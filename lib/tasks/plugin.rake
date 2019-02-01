@@ -87,8 +87,7 @@ desc 'run plugin specs'
 task 'plugin:spec', :plugin do |t, args|
   args.with_defaults(plugin: "*")
   ruby = `which ruby`.strip
-  # Traverse symlinks (https://stackoverflow.com/questions/357754/can-i-traverse-symlinked-directories-in-ruby-with-a-glob)
-  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**{,/*/**}/*_spec.rb")
+  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb")
   if files.length > 0
     sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')}"
   else
