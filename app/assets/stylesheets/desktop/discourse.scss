@@ -15,7 +15,10 @@ body.widget-dragging {
 
 .form-vertical {
   .control-group {
-    margin-bottom: 24px;
+    margin-bottom: 1.25em;
+  }
+  .controls:not(.controls-dropdown) + .controls {
+    margin-top: 0.5em;
   }
 }
 
