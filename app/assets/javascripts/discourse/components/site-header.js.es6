@@ -137,6 +137,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched(this._leftMenuAction(), "header");
+      window.requestAnimationFrame(() => this.panMove(e));
     } else if (
       windowWidth - center.x < SCREEN_EDGE_MARGIN &&
       !this.$(".menu-panel").length &&
@@ -148,6 +149,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched(this._rightMenuAction(), "header");
+      window.requestAnimationFrame(() => this.panMove(e));
     } else {
       this._isPanning = false;
     }
