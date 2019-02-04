@@ -192,13 +192,13 @@ GEM
       mini_mime (>= 0.1.1)
     maxminddb (0.1.21)
     memory_profiler (0.9.12)
-    message_bus (2.2.0.pre.1)
+    message_bus (2.2.0)
       rack (>= 1.1.3)
     metaclass (0.0.4)
     method_source (0.8.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
-    mini_racer (0.2.3)
+    mini_racer (0.2.4)
       libv8 (>= 6.3)
     mini_scheduler (0.9.1)
       sidekiq
@@ -490,7 +490,7 @@ DEPENDENCIES
   mail
   maxminddb
   memory_profiler
-  message_bus (= 2.2.0.pre.1)
+  message_bus
   mini_mime
   mini_racer
   mini_scheduler

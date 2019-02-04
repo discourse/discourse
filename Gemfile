@@ -45,12 +45,7 @@ gem 'discourse-ember-source', '~> 3.5.1'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
-# message bus 2.2.0 should be very stable
-# we trimmed some of the internal API surface down so we went with
-# a pre release here to make we don't do a full release prior to
-# baking here. Remove 2.2.0.pre no later than Jan 2019 and move back
-# to the standard releases
-gem 'message_bus', '2.2.0.pre.1'
+gem 'message_bus'
 
 gem 'rails_multisite'
 
