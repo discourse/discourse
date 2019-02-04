@@ -142,7 +142,13 @@ group :development do
   gem 'bullet', require: !!ENV['BULLET']
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'annotate'
+
+  # waiting on 2.7.5 per: https://github.com/ctran/annotate_models/pull/595
+  if rails_master?
+    gem 'annotate', git: 'https://github.com/ctran/annotate_models.git'
+  else
+    gem 'annotate'
+  end
 end
 
 # this is an optional gem, it provides a high performance replacement
