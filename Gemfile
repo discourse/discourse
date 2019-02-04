@@ -26,7 +26,7 @@ else
   gem 'seed-fu'
 end
 
-gem 'mail', '2.7.1.rc1', require: false
+gem 'mail', require: false
 gem 'mini_mime'
 gem 'mini_suffix'
 
