@@ -786,7 +786,8 @@ class PluginApi {
   /**
    *
    * Registers a function to handle uploads for specified file types
-   * The normal uploading functionality will be bypassed
+   * The normal uploading functionality will be bypassed if function returns
+   * a falsy value.
    * This only for uploads of individual files
    *
    * Example:
