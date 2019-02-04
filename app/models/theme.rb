@@ -437,6 +437,7 @@ class Theme < ActiveRecord::Base
 
       RemoteTheme::METADATA_PROPERTIES.each do |property|
         meta[property] = remote_theme&.public_send(property)
+        meta[property] = nil if meta[property] == "URL" # Clean up old discourse_theme CLI placeholders
       end
 
       meta[:assets] = {}.tap do |hash|
@@ -453,6 +454,8 @@ class Theme < ActiveRecord::Base
           hash[scheme.name] = {}.tap { |colors| scheme.colors.each { |color| colors[color.name] = color.hex } }
         end
       end
+
+      meta[:learn_more] = "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
 
     end
   end

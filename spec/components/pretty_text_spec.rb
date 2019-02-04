@@ -265,6 +265,23 @@ describe PrettyText do
       end
     end
 
+    context 'subfolder' do
+      before do
+        GlobalSetting.stubs(:relative_url_root).returns('/forum')
+        Discourse.stubs(:base_uri).returns("/forum")
+      end
+
+      it "handles user and group mentions correctly" do
+        Fabricate(:user, username: 'user1')
+        Fabricate(:group, name: 'groupA', mentionable_level: Group::ALIAS_LEVELS[:everyone])
+
+        input = 'hi there @user1 and @groupA'
+        expected = '<p>hi there <a class="mention" href="/forum/u/user1">@user1</a> and <a class="mention-group" href="/forum/groups/groupa">@groupA</a></p>'
+
+        expect(PrettyText.cook(input)).to eq(expected)
+      end
+    end
+
     it "does not create mention for a non mentionable group" do
       group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:nobody])
 

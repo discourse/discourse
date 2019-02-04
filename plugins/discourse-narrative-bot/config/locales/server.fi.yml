@@ -154,6 +154,14 @@ fi:
 
           - Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
+        instructions: |-
+          Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.
+
+          Kopioi linkki mobiililaitteella koskettamalla sitä hetken aikaa tai klikkaa sitä hiiresi oikealla painikkeella:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Siistiä! Suurin osa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
         not_found: |-

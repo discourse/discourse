@@ -133,7 +133,13 @@ module ApplicationHelper
   end
 
   def text_size_class
-    cookie_size = cookies[:text_size] if UserOption.text_sizes.keys.include?(cookies[:text_size]&.to_sym)
+    requested_cookie_size, cookie_seq = cookies[:text_size]&.split("|")
+    server_seq = current_user&.user_option&.text_size_seq
+    if cookie_seq && server_seq && cookie_seq.to_i >= server_seq &&
+              UserOption.text_sizes.keys.include?(requested_cookie_size&.to_sym)
+      cookie_size = requested_cookie_size
+    end
+
     size = cookie_size || current_user&.user_option&.text_size || SiteSetting.default_text_size
     "text-size-#{size}"
   end
@@ -206,16 +212,18 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
-    twitter_summary_large_image_url =
-      SiteSetting.site_twitter_summary_large_image_url
+    if opts[:image].blank?
+      twitter_summary_large_image_url = SiteSetting.site_twitter_summary_large_image_url
 
-    opengraph_image_url = SiteSetting.opengraph_image_url
+      if twitter_summary_large_image_url.present?
+        opts[:twitter_summary_large_image] = twitter_summary_large_image_url
+      end
 
-    if opts[:image].blank? && (opengraph_image_url.present? || twitter_summary_large_image_url.present?)
-      opts[:twitter_summary_large_image] = twitter_summary_large_image_url if twitter_summary_large_image_url.present?
-      opts[:image] = opengraph_image_url.present? ? opengraph_image_url : twitter_summary_large_image_url
-    elsif opts[:image].blank? && SiteSetting.site_apple_touch_icon_url.present?
-      opts[:image] = SiteSetting.site_apple_touch_icon_url
+      opts[:image] = SiteSetting.opengraph_image_url.presence ||
+        twitter_summary_large_image_url.presence ||
+        SiteSetting.site_large_icon_url.presence ||
+        SiteSetting.site_apple_touch_icon_url.presence ||
+        SiteSetting.site_logo_url.presence
     end
 
     # Use the correct scheme for opengraph/twitter image
@@ -471,6 +479,8 @@ module ApplicationHelper
       uri = URI(Discourse.base_url)
       absolute_url = "#{uri.scheme}:#{link}"
     elsif link.start_with?("/uploads/")
+      absolute_url = "#{Discourse.base_url}#{link}"
+    elsif link.start_with?("/images/")
       absolute_url = "#{Discourse.base_url}#{link}"
     elsif GlobalSetting.relative_url_root && link.start_with?(GlobalSetting.relative_url_root)
       absolute_url = "#{Discourse.base_url_no_prefix}#{link}"

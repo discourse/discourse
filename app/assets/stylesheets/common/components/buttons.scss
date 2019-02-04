@@ -17,7 +17,9 @@
   transition: all 0.25s;
   box-sizing: border-box;
   min-height: 30px;
-
+  .d-icon {
+    transition: color 0.25s;
+  }
   &:active,
   &.btn-active {
     text-shadow: none;
@@ -49,6 +51,9 @@
   color: $primary;
   font-weight: normal;
   background: $primary-low;
+  .d-icon {
+    color: $primary-high;
+  }
 
   &[href] {
     color: $primary;
@@ -60,23 +65,28 @@
     &.btn-hover {
       background: $primary-medium;
       color: $secondary;
+      .d-icon {
+        color: $secondary-very-high;
+      }
     }
   }
   &[disabled],
   &.disabled {
     background: $primary-low;
+    .d-icon {
+      color: $primary-medium;
+    }
     &:hover {
       color: dark-light-choose($primary-low-mid, $secondary-high);
+      .d-icon {
+        color: $primary-low-mid;
+      }
     }
     cursor: not-allowed;
   }
 
   .d-icon {
-    opacity: 0.7;
     line-height: $line-height-medium; // Match button text line-height
-  }
-  &.btn-primary .d-icon {
-    opacity: 1;
   }
 }
 
@@ -88,7 +98,9 @@
   font-weight: normal;
   color: $secondary;
   background: $tertiary;
-
+  .d-icon {
+    color: currentColor;
+  }
   &[href] {
     color: $secondary;
   }
@@ -100,6 +112,9 @@
         scale-color($tertiary, $lightness: -20%),
         scale-color($tertiary, $lightness: 20%)
       );
+      .d-icon {
+        color: currentColor;
+      }
     }
   }
   &:active,
@@ -112,6 +127,9 @@
   &[disabled],
   &.disabled {
     background: $tertiary;
+    .d-icon {
+      color: currentColor;
+    }
   }
 }
 
@@ -122,6 +140,9 @@
   color: $secondary;
   font-weight: normal;
   background: $danger;
+  .d-icon {
+    color: $danger-low;
+  }
   &[href] {
     color: $secondary;
   }
@@ -133,6 +154,9 @@
         scale-color($danger, $lightness: -20%),
         scale-color($danger, $lightness: 20%)
       );
+      .d-icon {
+        color: $danger-low;
+      }
     }
   }
   &:active,
@@ -142,6 +166,9 @@
   &[disabled],
   &.disabled {
     background: $danger;
+    .d-icon {
+      color: $danger-low;
+    }
   }
 }
 
@@ -149,6 +176,9 @@
 // --------------------------------------------------
 
 .btn-social {
+  .d-icon {
+    color: #fff;
+  }
   color: #fff;
   background: #666;
   &:hover {
@@ -214,7 +244,15 @@
   border: 0;
   outline: 0;
   line-height: $line-height-small;
+  transition: color 0.25s, background 0.25s;
   .d-icon {
-    opacity: 0.7;
+    color: $primary-low-mid;
+  }
+  .discourse-no-touch & {
+    &:hover {
+      .d-icon {
+        color: $primary;
+      }
+    }
   }
 }

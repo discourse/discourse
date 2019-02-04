@@ -544,7 +544,6 @@ zh_TW:
       first_notification: "你的第一則通知！選擇以開始。"
       disable_jump_reply: "不要在回覆之後直接跳到我的文章"
       dynamic_favicon: "在瀏覽器小圖示上顯示新主題/更新的主題數"
-      theme_default_on_all_devices: "在我所有的裝置上將此設為預設佈景"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
       enable_quoting: "允許引用高亮文字"

@@ -32,12 +32,13 @@ class RemoteTheme < ActiveRecord::Base
     raise ImportError.new I18n.t("themes.import_error.about_json")
   end
 
-  def self.update_tgz_theme(filename, match_theme: false, user: Discourse.system_user)
+  def self.update_tgz_theme(filename, match_theme: false, user: Discourse.system_user, theme_id: nil)
     importer = ThemeStore::TgzImporter.new(filename)
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
-    theme = Theme.find_by(name: theme_info["name"]) if match_theme
+    theme = Theme.find_by(name: theme_info["name"]) if match_theme # Old theme CLI method, remove Jan 2020
+    theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
     theme ||= Theme.new(user_id: user&.id || -1, name: theme_info["name"])
 
     theme.component = theme_info["component"].to_s == "true"
@@ -176,6 +177,7 @@ class RemoteTheme < ActiveRecord::Base
 
   def update_theme_color_schemes(theme, schemes)
     missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
+    ordered_schemes = []
 
     schemes&.each do |name, colors|
       missing_scheme_names.delete(name)
@@ -188,18 +190,24 @@ class RemoteTheme < ActiveRecord::Base
             theme.notify_color_change(c)
           end
         end
+        ordered_schemes << existing
       else
         scheme = theme.color_schemes.build(name: name)
         ColorScheme.base.colors_hashes.each do |color|
           override = normalize_override(colors[color[:name]])
           scheme.color_scheme_colors << ColorSchemeColor.new(name: color[:name], hex: override || color[:hex])
         end
+        ordered_schemes << scheme
       end
     end
 
     if missing_scheme_names.length > 0
       ColorScheme.where(id: missing_scheme_names.values).delete_all
       # we may have stuff pointed at the incorrect scheme?
+    end
+
+    if theme.new_record?
+      theme.color_scheme = ordered_schemes.first
     end
   end
 
@@ -228,17 +236,21 @@ end
 #
 # Table name: remote_themes
 #
-#  id                :integer          not null, primary key
-#  remote_url        :string           not null
-#  remote_version    :string
-#  local_version     :string
-#  about_url         :string
-#  license_url       :string
-#  commits_behind    :integer
-#  remote_updated_at :datetime
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  private_key       :text
-#  branch            :string
-#  last_error_text   :text
+#  id                        :integer          not null, primary key
+#  remote_url                :string           not null
+#  remote_version            :string
+#  local_version             :string
+#  about_url                 :string
+#  license_url               :string
+#  commits_behind            :integer
+#  remote_updated_at         :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  private_key               :text
+#  branch                    :string
+#  last_error_text           :text
+#  authors                   :string
+#  theme_version             :string
+#  minimum_discourse_version :string
+#  maximum_discourse_version :string
 #

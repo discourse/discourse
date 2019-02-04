@@ -78,11 +78,10 @@
           <td class="col actions">
             {{#unless item.editing}}
               {{d-button
-                class="btn-default"
+                class="btn-default btn-danger"
                 action=(action "destroy")
                 actionParam=item
-                icon="far-trash-alt"
-                class="btn-danger"}}
+                icon="far-trash-alt"}}
               {{d-button
                 class="btn-default"
                 action=(action "edit")

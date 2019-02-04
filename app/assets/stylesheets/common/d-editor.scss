@@ -82,9 +82,11 @@
   .btn,
   .btn-default {
     background-color: transparent;
-    color: $primary-high;
     padding: 4px 8px;
     display: inline-block;
+    .d-icon {
+      color: $primary-medium;
+    }
     @media all and (max-width: 800px) {
       padding: 5px;
     }

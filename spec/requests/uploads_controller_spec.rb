@@ -226,6 +226,14 @@ describe UploadsController do
       expect(response.status).to eq(404)
     end
 
+    it "returns 404 when the path is nil" do
+      upload = upload_file("logo.png")
+      upload.update_column(:url, "invalid-url")
+
+      get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+      expect(response.status).to eq(404)
+    end
+
     it 'uses send_file' do
       upload = upload_file("logo.png")
       get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"

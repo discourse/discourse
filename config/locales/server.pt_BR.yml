@@ -38,7 +38,6 @@ pt_BR:
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, esquema de cores inválido"
     other_error: "Algo de errado aconteceu ao atualizar o tema"
-    error_importing: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido."
       data_type_not_a_number: "Definindo`%{name}` tipo não é suportado. Tipos suportados são `integer`,` bool`, `list` e` enum`"
@@ -878,7 +877,6 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações autenticadas"
     page_view_crawler_reqs:
-      title: "Web Crawlers"
       xaxis: "Dia"
       yaxis: "Visualizações por indexadores web"
     page_view_total_reqs:
@@ -930,7 +928,6 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Número de visitas"
     web_crawlers:
-      title: "Solicitações de rastreador da Web"
       labels:
         user_agent: "Agente de usuário"
         page_views: "Visualizações de página"
@@ -1339,8 +1336,6 @@ pt_BR:
     email_link_color: "A cor dos links em e-mails HTML. Digite um nome de cor ('azul') ou valor hexadecimal ('# 0000FF')."
     detect_custom_avatars: "Se deve ou não verificar se os usuários enviaram imagens de perfil personalizadas."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá checar o Gravatar por avatares personalizados em um dia"
-    public_user_custom_fields: "Um conjunto de campos personalizados para um usuário que podem ser apresentados publicamente."
-    staff_user_custom_fields: "Um conjunto de campos personalizados para um usuário que pode ser mostrado para membros da equipe."
     enable_user_directory: "Fornece um diretório de usuários para navegar"
     enable_group_directory: "Fornecer um diretório de grupos para navegação"
     allow_anonymous_posting: "Permitir usuários trocar para modo anônimo"
@@ -1360,7 +1355,6 @@ pt_BR:
     suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
     header_dropdown_category_count: "Quantas categorias podem ser exibidas no menu suspenso do cabeçalho."
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as strings de consulta das rotas de tópicos. Formato é regex + string use \\ 1 etc. para acessar capturas"
-    global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
     automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."
     read_time_word_count: "Palavras por minuto para calcular o tempo estimado de leitura."

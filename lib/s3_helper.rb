@@ -205,6 +205,20 @@ class S3Helper
     opts
   end
 
+  def download_file(filename, destination_path, failure_message = nil)
+    unless object(filename).download_file(destination_path)
+      raise failure_message&.to_s || "Failed to download file"
+    end
+  end
+
+  def s3_client
+    @s3_client ||= Aws::S3::Client.new(@s3_options)
+  end
+
+  def s3_inventory_path(path = 'inventory')
+    get_path_for_s3_upload(path)
+  end
+
   private
 
   def default_s3_options
@@ -226,10 +240,6 @@ class S3Helper
 
   def multisite_upload_path
     File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
-  end
-
-  def s3_client
-    @s3_client ||= Aws::S3::Client.new(@s3_options)
   end
 
   def s3_resource

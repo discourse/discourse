@@ -665,7 +665,6 @@ da:
       xaxis: "Dag"
       yaxis: "Logged in Sidevisninger"
     page_view_crawler_reqs:
-      title: "Web Crawlers"
       xaxis: "Dag"
       yaxis: "Web Crawler Sidevisninger"
     page_view_total_reqs:

@@ -24,7 +24,7 @@ describe UserAnonymizer do
 
   describe "make_anonymous" do
     let(:original_email) { "edward@example.net" }
-    let(:user) { Fabricate(:user, username: "edward", email: original_email) }
+    let(:user) { Fabricate(:user_single_email, username: "edward", email: original_email) }
     let(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
@@ -33,9 +33,23 @@ describe UserAnonymizer do
       expect(user.reload.username).to match(/^anon\d{3,}$/)
     end
 
-    it "changes email address" do
+    it "changes the primary email address" do
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
+    end
+
+    it "changes the primary email address when there is an email domain whitelist" do
+      SiteSetting.email_domains_whitelist = 'example.net|wayne.com|discourse.org'
+
+      make_anonymous
+      expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
+    end
+
+    it "deletes secondary email addresses" do
+      Fabricate(:secondary_email, user: user, email: "secondary_email@example.com")
+
+      make_anonymous
+      expect(user.reload.secondary_emails).to be_blank
     end
 
     it "turns off all notifications" do

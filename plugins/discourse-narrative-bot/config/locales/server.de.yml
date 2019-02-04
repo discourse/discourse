@@ -146,7 +146,7 @@ de:
       hello:
         title: "Sei gegrüßt!"
         message: |-
-          Danke, dass du %{title}beigetreten bist. Willkommen!
+          Danke, dass du %{title} beigetreten bist. Willkommen!
 
           - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) ist auch da um zu helfen, wenn du eine Person erreichen möchtest.
 

@@ -38,7 +38,6 @@ nb_NO:
   themes:
     bad_color_scheme: "Kan ikke oppdatere drakt, ugyldig fargepalett"
     other_error: "Noe gikk galt under oppdateringen av drakten"
-    error_importing: "En feil oppstod under kloning av git repository, tilgang ble nektet eller repository ikke funnet."
     errors:
       component_no_user_selectable: "Draktkomponenter kan ikke gjøres valgbare for brukere"
       component_no_default: "Draktkomponenter kan ikke være standard drakt"
@@ -886,7 +885,6 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Sidevisninger av innloggede"
     page_view_crawler_reqs:
-      title: "Web crawlere"
       xaxis: "Dag"
       yaxis: "Sidevisninger fra Søkeroboter"
     page_view_total_reqs:
@@ -938,7 +936,6 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Antall besøk"
     web_crawlers:
-      title: "Forespørsler fra Søkeroboter"
       labels:
         user_agent: "Brukeragent"
         page_views: "Sidevisninger"

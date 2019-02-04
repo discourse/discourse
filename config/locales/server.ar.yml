@@ -778,7 +778,6 @@ ar:
       xaxis: "يوم"
       yaxis: "عدد قراءات الصفحات للمسجلين دخول"
     page_view_crawler_reqs:
-      title: "عناكب اﻹنترنت"
       xaxis: "يوم"
       yaxis: "عدد قراءات الصفحات لزواحف الانترنت"
     page_view_total_reqs:
@@ -1094,8 +1093,6 @@ ar:
     disable_digest_emails: "تعطيل رسائل الملخص لجميع الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
-    public_user_custom_fields: "حقول قائمه بيضاء مخصصه للمستدم يمكن رويتها علنا"
-    staff_user_custom_fields: "حقول القائمه البيضاء المخصصه للمستخدم يمكن اراها للطاقم"
     enable_user_directory: "وفر دليل المستخدمين للتصفح"
     allow_anonymous_posting: "اسمح للمستخدمين ان يغيروا لوضع المخفي"
     anonymous_posting_min_trust_level: "أدنى مستوى ثقة للسماح بنشر مشاركات مجهولة."
@@ -1107,7 +1104,6 @@ ar:
     dominating_topic_minimum_percent: "ما هي النسبه المئويه للمشاركات التي يجب علي المستخدم عملها في الموضوع قبل تلقيه لتنبيه عن خروجه لنطاق الموضوع"
     disable_avatar_education_message: "عطل الرسالة التعليمية لتغيير الصورة الرمزية."
     suppress_uncategorized_badge: "لا تظهر الشارة للموضوعات غير المصنفة في قائمة الموضوعات."
-    global_notice: "اعرض تنبيه, شعار عام طارئ ملاحظه لكل الزوار, غير الفراغ لاخفاء(HTML مسموح)"
     disable_edit_notifications: "لتعطيل تحرير الاشعارات بواسطة العضو النظام عندما يكون نشطاً 'download_remote_images_to_local'."
     automatically_unpin_topics: "تلقائياً قم بنزع الدبوس عندا يصل المستخدم إلي نهاية الصفحه"
     read_time_word_count: "عداد الكلمات  للدقيقه لحساب الوقت المقدر للقراءه "

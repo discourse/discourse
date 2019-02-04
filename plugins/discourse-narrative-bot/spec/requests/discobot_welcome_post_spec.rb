@@ -43,6 +43,17 @@ describe "Discobot welcome post" do
         expect(Jobs::NarrativeInit.jobs.first["args"].first["user_id"]).to eq(User.last.id)
       end
     end
+  end
 
+  context 'when user is staged' do
+    let(:staged_user) { Fabricate(:user, staged: true) }
+
+    before do
+      SiteSetting.discourse_narrative_bot_welcome_post_type = 'welcome_message'
+    end
+
+    it 'should not send welcome message' do
+      expect { staged_user }.to_not change { Jobs::SendDefaultWelcomeMessage.jobs.count }
+    end
   end
 end

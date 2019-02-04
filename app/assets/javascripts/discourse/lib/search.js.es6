@@ -80,7 +80,7 @@ export function translateResults(results, opts) {
           more: groupedSearchResult[`more_${name}`]
         };
 
-        if (result.more && name === "posts" && opts.fullSearchUrl) {
+        if (result.more && componentName === "topic" && opts.fullSearchUrl) {
           result.more = false;
           result.moreUrl = opts.fullSearchUrl;
         }

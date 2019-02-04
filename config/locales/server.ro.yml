@@ -646,7 +646,6 @@ ro:
       xaxis: "Zi"
       yaxis: "Vizualizări de pagină înregistrate"
     page_view_crawler_reqs:
-      title: "Roboți web"
       xaxis: "Zi"
       yaxis: "Vizualizări de pagină făcute de roboți web"
     page_view_total_reqs:
@@ -1009,8 +1008,6 @@ ro:
     email_link_color: "Culoarea link-urilor din emailurile HTML. Introdu un nume de culoare („albastru”) sau o valoare hex ('#0000FF')."
     detect_custom_avatars: "Dacă sau nu să verifice dacă utilizatorii și-au încărcat poze de profil personalizate."
     max_daily_gravatar_crawls: "Numărul maxim zilnic de verificări pe care Discourse le va face pe Gravatar pentru a vedea dacă există avatare personalizate."
-    public_user_custom_fields: "O listă albă cu câmpuri personalizate pentru utilizator, ce se pot afișa public."
-    staff_user_custom_fields: "O listă albă cu câmpuri personalizate pentru utilizator care pot fi vizualizate de membrii echipei."
     enable_user_directory: "Furnizează un „carte de telefon” cu utilizatorii"
     allow_anonymous_posting: "Permite utilizatorilor să comute pe modul anonim"
     anonymous_posting_min_trust_level: "Nivelul minim de încredere necesar pentru a putea activa postarea anonimă."
@@ -1024,7 +1021,6 @@ ro:
     disable_avatar_education_message: "Dezactivează mesajul educațional pentru schimbarea avatarului."
     suppress_uncategorized_badge: "Nu arăta ecusonul pentru subiectele fără categorie în lista de subiecte."
     permalink_normalizations: "Aplică următorul regex înainte de a detecta permalink-urile, de exemplu:  /(topic.*)\\?.*/\\1 va elimina șirurile de interogare din căile subiectelor. Formatul este regex+șir folosește \\1 etc.pentru a capturarea secvențelor"
-    global_notice: "Afișează o notificare de tip banner global URGENT, URGENȚĂ pentru toți vizitatori, lasă gol pentru a-l ascunde (HTML permis)."
     disable_edit_notifications: "Deactivează editarea notificărilo de către utilizator atunci când setarea 'download_remote_images_to_local' este activată."
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."

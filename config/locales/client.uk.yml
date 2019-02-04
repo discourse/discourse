@@ -1230,7 +1230,6 @@ uk:
           revert_confirm: "Чи впевнені ви, що хочете повернути ваші зміни?"
         theme:
           upload: "Завантажити"
-          about_theme: "Про тему"
           license: "Ліцензія"
           update_to_latest: "Оновити до останьої"
           add: "Додати"

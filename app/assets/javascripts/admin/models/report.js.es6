@@ -333,7 +333,7 @@ const Report = Discourse.Model.extend({
     const formatedValue = () => {
       const topicId = row[properties.id];
       const href = Discourse.getURL(`/t/-/${topicId}`);
-      return `<a href='${href}'>${topicTitle}</a>`;
+      return `<a href='${href}'>${escapeExpression(topicTitle)}</a>`;
     };
 
     return {
@@ -352,7 +352,9 @@ const Report = Discourse.Model.extend({
       property: properties.title,
       value: postTitle,
       formatedValue:
-        postTitle && href ? `<a href='${href}'>${postTitle}</a>` : "—"
+        postTitle && href
+          ? `<a href='${href}'>${escapeExpression(postTitle)}</a>`
+          : "—"
     };
   },
 

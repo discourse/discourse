@@ -543,7 +543,6 @@ ja:
       first_notification: "最初の通知です! 始めるために選択してください。"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規/更新トピックの件数をブラウザのアイコンに表示する"
-      theme_default_on_all_devices: "ご自身の全てのデバイス上で初期テーマを作成して下さい。"
       allow_private_messages: "他のユーザーが私にパーソナルメッセージを送信できるようにする"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"

@@ -1050,6 +1050,9 @@ files:
   s3_configure_tombstone_policy:
     default: true
     shadowed_by_global: true
+  enable_s3_inventory:
+    default: false
+    shadowed_by_global: true
   allow_profile_backgrounds:
     client: true
     default: true

@@ -178,9 +178,18 @@ describe ApplicationHelper do
           expect(helper.html_classes.split(" ")).to include('text-size-larger')
         end
 
+        it 'ignores cookies with lower sequence' do
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "normal|1"
+          expect(helper.html_classes.split(" ")).to include('text-size-larger')
+        end
+
         it 'prioritises the cookie specified text size' do
-          helper.request.cookies["text_size"] = "normal"
-          expect(helper.html_classes.split(" ")).to include('text-size-normal')
+          user.user_option.update!(text_size_seq: 2)
+
+          helper.request.cookies["text_size"] = "largest|4"
+          expect(helper.html_classes.split(" ")).to include('text-size-largest')
         end
 
         it 'includes the user specified text size' do
@@ -218,6 +227,66 @@ describe ApplicationHelper do
     it 'escapes and strips invalid unicode and strips in json body' do
       @preloaded = { test: %{["< \x80"]} }
       expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
+    end
+  end
+
+  describe 'crawlable_meta_data' do
+    context "opengraph image" do
+      it 'returns the correct image' do
+        SiteSetting.opengraph_image = Fabricate(:upload,
+          url: '/images/og-image.png'
+        )
+
+        SiteSetting.twitter_summary_large_image = Fabricate(:upload,
+          url: '/images/twitter.png'
+        )
+
+        SiteSetting.large_icon = Fabricate(:upload,
+          url: '/images/large_icon.png'
+        )
+
+        SiteSetting.apple_touch_icon = Fabricate(:upload,
+          url: '/images/default-apple-touch-icon.png'
+        )
+
+        SiteSetting.logo = Fabricate(:upload, url: '/images/d-logo-sketch.png')
+
+        expect(
+          helper.crawlable_meta_data(image: "some-image.png")
+        ).to include("some-image.png")
+
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.opengraph_image_url
+        )
+
+        SiteSetting.opengraph_image = nil
+
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.site_twitter_summary_large_image_url
+        )
+
+        SiteSetting.twitter_summary_large_image = nil
+
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.site_large_icon_url
+        )
+
+        SiteSetting.large_icon = nil
+
+        expect(helper.crawlable_meta_data).to include(
+          SiteSetting.site_apple_touch_icon_url
+        )
+
+        SiteSetting.apple_touch_icon = nil
+        SiteSetting.apple_touch_icon_url = nil
+
+        expect(helper.crawlable_meta_data).to include(SiteSetting.site_logo_url)
+
+        SiteSetting.logo = nil
+        SiteSetting.logo_url = nil
+
+        expect(helper.crawlable_meta_data).to_not include("/images")
+      end
     end
   end
 end

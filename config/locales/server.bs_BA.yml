@@ -38,7 +38,6 @@ bs_BA:
   themes:
     bad_color_scheme: "Ne mogu ažuriratiizgled temu, šema boja nije ispravna."
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
-    error_importing: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
       data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
@@ -505,12 +504,10 @@ bs_BA:
     email_editable: "Allow users to change their e-mail address after registration."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     enable_names: "Allow showing user full names. Disable to hide full names."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."

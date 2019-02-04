@@ -71,6 +71,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("selection", canSplitTopic ? "new_message" : "existing_message");
     } else if (!canSplitTopic) {
       this.set("selection", "existing_topic");
+      Ember.run.next(() => $("#choose-topic-title").focus());
     }
   },
 
