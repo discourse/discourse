@@ -323,7 +323,7 @@ GEM
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
     rchardet (1.8.0)
-    redis (4.1.0)
+    redis (4.0.1)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
     request_store (1.4.1)
@@ -527,7 +527,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   rbtrace
   rchardet
-  redis
+  redis (= 4.0.1)
   redis-namespace
   rinku
   rotp
