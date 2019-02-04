@@ -143,7 +143,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'annotate'
-  gem 'foreman', require: false
 end
 
 # this is an optional gem, it provides a high performance replacement
