@@ -137,6 +137,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched(this._leftMenuAction(), "header");
+      window.requestAnimationFrame(() => this.panMove(e));
     } else if (
       windowWidth - center.x < SCREEN_EDGE_MARGIN &&
       !this.$(".menu-panel").length &&
@@ -148,6 +149,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched(this._rightMenuAction(), "header");
+      window.requestAnimationFrame(() => this.panMove(e));
     } else {
       this._isPanning = false;
     }
@@ -242,13 +244,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
     });
 
-    if (this.site.mobileView) {
-      $("body")
-        .on("pointerdown", e => this._panStart(e))
-        .on("pointermove", e => this._panMove(e))
-        .on("pointerup", e => this._panMove(e))
-        .on("pointercancel", e => this._panMove(e));
-    }
+    this.addTouchListeners($("body"));
   },
 
   willDestroyElement() {
@@ -260,13 +256,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.off("header:hide-topic");
     this.appEvents.off("dom:clean");
 
-    if (this.site.mobileView) {
-      $("body")
-        .off("pointerdown")
-        .off("pointerup")
-        .off("pointermove")
-        .off("pointercancel");
-    }
+    this.removeTouchListeners($("body"));
+
     Ember.run.cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
   },
