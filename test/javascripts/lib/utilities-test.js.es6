@@ -204,7 +204,7 @@ QUnit.test("replaces GUID in image alt text on iOS", assert => {
 });
 
 QUnit.test("isAnImage", assert => {
-  ["png", "jpg", "jpeg", "bmp", "gif", "ico"].forEach(extension => {
+  ["png", "jpg", "jpeg", "gif", "ico"].forEach(extension => {
     var image = "image." + extension;
     assert.ok(isAnImage(image), image + " is recognized as an image");
     assert.ok(
