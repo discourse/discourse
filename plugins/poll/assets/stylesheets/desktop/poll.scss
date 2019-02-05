@@ -15,7 +15,7 @@ div.poll {
     }
 
     p {
-      margin: 1.5em;
+      margin: 0.5em 0;
     }
 
     .info-label {
@@ -30,7 +30,7 @@ div.poll {
 
   .poll-buttons {
     border-top: 1px solid $primary-low;
-    padding: 1em 1.25em;
+    padding: 1em;
 
     .info-text {
       line-height: 2em;
