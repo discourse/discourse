@@ -43,6 +43,8 @@ module BackupRestore
       log "Finalizing backup..."
 
       @with_uploads ? create_archive : move_dump_backup
+
+      unpause_sidekiq
       upload_archive
 
       after_create_hook
@@ -334,6 +336,7 @@ module BackupRestore
     end
 
     def unpause_sidekiq
+      return unless Sidekiq.paused?
       log "Unpausing sidekiq..."
       Sidekiq.unpause!
     rescue => ex
