@@ -1053,6 +1053,19 @@ describe Search do
       results = Search.execute('first in:title')
       expect(results.posts.length).to eq(0)
     end
+
+    it 'works irrespective of the order' do
+      topic = Fabricate(:topic, title: "A topic about Discourse")
+      Fabricate(:post, topic: topic, raw: "This is another post")
+      topic2 = Fabricate(:topic, title: "This is another topic")
+      Fabricate(:post, topic: topic2, raw: "Discourse is awesome")
+
+      results = Search.execute('Discourse in:title status:open')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('in:title status:open Discourse')
+      expect(results.posts.length).to eq(1)
+    end
   end
 
   context 'ignore_diacritics' do
