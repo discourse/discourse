@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   attributeBindings: [
     "disabled",
     "translatedTitle:title",
-    "translatedTitle:aria-label",
+    "translatedLabel:aria-label",
     "tabindex"
   ],
 
