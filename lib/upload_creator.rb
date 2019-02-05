@@ -3,7 +3,7 @@ require_dependency "image_sizer"
 
 class UploadCreator
 
-  TYPES_CONVERTED_TO_JPEG ||= %i{bmp png}
+  TYPES_CONVERTED_TO_JPEG ||= %i{png}
 
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 

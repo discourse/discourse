@@ -282,7 +282,7 @@ export function validateUploadedFile(file, opts) {
   return true;
 }
 
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|svg|webp|ico)/i;
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico)/i;
 
 function extensionsToArray(exts) {
   return exts
@@ -376,7 +376,7 @@ export function authorizesOneOrMoreImageExtensions() {
 }
 
 export function isAnImage(path) {
-  return /\.(png|jpe?g|gif|bmp|svg|webp|ico)$/i.test(path);
+  return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
 function uploadTypeFromFileName(fileName) {
