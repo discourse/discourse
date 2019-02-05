@@ -7,6 +7,10 @@ class ThemeField < ActiveRecord::Base
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
 
+  after_commit do |field|
+    SvgSprite.expire_cache if field.target_id == Theme.targets[:settings]
+  end
+
   scope :find_by_theme_ids, ->(theme_ids) {
     return none unless theme_ids.present?
 
