@@ -681,8 +681,9 @@ export default Ember.Component.extend({
 
       const matchingHandler = uploadHandlers.find(matcher);
       if (data.files.length === 1 && matchingHandler) {
-        matchingHandler.method(data.files[0]);
-        return false;
+        if (!matchingHandler.method(data.files[0])) {
+          return false;
+        }
       }
 
       // If no plugin, continue as normal
