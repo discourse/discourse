@@ -105,6 +105,10 @@ class ThemeSettingsManager
     def is_valid_value?(new_value)
       (@opts[:min]..@opts[:max]).include? new_value.to_s.length
     end
+
+    def textarea
+      @opts[:textarea]
+    end
   end
 
   class Bool < self
