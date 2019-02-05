@@ -148,9 +148,11 @@ class UsersController < ApplicationController
 
   def check_emails
     user = fetch_user_from_params(include_inactive: true)
-    guardian.ensure_can_check_emails!(user)
 
-    StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    unless user == current_user
+      guardian.ensure_can_check_emails!(user)
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
 
     email, *secondary_emails = user.emails
 
