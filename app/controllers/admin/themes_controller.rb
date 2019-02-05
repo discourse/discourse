@@ -209,6 +209,8 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
     end
+  rescue RemoteTheme::ImportError => e
+    render_json_error e.message
   end
 
   def destroy

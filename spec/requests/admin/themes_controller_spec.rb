@@ -311,7 +311,19 @@ describe Admin::ThemesController do
       # Database correct
       theme.reload
       expect(theme.theme_translation_overrides.count).to eq(0)
+    end
 
+    it 'handles import errors on update' do
+      theme.create_remote_theme!(remote_url: "https://example.com/repository")
+
+      # RemoteTheme is extensively tested, and setting up the test scaffold is a large overhead
+      # So use a stub here to test the controller
+      RemoteTheme.any_instance.stubs(:update_from_remote).raises(RemoteTheme::ImportError.new("error message"))
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: { remote_update: true }
+      }
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)["errors"].first).to eq("error message")
     end
 
     it 'returns the right error message' do
