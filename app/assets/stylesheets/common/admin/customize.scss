@@ -71,10 +71,6 @@
         margin-bottom: 0;
       }
     }
-
-    .create-actions {
-      margin-left: auto;
-    }
   }
   .admin-container {
     padding: 0;
@@ -202,6 +198,9 @@
       width: 10%;
       vertical-align: top;
       margin-top: 5px;
+    }
+    .create-actions {
+      margin-bottom: 1em;
     }
     .content-wrapper {
       display: inline-block;
