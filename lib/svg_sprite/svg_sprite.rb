@@ -188,7 +188,7 @@ module SvgSprite
   SVG_SPRITE_PATHS = Dir.glob(["#{Rails.root}/vendor/assets/svg-icons/**/*.svg",
                                "#{Rails.root}/plugins/*/svg-icons/*.svg"])
 
-  def self.all_icons(theme_ids)
+  def self.all_icons(theme_ids = [])
     get_set_cache("icons_#{Theme.transform_ids(theme_ids).join(',')}") do
       Set.new()
         .merge(settings_icons)
@@ -203,13 +203,13 @@ module SvgSprite
     end
   end
 
-  def self.version(theme_ids)
+  def self.version(theme_ids = [])
     get_set_cache "version_#{Theme.transform_ids(theme_ids).join(',')}" do
       Digest::SHA1.hexdigest(all_icons(theme_ids).join('|'))
     end
   end
 
-  def self.path(theme_ids)
+  def self.path(theme_ids = [])
     "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme_ids&.join(",")}-#{version(theme_ids)}.js"
   end
 
@@ -217,7 +217,7 @@ module SvgSprite
     cache&.clear
   end
 
-  def self.bundle(theme_ids)
+  def self.bundle(theme_ids = [])
     icons = all_icons(theme_ids)
 
     doc = File.open("#{Rails.root}/vendor/assets/svg-icons/fontawesome/solid.svg") { |f| Nokogiri::XML(f) }
