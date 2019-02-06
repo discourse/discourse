@@ -22,8 +22,9 @@ else
   gem 'activesupport', '5.2.2'
   gem 'railties', '5.2.2'
   gem 'sprockets-rails'
-  gem 'seed-fu'
 end
+
+gem 'seed-fu'
 
 gem 'mail', require: false
 gem 'mini_mime'
