@@ -16,9 +16,11 @@ describe Jobs::UpdateS3Inventory do
 
   it "updates the bucket policy and inventory configuration in S3" do
     id = "original"
+    path = File.join(S3Inventory::INVENTORY_PREFIX, S3Inventory::INVENTORY_VERSION)
+
     @client.expects(:put_bucket_policy).with(
       bucket: "bucket",
-      policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"InventoryAndAnalyticsPolicy\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":[\"s3:PutObject\"],\"Resource\":[\"arn:aws:s3:::bucket/#{S3Inventory::INVENTORY_PREFIX}/#{S3Inventory::INVENTORY_VERSION}/*\"],\"Condition\":{\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::bucket\"},\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}}}]}"
+      policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"InventoryAndAnalyticsPolicy\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":[\"s3:PutObject\"],\"Resource\":[\"arn:aws:s3:::bucket/#{path}/*\"],\"Condition\":{\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::bucket\"},\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}}}]}"
     )
     @client.expects(:put_bucket_inventory_configuration)
     @client.expects(:put_bucket_inventory_configuration).with(
@@ -28,7 +30,7 @@ describe Jobs::UpdateS3Inventory do
         destination: {
           s3_bucket_destination: {
             bucket: "arn:aws:s3:::bucket",
-            prefix: "inventory/#{id}",
+            prefix: path,
             format: "CSV"
           }
         },
