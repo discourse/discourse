@@ -417,7 +417,6 @@ export default {
       $article.addClass("selected");
 
       if ($article.is(".topic-post")) {
-        $("a.tabLoc", $article).focus();
         this._scrollToPost($article);
       } else {
         this._scrollList($article, direction);
@@ -427,9 +426,14 @@ export default {
 
   _scrollToPost($article) {
     if ($article.find("#post_1").length > 0) {
-      $(window).scrollTop(0);
+      $("html, body").animate({ scrollTop: 0 }, 100);
     } else {
-      $(window).scrollTop($article.offset().top - minimumOffset());
+      $("html, body").animate(
+        {
+          scrollTop: $article.offset().top - minimumOffset()
+        },
+        100
+      );
     }
   },
 
