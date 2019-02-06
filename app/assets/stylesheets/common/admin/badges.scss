@@ -66,6 +66,9 @@
   }
   .badge-intro {
     margin-top: 10%;
+    h1 {
+      line-height: $line-height-medium;
+    }
     .badge-intro-emoji {
       // it's an emoji so we want fixed deminsions
       height: 55px;
