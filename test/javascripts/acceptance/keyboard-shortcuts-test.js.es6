@@ -1,9 +1,9 @@
 import { acceptance } from "helpers/qunit-helpers";
-import DiscourseURL from "discourse/lib/url";
 
 acceptance("Keyboard Shortcuts", { loggedIn: true });
 
 test("go to first suggested topic", async assert => {
+  /* global server */
   server.get("/t/27331/4.json", () => [
     200,
     { "Content-Type": "application/json" },
