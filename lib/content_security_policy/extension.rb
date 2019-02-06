@@ -17,12 +17,13 @@ class ContentSecurityPolicy
 
     THEME_SETTING = 'extend_content_security_policy'
 
-    def theme_extensions
-      cache['theme_extensions'] ||= find_theme_extensions
+    def theme_extensions(theme_ids)
+      key = "theme_extensions_#{Theme.transform_ids(theme_ids).join(',')}"
+      cache[key] ||= find_theme_extensions(theme_ids)
     end
 
     def clear_theme_extensions_cache!
-      cache['theme_extensions'] = nil
+      cache.clear
     end
 
     private
@@ -31,10 +32,10 @@ class ContentSecurityPolicy
       @cache ||= DistributedCache.new('csp_extensions')
     end
 
-    def find_theme_extensions
+    def find_theme_extensions(theme_ids)
       extensions = []
 
-      Theme.find_each do |theme|
+      Theme.where(id: Theme.transform_ids(theme_ids)).find_each do |theme|
         theme.cached_settings.each do |setting, value|
           extensions << build_theme_extension(value) if setting.to_s == THEME_SETTING
         end
