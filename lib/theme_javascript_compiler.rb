@@ -54,7 +54,7 @@ class ThemeJavascriptCompiler
 
       function manipulatePath(path) {
         // Override old themeSetting syntax when it's a param inside another node
-        if(path.parts[0] == "themeSettings"){
+        if(path.parts && path.parts[0] == "themeSettings"){
           const settingParts = path.parts.slice(1);
           path.type = "SubExpression";
           Object.assign(path, generateHelper(settingParts))
@@ -63,7 +63,7 @@ class ThemeJavascriptCompiler
 
       function manipulateNode(node) {
         // Magically add theme id as the first param for each of these helpers
-        if (["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])) {
+        if (node.path.parts && ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])) {
           node.params.unshift({
             type: "NumberLiteral",
             value: #{@theme_id},
@@ -72,7 +72,7 @@ class ThemeJavascriptCompiler
         }
 
         // Override old themeSetting syntax when it's in its own node
-        if (node.path.parts[0] == "themeSettings") {
+        if (node.path.parts && node.path.parts[0] == "themeSettings") {
           Object.assign(node, generateHelper(node.path.parts.slice(1)))
         }
       }
@@ -100,6 +100,7 @@ class ThemeJavascriptCompiler
             if(node.path.original == 'get'
               && node.params
               && node.params[0]
+              && node.params[0].parts
               && node.params[0].parts[0] == 'themeSettings'){
                 node.path.parts = node.params[0].parts
                 node.params = []
