@@ -16,33 +16,38 @@ describe "S3Inventory" do
     SiteSetting.s3_secret_access_key = "def"
     SiteSetting.enable_s3_inventory = true
 
-    client.stub_responses(:list_objects,
-      contents: [
-        {
-          etag: "\"70ee1738b6b21e2c8a43f3a5ab0eee71\"",
-          key: "example1.csv.gz",
-          last_modified: Time.parse("2014-11-21T19:40:05.000Z"),
-          owner: {
-            display_name: "myname",
-            id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
+    client.stub_responses(:list_objects, -> (context) {
+      inventory_data_path = "#{S3Inventory::INVENTORY_PREFIX}/#{S3Inventory::INVENTORY_VERSION}/bucket/original/data"
+      expect(context.params[:prefix]).to eq(inventory_data_path)
+
+      {
+        contents: [
+          {
+            etag: "\"70ee1738b6b21e2c8a43f3a5ab0eee71\"",
+            key: "example1.csv.gz",
+            last_modified: Time.parse("2014-11-21T19:40:05.000Z"),
+            owner: {
+              display_name: "myname",
+              id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
+            },
+            size: 11,
+            storage_class: "STANDARD",
           },
-          size: 11,
-          storage_class: "STANDARD",
-        },
-        {
-          etag: "\"9c8af9a76df052144598c115ef33e511\"",
-          key: "example2.csv.gz",
-          last_modified: Time.parse("2013-11-15T01:10:49.000Z"),
-          owner: {
-            display_name: "myname",
-            id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
-          },
-          size: 713193,
-          storage_class: "STANDARD",
-        }
-      ],
-      next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ=="
-    )
+          {
+            etag: "\"9c8af9a76df052144598c115ef33e511\"",
+            key: "example2.csv.gz",
+            last_modified: Time.parse("2013-11-15T01:10:49.000Z"),
+            owner: {
+              display_name: "myname",
+              id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
+            },
+            size: 713193,
+            storage_class: "STANDARD",
+          }
+        ],
+        next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ=="
+      }
+    })
   end
 
   it "should return the latest inventory file name" do
