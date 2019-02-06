@@ -10,6 +10,7 @@ class S3Inventory
   CSV_KEY_INDEX ||= 1
   CSV_ETAG_INDEX ||= 2
   INVENTORY_PREFIX ||= "inventory"
+  INVENTORY_VERSION ||= "1"
 
   def initialize(s3_helper, type)
     @s3_helper = s3_helper
@@ -96,10 +97,10 @@ class S3Inventory
             "Effect": "Allow",
             "Principal": { "Service": "s3.amazonaws.com" },
             "Action": ["s3:PutObject"],
-            "Resource": ["arn:aws:s3:::#{inventory_root_path}/*"],
+            "Resource": ["#{inventory_path_arn}/*"],
             "Condition": {
               "ArnLike": {
-                "aws:SourceArn": "arn:aws:s3:::#{bucket_name}"
+                "aws:SourceArn": bucket_arn
               },
               "StringEquals": {
                 "s3:x-amz-acl": "bucket-owner-full-control"
@@ -134,7 +135,7 @@ class S3Inventory
     {
       destination: {
         s3_bucket_destination: {
-          bucket: "arn:aws:s3:::#{bucket_name}",
+          bucket: bucket_arn,
           prefix: destination_prefix,
           format: "CSV"
         }
@@ -163,7 +164,7 @@ class S3Inventory
   def unsorted_files
     objects = []
 
-    @s3_helper.list(File.join(inventory_path, "data")).each do |obj|
+    @s3_helper.list(inventory_data_path).each do |obj|
       if obj.key.match?(/\.csv\.gz$/i)
         objects << obj
       end
@@ -174,12 +175,22 @@ class S3Inventory
     log("Failed to list inventory from S3", e)
   end
 
-  def inventory_path
-    File.join(inventory_root_path, inventory_id)
+  def inventory_data_path
+    File.join(inventory_path, bucket_name, inventory_id, "data")
   end
 
-  def inventory_root_path
-    File.join(bucket_name, bucket_folder_path || "", INVENTORY_PREFIX)
+  def inventory_path_arn
+    File.join(bucket_arn, inventory_path)
+  end
+
+  def inventory_path
+    path = File.join(INVENTORY_PREFIX, INVENTORY_VERSION)
+    path = File.join(bucket_folder_path, path) if bucket_folder_path.present?
+    path
+  end
+
+  def bucket_arn
+    "arn:aws:s3:::#{bucket_name}"
   end
 
   def log(message, ex = nil)
