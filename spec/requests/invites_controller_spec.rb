@@ -213,6 +213,18 @@ describe InvitesController do
       end
     end
 
+    context 'with an invalid invite record' do
+      let(:invite) { Fabricate(:invite, email: "John Doe <john.doe@example.com>") }
+      it "responds with error message" do
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+        expect(json["message"]).to eq(I18n.t('invite.error_message'))
+        expect(session[:current_user_id]).to be_blank
+      end
+    end
+
     context 'with a deleted invite' do
       let(:topic) { Fabricate(:topic) }
 

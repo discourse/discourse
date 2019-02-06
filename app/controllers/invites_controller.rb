@@ -63,7 +63,8 @@ class InvitesController < ApplicationController
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
         render json: {
           success: false,
-          errors: e.record&.errors&.to_hash || {}
+          errors: e.record&.errors&.to_hash || {},
+          message: I18n.t('invite.error_message')
         }
       end
     else
