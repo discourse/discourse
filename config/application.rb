@@ -14,7 +14,11 @@ rescue
 end
 
 require File.expand_path('../boot', __FILE__)
-require 'rails/all'
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'sprockets/railtie'
 
 # Plugin related stuff
 require_relative '../lib/discourse_event'
