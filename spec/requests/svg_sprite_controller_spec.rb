@@ -8,7 +8,7 @@ describe SvgSpriteController do
     end
 
     it "should return bundle when version is current" do
-      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version([])}.js"
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
       expect(response.status).to eq(200)
 
       theme = Fabricate(:theme)
@@ -23,7 +23,7 @@ describe SvgSpriteController do
       get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
       expect(response.status).to eq(302)
-      expect(response.location).to include(SvgSprite.version([]))
+      expect(response.location).to include(SvgSprite.version)
     end
   end
 
