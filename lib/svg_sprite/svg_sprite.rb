@@ -342,10 +342,7 @@ Discourse SVG subset of #{fa_license}
   end
 
   def self.get_set_cache(key, &blk)
-    if val = cache[key]
-      return val
-    end
-    cache[key] = blk.call
+    cache[key] ||= blk.call
   end
 
   def self.cache
