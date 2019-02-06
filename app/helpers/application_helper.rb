@@ -382,7 +382,7 @@ module ApplicationHelper
 
   def theme_ids
     if customization_disabled?
-      nil
+      [nil]
     else
       request.env[:resolved_theme_ids]
     end
@@ -454,11 +454,11 @@ module ApplicationHelper
       asset_version: Discourse.assets_digest,
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
-      svg_sprite_path: SvgSprite.path,
+      svg_sprite_path: SvgSprite.path(theme_ids),
     }
 
     if Rails.env.development?
-      setup_data[:svg_icon_list] = SvgSprite.all_icons
+      setup_data[:svg_icon_list] = SvgSprite.all_icons(theme_ids)
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

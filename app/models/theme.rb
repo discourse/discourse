@@ -121,6 +121,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.transform_ids(ids, extend: true)
+    return [] if ids.nil?
     get_set_cache "#{extend ? "extended_" : ""}transformed_ids_#{ids.join("_")}" do
       next [] if ids.blank?
 
