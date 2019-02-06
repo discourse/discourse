@@ -633,9 +633,6 @@ blockquote {
 }
 
 // variables are used to calculate the width of .gap
-$topic-body-width: 690px;
-$topic-body-width-padding: 11px;
-$topic-avatar-width: 45px;
 .topic-body {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
   float: left;
