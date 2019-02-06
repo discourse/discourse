@@ -65,9 +65,8 @@ describe Theme do
     expect(Theme.transform_ids([theme.id])).to be_empty
   end
 
-  it "#transform_ids works with nil values" do
-    # Used in safe mode
-    expect(Theme.transform_ids([nil])).to eq([nil])
+  it "#transform_ids only passes valid themes" do
+    expect(Theme.transform_ids([nil])).to eq([])
   end
 
   it "doesn't allow multi-level theme components" do

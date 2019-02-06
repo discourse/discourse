@@ -381,11 +381,7 @@ module ApplicationHelper
   end
 
   def theme_ids
-    if customization_disabled?
-      [nil]
-    else
-      request.env[:resolved_theme_ids]
-    end
+    request.env[:resolved_theme_ids]
   end
 
   def scheme_id

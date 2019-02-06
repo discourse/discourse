@@ -44,6 +44,7 @@ class Stylesheet::Manager
     theme_ids = [theme_ids] unless Array === theme_ids
     theme_ids = [theme_ids.first] unless target =~ THEME_REGEX
     theme_ids = Theme.transform_ids(theme_ids, extend: false)
+    theme_ids = [nil] if theme_ids.empty? # Build at least one stylesheet without any theme
 
     current_hostname = Discourse.current_hostname
 

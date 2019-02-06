@@ -18,7 +18,7 @@ describe SvgSprite do
     expect(SvgSprite.path([1, 2])).to eq("/svg-sprite/#{Discourse.current_hostname}/svg-1,2-#{version}.js")
 
     # Safe mode
-    expect(SvgSprite.path([nil])).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
+    expect(SvgSprite.path(nil)).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
   end
 
   it 'can search for a specific FA icon' do

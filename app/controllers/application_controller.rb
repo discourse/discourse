@@ -380,7 +380,10 @@ class ApplicationController < ActionController::Base
     return if request.method != "GET"
 
     resolve_safe_mode
-    return if request.env[NO_CUSTOM]
+
+    if request.env[NO_CUSTOM]
+      return @theme_ids = request.env[:resolved_theme_ids] = []
+    end
 
     theme_ids = []
 
