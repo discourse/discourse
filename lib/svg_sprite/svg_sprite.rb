@@ -341,8 +341,8 @@ Discourse SVG subset of #{fa_license}
     fa4_to_fa5_names[icon_name] || icon_name
   end
 
-  def self.get_set_cache(key, &blk)
-    cache[key] ||= blk.call
+  def self.get_set_cache(key)
+    cache[key] ||= yield
   end
 
   def self.cache
