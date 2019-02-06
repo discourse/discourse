@@ -25,9 +25,15 @@ describe Invite do
 
   context 'email validators' do
     let(:coding_horror) { Fabricate(:coding_horror) }
-    let(:invite) { Invite.create(email: "test@mailinator.com", invited_by: coding_horror) }
+
+    it "should not allow an invite with unformatted email address" do
+      expect {
+        Fabricate(:invite, email: "John Doe <john.doe@example.com>")
+      }.to raise_error(ActiveRecord::RecordInvalid)
+    end
 
     it "should not allow an invite with blacklisted email" do
+      invite = Invite.create(email: "test@mailinator.com", invited_by: coding_horror)
       expect(invite).not_to be_valid
     end
 

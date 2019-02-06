@@ -214,8 +214,9 @@ describe InvitesController do
     end
 
     context 'with an invalid invite record' do
-      let(:invite) { Fabricate(:invite, email: "John Doe <john.doe@example.com>") }
+      let(:invite) { Fabricate(:invite) }
       it "responds with error message" do
+        invite.update_attribute(:email, "John Doe <john.doe@example.com>")
         put "/invites/show/#{invite.invite_key}.json"
         expect(response.status).to eq(200)
         json = JSON.parse(response.body)
