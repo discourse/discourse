@@ -125,18 +125,13 @@ class S3Inventory
 
   def inventory_configuration
     filter_prefix = inventory_id
-    destination_prefix = File.join(INVENTORY_PREFIX, inventory_id)
-
-    if bucket_folder_path.present?
-      filter_prefix = File.join(bucket_folder_path, filter_prefix)
-      destination_prefix = File.join(bucket_folder_path, destination_prefix)
-    end
+    filter_prefix = File.join(bucket_folder_path, filter_prefix) if bucket_folder_path.present?
 
     {
       destination: {
         s3_bucket_destination: {
           bucket: bucket_arn,
-          prefix: destination_prefix,
+          prefix: inventory_path,
           format: "CSV"
         }
       },
