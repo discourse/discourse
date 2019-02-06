@@ -16,7 +16,7 @@ class Invite < ActiveRecord::Base
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
   validates_presence_of :invited_by_id
-  validates :email, email: true
+  validates :email, email: true, format: { with: EmailValidator.email_regex }
 
   before_create do
     self.invite_key ||= SecureRandom.hex
