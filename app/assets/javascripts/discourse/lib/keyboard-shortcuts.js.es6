@@ -1,6 +1,7 @@
 import DiscourseURL from "discourse/lib/url";
 import Composer from "discourse/models/composer";
 import { minimumOffset } from "discourse/lib/offset-calculator";
+import { ajax } from "discourse/lib/ajax";
 
 const bindings = {
   "!": { postAction: "showFlags" },
@@ -32,6 +33,7 @@ const bindings = {
   "g p": { path: "/my/activity" },
   "g m": { path: "/my/messages" },
   "g d": { path: "/my/activity/drafts" },
+  "g s": { handler: "goToFirstSuggestedTopic", anonymous: true },
   home: { handler: "goToFirstPost", anonymous: true },
   "command+up": { handler: "goToFirstPost", anonymous: true },
   j: { handler: "selectDown", anonymous: true },
@@ -131,6 +133,26 @@ export default {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     Ember.run.later(() => $(".d-editor .quote").click(), 500);
+  },
+
+  goToFirstSuggestedTopic() {
+    const $el = $(".suggested-topics a.raw-topic-link:first");
+    if ($el.length) {
+      $el.click();
+    } else {
+      const controller = this.container.lookup("controller:topic");
+      // Only the last page contains list of suggested topics.
+      const url = `/t/${controller.get("model.id")}/last.json`;
+      ajax(url).then(result => {
+        if (result.suggested_topics && result.suggested_topics.length > 0) {
+          const topic = controller.store.createRecord(
+            "topic",
+            result.suggested_topics[0]
+          );
+          DiscourseURL.routeTo(topic.get("url"));
+        }
+      });
+    }
   },
 
   goToFirstPost() {
