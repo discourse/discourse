@@ -102,4 +102,26 @@ RSpec.describe Admin::FlagsController do
       expect(first_post.deleted_at).to eq(nil)
     end
   end
+
+  context '#disagree' do
+    it "unhides the post and unsilences the user if disagreed" do
+      SiteSetting.num_spam_flags_to_silence_new_user = 1
+      SiteSetting.num_users_to_silence_new_user = 1
+
+      new_user = Fabricate(:newuser)
+      new_post = create_post(user: new_user)
+
+      PostAction.act(Fabricate(:leader), new_post, PostActionType.types[:spam])
+
+      post "/admin/flags/disagree/#{new_post.id}.json"
+      expect(response.status).to eq(200)
+
+      new_post.reload
+      new_user.reload
+
+      expect(new_post).to_not be_hidden
+      expect(new_post.spam_count).to eq(0)
+      expect(new_user).to_not be_silenced
+    end
+  end
 end

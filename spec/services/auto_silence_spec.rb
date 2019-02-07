@@ -9,24 +9,25 @@ describe SpamRule::AutoSilence do
   end
 
   describe 'perform' do
-    let(:post)  { Fabricate.build(:post, user: Fabricate.build(:user, trust_level: TrustLevel[0])) }
-    subject     { described_class.new(post.user) }
+    let(:user) { Fabricate.build(:newuser) }
+    let(:post) { Fabricate(:post, user: user) }
+    subject { described_class.new(post.user) }
 
     it 'takes no action if user should not be silenced' do
-      subject.stubs(:silence?).returns(false)
-      subject.expects(:silence_user).never
       subject.perform
+      expect(post.user.reload).not_to be_silenced
     end
 
     it 'delivers punishment when user should be silenced' do
-      subject.stubs(:silence?).returns(true)
-      subject.expects(:silence_user)
+      SiteSetting.num_spam_flags_to_silence_new_user = 1
+      SiteSetting.num_users_to_silence_new_user = 1
+      PostAction.act(Discourse.system_user, post, PostActionType.types[:spam])
       subject.perform
+      expect(post.user.reload).to be_silenced
     end
   end
 
   describe 'num_spam_flags_against_user' do
-    before { described_class.any_instance.stubs(:silence_user) }
     let(:post)     { Fabricate(:post) }
     let(:enforcer) { described_class.new(post.user) }
     subject        { enforcer.num_spam_flags_against_user }
@@ -53,7 +54,6 @@ describe SpamRule::AutoSilence do
   end
 
   describe 'num_users_who_flagged_spam_against_user' do
-    before { described_class.any_instance.stubs(:silence_user) }
     let(:post)     { Fabricate(:post) }
     let(:enforcer) { described_class.new(post.user) }
     subject        { enforcer.num_users_who_flagged_spam_against_user }
@@ -130,146 +130,157 @@ describe SpamRule::AutoSilence do
     let!(:post)   { Fabricate(:post, user: user) }
     subject       { described_class.new(user) }
 
-    before do
-      described_class.stubs(:silence?).with { |u| u.id != user.id }.returns(false)
-      described_class.stubs(:silence?).with { |u| u.id == user.id }.returns(true)
-      subject.stubs(:silence?).returns(true)
-    end
-
     context 'user is not silenced' do
-      before do
-        UserSilencer.expects(:silence).with(user, Discourse.system_user, message: :too_many_spam_flags).returns(true)
-      end
-
       it 'prevents the user from making new posts' do
         subject.silence_user
+        expect(user).to be_silenced
         expect(Guardian.new(user).can_create_post?(nil)).to be_falsey
       end
 
-      it 'sends private message to moderators' do
-        SiteSetting.notify_mods_when_user_silenced = true
-        moderator = Fabricate(:moderator)
-        GroupMessage.expects(:create).with do |group, msg_type, params|
-          group == (Group[:moderators].name) && msg_type == (:user_automatically_silenced) && params[:user].id == (user.id)
-        end
-        subject.silence_user
-      end
+      context "with a moderator" do
+        let!(:moderator) { Fabricate(:moderator) }
 
-      it "doesn't send a pm to moderators if notify_mods_when_user_silenced is false" do
-        SiteSetting.notify_mods_when_user_silenced = false
-        GroupMessage.expects(:create).never
-        subject.silence_user
+        it 'sends private message to moderators' do
+          SiteSetting.notify_mods_when_user_silenced = true
+          subject.silence_user
+          expect(subject.group_message).to be_present
+        end
+
+        it "doesn't send a pm to moderators if notify_mods_when_user_silenced is false" do
+          SiteSetting.notify_mods_when_user_silenced = false
+          subject.silence_user
+          expect(subject.group_message).to be_blank
+        end
       end
     end
 
     context 'user is already silenced' do
       before do
-        UserSilencer.expects(:silence).with(user, Discourse.system_user, message: :too_many_spam_flags).returns(false)
+        UserSilencer.silence(user)
       end
 
       it "doesn't send a pm to moderators if the user is already silenced" do
-        GroupMessage.expects(:create).never
         subject.silence_user
+        expect(subject.group_message).to be_blank
       end
     end
   end
 
-  describe 'silence?' do
+  describe 'autosilenced?' do
+    let(:user) { Fabricate(:newuser) }
+    let(:flagger) { Fabricate(:user) }
+    let(:flagger2) { Fabricate(:user) }
+    let(:post) { Fabricate(:post, user: user) }
+    let(:post2) { Fabricate(:post, user: user) }
 
-    context 'never been silenced' do
-      shared_examples "can't be silenced" do
-        it "returns false" do
-          enforcer = described_class.new(user)
-          enforcer.expects(:num_spam_flags_against_user).never
-          enforcer.expects(:num_users_who_flagged_spam_against_user).never
-          enforcer.expects(:num_flags_against_user).never
-          enforcer.expects(:num_users_who_flagged).never
-          expect(enforcer.silence?).to eq(false)
-        end
-      end
+    context "higher trust levels or staff" do
+      it "should not autosilence any of them" do
+        PostAction.act(flagger, post, PostActionType.types[:spam])
+        PostAction.act(flagger2, post, PostActionType.types[:spam])
 
-      (1..4).each do |trust_level|
-        context "user has trust level #{trust_level}" do
-          let(:user) { Fabricate(:user, trust_level: trust_level) }
-          include_examples "can't be silenced"
-        end
-      end
+        enforcer = described_class.new(user)
+        expect(enforcer.should_autosilence?).to eq(true)
 
-      context "user is an admin" do
-        let(:user) { Fabricate(:admin) }
-        include_examples "can't be silenced"
-      end
+        user.trust_level = 1
+        expect(enforcer.should_autosilence?).to eq(false)
 
-      context "user is a moderator" do
-        let(:user) { Fabricate(:moderator) }
-        include_examples "can't be silenced"
+        user.trust_level = 2
+        expect(enforcer.should_autosilence?).to eq(false)
+
+        user.trust_level = 3
+        expect(enforcer.should_autosilence?).to eq(false)
+
+        user.trust_level = 4
+        expect(enforcer.should_autosilence?).to eq(false)
+
+        user.trust_level = 0
+        user.moderator = true
+        expect(enforcer.should_autosilence?).to eq(false)
+
+        user.moderator = false
+        user.admin = true
+        expect(enforcer.should_autosilence?).to eq(false)
       end
     end
 
     context 'new user' do
-      let(:user)  { Fabricate(:user, trust_level: TrustLevel[0]) }
-      subject     { described_class.new(user) }
+      subject { described_class.new(user) }
 
       it 'returns false if there are no spam flags' do
-        subject.stubs(:num_spam_flags_against_user).returns(0)
-        subject.stubs(:num_users_who_flagged_spam_against_user).returns(0)
-        expect(subject.silence?).to be_falsey
+        expect(subject.num_spam_flags_against_user).to eq(0)
+        expect(subject.num_users_who_flagged_spam_against_user).to eq(0)
+        expect(subject.should_autosilence?).to eq(false)
       end
 
       it 'returns false if there are not received enough flags' do
-        subject.stubs(:num_spam_flags_against_user).returns(1)
-        subject.stubs(:num_users_who_flagged_spam_against_user).returns(2)
-        expect(subject.silence?).to be_falsey
+        PostAction.act(flagger, post, PostActionType.types[:spam])
+        expect(subject.num_spam_flags_against_user).to eq(1)
+        expect(subject.num_users_who_flagged_spam_against_user).to eq(1)
+        expect(subject.should_autosilence?).to eq(false)
       end
 
       it 'returns false if there have not been enough users' do
-        subject.stubs(:num_spam_flags_against_user).returns(2)
-        subject.stubs(:num_users_who_flagged_spam_against_user).returns(1)
-        expect(subject.silence?).to be_falsey
+        PostAction.act(flagger, post, PostActionType.types[:spam])
+        PostAction.act(flagger, post2, PostActionType.types[:spam])
+        expect(subject.num_spam_flags_against_user).to eq(2)
+        expect(subject.num_users_who_flagged_spam_against_user).to eq(1)
+        expect(subject.should_autosilence?).to eq(false)
       end
 
       it 'returns false if num_spam_flags_to_silence_new_user is 0' do
         SiteSetting.num_spam_flags_to_silence_new_user = 0
-        subject.stubs(:num_spam_flags_against_user).returns(100)
-        subject.stubs(:num_users_who_flagged_spam_against_user).returns(100)
-        expect(subject.silence?).to be_falsey
+        PostAction.act(flagger, post, PostActionType.types[:spam])
+        PostAction.act(flagger2, post, PostActionType.types[:spam])
+        expect(subject.should_autosilence?).to eq(false)
       end
 
       it 'returns false if num_users_to_silence_new_user is 0' do
         SiteSetting.num_users_to_silence_new_user = 0
-        subject.stubs(:num_spam_flags_against_user).returns(100)
-        subject.stubs(:num_users_who_flagged_spam_against_user).returns(100)
-        expect(subject.silence?).to be_falsey
+        PostAction.act(flagger, post, PostActionType.types[:spam])
+        PostAction.act(flagger2, post, PostActionType.types[:spam])
+        expect(subject.should_autosilence?).to eq(false)
       end
 
       it 'returns true when there are enough flags from enough users' do
-        subject.stubs(:num_spam_flags_against_user).returns(2)
-        subject.stubs(:num_users_who_flagged_spam_against_user).returns(2)
-        expect(subject.silence?).to be_truthy
+        PostAction.act(flagger, post, PostActionType.types[:spam])
+        PostAction.act(flagger2, post, PostActionType.types[:spam])
+        expect(subject.num_spam_flags_against_user).to eq(2)
+        expect(subject.num_users_who_flagged_spam_against_user).to eq(2)
+        expect(subject.should_autosilence?).to eq(true)
       end
 
       context "all types of flags" do
+        let(:leader1) { Fabricate(:leader) }
+        let(:leader2) { Fabricate(:leader) }
+
         before do
           SiteSetting.num_tl3_flags_to_silence_new_user = 3
           SiteSetting.num_tl3_users_to_silence_new_user = 2
         end
 
         it 'returns false if there are not enough flags' do
-          subject.stubs(:num_tl3_flags_against_user).returns(1)
-          subject.stubs(:num_tl3_users_who_flagged).returns(1)
-          expect(subject.silence?).to be_falsey
+          PostAction.act(leader1, post, PostActionType.types[:inappropriate])
+          expect(subject.num_tl3_flags_against_user).to eq(1)
+          expect(subject.num_tl3_users_who_flagged).to eq(1)
+          expect(subject.should_autosilence?).to be_falsey
         end
 
         it 'returns false if enough flags but not enough users' do
-          subject.stubs(:num_tl3_flags_against_user).returns(3)
-          subject.stubs(:num_tl3_users_who_flagged).returns(1)
-          expect(subject.silence?).to be_falsey
+          PostAction.act(leader1, post, PostActionType.types[:inappropriate])
+          PostAction.act(leader1, post2, PostActionType.types[:inappropriate])
+          PostAction.act(leader1, Fabricate(:post, user: user), PostActionType.types[:inappropriate])
+          expect(subject.num_tl3_flags_against_user).to eq(3)
+          expect(subject.num_tl3_users_who_flagged).to eq(1)
+          expect(subject.should_autosilence?).to eq(false)
         end
 
         it 'returns true if enough flags and users' do
-          subject.stubs(:num_tl3_flags_against_user).returns(3)
-          subject.stubs(:num_tl3_users_who_flagged).returns(2)
-          expect(subject.silence?).to eq(true)
+          PostAction.act(leader1, post, PostActionType.types[:inappropriate])
+          PostAction.act(leader1, post2, PostActionType.types[:inappropriate])
+          PostAction.act(leader2, post, PostActionType.types[:inappropriate])
+          expect(subject.num_tl3_flags_against_user).to eq(3)
+          expect(subject.num_tl3_users_who_flagged).to eq(2)
+          expect(subject.should_autosilence?).to eq(true)
         end
       end
     end
@@ -279,7 +290,7 @@ describe SpamRule::AutoSilence do
       subject     { described_class.new(user) }
 
       it 'returns false' do
-        expect(subject.silence?).to be_truthy
+        expect(subject.should_autosilence?).to eq(false)
       end
     end
   end
