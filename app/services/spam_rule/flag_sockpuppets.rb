@@ -5,11 +5,13 @@ class SpamRule::FlagSockpuppets
   end
 
   def perform
-    if SiteSetting.flag_sockpuppets && reply_is_from_sockpuppet?
-      flag_sockpuppet_users
-      true
-    else
-      false
+    I18n.with_locale(SiteSetting.default_locale) do
+      if SiteSetting.flag_sockpuppets && reply_is_from_sockpuppet?
+        flag_sockpuppet_users
+        true
+      else
+        false
+      end
     end
   end
 
