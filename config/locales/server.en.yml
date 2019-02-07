@@ -72,7 +72,7 @@ en:
   on_another_topic: "On another topic"
 
   themes:
-    bad_color_scheme: "Can not update theme, invalid color scheme"
+    bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
     import_error:
       generic: An error occured while importing that theme
@@ -84,7 +84,7 @@ en:
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
-      component_no_color_scheme: "Theme components can't have color scheme"
+      component_no_color_scheme: "Theme components can't have color palettes"
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
@@ -3436,14 +3436,14 @@ en:
 
   color_schemes:
     base_theme_name: "Base"
-    light: "Light Scheme"
-    dark: "Dark Scheme"
-    neutral: "Neutral Scheme"
-    grey_amber: "Grey Amber Scheme"
-    shades_of_blue: "Shades of Blue Scheme"
-    latte: "Latte Scheme"
-    summer: "Summer Scheme"
-    dark_rose: "Dark Rose Scheme"
+    light: "Light"
+    dark: "Dark"
+    neutral: "Neutral"
+    grey_amber: "Grey Amber"
+    shades_of_blue: "Shades of Blue"
+    latte: "Latte"
+    summer: "Summer"
+    dark_rose: "Dark Rose"
     default_theme_name: "Light"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
@@ -4212,14 +4212,6 @@ en:
 
       colors:
         title: "Theme"
-        fields:
-          theme_id:
-            description: "Do you prefer a light or dark color scheme to start with? You can further customize the look and feel of your site via Admin, Customize."
-            choices:
-              default:
-                label: "Simple Light"
-              dark:
-                label: "Simple Dark"
 
       logos:
         title: "Logos"
