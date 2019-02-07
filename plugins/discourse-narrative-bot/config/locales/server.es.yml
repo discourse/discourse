@@ -42,9 +42,9 @@ es:
       invalid: |-
         Lo siento, es matemáticamente imposible lanzar esa combinación de dados. :confounded:
       not_enough_dice: |-
-        Solo tengo %{num_of_dice} dados para jugar. Es [vergonzoso]((http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)) lo sé!
+        Solo tengo %{num_of_dice} dados para jugar. Es [vergonzoso]((http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)), ¡lo sé!
       out_of_range: |-
-        ¿Sabías que [el máximo número de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para que un dado, matemáticamente correcto, es de 120 lados?
+        ¿Sabías que [el máximo número de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para un dado, matemáticamente correcto, es 120?
       results: |-
         > :game_die: %{results}
     quote:

@@ -1017,7 +1017,6 @@ nb_NO:
     summary_posts_required: "Minste antall innlegg før 'Sammendrag for Emnet' aktiveres"
     summary_likes_required: "Minste antall 'likes' i et emne før 'Sammendrag for Emnet' aktiveres"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
-    summary_max_results: "Maksimalt antall innlegg som returneres av 'Oppsummer denne tråden'"
     num_spam_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam av minst num_users_to_silence_new_user forskjellige brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."

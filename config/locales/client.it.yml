@@ -1797,6 +1797,8 @@ it:
           other: "{{count}} messaggi"
         cancel: "Rimuovi filtro"
       move_to:
+        title: "Sposta in"
+        action: "sposta in"
         error: "Si è verificato un errore spostando i messaggi."
       split_topic:
         title: "Sposta in un nuovo argomento"
@@ -2960,6 +2962,7 @@ it:
           custom_sections: "Sezioni personalizzate:"
           theme_components: "Componenti Tema"
           convert: "Converti"
+          convert_component_alert: "Non hai ancora salvato le tue modifiche. Sei sicuro di volerle abbandonare e passare ad altro?"
           convert_component_tooltip: "Converti questo Componente in Tema"
           convert_theme_alert: "Sei sicuro di voler convertire questo Tema in Componente? Sarà rimosso come Tema Padre da %{relatives}."
           convert_theme_tooltip: "Converti questo Tema in Componente"
@@ -2970,6 +2973,7 @@ it:
           upload_file_tip: "Scegli una risorsa da caricare (png, woff2, ecc...)"
           variable_name: "Nome SCSS var:"
           upload: "Carica"
+          unsaved_changes_alert: "Non hai ancora salvato le tue modifiche. Sei sicuro di volerle abbandonare e passare ad altro?"
           css_html: "CSS/HTML personalizzato"
           edit_css_html: "Modifica CSS/HTML"
           edit_css_html_help: "Non hai modificato nessun CSS o HTML"

@@ -226,6 +226,7 @@ it:
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   not_accepting_pms: "Spiacenti, %{username} non accetta messaggi al momento."
   max_pm_recepients: "Spiacenti, puoi inviare un messaggio ad un massimo di %{recipients_limit} destinatari."
+  removed_direct_reply_full_quotes: "La citazione completa del messaggio precedente è stata rimossa automaticamente."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   invalid_characters: "contiene caratteri non validi"
   is_invalid: "sembra poco chiaro, è una frase completa?"
@@ -1011,7 +1012,6 @@ it:
     summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
-    summary_max_results: "Massimo numero di messaggi mostrati in 'Riassumi Argomento'"
     enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
     long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"
@@ -1050,6 +1050,7 @@ it:
     send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
+    remove_full_quote: "Rimuovi automaticamente le citazioni complete dalle risposte dirette."
     suppress_reply_when_quoting: "Non mostrare in-risposta-a espandibile in un messaggio quando il messaggio include la citazione."
     max_reply_history: "Numero massimo di risposte da espandere quando si espande in-risposta-a"
     topics_per_period_in_top_summary: "Numero di argomenti popolari mostrati nel riepilogo di default."
@@ -1136,7 +1137,6 @@ it:
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere tutto minuscolo, senza punti, senza trattini bassi."
     s3_access_key_id: "La access key id Amazon S3 che verrà usata per caricare le immagini."
     s3_secret_access_key: "La access key secret Amazon S3 che verrà usata per caricare le immagini."
-    s3_region: "La region name Amazon S3 che verrà usata per caricare le immagini."
     s3_cdn_url: "URL della CDN da usare per tutte le risorse s3 (ad esempio: https://cdn.somewhere.com). ATTENZIONE: dopo aver cambiato questa impostazione devi aggiornare tutti i vecchi messaggi."
     avatar_sizes: "Elenco delle dimensioni degli avatar, generate automaticamente."
     external_system_avatars_enabled: "Utilizza un servizio esterno per gli avatar."
@@ -2507,18 +2507,22 @@ it:
         Questo distintivo è assegnato la prima volta che modifichi uno dei tuoi messaggi. Anche se non potrai modificare i tuoi messaggi indefinitamente, la modifica è sempre una buona idea — puoi migliorare i tuoi messaggi, correggere piccoli errori o aggiungere qualcosa che avevi tralasciato nel momento della prima stesura. Effettua modifiche per migliorare i tuoi messaggi!
     basic_user:
       name: Base
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> a tutte le funzioni essenziali della comunità"
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
     member:
       name: Membro
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Puà utilizzare</a> inviti, messaggi di gruppo e più \"mi piace\""
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, a mettere un numero maggiore di "Mi piace" al giorno.
     regular:
       name: Assiduo
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> ricategorizza, rinomina, collegamenti seguiti, wiki e ulteriori \"mi piace\""
       long_description: |
         Questo distintivo viene assegnato quando raggiungi il livello di esperienza 3. Grazie per essere stato parte attiva della nostra comunità per qualche mese. Ora sei uno dei lettori più attivi e un collaboratore affidabile che rende grande la nostra comunità. Ora puoi ricategorizzare e rinominare gli argomenti, usare le segnalazioni spam più potenti, accedere a un'area Lounge privata, e puoi mettere un numero maggiore di "Mi piace" al giorno.
     leader:
       name: Veterano
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> modifica globale, appuntare, chiudere, archiviare, dividere e unire argomenti, e ulteriori \"mi piace\""
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 4. Sei un veterano in questa comunità selezionato dallo staff, e qui sei un esempio positivo per il resto della comunità con le tue azioni e parole. Hai la possibilità di modificare tutti i messaggi, agire come un moderatore con azioni comuni quali puntare, chiudere, rendere invisibile, archiviare, dividere e unire, e hai tonnellate di mi piace al giorno.
     welcome:
