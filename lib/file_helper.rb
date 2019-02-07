@@ -121,7 +121,7 @@ class FileHelper
   end
 
   def self.supported_images
-    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico}
+    @@supported_images ||= Set.new %w{jpg jpeg png gif ico}
   end
 
   def self.supported_images_regexp

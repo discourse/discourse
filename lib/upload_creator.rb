@@ -7,7 +7,7 @@ class UploadCreator
 
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse g line linearGradient path polygon polyline
-    radialGradient rect stop style svg text textpath tref tspan use
+    radialGradient rect stop style svg symbol text textpath tref tspan use
   }.each(&:freeze)
 
   # Available options
@@ -57,6 +57,8 @@ class UploadCreator
 
         # conversion may have switched the type
         image_type = @image_info.type.to_s
+      elsif @image_info && @image_info.type.to_s == "svg"
+        whitelist_svg!
       end
 
       # compute the sha of the file
@@ -149,7 +151,7 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
-    elsif pixels == 0
+    elsif pixels == 0 && @image_info.type.to_s != "svg"
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
     end
   end

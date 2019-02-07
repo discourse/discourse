@@ -192,6 +192,24 @@ module SvgSprite
   SVG_SPRITE_PATHS = Dir.glob(["#{Rails.root}/vendor/assets/svg-icons/**/*.svg",
                                "#{Rails.root}/plugins/*/svg-icons/*.svg"])
 
+  def self.sprite_paths(theme_ids = [])
+    # Allow themes to provide custom icons in an SVG sprite asset called "icons-sprite"
+    ThemeField.where(name: 'icons-sprite', theme_id: Theme.transform_ids(theme_ids))
+      .pluck(:upload_id).each do |upload_id|
+
+      upload = Upload.find(upload_id)
+      original_path = Discourse.store.path_for(upload)
+      if original_path.blank?
+        external_copy = Discourse.store.download(upload) rescue nil
+        original_path = external_copy.try(:path)
+      end
+
+      SVG_SPRITE_PATHS << Discourse.store.path_for(upload) if original_path.present?
+    end
+
+    SVG_SPRITE_PATHS
+  end
+
   def self.all_icons(theme_ids = [])
     get_set_cache("icons_#{Theme.transform_ids(theme_ids).join(',')}") do
       Set.new()
@@ -233,7 +251,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
 """.dup
 
-    SVG_SPRITE_PATHS.each do |fname|
+    sprite_paths(theme_ids).each do |fname|
       svg_file = Nokogiri::XML(File.open(fname)) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
@@ -256,7 +274,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    SVG_SPRITE_PATHS.each do |fname|
+    # TODO: pass theme_ids here too?
+    sprite_paths.each do |fname|
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
