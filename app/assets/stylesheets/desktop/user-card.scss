@@ -294,6 +294,7 @@ $user_card_background: $secondary;
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 0.5em;
+      max-width: 150px;
       background: $primary-very-low;
       border: 1px solid $primary-low;
       color: $user_card_primary;
