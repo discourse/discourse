@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 export default Ember.Component.extend({
   elementId: "topic-footer-buttons",
@@ -9,6 +10,19 @@ export default Ember.Component.extend({
   @computed("topic.isPrivateMessage")
   canArchive(isPM) {
     return this.siteSettings.enable_personal_messages && isPM;
+  },
+
+  buttons: getTopicFooterButtons(),
+
+  @computed("buttons.[]")
+  inlineButtons(buttons) {
+    return buttons.filter(button => !button.dropdown);
+  },
+
+  // topic.assigned_to_user is for backward plugin support
+  @computed("buttons.[]", "topic.assigned_to_user")
+  dropdownButtons(buttons) {
+    return buttons.filter(button => button.dropdown);
   },
 
   @computed("topic.isPrivateMessage")
@@ -50,17 +64,5 @@ export default Ember.Component.extend({
 
   @computed("topic.message_archived")
   archiveLabel: archived =>
-    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
-
-  @computed("topic.bookmarked")
-  bookmarkClass: bookmarked =>
-    bookmarked ? "bookmark bookmarked" : "bookmark",
-
-  @computed("topic.bookmarked")
-  bookmarkLabel: bookmarked =>
-    bookmarked ? "bookmarked.clear_bookmarks" : "bookmarked.title",
-
-  @computed("topic.bookmarked")
-  bookmarkTitle: bookmarked =>
-    bookmarked ? "bookmarked.help.unbookmark" : "bookmarked.help.bookmark"
+    archived ? "topic.move_to_inbox.title" : "topic.archive_message.title"
 });
