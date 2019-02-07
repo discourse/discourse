@@ -89,20 +89,12 @@ componentTest("priority", {
   },
   async test(assert) {
     const buttons = await find(".topic-footer-button");
+    const firstButton = find("#topic-footer-button-my-first-button");
+    const secondButton = find("#topic-footer-button-my-second-button");
+    const thirdButton = find("#topic-footer-button-my-third-button");
 
-    assert.equal(buttons.length, 3);
-    assert.equal(
-      buttons.eq(0).attr("id"),
-      "topic-footer-button-my-first-button"
-    );
-    assert.equal(
-      buttons.eq(1).attr("id"),
-      "topic-footer-button-my-second-button"
-    );
-    assert.equal(
-      buttons.eq(2).attr("id"),
-      "topic-footer-button-my-third-button"
-    );
+    assert.ok(buttons.index(firstButton) > buttons.index(secondButton));
+    assert.ok(buttons.index(secondButton) > buttons.index(thirdButton));
   }
 });
 
