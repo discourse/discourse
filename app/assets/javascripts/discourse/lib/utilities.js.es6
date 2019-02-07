@@ -348,7 +348,7 @@ export function authorizedExtensions() {
 
 export function authorizedImagesExtensions() {
   return authorizesAllExtensions()
-    ? "png, jpg, jpeg, gif, bmp, svg, webp, ico"
+    ? "png, jpg, jpeg, gif, svg, ico"
     : imagesExtensions().join(", ");
 }
 
