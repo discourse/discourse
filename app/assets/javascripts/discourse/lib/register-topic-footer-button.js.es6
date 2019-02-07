@@ -53,6 +53,8 @@ export function registerTopicFooterButton(button) {
   }
 
   _topicFooterButtons.push(normalizedButton);
+
+  _topicFooterButtons = _topicFooterButtons.uniqBy("id");
 }
 
 export function getTopicFooterButtons() {

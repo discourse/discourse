@@ -1,14 +1,9 @@
-import {
-  registerTopicFooterButton,
-  clearTopicFooterButtons
-} from "discourse/lib/register-topic-footer-button";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 export default {
   name: "topic-footer-buttons",
 
   initialize() {
-    clearTopicFooterButtons();
-
     registerTopicFooterButton({
       id: "share",
       icon: "link",
