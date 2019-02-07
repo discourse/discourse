@@ -1768,6 +1768,10 @@ uncategorized:
     list_type: "compact"
     client: true
 
+  always_include_topic_excerpts:
+    default: false
+    hidden: true
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
