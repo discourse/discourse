@@ -1228,16 +1228,20 @@ HTML
       expect(cooked).to eq(html.strip)
     end
 
-    it "allows whitespace before the percent scaler" do
+    it "ignores whitespace and allows scaling by percent, width, height" do
       cooked = PrettyText.cook <<~MD
         ![|220x100, 50%](http://png.com/my.png)
         ![|220x100 , 50%](http://png.com/my.png)
         ![|220x100 ,50%](http://png.com/my.png)
+        ![|220x100,150x](http://png.com/my.png)
+        ![|220x100, x50](http://png.com/my.png)
       MD
 
       html = <<~HTML
         <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="150" height="68"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"></p>
       HTML
 
