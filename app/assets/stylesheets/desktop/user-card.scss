@@ -289,6 +289,10 @@ $user_card_background: $secondary;
     margin-top: 5px;
 
     .user-badge {
+      display: flex;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       margin-right: 0.5em;
       background: $primary-very-low;
       border: 1px solid $primary-low;
@@ -305,6 +309,7 @@ $user_card_background: $secondary;
   .more-user-badges {
     @extend .user-badge;
     padding: 3px 8px;
+    white-space: nowrap;
   }
 
   .suspended {
