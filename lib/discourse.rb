@@ -105,6 +105,8 @@ module Discourse
 
   class Deprecation < StandardError; end
 
+  class ScssError < StandardError; end
+
   def self.filters
     @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end

@@ -6,16 +6,6 @@ module Stylesheet
 
   class Compiler
 
-    def self.error_as_css(error, label)
-      error = error.message
-      error.gsub!("\n", '\A ')
-      error.gsub!("'", '\27 ')
-
-      "#main { display: none; }
-      body { white-space: pre; }
-      body:before { font-family: monospace; content: '#{error}' }"
-    end
-
     def self.compile_asset(asset, options = {})
 
       if Importer.special_imports[asset.to_s]
