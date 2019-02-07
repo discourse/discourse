@@ -155,6 +155,7 @@ fr:
         other: "Vous avez spécifié les choix invalides %{name}"
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Vous ne pouvez pas activer l'inventaire sur S3 avant d'avoir activer les envois S3."
       s3_backup_requires_s3_settings: "Il n'est pas possible d'utiliser le lieu de sauvegarde S3 sans renseigner le '%{setting_name}'."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour 's3_upload_bucket' and 's3_backup_bucket'. Choisir un autre bucket ou utiliser un chemin d'accès différent pour chaque bucket."
     conflicting_google_user_id: 'Le Google Account ID a changé pour ce compte ; un responsable doit intervenir pour des raisons de sécurité. Merci de contacter les responsables et les renvoyer vers <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -169,6 +170,7 @@ fr:
       <p>Si vous vous rappelez de votre mot de passe, vous pouvez vous <a href="%{base_url}/login">Connecter</a>.</p>
 
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">Réinitialiser mot de passe</a>.</p>
+    error_message: "Il y a eu une erreur lors de l'acceptation d'une invitation. Merci de contacter l'administrateur du site."
     user_exists: "Il n'y a pas besoin d'inviter <b>%{email}</b> qui <a href='%{base_path}/u/%{username}/summary'>a déjà un compte</a> !"
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un courriel d'activation à votre adresse. Merci de suivre les instructions dans le courriel pour activer votre compte.</p><p>Si vous ne le recevez pas, vérifiez votre dossier Spam dans votre messagerie.</p>"
   bulk_invite:
@@ -387,13 +389,12 @@ fr:
       Nous sommes désolés, les nouveaux membres sont limités temporairement à %{newuser_max_replies_per_topic} réponses dans un même sujet.
 
       Plutôt que d'ajouter une nouvelle réponse, vous pouvez éditer vos messages précédents ou visiter d'autres sujets.
-    reviving_old_topic: |2
-
+    reviving_old_topic: |
       ### Relancer ce sujet ?
 
       La dernière réponse à ce sujet était **%{time_ago}**. Votre réponse remettra ce sujet en tête de liste et provoquera une notification à tous les intervenants qui y ont pris part auparavant.
 
-      Etes vous sûr de vouloir continuer cette vieille conversation ?
+      Êtes vous sûr de vouloir continuer cette vieille conversation ?
   activerecord:
     attributes:
       category:
@@ -1375,10 +1376,11 @@ fr:
     automatic_backups_enabled: "Activer les sauvegardes automatiques tels que définis dans les fréquences de sauvegarde"
     backup_frequency: "Nombre de jours entre sauvegardes"
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
-    s3_endpoint: "Le terminal peut être modifié pour être sauvegardé sur un service compatible S3 comme DigitalOcean Spaces ou Minio. ATTENTION: Utiliser défaut si vous utilisez AWS S3"
+    s3_endpoint: "Le terminal peut être modifié pour être sauvegardé sur un service compatible S3 comme DigitalOcean Spaces ou Minio. ATTENTION: Laisser vide si vous utilisez AWS S3"
     s3_force_path_style: "Appliquez l'adressage de type chemin pour votre terminal personnalisé. IMPORTANT : Nécessaire pour utiliser les téléchargements et sauvegardes Minio."
     s3_configure_tombstone_policy: "Activer la suppression automatique des téléchargements non-référencés (?). IMPORTANT: En cas de désactivation, aucun espace disque ne sera récupéré suite à la suppression de téléchargements."
     s3_disable_cleanup: "Désactiver la suppression des sauvegardes de S3 lors de leur suppression locale."
+    enable_s3_inventory: "Générer des rapports et vérifier les envois avec l'inventaire Amazon S3. IMPORTANT: nécessite un accès valide à S3 (l'identifiant et la clé secrète). "
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si désactivé, seule la base de données sera sauvegardée."
     backup_location: "Lieu de stockage des archivages. IMPORTANT: S3 reqiuert que des identifiants valides S3 soient saisis dans Files settings."
@@ -1421,7 +1423,7 @@ fr:
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans tirets bas."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
-    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
+    s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour envoyer des images et sauvegardes."
     s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants. "
     avatar_sizes: "Liste des tailles des avatars automatiquement générés"
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."

@@ -157,6 +157,7 @@ class Search
     term.gsub!(/[\u201c\u201d]/, '"')
 
     @clean_term = term
+    @in_title = false
 
     term = process_advanced_search!(term)
 
@@ -550,8 +551,6 @@ class Search
           found = true
         end
       end
-
-      @in_title = false
 
       if word == 'order:latest' || word == 'l'
         @order = :latest

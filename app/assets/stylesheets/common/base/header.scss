@@ -117,6 +117,9 @@
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
+      .d-icon {
+        color: $primary-medium;
+      }
     }
     &:active {
       color: $primary;

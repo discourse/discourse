@@ -188,39 +188,37 @@ module SvgSprite
   SVG_SPRITE_PATHS = Dir.glob(["#{Rails.root}/vendor/assets/svg-icons/**/*.svg",
                                "#{Rails.root}/plugins/*/svg-icons/*.svg"])
 
-  def self.svg_sprite_cache
-    @svg_sprite_cache ||= DistributedCache.new('svg_sprite')
+  def self.all_icons(theme_ids = [])
+    get_set_cache("icons_#{Theme.transform_ids(theme_ids).join(',')}") do
+      Set.new()
+        .merge(settings_icons)
+        .merge(plugin_icons)
+        .merge(badge_icons)
+        .merge(group_icons)
+        .merge(theme_icons(theme_ids))
+        .delete_if { |i| i.blank? || i.include?("/") }
+        .map! { |i| process(i.dup) }
+        .merge(SVG_ICONS)
+        .sort
+    end
   end
 
-  def self.all_icons
-    Set.new()
-      .merge(settings_icons)
-      .merge(plugin_icons)
-      .merge(badge_icons)
-      .merge(group_icons)
-      .merge(theme_icons)
-      .delete_if { |i| i.blank? || i.include?("/") }
-      .map! { |i| process(i.dup) }
-      .merge(SVG_ICONS)
-      .sort
+  def self.version(theme_ids = [])
+    get_set_cache("version_#{Theme.transform_ids(theme_ids).join(',')}") do
+      Digest::SHA1.hexdigest(all_icons(theme_ids).join('|'))
+    end
   end
 
-  def self.rebuild_cache
-    icons = all_icons
-    svg_sprite_cache['icons'] = icons
-    svg_sprite_cache['version'] = Digest::SHA1.hexdigest(icons.join('|'))
+  def self.path(theme_ids = [])
+    "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme_ids&.join(",")}-#{version(theme_ids)}.js"
   end
 
   def self.expire_cache
-    svg_sprite_cache.clear
+    cache&.clear
   end
 
-  def self.version
-    svg_sprite_cache['version'] || rebuild_cache
-  end
-
-  def self.bundle
-    icons = svg_sprite_cache['icons'] || all_icons
+  def self.bundle(theme_ids = [])
+    icons = all_icons(theme_ids)
 
     doc = File.open("#{Rails.root}/vendor/assets/svg-icons/fontawesome/solid.svg") { |f| Nokogiri::XML(f) }
     fa_license = doc.at('//comment()').text
@@ -240,7 +238,6 @@ Discourse SVG subset of #{fa_license}
 
       svg_file.css('symbol').each do |sym|
         icon_id = prepare_symbol(sym, svg_filename)
-
         if icons.include? icon_id
           sym.attributes['id'].value = icon_id
           sym.css('title').each(&:remove)
@@ -286,10 +283,6 @@ Discourse SVG subset of #{fa_license}
     icon_id
   end
 
-  def self.path
-    "/svg-sprite/#{Discourse.current_hostname}/svg-#{version}.js"
-  end
-
   def self.settings_icons
     # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
     site_setting_icons = []
@@ -319,11 +312,11 @@ Discourse SVG subset of #{fa_license}
     Group.where("flair_url LIKE '%fa-%'").pluck(:flair_url).uniq
   end
 
-  def self.theme_icons
+  def self.theme_icons(theme_ids)
     theme_icon_settings = []
 
-    # Theme.all includes default values
-    Theme.all.each do |theme|
+    # Need to load full records for default values
+    Theme.where(id: Theme.transform_ids(theme_ids)).each do |theme|
       settings = theme.cached_settings.each do |key, value|
         if key.to_s.include?("_icon") && String === value
           theme_icon_settings |= value.split('|')
@@ -346,5 +339,13 @@ Discourse SVG subset of #{fa_license}
     icon_name.strip!
     FA_ICON_MAP.each { |k, v| icon_name.sub!(k, v) }
     fa4_to_fa5_names[icon_name] || icon_name
+  end
+
+  def self.get_set_cache(key)
+    cache[key] ||= yield
+  end
+
+  def self.cache
+    @cache ||= DistributedCache.new('svg_sprite')
   end
 end

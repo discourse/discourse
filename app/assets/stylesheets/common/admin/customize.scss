@@ -71,10 +71,6 @@
         margin-bottom: 0;
       }
     }
-
-    .create-actions {
-      margin-left: auto;
-    }
   }
   .admin-container {
     padding: 0;
@@ -203,12 +199,16 @@
       vertical-align: top;
       margin-top: 5px;
     }
+    .create-actions {
+      margin-bottom: 1em;
+    }
     .content-wrapper {
       display: inline-block;
       vertical-align: top;
       width: 65%;
       h1 {
         display: inline-block;
+        line-height: $line-height-medium;
       }
     }
     .external-link {

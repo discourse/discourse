@@ -2,13 +2,17 @@
   <img src={{womanArtistEmojiURL}}>
   <div class="content-wrapper">
     <h1>{{I18n "admin.customize.theme.themes_intro"}}</h1>
+     <div class="create-actions">
+      {{d-button label="admin.customize.new" icon="plus" action=(route-action "showCreateModal") class="btn-primary"}}
+      {{d-button action=(route-action "importModal") icon="upload" label="admin.customize.import" class="btn-default"}}
+    </div>
     <div class="external-resources">
       {{#each externalResources as |resource|}}
         <a href={{resource.link}} class="external-link" target="_blank">
           {{d-icon resource.icon}}
           {{I18n resource.key}}
         </a>
-      {{/each}}
+      {{/each}}     
     </div>
   </div>
 </div>

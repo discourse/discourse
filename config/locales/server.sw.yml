@@ -737,7 +737,6 @@ sw:
     summary_posts_required: "Kiwango cha chini cha machapisho ndani ya mada kabla 'Fupisha Mada' haijaonyeshwa"
     summary_likes_required: "Kiwango cha chini cha likes ndani ya mada kabla 'Mada kufupishwa' haijaruhusiwa"
     summary_percent_filter: "Mtumiaji akibonyeza 'Fupisha Hii Mada', onyesha % machapisho ya juu"
-    summary_max_results: "Kiwango cha juu cha machapisho zinazoonyeshwa kutoka kwa 'Muhtasari wa Hii Mada'"
     enable_personal_messages: "Ruhusu watumiaji wenye kiwango cha 1 cha uaminifu (inasanidiwa kwa kupitia kiwango cha chini cha uaminifu kutuma ujumbe) kutuma ujumbe wa barua pepe. Wasaidizi wataweza kutuma ujumbe mda kila wakati."
     enable_system_message_replies: "Waruhusu watumiaji wajibu ujumbe wa mfumo,hata kama ujumbe binafsi umezuiliwa."
     notify_mods_when_user_silenced: "Kama mtumiaji akinyamazishwa, tuma ujumbe kwa wasimamizi wote."

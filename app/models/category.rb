@@ -113,6 +113,9 @@ class Category < ActiveRecord::Base
   # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
 
+  # Allows us to skip creating the category definition topic in tests.
+  attr_accessor :skip_category_definition
+
   @topic_id_cache = DistributedCache.new('category_topic_ids')
 
   def self.topic_ids
@@ -212,6 +215,8 @@ class Category < ActiveRecord::Base
   end
 
   def create_category_definition
+    return if skip_category_definition
+
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.ignore_category_auto_close = true

@@ -105,6 +105,8 @@ module Discourse
 
   class Deprecation < StandardError; end
 
+  class ScssError < StandardError; end
+
   def self.filters
     @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end
@@ -461,6 +463,11 @@ module Discourse
       @local_store_loaded ||= require 'file_store/local_store'
       FileStore::LocalStore.new
     end
+  end
+
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    name = site_setting.name.to_s
+    Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
   end
 
   def self.current_user_provider

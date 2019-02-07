@@ -3125,7 +3125,7 @@ fi:
           delete_upload_confirm: "Poista ladattu tiedosto? (Teeman CSS voi lakata toimimasta!)"
           import_web_tip: "Tietovarasto, jossa teema on"
           import_file_tip: ".tar.gz or .dcstyle.json -tiedosto, jossa teema on"
-          is_private: "Teema in yksityisessä git-tietovarastossa"
+          is_private: "Teema on yksityisessä git-tietovarastossa"
           remote_branch: "Haaran nimi (valinnainen)"
           public_key: "Anna repositorioon pääsy seuraavalle julkiselle avaimelle:"
           about_theme: "Tietoa"

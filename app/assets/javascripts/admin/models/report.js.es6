@@ -352,7 +352,9 @@ const Report = Discourse.Model.extend({
       property: properties.title,
       value: postTitle,
       formatedValue:
-        postTitle && href ? `<a href='${href}'>${escapeExpression(postTitle)}</a>` : "—"
+        postTitle && href
+          ? `<a href='${href}'>${escapeExpression(postTitle)}</a>`
+          : "—"
     };
   },
 

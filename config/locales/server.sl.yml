@@ -28,6 +28,9 @@ sl:
   posts: "prispevkov"
   loading: "Nalagam"
   log_in: "Vpis"
+  emails:
+    incoming:
+      maximum_staged_user_per_email_reached: "Dosegli največje število prirejenih uporabnikov na e-sporočilo."
   errors: &errors
     messages:
       taken: "je že uporabljeno"
@@ -67,7 +70,7 @@ sl:
 
       <p>Drugače lahko<a href="%{base_url}/password-reset">zamenjate geslo</a>.</p>
     user_exists: "Ni potrebe za povabilo <b>%{email}</b>, ker <a href='%{base_path}/u/%{username}/summary'>je že prijavljen!</a>"
-    confirm_email: "<p>Ste skoraj koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
+    confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
   topic_invite:
     failed_to_invite: "Uporabnika ne moremo povabiti v to temo ker ni član ene od naslednjih skupin uporabnikov: %{group_names}."
     user_exists: "Uporabnik je bil že povabljen. Uporabnika lahko povabite na vsako temo samo enkrat."
@@ -183,6 +186,8 @@ sl:
               unique_characters: "vsebuje preveč enakih znakov. Uporabite bolj varno geslo."
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
+  lounge_welcome:
+    title: "Dobrodošli v loži"
   category:
     uncategorized_description: "Teme, ki ne potrebujejo kategorijo ali ne sodijo v nobeno obstoječo kategorijo."
   trust_levels:
@@ -281,8 +286,13 @@ sl:
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
     invalid_token: "Povezava za prijavo je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo."
+    title: "Prijava z e-naslovom"
+  change_email:
+    error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
   activation:
+    please_continue: "Vaš nov uporabniški račun je potrjen - preusmerjeni boste na začetno stran."
     welcome_to: "Dobrodošli na %{site_name}!"
+    approval_required: "Moderator mora ročno potrditi vaš nov uporabniški račun da boste lahko dostopali do foruma. Ko bo račun potrjen boste prejeli e-sporočilo."
   post_action_types:
     off_topic:
       description: "Prispevek ne ustreza pogovoru v tej temi kot je definiran z naslovom teme in prvim prispevkom v temi in bi verjetno sodil nekam drugam."
@@ -344,6 +354,9 @@ sl:
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
+  redirected_to_top_reasons:
+    new_user: "Dobrodošli v naši skupnosti! To so najbolj popularne teme zadnjih dni."
+    not_seen_in_a_month: "Dobrodošli nazaj! Nekaj časa vas nismo videli. To so najbolj popularne teme od kar vas ni bilo."
   merge_posts:
     edit_reason:
       one: "%{count} prispevek združena od %{username}"
@@ -434,11 +447,44 @@ sl:
       other: "Ta tema se je samodejno odprla %{count} minut po zadnjem odgovoru."
     auto_deleted_by_timer: "Samodejno izbrisana s strani opomnika."
   login:
+    not_approved: "Vaš račun še ni bil potrjen. Obveščeni boste preko e-sporočila ko bo račun pripravljen za prijavo."
+    incorrect_username_email_or_password: "Napačno uporabniško ime, e-naslov ali geslo"
+    incorrect_password: "Napačno geslo"
     wait_approval: "Hvala za registracijo. Obvestili vas bomo, ko bo vaš račun potrjen."
-    suspended_with_reason: "Suspendiran račun do%{date}: %{reason}"
+    active: "Vaš uporabniški račun je aktiviran in pripravljen za uporabo."
+    activate_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na <b>%{email}</b>. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
+    not_activated: "Prijava z vašim računom še ni mogoča. Poslali smo vam aktivacijsko e-sporočilo. Sledite navodilom v e-sporočilu za aktivacijo računa."
+    not_allowed_from_ip_address: "Ne morete se prijaviti kot %{username} iz tega IP naslova."
+    admin_not_allowed_from_ip_address: "Ne morete se prijaviti kot administrator iz tega IP naslova."
+    suspended: "Ne morete se prijaviti do %{date}."
+    suspended_with_reason: "Suspendiran račun do %{date}: %{reason}"
+    errors: "%{errors}"
+    not_available: "Ni na voljo. Poskusite %{suggestion}?"
+    something_already_taken: "Prišlo je do napake, mogoče je uporabniško ime ali e-naslov že registriran. Poskusite povezavo za pozabljeno geslo."
+    omniauth_error: "Prišlo je do napake pri preverjanju vašega računa. Mogoče niste potrdili avtorizacije?"
+    omniauth_error_unknown: "Prišlo je do napake pri vaši prijavi, prosimo poskusite ponovno."
+    authenticator_error_no_valid_email: "E-naslov povezan z računom %{account} ni dovoljen. Morali boste uporabiti drug e-naslov."
+    new_registrations_disabled: "Nove registracije uporabniških računov trenutno niso mogoče."
+    password_too_long: "Geslo je omejeno na 200 znakov."
+    email_too_long: "Vaš e-naslov je predolg. E-naslov je lahko dolg največ 254 znakov, od tega domena največ 253 znakov."
+    reserved_username: "Uporabniško ime ni dovoljeno."
+    missing_user_field: "Niste vnesli vseh uporabniških podatkov."
+    auth_complete: "Avtentikacija je končana."
+    click_to_continue: "Kliknite tukaj za nadaljevanje."
+    already_logged_in: "Izgleda da hočete sprejeti povabilo od drugega uporabnika. Če niste %{current_user}, se odjavite in poskusite ponovno."
+    second_factor_title: "Potrjevanje v dveh korakih"
+    second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije:"
+    second_factor_backup_description: "Vnesite eno od vaših rezervnih potrditvenih kod:"
+    second_factor_backup_title: "Rezervna potrditvena koda"
+    invalid_second_factor_code: "Neustrezna potrditvena koda. Vsaka potrditvena koda je lahko uporabljena samo enkrat."
+    second_factor_toggle:
+      totp: "Namesto tega uporabite authenticator aplikacijo"
+      backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
   user:
     ip_address:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
+    destroy_reasons:
+      unused_staged_user: "Neuporabljen prirejen uporabnik"
   flags_reminder:
     flags_were_submitted:
       one: "Prijave so bile podane več kot %{count} uro nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
@@ -451,9 +497,9 @@ sl:
       few: "%{count} prijave čakajo na pregled"
       other: "%{count} prijav čaka na pregled"
   invite_mailer:
-    subject_template: "%{inviter_name} vas je povabil(a) da sodelujete v '%{topic_title}' na %{site_domain_name}"
+    subject_template: "%{inviter_name} vas je povabil da sodelujete v '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} vas je povabil(a) da sodelujete v
+      %{inviter_name} vas je povabil da sodelujete v
 
       > **%{topic_title}**
       >
@@ -467,9 +513,9 @@ sl:
 
       %{invite_link}
   custom_invite_mailer:
-    subject_template: "%{inviter_name} vas je povabil(a) da sodelujete v '%{topic_title}' na %{site_domain_name}"
+    subject_template: "%{inviter_name} vas je povabil da sodelujete v '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} vas je povabil(a) da sodelujete v
+      %{inviter_name} vas je povabil da sodelujete v
 
       > **%{topic_title}**
       >
@@ -487,9 +533,9 @@ sl:
 
       %{invite_link}
   invite_forum_mailer:
-    subject_template: "%{inviter_name} vas je povabil(a) da se pridružite %{site_domain_name}"
+    subject_template: "%{inviter_name} vas je povabil da se pridružite %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} vas je povabil(a) da se pridružite
+      %{inviter_name} vas je povabil da se pridružite
 
       > **%{site_title}**
       >
@@ -499,9 +545,9 @@ sl:
 
       %{invite_link}
   custom_invite_forum_mailer:
-    subject_template: "%{inviter_name} vas je povabil(a) da se pridružite %{site_domain_name}"
+    subject_template: "%{inviter_name} vas je povabil da se pridružite %{site_domain_name}"
     text_body_template: |
-      %{inviter_name} vas je povabil(a) da se pridružite
+      %{inviter_name} vas je povabil da se pridružite
 
       > **%{site_title}**
       >
@@ -533,7 +579,11 @@ sl:
     few: "Ta tema je začasno zaprta za najmanj %{count} ure, ker je prejela veliko število prijav s strani članov skupnosti."
     other: "Ta tema je začasno zaprta za najmanj %{count} ur, ker je prejela veliko število prijav s strani članov skupnosti."
   system_messages:
+    private_topic_title: "Tema #%{id}"
+    contents_hidden: "Obiščite prispevek da vidite vsebino"
     post_hidden:
+      title: "Prispevek skrit"
+      subject_template: "Prispevek je bil skrit zaradi prijav iz skupnosti"
       text_body_template: |
         Pozdravljeni,
 
@@ -549,6 +599,8 @@ sl:
 
         Za dodatna navodila preberite [pravila skupnosti](%{base_url}/guidelines).
     post_hidden_again:
+      title: "Prispevek ponovno skrit"
+      subject_template: "Prispevek je bil ponovno skrit zaradi prijav iz skupnosti zato smo obvestili osebje"
       text_body_template: |
         Pozdravljeni,
 
@@ -562,6 +614,8 @@ sl:
 
         Za dodatna navodila preberite [pravila skupnosti](%{base_url}/guidelines).
     flags_agreed_and_post_deleted:
+      title: "Prijavljen prispevek odstranjen s strani osebja"
+      subject_template: "Prijavljen prispevek odstranjen s strani osebja"
       text_body_template: |
         Pozdravljeni,
 
@@ -584,6 +638,8 @@ sl:
 
         S časom vas bomo bolje spoznali in bomo vaše začasne omejitve novega uporabnika odstranili. Čez čas boste lahko dosegli [nivo zaupanja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), ki vam bo omogočal več dejanj s katerimi skupaj upravljamo našo skupnost.
     welcome_user:
+      title: "Dobrodošel uporabnik"
+      subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
         Hvala za prijavo na %{site_name} in dobrodošli!
 
@@ -592,7 +648,15 @@ sl:
         Ker podpiramo prijazno komunikacijo, želimo da spoštujete [pravila skupnosti](%{base_url}/guidelines).
 
         Lepo se imejte v naši družbi!
+    welcome_tl1_user:
+      title: "Dobrodošli na nivoju zaupanja 1!"
+      subject_template: "Zahvaljujemo se vam, ker nas spremljate"
+      text_body_template: |
+        Pozdravljeni! Vidimo da ste pridno spremljali naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+
+        Vesili smo, da ste med nami in bi radi več vedeli o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [začnite novo temo](%{base_url}/categories).
     welcome_invite:
+      title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
         Hvala da ste sprejeli povabilo na  %{site_name} -- dobrodošli!
@@ -608,6 +672,52 @@ sl:
         Lepo se imejte v naši družbi!
 
         [prefs]: %{user_preferences_url}
+    backup_succeeded:
+      title: "Varnostna kopija uspela"
+      subject_template: "Varnostna kopija uspela"
+      text_body_template: |
+        Varnostna kopija uspela.
+
+        Pojdite v [admin > backup section](%{base_url}/admin/backups) za prenos vaše nove varnostne kopije.
+
+        Tukaj je dnevnik:
+
+        ``` text
+        %{logs}
+        ```
+    backup_failed:
+      title: "Varnostna kopija ni uspela"
+      subject_template: "Varnostna kopija ni uspela"
+      text_body_template: |
+        Varnostna kopija ni uspela.
+
+        Tukaj je dnevnik:
+
+        ``` text
+        %{logs}
+        ```
+    restore_succeeded:
+      title: "Obnovitev iz varnostne kopije uspela"
+      subject_template: "Obnovitev iz varnostne kopije uspela"
+      text_body_template: |
+        Obnovitev iz varnostne kopije uspela.
+
+        Tukaj je dnevnik:
+
+        ``` text
+        %{logs}
+        ```
+    restore_failed:
+      title: "Obnovitev iz varnostne kopije ni uspela"
+      subject_template: "Obnovitev iz varnostne kopije ni uspela"
+      text_body_template: |
+        Obnovitev iz varnostne kopije ni uspela.
+
+        Tukaj je dnevnik:
+
+        ``` text
+        %{logs}
+        ```
     bulk_invite_succeeded:
       title: "Množično povabilo je uspelo"
       subject_template: "Množično povabilo uporabnikov je uspelo"
@@ -677,6 +787,13 @@ sl:
         [Preverite prijave](%{base_url}/admin/flags). Če je bil uporabnik %{username} po nepotrebnem utišan, kliknite gumb Ukini utišanje uporabnika na [admin strani uporabnika](%{user_url}).
 
         Ta nastavitev se lahko sprememni preko `silence_new_user` nastavitve.
+    unsilenced:
+      text_body_template: |
+        Pozdravljeni,
+
+        To samodejno sporočilo od %{site_name} vas obvešča da vaš račun ni več zadržan za pregled s strani osebja.
+
+        Sedaj lahko odgovarjate in ustvarite nove teme. Hvala za potrpežljivost.
     pending_users_reminder:
       subject_template:
         one: "%{count} uporabnik čaka na potrditev"
@@ -687,6 +804,13 @@ sl:
         Novo registrirani uporabniki čakajo na potrditev (ali zavrnitev) preden lahko dostopajo do foruma..
 
         [Preverite jih v Admin delu](%{base_url}/admin/users/list/pending).
+    new_user_of_the_month:
+      text_body_template: |
+        Čestitamo, osvojili ste **Nov uporabnik meseca %{month_year}**. :trophy:
+
+        Ta nagrada je podeljena dvem novim uporabnikom vsak mesec in bo stalno vidna  na [seznamu značk](%{url}).
+
+        Hitro ste poslali pomemben član skupnosti. Zahvaljujemo se vam za pridružitev in nadaljujte z dobrim delom!
     queued_posts_reminder:
       subject_template:
         one: "%{count} prispevek čaka na pregled"
@@ -697,16 +821,28 @@ sl:
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
+  email_from: "%{user_name} preko %{site_name}"
   user_notifications:
     previous_discussion: "Prejšnji odgovori"
+    reached_limit:
+      one: "Opozorilo: na dan vam pošljemo največ %{count} e-sporočilo. Preverite na forumu tudi preostale, ki vam jih nismo poslali. P.S. Čestitamo za popularnost!"
+      two: "Opozorilo: na dan vam pošljemo največ %{count} e-sporočili. Preverite na forumu tudi preostale, ki vam jih nismo poslali. P.S. Čestitamo za popularnost!"
+      few: "Opozorilo: na dan vam pošljemo največ %{count} e-sporočila. Preverite na forumu tudi preostale, ki vam jih nismo poslali. P.S. Čestitamo za popularnost!"
+      other: "Opozorilo: na dan vam pošljemo največ %{count} e-sporočil. Preverite na forumu tudi preostale, ki vam jih nismo poslali. P.S. Čestitamo za popularnost!"
     in_reply_to: "V odgovor na"
     unsubscribe:
       title: "Odjavi"
+      description: "Nočete prejemati takšnih e-sporočil? Ni problema! Kliknite spodaj za takojšno odjavo:"
     reply_by_email: "[Pojdi na temo](%{base_url}%{url}) ali odgovori na to e-sporočilo da odgovorite."
     reply_by_email_pm: "[Pojdi na sporočilo](%{base_url}%{url}) ali odgovori na to e-sporočilo da odgovorite %{participants}."
+    only_reply_by_email: "Odgovori na to e-sporočilo da odgovorite."
+    only_reply_by_email_pm: "Odgovori na to e-sporočilo da odgovorite %{participants}."
+    visit_link_to_respond: "[Pojdi na temo](%{base_url}%{url}) da odgovorite."
     visit_link_to_respond_pm: "[Pojdi na sporočilo](%{base_url}%{url}) da odgovorite %{participants}."
+    posted_by: "Objavljeno od %{username}ob %{post_date}"
+    pm_participants: "Sodelujoči: %{participants}"
     invited_group_to_private_message_body: |
-      %{username} je povabil(a) @%{group_name} da sodeluje v
+      %{username} je povabil @%{group_name} da sodeluje v
 
       > **%{topic_title}**
       >
@@ -716,7 +852,7 @@ sl:
 
       > %{site_title} -- %{site_description}
     invited_to_private_message_body: |
-      %{username} vas je povabil(a) da sodelujete v
+      %{username} vas je povabil da sodelujete v
 
       > **%{topic_title}**
       >
@@ -726,7 +862,7 @@ sl:
 
       > %{site_title} -- %{site_description}
     invited_to_topic_body: |
-      %{username} vas je povabil(a) da sodelujete v
+      %{username} vas je povabil da sodelujete v
 
       > **%{topic_title}**
       >
@@ -736,13 +872,157 @@ sl:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm_group:
-      subject_template: "[%{email_prefix}] %{username} je povabil(a)  @%{group_name} da sodelujete v '%{topic_title}'"
+      title: "Uporabnik je povabil skupino v ZS"
+      subject_template: "[%{email_prefix}] %{username} je povabil  @%{group_name} da sodelujete v '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
-      subject_template: "[%{email_prefix}] %{username} vas je povabil(a) da sodelujete v '%{topic_title}'"
+      title: "Uporabnik je povabil v ZS"
+      subject_template: "[%{email_prefix}] %{username} vas je povabil da sodelujete v '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{email_prefix}] %{username} vas je povabil(a) da sodelujete v '%{topic_title}'"
+      title: "Uporabnik je povabil v ZS prirejeni"
+      subject_template: "[%{email_prefix}] %{username} vas je povabil da sodelujete v '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_topic:
       title: "Uporabnik povabljen v temo"
+      subject_template: "[%{email_prefix}] %{username} vas je povabil v temo '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      title: "Uporabnik je odgovoril"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      title: "Uporabnik je odgovoril na ZS"
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_quoted:
+      title: "Uporabnik je citiral"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      title: "Uporabnik je povezal"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      title: "Uporabnik je omenil"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      title: "Uporabnik je omenil ZS"
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      title: "Uporabnik je omenil skupino"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      title: "Uporabnik je objavil"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      title: "Uporabnik opazuje prvi prispevek"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      title: "Uporabnik je objavil ZS"
+      subject_template: "[%{email_prefix}] [ZS] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      title: "Uporabnik je objavil ZS prirejeni"
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
     account_suspended:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
@@ -752,58 +1032,123 @@ sl:
         %{reason}
 
         %{message}
+    account_silenced:
+      title: "Utišan račun"
+      subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
+      text_body_template: |
+        Utišani ste bili na forumu do %{silenced_till}.
+
+        %{reason}
+
+        %{message}
+    account_exists:
+      title: "Račun že obstaja"
+      subject_template: "[%{email_prefix}] Račun že obstaja"
+      text_body_template: |
+        Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na  %{email}, vendar račun s tem naslovom že obstaja.
+
+        Če ste pozabili geslo [ga ponovno nastavite](%{base_url}/password-reset).
+
+        Če niste vi poizkusili ustvariti račun %{email} ali spremeniti e-naslov, ne skrbite – to e-sporočilo lahko zanemarite.
+
+        Če imate kakršnakoli vprašanja [kontaktirajte naše prijazno osebje](%{base_url}/about).
     account_second_factor_disabled:
-      text_body_template: "Preverjanje v dveh korakih je bilo onemogočeno na vašem računu pri %{site_name}. Sedaj se lahko prijavite samo z geslom - dodatna potrditvena koda ni več potrebna.\n\nČe niste sami izklopili preverjanje v dveh korakih je mogoče, da je nekdo posegel v vaš račun. \n\nČe imate kakršnakoli vprašanja, [kontaktirajte osebje foruma](%{base_url}/about).\n"
+      title: "Preverjanje v dveh korakih onemogočeno"
+      subject_template: "[%{email_prefix}] Preverjanje v dveh korakih onemogočeno"
+      text_body_template: "Preverjanje v dveh korakih je bilo onemogočeno na vašem računu pri %{site_name}. Sedaj se lahko prijavite samo z geslom - dodatna potrditvena koda ni več potrebna.\n\nČe niste sami izklopili preverjanje v dveh korakih je mogoče, da je nekdo posegel v vaš račun. \n\nČe imate kakršnakoli vprašanja [kontaktirajte naše prijazno osebje](%{base_url}/about).\n"
     digest:
       why: "Kratek povzetek %{site_link} od vašega zadnjega obiska %{last_seen_at}"
       since_last_visit: "Od vašega zadnjega obiska"
       new_topics: "Nove teme"
       unread_messages: "Neprebrana zasebna sporočila"
       unread_notifications: "Neprebrana obvestila"
-      liked_received: "Prejetih všečkov"
-      new_posts: "Novih prispevkov"
-      new_users: "Novih uporabnikov"
-      popular_topics: "Zanimivih tem"
+      liked_received: "Prejeti všečki"
+      new_posts: "Novi prispevki"
+      new_users: "Novi uporabniki"
+      popular_topics: "Zanimive teme"
       follow_topic: "Sledi tej temi"
-      join_the_discussion: "Preberi"
+      join_the_discussion: "Preberi več"
       popular_posts: "Zanimivi prispevki"
       more_new: "Novo za vas"
-      subject_template: "[%{email_prefix}] povzetek"
-      unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ker vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link}, ali %{unsubscribe_link} za odjavo."
+      subject_template: "[%{email_prefix}] Povzetek"
+      unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ker vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link} ali %{unsubscribe_link} za odjavo."
       your_email_settings: "vaše nastavitve e-pošte"
-      click_here: "klikni tukaj"
-      from: "%{site_name} povzetek"
+      click_here: "kliknite tukaj"
+      from: "%{site_name} Povzetek"
       preheader: "Strnjen povzetek od vašega zadnjega obiska %{last_seen_at}"
+    forgot_password:
+      title: "Pozabljeno geslo"
+      subject_template: "[%{email_prefix}] Ponastavi geslo"
+      text_body_template: |
+        Nekdo je zahteval zamenjavo gesla na [%{site_name}](%{base_url}).
+
+        Če to niste bili vi, lahko zanemarite to e-sporočilo.
+
+        Kliknite spodnjo povezavo za izbiro novega gesla:
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
+      title: "Prijava s povezavo"
+      subject_template: "[%{email_prefix}] Prijava s povezavo"
       text_body_template: |
         Tukaj je vaša povezava za prijavo na [%{site_name}](%{base_url}).
 
-        Če niste vi zahtevali te povezave, lahko ignorirate to e-sporočilo.
+        Če niste vi zahtevali te povezave, lahko zanemarite to e-sporočilo.
 
         Za prijavo sledite povezavi:
         %{base_url}/session/email-login/%{email_token}
     set_password:
+      title: "Nastavi geslo"
+      subject_template: "[%{email_prefix}] Nastavi geslo"
       text_body_template: |
         Nekdo je zahteval dodajanje gesla na vašemu računu pri [%{site_name}](%{base_url}). Alternativno se lahko prijavite tudi s podprtimi zunanjimi računi (Google, Facebook...), ki se ujemajo z vašim e-naslovom.
 
-        Če niste vi podali te zahteve, lahko to e-sporočilo ignorirate.
+        Če niste vi podali te zahteve, lahko zanemarite to e-sporočilo.
 
         Sledite povezavi za izbiro gesla:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
+      title: "Admin prijava"
+      subject_template: "[%{email_prefix}] Prijava"
       text_body_template: |
         Nekdo je zahteval prijavo na vaš račun pri [%{site_name}](%{base_url}).
 
-        Če niste vi podali te zahteve, lahko to e-sporočilo ignorirate.
+        Če niste vi podali te zahteve, lahko zanemarite to e-sporočilo.
 
         Za prijavo sledite povezavi:
         %{base_url}/u/admin-login/%{email_token}
     account_created:
+      title: "Račun ustvarjen"
+      subject_template: "[%{email_prefix}] Vaš nov uporabniški račun"
       text_body_template: |
         Ustvarjen je bil nov uporabniški račun na %{site_name}
 
-        Spedite povezavi za nastavitev gesla za vaš novi uporabniški račun:
+        Sledite povezavi za nastavitev gesla za vaš novi uporabniški račun:
         %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      title: "Potrdite nov e-naslov"
+      subject_template: "[%{email_prefix}] Potrdite vaš novi e-naslov"
+      text_body_template: |
+        Potrdite vaš nov e-naslov pri %{site_name} tako da sledite povezavi:
+
+        %{base_url}/u/authorize-email/%{email_token}
+    confirm_old_email:
+      title: "Potrdite star e-naslov"
+      subject_template: "[%{email_prefix}] Potrdite vaš trenutni e-naslov"
+      text_body_template: |
+        Preden lahko spremenite vaš e-naslov, morate potrditi da imate nadzor nad vašim trenutnim e-naslovom. Po tem pa vam bomo omogočili potrditev novega e-naslova.
+
+        Potrdite vaš trenutni e-naslov pri %{site_name} tako da sledite povezavi:
+
+        %{base_url}/u/authorize-email/%{email_token}
+    notify_old_email:
+      title: "Obvesti stari e-naslov"
+      subject_template: "[%{email_prefix}] Vaš e-naslov je bil spremenjen"
+      text_body_template: |
+        To samodejno sporočilo vam sporoča da je bil vaš e-naslov pri %{site_name} spremenjen. Če je bilo spremenjeno po nesreči, obvestite administratorja strani.
+
+        Vaš e-naslov je bil spremenjen v:
+
+        %{new_email}
     signup_after_approval:
       title: "Registracija po potrditvi"
       subject_template: "Potrjeni ste bili na %{site_name}!"
@@ -824,7 +1169,17 @@ sl:
         Lepo se imejte v naši družbi!
     signup:
       title: "Registracija"
+      subject_template: "[%{email_prefix}] Potrdite nov uporabniški račun"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        Sledite tej povezavi za aktivacijo vašega novega računa:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Če zgornja povezava ne reagira na klik, jo skopirajte v naslovno vrstico v vašem brskalniku.
     suspicious_login:
+      title: "Opozorilo nove prijave"
+      subject_template: "[%{site_name}] Opozorilo nove prijave iz %{location}"
       text_body_template: |
         Pozdravljeni,
 
@@ -845,7 +1200,19 @@ sl:
       ## [Dobrodošli na %{title}](#welcome)
       Za dostop potrebujete uporabniški račun. Prosite obstoječega uporabnika, da vas povabi ali pa se prijavite za nadaljevanje.
   terms_of_service:
+    title: "Pogoji uporabe"
     signup_form_message: 'Prebral sem in sprejemam <a href="%{base_path}/tos" target="_blank">pogoje uporabe</a>.'
+  upload:
+    edit_reason: "prenos slik v lokalno kopijo"
+  about: "O nas"
+  privacy: "Zasebnost"
+  edit_this_page: "Uredi to stran"
+  static_topic_first_reply: |
+    Uredite prvi prispevek v tej temi da spremenite vsebino %{page_name} strani.
+  guidelines_topic:
+    title: "Pravila skupnosti"
+  privacy_topic:
+    title: "Pravilnik o zasebnosti"
   badges:
     editor:
       name: Urednik
@@ -1086,6 +1453,13 @@ sl:
       long_description: |
         Ta značka vam je podeljena za obiskovanje 365 zaporednih dni. Neverjetno, celo leto!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
+  admin_login:
+    success: "E-sporočilo poslano"
+    errors:
+      unknown_email_address: "Neznan e-naslov."
+      invalid_token: "Napačen žeton."
+    email_input: "Administratorjev e-naslov"
+    submit_button: "Pošlji e-sporočilo"
   tags:
     forbidden:
       restricted_to:
@@ -1093,3 +1467,9 @@ sl:
         two: '"%{tag_name}" oznaka je omejena samo za naslednji kategoriji: %{category_names}'
         few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
         other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
+  finish_installation:
+    confirm_email:
+      message: "<p>Poslali smo vam aktivacijsko e-sporočilo na <b>%{email}</b>. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila niste prejeli, preverite da ste pravilno nastavili e-pošto v Discourse in preverite predal z vsiljeno pošto .</p>"
+    resend_email:
+      title: "Ponovno pošlji aktivacijsko e-sporočilo"
+      message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"

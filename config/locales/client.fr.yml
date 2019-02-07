@@ -259,7 +259,7 @@ fr:
       new_private_message: "Nouveau brouillon de message direct"
       topic_reply: "Créer un brouillon de réponse"
       abandon:
-        confirm: "Vous avez déjà ouvert un autre brouillon dans ce sujet. Etes-vous sûr de vouloir l'abandonner ?"
+        confirm: "Vous avez déjà ouvert un autre brouillon dans ce sujet. Êtes-vous sûr de vouloir l'abandonner ?"
         yes_value: "Oui, abandonner"
         no_value: "Non, garder"
     topic_count_latest:
@@ -3630,7 +3630,7 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
-        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter d'enlever du contenu de discussions existantes. <br><br> Etes-vous sûr de vouloir supprimer cet utilisateur ? C'est irreversible !"
+        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter d'enlever du contenu de discussions existantes. <br><br> Êtes-vous sûr de vouloir supprimer cet utilisateur ? C'est irréversible !"
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse de courriel et adresse IP."
         delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur"

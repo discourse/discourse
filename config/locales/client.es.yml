@@ -915,7 +915,7 @@ es:
           text: "Invitación masiva desde archivo"
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
           error: "Lo siento, el archivo debe tener formato CSV. "
-          confirmation_message: "Estás a punto de enviar invitaciones por correo a todo el mundo en el archivo subido."
+          confirmation_message: "Estás a punto de enviar invitaciones por correo a todos en el archivo subido."
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
@@ -2514,11 +2514,11 @@ es:
     google_search: |
       <h3>Buscar con Google</h3>
       <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
       </p>
     tagging:
       all_tags: "Etiquetas"
@@ -3072,7 +3072,7 @@ es:
           themes_intro: "Selecciona un tema existente o crear nuevo para empezar"
           beginners_guide_title: "Guía para novatos usando temas de Discourse"
           developers_guide_title: "Guía para desarrolladores para temas de Discourse"
-          browse_themes: "Ver temas de la comunidad"
+          browse_themes: "Ver temas (themes) de la comunidad"
           import_theme: "Importar tema"
           customize_desc: "Personalizar:"
           title: "Tema"
@@ -3136,7 +3136,7 @@ es:
           authors: "Autoría:"
           source_url: "Fuente"
           required_version:
-            error: "Este tema ha sido desactivado automáticamente por no ser compatible con esta versión de Discourse."
+            error: "Este tema ha sido desactivado automáticamente por no ser compatible con la versión actual de Discourse."
             minimum: "Necesita Discourse versión {{version}} o superior."
             maximum: "Necesita Discourse versión {{version}} o inferior."
           component_of: "Componente de:"

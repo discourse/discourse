@@ -72,7 +72,7 @@ en:
   on_another_topic: "On another topic"
 
   themes:
-    bad_color_scheme: "Can not update theme, invalid color scheme"
+    bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
     import_error:
       generic: An error occured while importing that theme
@@ -84,7 +84,7 @@ en:
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
-      component_no_color_scheme: "Theme components can't have color scheme"
+      component_no_color_scheme: "Theme components can't have color palettes"
       no_multilevels_components: "Themes with child themes can't be child themes themselves"
     settings_errors:
       invalid_yaml: "Provided YAML is invalid."
@@ -191,6 +191,7 @@ en:
         other: "You specified the invalid choices %{name}"
       default_categories_already_selected: "You cannot select a category used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "You cannot enable inventory to S3 unless you've enabled the S3 uploads."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
     conflicting_google_user_id: 'The Google Account ID for this account has changed; staff intervention is required for security reasons. Please contact staff and point them to <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -207,6 +208,7 @@ en:
       <p>If you remember your password you can <a href="%{base_url}/login">Login</a>.</p>
 
       <p>Otherwise please <a href="%{base_url}/password-reset">Reset Password</a>.</p>
+    error_message: "There was an error accepting invite. Please contact the site's administrator."
     user_exists: "There's no need to invite <b>%{email}</b>, they <a href='%{base_path}/u/%{username}/summary'>already have an account!</a>"
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
 
@@ -1327,7 +1329,7 @@ en:
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
-    summary_max_results: "Maximum posts returned by 'Summary This Topic'"
+    summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
 
     enable_personal_messages: "Allow trust level 1 (configurable via min trust level to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
@@ -1484,10 +1486,11 @@ en:
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "The number of days between backups."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
-    s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Use default if using AWS S3"
+    s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
+    enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
@@ -1540,7 +1543,7 @@ en:
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
-    s3_region: "The Amazon S3 region name that will be used to upload images."
+    s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
 
     avatar_sizes: "List of automatically generated avatar sizes."
@@ -3433,14 +3436,14 @@ en:
 
   color_schemes:
     base_theme_name: "Base"
-    light: "Light Scheme"
-    dark: "Dark Scheme"
-    neutral: "Neutral Scheme"
-    grey_amber: "Grey Amber Scheme"
-    shades_of_blue: "Shades of Blue Scheme"
-    latte: "Latte Scheme"
-    summer: "Summer Scheme"
-    dark_rose: "Dark Rose Scheme"
+    light: "Light"
+    dark: "Dark"
+    neutral: "Neutral"
+    grey_amber: "Grey Amber"
+    shades_of_blue: "Shades of Blue"
+    latte: "Latte"
+    summer: "Summer"
+    dark_rose: "Dark Rose"
     default_theme_name: "Light"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
@@ -4209,14 +4212,6 @@ en:
 
       colors:
         title: "Theme"
-        fields:
-          theme_id:
-            description: "Do you prefer a light or dark color scheme to start with? You can further customize the look and feel of your site via Admin, Customize."
-            choices:
-              default:
-                label: "Simple Light"
-              dark:
-                label: "Simple Dark"
 
       logos:
         title: "Logos"

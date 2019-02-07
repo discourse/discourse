@@ -19,6 +19,7 @@ import { addFlagProperty } from "discourse/components/site-header";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
@@ -41,7 +42,7 @@ import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.27";
+const PLUGIN_API_VERSION = "0.8.28";
 
 class PluginApi {
   constructor(version, container) {
@@ -603,6 +604,21 @@ class PluginApi {
    * Register a small icon to be used for custom small post actions
    *
    * ```javascript
+   * api.registerTopicFooterButton({
+   *   key: "flag"
+   *   icon: "flag"
+   *   action: (context) => console.log(context.get("topic.id"))
+   * });
+   * ```
+   **/
+  registerTopicFooterButton(action) {
+    registerTopicFooterButton(action);
+  }
+
+  /**
+   * Register a small icon to be used for custom small post actions
+   *
+   * ```javascript
    * api.registerPostSmallActionIcon('assign-to', 'user-add');
    * ```
    **/
@@ -786,7 +802,8 @@ class PluginApi {
   /**
    *
    * Registers a function to handle uploads for specified file types
-   * The normal uploading functionality will be bypassed
+   * The normal uploading functionality will be bypassed if function returns
+   * a falsy value.
    * This only for uploads of individual files
    *
    * Example:

@@ -3066,7 +3066,7 @@ de:
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder erstelle ein neues, um loszulegen"
-          beginners_guide_title: "Leitfaden für Einstieger zur Verwendung von Discourse-Themes"
+          beginners_guide_title: "Leitfaden für Einsteiger zur Verwendung von Discourse-Themes"
           developers_guide_title: "Leitfaden für Entwickler zur Verwendung von Discourse-Themes"
           browse_themes: "Community-Themes durchsuchen"
           import_theme: "Design importieren"
@@ -3224,7 +3224,7 @@ de:
         title: "E-Mails"
         settings: "Einstellungen"
         templates: "Vorlagen"
-        preview_digest: "Vorschau auf Neuigkeiten anzeigen"
+        preview_digest: "Vorschau auf Neuigkeiten"
         advanced_test:
           title: "Erweiterter Test"
           desc: "Erfahre, wie Discourse erhaltene E-Mails verarbeitet. Um eine E-Mail korrekt zu verarbeiten, kopiere unten bitte die ganze ursprüngliche E-Mail-Nachricht hinein:"

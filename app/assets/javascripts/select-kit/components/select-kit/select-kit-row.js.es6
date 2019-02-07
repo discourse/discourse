@@ -16,7 +16,11 @@ export default Ember.Component.extend(UtilsMixin, {
     "ariaLabel:aria-label",
     "guid:data-guid"
   ],
-  classNameBindings: ["isHighlighted", "isSelected"],
+  classNameBindings: [
+    "isHighlighted",
+    "isSelected",
+    "computedContent.originalContent.classNames"
+  ],
 
   forceEscape: Ember.computed.alias("options.forceEscape"),
 

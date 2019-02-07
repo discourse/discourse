@@ -377,6 +377,7 @@ ja:
         logs: "このグループに関するログはありません。"
       add: "追加"
       join: "参加"
+      leave: "脱退"
       request: "リクエスト"
       message: "メッセージ"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
@@ -400,6 +401,7 @@ ja:
         owner_groups: "自分が所有するグループ"
         close_groups: "クローズされたグループ"
         automatic_groups: "自動で作成されたグループ"
+        automatic: "自動"
         public: "公開"
         private: "非公開"
         public_groups: "公開グループ"
@@ -417,6 +419,7 @@ ja:
         filter_placeholder_admin: "ユーザー名かメール"
         filter_placeholder: "ユーザー名"
         remove_member: "メンバーを削除する"
+        owner: "オーナー"
       topics: "トピック"
       posts: "投稿"
       mentions: "メンション"
@@ -447,6 +450,7 @@ ja:
           description: "グループ内の新規トピックについては何も通知されません。"
       flair_url: "アバター画像"
       flair_url_placeholder: "(オプション) 画像URL or Font Awesomeのクラス名"
+      flair_url_description: '20ピクセルx 20ピクセル以上の正方形の画像またはFontAwesomeアイコン（使用可能な形式： "fa-icon"、 "far fa-icon"、または "fab fa-icon"）を使用します。'
       flair_bg_color: "アバターの背景色"
       flair_bg_color_placeholder: "(オプション) HEXカラー値"
       flair_color: "アバター色"
@@ -543,6 +547,8 @@ ja:
       first_notification: "最初の通知です! 始めるために選択してください。"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規/更新トピックの件数をブラウザのアイコンに表示する"
+      theme_default_on_all_devices: "これをすべてのデバイスのデフォルトテーマにする"
+      text_size_default_on_all_devices: "これをすべての端末のデフォルトのテキストサイズにする"
       allow_private_messages: "他のユーザーが私にパーソナルメッセージを送信できるようにする"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
@@ -583,6 +589,7 @@ ja:
       watched_first_post_tags: "最初の投稿をウォッチする"
       watched_first_post_tags_instructions: "これらのタグの新規トピック内の新規投稿は通知されます。"
       muted_categories: "通知しない"
+      muted_categories_instructions: "これらのカテゴリの新しいトピックについては通知されず、カテゴリや最新のページにも表示されません。"
       no_category_access: "モデレータとしてカテゴリーへのアクセスが制限されたので、保存できませんでした。"
       delete_account: "アカウントを削除する"
       delete_account_confirm: "アカウントを削除してもよろしいですか？削除されたアカウントは復元できません。"
@@ -641,6 +648,12 @@ ja:
       second_factor:
         title: "2段階認証"
         disable: "2段階認証を無効にする"
+        enable: "アカウントセキュリティを強化するために2段階認証を有効にする"
+        label: "コード"
+        enable_description: |
+          サポートされているアプリ（<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>で、このQRコードをスキャンし、認証コードを入力してください。
+        show_key_description: "手動入力"
+        oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
@@ -711,6 +724,8 @@ ja:
         title: "もう一度パスワードを入力してください。"
       auth_tokens:
         title: "最近使用した端末"
+        log_out_all: "すべてログアウトする"
+        not_you: "あなたではない？"
       last_posted: "最後の投稿"
       last_emailed: "最終メール"
       last_seen: "最後のアクティビティ"
@@ -719,6 +734,13 @@ ja:
       location: "場所"
       website: "ウェブサイト"
       email_settings: "メール"
+      hide_profile_and_presence: "公開プロフィールとプレゼンス機能を非表示にする"
+      text_size:
+        title: "テキストサイズ"
+        smaller: "小"
+        normal: "デフォルト"
+        larger: "大"
+        largest: "最大"
       like_notification_frequency:
         title: "いいねされた時に通知"
         always: "常時"
@@ -2099,6 +2121,7 @@ ja:
         watching_first_post:
           title: "最初の投稿をウォッチする"
       groups:
+        new: "新しいグループ"
         parent_tag_label: "親タグ:"
         parent_tag_placeholder: "任意"
         save: "保存する"
@@ -2125,6 +2148,8 @@ ja:
           top: "トップトピックは以上です。"
           bookmarks: "ブックマーク済みのトピックは以上です。"
           search: "検索結果は以上です。"
+    invite:
+      custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
@@ -2143,6 +2168,7 @@ ja:
         version_check_pending: "アップロードしたてです。素晴らしいです！   "
         installed_version: "インストール済み"
         latest_version: "最新"
+        problems_found: "現在のサイト設定に基づいたアドバイス"
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"
@@ -2209,9 +2235,27 @@ ja:
         flagged_topics:
           topic: "トピック"
       groups:
+        new:
+          title: "新しいグループ"
+          name:
+            too_short: "グループ名が短すぎます"
+            blank: "グループ名は空白にできません"
         manage:
+          interaction:
+            visibility: 可視性
+            visibility_levels:
+              title: "誰がこのグループを閲覧できますか？"
+              members: "グループオーナー、メンバー、管理者"
+              staff: "グループオーナーとスタッフ"
+              owners: "グループオーナーと管理者"
           membership:
+            automatic: 自動
             trust_level: トラストレベル
+            trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
+            automatic_membership_email_domains: "このリストにあるものと完全に一致するメー​​ルドメインで登録したユーザーは、自動的にこのグループに追加されます。"
+            automatic_membership_retroactive: "既存の登録ユーザーを追加するため、同じメールドメインにルールを適用する"
+            primary_group: "自動的にプライマリーグループとして設定する"
+        name_placeholder: "グループ名、スペースなし、ユーザー名のルールと同じ"
         primary: "プライマリーグループ"
         no_primary: "（プライマリーグループなし）"
         title: "グループ"
@@ -2225,6 +2269,8 @@ ja:
         add: "追加"
         custom: "カスタム"
         automatic: "自動で作成されたグループ"
+        default_title: "デフォルトタイトル"
+        default_title_description: "グループ内のすべてのユーザーに適用されます"
         group_owners: オーナー
         add_owners: オーナーを追加
       api:

@@ -152,7 +152,7 @@ class SiteSetting < ActiveRecord::Base
       bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-      if SiteSetting.s3_endpoint == "https://s3.amazonaws.com"
+      if SiteSetting.s3_endpoint.blank? || SiteSetting.s3_endpoint.end_with?("amazonaws.com")
         if SiteSetting.Upload.s3_region.start_with?("cn-")
           "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         else
