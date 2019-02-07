@@ -114,8 +114,6 @@ class Admin::FlagsController < Admin::AdminController
 
     PostAction.clear_flags!(post, current_user)
 
-    post.unhide!
-
     render body: nil
   end
 
