@@ -287,14 +287,15 @@ $user_card_background: $secondary;
     align-items: flex-start;
     padding-bottom: 10px;
     margin-top: 5px;
-
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 185px;
+    }
     .user-badge {
       display: flex;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       margin-right: 0.5em;
-      max-width: 150px;
       background: $primary-very-low;
       border: 1px solid $primary-low;
       color: $user_card_primary;
