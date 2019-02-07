@@ -8,6 +8,7 @@ export default ComboBoxComponent.extend({
   allowInitialValueMutation: false,
   allowAutoSelectFirst: false,
   nameProperty: "label",
+  isHidden: Ember.computed.empty("content"),
 
   computeHeaderContent() {
     const content = this._super(...arguments);
