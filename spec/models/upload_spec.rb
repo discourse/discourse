@@ -45,6 +45,16 @@ describe Upload do
     end
   end
 
+  it "supports <style> element in SVG" do
+    SiteSetting.authorized_extensions = "svg"
+
+    upload = UploadCreator.new(image_svg, image_svg_filename).create_for(user_id)
+    expect(upload.valid?).to eq(true)
+
+    path = Discourse.store.path_for(upload)
+    expect(File.read(path)).to match(/<style>/)
+  end
+
   it "can reconstruct dimensions on demand" do
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
 
