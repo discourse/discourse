@@ -2,7 +2,7 @@ class UserApiKey < ActiveRecord::Base
 
   SCOPES = {
     read: [:get],
-    write: [:get, :post, :patch],
+    write: [:get, :post, :patch, :delete],
     message_bus: [[:post, 'message_bus']],
     push: nil,
     notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
