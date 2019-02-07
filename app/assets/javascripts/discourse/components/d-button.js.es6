@@ -39,7 +39,12 @@ export default Ember.Component.extend({
   click() {
     if (typeof this.get("action") === "string") {
       this.sendAction("action", this.get("actionParam"));
-    } else {
+    } else if (
+      typeof this.get("action") === "object" &&
+      this.get("action").value
+    ) {
+      this.get("action").value(this.get("actionParam"));
+    } else if (typeof this.get("action") === "function") {
       this.get("action")(this.get("actionParam"));
     }
 

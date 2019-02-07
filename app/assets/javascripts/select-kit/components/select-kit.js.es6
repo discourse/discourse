@@ -144,18 +144,16 @@ export default Ember.Component.extend(
     didComputeAttributes() {},
 
     willComputeContent(content) {
-      return content;
+      return applyContentPluginApiCallbacks(
+        this.get("pluginApiIdentifiers"),
+        content,
+        this
+      );
     },
     computeContent(content) {
       return content;
     },
     _beforeDidComputeContent(content) {
-      content = applyContentPluginApiCallbacks(
-        this.get("pluginApiIdentifiers"),
-        content,
-        this
-      );
-
       let existingCreatedComputedContent = [];
       if (!this.get("allowContentReplacement")) {
         existingCreatedComputedContent = this.get("computedContent").filterBy(
