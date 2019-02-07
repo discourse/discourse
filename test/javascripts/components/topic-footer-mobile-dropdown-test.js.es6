@@ -36,27 +36,11 @@ componentTest("default", {
         .value(),
       null
     );
-    assert.equal(
-      this.get("subject")
-        .rowByIndex(0)
-        .name(),
-      "Bookmark"
-    );
-    assert.equal(
-      this.get("subject")
-        .rowByIndex(1)
-        .name(),
-      "Share"
-    );
     assert.notOk(
       this.get("subject")
         .selectedRow()
         .exists(),
       "it doesn’t preselect first row"
     );
-
-    await this.get("subject").selectRowByValue("share");
-
-    assert.equal(this.get("value"), null, "it resets the value");
   }
 });
