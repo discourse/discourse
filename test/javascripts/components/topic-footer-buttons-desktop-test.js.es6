@@ -93,8 +93,8 @@ componentTest("priority", {
     const secondButton = find("#topic-footer-button-my-second-button");
     const thirdButton = find("#topic-footer-button-my-third-button");
 
-    assert.ok(buttons.index(firstButton) > buttons.index(secondButton));
-    assert.ok(buttons.index(secondButton) > buttons.index(thirdButton));
+    assert.ok(buttons.index(firstButton) < buttons.index(secondButton));
+    assert.ok(buttons.index(secondButton) < buttons.index(thirdButton));
   }
 });
 
