@@ -179,6 +179,7 @@ tr_TR:
     submit: "Gönder"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
+    go_ahead: "Devam edin"
     sign_up: "Kayıt Ol"
     log_in: "Giriş Yap"
     age: "Yaş"
@@ -781,6 +782,12 @@ tr_TR:
       location: "Lokasyon"
       website: "Web Sitesi"
       email_settings: "E-posta"
+      text_size:
+        title: "Yazı Boyutu"
+        smaller: "Daha küçük"
+        normal: "Normal"
+        larger: "Daha büyük"
+        largest: "En büyük"
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"

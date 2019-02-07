@@ -1123,7 +1123,7 @@ ru:
     first_post: Первое сообщение
     mute: Отключить
     unmute: Включить
-    last_post: Дата
+    last_post: Последнее сообщение
     time_read: Прочитанные
     time_read_recently: "%{time_read} недавно"
     time_read_tooltip: "%{time_read} общее время чтения"
@@ -1249,7 +1249,7 @@ ru:
         message: "Вход с помощью учетной записи Facebook (всплывающие окна должны быть разрешены)"
       yahoo:
         name: "Yahoo"
-        title: "Через Yahoo"
+        title: "Yahoo"
         message: "Вход с помощью учетной записи Yahoo (убедитесь, что блокировщик всплывающих окон отключен)"
       github:
         name: "GitHub"

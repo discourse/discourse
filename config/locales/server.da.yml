@@ -772,7 +772,6 @@ da:
     summary_posts_required: "Minimum antal indlæg i et emne, før 'opsummer dette emne' er aktiveret"
     summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
-    summary_max_results: "Max antal indlæg indeholdt i 'Opsummer dette Emne'"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
     long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"

@@ -34,10 +34,15 @@ pt:
   disable_remote_images_download_reason: "A transferência remota de imagens foi desativada porque não existe espaço disponível no disco."
   anonymous: "Anónimo"
   remove_posts_deleted_by_author: "Eliminado pelo autor"
+  redirect_warning: "Não fomos capazes de verificar se a hiperligação que selecionou foi publicada no fórum. Se desejar continuar de qualquer maneira, selecione a hiperligação abaixo."
   on_another_topic: "Noutro tópico"
   themes:
     bad_color_scheme: "Não é possível atualizar o tema, esquema de cor inválido"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
+    import_error:
+      generic: Ocorreu um erro durante a importação do tema
+      about_json: "Erro de Importação: about.json não existe ou é inválido"
+      about_json_values: "about.json possui valores inválidos: %{errors}"
     errors:
       component_no_user_selectable: "Components de um tema não podem ser seleccionados por um utilizador"
       component_no_default: "Components de um tema não podem ter o tema predefinido"
@@ -55,6 +60,8 @@ pt:
       number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
       number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
       string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
+    locale_errors:
+      invalid_yaml: "YAML de traduçaõ é inválido"
   emails:
     incoming:
       default_subject: "Este tópico precisa de um título"
@@ -760,7 +767,6 @@ pt:
     summary_posts_required: "Número mínimo de mensagens num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
-    summary_max_results: "Número máximo de mensagens devolvidas por 'Resumo deste Tópico'"
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -865,7 +871,6 @@ pt:
     s3_upload_bucket: "Nome do balde da Amazon S3 que contém os ficheiros carregados. AVISO: tem que ser minúsculo, sem pontos e sem sublinhados."
     s3_access_key_id: "Id da chave de acesso Amazon S3 que será usada para carregar imagens."
     s3_secret_access_key: "Chave de acesso secreta Amazon S3 que será usada para carregar imagens."
-    s3_region: "Nome da região Amazon S3 que será usada para carregar imagens."
     s3_cdn_url: "O URL CDN a ser usado para todos os recursos s3 (por exemplo: https://cdn.somewhere.com). AVISO: após alterar esta configuração deve refazer as últimas mensagens."
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     external_system_avatars_enabled: "Utilize o serviço do sistema externo de avatars."
