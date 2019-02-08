@@ -37,4 +37,11 @@
       <span class="empty">{{I18n "admin.customize.theme.empty"}}</span>
     </div>
   {{/if}}
+
+
+</div>
+
+<div class="create-actions">
+  {{d-button label="admin.customize.new" icon="plus" action=(route-action "showCreateModal") class="btn-primary"}}
+  {{d-button action=(route-action "importModal") icon="upload" label="admin.customize.import" class="btn-default"}}
 </div>
