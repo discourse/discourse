@@ -5,7 +5,6 @@ import {
   observes
 } from "ember-addons/ember-computed-decorators";
 import {
-  currentThemeId,
   listThemes,
   previewTheme,
   setLocalTheme
