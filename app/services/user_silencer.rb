@@ -17,7 +17,7 @@ class UserSilencer
   end
 
   def self.was_silenced_for?(post)
-    return false unless post.present?
+    return false if post.blank?
 
     UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
   end
