@@ -64,11 +64,13 @@ class ThemeJavascriptCompiler
       function manipulateNode(node) {
         // Magically add theme id as the first param for each of these helpers
         if (node.path.parts && ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])) {
-          node.params.unshift({
-            type: "NumberLiteral",
-            value: #{@theme_id},
-            original: #{@theme_id}
-          })
+          if(node.params.length === 1){
+            node.params.unshift({
+              type: "NumberLiteral",
+              value: #{@theme_id},
+              original: #{@theme_id}
+            })
+          }
         }
 
         // Override old themeSetting syntax when it's in its own node
