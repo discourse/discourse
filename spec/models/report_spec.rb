@@ -814,7 +814,7 @@ describe Report do
     end
 
     it "returns a report with an exception error" do
-      report = Report.find("exception_test")
+      report = Report.find("exception_test", wrap_exceptions_in_test: true)
       expect(report.error).to eq(:exception)
     end
   end
@@ -853,7 +853,7 @@ describe Report do
 
       Report.stubs(:new).raises(ReportInitError.new("x"))
 
-      report = Report.find('signups')
+      report = Report.find('signups', wrap_exceptions_in_test: true)
 
       expect(report).to be_nil
 
