@@ -46,17 +46,10 @@ export default Ember.Controller.extend(PreferencesTabController, {
   },
 
   preferencesController: Ember.inject.controller("preferences"),
-  makeThemeDefault: true,
-  makeTextSizeDefault: true,
 
   @computed()
   availableLocales() {
     return JSON.parse(this.siteSettings.available_locales);
-  },
-
-  @computed()
-  themeId() {
-    return currentThemeId();
   },
 
   @computed
@@ -79,6 +72,16 @@ export default Ember.Controller.extend(PreferencesTabController, {
   themeIdChanged() {
     const id = this.get("themeId");
     previewTheme([id]);
+  },
+
+  @computed("model.user_option.theme_ids", "themeId")
+  showThemeSetDefault(userOptionThemes, selectedTheme) {
+    return userOptionThemes[0] !== selectedTheme;
+  },
+
+  @computed("model.user_option.text_size", "textSize")
+  showTextSetDefault(userOptionTextSize, selectedTextSize) {
+    return userOptionTextSize !== selectedTextSize;
   },
 
   homeChanged() {
@@ -120,13 +123,17 @@ export default Ember.Controller.extend(PreferencesTabController, {
         .then(() => {
           this.set("saved", true);
 
-          if (!makeThemeDefault) {
+          if (makeThemeDefault) {
+            setLocalTheme([]);
+          } else {
             setLocalTheme(
               [this.get("themeId")],
               this.get("model.user_option.theme_key_seq")
             );
           }
-          if (!makeTextSizeDefault) {
+          if (makeTextSizeDefault) {
+            this.get("model").updateTextSizeCookie(null);
+          } else {
             this.get("model").updateTextSizeCookie(this.get("textSize"));
           }
 

@@ -141,7 +141,7 @@ QUnit.test("font size change", async assert => {
   await selectKitSelectRowByValue("largest", ".text-size .combobox");
 
   await savePreferences();
-  assert.equal($.cookie("text_size"), "larger|1", "cookie remains the same");
+  assert.equal($.cookie("text_size"), null, "cookie is removed");
 
   $.removeCookie("text_size");
 });
