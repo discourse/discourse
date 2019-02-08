@@ -18,6 +18,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   localFile: null,
   uploadUrl: null,
   urlPlaceholder: "https://github.com/discourse/sample_theme",
+  advancedVisible: false,
 
   @computed("loading", "remote", "uploadUrl", "local", "localFile")
   importDisabled(isLoading, isRemote, uploadUrl, isLocal, localFile) {
@@ -48,6 +49,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     uploadLocaleFile() {
       this.set("localFile", $("#file-input")[0].files[0]);
+    },
+
+    toggleAdvanced() {
+      this.set("advancedVisible", !this.get("advancedVisible"));
     },
 
     importTheme() {
