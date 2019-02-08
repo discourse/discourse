@@ -6,10 +6,10 @@
 
   .themes-list {
     width: 100%;
+    margin-bottom: 1em;
   }
-
-  .customize-themes-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .form-horizontal.theme.settings .setting-label,
+  .admin-container .select-kit {
+    width: 100%;
   }
 }
