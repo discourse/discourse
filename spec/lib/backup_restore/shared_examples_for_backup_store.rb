@@ -81,7 +81,7 @@ shared_examples "backup store" do
     end
 
     describe "#reset_cache" do
-      it "resets the storage stats report" do
+      pending "resets the storage stats report" do
         report_type = "storage_stats"
         report = Report.find(report_type)
         Report.cache(report, 35.minutes)
