@@ -97,7 +97,7 @@ export default {
 
     registerTopicFooterButton({
       id: "archive",
-      priority: 1001,
+      priority: 996,
       icon() {
         return this.get("archiveIcon");
       },
