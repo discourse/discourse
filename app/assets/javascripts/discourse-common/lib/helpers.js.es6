@@ -32,7 +32,11 @@ function resolveParams(ctx, options) {
     if (options.hashTypes) {
       Object.keys(hash).forEach(function(k) {
         const type = options.hashTypes[k];
-        if (type === "STRING" || type === "StringLiteral") {
+        if (
+          type === "STRING" ||
+          type === "StringLiteral" ||
+          type === "SubExpression"
+        ) {
           params[k] = hash[k];
         } else if (type === "ID" || type === "PathExpression") {
           params[k] = get(ctx, hash[k], options);
