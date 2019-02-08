@@ -1,5 +1,10 @@
 {{#unless editingTheme}}
-  {{themes-list themes=fullThemes components=childThemes currentTab=currentTab}}
-
+  {{themes-list
+    themes=fullThemes
+    components=childThemes
+    currentTab=currentTab
+    showCreateModal=(route-action "showCreateModal")
+    importModal=(route-action "importModal")}}
 {{/unless}}
+
 {{outlet}}
