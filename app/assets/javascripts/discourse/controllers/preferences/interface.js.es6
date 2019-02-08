@@ -75,7 +75,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
-    return userOptionThemes[0] !== selectedTheme;
+    return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
   },
 
   @computed("model.user_option.text_size", "textSize")
