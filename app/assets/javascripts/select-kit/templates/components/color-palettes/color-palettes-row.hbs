@@ -1,0 +1,11 @@
+<span class="name">
+  {{label}}
+</span>
+
+{{#if colors}}
+  <div class="palettes">
+    {{#each colors as |color|}}
+      <span class="palette" style="background-color:{{color}};"></span>
+    {{/each}}
+  </div>
+{{/if}}
