@@ -10,6 +10,7 @@ export default RestrictedUserRoute.extend({
       textSize: user.get("currentTextSize"),
       themeId: currentThemeId(),
       makeThemeDefault:
+        !user.get("user_option.theme_ids") ||
         currentThemeId() === user.get("user_option.theme_ids")[0],
       makeTextSizeDefault:
         user.get("currentTextSize") === user.get("user_option.text_size")
