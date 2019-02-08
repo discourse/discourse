@@ -67,13 +67,13 @@
             <code>{{model.remoteError}}</code>
           </div>
         {{/if}}
-        
+
         {{#if model.remote_theme.commits_behind}}
           {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
         {{else}}
           {{#d-button action=(action "checkForThemeUpdates") icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
         {{/if}}
-        
+
         <span class='status-message'>
             {{#if updatingRemote}}
               {{i18n 'admin.customize.theme.updating'}}
@@ -104,11 +104,14 @@
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.color_scheme"}}</div>
       <div class="description">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
-      <div class="control">{{combo-box content=colorSchemes
-                                       filterable=true
-                                       forceEscape=true
-                                       value=colorSchemeId
-                                       icon="paint-brush"}}
+      <div class="control">
+        {{color-palettes
+          content=colorSchemes
+          filterable=true
+          forceEscape=true
+          value=colorSchemeId
+          icon="paint-brush"}}
+
          {{#if colorSchemeChanged}}
             {{d-button action=(action "changeScheme") class="btn-primary submit-edit" icon="check"}}
             {{d-button action=(action "cancelChangeScheme") class="btn-default cancel-edit" icon="times"}}
