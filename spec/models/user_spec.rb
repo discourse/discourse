@@ -1989,4 +1989,14 @@ describe User do
       expect(PostAction.with_deleted.where(user_id: user.id).length).to eq(0)
     end
   end
+
+  context "human?" do
+    it "returns true for a regular user" do
+      expect(Fabricate(:user)).to be_human
+    end
+
+    it "returns false for the system user" do
+      expect(Discourse.system_user).not_to be_human
+    end
+  end
 end

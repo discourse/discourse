@@ -291,6 +291,10 @@ class User < ActiveRecord::Base
     fields.uniq
   end
 
+  def human?
+    self.id > 0
+  end
+
   def effective_locale
     if SiteSetting.allow_user_locale && self.locale.present?
       self.locale
