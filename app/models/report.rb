@@ -160,6 +160,8 @@ class Report
   end
 
   def self.find(type, opts = nil)
+    opts ||= {}
+
     begin
       report = _get(type, opts)
       report_method = :"report_#{type}"
@@ -178,6 +180,10 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
+
+      # In test mode, don't swallow exceptions by default to help debug errors.
+      raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
+
       # ensures that if anything unexpected prevents us from
       # creating a report object we fail elegantly and log an error
       if !report
