@@ -377,6 +377,14 @@ module BackupRestore
 
     def migrate_database
       log "Migrating the database..."
+
+      if Discourse.skip_post_deployment_migrations?
+        ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"] = "0"
+        Rails.application.config.paths['db/migrate'] << Rails.root.join(
+          Discourse::DB_POST_MIGRATE_PATH
+        ).to_s
+      end
+
       Discourse::Application.load_tasks
       ENV["VERSION"] = @current_version.to_s
       DB.exec("SET search_path = public, pg_catalog;")
