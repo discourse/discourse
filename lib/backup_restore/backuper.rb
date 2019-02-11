@@ -37,14 +37,14 @@ module BackupRestore
 
       dump_public_schema
 
+      unpause_sidekiq
+
       disable_readonly_mode
       ### READ-ONLY / END ###
 
       log "Finalizing backup..."
 
       @with_uploads ? create_archive : move_dump_backup
-
-      unpause_sidekiq
       upload_archive
 
       after_create_hook
@@ -237,8 +237,8 @@ module BackupRestore
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--warning=no-file-changed', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to archive uploads."
+            'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
+            failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
           )
         else
           log "No uploads found, skipping archiving uploads..."
