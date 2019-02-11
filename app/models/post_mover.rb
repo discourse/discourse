@@ -87,11 +87,10 @@ class PostMover
 
     posts.each do |post|
       post.is_first_post? ? create_first_post(post) : move(post)
-      if @move_to_pm
-        destination_topic.topic_allowed_users.build(user_id: post.user_id) unless destination_topic.topic_allowed_users.where(user_id: post.user_id).exists?
+      if @move_to_pm && destination_topic.topic_allowed_users.where(user_id: post.user_id).blank?
+        destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
-    destination_topic.save! if @move_to_pm
 
     PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
       if post_reply.post && post_reply.reply && post_reply.reply.topic_id != post_reply.post.topic_id
