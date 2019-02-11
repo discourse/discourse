@@ -580,13 +580,15 @@ describe PostMover do
 
       context 'move to new message' do
         it "adds post users as topic allowed users" do
-          personal_message.move_posts(admin, [p2.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
+          personal_message.move_posts(admin, [p2.id, p3.id, p4.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
 
           p2.reload
-          expect(p2.topic.archetype).to eq(Archetype.private_message)
-          expect(p2.topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
-          expect(p2.topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
-          expect(p2.topic.tags.pluck(:name)).to eq([])
+          destination_topic = p2.topic
+          expect(destination_topic.archetype).to eq(Archetype.private_message)
+          expect(destination_topic.topic_allowed_users.where(user_id: user.id).count).to eq(1)
+          expect(destination_topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
+          expect(destination_topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
+          expect(destination_topic.tags.pluck(:name)).to eq([])
         end
 
         it "can add tags to new message when allow_staff_to_tag_pms is enabled" do
