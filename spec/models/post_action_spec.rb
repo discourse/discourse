@@ -938,23 +938,32 @@ describe PostAction do
       it "will keep the topic in closed status until the community flags are handled" do
         freeze_time
 
-        PostAction.stubs(:auto_close_threshold_reached?).returns(true)
-        PostAction.auto_close_if_threshold_reached(topic)
+        SiteSetting.num_flaggers_to_close_topic = 1
+        SiteSetting.num_flags_to_close_topic = 1
 
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(flagger1, post, PostActionType.types[:spam])
         expect(topic.reload.closed).to eq(true)
 
         timer = TopicTimer.last
         expect(timer.execute_at).to eq(1.hour.from_now)
 
         freeze_time timer.execute_at
-        Jobs.expects(:enqueue_in).with(1.hour.to_i, :toggle_topic_closed, topic_timer_id: timer.id, state: false).returns(true)
+        Jobs.expects(:enqueue_in).with(
+          1.hour.to_i,
+          :toggle_topic_closed,
+          topic_timer_id: timer.id,
+          state: false
+        ).returns(true)
         Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
 
         expect(topic.reload.closed).to eq(true)
         expect(timer.reload.execute_at).to eq(1.hour.from_now)
 
         freeze_time timer.execute_at
-        PostAction.stubs(:auto_close_threshold_reached?).returns(false)
+        SiteSetting.num_flaggers_to_close_topic = 10
+        SiteSetting.num_flags_to_close_topic = 10
+
         Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
 
         expect(topic.reload.closed).to eq(false)
