@@ -1,8 +1,4 @@
 //! moment.js
-//! version : 2.22.1
-//! Copyright (c) JS Foundation and other contributors
-//! license : MIT
-//! github.com/moment/moment
 
 ;(function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :

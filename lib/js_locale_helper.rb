@@ -153,8 +153,8 @@ module JsLocaleHelper
     result << "I18n.pluralizationRules.#{locale_str} = MessageFormat.locale.#{mf_locale};\n" if mf_locale != "en"
 
     # moment
-    result << File.read("#{Rails.root}/lib/javascripts/moment.js")
-    result << File.read("#{Rails.root}/lib/javascripts/moment-timezone-with-data.js")
+    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment.js")
+    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment-timezone-with-data.js")
     result << moment_locale(locale_str)
     result << moment_formats
 
@@ -162,7 +162,7 @@ module JsLocaleHelper
   end
 
   def self.find_moment_locale(locale_chain)
-    path = "#{Rails.root}/lib/javascripts/moment_locale"
+    path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
 
     # moment.js uses a different naming scheme for locale files
     locale_chain = locale_chain.map { |l| l.tr('_', '-').downcase }

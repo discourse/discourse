@@ -67,6 +67,13 @@ task 'javascript:update' do
     }, {
       source: 'mousetrap/mousetrap.js'
     }, {
+      source: 'moment/moment.js'
+    }, {
+      source: 'moment/locale',
+      destination: 'moment-locale',
+    }, {
+      source: 'moment-timezone/builds/moment-timezone-with-data.js'
+    }, {
       source: 'resumablejs/resumable.js'
     }, {
       # TODO: drop when we eventually drop IE11, this will land in iOS in version 13

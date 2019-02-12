@@ -102,7 +102,7 @@ describe Plugin::Instance do
 
       plugin.send :register_assets!
 
-      expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq("lib/javascripts/moment.js")
+      expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq("vendor/assets/javascripts/moment.js")
     end
   end
 
@@ -390,7 +390,7 @@ describe Plugin::Instance do
 
       expect(locale[:fallbackLocale]).to eq("es")
       expect(locale[:message_format]).to eq(["es", "#{Rails.root}/lib/javascripts/locale/es.js"])
-      expect(locale[:moment_js]).to eq(["es", "#{Rails.root}/lib/javascripts/moment_locale/es.js"])
+      expect(locale[:moment_js]).to eq(["es", "#{Rails.root}/vendor/assets/javascripts/moment-locale/es.js"])
       expect(locale[:plural]).to be_nil
 
       expect(Rails.configuration.assets.precompile).to include("locales/es_MX.js")
@@ -404,7 +404,7 @@ describe Plugin::Instance do
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:message_format]).to eq(["tlh", "#{plugin_path}/lib/javascripts/locale/message_format/tlh.js"])
-      expect(locale[:moment_js]).to eq(["tlh", "#{Rails.root}/lib/javascripts/moment_locale/tlh.js"])
+      expect(locale[:moment_js]).to eq(["tlh", "#{Rails.root}/vendor/assets/javascripts/moment-locale/tlh.js"])
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
       expect(Rails.configuration.assets.precompile).to include("locales/tlh.js")
