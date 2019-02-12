@@ -54,7 +54,7 @@ widgetTest("via-email", {
   },
   async test(assert) {
     await click(".post-info.via-email");
-    assert.ok(this.rawEmailShown, "clicking the enveloppe shows the raw email");
+    assert.ok(this.rawEmailShown, "clicking the envelope shows the raw email");
   }
 });
 
@@ -69,7 +69,7 @@ widgetTest("via-email without permission", {
     await click(".post-info.via-email");
     assert.ok(
       !this.rawEmailShown,
-      `clicking the enveloppe doesn't show the raw email`
+      "clicking the envelope doesn't show the raw email"
     );
   }
 });
