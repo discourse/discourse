@@ -234,6 +234,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
           })
           .catch(popupAjaxError)
           .finally(() => this.set("loading", false));
+
+        return;
       }
 
       let options = {
