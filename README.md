@@ -132,7 +132,7 @@ Adding Support for a new URL
        let(:html) { described_class.new(link).to_html }
 
        before do
-         fake(link, response("name.response"))
+         fake(link, response("name"))
        end
 
        it "has the video's title" do
@@ -170,7 +170,7 @@ Adding Support for a new URL
   5. Create new fixture from HTML response for your FakeWeb request(s)
 
      ``` bash
-     curl --output spec/fixtures/oneboxname.response -L -X -GET http://example.com
+     curl --output spec/fixtures/oneboxname.response -L -X GET http://example.com
      ```
 
   6. Require in Engine module
