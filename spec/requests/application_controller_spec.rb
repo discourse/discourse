@@ -143,6 +143,21 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(404)
         expect(response.body).to_not include('google.com/search')
       end
+
+      it 'should cache results' do
+        $redis.del("page_not_found_topics")
+
+        topic1 = Fabricate(:topic)
+        get '/t/nope-nope/99999999'
+        expect(response.status).to eq(404)
+        expect(response.body).to include(topic1.title)
+
+        topic2 = Fabricate(:topic)
+        get '/t/nope-nope/99999999'
+        expect(response.status).to eq(404)
+        expect(response.body).to include(topic1.title)
+        expect(response.body).to_not include(topic2.title)
+      end
     end
   end
 
