@@ -248,7 +248,10 @@ module BackupRestore
       remove_tmp_directory
 
       log "Gzipping archive, this may take a while..."
-      Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
+      Discourse::Utils.execute_command(
+        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
+        failure_message: "Failed to gzip archive."
+      )
     end
 
     def upload_archive
