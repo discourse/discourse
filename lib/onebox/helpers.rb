@@ -173,7 +173,17 @@ module Onebox
     end
 
     def self.title_attr(meta)
-      (meta && !blank?(meta[:title])) ? "title='#{CGI::escapeHTML(meta[:title])}'" : ""
+      title = get(meta, :title)
+      !title.nil? ? "title='#{title}'" : ""
+    end
+
+    def self.get(meta, attr)
+      (meta && !blank?(meta[attr])) ? sanitize(meta[attr]) : nil
+    end
+
+    def self.sanitize(value, length = 50)
+      return nil if blank?(value)
+      truncate(Sanitize.fragment(value).strip, length)
     end
 
     def self.normalize_url_for_output(url)

@@ -31,7 +31,7 @@ module Onebox
       def album_html(og)
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
-        album_title = "[Album] #{Onebox::Helpers.truncate(og[:title].strip, 80)}"
+        album_title = "[Album] #{Onebox::Helpers.sanitize(og[:title], 80)}"
 
         <<-HTML
             <div class='onebox imgur-album'>
