@@ -76,6 +76,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
         }
       }
 
+      if (this.get("model.user_id")) {
+        // Used by theme-creator
+        options.data["user_id"] = this.get("model.user_id");
+      }
+
       this.set("loading", true);
       ajax(this.get("importUrl"), options)
         .then(result => {
