@@ -3395,7 +3395,7 @@ en:
           public_key: "Grant the following public key access to the repo:"
           install: "Install"
           installed: "Installed"
-          install_popular: "Popular themes and components"
+          install_popular: "Popular"
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
