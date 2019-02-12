@@ -4,7 +4,8 @@
  **/
 export const SWIPE_VELOCITY = 40;
 export const SWIPE_DISTANCE_THRESHOLD = 50;
-export const SWIPE_VELOCITY_THRESHOLD = 0.1;
+export const SWIPE_VELOCITY_THRESHOLD = 0.12;
+export const MINIMUM_SWIPE_DISTANCE = 5;
 export default Ember.Mixin.create({
   //velocity is pixels per ms
 
@@ -120,7 +121,7 @@ export default Ember.Mixin.create({
     }
     const previousState = this.get("_panState");
     const newState = this._calculateNewPanState(previousState, e);
-    if (previousState.start && newState.distance < 5) {
+    if (previousState.start && newState.distance < MINIMUM_SWIPE_DISTANCE) {
       return;
     }
     this.set("_panState", newState);

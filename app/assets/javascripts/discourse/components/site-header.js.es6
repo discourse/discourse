@@ -15,7 +15,7 @@ function addFlagProperty(prop) {
 const PANEL_BODY_MARGIN = 30;
 
 //android supports pulling in from the screen edges
-const SCREEN_EDGE_MARGIN = 30;
+const SCREEN_EDGE_MARGIN = 20;
 const SCREEN_OFFSET = 300;
 
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
