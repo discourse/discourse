@@ -1,0 +1,122 @@
+{{#d-modal-body class='upload-selector install-theme' title="admin.customize.theme.install"}}
+  <div class="install-theme-items">
+    <div class="install-theme-item">
+      {{radio-button name="upload" id="popular" value="popular" selection=selection}}
+      <label class="radio" for="popular">{{i18n 'admin.customize.theme.install_popular'}}</label>
+      {{d-icon 'caret-right'}}
+    </div>
+    <div class="install-theme-item">
+      {{radio-button name="upload" id="local" value="local" selection=selection}}
+      <label class="radio" for="local">{{i18n 'admin.customize.theme.install_upload'}}</label>
+      {{d-icon 'caret-right'}}
+    </div>
+    <div class="install-theme-item">
+      {{radio-button name="upload" id="remote" value="remote" selection=selection}}
+      <label class="radio" for="remote">{{i18n 'admin.customize.theme.install_git_repo'}}</label>
+      {{d-icon 'caret-right'}}
+    </div>
+    <div class="install-theme-item">
+      {{radio-button name="upload" id="create" value="create" selection=selection}}
+      <label class="radio" for="create">{{i18n 'admin.customize.theme.install_create'}}</label>
+      {{d-icon 'caret-right'}}
+    </div>
+  </div>
+  <div class="install-theme-content">
+    {{#if popular}}
+      <div class="popular-theme-items">
+        {{#each themes as |theme|}}
+          <div class="popular-theme-item">
+            <div class="popular-theme-name">
+              <div class="popular-theme-type">
+                {{#if theme.component}}
+                  {{d-icon 'puzzle-piece'}} {{i18n 'admin.customize.theme.component'}}
+                {{else}}
+                  {{i18n 'admin.customize.theme.theme'}}
+                {{/if}}
+              </div>
+              <a href="{{theme.meta_url}}" target="_blank">{{theme.name}}</a>
+            </div>
+            <div class="popular-theme-buttons">
+              {{#if theme.installed}}
+                <span>{{I18n "admin.customize.theme.installed"}}</span>
+              {{else}}
+                {{d-button class='btn-small'
+                  label="admin.customize.theme.install"
+                  disabled=installDisabled
+                  icon="upload"
+                  action=(action "installThemeFromList" theme.value)}}
+
+                {{#if theme.preview}}
+                  <a href="{{theme.preview}}" target="_blank">{{d-icon "desktop"}} {{I18n "admin.customize.theme.preview"}}</a>
+                {{/if}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+
+    {{#if local}}
+      <div class="inputs">
+        <input onchange={{action "uploadLocaleFile"}} type="file" id="file-input" accept='.dcstyle.json,application/json,.tar.gz,application/x-gzip'><br>
+        <span class="description">{{i18n 'admin.customize.theme.import_file_tip'}}</span>
+      </div>
+    {{/if}}
+
+    {{#if remote}}
+      <div class="inputs">
+        <div class='repo'>
+          <div class="label">{{i18n 'admin.customize.theme.import_web_tip'}}</div>
+          {{input value=uploadUrl placeholder=urlPlaceholder}}
+        </div>
+
+        {{d-button
+          class="btn-small advanced-repo"
+          action=(action "toggleAdvanced")
+          label='admin.customize.theme.import_web_advanced'}}
+
+        {{#if advancedVisible}}
+          <div class='branch'>
+            <div class="label">{{i18n 'admin.customize.theme.remote_branch'}}</div>
+            {{input value=branch placeholder="master"}}
+          </div>
+
+          <div class='check-private'>
+            <label>
+              {{input type="checkbox" checked=privateChecked}}
+              {{i18n 'admin.customize.theme.is_private'}}
+            </label>
+          </div>
+          {{#if checkPrivate}}
+            {{#if privateChecked}}
+            {{#if publicKey}}
+            <div class='public-key'>
+              <div class="label">{{i18n 'admin.customize.theme.public_key'}}</div>
+              {{textarea readonly=true value=publicKey}}
+            </div>
+            {{/if}}
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if create}}
+      <div class="inputs">
+        <div class="label">{{I18n "admin.customize.theme.create_name"}}</div>
+        {{input value=name placeholder=placeholder}}
+
+        <div class="label">{{I18n "admin.customize.theme.create_type"}}</div>
+        {{combo-box valueAttribute="value" content=createTypes value=selectedType}}
+      </div>
+    {{/if}}
+  </div>
+
+{{/d-modal-body}}
+
+{{#unless popular}}
+  <div class="modal-footer">
+    {{d-button action=(action "installTheme") disabled=installDisabled class='btn btn-primary' label=submitLabel}}
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  </div>
+{{/unless}}

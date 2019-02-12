@@ -11,17 +11,13 @@ export default Ember.Route.extend({
   },
 
   actions: {
-    importModal() {
-      showModal("admin-import-theme", { admin: true });
+    installModal() {
+      showModal("admin-install-theme", { admin: true });
     },
 
     addTheme(theme) {
       this.refresh();
       this.transitionTo("adminCustomizeThemes.show", theme.get("id"));
-    },
-
-    showCreateModal() {
-      showModal("admin-create-theme", { admin: true });
     }
   }
 });
