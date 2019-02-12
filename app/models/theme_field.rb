@@ -372,7 +372,7 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  after_commit do
+  after_commit on: [:create, :update] do
     ensure_baked!
     ensure_scss_compiles!
     theme.clear_cached_settings!
