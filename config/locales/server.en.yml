@@ -1494,6 +1494,7 @@ en:
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
+    backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
