@@ -1441,6 +1441,7 @@ class Report
       WHERE t.action = 'suspicious'
         AND t.created_at >= :start_date
         AND t.created_at <= :end_date
+      ORDER BY t.created_at DESC
     SQL
 
     DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
