@@ -372,10 +372,12 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  after_commit on: [:create, :update] do
-    ensure_baked!
-    ensure_scss_compiles!
-    theme.clear_cached_settings!
+  after_commit do
+    unless destroyed?
+      ensure_baked!
+      ensure_scss_compiles!
+      theme.clear_cached_settings!
+    end
 
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
     CSP::Extension.clear_theme_extensions_cache! if name == 'yaml'
