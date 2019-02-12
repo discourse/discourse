@@ -202,16 +202,16 @@ module Onebox
           d = { link: link }.merge(raw)
 
           if !Onebox::Helpers.blank?(d[:title])
-            d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title].strip, 80))
+            d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title], 80))
           end
 
           d[:description] ||= d[:summary]
           if !Onebox::Helpers.blank?(d[:description])
-            d[:description] = html_entities.decode(Sanitize.fragment(Onebox::Helpers.truncate(d[:description].strip, 250)))
+            d[:description] = html_entities.decode(Onebox::Helpers.truncate(d[:description], 250))
           end
 
           if !Onebox::Helpers.blank?(d[:site_name])
-            d[:domain] = html_entities.decode(Onebox::Helpers.truncate(d[:site_name].strip, 80))
+            d[:domain] = html_entities.decode(Onebox::Helpers.truncate(d[:site_name], 80))
           elsif !Onebox::Helpers.blank?(d[:domain])
             d[:domain] = "http://#{d[:domain]}" unless d[:domain] =~ /^https?:\/\//
             d[:domain] = URI(d[:domain]).host.to_s.sub(/^www\./, '') rescue nil
@@ -231,22 +231,22 @@ module Onebox
 
           # Twitter labels
           if !Onebox::Helpers.blank?(d[:label1]) && !Onebox::Helpers.blank?(d[:data1]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label1] =~ /#{l}/i }
-            d[:label_1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label1].strip))
-            d[:data_1]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data1].strip))
+            d[:label_1] = Onebox::Helpers.truncate(d[:label1])
+            d[:data_1]  = Onebox::Helpers.truncate(d[:data1])
           end
           if !Onebox::Helpers.blank?(d[:label2]) && !Onebox::Helpers.blank?(d[:data2]) && !!WhitelistedGenericOnebox.twitter_label_whitelist.find { |l| d[:label2] =~ /#{l}/i }
             unless Onebox::Helpers.blank?(d[:label_1])
-              d[:label_2] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
-              d[:data_2]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
+              d[:label_2] = Onebox::Helpers.truncate(d[:label2])
+              d[:data_2]  = Onebox::Helpers.truncate(d[:data2])
             else
-              d[:label_1] = Sanitize.fragment(Onebox::Helpers.truncate(d[:label2].strip))
-              d[:data_1]  = Sanitize.fragment(Onebox::Helpers.truncate(d[:data2].strip))
+              d[:label_1] = Onebox::Helpers.truncate(d[:label2])
+              d[:data_1]  = Onebox::Helpers.truncate(d[:data2])
             end
           end
 
           if Onebox::Helpers.blank?(d[:label_1]) && !Onebox::Helpers.blank?(d[:price_amount]) && !Onebox::Helpers.blank?(d[:price_currency])
             d[:label_1] = "Price"
-            d[:data_1] = Sanitize.fragment(Onebox::Helpers.truncate("#{d[:price_currency].strip} #{d[:price_amount].strip}"))
+            d[:data_1] = Onebox::Helpers.truncate("#{d[:price_currency].strip} #{d[:price_amount].strip}")
           end
 
           d

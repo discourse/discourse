@@ -50,7 +50,7 @@ module Onebox
 
       def video_title
         @video_title ||= begin
-          Sanitize.fragment(Onebox::Helpers.truncate(video_oembed_data[:title].strip, 80))
+          Onebox::Helpers.truncate(video_oembed_data[:title], 80)
         rescue
           nil
         end

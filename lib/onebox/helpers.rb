@@ -169,6 +169,7 @@ module Onebox
     end
 
     def self.truncate(string, length = 50)
+      string = sanitize(string)
       string.size > length ? string[0...(string.rindex(" ", length) || length)] + "..." : string
     end
 
@@ -183,7 +184,7 @@ module Onebox
 
     def self.sanitize(value, length = 50)
       return nil if blank?(value)
-      truncate(Sanitize.fragment(value).strip, length)
+      Sanitize.fragment(value).strip
     end
 
     def self.normalize_url_for_output(url)

@@ -20,7 +20,7 @@ module Onebox
 
         result = { link: og[:url],
                    title: html_entities.decode(Onebox::Helpers.truncate(title, 80)),
-                   description: html_entities.decode(Sanitize.fragment(Onebox::Helpers.truncate(og[:description].strip, 250)))
+                   description: html_entities.decode(Onebox::Helpers.truncate(og[:description], 250))
                   }
 
         if !Onebox::Helpers.blank?(og[:image])
