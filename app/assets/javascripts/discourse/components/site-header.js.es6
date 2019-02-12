@@ -228,6 +228,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   didInsertElement() {
     this._super(...arguments);
+    const { isAndroid } = this.capabilities;
     $(window).on("resize.discourse-menu-panel", () => this.afterRender());
 
     this.appEvents.on("header:show-topic", topic => this.setTopic(topic));
@@ -244,11 +245,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
     });
 
-    this.addTouchListeners($("body"));
+    // Only add listeners for opening menus by swiping them in on Android devices
+    // iOS will respond to these events, but also does swiping for back/forward
+    if (isAndroid) {
+      this.addTouchListeners($("body"));
+    }
   },
 
   willDestroyElement() {
     this._super(...arguments);
+    const { isAndroid } = this.capabilities;
     $("body").off("keydown.header");
     $(window).off("resize.discourse-menu-panel");
 
@@ -256,7 +262,9 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.off("header:hide-topic");
     this.appEvents.off("dom:clean");
 
-    this.removeTouchListeners($("body"));
+    if (isAndroid) {
+      this.removeTouchListeners($("body"));
+    }
 
     Ember.run.cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
