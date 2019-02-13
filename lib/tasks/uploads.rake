@@ -482,16 +482,16 @@ end
 # list all missing uploads and optimized images
 task "uploads:missing" => :environment do
   if ENV["RAILS_DB"]
-    list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
+    list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'], backfill_etags: ENV['BACKFILL_ETAGS'])
   else
     RailsMultisite::ConnectionManagement.each_connection do |db|
-      list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'])
+      list_missing_uploads(skip_optimized: ENV['SKIP_OPTIMIZED'], backfill_etags: ENV['BACKFILL_ETAGS'])
     end
   end
 end
 
-def list_missing_uploads(skip_optimized: false)
-  Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
+def list_missing_uploads(skip_optimized: false, backfill_etags: false)
+  Discourse.store.list_missing_uploads(skip_optimized: skip_optimized, backfill_etags: backfill_etags)
 end
 
 ################################################################################

@@ -24,7 +24,7 @@ class S3Inventory
     end
   end
 
-  def list_missing
+  def list_missing(backfill_etags: false)
     if files.blank?
       error("Failed to list inventory from S3")
       return
@@ -43,6 +43,13 @@ class S3Inventory
             CSV.foreach(file[:filename][0...-3], headers: false) do |row|
               connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
             end
+          end
+        end
+
+        if backfill_etags
+          uploads = model.where(etag: nil).joins("LEFT JOIN #{table_name} ON #{model.table_name}.url ILIKE '%' || #{table_name}.key")
+          uploads.select(:id, :"#{table_name}.etag").find_each do |upload|
+            model.where(id: upload.id).update_all(etag: upload.etag)
           end
         end
 
