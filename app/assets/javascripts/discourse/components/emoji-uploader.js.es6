@@ -9,7 +9,7 @@ export default Ember.Component.extend(UploadMixin, {
 
   uploadOptions() {
     return {
-      sequentialUploads: true,
+      sequentialUploads: true
     };
   },
 
