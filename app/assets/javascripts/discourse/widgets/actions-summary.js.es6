@@ -56,7 +56,6 @@ createWidget("small-user-list", {
       let buffer = [icons];
       if (description) {
         buffer.push(description);
-        buffer.push(".");
       }
       return buffer;
     }
