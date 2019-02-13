@@ -14,15 +14,6 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP user name?      [SMTP credentials for your domain under domains tab]
     SMTP password?       [SMTP credentials for your domain under domains tab]
 
-#### [Elastic Email][ee] &mdash; 150k emails/month (5k max/day)
-
-    SMTP server address? smtp.elasticemail.com
-    SMTP user name?      [Your registered email address]
-    SMTP password?       [Elastic Email API Key]
-    SMTP port?           2525
-
-NOTE: Elastic Email currently doesn't fully integrate with Discourse's internal unsubscribe mechanism and hence puts an additional UNSUBSCRIBE link at the bottom of each sent email. If this is a problem for your needs, consider using other providers. [See discussion here](https://meta.discourse.org/t/remove-or-merge-elastic-email-unsubscribe/70236).
-
 #### [SendGrid][sg] &mdash; 40k emails on a 30 day trial
 
     SMTP server address? smtp.sendgrid.net
