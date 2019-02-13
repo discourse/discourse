@@ -9,9 +9,10 @@ QUnit.test("as an admin", async assert => {
   Discourse.SiteSettings.enforce_second_factor = "staff";
 
   await visit("/u/eviltrout/summary");
+
   assert.equal(
-    $(".user-preferences h3").text(),
-    I18n.t("user.second_factor.title"),
+    find(".control-label").text(),
+    "Password",
     "it will not transition from second-factor preferences"
   );
 
@@ -19,8 +20,8 @@ QUnit.test("as an admin", async assert => {
   await click("a.admin-link");
 
   assert.equal(
-    $(".user-preferences h3").text(),
-    I18n.t("user.second_factor.title"),
+    find(".control-label").text(),
+    "Password",
     "it stays at second-factor preferences"
   );
 });
@@ -32,9 +33,10 @@ QUnit.test("as a user", async assert => {
   Discourse.SiteSettings.enforce_second_factor = "all";
 
   await visit("/u/eviltrout/summary");
+
   assert.equal(
-    $(".user-preferences h3").text(),
-    I18n.t("user.second_factor.title"),
+    find(".control-label").text(),
+    "Password",
     "it will not transition from second-factor preferences"
   );
 
@@ -42,8 +44,8 @@ QUnit.test("as a user", async assert => {
   await click("a.about-link");
 
   assert.equal(
-    $(".user-preferences h3").text(),
-    I18n.t("user.second_factor.title"),
+    find(".control-label").text(),
+    "Password",
     "it stays at second-factor preferences"
   );
 });

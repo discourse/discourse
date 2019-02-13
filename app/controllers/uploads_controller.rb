@@ -4,7 +4,7 @@ require_dependency 'upload_creator'
 class UploadsController < ApplicationController
   requires_login except: [:show]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, :redirect_to_second_factor_if_required, only: [:show]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show]
 
   def create
     # capture current user for block later on

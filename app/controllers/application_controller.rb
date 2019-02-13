@@ -49,7 +49,6 @@ class ApplicationController < ActionController::Base
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
-  before_action :redirect_to_second_factor_if_required
   before_action :block_if_requires_login
   before_action :preload_json
   before_action :check_xhr
@@ -686,10 +685,9 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_login_if_required
-    return if current_user || (request.format.json? && is_api?)
+    return if request.format.json? && is_api?
 
-    if SiteSetting.login_required?
-
+    if !current_user && SiteSetting.login_required?
       flash.keep
       dont_cache_page
 
@@ -705,21 +703,18 @@ class ApplicationController < ActionController::Base
         redirect_to path("/login")
       end
     end
-  end
 
-  def redirect_to_second_factor_if_required
-    return if request.format.json? || is_api?
-
-    return if !current_user
-    return if current_user.totp_enabled?
-    return if SiteSetting.enforce_second_factor == 'staff' && !current_user.staff?
-    return if SiteSetting.enforce_second_factor == 'no'
-
-    redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
-
-    return if request.fullpath.start_with?(redirect_path)
-
-    redirect_to path(redirect_path)
+    if current_user &&
+      !current_user.totp_enabled? &&
+      !request.format.json? &&
+      !is_api? &&
+      ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
+        SiteSetting.enforce_second_factor == 'all')
+      redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+      if !request.fullpath.start_with?(redirect_path)
+        redirect_to path(redirect_path)
+      end
+    end
   end
 
   def block_if_readonly_mode

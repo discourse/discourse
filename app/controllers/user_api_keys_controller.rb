@@ -3,7 +3,7 @@ class UserApiKeysController < ApplicationController
   layout 'no_ember'
 
   requires_login only: [:create, :revoke, :undo_revoke]
-  skip_before_action :redirect_to_login_if_required, :redirect_to_second_factor_if_required, only: [:new]
+  skip_before_action :redirect_to_login_if_required, only: [:new]
   skip_before_action :check_xhr, :preload_json
 
   AUTH_API_VERSION ||= 3

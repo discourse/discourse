@@ -3,7 +3,7 @@
 class ExtraLocalesController < ApplicationController
 
   layout :false
-  skip_before_action :check_xhr, :preload_json, :redirect_to_second_factor_if_required
+  skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
 
   def show
     bundle = params[:bundle]

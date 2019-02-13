@@ -3,7 +3,7 @@ require_dependency 'file_helper'
 
 class StaticController < ApplicationController
 
-  skip_before_action :check_xhr, :redirect_to_login_if_required, :redirect_to_second_factor_if_required
+  skip_before_action :check_xhr, :redirect_to_login_if_required
   skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
   skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
   skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]

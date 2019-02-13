@@ -17,7 +17,7 @@ export default RestrictedUserRoute.extend({
 
   actions: {
     willTransition(transition) {
-      this._super();
+      this._super(...arguments);
 
       const controller = this.controllerFor("preferences/second-factor");
       const user = controller.get("currentUser");
