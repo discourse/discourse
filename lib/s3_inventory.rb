@@ -37,7 +37,7 @@ class S3Inventory
       begin
         table_name = "#{inventory_id}_inventory"
         connection = ActiveRecord::Base.connection.raw_connection
-        connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text PRIMARY KEY)")
+        connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
         connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
           files.each do |file|
             CSV.foreach(file[:filename][0...-3], headers: false) do |row|
