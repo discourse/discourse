@@ -2026,7 +2026,7 @@ bs_BA:
       email_in_disabled_click: 'enable the "email in" setting.'
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
-      add_permission: "Add Permission"
+      : "Add Permission"
       this_year: "this year"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "

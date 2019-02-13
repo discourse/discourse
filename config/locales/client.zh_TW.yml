@@ -1820,7 +1820,7 @@ zh_TW:
       all_topics_wiki: "新的主題預設為共筆。"
       allow_badges_label: "允許授予本分類的徽章"
       edit_permissions: "編輯權限"
-      add_permission: "新增權限"
+      : "新增權限"
       this_year: "今年"
       position: "位置"
       default_position: "預設的位置"

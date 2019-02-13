@@ -1512,7 +1512,7 @@ sq:
       email_in_disabled_click: 'aktivizo rregullimin "email in".'
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       edit_permissions: "Ndryshoni autorizimet"
-      add_permission: "Shtoni autorizim"
+      : "Shtoni autorizim"
       this_year: "këtë vit"
       default_position: "Default Position"
       position_disabled: "Kategoritue do të renditen sipas aktivitetit. Për të kontrolluar renditjen e kategorive nëpër lista, "

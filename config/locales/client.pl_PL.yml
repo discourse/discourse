@@ -2156,7 +2156,7 @@ pl_PL:
       default_top_period: "Domyślny okres wyświetlania najlepszych postów:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
-      add_permission: "Dodaj uprawnienie"
+      : "Dodaj uprawnienie"
       this_year: "ten rok"
       default_position: "Domyślna pozycja"
       position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"

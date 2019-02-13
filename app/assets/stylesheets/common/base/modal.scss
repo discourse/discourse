@@ -432,7 +432,12 @@
   }
 
   .add-permission {
-    margin-top: 12px;
+    margin-left: 0.25em;
+    position: absolute;
+  }
+
+  .add-permission-icon{
+    margin: 0;
   }
 }
 

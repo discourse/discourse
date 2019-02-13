@@ -913,7 +913,7 @@ uk:
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дозволити нагороджувати значками у цій категорії"
       edit_permissions: "Редагувати дозволи"
-      add_permission: "Додати дозвіл"
+      : "Додати дозвіл"
       this_year: "цього року"
       default_position: "Default Position"
       parent: "Батьківська категорія"
