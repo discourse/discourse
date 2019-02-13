@@ -2,21 +2,28 @@
 
 require 'maxminddb'
 require 'resolv'
+require 'rubygems/package'
+require 'zlib'
 
 class DiscourseIpInfo
   include Singleton
 
   def initialize
-    open_db(File.join(Rails.root, 'vendor', 'data'))
+    reload
   end
 
-  def open_db(path)
-    @loc_mmdb = mmdb_load(File.join(path, 'GeoLite2-City.mmdb'))
-    @asn_mmdb = mmdb_load(File.join(path, 'GeoLite2-ASN.mmdb'))
+  def reload(path = nil)
+    path ||= File.join(Rails.root, 'vendor', 'data')
+    @loc_mmdb = load_mmdb(File.join(path, 'GeoLite2-City.mmdb'))
+    @asn_mmdb = load_mmdb(File.join(path, 'GeoLite2-ASN.mmdb'))
     @cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
-  def mmdb_load(filepath)
+  def self.reload(path = nil)
+    instance.reload(path)
+  end
+
+  def load_mmdb(filepath)
     begin
       MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)
     rescue Errno::ENOENT => e
@@ -83,11 +90,29 @@ class DiscourseIpInfo
       lookup(ip, locale: locale, resolve_hostname: resolve_hostname)
   end
 
-  def self.open_db(path)
-    instance.open_db(path)
-  end
-
   def self.get(ip, locale: :en, resolve_hostname: false)
     instance.get(ip, locale: locale, resolve_hostname: resolve_hostname)
+  end
+
+  def self.download_mmdb(name)
+    uri = URI("http://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
+    tar_gz_archive = Net::HTTP.get(uri)
+
+    extractor = Gem::Package::TarReader.new(Zlib::GzipReader.new(StringIO.new(tar_gz_archive)))
+    extractor.rewind
+
+    extractor.each do |entry|
+      next unless entry.full_name.ends_with?(".mmdb")
+
+      filename = File.join(Rails.root, 'vendor', 'data', "#{name}.mmdb")
+      File.open(filename, "wb") { |f| f.write(entry.read) }
+    end
+
+    extractor.close
+  end
+
+  def self.update!
+    download_mmdb('GeoLite2-City')
+    download_mmdb('GeoLite2-ASN')
   end
 end
