@@ -1744,7 +1744,7 @@ pt:
       email_in_disabled_click: 'ative a definição "email em".'
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
-      : "Adicionar Permissões"
+      add_permission: "Adicionar Permissões"
       this_year: "este ano"
       default_position: "Posição Padrão"
       position_disabled: "As categorias serão exibidas por ordem de actividade. Para controlar a ordenação das categorias nas listas,"

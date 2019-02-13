@@ -2192,7 +2192,7 @@ fr:
       default_top_period: "Période des meilleurs sujets par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
-      : "Ajouter la permission"
+      add_permission: "Ajouter la permission"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"

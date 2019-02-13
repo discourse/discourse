@@ -1850,7 +1850,7 @@ ko:
       default_top_period: "기본 Top 기간:"
       allow_badges_label: "배지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
-      : "권한 추가"
+      add_permission: "권한 추가"
       this_year: "올해"
       position: "위치:"
       default_position: "기본 위치"

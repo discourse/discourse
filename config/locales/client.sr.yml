@@ -1228,7 +1228,7 @@ sr:
       email_in_disabled_click: 'omogućite "pošalji email u" podešavanjima.'
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       edit_permissions: "Izmeni dozvole"
-      : "Dodaj dozvole"
+      add_permission: "Dodaj dozvole"
       this_year: "ove godine"
       default_position: "Zadana pozicija"
       position_disabled: "Kategorije će u nizu biti prikazivane po nivou aktivnosti. Za kontrolu redosleda kategorija u listi,"

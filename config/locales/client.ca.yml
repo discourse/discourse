@@ -1638,7 +1638,7 @@ ca:
       subcategory_list_style: "Estil de llista de la subcategoria:"
       allow_badges_label: "Permet concedir distintius dins aquesta categoria"
       edit_permissions: "Edita permisos"
-      : "Afegeix permisos"
+      add_permission: "Afegeix permisos"
       this_year: "aquest any"
       default_position: "Posició per defecte"
       position_disabled: "Les categories es mostraran per ordre d'activitat. Per controlar l'ordre de les categories en llistes, "

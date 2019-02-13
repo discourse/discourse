@@ -2304,7 +2304,7 @@ cs:
       default_top_period: "Výchozí hlavní doba:"
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
-      : "Přidat oprávnění"
+      add_permission: "Přidat oprávnění"
       require_topic_approval: "Požadovat schválení moderátorů pro všechna nová témata"
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"

@@ -1786,7 +1786,7 @@ hu:
       default_view: "Alapértelmezett témakörök"
       allow_badges_label: "Kitűzök elnyerésének engedélyezése ebben a kategóriában"
       edit_permissions: "Jogok szerkesztése"
-      : "Jogok hozzáadása"
+      add_permission: "Jogok hozzáadása"
       this_year: "ez az év"
       position: "Pozíció:"
       default_position: "Alapértelmezett pozíció"

@@ -2099,7 +2099,7 @@ nl:
       default_top_period: "Standaard topperiode:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
       edit_permissions: "Toestemmingen wijzigen"
-      : "Toestemming toevoegen"
+      add_permission: "Toestemming toevoegen"
       this_year: "dit jaar"
       default_position: "Standaardpositie"
       position_disabled: "Categorieën worden op volgorde van activiteit weergegeven. Om de volgorde van categorieën in lijsten aan te passen, "

@@ -1956,7 +1956,7 @@ lt:
       sort_order: "Temų sąrasą rūšiuoti oagal\""
       allow_badges_label: "Leisti trofėjų apdovanojimus šioje kategorijoje"
       edit_permissions: "Redaguoti leidimus"
-      : "Pridėti leidimus"
+      add_permission: "Pridėti leidimus"
       this_year: "šiais metais"
       position: "Vieta:"
       default_position: "Numatyta pozicija"

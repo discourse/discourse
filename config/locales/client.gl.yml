@@ -1314,7 +1314,7 @@ gl:
       email_in_disabled_click: 'activar o axuste «email in».'
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
-      : "Engadir permisos"
+      add_permission: "Engadir permisos"
       this_year: "este ano"
       default_position: "Posición predeterminada"
       position_disabled: "As categorías amosaranse en orde de actividade. Para controlar a orde das categorías nas listas."

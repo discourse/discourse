@@ -2044,7 +2044,7 @@ zh_CN:
       default_top_period: "默认热门时长："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
-      : "添加权限"
+      add_permission: "添加权限"
       require_topic_approval: "所有新主题需要版主审批"
       require_reply_approval: "所有新回复需要版主审批"
       this_year: "今年"

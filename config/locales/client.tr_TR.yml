@@ -2061,7 +2061,7 @@ tr_TR:
       default_top_period: "Varsayılan Üst Periyot:"
       allow_badges_label: "Bu kategoride rozetle ödüllendirilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
-      : "İzin Ekle"
+      add_permission: "İzin Ekle"
       require_topic_approval: "Tüm yeni konular moderatör onayını gerektirir"
       require_reply_approval: "Tüm yeni cevaplar moderatör onayı gerektirir"
       this_year: "bu yıl"

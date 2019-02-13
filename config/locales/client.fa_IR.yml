@@ -1787,7 +1787,7 @@ fa_IR:
       default_top_period: "دوره زمانی پیشفرض برترین‌ها:"
       allow_badges_label: "امکان  اهدای نشان در این دسته‌بندی را بده"
       edit_permissions: "ویرایش دسترسی‌ها"
-      : "افزودن مجوز"
+      add_permission: "افزودن مجوز"
       this_year: "امسال"
       default_position: "موقعیت پیش‌فرض"
       position_disabled: "دسته‌‌بندی‌ها به‌ترتیب فعالیت نمایش داده می‌شوند. برای کنترل ترتیب دسته‌بندی‌ها"
