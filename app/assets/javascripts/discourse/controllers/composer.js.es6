@@ -783,7 +783,11 @@ export default Ember.Controller.extend({
     });
 
     // Scope the categories drop down to the category we opened the composer with.
-    if (opts.categoryId && opts.draftKey !== "reply_as_new_topic") {
+    if (
+      opts.categoryId &&
+      opts.draftKey !== "reply_as_new_topic" &&
+      !opts.disableScopedCategory
+    ) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);
