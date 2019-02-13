@@ -242,7 +242,7 @@ export default DropdownSelectBoxComponent.extend({
   replyAsNewTopicSelected(options) {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
-    options.disabledScopedCategory = true;
+    options.disableScopedCategory = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
@@ -300,7 +300,7 @@ export default DropdownSelectBoxComponent.extend({
             "draftKey",
             "draftSequence",
             "reply",
-            "disabledScopedCategory"
+            "disableScopedCategory"
           ),
           model
         );

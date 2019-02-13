@@ -786,7 +786,7 @@ export default Ember.Controller.extend({
     if (
       opts.categoryId &&
       opts.draftKey !== "reply_as_new_topic" &&
-      !opts.disabledScopedCategory
+      !opts.disableScopedCategory
     ) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
