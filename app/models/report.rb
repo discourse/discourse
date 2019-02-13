@@ -204,9 +204,9 @@ class Report
 
   def self.report_consolidated_page_views(report)
     filters = %w[
-      page_view_crawler
       page_view_logged_in
       page_view_anon
+      page_view_crawler
     ]
 
     report.modes = [:stacked_chart]
