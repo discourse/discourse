@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Onebox::Engine::TypeformOnebox do
+
   it 'Appends the embed widget param when is missing' do
     raw_preview = Onebox.preview('https://basvanleeuwen1.typeform.com/to/NzdRpx').to_s
 
@@ -41,9 +42,7 @@ describe Onebox::Engine::TypeformOnebox do
   end
 
   def get_query_params(raw_preview)
-    preview = Nokogiri::HTML::DocumentFragment.parse(raw_preview)
-
-    form_url = preview.css('iframe').first['src']
+    form_url = inspect_html_fragment(raw_preview, 'iframe', 'src')
     CGI::parse(URI::parse(form_url).query || '')
   end
 end
