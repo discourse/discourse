@@ -46,7 +46,7 @@ class S3Inventory
           end
         end
 
-        uploads = model.where("created_at < ?", last_modified)
+        uploads = (model == Upload) ? model.where("created_at < ?", last_modified) : model
         missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
 
         if (missing_count = missing_uploads.count) > 0
