@@ -147,6 +147,7 @@
 .modal-form {
   margin-bottom: 0;
 }
+
 .modal-footer {
   padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
@@ -154,11 +155,13 @@
     margin: 0 5px 5px 0;
   }
 }
+
 .modal-footer:before,
 .modal-footer:after {
   display: table;
   content: "";
 }
+
 .modal-footer:after {
   clear: both;
 }
@@ -315,6 +318,7 @@
     }
   }
 }
+
 .d-modal-cancel {
   margin-left: 1em;
   color: $primary-medium;
@@ -432,7 +436,12 @@
   }
 
   .add-permission {
-    margin-top: 12px;
+    margin-left: 0.25em;
+    position: absolute;
+  }
+
+  .add-permission-icon {
+    margin: 0;
   }
 }
 

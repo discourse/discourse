@@ -1757,7 +1757,7 @@ lv:
       default_top_period: "Noklusējuma topa periods:"
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       edit_permissions: "Mainīt atļaujas"
-      add_permission: "Pievienot atļauju"
+      : "Pievienot atļauju"
       this_year: "šogad"
       default_position: "Noklusētā pozīcija"
       position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"

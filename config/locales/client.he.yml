@@ -1831,7 +1831,7 @@ he:
       default_top_period: "פרק זמן דיפולטיבי להובלה"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
-      add_permission: "הוסף הרשאה"
+      : "הוסף הרשאה"
       this_year: "השנה"
       default_position: "מיקום ברירת מחדל"
       position_disabled: "קטגוריות יוצגו על פס סדר הפעילות. כדי לשלוט בסדר הקטגורייות ברשימה,"

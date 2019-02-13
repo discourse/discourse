@@ -1716,7 +1716,7 @@ da:
       default_top_period: "Standardperiode for top:"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
-      add_permission: "Tilføj tilladelse"
+      : "Tilføj tilladelse"
       this_year: "dette år"
       default_position: "Standarposition"
       position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "

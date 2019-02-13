@@ -1646,7 +1646,7 @@ sv:
       default_view: "Förvald ämneslista"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
-      add_permission: "Lägg till behörighet"
+      : "Lägg till behörighet"
       this_year: "i år"
       default_position: "Standardposition"
       position_disabled: "Kategorier kommer att sorteras efter deras aktivitet. För att ställa in sorteringen av kategorier i den här listan,"

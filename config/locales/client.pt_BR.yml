@@ -2073,7 +2073,7 @@ pt_BR:
       default_top_period: "Período Superior Padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nessa categoria"
       edit_permissions: "Editar Permissões"
-      add_permission: "Adicionar Permissões"
+      : "Adicionar Permissões"
       require_topic_approval: "Requer aprovação do moderador de todos os novos tópicos"
       require_reply_approval: "Requer aprovação do moderador de todas as novas respostas"
       this_year: "este ano"

@@ -1969,7 +1969,7 @@ sw:
       default_view: "Orodha ya Mada Chaguo Msingi:"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
       edit_permissions: "Hariri Vibali"
-      add_permission: "Ongeza Kibali"
+      : "Ongeza Kibali"
       this_year: "mwaka huu"
       position: "Nafasi"
       default_position: "Chaguo Msingi la Nafasi"

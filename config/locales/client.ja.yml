@@ -1846,7 +1846,7 @@ ja:
       email_in_disabled_click: '"email in"設定を有効にしてください'
       allow_badges_label: "このカテゴリでバッジが付与されることを許可"
       edit_permissions: "パーミッションを編集"
-      add_permission: "パーミッションを追加"
+      : "パーミッションを追加"
       this_year: "今年"
       position: "ポジション"
       default_position: "デフォルトポジション"

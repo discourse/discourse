@@ -2191,7 +2191,7 @@ es:
       default_top_period: "Periodo por defecto para el TOP"
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
-      add_permission: "Añadir permisos"
+      : "Añadir permisos"
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
       this_year: "este año"

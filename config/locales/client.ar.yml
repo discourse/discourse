@@ -2117,7 +2117,7 @@ ar:
       default_top_period: "فترة الاكثر مشاهدة الافتراضية"
       allow_badges_label: "السماح بالحصول على الأوسمة في هذا القسم"
       edit_permissions: "عدل التصاريح"
-      add_permission: "أضف تصريحًا"
+      : "أضف تصريحًا"
       this_year: "هذه السنة"
       default_position: "المكان الافتراضي"
       position_disabled: "سوف تُعرض الاقسام بترتيب نشاطها. للتّحكّم بترتيب الأقسام في القائمة،"

@@ -2385,7 +2385,7 @@ sl:
       default_top_period: "Privzeto obdobje za najboljše:"
       allow_badges_label: "Omogoči nagrajevanje z značkami v tej kategoriji"
       edit_permissions: "Uredi dovoljenja"
-      add_permission: "Dodaj dovoljenja"
+      : "Dodaj dovoljenja"
       require_topic_approval: "Zahtevaj moderatorjevo potrditev vseh novih tem"
       require_reply_approval: "Zahteva odobritev moderatorja za vse nove odgovore"
       this_year: "to leto"
