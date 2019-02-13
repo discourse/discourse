@@ -236,8 +236,10 @@ module BackupRestore
       log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
+          exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
+            'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
             failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
           )
         else

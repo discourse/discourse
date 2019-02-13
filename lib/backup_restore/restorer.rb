@@ -425,6 +425,7 @@ module BackupRestore
           tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
           previous_db_name = File.basename(tmp_uploads_path)
           current_db_name = RailsMultisite::ConnectionManagement.current_db
+          optimized_images_exist = File.exist?(File.join(tmp_uploads_path, 'optimized'))
 
           Discourse::Utils.execute_command(
             'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
@@ -432,9 +433,28 @@ module BackupRestore
           )
 
           if previous_db_name != current_db_name
+            log "Remapping uploads..."
             DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
           end
+
+          generate_optimized_images unless optimized_images_exist
         end
+      end
+    end
+
+    def generate_optimized_images
+      log 'Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed.'
+      log 'You can expedite the process by manually running "rake posts:rebake_uncooked_posts"'
+
+      DB.exec("TRUNCATE TABLE optimized_images")
+      DB.exec(<<~SQL)
+        UPDATE posts
+        SET baked_version = NULL
+        WHERE id IN (SELECT post_id FROM post_uploads)
+      SQL
+
+      User.where("uploaded_avatar_id IS NOT NULL").find_each do |user|
+        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id, user_id: user.id)
       end
     end
 

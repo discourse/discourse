@@ -1534,6 +1534,9 @@ backups:
     min: 1
     max: 9
     shadowed_by_global: true
+  include_thumbnails_in_backups:
+    default: true
+    shadowed_by_global: true
 
 search:
   min_search_term_length:
