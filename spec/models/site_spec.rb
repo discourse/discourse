@@ -74,7 +74,7 @@ describe Site do
     expect(site.groups.pluck(:name)).to eq(["moderators"])
 
     group = Fabricate(:group)
-    expect(site.groups.pluck(:name)).to eq([group.name])
+    expect(site.groups.pluck(:name)).to eq(["moderators", group.name])
 
     admin = Fabricate(:admin)
     site = Site.new(Guardian.new(admin))
