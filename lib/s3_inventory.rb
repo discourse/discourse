@@ -136,7 +136,7 @@ class S3Inventory
 
       @s3_helper.download_file(symlink_file.key, filename, failure_message)
       File.readlines(filename).map do |key|
-        key = key.sub("s3://#{bucket_name}/").sub("\n", "")
+        key = key.sub("s3://#{bucket_name}/", "").sub("\n", "")
         { key: key, filename: File.join(tmp_directory, File.basename(key)) }
       end
     end
