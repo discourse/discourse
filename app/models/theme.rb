@@ -444,7 +444,7 @@ class Theme < ActiveRecord::Base
 
       meta[:assets] = {}.tap do |hash|
         theme_fields.where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
-          hash[field.name] = "assets/#{field.upload.original_filename}"
+          hash[field.name] = field.file_path
         end
       end
 

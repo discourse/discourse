@@ -340,7 +340,7 @@ class ThemeField < ActiveRecord::Base
                          canonical: -> (h) { "locales/#{h[:name]}.yml" }),
     ThemeFileMatcher.new(regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
                          names: nil, types: :theme_upload_var, targets: :common,
-                         canonical: -> (h) { "assets/#{h[:filename]}" }),
+                         canonical: -> (h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" }),
   ]
 
   # For now just work for standard fields
