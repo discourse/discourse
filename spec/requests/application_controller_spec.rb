@@ -177,7 +177,6 @@ RSpec.describe ApplicationController do
         end
       end
 
-
       it 'should cache results' do
         $redis.del("page_not_found_topics")
 
