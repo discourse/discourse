@@ -268,7 +268,7 @@ describe CookedPostProcessor do
 
         # fake some optimized images
         OptimizedImage.create!(
-          url: 'http://a.b.c/666x500.jpg',
+          url: '/uploads/default/666x500.jpg',
           width: 666,
           height: 500,
           upload_id: upload.id,
@@ -280,7 +280,7 @@ describe CookedPostProcessor do
 
         # fake 3x optimized image, we lose 2 pixels here over original due to rounding on downsize
         OptimizedImage.create!(
-          url: 'http://a.b.c/1998x1500.jpg',
+          url: '/uploads/default/1998x1500.jpg',
           width: 1998,
           height: 1500,
           upload_id: upload.id,
@@ -291,7 +291,7 @@ describe CookedPostProcessor do
 
         # Fake a loading image
         optimized_image = OptimizedImage.create!(
-          url: 'http://a.b.c/10x10.png',
+          url: '/uploads/default/10x10.png',
           width: CookedPostProcessor::LOADING_SIZE,
           height: CookedPostProcessor::LOADING_SIZE,
           upload_id: upload.id,
@@ -307,9 +307,22 @@ describe CookedPostProcessor do
 
         html = cpp.html
 
-        expect(html).to include(%Q|data-small-upload="#{optimized_image.url}"|)
+        expect(html).to include(%Q|data-small-upload="//test.localhost/uploads/default/10x10.png"|)
         # 1.5x is skipped cause we have a missing thumb
-        expect(html).to include('srcset="http://a.b.c/666x500.jpg, http://a.b.c/1998x1500.jpg 3x"')
+        expect(html).to include('srcset="//test.localhost/uploads/default/666x500.jpg, //test.localhost/uploads/default/1998x1500.jpg 3x"')
+        expect(html).to include('src="//test.localhost/uploads/default/666x500.jpg"')
+
+        # works with CDN
+        set_cdn_url("http://cdn.localhost")
+
+        cpp = CookedPostProcessor.new(post)
+        cpp.add_to_size_cache(upload.url, 2000, 1500)
+        cpp.post_process_images
+        html = cpp.html
+
+        expect(html).to include(%Q|data-small-upload="//cdn.localhost/uploads/default/10x10.png"|)
+        expect(html).to include('srcset="//cdn.localhost/uploads/default/666x500.jpg, //cdn.localhost/uploads/default/1998x1500.jpg 3x"')
+        expect(html).to include('src="//cdn.localhost/uploads/default/666x500.jpg"')
       end
 
       it "doesn't include response images for cropped images" do
@@ -409,7 +422,7 @@ describe CookedPostProcessor do
         FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
 
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
 <span class=\"filename\">logo.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
@@ -502,7 +515,7 @@ describe CookedPostProcessor do
 
       it "crops the image" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
 <span class=\"filename\">logo.png</span><span class=\"informations\">1125×2436 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
@@ -533,7 +546,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
 <span class=\"filename\">logo.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
         expect(cpp).to be_dirty
@@ -542,7 +555,7 @@ describe CookedPostProcessor do
       it "should escape the filename" do
         upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
 <span class=\"filename\">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
 </div></a></div></p>"
       end
@@ -568,7 +581,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"WAT\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"WAT\"><img src=\"//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
        <span class=\"filename\">WAT</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
        </div></a></div></p>"
         expect(cpp).to be_dirty
