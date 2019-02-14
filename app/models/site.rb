@@ -72,9 +72,7 @@ class Site
   end
 
   def groups
-    groups = Group.visible_groups(@guardian.user)
-    groups = groups.where("automatic IS FALSE OR groups.id = #{Group::AUTO_GROUPS[:moderators]}") if !@guardian.is_staff?
-    groups
+    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
   end
 
   def suppressed_from_latest_category_ids
