@@ -1535,7 +1535,7 @@ backups:
     max: 9
     shadowed_by_global: true
   include_thumbnails_in_backups:
-    default: true
+    default: false
     shadowed_by_global: true
 
 search:
