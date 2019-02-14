@@ -1,5 +1,3 @@
-require "aws-sdk-sns"
-
 module Jobs
 
   class ConfirmSnsSubscription < Jobs::Base
@@ -8,8 +6,9 @@ module Jobs
     def execute(args)
       return unless raw  = args[:raw].presence
       return unless json = args[:json].presence
-
       return unless subscribe_url = json["SubscribeURL"].presence
+
+      require "aws-sdk-sns"
       return unless Aws::SNS::MessageVerifier.new.authentic?(raw)
 
       # confirm subscription by visiting the URL

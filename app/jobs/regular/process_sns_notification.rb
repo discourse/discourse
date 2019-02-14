@@ -1,5 +1,3 @@
-require "aws-sdk-sns"
-
 module Jobs
 
   class ProcessSnsNotification < Jobs::Base
@@ -14,6 +12,7 @@ module Jobs
       return unless message_id = message.dig("mail", "messageId").presence
       return unless bounce_type = message.dig("bounce", "bounceType").presence
 
+      require "aws-sdk-sns"
       return unless Aws::SNS::MessageVerifier.new.authentic?(raw)
 
       message.dig("bounce", "bouncedRecipients").each do |r|
