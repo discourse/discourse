@@ -19,7 +19,7 @@ task 'javascript:update' do
 
   dependencies = [
     {
-      source: 'ace-builds/src-min',
+      source: 'ace-builds/src-min-noconflict/.',
       destination: 'ace',
       public: true
     }, {
@@ -69,7 +69,7 @@ task 'javascript:update' do
     }, {
       source: 'moment/moment.js'
     }, {
-      source: 'moment/locale',
+      source: 'moment/locale/.',
       destination: 'moment-locale',
     }, {
       source: 'moment-timezone/builds/moment-timezone-with-data.js'
@@ -104,6 +104,11 @@ task 'javascript:update' do
 
       puts "Cleanup unused styles folder"
       system("rm -rf node_modules/highlight.js/build/styles")
+    end
+
+    if src.include? "ace-builds"
+      puts "Cleanup unused snippets folder for ACE"
+      system("rm -rf node_modules/ace-builds/src-min-noconflict/snippets")
     end
 
     if f[:public]
