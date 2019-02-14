@@ -99,7 +99,7 @@ const Category = RestModel.extend({
         color: this.get("color"),
         text_color: this.get("text_color"),
         secure: this.get("secure"),
-        permissions: this.get("permissionsForUpdate"),
+        permissions: this._permissionsForUpdate(),
         auto_close_hours: this.get("auto_close_hours"),
         auto_close_based_on_last_post: this.get(
           "auto_close_based_on_last_post"
@@ -135,8 +135,8 @@ const Category = RestModel.extend({
     });
   },
 
-  @computed("permissions")
-  permissionsForUpdate(permissions) {
+  _permissionsForUpdate() {
+    const permissions = this.get("permissions");
     let rval = {};
     permissions.forEach(p => (rval[p.group_name] = p.permission.id));
     return rval;

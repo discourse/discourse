@@ -55,6 +55,8 @@ class Category < ActiveRecord::Base
 
   validate :ensure_slug
 
+  validate :permissions_compatibility_validator
+
   validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
 
   after_create :create_category_definition
@@ -630,6 +632,43 @@ class Category < ActiveRecord::Base
       DiscourseEvent.trigger(event, self)
       true
     end
+  end
+
+  def permissions_compatibility_validator
+    # when saving subcategories
+    if @permissions && parent_category_id.present?
+      return if parent_category.category_groups.empty?
+
+      parent_permissions = parent_category.category_groups.pluck(:group_id, :permission_type)
+      child_permissions = @permissions.empty? ? [[Group[:everyone].id, CategoryGroup.permission_types[:full]]] : @permissions
+      check_permissions_compatibility(parent_permissions, child_permissions)
+
+    # when saving parent category
+    elsif @permissions && subcategories.present?
+      return if @permissions.empty?
+
+      parent_permissions = @permissions
+      child_permissions = subcategories_permissions.uniq
+
+      check_permissions_compatibility(parent_permissions, child_permissions)
+    end
+  end
+
+  private
+
+  def check_permissions_compatibility(parent_permissions, child_permissions)
+    parent_groups = parent_permissions.map(&:first)
+    child_groups = child_permissions.map(&:first)
+    only_in_subcategory = child_groups - parent_groups
+
+    errors.add(:base, I18n.t("category.errors.permission_conflict")) if only_in_subcategory.present?
+  end
+
+  def subcategories_permissions
+    CategoryGroup.joins(:category)
+      .where(['categories.parent_category_id = ?', self.id])
+      .pluck(:group_id, :permission_type)
+      .uniq
   end
 end
 
