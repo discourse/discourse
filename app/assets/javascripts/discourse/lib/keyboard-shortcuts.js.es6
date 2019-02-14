@@ -7,7 +7,7 @@ const bindings = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
-  "ctrl+alt+f": { handler: "toggleSearch", anonymous: true },
+  "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
@@ -67,7 +67,7 @@ const bindings = {
   "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
   "shift+u": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
-  "shift+f11": { handler: "fullscreenComposer" },
+  "shift+f11": { handler: "fullscreenComposer", global: true },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
   "x r": {
@@ -101,7 +101,12 @@ export default {
       if (binding.path) {
         this._bindToPath(binding.path, key);
       } else if (binding.handler) {
-        this._bindToFunction(binding.handler, key);
+        if (binding.global) {
+          // global shortcuts will trigger even while focusing on input/textarea
+          this._globalBindToFunction(binding.handler, key);
+        } else {
+          this._bindToFunction(binding.handler, key);
+        }
       } else if (binding.postAction) {
         this._bindToSelectedPost(binding.postAction, key);
       } else if (binding.click) {
@@ -397,6 +402,12 @@ export default {
       }
       $sel.click();
     });
+  },
+
+  _globalBindToFunction(func, binding) {
+    if (typeof this[func] === "function") {
+      this.keyTrapper.bindGlobal(binding, _.bind(this[func], this));
+    }
   },
 
   _bindToFunction(func, binding) {

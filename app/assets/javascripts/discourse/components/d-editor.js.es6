@@ -256,15 +256,6 @@ export default Ember.Component.extend({
     const mouseTrap = Mousetrap(this.$(".d-editor-input")[0]);
     const shortcuts = this.get("toolbar.shortcuts");
 
-    // for some reason I am having trouble bubbling this so hack it in
-    mouseTrap.bind(["ctrl+alt+f"], event => {
-      this.appEvents.trigger("header:keyboard-trigger", {
-        type: "search",
-        event
-      });
-      return true;
-    });
-
     Object.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
       mouseTrap.bind(sc, () => {
@@ -323,7 +314,6 @@ export default Ember.Component.extend({
     Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
       mouseTrap.unbind(sc)
     );
-    mouseTrap.unbind("ctrl+/", "command+/");
     this.$(".d-editor-preview").off("click.preview");
   },
 
