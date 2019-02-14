@@ -121,6 +121,10 @@ export default function userSearch(options) {
     topicId = options.topicId,
     group = options.group;
 
+  if (/[^\w.-]/.test(term)) {
+    term = "";
+  }
+
   if (oldSearch) {
     oldSearch.abort();
     oldSearch = null;

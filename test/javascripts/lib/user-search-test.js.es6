@@ -1,4 +1,5 @@
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 
 QUnit.module("lib:user-search", {
   beforeEach() {
@@ -70,4 +71,9 @@ QUnit.test("it places groups unconditionally for exact match", async assert => {
 QUnit.test("it strips @ from the beginning", async assert => {
   let results = await userSearch({ term: "@Team" });
   assert.equal(results[results.length - 1]["name"], "team");
+});
+
+QUnit.test("it does not search for invalid usernames", async assert => {
+  let results = await userSearch({ term: "foo, " });
+  assert.equal(results, CANCELLED_STATUS);
 });
