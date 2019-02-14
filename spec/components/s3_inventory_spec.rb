@@ -64,6 +64,7 @@ describe "S3Inventory" do
     upload = Fabricate(:upload, etag: "ETag", created_at: 1.days.ago)
     Fabricate(:upload, etag: "ETag2", created_at: Time.now)
 
+    inventory.expects(:download_inventory_files_to_tmp_directory)
     inventory.expects(:decompress_inventory_files)
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).at_least(1)
     inventory.expects(:last_modified).returns(Time.now)
@@ -72,12 +73,13 @@ describe "S3Inventory" do
       inventory.list_missing
     end
 
-    expect(output).to eq("Downloading inventory file 'Key' to tmp directory...\n#{upload.url}\n1 of 4 uploads are missing\n")
+    expect(output).to eq("#{upload.url}\n1 of 4 uploads are missing\n")
   end
 
   it "should backfill etags to uploads table correctly" do
     Fabricate(:upload, url: "//bucket.amazonaws.com/original/0184537a4f419224404d013414e913a4f56018f2.jpg", created_at: 2.days.ago)
 
+    inventory.expects(:download_inventory_files_to_tmp_directory)
     inventory.expects(:decompress_inventory_files)
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).at_least(1)
 
