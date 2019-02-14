@@ -77,14 +77,20 @@ describe "S3Inventory" do
   end
 
   it "should backfill etags to uploads table correctly" do
-    Fabricate(:upload, url: "//bucket.amazonaws.com/original/0184537a4f419224404d013414e913a4f56018f2.jpg", created_at: 2.days.ago)
+    files = [
+      ["//bucket.amazonaws.com/original/0184537a4f419224404d013414e913a4f56018f2.jpg", "defcaac0b4aca535c284e95f30d608d0"],
+      ["//bucket.amazonaws.com/original/0789fbf5490babc68326b9cec90eeb0d6590db05.png", "25c02eaceef4cb779fc17030d33f7f06"]
+    ]
+    files.each { |file| Fabricate(:upload, url: file[0]) }
 
     inventory.expects(:download_inventory_files_to_tmp_directory)
     inventory.expects(:decompress_inventory_files)
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
 
     output = capture_stdout do
-      expect { inventory.list_missing(backfill_etags: true) }.to change { Upload.where(etag: nil).count }.by(-1)
+      expect { inventory.list_missing }.to change { Upload.where(etag: nil).count }.by(-2)
     end
+
+    expect(Upload.order(:url).pluck(:url, :etag)).to eq(files)
   end
 end
