@@ -5,7 +5,7 @@ require "csv"
 
 class S3Inventory
 
-  attr_reader :inventory_id, :model, :last_modified
+  attr_reader :inventory_id, :model, :inventory_date
 
   CSV_KEY_INDEX ||= 1
   CSV_ETAG_INDEX ||= 2
@@ -53,7 +53,7 @@ class S3Inventory
           end
         end
 
-        uploads = (model == Upload) ? model.where("created_at < ?", last_modified) : model
+        uploads = (model == Upload) ? model.where("created_at < ?", inventory_date) : model
         missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
 
         if (missing_count = missing_uploads.count) > 0
@@ -129,7 +129,7 @@ class S3Inventory
       symlink_file = unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
       return [] if symlink_file.blank?
 
-      @last_modified = symlink_file.last_modified
+      @inventory_date = symlink_file.last_modified - 1.day
       log "Downloading symlink file to tmp directory..."
       failure_message = "Failed to download symlink file to tmp directory."
       filename = File.join(tmp_directory, File.basename(symlink_file.key))

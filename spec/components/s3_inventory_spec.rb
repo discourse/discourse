@@ -66,8 +66,8 @@ describe "S3Inventory" do
 
     inventory.expects(:download_inventory_files_to_tmp_directory)
     inventory.expects(:decompress_inventory_files)
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).at_least(1)
-    inventory.expects(:last_modified).returns(Time.now)
+    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
+    inventory.expects(:inventory_date).returns(Time.now)
 
     output = capture_stdout do
       inventory.list_missing
@@ -81,7 +81,7 @@ describe "S3Inventory" do
 
     inventory.expects(:download_inventory_files_to_tmp_directory)
     inventory.expects(:decompress_inventory_files)
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).at_least(1)
+    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
 
     output = capture_stdout do
       expect { inventory.list_missing(backfill_etags: true) }.to change { Upload.where(etag: nil).count }.by(-1)
