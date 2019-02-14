@@ -71,14 +71,14 @@ describe Site do
     site = Site.new(Guardian.new(user))
 
     group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
-    expect(site.groups.pluck(:name)).to eq(["moderators"])
+    expect(site.groups.pluck(:name)).to contain_exactly("moderators")
 
     group = Fabricate(:group)
-    expect(site.groups.pluck(:name)).to eq(["moderators", group.name])
+    expect(site.groups.pluck(:name)).to contain_exactly("moderators", group.name)
 
     admin = Fabricate(:admin)
     site = Site.new(Guardian.new(admin))
-    expect(site.groups.pluck(:name)).to eq(Group.visible_groups(admin).pluck(:name))
+    expect(site.groups.pluck(:name)).to match_array(Group.visible_groups(admin).pluck(:name))
   end
 
   it "includes all enabled authentication providers" do
