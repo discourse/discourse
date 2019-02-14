@@ -1611,6 +1611,10 @@ mkdirp@0.5.1, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+"moment-timezone-names-translations@https://github.com/discourse/moment-timezone-names-translations":
+  version "0.0.0"
+  resolved "https://github.com/discourse/moment-timezone-names-translations#5f576fc6355d8e636783bfb7b0214a5d74a5399d"
+
 moment-timezone@0.5.14:
   version "0.5.14"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.14.tgz#4eb38ff9538b80108ba467a458f3ed4268ccfcb1"
