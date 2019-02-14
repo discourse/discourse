@@ -25,4 +25,12 @@ class ApplicationSerializer < ActiveModel::Serializer
   def cache_fragment(name)
     ApplicationSerializer.fragment_cache[name] ||= yield
   end
+
+  def cache_anon_fragment(name, &blk)
+    if scope.anonymous?
+      cache_fragment(name, &blk)
+    else
+      blk.call
+    end
+  end
 end

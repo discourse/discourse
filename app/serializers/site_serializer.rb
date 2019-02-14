@@ -50,7 +50,9 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def groups
-    object.groups.pluck(:id, :name).map { |id, name| { id: id, name: name } }.as_json
+    cache_anon_fragment("group_names") do
+      object.groups.order(:name).pluck(:id, :name).map { |id, name| { id: id, name: name } }.as_json
+    end
   end
 
   def post_action_types
