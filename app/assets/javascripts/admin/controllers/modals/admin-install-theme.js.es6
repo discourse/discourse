@@ -23,7 +23,8 @@ const POPULAR_THEMES = [
     name: "Material Design Theme",
     value: "https://github.com/discourse/material-design-stock-theme",
     preview: "https://newmaterial.trydiscourse.com",
-    description: "Inspired by Material Design, this theme comes with several color palettes (incl. a dark one).",
+    description:
+      "Inspired by Material Design, this theme comes with several color palettes (incl. a dark one).",
     meta_url: "https://meta.discourse.org/t/material-design-stock-theme/47142"
   },
   {
@@ -38,7 +39,8 @@ const POPULAR_THEMES = [
     name: "Sam's Simple Theme",
     value: "https://github.com/SamSaffron/discourse-simple-theme",
     preview: "https://theme-creator.discourse.org/theme/sam/simple",
-    description: "Simplified front page design with classic colors and typography.",
+    description:
+      "Simplified front page design with classic colors and typography.",
     meta_url:
       "https://meta.discourse.org/t/sams-personal-minimal-topic-list-design/23552"
   },
@@ -60,7 +62,8 @@ const POPULAR_THEMES = [
   {
     name: "Brand Header Theme Component",
     value: "https://github.com/discourse/discourse-brand-header",
-    description: "Add an extra top header with your logo, navigation links and social icons.",
+    description:
+      "Add an extra top header with your logo, navigation links and social icons.",
     meta_url: "https://meta.discourse.org/t/brand-header-theme-component/77977",
     component: true
   },
@@ -78,14 +81,16 @@ const POPULAR_THEMES = [
     value: "https://github.com/awesomerobot/discourse-category-banners",
     preview:
       "https://theme-creator.discourse.org/theme/awesomerobot/discourse-category-banners",
-    description: "Show banners on category pages using your existing category details.",
+    description:
+      "Show banners on category pages using your existing category details.",
     meta_url: "https://meta.discourse.org/t/discourse-category-banners/86241",
     component: true
   },
   {
     name: "Hamburger Theme Selector",
     value: "https://github.com/discourse/discourse-hamburger-theme-selector",
-    description: "Displays a theme selector in the hamburger menu provided there is more than one user-selectable theme.",
+    description:
+      "Displays a theme selector in the hamburger menu provided there is more than one user-selectable theme.",
     meta_url: "https://meta.discourse.org/t/hamburger-theme-selector/61210",
     component: true
   },
