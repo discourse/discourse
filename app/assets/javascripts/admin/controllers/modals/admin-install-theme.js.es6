@@ -15,6 +15,7 @@ const POPULAR_THEMES = [
     name: "Graceful",
     value: "https://github.com/awesomerobot/graceful",
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/graceful",
+    description: "A light and graceful theme for Discourse.",
     meta_url:
       "https://meta.discourse.org/t/a-graceful-theme-for-discourse/93040"
   },
@@ -22,12 +23,14 @@ const POPULAR_THEMES = [
     name: "Material Design Theme",
     value: "https://github.com/discourse/material-design-stock-theme",
     preview: "https://newmaterial.trydiscourse.com",
+    description: "Inspired by Material Design, this theme comes with several color palettes (incl. a dark one).",
     meta_url: "https://meta.discourse.org/t/material-design-stock-theme/47142"
   },
   {
     name: "Minima",
     value: "https://github.com/awesomerobot/minima",
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/minima",
+    description: "A minimal theme with reduced UI elements and focus on text.",
     meta_url:
       "https://meta.discourse.org/t/minima-a-minimal-theme-for-discourse/108178"
   },
@@ -35,6 +38,7 @@ const POPULAR_THEMES = [
     name: "Sam's Simple Theme",
     value: "https://github.com/SamSaffron/discourse-simple-theme",
     preview: "https://theme-creator.discourse.org/theme/sam/simple",
+    description: "Simplified front page design with classic colors and typography.",
     meta_url:
       "https://meta.discourse.org/t/sams-personal-minimal-topic-list-design/23552"
   },
@@ -42,11 +46,13 @@ const POPULAR_THEMES = [
     name: "Vincent",
     value: "https://github.com/hnb-ku/discourse-vincent-theme",
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/vincent",
+    description: "An elegant dark theme with a few color palettes.",
     meta_url: "https://meta.discourse.org/t/discourse-vincent-theme/76662"
   },
   {
     name: "Alternative Logos",
     value: "https://github.com/hnb-ku/discourse-alt-logo",
+    description: "Add alternative logos for dark / light themes.",
     meta_url:
       "https://meta.discourse.org/t/alternative-logo-for-dark-themes/88502",
     component: true
@@ -54,6 +60,7 @@ const POPULAR_THEMES = [
   {
     name: "Brand Header Theme Component",
     value: "https://github.com/discourse/discourse-brand-header",
+    description: "Add an extra top header with your logo, navigation links and social icons.",
     meta_url: "https://meta.discourse.org/t/brand-header-theme-component/77977",
     component: true
   },
@@ -62,6 +69,7 @@ const POPULAR_THEMES = [
     value: "https://github.com/hnb-ku/discourse-custom-header-links",
     preview:
       "https://theme-creator.discourse.org/theme/Johani/custom-header-links",
+    description: "Easily add custom text-based links to the header.",
     meta_url: "https://meta.discourse.org/t/custom-header-links/90588",
     component: true
   },
@@ -70,12 +78,14 @@ const POPULAR_THEMES = [
     value: "https://github.com/awesomerobot/discourse-category-banners",
     preview:
       "https://theme-creator.discourse.org/theme/awesomerobot/discourse-category-banners",
+    description: "Show banners on category pages using your existing category details.",
     meta_url: "https://meta.discourse.org/t/discourse-category-banners/86241",
     component: true
   },
   {
     name: "Hamburger Theme Selector",
     value: "https://github.com/discourse/discourse-hamburger-theme-selector",
+    description: "Displays a theme selector in the hamburger menu provided there is more than one user-selectable theme.",
     meta_url: "https://meta.discourse.org/t/hamburger-theme-selector/61210",
     component: true
   },
@@ -83,12 +93,11 @@ const POPULAR_THEMES = [
     name: "Header submenus",
     value: "https://github.com/hnb-ku/discourse-header-submenus",
     preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
+    description: "Lets you build a header menu with submenus (dropdowns).",
     meta_url: "https://meta.discourse.org/t/header-submenus/94584",
     component: true
   }
 ];
-
-const POPULAR_COMPONENTS = [];
 
 export default Ember.Controller.extend(ModalFunctionality, {
   popular: Ember.computed.equal("selection", "popular"),
@@ -110,20 +119,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
     { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS }
   ],
+  selectedType: Ember.computed.alias("themesController.currentTab"),
+  component: Ember.computed.equal("selectedType", COMPONENTS),
 
   @computed("themesController.installedThemes")
   themes(installedThemes) {
     return POPULAR_THEMES.map(t => {
-      if (installedThemes.includes(t.name)) {
-        Ember.set(t, "installed", true);
-      }
-      return t;
-    });
-  },
-
-  @computed("themesController.installedThemes")
-  popularComponents(installedThemes) {
-    return POPULAR_COMPONENTS.map(t => {
       if (installedThemes.includes(t.name)) {
         Ember.set(t, "installed", true);
       }
@@ -192,20 +193,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("themesController.currentTab")
-  selectedType(tab) {
-    return tab;
-  },
-
-  @computed("selectedType")
-  component(type) {
-    return type === COMPONENTS;
-  },
-
   @computed("selection")
   submitLabel(selection) {
-    if (selection === "create") return "admin.customize.theme.create";
-    else return "admin.customize.theme.install";
+    return `admin.customize.theme.${
+      selection === "create" ? "create" : "install"
+    }`;
+  },
+
+  @computed("privateChecked", "checkPrivate", "publicKey")
+  showPublicKey(privateChecked, checkPrivate, publicKey) {
+    return privateChecked && checkPrivate && publicKey;
   },
 
   actions: {

@@ -60,15 +60,6 @@
   height: 65vh;
   overflow: auto;
   padding-right: 20px;
-  h3 {
-    color: $primary-medium;
-    border-bottom: 1px solid $primary-low;
-    margin-bottom: 0px;
-    padding: 8px 0px;
-    &.admin-theme-components-title {
-      margin-top: 20px;
-    }
-  }
 }
 
 .popular-theme-item {
@@ -78,7 +69,6 @@
   align-items: center;
   .popular-theme-name {
     flex: 1;
-    font-weight: bold;
     .popular-theme-type {
       font-weight: normal;
       font-size: $font-down-2;
@@ -87,11 +77,17 @@
 
     a {
       color: $primary-very-high;
+      font-weight: bold;
       &:hover,
       &:visited,
       &:active {
         color: $primary-high;
       }
+    }
+
+    .popular-theme-description {
+      font-size: $font-down-1;
+      padding-right: 20px;
     }
   }
   .popular-theme-buttons {
