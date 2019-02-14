@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/sketchfab\.com\/models\/[a-z0-9]{32}/)
+      matches_regexp(/^https?:\/\/sketchfab\.com\/(?:models\/|3d-models\/(?:[^\/\s]+-)?)([a-z0-9]{32})/)
       always_https
 
       def to_html
