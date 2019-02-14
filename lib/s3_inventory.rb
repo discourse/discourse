@@ -24,7 +24,7 @@ class S3Inventory
     end
   end
 
-  def list_missing(backfill_etags: false)
+  def list_missing
     if files.blank?
       error("Failed to list inventory from S3")
       return
@@ -46,12 +46,12 @@ class S3Inventory
           end
         end
 
-        if backfill_etags
-          uploads = model.where(etag: nil).joins("INNER JOIN #{table_name} ON #{model.table_name}.url ILIKE '%' || #{table_name}.key")
-          uploads.select(:id, :"#{table_name}.etag").find_each do |upload|
-            model.where(id: upload.id).update_all(etag: upload.etag)
-          end
-        end
+        # backfilling etags
+        connection.async_exec("UPDATE #{model.table_name}
+          SET etag = #{table_name}.etag
+          FROM #{table_name}
+          WHERE #{model.table_name}.etag IS NULL
+            AND url ILIKE '%' || #{table_name}.key")
 
         uploads = (model == Upload) ? model.where("created_at < ?", inventory_date) : model
         missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
