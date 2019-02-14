@@ -2,9 +2,6 @@ require 'rails_helper'
 require_dependency 'sidekiq/pausable'
 
 RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
-  after do
-    $redis.flushall
-  end
 
   describe '#pause!, #unpause! and #paused?' do
     it "can pause and unpause" do
@@ -23,13 +20,21 @@ RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
         Sidekiq.pause!
         expect(Sidekiq.paused?).to eq(true)
       end
+
+      expect(Sidekiq.paused_dbs).to eq(["second"])
+
+      Sidekiq.unpause_all!
+
+      RailsMultisite::ConnectionManagement.each_connection do
+        expect(Sidekiq.paused?).to eq(false)
+      end
     end
   end
 end
 
 RSpec.describe Sidekiq::Pausable do
   after do
-    $redis.flushall
+    Sidekiq.unpause_all!
   end
 
   it "can still run heartbeats when paused" do
