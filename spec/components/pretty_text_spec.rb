@@ -215,7 +215,7 @@ describe PrettyText do
             ddd
             [/quote]
           MD
-          expect(PrettyText.cook(md)).to include("/forum/letter_avatar_proxy")
+          expect(PrettyText.cook(md)).to include("/forum/letter_proxy")
         end
       end
     end
