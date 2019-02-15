@@ -1077,7 +1077,7 @@ files:
     client: true
     shadowed_by_global: true
   external_system_avatars_url:
-    default: "/letter_avatar_proxy/v2/letter/{first_letter}/{color}/{size}.png"
+    default: "/letter_avatar_proxy/v3/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
