@@ -725,7 +725,7 @@ class ApplicationController < ActionController::Base
         category_topic_ids = Category.pluck(:topic_id).compact
         @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
         @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-        @topics_partial = render_to_string partial: '/exceptions/not_found_topics'
+        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
         $redis.setex(key, 10.minutes, @topics_partial)
       end
     end

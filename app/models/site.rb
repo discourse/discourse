@@ -71,6 +71,10 @@ class Site
     end
   end
 
+  def groups
+    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
+  end
+
   def suppressed_from_latest_category_ids
     categories.select { |c| c.suppress_from_latest == true }.map(&:id)
   end

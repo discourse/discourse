@@ -133,9 +133,10 @@ export default Ember.Controller.extend({
   @computed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
-    "model.targetUsernames"
+    "model.targetUsernames",
+    "model.composeState"
   )
-  focusTarget(replyingToTopic, creatingPM, usernames) {
+  focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
     if (this.capabilities.isIOS) {
       return "none";
     }
@@ -151,6 +152,10 @@ export default Ember.Controller.extend({
 
     if (replyingToTopic) {
       return "reply";
+    }
+
+    if (composeState === Composer.FULLSCREEN) {
+      return "editor";
     }
 
     return "title";
@@ -783,7 +788,11 @@ export default Ember.Controller.extend({
     });
 
     // Scope the categories drop down to the category we opened the composer with.
-    if (opts.categoryId && opts.draftKey !== "reply_as_new_topic") {
+    if (
+      opts.categoryId &&
+      opts.draftKey !== "reply_as_new_topic" &&
+      !opts.disableScopedCategory
+    ) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);

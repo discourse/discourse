@@ -7,6 +7,12 @@ export default Ember.Component.extend(UploadMixin, {
   hasName: Ember.computed.notEmpty("name"),
   addDisabled: Ember.computed.not("hasName"),
 
+  uploadOptions() {
+    return {
+      sequentialUploads: true
+    };
+  },
+
   @computed("hasName", "name")
   data(hasName, name) {
     return hasName ? { name } : {};
