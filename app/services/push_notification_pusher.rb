@@ -88,15 +88,19 @@ class PushNotificationPusher
     rescue Webpush::ExpiredSubscription
       unsubscribe(user, subscription)
     rescue Webpush::ResponseError => e
-      Discourse.warn_exception(
-        e,
-        message: "Failed to send push notification",
-        env: {
-          user_id: user.id,
-          endpoint: subscription["endpoint"],
-          message: message.to_json
-        }
-      )
+      if e.response.message == "MismatchSenderId"
+        unsubscribe(user, subscription)
+      else
+        Discourse.warn_exception(
+          e,
+          message: "Failed to send push notification",
+          env: {
+            user_id: user.id,
+            endpoint: subscription["endpoint"],
+            message: message.to_json
+          }
+        )
+      end
     end
   end
 end
