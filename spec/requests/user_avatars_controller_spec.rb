@@ -10,7 +10,8 @@ describe UserAvatarsController do
     end
 
     it 'returns an avatar if we are allowing the proxy' do
-      get "/letter_avatar_proxy/v2/letter/a/aaaaaa/360.png"
+      stub_request(:get, "https://avatars.discourse.org/v3/letter/a/aaaaaa/360.png").to_return(body: 'image')
+      get "/letter_avatar_proxy/v3/letter/a/aaaaaa/360.png"
       expect(response.status).to eq(200)
     end
   end
