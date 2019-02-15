@@ -21,8 +21,13 @@
             </tr>
           </table>
         </div>
-        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled class=secondFactorClass}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod}}
+        {{#second-factor-form
+          secondFactorMethod=secondFactorMethod
+          loginSecondFactor=loginSecondFactor
+          class=secondFactorClass
+          backupEnabled=backupEnabled
+          isLogin=true}}
+          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
         {{/second-factor-form}}
       </form>
     {{/if}}

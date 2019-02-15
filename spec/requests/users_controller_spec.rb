@@ -3087,8 +3087,8 @@ describe UsersController do
         context 'when token is invalid' do
           it 'returns the right response' do
             put "/users/second_factor.json", params: {
-              second_factor_token: '000000',
-              second_factor_method: UserSecondFactor.methods[:totp],
+              second_factor_auth: ['000000', UserSecondFactor.methods[:totp]],
+              second_factor_target: UserSecondFactor.methods[:totp],
               enable: 'true',
             }
 
@@ -3103,9 +3103,9 @@ describe UsersController do
         context 'when token is valid' do
           it 'should allow second factor for the user to be enabled' do
             put "/users/second_factor.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              enable: 'true',
-              second_factor_method: UserSecondFactor.methods[:totp]
+              second_factor_auth: [ROTP::TOTP.new(user_second_factor.data).now, UserSecondFactor.methods[:totp]],
+              second_factor_target: UserSecondFactor.methods[:totp],
+              enable: 'true'
             }
 
             expect(response.status).to eq(200)
@@ -3114,8 +3114,8 @@ describe UsersController do
 
           it 'should allow second factor for the user to be disabled' do
             put "/users/second_factor.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:totp]
+              second_factor_auth: [ROTP::TOTP.new(user_second_factor.data).now, UserSecondFactor.methods[:totp]],
+              second_factor_target: UserSecondFactor.methods[:totp]
             }
 
             expect(response.status).to eq(200)
@@ -3128,7 +3128,7 @@ describe UsersController do
         context 'when token is missing' do
           it 'returns the right response' do
             put "/users/second_factor.json", params: {
-              second_factor_method: UserSecondFactor.methods[:backup_codes],
+              second_factor_target: UserSecondFactor.methods[:backup_codes]
             }
 
             expect(response.status).to eq(400)
@@ -3138,8 +3138,8 @@ describe UsersController do
         context 'when token is invalid' do
           it 'returns the right response' do
             put "/users/second_factor.json", params: {
-              second_factor_token: '000000',
-              second_factor_method: UserSecondFactor.methods[:backup_codes],
+              second_factor_auth: ['000000', UserSecondFactor.methods[:totp]],
+              second_factor_target: UserSecondFactor.methods[:backup_codes]
             }
 
             expect(response.status).to eq(200)
@@ -3153,8 +3153,8 @@ describe UsersController do
         context 'when token is valid' do
           it 'should allow second factor backup for the user to be disabled' do
             put "/users/second_factor.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now,
-              second_factor_method: UserSecondFactor.methods[:backup_codes]
+              second_factor_auth: [ROTP::TOTP.new(user_second_factor.data).now, UserSecondFactor.methods[:totp]],
+              second_factor_target: UserSecondFactor.methods[:backup_codes]
             }
 
             expect(response.status).to eq(200)
@@ -3171,7 +3171,7 @@ describe UsersController do
     context 'when not logged in' do
       it 'should return the right response' do
         put "/users/second_factors_backup.json", params: {
-          second_factor_token: 'wrongtoken'
+          second_factor_auth: ['wrongtoken', UserSecondFactor.methods[:totp]]
         }
 
         expect(response.status).to eq(403)
@@ -3186,7 +3186,7 @@ describe UsersController do
       describe 'create 2fa request' do
         it 'fails on incorrect password' do
           put "/users/second_factors_backup.json", params: {
-            second_factor_token: 'wrongtoken'
+            second_factor_auth: ['wrongtoken', UserSecondFactor.methods[:totp]]
           }
 
           expect(response.status).to eq(200)
@@ -3201,7 +3201,7 @@ describe UsersController do
             SiteSetting.enable_local_logins = false
 
             put "/users/second_factors_backup.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+              second_factor_auth: [ROTP::TOTP.new(user_second_factor.data).now, UserSecondFactor.methods[:totp]]
             }
 
             expect(response.status).to eq(404)
@@ -3214,7 +3214,7 @@ describe UsersController do
             SiteSetting.enable_sso = true
 
             put "/users/second_factors_backup.json", params: {
-              second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+              second_factor_auth: [ROTP::TOTP.new(user_second_factor.data).now, UserSecondFactor.methods[:totp]]
             }
 
             expect(response.status).to eq(404)
@@ -3225,7 +3225,7 @@ describe UsersController do
           user_second_factor
 
           put "/users/second_factors_backup.json", params: {
-            second_factor_token: ROTP::TOTP.new(user_second_factor.data).now
+            second_factor_auth: [ROTP::TOTP.new(user_second_factor.data).now, UserSecondFactor.methods[:totp]]
           }
 
           expect(response.status).to eq(200)
