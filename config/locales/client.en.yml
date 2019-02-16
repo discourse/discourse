@@ -537,7 +537,7 @@ en:
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will be notified of new topics in this group but not replies to the topics."
+          description: "You will be notified of new messages in this group but not replies to the messages."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -546,7 +546,7 @@ en:
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
-          description: "You will never be notified of anything about new topics in this group."
+          description: "You will not be notified of anything about messages in this group."
       flair_url: "Avatar Flair Image"
       flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
       flair_url_description: 'Use square images no smaller than 20px by 20px or FontAwesome icons (accepted formats: "fa-icon", "far fa-icon" or "fab fa-icon").'
