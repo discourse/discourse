@@ -70,7 +70,11 @@ module ImportScripts::PhpBB3
         next if all_records_exist?(:users, importer.map_users_to_import_ids(rows))
 
         create_users(rows, total: total_count, offset: offset) do |row|
-          importer.map_user(row)
+          begin
+            importer.map_user(row)
+          rescue => e
+            log_error("Failed to map user with ID #{row[:user_id]}", e)
+          end
         end
       end
     end
@@ -88,7 +92,11 @@ module ImportScripts::PhpBB3
         next if all_records_exist?(:users, importer.map_anonymous_users_to_import_ids(rows))
 
         create_users(rows, total: total_count, offset: offset) do |row|
-          importer.map_anonymous_user(row)
+          begin
+            importer.map_anonymous_user(row)
+          rescue => e
+            log_error("Failed to map anonymous user with ID #{row[:user_id]}", e)
+          end
         end
       end
     end
@@ -116,7 +124,11 @@ module ImportScripts::PhpBB3
         next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
 
         create_posts(rows, total: total_count, offset: offset) do |row|
-          importer.map_post(row)
+          begin
+            importer.map_post(row)
+          rescue => e
+            log_error("Failed to map post with ID #{row[:post_id]}", e)
+          end
         end
       end
     end
@@ -134,7 +146,11 @@ module ImportScripts::PhpBB3
         next if all_records_exist?(:posts, importer.map_to_import_ids(rows))
 
         create_posts(rows, total: total_count, offset: offset) do |row|
-          importer.map_message(row)
+          begin
+            importer.map_message(row)
+          rescue => e
+            log_error("Failed to map message with ID #{row[:msg_id]}", e)
+          end
         end
       end
     end
@@ -166,6 +182,12 @@ module ImportScripts::PhpBB3
 
     def batches
       super(@settings.database.batch_size)
+    end
+
+    def log_error(message, e)
+      puts message
+      puts e.message
+      puts e.backtrace.join("\n")
     end
   end
 end
