@@ -47,6 +47,11 @@ module ImportScripts::PhpBB3
     protected
 
     def add_normalization(normalizations, normalization)
+      if @settings.normalization_prefix.present?
+        prefix = @settings.normalization_prefix[%r|^/?(.*?)/?$|, 1]
+        normalization = "/#{prefix.gsub('/', '\/')}\\#{normalization}"
+      end
+
       normalizations << normalization unless normalizations.include?(normalization)
     end
 
