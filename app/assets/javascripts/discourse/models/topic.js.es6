@@ -754,7 +754,9 @@ Topic.reopenClass({
     return ajax("/topics/reset-new", { type: "PUT" });
   },
 
-  idForSlug: fmt("slug", "/t/id_for/%@")
+  idForSlug(slug) {
+    return ajax(`/t/id_for/${slug}`);
+  }
 });
 
 function moveResult(result) {
