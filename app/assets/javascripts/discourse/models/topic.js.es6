@@ -266,7 +266,7 @@ const Topic = RestModel.extend({
     return this.urlForPostNumber(lastReadPostNumber);
   },
 
-  @computed("lastReadPostNumber", "highestPostNumber", "url")
+  @computed("last_read_post_number", "highest_post_number", "url")
   lastUnreadUrl(lastReadPostNumber, highestPostNumber) {
     if (highestPostNumber <= lastReadPostNumber) {
       if (this.get("category.navigate_to_first_post_after_read")) {
@@ -279,7 +279,7 @@ const Topic = RestModel.extend({
     }
   },
 
-  @computed("highestPostNumber", "url")
+  @computed("highest_post_number", "url")
   lastPostUrl(highestPostNumber) {
     return this.urlForPostNumber(highestPostNumber);
   },
