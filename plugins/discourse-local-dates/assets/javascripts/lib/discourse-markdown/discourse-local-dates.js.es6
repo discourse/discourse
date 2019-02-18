@@ -143,7 +143,7 @@ export function setup(helper) {
 
   helper.registerPlugin(md => {
     const rule = {
-      matcher: /\[date(.+?)\]/,
+      matcher: /\[date(=.+?)\]/,
       onMatch: addLocalDate
     };
 
