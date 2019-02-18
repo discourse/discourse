@@ -2,6 +2,12 @@ import UserField from "admin/models/user-field";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
+import { i18n } from "discourse/lib/computed";
+import {
+  default as computed,
+  observes,
+  on
+} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend(bufferedProperty("userField"), {
   editing: Ember.computed.empty("userField.id"),
@@ -10,58 +16,56 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
   cantMoveUp: propertyEqual("userField", "firstField"),
   cantMoveDown: propertyEqual("userField", "lastField"),
 
-  userFieldsDescription: function() {
-    return I18n.t("admin.user_fields.description");
-  }.property(),
+  userFieldsDescription: i18n("admin.user_fields.description"),
 
-  bufferedFieldType: function() {
-    return UserField.fieldTypeById(this.get("buffered.field_type"));
-  }.property("buffered.field_type"),
+  @computed("buffered.field_type")
+  bufferedFieldType(fieldType) {
+    return UserField.fieldTypeById(fieldType);
+  },
 
-  _focusOnEdit: function() {
+  @on("didInsertElement")
+  @observes("editing")
+  _focusOnEdit() {
     if (this.get("editing")) {
       Ember.run.scheduleOnce("afterRender", this, "_focusName");
     }
-  }
-    .observes("editing")
-    .on("didInsertElement"),
+  },
 
-  _focusName: function() {
+  _focusName() {
     $(".user-field-name").select();
   },
 
-  fieldName: function() {
-    return UserField.fieldTypeById(this.get("userField.field_type")).get(
-      "name"
-    );
-  }.property("userField.field_type"),
+  @computed("userField.field_type")
+  fieldName(fieldType) {
+    return UserField.fieldTypeById(fieldType).get("name");
+  },
 
-  flags: function() {
-    const ret = [];
-    if (this.get("userField.editable")) {
-      ret.push(I18n.t("admin.user_fields.editable.enabled"));
-    }
-    if (this.get("userField.required")) {
-      ret.push(I18n.t("admin.user_fields.required.enabled"));
-    }
-    if (this.get("userField.show_on_profile")) {
-      ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
-    }
-    if (this.get("userField.show_on_user_card")) {
-      ret.push(I18n.t("admin.user_fields.show_on_user_card.enabled"));
-    }
-
-    return ret.join(", ");
-  }.property(
+  @computed(
     "userField.editable",
     "userField.required",
     "userField.show_on_profile",
     "userField.show_on_user_card"
-  ),
+  )
+  flags(editable, required, showOnProfile, showOnUserCard) {
+    const ret = [];
+    if (editable) {
+      ret.push(I18n.t("admin.user_fields.editable.enabled"));
+    }
+    if (required) {
+      ret.push(I18n.t("admin.user_fields.required.enabled"));
+    }
+    if (showOnProfile) {
+      ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
+    }
+    if (showOnUserCard) {
+      ret.push(I18n.t("admin.user_fields.show_on_user_card.enabled"));
+    }
+
+    return ret.join(", ");
+  },
 
   actions: {
     save() {
-      const self = this;
       const buffered = this.get("buffered");
       const attrs = buffered.getProperties(
         "name",
@@ -76,9 +80,9 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
 
       this.get("userField")
         .save(attrs)
-        .then(function() {
-          self.set("editing", false);
-          self.commitBuffer();
+        .then(() => {
+          this.set("editing", false);
+          this.commitBuffer();
         })
         .catch(popupAjaxError);
     },
