@@ -67,7 +67,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
     if (isPrivateMessage) {
-      this.set("selection", this.get("canSplitToPM") ? "new_message" : "existing_message");
+      this.set(
+        "selection",
+        this.get("canSplitToPM") ? "new_message" : "existing_message"
+      );
     } else if (!this.get("canSplitTopic")) {
       this.set("selection", "existing_topic");
       Ember.run.next(() => $("#choose-topic-title").focus());
