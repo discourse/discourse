@@ -1,30 +1,34 @@
 {{#d-modal-body title="admin.badges.badge_groupings.modal_title" class="badge-groupings-modal"}}
   <div class="badge-groupings">
-    <ul class='badge-groupings-list'>
+    <ul class="badge-groupings-list">
       {{#each workingCopy as |wc|}}
         <li class="badge-grouping-item">
           <div class="badge-grouping">
             {{#if wc.editing}}
               {{input value=wc.name class="badge-grouping-name-input"}}
-              <button {{action "save" wc}} class="btn no-text">{{d-icon 'check'}}</button>
+              {{d-button action=(action "save" wc) icon="check"}}
             {{else}}
               <span>{{wc.displayName}}</span>
             {{/if}}
           </div>
-          <div class='actions'>
-            <button {{action "edit" wc}} class="btn no-text" disabled={{wc.system}}>{{d-icon 'pencil-alt'}}</button>
-            <button {{action "up" wc}} class="btn no-text">{{d-icon 'chevron-up'}}</button>
-            <button {{action "down" wc}} class="btn no-text">{{d-icon 'chevron-down'}}</button>
-            <button {{action "delete" wc}} class="btn no-text btn-danger"
-             disabled={{wc.system}}>{{d-icon 'times'}}</button>
+          <div class="actions">
+            {{d-button action=(action "edit" wc) disabled=wc.system icon="pencil-alt"}}
+            {{d-button action=(action "up" wc) icon="chevron-up"}}
+            {{d-button action=(action "down" wc) icon="chevron-down"}}
+            {{d-button action=(action "delete" wc) disabled=wc.system icon="times"}}
           </div>
         </li>
       {{/each}}
     </ul>
   </div>
-  <button class='btn new-badge-grouping' {{action "add"}}>{{i18n 'admin.badges.new'}}</button>
+  {{d-button action=(action "add") label="admin.badges.new"}}
 {{/d-modal-body}}
+
 <div class="modal-footer">
-  <button class='btn btn-primary' {{action "saveAll"}} disabled={{submitDisabled}}>{{i18n 'admin.badges.save'}}</button>
+  {{d-button
+    action=(action "saveAll")
+    label="admin.badges.save"
+    class="btn-primary"
+    disabled=submitDisabled}}
   {{d-modal-cancel close=(route-action "closeModal")}}
 </div>
