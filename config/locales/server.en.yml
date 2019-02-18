@@ -99,7 +99,7 @@ en:
       number_value_not_valid_min: "It must be larger than or equal to %{min}."
       number_value_not_valid_max: "It must be smaller than or equal to %{max}."
       string_value_not_valid: "New value length isn't within the allowed range."
-      string_value_not_valid_min_max: "It must be between %{min} and %{max} character long."
+      string_value_not_valid_min_max: "It must be between %{min} and %{max} characters long."
       string_value_not_valid_min: "It must be at least %{min} characters long."
       string_value_not_valid_max: "It must be at most %{max} characters long."
     locale_errors:
