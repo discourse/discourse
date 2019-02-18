@@ -81,6 +81,8 @@ module BackupRestore
       clear_theme_cache
 
       extract_uploads
+
+      after_restore_hook
     rescue SystemExit
       log "Restore process was cancelled!"
       rollback
@@ -529,6 +531,11 @@ module BackupRestore
     def ensure_directory_exists(directory)
       log "Making sure #{directory} exists..."
       FileUtils.mkdir_p(directory)
+    end
+
+    def after_restore_hook
+      log "Executing the after_restore_hook..."
+      DiscourseEvent.trigger(:restore_complete)
     end
 
     def log(message, ex = nil)
