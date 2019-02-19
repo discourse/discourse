@@ -164,10 +164,10 @@ module JsLocaleHelper
   def self.find_moment_locale(locale_chain)
     path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
 
-    # moment.js uses a different naming scheme for locale files
-    locale_chain = locale_chain.map { |l| l.tr('_', '-').downcase }
-
-    find_locale(locale_chain, path, :moment_js, fallback_to_english: false)
+    find_locale(locale_chain, path, :moment_js, fallback_to_english: false) do
+      # moment.js uses a different naming scheme for locale files
+      locale_chain.map { |l| l.tr('_', '-').downcase }
+    end
   end
 
   def self.find_message_format_locale(locale_chain, fallback_to_english:)
@@ -183,6 +183,8 @@ module JsLocaleHelper
       filename = File.join(path, "#{locale}.js")
       return [locale, filename] if File.exist?(filename)
     end
+
+    locale_chain = yield if block_given?
 
     # try again, but this time only with the language itself
     locale_chain = locale_chain.map { |l| l.split(/[-_]/)[0] }
