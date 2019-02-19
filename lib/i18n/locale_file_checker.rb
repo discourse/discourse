@@ -112,7 +112,7 @@ class LocaleFileChecker
   end
 
   def check_message_format
-    mf_locale, mf_filename = JsLocaleHelper.find_message_format_locale([@locale], true)
+    mf_locale, mf_filename = JsLocaleHelper.find_message_format_locale([@locale], fallback_to_english: true)
 
     traverse_hash(@locale_yaml, []) do |keys, value|
       next unless keys.last.ends_with?("_MF")
