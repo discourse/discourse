@@ -65,7 +65,7 @@ class PostDestroyer
       id: @post.id,
       category_id: @post&.topic&.category_id,
       payload: payload
-    )
+    ) if WebHook.active_web_hooks(:post).exists?
 
     if @post.is_first_post? && @post.topic
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
@@ -73,7 +73,7 @@ class PostDestroyer
         id: topic.id,
         category_id: topic&.category_id,
         payload: topic_payload
-      )
+      ) if WebHook.active_web_hooks(:topic).exists?
     end
   end
 
