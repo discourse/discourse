@@ -19,7 +19,7 @@ import {
 export function loadTopicView(topic, args) {
   const topicId = topic.get("id");
   const data = _.merge({}, args);
-  const url = Discourse.getURL("/t/") + topicId;
+  const url = `${Discourse.getURL("/t/")}${topicId}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
@@ -223,10 +223,7 @@ const Topic = RestModel.extend({
     this.set("category", category);
   },
 
-  @computed("category.fullSlug")
-  categoryClass(categoryfullSlug) {
-    return `category-${categoryfullSlug}`;
-  },
+  categoryClass: fmt("category.fullSlug", "category-%@"),
 
   @computed("url")
   shareUrl(url) {
@@ -743,7 +740,7 @@ Topic.reopenClass({
 
   bulkOperationByFilter(filter, operation, categoryId) {
     const data = { filter, operation };
-    if (categoryId) data["category_id"] = categoryId;
+    if (categoryId) data.category_id = categoryId;
     return ajax("/topics/bulk", {
       type: "PUT",
       data
