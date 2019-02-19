@@ -135,12 +135,12 @@ en:
       next_month: "Next Month"
       placeholder: date
     share:
-      topic: "share a link to this topic"
-      post: "post #%{postNumber}"
+      topic: "<b>Topic</b>: %{topicTitle}"
+      post: "<b>Post #%{postNumber}</b>, %{postDate}"
       close: "close"
-      twitter: "share this link on Twitter"
-      facebook: "share this link on Facebook"
-      email: "send this link in an email"
+      twitter: "Share this link on Twitter"
+      facebook: "Share this link on Facebook"
+      email: "Send this link in an email"
 
     action_codes:
       public_topic: "made this topic public %{when}"
@@ -1948,6 +1948,7 @@ en:
 
       share:
         title: "Share"
+        extended_title: "Share a link"
         help: "share a link to this topic"
 
       print:

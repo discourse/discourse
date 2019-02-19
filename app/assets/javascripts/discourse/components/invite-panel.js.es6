@@ -1,13 +1,15 @@
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { emailValid } from "discourse/lib/utilities";
 import computed from "ember-addons/ember-computed-decorators";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
+import { i18n } from "discourse/lib/computed";
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  userInvitedShow: Ember.inject.controller("user-invited-show"),
+export default Ember.Component.extend({
+  classNames: ["invite-panel"],
 
-  // If this isn't defined, it will proxy to the user model on the preferences
+  inviteModel: Ember.computed.alias("panel.model.inviteModel"),
+
+  // If this isn't defined, it will proxy to the user topic on the preferences
   // page which is wrong.
   emailOrUsername: null,
   hasCustomMessage: false,
@@ -15,30 +17,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
   inviteIcon: "envelope",
   invitingExistingUserToTopic: false,
 
-  @computed("isMessage", "invitingToTopic")
-  title(isMessage, invitingToTopic) {
-    if (isMessage) {
-      return "topic.invite_private.title";
-    } else if (invitingToTopic) {
-      return "topic.invite_reply.title";
-    } else {
-      return "user.invited.create";
-    }
-  },
-
-  @computed
-  isAdmin() {
-    return this.currentUser.admin;
-  },
+  isAdmin: Ember.computed.alias("currentUser.admin"),
 
   @computed(
     "isAdmin",
     "emailOrUsername",
     "invitingToTopic",
     "isPrivateTopic",
-    "model.groupNames",
-    "model.saving",
-    "model.details.can_invite_to"
+    "topic.groupNames",
+    "topic.saving",
+    "topic.details.can_invite_to"
   )
   disabled(
     isAdmin,
@@ -51,26 +39,39 @@ export default Ember.Controller.extend(ModalFunctionality, {
   ) {
     if (saving) return true;
     if (Ember.isEmpty(emailOrUsername)) return true;
+
     const emailTrimmed = emailOrUsername.trim();
 
     // when inviting to forum, email must be valid
-    if (!invitingToTopic && !emailValid(emailTrimmed)) return true;
-    // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(emailTrimmed)) return true;
-    // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && Ember.isEmpty(groupNames) && emailValid(emailTrimmed))
+    if (!invitingToTopic && !emailValid(emailTrimmed)) {
       return true;
+    }
+
+    // normal users (not admin) can't invite users to private topic via email
+    if (!isAdmin && isPrivateTopic && emailValid(emailTrimmed)) {
+      return true;
+    }
+
+    // when inviting to private topic via email, group name must be specified
+    if (
+      isPrivateTopic &&
+      Ember.isEmpty(groupNames) &&
+      emailValid(emailTrimmed)
+    ) {
+      return true;
+    }
 
     if (can_invite_to) return false;
+
     return false;
   },
 
   @computed(
     "isAdmin",
     "emailOrUsername",
-    "model.saving",
+    "inviteModel.saving",
     "isPrivateTopic",
-    "model.groupNames",
+    "inviteModel.groupNames",
     "hasCustomMessage"
   )
   disabledCopyLink(
@@ -84,54 +85,65 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (hasCustomMessage) return true;
     if (saving) return true;
     if (Ember.isEmpty(emailOrUsername)) return true;
+
     const email = emailOrUsername.trim();
+
     // email must be valid
-    if (!emailValid(email)) return true;
-    // normal users (not admin) can't invite users to private topic via email
-    if (!isAdmin && isPrivateTopic && emailValid(email)) return true;
-    // when inviting to private topic via email, group name must be specified
-    if (isPrivateTopic && Ember.isEmpty(groupNames) && emailValid(email))
+    if (!emailValid(email)) {
       return true;
+    }
+
+    // normal users (not admin) can't invite users to private topic via email
+    if (!isAdmin && isPrivateTopic && emailValid(email)) {
+      return true;
+    }
+
+    // when inviting to private topic via email, group name must be specified
+    if (isPrivateTopic && Ember.isEmpty(groupNames) && emailValid(email)) {
+      return true;
+    }
+
     return false;
   },
 
-  @computed("model.saving")
+  @computed("inviteModel.saving")
   buttonTitle(saving) {
     return saving ? "topic.inviting" : "topic.invite_reply.action";
   },
 
-  // We are inviting to a topic if the model isn't the current user.
+  // We are inviting to a topic if the topic isn't the current user.
   // The current user would mean we are inviting to the forum in general.
-  @computed("model")
-  invitingToTopic(model) {
-    return model !== this.currentUser;
+  @computed("inviteModel")
+  invitingToTopic(inviteModel) {
+    return inviteModel !== this.currentUser;
   },
 
-  @computed("model", "model.details.can_invite_via_email")
-  canInviteViaEmail(model, can_invite_via_email) {
-    return this.get("model") === this.currentUser ? true : can_invite_via_email;
+  @computed("inviteModel", "inviteModel.details.can_invite_via_email")
+  canInviteViaEmail(inviteModel, canInviteViaEmail) {
+    return this.get("inviteModel") === this.currentUser
+      ? true
+      : canInviteViaEmail;
   },
 
-  @computed("isMessage", "canInviteViaEmail")
-  showCopyInviteButton(isMessage, canInviteViaEmail) {
-    return canInviteViaEmail && !isMessage;
+  @computed("isPM", "canInviteViaEmail")
+  showCopyInviteButton(isPM, canInviteViaEmail) {
+    return canInviteViaEmail && !isPM;
   },
 
-  topicId: Ember.computed.alias("model.id"),
+  topicId: Ember.computed.alias("inviteModel.id"),
 
-  // Is Private Topic? (i.e. visible only to specific group members)
+  // eg: visible only to specific group members
   isPrivateTopic: Ember.computed.and(
     "invitingToTopic",
-    "model.category.read_restricted"
+    "inviteModel.category.read_restricted"
   ),
 
-  // Is Private Message?
-  isMessage: Ember.computed.equal("model.archetype", "private_message"),
+  isPM: Ember.computed.equal("inviteModel.archetype", "private_message"),
 
-  // Allow Existing Members? (username autocomplete)
+  // scope to allowed usernames
   allowExistingMembers: Ember.computed.alias("invitingToTopic"),
 
-  @computed("isAdmin", "model.group_users")
+  @computed("isAdmin", "inviteModel.group_users")
   isGroupOwnerOrAdmin(isAdmin, groupUsers) {
     return (
       isAdmin || (groupUsers && groupUsers.some(groupUser => groupUser.owner))
@@ -143,7 +155,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     "isGroupOwnerOrAdmin",
     "emailOrUsername",
     "isPrivateTopic",
-    "isMessage",
+    "isPM",
     "invitingToTopic",
     "canInviteViaEmail"
   )
@@ -151,14 +163,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     isGroupOwnerOrAdmin,
     emailOrUsername,
     isPrivateTopic,
-    isMessage,
+    isPM,
     invitingToTopic,
     canInviteViaEmail
   ) {
     return (
       isGroupOwnerOrAdmin &&
       canInviteViaEmail &&
-      !isMessage &&
+      !isPM &&
       (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic)
     );
   },
@@ -166,13 +178,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("emailOrUsername")
   showCustomMessage(emailOrUsername) {
     return (
-      this.get("model") === this.currentUser || emailValid(emailOrUsername)
+      this.get("inviteModel") === this.currentUser ||
+      emailValid(emailOrUsername)
     );
   },
 
   // Instructional text for the modal.
   @computed(
-    "isMessage",
+    "isPM",
     "invitingToTopic",
     "emailOrUsername",
     "isPrivateTopic",
@@ -180,7 +193,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     "canInviteViaEmail"
   )
   inviteInstructions(
-    isMessage,
+    isPM,
     invitingToTopic,
     emailOrUsername,
     isPrivateTopic,
@@ -190,7 +203,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (!canInviteViaEmail) {
       // can't invite via email, only existing users
       return I18n.t("topic.invite_reply.sso_enabled");
-    } else if (isMessage) {
+    } else if (isPM) {
       // inviting to a message
       return I18n.t("topic.invite_private.email_or_username");
     } else if (invitingToTopic) {
@@ -222,14 +235,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   groupFinder(term) {
-    return Group.findAll({ term: term, ignore_automatic: true });
+    return Group.findAll({ term, ignore_automatic: true });
   },
 
-  @computed("isMessage", "emailOrUsername", "invitingExistingUserToTopic")
-  successMessage(isMessage, emailOrUsername, invitingExistingUserToTopic) {
+  @computed("isPM", "emailOrUsername", "invitingExistingUserToTopic")
+  successMessage(isPM, emailOrUsername, invitingExistingUserToTopic) {
     if (this.get("hasGroups")) {
       return I18n.t("topic.invite_private.success_group");
-    } else if (isMessage) {
+    } else if (isPM) {
       return I18n.t("topic.invite_private.success");
     } else if (invitingExistingUserToTopic) {
       return I18n.t("topic.invite_reply.success_existing_email", {
@@ -242,9 +255,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  @computed("isMessage")
-  errorMessage(isMessage) {
-    return isMessage
+  @computed("isPM")
+  errorMessage(isPM) {
+    return isPM
       ? I18n.t("topic.invite_private.error")
       : I18n.t("topic.invite_reply.error");
   },
@@ -256,18 +269,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
       : "topic.invite_reply.username_placeholder";
   },
 
-  @computed
-  customMessagePlaceholder() {
-    return I18n.t("invite.custom_message_placeholder");
-  },
+  customMessagePlaceholder: i18n("invite.custom_message_placeholder"),
 
   // Reset the modal to allow a new user to be invited.
   reset() {
-    this.set("emailOrUsername", null);
-    this.set("hasCustomMessage", false);
-    this.set("customMessage", null);
-    this.set("invitingExistingUserToTopic", false);
-    this.get("model").setProperties({
+    this.setProperties({
+      emailOrUsername: null,
+      hasCustomMessage: false,
+      customMessage: null,
+      invitingExistingUserToTopic: false
+    });
+
+    this.get("inviteModel").setProperties({
       groupNames: null,
       error: false,
       saving: false,
@@ -278,24 +291,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     createInvite() {
-      const self = this;
       if (this.get("disabled")) {
         return;
       }
 
-      const groupNames = this.get("model.groupNames"),
-        userInvitedController = this.get("userInvitedShow"),
-        model = this.get("model");
+      const groupNames = this.get("inviteModel.groupNames");
+      const userInvitedController = this.get("panel.model.userInvitedShow");
 
+      const model = this.get("inviteModel");
       model.setProperties({ saving: true, error: false });
 
       const onerror = e => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-          self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+          this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {
-          self.set(
+          this.set(
             "errorMessage",
-            self.get("isMessage")
+            this.get("isPM")
               ? I18n.t("topic.invite_private.error")
               : I18n.t("topic.invite_reply.error")
           );
@@ -304,18 +316,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
       };
 
       if (this.get("hasGroups")) {
-        return this.get("model")
+        return this.get("inviteModel")
           .createGroupInvite(this.get("emailOrUsername").trim())
           .then(data => {
             model.setProperties({ saving: false, finished: true });
-            this.get("model.details.allowed_groups").pushObject(
+            this.get("inviteModel.details.allowed_groups").pushObject(
               Ember.Object.create(data.group)
             );
             this.appEvents.trigger("post-stream:refresh");
           })
           .catch(onerror);
       } else {
-        return this.get("model")
+        return this.get("inviteModel")
           .createInvite(
             this.get("emailOrUsername").trim(),
             groupNames,
@@ -327,15 +339,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
               Invite.findInvitedBy(
                 this.currentUser,
                 userInvitedController.get("filter")
-              ).then(invite_model => {
-                userInvitedController.set("model", invite_model);
-                userInvitedController.set(
-                  "totalInvites",
-                  invite_model.invites.length
-                );
+              ).then(inviteModel => {
+                userInvitedController.setProperties({
+                  topic: inviteModel,
+                  totalInvites: inviteModel.invites.length
+                });
               });
-            } else if (this.get("isMessage") && result && result.user) {
-              this.get("model.details.allowed_users").pushObject(
+            } else if (this.get("isPM") && result && result.user) {
+              this.get("inviteModel.details.allowed_users").pushObject(
                 Ember.Object.create(result.user)
               );
               this.appEvents.trigger("post-stream:refresh");
@@ -353,24 +364,21 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     generateInvitelink() {
-      const self = this;
-
       if (this.get("disabled")) {
         return;
       }
 
-      const groupNames = this.get("model.groupNames"),
-        userInvitedController = this.get("userInvitedShow"),
-        model = this.get("model");
-
-      var topicId = null;
-      if (this.get("invitingToTopic")) {
-        topicId = this.get("model.id");
-      }
-
+      const groupNames = this.get("inviteModel.groupNames");
+      const userInvitedController = this.get("userInvitedShow");
+      const model = this.get("inviteModel");
       model.setProperties({ saving: true, error: false });
 
-      return this.get("model")
+      let topicId;
+      if (this.get("invitingToTopic")) {
+        topicId = this.get("inviteModel.id");
+      }
+
+      return model
         .generateInviteLink(
           this.get("emailOrUsername").trim(),
           groupNames,
@@ -385,21 +393,20 @@ export default Ember.Controller.extend(ModalFunctionality, {
           Invite.findInvitedBy(
             this.currentUser,
             userInvitedController.get("filter")
-          ).then(invite_model => {
-            userInvitedController.set("model", invite_model);
-            userInvitedController.set(
-              "totalInvites",
-              invite_model.invites.length
-            );
+          ).then(inviteModel => {
+            userInvitedController.setProperties({
+              topic: inviteModel,
+              totalInvites: inviteModel.invites.length
+            });
           });
         })
-        .catch(function(e) {
+        .catch(e => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
-            self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
+            this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
           } else {
-            self.set(
+            this.set(
               "errorMessage",
-              self.get("isMessage")
+              this.get("isPM")
                 ? I18n.t("topic.invite_private.error")
                 : I18n.t("topic.invite_reply.error")
             );
@@ -411,7 +418,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     showCustomMessageBox() {
       this.toggleProperty("hasCustomMessage");
       if (this.get("hasCustomMessage")) {
-        if (this.get("model") === this.currentUser) {
+        if (this.get("inviteModel") === this.currentUser) {
           this.set(
             "customMessage",
             I18n.t("invite.custom_message_template_forum")

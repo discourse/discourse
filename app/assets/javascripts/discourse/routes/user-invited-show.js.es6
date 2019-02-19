@@ -30,8 +30,19 @@ export default Discourse.Route.extend({
 
   actions: {
     showInvite() {
-      showModal("invite", { model: this.currentUser });
-      this.controllerFor("invite").reset();
+      showModal("share-and-invite", {
+        modalClass: "share-and-invite",
+        panels: [
+          {
+            id: "invite",
+            title: "user.invited.create",
+            model: {
+              inviteModel: this.currentUser,
+              userInvitedShow: this.controllerFor("user-invited-show")
+            }
+          }
+        ]
+      });
     }
   }
 });

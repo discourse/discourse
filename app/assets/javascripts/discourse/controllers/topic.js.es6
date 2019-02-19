@@ -35,6 +35,7 @@ export function registerCustomPostMessageCallback(type, callback) {
 export default Ember.Controller.extend(bufferedProperty("model"), {
   composer: Ember.inject.controller(),
   application: Ember.inject.controller(),
+  userInvitedShow: Ember.inject.controller("user-invited-show"),
   multiSelect: false,
   selectedPostIds: null,
   editingTopic: false,

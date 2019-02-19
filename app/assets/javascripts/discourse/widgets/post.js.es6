@@ -13,6 +13,7 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
+import showModal from "discourse/lib/show-modal";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -219,6 +220,68 @@ function showReplyTab(attrs, siteSettings) {
   );
 }
 
+createWidget("post-date", {
+  tagName: "div.post-info.post-date",
+
+  buildClasses(attrs) {
+    let classes = "post-date";
+
+    const lastWikiEdit =
+      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
+
+    if (lastWikiEdit) {
+      classes = `${classes} last-wiki-edit`;
+    }
+
+    return classes;
+  },
+
+  html(attrs) {
+    return h("a", {}, dateNode(this._date(attrs)));
+  },
+
+  _date(attrs) {
+    const lastWikiEdit =
+      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
+    const createdAt = new Date(attrs.created_at);
+    return lastWikiEdit ? lastWikiEdit : createdAt;
+  },
+
+  click() {
+    const post = this.findAncestorModel();
+
+    const modalFallback = () => {
+      showModal("share-and-invite", {
+        modalClass: "share-and-invite",
+        panels: [
+          {
+            id: "share",
+            title: "topic.share.extended_title",
+            model: {
+              postNumber: this.attrs.post_number,
+              shareUrl: this.attrs.shareUrl,
+              date: this._date(this.attrs),
+              postId: post.get("id"),
+              topic: post.get("topic")
+            }
+          }
+        ]
+      });
+    };
+
+    // use native webshare when available
+    // navigator.share needs HTTPS, returns undefined on HTTP
+    if (window.navigator.share) {
+      window.navigator.share({ url: this.attrs.shareUrl }).catch(() => {
+        // if navigator fails for unexpected reason fallback to popup
+        modalFallback();
+      });
+    } else {
+      modalFallback();
+    }
+  }
+});
+
 createWidget("post-meta-data", {
   tagName: "div.topic-meta-data",
 
@@ -241,21 +304,6 @@ createWidget("post-meta-data", {
       );
     }
 
-    const lastWikiEdit =
-      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
-    const createdAt = new Date(attrs.created_at);
-    const date = lastWikiEdit ? dateNode(lastWikiEdit) : dateNode(createdAt);
-    const attributes = {
-      class: "post-date",
-      href: attrs.shareUrl,
-      "data-share-url": attrs.shareUrl,
-      "data-post-number": attrs.post_number
-    };
-
-    if (lastWikiEdit) {
-      attributes["class"] += " last-wiki-edit";
-    }
-
     if (attrs.via_email) {
       postInfo.push(this.attach("post-email-indicator", attrs));
     }
@@ -276,7 +324,7 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
-    postInfo.push(h("div.post-info.post-date", h("a", { attributes }, date)));
+    postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
       h(
