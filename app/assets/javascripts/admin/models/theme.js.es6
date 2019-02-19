@@ -60,7 +60,7 @@ const Theme = RestModel.extend({
     };
   },
 
-  @computed("fieldNames", "theme_fields.@each.error")
+  @computed("fieldNames", "theme_fields.[]", "theme_fields.@each.error")
   fields(fieldNames) {
     const hash = {};
     Object.keys(fieldNames).forEach(target => {
@@ -208,11 +208,15 @@ const Theme = RestModel.extend({
       this.theme_fields.pushObject(field);
       themeFields[key] = field;
     } else {
-      if (Ember.isEmpty(value)) {
-        this.theme_fields.removeObject(themeFields[key]);
-        themeFields[key] = null;
-      } else {
-        existingField.value = value;
+      const changed =
+        (Ember.isEmpty(existingField.value) && !Ember.isEmpty(value)) ||
+        (Ember.isEmpty(value) && !Ember.isEmpty(existingField.value));
+
+      existingField.value = value;
+      if (changed) {
+        // Observing theme_fields.@each.value is too slow, so manually notify
+        // if the value goes to/from blank
+        this.notifyPropertyChange("theme_fields.[]");
       }
     }
   },
