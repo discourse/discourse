@@ -52,7 +52,7 @@ class PostgreSQLFallbackHandler
   def master_down
     synchronize do
       @masters_down[namespace] = true
-      Sidekiq.pause! if !Sidekiq.paused?
+      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
       MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace, pid: Process.pid)
     end
   end
