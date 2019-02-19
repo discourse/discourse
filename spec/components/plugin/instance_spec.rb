@@ -353,7 +353,7 @@ describe Plugin::Instance do
     end
 
     it "enables the registered locales only on activate" do
-      plugin.register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      plugin.register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
       plugin.register_locale("es_MX", name: "Spanish (Mexico)", nativeName: "Español (México)", fallbackLocale: "es")
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
 
@@ -362,24 +362,27 @@ describe Plugin::Instance do
     end
 
     it "allows finding the locale by string and symbol" do
-      register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
 
-      expect(DiscoursePluginRegistry.locales).to have_key(:foo)
-      expect(DiscoursePluginRegistry.locales).to have_key('foo')
+      expect(DiscoursePluginRegistry.locales).to have_key(:foo_BAR)
+      expect(DiscoursePluginRegistry.locales).to have_key('foo_BAR')
     end
 
     it "correctly registers a new locale" do
-      locale = register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+      locale = register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
 
       expect(DiscoursePluginRegistry.locales.count).to eq(1)
-      expect(DiscoursePluginRegistry.locales).to have_key(:foo)
+      expect(DiscoursePluginRegistry.locales).to have_key(:foo_BAR)
 
       expect(locale[:fallbackLocale]).to be_nil
-      expect(locale[:message_format]).to eq(["foo", "#{plugin_path}/lib/javascripts/locale/message_format/foo.js"])
-      expect(locale[:moment_js]).to eq(["foo", "#{plugin_path}/lib/javascripts/locale/moment_js/foo.js"])
+      expect(locale[:message_format]).to eq(["foo_BAR", "#{plugin_path}/lib/javascripts/locale/message_format/foo_BAR.js"])
+      expect(locale[:moment_js]).to eq(["foo_BAR", "#{plugin_path}/lib/javascripts/locale/moment_js/foo_BAR.js"])
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
-      expect(Rails.configuration.assets.precompile).to include("locales/foo.js")
+      expect(Rails.configuration.assets.precompile).to include("locales/foo_BAR.js")
+
+      expect(JsLocaleHelper.find_message_format_locale(["foo_BAR"], fallback_to_english: true)).to eq(locale[:message_format])
+      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq (locale[:moment_js])
     end
 
     it "correctly registers a new locale using a fallback locale" do
@@ -394,6 +397,9 @@ describe Plugin::Instance do
       expect(locale[:plural]).to be_nil
 
       expect(Rails.configuration.assets.precompile).to include("locales/es_MX.js")
+
+      expect(JsLocaleHelper.find_message_format_locale(["es_MX"], fallback_to_english: true)).to eq(locale[:message_format])
+      expect(JsLocaleHelper.find_moment_locale(["es_MX"])).to eq (locale[:moment_js])
     end
 
     it "correctly registers a new locale when some files exist in core" do
@@ -408,6 +414,9 @@ describe Plugin::Instance do
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
       expect(Rails.configuration.assets.precompile).to include("locales/tlh.js")
+
+      expect(JsLocaleHelper.find_message_format_locale(["tlh"], fallback_to_english: true)).to eq(locale[:message_format])
+      expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq (locale[:moment_js])
     end
 
     it "does not register a new locale when the fallback locale does not exist" do
@@ -416,11 +425,11 @@ describe Plugin::Instance do
     end
 
     [
-      "config/locales/client.foo.yml",
-      "config/locales/server.foo.yml",
-      "lib/javascripts/locale/message_format/foo.js",
-      "lib/javascripts/locale/moment_js/foo.js",
-      "assets/locales/foo.js.erb"
+      "config/locales/client.foo_BAR.yml",
+      "config/locales/server.foo_BAR.yml",
+      "lib/javascripts/locale/message_format/foo_BAR.js",
+      "lib/javascripts/locale/moment_js/foo_BAR.js",
+      "assets/locales/foo_BAR.js.erb"
     ].each do |path|
       it "does not register a new locale when #{path} is missing" do
         path = "#{plugin_path}/#{path}"
@@ -428,7 +437,7 @@ describe Plugin::Instance do
         File.stubs('exist?').with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
         File.stubs('exist?').with(path).returns(false)
 
-        register_locale("foo", name: "Foo", nativeName: "Foo Bar", plural: plural)
+        register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
         expect(DiscoursePluginRegistry.locales.count).to eq(0)
       end
     end
