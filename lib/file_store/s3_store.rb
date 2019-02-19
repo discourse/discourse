@@ -126,8 +126,8 @@ module FileStore
     def list_missing_uploads(skip_optimized: false)
       if SiteSetting.enable_s3_inventory
         require 's3_inventory'
-        S3Inventory.new(s3_helper, :upload).list_missing
-        S3Inventory.new(s3_helper, :optimized).list_missing unless skip_optimized
+        S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
+        S3Inventory.new(s3_helper, :optimized).backfill_etags_and_list_missing unless skip_optimized
       else
         list_missing(Upload, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized

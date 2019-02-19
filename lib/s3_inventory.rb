@@ -24,7 +24,7 @@ class S3Inventory
     end
   end
 
-  def list_missing
+  def backfill_etags_and_list_missing
     if files.blank?
       error("Failed to list inventory from S3")
       return
