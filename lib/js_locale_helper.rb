@@ -137,7 +137,7 @@ module JsLocaleHelper
 
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
     message_formats.merge!(strip_out_message_formats!(translations[locale_str]['admin_js']))
-    mf_locale, mf_filename = find_message_format_locale([locale_str], true)
+    mf_locale, mf_filename = find_message_format_locale([locale_str], fallback_to_english: true)
     result = generate_message_format(message_formats, mf_locale, mf_filename)
 
     translations.keys.each do |l|
@@ -167,15 +167,15 @@ module JsLocaleHelper
     # moment.js uses a different naming scheme for locale files
     locale_chain = locale_chain.map { |l| l.tr('_', '-').downcase }
 
-    find_locale(locale_chain, path, :moment_js, false)
+    find_locale(locale_chain, path, :moment_js, fallback_to_english: false)
   end
 
-  def self.find_message_format_locale(locale_chain, fallback_to_english)
+  def self.find_message_format_locale(locale_chain, fallback_to_english:)
     path = "#{Rails.root}/lib/javascripts/locale"
-    find_locale(locale_chain, path, :message_format, fallback_to_english)
+    find_locale(locale_chain, path, :message_format, fallback_to_english: fallback_to_english)
   end
 
-  def self.find_locale(locale_chain, path, type, fallback_to_english)
+  def self.find_locale(locale_chain, path, type, fallback_to_english:)
     locale_chain.each do |locale|
       plugin_locale = DiscoursePluginRegistry.locales[locale]
       return plugin_locale[type] if plugin_locale&.has_key?(type)
@@ -188,7 +188,7 @@ module JsLocaleHelper
     locale_chain = locale_chain.map { |l| l.split(/[-_]/)[0] }
       .uniq.reject { |l| locale_chain.include?(l) }
     unless locale_chain.empty?
-      locale_data = find_locale(locale_chain, path, type, false)
+      locale_data = find_locale(locale_chain, path, type, fallback_to_english: false)
       return locale_data if locale_data
     end
 
