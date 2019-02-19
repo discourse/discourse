@@ -32,12 +32,13 @@ module BackupRestore
       ### READ-ONLY / START ###
       enable_readonly_mode
 
-      pause_sidekiq
-      wait_for_sidekiq
-
-      dump_public_schema
-
-      unpause_sidekiq
+      begin
+        pause_sidekiq
+        wait_for_sidekiq
+        dump_public_schema
+      ensure
+        unpause_sidekiq
+      end
 
       disable_readonly_mode
       ### READ-ONLY / END ###
@@ -300,7 +301,6 @@ module BackupRestore
       log "Cleaning stuff up..."
       delete_uploaded_archive
       remove_tar_leftovers
-      unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space
