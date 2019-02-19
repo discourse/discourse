@@ -6,7 +6,6 @@ class Admin::UsersController < Admin::AdminController
 
   before_action :fetch_user, only: [:suspend,
                                     :unsuspend,
-                                    :refresh_browsers,
                                     :log_out,
                                     :revoke_admin,
                                     :grant_admin,
@@ -173,11 +172,6 @@ class Admin::UsersController < Admin::AdminController
     else
       render json: { error: I18n.t('admin_js.admin.users.id_not_found') }, status: 404
     end
-  end
-
-  def refresh_browsers
-    refresh_browser @user
-    render body: nil
   end
 
   def revoke_admin

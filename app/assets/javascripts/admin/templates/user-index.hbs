@@ -148,10 +148,6 @@
     <div class="value">{{model.ip_address}}</div>
     <div class="controls">
       {{#if currentUser.staff}}
-        {{d-button
-          class="btn-default"
-          action=(action "refreshBrowsers")
-          label="admin.user.refresh_browsers"}}
         {{ip-lookup ip=model.ip_address userId=model.id}}
       {{/if}}
     </div>

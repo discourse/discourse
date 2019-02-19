@@ -2978,8 +2978,6 @@ et:
         suspended: "Peatatud?"
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Sunni brauserit värskendama"
-        refresh_browsers_message: "Sõnum saadetud kõigile klientidele!"
         show_public_profile: "Näita avalikku profiili"
         impersonate: "Kehasta"
         action_logs: "Toimingute logi"

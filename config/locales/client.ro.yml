@@ -3077,8 +3077,6 @@ ro:
         suspended: "Suspendat?"
         staged: "În așteptare?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Forțează reîmprospătarea browserului"
-        refresh_browsers_message: "Mesajul a fost trimis către toţi. "
         show_public_profile: "Arată profilul public"
         impersonate: "Joacă rolul utilizatorului"
         ip_lookup: "Căutare IP"

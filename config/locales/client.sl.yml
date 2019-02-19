@@ -3450,8 +3450,6 @@ sl:
         admin: "Admin?"
         suspended: "Suspendiran?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Zahtevaj osvežitev brskalnika"
-        refresh_browsers_message: "Obvestilo poslano vsem odjemalcem!"
         show_public_profile: "Pokaži javni profil"
         impersonate: "Poosebi uporabnika"
         action_logs: "Dnevnik akcij"

@@ -1463,8 +1463,6 @@ te:
         admin: "అధికారి?"
         suspended: "సస్పెండయ్యాడా? "
         show_admin_profile: "అధికారి"
-        refresh_browsers: "బ్రౌజరు తాజాకరణ బలవంతంచేయి"
-        refresh_browsers_message: "అన్ని క్లైంటులకు సందేశం పంపబడింది!"
         show_public_profile: "ప్రజా ప్రవర చూపు"
         impersonate: "పరకాయప్రవేశం చేయి"
         ip_lookup: "ఐపీ లుకప్"

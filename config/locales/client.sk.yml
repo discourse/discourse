@@ -2825,8 +2825,6 @@ sk:
         suspended: "Odobrate práva?"
         staged: "Dočasný?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Vynútiť refresh browsera."
-        refresh_browsers_message: "Správa odoslaná všetkým klientom!"
         show_public_profile: "Ukázať verejný profil"
         impersonate: "Privlastniť"
         ip_lookup: "Vyhľadávanie IP"

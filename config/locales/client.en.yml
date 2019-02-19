@@ -3830,8 +3830,6 @@ en:
         suspended: "Suspended?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Force browser refresh"
-        refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
         impersonate: "Impersonate"
         action_logs: "Action Logs"

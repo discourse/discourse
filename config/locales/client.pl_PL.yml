@@ -3308,8 +3308,6 @@ pl_PL:
         suspended: "Zawieszony?"
         staged: "Wystawiony?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Wymuś odświeżenie przeglądarki"
-        refresh_browsers_message: "Wiadomość wysłana do wszystkich klientów!"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: "Zaloguj się na to konto"
         action_logs: "Logi akcji"
