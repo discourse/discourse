@@ -9,6 +9,8 @@ module SvgSprite
     "anchor",
     "angle-double-down",
     "angle-double-up",
+    "angle-double-right",
+    "angle-double-left",
     "angle-down",
     "angle-right",
     "angle-up",
