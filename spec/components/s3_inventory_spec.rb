@@ -51,7 +51,7 @@ describe "S3Inventory" do
 
   it "should raise error if an inventory file is not found" do
     client.stub_responses(:list_objects, contents: [])
-    output = capture_stdout { inventory.list_missing }
+    output = capture_stdout { inventory.backfill_etags_and_list_missing }
     expect(output).to eq("Failed to list inventory from S3\n")
   end
 
@@ -70,7 +70,7 @@ describe "S3Inventory" do
     inventory.expects(:inventory_date).returns(Time.now)
 
     output = capture_stdout do
-      inventory.list_missing
+      inventory.backfill_etags_and_list_missing
     end
 
     expect(output).to eq("#{upload.url}\n1 of 4 uploads are missing\n")
@@ -88,7 +88,7 @@ describe "S3Inventory" do
     inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(2)
 
     output = capture_stdout do
-      expect { inventory.list_missing }.to change { Upload.where(etag: nil).count }.by(-2)
+      expect { inventory.backfill_etags_and_list_missing }.to change { Upload.where(etag: nil).count }.by(-2)
     end
 
     expect(Upload.order(:url).pluck(:url, :etag)).to eq(files)
