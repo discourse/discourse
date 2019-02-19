@@ -1,3 +1,8 @@
+## 1.8.78
+
+ * Kaltura onebox support
+ * Typeform onebox support
+
 ## 1.8.40
 
   * remove explicit dependency on fast blank
