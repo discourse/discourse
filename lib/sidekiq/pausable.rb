@@ -61,7 +61,14 @@ class SidekiqPauser
     if t = @extend_lease_thread
       @extend_lease_thread = nil
       while t.alive?
-        t.wakeup
+        begin
+          t.wakeup
+        rescue ThreadError => e
+          unless e.message =~ /killed thread/
+            raise e
+          end
+        end
+
         sleep 0
       end
     end
