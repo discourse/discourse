@@ -40,7 +40,7 @@ export default createWidget("hamburger-menu", {
 
   settings: {
     showCategories: true,
-    maxWidth: 300,
+    maxWidth: 360,
     showFAQ: true,
     showAbout: true
   },
