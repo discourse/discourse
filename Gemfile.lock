@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    onebox (1.8.77)
+    onebox (1.8.78)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -38,7 +38,7 @@ GEM
       rspec (>= 2.14, < 4.0)
     haml (4.0.7)
       tilt
-    hitimes (1.3.0)
+    hitimes (1.3.1)
     htmlentities (4.3.4)
     jaro_winkler (1.5.2)
     listen (2.10.1)
@@ -93,7 +93,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.63.0)
+    rubocop (0.64.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
