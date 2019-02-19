@@ -19,6 +19,12 @@ export default Ember.Component.extend({
 
   isAdmin: Ember.computed.alias("currentUser.admin"),
 
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.reset();
+  },
+
   @computed(
     "isAdmin",
     "emailOrUsername",
@@ -341,7 +347,7 @@ export default Ember.Component.extend({
                 userInvitedController.get("filter")
               ).then(inviteModel => {
                 userInvitedController.setProperties({
-                  topic: inviteModel,
+                  model: inviteModel,
                   totalInvites: inviteModel.invites.length
                 });
               });
@@ -395,7 +401,7 @@ export default Ember.Component.extend({
             userInvitedController.get("filter")
           ).then(inviteModel => {
             userInvitedController.setProperties({
-              topic: inviteModel,
+              model: inviteModel,
               totalInvites: inviteModel.invites.length
             });
           });
