@@ -91,18 +91,6 @@
     padding: 5px;
   }
 
-  .edit-main-nav {
-    .nav-pills:after,
-    .nav-pills:before {
-      display: inline;
-      content: "";
-    }
-    .show-overidden {
-      float: right;
-    }
-    margin-bottom: 10px;
-  }
-
   .admin-container {
     padding-left: 10px;
     padding-right: 10px;
@@ -390,9 +378,6 @@
     }
   }
 
-  .nav-pills.fields {
-    margin-left: 10px;
-  }
   .content-list,
   .current-style {
     float: left;
@@ -407,34 +392,50 @@
       margin: 0;
     }
 
-    .nav.target {
-      margin-top: 15px;
-
-      li {
-        position: relative;
-
-        a {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-      }
-
-      .fa {
-        margin-left: 8px;
-      }
-
-      .d-icon-mobile {
-        position: relative;
-        top: -3px;
-        font-size: $font-up-3;
-        max-height: 20px;
-      }
+    .edit-main-nav .nav-pills > li a.active {
+      background-color: $quaternary;
+      color: $secondary;
     }
 
-    .toggle-maximize {
-      position: absolute;
-      right: -5px;
+    .edit-main-nav ul {
+      padding-bottom: 0;
+    }
+
+    .nav-pills {
+      li {
+        margin-right: 0;
+        display: flex;
+
+        &.spacer {
+          flex-grow: 1;
+        }
+
+        &:last-of-type > a {
+          margin-right: 0;
+        }
+
+        a.no-text .d-icon {
+          margin-right: 0;
+        }
+
+        label {
+          padding: 6px 12px;
+          margin-bottom: 0;
+        }
+
+        a.blank:not(.active) {
+          color: $primary-medium;
+        }
+
+        input {
+          margin-bottom: 0;
+          margin-left: 6px;
+        }
+
+        button {
+          margin-right: 0;
+        }
+      }
     }
 
     .ace-wrapper {
