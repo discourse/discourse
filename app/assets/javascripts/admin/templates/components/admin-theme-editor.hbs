@@ -19,14 +19,18 @@
             {{/link-to}}
         </li>
         {{/each}}
+        
+        {{#if allowAdvanced}}
         <li>
-        <a {{action "toggleShowAdvanced"}} 
-            class='no-text' 
-            title="{{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}"
-        >
-            {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}   
-        </a>
+            <a {{action "toggleShowAdvanced"}} 
+                class='no-text' 
+                title="{{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}"
+            >
+                {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}   
+            </a>
         </li>
+        {{/if}}
+
         <li class="spacer"></li>
         <li>
         <label>
