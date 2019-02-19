@@ -154,9 +154,7 @@ const Theme = RestModel.extend({
 
   hasError(target, name) {
     return this.get("theme_fields")
-      .filter(f => {
-        return f.target === target && (!name || name === f.name);
-      })
+      .filter(f => f.target === target && (!name || name === f.name))
       .any(f => f.error);
   },
 

@@ -4,12 +4,12 @@
         {{#each visibleTargets as |target|}}
         <li>
             {{#link-to editRouteName
-            theme.id 
-            target.name 
-            fieldName 
-            replace=true 
-            title=field.title 
-            class=(if target.edited 'edited' 'blank')
+                theme.id 
+                target.name 
+                fieldName 
+                replace=true 
+                title=field.title 
+                class=(if target.edited 'edited' 'blank')
             }}
             {{#if target.error}}{{d-icon 'exclamation-triangle'}}{{/if}}
             {{#if target.icon}}
@@ -24,11 +24,7 @@
             class='no-text' 
             title="{{i18n (concat "admin.customize.theme." (if showAdvanced "hide_advanced" "show_advanced"))}}"
         >
-            {{#if showAdvanced}}
-            {{d-icon "angle-double-left"}}
-            {{else}}
-            {{d-icon "angle-double-right"}}
-            {{/if}}
+            {{d-icon (if showAdvanced "angle-double-left" "angle-double-right")}}   
         </a>
         </li>
         <li class="spacer"></li>

@@ -1,4 +1,5 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import { fmt } from "discourse/lib/computed";
 
 export default Ember.Component.extend({
   @computed("theme.targets", "onlyOverridden", "showAdvanced")
@@ -40,10 +41,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed("fieldName", "currentTargetName")
-  editorId(fieldName, currentTarget) {
-    return fieldName + "|" + currentTarget;
-  },
+  editorId: fmt("fieldName", "currentTargetName", "%@|%@"),
 
   @computed("maximized")
   maximizeIcon(maximized) {
@@ -77,16 +75,13 @@ export default Ember.Component.extend({
       if (!name) return;
       name = name.replace(/\W/g, "");
       this.get("theme").setField(this.get("currentTargetName"), name, "");
-      this.set("newFieldName", "");
-      this.set("addingField", false);
+      this.setProperties({ newFieldName: "", addingField: false });
       this.fieldAdded(this.get("currentTargetName"), name);
     },
 
     toggleMaximize: function() {
       this.toggleProperty("maximized");
-      Ember.run.next(() => {
-        this.appEvents.trigger("ace:resize");
-      });
+      Ember.run.next(() => this.appEvents.trigger("ace:resize"));
     },
 
     onlyOverriddenChanged(value) {
