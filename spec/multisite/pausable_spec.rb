@@ -17,7 +17,7 @@ RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
       expect(Sidekiq.paused?).to eq(false)
 
       test_multisite_connection('second') do
-        Sidekiq.pause!
+        Sidekiq.pause!("test")
         expect(Sidekiq.paused?).to eq(true)
       end
 

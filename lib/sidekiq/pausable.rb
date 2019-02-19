@@ -9,8 +9,8 @@ class SidekiqPauser
     @dbs ||= Set.new
   end
 
-  def pause!
-    $redis.setex PAUSED_KEY, TTL, "paused"
+  def pause!(value = "paused")
+    $redis.setex PAUSED_KEY, TTL, value
 
     @mutex.synchronize do
       extend_lease_thread
@@ -36,9 +36,11 @@ class SidekiqPauser
 
   def paused_dbs
     dbs = []
+
     RailsMultisite::ConnectionManagement.each_connection do
       dbs << RailsMultisite::ConnectionManagement.current_db if paused?
     end
+
     dbs
   end
 
@@ -68,9 +70,9 @@ class SidekiqPauser
   def extend_lease_thread
     # should always be called from a mutex
     @dbs << RailsMultisite::ConnectionManagement.current_db
+
     @extend_lease_thread ||= Thread.new do
       while true do
-
         break if !@extend_lease_thread
 
         @dbs.each do |db|
@@ -91,8 +93,9 @@ end
 
 module Sidekiq
   @pauser = SidekiqPauser.new
-  def self.pause!
-    @pauser.pause!
+
+  def self.pause!(key = nil)
+    key ? @pauser.pause!(key) : @pauser.pause!
   end
 
   def self.paused?
