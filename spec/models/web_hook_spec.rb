@@ -125,10 +125,13 @@ describe WebHook do
     end
 
     describe 'when there are no active hooks' do
-      it 'should not enqueue anything' do
+      it 'should not generate payload and enqueue anything' do
         topic_web_hook.destroy!
         post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
         expect(Jobs::EmitWebHookEvent.jobs.length).to eq(0)
+
+        WebHook.expects(:generate_payload).times(0)
+        PostDestroyer.new(admin, post).destroy
       end
     end
 
@@ -382,6 +385,12 @@ describe WebHook do
       expect(job_args["event_name"]).to eq("tag_destroyed")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(tag.id)
+    end
+
+    it 'should not generate payload if webhooks not exist' do
+      WebHook.expects(:generate_payload).times(0)
+      tag = Fabricate(:tag)
+      tag.destroy!
     end
 
     it 'should enqueue the right hooks for flag events' do
