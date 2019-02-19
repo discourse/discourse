@@ -64,7 +64,7 @@ $line-height-large: 1.4; // Normal or small text
 // These files don't actually exist. They're injected by Stylesheet::Compiler.
 // --------------------------------------------------
 
-@import "theme_variables";
+@import "theme_colors";
 @import "plugins_variables";
 @import "common/foundation/math";
 

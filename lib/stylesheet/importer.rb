@@ -33,12 +33,19 @@ module Stylesheet
       import_files(DiscoursePluginRegistry.sass_variables)
     end
 
-    register_import "theme_variables" do
+    register_import "theme_colors" do
       contents = ""
       colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
+      contents
+
+      Import.new("theme_colors.scss", source: contents)
+    end
+
+    register_import "theme_variables" do
+      contents = ""
 
       theme&.all_theme_variables&.each do |field|
         if field.type_id == ThemeField.types[:theme_upload_var]
