@@ -32,8 +32,8 @@ describe ActiveRecord::ConnectionHandling do
   end
 
   after do
-    (Thread.list - @threads).each(&:kill)
     Sidekiq.unpause!
+    (Thread.list - @threads).each(&:kill)
     postgresql_fallback_handler.setup!
 
     ActiveRecord::Base.unstub(:postgresql_connection)
