@@ -2971,8 +2971,6 @@ ko:
         suspended: "접근 금지?"
         staged: "격리조치?"
         show_admin_profile: "관리자"
-        refresh_browsers: "브라우저 새로 고침"
-        refresh_browsers_message: "모든 클라이언트에게 메시지 보내기"
         show_public_profile: "공개 프로필 보기"
         impersonate: "사용자로 로그인하기"
         action_logs: "활동 로그"

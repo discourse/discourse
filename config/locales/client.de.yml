@@ -3559,8 +3559,6 @@ de:
         suspended: "Gesperrt?"
         staged: "Vorbereitet?"
         show_admin_profile: "Administration"
-        refresh_browsers: "Aktualisierung im Browser erzwingen"
-        refresh_browsers_message: "Nachricht wurde an alle Clients gesendet!"
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: "Nutzersicht"
         action_logs: "Aktionsprotokoll"

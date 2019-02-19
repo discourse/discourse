@@ -2890,8 +2890,6 @@ lt:
         suspended: "Sustabdytas?"
         staged: "Inscenizuotas?"
         show_admin_profile: "Administravimas"
-        refresh_browsers: "Priverstinai perkrauti naršyklę"
-        refresh_browsers_message: "Žinutė išsiųsta visiems klientams!"
         show_public_profile: "Rodyti viešą profilį"
         impersonate: "Apsimesti"
         action_logs: "Veiksmų įrašai"

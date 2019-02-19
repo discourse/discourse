@@ -2241,8 +2241,6 @@ vi:
         suspended: "Đã tạm khóa?"
         staged: "Cấp bậc?"
         show_admin_profile: "Quản trị"
-        refresh_browsers: "Bắt buộc làm mới trình duyệt"
-        refresh_browsers_message: "Tin nhắn đã gửi cho tất cả người dùng!"
         show_public_profile: "Hiển thị hồ sơ công khai"
         impersonate: "Mạo danh"
         ip_lookup: "Tìm kiếm địa chỉ IP"

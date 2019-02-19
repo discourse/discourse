@@ -2883,8 +2883,6 @@ el:
         suspended: "Αποβλημένος;"
         staged: "Στάδιο Μετάβασης;"
         show_admin_profile: "Διαχείριση"
-        refresh_browsers: "Να ανανεωθεί αναγκαστικά η σελίδα"
-        refresh_browsers_message: "Το μήνυμα στάλθηκε σε όλους τους χρήστες!"
         show_public_profile: "Εμφάνισε το Δημόσιο Προφίλ"
         impersonate: "Υποδυθείτε"
         action_logs: "Καταγραφές Ενεργειών"

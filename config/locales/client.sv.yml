@@ -2564,8 +2564,6 @@ sv:
         suspended: "Avstängd?"
         staged: "Arrangerad?"
         show_admin_profile: "Administratör"
-        refresh_browsers: "Tvinga webbläsaruppdatering"
-        refresh_browsers_message: "Meddelande skickat till alla klienter!"
         show_public_profile: "Visa publik profil"
         impersonate: "Imitera"
         action_logs: "Åtgärdslogg"

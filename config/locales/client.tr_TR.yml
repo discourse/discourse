@@ -3315,8 +3315,6 @@ tr_TR:
         suspended: "Askıya mı alındı?"
         staged: "Aşamalı mı?"
         show_admin_profile: "Yönetici"
-        refresh_browsers: "Tarayıcıyı sayfa yenilemesine zorla"
-        refresh_browsers_message: "Mesaj tüm kullanıcılara gönderildi!"
         show_public_profile: "Herkese Açık Profili Göster"
         impersonate: "Taklit et"
         action_logs: "İşlem Kayıtları"

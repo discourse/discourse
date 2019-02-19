@@ -3322,8 +3322,6 @@ nb_NO:
         suspended: "Utestengt?"
         staged: "Arrangert?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Tving gjenoffrisking av nettleser"
-        refresh_browsers_message: "Melding sendt til alle klienter!"
         show_public_profile: "Vis offentlig profil"
         impersonate: "Gi deg ut for å være en annen"
         action_logs: "Handlingslogger"

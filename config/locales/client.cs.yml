@@ -3563,8 +3563,6 @@ cs:
         suspended: "Zakázán?"
         staged: "Staged?"
         show_admin_profile: "Administrace"
-        refresh_browsers: "Vynutit obnovení prohlížeče"
-        refresh_browsers_message: "Zpráva odeslána všem klientům!"
         show_public_profile: "Zobrazit veřejný profil"
         impersonate: "Vydávat se za uživatele"
         action_logs: "Logy akcí"

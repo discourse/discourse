@@ -3369,8 +3369,6 @@ it:
         suspended: "Sospeso?"
         staged: "Temporaneo?"
         show_admin_profile: "Amministratore"
-        refresh_browsers: "Forza l'aggiornamento del browser"
-        refresh_browsers_message: "Messaggio inviato a tutti i client!"
         show_public_profile: "Mostra Profilo Pubblico"
         impersonate: "Impersona"
         action_logs: "Log Azione"

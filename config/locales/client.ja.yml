@@ -2686,8 +2686,6 @@ ja:
         suspended: "凍結状態"
         staged: "ステージドモードの状態"
         show_admin_profile: "アカウントの管理"
-        refresh_browsers: "ブラウザを強制更新"
-        refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
         show_public_profile: "パブリックプロフィールを見る"
         impersonate: "このユーザになりすます"
         action_logs: "アクションログ"

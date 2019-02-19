@@ -3563,8 +3563,6 @@ es:
         suspended: "¿Suspendido?"
         staged: "¿Provisional?"
         show_admin_profile: "Administrador"
-        refresh_browsers: "Forzar recarga del navegador"
-        refresh_browsers_message: "¡Mensaje enviado a todos los clientes!"
         show_public_profile: "Ver perfil público"
         impersonate: "Impersonar a"
         action_logs: "Logs de acciones"

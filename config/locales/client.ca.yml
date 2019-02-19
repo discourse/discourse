@@ -2573,8 +2573,6 @@ ca:
         suspended: "Suspès?"
         staged: "Escenificat?"
         show_admin_profile: "Administració"
-        refresh_browsers: "Força l'actualització del navegador"
-        refresh_browsers_message: "Missatge enviat a totes les persones clientes!"
         show_public_profile: "Mostra perfil públic"
         impersonate: "Personifica"
         action_logs: "Registres d'accions"

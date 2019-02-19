@@ -2780,8 +2780,6 @@ fa_IR:
         suspended: "تعلیق شد؟"
         staged: "کاربر خودکار؟"
         show_admin_profile: "مدیر ارشد"
-        refresh_browsers: "تازه کردن اجباری مرورگر"
-        refresh_browsers_message: "ارسال پیام به تمام مشتریان! "
         show_public_profile: "نمایش نمایه عمومی"
         impersonate: "جعل هویت کردن"
         action_logs: "گزارش گار"

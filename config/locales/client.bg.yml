@@ -2357,8 +2357,6 @@ bg:
         suspended: "Отстранен? "
         staged: "Поставен?"
         show_admin_profile: "Админ"
-        refresh_browsers: "Принудително опресняване на браузъра "
-        refresh_browsers_message: "Съобщението е изпратено до всички клиенти! "
         show_public_profile: "Покажи публичния профил "
         impersonate: "Представени "
         ip_lookup: "IP търсене "

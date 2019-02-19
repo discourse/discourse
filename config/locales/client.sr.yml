@@ -1734,8 +1734,6 @@ sr:
         admin: "Administrator?"
         suspended: "Suspendovan?"
         show_admin_profile: "Administrator"
-        refresh_browsers: "Forsiraj osveživanje pretraživača"
-        refresh_browsers_message: "Poruka poslata svim klijentima!"
         show_public_profile: "Pokaži javni profil"
         impersonate: "Predstavi se kao"
         ip_lookup: "IP Pregled"
