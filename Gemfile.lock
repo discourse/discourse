@@ -217,7 +217,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    mustache (1.0.5)
+    mustache (1.1.0)
     nap (1.1.0)
     no_proxy_fix (0.1.2)
     nokogiri (1.10.1)
@@ -261,7 +261,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.77)
+    onebox (1.8.78)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -515,7 +515,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.77)
+  onebox (= 1.8.78)
   openid-redis-store
   pg
   pry-nav
