@@ -261,7 +261,7 @@ class ThemeField < ActiveRecord::Base
   def ensure_scss_compiles!
     if ThemeField.scss_fields.include?(self.name)
       begin
-        Stylesheet::Compiler.compile("@import \"theme_variables\"; @import \"theme_field\";",
+        Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"theme_field\";",
                                      "theme.scss",
                                      theme_field: self.value.dup,
                                      theme: self.theme
