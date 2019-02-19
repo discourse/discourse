@@ -45,12 +45,12 @@ class PostDestroyer
   end
 
   def destroy
-    payload = WebHook.generate_payload(:post, @post)
+    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
     topic = @post.topic
 
     if @post.is_first_post? && topic
       topic_view = TopicView.new(topic.id, Discourse.system_user)
-      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
     end
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after

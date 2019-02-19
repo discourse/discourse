@@ -7,7 +7,7 @@ module HasDestroyedWebHook
 
   def enqueue_destroyed_web_hook
     type = self.class.name.underscore.to_sym
-    payload = WebHook.generate_payload(type, self)
+    payload = WebHook.generate_payload(type, self) if WebHook.active_web_hooks(type).exists?
     yield
     WebHook.enqueue_hooks(type, "#{type}_destroyed".to_sym,
       id: id,
