@@ -6,8 +6,8 @@ export default Ember.Component.extend({
   panel: null,
   selectedPanel: null,
   panelsLength: null,
-  classNameBindings: ["isActive", "isSingleTab"],
-  isSingleTab: Ember.computed.equal("panelsLength", 1),
+  classNameBindings: ["isActive", "isSingle", "panel.id"],
+  isSingle: Ember.computed.equal("panelsLength", 1),
   title: Ember.computed.alias("panel.title"),
   isActive: propertyEqual("panel.id", "selectedPanel.id"),
 

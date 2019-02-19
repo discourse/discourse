@@ -22,29 +22,6 @@ acceptance("Topic", {
   }
 });
 
-QUnit.test("Share Popup", async assert => {
-  await visit("/t/internationalization-localization/280");
-  assert.ok(!exists("#share-link.visible"), "it is not visible");
-
-  await click("button[data-share-url]");
-  assert.ok(exists("#share-link.visible"), "it shows the popup");
-
-  await click("#share-link .close-share");
-  assert.ok(!exists("#share-link.visible"), "it closes the popup");
-
-  // TODO tgxworld This fails on Travis but we need to push the security fix out
-  // first.
-  // click('#topic-footer-buttons .btn.create');
-  // fillIn('.d-editor-input', '<h2><div data-share-url="something">Click</button><h2>');
-  //
-  // click('#reply-control .btn.create');
-  // click('h2 div[data-share-url]');
-  //
-  // andThen(() => {
-  //   ok(!exists('#share-link.visible'), 'it does not show the popup');
-  // });
-});
-
 QUnit.test("Showing and hiding the edit controls", async assert => {
   await visit("/t/internationalization-localization/280");
 
