@@ -333,9 +333,7 @@ module Discourse
 
             @dbs.each do |db|
               RailsMultisite::ConnectionManagement.with_connection(db) do
-                if readonly_mode?(key)
-                  $redis.expire(key, READONLY_MODE_KEY_TTL)
-                else
+                if !$redis.expire(key, READONLY_MODE_KEY_TTL)
                   @dbs.delete(db)
                 end
               end
