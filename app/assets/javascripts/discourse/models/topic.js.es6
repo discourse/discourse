@@ -1,30 +1,34 @@
 import { ajax } from "discourse/lib/ajax";
 import { flushMap } from "discourse/models/store";
 import RestModel from "discourse/models/rest";
-import { propertyEqual } from "discourse/lib/computed";
+import { propertyEqual, fmt } from "discourse/lib/computed";
 import { longDate } from "discourse/lib/formatter";
 import { isRTL } from "discourse/lib/text-direction";
-import computed from "ember-addons/ember-computed-decorators";
 import ActionSummary from "discourse/models/action-summary";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { censor } from "pretty-text/censored-words";
 import { emojiUnescape } from "discourse/lib/text";
 import PreloadStore from "preload-store";
 import { userPath } from "discourse/lib/url";
+import {
+  default as computed,
+  observes,
+  on
+} from "ember-addons/ember-computed-decorators";
 
 export function loadTopicView(topic, args) {
   const topicId = topic.get("id");
   const data = _.merge({}, args);
-  const url = Discourse.getURL("/t/") + topicId;
+  const url = `${Discourse.getURL("/t/")}${topicId}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
   delete data.__type;
   delete data.store;
 
-  return PreloadStore.getAndRemove(`topic_${topicId}`, () => {
-    return ajax(jsonUrl, { data });
-  }).then(json => {
+  return PreloadStore.getAndRemove(`topic_${topicId}`, () =>
+    ajax(jsonUrl, { data })
+  ).then(json => {
     topic.updateFromJson(json);
     return json;
   });
@@ -101,44 +105,44 @@ const Topic = RestModel.extend({
     );
 
     if (Discourse.SiteSettings.support_mixed_text_direction) {
-      let titleDir = isRTL(title) ? "rtl" : "ltr";
+      const titleDir = isRTL(title) ? "rtl" : "ltr";
       return `<span dir="${titleDir}">${fancyTitle}</span>`;
     }
     return fancyTitle;
   },
 
   // returns createdAt if there's no bumped date
-  bumpedAt: function() {
-    const bumpedAt = this.get("bumped_at");
-    if (bumpedAt) {
-      return new Date(bumpedAt);
+  @computed("bumped_at", "createdAt")
+  bumpedAt(bumped_at, createdAt) {
+    if (bumped_at) {
+      return new Date(bumped_at);
     } else {
-      return this.get("createdAt");
+      return createdAt;
     }
-  }.property("bumped_at", "createdAt"),
+  },
 
-  bumpedAtTitle: function() {
-    return (
-      I18n.t("first_post") +
-      ": " +
-      longDate(this.get("createdAt")) +
-      "\n" +
-      I18n.t("last_post") +
-      ": " +
-      longDate(this.get("bumpedAt"))
-    );
-  }.property("bumpedAt"),
+  @computed("bumpedAt", "createdAt")
+  bumpedAtTitle(bumpedAt, createdAt) {
+    const firstPost = I18n.t("first_post");
+    const lastPost = I18n.t("last_post");
+    const createdAtDate = longDate(createdAt);
+    const bumpedAtDate = longDate(bumpedAt);
 
-  createdAt: function() {
-    return new Date(this.get("created_at"));
-  }.property("created_at"),
+    return `${firstPost}: ${createdAtDate}\n${lastPost}: ${bumpedAtDate}`;
+  },
 
-  postStream: function() {
+  @computed("created_at")
+  createdAt(created_at) {
+    return new Date(created_at);
+  },
+
+  @computed
+  postStream() {
     return this.store.createRecord("postStream", {
       id: this.get("id"),
       topic: this
     });
-  }.property(),
+  },
 
   @computed("tags")
   visibleListTags(tags) {
@@ -165,9 +169,7 @@ const Topic = RestModel.extend({
 
       return this.set(
         "related_messages",
-        relatedMessages.map(st => {
-          return store.createRecord("topic", st);
-        })
+        relatedMessages.map(st => store.createRecord("topic", st))
       );
     }
   },
@@ -179,115 +181,116 @@ const Topic = RestModel.extend({
 
       return this.set(
         "suggested_topics",
-        suggestedTopics.map(st => {
-          return store.createRecord("topic", st);
-        })
+        suggestedTopics.map(st => store.createRecord("topic", st))
       );
     }
   },
 
-  replyCount: function() {
-    return this.get("posts_count") - 1;
-  }.property("posts_count"),
+  @computed("posts_count")
+  replyCount(postsCount) {
+    return postsCount - 1;
+  },
 
-  details: function() {
+  @computed
+  details() {
     return this.store.createRecord("topicDetails", {
       id: this.get("id"),
       topic: this
     });
-  }.property(),
+  },
 
   invisible: Ember.computed.not("visible"),
   deleted: Ember.computed.notEmpty("deleted_at"),
 
-  searchContext: function() {
-    return { type: "topic", id: this.get("id") };
-  }.property("id"),
+  @computed("id")
+  searchContext(id) {
+    return { type: "topic", id };
+  },
 
-  _categoryIdChanged: function() {
+  @on("init")
+  @observes("category_id")
+  _categoryIdChanged() {
     this.set("category", Discourse.Category.findById(this.get("category_id")));
-  }
-    .observes("category_id")
-    .on("init"),
+  },
 
-  _categoryNameChanged: function() {
+  @observes("categoryName")
+  _categoryNameChanged() {
     const categoryName = this.get("categoryName");
     let category;
     if (categoryName) {
       category = this.site.get("categories").findBy("name", categoryName);
     }
     this.set("category", category);
-  }.observes("categoryName"),
-
-  categoryClass: function() {
-    return "category-" + this.get("category.fullSlug");
-  }.property("category.fullSlug"),
-
-  shareUrl: function() {
-    const user = Discourse.User.current();
-    return this.get("url") + (user ? "?u=" + user.get("username_lower") : "");
-  }.property("url"),
-
-  @computed("url")
-  printUrl(url) {
-    return url + "/print";
   },
 
-  url: function() {
-    let slug = this.get("slug") || "";
+  categoryClass: fmt("category.fullSlug", "category-%@"),
+
+  @computed("url")
+  shareUrl(url) {
+    const user = Discourse.User.current();
+    const userQueryString = user ? `?u=${user.get("username_lower")}` : "";
+    return `${url}${userQueryString}`;
+  },
+
+  printUrl: fmt("url", "%@/print"),
+
+  @computed("id", "slug")
+  url(id, slug) {
+    slug = slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
     }
-    return Discourse.getURL("/t/") + slug + "/" + this.get("id");
-  }.property("id", "slug"),
+    return `${Discourse.getURL("/t/")}${slug}/${id}`;
+  },
 
   // Helper to build a Url with a post number
   urlForPostNumber(postNumber) {
     let url = this.get("url");
     if (postNumber && postNumber > 0) {
-      url += "/" + postNumber;
+      url += `/${postNumber}`;
     }
     return url;
   },
 
-  totalUnread: function() {
-    const count = (this.get("unread") || 0) + (this.get("new_posts") || 0);
+  @computed("new_posts", "unread")
+  totalUnread(newPosts, unread) {
+    const count = (unread || 0) + (newPosts || 0);
     return count > 0 ? count : null;
-  }.property("new_posts", "unread"),
+  },
 
-  lastReadUrl: function() {
-    return this.urlForPostNumber(this.get("last_read_post_number"));
-  }.property("url", "last_read_post_number"),
+  @computed("last_read_post_number", "url")
+  lastReadUrl(lastReadPostNumber) {
+    return this.urlForPostNumber(lastReadPostNumber);
+  },
 
-  lastUnreadUrl: function() {
-    const highest = this.get("highest_post_number");
-    const lastRead = this.get("last_read_post_number");
-
-    if (highest <= lastRead) {
+  @computed("last_read_post_number", "highest_post_number", "url")
+  lastUnreadUrl(lastReadPostNumber, highestPostNumber) {
+    if (highestPostNumber <= lastReadPostNumber) {
       if (this.get("category.navigate_to_first_post_after_read")) {
         return this.urlForPostNumber(1);
       } else {
-        return this.urlForPostNumber(lastRead + 1);
+        return this.urlForPostNumber(lastReadPostNumber + 1);
       }
     } else {
-      return this.urlForPostNumber(lastRead + 1);
+      return this.urlForPostNumber(lastReadPostNumber + 1);
     }
-  }.property("url", "last_read_post_number", "highest_post_number"),
+  },
 
-  lastPostUrl: function() {
-    return this.urlForPostNumber(this.get("highest_post_number"));
-  }.property("url", "highest_post_number"),
+  @computed("highest_post_number", "url")
+  lastPostUrl(highestPostNumber) {
+    return this.urlForPostNumber(highestPostNumber);
+  },
 
-  firstPostUrl: function() {
+  @computed("url")
+  firstPostUrl() {
     return this.urlForPostNumber(1);
-  }.property("url"),
+  },
 
-  summaryUrl: function() {
-    return (
-      this.urlForPostNumber(1) +
-      (this.get("has_summary") ? "?filter=summary" : "")
-    );
-  }.property("url"),
+  @computed("url")
+  summaryUrl() {
+    const summaryQueryString = this.get("has_summary") ? "?filter=summary" : "";
+    return `${this.urlForPostNumber(1)}${summaryQueryString}`;
+  },
 
   @computed("last_poster.username")
   lastPosterUrl(username) {
@@ -297,39 +300,40 @@ const Topic = RestModel.extend({
   // The amount of new posts to display. It might be different than what the server
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.
-  displayNewPosts: function() {
-    const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[
-      this.get("id")
-    ];
+  @computed("new_posts", "id")
+  displayNewPosts(newPosts, id) {
+    const highestSeen = Discourse.Session.currentProp("highestSeenByTopic")[id];
     if (highestSeen) {
-      let delta = highestSeen - this.get("last_read_post_number");
+      const delta = highestSeen - this.get("last_read_post_number");
       if (delta > 0) {
-        let result = this.get("new_posts") - delta;
+        let result = newPosts - delta;
         if (result < 0) {
           result = 0;
         }
         return result;
       }
     }
-    return this.get("new_posts");
-  }.property("new_posts", "id"),
+    return newPosts;
+  },
 
-  viewsHeat: function() {
-    const v = this.get("views");
-    if (v >= Discourse.SiteSettings.topic_views_heat_high)
+  @computed("views")
+  viewsHeat(v) {
+    if (v >= Discourse.SiteSettings.topic_views_heat_high) {
       return "heatmap-high";
-    if (v >= Discourse.SiteSettings.topic_views_heat_medium)
+    }
+    if (v >= Discourse.SiteSettings.topic_views_heat_medium) {
       return "heatmap-med";
-    if (v >= Discourse.SiteSettings.topic_views_heat_low) return "heatmap-low";
+    }
+    if (v >= Discourse.SiteSettings.topic_views_heat_low) {
+      return "heatmap-low";
+    }
     return null;
-  }.property("views"),
+  },
 
-  archetypeObject: function() {
-    return Discourse.Site.currentProp("archetypes").findBy(
-      "id",
-      this.get("archetype")
-    );
-  }.property("archetype"),
+  @computed("archetype")
+  archetypeObject(archetype) {
+    return Discourse.Site.currentProp("archetypes").findBy("id", archetype);
+  },
 
   isPrivateMessage: Ember.computed.equal("archetype", "private_message"),
   isBanner: Ember.computed.equal("archetype", "banner"),
@@ -343,32 +347,26 @@ const Topic = RestModel.extend({
     if (property === "closed") {
       this.incrementProperty("posts_count");
     }
-    return ajax(this.get("url") + "/status", {
+    return ajax(`${this.get("url")}/status`, {
       type: "PUT",
       data: {
         status: property,
         enabled: !!value,
-        until: until
+        until
       }
     });
   },
 
   makeBanner() {
-    const self = this;
-    return ajax("/t/" + this.get("id") + "/make-banner", { type: "PUT" }).then(
-      function() {
-        self.set("archetype", "banner");
-      }
+    return ajax(`/t/${this.get("id")}/make-banner`, { type: "PUT" }).then(() =>
+      this.set("archetype", "banner")
     );
   },
 
   removeBanner() {
-    const self = this;
-    return ajax("/t/" + this.get("id") + "/remove-banner", {
+    return ajax(`/t/${this.get("id")}/remove-banner`, {
       type: "PUT"
-    }).then(function() {
-      self.set("archetype", "regular");
-    });
+    }).then(() => this.set("archetype", "regular"));
   },
 
   toggleBookmark() {
@@ -432,23 +430,23 @@ const Topic = RestModel.extend({
   },
 
   createGroupInvite(group) {
-    return ajax("/t/" + this.get("id") + "/invite-group", {
+    return ajax(`/t/${this.get("id")}/invite-group`, {
       type: "POST",
       data: { group }
     });
   },
 
   createInvite(user, group_names, custom_message) {
-    return ajax("/t/" + this.get("id") + "/invite", {
+    return ajax(`/t/${this.get("id")}/invite`, {
       type: "POST",
       data: { user, group_names, custom_message }
     });
   },
 
-  generateInviteLink: function(email, groupNames, topicId) {
+  generateInviteLink(email, groupNames, topicId) {
     return ajax("/invites/link", {
       type: "POST",
-      data: { email: email, group_names: groupNames, topic_id: topicId }
+      data: { email, group_names: groupNames, topic_id: topicId }
     });
   },
 
@@ -492,28 +490,25 @@ const Topic = RestModel.extend({
   },
 
   reload() {
-    return ajax(`/t/${this.get("id")}`, { type: "GET" }).then(topic_json => {
-      this.updateFromJson(topic_json);
-    });
+    return ajax(`/t/${this.get("id")}`, { type: "GET" }).then(topic_json =>
+      this.updateFromJson(topic_json)
+    );
   },
 
-  isPinnedUncategorized: function() {
-    return this.get("pinned") && this.get("category.isUncategorizedCategory");
-  }.property("pinned", "category.isUncategorizedCategory"),
+  isPinnedUncategorized: Ember.computed.and(
+    "pinned",
+    "category.isUncategorizedCategory"
+  ),
 
   clearPin() {
-    const topic = this;
-
     // Clear the pin optimistically from the object
-    topic.set("pinned", false);
-    topic.set("unpinned", true);
+    this.setProperties({ pinned: false, unpinned: true });
 
-    ajax("/t/" + this.get("id") + "/clear-pin", {
+    ajax(`/t/${this.get("id")}/clear-pin`, {
       type: "PUT"
-    }).then(null, function() {
+    }).then(null, () => {
       // On error, put the pin back
-      topic.set("pinned", true);
-      topic.set("unpinned", false);
+      this.setProperties({ pinned: true, unpinned: false });
     });
   },
 
@@ -526,18 +521,14 @@ const Topic = RestModel.extend({
   },
 
   rePin() {
-    const topic = this;
-
     // Clear the pin optimistically from the object
-    topic.set("pinned", true);
-    topic.set("unpinned", false);
+    this.setProperties({ pinned: true, unpinned: false });
 
-    ajax("/t/" + this.get("id") + "/re-pin", {
+    ajax(`/t/${this.get("id")}/re-pin`, {
       type: "PUT"
-    }).then(null, function() {
+    }).then(null, () => {
       // On error, put the pin back
-      topic.set("pinned", true);
-      topic.set("unpinned", false);
+      this.setProperties({ pinned: true, unpinned: false });
     });
   },
 
@@ -548,17 +539,19 @@ const Topic = RestModel.extend({
 
   hasExcerpt: Ember.computed.notEmpty("excerpt"),
 
-  excerptTruncated: function() {
-    const e = this.get("excerpt");
-    return e && e.substr(e.length - 8, 8) === "&hellip;";
-  }.property("excerpt"),
+  @computed("excerpt")
+  excerptTruncated(excerpt) {
+    return excerpt && excerpt.substr(excerpt.length - 8, 8) === "&hellip;";
+  },
 
   readLastPost: propertyEqual("last_read_post_number", "highest_post_number"),
   canClearPin: Ember.computed.and("pinned", "readLastPost"),
 
   archiveMessage() {
     this.set("archiving", true);
-    var promise = ajax(`/t/${this.get("id")}/archive-message`, { type: "PUT" });
+    const promise = ajax(`/t/${this.get("id")}/archive-message`, {
+      type: "PUT"
+    });
 
     promise
       .then(msg => {
@@ -574,7 +567,7 @@ const Topic = RestModel.extend({
 
   moveToInbox() {
     this.set("archiving", true);
-    var promise = ajax(`/t/${this.get("id")}/move-to-inbox`, { type: "PUT" });
+    const promise = ajax(`/t/${this.get("id")}/move-to-inbox`, { type: "PUT" });
 
     promise
       .then(msg => {
@@ -593,9 +586,7 @@ const Topic = RestModel.extend({
       type: "PUT",
       data: this.getProperties("destination_category_id")
     })
-      .then(() => {
-        this.set("destination_category_id", null);
-      })
+      .then(() => this.set("destination_category_id", null))
       .catch(popupAjaxError);
   },
 
@@ -609,9 +600,7 @@ const Topic = RestModel.extend({
 
   convertTopic(type) {
     return ajax(`/t/${this.get("id")}/convert-topic/${type}`, { type: "PUT" })
-      .then(() => {
-        window.location.reload();
-      })
+      .then(() => window.location.reload())
       .catch(popupAjaxError);
   },
 
@@ -633,7 +622,7 @@ Topic.reopenClass({
   createActionSummary(result) {
     if (result.actions_summary) {
       const lookup = Ember.Object.create();
-      result.actions_summary = result.actions_summary.map(function(a) {
+      result.actions_summary = result.actions_summary.map(a => {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         const actionSummary = ActionSummary.create(a);
@@ -664,13 +653,11 @@ Topic.reopenClass({
     Object.keys(props).forEach(function(k) {
       const v = props[k];
       if (v instanceof Array && v.length === 0) {
-        props[k + "_empty_array"] = true;
+        props[`${k}_empty_array`] = true;
       }
     });
 
-    return ajax(topic.get("url"), { type: "PUT", data: props }).then(function(
-      result
-    ) {
+    return ajax(topic.get("url"), { type: "PUT", data: props }).then(result => {
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
@@ -688,7 +675,7 @@ Topic.reopenClass({
   find(topicId, opts) {
     let url = Discourse.getURL("/t/") + topicId;
     if (opts.nearPost) {
-      url += "/" + opts.nearPost;
+      url += `/${opts.nearPost}`;
     }
 
     const data = {};
@@ -716,14 +703,14 @@ Topic.reopenClass({
     }
 
     // Check the preload store. If not, load it via JSON
-    return ajax(url + ".json", { data: data });
+    return ajax(`${url}.json`, { data });
   },
 
   changeOwners(topicId, opts) {
-    const promise = ajax("/t/" + topicId + "/change-owner", {
+    const promise = ajax(`/t/${topicId}/change-owner`, {
       type: "POST",
       data: opts
-    }).then(function(result) {
+    }).then(result => {
       if (result.success) return result;
       promise.reject(new Error("error changing ownership of posts"));
     });
@@ -731,10 +718,10 @@ Topic.reopenClass({
   },
 
   changeTimestamp(topicId, timestamp) {
-    const promise = ajax("/t/" + topicId + "/change-timestamp", {
+    const promise = ajax(`/t/${topicId}/change-timestamp`, {
       type: "PUT",
-      data: { timestamp: timestamp }
-    }).then(function(result) {
+      data: { timestamp }
+    }).then(result => {
       if (result.success) return result;
       promise.reject(new Error("error updating timestamp of topic"));
     });
@@ -745,20 +732,18 @@ Topic.reopenClass({
     return ajax("/topics/bulk", {
       type: "PUT",
       data: {
-        topic_ids: topics.map(function(t) {
-          return t.get("id");
-        }),
-        operation: operation
+        topic_ids: topics.map(t => t.get("id")),
+        operation
       }
     });
   },
 
   bulkOperationByFilter(filter, operation, categoryId) {
-    const data = { filter: filter, operation: operation };
-    if (categoryId) data["category_id"] = categoryId;
+    const data = { filter, operation };
+    if (categoryId) data.category_id = categoryId;
     return ajax("/topics/bulk", {
       type: "PUT",
-      data: data
+      data
     });
   },
 
@@ -767,7 +752,7 @@ Topic.reopenClass({
   },
 
   idForSlug(slug) {
-    return ajax("/t/id_for/" + slug);
+    return ajax(`/t/id_for/${slug}`);
   }
 });
 
@@ -781,13 +766,13 @@ function moveResult(result) {
 }
 
 export function movePosts(topicId, data) {
-  return ajax("/t/" + topicId + "/move-posts", { type: "POST", data }).then(
+  return ajax(`/t/${topicId}/move-posts`, { type: "POST", data }).then(
     moveResult
   );
 }
 
 export function mergeTopic(topicId, data) {
-  return ajax("/t/" + topicId + "/merge-topic", { type: "POST", data }).then(
+  return ajax(`/t/${topicId}/merge-topic`, { type: "POST", data }).then(
     moveResult
   );
 }
