@@ -1228,12 +1228,10 @@ describe CookedPostProcessor do
     end
 
     it "works only on new posts" do
-      SiteSetting.queue_jobs = false
-
-      hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
-      small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
-
+      Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
+      Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
       reply = PostCreator.create!(topic.user, topic_id: topic.id, raw: raw)
+
       CookedPostProcessor.new(reply).post_process
       expect(reply.raw).to eq(raw)
 
