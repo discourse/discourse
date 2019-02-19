@@ -3187,8 +3187,6 @@ nl:
         suspended: "Geschorst?"
         staged: "Staged?"
         show_admin_profile: "Beheerder"
-        refresh_browsers: "Vernieuwen in browser forceren"
-        refresh_browsers_message: "Bericht verstuurd aan alle gebruikers!"
         show_public_profile: "Openbaar profiel tonen"
         impersonate: "Aanmelden als gebruiker"
         action_logs: "Actielogboeken"

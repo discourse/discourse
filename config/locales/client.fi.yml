@@ -3560,8 +3560,6 @@ fi:
         suspended: "Hyllytetty?"
         staged: "Esikäyttäjä?"
         show_admin_profile: "Ylläpito"
-        refresh_browsers: "Pakota sivun uudelleen lataus"
-        refresh_browsers_message: "Sanoma lähetettiin kaikille päätelaitteille!"
         show_public_profile: "Näytä julkinen profiili"
         impersonate: "Esiinny käyttäjänä"
         action_logs: "Toimintaloki"

@@ -3069,8 +3069,6 @@ sw:
         admin: "Kiongozi?"
         suspended: "Imesitishwa?"
         show_admin_profile: "Msimamizi"
-        refresh_browsers: "Lazimisha uanzishaji upya wa kivinjari"
-        refresh_browsers_message: "Ujumbe umetumwa kwa watumiaji wote!"
         show_public_profile: "Onyesha Taarifa za Umma"
         impersonate: "Chukua Utambulisho wa Mtu Mwingine"
         action_logs: "Taarifa za Shughuli Tofauti"

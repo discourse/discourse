@@ -2794,8 +2794,6 @@ hu:
         admin: "Adminisztrátor?"
         suspended: "Felfüggesztett?"
         show_admin_profile: "Adminisztrátor"
-        refresh_browsers: "Erőszakolt böngésző frissítés"
-        refresh_browsers_message: "Üzenet elküldve minden ügyfélnek"
         show_public_profile: "Publikus profil megjelenítése"
         ip_lookup: "IP-cím keresés"
         log_out: "Kijelentkezés"

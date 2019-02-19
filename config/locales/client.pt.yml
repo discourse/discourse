@@ -2661,8 +2661,6 @@ pt:
         suspended: "Suspendido?"
         staged: "Temporário?"
         show_admin_profile: "Administração"
-        refresh_browsers: "Forçar atualização da página no browser"
-        refresh_browsers_message: "Mensagem enviada para todos os clientes!"
         show_public_profile: "Mostrar Perfil Público"
         impersonate: "Personificar"
         ip_lookup: "Pesquisa de IP"

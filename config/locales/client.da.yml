@@ -2711,8 +2711,6 @@ da:
         suspended: "Suspenderet?"
         staged: "Midlertidig?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Gennemtving browser refresh"
-        refresh_browsers_message: "Beskeden er sendt til alle tilsluttede browsere!"
         show_public_profile: "Vis offentlig profil"
         impersonate: "Impersonate"
         action_logs: "Aktivitetslog"

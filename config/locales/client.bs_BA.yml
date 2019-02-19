@@ -2539,8 +2539,6 @@ bs_BA:
         admin: "Admin?"
         suspended: "Suspended?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Force browser refresh"
-        refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
         impersonate: "Impersonate"
         ip_lookup: "IP Lookup"

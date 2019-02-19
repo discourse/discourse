@@ -2703,8 +2703,6 @@ lv:
         suspended: "Neapturēts?"
         staged: "Izveidots?"
         show_admin_profile: "Administrators"
-        refresh_browsers: "Piespiest pārlūka atsvaidzināšanu (Force browser refresh)"
-        refresh_browsers_message: "Ziņa nosūtīta visiem klientiem!"
         show_public_profile: "Parādīt publisko profilu"
         impersonate: "Izlikties (Impersonate)"
         action_logs: "Aktivitāšu saraksts"

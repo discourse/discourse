@@ -2905,8 +2905,6 @@ he:
         suspended: "מושעה?"
         staged: "מועמד?"
         show_admin_profile: "מנהל ראשי"
-        refresh_browsers: "הכרח רענון דפדפן"
-        refresh_browsers_message: "ההודעה נשלחה לכל הלקוחות!"
         show_public_profile: "הצג פרופיל פומבי"
         impersonate: "התחזה"
         action_logs: "יומני פעולות"

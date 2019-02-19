@@ -3353,8 +3353,6 @@ zh_CN:
         suspended: "已禁止？"
         staged: "暂存？"
         show_admin_profile: "管理员"
-        refresh_browsers: "强制浏览器刷新"
-        refresh_browsers_message: "私信发送至所有用户！"
         show_public_profile: "显示公开介绍"
         impersonate: "检视角度"
         action_logs: "操作日志"

@@ -1449,8 +1449,6 @@ uk:
         admin: "Адмін?"
         suspended: "Призупинено?"
         show_admin_profile: "Адмін"
-        refresh_browsers: "Примусово оновити оглядач"
-        refresh_browsers_message: "Повідомлення надіслано всім клієнтам!"
         show_public_profile: "Показати публічний профіль"
         impersonate: "Втілитися"
         ip_lookup: "Пошук IP"

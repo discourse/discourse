@@ -3255,8 +3255,6 @@ ar:
         suspended: "معلّق؟"
         staged: "تنظيم؟"
         show_admin_profile: "مدير"
-        refresh_browsers: "أجبر إنعاش المتصفح"
-        refresh_browsers_message: "الرسالة أُرسلت إلى كل الأعضاء!"
         show_public_profile: "عرض الملف العام."
         impersonate: "انتحال شخصية"
         action_logs: "سجلات الاجراء"

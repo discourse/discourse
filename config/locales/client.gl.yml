@@ -1930,8 +1930,6 @@ gl:
         suspended: "Suspendido?"
         staged: "Transitorio?"
         show_admin_profile: "Administración"
-        refresh_browsers: "Forzar a actualización do navegador"
-        refresh_browsers_message: "Mensaxe enviada a todos os clientes."
         show_public_profile: "Amosar o perfil público"
         impersonate: "Suplantar"
         ip_lookup: "Busca de IP"

@@ -3577,8 +3577,6 @@ fr:
         suspended: "Suspendu ?"
         staged: "Distant ?"
         show_admin_profile: "Administration"
-        refresh_browsers: "Forcer le rafraîchissement du navigateur"
-        refresh_browsers_message: "Message envoyé à tous les clients !"
         show_public_profile: "Afficher le profil public"
         impersonate: "Incarner"
         action_logs: "Journaux d'actions"

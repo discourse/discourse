@@ -2260,8 +2260,6 @@ sq:
         suspended: "Pezulluar?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Forco rifreskimin e shfletuesit"
-        refresh_browsers_message: "Mesazhi u dërgua tek të gjithë klientët!"
         show_public_profile: "Shfaq Profilin Publik"
         impersonate: "Personifiko"
         ip_lookup: "Shiko IP"

@@ -3812,8 +3812,6 @@ ru:
         suspended: "Заморожен?"
         staged: "Имитация?"
         show_admin_profile: "Администратор"
-        refresh_browsers: "Выполнить перезагрузку браузера"
-        refresh_browsers_message: "Сообщение отправлено всем клиентам!"
         show_public_profile: "Показать публичный профиль"
         impersonate: "Представиться как пользователь"
         action_logs: "Журнал действий"

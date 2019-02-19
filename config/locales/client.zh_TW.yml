@@ -2725,8 +2725,6 @@ zh_TW:
         suspended: "已停權?"
         staged: "暫存？"
         show_admin_profile: "管理員"
-        refresh_browsers: "強制瀏覽器重新整理"
-        refresh_browsers_message: "訊息已寄出給所有用戶!"
         show_public_profile: "顯示公開的基本資料"
         impersonate: "檢視角度"
         action_logs: "操作紀錄"
