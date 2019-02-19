@@ -113,6 +113,7 @@ body.wizard {
 }
 
 .wizard-step-colors {
+  max-height: 465px;
   margin-bottom: 20px;
   overflow-y: auto;
   .grid {
@@ -171,7 +172,7 @@ body.wizard {
   border: 1px solid #ccc;
 
   .wizard-step-contents {
-    min-height: 510px;
+    height: 550px;
   }
 
   .wizard-column-contents {
@@ -544,7 +545,7 @@ body.wizard {
     max-height: none;
   }
   .wizard-step-contents {
-    min-height: auto !important;
+    height: auto !important;
   }
   .wizard-step-banner {
     width: 100% !important;
