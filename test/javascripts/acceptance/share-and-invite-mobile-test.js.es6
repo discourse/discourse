@@ -47,9 +47,8 @@ QUnit.test("Topic footer mobile button", async assert => {
     "it shows the topic sharing url"
   );
 
-  assert.equal(
-    find(".share-and-invite.modal .social-link").length,
-    3,
+  assert.ok(
+    find(".share-and-invite.modal .social-link").length > 1,
     "it shows social sources"
   );
 });
