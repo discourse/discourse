@@ -44,12 +44,14 @@ describe DistributedMutex do
   it 'allows the validity of the lock to be configured' do
     freeze_time
 
-    mutex = DistributedMutex.new(key)
+    mutex = DistributedMutex.new(key, validity: 2)
 
-    mutex.synchronize(validity: 2) do
+    mutex.synchronize do
       expect($redis.ttl(key)).to eq(2)
       expect($redis.get(key).to_i).to eq(Time.now.to_i + 2)
     end
+
+    mutex = DistributedMutex.new(key)
 
     mutex.synchronize do
       expect($redis.ttl(key)).to eq(DistributedMutex::DEFAULT_VALIDITY)
