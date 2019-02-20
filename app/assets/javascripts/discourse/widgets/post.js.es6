@@ -280,9 +280,7 @@ createWidget("post-date", {
       });
     };
 
-    // use native webshare when available
-    // navigator.share needs HTTPS, returns undefined on HTTP
-    nativeShare({ url: this.attrs.shareUrl }).catch(modalFallback);
+    nativeShare({ url: this.attrs.shareUrl }).then(null, modalFallback);
   }
 });
 
