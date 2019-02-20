@@ -144,6 +144,7 @@ module SvgSprite
     "plus-circle",
     "plus-square",
     "power-off",
+    "puzzle-piece",
     "question",
     "question-circle",
     "quote-left",

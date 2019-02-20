@@ -3304,7 +3304,7 @@ en:
         save: "Save"
         new: "New"
         new_style: "New Style"
-        import: "Import"
+        install: "Install"
         delete: "Delete"
         delete_confirm: "Delete this theme?"
         color: "Color"
@@ -3329,17 +3329,15 @@ en:
           components: "Components"
           theme_name: "Theme name"
           component_name: "Component name"
-          themes_intro: "Select an existing theme or create a new one to get started"
+          themes_intro: "Select an existing theme or install a new one to get started"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
-          import_theme: "Import Theme"
           customize_desc: "Customize:"
           title: "Themes"
           create: "Create"
-          create_type: "Type:"
-          create_name: "Name:"
-          name_too_short: "The name must be at least 4 characters long."
+          create_type: "Type"
+          create_name: "Name"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
@@ -3395,6 +3393,12 @@ en:
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
+          install: "Install"
+          installed: "Installed"
+          install_popular: "Popular"
+          install_upload: "From your device"
+          install_git_repo: "From a git repository"
+          install_create: "Create new"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -4131,10 +4135,9 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
-          title: 'Select an existing badge or create a new one to get started'
-          what_are_badges_title: 'What are badges?'
-          badge_query_examples_title: 'Badge query examples'
-
+          title: "Select an existing badge or create a new one to get started"
+          what_are_badges_title: "What are badges?"
+          badge_query_examples_title: "Badge query examples"
 
       emoji:
         title: "Emoji"
