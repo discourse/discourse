@@ -196,12 +196,12 @@ class PostMover
 
   def create_moderator_post_in_original_topic
     move_type_str = PostMover.move_types[@move_type].to_s
+    move_type_str.sub!("topic", "message") if @move_to_pm
 
     message = I18n.with_locale(SiteSetting.default_locale) do
       I18n.t(
         "move_posts.#{move_type_str}_moderator_post",
         count: posts.length,
-        entity: @move_to_pm ? "message" : "topic",
         topic_link: posts.first.is_first_post? ?
           "[#{destination_topic.title}](#{destination_topic.relative_url})" :
           "[#{destination_topic.title}](#{posts.first.url})"
