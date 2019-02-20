@@ -165,14 +165,17 @@ module JsLocaleHelper
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
       path = "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale"
+      type = :moment_js_timezones
     else
       path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
+      type = :moment_js
     end
 
-    find_locale(locale_chain, path, :moment_js, fallback_to_english: false) do |locale|
+    find_locale(locale_chain, path, type, fallback_to_english: false) do |locale|
       # moment.js uses a different naming scheme for locale files
       locale.tr('_', '-').downcase
     end
+
   end
 
   def self.find_message_format_locale(locale_chain, fallback_to_english:)

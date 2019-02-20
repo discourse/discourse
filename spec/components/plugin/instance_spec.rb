@@ -358,6 +358,7 @@ describe Plugin::Instance do
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
 
       plugin.activate!
+
       expect(DiscoursePluginRegistry.locales.count).to eq(2)
     end
 
@@ -377,12 +378,14 @@ describe Plugin::Instance do
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:message_format]).to eq(["foo_BAR", "#{plugin_path}/lib/javascripts/locale/message_format/foo_BAR.js"])
       expect(locale[:moment_js]).to eq(["foo_BAR", "#{plugin_path}/lib/javascripts/locale/moment_js/foo_BAR.js"])
+      expect(locale[:moment_js_timezones]).to eq(["foo_BAR", "#{plugin_path}/lib/javascripts/locale/moment_js_timezones/foo_BAR.js"])
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
       expect(Rails.configuration.assets.precompile).to include("locales/foo_BAR.js")
 
       expect(JsLocaleHelper.find_message_format_locale(["foo_BAR"], fallback_to_english: true)).to eq(locale[:message_format])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq (locale[:moment_js])
+      expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq (locale[:moment_js_timezones])
     end
 
     it "correctly registers a new locale using a fallback locale" do
@@ -394,6 +397,7 @@ describe Plugin::Instance do
       expect(locale[:fallbackLocale]).to eq("es")
       expect(locale[:message_format]).to eq(["es", "#{Rails.root}/lib/javascripts/locale/es.js"])
       expect(locale[:moment_js]).to eq(["es", "#{Rails.root}/vendor/assets/javascripts/moment-locale/es.js"])
+      expect(locale[:moment_js_timezones]).to eq(["es", "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale/es.js"])
       expect(locale[:plural]).to be_nil
 
       expect(Rails.configuration.assets.precompile).to include("locales/es_MX.js")
