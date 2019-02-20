@@ -1,5 +1,6 @@
 require "rails_helper"
 require "cooked_post_processor"
+require "file_store/s3_store"
 
 describe CookedPostProcessor do
   context "#post_process" do
@@ -304,6 +305,7 @@ describe CookedPostProcessor do
 
         cpp.add_to_size_cache(upload.url, 2000, 1500)
         cpp.post_process_images
+        cpp.optimize_urls
 
         html = cpp.html
 
@@ -318,6 +320,8 @@ describe CookedPostProcessor do
         cpp = CookedPostProcessor.new(post)
         cpp.add_to_size_cache(upload.url, 2000, 1500)
         cpp.post_process_images
+        cpp.optimize_urls
+
         html = cpp.html
 
         expect(html).to include(%Q|data-small-upload="//cdn.localhost/uploads/default/10x10.png"|)
@@ -343,6 +347,7 @@ describe CookedPostProcessor do
         cpp = CookedPostProcessor.new(post)
         cpp.add_to_size_cache(upload.url, 200, 4000)
         cpp.post_process_images
+        cpp.optimize_urls
 
         expect(cpp.html).to_not include('srcset="')
       end
@@ -360,7 +365,10 @@ describe CookedPostProcessor do
       let(:post) { Fabricate(:post_with_image_urls) }
       let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
 
-      before { cpp.post_process_images }
+      before do
+        cpp.post_process_images
+        cpp.optimize_urls
+      end
 
       context "valid" do
         let(:image_sizes) { { "http://foo.bar/image.png" => { "width" => 111, "height" => 222 } } }
@@ -422,9 +430,14 @@ describe CookedPostProcessor do
         FileStore::BaseStore.any_instance.expects(:get_depth_for).returns(0)
 
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
-</div></a></div></p>"
+        cpp.optimize_urls
+
+        expect(cpp.html).to match_html <<~HTML
+          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
+          <span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          </div></a></div></p>
+        HTML
+
         expect(cpp).to be_dirty
       end
 
@@ -439,8 +452,11 @@ describe CookedPostProcessor do
         it 'should not add lightbox' do
           cpp.post_process_oneboxes
           cpp.post_process_images
+          cpp.optimize_urls
 
-          expect(cpp.html).to match_html("<p><img class=\"onebox\" src=\"/uploads/default/original/1X/1234567890123456.jpg\" width=\"690\"\ height=\"788\"></p>")
+          expect(cpp.html).to match_html <<~HTML
+            <p><img class="onebox" src="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" width="690" height="788"></p>
+          HTML
         end
       end
 
@@ -451,8 +467,11 @@ describe CookedPostProcessor do
 
         it 'should not add lightbox' do
           cpp.post_process_images
+          cpp.optimize_urls
 
-          expect(cpp.html).to match_html("<p><img src=\"/uploads/default/original/1X/1234567890123456.svg\" width=\"690\"\ height=\"788\"></p>")
+          expect(cpp.html).to match_html <<~HTML
+            <p><img src="//test.localhost/uploads/default/original/1X/1234567890123456.svg" width="690" height="788"></p>
+          HTML
         end
 
         describe 'when image src is an URL' do
@@ -463,6 +482,7 @@ describe CookedPostProcessor do
           it 'should not add lightbox' do
             SiteSetting.crawl_images = true
             cpp.post_process_images
+            cpp.optimize_urls
 
             expect(cpp.html).to match_html("<p><img src=\"http://test.discourse/uploads/default/original/1X/1234567890123456.svg?somepamas\" width=\"690\"\ height=\"788\"></p>")
           end
@@ -515,9 +535,14 @@ describe CookedPostProcessor do
 
       it "crops the image" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png\" width=\"230\" height=\"500\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1125×2436 1.21 KB</span><span class=\"expand\"></span>
-</div></a></div></p>"
+        cpp.optimize_urls
+
+        expect(cpp.html).to match_html <<~HTML
+          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png" width="230" height="500"><div class="meta">
+          <span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><span class="expand"></span>
+          </div></a></div></p>
+        HTML
+
         expect(cpp).to be_dirty
       end
 
@@ -546,18 +571,27 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"logo.png\"><img src=\"//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">logo.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
-</div></a></div></p>"
+        cpp.optimize_urls
+
+        expect(cpp.html). to match_html <<~HTML
+          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
+          <span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          </div></a></div></p>
+        HTML
+
         expect(cpp).to be_dirty
       end
 
       it "should escape the filename" do
         upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/subfolder/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
-<span class=\"filename\">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
-</div></a></div></p>"
+        cpp.optimize_urls
+
+        expect(cpp.html).to match_html <<~HTML
+          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
+          <span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          </div></a></div></p>
+        HTML
       end
 
     end
@@ -581,9 +615,14 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a class=\"lightbox\" href=\"/uploads/default/original/1X/1234567890123456.jpg\" data-download-href=\"/uploads/default/#{upload.sha1}\" title=\"WAT\"><img src=\"//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
-       <span class=\"filename\">WAT</span><span class=\"informations\">1750×2000 1.21 KB</span><span class=\"expand\"></span>
-       </div></a></div></p>"
+        cpp.optimize_urls
+
+        expect(cpp.html).to match_html <<~HTML
+          <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="WAT"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" width="690" height="788"><div class="meta">
+          <span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          </div></a></div></p>
+        HTML
+
         expect(cpp).to be_dirty
       end
 
@@ -828,6 +867,7 @@ describe CookedPostProcessor do
       cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
       cpp.post_process_oneboxes
       cpp.post_process_images
+      cpp.optimize_urls
 
       expect(cpp.doc.to_s).to match(/<div class="large-image-placeholder">/)
     end
@@ -957,6 +997,38 @@ describe CookedPostProcessor do
           <img src="http://foo.bar/image.png"><br>
           <a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br>
           <img src="//my.cdn.com/images/emoji/twitter/smile.png?v=#{Emoji::EMOJI_VERSION}" title=":smile:" class="emoji" alt=":smile:"></p>
+        HTML
+      end
+
+      it "uses the right CDN when uploads are on S3" do
+        Rails.configuration.action_controller.stubs(:asset_host).returns("https://local.cdn.com")
+
+        SiteSetting.s3_upload_bucket = "some-bucket-on-s3"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.s3_cdn_url = "https://s3.cdn.com"
+        SiteSetting.enable_s3_uploads = true
+
+        uploaded_file = file_from_fixtures("smallest.png")
+        upload_sha1 = Digest::SHA1.hexdigest(File.read(uploaded_file))
+        upload = Fabricate(:upload,
+          original_filename: "smallest.png",
+          width: 10,
+          height: 20,
+          sha1: upload_sha1,
+          extension: "png",
+        )
+
+        upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{Discourse.store.get_path_for_upload(upload)}")
+
+        the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
+
+        cpp = CookedPostProcessor.new(the_post)
+        cpp.optimize_urls
+
+        expect(cpp.html).to match_html <<~HTML
+          <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=6" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+          <p><img src="https://s3.cdn.com/original/1X/#{upload_sha1}.png" alt="smallest.png" width="10" height="20"></p>
         HTML
       end
 
