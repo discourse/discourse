@@ -80,10 +80,10 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
     "@sam:"
   ];
 
-  skippedTerms.forEach(async term => {
+  for (let term of skippedTerms) {
     let results = await userSearch({ term });
     assert.equal(results.length, 0);
-  });
+  }
 
   let allowedTerms = [
     "@sam sam", // double space is not allowed
@@ -93,8 +93,8 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
 
   let topicId = 100;
 
-  allowedTerms.forEach(async term => {
+  for (let term of allowedTerms) {
     let results = await userSearch({ term, topicId });
     assert.equal(results.length, 6);
-  });
+  }
 });
