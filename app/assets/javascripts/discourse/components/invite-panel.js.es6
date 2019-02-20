@@ -8,10 +8,12 @@ export default Ember.Component.extend({
   tagName: null,
 
   inviteModel: Ember.computed.alias("panel.model.inviteModel"),
+  userInvitedShow: Ember.computed.alias("panel.model.userInvitedShow"),
 
   // If this isn't defined, it will proxy to the user topic on the preferences
   // page which is wrong.
   emailOrUsername: null,
+  hasCustomMessage: false,
   hasCustomMessage: false,
   customMessage: null,
   inviteIcon: "envelope",
@@ -302,7 +304,7 @@ export default Ember.Component.extend({
       }
 
       const groupNames = this.get("inviteModel.groupNames");
-      const userInvitedController = this.get("panel.model.userInvitedShow");
+      const userInvitedController = this.get("userInvitedShow");
 
       const model = this.get("inviteModel");
       model.setProperties({ saving: true, error: false });
@@ -341,7 +343,7 @@ export default Ember.Component.extend({
           )
           .then(result => {
             model.setProperties({ saving: false, finished: true });
-            if (!this.get("invitingToTopic")) {
+            if (!this.get("invitingToTopic") && userInvitedController) {
               Invite.findInvitedBy(
                 this.currentUser,
                 userInvitedController.get("filter")
@@ -396,15 +398,18 @@ export default Ember.Component.extend({
             finished: true,
             inviteLink: result
           });
-          Invite.findInvitedBy(
-            this.currentUser,
-            userInvitedController.get("filter")
-          ).then(inviteModel => {
-            userInvitedController.setProperties({
-              model: inviteModel,
-              totalInvites: inviteModel.invites.length
+
+          if (userInvitedController) {
+            Invite.findInvitedBy(
+              this.currentUser,
+              userInvitedController.get("filter")
+            ).then(inviteModel => {
+              userInvitedController.setProperties({
+                model: inviteModel,
+                totalInvites: inviteModel.invites.length
+              });
             });
-          });
+          }
         })
         .catch(e => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {

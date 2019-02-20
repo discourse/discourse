@@ -67,8 +67,7 @@ export default {
               id: "invite",
               title: invitePanelTitle,
               model: {
-                inviteModel: this.get("topic"),
-                userInvitedShow: this.get("userInvitedShow")
+                inviteModel: this.get("topic")
               }
             });
           }
