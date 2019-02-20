@@ -61,6 +61,11 @@
 }
 
 .share-and-invite.modal .invite.modal-panel {
+  .error-message,
+  .success-message {
+    margin-bottom: s(2);
+  }
+
   .body {
     .invite-user-control,
     .group-access-control,
