@@ -6,8 +6,6 @@ require_dependency 'pretty_text'
 require_dependency 'quote_comparer'
 
 class CookedPostProcessor
-  include ActionView::Helpers::NumberHelper
-
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
   LOADING_SIZE = 10
@@ -422,7 +420,7 @@ class CookedPostProcessor
 
     filename = get_filename(upload, img["src"])
     informations = "#{original_width}×#{original_height}"
-    informations << " #{number_to_human_size(upload.filesize)}" if upload
+    informations << " #{upload.human_filesize}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)
 

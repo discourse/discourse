@@ -206,6 +206,7 @@ en:
         us_west_2: "US West (Oregon)"
 
     edit: "edit the title and category of this topic"
+    expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
@@ -1569,7 +1570,6 @@ en:
       select_file: "Select File"
       image_link: "link your image will point to"
       default_image_alt_text: image
-      filename: "Filename"
 
     search:
       sort_by: "Sort by"

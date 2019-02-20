@@ -3,26 +3,6 @@
   background-size: cover;
   position: relative;
 
-  .image-uploader-info {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: $primary;
-    text-align: center;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    opacity: 0.6;
-
-    a {
-      color: $secondary;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
   .image-upload-controls {
     display: flex;
 
@@ -30,7 +10,7 @@
       margin-right: 5px;
     }
 
-    .image-uploader-info-btn {
+    .image-uploader-lightbox-btn {
       background: none;
       margin-right: 0;
       margin-left: auto;
