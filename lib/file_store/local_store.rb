@@ -46,8 +46,7 @@ module FileStore
     end
 
     def cdn_url(url)
-      return url if Discourse.asset_host.blank?
-      url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
+      UrlHelper.local_cdn_url(url)
     end
 
     def path_for(upload)
