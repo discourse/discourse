@@ -3276,6 +3276,7 @@ en:
         location:
           local: "Local Storage"
           s3: "S3"
+        backup_storage_error: "Failed to access backup storage: %{error_message}"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
