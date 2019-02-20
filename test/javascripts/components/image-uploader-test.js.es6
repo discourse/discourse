@@ -4,7 +4,7 @@ moduleForComponent("image-uploader", { integration: true });
 componentTest("with image", {
   template: "{{image-uploader imageUrl='/some/upload.png'}}",
 
-  test(assert) {
+  async test(assert) {
     assert.equal(
       this.$(".d-icon-far-image").length,
       1,
@@ -15,6 +15,20 @@ componentTest("with image", {
       this.$(".d-icon-far-trash-alt").length,
       1,
       "it displays the trash icon"
+    );
+
+    assert.equal(
+      this.$(".image-uploader-info").length,
+      0,
+      "it does not display the image info"
+    );
+
+    await click(".image-uploader-info-btn");
+
+    assert.equal(
+      this.$(".image-uploader-info").length,
+      1,
+      "it displays the image info"
     );
   }
 });
@@ -33,6 +47,12 @@ componentTest("without image", {
       this.$(".d-icon-far-trash-alt").length,
       0,
       "it does not display trash icon"
+    );
+
+    assert.equal(
+      this.$(".image-uploader-info-btn").length,
+      0,
+      "it does not display the image info button toggle"
     );
   }
 });
