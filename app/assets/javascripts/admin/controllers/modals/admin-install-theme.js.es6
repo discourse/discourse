@@ -174,7 +174,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this._keyLoading = true;
       ajax(this.get("keyGenUrl"), { method: "POST" })
         .then(pair => {
-          this.setProperties({ privateKey: pair.private_key, publicKey: pair.public_key });
+          this.setProperties({
+            privateKey: pair.private_key,
+            publicKey: pair.public_key
+          });
         })
         .catch(popupAjaxError)
         .finally(() => {
