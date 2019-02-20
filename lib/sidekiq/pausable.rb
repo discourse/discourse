@@ -11,11 +11,7 @@ class SidekiqPauser
 
   def pause!(value = "paused")
     $redis.setex PAUSED_KEY, TTL, value
-
-    @mutex.synchronize do
-      extend_lease_thread
-    end
-
+    extend_lease_thread
     true
   end
 
@@ -75,24 +71,27 @@ class SidekiqPauser
   end
 
   def extend_lease_thread
-    # should always be called from a mutex
-    @dbs << RailsMultisite::ConnectionManagement.current_db
+    @mutex.synchronize do
+      @dbs << RailsMultisite::ConnectionManagement.current_db
 
-    @extend_lease_thread ||= Thread.new do
-      while true do
-        break if !@extend_lease_thread
+      @extend_lease_thread ||= Thread.new do
+        while true do
+          @mutex.synchronize do
+            break if !@extend_lease_thread
 
-        @dbs.each do |db|
-          RailsMultisite::ConnectionManagement.with_connection(db) do
-            if !$redis.expire(PAUSED_KEY, TTL)
-              # if it was unpaused in another process we got to remove the
-              # bad key
-              @dbs.delete(db)
+            @dbs.each do |db|
+              RailsMultisite::ConnectionManagement.with_connection(db) do
+                if !$redis.expire(PAUSED_KEY, TTL)
+                  # if it was unpaused in another process we got to remove the
+                  # bad key
+                  @dbs.delete(db)
+                end
+              end
             end
           end
-        end
 
-        sleep(Rails.env.test? ? 0.01 : TTL / 2)
+          sleep(Rails.env.test? ? 0.01 : TTL / 2)
+        end
       end
     end
   end
