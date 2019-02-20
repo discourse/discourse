@@ -27,9 +27,9 @@
 
 .modal-header {
   display: flex;
-  align-items: flex-start;
   padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
+  align-items: center;
 
   .title {
     h3 {
@@ -42,6 +42,7 @@
   }
 
   .modal-close {
+    align-self: flex-start;
     order: 2;
     margin-left: auto;
   }
@@ -104,6 +105,7 @@
   background-clip: padding-box;
   box-shadow: shadow("modal");
   padding: 1px;
+  box-sizing: border-box;
 
   @media screen and (min-width: 475px) {
     min-width: 475px;
@@ -617,7 +619,41 @@
   }
 }
 
-.modal-tab {
-  position: absolute;
-  width: 95%;
+.modal:not(.has-tabs) {
+  .modal-tab {
+    position: absolute;
+    width: 95%;
+  }
+}
+
+.modal {
+  &.has-tabs {
+    .modal-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      width: calc(100% - 20px);
+      flex: 1 0 auto;
+      margin: 0;
+
+      .modal-tab {
+        list-style: none;
+        padding: s(1 2);
+        margin-right: s(1);
+        cursor: pointer;
+
+        &.is-active {
+          color: $secondary;
+          background: $danger;
+
+          &.single-tab {
+            color: $primary;
+            background: none;
+            padding: s(1 0);
+            font-weight: 700;
+            font-size: $font-up-3;
+          }
+        }
+      }
+    }
+  }
 }

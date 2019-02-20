@@ -34,7 +34,8 @@ export default TextField.extend({
       single = bool("single"),
       allowAny = bool("allowAny"),
       disabled = bool("disabled"),
-      disallowEmails = bool("disallowEmails");
+      disallowEmails = bool("disallowEmails"),
+      fullWidthWrap = bool("fullWidthWrap");
 
     function excludedUsernames() {
       // hack works around some issues with allowAny eventing
@@ -54,6 +55,7 @@ export default TextField.extend({
         single: single,
         allowAny: allowAny,
         updateData: opts && opts.updateData ? opts.updateData : false,
+        fullWidthWrap,
 
         dataSource(term) {
           var results = userSearch({

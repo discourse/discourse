@@ -192,7 +192,6 @@
                 toggleSummary=(action "toggleSummary")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
-                showInvite=(route-action "showInvite")
                 topVisibleChanged=(action "topVisibleChanged")
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
@@ -264,11 +263,9 @@
                     convertToPrivateMessage=(action "convertToPrivateMessage")
                     toggleBookmark=(action "toggleBookmark")
                     showFlagTopic=(route-action "showFlagTopic")
-                    showInvite=(route-action "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
                     editFirstPost=(action "editFirstPost")
-                    replyToPost=(action "replyToPost")
-                    }}
+                    replyToPost=(action "replyToPost")}}
                 {{else}}
                   <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
@@ -319,8 +316,6 @@
       {{/conditional-loading-spinner}}
     </div>
   {{/if}}
-
-  {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
 
   {{#if embedQuoteButton}}
     {{quote-button quoteState=quoteState selectText=(action "selectText")}}

@@ -1,3 +1,5 @@
+import showModal from "discourse/lib/show-modal";
+import { share } from "discourse/lib/pwa-utils";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 export default {
@@ -5,25 +7,100 @@ export default {
 
   initialize() {
     registerTopicFooterButton({
-      id: "share",
+      id: "native-share",
       icon: "link",
       priority: 999,
       label: "topic.share.title",
       title: "topic.share.help",
       action() {
-        this.appEvents.trigger(
-          "share:url",
-          this.get("topic.shareUrl"),
-          $("#topic-footer-buttons")
+        share({ url: this.get("topic.shareUrl") }).catch(() =>
+          showModal("share-and-invite", {
+            modalClass: "share-and-invite",
+            panels: [
+              {
+                id: "share",
+                title: "topic.share.title",
+                model: { topic: this.get("topic") }
+              }
+            ]
+          })
         );
+      },
+      dropdown: true,
+      classNames: ["native-share"],
+      dependentKeys: ["topic.shareUrl", "topic.isPrivateMessage"],
+      displayed() {
+        return window.navigator.share;
+      }
+    });
+
+    registerTopicFooterButton({
+      id: "share-and-invite",
+      icon: "link",
+      priority: 999,
+      label: "topic.share.title",
+      title: "topic.share.help",
+      action() {
+        const modal = () => {
+          const panels = [
+            {
+              id: "share",
+              title: "topic.share.extended_title",
+              model: {
+                topic: this.get("topic")
+              }
+            }
+          ];
+
+          if (this.get("canInviteTo") && !this.get("inviteDisabled")) {
+            let invitePanelTitle;
+
+            if (this.get("isPM")) {
+              invitePanelTitle = "topic.invite_private.title";
+            } else if (this.get("invitingToTopic")) {
+              invitePanelTitle = "topic.invite_reply.title";
+            } else {
+              invitePanelTitle = "user.invited.create";
+            }
+
+            panels.push({
+              id: "invite",
+              title: invitePanelTitle,
+              model: {
+                inviteModel: this.get("topic")
+              }
+            });
+          }
+
+          showModal("share-and-invite", {
+            model: this.get("topic"),
+            modalClass: "share-and-invite",
+            panels
+          });
+        };
+
+        if (window.navigator.share) {
+          window.navigator
+            .share({ url: this.get("topic.shareUrl") })
+            .catch(() => modal());
+        } else {
+          modal();
+        }
       },
       dropdown() {
         return this.site.mobileView;
       },
-      classNames: ["share"],
-      dependentKeys: ["topic.shareUrl", "topic.isPrivateMessage"],
+      classNames: ["share-and-invite"],
+      dependentKeys: [
+        "topic.shareUrl",
+        "topic.isPrivateMessage",
+        "canInviteTo",
+        "inviteDisabled",
+        "isPM",
+        "invitingToTopic"
+      ],
       displayed() {
-        return !this.get("topic.isPrivateMessage");
+        return !(this.site.mobileView && window.navigator.share);
       }
     });
 
@@ -44,26 +121,6 @@ export default {
           this.get("topic.details.can_flag_topic") &&
           !this.get("topic.isPrivateMessage")
         );
-      }
-    });
-
-    registerTopicFooterButton({
-      id: "invite",
-      icon: "users",
-      priority: 997,
-      label: "topic.invite_reply.title",
-      title: "topic.invite_reply.help",
-      action: "showInvite",
-      dropdown() {
-        return this.site.mobileView;
-      },
-      classNames: ["invite-topic"],
-      dependentKeys: ["canInviteTo", "inviteDisabled"],
-      displayed() {
-        return this.get("canInviteTo");
-      },
-      disabled() {
-        return this.get("inviteDisabled");
       }
     });
 

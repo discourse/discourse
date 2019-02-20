@@ -2136,6 +2136,7 @@ export default {
     pinned: false,
     pinned_at: null,
     details: {
+      can_invite_via_email: true,
       auto_close_at: null,
       auto_close_hours: null,
       auto_close_based_on_last_post: false,
