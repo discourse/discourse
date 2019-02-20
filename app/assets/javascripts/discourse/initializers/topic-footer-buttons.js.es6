@@ -1,5 +1,5 @@
 import showModal from "discourse/lib/show-modal";
-import { share } from "discourse/lib/pwa-utils";
+import { nativeShare } from "discourse/lib/pwa-utils";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 export default {
@@ -13,7 +13,7 @@ export default {
       label: "topic.share.title",
       title: "topic.share.help",
       action() {
-        share({ url: this.get("topic.shareUrl") }).catch(() =>
+        nativeShare({ url: this.get("topic.shareUrl") }).catch(() =>
           showModal("share-and-invite", {
             modalClass: "share-and-invite",
             panels: [

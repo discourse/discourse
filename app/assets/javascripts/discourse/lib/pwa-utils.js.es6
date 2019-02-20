@@ -1,4 +1,4 @@
-export function share(data) {
+export function nativeShare(data) {
   return new Ember.RSVP.Promise((resolve, reject) => {
     if (
       window.location.protocol === "https:" &&
