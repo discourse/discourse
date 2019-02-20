@@ -460,6 +460,7 @@ en:
       topic:
         title: "Title"
         featured_link: "Featured Link"
+        category_id: "Category"
       post:
         raw: "Body"
       user_profile:
