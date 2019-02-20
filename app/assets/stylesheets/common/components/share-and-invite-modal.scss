@@ -1,0 +1,86 @@
+.share-and-invite.modal {
+  .modal-body {
+    max-width: 475px;
+  }
+}
+
+.share-and-invite.modal .share.modal-panel {
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .title {
+      font-size: $font-0;
+      font-weight: normal;
+      margin-bottom: s(2);
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+
+    .topic-share-url {
+      width: 100%;
+    }
+
+    .topic-share-url-for-touch {
+      width: 290px;
+
+      @extend .overflow-ellipsis;
+    }
+
+    .topic-share-url-for-touch,
+    .topic-share-url {
+      margin-bottom: s(2);
+    }
+
+    .sources {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+
+      .social-link {
+        font-size: $font-up-4;
+      }
+    }
+  }
+}
+
+.share-and-invite.modal .invite.modal-panel {
+  .error-message,
+  .success-message {
+    margin-bottom: s(2);
+  }
+
+  .body {
+    .invite-user-control,
+    .group-access-control,
+    .show-custom-message-control {
+      margin-bottom: s(4);
+    }
+
+    .instructions {
+      margin-bottom: s(2);
+    }
+
+    .email-or-username-input {
+      width: 100%;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+
+    .btn-primary {
+      margin-right: s(2);
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
