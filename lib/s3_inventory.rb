@@ -34,37 +34,39 @@ class S3Inventory
       download_inventory_files_to_tmp_directory
       decompress_inventory_files
 
-      begin
-        table_name = "#{inventory_id}_inventory"
-        connection = ActiveRecord::Base.connection.raw_connection
-        connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
-        connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
-          files.each do |file|
-            CSV.foreach(file[:filename][0...-3], headers: false) do |row|
-              connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
+      ActiveRecord::Base.transaction do
+        begin
+          table_name = "#{inventory_id}_inventory"
+          connection = ActiveRecord::Base.connection.raw_connection
+          connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
+          connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
+            files.each do |file|
+              CSV.foreach(file[:filename][0...-3], headers: false) do |row|
+                connection.put_copy_data("#{row[CSV_KEY_INDEX]},#{row[CSV_ETAG_INDEX]}\n")
+              end
             end
           end
-        end
 
-        # backfilling etags
-        connection.async_exec("UPDATE #{model.table_name}
-          SET etag = #{table_name}.etag
-          FROM #{table_name}
-          WHERE #{model.table_name}.etag IS NULL
-            AND url ILIKE '%' || #{table_name}.key")
+          # backfilling etags
+          connection.async_exec("UPDATE #{model.table_name}
+            SET etag = #{table_name}.etag
+            FROM #{table_name}
+            WHERE #{model.table_name}.etag IS NULL
+              AND url ILIKE '%' || #{table_name}.key")
 
-        uploads = (model == Upload) ? model.where("created_at < ?", inventory_date) : model
-        missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
+          uploads = (model == Upload) ? model.where("created_at < ?", inventory_date) : model
+          missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
 
-        if (missing_count = missing_uploads.count) > 0
-          missing_uploads.select(:id, :url).find_each do |upload|
-            log upload.url
+          if (missing_count = missing_uploads.count) > 0
+            missing_uploads.select(:id, :url).find_each do |upload|
+              log upload.url
+            end
+
+            log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
           end
-
-          log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
+        ensure
+          connection.exec("DROP TABLE #{table_name}") unless connection.nil?
         end
-      ensure
-        connection.exec("DROP TABLE #{table_name}") unless connection.nil?
       end
     end
   end
