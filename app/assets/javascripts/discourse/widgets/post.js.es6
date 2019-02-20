@@ -2,7 +2,7 @@ import PostCooked from "discourse/widgets/post-cooked";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { createWidget, applyDecorators } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { share } from "discourse/lib/pwa-utils";
+import { nativeShare } from "discourse/lib/pwa-utils";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
@@ -282,7 +282,7 @@ createWidget("post-date", {
 
     // use native webshare when available
     // navigator.share needs HTTPS, returns undefined on HTTP
-    share({ url: this.attrs.shareUrl }).catch(modalFallback);
+    nativeShare({ url: this.attrs.shareUrl }).catch(modalFallback);
   }
 });
 
