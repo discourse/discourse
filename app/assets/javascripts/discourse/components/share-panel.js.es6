@@ -35,8 +35,10 @@ export default Ember.Component.extend({
     return I18n.t("share.topic", { topicTitle });
   },
 
-  @computed("topic.shareUrl")
-  shareUrl(shareUrl) {
+  @computed("panel.model.shareUrl", "topic.shareUrl")
+  shareUrl(forcedShareUrl, shareUrl) {
+    shareUrl = forcedShareUrl || shareUrl;
+
     if (Ember.isEmpty(shareUrl)) {
       return;
     }
