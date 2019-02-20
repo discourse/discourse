@@ -193,7 +193,10 @@
 
   {{#if availableChildThemes}}
     <div class="control-unit">
-      <div class="mini-title">{{i18n "admin.customize.theme.theme_components"}}</div>
+      <div class="mini-title">
+        {{d-icon "puzzle-piece"}}
+        {{i18n "admin.customize.theme.theme_components"}}
+      </div>
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}
