@@ -441,6 +441,38 @@ createWidget("post-contents", {
     return result;
   },
 
+  _date(attrs) {
+    const lastWikiEdit =
+      attrs.wiki && attrs.lastWikiEdit && new Date(attrs.lastWikiEdit);
+    const createdAt = new Date(attrs.created_at);
+    return lastWikiEdit ? lastWikiEdit : createdAt;
+  },
+
+  share() {
+    const post = this.findAncestorModel();
+
+    const modalFallback = () => {
+      showModal("share-and-invite", {
+        modalClass: "share-and-invite",
+        panels: [
+          {
+            id: "share",
+            title: "topic.share.extended_title",
+            model: {
+              postNumber: this.attrs.post_number,
+              shareUrl: this.attrs.shareUrl,
+              date: this._date(this.attrs),
+              postId: post.get("id"),
+              topic: post.get("topic")
+            }
+          }
+        ]
+      });
+    };
+
+    nativeShare({ url: this.attrs.shareUrl }).then(null, modalFallback);
+  },
+
   toggleRepliesBelow(goToPost = "false") {
     if (this.state.repliesBelow.length) {
       this.state.repliesBelow = [];
