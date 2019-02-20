@@ -22,12 +22,14 @@ acceptance("Topic", {
   }
 });
 
-
 QUnit.test("Share Modal", async assert => {
   await visit("/t/internationalization-localization/280");
 
   await click(".topic-post:first-child button.share");
-  assert.ok(exists(".modal.share-and-invite"), "it shows the share and invite modal");
+  assert.ok(
+    exists(".modal.share-and-invite"),
+    "it shows the share and invite modal"
+  );
 });
 
 QUnit.test("Showing and hiding the edit controls", async assert => {
