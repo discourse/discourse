@@ -1,18 +1,21 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Share and Invite modal - desktop", {
-  loggedIn: true
+acceptance("Share and Invite modal - mobile", {
+  loggedIn: true,
+  mobileView: true
 });
 
-QUnit.test("Topic footer button", async assert => {
+QUnit.test("Topic footer mobile button", async assert => {
   await visit("/t/internationalization-localization/280");
 
   assert.ok(
-    exists("#topic-footer-button-share-and-invite"),
-    "the button exists"
+    !exists("#topic-footer-button-share-and-invite"),
+    "the button doesn’t exist"
   );
 
-  await click("#topic-footer-button-share-and-invite");
+  const subject = selectKit(".topic-footer-mobile-dropdown");
+  await subject.expand();
+  await subject.selectRowByValue("share-and-invite");
 
   assert.ok(exists(".share-and-invite.modal"), "it shows the modal");
 
@@ -27,8 +30,8 @@ QUnit.test("Topic footer button", async assert => {
   );
 
   assert.ok(
-    exists(".share-and-invite.modal .modal-tab.invite"),
-    "it shows the invite tab"
+    !exists(".share-and-invite.modal .modal-tab.invite"),
+    "it doesn’t show the invite tab"
   );
 
   assert.equal(
@@ -48,20 +51,6 @@ QUnit.test("Topic footer button", async assert => {
     find(".share-and-invite.modal .social-link").length,
     3,
     "it shows social sources"
-  );
-
-  await click(".share-and-invite.modal .modal-tab.invite");
-
-  assert.ok(
-    exists(".share-and-invite.modal .modal-panel.invite .send-invite:disabled"),
-    "send invite button is disabled"
-  );
-
-  assert.ok(
-    exists(
-      ".share-and-invite.modal .modal-panel.invite .generate-invite-link:disabled"
-    ),
-    "generate invite button is disabled"
   );
 });
 

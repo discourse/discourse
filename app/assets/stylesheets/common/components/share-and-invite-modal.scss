@@ -10,12 +10,6 @@
     flex-direction: row;
     align-items: center;
 
-    .date {
-      margin-left: auto;
-      font-size: $font-down-1;
-      color: $primary-medium;
-    }
-
     .title {
       font-size: $font-0;
       font-weight: normal;
@@ -50,11 +44,6 @@
 
       .social-link {
         font-size: $font-up-4;
-      }
-
-      .reply-as-new-topic {
-        margin-left: auto;
-        font-size: $font-0;
       }
     }
   }

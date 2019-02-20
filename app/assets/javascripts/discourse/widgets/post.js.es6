@@ -238,7 +238,17 @@ createWidget("post-date", {
   },
 
   html(attrs) {
-    return h("a", {}, dateNode(this._date(attrs)));
+    return h(
+      "a",
+      {
+        attributes: {
+          class: "post-date",
+          "data-share-url": attrs.shareUrl,
+          "data-post-number": attrs.post_number
+        }
+      },
+      dateNode(this._date(attrs))
+    );
   },
 
   _date(attrs) {
