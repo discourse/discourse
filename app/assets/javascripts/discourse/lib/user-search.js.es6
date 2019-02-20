@@ -23,7 +23,11 @@ function performSearch(
     resultsFn(cached);
     return;
   }
-  if (term === "") {
+
+  // I am not strongly against unconditionally returning
+  // however this allows us to return a list of probable
+  // users we want to mention, early on a topic
+  if (term === "" && !topicId) {
     return [];
   }
 
@@ -108,6 +112,18 @@ function organizeResults(r, options) {
   return results;
 }
 
+// all punctuations except for . which is allowed in usernames
+// note: these are valid in names, but will end up tripping search anyway so just skip
+// this means searching for `sam saffron` is OK but if my name is `sam$ saffron` autocomplete
+// will not find me, which is a reasonable compromise
+//
+// we also ignore if we notice a double space or a string that is only a space
+const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-\/:;<=>?@\[\]^_`{|}~])|\s\s|^\s$/;
+
+function skipSearch(term) {
+  return !!term.match(ignoreRegex);
+}
+
 export default function userSearch(options) {
   if (options.term && options.term.length > 0 && options.term[0] === "@") {
     options.term = options.term.substring(1);
@@ -120,10 +136,6 @@ export default function userSearch(options) {
     allowedUsers = options.allowedUsers,
     topicId = options.topicId,
     group = options.group;
-
-  if (/[^\w.-]/.test(term)) {
-    term = "";
-  }
 
   if (oldSearch) {
     oldSearch.abort();
@@ -142,6 +154,11 @@ export default function userSearch(options) {
     var clearPromise = setTimeout(function() {
       resolve(CANCELLED_STATUS);
     }, 5000);
+
+    if (skipSearch(term)) {
+      resolve([]);
+      return;
+    }
 
     debouncedSearch(
       term,

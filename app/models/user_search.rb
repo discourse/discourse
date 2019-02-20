@@ -80,7 +80,13 @@ class UserSearch
 
     # 2. in topic
     if @topic_id
-      filtered_by_term_users.where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
+      in_topic = filtered_by_term_users.where('users.id IN (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
+
+      if @searching_user.present?
+        in_topic = in_topic.where('users.id <> ?', @searching_user.id)
+      end
+
+      in_topic
         .order('last_seen_at DESC')
         .limit(@limit - users.length)
         .pluck(:id)
@@ -90,10 +96,12 @@ class UserSearch
     return users.to_a if users.length >= @limit
 
     # 3. global matches
-    filtered_by_term_users.order('last_seen_at DESC')
-      .limit(@limit - users.length)
-      .pluck(:id)
-      .each { |id| users << id }
+    if !@topic_id || @term.present?
+      filtered_by_term_users.order('last_seen_at DESC')
+        .limit(@limit - users.length)
+        .pluck(:id)
+        .each { |id| users << id }
+    end
 
     users.to_a
   end
