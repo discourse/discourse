@@ -5,7 +5,7 @@ import Invite from "discourse/models/invite";
 import { i18n } from "discourse/lib/computed";
 
 export default Ember.Component.extend({
-  classNames: ["invite-panel"],
+  tagName: null,
 
   inviteModel: Ember.computed.alias("panel.model.inviteModel"),
 

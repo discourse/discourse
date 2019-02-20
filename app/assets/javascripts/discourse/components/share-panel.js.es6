@@ -4,7 +4,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import Sharing from "discourse/lib/sharing";
 
 export default Ember.Component.extend({
-  classNames: ["share-panel"],
+  tagName: null,
 
   date: Ember.computed.alias("panel.model.date"),
   type: Ember.computed.alias("panel.model.type"),

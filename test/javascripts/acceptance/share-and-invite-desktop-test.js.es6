@@ -17,17 +17,17 @@ QUnit.test("Topic footer button", async assert => {
   assert.ok(exists(".share-and-invite.modal"), "it shows the modal");
 
   assert.ok(
-    exists(".share-and-invite.modal .panel-tab.share"),
+    exists(".share-and-invite.modal .modal-tab.share"),
     "it shows the share tab"
   );
 
   assert.ok(
-    exists(".share-and-invite.modal .panel-tab.share.is-active"),
+    exists(".share-and-invite.modal .modal-tab.share.is-active"),
     "it activates the share tab by default"
   );
 
   assert.ok(
-    exists(".share-and-invite.modal .panel-tab.invite"),
+    exists(".share-and-invite.modal .modal-tab.invite"),
     "it shows the invite tab"
   );
 
@@ -50,7 +50,7 @@ QUnit.test("Topic footer button", async assert => {
     "it shows social sources"
   );
 
-  await click(".share-and-invite.modal .panel-tab.invite");
+  await click(".share-and-invite.modal .modal-tab.invite");
 
   assert.ok(
     exists(".share-and-invite.modal .invite-panel .send-invite:disabled"),
@@ -72,17 +72,17 @@ QUnit.test("Post date link", async assert => {
   assert.ok(exists(".share-and-invite.modal"), "it shows the modal");
 
   assert.ok(
-    exists(".share-and-invite.modal .panel-tab.share"),
+    exists(".share-and-invite.modal .modal-tab.share"),
     "it shows the share tab"
   );
 
   assert.ok(
-    exists(".share-and-invite.modal .panel-tab.share.is-single"),
+    exists(".share-and-invite.modal .modal-tab.share.single-tab"),
     "it shows only one tab"
   );
 
   assert.ok(
-    !exists(".share-and-invite.modal .panel-tab.invite"),
+    !exists(".share-and-invite.modal .modal-tab.invite"),
     "it doesn’t show the invite tab"
   );
 });

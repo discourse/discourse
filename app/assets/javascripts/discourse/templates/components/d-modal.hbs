@@ -11,9 +11,9 @@
         {{/if}}
 
         {{#if panels}}
-          <ul class="panel-tabs">
+          <ul class="modal-tabs">
             {{#each panels as |panel|}}
-              {{panel-tab
+              {{modal-tab
                 panel=panel
                 panelsLength=panels.length
                 selectedPanel=selectedPanel

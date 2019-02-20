@@ -4,7 +4,7 @@
   }
 }
 
-.share-and-invite.modal .share-panel {
+.share-and-invite.modal .share.modal-panel {
   .header {
     display: flex;
     flex-direction: row;
@@ -60,7 +60,7 @@
   }
 }
 
-.share-and-invite.modal .invite-panel {
+.share-and-invite.modal .invite.modal-panel {
   .body {
     .invite-user-control,
     .group-access-control,

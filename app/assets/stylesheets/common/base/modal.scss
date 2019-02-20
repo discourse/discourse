@@ -619,21 +619,23 @@
   }
 }
 
-.modal-tab {
-  position: absolute;
-  width: 95%;
+.modal:not(.has-tabs) {
+  .modal-tab {
+    position: absolute;
+    width: 95%;
+  }
 }
 
 .modal {
-  &.has-panels {
-    .panel-tabs {
+  &.has-tabs {
+    .modal-tabs {
       display: inline-flex;
       flex-wrap: wrap;
       width: calc(100% - 20px);
       flex: 1 0 auto;
       margin: 0;
 
-      .panel-tab {
+      .modal-tab {
         list-style: none;
         padding: s(1 2);
         margin-right: s(1);
@@ -643,7 +645,7 @@
           color: $secondary;
           background: $danger;
 
-          &.is-single {
+          &.single-tab {
             color: $primary;
             background: none;
             padding: s(1 0);

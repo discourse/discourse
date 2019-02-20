@@ -76,7 +76,7 @@ export default function(name, opts) {
 
     modalController.set(
       "modalClass",
-      `${modalController.get("modalClass")} has-panels`
+      `${modalController.get("modalClass")} has-tabs`
     );
   } else {
     modalController.setProperties({ panels: [], selectedPanel: null });
