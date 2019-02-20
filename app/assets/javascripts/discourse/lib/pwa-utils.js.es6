@@ -6,8 +6,14 @@ export function nativeShare(data) {
     ) {
       window.navigator
         .share(data)
-        .catch(reject)
-        .then(resolve);
+        .then(resolve)
+        .catch(e => {
+          if (e.message === "Share canceled") {
+            // closing share panel do nothing
+          } else {
+            reject();
+          }
+        });
     } else {
       reject();
     }

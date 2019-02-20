@@ -7,34 +7,6 @@ export default {
 
   initialize() {
     registerTopicFooterButton({
-      id: "native-share",
-      icon: "link",
-      priority: 999,
-      label: "topic.share.title",
-      title: "topic.share.help",
-      action() {
-        nativeShare({ url: this.get("topic.shareUrl") }).catch(() =>
-          showModal("share-and-invite", {
-            modalClass: "share-and-invite",
-            panels: [
-              {
-                id: "share",
-                title: "topic.share.title",
-                model: { topic: this.get("topic") }
-              }
-            ]
-          })
-        );
-      },
-      dropdown: true,
-      classNames: ["native-share"],
-      dependentKeys: ["topic.shareUrl", "topic.isPrivateMessage"],
-      displayed() {
-        return window.navigator.share;
-      }
-    });
-
-    registerTopicFooterButton({
       id: "share-and-invite",
       icon: "link",
       priority: 999,
@@ -79,13 +51,7 @@ export default {
           });
         };
 
-        if (window.navigator.share) {
-          window.navigator
-            .share({ url: this.get("topic.shareUrl") })
-            .catch(() => modal());
-        } else {
-          modal();
-        }
+        nativeShare({ url: this.get("topic.shareUrl") }).then(null, modal);
       },
       dropdown() {
         return this.site.mobileView;
@@ -98,10 +64,7 @@ export default {
         "inviteDisabled",
         "isPM",
         "invitingToTopic"
-      ],
-      displayed() {
-        return !(this.site.mobileView && window.navigator.share);
-      }
+      ]
     });
 
     registerTopicFooterButton({
