@@ -3,6 +3,7 @@ import UploadMixin from "discourse/mixins/upload";
 
 export default Ember.Component.extend(UploadMixin, {
   classNames: ["image-uploader"],
+  infoHidden: true,
 
   @computed("imageUrl")
   backgroundStyle(imageUrl) {
@@ -11,6 +12,17 @@ export default Ember.Component.extend(UploadMixin, {
     }
 
     return `background-image: url(${imageUrl})`.htmlSafe();
+  },
+
+  @computed("imageUrl")
+  imageBaseName(imageUrl) {
+    if (Ember.isEmpty(imageUrl)) return;
+    return imageUrl.split("/").slice(-1)[0];
+  },
+
+  @computed("infoHidden", "imageBaseName")
+  showInfo(infoHidden, imageBaseName) {
+    return !infoHidden && imageBaseName;
   },
 
   @computed("backgroundStyle")
@@ -31,6 +43,10 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   actions: {
+    toggleInfo() {
+      this.toggleProperty("infoHidden");
+    },
+
     trash() {
       this.setProperties({ imageUrl: null, imageId: null });
 

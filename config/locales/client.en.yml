@@ -1569,6 +1569,7 @@ en:
       select_file: "Select File"
       image_link: "link your image will point to"
       default_image_alt_text: image
+      filename: "Filename"
 
     search:
       sort_by: "Sort by"

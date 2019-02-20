@@ -4,9 +4,23 @@
       {{d-icon "far-image"}}
       <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
     </label>
+
     {{#if hasBackgroundStyle}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "far-trash-alt"}}</button>
     {{/if}}
+
+    {{#if imageBaseName}}
+      {{d-button icon="info-circle" class="btn image-uploader-info-btn no-text"
+                                    title="upload_selector.filename"
+                                    action=(action "toggleInfo")}}
+    {{/if}}
+
     <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
   </div>
+
+  {{#if showInfo}}
+    <div class="image-uploader-info">
+      <a href={{imageUrl}} target="_blank">{{imageBaseName}}</a>
+    </div>
+  {{/if}}
 </div>
