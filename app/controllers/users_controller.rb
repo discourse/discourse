@@ -867,6 +867,10 @@ class UsersController < ApplicationController
 
     include_groups = params[:include_groups] == "true"
 
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
+    include_groups = groups = nil if term.blank?
+
     if include_groups || groups
       groups = Group.search_groups(term, groups: groups)
       groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
