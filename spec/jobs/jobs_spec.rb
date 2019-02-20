@@ -3,6 +3,8 @@ require_dependency 'jobs/base'
 
 describe Jobs do
 
+  let(:post) { Fabricate(:post) }
+
   describe 'enqueue' do
 
     describe 'when queue_jobs is true' do
@@ -151,6 +153,20 @@ describe Jobs do
       Jobs.expects(:enqueue_in).with(0, :eat_lunch, {}).returns(true)
       Jobs.enqueue_at(3.hours.ago, :eat_lunch, {})
     end
+  end
+
+  describe '.has_same_job_been_enqueued?' do
+
+    it 'checks if similar job has been enqueued' do
+      job_name = 'process_post'
+      args = { post_id: post.id }
+      expect(Jobs.has_same_job_been_enqueued?(job_name, args)).to eq(false)
+
+      Jobs.enqueue(:process_post, args)
+
+      expect(Jobs.has_same_job_been_enqueued?(job_name, args)).to eq(true)
+    end
+
   end
 
 end

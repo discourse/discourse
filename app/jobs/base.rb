@@ -253,19 +253,37 @@ module Jobs
     job_class = "Jobs::#{job_name.to_s.camelcase}"
     Sidekiq::ScheduledSet.new.select do |scheduled_job|
       if scheduled_job.klass.to_s == job_class
-        matched = true
         job_params = scheduled_job.item["args"][0].with_indifferent_access
-        opts.each do |key, value|
-          if job_params[key] != value
-            matched = false
-            break
-          end
-        end
-        matched
+        has_required_params?(job_params, opts)
       else
         false
       end
     end
+  end
+
+  def self.has_same_job_been_enqueued?(job_name, opts)
+    job_class = "Jobs::#{job_name.to_s.camelcase}"
+    job_class.constantize.jobs.select do |job|
+      if job['class'] == job_class
+        job_params = job['args'][0].with_indifferent_access
+        has_required_params?(job_params, opts)
+      else
+        false
+      end
+    end.any?
+  end
+
+  private
+
+  def self.has_required_params?(job_params, required_params)
+    matched = true
+    required_params.each do |key, value|
+      if job_params[key] != value
+        matched = false
+        break
+      end
+    end
+    matched
   end
 end
 
