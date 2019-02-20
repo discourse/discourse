@@ -76,9 +76,9 @@ class SidekiqPauser
 
       @extend_lease_thread ||= Thread.new do
         while true do
-          @mutex.synchronize do
-            break if !@extend_lease_thread
+          break if !@extend_lease_thread
 
+          @mutex.synchronize do
             @dbs.each do |db|
               RailsMultisite::ConnectionManagement.with_connection(db) do
                 if !$redis.expire(PAUSED_KEY, TTL)
