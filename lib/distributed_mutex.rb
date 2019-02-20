@@ -3,24 +3,29 @@ class DistributedMutex
   DEFAULT_VALIDITY = 60
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
-    self.new(key, redis).synchronize(validity: DEFAULT_VALIDITY, &blk)
+    self.new(
+      key,
+      redis: redis,
+      validity: validity
+    ).synchronize(&blk)
   end
 
-  def initialize(key, redis = nil)
+  def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
     @key = key
     @using_global_redis = true if !redis
     @redis = redis || $redis
     @mutex = Mutex.new
+    @validity = validity
   end
 
   CHECK_READONLY_ATTEMPT ||= 10
 
   # NOTE wrapped in mutex to maintain its semantics
-  def synchronize(validity: DEFAULT_VALIDITY)
+  def synchronize
     @mutex.lock
     attempts = 0
 
-    while !try_to_get_lock(validity)
+    while !try_to_get_lock
       sleep 0.001
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly?
@@ -41,11 +46,11 @@ class DistributedMutex
 
   private
 
-  def try_to_get_lock(validity)
+  def try_to_get_lock
     got_lock = false
 
-    if @redis.setnx @key, Time.now.to_i + validity
-      @redis.expire @key, validity
+    if @redis.setnx @key, Time.now.to_i + @validity
+      @redis.expire @key, @validity
       got_lock = true
     else
       begin
@@ -54,7 +59,7 @@ class DistributedMutex
 
         if time && time.to_i < Time.now.to_i
           got_lock = @redis.multi do
-            @redis.set @key, Time.now.to_i + validity
+            @redis.set @key, Time.now.to_i + @validity
           end
         end
       ensure
