@@ -3399,7 +3399,6 @@ en:
           install_upload: "From your device"
           install_git_repo: "From a git repository"
           install_create: "Create new"
-          preview: "Preview"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -4136,10 +4135,9 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
-          title: 'Select an existing badge or create a new one to get started'
-          what_are_badges_title: 'What are badges?'
-          badge_query_examples_title: 'Badge query examples'
-
+          title: "Select an existing badge or create a new one to get started"
+          what_are_badges_title: "What are badges?"
+          badge_query_examples_title: "Badge query examples"
 
       emoji:
         title: "Emoji"

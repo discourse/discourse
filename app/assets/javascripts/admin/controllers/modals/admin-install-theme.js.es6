@@ -13,7 +13,7 @@ const MIN_NAME_LENGTH = 4;
 const POPULAR_THEMES = [
   {
     name: "Graceful",
-    value: "https://github.com/awesomerobot/graceful",
+    value: "https://github.com/discourse/graceful",
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/graceful",
     description: "A light and graceful theme for Discourse.",
     meta_url:
@@ -29,7 +29,7 @@ const POPULAR_THEMES = [
   },
   {
     name: "Minima",
-    value: "https://github.com/awesomerobot/minima",
+    value: "https://github.com/discourse/minima",
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/minima",
     description: "A minimal theme with reduced UI elements and focus on text.",
     meta_url:
@@ -37,7 +37,7 @@ const POPULAR_THEMES = [
   },
   {
     name: "Sam's Simple Theme",
-    value: "https://github.com/SamSaffron/discourse-simple-theme",
+    value: "https://github.com/discourse/discourse-simple-theme",
     preview: "https://theme-creator.discourse.org/theme/sam/simple",
     description:
       "Simplified front page design with classic colors and typography.",
@@ -46,14 +46,14 @@ const POPULAR_THEMES = [
   },
   {
     name: "Vincent",
-    value: "https://github.com/hnb-ku/discourse-vincent-theme",
+    value: "https://github.com/discourse/discourse-vincent-theme",
     preview: "https://theme-creator.discourse.org/theme/awesomerobot/vincent",
     description: "An elegant dark theme with a few color palettes.",
     meta_url: "https://meta.discourse.org/t/discourse-vincent-theme/76662"
   },
   {
     name: "Alternative Logos",
-    value: "https://github.com/hnb-ku/discourse-alt-logo",
+    value: "https://github.com/discourse/discourse-alt-logo",
     description: "Add alternative logos for dark / light themes.",
     meta_url:
       "https://meta.discourse.org/t/alternative-logo-for-dark-themes/88502",
@@ -69,7 +69,7 @@ const POPULAR_THEMES = [
   },
   {
     name: "Custom Header Links",
-    value: "https://github.com/hnb-ku/discourse-custom-header-links",
+    value: "https://github.com/discourse/discourse-custom-header-links",
     preview:
       "https://theme-creator.discourse.org/theme/Johani/custom-header-links",
     description: "Easily add custom text-based links to the header.",
@@ -78,7 +78,7 @@ const POPULAR_THEMES = [
   },
   {
     name: "Category Banners",
-    value: "https://github.com/awesomerobot/discourse-category-banners",
+    value: "https://github.com/discourse/discourse-category-banners",
     preview:
       "https://theme-creator.discourse.org/theme/awesomerobot/discourse-category-banners",
     description:
@@ -96,7 +96,7 @@ const POPULAR_THEMES = [
   },
   {
     name: "Header submenus",
-    value: "https://github.com/hnb-ku/discourse-header-submenus",
+    value: "https://github.com/discourse/discourse-header-submenus",
     preview: "https://theme-creator.discourse.org/theme/Johani/header-submenus",
     description: "Lets you build a header menu with submenus (dropdowns).",
     meta_url: "https://meta.discourse.org/t/header-submenus/94584",
@@ -174,8 +174,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this._keyLoading = true;
       ajax(this.get("keyGenUrl"), { method: "POST" })
         .then(pair => {
-          this.set("privateKey", pair.private_key);
-          this.set("publicKey", pair.public_key);
+          this.setProperties({ privateKey: pair.private_key, publicKey: pair.public_key });
         })
         .catch(popupAjaxError)
         .finally(() => {
@@ -275,8 +274,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.send("closeModal");
         })
         .then(() => {
-          this.set("privateKey", null);
-          this.set("publicKey", null);
+          this.setProperties({ privateKey: null, publicKey: null });
         })
         .catch(popupAjaxError)
         .finally(() => this.set("loading", false));
