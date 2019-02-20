@@ -2802,7 +2802,8 @@ describe UsersController do
         Fabricate(:group,
           mentionable_level: 99,
           messageable_level: 0,
-          visibility_level: 0
+          visibility_level: 0,
+          name: 'aaa1'
         )
       end
 
@@ -2810,14 +2811,16 @@ describe UsersController do
         Fabricate(:group,
           mentionable_level: 99,
           messageable_level: 0,
-          visibility_level: 1
+          visibility_level: 1,
+          name: 'aaa2'
         )
       end
 
       let!(:messageable_group) do
         Fabricate(:group,
           mentionable_level: 0,
-          messageable_level: 99
+          messageable_level: 99,
+          name: 'aaa3'
         )
       end
 
@@ -2826,8 +2829,17 @@ describe UsersController do
           sign_in(user)
         end
 
-        it "only returns visible groups" do
+        it "does not search for groups if there is no term" do
           get "/u/search/users.json", params: { include_groups: "true" }
+
+          expect(response.status).to eq(200)
+
+          groups = JSON.parse(response.body)["groups"]
+          expect(groups).to eq(nil)
+        end
+
+        it "only returns visible groups" do
+          get "/u/search/users.json", params: { include_groups: "true", term: 'a' }
 
           expect(response.status).to eq(200)
 
@@ -2840,7 +2852,8 @@ describe UsersController do
         it "doesn't search for groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
-            include_messageable_groups: 'false'
+            include_messageable_groups: 'false',
+            term: 'a'
           }
 
           expect(response.status).to eq(200)
@@ -2850,7 +2863,8 @@ describe UsersController do
         it "searches for messageable groups" do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
-            include_messageable_groups: 'true'
+            include_messageable_groups: 'true',
+            term: 'a'
           }
 
           expect(response.status).to eq(200)
@@ -2862,7 +2876,8 @@ describe UsersController do
         it 'searches for mentionable groups' do
           get "/u/search/users.json", params: {
             include_messageable_groups: 'false',
-            include_mentionable_groups: 'true'
+            include_mentionable_groups: 'true',
+            term: 'a'
           }
 
           expect(response.status).to eq(200)
@@ -2878,7 +2893,8 @@ describe UsersController do
         it 'should not include mentionable/messageable groups' do
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
-            include_messageable_groups: 'false'
+            include_messageable_groups: 'false',
+            term: 'a'
           }
 
           expect(response.status).to eq(200)
@@ -2886,7 +2902,8 @@ describe UsersController do
 
           get "/u/search/users.json", params: {
             include_mentionable_groups: 'false',
-            include_messageable_groups: 'true'
+            include_messageable_groups: 'true',
+            term: 'a'
           }
 
           expect(response.status).to eq(200)
@@ -2894,7 +2911,8 @@ describe UsersController do
 
           get "/u/search/users.json", params: {
             include_messageable_groups: 'false',
-            include_mentionable_groups: 'true'
+            include_mentionable_groups: 'true',
+            term: 'a'
           }
 
           expect(response.status).to eq(200)
