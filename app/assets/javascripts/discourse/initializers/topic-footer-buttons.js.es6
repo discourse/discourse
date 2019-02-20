@@ -1,4 +1,5 @@
 import showModal from "discourse/lib/show-modal";
+import { share } from "discourse/lib/pwa-utils";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 export default {
@@ -12,24 +13,18 @@ export default {
       label: "topic.share.title",
       title: "topic.share.help",
       action() {
-        // use native webshare when available
-        // navigator.share needs HTTPS, returns undefined on HTTP
-        window.navigator
-          .share({ url: this.get("topic.shareUrl") })
-          .catch(() => {
-            showModal("share-and-invite", {
-              modalClass: "share-and-invite",
-              panels: [
-                {
-                  id: "share",
-                  title: "topic.share.title",
-                  model: {
-                    topic: this.get("topic")
-                  }
-                }
-              ]
-            });
-          });
+        share({ url: this.get("topic.shareUrl") }).catch(() =>
+          showModal("share-and-invite", {
+            modalClass: "share-and-invite",
+            panels: [
+              {
+                id: "share",
+                title: "topic.share.title",
+                model: { topic: this.get("topic") }
+              }
+            ]
+          })
+        );
       },
       dropdown: true,
       classNames: ["native-share"],
