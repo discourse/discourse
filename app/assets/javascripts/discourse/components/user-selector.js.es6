@@ -34,7 +34,7 @@ export default TextField.extend({
       single = bool("single"),
       allowAny = bool("allowAny"),
       disabled = bool("disabled"),
-      disallowEmails = bool("disallowEmails"),
+      allowEmails = bool("allowEmails"),
       fullWidthWrap = bool("fullWidthWrap");
 
     function excludedUsernames() {
@@ -67,7 +67,7 @@ export default TextField.extend({
             includeMentionableGroups,
             includeMessageableGroups,
             group: self.get("group"),
-            disallowEmails
+            allowEmails
           });
           return results;
         },
