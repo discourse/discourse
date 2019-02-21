@@ -84,4 +84,17 @@ QUnit.test("Post date link", async assert => {
     !exists(".share-and-invite.modal .modal-tab.invite"),
     "it doesn’t show the invite tab"
   );
+
+  assert.equal(
+    find(".share-and-invite.modal .modal-panel.share .title").text(),
+    "Post #2, Feb 5, '13 10:32 PM",
+    "it shows the post number with the date"
+  );
+
+  assert.ok(
+    find(".share-and-invite.modal .modal-panel.share .topic-share-url")
+      .val()
+      .includes("/t/internationalization-localization/280/2?u=eviltrout"),
+    "it shows the topic sharing url including the post number"
+  );
 });
