@@ -1,8 +1,4 @@
-import {
-  default as computed,
-  observes
-} from "ember-addons/ember-computed-decorators";
-
+import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 import lightbox from "discourse/lib/lightbox";
 import { ajax } from "discourse/lib/ajax";
