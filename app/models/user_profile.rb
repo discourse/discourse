@@ -113,7 +113,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def trigger_profile_updated_event
-    DiscourseEvent.trigger(:user_profile_updated, self)
+    DiscourseEvent.trigger(:user_profile_bio_updated, self) if self.previous_changes['bio_raw']
   end
 
   protected
