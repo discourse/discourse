@@ -1720,6 +1720,9 @@ RSpec.describe TopicsController do
     let(:topic) { post.topic }
 
     it 'returns first post of the topic' do
+      # we need one for suggested
+      create_post
+
       get "/t/#{topic.id}/posts.json"
 
       expect(response.status).to eq(200)
@@ -1727,6 +1730,13 @@ RSpec.describe TopicsController do
       body = JSON.parse(response.body)
 
       expect(body["post_stream"]["posts"].first["id"]).to eq(post.id)
+
+      expect(body["suggested_topics"]).to eq(nil)
+
+      get "/t/#{topic.id}/posts.json?include_suggested=true"
+      body = JSON.parse(response.body)
+
+      expect(body["suggested_topics"]).not_to eq(nil)
     end
 
     describe 'filtering by post number with filters' do

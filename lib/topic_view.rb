@@ -51,6 +51,9 @@ class TopicView
     @post_number = [@post_number.to_i, 1].max
     @page = [@page.to_i, 1].max
 
+    @include_suggested = options.fetch(:include_suggested) { true }
+    @include_related = options.fetch(:include_related) { true }
+
     @chunk_size =
       case
       when @print then TopicView.print_chunk_size
@@ -402,11 +405,19 @@ class TopicView
   end
 
   def suggested_topics
-    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+    if @include_suggested
+      @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+    else
+      nil
+    end
   end
 
   def related_messages
-    @related_messages ||= TopicQuery.new(@user).list_related_for(topic, pm_params: pm_params)
+    if @include_related
+      @related_messages ||= TopicQuery.new(@user).list_related_for(topic, pm_params: pm_params)
+    else
+      nil
+    end
   end
 
   # This is pending a larger refactor, that allows custom orders
