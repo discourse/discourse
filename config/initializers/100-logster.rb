@@ -69,6 +69,7 @@ if Rails.env.production?
     # scopes for the enums
     /^Creating scope :open\. Overwriting existing method Poll\.open\./,
   ]
+  Logster.config.env_expandable_keys.push(:hostname, :problem_db)
 end
 
 # middleware that logs errors sits before multisite
