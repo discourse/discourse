@@ -482,45 +482,47 @@ Discourse::Application.routes.draw do
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: RouteFormat.username }
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: RouteFormat.username }
 
-  resources :groups, id: RouteFormat.username do
-    get "posts.rss" => "groups#posts_feed", format: :rss
-    get "mentions.rss" => "groups#mentions_feed", format: :rss
+  %w{groups g}.each do |root_path|
+    resources :groups, id: RouteFormat.username, path: root_path do
+      get "posts.rss" => "groups#posts_feed", format: :rss
+      get "mentions.rss" => "groups#mentions_feed", format: :rss
 
-    get 'members'
-    get 'posts'
-    get 'mentions'
-    get 'counts'
-    get 'mentionable'
-    get 'messageable'
-    get 'logs' => 'groups#histories'
+      get 'members'
+      get 'posts'
+      get 'mentions'
+      get 'counts'
+      get 'mentionable'
+      get 'messageable'
+      get 'logs' => 'groups#histories'
 
-    collection do
-      get "check-name" => 'groups#check_name'
-      get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
-      get "search" => "groups#search"
-    end
-
-    member do
-      %w{
-        activity
-        activity/:filter
-        messages
-        messages/inbox
-        messages/archive
-        manage
-        manage/profile
-        manage/members
-        manage/membership
-        manage/interaction
-        manage/logs
-      }.each do |path|
-        get path => 'groups#show'
+      collection do
+        get "check-name" => 'groups#check_name'
+        get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
+        get "search" => "groups#search"
       end
 
-      put "members" => "groups#add_members"
-      delete "members" => "groups#remove_member"
-      post "request_membership" => "groups#request_membership"
-      post "notifications" => "groups#set_notifications"
+      member do
+        %w{
+          activity
+          activity/:filter
+          messages
+          messages/inbox
+          messages/archive
+          manage
+          manage/profile
+          manage/members
+          manage/membership
+          manage/interaction
+          manage/logs
+        }.each do |path|
+          get path => 'groups#show'
+        end
+
+        put "members" => "groups#add_members"
+        delete "members" => "groups#remove_member"
+        post "request_membership" => "groups#request_membership"
+        post "notifications" => "groups#set_notifications"
+      end
     end
   end
 

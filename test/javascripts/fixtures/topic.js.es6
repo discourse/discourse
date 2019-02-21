@@ -4589,7 +4589,7 @@ export default {
           uploaded_avatar_id: 9,
           created_at: "2015-08-13T14:49:11.840Z",
           cooked:
-            '<p>This is the first post. <a class="mention-group" href="/groups/discourse">@discourse</a></p>',
+            '<p>This is the first post. <a class="mention-group" href="/g/discourse">@discourse</a></p>',
           post_number: 1,
           post_type: 1,
           updated_at: "2015-08-13T14:49:11.840Z",
