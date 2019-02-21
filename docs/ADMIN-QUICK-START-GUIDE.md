@@ -1,4 +1,4 @@
-Congratulations, you are now the proud owner of your very own [Civilized Discourse Construction Kit](http://www.discourse.org). :hatching_chick:
+Congratulations, you are now the proud owner of your very own [Civilized Discourse Construction Kit](https://www.discourse.org). :hatching_chick:
 
 ### Getting Started
 
@@ -101,7 +101,7 @@ Be patient; building communities is hard. Before launching, be sure to:
 3. Commit to visiting and participating regularly.
 4. Link your community everywhere and promote it so people can find it.
 
-There's more advice at [Building a Discourse Community](http://blog.discourse.org/2014/08/building-a-discourse-community/).
+There's more advice at [Building a Discourse Community](https://blog.discourse.org/2014/08/building-a-discourse-community/).
 
 ### Sending Invitations
 
@@ -135,7 +135,7 @@ The invite area on your profile page also includes advanced Staff methods of [se
 
 ### Need more Help?
 
-For more assistance on configuring and running your Discourse forum, see [meta.discourse.org](http://meta.discourse.org).
+For more assistance on configuring and running your Discourse forum, see [meta.discourse.org](https://meta.discourse.org).
 
 ----
 
