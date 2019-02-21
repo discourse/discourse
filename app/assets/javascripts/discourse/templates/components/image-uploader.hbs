@@ -13,7 +13,8 @@
       {{d-button icon="discourse-expand"
           title='expand'
           class="btn image-uploader-lightbox-btn no-text"
-          action=(action "toggleLightbox")}}
+          action=(action "toggleLightbox")
+          disabled=loadingLightbox}}
     {{/if}}
 
     <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>

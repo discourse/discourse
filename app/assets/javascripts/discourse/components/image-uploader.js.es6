@@ -6,6 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Component.extend(UploadMixin, {
   classNames: ["image-uploader"],
+  loadingLightbox: false,
 
   init() {
     this._super(...arguments);
@@ -71,6 +72,8 @@ export default Ember.Component.extend(UploadMixin, {
       if (this.get("imageFilename")) {
         this._openLightbox();
       } else {
+        this.set("loadingLightbox", true);
+
         ajax(`/uploads/lookup-metadata`, {
           type: "POST",
           data: { url: this.get("imageUrl") }
@@ -84,6 +87,7 @@ export default Ember.Component.extend(UploadMixin, {
             });
 
             this._openLightbox();
+            this.set("loadingLightbox", false);
           })
           .catch(popupAjaxError);
       }
