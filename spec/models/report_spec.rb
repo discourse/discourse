@@ -1097,6 +1097,7 @@ describe Report do
   describe "consolidated_page_views" do
     before do
       freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
       ApplicationRequest.clear_cache!
     end
 
