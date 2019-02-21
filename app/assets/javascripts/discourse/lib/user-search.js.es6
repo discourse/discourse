@@ -85,7 +85,7 @@ function organizeResults(r, options) {
     });
   }
 
-  if (!options.disallowEmails && emailValid(options.term)) {
+  if (options.allowEmails && emailValid(options.term)) {
     let e = { username: options.term };
     emails = [e];
     results.push(e);
@@ -118,9 +118,13 @@ function organizeResults(r, options) {
 // will not find me, which is a reasonable compromise
 //
 // we also ignore if we notice a double space or a string that is only a space
-const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-\/:;<=>?@\[\]^_`{|}~])|\s\s|^\s$/;
+const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-\/:;<=>?\[\]^_`{|}~])|\s\s|^\s$/;
 
-function skipSearch(term) {
+function skipSearch(term, allowEmails) {
+  if (term.indexOf("@") > -1 && !allowEmails) {
+    return true;
+  }
+
   return !!term.match(ignoreRegex);
 }
 
@@ -155,7 +159,7 @@ export default function userSearch(options) {
       resolve(CANCELLED_STATUS);
     }, 5000);
 
-    if (skipSearch(term)) {
+    if (skipSearch(term, options.allowEmails)) {
       resolve([]);
       return;
     }

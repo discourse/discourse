@@ -73,6 +73,7 @@ QUnit.test("it strips @ from the beginning", async assert => {
 });
 
 QUnit.test("it skips a search depending on punctuations", async assert => {
+  let results;
   let skippedTerms = [
     "@sam  s", // double space is not allowed
     "@sam;",
@@ -81,7 +82,7 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
   ];
 
   for (let term of skippedTerms) {
-    let results = await userSearch({ term });
+    results = await userSearch({ term });
     assert.equal(results.length, 0);
   }
 
@@ -94,7 +95,14 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
   let topicId = 100;
 
   for (let term of allowedTerms) {
-    let results = await userSearch({ term, topicId });
+    results = await userSearch({ term, topicId });
     assert.equal(results.length, 6);
   }
+
+  results = await userSearch({ term: "sam@sam.com", allowEmails: true });
+  // 6 + email
+  assert.equal(results.length, 7);
+
+  results = await userSearch({ term: "sam@sam.com" });
+  assert.equal(results.length, 0);
 });
