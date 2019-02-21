@@ -48,7 +48,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return automaticGroups
       .map(group => {
         const name = Ember.String.htmlSafe(group.name);
-        return `<a href="/groups/${name}">${name}</a>`;
+        return `<a href="/g/${name}">${name}</a>`;
       })
       .join(", ");
   },

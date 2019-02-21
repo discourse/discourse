@@ -18,7 +18,7 @@ const response = object => {
 };
 
 QUnit.test("Anonymous Viewing Group", async assert => {
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   assert.equal(
     count(".nav-pills li a[title='Messages']"),
@@ -30,12 +30,12 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
 
-  await click(".activity-nav li a[href='/groups/discourse/activity/topics']");
+  await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
   assert.ok(find(".topic-list"), "it shows the topic list");
   assert.equal(count(".topic-list-item"), 2, "it lists stream items");
 
-  await click(".activity-nav li a[href='/groups/discourse/activity/mentions']");
+  await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
   assert.ok(count(".user-stream-item") > 0, "it lists stream items");
   assert.ok(
@@ -68,8 +68,8 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 
   Discourse.SiteSettings.enable_group_directory = false;
 
-  await visit("/groups");
-  await visit("/groups/discourse");
+  await visit("/g");
+  await visit("/g/discourse");
   await expandSelectKit(".group-dropdown");
 
   assert.equal(
@@ -80,7 +80,7 @@ QUnit.test("Anonymous Viewing Group", async assert => {
 });
 
 QUnit.test("Anonymous Viewing Automatic Group", async assert => {
-  await visit("/groups/moderators");
+  await visit("/g/moderators");
 
   assert.equal(
     count(".nav-pills li a[title='Manage']"),
@@ -93,7 +93,7 @@ QUnit.test("User Viewing Group", async assert => {
   logIn();
   Discourse.reset();
 
-  await visit("/groups");
+  await visit("/g");
   await click(".group-index-request");
 
   assert.equal(
@@ -117,7 +117,7 @@ QUnit.test("User Viewing Group", async assert => {
     "Internationalization / localization"
   );
 
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   await click(".group-message-button");
 
@@ -140,7 +140,7 @@ QUnit.test(
     logIn();
     Discourse.reset();
 
-    await visit("/groups/discourse");
+    await visit("/g/discourse");
 
     await click(".nav-pills li a[title='Messages']");
 
@@ -240,7 +240,7 @@ QUnit.test("Admin viewing group messages", async assert => {
   logIn();
   Discourse.reset();
 
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
   await click(".nav-pills li a[title='Messages']");
 
   assert.equal(
@@ -256,7 +256,7 @@ QUnit.test("Admin Viewing Group", async assert => {
   logIn();
   Discourse.reset();
 
-  await visit("/groups/discourse");
+  await visit("/g/discourse");
 
   assert.ok(
     find(".nav-pills li a[title='Manage']").length === 1,

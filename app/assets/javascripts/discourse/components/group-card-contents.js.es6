@@ -35,7 +35,7 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
 
   @computed("group")
   groupPath(group) {
-    return `${Discourse.BaseUri}/groups/${group.name}`;
+    return `${Discourse.BaseUri}/g/${group.name}`;
   },
 
   _showCallback(username, $target) {
