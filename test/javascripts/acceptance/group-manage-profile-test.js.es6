@@ -6,7 +6,7 @@ QUnit.test("As an admin", async assert => {
   logIn();
   Discourse.reset();
 
-  await visit("/groups/discourse/manage/profile");
+  await visit("/g/discourse/manage/profile");
 
   assert.ok(
     find(".group-flair-inputs").length === 1,
@@ -31,7 +31,7 @@ QUnit.test("As a group owner", async assert => {
   Discourse.reset();
   replaceCurrentUser({ staff: false, admin: false });
 
-  await visit("/groups/discourse/manage/profile");
+  await visit("/g/discourse/manage/profile");
 
   assert.equal(
     find(".group-form-name").length,
@@ -41,7 +41,7 @@ QUnit.test("As a group owner", async assert => {
 });
 
 QUnit.test("As an anonymous user", async assert => {
-  await visit("/groups/discourse/manage/profile");
+  await visit("/g/discourse/manage/profile");
 
   assert.ok(
     count(".group-members tr") > 0,

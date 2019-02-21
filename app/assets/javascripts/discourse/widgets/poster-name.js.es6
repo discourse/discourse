@@ -17,7 +17,7 @@ createWidget("poster-name-title", {
   html(attrs) {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName) {
-      const href = Discourse.getURL(`/groups/${attrs.primaryGroupName}`);
+      const href = Discourse.getURL(`/g/${attrs.primaryGroupName}`);
       titleContents = h(
         "a.user-group",
         {

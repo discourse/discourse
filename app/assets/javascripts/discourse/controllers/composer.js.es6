@@ -547,18 +547,19 @@ export default Ember.Controller.extend({
       ) {
         groups.forEach(group => {
           let body;
+          const groupLink = Discourse.getURL(`/g/${group.name}/members`);
 
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: "@" + group.name,
               max: group.max_mentions,
-              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+              group_link: groupLink
             });
           } else {
             body = I18n.t("composer.group_mentioned", {
               group: "@" + group.name,
               count: group.user_count,
-              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+              group_link: groupLink
             });
           }
 
