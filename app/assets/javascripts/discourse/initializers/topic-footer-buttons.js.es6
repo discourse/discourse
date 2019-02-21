@@ -45,7 +45,6 @@ export default {
           }
 
           showModal("share-and-invite", {
-            model: this.get("topic"),
             modalClass: "share-and-invite",
             panels
           });
