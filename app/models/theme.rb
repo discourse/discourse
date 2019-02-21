@@ -273,6 +273,7 @@ class Theme < ActiveRecord::Base
       fields = ThemeField.find_by_theme_ids(theme_ids)
         .where(target_id: [Theme.targets[target], Theme.targets[:common]])
         .where(name: name.to_s)
+        .order(:target_id)
     end
 
     fields.each(&:ensure_baked!)
