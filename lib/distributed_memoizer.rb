@@ -46,6 +46,11 @@ class DistributedMemoizer
     "memoize_" << key
   end
 
+  # Used for testing
+  def self.flush!
+    $redis.scan_each(match: "memoize_*").each { |key| $redis.del(key) }
+  end
+
   protected
 
   def self.get_lock(redis, redis_lock_key)

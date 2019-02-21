@@ -9,7 +9,7 @@ describe StaticController do
     before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
 
     after do
-      $redis.flushall
+      DistributedMemoizer.flush!
     end
 
     it 'returns the default favicon for a missing download' do
