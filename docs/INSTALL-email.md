@@ -37,7 +37,7 @@ NOTE: Elastic Email policy insists on an additional UNSUBSCRIBE link at the bott
 
    [ee]: https://elasticemail.com
   [jet]: https://www.mailjet.com/pricing
-  [gun]: http://www.mailgun.com/
+  [gun]: https://www.mailgun.com/
    [sg]: https://sendgrid.com/
   [sg2]: https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html
   
