@@ -53,8 +53,8 @@ class Upload < ActiveRecord::Base
     opts ||= {}
     opts[:allow_animation] = SiteSetting.allow_animated_thumbnails
 
-    if get_optimized_image(width, height, opts)
-      save(validate: false)
+    if optimized_image = get_optimized_image(width, height, opts)
+      optimized_image if save(validate: false)
     end
   end
 

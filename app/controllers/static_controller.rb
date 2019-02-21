@@ -102,6 +102,7 @@ class StaticController < ApplicationController
   end
 
   FAVICON ||= -"favicon"
+  FAVICON_SIZE = 32
 
   # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
   # that draws the notification count on top of favicon (per user default off)
@@ -118,22 +119,36 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.site_favicon_url, 60 * 30) do
-        begin
-          file = FileHelper.download(
-            UrlHelper.absolute(SiteSetting.site_favicon_url),
-            max_file_size: 50.kilobytes,
-            tmp_file_name: FAVICON,
-            follow_redirect: true
-          )
-          file ||= Tempfile.new([FAVICON, ".png"])
-          data = file.read
-          file.unlink
-          data
-        rescue => e
-          AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-          Rails.logger.debug("Invalid favicon_url #{SiteSetting.site_favicon_url}: #{e}\n#{e.backtrace}")
+      data = DistributedMemoizer.memoize("FAVICON#{SiteSetting.favicon&.id}", 60 * 30) do
+        favicon = SiteSetting.favicon
+        next "" unless favicon
+
+        image =
+          if favicon.width <= FAVICON_SIZE && favicon.height <= FAVICON_SIZE
+            favicon
+          elsif thumbnail = favicon.thumbnail(FAVICON_SIZE, FAVICON_SIZE)
+            thumbnail
+          else
+            favicon.create_thumbnail!(FAVICON_SIZE, FAVICON_SIZE)
+          end
+
+        if !image
           ""
+        elsif Discourse.store.external?
+          begin
+            file = FileHelper.download(
+              UrlHelper.absolute(image.url),
+              max_file_size: image.filesize,
+              tmp_file_name: FAVICON,
+              follow_redirect: true
+            )
+
+            file&.read || ""
+          ensure
+            file&.unlink
+          end
+        else
+          File.read(Rails.root.join("public", image.url[1..-1]))
         end
       end
 

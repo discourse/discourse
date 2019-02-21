@@ -90,7 +90,6 @@ class AdminDashboardData
     @problem_blocks = []
 
     @problem_messages = [
-      'dashboard.bad_favicon_url',
       'dashboard.poll_pop3_timeout',
       'dashboard.poll_pop3_auth_error'
     ]

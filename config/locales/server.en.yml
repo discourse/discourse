@@ -1242,7 +1242,6 @@ en:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
     missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
-    bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
     poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
     poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
     force_https_warning: "Your website is using SSL. But `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` is not yet enabled in your site settings."

@@ -4,38 +4,104 @@ describe StaticController do
   let(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
-    let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
+    let(:filename) { 'smallest.png' }
+    let(:file) { file_from_fixtures(filename) }
 
-    before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
+    let(:upload) do
+      UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
+    end
 
     after do
       DistributedMemoizer.flush!
     end
 
-    it 'returns the default favicon for a missing download' do
-      url = UrlHelper.absolute(upload.url)
-      SiteSetting.favicon = upload
-      stub_request(:get, url).to_return(status: 404)
+    describe 'local store' do
+      after do
+        upload.optimized_images.destroy_all
+      end
 
-      get '/favicon/proxied'
+      it 'returns the default favicon if favicon has not been configured' do
+        get '/favicon/proxied'
 
-      favicon = File.read(Rails.root + "public/images/default-favicon.png")
+        favicon = File.read(Rails.root + "public/images/default-favicon.png")
 
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq('image/png')
-      expect(response.body.bytesize).to eq(favicon.bytesize)
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(favicon.bytesize)
+      end
+
+      it 'can proxy correctly when uploaded favicon is smaller than default' do
+        SiteSetting.favicon = upload
+
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(upload.filesize)
+      end
+
+      it 'can proxy correctly when uploaded favicon is larger than default' do
+        upload.update!(
+          width: described_class::FAVICON_SIZE + 1,
+          height: described_class::FAVICON_SIZE + 1
+        )
+
+        SiteSetting.favicon = upload
+
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+
+        optimized_image = upload.thumbnail(
+          described_class::FAVICON_SIZE,
+          described_class::FAVICON_SIZE
+        )
+
+        expect(response.body.bytesize).to eq(optimized_image.filesize)
+      end
     end
 
-    it 'can proxy a favicon correctly' do
-      url = UrlHelper.absolute(upload.url)
-      SiteSetting.favicon = upload
-      stub_request(:get, url).to_return(status: 200, body: png)
+    describe 'external store' do
+      let(:upload) do
+        Upload.create!(
+          url: '//s3-upload-bucket.s3-us-east-1.amazonaws.com/somewhere/a.png',
+          original_filename: filename,
+          filesize: 100,
+          user_id: Discourse.system_user.id,
+          width: described_class::FAVICON_SIZE + 1,
+          height: described_class::FAVICON_SIZE + 1
+        )
+      end
 
-      get '/favicon/proxied'
+      let!(:optimized_image) do
+        Fabricate(:optimized_image,
+          url: '//s3-upload-bucket.s3-us-east-1.amazonaws.com/optimized/a.png',
+          upload: upload,
+          width: described_class::FAVICON_SIZE,
+          height: described_class::FAVICON_SIZE,
+          filesize: File.size(file)
+        )
+      end
 
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq('image/png')
-      expect(response.body.bytesize).to eq(png.bytesize)
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_access_key_id = 'X'
+        SiteSetting.s3_secret_access_key = 'X'
+      end
+
+      it 'can proxy a favicon correctly' do
+        SiteSetting.favicon = upload
+
+        stub_request(:get, "https:/#{optimized_image.url}")
+          .to_return(status: 200, body: file)
+
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(optimized_image.filesize)
+      end
     end
   end
 
