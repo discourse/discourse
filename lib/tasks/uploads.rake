@@ -246,10 +246,17 @@ def migrate_to_s3
 
   bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
 
-  s3 = Aws::S3::Client.new(
+  opts = {
     region: ENV["DISCOURSE_S3_REGION"],
     access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
-    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"])
+    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
+  }
+
+  # S3::Client ignores the `region` option when an `endpoint` is provided.
+  # Without `region`, non-default region bucket creation will break for S3, so we can only
+  # define endpoint when not using S3 i.e. when SiteSetting.s3_endpoint is provided.
+  opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+  s3 = Aws::S3::Client.new(opts)
 
   if bucket_has_folder_path
     bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
