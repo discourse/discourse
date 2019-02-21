@@ -86,6 +86,19 @@ class UploadsController < ApplicationController
     end
   end
 
+  def metadata
+    params.require(:url)
+    upload = Upload.get_from_url(params[:url])
+    raise Discourse::NotFound unless upload
+
+    render json: {
+      original_filename: upload.original_filename,
+      width: upload.width,
+      height: upload.height,
+      human_filesize: upload.human_filesize
+    }
+  end
+
   protected
 
   def render_404

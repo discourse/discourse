@@ -536,6 +536,15 @@ export default function() {
       });
     });
 
+    this.post("/uploads/lookup-metadata", () => {
+      return response(200, {
+        imageFilename: "somefile.png",
+        imageFilesize: "10 KB",
+        imageWidth: "1",
+        imageHeight: "1"
+      });
+    });
+
     this.get("/inline-onebox", request => {
       if (
         request.queryParams.urls.includes(

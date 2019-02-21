@@ -7,6 +7,8 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  include ActionView::Helpers::NumberHelper
+
   SHA1_LENGTH = 40
 
   belongs_to :user
@@ -206,6 +208,10 @@ class Upload < ActiveRecord::Base
     upload = nil
     upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
     upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
+  end
+
+  def human_filesize
+    number_to_human_size(self.filesize)
   end
 
   def self.migrate_to_new_scheme(limit = nil)

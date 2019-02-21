@@ -17,18 +17,12 @@ componentTest("with image", {
       "it displays the trash icon"
     );
 
-    assert.equal(
-      this.$(".image-uploader-info").length,
-      0,
-      "it does not display the image info"
-    );
-
-    await click(".image-uploader-info-btn");
+    await click(".image-uploader-lightbox-btn");
 
     assert.equal(
-      this.$(".image-uploader-info").length,
+      $(".mfp-container").length,
       1,
-      "it displays the image info"
+      "it displays the image lightbox"
     );
   }
 });
@@ -50,9 +44,9 @@ componentTest("without image", {
     );
 
     assert.equal(
-      this.$(".image-uploader-info-btn").length,
+      this.$(".image-uploader-lightbox-btn").length,
       0,
-      "it does not display the image info button toggle"
+      "it does not display the button to open image lightbox"
     );
   }
 });
