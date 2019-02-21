@@ -197,13 +197,17 @@ class TopicsController < ApplicationController
 
   def posts
     params.require(:topic_id)
-    params.permit(:post_ids, :post_number, :username_filters, :filter)
+    params.permit(:post_ids, :post_number, :username_filters, :filter, :include_suggested)
+
+    include_suggested = params[:include_suggested] == "true"
 
     options = {
       filter_post_number: params[:post_number],
       post_ids: params[:post_ids],
       asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
-      filter: params[:filter]
+      filter: params[:filter],
+      include_suggested: include_suggested,
+      include_related: include_suggested,
     }
 
     fetch_topic_view(options)
