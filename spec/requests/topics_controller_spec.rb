@@ -573,7 +573,7 @@ RSpec.describe TopicsController do
     end
 
     describe "forbidden to trust_level_4" do
-      let!(:user) { sign_in(Fabricate(:trust_level_4)) }
+      let!(:trust_level_4) { sign_in(Fabricate(:trust_level_4)) }
 
       it 'correctly denies' do
         put "/t/1/change-timestamp.json", params: params
@@ -609,7 +609,7 @@ RSpec.describe TopicsController do
           timestamp: new_timestamp.to_f
         }
 
-        log = UserHostory.last
+        log = UserHistory.last
         expect(log.user_id).to eq(moderator.id)
         expect(log.topic_id).to eq(topic.id)
         expect(log.new_value).to eq(Time.zone.at(new_timestamp.to_f))
