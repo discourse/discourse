@@ -674,10 +674,11 @@ class TopicsController < ApplicationController
   def change_timestamps
     topic_id = params.require(:topic_id).to_i
     timestamp = params.require(:timestamp).to_f
-    topic = Topic.with_deleted.find(topic_id)
-    previous_timestamp = topic.first_post.created_at
 
     guardian.ensure_can_change_post_timestamps!
+
+    topic = Topic.with_deleted.find(topic_id)
+    previous_timestamp = topic.first_post.created_at
 
     begin
       TopicTimestampChanger.new(
