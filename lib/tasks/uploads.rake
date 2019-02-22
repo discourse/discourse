@@ -278,13 +278,7 @@ def migrate_to_s3
   print " - Listing S3 files"
 
   s3_objects = []
-
-  prefix =
-    if ENV["SKIP_MULTISITE_PREFIX"] || Rails.configuration.multisite
-      "uploads/#{db}/original/"
-    else
-      "original/"
-    end
+  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
 
   options = { bucket: bucket, prefix: folder + prefix }
 
