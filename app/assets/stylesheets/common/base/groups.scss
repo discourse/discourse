@@ -1,18 +1,25 @@
 .groups-header {
+  display: flex;
+  flex-wrap: wrap;
   margin-bottom: 30px;
+  .groups-header-new {
+    order: 2;
+    margin-bottom: 0.5em;
+  }
 }
 
 .groups-header-filters {
   display: flex;
+  flex-wrap: wrap;
 
   .groups-header-filters-name,
   .groups-header-filters-type {
     margin-right: 5px;
-    margin-bottom: 0;
+    margin-bottom: 0.5em;
   }
 
   &:last-child {
-    margin-right: 0;
+    margin-right: auto;
   }
 }
 
