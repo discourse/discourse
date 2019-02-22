@@ -646,11 +646,7 @@
           background: $danger;
 
           &.single-tab {
-            color: $primary;
-            background: none;
-            padding: s(1 0);
-            font-weight: 700;
-            font-size: $font-up-3;
+            display: none;
           }
         }
       }

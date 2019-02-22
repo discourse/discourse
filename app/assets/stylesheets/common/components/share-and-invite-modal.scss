@@ -14,6 +14,11 @@
       font-size: $font-0;
       font-weight: normal;
       margin-bottom: s(2);
+
+      .post-date {
+        color: $primary-medium;
+        font-size: $font-down-1;
+      }
     }
   }
 
@@ -23,12 +28,15 @@
 
     .topic-share-url {
       width: 100%;
+      height: auto;
+      box-sizing: border-box;
     }
 
     .topic-share-url-for-touch {
-      width: 290px;
-
-      @extend .overflow-ellipsis;
+      a {
+        word-break: break-all;
+        font-size: $font-up-1;
+      }
     }
 
     .topic-share-url-for-touch,
@@ -43,7 +51,7 @@
       flex-direction: row;
 
       .social-link {
-        font-size: $font-up-4;
+        font-size: $font-up-6;
         margin-right: s(2);
       }
     }
