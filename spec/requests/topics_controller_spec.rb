@@ -612,8 +612,8 @@ RSpec.describe TopicsController do
         log = UserHistory.last
         expect(log.acting_user_id).to eq(moderator.id)
         expect(log.topic_id).to eq(topic.id)
-        expect(log.new_value).to eq(Time.zone.at(new_timestamp.to_f).utc)
-        expect(log.previous_value).to eq(Time.zone.at(old_timestamp.to_f).utc)
+        expect(log.new_value).to eq(new_timestamp.utc.to_s)
+        expect(log.previous_value).to eq(old_timestamp.utc.to_s)
       end
     end
   end
