@@ -226,7 +226,7 @@ module PostGuardian
   end
 
   def can_change_post_timestamps?
-    is_admin?
+    is_staff?
   end
 
   def can_wiki?(post)

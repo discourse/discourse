@@ -117,6 +117,16 @@ class StaffActionLogger
     )
   end
 
+  def log_topic_timestamps_changed(topic, new_timestamp, previous_timestamp, opts = {})
+    raise Discourse::InvalidParameters.new(:topic) unless topic && topic.is_a?(Topic)
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:topic_timestamps_changed],
+      topic_id: topic.id,
+      new_value: new_timestamp,
+      previous_value: previous_timestamp)
+    )
+  end
+
   def log_post_lock(post, opts = {})
     raise Discourse::InvalidParameters.new(:post) unless post && post.is_a?(Post)
     UserHistory.create!(params(opts).merge(
