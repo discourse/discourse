@@ -572,19 +572,17 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(403)
     end
 
-    [:moderator, :trust_level_4].each do |user|
-      describe "forbidden to #{user}" do
-        let!(user) { sign_in(Fabricate(user)) }
+    describe "forbidden to trust_level_4" do
+      let!(:user) { sign_in(Fabricate(:trust_level_4)) }
 
-        it 'correctly denies' do
-          put "/t/1/change-timestamp.json", params: params
-          expect(response).to be_forbidden
-        end
+      it 'correctly denies' do
+        put "/t/1/change-timestamp.json", params: params
+        expect(response).to be_forbidden
       end
     end
 
     describe 'changing timestamps' do
-      let!(:admin) { sign_in(Fabricate(:admin)) }
+      let!(:moderator) { sign_in(Fabricate(:moderator)) }
       let(:old_timestamp) { Time.zone.now }
       let(:new_timestamp) { old_timestamp - 1.day }
       let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
@@ -604,6 +602,18 @@ RSpec.describe TopicsController do
         expect(topic.reload.created_at).to be_within_one_second_of(new_timestamp)
         expect(p1.reload.created_at).to be_within_one_second_of(new_timestamp)
         expect(p2.reload.created_at).to be_within_one_second_of(old_timestamp)
+      end
+
+      it 'should create a staff log entry' do
+        put "/t/#{topic.id}/change-timestamp.json", params: {
+          timestamp: new_timestamp.to_f
+        }
+
+        log = UserHostory.last
+        expect(log.user_id).to eq(moderator.id)
+        expect(log.topic_id).to eq(topic.id)
+        expect(log.new_value).to eq(Time.zone.at(new_timestamp.to_f))
+        expect(log.previous_value).to eq(Time.zone.at(old_timestamp.to_f))
       end
     end
   end
