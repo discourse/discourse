@@ -243,6 +243,7 @@ createWidget("post-date", {
       {
         attributes: {
           class: "post-date",
+          href: attrs.shareUrl,
           "data-share-url": attrs.shareUrl,
           "data-post-number": attrs.post_number
         }
@@ -258,7 +259,9 @@ createWidget("post-date", {
     return lastWikiEdit ? lastWikiEdit : createdAt;
   },
 
-  click() {
+  click(event) {
+    event.preventDefault();
+
     const post = this.findAncestorModel();
 
     const modalFallback = () => {
