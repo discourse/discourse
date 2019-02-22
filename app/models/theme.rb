@@ -242,7 +242,8 @@ class Theme < ActiveRecord::Base
     if all_themes
       message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
     else
-      message = refresh_message_for_targets(targets, theme_ids).flatten
+      parent_ids = Theme.where(id: theme_ids).joins(:parent_themes).pluck(:parent_theme_id).uniq
+      message = refresh_message_for_targets(targets, theme_ids | parent_ids).flatten
     end
 
     MessageBus.publish('/file-change', message)
