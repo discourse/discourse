@@ -2,16 +2,14 @@ require 'listen'
 
 module Stylesheet
   class Watcher
+    REDIS_KEY = "dev_last_used_theme_id"
 
     def self.theme_id=(v)
-      @theme_id = v
+      $redis.set(REDIS_KEY, v)
     end
 
     def self.theme_id
-      if @theme_id.blank? && SiteSetting.default_theme_id != -1
-        @theme_id = SiteSetting.default_theme_id
-      end
-      @theme_id
+      ($redis.get(REDIS_KEY) || SiteSetting.default_theme_id).to_i
     end
 
     def self.watch(paths = nil)
