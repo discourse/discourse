@@ -676,16 +676,21 @@ class TopicsController < ApplicationController
   end
 
   def change_timestamps
-    params.require(:topic_id)
-    params.require(:timestamp)
+    topic_id = params.require(:topic_id).to_i
+    timestamp = params.require(:timestamp).to_f
 
     guardian.ensure_can_change_post_timestamps!
 
+    topic = Topic.with_deleted.find(topic_id)
+    previous_timestamp = topic.first_post.created_at
+
     begin
       TopicTimestampChanger.new(
-        topic_id: params[:topic_id].to_i,
-        timestamp: params[:timestamp].to_f
+        topic: topic,
+        timestamp: timestamp
       ).change!
+
+      StaffActionLogger.new(current_user).log_topic_timestamps_changed(topic, Time.zone.at(timestamp), previous_timestamp)
 
       render json: success_json
     rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError

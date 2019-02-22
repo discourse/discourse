@@ -3669,6 +3669,7 @@ en:
             merge_user: "merge user"
             entity_export: "export entity"
             change_name: "change name"
+            topic_timestamps_changed: "topic timestamps changed"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

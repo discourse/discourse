@@ -201,7 +201,7 @@ export default createWidget("topic-admin-menu", {
       });
     }
 
-    if (this.currentUser.admin) {
+    if (this.currentUser.get("staff")) {
       buttons.push({
         className: "topic-admin-change-timestamp",
         buttonClass: "btn-default",
