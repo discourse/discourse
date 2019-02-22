@@ -80,6 +80,24 @@ describe ApplicationHelper do
         expect(helper.mobile_view?).to eq(false)
       end
 
+      context "mobile_view session is cleared" do
+        before do
+          params[:mobile_view] = 'auto'
+        end
+
+        it "is false if user agent is not mobile" do
+          session[:mobile_view] = '1'
+          controller.request.stubs(:user_agent).returns('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36')
+          expect(helper.mobile_view?).to be_falsey
+        end
+
+        it "is true for iPhone" do
+          session[:mobile_view] = '0'
+          controller.request.stubs(:user_agent).returns('Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1')
+          expect(helper.mobile_view?).to eq(true)
+        end
+      end
+
       context "mobile_view is not set" do
         it "is false if user agent is not mobile" do
           controller.request.stubs(:user_agent).returns('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36')
