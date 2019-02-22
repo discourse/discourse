@@ -135,8 +135,8 @@ en:
       next_month: "Next Month"
       placeholder: date
     share:
-      topic: "<b>Topic</b>: %{topicTitle}"
-      post: "<b>Post #%{postNumber}</b>, %{postDate}"
+      topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
+      post_html: '<span class="post-number">Post #%{postNumber}</span>, <span class="post-date">%{postDate}</span>'
       close: "close"
       twitter: "Share this link on Twitter"
       facebook: "Share this link on Facebook"

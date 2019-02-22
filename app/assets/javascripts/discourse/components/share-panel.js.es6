@@ -27,12 +27,12 @@ export default Ember.Component.extend({
     topicTitle = escapeExpression(topicTitle);
 
     if (type === "topic") {
-      return I18n.t("share.topic", { topicTitle });
+      return I18n.t("share.topic_html", { topicTitle });
     }
     if (postNumber) {
-      return I18n.t("share.post", { postNumber, postDate });
+      return I18n.t("share.post_html", { postNumber, postDate });
     }
-    return I18n.t("share.topic", { topicTitle });
+    return I18n.t("share.topic_html", { topicTitle });
   },
 
   @computed("panel.model.shareUrl", "topic.shareUrl")
