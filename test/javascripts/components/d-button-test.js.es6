@@ -35,3 +35,11 @@ componentTest("text only button", {
     assert.ok(this.$("button span.d-button-label").length, "it has the label");
   }
 });
+
+componentTest("form attribute", {
+  template: '{{d-button form="login-form"}}',
+
+  test(assert) {
+    assert.ok(exists("button[form=login-form]"), "it has the form attribute");
+  }
+});
