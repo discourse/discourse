@@ -1,17 +1,26 @@
-import AdminUser from "admin/models/admin-user";
-
 export default Discourse.Route.extend({
-  model: function(params) {
-    this.userFilter = params.filter;
-    return AdminUser.findAll(params.filter);
+  queryParams: {
+    order: { refreshModel: true },
+    ascending: { refreshModel: true }
   },
 
-  setupController: function(controller, model) {
-    controller.setProperties({
-      model: model,
-      query: this.userFilter,
-      showEmails: false,
-      refreshing: false
-    });
+  beforeModel(transition) {
+    const routeName = "adminUsersList.show";
+
+    if (transition.targetName === routeName) {
+      const params = transition.params[routeName];
+      const controller = this.controllerFor(routeName);
+      if (controller) {
+        controller.setProperties({
+          order: transition.queryParams.order,
+          ascending: transition.queryParams.ascending,
+          query: params.filter,
+          showEmails: false,
+          refreshing: false
+        });
+
+        controller._refreshUsers();
+      }
+    }
   }
 });

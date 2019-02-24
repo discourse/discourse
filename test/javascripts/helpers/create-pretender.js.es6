@@ -458,6 +458,16 @@ export default function() {
       ]);
     });
 
+    this.get("/admin/users/list/suspect.json", () => {
+      return response(200, [
+        {
+          id: 2,
+          username: "sam",
+          email: "<small>sam@example.com</small>"
+        }
+      ]);
+    });
+
     this.get("/admin/customize/site_texts", request => {
       if (request.queryParams.overridden) {
         return response(200, { site_texts: [overridden] });
