@@ -38,7 +38,7 @@ export default Ember.Controller.extend(PasswordValidation, {
         type: "PUT",
         data: {
           password: this.get("accountPassword"),
-          second_factor_token: this.get("secondFactor"),
+          second_factor_token: this.get("secondFactorToken"),
           second_factor_method: this.get("secondFactorMethod")
         }
       })

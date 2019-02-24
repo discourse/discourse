@@ -86,15 +86,16 @@
           <label class='control-label'>{{i18n 'user.password.title'}}</label>
 
           <div class="controls">
-            {{text-field value=password
+            <div>
+              {{text-field value=password
                 id="password"
                 type="password"
                 classNames="input-xxlarge"
                 autofocus="autofocus"}}
-          </div>
-
-          <div class='instructions controls'>
-            {{i18n 'user.second_factor.confirm_password_description'}}
+            </div>
+            <div class='instructions'>
+              {{i18n 'user.second_factor.confirm_password_description'}}
+            </div>
           </div>
         </div>
 

@@ -106,7 +106,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         data: {
           login: this.get("loginName"),
           password: this.get("loginPassword"),
-          second_factor_token: this.get("loginSecondFactor"),
+          second_factor_token: this.get("secondFactorToken"),
           second_factor_method: this.get("secondFactorMethod")
         }
       }).then(

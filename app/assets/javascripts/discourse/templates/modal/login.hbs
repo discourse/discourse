@@ -1,4 +1,4 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action=(action "login")}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{#d-modal-body title="login.title" class=(concat "login-modal" " " (if hasAtLeastOneLoginButton "has-alt-auth"))}}
 
     {{#if canLoginLocal}}
@@ -23,11 +23,11 @@
         </div>
         {{#second-factor-form
           secondFactorMethod=secondFactorMethod
-          loginSecondFactor=loginSecondFactor
+          secondFactorToken=secondFactorToken
           class=secondFactorClass
           backupEnabled=backupEnabled
           isLogin=true}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
         {{/second-factor-form}}
       </form>
     {{/if}}

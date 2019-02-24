@@ -1055,7 +1055,7 @@ class UsersController < ApplicationController
   def create_second_factor_backup
     raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
 
-    unless current_user.authenticate_second_factor(params[:second_factor_auth][0], params[:second_factor_auth][1].to_i)
+    unless current_user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
       return render json: failed_json.merge(
         error: I18n.t("login.invalid_second_factor_code")
       )
@@ -1069,13 +1069,14 @@ class UsersController < ApplicationController
   end
 
   def update_second_factor
-    params.require(:second_factor_auth)
+    params.require(:second_factor_token)
+    params.require(:second_factor_method)
     params.require(:second_factor_target)
 
-    auth_method = params[:second_factor_auth][1].to_i
-    auth_token = params[:second_factor_auth][0]
+    auth_method = params[:second_factor_method].to_i
+    auth_token = params[:second_factor_token]
 
-    update_second_factor_method = params[:second_factor_target][0].to_i
+    update_second_factor_method = params[:second_factor_target].to_i
 
     [request.remote_ip, current_user.id].each do |key|
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!

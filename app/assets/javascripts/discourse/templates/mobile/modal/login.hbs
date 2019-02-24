@@ -1,4 +1,4 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action=(action "login")}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{#d-modal-body title="login.title" class="login-modal"}}
     {{#if showLoginButtons}}
       {{login-buttons
@@ -38,10 +38,10 @@
         </div>
         {{#second-factor-form
           secondFactorMethod=secondFactorMethod
-          loginSecondFactor=loginSecondFactor
+          secondFactorToken=secondFactorToken
           class=secondFactorClass
           isLogin=true}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
+          {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
         {{/second-factor-form}}
       </form>
     {{/if}}

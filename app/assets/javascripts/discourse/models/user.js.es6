@@ -370,7 +370,8 @@ const User = RestModel.extend({
   toggleSecondFactor(authToken, authMethod, targetMethod, enable) {
     return ajax("/u/second_factor.json", {
       data: {
-        second_factor_auth: [authToken, authMethod],
+        second_factor_token: authToken,
+        second_factor_method: authMethod,
         second_factor_target: targetMethod,
         enable
       },
@@ -380,7 +381,10 @@ const User = RestModel.extend({
 
   generateSecondFactorCodes(authToken, authMethod) {
     return ajax("/u/second_factors_backup.json", {
-      data: { second_factor_auth: [authToken, authMethod] },
+      data: {
+        second_factor_token: authToken,
+        second_factor_method: authMethod
+      },
       type: "PUT"
     });
   },
