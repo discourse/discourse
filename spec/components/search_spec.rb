@@ -701,8 +701,14 @@ describe Search do
       expect(Search.execute('test after:jan').posts.length).to eq(1)
 
       expect(Search.execute('test in:first').posts.length).to eq(1)
+
       expect(Search.execute('boom').posts.length).to eq(1)
+
       expect(Search.execute('boom in:first').posts.length).to eq(0)
+      expect(Search.execute('boom f').posts.length).to eq(0)
+
+      expect(Search.execute('123 in:first').posts.length).to eq(1)
+      expect(Search.execute('123 f').posts.length).to eq(1)
 
       expect(Search.execute('user:nobody').posts.length).to eq(0)
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
@@ -1050,7 +1056,13 @@ describe Search do
       results = Search.execute('title in:title')
       expect(results.posts.length).to eq(1)
 
+      results = Search.execute('title t')
+      expect(results.posts.length).to eq(1)
+
       results = Search.execute('first in:title')
+      expect(results.posts.length).to eq(0)
+
+      results = Search.execute('first t')
       expect(results.posts.length).to eq(0)
     end
 
