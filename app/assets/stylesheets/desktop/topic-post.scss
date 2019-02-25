@@ -851,8 +851,8 @@ span.highlighted {
   background-color: $tertiary-low;
 }
 
-.username.new-user a {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+.first.new-user:not(.staff) a {
+  color: $primary-low-mid;
 }
 
 .read-state {
