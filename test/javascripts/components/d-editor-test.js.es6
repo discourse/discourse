@@ -157,7 +157,7 @@ testCase(`bold with a multiline selection`, async function(assert, textarea) {
 testCase(`italic button with no selection`, async function(assert, textarea) {
   await click(`button.italic`);
   const example = I18n.t(`composer.italic_text`);
-  assert.equal(this.get("value"), `hello world._${example}_`);
+  assert.equal(this.get("value"), `hello world.*${example}*`);
 
   assert.equal(textarea.selectionStart, 13);
   assert.equal(textarea.selectionEnd, 13 + example.length);
@@ -168,7 +168,7 @@ testCase(`italic button with a selection`, async function(assert, textarea) {
   textarea.selectionEnd = 11;
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `hello _world_.`);
+  assert.equal(this.get("value"), `hello *world*.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 12);
 
@@ -185,7 +185,7 @@ testCase(`italic with a multiline selection`, async function(assert, textarea) {
   textarea.selectionEnd = 12;
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `_hello_\n\n_world_\n\ntest.`);
+  assert.equal(this.get("value"), `*hello*\n\n*world*\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 16);
 
