@@ -106,14 +106,14 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
   _showTopic() {
     $("header.d-header")
-      .removeClass("scroll-down")
-      .addClass("scroll-up");
+      .removeClass("scroll-up")
+      .addClass("scroll-down");
   },
 
   _hideTopic() {
     $("header.d-header")
-      .removeClass("scroll-up")
-      .addClass("scroll-down");
+      .removeClass("scroll-down")
+      .addClass("scroll-up");
   },
 
   _highlightPost(postNumber) {
