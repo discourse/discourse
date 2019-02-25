@@ -156,18 +156,26 @@ module JsLocaleHelper
     result << File.read("#{Rails.root}/vendor/assets/javascripts/moment.js")
     result << File.read("#{Rails.root}/vendor/assets/javascripts/moment-timezone-with-data.js")
     result << moment_locale(locale_str)
+    result << moment_locale(locale_str, timezone_names: true)
     result << moment_formats
 
     result
   end
 
-  def self.find_moment_locale(locale_chain)
-    path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
+  def self.find_moment_locale(locale_chain, timezone_names: false)
+    if timezone_names
+      path = "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale"
+      type = :moment_js_timezones
+    else
+      path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
+      type = :moment_js
+    end
 
-    find_locale(locale_chain, path, :moment_js, fallback_to_english: false) do |locale|
+    find_locale(locale_chain, path, type, fallback_to_english: false) do |locale|
       # moment.js uses a different naming scheme for locale files
       locale.tr('_', '-').downcase
     end
+
   end
 
   def self.find_message_format_locale(locale_chain, fallback_to_english:)
@@ -213,8 +221,8 @@ module JsLocaleHelper
     "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 
-  def self.moment_locale(locale)
-    _, filename = find_moment_locale([locale])
+  def self.moment_locale(locale, timezone_names: false)
+    _, filename = find_moment_locale([locale], timezone_names: timezone_names)
     filename && File.exist?(filename) ? File.read(filename) << "\n" : ""
   end
 
