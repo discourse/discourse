@@ -10,11 +10,11 @@ componentTest("can add users", {
 
   async test(assert) {
     assert.ok(
-      this.$(".users-list .invite-list-user").length === 0,
+      find(".users-list .invite-list-user").length === 0,
       "no users at first"
     );
     assert.ok(
-      this.$(".new-user .invalid").length === 0,
+      find(".new-user .invalid").length === 0,
       "not invalid at first"
     );
 
@@ -28,19 +28,19 @@ componentTest("can add users", {
 
     await click(".add-user");
     assert.ok(
-      this.$(".users-list .invite-list-user").length === 0,
+      find(".users-list .invite-list-user").length === 0,
       "doesn't add a blank user"
     );
-    assert.ok(this.$(".new-user .invalid").length === 1);
+    assert.ok(find(".new-user .invalid").length === 1);
 
     await fillIn(".invite-email", "eviltrout@example.com");
     await click(".add-user");
 
     assert.ok(
-      this.$(".users-list .invite-list-user").length === 1,
+      find(".users-list .invite-list-user").length === 1,
       "adds the user"
     );
-    assert.ok(this.$(".new-user .invalid").length === 0);
+    assert.ok(find(".new-user .invalid").length === 0);
 
     const val = JSON.parse(this.get("field.value"));
     assert.equal(val.length, 1);
@@ -56,23 +56,23 @@ componentTest("can add users", {
     await click(".add-user");
 
     assert.ok(
-      this.$(".users-list .invite-list-user").length === 1,
+      find(".users-list .invite-list-user").length === 1,
       "can't add the same user twice"
     );
-    assert.ok(this.$(".new-user .invalid").length === 1);
+    assert.ok(find(".new-user .invalid").length === 1);
 
     await fillIn(".invite-email", "not-an-email");
     await click(".add-user");
 
     assert.ok(
-      this.$(".users-list .invite-list-user").length === 1,
+      find(".users-list .invite-list-user").length === 1,
       "won't add an invalid email"
     );
-    assert.ok(this.$(".new-user .invalid").length === 1);
+    assert.ok(find(".new-user .invalid").length === 1);
 
     await click(".invite-list .invite-list-user:eq(0) .remove-user");
     assert.ok(
-      this.$(".users-list .invite-list-user").length === 0,
+      find(".users-list .invite-list-user").length === 0,
       "removed the user"
     );
   }

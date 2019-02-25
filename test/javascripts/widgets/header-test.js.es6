@@ -5,8 +5,8 @@ moduleForWidget("header");
 widgetTest("rendering basics", {
   template: '{{mount-widget widget="header"}}',
   test(assert) {
-    assert.ok(this.$("header.d-header").length);
-    assert.ok(this.$("#site-logo").length);
+    assert.ok(find("header.d-header").length);
+    assert.ok(find("#site-logo").length);
   }
 });
 
@@ -22,8 +22,8 @@ widgetTest("sign up / login buttons", {
   },
 
   async test(assert) {
-    assert.ok(this.$("button.sign-up-button").length);
-    assert.ok(this.$("button.login-button").length);
+    assert.ok(find("button.sign-up-button").length);
+    assert.ok(find("button.login-button").length);
 
     await click("button.sign-up-button");
     assert.ok(this.signupShown);

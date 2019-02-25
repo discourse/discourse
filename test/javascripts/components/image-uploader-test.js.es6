@@ -6,13 +6,13 @@ componentTest("with image", {
 
   async test(assert) {
     assert.equal(
-      this.$(".d-icon-far-image").length,
+      find(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      this.$(".d-icon-far-trash-alt").length,
+      find(".d-icon-far-trash-alt").length,
       1,
       "it displays the trash icon"
     );
@@ -32,19 +32,19 @@ componentTest("without image", {
 
   test(assert) {
     assert.equal(
-      this.$(".d-icon-far-image").length,
+      find(".d-icon-far-image").length,
       1,
       "it displays the upload icon"
     );
 
     assert.equal(
-      this.$(".d-icon-far-trash-alt").length,
+      find(".d-icon-far-trash-alt").length,
       0,
       "it does not display trash icon"
     );
 
     assert.equal(
-      this.$(".image-uploader-lightbox-btn").length,
+      find(".image-uploader-lightbox-btn").length,
       0,
       "it does not display the button to open image lightbox"
     );
