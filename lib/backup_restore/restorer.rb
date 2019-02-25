@@ -402,7 +402,7 @@ module BackupRestore
       log "Reloading site settings..."
       SiteSetting.refresh!
 
-      log "Disabling outgoing emails for non-stuff users..."
+      log "Disabling outgoing emails for non-staff users..."
       user = User.find_by_email(@user_info[:email]) || Discourse.system_user
       SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
     end
