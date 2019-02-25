@@ -10,40 +10,44 @@ QUnit.test("lists users", async assert => {
 });
 
 QUnit.test("switching tabs", async assert => {
-  const activeUser = "<small>eviltrout@example.com</small>";
-  const suspectUser = "<small>sam@example.com</small>";
+  const activeUser = "eviltrout@example.com";
+  const suspectUser = "sam@example.com";
   const activeTitle = I18n.t("admin.users.titles.active");
   const suspectTitle = I18n.t("admin.users.titles.suspect");
 
   await visit("/admin/users/list/active");
 
   assert.equal(find(".admin-title h2").text(), activeTitle);
-  assert.equal(
-    find(".users-list .user:nth-child(1) .email").text(),
-    activeUser
+  assert.ok(
+    find(".users-list .user:nth-child(1) .email")
+      .text()
+      .includes(activeUser)
   );
 
   await click('a[href="/admin/users/list/suspect"]');
 
   assert.equal(find(".admin-title h2").text(), suspectTitle);
-  assert.equal(
-    find(".users-list .user:nth-child(1) .email").text(),
-    suspectUser
+  assert.ok(
+    find(".users-list .user:nth-child(1) .email")
+      .text()
+      .includes(suspectUser)
   );
 
   await click(".users-list .sortable:nth-child(4)");
 
   assert.equal(find(".admin-title h2").text(), suspectTitle);
-  assert.equal(
-    find(".users-list .user:nth-child(1) .email").text(),
-    suspectUser
+  assert.ok(
+    find(".users-list .user:nth-child(1) .email")
+      .text()
+      .includes(suspectUser)
   );
 
   await click('a[href="/admin/users/list/active"]');
 
   assert.equal(find(".admin-title h2").text(), activeTitle);
-  assert.equal(
-    find(".users-list .user:nth-child(1) .email").text(),
-    activeUser
+  assert.ok(
+    find(".users-list .user:nth-child(1) .email")
+      .text()
+      .includes(activeUser)
   );
 });
