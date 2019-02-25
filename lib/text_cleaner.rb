@@ -27,6 +27,8 @@ class TextCleaner
   end
 
   def self.clean(text, opts = {})
+    # Remove invalid byte sequences
+    text.scrub!("")
     # Replace !!!!! with a single !
     text.gsub!(/!+/, '!') if opts[:deduplicate_exclamation_marks]
     # Replace ????? with a single ?
