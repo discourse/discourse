@@ -65,6 +65,12 @@ export default Ember.Component.extend({
 
   @computed()
   allTimezones() {
+    if (
+      moment.locale() !== "en" &&
+      typeof moment.tz.localizedNames === "function"
+    ) {
+      return moment.tz.localizedNames();
+    }
     return moment.tz.names();
   },
 

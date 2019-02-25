@@ -638,6 +638,10 @@ class Plugin::Instance
       opts[:moment_js] = find_locale_file(locale_chain, path)
       opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
 
+      path = File.join(lib_locale_path, "moment_js_timezones")
+      opts[:moment_js_timezones] = find_locale_file(locale_chain, path)
+      opts[:moment_js_timezones] = JsLocaleHelper.find_moment_locale(locale_chain, timezone_names: true) unless opts[:moment_js_timezones]
+
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)
         Rails.configuration.assets.precompile << "locales/#{locale}.js"

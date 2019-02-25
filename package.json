@@ -25,6 +25,7 @@
     "markdown-it": "8.4.1",
     "moment": "2.22.1",
     "moment-timezone": "0.5.14",
+    "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
     "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
     "pikaday": "1.7.0",
     "resumablejs": "1.1.0",

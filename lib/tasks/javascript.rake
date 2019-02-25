@@ -74,6 +74,9 @@ task 'javascript:update' do
     }, {
       source: 'moment-timezone/builds/moment-timezone-with-data.js'
     }, {
+      source: 'moment-timezone-names-translations/locales/.',
+      destination: 'moment-timezone-names-locale'
+    }, {
       source: 'mousetrap/plugins/global-bind/mousetrap-global-bind.js'
     }, {
       source: 'resumablejs/resumable.js'
