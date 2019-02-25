@@ -13,10 +13,7 @@ componentTest("can add users", {
       find(".users-list .invite-list-user").length === 0,
       "no users at first"
     );
-    assert.ok(
-      find(".new-user .invalid").length === 0,
-      "not invalid at first"
-    );
+    assert.ok(find(".new-user .invalid").length === 0, "not invalid at first");
 
     const firstVal = JSON.parse(this.get("field.value"));
     assert.equal(firstVal.length, 0, "empty JSON at first");

@@ -71,10 +71,7 @@ widgetTest("buildClasses", {
   },
 
   test(assert) {
-    assert.ok(
-      find(".test.static.cool-class").length,
-      "it has all the classes"
-    );
+    assert.ok(find(".test.static.cool-class").length, "it has all the classes");
   }
 });
 
