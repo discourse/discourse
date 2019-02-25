@@ -4,6 +4,8 @@ export default Discourse.Route.extend({
     ascending: { refreshModel: true }
   },
 
+  // TODO: this has been introduced to fix a bug in admin-users-list-show
+  // loading AdminUser model multiple times without refactoring the controller
   beforeModel(transition) {
     const routeName = "adminUsersList.show";
 
