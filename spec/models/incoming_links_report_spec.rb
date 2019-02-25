@@ -3,8 +3,7 @@ require 'rails_helper'
 describe IncomingLinksReport do
 
   before do
-    # we do not want this to fail if you run it at 11:59:59PM
-    freeze_time Time.zone.now
+    freeze_time DateTime.parse('2010-01-01 6:00')
   end
 
   describe 'integration' do
