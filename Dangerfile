@@ -22,7 +22,6 @@ files = (git.added_files + git.modified_files)
   .select { |path| !path.start_with?("plugins/") }
   .select { |path| path.end_with?("es6") || path.end_with?("rb") }
 
-
 js_test_files = files.select { |path| path.end_with?("-test.js.es6") }
 
 super_offenses = []
