@@ -1,0 +1,29 @@
+# NOTE: Adapted settings like "enable_sso" are also applied even when edgeryders_multisite_enabled is false.
+plugins:
+  edgeryders_multisite_enabled:
+    default: true
+    client: true
+users:
+  email_editable: false
+security:
+  force_https:
+    default: true
+    shadowed_by_global: true
+login:
+  enable_sso:
+    client: true
+    default: true
+    validator: "EnableSsoValidator"
+  sso_url:
+    default: 'https://communities.edgeryders.eu/session/sso_provider'
+    regex: '^https?:\/\/.+[^\/]$'
+  sso_overrides_email:
+    default: true
+    validator: "SsoOverridesEmailValidator"
+  sso_overrides_username: true
+  sso_overrides_name: true
+  sso_overrides_avatar:
+    default: true
+    client: true
+  sso_overrides_profile_background: true
+  sso_overrides_card_background: true

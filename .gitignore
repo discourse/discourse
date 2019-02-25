@@ -19,6 +19,8 @@ public/tombstone/*
 
 # Ignore bundler config
 /.bundle
+/.vagrant
+/.vagrantfile
 /cache
 /coverage/*
 
@@ -34,7 +36,6 @@ config/discourse.conf
 *.sql.gz
 /db/*.sqlite3
 /db/structure.sql
-/db/schema.rb
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
@@ -42,17 +43,22 @@ config/discourse.conf
 /logfile
 log/
 bootsnap-load-path-cache
-bootsnap-compile-cache/
 
 # Ignore plugins except for the bundled ones.
 /plugins/*
+!/plugins/emoji/
 !/plugins/lazyYT/
 !/plugins/poll/
 !/plugins/discourse-details/
 !/plugins/discourse-nginx-performance-report
 !/plugins/discourse-narrative-bot
-!/plugins/discourse-presence
-!/plugins/discourse-local-dates
+!/plugins/discourse-navigation
+!/plugins/discourse-branding
+!/plugins/discourse-migratepassword
+!/plugins/discourse-edgeryders
+!/plugins/discourse-text-direction
+!/plugins/discourse-annotator
+!/plugins/discourse-topic-previews
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -78,7 +84,6 @@ discourse.sublime-workspace
 *~
 *.swp
 *.swo
-*.swm
 
 # don't check in multisite config
 config/multisite.yml
@@ -93,6 +98,9 @@ config/fog_credentials.yml
 # Scripts used for downloading/refreshing db
 script/download_db
 script/refresh_db
+
+# temp directory for chef (used to configure vagrant VM)
+chef/tmp/*
 
 # .procfile
 .procfile
@@ -113,14 +121,5 @@ bundler_stubs/*
 vendor/bundle/*
 *.db
 
-# ignore jetbrains ide file
+#ignore jetbrains ide file
 *.iml
-
-# vim swap
-*.swn
-
-# ignore nodejs files
-/node_modules
-/package-lock.json
-
-/vendor/data/GeoLite2-City.mmdb
