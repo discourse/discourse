@@ -1019,7 +1019,8 @@ describe CookedPostProcessor do
           extension: "png",
         )
 
-        upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{Discourse.store.get_path_for_upload(upload)}")
+        stored_path = Discourse.store.get_path_for_upload(upload)
+        upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
 
         the_post = Fabricate(:post, raw: %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})})
 
@@ -1028,7 +1029,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=6" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
-          <p><img src="https://s3.cdn.com/original/1X/#{upload_sha1}.png" alt="smallest.png" width="10" height="20"></p>
+          <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" width="10" height="20"></p>
         HTML
       end
 
