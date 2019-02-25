@@ -318,6 +318,8 @@
     </div>
   {{/if}}
 
+  {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
+
   {{#if embedQuoteButton}}
     {{quote-button quoteState=quoteState selectText=(action "selectText")}}
   {{/if}}

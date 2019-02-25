@@ -646,7 +646,9 @@
           background: $danger;
 
           &.single-tab {
-            display: none;
+            background: none;
+            color: $primary;
+            padding: s(1 0);
           }
         }
       }
