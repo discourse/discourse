@@ -55,7 +55,7 @@
 .open {
   .grippie {
     cursor: row-resize;
-    padding: 6px 0;
+    padding: 4px 0;
     background: $tertiary;
     &:before {
       content: "";
@@ -63,6 +63,14 @@
       width: 27px;
       margin: auto;
       border-top: 3px double $secondary;
+    }
+  }
+}
+
+.discourse-touch {
+  .open {
+    .grippie {
+      padding: 7px 0;
     }
   }
 }
