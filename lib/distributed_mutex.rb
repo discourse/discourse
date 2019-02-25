@@ -1,6 +1,6 @@
 # Cross-process locking using Redis.
 class DistributedMutex
-  DEFAULT_VALIDITY = 60
+  DEFAULT_VALIDITY ||= 60
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
     self.new(
