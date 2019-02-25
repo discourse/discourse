@@ -79,4 +79,23 @@ after_initialize do
     end
   end
 
+
+  # NOTE: Moved to the users controller as it must be executed after child records were created.
+  # User.class_eval do
+  #   # Use to notify community managers about new sign-ups.
+  #   # Users can simply set the notification level of the posts thread accordingly ("Watching" to get immediate
+  #   # e-mail notifications, "Tracking" to only get in-site and desktop notifications).
+  #   after_create do
+  #     if topic = Topic.find_by(id: 6710)
+  #       manager = NewPostManager.new(
+  #         Discourse.system_user,
+  #         raw: "We're glad to welcome [#{username}](/u/#{username}) to our community. (#{UserCustomField.find_by(user_id: id, name: 'user_field_3').try(:value)})",
+  #         topic_id: topic.id
+  #       )
+  #       manager.perform
+  #     end
+  #   end
+  # end
+
+
 end

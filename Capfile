@@ -15,8 +15,12 @@ require 'capistrano/deploy'
 require 'capistrano/scm/git'
 install_plugin Capistrano::SCM::Git
 
-require 'capistrano/chruby'
 
+# https://github.com/seuros/capistrano-puma
+require 'capistrano/puma'
+install_plugin Capistrano::Puma  # Default puma tasks
+install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
+install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
 
 
 # Include tasks from other gems included in your Gemfile
@@ -30,23 +34,13 @@ require 'capistrano/chruby'
 #   https://github.com/capistrano/rails
 #   https://github.com/capistrano/passenger
 #
-#
 require 'capistrano/rails'
 # require 'capistrano/rails/migrations'
 # require 'capistrano/rails/assets'
+require 'capistrano/chruby'
 require 'capistrano/bundler'
 require 'capistrano/sidekiq'
 require 'capistrano/sidekiq/monit'
-
-
-# IMPORTANT: capistrano-puma must be required after capistrano-chruby or it won't detect chruby usage.
-# See: https://github.com/seuros/capistrano-puma/issues/149
-#
-# https://github.com/seuros/capistrano-puma
-require 'capistrano/puma'
-install_plugin Capistrano::Puma  # Default puma tasks
-install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
-install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
 
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
