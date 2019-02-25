@@ -4,8 +4,15 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const THEME_UPLOAD_VAR = 2;
 
+export const THEMES = "themes";
+export const COMPONENTS = "components";
+const SETTINGS_TYPE_ID = 5;
+
 const Theme = RestModel.extend({
   FIELDS_IDS: [0, 1],
+  isActive: Ember.computed.or("default", "user_selectable"),
+  isPendingUpdates: Ember.computed.gt("remote_theme.commits_behind", 0),
+  hasEditedFields: Ember.computed.gt("editedFields.length", 0),
 
   @computed("theme_fields")
   themeFields(fields) {
@@ -23,7 +30,7 @@ const Theme = RestModel.extend({
     return hash;
   },
 
-  @computed("theme_fields", "theme_fields.@each")
+  @computed("theme_fields", "theme_fields.[]")
   uploads(fields) {
     if (!fields) {
       return [];
@@ -33,17 +40,38 @@ const Theme = RestModel.extend({
     );
   },
 
+  @computed("theme_fields", "theme_fields.@each.error")
+  isBroken(fields) {
+    return (
+      fields && fields.some(field => field.error && field.error.length > 0)
+    );
+  },
+
+  @computed("theme_fields.[]")
+  editedFields(fields) {
+    return fields.filter(
+      field => !Ember.isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
+    );
+  },
+
+  @computed("remote_theme.last_error_text")
+  remoteError(errorText) {
+    if (errorText && errorText.length > 0) {
+      return errorText;
+    }
+  },
+
   getKey(field) {
     return `${field.target} ${field.name}`;
   },
 
   hasEdited(target, name) {
     if (name) {
-      return !Em.isEmpty(this.getField(target, name));
+      return !Ember.isEmpty(this.getField(target, name));
     } else {
       let fields = this.get("theme_fields") || [];
       return fields.any(
-        field => field.target === target && !Em.isEmpty(field.value)
+        field => field.target === target && !Ember.isEmpty(field.value)
       );
     }
   },
@@ -102,7 +130,7 @@ const Theme = RestModel.extend({
     }
   },
 
-  @computed("childThemes.@each")
+  @computed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
       return childThemes.map(theme => Ember.get(theme, "id"));
@@ -160,6 +188,10 @@ const Theme = RestModel.extend({
     const settings = {};
     settings[name] = value;
     return this.save({ settings });
+  },
+
+  saveTranslation(name, value) {
+    return this.save({ translations: { [name]: value } });
   }
 });
 

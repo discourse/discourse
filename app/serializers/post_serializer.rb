@@ -9,7 +9,8 @@ class PostSerializer < BasicPostSerializer
     :single_post_link_counts,
     :draft_sequence,
     :post_actions,
-    :all_post_actions
+    :all_post_actions,
+    :add_excerpt
   ]
 
   INSTANCE_VARS.each do |v|
@@ -70,7 +71,8 @@ class PostSerializer < BasicPostSerializer
              :action_code,
              :action_code_who,
              :last_wiki_edit,
-             :locked
+             :locked,
+             :excerpt
 
   def initialize(object, opts)
     super(object, opts)
@@ -95,6 +97,10 @@ class PostSerializer < BasicPostSerializer
 
   def include_category_id?
     @add_title
+  end
+
+  def include_excerpt?
+    @add_excerpt
   end
 
   def topic_title
@@ -312,11 +318,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_custom_fields
-    @topic_view.user_custom_fields[object.user_id]
+    user_custom_fields_object[object.user_id]
   end
 
   def include_user_custom_fields?
-    (@topic_view&.user_custom_fields || {})[object.user_id]
+    user_custom_fields_object[object.user_id]
   end
 
   def static_doc
@@ -340,6 +346,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def version
+    return 1 if object.hidden && !scope.can_view_hidden_post_revisions?
+
     scope.is_staff? ? object.version : object.public_version
   end
 
@@ -380,9 +388,13 @@ class PostSerializer < BasicPostSerializer
 
   private
 
+  def user_custom_fields_object
+    (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
+  end
+
   def topic
     @topic = object.topic
-    @topic ||= Topic.with_deleted.find(object.topic_id) if scope.is_staff?
+    @topic ||= Topic.with_deleted.find_by(id: object.topic_id) if scope.is_staff?
     @topic
   end
 

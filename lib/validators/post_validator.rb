@@ -17,6 +17,7 @@ class Validators::PostValidator < ActiveModel::Validator
     max_attachments_validator(record)
     can_post_links_validator(record)
     unique_post_validator(record)
+    force_edit_last_validator(record)
   end
 
   def presence(post)
@@ -138,6 +139,33 @@ class Validators::PostValidator < ActiveModel::Validator
 
     if post.matches_recent_post?
       post.errors.add(:raw, I18n.t(:just_posted_that))
+    end
+  end
+
+  def force_edit_last_validator(post)
+    return if SiteSetting.max_consecutive_replies == 0 || post.id || post.acting_user&.staff? || private_message?(post)
+
+    topic = post.topic
+    return if topic&.ordered_posts&.first&.user == post.user
+
+    last_posts_count = DB.query_single(<<~SQL, topic_id: post.topic_id, user_id: post.acting_user.id, max_replies: SiteSetting.max_consecutive_replies).first
+      SELECT COUNT(*)
+      FROM (
+        SELECT user_id
+          FROM posts
+         WHERE deleted_at IS NULL
+           AND NOT hidden
+           AND topic_id = :topic_id
+         ORDER BY post_number DESC
+         LIMIT :max_replies
+      ) c
+      WHERE c.user_id = :user_id
+    SQL
+    return if last_posts_count < SiteSetting.max_consecutive_replies
+
+    guardian = Guardian.new(post.acting_user)
+    if guardian.can_edit?(topic.ordered_posts.last)
+      post.errors.add(:base, I18n.t(:max_consecutive_replies, count: SiteSetting.max_consecutive_replies))
     end
   end
 

@@ -434,12 +434,19 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
           described_class.any_instance.expects(:enqueue_timeout_job).with(user)
 
+          url = "https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg"
+
+          stub_request(:head, url).to_return(
+            status: 200, body: file_from_fixtures("smallest.png").read
+          )
+
           new_post = Fabricate(:post,
             user: user,
             topic: topic,
-            raw: "<img src='https://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg'>"
+            raw: url
           )
 
+          CookedPostProcessor.new(new_post).post_process
           DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: new_post.id).select
 
           expected_raw = <<~RAW

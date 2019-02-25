@@ -46,7 +46,7 @@ widgetTest("undo", {
 
 widgetTest("deferFlags", {
   template:
-    '{{mount-widget widget="actions-summary" args=args deferPostActionFlags="deferPostActionFlags"}}',
+    '{{mount-widget widget="actions-summary" args=args deferPostActionFlags=(action "deferPostActionFlags")}}',
   beforeEach() {
     this.set("args", {
       actionsSummary: [
@@ -80,7 +80,7 @@ widgetTest("post deleted", {
   },
   test(assert) {
     assert.ok(
-      this.$(".post-action .d-icon-trash-o").length === 1,
+      this.$(".post-action .d-icon-far-trash-alt").length === 1,
       "it has the deleted icon"
     );
     assert.ok(

@@ -109,6 +109,14 @@ QUnit.test("ensures an authorized upload", assert => {
   );
 });
 
+QUnit.test("skipping validation works", assert => {
+  const files = [{ name: "backup.tar.gz" }];
+  sandbox.stub(bootbox, "alert");
+
+  assert.not(validUpload(files, { skipValidation: false }));
+  assert.ok(validUpload(files, { skipValidation: true }));
+});
+
 QUnit.test("staff can upload anything in PM", assert => {
   const files = [{ name: "some.docx" }];
   Discourse.SiteSettings.authorized_extensions = "jpeg";
@@ -196,16 +204,16 @@ QUnit.test("replaces GUID in image alt text on iOS", assert => {
 });
 
 QUnit.test("isAnImage", assert => {
-  _.each(["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "ico"], function(
-    extension
-  ) {
-    var image = "image." + extension;
-    assert.ok(isAnImage(image), image + " is recognized as an image");
-    assert.ok(
-      isAnImage("http://foo.bar/path/to/" + image),
-      image + " is recognized as an image"
-    );
-  });
+  ["png", "jpg", "jpeg", "bmp", "gif", "tif", "tiff", "ico"].forEach(
+    extension => {
+      var image = "image." + extension;
+      assert.ok(isAnImage(image), image + " is recognized as an image");
+      assert.ok(
+        isAnImage("http://foo.bar/path/to/" + image),
+        image + " is recognized as an image"
+      );
+    }
+  );
   assert.not(isAnImage("file.txt"));
   assert.not(isAnImage("http://foo.bar/path/to/file.txt"));
   assert.not(isAnImage(""));

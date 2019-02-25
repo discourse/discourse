@@ -1,23 +1,38 @@
 .discourse-local-date {
-  display: inline-block;
-  vertical-align: top;
-
-  &.cooked {
+  &.cooked-date {
     color: $primary;
-    font-weight: bold;
     cursor: pointer;
+    border-bottom: 1px dashed $primary-medium;
 
-    .d-icon-globe {
-      margin-right: 0.25em;
-      color: $primary-medium;
-
-      &:hover {
-        color: $primary-high;
-      }
+    .d-icon {
+      color: $primary;
     }
 
-    &:hover .d-icon-globe {
-      color: $primary-high;
+    &.past {
+      border-bottom-color: $primary-low-mid;
+    }
+  }
+}
+
+.discourse-local-date + #discourse-tooltip {
+  .tooltip-content {
+    max-width: 360px;
+    padding: 0.5em;
+
+    .previews {
+      .preview {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+
+        .timezone {
+          font-weight: 700;
+        }
+
+        &.current {
+          background: $tertiary-low;
+        }
+      }
     }
   }
 }
@@ -51,7 +66,7 @@
   flex-direction: row;
 
   .form {
-    flex: 1;
+    flex: 1 0 0px;
 
     label {
       font-weight: 700;
@@ -103,7 +118,7 @@
       }
 
       .preview {
-        flex: 1;
+        flex: 1 0 0px;
         margin-top: 16px;
         text-align: center;
       }

@@ -151,8 +151,8 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
-    [FacebookUserInfo, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
-      SingleSignOnRecord, TwitterUserInfo, EmailChangeRequest
+    [UserAssociatedAccount, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
+      SingleSignOnRecord, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
     end
@@ -173,13 +173,29 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     columns = Category.columns.map(&:name)
     imported_ids = []
-    last_id = Category.unscoped.maximum(:id)
+    last_id = Category.unscoped.maximum(:id) || 1
 
     sql = "COPY categories (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
-      source_raw_connection.exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(', ')} FROM categories").each do |row|
+      source_raw_connection.exec(
+          "SELECT concat('/c/', x.parent_slug, '/', x.slug) as path,
+                  #{columns.map { |c| "c.\"#{c}\"" }.join(', ')}
+             FROM categories c
+       INNER JOIN (
+              SELECT c1.id AS id,
+                     c2.slug AS parent_slug,
+                     c1.slug AS slug
+                FROM categories c1
+     LEFT OUTER JOIN categories c2 ON c1.parent_category_id = c2.id
+                  ) x ON c.id = x.id"
+        ).each do |row|
 
-        if existing = Category.where(name: row['name']).first
+        source_category_path = row.delete('path')&.squeeze('/')
+
+        existing = Category.where(slug: row['slug']).first
+        parent_slug = existing&.parent_category&.slug
+        if existing &&
+            source_category_path == "/c/#{parent_slug}/#{existing.slug}".squeeze('/')
           @categories[row['id']] = existing.id
           next
         end
@@ -249,13 +265,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
     columns = Tag.columns.map(&:name)
     imported_ids = []
-    last_id = Tag.unscoped.maximum(:id)
+    last_id = Tag.unscoped.maximum(:id) || 1
 
     sql = "COPY tags (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
       source_raw_connection.exec("SELECT #{columns.map { |c| "\"#{c}\"" }.join(', ')} FROM tags").each do |row|
 
-        if existing = Tag.where(name: row['name']).first
+        if existing = Tag.where_name(row['name']).first
           @tags[row['id']] = existing.id
           next
         end
@@ -366,7 +382,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     puts "merging badges..."
     columns = Badge.columns.map(&:name)
     imported_ids = []
-    last_id = Badge.unscoped.maximum(:id)
+    last_id = Badge.unscoped.maximum(:id) || 1
 
     sql = "COPY badges (#{columns.map { |c| "\"#{c}\"" }.join(', ')}) FROM STDIN"
     @raw_connection.copy_data(sql, @encoder) do
@@ -607,11 +623,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     notification
   end
 
-  def process_facebook_user_info(r)
-    return nil if FacebookUserInfo.where(facebook_user_id: r['facebook_user_id']).exists?
-    r
-  end
-
   def process_github_user_info(r)
     return nil if GithubUserInfo.where(github_user_id: r['github_user_id']).exists?
     r
@@ -632,13 +643,13 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     r
   end
 
-  def process_single_sign_on_record(r)
-    return nil if SingleSignOnRecord.where(external_id: r['external_id']).exists?
+  def process_user_associated_account(r)
+    return nil if UserAssociatedAccount.where(provider_uid: r['uid'], provider_name: r['provider']).exists?
     r
   end
 
-  def process_twitter_user_info(r)
-    return nil if TwitterUserInfo.where(twitter_user_id: r['twitter_user_id']).exists?
+  def process_single_sign_on_record(r)
+    return nil if SingleSignOnRecord.where(external_id: r['external_id']).exists?
     r
   end
 

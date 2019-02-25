@@ -1,5 +1,7 @@
 class TagGroupsController < ApplicationController
-  requires_login except: [:index, :show]
+
+  requires_login
+  before_action :ensure_staff
 
   skip_before_action :check_xhr, only: [:index, :show]
   before_action :fetch_tag_group, only: [:show, :update, :destroy]

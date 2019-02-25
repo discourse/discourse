@@ -7,9 +7,9 @@
 
 <div class="admin-title">
   <h2>{{title}}</h2>
-  {{#unless showEmails}}
-      <button {{action "showEmails"}} class="show-emails btn">{{i18n 'admin.users.show_emails'}}</button>
-  {{/unless}}
+  {{#if canCheckEmails}}
+      <button {{action "showEmails"}} class="show-emails btn btn-default">{{i18n 'admin.users.show_emails'}}</button>
+  {{/if}}
 </div>
 <div class='username controls'>
   {{text-field value=listFilter placeholder=searchHint}}
@@ -52,7 +52,7 @@
               </a>
               {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
               {{#if user.staged}}
-                {{d-icon "envelope-o" title="user.staged" }}
+                {{d-icon "far-envelope" title="user.staged" }}
               {{/if}}
             </td>
             <td class='email'>
@@ -95,10 +95,10 @@
             {{/if}}
             <td class="user-status">
               {{#if user.admin}}
-                {{d-icon "shield" title="admin.title" }}
+                {{d-icon "shield-alt" title="admin.title" }}
               {{/if}}
               {{#if user.moderator}}
-                {{d-icon "shield" title="admin.moderator" }}
+                {{d-icon "shield-alt" title="admin.moderator" }}
               {{/if}}
               {{#if user.second_factor_enabled}}
                 {{d-icon "lock" title="admin.user.second_factor_enabled" }}

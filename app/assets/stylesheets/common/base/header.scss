@@ -1,4 +1,6 @@
 .d-header {
+  display: flex;
+  align-items: center;
   width: 100%;
   position: absolute;
   top: 0;
@@ -6,17 +8,25 @@
   background-color: $header_background;
   box-shadow: shadow("header");
 
+  > .wrap {
+    width: calc(100% - 16px); // accommodates for 8px vertical padding
+    height: 100%;
+    .contents {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
   .docked & {
     position: fixed;
     backface-visibility: hidden; /** do magic for scrolling performance **/
   }
 
-  .contents {
-    margin: 8px 0;
-  }
-
   .title {
-    float: left;
+    display: flex;
+    align-items: center;
+    height: 100%;
     a,
     a:visited {
       color: $header_primary;
@@ -24,17 +34,18 @@
   }
 
   #site-logo {
-    max-height: 2.8571em;
+    width: auto;
   }
 
   .d-icon-home {
-    font-size: 1.643em;
+    font-size: $font-up-5;
   }
 
   .panel {
-    float: right;
     position: relative;
     display: flex;
+    flex: 0 0 auto;
+    margin-left: auto;
     align-items: center;
   }
 
@@ -45,6 +56,8 @@
   }
 
   .header-buttons {
+    display: flex;
+    align-items: center;
     margin-top: 0.2em;
   }
 
@@ -87,10 +100,6 @@
     width: 2.2857em;
     height: 2.2857em;
     padding: 0.2143em;
-    color: dark-light-choose(
-      scale-color($header_primary, $lightness: 50%),
-      $header_primary
-    );
     text-decoration: none;
     cursor: pointer;
     border-top: 1px solid transparent;
@@ -99,16 +108,18 @@
     transition: all linear 0.15s;
     outline: none;
     img.avatar {
-      width: 2.2857em;
-      height: 2.2857em;
+      width: 2.1333em;
+      height: 2.1333em;
     }
     &:hover,
     &:focus {
-      color: $primary;
       background-color: $primary-low;
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
+      .d-icon {
+        color: $primary-medium;
+      }
     }
     &:active {
       color: $primary;
@@ -118,13 +129,14 @@
   .drop-down-mode & {
     .active .icon {
       position: relative;
-      color: #7b7b7b;
       background-color: $secondary;
       cursor: default;
       border-top: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
       border-right: 1px solid $primary-low;
-
+      .d-icon {
+        color: $primary-medium;
+      }
       &:after {
         display: block;
         position: absolute;
@@ -147,6 +159,7 @@
     font-size: $font-up-4;
     line-height: $line-height-large;
     display: inline-block;
+    color: $header_primary-low-mid;
   }
   .notifications {
     position: relative;
@@ -165,7 +178,7 @@
     z-index: z("base");
     left: 0;
     top: -4px;
-    min-width: 6px;
+    min-width: 0.6em;
   }
   .unread-notifications {
     left: auto;
@@ -194,4 +207,161 @@
 // we don't need this X to clear field
 #search-term::-ms-clear {
   display: none;
+}
+
+// topic info in the header
+.extra-info-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0%; // unit on flex-basis is required for IE11
+  height: 100%;
+  line-height: $line-height-medium;
+  padding: 0 1.5em 0 0.5em;
+  // we need to hide overflow in both to truncate the title in a flexbox
+  overflow: hidden;
+  .extra-info {
+    overflow: hidden;
+    width: 100%;
+    -webkit-animation: fadein 0.5s;
+    animation: fadein 0.5s;
+  }
+  .topic-link {
+    color: $header_primary;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topic-statuses {
+    .d-icon {
+      color: $header_primary-medium;
+    }
+    .d-icon-envelope {
+      color: $danger;
+    }
+  }
+  h1 {
+    margin: 0 0 0.25em 0;
+    font-size: $font-up-3;
+    width: 100%;
+  }
+  .categories-wrapper {
+    display: inline-flex;
+    max-width: 100%;
+    // only truncate the last category name.
+    > a:last-of-type {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  .badge-wrapper {
+    margin-right: 8px;
+    &.bullet {
+      padding-top: 2px; // alignment hack
+    }
+  }
+  .badge-wrapper.bullet {
+    .badge-category-parent-bg,
+    .badge-category-bg {
+      min-width: 5px;
+    }
+  }
+  .badge-wrapper {
+    &.bullet,
+    &.bar,
+    &.none {
+      span.badge-category {
+        color: $header_primary-high;
+      }
+    }
+  }
+  .topic-header-extra {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    flex: 1 0 0%; // unit on flex-basis is required for IE11
+    .discourse-tags {
+      color: $header_primary-high;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      .discourse-tag {
+        display: inline; // tags need to stay inline in order for them to truncate
+      }
+    }
+  }
+  // the tag container should shrink
+  .topic-header-extra {
+    min-width: 1px; // 1px value is needed to avoid IE11 flexbox bug
+  }
+}
+
+// PM header participants
+
+$avatar-height: 1.641em;
+$mobile-avatar-height: 1.532em;
+
+.topic-header-participants {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-size: $font-down-1;
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
+  .trigger-user-card,
+  .trigger-group-card {
+    &:not(:last-of-type) {
+      margin-right: 5px;
+    }
+  }
+
+  .trigger-user-card {
+    .icon {
+      height: $avatar-height;
+      .mobile-view & {
+        height: $mobile-avatar-height;
+      }
+      display: inline-block;
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+
+  .trigger-group-card {
+    padding: 0 5px;
+    border: 1px solid $primary-low;
+    border-radius: 0.25em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      height: $avatar-height;
+      .mobile-view & {
+        height: $mobile-avatar-height;
+      }
+      color: $primary-high;
+
+      .d-icon {
+        margin-right: 5px;
+      }
+    }
+
+    span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .more-participants {
+    color: $header_primary-high;
+    margin-left: 5px;
+  }
 }

@@ -1,7 +1,5 @@
 <% if crawler_layout? %>
 
-<% content_for :title do %><%=t "about" %> - <%= SiteSetting.title %><% end %>
-
 <section itemscope itemtype="https://schema.org/AboutPage">
   <h1 itemprop="name">
     <%=t "js.about.title", {title: @about.title} %>
@@ -105,6 +103,13 @@
 
 <% end %>
 
-<% content_for :head do %>
-  <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: @title, description: SiteSetting.site_description) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+  <% end %>
 <% end %>

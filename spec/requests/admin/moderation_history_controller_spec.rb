@@ -35,6 +35,17 @@ RSpec.describe Admin::BackupsController do
       expect(::JSON.parse(response.body)['moderation_history']).to be_present
     end
 
+    it 'includes post approval record' do
+      queued_post = Fabricate(:queued_post)
+      post = queued_post.approve!(Discourse.system_user)
+
+      get "/admin/moderation_history.json?filter=post&post_id=#{post.id}"
+
+      expect(response.status).to eq(200)
+
+      moderation_history = JSON.parse(response.body)['moderation_history'].first
+      expect(moderation_history['action_name']).to eq('post_approved')
+    end
   end
 
   describe "for a topic" do

@@ -79,7 +79,8 @@ export function transformBasicPost(post) {
     cooked_hidden: !!post.cooked_hidden,
     expandablePost: false,
     replyCount: post.reply_count,
-    locked: post.locked
+    locked: post.locked,
+    userCustomFields: post.user_custom_fields
   };
 
   _additionalAttributes.forEach(a => (postAtts[a] = post[a]));
@@ -128,7 +129,6 @@ export default function transformPost(
   postAtts.linkCounts = post.link_counts;
   postAtts.actionCode = post.action_code;
   postAtts.actionCodeWho = post.action_code_who;
-  postAtts.userCustomFields = post.user_custom_fields;
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
 

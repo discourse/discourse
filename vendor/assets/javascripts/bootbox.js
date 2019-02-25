@@ -288,7 +288,7 @@ var bootbox = window.bootbox || (function(document, $) {
         while (i--) {
             var label    = null,
                 href     = null,
-                _class   = null,
+                _class   = 'btn-default',
                 icon     = '',
                 callback = null;
 

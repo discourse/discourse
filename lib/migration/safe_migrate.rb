@@ -16,12 +16,32 @@ class Migration::SafeMigrate
     end
 
     def migrate(direction)
-      if direction == :up && version && version > UNSAFE_VERSION && @@enable_safe != false
+      if direction == :up &&
+         version && version > UNSAFE_VERSION &&
+         @@enable_safe != false &&
+         !is_post_deploy_migration?
+
         Migration::SafeMigrate.enable!
       end
+
       super
     ensure
       Migration::SafeMigrate.disable!
+    end
+
+    private
+
+    def is_post_deploy_migration?
+      method =
+        if self.respond_to?(:up)
+          :up
+        elsif self.respond_to?(:change)
+          :change
+        end
+
+      self.method(method).source_location.first.include?(
+        Discourse::DB_POST_MIGRATE_PATH
+      )
     end
   end
 
@@ -30,7 +50,9 @@ class Migration::SafeMigrate
       super
     rescue => e
       if e.cause.is_a?(Discourse::InvalidMigration)
-        def e.cause; nil; end
+        def e.cause
+          nil
+        end
         def e.backtrace
           super.reject do |frame|
             frame =~ /safe_migrate\.rb/ || frame =~ /schema_migration_details\.rb/
@@ -90,7 +112,7 @@ class Migration::SafeMigrate
         -------------------------------------------------------------------------------------
         An attempt was made to drop or rename a table in a migration
         SQL used was: '#{sql}'
-        Please use the deferred pattern using Migration::TableDropper in db/seeds to drop
+        Please generate a post deployment migration using `rails g post_migration` to drop
         or rename the table.
 
         This protection is in place to protect us against dropping tables that are currently
@@ -103,7 +125,8 @@ class Migration::SafeMigrate
         -------------------------------------------------------------------------------------
         An attempt was made to drop or rename a column in a migration
         SQL used was: '#{sql}'
-        Please use the deferred pattern using Migration::ColumnDropper in db/seeds to drop
+
+        Please generate a post deployment migration using `rails g post_migration` to drop
         or rename columns.
 
         Note, to minimize disruption use self.ignored_columns = ["column name"] on your

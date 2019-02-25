@@ -258,6 +258,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
             expect(new_post.raw).to eq(I18n.t(
               'discourse_narrative_bot.track_selector.do_not_understand.second_response',
+              base_path: Discourse.base_path,
               reset_trigger: "#{described_class.reset_trigger} #{DiscourseNarrativeBot::NewUserNarrative.reset_trigger}",
             ))
 

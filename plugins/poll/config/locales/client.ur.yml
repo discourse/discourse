@@ -15,8 +15,6 @@ ur:
         one: "کُل ووٹ"
         other: "کُل ووٹ"
       average_rating: "اوسط ریٹینگ: <strong>%{اوسط}</strong>۔"
-      public:
-        title: "ووٹ پبلک ہیں۔"
       multiple:
         help:
           at_least_min_options:

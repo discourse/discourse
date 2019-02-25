@@ -1,1 +1,14 @@
-<p class="about">{{i18n 'admin.customize.about'}}</p>
+<div class="themes-intro">
+  <img src={{womanArtistEmojiURL}}>
+  <div class="content-wrapper">
+    <h1>{{I18n "admin.customize.theme.themes_intro"}}</h1>
+    <div class="external-resources">
+      {{#each externalResources as |resource|}}
+        <a href={{resource.link}} class="external-link" target="_blank">
+          {{d-icon resource.icon}}
+          {{I18n resource.key}}
+        </a>
+      {{/each}}
+    </div>
+  </div>
+</div>

@@ -6,7 +6,10 @@
       "folder_exclude_patterns": ["external", "external_development", "external_production", "images", "imported", "fonts", "defer"],
       "file_exclude_patterns": ["i18n.js"]
     },
-    { "path": "config" },
+    {
+      "path": "config",
+      "file_exclude_patterns": ["*.ar.yml", "*.bg.yml", "*.bs_BA.yml", "*.ca.yml", "*.cs.yml", "*.da.yml", "*.de.yml", "*.el.yml", "*.es.yml", "*.et.yml", "*.fa_IR.yml", "*.fi.yml", "*.fr.yml", "*.gl.yml", "*.he.yml", "*.hu.yml", "*.id.yml", "*.it.yml", "*.ja.yml", "*.ko.yml", "*.lt.yml", "*.lv.yml", "*.nb_NO.yml", "*.nl.yml", "*.pl_PL.yml", "*.pt.yml", "*.pt_BR.yml", "*.ro.yml", "*.ru.yml", "*.sk.yml", "*.sl.yml", "*.sq.yml", "*.sr.yml", "*.sv.yml", "*.sw.yml", "*.te.yml", "*.th.yml", "*.tr_TR.yml", "*.uk.yml", "*.ur.yml", "*.vi.yml", "*.zh_CN.yml", "*.zh_TW.yml"]
+    },
     {
       "path": "db",
       "file_exclude_patterns": ["*.sqlite3"]

@@ -1,4 +1,5 @@
 import { h } from "virtual-dom";
+import { renderIcon } from "discourse-common/lib/icon-library";
 
 const _decorators = [];
 
@@ -35,12 +36,13 @@ export default function renderTopicFeaturedLink(topic) {
   if (meta) {
     return `<a class="topic-featured-link" rel="${meta.rel}" target="${
       meta.target
-    }" href="${meta.href}">${meta.domain}</a>`;
+    }" href="${meta.href}">${renderIcon("string", "external-link-alt")} ${
+      meta.domain
+    }</a>`;
   } else {
     return "";
   }
 }
-
 export function topicFeaturedLinkNode(topic) {
   const meta = extractLinkMeta(topic);
   if (meta) {
@@ -49,7 +51,7 @@ export function topicFeaturedLinkNode(topic) {
       {
         attributes: { href: meta.href, rel: meta.rel, target: meta.target }
       },
-      meta.domain
+      [renderIcon("node", "external-link-alt"), meta.domain]
     );
   }
 }

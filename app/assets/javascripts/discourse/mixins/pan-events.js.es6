@@ -1,29 +1,46 @@
+/**
+   Pan events is a mixin that allows components to detect and respond to swipe gestures
+   It fires callbacks for panStart, panEnd, panMove with the pan state, and the original event.
+ **/
+export const SWIPE_VELOCITY = 40;
+export const SWIPE_DISTANCE_THRESHOLD = 50;
+export const SWIPE_VELOCITY_THRESHOLD = 0.1;
 export default Ember.Mixin.create({
   //velocity is pixels per ms
 
   _panState: null,
 
   didInsertElement() {
-    this._super();
-
-    if (this.site.mobileView) {
-      this.$()
-        .on("pointerdown", e => this._panStart(e))
-        .on("pointermove", e => this._panMove(e))
-        .on("pointerup", e => this._panMove(e))
-        .on("pointercancel", e => this._panMove(e));
-    }
+    this._super(...arguments);
+    this.addTouchListeners(this.$());
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
+    this.removeTouchListeners(this.$());
+  },
 
+  addTouchListeners($element) {
     if (this.site.mobileView) {
-      this.$()
-        .off("pointerdown")
-        .off("pointerup")
-        .off("pointermove")
-        .off("pointercancel");
+      $element
+        .on("touchstart", e => this._panStart(e.touches[0]))
+        .on("touchmove", e => {
+          const touchEvent = e.touches[0];
+          touchEvent.type = "pointermove";
+          this._panMove(touchEvent, e);
+        })
+        .on("touchend", e => this._panMove({ type: "pointerup" }, e))
+        .on("touchcancel", e => this._panMove({ type: "pointercancel" }, e));
+    }
+  },
+
+  removeTouchListeners($element) {
+    if (this.site.mobileView) {
+      $element
+        .off("touchstart")
+        .off("touchmove")
+        .off("touchend")
+        .off("touchcancel");
     }
   },
 
@@ -44,6 +61,9 @@ export default Ember.Mixin.create({
     }
     const newTimestamp = new Date().getTime();
     const timeDiffSeconds = newTimestamp - oldState.timestamp;
+    if (timeDiffSeconds === 0) {
+      return oldState;
+    }
     //calculate delta x, y, distance from START location
     const deltaX = e.clientX - oldState.startLocation.x;
     const deltaY = e.clientY - oldState.startLocation.y;
@@ -93,7 +113,7 @@ export default Ember.Mixin.create({
     this.set("_panState", newState);
   },
 
-  _panMove(e) {
+  _panMove(e, originalEvent) {
     if (!this.get("_panState")) {
       this._panStart(e);
       return;
@@ -104,6 +124,7 @@ export default Ember.Mixin.create({
       return;
     }
     this.set("_panState", newState);
+    newState.originalEvent = originalEvent;
     if (previousState.start && "panStart" in this) {
       this.panStart(newState);
     } else if (

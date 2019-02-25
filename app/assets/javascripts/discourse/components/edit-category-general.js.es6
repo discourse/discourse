@@ -6,7 +6,9 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default buildCategoryPanel("general", {
   foregroundColors: ["FFFFFF", "000000"],
-  canSelectParentCategory: Em.computed.not("category.isUncategorizedCategory"),
+  canSelectParentCategory: Ember.computed.not(
+    "category.isUncategorizedCategory"
+  ),
 
   // background colors are available as a pipe-separated string
   @computed

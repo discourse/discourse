@@ -1,14 +1,7 @@
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<%= tag.meta id: 'data-ga-universal-analytics', data: {
+  tracking_code: SiteSetting.ga_universal_tracking_code,
+  json: ga_universal_json,
+  auto_link_domains: SiteSetting.ga_universal_auto_link_domains
+} %>
 
-  ga('create', '<%= SiteSetting.ga_universal_tracking_code %>', <%= ga_universal_json %>);
-
-  <% if SiteSetting.ga_universal_auto_link_domains.present? %>
-  ga('require', 'linker');
-  ga('linker:autoLink', <%= raw SiteSetting.ga_universal_auto_link_domains.split('|').to_json %>);
-  <% end %>
-
-</script>
+<%= preload_script "google-universal-analytics" %>

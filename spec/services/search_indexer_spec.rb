@@ -3,6 +3,10 @@ require 'rails_helper'
 describe SearchIndexer do
   let(:post_id) { 99 }
 
+  def scrub(html, strip_diacritics: false)
+    SearchIndexer.scrub_html_for_search(html, strip_diacritics: strip_diacritics)
+  end
+
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
@@ -16,26 +20,26 @@ describe SearchIndexer do
 
   it 'extract youtube title' do
     html = "<div class=\"lazyYT\" data-youtube-id=\"lmFgeFh2nlw\" data-youtube-title=\"Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>"
-
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
-
-    expect(scrubbed).to eq(" Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive] ")
+    scrubbed = scrub(html)
+    expect(scrubbed).to eq("Metallica Mixer Explains Missing Bass on 'And Justice for All' [Exclusive]")
   end
 
   it 'extract a link' do
     html = "<a href='http://meta.discourse.org/'>link</a>"
-
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html)
-
-    expect(scrubbed).to eq(" http://meta.discourse.org/  link ")
+    scrubbed = scrub(html)
+    expect(scrubbed).to eq("http://meta.discourse.org/ link")
   end
 
-  it 'removes diacritics' do
+  it 'uses ignore_accent setting to strip diacritics' do
     html = "<p>HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好</p>"
 
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html, strip_diacritics: true)
+    SiteSetting.search_ignore_accents = true
+    scrubbed = SearchIndexer.scrub_html_for_search(html)
+    expect(scrubbed).to eq("HELLO Heterogeneite Здравствуите هتاف للترحيب 你好")
 
-    expect(scrubbed).to eq(" HELLO Heterogeneite Здравствуите هتاف للترحيب 你好 ")
+    SiteSetting.search_ignore_accents = false
+    scrubbed = SearchIndexer.scrub_html_for_search(html)
+    expect(scrubbed).to eq("HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好")
   end
 
   it "doesn't index local files" do
@@ -54,9 +58,9 @@ describe SearchIndexer do
       </div>
     HTML
 
-    scrubbed = SearchIndexer::HtmlScrubber.scrub(html).gsub(/\s+/, " ")
+    scrubbed = scrub(html)
 
-    expect(scrubbed).to eq(" Discourse 51%20PM Untitled design (21).jpg Untitled%20design%20(21) Untitled design (21).jpg 1280x1136 472 KB ")
+    expect(scrubbed).to eq("Discourse 51%20PM Untitled design (21).jpg Untitled%20design%20(21) Untitled design (21).jpg 1280x1136 472 KB")
   end
 
   it 'correctly indexes a post according to version' do

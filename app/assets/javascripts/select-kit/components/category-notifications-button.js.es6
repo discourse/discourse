@@ -11,5 +11,7 @@ export default NotificationOptionsComponent.extend({
 
   mutateValue(value) {
     this.get("category").setNotification(value);
-  }
+  },
+
+  deselect() {}
 });

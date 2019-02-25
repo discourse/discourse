@@ -15,11 +15,13 @@ class Upload < ActiveRecord::Base
   has_many :posts, through: :post_uploads
 
   has_many :optimized_images, dependent: :destroy
+  has_many :user_uploads, dependent: :destroy
 
   attr_accessor :for_group_message
   attr_accessor :for_theme
   attr_accessor :for_private_message
   attr_accessor :for_export
+  attr_accessor :for_site_setting
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -32,6 +34,10 @@ class Upload < ActiveRecord::Base
     UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
   end
 
+  def to_s
+    self.url
+  end
+
   def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end
@@ -40,13 +46,10 @@ class Upload < ActiveRecord::Base
     thumbnail(width, height).present?
   end
 
-  def create_thumbnail!(width, height, crop = false)
+  def create_thumbnail!(width, height, opts = nil)
     return unless SiteSetting.create_thumbnails?
-
-    opts = {
-      allow_animation: SiteSetting.allow_animated_thumbnails,
-      crop: crop
-    }
+    opts ||= {}
+    opts[:allow_animation] = SiteSetting.allow_animated_thumbnails
 
     if get_optimized_image(width, height, opts)
       save(validate: false)
@@ -62,7 +65,8 @@ class Upload < ActiveRecord::Base
     opts = opts.merge(raise_on_error: true)
     begin
       OptimizedImage.create_for(self, width, height, opts)
-    rescue
+    rescue => ex
+      Rails.logger.info ex if Rails.env.development?
       opts = opts.merge(raise_on_error: false)
       if fix_image_extension
         OptimizedImage.create_for(self, width, height, opts)
@@ -112,7 +116,7 @@ class Upload < ActiveRecord::Base
   end
 
   def fix_dimensions!
-    return if !FileHelper.is_image?("image.#{extension}")
+    return if !FileHelper.is_supported_image?("image.#{extension}")
 
     path =
       if local?
@@ -121,8 +125,23 @@ class Upload < ActiveRecord::Base
         Discourse.store.download(self).path
       end
 
-    self.width, self.height = size = FastImage.new(path).size
-    self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(*size)
+    begin
+      w, h = FastImage.new(path, raise_on_failure: true).size
+
+      self.width = w || 0
+      self.height = h || 0
+
+      self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(w, h)
+
+      self.update_columns(
+        width: width,
+        height: height,
+        thumbnail_width: thumbnail_width,
+        thumbnail_height: thumbnail_height
+      )
+    rescue => e
+      Discourse.warn_exception(e, message: "Error getting image dimensions")
+    end
     nil
   end
 
@@ -168,6 +187,10 @@ class Upload < ActiveRecord::Base
     Digest::SHA1.file(path).hexdigest
   end
 
+  def self.extract_upload_url(url)
+    url.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+  end
+
   def self.get_from_url(url)
     return if url.blank?
 
@@ -177,7 +200,7 @@ class Upload < ActiveRecord::Base
     end
 
     return if uri&.path.blank?
-    data = uri.path.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+    data = extract_upload_url(uri.path)
     return if data.blank?
     sha1 = data[2]
     upload = nil
@@ -219,7 +242,7 @@ class Upload < ActiveRecord::Base
             upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
-          FileHelper.optimize_image!(path) if FileHelper.is_image?(File.basename(path))
+          FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
@@ -264,9 +287,13 @@ end
 #  origin            :string(1000)
 #  retain_hours      :integer
 #  extension         :string(10)
+#  thumbnail_width   :integer
+#  thumbnail_height  :integer
+#  etag              :string
 #
 # Indexes
 #
+#  index_uploads_on_etag        (etag)
 #  index_uploads_on_extension   (lower((extension)::text))
 #  index_uploads_on_id_and_url  (id,url)
 #  index_uploads_on_sha1        (sha1) UNIQUE

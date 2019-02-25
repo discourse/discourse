@@ -21,7 +21,7 @@ export default Ember.Controller.extend({
     var raw = this.get("model.query_plan"),
       returned = "<pre class='badge-query-plan'>";
 
-    _.each(raw, function(linehash) {
+    raw.forEach(linehash => {
       returned += escapeExpression(linehash["QUERY PLAN"]);
       returned += "<br>";
     });

@@ -251,14 +251,15 @@ aside.onebox {
 
       .instagram-video-icon {
         &:before {
-          font-family: FontAwesome;
-          font-size: $font-up-5;
-          content: "\f144";
+          opacity: 0.8;
+          // ideally, the SVG used here should be in HTML and reference the SVG sprite
+          content: svg-uri(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
+          );
         }
         bottom: 10px;
         right: 10px;
         position: absolute;
-        color: white;
       }
 
       .instagram-image {
@@ -548,10 +549,32 @@ aside.onebox.stackexchange .onebox-body {
   .retweet {
     color: dark-light-choose($primary-medium, $secondary-medium);
     padding-left: 10px;
+    svg {
+      fill: currentColor;
+      vertical-align: middle;
+    }
   }
 }
 
 // mobile specific style
 .mobile-view article.onebox-body {
   border-top: none;
+}
+
+// Google Photos Album
+.onebox.google-photos-album {
+  @extend .imgur-album;
+}
+
+// Force oneboxed videos to 16:9 aspect ratio
+.onebox.video-onebox {
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+
+  video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 }

@@ -8,10 +8,19 @@ class Auth::AuthProvider
   def self.auth_attributes
     [:pretty_name, :title, :message, :frame_width, :frame_height, :authenticator,
      :pretty_name_setting, :title_setting, :enabled_setting, :full_screen_login, :full_screen_login_setting,
-     :custom_url]
+     :custom_url, :background_color]
   end
 
   attr_accessor(*auth_attributes)
+
+  def enabled_setting=(val)
+    Discourse.deprecate("enabled_setting is deprecated. Please define authenticator.enabled? instead")
+    @enabled_setting = val
+  end
+
+  def background_color=(val)
+    Discourse.deprecate("background_color is no longer functional. Please use CSS instead")
+  end
 
   def name
     authenticator.name

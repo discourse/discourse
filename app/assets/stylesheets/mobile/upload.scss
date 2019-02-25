@@ -7,7 +7,7 @@
     line-height: $line-height-medium;
   }
   .description {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
   }
   .radios {
     display: flex;

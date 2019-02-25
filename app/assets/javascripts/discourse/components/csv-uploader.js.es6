@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 import UploadMixin from "discourse/mixins/upload";
 
-export default Em.Component.extend(UploadMixin, {
+export default Ember.Component.extend(UploadMixin, {
   type: "csv",
   tagName: "span",
   uploadUrl: "/invites/upload_csv",
@@ -25,5 +25,22 @@ export default Em.Component.extend(UploadMixin, {
 
   uploadDone() {
     bootbox.alert(I18n.t("user.invited.bulk_invite.success"));
-  }
+  },
+
+  uploadOptions() {
+    return { autoUpload: false };
+  },
+
+  _init: function() {
+    const $upload = this.$();
+
+    $upload.on("fileuploadadd", (e, data) => {
+      bootbox.confirm(
+        I18n.t("user.invited.bulk_invite.confirmation_message"),
+        I18n.t("cancel"),
+        I18n.t("go_ahead"),
+        result => (result ? data.submit() : data.abort())
+      );
+    });
+  }.on("didInsertElement")
 });

@@ -194,54 +194,55 @@ module HasCustomFields
   def save_custom_fields(force = false)
     if force || !custom_fields_clean?
       dup = @custom_fields.dup
-
       array_fields = {}
 
-      _custom_fields.reload.each do |f|
-        if dup[f.name].is_a?(Array)
-          # we need to collect Arrays fully before we can compare them
-          if !array_fields.has_key?(f.name)
-            array_fields[f.name] = [f]
+      ActiveRecord::Base.transaction do
+        _custom_fields.reload.each do |f|
+          if dup[f.name].is_a?(Array)
+            # we need to collect Arrays fully before we can compare them
+            if !array_fields.has_key?(f.name)
+              array_fields[f.name] = [f]
+            else
+              array_fields[f.name] << f
+            end
+          elsif dup[f.name].is_a?(Hash)
+            if dup[f.name].to_json != f.value
+              f.destroy!
+            else
+              dup.delete(f.name)
+            end
           else
-            array_fields[f.name] << f
-          end
-        elsif dup[f.name].is_a? Hash
-          if dup[f.name].to_json != f.value
-            f.destroy!
-          else
-            dup.delete(f.name)
-          end
-        else
-          t = {}
-          self.class.append_custom_field(t, f.name, f.value)
+            t = {}
+            self.class.append_custom_field(t, f.name, f.value)
 
-          if dup[f.name] != t[f.name]
-            f.destroy!
-          else
-            dup.delete(f.name)
+            if dup[f.name] != t[f.name]
+              f.destroy!
+            else
+              dup.delete(f.name)
+            end
           end
         end
-      end
 
-      # let's iterate through our arrays and compare them
-      array_fields.each do |field_name, fields|
-        if fields.length == dup[field_name].length && fields.map(&:value) == dup[field_name]
-          dup.delete(field_name)
-        else
-          fields.each(&:destroy)
+        # let's iterate through our arrays and compare them
+        array_fields.each do |field_name, fields|
+          if fields.length == dup[field_name].length && fields.map(&:value) == dup[field_name]
+            dup.delete(field_name)
+          else
+            fields.each(&:destroy!)
+          end
         end
-      end
 
-      dup.each do |k, v|
-        field_type = self.class.get_custom_field_type(k)
+        dup.each do |k, v|
+          field_type = self.class.get_custom_field_type(k)
 
-        if v.is_a?(Array) && field_type != :json
-          v.each { |subv| _custom_fields.create!(name: k, value: subv) }
-        else
-          _custom_fields.create!(
-            name: k,
-            value: v.is_a?(Hash) || field_type == :json ? v.to_json : v
-          )
+          if v.is_a?(Array) && field_type != :json
+            v.each { |subv| _custom_fields.create!(name: k, value: subv) }
+          else
+            _custom_fields.create!(
+              name: k,
+              value: v.is_a?(Hash) || field_type == :json ? v.to_json : v
+            )
+          end
         end
       end
 

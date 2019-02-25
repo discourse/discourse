@@ -52,7 +52,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
         GROUP BY n.nid, n.title, n.uid, n.created, f.body_value
         LIMIT #{batch_size}
         OFFSET #{offset}
-      ", cache_rows: false);
+      ", cache_rows: false)
 
       break if results.size < 1
 

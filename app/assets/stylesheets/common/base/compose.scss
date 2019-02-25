@@ -36,7 +36,7 @@
       border-color: $secondary;
       border-right-color: transparent;
     }
-    i {
+    .d-icon {
       color: $secondary;
     }
   }
@@ -68,7 +68,7 @@
         display: none;
       }
       .d-icon {
-        opacity: 1;
+        color: $secondary;
       }
     }
   }
@@ -83,6 +83,9 @@
     .saving-text {
       display: none;
     }
+    .toggler {
+      order: 2;
+    }
   }
 
   &.saving .saving-text {
@@ -94,13 +97,19 @@
     margin: 5px 0 10px 0;
     display: flex;
     align-items: center;
-    i {
-      color: $primary-high;
+    .d-icon {
+      color: $primary-medium;
     }
     .reply-details {
-      max-width: calc(100% - 60px);
+      max-width: calc(100% - 175px);
       flex: 1 1 auto;
+      display: flex;
+      align-items: center;
       white-space: nowrap;
+
+      .d-icon {
+        opacity: 0.8;
+      }
     }
     .composer-action-title {
       display: inline-flex;
@@ -144,10 +153,13 @@
       }
     }
     .composer-controls {
+      display: flex;
       margin-left: auto;
-      margin-right: -5px;
       button {
-        padding: 0 8px;
+        padding: 5px 7px;
+        &.toggler {
+          order: 2;
+        }
       }
     }
   }
@@ -204,7 +216,7 @@
     }
     .category-chooser {
       display: flex;
-      flex: 1;
+      flex: 1 0 auto;
       width: auto;
     }
   }
@@ -222,7 +234,8 @@
   }
 
   .add-warning {
-    margin-left: 1em;
+    margin-left: 0.75em;
+    margin-bottom: 0;
     display: flex;
     input {
       margin-right: 5px;
@@ -255,14 +268,6 @@
     flex-direction: column;
     flex-grow: 1;
     min-height: 0;
-  }
-
-  .d-editor-button-bar .btn {
-    padding: 4px 8px;
-    display: inline-block;
-    @media all and (max-width: 800px) {
-      padding: 5px;
-    }
   }
 
   .submit-panel {
@@ -399,8 +404,11 @@ div.ac-wrap {
   max-height: 150px;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   background-color: $secondary;
   border: 1px solid $primary-medium;
+  min-height: 30px;
+  box-sizing: border-box;
   div.item {
     float: left;
     padding: 4px 10px;
@@ -426,6 +434,7 @@ div.ac-wrap {
     border: 0;
     margin: 0;
     background: transparent;
+    min-height: unset;
   }
 }
 

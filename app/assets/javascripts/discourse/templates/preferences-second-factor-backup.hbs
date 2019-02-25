@@ -40,13 +40,13 @@
       <div class="controls">
         <div class="actions">
             {{d-button
-              action="generateSecondFactorCodes"
+              action=(action "generateSecondFactorCodes")
               class="btn btn-primary"
               disabled=isDisabledGenerateBackupCodeBtn
               label=generateBackupCodeBtnLabel}}
           {{#if backupEnabled}}
             {{d-button
-              action="disableSecondFactorBackup"
+              action=(action "disableSecondFactorBackup")
               class="btn btn-danger"
               disabled=isDisabledDisableBackupCodeBtn
               label="user.second_factor_backup.disable"}}

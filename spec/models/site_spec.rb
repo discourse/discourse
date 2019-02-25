@@ -66,6 +66,21 @@ describe Site do
     expect(Site.new(guardian).categories).not_to include(sub_category)
   end
 
+  it "omits groups user can not see" do
+    user = Fabricate(:user)
+    site = Site.new(Guardian.new(user))
+
+    staff_group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+    expect(site.groups.pluck(:name)).not_to include(staff_group.name)
+
+    public_group = Fabricate(:group)
+    expect(site.groups.pluck(:name)).to include(public_group.name)
+
+    admin = Fabricate(:admin)
+    site = Site.new(Guardian.new(admin))
+    expect(site.groups.pluck(:name)).to include(staff_group.name, public_group.name, "everyone")
+  end
+
   it "includes all enabled authentication providers" do
     SiteSetting.enable_twitter_logins = true
     SiteSetting.enable_facebook_logins = true

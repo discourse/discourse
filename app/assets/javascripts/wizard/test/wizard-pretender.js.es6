@@ -33,6 +33,7 @@ export default function() {
       return response(200, {
         wizard: {
           start: "hello-world",
+          completed: true,
           steps: [
             {
               id: "hello-world",
@@ -51,13 +52,21 @@ export default function() {
             },
             {
               id: "second-step",
+              title: "Second step",
               index: 1,
+              fields: [{ id: "some-title", type: "text" }],
+              previous: "hello-world",
+              next: "last-step"
+            },
+            {
+              id: "last-step",
+              index: 2,
               fields: [
                 { id: "snack", type: "dropdown", required: true },
                 { id: "theme-preview", type: "component" },
                 { id: "an-image", type: "image" }
               ],
-              previous: "hello-world"
+              previous: "second-step"
             }
           ]
         }

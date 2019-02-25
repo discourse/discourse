@@ -42,7 +42,10 @@
 .close {
   font-size: $font-up-3;
   text-decoration: none;
-  color: dark-light-choose($primary-high, $secondary-low);
+  color: $primary-high;
+  &:visited {
+    color: $primary-high;
+  }
   cursor: pointer;
   &:hover {
     color: $primary;
@@ -113,19 +116,30 @@
   }
 }
 
-.split-modal {
+.move-to-modal {
   .modal-body {
     position: relative;
     height: 350px;
   }
 
   #move-selected {
+    // prevents content from moving when user selects differnt move options 525px
+    // is the same width we set on category edit modal
+    width: 525px;
+
     p {
       margin-top: 0;
     }
 
-    input[type="radio"] {
-      margin-right: 10px;
+    .radios {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: row;
+
+      .radio-label {
+        display: inline-block;
+        padding-right: 15px;
+      }
     }
 
     button {
@@ -139,10 +153,21 @@
     }
 
     form {
+      width: 95%;
       margin-top: 20px;
       #split-topic-name,
-      #choose-topic-title {
-        width: 520px;
+      #choose-topic-title,
+      #choose-message-title {
+        width: 100%;
+      }
+
+      .participant-selector {
+        width: 100%;
+      }
+
+      div.ac-wrap {
+        width: 100%;
+        margin-bottom: 9px;
       }
     }
   }

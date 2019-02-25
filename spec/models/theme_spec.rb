@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe Theme do
-
-  before do
+  after do
     Theme.clear_cache!
   end
 
@@ -12,14 +11,6 @@ describe Theme do
 
   let(:guardian) do
     Guardian.new(user)
-  end
-
-  let :customization_params do
-    { name: 'my name', user_id: user.id, header: "my awesome header" }
-  end
-
-  let :customization do
-    Fabricate(:theme, customization_params)
   end
 
   let(:theme) { Fabricate(:theme, user: user) }
@@ -66,10 +57,17 @@ describe Theme do
 
   end
 
-  it 'can correctly find parent themes' do
-    theme.add_child_theme!(child)
+  it "can automatically disable for mismatching version" do
+    expect(theme.enabled?).to eq(true)
+    theme.create_remote_theme!(remote_url: "", minimum_discourse_version: "99.99.99")
+    expect(theme.enabled?).to eq(false)
 
-    expect(child.dependant_themes.length).to eq(1)
+    expect(Theme.transform_ids([theme.id])).to be_empty
+  end
+
+  it "#transform_ids works with nil values" do
+    # Used in safe mode
+    expect(Theme.transform_ids([nil])).to eq([nil])
   end
 
   it "doesn't allow multi-level theme components" do
@@ -121,10 +119,12 @@ HTML
     theme.set_field(target: :common, name: "header", value: with_template)
     theme.save!
 
+    field = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: 'header')
     baked = Theme.lookup_field(theme.id, :mobile, "header")
 
-    expect(baked).to match(/HTMLBars/)
-    expect(baked).to match(/raw-handlebars/)
+    expect(baked).to include(field.javascript_cache.url)
+    expect(field.javascript_cache.content).to include('HTMLBars')
+    expect(field.javascript_cache.content).to include('raw-handlebars')
   end
 
   it 'should create body_tag_baked on demand if needed' do
@@ -181,12 +181,20 @@ HTML
   end
 
   describe ".transform_ids" do
+    let!(:orphan1) { Fabricate(:theme, component: true) }
     let!(:child) { Fabricate(:theme, component: true) }
     let!(:child2) { Fabricate(:theme, component: true) }
+    let!(:orphan2) { Fabricate(:theme, component: true) }
+    let!(:orphan3) { Fabricate(:theme, component: true) }
+    let!(:orphan4) { Fabricate(:theme, component: true) }
 
     before do
       theme.add_child_theme!(child)
       theme.add_child_theme!(child2)
+    end
+
+    it "returns an empty array if no ids are passed" do
+      expect(Theme.transform_ids([])).to eq([])
     end
 
     it "adds the child themes of the parent" do
@@ -194,17 +202,13 @@ HTML
 
       expect(Theme.transform_ids([theme.id])).to eq([theme.id, *sorted])
 
-      fake_id = [child.id, child2.id, theme.id].min - 5
-      fake_id2 = [child.id, child2.id, theme.id].max + 5
-
-      expect(Theme.transform_ids([theme.id, fake_id2, fake_id]))
-        .to eq([theme.id, fake_id, *sorted, fake_id2])
+      expect(Theme.transform_ids([theme.id, orphan1.id, orphan2.id])).to eq([theme.id, orphan1.id, *sorted, orphan2.id])
     end
 
     it "doesn't insert children when extend is false" do
-      fake_id = theme.id + 1
-      fake_id2 = fake_id + 2
-      fake_id3 = fake_id2 + 3
+      fake_id = orphan2.id
+      fake_id2 = orphan3.id
+      fake_id3 = orphan4.id
 
       expect(Theme.transform_ids([theme.id], extend: false)).to eq([theme.id])
       expect(Theme.transform_ids([theme.id, fake_id3, fake_id, fake_id2, fake_id2], extend: false))
@@ -215,7 +219,7 @@ HTML
   context "plugin api" do
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
-      f.value_baked
+      return f.value_baked, f.javascript_cache
     end
 
     it "transpiles ES6 code" do
@@ -225,10 +229,10 @@ HTML
         </script>
 HTML
 
-      transpiled = transpile(html)
-      expect(transpiled).to match(/\<script\>/)
-      expect(transpiled).to match(/var x = 1;/)
-      expect(transpiled).to match(/_registerPluginCode\('0.1'/)
+      baked, javascript_cache = transpile(html)
+      expect(baked).to include(javascript_cache.url)
+      expect(javascript_cache.content).to include('var x = 1;')
+      expect(javascript_cache.content).to include("_registerPluginCode('0.1'")
     end
 
     it "converts errors to a script type that is not evaluated" do
@@ -239,43 +243,14 @@ HTML
         </script>
 HTML
 
-      transpiled = transpile(html)
-      expect(transpiled).to match(/text\/discourse-js-error/)
-      expect(transpiled).to match(/read-only/)
+      baked, javascript_cache = transpile(html)
+      expect(baked).to include(javascript_cache.url)
+      expect(javascript_cache.content).to include('Theme Transpilation Error')
+      expect(javascript_cache.content).to include('read-only')
     end
   end
 
-  context 'theme vars' do
-
-    it 'works in parent theme' do
-      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; }')
-      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
-      theme.set_field(target: :common, name: :not_red, value: 'red', type: :theme_var)
-      theme.component = true
-      theme.save
-
-      parent_theme = Fabricate(:theme)
-      parent_theme.set_field(target: :common, name: :scss, value: 'body {background-color: $not_red; }')
-      parent_theme.set_field(target: :common, name: :not_red, value: 'blue', type: :theme_var)
-      parent_theme.save
-      parent_theme.add_child_theme!(theme)
-
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: parent_theme.id)
-      expect(scss).to include("color:red")
-      expect(scss).to include("background-color:blue")
-    end
-
-    it 'can generate scss based off theme vars' do
-      theme.set_field(target: :common, name: :scss, value: 'body {color: $magic; content: quote($content)}')
-      theme.set_field(target: :common, name: :magic, value: 'red', type: :theme_var)
-      theme.set_field(target: :common, name: :content, value: 'Sam\'s Test', type: :theme_var)
-      theme.save
-
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
-      expect(scss).to include("red")
-      expect(scss).to include('"Sam\'s Test"')
-    end
-
+  context 'theme upload vars' do
     let :image do
       file_from_fixtures("logo.png")
     end
@@ -320,35 +295,69 @@ HTML
 
     it "allows values to be used in JS" do
       theme.set_field(target: :settings, name: :yaml, value: "name: bob")
-      theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
+      theme_field = theme.set_field(target: :common, name: :after_header, value: '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>')
       theme.save!
 
       transpiled = <<~HTML
-      <script>if ('Discourse' in window) {
-        Discourse._registerPluginCode('1.0', function (api) {
-          var settings = { "name": "bob" };
-          alert(settings.name);var a = function a() {};
-        });
-      }</script>
+      (function() {
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{theme.id}, {"name":"bob"});
+        }
+      })();
+      (function () {
+        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+          var themePrefix = function themePrefix(key) {
+            return 'theme_translations.#{theme.id}.' + key;
+          };
+          Discourse._registerPluginCode('1.0', function (api) {
+            alert(settings.name);var a = function a() {};
+          });
+        }
+      })();
       HTML
 
-      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
+      theme_field.reload
+      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
+      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
 
       transpiled = <<~HTML
-      <script>if ('Discourse' in window) {
-        Discourse._registerPluginCode('1.0', function (api) {
-          var settings = { "name": "bill" };
-          alert(settings.name);var a = function a() {};
-        });
-      }</script>
+      (function() {
+        if ('Discourse' in window && Discourse.__container__) {
+          Discourse.__container__
+            .lookup("service:theme-settings")
+            .registerSettings(#{theme.id}, {"name":"bill"});
+        }
+      })();
+      (function () {
+        if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {
+          var settings = Discourse.__container__.lookup("service:theme-settings").getObjectForTheme(#{theme.id});
+          var themePrefix = function themePrefix(key) {
+            return 'theme_translations.#{theme.id}.' + key;
+          };
+          Discourse._registerPluginCode('1.0', function (api) {
+            alert(settings.name);var a = function a() {};
+          });
+        }
+      })();
       HTML
-      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to eq(transpiled.strip)
 
+      theme_field.reload
+      expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(theme_field.javascript_cache.url)
+      expect(theme_field.javascript_cache.content).to eq(transpiled.strip)
     end
 
+    it 'is empty when the settings are invalid' do
+      theme.set_field(target: :settings, name: :yaml, value: 'nil_setting: ')
+      theme.save!
+
+      expect(theme.settings).to be_empty
+    end
   end
 
   it 'correctly caches theme ids' do
@@ -411,6 +420,30 @@ HTML
     Theme.find_by(id: id).included_settings.to_json
   end
 
+  it 'clears color scheme cache correctly' do
+    Theme.destroy_all
+
+    cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
+      Fabricate(:color_scheme_color, name: 'header_primary',  hex: 'F0F0F0'),
+      Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
+      Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
+    ])
+
+    theme = Fabricate(:theme,
+      user_selectable: true,
+      user: Fabricate(:admin),
+      color_scheme_id: cs.id
+    )
+
+    theme.set_default!
+
+    expect(ColorScheme.hex_for_name('header_primary')).to eq('F0F0F0')
+
+    Theme.clear_default!
+
+    expect(ColorScheme.hex_for_name('header_primary')).to eq('333333')
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
@@ -438,5 +471,104 @@ HTML
     json = cached_settings(theme.id)
     expect(json).not_to match(/\"integer_setting\":54/)
     expect(json).to match(/\"boolean_setting\":false/)
+  end
+
+  describe "theme translations" do
+    it "can list working theme_translation_manager objects" do
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
+          theme_metadata:
+            description: "Description of my theme"
+          group_of_translations:
+            translation1: en test1
+            translation2: en test2
+          base_translation1: en test3
+          base_translation2: en test4
+      YAML
+      fr_translation = ThemeField.create!(theme_id: theme.id, name: "fr", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        fr:
+          group_of_translations:
+            translation2: fr test2
+          base_translation2: fr test4
+          base_translation3: fr test5
+      YAML
+
+      I18n.locale = :fr
+      theme.update_translation("group_of_translations.translation1", "overriddentest1")
+      translations = theme.translations
+      theme.reload
+
+      expect(translations.map(&:key)).to eq([
+        "group_of_translations.translation1",
+        "group_of_translations.translation2",
+        "base_translation1",
+        "base_translation2",
+        "base_translation3"
+      ])
+
+      expect(translations.map(&:default)).to eq([
+        "en test1",
+        "fr test2",
+        "en test3",
+        "fr test4",
+        "fr test5"
+      ])
+
+      expect(translations.map(&:value)).to eq([
+        "overriddentest1",
+        "fr test2",
+        "en test3",
+        "fr test4",
+        "fr test5"
+      ])
+    end
+
+    it "can list internal theme_translation_manager objects" do
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
+          theme_metadata:
+            description: "Description of my theme"
+          another_translation: en test4
+      YAML
+      translations = theme.internal_translations
+      expect(translations.map(&:key)).to contain_exactly("theme_metadata.description")
+      expect(translations.map(&:value)).to contain_exactly("Description of my theme")
+    end
+
+    it "can create a hash of overridden values" do
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en:
+          group_of_translations:
+            translation1: en test1
+      YAML
+
+      theme.update_translation("group_of_translations.translation1", "overriddentest1")
+      I18n.locale = :fr
+      theme.update_translation("group_of_translations.translation1", "overriddentest2")
+      theme.reload
+      expect(theme.translation_override_hash).to eq(
+        "en" => {
+          "group_of_translations" => {
+            "translation1" => "overriddentest1"
+          }
+        },
+        "fr" => {
+          "group_of_translations" => {
+            "translation1" => "overriddentest2"
+          }
+        }
+      )
+    end
+
+    it "fall back when listing baked field" do
+      theme2 = Fabricate(:theme)
+
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: '')
+      fr_translation = ThemeField.create!(theme_id: theme.id, name: "fr", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: '')
+
+      en_translation2 = ThemeField.create!(theme_id: theme2.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: '')
+
+      expect(Theme.list_baked_fields([theme.id, theme2.id], :translations, 'fr').map(&:id)).to contain_exactly(fr_translation.id, en_translation2.id)
+    end
   end
 end

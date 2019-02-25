@@ -86,9 +86,7 @@ function positioningWorkaround($fixedElement) {
       fixedElement.style.top = "";
       fixedElement.style.height = oldHeight;
 
-      setTimeout(() => {
-        $(fixedElement).removeClass("no-transition");
-      }, 500);
+      Ember.run.later(() => $(fixedElement).removeClass("no-transition"), 500);
 
       $(window).scrollTop(originalScrollTop);
 

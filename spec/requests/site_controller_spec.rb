@@ -1,32 +1,36 @@
 require 'rails_helper'
 
 describe SiteController do
-  describe '.basic_info' do
+  describe '#basic_info' do
     it 'is visible always even for sites requiring login' do
-      SiteSetting.login_required = true
+      upload = Fabricate(:upload)
 
+      SiteSetting.login_required = true
       SiteSetting.title = "Hammer Time"
       SiteSetting.site_description = "A time for Hammer"
-      SiteSetting.logo_url = "/uploads/logo.png"
-      SiteSetting.logo_small_url = "http://boom.com/uploads/logo_small.png"
-      SiteSetting.apple_touch_icon_url = "https://boom.com/apple/logo.png"
-      SiteSetting.mobile_logo_url = "https://a.a/a.png"
+      SiteSetting.logo = upload
+      SiteSetting.logo_small = upload
+      SiteSetting.apple_touch_icon = upload
+      SiteSetting.mobile_logo = upload
+      Theme.clear_default!
 
       get "/site/basic-info.json"
       json = JSON.parse(response.body)
 
+      expected_url = UrlHelper.absolute(upload.url)
+
       expect(json["title"]).to eq("Hammer Time")
       expect(json["description"]).to eq("A time for Hammer")
-      expect(json["logo_url"]).to eq("http://test.localhost/uploads/logo.png")
-      expect(json["apple_touch_icon_url"]).to eq("https://boom.com/apple/logo.png")
-      expect(json["logo_small_url"]).to eq("http://boom.com/uploads/logo_small.png")
-      expect(json["mobile_logo_url"]).to eq("https://a.a/a.png")
+      expect(json["logo_url"]).to eq(expected_url)
+      expect(json["apple_touch_icon_url"]).to eq(expected_url)
+      expect(json["logo_small_url"]).to eq(expected_url)
+      expect(json["mobile_logo_url"]).to eq(expected_url)
       expect(json["header_primary_color"]).to eq("333333")
       expect(json["header_background_color"]).to eq("ffffff")
     end
   end
 
-  describe '.statistics' do
+  describe '#statistics' do
     it 'is visible for sites requiring login' do
       SiteSetting.login_required = true
       SiteSetting.share_anonymized_statistics = true

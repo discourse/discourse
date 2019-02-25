@@ -35,12 +35,18 @@ export default createWidget("link", {
   },
 
   buildAttributes(attrs) {
-    return {
+    const ret = {
       href: this.href(attrs),
       title: attrs.title
         ? I18n.t(attrs.title, attrs.titleOptions)
         : this.label(attrs)
     };
+    if (attrs.attributes) {
+      Object.keys(attrs.attributes).forEach(
+        k => (ret[k] = attrs.attributes[k])
+      );
+    }
+    return ret;
   },
 
   label(attrs) {

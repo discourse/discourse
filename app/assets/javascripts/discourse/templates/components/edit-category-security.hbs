@@ -26,13 +26,13 @@
                   nameProperty="description"
                   content=category.availablePermissions
                   value=selectedPermission}}
-      <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-small add-permission">
+      <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-default add-permission">
         {{i18n 'category.add_permission'}}
       </button>
     {{/if}}
   {{else}}
     {{#unless category.is_special}}
-      <button {{action "editPermissions"}} class="btn btn-small edit-permission">{{i18n 'category.edit_permissions'}}</button>
+      <button {{action "editPermissions"}} class="btn btn-default btn-default edit-permission">{{i18n 'category.edit_permissions'}}</button>
     {{/unless}}
   {{/if}}
 </section>

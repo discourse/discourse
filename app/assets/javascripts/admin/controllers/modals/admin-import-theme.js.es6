@@ -1,7 +1,10 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { observes } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   local: Ember.computed.equal("selection", "local"),
@@ -11,11 +14,22 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
-
   checkPrivate: Ember.computed.match("uploadUrl", /^git/),
+  localFile: null,
+  uploadUrl: null,
+  urlPlaceholder: "https://github.com/discourse/sample_theme",
+
+  @computed("loading", "remote", "uploadUrl", "local", "localFile")
+  importDisabled(isLoading, isRemote, uploadUrl, isLocal, localFile) {
+    return isLoading || (isRemote && !uploadUrl) || (isLocal && !localFile);
+  },
 
   @observes("privateChecked")
   privateWasChecked() {
+    this.get("privateChecked")
+      ? this.set("urlPlaceholder", "git@github.com:discourse/sample_theme.git")
+      : this.set("urlPlaceholder", "https://github.com/discourse/sample_theme");
+
     const checked = this.get("privateChecked");
     if (checked && !this._keyLoading) {
       this._keyLoading = true;
@@ -32,6 +46,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
+    uploadLocaleFile() {
+      this.set("localFile", $("#file-input")[0].files[0]);
+    },
+
     importTheme() {
       let options = {
         type: "POST"
@@ -41,10 +59,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
         options.processData = false;
         options.contentType = false;
         options.data = new FormData();
-        options.data.append("theme", $("#file-input")[0].files[0]);
+        options.data.append("theme", this.get("localFile"));
       } else {
         options.data = {
-          remote: this.get("uploadUrl")
+          remote: this.get("uploadUrl"),
+          branch: this.get("branch")
         };
 
         if (this.get("privateChecked")) {

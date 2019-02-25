@@ -13,6 +13,7 @@ if Rails.env.development?
 end
 
 module Discourse
+  DB_POST_MIGRATE_PATH ||= "db/post_migrate"
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
@@ -287,6 +288,11 @@ module Discourse
     nil
   end
 
+  class << self
+    alias_method :base_path, :base_uri
+    alias_method :base_url_no_path, :base_url_no_prefix
+  end
+
   READONLY_MODE_KEY_TTL  ||= 60
   READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
   PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze
@@ -307,6 +313,7 @@ module Discourse
     end
 
     MessageBus.publish(readonly_channel, true)
+    Site.clear_anon_cache!
     true
   end
 
@@ -340,6 +347,7 @@ module Discourse
   def self.disable_readonly_mode(key = READONLY_MODE_KEY)
     $redis.del(key)
     MessageBus.publish(readonly_channel, false)
+    Site.clear_anon_cache!
     true
   end
 
@@ -347,13 +355,17 @@ module Discourse
     recently_readonly? || $redis.mget(*keys).compact.present?
   end
 
+  def self.pg_readonly_mode?
+    $redis.get(PG_READONLY_MODE_KEY).present?
+  end
+
   def self.last_read_only
-    @last_read_only ||= {}
+    @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
   end
 
   def self.recently_readonly?
-    return false unless read_only = last_read_only[$redis.namespace]
-    read_only > 15.seconds.ago
+    read_only = last_read_only[$redis.namespace]
+    read_only.present? && read_only > 15.seconds.ago
   end
 
   def self.received_readonly!
@@ -362,6 +374,8 @@ module Discourse
 
   def self.clear_readonly!
     last_read_only[$redis.namespace] = nil
+    Site.clear_anon_cache!
+    true
   end
 
   def self.request_refresh!(user_ids: nil)
@@ -596,9 +610,18 @@ module Discourse
     end
   end
 
-  def self.deprecate(warning)
-    location = caller_locations[1]
-    warning = "Deprecation Notice: #{warning}\nAt: #{location.label} #{location.path}:#{location.lineno}"
+  def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false)
+    location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
+    warning = ["Deprecation notice:", warning]
+    warning << "(deprecated since Discourse #{since})" if since
+    warning << "(removal in Discourse #{drop_from})" if drop_from
+    warning << "\nAt #{location}"
+    warning = warning.join(" ")
+
+    if raise_error
+      raise Deprecation.new(warning)
+    end
+
     if Rails.env == "development"
       STDERR.puts(warning)
     end
@@ -646,6 +669,10 @@ module Discourse
 
   def self.running_in_rack?
     ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
+  end
+
+  def self.skip_post_deployment_migrations?
+    ['1', 'true'].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
   end
 
 end

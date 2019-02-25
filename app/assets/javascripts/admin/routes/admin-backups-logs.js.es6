@@ -15,7 +15,7 @@ export default Ember.Route.extend({
             return log.message.length === 0 || log.message[0] === "[";
           })
           .map(function(log) {
-            return Em.Object.create(log);
+            return Ember.Object.create(log);
           })
           .value();
         logs.pushObjects(newLogs);

@@ -96,9 +96,9 @@ end
 #
 # Indexes
 #
-#  index_email_logs_on_created_at              (created_at)
-#  index_email_logs_on_message_id              (message_id)
-#  index_email_logs_on_post_id                 (post_id)
-#  index_email_logs_on_user_id                 (user_id)
-#  index_email_logs_on_user_id_and_created_at  (user_id,created_at)
+#  index_email_logs_on_bounced     (bounced)
+#  index_email_logs_on_created_at  (created_at)
+#  index_email_logs_on_message_id  (message_id)
+#  index_email_logs_on_post_id     (post_id)
+#  index_email_logs_on_user_id     (user_id)
 #

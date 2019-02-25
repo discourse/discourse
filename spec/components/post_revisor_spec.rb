@@ -114,6 +114,15 @@ describe PostRevisor do
       end
     end
 
+    describe 'with nil raw contents' do
+      it "doesn't change version" do
+        expect {
+          expect(subject.revise!(post.user, raw: nil)).to eq(false)
+          post.reload
+        }.not_to change(post, :version)
+      end
+    end
+
     describe 'ninja editing' do
       it 'correctly applies edits' do
         SiteSetting.editing_grace_period = 1.minute
@@ -537,7 +546,7 @@ describe PostRevisor do
           expect(post).to be_locked
         end
 
-        it "doesn't wiki posts" do
+        it "doesn't lock the wiki posts" do
           post.wiki = true
           result = subject.revise!(
             moderator,
@@ -547,6 +556,7 @@ describe PostRevisor do
           post.reload
           expect(post).not_to be_locked
         end
+
         it "doesn't lock the post when the raw did not change" do
           result = subject.revise!(
             moderator,
@@ -562,6 +572,16 @@ describe PostRevisor do
           result = subject.revise!(
             Fabricate(:user),
             raw: "lets totally update the body"
+          )
+          expect(result).to eq(true)
+          post.reload
+          expect(post).not_to be_locked
+        end
+
+        it "doesn't lock the post when revised by system user" do
+          result = subject.revise!(
+            Discourse.system_user,
+            raw: "I usually replace hotlinked images"
           )
           expect(result).to eq(true)
           post.reload

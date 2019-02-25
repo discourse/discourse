@@ -24,5 +24,17 @@ describe StylesheetCache do
       expect(StylesheetCache.first.content).to eq "c"
     end
 
+    it "it retains stylesheets for competing targets" do
+      StylesheetCache.destroy_all
+
+      StylesheetCache.add("desktop", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
+      StylesheetCache.add("desktop", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
+      StylesheetCache.add("mobile", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
+      StylesheetCache.add("mobile", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
+      StylesheetCache.add("mobile", SecureRandom.hex, "body { }", "map", max_to_keep: 2)
+
+      expect(StylesheetCache.order(:id).pluck(:target)).to eq(["desktop", "desktop", "mobile", "mobile"])
+    end
+
   end
 end

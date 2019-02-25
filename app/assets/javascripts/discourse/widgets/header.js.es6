@@ -162,7 +162,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
-  tagName: "ul.icons.d-header-icons.clearfix",
+  tagName: "ul.icons.d-header-icons",
 
   buildAttributes() {
     return { role: "navigation" };
@@ -253,6 +253,15 @@ createWidget("header-buttons", {
   }
 });
 
+createWidget("header-cloak", {
+  tagName: "div.header-cloak",
+  html() {
+    return "";
+  },
+  click() {},
+  scheduleRerender() {}
+});
+
 const forceContextEnabled = ["category", "user", "private_messages"];
 
 let additionalPanels = [];
@@ -315,6 +324,9 @@ export default createWidget("header", {
       } else if (state.userVisible) {
         panels.push(this.attach("user-menu"));
       }
+      if (this.site.mobileView) {
+        panels.push(this.attach("header-cloak"));
+      }
 
       additionalPanels.map(panel => {
         if (this.state[panel.toggle]) {
@@ -348,6 +360,7 @@ export default createWidget("header", {
     this.state.userVisible = false;
     this.state.hamburgerVisible = false;
     this.state.searchVisible = false;
+    this.toggleBodyScrolling(false);
   },
 
   linkClickedEvent(attrs) {
@@ -416,10 +429,36 @@ export default createWidget("header", {
     }
 
     this.state.userVisible = !this.state.userVisible;
+    this.toggleBodyScrolling(this.state.userVisible);
   },
 
   toggleHamburger() {
     this.state.hamburgerVisible = !this.state.hamburgerVisible;
+    this.toggleBodyScrolling(this.state.hamburgerVisible);
+  },
+
+  toggleBodyScrolling(bool) {
+    if (!this.site.mobileView) return;
+    if (bool) {
+      document.body.addEventListener("touchmove", this.preventDefault, {
+        passive: false
+      });
+    } else {
+      document.body.removeEventListener("touchmove", this.preventDefault, {
+        passive: false
+      });
+    }
+  },
+
+  preventDefault(e) {
+    // prevent all scrollin on menu panels, except on overflow
+    const height = window.innerHeight ? window.innerHeight : $(window).height();
+    if (
+      !$(e.target).parents(".menu-panel").length ||
+      $(".menu-panel .panel-body-contents").height() <= height
+    ) {
+      e.preventDefault();
+    }
   },
 
   togglePageSearch() {

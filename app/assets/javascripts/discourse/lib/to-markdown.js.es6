@@ -8,6 +8,9 @@ const msoListClasses = [
   "MsoListParagraphCxSpMiddle",
   "MsoListParagraphCxSpLast"
 ];
+const hasChild = (e, n) => {
+  return (e.children || []).some(c => c.name === n);
+};
 
 export class Tag {
   constructor(name, prefix = "", suffix = "", inline = false) {
@@ -194,14 +197,19 @@ export class Tag {
       }
 
       decorate(text) {
-        const attr = this.element.attributes;
+        const e = this.element;
+        const attr = e.attributes;
 
         if (/^mention/.test(attr.class) && "@" === text[0]) {
           return text;
-        }
-
-        if ("hashtag" === attr.class && "#" === text[0]) {
+        } else if ("hashtag" === attr.class && "#" === text[0]) {
           return text;
+        } else if (
+          ["lightbox", "d-lazyload"].includes(attr.class) &&
+          hasChild(e, "img")
+        ) {
+          text = attr.title || "";
+          return "![" + text + "](" + attr.href + ")";
         }
 
         if (attr.href && text !== attr.href) {
@@ -227,7 +235,7 @@ export class Tag {
         const src = attr.src || pAttr.src;
         const cssClass = attr.class || pAttr.class;
 
-        if (cssClass === "emoji") {
+        if (cssClass && cssClass.includes("emoji")) {
           return attr.title || pAttr.title;
         }
 

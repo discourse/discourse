@@ -121,6 +121,27 @@ describe PostSerializer do
       end
     end
 
+    context "a hidden revised post" do
+      let(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
+
+      before do
+        SiteSetting.editing_grace_period_max_diff = 1
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(post.user, raw: 'Hello, everyone!')
+      end
+
+      it "will not leak version to users" do
+        json = PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
+        expect(json[:version]).to eq(1)
+      end
+
+      it "will show real version to staff" do
+        json = PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+        expect(json[:version]).to eq(2)
+      end
+    end
+
     context "a public wiki post" do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, wiki: true) }
 

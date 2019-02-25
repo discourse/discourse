@@ -75,4 +75,30 @@ describe DiscourseHub do
       end
     end
   end
+
+  describe '.collection_action' do
+    before do
+      @orig_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after do
+      Rails.logger = @orig_logger
+    end
+
+    it 'should log correctly on error' do
+      stub_request(:get, (ENV['HUB_BASE_URL'] || "http://local.hub:3000/api") + '/test').
+        to_return(status: 500, body: "", headers: {})
+
+      DiscourseHub.collection_action(:get, '/test')
+
+      expect(Rails.logger.warnings).to eq([
+        DiscourseHub.response_status_log_message('/test', 500),
+      ])
+
+      expect(Rails.logger.errors).to eq([
+        DiscourseHub.response_body_log_message("")
+      ])
+    end
+  end
 end

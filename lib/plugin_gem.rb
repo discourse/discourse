@@ -6,7 +6,7 @@ module PluginGem
     spec_path = gems_path + "/specifications"
     spec_file = spec_path + "/#{name}-#{version}.gemspec"
     unless File.exists? spec_file
-      command = "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies"
+      command = "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies --no-user-install"
       if opts[:source]
         command << " --source #{opts[:source]}"
       end

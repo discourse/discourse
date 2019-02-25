@@ -1,3 +1,5 @@
+import { LIKED_CONSOLIDATED_TYPE } from "discourse/widgets/notification-item";
+
 export default {
   "site.json": {
     site: {
@@ -16,7 +18,8 @@ export default {
         posted: 9,
         moved_post: 10,
         linked: 11,
-        granted_badge: 12
+        granted_badge: 12,
+        liked_consolidated: LIKED_CONSOLIDATED_TYPE
       },
       post_types: {
         regular: 1,
@@ -51,7 +54,7 @@ export default {
         "posted",
         "search"
       ],
-      periods: ["yearly", "quarterly", "monthly", "weekly", "daily"],
+      periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
         "latest",
         "unread",
@@ -88,7 +91,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
@@ -107,7 +109,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
@@ -127,7 +128,6 @@ export default {
           permission: 1,
           parent_category_id: 2,
           notification_level: null,
-          logo_url: null,
           background_url: null
         },
         {
@@ -144,7 +144,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null,
           show_subcategory_list: true,
           default_view: "latest",
@@ -164,7 +163,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
@@ -182,7 +180,6 @@ export default {
           read_restricted: true,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null
         },
         {
@@ -200,7 +197,6 @@ export default {
           permission: 1,
           parent_category_id: 7,
           notification_level: null,
-          logo_url: null,
           background_url: null
         },
         {
@@ -218,7 +214,6 @@ export default {
           permission: 1,
           parent_category_id: 7,
           notification_level: null,
-          logo_url: null,
           background_url: null
         },
         {
@@ -235,7 +230,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
@@ -254,7 +248,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
           background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
@@ -273,8 +266,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -292,8 +283,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -311,8 +300,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -330,8 +317,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -349,9 +334,7 @@ export default {
           read_restricted: false,
           permission: 1,
           parent_category_id: 5,
-          notification_level: null,
-          logo_url: null,
-          background_url: null
+          notification_level: null
         },
         {
           id: 1,
@@ -367,8 +350,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           can_edit: true,
           show_subcategory_list: false,
           default_view: "latest"
@@ -387,8 +368,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: "",
-          background_url: "",
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -406,9 +385,7 @@ export default {
           read_restricted: false,
           permission: 1,
           parent_category_id: 6,
-          notification_level: null,
-          logo_url: null,
-          background_url: null
+          notification_level: null
         },
         {
           id: 8,
@@ -424,8 +401,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -443,8 +418,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: false,
           default_view: "latest"
         },
@@ -462,8 +435,6 @@ export default {
           read_restricted: false,
           permission: 1,
           notification_level: null,
-          logo_url: null,
-          background_url: null,
           show_subcategory_list: true,
           default_view: "latest",
           subcategory_list_style: "boxes"

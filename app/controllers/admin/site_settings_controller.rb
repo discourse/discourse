@@ -13,6 +13,11 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = params[id]
     value.strip! if value.is_a?(String)
     raise_access_hidden_setting(id)
+
+    if SiteSetting.type_supervisor.get_type(id) == :upload
+      value = Upload.get_from_url(value) || ''
+    end
+
     SiteSetting.set_and_log(id, value, current_user)
     render body: nil
   end

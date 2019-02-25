@@ -1,11 +1,16 @@
+require_dependency 'browser_detection'
+require_dependency 'discourse_ip_info'
+
 module UserAuthTokensMixin
   extend ActiveSupport::Concern
 
   included do
     attributes :id,
                :client_ip,
+               :location,
+               :browser,
+               :device,
                :os,
-               :device_name,
                :icon,
                :created_at
   end
@@ -14,55 +19,35 @@ module UserAuthTokensMixin
     object.client_ip.to_s
   end
 
-  def os
-    case object.user_agent
-    when /Android/i
-      'Android'
-    when /iPhone|iPad|iPod/i
-      'iOS'
-    when /Macintosh/i
-      'macOS'
-    when /Linux/i
-      'Linux'
-    when /Windows/i
-      'Windows'
-    else
-      I18n.t('staff_action_logs.unknown')
-    end
+  def location
+    ipinfo = DiscourseIpInfo.get(client_ip, locale: I18n.locale)
+    ipinfo[:location].presence || I18n.t('staff_action_logs.unknown')
   end
 
-  def device_name
-    case object.user_agent
-    when /Android/i
-      I18n.t('user_auth_tokens.devices.android')
-    when /iPad/i
-      I18n.t('user_auth_tokens.devices.ipad')
-    when /iPhone/i
-      I18n.t('user_auth_tokens.devices.iphone')
-    when /iPod/i
-      I18n.t('user_auth_tokens.devices.ipod')
-    when /Mobile/i
-      I18n.t('user_auth_tokens.devices.mobile')
-    when /Macintosh/i
-      I18n.t('user_auth_tokens.devices.mac')
-    when /Linux/i
-      I18n.t('user_auth_tokens.devices.linux')
-    when /Windows/i
-      I18n.t('user_auth_tokens.devices.windows')
-    else
-      I18n.t('user_auth_tokens.devices.unknown')
-    end
+  def browser
+    val = BrowserDetection.browser(object.user_agent)
+    I18n.t("user_auth_tokens.browser.#{val}")
+  end
+
+  def device
+    val = BrowserDetection.device(object.user_agent)
+    I18n.t("user_auth_tokens.device.#{val}")
+  end
+
+  def os
+    val = BrowserDetection.os(object.user_agent)
+    I18n.t("user_auth_tokens.os.#{val}")
   end
 
   def icon
-    case os
-    when 'Android'
+    case BrowserDetection.os(object.user_agent)
+    when :android
       'android'
-    when 'macOS', 'iOS'
+    when :macos, :ios
       'apple'
-    when 'Linux'
+    when :linux
       'linux'
-    when 'Windows'
+    when :windows
       'windows'
     else
       'question'

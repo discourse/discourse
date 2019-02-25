@@ -22,6 +22,11 @@
   td {
     padding-right: 5px;
   }
+  #credentials {
+    tr:first-of-type {
+      margin-bottom: 0.75em;
+    }
+  }
 }
 
 #new-account-link {
@@ -71,33 +76,38 @@ $input-width: 220px;
     margin-top: 0.5em;
   }
 
-  .user-field.confirm {
-    margin-top: 20px;
-  }
-
   .user-field {
     > label {
       width: $label-width;
       float: left;
-    }
-    input[type="text"] {
-      width: $input-width;
+      margin-top: 0.75em;
       margin-bottom: 0;
+      padding-top: 5px;
     }
+    &:first-of-type > label {
+      margin-top: 0;
+    }
+
+    input[type="text"] {
+      margin-bottom: 0;
+      width: 100%;
+    }
+
+    .select-kit {
+      width: 100%;
+    }
+
     .controls {
+      padding-top: 5px;
       margin-left: $label-width;
-      margin-bottom: 15px;
       label {
         width: auto;
         text-align: left;
         font-weight: normal;
-        float: auto;
       }
       .instructions {
+        margin-top: 0.15em;
         color: dark-light-choose($primary-medium, $secondary-medium);
-        margin: 0;
-        font-size: $font-down-1;
-        font-weight: normal;
         line-height: $line-height-medium;
       }
     }

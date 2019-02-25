@@ -4,6 +4,13 @@ img.emoji {
   vertical-align: middle;
 }
 
+small img.emoji,
+sub img.emoji,
+sup img.emoji {
+  height: 1.1em;
+  width: 1.1em;
+}
+
 .emoji-picker {
   background-clip: padding-box;
   z-index: z("modal", "content");
@@ -11,18 +18,18 @@ img.emoji {
   display: none;
   flex-direction: row;
   height: 300px;
-  color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
+  color: $primary;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border: 1px solid $primary-low;
 }
 
 .emoji-picker .categories-column {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 0 0px;
   align-items: center;
   justify-content: space-between;
-  border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-right: 1px solid $primary-low;
   min-width: 36px;
 }
 
@@ -54,7 +61,7 @@ img.emoji {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   padding: 0;
-  flex: 1;
+  flex: 1 0 0px;
   flex-direction: column;
 }
 
@@ -95,7 +102,7 @@ img.emoji {
   align-items: center;
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-top: 1px solid $primary-low;
 }
 
 .emoji-picker .info {
@@ -143,18 +150,18 @@ img.emoji {
   background: #7c533e;
 }
 
-.emoji-picker .diversity-picker .diversity-scale.selected i {
+.emoji-picker .diversity-picker .diversity-scale.selected .d-icon {
   display: block;
 }
 
-.emoji-picker .diversity-picker i {
+.emoji-picker .diversity-picker .d-icon {
   display: none;
 }
 
 .emoji-picker .diversity-picker .d-icon {
   color: #fff;
   font-size: $font-0;
-  text-shadow: 0.5px 1.5px 0 rgba(0, 0, 0, 0.3);
+  filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
 }
 
 .emoji-picker button.emoji {
@@ -182,10 +189,6 @@ img.emoji {
   background-color: lighten($tertiary, 40%);
 }
 
-.wmd-emoji-button:before {
-  content: "\f118";
-}
-
 .emoji-picker-modal.fadeIn {
   z-index: z("modal", "overlay");
   position: fixed;
@@ -199,7 +202,7 @@ img.emoji {
 
 .emoji-picker .filter {
   background-color: none;
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  border-bottom: 1px solid $primary-low;
   padding: 5px;
   display: flex;
   position: relative;
@@ -220,7 +223,7 @@ img.emoji {
 .emoji-picker .filter input {
   height: 24px;
   margin: 0;
-  flex: 1;
+  flex: 1 0 0px;
   border: none;
   box-shadow: none;
   padding-right: 24px;
@@ -244,7 +247,7 @@ img.emoji {
   align-items: center;
   justify-content: flex-start;
   padding: 4px;
-  flex: 1;
+  flex: 1 0 0px;
 }
 
 .emoji-picker .filter .clear-filter {

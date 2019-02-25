@@ -58,7 +58,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   keyUp() {
-    this.sendAction("typed");
+    this.typed();
 
     const lastKeyUp = new Date();
     this._lastKeyUp = lastKeyUp;
@@ -85,7 +85,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     const $replyControl = $("#reply-control");
     const resize = () => Ember.run(() => this.resize());
 
@@ -112,11 +112,11 @@ export default Ember.Component.extend(KeyEnterEscape, {
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents.off("composer:resize", this, this.resize);
   },
 
   click() {
-    this.sendAction("openIfDraft");
+    this.openIfDraft();
   }
 });

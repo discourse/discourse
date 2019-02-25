@@ -4,7 +4,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 export default Ember.Controller.extend(ModalFunctionality, {
   modelChanged: function() {
     const model = this.get("model");
-    const copy = Em.A();
+    const copy = Ember.A();
     const store = this.store;
 
     if (model) {

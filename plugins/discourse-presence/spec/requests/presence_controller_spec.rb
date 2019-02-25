@@ -37,6 +37,12 @@ describe ::Presence::PresencesController do
       expect { post '/presence/publish.json' }.not_to raise_error
     end
 
+    it "does not publish for users with disabled presence features" do
+      user1.user_option.update_column(:hide_profile_and_presence, true)
+      post '/presence/publish.json'
+      expect(response.code).to eq("404")
+    end
+
     it "uses guardian to secure endpoint" do
       private_post = Fabricate(:private_message_post)
 

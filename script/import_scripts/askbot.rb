@@ -114,15 +114,15 @@ class ImportScripts::MyAskBot < ImportScripts::Base
 
       create_users(users, total: total_count, offset: offset) do |user|
         {
-          id:           user["id"],
-          username:     user["username"],
-          email:        user["email"] || (SecureRandom.hex << "@domain.com"),
-          admin:        user["is_staff"],
-          created_at:   Time.zone.at(@td.decode(user["date_joined"])),
+          id: user["id"],
+          username: user["username"],
+          email: user["email"] || (SecureRandom.hex << "@domain.com"),
+          admin: user["is_staff"],
+          created_at: Time.zone.at(@td.decode(user["date_joined"])),
           last_seen_at: Time.zone.at(@td.decode(user["last_seen"])),
-          name:         user["real_name"],
-          website:      user["website"],
-          location:     user["location"],
+          name: user["real_name"],
+          website: user["website"],
+          location: user["location"],
         }
       end
     end

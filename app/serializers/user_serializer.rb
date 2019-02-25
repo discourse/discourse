@@ -197,8 +197,9 @@ class UserSerializer < BasicUserSerializer
 
   def user_auth_tokens
     ActiveModel::ArraySerializer.new(
-      object.user_auth_tokens.order(:seen_at).reverse_order,
-      each_serializer: UserAuthTokenSerializer
+      object.user_auth_tokens,
+      each_serializer: UserAuthTokenSerializer,
+      scope: scope
     )
   end
 
@@ -419,7 +420,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def user_fields
-    object.user_fields
+    allowed_keys = scope.allowed_user_field_ids(object).map(&:to_s)
+    object.user_fields&.select { |k, v| allowed_keys.include?(k) }
   end
 
   def include_user_fields?

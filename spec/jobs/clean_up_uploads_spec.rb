@@ -44,9 +44,67 @@ describe Jobs::CleanUpUploads do
     end
   end
 
-  it "does not clean up uploads in site settings" do
+  it 'does not clean up upload site settings' do
+    begin
+      original_provider = SiteSetting.provider
+      SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+      SiteSetting.clean_orphan_uploads_grace_period_hours = 1
+
+      logo_upload = fabricate_upload
+      logo_small_upload = fabricate_upload
+      digest_logo_upload = fabricate_upload
+      mobile_logo_upload = fabricate_upload
+      large_icon_upload = fabricate_upload
+      opengraph_image_upload = fabricate_upload
+      twitter_summary_large_image_upload = fabricate_upload
+      favicon_upload = fabricate_upload
+      apple_touch_icon_upload = fabricate_upload
+
+      SiteSetting.logo = logo_upload
+      SiteSetting.logo_small = logo_small_upload
+      SiteSetting.digest_logo = digest_logo_upload
+      SiteSetting.mobile_logo = mobile_logo_upload
+      SiteSetting.large_icon = large_icon_upload
+      SiteSetting.opengraph_image = opengraph_image_upload
+
+      SiteSetting.twitter_summary_large_image =
+        twitter_summary_large_image_upload
+
+      SiteSetting.favicon = favicon_upload
+      SiteSetting.apple_touch_icon = apple_touch_icon_upload
+
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      [
+        logo_upload,
+        logo_small_upload,
+        digest_logo_upload,
+        mobile_logo_upload,
+        large_icon_upload,
+        opengraph_image_upload,
+        twitter_summary_large_image_upload,
+        favicon_upload,
+        apple_touch_icon_upload
+      ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
+
+      fabricate_upload
+      SiteSetting.opengraph_image = ''
+
+      Jobs::CleanUpUploads.new.execute(nil)
+    ensure
+      SiteSetting.delete_all
+      SiteSetting.provider = original_provider
+    end
+  end
+
+  it "does not clean up uploads with URLs used in site settings" do
     logo_upload = fabricate_upload
     logo_small_upload = fabricate_upload
+    digest_logo_upload = fabricate_upload
+    mobile_logo_upload = fabricate_upload
+    large_icon_upload = fabricate_upload
+    default_opengraph_image_upload = fabricate_upload
+    twitter_summary_large_image_upload = fabricate_upload
     favicon_upload = fabricate_upload
     apple_touch_icon_upload = fabricate_upload
     avatar1_upload = fabricate_upload
@@ -54,6 +112,14 @@ describe Jobs::CleanUpUploads do
 
     SiteSetting.logo_url = logo_upload.url
     SiteSetting.logo_small_url = logo_small_upload.url
+    SiteSetting.digest_logo_url = digest_logo_upload.url
+    SiteSetting.mobile_logo_url = mobile_logo_upload.url
+    SiteSetting.large_icon_url = large_icon_upload.url
+    SiteSetting.default_opengraph_image_url = default_opengraph_image_upload.url
+
+    SiteSetting.twitter_summary_large_image_url =
+      twitter_summary_large_image_upload.url
+
     SiteSetting.favicon_url = favicon_upload.url
     SiteSetting.apple_touch_icon_url = apple_touch_icon_upload.url
     SiteSetting.selectable_avatars = [avatar1_upload.url, avatar2_upload.url].join("\n")
@@ -63,6 +129,11 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: @upload.id)).to eq(false)
     expect(Upload.exists?(id: logo_upload.id)).to eq(true)
     expect(Upload.exists?(id: logo_small_upload.id)).to eq(true)
+    expect(Upload.exists?(id: digest_logo_upload.id)).to eq(true)
+    expect(Upload.exists?(id: mobile_logo_upload.id)).to eq(true)
+    expect(Upload.exists?(id: large_icon_upload.id)).to eq(true)
+    expect(Upload.exists?(id: default_opengraph_image_upload.id)).to eq(true)
+    expect(Upload.exists?(id: twitter_summary_large_image_upload.id)).to eq(true)
     expect(Upload.exists?(id: favicon_upload.id)).to eq(true)
     expect(Upload.exists?(id: apple_touch_icon_upload.id)).to eq(true)
     expect(Upload.exists?(id: avatar1_upload.id)).to eq(true)

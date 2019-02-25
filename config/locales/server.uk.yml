@@ -35,7 +35,7 @@ uk:
         other: надто довге (максимум %{count} символів)
       other_than: "має бути іншим ніж %{count}"
     template:
-      body: 'Проблеми на цих полях:'
+      body: "Проблеми на цих полях:"
     embed:
       load_from_remote: "Під час завантаження допису виникла проблема."
   activemodel:
@@ -60,11 +60,6 @@ uk:
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
-    replies:
-      one: "1 відповідь"
-      few: "%{count} відповідей"
-      many: "%{count} відповідей"
-      other: "%{count} відповідей"
   no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
   too_many_images:
     one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
@@ -121,7 +116,7 @@ uk:
       category:
         name: "Назва категорії"
       topic:
-        title: 'Назва'
+        title: "Назва"
       post:
         raw: "Тіло"
       user_profile:
@@ -137,8 +132,6 @@ uk:
           attributes:
             payload_url:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
-  user_profile:
-    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   staff_category_name: "Персонал"
   staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
@@ -180,9 +173,9 @@ uk:
         many: "%{count} секунд тому"
         other: "%{count} секунд тому"
   password_reset:
-    update: 'Оновити пароль'
-    save: 'Встановити пароль'
-    title: 'Скинути пароль'
+    update: "Оновити пароль"
+    save: "Встановити пароль"
+    title: "Скинути пароль"
     success: "Ви успішно змінили свій пароль і зараз Ви в системі."
     success_unapproved: "Ви успішно змінили свій пароль."
   change_email:
@@ -194,34 +187,34 @@ uk:
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
     off_topic:
-      title: 'Недотичне до теми'
-      long_form: 'flagged this as off-topic'
+      title: "Недотичне до теми"
+      long_form: "flagged this as off-topic"
     spam:
-      title: 'Спам'
-      long_form: 'flagged this as spam'
+      title: "Спам"
+      long_form: "flagged this as spam"
     inappropriate:
-      title: 'Неприпустиме'
-      long_form: 'flagged this as inappropriate'
+      title: "Неприпустиме"
+      long_form: "flagged this as inappropriate"
     notify_user:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Лишити закладку'
-      description: 'Bookmark this post'
-      long_form: 'bookmarked this post'
+      title: "Лишити закладку"
+      description: "Bookmark this post"
+      long_form: "bookmarked this post"
     like:
-      title: 'Вподобати'
-      description: 'Like this post'
-      long_form: 'liked this'
+      title: "Вподобати"
+      description: "Like this post"
+      long_form: "liked this"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.'
-      long_form: 'flagged this as spam'
+      title: "Spam"
+      description: "This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature."
+      long_form: "flagged this as spam"
     inappropriate:
-      title: 'Inappropriate'
-      long_form: 'flagged this as inappropriate'
+      title: "Inappropriate"
+      long_form: "flagged this as inappropriate"
     notify_moderators:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
@@ -255,10 +248,6 @@ uk:
       title: "Закладки"
       xaxis: "День"
       yaxis: "Кількість нових закладок"
-    starred:
-      title: "Зірочки"
-      xaxis: "День"
-      yaxis: "Кількість нових тем, позначених зірочкою"
     users_by_trust_level:
       title: "Користувачі за Рівнем довіри"
       xaxis: "Рівень довіри"
@@ -297,36 +286,21 @@ uk:
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">See this guide to learn more</a>.'
-    twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
-    github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
-    image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
+    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
-    apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
-    ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
     min_password_length: "Мінімальна довжина пароля."
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
-    enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
-    enable_facebook_logins: "Увімкнути вхід через Facebook; потребує facebook_app_id та facebook_app_secret"
-    facebook_app_id: "App id для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
-    facebook_app_secret: "App secret для входу через Facebook, зареєстрований на https://developers.facebook.com/apps"
-    enable_github_logins: "Увімкнути вхід через Github; потребує github_client_id та github_client_secret"
-    github_client_id: "Client id для входу через Github, зареєстрований на https://github.com/settings/applications"
-    github_client_secret: "Client secret для входу через Github, зареєстрований на https://github.com/settings/applications"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -335,12 +309,11 @@ uk:
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "Мінімальний рівень довіри, необхідний для створення нової теми."
     newuser_max_attachments: "Скільки прикріплень новий користувач може додати до допису."
-    title_fancy_entities: "Перетворювати звичайні ASCII-символи на примхливі HTML-сутності у назвах тем, на кшталт SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Запобігати типовим опискам та помилкам, таким як: всі літери - великі, перша літера - мала, багаторазові ! та ?, надлишкові . в кінці, тощо."
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "Шаблон адреси електронної скриньки у формі для відповідей через електронну пошту, наприклад: %%{reply_key}@reply.myforum.com"
     email_in_min_trust: "Мінімальний рівень довіри, який потрібен користувачу для дозволу створювати нові теми через email. "
     delete_all_posts_max: "Максимальне число дописів, які можна видалити за один раз кнопкою \"Видалити всі дописи\". Якщо користувач має більше дописів, ніж це число, їх не можна буде видалити за один раз, і користувача також."
     email_editable: "Дозволити користувачам змінювати свою електронну скриньку після реєстрації."
@@ -359,20 +332,15 @@ uk:
       invalid_string_max: "Має бути не більше ніж %{max} символів."
   search:
     types:
-      category: 'Categories'
-      topic: 'Результати'
-      user: 'Users'
+      category: "Categories"
+      topic: "Результати"
+      user: "Users"
   original_poster: "Перший дописувач"
   most_posts: "Найбільше дописів"
   most_recent_poster: "Автор останнього допису"
   frequent_poster: "Частий дописувач"
   topic_statuses:
-    archived_enabled: "Цю тему тепер заархівовано. Вона заморожена і її жодним чином не можна змінити."
-    archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
-    closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
-    closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
-    pinned_disabled: "Тепер цю тему відкріплено. Вона більше не з'являтиметься вгорі своєї категорії."
   login:
     not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
     incorrect_username_email_or_password: "Неправильне ім'я користувача, електронна скринька або пароль"
@@ -425,8 +393,7 @@ uk:
     search_title: "Пошук на цьому сайті"
   terms_of_service:
     title: "Умови Використання"
-    signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
-  deleted: 'deleted'
+  deleted: "deleted"
   upload:
     edit_reason: "завантажені локальні копії забражень"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."

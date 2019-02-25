@@ -86,6 +86,11 @@ signups_fixture.type = "signups_timeout";
 signups_fixture.error = "timeout";
 const signups_timeout = signups_fixture;
 
+signups_fixture = JSON.parse(JSON.stringify(signups));
+signups_fixture.type = "not_found";
+signups_fixture.error = "not_found";
+const signups_not_found = signups_fixture;
+
 const startDate = moment()
   .locale("en")
   .utc()
@@ -96,6 +101,8 @@ const endDate = moment()
   .locale("en")
   .utc()
   .endOf("day");
+
+const daysInQueryPeriod = endDate.diff(startDate, "days", false) + 1;
 
 const data = [
   851,
@@ -130,7 +137,7 @@ const data = [
   4048,
   2523,
   1062
-];
+].slice(-daysInQueryPeriod);
 
 const page_view_total_reqs = {
   type: "page_view_total_reqs",
@@ -175,6 +182,12 @@ const page_view_total_reqs = {
 
 export default {
   "/admin/reports/bulk": {
-    reports: [signups, signups_exception, signups_timeout, page_view_total_reqs]
+    reports: [
+      signups,
+      signups_not_found,
+      signups_exception,
+      signups_timeout,
+      page_view_total_reqs
+    ]
   }
 };

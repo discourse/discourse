@@ -2,13 +2,14 @@ import debounce from "discourse/lib/debounce";
 import { renderSpinner } from "discourse/helpers/loading-spinner";
 import { escapeExpression } from "discourse/lib/utilities";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
+import { observes, on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend(
   bufferedRender({
     classNames: ["admin-backups-logs"],
 
     init() {
-      this._super();
+      this._super(...arguments);
       this._reset();
     },
 
@@ -21,30 +22,38 @@ export default Ember.Component.extend(
       $div.scrollTop = $div.scrollHeight;
     },
 
-    _updateFormattedLogs: debounce(function() {
-      const logs = this.get("logs");
-      if (logs.length === 0) {
+    @on("init")
+    @observes("logs.[]")
+    _resetFormattedLogs() {
+      if (this.get("logs").length === 0) {
         this._reset(); // reset the cached logs whenever the model is reset
-      } else {
-        // do the log formatting only once for HELLish performance
-        let formattedLogs = this.get("formattedLogs");
-        for (let i = this.get("index"), length = logs.length; i < length; i++) {
-          const date = logs[i].get("timestamp"),
-            message = escapeExpression(logs[i].get("message"));
-          formattedLogs += "[" + date + "] " + message + "\n";
-        }
-        // update the formatted logs & cache index
-        this.setProperties({
-          formattedLogs: formattedLogs,
-          index: logs.length
-        });
-        // force rerender
         this.rerenderBuffer();
       }
+    },
+
+    @on("init")
+    @observes("logs.[]")
+    _updateFormattedLogs: debounce(function() {
+      const logs = this.get("logs");
+      if (logs.length === 0) return;
+
+      // do the log formatting only once for HELLish performance
+      let formattedLogs = this.get("formattedLogs");
+      for (let i = this.get("index"), length = logs.length; i < length; i++) {
+        const date = logs[i].get("timestamp"),
+          message = escapeExpression(logs[i].get("message"));
+        formattedLogs += "[" + date + "] " + message + "\n";
+      }
+      // update the formatted logs & cache index
+      this.setProperties({
+        formattedLogs: formattedLogs,
+        index: logs.length
+      });
+      // force rerender
+      this.rerenderBuffer();
+
       Ember.run.scheduleOnce("afterRender", this, this._scrollDown);
-    }, 150)
-      .observes("logs.[]")
-      .on("init"),
+    }, 150),
 
     buildBuffer(buffer) {
       const formattedLogs = this.get("formattedLogs");

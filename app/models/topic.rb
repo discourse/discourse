@@ -731,7 +731,6 @@ class Topic < ActiveRecord::Base
                               post_type: opts[:post_type] || Post.types[:moderator_action],
                               action_code: opts[:action_code],
                               no_bump: opts[:bump].blank?,
-                              skip_notifications: opts[:skip_notifications],
                               topic_id: self.id,
                               skip_validations: true,
                               custom_fields: opts[:custom_fields])
@@ -840,60 +839,27 @@ class Topic < ActiveRecord::Base
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
     target_user = User.find_by_username_or_email(username_or_email)
     guardian = Guardian.new(invited_by)
+    is_email = username_or_email =~ /^.+@.+$/
 
-    if target_user && topic_allowed_users.where(user_id: target_user.id).exists?
-      raise UserExists.new(I18n.t("topic_invite.user_exists"))
-    end
-
-    return true if target_user && invite_existing_muted?(target_user, invited_by)
-
-    if private_message? && target_user && !guardian.can_send_private_message?(target_user)
-      raise UserExists.new(I18n.t("activerecord.errors.models.topic.attributes.base.cant_send_pm"))
-    end
-
-    if target_user && private_message? && topic_allowed_users.create!(user_id: target_user.id)
-      rate_limit_topic_invitation(invited_by)
-      add_small_action(invited_by, "invited_user", target_user.username)
-
-      create_invite_notification!(
-        target_user,
-        Notification.types[:invited_to_private_message],
-        invited_by.username
-      )
-
-      true
-    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
-
-      if target_user
-        rate_limit_topic_invitation(invited_by)
-        Invite.extend_permissions(self, target_user, invited_by)
-
-        create_invite_notification!(
-          target_user,
-          Notification.types[:invited_to_topic],
-          invited_by.username
-        )
-      else
-        invite_by_email(invited_by, username_or_email, group_ids, custom_message)
+    if target_user
+      if topic_allowed_users.exists?(user_id: target_user.id)
+        raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      true
-    elsif target_user &&
-          rate_limit_topic_invitation(invited_by) &&
-          topic_allowed_users.create!(user_id: target_user.id)
+      if invite_existing_muted?(target_user, invited_by)
+        return true
+      end
 
-      create_invite_notification!(
-        target_user,
-        Notification.types[:invited_to_topic],
-        invited_by.username
+      if private_message?
+        !!invite_to_private_message(invited_by, target_user, guardian)
+      else
+        !!invite_to_topic(invited_by, target_user, group_ids, guardian)
+      end
+    elsif is_email && guardian.can_invite_via_email?(self)
+      !!Invite.invite_by_email(
+        username_or_email, invited_by, self, group_ids, custom_message
       )
-
-      true
     end
-  end
-
-  def invite_by_email(invited_by, email, group_ids = nil, custom_message = nil)
-    Invite.invite_by_email(email, invited_by, self, group_ids, custom_message)
   end
 
   def invite_existing_muted?(target_user, invited_by)
@@ -930,10 +896,10 @@ class Topic < ActiveRecord::Base
   end
 
   def move_posts(moved_by, post_ids, opts)
-    post_mover = PostMover.new(self, moved_by, post_ids)
+    post_mover = PostMover.new(self, moved_by, post_ids, move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message")
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id])
+      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
 
       DiscourseEvent.trigger(:topic_merged,
         post_mover.original_topic,
@@ -1390,13 +1356,62 @@ class Topic < ActiveRecord::Base
     post = ordered_posts.where(
       user_deleted: false,
       hidden: false,
-      post_type: Topic.visible_post_types
-    ).last
+      post_type: Post.types[:regular]
+    ).last || first_post
 
     update!(bumped_at: post.created_at)
   end
 
   private
+
+  def invite_to_private_message(invited_by, target_user, guardian)
+    if !guardian.can_send_private_message?(target_user)
+      raise UserExists.new(I18n.t(
+        "activerecord.errors.models.topic.attributes.base.cant_send_pm"
+      ))
+    end
+
+    Topic.transaction do
+      rate_limit_topic_invitation(invited_by)
+      topic_allowed_users.create!(user_id: target_user.id)
+      add_small_action(invited_by, "invited_user", target_user.username)
+
+      create_invite_notification!(
+        target_user,
+        Notification.types[:invited_to_private_message],
+        invited_by.username
+      )
+    end
+  end
+
+  def invite_to_topic(invited_by, target_user, group_ids, guardian)
+    Topic.transaction do
+      rate_limit_topic_invitation(invited_by)
+
+      if group_ids
+        (
+          self.category.groups.where(id: group_ids).where(automatic: false) -
+          target_user.groups.where(automatic: false)
+        ).each do |group|
+          if guardian.can_edit_group?(group)
+            group.add(target_user)
+
+            GroupActionLogger
+              .new(invited_by, group)
+              .log_add_user_to_group(target_user)
+          end
+        end
+      end
+
+      if Guardian.new(target_user).can_see_topic?(self)
+        create_invite_notification!(
+          target_user,
+          Notification.types[:invited_to_topic],
+          invited_by.username
+        )
+      end
+    end
+  end
 
   def update_category_topic_count_by(num)
     if category_id.present?

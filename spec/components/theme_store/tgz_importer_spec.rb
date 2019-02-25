@@ -23,7 +23,7 @@ describe ThemeStore::TgzImporter do
       FileUtils.mkdir('test/a')
       File.write("test/a/inner", "hello world inner")
 
-      `tar -cvzf test.tar.gz test/*`
+      `tar -cvzf test.tar.gz test/* 2> /dev/null`
     end
 
     importer = ThemeStore::TgzImporter.new("#{@temp_folder}/test.tar.gz")

@@ -360,6 +360,28 @@ describe UserDestroyer do
         }.to change { User.count }.by(-1)
       end
     end
+
+    context 'user has staff action logs' do
+      before do
+        logger = StaffActionLogger.new(user)
+        logger.log_site_setting_change(
+          'site_description',
+          'Our friendly community',
+          'My favourite community'
+        )
+      end
+
+      it "should keep the staff action log and add the username" do
+        username = user.username
+        log = UserHistory.staff_action_records(
+          Discourse.system_user,
+          acting_user: username
+        ).to_a[0]
+        UserDestroyer.new(admin).destroy(user, delete_posts: true)
+        log.reload
+        expect(log.details).to include(username)
+      end
+    end
   end
 
 end

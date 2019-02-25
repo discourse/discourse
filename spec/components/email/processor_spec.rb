@@ -103,14 +103,27 @@ describe Email::Processor do
     let(:mail2) { "From: #{from}\nTo: foo@foo.com\nSubject: BAR BAR\n\nBar bar bar bar?" }
 
     it "sends a rejection email on an unrecognized error" do
-      Email::Processor.any_instance.stubs(:can_send_rejection_email?).returns(true)
-      Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
-      Rails.logger.expects(:error)
+      begin
+        @orig_logger = Rails.logger
+        Rails.logger = @fake_logger = FakeLogger.new
 
-      Email::Processor.process!(mail)
-      expect(IncomingEmail.last.error).to             eq("boom")
-      expect(IncomingEmail.last.rejection_message).to be_present
-      expect(EmailLog.last.email_type).to             eq("email_reject_unrecognized_error")
+        Email::Processor.any_instance.stubs(:can_send_rejection_email?).returns(true)
+        Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
+
+        Email::Processor.process!(mail)
+
+        errors = Rails.logger.errors
+        expect(errors.size).to eq(1)
+        expect(errors.first).to include("boom")
+
+        incoming_email = IncomingEmail.last
+        expect(incoming_email.error).to eq("boom")
+        expect(incoming_email.rejection_message).to be_present
+
+        expect(EmailLog.last.email_type).to eq("email_reject_unrecognized_error")
+      ensure
+        Rails.logger = @orig_logger
+      end
     end
 
     it "sends more than one rejection email per day" do

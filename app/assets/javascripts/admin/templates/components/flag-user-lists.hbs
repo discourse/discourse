@@ -8,6 +8,7 @@
         <div class='flagger-flag-type'>
           {{post-action-title postAction.post_action_type_id postAction.name_key}}
         </div>
+        {{user-flag-percentage user=postAction.user}}
       {{/flag-user}}
     {{/each}}
   </div>

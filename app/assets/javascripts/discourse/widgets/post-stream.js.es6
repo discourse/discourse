@@ -4,7 +4,7 @@ import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 
 let transformCallbacks = null;
-function postTransformCallbacks(transformed) {
+export function postTransformCallbacks(transformed) {
   if (transformCallbacks === null) {
     return;
   }

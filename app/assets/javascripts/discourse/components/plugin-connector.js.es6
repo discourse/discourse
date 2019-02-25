@@ -2,7 +2,7 @@ import { observes } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   init() {
-    this._super();
+    this._super(...arguments);
 
     const connector = this.get("connector");
     this.set("layoutName", connector.templateName);
@@ -12,6 +12,8 @@ export default Ember.Component.extend({
 
     const connectorClass = this.get("connector.connectorClass");
     connectorClass.setupComponent.call(this, args, this);
+
+    this.set("actions", connectorClass.actions);
   },
 
   @observes("args")

@@ -1,11 +1,8 @@
 {{#d-modal-body class='change-ownership'}}
   {{{i18n 'topic.change_owner.instructions' count=selectedPostsCount old_user=selectedPostsUsername}}}
-  <p>
-      {{{i18n 'topic.change_owner.instructions_warn'}}}
-  </p>
 
   <form>
-    <label>{{i18n 'topic.change_owner.label'}}</label>
+    <label></label>
     {{user-selector single="true"
                     usernames=new_user
                     placeholderKey="topic.change_owner.placeholder"

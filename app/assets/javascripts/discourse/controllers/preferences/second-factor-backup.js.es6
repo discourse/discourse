@@ -58,7 +58,7 @@ export default Ember.Controller.extend({
 
       this.set("loading", true);
 
-      this.get("content")
+      this.get("model")
         .toggleSecondFactor(this.get("secondFactorToken"), false, 2)
         .then(response => {
           if (response.error) {
@@ -68,7 +68,7 @@ export default Ember.Controller.extend({
 
           this.set("errorMessage", null);
 
-          const usernameLower = this.get("content").username.toLowerCase();
+          const usernameLower = this.get("model").username.toLowerCase();
           DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
         })
         .catch(popupAjaxError)
@@ -78,7 +78,7 @@ export default Ember.Controller.extend({
     generateSecondFactorCodes() {
       if (!this.get("secondFactorToken")) return;
       this.set("loading", true);
-      this.get("content")
+      this.get("model")
         .generateSecondFactorCodes(this.get("secondFactorToken"))
         .then(response => {
           if (response.error) {

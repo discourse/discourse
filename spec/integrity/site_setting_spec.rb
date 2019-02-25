@@ -23,11 +23,13 @@ describe "site setting integrity checks" do
 
   it "no locale default has different type than default or invalid key" do
     yaml.each_value do |category|
-      category.each_value do |setting|
+      category.each do |setting_name, setting|
         next unless setting.is_a?(Hash)
         if setting['locale_default']
           setting['locale_default'].each_pair do |k, v|
-            expect(LocaleSiteSetting.valid_value?(k.to_s)).to be_truthy
+            expect(LocaleSiteSetting.valid_value?(k.to_s)).to be_truthy,
+              "'#{k}' is not a valid locale_default key for '#{setting_name}' site setting"
+
             case setting['default']
             when TrueClass, FalseClass
               expect(v.class == TrueClass || v.class == FalseClass).to be_truthy

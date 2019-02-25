@@ -3,8 +3,8 @@ require_dependency 'upload_creator'
 
 class UserAvatar < ActiveRecord::Base
   belongs_to :user
-  belongs_to :gravatar_upload, class_name: 'Upload', dependent: :destroy
-  belongs_to :custom_upload, class_name: 'Upload', dependent: :destroy
+  belongs_to :gravatar_upload, class_name: 'Upload'
+  belongs_to :custom_upload, class_name: 'Upload'
 
   def contains_upload?(id)
     gravatar_upload_id == id || custom_upload_id == id
@@ -13,12 +13,10 @@ class UserAvatar < ActiveRecord::Base
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user_id}") do
       begin
-        # special logic for our system user
-        email_hash = user_id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
-
-        self.last_gravatar_download_attempt = Time.new
+        self.update!(last_gravatar_download_attempt: Time.now)
 
         max = Discourse.avatar_sizes.max
+        email_hash = user_id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
         gravatar_url = "https://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
 
         # follow redirects in case gravatar change rules on us
@@ -42,26 +40,22 @@ class UserAvatar < ActiveRecord::Base
             type: "avatar"
           ).create_for(user_id)
 
-          upload_id = upload.id
-
-          if gravatar_upload_id != upload_id
+          if gravatar_upload_id != upload.id
             User.transaction do
               if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
-                user.update!(uploaded_avatar_id: upload_id)
+                user.update!(uploaded_avatar_id: upload.id)
               end
 
-              gravatar_upload&.destroy!
-              self.gravatar_upload = upload
-              save!
+              self.update!(gravatar_upload: upload)
             end
           end
         end
-      rescue OpenURI::HTTPError
-        save!
-      rescue SocketError
-        # skip saving, we are not connected to the net
+      rescue OpenURI::HTTPError => e
+        if e.io&.status[0].to_i != 404
+          raise e
+        end
       ensure
-        tempfile.try(:close!)
+        tempfile&.close!
       end
     end
   end

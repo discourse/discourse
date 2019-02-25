@@ -153,7 +153,7 @@ module DiscourseNarrativeBot
         flag = PostAction.create!(
           user: self.discobot_user,
           post: post, post_action_type_id:
-          PostActionType.types[:off_topic]
+          PostActionType.types[:notify_moderators]
         )
 
         PostAction.defer_flags!(post, self.discobot_user)

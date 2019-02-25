@@ -518,10 +518,6 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     raw
   end
-
-  def fake_email
-    SecureRandom.hex << "@domain.com"
-  end
 end
 
 ImportScripts::NodeBB.new.perform

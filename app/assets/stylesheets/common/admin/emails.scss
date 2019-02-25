@@ -1,13 +1,5 @@
 // Styles for admin/emails
 
-.email-preview {
-  .ac-wrap {
-    .item {
-      margin: 0.2em 0 0 0.4em;
-    }
-  }
-}
-
 // Emails
 .email-list {
   .filters input {
@@ -89,5 +81,17 @@
     width: 100%;
     height: 600px;
     border-width: 1px;
+  }
+}
+
+.email-advanced-test {
+  .admin-controls {
+    display: block;
+  }
+
+  .email-body {
+    width: 95%;
+    height: 150px;
+    font-family: monospace;
   }
 }

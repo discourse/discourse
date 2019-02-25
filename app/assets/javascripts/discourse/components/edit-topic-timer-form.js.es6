@@ -9,7 +9,8 @@ import {
   OPEN_STATUS_TYPE,
   DELETE_STATUS_TYPE,
   REMINDER_TYPE,
-  CLOSE_STATUS_TYPE
+  CLOSE_STATUS_TYPE,
+  BUMP_TYPE
 } from "discourse/controllers/edit-topic-timer";
 
 export default Ember.Component.extend({
@@ -17,12 +18,18 @@ export default Ember.Component.extend({
   autoOpen: Ember.computed.equal("selection", OPEN_STATUS_TYPE),
   autoClose: Ember.computed.equal("selection", CLOSE_STATUS_TYPE),
   autoDelete: Ember.computed.equal("selection", DELETE_STATUS_TYPE),
+  autoBump: Ember.computed.equal("selection", BUMP_TYPE),
   publishToCategory: Ember.computed.equal(
     "selection",
     PUBLISH_TO_CATEGORY_STATUS_TYPE
   ),
   reminder: Ember.computed.equal("selection", REMINDER_TYPE),
-  showTimeOnly: Ember.computed.or("autoOpen", "autoDelete", "reminder"),
+  showTimeOnly: Ember.computed.or(
+    "autoOpen",
+    "autoDelete",
+    "reminder",
+    "autoBump"
+  ),
 
   @computed(
     "topicTimer.updateTime",
@@ -65,7 +72,9 @@ export default Ember.Component.extend({
   @observes("selection")
   _updateBasedOnLastPost() {
     if (!this.get("autoClose")) {
-      this.set("topicTimer.based_on_last_post", false);
+      Ember.run.schedule("afterRender", () => {
+        this.set("topicTimer.based_on_last_post", false);
+      });
     }
   }
 });

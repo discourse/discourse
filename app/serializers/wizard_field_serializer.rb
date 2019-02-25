@@ -27,8 +27,15 @@ class WizardFieldSerializer < ApplicationSerializer
     @i18n_key ||= "wizard.step.#{object.step.id}.fields.#{object.id}".underscore
   end
 
+  def translate(sub_key, vars = nil)
+    key = "#{i18n_key}.#{sub_key}"
+    return nil unless I18n.exists?(key)
+
+    vars.nil? ? I18n.t(key) : I18n.t(key, vars)
+  end
+
   def label
-    I18n.t("#{i18n_key}.label", default: '')
+    translate("label")
   end
 
   def include_label?
@@ -36,7 +43,7 @@ class WizardFieldSerializer < ApplicationSerializer
   end
 
   def placeholder
-    I18n.t("#{i18n_key}.placeholder", default: '')
+    translate("placeholder")
   end
 
   def include_placeholder?
@@ -44,7 +51,7 @@ class WizardFieldSerializer < ApplicationSerializer
   end
 
   def description
-    I18n.t("#{i18n_key}.description", default: '')
+    translate("description", base_path: Discourse.base_path)
   end
 
   def include_description?

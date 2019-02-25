@@ -32,7 +32,7 @@ module Stylesheet
     end
 
     def self.compile(stylesheet, filename, options = {})
-      source_map_file = options[:source_map_file] || "#{filename.sub(".scss", "")}.css.map";
+      source_map_file = options[:source_map_file] || "#{filename.sub(".scss", "")}.css.map"
 
       engine = SassC::Engine.new(stylesheet,
                                  importer: Importer,

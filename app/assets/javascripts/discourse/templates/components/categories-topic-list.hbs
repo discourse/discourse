@@ -7,7 +7,7 @@
     {{latest-topic-list-item topic=t}}
   {{/each}}
   <div class="more-topics">
-    <a href="/{{filter}}" class="btn pull-right">{{i18n "more"}}</a>
+    <a href="{{get-url (concat '/' filter)}}" class="btn btn-default pull-right">{{i18n "more"}}</a>
   </div>
 {{else}}
   <div class='no-topics'>

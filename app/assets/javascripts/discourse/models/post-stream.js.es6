@@ -317,7 +317,7 @@ export default RestModel.extend({
           });
 
           delete this.get("gaps.before")[postId];
-          this.get("stream").enumerableContentDidChange();
+          this.get("stream").arrayContentDidChange();
           this.get("postsWithPlaceholders").arrayContentDidChange(
             origIdx,
             0,
@@ -340,7 +340,7 @@ export default RestModel.extend({
       stream.pushObjects(gap);
       return this.appendMore().then(() => {
         delete this.get("gaps.after")[postId];
-        this.get("stream").enumerableContentDidChange();
+        this.get("stream").arrayContentDidChange();
       });
     }
     return Ember.RSVP.resolve();

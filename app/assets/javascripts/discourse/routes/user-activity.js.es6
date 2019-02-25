@@ -1,6 +1,11 @@
 export default Discourse.Route.extend({
   model() {
-    return this.modelFor("user");
+    let user = this.modelFor("user");
+    if (user.get("profile_hidden")) {
+      return this.replaceWith("user.profile-hidden");
+    }
+
+    return user;
   },
 
   setupController(controller, user) {

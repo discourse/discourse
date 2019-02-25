@@ -9,6 +9,9 @@ class ThemeSetting < ActiveRecord::Base
     theme.clear_cached_settings!
     theme.remove_from_cache!
     theme.theme_fields.update_all(value_baked: nil)
+    theme.theme_settings.reload
+    SvgSprite.expire_cache if self.name.to_s.include?("_icon")
+    CSP::Extension.clear_theme_extensions_cache! if name.to_s == CSP::Extension::THEME_SETTING
   end
 
   def self.types

@@ -1,3 +1,7 @@
 <div class='ac-message'>
-  {{{i18n 'login.sent_activation_email_again' currentEmail=email}}}
+  {{#if email}}
+    {{{i18n 'login.sent_activation_email_again' currentEmail=email}}}
+  {{else}}
+    {{i18n 'login.sent_activation_email_again_generic'}}
+  {{/if}}
 </div>

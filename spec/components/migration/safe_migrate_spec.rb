@@ -29,7 +29,7 @@ describe Migration::SafeMigrate do
   it "bans all table removal" do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/drop_table"
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_table"
 
     output = capture_stdout do
       expect(lambda do
@@ -37,7 +37,7 @@ describe Migration::SafeMigrate do
       end).to raise_error(StandardError)
     end
 
-    expect(output).to include("TableDropper")
+    expect(output).to include("rails g post_migration")
 
     expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
@@ -46,7 +46,7 @@ describe Migration::SafeMigrate do
   it "bans all table renames" do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/rename_table"
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_table"
 
     output = capture_stdout do
       expect(lambda do
@@ -57,13 +57,13 @@ describe Migration::SafeMigrate do
     expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
 
-    expect(output).to include("TableDropper")
+    expect(output).to include("rails g post_migration")
   end
 
   it "bans all column removal" do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/remove_column"
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/remove_column"
 
     output = capture_stdout do
       expect(lambda do
@@ -71,7 +71,7 @@ describe Migration::SafeMigrate do
       end).to raise_error(StandardError)
     end
 
-    expect(output).to include("ColumnDropper")
+    expect(output).to include("rails g post_migration")
 
     expect(User.first).not_to eq(nil)
     expect { User.first.username }.not_to raise_error
@@ -80,7 +80,7 @@ describe Migration::SafeMigrate do
   it "bans all column renames" do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/rename_column"
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_column"
 
     output = capture_stdout do
       expect(lambda do
@@ -88,7 +88,7 @@ describe Migration::SafeMigrate do
       end).to raise_error(StandardError)
     end
 
-    expect(output).to include("ColumnDropper")
+    expect(output).to include("rails g post_migration")
 
     expect(User.first).not_to eq(nil)
     expect { User.first.username }.not_to raise_error
@@ -98,12 +98,28 @@ describe Migration::SafeMigrate do
     Migration::SafeMigrate.enable!
     Migration::SafeMigrate.disable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/migrate/drop_table"
+    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_table"
 
     output = capture_stdout do
       migrate_up(path)
     end
 
-    expect(output).to include("drop_table(:users)")
+    expect(output).to include("drop_table(:email_logs)")
+  end
+
+  describe 'for a post deployment migration' do
+    it 'should not ban unsafe migrations' do
+      user = Fabricate(:user)
+      Migration::SafeMigrate::SafeMigration.enable_safe!
+
+      path = File.expand_path "#{Rails.root}/spec/fixtures/db/post_migrate"
+
+      output = capture_stdout do
+        migrate_up(path)
+      end
+
+      expect(output).to include("drop_table(:email_logs)")
+      expect(user.reload).to eq(user)
+    end
   end
 end

@@ -83,26 +83,14 @@ export default Ember.Component.extend(bufferedProperty("userField"), {
         .catch(popupAjaxError);
     },
 
-    moveUp() {
-      this.sendAction("moveUpAction", this.get("userField"));
-    },
-
-    moveDown() {
-      this.sendAction("moveDownAction", this.get("userField"));
-    },
-
     edit() {
       this.set("editing", true);
-    },
-
-    destroy() {
-      this.sendAction("destroyAction", this.get("userField"));
     },
 
     cancel() {
       const id = this.get("userField.id");
       if (Ember.isEmpty(id)) {
-        this.sendAction("destroyAction", this.get("userField"));
+        this.destroyAction(this.get("userField"));
       } else {
         this.rollbackBuffer();
         this.set("editing", false);

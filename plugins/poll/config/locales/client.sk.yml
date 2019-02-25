@@ -19,8 +19,6 @@ sk:
         many: "hlasov celkom"
         other: "hlasov celkom"
       average_rating: "Priemerné hodnotenie: <strong>%{average}</strong>."
-      public:
-        title: "Hlasy sú verejné."
       multiple:
         help:
           at_least_min_options:

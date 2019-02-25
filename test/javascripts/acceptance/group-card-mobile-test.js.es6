@@ -7,5 +7,5 @@ QUnit.test("group card", async assert => {
   assert.ok(invisible("#group-card"), "user card is invisible by default");
 
   await click("a.mention-group:first");
-  assert.ok(visible(".group-details-container"), "group page show be shown");
+  assert.ok(visible(".group-details-container"), "group page should be shown");
 });

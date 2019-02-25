@@ -22,7 +22,7 @@ class Cache < ActiveSupport::Cache::Store
   end
 
   def keys(pattern = "*")
-    redis.keys("#{@namespace}:#{pattern}")
+    redis.scan_each(match: "#{@namespace}:#{pattern}").to_a
   end
 
   def clear

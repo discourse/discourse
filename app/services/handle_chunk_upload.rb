@@ -36,7 +36,6 @@ class HandleChunkUpload
   def merge_chunks
     upload_path     = @params[:upload_path]
     tmp_upload_path = @params[:tmp_upload_path]
-    model           = @params[:model]
     identifier      = @params[:identifier]
     filename        = @params[:filename]
     tmp_directory   = @params[:tmp_directory]
@@ -52,7 +51,7 @@ class HandleChunkUpload
     File.open(tmp_upload_path, "a") do |file|
       (1..@chunk).each do |chunk_number|
         # path to chunk
-        chunk_path = model.chunk_path(identifier, filename, chunk_number)
+        chunk_path = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
         # add chunk to file
         file << File.open(chunk_path).read
       end

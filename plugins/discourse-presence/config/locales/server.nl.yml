@@ -5,4 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nl: {}
+nl:
+  site_settings:
+    presence_enabled: 'Gebruikers laten zien die op dit moment aan het reageren zijn op de huidige topic, of het huidige bericht aan het bewerken zijn?'
+    presence_max_users_shown: 'Maximale aantal gebruikers weergegeven.'

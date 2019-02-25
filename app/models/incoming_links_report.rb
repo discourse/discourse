@@ -44,10 +44,26 @@ class IncomingLinksReport
 
     num_clicks = link_count_per_user(start_date: report.start_date, end_date: report.end_date, category_id: report.category_id)
     num_topics = topic_count_per_user(start_date: report.start_date, end_date: report.end_date, category_id: report.category_id)
-    user_id_lookup = User.where(username: num_clicks.keys).select(:id, :username).inject({}) { |sum, v| sum[v.username] = v.id; sum; }
+    user_id_lookup = User
+      .where(username: num_clicks.keys)
+      .select(:id, :username, :uploaded_avatar_id)
+      .inject({}) { |sum, v|
+        sum[v.username] = {
+          id: v.id,
+          user_avatar_template: User.avatar_template(v.username, v.uploaded_avatar_id)
+        }
+        sum
+      }
+
     report.data = []
     num_clicks.each_key do |username|
-      report.data << { username: username, user_id: user_id_lookup[username], num_clicks: num_clicks[username], num_topics: num_topics[username] }
+      report.data << {
+        username: username,
+        user_id: user_id_lookup[username][:id],
+        user_avatar_template: user_id_lookup[username][:user_avatar_template],
+        num_clicks: num_clicks[username],
+        num_topics: num_topics[username]
+      }
     end
     report.data = report.data.sort_by { |x| x[:num_clicks] }.reverse[0, 10]
   end
@@ -105,7 +121,7 @@ class IncomingLinksReport
   end
 
   def self.report_top_referred_topics(report)
-    report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.num_clicks")
+    report.y_titles[:num_clicks] = I18n.t("reports.#{report.type}.labels.num_clicks")
     num_clicks = link_count_per_topic(start_date: report.start_date, end_date: report.end_date, category_id: report.category_id)
     num_clicks = num_clicks.to_a.sort_by { |x| x[1] }.last(report.limit || 10).reverse
     report.data = []

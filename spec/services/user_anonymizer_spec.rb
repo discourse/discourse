@@ -24,7 +24,7 @@ describe UserAnonymizer do
 
   describe "make_anonymous" do
     let(:original_email) { "edward@example.net" }
-    let(:user) { Fabricate(:user, username: "edward", email: original_email) }
+    let(:user) { Fabricate(:user_single_email, username: "edward", email: original_email) }
     let(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
@@ -33,9 +33,23 @@ describe UserAnonymizer do
       expect(user.reload.username).to match(/^anon\d{3,}$/)
     end
 
-    it "changes email address" do
+    it "changes the primary email address" do
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
+    end
+
+    it "changes the primary email address when there is an email domain whitelist" do
+      SiteSetting.email_domains_whitelist = 'example.net|wayne.com|discourse.org'
+
+      make_anonymous
+      expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
+    end
+
+    it "deletes secondary email addresses" do
+      Fabricate(:secondary_email, user: user, email: "secondary_email@example.com")
+
+      make_anonymous
+      expect(user.reload.secondary_emails).to be_blank
     end
 
     it "turns off all notifications" do
@@ -115,7 +129,7 @@ describe UserAnonymizer do
       user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences
       user.save!
-      expect { make_anonymous }.to change { Upload.count }.by(-1)
+      make_anonymous
       user.reload
       expect(user.user_avatar).to eq(nil)
       expect(user.uploaded_avatar_id).to eq(nil)
@@ -176,20 +190,18 @@ describe UserAnonymizer do
     end
 
     it "removes external auth assocations" do
-      user.twitter_user_info = TwitterUserInfo.create(user_id: user.id, screen_name: "example", twitter_user_id: "examplel123123")
       user.google_user_info = GoogleUserInfo.create(user_id: user.id, google_user_id: "google@gmail.com")
       user.github_user_info = GithubUserInfo.create(user_id: user.id, screen_name: "example", github_user_id: "examplel123123")
-      user.facebook_user_info = FacebookUserInfo.create(user_id: user.id, facebook_user_id: "example")
+      user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_infos = [Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")]
       user.instagram_user_info = InstagramUserInfo.create(user_id: user.id, screen_name: "example", instagram_user_id: "examplel123123")
       UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
       make_anonymous
       user.reload
-      expect(user.twitter_user_info).to eq(nil)
       expect(user.google_user_info).to eq(nil)
       expect(user.github_user_info).to eq(nil)
-      expect(user.facebook_user_info).to eq(nil)
+      expect(user.user_associated_accounts).to be_empty
       expect(user.single_sign_on_record).to eq(nil)
       expect(user.oauth2_user_infos).to be_empty
       expect(user.instagram_user_info).to eq(nil)

@@ -5,14 +5,42 @@
   "repository": "git@github.com:discourse/discourse.git",
   "author": "Discourse",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "5.5.0",
+    "ace-builds": "1.4.1",
+    "bootbox": "3.2.0",
+    "chart.js": "2.7.3",
+    "favcount": "https://github.com/chrishunt/favcount",
+    "handlebars": "4.0.12",
+    "highlight.js": "https://github.com/highlightjs/highlight.js",
+    "htmlparser": "https://github.com/tautologistics/node-htmlparser",
+    "intersection-observer": "^0.5.1",
+    "jquery": "3.3.1",
+    "jquery-color": "1.0.0",
+    "jquery-resize": "https://github.com/cowboy/jquery-resize/",
+    "jquery-tags-input": "1.3.5",
+    "jquery.autoellipsis": "https://github.com/pvdspek/jquery.autoellipsis",
+    "jquery.cookie": "1.4.1",
+    "magnific-popup": "1.1.0",
+    "markdown-it": "8.4.1",
+    "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
+    "pikaday": "1.7.0",
+    "resumablejs": "1.1.0",
+    "spectrum-colorpicker": "1.8.0"
+  },
   "devDependencies": {
     "babel-eslint": "^8.2",
     "chrome-launcher": "^0.10",
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
-    "prettier": "^1.13",
-    "puppeteer": "^1.4",
-    "pretender": "^1.6"
+    "pretender": "^1.6",
+    "prettier": "^1.15.3",
+    "puppeteer": "1.4",
+    "qunit": "2.8.0",
+    "route-recognizer": "^0.3.3",
+    "sinon": "^6.3.5"
+  },
+  "scripts": {
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
   }
 }

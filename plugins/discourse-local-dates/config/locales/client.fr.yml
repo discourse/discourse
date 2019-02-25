@@ -8,6 +8,10 @@
 fr:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Aujourd'hui %{time}
+        tomorrow: Demain %{time}
+        yesterday: Hier %{time}
       title: Insérer date
       create:
         modal_title: Insérer date

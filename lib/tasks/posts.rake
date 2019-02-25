@@ -277,7 +277,7 @@ task 'posts:refresh_emails', [:topic_id] => [:environment] do |_, args|
       receiver = Email::Receiver.new(post.raw_email)
 
       body, elided = receiver.select_body
-      body = receiver.add_attachments(body || '', post.user_id)
+      body = receiver.add_attachments(body || '', post.user)
       body << Email::Receiver.elided_html(elided) if elided.present?
 
       post.revise(Discourse.system_user, { raw: body, cook_method: Post.cook_methods[:regular] },

@@ -13,22 +13,7 @@
   <%= preload_script "ember_jquery" %>
   <%= preload_script "vendor" %>
   <%= render_google_universal_analytics_code %>
+  <%= tag.meta id: 'data-activate-account', data: { path: path('/u/hp') } %>
 <%- end %>
 
-<script language="javascript">
-  (function() {
-    setTimeout(function() {
-      var $activateButton = $('#activate-account-button');
-      $activateButton.on('click', function() {
-        $activateButton.prop('disabled', true);
-        $.ajax("<%= path "/u/hp" %>").then(function(hp) {
-          $('#password_confirmation').val(hp.value);
-          $('#challenge').val(hp.challenge.split("").reverse().join(""));
-          $('#activate-account-form').submit();
-        }).fail(function() {
-          $activateButton.prop('disabled', false);
-        });
-      });
-    }, 50);
-  })();
-</script>
+<%= preload_script "activate-account" %>

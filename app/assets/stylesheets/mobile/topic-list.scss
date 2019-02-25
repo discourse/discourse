@@ -19,6 +19,7 @@
       box-sizing: border-box;
       display: flex;
       align-self: stretch;
+      align-items: center;
       margin: 0 3px 10px 3px;
       order: 10; // always last for consistent placement
     }
@@ -66,7 +67,7 @@
     flex-wrap: wrap;
     width: 100%;
     .edit-category {
-      i {
+      .d-icon {
         margin: 0;
       }
       @media screen and (max-width: 374px) {
@@ -89,8 +90,8 @@
     }
     > li {
       margin-right: 0;
-      background: $primary-low;
       font-size: $font-down-1;
+      border: 1px solid $primary-medium;
     }
     > li > a {
       line-height: $line-height-large;
@@ -143,8 +144,20 @@
     max-width: 300px;
   }
 
-  a.title {
-    color: $primary;
+  .main-link {
+    line-height: $line-height-medium;
+    position: relative;
+    z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
+    a.title {
+      color: $primary;
+      padding: 0.5em 0 1.2em 0;
+    }
+    .topic-statuses {
+      a {
+        line-height: 0.8;
+        color: $primary-medium;
+      }
+    }
   }
 
   .badge-notification,
@@ -155,7 +168,7 @@
     font-size: $font-0;
     line-height: $line-height-small;
     padding: 0.15em 0.4em 0.2em 0.4em;
-    i {
+    .d-icon {
       color: $secondary;
     }
 
@@ -164,7 +177,6 @@
     }
     &.new-topic {
       padding: 0;
-      top: -2px;
     }
   }
 
@@ -176,6 +188,9 @@
   }
 
   .topic-item-stats {
+    position: relative;
+    margin-top: 0.25em;
+    z-index: z("base");
     .category,
     .num,
     .last-poster {
@@ -263,10 +278,11 @@ tr.category-topic-link {
   border-top: 1px solid;
 
   h3 {
+    max-width: 100%;
     display: inline-block;
     font-size: $font-up-2;
-    margin: 0 0 0 10px;
-    i {
+    padding: 0 0 0 10px;
+    .d-icon {
       margin-right: 5px;
     }
     a[href] {
@@ -468,11 +484,32 @@ ol.category-breadcrumb {
   padding-top: 10px;
 }
 
-.category-logo {
+.category-logo.aspect-image {
   display: block;
-  max-width: 100%;
-  max-height: 150px;
-  padding: 8px 0;
+  margin: 8px 0;
+
+  img {
+    width: auto;
+    max-width: 100%;
+    max-height: 150px;
+  }
+}
+
+@supports (--custom: property) {
+  .category-logo.aspect-image {
+    --max-height: 150px;
+    max-height: var(--max-height);
+    width: calc(var(--max-height) * var(--aspect-ratio));
+    max-width: 100%;
+    height: auto;
+
+    img {
+      width: 100%;
+      height: inherit;
+      max-width: initial;
+      max-height: initial;
+    }
+  }
 }
 
 button.dismiss-read {

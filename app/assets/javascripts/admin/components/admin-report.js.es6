@@ -34,6 +34,7 @@ function collapseWeekly(data, average) {
     bucket = bucket || { x: data[i].x, y: 0 };
     bucket.y += data[i].y;
   }
+
   return aggregate;
 }
 
@@ -41,7 +42,7 @@ export default Ember.Component.extend({
   classNameBindings: ["isEnabled", "isLoading", "dasherizedDataSourceName"],
   classNames: ["admin-report"],
   isEnabled: true,
-  disabledLabel: "admin.dashboard.disabled",
+  disabledLabel: I18n.t("admin.dashboard.disabled"),
   isLoading: false,
   rateLimitationString: null,
   dataSourceName: null,
@@ -111,7 +112,12 @@ export default Ember.Component.extend({
     unregisterHoverTooltip($(".info[data-tooltip]"));
   },
 
-  showError: Ember.computed.or("showTimeoutError", "showExceptionError"),
+  showError: Ember.computed.or(
+    "showTimeoutError",
+    "showExceptionError",
+    "showNotFoundError"
+  ),
+  showNotFoundError: Ember.computed.equal("model.error", "not_found"),
   showTimeoutError: Ember.computed.equal("model.error", "timeout"),
   showExceptionError: Ember.computed.equal("model.error", "exception"),
 
@@ -140,7 +146,7 @@ export default Ember.Component.extend({
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
 
     return Ember.makeArray(modes).map(mode => {
-      const base = `mode-btn ${mode}`;
+      const base = `btn-default mode-btn ${mode}`;
       const cssClass = currentMode === mode ? `${base} is-current` : base;
 
       return {
@@ -274,13 +280,17 @@ export default Ember.Component.extend({
     if (!this.get("startDate") || !this.get("endDate")) {
       report = sort(filteredReports)[0];
     } else {
-      let reportKey = this.get("reportKey");
+      const reportKey = this.get("reportKey");
 
       report = sort(
         filteredReports.filter(r => r.report_key.includes(reportKey))
       )[0];
 
       if (!report) return;
+    }
+
+    if (report.error === "not_found") {
+      this.set("showFilteringUI", false);
     }
 
     this._renderReport(
@@ -302,7 +312,7 @@ export default Ember.Component.extend({
   },
 
   _fetchReport() {
-    this._super();
+    this._super(...arguments);
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
@@ -380,7 +390,20 @@ export default Ember.Component.extend({
   _loadReport(jsonReport) {
     Report.fillMissingDates(jsonReport, { filledField: "chartData" });
 
-    if (jsonReport.chartData && jsonReport.chartData.length > 40) {
+    if (jsonReport.chartData && jsonReport.modes[0] === "stacked_chart") {
+      jsonReport.chartData = jsonReport.chartData.map(chartData => {
+        if (chartData.length > 40) {
+          return {
+            data: collapseWeekly(chartData.data),
+            req: chartData.req,
+            label: chartData.label,
+            color: chartData.color
+          };
+        } else {
+          return chartData;
+        }
+      });
+    } else if (jsonReport.chartData && jsonReport.chartData.length > 40) {
       jsonReport.chartData = collapseWeekly(
         jsonReport.chartData,
         jsonReport.average

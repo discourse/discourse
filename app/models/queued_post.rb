@@ -1,6 +1,6 @@
 class QueuedPost < ActiveRecord::Base
 
-  class InvalidStateTransition < StandardError; end;
+  class InvalidStateTransition < StandardError; end
 
   belongs_to :user
   belongs_to :topic

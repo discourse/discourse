@@ -27,12 +27,7 @@ module JsLocaleHelper
     end
   end
 
-  def self.load_translations(locale, opts = nil)
-    opts ||= {}
-
-    @loaded_translations = nil if opts[:force]
-    @plugin_translations = nil if opts[:force]
-
+  def self.load_translations(locale)
     @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
@@ -115,10 +110,14 @@ module JsLocaleHelper
 
     I18n.locale = locale_sym
 
+    if Rails.env.development?
+      @loaded_translations = nil
+      @plugin_translations = nil
+      @loaded_merges = nil
+    end
+
     translations =
-      if Rails.env.development?
-        load_translations(locale_sym, force: true)
-      elsif locale_sym == :en
+      if locale_sym == :en
         load_translations(locale_sym)
       elsif locale_sym == site_locale || site_locale == :en
         load_translations_merged(locale_sym, fallback_locale, :en)

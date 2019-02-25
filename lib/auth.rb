@@ -3,6 +3,7 @@ module Auth; end
 require_dependency 'auth/auth_provider'
 require_dependency 'auth/result'
 require_dependency 'auth/authenticator'
+require_dependency 'auth/managed_authenticator'
 require_dependency 'auth/facebook_authenticator'
 require_dependency 'auth/open_id_authenticator'
 require_dependency 'auth/github_authenticator'

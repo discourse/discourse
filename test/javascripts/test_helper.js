@@ -1,16 +1,16 @@
 /*global document, sinon, QUnit, Logster */
 
 //= require env
-//= require probes
 //= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
 //= require ember.debug
 //= require ember-template-compiler
 //= require message-bus
+//= require qunit/qunit/qunit
 //= require ember-qunit
 //= require fake_xml_http_request
-//= require route-recognizer
+//= require route-recognizer/dist/route-recognizer
 //= require pretender/pretender
 //= require discourse-loader
 //= require preload-store
@@ -28,8 +28,7 @@
 //= require htmlparser.js
 //= require admin
 
-//= require sinon-1.7.1
-//= require sinon-qunit-1.0.0
+//= require sinon/pkg/sinon
 
 //= require helpers/assertions
 //= require helpers/select-kit-helper
@@ -44,6 +43,14 @@
 //
 //= require jquery.magnific-popup.min.js
 
+sinon.config = {
+  injectIntoThis: false,
+  injectInto: null,
+  properties: ["spy", "stub", "mock", "clock", "sandbox"],
+  useFakeTimers: true,
+  useFakeServer: false
+};
+
 window.inTestEnv = true;
 
 // Stop the message bus so we don't get ajax calls
@@ -51,7 +58,6 @@ window.MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;
-d.write('<script src="/javascripts/ace/ace.js"></script>');
 d.write(
   '<div id="ember-testing-container"><div id="ember-testing"></div></div>'
 );
@@ -123,7 +129,7 @@ QUnit.testStart(function(ctx) {
   var ps = require("preload-store").default;
   ps.reset();
 
-  window.sandbox = sinon.sandbox.create();
+  window.sandbox = sinon;
   window.sandbox.stub(ScrollingDOMMethods, "screenNotFull");
   window.sandbox.stub(ScrollingDOMMethods, "bindOnScroll");
   window.sandbox.stub(ScrollingDOMMethods, "unbindOnScroll");

@@ -25,11 +25,6 @@ bg:
     default_poll_with_multiple_choices_has_invalid_parameters: "Анкетата с множество възможни избора има невалидни параметри."
     named_poll_with_multiple_choices_has_invalid_parameters: "Анкетата <strong>%{name}</strong> е с множество възможни отговори и има невалидни параметри."
     requires_at_least_1_valid_option: "Трябва да изберете най-малко 1 валиден вариант."
-    default_cannot_be_made_public: "Анкета с гласове не може да бъде направена публична."
-    edit_window_expired:
-      op_cannot_edit_options: "Не можете да добавяте или премахвате опции в анкетата след %{minutes} минути. Моля свържете се с модератор, ако искате да редактирате опции в анкетите."
-      staff_cannot_add_or_remove_options: "Не можете да добавяте или премахвате опции в анкетата след %{minutes} минути. Трябва да затворите тази тема и да създадете нова."
-    no_polls_associated_with_this_post: "Няма анкети които са свързани с тази публикация."
     no_poll_with_this_name: "Няма анкета <strong>%{name}</strong> свързана с тази публикация."
     post_is_deleted: "Не можете да извършвате действие върху изтрита публикация."
     topic_must_be_open_to_vote: "Темата трябва да бъде отворена за да гласувате."

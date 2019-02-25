@@ -52,7 +52,7 @@ class InlineOneboxer
 
       if uri.present? &&
         uri.hostname.present? &&
-        (always_allow || domains.include?(uri.hostname)) &&
+        (always_allow || domains.include?(uri.hostname))
         title = RetrieveTitle.crawl(url)
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)

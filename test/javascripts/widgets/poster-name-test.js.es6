@@ -39,7 +39,7 @@ widgetTest("extra classes and glyphs", {
     assert.ok(this.$("span.staff").length);
     assert.ok(this.$("span.admin").length);
     assert.ok(this.$("span.moderator").length);
-    assert.ok(this.$(".d-icon-shield").length);
+    assert.ok(this.$(".d-icon-shield-alt").length);
     assert.ok(this.$("span.new-user").length);
     assert.ok(this.$("span.fish").length);
   }

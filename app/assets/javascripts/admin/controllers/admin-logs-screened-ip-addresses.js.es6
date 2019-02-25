@@ -11,8 +11,7 @@ export default Ember.Controller.extend({
   show: debounce(function() {
     this.set("loading", true);
     ScreenedIpAddress.findAll(this.get("filter")).then(result => {
-      this.set("model", result);
-      this.set("loading", false);
+      this.setProperties({ model: result, loading: false });
     });
   }, 250).observes("filter"),
 
@@ -35,8 +34,9 @@ export default Ember.Controller.extend({
     },
 
     cancel(record) {
-      if (this.get("savedIpAddress") && record.get("editing")) {
-        record.set("ip_address", this.get("savedIpAddress"));
+      const savedIpAddress = this.get("savedIpAddress");
+      if (savedIpAddress && record.get("editing")) {
+        record.set("ip_address", savedIpAddress);
       }
       record.set("editing", false);
     },
@@ -46,9 +46,7 @@ export default Ember.Controller.extend({
       record.set("editing", false);
       record
         .save()
-        .then(() => {
-          this.set("savedIpAddress", null);
-        })
+        .then(() => this.set("savedIpAddress", null))
         .catch(e => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
             bootbox.alert(
@@ -84,7 +82,7 @@ export default Ember.Controller.extend({
               .catch(e => {
                 bootbox.alert(
                   I18n.t("generic_error_with_reason", {
-                    error: "http: " + e.status + " - " + e.body
+                    error: `http: ${e.status} - ${e.body}`
                   })
                 );
               });
@@ -98,25 +96,24 @@ export default Ember.Controller.extend({
     },
 
     rollUp() {
-      const self = this;
       return bootbox.confirm(
         I18n.t("admin.logs.screened_ips.roll_up_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        function(confirmed) {
+        confirmed => {
           if (confirmed) {
-            self.set("loading", true);
-            return ScreenedIpAddress.rollUp().then(function(results) {
+            this.set("loading", true);
+            return ScreenedIpAddress.rollUp().then(results => {
               if (results && results.subnets) {
                 if (results.subnets.length > 0) {
-                  self.send("show");
+                  this.send("show");
                   bootbox.alert(
                     I18n.t("admin.logs.screened_ips.rolled_up_some_subnets", {
                       subnets: results.subnets.join(", ")
                     })
                   );
                 } else {
-                  self.set("loading", false);
+                  this.set("loading", false);
                   bootbox.alert(
                     I18n.t("admin.logs.screened_ips.rolled_up_no_subnet")
                   );

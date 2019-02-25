@@ -17,9 +17,10 @@ export default Discourse.Route.extend({
     const badgeTriggers = [];
     const badgeGroupings = [];
 
-    _.each(json.admin_badges.triggers, function(v, k) {
+    Object.keys(json.admin_badges.triggers).forEach(k => {
+      const id = json.admin_badges.triggers[k];
       badgeTriggers.push({
-        id: v,
+        id,
         name: I18n.t("admin.badges.trigger_type." + k)
       });
     });

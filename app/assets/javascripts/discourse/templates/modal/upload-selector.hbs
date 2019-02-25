@@ -41,7 +41,7 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action="upload" class='btn-primary' icon=uploadIcon label='upload'}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button action=(action "upload") class='btn-primary' icon=uploadIcon label='upload'}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
   {{#if remote}}<a {{action "toggleShowMore"}} class="pull-right">{{i18n 'show_more'}}</a>{{/if}}
 </div>

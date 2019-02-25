@@ -17,7 +17,7 @@
         <h1 class="{{staff}} {{new_user}} {{if nameFirst "full-name" "username"}}">
           <a href={{user.path}} {{action "showUser"}}>{{if nameFirst user.name (format-username username)}} {{user-status user currentUser=currentUser}}</a>
         </h1>
-        {{plugin-outlet name="user-card-after-username" args=(hash user=user) tagName=''}}
+        {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser")) tagName=''}}
 
         {{#unless nameFirst}}
           {{#if user.name}}
@@ -44,7 +44,7 @@
         <li class='compose-pm'>
           {{d-button
             class="btn-primary"
-            action=(action "composePrivateMessage" user post)
+            action=(route-action "composePrivateMessage" user post)
             icon="envelope"
             label="user.private_message"}}
         </li>
@@ -53,6 +53,7 @@
       {{#if showFilter}}
         <li>
           {{d-button
+            class="btn-default"
             action=(action "togglePosts" user)
             icon="filter"
             translatedLabel=togglePostsLabel}}
@@ -62,7 +63,7 @@
       {{#if hasUserFilters}}
         <li>
           {{d-button
-            action="cancelFilter"
+            action=(action "cancelFilter")
             icon="times"
             label="topic.filters.cancel"}}
         </li>
@@ -72,7 +73,8 @@
         <li>
           {{d-button
             class="btn-danger"
-            action=(action "deleteUser" user)
+            action=(action "deleteUser")
+            actionParam=user
             icon="exclamation-triangle"
             label="admin.user.delete"}}
         </li>
@@ -116,30 +118,35 @@
     {{/if}}
 
     {{#if user}}
-      <div class="metadata">
-        {{#if user.last_posted_at}}
-          <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date user.last_posted_at leaveAgo="true"}}</h3>
-        {{/if}}
-        <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date user.created_at leaveAgo="true"}}</h3>
-        <h3 title="{{timeReadTooltip}}">
-          <span class='desc'>{{i18n 'time_read'}}</span>
-          {{format-duration user.time_read}}
-          {{#if showRecentTimeRead}}
-            <span>({{i18n 'time_read_recently' time_read=recentTimeRead}})</span>
+      {{#unless user.profile_hidden}}
+        <div class="metadata">
+          {{#if user.last_posted_at}}
+            <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date user.last_posted_at leaveAgo="true"}}</h3>
           {{/if}}
-        </h3>
-        {{#if showCheckEmail}}
-          <h3 class="email">
-            {{d-icon "envelope-o" title="user.email.title"}}
-            {{#if user.email}}
-              {{user.email}}
-            {{else}}
-              {{d-button action="checkEmail" actionParam=user icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
+          <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date user.created_at leaveAgo="true"}}</h3>
+          <h3 title="{{timeReadTooltip}}">
+            <span class='desc'>{{i18n 'time_read'}}</span>
+            {{format-duration user.time_read}}
+            {{#if showRecentTimeRead}}
+              <span>({{i18n 'time_read_recently' time_read=recentTimeRead}})</span>
             {{/if}}
           </h3>
-        {{/if}}
-        {{plugin-outlet name="user-card-metadata" args=(hash user=user)}}
-      </div>
+          {{#if showCheckEmail}}
+            <h3 class="email">
+              {{d-icon "far-envelope" title="user.email.title"}}
+              {{#if user.email}}
+                {{user.email}}
+              {{else}}
+                {{d-button action=(action "checkEmail") actionParam=user icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
+              {{/if}}
+            </h3>
+          {{/if}}
+          {{plugin-outlet name="user-card-metadata" args=(hash user=user)}}
+        </div>
+      {{/unless}}
+
+      {{plugin-outlet name="user-card-after-metadata" args=(hash user=user)}}
+
     {{/if}}
 
     {{#if publicUserFields}}
@@ -154,6 +161,8 @@
         {{/each}}
       </div>
     {{/if}}
+
+    {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
 
     {{#if showBadges}}
       {{#if user.featured_user_badges}}

@@ -9,7 +9,10 @@ componentTest("default", {
     const html = this.$()
       .html()
       .trim();
-    assert.equal(html, '<i class="fa fa-bars d-icon d-icon-bars"></i>');
+    assert.equal(
+      html,
+      '<svg class="fa d-icon d-icon-bars svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#bars"></use></svg>'
+    );
   }
 });
 
@@ -22,7 +25,7 @@ componentTest("with replacement", {
       .trim();
     assert.equal(
       html,
-      '<i class="fa fa-exclamation-circle d-icon d-icon-d-watching"></i>'
+      '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use xlink:href="#exclamation-circle"></use></svg>'
     );
   }
 });

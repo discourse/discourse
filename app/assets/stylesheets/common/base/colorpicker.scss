@@ -2,29 +2,45 @@
 
 .category-color-editor {
   input {
-    width: 70px;
-    margin-right: 10px;
+    width: 5.5em;
+    margin-right: 1em;
   }
 
   .color-title {
-    display: inline-block;
-    width: 120px;
+    display: block;
+    margin: 1em 0 0.25em;
+  }
+
+  .colorpicker-wrapper {
+    display: flex;
+    align-items: center;
+    input,
+    .add-on {
+      align-self: flex-start;
+      margin-bottom: 0.125em;
+    }
   }
 
   .colors-container {
-    display: inline-block;
-    vertical-align: middle;
-    padding-top: 4px;
-    max-width: 240px;
+    display: inline-flex;
+    flex-wrap: wrap;
 
     .colorpicker {
-      border: 1px solid $primary-low;
-      margin-right: 2px;
-      width: 16px;
-      height: 16px;
-      font-size: 0.286em;
-      &.used-color {
-        background: image-url("chosen-sprite.png") -19px 13px;
+      position: relative;
+      margin: 0 0.125em 0.25em;
+      border: 1px solid $primary-medium;
+      width: 1.25em;
+      height: 1.2em;
+      padding: 0;
+      flex: 0 0 auto;
+      color: white;
+      svg {
+        display: none;
+      }
+      &.used-color svg {
+        display: inline-flex;
+        opacity: 0.8;
+        max-width: 70%;
       }
     }
   }

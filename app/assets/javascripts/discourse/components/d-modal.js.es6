@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   setUp() {
     $("html").on("keydown.discourse-modal", e => {
       if (e.which === 27 && this.get("dismissable")) {
-        Em.run.next(() => $(".modal-header a.close").click());
+        Ember.run.next(() => $(".modal-header a.close").click());
       }
     });
 

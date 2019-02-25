@@ -5,6 +5,9 @@
       class="input-xxlarge"
       value=model.flair_url
       placeholderKey="groups.flair_url_placeholder"}}
+  <div class="control-instructions">
+    {{i18n 'groups.flair_url_description'}}
+  </div>
 </div>
 
 <div class='control-group'>
@@ -39,7 +42,7 @@
       <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}></div>
     {{else}}
       <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}>
-        <i class="fa {{model.flair_url}}"></i>
+        {{d-icon flairPreviewIconUrl}}
       </div>
     {{/if}}
   </div>

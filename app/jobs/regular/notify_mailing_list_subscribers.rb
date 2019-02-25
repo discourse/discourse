@@ -5,7 +5,20 @@ module Jobs
   class NotifyMailingListSubscribers < Jobs::Base
     include Skippable
 
+    RETRY_TIMES = [5.minute, 15.minute, 30.minute, 45.minute, 90.minute, 180.minute, 300.minute]
+
     sidekiq_options queue: 'low'
+
+    sidekiq_options retry: RETRY_TIMES.size
+
+    sidekiq_retry_in do |count, exception|
+      case exception.wrapped
+      when SocketError
+        RETRY_TIMES[count]
+      else
+        Jobs::UserEmail.seconds_to_delay(count)
+      end
+    end
 
     def execute(args)
       return if SiteSetting.disable_mailing_list_mode

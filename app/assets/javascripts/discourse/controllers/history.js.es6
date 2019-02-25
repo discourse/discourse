@@ -4,6 +4,7 @@ import computed from "ember-addons/ember-computed-decorators";
 import { propertyGreaterThan, propertyLessThan } from "discourse/lib/computed";
 import { on, observes } from "ember-addons/ember-computed-decorators";
 import { sanitizeAsync } from "discourse/lib/text";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 function customTagArray(fieldName) {
   return function() {
@@ -30,10 +31,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  previousFeaturedLink: Em.computed.alias(
+  previousFeaturedLink: Ember.computed.alias(
     "model.featured_link_changes.previous"
   ),
-  currentFeaturedLink: Em.computed.alias("model.featured_link_changes.current"),
+  currentFeaturedLink: Ember.computed.alias(
+    "model.featured_link_changes.current"
+  ),
 
   previousTagChanges: customTagArray("model.tags_changes.previous"),
   currentTagChanges: customTagArray("model.tags_changes.current"),
@@ -44,6 +47,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
       {
         previous,
+        icon: iconHTML("arrows-alt-h"),
         current,
         total
       }
@@ -186,26 +190,26 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  displayingInline: Em.computed.equal("viewMode", "inline"),
-  displayingSideBySide: Em.computed.equal("viewMode", "side_by_side"),
-  displayingSideBySideMarkdown: Em.computed.equal(
+  displayingInline: Ember.computed.equal("viewMode", "inline"),
+  displayingSideBySide: Ember.computed.equal("viewMode", "side_by_side"),
+  displayingSideBySideMarkdown: Ember.computed.equal(
     "viewMode",
     "side_by_side_markdown"
   ),
 
   @computed("displayingInline")
   inlineClass(displayingInline) {
-    return displayingInline ? "btn-primary" : "";
+    return displayingInline ? "btn-danger" : "btn-flat";
   },
 
   @computed("displayingSideBySide")
   sideBySideClass(displayingSideBySide) {
-    return displayingSideBySide ? "btn-primary" : "";
+    return displayingSideBySide ? "btn-danger" : "btn-flat";
   },
 
   @computed("displayingSideBySideMarkdown")
   sideBySideMarkdownClass(displayingSideBySideMarkdown) {
-    return displayingSideBySideMarkdown ? "btn-primary" : "";
+    return displayingSideBySideMarkdown ? "btn-danger" : "btn-flat";
   },
 
   @computed("model.category_id_changes")

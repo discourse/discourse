@@ -93,7 +93,7 @@ en:
         "8": "Outlook good"
         "9": "Yes"
         "10": "Signs point to yes"
-        "11": "Reply hazy try again"
+        "11": "Reply hazy, try again"
         "12": "Ask again later"
         "13": "Better not tell you now"
         "14": "Cannot predict now"
@@ -139,35 +139,35 @@ en:
         second_response: |-
           Aw, sorry. I’m still not getting it. :anguished:
 
-          I’m just a bot, but if you’d like to reach a real person, see [our contact page](/about).
+          I’m just a bot, but if you’d like to reach a real person, see [our contact page](%{base_path}/about).
 
           In the meantime, I’ll stay out of your way.
 
     new_user_narrative:
       reset_trigger: "new user"
-      title: "New user narrative completetion certificate"
+      title: "New user narrative completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:
-        title: ":robot: Greetings!"
+        title: "Greetings!"
         message: |-
           Thanks for joining %{title}, and welcome!
 
-          - I’m only a robot, but [our friendly staff](/about) are also here to help if you need to reach a person.
+          - I’m only a robot, but [our friendly staff](%{base_uri}/about) are also here to help if you need to reach a person.
 
-          - For safety reasons, we temporarily limit what new users can do. You’ll gain new abilities (and [badges](/badges)) as we get to know you.
+          - For safety reasons, we temporarily limit what new users can do. You’ll gain new abilities (and [badges](%{base_uri}/badges)) as we get to know you.
 
-          - We believe in [civilized community behavior](/guidelines) at all times.
+          - We believe in [civilized community behavior](%{base_uri}/guidelines) at all times.
 
       onebox:
         instructions: |-
           Next, can you share one of these links with me? Reply with **a link on a line by itself**, and it’ll automatically expand to include a nifty summary.
 
-          To copy a link, tap and hold on mobile, or right click your mouse:
+          To copy any link, tap and hold on mobile, or right click your pointing device:
 
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
+           <https://en.wikipedia.org/wiki/Inherently_funny_word>
+           <https://en.wikipedia.org/wiki/Death_by_coconut>
+           <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Cool! This will work for most <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Remember, it must be on a line _all by itself_, with nothing else in front, or behind.
         not_found: |-
@@ -280,7 +280,7 @@ en:
 
           I guess you know what to do. Go ahead and **flag this post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> as inappropriate!
         reply: |-
-          [Our staff](/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
+          [Our staff](%{base_uri}/groups/staff) will be privately notified about your flag. If enough community members flag a post, it will also be automatically hidden as a precaution. (Since I didn’t actually write a nasty post :angel:, I’ve gone ahead and removed the flag for now.)
         not_found: |-
           Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
 
@@ -312,7 +312,7 @@ en:
 
           %{certificate}
 
-          That’s all for now! Check out [**our latest discussion topics**](/latest) or [**discussion categories**](/categories). :sunglasses:
+          That’s all for now! Check out [**our latest discussion topics**](%{base_uri}/latest) or [**discussion categories**](%{base_uri}/categories). :sunglasses:
 
           (If you’d like to speak with me again to learn more, just message or mention `@%{discobot_username}` any time!)
 
@@ -324,7 +324,7 @@ en:
       cert_title: "In recognition of successful completion of the advanced user tutorial"
       title: ':arrow_up: Advanced user features'
       start_message: |-
-        As an _advanced_ user, have you visited [your preferences page](/my/preferences) yet @%{username}? There are lots of ways to customize your experience, such as selecting a dark or light theme.
+        As an _advanced_ user, have you visited [your preferences page](%{base_uri}/my/preferences) yet @%{username}? There are lots of ways to customize your experience, such as selecting a dark or light theme.
 
         But I digress, let’s begin!
 
@@ -394,7 +394,7 @@ en:
         reply: |-
           Awesome work! I hope you didn’t mute this topic since I can be a little talkative at times :grin:.
 
-          Note that when you reply to a topic, or read a topic for more than a few minutes, it is automatically set to a notification level of 'tracking'. You can change this in [your user preferences](/my/preferences).
+          Note that when you reply to a topic, or read a topic for more than a few minutes, it is automatically set to a notification level of 'tracking'. You can change this in [your user preferences](%{base_uri}/my/preferences).
 
       poll:
         instructions: |-

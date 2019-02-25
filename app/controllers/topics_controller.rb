@@ -64,7 +64,6 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
     username_filters = opts[:username_filters]
 
-    opts[:slow_platform] = true if slow_platform?
     opts[:print] = true if params[:print].present?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
@@ -250,7 +249,12 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
-    PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+    if params[:last].to_s == "1"
+      PostTiming.destroy_last_for(current_user, params[:topic_id])
+    else
+      PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+    end
+
     render body: nil
   end
 
@@ -495,7 +499,10 @@ class TopicsController < ApplicationController
   def remove_allowed_user
     params.require(:username)
     topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::NotFound unless topic
     user = User.find_by(username: params[:username])
+    raise Discourse::NotFound unless user
+
     guardian.ensure_can_remove_allowed_users!(topic, user)
 
     if topic.remove_allowed_user(current_user, user)
@@ -555,7 +562,7 @@ class TopicsController < ApplicationController
       ))
     end
 
-    guardian.ensure_can_invite_to!(topic, groups)
+    guardian.ensure_can_invite_to!(topic)
     group_ids = groups.map(&:id)
 
     begin
@@ -568,7 +575,25 @@ class TopicsController < ApplicationController
           render json: success_json
         end
       else
-        render json: failed_json, status: 422
+        json = failed_json
+
+        unless topic.private_message?
+          group_names = topic.category
+            .visible_group_names(current_user)
+            .where(automatic: false)
+            .pluck(:name)
+            .join(", ")
+
+          if group_names.present?
+            json.merge!(errors: [
+              I18n.t("topic_invite.failed_to_invite",
+                group_names: group_names
+              )
+            ])
+          end
+        end
+
+        render json: json, status: 422
       end
     rescue Topic::UserExists => e
       render json: { errors: [e.message] }, status: 422
@@ -582,13 +607,26 @@ class TopicsController < ApplicationController
   end
 
   def merge_topic
-    params.require(:destination_topic_id)
+    topic_id = params.require(:topic_id)
+    destination_topic_id = params.require(:destination_topic_id)
+    params.permit(:participants)
+    params.permit(:archetype)
 
-    topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
+
+    topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
-    dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
-    render_topic_changes(dest_topic)
+    args = {}
+    args[:destination_topic_id] = destination_topic_id.to_i
+
+    if params[:archetype].present?
+      args[:archetype] = params[:archetype]
+      args[:participants] = params[:participants] if params[:participants].present? && params[:archetype] == "private_message"
+    end
+
+    destination_topic = topic.move_posts(current_user, topic.posts.pluck(:id), args)
+    render_topic_changes(destination_topic)
   end
 
   def move_posts
@@ -596,6 +634,10 @@ class TopicsController < ApplicationController
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
     params.permit(:tags)
+    params.permit(:participants)
+    params.permit(:archetype)
+
+    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -605,8 +647,8 @@ class TopicsController < ApplicationController
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 
-    dest_topic = move_posts_to_destination(topic)
-    render_topic_changes(dest_topic)
+    destination_topic = move_posts_to_destination(topic)
+    render_topic_changes(destination_topic)
   rescue ActiveRecord::RecordInvalid => ex
     render_json_error(ex)
   end
@@ -801,7 +843,7 @@ class TopicsController < ApplicationController
         host: request.host,
         current_user: current_user,
         topic_id: @topic_view.topic.id,
-        post_number: params[:post_number],
+        post_number: @topic_view.current_post_number,
         username: request['u'],
         ip_address: request.remote_ip
       }
@@ -845,7 +887,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @description_meta = @topic_view.topic.excerpt || @topic_view.summary
+        @description_meta = @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end
@@ -868,8 +910,14 @@ class TopicsController < ApplicationController
     args = {}
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
-    args[:category_id] = params[:category_id].to_i if params[:category_id].present?
     args[:tags] = params[:tags] if params[:tags].present?
+
+    if params[:archetype].present?
+      args[:archetype] = params[:archetype]
+      args[:participants] = params[:participants] if params[:participants].present? && params[:archetype] == "private_message"
+    else
+      args[:category_id] = params[:category_id].to_i if params[:category_id].present?
+    end
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end

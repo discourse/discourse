@@ -54,6 +54,10 @@ describe TopicLinkClick do
           TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.0', user_id: @post.user_id)
         }.not_to change(TopicLinkClick, :count)
 
+        # can handle double # in a url
+        # NOTE: this is not compliant but exists in the wild
+        click = TopicLinkClick.create_from(url: "http://discourse.org#a#b", post_id: @post.id, ip: '127.0.0.1')
+        expect(click).to eq("http://discourse.org#a#b")
       end
 
       context 'with a valid url and post_id' do

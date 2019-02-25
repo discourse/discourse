@@ -32,11 +32,15 @@
 
     <div>
       <label for="badge_grouping_id">{{i18n 'admin.badges.badge_grouping'}}</label>
-      {{combo-box name="badge_grouping_id"
-                  value=buffered.badge_grouping_id
-                  content=badgeGroupings
-                  nameProperty="name"}}
-      &nbsp;<button {{action "editGroupings"}} class='btn'>{{d-icon 'pencil'}}</button>
+
+      <div class="badge-grouping-control">
+        {{combo-box name="badge_grouping_id"
+          value=buffered.badge_grouping_id
+          content=badgeGroupings
+          class="badge-selector"
+          nameProperty="name"}}
+        <button {{action "editGroupings"}} class='btn btn-icon no-text btn-default'>{{d-icon "pencil-alt"}}</button>
+      </div>
     </div>
 
 

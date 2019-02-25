@@ -10,8 +10,9 @@ RSpec.describe DiscourseNarrativeBot::CertificateGenerator do
   end
 
   describe '#logo_group' do
-    describe 'when SiteSetting.logo_small_url is blank' do
+    describe 'when SiteSetting.site_logo_small_url is blank' do
       before do
+        SiteSetting.logo_small = ''
         SiteSetting.logo_small_url = ''
       end
 

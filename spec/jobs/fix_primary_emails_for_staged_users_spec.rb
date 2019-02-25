@@ -20,6 +20,10 @@ RSpec.describe Jobs::FixPrimaryEmailsForStagedUsers do
 
     UserEmail.delete_all
 
+    # since we removing `user_emails` table the `user.primary_email` value will be nil.
+    # it will raise error in https://github.com/discourse/discourse/blob/d0b027d88deeabf8bc105419f7d3fae0087091cd/app/models/user.rb#L942
+    WebHook.stubs(:generate_payload).returns(nil)
+
     expect { described_class.new.execute_onceoff({}) }
       .to change { User.count }.by(-2)
       .and change { staged_user.posts.count }.by(3)

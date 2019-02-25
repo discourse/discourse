@@ -1,3 +1,6 @@
+// TODO: This code should be moved to lib, it was heavily modified by us over the years, and mostly written by us
+// except for the little snippet from StackOverflow
+//
 // http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
 var clone, getCaret;
 getCaret = function(el) {
@@ -19,7 +22,7 @@ getCaret = function(el) {
 
 clone = null;
 
-$.fn.caret = function(){
+$.fn.caret = function() {
   return getCaret(this[0]);
 };
 
@@ -29,7 +32,22 @@ $.fn.caret = function(){
   @module $.fn.caretPosition
 **/
 $.fn.caretPosition = function(options) {
-  var after, before, getStyles, guard, html, important, insertSpaceAfterBefore, letter, makeCursor, p, pPos, pos, span, styles, textarea, val;
+  var after,
+    before,
+    getStyles,
+    guard,
+    html,
+    important,
+    insertSpaceAfterBefore,
+    letter,
+    makeCursor,
+    p,
+    pPos,
+    pos,
+    span,
+    styles,
+    textarea,
+    val;
   if (clone) {
     clone.remove();
   }
@@ -44,17 +62,15 @@ $.fn.caretPosition = function(options) {
     }
   };
 
-  styles = getStyles(textarea[0]);
-  clone = $("<div><p></p></div>").appendTo("body");
-  p = clone.find("p");
-  clone.width(textarea.width());
-  clone.height(textarea.height());
-
   important = function(prop) {
     return styles.getPropertyValue(prop);
   };
 
-  const isRTL = $('html').hasClass('rtl');
+  styles = getStyles(textarea[0]);
+  clone = $("<div><p></p></div>").appendTo("body");
+  p = clone.find("p");
+
+  const isRTL = $("html").hasClass("rtl");
   clone.css({
     border: "1px solid black",
     padding: important("padding"),
@@ -77,7 +93,14 @@ $.fn.caretPosition = function(options) {
     "line-height": important("line-height")
   });
 
-  pos = options && (options.pos || options.pos === 0) ? options.pos : getCaret(textarea[0]);
+  clone.width(textarea.width());
+  clone.height(textarea.height());
+
+  pos =
+    options && (options.pos || options.pos === 0)
+      ? options.pos
+      : getCaret(textarea[0]);
+
   val = textarea.val().replace("\r", "");
   if (options && options.key) {
     val = val.substring(0, pos) + options.key + val.substring(pos);
@@ -103,12 +126,23 @@ $.fn.caretPosition = function(options) {
     var l;
     l = val.substring(pos, pos + 1);
     if (l === "\n") return "<br>";
-    return "<span class='" + klass + "' style='background-color:" + color + "; margin:0; padding: 0'>" + guard(l) + "</span>";
+    return (
+      "<span class='" +
+      klass +
+      "' style='background-color:" +
+      color +
+      "; margin:0; padding: 0'>" +
+      guard(l) +
+      "</span>"
+    );
   };
 
   html = "";
+
   if (before >= 0) {
-    html += guard(val.substring(0, pos - 1)) + makeCursor(before, "before", "#d0ffff");
+    html +=
+      guard(val.substring(0, pos - 1)) +
+      makeCursor(before, "before", "#d0ffff");
     if (insertSpaceAfterBefore) {
       html += makeCursor(0, "post-before", "#d0ffff");
     }
@@ -130,9 +164,11 @@ $.fn.caretPosition = function(options) {
   }
 
   pPos = p.offset();
-  return {
+  var position = {
     left: pos.left - pPos.left,
-    top: (pos.top - pPos.top) - clone.scrollTop()
+    top: pos.top - pPos.top - clone.scrollTop()
   };
 
+  clone.remove();
+  return position;
 };

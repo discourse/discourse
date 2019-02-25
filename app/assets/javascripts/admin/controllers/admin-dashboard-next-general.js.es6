@@ -16,23 +16,12 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   isLoading: false,
   dashboardFetchedAt: null,
   exceptionController: Ember.inject.controller("exception"),
-  diskSpace: Ember.computed.alias("model.attributes.disk_space"),
   logSearchQueriesEnabled: setting("log_search_queries"),
-  lastBackupTakenAt: Ember.computed.alias(
-    "model.attributes.last_backup_taken_at"
-  ),
-  shouldDisplayDurability: Ember.computed.and("diskSpace"),
+  basePath: Discourse.BaseUri,
 
-  @computed
-  activityMetrics() {
-    return [
-      "page_view_total_reqs",
-      "visits",
-      "time_to_first_response",
-      "likes",
-      "flags",
-      "user_to_user_private_messages_with_replies"
-    ];
+  @computed("siteSettings.dashboard_general_tab_activity_metrics")
+  activityMetrics(metrics) {
+    return (metrics || "").split("|").filter(m => m);
   },
 
   @computed
@@ -64,7 +53,7 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   trendingSearchFilters() {
     return {
       startDate: moment()
-        .subtract(6, "days")
+        .subtract(1, "month")
         .startOf("day"),
       endDate: this.get("today")
     };
@@ -77,8 +66,16 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     };
   },
 
+  @computed
+  trendingSearchDisabledLabel() {
+    return I18n.t("admin.dashboard.reports.trending_search.disabled", {
+      basePath: Discourse.BaseUri
+    });
+  },
+
   usersByTypeReport: staticReport("users_by_type"),
   usersByTrustLevelReport: staticReport("users_by_trust_level"),
+  storageReport: staticReport("storage_report"),
 
   fetchDashboard() {
     if (this.get("isLoading")) return;
@@ -117,13 +114,6 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
   @computed("model.attributes.updated_at")
   updatedTimestamp(updatedAt) {
     return moment(updatedAt)
-      .tz(moment.tz.guess())
-      .format("LLL");
-  },
-
-  @computed("lastBackupTakenAt")
-  backupTimestamp(lastBackupTakenAt) {
-    return moment(lastBackupTakenAt)
       .tz(moment.tz.guess())
       .format("LLL");
   },

@@ -16,7 +16,12 @@ de:
         other: "abgegebene Stimmen"
       average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
       public:
-        title: "Abgegebene Stimmen werden veröffentlicht."
+        title: "Stimmen sind <strong>öffentlich</strong>."
+      results:
+        vote:
+          title: "Ergebnisse werden <strong>nach Stimmabgabe</strong> angezeigt."
+        closed:
+          title: "Ergebnisse werden angezeigt <strong>nach Ende der Abstimmung</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -64,6 +69,11 @@ de:
           regular: Einfachauswahl
           multiple: Mehrfachauswahl
           number: Bewertung
+        poll_result:
+          label: Ergebnisse
+          always: Immer sichtbar
+          vote: Nach Stimmabgabe
+          closed: Nach Ende der Abstimmung
         poll_config:
           max: max.
           min: min.

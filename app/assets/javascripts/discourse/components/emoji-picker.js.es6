@@ -13,7 +13,7 @@ const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
 const EMOJI_SELECTED_DIVERSITY = "emojiSelectedDiversity";
 const PER_ROW = 11;
-const customEmojis = _.map(_.keys(extendedEmojiList()), code => {
+const customEmojis = _.keys(extendedEmojiList()).map(code => {
   return { code, src: emojiUrlFor(code) };
 });
 
@@ -148,7 +148,7 @@ export default Ember.Component.extend({
       $recentSection.css("height", "auto").show();
     }
 
-    const recentEmojis = _.map(this.get("recentEmojis"), code => {
+    const recentEmojis = this.get("recentEmojis").map(code => {
       return { code, src: emojiUrlFor(code) };
     });
     const template = findRawTemplate("emoji-picker-recent")({ recentEmojis });
@@ -235,7 +235,7 @@ export default Ember.Component.extend({
       this.$results
         .empty()
         .html(
-          _.map(filteredCodes, code => {
+          filteredCodes.map(code => {
             const hasDiversity = isSkinTonableEmoji(code);
             const diversity = hasDiversity ? "diversity" : "";
             const scaledCode = this._codeWithDiversity(code, hasDiversity);
@@ -333,7 +333,7 @@ export default Ember.Component.extend({
         this._trackEmojiUsage(code);
       }
 
-      this.sendAction("emojiSelected", code);
+      this.emojiSelected(code);
 
       if (this.$modal.hasClass("fadeIn")) {
         this.set("active", false);

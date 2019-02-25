@@ -13,30 +13,41 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
-    logo = SiteSetting.large_icon_url.presence || SiteSetting.logo_small_url.presence || SiteSetting.apple_touch_icon_url.presence
+    logo = SiteSetting.site_large_icon_url.presence ||
+      SiteSetting.site_logo_small_url.presence ||
+      SiteSetting.site_apple_touch_icon_url.presence
+
     if !logo
-      logo = path('/images/d-logo-sketch-small.png')
+      logo = '/images/d-logo-sketch-small.png'
     end
+
     file_info = get_file_info(logo)
 
-    display = request.user_agent =~ /iPad|iPhone/ ? 'browser' : 'standalone'
+    display = Regexp.new(SiteSetting.pwa_display_browser_regex).match(request.user_agent) ? 'browser' : 'standalone'
 
     manifest = {
       name: SiteSetting.title,
-      short_name: SiteSetting.title,
       display: display,
-      orientation: 'any',
       start_url: Discourse.base_uri.present? ? "#{Discourse.base_uri}/" : '.',
-      background_color: "##{ColorScheme.hex_for_name('secondary')}",
-      theme_color: "##{ColorScheme.hex_for_name('header_background')}",
+      background_color: "##{ColorScheme.hex_for_name('secondary', view_context.scheme_id)}",
+      theme_color: "##{ColorScheme.hex_for_name('header_background', view_context.scheme_id)}",
       icons: [
         {
-          src: logo,
+          src: UrlHelper.absolute(logo),
           sizes: file_info[:size],
           type: file_info[:type]
         }
-      ]
+      ],
+      share_target: {
+        action: "/new-topic",
+        params: {
+          title: "title",
+          text: "body"
+        }
+      }
     }
+
+    manifest[:short_name] = SiteSetting.short_title if SiteSetting.short_title.present?
 
     if SiteSetting.native_app_install_banner
       manifest = manifest.merge(

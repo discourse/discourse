@@ -67,7 +67,7 @@ class ImportScripts::Jive < ImportScripts::Base
     first = true
     row = nil
 
-    current_row = "";
+    current_row = ""
     double_quote_count = 0
 
     File.open(filename).each_line do |line|

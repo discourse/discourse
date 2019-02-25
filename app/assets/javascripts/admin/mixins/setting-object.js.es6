@@ -24,7 +24,9 @@ export default Ember.Mixin.create({
   }.property("valid_values"),
 
   allowsNone: function() {
-    if (_.indexOf(this.get("valid_values"), "") >= 0)
+    const validValues = this.get("valid_values");
+    if (validValues && validValues.indexOf("") >= 0) {
       return "admin.settings.none";
+    }
   }.property("valid_values")
 });

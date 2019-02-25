@@ -21,7 +21,7 @@ const WatchedWord = Discourse.Model.extend({
 
 WatchedWord.reopenClass({
   findAll() {
-    return ajax("/admin/logs/watched_words").then(list => {
+    return ajax("/admin/logs/watched_words.json").then(list => {
       const actions = {};
       list.words.forEach(s => {
         if (!actions[s.action]) {

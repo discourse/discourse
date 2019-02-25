@@ -174,6 +174,7 @@ class PostRevisor
       !@post.wiki? &&
       @fields.has_key?('raw') &&
       @editor.staff? &&
+      @editor != Discourse.system_user &&
       !@post.user.staff?
     )
       PostLocker.new(@post, @editor).lock
@@ -204,7 +205,7 @@ class PostRevisor
   end
 
   def cleanup_whitespaces(raw)
-    TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "")
+    raw.present? ? TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "") : ""
   end
 
   def should_revise?
@@ -543,16 +544,16 @@ class PostRevisor
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    # damingo (Github ID), 2017-08-04
-    # doc = Nokogiri::HTML.fragment(@post.cooked)
-    # doc.css("img").remove
-    # html = doc.css("p").first.inner_html.strip
-    html = @post.cooked
+    doc = Nokogiri::HTML.fragment(@post.cooked)
+    doc.css("img").remove
 
-    new_description = html unless html.starts_with?(Category.post_template[0..50])
-
-    category.update_column(:description, new_description)
-    @category_changed = category
+    if html = doc.css("p").first&.inner_html&.strip
+      new_description = html unless html.starts_with?(Category.post_template[0..50])
+      category.update_column(:description, new_description)
+      @category_changed = category
+    else
+      @post.errors[:base] << I18n.t("category.errors.description_incomplete")
+    end
   end
 
   def advance_draft_sequence

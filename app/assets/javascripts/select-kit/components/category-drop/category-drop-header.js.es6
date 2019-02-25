@@ -42,23 +42,20 @@ export default ComboBoxSelectBoxHeaderComponent.extend({
       if (categoryBackgroundColor || categoryTextColor) {
         let style = "";
         if (categoryBackgroundColor) {
-          if (categoryStyle === "bar") {
-            style += `border-color: #${categoryBackgroundColor};`;
-          } else if (categoryStyle === "box") {
-            style += `background-color: #${categoryBackgroundColor};`;
+          if (categoryStyle === "box") {
+            style += `border-color: #${categoryBackgroundColor}; background-color: #${categoryBackgroundColor};`;
             if (categoryTextColor) {
               style += `color: #${categoryTextColor};`;
             }
           }
         }
-
         return style.htmlSafe();
       }
     }
   },
 
   didRender() {
-    this._super();
+    this._super(...arguments);
 
     this.$().attr("style", this.get("categoryStyle"));
     this.$(".caret-icon").attr("style", this.get("categoryStyle"));

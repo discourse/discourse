@@ -11,7 +11,6 @@ export default Ember.Controller.extend({
       })
       .then(result => {
         this.set("loadingFlags", false);
-        console.log(result);
         this.set("flaggedPosts", result);
       });
   }

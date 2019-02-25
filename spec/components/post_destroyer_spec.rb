@@ -217,6 +217,38 @@ describe PostDestroyer do
     end
   end
 
+  describe "recovery and post actions" do
+    let(:codinghorror) { Fabricate(:coding_horror) }
+    let!(:like) { PostAction.act(codinghorror, post, PostActionType.types[:like]) }
+    let!(:another_like) { PostAction.act(moderator, post, PostActionType.types[:like]) }
+
+    it "restores public post actions" do
+      PostDestroyer.new(moderator, post).destroy
+      expect(PostAction.exists?(id: like.id)).to eq(false)
+
+      PostDestroyer.new(moderator, post).recover
+      expect(PostAction.exists?(id: like.id)).to eq(true)
+    end
+
+    it "does not recover previously-deleted actions" do
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+      expect(PostAction.exists?(id: like.id)).to eq(false)
+
+      PostDestroyer.new(moderator, post).destroy
+      PostDestroyer.new(moderator, post).recover
+      expect(PostAction.exists?(id: another_like.id)).to eq(true)
+      expect(PostAction.exists?(id: like.id)).to eq(false)
+    end
+
+    it "updates post like count" do
+      PostDestroyer.new(moderator, post).destroy
+      PostDestroyer.new(moderator, post).recover
+      post.reload
+      expect(post.like_count).to eq(2)
+      expect(post.custom_fields["deleted_public_actions"]).to be_nil
+    end
+  end
+
   describe 'basic destroying' do
     it "as the creator of the post, doesn't delete the post" do
       begin
@@ -392,6 +424,16 @@ describe PostDestroyer do
       }.to_not change { author.topic_count }
       expect(author.post_count).to eq(0) # also unchanged
     end
+
+    it 'triggers the extensibility events' do
+      events = DiscourseEvent.track_events { PostDestroyer.new(admin, first_post).destroy }.last(2)
+
+      expect(events[0][:event_name]).to eq(:post_destroyed)
+      expect(events[0][:params].first).to eq(first_post)
+
+      expect(events[1][:event_name]).to eq(:topic_destroyed)
+      expect(events[1][:params].first).to eq(first_post.topic)
+    end
   end
 
   context 'deleting the second post in a topic' do
@@ -470,6 +512,13 @@ describe PostDestroyer do
       it "creates a new user history entry" do
         expect { subject }.to change { UserHistory.count }.by(1)
       end
+
+      it 'triggers a extensibility event' do
+        events = DiscourseEvent.track_events { subject }
+
+        expect(events[0][:event_name]).to eq(:post_destroyed)
+        expect(events[0][:params].first).to eq(post)
+      end
     end
   end
 
@@ -515,6 +564,16 @@ describe PostDestroyer do
         expect { subject }.to change { UserHistory.count }.by(1)
       end
     end
+  end
+
+  it "deletes a post belonging to a non-existent topic" do
+    DB.exec("DELETE FROM topics WHERE id = ?", post.topic_id)
+    post.reload
+
+    PostDestroyer.new(admin, post).destroy
+
+    expect(post.deleted_at).to be_present
+    expect(post.deleted_by).to eq(admin)
   end
 
   describe 'after delete' do
@@ -573,10 +632,11 @@ describe PostDestroyer do
     let!(:flag) { PostAction.act(moderator, second_post, PostActionType.types[:off_topic]) }
 
     before do
-      SiteSetting.queue_jobs = false
+      Jobs::SendSystemMessage.clear
     end
 
     it "should delete public post actions and agree with flags" do
+      url = second_post.url
       second_post.expects(:update_flagged_posts_count)
 
       PostDestroyer.new(moderator, second_post).destroy
@@ -591,36 +651,60 @@ describe PostDestroyer do
       expect(second_post.bookmark_count).to eq(0)
       expect(second_post.off_topic_count).to eq(1)
 
-      notification = second_post.user.notifications.where(notification_type: Notification.types[:private_message]).last
-      expect(notification).to be_present
-      expect(notification.topic.title).to eq(I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template'))
+      jobs = Jobs::SendSystemMessage.jobs
+      expect(jobs.size).to eq(1)
+
+      Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+
+      expect(Post.last.raw).to eq(I18n.t(
+        "system_messages.flags_agreed_and_post_deleted.text_body_template",
+        flagged_post_raw_content: second_post.raw,
+        url: url,
+        flag_reason: I18n.t(
+          "flag_reasons.#{PostActionType.flag_types[off_topic.post_action_type_id]}",
+          locale: SiteSetting.default_locale,
+          base_path: Discourse.base_path
+        ),
+        site_name: SiteSetting.title,
+        base_url: Discourse.base_url
+      ).strip)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
-      second_post.expects(:update_flagged_posts_count)
+      expect(PostAction.flagged_posts_count).to eq(1)
       PostDestroyer.new(Discourse.system_user, second_post).destroy
-      expect(
-        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
-      ).to eq(false)
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+      expect(PostAction.flagged_posts_count).to eq(0)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by author" do
       SiteSetting.delete_removed_posts_after = 0
-      second_post.expects(:update_flagged_posts_count)
+      expect(PostAction.flagged_posts_count).to eq(1)
       PostDestroyer.new(second_post.user, second_post).destroy
-      expect(
-        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
-      ).to eq(false)
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+      expect(PostAction.flagged_posts_count).to eq(0)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if flags were deferred" do
-      second_post.expects(:update_flagged_posts_count)
+      expect(PostAction.flagged_posts_count).to eq(1)
       PostAction.defer_flags!(second_post, moderator)
       second_post.reload
+      expect(PostAction.flagged_posts_count).to eq(0)
+
       PostDestroyer.new(moderator, second_post).destroy
-      expect(
-        Topic.where(title: I18n.t('system_messages.flags_agreed_and_post_deleted.subject_template')).exists?
-      ).to eq(false)
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+    end
+
+    it "should not send the flags_agreed_and_post_deleted message if defer_flags is true" do
+      expect(PostAction.flagged_posts_count).to eq(1)
+      PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
+      expect(PostAction.flagged_posts_count).to eq(0)
+    end
+
+    it "should set the deleted_public_actions custom field" do
+      PostDestroyer.new(moderator, second_post).destroy
+      expect(second_post.custom_fields["deleted_public_actions"]).to eq("#{bookmark.id}")
     end
   end
 

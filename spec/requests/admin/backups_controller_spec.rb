@@ -4,6 +4,25 @@ RSpec.describe Admin::BackupsController do
   let(:admin) { Fabricate(:admin) }
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2014-02-11-065935.tar.gz" }
+  let(:store) { BackupRestore::LocalBackupStore.new }
+
+  def create_backup_files(*filenames)
+    @paths = filenames.map do |filename|
+      path = backup_path(filename)
+      File.open(path, "w") { |f| f.write("test backup") }
+      path
+    end
+  end
+
+  def backup_path(filename)
+    File.join(BackupRestore::LocalBackupStore.base_directory, filename)
+  end
+
+  def map_preloaded
+    controller.instance_variable_get("@preloaded").map do |key, value|
+      [key, JSON.parse(value)]
+    end.to_h
+  end
 
   it "is a subclass of AdminController" do
     expect(Admin::BackupsController < Admin::AdminController).to eq(true)
@@ -11,10 +30,14 @@ RSpec.describe Admin::BackupsController do
 
   before do
     sign_in(admin)
+    SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
   end
 
   after do
     $redis.flushall
+
+    @paths&.each { |path| File.delete(path) if File.exists?(path) }
+    @paths = nil
   end
 
   describe "#index" do
@@ -29,11 +52,7 @@ RSpec.describe Admin::BackupsController do
         get "/admin/backups.html"
         expect(response.status).to eq(200)
 
-        preloaded = controller.instance_variable_get("@preloaded").map do |key, value|
-          [key, JSON.parse(value)]
-        end.to_h
-
-        expect(preloaded["backups"].size).to eq(Backup.all.size)
+        preloaded = map_preloaded
         expect(preloaded["operations_status"].symbolize_keys).to eq(BackupRestore.operations_status)
         expect(preloaded["logs"].size).to eq(BackupRestore.logs.size)
       end
@@ -42,23 +61,14 @@ RSpec.describe Admin::BackupsController do
     context "json format" do
       it "returns a list of all the backups" do
         begin
-          paths = []
-          [backup_filename, backup_filename2].each do |name|
-            path = File.join(Backup.base_directory, name)
-            paths << path
-            File.open(path, "w") { |f| f.write("hello") }
-            Backup.create_from_filename(name)
-          end
+          create_backup_files(backup_filename, backup_filename2)
 
           get "/admin/backups.json"
-
           expect(response.status).to eq(200)
 
-          json = JSON.parse(response.body).map { |backup| backup["filename"] }
-          expect(json).to include(backup_filename)
-          expect(json).to include(backup_filename2)
-        ensure
-          paths.each { |path| File.delete(path) }
+          filenames = JSON.parse(response.body).map { |backup| backup["filename"] }
+          expect(filenames).to include(backup_filename)
+          expect(filenames).to include(backup_filename2)
         end
       end
     end
@@ -88,36 +98,23 @@ RSpec.describe Admin::BackupsController do
     it "uses send_file to transmit the backup" do
       begin
         token = EmailBackupToken.set(admin.id)
-        path = File.join(Backup.base_directory, backup_filename)
-        File.open(path, "w") { |f| f.write("hello") }
-
-        Backup.create_from_filename(backup_filename)
+        create_backup_files(backup_filename)
 
         expect do
           get "/admin/backups/#{backup_filename}.json", params: { token: token }
         end.to change { UserHistory.where(action: UserHistory.actions[:backup_download]).count }.by(1)
 
-        expect(response.headers['Content-Length']).to eq("5")
+        expect(response.headers['Content-Length']).to eq("11")
         expect(response.headers['Content-Disposition']).to match(/attachment; filename/)
-      ensure
-        File.delete(path)
-        EmailBackupToken.del(admin.id)
       end
     end
 
     it "returns 422 when token is bad" do
       begin
-        path = File.join(Backup.base_directory, backup_filename)
-        File.open(path, "w") { |f| f.write("hello") }
-
-        Backup.create_from_filename(backup_filename)
-
         get "/admin/backups/#{backup_filename}.json", params: { token: "bad_value" }
 
         expect(response.status).to eq(422)
         expect(response.headers['Content-Disposition']).not_to match(/attachment; filename/)
-      ensure
-        File.delete(path)
       end
     end
 
@@ -125,20 +122,16 @@ RSpec.describe Admin::BackupsController do
       token = EmailBackupToken.set(admin.id)
       get "/admin/backups/#{backup_filename}.json", params: { token: token }
 
-      EmailBackupToken.del(admin.id)
       expect(response.status).to eq(404)
     end
   end
 
   describe '#destroy' do
-    let(:b) { Backup.new(backup_filename) }
-
     it "removes the backup if found" do
       begin
-        path = File.join(Backup.base_directory, backup_filename)
-        File.open(path, "w") { |f| f.write("hello") }
-
-        Backup.create_from_filename(backup_filename)
+        path = backup_path(backup_filename)
+        create_backup_files(backup_filename)
+        expect(File.exists?(path)).to eq(true)
 
         expect do
           delete "/admin/backups/#{backup_filename}.json"
@@ -146,8 +139,6 @@ RSpec.describe Admin::BackupsController do
 
         expect(response.status).to eq(200)
         expect(File.exists?(path)).to eq(false)
-      ensure
-        File.delete(path) if File.exists?(path)
       end
     end
 
@@ -162,9 +153,7 @@ RSpec.describe Admin::BackupsController do
       get "/admin/backups/logs.html"
       expect(response.status).to eq(200)
 
-      preloaded = controller.instance_variable_get("@preloaded").map do |key, value|
-        [key, JSON.parse(value)]
-      end.to_h
+      preloaded = map_preloaded
 
       expect(preloaded["operations_status"].symbolize_keys).to eq(BackupRestore.operations_status)
       expect(preloaded["logs"].size).to eq(BackupRestore.logs.size)
@@ -228,6 +217,7 @@ RSpec.describe Admin::BackupsController do
           described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
           filename = 'test_Site-0123456789.tar.gz'
+          @paths = [backup_path(File.join('tmp', 'test', "#{filename}.part1"))]
 
           post "/admin/backups/upload.json", params: {
             resumableFilename: filename,
@@ -241,13 +231,6 @@ RSpec.describe Admin::BackupsController do
 
           expect(response.status).to eq(200)
           expect(response.body).to eq("")
-        ensure
-          begin
-            File.delete(
-              File.join(Backup.base_directory, 'tmp', 'test', "#{filename}.part1")
-            )
-          rescue Errno::ENOENT
-          end
         end
       end
     end
@@ -284,18 +267,20 @@ RSpec.describe Admin::BackupsController do
   end
 
   describe "#email" do
-    let(:backup_filename) { "test.tar.gz" }
-    let(:backup) { Backup.new(backup_filename) }
-
     it "enqueues email job" do
-      Backup.expects(:[]).with(backup_filename).returns(backup)
 
-      Jobs.expects(:enqueue).with(:download_backup_email,
-        user_id: admin.id,
-        backup_file_path: 'http://www.example.com/admin/backups/test.tar.gz'
-      )
+      # might as well test this here if we really want www.example.com
+      SiteSetting.force_hostname = "www.example.com"
 
-      put "/admin/backups/#{backup_filename}.json"
+      create_backup_files(backup_filename)
+
+      expect {
+        put "/admin/backups/#{backup_filename}.json"
+      }.to change { Jobs::DownloadBackupEmail.jobs.size }.by(1)
+
+      job_args = Jobs::DownloadBackupEmail.jobs.last["args"].first
+      expect(job_args["user_id"]).to eq(admin.id)
+      expect(job_args["backup_file_path"]).to eq("http://www.example.com/admin/backups/#{backup_filename}")
 
       expect(response.status).to eq(200)
     end

@@ -33,17 +33,51 @@ RSpec.describe Admin::SiteTextsController do
     end
   end
 
-  context "when logged in as amin" do
+  context "when logged in as admin" do
     before do
       sign_in(admin)
     end
 
     describe '#index' do
       it 'returns json' do
-        get "/admin/customize/site_texts.json", params: {  q: 'title' }
+        get "/admin/customize/site_texts.json", params: { q: 'title' }
         expect(response.status).to eq(200)
-        expect(::JSON.parse(response.body)).to be_present
+        expect(JSON.parse(response.body)['site_texts']).to include(include("id" => "title"))
       end
+
+      it 'normalizes quotes during search' do
+        value = %q|“That’s a ‘magic’ sock.”|
+        put "/admin/customize/site_texts/title.json", params: { site_text: { value: value } }
+
+        [
+          %q|That's a 'magic' sock.|,
+          %q|That’s a ‘magic’ sock.|,
+          %q|“That's a 'magic' sock.”|,
+          %q|"That's a 'magic' sock."|,
+          %q|«That's a 'magic' sock.»|,
+          %q|„That’s a ‚magic‘ sock.“|
+        ].each do |search_term|
+          get "/admin/customize/site_texts.json", params: { q: search_term }
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)['site_texts']).to include(include("id" => "title", "value" => value))
+        end
+      end
+
+      it 'normalizes ellipsis' do
+        value = "Loading Discussion…"
+        put "/admin/customize/site_texts/embed.loading.json", params: { site_text: { value: value } }
+
+        [
+          "Loading Discussion",
+          "Loading Discussion...",
+          "Loading Discussion…"
+        ].each do |search_term|
+          get "/admin/customize/site_texts.json", params: { q: search_term }
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)['site_texts']).to include(include("id" => "embed.loading", "value" => value))
+        end
+      end
+
     end
 
     describe '#show' do

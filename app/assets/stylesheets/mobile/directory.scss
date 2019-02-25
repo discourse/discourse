@@ -1,18 +1,38 @@
-.directory .user {
-  border-top: 1px solid $primary-low;
-  padding: 1em;
+.directory {
+  .select-kit.dropdown-select-box.period-chooser
+    .period-chooser-header
+    h2.selected-name {
+    font-size: $font-up-1;
+    margin-bottom: 0.25em;
+  }
 
-  .user-stat {
-    margin-left: 55px;
-    .value {
-      font-weight: bold;
+  .filter-name {
+    float: left;
+  }
+
+  .user {
+    border-top: 1px solid $primary-low;
+    padding: 1em;
+    display: flex;
+    flex-wrap: wrap;
+
+    .user-info {
+      width: 100%;
+      margin-bottom: 1em;
     }
-    .label {
-      margin-left: 0.2em;
-      color: $primary-medium;
-    }
-    .d-icon-heart {
-      color: $love;
+
+    .user-stat {
+      flex: 1 1 50%;
+      .value {
+        font-weight: bold;
+      }
+      .label {
+        margin-left: 0.2em;
+        color: $primary-medium;
+      }
+      .d-icon-heart {
+        color: $love;
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 const ColorSchemeColor = Discourse.Model.extend({
   init: function() {
-    this._super();
+    this._super(...arguments);
     this.startTrackingChanges();
   },
 

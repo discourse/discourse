@@ -29,4 +29,8 @@ task "site_settings:import" => :environment do
   puts " Updated:   #{counts[:updated]}"
   puts " Not Found: #{counts[:not_found]}"
   puts " Errors:    #{counts[:errors]}"
+
+  if counts[:not_found] + counts[:errors] > 0
+    exit 1
+  end
 end

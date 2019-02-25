@@ -20,6 +20,10 @@
       float: left;
       width: 53%;
       padding-right: 20px;
+      input[type="checkbox"],
+      input[type="radio"] {
+        flex: 0 0 auto;
+      }
       .category-selector {
         width: 95%;
       }
@@ -33,14 +37,17 @@
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
+      .uploaded-image-preview {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: $primary-medium;
+      }
     }
     .setting-controls {
       float: left;
     }
     .input-setting-string,
     .input-setting-textarea {
-      box-sizing: border-box;
-      height: 30px;
       width: 100%;
       @media (max-width: $mobile-breakpoint) {
         width: 100%;

@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     this.$().on("click.discourse-staff-logs", "[data-link-post-id]", e => {
       let postId = $(e.target).attr("data-link-post-id");

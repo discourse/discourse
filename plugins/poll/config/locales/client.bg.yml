@@ -15,8 +15,6 @@ bg:
         one: "общ брой гласове"
         other: "общо гласове"
       average_rating: "Средна отценка: <strong>%{average}</strong>."
-      public:
-        title: "Гласуването е публично."
       multiple:
         help:
           at_least_min_options:

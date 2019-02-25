@@ -20,14 +20,14 @@ function displayCategoryInList(site, category) {
 }
 
 const TopicList = RestModel.extend({
-  canLoadMore: Em.computed.notEmpty("more_topics_url"),
+  canLoadMore: Ember.computed.notEmpty("more_topics_url"),
 
   forEachNew(topics, callback) {
     const topicIds = [];
 
-    _.each(this.get("topics"), topic => (topicIds[topic.get("id")] = true));
+    this.get("topics").forEach(topic => (topicIds[topic.get("id")] = true));
 
-    _.each(topics, topic => {
+    topics.forEach(topic => {
       if (!topicIds[topic.id]) {
         callback(topic);
       }

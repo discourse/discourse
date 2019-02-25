@@ -126,8 +126,15 @@ EOM
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query(<<-SQL
-          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email,
-                 CONCAT(password, ':', salt) AS crypted_password
+          SELECT userid
+               , username
+               , homepage
+               , usertitle
+               , usergroupid
+               , joindate
+               , email
+               , password
+               , salt
             FROM #{TABLE_PREFIX}user
            WHERE userid > #{last_user_id}
         ORDER BY userid
@@ -138,12 +145,13 @@ EOM
       break if users.empty?
 
       last_user_id = users[-1]["userid"]
-      before = users.size
-      users.reject! { |u| @lookup.user_already_imported?(u["userid"].to_i) }
+      users.reject! { |u| @lookup.user_already_imported?(u["userid"]) }
 
       create_users(users, total: user_count, offset: offset) do |user|
         email = user["email"].presence || fake_email
         email = fake_email unless email[EmailValidator.email_regex]
+
+        password = [user["password"].presence, user["salt"].presence].compact.join(":")
 
         username = @htmlentities.decode(user["username"]).strip
 
@@ -151,8 +159,9 @@ EOM
           id: user["userid"],
           name: username,
           username: username,
-          password: user["crypted_password"],
+          password: password,
           email: email,
+          merge: true,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
           primary_group_id: group_id_from_imported_group_id(user["usergroupid"].to_i),
@@ -167,7 +176,6 @@ EOM
     end
 
     @usernames = UserCustomField.joins(:user).where(name: 'import_username').pluck('user_custom_fields.value', 'users.username').to_h
-
   end
 
   def create_groups_membership
@@ -921,10 +929,6 @@ EOM
 
   def parse_timestamp(timestamp)
     Time.zone.at(@tz.utc_to_local(timestamp))
-  end
-
-  def fake_email
-    SecureRandom.hex << "@domain.com"
   end
 
   def mysql_query(sql)

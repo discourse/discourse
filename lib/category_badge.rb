@@ -9,11 +9,11 @@ module CategoryBadge
     "<span style='background-color: ##{color};#{styles}'>#{insert_blank ? '&nbsp;' : ''}</span>"
   end
 
-  def self.inline_badge_wrapper_style
+  def self.inline_badge_wrapper_style(category)
     style =
       case (SiteSetting.category_style || :box).to_sym
       when :bar then 'line-height: 1.25; margin-right: 5px;'
-      when :box then 'line-height: 1.5; margin-top: 5px; margin-right: 5px;'
+      when :box then "background-color:##{category.color}; line-height: 1.5; margin-top: 5px; margin-right: 5px;"
       when :bullet then 'line-height: 1; margin-right: 10px;'
       when :none then ''
       end
@@ -43,7 +43,7 @@ module CategoryBadge
           when :bar
             inline_category_stripe(parent_category.color, 'display: inline-block; padding: 1px;', true)
           when :box
-            inline_category_stripe(parent_category.color, 'display: block; position: absolute; width: 100%; height: 100%;')
+            inline_category_stripe(parent_category.color, 'display: inline-block; padding: 0 1px;', true)
           when :bullet
             inline_category_stripe(parent_category.color, 'display: inline-block; width: 5px; height: 10px; line-height: 1;')
           when :none
@@ -63,11 +63,7 @@ module CategoryBadge
         when :bar
           inline_category_stripe(category.color, 'display: inline-block; padding: 1px;', true)
         when :box
-          unless show_parent
-            inline_category_stripe(category.color, 'display: block; position: absolute; width: 100%; height: 100%;')
-          else
-            inline_category_stripe(category.color, 'left: 5px; display: block; position: absolute; width: calc(100% - 5px); height: 100%;')
-          end
+          ''
         when :bullet
           inline_category_stripe(category.color, "display: inline-block; width: #{category.parent_category_id.nil? ? 10 : 5}px; height: 10px;")
         when :none
@@ -88,7 +84,7 @@ module CategoryBadge
         when :bar
           'color: #222222; padding: 3px; vertical-align: text-top; margin-top: -3px; display: inline-block;'
         when :box
-          "color: ##{category.text_color}; #{show_parent ? 'margin-left: 5px; ' : ''} position: relative; padding: 0 5px; margin-top: 2px;"
+          "color: ##{category.text_color}; padding: 0 5px;"
         when :bullet
           'color: #222222; vertical-align: text-top; line-height: 1; margin-left: 4px; padding-left: 2px; display: inline;'
         when :none
@@ -104,7 +100,7 @@ module CategoryBadge
 
     result << ERB::Util.html_escape(category.name) << '</span>'
 
-    result = "<a class='badge-wrapper #{extra_classes}' href='#{category_url}'" + (opts[:inline_style] ? inline_badge_wrapper_style : '') + ">#{result}</a>"
+    result = "<a class='badge-wrapper #{extra_classes}' href='#{category_url}'" + (opts[:inline_style] ? inline_badge_wrapper_style(category) : '') + ">#{result}</a>"
 
     result.html_safe
   end

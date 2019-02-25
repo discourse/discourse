@@ -196,6 +196,8 @@ QUnit.test("findByIds", assert => {
     Discourse.Category.findByIds([1, 2, 3]),
     _.values(categories)
   );
+
+  assert.deepEqual(Discourse.Category.findByIds(), []);
 });
 
 QUnit.test("search with category name", assert => {

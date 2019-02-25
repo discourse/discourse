@@ -6,13 +6,17 @@
         <ul class="breadcrumb">
           {{#if showAllReportsLink}}
             <li class="item all-reports">
-              {{#link-to "adminReports" class="report-url"}}
+              {{#link-to "admin.dashboardNextReports" class="report-url"}}
                 {{i18n "admin.dashboard.all_reports"}}
               {{/link-to}}
             </li>
-            <li class="item separator">|</li>
+
+            {{#unless showNotFoundError}}
+              <li class="item separator">|</li>
+            {{/unless}}
           {{/if}}
 
+          {{#unless showNotFoundError}}
           <li class="item report">
             <a href="{{model.reportUrl}}" class="report-url">
               {{model.title}}
@@ -24,6 +28,7 @@
               </span>
             {{/if}}
           </li>
+          {{/unless}}
         </ul>
       {{/if}}
 
@@ -64,7 +69,7 @@
             </div>
           {{else}}
             <div class="alert alert-info report-alert no-data">
-              {{d-icon "pie-chart"}}
+              {{d-icon "chart-pie"}}
               {{#if model.reportUrl}}
                 <a href="{{model.reportUrl}}" class="report-url">
                   <span>
@@ -94,23 +99,28 @@
             <span>{{i18n "admin.dashboard.exception_error"}}</span>
           </div>
         {{/if}}
+
+        {{#if showNotFoundError}}
+          <div class="alert alert-error report-alert not-found">
+            {{d-icon "exclamation-triangle"}}
+            <span>{{i18n "admin.dashboard.not_found_error"}}</span>
+          </div>
+        {{/if}}
       {{/unless}}
     </div>
 
     {{#if showFilteringUI}}
       <div class="filters">
         {{#if showModes}}
-          <ul class="modes">
+          <div class="modes">
             {{#each displayedModes as |displayedMode|}}
-              <li class="mode">
-                {{d-button
-                  action="changeMode"
-                  actionParam=displayedMode.mode
-                  class=displayedMode.cssClass
-                  icon=displayedMode.icon}}
-              </li>
+              {{d-button
+                action=(action "changeMode")
+                actionParam=displayedMode.mode
+                class=displayedMode.cssClass
+                icon=displayedMode.icon}}
             {{/each}}
-          </ul>
+          </div>
         {{/if}}
 
         {{#if showDatesOptions}}
@@ -167,8 +177,8 @@
           <div class="control">
             <div class="input">
               {{d-button
-                class="export-csv-btn"
-                action="exportCsv"
+                class="btn-default export-csv-btn"
+                action=(action "exportCsv")
                 label="admin.export_csv.button_text"
                 icon="download"}}
             </div>
@@ -180,9 +190,9 @@
             <div class="input">
               {{d-button
                 class="refresh-report-btn btn-primary"
-                action="refreshReport"
+                action=(action "refreshReport")
                 label="admin.dashboard.reports.refresh_report"
-                icon="refresh"}}
+                icon="sync"}}
             </div>
           </div>
         {{/if}}
@@ -192,6 +202,6 @@
 {{/conditional-loading-section}}
 {{else}}
   <div class="alert alert-info">
-    {{{i18n disabledLabel}}}
+    {{{disabledLabel}}}
   </div>
 {{/if}}

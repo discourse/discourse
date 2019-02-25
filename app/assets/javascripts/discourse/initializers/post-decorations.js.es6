@@ -1,5 +1,6 @@
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
+import { setupLazyLoading } from "discourse/lib/lazy-load-images";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
@@ -13,6 +14,8 @@ export default {
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCooked(setTextDirections);
       }
+
+      setupLazyLoading(api);
 
       api.decorateCooked($elem => {
         const players = $("audio", $elem);

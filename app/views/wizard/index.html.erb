@@ -5,11 +5,8 @@
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script 'wizard-vendor' %>
     <%= preload_script 'wizard-application' %>
-    <%= render partial: "common/special_font_face" %>
     <script src="<%= ExtraLocalesController.url("wizard") %>"></script>
     <%= csrf_meta_tags %>
-
-    <meta name="discourse-base-uri" content="<%= Discourse.base_uri %>">
 
     <%= render partial: "layouts/head" %>
     <title><%= t 'wizard.title' %></title>
@@ -17,12 +14,13 @@
 
   <body class='wizard'>
     <div id='wizard-main'></div>
+    <%= preload_script 'wizard-start' %>
 
-    <script>
-      (function() {
-        var wizard = require('wizard/wizard').default.create();
-        wizard.start();
-      })();
-    </script>
+    <div id="svg-sprites" style="display:none;">
+      <div class="fontawesome">
+        <%= raw SvgSprite.bundle %>
+      </div>
+    </div>
+
   </body>
 </html>

@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   elementId: "navigation-bar",
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("connectors", renderedConnectorsFor("extra-nav-item", null, this));
   },
 
@@ -68,14 +68,21 @@ export default Ember.Component.extend({
       if (this.get("expanded")) {
         DiscourseURL.appEvents.on("dom:clean", this, this.ensureDropClosed);
 
-        Em.run.next(() => {
+        Ember.run.next(() => {
           if (!this.get("expanded")) {
             return;
           }
 
           this.$(".drop a").on("click", () => {
             this.$(".drop").hide();
-            this.set("expanded", false);
+
+            Ember.run.next(() => {
+              if (!this.element || this.isDestroying || this.isDestroyed) {
+                return;
+              }
+              this.set("expanded", false);
+            });
+
             return true;
           });
 

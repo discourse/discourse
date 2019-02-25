@@ -1,4 +1,5 @@
 import { scrollTop } from "discourse/mixins/scroll-top";
+import { THEMES, COMPONENTS } from "admin/models/theme";
 
 export default Ember.Route.extend({
   serialize(model) {
@@ -14,19 +15,21 @@ export default Ember.Route.extend({
   setupController(controller, model) {
     this._super(...arguments);
 
-    controller.set("model", model);
-
     const parentController = this.controllerFor("adminCustomizeThemes");
-    parentController.set("editingTheme", false);
-    controller.set("allThemes", parentController.get("model"));
+    parentController.setProperties({
+      editingTheme: false,
+      currentTab: model.get("component") ? COMPONENTS : THEMES
+    });
+
+    controller.setProperties({
+      model: model,
+      parentController: parentController,
+      allThemes: parentController.get("model"),
+      colorSchemeId: model.get("color_scheme_id"),
+      colorSchemes: parentController.get("model.extras.color_schemes")
+    });
 
     this.handleHighlight(model);
-
-    controller.set(
-      "colorSchemes",
-      parentController.get("model.extras.color_schemes")
-    );
-    controller.set("colorSchemeId", model.get("color_scheme_id"));
   },
 
   deactivate() {
@@ -34,9 +37,11 @@ export default Ember.Route.extend({
   },
 
   handleHighlight(theme) {
-    this.get("controller.allThemes").forEach(t => t.set("active", false));
+    this.get("controller.allThemes")
+      .filter(t => t.get("selected"))
+      .forEach(t => t.set("selected", false));
     if (theme) {
-      theme.set("active", true);
+      theme.set("selected", true);
     }
   },
 

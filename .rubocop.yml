@@ -114,3 +114,10 @@ Layout/AlignHash:
 
 Bundler/OrderedGems:
   Enabled: false
+
+Style/SingleLineMethods:
+  Enabled: true
+
+Style/Semicolon:
+  Enabled: true
+  AllowAsExpressionSeparator: true

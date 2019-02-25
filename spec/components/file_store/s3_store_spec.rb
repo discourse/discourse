@@ -38,6 +38,8 @@ describe FileStore::S3Store do
   context 'uploading to s3' do
     include_context "s3 helpers"
 
+    let(:etag) { "etag" }
+
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
@@ -45,11 +47,13 @@ describe FileStore::S3Store do
         s3_object = stub
 
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
-        s3_object.expects(:upload_file)
+
+        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
         expect(store.store_upload(uploaded_file, upload)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
         )
+        expect(upload.etag).to eq(etag)
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -63,11 +67,13 @@ describe FileStore::S3Store do
           s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
-          s3_object.expects(:upload_file)
+
+          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
           )
+          expect(upload.etag).to eq(etag)
         end
       end
     end
@@ -80,11 +86,13 @@ describe FileStore::S3Store do
         path = "optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
 
         s3_bucket.expects(:object).with(path).returns(s3_object)
-        s3_object.expects(:upload_file)
+
+        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
         expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
         )
+        expect(optimized_image.etag).to eq(etag)
       end
 
       describe "when s3_upload_bucket includes folders path" do
@@ -99,11 +107,13 @@ describe FileStore::S3Store do
           path = "discourse-uploads/optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
 
           s3_bucket.expects(:object).with(path).returns(s3_object)
-          s3_object.expects(:upload_file)
+
+          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
           expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
           )
+          expect(optimized_image.etag).to eq(etag)
         end
       end
     end
@@ -154,6 +164,24 @@ describe FileStore::S3Store do
         store.remove_upload(upload)
       end
 
+      it "removes the optimized image from s3 with the right paths" do
+        optimized = Fabricate(:optimized_image, version: 1)
+        upload = optimized.upload
+        path = "optimized/1X/#{upload.sha1}_#{optimized.version}_#{optimized.width}x#{optimized.height}.png"
+
+        store.expects(:get_depth_for).with(upload.id).returns(0)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+        optimized.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}")
+        s3_object = stub
+
+        s3_bucket.expects(:object).with("tombstone/#{path}").returns(s3_object)
+        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{path}")
+        s3_bucket.expects(:object).with(path).returns(s3_object)
+        s3_object.expects(:delete)
+
+        store.remove_optimized_image(optimized)
+      end
+
       describe "when s3_upload_bucket includes folders path" do
         before do
           SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
@@ -176,21 +204,25 @@ describe FileStore::S3Store do
     end
 
     describe "#remove_optimized_image" do
-      let(:optimized_image) do
-        Fabricate(:optimized_image,
-          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/optimized/1X/#{upload.sha1}_1_100x200.png",
-          upload: upload
+      let(:optimized_image) { Fabricate(:optimized_image, upload: upload) }
+
+      let(:image_path) do
+        FileStore::BaseStore.new.get_path_for_optimized_image(optimized_image)
+      end
+
+      before do
+        optimized_image.update!(
+          url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com#{image_path}"
         )
       end
 
       it "removes the file from s3 with the right paths" do
-        store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         s3_object = stub
 
-        s3_bucket.expects(:object).with("tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
-        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/optimized/1X/#{upload.sha1}_1_100x200.png")
-        s3_bucket.expects(:object).with("optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
+        s3_bucket.expects(:object).with("tombstone/#{image_path}").returns(s3_object)
+        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{image_path}")
+        s3_bucket.expects(:object).with("#{image_path}").returns(s3_object)
         s3_object.expects(:delete)
 
         store.remove_optimized_image(optimized_image)
@@ -202,13 +234,21 @@ describe FileStore::S3Store do
         end
 
         it "removes the file from s3 with the right paths" do
-          store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_object = stub
 
-          s3_bucket.expects(:object).with("discourse-uploads/tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
-          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/optimized/1X/#{upload.sha1}_1_100x200.png")
-          s3_bucket.expects(:object).with("discourse-uploads/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
+          s3_bucket.expects(:object)
+            .with("discourse-uploads/tombstone/#{image_path}")
+            .returns(s3_object)
+
+          s3_object.expects(:copy_from).with(
+            copy_source: "s3-upload-bucket/discourse-uploads/#{image_path}"
+          )
+
+          s3_bucket.expects(:object).with(
+            "discourse-uploads/#{image_path}"
+          ).returns(s3_object)
+
           s3_object.expects(:delete)
 
           store.remove_optimized_image(optimized_image)

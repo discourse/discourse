@@ -10,7 +10,8 @@ describe UserAvatarsController do
     end
 
     it 'returns an avatar if we are allowing the proxy' do
-      get "/letter_avatar_proxy/v2/letter/a/aaaaaa/360.png"
+      stub_request(:get, "https://avatars.discourse.org/v3/letter/a/aaaaaa/360.png").to_return(body: 'image')
+      get "/letter_avatar_proxy/v3/letter/a/aaaaaa/360.png"
       expect(response.status).to eq(200)
     end
   end
@@ -75,7 +76,7 @@ describe UserAvatarsController do
 
       stub_request(:get, "http://cdn.com/something/else").to_return(body: 'image')
 
-      GlobalSetting.expects(:cdn_url).returns("http://awesome.com/boom")
+      GlobalSetting.stubs(:cdn_url).returns("http://awesome.com/boom")
 
       upload = Fabricate(:upload, url: "//test.s3.dualstack.us-east-1.amazonaws.com/something")
 
@@ -84,7 +85,8 @@ describe UserAvatarsController do
         upload: upload,
         width: 98,
         height: 98,
-        url: "//test.s3.dualstack.us-east-1.amazonaws.com/something/else"
+        url: "//test.s3.dualstack.us-east-1.amazonaws.com/something/else",
+        version: OptimizedImage::VERSION
       )
 
       user = Fabricate(:user, uploaded_avatar_id: upload.id)
@@ -99,6 +101,29 @@ describe UserAvatarsController do
       expect(response.body).to eq("image")
       expect(response.headers["Cache-Control"]).to eq('max-age=31556952, public, immutable')
       expect(response.headers["Last-Modified"]).to eq(optimized_image.upload.created_at.httpdate)
+    end
+
+    it 'serves new version for old urls' do
+      user = Fabricate(:user)
+      SiteSetting.avatar_sizes = "45"
+
+      image = file_from_fixtures("cropped.png")
+      upload = UploadCreator.new(image, "image.png").create_for(user.id)
+
+      user.update_columns(uploaded_avatar_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/45/#{upload.id}_1.png"
+
+      expect(response.status).to eq(200)
+
+      image = response.body
+      optimized = upload.get_optimized_image(45, 45, {})
+
+      expect(optimized.filesize).to eq(body.length)
+
+      # clean up images
+      upload.destroy
+
     end
 
     it 'serves a correct last modified for render blank' do

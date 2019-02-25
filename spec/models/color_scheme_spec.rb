@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 describe ColorScheme do
+  after do
+    ColorScheme.hex_cache.clear
+  end
 
   let(:valid_params) { { name: "Best Colors Evar", colors: valid_colors } }
+
   let(:valid_colors) { [
     { name: '$primary_background_color', hex: 'FFBB00' },
     { name: '$secondary_background_color', hex: '888888' }
@@ -63,6 +67,13 @@ describe ColorScheme do
 
       it "returns nil for a missing attribute" do
         expect(ColorScheme.hex_for_name('undefined')).to eq nil
+      end
+
+      it "returns the base color for an attribute of a specified scheme" do
+        scheme = ColorScheme.create_from_base(name: "test scheme")
+        ColorSchemeRevisor.revise(scheme, colors: [{ name: "header_background", hex: "9dc927", default_hex: "949493" }])
+        scheme.reload
+        expect(ColorScheme.hex_for_name("header_background", scheme.id)).to eq("9dc927")
       end
 
       it "returns the base color for an attribute" do

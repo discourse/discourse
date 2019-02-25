@@ -152,3 +152,14 @@ componentTest("rate limited", {
     );
   }
 });
+
+componentTest("not found", {
+  template: "{{admin-report dataSourceName='not_found'}}",
+
+  test(assert) {
+    assert.ok(
+      exists(".alert-error.not-found"),
+      "it displays a not found error"
+    );
+  }
+});

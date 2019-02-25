@@ -14,18 +14,13 @@ export default Ember.Component.extend({
   formats: null,
   recurring: null,
   advancedMode: false,
+  isValid: true,
 
   init() {
     this._super();
 
     this.set("date", moment().format(this.dateFormat));
-    this.set("format", `LLL`);
-    this.set(
-      "timezones",
-      (this.siteSettings.discourse_local_dates_default_timezones || "")
-        .split("|")
-        .filter(f => f)
-    );
+    this.set("timezones", []);
     this.set(
       "formats",
       (this.siteSettings.discourse_local_dates_default_formats || "")
@@ -34,10 +29,9 @@ export default Ember.Component.extend({
     );
   },
 
-  didInsertElement() {
-    this._super();
-
-    this._setConfig();
+  @observes("date", "time", "toDate", "toTime")
+  _resetFormValidity() {
+    this.set("isValid", true);
   },
 
   @computed
@@ -71,53 +65,33 @@ export default Ember.Component.extend({
 
   @computed()
   allTimezones() {
-    return _.map(moment.tz.names(), z => z);
+    return moment.tz.names();
   },
 
-  @observes(
-    "date",
-    "time",
-    "toDate",
-    "toTime",
-    "recurring",
-    "format",
-    "timezones"
-  )
-  _setConfig() {
-    const toTime = this.get("toTime");
+  getConfig(range) {
+    const endOfRange = range && range === "end";
+    const time = endOfRange ? this.get("toTime") : this.get("time");
+    let date = endOfRange ? this.get("toDate") : this.get("date");
 
-    if (toTime && !this.get("toDate")) {
-      this.set("toDate", moment().format(this.dateFormat));
+    if (endOfRange && time && !date) {
+      date = moment().format(this.dateFormat);
     }
 
-    const date = this.get("date");
-    const toDate = this.get("toDate");
-    const time = this.get("time");
     const recurring = this.get("recurring");
     const format = this.get("format");
     const timezones = this.get("timezones");
     const timeInferred = time ? false : true;
-    const toTimeInferred = toTime ? false : true;
+    const timezone = this.get("currentUserTimezone");
 
     let dateTime;
     if (!timeInferred) {
-      dateTime = moment
-        .tz(`${date} ${time}`, this.get("currentUserTimezone"))
-        .utc();
+      dateTime = moment.tz(`${date} ${time}`, timezone);
     } else {
-      dateTime = moment.tz(date, this.get("currentUserTimezone")).utc();
-    }
-
-    let toDateTime;
-    if (!toTimeInferred) {
-      toDateTime = moment
-        .tz(`${toDate} ${toTime}`, this.get("currentUserTimezone"))
-        .utc();
-    } else {
-      toDateTime = moment
-        .tz(toDate, this.get("currentUserTimezone"))
-        .endOf("day")
-        .utc();
+      if (endOfRange) {
+        dateTime = moment.tz(date, timezone).endOf("day");
+      } else {
+        dateTime = moment.tz(date, timezone);
+      }
     }
 
     let config = {
@@ -125,84 +99,76 @@ export default Ember.Component.extend({
       dateTime,
       recurring,
       format,
-      timezones
+      timezones,
+      timezone
     };
 
-    config.time = dateTime.format(this.timeFormat);
-    config.toTime = toDateTime.format(this.timeFormat);
-
-    if (toDate) {
-      config.toDate = toDateTime.format(this.dateFormat);
+    if (!timeInferred) {
+      config.time = dateTime.format(this.timeFormat);
     }
 
-    if (
-      timeInferred &&
-      toTimeInferred &&
-      this.get("formats").includes(format)
-    ) {
+    if (timeInferred) {
+      config.displayedTimezone = this.get("currentUserTimezone");
+    }
+
+    if (timeInferred && this.get("formats").includes(format)) {
       config.format = "LL";
     }
 
-    if (toDate) {
-      config.toDateTime = toDateTime;
-    }
-
-    if (
-      !timeInferred &&
-      !toTimeInferred &&
-      date === moment().format(this.dateFormat) &&
-      date === toDate &&
-      this.get("formats").includes(format)
-    ) {
-      config.format = "LT";
-    }
-
-    this.set("config", config);
+    return config;
   },
 
-  getTextConfig(config) {
-    let text = `[date=${config.date} `;
-    if (config.recurring) text += `recurring=${config.recurring} `;
+  _generateDateMarkup(config) {
+    let text = `[date=${config.date}`;
 
     if (config.time) {
-      text += `time=${config.time} `;
+      text += ` time=${config.time} `;
     }
 
-    text += `format="${config.format}" `;
-    text += `timezones="${config.timezones.join("|")}"`;
+    if (config.format && config.format.length) {
+      text += ` format="${config.format}" `;
+    }
+
+    if (config.timezone) {
+      text += ` timezone="${config.timezone}"`;
+    }
+
+    if (config.timezones && config.timezones.length) {
+      text += ` timezones="${config.timezones.join("|")}"`;
+    }
+
+    if (config.recurring) {
+      text += ` recurring="${config.recurring}"`;
+    }
+
     text += `]`;
-
-    if (config.toDate) {
-      text += ` → `;
-      text += `[date=${config.toDate} `;
-
-      if (config.toTime) {
-        text += `time=${config.toTime} `;
-      }
-
-      text += `format="${config.format}" `;
-      text += `timezones="${config.timezones.join("|")}"`;
-      text += `]`;
-    }
 
     return text;
   },
 
-  @computed("config.dateTime", "config.toDateTime")
-  validDate(dateTime, toDateTime) {
-    if (!dateTime) return false;
+  valid(isRange) {
+    const fromConfig = this.getConfig(isRange ? "start" : null);
 
-    if (toDateTime) {
-      if (!toDateTime.isValid()) {
-        return false;
-      }
+    if (!fromConfig.dateTime || !fromConfig.dateTime.isValid()) {
+      this.set("isValid", false);
+      return false;
+    }
 
-      if (toDateTime.diff(dateTime) < 0) {
+    if (isRange) {
+      const toConfig = this.getConfig("end");
+
+      if (
+        !toConfig.dateTime ||
+        !toConfig.dateTime.isValid() ||
+        toConfig.dateTime.diff(fromConfig.dateTime) < 0
+      ) {
+        this.set("isValid", false);
         return false;
       }
     }
 
-    return dateTime.isValid();
+    this.set("isValid", true);
+    return true;
   },
 
   @computed("advancedMode")
@@ -218,10 +184,23 @@ export default Ember.Component.extend({
     },
 
     save() {
-      this._closeModal();
+      const isRange =
+        this.get("date") && (this.get("toDate") || this.get("toTime"));
 
-      const textConfig = this.getTextConfig(this.get("config"));
-      this.get("toolbarEvent").addText(textConfig);
+      if (this.valid(isRange)) {
+        this._closeModal();
+
+        let text = this._generateDateMarkup(
+          this.getConfig(isRange ? "start" : null)
+        );
+
+        if (isRange) {
+          text += ` → `;
+          text += this._generateDateMarkup(this.getConfig("end"));
+        }
+
+        this.get("toolbarEvent").addText(text);
+      }
     },
 
     fillFormat(format) {

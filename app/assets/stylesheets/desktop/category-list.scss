@@ -52,32 +52,41 @@
   .subcategories {
     margin-top: 0.25em;
     clear: both;
+    .subcategory {
+      display: inline-flex;
+      align-items: baseline;
+      margin-right: 0.8em;
+    }
+    .badge-wrapper {
+      margin-right: 0.5em;
+    }
     .badge-notification.new-posts {
+      display: block;
       padding: 0;
-      margin: 0 10px 0 0;
     }
   }
 
   .featured-topic {
     margin: 10px 0 0;
     display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-
+    align-items: baseline;
     &:first-of-type {
       margin-top: 13px;
     }
-
     a.last-posted-at,
     a.last-posted-at:visited {
       font-size: $font-down-1;
       color: dark-light-choose($primary-medium, $secondary-high);
     }
-
-    .topic-statuses .fa {
-      color: dark-light-choose($primary-medium, $secondary-high);
+    .title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 0 1 auto;
     }
-
+    .topic-statuses {
+      margin-right: 0.15em;
+    }
     .topic-post-badges .badge.new-posts,
     .title {
       margin-right: 5px;
@@ -92,9 +101,6 @@
         line-height: $line-height-medium;
         a[href] {
           color: $primary;
-        }
-        .fa {
-          margin-right: 5px;
         }
       }
     }
@@ -111,7 +117,7 @@
   flex-flow: row wrap;
 
   div.column {
-    flex: 1;
+    flex: 1 0 0px;
     flex-direction: row;
     min-width: 300px;
   }
@@ -128,8 +134,11 @@
     }
   }
 
-  .discourse-tag {
-    font-size: $font-down-2;
+  .discourse-tags {
+    display: inline-block;
+    .discourse-tag {
+      font-size: $font-down-1;
+    }
   }
 
   .topic-featured-link {

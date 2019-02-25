@@ -1,7 +1,7 @@
 {{#d-section class="user-navigation" pageClass="user-messages"}}
   {{#unless site.mobileView}}
     {{#if showNewPM}}
-      {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+      {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
     {{/if}}
   {{/unless}}
 
@@ -26,7 +26,7 @@
       {{#if group.has_messages}}
         <li>
           {{#link-to 'userPrivateMessages.group' group.name}}
-            {{d-icon "group" class="glyph"}}
+            {{d-icon "users"}}
             {{capitalize-string group.name}}
           {{/link-to}}
         </li>
@@ -57,33 +57,36 @@
 
 <section class='user-right messages'>
 
-<div class="clearfix list-actions">
-    {{#if showToggleBulkSelect}}
-      <button {{action "toggleBulkSelect"}} class="btn bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
-        {{d-icon "list"}}
-      </button>
-    {{/if}}
+<div class="list-actions">
+  
+    {{#unless site.mobileView}}
+      {{#if showToggleBulkSelect}}
+        <button {{action "toggleBulkSelect"}} class="btn btn-default bulk-select no-text" title="{{i18n "user.messages.bulk_select"}}">
+          {{d-icon "list"}}
+        </button>
+      {{/if}}
+    {{/unless}}
 
     {{#if site.mobileView}}
       {{#if showNewPM}}
-        {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
+        {{d-button class="btn-primary new-private-message" action=(route-action "composePrivateMessage") icon="envelope" label="user.new_private_message"}}
       {{/if}}
     {{/if}}
 
     {{#if canArchive}}
-    <button {{action "archive"}} class="btn btn-archive">
+    <button {{action "archive"}} class="btn btn-default btn-archive">
       {{i18n "user.messages.move_to_archive"}}
     </button>
     {{/if}}
 
     {{#if canMoveToInbox}}
-    <button {{action "toInbox"}} class="btn btn-to-inbox">
+    <button {{action "toInbox"}} class="btn btn-default btn-to-inbox">
       {{i18n "user.messages.move_to_inbox"}}
     </button>
     {{/if}}
 
     {{#if bulkSelectEnabled}}
-    <button {{action "selectAll"}} class="btn btn-select-all">
+    <button {{action "selectAll"}} class="btn btn-default btn-select-all">
       {{i18n "user.messages.select_all"}}
     </button>
     {{/if}}

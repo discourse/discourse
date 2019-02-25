@@ -1,0 +1,28 @@
+{{#conditional-loading-spinner condition=isLoading}}
+   <div class="reports-index section">
+     <div class="section-title">
+       <h2>{{i18n "admin.reports.title"}}</h2>
+      {{input
+        class="filter-reports-input"
+        input=(action "filterReports" value="target.value")
+        placeholder=(i18n "admin.dashboard.filter_reports")
+        autofocus=true}}
+    </div>
+
+    <ul class="reports-list">
+      {{#each filterReports as |report|}}
+        <li class="report">
+          {{#link-to 'adminReports.show' report.type}}
+            <h3 class="report-title">{{report.title}}</h3>
+
+            {{#if report.description}}
+            <p class="report-description">
+              {{report.description}}
+            </p>
+          {{/if}}
+          {{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+{{/conditional-loading-spinner}}

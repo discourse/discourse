@@ -16,6 +16,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 const LIKED_TYPE = 5;
 const INVITED_TYPE = 8;
 const GROUP_SUMMARY_TYPE = 16;
+export const LIKED_CONSOLIDATED_TYPE = 19;
 
 createWidget("notification-item", {
   tagName: "li",
@@ -61,6 +62,16 @@ createWidget("notification-item", {
       return userPath(data.display_username);
     }
 
+    if (attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
+      return userPath(
+        `${this.attrs.username ||
+          this.currentUser
+            .username}/notifications/likes-received?acting_username=${
+          data.display_username
+        }`
+      );
+    }
+
     if (data.group_id) {
       return userPath(data.username + "/messages/group/" + data.group_name);
     }
@@ -77,7 +88,16 @@ createWidget("notification-item", {
       return this.attrs.fancy_title;
     }
 
-    const title = data.topic_title;
+    let title;
+
+    if (this.attrs.notification_type === LIKED_CONSOLIDATED_TYPE) {
+      title = I18n.t("notifications.liked_consolidated_description", {
+        count: parseInt(data.count)
+      });
+    } else {
+      title = data.topic_title;
+    }
+
     return Ember.isEmpty(title) ? "" : escapeExpression(title);
   },
 
@@ -95,9 +115,11 @@ createWidget("notification-item", {
 
     const username = formatUsername(data.display_username);
     const description = this.description();
+
     if (notificationType === LIKED_TYPE && data.count > 1) {
       const count = data.count - 2;
       const username2 = formatUsername(data.username2);
+
       if (count === 0) {
         return I18n.t("notifications.liked_2", {
           description,

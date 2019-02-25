@@ -47,9 +47,9 @@ QUnit.test("add words", async assert => {
   await click(".watched-word-form button");
 
   let found = [];
-  _.each(find(".watched-words-list .watched-word"), i => {
+  $.each(find(".watched-words-list .watched-word"), (index, elem) => {
     if (
-      $(i)
+      $(elem)
         .text()
         .trim() === "poutine"
     ) {
@@ -65,13 +65,13 @@ QUnit.test("remove words", async assert => {
 
   let word = null;
 
-  _.each(find(".watched-words-list .watched-word"), i => {
+  $.each(find(".watched-words-list .watched-word"), (index, elem) => {
     if (
-      $(i)
+      $(elem)
         .text()
         .trim() === "anise"
     ) {
-      word = i;
+      word = elem;
     }
   });
 

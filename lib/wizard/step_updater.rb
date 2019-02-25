@@ -30,6 +30,11 @@ class Wizard
 
     def update_setting(id, value)
       value.strip! if value.is_a?(String)
+
+      if !value.is_a?(Upload) && SiteSetting.type_supervisor.get_type(id) == :upload
+        value = Upload.get_from_url(value) || ''
+      end
+
       SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.send(id) != value
     end
 

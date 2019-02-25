@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PARAMS="$@"
+if [[ $# = 1 ]] && [[ "$1" =~ "s" ]];
+then
+  PARAMS="$PARAMS -b 0.0.0.0"
+fi
+
+CMD="cd /src && USER=discourse RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 LD_PRELOAD=/usr/lib/libjemalloc.so RAILS_ENV=${RAILS_ENV:=development} bin/unicorn $PARAMS"
+docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"

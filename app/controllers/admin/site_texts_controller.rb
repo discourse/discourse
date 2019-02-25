@@ -28,6 +28,10 @@ class Admin::SiteTextsController < Admin::AdminController
         results << record_for(k, v)
       end
 
+      unless translations.empty?
+        extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
+      end
+
       results.sort! do |x, y|
         if x[:value].casecmp(query) == 0
           -1

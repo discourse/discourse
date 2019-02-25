@@ -3,6 +3,10 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Groups");
 
 QUnit.test("Browsing Groups", async assert => {
+  await visit("/groups?username=eviltrout");
+
+  assert.equal(count(".groups-table-row"), 1, "it displays user's groups");
+
   await visit("/groups");
 
   assert.equal(count(".groups-table-row"), 2, "it displays visible groups");

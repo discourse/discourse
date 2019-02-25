@@ -1,3 +1,16 @@
+if ARGV.include?('bbcode-to-md')
+  # Replace (most) bbcode with markdown before creating posts.
+  # This will dramatically clean up the final posts in Discourse.
+  #
+  # In a temp dir:
+  #
+  # git clone https://github.com/nlalonde/ruby-bbcode-to-md.git
+  # cd ruby-bbcode-to-md
+  # gem build ruby-bbcode-to-md.gemspec
+  # gem install ruby-bbcode-to-md-*.gem
+  require 'ruby-bbcode-to-md'
+end
+
 require "pg"
 require "set"
 require "redcarpet"
@@ -13,6 +26,8 @@ class BulkImport::Base
 
   NOW ||= "now()".freeze
   PRIVATE_OFFSET ||= 2**30
+
+  # rubocop:disable Layout/AlignHash
 
   CHARSET_MAP = {
     "armscii8" => nil,
@@ -53,6 +68,8 @@ class BulkImport::Base
     "utf8"     => Encoding::UTF_8,
   }
 
+  # rubocop:enable Layout/AlignHash
+
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"
     db = ActiveRecord::Base.connection_config
@@ -62,6 +79,7 @@ class BulkImport::Base
     @uploader = ImportScripts::Uploader.new
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
+    @bbcode_to_md = true if use_bbcode_to_md?
 
     @markdown = Redcarpet::Markdown.new(
       Redcarpet::Render::HTML.new(hard_wrap: true),
@@ -80,7 +98,7 @@ class BulkImport::Base
     load_indexes
     execute
     fix_primary_keys
-    puts "Done!"
+    puts "Done! Now run the 'import:ensure_consistency' rake task."
   end
 
   def preload_i18n
@@ -168,6 +186,10 @@ class BulkImport::Base
     @last_post_action_id = last_id(PostAction)
   end
 
+  def use_bbcode_to_md?
+    ARGV.include?("bbcode-to-md")
+  end
+
   def execute
     raise NotImplementedError
   end
@@ -183,14 +205,28 @@ class BulkImport::Base
     @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})") if @last_post_action_id > 0
   end
 
-  def group_id_from_imported_id(id); @groups[id.to_s]; end
-  def user_id_from_imported_id(id); @users[id.to_s]; end
-  def category_id_from_imported_id(id); @categories[id.to_s]; end
-  def topic_id_from_imported_id(id); @topics[id.to_s]; end
-  def post_id_from_imported_id(id); @posts[id.to_s]; end
+  def group_id_from_imported_id(id)
+    @groups[id.to_s]
+  end
+  def user_id_from_imported_id(id)
+    @users[id.to_s]
+  end
+  def category_id_from_imported_id(id)
+    @categories[id.to_s]
+  end
+  def topic_id_from_imported_id(id)
+    @topics[id.to_s]
+  end
+  def post_id_from_imported_id(id)
+    @posts[id.to_s]
+  end
 
-  def post_number_from_imported_id(id); @post_number_by_post_id[post_id_from_imported_id(id)]; end
-  def topic_id_from_imported_post_id(id); @topic_id_by_post_id[post_id_from_imported_id(id)]; end
+  def post_number_from_imported_id(id)
+    @post_number_by_post_id[post_id_from_imported_id(id)]
+  end
+  def topic_id_from_imported_post_id(id)
+    @topic_id_by_post_id[post_id_from_imported_id(id)]
+  end
 
   GROUP_COLUMNS ||= %i{
     id name title bio_raw bio_cooked created_at updated_at
@@ -250,7 +286,9 @@ class BulkImport::Base
     topic_id tag_id created_at updated_at
   }
 
-  def create_groups(rows, &block); create_records(rows, "group", GROUP_COLUMNS, &block); end
+  def create_groups(rows, &block)
+    create_records(rows, "group", GROUP_COLUMNS, &block)
+  end
 
   def create_users(rows, &block)
     @imported_usernames = {}
@@ -273,16 +311,36 @@ class BulkImport::Base
     end
   end
 
-  def create_user_emails(rows, &block) create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block); end
-  def create_user_stats(rows, &block) create_records(rows, "user_stat", USER_STAT_COLUMNS, &block); end
-  def create_user_profiles(rows, &block); create_records(rows, "user_profile", USER_PROFILE_COLUMNS, &block); end
-  def create_group_users(rows, &block); create_records(rows, "group_user", GROUP_USER_COLUMNS, &block); end
-  def create_categories(rows, &block); create_records(rows, "category", CATEGORY_COLUMNS, &block); end
-  def create_topics(rows, &block); create_records(rows, "topic", TOPIC_COLUMNS, &block); end
-  def create_posts(rows, &block); create_records(rows, "post", POST_COLUMNS, &block); end
-  def create_post_actions(rows, &block); create_records(rows, "post_action", POST_ACTION_COLUMNS, &block); end
-  def create_topic_allowed_users(rows, &block); create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block); end
-  def create_topic_tags(rows, &block); create_records(rows, "topic_tag", TOPIC_TAG_COLUMNS, &block); end
+  def create_user_emails(rows, &block)
+    create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block)
+  end
+  def create_user_stats(rows, &block)
+    create_records(rows, "user_stat", USER_STAT_COLUMNS, &block)
+  end
+  def create_user_profiles(rows, &block)
+    create_records(rows, "user_profile", USER_PROFILE_COLUMNS, &block)
+  end
+  def create_group_users(rows, &block)
+    create_records(rows, "group_user", GROUP_USER_COLUMNS, &block)
+  end
+  def create_categories(rows, &block)
+    create_records(rows, "category", CATEGORY_COLUMNS, &block)
+  end
+  def create_topics(rows, &block)
+    create_records(rows, "topic", TOPIC_COLUMNS, &block)
+  end
+  def create_posts(rows, &block)
+    create_records(rows, "post", POST_COLUMNS, &block)
+  end
+  def create_post_actions(rows, &block)
+    create_records(rows, "post_action", POST_ACTION_COLUMNS, &block)
+  end
+  def create_topic_allowed_users(rows, &block)
+    create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block)
+  end
+  def create_topic_tags(rows, &block)
+    create_records(rows, "topic_tag", TOPIC_TAG_COLUMNS, &block)
+  end
 
   def process_group(group)
     @groups[group[:imported_id].to_s] = group[:id] = @last_group_id += 1
@@ -339,7 +397,7 @@ class BulkImport::Base
   end
 
   def process_user_email(user_email)
-    user_email[:id] = @last_user_email_id += 1;
+    user_email[:id] = @last_user_email_id += 1
     user_email[:user_id] = @users[user_email[:imported_user_id].to_s]
     user_email[:primary] = true
     user_email[:created_at] ||= NOW
@@ -423,6 +481,9 @@ class BulkImport::Base
     @topic_id_by_post_id[post[:id]] = post[:topic_id]
     post[:raw] = (post[:raw] || "").scrub.strip.presence || "<Empty imported post>"
     post[:raw] = process_raw post[:raw]
+    if @bbcode_to_md
+      post[:raw] = post[:raw].bbcode_to_md(false, {}, :disable, :quote) rescue post[:raw]
+    end
     post[:like_count] ||= 0
     post[:cooked] = pre_cook post[:raw]
     post[:hidden] ||= false
@@ -512,8 +573,12 @@ class BulkImport::Base
 
     # [URL]...[/URL]
     # [MP3]...[/MP3]
+    # [EMAIL]...[/EMAIL]
+    # [LEFT]...[/LEFT]
     raw.gsub!(/\[\/?URL\]/i, "")
     raw.gsub!(/\[\/?MP3\]/i, "")
+    raw.gsub!(/\[\/?EMAIL\]/i, "")
+    raw.gsub!(/\[\/?LEFT\]/i, "")
 
     # [FONT=blah] and [COLOR=blah]
     raw.gsub!(/\[FONT=.*?\](.*?)\[\/FONT\]/im, "\\1")
@@ -569,6 +634,19 @@ class BulkImport::Base
 
     # [SPOILER=Some hidden stuff]SPOILER HERE!![/SPOILER]
     raw.gsub!(/\[SPOILER="?(.+?)"?\](.+?)\[\/SPOILER\]/im) { "\n#{$1}\n[spoiler]#{$2}[/spoiler]\n" }
+
+    # convert list tags to ul and list=1 tags to ol
+    # (basically, we're only missing list=a here...)
+    # (https://meta.discourse.org/t/phpbb-3-importer-old/17397)
+    raw.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
+    raw.gsub!(/\[list=1\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
+    raw.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
+    raw.gsub!(/\[list=1\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+    # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    raw.gsub!(/\[\*\]\n/, '')
+    raw.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    raw.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
+    raw.gsub!(/\[\*=1\]/, '')
 
     raw
   end

@@ -10,7 +10,7 @@
     margin-bottom: 1em;
 
     .search-query {
-      flex: 1;
+      flex: 1 0 0px;
       margin: 0 0.5em 0 0;
     }
 
@@ -220,17 +220,18 @@
     color: $tertiary-high;
   }
   .search-link {
-    .topic-statuses,
     .topic-title {
       font-size: $font-up-2;
-      line-height: $line-height-large;
+      line-height: $line-height-medium;
     }
-
     .topic-statuses {
-      float: none;
       display: inline-block;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      font-size: $font-0;
+      font-size: 1.3em;
+      line-height: $line-height-medium;
+      color: $primary-medium;
+      span {
+        line-height: 1;
+      }
     }
   }
   .blurb {

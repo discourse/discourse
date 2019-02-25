@@ -7,5 +7,7 @@
 
 ru:
   site_settings:
+    discourse_local_dates_enabled: "Включить функцию discourse-local-dates. Это добавит поддержку дат с указанием местного часового пояса в сообщениях с использованием элемента  [date] . "
     discourse_local_dates_default_formats: "Часто используемые форматы даты и времени, см.: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>формат строки momentjs</a>"
     discourse_local_dates_default_timezones: "Список часовых поясов по умолчанию должен быть допустимым <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "Формат, используемый для отображения даты в сообщениях e-mail."

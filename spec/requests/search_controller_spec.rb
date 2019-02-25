@@ -127,6 +127,16 @@ describe SearchController do
   end
 
   context "#show" do
+    it "doesn't raise an error when search term not specified" do
+      get "/search"
+      expect(response.status).to eq(200)
+    end
+
+    it "raises an error when the search term length is less than required" do
+      get "/search.json", params: { q: 'ba' }
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }

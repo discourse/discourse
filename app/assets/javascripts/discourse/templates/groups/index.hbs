@@ -1,8 +1,8 @@
 {{#d-section pageClass="groups"}}
   <div class="groups-header">
     {{#if currentUser.admin}}
-      {{d-button action="new"
-          class="groups-header-new pull-right"
+      {{d-button action=(action "new")
+          class="btn-default groups-header-new pull-right"
           icon="plus"
           label="admin.groups.new.title"}}
     {{/if}}
@@ -23,7 +23,7 @@
 
   {{#if model}}
     {{#conditional-loading-spinner condition=model.loading}}
-      {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
+      {{#load-more selector=".groups-table .groups-table-row" action=(action "loadMore")}}
         <div class='container'>
           <table class="groups-table">
             <thead>
@@ -54,13 +54,13 @@
                     {{/link-to}}
                   </td>
 
-                  <td class="groups-user-count">{{group.user_count}}</td>
+                  <td class="groups-user-count">{{d-icon "group"}}{{group.user_count}}</td>
 
                   <td class="groups-table-type">
                     {{#if group.public_admission}}
                       {{i18n 'groups.index.public'}}
                     {{else if group.isPrivate}}
-                      {{d-icon "eye-slash"}}
+                      {{d-icon "far-eye-slash"}}
                       {{i18n 'groups.index.private'}}
                     {{else}}
                       {{#if group.automatic}}
@@ -82,7 +82,7 @@
                       </span>
                     {{/if}}
 
-                    {{group-membership-button model=group showLogin='showLogin'}}
+                    {{group-membership-button tagName='' model=group showLogin=(route-action "showLogin")}}
                   </td>
                 </tr>
               {{/each}}

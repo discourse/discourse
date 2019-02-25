@@ -1,25 +1,26 @@
 {{#if showPositionInput}}
   <section class='field position-fields'>
-    <label>
+    <label for="category-position">
       {{i18n 'category.position'}}
-      {{text-field value=category.position class="position-input" type="number"}}
     </label>
+          {{text-field value=category.position id="category-position" class="position-input" type="number"}}
+
   </section>
 {{/if}}
 
 {{#unless showPositionInput}}
   <section class='field'>
     {{i18n 'category.position_disabled'}}
-    <a href="/admin/site_settings/category/basic">{{i18n 'category.position_disabled_click'}}</a>
+    <a href="{{get-url '/admin/site_settings/category/basic'}}">{{i18n 'category.position_disabled_click'}}</a>
   </section>
 {{/unless}}
 
 <section class='field'>
   <div class="control-group">
-    <label>
+    <label for="topic-auto-close">
       {{i18n 'topic.auto_close.label'}}
-      {{text-field value=category.auto_close_hours type="number"}}
     </label>
+          {{text-field value=category.auto_close_hours id="topic-auto-close" type="number"}}
 
     <label>
       {{input type="checkbox" checked=category.auto_close_based_on_last_post}}
@@ -53,59 +54,62 @@
 
 {{#if showSubcategoryListStyle}}
   <section class="field subcategory-list-style-field">
-    <label>
+    <label for="subcategory-list-style">
       {{i18n "category.subcategory_list_style"}}
-      {{combo-box valueAttribute="value" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
     </label>
+          {{combo-box valueAttribute="value" id="subcategory-list-style" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
+
   </section>
 {{/if}}
 
 <section class="field default-view-field">
-  <label>
+  <label for="category-default-view">
     {{i18n "category.default_view"}}
   </label>
   <div class="controls">
-    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
+    {{combo-box valueAttribute="value" id="category-default-view" content=availableViews value=category.default_view}}
   </div>
 </section>
 
 <section class="field default-top-period-field">
-  <label>
+  <label for="category-default-period">
     {{i18n "category.default_top_period"}}
   </label>
   <div class="controls">
-    {{combo-box valueAttribute="value" content=availableTopPeriods value=category.default_top_period}}
+    {{combo-box valueAttribute="value" id="category-default-period" content=availableTopPeriods value=category.default_top_period}}
   </div>
 </section>
 
 <section class="field">
-  <label>
+  <label for="category-sort-order">
     {{i18n "category.sort_order"}}
   </label>
   <div class="controls">
-  {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+  {{combo-box valueAttribute="value" id="category-sort-order" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
   {{#unless isDefaultSortOrder}}
-    {{combo-box castBoolean=true valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+    {{combo-box castBoolean=true valueAttribute="value" id="category-sort-order" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
   {{/unless}}
     </div>
 </section>
 
 <section class="field">
-  <label>
+  <label for="category-number-featured-topics">
     {{#if category.parent_category_id}}
       {{i18n "category.subcategory_num_featured_topics"}}
     {{else}}
       {{i18n "category.num_featured_topics"}}
     {{/if}}
-    {{text-field value=category.num_featured_topics type="number"}}
   </label>
+      {{text-field value=category.num_featured_topics id="category-number-featured-topics" type="number"}}
+
 </section>
 
 <section class="field">
-  <label>
+  <label for="category-number-daily-bump">
     {{i18n "category.num_auto_bump_daily"}}
-    {{text-field value=category.custom_fields.num_auto_bump_daily type="number"}}
   </label>
+      {{text-field value=category.custom_fields.num_auto_bump_daily id="category-number-daily-bump" type="number"}}
+
 </section>
 
 <section class="field">
@@ -142,11 +146,12 @@
     </section>
 
     <section class='field'>
-      <label>
-        {{d-icon "envelope-o"}}
+      <label for="category-email-in">
+        {{d-icon "far-envelope"}}
         {{i18n 'category.email_in'}}
-        {{text-field class="email-in" value=category.email_in}}
       </label>
+              {{text-field id="category-email-in" class="email-in" value=category.email_in}}
+
     </section>
 
     <section class='field'>
@@ -161,10 +166,11 @@
 
 {{#if siteSettings.tagging_enabled}}
   <section class='field minimum-required-tags'>
-    <label>
+    <label for="category-minimum-tags">
       {{i18n 'category.minimum_required_tags'}}
-      {{text-field value=category.minimum_required_tags type="number"}}
     </label>
+          {{text-field value=category.minimum_required_tags id="category-minimum-tags" type="number" min="0"}}
+
   </section>
 {{/if}}
 
@@ -187,6 +193,6 @@
 {{#unless emailInEnabled}}
   <section class='field'>
     {{i18n 'category.email_in_disabled'}}
-    <a href="/admin/site_settings/category/email">{{i18n 'category.email_in_disabled_click'}}</a>
+    <a href="{{get-url '/admin/site_settings/category/email'}}">{{i18n 'category.email_in_disabled_click'}}</a>
   </section>
 {{/unless}}

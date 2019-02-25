@@ -7,6 +7,7 @@
 
 it:
   site_settings:
+    discourse_narrative_bot_enabled: 'Abilita Discourse Narrative Bot (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Disabilita il messaggio di benvenuto di Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomi utente che Discourse Narrative Bot deve ignorare"
     discourse_narrative_bot_disable_public_replies: "Disabilita le risposte pubbliche da Discourse Narrative Bot"
@@ -133,35 +134,27 @@ it:
           Sfortunatamente, essendo un robot mal programmato, non l'ho capita bene. :frowning:
         track_response: Puoi provare di nuovo, o se vuoi saltare questo passaggio, dimmi `%{skip_trigger}`. Altrimenti per ricominciare, dimmi `%{reset_trigger}`.
         second_response: |-
-          Oh, scusa. Non sto ancora capendo. :anguished:
+          Oh, scusa. Non ho ancora capito. :anguished:
 
-          Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](/about).
+          Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](%{base_path}/about).
 
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:
       reset_trigger: "nuovo utente"
       cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
       hello:
-        title: ":robot: Benvenuto!"
+        title: "Saluti!"
         message: |-
           Grazie per esserti unito a %{title}, e benvenuto!
 
-          - Io sono solo un robot, ma [il nostro amichevole staff](/about) è qui per aiutarti se hai bisogno di contattare una persona.
+          - Io sono solo un robot, ma [il nostro amichevole staff](%{base_uri}/about) è qui per aiutarti se hai bisogno di contattare una persona.
 
-          - Per ragioni di sicurezza, abbiamo temporaneamente limitato ciò che i nuovi utenti possono fare. Potrai guadagnare nuove abilità (e [distintivi](/badges)) appena ti conosceremo meglio.
+          - Per ragioni di sicurezza, abbiamo temporaneamente limitato ciò che i nuovi utenti possono fare. Potrai guadagnare nuove abilità (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
 
-          - Noi crediamo in una [comunità dal comportamento civile](/guidelines) in ogni momento.
+          - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
-        instructions: |-
-          Adesso, puoi condividere uno di questi collegamenti con me? Rispondi con **un collegamento su una riga a sé stante**, e verrà automaticamente espanso per includere un bel sommario.
-
-          Per copiare un collegamento, toccalo e tienilo premuto su mobile, o fai click col tasto destro del mouse:
-
-          - https://it.wikipedia.org/wiki/Italia
-          - https://it.wikipedia.org/wiki/Pagina_principale
-          - https://it.wikipedia.org/wiki/Traduzione
         reply: |-
-          Fantastico! Questo funzionerà per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, con niente davanti o dietro.
+          Fantastico! Funziona per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, senza niente né davanti né dietro.
         not_found: |-
           Mi dispiace, non riesco a trovare il collegamento nella tua risposta! :cry:
 
@@ -204,15 +197,15 @@ it:
         instructions: |-
           Puoi provare a citarmi nella tua risposta, così saprò esattamente a quale parte del mio messaggio stai rispondendo?
 
-          > Se questo è caffè, per favore portami del thè; ma se questo è thè, per favore portami del caffè.
+          > Se questo è caffè, per favore portami del tè; ma se questo è tè, per favore portami del caffè.
           >
-          > Un vantaggio del parlare con sè stessi è che almeno sai che qualcuno ti sta ascoltando.
+          > Un vantaggio del parlare con se stessi è che almeno sai che qualcuno ti sta ascoltando.
           >
           > Alcune persone si fanno strada con le parole e altre persone… oh, oh, non hanno una strada.
 
           Seleziona il testo della citazione &uarr; che preferisci, e poi premi il pulsante **Cita** che comparirà sopra il testo selezionato – o il pulsante **Rispondi** in fondo a questo messaggio.
 
-          Sotto la citazione, digita una o due parole sul motivo per cui hai scelto proprio quella perchè sono curioso :thinking:
+          Sotto la citazione, digita una o due parole sul motivo per cui hai scelto proprio quella perché sono curioso :thinking:
         reply: |-
           Bel lavoro, hai scelto la mia citazione preferita! :left_speech_bubble:
         not_found: |-
@@ -220,6 +213,8 @@ it:
 
           Selezionare un qualsiasi testo del mio messaggio farà apparire il pulsante <kbd>**Cita**</kbd>. E anche premere **Rispondi** con qualsiasi testo selezionato funzionerà! Puoi provare di nuovo?
       bookmark:
+        instructions: |-
+          Se vuoi saperne di più, seleziona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">qui sotto e<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16">**inserisci questo messaggio privato nei segnalibri**. Se lo farai, ci potrebbe essere un :gift: per te!
         reply: |-
           Eccellente! Ora potrai tornare facilmente a questa conversazione privata in ogni momento, proprio dalla [scheda segnalibri sul tuo profilo](%{profile_page_url}/activity/bookmarks). Basta selezionare l'immagine del tuo profilo in alto a destra &#8599;
         not_found: |-
@@ -262,7 +257,7 @@ it:
 
           Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
         reply: |-
-          [Il nostro staff](/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
+          [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
           Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
@@ -292,7 +287,7 @@ it:
 
           %{certificate}
 
-          E' tutto per ora! Controlla [**gli argomenti delle nostre ultime discussioni**](/latest) o [**le categorie di discussione**](/categories). :sunglasses:
+          E' tutto per ora! Controlla [**gli argomenti delle nostre ultime discussioni**](%{base_uri}/latest) o [**le categorie di discussione**](%{base_uri}/categories). :sunglasses:
 
           (Se vuoi parlare con me ancora per imparare altro, inviami un messaggio o menzionami scrivendo `@%{discobot_username}` quando vuoi!)
       certificate:
@@ -302,7 +297,7 @@ it:
       cert_title: "In riconoscimento del completamento con successo del tutorial utente avanzato"
       title: ':arrow_up: Funzioni utente avanzato'
       start_message: |-
-        Come utente _avanzato_, hai già visitato [la pagina delle opzioni sul tuo profilo](/my/preferences) @%{username}? Ci sono molti modi per personalizzare la tua esperienza, ad esempio selezionando un tema scuro o uno chiaro.
+        Come utente _avanzato_, hai già visitato [la pagina delle preferenze](%{base_uri}my/preferences) @%{username}? Ci sono molti modi per personalizzare la tua esperienza, ad esempio selezionando un tema scuro o uno chiaro.
 
         Ma sto divagando, cominciamo!
       edit:
@@ -367,14 +362,14 @@ it:
         reply: |-
           Lavoro impressionante! Spero tu non abbia silenziato questo argomento dato che a volte posso essere un po' loquace :grin:.
 
-          Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica a 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](/my/preferences).
+          Nota che quando rispondi ad un argomento, o leggi un argomento per più di qualche minuto, verrà automaticamente impostato il livello di notifica a 'seguito'. Puoi modificare queste impostazioni sulle [tue preferenze utente](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Lo sapevi che puoi aggiungere un sondaggio in ogni messaggio? Prova ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor per **creare un sondaggio**.
         not_found: |-
           Ooops! Non c'è nessun sondaggio nella tua risposta.
 
-          Usa il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
+          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">a ingranaggio nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
 
           ```text
           [poll]
@@ -405,7 +400,7 @@ it:
 
           Riesci ad usare il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> rotella nell'editor per aggiungere una sezione dettagli nella tua prossima risposta?
         not_found: |-
-          Hai problemi a creare un widget con dei dettagli? Prova a includere quello che segue nella tua prossima risposta:
+          Hai problemi a creare un widget con dei dettagli? Prova a includere quanto segue nella prossima risposta:
 
           ```text
           [details=Selezionami per vedere i dettagli]

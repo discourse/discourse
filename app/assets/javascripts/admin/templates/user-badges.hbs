@@ -16,12 +16,12 @@
     <form class="form-horizontal">
       <div>
       <label>{{i18n 'admin.badges.badge'}}</label>
-      {{combo-box filterable=true value=selectedBadgeId content=grantableBadges}}
+      {{combo-box forceEscape=true filterable=true value=selectedBadgeId content=grantableBadges}}
       </div>
-      <label>
+      <div>
       <label>{{i18n 'admin.badges.reason'}}</label>
       {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
-      </label>
+      </div>
       <button class='btn btn-primary' {{action "grantBadge"}}>{{i18n 'admin.badges.grant'}}</button>
     </form>
     {{/if}}

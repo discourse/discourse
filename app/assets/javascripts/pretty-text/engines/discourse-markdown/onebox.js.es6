@@ -1,5 +1,10 @@
 import { lookupCache } from "pretty-text/oneboxer";
-import { cachedInlineOnebox } from "pretty-text/inline-oneboxer";
+
+import {
+  cachedInlineOnebox,
+  INLINE_ONEBOX_LOADING_CSS_CLASS,
+  INLINE_ONEBOX_CSS_CLASS
+} from "pretty-text/inline-oneboxer";
 
 const ONEBOX = 1;
 const INLINE = 2;
@@ -94,23 +99,14 @@ function applyOnebox(state, silent) {
               attrs.push(["class", "onebox"]);
               attrs.push(["target", "_blank"]);
             }
-          } else if (mode === INLINE) {
-            if (!isTopLevel(href)) {
-              let onebox = cachedInlineOnebox(href);
-              let options = state.md.options.discourse;
+          } else if (mode === INLINE && !isTopLevel(href)) {
+            const onebox = cachedInlineOnebox(href);
 
-              if (options.lookupInlineOnebox) {
-                onebox = options.lookupInlineOnebox(
-                  href,
-                  options.invalidateOneboxes
-                );
-              }
-
-              if (onebox && onebox.title) {
-                text.content = onebox.title;
-              } else if (state.md.options.discourse.previewing && !onebox) {
-                attrs.push(["class", "inline-onebox-loading"]);
-              }
+            if (onebox && onebox.title) {
+              text.content = onebox.title;
+              attrs.push(["class", INLINE_ONEBOX_CSS_CLASS]);
+            } else {
+              attrs.push(["class", INLINE_ONEBOX_LOADING_CSS_CLASS]);
             }
           }
         }

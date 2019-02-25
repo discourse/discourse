@@ -111,6 +111,7 @@ class Admin::WebHooksController < Admin::AdminController
                                      :wildcard_web_hook, :active, :verify_certificate,
                                      web_hook_event_type_ids: [],
                                      group_ids: [],
+                                     tag_names: [],
                                      category_ids: [])
   end
 

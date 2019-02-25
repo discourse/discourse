@@ -15,23 +15,21 @@ module I18n
     alias_method :translate_no_cache, :translate
     alias_method :exists_no_cache?, :exists?
     alias_method :reload_no_cache!, :reload!
+    alias_method :locale_no_cache=, :locale=
+
     LRU_CACHE_SIZE = 300
 
     def init_accelerator!
       @overrides_enabled = true
-      reload!
+      execute_reload
     end
 
     def reload!
-      @loaded_locales = []
-      @cache = nil
-      @overrides_by_site = {}
-
-      reload_no_cache!
-      ensure_all_loaded!
+      @requires_reload = true
     end
 
     LOAD_MUTEX = Mutex.new
+
     def load_locale(locale)
       LOAD_MUTEX.synchronize do
         return if @loaded_locales.include?(locale)
@@ -61,7 +59,9 @@ module I18n
       backend.fallbacks(locale).each { |l| ensure_loaded!(l) }
     end
 
-    def search(query, opts = nil)
+    def search(query, opts = {})
+      execute_reload if @requires_reload
+
       locale = opts[:locale] || config.locale
 
       load_locale(locale) unless @loaded_locales.include?(locale)
@@ -70,7 +70,7 @@ module I18n
       target = opts[:backend] || backend
       results = opts[:overridden] ? {} : target.search(config.locale, query)
 
-      regexp = /#{Regexp.escape(query)}/i
+      regexp = I18n::Backend::DiscourseI18n.create_search_regexp(query)
       (overrides_by_locale(locale) || {}).each do |k, v|
         results.delete(k)
         results[k] = v if (k =~ regexp || v =~ regexp)
@@ -140,6 +140,8 @@ module I18n
     end
 
     def translate(*args)
+      execute_reload if @requires_reload
+
       options  = args.last.is_a?(Hash) ? args.pop.dup : {}
       key      = args.shift
       locale   = options[:locale] || config.locale
@@ -177,10 +179,35 @@ module I18n
     alias_method :t, :translate
 
     def exists?(key, locale = nil)
+      execute_reload if @requires_reload
+
       locale ||= config.locale
       load_locale(locale) unless @loaded_locales.include?(locale)
       exists_no_cache?(key, locale)
     end
 
+    def locale=(value)
+      execute_reload if @requires_reload
+      self.locale_no_cache = value
+    end
+
+    private
+
+    RELOAD_MUTEX = Mutex.new
+
+    def execute_reload
+      RELOAD_MUTEX.synchronize do
+        return unless @requires_reload
+
+        @loaded_locales = []
+        @cache = nil
+        @overrides_by_site = {}
+
+        reload_no_cache!
+        ensure_all_loaded!
+
+        @requires_reload = false
+      end
+    end
   end
 end

@@ -2,106 +2,83 @@ export default {
   "about.json": {
     about: {
       stats: {
-        topic_count: 5969,
-        post_count: 65860,
-        user_count: 10858,
-        topics_7_days: 112,
-        posts_7_days: 1302,
-        users_7_days: 111,
-        like_count: 37747,
-        likes_7_days: 1143
+        topic_count: 27480,
+        post_count: 490358,
+        user_count: 41719,
+        topics_7_days: 169,
+        topics_30_days: 517,
+        posts_7_days: 3128,
+        posts_30_days: 10660,
+        users_7_days: 237,
+        users_30_days: 866,
+        active_users_7_days: 1004,
+        active_users_30_days: 2026,
+        like_count: 499135,
+        likes_7_days: 3449,
+        likes_30_days: 12313
       },
       description:
         "Discussion about the next-generation open source Discourse forum software",
       title: "Discourse Meta",
       locale: "en",
-      version: "0.9.9.16",
-      moderators: [
-        {
-          id: 3,
-          username: "supermathie",
-          uploaded_avatar_id: 5247,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 19,
-          username: "eviltrout",
-          uploaded_avatar_id: 5275,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 2,
-          username: "neil",
-          uploaded_avatar_id: 5245,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 1,
-          username: "sam",
-          uploaded_avatar_id: 5243,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 1995,
-          username: "zogstrip",
-          uploaded_avatar_id: 8630,
-          avatar_template: "/images/avatar.png"
-        }
-      ],
+      version: "2.2.0.beta8",
+      https: true,
       admins: [
         {
-          id: 3,
-          username: "supermathie",
-          uploaded_avatar_id: 5247,
-          avatar_template: "/images/avatar.png"
+          id: 1,
+          username: "sam",
+          name: "Sam Saffron",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/sam/{size}/102149_2.png",
+          title: "co-founder",
+          last_seen_at: "2019-01-15T13:30:43.272Z"
         },
         {
           id: 32,
           username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template: "/images/avatar.png"
+          name: "Jeff Atwood",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/codinghorror/{size}/110067_2.png",
+          title: "co-founder",
+          last_seen_at: "2019-01-15T13:21:56.592Z"
         },
         {
           id: 19,
           username: "eviltrout",
-          uploaded_avatar_id: 5275,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 38,
-          username: "frandallfarmer",
-          uploaded_avatar_id: 5307,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 6626,
-          username: "riking",
-          uploaded_avatar_id: 9779,
-          avatar_template: "/images/avatar.png"
-        },
-        {
-          id: 2,
-          username: "neil",
-          uploaded_avatar_id: 5245,
-          avatar_template: "/images/avatar.png"
-        },
+          name: "Robin Ward",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
+          title: "co-founder",
+          last_seen_at: "2019-01-14T18:03:08.232Z"
+        }
+      ],
+      moderators: [
         {
           id: 1,
           username: "sam",
-          uploaded_avatar_id: 5243,
-          avatar_template: "/images/avatar.png"
+          name: "Sam Saffron",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/sam/{size}/102149_2.png",
+          title: "co-founder",
+          last_seen_at: "2019-01-15T13:30:43.272Z"
         },
         {
-          id: 1995,
-          username: "zogstrip",
-          uploaded_avatar_id: 8630,
-          avatar_template: "/images/avatar.png"
+          id: 32,
+          username: "codinghorror",
+          name: "Jeff Atwood",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/codinghorror/{size}/110067_2.png",
+          title: "co-founder",
+          last_seen_at: "2019-01-15T13:21:56.592Z"
+        },
+        {
+          id: 19,
+          username: "eviltrout",
+          name: "Robin Ward",
+          avatar_template:
+            "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
+          title: "co-founder",
+          last_seen_at: "2019-01-14T18:03:08.232Z"
         }
       ]
     }

@@ -35,5 +35,29 @@ export default Ember.Route.extend({
     controller.setTargetName(wrapper.target || "common");
     controller.set("fieldName", wrapper.field_name || "scss");
     this.controllerFor("adminCustomizeThemes").set("editingTheme", true);
+    this.set("shouldAlertUnsavedChanges", true);
+  },
+
+  actions: {
+    willTransition(transition) {
+      if (
+        this.get("controller.model.changed") &&
+        this.get("shouldAlertUnsavedChanges") &&
+        transition.intent.name !== this.routeName
+      ) {
+        transition.abort();
+        bootbox.confirm(
+          I18n.t("admin.customize.theme.unsaved_changes_alert"),
+          I18n.t("admin.customize.theme.discard"),
+          I18n.t("admin.customize.theme.stay"),
+          result => {
+            if (!result) {
+              this.set("shouldAlertUnsavedChanges", false);
+              transition.retry();
+            }
+          }
+        );
+      }
+    }
   }
 });

@@ -44,14 +44,14 @@
             <ul>
               {{#if model.can_send_private_message_to_user}}
               <li>
-                <a class='btn btn-primary compose-pm' {{action "composePrivateMessage" model}}>
-                  {{d-icon "envelope"}}
-                  {{i18n 'user.private_message'}}
-                </a>
+                {{d-button class="btn btn-primary compose-pm"
+                  action=(route-action "composePrivateMessage" model)
+                  icon="envelope"
+                  label="user.private_message"}}
               </li>
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class="btn">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
+                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
                               connectorTagName="li"
@@ -60,11 +60,11 @@
               {{#if canExpandProfile}}
                 <li>
                   {{#if collapsedInfo}}
-                    <a {{action "expandProfile"}} href class="btn">
+                    <a {{action "expandProfile"}} href class="btn btn-default">
                       {{d-icon "angle-double-down"}} {{i18n 'user.expand_profile'}}
                     </a>
                   {{else}}
-                    <a {{action "collapseProfile"}} href class="btn">
+                    <a {{action "collapseProfile"}} href class="btn btn-default">
                       {{d-icon "angle-double-up"}} {{i18n 'user.collapse_profile'}}
                     </a>
                   {{/if}}
@@ -165,7 +165,7 @@
               {{#if model.email}}
                 {{model.email}}
               {{else}}
-                {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
+                {{d-button action=(route-action "checkEmail") actionParam=model icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </dd>
             </div>
@@ -186,7 +186,7 @@
           {{/if}}
 
           {{#if canDeleteUser}}
-            <div>{{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
+            <div>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
           {{/if}}
         </dl>
         {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}
@@ -195,8 +195,10 @@
     </section>
 
     {{#mobile-nav class='main-nav' desktopClass="nav nav-pills user-nav" currentPath=currentPath}}
-      <li>{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
-      <li>{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
+      {{#unless model.profile_hidden}}
+        <li>{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
+        <li>{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
+      {{/unless}}
       {{#if showNotificationsTab}}
         <li>
           {{#link-to 'userNotifications'}}
@@ -205,7 +207,7 @@
         </li>
       {{/if}}
       {{#if showPrivateMessages}}
-        <li>{{#link-to 'userPrivateMessages'}}{{d-icon "envelope-o"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
+        <li>{{#link-to 'userPrivateMessages'}}{{d-icon "far-envelope"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
       {{/if}}
       {{#if canInviteToForum}}
         <li>{{#link-to 'userInvited'}}{{d-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>

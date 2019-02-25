@@ -9,10 +9,11 @@ describe DiscourseTagging do
 
   let(:admin) { Fabricate(:admin) }
   let(:user)  { Fabricate(:user) }
+  let(:guardian) { Guardian.new(user) }
 
   let!(:tag1) { Fabricate(:tag, name: "fun") }
   let!(:tag2) { Fabricate(:tag, name: "fun2") }
-  let!(:tag3) { Fabricate(:tag, name: "fun3") }
+  let!(:tag3) { Fabricate(:tag, name: "Fun3") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -155,6 +156,63 @@ describe DiscourseTagging do
         PostRevisor.new(post).revise!(admin, raw: post.raw, tags: [hidden_tag.name])
         expect(PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: [])).to be_truthy
         expect(topic.reload.tags).to eq([hidden_tag])
+      end
+    end
+  end
+
+  describe '#tags_for_saving' do
+    it "returns empty array if input is nil" do
+      expect(described_class.tags_for_saving(nil, guardian)).to eq([])
+    end
+
+    it "returns empty array if input is empty" do
+      expect(described_class.tags_for_saving([], guardian)).to eq([])
+    end
+
+    it "returns empty array if can't tag topics" do
+      guardian.stubs(:can_tag_topics?).returns(false)
+      expect(described_class.tags_for_saving(['newtag'], guardian)).to eq([])
+    end
+
+    context "can tag topics but not create tags" do
+      before do
+        guardian.stubs(:can_create_tag?).returns(false)
+        guardian.stubs(:can_tag_topics?).returns(true)
+      end
+
+      it "returns empty array if all tags are new" do
+        expect(described_class.tags_for_saving(['newtag', 'newtagplz'], guardian)).to eq([])
+      end
+
+      it "returns only existing tag names" do
+        Fabricate(:tag, name: 'oldtag')
+        Fabricate(:tag, name: 'oldTag2')
+        expect(described_class.tags_for_saving(['newtag', 'oldtag', 'oldtag2'], guardian)).to contain_exactly('oldtag', 'oldTag2')
+      end
+    end
+
+    context "can tag topics and create tags" do
+      before do
+        guardian.stubs(:can_create_tag?).returns(true)
+        guardian.stubs(:can_tag_topics?).returns(true)
+      end
+
+      it "returns given tag names if can create new tags and tag topics" do
+        expect(described_class.tags_for_saving(['newtag1', 'newtag2'], guardian).try(:sort)).to eq(['newtag1', 'newtag2'])
+      end
+
+      it "only sanitizes new tags" do # for backwards compat
+        Tag.new(name: 'math=fun').save(validate: false)
+        expect(described_class.tags_for_saving(['math=fun', 'fun*2@gmail.com'], guardian).try(:sort)).to eq(['math=fun', 'fun2gmailcom'].sort)
+      end
+    end
+
+    describe "clean_tag" do
+      it "downcases new tags if setting enabled" do
+        expect(DiscourseTagging.clean_tag("HeLlO".freeze)).to eq("hello")
+
+        SiteSetting.force_lowercase_tags = false
+        expect(DiscourseTagging.clean_tag("HeLlO")).to eq("HeLlO")
       end
     end
   end

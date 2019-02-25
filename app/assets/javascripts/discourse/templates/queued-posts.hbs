@@ -1,11 +1,11 @@
 <div class='container'>
   <div class='queued-posts'>
     {{#each model as |post|}}
-      {{queued-post post=post currentlyEditing=editing removePost="removePost"}}
+      {{queued-post post=post currentlyEditing=editing removePost=(route-action "removePost" post)}}
     {{else}}
       <p>{{i18n "queue.none"}}</p>
     {{/each}}
 
-    {{d-button action="refresh" label="refresh" icon="refresh" disabled=model.refreshing id='refresh-queued'}}
+    {{d-button action=(route-action "refresh") label="refresh" icon="refresh" disabled=model.refreshing class="btn-default" id='refresh-queued'}}
   </div>
 </div>

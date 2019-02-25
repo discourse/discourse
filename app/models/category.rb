@@ -3,11 +3,16 @@
 require_dependency 'distributed_cache'
 
 class Category < ActiveRecord::Base
+  self.ignored_columns = %w{
+    uploaded_meta_id
+  }
+
   include Searchable
   include Positionable
   include HasCustomFields
   include CategoryHashtag
   include AnonCacheInvalidator
+  include HasDestroyedWebHook
 
   REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
   REQUIRE_REPLY_APPROVAL = 'require_reply_approval'
@@ -49,6 +54,8 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
 
   validate :ensure_slug
+
+  validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
 
   after_create :create_category_definition
 
@@ -227,8 +234,7 @@ class Category < ActiveRecord::Base
 
     @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
-      # damingo (Github ID), 2017-08-10
-      Nokogiri::HTML.fragment(self.description.gsub(/<summary\s*>.*?<\/summary\s*>/,'')).text.strip.truncate(500, separator: /\s/)
+      Nokogiri::HTML.fragment(self.description).text.strip.html_safe
     end
   end
 
@@ -476,6 +482,10 @@ class Category < ActiveRecord::Base
     self.name_lower = name.downcase if self.name
   end
 
+  def visible_group_names(user)
+    self.groups.visible_groups(user)
+  end
+
   def secure_group_ids
     if self.read_restricted?
       groups.pluck("groups.id")
@@ -533,7 +543,8 @@ class Category < ActiveRecord::Base
   end
 
   def full_slug(separator = "-")
-    url[3..-1].gsub("/", separator)
+    start_idx = "#{Discourse.base_uri}/c/".length
+    url[start_idx..-1].gsub("/", separator)
   end
 
   def url
@@ -564,11 +575,9 @@ class Category < ActiveRecord::Base
 
   def create_category_permalink
     old_slug = saved_changes.transform_values(&:first)["slug"]
-    if self.parent_category
-      url = "c/#{self.parent_category.slug}/#{old_slug}"
-    else
-      url = "c/#{old_slug}"
-    end
+    url = +"#{Discourse.base_uri}/c"
+    url << "/#{parent_category.slug}" if parent_category_id
+    url << "/#{old_slug}"
 
     if Permalink.where(url: url).exists?
       Permalink.where(url: url).update_all(category_id: id)
@@ -669,7 +678,7 @@ end
 #  default_top_period                :string(20)       default("all")
 #  mailinglist_mirror                :boolean          default(FALSE), not null
 #  suppress_from_latest              :boolean          default(FALSE)
-#  minimum_required_tags             :integer          default(0)
+#  minimum_required_tags             :integer          default(0), not null
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #
 # Indexes

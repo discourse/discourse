@@ -1,9 +1,16 @@
-{{#d-section class="current-badge content-body"}}
-  <p>{{i18n 'admin.badges.none_selected'}}</p>
-
-  <div>
-    {{#link-to 'adminBadges.show' 'new' class="btn"}}
-      {{d-icon "plus"}} {{i18n 'admin.badges.new'}}
-    {{/link-to}}
+{{#d-section class="current-badges"}}
+  <div class="badge-intro">
+    <img src={{badgeIntroEmoji}} class="badge-intro-emoji">
+    <div class="content-wrapper">
+      <h1>{{i18n 'admin.badges.badge_intro.title'}}</h1>
+      <div class="external-resources">
+        {{#each badgeIntroLinks as |link|}}
+          <a href={{link.href}} class="external-link" target="_blank">
+            {{d-icon link.icon}}
+            <span>{{I18n link.text}}</span>
+          </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
 {{/d-section}}

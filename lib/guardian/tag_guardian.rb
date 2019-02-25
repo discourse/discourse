@@ -23,4 +23,14 @@ module TagGuardian
   def can_admin_tag_groups?
     is_staff? && SiteSetting.tagging_enabled
   end
+
+  def hidden_tag_names
+    @hidden_tag_names ||= begin
+      if SiteSetting.tagging_enabled && !is_staff?
+        DiscourseTagging.hidden_tag_names(self)
+      else
+        []
+      end
+    end
+  end
 end

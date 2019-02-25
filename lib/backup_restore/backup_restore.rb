@@ -1,5 +1,5 @@
-require "backup_restore/backuper"
-require "backup_restore/restorer"
+require_dependency "backup_restore/backuper"
+require_dependency "backup_restore/restorer"
 
 module BackupRestore
 

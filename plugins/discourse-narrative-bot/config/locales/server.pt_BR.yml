@@ -93,7 +93,6 @@ pt_BR:
         '8': "Boa perspectiva"
         '9': "Sim"
         '10': "Sinais apontam que sim"
-        '11': "Responder hazy  tente novamente"
         '12': "Pergunte novamente depois"
         '13': "Melhor não falar pra você agora"
         '14': "não pode prever agora"
@@ -135,31 +134,22 @@ pt_BR:
         second_response: |-
           Me perdoe. Mas eu não estou entendendo ainda. :anguished:
 
-          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](/about).
+          Eu sou apenas um robô, mas se você quiser falar com uma pessoal real, veja [nossa página de contato](%{base_path}/about).
 
           Enquanto isso eu ficarei fora do seu caminho.
     new_user_narrative:
       reset_trigger: "novo usuário"
       cert_title: "Como forma de reconhecimento por completar com sucesso o tutorial do novo usuário."
       hello:
-        title: "Olá! :robot:"
         message: |-
-          Obrigado por se juntar ao %{title}, e seja bem vindo!
+          Obrigado por entrar em %{title}, e seja bem-vindo!
 
-          - Eu sou um robô, mas [nossa amigável equipe](/about) também estão aqui para te ajudar, case precise falar com uma pessoa.
+          - Sou apenas um robô, mas [nossa simpática equipe](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
 
-          - Por motivos de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você vai ganhar novas habilidades (e [emblemas](/badges) ao passo que nós conhecermos melhor você.
+          - Por motivos de segurança, nós temporariamente limitamos o que novos usuários podem fazer. Você ganhará novas habilidades (e [emblemas](%{base_uri}/badges)) conforme vamos o conhecendo.
 
-          - Nós acreditamos em um {comunidade com comportamento civilizado](/guidelines) em todos os momentos.
+          - Nós acreditamos em um [comportamento civilizado em comunidade](%{base_uri}/guidelines) a todo momento.
       onebox:
-        instructions: |-
-          Em seguida, você pode compartilhar um desses links comigo? Responda com ** um link em uma linha sozinho ** e ele será expandido automaticamente para incluir um resumo interessante.
-
-          Para copiar um link, toque e segure no celular ou clique com o botão direito do mouse:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Legal! isto vai funcionar para a maioria dos links. Lembre-se, deve estar na linha _all by itself_, com nada na frente ou atrás.
         not_found: |-
@@ -263,8 +253,6 @@ pt_BR:
           >  :imp: Eu escrevi algo desagradável aqui
 
           Eu acho que você sabe o que fazer. Vá em frente e ** marque esta postagem ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropriado!
-        reply: |-
-          [Nossa equipe] (/ grupos / equipe) será notificada em particular sobre sua bandeira. Se um número suficiente de membros da comunidade sinalizar uma postagem, ela também será ocultada automaticamente como precaução. (Como eu realmente não escrevi uma postagem desagradável: angel :, eu fui em frente e removi a bandeira por enquanto.)
         not_found: |-
           Ah, não, minha postagem desagradável ainda não foi sinalizada. : preocupado: você pode sinalizá-lo como impróprio usando o ** flag ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão Mostrar mais<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar mais ações para cada postagem.
       search:
@@ -288,25 +276,12 @@ pt_BR:
           - Se você tiver um : teclado físico :, pressione<kbd>?</kbd> para ver nossos atalhos de teclado úteis.
         not_found: |-
           Hmm… parece que você pode estar com problemas. Me desculpe por isso. Você pesquisou <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> pelo termo **capy&#8203;bara**?
-      end:
-        message: |-
-          Obrigado por ficar comigo @%{username}! Eu fiz isso para você, acho que você ganhou:
-
-          %{certificate}
-
-          É tudo por agora! Confira [** nossos tópicos de discussão mais recentes **] (/ mais recentes) ou [** categorias de discussão **] (/ categorias). :oculos de sol:
-
-          (Se você quiser falar comigo novamente para saber mais, apenas envie uma mensagem ou mencione `@%{discobot_username}` a qualquer hora!)
       certificate:
         alt: 'Certificado de conclusão'
     advanced_user_narrative:
       reset_trigger: 'usuário avançado'
       cert_title: "Em reconhecimento da conclusão bem-sucedida do tutorial do usuário avançado"
       title: ': arrow_up: recursos avançados do usuário'
-      start_message: |-
-        Como usuário _advanced_, você já visitou [sua página de preferências] (/ my / preferences) ainda @%{username}? Existem muitas maneiras de personalizar sua experiência, como selecionar um tema claro ou escuro.
-
-        Mas eu discordo, vamos começar!
       edit:
         bot_created_post_raw: "@%{discobot_username} é, de longe, o bot mais legal que conheço: wink:"
         instructions: |-
@@ -365,10 +340,6 @@ pt_BR:
           Vamos tentar alterar o nível de notificação para este tópico. Na parte inferior do tópico, você encontrará um botão que mostra que ** está assistindo ** este tópico. Você pode alterar o nível de notificação para ** rastreamento **?
         not_found: |-
           Parece que você ainda está assistindo: eyes: this topic! Se você estiver com dificuldades para encontrá-lo, o botão do nível de notificação está localizado na parte inferior do tópico.
-        reply: |-
-          Ótimo trabalho! Espero que você não tenha ignorado este tópico, já que às vezes posso ser um pouco falador: sorriso.
-
-          Observe que, quando você responde a um tópico ou lê um tópico por mais de alguns minutos, ele é automaticamente definido para um nível de notificação de 'rastreamento'. Você pode alterar isso em [suas preferências de usuário] (/ my / preferences).
       poll:
         instructions: |-
           Você sabia que pode adicionar uma enquete a qualquer postagem?  Tente usar<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a engrenagem no editor para ** construir uma enquete **

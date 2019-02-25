@@ -287,7 +287,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           if !row['icon'].empty?
             upload = create_upload(Discourse::SYSTEM_USER_ID, File.join(DISCUZX_BASE_DIR, ATTACHMENT_DIR, '../common', row['icon']), File.basename(row['icon']))
             if upload
-              category.logo_url = upload.url
+              category.uploaded_logo = upload
               # FIXME: I don't know how to get '/shared' by script. May change to Rails.root
               category.color = Miro::DominantColors.new(File.join('/shared', category.logo_url)).to_hex.first[1, 6] if !color
               category.save!

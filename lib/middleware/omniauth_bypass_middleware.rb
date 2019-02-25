@@ -7,6 +7,8 @@ class Middleware::OmniauthBypassMiddleware
   def initialize(app, options = {})
     @app = app
 
+    Discourse.plugins.each(&:notify_before_auth)
+
     # if you need to test this and are having ssl issues see:
     #  http://stackoverflow.com/questions/6756460/openssl-error-using-omniauth-specified-ssl-path-but-didnt-work
     # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
@@ -14,6 +16,12 @@ class Middleware::OmniauthBypassMiddleware
       Discourse.authenticators.each do |authenticator|
         authenticator.register_middleware(self)
       end
+    end
+
+    @omniauth.before_request_phase do |env|
+      # If the user is trying to reconnect to an existing account, store in session
+      request = ActionDispatch::Request.new(env)
+      request.session[:auth_reconnect] = !!request.params["reconnect"]
     end
   end
 

@@ -1,0 +1,46 @@
+.svg-icon,
+.svg-icon-title {
+  height: 1em;
+  width: 1em;
+  line-height: 1;
+  display: inline-flex;
+  position: relative;
+  vertical-align: -0.125em;
+  fill: currentColor;
+  flex-shrink: 0; // Prevent the icon from shrinking if it's in a flexbox
+  overflow: visible;
+}
+
+// Fixes Edge bug with SVG elements not triggering click event
+svg > use {
+  pointer-events: none;
+}
+
+// Stacked Icons
+// Usage:
+// <span class="fa-stack">
+//    <svg class="... d-icon-icon1 fa-stack-1x ..." xmlns="http://www.w3.org/2000/svg"><use xlink:href="#icon1"></use></svg>
+//    <svg class="... d-icon-icon2 fa-stack-2x ..." xmlns="http://www.w3.org/2000/svg"><use xlink:href="#icon2"></use></svg>
+// </span>
+// -------------------------
+
+.fa-stack {
+  position: relative;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+
+  .fa-stack-1x,
+  .fa-stack-2x {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+  }
+
+  .fa-stack-2x {
+    height: 1.5em;
+    width: 1.5em;
+    margin-top: -0.25em;
+    margin-left: -0.25em;
+  }
+}

@@ -18,17 +18,18 @@ es:
       name: Certificado
       description: "Ha completado nuestro tutorial de nuevo usuario"
       long_description: |
-        Este distintivo se otorga a quienes han completado el tutorial de nuevo usuario. Has tomado la iniciativa para aprender las herramientas básicas para el debate, y ahora tú estás certificado!
+        Este distintivo se otorga a quienes han completado el tutorial de nuevo usuario. Has tomado la iniciativa para aprender las herramientas básicas para el debate, ¡y ahora estás certificado!
     licensed:
-      name: Licenciado
+      name: Licenciatura
       description: "Ha completado nuestro tutorial de usuario avanzado"
       long_description: |
-        Este distintivo se otorga a quienes han completado el tutorial de usuario avanzado. Has dominado las herramientas avanzadas de discusión — y ahora tú eres un licenciado!
+        Este distintivo se otorga a quienes han completado el tutorial de usuario avanzado. Has dominado las herramientas avanzadas de discusión —¡y ahora eres un licenciado!
   discourse_narrative_bot:
     bio: "Hola, no soy una persona real. Soy un bot que puede enseñarte sobre este sitio. Para interactuar conmigo, me envías un mensaje o me mencionas **`@%{discobot_username}`** en cualquier lugar."
     timeout:
       message: |-
         Hey @%{username}, solo estoy verificando si estás porque no he oído de tí en un tiempo.
+
         - Para continuar, responde en cualquier momento.
 
         - Si gustas de saltar este paso, dime `%{skip_trigger}`.
@@ -41,9 +42,9 @@ es:
       invalid: |-
         Lo siento, es matemáticamente imposible lanzar esa combinación de dados. :confounded:
       not_enough_dice: |-
-        Solo tengo %{num_of_dice} dados para jugar. Es vergonsozo lo sé!
+        Solo tengo %{num_of_dice} dados para jugar. Es [vergonzoso]((http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php)) lo sé!
       out_of_range: |-
-        ¿Sabías que el máximo número de lados para que un dado, matemáticamente correcto, es de 120 lados?
+        ¿Sabías que [el máximo número de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para que un dado, matemáticamente correcto, es de 120 lados?
       results: |-
         > :game_die: %{results}
     quote:
@@ -111,7 +112,7 @@ es:
       help_trigger: 'mostrar ayuda'
       random_mention:
         reply: |-
-          ¿Alguien me llamó? Averigua qué puedo hacer con `@%{discobot_username} %{help_trigger}`.
+          ¡Hola! Para averiguar qué puedo hacer, escribe `@%{discobot_username} %{help_trigger}`.
         tracks: |-
           Hola! Estoy conociendo cómo hacer las siguientes cosas:
 
@@ -125,16 +126,17 @@ es:
           > :left_speech_bubble: _Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you_ &mdash; Princess Diana
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: No se puede predecir ahora
+          > :crystal_ball: Puedes confiar en ello
       do_not_understand:
         first_response: |-
-          Hey, gracias por tu respuesta!
+          Oye, ¡gracias por tu respuesta!
+
           Lamentablemente, como un robot con programación muy pobre, no he podido entender lo que me has dicho. :frowning:
         track_response: Puedes intentarlo de nuevo, o bien para saltar este paso, dime `%{skip_trigger}`. Para empezar de nuevo, dime `%{reset_trigger}`.
         second_response: |-
-          Aw, lo siento. Sigo sin entenderlo. :anguished:
+          Vaya, lo siento. Sigo sin entenderlo. :anguished:
 
-          Soy solo un robot, pero si quieres contactar a una persona real, mira [nuestra página de contacto](/about).
+          Soy solo un robot, pero si quieres contactar a una persona real, mira [nuestra página de contacto](%{base_path}/about).
 
           Mientras tanto, me quedaré fuera de tu camino.
     new_user_narrative:
@@ -142,29 +144,30 @@ es:
       title: "Certificado de completación para el nuevo usuario"
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario nuevo"
       hello:
-        title: ":robot: Saludos!"
+        title: "¡Saludos!"
         message: |-
           Gracias por unirte a %{title}, y bienvenido!
 
-          - Soy solo un robot, pero [nuestro amigable staff](/about) está también aquí para ayudar si necesitas contactar a una persona.
+          - Soy solo un robot, pero [nuestro amigable staff](%{base_uri}/about) está también aquí para ayudar si necesitas contactar a una persona.
 
-          - Por razones de seguridad, nosotros temporalmente limitamos lo que los nuevos usuarios pueden hacer. Tú podrás ganar nuevas habilidades (y [distintivos](/badges)) cuando te vayamos conociendo.
+          - Por razones de seguridad, nosotros temporalmente limitamos lo que los nuevos usuarios pueden hacer. Tú podrás ganar nuevas habilidades (y [distintivos](%{base_uri}/badges)) cuando te vayamos conociendo.
 
-          - Nosotros creemos en el [comportamiento de una comunidad civilizada](/guidelines) en todo momento.
+          - Nosotros creemos en el [comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:
         instructions: |-
-          Ahora, tú puedes compartir uno de estos enlaces conmigo? Responde con **el enlace propiamente dicho**, y automáticamente se expandirá con un breve resumen.
+          Lo que sigue, ¿puedes compartir uno de estos enlaces conmigo? Responde con **el enlace en una línea aparte**, y automáticamente se expandirá con un breve resumen.
+
           Para copiar un enlace, toca y mantiene presionado en el móvil, o haz clic derecho con tu mouse:
 
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           ¡Genial! Esto funcionará en la mayoría de los <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda que debe ser colocado el enlace en una _linea aparte_, sin texto ni espacios delante ni atrás del enlace.
         not_found: |-
           Disculpa, ¡no he podido encontrar el enlace en tu respuesta! :cry:
 
-          Puedes intentar agregar el siguiente enlace, en una línea aparte, en tu siguiente respuesta?
+          ¿Puedes intentar agregar el siguiente enlace, en una línea aparte, en tu siguiente respuesta?
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
@@ -258,7 +261,7 @@ es:
 
           Me imagino que sabes qué hacer. Anímate, **reporta este mensaje** con el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> como inapropiado!
         reply: |-
-          [Nuestro staff](/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, será ocultado automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado el reporte por ahora.)
+          [Nuestro staff](%{base_uri}/groups/staff) será notificado por privado sobre tu reporte. Si un número suficiente de miembros reportan un mensaje, será ocultado automáticamente como precaución. (Puesto que no escribí algo realmente desagradable :angel:, he quitado la bandera por ahora.)
         not_found: |-
           Oh no, mi mensaje asqueroso no ha sido reportado aún. :worried: ¿Puedes reportar como inapropiado usando la **bandera** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que debes primero presionar el botón <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">  para ver otras opciones para cada mensaje.
       search:
@@ -288,7 +291,7 @@ es:
 
           %{certificate}
 
-          ¡Eso es todo por ahora! Echa un vistazo a [**nuestros últimos temas de discusión**](/latest) o las [**categorías de debate**](/categories). :sunglasses:
+          ¡Eso es todo por ahora! Echa un vistazo a [**nuestros últimos temas de discusión**](%{base_uri}/latest) o las [**categorías de debate**](%{base_uri}/categories). :sunglasses:
 
           (Si deseas hablar conmigo de nuevo para aprender más, solo envía un mensaje privado o me mencionas `@%{discobot_username}` en cualquier momento!)
       certificate:
@@ -298,8 +301,9 @@ es:
       cert_title: "En reconocimiento de la finalización exitosa del tutorial de usuario avanzado"
       title: ':arrow_up: Funciones avanzadas del usuario'
       start_message: |-
-        Como un usuario _avanzado_, ¿no has visitado [tus preferencias](/my/preferences) aún @%{username}? Hay muchas formas de personalizar tu experiencia, por ejemplo podrías elegir un diseño oscuro.
-        ¡Pero yo divago, comencemos!
+        Como un usuario _avanzado_, ¿no has visitado [tus preferencias](%{base_uri}/my/preferences) aún @%{username}? Hay muchas formas de personalizar tu experiencia, por ejemplo podrías elegir un diseño oscuro o bien uno claro.
+
+        Pero yo divago, ¡comencemos!
       edit:
         bot_created_post_raw: "@%{discobot_username} es, por lejos, el mejor bot que conozco :wink:"
         instructions: |-
@@ -358,7 +362,8 @@ es:
           Parece que aún estás vigilando :eyes: este tema! Si tienes problemas para encontrar el botón del nivel de notificación, el mismo está debajo de todo el tema de debate.
         reply: |-
           ¡Impresionante trabajo! Espero que no silencies este tema ya que puedo ser un poco hablador a veces :grin:.
-          Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](/my/preferences).
+
+          Tenga en cuenta que cuando responde a un tema o lee un tema durante más de unos minutos, se establece automáticamente en un nivel de notificación de "seguimiento". Puedes cambiar esto en [tus preferencias de usuario](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           ¿Sabes que puedes agregar una encuesta en cualquier mensaje? Intenta usando el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor para **armar una encuesta**.

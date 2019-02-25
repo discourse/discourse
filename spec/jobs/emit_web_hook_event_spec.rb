@@ -125,6 +125,42 @@ describe Jobs::EmitWebHookEvent do
     end
   end
 
+  context 'with tag filters' do
+    let(:tag) { Fabricate(:tag) }
+    let(:topic) { Fabricate(:topic, tags: [tag]) }
+    let(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
+
+    it "doesn't emit when event is not included any tags" do
+      subject.execute(
+        web_hook_id: topic_hook.id,
+        event_type: 'topic',
+        payload: { test: "some payload" }.to_json
+      )
+    end
+
+    it "doesn't emit when event is not related with defined tags" do
+      subject.execute(
+        web_hook_id: topic_hook.id,
+        event_type: 'topic',
+        tag_ids: [Fabricate(:tag).id],
+        payload: { test: "some payload" }.to_json
+      )
+    end
+
+    it 'emit when event is related with defined tags' do
+      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+        .with(body: "{\"topic\":{\"test\":\"some payload\"}}")
+        .to_return(body: 'OK', status: 200)
+
+      subject.execute(
+        web_hook_id: topic_hook.id,
+        event_type: 'topic',
+        tag_ids: topic.tags.pluck(:id),
+        payload: { test: "some payload" }.to_json
+      )
+    end
+  end
+
   describe '#web_hook_request' do
     it 'creates delivery event record' do
       stub_request(:post, "https://meta.discourse.org/webhook_listener")

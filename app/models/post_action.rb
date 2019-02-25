@@ -52,6 +52,26 @@ class PostAction < ActiveRecord::Base
       .count
   end
 
+  # Forums can choose to apply a minimum number of flags required before it shows up in
+  # the admin interface. One exception is posts hidden by tl3/tl4 - we want those to
+  # show up even if the minimum visibility is not met.
+  def self.apply_minimum_visibility(relation)
+    return relation unless SiteSetting.min_flags_staff_visibility > 1
+
+    params = {
+      min_flags: SiteSetting.min_flags_staff_visibility,
+      hidden_reasons: Post.hidden_reasons.only(:flagged_by_tl3_user, :flagged_by_tl4_user).values
+    }
+
+    relation.having(<<~SQL, params)
+      (COUNT(*) >= :min_flags) OR
+      (SUM(CASE
+        WHEN posts.hidden_reason_id IN (:hidden_reasons) THEN 1
+        ELSE 0
+       END) > 0)
+    SQL
+  end
+
   def self.update_flagged_posts_count
     flagged_relation = PostAction.active
       .flags
@@ -61,10 +81,7 @@ class PostAction < ActiveRecord::Base
       .where('posts.user_id > 0')
       .group("posts.id")
 
-    if SiteSetting.min_flags_staff_visibility > 1
-      flagged_relation = flagged_relation
-        .having("count(*) >= ?", SiteSetting.min_flags_staff_visibility)
-    end
+    flagged_relation = apply_minimum_visibility(flagged_relation)
 
     posts_flagged_count = flagged_relation
       .pluck("posts.id")
@@ -143,7 +160,7 @@ class PostAction < ActiveRecord::Base
     result = unscoped.where(post_action_type_id: post_action_type)
     result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
     result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
-    result = result.joins(post: :topic).merge(Topic.in_category_and_categories(opts[:category_id])) if opts[:category_id]
+    result = result.joins(post: :topic).merge(Topic.in_category_and_subcategories(opts[:category_id])) if opts[:category_id]
     result.group('date(post_actions.created_at)')
       .order('date(post_actions.created_at)')
       .count
@@ -164,6 +181,9 @@ class PostAction < ActiveRecord::Base
       trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
     end
 
+    # Update the flags_agreed user stat
+    UserStat.where(user_id: actions.map(&:user_id)).update_all("flags_agreed = flags_agreed + 1")
+
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
 
     if actions.first.present?
@@ -183,8 +203,7 @@ class PostAction < ActiveRecord::Base
         PostActionType.notify_flag_type_ids
       end
 
-    actions = PostAction.where(post_id: post.id)
-      .where(post_action_type_id: action_type_ids)
+    actions = PostAction.active.where(post_id: post.id).where(post_action_type_id: action_type_ids)
 
     actions.each do |action|
       action.disagreed_at = Time.zone.now
@@ -193,6 +212,9 @@ class PostAction < ActiveRecord::Base
       action.save
       action.add_moderator_post_if_needed(moderator, :disagreed)
     end
+
+    # Update the flags_disagreed user stat
+    UserStat.where(user_id: actions.map(&:user_id)).update_all("flags_disagreed = flags_disagreed + 1")
 
     # reset all cached counters
     cached = {}
@@ -430,12 +452,12 @@ class PostAction < ActiveRecord::Base
   before_create do
     post_action_type_ids = is_flag? ? PostActionType.notify_flag_types.values : post_action_type_id
     raise AlreadyActed if PostAction.where(user_id: user_id)
-        .where(post_id: post_id)
-        .where(post_action_type_id: post_action_type_ids)
-        .where(deleted_at: nil)
-        .where(disagreed_at: nil)
-        .where(targets_topic: targets_topic)
-        .exists?
+      .where(post_id: post_id)
+      .where(post_action_type_id: post_action_type_ids)
+      .where(deleted_at: nil)
+      .where(disagreed_at: nil)
+      .where(targets_topic: targets_topic)
+      .exists?
   end
 
   # Returns the flag counts for a post, taking into account that some users
@@ -542,9 +564,8 @@ class PostAction < ActiveRecord::Base
 
   MAXIMUM_FLAGS_PER_POST = 3
 
-  def self.auto_close_if_threshold_reached(topic)
-    return if topic.nil? || topic.closed?
-
+  def self.auto_close_threshold_reached?(topic)
+    return if topic.user&.staff?
     flags = PostAction.active
       .flags
       .joins(:post)
@@ -557,6 +578,13 @@ class PostAction < ActiveRecord::Base
     return if flags.count < SiteSetting.num_flaggers_to_close_topic
     # we need a minimum number of flags
     return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
+
+    true
+  end
+
+  def self.auto_close_if_threshold_reached(topic)
+    return if topic.nil? || topic.closed?
+    return unless auto_close_threshold_reached?(topic)
 
     # the threshold has been reached, we will close the topic waiting for intervention
     topic.update_status("closed", true, Discourse.system_user,
@@ -583,13 +611,20 @@ class PostAction < ActiveRecord::Base
 
       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
 
-    elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
-          SiteSetting.flags_required_to_hide_post > 0
+    elsif PostActionType.auto_action_flag_types.include?(post_action_type)
 
-      _old_flags, new_flags = PostAction.flag_counts_for(post.id)
+      if acting_user.has_trust_level?(TrustLevel[4]) &&
+         !acting_user.staff? &&
+         post.user&.trust_level != TrustLevel[4]
 
-      if new_flags >= SiteSetting.flags_required_to_hide_post
-        hide_post!(post, post_action_type, guess_hide_reason(post))
+        hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl4_user])
+      elsif SiteSetting.flags_required_to_hide_post > 0
+
+        _old_flags, new_flags = PostAction.flag_counts_for(post.id)
+
+        if new_flags >= SiteSetting.flags_required_to_hide_post
+          hide_post!(post, post_action_type, guess_hide_reason(post))
+        end
       end
     end
   end
@@ -615,7 +650,11 @@ class PostAction < ActiveRecord::Base
       options = {
         url: post.url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason: I18n.t("flag_reasons.#{post_action_type}", locale: SiteSetting.default_locale),
+        flag_reason: I18n.t(
+          "flag_reasons.#{post_action_type}",
+          locale: SiteSetting.default_locale,
+          base_path: Discourse.base_path
+        )
       }
 
       Jobs.enqueue_in(5.seconds, :send_system_message,
@@ -623,6 +662,7 @@ class PostAction < ActiveRecord::Base
                       message_type: hiding_again ? :post_hidden_again : :post_hidden,
                       message_options: options)
     end
+    update_flagged_posts_count
   end
 
   def self.guess_hide_reason(post)
@@ -633,7 +673,7 @@ class PostAction < ActiveRecord::Base
 
   def self.post_action_type_for_post(post_id)
     post_action = PostAction.find_by(deferred_at: nil, post_id: post_id, post_action_type_id: PostActionType.notify_flag_types.values, deleted_at: nil)
-    PostActionType.types[post_action.post_action_type_id]
+    PostActionType.types[post_action.post_action_type_id] if post_action
   end
 
   def self.target_moderators

@@ -119,7 +119,7 @@ after_initialize do
   end
 
   self.add_model_callback(User, :after_commit, on: :create) do
-    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !self.staged
       self.enqueue_bot_welcome_post
     end
   end
@@ -204,7 +204,7 @@ after_initialize do
   end
 
   self.add_model_callback(PostAction, :after_commit, on: :create) do
-    if self.user.enqueue_narrative_bot_job?
+    if self.post && self.user.enqueue_narrative_bot_job?
       input =
         case self.post_action_type_id
         when *PostActionType.flag_types_without_custom.values

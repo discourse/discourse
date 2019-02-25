@@ -15,8 +15,6 @@ el:
         one: "συνολική ψήφος"
         other: "συνολικές ψήφοι"
       average_rating: "Μέση βαθμολογία: <strong>%{average}</strong>."
-      public:
-        title: "Οι ψηφοφορίες είναι δημόσιες "
       multiple:
         help:
           at_least_min_options:

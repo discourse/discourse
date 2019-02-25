@@ -6,6 +6,11 @@ import PermissionType from "discourse/models/permission-type";
 export default Discourse.Route.extend({
   navMode: "latest",
 
+  queryParams: {
+    ascending: { refreshModel: true },
+    order: { refreshModel: true }
+  },
+
   renderTemplate() {
     const controller = this.controllerFor("tags.show");
     this.render("tags.show", { controller });
@@ -49,25 +54,29 @@ export default Discourse.Route.extend({
 
     if (tag && tag.get("id") !== "none" && this.get("currentUser")) {
       // If logged in, we should get the tag's user settings
-      return this.store.find("tagNotification", tag.get("id")).then(tn => {
-        this.set("tagNotification", tn);
-        return tag;
-      });
+      return this.store
+        .find("tagNotification", tag.get("id").toLowerCase())
+        .then(tn => {
+          this.set("tagNotification", tn);
+          return tag;
+        });
     }
 
     return tag;
   },
 
-  afterModel(tag) {
+  afterModel(tag, transition) {
     const controller = this.controllerFor("tags.show");
     controller.set("loading", true);
 
     const params = controller.getProperties("order", "ascending");
+    params.order = transition.queryParams.order || params.order;
+    params.ascending = transition.queryParams.ascending || params.ascending;
 
     const categorySlug = this.get("categorySlug");
     const parentCategorySlug = this.get("parentCategorySlug");
     const filter = this.get("navMode");
-    const tag_id = tag ? tag.id : "none";
+    const tag_id = tag ? tag.id.toLowerCase() : "none";
 
     if (categorySlug) {
       var category = Discourse.Category.findBySlug(
@@ -100,6 +109,9 @@ export default Discourse.Route.extend({
       params,
       {}
     ).then(list => {
+      if (list.topic_list.tags) {
+        tag.set("id", list.topic_list.tags[0].name); // Update name of tag (case might be different)
+      }
       controller.setProperties({
         list: list,
         canCreateTopic: list.get("can_create_topic"),

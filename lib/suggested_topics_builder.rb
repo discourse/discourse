@@ -17,7 +17,8 @@ class SuggestedTopicsBuilder
     return unless results
 
     # Only add results if we don't have those topic ids already
-    results = results.where('topics.id NOT IN (?)', @excluded_topic_ids)
+    results = results
+      .where('topics.id NOT IN (?)', @excluded_topic_ids)
       .where(visible: true)
 
     # If limit suggested to category is enabled, restrict to that category
@@ -29,17 +30,27 @@ class SuggestedTopicsBuilder
     results.reject! { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?
-      # Keep track of the ids we've added
-      @excluded_topic_ids.concat results.map { |r| r.id }
+
+      # protect against dupes
+      temp = results
+      results = []
+      temp.each do |r|
+        if !@excluded_topic_ids.include?(r.id)
+          results << r
+          @excluded_topic_ids << r.id
+        end
+      end
+
       splice_results(results, priority)
     end
   end
 
   def splice_results(results, priority)
-    if  @category_id && priority == :high
+    if priority == :ultra_high
+      @results.insert 0, *results
 
+    elsif  @category_id && priority == :high
       # Topics from category @category_id need to be first in the list, all others after.
-
       other_category_index = @results.index { |r| r.category_id != @category_id }
       category_results, other_category_results = results.partition { |r| r.category_id == @category_id }
 

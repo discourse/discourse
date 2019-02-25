@@ -5,7 +5,7 @@ export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
   rowComponent: "period-chooser/period-chooser-row",
   headerComponent: "period-chooser/period-chooser-header",
-  content: Ember.computed.alias("site.periods"),
+  content: Ember.computed.oneWay("site.periods"),
   value: Ember.computed.alias("period"),
   isHidden: Ember.computed.alias("showPeriods"),
 
@@ -26,7 +26,9 @@ export default DropdownSelectBoxComponent.extend({
 
   actions: {
     onSelect() {
-      this.sendAction("action", this.get("computedValue"));
+      if (this.action) {
+        this.action(this.get("computedValue"));
+      }
     }
   }
 });

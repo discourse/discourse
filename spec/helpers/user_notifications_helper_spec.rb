@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe UserNotificationsHelper do
-  describe 'email_excerpt' do
+  describe '#email_excerpt' do
     let(:paragraphs) { [
       "<p>This is the first paragraph, but you should read more.</p>",
       "<p>And here is its friend, the second paragraph.</p>"
@@ -51,6 +51,84 @@ describe UserNotificationsHelper do
       HTML
 
       expect(helper.email_excerpt(cooked)).to eq "<p>BEFORE</p><blockquote>\n  <p>This is a user quote</p>\n</blockquote><p>AFTER</p>"
+    end
+  end
+
+  describe '#logo_url' do
+    describe 'local store' do
+      let(:upload) { Fabricate(:upload, sha1: "somesha1") }
+
+      before do
+        SiteSetting.logo = upload
+      end
+
+      it 'should return the right URL' do
+        expect(helper.logo_url).to eq(
+          "http://test.localhost/uploads/default/original/1X/somesha1.png"
+        )
+      end
+
+      describe 'when cdn path is configured' do
+        before do
+          GlobalSetting.expects(:cdn_url)
+            .returns('https://some.localcdn.com')
+            .at_least_once
+        end
+
+        it 'should return the right URL' do
+          expect(helper.logo_url).to eq(
+            "https://some.localcdn.com/uploads/default/original/1X/somesha1.png"
+          )
+        end
+      end
+
+      describe 'when logo is an SVG' do
+        let(:upload) { Fabricate(:upload, extension: "svg") }
+
+        it 'should return nil' do
+          expect(helper.logo_url).to eq(nil)
+        end
+      end
+    end
+
+    describe 's3 store' do
+      let(:upload) { Fabricate(:upload_s3, sha1: "somesha1") }
+
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secret key"
+        SiteSetting.logo = upload
+      end
+
+      it 'should return the right URL' do
+        expect(helper.logo_url).to eq(
+          "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/somesha1.png"
+        )
+      end
+
+      describe 'when global cdn path is configured' do
+        it 'should return the right url' do
+          GlobalSetting.stubs(:cdn_url).returns('https://some.cdn.com/cluster')
+
+          expect(helper.logo_url).to eq(
+            "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/somesha1.png"
+          )
+        end
+      end
+
+      describe 'when cdn path is configured' do
+        before do
+          SiteSetting.s3_cdn_url = 'https://some.cdn.com'
+        end
+
+        it 'should return the right url' do
+          expect(helper.logo_url).to eq(
+            "https://some.cdn.com/original/1X/somesha1.png"
+          )
+        end
+      end
     end
   end
 end

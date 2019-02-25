@@ -27,8 +27,8 @@ export default Ember.Component.extend({
       items: _.isArray(groupNames)
         ? groupNames
         : Ember.isEmpty(groupNames)
-          ? []
-          : [groupNames],
+        ? []
+        : [groupNames],
       single: this.get("single"),
       updateData: opts && opts.updateData ? opts.updateData : false,
       onChangeItems: items => {

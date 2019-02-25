@@ -71,6 +71,10 @@ class Site
     end
   end
 
+  def groups
+    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
+  end
+
   def suppressed_from_latest_category_ids
     categories.select { |c| c.suppress_from_latest == true }.map(&:id)
   end
@@ -125,10 +129,12 @@ class Site
     json
   end
 
+  SITE_JSON_CHANNEL = '/site_json'
+
   def self.clear_anon_cache!
     # publishing forces the sequence up
     # the cache is validated based on the sequence
-    MessageBus.publish('/site_json', '')
+    MessageBus.publish(SITE_JSON_CHANNEL, '')
   end
 
 end

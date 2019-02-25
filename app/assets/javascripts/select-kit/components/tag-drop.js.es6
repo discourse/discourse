@@ -1,9 +1,10 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
 import DiscourseURL from "discourse/lib/url";
+import TagsMixin from "select-kit/mixins/tags";
 import { default as computed } from "ember-addons/ember-computed-decorators";
-const { isEmpty } = Ember;
+const { isEmpty, run } = Ember;
 
-export default ComboBoxComponent.extend({
+export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
   classNameBindings: ["categoryStyle", "tagClass"],
   classNames: "tag-drop",
@@ -21,6 +22,8 @@ export default ComboBoxComponent.extend({
   fullWidthOnMobile: true,
   caretDownIcon: "caret-right",
   caretUpIcon: "caret-down",
+  allowContentReplacement: true,
+  isAsync: true,
 
   @computed("tagId")
   noTagsSelected() {
@@ -39,10 +42,12 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     if (!content.value) {
-      if (this.get("noTagsSelected")) {
+      if (this.get("tagId")) {
+        content.title = this.get("tagId");
+      } else if (this.get("noTagsSelected")) {
         content.title = this.get("noTagsLabel");
       } else {
         content.title = this.get("allTagsLabel");
@@ -62,9 +67,9 @@ export default ComboBoxComponent.extend({
   @computed("firstCategory", "secondCategory")
   allTagsUrl() {
     if (this.get("currentCategory")) {
-      return this.get("currentCategory.url") + "?allTags=1";
+      return Discourse.getURL(this.get("currentCategory.url") + "?allTags=1");
     } else {
-      return "/";
+      return Discourse.getURL("/");
     }
   },
 
@@ -74,30 +79,7 @@ export default ComboBoxComponent.extend({
     if (this.get("currentCategory")) {
       url += this.get("currentCategory.url");
     }
-    return `${url}/none`;
-  },
-
-  @computed("allTagsUrl", "allTagsLabel", "noTagsUrl", "noTagsLabel")
-  collectionHeader(allTagsUrl, allTagsLabel, noTagsUrl, noTagsLabel) {
-    let content = "";
-
-    if (this.get("tagId") !== "none") {
-      content += `
-        <a href="${noTagsUrl}" class="tag-filter">
-          ${noTagsLabel}
-        </a>
-      `;
-    }
-
-    if (this.get("hasSelection") || this.get("tagId") === "none") {
-      content += `
-        <a href="${allTagsUrl}" class="tag-filter">
-          ${allTagsLabel}
-        </a>
-      `;
-    }
-
-    return content;
+    return Discourse.getURL(`${url}/none`);
   },
 
   @computed("tag")
@@ -110,23 +92,90 @@ export default ComboBoxComponent.extend({
     return I18n.t("tagging.selector_no_tags");
   },
 
-  @computed("site.top_tags")
-  content(topTags) {
-    if (this.siteSettings.tags_sort_alphabetically && topTags) {
-      return topTags.sort();
-    } else {
-      return topTags;
+  @computed("tagId", "allTagsLabel", "noTagsLabel")
+  shortcuts(tagId, allTagsLabel, noTagsLabel) {
+    const shortcuts = [];
+
+    if (tagId !== "none") {
+      shortcuts.push({
+        name: noTagsLabel,
+        __sk_row_type: "noopRow",
+        id: "no-tags"
+      });
     }
+
+    if (tagId) {
+      shortcuts.push({
+        name: allTagsLabel,
+        __sk_row_type: "noopRow",
+        id: "all-tags"
+      });
+    }
+
+    return shortcuts;
+  },
+
+  @computed("site.top_tags", "shortcuts")
+  content(topTags, shortcuts) {
+    if (this.siteSettings.tags_sort_alphabetically && topTags) {
+      return shortcuts.concat(topTags.sort());
+    } else {
+      return shortcuts.concat(Ember.makeArray(topTags));
+    }
+  },
+
+  _prepareSearch(query) {
+    const data = {
+      q: query,
+      limit: this.get("siteSettings.max_tag_search_results")
+    };
+
+    this.searchTags("/tags/filter/search", data, this._transformJson);
+  },
+
+  _transformJson(context, json) {
+    let results = json.results;
+    results = results.sort((a, b) => a.id > b.id);
+    return results;
   },
 
   actions: {
     onSelect(tagId) {
-      let url = "/tags";
-      if (this.get("currentCategory")) {
-        url += this.get("currentCategory.url");
+      let url;
+
+      if (tagId === "all-tags") {
+        url = Discourse.getURL(this.get("allTagsUrl"));
+      } else if (tagId === "no-tags") {
+        url = Discourse.getURL(this.get("noTagsUrl"));
+      } else {
+        url = "/tags";
+        if (this.get("currentCategory")) {
+          url += this.get("currentCategory.url");
+        }
+        url = Discourse.getURL(`${url}/${tagId.toLowerCase()}`);
       }
-      url = `${url}/${tagId}`;
+
       DiscourseURL.routeTo(url);
+    },
+
+    onExpand() {
+      if (isEmpty(this.get("asyncContent"))) {
+        this.set("asyncContent", this.get("content"));
+      }
+    },
+
+    onFilter(filter) {
+      if (isEmpty(filter)) {
+        this.set("asyncContent", this.get("content"));
+        return;
+      }
+
+      this.startLoading();
+
+      this.set(
+        "searchDebounce",
+        run.debounce(this, this._prepareSearch, filter, 350)
+      );
     }
   }
 });

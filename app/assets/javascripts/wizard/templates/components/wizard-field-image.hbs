@@ -7,8 +7,8 @@
     {{i18n "wizard.uploading"}}
   {{else}}
     {{i18n "wizard.upload"}}
-    {{d-icon "picture-o"}}
+    {{d-icon "far-image"}}
   {{/if}}
 
-  <input disabled={{uploading}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
+  <input class="wizard-hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
 </label>

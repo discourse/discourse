@@ -11,7 +11,6 @@ function loadWithTag(path, cb) {
   if (Ember.Test) {
     Ember.Test.registerWaiter(() => finished);
   }
-  head.appendChild(s);
 
   s.onload = s.onreadystatechange = function(_, abort) {
     finished = true;
@@ -27,6 +26,8 @@ function loadWithTag(path, cb) {
       }
     }
   };
+
+  head.appendChild(s);
 }
 
 export function loadCSS(url) {
@@ -41,17 +42,19 @@ export default function loadScript(url, opts) {
 
   opts = opts || {};
 
+  // Scripts should always load from CDN
+  // CSS is type text, to accept it from a CDN we would need to handle CORS
+  url = opts.css ? Discourse.getURL(url) : Discourse.getURLWithCDN(url);
+
   $("script").each((i, tag) => {
     const src = tag.getAttribute("src");
 
-    if (src && (opts.scriptTag || src !== url)) {
-      _loaded[tag.getAttribute("src")] = true;
+    if (src && src !== url && !_loading[src]) {
+      _loaded[src] = true;
     }
   });
 
   return new Ember.RSVP.Promise(function(resolve) {
-    url = Discourse.getURL(url);
-
     // If we already loaded this url
     if (_loaded[url]) {
       return resolve();
@@ -78,30 +81,15 @@ export default function loadScript(url, opts) {
       _loaded[url] = true;
     };
 
-    let cdnUrl = url;
-
-    // Scripts should always load from CDN
-    // CSS is type text, to accept it from a CDN we would need to handle CORS
-    if (!opts.css && Discourse.CDN && url[0] === "/" && url[1] !== "/") {
-      cdnUrl = Discourse.CDN.replace(/\/$/, "") + url;
-    }
-
-    // Some javascript depends on the path of where it is loaded (ace editor)
-    // to dynamically load more JS. In that case, add the `scriptTag: true`
-    // option.
-    if (opts.scriptTag) {
-      if (Ember.testing) {
-        throw new Error(
-          `In test mode scripts cannot be loaded async ${cdnUrl}`
-        );
-      }
-      loadWithTag(cdnUrl, cb);
-    } else {
+    if (opts.css) {
       ajax({
-        url: cdnUrl,
-        dataType: opts.css ? "text" : "script",
+        url: url,
+        dataType: "text",
         cache: true
       }).then(cb);
+    } else {
+      // Always load JavaScript with script tag to avoid Content Security Policy inline violations
+      loadWithTag(url, cb);
     }
   });
 }

@@ -48,7 +48,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     willTransition() {
       var router = getOwner(this).lookup("router:main");
       Ember.run.once(router, router.trigger, "willTransition");
-      return this._super();
+      return this._super(...arguments);
     },
 
     postWasEnqueued(details) {
@@ -144,6 +144,13 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     // Close the current modal, and destroy its state.
     closeModal() {
       this.render("hide-modal", { into: "modal", outlet: "modalBody" });
+
+      const route = getOwner(this).lookup("route:application");
+      const name = route.controllerFor("modal").get("name");
+      const controller = getOwner(this).lookup(`controller:${name}`);
+      if (controller && controller.onClose) {
+        controller.onClose();
+      }
     },
 
     /**
@@ -199,8 +206,8 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   activate() {
-    this._super();
-    Em.run.next(function() {
+    this._super(...arguments);
+    Ember.run.next(function() {
       // Support for callbacks once the application has activated
       ApplicationRoute.trigger("activate");
     });

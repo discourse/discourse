@@ -12,17 +12,11 @@ def expand_path(path)
   File.expand_path("../../#{path}", __FILE__)
 end
 
-# List of locales that will break Discourse and need to be fixed
-# by translators in Transifex.
-def broken_locales
-  ['ja']
-end
-
 def supported_locales
   Dir.glob(expand_path('config/locales/client.*.yml'))
     .map { |x| x.split('.')[-2] }
     .select { |x| x != 'en' }
-    .sort - broken_locales
+    .sort - TranslationsManager::BROKEN_LOCALES
 end
 
 YML_DIRS = ['config/locales',

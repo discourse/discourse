@@ -10,6 +10,7 @@ Crawl-delay: <%= agent[:delay] %>
 <%- end -%>
 <% agent[:disallow].each do |path| %>
 Disallow: <%= path %>
+Noindex: <%= path %>
 <% end %>
 
 

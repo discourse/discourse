@@ -9,24 +9,13 @@ import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 
 export function translateResults(results, opts) {
-  if (!opts) opts = {};
+  opts = opts || {};
 
-  // Topics might not be included
-  if (!results.topics) {
-    results.topics = [];
-  }
-  if (!results.users) {
-    results.users = [];
-  }
-  if (!results.posts) {
-    results.posts = [];
-  }
-  if (!results.categories) {
-    results.categories = [];
-  }
-  if (!results.tags) {
-    results.tags = [];
-  }
+  results.topics = results.topics || [];
+  results.users = results.users || [];
+  results.posts = results.posts || [];
+  results.categories = results.categories || [];
+  results.tags = results.tags || [];
 
   const topicMap = {};
   results.topics = results.topics.map(function(topic) {
@@ -45,8 +34,7 @@ export function translateResults(results, opts) {
   });
 
   results.users = results.users.map(function(user) {
-    user = User.create(user);
-    return user;
+    return User.create(user);
   });
 
   results.categories = results.categories
@@ -57,7 +45,7 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function(tag) {
-      let tagName = Handlebars.Utils.escapeExpression(tag.name);
+      const tagName = Handlebars.Utils.escapeExpression(tag.name);
       return Ember.Object.create({
         id: tagName,
         url: Discourse.getURL("/tags/" + tagName)
@@ -65,34 +53,34 @@ export function translateResults(results, opts) {
     })
     .compact();
 
-  const r = results.grouped_search_result;
   results.resultTypes = [];
 
   // TODO: consider refactoring front end to take a better structure
-  if (r) {
+  const groupedSearchResult = results.grouped_search_result;
+  if (groupedSearchResult) {
     [
       ["topic", "posts"],
-      ["user", "users"],
       ["category", "categories"],
-      ["tag", "tags"]
+      ["tag", "tags"],
+      ["user", "users"]
     ].forEach(function(pair) {
-      const type = pair[0],
-        name = pair[1];
+      const type = pair[0];
+      const name = pair[1];
       if (results[name].length > 0) {
-        var result = {
+        const componentName =
+          opts.searchContext &&
+          opts.searchContext.type === "topic" &&
+          type === "topic"
+            ? "post"
+            : type;
+        const result = {
           results: results[name],
-          componentName:
-            "search-result-" +
-            (opts.searchContext &&
-            opts.searchContext.type === "topic" &&
-            type === "topic"
-              ? "post"
-              : type),
+          componentName: `search-result-${componentName}`,
           type,
-          more: r["more_" + name]
+          more: groupedSearchResult[`more_${name}`]
         };
 
-        if (result.more && name === "posts" && opts.fullSearchUrl) {
+        if (result.more && componentName === "topic" && opts.fullSearchUrl) {
           result.more = false;
           result.moreUrl = opts.fullSearchUrl;
         }
@@ -103,13 +91,13 @@ export function translateResults(results, opts) {
   }
 
   const noResults = !!(
-    results.topics.length === 0 &&
-    results.posts.length === 0 &&
-    results.users.length === 0 &&
-    results.categories.length === 0
+    !results.topics.length &&
+    !results.posts.length &&
+    !results.users.length &&
+    !results.categories.length
   );
 
-  return noResults ? null : Em.Object.create(results);
+  return noResults ? null : Ember.Object.create(results);
 }
 
 export function searchForTerm(term, opts) {
@@ -119,6 +107,8 @@ export function searchForTerm(term, opts) {
   const data = { term: term, include_blurbs: "true" };
   if (opts.typeFilter) data.type_filter = opts.typeFilter;
   if (opts.searchForId) data.search_for_id = true;
+  if (opts.restrictToArchetype)
+    data.restrict_to_archetype = opts.restrictToArchetype;
 
   if (opts.searchContext) {
     data.search_context = {

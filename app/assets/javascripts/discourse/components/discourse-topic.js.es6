@@ -12,6 +12,9 @@ function highlight(postNumber) {
   $contents.on("animationend", () => $contents.removeClass("highlighted"));
 }
 
+// used to determine scroll direction on mobile
+let lastScroll, scrollDirection, delta;
+
 export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   userFilters: Ember.computed.alias("topic.userFilters"),
   classNameBindings: [
@@ -45,7 +48,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.bindScrolling({ name: "topic-view" });
 
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
@@ -94,10 +97,27 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
         this.appEvents.trigger("header:hide-topic");
       }
     });
+    // setup mobile scroll logo
+    if (this.site.mobileView) {
+      this.appEvents.on("topic:scrolled", offset =>
+        this.mobileScrollGaurd(offset)
+      );
+      // used to animate header contents on scroll
+      this.appEvents.on("header:show-topic", () => {
+        $("header.d-header")
+          .removeClass("scroll-up")
+          .addClass("scroll-down");
+      });
+      this.appEvents.on("header:hide-topic", () => {
+        $("header.d-header")
+          .removeClass("scroll-down")
+          .addClass("scroll-up");
+      });
+    }
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.unbindScrolling("topic-view");
     $(window).unbind("resize.discourse-on-scroll");
 
@@ -109,6 +129,11 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     // this happens after route exit, stuff could have trickled in
     this.appEvents.trigger("header:hide-topic");
     this.appEvents.off("post:highlight");
+    // mobile scroll logo clean up.
+    if (this.site.mobileView) {
+      this.appEvents.off("topic:scrolled");
+      $("header.d-header").removeClass("scroll-down scroll-up");
+    }
   },
 
   @observes("Discourse.hasFocus")
@@ -123,9 +148,18 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   showTopicInHeader(topic, offset) {
-    return offset > this.get("dockAt");
+    // conditions for showing topic title in the header for mobile
+    if (
+      this.site.mobileView &&
+      scrollDirection !== "up" &&
+      offset > this.dockAt
+    ) {
+      return true;
+      // condition for desktops
+    } else {
+      return offset > this.dockAt;
+    }
   },
-
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   scrolled() {
     if (this.isDestroyed || this.isDestroying || this._state !== "inDOM") {
@@ -161,5 +195,23 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
     // Trigger a scrolled event
     this.appEvents.trigger("topic:scrolled", offset);
+  },
+
+  // determines scroll direction, triggers header topic info on mobile
+  // and ensures that the switch happens only once per scroll direction change
+  mobileScrollGaurd(offset) {
+    // user hasn't scrolled past topic title.
+    if (offset < this.dockAt) return;
+
+    delta = offset - lastScroll;
+    // 3px buffer so that the switch doesn't happen with tiny scrolls
+    if (delta > 3 && scrollDirection !== "down") {
+      scrollDirection = "down";
+      this.appEvents.trigger("header:show-topic", this.topic);
+    } else if (delta < -3 && scrollDirection !== "up") {
+      scrollDirection = "up";
+      this.appEvents.trigger("header:hide-topic");
+    }
+    lastScroll = offset;
   }
 });

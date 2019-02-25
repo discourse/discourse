@@ -1,4 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
+import showModal from "discourse/lib/show-modal";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
   sortProperties: ["totalCount:desc", "id"],
@@ -18,6 +21,15 @@ export default Ember.Controller.extend({
     }
   },
 
+  @computed
+  actionsMapping() {
+    return {
+      manageGroups: () => this.send("showTagGroups"),
+      uploadTags: () => this.send("showUploader"),
+      deleteUnusedTags: () => this.send("deleteUnused")
+    };
+  },
+
   actions: {
     sortByCount() {
       this.setProperties({
@@ -33,6 +45,47 @@ export default Ember.Controller.extend({
         sortedByCount: false,
         sortedByName: true
       });
+    },
+
+    showUploader() {
+      showModal("tag-upload");
+    },
+
+    deleteUnused() {
+      ajax("/tags/unused", { type: "GET" })
+        .then(result => {
+          const displayN = 20;
+          const tags = result["tags"];
+          const joinedTags = tags.slice(0, displayN).join(", ");
+          var more = Math.max(0, tags.length - displayN);
+
+          const tagsString =
+            more === 0
+              ? joinedTags
+              : I18n.t("tagging.delete_unused_confirmation_more_tags", {
+                  count: more,
+                  tags: joinedTags
+                });
+
+          const string = I18n.t("tagging.delete_unused_confirmation", {
+            count: tags.length,
+            tags: tagsString
+          });
+
+          bootbox.confirm(
+            string,
+            I18n.t("tagging.cancel_delete_unused"),
+            I18n.t("tagging.delete_unused"),
+            proceed => {
+              if (proceed) {
+                ajax("/tags/unused", { type: "DELETE" })
+                  .then(() => this.send("refresh"))
+                  .catch(popupAjaxError);
+              }
+            }
+          );
+        })
+        .catch(popupAjaxError);
     }
   }
 });

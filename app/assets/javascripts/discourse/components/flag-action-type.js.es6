@@ -23,9 +23,9 @@ export default Ember.Component.extend({
     return flag === selectedFlag;
   },
 
-  showMessageInput: Em.computed.and("flag.is_custom_flag", "selected"),
-  showDescription: Em.computed.not("showMessageInput"),
-  isNotifyUser: Em.computed.equal("flag.name_key", "notify_user"),
+  showMessageInput: Ember.computed.and("flag.is_custom_flag", "selected"),
+  showDescription: Ember.computed.not("showMessageInput"),
+  isNotifyUser: Ember.computed.equal("flag.name_key", "notify_user"),
 
   @computed("flag.description", "flag.short_description")
   description(long_description, short_description) {
@@ -57,7 +57,7 @@ export default Ember.Component.extend({
 
   actions: {
     changePostActionType(at) {
-      this.sendAction("changePostActionType", at);
+      this.changePostActionType(at);
     }
   }
 });

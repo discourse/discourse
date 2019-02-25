@@ -5,6 +5,7 @@ require_dependency 'enum'
 class Group < ActiveRecord::Base
   include HasCustomFields
   include AnonCacheInvalidator
+  include HasDestroyedWebHook
 
   cattr_accessor :preloaded_custom_field_names
   self.preloaded_custom_field_names = Set.new
@@ -25,7 +26,6 @@ class Group < ActiveRecord::Base
   before_save :cook_bio
 
   after_save :destroy_deletions
-  after_save :automatic_group_membership
   after_save :update_primary_group
   after_save :update_title
 
@@ -35,12 +35,14 @@ class Group < ActiveRecord::Base
   after_save :expire_cache
   after_destroy :expire_cache
 
+  after_commit :automatic_group_membership, on: [:create, :update]
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
   after_commit :trigger_group_destroyed_event, on: :destroy
 
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
+    SvgSprite.expire_cache
   end
 
   validate :name_format_validator
@@ -48,7 +50,7 @@ class Group < ActiveRecord::Base
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
-  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0, 3] != 'fa-' }
+  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url.exclude?('fa-') }
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
 
   AUTO_GROUPS = {
@@ -86,8 +88,12 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :visible_groups, Proc.new { |user, order|
-    groups = Group.order(order || "name ASC").where("groups.id > 0")
+  scope :visible_groups, Proc.new { |user, order, opts|
+    groups = Group.order(order || "name ASC")
+
+    if !opts || !opts[:include_everyone]
+      groups = groups.where("groups.id > 0")
+    end
 
     unless user&.admin
       sql = <<~SQL
@@ -131,22 +137,30 @@ class Group < ActiveRecord::Base
   }
 
   scope :mentionable, lambda { |user|
-
-    where("mentionable_level in (:levels) OR
-          (
-            mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
-            SELECT group_id FROM group_users WHERE user_id = :user_id)
-          )", levels: alias_levels(user), user_id: user && user.id)
+    where(self.mentionable_sql_clause,
+      levels: alias_levels(user),
+      user_id: user&.id
+    )
   }
 
   scope :messageable, lambda { |user|
-
     where("messageable_level in (:levels) OR
           (
             messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           )", levels: alias_levels(user), user_id: user && user.id)
   }
+
+  def self.mentionable_sql_clause
+    <<~SQL
+    mentionable_level in (:levels)
+    OR (
+      mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
+      AND id in (
+        SELECT group_id FROM group_users WHERE user_id = :user_id)
+      )
+    SQL
+  end
 
   def self.alias_levels(user)
     levels = [ALIAS_LEVELS[:everyone]]
@@ -192,10 +206,10 @@ class Group < ActiveRecord::Base
 
   def posts_for(guardian, opts = nil)
     opts ||= {}
-    user_ids = group_users.map { |gu| gu.user_id }
-    result = Post.includes(:user, :topic, topic: :category)
+    result = Post.joins(:topic, user: :groups, topic: :category)
+      .preload(:topic, user: :groups, topic: :category)
       .references(:posts, :topics, :category)
-      .where(user_id: user_ids)
+      .where(groups: { id: id })
       .where('topics.archetype <> ?', Archetype.private_message)
       .where('topics.visible')
       .where(post_type: Post.types[:regular])

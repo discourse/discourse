@@ -1,5 +1,4 @@
 import { ajax } from "discourse/lib/ajax";
-import PreloadStore from "preload-store";
 
 const Backup = Discourse.Model.extend({
   destroy() {
@@ -16,9 +15,9 @@ const Backup = Discourse.Model.extend({
 
 Backup.reopenClass({
   find() {
-    return PreloadStore.getAndRemove("backups", () =>
-      ajax("/admin/backups.json")
-    ).then(backups => backups.map(backup => Backup.create(backup)));
+    return ajax("/admin/backups.json").then(backups =>
+      backups.map(backup => Backup.create(backup))
+    );
   },
 
   start(withUploads) {

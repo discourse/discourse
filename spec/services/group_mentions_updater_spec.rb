@@ -17,7 +17,11 @@ RSpec.describe GroupMentionsUpdater do
         ["This @#{old_group_name} is awesome!", "This @#{new_group_name} is awesome!"],
         ["Mention us @ @#{old_group_name}", "Mention us @ @#{new_group_name}"],
       ].each do |raw, expected_raw|
-        group = Fabricate(:group, name: old_group_name)
+        group = Fabricate(:group,
+          name: old_group_name,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone]
+        )
+
         post.update!(raw: raw)
         group.update!(name: new_group_name)
         post.reload
@@ -30,7 +34,11 @@ RSpec.describe GroupMentionsUpdater do
     end
 
     it 'should not update invalid group mentions' do
-      group = Fabricate(:group, name: 'team')
+      group = Fabricate(:group,
+        name: 'team',
+        mentionable_level: Group::ALIAS_LEVELS[:everyone]
+      )
+
       post.update!(raw: 'This is not valid@team.com')
 
       expect(post.reload.raw_mentions).to eq([])
@@ -41,8 +49,15 @@ RSpec.describe GroupMentionsUpdater do
     end
 
     it "should ignore validations" do
-      Fabricate(:group, name: "awesome_team")
-      Fabricate(:group, name: "pro_team")
+      everyone_mention_level = Group::ALIAS_LEVELS[:everyone]
+
+      %w{
+        awesome_team
+        pro_team
+      }.each do |name|
+        Fabricate(:group, name: name, mentionable_level: everyone_mention_level)
+      end
+
       post.update!(raw: "@awesome_team is cool and so is @pro_team")
 
       SiteSetting.max_mentions_per_post = 1

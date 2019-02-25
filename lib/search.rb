@@ -2,9 +2,17 @@ require_dependency 'search/grouped_search_results'
 
 class Search
   INDEX_VERSION = 2.freeze
+  DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
   def self.per_facet
     5
+  end
+
+  def self.strip_diacritics(str)
+    s = str.unicode_normalize(:nfkd)
+    s.gsub!(DIACRITICS, "")
+    s.strip!
+    s
   end
 
   def self.per_filter
@@ -47,18 +55,27 @@ class Search
   end
 
   def self.prepare_data(search_data, purpose = :query)
-    data = search_data.squish
-    # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
-    # Korean appears to be safe cause words are already space seperated
-    # For Japanese we should investigate using kakasi
-    if ['zh_TW', 'zh_CN', 'ja'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
-      require 'cppjieba_rb' unless defined? CppjiebaRb
-      mode = (purpose == :query ? :query : :mix)
-      data = CppjiebaRb.segment(search_data, mode: mode)
-      data = CppjiebaRb.filter_stop_word(data).join(' ')
-    end
+    purpose ||= :query
 
+    data = search_data.dup
     data.force_encoding("UTF-8")
+    if purpose != :topic
+      # TODO cppjieba_rb is designed for chinese, we need something else for Japanese
+      # Korean appears to be safe cause words are already space seperated
+      # For Japanese we should investigate using kakasi
+      if ['zh_TW', 'zh_CN', 'ja'].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese_japanese_korean
+        require 'cppjieba_rb' unless defined? CppjiebaRb
+        mode = (purpose == :query ? :query : :mix)
+        data = CppjiebaRb.segment(search_data, mode: mode)
+        data = CppjiebaRb.filter_stop_word(data).join(' ')
+      else
+        data.squish!
+      end
+
+      if SiteSetting.search_ignore_accents
+        data = strip_diacritics(data)
+      end
+    end
     data
   end
 
@@ -140,11 +157,12 @@ class Search
     term.gsub!(/[\u201c\u201d]/, '"')
 
     @clean_term = term
+    @in_title = false
 
     term = process_advanced_search!(term)
 
     if term.present?
-      @term = Search.prepare_data(term)
+      @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)
       @original_term = PG::Connection.escape_string(@term)
     end
 
@@ -210,7 +228,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && @results.type_filter == 'topic'
+    if @opts[:search_for_id] && (@results.type_filter == 'topic' || @results.type_filter == 'private_messages')
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
       else
@@ -407,7 +425,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where(name: slug[0]).pluck(:id).first
+      tag_id = Tag.where_name(slug[0]).pluck(:id).first
       if (tag_id)
         posts.where("topics.id IN (
           SELECT DISTINCT(tt.topic_id)
@@ -496,7 +514,7 @@ class Search
 
   def search_tags(posts, match, positive:)
     return if match.nil?
-
+    match.downcase!
     modifier = positive ? "" : "NOT"
 
     if match.include?('+')
@@ -507,16 +525,16 @@ class Search
         FROM topic_tags tt, tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
-        HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(tags.name), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
-      )", tags.join('&')).order("id")
+        HAVING to_tsvector(#{default_ts_config}, array_to_string(array_agg(lower(tags.name)), ' ')) @@ to_tsquery(#{default_ts_config}, ?)
+      )", tags.join('&'))
     else
       tags = match.split(",")
 
       posts.where("topics.id #{modifier} IN (
         SELECT DISTINCT(tt.topic_id)
         FROM topic_tags tt, tags
-        WHERE tt.tag_id = tags.id AND tags.name IN (?)
-      )", tags).order("id")
+        WHERE tt.tag_id = tags.id AND lower(tags.name) IN (?)
+      )", tags)
     end
   end
 
@@ -533,8 +551,6 @@ class Search
           found = true
         end
       end
-
-      @in_title = false
 
       if word == 'order:latest' || word == 'l'
         @order = :latest
@@ -612,7 +628,14 @@ class Search
 
   # If we're searching for a single topic
   def single_topic(id)
-    post = Post.find_by(topic_id: id, post_number: 1)
+    if @opts[:restrict_to_archetype].present?
+      archetype = @opts[:restrict_to_archetype] == Archetype.default ? Archetype.default : Archetype.private_message
+      post = Post.joins(:topic)
+        .where("topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1", id: id, archetype: archetype)
+        .first
+    else
+      post = Post.find_by(topic_id: id, post_number: 1)
+    end
     return nil unless @guardian.can_see?(post)
 
     @results.add(post)
@@ -815,7 +838,7 @@ class Search
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
     all_terms = data.scan(/'([^']+)'\:\d+/).flatten
     all_terms.map! do |t|
-      t.split(/[\)\(&']/)[0]
+      t.split(/[\)\(&']/).find(&:present?)
     end.compact!
 
     query = ActiveRecord::Base.connection.quote(

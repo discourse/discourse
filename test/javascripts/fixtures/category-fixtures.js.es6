@@ -16,8 +16,6 @@ export default {
       read_restricted: false,
       permission: null,
       notification_level: null,
-      logo_url: null,
-      background_url: null,
       available_groups: [
         "admins",
         "discourse",

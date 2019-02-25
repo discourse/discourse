@@ -41,6 +41,10 @@ export default Discourse.Route.extend({
     showTagGroups() {
       this.transitionTo("tagGroups");
       return true;
+    },
+
+    refresh() {
+      this.refresh();
     }
   }
 });

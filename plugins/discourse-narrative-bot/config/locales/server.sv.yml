@@ -7,6 +7,7 @@
 
 sv:
   site_settings:
+    discourse_narrative_bot_enabled: 'Aktivera Discourse digitala hjälpreda (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Avaktivera introduktionsmeddelandet från Discourse  digitala hjälpreda "
     discourse_narrative_bot_ignored_usernames: "Användarnamn som Discourse  digitala hjälpreda bör ignorera"
     discourse_narrative_bot_disable_public_replies: "Inaktivera publika svar från Discourse digitala hjälpreda "
@@ -20,7 +21,7 @@ sv:
         Detta märke tilldelas efter genomförande av den interaktiva introduktionen för nya användare. Du har genom detta initiativ lärt dig grundläggande verktygen för diskussion och är nu certifierad!
     licensed:
       name: Licencierad
-      description: "Genomfört den avancerade användar kursen"
+      description: "Genomfört den avancerade användarkursen"
       long_description: |
         Detta märke tilldelas efter genomförande av den interaktiva avancerade instruktionen för användare. Du har genom detta initiativ lärt dig grundläggande verktygen för diskussion och är nu certifierad!
   discourse_narrative_bot:
@@ -73,7 +74,16 @@ sv:
         quote: "Gör en sak varje dag som skrämmer dig."
         author: "Eleanor Roosevelt"
       '9':
+        quote: "Misstag är alltid förlåtliga, om en har modet att erkänna dem."
         author: "Bruce Lee"
+    magic_8_ball:
+      answers:
+        '1': "Det är säkert"
+        '3': "Utan tvivel"
+        '4': "Ja definitivt"
+        '5': "Du kan lita på det"
+        '7': "Mest sannolikt"
+        '9': "Ja"
     advanced_user_narrative:
       poll:
         reply: |-

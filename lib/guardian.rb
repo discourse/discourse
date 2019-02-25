@@ -19,23 +19,46 @@ class Guardian
   include TagGuardian
 
   class AnonymousUser
-    def blank?; true; end
-    def admin?; false; end
-    def staff?; false; end
-    def moderator?; false; end
-    def approved?; false; end
-    def staged?; false; end
-    def silenced?; false; end
-    def secure_category_ids; []; end
-    def topic_create_allowed_category_ids; []; end
-    def has_trust_level?(level); false; end
-    def email; nil; end
+    def blank?
+      true
+    end
+    def admin?
+      false
+    end
+    def staff?
+      false
+    end
+    def moderator?
+      false
+    end
+    def approved?
+      false
+    end
+    def staged?
+      false
+    end
+    def silenced?
+      false
+    end
+    def secure_category_ids
+      []
+    end
+    def topic_create_allowed_category_ids
+      []
+    end
+    def has_trust_level?(level)
+      false
+    end
+    def email
+      nil
+    end
   end
 
-  attr_accessor :can_see_emails
+  attr_reader :request
 
-  def initialize(user = nil)
+  def initialize(user = nil, request = nil)
     @user = user.presence || AnonymousUser.new
+    @request = request
   end
 
   def user
@@ -265,19 +288,25 @@ class Guardian
 
   def can_invite_to?(object, groups = nil)
     return false unless authenticated?
-    return true if is_admin?
+    is_topic = object.is_a?(Topic)
+    return true if is_admin? && !is_topic
     return false if (SiteSetting.max_invites_per_day.to_i == 0 && !is_staff?)
     return false unless can_see?(object)
     return false if groups.present?
 
-    if object.is_a?(Topic) && object.private_message?
-      return false unless SiteSetting.enable_personal_messages?
-      return false if object.reached_recipients_limit? && !is_staff?
-    end
+    if is_topic
+      if object.private_message?
+        return true if is_admin?
+        return false unless SiteSetting.enable_personal_messages?
+        return false if object.reached_recipients_limit? && !is_staff?
+      end
 
-    if object.is_a?(Topic) && object.category
-      if object.category.groups.any?
-        return true if object.category.groups.all? { |g| can_edit_group?(g) }
+      if (category = object.category) && category.read_restricted
+        if (groups = category.groups&.where(automatic: false))&.any?
+          return groups.any? { |g| can_edit_group?(g) } ? true : false
+        else
+          return false
+        end
       end
     end
 
@@ -314,7 +343,7 @@ class Guardian
     can_send_private_message?(group)
   end
 
-  def can_send_private_message?(target)
+  def can_send_private_message?(target, notify_moderators: false)
     is_user = target.is_a?(User)
     is_group = target.is_a?(Group)
 
@@ -322,11 +351,11 @@ class Guardian
     # User is authenticated
     authenticated? &&
     # Have to be a basic level at least
-    @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
+    (@user.has_trust_level?(SiteSetting.min_trust_to_send_messages) || notify_moderators) &&
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # PMs are enabled
-    (is_staff? || SiteSetting.enable_personal_messages) &&
+    (is_staff? || SiteSetting.enable_personal_messages || notify_moderators) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
@@ -351,13 +380,10 @@ class Guardian
     )
   end
 
-  def can_see_emails?
-    @can_see_emails
-  end
-
   def can_export_entity?(entity)
     return false unless @user
-    return true if is_staff?
+    return true if is_admin?
+    return entity != 'user_list' if is_moderator?
 
     # Regular users can only export their archives
     return false unless entity == "user_archive"
@@ -376,6 +402,12 @@ class Guardian
 
     Theme.user_theme_ids.include?(parent) &&
       (components - Theme.components_for(parent)).empty?
+  end
+
+  def auth_token
+    if cookie = request&.cookies[Auth::DefaultCurrentUserProvider::TOKEN_COOKIE]
+      UserAuthToken.hash_token(cookie)
+    end
   end
 
   private

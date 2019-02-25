@@ -149,11 +149,14 @@ class Auth::DefaultCurrentUserProvider
     end
   end
 
-  def log_on_user(user, session, cookies)
-    @user_token = UserAuthToken.generate!(user_id: user.id,
-                                          user_agent: @env['HTTP_USER_AGENT'],
-                                          path: @env['REQUEST_PATH'],
-                                          client_ip: @request.ip)
+  def log_on_user(user, session, cookies, opts = {})
+    @user_token = UserAuthToken.generate!(
+      user_id: user.id,
+      user_agent: @env['HTTP_USER_AGENT'],
+      path: @env['REQUEST_PATH'],
+      client_ip: @request.ip,
+      staff: user.staff?,
+      impersonate: opts[:impersonate])
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
     unstage_user(user)
@@ -238,8 +241,12 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def should_update_last_seen?
+    return false if Discourse.pg_readonly_mode?
+
     if @request.xhr?
       @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
+    elsif !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
+      false
     else
       true
     end

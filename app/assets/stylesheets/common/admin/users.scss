@@ -78,14 +78,19 @@
       margin-left: 0;
     }
     .btn {
-      margin: 2px 5px 2px 0;
+      margin-right: 5px;
     }
   }
 }
 
-.admin-users .users-list {
-  .username .fa {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+.admin-users {
+  input {
+    margin-bottom: 0;
+  }
+  .users-list {
+    .username .fa {
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
   }
 }
 

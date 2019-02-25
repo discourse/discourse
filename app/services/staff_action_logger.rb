@@ -459,6 +459,14 @@ class StaffActionLogger
     ))
   end
 
+  def log_entity_export(entity, opts = {})
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:entity_export],
+      ip_address: @admin.ip_address.to_s,
+      subject: entity
+    ))
+  end
+
   def log_backup_download(backup, opts = {})
     raise Discourse::InvalidParameters.new(:backup) unless backup
     UserHistory.create!(params(opts).merge(

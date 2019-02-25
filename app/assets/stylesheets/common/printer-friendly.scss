@@ -8,7 +8,7 @@
   .topic-map,
   .post-menu-area.clearfix,
   div#topic-footer-buttons,
-  div#suggested-topics,
+  div.suggested-topics,
   div#progress-topic-wrapper,
   #topic-progress-wrapper,
   div.nums,
@@ -35,8 +35,15 @@
   .alert-info,
   .badge-category,
   .badge-category-bg,
-  .badge-notification.clicks {
+  .badge-notification.clicks,
+  .crawler-nav,
+  .powered-by-link {
     display: none !important;
+  }
+  /* For readability */
+  a,
+  a:visited {
+    color: #0088cc !important;
   }
   /* bottom border to help separate posts */
   div.row {
@@ -70,9 +77,6 @@
   }
   .gap {
     width: auto;
-  }
-  .gutter {
-    padding: 0;
   }
   /* restyle div#topic-title */
   #topic-title {

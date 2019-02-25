@@ -32,7 +32,8 @@ export function startPageTracking(router, appEvents) {
     });
 
     transitionCount++;
-    _.each(cache, (v, k) => {
+    Object.keys(cache).forEach(k => {
+      const v = cache[k];
       if (v && v.target && v.target < transitionCount) {
         delete cache[k];
       }
@@ -56,7 +57,7 @@ export function googleTagManagerPageChanged(data) {
     }
   };
 
-  _.each(_gtmPageChangedCallbacks, callback => callback(gtmData));
+  _gtmPageChangedCallbacks.forEach(callback => callback(gtmData));
 
   window.dataLayer.push(gtmData);
 }

@@ -33,7 +33,11 @@ class CategoriesController < ApplicationController
     )
     @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
-    @title = "#{I18n.t('js.filters.categories.title')} - #{SiteSetting.title}" unless category_options[:is_homepage]
+    if category_options[:is_homepage] && SiteSetting.short_site_description.present?
+      @title = "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+    elsif !category_options[:is_homepage]
+      @title = "#{I18n.t('js.filters.categories.title')} - #{SiteSetting.title}"
+    end
 
     respond_to do |format|
       format.html do
@@ -149,9 +153,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:position)
 
       # properly null the value so the database constraint doesn't catch us
-      if category_params.has_key?(:email_in) && category_params[:email_in].blank?
-        category_params[:email_in] = nil
-      end
+      category_params[:email_in] = nil if category_params[:email_in]&.blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
 
@@ -311,6 +314,7 @@ class CategoriesController < ApplicationController
       params[:include_topics] ||
       (parent_category && parent_category.subcategory_list_includes_topics?) ||
       style == "categories_with_featured_topics".freeze ||
+      style == "categories_boxes_with_topics".freeze ||
       style == "categories_with_top_topics".freeze
   end
 end

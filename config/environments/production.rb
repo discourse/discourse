@@ -24,12 +24,12 @@ Discourse::Application.configure do
 
   if GlobalSetting.smtp_address
     settings = {
-      address:              GlobalSetting.smtp_address,
-      port:                 GlobalSetting.smtp_port,
-      domain:               GlobalSetting.smtp_domain,
-      user_name:            GlobalSetting.smtp_user_name,
-      password:             GlobalSetting.smtp_password,
-      authentication:       GlobalSetting.smtp_authentication,
+      address: GlobalSetting.smtp_address,
+      port: GlobalSetting.smtp_port,
+      domain: GlobalSetting.smtp_domain,
+      user_name: GlobalSetting.smtp_user_name,
+      password: GlobalSetting.smtp_password,
+      authentication: GlobalSetting.smtp_authentication,
       enable_starttls_auto: GlobalSetting.smtp_enable_start_tls
     }
 

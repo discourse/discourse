@@ -33,7 +33,7 @@ export default createWidget("post-edits-indicator", {
   },
 
   html(attrs) {
-    let icon = "pencil";
+    let icon = "pencil-alt";
     const updatedAt = new Date(attrs.updated_at);
     let className = this.historyHeat(updatedAt);
     const date = longDate(updatedAt);
@@ -62,13 +62,14 @@ export default createWidget("post-edits-indicator", {
       "a",
       {
         className,
-        attributes: { title }
+        attributes: { title, href: "#" }
       },
       contents
     );
   },
 
-  click() {
+  click(e) {
+    e.preventDefault();
     if (this.attrs.wiki && this.attrs.version === 1) {
       this.sendWidgetAction("editPost");
     } else if (this.attrs.canViewEditHistory) {

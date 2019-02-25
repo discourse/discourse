@@ -25,11 +25,9 @@ zh_CN:
     default_poll_with_multiple_choices_has_invalid_parameters: "多选投票有无效选项。"
     named_poll_with_multiple_choices_has_invalid_parameters: "“<strong>%{name}</strong>”多选投票有无效参数。"
     requires_at_least_1_valid_option: "你必须选择至少 1 个有效的选项。"
-    default_cannot_be_made_public: "投票调查不能公开。"
     edit_window_expired:
-      op_cannot_edit_options: "在创建话题%{minutes}分钟后，你不可以增加、删除投票选项。如果你需要修改投票选项，请联系管理员。"
-      staff_cannot_add_or_remove_options: "在创建话题%{minutes}分钟后，你不能增加或者删除投票选项。你可以选择删除该话题然后重新创建一个。"
-    no_polls_associated_with_this_post: "这个帖子中没有投票。"
+      cannot_edit_default_poll_with_votes: "在创建%{minutes}分钟后，你无法更改投票。"
+      cannot_edit_named_poll_with_votes: "在创建%{minutes}分钟后，你无法更改投票名<strong>${name}</strong>。"
     no_poll_with_this_name: "投票“<strong>%{name}</strong>”没有被关联到帖子。"
     post_is_deleted: "帖子已经删除，无法操作。"
     user_cant_post_in_topic: "你无法投票，因为你无法在这个主题里发帖"
@@ -37,6 +35,6 @@ zh_CN:
     poll_must_be_open_to_vote: "投票必须开启。"
     topic_must_be_open_to_toggle_status: "主题必须未被锁定才能改变状态。"
     only_staff_or_op_can_toggle_status: "只有管理人员或者发布投票的人才能改变投票状态。"
-    insufficient_rights_to_create: "您不能创建投票。"
+    insufficient_rights_to_create: "你不能创建投票。"
     email:
       link_to_poll: "点击查看投票。"

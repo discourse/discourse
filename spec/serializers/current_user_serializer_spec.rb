@@ -65,4 +65,24 @@ RSpec.describe CurrentUserSerializer do
       expect(payload[:top_category_ids]).to eq([category2.id, category1.id])
     end
   end
+
+  context "#groups" do
+    let(:member) { Fabricate(:user) }
+    let :serializer do
+      CurrentUserSerializer.new(member, scope: Guardian.new, root: false)
+    end
+
+    it "should only show visible groups" do
+      Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
+      hidden_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:owners])
+      public_group = Fabricate.build(:group, visibility_level: Group.visibility_levels[:public])
+      hidden_group.add(member)
+      hidden_group.save!
+      public_group.add(member)
+      public_group.save!
+      payload = serializer.as_json
+
+      expect(payload[:groups]).to eq([{ id: public_group.id, name: public_group.name }])
+    end
+  end
 end

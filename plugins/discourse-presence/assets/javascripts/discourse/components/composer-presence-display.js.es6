@@ -9,8 +9,6 @@ export const keepAliveDuration = 10000;
 export const bufferTime = 3000;
 
 export default Ember.Component.extend({
-  composer: Ember.inject.controller(),
-
   // Passed in variables
   action: null,
   post: null,
@@ -113,6 +111,12 @@ export default Ember.Component.extend({
 
   publish(data) {
     this._lastPublish = new Date();
+
+    // Don't publish presence if disabled
+    if (this.currentUser.hide_profile_and_presence) {
+      return Ember.RSVP.Promise.resolve();
+    }
+
     return ajax("/presence/publish", { type: "POST", data });
   },
 

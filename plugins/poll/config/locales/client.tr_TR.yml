@@ -15,8 +15,6 @@ tr_TR:
         one: "toplam oy"
         other: "toplam oy"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
-      public:
-        title: "Oylar herkese açık."
       multiple:
         help:
           at_least_min_options:

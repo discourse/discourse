@@ -608,35 +608,85 @@ describe Topic do
     end
 
     describe 'public topic' do
-      def expect_the_right_notification_to_be_created
+      def expect_the_right_notification_to_be_created(inviter, invitee)
         notification = Notification.last
 
         expect(notification.notification_type)
           .to eq(Notification.types[:invited_to_topic])
 
-        expect(notification.user).to eq(another_user)
+        expect(notification.user).to eq(invitee)
         expect(notification.topic).to eq(topic)
 
         notification_data = JSON.parse(notification.data)
 
         expect(notification_data["topic_title"]).to eq(topic.title)
-        expect(notification_data["display_username"]).to eq(user.username)
+        expect(notification_data["display_username"]).to eq(inviter.username)
       end
 
       describe 'by username' do
         it 'should invite user into a topic' do
           topic.invite(user, another_user.username)
-
-          expect(topic.reload.allowed_users.last).to eq(another_user)
-          expect_the_right_notification_to_be_created
+          expect_the_right_notification_to_be_created(user, another_user)
         end
       end
 
       describe 'by email' do
         it 'should be able to invite a user' do
           expect(topic.invite(user, another_user.email)).to eq(true)
-          expect(topic.reload.allowed_users.last).to eq(another_user)
-          expect_the_right_notification_to_be_created
+          expect_the_right_notification_to_be_created(user, another_user)
+        end
+
+        describe 'when topic belongs to a private category' do
+          let(:group) { Fabricate(:group) }
+
+          let(:category) do
+            Fabricate(:category, groups: [group]).tap do |category|
+              category.set_permissions(group => :full)
+              category.save!
+            end
+          end
+
+          let(:topic) { Fabricate(:topic, category: category) }
+          let(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+          let(:invitee) { Fabricate(:user) }
+
+          describe 'as a group owner' do
+            it 'should be able to invite a user' do
+              expect do
+                expect(topic.invite(inviter, invitee.email, [group.id]))
+                  .to eq(true)
+              end.to change { Notification.count } &
+                     change { GroupHistory.count }
+
+              expect_the_right_notification_to_be_created(inviter, invitee)
+
+              group_history = GroupHistory.last
+
+              expect(group_history.acting_user).to eq(inviter)
+              expect(group_history.target_user).to eq(invitee)
+
+              expect(group_history.action).to eq(
+                GroupHistory.actions[:add_user_to_group]
+              )
+            end
+
+            describe 'when group ids are not given' do
+              it 'should not invite the user' do
+                expect do
+                  expect(topic.invite(inviter, invitee.email)).to eq(false)
+                end.to_not change { Notification.count }
+              end
+            end
+          end
+
+          describe 'as a normal user' do
+            it 'should not be able to invite a user' do
+              expect do
+                expect(topic.invite(Fabricate(:user), invitee.email, [group.id]))
+                  .to eq(false)
+              end.to_not change { Notification.count }
+            end
+          end
         end
 
         context "for a muted topic" do
@@ -1040,9 +1090,14 @@ describe Topic do
 
       it "resets the topic archetype" do
         topic.expects(:add_moderator_post)
-        MessageBus.expects(:publish).with("/site/banner", nil)
-        topic.remove_banner!(user)
+
+        message = MessageBus.track_publish do
+          topic.remove_banner!(user)
+        end.first
+
         expect(topic.archetype).to eq(Archetype.default)
+        expect(message.channel).to eq("/site/banner")
+        expect(message.data).to eq(nil)
       end
 
     end
@@ -2004,34 +2059,6 @@ describe Topic do
     expect(topic.save).to eq(true)
   end
 
-  context 'invite by group manager' do
-    let(:group_manager) { Fabricate(:user) }
-    let(:group) { Fabricate(:group).tap { |g| g.add_owner(group_manager) } }
-    let(:private_category)  { Fabricate(:private_category, group: group) }
-    let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
-
-    context 'to an email' do
-      let(:randolph) { 'randolph@duke.ooo' }
-
-      it "should attach group to the invite" do
-        group_private_topic.invite(group_manager, randolph)
-        expect(Invite.last.groups).to eq([group])
-      end
-    end
-
-    # should work for an existing user - give access, send notification
-    context 'to an existing user' do
-      let(:walter) { Fabricate(:walter_white) }
-
-      it "should add user to the group" do
-        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_falsey
-        group_private_topic.invite(group_manager, walter.email)
-        expect(walter.groups).to include(group)
-        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
-      end
-    end
-  end
-
   it "Correctly sets #message_archived?" do
     topic = Fabricate(:private_message_topic)
     user = topic.user
@@ -2310,25 +2337,26 @@ describe Topic do
   end
 
   describe "#reset_bumped_at" do
-    it "ignores hidden and deleted posts when resetting the topic's bump date" do
-      post = create_post(created_at: 10.hours.ago)
-      topic = post.topic
+    it "ignores hidden, deleted, moderator and small action posts when resetting the topic's bump date" do
+      post1 = create_post(created_at: 10.hours.ago)
+      topic = post1.topic
 
       expect { topic.reset_bumped_at }.to_not change { topic.bumped_at }
 
-      post = Fabricate(:post, topic: topic, post_number: 2, created_at: 9.hours.ago)
+      post2 = Fabricate(:post, topic: topic, post_number: 2, created_at: 9.hours.ago)
       Fabricate(:post, topic: topic, post_number: 3, created_at: 8.hours.ago, deleted_at: 1.hour.ago)
       Fabricate(:post, topic: topic, post_number: 4, created_at: 7.hours.ago, hidden: true)
       Fabricate(:post, topic: topic, post_number: 5, created_at: 6.hours.ago, user_deleted: true)
       Fabricate(:post, topic: topic, post_number: 6, created_at: 5.hours.ago, post_type: Post.types[:whisper])
 
-      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post2.reload.created_at)
 
-      post = Fabricate(:post, topic: topic, post_number: 7, created_at: 4.hours.ago, post_type: Post.types[:moderator_action])
-      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+      post3 = Fabricate(:post, topic: topic, post_number: 7, created_at: 4.hours.ago, post_type: Post.types[:regular])
+      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post3.reload.created_at)
 
-      post = Fabricate(:post, topic: topic, post_number: 8, created_at: 3.hours.ago, post_type: Post.types[:small_action])
-      expect { topic.reset_bumped_at }.to change { topic.bumped_at }.to(post.reload.created_at)
+      Fabricate(:post, topic: topic, post_number: 8, created_at: 3.hours.ago, post_type: Post.types[:small_action])
+      Fabricate(:post, topic: topic, post_number: 9, created_at: 2.hours.ago, post_type: Post.types[:moderator_action])
+      expect { topic.reset_bumped_at }.not_to change { topic.bumped_at }
     end
   end
 end

@@ -56,6 +56,26 @@ QUnit.test("canLeaveGroup", function(assert) {
   );
 });
 
+QUnit.test("canRequestMembership", function(assert) {
+  this.subject().setProperties({
+    model: { allow_membership_requests: true, is_group_user: true }
+  });
+
+  assert.equal(
+    this.subject().get("canRequestMembership"),
+    false,
+    "can't request for membership if user is already in the group"
+  );
+
+  this.subject().set("model.is_group_user", false);
+
+  assert.equal(
+    this.subject().get("canRequestMembership"),
+    true,
+    "allowed to request for group membership"
+  );
+});
+
 QUnit.test("userIsGroupUser", function(assert) {
   this.subject().setProperties({
     model: { is_group_user: true }

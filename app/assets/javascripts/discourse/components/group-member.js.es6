@@ -3,7 +3,7 @@ export default Ember.Component.extend({
 
   actions: {
     remove() {
-      this.sendAction("removeAction", this.get("member"));
+      this.removeAction(this.get("member"));
     }
   }
 });

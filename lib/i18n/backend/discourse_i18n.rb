@@ -12,7 +12,6 @@ module I18n
       end
 
       def reload!
-        @overrides = {}
         @pluralizers = {}
         super
       end
@@ -40,11 +39,22 @@ module I18n
         false
       end
 
+      def self.create_search_regexp(query, as_string: false)
+        regexp = Regexp.escape(query)
+
+        regexp.gsub!(/['‘’‚‹›]/, "['‘’‚‹›]")
+        regexp.gsub!(/["“”„«»]/, '["“”„«»]')
+        regexp.gsub!(/(?:\\\.\\\.\\\.|…)/, '(?:\.\.\.|…)')
+
+        as_string ? regexp : /#{regexp}/i
+      end
+
       def search(locale, query)
         results = {}
+        regexp = self.class.create_search_regexp(query)
 
         fallbacks(locale).each do |fallback|
-          find_results(/#{Regexp.escape(query)}/i, results, translations[fallback])
+          find_results(regexp, results, translations[fallback])
         end
 
         results

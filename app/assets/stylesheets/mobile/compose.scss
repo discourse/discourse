@@ -25,6 +25,9 @@
 
   .reply-to {
     margin: 5px 0;
+    .reply-details {
+      max-width: calc(100% - 75px);
+    }
   }
 
   .toggler {
@@ -124,6 +127,13 @@
   }
 
   .d-editor-button-bar .btn {
+    svg {
+      -webkit-transform: translate3d(
+        0,
+        0,
+        0
+      ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
+    }
     @media all and (max-width: 350px) {
       padding: 2px 4px;
     }
@@ -147,7 +157,7 @@
   .with-tags {
     .category-input {
       flex-basis: auto;
-      flex: 1;
+      flex: 1 0 0px;
       margin: 0;
       width: 45%;
       margin-bottom: 5px;
@@ -155,7 +165,7 @@
 
     .mini-tag-chooser {
       width: 50%;
-      flex: 1;
+      flex: 1 0 0px;
       margin-left: 5px;
       margin-bottom: 5px;
       z-index: z("base");
@@ -171,5 +181,9 @@
 
   .add-warning {
     margin: 0 0 5px 5px;
+  }
+
+  .whisper {
+    margin-right: 5px;
   }
 }

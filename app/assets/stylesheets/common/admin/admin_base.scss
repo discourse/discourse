@@ -26,10 +26,12 @@ $mobile-breakpoint: 700px;
 
   .nav-pills {
     display: inline-flex;
+    flex-wrap: wrap;
     width: calc(100% - 10px);
     flex: 1 0 auto;
     @include breakpoint(tablet) {
       white-space: nowrap;
+      flex-wrap: nowrap;
       overflow-x: scroll;
       -webkit-overflow-scrolling: touch;
       margin: 0 0 0 -10px;
@@ -400,7 +402,7 @@ $mobile-breakpoint: 700px;
 
   .username {
     input {
-      min-width: 220px;
+      min-width: 15em;
       @media screen and (max-width: 500px) {
         box-sizing: border-box;
         width: 100%;
@@ -468,7 +470,7 @@ $mobile-breakpoint: 700px;
   nav {
     display: inline-flex;
     position: relative;
-    flex: 1;
+    flex: 1 0 0px;
     height: auto;
     overflow: hidden;
     padding: 0;
@@ -550,8 +552,12 @@ $mobile-breakpoint: 700px;
     @include breakpoint(mobile) {
       margin: 0 -10px;
     }
+    label {
+      margin-bottom: 0;
+    }
     input {
-      margin: 0;
+      margin-right: 5px;
+      margin-bottom: 0;
       @include breakpoint(tablet) {
         max-width: 150px;
       }
@@ -614,8 +620,6 @@ $mobile-breakpoint: 700px;
     }
   }
   .toggle {
-    margin-top: 8px;
-    float: right;
     span {
       font-weight: bold;
     }
@@ -623,14 +627,6 @@ $mobile-breakpoint: 700px;
   label {
     display: inline-block;
     margin-right: 5px;
-  }
-  #last-seen input[type="text"] {
-    float: none;
-  }
-  .ac-wrap {
-    display: inline-block;
-    vertical-align: middle;
-    padding: 0;
   }
   .pull-right {
     padding-right: 10px;
@@ -754,6 +750,9 @@ section.details {
   padding: 5px;
   clear: both;
   text-align: right;
+  .btn {
+    line-height: $line-height-medium;
+  }
   @media (max-width: $mobile-breakpoint) {
     .btn {
       margin: 2px;
@@ -871,6 +870,17 @@ table#user-badges {
   }
 }
 
+@mixin value-btn {
+  width: 29px;
+  border: 1px solid $primary-low;
+  outline: none;
+  padding: 0;
+
+  &:focus {
+    border-color: $tertiary;
+  }
+}
+
 .value-list {
   .value {
     padding: 0.125em 0;
@@ -885,7 +895,7 @@ table#user-badges {
 
     .value-input {
       box-sizing: border-box;
-      flex: 1;
+      flex: 1 0 0px;
       border-color: $primary-low;
       cursor: pointer;
       margin: 0;
@@ -897,19 +907,57 @@ table#user-badges {
     }
 
     .remove-value-btn {
+      @include value-btn;
       margin-right: 0.25em;
-      width: 29px;
-      border: 1px solid $primary-low;
-      outline: none;
-      padding: 0;
-
-      &:focus {
-        border-color: $tertiary;
-      }
     }
   }
   .values {
     margin-bottom: 0.5em;
+  }
+}
+
+.secret-value-list {
+  .value {
+    flex-flow: row wrap;
+    margin-left: -0.25em;
+    margin-top: -0.125em;
+    .new-value-input {
+      flex: 1 0 0px;
+    }
+    .value-input,
+    .new-value-input {
+      margin-top: 0.125em;
+      &:last-of-type {
+        margin-left: 0.25em;
+      }
+    }
+    .remove-value-btn {
+      margin-left: 0.25em;
+      margin-top: 0.125em;
+    }
+    .add-value-btn {
+      @include value-btn;
+      margin-left: 0.25em;
+      margin-top: 0.125em;
+    }
+    .new-value-input {
+      margin-left: 0.25em;
+    }
+  }
+}
+
+.mobile-view .secret-value-list {
+  .add-value-btn {
+    margin-bottom: 9px;
+  }
+  .value {
+    .value-input:last-of-type {
+      margin-left: 2.35em;
+    }
+    .new-value-input:first-of-type {
+      margin-right: 2.15em;
+      margin-left: 0.25em;
+    }
   }
 }
 
@@ -953,6 +1001,7 @@ table#user-badges {
 @import "common/admin/admin_report";
 @import "common/admin/admin_report_counters";
 @import "common/admin/admin_report_chart";
+@import "common/admin/admin_report_stacked_chart";
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
 @import "common/admin/dashboard_previous";

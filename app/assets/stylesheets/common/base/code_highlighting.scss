@@ -75,7 +75,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 }
 
 .hljs-regexp {
-  color: #009926;
+  color: $success;
 }
 
 .hljs-symbol,
@@ -90,24 +90,24 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .lisp .hljs-title,
 .clojure .hljs-built_in,
 .hljs-builtin-name {
-  color: #0086b3;
+  color: $tertiary-high;
 }
 
 .meta {
-  color: #999;
+  color: $primary-medium;
   font-weight: bold;
 }
 
 .hljs-deletion {
-  background: #fdd;
+  background: $danger-low;
 }
 
 .hljs-addition {
-  background: #dfd;
+  background: $success-low;
 }
 
 .diff .hljs-meta {
-  color: #aaa;
+  color: $primary-low;
 }
 
 /*

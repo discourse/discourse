@@ -1,10 +1,14 @@
 import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
+import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 
 acceptance("Composer Actions", {
   loggedIn: true,
   settings: {
     enable_whispers: true
+  },
+  site: {
+    can_tag_topics: true
   },
   beforeEach() {
     _clearSnapshots();
@@ -89,9 +93,7 @@ QUnit.test("replying to post - toggle_whisper", async assert => {
   await composerActions.selectRowByValue("toggle_whisper");
 
   assert.ok(
-    find(".composer-fields .whisper")
-      .text()
-      .indexOf(I18n.t("composer.whisper")) > 0
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1
   );
 });
 
@@ -103,7 +105,7 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 
   await visit("/t/internationalization-localization/280");
 
-  await click("#topic-title .d-icon-pencil");
+  await click("#topic-title .d-icon-pencil-alt");
   await categoryChooser.expand();
   await categoryChooser.selectRowByValue(4);
   await click("#topic-title .submit-edit");
@@ -129,19 +131,31 @@ QUnit.test("replying to post - reply_as_new_topic", async assert => {
 });
 
 QUnit.test("shared draft", async assert => {
+  toggleCheckDraftPopup(true);
+
   const composerActions = selectKit(".composer-actions");
+  const tags = selectKit(".mini-tag-chooser");
 
   await visit("/");
   await click("#create-topic");
 
+  await fillIn("#reply-title", "This is the new text for the title");
+  await fillIn(".d-editor-input", "This is the new text for the post");
+  await tags.expand();
+  await tags.selectRowByValue("monkey");
+
   await composerActions.expand();
   await composerActions.selectRowByValue("shared_draft");
+
+  assert.equal(tags.header().value(), "monkey", "tags are not reset");
 
   assert.equal(
     find("#reply-control .btn-primary.create .d-button-label").text(),
     I18n.t("composer.create_shared_draft")
   );
   assert.ok(find("#reply-control.composing-shared-draft").length === 1);
+
+  toggleCheckDraftPopup(false);
 });
 
 QUnit.test("hide component if no content", async assert => {
@@ -287,10 +301,10 @@ QUnit.test("replying to post as staff", async assert => {
   assert.equal(composerActions.rowByIndex(4).value(), "toggle_topic_bump");
 });
 
-QUnit.test("replying to post as regular user", async assert => {
+QUnit.test("replying to post as TL3 user", async assert => {
   const composerActions = selectKit(".composer-actions");
 
-  replaceCurrentUser({ staff: false, admin: false });
+  replaceCurrentUser({ staff: false, admin: false, trust_level: 3 });
   await visit("/t/internationalization-localization/280");
   await click("article#post_3 button.reply");
   await composerActions.expand();
@@ -303,6 +317,18 @@ QUnit.test("replying to post as regular user", async assert => {
       "toggle button is not visible"
     );
   });
+});
+
+QUnit.test("replying to post as TL4 user", async assert => {
+  const composerActions = selectKit(".composer-actions");
+
+  replaceCurrentUser({ staff: false, admin: false, trust_level: 4 });
+  await visit("/t/internationalization-localization/280");
+  await click("article#post_3 button.reply");
+  await composerActions.expand();
+
+  assert.equal(composerActions.rows().length, 4);
+  assert.equal(composerActions.rowByIndex(3).value(), "toggle_topic_bump");
 });
 
 QUnit.test(

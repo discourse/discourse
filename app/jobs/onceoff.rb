@@ -19,7 +19,7 @@ class Jobs::Onceoff < Jobs::Base
       begin
         return if OnceoffLog.where(job_name: job_name).exists? && !args[:force]
         execute_onceoff(args)
-        OnceoffLog.create(job_name: job_name)
+        OnceoffLog.create!(job_name: job_name)
       ensure
         $redis.del(running_key_name) if has_lock
       end

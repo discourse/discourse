@@ -4,9 +4,12 @@ plugins:
     client: true
   poll_maximum_options:
     default: 20
+    min: 2
+    max: 100
     client: true
   poll_edit_window_mins:
     default: 5
+    min: 0
   poll_minimum_trust_level_to_create:
     default: 1
     client: true

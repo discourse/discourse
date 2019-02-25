@@ -93,7 +93,6 @@ nb_NO:
         '8': "Utsiktene er gode"
         '9': "Ja"
         '10': "Ting taler i favør av ja"
-        '11': "Vagt svar, prøv igjen"
         '12': "Spør igjen senere"
         '13': "Best å ikke fortelle deg det nå"
         '14': "Kan ikke spå nå"
@@ -135,31 +134,13 @@ nb_NO:
         second_response: |-
           Æsj, unnskyld. Jeg skjønner fremdeles ingenting. :anguished:
 
-          Jeg er bare en robot, men hvis du trenger å snakke med en ekte person kan du gå til denne [siden for kontakter](/about).
+          Jeg er bare en robot, men hvis du trenger å snakke med en ekte person kan du gå til denne [siden for kontakter](%{base_path}/about).
 
           I mellomtiden skal jeg ikke plage deg mer.
     new_user_narrative:
       reset_trigger: "ny bruker"
       cert_title: "Som bevis for vellykket gjennomføring av introduksjonen for nye brukere"
-      hello:
-        title: ":robot: Heisann!"
-        message: |-
-          Velkommen til %{title}, takk for at du ville bli medlem!
-
-          - Jeg er bare en robot, men [den vennlige staben](/about) er også her for å hjelpe hvis du trenger assistanse fra en person.
-
-          - Av sikkerhetshensyn begrenser vi hva nye brukere kan gjøre helt i starten. Du vil gradvis få flere tillatelser (og [merker](/badges)) etterhvert som vi blir kjent med deg.
-
-          - Vi prøver å holde [samfunnets oppførsel sivilisert](/guidelines) til enhver tid.
       onebox:
-        instructions: |-
-          Neste steg, kan du dele en av disse lenkene med meg? Svar med **en frittstående lenke på en ny linje**, da vil den automatisk utvides til å inkludere et stilig sammendrag.
-
-          For å kopiere en lenke, trykk og hold på den med en mobil enhet, eller høyreklikk med en gammeldags mus:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Kult! Dette fungerer for de aller fleste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> lenkene. Bare husk at de må ha en linje _helt for seg selv_ når du limer dem inn, uten noe annet foran eller bak.
         not_found: |-
@@ -262,8 +243,6 @@ nb_NO:
           > :imp: jeg skrev noe utrivelig her!
 
           Jeg tror du vet hva du bør gjøre. Prøv å **flagge dette innlegget**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> som upassende
-        reply: |-
-          [Staben vår](/groups/staff) vil bli informert privat om flagget ditt. Hvis nok av medlemmene våre flagger en post, vil den også bli skjult for sikkerhets skyld. (Siden jeg ikke egentlig skrev noe utrivelig :angel: har jeg tatt meg den frihet å fjerne flagget igjen inntil videre.)
         not_found: |-
           Å nei, det ekle inlegget mitt har ikke blitt flagget enda. :worried: Klarer du å flagge det som upassende med **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ikke glem at du kan trykke "vis mer" knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> for å vise flere handlinger for hvert inlegg.
       search:
@@ -287,26 +266,12 @@ nb_NO:
           - Hvis du har et fysisk :keyboard:, trykk <kbd>?</kbd> på det for å få en oversikt over hendige tastatursnarveier.
         not_found: |-
           Hmm... det ser ut som du kanskje har trøbbel. Beklager så mye! Brukte du <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> for å søke etter **capy&#8203;bara**?
-      end:
-        message: |-
-          Takk for at du holdt ut sammen med meg hele veien @%{username}! Jeg har laget denne til deg, jeg synes du har fortjent det:
-
-          %{certificate}
-
-          Det var alt for nå! Sjekk ut [**de siste diskusjonsemnene**](/latest) eller [**listen over kategorier**](/categories).
-          :sunglasses:
-
-          (Hvis du ønsker å snakke med meg igjen eller lære mer, bare send meg en melding eller nevn `@%{discobot_username}` når som helst!)
       certificate:
         alt: 'Bevis for Utmerkelse'
     advanced_user_narrative:
       reset_trigger: 'avansert bruker'
       cert_title: "Som vitnesbyrd på bestått gjennomgang av den avanserte brukeropplæringen"
       title: ':arrow_up: Avanserte brukerfunksjoner'
-      start_message: |-
-        Nå som du er en _avansert_ bruker, har du rukket å undersøke [brukerinstillingene dine](/my/preferences) enda @%{username}? Det er mange måter å tilpasse opplevelsen, som for eksempel ved å velge mellom en lys eller mørk drakt.
-
-        Men det var en digresjon, la oss begynne!
       edit:
         bot_created_post_raw: "@%{discobot_username} er overlegent den kuleste bot-en jeg vet om :wink:"
         instructions: |-
@@ -366,10 +331,6 @@ nb_NO:
           La oss prøve å endre varslingsnivået på dette emnet. I bunnen av emnet vil du finne en knapp som viser at du **følger** dette emnet. Kan du endre varslingsnivået til **overvåker**?
         not_found: |-
           Det ser ut til at du fremdeles følger :eyes: dette emnet! Hvis du har problemer med å finne knappen så er den helt i bunnen av dette emnet under de andre knappene.
-        reply: |-
-          Se der ja! Jeg håper du ikke valgte å ignorere dette emnet fordi du synes jeg skravler for mye :grin:.
-
-          Merk at når du svarer på et emne eller har lest et emne i mer enn et par minutter, vil varslingsnivået på emnet automatisk settes opp til 'overvåker'. Du kan endre på denne mekanismen hvis du vil i [instillingene dine](/my/preferences).
       poll:
         instructions: |-
           Visste du at du enkelt kan legge til en avstemning i et innlegg? Prøv å trykke på <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tannhjulet i redigeringsverktøyet og **lag en avstemning**.

@@ -1,6 +1,6 @@
-<label class="control-label" for="{{concat 'user-' elementId}}">{{{field.name}}}</label>
+<label class="control-label" for="{{concat 'user-' elementId}}">{{{field.name}}} {{#if field.required}}<span class='required'>*</span>{{/if}}
+</label>
 <div class='controls'>
   {{combo-box id=(concat 'user-' elementId) content=field.options value=value none=noneLabel}}
-  {{#if field.required}}<span class='required'>*</span>{{/if}}
   <div class="instructions">{{{field.description}}}</div>
 </div>

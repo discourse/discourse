@@ -37,22 +37,22 @@ class UploadCreator
       # test for image regardless of input
       @image_info = FastImage.new(@file) rescue nil
 
-      is_image = FileHelper.is_image?(@filename)
-      is_image ||= @image_info && FileHelper.is_image?("test.#{@image_info.type}")
+      is_image = FileHelper.is_supported_image?(@filename)
+      is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
 
       if is_image
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        if @filename[/\.svg$/i]
+        if @image_info.type.to_s == "svg"
           whitelist_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if should_convert_to_jpeg?
           downsize!        if should_downsize?
-          fix_orientation! if should_fix_orientation?
 
           return @upload   if is_still_too_big?
 
+          fix_orientation! if should_fix_orientation?
           crop!            if should_crop?
           optimize!        if should_optimize?
         end
@@ -74,11 +74,14 @@ class UploadCreator
       end
 
       # return the previous upload if any
-      return @upload unless @upload.nil?
+      if @upload
+        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+        return @upload
+      end
 
       fixed_original_filename = nil
-      if is_image
 
+      if is_image
         current_extension = File.extname(@filename).downcase.sub("jpeg", "jpg")
         expected_extension = ".#{image_type}".downcase.sub("jpeg", "jpg")
 
@@ -86,11 +89,7 @@ class UploadCreator
         # otherwise validation will fail and we can not save
         # TODO decide if we only run the validation on the extension
         if current_extension != expected_extension
-          basename = File.basename(@filename, current_extension)
-
-          if basename.length == 0
-            basename = "image"
-          end
+          basename = File.basename(@filename, current_extension).presence || "image"
           fixed_original_filename = "#{basename}#{expected_extension}"
         end
       end
@@ -114,6 +113,7 @@ class UploadCreator
       @upload.for_group_message   = true if @opts[:for_group_message]
       @upload.for_theme           = true if @opts[:for_theme]
       @upload.for_export          = true if @opts[:for_export]
+      @upload.for_site_setting    = true if @opts[:for_site_setting]
 
       return @upload unless @upload.save
 
@@ -122,14 +122,19 @@ class UploadCreator
         url = Discourse.store.store_upload(f, @upload)
 
         if url.present?
-          @upload.update!(url: url)
+          @upload.url = url
+          @upload.save!
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar"
+      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
         Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
+      end
+
+      if @upload.errors.empty?
+        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
       end
 
       @upload
@@ -160,7 +165,12 @@ class UploadCreator
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
+  MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
+  MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
+
   def convert_to_jpeg!
+    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
     from = @file.path
@@ -178,8 +188,12 @@ class UploadCreator
       execute_convert(from, to, true)
     end
 
-    # keep the JPEG if it's at least 15% smaller
-    if File.size(jpeg_tempfile.path) < filesize * 0.85
+    new_size = File.size(jpeg_tempfile.path)
+
+    keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
+    keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
+
+    if keep_jpeg
       @file = jpeg_tempfile
       extract_image_info!
     else
@@ -269,7 +283,6 @@ class UploadCreator
 
   def crop!
     max_pixel_ratio = Discourse::PIXEL_RATIOS.max
-
     filename_with_correct_ext = "image.#{@image_info.type}"
 
     case @opts[:type]

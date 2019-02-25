@@ -99,6 +99,15 @@ SQL
   GROUP BY p.user_id
 SQL
 
+  WikiEditor = <<~SQL
+  SELECT DISTINCT ON (pr.user_id) pr.user_id, pr.post_id, pr.created_at granted_at
+  FROM post_revisions pr
+  JOIN badge_posts p on p.id = pr.post_id
+  WHERE p.wiki
+      AND NOT pr.hidden
+      AND (:backfill OR p.id IN (:post_ids))
+SQL
+
   Welcome = <<SQL
   SELECT p.user_id, min(post_id) post_id, min(pa.created_at) granted_at
   FROM post_actions pa
@@ -189,8 +198,7 @@ SQL
     <<-SQL
         SELECT tl.user_id, post_id, current_timestamp granted_at
           FROM topic_links tl
-          JOIN posts p  ON p.id = post_id    AND p.deleted_at IS NULL
-          JOIN topics t ON t.id = p.topic_id AND t.deleted_at IS NULL AND t.archetype <> 'private_message'
+          JOIN badge_posts p ON p.id = post_id
          WHERE NOT tl.internal
            AND tl.clicks >= #{count}
       GROUP BY tl.user_id, tl.post_id

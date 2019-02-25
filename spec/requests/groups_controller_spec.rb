@@ -360,7 +360,15 @@ describe GroupsController do
     end
 
     it "ensures that membership can be paginated" do
-      5.times { group.add(Fabricate(:user)) }
+
+      freeze_time
+
+      first_user = Fabricate(:user)
+      group.add(first_user)
+
+      freeze_time 1.day.from_now
+
+      4.times { group.add(Fabricate(:user)) }
       usernames = group.users.map { |m| m.username }.sort
 
       get "/groups/#{group.name}/members.json", params: { limit: 3 }
@@ -378,6 +386,11 @@ describe GroupsController do
       members = JSON.parse(response.body)["members"]
 
       expect(members.map { |m| m['username'] }).to eq(usernames[3..5])
+
+      get "/groups/#{group.name}/members.json", params: { order: 'added_at', desc: true }
+      members = JSON.parse(response.body)["members"]
+
+      expect(members.last['added_at']).to eq(first_user.created_at.as_json)
     end
   end
 
@@ -856,12 +869,12 @@ describe GroupsController do
 
       context "is able to add several members to a group" do
         let(:user1) { Fabricate(:user) }
-        let(:user2) { Fabricate(:user) }
+        let(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
           expect do
             put "/groups/#{group.id}/members.json",
-              params: { usernames: [user1.username, user2.username].join(",") }
+              params: { usernames: [user1.username, user2.username.upcase].join(",") }
           end.to change { group.users.count }.by(2)
 
           expect(response.status).to eq(200)
@@ -992,13 +1005,22 @@ describe GroupsController do
 
       it "raises an error if user to be removed is not found" do
         delete "/groups/#{group.id}/members.json", params: { user_id: -10 }
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(400)
       end
 
       context "is able to remove a member" do
         it "removes by id" do
           expect do
             delete "/groups/#{group.id}/members.json", params: { user_id: user.id }
+          end.to change { group.users.count }.by(-1)
+
+          expect(response.status).to eq(200)
+        end
+
+        it "removes by id with integer in json" do
+          expect do
+            headers = { "CONTENT_TYPE": "application/json" }
+            delete "/groups/#{group.id}/members.json", params: "{\"user_id\":#{user.id}}", headers: headers
           end.to change { group.users.count }.by(-1)
 
           expect(response.status).to eq(200)
@@ -1062,6 +1084,58 @@ describe GroupsController do
               params: { username: other_user.username }
 
             expect(response).to be_forbidden
+          end
+        end
+      end
+
+      context '#remove_members' do
+        context "is able to remove several members from a group" do
+          let(:user1) { Fabricate(:user) }
+          let(:user2) { Fabricate(:user, username: "UsEr2") }
+          let(:group1) { Fabricate(:group, users: [user1, user2]) }
+
+          it "removes by username" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { usernames: [user1.username, user2.username.upcase].join(",") }
+            end.to change { group1.users.count }.by(-2)
+            expect(response.status).to eq(200)
+          end
+
+          it "removes by id" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { user_ids: [user1.id, user2.id].join(",") }
+            end.to change { group1.users.count }.by(-2)
+
+            expect(response.status).to eq(200)
+          end
+
+          it "removes by id with integer in json" do
+            expect do
+              headers = { "CONTENT_TYPE": "application/json" }
+              delete "/groups/#{group1.id}/members.json", params: "{\"user_ids\":#{user1.id}}", headers: headers
+            end.to change { group1.users.count }.by(-1)
+
+            expect(response.status).to eq(200)
+          end
+
+          it "removes by email" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { user_emails: [user1.email, user2.email].join(",") }
+            end.to change { group1.users.count }.by(-2)
+
+            expect(response.status).to eq(200)
+          end
+
+          it "only removes users in that group" do
+            expect do
+              delete "/groups/#{group1.id}/members.json",
+                params: { usernames: [user.username, user2.username].join(",") }
+            end.to change { group1.users.count }.by(-1)
+
+            expect(response.status).to eq(200)
           end
         end
       end

@@ -15,16 +15,16 @@
       }
 
       &.bar.has-selection .category-drop-header {
-        border: none;
+        padding: 0 5px 0 10px;
       }
 
       &.box.has-selection .category-drop-header {
-        padding: 3px 5px 3px 10px;
+        .badge-wrapper.box {
+          padding: 0;
+        }
       }
 
       .category-drop-header {
-        padding: 5px 5px 5px 10px;
-
         &.is-none .selected-name {
           color: inherit;
         }
@@ -41,6 +41,12 @@
       .select-kit-row {
         flex-direction: column;
         align-items: flex-start;
+
+        &[data-value="all-categories"],
+        &[data-value="no-categories"] {
+          color: $tertiary;
+          font-weight: 700;
+        }
 
         .category-desc {
           font-weight: normal;
@@ -60,6 +66,10 @@
         .badge-wrapper {
           margin: 0;
           font-weight: bold;
+
+          &:nth-child(2) {
+            margin-left: 10px;
+          }
         }
       }
 

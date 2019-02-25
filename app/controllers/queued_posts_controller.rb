@@ -54,8 +54,8 @@ class QueuedPostsController < ApplicationController
 
   def user_deletion_opts
     base = {
-      context:           I18n.t('queue.delete_reason', performed_by: current_user.username),
-      delete_posts:      true,
+      context: I18n.t('queue.delete_reason', performed_by: current_user.username),
+      delete_posts: true,
       delete_as_spammer: true
     }
 

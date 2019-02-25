@@ -8,6 +8,15 @@
                   valueAttribute="value"}}
     </div>
 
+    <div class="input-group poll-select">
+      <label class="input-group-label">{{i18n 'poll.ui_builder.poll_result.label'}}</label>
+      {{combo-box content=pollResults
+                  value=pollResult
+                  allowInitialValueMutation=true
+                  valueAttribute="value"}}
+    </div>
+
+
     {{#if showMinMax}}
       <div class="input-group poll-number">
         {{input-tip validation=minMaxValueValidation}}
@@ -73,5 +82,5 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action="insertPoll" icon="bar-chart-o" class='btn-primary' label='poll.ui_builder.insert' disabled=disableInsert}}
+  {{d-button action=(action "insertPoll") icon="chart-bar" class='btn-primary' label='poll.ui_builder.insert' disabled=disableInsert}}
 </div>

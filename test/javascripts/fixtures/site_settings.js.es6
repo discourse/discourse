@@ -34,6 +34,16 @@ export default {
         type: "username"
       },
       {
+        setting: "logo",
+        description: "Some logo",
+        default: "",
+        value: "/some/image",
+        category: "required",
+        preview: null,
+        secret: false,
+        type: "upload"
+      },
+      {
         setting: "top_menu",
         description:
           "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks",

@@ -13,8 +13,6 @@ id:
       total_votes:
         other: "jumlah suara"
       average_rating: "Rata-rata rating: <strong>%{average}</strong>."
-      public:
-        title: "Polling ini publik"
       multiple:
         help:
           at_least_min_options:

@@ -13,8 +13,6 @@ sl:
         two: "glasovalca"
         few: "glasovalci"
         other: "glasovalci"
-      public:
-        title: "Glasovi so javni."
       cast-votes:
         label: "Glasuj!"
       show-results:

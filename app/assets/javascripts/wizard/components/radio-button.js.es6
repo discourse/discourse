@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   click(e) {
     e.preventDefault();
-    this.sendAction("onChange", this.get("radioValue"));
+    this.onChange(this.get("radioValue"));
   },
 
   @observes("value")

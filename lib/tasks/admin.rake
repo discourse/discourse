@@ -56,8 +56,12 @@ task "admin:create" => :environment do
       admin.email = email
       admin.username = UserNameSuggester.suggest(admin.email)
       begin
-        password = ask("Password:  ") { |q| q.echo = false }
-        password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
+        if ENV["RANDOM_PASSWORD"] == "1"
+          password = password_confirmation = SecureRandom.hex
+        else
+          password = ask("Password:  ") { |q| q.echo = false }
+          password_confirmation = ask("Repeat password:  ") { |q| q.echo = false }
+        end
       end while password != password_confirmation
       admin.password = password
     end

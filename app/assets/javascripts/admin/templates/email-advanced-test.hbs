@@ -1,0 +1,25 @@
+<p>{{i18n 'admin.email.advanced_test.desc'}}</p>
+
+<div class='email-advanced-test'>
+  <label for="email">{{i18n 'admin.email.advanced_test.email'}}</label>
+  {{textarea name="email" value=email class="email-body"}}
+  <button class='btn' {{action "run"}}>{{i18n 'admin.email.advanced_test.run'}}</button>
+</div>
+
+{{#conditional-loading-spinner condition=loading}}
+
+{{#if format}}
+  <hr/>
+  <div class="text">
+    <h3>{{i18n 'admin.email.advanced_test.text'}}</h3>
+    <pre class="full-reason">{{{text}}}</pre>
+  </div>
+
+  <hr/>
+  <div class="elided">
+    <h3>{{i18n 'admin.email.advanced_test.elided'}}</h3>
+    <pre class="full-reason">{{{elided}}}</pre>
+  </div>
+{{/if}}
+
+{{/conditional-loading-spinner}}

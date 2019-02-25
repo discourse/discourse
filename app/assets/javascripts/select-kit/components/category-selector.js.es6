@@ -12,7 +12,7 @@ export default MultiSelectComponent.extend({
   allowUncategorized: true,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     if (!this.get("categories")) this.set("categories", []);
     if (!this.get("blacklist")) this.set("blacklist", []);

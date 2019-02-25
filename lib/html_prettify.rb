@@ -366,17 +366,17 @@ class HtmlPrettify < String
 
   def default_entities
     {
-      single_left_quote:    "&lsquo;",
-      double_left_quote:    "&ldquo;",
-      single_right_quote:   "&rsquo;",
-      double_right_quote:   "&rdquo;",
-      em_dash:              "&mdash;",
-      en_dash:              "&ndash;",
-      ellipsis:             "&hellip;",
-      html_quote:           "&quot;",
-      frac12:               "&frac12;",
-      frac14:               "&frac14;",
-      frac34:               "&frac34;",
+      single_left_quote: "&lsquo;",
+      double_left_quote: "&ldquo;",
+      single_right_quote: "&rsquo;",
+      double_right_quote: "&rdquo;",
+      em_dash: "&mdash;",
+      en_dash: "&ndash;",
+      ellipsis: "&hellip;",
+      html_quote: "&quot;",
+      frac12: "&frac12;",
+      frac14: "&frac14;",
+      frac34: "&frac34;",
     }
   end
 

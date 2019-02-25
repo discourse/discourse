@@ -45,15 +45,15 @@ export default Ember.Object.extend({
     }
 
     if (topic.get("pinned")) {
-      results.push({ icon: "thumb-tack", key: "pinned" });
+      results.push({ icon: "thumbtack", key: "pinned" });
     }
 
     if (topic.get("unpinned")) {
-      results.push({ icon: "thumb-tack unpinned", key: "unpinned" });
+      results.push({ icon: "thumbtack", key: "unpinned" });
     }
 
     if (topic.get("invisible")) {
-      results.push({ icon: "eye-slash", key: "invisible" });
+      results.push({ icon: "far-eye-slash", key: "unlisted" });
     }
 
     results.forEach(result => {
@@ -74,7 +74,6 @@ export default Ember.Object.extend({
     if (results.length === 0 && defaultIcon) {
       this.set("showDefault", defaultIcon);
     }
-
     return results;
   }
 });

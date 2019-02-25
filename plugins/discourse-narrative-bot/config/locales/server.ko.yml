@@ -93,7 +93,6 @@ ko:
         '8': "좋을 전망."
         '9': "응."
         '10': "괜찮아 보이는군."
-        '11': "흐릿하게 보이는군. 다시..."
         '12': "다음에 다시 물어봐."
         '13': "지금은 말하지 않는 편이 낫겠어."
         '14': "지금은 예측할 수 없어."
@@ -135,31 +134,13 @@ ko:
         second_response: |-
           오 미안. 아직도 무슨 말인지 모르겠어. :anguished:
 
-          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면  [우리 연락처 페이지](/about) 를 참고해.
+          난 그냥 로봇일 뿐이야. 진짜 사람한테 연락하고 싶다면  [우리 연락처 페이지](%{base_path}/about) 를 참고해.
 
           그럼, 난 잠시 자리를 비워줄게.
     new_user_narrative:
       reset_trigger: "새로운 사용자"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
-      hello:
-        title: ":robot: 반가워!"
-        message: |-
-          %{title}에 가입해줘서 고맙고 반가워!
-
-          - 난 로봇이야. 하지만 사람에게 문의하고 싶은 일이 있다면 [친절한 스탭](/about)들에게 문의할 수도 있어.
-
-          - 안전상의 이유로, 우리는 임시로 새로운 사용자가 할 수 있는 일을 제한을 걸어놔. 차차 알아가면서 할 수 있는 일들과 [배지](/badges)들이 늘어날거야.
-
-          - 우리는 [커뮤니티 규칙](/guidelines)를 언제나 믿고 있지.
       onebox:
-        instructions: |-
-          자 이제, 이 링크 중 하나를 나한테 공유해볼래? 한줄 당 링크 하나씩 써서 답글을 써봐. 그러면 자동으로 해당 페이지의 요약이 추가된단다.
-
-          링크를 복사하려면, 링크 위에서 마우스 우클릭을 하면 돼. 모바일에서는 링크를 계속 누르고 있으면 되고.
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해.  딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
         not_found: |-
@@ -172,7 +153,7 @@ ko:
         instructions: |-
           유니콘 사진이야.
 
-          <img src="/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_path}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">%{base_uri}/images/unicorn.png" width="520" height="520">
 
           (당연히 그렇겠지만) 맘에 들면 이 포스트 아래에 있는 '좋아요'버튼을 눌러봐.
 
@@ -261,8 +242,6 @@ ko:
           > :imp: 어쩌고 저쩌고 나쁜 글
 
           뭘 할지 잘 알고 있지? **이 포스트 신고하기** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 를 눌러서 부적절하다고 알려줘!
-        reply: |-
-          [우리의 운영진](/groups/staff)은 니가 한 신고내용을 개인 메시지로 알림받게 될 거야. 충분한 커뮤니티 회원들이 신고를 하면, 포스트의 내용이 숨겨지고 사전경고가 걸리게 돼.(난 실제로 나쁜 글을 쓴 건 아니니까:angel:, 이제 신고를 지울게.)
         not_found: |-
           이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried:  부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
@@ -286,25 +265,12 @@ ko:
           - 진짜 실물 :keyboard:가 있다면, <kbd>?</kbd>를 눌러서 간편한 단축키가 뭐가 있는지 알아봐.
         not_found: |-
           흠.... 아무래도 문제가 있어 보이네. 미안해. 검색<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">을 눌러서 **capy&#8203;bara**를 찾아봤어?
-      end:
-        message: |-
-          @%{username}! 나와 함께 해줘서 고마워! 널 위해 이 뱃지를 준비했어.
-
-          %{certificate}
-
-          이제 다 됐어! [**최근 논의되는 토픽**](/latest)이나 [**카테고리**](/categories) 를 확인해봐. :sunglasses:
-
-          (또 다른 걸 알고싶으면, `@%{discobot_username}`으로 메시지를 보내거나 멘션을 걸어줘!)
       certificate:
         alt: '목표달성 인증'
     advanced_user_narrative:
       reset_trigger: '고급 사용자'
       cert_title: "고급 사용자 튜토리얼을 훌륭하게 완료한 것에 대한 보상으로"
       title: ':arrow_up: 고급 사용자 기능'
-      start_message: |-
-        @%{username}! _고급_ 사용자로서, [설정 페이지](/my/preferences) 를 가본적 있니? 다크 테마, 라이트 테마 선택같은 사용자 경험을 개인화할 수 있는 많은 옵션이 있어.
-
-        사설이 길었네, 시작하자!
       edit:
         bot_created_post_raw: "@%{discobot_username}는 내가 아는 한, 현존하는 가장 쿨한 봇이지:wink:"
         instructions: |-

@@ -34,10 +34,91 @@ export default createPreviewComponent(659, 320, {
     ) {
       this.drawPills(colors, height * 0.15, { categories: true });
       this.renderCategories(ctx, colors, width, height);
+    } else if (
+      ["categories_boxes", "categories_boxes_with_topics"].includes(
+        this.get("step.fieldsById.homepage_style.value")
+      )
+    ) {
+      this.drawPills(colors, height * 0.15, { categories: true });
+      const topics =
+        this.get("step.fieldsById.homepage_style.value") ===
+        "categories_boxes_with_topics";
+      this.renderCategoriesBoxes(ctx, colors, width, height, { topics });
     } else {
       this.drawPills(colors, height * 0.15, { categories: true });
       this.renderCategoriesWithTopics(ctx, colors, width, height);
     }
+  },
+
+  renderCategoriesBoxes(ctx, colors, width, height, opts) {
+    opts = opts || {};
+
+    const borderColor = darkLightDiff(
+      colors.primary,
+      colors.secondary,
+      90,
+      -75
+    );
+    const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
+    const margin = height * 0.03;
+    const bodyFontSize = height / 440.0;
+    const boxHeight = height * 0.7 - margin * 2;
+    const descriptions = this.getDescriptions();
+    const boxesSpacing = 15;
+    const boxWidth = (width - margin * 2 - boxesSpacing * 2) / 3;
+
+    this.categories().forEach((category, index) => {
+      const boxStartX = margin + index * boxWidth + index * boxesSpacing;
+      const boxStartY = height * 0.33;
+
+      this.drawSquare(
+        ctx,
+        { x: boxStartX, y: boxStartY },
+        { x: boxStartX + boxWidth, y: boxStartY + boxHeight },
+        [
+          { color: borderColor },
+          { color: borderColor },
+          { color: borderColor },
+          { color: category.color, width: 5 }
+        ]
+      );
+
+      ctx.font = `Bold ${bodyFontSize * 1.3}em 'Arial'`;
+      ctx.fillStyle = colors.primary;
+      ctx.textAlign = "center";
+      ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
+      ctx.textAlign = "left";
+
+      if (opts.topics) {
+        let startY = boxStartY + 60;
+        this.getTitles().forEach(title => {
+          ctx.font = `${bodyFontSize * 1}em 'Arial'`;
+          ctx.fillStyle = colors.tertiary;
+          startY +=
+            this.fillTextMultiLine(
+              ctx,
+              title.split("\n").join(" "),
+              boxStartX + 10,
+              startY,
+              13,
+              boxWidth * 0.95
+            ) + 8;
+        });
+      } else {
+        ctx.font = `${bodyFontSize * 1}em 'Arial'`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = "center";
+        this.fillTextMultiLine(
+          ctx,
+          descriptions[index],
+          boxStartX + boxWidth / 2,
+          boxStartY + 60,
+          13,
+          boxWidth * 0.8
+        );
+        ctx.textAlign = "left";
+      }
+    });
   },
 
   renderCategories(ctx, colors, width, height) {
@@ -272,8 +353,12 @@ export default createPreviewComponent(659, 320, {
       .map(t => t.substring(0, 40));
   },
 
+  getDescriptions() {
+    return LOREM.split(".");
+  },
+
   renderLatest(ctx, colors, width, height) {
-    const rowHeight = height / 10.0;
+    const rowHeight = height / 6.6;
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const bodyFontSize = height / 440.0;
 
@@ -294,7 +379,7 @@ export default createPreviewComponent(659, 320, {
       ctx.stroke();
     };
 
-    const cols = [0.02, 0.5, 0.65, 0.8, 0.87, 0.93].map(c => c * width);
+    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map(c => c * width);
 
     // Headings
     const headingY = height * 0.33;
@@ -302,11 +387,9 @@ export default createPreviewComponent(659, 320, {
     ctx.fillStyle = textColor;
     ctx.font = `${bodyFontSize * 0.9}em 'Arial'`;
     ctx.fillText("Topic", cols[0], headingY);
-    ctx.fillText("Category", cols[1], headingY);
-    ctx.fillText("Users", cols[2], headingY);
-    ctx.fillText("Replies", cols[3], headingY);
-    ctx.fillText("Views", cols[4], headingY);
-    ctx.fillText("Activity", cols[5], headingY);
+    ctx.fillText("Replies", cols[2], headingY);
+    ctx.fillText("Views", cols[3], headingY);
+    ctx.fillText("Activity", cols[4], headingY);
 
     // Topics
     let y = headingY + rowHeight / 2.6;
@@ -316,43 +399,91 @@ export default createPreviewComponent(659, 320, {
     ctx.font = `${bodyFontSize}em 'Arial'`;
     ctx.lineWidth = 1;
     this.getTitles().forEach(title => {
-      const textPos = y + rowHeight * 0.7;
+      const textPos = y + rowHeight * 0.4;
       ctx.fillStyle = textColor;
       ctx.fillText(title, cols[0], textPos);
 
       const category = this.categories()[0];
       ctx.beginPath();
       ctx.fillStyle = category.color;
-      const badgeSize = rowHeight * 0.2;
-      ctx.font = `Bold ${bodyFontSize * 0.5}em 'Arial'`;
-      ctx.rect(cols[1], y + rowHeight * 0.5, badgeSize, badgeSize);
+      const badgeSize = rowHeight * 0.15;
+      ctx.font = `Bold ${bodyFontSize * 0.75}em 'Arial'`;
+      ctx.rect(cols[0] + 4, y + rowHeight * 0.6, badgeSize, badgeSize);
       ctx.fill();
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
         category.name,
-        cols[1] + badgeSize * 1.5,
-        y + rowHeight * 0.65
+        cols[0] + badgeSize * 2,
+        y + rowHeight * 0.73
       );
       this.scaleImage(
         this.avatar,
-        cols[2],
-        y + rowHeight * 0.3,
+        cols[1],
+        y + rowHeight * 0.25,
         rowHeight * 0.5,
         rowHeight * 0.5
       );
 
       ctx.fillStyle = textColor;
       ctx.font = `${bodyFontSize}em 'Arial'`;
-      for (let j = 3; j <= 5; j++) {
+      for (let j = 2; j <= 4; j++) {
         ctx.fillText(
           j === 5 ? "1h" : Math.floor(Math.random() * 90) + 10,
           cols[j] + margin,
-          y + rowHeight * 0.7
+          y + rowHeight * 0.6
         );
       }
       drawLine(y + rowHeight * 1);
       y += rowHeight;
+    });
+  },
+
+  fillTextMultiLine(ctx, text, x, y, lineHeight, maxWidth) {
+    const words = text.split(" ").filter(f => f);
+    let line = "";
+    let totalHeight = 0;
+
+    words.forEach(word => {
+      if (ctx.measureText(`${line} ${word} `).width >= maxWidth) {
+        ctx.fillText(line, x, y + totalHeight);
+        totalHeight += lineHeight;
+        line = word.trim();
+      } else {
+        line = `${line} ${word}`.trim();
+      }
+    });
+
+    ctx.fillText(line, x, y + totalHeight);
+    totalHeight += lineHeight;
+
+    return totalHeight;
+  },
+
+  // Edges expected in this order: NW to NE -> NE to SE -> SE to SW -> SW to NW
+  drawSquare(ctx, from, to, edges = []) {
+    const edgeConfiguration = index => {
+      const edge = edges[index] || {};
+
+      return {
+        width: edge.width || 1,
+        color: edge.color || "#333"
+      };
+    };
+
+    [
+      { from: { x: from.x, y: from.y }, to: { x: to.x, y: from.y } },
+      { from: { x: to.x, y: from.y }, to: { x: to.x, y: to.y } },
+      { from: { x: to.x, y: to.y }, to: { x: from.x, y: to.y } },
+      { from: { x: from.x, y: to.y }, to: { x: from.x, y: from.y } }
+    ].forEach((path, index) => {
+      const configuration = edgeConfiguration(index);
+      ctx.beginPath();
+      ctx.moveTo(path.from.x, path.from.y);
+      ctx.strokeStyle = configuration.color;
+      ctx.lineWidth = configuration.width;
+      ctx.lineTo(path.to.x, path.to.y);
+      ctx.stroke();
     });
   }
 });

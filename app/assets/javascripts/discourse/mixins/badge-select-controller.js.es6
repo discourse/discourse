@@ -10,7 +10,7 @@ export default Ember.Mixin.create({
       return e.get("badge.name");
     });
     items.unshiftObject(
-      Em.Object.create({
+      Ember.Object.create({
         badge: Badge.create({ name: I18n.t("badges.none") })
       })
     );
@@ -36,5 +36,5 @@ export default Ember.Mixin.create({
     return selectedUserBadge;
   }.property("selectedUserBadgeId"),
 
-  disableSave: Em.computed.alias("saving")
+  disableSave: Ember.computed.alias("saving")
 });

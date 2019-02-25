@@ -118,7 +118,7 @@ describe Jobs::PullHotlinkedImages do
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
         expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
-        expect(post.cooked).to match(/<span class="broken-image fa fa-chain-broken/)
+        expect(post.cooked).to match(/<span class="broken-image/)
         expect(post.cooked).to match(/<div class="large-image-placeholder">/)
       end
     end

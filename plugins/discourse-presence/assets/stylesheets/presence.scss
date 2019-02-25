@@ -48,8 +48,8 @@
 
 .composer-fields .presence-users {
   position: absolute;
-  top: 18px;
-  right: 40px;
+  top: 20px;
+  right: 95px;
   @media screen and (max-width: $small-width) {
     max-width: 318px;
     .presence-avatars {
@@ -63,7 +63,7 @@
     font-size: $font-down-1;
   }
   .composer-fields .presence-users {
-    top: 3px;
+    top: 7px;
     right: 65px;
     max-width: 70px;
     .presence-avatars {

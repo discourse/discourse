@@ -15,6 +15,7 @@ class DiscoursePluginRegistry
     attr_writer :handlebars
     attr_writer :serialized_current_user_fields
     attr_writer :seed_data
+    attr_writer :svg_icons
     attr_writer :locales
     attr_accessor :custom_html
 
@@ -57,6 +58,10 @@ class DiscoursePluginRegistry
 
     def sass_variables
       @sass_variables ||= Set.new
+    end
+
+    def svg_icons
+      @svg_icons ||= []
     end
 
     def handlebars
@@ -105,6 +110,10 @@ class DiscoursePluginRegistry
     self.service_workers << filename
   end
 
+  def self.register_svg_icon(icon)
+    self.svg_icons << icon
+  end
+
   def register_css(filename)
     self.class.stylesheets << filename
   end
@@ -139,7 +148,7 @@ class DiscoursePluginRegistry
     end
   end
 
-  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6|\.js\.no-module\.es6$/
   HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
 
   def self.register_asset(asset, opts = nil)

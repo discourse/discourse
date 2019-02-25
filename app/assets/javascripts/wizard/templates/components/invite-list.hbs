@@ -2,7 +2,7 @@
 {{#if users}}
 <div class="users-list">
   {{#each users as |user|}}
-    {{invite-list-user user=user roles=roles removeUser="removeUser"}}
+    {{invite-list-user user=user roles=roles removeUser=(action "removeUser")}}
   {{/each}}
 </div>
 {{/if}}

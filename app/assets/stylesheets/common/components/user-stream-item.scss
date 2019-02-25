@@ -48,7 +48,7 @@
     clear: right;
   }
 
-  .delete-info i {
+  .delete-info .d-icon {
     font-size: $font-0;
   }
 
@@ -122,11 +122,13 @@
   }
 
   .excerpt {
-    margin: 5px 0;
+    margin: 1em 0 0 0;
     font-size: $font-0;
     word-wrap: break-word;
     color: $primary;
-
+    &:empty {
+      display: none;
+    }
     details.disabled {
       color: $primary-medium;
     }
@@ -151,5 +153,8 @@
     width: 15px;
     display: inline-block;
     color: $primary;
+    &.d-icon-heart {
+      color: $love;
+    }
   }
 }

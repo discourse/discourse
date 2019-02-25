@@ -6,6 +6,8 @@
 # => RUN_SMOKE_TESTS  executes the smoke tests instead of the regular tests from docker.rake
 # See lib/tasks/docker.rake and lib/tasks/smoke_test.rake for more information
 
+puts "travis_fold:end:starting_docker_container" if ENV["TRAVIS"]
+
 def run_or_fail(command)
   pid = Process.spawn(command)
   Process.wait(pid)
@@ -13,11 +15,19 @@ def run_or_fail(command)
 end
 
 unless ENV['NO_UPDATE']
+  puts "travis_fold:start:pulling_latest_discourse" if ENV["TRAVIS"]
+  run_or_fail("git reset --hard")
   run_or_fail("git pull")
 
   checkout = ENV['COMMIT_HASH'] || "HEAD"
   run_or_fail("git checkout #{checkout}")
+
+  puts "travis_fold:end:pulling_latest_discourse" if ENV["TRAVIS"]
+  puts "travis_fold:start:bundle" if ENV["TRAVIS"]
+
   run_or_fail("bundle")
+
+  puts "travis_fold:end:bundle" if ENV["TRAVIS"]
 end
 
 if ENV['RUN_SMOKE_TESTS']

@@ -6,12 +6,11 @@
   #login-buttons:not(.hidden) {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     flex-basis: 40%;
     align-items: center;
     min-height: 175px;
     border-left: 1px solid $primary-low;
-    padding: 15px;
+    padding: 0 15px;
     order: 2;
 
     button {
@@ -20,6 +19,26 @@
       &:lang(zh_CN) {
         min-width: 200px;
       }
+    }
+  }
+
+  .login-modal {
+    #login-buttons:not(.hidden) {
+      button {
+        &:first-of-type {
+          margin-top: 2.8em;
+        }
+        &:last-of-type {
+          margin-bottom: 3em;
+        }
+      }
+    }
+  }
+
+  .create-account {
+    #login-buttons:not(.hidden) {
+      justify-content: flex-start;
+      padding-top: 2.7em;
     }
   }
 
@@ -75,13 +94,52 @@
   }
 
   .login-form {
+    position: relative;
     display: flex;
     flex: 1 1 50%;
-    align-items: center;
-    padding: 0 15px;
+    overflow: hidden;
+
+    &:after,
+    &:before {
+      content: "";
+      display: block;
+      height: 25px;
+      position: absolute;
+      width: 100%;
+      pointer-events: none;
+    }
+    &:after {
+      bottom: 0;
+      background-image: linear-gradient(
+        to bottom,
+        rgba($secondary, 0) 0%,
+        rgba($secondary, 1) 100%
+      );
+    }
+    &:before {
+      top: 0;
+      background-image: linear-gradient(
+        to top,
+        rgba($secondary, 0) 0%,
+        rgba($secondary, 1) 100%
+      );
+    }
+    form {
+      box-sizing: border-box;
+      padding: 15px;
+      margin-bottom: 5px;
+      max-height: 475px;
+      @media screen and (max-height: 768px) {
+        max-height: 60vh;
+      }
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
     form,
     table {
       width: 100%;
+      display: block; //IE11
     }
 
     tr {
@@ -115,19 +173,10 @@
 
     > label {
       width: auto;
-      font-weight: bold;
-    }
-
-    .select-kit {
-      width: 242px; // match text-input width
     }
 
     .controls {
       margin-left: 0;
-
-      .instructions {
-        margin-top: 5px;
-      }
     }
   }
 
@@ -161,11 +210,6 @@
   .tos-agree {
     margin-bottom: 12px;
   }
-
-  .user-fields {
-    border-top: 1px solid $primary-low;
-    padding-top: 20px;
-  }
 }
 
 .login-form {
@@ -175,8 +219,9 @@
     }
     &:not(:empty),
     &:empty + td {
+      display: block;
       min-height: 1.75em;
-      width: 240px;
+      max-width: 240px;
     }
   }
 }

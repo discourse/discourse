@@ -1,7 +1,11 @@
 {{#each icons as |icon|}} {{d-icon icon}} {{/each}}
 
 <span class="selected-name">
-  {{{label}}}
+  {{#if forceEscape}}
+    {{label}}
+  {{else}}
+    {{{label}}}
+  {{/if}}
 </span>
 
 {{#if shouldDisplayClearableButton}}
@@ -10,4 +14,4 @@
   </button>
 {{/if}}
 
-{{d-icon caretIcon class="caret-icon fa-fw"}}
+{{d-icon caretIcon class="caret-icon"}}

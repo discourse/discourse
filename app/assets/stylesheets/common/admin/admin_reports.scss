@@ -13,20 +13,6 @@
     height: 400px;
   }
 
-  .reports-list {
-    list-style: none;
-    margin: 0;
-
-    .report {
-      padding-bottom: 0.5em;
-      margin-bottom: 0.5em;
-
-      .report-description {
-        margin: 0;
-      }
-    }
-  }
-
   .report-container {
     display: flex;
 
@@ -41,7 +27,7 @@
 
     .filters {
       display: flex;
-      flex: 1;
+      flex: 1 0 0px;
       align-items: center;
       flex-direction: column;
       margin-left: 2em;

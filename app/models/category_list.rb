@@ -20,6 +20,7 @@ class CategoryList
     find_categories
 
     prune_empty
+    prune_muted
     find_user_data
     sort_unpinned
     trim_results
@@ -134,6 +135,10 @@ class CategoryList
   def prune_empty
     return if SiteSetting.allow_uncategorized_topics
     @categories.delete_if { |c| c.uncategorized? && c.displayable_topics.blank? }
+  end
+
+  def prune_muted
+    @categories.delete_if { |c| c.notification_level == CategoryUser.notification_levels[:muted] }
   end
 
   # Attach some data for serialization to each topic

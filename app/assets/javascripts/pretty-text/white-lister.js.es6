@@ -1,3 +1,8 @@
+import {
+  INLINE_ONEBOX_CSS_CLASS,
+  INLINE_ONEBOX_LOADING_CSS_CLASS
+} from "pretty-text/inline-oneboxer";
+
 // to match:
 // abcd
 // abcd[test]
@@ -116,7 +121,8 @@ const DEFAULT_LIST = [
   "a.mention",
   "a.mention-group",
   "a.onebox",
-  "a.inline-onebox-loading",
+  `a.${INLINE_ONEBOX_CSS_CLASS}`,
+  `a.${INLINE_ONEBOX_LOADING_CSS_CLASS}`,
   "a[data-bbcode]",
   "a[name]",
   "a[rel=nofollow]",
@@ -177,6 +183,7 @@ const DEFAULT_LIST = [
   "small",
   "span[lang]",
   "span.excerpt",
+  "div.excerpt",
   "span.hashtag",
   "span.mention",
   "strike",

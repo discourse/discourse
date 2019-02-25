@@ -1,9 +1,5 @@
 require 'rails_helper'
 
-# For autospec:
-Auth.send(:remove_const, :GoogleOAuth2Authenticator)
-load 'auth/google_oauth2_authenticator.rb'
-
 describe Auth::GoogleOAuth2Authenticator do
 
   it 'does not look up user unless email is verified' do

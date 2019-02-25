@@ -4,7 +4,7 @@ export default Ember.Object.extend({
       return this.forceName;
     }
 
-    return I18n.t(this.name);
+    return this.name ? I18n.t(this.name) : "";
   }.property(),
 
   sortIcon: function() {

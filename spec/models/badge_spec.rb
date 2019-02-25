@@ -80,4 +80,58 @@ describe Badge do
       it { is_expected.to be true }
     end
   end
+
+  describe '.i18n_name' do
+    it 'transforms to lower case letters, and replaces spaces with underscores' do
+      expect(Badge.i18n_name('Basic User')).to eq('basic_user')
+    end
+  end
+
+  describe '.display_name' do
+    it 'fetches from translations when i18n_name key exists' do
+      expect(Badge.display_name('basic_user')).to eq('Basic')
+      expect(Badge.display_name('Basic User')).to eq('Basic')
+    end
+
+    it 'fallbacks to argument value when translation does not exist' do
+      expect(Badge.display_name('Not In Translations')).to eq('Not In Translations')
+    end
+  end
+
+  context "PopularLink badge" do
+
+    let(:popular_link_badge) do
+      Badge.find(Badge::PopularLink)
+    end
+
+    before do
+      popular_link_badge.query = BadgeQueries.linking_badge(2)
+      popular_link_badge.save!
+    end
+
+    it "is awarded" do
+      post = create_post(raw: "https://www.discourse.org/")
+
+      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.100")
+      BadgeGranter.backfill(popular_link_badge)
+      expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
+
+      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
+      BadgeGranter.backfill(popular_link_badge)
+      expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(1)
+    end
+
+    it "is not awarded for links in a restricted category" do
+      category = Fabricate(:category)
+      post = create_post(raw: "https://www.discourse.org/", category: category)
+
+      category.set_permissions({})
+      category.save!
+
+      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.100")
+      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
+      BadgeGranter.backfill(popular_link_badge)
+      expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
+    end
+  end
 end

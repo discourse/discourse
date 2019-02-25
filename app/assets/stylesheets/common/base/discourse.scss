@@ -73,7 +73,9 @@ button {
   &.ok {
     background: $success;
     color: $secondary;
-
+    .d-icon {
+      color: currentColor;
+    }
     @include hover {
       background: lighten($success, 10%);
       color: $secondary;
@@ -83,7 +85,9 @@ button {
   &.cancel {
     background: $danger;
     color: $secondary;
-
+    .d-icon {
+      color: currentColor;
+    }
     @include hover {
       background: lighten($danger, 10%);
       color: $secondary;
@@ -111,16 +115,20 @@ span.relative-date {
 }
 
 label {
-  display: block;
+  display: flex;
   margin-bottom: 5px;
+  align-items: flex-start;
 }
 
 input {
   &[type="radio"],
   &[type="checkbox"] {
-    margin: 3px 0;
-    line-height: $line-height-medium;
+    margin-top: 0.17em;
+    margin-right: 0.43em;
+    margin-left: 0.1em;
+    line-height: $line-height-small;
     cursor: pointer;
+    flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
   }
   &[type="submit"],
   &[type="reset"],
@@ -192,15 +200,63 @@ input {
     padding: $input-padding;
     margin-bottom: 9px;
     font-size: $font-0;
-    line-height: $line-height-large;
+    line-height: $line-height-small;
     color: $primary;
     background-color: $secondary;
     border: 1px solid $primary-medium;
     border-radius: 0;
+    box-sizing: border-box;
+    min-height: 30px;
     &:focus {
       border-color: $tertiary;
       box-shadow: shadow("focus");
       outline: 0;
+    }
+  }
+}
+
+.input {
+  &-prepend,
+  &-append {
+    margin-bottom: 5px;
+    input[class*="span"] {
+      display: inline-block;
+    }
+    input,
+    select {
+      position: relative;
+      margin-bottom: 0;
+      vertical-align: middle;
+      border-radius: 0;
+      &:focus {
+        z-index: z("base") + 1;
+      }
+    }
+    .add-on {
+      display: inline-flex;
+      align-items: center;
+      width: auto;
+      padding: 0 0.5em;
+      height: 28px;
+      background-color: $primary-low;
+      border: 1px solid $primary-medium;
+    }
+    .add-on,
+    .btn {
+      &:first-child {
+        margin-right: -1px;
+      }
+      &:last-child {
+        margin-left: -1px;
+        border-radius: 0 3px 3px 0;
+      }
+    }
+  }
+
+  &-prepend {
+    .add-on,
+    .btn {
+      margin-right: -1px;
     }
   }
 }
@@ -471,6 +527,7 @@ select {
   .input-append {
     display: inline-block;
     margin-bottom: 0;
+    flex: 0 0 auto;
   }
 
   .control-group {
@@ -484,6 +541,11 @@ select {
         padding: 10px;
         text-align: center;
       }
+    }
+
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+      background-color: dark-light-choose($highlight-low, $highlight);
     }
   }
 
@@ -556,49 +618,79 @@ select {
 }
 
 .pref-auth-tokens {
-  .control-label {
-    display: inline-block;
-  }
-
   .row {
+    border-bottom: 1px solid #ddd;
     margin: 5px 0px;
-  }
+    padding-bottom: 5px;
 
-  .muted {
-    color: $primary-medium;
-  }
-
-  .perf-auth-token {
-    background-color: $primary-very-low;
-    color: $primary;
-    display: block;
-    padding: 5px;
-    margin-bottom: 10px;
-  }
-
-  .auth-token-summary {
-    padding: 0px 10px;
-
-    .auth-token-label,
-    .auth-token-value {
-      font-size: 1.2em;
-      margin-top: 5px;
+    &:last-child {
+      border-bottom: 0;
     }
   }
 
-  .auth-token-details {
-    background: $secondary;
-    padding: 5px 10px;
-    margin: 10px 5px 5px 5px;
-
-    .auth-token-label {
-      color: $primary-medium;
-    }
-  }
-
-  .auth-token-label,
-  .auth-token-value {
+  .auth-token-icon {
+    font-size: 2.25em;
     float: left;
-    width: 50%;
+    margin-right: 10px;
+  }
+
+  .auth-token-first {
+    font-size: 1.1em;
+
+    .auth-token-device {
+      font-weight: bold;
+    }
+  }
+
+  .auth-token-second {
+    color: $primary-medium;
+
+    .active {
+      color: $success;
+      font-weight: bold;
+    }
+  }
+
+  .auth-token-dropdown {
+    float: right;
+
+    .btn,
+    .btn:hover {
+      background: transparent;
+
+      .d-icon {
+        color: $primary;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    width: 120px;
+
+    & .icon {
+      margin-top: auto;
+    }
+  }
+}
+
+.topic-statuses {
+  display: inline;
+  float: left;
+  margin-right: 0.15em;
+  .topic-status {
+    margin: 0;
+    display: inline-flex;
+    color: $primary-medium;
+    .d-icon {
+      height: 0.76em;
+      width: 0.75em;
+    }
+    &:not(:last-child) {
+      margin-right: 0.15em;
+    }
+  }
+
+  .d-icon-envelope {
+    color: $danger;
   }
 }

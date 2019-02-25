@@ -6,13 +6,13 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 # Preparing a fresh Ubuntu install
 
-To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Discourse plugins follow the commands below. We assume an English install of Ubuntu.
+To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discourse and Discourse plugins follow the commands below. We assume an English install of Ubuntu.
 
     # Basics
     whoami > /tmp/username
     sudo add-apt-repository ppa:chris-lea/redis-server
     sudo apt-get -yqq update
-    sudo apt-get -yqq install python-software-properties vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick postgresql postgresql-contrib-9.5 libpq-dev postgresql-server-dev-9.5 redis-server advancecomp gifsicle jhead jpegoptim libjpeg-turbo-progs optipng pngcrush pngquant gnupg2
+    sudo apt-get -yqq install python-software-properties vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick redis-server advancecomp gifsicle jhead jpegoptim libjpeg-turbo-progs optipng pngcrush pngquant gnupg2
 
     # Ruby
     curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
@@ -21,9 +21,11 @@ To get your Ubuntu 16.04 LTS install up and running to develop Discourse and Dis
 
     # exit the terminal and open it again to activate RVM
 
-    rvm install 2.5.1
-    rvm --default use 2.5.1 # If this error out check https://rvm.io/integration/gnome-terminal
+    rvm install 2.5.3
+    rvm --default use 2.5.3 # If this error out check https://rvm.io/integration/gnome-terminal
     gem install bundler mailcatcher rake
+
+    # Download and install postgresql-10 from https://wiki.postgresql.org/wiki/Apt
 
     # Postgresql
     sudo -u postgres -i

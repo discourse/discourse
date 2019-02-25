@@ -3,7 +3,20 @@ module Jobs
   class ClosePoll < Jobs::Base
 
     def execute(args)
-      DiscoursePoll::Poll.toggle_status(args[:post_id], args[:poll_name], "closed", -1)
+      %i{
+        post_id
+        poll_name
+      }.each do |key|
+        raise Discourse::InvalidParameters.new(key) if args[key].blank?
+      end
+
+      DiscoursePoll::Poll.toggle_status(
+        args[:post_id],
+        args[:poll_name],
+        "closed",
+        Discourse.system_user,
+        false
+      )
     end
 
   end

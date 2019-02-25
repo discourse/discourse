@@ -10,3 +10,7 @@ ro:
     presence:
       replying: "răspunde"
       editing: "editează"
+      replying_to_topic:
+        one: "răspunde"
+        few: "răspund"
+        other: "răspund"

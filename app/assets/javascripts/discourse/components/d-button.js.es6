@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   attributeBindings: [
     "disabled",
     "translatedTitle:title",
-    "translatedTitle:aria-label",
+    "translatedLabel:aria-label",
     "tabindex"
   ],
 
@@ -37,7 +37,12 @@ export default Ember.Component.extend({
   },
 
   click() {
-    this.sendAction("action", this.get("actionParam"));
+    if (typeof this.get("action") === "string") {
+      this.sendAction("action", this.get("actionParam"));
+    } else {
+      this.get("action")(this.get("actionParam"));
+    }
+
     return false;
   }
 });

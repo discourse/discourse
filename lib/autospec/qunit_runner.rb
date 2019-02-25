@@ -5,8 +5,12 @@ module Autospec
   class QunitRunner < BaseRunner
 
     WATCHERS = {}
-    def self.watch(pattern, &blk); WATCHERS[pattern] = blk; end
-    def watchers; WATCHERS; end
+    def self.watch(pattern, &blk)
+      WATCHERS[pattern] = blk
+    end
+    def watchers
+      WATCHERS
+    end
 
     # Discourse specific
     watch(%r{^app/assets/javascripts/discourse/(.+)\.js.es6$}) { |m| "test/javascripts/#{m[1]}-test.js.es6" }
@@ -14,13 +18,19 @@ module Autospec
     watch(%r{^test/javascripts/.+\.js.es6$})
 
     RELOADERS = Set.new
-    def self.reload(pattern); RELOADERS << pattern; end
-    def reloaders; RELOADERS; end
+    def self.reload(pattern)
+      RELOADERS << pattern
+    end
+    def reloaders
+      RELOADERS
+    end
 
     # Discourse specific
     reload(%r{^test/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
     reload(%r{^test/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
     reload("test/javascripts/test_helper.js")
+
+    watch(%r{^plugins/.*/test/.+\.js.es6$})
 
     require "socket"
 
@@ -66,7 +76,7 @@ module Autospec
         end
       end
 
-      cmd = "node #{Rails.root}/vendor/assets/javascripts/run-qunit.js \"#{qunit_url}\" 3000000 ./tmp/qunit_result"
+      cmd = "node #{Rails.root}/test/run-qunit.js \"#{qunit_url}\" 3000000 ./tmp/qunit_result"
 
       @pid = Process.spawn(cmd)
       _, status = Process.wait2(@pid)

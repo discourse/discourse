@@ -4,7 +4,6 @@ import AdminUser from "admin/models/admin-user";
 import computed from "ember-addons/ember-computed-decorators";
 
 const ATTRIBUTES = [
-  "disk_space",
   "admins",
   "moderators",
   "silenced",

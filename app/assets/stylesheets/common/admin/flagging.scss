@@ -107,9 +107,31 @@
     .flag-user-date {
       color: $primary-medium;
     }
-
     .flag-user-avatar {
       margin-right: 0.5em;
+    }
+    .flag-user-extra {
+      display: flex;
+      align-items: center;
+
+      .user-flag-percentage {
+        display: flex;
+        align-items: center;
+        margin-left: 0.5em;
+
+        .percentage-label {
+          margin-right: 0.25em;
+          &.agreed {
+            color: $success;
+          }
+          &.disagreed {
+            color: $danger;
+          }
+          &.ignored {
+            color: $primary-medium;
+          }
+        }
+      }
     }
   }
 
@@ -169,7 +191,7 @@
   }
 }
 
-.flag-counts {
+div.flag-counts {
   display: inline-block;
   margin-right: 0.5em;
 
@@ -182,9 +204,16 @@
 .flagged-topic {
   td.topic-title {
     width: 400px;
+
+    .combined-title {
+      .d-icon {
+        margin-right: 0.5em;
+      }
+      display: flex;
+    }
+
     a {
       width: 400px;
-      display: inline-block;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;

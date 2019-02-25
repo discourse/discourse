@@ -46,7 +46,7 @@ export default DesktopNotificationConfig.extend({
 
   actions: {
     turnon() {
-      this._super();
+      this._super(...arguments);
       this.set("bannerDismissed", true);
     },
     dismiss() {

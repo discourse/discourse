@@ -1,21 +1,45 @@
 {{#each categories as |c|}}
-  <div class='category-box category-box-{{unbound c.slug}}' style={{border-color c.color}} data-url={{c.url}}>
+  <div class='category category-box category-box-{{unbound c.slug}}' style={{border-color c.color}} data-url={{c.url}}>
     <div class='category-box-inner'>
-      <div class='category-box-heading'>
+      <div class="category-logo">
         {{#if c.uploaded_logo.url}}
-          {{cdn-img src=c.uploaded_logo.url class="logo"}}
+          {{cdn-img
+              src=c.uploaded_logo.url
+              class="logo"
+              width=c.uploaded_logo.width
+              height=c.uploaded_logo.height}}
         {{/if}}
-
-        <h3>
-          {{#if c.read_restricted}}
-            {{d-icon 'lock'}}
-          {{/if}}
-          {{c.name}}
-        </h3>
       </div>
+      <div class="category-details">
+        <div class='category-box-heading'>
+          <h3>
+            {{#if c.read_restricted}}
+              {{d-icon 'lock'}}
+            {{/if}}
+            {{c.name}}
+          </h3>
+        </div>
 
-      <div class='description'>
-        {{{text-overflow class="overflow" text=c.description_excerpt}}}
+        <div class='description'>
+          {{{text-overflow class="overflow" text=c.description_excerpt}}}
+        </div>
+
+        {{#if c.subcategories}}
+          <div class='subcategories'>
+            {{#each c.subcategories as |sc|}}
+              <a class="subcategory" href={{sc.url}}>
+                <span class="subcategory-image-placeholder">
+                  {{cdn-img
+                      src=sc.uploaded_logo.url
+                      class="logo"
+                      width=sc.uploaded_logo.width
+                      height=sc.uploaded_logo.height}}
+                </span>
+                <span class="subcategory-link">{{sc.name}}</span>
+              </a>
+            {{/each}}
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>

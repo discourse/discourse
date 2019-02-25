@@ -45,6 +45,10 @@ describe UsernameChanger do
           expect(UsernameChanger.change(myself, "HanSolo", myself)).to eq(true)
         end.to change { UserHistory.count }.by(1)
 
+        expect(UserHistory.last.action).to eq(
+          UserHistory.actions[:change_username]
+        )
+
         expect(myself.reload.username).to eq('HanSolo')
 
         expect do
@@ -331,7 +335,7 @@ describe UsernameChanger do
               Lorem ipsum
 
               [quote="foo, post:1, topic:#{quoted_post.topic.id}"]
-              quoted post
+              quoted
               [/quote]
             RAW
           end
@@ -341,7 +345,7 @@ describe UsernameChanger do
               Lorem ipsum
 
               [quote="bar, post:1, topic:#{quoted_post.topic.id}"]
-              quoted post
+              quoted
               [/quote]
             RAW
           end
@@ -354,7 +358,7 @@ describe UsernameChanger do
               <div class="quote-controls"></div>
               <img alt='' width="20" height="20" src="#{avatar_url}" class="avatar"> bar:</div>
               <blockquote>
-              <p>quoted post</p>
+              <p>quoted</p>
               </blockquote>
               </aside>
             HTML

@@ -46,7 +46,6 @@ bootsnap-compile-cache/
 
 # Ignore plugins except for the bundled ones.
 /plugins/*
-!/plugins/emoji/
 !/plugins/lazyYT/
 !/plugins/poll/
 !/plugins/discourse-details/
@@ -54,13 +53,6 @@ bootsnap-compile-cache/
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/discourse-local-dates
-!/plugins/discourse-navigation
-!/plugins/discourse-branding
-!/plugins/discourse-migratepassword
-!/plugins/discourse-edgeryders
-!/plugins/discourse-text-direction
-!/plugins/discourse-annotator
-!/plugins/discourse-topic-previews
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -130,3 +122,5 @@ vendor/bundle/*
 # ignore nodejs files
 /node_modules
 /package-lock.json
+
+/vendor/data/GeoLite2-City.mmdb

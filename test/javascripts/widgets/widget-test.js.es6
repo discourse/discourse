@@ -217,7 +217,7 @@ widgetTest("handlebars d-icon", {
   },
 
   test(assert) {
-    assert.equal(this.$("i.fa.fa-arrow-down").length, 1);
+    assert.equal(this.$(".d-icon-arrow-down").length, 1);
   }
 });
 

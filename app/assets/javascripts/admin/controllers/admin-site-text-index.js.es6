@@ -25,8 +25,7 @@ export default Ember.Controller.extend({
     },
 
     search(overridden) {
-      this.set("overridden", overridden);
-
+      if (typeof overridden === "boolean") this.set("overridden", overridden);
       const q = this.get("q");
       if (q !== lastSearch || overridden !== lastOverridden) {
         this.set("searching", true);

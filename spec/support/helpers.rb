@@ -58,7 +58,7 @@ module Helpers
   def stub_guardian(user)
     guardian = Guardian.new(user)
     yield(guardian) if block_given?
-    Guardian.stubs(new: guardian).with(user)
+    Guardian.stubs(new: guardian).with(user, anything)
   end
 
   def wait_for(on_fail: nil, &blk)

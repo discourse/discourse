@@ -8,37 +8,17 @@ body.widget-dragging {
   cursor: ns-resize;
 }
 
-header {
-  margin-bottom: 15px;
-}
-
 // Common classes
 .boxed {
   height: 100%;
 }
 
-.topic-statuses {
-  float: left;
-  padding: 0;
-
-  .topic-status {
-    padding: 0 2px 0 0;
-    margin: 0;
-    line-height: $line-height-small;
-
-    i {
-      font-size: $font-down-1;
-    }
-  }
-
-  .d-icon-envelope {
-    color: $danger;
-  }
-}
-
 .form-vertical {
   .control-group {
-    margin-bottom: 24px;
+    margin-bottom: 1.25em;
+  }
+  .controls:not(.controls-dropdown) + .controls {
+    margin-top: 0.5em;
   }
 }
 
@@ -121,103 +101,9 @@ input {
 }
 
 .input {
-  &-xxlarge {
+  &-xxlarge,
+  &-xxlarge + .control-instructions {
     width: 530px;
-  }
-
-  &-prepend,
-  &-append {
-    margin-bottom: 5px;
-
-    input[class*="span"] {
-      display: inline-block;
-    }
-
-    input,
-    select {
-      position: relative;
-      margin-bottom: 0;
-      vertical-align: middle;
-
-      &:focus {
-        z-index: z("base") + 1;
-      }
-    }
-
-    .add-on {
-      display: inline-block;
-      width: auto;
-      height: 18px;
-      min-width: 16px;
-      padding: 4px 5px;
-      font-weight: normal;
-      line-height: $line-height-medium;
-      text-align: center;
-      vertical-align: middle;
-      background-color: $secondary;
-      border: 1px solid $primary-low;
-    }
-
-    .add-on,
-    .btn {
-      margin-left: -1px;
-      border-radius: 0;
-    }
-
-    .active {
-      background-color: $danger-medium;
-      border-color: $danger;
-    }
-  }
-
-  &-prepend {
-    .add-on,
-    .btn {
-      margin-right: -1px;
-
-      &:first-child {
-        border-radius: 3px 0 0 3px;
-      }
-    }
-  }
-
-  &-append {
-    input,
-    select {
-      border-radius: 3px 0 0 3px;
-    }
-
-    .add-on,
-    .btn {
-      &:last-child {
-        border-radius: 0 3px 3px 0;
-      }
-    }
-  }
-}
-
-.input-prepend.input-append {
-  input,
-  select {
-    border-radius: 0;
-    background-color: $primary-low;
-    border-color: $primary-low;
-  }
-
-  .add-on,
-  .btn {
-    &:first-child {
-      margin-right: -1px;
-      border-radius: 3px 0 0 3px;
-    }
-  }
-
-  .add-on,
-  .btn {
-    &:last-child {
-      margin-left: -1px;
-      border-radius: 0 3px 3px 0;
-    }
   }
 }
 

@@ -67,13 +67,18 @@ registerButton("like", attrs => {
     className
   };
 
-  if (attrs.canToggleLike) {
+  // If the user has already liked the post and doesn't have permission
+  // to undo that operation, then indicate via the title that they've liked it
+  // and disable the button. Otherwise, set the title even if the user
+  // is anonymous (meaning they don't currently have permission to like);
+  // this is important for accessibility.
+  if (attrs.liked && !attrs.canToggleLike) {
+    button.title = "post.controls.has_liked";
+    button.disabled = true;
+  } else {
     button.title = attrs.liked
       ? "post.controls.undo_like"
       : "post.controls.like";
-  } else if (attrs.liked) {
-    button.title = "post.controls.has_liked";
-    button.disabled = true;
   }
 
   return button;
@@ -104,7 +109,7 @@ registerButton("like-count", attrs => {
 });
 
 registerButton("flag", attrs => {
-  if (attrs.canFlag) {
+  if (attrs.canFlag && !attrs.hidden) {
     return {
       action: "showFlags",
       title: "post.controls.flag",
@@ -120,7 +125,7 @@ registerButton("edit", attrs => {
       action: "editPost",
       className: "edit",
       title: "post.controls.edit",
-      icon: "pencil",
+      icon: "pencil-alt",
       alwaysShowYours: true
     };
   }
@@ -262,8 +267,8 @@ registerButton("delete", attrs => {
     return {
       id: "delete_topic",
       action: "deletePost",
-      title: "topic.actions.delete",
-      icon: "trash-o",
+      title: "post.controls.delete_topic",
+      icon: "far-trash-alt",
       className: "delete"
     };
   } else if (attrs.canRecover) {
@@ -279,7 +284,7 @@ registerButton("delete", attrs => {
       id: "delete",
       action: "deletePost",
       title: "post.controls.delete",
-      icon: "trash-o",
+      icon: "far-trash-alt",
       className: "delete"
     };
   } else if (!attrs.canDelete && attrs.firstPost && attrs.yours) {
@@ -287,7 +292,7 @@ registerButton("delete", attrs => {
       id: "delete_topic",
       action: "showDeleteTopicModal",
       title: "post.controls.delete_topic_disallowed",
-      icon: "trash-o",
+      icon: "far-trash-alt",
       className: "delete"
     };
   }
@@ -399,8 +404,7 @@ export default createWidget("post-menu", {
       ])
     );
 
-    Object.keys(_extraButtons).forEach(k => {
-      const builder = _extraButtons[k];
+    Object.values(_extraButtons).forEach(builder => {
       if (builder) {
         const buttonAtts = builder(attrs, this.state, this.siteSettings);
         if (buttonAtts) {

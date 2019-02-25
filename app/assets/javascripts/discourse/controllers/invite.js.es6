@@ -120,13 +120,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   topicId: Ember.computed.alias("model.id"),
 
   // Is Private Topic? (i.e. visible only to specific group members)
-  isPrivateTopic: Em.computed.and(
+  isPrivateTopic: Ember.computed.and(
     "invitingToTopic",
     "model.category.read_restricted"
   ),
 
   // Is Private Message?
-  isMessage: Em.computed.equal("model.archetype", "private_message"),
+  isMessage: Ember.computed.equal("model.archetype", "private_message"),
 
   // Allow Existing Members? (username autocomplete)
   allowExistingMembers: Ember.computed.alias("invitingToTopic"),
@@ -206,7 +206,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
           this.set("inviteIcon", "envelope");
           return I18n.t("topic.invite_reply.to_topic_email");
         } else {
-          this.set("inviteIcon", "hand-o-right");
+          this.set("inviteIcon", "hand-point-right");
           return I18n.t("topic.invite_reply.to_topic_username");
         }
       }
@@ -289,7 +289,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
       model.setProperties({ saving: true, error: false });
 
-      const onerror = function(e) {
+      const onerror = e => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           self.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {

@@ -27,11 +27,6 @@ pt:
     default_poll_with_multiple_choices_has_invalid_parameters: "Sondagem com escolha múltipla tem parâmetros inválidos."
     named_poll_with_multiple_choices_has_invalid_parameters: "Sondagem com o nome <strong>%{name}</strong> com escolha múltipla tem parâmetros inválidos."
     requires_at_least_1_valid_option: "Deve selecionar pelo menos 1 opção válida."
-    default_cannot_be_made_public: "Sondagem com votos não pode ser tornada pública."
-    edit_window_expired:
-      op_cannot_edit_options: "Não pode adicionar ou remover opções da sondagem após os primeiros %{minutes} minutos. Por favor contacte um moderador se necessitar de editar opções da sondagem."
-      staff_cannot_add_or_remove_options: "Não pode adicionar ou remover opções da sondagem após os primeiros %{minutes} minutos. Como alternativa, pode fechar este tópico e criar um novo."
-    no_polls_associated_with_this_post: "Nenhuma sondagem está associada a esta publicação."
     no_poll_with_this_name: "Nenhuma sondagem com o nome <strong>%{name}</strong> está associada a esta publicação."
     post_is_deleted: "Não é possível realizar ações em publicações eliminadas."
     user_cant_post_in_topic: "Não pode votar porque não pode publicar neste tópico."

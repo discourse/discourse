@@ -51,9 +51,9 @@ class UserApiKeysController < ApplicationController
 
     require_params
 
-    unless SiteSetting.allowed_user_api_auth_redirects
+    if params.key?(:auth_redirect) && SiteSetting.allowed_user_api_auth_redirects
         .split('|')
-        .any? { |u| params[:auth_redirect] == u }
+        .none? { |u| params[:auth_redirect] == u }
 
       raise Discourse::InvalidAccess
     end
@@ -61,12 +61,13 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless meets_tl?
 
     validate_params
+    @application_name = params[:application_name]
 
     # destroy any old keys we had
     UserApiKey.where(user_id: current_user.id, client_id: params[:client_id]).destroy_all
 
     key = UserApiKey.create!(
-      application_name: params[:application_name],
+      application_name: @application_name,
       client_id: params[:client_id],
       user_id: current_user.id,
       push_url: params[:push_url],
@@ -76,7 +77,7 @@ class UserApiKeysController < ApplicationController
 
     # we keep the payload short so it encrypts easily with public key
     # it is often restricted to 128 chars
-    payload = {
+    @payload = {
       key: key.key,
       nonce: params[:nonce],
       push: key.has_push?,
@@ -84,9 +85,19 @@ class UserApiKeysController < ApplicationController
     }.to_json
 
     public_key = OpenSSL::PKey::RSA.new(params[:public_key])
-    payload = Base64.encode64(public_key.public_encrypt(payload))
+    @payload = Base64.encode64(public_key.public_encrypt(@payload))
 
-    redirect_to "#{params[:auth_redirect]}?payload=#{CGI.escape(payload)}"
+    if params[:auth_redirect]
+      redirect_to("#{params[:auth_redirect]}?payload=#{CGI.escape(@payload)}")
+    else
+      respond_to do |format|
+        format.html { render :show }
+        format.json do
+          instructions = I18n.t("user_api_key.instructions", application_name: @application_name)
+          render json: { payload: @payload, instructions: instructions }
+        end
+      end
+    end
   end
 
   def revoke
@@ -124,7 +135,6 @@ class UserApiKeysController < ApplicationController
      :nonce,
      :scopes,
      :client_id,
-     :auth_redirect,
      :application_name
     ].each { |p| params.require(p) }
   end

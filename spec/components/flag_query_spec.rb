@@ -114,11 +114,11 @@ describe FlagQuery do
 
     it "respects `min_flags_staff_visibility`" do
       admin = Fabricate(:admin)
-      moderator = Fabricate(:moderator)
+      flagger = Fabricate(:user)
 
       post = create_post
 
-      PostAction.act(moderator, post, PostActionType.types[:spam])
+      PostAction.act(flagger, post, PostActionType.types[:spam])
 
       SiteSetting.min_flags_staff_visibility = 2
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
@@ -127,6 +127,34 @@ describe FlagQuery do
       expect(users).to be_blank
 
       PostAction.act(admin, post, PostActionType.types[:inappropriate])
+      posts, topics, users = FlagQuery.flagged_posts_report(admin)
+      expect(posts).to be_present
+      expect(topics).to be_present
+      expect(users).to be_present
+    end
+
+    it "respects `min_flags_staff_visibility` for tl3 hidden spam" do
+      admin = Fabricate(:admin)
+      tl3 = Fabricate(:user, trust_level: 3)
+      post = create_post
+
+      post.user.update_column(:trust_level, 0)
+      PostAction.act(tl3, post, PostActionType.types[:spam])
+
+      SiteSetting.min_flags_staff_visibility = 2
+      posts, topics, users = FlagQuery.flagged_posts_report(admin)
+      expect(posts).to be_present
+      expect(topics).to be_present
+      expect(users).to be_present
+    end
+
+    it "respects `min_flags_staff_visibility` for tl4 hidden posts" do
+      admin = Fabricate(:admin)
+      tl4 = Fabricate(:user, trust_level: 4)
+      post = create_post
+      PostAction.act(tl4, post, PostActionType.types[:spam])
+
+      SiteSetting.min_flags_staff_visibility = 2
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
       expect(posts).to be_present
       expect(topics).to be_present

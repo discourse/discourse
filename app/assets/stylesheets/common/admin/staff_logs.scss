@@ -163,6 +163,9 @@
     a:first-of-type {
       margin-right: 0.25em;
     }
+    .deleted-user {
+      font-size: $font-up-2;
+    }
   }
   .created_at {
     text-align: center;
@@ -198,7 +201,7 @@
     .label {
       font-weight: bold;
     }
-    i {
+    .d-icon {
       margin-left: 6px;
     }
   }
@@ -246,7 +249,7 @@
     margin: 0 -0.25em 1em;
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
   }
   @media screen and (min-width: 800px) {
     .screened-ip-address-form {

@@ -1,0 +1,39 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+lt:
+  site_settings:
+    poll_enabled: "Visos apklausos?"
+    poll_maximum_options: "Maskimalus įterpiamų įrašų skaičius"
+  poll:
+    multiple_polls_without_name: "Yra keli baseinai be pavadinimo. Naudokite '<code> vardą </ code>' atributas vienareikšmiškai identifikuoti savo apklausas."
+    multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
+    default_poll_must_have_at_least_2_options: "Apklausa turi turėti mažiausiai 2 variantus."
+    named_poll_must_have_at_least_2_options: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau 2 variantus."
+    default_poll_must_have_less_options:
+      one: "Apklausa turi turėti mažiau nei %{count} variantą."
+      few: "Apklausa turi turėti mažiau nei %{count} variantų."
+      many: "Apklausa turi turėti mažiau nei %{count} variantų."
+      other: "Apklausa turi turėti mažiau nei %{count} variantų."
+    named_poll_must_have_less_options:
+      one: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau  varianta."
+      few: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau  varianta."
+      many: "Poll named <strong>%{name}</strong> must have less than %{count} options."
+      other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
+    default_poll_must_have_different_options: "Apklausa turi turėti skirtingus atsakymus."
+    named_poll_must_have_different_options: "Apklausa pavadinimu <strong>%{name}</strong> turi turėti bent jau 2 variantus."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Apklausa su keliais pasirinkimų yra neleistinų parametrus."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Apklausa pavadintas <strong>% {name} </ strong>, su daug pasirinkimo yra neleistinų parametrus."
+    requires_at_least_1_valid_option: "Jūs privalote pasirinkti bent 1 galiojantį variantą."
+    no_poll_with_this_name: "Nėra baseinas pavadintas <strong>% {name} </ strong>, susijęs su šio pranešimo."
+    post_is_deleted: "Negali veikti ištrintų paštu."
+    topic_must_be_open_to_vote: "Apklausa turi būti atidaryta, kad būtų galima balsuoti."
+    poll_must_be_open_to_vote: "Apklausa turi būti atidaryta, kad būtų galima balsuoti."
+    topic_must_be_open_to_toggle_status: "Ši tema turi būti atvira perjungti statusą."
+    only_staff_or_op_can_toggle_status: "Tik personalo narys arba originalą plakatas gali perjungti apklausos statusą."
+    email:
+      link_to_poll: "Spauskite, kad peržiūrėtumėte apklausą."

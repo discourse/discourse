@@ -8,62 +8,104 @@ describe UserAvatar do
     let(:temp) { Tempfile.new('test') }
     let(:upload) { Fabricate(:upload, user: user) }
 
-    before do
-      temp.binmode
-      # tiny valid png
-      temp.write(Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw=="))
-      temp.rewind
-      FileHelper.expects(:download).returns(temp)
-    end
+    describe "when working" do
 
-    after do
-      temp.unlink
-    end
+      before do
+        temp.binmode
+        # tiny valid png
+        temp.write(Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw=="))
+        temp.rewind
+        FileHelper.expects(:download).returns(temp)
+      end
 
-    it 'can update gravatars' do
-      expect do
-        avatar.update_gravatar!
-      end.to change { Upload.count }.by(1)
+      after do
+        temp.unlink
+      end
 
-      upload = Upload.last
+      it 'can update gravatars' do
+        freeze_time Time.now
 
-      expect(avatar.gravatar_upload).to eq(upload)
-      expect(user.reload.uploaded_avatar).to eq(nil)
-    end
+        expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
 
-    describe 'when user has an existing custom upload' do
-      it "should not change the user's uploaded avatar" do
-        user.update!(uploaded_avatar: upload)
-
-        avatar.update!(
-          custom_upload: upload,
-          gravatar_upload: Fabricate(:upload, user: user)
-        )
-
-        avatar.update_gravatar!
-
-        expect(upload.reload).to eq(upload)
-        expect(user.reload.uploaded_avatar).to eq(upload)
-        expect(avatar.reload.custom_upload).to eq(upload)
         expect(avatar.gravatar_upload).to eq(Upload.last)
+        expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
+        expect(user.reload.uploaded_avatar).to eq(nil)
+
+        expect do
+          avatar.destroy
+        end.to_not change { Upload.count }
+
+      end
+
+      describe 'when user has an existing custom upload' do
+        it "should not change the user's uploaded avatar" do
+          user.update!(uploaded_avatar: upload)
+
+          avatar.update!(
+            custom_upload: upload,
+            gravatar_upload: Fabricate(:upload, user: user)
+          )
+
+          avatar.update_gravatar!
+
+          expect(upload.reload).to eq(upload)
+          expect(user.reload.uploaded_avatar).to eq(upload)
+          expect(avatar.reload.custom_upload).to eq(upload)
+          expect(avatar.gravatar_upload).to eq(Upload.last)
+        end
+      end
+
+      describe 'when user has an existing gravatar' do
+        it "should update the user's uploaded avatar correctly" do
+          user.update!(uploaded_avatar: upload)
+          avatar.update!(gravatar_upload: upload)
+
+          avatar.update_gravatar!
+
+          # old upload to be cleaned up via clean_up_uploads
+          expect(Upload.find_by(id: upload.id)).not_to eq(nil)
+
+          new_upload = Upload.last
+
+          expect(user.reload.uploaded_avatar).to eq(new_upload)
+          expect(avatar.reload.gravatar_upload).to eq(new_upload)
+        end
       end
     end
 
-    describe 'when user has an existing gravatar' do
-      it "should update the user's uploaded avatar correctly" do
-        user.update!(uploaded_avatar: upload)
-        avatar.update!(gravatar_upload: upload)
+    describe "when failing" do
 
-        avatar.update_gravatar!
+      it "always update 'last_gravatar_download_attempt'" do
+        freeze_time Time.now
 
-        expect(Upload.find_by(id: upload.id)).to eq(nil)
+        FileHelper.expects(:download).raises(SocketError)
 
-        new_upload = Upload.last
+        expect do
+          expect { avatar.update_gravatar! }.to raise_error(SocketError)
+        end.to_not change { Upload.count }
 
-        expect(user.reload.uploaded_avatar).to eq(new_upload)
-        expect(avatar.reload.gravatar_upload).to eq(new_upload)
+        expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
+      end
+
+    end
+
+    describe "404 should be silent, nothing to do really" do
+
+      it "does nothing when avatar is 404" do
+
+        freeze_time Time.now
+
+        stub_request(:get, "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&s=360").
+          to_return(status: 404, body: "", headers: {})
+
+        expect do
+          avatar.update_gravatar!
+        end.to_not change { Upload.count }
+
+        expect(avatar.last_gravatar_download_attempt).to eq(Time.now)
       end
     end
+
   end
 
   context '.import_url_for_user' do

@@ -27,11 +27,6 @@ nl:
     default_poll_with_multiple_choices_has_invalid_parameters: "De poll met meerdere keuzes heeft ongeldige parameters."
     named_poll_with_multiple_choices_has_invalid_parameters: "De poll met de naam <strong>%{name}</strong> met meerdere keuzes heeft ongeldige parameters."
     requires_at_least_1_valid_option: "Kies minstens 1 geldige optie."
-    default_cannot_be_made_public: "De poll met stemmen kan niet openbaar worden gemaakt."
-    edit_window_expired:
-      op_cannot_edit_options: "U kunt na %{minutes} minuten geen pollopties meer toevoegen of verwijderen. Neem contact op met een moderator als u een polloptie dient te bewerken."
-      staff_cannot_add_or_remove_options: "U kunt na %{minutes} minuten geen pollopties meer toevoegen of verwijderen. U dient daarom dit topic te sluiten en een nieuw topic aan te maken."
-    no_polls_associated_with_this_post: "Er zijn geen polls aan dit bericht gekoppeld."
     no_poll_with_this_name: "Er is geen poll met de naam <strong>%{name}</strong> aan dit bericht gekoppeld."
     post_is_deleted: "Dit kan niet bij een verwijderd bericht."
     user_cant_post_in_topic: "Je kunt niet stemmen omdat je niet in dit topic kunt posten."

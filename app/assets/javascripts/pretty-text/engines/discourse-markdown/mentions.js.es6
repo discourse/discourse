@@ -1,32 +1,12 @@
 function addMention(buffer, matches, state) {
   let username = matches[1] || matches[2];
-  let { getURL, mentionLookup, formatUsername } = state.md.options.discourse;
-
-  let type = mentionLookup && mentionLookup(username);
-
-  let tag = "a";
+  let tag = "span";
   let className = "mention";
-  let href = null;
-
-  if (type === "user") {
-    href = getURL("/u/") + username.toLowerCase();
-  } else if (type === "group") {
-    href = getURL("/groups/") + username;
-    className = "mention-group";
-  } else {
-    tag = "span";
-  }
 
   let token = new state.Token("mention_open", tag, 1);
   token.attrs = [["class", className]];
-  if (href) {
-    token.attrs.push(["href", href]);
-  }
 
   buffer.push(token);
-  if (formatUsername) {
-    username = formatUsername(username);
-  }
 
   token = new state.Token("text", "", 0);
   token.content = "@" + username;

@@ -6,5 +6,12 @@ export default Ember.Component.extend({
   @computed("src")
   cdnSrc(src) {
     return Discourse.getURLWithCDN(src);
+  },
+
+  @computed("width", "height")
+  style(width, height) {
+    if (width && height) {
+      return Ember.String.htmlSafe(`--aspect-ratio: ${width / height};`);
+    }
   }
 });

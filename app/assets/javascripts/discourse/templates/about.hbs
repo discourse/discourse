@@ -31,6 +31,10 @@
         </section>
       {{/if}}
 
+      {{plugin-outlet name="about-after-admins"
+                    connectorTagName='section'
+                    args=(hash model=model)}}
+
       {{#if model.moderators}}
         <section class='about moderators'>
           <h3>{{d-icon "users"}} {{i18n 'about.our_moderators'}}</h3>
@@ -43,6 +47,10 @@
           <div class='clearfix'></div>
         </section>
       {{/if}}
+
+      {{plugin-outlet name="about-after-moderators"
+                    connectorTagName='section'
+                    args=(hash model=model)}}
 
       <section class='about stats'>
         <h3>{{d-icon "bar-chart"}}  {{i18n 'about.stats'}}</h3>
@@ -89,7 +97,7 @@
 
       {{#if contactInfo}}
         <section class='about contact'>
-            <h3>{{d-icon "envelope-o"}} {{i18n 'about.contact'}}</h3>
+            <h3>{{d-icon "far-envelope"}} {{i18n 'about.contact'}}</h3>
             <p>{{{contactInfo}}}</p>
         </section>
       {{/if}}

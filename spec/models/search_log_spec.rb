@@ -194,17 +194,16 @@ RSpec.describe SearchLog, type: :model do
     end
 
     it "considers time period" do
-      expect(SearchLog.trending.count).to eq(4)
+      expect(SearchLog.trending.to_a.count).to eq(4)
 
       SearchLog.where(term: 'swift').update_all(created_at: 1.year.ago)
-      expect(SearchLog.trending(:monthly).count).to eq(3)
+      expect(SearchLog.trending(:monthly).to_a.count).to eq(3)
     end
 
     it "correctly returns trending data" do
       top_trending = SearchLog.trending.first
       expect(top_trending.term).to eq("ruby")
       expect(top_trending.searches).to eq(3)
-      expect(top_trending.unique).to eq(2)
       expect(top_trending.click_through).to eq(0)
 
       SearchLog.where(term: 'ruby', ip_address: '127.0.0.1').update_all(search_result_id: 12)

@@ -11,8 +11,6 @@ export default Discourse.Route.extend({
     username: { refreshModel: true }
   },
 
-  refreshQueryWithoutTransition: true,
-
   model(params) {
     this._params = params;
     return this.store.findAll("group", params);

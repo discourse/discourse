@@ -77,10 +77,10 @@ class ImportScripts::Nabble < ImportScripts::Base
 
       create_users(users, total: total_count, offset: offset) do |row|
         {
-          id:           row["user_id"],
-          email:        row["email"] || (SecureRandom.hex << "@domain.com"),
-          created_at:   Time.zone.at(@td.decode(row["joined"])),
-          name:         row["name"],
+          id: row["user_id"],
+          email: row["email"] || (SecureRandom.hex << "@domain.com"),
+          created_at: Time.zone.at(@td.decode(row["joined"])),
+          name: row["name"],
           post_create_action: proc do |user|
             import_avatar(user, row["user_id"])
           end
@@ -151,13 +151,15 @@ class ImportScripts::Nabble < ImportScripts::Base
         raw = process_content(raw)
         raw = process_attachments(raw, t['node_id'])
 
-        { id: t['node_id'],
+        {
+          id: t['node_id'],
           title: t['subject'],
           user_id: user_id_from_imported_user_id(t["owner_id"]) || Discourse::SYSTEM_USER_ID,
           created_at: Time.zone.at(@td.decode(t["when_created"])),
           category: CATEGORY_ID,
           raw: raw,
-          cook_method: Post.cook_methods[:regular] }
+          cook_method: Post.cook_methods[:regular]
+        }
       end
     end
   end
@@ -172,7 +174,7 @@ class ImportScripts::Nabble < ImportScripts::Base
     txt.gsub! /\<quote author="(.*?)"\>/, '[quote="\1"]'
     txt.gsub! /\<\/quote\>/, '[/quote]'
     txt.gsub!(/\<raw\>(.*?)\<\/raw\>/m) do |match|
-      c = Regexp.last_match[1].indent(4);
+      c = Regexp.last_match[1].indent(4)
        "\n#{c}\n"
     end
 

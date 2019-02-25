@@ -71,6 +71,7 @@ class UserSilencer
   def unsilence
     @user.silenced_till = nil
     if @user.save
+      DiscourseEvent.trigger(:user_unsilenced, user: @user)
       SystemMessage.create(@user, :unsilenced)
       StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
     end

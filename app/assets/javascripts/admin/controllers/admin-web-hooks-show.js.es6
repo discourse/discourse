@@ -9,6 +9,11 @@ export default Ember.Controller.extend({
   defaultEventTypes: Ember.computed.alias("adminWebHooks.defaultEventTypes"),
   contentTypes: Ember.computed.alias("adminWebHooks.contentTypes"),
 
+  @computed
+  showTagsFilter() {
+    return this.siteSettings.tagging_enabled;
+  },
+
   @computed("model.isSaving", "saved", "saveButtonDisabled")
   savingStatus(isSaving, saved, saveButtonDisabled) {
     if (isSaving) {
@@ -57,9 +62,21 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.isSaving", "secretValidation", "eventTypeValidation")
-  saveButtonDisabled(isSaving, secretValidation, eventTypeValidation) {
-    return isSaving ? false : secretValidation || eventTypeValidation;
+  @computed(
+    "model.isSaving",
+    "secretValidation",
+    "eventTypeValidation",
+    "model.payload_url"
+  )
+  saveButtonDisabled(
+    isSaving,
+    secretValidation,
+    eventTypeValidation,
+    payloadUrl
+  ) {
+    return isSaving
+      ? false
+      : secretValidation || eventTypeValidation || Ember.isEmpty(payloadUrl);
   },
 
   actions: {

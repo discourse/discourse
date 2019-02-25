@@ -15,8 +15,6 @@ nl:
         one: "totale stem"
         other: "totale stemmen"
       average_rating: "Gemiddelde beoordeling: <strong>%{average}</strong>."
-      public:
-        title: "Stemmen zijn openbaar."
       multiple:
         help:
           at_least_min_options:

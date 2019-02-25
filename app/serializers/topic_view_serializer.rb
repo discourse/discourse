@@ -174,11 +174,11 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def current_post_number
-    [object.post_number, object.highest_post_number].min
+    object.current_post_number
   end
 
   def include_current_post_number?
-    object.highest_post_number.present?
+    object.current_post_number.present?
   end
 
   def highest_post_number

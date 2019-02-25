@@ -22,6 +22,8 @@ en:
     poll_minimum_trust_level_to_create: "Define the minimum trust level needed to create polls."
 
   poll:
+    invalid_argument: "Invalid value '%{value}' for argument '%{argument}'."
+
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
     multiple_polls_with_same_name: "There are multiple polls with the same name: <strong>%{name}</strong>. Use the '<code>name</code>' attribute to uniquely identify your polls."
 
@@ -43,14 +45,10 @@ en:
 
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
 
-    default_cannot_be_made_public: "Poll with votes cannot be made public."
-    named_cannot_be_made_public: "Poll named <strong>%{name}</strong> has votes and cannot be made public."
-
     edit_window_expired:
-      op_cannot_edit_options: "You cannot add or remove poll options after the first %{minutes} minutes. Please contact a moderator if you need to edit a poll option."
-      staff_cannot_add_or_remove_options: "You cannot add or remove poll options after the first %{minutes} minutes. You should close this topic and create a new one instead."
+      cannot_edit_default_poll_with_votes: "You cannot change a poll after the first %{minutes} minutes."
+      cannot_edit_named_poll_with_votes: "You cannot change the poll name <strong>${name}</strong> after the first %{minutes} minutes."
 
-    no_polls_associated_with_this_post: "No polls are associated with this post."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
 
     post_is_deleted: "Cannot act on a deleted post."

@@ -2,6 +2,7 @@
 // These styles are also used for "/groups" — test those pages if making significant changes
 .user-right {
   .list-actions {
+    display: flex;
     margin-bottom: 10px;
 
     .btn {
@@ -19,10 +20,6 @@
 }
 
 .user-main {
-  .d-icon-heart {
-    color: $love !important;
-  }
-
   .about {
     overflow: hidden;
     width: 100%;
@@ -62,6 +59,9 @@
         color: $primary;
 
         &.groups {
+          span:not(:last-of-type) {
+            margin-right: 0.25em;
+          }
           span:after {
             content: ",";
           }
@@ -81,23 +81,16 @@
     .details {
       background: rgba($secondary, 0.8);
 
-      blockquote {
-        background-color: $secondary-low;
-        border-left-color: $secondary-low;
-      }
-
       h1 {
         font-size: $font-up-5;
         font-weight: normal;
-        i {
+        .d-icon {
           font-size: 0.8em;
         }
       }
 
       h2 {
-        font-size: $font-up-2;
         font-weight: normal;
-        margin-top: 10px;
         max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
@@ -106,9 +99,7 @@
 
       h3 {
         font-weight: normal;
-        font-size: $font-0;
-        margin: 5px 0;
-
+        margin-bottom: 0.5em;
         .d-icon:not(:first-of-type) {
           margin-left: 10px;
         }
@@ -165,9 +156,9 @@
         list-style-type: none;
       }
 
-      a {
-        padding: 5px 10px;
+      .btn {
         margin-bottom: 10px;
+        line-height: $line-height-medium;
       }
     }
 
@@ -297,7 +288,6 @@
         width: auto;
         text-align: left;
         font-weight: normal;
-        float: auto;
       }
 
       .instructions {
@@ -309,14 +299,22 @@
       }
     }
   }
+  .user-content {
+    .admin-controls nav {
+      margin: 0;
+      .nav-pills {
+        overflow-x: auto;
+      }
+    }
+  }
 }
 
 .user-field {
   .required {
-    text-align: top;
+    vertical-align: top;
     color: $danger;
     font-weight: bold;
-    font-size: $font-up-2;
+    margin-left: 0.25em;
   }
 }
 
@@ -392,10 +390,6 @@
   }
 }
 
-.new-private-message {
-  margin-bottom: 15px;
-}
-
 .user-nav {
   margin: 5px 0;
 }
@@ -406,44 +400,6 @@
     list-style: none;
     margin: 0;
   }
-
-  .username, .name {
-    display: block;
-  }
-
-  .name {
-    margin-left: 0;
-  }
-}
-
-.user-nav {
-  margin: 5px 0px;
-  .fa {
-    margin-right: 5px;
-  }
-  .fa.fa-comment {
-    margin-right: 2px;
-  }
-}
-
-.user-right .list-actions {
-  margin-bottom: 10px;
-  .btn {
-    margin-right: 10px;
-  }
-}
-
-.top-section {
-  ul {
-    list-style: none;
-    margin: 0;
-  }
-}
-
-.top-section,
-.replies-section,
-.topics-section {
-  margin-bottom: 20px;
 }
 
 .top-section,
@@ -741,4 +697,8 @@
       }
     }
   }
+}
+
+.user-summary-page .d-icon-heart {
+  color: $love;
 }

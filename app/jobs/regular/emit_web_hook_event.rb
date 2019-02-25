@@ -28,6 +28,9 @@ module Jobs
         return if web_hook.category_ids.present? && (!args[:category_id].present? ||
           !web_hook.category_ids.include?(args[:category_id]))
 
+        return if web_hook.tag_ids.present? && (args[:tag_ids].blank? ||
+          (web_hook.tag_ids & args[:tag_ids]).blank?)
+
         raise Discourse::InvalidParameters.new(:payload) unless args[:payload].present?
         args[:payload] = JSON.parse(args[:payload])
       end

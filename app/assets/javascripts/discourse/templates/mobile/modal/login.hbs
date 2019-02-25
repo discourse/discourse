@@ -1,11 +1,11 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action=(action "login")}}
   {{#d-modal-body title="login.title" class="login-modal"}}
     {{#if showLoginButtons}}
       {{login-buttons
         showLoginWithEmailLink=showLoginWithEmailLink
         processingEmailLink=processingEmailLink
-        emailLogin='emailLogin'
-        externalLogin='externalLogin'}}
+        emailLogin=(action "emailLogin")
+        externalLogin=(action "externalLogin")}}
     {{/if}}
 
     {{#if canLoginLocal}}
@@ -46,20 +46,20 @@
 
   <div class="modal-footer">
     {{#if authenticate}}
-      {{i18n 'login.authenticating'}}
+      {{i18n "login.authenticating"}}
     {{/if}}
 
     {{#if canLoginLocal}}
-      {{d-button action="login"
-          icon="unlock"
-          label=loginButtonLabel
-          disabled=loginDisabled
-          class='btn btn-large btn-primary'}}
+      {{d-button action=(action "login")
+        icon="unlock"
+        label=loginButtonLabel
+        disabled=loginDisabled
+        class="btn btn-large btn-primary"}}
 
       {{#if showSignupLink}}
-        <button class="btn btn-large" id="new-account-link" {{action "showCreateAccount"}}>
-          {{i18n 'create_account.title'}}
-        </button>
+        {{#d-button class="btn btn-large" id="new-account-link" action=(route-action "showCreateAccount")}}
+          {{i18n "create_account.title"}}
+        {{/d-button}}
       {{/if}}
     {{/if}}
   </div>

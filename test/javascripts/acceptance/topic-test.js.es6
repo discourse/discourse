@@ -7,6 +7,18 @@ acceptance("Topic", {
     server.put("/posts/398/wiki", () => {
       return helper.response({});
     });
+
+    server.get("/topics/feature_stats.json", () => {
+      return helper.response({
+        pinned_in_category_count: 0,
+        pinned_globally_count: 0,
+        banner_count: 0
+      });
+    });
+
+    server.put("/t/280/make-banner", () => {
+      return helper.response({});
+    });
   }
 });
 
@@ -36,7 +48,7 @@ QUnit.test("Share Popup", async assert => {
 QUnit.test("Showing and hiding the edit controls", async assert => {
   await visit("/t/internationalization-localization/280");
 
-  await click("#topic-title .d-icon-pencil");
+  await click("#topic-title .d-icon-pencil-alt");
 
   assert.ok(exists("#edit-title"), "it shows the editing controls");
   assert.ok(
@@ -54,7 +66,7 @@ QUnit.test("Updating the topic title and category", async assert => {
 
   await visit("/t/internationalization-localization/280");
 
-  await click("#topic-title .d-icon-pencil");
+  await click("#topic-title .d-icon-pencil-alt");
   await fillIn("#edit-title", "this is the new title");
   await categoryChooser.expand();
   await categoryChooser.selectRowByValue(4);
@@ -173,7 +185,7 @@ QUnit.test("Visit topic routes", async assert => {
 
 QUnit.test("Updating the topic title with emojis", async assert => {
   await visit("/t/internationalization-localization/280");
-  await click("#topic-title .d-icon-pencil");
+  await click("#topic-title .d-icon-pencil-alt");
 
   await fillIn("#edit-title", "emojis title :bike: :blonde_woman:t6:");
 
@@ -213,6 +225,20 @@ QUnit.test("remove featured link", async assert => {
   // await click('.title-wrapper .remove-featured-link');
   // await click('.title-wrapper .submit-edit');
   // assert.ok(!exists('.title-wrapper .topic-featured-link'), 'link is gone');
+});
+
+QUnit.test("Unpinning unlisted topic", async assert => {
+  await visit("/t/internationalization-localization/280");
+
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-pin .btn");
+  await click(".btn-primary:last");
+
+  await click(".toggle-admin-menu");
+  await click(".topic-admin-visible .btn");
+
+  await click(".toggle-admin-menu");
+  assert.ok(exists(".topic-admin-pin"), "it should show the multi select menu");
 });
 
 QUnit.test("selecting posts", async assert => {
@@ -259,4 +285,11 @@ QUnit.test("select below", async assert => {
       .includes(I18n.t("topic.multi_select.description", { count: 19 })),
     "it should select the right number of posts"
   );
+});
+
+QUnit.test("View Hidden Replies", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click(".gap");
+
+  assert.equal(find(".gap").length, 0, "it hides gap");
 });

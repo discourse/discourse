@@ -23,11 +23,6 @@ ko:
     default_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 투표가 잘못된 매개변수를 가지고 있습니다."
     named_poll_with_multiple_choices_has_invalid_parameters: "복수응답 가능한 <strong>%{name}</strong> 투표가 잘못된 매개변수를 가지고 있습니다."
     requires_at_least_1_valid_option: "유효한 투표 항목을 적어도 1개는 선택해야 합니다."
-    default_cannot_be_made_public: "이미 투표가 진행되어서 공개로 전환할 수 없습니다."
-    edit_window_expired:
-      op_cannot_edit_options: "처음 %{minutes}분 동안은 투표를 추가하거나 삭제할 수 없습니다. 투표를 꼭 수정해야만 한다면 운영자에게 문의하시기 바랍니다."
-      staff_cannot_add_or_remove_options: "처음 %{minutes}분 동안은 투표 항목을 추가하거나 삭제할 수 없습니다. 그렇지 않으면, 이 토픽을 닫고 새로운 토픽을 만들어야 합니다."
-    no_polls_associated_with_this_post: "이 포스트와 관련한 투표가 없습니다."
     no_poll_with_this_name: "이 포스트와 관련한 <strong>%{name}</strong> 라는 이름의 투표는 없습니다."
     post_is_deleted: "지워진 포스트에는 불가능합니다."
     topic_must_be_open_to_vote: "토픽이 열려야 투표를 할 수 있습니다."

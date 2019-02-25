@@ -8,6 +8,10 @@
 fi:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: Tänään %{time}
+        tomorrow: Huomenna %{time}
+        yesterday: Eilen %{time}
       title: Lisää päiväys
       create:
         modal_title: Lisää päiväys
@@ -18,6 +22,7 @@ fi:
           simple_mode: Piilota lisäasetukset
           format_description: "Missä formaatissa aika näytetään käyttäjälle. Näytä käyttäjän aikavyöhyke sanallisesti (esim. Europe/Paris) lisäämällä \"\\T\\Z\"."
           timezones_title: Näytettävät aikavyöhykkeet
+          timezones_description: Aikavyöhykkeitä käytetään esikatselussa sekä varana virhetilanteissa.
           recurring_title: Toistuvuus
           recurring_description: "Määrittele tapahtuman toistuvuus. Voit myös manuaalisesti muokata toistuvuusparametriä, jonka lomake viestiin luo. Käytä näitä avainsanoja: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Ei toistuvuutta

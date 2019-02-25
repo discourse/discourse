@@ -45,6 +45,8 @@ describe TopicListItemSerializer do
   end
 
   describe 'hidden tags' do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
     let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
     let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
@@ -55,12 +57,30 @@ describe TopicListItemSerializer do
     end
 
     it 'returns hidden tag to staff' do
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+      json = TopicListItemSerializer.new(topic,
+        scope: Guardian.new(admin),
+        root: false
+      ).as_json
+
       expect(json[:tags]).to eq([hidden_tag.name])
     end
 
     it 'does not return hidden tag to non-staff' do
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(Fabricate(:user)), root: false).as_json
+      json = TopicListItemSerializer.new(topic,
+        scope: Guardian.new(user),
+        root: false
+      ).as_json
+
+      expect(json[:tags]).to eq([])
+    end
+
+    it 'accepts an option to remove hidden tags' do
+      json = TopicListItemSerializer.new(topic,
+        scope: Guardian.new(user),
+        hidden_tag_names: [hidden_tag.name],
+        root: false
+      ).as_json
+
       expect(json[:tags]).to eq([])
     end
   end

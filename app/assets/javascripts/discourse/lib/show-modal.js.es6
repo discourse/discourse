@@ -39,6 +39,7 @@ export default function(name, opts) {
   modalController.set("modalClass", opts.modalClass);
 
   const controllerName = opts.admin ? `modals/${name}` : name;
+  modalController.set("name", controllerName);
 
   let controller = container.lookup("controller:" + controllerName);
   const templateName = opts.templateName || Ember.String.dasherize(name);

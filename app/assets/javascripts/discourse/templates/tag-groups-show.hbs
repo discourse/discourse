@@ -30,20 +30,20 @@
 
   <section class="group-visibility">
     <div>
-      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="public" id="public-permission" selection=model.permissionName onChange="changed"}}
+      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="public" id="public-permission" selection=model.permissionName}}
       <label class="radio" for="public-permission">{{i18n 'tagging.groups.everyone_can_use'}}</label>
     </div>
     <div>
-      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="visible" id="visible-permission" selection=model.permissionName onChange="changed"}}
+      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="visible" id="visible-permission" selection=model.permissionName}}
       <label class="radio" for="visible-permission">{{i18n 'tagging.groups.usable_only_by_staff'}}</label>
     </div>
     <div>
-      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="private" id="private-permission" selection=model.permissionName onChange="changed"}}
+      {{radio-button class="tag-permissions-choice" name="tag-permissions-choice" value="private" id="private-permission" selection=model.permissionName}}
       <label class="radio" for="private-permission">{{i18n 'tagging.groups.visible_only_to_staff'}}</label>
     </div>
   </section>
 
-  <button {{action "save"}} disabled={{model.disableSave}} class='btn'>{{i18n 'tagging.groups.save'}}</button>
-  <button {{action "destroy"}} disabled={{model.disableSave}} class='btn btn-danger'>{{d-icon "trash-o"}} {{i18n 'tagging.groups.delete'}}</button>
+  <button {{action "save"}} disabled={{model.disableSave}} class='btn btn-default'>{{i18n 'tagging.groups.save'}}</button>
+  <button {{action "destroy"}} disabled={{model.disableDelete}} class='btn btn-danger'>{{d-icon "far-trash-alt"}} {{i18n 'tagging.groups.delete'}}</button>
   <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
 </div>

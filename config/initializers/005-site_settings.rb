@@ -4,7 +4,7 @@
 Discourse.git_version
 
 reload_settings = lambda {
-  RailsMultisite::ConnectionManagement.each_connection do
+  RailsMultisite::ConnectionManagement.safe_each_connection do
     begin
       SiteSetting.refresh!
 
@@ -13,10 +13,6 @@ reload_settings = lambda {
       end
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
-    rescue => e
-      STDERR.puts "URGENT: Failed to initialize site #{RailsMultisite::ConnectionManagement.current_db}:"\
-        "#{e.message}\n#{e.backtrace.join("\n")}"
-      # the show must go on, don't stop startup if multisite fails
     end
   end
 }

@@ -17,7 +17,6 @@
         padding: 0;
 
         h2.selected-name {
-          overflow: auto;
           color: $secondary;
           display: inline-block;
           box-sizing: border-box;
@@ -58,7 +57,7 @@
         display: flex;
 
         .period-title {
-          flex: 1;
+          flex: 1 0 0px;
         }
 
         .date-section {

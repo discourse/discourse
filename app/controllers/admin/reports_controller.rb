@@ -2,7 +2,11 @@ require_dependency 'report'
 
 class Admin::ReportsController < Admin::AdminController
   def index
-    reports_methods = Report.singleton_methods.grep(/^report_(?!about)/)
+    reports_methods = ['page_view_total_reqs'] +
+      ApplicationRequest.req_types.keys
+        .select { |r| r =~ /^page_view_/ && r !~ /mobile/ }
+        .map { |r| r + "_reqs" } +
+      Report.singleton_methods.grep(/^report_(?!about|storage_stats)/)
 
     reports = reports_methods.map do |name|
       type = name.to_s.gsub('report_', '')
@@ -39,7 +43,12 @@ class Admin::ReportsController < Admin::AdminController
             Report.cache(report, 35.minutes)
           end
 
-          reports << report if report
+          if report.blank?
+            report = Report._get(report_type, args)
+            report.error = :not_found
+          end
+
+          reports << report
         end
       end
 

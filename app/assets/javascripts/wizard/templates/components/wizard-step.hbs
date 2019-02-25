@@ -43,6 +43,12 @@
       </button>
     {{/if}}
 
+    {{#if showFinishButton}}
+      <button class='wizard-btn finish' {{action "exitEarly"}} disabled={{saving}} tabindex="10">
+        {{i18n "wizard.finish"}}
+      </button>
+    {{/if}}
+
     {{#if showDoneButton}}
       <button class='wizard-btn done' {{action "quit"}} disabled={{saving}} tabindex="10">
         {{i18n "wizard.done"}}

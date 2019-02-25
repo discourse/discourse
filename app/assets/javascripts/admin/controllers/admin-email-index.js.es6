@@ -5,7 +5,7 @@ export default Ember.Controller.extend({
 
     @property sendTestEmailDisabled
   **/
-  sendTestEmailDisabled: Em.computed.empty("testEmailAddress"),
+  sendTestEmailDisabled: Ember.computed.empty("testEmailAddress"),
 
   /**
     Clears the 'sentTestEmail' property on successful send.

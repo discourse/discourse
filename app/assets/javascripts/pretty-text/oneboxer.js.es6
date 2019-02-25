@@ -1,7 +1,15 @@
 let timeout;
 const loadingQueue = [];
-const localCache = {};
-const failedCache = {};
+let localCache = {};
+let failedCache = {};
+
+export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
+
+export function resetCache() {
+  loadingQueue.clear();
+  localCache = {};
+  failedCache = {};
+}
 
 function resolveSize(img) {
   $(img).addClass("size-resolved");
@@ -76,7 +84,7 @@ function loadNext(ajax) {
     .finally(() => {
       timeout = Ember.run.later(() => loadNext(ajax), timeoutMs);
       if (removeLoading) {
-        $elem.removeClass("loading-onebox");
+        $elem.removeClass(LOADING_ONEBOX_CSS_CLASS);
         $elem.data("onebox-loaded");
       }
     });
@@ -96,7 +104,7 @@ export function load({
 
   // If the onebox has loaded or is loading, return
   if ($elem.data("onebox-loaded")) return;
-  if ($elem.hasClass("loading-onebox")) return;
+  if ($elem.hasClass(LOADING_ONEBOX_CSS_CLASS)) return;
 
   const url = elem.href;
 
@@ -112,7 +120,7 @@ export function load({
   }
 
   // Add the loading CSS class
-  $elem.addClass("loading-onebox");
+  $elem.addClass(LOADING_ONEBOX_CSS_CLASS);
 
   // Add to the loading queue
   loadingQueue.push({ url, refresh, $elem, categoryId, topicId });

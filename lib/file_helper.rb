@@ -11,8 +11,8 @@ class FileHelper
     )
   end
 
-  def self.is_image?(filename)
-    filename =~ images_regexp
+  def self.is_supported_image?(filename)
+    filename =~ supported_images_regexp
   end
 
   class FakeIO
@@ -48,7 +48,7 @@ class FileHelper
             # attempt error API compatibility
             io = FakeIO.new
             io.status = [response.code, ""]
-            raise OpenURI::HTTPError.new("#{response.code} Error", io)
+            raise OpenURI::HTTPError.new("#{response.code} Error: #{response.body}", io)
           else
             log(:error, "FinalDestination did not work for: #{url}") if verbose
             throw :done
@@ -82,32 +82,50 @@ class FileHelper
     tmp
   end
 
-  def self.optimize_image!(filename)
-    ImageOptim.new(
-      # GLOBAL
-      timeout: 15,
-      skip_missing_workers: true,
-      # PNG
-      optipng: { level: 2, strip: SiteSetting.strip_image_metadata },
-      advpng: false,
-      pngcrush: false,
-      pngout: false,
-      pngquant: false,
-      # JPG
-      jpegoptim: { strip: SiteSetting.strip_image_metadata ? "all" : "none" },
-      jpegtran: false,
-      jpegrecompress: false,
+  def self.optimize_image!(filename, allow_pngquant: false)
+    image_optim(
+      allow_pngquant: allow_pngquant,
+      strip_image_metadata: SiteSetting.strip_image_metadata
     ).optimize_image!(filename)
   end
 
-  private
+  def self.image_optim(allow_pngquant: false, strip_image_metadata: true)
+    # memoization is critical, initializing an ImageOptim object is very expensive
+    # sometimes up to 200ms searching for binaries and looking at versions
+    memoize("image_optim", allow_pngquant, strip_image_metadata) do
+      pngquant_options = false
+      if allow_pngquant
+        pngquant_options = { allow_lossy: true }
+      end
 
-  def self.images
-    @@images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
+      ImageOptim.new(
+        # GLOBAL
+        timeout: 15,
+        skip_missing_workers: true,
+        # PNG
+        optipng: { level: 2, strip: strip_image_metadata },
+        advpng: false,
+        pngcrush: false,
+        pngout: false,
+        pngquant: pngquant_options,
+        # JPG
+        jpegoptim: { strip: strip_image_metadata ? "all" : "none" },
+        jpegtran: false,
+        jpegrecompress: false,
+      )
+    end
   end
 
-  def self.images_regexp
-    @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
+  def self.memoize(*args)
+    (@memoized ||= {})[args] ||= yield
+  end
+
+  def self.supported_images
+    @@supported_images ||= Set.new %w{jpg jpeg png gif svg ico}
+  end
+
+  def self.supported_images_regexp
+    @@supported_images_regexp ||= /\.(#{supported_images.to_a.join("|")})$/i
   end
 
 end

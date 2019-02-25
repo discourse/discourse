@@ -9,6 +9,8 @@ describe FinalDestination do
 
       force_get_hosts: ['https://force.get.com'],
 
+      preserve_fragment_url_hosts: ['https://eviltrout.com'],
+
       # avoid IP lookups in test
       lookup_ip: lambda do |host|
         case host
@@ -265,6 +267,18 @@ describe FinalDestination do
       expect(final.resolve.to_s).to eq("https://eviltrout.com")
       expect(final.status).to eq(:resolved)
       expect(final.cookie).to eq("bar=1; baz=2; foo=219ffwef9w0f")
+    end
+
+    it "persists fragment url" do
+      origin_url = "https://eviltrout.com/origin/lib/code/foobar.rb"
+      upstream_url = "https://eviltrout.com/upstream/lib/code/foobar.rb"
+
+      redirect_response(origin_url, upstream_url)
+      stub_request(:head, upstream_url).to_return(doc_response)
+
+      final = FinalDestination.new("#{origin_url}#L154-L205", opts)
+      expect(final.resolve.to_s).to eq("#{upstream_url}#L154-L205")
+      expect(final.status).to eq(:resolved)
     end
   end
 

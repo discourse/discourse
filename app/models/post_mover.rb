@@ -5,18 +5,24 @@ class PostMover
     @move_types ||= Enum.new(:new_topic, :existing_topic)
   end
 
-  def initialize(original_topic, user, post_ids)
+  def initialize(original_topic, user, post_ids, move_to_pm: false)
     @original_topic = original_topic
     @user = user
     @post_ids = post_ids
+    @move_to_pm = move_to_pm
   end
 
-  def to_topic(id)
+  def to_topic(id, participants: nil)
     @move_type = PostMover.move_types[:existing_topic]
 
+    topic = Topic.find_by_id(id)
+    raise Discourse::InvalidParameters unless topic.archetype == @original_topic.archetype
+
     Topic.transaction do
-      move_posts_to Topic.find_by_id(id)
+      move_posts_to topic
     end
+    add_allowed_users(participants) if participants.present? && @move_to_pm
+    topic
   end
 
   def to_new_topic(title, category_id = nil, tags = nil)
@@ -24,13 +30,15 @@ class PostMover
 
     post = Post.find_by(id: post_ids.first)
     raise Discourse::InvalidParameters unless post
+    archetype = @move_to_pm ? Archetype.private_message : Archetype.default
 
     Topic.transaction do
       new_topic = Topic.create!(
         user: post.user,
         title: title,
         category_id: category_id,
-        created_at: post.created_at
+        created_at: post.created_at,
+        archetype: archetype
       )
       DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
       move_posts_to new_topic
@@ -79,6 +87,9 @@ class PostMover
 
     posts.each do |post|
       post.is_first_post? ? create_first_post(post) : move(post)
+      if @move_to_pm && destination_topic.topic_allowed_users.where(user_id: post.user_id).blank?
+        destination_topic.topic_allowed_users.create!(user_id: post.user_id)
+      end
     end
 
     PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
@@ -189,6 +200,7 @@ class PostMover
       I18n.t(
         "move_posts.#{move_type_str}_moderator_post",
         count: posts.length,
+        entity: @move_to_pm ? "message" : "topic",
         topic_link: posts.first.is_first_post? ?
           "[#{destination_topic.title}](#{destination_topic.relative_url})" :
           "[#{destination_topic.title}](#{posts.first.url})"
@@ -233,5 +245,15 @@ class PostMover
       notification_level: TopicUser.notification_levels[:watching],
       notifications_reason_id: TopicUser.notification_reasons[:created_topic]
     )
+  end
+
+  def add_allowed_users(usernames)
+    return unless usernames.present?
+
+    names = usernames.split(',').flatten
+    User.where(username: names).find_each do |user|
+      destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
+    end
+    destination_topic.save!
   end
 end

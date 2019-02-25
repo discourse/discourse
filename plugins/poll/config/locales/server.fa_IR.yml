@@ -26,11 +26,6 @@ fa_IR:
     default_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای پارامترهای نامعتبری وجود دارد."
     named_poll_with_multiple_choices_has_invalid_parameters: "در نظرسنجی چند گزینه‌ای با نام <strong>%{name}</strong> پارامترهای نامعتبری وجود دارد."
     requires_at_least_1_valid_option: "باید حداقل یک گزینه معتبر انتخاب کنید."
-    default_cannot_be_made_public: "نظر سنجی با رای را نمی توان عمومی کرد"
-    edit_window_expired:
-      op_cannot_edit_options: "بعد از %{minutes} دقیقه اول نمی‌توانید گزینه‌های نظر‌سنجی را حذف یا اضافه کنید. برای ویرایش نظرسنجی با مدیر‌ها ارتباط برقرار کنید."
-      staff_cannot_add_or_remove_options: "بعد از %{minutes} دقیقه اول نمی‌توانید گزینه‌های نظر‌سنجی را حذف یا اضافه کنید. باید این موضوع را ببندید و یک موضوع جدید ایجاد کنید."
-    no_polls_associated_with_this_post: "هیچ نظرسنجی‌ای با این نوشته در تماس نیستن. "
     no_poll_with_this_name: "هیچ نظرسنجی اسم گزاری شده با اسم <strong>%{name}</strong> با این نوشته مرتبط نیست."
     post_is_deleted: "این کار را نمی‌توان روی یک نوشته حذف شده انجام داد."
     topic_must_be_open_to_vote: "موضوع باید برای رای گزاری باز باشد. "

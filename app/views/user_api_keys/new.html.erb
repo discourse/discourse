@@ -24,24 +24,12 @@
   <%= hidden_field_tag 'access', @access %>
   <%= hidden_field_tag 'nonce', @nonce %>
   <%= hidden_field_tag 'client_id', @client_id %>
-  <%= hidden_field_tag 'auth_redirect', @auth_redirect %>
+  <%= hidden_field_tag('auth_redirect', @auth_redirect) if @auth_redirect %>
   <%= hidden_field_tag 'push_url', @push_url %>
   <%= hidden_field_tag 'public_key', @public_key%>
   <%= hidden_field_tag 'scopes', @scopes%>
-  <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-danger', id: 'submit' %>
+  <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-danger' %>
 <% end %>
-<script>
-  window.__submitted = false;
-
-  // prevent double submission which would invalidate the nonce
-  document.getElementById('submit').addEventListener('click', function(e){
-    if (window.__submitted) {
-      e.preventDefault();
-    } else {
-      window.__submitted = true;
-    }
-  });
-</script>
 </div>
 <% end %>
 

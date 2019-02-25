@@ -53,6 +53,6 @@ module ImportScripts::PhpBB3
     end
   end
 
-  class UnsupportedVersionError < RuntimeError;
+  class UnsupportedVersionError < RuntimeError
   end
 end

@@ -10,8 +10,8 @@ export default Ember.Controller.extend({
   }.property("model.@each.id"),
 
   baseColors: function() {
-    var baseColorsHash = Em.Object.create({});
-    _.each(this.get("baseColorScheme.colors"), function(color) {
+    var baseColorsHash = Ember.Object.create({});
+    this.get("baseColorScheme.colors").forEach(color => {
       baseColorsHash.set(color.get("name"), color);
     });
     return baseColorsHash;
@@ -23,7 +23,7 @@ export default Ember.Controller.extend({
         "base_scheme_id",
         baseKey
       );
-      const newColorScheme = Em.copy(base, true);
+      const newColorScheme = Ember.copy(base, true);
       newColorScheme.set("name", I18n.t("admin.customize.colors.new_name"));
       newColorScheme.set("base_scheme_id", base.get("base_scheme_id"));
       newColorScheme.save().then(() => {

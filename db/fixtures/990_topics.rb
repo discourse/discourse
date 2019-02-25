@@ -26,11 +26,14 @@ unless Rails.env.test?
     end
   end
 
-  create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service",     company_domain: "company_domain",
-                                                                                                                    company_full_name: "company_full_name",
-                                                                                                                    company_name: "company_short_name")
+  create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service",
+                           company_name: SiteSetting.company_name.presence || "company_name",
+                           base_url: Discourse.base_url,
+                           contact_email: SiteSetting.contact_email.presence || "contact_email",
+                           governing_law: SiteSetting.governing_law.presence || "governing_law",
+                           city_for_disputes: SiteSetting.city_for_disputes.presence || "city_for_disputes")
 
-  create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body", nil, staff, "guidelines")
+  create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body", nil, staff, "guidelines", base_path: Discourse.base_path)
 
   create_static_page_topic('privacy_topic_id', 'privacy_topic.title', "privacy_topic.body", nil, staff, "privacy policy")
 end
@@ -38,15 +41,13 @@ end
 if seed_welcome_topics
   puts "Seeding welcome topics"
 
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: I18n.t('assets_topic_title'), skip_validations: true, category: staff ? staff.name : nil)
-
-  post = PostCreator.create(Discourse.system_user, raw: I18n.t('discourse_welcome_topic.body'), title: I18n.t('discourse_welcome_topic.title'), skip_validations: true)
+  post = PostCreator.create(Discourse.system_user, raw: I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path), title: I18n.t('discourse_welcome_topic.title'), skip_validations: true)
   post.topic.update_pinned(true, true)
   TopicCustomField.create(topic_id: post.topic.id, name: "is_welcome_topic", value: "true")
 
   lounge = Category.find_by(id: SiteSetting.lounge_category_id)
   if lounge
-    post = PostCreator.create(Discourse.system_user, raw: I18n.t('lounge_welcome.body'), title: I18n.t('lounge_welcome.title'), skip_validations: true, category: lounge.name)
+    post = PostCreator.create(Discourse.system_user, raw: I18n.t('lounge_welcome.body', base_path: Discourse.base_path), title: I18n.t('lounge_welcome.title'), skip_validations: true, category: lounge.name)
     post.topic.update_pinned(true)
   end
 

@@ -34,6 +34,7 @@ class FinalDestination
 
     @opts = opts || {}
     @force_get_hosts = @opts[:force_get_hosts] || []
+    @preserve_fragment_url_hosts = @opts[:preserve_fragment_url_hosts] || []
     @opts[:max_redirects] ||= 5
     @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
 
@@ -59,6 +60,7 @@ class FinalDestination
     @limited_ips = []
     @verbose = @opts[:verbose] || false
     @timeout = @opts[:timeout] || nil
+    @preserve_fragment_url = @preserve_fragment_url_hosts.any? { |host| hostname_matches?(host) }
   end
 
   def self.connection_timeout
@@ -210,6 +212,7 @@ class FinalDestination
 
     if location
       old_port = @uri.port
+      location = "#{location}##{@uri.fragment}" if @preserve_fragment_url && @uri.fragment.present?
       location = "#{@uri.scheme}://#{@uri.host}#{location}" if location[0] == "/"
       @uri = uri(location)
       @limit -= 1
@@ -263,11 +266,6 @@ class FinalDestination
     if SiteSetting.whitelist_internal_hosts.present?
       return true if SiteSetting.whitelist_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
     end
-
-    # Whitelisted hosts
-    return true if hostname_matches?(SiteSetting.s3_cdn_url) ||
-      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
-      hostname_matches?(Discourse.base_url_no_prefix)
 
     address_s = @opts[:lookup_ip].call(@uri.hostname)
     return false unless address_s

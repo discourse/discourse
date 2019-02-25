@@ -9,10 +9,6 @@ class TopicView
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
 
-  def self.slow_chunk_size
-    10
-  end
-
   def self.print_chunk_size
     1000
   end
@@ -57,7 +53,6 @@ class TopicView
 
     @chunk_size =
       case
-      when options[:slow_platform] then TopicView.slow_chunk_size
       when @print then TopicView.print_chunk_size
       else TopicView.chunk_size
       end
@@ -402,8 +397,16 @@ class TopicView
     @initial_load
   end
 
+  def pm_params
+    @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
+  end
+
   def suggested_topics
-    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
+    @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+  end
+
+  def related_messages
+    @related_messages ||= TopicQuery.new(@user).list_related_for(topic, pm_params: pm_params)
   end
 
   # This is pending a larger refactor, that allows custom orders
@@ -471,6 +474,12 @@ class TopicView
 
   def last_post_id
     @filtered_posts.order(sort_order: :desc).limit(1).pluck(:id).first
+  end
+
+  def current_post_number
+    if highest_post_number.present?
+      post_number > highest_post_number ? highest_post_number : post_number
+    end
   end
 
   protected

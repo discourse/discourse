@@ -82,7 +82,7 @@ export default {
               }
               oldNotifications.insertAt(
                 insertPosition,
-                Em.Object.create(lastNotification)
+                Ember.Object.create(lastNotification)
               );
             }
 
@@ -114,8 +114,8 @@ export default {
       const router = container.lookup("router:main");
 
       bus.subscribe("/categories", data => {
-        _.each(data.categories, c => site.updateCategory(c));
-        _.each(data.deleted_categories, id => site.removeCategory(id));
+        (data.categories || []).forEach(c => site.updateCategory(c));
+        (data.deleted_categories || []).forEach(id => site.removeCategory(id));
       });
 
       bus.subscribe("/client_settings", data =>

@@ -6,7 +6,7 @@ describe OptimizedImage do
 
   unless ENV["TRAVIS"]
     describe '.crop' do
-      it 'should work correctly' do
+      it 'should produce cropped images (requires ImageMagick 7)' do
         tmp_path = "/tmp/cropped.png"
 
         begin
@@ -17,13 +17,34 @@ describe OptimizedImage do
             5
           )
 
-          expect(File.read(tmp_path)).to eq(
-            File.read("#{Rails.root}/spec/fixtures/images/cropped.png")
-          )
+          # we don't want to deal with something new here every time image magick
+          # is upgraded or pngquant is upgraded, lets just test the basics ...
+          # cropped image should be less than 120 bytes
+
+          cropped_size = File.size(tmp_path)
+
+          expect(cropped_size).to be < 120
+          expect(cropped_size).to be > 50
+
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
       end
+    end
+
+    describe ".resize_instructions" do
+      let(:image) { "#{Rails.root}/spec/fixtures/images/logo.png" }
+
+      it "doesn't return any color options by default" do
+        instructions = described_class.resize_instructions(image, image, "50x50")
+        expect(instructions).to_not include('-colors')
+      end
+
+      it "supports an optional color option" do
+        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
+        expect(instructions).to include('-colors')
+      end
+
     end
 
     describe '.resize' do
@@ -37,6 +58,8 @@ describe OptimizedImage do
           # we use "filename" to get the correct extension here, it is more important
           # then any other param
 
+          orig_size = File.size(original_path)
+
           OptimizedImage.resize(
             original_path,
             original_path,
@@ -45,9 +68,10 @@ describe OptimizedImage do
             filename: "test.png"
           )
 
-          expect(File.read(original_path)).to eq(
-            File.read("#{Rails.root}/spec/fixtures/images/resized.png")
-          )
+          new_size = File.size(original_path)
+          expect(orig_size).to be > new_size
+          expect(new_size).not_to eq(0)
+
         ensure
           File.delete(original_path) if File.exists?(original_path)
         end
@@ -107,7 +131,7 @@ describe OptimizedImage do
     end
 
     describe '.downsize' do
-      it 'should work correctly' do
+      it 'should downsize logo (requires ImageMagick 7)' do
         tmp_path = "/tmp/downsized.png"
 
         begin
@@ -117,9 +141,10 @@ describe OptimizedImage do
             "100x100\>"
           )
 
-          expect(File.read(tmp_path)).to eq(
-            File.read("#{Rails.root}/spec/fixtures/images/downsized.png")
-          )
+          info = FastImage.new(tmp_path)
+          expect(info.size).to eq([100, 27])
+          expect(File.size(tmp_path)).to be < 2300
+
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
@@ -176,6 +201,46 @@ describe OptimizedImage do
 
   describe ".create_for" do
 
+    context "versioning" do
+      let(:filename) { 'logo.png' }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "is able to update optimized images on version change" do
+        upload = UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
+        optimized = OptimizedImage.create_for(upload, 10, 10)
+
+        expect(optimized.version).to eq(OptimizedImage::VERSION)
+
+        optimized_again = OptimizedImage.create_for(upload, 10, 10)
+        expect(optimized_again.id).to eq(optimized.id)
+
+        optimized.update_columns(version: nil)
+        old_id = optimized.id
+
+        optimized_new = OptimizedImage.create_for(upload, 10, 10)
+
+        expect(optimized_new.id).not_to eq(old_id)
+
+        # cleanup (which transaction rollback may miss)
+        optimized_new.destroy
+        upload.destroy
+      end
+    end
+
+    it "is able to 'optimize' an svg" do
+      # we don't really optimize anything, we simply copy
+      # but at least this confirms this actually works
+
+      SiteSetting.authorized_extensions = 'svg'
+      svg = file_from_fixtures('image.svg')
+      upload = UploadCreator.new(svg, 'image.svg').create_for(Discourse.system_user.id)
+      resized = upload.get_optimized_image(50, 50, {})
+
+      # we perform some basic svg mangling but expect the string Discourse to be there
+      expect(File.read(Discourse.store.path_for(resized))).to include("Discourse")
+      expect(File.read(Discourse.store.path_for(resized))).to eq(File.read(Discourse.store.path_for(upload)))
+    end
+
     context "when using an internal store" do
 
       let(:store) { FakeInternalStore.new }
@@ -213,6 +278,11 @@ describe OptimizedImage do
           expect(oi.width).to eq(100)
           expect(oi.height).to eq(200)
           expect(oi.url).to eq("/internally/stored/optimized/image.png")
+        end
+
+        it "is able to change the format" do
+          oi = OptimizedImage.create_for(upload, 100, 200, format: 'gif')
+          expect(oi.url).to eq("/internally/stored/optimized/image.gif")
         end
 
       end

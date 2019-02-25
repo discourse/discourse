@@ -1,10 +1,10 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
-import Tags from "select-kit/mixins/tags";
+import TagsMixin from "select-kit/mixins/tags";
 import renderTag from "discourse/lib/render-tag";
 import computed from "ember-addons/ember-computed-decorators";
 const { get, run, makeArray } = Ember;
 
-export default MultiSelectComponent.extend(Tags, {
+export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-chooser"],
   classNames: "tag-chooser",
   isAsync: true,
@@ -16,7 +16,7 @@ export default MultiSelectComponent.extend(Tags, {
   allowAny: Ember.computed.alias("allowCreate"),
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     if (this.get("allowCreate") !== false) {
       this.set("allowCreate", this.site.get("can_create_tag"));
@@ -27,6 +27,7 @@ export default MultiSelectComponent.extend(Tags, {
     }
 
     this.set("termMatchesForbidden", false);
+    this.set("termMatchErrorMessage", null);
 
     this.set("templateForRow", rowComponent => {
       const tag = rowComponent.get("computedContent");
@@ -117,6 +118,7 @@ export default MultiSelectComponent.extend(Tags, {
     let results = json.results;
 
     context.set("termMatchesForbidden", json.forbidden ? true : false);
+    context.set("termMatchErrorMessage", json.forbidden_message);
 
     if (context.get("blacklist")) {
       results = results.filter(result => {
@@ -131,12 +133,6 @@ export default MultiSelectComponent.extend(Tags, {
     results = results.map(result => {
       return { id: result.text, name: result.text, count: result.count };
     });
-
-    // if forbidden we probably have an existing tag which is not in the list of
-    // returned tags, so we manually add it at the top
-    if (json.forbidden) {
-      results.unshift({ id: json.forbidden, name: json.forbidden, count: 0 });
-    }
 
     return results;
   }

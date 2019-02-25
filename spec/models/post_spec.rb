@@ -940,6 +940,16 @@ describe Post do
   describe "cooking" do
     let(:post) { Fabricate.build(:post, post_args.merge(raw: "please read my blog http://blog.example.com")) }
 
+    it "should unconditionally follow links for staff" do
+
+      SiteSetting.tl3_links_no_follow = true
+      post.user.trust_level = 1
+      post.user.moderator = true
+      post.save
+
+      expect(post.cooked).not_to match(/nofollow/)
+    end
+
     it "should add nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
@@ -958,6 +968,46 @@ describe Post do
       post.user.trust_level = 3
       post.save
       expect(post.cooked).to match(/nofollow noopener/)
+    end
+
+    describe 'mentions' do
+      let(:group) do
+        Fabricate(:group,
+          mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
+        )
+      end
+
+      before do
+        SiteSetting.queue_jobs = false
+      end
+
+      describe 'when user can not mention a group' do
+        it "should not create the mention" do
+          post = Fabricate(:post, raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <span class="mention">@#{group.name}</span></p>|
+          )
+        end
+      end
+
+      describe 'when user can mention a group' do
+        before do
+          group.add(post.user)
+        end
+
+        it 'should create the mention' do
+          post.update!(raw: "hello @#{group.name}")
+          post.trigger_post_process
+          post.reload
+
+          expect(post.cooked).to eq(
+            %Q|<p>hello <a class="mention-group" href="/groups/#{group.name}">@#{group.name}</a></p>|
+          )
+        end
+      end
     end
   end
 
@@ -1102,6 +1152,27 @@ describe Post do
       Post.rebake_old(100)
       post.reload
       expect(post.baked_at).to eq(baked)
+    end
+
+    it "will rate limit globally" do
+
+      post1 = create_post
+      post2 = create_post
+      post3 = create_post
+
+      Post.where(id: [post1.id, post2.id, post3.id]).update_all(baked_version: -1)
+
+      global_setting :max_old_rebakes_per_15_minutes, 2
+
+      RateLimiter.clear_all_global!
+      RateLimiter.enable
+
+      Post.rebake_old(100)
+
+      expect(post3.reload.baked_version).not_to eq(-1)
+      expect(post2.reload.baked_version).not_to eq(-1)
+      expect(post1.reload.baked_version).to eq(-1)
+
     end
   end
 

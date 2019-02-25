@@ -1,4 +1,4 @@
-require 'rails_helper';
+require 'rails_helper'
 
 require 'guardian'
 require_dependency 'post_destroyer'
@@ -116,6 +116,11 @@ describe Guardian do
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
     end
 
+    it "does not allow flagging of hidden posts" do
+      post.hidden = true
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
+    end
+
     it "allows flagging of staff posts when allow_flagging_staff is true" do
       SiteSetting.allow_flagging_staff = true
       staff_post = Fabricate(:post, user: Fabricate(:moderator))
@@ -166,15 +171,13 @@ describe Guardian do
       SiteSetting.enable_personal_messages = false
       user.trust_level = TrustLevel[2]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
-    it "returns false for notify_user and notify_moderators if private messages are enabled but threshold not met" do
+    it "returns false for notify_user if private messages are enabled but threshold not met" do
       SiteSetting.enable_personal_messages = true
       SiteSetting.min_trust_to_send_messages = 2
       user.trust_level = TrustLevel[1]
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
-      expect(Guardian.new(user).post_can_act?(post, :notify_moderators)).to be_falsey
     end
 
     describe "trust levels" do
@@ -550,8 +553,8 @@ describe Guardian do
         expect(Guardian.new(user).can_invite_to?(private_topic)).to be_falsey
       end
 
-      it 'returns true for admin on private topic' do
-        expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
+      it 'returns false for admin on private topic' do
+        expect(Guardian.new(admin).can_invite_to?(private_topic)).to be(false)
       end
 
       it 'returns true for a group owner' do
@@ -561,6 +564,49 @@ describe Guardian do
       it 'returns true for normal user when inviting to topic and PM disabled' do
         SiteSetting.enable_personal_messages = false
         expect(Guardian.new(trust_level_2).can_invite_to?(topic)).to be_truthy
+      end
+
+      describe 'for a private category for automatic and non-automatic group' do
+        let(:automatic_group) { Fabricate(:group, automatic: true) }
+        let(:group) { Fabricate(:group) }
+
+        let(:category) do
+          Fabricate(:category, read_restricted: true).tap do |category|
+            category.groups << automatic_group
+            category.groups << group
+          end
+        end
+
+        let(:topic) { Fabricate(:topic, category: category) }
+
+        it 'should return true for an admin user' do
+          expect(Guardian.new(admin).can_invite_to?(topic)).to eq(true)
+        end
+
+        it 'should return true for a group owner' do
+          expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
+        end
+
+        it 'should return false for a normal user' do
+          expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
+        end
+      end
+
+      describe 'for a private category for automatic groups' do
+        let(:group) { Fabricate(:group, automatic: true) }
+
+        let(:category) do
+          Fabricate(:private_category, group: group, read_restricted: true)
+        end
+
+        let(:group_owner) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+        let(:topic) { Fabricate(:topic, category: category) }
+
+        it 'should return false for all type of users' do
+          expect(Guardian.new(admin).can_invite_to?(topic)).to eq(false)
+          expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(false)
+          expect(Guardian.new(user).can_invite_to?(topic)).to eq(false)
+        end
       end
     end
 
@@ -2576,6 +2622,24 @@ describe Guardian do
     end
   end
 
+  describe '#can_export_entity?' do
+    let(:user_guardian) { Guardian.new(user) }
+    let(:moderator_guardian) { Guardian.new(moderator) }
+    let(:admin_guardian) { Guardian.new(admin) }
+
+    it 'only allows admins to export user_list' do
+      expect(user_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('user_list')).to be_falsey
+      expect(admin_guardian.can_export_entity?('user_list')).to be_truthy
+    end
+
+    it 'allow moderators to export other admin entities' do
+      expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
+      expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
+      expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+  end
+
   describe "#allow_themes?" do
     let(:theme) { Fabricate(:theme) }
     let(:theme2) { Fabricate(:theme) }
@@ -2943,6 +3007,16 @@ describe Guardian do
             .to eq(false)
         end
       end
+    end
+  end
+
+  describe '#auth_token' do
+    it 'returns the correct auth token' do
+      token = UserAuthToken.generate!(user_id: user.id)
+      env = Rack::MockRequest.env_for("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token};")
+
+      guardian = Guardian.new(user, Rack::Request.new(env))
+      expect(guardian.auth_token).to eq(token.auth_token)
     end
   end
 end

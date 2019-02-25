@@ -38,4 +38,22 @@ describe UserSummary do
     expect(summary.top_categories.length).to eq(0)
   end
 
+  it "is robust enough to handle bad data" do
+    UserActionCreator.enable
+
+    liked_post = create_post
+    user = Fabricate(:user)
+    PostAction.act(user, liked_post, PostActionType.types[:like])
+
+    users = UserSummary.new(user, Guardian.new).most_liked_users
+
+    expect(users.map(&:id)).to eq([liked_post.user_id])
+
+    # really we should not be corrupting stuff like this
+    # but in production dbs this can happens sometimes I guess
+    liked_post.user.delete
+
+    users = UserSummary.new(user, Guardian.new).most_liked_users
+    expect(users).to eq([])
+  end
 end

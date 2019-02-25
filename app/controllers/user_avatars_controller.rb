@@ -35,7 +35,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
+    if SiteSetting.external_system_avatars_url !~ /^\/letter(_avatar)?_proxy/
       raise Discourse::NotFound
     end
 
@@ -43,17 +43,8 @@ class UserAvatarsController < ApplicationController
     params.require(:color)
     params.require(:version)
     params.require(:size)
-
     hijack do
-      identity = LetterAvatar::Identity.new
-      identity.letter = params[:letter].to_s[0].upcase
-      identity.color = params[:color].scan(/../).map(&:hex)
-      image = LetterAvatar.generate(params[:letter].to_s, params[:size].to_i, identity: identity)
-
-      response.headers["Last-Modified"] = File.ctime(image).httpdate
-      response.headers["Content-Length"] = File.size(image).to_s
-      immutable_for(1.year)
-      send_file image, disposition: nil
+      proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
     end
   end
 
@@ -99,7 +90,11 @@ class UserAvatarsController < ApplicationController
     upload_id, version = params[:version].split("_")
 
     version = (version || OptimizedImage::VERSION).to_i
-    return render_blank if version != OptimizedImage::VERSION
+
+    # old versions simply get new avatar
+    if version > OptimizedImage::VERSION
+      return render_blank
+    end
 
     upload_id = upload_id.to_i
     return render_blank unless upload_id > 0
@@ -184,6 +179,7 @@ class UserAvatarsController < ApplicationController
 
   def get_optimized_image(upload, size)
     return if !upload
+    return upload if upload.extension == "svg"
 
     upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
     # TODO decide if we want to detach here

@@ -13,8 +13,6 @@ zh_TW:
       total_votes:
         other: "總票數"
       average_rating: "平均評分：<strong>%{average}</strong>。"
-      public:
-        title: "投票是公開的。"
       multiple:
         help:
           at_least_min_options:

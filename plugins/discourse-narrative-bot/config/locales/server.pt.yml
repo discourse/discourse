@@ -7,6 +7,7 @@
 
 pt:
   site_settings:
+    discourse_narrative_bot_enabled: 'Activar o bot do Discourse (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Desativar a publicação de boas-vindas do Discourse Narrative Bot"
     discourse_narrative_bot_ignored_usernames: "Nomes de utilizador que o Discourse Narrative Bot deverá ignorar"
     discourse_narrative_bot_disable_public_replies: "Desativar as respostas públicas do Discourse Narrative Bot"
@@ -16,16 +17,24 @@ pt:
     certified:
       name: Certificado
       description: "Completou o nosso novo tutorial de utilizador"
+      long_description: |
+        Este crachá é atribuído após completar o tutorial de boas-vindas. Tomou a iniciativa de aprender o funcionamento básico da discussão. E já está certificado!
     licensed:
       name: Licenciado
       description: "Completou o nosso tutorial de utilizador avançado"
   discourse_narrative_bot:
+    bio: "Olá. Não sou humano. Sou um bot que pode ensiná-lo acerca deste sítio. Para interagir comigo, envie-me uma mensagem ou mencione-me  %{discobot_username} em qualquer lado."
+    dice:
+      not_enough_dice: |-
+        Só tenho %{num_of_dice} dado. [Vergonhoso] http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), bem sei!
     quote:
       '1':
+        quote: "Entre cada dificuldade há espaço para oportunidade."
         author: "Albert Einstein"
       '2':
         author: "Mahatma Gandhi"
       '3':
+        quote: "Não chore porque acabou, sorria porque aconteceu."
         author: "Dr. Seuss"
       '4':
         quote: "Se quer algo bem feito, faça--o você mesmo."
@@ -33,7 +42,10 @@ pt:
       '5':
         quote: "Acredite que pode e já está a meio caminho."
         author: "Theodore Roosevelt"
+      '6':
+        author: "A mãe de Forrest Gump"
       '7':
+        quote: "Isto é um pequeno passo para o homem, um gigantesco para a humanidade."
         author: "Neil Armstrong"
       '8':
         author: "Eleanor Roosevelt"
@@ -64,8 +76,6 @@ pt:
       help_trigger: 'exibir ajuda'
     new_user_narrative:
       reset_trigger: "novo utilizador"
-      hello:
-        title: ":robot: Saudações!"
       certificate:
         alt: 'Certificado de Realização'
     advanced_user_narrative:

@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   @observes("currentPath")
   currentPathChanged() {
     this.set("expanded", false);
-    Em.run.next(() => this._updateSelectedHtml());
+    Ember.run.next(() => this._updateSelectedHtml());
   },
 
   _updateSelectedHtml() {
@@ -38,7 +38,7 @@ export default Ember.Component.extend({
     toggleExpanded() {
       this.toggleProperty("expanded");
 
-      Em.run.next(() => {
+      Ember.run.next(() => {
         if (this.get("expanded")) {
           $(window)
             .off("click.mobile-nav")

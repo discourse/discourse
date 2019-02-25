@@ -12,7 +12,7 @@ class AdminConstraint
     provider.current_user &&
       provider.current_user.admin? &&
       custom_admin_check(request)
-  rescue Discourse::InvalidAccess
+  rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false
   end
 
