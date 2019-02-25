@@ -119,7 +119,6 @@ module Onebox
           usatoday.com
           viddler.com
           videojug.com
-          vimeo.com
           vine.co
           walmart.com
           washingtonpost.com
