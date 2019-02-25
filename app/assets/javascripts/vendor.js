@@ -9,7 +9,6 @@
 //= require Markdown.Converter.js
 //= require bootbox.js
 //= require bootstrap-modal.js
-//= require div_resizer
 //= require caret_position
 //= require favcount.js
 //= require jquery.ba-resize.js
