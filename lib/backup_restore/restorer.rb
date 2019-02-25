@@ -401,6 +401,10 @@ module BackupRestore
     def reload_site_settings
       log "Reloading site settings..."
       SiteSetting.refresh!
+
+      log "Disabling outgoing emails for non-stuff users..."
+      user = User.find_by_email(@user_info[:email]) || Discourse.system_user
+      SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
     end
 
     def clear_emoji_cache

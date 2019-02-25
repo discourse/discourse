@@ -114,7 +114,6 @@ class Admin::BackupsController < Admin::AdminController
       client_id: params.fetch(:client_id),
       publish_to_message_bus: true,
     }
-    SiteSetting.set_and_log(:disable_emails, 'yes', current_user)
     BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
     render_error("backup.operation_already_running")
