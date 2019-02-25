@@ -17,11 +17,11 @@ widgetTest("basics", {
   },
 
   test(assert) {
-    assert.ok(this.$(".title").length === 1);
+    assert.ok(find(".title").length === 1);
 
-    assert.ok(this.$("img#site-logo.logo-big").length === 1);
-    assert.equal(this.$("#site-logo").attr("src"), bigLogo);
-    assert.equal(this.$("#site-logo").attr("alt"), title);
+    assert.ok(find("img#site-logo.logo-big").length === 1);
+    assert.equal(find("#site-logo").attr("src"), bigLogo);
+    assert.equal(find("#site-logo").attr("alt"), title);
   }
 });
 
@@ -35,9 +35,9 @@ widgetTest("basics - minimized", {
   },
 
   test(assert) {
-    assert.ok(this.$("img.logo-small").length === 1);
-    assert.equal(this.$("img.logo-small").attr("src"), smallLogo);
-    assert.equal(this.$("img.logo-small").attr("alt"), title);
+    assert.ok(find("img.logo-small").length === 1);
+    assert.equal(find("img.logo-small").attr("src"), smallLogo);
+    assert.equal(find("img.logo-small").attr("alt"), title);
   }
 });
 
@@ -51,8 +51,8 @@ widgetTest("no logo", {
   },
 
   test(assert) {
-    assert.ok(this.$("h1#site-text-logo.text-logo").length === 1);
-    assert.equal(this.$("#site-text-logo").text(), title);
+    assert.ok(find("h1#site-text-logo.text-logo").length === 1);
+    assert.equal(find("#site-text-logo").text(), title);
   }
 });
 
@@ -66,7 +66,7 @@ widgetTest("no logo - minimized", {
   },
 
   test(assert) {
-    assert.ok(this.$(".d-icon-home").length === 1);
+    assert.ok(find(".d-icon-home").length === 1);
   }
 });
 
@@ -79,8 +79,8 @@ widgetTest("mobile logo", {
   },
 
   test(assert) {
-    assert.ok(this.$("img#site-logo.logo-big").length === 1);
-    assert.equal(this.$("#site-logo").attr("src"), mobileLogo);
+    assert.ok(find("img#site-logo.logo-big").length === 1);
+    assert.equal(find("#site-logo").attr("src"), mobileLogo);
   }
 });
 
@@ -92,8 +92,8 @@ widgetTest("mobile without logo", {
   },
 
   test(assert) {
-    assert.ok(this.$("img#site-logo.logo-big").length === 1);
-    assert.equal(this.$("#site-logo").attr("src"), bigLogo);
+    assert.ok(find("img#site-logo.logo-big").length === 1);
+    assert.equal(find("#site-logo").attr("src"), bigLogo);
   }
 });
 
@@ -108,9 +108,9 @@ widgetTest("basics, subfolder", {
   },
 
   test(assert) {
-    assert.ok(this.$("img#site-logo.logo-big").length === 1);
-    assert.equal(this.$("#site-logo").attr("src"), `/forum${bigLogo}`);
-    assert.equal(this.$("#site-logo").attr("alt"), title);
+    assert.ok(find("img#site-logo.logo-big").length === 1);
+    assert.equal(find("#site-logo").attr("src"), `/forum${bigLogo}`);
+    assert.equal(find("#site-logo").attr("alt"), title);
   }
 });
 
@@ -125,9 +125,9 @@ widgetTest("basics, subfolder - minimized", {
   },
 
   test(assert) {
-    assert.ok(this.$("img.logo-small").length === 1);
-    assert.equal(this.$("img.logo-small").attr("src"), `/forum${smallLogo}`);
-    assert.equal(this.$("img.logo-small").attr("alt"), title);
+    assert.ok(find("img.logo-small").length === 1);
+    assert.equal(find("img.logo-small").attr("src"), `/forum${smallLogo}`);
+    assert.equal(find("img.logo-small").attr("alt"), title);
   }
 });
 
@@ -141,7 +141,7 @@ widgetTest("mobile logo, subfolder", {
   },
 
   test(assert) {
-    assert.ok(this.$("img#site-logo.logo-big").length === 1);
-    assert.equal(this.$("#site-logo").attr("src"), `/forum${mobileLogo}`);
+    assert.ok(find("img#site-logo.logo-big").length === 1);
+    assert.equal(find("#site-logo").attr("src"), `/forum${mobileLogo}`);
   }
 });

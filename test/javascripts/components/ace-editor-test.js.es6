@@ -6,7 +6,7 @@ componentTest("css editor", {
   template: '{{ace-editor mode="css"}}',
   test(assert) {
     assert.expect(1);
-    assert.ok(this.$(".ace_editor").length, "it renders the ace editor");
+    assert.ok(find(".ace_editor").length, "it renders the ace editor");
   }
 });
 
@@ -14,7 +14,7 @@ componentTest("html editor", {
   template: '{{ace-editor mode="html" content="<b>wat</b>"}}',
   test(assert) {
     assert.expect(1);
-    assert.ok(this.$(".ace_editor").length, "it renders the ace editor");
+    assert.ok(find(".ace_editor").length, "it renders the ace editor");
   }
 });
 
@@ -22,7 +22,7 @@ componentTest("sql editor", {
   template: '{{ace-editor mode="sql" content="SELECT * FROM users"}}',
   test(assert) {
     assert.expect(1);
-    assert.ok(this.$(".ace_editor").length, "it renders the ace editor");
+    assert.ok(find(".ace_editor").length, "it renders the ace editor");
   }
 });
 
@@ -30,7 +30,7 @@ componentTest("disabled editor", {
   template:
     '{{ace-editor mode="sql" content="SELECT * FROM users" disabled=true}}',
   test(assert) {
-    const $ace = this.$(".ace_editor");
+    const $ace = find(".ace_editor");
     assert.expect(3);
     assert.ok($ace.length, "it renders the ace editor");
     assert.equal(

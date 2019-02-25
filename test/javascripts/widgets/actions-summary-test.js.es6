@@ -13,11 +13,11 @@ widgetTest("listing actions", {
     });
   },
   async test(assert) {
-    assert.equal(this.$(".post-actions .post-action").length, 2);
+    assert.equal(find(".post-actions .post-action").length, 2);
 
     await click(".post-action:eq(0) .action-link a");
     assert.equal(
-      this.$(".post-action:eq(0) img.avatar").length,
+      find(".post-action:eq(0) img.avatar").length,
       1,
       "clicking it shows the user"
     );
@@ -37,7 +37,7 @@ widgetTest("undo", {
     this.set("undoPostAction", () => (this.undid = true));
   },
   async test(assert) {
-    assert.equal(this.$(".post-actions .post-action").length, 1);
+    assert.equal(find(".post-actions .post-action").length, 1);
 
     await click(".action-link.undo");
     assert.ok(this.undid, "it triggered the action");
@@ -62,7 +62,7 @@ widgetTest("deferFlags", {
     this.on("deferPostActionFlags", () => (this.deferred = true));
   },
   async test(assert) {
-    assert.equal(this.$(".post-actions .post-action").length, 1);
+    assert.equal(find(".post-actions .post-action").length, 1);
 
     await click(".action-link.defer-flags");
     assert.ok(this.deferred, "it triggered the action");
@@ -80,11 +80,11 @@ widgetTest("post deleted", {
   },
   test(assert) {
     assert.ok(
-      this.$(".post-action .d-icon-far-trash-alt").length === 1,
+      find(".post-action .d-icon-far-trash-alt").length === 1,
       "it has the deleted icon"
     );
     assert.ok(
-      this.$(".avatar[title=eviltrout]").length === 1,
+      find(".avatar[title=eviltrout]").length === 1,
       "it has the deleted by avatar"
     );
   }
