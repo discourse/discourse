@@ -3,12 +3,11 @@ import showModal from "discourse/lib/show-modal";
 
 export default Discourse.Route.extend({
   model(params) {
-    const self = this;
-    Invite.findInvitedCount(self.modelFor("user")).then(function(result) {
-      self.set("invitesCount", result);
-    });
-    self.inviteFilter = params.filter;
-    return Invite.findInvitedBy(self.modelFor("user"), params.filter);
+    Invite.findInvitedCount(this.modelFor("user")).then(result =>
+      this.set("invitesCount", result)
+    );
+    this.inviteFilter = params.filter;
+    return Invite.findInvitedBy(this.modelFor("user"), params.filter);
   },
 
   afterModel(model) {
@@ -19,7 +18,7 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     controller.setProperties({
-      model: model,
+      model,
       user: this.controllerFor("user").get("model"),
       filter: this.inviteFilter,
       searchTerm: "",
