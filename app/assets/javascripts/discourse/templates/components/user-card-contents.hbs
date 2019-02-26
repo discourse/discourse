@@ -48,6 +48,15 @@
             icon="envelope"
             label="user.private_message"}}
         </li>
+        {{#if user.can_ignore_user}}
+          <li>
+            {{d-button
+              class="btn btn-danger"
+              action=(action "ignoreUser" user)
+              icon="eye-slash"
+              label="user.ignore"}}
+          </li>
+        {{/if}}
       {{/if}}
 
       {{#if showFilter}}

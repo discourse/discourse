@@ -49,6 +49,8 @@ class UserSerializer < BasicUserSerializer
              :can_edit_email,
              :can_edit_name,
              :stats,
+             :ignored,
+             :can_ignore_user,
              :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
@@ -272,6 +274,14 @@ class UserSerializer < BasicUserSerializer
 
   def stats
     UserAction.stats(object.id, scope)
+  end
+
+  def ignored
+    IgnoredUser.find_by(user_id: scope.user.try(:id), ignored_user_id: object.id).present?
+  end
+
+  def can_ignore_user
+    SiteSetting.ignore_user_enabled
   end
 
   # Needed because 'send_private_message_to_user' will always return false

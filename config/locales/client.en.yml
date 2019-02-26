@@ -636,6 +636,8 @@ en:
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
+      ignore: "Ignore"
+      follow: "Follow"
       activity_stream: "Activity"
       preferences: "Preferences"
       profile_hidden: "This user's public profile is hidden."

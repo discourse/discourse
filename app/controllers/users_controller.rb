@@ -995,6 +995,26 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def ignore
+    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+
+    ::IgnoredUser.find_or_create_by!(
+      user: current_user,
+      ignored_user: User.find_by(id: params[:ignored_user_id]))
+    render json: success_json
+  end
+
+  def follow
+    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+
+    ignored_user = ::IgnoredUser.find_by(
+      user: current_user,
+      ignored_user: User.find_by(id: params[:ignored_user_id]))
+    ignored_user.destroy if ignored_user.present?
+
+    render json: success_json
+  end
+
   def read_faq
     if user = current_user
       user.user_stat.read_faq = 1.second.ago
