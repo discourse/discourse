@@ -200,6 +200,11 @@ export default Ember.Component.extend(
         this._close();
       },
 
+      watchUser() {
+        this.get("user").watch();
+        this._close();
+      },
+
       showUser() {
         this.showUser(this.get("user"));
         this._close();

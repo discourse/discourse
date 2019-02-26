@@ -422,7 +422,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/ignore" => "users#ignore", constraints: { username: RouteFormat.username }
-    put "#{root_path}/:username/follow" => "users#follow", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/watch" => "users#watch", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }

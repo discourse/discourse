@@ -149,16 +149,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     ignoreUser() {
       const user = this.get("model");
-      user.ignore().then(() => {
-        user.set("ignored", true);
-      });
+      user.ignore().then(() => user.set("ignored", true));
     },
 
-    followUser() {
+    watchUser() {
       const user = this.get("model");
-      user.follow().then(() => {
-        user.set("ignored", false);
-      });
+      user.watch().then(() => user.set("ignored", false));
     }
   }
 });

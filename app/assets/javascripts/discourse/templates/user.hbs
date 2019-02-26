@@ -52,12 +52,12 @@
                 {{#if model.can_ignore_user}}
                   <li>
                   {{#if model.ignored}}
-                    {{d-button class="btn btn-default"
-                               action=(action "followUser")
+                    {{d-button class="btn-default"
+                               action=(action "watchUser")
                                icon="eye"
-                               label="user.follow"}}
+                               label="user.watch"}}
                   {{else}}
-                    {{d-button class="btn btn-danger"
+                    {{d-button class="btn-danger"
                                action=(action "ignoreUser")
                                icon="eye-slash"
                                label="user.ignore"}}

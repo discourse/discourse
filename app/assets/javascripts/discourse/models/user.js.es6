@@ -618,8 +618,8 @@ const User = RestModel.extend({
     });
   },
 
-  follow: function() {
-    return ajax(`${userPath(this.get("username"))}/follow.json`, {
+  watch: function() {
+    return ajax(`${userPath(this.get("username"))}/watch.json`, {
       type: "PUT",
       data: { ignored_user_id: this.get('id') }
     });

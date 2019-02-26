@@ -1004,7 +1004,7 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def follow
+  def watch
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
 
     ignored_user = ::IgnoredUser.find_by(
