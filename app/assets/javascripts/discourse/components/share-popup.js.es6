@@ -122,7 +122,7 @@ export default Ember.Component.extend({
         this.setProperties({ postNumber, date, postId });
 
         // use native webshare only when the user clicks on the "chain" icon
-        if (window.navigator.share && !$currentTarget.hasClass("post-date")) {
+        if (!$currentTarget.hasClass("post-date")) {
           nativeShare({ url }).then(null, () =>
             this._showUrl($currentTarget, url)
           );
