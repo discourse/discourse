@@ -109,7 +109,7 @@ export default Discourse.Route.extend({
       params,
       {}
     ).then(list => {
-      if (list.topic_list.tags) {
+      if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         tag.set("id", list.topic_list.tags[0].name); // Update name of tag (case might be different)
       }
       controller.setProperties({
