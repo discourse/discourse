@@ -289,7 +289,7 @@ class TopicsController < ApplicationController
         return render_json_error(I18n.t('category.errors.not_found'))
       end
 
-      if category && topic_tags = params[:tags] || topic.tags.pluck(:name)
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
         allowed_tags = category.tags.pluck(:name)
 
         if !(topic_tags.blank? || allowed_tags.blank?)
