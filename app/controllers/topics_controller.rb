@@ -292,7 +292,7 @@ class TopicsController < ApplicationController
       if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
         allowed_tags = category.tags.pluck(:name)
 
-        if !(topic_tags.blank? || allowed_tags.blank?)
+        if topic_tags.present? && allowed_tags.present?
           invalid_tags = topic_tags - allowed_tags
 
           if !invalid_tags.empty?
