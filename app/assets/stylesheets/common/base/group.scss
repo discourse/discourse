@@ -138,6 +138,9 @@ table.group-members {
   tr {
     .user-info {
       display: block;
+      .avatar-flair {
+        color: $primary;
+      }
     }
 
     td:first-child {
