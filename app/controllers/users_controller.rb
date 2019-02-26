@@ -1009,7 +1009,7 @@ class UsersController < ApplicationController
 
     ignored_user = ::IgnoredUser.find_by(
       user: current_user,
-      ignored_user: User.find_by(id: params[:ignored_user_id]))
+      ignored_user: User.find_by(id: params[:watched_user_id]))
     ignored_user.destroy if ignored_user.present?
 
     render json: success_json

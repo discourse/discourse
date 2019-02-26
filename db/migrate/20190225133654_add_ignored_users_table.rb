@@ -1,6 +1,6 @@
 class AddIgnoredUsersTable < ActiveRecord::Migration[5.2]
   def change
-    create_table :ignored_users, force: true do |t|
+    create_table :ignored_users do |t|
       t.integer :user_id, null: false
       t.integer :ignored_user_id, null: false
       t.timestamps null: false
