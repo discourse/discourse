@@ -22,22 +22,23 @@ class ThemeField < ActiveRecord::Base
       .order("theme_sort_column")
   }
 
-  scope :find_locale_fields, ->(theme_ids, locale_codes) {
-    return none unless theme_ids.present? && locale_codes.present?
+  scope :filter_locale_fields, ->(locale_codes) {
+    return none unless locale_codes.present?
 
-    find_by_theme_ids(theme_ids)
-      .where(target_id: Theme.targets[:translations], name: locale_codes)
+    where(target_id: Theme.targets[:translations], name: locale_codes)
       .joins(self.sanitize_sql_array([
-        "JOIN (
-          SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
-        ) as Y ON Y.locale_code = theme_fields.name",
-        *locale_codes.map.with_index { |code, index| [code, index] }
-      ]))
-      .reorder("X.theme_sort_column", "Y.locale_sort_column")
+      "JOIN (
+        SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
+      ) as Y ON Y.locale_code = theme_fields.name",
+      *locale_codes.map.with_index { |code, index| [code, index] }
+    ]))
+      .order("Y.locale_sort_column")
   }
 
   scope :find_first_locale_fields, ->(theme_ids, locale_codes) {
-    find_locale_fields(theme_ids, locale_codes)
+    find_by_theme_ids(theme_ids)
+      .filter_locale_fields(locale_codes)
+      .reorder("X.theme_sort_column", "Y.locale_sort_column")
       .select("DISTINCT ON (X.theme_sort_column) *")
   }
 
@@ -128,8 +129,8 @@ class ThemeField < ActiveRecord::Base
     ThemeTranslationParser.new(self, internal: internal).load
   end
 
-  def translation_data(with_overrides: true, internal: false)
-    fallback_fields = theme.theme_fields.find_locale_fields([theme.id], I18n.fallbacks[name])
+  def translation_data(with_overrides: true, internal: false, fallback_fields: nil)
+    fallback_fields ||= theme.theme_fields.filter_locale_fields(I18n.fallbacks[name])
 
     fallback_data = fallback_fields.each_with_index.map do |field, index|
       begin

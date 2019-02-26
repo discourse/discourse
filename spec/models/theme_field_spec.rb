@@ -212,9 +212,10 @@ HTML
     let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en", value: "") }
 
     describe "scopes" do
-      it "find_locale_fields returns results in the correct order" do
-        expect(ThemeField.find_locale_fields(
-          [theme3.id, theme.id, theme2.id], ["en", "fr"]
+      it "filter_locale_fields returns results in the correct order" do
+        expect(ThemeField.find_by_theme_ids([theme3.id, theme.id, theme2.id])
+          .filter_locale_fields(
+           ["en", "fr"]
         )).to eq([en3, en1, fr1, en2, fr2])
       end
 
