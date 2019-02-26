@@ -1000,18 +1000,14 @@ class UsersController < ApplicationController
 
     ::IgnoredUser.find_or_create_by!(
       user: current_user,
-      ignored_user: User.find_by(id: params[:ignored_user_id]))
+      ignored_user_id: params[:ignored_user_id])
     render json: success_json
   end
 
   def watch
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
 
-    ignored_user = ::IgnoredUser.find_by(
-      user: current_user,
-      ignored_user: User.find_by(id: params[:watched_user_id]))
-    ignored_user.destroy if ignored_user.present?
-
+    IgnoredUser.where(user: current_user, ignored_user_id: params[:watched_user_id]).delete_all
     render json: success_json
   end
 

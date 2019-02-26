@@ -605,7 +605,7 @@ class TopicView
     if SiteSetting.ignore_user_enabled
       if IgnoredUser.where(user_id: @user.id).present?
         @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?",
-                                                    IgnoredUser.where(user_id: @user.id).map(&:ignored_user_id),
+                                                    IgnoredUser.where(user_id: @user.id).select(:ignored_user_id),
                                                     first_post_id)
       end
     end

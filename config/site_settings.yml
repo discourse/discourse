@@ -531,7 +531,7 @@ users:
   log_personal_messages_views: false
   ignore_user_enabled:
     hidden: true
-    default: true
+    default: false
     client: true
 
 groups:
