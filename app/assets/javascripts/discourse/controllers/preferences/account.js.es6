@@ -92,9 +92,9 @@ export default Ember.Controller.extend(
       return userId !== this.get("currentUser.id");
     },
 
-    @computed("model.second_factor_enabled")
-    canUpdateAssociatedAccounts(secondFactorEnabled) {
-      if (secondFactorEnabled) {
+    @computed("model.second_factor_enabled", "CanCheckEmails")
+    canUpdateAssociatedAccounts(secondFactorEnabled, canCheckEmails) {
+      if (secondFactorEnabled || !canCheckEmails) {
         return false;
       }
 
@@ -106,8 +106,13 @@ export default Ember.Controller.extend(
 
     @computed("showAllAuthTokens", "model.user_auth_tokens")
     authTokens(showAllAuthTokens, tokens) {
-      tokens.sort((a, b) =>
-        a.is_active ? -1 : b.is_active ? 1 : b.seen_at.localeCompare(a.seen_at)
+      tokens.sort(
+        (a, b) =>
+          a.is_active
+            ? -1
+            : b.is_active
+              ? 1
+              : b.seen_at.localeCompare(a.seen_at)
       );
 
       return showAllAuthTokens

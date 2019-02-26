@@ -17,5 +17,9 @@ QUnit.test("updating of associated accounts", function(assert) {
 
   controller.set("model.second_factor_enabled", false);
 
+  assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
+
+  controller.set("CanCheckEmails", true);
+
   assert.equal(controller.get("canUpdateAssociatedAccounts"), true);
 });
