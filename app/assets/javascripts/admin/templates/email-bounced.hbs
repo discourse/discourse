@@ -31,7 +31,9 @@
         <td><a {{action "showIncomingEmail" l.id}}>{{l.email_type}}</a></td>
       </tr>
     {{else}}
-      <tr><td colspan="4">{{i18n 'admin.email.logs.none'}}</td></tr>
+      {{#unless loading}}
+        <tr><td colspan="4">{{i18n 'admin.email.logs.none'}}</td></tr>
+      {{/unless}}
     {{/each}}
 
   </table>
