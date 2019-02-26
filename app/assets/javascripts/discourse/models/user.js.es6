@@ -621,7 +621,7 @@ const User = RestModel.extend({
   watch: function() {
     return ajax(`${userPath(this.get("username"))}/watch.json`, {
       type: "PUT",
-      data: { ignored_user_id: this.get('id') }
+      data: { watched_user_id: this.get('id') }
     });
   },
 
