@@ -588,6 +588,7 @@ en:
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
       permission_conflict: "Subcategory permissions cannot be less restrictive than parent's."
+      disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."

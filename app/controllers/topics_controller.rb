@@ -288,6 +288,18 @@ class TopicsController < ApplicationController
       else
         return render_json_error(I18n.t('category.errors.not_found'))
       end
+
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
+        allowed_tags = category.tags.pluck(:name)
+
+        if topic_tags.present? && allowed_tags.present?
+          invalid_tags = topic_tags - allowed_tags
+
+          if !invalid_tags.empty?
+            return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+          end
+        end
+      end
     end
 
     changes = {}
