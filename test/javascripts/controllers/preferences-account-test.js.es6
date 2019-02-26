@@ -19,7 +19,7 @@ QUnit.test("updating of associated accounts", function(assert) {
 
   assert.equal(controller.get("canUpdateAssociatedAccounts"), false);
 
-  controller.set("CanCheckEmails", true);
+  controller.set("canCheckEmails", true);
 
   assert.equal(controller.get("canUpdateAssociatedAccounts"), true);
 });
