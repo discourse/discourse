@@ -369,8 +369,7 @@ const Composer = RestModel.extend({
     return (
       canCategorize &&
       !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics &&
-      !this.user.get("admin")
+      !this.siteSettings.allow_uncategorized_topics
     );
   },
 
