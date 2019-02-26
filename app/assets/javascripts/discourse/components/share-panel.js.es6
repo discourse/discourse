@@ -1,15 +1,12 @@
 import { escapeExpression } from "discourse/lib/utilities";
-import { longDateNoYear } from "discourse/lib/formatter";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import Sharing from "discourse/lib/sharing";
 
 export default Ember.Component.extend({
   tagName: null,
 
-  date: Ember.computed.alias("panel.model.date"),
   type: Ember.computed.alias("panel.model.type"),
-  postNumber: Ember.computed.alias("panel.model.postNumber"),
-  postId: Ember.computed.alias("panel.model.postId"),
+
   topic: Ember.computed.alias("panel.model.topic"),
 
   @computed
@@ -17,21 +14,9 @@ export default Ember.Component.extend({
     return Sharing.activeSources(this.siteSettings.share_links);
   },
 
-  @computed("date")
-  postDate(date) {
-    return date ? longDateNoYear(new Date(date)) : null;
-  },
-
-  @computed("type", "postNumber", "postDate", "topic.title")
-  shareTitle(type, postNumber, postDate, topicTitle) {
+  @computed("type", "topic.title")
+  shareTitle(type, topicTitle) {
     topicTitle = escapeExpression(topicTitle);
-
-    if (type === "topic") {
-      return I18n.t("share.topic_html", { topicTitle });
-    }
-    if (postNumber) {
-      return I18n.t("share.post_html", { postNumber, postDate });
-    }
     return I18n.t("share.topic_html", { topicTitle });
   },
 
@@ -81,27 +66,10 @@ export default Ember.Component.extend({
 
   actions: {
     share(source) {
-      const url = source.generateUrl(
-        this.get("shareUrl"),
-        this.get("topic.title")
-      );
-      const options = {
-        menubar: "no",
-        toolbar: "no",
-        resizable: "yes",
-        scrollbars: "yes",
-        width: 600,
-        height: source.popupHeight || 315
-      };
-      const stringOptions = Object.keys(options)
-        .map(k => `${k}=${options[k]}`)
-        .join(",");
-
-      if (source.shouldOpenInPopup) {
-        window.open(url, "", stringOptions);
-      } else {
-        window.open(url, "_blank");
-      }
+      Sharing.shareSource(source, {
+        url: this.get("shareUrl"),
+        title: this.get("topic.title")
+      });
     }
   }
 });
