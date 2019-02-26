@@ -300,6 +300,14 @@ QUnit.test("recently connected devices", async assert => {
   await visit("/u/eviltrout/preferences");
 
   assert.equal(
+    find(".auth-tokens > .auth-token:first .auth-token-device")
+      .text()
+      .trim(),
+    "Linux Computer",
+    "it should display active token first"
+  );
+
+  assert.equal(
     find(".pref-auth-tokens > a:first")
       .text()
       .trim(),
