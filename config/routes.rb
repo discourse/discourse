@@ -12,6 +12,20 @@ BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_
 Discourse::Application.routes.draw do
   relative_url_root = (defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root) ? Rails.configuration.relative_url_root + '/' : '/'
 
+
+  # damingo (Github ID), 2019-02-26
+  mount AnnotatorStore::Engine, at: '/annotator_store', constraints: StaffConstraint.new
+  namespace :administration, constraints: StaffConstraint.new do
+    namespace :annotator_store, path: 'annotator' do
+      resources :tags, path: 'codes'
+      resources :collections
+      resources :annotations, only: [:index, :show, :edit, :update]
+      resources :users, only: [:index], constraints: { format: 'json' }
+    end
+    root to: 'annotator_store/tags#index'
+  end
+
+
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 

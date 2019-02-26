@@ -144,6 +144,21 @@ group :development do
   gem 'binding_of_caller'
   gem 'annotate'
   gem 'foreman', require: false
+
+
+  # https://github.com/capistrano/capistrano
+  gem 'capistrano', '~> 3.8', require: false
+  # https://github.com/capistrano/rails
+  gem 'capistrano-rails', '~> 1.3', require: false
+  # https://github.com/capistrano/chruby
+  gem 'capistrano-chruby', require: false
+  # https://github.com/seuros/capistrano-puma
+  gem 'capistrano3-puma', git: 'https://github.com/seuros/capistrano-puma.git'
+  # https://github.com/seuros/capistrano-sidekiq
+  gem 'capistrano-sidekiq', require: false
+  # https://github.com/capistrano/bundler
+  gem 'capistrano-bundler', '~> 1.2'
+
 end
 
 # this is an optional gem, it provides a high performance replacement
@@ -202,3 +217,13 @@ end
 gem 'webpush', require: false
 gem 'colored2', require: false
 gem 'maxminddb'
+
+
+
+# damingo (Github ID), 2017-08-22, #annotator
+# gem 'annotator_store', git: 'https://github.com/edgeryders/annotator_store-gem'
+gem 'annotator_store', path: 'vendor/gems/annotator_store'
+# https://github.com/thoughtbot/administrate
+gem 'administrate'
+gem 'bcrypt', '3.1.3'
+gem 'unix-crypt', '1.3.0'   #, :require_name => 'unix_crypt'
