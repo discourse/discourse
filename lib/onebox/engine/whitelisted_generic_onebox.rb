@@ -60,7 +60,6 @@ module Onebox
           forbes.com
           foxnews.com
           funnyordie.com
-          gfycat.com
           gifs.com
           groupon.com
           howtogeek.com
