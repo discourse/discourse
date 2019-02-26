@@ -23,6 +23,7 @@ class Theme < ActiveRecord::Base
   belongs_to :remote_theme, autosave: true
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
+  has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -357,7 +358,7 @@ class Theme < ActiveRecord::Base
   def translations(internal: false)
     fallbacks = I18n.fallbacks[I18n.locale]
     begin
-      data = theme_fields.find_first_locale_fields([id], fallbacks).first&.translation_data(with_overrides: false, internal: internal)
+      data = locale_fields.first&.translation_data(with_overrides: false, internal: internal, fallback_fields: locale_fields)
       return {} if data.nil?
       best_translations = {}
       fallbacks.reverse.each do |locale|
