@@ -1,6 +1,6 @@
 moduleFor("controller:preferences/account");
 
-QUnit.test("updating of associated accounts", function(assert) {
+QUnit.skip("updating of associated accounts", function(assert) {
   const controller = this.subject({
     siteSettings: {
       enable_google_oauth2_logins: true
