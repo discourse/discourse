@@ -92,7 +92,7 @@ export default Ember.Controller.extend(
       return userId !== this.get("currentUser.id");
     },
 
-    @computed("model.second_factor_enabled", "CanCheckEmails")
+    @computed("model.second_factor_enabled", "canCheckEmails")
     canUpdateAssociatedAccounts(secondFactorEnabled, canCheckEmails) {
       if (secondFactorEnabled || !canCheckEmails) {
         return false;
