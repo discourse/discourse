@@ -1011,6 +1011,45 @@ RSpec.describe TopicsController do
           end
         end
 
+        context 'updating to a category with restricted tags' do
+          let!(:category) { Fabricate(:category) }
+          let!(:restricted_category) { Fabricate(:category) }
+          let!(:tag1) { Fabricate(:tag, name: 'tag1') }
+          let!(:tag2) { Fabricate(:tag, name: 'tag2') }
+
+          before do
+            SiteSetting.tagging_enabled = true
+            topic.update!(tags: [tag1])
+          end
+
+          it 'can change to a category disallowing this topic current tags' do
+            restricted_category.allowed_tags = [tag2.name]
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: restricted_category.id }
+
+            result = ::JSON.parse(response.body)
+
+            expect(response.status).to eq(422)
+            expect(result['errors']).to be_present
+            expect(topic.reload.category_id).not_to eq(restricted_category.id)
+          end
+
+          it 'can change to a category allowing this topic current tags' do
+            restricted_category.allowed_tags = [tag1.name]
+            restricted_category.reload
+
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: restricted_category.id }
+
+            expect(response.status).to eq(200)
+          end
+
+          it 'can change to a category allowing any tag' do
+            put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
+
+            expect(response.status).to eq(200)
+          end
+        end
+
         context "allow_uncategorized_topics is false" do
           before do
             SiteSetting.allow_uncategorized_topics = false
