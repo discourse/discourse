@@ -1932,7 +1932,7 @@ en:
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     max_api_keys_per_user: "Maximum number of user API keys per user"
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
-    allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
+    allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
 
