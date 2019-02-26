@@ -295,8 +295,8 @@ export default Ember.Component.extend({
       this.appEvents.on("composer:insert-text", (text, options) =>
         this._addText(this._getSelected(), text, options)
       );
-      this.appEvents.on("composer:replace-text", (oldVal, newVal) =>
-        this._replaceText(oldVal, newVal)
+      this.appEvents.on("composer:replace-text", (oldVal, newVal, opts) =>
+        this._replaceText(oldVal, newVal, opts)
       );
     }
     this._mouseTrap = mouseTrap;
@@ -659,7 +659,7 @@ export default Ember.Component.extend({
     }
   },
 
-  _replaceText(oldVal, newVal) {
+  _replaceText(oldVal, newVal, opts) {
     const val = this.get("value");
     const needleStart = val.indexOf(oldVal);
 
@@ -677,8 +677,17 @@ export default Ember.Component.extend({
       replacement: { start: needleStart, end: needleStart + newVal.length }
     });
 
-    // Replace value (side effect: cursor at the end).
-    this.set("value", val.replace(oldVal, newVal));
+    if (opts && opts.index && opts.regex) {
+      let i = -1;
+      const newValue = val.replace(opts.regex, match => {
+        i++;
+        return i === opts.index ? newVal : match;
+      });
+      this.set("value", newValue);
+    } else {
+      // Replace value (side effect: cursor at the end).
+      this.set("value", val.replace(oldVal, newVal));
+    }
 
     if ($("textarea.d-editor-input").is(":focus")) {
       // Restore cursor.
