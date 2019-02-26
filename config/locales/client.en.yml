@@ -136,7 +136,7 @@ en:
       placeholder: date
     share:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
-      post_html: '<span class="post-number">Post #%{postNumber}</span>, <span class="post-date">%{postDate}</span>'
+      post: "post #%{postNumber}"
       close: "close"
       twitter: "Share this link on Twitter"
       facebook: "Share this link on Facebook"
