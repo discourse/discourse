@@ -2069,7 +2069,7 @@ describe UsersController do
       describe 'when SiteSetting.ignore_user_enabled is false' do
         it 'raises an error' do
           SiteSetting.ignore_user_enabled = false
-          delete "/u/#{user.username}/watch.json", params: { watched_user_id: another_user.id }
+          delete "/u/#{user.username}/ignore.json", params: { watched_user_id: another_user.id }
           expect(response.status).to eq(404)
         end
       end
@@ -2081,7 +2081,7 @@ describe UsersController do
 
         it 'destroys IgnoredUser record' do
           SiteSetting.ignore_user_enabled = true
-          delete "/u/#{user.username}/watch.json", params: { watched_user_id: another_user.id }
+          delete "/u/#{user.username}/ignore.json", params: { watched_user_id: another_user.id }
           expect(response.status).to eq(200)
           expect(IgnoredUser.find_by(user_id: user.id,
                                      ignored_user_id: another_user.id)).to be_blank

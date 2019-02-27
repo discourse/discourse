@@ -532,7 +532,6 @@ users:
   ignore_user_enabled:
     hidden: true
     default: false
-    client: true
 
 groups:
   enable_group_directory:

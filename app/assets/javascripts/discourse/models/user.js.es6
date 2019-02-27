@@ -619,7 +619,7 @@ const User = RestModel.extend({
   },
 
   watch: function() {
-    return ajax(`${userPath(this.get("username"))}/watch.json`, {
+    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
       type: "DELETE",
       data: { watched_user_id: this.get("id") }
     });
