@@ -529,6 +529,9 @@ users:
     default: false
     client: true
   log_personal_messages_views: false
+  ignore_user_enabled:
+    hidden: true
+    default: false
 
 groups:
   enable_group_directory:
