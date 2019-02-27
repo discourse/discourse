@@ -277,7 +277,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def ignored
-    IgnoredUser.find_by(user_id: scope.user.try(:id), ignored_user_id: object.id).present?
+    IgnoredUser.find_by(user_id: scope.user&.id, ignored_user_id: object.id).present?
   end
 
   def can_ignore_user
