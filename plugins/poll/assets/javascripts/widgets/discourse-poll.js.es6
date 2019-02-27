@@ -120,6 +120,7 @@ createWidget("discourse-poll-voters", {
           : result.voters[attrs.optionId];
 
       const existingVoters = new Set(state.voters.map(voter => voter.username));
+
       newVoters.forEach(voter => {
         if (!existingVoters.has(voter.username)) {
           existingVoters.add(voter.username);
@@ -202,8 +203,8 @@ createWidget("discourse-poll-standard-results", {
       });
 
       if (isPublic && !state.loaded) {
+        state.voters = poll.get("preloaded_voters");
         state.loaded = true;
-        this.fetchVoters();
       }
 
       const percentages =
@@ -290,8 +291,8 @@ createWidget("discourse-poll-number-results", {
 
     if (poll.get("public")) {
       if (!state.loaded) {
+        state.voters = poll.get("preloaded_voters");
         state.loaded = true;
-        this.fetchVoters();
       }
 
       contents.push(
