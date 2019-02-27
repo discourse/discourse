@@ -80,7 +80,7 @@ class Toolbar {
       icon: "italic",
       label: getButtonLabel("composer.italic_label", "I"),
       shortcut: "I",
-      perform: e => e.applySurround("_", "_", "italic_text")
+      perform: e => e.applySurround("*", "*", "italic_text")
     });
 
     if (opts.showLink) {
