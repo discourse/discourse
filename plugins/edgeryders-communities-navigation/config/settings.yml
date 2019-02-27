@@ -1,0 +1,4 @@
+plugins:
+  edgeryders_communities_navigation_enabled:
+    default: true
+    client: true

@@ -1,0 +1,60 @@
+<nav id="bar">
+  <div class="wrap">
+    <div class="navbar-right">
+      {{plugin-outlet name="navbar-right"}}
+
+      <ul class="navbar-menu forum-selector-menu">
+        <li class="menuitem-clickable" tabindex="0">
+          <a><i class="fa fa-comments-o "></i> Communities</a>
+          <ul class="menu-level2">
+
+            <li>
+              <a class="community-link edgeryders-community" href="https://edgeryders.eu">
+                Edgeryders
+                <span class="site-desc">For all flavours of social innovators, changemakers and entrepreneurs. Quite large.</span>
+              </a>
+            </li>
+
+            <li>
+              <a class="community-link biofabforum-community" href="https://biofabforum.org">
+                Biofabforum
+                <span class="site-desc">
+                  For knowledge exchange and experimentation around the manufacturing with biological materials.
+                </span>
+              </a>
+            </li>
+
+            <li>
+              <a class="community-link timisoara-community" href="https://team2021.ro">
+                TeaM 2021
+                <span class="site-desc">For engaged citizens of Timisoara, the European Capital of Culture 2021</span>
+              </a>
+            </li>
+
+            <li>
+              <a class="community-link blivande-community" href="https://forum.blivande.com">
+                Blivande
+                <span class="site-desc">
+                  For those living, working and co-creating in Stockholm, Sweden.
+                </span>
+              </a>
+            </li>
+
+            <li>
+              <a class="community-link trustinplay-community" href="https://trustinplay.edgeryders.eu">
+                Trust in Play
+                <span class="site-desc">For urban game designers</span>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="navbar-left">
+      {{plugin-outlet name="navbar-left"}}
+    </div>
+
+  </div>
+</nav>

@@ -124,3 +124,13 @@ vendor/bundle/*
 /package-lock.json
 
 /vendor/data/GeoLite2-City.mmdb
+
+
+
+!/plugins/discourse-migratepassword
+!/plugins/discourse-edgeryders
+!/plugins/discourse-text-direction
+!/plugins/discourse-topic-previews
+!/plugins/edgeryders-communities-navigation
+!/plugins/edgeryders-multisite
+!/plugins/edgeryders-signup-notification

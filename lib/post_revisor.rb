@@ -544,10 +544,13 @@ class PostRevisor
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    doc = Nokogiri::HTML.fragment(@post.cooked)
-    doc.css("img").remove
+    # damingo (Github ID), 2019-01-02
+    # doc = Nokogiri::HTML.fragment(@post.cooked)
+    # doc.css("img").remove
+    #html = doc.css("p").first&.inner_html&.strip
+    html = @post.cooked
 
-    if html = doc.css("p").first&.inner_html&.strip
+    if html
       new_description = html unless html.starts_with?(Category.post_template[0..50])
       category.update_column(:description, new_description)
       @category_changed = category

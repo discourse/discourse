@@ -1,6 +1,6 @@
 GIT
-  remote: https://github.com/seuros/capistrano-puma.git
-  revision: 09b11cafb2cf30386d460955d0b9013d36373309
+  remote: https://github.com/edgeryders/capistrano-puma.git
+  revision: cf0c6a4624f14ec71e2f0918d48a5393adc4470f
   specs:
     capistrano3-puma (3.1.1)
       capistrano (~> 3.7)

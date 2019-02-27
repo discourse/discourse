@@ -234,7 +234,8 @@ class Category < ActiveRecord::Base
 
     @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
-      Nokogiri::HTML.fragment(self.description).text.strip.html_safe
+      # damingo (Github ID), 2019-01-02, #adaption #details
+      Nokogiri::HTML.fragment(self.description.gsub(/<summary\s*>.*?<\/summary\s*>/,'')).text.strip.truncate(500, separator: /\s/)
     end
   end
 

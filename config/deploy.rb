@@ -68,3 +68,6 @@ set :sidekiq_queue, %w(critical default low)
 # set :chruby_map_bins, fetch(:chruby_map_bins).to_a.concat(%w{ sidekiq sidekiqctl })
 # # Bundler integration
 # set :bundle_bins, fetch(:bundle_bins).to_a.concat(%w(sidekiq sidekiqctl))
+
+# See: https://github.com/seuros/capistrano-puma/issues/188
+append :chruby_map_bins, 'puma', 'pumactl'

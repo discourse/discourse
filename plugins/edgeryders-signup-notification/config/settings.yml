@@ -1,0 +1,7 @@
+plugins:
+  edgeryders_signup_notification_enabled:
+    default: false
+    client: true
+  edgeryders_signup_notification_topic_id:
+    default: 0
+    min: 0

@@ -1,0 +1,4 @@
+en:
+  site_settings:
+    edgeryders_signup_notification_enabled: "Enable EdgerydersSignupNotification plugin"
+    edgeryders_signup_notification_topic_id: "When a new user signs up a post is added to the topic with the given ID."
