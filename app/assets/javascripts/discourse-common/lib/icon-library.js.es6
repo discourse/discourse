@@ -167,7 +167,7 @@ const fa4Replacements = {
   "eye-slash": "far-eye-slash",
   eyedropper: "eye-dropper",
   fa: "fab-font-awesome",
-  facebook: "fab-facebook-f",
+  facebook: "fab-facebook",
   "facebook-f": "fab-facebook-f",
   "facebook-official": "fab-facebook",
   "facebook-square": "fab-facebook-square",
