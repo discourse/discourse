@@ -618,7 +618,7 @@ const User = RestModel.extend({
     });
   },
 
-  watch: function() {
+  watch() {
     return ajax(`${userPath(this.get("username"))}/ignore.json`, {
       type: "DELETE",
       data: { ignored_user_id: this.get("id") }
