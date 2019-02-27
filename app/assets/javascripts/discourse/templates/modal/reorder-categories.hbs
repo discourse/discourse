@@ -5,6 +5,7 @@
     <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
     <th class="th-cat">{{i18n "categories.category"}}</th>
     </thead>
+    <tbody>
     {{#each categoriesOrdered as |cat|}}
       <tr data-category-id="{{cat.id}}">
         <td>
@@ -21,6 +22,7 @@
         <td>{{category-badge cat allowUncategorized="true"}}</td>
       </tr>
     {{/each}}
+    </tbody>
   </table>
   <div id="rc-scroll-bottom"></div>
 {{/d-modal-body}}
