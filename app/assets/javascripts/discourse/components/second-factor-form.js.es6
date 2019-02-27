@@ -16,17 +16,23 @@ export default Ember.Component.extend({
       : I18n.t("login.second_factor_backup_description");
   },
 
-  @computed("secondFactorMethod")
-  linkText(secondFactorMethod) {
-    return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
-      ? "login.second_factor_backup"
-      : "login.second_factor";
+  @computed("secondFactorMethod", "isLogin")
+  linkText(secondFactorMethod, isLogin) {
+    if (isLogin) {
+      return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
+        ? "login.second_factor_backup"
+        : "login.second_factor";
+    } else {
+      return secondFactorMethod === SECOND_FACTOR_METHODS.TOTP
+        ? "user.second_factor_backup.use"
+        : "user.second_factor.use";
+    }
   },
 
   actions: {
     toggleSecondFactorMethod() {
       const secondFactorMethod = this.get("secondFactorMethod");
-      this.set("loginSecondFactor", "");
+      this.set("secondFactorToken", "");
       if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
         this.set("secondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
       } else {
