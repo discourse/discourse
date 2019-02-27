@@ -46,20 +46,10 @@
     }
 
     th.sortable {
-      cursor: pointer;
-      white-space: nowrap;
       width: 13%;
       .d-icon-heart {
         color: $love;
-        margin-right: 0.5em;
-      }
-      .d-icon-chevron-down,
-      .d-icon-chevron-up {
-        margin-left: 0.5em;
-      }
-
-      &:hover {
-        background-color: $primary-low;
+        margin: 0 0.25em 0 0;
       }
     }
   }

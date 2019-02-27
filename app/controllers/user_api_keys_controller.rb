@@ -53,7 +53,7 @@ class UserApiKeysController < ApplicationController
 
     if params.key?(:auth_redirect) && SiteSetting.allowed_user_api_auth_redirects
         .split('|')
-        .none? { |u| params[:auth_redirect] == u }
+        .none? { |u| WildcardUrlChecker.check_url(u, params[:auth_redirect]) }
 
       raise Discourse::InvalidAccess
     end

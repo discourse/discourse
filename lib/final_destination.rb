@@ -88,11 +88,25 @@ class FinalDestination
   end
 
   def small_get(headers)
-    Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
-      http.open_timeout = timeout
-      http.read_timeout = timeout
-      http.request_get(@uri.request_uri, headers)
+    status_code, headers = nil
+
+    catch(:done) do
+      Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
+        http.open_timeout = timeout
+        http.read_timeout = timeout
+        http.request_get(@uri.request_uri, headers) do |resp|
+          status_code = resp.code.to_i
+          headers = resp.to_hash
+
+          # see: https://bugs.ruby-lang.org/issues/15624
+          # if we allow response to return then body will be read
+          # got to abort without reading body
+          throw :done
+        end
+      end
     end
+
+    [status_code, headers]
   end
 
   # this is a new interface for simply getting
@@ -177,20 +191,19 @@ class FinalDestination
       @status = :resolved
       return @uri
     when 400, 405, 406, 409, 501
-      get_response = small_get(request_headers)
+      response_status, small_headers = small_get(request_headers)
 
-      response_status = get_response.code.to_i
       if response_status == 200
         @status = :resolved
         return @uri
       end
 
       response_headers = {}
-      if cookie_val = get_response.get_fields('set-cookie')
+      if cookie_val = small_headers['set-cookie']
         response_headers[:cookies] = cookie_val
       end
 
-      if location_val = get_response.get_fields('location')
+      if location_val = small_headers['location']
         response_headers[:location] = location_val.join
       end
     end

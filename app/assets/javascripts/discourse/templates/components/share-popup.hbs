@@ -1,0 +1,24 @@
+<div class="title">
+  <h3>{{{shareTitle}}}</h3>
+
+  {{#if date}}
+    <span class="date">{{displayDate}}</span>
+  {{/if}}
+</div>
+
+<div>
+  <input type="text">
+  <div class="share-for-touch"><div class="overflow-ellipsis"><a></a></div></div>
+</div>
+
+<div class="actions">
+  {{#each sources as |s|}}
+    {{share-source source=s title=model.title action=(action "share")}}
+  {{/each}}
+
+  <div class="link">
+    <a href {{action "close"}} class="close-share" aria-label={{i18n "share.close"}} title={{i18n "share.close"}}>
+      {{d-icon "times"}}
+    </a>
+  </div>
+</div>

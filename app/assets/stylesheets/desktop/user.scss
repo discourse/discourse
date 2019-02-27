@@ -115,18 +115,6 @@
 .user-invite-list {
   width: 100%;
   margin-top: 15px;
-
-  th {
-    text-align: left;
-    padding: 0 0 10px 0;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-  }
-
-  td {
-    padding: 10px 0 10px 0;
-    border-bottom: 1px solid $primary-low;
-  }
 }
 
 .user-invite-search {

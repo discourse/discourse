@@ -472,6 +472,7 @@ aside.quote {
   width: 16px;
   height: 16px;
   bottom: -3px;
+  color: $primary;
   &.rounded {
     background-size: 12px 12px;
     border-radius: 8px;
@@ -606,16 +607,16 @@ blockquote > *:last-child {
 .cooked table,
 .d-editor-preview table {
   thead {
-    border-bottom: 2px solid lighten($primary, 80%);
     th {
       text-align: left;
       padding-bottom: 2px;
+      font-weight: bold;
+      color: $primary;
     }
   }
 
-  td,
-  th {
-    padding: 3px 3px 3px 10px;
+  td {
+    padding: 3px 3px 3px 0.5em;
   }
 }
 

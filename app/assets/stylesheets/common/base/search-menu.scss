@@ -1,6 +1,7 @@
 .search-menu {
   .search-input {
     position: relative;
+    padding: 0.5em 3px;
   }
 
   .search-context .show-help {
@@ -15,7 +16,6 @@
   }
 
   input[type="text"] {
-    margin: 0.5em 3px;
     box-sizing: border-box;
     width: calc(100% - 6px);
     height: 32px;
