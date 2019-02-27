@@ -30,10 +30,7 @@ export default Ember.Component.extend({
     return !isPM || this.siteSettings.enable_personal_messages;
   },
 
-  @computed("topic.details.can_invite_to")
-  canInviteTo(result) {
-    return !this.site.mobileView && result;
-  },
+  canInviteTo: Ember.computed.alias("topic.details.can_invite_to"),
 
   inviteDisabled: Ember.computed.or(
     "topic.archived",
