@@ -1007,7 +1007,7 @@ class UsersController < ApplicationController
   def watch
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
 
-    IgnoredUser.where(user: current_user, ignored_user_id: params[:watched_user_id]).delete_all
+    IgnoredUser.where(user: current_user, ignored_user_id: params[:ignored_user_id]).delete_all
     render json: success_json
   end
 
