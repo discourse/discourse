@@ -1,3 +1,6 @@
+# damingo (Github ID), 2018-11-30, See: https://github.com/lautis/uglifier/issues/127
+require 'uglifier'
+
 Discourse::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
