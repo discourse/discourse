@@ -43,12 +43,27 @@
           <section class='controls'>
             <ul>
               {{#if model.can_send_private_message_to_user}}
-              <li>
-                {{d-button class="btn btn-primary compose-pm"
-                  action=(route-action "composePrivateMessage" model)
-                  icon="envelope"
-                  label="user.private_message"}}
-              </li>
+                <li>
+                  {{d-button class="btn-primary compose-pm"
+                    action=(route-action "composePrivateMessage" model)
+                    icon="envelope"
+                    label="user.private_message"}}
+                </li>
+                {{#if model.can_ignore_user}}
+                  <li>
+                  {{#if model.ignored}}
+                    {{d-button class="btn-default"
+                               action=(action "watchUser")
+                               icon="eye"
+                               label="user.watch"}}
+                  {{else}}
+                    {{d-button class="btn-danger"
+                               action=(action "ignoreUser")
+                               icon="eye-slash"
+                               label="user.ignore"}}
+                  {{/if}}
+                  </li>
+                {{/if}}
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
