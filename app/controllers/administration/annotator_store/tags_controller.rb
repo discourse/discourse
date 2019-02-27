@@ -15,7 +15,7 @@ class Administration::AnnotatorStore::TagsController < Administration::Applicati
 
     search_term = params[:search].to_s.strip
     resources = Administrate::Search.new(scope, dashboard_class, search_term).run
-    resources = resources.includes(*resource_includes) if resource_includes.any?
+    #resources = resources.includes(*resource_includes) if resource_includes.any?
     resources = params[:search].present? ? order.apply(resources) : resources.order('LOWER(name) asc')
     resources = resources.page(params[:page]).per(records_per_page)
     page = Administrate::Page::Collection.new(dashboard)

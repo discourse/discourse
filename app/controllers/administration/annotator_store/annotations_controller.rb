@@ -22,7 +22,7 @@ class Administration::AnnotatorStore::AnnotationsController < Administration::Ap
 
     search_term = params[:search].to_s.strip
     resources = Administrate::Search.new(scope, dashboard_class, search_term).run
-    resources = resources.includes(*resource_includes) if resource_includes.any?
+    #resources = resources.includes(*resource_includes) if resource_includes.any?
     resources = order.apply(resources)
     resources = resources.page(params[:page]).per(records_per_page)
     page = Administrate::Page::Collection.new(dashboard, order: order)
