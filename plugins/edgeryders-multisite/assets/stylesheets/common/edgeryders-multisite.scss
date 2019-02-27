@@ -23,6 +23,10 @@
   }
 
   details {
+    h2 {
+      font-size: 1.8rem;
+    }
+
     .tmp-rtl {
       h2 {
         font-size: 1.9rem;
@@ -39,7 +43,9 @@
 
 .header-buttons {
   .sign-up-button {
-    padding: 6px 10px;
+    line-height: 30px;
+    white-space: nowrap;
+    padding: 0 10px;
   }
 }
 
