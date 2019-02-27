@@ -26,19 +26,6 @@
 .groups-table {
   width: 100%;
 
-  th {
-    border-bottom: 1px solid $primary-low;
-    padding: 0.5em;
-    text-align: left;
-  }
-
-  .sortable {
-    &:hover {
-      background-color: $primary-low;
-      cursor: pointer;
-    }
-  }
-
   tr {
     td {
       padding: 0.8em;
