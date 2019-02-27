@@ -5,8 +5,12 @@
 .category-heading {
   margin-bottom: 1rem;
 
+  p {
+    font-size: 1.45rem;
+  }
+
   summary {
-    font-size: 1.5em;
+    font-size: 1.45rem;
   }
 
   details p {
@@ -21,7 +25,7 @@
   details {
     .tmp-rtl {
       h2 {
-        font-size: 1.9em;
+        font-size: 1.9rem;
       }
 
       p {
