@@ -39,11 +39,12 @@ describe Auth::ManagedAuthenticator do
   describe 'after_authenticate' do
     it 'can match account from an existing association' do
       user = Fabricate(:user)
-      associated = UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234")
+      associated = UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234", last_used: 1.year.ago)
       result = authenticator.after_authenticate(hash)
 
       expect(result.user.id).to eq(user.id)
       associated.reload
+      expect(associated.last_used).to be >= 1.day.ago
       expect(associated.info["name"]).to eq("Best Display Name")
       expect(associated.info["email"]).to eq("awesome@example.com")
       expect(associated.credentials["token"]).to eq("supersecrettoken")

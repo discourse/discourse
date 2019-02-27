@@ -45,6 +45,8 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     association.credentials = auth_token[:credentials] || {}
     association.extra = auth_token[:extra] || {}
 
+    association.last_used = Time.zone.now
+
     # Save to the DB. Do this even if we don't have a user - it might be linked up later in after_create_account
     association.save!
 
