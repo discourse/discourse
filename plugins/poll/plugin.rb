@@ -149,13 +149,7 @@ after_initialize do
         end
       end
 
-      def voters(post_id, poll_name, user, opts = {})
-        post = Post.find_by(id: post_id)
-        raise Discourse::InvalidParameters.new("post_id is invalid") unless post
-
-        poll = Poll.find_by(post_id: post_id, name: poll_name)
-        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
-
+      def serialized_voters(poll, opts = {})
         limit = (opts["limit"] || 25).to_i
         limit = 0  if limit < 0
         limit = 50 if limit > 50
@@ -208,7 +202,7 @@ after_initialize do
               WHERE row BETWEEN #{offset} AND #{offset + limit}
           SQL
 
-          user_ids = votes.map { |v| v.user_id }.to_set
+          user_ids = votes.map(&:user_id).uniq
 
           user_hashes = User
             .where(id: user_ids)
@@ -223,6 +217,16 @@ after_initialize do
         end
 
         result
+      end
+
+      def voters(post_id, poll_name, user, opts = {})
+        post = Post.find_by(id: post_id)
+        raise Discourse::InvalidParameters.new("post_id is invalid") unless post
+
+        poll = Poll.find_by(post_id: post_id, name: poll_name)
+        raise Discourse::InvalidParameters.new("poll_name is invalid") unless poll&.can_see_voters?(user)
+
+        serialized_voters(poll, opts)
       end
 
       def schedule_jobs(post)
