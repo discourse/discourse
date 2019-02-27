@@ -15,9 +15,9 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 
 
 # https://github.com/capistrano/chruby
-set :chruby_ruby, 'ruby-2.3.1'
+set :chruby_ruby, 'ruby-2.5.3'
 # Workaround for capistrano bug: https://github.com/capistrano/chruby/issues/7#issuecomment-214770540
-set :default_env, { path: '/opt/rubies/ruby-2.3.1/lib/ruby/gems/2.3.0/bin:/opt/rubies/ruby-2.3.1/bin:$PATH' }
+set :default_env, { path: '/opt/rubies/ruby-2.5.3/lib/ruby/gems/2.5.0/bin:/opt/rubies/ruby-2.5.3/bin:$PATH' }
 
 
 # https://github.com/capistrano/rails
