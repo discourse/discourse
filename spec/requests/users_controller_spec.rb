@@ -2022,7 +2022,7 @@ describe UsersController do
 
   describe '#ignore' do
     it 'raises an error when not logged in' do
-      put "/u/ignore.json"
+      put "/u/#{user.username}/ignore.json", params: { ignored_user_id: "" }
       expect(response.status).to eq(403)
     end
 
@@ -2036,7 +2036,7 @@ describe UsersController do
       describe 'when SiteSetting.ignore_user_enabled is false' do
         it 'raises an error' do
           SiteSetting.ignore_user_enabled = false
-          put "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
+          put "/u/#{user.username}/ignore.json"
           expect(response.status).to eq(404)
         end
       end
@@ -2055,7 +2055,7 @@ describe UsersController do
 
   describe '#watch' do
     it 'raises an error when not logged in' do
-      put "/u/ignore.json"
+      delete "/u/#{user.username}/ignore.json"
       expect(response.status).to eq(403)
     end
 
