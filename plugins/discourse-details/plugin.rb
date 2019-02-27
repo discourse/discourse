@@ -10,6 +10,9 @@ hide_plugin if self.respond_to?(:hide_plugin)
 register_asset "javascripts/details.js"
 register_asset "stylesheets/details.scss"
 
+register_svg_icon "align-right" if respond_to?(:register_svg_icon)
+
+
 after_initialize do
 
   Email::Styles.register_plugin_style do |fragment|

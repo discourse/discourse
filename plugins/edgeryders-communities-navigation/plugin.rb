@@ -7,6 +7,7 @@
 
 register_asset "stylesheets/common/edgeryders-communities-navigation.scss"
 
+register_svg_icon "comments-o" if respond_to?(:register_svg_icon)
 
 enabled_site_setting :edgeryders_communities_navigation_enabled
 
