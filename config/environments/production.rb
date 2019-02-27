@@ -12,7 +12,8 @@ Discourse::Application.configure do
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.public_file_server.enabled = GlobalSetting.serve_static_assets || false
 
-  config.assets.js_compressor = :uglifier
+  # damingo (Github ID), 2019-02-27, See: https://github.com/lautis/uglifier/issues/127
+  config.assets.js_compressor = Uglifier.new(harmony: true)
 
   # stuff should be pre-compiled
   config.assets.compile = false
