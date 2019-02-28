@@ -309,7 +309,7 @@
                 {{d-button action=(route-action "showLogin") class="btn-primary topic-retry" icon="user" label="log_in"}}
               {{/unless}}
             {{else}}
-              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
+              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="sync" label="errors.buttons.again"}}
             {{/if}}
           </div>
           {{conditional-loading-spinner condition=retrying}}

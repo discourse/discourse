@@ -75,7 +75,7 @@
         {{#if model.remote_theme.commits_behind}}
           {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
         {{else}}
-          {{#d-button action=(action "checkForThemeUpdates") icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
+          {{#d-button action=(action "checkForThemeUpdates") icon="sync" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
         {{/if}}
 
         <span class='status-message'>
