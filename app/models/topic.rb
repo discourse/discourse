@@ -95,8 +95,7 @@ class Topic < ActiveRecord::Base
             if: Proc.new { |t|
               (t.new_record? || t.category_id_changed?) &&
               !SiteSetting.allow_uncategorized_topics &&
-              (t.archetype.nil? || t.regular?) &&
-              (!t.user_id || !t.user.staff?)
+              (t.archetype.nil? || t.regular?)
             }
 
   validates :featured_link, allow_nil: true, url: true

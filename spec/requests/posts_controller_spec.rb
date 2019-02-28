@@ -999,6 +999,34 @@ describe PostsController do
 
           expect(JSON.parse(response.body)["errors"]).to include(I18n.t(:spamming_host))
         end
+
+        context "allow_uncategorized_topics is false" do
+          before do
+            SiteSetting.allow_uncategorized_topics = false
+          end
+
+          it "cant create an uncategorized post" do
+            post "/posts.json", params: {
+              raw: "a new post with no category",
+              title: "a new post with no category"
+            }
+            expect(response).not_to be_successful
+          end
+
+          context "as staff" do
+            before do
+              sign_in(Fabricate(:admin))
+            end
+
+            it "cant create an uncategorized post" do
+              post "/posts.json", params: {
+                raw: "a new post with no category",
+                title: "a new post with no category"
+              }
+              expect(response).not_to be_successful
+            end
+          end
+        end
       end
     end
 
