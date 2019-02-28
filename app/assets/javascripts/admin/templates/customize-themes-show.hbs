@@ -38,7 +38,11 @@
   {{#if model.remote_theme}}
 
     {{#if model.remote_theme.remote_url}}
-      <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{i18n "admin.customize.theme.source_url"}} {{d-icon "link"}}</a>
+      {{#if sourceIsHttp}}
+        <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{i18n "admin.customize.theme.source_url"}} {{d-icon "link"}}</a>
+      {{else}}
+        <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
+      {{/if}}
     {{/if}}
     {{#if model.remote_theme.about_url}}
     <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}} {{d-icon "link"}}</a>
