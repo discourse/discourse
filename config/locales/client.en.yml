@@ -915,6 +915,7 @@ en:
       website: "Web Site"
       email_settings: "Email"
       hide_profile_and_presence: "Hide my public profile and presence features"
+      enable_physical_keyboard: "Enable physical keyboard support on iPad"
 
       text_size:
         title: "Text Size"
