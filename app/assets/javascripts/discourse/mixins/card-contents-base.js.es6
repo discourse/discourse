@@ -97,6 +97,10 @@ export default Ember.Mixin.create({
           }
 
           this._close();
+
+          if (this.site.mobileView) {
+            return false;
+          }
         }
 
         return true;
