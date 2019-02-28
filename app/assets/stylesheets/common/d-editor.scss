@@ -205,6 +205,9 @@
 
 .d-editor-preview img {
   padding-bottom: 20px;
+  &.emoji {
+    padding-bottom: 0;
+  }
 }
 
 .d-editor-preview .image-wrapper {
