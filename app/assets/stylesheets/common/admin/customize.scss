@@ -140,9 +140,14 @@
       }
     }
 
-    .remote-url,
-    .about-url,
-    .license-url {
+    div.remote-url {
+      font-size: $font-down-1;
+      margin-bottom: 7px;
+    }
+
+    a.remote-url,
+    a.about-url,
+    a.license-url {
       display: inline-block;
       margin-right: 10px;
     }
