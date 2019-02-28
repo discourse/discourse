@@ -55,6 +55,9 @@
     {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics}}
   {{/if}}
   {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence}}
+  {{#if isiPad}}
+    {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks}}
+  {{/if}}
 </div>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}

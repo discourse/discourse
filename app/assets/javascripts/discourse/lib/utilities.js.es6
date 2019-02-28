@@ -550,6 +550,15 @@ export function isAppleDevice() {
   );
 }
 
+export function safariHacksDisabled() {
+  let pref = localStorage.getItem("safari-hacks-disabled");
+  let result = false;
+  if (pref !== null) {
+    result = pref === "true";
+  }
+  return result;
+}
+
 const toArray = items => {
   items = items || [];
 
