@@ -133,7 +133,7 @@ task 'docker:test' do
             spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
             params << spec_partials[subset].join(' ')
 
-            puts "Running spec subset #{subset} of #{total}"
+            puts "Running spec subset #{subset + 1} of #{total}"
           end
 
           @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
