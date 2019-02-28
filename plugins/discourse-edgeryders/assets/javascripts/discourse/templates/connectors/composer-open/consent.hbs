@@ -7,8 +7,8 @@
       we want to make sure you understand how to use this space.<br/>
 
       Just answer these two questions until you get them right: you will never see this message again. If you
-      have difficulties, <a href="mailto:noemi@edgeryders.eu?subject=I need help with the new authors' quiz">click 
-      here</a> to email us.
+      have difficulties or questions or ideas to make these questions better, 
+      <a href="mailto:noemi@edgeryders.eu?subject=I need help with the new authors' quiz">click here</a> to email us.
     </div>
 
     <!-- Quiz Results -->
@@ -21,52 +21,74 @@
       Well done, you understand it all! Now we are curious to hear your story. Proceed with the button below.
     </div>
 
-    <!-- Question 1 -->
+    <!-- Question #0 -->
     <div class="card quizlib-question">
-      <div class="quizlib-question-title">1. This website is a public forum and only loosely moderated. What does that
-        mean for you?
+      <div class="quizlib-question-title">1. This platform is used for research (<a href="/t/topic/37">learn more</a>). 
+        Researchers are encouraged to treat what we post into it as a window into societal, economic, technological, 
+        and political trends and transformations that affect all of us. As you participate in these discussion, you 
+        might reveal where you stand with respect to important societal, economic and political issues. Knowing this, 
+        which of the following best describes your position?
       </div>
       <div class="quizlib-question-answers">
         <ul>
           <li>
-            <label><input type="checkbox" name="q0" value="a">I will be careful. Everyone I meet here only online is
-              still a stranger. I will <strong>not</strong> lend them money, or tell them sensitive information.</label>
-
-            <div id="quizlib-hint-q0-a" class="quizlib-hint"><strong>Please correct this answer and try
-              again!</strong> This platform allows everyone to create an account, without having to reveal who they
-              are in real life. It is easy to create a false identity online … so you really should be careful with
-              strangers you meet only online!
-            </div>
+            <label><input type="radio" name="q0" value="a">I do not fear bad consequences when sharing with others my 
+            views and  alignment on societal, economic, technological and political issues.</label>
           </li>
           <li>
-            <label><input type="checkbox" name="q0" value="b">To receive advice, I would share information that I want
-              to keep within a small group of people. For example: my medical conditions, credit card details, political 
-              affiliations that I normally do not reveal.</label>
-
-            <div id="quizlib-hint-q0-b" class="quizlib-hint"><strong>Please correct this answer and try
-              again!</strong> This platform is public, and its content can be found with search engines like Google.
-              Share only what you are ok with to be seen by the whole world.
-            </div>
+            <label><input type="radio" name="q0" value="b">I worry about the the risks involved in sharing my views and 
+            alignment online, where others (such as the government or my employer) could access them. But I will 
+            participate in the conversation on this platform under my real name.</label>
+          </li>
+          <li>
+            <label><input type="radio" name="q0" value="c">I worry about the the risks involved in sharing my views and 
+            alignment online, where others (such as the government or my employer) could access them. Therefore, I protect 
+            my identity to a degree I think is adequate, for example posting under a pseudonym, using a fake e-mail 
+            address, using a VPN etc..</label>
+          </li>
+          <li>
+            <label><input type="radio" name="q0" value="d">I worry about the the risks involved in sharing my views and 
+            alignment online, where others (such as the government or my employer) could access them, and I don't know how 
+            to deal with that risk when posting on this platform. Outcome: do not allow posting.</label>
           </li>
         </ul>
+        <div id="quizlib-hint-q0" class="quizlib-hint"><strong>Please correct this answer and try again!</strong>
+          We want you to stay safe. If sharing information about your views and  alignment is risky for you, you should 
+          consider not participating in public discussion. We would still like to hear from you. You could (1) participate 
+          under a pseudonym, or (2) register under a one-time email address to reduce the risks that the content you post 
+          will be linked to you. Or (3) you can <a href="/t/topic/9537">contact our community managers securely and 
+          anonymously</a> to share your content.
+        </div>
       </div>
     </div>
 
-    <!-- Question 2 -->
+    <!-- Question #1 --> 
     <div class="card quizlib-question">
-      <div class="quizlib-question-title">2. This platform is full of tinkerers, DIY enthusiasts and hackers of all
-        kinds. When you ask a question here, how do you treat the advice you receive?
+      <div class="quizlib-question-title">2. This platform is only loosely moderated, to avoid harassment and exploitative 
+        behaviour, but to allow unconstrained conversation. Knowing this, would you:
       </div>
       <div class="quizlib-question-answers">
         <ul>
-          <li><label><input type="radio" name="q1" value="a">I will try out what people tell me here.</label></li>
-          <li><label><input type="radio" name="q1" value="b">I will be careful. Even if someone else advised me, I am still responsible for my own actions. If I don't know enough about the possible consequences, I will not do what they propose.
-            </label></li>
+          <li>
+            <label><input type="checkbox" name="q2" value="a">Share my credit card’s details at another participant’s 
+            request.</label>
+
+            <div id="quizlib-hint-q2-a" class="quizlib-hint"><strong>Please correct this answer and try
+              again!</strong> This is a public forum meant for conversation on general issues, and it is not secure to share 
+              personal information on. You should not share personal information that you do not want out in the open on it, 
+              such as your credit card detail, with anyone (including researchers and community managers and under any 
+              circumstance).
+            </div>
+          </li>
+          <li>
+            <label><input type="checkbox" name="q2" value="b">Engage in a conversation about important issues in my country, 
+            and how it should be reflected by the government’s policies.</label>
+
+            <div id="quizlib-hint-q2-b" class="quizlib-hint"><strong>Please correct this answer and try
+              again!</strong> This is a public platform made for exactly the purpose stated in this answer :)
+            </div>
+          </li>
         </ul>
-        <div id="quizlib-hint-q1" class="quizlib-hint"><strong>Please correct this answer and try again!</strong>
-          You should consider all advice on this platform "experimental" and "unproven", meant for people who know
-          enough about a topic to recognize potentially dangerous or harmful advice.
-        </div>
       </div>
     </div>
 
@@ -79,8 +101,8 @@
 
 <script type="text/javascript">
   quiz = new Quiz('quiz', [ // Use DOM element with id="quiz" as quiz form.
-    ['a'],                // Question 1 answer b is correct (multiple choice, using checkboxes).
-    'b',                  // Question 2 answer b is correct (single-choice, using radiobuttons).
+    ['a', 'c'],             // Question #0 answers a and c are correct (single-choice, using radiobuttons).
+    ['b'],                  // Question #1 answer b is correct (multiple-choice, using checkboxes).
   ]);
 
   $.ajax({
