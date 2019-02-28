@@ -127,9 +127,13 @@ task 'docker:test' do
 
           if ENV['PARALLEL']
             parts = ENV['PARALLEL'].split("/")
+            total = parts[1].to_i
+            subset = parts[0].to_i - 1
 
-            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(parts[1].to_i, false)
-            params << spec_partials[parts[0].to_i].join(' ')
+            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
+            params << spec_partials[subset].join(' ')
+
+            puts "Running spec subset #{subset} of #{total}"
           end
 
           @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
