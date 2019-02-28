@@ -7,7 +7,7 @@
 <div class="col actions">
   {{d-button icon="ellipsis-v" action=(action "toggleRequest") label="admin.web_hooks.events.request"}}
   {{d-button icon="ellipsis-v" action=(action "toggleResponse") label="admin.web_hooks.events.response"}}
-  {{d-button icon="refresh" action=(action "redeliver") label="admin.web_hooks.events.redeliver"}}
+  {{d-button icon="sync" action=(action "redeliver") label="admin.web_hooks.events.redeliver"}}
 </div>
 {{#if expandDetails}}
   <div class="details">

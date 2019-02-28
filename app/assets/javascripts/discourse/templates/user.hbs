@@ -54,7 +54,7 @@
                   {{#if model.ignored}}
                     {{d-button class="btn-default"
                                action=(action "watchUser")
-                               icon="eye"
+                               icon="far-eye"
                                label="user.watch"}}
                   {{else}}
                     {{d-button class="btn-danger"
@@ -99,7 +99,7 @@
             {{/if}}
             {{plugin-outlet name="user-post-names" args=(hash model=model)}}
             <h3 class="location-and-website">
-            {{#if model.location}}{{d-icon "map-marker"}} {{model.location}}{{/if}}
+            {{#if model.location}}{{d-icon "map-marker-alt"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
               {{d-icon "globe"}}
               {{#if linkWebsite}}

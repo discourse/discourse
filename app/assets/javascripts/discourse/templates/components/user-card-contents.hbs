@@ -53,12 +53,12 @@
             {{#if user.ignored}}
               {{d-button class="btn-default"
                          action=(action "watchUser")
-                         icon="eye"
+                         icon="far-eye"
                          label="user.watch"}}
             {{else}}
               {{d-button class="btn-danger"
                          action=(action "ignoreUser")
-                         icon="eye-slash"
+                         icon="far-eye-slash"
                          label="user.ignore"}}
             {{/if}}
           </li>
@@ -114,7 +114,7 @@
     {{#if hasLocationOrWebsite}}
       <div class="location-and-website">
         {{#if user.location}}
-          <span class='location'>{{d-icon "map-marker"}} <span>{{user.location}}</span></span>
+          <span class='location'>{{d-icon "map-marker-alt"}} <span>{{user.location}}</span></span>
         {{/if}}
 
         {{#if user.website_name}}
