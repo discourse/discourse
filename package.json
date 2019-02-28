@@ -37,11 +37,11 @@
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
     "pretender": "^1.6",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.4",
     "puppeteer": "1.4",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
-    "sinon": "^6.3.5"
+    "sinon": "^7.2.5"
   },
   "scripts": {
     "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""
