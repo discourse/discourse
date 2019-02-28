@@ -124,6 +124,14 @@ task 'docker:test' do
           if ENV["RSPEC_SEED"]
             params << "--seed #{ENV["RSPEC_SEED"]}"
           end
+
+          if ENV['PARALLEL']
+            parts = ENV['PARALLEL'].split("/")
+
+            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(parts[1].to_i, false)
+            params << spec_partials[parts[0].to_i].join(' ')
+          end
+
           @good &&= run_or_fail("bundle exec rspec #{params.join(' ')}".strip)
         end
 
