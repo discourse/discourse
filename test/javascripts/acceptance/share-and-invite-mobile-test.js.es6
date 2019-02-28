@@ -30,8 +30,8 @@ QUnit.test("Topic footer mobile button", async assert => {
   );
 
   assert.ok(
-    !exists(".share-and-invite.modal .modal-tab.invite"),
-    "it doesn’t show the invite tab"
+    exists(".share-and-invite.modal .modal-tab.invite"),
+    "it shows the invite tab"
   );
 
   assert.equal(
