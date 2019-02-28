@@ -205,7 +205,8 @@
 
 .d-editor-preview img {
   padding-bottom: 20px;
-  &.emoji {
+  &.emoji,
+  &.avatar {
     padding-bottom: 0;
   }
 }
