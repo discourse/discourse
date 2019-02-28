@@ -619,7 +619,7 @@ describe PostMover do
 
           old_message.reload
           move_message = old_message.posts.find_by(post_number: 2)
-          expect(move_message.post_type).to eq(Post.types[:small_action])
+          expect(move_message.post_type).to eq(Post.types[:whisper])
           expect(move_message.raw).to include("2 posts were split")
         end
       end
@@ -662,7 +662,7 @@ describe PostMover do
 
         it "uses the correct small action post" do
           moved_to = personal_message.move_posts(admin, [p2.id], destination_topic_id: another_personal_message.id, archetype: "private_message")
-          post = Post.find_by(topic_id: personal_message.id, post_type: Post.types[:small_action])
+          post = Post.find_by(topic_id: personal_message.id, post_type: Post.types[:whisper])
 
           expected_text = I18n.t(
             "move_posts.existing_message_moderator_post",
