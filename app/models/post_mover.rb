@@ -208,9 +208,10 @@ class PostMover
       )
     end
 
+    post_type = @move_to_pm ? Post.types[:whisper] : Post.types[:small_action]
     original_topic.add_moderator_post(
       user, message,
-      post_type: Post.types[:small_action],
+      post_type: post_type,
       action_code: "split_topic",
       post_number: @first_post_number_moved
     )
