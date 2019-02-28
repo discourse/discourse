@@ -114,6 +114,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   keyGenUrl: "/admin/themes/generate_key_pair",
   importUrl: "/admin/themes/import",
+  recordType: "theme",
   checkPrivate: Ember.computed.match("uploadUrl", /^git/),
   localFile: null,
   uploadUrl: null,
@@ -229,7 +230,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     installTheme() {
       if (this.get("create")) {
         this.set("loading", true);
-        const theme = this.store.createRecord("theme");
+        const theme = this.store.createRecord(this.get("recordType"));
         theme
           .save({ name: this.get("name"), component: this.get("component") })
           .then(() => {
@@ -272,7 +273,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("loading", true);
       ajax(this.get("importUrl"), options)
         .then(result => {
-          const theme = this.store.createRecord("theme", result.theme);
+          const theme = this.store.createRecord(
+            this.get("recordType"),
+            result.theme
+          );
           this.get("adminCustomizeThemes").send("addTheme", theme);
           this.send("closeModal");
         })
