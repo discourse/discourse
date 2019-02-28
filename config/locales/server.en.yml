@@ -574,6 +574,8 @@ en:
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
 
+  admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
+
   category:
     topic_prefix: "About the %{category} category"
     replace_paragraph: "(Replace this first paragraph with a brief description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.)"
