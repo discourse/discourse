@@ -550,6 +550,17 @@ export function isAppleDevice() {
   );
 }
 
+let iPadDetected = undefined;
+
+export function isiPad() {
+  if (iPadDetected === undefined) {
+    iPadDetected =
+      navigator.userAgent.match(/iPad/g) &&
+      !navigator.userAgent.match(/Trident/g);
+  }
+  return iPadDetected;
+}
+
 export function safariHacksDisabled() {
   let pref = localStorage.getItem("safari-hacks-disabled");
   let result = false;

@@ -10,7 +10,7 @@ import {
   setLocalTheme
 } from "discourse/lib/theme-selector";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { safariHacksDisabled } from "discourse/lib/utilities";
+import { safariHacksDisabled, isiPad } from "discourse/lib/utilities";
 
 const USER_HOMES = {
   1: "latest",
@@ -49,10 +49,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed()
   isiPad() {
-    return (
-      navigator.userAgent.match(/iPad/g) &&
-      !navigator.userAgent.match(/Trident/g)
-    );
+    return isiPad();
   },
 
   @computed()
