@@ -417,53 +417,112 @@ export default {
   },
 
   _moveSelection(direction) {
+    // Pressing a move key (J/K) very quick (i.e. keeping J or K pressed) will
+    // move fast by disabling smooth page scrolling.
+    const now = +new Date();
+    const fast = this._lastMoveTime && now - this._lastMoveTime < 150;
+    this._lastMoveTime = now;
+
     const $articles = this._findArticles();
+    if ($articles === undefined) {
+      return;
+    }
 
-    if (typeof $articles === "undefined") return;
+    let $selected = $articles.filter(".selected");
+    if ($selected.length === 0) {
+      $selected = $articles.filter("[data-islastviewedtopic=true]");
+    }
 
-    const $selected =
-      $articles.filter(".selected").length !== 0
-        ? $articles.filter(".selected")
-        : $articles.filter("[data-islastviewedtopic=true]");
+    // If still nothing is selected, select the first post that is
+    // visible and cancel move operation.
+    if ($selected.length === 0) {
+      const offset = minimumOffset();
+      $selected = $articles
+        .toArray()
+        .find(article => article.getBoundingClientRect().top > offset);
+      direction = 0;
+    }
 
-    let index = $articles.index($selected);
+    const index = $articles.index($selected);
+    let $article = $articles.eq(index);
+
+    /*
+     * Try doing a page scroll in the context of current post.
+     */
+
+    if (!fast && direction !== 0 && $article.length > 0) {
+      /** @var Begin and end offsets for current article
+       *       The beginning of first article is the beginning of the page.
+       */
+      const beginArticle =
+        $article.is(".topic-post") && $article.find("#post_1").length
+          ? 0
+          : $article.offset().top;
+      const endArticle =
+        $article.offset().top + $article[0].getBoundingClientRect().height;
+
+      /** @var Begin and end offsets for screen */
+      const beginScreen = $(window).scrollTop();
+      const endScreen = beginScreen + window.innerHeight;
+
+      if (direction < 0 && beginScreen > beginArticle) {
+        return this._scrollTo(
+          Math.max(
+            beginScreen - window.innerHeight + 3 * minimumOffset(), // page up
+            beginArticle - minimumOffset() // beginning of article
+          )
+        );
+      } else if (direction > 0 && endScreen < endArticle - minimumOffset()) {
+        return this._scrollTo(
+          Math.min(
+            endScreen - 3 * minimumOffset(), // page down
+            endArticle - window.innerHeight // end of article
+          )
+        );
+      }
+    }
+
+    /*
+     * Try scrolling to post above or below.
+     */
 
     if ($selected.length !== 0) {
       if (direction === -1 && index === 0) return;
       if (direction === 1 && index === $articles.length - 1) return;
     }
 
-    // when nothing is selected
-    if ($selected.length === 0) {
-      // select the first post with its top visible
-      const offset = minimumOffset();
-      index = $articles
-        .toArray()
-        .findIndex(article => article.getBoundingClientRect().top > offset);
-      direction = 0;
-    }
-
-    const $article = $articles.eq(index + direction);
-
+    $article = $articles.eq(index + direction);
     if ($article.length > 0) {
       $articles.removeClass("selected");
       $article.addClass("selected");
 
-      if ($article.is(".topic-post")) {
-        $("a.tabLoc", $article).focus();
-        this._scrollToPost($article);
-      } else {
-        this._scrollList($article, direction);
+      const articleRect = $article[0].getBoundingClientRect();
+      if (!fast && direction < 0 && articleRect.height > window.innerHeight) {
+        // Scrolling to the last "page" of the previous post if post has multiple
+        // "pages" (if its height does not fit in the screen).
+        return this._scrollTo(
+          $article.offset().top + articleRect.height - window.innerHeight
+        );
+      } else if ($article.is(".topic-post")) {
+        return this._scrollTo(
+          $article.find("#post_1").length > 0
+            ? 0
+            : $article.offset().top - minimumOffset(),
+          () => $("a.tabLoc", $article).focus()
+        );
       }
+
+      /*
+       * Otherwise scroll through the suggested topic list.
+       */
+      this._scrollList($article, direction);
     }
   },
 
-  _scrollToPost($article) {
-    if ($article.find("#post_1").length > 0) {
-      $(window).scrollTop(0);
-    } else {
-      $(window).scrollTop($article.offset().top - minimumOffset());
-    }
+  _scrollTo(scrollTop, complete) {
+    $("html, body")
+      .stop(true, true)
+      .animate({ scrollTop }, { duration: 100, complete });
   },
 
   _scrollList($article) {
