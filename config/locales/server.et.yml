@@ -800,7 +800,6 @@ et:
   upload:
     pasted_image_filename: "Asetatud pilt"
   color_schemes:
-    dark: "Tume skeem"
     default_theme_name: "Hele"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
@@ -996,13 +995,6 @@ et:
         title: "Organisatsioon"
       colors:
         title: "Kujundusteema"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Lihtne hele"
-              dark:
-                label: "Lihtne tume"
       logos:
         title: "Logod"
       icons:

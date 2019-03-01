@@ -34,7 +34,6 @@ fa_IR:
   anonymous: "ناشناس"
   remove_posts_deleted_by_author: "پاک شده توسط نویسنده"
   themes:
-    bad_color_scheme: "امکان بروزرسانی قالب وجود ندارد، ترکیب رنگ نامعتبر است."
     other_error: "در بروزرسانی قالب مشکلی پیش آمده"
   emails:
     incoming:
@@ -1031,7 +1030,6 @@ fa_IR:
     attachment_filename_blacklist: "لیست کلمات کلیدی لیست سیاه فایل‌های ضمیمه با توجه به نوع نام فایل."
     enable_forwarded_emails: "[BETA] اجازه ایجاد موضوع با ایمیل به کاربران."
     always_show_trimmed_content: "نمایش قسمت بریده شده ایمیل‌های دریافتی. اخطار: شاید آدرس ایمیل را نمایش دهد."
-    private_email: "محتوایی از نوشته‌ها یا موضوعات دیگر را برای افزایش امنیت اضافه نکن."
     manual_polling_enabled: "ایمیل‌ها را با API پاسخ بده"
     pop3_polling_enabled: "نظرسنجی از طریق POP3 برای پاسخ‌های ایمیلی. "
     pop3_polling_ssl: "وقتی که به سرور  POP3 متصل هستی از SSL استفاده کن. (پیشنهاد شده)"
@@ -1138,7 +1136,6 @@ fa_IR:
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
     max_api_keys_per_user: "حداکثر تعداد کلید API برای هر کاربر"
     min_trust_level_for_user_api_key: "سطح اعتماد مورد نیاز برای ایجاد کلید API کاربر"
-    allowed_user_api_auth_redirects: "لینک‌های مجاز برای انتقال بعد از ورود برای کلید‌های API کاربری"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
     min_trust_to_create_tag: "حداقل سطح اعتماد مورد نیاز برای ایجاد برچسب."
@@ -1853,7 +1850,6 @@ fa_IR:
     spam_hosts: "این کاربر تلاش کرده چند نوشته با لینک به یک دامنه ارسال کند(%{domain}). قسمت <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> را از تنظیمات سایت ببینید."
   color_schemes:
     base_theme_name: "پایه"
-    dark: "طرح تیره"
     light_theme_name: "روشن"
     dark_theme_name: "تیره"
   about: "درباره"
@@ -2129,14 +2125,6 @@ fa_IR:
         title: "سازمان"
       colors:
         title: "قالب"
-        fields:
-          theme_id:
-            description: "برای شروع کدام ترکیب رنگ را ترجیح می‌دهید، تیره یا روشن؟\nاین تنظیمات را بعد‌ها می‌توانید در مدیریت سایت تغییر دهید."
-            choices:
-              default:
-                label: "روشن ساده"
-              dark:
-                label: "تیره ساده"
       logos:
         title: "لوگو‌ها"
       icons:

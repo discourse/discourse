@@ -34,7 +34,6 @@ ar:
   anonymous: "متخفي"
   remove_posts_deleted_by_author: "حذفها الكاتب"
   themes:
-    bad_color_scheme: "لا يمكن تحديث الواجهة ، مخطط ألوان غير صحيح"
     other_error: "حصل خطأ عند تحديث الواجهة"
   emails:
     incoming:

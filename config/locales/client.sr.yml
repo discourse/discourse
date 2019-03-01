@@ -129,12 +129,7 @@ sr:
       next_month: "Sledeći mesec"
       placeholder: datum
     share:
-      topic: "podeli link ka ovoj temi"
-      post: "poruka #%{postNumber}"
       close: "zatvori"
-      twitter: "podeli ovaj link na Twitteru"
-      facebook: "podeli ovaj link na Facebooku"
-      email: "podeli ovaj link preko e-pošte"
     action_codes:
       public_topic: "objavi ovu temu javno %{when}"
       split_topic: "podeli ovu temu %{when}"
@@ -1228,7 +1223,6 @@ sr:
       email_in_disabled_click: 'omogućite "pošalji email u" podešavanjima.'
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       edit_permissions: "Izmeni dozvole"
-      add_permission: "Dodaj dozvole"
       this_year: "ove godine"
       default_position: "Zadana pozicija"
       position_disabled: "Kategorije će u nizu biti prikazivane po nivou aktivnosti. Za kontrolu redosleda kategorija u listi,"
@@ -1529,14 +1523,10 @@ sr:
         copy: "Kopija"
         colors:
           title: "Boje"
-          long_title: "Šema Boja"
-          new_name: "Nova šema boja"
           copy_name_prefix: "Kopija od"
-          delete_confirm: "Obriši ovu šemu?"
           undo: "Poništi"
           undo_title: "Poništi promene ovoj boji od zadnjeg puta kad su sačuvane."
           revert: "vrati"
-          revert_title: "Postavi ovu boju na Discourse standard šemu boja."
           primary:
             name: "primarna"
             description: "Većina teksta, ikonica i granica."

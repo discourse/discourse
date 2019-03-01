@@ -35,7 +35,6 @@ ko:
   anonymous: "익명"
   remove_posts_deleted_by_author: "글쓴이에 의해 삭제된 글"
   themes:
-    bad_color_scheme: "색 스케마가 잘못되어서 테마를 업데이트할 수 없습니다"
     other_error: "테마를 업데이트할 수 없습니다"
     settings_errors:
       number_value_not_valid_min_max: "반드시 값은 %{min}와 %{max}사이어야 합니다."
@@ -1041,7 +1040,6 @@ ko:
     attachment_filename_blacklist: "파일 이름을 기준으로 첨부를 차단할 키워드 블랙리스트."
     enable_forwarded_emails: "[베타] 사용자가 이메일 포워딩으로 토픽을 생성할 수 있도록 허용"
     always_show_trimmed_content: "항상 수신 메일의 다듬어진 부분을 표시. 경고: 메일 주소가 드러날 수 있습니다."
-    private_email: "개인 정보 보호를 위하여 이메일에 포스트나 토픽의 내용 미포함."
     manual_polling_enabled: "이메일 답장을 위한 API를 사용하여 이메일 푸시"
     pop3_polling_enabled: "POP3를 이용한 이메일 설문조사"
     pop3_polling_ssl: "SSL로 POP3 서버를 연결합니다. (추천)"
@@ -1371,7 +1369,6 @@ ko:
     sender_body_blank: "본문 내용이 없습니다"
   color_schemes:
     base_theme_name: "기본 테마 색상"
-    dark: "다크 Scheme"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
   about: "소개"
@@ -1653,14 +1650,6 @@ ko:
         title: "소속"
       colors:
         title: "테마"
-        fields:
-          theme_id:
-            description: "사이트 컬러 Scheme으로는 라이트가 좋으세요, 다크가 좋으세요? 관리자, 커스터마이징으로 들어가시면 더 많은 커스터마이징을 통해 사이트의 룩앤필을 바꿀 수 있습니다."
-            choices:
-              default:
-                label: "심플 라이트"
-              dark:
-                label: "심플 다크"
       logos:
         title: "로고"
       icons:

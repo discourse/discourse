@@ -131,7 +131,6 @@ sr:
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
     ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
     enable_forwarded_emails: "[BETA] Dozvoli korisnicima da kreiraju temu prosleđivanjem email poruke."
-    private_email: "Ne uključuj sadržaj  poruka ili tema u email porukama radi dodatne privatnosti."
     pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
     pop3_polling_period_mins: "Period u minutima za proveru novih email poruka na POP3 nalogu. NAPOMENA: zahteva ponovno pokretanje. "
     pop3_polling_port: "Port za proveru POP3 naloga."

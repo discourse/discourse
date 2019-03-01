@@ -17,7 +17,7 @@ ur:
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
   date:
-    month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
+    month_names: [~, جنوری, فروری, مارچ, اپریل, مئی, جون, جولائی, اگست, ستمبر, اکتوبر, نومبر, دسمبر]
     <<: *datetime_formats
   time:
     <<: *datetime_formats
@@ -36,7 +36,6 @@ ur:
   remove_posts_deleted_by_author: "مصنف کی طرف سے حذف کر دیا گیا"
   redirect_warning: "ہم تصدیق نہ کر سکے کہ آپ کا منتخب کردہ لِنک اصل میں فورم پر شائع کیا گیا تھا کہ نہیں۔ اگر آپ پھر بھی آگے بڑھنا چاہتے ہیں، تو نیچے دیئے گئے لِنک کو منتخب کریں۔"
   themes:
-    bad_color_scheme: "تِھیم اَپ ڈَیٹ نہیں ہو سکی، غلط رنگ سکیم"
     other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"
     settings_errors:
       invalid_yaml: "فراہم کردہ YAML غلط ہے۔"
@@ -51,7 +50,6 @@ ur:
       number_value_not_valid_min: "اِس کا %{min} سے زیادہ یا اِس کے برابر ہونا لازمی ہے۔"
       number_value_not_valid_max: "اِس کا %{max} سے کم یا اِس کے برابر ہونا لازمی ہے۔"
       string_value_not_valid: "نئی قدر کی لمبائی اجازت یافتہ رَینج کے اندر نہیں ہے۔"
-      string_value_not_valid_min_max: "اِس کا %{min} اور %{max} حروف لمبائی کے درمیان ہونا لازمی ہے۔"
       string_value_not_valid_min: "کم از کم %{min} حروف لمبا ہونا لازمی ہے۔"
       string_value_not_valid_max: "زیادہ سے زیادہ %{min} حروف لمبا ہونا لازمی ہے۔"
   emails:
@@ -1164,7 +1162,6 @@ ur:
     attachment_filename_blacklist: "مطلوبہ الفاظ کی فہرست جو فائل نام کی بنیاد پر منسلک اٹیچمنٹس کو بلَیک لِسٹ کرنے کیلئے استعمال ہوتی ہے۔"
     enable_forwarded_emails: "[BETA] صارفین کو ایک ای میل فارورڈ کر کہ ٹاپک بنائے کی اجازت دیں۔"
     always_show_trimmed_content: "ہمیشہ آنے والی ای میلز کا حصے دکھائیں۔ انتباہ: ای میل پتوں کو افشاں کر سکتا ہے۔"
-    private_email: "مزید رازداری کیلئے ای میلز میں پوسٹس یا ٹاپکس سے مواد شامل نہ کریں۔"
     manual_polling_enabled: "ای میل جوابات کیلئے API کا استعمال کرتے ہوئے ای میلز پُش کریں۔"
     pop3_polling_enabled: "ای میل جوابات کیلئے پَول بذریعہ POP3 کریں۔"
     pop3_polling_ssl: "POP3 سرور سے کنیکٹ کرتے وقت SSL کا استعمال کریں۔ (تجویز کردہ)"
@@ -1287,7 +1284,6 @@ ur:
     allow_user_api_key_scopes: "صارف API کلیدوں کیلئے اجازت دی جانے والی سکَوپس کی فہرست"
     max_api_keys_per_user: "فی صارف، صارف API کلیدوں کی زیادہ سے زیادہ تعداد"
     min_trust_level_for_user_api_key: "API کلیدوں کی تخلیق کیلئے مطلوبہ ٹرسٹ لَیول"
-    allowed_user_api_auth_redirects: "صارف API کلیدوں کیلئے توثیقی ریڈائرَیکٹ کیلئے اجازت یافتہ URL"
     allowed_user_api_push_urls: "صارف API پر سرور پُش کیلئے اجازت یافتہ URL"
     tagging_enabled: "ٹاپکس پر ٹیگز فعال کریں؟"
     min_trust_to_create_tag: "ٹَیگ بنانے کیلئے کم از کم مطلوبہ ٹرسٹ لَیول۔"
@@ -2310,7 +2306,6 @@ ur:
     spam_hosts: "اِس نئے صارف ایک ہی ڈومَین (%{domain}) کے لِنکس کے ساتھ کئی پوسٹس تخلیق کرنے کی کوشش کی۔ <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> سائٹ کی ترتیب دیکھیے۔"
   color_schemes:
     base_theme_name: "بَیس"
-    dark: "ڈارک سکیم"
     light_theme_name: "لائٹ"
     dark_theme_name: "ڈارک"
   about: "بارے میں"
@@ -2774,14 +2769,6 @@ ur:
         title: "ادارہ"
       colors:
         title: "تھیم"
-        fields:
-          theme_id:
-            description: "شروعات کیلئے کیا آپ لائیٹ یا ڈارک رنگ سکیم پسند کریں گے؟ آپ اپنی سائٹ کی جمالیات کو مذید اپنی مرضی کے مطابق ڈھال سکتے ہیں بذریعہ ایڈمن، \"مرضی کے مطابق بنائیں\"۔"
-            choices:
-              default:
-                label: "سادہ لائیٹ"
-              dark:
-                label: "سادہ ڈارک"
       logos:
         title: "لَوگَو"
       icons:

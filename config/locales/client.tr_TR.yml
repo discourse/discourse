@@ -109,12 +109,7 @@ tr_TR:
       next_month: "Sonraki Ay"
       placeholder: tarih
     share:
-      topic: "bu konunun bağlantısını paylaş"
-      post: "#%{postNumber} numaralı gönderiyi paylaş"
       close: "kapat"
-      twitter: "bu bağlantıyı Twitter'da paylaş"
-      facebook: "bu bağlantıyı Facebook'da paylaş"
-      email: "bu bağlantıyı e-posta ile gönder"
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
       private_topic: "bu konuyu %{when} kişisel mesaj yaptı"
@@ -471,7 +466,6 @@ tr_TR:
           description: "Herhangi biri @isminden bahseder ya da sana cevap verirse bildirim alacaksın"
         muted:
           title: "Sessiz"
-          description: "Bu gruptaki herhangi yeni bir konuyla ilgili bir bildirim almayacaksın. "
       flair_url: "Avatar Resmi"
       flair_url_placeholder: "(İsteğe bağlı) Resim URL'si veya Font Awesome Class'ı"
       flair_bg_color: "Avatar Arkaplan Rengi"
@@ -2061,7 +2055,6 @@ tr_TR:
       default_top_period: "Varsayılan Üst Periyot:"
       allow_badges_label: "Bu kategoride rozetle ödüllendirilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
-      add_permission: "İzin Ekle"
       require_topic_approval: "Tüm yeni konular moderatör onayını gerektirir"
       require_reply_approval: "Tüm yeni cevaplar moderatör onayı gerektirir"
       this_year: "bu yıl"
@@ -2853,7 +2846,6 @@ tr_TR:
         save: "Kaydet"
         new: "Yeni"
         new_style: "Yeni Biçim"
-        import: "İçe Aktar"
         delete: "Sil"
         delete_confirm: "Bu tema silinsin mi?"
         color: "Renk"
@@ -2873,12 +2865,9 @@ tr_TR:
           revert_confirm: "Değişiklikleri geri almak istediğine emin misin?"
         theme:
           browse_themes: "Topluluk temalarına göz atın"
-          import_theme: "Temayı İçe Aktar"
           customize_desc: "Kişiselleştir:"
           title: "Temalar"
           create: "Oluştur"
-          create_type: "Tür:"
-          create_name: "İsim:"
           long_title: "Sitenin renklerini, CSS ve HTML içeriğini değiştir"
           edit: "Düzenle"
           edit_confirm: "Bu, uzak bir temadır. Eğer CSS / HTML'yi düzenlersen, temayı güncellediğinde değişiklikler silinir."
@@ -2889,7 +2878,6 @@ tr_TR:
           preview: "Önizleme"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
-          color_scheme: "Renk Şeması"
           color_scheme_select: "Temada kullanılacak renkleri seç"
           custom_sections: "İsteğe uyarlanmış bölümler:"
           theme_components: "Tema Öğeleri"
@@ -2947,20 +2935,11 @@ tr_TR:
             text: "YAML"
             title: "Tema ayarlarını YAML formatında tanımla"
         colors:
-          select_base:
-            title: "Temel renk şemasını seç"
-            description: "Temel şema:"
           title: "Renkler"
-          edit: "Renk Şemalarını Düzenle"
-          long_title: "Renk Şemaları"
-          about: "Temalarında kullandığın renkleri değiştir. Başlamak için yeni bir renk şeması oluştur."
-          new_name: "Yeni Renk Şeması"
           copy_name_prefix: "Kopyası"
-          delete_confirm: "Bu renk şemasını silmek mi istiyorsun? "
           undo: "geri al"
           undo_title: " Son kayıt esnasında yapılan bu renkteki değişiklikleri geri al."
           revert: "eski haline getir"
-          revert_title: "Bu rengi varsayılan renk şemasına göre sıfırla."
           primary:
             name: "Ana"
             description: "Çoğu yazı, ikonlar ve kenarlar"

@@ -34,7 +34,6 @@ nl:
   anonymous: "Anoniem"
   remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   themes:
-    bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenschema"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
   emails:
     incoming:
@@ -976,7 +975,6 @@ nl:
     max_emails_per_day_per_user: "Maximale aantal e-mails dat per dag naar gebruikers wordt verzonden. 0 om de limiet uit te schakelen"
     enable_staged_users: "Maak automatisch staged gebruikers aan bij het verwerken van inkomende e-mails."
     maximum_staged_users_per_email: "Maximale aantal staged gebruikers dat bij het verwerken van een inkomende e-mail wordt aangemaakt."
-    private_email: "Geen inhoud van berichten of topics in e-mails bijvoegen voor extra privacy"
     pop3_polling_enabled: "Poll via POP3 voor antwoorden per e-mail."
     pop3_polling_ssl: "Gebruik SSL bij de verbinding naar de POP3 server. (Aanbevolen)"
     pop3_polling_period_mins: "De periode in minuten tussen controleren van het POP3 account voor e-mail. LET OP: vereist een herstart."
@@ -1058,7 +1056,6 @@ nl:
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
     max_api_keys_per_user: "Maximale aantal API-aanvragen van gebruiker per gebruiker"
     min_trust_level_for_user_api_key: "Vereiste vertrouwensniveau voor genereren van API-sleutels van gebruiker"
-    allowed_user_api_auth_redirects: "Toegestane URL voor authenticatie-omleiding voor API-sleutels van gebruiker"
     allowed_user_api_push_urls: "Toegestane URL's voor server-push naar gebruikers-API"
     errors:
       invalid_email: "Ongeldig e-mailadres."

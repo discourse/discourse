@@ -103,12 +103,7 @@ da:
       next_month: "Næste måned"
       placeholder: dato
     share:
-      topic: "del et link til dette emne"
-      post: "indlæg #%{postNumber}"
       close: "luk"
-      twitter: "del dette link på Twitter"
-      facebook: "del dette link på Facebook"
-      email: "send dette link i en e-mail"
     action_codes:
       public_topic: "offentliggjorde dette emne %{when}"
       private_topic: "Gjorde dette enme"
@@ -388,7 +383,6 @@ da:
           description: "Du får besked hvis nogen nævner dit @navn "
         muted:
           title: "Tavs"
-          description: "Du får aldrig beskeder om nye emner i denne gruppe."
       flair_url: "Avatar Flair-billede"
       flair_url_placeholder: "(Valgfrit) Billed-URL eller Font Awesome klasse"
       flair_bg_color: "Avatar Flair-baggrundsfarve"
@@ -1716,7 +1710,6 @@ da:
       default_top_period: "Standardperiode for top:"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
-      add_permission: "Tilføj tilladelse"
       this_year: "dette år"
       default_position: "Standarposition"
       position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "
@@ -2372,7 +2365,6 @@ da:
         save: "Gem"
         new: "Ny"
         new_style: "Ny style"
-        import: "Importer"
         delete: "Slet"
         delete_confirm: "Slet dette tema?"
         color: "Farve"
@@ -2391,7 +2383,6 @@ da:
           revert: "Rul ændringer tilbage"
           revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
         theme:
-          import_theme: "Importér tema"
           customize_desc: "Tilpas:"
           title: "Temaer"
           long_title: "Tilpas farver, CSS og HTML-indholdet for dit site"
@@ -2404,7 +2395,6 @@ da:
           preview: "Forhåndsvisning"
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
-          color_scheme: "Farveskema"
           color_scheme_select: "Vælg farver som temaet skal anvende"
           custom_sections: "Tilpassede sektioner:"
           theme_components: "Temakomponenter"
@@ -2441,20 +2431,11 @@ da:
             text: "</body>"
             title: "HTML som vil blive sat ind før tagget </body>"
         colors:
-          select_base:
-            title: "Vælg grundlæggende farveskema"
-            description: "Grundlæggende skema:"
           title: "Farver"
-          edit: "Redigér farveskemaer"
-          long_title: "Farve temaer"
-          about: "Tilpas farverne som dit tema gør brug af. Opret et nyt farveskema for at starte."
-          new_name: "Nyt farve tema"
           copy_name_prefix: "Kopi af"
-          delete_confirm: "Slet dette farvetema?"
           undo: "fortryd"
           undo_title: "Fortryd dine ændringer til denne farve, siden sidste gang den blev gemt."
           revert: "gendan"
-          revert_title: "Nulstil denne farve til Discourse's standard farve tema."
           primary:
             name: "Primær"
             description: "De fleste tekster, iconer og kanter."

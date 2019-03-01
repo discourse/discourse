@@ -103,12 +103,7 @@ sv:
       next_month: "Nästkommande månad"
       placeholder: datum
     share:
-      topic: "dela en länk till detta ämne"
-      post: "inlägg #%{postNumber}"
       close: "stäng"
-      twitter: "dela denna länk på Twitter"
-      facebook: "dela denna länk på Facebook"
-      email: "skicka denna länk i ett e-postmeddelande"
     action_codes:
       public_topic: "gjorde det här ämnet publikt %{when}"
       private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
@@ -393,7 +388,6 @@ sv:
           description: "Du kommer att notifieras om någon nämner ditt @namn eller svarar dig."
         muted:
           title: "Tystad"
-          description: "Du kommer aldrig att bli notifierad om något gällande nya ämnen i den här gruppen."
       flair_bg_color_placeholder: "Hex färgvärde"
       flair_color: "En Avatar som ändrar färg beroende på ljuset"
       flair_color_placeholder: "(Valfritt) Hex-färgvärde"
@@ -1646,7 +1640,6 @@ sv:
       default_view: "Förvald ämneslista"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
-      add_permission: "Lägg till behörighet"
       this_year: "i år"
       default_position: "Standardposition"
       position_disabled: "Kategorier kommer att sorteras efter deras aktivitet. För att ställa in sorteringen av kategorier i den här listan,"
@@ -2288,7 +2281,6 @@ sv:
         save: "Spara"
         new: "Ny"
         new_style: "Ny stil"
-        import: "Importera"
         delete: "Radera"
         color: "Färg"
         opacity: "Opacitet"
@@ -2303,14 +2295,10 @@ sv:
           revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
         colors:
           title: "Färger"
-          long_title: "Färgscheman"
-          new_name: "Nytt färgschema"
           copy_name_prefix: "Kopia av"
-          delete_confirm: "Ta bort det här färgschemat?"
           undo: "ångra"
           undo_title: "Återställ ändringarna för den här färgen till den senast sparade versionen."
           revert: "återställ"
-          revert_title: "Återställ den här färgen till Discourse standard färgschema."
           primary:
             name: "primär"
             description: "Det mesta av texten, ikoner och ramar."

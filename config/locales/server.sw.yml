@@ -36,7 +36,6 @@ sw:
   remove_posts_deleted_by_author: "Imefutwa na Mwandishi"
   redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
   themes:
-    bad_color_scheme: "Hauwezi kusasisha mandhari, mpango wa rangi batili"
     other_error: "Tatizo limetokea kwenye kusasisha mandhari"
     settings_errors:
       invalid_yaml: "YAML iliyowekwa ni batili."
@@ -48,7 +47,6 @@ sw:
       number_value_not_valid_min_max: "Lazima iwe kati ya %{min} na %{max}."
       number_value_not_valid_min: "Lazima iwe na ukubwa wa au zaidi ya %{min}."
       number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
-      string_value_not_valid_min_max: "Herufi lazima ziwe kati ya %{min} na %{max}"
       string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
       string_value_not_valid_max: "Isizidi maneno  %{max}."
   emails:
@@ -856,7 +854,6 @@ sw:
     auto_silence_first_post_regex: "Taarifa zilizo ndani ya mabano hazitapewa kipaumbele kama herufi ni kubwa au ndogo, kama zikipitishwa zitasababisha chapisho la kwanza linyamazishwe na lisubirishwe. Mfano raging|a[bc]a , itasababisha machapisho yote yenye raging au aba au aca yamazishwe mara ya kwanza. Kanuni hii inatokea kwenye chapisho la kwanza tu."
     flags_default_topics: "Onyesha mada zilizoripotiwa kama chaguo-msingi upande wa kiongozi"
     reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
-    private_email: "Usiweke ndani maandishi ya machapisho au mada kwenye barua pepe kwa ajili ya ulinzi zaidi."
     delete_all_posts_max: "Kiwango cha juu cha machapisho yanayoweza kufutwa mara moja na kitufe cha Futa Machapisho Yote. Kama mtumiaji ana namba fulani ya machapisho, machapisho hayawezi kufutwa mara moja na mtumiaji hawezi kufutwa. "
     digest_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa kwenye muhtasari wa barua pepe."
     digest_posts: "Kiwango cha juu cha machapisho kitakacho onyeshwa kwenye muhtasari ya barua pepe."

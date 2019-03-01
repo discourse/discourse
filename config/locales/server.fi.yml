@@ -37,7 +37,6 @@ fi:
   redirect_warning: "Emme pystyneet varmistamaan että klikkaamasi linkki on oikeasti lähetetty palstalle. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
   on_another_topic: "Toisessa ketjussa"
   themes:
-    bad_color_scheme: "Teemaa ei voitu päivittää, värimalli ei kelpaa"
     other_error: "Jotakin meni vikaan, kun teemaa päivitettiin"
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
@@ -49,7 +48,6 @@ fi:
     errors:
       component_no_user_selectable: "Teemakomponentti ei voi olla käyttäjän valittavissa"
       component_no_default: "Teemakomponentti ei voi olla oletusteema"
-      component_no_color_scheme: "Teemakomponentilla ei voi olla värimallia"
       no_multilevels_components: "Teemat joilla on tytärteemoja eivät voi olla tytärteemoja itse"
     settings_errors:
       invalid_yaml: "Annettu YAML ei kelpaa"
@@ -64,7 +62,6 @@ fi:
       number_value_not_valid_min: "Sen täytyy olla suurempi tai yhtä suuri kuin %{min}."
       number_value_not_valid_max: "Sen täytyy olla pienempi tai yhtä suuri kuin %{max}."
       string_value_not_valid: "Uuden arvon pituus ei ole sallituissa rajoissa."
-      string_value_not_valid_min_max: "Sen täytyy olla vähintään %{min} ja enintään %{max}merkkiä pitkä."
       string_value_not_valid_min: "Sen täytyy olla vähintään %{min}merkkiä pitkä."
       string_value_not_valid_max: "Sen täytyy olla enintään %{max}merkkiä pitkä"
     locale_errors:
@@ -717,7 +714,7 @@ fi:
       long_form: "liputti tämän sopimattomaksi"
     notify_user:
       title: "Lähetä käyttäjälle @{{username}} viesti."
-      description: "Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti."
+      description: "Haluan keskustella viestistä kirjoittajan kanssa kahden kesken."
       short_description: "Haluan keskustella viestistä kirjoittajan kanssa suoraan ja henkilökohtaisesti."
       long_form: "lähetä käyttäjälle viesti"
       email_title: 'Viestisi ketjussa "%{title}"'
@@ -1134,7 +1131,7 @@ fi:
     twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen Twitterin kautta (enable_twitter_logins), mutta key- ja secret-salausarvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
     github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen ja kirjautuminen GitHubin kautta (enable_github_logins), mutta client id- ja app secret -arvoja ei ole asetettu. Päivitä arvot <a href="%{base_path}/admin/site_settings">sivuston asetuksissa</a>. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voit lukea lisää tästä oppaasta</a>.'
     pwa_config_icon_warning: 'Sivustolta puuttuu 512×512-kokoinen ikoni joka tarvitaan, jotta Android-käyttäjä voi lisätä sivuston kotinäyttönsä pikavalinnaksi. Käy <a href="/admin/site_settings/category/all_results?filter=large_icon">sivustoasetuksissa</a> ja lataa 512×512-kokoinen kuvake.'
-    pwa_config_title_warning: 'Sivustolta puuttuu lyhyt nimi joka tarvitaan, jotta Android-käyttäjä voi lisätä sivuston kotinäyttönsä pikavalinnaksi. Käy <a href="/admin/site_settings/category/all_results?filter=large_icon">sivustoasetuksissa</a> ja määritä enintään 12 merkin pituinen nimi.'
+    pwa_config_title_warning: 'Sivustolta puuttuu lyhyt nimi joka tarvitaan, jotta Android-käyttäjä voi lisätä sivuston kotinäyttönsä pikavalinnaksi. Käy <a href="%{base_path}/admin/site_settings/category/all_results?filter=short_title">sivustoasetuksissa</a> ja määritä enintään 12 merkin pituinen nimi.'
     s3_config_warning: 'Palvelin on konfiguroitu tallentamaan sivustolle ladatut tiedostot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile tai s3_upload_bucket. Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
     s3_backup_config_warning: 'Palvelin on konfiguroitu tallentamaan varmuuskopiot S3:een, mutta vähintään yksi tiedoista on asettamatta: s3_access_key_id, s3_secret_access_key tai s3_upload_bucket . Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Lisätietoa englanninkielisestä ketjusta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataa uusin versio</a>.'
@@ -1538,7 +1535,6 @@ fi:
     attachment_filename_blacklist: "Lista avainsanoja, jota käytetään liitteiden estämisessä niiden tiedostonimen perusteella."
     enable_forwarded_emails: "[BETA] Salli käyttäjän aloittaa ketju välittämällä saapunut sähköpostiviesti."
     always_show_trimmed_content: "Näytä kaikkialla saapuvien sähköpostien karsitut osat. VAROITUS: voi paljastaa sähköpostiosoitteita."
-    private_email: "Älä laita sähköposteihin viestien tai ketjujen sisältöä yksityisyyssyistä."
     manual_polling_enabled: "Työnnä sähköpostit käyttäen sähköpostivastausten APIa."
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
@@ -1763,13 +1759,6 @@ fi:
     errors:
       different_topics: "Eri ketjuissa olevia viestejä ei voi yhdistää."
       different_users: "Eri käyttäjien viestejä ei voi yhdistää."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Viesti siirrettiin uuteen %{entity}: %{topic_link}"
-      other: "%{count} viestiä siirrettiin uuteen %{entity}: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Viesti siirrettiin toiseen %{entity}: %{topic_link}"
-      other: "%{count} viestiä siirrettiin toiseen %{entity}: %{topic_link}"
   change_owner:
     post_revision_text: "Vaihtoi omistajaa"
   topic_statuses:
@@ -2126,6 +2115,22 @@ fi:
     flags_agreed_and_post_deleted:
       title: "Henkilökunta poisti liputetun viestin"
       subject_template: "Henkilökunta poisti liputetun viestin"
+      text_body_template: |
+        Hei,
+
+        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme sinulle että [viestisi](%{base_url}%{url}) poistettiin.
+
+        %{flag_reason}
+
+        Yhteisö liputti viestin ja henkilökunnan jäsen päätti poistaa sen.
+
+        [details="Katsele poistettua viestiä klikkaamalla"]
+        ``` markdown
+        %{flagged_post_raw_content}
+        ```
+        [/details]
+
+        Kertaa [yhteisön säännöt](%{base_url}/guidelines) jos kaipaat lisätietoa.
     usage_tips:
       text_body_template: |
         [Tässä blogikirjoituksessa](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
@@ -2994,14 +2999,6 @@ fi:
     sender_post_deleted: "viesti on poistettu"
   color_schemes:
     base_theme_name: "Perus"
-    light: "Vaalea värimalli"
-    dark: "Tumma värimalli"
-    neutral: "Neutraali värimalli"
-    grey_amber: "Harmaa ambra -värimalli"
-    shades_of_blue: "Sinisen sävyt -värimalli"
-    latte: "Latte-värimalli"
-    summer: "Kesäinen värimalli"
-    dark_rose: "Tumma ruusu -värimalli"
     default_theme_name: "Vaalea"
     light_theme_name: "Vaalea"
     dark_theme_name: "Tumma"
@@ -3251,7 +3248,7 @@ fi:
       name: Vuosipäivä
       description: "Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin"
       long_description: |
-        Tämä ansiomerkki myönnetään aina, kun olet jäsenenä vuoden ajan ja kirjoitat sinä aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja annat panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
+        Tämä ansiomerkki myönnetään vuosittain jäsenyytesi vuosipäivän kunniaksi sillä ehdolla, että olet kirjoittanut vuoden aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
     nice_post:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
@@ -3561,14 +3558,6 @@ fi:
             placeholder: "San Francisco, Kalifornia"
       colors:
         title: "Värimaailma"
-        fields:
-          theme_id:
-            description: "Haluatko tumman vai vaalean värimaailman? Voit milloin vain muokata sivustosi ulkoasua navigoimalla Ylläpito --> Mukauta"
-            choices:
-              default:
-                label: "Yksinkertainen vaalea"
-              dark:
-                label: "Yksinkertainen tumma"
       logos:
         title: "Logot"
         fields:

@@ -296,7 +296,7 @@ nb_NO:
         reply: |-
           Whoa! :boom:
 
-          For å bevare den røde tråden i diskusjoner forsvinner ikke slettede innlegg umiddelbart, men de fjernes helt etter at det har gått en stund.
+          For å bevare den røde tråden i diskusjoner forsvinner ikke slettede innlegg umiddelbart, så innlegget vil bli fjernet om litt.
       recover:
         deleted_post_raw: 'Hvorfor slettet @%{discobot_username}innlegget mitt? :anguished:'
         instructions: |-

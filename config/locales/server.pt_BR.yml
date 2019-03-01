@@ -35,9 +35,12 @@ pt_BR:
   anonymous: "Anônimo"
   remove_posts_deleted_by_author: "Deletado pelo autor"
   redirect_warning: "Não foi possível confirmar se o link selecionado foi publicado no fórum. Se você deseja continuar mesmo assim, selecione o link abaixo."
+  on_another_topic: "Em outro tópico"
   themes:
-    bad_color_scheme: "Não é possível atualizar o tema, esquema de cores inválido"
+    bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
     other_error: "Algo de errado aconteceu ao atualizar o tema"
+    import_error:
+      generic: Ocorreu um erro ao importar esse tema
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido."
       data_type_not_a_number: "Definindo`%{name}` tipo não é suportado. Tipos suportados são `integer`,` bool`, `list` e` enum`"
@@ -51,7 +54,6 @@ pt_BR:
       number_value_not_valid_min: "Deve ser maior ou igual a%{min}."
       number_value_not_valid_max: "Deve ser menor ou igual a%{max}."
       string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
-      string_value_not_valid_min_max: "Deve estar entre%{min} e %{max}character long."
       string_value_not_valid_min: "Deve ser pelo menos%{min} characters long."
       string_value_not_valid_max: "Deve ser no máximo%{max} characters long."
   emails:
@@ -61,6 +63,7 @@ pt_BR:
       maximum_staged_user_per_email_reached: "Atingido número máximo de usuários de teste criados por email."
       no_subject: "(sem assunto)"
       no_body: "(sem corpo)"
+      missing_attachment: "(Anexo %{filename} não está presente)"
       errors:
         empty_email_error: "Ocorre quando o email bruto recebido estiver em branco."
         no_message_id_error: "Ocorre quando o email não possui cabeçalho 'id-mensagem'."
@@ -110,6 +113,7 @@ pt_BR:
       odd: deve ser ímpar
       record_invalid: "A validação falhou: %{errors}"
       max_emojis: "não pode ter mais que %{max_emojis_count} emojis"
+      emojis_disabled: "Não pode ter emoji"
       ip_address_already_screened: "já está incluído em uma regra existente"
       restrict_dependent_destroy:
         one: "Não foi possível excluir o registro porque um %{record} dependente existe"
@@ -137,6 +141,8 @@ pt_BR:
         other: "Você especificou a escolha inválida  %{name}"
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Você não pode habilitar o inventário para o S3 a não ser que tenha habilitado os uploads para o S3"
+      s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup não ser que você tenha provido o '%{setting_name}'."
     conflicting_google_user_id: 'O ID da Conta do Google para esta conta foi alterado. A intervenção do pessoal é necessária por razões de segurança. Por favor contate a equipe e aponte-os para <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
   activemodel:
     errors:
@@ -1293,7 +1299,6 @@ pt_BR:
     attachment_filename_blacklist: "Lista de palavras-chave usadas para anexos de lista negra com base no nome do arquivo."
     enable_forwarded_emails: "[BETA] Permitir que os usuários criem um tópico encaminhando um e-mail para."
     always_show_trimmed_content: "Sempre mostre a parte aparada dos emails recebidos. AVISO: pode revelar endereços de e-mail."
-    private_email: "Não inclua conteúdo de postagens ou tópicos em e-mails para privacidade extra."
     manual_polling_enabled: "Enviar e-mails usando a API para respostas por e-mail."
     pop3_polling_enabled: "POLLar via POP3 por respostas via email."
     pop3_polling_ssl: "Usar SSL ao conectar ao servidor POP3. (Recomendado)"
@@ -1422,7 +1427,6 @@ pt_BR:
     allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do usuário"
     max_api_keys_per_user: "Número máximo de chaves da API do usuário por usuário"
     min_trust_level_for_user_api_key: "Nível de confiança necessário para geração de chaves de API do usuário"
-    allowed_user_api_auth_redirects: "URL permitido para o redirecionamento de autenticação para chaves da API do usuário"
     allowed_user_api_push_urls: "URLs permitidos para push de servidor para API do usuário"
     tagging_enabled: "Habilitar etiquetas em tópicos?"
     min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma tag."
@@ -1825,6 +1829,14 @@ pt_BR:
     restore_failed:
       title: "Restauração falhou"
       subject_template: "A restauração falhou"
+      text_body_template: |
+        A restauração falhou
+
+        Aqui está o log:
+
+        ``` text
+        %{logs}
+        ```
     bulk_invite_succeeded:
       title: "Convite em massa foi bem-sucedido"
       subject_template: "Seus convites foram enviados com sucesso."
@@ -1994,6 +2006,8 @@ pt_BR:
         Desculpe, mas sua mensagem de e-mail para %{destination} (intitulado %{former_title}) não funcionou.
 
         Ocorreu um erro não reconhecido ao processar seu e-mail e não foi publicado. Você deve tentar novamente ou [contatar um membro da equipe](%{base_url}/sobre).
+    email_reject_attachment:
+      title: "Anexo do E-mail Rejeitado"
     email_error_notification:
       title: "Notificação de erro por e-mail"
       subject_template: "[%{email_prefix}] Problema de e-mail - erro de autenticação POP"
@@ -2501,14 +2515,6 @@ pt_BR:
     sender_text_part_body_blank: "text_part.body está em branco"
   color_schemes:
     base_theme_name: "Base"
-    light: "Esquema de Luz"
-    dark: "Esquema Escuro"
-    neutral: "Esquema Neutro"
-    grey_amber: "Esquema Âmbar Cinzento"
-    shades_of_blue: "Sombras do Esquema Azul"
-    latte: "Esquema Latte"
-    summer: "Esquema De Verão"
-    dark_rose: "Esquema de Rosa Escura"
     default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
@@ -2529,7 +2535,7 @@ pt_BR:
     Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name}
   guidelines_topic:
     title: "Perguntas frequentes/Diretrizes"
-    body: "<a name=\"civilized\"></a>\n\n## [Este é um lugar civilizado para discussão pública] (#civilizado)\n\nPor favor, trate este fórum de discussão com o mesmo respeito que você faria com um parque público. Nós também somos um recurso da comunidade compartilhada & mdash; um lugar para compartilhar habilidades, conhecimento e interesses por meio de conversas contínuas.\n\nEssas não são regras rígidas e rápidas, meras diretrizes para ajudar o julgamento humano de nossa comunidade e manter esse lugar limpo e bem iluminado para o discurso público civilizado.\n\n<a name=\"improve\"></a>\n\n## [Melhore a discussão] (#melhorar) \n\nAjude-nos a fazer deste um ótimo lugar para discussão, sempre trabalhando para melhorar a discussão de alguma forma, por menor que seja. Se você não tiver certeza de que sua postagem será adicionada à conversa, pense no que deseja dizer e tente novamente mais tarde.\n\nOs tópicos discutidos aqui são importantes para nós e queremos que você aja como se eles também fossem importantes para você. Seja respeitoso com os tópicos e as pessoas que os discutem, mesmo que você discorde de algo do que está sendo dito.\n\nUma maneira de melhorar a discussão é descobrindo aquelas que já estão acontecendo. Passe algum tempo navegando pelos tópicos aqui antes de responder ou iniciar o seu, e você terá mais chances de conhecer outras pessoas que compartilham seus interesses.\n\n<a name=\"agreeable\"></a>\n\n## [Seja agradável, mesmo quando você discordar] (#agradável)\n\nVocê pode querer responder a algo discordando dele. Isso é bom. Mas lembre-se de _criticizar idéias, não pessoas_. Por favor, evite:\n\n*   Xingamento\n*   Ataques ad hominem\n*   Respondendo ao tom de uma postagem em vez de seu conteúdo real\n*   Contradição do joelho-empurrão\n\nEm vez disso, forneça contra-argumentos fundamentados que melhorem a conversa.\n\n<a name=\"participate\"></a>\n\n## [Sua participação conta](#participe)\n\nAs conversas que temos aqui dão o tom para cada nova chegada. Ajude-nos a influenciar o futuro desta comunidade escolhendo participar de discussões que tornem este fórum um lugar interessante para ser & mdash; e evitando aqueles que não o fazem.\n\nO discurso fornece ferramentas que permitem à comunidade identificar coletivamente as melhores (e piores) contribuições: favoritos, marcações, sinalizações, respostas, edições e assim por diante. Use essas ferramentas para melhorar sua própria experiência e a das outras pessoas também.\n\nVamos deixar nossa comunidade melhor do que a encontramos.\n\n<a name=\"flag-problems\"></a>\n\n## [Se você ver um problema, sinalize-o] (#SinalizçãoDeProblemas)\n\nModeradores têm autoridade especial; eles são responsáveis ​​por este fórum. Mas você também. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou policiais.\n\nQuando você vir um mau comportamento, não responda. Ele encoraja o mau comportamento reconhecendo-o, consome sua energia e desperdiça o tempo de todos. _Apenas sinalize_ Se houver sinalizadores suficientes, ações serão tomadas, automaticamente ou por intervenção do moderador.\n\nPara manter nossa comunidade, os moderadores reservam-se o direito de remover qualquer conteúdo e qualquer conta de usuário por qualquer motivo a qualquer momento. Os moderadores não visualizam novas postagens; os moderadores e os operadores do site não se responsabilizam por nenhum conteúdo postado pela comunidade.\n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civil] (#seja civil)\n\nNada sabota uma conversa saudável como grosseria:\n\n*   Seja civilizado. Não poste nada que uma pessoa razoável consideraria ofensiva, abusiva ou de incitação ao ódio.\n*   Mantenha-se limpo. Não publique nada de obsceno ou sexualmente explícito.\n*   Respeitar-se mutuamente. Não assedie nem lamente ninguém, personifique pessoas ou exponha suas informações pessoais.\n*   Respeite o nosso fórum. Não publique spam nem ofusque o fórum.\n\nEstes não são termos concretos com definições precisas & mdash; evite até mesmo a aparência de qualquer uma dessas coisas. Se você não tiver certeza, pergunte-se como se sentiria se sua publicação fosse publicada na primeira página do New York Times..\n\nEste é um fórum público e os mecanismos de pesquisa indexam essas discussões. Mantenha o idioma, links e imagens seguros para familiares e amigos.\n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o arrumado] (#manter-arrumado)\n\nFaça o esforço para colocar as coisas no lugar certo, para que possamos passar mais tempo discutindo e menos limpando, assim:\n\n*   Não comece um tópico na categoria errada.\n*   Não publique a mesma coisa em vários tópicos.\n*   Não publique respostas sem conteúdo.\n*   Não desvie um tópico alterando-o no meio do caminho.\n*   Não assine suas postagens & mdash; cada post tem suas informações de perfil anexadas.\n\nEm vez de postar \"+1\" ou \"Concordo\", use o botão Curtir. Em vez de usar um tópico existente em uma direção radicalmente diferente, use Responder como um tópico vinculado.\n\n<a name=\"stealing\"></a>\n\n## [Post apenas seu próprio material] (#roubar)\n\nVocê não pode postar nada digital que pertença a outra pessoa sem permissão. Você não pode postar descrições, links ou métodos para roubar propriedade intelectual de alguém (software, vídeo, áudio, imagens) ou violar qualquer outra lei.\n\n<a name=\"power\"></a>\n\n## [Empoderado por você] (#poder)\n\nEste site é operado por sua [equipe local amigável] (/ sobre) e * você *, a comunidade. Se você tiver outras dúvidas sobre como as coisas devem funcionar aqui, abra um novo tópico na [categoria de feedback do site] (/ c / feedback do site) e vamos discutir! Se houver um problema crítico ou urgente que não possa ser tratado por um meta tópico ou sinalizador, entre em contato conosco através da [página pessoal] (/ about).\n\n<a name=\"tos\"></a>\n\n## [Termos de Serviço] (#tds)\n\nSim, legalês é chato, mas devemos nos proteger & ndash; e por extensão, você e seus dados & ndash; contra pessoas hostis. Temos um [Termos de Serviço] (/ tos) descrevendo seu (e nosso) comportamento e direitos relacionados a conteúdo, privacidade e leis. Para usar este serviço, você deve concordar em cumprir nossos [TOS] (/ tos).\n"
+    body: "<a name=\"civilized\"></a>\n\n## [Este é um lugar civilizado para discussão pública](#civilized)\n\nPor favor, trate este fórum de discussão com o mesmo respeito que você faria com um parque público. Nós também somos um recurso da comunidade compartilhada &mdash; um lugar para compartilhar habilidades, conhecimento e interesses por meio de conversas contínuas.\n\nEssas não são regras rígidas e rápidas, meras diretrizes para ajudar o julgamento humano de nossa comunidade e manter esse lugar limpo e bem iluminado para o discurso público civilizado.\n\n<a name=\"improve\"></a>\n\n## [Melhore a discussão](#improve) \n\nAjude-nos a fazer deste um ótimo lugar para discussão, sempre trabalhando para melhorar a discussão de alguma forma, por menor que seja. Se você não tiver certeza de que sua postagem será adicionada à conversa, pense no que deseja dizer e tente novamente mais tarde.\n\nOs tópicos discutidos aqui são importantes para nós e queremos que você aja como se eles também fossem importantes para você. Seja respeitoso com os tópicos e as pessoas que os discutem, mesmo que você discorde de algo do que está sendo dito.\n\nUma maneira de melhorar a discussão é descobrindo aquelas que já estão acontecendo. Passe algum tempo navegando pelos tópicos aqui antes de responder ou iniciar o seu, e você terá mais chances de conhecer outras pessoas que compartilham seus interesses.\n\n<a name=\"agreeable\"></a>\n\n## [Seja agradável, mesmo quando você discordar](#agreeable)\n\nVocê pode querer responder a algo discordando dele. Isso é bom. Mas lembre-se de _criticizar idéias, não pessoas_. Por favor, evite:\n\n* Xingamento\n* Ataques ad hominem\n* Respondendo ao tom de uma postagem em vez de seu conteúdo real\n* Contradição do joelho-empurrão\n\nEm vez disso, forneça contra-argumentos fundamentados que melhorem a conversa.\n\n<a name=\"participate\"></a>\n\n## [Sua participação conta](#participate)\n\nAs conversas que temos aqui dão o tom para cada nova chegada. Ajude-nos a influenciar o futuro desta comunidade escolhendo participar de discussões que tornem este fórum um lugar interessante para ser &mdash; e evitando aqueles que não o fazem.\n\nO discurso fornece ferramentas que permitem à comunidade identificar coletivamente as melhores (e piores) contribuições: favoritos, marcações, sinalizações, respostas, edições e assim por diante. Use essas ferramentas para melhorar sua própria experiência e a das outras pessoas também.\n\nVamos deixar nossa comunidade melhor do que a encontramos.\n\n<a name=\"flag-problems\"></a>\n\n## [Se você ver um problema, sinalize-o](#flag-problems)\n\nModeradores têm autoridade especial; eles são responsáveis por este fórum. Mas você também. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou policiais.\n\nQuando você vir um mau comportamento, não responda. Ele encoraja o mau comportamento reconhecendo-o, consome sua energia e desperdiça o tempo de todos. _Apenas sinalize_ Se houver sinalizadores suficientes, ações serão tomadas, automaticamente ou por intervenção do moderador.\n\nPara manter nossa comunidade, os moderadores reservam-se o direito de remover qualquer conteúdo e qualquer conta de usuário por qualquer motivo a qualquer momento. Os moderadores não visualizam novas postagens; os moderadores e os operadores do site não se responsabilizam por nenhum conteúdo postado pela comunidade.\n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civil](#be-civil)\n\nNada sabota uma conversa saudável como grosseria:\n\n* Seja civilizado. Não poste nada que uma pessoa razoável consideraria ofensiva, abusiva ou de incitação ao ódio.\n* Mantenha-se limpo. Não publique nada de obsceno ou sexualmente explícito.\n* Respeitar-se mutuamente. Não assedie nem lamente ninguém, personifique pessoas ou exponha suas informações pessoais.\n* Respeite o nosso fórum. Não publique spam nem ofusque o fórum.\n\nEstes não são termos concretos com definições precisas &mdash; evite até mesmo a aparência de qualquer uma dessas coisas. Se você não tiver certeza, pergunte-se como se sentiria se sua publicação fosse publicada na primeira página do New York Times..\n\nEste é um fórum público e os mecanismos de pesquisa indexam essas discussões. Mantenha o idioma, links e imagens seguros para familiares e amigos.\n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o arrumado](#keep-tidy)\n\nFaça o esforço para colocar as coisas no lugar certo, para que possamos passar mais tempo discutindo e menos limpando, assim:\n\n* Não comece um tópico na categoria errada.\n* Não publique a mesma coisa em vários tópicos.\n* Não publique respostas sem conteúdo.\n* Não desvie um tópico alterando-o no meio do caminho.\n* Não assine suas postagens &mdash; cada post tem suas informações de perfil anexadas.\n\nEm vez de postar \"+1\" ou \"Concordo\", use o botão Curtir. Em vez de usar um tópico existente em uma direção radicalmente diferente, use Responder como um tópico vinculado.\n\n<a name=\"stealing\"></a>\n\n## [Post apenas seu próprio material](#stealing)\n\nVocê não pode postar nada digital que pertença a outra pessoa sem permissão. Você não pode postar descrições, links ou métodos para roubar propriedade intelectual de alguém (software, vídeo, áudio, imagens) ou violar qualquer outra lei.\n\n<a name=\"power\"></a>\n\n## [Empoderado por você](#power)\n\nEste site é operado por sua [equipe local amigável](%{base_path}/about) e *você*, a comunidade. Se você tiver outras dúvidas sobre como as coisas devem funcionar aqui, abra um novo tópico na [categoria de feedback do site](/c/site-feedback) e vamos discutir! Se houver um problema crítico ou urgente que não possa ser tratado por um meta tópico ou sinalizador, entre em contato conosco através da [página pessoal](/about).\n\n <a name=\"tos\"></a>\n\n ## [Termos de Serviço](#tos)\n\n Sim, legalês é chato, mas devemos nos proteger &ndash; e por extensão, você e seus dados &ndash; contra pessoas hostis. Temos um [Termos de Serviço](/tos) descrevendo seu (e nosso) comportamento e direitos relacionados a conteúdo, privacidade e leis. Para usar este serviço, você deve concordar em cumprir nossos [TOS](/tos).\n"
   tos_topic:
     title: "Termos de Serviço"
   privacy_topic:
@@ -2944,14 +2950,6 @@ pt_BR:
         title: "Organização"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            description: "Você prefere um esquema de cores claras ou escuras para começar? Você pode personalizar ainda mais a aparência do seu site por meio do Admin, Personalizar."
-            choices:
-              default:
-                label: "Claro Simples"
-              dark:
-                label: "Escuro Simples"
       logos:
         title: "Logotipos"
       icons:

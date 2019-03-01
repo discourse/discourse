@@ -1075,7 +1075,6 @@ ro:
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
     max_api_keys_per_user: "Numărul maxim de chei API utilizator pe utilizator"
     min_trust_level_for_user_api_key: "Nivelul de încredere necesar pentru generarea de chei API utilizator"
-    allowed_user_api_auth_redirects: "URL permis pentru redirecționarea autentificării pentru cheile API utilizator "
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
     tagging_enabled: "Activează etichetele la subiecte?"
     min_trust_to_create_tag: "Nivelul minim de încredere necesar pentru crearea unei etichete."
@@ -1894,13 +1893,6 @@ ro:
         title: "Organizație"
       colors:
         title: "Temă"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Luminos simplu"
-              dark:
-                label: "Întunecat simplu"
       logos:
         title: "Logo-uri"
       icons:

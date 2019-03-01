@@ -109,12 +109,12 @@ es:
       next_month: "Próximo mes"
       placeholder: fecha
     share:
-      topic: "comparte un enlace a este tema"
+      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "cerrar"
-      twitter: "comparte este enlace en Twitter"
-      facebook: "comparte este enlace en Facebook"
-      email: "comparte este enlace por email"
+      twitter: "Comparte este enlace en Twitter"
+      facebook: "Comparte este enlace en Facebook"
+      email: "Comparte este enlace por email"
     action_codes:
       public_topic: "hizo este tema público %{when}"
       private_topic: "hizo este tema un mensaje personal %{when}"
@@ -173,6 +173,7 @@ es:
         us_west_1: "EEUU Oeste (Californa norte)"
         us_west_2: "EEUU Oeste (Oregon)"
     edit: "editar el título y la categoría de este tema"
+    expand: "Expandir"
     not_implemented: "Esta característica no ha sido implementada aún, ¡lo sentimos!"
     no_value: "No"
     yes_value: "Sí"
@@ -477,7 +478,7 @@ es:
           description: "Se te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
         watching_first_post:
           title: "Vigilar Primer Post"
-          description: "Se te notificará acerca de nuevos temas en este grupo, pero no cuando haya nuevas respuestas."
+          description: "Se te notificará de nuevos mensajes en este grupo pero no de respuestas a mensajes."
         tracking:
           title: "Siguiendo"
           description: "Se te notificará si alguien menciona tu @nombre o te responde, y un contador de nuevos mensajes será mostrado."
@@ -486,7 +487,7 @@ es:
           description: "Se te notificará si alguien menciona tu @nombre o te responde."
         muted:
           title: "Silenciado"
-          description: "Nunca se te notificará de nada sobre temas en este grupo."
+          description: "No se te notificará de nada relacionado con mensajes en este grupo."
       flair_url: "Sub-avatar del grupo"
       flair_url_placeholder: "(Opcional) Dirección URL de una imagen o clase de Font Awesome"
       flair_url_description: 'Use imágenes cuadradas de no menos de 20px por 20px o los iconos de FontAwesome (formatos aceptados: "fa-icon", "far fa-icon" o "fab fa-icon").'
@@ -708,6 +709,7 @@ es:
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error copiando datos al portapapeles"
         remaining_codes: "Tienes <strong>{{count}}</strong> códigos de respaldo restantes."
+        use: "<a href>Usar un código de recuperación</a>"
         codes:
           title: "Códigos de seguridad generados"
           description: "Cada uno de estos códigos de respaldo puede ser usado una única vez. Mantén los códigos en un lugar seguro, pero accesible."
@@ -725,6 +727,7 @@ es:
         extended_description: |
           La verificación en dos pasos añade una capa extra de seguridad requiriendo un token por única vez además de tu contraseña. Los códigos (token) se generan en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>
         oauth_enabled_warning: "Por favor ten en cuenta que los accesos a través de redes sociales serán inhabilitados si habilitas el factor de autenticación en dos pasos de tu cuenta."
+        use: "<a href>Usar Authenticator app</a>"
       change_about:
         title: "Cambiar 'Acerca de mí'"
         error: "Hubo un error al cambiar este valor."
@@ -959,9 +962,9 @@ es:
         top_topics: "Temas top"
         no_topics: "No hay temas aún."
         more_topics: "Más temas"
-        top_badges: "Distintivos top"
-        no_badges: "No hay distintivos aún."
-        more_badges: "Más distintivos"
+        top_badges: "Top medallas"
+        no_badges: "Todavía no hay medallas."
+        more_badges: "Más medalla"
         top_links: "Top enlaces"
         no_links: "No hay enlaces aún."
         most_liked_by: "Los que dieron más me gusta"
@@ -1413,6 +1416,7 @@ es:
         posted: '{{username}} publicó en "{{topic}}" - {{site_title}}'
         private_message: '{{username}} le envió un mensaje personal en "{{topic}}" - {{site_title}}'
         linked: '{{username}} enlazó tu publicación desde "{{topic}}" - {{site_title}}'
+        watching_first_post: '{{username}} ha creado un nuevo tema "{{topic}}" - {{site_title}}'
         confirm_title: "Notificaciones habilitadas - %{site_title}"
         confirm_body: "¡Éxito! Las notificaciones han sido habilitadas."
     upload_selector:
@@ -1471,7 +1475,7 @@ es:
         in_group:
           label: En el Grupo
         with_badge:
-          label: Con el Distintivo
+          label: Con la medalla
         with_tags:
           label: Etiquetado
         filters:
@@ -1774,6 +1778,7 @@ es:
         help: "Elimina el estado 'Destacado' de este tema para que no aparezca más en lo más alto de tu lista de temas"
       share:
         title: "Compartir"
+        extended_title: "Compartir un enlace"
         help: "comparte el enlace a este tema"
       print:
         title: "Imprimir"
@@ -2008,7 +2013,7 @@ es:
         rebake: "Reconstruir HTML"
         unhide: "Deshacer ocultar"
         change_owner: "Cambiar dueño"
-        grant_badge: "Condecer distintivo"
+        grant_badge: "Conceder medalla"
         lock_post: "Bloquear Post"
         lock_post_description: "evitar que el usuario que publicó edite esta publicación"
         unlock_post: "Desbloquear Post"
@@ -2161,7 +2166,7 @@ es:
       topic: "categoría"
       logo: "Imagen (logo) para la categoría"
       background_image: "Imagen de fondo para la categoría"
-      badge_colors: "Colores de los distintivos"
+      badge_colors: "Colores de las medalla"
       background_color: "Color de fondo"
       foreground_color: "Colores de primer plano"
       name_placeholder: "Debe ser corto y conciso."
@@ -2189,9 +2194,8 @@ es:
       sort_order: "Ordenar lista de temas:"
       default_view: "Orden por defecto:"
       default_top_period: "Periodo por defecto para el TOP"
-      allow_badges_label: "Permitir conceder distintivos en esta categoría"
+      allow_badges_label: "Permitir conceder medallas en esta categoría"
       edit_permissions: "Editar permisos"
-      add_permission: "Añadir permisos"
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
       this_year: "este año"
@@ -2334,7 +2338,7 @@ es:
       one: "usuario"
       other: "usuarios"
     category_title: "Categoría"
-    history: "Historia"
+    history: "Historial"
     changed_by: "por {{author}}"
     raw_email:
       title: "Emails entrantes"
@@ -2481,16 +2485,16 @@ es:
         print: "<b>ctrl</b>+<b>p</b> Imprimir tema"
     badges:
       earned_n_times:
-        one: "Ganó este distintivo 1 vez"
-        other: "Ganó este distintivo %{count} veces"
+        one: "Ganó esta medalla 1 vez"
+        other: "Ganó esta medalla %{count} veces"
       granted_on: "Concedido hace: %{date}"
-      others_count: "Otras personas con este distintivo (%{count})"
-      title: Distintivos
-      allow_title: "Puedes usar este distintivo como título"
+      others_count: "Otras personas con esta medalla (%{count})"
+      title: Medalla
+      allow_title: "Puedes usar esta medalla como título"
       multiple_grant: "Puedes ganar esto varias veces"
       badge_count:
-        one: "1 Distintivo"
-        other: "%{count} distintivos"
+        one: "1 medalla"
+        other: "%{count} medallas"
       more_badges:
         one: "+1 Más"
         other: "+%{count} Más"
@@ -2711,7 +2715,7 @@ es:
         active_posts: "Posts Reportados"
         old_posts: "Post reportados antiguos"
         topics: "Temas Reportados"
-        moderation_history: "Historia de Moderación"
+        moderation_history: "Historial de moderación"
         agree: "De acuerdo"
         agree_title: "Confirmar esta indicación como válido y correcto."
         agree_flag_hide_post: "Esconder Post"
@@ -3022,6 +3026,7 @@ es:
         location:
           local: "Almacenamiento local"
           s3: "S3"
+        backup_storage_error: "Error de acceso al backup storage: %{error_message}"
       export_csv:
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
@@ -3045,7 +3050,7 @@ es:
         save: "Guardar"
         new: "Nuevo"
         new_style: "Nuevo Estilo"
-        import: "Importar"
+        install: "Instalar"
         delete: "Eliminar"
         delete_confirm: "¿Eliminar este tema?"
         color: "Color"
@@ -3069,17 +3074,15 @@ es:
           components: "Componentes"
           theme_name: "Nombre del tema"
           component_name: "Nombre del componente"
-          themes_intro: "Selecciona un tema existente o crear nuevo para empezar"
+          themes_intro: "Seleccionar un estilo existente o instalar uno nuevo para empezar"
           beginners_guide_title: "Guía para novatos usando temas de Discourse"
           developers_guide_title: "Guía para desarrolladores para temas de Discourse"
           browse_themes: "Ver temas (themes) de la comunidad"
-          import_theme: "Importar tema"
           customize_desc: "Personalizar:"
           title: "Tema"
           create: "Crear"
-          create_type: "Tipo:"
-          create_name: "Nombre:"
-          name_too_short: "El nombre debe tener al menos 4 caracteres de largo."
+          create_type: "Tipo"
+          create_name: "Nombre"
           long_title: "Modifique los colores, los CSS y los contenidos HTML de su sitio"
           edit: "Editar"
           edit_confirm: "Este es un tema remoto, si editas CSS/HTML, los cambios serán borrados en la próxima actualización del tema."
@@ -3087,10 +3090,14 @@ es:
           desktop: "Escritorio"
           mobile: "Móvil"
           settings: "Ajustes"
+          translations: "Traducciones"
           preview: "Vista previa"
+          show_advanced: "Mostrar campos avanzados"
+          hide_advanced: "Ocultar campos avanzados"
+          hide_unused_fields: "Ocultar campos sin uso"
           is_default: "Tema habilitado por defecto"
           user_selectable: "Tema puede ser seleccionado por usuarios"
-          color_scheme: "Esquema de color"
+          color_scheme: "Paleta de Color"
           color_scheme_select: "Selecciona colores para ser usados en el tema"
           custom_sections: "Personalizaciones:"
           theme_components: "Componentes del tem"
@@ -3126,10 +3133,17 @@ es:
           edit_css_html_help: "No has editado ningún CSS o HTML"
           delete_upload_confirm: "¿Borrar este archivo? (¡El tema CSS puede dejar de funcionar!)"
           import_web_tip: "Repositorio que contiene el tema"
+          import_web_advanced: "Avanzado..."
           import_file_tip: "archivo .tar.gz o .dcstyle.json que contenga el tema"
           is_private: "El tema está en un repositorio privado de git"
           remote_branch: "Nombre del Branch (opcional)"
           public_key: "Conceda la siguiente clave pública de acceso para el repositorio:"
+          install: "Instalar"
+          installed: "Instalado"
+          install_popular: "Popular"
+          install_upload: "Desde tu dispositivo"
+          install_git_repo: "Desde un repositorio git"
+          install_create: "Crear nuevo"
           about_theme: "Acerca de"
           license: "Licencia"
           version: "Versión:"
@@ -3181,19 +3195,19 @@ es:
             title: "Definir ajustes al tema en formato YAML"
         colors:
           select_base:
-            title: "Selecciona esquema base de color"
-            description: "Esquema base:"
+            title: "Selecciona paleta base de color"
+            description: "Paleta base:"
           title: "Colores"
-          edit: "Editar esquemas de color"
-          long_title: "Esquemas de color"
-          about: "Modifica los colores utilizados en tu tema. Crea un nuevo esquema de color para empezar."
-          new_name: "Nuevo esquema de color"
+          edit: "Editar paletas de color"
+          long_title: "Paletas de color"
+          about: "Modifica los colores utilizados en tu theme. Crea una nueva paleta de color para empezar."
+          new_name: "Nueva paleta de color"
           copy_name_prefix: "Copia de"
-          delete_confirm: "¿Eliminar este esquema de color?"
+          delete_confirm: "¿Eliminar esta paleta de color?"
           undo: "deshacer"
           undo_title: "Deshacer los cambios a este color hasta el último guardado."
           revert: "rehacer"
-          revert_title: "Restaurar este color al esquema de Discourse por defecto."
+          revert_title: "Restaurar este color a la paleta de color de Discourse por defecto."
           primary:
             name: "primario"
             description: "La mayoría del texto, iconos y bordes."
@@ -3295,7 +3309,7 @@ es:
             reply_key_placeholder: "clave de respuesta"
       moderation_history:
         performed_by: "Realizado por"
-        no_results: "No hay historia de moderación disponible."
+        no_results: "No hay historial de moderación disponible."
         actions:
           delete_user: "Usuario Borrado"
           suspend_user: "Usuario Suspendido"
@@ -3349,8 +3363,8 @@ es:
             unsuspend_user: "desbloquear usuario"
             removed_suspend_user: "suspender usuario (eliminado)"
             removed_unsuspend_user: "no-suspender usuario (eliminado)"
-            grant_badge: "conceder distintivo"
-            revoke_badge: "revocar distintivo"
+            grant_badge: "conceder medalla"
+            revoke_badge: "retirar medalla"
             check_email: "comprobar e-mail"
             delete_topic: "eliminar tema"
             recover_topic: "recuperar tema"
@@ -3391,12 +3405,13 @@ es:
             topic_published: "tema publicado"
             post_approved: "post aprobado"
             post_rejected: "mensaje rechazado"
-            create_badge: "crear distintivo"
-            change_badge: "cambiar distintivo"
-            delete_badge: "borrar distintivo"
+            create_badge: "crear medalla"
+            change_badge: "cambiar medalla"
+            delete_badge: "borrar medalla"
             merge_user: "unir usuario"
             entity_export: "entidad exportadora"
             change_name: "cambiar nombre"
+            topic_timestamps_changed: "cambiada la fecha del tema"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -3552,7 +3567,7 @@ es:
         penalty_post_none: "Nada"
         penalty_count: "Contador de Faltas"
         clear_penalty_history:
-          title: "Borrar Historial de Faltas"
+          title: "Borrar historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
         delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Seguro?"
         silence: "Silenciar"
@@ -3782,47 +3797,47 @@ es:
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
       badges:
-        title: Distintivos
-        new_badge: Nuevo distintivo
+        title: Medallas
+        new_badge: Nueva medalla
         new: Nuevo
         name: Nombre
-        badge: Distintivo
+        badge: Medalla
         display_name: Nombre a mostrar
         description: Descripción
         long_description: Descripción completa
-        badge_type: Tipo de distintivo
+        badge_type: Tipo de medalla
         badge_grouping: Grupo
         badge_groupings:
-          modal_title: Grupos de distintivos
+          modal_title: Grupos de medallas
         granted_by: Concedido por
         granted_at: Concedido en
         reason_help: (Enlace a un post o tema)
         save: Guardar
         delete: Borrar
-        delete_confirm: "¿Estás seguro de que quieres eliminar este distintivo?"
+        delete_confirm: "¿Estás seguro de que quieres eliminar esta medall?"
         revoke: Revocar
         reason: Motivo
         expand: Expandir &hellip;
-        revoke_confirm: "¿Estás seguro de que quieres revocar este distintivo?"
-        edit_badges: Editar distintivos
-        grant_badge: Condecer distintivo
-        granted_badges: Distintivos concedidos
+        revoke_confirm: "¿Estás seguro de que quieres revocar esta medalla?"
+        edit_badges: Editar medallas
+        grant_badge: Condecer medallas
+        granted_badges: Medallas concedidas
         grant: Conceder
-        no_user_badges: "%{name} no tiene ningún distintivo."
-        no_badges: No hay distintivos para conceder.
-        none_selected: "Selecciona un distintivo para empezar"
-        allow_title: Permitir usar distintivo como título
+        no_user_badges: "%{name} no tiene ninguna medalla"
+        no_badges: No hay medallas para conceder.
+        none_selected: "Selecciona una medalla para empezar"
+        allow_title: Permitir usar medalla como título
         multiple_grant: Puede ser concedido varias veces
-        listable: Mostrar distintivo en la página pública de distintivos
-        enabled: Activar distintivo
+        listable: Mostrar medalla en la página pública de medallas
+        enabled: Activar medalla
         icon: Icono
         image: Imagen
         icon_help: "Usa una clase de Font Awesome"
         image_help: "Ingrese la URL de la imagen (anula el campo del icono si ambos están configurados)"
-        query: Consulta (SQL) para otorgar el distintivo
+        query: Consulta (SQL) para otorgar la medalla
         target_posts: La consulta tiene como objetivo posts
         auto_revoke: Ejecutar diariamente la consulta de revocación
-        show_posts: Mostrar el post por el que se concedió el distintivo en la página de distintivos
+        show_posts: Mostrar el post por el que se concedió la medalla en la página de medallas
         trigger: Activador
         trigger_type:
           none: "Actualizar diariamente"
@@ -3832,18 +3847,18 @@ es:
           user_change: "Cuando se edita o se crea un usuario"
           post_processed: "Después de procesar un post"
         preview:
-          link_text: "Vista previa de los distintivos concedidos"
+          link_text: "Vista previa de las medallas concedidas"
           plan_text: "Vista previa con el planteamiento de tu query"
-          modal_title: "Vista previa de la query para el distintivo"
+          modal_title: "Vista previa de la query para la medalla"
           sql_error_header: "Ha ocurrido un error con la consulta."
-          error_help: "Mira los siguientes enlaces para ayudarte con las queries de los distintivos."
+          error_help: "Mira los siguientes enlaces para ayudarte con las queries de las medalla"
           bad_count_warning:
             header: "¡ADVERTENCIA!"
-            text: "Faltan algunas muestras a la hora de conceder el distintivo. Esto ocurre cuando la query del distintivo devuelve IDs de usuarios o de posts que no existen. Esto podría causar resultados inesperados más tarde - por favor, revisa de nuevo tu query."
-          no_grant_count: "No hay distintivos para asignar."
+            text: "Faltan algunas muestras a la hora de conceder la medalla. Esto ocurre cuando la query de la medalla devuelve ID de usuarios o de posts que no existen. Esto podría causar resultados inesperados más tarde - por favor, revisa de nuevo tu query."
+          no_grant_count: "No hay medallas para asignar."
           grant_count:
-            one: "<b>%{count}</b> distintivos para conceder."
-            other: "<b>%{count}</b> distintivos para conceder."
+            one: "<b>%{count}</b> medalla para conceder."
+            other: "<b>%{count}</b> medallas para conceder."
           sample: "Ejemplo:"
           grant:
             with: "<span class=\"username\">%{username}</span>"
@@ -3851,9 +3866,9 @@ es:
             with_post_time: "<span class=\"username\">%{username}</span> por publicar en %{link} el <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> el <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: 'Selecciona un distintivo existente o crea uno para empezar'
-          what_are_badges_title: '¿Qué son los distintivos?'
-          badge_query_examples_title: 'Ejemplos de consultas de distintivos'
+          title: "Selecciona una medalla existente o crea una para empezar"
+          what_are_badges_title: "¿Qué son las medalla?"
+          badge_query_examples_title: "Ejemplos de consultas de medallas"
       emoji:
         title: "Emoji"
         help: "Añade nuevos emojis que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"

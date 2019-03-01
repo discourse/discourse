@@ -33,7 +33,6 @@ tr_TR:
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Yazar tarafından silindi"
   themes:
-    bad_color_scheme: "Temayı güncelleyemiyorum, geçersiz renk şeması"
     other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
   emails:
     incoming:
@@ -1498,13 +1497,6 @@ tr_TR:
             label: "Otomatik İletiler"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Basit Aydınlık"
-              dark:
-                label: "Basit Karanlık"
       logos:
         title: "Görseller"
       icons:

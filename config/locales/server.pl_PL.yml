@@ -34,7 +34,6 @@ pl_PL:
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Usunięte przez autora"
   themes:
-    bad_color_scheme: "Nie można zaktualizować szablonu, nieprawidłowe kolory"
     other_error: "Coś poszło nie tak podczas aktualizacji szablonu"
   emails:
     incoming:
@@ -1095,7 +1094,6 @@ pl_PL:
     attachment_filename_blacklist: "Lista słów kluczowych do blokowania załączników w oparciu o nazwę pliku."
     enable_forwarded_emails: "[BETA] Zezwól użytkownikom zakładać wątki poprzez forwardowanie maili przychodzących."
     always_show_trimmed_content: "Zawsze pokazuj przyciętą część przychodzących maili. Ostrzeżenie: może wyjawiać adresy email."
-    private_email: "Nie uwzględniaj zawartość z postów czy tematów w mailach dla zwiększenia prywatności."
     manual_polling_enabled: "Wykorzystuj funkcję push emails za pomocą API dla odpowiedzi na email."
     pop3_polling_enabled: "Ankieta poprzez POP3 dla odpowiedzi przez email."
     pop3_polling_ssl: "Używaj SSL podczas łączenia z serwerem POP3. (Rekomendowane)"
@@ -1204,7 +1202,6 @@ pl_PL:
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
     max_api_keys_per_user: "Maksymalna liczba kluczy API użytkownika na użytkownika."
     min_trust_level_for_user_api_key: "Poziom zaufania wymagany dla generacji kluczy API użytkownika."
-    allowed_user_api_auth_redirects: "Dozwolony URL dla przeadresowania autoryzacji dla klucz API użytkownika"
     allowed_user_api_push_urls: "Dozwolone URLs dla serwera push do API użytkownika"
     tagging_enabled: "Włączyć tagi w tematach?"
     min_trust_to_create_tag: "Minimalny poziom zaufania potrzebny do stworzenia tagu."
@@ -1978,7 +1975,6 @@ pl_PL:
     spam_hosts: "Ten nowy użytkownik próbował stworzyć wiele postów z linkami do tej samej domeny (%{domain}). Zobacz <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold</a> ustawienia strony."
   color_schemes:
     base_theme_name: "Podstawa"
-    dark: "Ciemny motyw"
     light_theme_name: "Jasny"
     dark_theme_name: "Ciemny"
   about: "O stronie"
@@ -2423,14 +2419,6 @@ pl_PL:
         title: "Organizacja"
       colors:
         title: "Motyw"
-        fields:
-          theme_id:
-            description: "Który kolor motywu preferujesz na początek? W późniejszym etapie możesz dostosować wygląd twojej strony poprzez Admin, Dostosuj."
-            choices:
-              default:
-                label: "Prosty Jasny"
-              dark:
-                label: "Prosty Ciemny"
       logos:
         title: "Loga"
       icons:
