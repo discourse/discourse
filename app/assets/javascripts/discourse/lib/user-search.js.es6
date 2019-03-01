@@ -112,13 +112,13 @@ function organizeResults(r, options) {
   return results;
 }
 
-// all punctuations except for . which is allowed in usernames
+// all punctuations except for -, _ and . which are allowed in usernames
 // note: these are valid in names, but will end up tripping search anyway so just skip
 // this means searching for `sam saffron` is OK but if my name is `sam$ saffron` autocomplete
 // will not find me, which is a reasonable compromise
 //
 // we also ignore if we notice a double space or a string that is only a space
-const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-\/:;<=>?\[\]^_`{|}~])|\s\s|^\s$/;
+const ignoreRegex = /([\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\/:;<=>?\[\]^`{|}~])|\s\s|^\s$/;
 
 function skipSearch(term, allowEmails) {
   if (term.indexOf("@") > -1 && !allowEmails) {
