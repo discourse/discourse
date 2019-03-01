@@ -35,7 +35,6 @@ hu:
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Szerző által törölve"
   themes:
-    bad_color_scheme: "Nem lehet az oldal stílust frissíteni, érvénytelen szín séma."
     other_error: "Hiba történt az oldal stílusának frissítése közben"
     settings_errors:
       invalid_yaml: "Az adott YAML érvénytelen."
@@ -885,14 +884,6 @@ hu:
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehetséges hogy megsérült?"
   color_schemes:
-    light: "Light Scheme"
-    dark: "Dark Scheme"
-    neutral: "Neutral Scheme"
-    grey_amber: "Grey Amber Scheme"
-    shades_of_blue: "Shades of Blue Scheme"
-    latte: "Latte Scheme"
-    summer: "Summer Scheme"
-    dark_rose: "Dark Rose Scheme"
     default_theme_name: "Light"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
@@ -979,13 +970,6 @@ hu:
         title: "Szervezet"
       colors:
         title: "Téma"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Simple Light"
-              dark:
-                label: "Simple Dark"
       logos:
         title: "Logók"
       icons:

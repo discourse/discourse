@@ -37,16 +37,20 @@ pt:
   redirect_warning: "Não fomos capazes de verificar se a hiperligação que selecionou foi publicada no fórum. Se desejar continuar de qualquer maneira, selecione a hiperligação abaixo."
   on_another_topic: "Noutro tópico"
   themes:
-    bad_color_scheme: "Não é possível atualizar o tema, esquema de cor inválido"
+    bad_color_scheme: "Não é possível actualizar o tema, a paleta de cores é inválida"
     other_error: "Ocorreu algo de errado ao atualizar o tema"
     import_error:
       generic: Ocorreu um erro durante a importação do tema
       about_json: "Erro de Importação: about.json não existe ou é inválido"
       about_json_values: "about.json possui valores inválidos: %{errors}"
+      git: "Erro ao clonar o repositório de git, acesso foi negado ou o repositório não existe"
+      unpack_failed: "Falha ao desempacotar o ficheiro"
+      unknown_file_type: "O ficheiro que enviou não parece ser um tema de Discourse válido."
     errors:
       component_no_user_selectable: "Components de um tema não podem ser seleccionados por um utilizador"
       component_no_default: "Components de um tema não podem ter o tema predefinido"
-      component_no_color_scheme: "Componentes de um tema não podem ter uma palete de cores"
+      component_no_color_scheme: "Componentes de um tema não podem ter paletas de cor"
+      no_multilevels_components: "Temas com temas descendentes não pode ser temas descendentes"
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido"
       data_type_not_a_number: "Tipo de configuração `%{name}` não é suportado. Tipos suportados são `integer`, `bool`, `lista` e `enum`."
@@ -60,7 +64,10 @@ pt:
       number_value_not_valid_min: "Deve ser maior ou igual a %{min}."
       number_value_not_valid_max: "Deve ser menor ou igual a %{max}."
       string_value_not_valid: "O novo valor não está dentro do intervalo permitido."
+      string_value_not_valid_min: "Deve ter o um tamanho mínimo de %{min} caractéres."
+      string_value_not_valid_max: "Deve ter, no máximo, um tamanho de %{max} caractéres."
     locale_errors:
+      top_level_locale: "A chave base de um ficheiro de locale deve coincidir com o nome do locale"
       invalid_yaml: "YAML de traduçaõ é inválido"
   emails:
     incoming:
@@ -75,7 +82,10 @@ pt:
         no_message_id_error: "Acontece quando o e-mail não tem 'Id. de Mensagem' no cabeçalho."
         auto_generated_email_error: "Acontece quando o cabeçalho 'precedence' é definida como: 'list', 'junk' ou 'auto_reply', ou quando algum cabeçalho contém: 'auto-submitted', 'auto-replied' ou 'auto-generated'."
         no_body_detected_error: "Acontece quando nós não conseguimos extrair um corpo e não existiam anexos."
+        no_sender_detected_error: "Acontece quando não conseguimos encontrar um endereço de e-mail válido no cabeçalho From."
+        from_reply_by_address_error: "Acontece quando o valor do cabeçalho From coincide com o endereço de e-mail de resposta."
         inactive_user_error: "Acontece quando o remetente não está ativo."
+        silenced_user_error: "Acontece quando o remetente foi silenciado."
         bad_destination_address: "Acontece quando nenhum dos endereços de e-mail nos campos Para/Cc/Bcc coincidem com um endereço de e-mail de 'A Receber' configurado."
         strangers_not_allowed_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não é membro."
         insufficient_trust_level_error: "Acontece quando um utilizador tentou criar um novo tópico numa categoria em que não tem o nível de confiança necessário."
@@ -87,6 +97,7 @@ pt:
       unrecognized_error: "Erro Desconhecido"
   errors: &errors
     format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."
       invalid_boolean: "Valor lógico inválido."
@@ -105,12 +116,16 @@ pt:
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro, é uma frase completa?"
+      contains_censored_words: "contém as seguintes paravras censuradas: %{censored_words}"
       less_than: "tem que ser menos que %{count}"
       less_than_or_equal_to: "tem que ser menos ou igual a %{count}"
       not_a_number: não é um número
       not_an_integer: tem que ser um inteiro
       odd: tem que ser ímpar
       record_invalid: "A validação falhou: %{errors}"
+      max_emojis: "Não pode ter mais que %{max_emojis_count} emoji."
+      emojis_disabled: "não pode ter emoji"
+      ip_address_already_screened: "já está incluído numa regra existente"
       restrict_dependent_destroy:
         one: "Não é possível eliminar o registo pois existe um %{record} dependente"
         many: "Não é possível eliminar o registo pois existem %{record} dependentes"
@@ -986,7 +1001,6 @@ pt:
     attachment_filename_blacklist: "Lista de termos-chave  usados para bloquear anexos com base no nome do ficheiro."
     enable_forwarded_emails: "[BETA] Permitir aos utilizadores a criação de um tópico via o encaminhamento de um email."
     always_show_trimmed_content: "Mostrar sempre a parte aparada dos emails recebidos. AVISO: poderá revelar endereços de email."
-    private_email: "Não inclua conteúdo de dos artigos ou tópicos nas mensagens para privacidade extra."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
     pop3_polling_enabled: "Solicitação através de POP3 para respostas de emails"
     pop3_polling_ssl: "Utilize SSL ao ligar a um servidor POP3. (Recomendado)"
@@ -1086,7 +1100,6 @@ pt:
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
     max_api_keys_per_user: "Número máximo de chaves de API de utilizador por utlizador"
     min_trust_level_for_user_api_key: "Nível de confiança requerido para gerar chaves da API de utilizador"
-    allowed_user_api_auth_redirects: "URL permitido para redirecionamento de autenticação  para chaves de API de utlizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
     tagging_enabled: "Permitir etiquetas em tópicos?"
     min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
@@ -1915,13 +1928,6 @@ pt:
         title: "Organização"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Claro Simples"
-              dark:
-                label: "Escuro Simples"
       logos:
         title: "Logos"
       icons:

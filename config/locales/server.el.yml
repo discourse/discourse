@@ -34,7 +34,6 @@ el:
   anonymous: "Ανώνυμα"
   remove_posts_deleted_by_author: "Διαγράφηκε από τον συγγραφέα"
   themes:
-    bad_color_scheme: "Το θέμα δεν μπόρεσε να ενημερωθεί, σφάλμα χρωματικής παλέτας"
     other_error: "Κάτι πήγε στραβά κατά την ενημέρωση του θέματος"
   emails:
     incoming:
@@ -1074,7 +1073,6 @@ el:
     attachment_filename_blacklist: "Λίστα των λέξεων-κλειδιών που χρησιμοποιούνται στη μαύρη λίστα συνημμένων με βάση το όνομα του αρχείου."
     enable_forwarded_emails: "[BETA] Να επιτρέπεται στους χρήστες να δημιουργήσουν ένα νήμα προωθώντας ένα email."
     always_show_trimmed_content: "Δείχνε πάντοτε την συντετμημένη μορφή των εισερχομένων email. ΠΡΟΣΟΧΗ: μπορεί να αποκαλύψει διευθύνσεις email. "
-    private_email: "Να μην περιλαμβάνεται περιεχόμενο από αναρτήσεις στα emails για επιπλέον ιδιωτικότητα."
     manual_polling_enabled: "Προώθηση μηνυμάτων email χρησιμοποιώντας το API για τις απαντήσεις email. "
     pop3_polling_enabled: "Κάνε έλεγχο χρησιμοποιώντας το πρωτόκολλο POP3 για απαντήσεις email. "
     pop3_polling_ssl: "Χρησιμοποιήσε το πρωτόκολλο SSL για την σύνδεση με τον POP3 διακομιστή. (Συνιστάται) "
@@ -1189,7 +1187,6 @@ el:
     allow_user_api_key_scopes: "Λίστα των πεδίων που επιτρέπεται για τα user API keys"
     max_api_keys_per_user: "Μέγιστος αριθμός user API keys ανά χρήστη. "
     min_trust_level_for_user_api_key: "Επίπεδο εμπιστοσύνης που απαιτείται για την δημιουργία user API keys. "
-    allowed_user_api_auth_redirects: "Επιτρεπόμενος σύνδεσμος για ανακατεύθυνση ταυτότητας για τα user API keys"
     allowed_user_api_push_urls: "Επιτρεπόμενοι συνδέσμοι για την ώθηση του διακομιστή στο user API"
     tagging_enabled: "Ενεργοποίηση ετικετών στα θέματα; "
     min_trust_to_create_tag: "Το ελάχιστο επίπεδο εμπιστοσύνης που απαιτείται για να δημιουργηθεί μία ετικέτα. "
@@ -2177,7 +2174,6 @@ el:
     spam_hosts: "Αυτός ο νέος χρήστης προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς το ίδιο domain (%{domain}). Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Βάση"
-    dark: "Σκουρόχρωμος Συνδυασμός"
     light_theme_name: "Ανοιχτό"
     dark_theme_name: "Σκούρο"
   about: "Σχετικά"
@@ -2670,14 +2666,6 @@ el:
         title: "Οργάνωση"
       colors:
         title: "Θέμα"
-        fields:
-          theme_id:
-            description: "Προτιμάτε χρωματισμό ανοιχτού ή σκούρου χρώματος για να ξεκινήσετε; Μπορείτε να εξατομικεύσετε την εμφάνιση και την αίσθηση του ιστοτόπου σας μέσω της επιλογής Διαχείριση, Εξατομίκευση."
-            choices:
-              default:
-                label: "Απλό Φωτεινό"
-              dark:
-                label: "Απλό Σκούρο"
       logos:
         title: "Λογότυπα"
       icons:

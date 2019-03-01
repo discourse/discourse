@@ -109,12 +109,7 @@ hu:
       next_month: "Következő hónap"
       placeholder: dátum
     share:
-      topic: "link megosztása ebbe a témába"
-      post: "bejegyzés #%{postNumber}"
       close: "bezár"
-      twitter: "a hivatkozás megosztása a Twitteren"
-      facebook: "a hivatkozás megosztása a Facebookon"
-      email: "a hivatkozás elküldése e-mailben"
     action_codes:
       public_topic: "publikussá tette ezt a témát ekkor: %{when}"
       private_topic: "ez a téma privát üzenetté téve ekkor: %{when}"
@@ -469,7 +464,6 @@ hu:
           description: "Csak akkor leszel értesítve, ha valaki megemlíti a @nevedet vagy válaszol neked."
         muted:
           title: "Némítás"
-          description: "Egyáltalán nem fogsz értesítést kapni az ebben a csoportban lévő új témákról."
       flair_url: "Avatar Flair kép"
       flair_url_placeholder: "(Opcionális) Kép url címe vagy Font Awesome css osztálya"
       flair_bg_color: "Avatar Flair háttér szín"
@@ -1786,7 +1780,6 @@ hu:
       default_view: "Alapértelmezett témakörök"
       allow_badges_label: "Kitűzök elnyerésének engedélyezése ebben a kategóriában"
       edit_permissions: "Jogok szerkesztése"
-      add_permission: "Jogok hozzáadása"
       this_year: "ez az év"
       position: "Pozíció:"
       default_position: "Alapértelmezett pozíció"
@@ -2440,7 +2433,6 @@ hu:
         save: "Mentés"
         new: "Új"
         new_style: "Új stílus"
-        import: "Importálás"
         delete: "Törlés"
         delete_confirm: "Töröljük ezt a témát?"
         color: "Szín"
@@ -2453,7 +2445,6 @@ hu:
           subject: "Tárgy"
           body: "Test"
         theme:
-          import_theme: "Téma importálása"
           customize_desc: "Személyre szabás:"
           title: "Témák"
           edit: "Szerkesztés"
@@ -2464,7 +2455,6 @@ hu:
           preview: "Előnézet"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."
           user_selectable: "A téma a felhasználók által választható"
-          color_scheme: "Szín sablon"
           color_scheme_select: "Válassz színeket a témához"
           custom_sections: "Egyéni részek:"
           theme_components: "Téma elemek"
@@ -2498,15 +2488,8 @@ hu:
             text: "YAML"
             title: "Téma beállításainak megadása YAML formátumban"
         colors:
-          select_base:
-            description: "Alap sablon:"
           title: "Színek"
-          edit: "Szín sablon szerkesztése"
-          long_title: "Szín sémák"
-          about: "Módosítsd a témáid által használt színeket. Kezdésként készíts egy új színösszeállítást."
-          new_name: "Új szín séma"
           copy_name_prefix: "másolata"
-          delete_confirm: "Törlöd ezt a szín sémát?"
           undo: "Visszavonás"
           revert: "Visszaállítás"
           primary:

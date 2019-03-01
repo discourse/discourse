@@ -109,22 +109,17 @@ nb_NO:
       next_month: "Neste måned"
       placeholder: dato
     share:
-      topic: "del en lenke til dette emnet"
-      post: "innlegg #%{postNumber}"
       close: "lukk"
-      twitter: "del denne lenken på Twitter"
-      facebook: "del denne lenken på Facebook"
-      email: "del denne lenken i en e-post"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
-      private_topic: "gjorde dette emnet til en personlig melding %{when}"
+      private_topic: "gjorde dette emnet om til en personlig melding %{when}"
       split_topic: "del opp dette emnet %{when}"
       invited_user: "inviterte %{who} %{when}"
       invited_group: "inviterte %{who} %{when}"
       user_left: "%{who} fjernet seg selv fra denne meldingen %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
-      autobumped: "automatisk løftet %{when}"
+      autobumped: "automatisk flyttet øverst %{when}"
       autoclosed:
         enabled: "lukket %{when}"
         disabled: "åpnet %{when}"
@@ -149,7 +144,7 @@ nb_NO:
     topic_admin_menu: "administratorhandlinger for emne"
     wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
-    bootstrap_mode_enabled: "For å gjøre lansering av siden enklere er den nå i oppstartsmodus. Alle nye brukere vil få tillitsnivå 1 og daglige oppsummeringer på e-post aktivert. Oppstartsmodus vil bli slått av når antall brukere overstiger %{min_users}."
+    bootstrap_mode_enabled: "For å gjøre lansering av siden enklere er den nå i oppstartsmodus. Alle nye brukere tildeles tillitsnivå 1 og får daglige oppsummeringer på e-post aktivert. Oppstartsmodus vil bli automatisk slått av når %{min_users} brukere har registrert seg."
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
     themes:
       default_description: "Forvalg"
@@ -175,7 +170,7 @@ nb_NO:
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
     yes_value: "Ja"
-    submit: "Send inn"
+    submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
     sign_up: "Registrer deg"
@@ -463,7 +458,6 @@ nb_NO:
           description: "Du vil bli varslet hvis noen nevner @navnet ditt eller svarer deg."
         muted:
           title: "Ignorert"
-          description: "Du vil aldri bli varslet om noe vedrørende nye emner i denne gruppen."
       flair_url: "Bilde for gruppetilhørighet på avatar"
       flair_url_placeholder: "(Valgfritt) Font Awesome-klasse eller URL til bilde"
       flair_bg_color: "Bakgrunnsfarge for gruppetilhørighetsbilde på avatar"
@@ -487,7 +481,7 @@ nb_NO:
       "14": "Venter"
       "15": "Utkast"
     categories:
-      all: "Alle"
+      all: "alle kategorier"
       all_subcategories: "alle"
       no_subcategory: "ingen"
       category: "Kategori"
@@ -502,11 +496,12 @@ nb_NO:
       topics: "Emner"
       latest: "Siste"
       latest_by: "siste av"
-      toggle_ordering: "Slå på/av styring av sortering"
+      toggle_ordering: "slå på/av styring av sortering"
       subcategories: "Underkategorier"
       topic_sentence:
         one: "1 emne"
         other: "%{count} emner"
+      n_more: "Kategorier (ytterligere%{count}) ..."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -751,7 +746,7 @@ nb_NO:
         title: "Språk for grensesnitt"
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
         default: "(forvalg)"
-        any: "hvilken som helst"
+        any: "alle"
       password_confirmation:
         title: "Passord igjen"
       last_posted: "Siste innlegg"
@@ -948,6 +943,9 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
+    too_few_topics_and_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner and <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
+    too_few_topics_notice: "La oss<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye besøkende trenger noen samtaler de kan lese og svare på."
+    too_few_posts_notice: "La oss <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang denne diskusjonen!</a> Det finnes for øyeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye besøkende trenger noen samtaler de kan lese og svare på."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> nådde innstillingsgrensen satt i %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> overstiger innstillingsgrensen satt i %{siteSettingRate}."
@@ -1190,6 +1188,7 @@ nb_NO:
         title_too_long: "Tittel kan ikke være mer enn {{max}} tegn"
         post_missing: "Innlegget kan ikke være tomt"
         post_length: "Innlegget må være på minst {{min}} tegn"
+        try_like: "Har du prøvd {{heart}}-knappen?"
         category_missing: "Du må velge en kategori"
         tags_missing: "Du må velge minst {{count}} stikkord"
       save_edit: "Lagre endring"
@@ -1210,7 +1209,7 @@ nb_NO:
       show_edit_reason: "(legg till endringsbegrunnelse)"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
       remove_featured_link: "Fjern lenke fra emnet."
-      reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formattere. Dra og slipp bilder."
+      reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for å formatere innholdet. Dra bilder hit eller lim dem inn."
       reply_placeholder_no_images: "Skriv her. Bruk Markdown, BBkode, eller HTML for å formatere."
       reply_placeholder_choose_category: "Du må velge en kategori før du skriver her."
       view_new_post: "Se ditt nye innlegg."
@@ -1276,6 +1275,8 @@ nb_NO:
         shared_draft:
           label: "Delt kladd"
           desc: "Lag et emneutkast som kun er synlig for staben"
+        toggle_topic_bump:
+          label: "Slå på/av at emnet flyttes øverst"
     notifications:
       tooltip:
         regular:
@@ -1380,10 +1381,10 @@ nb_NO:
         with_badge:
           label: Med merke
         with_tags:
-          label: Merket
+          label: Med stikkord
         filters:
           label: Vis bare emner/innlegg…
-          title: Kun treff i titler
+          title: Med treff i tittelen
           likes: Jeg likte
           posted: jeg skrev innlegg i
           watching: Jeg følger
@@ -1400,11 +1401,11 @@ nb_NO:
           all_tags: Alle stikkord nevnt ovenfor
         statuses:
           label: Hvor emner
-          open: er åpen
-          closed: er lukket
-          archived: er arkivert
+          open: er åpne
+          closed: er lukkede
+          archived: er arkiverte
           noreplies: har ingen svar
-          single_user: inneholder en enkelt bruker
+          single_user: inneholder bare én bruker
         post:
           count:
             label: Minimum antall innlegg
@@ -1573,6 +1574,8 @@ nb_NO:
         based_on_last_post: "Ikke lukk før det siste innlegget i emnet er minst så gammelt."
       auto_delete:
         title: "Automatisk sletting av emne"
+      auto_bump:
+        title: "Flytt emnet øverst automatisk"
       reminder:
         title: "Påminn meg"
       status_update_notice:
@@ -1581,6 +1584,7 @@ nb_NO:
         auto_publish_to_category: "Dette emnet vil bli opprettet i <a href=%{categoryUrl}>#%{categoryName}</a> %{timeLeft}."
         auto_close_based_on_last_post: "Dette emnet vil bli lukket %{duration} etter det siste innlegget."
         auto_delete: "Dette emnet vil bli automatisk slettet %{timeLeft}."
+        auto_bump: "Dette emnet vil automatisk bli flyttet øverst om %{timeLeft}."
         auto_reminder: "Du vil bli påminnet om dette emnet %{timeLeft}."
       auto_close_title: "Auto-lukk innstillinger"
       auto_close_immediate:
@@ -1662,7 +1666,8 @@ nb_NO:
         visible: "Gjør synlig"
         reset_read: "Tilbakestill lesedata"
         make_public: "Gjør til offentlig emne"
-        make_private: "Opprett personlig melding"
+        make_private: "Gjør om til personlig melding"
+        reset_bump_date: "Tilbakestille dato emnet ble flyttet øverst"
       feature:
         pin: "Fest emne"
         unpin: "Løsne emne"
@@ -2063,7 +2068,6 @@ nb_NO:
       default_top_period: "Forvalgt topp-periode:"
       allow_badges_label: "Tillat merker å bli tildelt i denne kategorien"
       edit_permissions: "Rediger tillatelser"
-      add_permission: "Legg til tillatelser"
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
       this_year: "dette året"
@@ -2073,7 +2077,7 @@ nb_NO:
       position_disabled_click: 'aktiver innstillingen "faste kategoriposisjoner".'
       minimum_required_tags: "Minste antall stikkord som kreves for et emne:"
       parent: "Foreldrekategori"
-      num_auto_bump_daily: "Antall åpne emner som vil løftes automatisk per dag:"
+      num_auto_bump_daily: "Antall åpne emner som automatisk flyttes øverst per dag:"
       navigate_to_first_post_after_read: "Naviger til første innlegg etter at emner er lest"
       notifications:
         watching:
@@ -2407,6 +2411,10 @@ nb_NO:
       sort_by_name: "navn"
       manage_groups: "Behandle stikkordgrupper"
       manage_groups_description: "Definer grupper for å organisere stikkord"
+      upload: "Last opp stikkord"
+      upload_description: "Last opp en csv-fil for å opprette flere stikkort på én gang"
+      upload_successful: "Stikkordene ble lastet opp"
+      delete_unused: "Slett ubrukte stikkord"
       filters:
         without_category: "%{filter} %{tag} emner"
         with_category: "%{filter} %{tag} emner i %{category}"
@@ -2865,7 +2873,6 @@ nb_NO:
         save: "Lagre"
         new: "Ny"
         new_style: "Ny stil"
-        import: "Importer"
         delete: "Slett"
         delete_confirm: "Slett denne drakten?"
         color: "Farge"
@@ -2884,7 +2891,6 @@ nb_NO:
           revert: "Tilbakestill endringer"
           revert_confirm: "Er du sikker på at du vil tilbakestille dine endringer?"
         theme:
-          import_theme: "Importer drakt"
           customize_desc: "Skreddersy:"
           title: "Drakter"
           long_title: "Gå over farger, CSS- og HTML-innhold på siden din"
@@ -2897,7 +2903,6 @@ nb_NO:
           preview: "Forhåndsvis"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
-          color_scheme: "Fargepalett"
           color_scheme_select: "Velg farger å bruke i drakten"
           custom_sections: "Egendefinerte valg:"
           theme_components: "Drakt-komponenter"
@@ -2955,20 +2960,11 @@ nb_NO:
             text: "YAML"
             title: "Definer draktinnstillinger i YAML-format"
         colors:
-          select_base:
-            title: "Velg hovedpalett"
-            description: "Hovedpalett:"
           title: "Farger"
-          edit: "Rediger fargepaletter"
-          long_title: "Fargepanel"
-          about: "Endre fargene brukt i draktene dine. Opprett en ny fargepalett for å komme i gang."
-          new_name: "Ny fargepalett"
           copy_name_prefix: "Kopi av"
-          delete_confirm: "Slett denne fargepaletten?"
           undo: "angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
           revert: "gå tilbake"
-          revert_title: "Nullstill denne fargen til forvalg i fargepaletten for Discourse"
           primary:
             name: "primær"
             description: "Det meste av tekst, ikoner og kanter."
@@ -3137,6 +3133,7 @@ nb_NO:
             revoke_moderation: "trekk tilbake moderering"
             backup_create: "opprett sikkerhetskopi"
             deleted_tag: "slettet stikkord"
+            deleted_unused_tags: "slett ubrukte stikkord"
             renamed_tag: "stikkord med nytt navn"
             revoke_email: "trekk tilbake e-post"
             lock_trust_level: "lås tillitsnivå"

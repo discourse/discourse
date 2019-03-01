@@ -1752,14 +1752,6 @@ sv:
         title: "Organisation"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            description: "Föredrar du en ljus eller mörk färgkarta att starta med? Du kan längre fram skräddarsy utseende och känsla på din sida via Admin, Customize."
-            choices:
-              default:
-                label: "Enkelt ljus"
-              dark:
-                label: "Enkelt mörkt"
       logos:
         title: "Logotyper"
       icons:

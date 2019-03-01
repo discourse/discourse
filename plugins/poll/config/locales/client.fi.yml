@@ -52,7 +52,7 @@ fi:
         label: "Sulje"
         confirm: "Suljetaanko äänestys?"
       automatic_close:
-        closes_in: "sulkeutuu <strong>%{timeLeft}</strong>"
+        closes_in: "sulkeutuu <strong>%{timeLeft}</strong> kuluttua"
         age: "sulkeutui <strong>%{age}</strong>"
       error_while_toggling_status: "Pahoittelut, äänestyksen tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Pahoittelut, ääntä annettaessa tapahtui virhe."

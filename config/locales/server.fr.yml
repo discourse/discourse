@@ -402,6 +402,7 @@ fr:
       topic:
         title: "Titre"
         featured_link: "Lien à la une"
+        category_id: "Catégorie"
       post:
         raw: "Corps"
       user_profile:
@@ -523,6 +524,8 @@ fr:
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
       description_incomplete: "Le message de description de la catégorie doit avoir au moins un paragraphe."
+      permission_conflict: "Les autorisations de sous-catégorie ne peuvent pas être moins restrictives que celles du parent."
+      disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées par cette catégorie : %{tags}"
     cannot_delete:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -1384,6 +1387,8 @@ fr:
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si désactivé, seule la base de données sera sauvegardée."
     backup_location: "Lieu de stockage des archivages. IMPORTANT: S3 reqiuert que des identifiants valides S3 soient saisis dans Files settings."
+    backup_gzip_compression_level_for_uploads: "Niveau de compression gzip utilisé pour compresser les envois."
+    include_thumbnails_in_backups: "Inclure les vignettes générées dans les sauvegardes. Si vous désactivez cette option, les sauvegardes seront réduites, mais il faudra réémettre toutes les publications après une restauration."
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
     verbose_localization: "Afficher des informations de debug sur l'interface à coté des textes traduits."
     previous_visit_timeout_hours: "Combien d'heures pour qu'une visite soit considérée comme la visite « précédente »."
@@ -1569,7 +1574,7 @@ fr:
     attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     enable_forwarded_emails: "[BÊTA] Autoriser les utilisateurs de créer des sujets en transferant un courriel."
     always_show_trimmed_content: "Toujours montrer la partie réduite des courriels entrants. ATTENTION : cela peut révéler les adresses courriels."
-    private_email: "Ne pas inclure du contenu des messages ou des sujets dans les courriels pour plus de confidentialité."
+    private_email: "Ne pas inclure du contenu de messages ou de sujets à des fins de vie privée. REMARQUE : cela désactive aussi le résumé par courriels."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connexions au serveur POP3. (Recommandé)"
@@ -1710,7 +1715,7 @@ fr:
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
     min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
-    allowed_user_api_auth_redirects: "URL autorisées pour la redirection d'authentification pour les clés de l'API utilisateur"
+    allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via clés d'API. Le symbole * peut être utilisé pour remplacer n'importe qu'elle partie de celle-ci (ex : www.exemple.fr/*)."
     allowed_user_api_push_urls: "URL autorisées pour le service push du serveur vers l'API utilisateur"
     expire_user_api_keys_days: "Nombre de jours avant l'expiration automatique d'une clé API utilisateur (0 pour jamais)"
     tagging_enabled: "Activer les étiquettes sur les sujets ?"
@@ -1721,7 +1726,7 @@ fr:
     show_filter_by_tag: "Afficher une liste déroulante pour filtrer une liste de sujet par étiquette."
     max_tags_in_filter_list: "Nombre maximum d'étiquettes à afficher dans la liste déroulante de filtres. Les étiquettes les plus utilisés seront affichées."
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, ils sont affichés par ordre de popularité."
-    tags_listed_by_group: "Lister les étiquettes par groupe d'étiquette sur la <a href='%{base_path}/tags' target='_blank'>page Etiquettes</a>."
+    tags_listed_by_group: "Lister les étiquettes par groupe d'étiquette sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
     tag_style: "Style visuel pour badges d'étiquette."
     allow_staff_to_tag_pms: "Autoriser les responsables à étiquetter n'importe quel message direct"
     min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour étiquetter des sujets"
@@ -1804,11 +1809,17 @@ fr:
       different_users: "Des messages appartenant à différents utilisateurs ne peuvent pas être fusionnés."
   move_posts:
     new_topic_moderator_post:
-      one: "Un message a été scindé en un nouveau %{entity}: %{topic_link}"
-      other: "%{count} messages ont été scindés en un nouveau%{entity}: %{topic_link}"
+      one: "Un message a été scindé en un nouveau sujet : %{topic_link}"
+      other: "%{count} messages ont été scindés en un nouveau sujet : %{topic_link}"
+    new_message_moderator_post:
+      one: "Un message a été scindé en un nouveau message direct : %{topic_link}"
+      other: "%{count} messages ont été scindés en un nouveau message direct : %{topic_link}"
     existing_topic_moderator_post:
-      one: "Un message a été fusionné en un %{entity} existant : %{topic_link}"
-      other: "%{count} messages ont été fusionnés dans un %{entity} existant : %{topic_link}"
+      one: "Un message a été fusionné à un sujet existant : %{topic_link}"
+      other: "%{count} messages ont été fusionnés à un sujet existant : %{topic_link}"
+    existing_message_moderator_post:
+      one: "Un message a été fusionné à un message direct existant : %{topic_link}"
+      other: "%{count} messages ont été fusionnés à un message direct existant : %{topic_link}"
   change_owner:
     post_revision_text: "Propriété transférée"
   topic_statuses:
@@ -3159,14 +3170,14 @@ fr:
     sender_post_deleted: "le message a été supprimé"
   color_schemes:
     base_theme_name: "Base"
-    light: "Palette claire"
-    dark: "Palette sombre"
-    neutral: "Palette neutre"
-    grey_amber: "Palette gris ambre"
-    shades_of_blue: "Palette nuances de bleu"
-    latte: "Palette latte"
-    summer: "Palette été"
-    dark_rose: "Palette rose foncé"
+    light: "Clair"
+    dark: "Sombre"
+    neutral: "Neutre"
+    grey_amber: "Gris ambre"
+    shades_of_blue: "Nuances de bleu"
+    latte: "Latte"
+    summer: "Eté"
+    dark_rose: "Rose foncé"
     default_theme_name: "Clair"
     light_theme_name: "Clair"
     dark_theme_name: "Sombre"
@@ -3854,7 +3865,7 @@ fr:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
   tags:
-    title: "Etiquettes"
+    title: "Étiquettes"
     staff_tag_disallowed: 'L''étiquette "%{tag}" ne peut être appliquée que par un responsable.'
     staff_tag_remove_disallowed: 'L''étiquette "%{tag}" ne peut être retirée que par un responsable.'
     minimum_required_tags: "Vous devez choisir au moins %{count} étiquettes."
@@ -3956,14 +3967,6 @@ fr:
             placeholder: "San Francisco, Californie"
       colors:
         title: "Thème"
-        fields:
-          theme_id:
-            description: "Préférez-vous une palette de couleurs claires ou sombres pour commencer ? Vous pouvez personnaliser l'aspect du site dans Administration, Personaliser."
-            choices:
-              default:
-                label: "Clair"
-              dark:
-                label: "Sombre"
       logos:
         title: "Logos"
         fields:

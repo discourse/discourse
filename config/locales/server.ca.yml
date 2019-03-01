@@ -36,7 +36,6 @@ ca:
   remove_posts_deleted_by_author: "Esborrat per la persona autora"
   redirect_warning: "No hem pogut comprovar que l'enllaç que has seleccionat s'hagi enviat al fòrum. Si tot i així vols continuar, clica l'enllaç de sota."
   themes:
-    bad_color_scheme: "No es pot actualitzar el tema, esquema de color invàlid"
     other_error: "S'ha produït un error mentre s'actualitzava el tema"
     settings_errors:
       invalid_yaml: "El YAML proveït és invàlid"
@@ -1082,7 +1081,6 @@ ca:
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus API personals"
     max_api_keys_per_user: "Quantitat màxima de claus API personals per participant"
     min_trust_level_for_user_api_key: "Nivell de confiança necessari per generar claus API personals"
-    allowed_user_api_auth_redirects: "Adreça URL permesa de redirecció d'autenticació per a claus API personals"
     allowed_user_api_push_urls: "Adreces URL permeses per dirigir el servidor a l'API personal "
     tagging_enabled: "Activa etiquetes als temes?"
     min_trust_to_create_tag: "Nivell mínim de confiança necessari per crear una etiqueta."
@@ -1846,14 +1844,6 @@ ca:
         title: "Organització"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            description: "T'estimes més un esquema de color clar o fosc per començar? Més endavant pots personalitzar l'aspecte del teu lloc web des de Amdinistració, Personalitza."
-            choices:
-              default:
-                label: "Clar senzill"
-              dark:
-                label: "Fosc senzill"
       logos:
         title: "Logos"
       icons:

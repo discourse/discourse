@@ -36,12 +36,10 @@ lt:
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
   themes:
-    bad_color_scheme: "Nepavyko atnaujinti temos, netinkamos spalvų schemos"
     other_error: "Įvyko klaida atnaujinant temą"
     errors:
       component_no_user_selectable: "Tematikos komponentai negali būti pasirinktini vartotojui"
       component_no_default: "Tema komponentai negali būti numatytoji tema"
-      component_no_color_scheme: "Tematikos komponentai negali turėti spalvų schemos"
       no_multilevels_components: "Temos su vaikų temomis negali būti patys vaikų temos"
     settings_errors:
       invalid_yaml: "Nurodytas YAML negalimas."

@@ -109,12 +109,7 @@ fi:
       next_month: "Seuraava kuukausi"
       placeholder: päivämäärä
     share:
-      topic: "jaa linkki tähän ketjuun"
-      post: "%{postNumber}. viesti"
       close: "sulje"
-      twitter: "jaa tämä linkki Twitterissä"
-      facebook: "jaa tämä linkki Facebookissa"
-      email: "lähetä tämä linkki sähköpostissa"
     action_codes:
       public_topic: "teki ketjusta julkisen %{when}"
       private_topic: "muutti ketjun yksityiskeskusteluksi %{when}"
@@ -477,7 +472,6 @@ fi:
           description: "Saat ilmoituksen uusista viesteistä jokaisessa viestiketjussa, ja uusien vastausten lukumäärä näytetään."
         watching_first_post:
           title: "Uudet ketjut tarkkailussa"
-          description: "Saat ilmoituksia uusista tämän ryhmän ketjuista, muttet ketjuihin tulevista vastauksista."
         tracking:
           title: "Seurannassa"
           description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten lukumäärä näytetään."
@@ -486,7 +480,6 @@ fi:
           description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle."
         muted:
           title: "Vaimennettu"
-          description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
       flair_url: "Avatarpinssin kuva"
       flair_url_placeholder: "(Ei-pakollinen) kuvan URL tai Font Awesome -luokka"
       flair_url_description: 'Käytä neliönmuotoista, kooltaan vähintään 20px kertaa 20px kuvaa tai FontAwesome ikonia (hyväksytyt muodot: "fa-icon", "far fa-icon" tai "fab fa-icon").'
@@ -2191,7 +2184,6 @@ fi:
       default_top_period: "Kuumat-listauksen oletusajanjakso:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
-      add_permission: "Lisää oikeus"
       require_topic_approval: "Edellytä valvojan hyväksyntää kaikille uusille ketjuille"
       require_reply_approval: "Edellytä valvojan hyväksyntää kaikille uusille vastauksille"
       this_year: "tänä vuonna"
@@ -3043,7 +3035,6 @@ fi:
         save: "Tallenna"
         new: "Uusi"
         new_style: "Uusi tyyli"
-        import: "Tuo"
         delete: "Poista"
         delete_confirm: "Poista tämä teema?"
         color: "Väri"
@@ -3067,17 +3058,12 @@ fi:
           components: "Komponentit"
           theme_name: "Teeman nimi"
           component_name: "Komponentin nimi"
-          themes_intro: "Aloita valitsemalla olemassa oleva teema tai luomalla uusi"
           beginners_guide_title: "Aloittelijan opas Discourse-teemojen käyttämiseen"
           developers_guide_title: "Kehittäjän opas Discourse-teemoihin"
           browse_themes: "Selaile yhteisön kehittämiä teemoja"
-          import_theme: "Tuo teema"
           customize_desc: "Mukauta:"
           title: "Teemat"
           create: "Luo"
-          create_type: "Tyyppi:"
-          create_name: "Nimi:"
-          name_too_short: "Nimen täytyy olla vähintään 4 merkkiä pitkä."
           long_title: "Muuta sivustosi värejä, CSS:ää ja HTML-sisältöä"
           edit: "Muokkaa"
           edit_confirm: "Tämä on ulkoinen teema. Jos muokkaat CSS:ää tai HTML:ää, muutokset kumoutuvat kun päivität teeman."
@@ -3088,7 +3074,6 @@ fi:
           preview: "Esikatselu"
           is_default: "Teema on käytössä oletuksena"
           user_selectable: "Teema on tarjolla käyttäjille"
-          color_scheme: "Värimalli"
           color_scheme_select: "Valitse teemalle värit"
           custom_sections: "Mukautetut osiot:"
           theme_components: "Teeman komponentit"
@@ -3178,20 +3163,11 @@ fi:
             text: "YAML"
             title: "Määritä teeman asetukset YAML-muodossa"
         colors:
-          select_base:
-            title: "Valitse perusvärimalli"
-            description: "Perusvärimalli:"
           title: "Värit"
-          edit: "Muokkaa värimalleja"
-          long_title: "Värimallit"
-          about: "Muuta teemojesi värejä. Aloita luomalla uusi värimalli."
-          new_name: "Uusi värimalli"
           copy_name_prefix: "Kopio"
-          delete_confirm: "Poista tämä värimalli?"
           undo: "peru"
           undo_title: "Peru muutokset tähän väriin ja palauta edellinen tallennettu tila."
           revert: "palauta"
-          revert_title: "Palauta tämä väri Discourse värimallin oletusarvoihin"
           primary:
             name: "ensisijainen väri"
             description: "Useimmat tekstit, ikonit ja reunat."
@@ -3848,9 +3824,9 @@ fi:
             with_post_time: "<span class=\"username\">%{username}</span> viestille ketjussa %{link} <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: 'Aloita valitsemalla olemassa oleva ansiomerkki tai luomalla uusi'
-          what_are_badges_title: 'Mitä ansiomerkit ovat?'
-          badge_query_examples_title: 'Esimerkkejä ansiomerkin tietokantakyselyistä'
+          title: "Aloita valitsemalla olemassa oleva ansiomerkki tai luomalla uusi"
+          what_are_badges_title: "Mitä ansiomerkit ovat?"
+          badge_query_examples_title: "Esimerkkejä ansiomerkin tietokantakyselyistä"
       emoji:
         title: "Emoji"
         help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"

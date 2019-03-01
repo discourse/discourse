@@ -34,7 +34,6 @@ da:
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet af forfatteren"
   themes:
-    bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farveskema"
     other_error: "Der opstod en fejl under opdatering af temaet"
   emails:
     incoming:
@@ -1481,13 +1480,6 @@ da:
         title: "Organisation"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Enkel og lyst"
-              dark:
-                label: "Enkelt og mørkt"
       logos:
         title: "Logoer"
       icons:

@@ -149,12 +149,8 @@ sl:
       next_month: "Naslednji mesec"
       placeholder: datum
     share:
-      topic: "deli povezavo do te teme"
-      post: "prispevek #%{postNumber}"
+      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zapri"
-      twitter: "deli povezavo na Twitterju"
-      facebook: "deli povezavo na Facebooku"
-      email: "pošlji povezavo preko e-pošte"
     action_codes:
       public_topic: "je naredil temo javno %{when}"
       private_topic: "je spremenil temo v zasebno sporočilo %{when}"
@@ -535,7 +531,6 @@ sl:
           description: "Obveščeni boste o vsakem novem prispevku v vsakem sporočilu in prikazan bo število novih odgovorov."
         watching_first_post:
           title: "Opazujem prvi prispevek"
-          description: "Obveščeni boste o novih temah v tej skupini, ne pa tudi o odgovorih na temo."
         tracking:
           title: "Sledim"
           description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori. Ob temi bo prikazano število novih odgovorov."
@@ -544,7 +539,6 @@ sl:
           description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         muted:
           title: "Utišano"
-          description: "O novih temah v tej skupini ne boste obveščeni."
       flair_url: "Avatar Flair slika"
       flair_url_placeholder: "(neobvezno) URL slike ali Font Awesome razred"
       flair_url_description: 'Uporabite kvadratne slike velikosti vsaj 20px x 20px ali FontAwesome ikone (sprejeti formati: "fa-icon", "far fa-icon" ali "fab fa-icon").'
@@ -661,7 +655,7 @@ sl:
       first_notification: "Vaše prvo obvestilo! Izberite ga za začetek."
       disable_jump_reply: "Ne skoči na moj prispevek po tem ko odgovorim"
       dynamic_favicon: "Pokaži število novih / posodobljenih tem na ikoni brskalnika"
-      theme_default_on_all_devices: "Nastavi kot privzeti izgled na vseh mojih napravah"
+      theme_default_on_all_devices: "Nastavi kot privzeti videz na vseh mojih napravah"
       text_size_default_on_all_devices: "Nastavi kot privzeto velikost besedila na vseh mojih napravah "
       allow_private_messages: "Dovoli drugim uporabnikom da mi pošiljajo zasebna sporočila."
       external_links_in_new_tab: "Odpri vse zunanje povezave v novem zavihku"
@@ -724,7 +718,7 @@ sl:
       undo_revoke_access: "Razveljavi preklic dostopa"
       api_approved: "Odobreno"
       api_last_used_at: "Zadnjič uporabljeno:"
-      theme: "Izgled"
+      theme: "Videz"
       home: "Privzeta začetna stran"
       staged: "Prirejen"
       staff_counters:
@@ -1168,7 +1162,7 @@ sl:
     trust_level: "Nivo zaupanja"
     search_hint: "uporabniško ime, e-naslov ali IP naslov"
     create_account:
-      disclaimer: "Z odprtjem računa sprejemate <a href='{{privacy_link}}'>pravilnik o zasebnosti</a> in <a href='{{tos_link}}'>pogoje uporabe</a>."
+      disclaimer: "Z registracijo sprejemate <a href='{{privacy_link}}'>pravilnik o zasebnosti</a> in <a href='{{tos_link}}'>pogoje uporabe</a>."
       title: "Registracija uporabnika"
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
     forgot_password:
@@ -1898,6 +1892,7 @@ sl:
         help: "Odstrani pripeto s te teme, tako da se ne pojavlja več na vrhu seznama tem"
       share:
         title: "Deli"
+        extended_title: "Deli povezavo"
         help: "deli povezavo do te teme"
       print:
         title: "Natisni"
@@ -2078,7 +2073,7 @@ sl:
         one: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} uri, če ni prijavljen moderatorju)"
         two: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah, če ni prijavljen moderatorju)"
         few: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah, če ni prijavljen moderatorju)"
-        other: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah, če ni prijavljen moderatorju)"
+        other: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah - razen če je prijavljen moderatorju)"
       collapse: "skrči"
       expand_collapse: "razširi/skrči"
       locked: "član osebja je zaklenil ta prispevek za urejanje"
@@ -2385,7 +2380,6 @@ sl:
       default_top_period: "Privzeto obdobje za najboljše:"
       allow_badges_label: "Omogoči nagrajevanje z značkami v tej kategoriji"
       edit_permissions: "Uredi dovoljenja"
-      add_permission: "Dodaj dovoljenja"
       require_topic_approval: "Zahtevaj moderatorjevo potrditev vseh novih tem"
       require_reply_approval: "Zahteva odobritev moderatorja za vse nove odgovore"
       this_year: "to leto"
@@ -3133,11 +3127,10 @@ sl:
       customize:
         title: "Prilagodi"
         preview: "predogled"
-        explain_preview: "Oglej si stran s tem izgledom"
+        explain_preview: "Oglej si stran s tem videzom"
         save: "Shrani"
-        import: "Uvozi"
         delete: "Izbriši"
-        delete_confirm: "Izbriši ta izgled?"
+        delete_confirm: "Izbriši ta videz?"
         color: "Barva"
         opacity: "Transparentnost"
         copy: "Kopiraj"
@@ -3151,21 +3144,17 @@ sl:
           revert: "Prekliči spremembe"
           revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
         theme:
-          theme: "Izgled"
-          theme_name: "Ime izgleda"
-          themes_intro: "Izberi obstoječ izgled ali ustvari novega"
-          import_theme: "Uvozi izgled"
+          theme: "Videz"
+          theme_name: "Ime videza"
           customize_desc: "Prilagodi:"
-          title: "Izgledi"
+          title: "Videzi"
           create: "Ustvari"
-          name_too_short: "Ime mora imeti najmanj 4 znake."
           edit: "Uredi"
           common: "Skupno"
           desktop: "Namizno"
           mobile: "Mobilno"
           settings: "Nastavitve"
           preview: "Predogled"
-          color_scheme: "Barvna shema"
           collapse: Skrči
           uploads: "Prenosi"
           upload: "Prenesi"
@@ -3185,15 +3174,8 @@ sl:
             text: "</body>"
             title: "HTML, ki bo vstavljen pred </body> oznako"
         colors:
-          select_base:
-            title: "Izberi osnovno barvno shemo"
-            description: "Osnovna shema:"
           title: "Barve"
-          edit: "Uredi barvne sheme"
-          long_title: "Barvne sheme"
-          new_name: "Nova barvna shema"
           copy_name_prefix: "Kopija od"
-          delete_confirm: "Izbriši barvno shemo?"
           undo: "razveljavi"
           highlight:
             name: "izpostavljeno"
@@ -3261,8 +3243,8 @@ sl:
             change_trust_level: "spremeni nivo zaupanja"
             change_username: "spremeni uporabniško ime"
             change_site_setting: "spremeni nastavitve strani"
-            change_theme: "menjaj izgled"
-            delete_theme: "izbriši izgled"
+            change_theme: "menjaj videz"
+            delete_theme: "izbriši videz"
             suspend_user: "suspendiraj uporabnika"
             unsuspend_user: "prekini suspenzijo uporabnika"
             grant_badge: "podeli značko"
@@ -3378,6 +3360,7 @@ sl:
           suspended: "Suspendirani"
           silenced: "Utišani"
           suspect: "Sumljivi"
+          staged: "Prirejen"
         approved: "Potrjen?"
         approved_selected:
           one: "potrdi uporabnika"
@@ -3402,6 +3385,7 @@ sl:
           silenced: "Utišani uporabniki"
           suspended: "Suspendirani uporabniki"
           suspect: "Sumljivi uporabniki"
+          staged: "Prirejeni uporabniki"
         reject_successful:
           one: "Uspešno zavrnili %{count} uporabnika."
           two: "Uspešno zavrnili %{count} uporabnika."
@@ -3449,6 +3433,7 @@ sl:
         moderator: "Moderator?"
         admin: "Admin?"
         suspended: "Suspendiran?"
+        staged: "Prirejen?"
         show_admin_profile: "Admin"
         show_public_profile: "Pokaži javni profil"
         impersonate: "Poosebi uporabnika"
@@ -3504,6 +3489,7 @@ sl:
         deactivate_explanation: "Deaktiviran uporabnik mora ponovno validirati svoj e-naslov."
         suspended_explanation: "Suspendiran uporabnik se ne more prijaviti."
         silence_explanation: "Utišan uporabnik ne more odgovarjati ali ustvariti novo temo."
+        staged_explanation: "Prirejen uporabnik lahko objavi prispevek preko e-pošte v določenih temah."
         trust_level_2_users: "Uporabniki na nivoju zaupanja 2"
         trust_level_3_requirements: "Zahteve za nivo zaupanja 3"
         trust_level_locked_tip: "nivo zaupanja je zaklenjen, sistem ne bo spreminjal nivo zaupanja uporabnika"
@@ -3652,9 +3638,9 @@ sl:
             with_post_time: "<span class=\"username\">%{username}</span> za prispevek v %{link} ob <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> ob <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: 'Izberite obstoječo značko ali ustvari novo značko'
-          what_are_badges_title: 'Kaj so značke?'
-          badge_query_examples_title: 'Primeri poizvedb SQL za značke'
+          title: "Izberite obstoječo značko ali ustvari novo značko"
+          what_are_badges_title: "Kaj so značke?"
+          badge_query_examples_title: "Primeri poizvedb SQL za značke"
       emoji:
         title: "Emoji"
         help: "Dodaj nov emoji, ki bo na voljo vsem. (lahko prestavite in spustite več datotek naenkrat)"
