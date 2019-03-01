@@ -331,20 +331,31 @@ export default SelectKitComponent.extend({
 
   deselect(rowComputedContentItems) {
     this.willDeselect(rowComputedContentItems);
+
     rowComputedContentItems = makeArray(rowComputedContentItems);
     const generatedComputedContents = this._filterRemovableComputedContents(
       makeArray(rowComputedContentItems)
     );
-    this.set("highlighted", null);
-    this.set("highlightedSelection", []);
+    this.setProperties({ highlighted: null, highlightedSelection: [] });
     this.get("computedValues").removeObjects(
       rowComputedContentItems.map(r => r.value)
     );
-    this.get("computedContent").removeObjects(generatedComputedContents);
-    run.next(() => this.mutateAttributes());
-    run.schedule("afterRender", () => {
-      this.didDeselect(rowComputedContentItems);
-      this.autoHighlight();
+    this.get("computedContent").removeObjects([
+      ...rowComputedContentItems,
+      ...generatedComputedContents
+    ]);
+
+    run.next(() => {
+      this.mutateAttributes();
+
+      run.schedule("afterRender", () => {
+        this.didDeselect(rowComputedContentItems);
+        this.autoHighlight();
+
+        if (!this.isDestroying && !this.isDestroyed) {
+          this._positionWrapper();
+        }
+      });
     });
   },
 
