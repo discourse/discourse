@@ -71,6 +71,17 @@ describe TopicView do
             expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post4.id])
           end
         end
+
+        describe "when an anonymous (non signed-in) user is viewing a Topic" do
+          let(:anonymous) { Fabricate(:anonymous) }
+          let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
+
+          it "filters out ignored user posts only" do
+            tv = TopicView.new(topic.id, nil, print: true)
+            expect(tv.filtered_post_ids.size).to eq(4)
+            expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post3.id, post4.id])
+          end
+        end
       end
     end
   end
