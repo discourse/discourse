@@ -12,7 +12,8 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import {
   escapeExpression,
   uploadIcon,
-  authorizesOneOrMoreExtensions
+  authorizesOneOrMoreExtensions,
+  safariHacksDisabled
 } from "discourse/lib/utilities";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
@@ -137,7 +138,7 @@ export default Ember.Controller.extend({
     "model.composeState"
   )
   focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
-    if (this.capabilities.isIOS) {
+    if (this.capabilities.isIOS && !safariHacksDisabled()) {
       return "none";
     }
 

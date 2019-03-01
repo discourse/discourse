@@ -30,7 +30,8 @@ import {
   validateUploadedFiles,
   authorizesOneOrMoreImageExtensions,
   formatUsername,
-  clipboardData
+  clipboardData,
+  safariHacksDisabled
 } from "discourse/lib/utilities";
 import {
   cacheShortUploadUrl,
@@ -201,7 +202,10 @@ export default Ember.Component.extend({
     }
 
     // Focus on the body unless we have a title
-    if (!this.get("composer.canEditTitle") && !this.capabilities.isIOS) {
+    if (
+      !this.get("composer.canEditTitle") &&
+      (!this.capabilities.isIOS || safariHacksDisabled())
+    ) {
       this.$(".d-editor-input").putCursorAtEnd();
     }
 
