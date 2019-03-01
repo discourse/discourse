@@ -149,12 +149,10 @@ ru:
       next_month: "Следующий месяц"
       placeholder: Дата
     share:
-      topic: "Поделиться ссылкой на эту тему"
-      post: "Ссылка на сообщение №%{postNumber}"
       close: "Закрыть"
-      twitter: "Поделиться ссылкой через Twitter"
-      facebook: "Поделиться ссылкой через Facebook"
-      email: "Поделиться ссылкой по электронной почте"
+      twitter: "Поделиться ссылкой в Twitter"
+      facebook: "Поделиться ссылкой в Facebook"
+      email: "Отправить эту ссылку по e-mail"
     action_codes:
       public_topic: "Сделал эту тему публичной %{when}"
       private_topic: "сделал эту тему персональным сообщением %{when}"
@@ -535,7 +533,6 @@ ru:
           description: "Уведомлять по каждому ответу на это сообщение и показывать счётчик новых непрочитанных ответов."
         watching_first_post:
           title: "Просмотр Первого сообщения"
-          description: "Вы будете получать уведомления о новых темах в этой группе, но не на ответы на них."
         tracking:
           title: "Следить"
           description: "Вы будете уведомлены если кто-то упомянет ваше @name или ответит вам. А так же вам будет показано общее количество новых ответов"
@@ -544,7 +541,6 @@ ru:
           description: "Вам придёт уведомление, если кто-нибудь упомянет ваш @псевдоним или ответит вам."
         muted:
           title: "Выключено"
-          description: "Не уведомлять о новых темах в этой группе."
       flair_url: "Изображение Аватара"
       flair_url_placeholder: "(Необязательно) Ссылка на изображение или класс шрифта Font Awesome"
       flair_url_description: 'Используйте квадратные картинки, размером не менее, чем 20px на 20px или иконки FontAwesome (допустимы форматы: "fa-icon", "far fa-icon" или "fab fa-icon")'
@@ -1507,6 +1503,7 @@ ru:
         posted: '{{username}} написал в "{{topic}}" - {{site_title}}'
         private_message: '{{username}} отправил вам личное сообщение в "{{topic}}" - {{site_title}}'
         linked: '{{username}} ссылается на ваш пост в теме: "{{topic}}" - {{site_title}}'
+        watching_first_post: '{{username}} создал новую тему "{{topic}}" - {{site_title}}'
         confirm_title: "Уведомления включены - %{site_title}"
         confirm_body: "Успешно! Уведомления были включены."
     upload_selector:
@@ -1886,6 +1883,7 @@ ru:
         help: "Открепить тему, чтобы она более не показывалась в самом начале списка тем"
       share:
         title: "Поделиться"
+        extended_title: "Поделиться ссылкой"
         help: "Поделиться ссылкой на тему"
       print:
         title: "Печать"
@@ -2373,7 +2371,6 @@ ru:
       default_top_period: "Верхний период по умолчанию:"
       allow_badges_label: "Разрешить вручение наград в этом разделе"
       edit_permissions: "Изменить права доступа"
-      add_permission: "Добавить права"
       require_topic_approval: "Требовать одобрения модератором всех новых тем"
       require_reply_approval: "Требовать одобрения модератором всех новых ответов"
       this_year: "за год"
@@ -3156,6 +3153,8 @@ ru:
           details: "Когда категория создается, обновляется или удаляется."
         tag_event:
           details: "Когда тег создан, обновлен или удален."
+        flag_event:
+          details: "Когда флаг создан, согласован, не согласен или игнорируется."
         queued_post_event:
           name: "Пост после утверждения"
           details: "Когда новая запись в очереди создается, утверждается или отклоняется."
@@ -3262,6 +3261,7 @@ ru:
         location:
           local: "Локальное хранилище"
           s3: "S3"
+        backup_storage_error: "Не удалось получить доступ к хранилищу резервных копий: %{error_message}"
       export_csv:
         success: "Процедура экспорта начата, мы отправим вам сообщение, когда процесс будет завершён."
         failed: "Экспорт не удался. Пожалуйста, проверьте логи."
@@ -3285,7 +3285,7 @@ ru:
         save: "Сохранить"
         new: "Новое"
         new_style: "Новый стиль"
-        import: "Импорт"
+        install: "Install"
         delete: "Удалить"
         delete_confirm: "Удалить этот стиль?"
         color: "Цвет"
@@ -3309,17 +3309,15 @@ ru:
           components: "Компоненты"
           theme_name: "Название темы"
           component_name: "Имя компонента"
-          themes_intro: "Выберите существующую тему или создайте новую, чтобы начать работу"
+          themes_intro: "Выберите существующую тему или установите новую, чтобы начать работу"
           beginners_guide_title: "Руководство для начинающих по использованию Discourse Тем"
           developers_guide_title: "Руководство разработчика по темам Discourse"
           browse_themes: "Просмотр Тем сообщества "
-          import_theme: "Импортировать стиль"
           customize_desc: "Настроить:"
           title: "Стили"
           create: "Создать"
-          create_type: "Тип:"
-          create_name: "Имя:"
-          name_too_short: "Имя должно содержать не менее 4 символов."
+          create_type: "Тип"
+          create_name: "Имя"
           long_title: "Стилизация сайта: цвета, CSS и HTML"
           edit: "Редактировать"
           edit_confirm: "Это импортированный стиль. Изменения CSS/HTML потеряются после очередного обновления стиля."
@@ -3327,10 +3325,14 @@ ru:
           desktop: "Настольный"
           mobile: "Мобильный"
           settings: "Настройки"
+          translations: "Переводы"
           preview: "Предпросмотр"
+          show_advanced: "Показать дополнительные поля"
+          hide_advanced: "Скрыть дополнительные поля"
+          hide_unused_fields: "Скрыть неиспользуемые поля"
           is_default: "Активировать по умолчанию"
           user_selectable: "Пользователи могут выбирать стиль"
-          color_scheme: "Цветовая схема"
+          color_scheme: "Цветовая палитра"
           color_scheme_select: "Выберите цвета для стиля"
           custom_sections: "Настройка секций:"
           theme_components: "Компоненты стиля"
@@ -3366,10 +3368,17 @@ ru:
           edit_css_html_help: "Вы не внесли никаких изменений в CSS или HTML"
           delete_upload_confirm: "Удалить этот файл? CSS стиля может перестать функционировать!"
           import_web_tip: "Репозиторий стиля"
+          import_web_advanced: "Дополнительно..."
           import_file_tip: "Файл .tar.gz или .dcstyle.json, содержащий тему"
           is_private: "Тема находится в частном репозитории git"
           remote_branch: "Имя ветви (необязательно)"
           public_key: "Предоставьте доступ к репозиторию со следующим открытым ключом:"
+          install: "Install"
+          installed: "Установлены"
+          install_popular: "Популярный"
+          install_upload: "С вашего устройства"
+          install_git_repo: "Из репозитория git"
+          install_create: "Создать новый"
           about_theme: "Об этом"
           license: "Лицензия"
           version: "Версия:"
@@ -3423,19 +3432,19 @@ ru:
             title: "Определить настройки темы в формате YAML"
         colors:
           select_base:
-            title: "Выберите базовую цветовую гамму"
-            description: "Базовая схема"
+            title: "Выберите базовую цветовую палитру"
+            description: "Базовая палитра:"
           title: "Цвета"
-          edit: "Редактировать цветовые схемы"
-          long_title: "Цветовые схемы"
-          about: "Настройте цвета, используемые вашими стилями. Начните с создания новой цветовой схемы."
-          new_name: "Новая цветовая схема"
+          edit: "Редактировать Цветовую Палитру"
+          long_title: "Цветовые палитры"
+          about: "Измените цвета, используемые в темах. Создайте новую цветовую палитру для начала."
+          new_name: "Новая Цветовая Палитра"
           copy_name_prefix: "Копия"
-          delete_confirm: "Удалить эту цветовую схему?"
+          delete_confirm: "Удалить эту цветовую палитру?"
           undo: "отменить"
           undo_title: "Отменить ваши изменения этого цвета с момента последнего сохранения."
           revert: "вернуть"
-          revert_title: "Вернуть этот цвет к стандартной цветовой схеме Discourse."
+          revert_title: "Сбросьте этот цвет на цветовую палитру Discourse по умолчанию."
           primary:
             name: "первичный"
             description: "Большинство текстов, иконок и границ."
@@ -3800,6 +3809,7 @@ ru:
         penalty_post_delete: "Удалить сообщение"
         penalty_post_edit: "Редактировать сообщение"
         penalty_post_none: "Ничего не делать"
+        penalty_count: "Количество нарушений"
         clear_penalty_history:
           title: "Очистить Историю Штрафов"
           description: "пользователи со штрафами не могут достичь TL3"
@@ -3812,8 +3822,6 @@ ru:
         suspended: "Заморожен?"
         staged: "Имитация?"
         show_admin_profile: "Администратор"
-        refresh_browsers: "Выполнить перезагрузку браузера"
-        refresh_browsers_message: "Сообщение отправлено всем клиентам!"
         show_public_profile: "Показать публичный профиль"
         impersonate: "Представиться как пользователь"
         action_logs: "Журнал действий"
@@ -4111,9 +4119,9 @@ ru:
             with_post_time: "<span class=\"username\">%{username}</span> за сообщение в %{link} в <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> в <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: 'Выберите существующую награду или создайте новую, чтобы начать работу'
-          what_are_badges_title: 'Что такое награды?'
-          badge_query_examples_title: 'Примеры запроса награды'
+          title: "Выберите существующую награду или создайте новую, чтобы начать работу"
+          what_are_badges_title: "Что такое награды?"
+          badge_query_examples_title: "Примеры запроса награды"
       emoji:
         title: "Иконки"
         help: "Добавить новые смайлики-emoji, которые будут доступны всем. (Подсказка: можно перетаскивать несколько файлов за раз)"

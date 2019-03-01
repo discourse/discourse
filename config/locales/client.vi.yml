@@ -89,12 +89,7 @@ vi:
       next_month: "Tháng sau"
       placeholder: ngày
     share:
-      topic: "chia sẻ chủ đề này"
-      post: "đăng #%{postNumber}"
       close: "đóng"
-      twitter: "chia sẻ lên Twitter"
-      facebook: "chia sẻ lên Facebook"
-      email: "Gửi liên kết này qua email"
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
       split_topic: "tách chủ đề này lúc %{when}"
@@ -360,7 +355,6 @@ vi:
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
         muted:
           title: "Im lặng"
-          description: "Bạn sẽ không bao giờ được thông báo về bất cứ chủ đề mới nào trong nhóm này"
       flair_url: "Ảnh đại diện"
       flair_url_placeholder: "(Tuỳ chọn) Link đến hình ảnh hoặc lớp Font Awesome"
       flair_bg_color: "Màu nền ảnh đại diện"
@@ -1542,7 +1536,6 @@ vi:
       email_in_disabled_click: 'kích hoạt thiết lập thư điện tử'
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
-      add_permission: "Thêm quyền"
       this_year: "năm nay"
       default_position: "vị trí mặc định"
       position_disabled: "Chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự chuyên mục trong danh sách, "
@@ -1986,7 +1979,6 @@ vi:
         save: "Lưu"
         new: "Mới"
         new_style: "Style mới"
-        import: "Nhập"
         delete: "Xóa"
         color: "Màu sắc"
         opacity: "Độ mờ"
@@ -2001,14 +1993,10 @@ vi:
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
         colors:
           title: "Màu sắc"
-          long_title: "Bảng màu"
-          new_name: "Bản màu mới"
           copy_name_prefix: "Bản sao của"
-          delete_confirm: "Xóa bảng màu này?"
           undo: "hoàn tác"
           undo_title: "Hoàn tác thay đổi của bạn vơ"
           revert: "phục hồi"
-          revert_title: "Thiết lập lại màu về mặc định của Discourse."
           primary:
             name: "chính"
             description: "Hầu hết chữ, biểu tượng, và viền."
@@ -2241,8 +2229,6 @@ vi:
         suspended: "Đã tạm khóa?"
         staged: "Cấp bậc?"
         show_admin_profile: "Quản trị"
-        refresh_browsers: "Bắt buộc làm mới trình duyệt"
-        refresh_browsers_message: "Tin nhắn đã gửi cho tất cả người dùng!"
         show_public_profile: "Hiển thị hồ sơ công khai"
         impersonate: "Mạo danh"
         ip_lookup: "Tìm kiếm địa chỉ IP"

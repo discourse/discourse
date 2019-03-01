@@ -149,12 +149,10 @@ lt:
       next_month: "Ateinantį mėnesį"
       placeholder: data
     share:
-      topic: "pasidalinti nuoroda į šią temą"
-      post: "įrašas #%{postNumber}"
+      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "uždaryti"
-      twitter: "pasidalinkite šią nuorodą per Twitter"
-      facebook: "pasidalinkite šią nuorodą per Facebook"
-      email: "siųskite šią nuorodą į el. paštą"
+      twitter: "Dalintis nuoroda Twitter"
+      facebook: "Dalintis nuoroda Facebook"
     action_codes:
       public_topic: "nustatė diskusijas viešom %{when}"
       private_topic: "pakeisti temą į asmeninę žinutę 1%{when}"
@@ -212,6 +210,7 @@ lt:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "redaguoti šios temos pavadinimą ir kateogoriją"
+    expand: "Išplėsti"
     not_implemented: "Ši funkcija dar neveikia, atsiprašome!"
     no_value: "Ne."
     yes_value: "Taip"
@@ -237,6 +236,7 @@ lt:
     privacy_policy: "Privatumo politika"
     privacy: "Privatumas"
     tos: "Paslaugų teikimo sąlygos"
+    rules: "Tisyklės"
     mobile_view: "Mobili peržiūra"
     desktop_view: "Pilna peržiūra"
     you: "Jūs"
@@ -259,6 +259,8 @@ lt:
       few: "{{count}} simboliai"
       many: "{{count}} simbolių"
       other: "{{count}} simbolių"
+    related_messages:
+      title: "Susiję pranešimai"
     suggested_topics:
       title: "Siūlomos Temos"
       pm_title: "Rekomenduojamos žinutės"
@@ -323,8 +325,10 @@ lt:
       none_found: "Nerasta temų."
       title:
         placeholder: "Įveskite temos pavadinimą čia"
+    choose_message:
+      none_found: "Žinučių nėra."
     queue:
-      topic: "Tema"
+      topic: "Tema:"
       approve: "Patvirtinti"
       reject: "Atmesti"
       delete_user: "Ištrinti vartotoją"
@@ -393,6 +397,7 @@ lt:
         make_user_group_owner: "Padaryti savininku"
         remove_user_as_group_owner: "Atšaukti valdytoją"
     groups:
+      member_added: "Pridėta"
       add_members:
         title: "Pridėti narius"
         description: "Valdykite šios grupės narystę"
@@ -500,7 +505,6 @@ lt:
           description: "Būsi perspėtas kai kažkas paminės tavo @vardą ar tau atsakys."
         muted:
           title: "Nutildytos"
-          description: "Tau nebus siunčiami pranešimai apie naujas temas šioje grupėje"
       flair_url: "Avatar Flair paveiksliukas"
       flair_url_placeholder: "(Pasirinktinai) Vaizdo URL arba \"Font Awesome\" klasė"
       flair_bg_color: "Avatar Flair fono splva"
@@ -1241,7 +1245,7 @@ lt:
       invitee_accepted: "<span>{{username}}</span> priėmė jūsų kvietimą"
       moved_post: "<span>{{username}}</span> perkeltas {{description}}"
       linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Užsitanavo '{{description}}'"
+      granted_badge: "Gavote '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Nauja tema</span> {{description}}"
       group_message_summary:
@@ -1956,7 +1960,6 @@ lt:
       sort_order: "Temų sąrasą rūšiuoti oagal\""
       allow_badges_label: "Leisti trofėjų apdovanojimus šioje kategorijoje"
       edit_permissions: "Redaguoti leidimus"
-      add_permission: "Pridėti leidimus"
       this_year: "šiais metais"
       position: "Vieta:"
       default_position: "Numatyta pozicija"
@@ -2534,7 +2537,6 @@ lt:
         save: "Išsaugoti"
         new: "Naujas"
         new_style: "Naujas stilius"
-        import: "Importuoti"
         delete: "Ištrinti"
         color: "Spalva"
         opacity: "Permatomumas"
@@ -2548,18 +2550,14 @@ lt:
           revert: "Atstatyti Pakeitimus"
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
         theme:
-          import_theme: "Importuoti temą"
           title: "Temos"
           create: "Sukurti"
-          create_type: "Tipas:"
-          create_name: "Pavadinimas:"
           edit: "Redaguoti"
           desktop: "Darbalaukis"
           mobile: "Mobilus"
           settings: "Nustatymai"
           preview: "Peržiūrėti"
           is_default: "Tema įgalinta pagal nutylėjimą"
-          color_scheme: "Spalvų schema"
           theme_components: "Temos komponentai"
           uploads: "Įkėlimai"
           upload: "Įkelti"
@@ -2590,18 +2588,11 @@ lt:
           yaml:
             text: "YAML"
         colors:
-          select_base:
-            title: "Pasirinkite pagrindinę spalvos schemą"
-            description: "Pagrindinė schema:"
           title: "Spalvos"
-          long_title: "Spalvų schemos"
-          new_name: "Nauja spalvų schema"
           copy_name_prefix: "Kopija"
-          delete_confirm: "Ištrinti šią spalvų schemą?"
           undo: "anuliuoti"
           undo_title: "Anuliuoti šios spalvos pakeitimus į paskutinį kartą išsaugotus."
           revert: "grąžinti"
-          revert_title: "Reset this color to Discourse's default color scheme."
           primary:
             name: "pirminė"
             description: "Pagrindnis tekstas, ikonos ir rėmeliai."
@@ -2890,8 +2881,6 @@ lt:
         suspended: "Sustabdytas?"
         staged: "Inscenizuotas?"
         show_admin_profile: "Administravimas"
-        refresh_browsers: "Priverstinai perkrauti naršyklę"
-        refresh_browsers_message: "Žinutė išsiųsta visiems klientams!"
         show_public_profile: "Rodyti viešą profilį"
         impersonate: "Apsimesti"
         action_logs: "Veiksmų įrašai"

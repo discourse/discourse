@@ -29,7 +29,6 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.create_for(upload, width, height, opts = {})
-
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
@@ -180,7 +179,7 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico|gif)\z/i
+  IM_DECODERS ||= /\A(jpe?g|png|ico|gif)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}

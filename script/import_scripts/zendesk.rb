@@ -82,19 +82,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
       )
     end
 
-    @db.execute_sql(<<~SQL)
-      DELETE FROM user
-      WHERE NOT EXISTS(
-          SELECT 1
-          FROM topic
-          WHERE topic.user_id = user.id
-      ) AND NOT EXISTS(
-          SELECT 1
-          FROM post
-          WHERE post.user_id = user.id
-      )
-    SQL
-
+    @db.delete_unused_users
     @db.sort_posts_by_created_at
   end
 
@@ -188,7 +176,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
     last_row_id = 0
 
     batches do |offset|
-      rows, last_row_id = @db.fetch_posts(last_row_id)
+      rows, last_row_id = @db.fetch_sorted_posts(last_row_id)
       break if rows.empty?
 
       next if all_records_exist?(:posts, rows.map { |row| row['id'] })

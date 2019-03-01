@@ -22,22 +22,23 @@ class ThemeField < ActiveRecord::Base
       .order("theme_sort_column")
   }
 
-  scope :find_locale_fields, ->(theme_ids, locale_codes) {
-    return none unless theme_ids.present? && locale_codes.present?
+  scope :filter_locale_fields, ->(locale_codes) {
+    return none unless locale_codes.present?
 
-    find_by_theme_ids(theme_ids)
-      .where(target_id: Theme.targets[:translations], name: locale_codes)
+    where(target_id: Theme.targets[:translations], name: locale_codes)
       .joins(self.sanitize_sql_array([
-        "JOIN (
-          SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
-        ) as Y ON Y.locale_code = theme_fields.name",
-        *locale_codes.map.with_index { |code, index| [code, index] }
-      ]))
-      .reorder("X.theme_sort_column", "Y.locale_sort_column")
+      "JOIN (
+        SELECT * FROM (VALUES #{locale_codes.map { "(?)" }.join(",")}) as Y (locale_code, locale_sort_column)
+      ) as Y ON Y.locale_code = theme_fields.name",
+      *locale_codes.map.with_index { |code, index| [code, index] }
+    ]))
+      .order("Y.locale_sort_column")
   }
 
   scope :find_first_locale_fields, ->(theme_ids, locale_codes) {
-    find_locale_fields(theme_ids, locale_codes)
+    find_by_theme_ids(theme_ids)
+      .filter_locale_fields(locale_codes)
+      .reorder("X.theme_sort_column", "Y.locale_sort_column")
       .select("DISTINCT ON (X.theme_sort_column) *")
   }
 
@@ -64,7 +65,7 @@ class ThemeField < ActiveRecord::Base
   validates :name, format: { with: /\A[a-z_][a-z0-9_-]*\z/i },
                    if: Proc.new { |field| ThemeField.theme_var_type_ids.include?(field.type_id) }
 
-  COMPILER_VERSION = 9
+  COMPILER_VERSION = 10
 
   belongs_to :theme
 
@@ -128,8 +129,8 @@ class ThemeField < ActiveRecord::Base
     ThemeTranslationParser.new(self, internal: internal).load
   end
 
-  def translation_data(with_overrides: true, internal: false)
-    fallback_fields = theme.theme_fields.find_locale_fields([theme.id], I18n.fallbacks[name])
+  def translation_data(with_overrides: true, internal: false, fallback_fields: nil)
+    fallback_fields ||= theme.theme_fields.filter_locale_fields(I18n.fallbacks[name])
 
     fallback_data = fallback_fields.each_with_index.map do |field, index|
       begin
@@ -261,7 +262,7 @@ class ThemeField < ActiveRecord::Base
   def ensure_scss_compiles!
     if ThemeField.scss_fields.include?(self.name)
       begin
-        Stylesheet::Compiler.compile("@import \"theme_variables\"; @import \"theme_field\";",
+        Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"theme_field\";",
                                      "theme.scss",
                                      theme_field: self.value.dup,
                                      theme: self.theme
@@ -339,7 +340,7 @@ class ThemeField < ActiveRecord::Base
                          canonical: -> (h) { "locales/#{h[:name]}.yml" }),
     ThemeFileMatcher.new(regex: /(?!)/, # Never match uploads by filename, they must be named in about.json
                          names: nil, types: :theme_upload_var, targets: :common,
-                         canonical: -> (h) { "assets/#{h[:filename]}" }),
+                         canonical: -> (h) { "assets/#{h[:name]}#{File.extname(h[:filename])}" }),
   ]
 
   # For now just work for standard fields
@@ -373,9 +374,11 @@ class ThemeField < ActiveRecord::Base
   end
 
   after_commit do
-    ensure_baked!
-    ensure_scss_compiles!
-    theme.clear_cached_settings!
+    unless destroyed?
+      ensure_baked!
+      ensure_scss_compiles!
+      theme.clear_cached_settings!
+    end
 
     Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
     CSP::Extension.clear_theme_extensions_cache! if name == 'yaml'

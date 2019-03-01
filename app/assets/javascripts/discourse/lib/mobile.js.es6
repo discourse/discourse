@@ -23,6 +23,9 @@ const Mobile = {
       if (window.location.search.match(/mobile_view=0/)) {
         localStorage.mobileView = false;
       }
+      if (window.location.search.match(/mobile_view=auto/)) {
+        localStorage.removeItem("mobileView");
+      }
       if (localStorage.mobileView) {
         var savedValue = localStorage.mobileView === "true";
         if (savedValue !== this.mobileView) {

@@ -32,10 +32,13 @@ module BackupRestore
       ### READ-ONLY / START ###
       enable_readonly_mode
 
-      pause_sidekiq
-      wait_for_sidekiq
-
-      dump_public_schema
+      begin
+        pause_sidekiq
+        wait_for_sidekiq
+        dump_public_schema
+      ensure
+        unpause_sidekiq
+      end
 
       disable_readonly_mode
       ### READ-ONLY / END ###
@@ -43,8 +46,6 @@ module BackupRestore
       log "Finalizing backup..."
 
       @with_uploads ? create_archive : move_dump_backup
-
-      unpause_sidekiq
       upload_archive
 
       after_create_hook
@@ -236,9 +237,11 @@ module BackupRestore
       log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
+          exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--warning=no-file-changed', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to archive uploads."
+            'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
+            failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
           )
         else
           log "No uploads found, skipping archiving uploads..."
@@ -248,7 +251,10 @@ module BackupRestore
       remove_tmp_directory
 
       log "Gzipping archive, this may take a while..."
-      Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
+      Discourse::Utils.execute_command(
+        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
+        failure_message: "Failed to gzip archive."
+      )
     end
 
     def upload_archive
@@ -295,7 +301,6 @@ module BackupRestore
       log "Cleaning stuff up..."
       delete_uploaded_archive
       remove_tar_leftovers
-      unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space

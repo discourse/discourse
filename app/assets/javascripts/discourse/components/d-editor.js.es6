@@ -12,7 +12,8 @@ import { findRawTemplate } from "discourse/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
-  clipboardData
+  clipboardData,
+  safariHacksDisabled
 } from "discourse/lib/utilities";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
@@ -80,7 +81,7 @@ class Toolbar {
       icon: "italic",
       label: getButtonLabel("composer.italic_label", "I"),
       shortcut: "I",
-      perform: e => e.applySurround("_", "_", "italic_text")
+      perform: e => e.applySurround("*", "*", "italic_text")
     });
 
     if (opts.showLink) {
@@ -256,15 +257,6 @@ export default Ember.Component.extend({
     const mouseTrap = Mousetrap(this.$(".d-editor-input")[0]);
     const shortcuts = this.get("toolbar.shortcuts");
 
-    // for some reason I am having trouble bubbling this so hack it in
-    mouseTrap.bind(["ctrl+alt+f"], event => {
-      this.appEvents.trigger("header:keyboard-trigger", {
-        type: "search",
-        event
-      });
-      return true;
-    });
-
     Object.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
       mouseTrap.bind(sc, () => {
@@ -304,8 +296,8 @@ export default Ember.Component.extend({
       this.appEvents.on("composer:insert-text", (text, options) =>
         this._addText(this._getSelected(), text, options)
       );
-      this.appEvents.on("composer:replace-text", (oldVal, newVal) =>
-        this._replaceText(oldVal, newVal)
+      this.appEvents.on("composer:replace-text", (oldVal, newVal, opts) =>
+        this._replaceText(oldVal, newVal, opts)
       );
     }
     this._mouseTrap = mouseTrap;
@@ -323,7 +315,6 @@ export default Ember.Component.extend({
     Object.keys(this.get("toolbar.shortcuts")).forEach(sc =>
       mouseTrap.unbind(sc)
     );
-    mouseTrap.unbind("ctrl+/", "command+/");
     this.$(".d-editor-preview").off("click.preview");
   },
 
@@ -534,7 +525,7 @@ export default Ember.Component.extend({
       const $textarea = this.$("textarea.d-editor-input");
       const textarea = $textarea[0];
       const oldScrollPos = $textarea.scrollTop();
-      if (!this.capabilities.isIOS) {
+      if (!this.capabilities.isIOS || safariHacksDisabled()) {
         $textarea.focus();
       }
       textarea.selectionStart = from;
@@ -669,7 +660,7 @@ export default Ember.Component.extend({
     }
   },
 
-  _replaceText(oldVal, newVal) {
+  _replaceText(oldVal, newVal, opts) {
     const val = this.get("value");
     const needleStart = val.indexOf(oldVal);
 
@@ -687,8 +678,17 @@ export default Ember.Component.extend({
       replacement: { start: needleStart, end: needleStart + newVal.length }
     });
 
-    // Replace value (side effect: cursor at the end).
-    this.set("value", val.replace(oldVal, newVal));
+    if (opts && opts.index && opts.regex) {
+      let i = -1;
+      const newValue = val.replace(opts.regex, match => {
+        i++;
+        return i === opts.index ? newVal : match;
+      });
+      this.set("value", newValue);
+    } else {
+      // Replace value (side effect: cursor at the end).
+      this.set("value", val.replace(oldVal, newVal));
+    }
 
     if ($("textarea.d-editor-input").is(":focus")) {
       // Restore cursor.

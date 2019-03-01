@@ -44,7 +44,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.77'
+gem 'onebox', '1.8.79'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -65,6 +65,7 @@ gem 'fast_xor', platform: :mri
 gem 'fastimage'
 
 gem 'aws-sdk-s3', require: false
+gem 'aws-sdk-sns', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
@@ -201,10 +202,11 @@ gem 'rchardet', require: false
 if ENV["IMPORT"] == "1"
   gem 'mysql2'
   gem 'redcarpet'
-  gem 'sqlite3', '~> 1.3.13'
+  gem 'sqlite3', '~> 1.3', '>= 1.3.13'
   gem 'ruby-bbcode-to-md', git: 'https://github.com/nlalonde/ruby-bbcode-to-md'
   gem 'reverse_markdown'
   gem 'tiny_tds'
+  gem 'csv', '~> 3.0'
 end
 
 gem 'webpush', require: false

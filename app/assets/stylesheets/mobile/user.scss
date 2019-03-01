@@ -19,9 +19,7 @@
       text-overflow: ellipsis;
     }
     th {
-      padding: 0.5em;
       text-align: right;
-      border-bottom: 1px solid $primary-low;
     }
     td {
       padding: 0.5em;
@@ -51,17 +49,6 @@
     table {
       width: 100%;
       margin-top: 10px;
-
-      th {
-        text-align: left;
-        border-bottom: 1px solid $primary-low;
-        padding: 5px;
-      }
-
-      td {
-        padding: 5px;
-        border-bottom: 1px solid $primary-low;
-      }
     }
   }
 

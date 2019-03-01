@@ -42,13 +42,13 @@ module UserAuthTokensMixin
   def icon
     case BrowserDetection.os(object.user_agent)
     when :android
-      'android'
+      'fab-android'
     when :macos, :ios
-      'apple'
+      'fab-apple'
     when :linux
-      'linux'
+      'fab-linux'
     when :windows
-      'windows'
+      'fab-windows'
     else
       'question'
     end

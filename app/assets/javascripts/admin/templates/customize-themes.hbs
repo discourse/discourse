@@ -1,12 +1,9 @@
 {{#unless editingTheme}}
-  <div class='customize-themes-header'>
-
-
-    <div class="create-actions">
-      {{d-button label="admin.customize.new" icon="plus" action=(route-action "showCreateModal") class="btn-primary"}}
-      {{d-button action=(route-action "importModal") icon="upload" label="admin.customize.import" class="btn-default"}}
-    </div>
-  </div>
-  {{themes-list themes=fullThemes components=childThemes currentTab=currentTab}}
+  {{themes-list
+    themes=fullThemes
+    components=childThemes
+    currentTab=currentTab
+    installModal=(route-action "installModal")}}
 {{/unless}}
+
 {{outlet}}

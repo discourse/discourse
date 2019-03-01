@@ -458,6 +458,16 @@ export default function() {
       ]);
     });
 
+    this.get("/admin/users/list/suspect.json", () => {
+      return response(200, [
+        {
+          id: 2,
+          username: "sam",
+          email: "<small>sam@example.com</small>"
+        }
+      ]);
+    });
+
     this.get("/admin/customize/site_texts", request => {
       if (request.queryParams.overridden) {
         return response(200, { site_texts: [overridden] });
@@ -533,6 +543,15 @@ export default function() {
           title: "Search Count",
           data: [{ x: "2017-07-20", y: 2 }]
         }
+      });
+    });
+
+    this.post("/uploads/lookup-metadata", () => {
+      return response(200, {
+        imageFilename: "somefile.png",
+        imageFilesize: "10 KB",
+        imageWidth: "1",
+        imageHeight: "1"
       });
     });
 

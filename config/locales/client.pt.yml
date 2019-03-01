@@ -109,12 +109,7 @@ pt:
       next_month: "Mês Seguinte"
       placeholder: data
     share:
-      topic: "partilhar uma hiperligação para este tópico"
-      post: "publicação #%{postNumber}"
       close: "fechar"
-      twitter: "partilhar esta hiperligação no Twitter"
-      facebook: "partilhar esta hiperligação no Facebook"
-      email: "enviar esta hiperligação por e-mail"
     action_codes:
       public_topic: "tornei este tópico publico %{when}"
       private_topic: "tornou este tópico numa mensagem privada %{when}"
@@ -399,7 +394,6 @@ pt:
           description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
         muted:
           title: "Silenciado"
-          description: "Não será notificado de nada relacionado com novos tópicos neste grupo."
       flair_url: "Imagem da Marca de Avatar"
       flair_bg_color: "Cor de Fundo da Marca de Avatar"
       flair_bg_color_placeholder: "(Opcional) Valor hexadecimal da cor"
@@ -1744,7 +1738,6 @@ pt:
       email_in_disabled_click: 'ative a definição "email em".'
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
-      add_permission: "Adicionar Permissões"
       this_year: "este ano"
       default_position: "Posição Padrão"
       position_disabled: "As categorias serão exibidas por ordem de actividade. Para controlar a ordenação das categorias nas listas,"
@@ -2388,7 +2381,6 @@ pt:
         save: "Guardar"
         new: "Novo"
         new_style: "Novo Estilo"
-        import: "Importar"
         delete: "Eliminar"
         color: "Cor"
         opacity: "Opacidade"
@@ -2403,14 +2395,10 @@ pt:
           revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
         colors:
           title: "Cores"
-          long_title: "Esquemas de Cores"
-          new_name: "Novo Esquema de Cores"
           copy_name_prefix: "Cópia de"
-          delete_confirm: "Apagar este esquema de cor?"
           undo: "desfazer"
           undo_title: "Desfazer as alterações a esta cor desde a última gravação."
           revert: "reverter"
-          revert_title: "Repor esta cor para o esquema de cor padrão do Discourse."
           primary:
             name: "primária"
             description: "A maioria do texto, ícones, e margens."
@@ -2661,8 +2649,6 @@ pt:
         suspended: "Suspendido?"
         staged: "Temporário?"
         show_admin_profile: "Administração"
-        refresh_browsers: "Forçar atualização da página no browser"
-        refresh_browsers_message: "Mensagem enviada para todos os clientes!"
         show_public_profile: "Mostrar Perfil Público"
         impersonate: "Personificar"
         ip_lookup: "Pesquisa de IP"

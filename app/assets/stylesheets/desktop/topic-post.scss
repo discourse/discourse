@@ -273,9 +273,17 @@ nav.post-controls {
     border: 1px solid $primary-low;
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
-    &:hover {
-      background: $primary-low;
-      color: $primary;
+    .d-icon {
+      color: currentColor;
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background: $primary-low;
+        color: $primary-high;
+        .d-icon {
+          color: currentColor;
+        }
+      }
     }
   } // bottom means "reply expansion" below a post
   &.bottom {
@@ -579,11 +587,6 @@ video {
   }
 }
 
-#share-link {
-  width: 365px;
-  margin-left: -4px;
-}
-
 .post-select {
   float: right;
   margin-right: 20px;
@@ -848,8 +851,8 @@ span.highlighted {
   background-color: $tertiary-low;
 }
 
-.username.new-user a {
-  color: dark-light-choose($primary-low-mid, $secondary-high);
+.first.new-user:not(.staff) a {
+  color: $primary-low-mid;
 }
 
 .read-state {

@@ -201,7 +201,10 @@ export default function(options) {
       wrap = this.wrap(
         "<div class='ac-wrap clearfix" + (disabled ? " disabled" : "") + "'/>"
       ).parent();
-      wrap.width(width);
+
+      if (!options.fullWidthWrap) {
+        wrap.width(width);
+      }
     }
 
     if (options.single && !options.width) {

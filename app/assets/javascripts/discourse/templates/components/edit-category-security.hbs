@@ -27,7 +27,7 @@
                   content=category.availablePermissions
                   value=selectedPermission}}
       <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-default add-permission">
-        {{i18n 'category.add_permission'}}
+        {{d-icon 'plus' class="add-permission-icon"}}
       </button>
     {{/if}}
   {{else}}

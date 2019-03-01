@@ -37,7 +37,7 @@ es:
   redirect_warning: "No pudimos verificar que el enlace que seleccionó se haya publicado en el foro. Si desea continuar de todos modos, seleccione el enlace a continuación."
   on_another_topic: "En otro tema"
   themes:
-    bad_color_scheme: "No puedes actualizar theme, esquema de color inválido"
+    bad_color_scheme: "No puede actualizar theme, paleta de color inválida"
     other_error: "Algo salió mal actualizando el theme"
     import_error:
       generic: Ha ocurrido un error al importar el tema
@@ -49,7 +49,7 @@ es:
     errors:
       component_no_user_selectable: "Los componentes de tema no pueden ser seleccionables por los usuarios"
       component_no_default: "Los componentes de temas no pueden ser el tema por defecto"
-      component_no_color_scheme: "Los componentes de tema no pueden tener esquemas de color"
+      component_no_color_scheme: "Componentes del theme no pueden tener paletas de color"
       no_multilevels_components: "Loa temas con temas hijos no pueden ser hijos de otros temas"
     settings_errors:
       invalid_yaml: "YAML provisto es inválido."
@@ -170,6 +170,7 @@ es:
       <p>Si recuerdas tu contraseña puedes <a href="%{base_url}/login">Ingresar</a>.</p>
 
       <p>O bien, por favor <a href="%{base_url}/password-reset">Resetear Contraseña</a>.</p>
+    error_message: "Hubo un error aceptando la invitación. Por favor, contacte al administrador del sitio."
     user_exists: "No hay necesidad de invitar a <b>%{email}</b>, ¡ya <a href='%{base_path}/u/%{username}/summary'>tiene una cuenta!</a>"
     confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a tu dirección de correo. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam.</p>"
   bulk_invite:
@@ -285,7 +286,7 @@ es:
     user_posts: "Posts recientes por @%{username}"
     user_topics: "Temas recientes por @%{username}"
     tag: "Temas etiquetados"
-    badge: "%{display_name} distintivo en %{site_title}"
+    badge: "%{display_name} medalla en %{site_title}"
   too_late_to_edit: "Ese post fue publicado hace demasiado tiempo. No puede ser editado ni eliminado."
   edit_conflict: "La publicación ha sido editada por otro usuario y tus cambios no pueden ser guardados."
   revert_version_same: "La versión actual es la misma que la versión a la que intentas volver."
@@ -394,6 +395,7 @@ es:
       topic:
         title: "Título"
         featured_link: "Enlace destacado"
+        category_id: "Categoría"
       post:
         raw: "Mensaje"
       user_profile:
@@ -512,6 +514,8 @@ es:
       email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
       email_already_used_in_category: "'%{email}' ya está siendo utilizado por la categoría '%{category_name}'."
       description_incomplete: "El post que contiene la descripción de la categoría debe contener al menos un párrafo."
+      permission_conflict: "Los permisos de subcategoría no pueden ser menos restrictivos que los de los padres."
+      disallowed_topic_tags: "Este tema tiene etiquetas no permitidas en esta categoría: '%{tags}'"
     cannot_delete:
       uncategorized: "Sin categoría no se puede eliminar"
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
@@ -1301,7 +1305,7 @@ es:
     prioritize_username_in_ux: "Mostrar username primero en la página de usuario, tarjeta de usuario y mensajes (cuando el nombre ha sido desactivado se muestra primero)"
     enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown cuando pegues texto en el compositor. (Experimental)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
-    enable_badges: "Activar el sistema de distintivos"
+    enable_badges: "Activar el sistema de medallas"
     enable_whispers: "Permitir a los miembros del staff comunicarse privadamente entre ellos en temas públicos."
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
     email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
@@ -1373,6 +1377,8 @@ es:
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el backup."
     backup_with_uploads: "Incluir archivos adjuntos en los backups programados. Desactivando esta opción tan solo se ejecutará una copia de seguridad de la base de datos."
     backup_location: "Ubicación donde se almacenan las copias de seguridad. IMPORTANTE: S3 requiere credenciales S3 válidas ingresadas en la configuración de Archivos."
+    backup_gzip_compression_level_for_uploads: "Nivel de compresión Gzip utilizado para comprimir subidas."
+    include_thumbnails_in_backups: "Incluir miniaturas generadas en copias de seguridad. Deshabilitar esto hará que las copias de seguridad sean más pequeñas, pero requiere una nueva versión de todas las publicaciones después de una restauración."
     active_user_rate_limit_secs: "Con qué frecuencia actualizaremos el campo 'last_seen_at', en segundos"
     verbose_localization: "Mostrar sugerencias de localización extendida en la interface de usuario "
     previous_visit_timeout_hours: "Cuanto tiempo debe pasar antes de que una visita sea considerada la 'visita previa', en horas"
@@ -1558,7 +1564,7 @@ es:
     attachment_filename_blacklist: "Lista de palabras clave utilizadas para bloquear adjuntos basados en el nombre de archivo."
     enable_forwarded_emails: "[BETA] Permitir a los usuarios crear temas enviándolos por email."
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los emails entrantes. AVISO: podría revelar direcciones de correo."
-    private_email: "No incluir contenido de posts o temas en emails para mejorar la privacidad."
+    private_email: "No incluir contenido de posts o temas en emails para mejorar la privacidad. NOTA: también se desactivan los correos electrónicos de resumen."
     manual_polling_enabled: "Lanza emails usando la API para las respuestas por email."
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
@@ -1699,7 +1705,7 @@ es:
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
     max_api_keys_per_user: "Número máximo de claves de usuario por usuario"
     min_trust_level_for_user_api_key: "Nivel de confianza necesario para generar claves de API de usuario"
-    allowed_user_api_auth_redirects: "URL permitida para autentificar redirección para claves API de usuario"
+    allowed_user_api_auth_redirects: "URL permitida para autentificar redirección para claves API de usuario. Símbolo comodín * puede ser usado para que coincida cualquier parte de la misma (por ejemplo www.ejemplo.com/*)."
     allowed_user_api_push_urls: "URL permitida para el 'server push' en claves API de usuario"
     expire_user_api_keys_days: "Número de días antes de que la clave de la API de usuario caduque automáticamente (0 para nunca)"
     tagging_enabled: "¿Activar etiquetas para los temas?"
@@ -1793,11 +1799,17 @@ es:
       different_users: "Mensajes que pertenecen a diferentes usuarios no pueden ser juntados."
   move_posts:
     new_topic_moderator_post:
-      one: "Un mensaje ha sido separado a un nuevo %{entity}: %{topic_link}"
-      other: "%{count} mensajes han sido separados a un nuevo %{entity}: %{topic_link}"
+      one: "Un mensaje ha sido separado a un nuevo tema: %{topic_link}"
+      other: "%{count} mensajes han sido separados a un nuevo tema: %{topic_link}"
+    new_message_moderator_post:
+      one: "Un mensaje ha sido separado a un nuevo mensaje: %{topic_link}"
+      other: "%{count} mensajes han sido separados a un mensaje: %{topic_link}"
     existing_topic_moderator_post:
-      one: "Un mensaje ha sido unido a un %{entity} existente: %{topic_link}"
-      other: "%{count} mensajes han sido unidos a un %{entity} existente: %{topic_link}"
+      one: "Un mensaje ha sido unido a un tema existente: %{topic_link}"
+      other: "%{count} mensajes han sido unidos a un tema existente: %{topic_link}"
+    existing_message_moderator_post:
+      one: "Un post ha sido unido a un mensaje existente: %{topic_link}"
+      other: "%{count} posts han sido unidos a un mensaje existente: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad"
   topic_statuses:
@@ -2580,7 +2592,7 @@ es:
       text_body_template: |
         ¡Enhorabuena, has ganado el **premio Nuevo Usuario del Mes para %{month_year}**. :trophy:!
 
-        Este premio solo lo ganan dos de los nuevos miembros de cada mes, y será visible permanentemente en [la página de distintivos](%{url}).
+        Este premio solo lo ganan dos de los nuevos miembros de cada mes, y será visible permanentemente en [la página de medalla](%{url}).
 
         Te has convertido rápidamente en un miembro de gran valor para nuestra comunidad. Gracias por unirte, ¡y continúa con el gran trabajo!
     queued_posts_reminder:
@@ -3041,14 +3053,14 @@ es:
     sender_post_deleted: "post ha sido borrado"
   color_schemes:
     base_theme_name: "Base"
-    light: "Esquema claro"
-    dark: "Esquema Oscuro"
-    neutral: "Esquema neutral"
-    grey_amber: "Esquema gris-ámbar"
-    shades_of_blue: "Esquema gama azul"
-    latte: "Gama Latte"
-    summer: "Gama veraniega"
-    dark_rose: "Gama rosa oscura"
+    light: "Claro"
+    dark: "Oscuro"
+    neutral: "Neutral"
+    grey_amber: "Gris Ámbar"
+    shades_of_blue: "Sombras de Azul"
+    latte: "Latte"
+    summer: "Veraniego"
+    dark_rose: "Rosa Oscuro"
     default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Oscuro"
@@ -3107,7 +3119,7 @@ es:
 
       Eres parte de la comunidad, y queremos que todo el mundo participe en ella. Crea o responde a los temas aportando algo y harás de este foro un lugar más interesante y agradable.
 
-      Este foro ofrece herramientas que permiten a la comunidad identificar entre todas las mejores (y peores) contribuciones: "Me gusta", marcadores, reportes, distintivos, respuestas, ediciones, y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
+      Este foro ofrece herramientas que permiten a la comunidad identificar entre todas las mejores (y peores) contribuciones: "Me gusta", marcadores, reportes, medallas, respuestas, ediciones, y demás. Usa todo esto para mejorar tu experiencia y la de los demás.
 
       Intentemos dejar esto mejor de lo que nos lo encontramos.
 
@@ -3383,7 +3395,7 @@ es:
       name: Líder
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dispone</a> de poder editar, destacar, cerrar, archivar, dividir y combinar temas globalmente"
       long_description: |
-        Este distintivo se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todos los posts, dar muchísimos "Me Gusta" por día y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o integrarlos.
+        Esta medalla se concede cuando alcanzas el nivel de confianza 4. Eres un líder de la comunidad elegido por los administradores, constituyes un ejemplo positivo para los demás mediante tus hechos y palabras. Ahora puedes editar todos los posts, dar muchísimos "Me Gusta" por día y realizar acciones de moderador como destacar temas, cerrarlos, archivarlos, hacerlos invisibles, dividirlos o integrarlos.
     welcome:
       name: ¡Bienvenido/a!
       description: Recibió un "me gusta"
@@ -3432,7 +3444,7 @@ es:
       name: Buena contribución
       description: Compartió un post con 25 visitantes únicos
       long_description: |
-        Este distintivo se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones, y esta comunidad.
+        Esta medalla se concede por compartir un enlace que fue visitado por 25 visitantes externos. Gracias por difundir las palabras sobre nuestras discusiones, y esta comunidad.
     good_share:
       name: Gran contribución
       description: Compartió un post con 300 visitantes únicos
@@ -3462,12 +3474,12 @@ es:
       name: Paladín
       description: Invitó a 3 usuarios
       long_description: |
-        Este distintivo se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
+        Esta medalla se concede cuando has invitado a 3 personas que han pasado tiempo en el sitio y se han convertido en usuarios básicos. Una comunidad vibrante necesita de un flujo constante de nuevas voces que participen en las conversaciones.
     champion:
       name: Campeón
       description: Invitó a 5 miembros
       long_description: |
-        Este distintivo se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
+        Esta medalla se concede cuando has invitado a 5 personas que han pasado el suficiente tiempo en el sitio como para convertirse en miembros de pleno derecho. ¡Bravo! ¡Gracias por enriquecer la diversidad de la comunidad con nuevos miembros!
     first_share:
       name: Primer compartido
       description: Compartió un post
@@ -3572,7 +3584,7 @@ es:
       name: Primera respuesta por email
       description: Respondió a un post vía email
       long_description: |
-        Este distintivo se concede la primera vez que respondes a un post por email :e-mail:.
+        Esta medalla se concede la primera vez que respondes a un post por email :e-mail:.
     new_user_of_the_month:
       name: "Nuevo usuario del mes"
       description: Contribuciones excepcionales en su primer mes
@@ -3593,7 +3605,7 @@ es:
       description: 365 días de visitas
       long_description: |
         Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Wow, un año entero!
-    badge_title_metadata: "%{display_name} distintivo en %{site_title}"
+    badge_title_metadata: "medalla %{display_name} en %{site_title}"
   admin_login:
     success: "Email enviado"
     errors:
@@ -3707,14 +3719,6 @@ es:
             placeholder: "San Francisco, California"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            description: "¿Prefieres un tema oscuro o claro para empezar? Siempre lo puedes personalizar a través del panel del Administrador."
-            choices:
-              default:
-                label: "Simple y claro"
-              dark:
-                label: "Simple y oscuro"
       logos:
         title: "Logos"
         fields:

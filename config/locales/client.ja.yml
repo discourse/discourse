@@ -89,12 +89,7 @@ ja:
       next_month: "翌月"
       placeholder: 日付
     share:
-      topic: "このトピックのリンクをシェアする"
-      post: "投稿 #%{postNumber}"
       close: "閉じる"
-      twitter: "Twitter でこのリンクを共有する"
-      facebook: "Facebook でこのリンクを共有する"
-      email: "メールでこのリンクを送る"
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
       private_topic: "このトピックを%{when}に個人的なメッセージにする"
@@ -345,7 +340,7 @@ ja:
       manage:
         title: "管理"
         name: "名前"
-        full_name: "氏名"
+        full_name: "フルネーム"
         add_members: "メンバーを加える"
         delete_member_confirm: "%{username}をグループ %{group} から削除しますか?"
         profile:
@@ -447,7 +442,6 @@ ja:
           description: "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート"
-          description: "グループ内の新規トピックについては何も通知されません。"
       flair_url: "アバター画像"
       flair_url_placeholder: "(オプション) 画像URL or Font Awesomeのクラス名"
       flair_url_description: '20ピクセルx 20ピクセル以上の正方形の画像またはFontAwesomeアイコン（使用可能な形式： "fa-icon"、 "far fa-icon"、または "fab fa-icon"）を使用します。'
@@ -1138,6 +1132,7 @@ ja:
       remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
       reply_placeholder_no_images: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。"
+      reply_placeholder_choose_category: "ここに入力する前にカテゴリを選択する必要があります。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
@@ -1483,6 +1478,7 @@ ja:
           "3_1": "このトピックを作成したため通知されます。"
           "3": "このトピックをウォッチしているため通知されます。"
           "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
+          "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを読む</a>ので、新しい返信の数が表示されます。'
           "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
           "0_7": "このカテゴリに関して一切通知を受け取りません。"
@@ -1846,7 +1842,6 @@ ja:
       email_in_disabled_click: '"email in"設定を有効にしてください'
       allow_badges_label: "このカテゴリでバッジが付与されることを許可"
       edit_permissions: "パーミッションを編集"
-      add_permission: "パーミッションを追加"
       this_year: "今年"
       position: "ポジション"
       default_position: "デフォルトポジション"
@@ -2377,7 +2372,6 @@ ja:
         save: "保存"
         new: "新規"
         new_style: "新しいスタイル"
-        import: "インポート"
         delete: "削除"
         delete_confirm: "このテーマを削除しますか?"
         color: "カラー"
@@ -2406,15 +2400,10 @@ ja:
             text: "</body>"
         colors:
           title: "カラー"
-          edit: "カラースキームの編集"
-          long_title: "カラースキーム"
-          new_name: "カラースキームを作成"
           copy_name_prefix: "のコピー"
-          delete_confirm: "このカラースキームを削除してもよろしいですか？"
           undo: "取り消す"
           undo_title: "変更を元に戻して、前回保存されたカラーにします"
           revert: "取り戻す"
-          revert_title: "デフォルトのカラースキームへ戻す"
           primary:
             name: "プライマリー"
             description: "テキスト、アイコンと枠の色"
@@ -2686,8 +2675,6 @@ ja:
         suspended: "凍結状態"
         staged: "ステージドモードの状態"
         show_admin_profile: "アカウントの管理"
-        refresh_browsers: "ブラウザを強制更新"
-        refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
         show_public_profile: "パブリックプロフィールを見る"
         impersonate: "このユーザになりすます"
         action_logs: "アクションログ"

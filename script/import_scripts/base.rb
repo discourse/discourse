@@ -302,8 +302,6 @@ class ImportScripts::Base
     # Allow the || operations to work with empty strings ''
     opts[:username] = nil if opts[:username].blank?
 
-    opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
-
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||

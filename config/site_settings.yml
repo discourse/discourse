@@ -529,6 +529,9 @@ users:
     default: false
     client: true
   log_personal_messages_views: false
+  ignore_user_enabled:
+    hidden: true
+    default: false
 
 groups:
   enable_group_directory:
@@ -1529,6 +1532,14 @@ backups:
     default: "3:30"
     regex: "^((0?(0|1|2|3|4|5|6|7|8|9)|(10|11|12|13|14|15|16|17|18|19|20|21|22|23))):\\d\\d$"
   backup_with_uploads: true
+  backup_gzip_compression_level_for_uploads:
+    default: 1
+    min: 1
+    max: 9
+    shadowed_by_global: true
+  include_thumbnails_in_backups:
+    default: false
+    shadowed_by_global: true
 
 search:
   min_search_term_length:
@@ -1767,6 +1778,10 @@ uncategorized:
     type: "list"
     list_type: "compact"
     client: true
+
+  always_include_topic_excerpts:
+    default: false
+    hidden: true
 
 user_preferences:
   default_email_digest_frequency:

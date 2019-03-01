@@ -7,8 +7,6 @@ require_dependency 'theme_translation_parser'
 require_dependency 'theme_translation_manager'
 
 class Theme < ActiveRecord::Base
-  # TODO: remove in 2019
-  self.ignored_columns = ["key"]
 
   @cache = DistributedCache.new('theme')
 
@@ -25,6 +23,7 @@ class Theme < ActiveRecord::Base
   belongs_to :remote_theme, autosave: true
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
+  has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -244,7 +243,8 @@ class Theme < ActiveRecord::Base
     if all_themes
       message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
     else
-      message = refresh_message_for_targets(targets, theme_ids).flatten
+      parent_ids = Theme.where(id: theme_ids).joins(:parent_themes).pluck(:parent_theme_id).uniq
+      message = refresh_message_for_targets(targets, theme_ids | parent_ids).flatten
     end
 
     MessageBus.publish('/file-change', message)
@@ -275,6 +275,7 @@ class Theme < ActiveRecord::Base
       fields = ThemeField.find_by_theme_ids(theme_ids)
         .where(target_id: [Theme.targets[target], Theme.targets[:common]])
         .where(name: name.to_s)
+        .order(:target_id)
     end
 
     fields.each(&:ensure_baked!)
@@ -357,7 +358,7 @@ class Theme < ActiveRecord::Base
   def translations(internal: false)
     fallbacks = I18n.fallbacks[I18n.locale]
     begin
-      data = theme_fields.find_first_locale_fields([id], fallbacks).first&.translation_data(with_overrides: false, internal: internal)
+      data = locale_fields.first&.translation_data(with_overrides: false, internal: internal, fallback_fields: locale_fields)
       return {} if data.nil?
       best_translations = {}
       fallbacks.reverse.each do |locale|
@@ -443,7 +444,7 @@ class Theme < ActiveRecord::Base
 
       meta[:assets] = {}.tap do |hash|
         theme_fields.where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
-          hash[field.name] = "assets/#{field.upload.original_filename}"
+          hash[field.name] = field.file_path
         end
       end
 

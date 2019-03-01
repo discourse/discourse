@@ -54,9 +54,16 @@
           %>
             <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username).html_safe %>
           <% end %>
-          <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
-            <%= post.created_at %>
-          </time>
+          <% if post.updated_at > post.created_at %>
+            <meta itemprop='datePublished' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
+            <time itemprop='dateModified' datetime='<%= post.updated_at.to_formatted_s(:iso8601) %>'>
+              <%= post.updated_at %>
+            </time>
+          <% else %>
+            <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>'>
+              <%= post.created_at %>
+            </time>
+          <% end %>
         </span>
         <span itemprop='position'>#<%= post.post_number %></span>
       </div>

@@ -8,7 +8,10 @@
                key-up=(action "search")}}
 
   <div class='extra-options'>
-    {{d-checkbox label="admin.site_text.show_overriden" checked=overridden change=(action "search")}}
+    <label>
+      {{input type="checkbox" checked=overridden click=(action "toggleOverridden")}}
+      {{i18n 'admin.site_text.show_overriden'}}
+    </label>
   </div>
 </div>
 

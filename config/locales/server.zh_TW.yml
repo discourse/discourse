@@ -1049,7 +1049,6 @@ zh_TW:
     allow_user_api_key_scopes: "用戶API授權範圍列表"
     max_api_keys_per_user: "每用戶最多持有的用戶 API 數"
     min_trust_level_for_user_api_key: "生成用戶 API 密鑰所需的信任等級"
-    allowed_user_api_auth_redirects: "允許用戶 API 密鑰重定向授權至"
     allowed_user_api_push_urls: "允許使用伺服器推送至用戶 API 的 URL"
     tagging_enabled: "啟用話題標籤功能？"
     min_trust_to_create_tag: "建立標籤所需的最低信任等級。"
@@ -2113,14 +2112,6 @@ zh_TW:
         title: "組織"
       colors:
         title: "主題"
-        fields:
-          theme_id:
-            description: "你喜歡亮色還是暗色的顏色方案？你可進一步在管理-自定義中修改網站的觀感。"
-            choices:
-              default:
-                label: "簡潔亮"
-              dark:
-                label: "簡潔黑"
       logos:
         title: "標誌"
       icons:

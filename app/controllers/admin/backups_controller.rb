@@ -37,7 +37,7 @@ class Admin::BackupsController < Admin::AdminController
     }
     BackupRestore.backup!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
-    render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
+    render_error("backup.operation_already_running")
   else
     StaffActionLogger.new(current_user).log_backup_create
     render json: success_json
@@ -46,7 +46,7 @@ class Admin::BackupsController < Admin::AdminController
   def cancel
     BackupRestore.cancel!
   rescue BackupRestore::OperationRunningError
-    render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
+    render_error("backup.operation_already_running")
   else
     render json: success_json
   end
@@ -114,10 +114,9 @@ class Admin::BackupsController < Admin::AdminController
       client_id: params.fetch(:client_id),
       publish_to_message_bus: true,
     }
-    SiteSetting.set_and_log(:disable_emails, 'yes', current_user)
     BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
-    render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
+    render_error("backup.operation_already_running")
   else
     render json: success_json
   end
@@ -125,7 +124,7 @@ class Admin::BackupsController < Admin::AdminController
   def rollback
     BackupRestore.rollback!
   rescue BackupRestore::OperationRunningError
-    render json: failed_json.merge(message: I18n.t("backup.operation_already_running"))
+    render_error("backup.operation_already_running")
   else
     render json: success_json
   end
@@ -192,15 +191,17 @@ class Admin::BackupsController < Admin::AdminController
     params.require(:filename)
     filename = params.fetch(:filename)
 
-    return render_error("backup.backup_file_should_be_tar_gz") unless valid_extension?(filename)
-    return render_error("backup.invalid_filename") unless valid_filename?(filename)
+    return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(filename)
+    return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(filename)
 
     store = BackupRestore::BackupStore.create
 
     begin
       upload_url = store.generate_upload_url(filename)
     rescue BackupRestore::BackupStore::BackupFileExists
-      return render_error("backup.file_exists")
+      return render_json_error(I18n("backup.file_exists"))
+    rescue BackupRestore::BackupStore::StorageError => e
+      return render_json_error(e)
     end
 
     render json: success_json.merge(url: upload_url)

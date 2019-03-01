@@ -24,7 +24,7 @@ nb_NO:
     am: "am"
     pm: "pm"
   title: "Discourse"
-  topics: "Tråder"
+  topics: "Emner"
   posts: "innlegg"
   loading: "Laster"
   powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
@@ -36,7 +36,6 @@ nb_NO:
   remove_posts_deleted_by_author: "Slettet av forfatter"
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
   themes:
-    bad_color_scheme: "Kan ikke oppdatere drakt, ugyldig fargepalett"
     other_error: "Noe gikk galt under oppdateringen av drakten"
     errors:
       component_no_user_selectable: "Draktkomponenter kan ikke gjøres valgbare for brukere"
@@ -55,12 +54,11 @@ nb_NO:
       number_value_not_valid_min: "Den må være større enn eller lik %{min}."
       number_value_not_valid_max: "Den må være mindre enn eller lik %{max}."
       string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
-      string_value_not_valid_min_max: "Den må være mellom %{min} og %{max} tegn lang."
       string_value_not_valid_min: "Den må være minst %{min} tegn lang."
       string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
   emails:
     incoming:
-      default_subject: "Tråden trenger en tittel"
+      default_subject: "Emnet trenger en tittel"
       show_trimmed_content: "Vis beskåret innhold"
       maximum_staged_user_per_email_reached: "Grensen er nådd for antall arrangerte brukere per e-post."
       no_subject: "(mangler emne)"
@@ -75,11 +73,11 @@ nb_NO:
         inactive_user_error: "Skjer når senderen ikke er aktiv."
         silenced_user_error: "Skjer når senderen er dempet."
         bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
-        strangers_not_allowed_error: "Skjer når en bruker har forsøkt å opprette en ny tråd i en kategori som vedkommende ikke er medlem av."
-        insufficient_trust_level_error: "Skjer når en bruker har forsøkt å opprette en ny tråd i en kategori som vedkommende ikke har påkrevet tillitsnivå for."
+        strangers_not_allowed_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke er medlem av."
+        insufficient_trust_level_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke har påkrevet tillitsnivå for."
         reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
-        topic_not_found_error: "Skjer når et svar blir mottatt, men den tilhørende tråden er slettet."
-        topic_closed_error: "Skjer når et svar blir mottatt, men den tilhørende tråden er stengt."
+        topic_not_found_error: "Skjer når et svar blir mottatt, men det tilhørende emnet er slettet."
+        topic_closed_error: "Skjer når et svar blir mottatt, men det tilhørende emnet er stengt."
         bounced_email_error: "E-posten er en returnert e-postrapport."
         screened_email_error: "Skjer når avsenderens e-postadresse allerede var filtrert."
         unsubscribe_not_allowed: "Skjer når avmelding via e-post ikke er tillatt for denne brukeren."
@@ -177,7 +175,7 @@ nb_NO:
   likes: "Likes"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme tråden."
-    other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i samme tråd."
+    other: "Vi beklager, men for nye brukere er det en midlertidig begrenset på %{count} svar i samme emne."
   embed:
     start_discussion: "Start diskusjon"
     continue: "Fortsett diskusjon"
@@ -217,8 +215,8 @@ nb_NO:
   contains_blocked_words: "Innlegget ditt inneholder et ord som ikke er tillatt: %{word}"
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utestengte brukere kan ikke skrive innlegg."
-  topic_not_found: "Noe gikk galt. Kanskje tråden ble lukket eller slettet mens du leste den?"
-  not_accepting_pms: "Beklager, %{username} ønsker ikke å motta personlige meldinger."
+  topic_not_found: "Noe gikk galt. Kanskje emnet ble lukket eller slettet mens du leste det?"
+  not_accepting_pms: "Beklager, %{username} ønsker ikke å motta personlige meldinger for øyeblikket."
   max_pm_recepients: "Beklager, du kan bare sende en melding til maksimalt %{recipients_limit} mottakere."
   just_posted_that: "er for likt det du nylig publiserte."
   invalid_characters: "inneholder ugyldige tegn"
@@ -227,31 +225,31 @@ nb_NO:
   prev_page: "← forrige side"
   page_num: "Side %{num}"
   home_title: "Hjem"
-  topics_in_category: "Tråder i '%{category}'-kategorien"
+  topics_in_category: "Emner i '%{category}'-kategorien"
   rss_posts_in_topic: "RSS-strøm av '%{topic}'"
-  rss_topics_in_category: "RSS-strøm av tråder i '%{category}'-kategorien"
+  rss_topics_in_category: "RSS-strøm av emner i '%{category}'-kategorien"
   author_wrote: "%{author} skrev:"
   num_posts: "Innlegg:"
   num_participants: "Deltakere:"
-  read_full_topic: "Les hele tråden"
+  read_full_topic: "Les hele emnet"
   private_message_abbrev: "Mld"
   rss_description:
-    latest: "Siste tråder"
-    hot: "Populære tråder"
-    top: "Mest populære tråder"
-    top_all: "Tidenes mest populære tråder"
-    top_yearly: "Årets mest populære tråder"
-    top_quarterly: "Kvartalets mest populære tråder"
-    top_monthly: "Månedens mest populære tråder"
-    top_weekly: "Ukens mest populære tråder"
-    top_daily: "Dagens mest populære tråder"
+    latest: "Siste emner"
+    hot: "Populære emner"
+    top: "Mest populære emner"
+    top_all: "Tidenes mest populære emner"
+    top_yearly: "Årets mest populære emner"
+    top_quarterly: "Kvartalets mest populære emner"
+    top_monthly: "Månedens mest populære emner"
+    top_weekly: "Ukens mest populære emner"
+    top_daily: "Dagens mest populære emner"
     posts: "Siste innlegg"
     private_posts: "Siste personlige beskjeder"
     group_posts: "Siste innlegg fra %{group_name}"
     group_mentions: "Siste omtalelser %{group_name}"
     user_posts: "Siste innlegg av @%{username}"
-    user_topics: "Siste tråder av @%{username}"
-    tag: "Tråder med stikkord"
+    user_topics: "Siste emner av @%{username}"
+    tag: "Emner med stikkord"
     badge: "%{display_name} merke på %{site_title}"
   too_late_to_edit: "Det er for lenge siden det innlegget ble skrevet. Det kan ikke lenger redigeres eller slettes."
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
@@ -298,7 +296,7 @@ nb_NO:
 
       - Hvem vil være interessert i dette? Hvorfor har det noe å si? Hva slags respons er du ute etter?
 
-      - Bruk relevante begrep i tråden slik at andre kan *finne* det. Velg en kategori for å gruppere tråden ditt med andre lignende tråder.
+      - Bruk relevante begrep i emnet slik at andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre lignende emner.
 
       [Se retningslinjene for dette nettstedet](%{base_path}/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
     "new-reply": |
@@ -350,7 +348,7 @@ nb_NO:
     reviving_old_topic: |
       ### Gjennopplive dette emnet?
 
-      Det siste svaret i dette emnet ble skrevet **%{time_ago}**. Svaret ditt vil flytte emnet tilbake på toppen av listene og varsle alle tidligere deltagere av samtalen.
+      Det siste svaret i dette emnet ble skrevet for **%{time_ago}**. Svaret ditt vil flytte emnet til toppen av listen og varsle alle som tidligere deltok i samtalen.
 
       Er du sikker på at du ønsker å fortsette denne gamle samtalen?
   activerecord:
@@ -399,7 +397,7 @@ nb_NO:
               invalid: "er ikke en gyldig farge"
         post_reply:
           base:
-            different_topic: "Innlegg og svar må tilhøre samme tråd."
+            different_topic: "Innlegg og svar må tilhøre samme emne."
         web_hook:
           attributes:
             payload_url:
@@ -425,7 +423,7 @@ nb_NO:
   meta_category_name: "Tilbakemeldinger"
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
-  staff_category_description: "Privat kategori for diskusjoner blant staben. Tråder er kun synlige for administratorer og moderatorer."
+  staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
   discourse_welcome_topic:
     title: "Velkommen til Discourse"
     body: |2
@@ -446,7 +444,7 @@ nb_NO:
     title: "Velkommen til salongen"
   category:
     topic_prefix: "Om kategorien %{category} "
-    post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal tråder i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
+    post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
     errors:
       not_found: "Kategorien finnes ikke!"
       uncategorized_parent: "Ukategorisert kan ikke ha en foreldrekategori"
@@ -462,8 +460,8 @@ nb_NO:
       topic_exists:
         one: "Kan ikke slette denne kategorien fordi den har 1 emne. Eldste emne er %{topic_link}."
         other: "Kan ikke slette denne kategorien fordi den har %{count} emner. Eldste emne er %{topic_link}."
-      topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall tråder er %{count}."
-    uncategorized_description: "Tråder som ikke trenger en kategori eller som ikke passer i noen av de eksisterende kategoriene."
+      topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi antall emner er %{count}."
+    uncategorized_description: "Emne som ikke trenger en kategori eller som ikke passer i noen av de andre kategoriene."
   trust_levels:
     newuser:
       title: "ny bruker"
@@ -684,19 +682,19 @@ nb_NO:
       title: "Noe annet"
       long_form: "Markert for mederering"
       short_description: "Krever handling fra staben av en annen grunn"
-      email_title: 'Tråden "%{title}" krever oppmerksomhet fra en moderator'
+      email_title: 'Emnet "%{title}" krever oppmerksomhet fra en moderator'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Innlegget ditt ble flagget av samfunnet. Vennligst <a href="%{path}">sjekk meldingene dine</a>.</p>'
     user_must_edit: "<p>Dette innlegget ble rapportert av gemenskapen og er midlertidig skjult.</p>"
   archetypes:
     regular:
-      title: "Vanlig tråd"
+      title: "Vanlig emne"
     banner:
-      title: "Bannertråd"
+      title: "Banneremne"
       message:
-        make: "Denne tråden er nå et banner. Det vil vises øverst på hver side til brukeren lukker det."
-        remove: "Denne tråden er ikke lenger et banner. Det vil ikke lenger vises øverst på hver side."
+        make: "Dette emnet er nå et banner. Det vil vises øverst på hver side til brukeren lukker det."
+        remove: "Dette emnet er ikke lenger et banner. Det vil ikke lenger vises øverst på hver side."
   unsubscribed:
     title: "Avmeldt!"
     description: "<b>%{email}</b> er avmeldt. For å endre på oppsettet for e-post kan du <a href='%{url}'>besøke brukerinnstilingene</a>."
@@ -704,9 +702,9 @@ nb_NO:
     private_topic_description: "For å melde deg på igjen, bruk varslingskontrollene til høyre for eller i bunnen av emnet."
   unsubscribe:
     title: "Avmeld"
-    stop_watching_topic: "Slutt å følge denne tråden, %{link}"
-    mute_topic: "Ignorer alle varslene for denne tråden, %{link}"
-    unwatch_category: "Slutt å følge alle tråder i %{category}"
+    stop_watching_topic: "Slutt å følge dette emnet, %{link}"
+    mute_topic: "Ignorer alle varslene for dette emnet, %{link}"
+    unwatch_category: "Slutt å følge alle emner i %{category}"
     mailing_list_mode: "Slå av e-postlistemodus"
     disable_digest_emails: "Slutt å sende meg oppsummerings-eposter"
     all: "Ikke send meg noen e-poster fra %{sitename}"
@@ -786,9 +784,9 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Antallet brukerprofiler vist"
     topics:
-      title: "Tråder"
+      title: "Emner"
       xaxis: "Dag"
-      yaxis: "Antall nye tråder"
+      yaxis: "Antall nye emner"
     posts:
       title: "Innlegg"
       xaxis: "Dag"
@@ -860,19 +858,19 @@ nb_NO:
       title: "Topp-henvisere"
       xaxis: "Bruker"
       num_clicks: "Klikk"
-      num_topics: "Tråder"
+      num_topics: "Emner"
     top_traffic_sources:
       title: "Topp trafikk-kilder"
       xaxis: "Domene"
       num_clicks: "Klikk"
-      num_topics: "Tråder"
+      num_topics: "Emner"
       num_users: "Brukere"
       labels:
         domain: Domene
         num_clicks: Klikk
         num_topics: Emner
     top_referred_topics:
-      title: "Topp henviste tråder"
+      title: "Topp henviste emner"
       labels:
         num_clicks: "Klikk"
         topic: "Emne"
@@ -928,7 +926,7 @@ nb_NO:
       xaxis: "Dag"
       yaxis: "Gjennomsnittlig tid (timer)"
     topics_with_no_response:
-      title: "Tråder uten svar"
+      title: "Emner uten svar"
       xaxis: "Dag"
       yaxis: "Totalt"
     mobile_visits:
@@ -979,7 +977,7 @@ nb_NO:
     search_query_log_max_size: "Maksimalt antall søkeord som beholdes"
     search_query_log_max_retention_days: "Maksimal tid å beholde søkeord, i dager."
     allow_uncategorized_topics: "Tillat opprettelse av ukategoriserte emner. ADVARSEL: Hvis det finnes ukategoriserte emner, må du sette en kategori på dem før du skrur denne instillingen av."
-    allow_duplicate_topic_titles: "Tillat flere tråder med identisk tittel."
+    allow_duplicate_topic_titles: "Tillat flere emner med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
@@ -1024,7 +1022,7 @@ nb_NO:
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
     allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
-    topics_per_period_in_top_summary: "Antall tråder som vises i standard oppsummering av mest populære tråder."
+    topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
     enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"
@@ -1048,18 +1046,18 @@ nb_NO:
     auto_silence_fast_typers_max_trust_level: "Maksimalt tillitsnivå for automatisk demping av raske innlegg"
     delete_user_max_post_age: "Ikke tillatt å slette brukere hvor deres første innlegg er mer enn (x) dager gamle."
     email_editable: "Tillat brukere å endre e-postadressen sin etter registrering."
-    digest_topics: "Maksimalt antall populære tråder som skal vises i oppsummerings-e-posten."
+    digest_topics: "Maksimalt antall populære emner som skal vises i oppsummerings-e-posten."
     digest_posts: "Maksimalt antall populære innlegg å vise i oppsummerings-e-posten."
-    digest_other_topics: "Maksimalt antall tråder som skal vises i delen 'Nytt i tråder og kategorier du følger' i oppsummerings-e-posten."
+    digest_other_topics: "Maksimalt antall emner som skal vises i delen 'Nytt i emner og kategorier du følger' i oppsummerings-e-posten."
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
     disable_digest_emails: "Deaktiver oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig drakt, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
-    automatically_unpin_topics: "Automatisk fjern feste for tråder når brukeren når bunnen."
+    automatically_unpin_topics: "Automatisk fjern feste for emner når brukeren når bunnen."
     embed_post_limit: "Maksimalt antall innlegg som skal bygges inn."
-    embed_username_required: "Brukernavn kreves for opprettelse av tråd."
+    embed_username_required: "Brukernavn kreves for opprettelse av emne."
     enable_emoji: "Aktiver emoji."
     emoji_set: "Hvordan vil du ha din emoji?"
     default_email_digest_frequency: "Forvalgt innstilling for hvor ofte brukere mottar oppsummerings-e-poster"
@@ -1067,12 +1065,12 @@ nb_NO:
     default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som forvalg"
     disable_mailing_list_mode: "Forby brukere å slå på e-postlistemodus"
     default_email_previous_replies: "Inkluder tidligere svar i e-poster som forvalg."
-    default_topics_automatic_unpin: "La det være forvalgt innstilling å fjerne feste for tråder automatisk når brukeren når bunnen."
+    default_topics_automatic_unpin: "La det være forvalgt innstilling å fjerne feste for emner automatisk når brukeren når bunnen."
     default_categories_watching: "Liste med kategorier som følges som forvalg"
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
-    default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hver nye tråd følges."
-    remove_muted_tags_from_latest: "Ikke vis tråder med dempede stikkord i listen over siste tråder."
+    default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
+    remove_muted_tags_from_latest: "Ikke vis emner med dempede stikkord i listen over siste emner."
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1089,29 +1087,29 @@ nb_NO:
   most_posts: "Flest innlegg"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
-    new_user: "Velkommen til forumet vårt! Dette er de mest populære trådene for tiden. "
-    not_seen_in_a_month: "Velkommen tilbake! Vi har ikke sett deg på en stund. Dette er de mest populære trådene siden du var her sist."
+    new_user: "Velkommen til felleskapet vårt! Dette er de mest populære emnene for tiden. "
+    not_seen_in_a_month: "Velkommen tilbake! Vi har ikke sett deg på en stund. Dette er de mest populære emnene siden du var her sist."
   topic_statuses:
     autoclosed_enabled_days:
       one: "Denne tråden ble automatisk lukket etter 1 dag. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. "
+      other: "Dette emnet ble automatisk lukket etter %{count} dager. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_hours:
       one: "Denne tråden ble automatisk lukket etter 1 time. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. "
+      other: "Dette emnet ble automatisk lukket etter %{count} timer. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_minutes:
       one: "Denne tråden ble automatisk lukket etter 1 minutt. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. "
+      other: "Dette emnet ble automatisk lukket etter %{count} minutter. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_days:
       one: "Denne tråden ble automatisk lukket 1 dag etter siste innlegg. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. "
+      other: "Dette emnet ble automatisk lukket %{count} dager etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_hours:
       one: "Denne tråden ble automatisk lukket 1 time etter siste innlegg. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. "
+      other: "Dette emnet ble automatisk lukket %{count} timer etter siste svar. Nye svar er ikke lenger tillatt. "
     autoclosed_enabled_lastpost_minutes:
       one: "Denne tråden ble automatisk lukket 1 minutt etter siste innlegg. Nye svar er ikke lenger tillatt. "
-      other: "Denne tråden ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. "
-    autoclosed_disabled: "Denne tråden er nå åpen. Tråden kan svares på. "
-    autoclosed_disabled_lastpost: "Denne tråden er åpne. Nye svar er tillatt."
+      other: "Dette emnet ble automatisk lukket %{count} minutter etter siste svar. Nye svar er ikke lenger tillatt. "
+    autoclosed_disabled: "Dette emnet er nå åpent. Nye svar er tillatt."
+    autoclosed_disabled_lastpost: "Dette emnet er nå åpent. Nye svar er tillatt."
   login:
     incorrect_username_email_or_password: "Feil brukernavn, email eller passord"
     wait_approval: "Takk for at du registrerte deg. Vi vil varsle deg når din konto er blitt godkjent."
@@ -1187,14 +1185,14 @@ nb_NO:
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
-      new_topics: "Nye tråder"
+      new_topics: "Nye emner"
       unread_messages: "Uleste meldinger"
       unread_notifications: "Uleste varslinger."
       liked_received: "Likes mottatt"
       new_posts: "Nye innlegg"
       new_users: "Nye brukere"
-      popular_topics: "Populære tråder"
-      follow_topic: "Følg denne tråden"
+      popular_topics: "Populære emner"
+      follow_topic: "Følg dette emnet"
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
@@ -1217,7 +1215,6 @@ nb_NO:
     images:
       size_not_found: "Beklager, vi kunne ikke fastslå størrelsen på bildet ditt. Kanskje bildet ditt er blitt ødelagt?"
   color_schemes:
-    dark: "Mørk drakt"
     light_theme_name: "Lys"
     dark_theme_name: "Mørk"
   about: "Om"
@@ -1253,7 +1250,7 @@ nb_NO:
       *   For å gjøre opplevelsen din mer personlig. Opplysningene dine hjelper oss å svare bedre på dine individuelle behov.
       *   For å forbedre nettstedet vårt. Vi jobber konstant for å forbedre nettstedets tilbud basert på opplysningene og tilbakemeldingene vi mottar fra deg.
       *   For å forbedre vår kundeservice. Dine opplysninger hjelper oss å svare mer effektivt på dine forespørsler sendt til kundeservice eller behov om støtte.
-      *   For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av tråder eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
+      *   For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av emner eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
 
       <a name="sikre"></a>
 
@@ -1327,7 +1324,7 @@ nb_NO:
     anniversary:
       name: Jubileum
     good_topic:
-      name: Bra tråd
+      name: Bra emne
     champion:
       description: Inviterte fem medlemmer
     first_quote:
@@ -1392,13 +1389,6 @@ nb_NO:
         title: "Organisasjon"
       colors:
         title: "Drakt"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Enkel lys"
-              dark:
-                label: "Enkel mørk"
       logos:
         title: "Logoer"
       icons:
@@ -1409,6 +1399,6 @@ nb_NO:
           homepage_style:
             choices:
               latest:
-                label: "Siste tråder"
+                label: "Siste emner"
       emoji:
         title: "Emoji"

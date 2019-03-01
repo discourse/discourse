@@ -4,7 +4,7 @@
                  typed=(action "typed")
                  cancelled=(action "cancelled")
                  save=(action "save")}}
-
+  <div class="grippie"></div>
   {{#if visible}}
       {{composer-messages composer=model
                           messageCount=messageCount
@@ -111,7 +111,8 @@
                             importQuote=(action "importQuote")
                             togglePreview=(action "togglePreview")
                             showToolbar=showToolbar
-                            afterRefresh=(action "afterRefresh")}}
+                            afterRefresh=(action "afterRefresh")
+                            focusTarget=focusTarget}}
 
           <div class='submit-panel'>
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}

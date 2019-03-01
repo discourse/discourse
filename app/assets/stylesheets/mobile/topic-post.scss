@@ -244,8 +244,7 @@ a.reply-to-tab {
     color: $tertiary;
   }
   .combobox {
-    float: left;
-    margin-right: 1em;
+    margin-right: 0.5em;
     width: 160px;
     margin-bottom: 0.5em;
   }
@@ -288,8 +287,8 @@ span.post-count {
 
 #topic-footer-buttons {
   .btn {
-    margin-bottom: 5px;
-    margin-right: 10px;
+    margin-bottom: 0.5em;
+    margin-right: 0.5em;
   }
 }
 
@@ -349,12 +348,6 @@ iframe {
 .dropdown-toggle {
   float: left;
   position: relative;
-}
-
-#share-link {
-  width: 290px;
-  left: auto;
-  right: 4px;
 }
 
 .selected-posts {

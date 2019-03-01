@@ -37,12 +37,10 @@ ja:
   redirect_warning: "選択されたリンクがこのフォーラムに投稿されたものと確認できませんでした。このまま進むには、下のリンクを選択してください。"
   on_another_topic: "別のトピックで"
   themes:
-    bad_color_scheme: "テーマを更新できないなら、カラースキームを無効にする"
     other_error: "サーバーに不具合があるので、テーマを更新してください。"
     errors:
       component_no_user_selectable: "テーマコンポーネントはユーザー選択可能にできません"
       component_no_default: "テーマコンポーネントはデフォルトテーマにできません"
-      component_no_color_scheme: "テーマコンポーネントにはカラースキームを付与できません"
       no_multilevels_components: "子テーマ自身を子テーマのテーマにはできません"
     settings_errors:
       invalid_yaml: "入力されたYAMLは不正です"
@@ -201,7 +199,7 @@ ja:
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
   meta_category_name: "サイトフィードバック"
-  meta_category_description: "本サイトをより使い勝手がいいものにするために議論しましょう。"
+  meta_category_description: "このサイトに関するディスカッション、この組織、それがどのように機能し、 そして、我々はそれをどのように改善できるでしょうか。"
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフのためのプライベートカテゴリです。トピックは管理者とモデレータのみが閲覧できます"
   discourse_welcome_topic:

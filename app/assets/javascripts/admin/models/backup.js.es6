@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 
 const Backup = Discourse.Model.extend({
   destroy() {
@@ -15,9 +16,16 @@ const Backup = Discourse.Model.extend({
 
 Backup.reopenClass({
   find() {
-    return ajax("/admin/backups.json").then(backups =>
-      backups.map(backup => Backup.create(backup))
-    );
+    return ajax("/admin/backups.json")
+      .then(backups => backups.map(backup => Backup.create(backup)))
+      .catch(error => {
+        bootbox.alert(
+          I18n.t("admin.backups.backup_storage_error", {
+            error_message: extractError(error)
+          })
+        );
+        return [];
+      });
   },
 
   start(withUploads) {

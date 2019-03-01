@@ -1,12 +1,6 @@
 <section class='user-preferences'>
   <form class="form-horizontal">
 
-    <div class="control-group">
-      <div class="controls">
-        <h3>{{i18n 'user.second_factor.title'}}</h3>
-      </div>
-    </div>
-
     {{#if errorMessage}}
       <div class="control-group">
         <div class="controls">
@@ -16,15 +10,16 @@
     {{/if}}
 
     {{#if model.second_factor_enabled}}
-      <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
-
       <div class="control-group">
         <div class="controls">
-          {{second-factor-input maxlength=6 value=secondFactorToken inputId='second-factor-token'}}
-        </div>
-
-        <div class='instructions controls'>
-          {{i18n 'user.second_factor.disable_description'}}
+          {{#second-factor-form
+              secondFactorMethod=secondFactorMethod
+              backupEnabled=backupEnabled
+              secondFactorToken=secondFactorToken
+              secondFactorTitle=(i18n 'user.second_factor.title')
+              isLogin=false}}
+            {{second-factor-input value=secondFactorToken inputId='second-factor-token' secondFactorMethod=secondFactorMethod}}
+          {{/second-factor-form}}
         </div>
       </div>
 
@@ -91,15 +86,16 @@
           <label class='control-label'>{{i18n 'user.password.title'}}</label>
 
           <div class="controls">
-            {{text-field value=password
+            <div>
+              {{text-field value=password
                 id="password"
                 type="password"
                 classNames="input-xxlarge"
                 autofocus="autofocus"}}
-          </div>
-
-          <div class='instructions controls'>
-            {{i18n 'user.second_factor.confirm_password_description'}}
+            </div>
+            <div class='instructions'>
+              {{i18n 'user.second_factor.confirm_password_description'}}
+            </div>
           </div>
         </div>
 

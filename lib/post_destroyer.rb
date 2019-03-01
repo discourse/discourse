@@ -45,12 +45,12 @@ class PostDestroyer
   end
 
   def destroy
-    payload = WebHook.generate_payload(:post, @post)
+    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
     topic = @post.topic
 
     if @post.is_first_post? && topic
       topic_view = TopicView.new(topic.id, Discourse.system_user)
-      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
     end
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
@@ -65,7 +65,7 @@ class PostDestroyer
       id: @post.id,
       category_id: @post&.topic&.category_id,
       payload: payload
-    )
+    ) if WebHook.active_web_hooks(:post).exists?
 
     if @post.is_first_post? && @post.topic
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
@@ -73,7 +73,7 @@ class PostDestroyer
         id: topic.id,
         category_id: topic&.category_id,
         payload: topic_payload
-      )
+      ) if WebHook.active_web_hooks(:topic).exists?
     end
   end
 
@@ -226,7 +226,7 @@ class PostDestroyer
   end
 
   def agree_with_flags
-    if @post.has_active_flag? && @user.id > 0 && @user.staff?
+    if @post.has_active_flag? && @user.human? && @user.staff?
       Jobs.enqueue(
         :send_system_message,
         user_id: @post.user_id,

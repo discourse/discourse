@@ -135,12 +135,12 @@ en:
       next_month: "Next Month"
       placeholder: date
     share:
-      topic: "share a link to this topic"
+      topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber}"
       close: "close"
-      twitter: "share this link on Twitter"
-      facebook: "share this link on Facebook"
-      email: "send this link in an email"
+      twitter: "Share this link on Twitter"
+      facebook: "Share this link on Facebook"
+      email: "Send this link in an email"
 
     action_codes:
       public_topic: "made this topic public %{when}"
@@ -206,6 +206,7 @@ en:
         us_west_2: "US West (Oregon)"
 
     edit: "edit the title and category of this topic"
+    expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
@@ -537,7 +538,7 @@ en:
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
         watching_first_post:
           title: "Watching First Post"
-          description: "You will be notified of new topics in this group but not replies to the topics."
+          description: "You will be notified of new messages in this group but not replies to the messages."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -546,7 +547,7 @@ en:
           description: "You will be notified if someone mentions your @name or replies to you."
         muted:
           title: "Muted"
-          description: "You will never be notified of anything about new topics in this group."
+          description: "You will not be notified of anything about messages in this group."
       flair_url: "Avatar Flair Image"
       flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
       flair_url_description: 'Use square images no smaller than 20px by 20px or FontAwesome icons (accepted formats: "fa-icon", "far fa-icon" or "fab fa-icon").'
@@ -635,6 +636,8 @@ en:
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
+      ignore: "Ignore"
+      watch: "Watch"
       activity_stream: "Activity"
       preferences: "Preferences"
       profile_hidden: "This user's public profile is hidden."
@@ -781,6 +784,7 @@ en:
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
         remaining_codes: "You have <strong>{{count}}</strong> backup codes remaining."
+        use: "<a href>Use a backup code</a>"
         codes:
           title: "Backup Codes Generated"
           description: "Each of these backup codes can only be used once. Keep them somewhere safe but accessible."
@@ -799,6 +803,7 @@ en:
         extended_description: |
           Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
+        use: "<a href>Use Authenticator app</a>"
 
       change_about:
         title: "Change About Me"
@@ -910,6 +915,7 @@ en:
       website: "Web Site"
       email_settings: "Email"
       hide_profile_and_presence: "Hide my public profile and presence features"
+      enable_physical_keyboard: "Enable physical keyboard support on iPad"
 
       text_size:
         title: "Text Size"
@@ -1550,6 +1556,7 @@ en:
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
         private_message: '{{username}} sent you a personal message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
+        watching_first_post: '{{username}} created a new topic "{{topic}}" - {{site_title}}'
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
 
@@ -1946,6 +1953,7 @@ en:
 
       share:
         title: "Share"
+        extended_title: "Share a link"
         help: "share a link to this topic"
 
       print:
@@ -2399,7 +2407,6 @@ en:
       default_top_period: "Default Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
-      add_permission: "Add Permission"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
@@ -3275,6 +3282,7 @@ en:
         location:
           local: "Local Storage"
           s3: "S3"
+        backup_storage_error: "Failed to access backup storage: %{error_message}"
 
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
@@ -3301,7 +3309,7 @@ en:
         save: "Save"
         new: "New"
         new_style: "New Style"
-        import: "Import"
+        install: "Install"
         delete: "Delete"
         delete_confirm: "Delete this theme?"
         color: "Color"
@@ -3326,17 +3334,15 @@ en:
           components: "Components"
           theme_name: "Theme name"
           component_name: "Component name"
-          themes_intro: "Select an existing theme or create a new one to get started"
+          themes_intro: "Select an existing theme or install a new one to get started"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
-          import_theme: "Import Theme"
           customize_desc: "Customize:"
           title: "Themes"
           create: "Create"
-          create_type: "Type:"
-          create_name: "Name:"
-          name_too_short: "The name must be at least 4 characters long."
+          create_type: "Type"
+          create_name: "Name"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
@@ -3344,7 +3350,11 @@ en:
           desktop: "Desktop"
           mobile: "Mobile"
           settings: "Settings"
+          translations: "Translations"
           preview: "Preview"
+          show_advanced: "Show advanced fields"
+          hide_advanced: "Hide advanced fields"
+          hide_unused_fields: "Hide unused fields"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           color_scheme: "Color Palette"
@@ -3383,10 +3393,17 @@ en:
           edit_css_html_help: "You have not edited any CSS or HTML"
           delete_upload_confirm: "Delete this upload? (Theme CSS may stop working!)"
           import_web_tip: "Repository containing theme"
+          import_web_advanced: "Advanced..."
           import_file_tip: ".tar.gz or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
+          install: "Install"
+          installed: "Installed"
+          install_popular: "Popular"
+          install_upload: "From your device"
+          install_git_repo: "From a git repository"
+          install_create: "Create new"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -3657,6 +3674,7 @@ en:
             merge_user: "merge user"
             entity_export: "export entity"
             change_name: "change name"
+            topic_timestamps_changed: "topic timestamps changed"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3829,8 +3847,6 @@ en:
         suspended: "Suspended?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Force browser refresh"
-        refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
         impersonate: "Impersonate"
         action_logs: "Action Logs"
@@ -4125,10 +4141,9 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
-          title: 'Select an existing badge or create a new one to get started'
-          what_are_badges_title: 'What are badges?'
-          badge_query_examples_title: 'Badge query examples'
-
+          title: "Select an existing badge or create a new one to get started"
+          what_are_badges_title: "What are badges?"
+          badge_query_examples_title: "Badge query examples"
 
       emoji:
         title: "Emoji"

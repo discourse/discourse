@@ -192,7 +192,6 @@
                 toggleSummary=(action "toggleSummary")
                 removeAllowedUser=(action "removeAllowedUser")
                 removeAllowedGroup=(action "removeAllowedGroup")
-                showInvite=(route-action "showInvite")
                 topVisibleChanged=(action "topVisibleChanged")
                 currentPostChanged=(action "currentPostChanged")
                 currentPostScrolled=(action "currentPostScrolled")
@@ -201,7 +200,8 @@
                 selectReplies=(action "selectReplies")
                 selectBelow=(action "selectBelow")
                 fillGapBefore=(action "fillGapBefore")
-                fillGapAfter=(action "fillGapAfter")}}
+                fillGapAfter=(action "fillGapAfter")
+                showInvite=(route-action "showInvite")}}
             {{/unless}}
 
             {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
@@ -264,11 +264,9 @@
                     convertToPrivateMessage=(action "convertToPrivateMessage")
                     toggleBookmark=(action "toggleBookmark")
                     showFlagTopic=(route-action "showFlagTopic")
-                    showInvite=(route-action "showInvite")
                     toggleArchiveMessage=(action "toggleArchiveMessage")
                     editFirstPost=(action "editFirstPost")
-                    replyToPost=(action "replyToPost")
-                    }}
+                    replyToPost=(action "replyToPost")}}
                 {{else}}
                   <div id="topic-footer-buttons">
                     {{d-button icon="reply" class="btn-primary pull-right" action=(route-action "showLogin") label="topic.reply.title"}}
@@ -311,7 +309,7 @@
                 {{d-button action=(route-action "showLogin") class="btn-primary topic-retry" icon="user" label="log_in"}}
               {{/unless}}
             {{else}}
-              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
+              {{d-button action=(action "retryLoading") class="btn-primary topic-retry" icon="sync" label="errors.buttons.again"}}
             {{/if}}
           </div>
           {{conditional-loading-spinner condition=retrying}}
@@ -320,7 +318,7 @@
     </div>
   {{/if}}
 
-  {{share-popup topic=model replyAsNewTopic=(action "replyAsNewTopic")}}
+  {{share-popup topic=model}}
 
   {{#if embedQuoteButton}}
     {{quote-button quoteState=quoteState selectText=(action "selectText")}}

@@ -4,9 +4,12 @@ export default Ember.Component.extend({
   // subclasses need this
   layoutName: "components/d-button",
 
+  form: null,
+
   tagName: "button",
   classNameBindings: [":btn", "noText", "btnType"],
   attributeBindings: [
+    "form",
     "disabled",
     "translatedTitle:title",
     "translatedLabel:aria-label",

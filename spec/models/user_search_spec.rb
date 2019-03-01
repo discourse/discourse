@@ -137,6 +137,11 @@ describe UserSearch do
 
     results = search_for(staged.username, include_staged_users: true)
     expect(results.first.username).to eq(staged.username)
+
+    results = search_for("", topic_id: topic.id, searching_user: user1)
+
+    # mrb is omitted, mrb is current user
+    expect(results.map(&:username)).to eq(["mrpink", "mrorange"])
   end
 
 end

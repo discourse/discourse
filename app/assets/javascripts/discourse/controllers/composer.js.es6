@@ -12,7 +12,8 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import {
   escapeExpression,
   uploadIcon,
-  authorizesOneOrMoreExtensions
+  authorizesOneOrMoreExtensions,
+  safariHacksDisabled
 } from "discourse/lib/utilities";
 import { emojiUnescape } from "discourse/lib/text";
 import { shortDate } from "discourse/lib/formatter";
@@ -133,10 +134,11 @@ export default Ember.Controller.extend({
   @computed(
     "model.replyingToTopic",
     "model.creatingPrivateMessage",
-    "model.targetUsernames"
+    "model.targetUsernames",
+    "model.composeState"
   )
-  focusTarget(replyingToTopic, creatingPM, usernames) {
-    if (this.capabilities.isIOS) {
+  focusTarget(replyingToTopic, creatingPM, usernames, composeState) {
+    if (this.capabilities.isIOS && !safariHacksDisabled()) {
       return "none";
     }
 
@@ -151,6 +153,10 @@ export default Ember.Controller.extend({
 
     if (replyingToTopic) {
       return "reply";
+    }
+
+    if (composeState === Composer.FULLSCREEN) {
+      return "editor";
     }
 
     return "title";
@@ -542,18 +548,19 @@ export default Ember.Controller.extend({
       ) {
         groups.forEach(group => {
           let body;
+          const groupLink = Discourse.getURL(`/g/${group.name}/members`);
 
           if (group.max_mentions < group.user_count) {
             body = I18n.t("composer.group_mentioned_limit", {
               group: "@" + group.name,
               max: group.max_mentions,
-              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+              group_link: groupLink
             });
           } else {
             body = I18n.t("composer.group_mentioned", {
               group: "@" + group.name,
               count: group.user_count,
-              group_link: Discourse.getURL(`/groups/${group.name}/members`)
+              group_link: groupLink
             });
           }
 
@@ -783,7 +790,11 @@ export default Ember.Controller.extend({
     });
 
     // Scope the categories drop down to the category we opened the composer with.
-    if (opts.categoryId && opts.draftKey !== "reply_as_new_topic") {
+    if (
+      opts.categoryId &&
+      opts.draftKey !== "reply_as_new_topic" &&
+      !opts.disableScopedCategory
+    ) {
       const category = this.site.categories.findBy("id", opts.categoryId);
       if (category) {
         this.set("scopedCategoryId", opts.categoryId);

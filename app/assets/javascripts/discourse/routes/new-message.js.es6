@@ -3,12 +3,11 @@ import Group from "discourse/models/group";
 
 export default Discourse.Route.extend({
   beforeModel(transition) {
-    const self = this;
     const params = transition.queryParams;
     const groupName = params.groupname || params.group_name;
 
-    if (self.currentUser) {
-      self.replaceWith("discovery.latest").then(e => {
+    if (this.currentUser) {
+      this.replaceWith("discovery.latest").then(e => {
         if (params.username) {
           // send a message to a user
           User.findByUsername(params.username)
@@ -28,9 +27,7 @@ export default Discourse.Route.extend({
                 );
               }
             })
-            .catch(function() {
-              bootbox.alert(I18n.t("generic_error"));
-            });
+            .catch(() => bootbox.alert(I18n.t("generic_error")));
         } else if (groupName) {
           // send a message to a group
           Group.messageable(groupName)
@@ -50,9 +47,7 @@ export default Discourse.Route.extend({
                 );
               }
             })
-            .catch(function() {
-              bootbox.alert(I18n.t("generic_error"));
-            });
+            .catch(() => bootbox.alert(I18n.t("generic_error")));
         }
       });
     } else {
@@ -60,7 +55,7 @@ export default Discourse.Route.extend({
       if (Discourse.showingSignup) {
         Discourse.showingSignup = false;
       } else {
-        self.replaceWith("login");
+        this.replaceWith("login");
       }
     }
   }

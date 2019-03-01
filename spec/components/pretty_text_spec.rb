@@ -779,81 +779,6 @@ describe PrettyText do
     expect(PrettyText.cook(raw)).to eq(html.strip)
   end
 
-  describe 's3_cdn' do
-
-    def test_s3_cdn
-      # add extra img tag to ensure it does not blow up
-      raw = <<~HTML
-        <img>
-        <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-        <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-        <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-      HTML
-
-      html = <<~HTML
-        <p><img><br>
-        <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
-        <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>
-        <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
-      HTML
-
-      expect(PrettyText.cook(raw)).to eq(html.strip)
-    end
-
-    before do
-      GlobalSetting.reset_s3_cache!
-    end
-
-    after do
-      GlobalSetting.reset_s3_cache!
-    end
-
-    it 'can substitute s3 cdn when added via global setting' do
-
-      global_setting :s3_access_key_id, 'XXX'
-      global_setting :s3_secret_access_key, 'XXX'
-      global_setting :s3_bucket, 'XXX'
-      global_setting :s3_region, 'XXX'
-      global_setting :s3_cdn_url, 'https://awesome.cdn'
-
-      test_s3_cdn
-    end
-
-    it 'can substitute s3 cdn correctly' do
-      SiteSetting.s3_access_key_id = "XXX"
-      SiteSetting.s3_secret_access_key = "XXX"
-      SiteSetting.s3_upload_bucket = "test"
-      SiteSetting.s3_cdn_url = "https://awesome.cdn"
-
-      SiteSetting.enable_s3_uploads = true
-
-      test_s3_cdn
-    end
-
-    def test_s3_with_subfolder_cdn
-      raw = <<~RAW
-        <img src='https:#{Discourse.store.absolute_base_url}/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
-      RAW
-
-      html = <<~HTML
-        <p><img src="https://awesome.cdn/subfolder/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
-      HTML
-
-      expect(PrettyText.cook(raw)).to eq(html.strip)
-    end
-
-    it 'can substitute s3 with subfolder cdn when added via global setting' do
-
-      global_setting :s3_access_key_id, 'XXX'
-      global_setting :s3_secret_access_key, 'XXX'
-      global_setting :s3_bucket, 'XXX/subfolder'
-      global_setting :s3_region, 'XXX'
-      global_setting :s3_cdn_url, 'https://awesome.cdn/subfolder'
-
-      test_s3_with_subfolder_cdn
-    end
-  end
-
   describe "emoji" do
     it "replaces unicode emoji with our emoji sets if emoji is enabled" do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
@@ -1228,16 +1153,20 @@ HTML
       expect(cooked).to eq(html.strip)
     end
 
-    it "allows whitespace before the percent scaler" do
+    it "ignores whitespace and allows scaling by percent, width, height" do
       cooked = PrettyText.cook <<~MD
         ![|220x100, 50%](http://png.com/my.png)
         ![|220x100 , 50%](http://png.com/my.png)
         ![|220x100 ,50%](http://png.com/my.png)
+        ![|220x100,150x](http://png.com/my.png)
+        ![|220x100, x50](http://png.com/my.png)
       MD
 
       html = <<~HTML
         <p><img src="http://png.com/my.png" alt width="110" height="50"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="110" height="50"><br>
+        <img src="http://png.com/my.png" alt width="150" height="68"><br>
         <img src="http://png.com/my.png" alt width="110" height="50"></p>
       HTML
 

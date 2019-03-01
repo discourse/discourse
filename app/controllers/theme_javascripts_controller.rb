@@ -28,6 +28,8 @@ class ThemeJavascriptsController < ApplicationController
       File.write(cache_file, content)
     end
 
+    # this is only required for NGINX X-SendFile it seems
+    response.headers["Content-Length"] = File.size(cache_file).to_s
     set_cache_control_headers
     send_file(cache_file, disposition: :inline)
   end

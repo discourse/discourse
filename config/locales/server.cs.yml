@@ -35,7 +35,6 @@ cs:
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
   themes:
-    bad_color_scheme: "Nelze aktualizovat skin (theme), neplatné barevné schéma"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
   emails:
     incoming:

@@ -109,12 +109,7 @@ ca:
       next_month: "Següent mes"
       placeholder: data
     share:
-      topic: "compartir un enllaç a aquest tema"
-      post: "publica #%{postNumber}"
       close: "tanca"
-      twitter: "comparteix aquest enllaç a Twitter"
-      facebook: "comparteix aquest enllaç a Facebook"
-      email: "envia aquest enllaç per correu electrònic"
     action_codes:
       public_topic: "va fer públic aquest tema %{when}"
       split_topic: "va dividir aquest tema %{when}"
@@ -157,9 +152,11 @@ ca:
         ap_southeast_1: "Àsia Pacífic (Singapur)"
         ap_southeast_2: "Àsia Pacífic (Sídnei)"
         cn_north_1: "Xina (Beijing)"
+        cn_northwest_1: "Xina (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irlanda)"
         eu_west_2: "EU (Londres)"
+        eu_west_3: "UE (Paris)"
         sa_east_1: "Sudamèrica (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "EEUU Est (Ohio)"
@@ -170,6 +167,7 @@ ca:
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
     no_value: "No"
     yes_value: "Sí"
+    submit: "Envia"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut una errada: "
     sign_up: "Registra't"
@@ -189,6 +187,8 @@ ca:
     privacy_policy: "Política de privadesa"
     privacy: "Privadesa"
     tos: "Condicions generals d'ús"
+    rules: "Normes"
+    conduct: "Codi de Conducta"
     mobile_view: "Visió Mòbil"
     desktop_view: "Visió d'Escriptori"
     you: "Tu"
@@ -209,6 +209,8 @@ ca:
     character_count:
       one: "{{count}} caràcter"
       other: "{{count}} caràcters"
+    related_messages:
+      title: "Missatges Relacionats"
     suggested_topics:
       title: "Temes suggerits"
       pm_title: "Missatges proposats"
@@ -220,6 +222,8 @@ ca:
       our_moderators: "El nostre equip moderador"
       stat:
         all_time: "Sempre"
+        last_7_days: "Darrers 7"
+        last_30_days: "Darrers 30"
       like_count: "M'agrades"
       topic_count: "Temes"
       post_count: "Publicacions"
@@ -236,6 +240,15 @@ ca:
     bookmarks:
       created: "has marcat aquesta publicació com a preferit"
       remove: "Elimina Preferit"
+    drafts:
+      resume: "Resum"
+      remove: "Elimina"
+      new_topic: "Esborrany nou tema"
+      new_private_message: "Esborrany nou missatge privat"
+      topic_reply: "Esborrany resposta"
+      abandon:
+        yes_value: "Sí, abandona"
+        no_value: "No, segueix"
     preview: "previsualitza"
     cancel: "cancel·la"
     save: "Desa els canvis"
@@ -247,6 +260,7 @@ ca:
     pasting: "Enganxant..."
     enable: "Activa"
     disable: "Desactiva"
+    continue: "Continua"
     undo: "Desfés"
     revert: "Reverteix"
     failed: "Ha fallat"
@@ -259,6 +273,11 @@ ca:
       none_found: "No s'ha trobat temes."
       title:
         placeholder: "escriu el títol del tema aquí"
+    choose_message:
+      none_found: "No s'han trobat missatges."
+      title:
+        search: "Busca un Missatge pel Títol:"
+        placeholder: "escriu el títol del missatge aquí"
     queue:
       topic: "Tema:"
       approve: "Aprova"
@@ -325,8 +344,32 @@ ca:
     groups:
       add_members:
         title: "Afegeix membres"
+        usernames: "Noms d'usuari"
       manage:
+        title: "Gestionar"
+        name: "Nom"
+        full_name: "Nom complert"
         add_members: "Afegeix membres"
+        delete_member_confirm: "Elimina '%{username}' del '%{group}' grup?"
+        profile:
+          title: Perfil
+        interaction:
+          posting: Publicant
+          notification: Notificació
+        membership:
+          title: Afiliació
+          access: Accés
+        logs:
+          title: "Registres"
+          when: "Quan"
+          action: "Acció"
+          acting_user: "Persona usuària activa"
+          target_user: "Persona usuària destinatària"
+          subject: "Tema"
+          details: "Detalls"
+          from: "De"
+          to: "A"
+      public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup."
         members: "No hi ha membres a aquest grup."
@@ -335,18 +378,50 @@ ca:
         topics: "No hi ha temes de membres d'aquest grup."
         logs: "No hi ha registres per a aquest grup."
       add: "Afegeix"
+      join: "Registrar-se"
+      leave: "Abandona"
+      request: "Sol·licita"
       message: "Missatge"
+      membership_request:
+        submit: "Sol·licita petició"
       membership: "Afiliació"
       name: "Nom"
+      group_name: "Nom del grup"
+      user_count: "Persones usuàries"
       bio: "Sobre el Grup"
+      selector_placeholder: "escriu nom de persona usuària"
       owner: "propietari"
       index:
         title: "Grups"
+        all: "Tots els grups"
         empty: "No hi ha grups visibles"
+        filter: "Filtra per tipus de grup"
+        owner_groups: "Grups que tinc"
+        close_groups: "Grups Tancats"
+        automatic_groups: "Grups Automàtics"
+        automatic: "Automàtic"
+        closed: "Tancat"
+        public: "Públic"
+        private: "Privat"
+        public_groups: "Grups Públics"
+        automatic_group: Grups Automàtics
+        close_group: Tancar Grup
+        my_groups: "Els meus grups"
+        group_type: "Tipus de Grup"
+        is_group_user: "Membre"
+        is_group_owner: "Propietari"
       title:
         one: "Grup"
         other: "Grups"
       activity: "Activitat"
+      members:
+        title: "Membres"
+        filter_placeholder_admin: "nom d'usuari o correu"
+        filter_placeholder: "nom de persona usuària"
+        remove_member: "Elimina Membre"
+        make_owner: "Crea persona propietària"
+        remove_owner: "Elimina persona propietària"
+        owner: "Propietari"
       topics: "Temes"
       posts: "Publicacions"
       mentions: "Mencions"
@@ -371,7 +446,6 @@ ca:
           description: "Se't notificarà si algú menciona el teu @nom o et respòn."
         muted:
           title: "Silenciat"
-          description: "Mai no se't notificarà res sobre nous temes a aquest grup."
       flair_url: "Imatge d'Avatar"
       flair_url_placeholder: "(Opcional) Imatge URL o classe Font Awesome "
       flair_bg_color: "Color de fons d'Avatar "
@@ -393,8 +467,10 @@ ca:
       "12": "Elements enviats"
       "13": "Safata d'entrada"
       "14": "Pendents"
+      "15": "Esborranys"
     categories:
       all: "totes les categories"
+      all_subcategories: "tots"
       no_subcategory: "cap"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
@@ -1638,7 +1714,6 @@ ca:
       subcategory_list_style: "Estil de llista de la subcategoria:"
       allow_badges_label: "Permet concedir distintius dins aquesta categoria"
       edit_permissions: "Edita permisos"
-      add_permission: "Afegeix permisos"
       this_year: "aquest any"
       default_position: "Posició per defecte"
       position_disabled: "Les categories es mostraran per ordre d'activitat. Per controlar l'ordre de les categories en llistes, "
@@ -2273,7 +2348,6 @@ ca:
         save: "Desa"
         new: "Nou"
         new_style: "Nou estil"
-        import: "Importa"
         delete: "Esborra"
         color: "Color"
         opacity: "Opacitat"
@@ -2305,14 +2379,10 @@ ca:
             text: "YAML"
         colors:
           title: "Colors"
-          long_title: "Esquemes de color"
-          new_name: "Nou esquema de color"
           copy_name_prefix: "Còpia de"
-          delete_confirm: "Esborra aquest esquema de color?"
           undo: "desfés"
           undo_title: "Desfés els teus canvis a aquest color des del darrer cop que va ser desat."
           revert: "reverteix"
-          revert_title: "Restableix aquest color a l'esquema de color per defecte de Discourse."
           primary:
             name: "primari"
             description: "Majoria de text, icones i vores."
@@ -2573,8 +2643,6 @@ ca:
         suspended: "Suspès?"
         staged: "Escenificat?"
         show_admin_profile: "Administració"
-        refresh_browsers: "Força l'actualització del navegador"
-        refresh_browsers_message: "Missatge enviat a totes les persones clientes!"
         show_public_profile: "Mostra perfil públic"
         impersonate: "Personifica"
         action_logs: "Registres d'accions"

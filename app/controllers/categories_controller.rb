@@ -140,7 +140,7 @@ class CategoriesController < ApplicationController
 
       render_serialized(@category, CategorySerializer)
     else
-      return render_json_error(@category) unless @category.save
+      return render_json_error(@category)
     end
   end
 

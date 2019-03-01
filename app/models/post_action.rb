@@ -231,6 +231,8 @@ class PostAction < ActiveRecord::Base
     end
 
     update_flagged_posts_count
+
+    undo_hide_and_silence(post)
   end
 
   def self.defer_flags!(post, moderator, delete_post = false)
@@ -373,6 +375,13 @@ class PostAction < ActiveRecord::Base
     # can happen despite being .create
     # since already bookmarked
     PostAction.where(where_attrs).first
+  end
+
+  def self.undo_hide_and_silence(post)
+    return unless post.hidden?
+
+    post.unhide!
+    UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
   end
 
   def self.copy(original_post, target_post)
@@ -537,7 +546,7 @@ class PostAction < ActiveRecord::Base
     post = Post.with_deleted.where(id: post_id).first
     PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
-    SpamRulesEnforcer.enforce!(post.user)
+    SpamRule::AutoSilence.new(post.user, post).perform
   end
 
   def create_user_action

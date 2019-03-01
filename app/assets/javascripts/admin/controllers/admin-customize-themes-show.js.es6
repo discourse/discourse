@@ -147,6 +147,10 @@ export default Ember.Controller.extend({
       "scss"
     );
   },
+  sourceIsHttp: Ember.computed.match(
+    "model.remote_theme.remote_url",
+    /^http(s)?:\/\//
+  ),
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);

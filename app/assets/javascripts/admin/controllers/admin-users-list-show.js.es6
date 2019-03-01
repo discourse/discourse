@@ -1,12 +1,11 @@
 import debounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
-import { observes } from "ember-addons/ember-computed-decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 
 export default Ember.Controller.extend(CanCheckEmails, {
+  model: null,
   query: null,
-  queryParams: ["order", "ascending"],
   order: null,
   ascending: null,
   showEmails: false,
@@ -47,8 +46,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     this._refreshUsers();
   }, 250).observes("listFilter"),
 
-  @observes("order", "ascending")
-  _refreshUsers: function() {
+  _refreshUsers() {
     this.set("refreshing", true);
 
     AdminUser.findAll(this.get("query"), {
@@ -57,12 +55,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
       order: this.get("order"),
       ascending: this.get("ascending")
     })
-      .then(result => {
-        this.set("model", result);
-      })
-      .finally(() => {
-        this.set("refreshing", false);
-      });
+      .then(result => this.set("model", result))
+      .finally(() => this.set("refreshing", false));
   },
 
   actions: {
@@ -95,7 +89,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     showEmails: function() {
       this.set("showEmails", true);
-      this._refreshUsers(true);
+      this._refreshUsers();
     }
   }
 });

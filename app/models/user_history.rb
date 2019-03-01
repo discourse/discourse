@@ -83,7 +83,8 @@ class UserHistory < ActiveRecord::Base
       post_rejected: 64,
       merge_user: 65,
       entity_export: 66,
-      change_password: 67
+      change_password: 67,
+      topic_timestamps_changed: 68
     )
   end
 
@@ -145,7 +146,8 @@ class UserHistory < ActiveRecord::Base
       :post_rejected,
       :merge_user,
       :entity_export,
-      :change_name
+      :change_name,
+      :topic_timestamps_changed
     ]
   end
 

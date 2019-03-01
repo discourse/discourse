@@ -4,9 +4,34 @@
       {{d-icon "far-image"}}
       <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
     </label>
+
     {{#if hasBackgroundStyle}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "far-trash-alt"}}</button>
     {{/if}}
+
+    {{#if imageUrl}}
+      {{d-button icon="discourse-expand"
+          title='expand'
+          class="btn image-uploader-lightbox-btn no-text"
+          action=(action "toggleLightbox")
+          disabled=loadingLightbox}}
+    {{/if}}
+
     <span class="btn {{unless uploading 'hidden'}}">{{i18n 'upload_selector.uploading'}} {{uploadProgress}}%</span>
   </div>
+
+
+  {{#if imageUrl}}
+    <a class="lightbox"
+       href={{imageUrl}}
+       title={{imageFilename}}
+       rel="nofollow noopener">
+
+      <div class="meta">
+        <span class="informations">
+          {{imageWidth}}x{{imageHeight}} {{imageFilesize}}
+        </span>
+      </div>
+    </a>
+  {{/if}}
 </div>

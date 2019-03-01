@@ -36,7 +36,6 @@ bs_BA:
   remove_posts_deleted_by_author: "Izbrisan od strane autora"
   redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
   themes:
-    bad_color_scheme: "Ne mogu ažuriratiizgled temu, šema boja nije ispravna."
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
@@ -51,7 +50,6 @@ bs_BA:
       number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
       number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
       string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
-      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} karakter dugo."
       string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
       string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
   emails:

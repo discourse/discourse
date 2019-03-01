@@ -44,18 +44,21 @@ GEM
     arel (9.0.0)
     ast (2.4.0)
     aws-eventstream (1.0.1)
-    aws-partitions (1.104.0)
-    aws-sdk-core (3.27.0)
+    aws-partitions (1.138.0)
+    aws-sdk-core (3.46.1)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-kms (1.9.0)
-      aws-sdk-core (~> 3, >= 3.26.0)
+    aws-sdk-kms (1.13.0)
+      aws-sdk-core (~> 3, >= 3.39.0)
       aws-sigv4 (~> 1.0)
-    aws-sdk-s3 (1.19.0)
-      aws-sdk-core (~> 3, >= 3.26.0)
+    aws-sdk-s3 (1.30.1)
+      aws-sdk-core (~> 3, >= 3.39.0)
       aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.0)
+    aws-sdk-sns (1.9.0)
+      aws-sdk-core (~> 3, >= 3.39.0)
       aws-sigv4 (~> 1.0)
     aws-sigv4 (1.0.3)
     barber (0.12.0)
@@ -183,7 +186,7 @@ GEM
     logstash-event (1.2.02)
     logstash-logger (0.26.1)
       logstash-event (~> 1.2)
-    logster (2.0.1)
+    logster (2.1.2)
     loofah (2.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -202,7 +205,7 @@ GEM
       libv8 (>= 6.3)
     mini_scheduler (0.9.1)
       sidekiq
-    mini_sql (0.1.10)
+    mini_sql (0.2.1)
     mini_suffix (0.3.0)
       ffi (~> 1.9)
     minitest (5.11.3)
@@ -214,7 +217,7 @@ GEM
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    mustache (1.0.5)
+    mustache (1.1.0)
     nap (1.1.0)
     no_proxy_fix (0.1.2)
     nokogiri (1.10.1)
@@ -258,7 +261,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.77)
+    onebox (1.8.79)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -452,6 +455,7 @@ DEPENDENCIES
   activesupport (= 5.2.2)
   annotate
   aws-sdk-s3
+  aws-sdk-sns
   barber
   better_errors
   binding_of_caller
@@ -511,7 +515,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.77)
+  onebox (= 1.8.79)
   openid-redis-store
   pg
   pry-nav

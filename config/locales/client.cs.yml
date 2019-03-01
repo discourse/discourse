@@ -149,12 +149,7 @@ cs:
       next_month: "Další měsíc"
       placeholder: datum
     share:
-      topic: "sdílet odkaz na toto téma"
-      post: "příspěvek #%{postNumber}"
       close: "zavřít"
-      twitter: "sdílet odkaz na Twitteru"
-      facebook: "sdílet odkaz na Facebooku"
-      email: "odeslat odkaz emailem"
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
@@ -531,7 +526,6 @@ cs:
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
-          description: "Nikdy nedostanete oznámení o nových tématech v této skupině."
       flair_url: "Avatar Flair obrázek"
       flair_url_placeholder: "(Volitelné) URL obrázku nebo třída Font Awesome "
       flair_bg_color: "Avatar Flair barva pozadí"
@@ -2304,7 +2298,6 @@ cs:
       default_top_period: "Výchozí hlavní doba:"
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
-      add_permission: "Přidat oprávnění"
       require_topic_approval: "Požadovat schválení moderátorů pro všechna nová témata"
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"
@@ -3115,7 +3108,6 @@ cs:
         save: "Uložit"
         new: "Nové"
         new_style: "Nový styl"
-        import: "Import"
         delete: "Smazat"
         delete_confirm: "Smazat tento motiv? "
         color: "Barva"
@@ -3134,7 +3126,6 @@ cs:
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
         theme:
-          import_theme: "importovat motiv "
           customize_desc: "Přizpůsobit:"
           title: "Motivy"
           long_title: "Změnit barvy, CSS a HTML obsahy na vaší stránce"
@@ -3147,7 +3138,6 @@ cs:
           preview: "Náhled"
           is_default: "Motiv je ve výchozím nastavení povolený"
           user_selectable: "Motiv může být zvolen uživatelem"
-          color_scheme: "Barevné schéma"
           color_scheme_select: "Vybrat barvy motivu"
           custom_sections: "vlastí sekce:"
           theme_components: "Komponenty motivu"
@@ -3204,20 +3194,11 @@ cs:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
         colors:
-          select_base:
-            title: "Vyberte základní barvu"
-            description: "Základní schéma: "
           title: "Barvy"
-          edit: "Upravit barevná schémata"
-          long_title: "Barevná schémata"
-          about: "Upravit barvy užívané tvým motivem. Vytvořit nové barevné schéma na začátek."
-          new_name: "Nové barevné schéma"
           copy_name_prefix: "Kopie"
-          delete_confirm: "Chcete smazat toto barevné schéma?"
           undo: "zpět"
           undo_title: "Vrať svoje změny této barvy od doby kdy byla posledně uložena."
           revert: "vrátit"
-          revert_title: "Vrátit tuto barvu na výchozí barevné schéma Discourse."
           primary:
             name: "primární"
             description: "Většina textu, ikon a okrajů."
@@ -3563,8 +3544,6 @@ cs:
         suspended: "Zakázán?"
         staged: "Staged?"
         show_admin_profile: "Administrace"
-        refresh_browsers: "Vynutit obnovení prohlížeče"
-        refresh_browsers_message: "Zpráva odeslána všem klientům!"
         show_public_profile: "Zobrazit veřejný profil"
         impersonate: "Vydávat se za uživatele"
         action_logs: "Logy akcí"

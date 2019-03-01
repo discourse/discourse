@@ -6,14 +6,14 @@
   z-index: z("dropdown");
   box-shadow: shadow("card");
   background-color: $secondary;
-  padding: 6px 10px 10px 10px;
+  padding: s(2 2 1 2);
   width: 300px;
   display: none;
   &.visible {
     display: block;
   }
   input[type="text"] {
-    width: 96%;
+    width: 100%;
   }
   .share-for-touch .overflow-ellipsis {
     clear: both;
@@ -21,9 +21,24 @@
   .share-for-touch {
     margin: 14px 0;
   }
-  h3 {
-    font-size: $font-0;
+
+  .title {
+    margin-bottom: s(1);
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      font-size: $font-0;
+      margin: 0;
+    }
+
+    .date {
+      font-weight: normal;
+      color: dark-light-choose($primary-medium, $secondary-medium);
+    }
   }
+
   .copy-text {
     display: inline-block;
     position: absolute;
@@ -37,43 +52,29 @@
     }
   }
   .social-link {
-    margin-left: 2px;
-    margin-right: 8px;
-    float: left;
+    margin-right: s(2);
     font-size: $font-up-4;
   }
-  .reply-as-new-topic {
-    float: left;
-    line-height: $line-height-large;
-    margin-left: 8px;
-    margin-top: 0.5em;
-    .fa {
-      margin-right: 5px;
-    }
-  }
   .link {
-    margin-right: 2px;
-    float: right;
     font-size: $font-up-3;
     a {
       color: dark-light-choose($primary-medium, $secondary-medium);
     }
   }
 
-  h3 {
-    margin: 5px 0;
-    float: left;
-  }
-
-  .date {
-    float: right;
-    margin: 5px;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-  }
-
   input[type="text"] {
     font-size: $font-up-1;
-    margin-bottom: 10px;
+    margin-bottom: 0;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    margin-top: s(2);
+
+    .link {
+      margin-left: auto;
+    }
   }
 }
 

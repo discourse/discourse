@@ -143,6 +143,54 @@ RSpec.describe ApplicationController do
         expect(response.status).to eq(404)
         expect(response.body).to_not include('google.com/search')
       end
+
+      describe 'no logspam' do
+
+        before do
+          @orig_logger = Rails.logger
+          Rails.logger = @fake_logger = FakeLogger.new
+        end
+
+        after do
+          Rails.logger = @orig_logger
+        end
+
+        it 'should handle 404 to a css file' do
+
+          $redis.del("page_not_found_topics")
+
+          topic1 = Fabricate(:topic)
+          get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
+          expect(response.status).to eq(404)
+          expect(response.body).to include(topic1.title)
+
+          topic2 = Fabricate(:topic)
+          get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
+          expect(response.status).to eq(404)
+          expect(response.body).to include(topic1.title)
+          expect(response.body).to_not include(topic2.title)
+
+          expect(Rails.logger.fatals.length).to eq(0)
+          expect(Rails.logger.errors.length).to eq(0)
+          expect(Rails.logger.warnings.length).to eq(0)
+
+        end
+      end
+
+      it 'should cache results' do
+        $redis.del("page_not_found_topics")
+
+        topic1 = Fabricate(:topic)
+        get '/t/nope-nope/99999999'
+        expect(response.status).to eq(404)
+        expect(response.body).to include(topic1.title)
+
+        topic2 = Fabricate(:topic)
+        get '/t/nope-nope/99999999'
+        expect(response.status).to eq(404)
+        expect(response.body).to include(topic1.title)
+        expect(response.body).to_not include(topic2.title)
+      end
     end
   end
 

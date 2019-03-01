@@ -632,11 +632,15 @@ class Plugin::Instance
 
       path = File.join(lib_locale_path, "message_format")
       opts[:message_format] = find_locale_file(locale_chain, path)
-      opts[:message_format] = JsLocaleHelper.find_message_format_locale(locale_chain, false) unless opts[:message_format]
+      opts[:message_format] = JsLocaleHelper.find_message_format_locale(locale_chain, fallback_to_english: false) unless opts[:message_format]
 
       path = File.join(lib_locale_path, "moment_js")
       opts[:moment_js] = find_locale_file(locale_chain, path)
       opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
+
+      path = File.join(lib_locale_path, "moment_js_timezones")
+      opts[:moment_js_timezones] = find_locale_file(locale_chain, path)
+      opts[:moment_js_timezones] = JsLocaleHelper.find_moment_locale(locale_chain, timezone_names: true) unless opts[:moment_js_timezones]
 
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)

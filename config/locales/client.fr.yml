@@ -109,12 +109,12 @@ fr:
       next_month: "Mois suivant"
       placeholder: date
     share:
-      topic: "partager ce sujet"
+      topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber}"
       close: "fermer"
-      twitter: "partager ce lien sur Twitter"
-      facebook: "partager ce lien sur Facebook"
-      email: "envoyer ce lien dans un courriel"
+      twitter: "Partager ce lien sur Twitter"
+      facebook: "Partager ce lien sur Facebook"
+      email: "Envoyer ce lien par courriel"
     action_codes:
       public_topic: "a rendu ce sujet public %{when}"
       private_topic: "a rendu ce sujet message direct %{when}"
@@ -173,6 +173,7 @@ fr:
         us_west_1: "États-Unis ouest (Californie)"
         us_west_2: "États-Unis ouest (Oregon)"
     edit: "modifier le titre et la catégorie de ce sujet"
+    expand: "Développer"
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
     yes_value: "Oui"
@@ -477,7 +478,7 @@ fr:
           description: "Vous serez notifié de chaque nouvelle réponse dans chaque message, et le nombre de nouvelles réponses sera affiché."
         watching_first_post:
           title: "Surveiller les nouveaux sujets"
-          description: "Vous serez averti de nouveaux sujets dans ce groupe mais pas de réponses aux sujets."
+          description: "Vous serez averti de nouveaux messages dans ce groupe mais pas de réponses aux messages."
         tracking:
           title: "Suivre"
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond, et le nombre de nouvelles réponses sera affiché."
@@ -486,7 +487,7 @@ fr:
           description: "Vous serez notifié si quelqu'un mentionne votre @pseudo ou vous répond."
         muted:
           title: "Silencieux"
-          description: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans ce groupe."
+          description: "Nous ne serez jamais notifié de quoi que ce soit à propos des messages dans ce groupe."
       flair_url: "Image de la vignette d'avatar"
       flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
       flair_url_description: 'Utiliser des images de minimum 20px fois 20px ou des icônes FontAwesome (formats acceptés: "fa-icon", "far fa-icon" ou "fab fa-icon").'
@@ -570,6 +571,8 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
+      ignore: "Ignorer"
+      watch: "Surveiller"
       activity_stream: "Activité"
       preferences: "Préférences"
       profile_hidden: "Le profil public de cet usagé est caché."
@@ -626,7 +629,7 @@ fr:
         many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)"
         few_per_day: "M'envoyer un courriel pour chaque nouveau message (environ 2 par jour)"
         warning: "Mode liste de diffusion activé. Les paramètres de notification par e-mail sont remplacés."
-      tag_settings: "Etiquettes"
+      tag_settings: "Étiquettes"
       watched_tags: "Surveillés"
       watched_tags_instructions: "Vous surveillerez automatiquement tous les sujets avec ces étiquettes. Vous serez notifié de tous les nouveaux messages et sujets, et le nombre de nouveaux messages apparaîtra à coté du sujet."
       tracked_tags: "Suivis"
@@ -682,14 +685,14 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (peut-être que votre connexion est coupée)"
         select_all: "Tout sélectionner"
-        tags: "Etiquettes"
+        tags: "Étiquettes"
       preferences_nav:
         account: "Compte"
         profile: "Profil"
         emails: "Courriels"
         notifications: "Notifications"
         categories: "Catégories"
-        tags: "Etiquettes"
+        tags: "Étiquettes"
         interface: "Interface"
         apps: "Applications"
       change_password:
@@ -710,6 +713,7 @@ fr:
         copied_to_clipboard: "Copié dans le presse-papiers"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papiers"
         remaining_codes: "Vous avez <strong>{{count}}</strong> codes de secours restants."
+        use: "<a href>Utiliser un code de sauvegarde</a>"
         codes:
           title: "Codes de secours générés"
           description: "Chaque code de secours ne peut être utilisé qu'une seule fois. Garder les dans un endroit sûr mais accessible."
@@ -726,6 +730,7 @@ fr:
         show_key_description: "Saisir manuellement"
         extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
+        use: "<a href>Utiliser l'application Authenticator</a>"
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -823,6 +828,7 @@ fr:
       website: "Site internet"
       email_settings: "Courriel"
       hide_profile_and_presence: "Cacher mon profil public et statistiques"
+      enable_physical_keyboard: "Activer le support du clavier physique sur iPad"
       text_size:
         title: "Taille de texte"
         smaller: "Petit"
@@ -1414,6 +1420,7 @@ fr:
         posted: '{{username}} a posté dans « {{topic}} » - {{site_title}}'
         private_message: '{{username}} vous a envoyé un message direct dans « {{topic}} » - {{site_title}}'
         linked: '{{username}} a créé un lien vers votre message posté dans « {{topic}} » - {{site_title}}'
+        watching_first_post: '{{username}} a crée un nouveau sujet « {{topic}} » - {{site_title}}'
         confirm_title: "Notifications activées - %{site_title}"
         confirm_body: "Les notifications ont été activées."
     upload_selector:
@@ -1775,6 +1782,7 @@ fr:
         help: "Retirer l'épingle de ce sujet afin qu'il n'apparaisse plus en tête de votre liste de sujet"
       share:
         title: "Partager"
+        extended_title: "Partager ce lien"
         help: "partager ce sujet"
       print:
         title: "Imprimer"
@@ -2143,7 +2151,7 @@ fr:
       general: "Général"
       settings: "Paramètres"
       topic_template: "Modèle de sujet"
-      tags: "Etiquettes"
+      tags: "Étiquettes"
       tags_allowed_tags: "N'autoriser que ces étiquettes à être utilisées dans cette catégorie :"
       tags_allowed_tag_groups: "N'autoriser que les étiquettes de ces groupes à être utilisées dans cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
@@ -2192,7 +2200,6 @@ fr:
       default_top_period: "Période des meilleurs sujets par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
-      add_permission: "Ajouter la permission"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
@@ -2540,7 +2547,7 @@ fr:
       selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
       changed: "étiquettes modifiées :"
-      tags: "Etiquettes"
+      tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
       delete_tag: "Supprimer l'étiquette"
       delete_confirm:
@@ -2557,7 +2564,7 @@ fr:
       upload: "Télécharger des étiquettes"
       upload_description: "Télécharger un fichier csv pour créer des étiquettes en masse"
       upload_instructions: "Un par ligne, avec optionnellement un groupe d'étiquettes sous la forme 'tag_name,tag_group'."
-      upload_successful: "Etiquettes téléchargées avec succès"
+      upload_successful: "Étiquettes téléchargées avec succès"
       delete_unused_confirmation:
         one: "%{count} étiquette sera supprimée : %{tags}"
         other: "%{count} étiquettes seront supprimées : %{tags}"
@@ -2592,8 +2599,8 @@ fr:
         title: "Groupes d'étiquette"
         about: "Ajouter des étiquettes aux groupes pour les gérer plus facilement."
         new: "Nouveau groupe"
-        tags_label: "Etiquettes dans ce groupe :"
-        parent_tag_label: "Etiquette parent :"
+        tags_label: "Étiquettes dans ce groupe :"
+        parent_tag_label: "Étiquette parent :"
         parent_tag_placeholder: "Facultatif"
         parent_tag_description: "Les étiquette de ce groupe ne peuvent pas être utilisées sauf si l'étiquette parent est présente."
         one_per_topic_label: "Limiter à une étiquette de ce groupe par sujet"
@@ -2909,7 +2916,7 @@ fr:
         categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laisser vide pour les déclencher pour toutes les catégories."
         categories_filter: "Catégories"
         tags_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux étiquettes définies. Laisser vide pour les déclencher pour toutes les étiquettes."
-        tags_filter: "Etiquettes déclenchées"
+        tags_filter: "Étiquettes déclenchées"
         groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laisser vide pour les déclencher pour tous les groupes."
         groups_filter: "Groupes"
         delete_confirm: "Supprimer ce Webhook ?"
@@ -3036,6 +3043,7 @@ fr:
         location:
           local: "Stockage locale"
           s3: "S3"
+        backup_storage_error: "L'accès à l'emplacement de la sauvegarde a échoué : %{error_message}"
       export_csv:
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
@@ -3059,7 +3067,7 @@ fr:
         save: "Sauvegarder"
         new: "Nouveau"
         new_style: "Nouveau style"
-        import: "Importer"
+        install: "Installer"
         delete: "Supprimer"
         delete_confirm: "Supprimer ce thème ?"
         color: "Couleur"
@@ -3083,17 +3091,15 @@ fr:
           components: "Composants"
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
-          themes_intro: "Choisir un thème existant ou en créer un nouveau pour commencer"
+          themes_intro: "Sélectionner un thème existant ou installez-en un nouveau pour commencer"
           beginners_guide_title: "Guide d'utilisation des thèmes de Discourse pour débutants"
           developers_guide_title: "Guide de développement de thèmes pour Discourse"
           browse_themes: "Parcourir les thèmes de la communauté"
-          import_theme: "Importer un thème"
           customize_desc: "Personaliser :"
           title: "Thèmes"
           create: "Créer"
-          create_type: "Type :"
-          create_name: "Nom :"
-          name_too_short: "Le nom doit comporter au-moins 4 caractères."
+          create_type: "Type"
+          create_name: "Nom"
           long_title: "Modifier les couleurs, le CSS et le contenu HTML de votre site"
           edit: "Modifier"
           edit_confirm: "Ceci est un thème distant, si vous modifiez le CSS/HTML vos modifications seront écrasées la prochaine fois que vous le mettez à jour."
@@ -3101,7 +3107,11 @@ fr:
           desktop: "Bureau"
           mobile: "Mobile"
           settings: "Paramètres"
+          translations: "Traductions"
           preview: "Prévisualiser"
+          show_advanced: "Afficher les champs avancés"
+          hide_advanced: "Cacher les champs avancés"
+          hide_unused_fields: "Cacher les champs inutilisés"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
           color_scheme: "Palette de couleurs"
@@ -3140,10 +3150,17 @@ fr:
           edit_css_html_help: "Vous n'avez modifié aucun CSS ou HTML"
           delete_upload_confirm: "Supprimer cet upload? (Le thème CSS pourrait ne plus fonctionner!)"
           import_web_tip: "Dépôt contenant le thème"
+          import_web_advanced: "Avancé..."
           import_file_tip: "Fichier .tar.gz ou .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt git privé"
           remote_branch: "Nom de branche (optionnel)"
           public_key: "Accorder un accès dépôt à la clef publique suivante :"
+          install: "Installer"
+          installed: "Installé"
+          install_popular: "Populaire"
+          install_upload: "Depuis votre appareil"
+          install_git_repo: "Depuis un dépôt git"
+          install_create: "En créer un nouveau"
           about_theme: "À propos"
           license: "Licence"
           version: "Version :"
@@ -3203,7 +3220,7 @@ fr:
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
-          delete_confirm: "Supprimer cette palette de couleurs ?"
+          delete_confirm: "Supprimer cette palette de couleur ?"
           undo: "annuler"
           undo_title: "Annuler vos modifications sur cette couleur depuis la dernière fois qu'elle a été sauvegardée."
           revert: "rétablir"
@@ -3411,6 +3428,7 @@ fr:
             merge_user: "fusionne utilisateur"
             entity_export: "exporter l'entité"
             change_name: "modifier nom"
+            topic_timestamps_changed: "Date du sujet changée"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3577,8 +3595,6 @@ fr:
         suspended: "Suspendu ?"
         staged: "Distant ?"
         show_admin_profile: "Administration"
-        refresh_browsers: "Forcer le rafraîchissement du navigateur"
-        refresh_browsers_message: "Message envoyé à tous les clients !"
         show_public_profile: "Afficher le profil public"
         impersonate: "Incarner"
         action_logs: "Journaux d'actions"
@@ -3791,7 +3807,7 @@ fr:
           login: "Connexion"
           plugins: "Extensions"
           user_preferences: "Préférences"
-          tags: "Etiquettes"
+          tags: "Étiquettes"
           search: "Rechercher"
           groups: "Groupes"
           dashboard: "Tableau de bord"
@@ -3867,9 +3883,9 @@ fr:
             with_post_time: "<span class=\"username\">%{username}</span> pour son message dans %{link} à <span class=\"time\">%{time}</span>"
             with_time: "<span class=\"username\">%{username}</span> à <span class=\"time\">%{time}</span>"
         badge_intro:
-          title: 'Choisir un badge existant ou en créer un nouveau pour commencer'
-          what_are_badges_title: 'Qu''est-ce que les badges ?'
-          badge_query_examples_title: 'Exemple de requête de badge'
+          title: "Choisir un badge existant ou en créer un nouveau pour commencer"
+          what_are_badges_title: "Qu'est-ce que les badges ?"
+          badge_query_examples_title: "Exemple de requête de badge"
       emoji:
         title: "Emoji"
         help: "Ajouter un nouvel emoji qui sera disponible pour tout le monde. (Conseil: glisser-déposer plusieurs fichiers en même temps)"

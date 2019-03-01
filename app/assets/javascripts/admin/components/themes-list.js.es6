@@ -61,18 +61,6 @@ export default Ember.Component.extend({
     }
   },
 
-  didRender() {
-    this._super(...arguments);
-
-    // hide scrollbar
-    const $container = this.$(".themes-list-container");
-    const containerNode = $container[0];
-    if (containerNode) {
-      const width = containerNode.offsetWidth - containerNode.clientWidth;
-      $container.css("width", `calc(100% + ${width}px)`);
-    }
-  },
-
   actions: {
     changeView(newTab) {
       if (newTab !== this.get("currentTab")) {

@@ -359,7 +359,7 @@ class PostCreator
                            limit_once_per: 24.hours,
                            message_params: { domains: @post.linked_hosts.keys.join(', ') })
     elsif @post && errors.blank? && !skip_validations?
-      SpamRulesEnforcer.enforce!(@post)
+      SpamRule::FlagSockpuppets.new(@post).perform
     end
   end
 

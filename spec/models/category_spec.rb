@@ -751,4 +751,77 @@ describe Category do
     end
   end
 
+  describe "validate permissions compatibility" do
+    let(:admin) { Fabricate(:admin) }
+    let(:group) { Fabricate(:group) }
+    let(:group2) { Fabricate(:group) }
+    let(:parent_category) { Fabricate(:category, name: "parent") }
+    let(:subcategory) { Fabricate(:category, name: "child1", parent_category_id: parent_category.id) }
+    let(:subcategory2) { Fabricate(:category, name: "child2", parent_category_id: parent_category.id) }
+
+    context "when changing subcategory permissions" do
+      it "it is not valid if permissions are less restrictive" do
+        parent_category.set_permissions(group => :readonly)
+        parent_category.save!
+
+        subcategory.set_permissions(group => :full, group2 => :readonly)
+
+        expect(subcategory.valid?).to eq(false)
+        expect(subcategory.errors.full_messages).to eq([I18n.t("category.errors.permission_conflict")])
+      end
+
+      it "is valid if permissions are same or more restrictive" do
+        parent_category.set_permissions(group => :full, group2 => :create_post)
+        parent_category.save!
+
+        subcategory.set_permissions(group => :create_post, group2 => :full)
+
+        expect(subcategory.valid?).to eq(true)
+      end
+
+      it "is valid if no permissions are set on parent" do
+        parent_category.set_permissions(everyone: :full)
+        parent_category.save!
+
+        subcategory.set_permissions(group => :create_post, group2 => :create_post)
+
+        expect(subcategory.valid?).to eq(true)
+      end
+    end
+
+    context "when changing parent category permissions" do
+      it "it is not valid if subcategory permissions are less restrictive" do
+        subcategory.set_permissions(group => :create_post)
+        subcategory.save!
+        subcategory2.set_permissions(group => :create_post, group2 => :create_post)
+        subcategory2.save!
+
+        parent_category.set_permissions(group => :readonly)
+
+        expect(parent_category.valid?).to eq(false)
+        expect(parent_category.errors.full_messages).to eq([I18n.t("category.errors.permission_conflict")])
+      end
+
+      it "is valid if subcategory permissions are same or more restrictive" do
+        subcategory.set_permissions(group => :create_post)
+        subcategory.save!
+        subcategory2.set_permissions(group => :create_post, group2 => :create_post)
+        subcategory2.save!
+
+        parent_category.set_permissions(group => :full, group2 => :create_post)
+
+        expect(parent_category.valid?).to eq(true)
+
+      end
+
+      it "is valid if no permissions set on parent" do
+        subcategory.set_permissions(group => :create_post)
+        subcategory.save
+        parent_category.set_permissions(everyone: :full)
+
+        expect(parent_category.valid?).to eq(true)
+      end
+    end
+  end
+
 end

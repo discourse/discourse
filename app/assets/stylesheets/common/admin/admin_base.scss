@@ -99,21 +99,6 @@ $mobile-breakpoint: 700px;
   th {
     padding: 8px;
   }
-  th {
-    text-align: left;
-    &.sortable {
-      cursor: pointer;
-
-      &:hover {
-        background-color: #e9e9e9;
-        background-color: lighten($primary, 80%);
-      }
-      .d-icon-chevron-down,
-      .d-icon-chevron-up {
-        margin-left: 0.5em;
-      }
-    }
-  }
   tr:hover {
     background-color: darken($secondary, 2.5%);
   }
@@ -994,6 +979,7 @@ table#user-badges {
 @import "common/admin/flagging";
 @import "common/admin/staff_logs";
 @import "common/admin/customize";
+@import "common/admin/customize-install-theme";
 @import "common/admin/api";
 @import "common/admin/backups";
 @import "common/admin/plugins";

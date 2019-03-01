@@ -1,6 +1,8 @@
 require_dependency 'webpush'
 
 class PushNotificationPusher
+  TOKEN_VALID_FOR_SECONDS ||= 5 * 60
+
   def self.push(user, payload)
     message = {
       title: I18n.t(
@@ -82,21 +84,26 @@ class PushNotificationPusher
         vapid: {
           subject: Discourse.base_url,
           public_key: SiteSetting.vapid_public_key,
-          private_key: SiteSetting.vapid_private_key
+          private_key: SiteSetting.vapid_private_key,
+          expiration: TOKEN_VALID_FOR_SECONDS
         }
       )
     rescue Webpush::ExpiredSubscription
       unsubscribe(user, subscription)
     rescue Webpush::ResponseError => e
-      Discourse.warn_exception(
-        e,
-        message: "Failed to send push notification",
-        env: {
-          user_id: user.id,
-          endpoint: subscription["endpoint"],
-          message: message.to_json
-        }
-      )
+      if e.response.message == "MismatchSenderId"
+        unsubscribe(user, subscription)
+      else
+        Discourse.warn_exception(
+          e,
+          message: "Failed to send push notification",
+          env: {
+            user_id: user.id,
+            endpoint: subscription["endpoint"],
+            message: message.to_json
+          }
+        )
+      end
     end
   end
 end

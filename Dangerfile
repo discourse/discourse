@@ -22,7 +22,10 @@ files = (git.added_files + git.modified_files)
   .select { |path| !path.start_with?("plugins/") }
   .select { |path| path.end_with?("es6") || path.end_with?("rb") }
 
+js_test_files = files.select { |path| path.end_with?("-test.js.es6") }
+
 super_offenses = []
+jquery_find_offenses = []
 
 files.each do |path|
   diff = git.diff_for_file(path)
@@ -34,9 +37,26 @@ files.each do |path|
   end
 end
 
+js_test_files.each do |path|
+  diff = git.diff_for_file(path)
+
+  next if !diff
+
+  diff.patch.lines.grep(/^\+\s\s/).each do |added_line|
+    jquery_find_offenses << path if added_line['this.$(']
+  end
+end
+
 if !super_offenses.empty?
   warn(%{
 When possible use `this._super(...arguments)` instead of `this._super()`\n
 #{super_offenses.uniq.map { |o| github.html_link(o) }.join("\n")}
+  })
+end
+
+if !jquery_find_offenses.empty?
+  warn(%{
+Use `find()` instead of `this.$` in js tests`\n
+#{jquery_find_offenses.uniq.map { |o| github.html_link(o) }.join("\n")}
   })
 end

@@ -127,6 +127,25 @@ HTML
     expect(field.javascript_cache.content).to include('raw-handlebars')
   end
 
+  it 'can destroy unbaked theme without errors' do
+    with_template = <<HTML
+    <script type='text/x-handlebars' name='template'>
+      {{hello}}
+    </script>
+    <script type='text/x-handlebars' data-template-name='raw_template.raw'>
+      {{hello}}
+    </script>
+HTML
+    theme.set_field(target: :common, name: "header", value: with_template)
+    theme.save!
+
+    field = theme.theme_fields.find_by(target_id: Theme.targets[:common], name: 'header')
+    baked = Theme.lookup_field(theme.id, :mobile, "header")
+    ThemeField.where(id: field.id).update_all(compiler_version: 0) # update_all to avoid callbacks
+
+    field.reload.destroy!
+  end
+
   it 'should create body_tag_baked on demand if needed' do
     theme.set_field(target: :common, name: :body_tag, value: "<b>test")
     theme.save
@@ -271,7 +290,7 @@ HTML
       theme.reload
       expect(theme.theme_fields.find_by(name: :scss).error).to eq(nil)
 
-      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      scss, _map = Stylesheet::Compiler.compile('@import "common/foundation/variables"; @import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include(upload.url)
     end
   end

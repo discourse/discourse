@@ -367,20 +367,24 @@ const User = RestModel.extend({
     });
   },
 
-  toggleSecondFactor(token, enable, method) {
+  toggleSecondFactor(authToken, authMethod, targetMethod, enable) {
     return ajax("/u/second_factor.json", {
       data: {
-        second_factor_token: token,
-        second_factor_method: method,
+        second_factor_token: authToken,
+        second_factor_method: authMethod,
+        second_factor_target: targetMethod,
         enable
       },
       type: "PUT"
     });
   },
 
-  generateSecondFactorCodes(token) {
+  generateSecondFactorCodes(authToken, authMethod) {
     return ajax("/u/second_factors_backup.json", {
-      data: { second_factor_token: token },
+      data: {
+        second_factor_token: authToken,
+        second_factor_method: authMethod
+      },
       type: "PUT"
     });
   },
@@ -611,6 +615,20 @@ const User = RestModel.extend({
     }
   },
 
+  ignore() {
+    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
+      type: "PUT",
+      data: { ignored_user_id: this.get("id") }
+    });
+  },
+
+  watch() {
+    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
+      type: "DELETE",
+      data: { ignored_user_id: this.get("id") }
+    });
+  },
+
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
     ajax(userPath(this.get("username") + ".json"), {
@@ -719,11 +737,15 @@ const User = RestModel.extend({
   },
 
   updateTextSizeCookie(newSize) {
-    const seq = this.get("user_option.text_size_seq");
-    $.cookie("text_size", `${newSize}|${seq}`, {
-      path: "/",
-      expires: 9999
-    });
+    if (newSize) {
+      const seq = this.get("user_option.text_size_seq");
+      $.cookie("text_size", `${newSize}|${seq}`, {
+        path: "/",
+        expires: 9999
+      });
+    } else {
+      $.removeCookie("text_size", { path: "/", expires: 1 });
+    }
   }
 });
 

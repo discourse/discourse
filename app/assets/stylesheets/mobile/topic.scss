@@ -215,3 +215,9 @@ sub sub {
     margin-right: 0;
   }
 }
+
+.topic-footer-main-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}

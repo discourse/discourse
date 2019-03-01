@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.5.0",
-    "ace-builds": "1.4.1",
+    "ace-builds": "1.4.2",
     "bootbox": "3.2.0",
     "chart.js": "2.7.3",
     "favcount": "https://github.com/chrishunt/favcount",
@@ -23,6 +23,9 @@
     "jquery.cookie": "1.4.1",
     "magnific-popup": "1.1.0",
     "markdown-it": "8.4.1",
+    "moment": "2.22.1",
+    "moment-timezone": "0.5.14",
+    "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
     "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
     "pikaday": "1.7.0",
     "resumablejs": "1.1.0",
@@ -34,11 +37,11 @@
     "chrome-remote-interface": "^0.25",
     "eslint": "^4.19",
     "pretender": "^1.6",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.4",
     "puppeteer": "1.4",
     "qunit": "2.8.0",
     "route-recognizer": "^0.3.3",
-    "sinon": "^6.3.5"
+    "sinon": "^7.2.5"
   },
   "scripts": {
     "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('NPM is not supported, please use Yarn instead. ')\""

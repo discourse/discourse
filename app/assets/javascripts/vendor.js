@@ -9,7 +9,6 @@
 //= require Markdown.Converter.js
 //= require bootbox.js
 //= require bootstrap-modal.js
-//= require div_resizer
 //= require caret_position
 //= require favcount.js
 //= require jquery.ba-resize.js
@@ -22,6 +21,7 @@
 //= require jquery.sortable.js
 //= require lodash.js
 //= require mousetrap.js
+//= require mousetrap-global-bind.js
 //= require rsvp.js
 //= require show-html.js
 //= require break_string

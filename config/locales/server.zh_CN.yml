@@ -37,12 +37,10 @@ zh_CN:
   redirect_warning: "我们无法验证你选择的链接是否已实际发布到论坛。如果您仍想继续，请选择以下链接。"
   on_another_topic: "在另外的主题"
   themes:
-    bad_color_scheme: "色彩空间无效，无法更新主题"
     other_error: "更新主题时出错"
     errors:
       component_no_user_selectable: "主题组件不能由用户选择"
       component_no_default: "主题组件不能是默认主题"
-      component_no_color_scheme: "主题组件不能有配色方案"
       no_multilevels_components: "具有子主题的主题本身不能是子主题"
     settings_errors:
       invalid_yaml: "填写的 YAML 无效"
@@ -57,7 +55,6 @@ zh_CN:
       number_value_not_valid_min: "它必须大于或等于%{min}。"
       number_value_not_valid_max: "它必须小于或等于%{max}。"
       string_value_not_valid: "新值长度不在允许的范围内。"
-      string_value_not_valid_min_max: "它必须介于%{min}和%{max}之间。"
       string_value_not_valid_min: "它必须至少为%{min}个字符。"
       string_value_not_valid_max: "它必须至多为%{max}个字符。"
   emails:
@@ -1430,7 +1427,6 @@ zh_CN:
     attachment_filename_blacklist: "基于文件名禁止附件的黑名单列表。"
     enable_forwarded_emails: "[测试] 允许用户通过抄送邮件发表主题。"
     always_show_trimmed_content: "总是显示进站邮件中被截断的部分。警告：可能显示某些邮件地址。"
-    private_email: "出于隐私考虑，不包含帖子或主题内的内容。"
     manual_polling_enabled: "用 API 推送邮件回复。"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
@@ -1565,7 +1561,6 @@ zh_CN:
     allow_user_api_key_scopes: "用户API授权范围列表"
     max_api_keys_per_user: "每用户最多持有的用户 API 数"
     min_trust_level_for_user_api_key: "生成用户 API 密钥所需的信任等级"
-    allowed_user_api_auth_redirects: "允许用户 API 密钥重定向授权至"
     allowed_user_api_push_urls: "允许使用服务器推送至用户 API 的 URL"
     expire_user_api_keys_days: "用户API密钥自动过期前的天数（0表示从不）"
     tagging_enabled: "启用标签功能，允许为主题设置标签？"
@@ -2798,14 +2793,6 @@ zh_CN:
     sender_post_deleted: "帖子已被删除"
   color_schemes:
     base_theme_name: "基础"
-    light: "亮色方案"
-    dark: "暗色方案"
-    neutral: "中性方案"
-    grey_amber: "灰琥珀色方案"
-    shades_of_blue: "蓝黑方案"
-    latte: "棕色方案"
-    summer: "夏季方案"
-    dark_rose: "黑红方案"
     default_theme_name: "亮"
     light_theme_name: "亮"
     dark_theme_name: "暗"
@@ -3531,14 +3518,6 @@ zh_CN:
             placeholder: "旧金山，加利福尼亚"
       colors:
         title: "主题"
-        fields:
-          theme_id:
-            description: "你想喜欢白色还是深色的界面？你可以以后在\"管理员/定制”界面更改这个设置。"
-            choices:
-              default:
-                label: "简洁亮"
-              dark:
-                label: "简洁黑"
       logos:
         title: "标志"
         fields:

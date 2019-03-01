@@ -2,6 +2,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { longDateNoYear } from "discourse/lib/formatter";
 import computed from "ember-addons/ember-computed-decorators";
 import Sharing from "discourse/lib/sharing";
+import { nativeShare } from "discourse/lib/pwa-utils";
 
 export default Ember.Component.extend({
   elementId: "share-link",
@@ -87,11 +88,6 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce("afterRender", this, this._focusUrl);
   },
 
-  _webShare(url) {
-    // We can pass title and text too, but most share targets do their own oneboxing
-    return navigator.share({ url });
-  },
-
   didInsertElement() {
     this._super(...arguments);
 
@@ -126,12 +122,10 @@ export default Ember.Component.extend({
         this.setProperties({ postNumber, date, postId });
 
         // use native webshare only when the user clicks on the "chain" icon
-        // navigator.share needs HTTPS, returns undefined on HTTP
-        if (navigator.share && !$currentTarget.hasClass("post-date")) {
-          this._webShare(url).catch(() => {
-            // if navigator fails for unexpected reason fallback to popup
-            this._showUrl($currentTarget, url);
-          });
+        if (!$currentTarget.hasClass("post-date")) {
+          nativeShare({ url }).then(null, () =>
+            this._showUrl($currentTarget, url)
+          );
         } else {
           this._showUrl($currentTarget, url);
         }
@@ -160,15 +154,6 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    replyAsNewTopic() {
-      const postStream = this.get("topic.postStream");
-      const postId =
-        this.get("postId") || postStream.findPostIdForPostNumber(1);
-      const post = postStream.findLoadedPost(postId);
-      this.get("replyAsNewTopic")(post);
-      this.send("close");
-    },
-
     close() {
       this.setProperties({
         link: null,
@@ -179,17 +164,10 @@ export default Ember.Component.extend({
     },
 
     share(source) {
-      const url = source.generateUrl(this.get("link"), this.get("topic.title"));
-      if (source.shouldOpenInPopup) {
-        window.open(
-          url,
-          "",
-          "menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=" +
-            (source.popupHeight || 315)
-        );
-      } else {
-        window.open(url, "_blank");
-      }
+      Sharing.shareSource(source, {
+        url: this.get("link"),
+        title: this.get("topic.title")
+      });
     }
   }
 });

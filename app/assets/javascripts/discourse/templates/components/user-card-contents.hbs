@@ -48,6 +48,21 @@
             icon="envelope"
             label="user.private_message"}}
         </li>
+        {{#if user.can_ignore_user}}
+          <li>
+            {{#if user.ignored}}
+              {{d-button class="btn-default"
+                         action=(action "watchUser")
+                         icon="far-eye"
+                         label="user.watch"}}
+            {{else}}
+              {{d-button class="btn-danger"
+                         action=(action "ignoreUser")
+                         icon="far-eye-slash"
+                         label="user.ignore"}}
+            {{/if}}
+          </li>
+        {{/if}}
       {{/if}}
 
       {{#if showFilter}}
@@ -99,7 +114,7 @@
     {{#if hasLocationOrWebsite}}
       <div class="location-and-website">
         {{#if user.location}}
-          <span class='location'>{{d-icon "map-marker"}} <span>{{user.location}}</span></span>
+          <span class='location'>{{d-icon "map-marker-alt"}} <span>{{user.location}}</span></span>
         {{/if}}
 
         {{#if user.website_name}}

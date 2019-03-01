@@ -103,12 +103,7 @@ gl:
       next_month: "Mes seguinte"
       placeholder: data
     share:
-      topic: "compartir unha ligazón a este tema"
-      post: "publicación %{postNumber}"
       close: "pechar"
-      twitter: "compartir esta ligazón no Twitter"
-      facebook: "compartir esta ligazón no Facebook"
-      email: "enviar esta ligazón nun correo electrónico"
     action_codes:
       public_topic: "fixo esta publicación pública no %{when}"
       split_topic: "este tema dividiuse o %{when}"
@@ -326,7 +321,6 @@ gl:
           description: "Notificaráseche se alguén menciona o teu @nome ou che responde."
         muted:
           title: "Silenciado"
-          description: "Non recibirás notificacións de nada relacionado con novos temas neste grupo."
     user_action_groups:
       "1": "Gústames dados"
       "2": "Gústames recibidos"
@@ -1314,7 +1308,6 @@ gl:
       email_in_disabled_click: 'activar o axuste «email in».'
       allow_badges_label: "Permitir adxudicar insignias nesta categoría"
       edit_permissions: "Editar permisos"
-      add_permission: "Engadir permisos"
       this_year: "este ano"
       default_position: "Posición predeterminada"
       position_disabled: "As categorías amosaranse en orde de actividade. Para controlar a orde das categorías nas listas."
@@ -1672,7 +1665,6 @@ gl:
         save: "Gardar"
         new: "Novo"
         new_style: "Novo estilo"
-        import: "Importar"
         delete: "Eliminar"
         color: "Cor"
         opacity: "Opacidade"
@@ -1687,14 +1679,10 @@ gl:
           revert_confirm: "Confirmas a reversión dos cambios?"
         colors:
           title: "Cores"
-          long_title: "Esquemas de cor"
-          new_name: "Novo esquema de cores"
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Queres eliminar este esquema de cor?"
           undo: "desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
           revert: "reverter"
-          revert_title: "Restabelecer o esquema de cor ao predeterminado de Discourse."
           primary:
             name: "primario"
             description: "Principalmente texto, iconas e bordos."
@@ -1930,8 +1918,6 @@ gl:
         suspended: "Suspendido?"
         staged: "Transitorio?"
         show_admin_profile: "Administración"
-        refresh_browsers: "Forzar a actualización do navegador"
-        refresh_browsers_message: "Mensaxe enviada a todos os clientes."
         show_public_profile: "Amosar o perfil público"
         impersonate: "Suplantar"
         ip_lookup: "Busca de IP"

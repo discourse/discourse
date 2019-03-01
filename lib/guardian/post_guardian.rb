@@ -108,10 +108,9 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-
     return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
 
-    (!SpamRule::AutoSilence.silence?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
+    (!SpamRule::AutoSilence.prevent_posting?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
       Category.post_create_allowed(self).where(id: parent.category.id).count == 1
@@ -227,7 +226,7 @@ module PostGuardian
   end
 
   def can_change_post_timestamps?
-    is_admin?
+    is_staff?
   end
 
   def can_wiki?(post)

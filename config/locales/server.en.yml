@@ -99,7 +99,7 @@ en:
       number_value_not_valid_min: "It must be larger than or equal to %{min}."
       number_value_not_valid_max: "It must be smaller than or equal to %{max}."
       string_value_not_valid: "New value length isn't within the allowed range."
-      string_value_not_valid_min_max: "It must be between %{min} and %{max} character long."
+      string_value_not_valid_min_max: "It must be between %{min} and %{max} characters long."
       string_value_not_valid_min: "It must be at least %{min} characters long."
       string_value_not_valid_max: "It must be at most %{max} characters long."
     locale_errors:
@@ -460,6 +460,7 @@ en:
       topic:
         title: "Title"
         featured_link: "Featured Link"
+        category_id: "Category"
       post:
         raw: "Body"
       user_profile:
@@ -586,6 +587,8 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
+      permission_conflict: "Subcategory permissions cannot be less restrictive than parent's."
+      disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -1494,6 +1497,8 @@ en:
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
+    backup_gzip_compression_level_for_uploads: "Gzip compression level used for compressing uploads."
+    include_thumbnails_in_backups: "Include generated thumbnails in backups. Disabling this will make backups smaller, but requires a rebake of all posts after a restore."
 
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -1737,7 +1742,7 @@ en:
 
     enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
-    private_email: "Don't include content from posts or topics in emails for extra privacy."
+    private_email: "Don't include content from posts or topics in emails for extra privacy. NOTE: also disabled digest emails."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -1927,7 +1932,7 @@ en:
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     max_api_keys_per_user: "Maximum number of user API keys per user"
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
-    allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
+    allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     expire_user_api_keys_days: "Number of days before an user API key automatically expires (0 for never)"
 
@@ -2035,11 +2040,17 @@ en:
 
   move_posts:
     new_topic_moderator_post:
-      one: "A post was split to a new %{entity}: %{topic_link}"
-      other: "%{count} posts were split to a new %{entity}: %{topic_link}"
+      one: "A post was split to a new topic: %{topic_link}"
+      other: "%{count} posts were split to a new topic: %{topic_link}"
+    new_message_moderator_post:
+      one: "A post was split to a new message: %{topic_link}"
+      other: "%{count} posts were split to a new message: %{topic_link}"
     existing_topic_moderator_post:
-      one: "A post was merged into an existing %{entity}: %{topic_link}"
-      other: "%{count} posts were merged into an existing %{entity}: %{topic_link}"
+      one: "A post was merged into an existing topic: %{topic_link}"
+      other: "%{count} posts were merged into an existing topic: %{topic_link}"
+    existing_message_moderator_post:
+      one: "A post was merged into an existing message: %{topic_link}"
+      other: "%{count} posts were merged into an existing message: %{topic_link}"
 
   change_owner:
     post_revision_text: "Ownership transferred"

@@ -240,5 +240,15 @@ describe UserApiKeysController do
       expect(api_key.user_id).to eq(user.id)
 
     end
+
+    it "will allow redirect to wildcard urls" do
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + '/*'
+      args[:auth_redirect] = args[:auth_redirect] + '/bluebirds/fly'
+
+      sign_in(Fabricate(:user))
+
+      post "/user-api-key.json", params: args
+      expect(response.status).to eq(302)
+    end
   end
 end

@@ -10,9 +10,6 @@ require 'archetype'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
-  # TODO: Remove this after 19th Dec 2018
-  self.ignored_columns = %w{vote_count}
-
   include RateLimiter::OnCreateRecord
   include Trashable
   include Searchable

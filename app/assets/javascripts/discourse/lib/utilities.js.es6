@@ -282,7 +282,7 @@ export function validateUploadedFile(file, opts) {
   return true;
 }
 
-const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|svg|ico)/i;
 
 function extensionsToArray(exts) {
   return exts
@@ -348,7 +348,7 @@ export function authorizedExtensions() {
 
 export function authorizedImagesExtensions() {
   return authorizesAllExtensions()
-    ? "png, jpg, jpeg, gif, bmp, tiff, svg, webp, ico"
+    ? "png, jpg, jpeg, gif, svg, ico"
     : imagesExtensions().join(", ");
 }
 
@@ -376,7 +376,7 @@ export function authorizesOneOrMoreImageExtensions() {
 }
 
 export function isAnImage(path) {
-  return /\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i.test(path);
+  return /\.(png|jpe?g|gif|svg|ico)$/i.test(path);
 }
 
 function uploadTypeFromFileName(fileName) {
@@ -548,6 +548,26 @@ export function isAppleDevice() {
     navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
     !navigator.userAgent.match(/Trident/g)
   );
+}
+
+let iPadDetected = undefined;
+
+export function isiPad() {
+  if (iPadDetected === undefined) {
+    iPadDetected =
+      navigator.userAgent.match(/iPad/g) &&
+      !navigator.userAgent.match(/Trident/g);
+  }
+  return iPadDetected;
+}
+
+export function safariHacksDisabled() {
+  let pref = localStorage.getItem("safari-hacks-disabled");
+  let result = false;
+  if (pref !== null) {
+    result = pref === "true";
+  }
+  return result;
 }
 
 const toArray = items => {

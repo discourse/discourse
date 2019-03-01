@@ -5,4 +5,18 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-id: {}
+id:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Hari ini 1 %{time}
+        tomorrow: Besok 1 %{time}
+        yesterday: Kemarin 1 %{time}
+      title: Masukkan tanggal
+      create:
+        modal_title: Masukkan tanggal
+        form:
+          insert: Masukkan
+          advanced_mode: Mode lanjutan
+          simple_mode: Mode sederhana
+          timezones_title: Zona waktu yang ditampilkan

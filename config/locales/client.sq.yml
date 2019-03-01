@@ -102,12 +102,7 @@ sq:
       previous_month: "Muaji i kaluar"
       next_month: "Muaji i ardhshëm"
     share:
-      topic: "shpërnda një lidhje tek kjo temë"
-      post: "postim #%{postNumber}"
       close: "mbylle"
-      twitter: "shpërndaje këtë lidhje në Twitter"
-      facebook: "postojeni këtë lidhje në Facebook"
-      email: "dërgoje këtë lidhje me email"
     action_codes:
       public_topic: "e bëri këtë temë publike %{when}"
       split_topic: "ndaje këtë teme %{when}"
@@ -347,7 +342,6 @@ sq:
           description: "Ju do të njoftoheni në qoftë se dikush ju përmend @emrin ose ju përgjigjet."
         muted:
           title: "Pa njoftime"
-          description: "Ju nuk do të njoftoheni asnjëherë për asgjë mbi temat e reja të këtij grupi."
       flair_preview_icon: "Parashiko ikonën"
       flair_preview_image: "Parashiko imazhin"
     user_action_groups:
@@ -1512,7 +1506,6 @@ sq:
       email_in_disabled_click: 'aktivizo rregullimin "email in".'
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       edit_permissions: "Ndryshoni autorizimet"
-      add_permission: "Shtoni autorizim"
       this_year: "këtë vit"
       default_position: "Default Position"
       position_disabled: "Kategoritue do të renditen sipas aktivitetit. Për të kontrolluar renditjen e kategorive nëpër lista, "
@@ -2024,7 +2017,6 @@ sq:
         save: "Ruaj"
         new: "E Re"
         new_style: "Veshje e Re"
-        import: "Importo"
         delete: "Fshij"
         color: "Ngjyra"
         opacity: "Opaciteti"
@@ -2039,14 +2031,10 @@ sq:
           revert_confirm: "A jeni i sigurtë që doni të riktheni ndryshimet?"
         colors:
           title: "Ngjyrat"
-          long_title: "Skemat e ngjyrave"
-          new_name: "Një skemë e re ngjyrash"
           copy_name_prefix: "Kopje e"
-          delete_confirm: "Fshije këtë skemë ngjyrash?"
           undo: "rikthe"
           undo_title: "Anullo ndryshimet e bëra në këtë skemë, rikthe versionin e ruajtur herën e fundit. "
           revert: "rikthe"
-          revert_title: "Zëvendëso këtë ngjyrë me ngjyrën standarte Discourse. "
           primary:
             name: "parësor"
             description: "Shumica e tekstit, ikonave dhe bordurave. "
@@ -2260,8 +2248,6 @@ sq:
         suspended: "Pezulluar?"
         staged: "Staged?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Forco rifreskimin e shfletuesit"
-        refresh_browsers_message: "Mesazhi u dërgua tek të gjithë klientët!"
         show_public_profile: "Shfaq Profilin Publik"
         impersonate: "Personifiko"
         ip_lookup: "Shiko IP"

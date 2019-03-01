@@ -21,10 +21,6 @@ class User < ActiveRecord::Base
   include SecondFactorManager
   include HasDestroyedWebHook
 
-  self.ignored_columns = %w{
-    group_locked_trust_level
-  }
-
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
@@ -224,7 +220,7 @@ class User < ActiveRecord::Base
   def self.username_available?(username, email = nil, allow_reserved_username: false)
     lower = username.downcase
     return false if !allow_reserved_username && reserved_username?(lower)
-    return true  if DB.exec(User::USERNAME_EXISTS_SQL, username: lower) == 0
+    return true  if !username_exists?(lower)
 
     # staged users can use the same username since they will take over the account
     email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
@@ -293,6 +289,10 @@ class User < ActiveRecord::Base
     end
 
     fields.uniq
+  end
+
+  def human?
+    self.id > 0
   end
 
   def effective_locale
@@ -1270,6 +1270,10 @@ class User < ActiveRecord::Base
   (SELECT groups.id, false as is_user FROM groups
   WHERE lower(groups.name) = :username)
   SQL
+
+  def self.username_exists?(username_lower)
+    DB.exec(User::USERNAME_EXISTS_SQL, username: username_lower) > 0
+  end
 
   def username_validator
     username_format_validator || begin

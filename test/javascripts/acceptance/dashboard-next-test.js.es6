@@ -75,7 +75,7 @@ QUnit.test("general tab - activity metrics", async assert => {
     $(".admin-report.page-view-total-reqs .thirty-days-count")
       .text()
       .trim(),
-    "80.8k"
+    "74.6k"
   );
 });
 

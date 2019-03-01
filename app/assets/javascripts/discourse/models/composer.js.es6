@@ -62,7 +62,7 @@ export const SAVE_LABELS = {
 };
 
 export const SAVE_ICONS = {
-  [EDIT]: "pencil",
+  [EDIT]: "pencil-alt",
   [EDIT_SHARED_DRAFT]: "clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
@@ -369,8 +369,7 @@ const Composer = RestModel.extend({
     return (
       canCategorize &&
       !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics &&
-      !this.user.get("admin")
+      !this.siteSettings.allow_uncategorized_topics
     );
   },
 

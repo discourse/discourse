@@ -121,12 +121,7 @@ lv:
       next_month: "Nākamais mēnesis"
       placeholder: datums
     share:
-      topic: "padalīties ar saiti uz šo tēmu"
-      post: "ieraksts #%{postNumber}"
       close: "aizvērt"
-      twitter: "padalīties ar šo saiti Twitter"
-      facebook: "padalīties ar šo saiti Facebook"
-      email: "nosūtīt šo saiti e-pastā"
     action_codes:
       public_topic: "padarīja tēmu publisku %{when}"
       split_topic: "sadalīja šo tēmu %{when}"
@@ -384,7 +379,6 @@ lv:
           description: "Jums paziņos, ja kāds pieminēs jūsu @vārdu vai atbildēs Jums."
         muted:
           title: "Noklusināts"
-          description: "Jums nekad neko neziņos par jauniem ierakstiem šajā grupā."
       flair_url: "Avatāra attēls"
       flair_url_placeholder: "(Neobligāti) Saite uz attēlu vai Font Awesome klasi"
       flair_bg_color: "Avatāra attēla fona krāsa"
@@ -1757,7 +1751,6 @@ lv:
       default_top_period: "Noklusējuma topa periods:"
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       edit_permissions: "Mainīt atļaujas"
-      add_permission: "Pievienot atļauju"
       this_year: "šogad"
       default_position: "Noklusētā pozīcija"
       position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"
@@ -2391,7 +2384,6 @@ lv:
         save: "Saglabāt"
         new: "Jauns"
         new_style: "Jauns stils"
-        import: "Importēt"
         delete: "Dzēst"
         delete_confirm: "Dzēst šo dizainu?"
         color: "Krāsa"
@@ -2410,7 +2402,6 @@ lv:
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
         theme:
-          import_theme: "Importēt dizainu"
           customize_desc: "Pielāgot:"
           title: "Dizaini"
           long_title: "Labot jūsu vietnes krāsas, CSS un HTML saturu"
@@ -2421,7 +2412,6 @@ lv:
           preview: "Priekšskatījums"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
-          color_scheme: "Krāsu shēma"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
@@ -2703,8 +2693,6 @@ lv:
         suspended: "Neapturēts?"
         staged: "Izveidots?"
         show_admin_profile: "Administrators"
-        refresh_browsers: "Piespiest pārlūka atsvaidzināšanu (Force browser refresh)"
-        refresh_browsers_message: "Ziņa nosūtīta visiem klientiem!"
         show_public_profile: "Parādīt publisko profilu"
         impersonate: "Izlikties (Impersonate)"
         action_logs: "Aktivitāšu saraksts"

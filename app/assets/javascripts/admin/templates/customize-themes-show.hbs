@@ -23,7 +23,7 @@
         {{i18n "admin.customize.theme.required_version.minimum" version=model.remote_theme.minimum_discourse_version}}
       {{/if}}
       {{#if model.remote_theme.maximum_discourse_version}}
-        {{i18n "admin.customize.theme.required_version.minimum" version=model.remote_theme.maximum_discourse_version}}
+        {{i18n "admin.customize.theme.required_version.maximum" version=model.remote_theme.maximum_discourse_version}}
       {{/if}}
     </div>
   {{/unless}}
@@ -38,7 +38,11 @@
   {{#if model.remote_theme}}
 
     {{#if model.remote_theme.remote_url}}
-      <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{i18n "admin.customize.theme.source_url"}} {{d-icon "link"}}</a>
+      {{#if sourceIsHttp}}
+        <a class="remote-url" href="{{model.remote_theme.remote_url}}">{{i18n "admin.customize.theme.source_url"}} {{d-icon "link"}}</a>
+      {{else}}
+        <div class="remote-url"><code>{{model.remote_theme.remote_url}}</code></div>
+      {{/if}}
     {{/if}}
     {{#if model.remote_theme.about_url}}
     <a class="url about-url" href="{{model.remote_theme.about_url}}">{{i18n "admin.customize.theme.about_theme"}} {{d-icon "link"}}</a>
@@ -67,13 +71,13 @@
             <code>{{model.remoteError}}</code>
           </div>
         {{/if}}
-        
+
         {{#if model.remote_theme.commits_behind}}
           {{#d-button action=(action "updateToLatest") icon="download" class='btn-primary'}}{{i18n "admin.customize.theme.update_to_latest"}}{{/d-button}}
         {{else}}
-          {{#d-button action=(action "checkForThemeUpdates") icon="refresh" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
+          {{#d-button action=(action "checkForThemeUpdates") icon="sync" class="btn-default"}}{{i18n "admin.customize.theme.check_for_updates"}}{{/d-button}}
         {{/if}}
-        
+
         <span class='status-message'>
             {{#if updatingRemote}}
               {{i18n 'admin.customize.theme.updating'}}
@@ -104,11 +108,14 @@
     <div class="control-unit">
       <div class="mini-title">{{i18n "admin.customize.theme.color_scheme"}}</div>
       <div class="description">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
-      <div class="control">{{combo-box content=colorSchemes
-                                       filterable=true
-                                       forceEscape=true
-                                       value=colorSchemeId
-                                       icon="paint-brush"}}
+      <div class="control">
+        {{color-palettes
+          content=colorSchemes
+          filterable=true
+          forceEscape=true
+          value=colorSchemeId
+          icon="paint-brush"}}
+
          {{#if colorSchemeChanged}}
             {{d-button action=(action "changeScheme") class="btn-primary submit-edit" icon="check"}}
             {{d-button action=(action "cancelChangeScheme") class="btn-default cancel-edit" icon="times"}}
@@ -190,7 +197,10 @@
 
   {{#if availableChildThemes}}
     <div class="control-unit">
-      <div class="mini-title">{{i18n "admin.customize.theme.theme_components"}}</div>
+      <div class="mini-title">
+        {{d-icon "puzzle-piece"}}
+        {{i18n "admin.customize.theme.theme_components"}}
+      </div>
       {{#if model.childThemes.length}}
         <ul class='removable-list'>
           {{#each model.childThemes as |child|}}

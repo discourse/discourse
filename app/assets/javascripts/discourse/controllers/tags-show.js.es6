@@ -1,4 +1,7 @@
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import {
   default as NavItem,
@@ -19,14 +22,14 @@ if (extraNavItemProperties) {
 if (customNavItemHref) {
   customNavItemHref(function(navItem) {
     if (navItem.get("tagId")) {
-      var name = navItem.get("name");
+      const name = navItem.get("name");
 
       if (!Discourse.Site.currentProp("filters").includes(name)) {
         return null;
       }
 
-      var path = "/tags/",
-        category = navItem.get("category");
+      let path = "/tags/";
+      const category = navItem.get("category");
 
       if (category) {
         path += "c/";
@@ -37,8 +40,8 @@ if (customNavItemHref) {
         path += "/";
       }
 
-      path += navItem.get("tagId") + "/l/";
-      return path + name.replace(" ", "-");
+      path += `${navItem.get("tagId")}/l/`;
+      return `${path}${name.replace(" ", "-")}`;
     } else {
       return null;
     }
@@ -66,9 +69,10 @@ export default Ember.Controller.extend(BulkTopicSelection, {
 
   categories: Ember.computed.alias("site.categoriesList"),
 
-  createTopicLabel: function() {
-    return this.get("list.draft") ? "topic.open_draft" : "topic.create";
-  }.property("list", "list.draft"),
+  @computed("list", "list.draft")
+  createTopicLabel(list, listDraft) {
+    return listDraft ? "topic.open_draft" : "topic.create";
+  },
 
   @computed("canCreateTopic", "category", "canCreateTopicOnCategory")
   createTopicDisabled(canCreateTopic, category, canCreateTopicOnCategory) {
@@ -85,92 +89,87 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     "q"
   ],
 
-  navItems: function() {
-    return NavItem.buildList(this.get("category"), {
-      tagId: this.get("tag.id"),
-      filterMode: this.get("filterMode")
+  @computed("category", "tag.id", "filterMode")
+  navItems(category, tagId, filterMode) {
+    return NavItem.buildList(category, {
+      tagId,
+      filterMode
     });
-  }.property("category", "tag.id", "filterMode"),
+  },
 
-  showTagFilter: function() {
+  @computed("category")
+  showTagFilter() {
     return Discourse.SiteSettings.show_filter_by_tag;
-  }.property("category"),
+  },
 
-  showAdminControls: function() {
-    return (
-      !this.get("additionalTags") &&
-      this.get("canAdminTag") &&
-      !this.get("category")
-    );
-  }.property("additionalTags", "canAdminTag", "category"),
+  @computed("additionalTags", "canAdminTag", "category")
+  showAdminControls(additionalTags, canAdminTag, category) {
+    return !additionalTags && canAdminTag && !category;
+  },
 
   loadMoreTopics() {
     return this.get("list").loadMore();
   },
 
-  _showFooter: function() {
+  @observes("list.canLoadMore")
+  _showFooter() {
     this.set("application.showFooter", !this.get("list.canLoadMore"));
-  }.observes("list.canLoadMore"),
+  },
 
-  footerMessage: function() {
-    if (this.get("loading") || this.get("list.topics.length") !== 0) {
+  @computed("navMode", "list.topics.length", "loading")
+  footerMessage(navMode, listTopicsLength, loading) {
+    if (loading || listTopicsLength !== 0) {
       return;
     }
 
-    if (this.get("list.topics.length") === 0) {
-      return I18n.t("tagging.topics.none." + this.get("navMode"), {
+    if (listTopicsLength === 0) {
+      return I18n.t(`tagging.topics.none.${navMode}`, {
         tag: this.get("tag.id")
       });
     } else {
-      return I18n.t("tagging.topics.bottom." + this.get("navMode"), {
+      return I18n.t(`tagging.topics.bottom.${navMode}`, {
         tag: this.get("tag.id")
       });
     }
-  }.property("navMode", "list.topics.length", "loading"),
+  },
 
   actions: {
-    changeSort(sortBy) {
-      if (sortBy === this.get("order")) {
+    changeSort(order) {
+      if (order === this.get("order")) {
         this.toggleProperty("ascending");
       } else {
-        this.setProperties({ order: sortBy, ascending: false });
+        this.setProperties({ order, ascending: false });
       }
+
       this.send("invalidateModel");
     },
 
     refresh() {
-      const self = this;
       // TODO: this probably doesn't work anymore
       return this.store
         .findFiltered("topicList", { filter: "tags/" + this.get("tag.id") })
-        .then(function(list) {
-          self.set("list", list);
-          self.resetSelected();
+        .then(list => {
+          this.set("list", list);
+          this.resetSelected();
         });
     },
 
     deleteTag() {
-      const self = this;
       const numTopics =
         this.get("list.topic_list.tags.firstObject.topic_count") || 0;
+
       const confirmText =
         numTopics === 0
           ? I18n.t("tagging.delete_confirm_no_topics")
           : I18n.t("tagging.delete_confirm", { count: numTopics });
-      bootbox.confirm(confirmText, function(result) {
-        if (!result) {
-          return;
-        }
 
-        self
-          .get("tag")
+      bootbox.confirm(confirmText, result => {
+        if (!result) return;
+
+        this.get("tag")
           .destroyRecord()
-          .then(function() {
-            self.transitionToRoute("tags.index");
-          })
-          .catch(function() {
-            bootbox.alert(I18n.t("generic_error"));
-          });
+          .then(() => this.transitionToRoute("tags.index"))
+          .catch(() => bootbox.alert(I18n.t("generic_error")));
       });
     },
 

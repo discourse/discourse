@@ -17,7 +17,7 @@ class Admin::ThemesController < Admin::AdminController
     hijack do
       File.open(path) do |file|
         filename = params[:file]&.original_filename || File.basename(path)
-        upload = UploadCreator.new(file, filename, for_theme: true).create_for(current_user.id)
+        upload = UploadCreator.new(file, filename, for_theme: true).create_for(theme_user.id)
         if upload.errors.count > 0
           render_json_error upload
         else
@@ -44,7 +44,7 @@ class Admin::ThemesController < Admin::AdminController
       json = JSON::parse(params[:theme].read)
       theme = json['theme']
 
-      @theme = Theme.new(name: theme["name"], user_id: current_user.id)
+      @theme = Theme.new(name: theme["name"], user_id: theme_user.id)
       theme["theme_fields"]&.each do |field|
 
         if field["raw_upload"]
@@ -54,7 +54,7 @@ class Admin::ThemesController < Admin::AdminController
             file = Base64.decode64(field["raw_upload"])
             tmp.write(file)
             tmp.rewind
-            upload = UploadCreator.new(tmp, field["filename"]).create_for(current_user.id)
+            upload = UploadCreator.new(tmp, field["filename"]).create_for(theme_user.id)
             field["upload_id"] = upload.id
           ensure
             tmp.unlink
@@ -79,7 +79,7 @@ class Admin::ThemesController < Admin::AdminController
     elsif params[:remote]
       begin
         branch = params[:branch] ? params[:branch] : nil
-        @theme = RemoteTheme.import_theme(params[:remote], current_user, private_key: params[:private_key], branch: branch)
+        @theme = RemoteTheme.import_theme(params[:remote], theme_user, private_key: params[:private_key], branch: branch)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
@@ -90,7 +90,7 @@ class Admin::ThemesController < Admin::AdminController
       theme_id = params[:theme_id]
       match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: match_theme_by_name, user: current_user, theme_id: theme_id)
+        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
@@ -107,6 +107,7 @@ class Admin::ThemesController < Admin::AdminController
                                           :remote_theme,
                                           :theme_settings,
                                           :settings_field,
+                                          # :locale_fields, # Fails due to https://github.com/rails/rails/issues/34456
                                           :user,
                                           :color_scheme,
                                           theme_fields: :upload
@@ -129,7 +130,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def create
     @theme = Theme.new(name: theme_params[:name],
-                       user_id: current_user.id,
+                       user_id: theme_user.id,
                        user_selectable: theme_params[:user_selectable] || false,
                        color_scheme_id: theme_params[:color_scheme_id],
                        component: [true, "true"].include?(theme_params[:component]))
@@ -315,5 +316,10 @@ class Admin::ThemesController < Admin::AdminController
     elsif param.to_s == "true" && !@theme.component?
       @theme.switch_to_component!
     end
+  end
+
+  # Overridden by theme-creator plugin
+  def theme_user
+    current_user
   end
 end

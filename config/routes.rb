@@ -15,10 +15,11 @@ Discourse::Application.routes.draw do
   match "/404", to: "exceptions#not_found", via: [:get, :post]
   get "/404-body" => "exceptions#not_found_body"
 
+  post "webhooks/aws" => "webhooks#aws"
   post "webhooks/mailgun"  => "webhooks#mailgun"
-  post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/mailjet"  => "webhooks#mailjet"
   post "webhooks/mandrill" => "webhooks#mandrill"
+  post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/sparkpost" => "webhooks#sparkpost"
 
   if Rails.env.development?
@@ -116,7 +117,6 @@ Discourse::Application.routes.draw do
       put "revoke_moderation", constraints: AdminConstraint.new
       put "grant_moderation", constraints: AdminConstraint.new
       put "approve"
-      post "refresh_browsers", constraints: AdminConstraint.new
       post "log_out", constraints: AdminConstraint.new
       put "activate"
       put "deactivate"
@@ -421,6 +421,8 @@ Discourse::Application.routes.draw do
     post "#{root_path}/:username/preferences/revoke-auth-token" => "users#revoke_auth_token", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/ignore" => "users#ignore", constraints: { username: RouteFormat.username }
+    delete "#{root_path}/:username/ignore" => "users#watch", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
@@ -461,6 +463,7 @@ Discourse::Application.routes.draw do
   get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
   get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
 
+  post "uploads/lookup-metadata" => "uploads#metadata"
   post "uploads" => "uploads#create"
   post "uploads/lookup-urls" => "uploads#lookup_urls"
 
@@ -481,45 +484,47 @@ Discourse::Application.routes.draw do
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: { username: RouteFormat.username }
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: { username: RouteFormat.username }
 
-  resources :groups, id: RouteFormat.username do
-    get "posts.rss" => "groups#posts_feed", format: :rss
-    get "mentions.rss" => "groups#mentions_feed", format: :rss
+  %w{groups g}.each do |root_path|
+    resources :groups, id: RouteFormat.username, path: root_path do
+      get "posts.rss" => "groups#posts_feed", format: :rss
+      get "mentions.rss" => "groups#mentions_feed", format: :rss
 
-    get 'members'
-    get 'posts'
-    get 'mentions'
-    get 'counts'
-    get 'mentionable'
-    get 'messageable'
-    get 'logs' => 'groups#histories'
+      get 'members'
+      get 'posts'
+      get 'mentions'
+      get 'counts'
+      get 'mentionable'
+      get 'messageable'
+      get 'logs' => 'groups#histories'
 
-    collection do
-      get "check-name" => 'groups#check_name'
-      get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
-      get "search" => "groups#search"
-    end
-
-    member do
-      %w{
-        activity
-        activity/:filter
-        messages
-        messages/inbox
-        messages/archive
-        manage
-        manage/profile
-        manage/members
-        manage/membership
-        manage/interaction
-        manage/logs
-      }.each do |path|
-        get path => 'groups#show'
+      collection do
+        get "check-name" => 'groups#check_name'
+        get 'custom/new' => 'groups#new', constraints: AdminConstraint.new
+        get "search" => "groups#search"
       end
 
-      put "members" => "groups#add_members"
-      delete "members" => "groups#remove_member"
-      post "request_membership" => "groups#request_membership"
-      post "notifications" => "groups#set_notifications"
+      member do
+        %w{
+          activity
+          activity/:filter
+          messages
+          messages/inbox
+          messages/archive
+          manage
+          manage/profile
+          manage/members
+          manage/membership
+          manage/interaction
+          manage/logs
+        }.each do |path|
+          get path => 'groups#show'
+        end
+
+        put "members" => "groups#add_members"
+        delete "members" => "groups#remove_member"
+        post "request_membership" => "groups#request_membership"
+        post "notifications" => "groups#set_notifications"
+      end
     end
   end
 

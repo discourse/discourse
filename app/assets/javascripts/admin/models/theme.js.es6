@@ -9,10 +9,86 @@ export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
 
 const Theme = RestModel.extend({
-  FIELDS_IDS: [0, 1],
+  FIELDS_IDS: [0, 1, 5],
   isActive: Ember.computed.or("default", "user_selectable"),
   isPendingUpdates: Ember.computed.gt("remote_theme.commits_behind", 0),
   hasEditedFields: Ember.computed.gt("editedFields.length", 0),
+
+  @computed("theme_fields.[]")
+  targets() {
+    return [
+      { id: 0, name: "common" },
+      { id: 1, name: "desktop", icon: "desktop" },
+      { id: 2, name: "mobile", icon: "mobile-alt" },
+      { id: 3, name: "settings", icon: "cog", advanced: true },
+      {
+        id: 4,
+        name: "translations",
+        icon: "globe",
+        advanced: true,
+        customNames: true
+      }
+    ].map(target => {
+      target["edited"] = this.hasEdited(target.name);
+      target["error"] = this.hasError(target.name);
+      return target;
+    });
+  },
+
+  @computed("theme_fields.[]")
+  fieldNames() {
+    const common = [
+      "scss",
+      "head_tag",
+      "header",
+      "after_header",
+      "body_tag",
+      "footer"
+    ];
+
+    return {
+      common: [...common, "embedded_scss"],
+      desktop: common,
+      mobile: common,
+      settings: ["yaml"],
+      translations: [
+        "en",
+        ...(this.get("theme_fields") || [])
+          .filter(f => f.target === "translations" && f.name !== "en")
+          .map(f => f.name)
+      ]
+    };
+  },
+
+  @computed("fieldNames", "theme_fields.[]", "theme_fields.@each.error")
+  fields(fieldNames) {
+    const hash = {};
+    Object.keys(fieldNames).forEach(target => {
+      hash[target] = fieldNames[target].map(fieldName => {
+        const field = {
+          name: fieldName,
+          edited: this.hasEdited(target, fieldName),
+          error: this.hasError(target, fieldName)
+        };
+
+        if (target === "translations") {
+          field.translatedName = fieldName;
+        } else {
+          field.translatedName = I18n.t(
+            `admin.customize.theme.${fieldName}.text`
+          );
+          field.title = I18n.t(`admin.customize.theme.${fieldName}.title`);
+        }
+
+        if (fieldName.indexOf("_tag") > 0) {
+          field.icon = "far-file-alt";
+        }
+
+        return field;
+      });
+    });
+    return hash;
+  },
 
   @computed("theme_fields")
   themeFields(fields) {
@@ -76,6 +152,12 @@ const Theme = RestModel.extend({
     }
   },
 
+  hasError(target, name) {
+    return this.get("theme_fields")
+      .filter(f => f.target === target && (!name || name === f.name))
+      .any(f => f.error);
+  },
+
   getError(target, name) {
     let themeFields = this.get("themeFields");
     let key = this.getKey({ target, name });
@@ -114,7 +196,7 @@ const Theme = RestModel.extend({
         existing.value = value;
         existing.upload_id = upload_id;
       } else {
-        fields.push(field);
+        fields.pushObject(field);
       }
       return;
     }
@@ -123,10 +205,19 @@ const Theme = RestModel.extend({
     let key = this.getKey({ target, name });
     let existingField = themeFields[key];
     if (!existingField) {
-      this.theme_fields.push(field);
+      this.theme_fields.pushObject(field);
       themeFields[key] = field;
     } else {
+      const changed =
+        (Ember.isEmpty(existingField.value) && !Ember.isEmpty(value)) ||
+        (Ember.isEmpty(value) && !Ember.isEmpty(existingField.value));
+
       existingField.value = value;
+      if (changed) {
+        // Observing theme_fields.@each.value is too slow, so manually notify
+        // if the value goes to/from blank
+        this.notifyPropertyChange("theme_fields.[]");
+      }
     }
   },
 

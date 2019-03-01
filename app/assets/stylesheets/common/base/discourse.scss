@@ -276,7 +276,31 @@ select {
   border: 1px solid $primary-low;
 }
 
+table {
+  th {
+    font-weight: normal;
+    color: $primary-medium;
+    text-align: left;
+    padding: 0.5em;
+  }
+}
+
 // Common Classes
+
+.sortable {
+  white-space: nowrap;
+  cursor: pointer;
+  .discourse-no-touch & {
+    &:hover {
+      background-color: $primary-low;
+    }
+  }
+  .d-icon {
+    margin-left: 0.25em;
+  }
+  @include unselectable;
+}
+
 .radio,
 .checkbox {
   min-height: 18px;
@@ -532,21 +556,6 @@ select {
 
   .control-group {
     @include clearfix;
-
-    .table {
-      width: 100%;
-
-      th,
-      td {
-        padding: 10px;
-        text-align: center;
-      }
-    }
-
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-      background-color: dark-light-choose($highlight-low, $highlight);
-    }
   }
 
   .control-label {
