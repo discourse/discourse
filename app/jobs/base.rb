@@ -16,34 +16,86 @@ module Jobs
   end
 
   class Base
+    class JobInstrumenter
+      def initialize(job_class:, opts:, db:)
+        return unless enabled?
+        @data = {}
 
-    class Instrumenter
+        @data["hostname"] = `hostname`.strip # Hostname
+        @data["pid"] = Process.pid # Pid
+        @data["database"] = db # DB name - multisite db name it ran on
+        @data["job_name"] = job_class.name # Job Name - eg: Jobs::AboutStats
+        @data["job_type"] = job_class.try(:scheduled?) ? "scheduled" : "regular" # Job Type - either s for scheduled or r for regular
+        @data["opts"] = opts # Params - json encoded params for the job
 
-      def self.stats
-        Thread.current[:db_stats] ||= Stats.new
+        @data["status"] = 'pending'
+        @start_timestamp = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+        self.class.ensure_interval_logging!
+        @@active_jobs ||= []
+        @@active_jobs << self
+
+        MethodProfiler.ensure_discourse_instrumentation!
+        MethodProfiler.start
       end
 
-      class Stats
-        attr_accessor :query_count, :duration_ms
+      def stop(exception:)
+        return unless enabled?
 
-        def initialize
-          @query_count = 0
-          @duration_ms = 0
+        profile = MethodProfiler.stop
+
+        @@active_jobs.delete(self)
+
+        @data["duration"] = profile[:total_duration] # Duration - length in seconds it took to run
+        @data["sql_duration"] = profile.dig(:sql, :duration) || 0 # Sql Duration (s)
+        @data["sql_calls"] = profile.dig(:sql, :calls) || 0 # Sql Statements - how many statements ran
+        @data["redis_duration"] = profile.dig(:redis, :duration) || 0 # Redis Duration (s)
+        @data["redis_calls"] = profile.dig(:redis, :calls) || 0 # Redis commands
+        @data["net_duration"] = profile.dig(:net, :duration) || 0 # Redis Duration (s)
+        @data["net_calls"] = profile.dig(:net, :calls) || 0 # Redis commands
+
+        if exception.present?
+          @data["exception"] = exception # Exception - if job fails a json encoded exception
+          @data["status"] = 'failed'
+        else
+          @data["status"] = 'success' # Status - fail, success, pending
         end
+
+        write_to_log
       end
 
-      def call(name, start, finish, message_id, values)
-        stats = Instrumenter.stats
-        stats.query_count += 1
-        stats.duration_ms += (((finish - start).to_f) * 1000).to_i
+      def logger
+        @@logger ||= Logger.new("#{Rails.root}/log/sidekiq.log")
+      end
+
+      def current_duration
+        Process.clock_gettime(Process::CLOCK_MONOTONIC) - @start_timestamp
+      end
+
+      def write_to_log
+        return unless enabled?
+        @data["@timestamp"] = Time.now
+        @data["duration"] = current_duration if @data["status"] == "pending"
+        logger << "#{@data.to_json}\n"
+      end
+
+      def enabled?
+        ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+      end
+
+      def self.ensure_interval_logging!
+        interval = ENV["DISCOURSE_LOG_SIDEKIQ_INTERVAL"]
+        return if !interval
+        @@interval_thread ||= Thread.new do
+          loop do
+            sleep interval.to_i
+            @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+          end
+        end
       end
     end
 
     include Sidekiq::Worker
-
-    def initialize
-      @db_duration = 0
-    end
 
     def log(*args)
       args.each do |arg|
@@ -81,16 +133,7 @@ module Jobs
       @db_duration || 0
     end
 
-    def ensure_db_instrumented
-      @@instrumented ||= begin
-        ActiveSupport::Notifications.subscribe('sql.active_record', Instrumenter.new)
-        true
-      end
-    end
-
     def perform(*args)
-      total_db_time = 0
-      ensure_db_instrumented
       opts = args.extract_options!.with_indifferent_access
 
       if SiteSetting.queue_jobs?
@@ -125,6 +168,7 @@ module Jobs
           exception = {}
 
           RailsMultisite::ConnectionManagement.with_connection(db) do
+            job_instrumenter = JobInstrumenter.new(job_class: self.class, opts: opts, db: db)
             begin
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
@@ -144,7 +188,7 @@ module Jobs
               exception[:message] = "While establishing database connection to #{db}"
               exception[:other] = { problem_db: db }
             ensure
-              total_db_time += Instrumenter.stats.duration_ms
+              job_instrumenter.stop(exception: exception)
             end
           end
 
@@ -164,7 +208,6 @@ module Jobs
       nil
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
-      @db_duration = total_db_time
     end
 
   end
