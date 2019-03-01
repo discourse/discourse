@@ -606,6 +606,7 @@ class TopicView
       @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?",
                                                   IgnoredUser.where(user_id: @user&.id).select(:ignored_user_id),
                                                   first_post_id)
+      @contains_gaps = true
     end
 
     # Filters
