@@ -12,8 +12,8 @@ describe IntroductionUpdater do
       topic
     end
 
-    it "finds the welcome topic by custom field" do
-      TopicCustomField.create(topic_id: welcome_topic.id, name: "is_welcome_topic", value: "true")
+    it "finds the welcome topic by site setting" do
+      SiteSetting.welcome_topic_id = welcome_topic.id
       expect(subject.get_summary).to eq(welcome_post_raw)
     end
 

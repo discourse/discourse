@@ -65,20 +65,6 @@ task "topics:apply_autoclose" => :environment do
   puts "", "Done"
 end
 
-def update_static_page_topic(locale, site_setting_key, title_key, body_key, params = {})
-  topic = Topic.find(SiteSetting.send(site_setting_key))
-
-  if (topic && post = topic.first_post)
-    post.revise(Discourse.system_user,
-                title: I18n.t(title_key, locale: locale),
-                raw: I18n.t(body_key, params.merge(locale: locale)))
-
-    puts "", "Topic for #{site_setting_key} updated"
-  else
-    puts "", "Topic for #{site_setting_key} not found"
-  end
-end
-
 desc "Update static topics (ToS, Privacy, Guidelines) with latest translated content"
 task "topics:update_static", [:locale] => [:environment] do |_, args|
   locale = args[:locale]&.to_sym
@@ -88,15 +74,5 @@ task "topics:update_static", [:locale] => [:environment] do |_, args|
     exit 1
   end
 
-  update_static_page_topic(locale, "tos_topic_id", "tos_topic.title", "tos_topic.body",
-                           company_name: SiteSetting.company_name.presence || "company_name",
-                           base_url: Discourse.base_url,
-                           contact_email: SiteSetting.contact_email.presence || "contact_email",
-                           governing_law: SiteSetting.governing_law.presence || "governing_law",
-                           city_for_disputes: SiteSetting.city_for_disputes.presence || "city_for_disputes")
-
-  update_static_page_topic(locale, "guidelines_topic_id", "guidelines_topic.title", "guidelines_topic.body",
-                           base_path: Discourse.base_path)
-
-  update_static_page_topic(locale, "privacy_topic_id", "privacy_topic.title", "privacy_topic.body")
+  SeedData::Topics.new(locale).update
 end
