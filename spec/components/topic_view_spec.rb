@@ -31,6 +31,50 @@ describe TopicView do
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
+  context "setup_filtered_posts" do
+    describe "filters posts with ignored users" do
+      let!(:user) { Fabricate(:user) }
+      let!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
+      let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
+      let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
+      let!(:post3) { Fabricate(:post, topic: topic, user: user) }
+
+      describe "when SiteSetting.ignore_user_enabled is false" do
+        it "does not filter out ignored user posts" do
+          SiteSetting.ignore_user_enabled = false
+
+          tv = TopicView.new(topic.id, evil_trout, print: true)
+          expect(tv.filtered_post_ids.size).to eq(3)
+          expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post3.id])
+        end
+      end
+
+      describe "when SiteSetting.ignore_user_enabled is true" do
+
+        before do
+          SiteSetting.ignore_user_enabled = true
+        end
+
+        it "filters out ignored user posts" do
+          tv = TopicView.new(topic.id, evil_trout, print: true)
+          expect(tv.filtered_post_ids.size).to eq(2)
+          expect(tv.filtered_post_ids).to match_array([post.id, post2.id])
+        end
+
+        describe "when an anonymous user made a post" do
+          let(:anonymous) { Fabricate(:anonymous) }
+          let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
+
+          it "filters out ignored user posts only" do
+            tv = TopicView.new(topic.id, evil_trout, print: true)
+            expect(tv.filtered_post_ids.size).to eq(3)
+            expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post4.id])
+          end
+        end
+      end
+    end
+  end
+
   context "chunk_size" do
     it "returns `chunk_size` by default" do
       expect(TopicView.new(topic.id, evil_trout).chunk_size).to eq(TopicView.chunk_size)
