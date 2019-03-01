@@ -12,7 +12,8 @@ import { findRawTemplate } from "discourse/lib/raw-templates";
 import { siteDir } from "discourse/lib/text-direction";
 import {
   determinePostReplaceSelection,
-  clipboardData
+  clipboardData,
+  safariHacksDisabled
 } from "discourse/lib/utilities";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
@@ -524,7 +525,7 @@ export default Ember.Component.extend({
       const $textarea = this.$("textarea.d-editor-input");
       const textarea = $textarea[0];
       const oldScrollPos = $textarea.scrollTop();
-      if (!this.capabilities.isIOS) {
+      if (!this.capabilities.isIOS || safariHacksDisabled()) {
         $textarea.focus();
       }
       textarea.selectionStart = from;
