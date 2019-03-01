@@ -89,6 +89,8 @@ QUnit.test("it skips a search depending on punctuations", async assert => {
   let allowedTerms = [
     "@sam sam", // double space is not allowed
     "@sam.sam",
+    "@sam_sam",
+    "@sam-sam",
     "@"
   ];
 
