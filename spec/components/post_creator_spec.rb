@@ -776,6 +776,22 @@ describe PostCreator do
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
     end
+
+    it 'does not increase posts count for small actions' do
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user))
+
+      3.times do
+        user = Fabricate(:user)
+        topic.invite(topic.user, user.username)
+        expect(topic.reload.posts_count).to eq(0)
+      end
+
+      Topic.reset_highest(topic.id)
+      expect(topic.reload.posts_count).to eq(0)
+
+      Topic.reset_all_highest!
+      expect(topic.reload.posts_count).to eq(0)
+    end
   end
 
   context "warnings" do
