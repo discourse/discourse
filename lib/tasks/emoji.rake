@@ -219,21 +219,36 @@ EMOJI_GROUPS ||= [
     "fullname" => "People",
     "tabicon" => "grinning",
     "sections" => [
-      "face-positive",
-      "face-neutral",
+      "face-smiling",
+      "face-affection",
+      "face-tongue",
+      "face-hand",
+      "face-neutral-skeptical",
+      "face-sleepy",
+      "face-unwell",
+      "face-hat",
+      "face-glasses",
+      "face-concerned",
       "face-negative",
-      "face-sick",
-      "face-role",
-      "face-fantasy",
+      "face-costume",
       "cat-face",
       "monkey-face",
-      "skin-tone",
+      "hand-fingers-open",
+      "hand-fingers-partial",
+      "hand-single-finger",
+      "hand-fingers-closed",
+      "hands",
+      "hand-prop",
+      "body-parts",
       "person",
+      "person-gesture",
       "person-role",
       "person-fantasy",
-      "person-gesture",
+      "person-resting",
       "family",
-      "body"
+      "person-symbol",
+      "skin-tone",
+      "hair-style"
     ]
   },
   {
@@ -262,6 +277,7 @@ EMOJI_GROUPS ||= [
       "food-vegetable",
       "food-prepared",
       "food-asian",
+      "food-marine",
       "food-sweet",
       "drink",
       "dishware"
@@ -286,7 +302,8 @@ EMOJI_GROUPS ||= [
       "sport",
       "game",
       "music",
-      "musical-instrument"
+      "musical-instrument",
+      "arts_&_crafts"
     ]
   },
   {
@@ -338,7 +355,8 @@ EMOJI_GROUPS ||= [
       "keycap",
       "alphanum",
       "geometric",
-      "time"
+      "time",
+      "gender"
     ]
   }
 ]
@@ -349,168 +367,14 @@ DEFAULT_SET ||= "twitter"
 
 # Replace the platform by another when downloading the image (accepts names or categories)
 EMOJI_IMAGES_PATCH ||= {
-  "windows" => {
-    "infinity" => "twitter",
-    "pirate_flag" => "twitter"
-  },
+  "windows" => { },
   "apple" => {
-    "snowboarder" => "twitter",
-    "smiling_face_with_three_Hearts" => "twitter",
-    "hot_face" => "twitter",
-    "cold_face" => "twitter",
-    "partying_face" => "twitter",
-    "woozy_face" => "twitter",
-    "pleading_face" => "twitter",
-    "man_red_haired" => "twitter",
-    "man_curly_haired" => "twitter",
-    "man_white_haired" => "twitter",
-    "man_bald" => "twitter",
-    "woman_red_haired" => "twitter",
-    "woman_curly_haired" => "twitter",
-    "woman_white_haired" => "twitter",
-    "woman_bald" => "twitter",
-    "superhero" => "twitter",
-    "man_superhero" => "twitter",
-    "woman_superhero" => "twitter",
-    "supervillain" => "twitter",
-    "woman_supervillain" => "twitter",
-    "man_supervillain" => "twitter",
-    "leg" => "twitter",
-    "foot" => "twitter",
-    "bone" => "twitter",
-    "tooth" => "twitter",
-    "goggles" => "twitter",
-    "lab_coat" => "twitter",
-    "hiking_boot" => "twitter",
-    "flat_shoe" => "twitter",
-    "raccoon" => "twitter",
-    "llama" => "twitter",
-    "hippopotamus" => "twitter",
-    "kangaroo" => "twitter",
-    "badger" => "twitter",
-    "swan" => "twitter",
-    "peacock" => "twitter",
-    "parrot" => "twitter",
-    "lobster" => "twitter",
-    "mosquito" => "twitter",
-    "microbe" => "twitter",
-    "mango" => "twitter",
-    "leafy_green" => "twitter",
-    "bagel" => "twitter",
-    "salt" => "twitter",
-    "moon_cake" => "twitter",
-    "cupcake" => "twitter",
-    "compass" => "twitter",
-    "brick" => "twitter",
-    "skateboard" => "twitter",
-    "luggage" => "twitter",
-    "firecracker" => "twitter",
-    "red_gift_envelope" => "twitter",
-    "flying_disc" => "twitter",
-    "lacrosse" => "twitter",
-    "nazar_amulet" => "twitter",
-    "jigsaw" => "twitter",
-    "teddy_bear" => "twitter",
-    "chess_pawn" => "twitter",
-    "thread" => "twitter",
-    "yarn" => "twitter",
-    "abacus" => "twitter",
-    "receipt" => "twitter",
-    "toolbox" => "twitter",
-    "magnet" => "twitter",
-    "test_tube" => "twitter",
-    "petri_dish" => "twitter",
-    "dna" => "twitter",
-    "lotion_bottle" => "twitter",
-    "safety_pin" => "twitter",
-    "broom" => "twitter",
-    "basket" => "twitter",
-    "roll_of_toilet_paper" => "twitter",
-    "soap" => "twitter",
-    "sponge" => "twitter",
-    "fire_extinguisher" => "twitter",
-    "infinity" => "twitter",
-    "pirate_flag" => "twitter"
+    "snowboarder" => "twitter"
   },
   "emoji_one" => {
     "country-flag" => "twitter"
   },
   "facebook" => {
-    "smiling_face_with_three_Hearts" => "twitter",
-    "hot_face" => "twitter",
-    "cold_face" => "twitter",
-    "partying_face" => "twitter",
-    "woozy_face" => "twitter",
-    "pleading_face" => "twitter",
-    "man_red_haired" => "twitter",
-    "man_curly_haired" => "twitter",
-    "man_white_haired" => "twitter",
-    "man_bald" => "twitter",
-    "woman_red_haired" => "twitter",
-    "woman_curly_haired" => "twitter",
-    "woman_white_haired" => "twitter",
-    "woman_bald" => "twitter",
-    "man_superhero" => "twitter",
-    "woman_superhero" => "twitter",
-    "woman_supervillain" => "twitter",
-    "man_supervillain" => "twitter",
-    "leg" => "twitter",
-    "foot" => "twitter",
-    "bone" => "twitter",
-    "tooth" => "twitter",
-    "goggles" => "twitter",
-    "lab_coat" => "twitter",
-    "hiking_boot" => "twitter",
-    "flat_shoe" => "twitter",
-    "raccoon" => "twitter",
-    "llama" => "twitter",
-    "hippopotamus" => "twitter",
-    "kangaroo" => "twitter",
-    "badger" => "twitter",
-    "swan" => "twitter",
-    "peacock" => "twitter",
-    "parrot" => "twitter",
-    "lobster" => "twitter",
-    "mosquito" => "twitter",
-    "microbe" => "twitter",
-    "mango" => "twitter",
-    "leafy_green" => "twitter",
-    "bagel" => "twitter",
-    "salt" => "twitter",
-    "moon_cake" => "twitter",
-    "cupcake" => "twitter",
-    "compass" => "twitter",
-    "brick" => "twitter",
-    "skateboard" => "twitter",
-    "luggage" => "twitter",
-    "firecracker" => "twitter",
-    "red_gift_envelope" => "twitter",
-    "softball" => "twitter",
-    "flying_disc" => "twitter",
-    "lacrosse" => "twitter",
-    "nazar_amulet" => "twitter",
-    "jigsaw" => "twitter",
-    "teddy_bear" => "twitter",
-    "chess_pawn" => "twitter",
-    "thread" => "twitter",
-    "yarn" => "twitter",
-    "abacus" => "twitter",
-    "receipt" => "twitter",
-    "toolbox" => "twitter",
-    "magnet" => "twitter",
-    "test_tube" => "twitter",
-    "petri_dish" => "twitter",
-    "dna" => "twitter",
-    "lotion_bottle" => "twitter",
-    "safety_pin" => "twitter",
-    "broom" => "twitter",
-    "basket" => "twitter",
-    "roll_of_toilet_paper" => "twitter",
-    "soap" => "twitter",
-    "sponge" => "twitter",
-    "fire_extinguisher" => "twitter",
-    "infinity" => "twitter",
-    "pirate_flag" => "twitter"
   }
 }
 
@@ -767,12 +631,12 @@ class TestEmojiUpdate < MiniTest::Test
   end
 
   def test_default_set
-    original_image = image_path("twitter", "macau")
-
-    alias_image = image_path("emoji_one", "macau")
+    original_image = image_path("twitter", "snowboarder")
+    alias_image = image_path("apple", "snowboarder")
     assert_equal File.size(original_image), File.size(alias_image)
 
-    alias_image = image_path("win10", "macau")
+    original_image = image_path("twitter", "macau")
+    alias_image = image_path("emoji_one", "macau")
     assert_equal File.size(original_image), File.size(alias_image)
   end
 end
