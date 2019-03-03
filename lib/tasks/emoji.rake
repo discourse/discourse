@@ -367,15 +367,8 @@ DEFAULT_SET ||= "twitter"
 
 # Replace the platform by another when downloading the image (accepts names or categories)
 EMOJI_IMAGES_PATCH ||= {
-  "windows" => { },
-  "apple" => {
-    "snowboarder" => "twitter"
-  },
-  "emoji_one" => {
-    "country-flag" => "twitter"
-  },
-  "facebook" => {
-  }
+  "apple" => { "snowboarder" => "twitter" },
+  "emoji_one" => { "country-flag" => "twitter" }
 }
 
 EMOJI_SETS ||= {
