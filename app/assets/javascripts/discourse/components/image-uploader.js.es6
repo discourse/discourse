@@ -15,7 +15,10 @@ export default Ember.Component.extend(UploadMixin, {
 
   willDestroyElement() {
     this._super(...arguments);
-    $("a.lightbox").magnificPopup("close");
+    const elem = $("a.lightbox");
+    if (elem && typeof elem.magnificPopup === "function") {
+      $("a.lightbox").magnificPopup("close");
+    }
   },
 
   @computed("imageUrl")
