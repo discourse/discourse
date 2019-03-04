@@ -64,8 +64,19 @@ module Jobs
         write_to_log
       end
 
-      def logger
+      def self.raw_log(message)
         @@logger ||= Logger.new("#{Rails.root}/log/sidekiq.log")
+        @@log_queue ||= Queue.new
+        unless @log_thread&.alive?
+          @@log_thread = Thread.new do
+            begin
+              loop { @@logger << @@log_queue.pop }
+            rescue Exception => e
+              Discourse.warn_exception(e, message: "Sidekiq logging thread terminated unexpectedly")
+            end
+          end
+        end
+        @@log_queue.push(message)
       end
 
       def current_duration
@@ -76,7 +87,7 @@ module Jobs
         return unless enabled?
         @data["@timestamp"] = Time.now
         @data["duration"] = current_duration if @data["status"] == "pending"
-        logger << "#{@data.to_json}\n"
+        self.class.raw_log("#{@data.to_json}\n")
       end
 
       def enabled?
