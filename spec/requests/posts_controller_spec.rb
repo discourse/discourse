@@ -393,6 +393,15 @@ describe PostsController do
         post.reload
         expect(post.raw).to eq('edited body')
       end
+
+      it "won't update bump date if post is a whisper" do
+        post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
+
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(200)
+
+        expect(post.topic.reload.bumped_at).to be < post.created_at
+      end
     end
 
     it 'can not change category to a disallowed category' do
