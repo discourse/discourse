@@ -87,9 +87,13 @@ module Jobs
         interval = ENV["DISCOURSE_LOG_SIDEKIQ_INTERVAL"]
         return if !interval
         @@interval_thread ||= Thread.new do
-          loop do
-            sleep interval.to_i
-            @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+          begin
+            loop do
+              sleep interval.to_i
+              @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+            end
+          rescue Exception => e
+            Discourse.warn_exception(e, message: "Sidekiq interval logging thread terminated unexpectedly")
           end
         end
       end
