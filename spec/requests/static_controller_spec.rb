@@ -96,12 +96,22 @@ describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response" do
+      it "should return the right response for /faq" do
         get "/faq"
 
         expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('js.faq'))
         expect(response.body).to include("<title>FAQ - Discourse</title>")
+      end
+
+      it "should return the right response for /signup" do
+        get "/signup"
+        expect(response.status).to eq(200)
+      end
+
+      it "should return the right response for /password-reset" do
+        get "/password-reset"
+        expect(response.status).to eq(200)
       end
     end
 
