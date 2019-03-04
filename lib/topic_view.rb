@@ -603,10 +603,12 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     if SiteSetting.ignore_user_enabled
-      @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?",
-                                                  IgnoredUser.where(user_id: @user&.id).select(:ignored_user_id),
-                                                  first_post_id)
-      @contains_gaps = true
+      ignored_user_ids = IgnoredUser.where(user_id: @user&.id).pluck(:ignored_user_id)
+
+      if ignored_user_ids.present?
+        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?", ignored_user_ids, first_post_id)
+        @contains_gaps = true
+      end
     end
 
     # Filters
