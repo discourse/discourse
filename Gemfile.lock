@@ -287,6 +287,9 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.6)
       pry (>= 0.10.4)
+    pry-remote (0.1.8)
+      pry (~> 0.9)
+      slop (~> 3.0)
     public_suffix (3.0.3)
     puma (3.12.0)
     r2 (0.2.7)
@@ -520,6 +523,7 @@ DEPENDENCIES
   pg
   pry-nav
   pry-rails
+  pry-remote
   puma
   r2 (~> 0.2.5)
   rack-mini-profiler
