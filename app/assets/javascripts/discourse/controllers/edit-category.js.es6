@@ -59,7 +59,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   saveLabel: function() {
     if (this.get("saving")) return "saving";
-    if (this.get("model.isUncategorizedCategory")) return "save";
     return this.get("model.id") ? "category.save" : "category.create";
   }.property("saving", "model.id"),
 

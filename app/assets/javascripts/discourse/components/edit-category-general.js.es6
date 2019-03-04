@@ -9,6 +9,11 @@ export default buildCategoryPanel("general", {
   canSelectParentCategory: Ember.computed.not(
     "category.isUncategorizedCategory"
   ),
+  uncategorizedSiteSettingLink:
+    Discourse.BaseUri +
+    "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics",
+  customizeTextContentLink:
+    Discourse.BaseUri + "/admin/customize/site_texts?q=uncategorized",
 
   // background colors are available as a pipe-separated string
   @computed
