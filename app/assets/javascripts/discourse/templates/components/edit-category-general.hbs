@@ -1,3 +1,10 @@
+{{#if category.isUncategorizedCategory}}
+  <p class="warning">
+    {{d-icon "warning"}}
+    {{{i18n 'category.uncategorized_general_warning' settingLink=uncategorizedSiteSettingLink customizeLink=customizeTextContentLink}}}
+  </p>
+{{/if}}
+
 <form>
   {{category-name-fields category=category tagName=""}}
 
