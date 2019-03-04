@@ -195,11 +195,6 @@ export default Ember.Component.extend(
         this._close();
       },
 
-      ignoreUser() {
-        this.get("user").ignore();
-        this._close();
-      },
-
       watchUser() {
         this.get("user").watch();
         this._close();
