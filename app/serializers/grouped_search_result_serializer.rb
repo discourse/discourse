@@ -3,6 +3,7 @@ class GroupedSearchResultSerializer < ApplicationSerializer
   has_many :users, serializer: SearchResultUserSerializer
   has_many :categories, serializer: BasicCategorySerializer
   has_many :tags, serializer: TagSerializer
+  has_many :groups, serializer: BasicGroupSerializer
   attributes :more_posts, :more_users, :more_categories, :term, :search_log_id, :more_full_page_results, :can_create_topic
 
   def search_log_id
