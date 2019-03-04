@@ -826,7 +826,7 @@ export default Ember.Component.extend({
           $buttonWrapper.append($scaleButton);
 
           if (buttonIndex !== buttonScales.length - 1) {
-            $buttonWrapper.append(`<span class="separator"> | </span>`);
+            $buttonWrapper.append(`<span class="separator"> • </span>`);
           }
         });
       }
