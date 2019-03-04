@@ -563,7 +563,7 @@ class ImportScripts::Base
     post_creator = PostCreator.new(user, opts)
     post = post_creator.create
     post_create_action.try(:call, post) if post
-    post_creator.errors.full_messages.empty? ? post : post_creator.errors.full_messages
+    if !post || post_creator.errors&.length > 0 ? post : post_creator.errors.full_messages
   end
 
   def create_upload(user_id, path, source_filename)
