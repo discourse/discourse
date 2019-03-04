@@ -30,12 +30,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   title: function() {
     if (this.get("model.id")) {
-      return I18n.t("category.edit_long") + " : " + this.get("model.name");
+      return I18n.t("category.edit_dialog_title", {
+        categoryName: this.get("model.name")
+      });
     }
-    return (
-      I18n.t("category.create") +
-      (this.get("model.name") ? " : " + this.get("model.name") : "")
-    );
+    return I18n.t("category.create");
   }.property("model.id", "model.name"),
 
   titleChanged: function() {
