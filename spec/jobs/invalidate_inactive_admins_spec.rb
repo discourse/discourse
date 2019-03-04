@@ -37,7 +37,6 @@ describe Jobs::InvalidateInactiveAdmins do
       context 'with social logins' do
         before do
           GithubUserInfo.create!(user_id: not_seen_admin.id, screen_name: 'bob', github_user_id: 100)
-          InstagramUserInfo.create!(user_id: not_seen_admin.id, screen_name: 'bob', instagram_user_id: 'examplel123123')
           UserOpenId.create!(url: 'https://me.yahoo.com/id/123' , user_id: not_seen_admin.id, email: 'bob@example.com', active: true)
           GoogleUserInfo.create!(user_id: not_seen_admin.id, google_user_id: 100, email: 'bob@example.com')
         end
@@ -45,7 +44,6 @@ describe Jobs::InvalidateInactiveAdmins do
         it 'removes the social logins' do
           subject
           expect(GithubUserInfo.where(user_id: not_seen_admin.id).exists?).to eq(false)
-          expect(InstagramUserInfo.where(user_id: not_seen_admin.id).exists?).to eq(false)
           expect(GoogleUserInfo.where(user_id: not_seen_admin.id).exists?).to eq(false)
           expect(UserOpenId.where(user_id: not_seen_admin.id).exists?).to eq(false)
         end
