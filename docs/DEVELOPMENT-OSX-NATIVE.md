@@ -4,7 +4,7 @@ These instructions assume you have read and understood the **[Discourse Advanced
 
 OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](https://www.discourse.org)** in your native environment. These instructions should get you there.
 
-Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.5+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
+Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.6+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
 
 ## Quick Setup
 
@@ -76,11 +76,11 @@ If you do already have RVM installed, this should make sure everything is up to 
     # If autolibs is set to 0-2, it will give an error for things that are missing, instead.
     rvm requirements
 
-Either way, you'll now want to install Ruby 2.5+ (we recommend 2.5.2 or higher).
+Either way, you'll now want to install Ruby 2.6+ (we recommend 2.6.1 or higher).
 
     # Now, install Ruby
-    rvm install 2.5.3
-    rvm use 2.5.3 --default # Careful with this if you're already developing Ruby
+    rvm install 2.6.1
+    rvm use 2.6.1 --default # Careful with this if you're already developing Ruby
 
 ## Git
 
