@@ -2,10 +2,7 @@ import PreferencesTabController from "discourse/mixins/preferences-tab-controlle
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend(PreferencesTabController, {
-  saveAttrNames: [
-    "muted_usernames",
-    "ignored_usernames"
-  ],
+  saveAttrNames: ["muted_usernames", "ignored_usernames"],
 
   actions: {
     save() {
