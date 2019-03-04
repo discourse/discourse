@@ -39,14 +39,16 @@
   </div>
 {{/if}}
 
-<div class="control-group muting">
-  <label class="control-label">{{i18n 'user.users'}}</label>
-  <div class="controls category-controls">
-    <label>{{d-icon "d-muted" class="muted icon"}} {{i18n 'user.muted_users'}}</label>
-    {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+{{#unless siteSettings.ignore_user_enabled}}
+  <div class="control-group muting">
+    <label class="control-label">{{i18n 'user.users'}}</label>
+    <div class="controls category-controls">
+      <label>{{d-icon "d-muted" class="muted icon"}} {{i18n 'user.muted_users'}}</label>
+      {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+    </div>
+    <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
   </div>
-  <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
-</div>
+{{/unless}}
 
 {{plugin-outlet name="user-preferences-notifications" args=(hash model=model save=(action "save"))}}
 

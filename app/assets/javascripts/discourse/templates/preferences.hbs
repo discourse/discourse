@@ -25,6 +25,13 @@
         {{i18n 'user.preferences_nav.categories'}}
       {{/link-to}}
     </li>
+    {{#if siteSettings.ignore_user_enabled}}
+      <li class='indent nav-users'>
+        {{#link-to 'preferences.users'}}
+          {{i18n 'user.preferences_nav.users'}}
+        {{/link-to}}
+      </li>
+    {{/if}}
     {{#if siteSettings.tagging_enabled}}
       <li class='indent nav-tags'>
         {{#link-to 'preferences.tags'}}
