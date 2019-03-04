@@ -779,8 +779,8 @@ describe Category do
         expect(subcategory.valid?).to eq(true)
       end
 
-      it "is valid if no permissions are set on parent" do
-        parent_category.set_permissions(everyone: :full)
+      it "is valid if everyone has access to parent category" do
+        parent_category.set_permissions(everyone: :readonly)
         parent_category.save!
 
         subcategory.set_permissions(group => :create_post, group2 => :create_post)
@@ -814,10 +814,10 @@ describe Category do
 
       end
 
-      it "is valid if no permissions set on parent" do
+      it "is valid if everyone has access to parent category" do
         subcategory.set_permissions(group => :create_post)
         subcategory.save
-        parent_category.set_permissions(everyone: :full)
+        parent_category.set_permissions(everyone: :readonly)
 
         expect(parent_category.valid?).to eq(true)
       end

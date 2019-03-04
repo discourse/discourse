@@ -36,7 +36,6 @@ it:
   remove_posts_deleted_by_author: "Cancellato dall'autore"
   redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
   themes:
-    bad_color_scheme: "Impossibile aggiornare il tema, lo schema colori non è valido"
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
     errors:
       component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
@@ -55,7 +54,6 @@ it:
       number_value_not_valid_min: "Deve essere maggiore o uguale a %{min}."
       number_value_not_valid_max: "Deve essere minore o uguale a %{max}."
       string_value_not_valid: "La nuova lunghezza del valore non rientra nell'intervallo consentito."
-      string_value_not_valid_min_max: "Deve essere compreso tra %{min} e %{max} caratteri."
       string_value_not_valid_min: "Deve contenere almeno %{min} caratteri."
       string_value_not_valid_max: "Deve contenere al massimo %{max} caratteri."
   emails:
@@ -1264,7 +1262,6 @@ it:
     attachment_filename_blacklist: "Elenco delle parole chiave utilizzate per mettere in lista nera gli allegati in base al nome del file."
     enable_forwarded_emails: "[BETA] Consenti agli utenti di creare un argomento inviando una email."
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
-    private_email: "Non includere contenuti da messaggi o argomenti nelle email per una maggiore privacy."
     manual_polling_enabled: "Push delle email utilizzando le API per le risposte email."
     pop3_polling_enabled: "Cerca le risposte via email tramite POP3."
     pop3_polling_ssl: "Usa SSL per la connessione al server POP3 (raccomandato)."
@@ -1380,7 +1377,6 @@ it:
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
     max_api_keys_per_user: "Numero massimo di chiavi API utente per utente"
     min_trust_level_for_user_api_key: "Livello di esperienza richiesto per la generazione di chiavi API utente"
-    allowed_user_api_auth_redirects: "URL consentito per il reindirizzamento di autenticazione per le chiavi API utente"
     allowed_user_api_push_urls: "URL consentiti per il push del server alla API utente"
     tagging_enabled: "Abilitare le etichette per gli argomenti?"
     min_trust_to_create_tag: "Il livello di esperienza minimo per creare un'etichetta."
@@ -1451,10 +1447,6 @@ it:
     errors:
       different_topics: "I messaggi appartenenti a diversi argomenti non possono essere fusi."
       different_users: "I messaggi appartenenti a diversi utenti non possono essere fusi."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Un messaggio è stato spostato in un nuovo %{entity}: %{topic_link}"
-      other: "%{count} messaggi sono stati spostati in un nuovo %{entity}: %{topic_link}"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "Questo messaggio è stato chiuso automaticamente per aver raggiunto il limite massimo di 1 risposta."
@@ -2301,7 +2293,6 @@ it:
     spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio (%{domain}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "Base"
-    dark: "Combinazione Scura"
     light_theme_name: "Chiaro"
     dark_theme_name: "Scuro"
   about: "Informazioni su"
@@ -2814,14 +2805,6 @@ it:
         title: "Società"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            description: "Preferisci iniziare una combinazione di colori chiara o scura? È possibile personalizzare ulteriormente l'aspetto del tuo sito tramite Amministrazione, Personalizza."
-            choices:
-              default:
-                label: "Semplice Chiaro"
-              dark:
-                label: "Semplice Scuro"
       logos:
         title: "Loghi"
       icons:

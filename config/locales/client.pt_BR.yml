@@ -109,12 +109,7 @@ pt_BR:
       next_month: "Mês Seguinte"
       placeholder: data
     share:
-      topic: "compartilhe o link desse tópico"
-      post: "mensagem #%{postNumber}"
       close: "fechar"
-      twitter: "compartilhe este link no Twitter"
-      facebook: "compartilhe este link no Facebook"
-      email: "enviar esse link para um email"
     action_codes:
       public_topic: "tornou este tópico público em %{when}"
       private_topic: "transformar esse tópico em uma mensagem pessoal %{when}"
@@ -464,7 +459,6 @@ pt_BR:
           description: "Você será notificado se alguém mencionar seu @name ou responder a você."
         muted:
           title: "Silenciado"
-          description: "Você nunca será notificado sobre novos tópicos nesse grupo."
       flair_url: "Imagem do Avatar Flair"
       flair_url_placeholder: "(Opcional) URL da imagem ou classe do Font Awesome"
       flair_bg_color: "Cor de Fundo do Avatar Flair"
@@ -2073,7 +2067,6 @@ pt_BR:
       default_top_period: "Período Superior Padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nessa categoria"
       edit_permissions: "Editar Permissões"
-      add_permission: "Adicionar Permissões"
       require_topic_approval: "Requer aprovação do moderador de todos os novos tópicos"
       require_reply_approval: "Requer aprovação do moderador de todas as novas respostas"
       this_year: "este ano"
@@ -2875,7 +2868,6 @@ pt_BR:
         save: "Guardar"
         new: "Novo"
         new_style: "Novo Estilo"
-        import: "Importar"
         delete: "Apagar"
         delete_confirm: "Apagar este tema?"
         color: "Cor"
@@ -2894,7 +2886,6 @@ pt_BR:
           revert: "Reverter Alterações"
           revert_confirm: "Tem certeza de que deseja reverter as alterações?"
         theme:
-          import_theme: "Importar Tema"
           customize_desc: "Personalizar:"
           title: "Temas"
           long_title: "Alterar cores, CSS e conteúdo HTML do seu site"
@@ -2907,7 +2898,6 @@ pt_BR:
           preview: "Prévia"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
-          color_scheme: "Esquema de cores"
           color_scheme_select: "Selecione as cores a serem usadas pelo tema"
           custom_sections: "Seções personalizadas:"
           theme_components: "Componentes do Tema"
@@ -2965,20 +2955,11 @@ pt_BR:
             text: "YAML"
             title: "Definir configurações de tema no formato YAML"
         colors:
-          select_base:
-            title: "Selecione o esquema de cores base"
-            description: "Esquema base:"
           title: "Cores"
-          edit: "Editar esquemas de cores"
-          long_title: "Esquema de Cores"
-          about: "Modifique as cores usadas pelos seus temas. Crie um novo esquema de cores para começar."
-          new_name: "Novo Esquema de Cor"
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Apagar esse esquema de cor?"
           undo: "desfazer"
           undo_title: "Desfazer suas mudanças para esta cor desde a última vez que foi salvo."
           revert: "reverter"
-          revert_title: "Apagar esta cor do projeto padrão de cores do Discourse."
           primary:
             name: "primário"
             description: "Maioria dos textos, ícones e bordas."

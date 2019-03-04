@@ -355,7 +355,7 @@ fi:
           Höh, en näe viittauksia alueisiin. Huomioi, ettei `#` saa olla rivinsä ensimmäinen merkki. Kopioisitko tämän seuraavaan vastaukseesi?
 
           ```text
-          I can create a category link via #
+          Voin luoda aluelinkin käyttäen risuaitaa #
           ```
         reply: |-
           Erinomaista! Muista, että tämä toimii alueiden lisäksi myös tunnisteille, jos ne ovat käytössä täällä.

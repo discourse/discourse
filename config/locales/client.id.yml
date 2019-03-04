@@ -89,12 +89,7 @@ id:
       next_month: "Bulan Depan"
       placeholder: tanggal
     share:
-      topic: "share link ke topik ini"
-      post: "post #%{postNumber}"
       close: "tutup"
-      twitter: "share link ini di Twitter"
-      facebook: "share link ini di Facebook"
-      email: "kirim link ini melalui email"
     action_codes:
       public_topic: "membuat topik ini umum %{when}"
       private_topic: "Jadikan topik ini sebagai pesan pribadi"
@@ -373,7 +368,6 @@ id:
           description: "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
         muted:
           title: "meredam"
-          description: "Anda tidak akan pernah diberitahu apapun tentang topik baru pada kelompok ini."
     user_action_groups:
       "1": "Likes Diberikan"
       "2": "Likes Diterima"

@@ -13,8 +13,84 @@ sl:
         two: "glasovalca"
         few: "glasovalci"
         other: "glasovalci"
+      total_votes:
+        one: "vseh glasov"
+        two: "vseh glasov"
+        few: "vseh glasov"
+        other: "vseh glasov"
+      average_rating: "Povprečna ocena: <strong>%{average}</strong>."
+      public:
+        title: "Glasovi so <strong>javni</strong>."
+      results:
+        vote:
+          title: "Rezultati bodo vidni na <strong>glasovnici</strong>."
+        closed:
+          title: "Rezultati bodo prikazani, ko se glasovanje <strong>zapre</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Izberite vsaj <strong>%{count}</strong> opcijo"
+            two: "Izberite vsaj <strong>%{count}</strong> opciji"
+            few: "Izberite vsaj <strong>%{count}</strong> opcije"
+            other: "Izberite vsaj <strong>%{count}</strong> opcij"
+          up_to_max_options:
+            one: "Izberite do <strong>%{count}</strong> opcijo"
+            two: "Izberite do <strong>%{count}</strong> opciji"
+            few: "Izberite do <strong>%{count}</strong> opcije"
+            other: "Izberite do <strong>%{count}</strong> opcij"
+          x_options:
+            one: "Izberite <strong>%{count}</strong> opcijo"
+            two: "Izberite <strong>%{count}</strong> opciji"
+            few: "Izberite <strong>%{count}</strong> opcije"
+            other: "Izberite <strong>%{count}</strong> opcij"
+          between_min_and_max_options: "Izberite med <strong>%{min}</strong> in <strong>%{max}</strong> opcijami"
       cast-votes:
+        title: "Oddajte svoj glas"
         label: "Glasuj!"
       show-results:
         title: "Prikaži rezultate ankete"
         label: "Prikaži rezultate"
+      hide-results:
+        title: "Nazaj na vašo glasovnico"
+        label: "Skrij rezultate"
+      open:
+        title: "Odpri anketo"
+        label: "Odpri"
+        confirm: "Ali ste prepričani da hočete odpreti to anketo?"
+      close:
+        title: "Zapri anketo"
+        label: "Zapri"
+        confirm: "Ali ste prepričani da hočete zapreti to anketo?"
+      automatic_close:
+        closes_in: "se zapre v <strong>%{timeLeft}</strong>"
+        age: "zaprta <strong>%{age}</strong>"
+      error_while_toggling_status: "Prišlo je do napake med spreminjanjem statusa te ankete."
+      error_while_casting_votes: "Prišlo je do napake med oddajo vašega glasu."
+      error_while_fetching_voters: "Prišlo je do napake med prikazom glasovalcev."
+      ui_builder:
+        title: Ustvari anketo
+        insert: Vstavi anketo
+        help:
+          options_count: Vnesite vsaj dve opciji
+          invalid_values: Najmanjša vrednost mora biti manjša od največje vrednosti.
+          min_step_value: Najmanjša vrednost koraka je 1.
+        poll_type:
+          label: Tip
+          regular: En odgovor
+          multiple: Več odgovorov
+          number: Številčna ocena
+        poll_result:
+          label: Rezultati
+          always: Vedno vidni
+          vote: Po glasovanju
+          closed: Ko se zapre
+        poll_config:
+          max: Največ
+          min: Najmanj
+          step: Korak
+        poll_public:
+          label: Pokaži glasovalce
+        poll_options:
+          label: Vnesi en glasovalno opcijo na vrstico
+        automatic_close:
+          label: Samodejno zapri anketo

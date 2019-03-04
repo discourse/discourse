@@ -89,12 +89,7 @@ zh_TW:
       next_month: "下個月"
       placeholder: 日期
     share:
-      topic: "在此話題內分享連結"
-      post: "文章 #%{postNumber}"
       close: "關閉"
-      twitter: "在 Twitter 分享此連結"
-      facebook: "在 Facebook 分享此連結"
-      email: "以電子郵件分享此連結"
     action_codes:
       public_topic: "於 %{when}發佈這個話題"
       private_topic: "於 %{when} 私訊這個話題"
@@ -441,7 +436,6 @@ zh_TW:
           description: "當有人通過 @名字 提及你時或回覆你時你會收到通知。"
         muted:
           title: "靜音"
-          description: "你將不會再收到任何與此群組新討論話題有關的通知。"
       flair_url: "頭像圖片"
       flair_url_placeholder: "（可選）圖片網站或 Font Awesome class"
       flair_bg_color: "頭像背景顏色"
@@ -1770,6 +1764,17 @@ zh_TW:
           side_by_side_markdown:
             title: "顯示原始碼左右比對"
             button: "原始"
+      raw_email:
+        displays:
+          raw:
+            title: "顯示原始電子郵件"
+            button: "原始"
+          text_part:
+            title: "顯示電子郵件部分文字"
+            button: "文字"
+          html_part:
+            title: "顯示電子郵件HTML格式"
+            button: "HTML"
     category:
       can: "可以&hellip; "
       none: "( 無分類 )"
@@ -1820,7 +1825,6 @@ zh_TW:
       all_topics_wiki: "新的主題預設為共筆。"
       allow_badges_label: "允許授予本分類的徽章"
       edit_permissions: "編輯權限"
-      add_permission: "新增權限"
       this_year: "今年"
       position: "位置"
       default_position: "預設的位置"
@@ -2446,7 +2450,6 @@ zh_TW:
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
-        import: "匯入"
         delete: "刪除"
         delete_confirm: "刪除這個佈景？"
         color: "顏色"
@@ -2461,18 +2464,13 @@ zh_TW:
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
         theme:
-          import_theme: "匯入佈景"
           title: "佈景"
         colors:
           title: "顏色"
-          long_title: "顏色樣式"
-          new_name: "新的配色樣式"
           copy_name_prefix: "複製於"
-          delete_confirm: "刪除此顏色樣式？"
           undo: "復原"
           undo_title: "復原你前次對此顏色所做的修改"
           revert: "回復"
-          revert_title: "重設此顏色為 Discourse 的預設顏色樣式"
           primary:
             name: "一級"
             description: "大部分的文字、圖示和邊框"

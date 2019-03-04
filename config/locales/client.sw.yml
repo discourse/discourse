@@ -109,12 +109,7 @@ sw:
       next_month: "Mwezi Ujao"
       placeholder: tarehe
     share:
-      topic: "Andika kiungo shiriki cha mada hii"
-      post: "taarifa #%{postNumber}"
       close: "funga"
-      twitter: "Shiriki hiki kiungo kwenye Twitter"
-      facebook: "Shiriki hiki kiungo kwenye Facebook"
-      email: "tuma kiungo hiki kwenye barua pepe"
     action_codes:
       public_topic: "ameifanya hii mada isiwe ya siri %{when}"
       private_topic: "ameifanya hii mada ujumbe binafsi %{when}"
@@ -242,7 +237,9 @@ sw:
         unbookmark: "Bofya kuondoa mialamisho yote kwenye mada hii"
     bookmarks:
       created: "umealamisha chapisho hili"
+      not_bookmarked: "alamisha chapisho hili"
       remove: "Ondoa Alamisho"
+      confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
     drafts:
       new_topic: "Mswadajaribio wa mada mpya"
       new_private_message: "Mswadajaribio wa ujumbe binafsi mpya"
@@ -262,6 +259,7 @@ sw:
     saved: "Imehifadhiwa!"
     upload: "Pakia"
     uploading: "Inapakiwa..."
+    uploading_filename: "Inapakia {{filename}}..."
     uploaded: "Imepakiwa!"
     pasting: "Inabandika..."
     enable: "Ruhusu"
@@ -459,7 +457,6 @@ sw:
           description: "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
         muted:
           title: "Imenyamazishwa"
-          description: "Hautajulishwa chochote kuhusu mada mpya kwenye kikundi hichi."
       flair_url: "Picha ya mtumiaji"
       flair_url_placeholder: "(Hiari) URL ya Picha au Font Awesome class"
       flair_bg_color: "Rangi ya nyuma kwenye picha ya mtumiaji"
@@ -517,6 +514,7 @@ sw:
       topics_entered: "mada zilizoingizwa"
       post_count: "# machapisho"
       confirm_delete_other_accounts: "Una uhakika unataka kufuta hizi akaunti?"
+      powered_by: "inatumia <a href='https://maxmind.com'>MaxMindDB</a>"
     user_fields:
       none: "(Chagua chaguo moja)"
     user:
@@ -1969,7 +1967,6 @@ sw:
       default_view: "Orodha ya Mada Chaguo Msingi:"
       allow_badges_label: "Ruhusu beji hizi zitolewe kwenye kategoria hii:"
       edit_permissions: "Hariri Vibali"
-      add_permission: "Ongeza Kibali"
       this_year: "mwaka huu"
       position: "Nafasi"
       default_position: "Chaguo Msingi la Nafasi"
@@ -2147,6 +2144,7 @@ sw:
         this_week: "Wiki"
         today: "Leo"
         other_periods: "tazama juu"
+    browser_update: 'Kwa bahati mbaya, <a href="https://www.discourse.org/faq/#browser">kivinjari unachotumia kimepita mda na hakiwezi kufungua tovuti hii</a>. Tafadhali <a href="https://browsehappy.com">sasisha kivinjari chako</a>.'
     permission_types:
       full: "Tengeneza / Jibu / Angalia"
       create_post: "Jibu / Angalia"
@@ -2623,6 +2621,7 @@ sw:
             label: "Chelezo"
             title: "Tengeneza chelezo"
             confirm: "Unataka kuanzisha chelezo jipya?"
+            without_uploads: "Ndio (usiweke vilivyopakiwa)"
           download:
             label: "Pakua"
             title: "Tuma barua pepe yenye kiungo cha upakuaji"
@@ -2662,7 +2661,6 @@ sw:
         save: "Hifadhi"
         new: "Mpya"
         new_style: "Style Mpya"
-        import: "Ingiza"
         delete: "Ondoa"
         delete_confirm: "Ondoa mandhari hii?"
         color: "Rangi"
@@ -2679,7 +2677,6 @@ sw:
           revert: "Ondoa Mabadiliko"
           revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
         theme:
-          import_theme: "Ingiza Mandhari"
           customize_desc: "Geuza Kukufaa:"
           title: "Mandhari"
           long_title: "Boresha rangi, taarifa za CSS na HTML zilipo ndani ya tovuti yako"
@@ -2692,7 +2689,6 @@ sw:
           preview: "Kihakiki"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
-          color_scheme: "Mpango Rangi"
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
@@ -2710,6 +2706,7 @@ sw:
           import_web_tip: "Hifadhi yenye mandhari"
           is_private: "Mandhari ipo ndani ya hifadhi binafsi ya git"
           public_key: "Ruhusu ufungo wa umma ufuatao ufikie hifadhi:"
+          about_theme: "Kuhusu"
           license: "Leseni"
           update_to_latest: "Sasisha iwe Toleo Jipya"
           check_for_updates: "Angalia Masasisho"
@@ -2742,20 +2739,11 @@ sw:
             text: "YAML"
             title: "Tambulisha mipangilio ya mpango kwenye umbiza wa YAML"
         colors:
-          select_base:
-            title: "Chagua rangi ya mpango msingi"
-            description: "Mipango msingi:"
           title: "Rangi"
-          edit: "Hariri Mipango Rangi"
-          long_title: "Mipango Rangi"
-          about: "Rekebisha rangi zinazotumiwa na mandhari. Tengeneza mpango rangi mpya kuanza."
-          new_name: "Mpango Rangi Mpya"
           copy_name_prefix: "Nakala ya"
-          delete_confirm: "Ondoa mpango rangi huu?"
           undo: "tendua"
           undo_title: "tendua madiliko kwenye rangi hii kutoka mara ya mwisho ilivyohifadhiwa."
           revert: "rejea"
-          revert_title: "Rudisha rangi ya Discourse."
           primary:
             name: "msingi"
             description: "Neno, ikoni, na mipaka mingi."
@@ -2967,6 +2955,7 @@ sw:
           searches: "Utafiti"
           types:
             all_search_types: "Aina zote za matokeo"
+            header: "Kichwa"
             full_page: "Ukurasa Wote"
           header_search_results: "Matokeo ya Utafiti"
         logster:

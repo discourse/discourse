@@ -109,12 +109,7 @@ fa_IR:
       next_month: "ماه بعد"
       placeholder: تاریخ
     share:
-      topic: "پیوندی به این موضوع را به اشتراک بگذارید"
-      post: "ارسال #%{postNumber}"
       close: "بسته"
-      twitter: "این پیوند را در توییتر به اشتراک بگذارید."
-      facebook: "این پیوند را در فیسبوک به اشتراک بگذارید."
-      email: "این پیوند را با ایمیل بفرستید"
     action_codes:
       public_topic: "این موضوع در %{when}  عمومی شده"
       private_topic: "این موضوع در %{when}  یک پیغام خصوصی شده"
@@ -450,7 +445,6 @@ fa_IR:
           description: "در صورتی که به @نام شما اشاره شود و یا پاسخی دریافت کنید اعلانی برای شما ارسال می‌شود."
         muted:
           title: "بی صدا شد"
-          description: "با ارسال شدن موضوعات جدید در این گروه شما اعلانی دریافت نخواهید کرد."
       flair_url: "تصویر آواتار"
       flair_url_placeholder: "(اختیاری) URL تصویر و یا کلاس Font Awesome"
       flair_bg_color: "رنگ پس زمینه آواتار"
@@ -1787,7 +1781,6 @@ fa_IR:
       default_top_period: "دوره زمانی پیشفرض برترین‌ها:"
       allow_badges_label: "امکان  اهدای نشان در این دسته‌بندی را بده"
       edit_permissions: "ویرایش دسترسی‌ها"
-      add_permission: "افزودن مجوز"
       this_year: "امسال"
       default_position: "موقعیت پیش‌فرض"
       position_disabled: "دسته‌‌بندی‌ها به‌ترتیب فعالیت نمایش داده می‌شوند. برای کنترل ترتیب دسته‌بندی‌ها"
@@ -2436,7 +2429,6 @@ fa_IR:
         save: "ذخیره"
         new: "تازه"
         new_style: "سبک جدید"
-        import: "ورود داده‌ها"
         delete: "پاک کردن"
         delete_confirm: "حذف قالب"
         color: "رنگ"
@@ -2455,7 +2447,6 @@ fa_IR:
           revert: "بازگرداندن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را بازگردانی کنید؟"
         theme:
-          import_theme: "درون‌ریزی قالب"
           customize_desc: "شخصی‌سازی:"
           title: "قالب‌ها"
           long_title: "اصلاح رنگ، CSS و HTML محتوای سایت."
@@ -2467,7 +2458,6 @@ fa_IR:
           preview: "پیش‌نمایش"
           is_default: "قالب پیش‌فرض"
           user_selectable: "قالب توسط کاربر قابل تغییر است"
-          color_scheme: "طرح رنگ"
           color_scheme_select: "انتخاب رنگ مورد استفاده قالب"
           custom_sections: "بخش‌های سفارشی"
           theme_components: "اجزای قالب"
@@ -2510,20 +2500,11 @@ fa_IR:
             text: "</body>"
             title: "کد HTML که قبل از تگ </body> اضافه می‌شود"
         colors:
-          select_base:
-            title: "انتخاب طرح رنگ پایه:"
-            description: "طرح پایه:"
           title: "رنگ‌ها"
-          edit: "ویرایش طرح‌ رنگ"
-          long_title: "طرح‌های رنگی"
-          about: "رنگ‌های استفاده شده در قالب را تغییر دهید یا طرح رنگی جدید ایجاد کنید."
-          new_name: "طرح رنگ جدید"
           copy_name_prefix: "کپی از"
-          delete_confirm: "این طرح رنگ پاک شود؟"
           undo: "خنثی کردن"
           undo_title: "برگشت دادن رنگ دخیره شده خود به آخرین رنگی که ذخیره شده است"
           revert: "برگشت"
-          revert_title: "تنظیم مجدد این رنگ به رنگ به پیش فرض دیسکورس."
           primary:
             name: "اصلی"
             description: "بیشتر متن، آیکن‌ها، و کادر‌ها."

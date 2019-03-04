@@ -109,12 +109,11 @@ it:
       next_month: "Mese Successivo"
       placeholder: data
     share:
-      topic: "condividi un collegamento a questo argomento"
-      post: "messaggio n°%{postNumber}"
+      topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       close: "chiudi"
-      twitter: "condividi questo collegamento su Twitter"
-      facebook: "condividi questo collegamento su Facebook"
-      email: "invia questo collegamento via email"
+      twitter: "Condividi questo collegamento su Twitter"
+      facebook: "Condividi questo collegamento su Facebook"
+      email: "Invia questo collegamento per email"
     action_codes:
       public_topic: "ha reso questo argomento pubblico %{when}"
       private_topic: "ha reso questo argomento privato %{when}"
@@ -124,6 +123,7 @@ it:
       user_left: "%{who}ha rimosso se stesso da questo messaggio %{when} "
       removed_user: "rimosso %{who} %{when}"
       removed_group: "cancellato %{who} %{when}"
+      autobumped: "riproposto automaticamente %{when}"
       autoclosed:
         enabled: "chiuso %{when}"
         disabled: "aperto %{when}"
@@ -172,6 +172,7 @@ it:
         us_west_1: "Stati Uniti Ovest (California del Nord)"
         us_west_2: "Stati Uniti Ovest (Oregon)"
     edit: "modifica titolo e categoria dell'argomento"
+    expand: "Espandi"
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
     yes_value: "Sì"
@@ -195,6 +196,7 @@ it:
     privacy_policy: "Tutela Privacy"
     privacy: "Privacy"
     tos: "Termini di Servizio"
+    rules: "Regole"
     conduct: "Codice di Condotta"
     mobile_view: "Visualizzazione Mobile"
     desktop_view: "Visualizzazione Desktop"
@@ -216,6 +218,8 @@ it:
     character_count:
       one: "{{count}} carattere"
       other: "{{count}} caratteri"
+    related_messages:
+      title: "Messaggi correlati"
     suggested_topics:
       title: "Argomenti Suggeriti"
       pm_title: "Messaggi Suggeriti"
@@ -244,7 +248,9 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
     bookmarks:
       created: "hai inserito questo messaggio nei segnalibri"
+      not_bookmarked: "Aggiungi questo messaggio ai segnalibri"
       remove: "Rimuovi Segnalibro"
+      confirm_clear: "Sei certo di voler rimuovere tutti i segnalibri da questo argomento?"
     drafts:
       resume: "Riprendi"
       remove: "Rimuovi"
@@ -252,6 +258,7 @@ it:
       new_private_message: "Nuovo messaggio privato in bozza"
       topic_reply: "Risposta in bozza"
       abandon:
+        confirm: "Hai già aperto una bozza in questo argomento. Sei sicuro di volerla abbandonare?"
         yes_value: "Sì, abbandona"
         no_value: "No, mantieni"
     topic_count_latest:
@@ -467,7 +474,7 @@ it:
           description: "Verrai avvertito per ogni nuovo invio in qualsiasi messaggio, e verrà mostrato il conteggio delle nuove risposte."
         watching_first_post:
           title: "Osservando Primo Messaggio"
-          description: "Verrai avvertito per ogni nuovo Argomento in questo gruppo, ma non per le risposte agli Argomenti."
+          description: "Verrai avvertito di tutti i nuovi messaggi in questo gruppo, ma non delle risposte ai messaggi."
         tracking:
           title: "Seguendo"
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde, e verrà mostrato un conteggio delle nuove risposte."
@@ -476,9 +483,10 @@ it:
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde."
         muted:
           title: "Silenziato"
-          description: "Non verrai mai avvertito per i nuovi argomenti in questo gruppo."
+          description: "Non verrai avvertito di nulla riguardo ai messaggi in questo gruppo."
       flair_url: "Immagine Avatar Flair"
       flair_url_placeholder: "(Facoltativo) URL Immagine o classe Font Awesome"
+      flair_url_description: 'Usa immagini quadrate non più piccole di 20px per 20px o icone FontAwesome (formati accettati: "fa-icon", "far fa-icon" o "fab fa-icon").'
       flair_bg_color: "Colore Sfondo Avatar Flair"
       flair_bg_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_color: "Colore Avatar Flair"
@@ -542,6 +550,7 @@ it:
       topics_entered: "argomenti visualizzati"
       post_count: "n° messaggi"
       confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
+      powered_by: "tramite<a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "copiato"
     user_fields:
       none: "(scegli un'opzione)"
@@ -585,6 +594,8 @@ it:
       first_notification: "La tua prima notifica! Selezionala per iniziare."
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
+      theme_default_on_all_devices: "Rendi questo il tema di default su tutti i miei dispositivi."
+      text_size_default_on_all_devices: "Rendi questa dimensione del testo il default su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi privati"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
@@ -704,8 +715,12 @@ it:
         confirm_password_description: "Per favore conferma la tua password per continuare"
         label: "Codice"
         rate_limit: "Per favore, attendi prima di provare un altro codice di autenticazione."
+        enable_description: |
+          Scannerizza il QR code con una delle app supportate (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> e inserisci il tuo codice di autenticazione
         disable_description: "Inserisci il codice di autenticazione dalla tua app"
         show_key_description: "Inserisci manualmente"
+        extended_description: |
+          L'autenticazione a due fattori aggiunge ulteriore sicurezza attraverso la richiesta di un token usa e getta insieme alla password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
       change_about:
         title: "Modifica i dati personali"
@@ -725,6 +740,7 @@ it:
         title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
         gravatar_title: "Cambia il tuo avatar sul sito Gravatar"
+        gravatar_failed: "Non è stato trovato alcun Gravatar abbinato a questa email."
         refresh_gravatar_title: "Ricarica il tuo Gravatar"
         letter_based: "Immagine del profilo assegnata dal sistema"
         uploaded_avatar: "Immagine personalizzata"
@@ -790,7 +806,10 @@ it:
         show_all: "Mostra tutti ({{count}})"
         show_few: "Mostrane di meno"
         was_this_you: "Eri tu?"
+        was_this_you_description: "Se non sei stato tu, ti raccomandiamo di cambiare la tua password e di disconnetterti da tutte le sessioni."
         browser_and_device: "{{browser}} su {{device}}"
+        secure_account: "Metti in sicurezza il mio account"
+        latest_post: "Hai inviato il tuo ultimo messaggio..."
       last_posted: "Ultimo Messaggio"
       last_emailed: "Ultima email inviata"
       last_seen: "Ultima visita"
@@ -1331,6 +1350,7 @@ it:
           label: "Bozza Condivisa"
           desc: "Prepara la bozza di un argomento che sarà visibile solo allo Staff"
         toggle_topic_bump:
+          label: "Commuta riproposizione argomenti"
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
     notifications:
       tooltip:
@@ -1356,6 +1376,10 @@ it:
       liked_many:
         one: "<span>{{username}}, {{username2}} e {{count}} altri</span> {{description}}"
         other: "<span>{{username}}, {{username2}} e {{count}} altri</span> {{description}}"
+      liked_consolidated_description:
+        one: "ha messo \"mi piace\" ad {{count}} tuo messaggio"
+        other: "ha messo \"mi piace\" ad {{count}} dei tuoi messaggi"
+      liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1376,6 +1400,7 @@ it:
         posted: '{{username}} ha pubblicato in "{{topic}}" - {{site_title}}'
         private_message: '{{username}} ti ha inviato un messaggio personale in "{{topic}}" - {{site_title}}'
         linked: '{{username}} ha aggiunto un collegamento a un tuo messaggio da "{{topic}}" - {{site_title}}'
+        watching_first_post: '{{username}} ha creato il nuovo argomento "{{topic}}" - {{site_title}}'
         confirm_title: "Notifiche abilitate - %{site_title}"
         confirm_body: "Successo! Le notifiche sono state abilitate."
     upload_selector:
@@ -1626,6 +1651,8 @@ it:
         based_on_last_post: "Non chiudere finché l'ultimo messaggio nell'argomento non ha questa anzianità."
       auto_delete:
         title: "Elimina Automaticamente Argomento"
+      auto_bump:
+        title: "Riproponi automaticamente l’argomento"
       reminder:
         title: "Ricordamelo"
       status_update_notice:
@@ -1634,6 +1661,7 @@ it:
         auto_publish_to_category: "Questo argomento verrà pubblicato su <a href=%{categoryUrl}>#%{categoryName}</a>%{timeLeft}"
         auto_close_based_on_last_post: "Questo argomento si chiuderà %{duration}dopo l'ultima risposta."
         auto_delete: "Questo argomento verrà automaticamente cancellato %{timeLeft}."
+        auto_bump: "Questo argomento sarà riproposto automaticamente %{timeLeft}."
         auto_reminder: "Questo argomento ti verrà ricordato %{timeLeft}."
       auto_close_title: "Impostazioni di auto-chiusura"
       auto_close_immediate:
@@ -1653,6 +1681,7 @@ it:
         jump_prompt_of: "di %{count} messaggi"
         jump_prompt_long: "A quale messaggio vuoi saltare?"
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
+        jump_prompt_or: "o"
         total: totale messaggi
         current: messaggio corrente
       notifications:
@@ -1714,6 +1743,7 @@ it:
         reset_read: "Reimposta Dati Letti"
         make_public: "Rendi Argomento Pubblico"
         make_private: "Rendi Messaggio Personale"
+        reset_bump_date: "Reimposta la data di riproposizione"
       feature:
         pin: "Appunta Argomento"
         unpin: "Spunta Argomento"
@@ -1728,6 +1758,7 @@ it:
         help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"
       share:
         title: "Condividi"
+        extended_title: "Condividi un collegamento"
         help: "condividi un collegamento a questo argomento"
       print:
         title: "Stampa"
@@ -2144,7 +2175,6 @@ it:
       default_top_period: "Periodo Predefinito Argomenti Di Punta:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
-      add_permission: "Aggiungi Permesso"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       this_year: "quest'anno"
@@ -2154,6 +2184,7 @@ it:
       position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
       parent: "Categoria Superiore"
+      num_auto_bump_daily: "Numero di argomenti da riproporre automaticamente ogni giorno:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
       notifications:
         watching:
@@ -2380,6 +2411,7 @@ it:
         bookmarks: "<b>g</b>, <b>b</b> Segnalibri"
         profile: "<b>g</b>, <b>p</b> Profilo"
         messages: "<b>g</b>, <b>m</b> Messaggi"
+        drafts: "<b>g</b>, <b>d</b> Bozze"
       navigation:
         title: "Navigazione"
         jump: "<b>#</b> Vai al messaggio n°"
@@ -2917,7 +2949,6 @@ it:
         save: "Salva"
         new: "Nuovo"
         new_style: "Nuovo Stile"
-        import: "Importare"
         delete: "Cancella"
         delete_confirm: "Eliminare questo tema?"
         color: "Colore"
@@ -2941,12 +2972,12 @@ it:
           components: "Componenti"
           theme_name: "Nome del Tema"
           component_name: "Nome del Componente"
-          import_theme: "Importa Tema"
+          browse_themes: "Sfoglia i temi della comunità"
           customize_desc: "Personalizza:"
           title: "Temi"
           create: "Crea"
-          create_type: "Tipo:"
-          create_name: "Nome:"
+          create_type: "Tipo"
+          create_name: "Nome"
           long_title: "Modifica i colori, i CSS e il contenuto HTML del tuo sito"
           edit: "Modifica"
           edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
@@ -2954,10 +2985,14 @@ it:
           desktop: "Desktop"
           mobile: "Mobile"
           settings: "Impostazioni"
+          translations: "Traduzioni"
           preview: "Anteprima"
+          show_advanced: "Mostra campi avanzati"
+          hide_advanced: "Nascondi campi avanzati"
+          hide_unused_fields: "Nascondi campi inutilizzati"
           is_default: "Il tema è abilitato di default"
           user_selectable: "Il tema può essere selezionato dagli utenti"
-          color_scheme: "Schema Colore"
+          color_scheme: "Tavolozza dei colori"
           color_scheme_select: "Seleziona i colori da usare nel tema"
           custom_sections: "Sezioni personalizzate:"
           theme_components: "Componenti Tema"
@@ -2967,6 +3002,10 @@ it:
           convert_theme_alert: "Sei sicuro di voler convertire questo Tema in Componente? Sarà rimosso come Tema Padre da %{relatives}."
           convert_theme_tooltip: "Converti questo Tema in Componente"
           inactive_themes: "Temi non attivi:"
+          inactive_components: "Componenti inutilizzati:"
+          broken_theme_tooltip: "Questo tema presenta errori nel codice CSS, HTML o YAML"
+          default_theme_tooltip: "Questo è il tema di default del sito"
+          updates_available_tooltip: "Sono disponibili aggiornamenti per questo tema"
           uploads: "Carica"
           no_uploads: "Puoi caricare le risorse associate al tuo tema come il tipo di carattere e le immagini"
           add_upload: "Aggiungi Caricamento"
@@ -3017,20 +3056,11 @@ it:
             text: "YAML"
             title: "Definisci le impostazioni del tema in formato YAML"
         colors:
-          select_base:
-            title: "Seleziona combinazione colori di base"
-            description: "Combinazione base:"
           title: "Colori"
-          edit: "Modifica Combinazioni Colori"
-          long_title: "Combinazioni Colori"
-          about: "Modifica i colori predefiniti usati dai tuoi temi. Crea una nuova combinazione di colori per iniziare."
-          new_name: "Nuova Combinazione Colori"
           copy_name_prefix: "Copia di"
-          delete_confirm: "Eliminare questa combinazione di colori?"
           undo: "annulla"
           undo_title: "Annulla le modifiche effettuate a questo colore dall'ultimo salvataggio."
           revert: "ripristina"
-          revert_title: "Reimposta questo colore alla combinazione colori di default di Discourse."
           primary:
             name: "primario"
             description: "Per la maggior parte del testo, icone e bordi."
@@ -3151,6 +3181,7 @@ it:
           filter: "Filtro"
           title: "Azioni Staff"
           clear_filters: "Mostra Tutto"
+          staff_user: "Utente"
           target_user: "Destinatario"
           subject: "Oggetto"
           when: "Quando"
@@ -3173,6 +3204,8 @@ it:
             change_site_text: "cambia il testo del sito"
             suspend_user: "utente sospeso"
             unsuspend_user: "utente riattivato"
+            removed_suspend_user: "sospendi utente (rimosso)"
+            removed_unsuspend_user: "riabilita utente (rimosso)"
             grant_badge: "assegna distintivo"
             revoke_badge: "revoca distintivo"
             check_email: "controlla email"
@@ -3187,12 +3220,15 @@ it:
             create_category: "crea categoria"
             silence_user: "utente in silenzio"
             unsilence_user: "utente non silenziato"
+            removed_silence_user: "silenzia utente (rimosso)"
+            removed_unsilence_user: "de-silenzia utente (rimosso)"
             grant_admin: "assegna amministrazione"
             revoke_admin: "revoca amministrazione"
             grant_moderation: "assegna moderazione"
             revoke_moderation: "revoca moderazione"
             backup_create: "crea backup"
             deleted_tag: "etichetta cancellata"
+            deleted_unused_tags: "Etichette inutilizzate eliminate"
             renamed_tag: "etichetta rinominata"
             revoke_email: "revoca email"
             lock_trust_level: "C"
@@ -3215,6 +3251,8 @@ it:
             create_badge: "crea distintivo"
             change_badge: "cambia distintivo"
             delete_badge: "elimina distintivo"
+            merge_user: "unisci utente"
+            change_name: "cambia nome"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -3417,6 +3455,7 @@ it:
         cant_delete_all_too_many_posts:
           one: "Non posso cancellare tutti i post perché l'utente ha più di 1 post. (delete_all_posts_max.)"
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
+        delete_confirm: "E' genericamente preferibile anonimizzare un utente inveche che eliminarlo, per evitare di rimuovere contenuti dalle discussioni esistenti.<br><br>Sei sicuro di voler eliminare questo utente? Questa modifica è permanente."
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
         delete_dont_block: "Elimina soltanto"
         deleting_user: "Cancellazione utente..."

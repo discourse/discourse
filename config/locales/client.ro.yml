@@ -129,12 +129,7 @@ ro:
       next_month: "Luna următoare"
       placeholder: dată
     share:
-      topic: "Distribuie un link cu acest subiect"
-      post: "Distribuie postarea #%{postNumber}"
       close: "Închide"
-      twitter: "Distribuie pe Twitter"
-      facebook: "Distribuie pe Facebook"
-      email: "Drimite pe email"
     action_codes:
       public_topic: "a făcut acest subiect public %{when}"
       private_topic: "fă acest subiect un mesaj personal %{when}"
@@ -493,7 +488,6 @@ ro:
           description: "Vei fi notificat dacă cineva îți menționează @numele sau îți va răspunde."
         muted:
           title: "Setat pe silențios"
-          description: "Nu vei fi niciodată notificat despre nimic legat de noile subiecte din acest grup."
       flair_url: "Imagine avatar cu element distinct"
       flair_url_placeholder: "(Opțional) URL imagine sau clasă Font Awesome"
       flair_bg_color: "Culoarea de fundal a avatarului cu element distinct"
@@ -1995,7 +1989,6 @@ ro:
       default_view: "Listă implicită de subiecte:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       edit_permissions: "Editează permisiuni"
-      add_permission: "Adaugă permisiune"
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
       this_year: "anul acesta"
       default_position: "Poziție inițială"
@@ -2700,7 +2693,6 @@ ro:
         save: "Salvare"
         new: "Nou"
         new_style: "Stil nou"
-        import: "Importă"
         delete: "Șterge"
         delete_confirm: "Șterge această temă"
         color: "Culoare"
@@ -2719,7 +2711,6 @@ ro:
           revert: "Revocă schimbările"
           revert_confirm: "Ești sigur că vrei să revoci schimbările?"
         theme:
-          import_theme: "Importă temă"
           customize_desc: "Personalizează:"
           title: "Teme"
           long_title: "Modifică culori, CSS și conținutul HTML al site-ului"
@@ -2730,7 +2721,6 @@ ro:
           preview: "Previzualizează"
           is_default: "Tema este activată implicit"
           user_selectable: "Tema poate fi aleasă de către utilizatori"
-          color_scheme: "Schemă de culori"
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
@@ -2762,19 +2752,11 @@ ro:
           body_tag:
             text: "1"
         colors:
-          select_base:
-            title: "Alege schema de culori de bază"
-            description: "Schemă de bază:"
           title: "Culori"
-          edit: "Modifică scheme de culori"
-          long_title: "Scheme de culori"
-          new_name: "Nouă schemă de culori"
           copy_name_prefix: "Copie a"
-          delete_confirm: "Ștergi această schemă de culori?"
           undo: "revenire"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."
           revert: "revenire"
-          revert_title: "Resetează această culoare la schema de culori implicită din Discourse."
           primary:
             name: "primar"
             description: "Majoritatea textului, iconițe și margini."

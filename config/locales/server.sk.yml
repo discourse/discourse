@@ -35,7 +35,6 @@ sk:
   remove_posts_deleted_by_author: "Zmazané autorom"
   redirect_warning: "Neboli sme schopní overiť, či vami vybraný link bol pridaný na fórum. Ak chcete aj tak pokračovať, vyberte link nižšie."
   themes:
-    bad_color_scheme: "Nepodarilo sa aktualizovať tému, neplatná farebná schéma"
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."

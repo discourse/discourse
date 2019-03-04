@@ -149,12 +149,7 @@ sk:
       next_month: "Nasledujúci mesiac"
       placeholder: Dátum
     share:
-      topic: "zdieľaj odkaz na túto tému"
-      post: "príspevok #%{postNumber}"
       close: "zatvoriť"
-      twitter: "zdieľaj odkaz na Twitteri"
-      facebook: "zdieľaj odkaz na Facebooku"
-      email: "pošli odkaz emailom"
     action_codes:
       public_topic: "téma je verejná%{when}"
       private_topic: "urobil(a) z témy osobnú správu%{when}"
@@ -535,7 +530,6 @@ sk:
           description: "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
         muted:
           title: "Ignorované"
-          description: "Nikdy nebudete upozornení na nič ohľadom nových tém v tejto skupine."
       flair_url: "Obrázok pre štítok avataru"
       flair_url_placeholder: "(Voliteľné) URL obrázka alebo typ Awesome Fontu"
       flair_bg_color: "Farba pozadia štítku avataru"
@@ -1935,7 +1929,6 @@ sk:
       email_in_disabled_click: 'povoľte nastavenie "email in"'
       allow_badges_label: "Povoliť získavanie odznakov v tejto kategórii"
       edit_permissions: "Upraviť práva"
-      add_permission: "Pridať práva"
       this_year: "tento rok"
       default_position: "Predvolená pozícia"
       position_disabled: "Kategórie budú zobrazené podľa aktivity. Pre možnosť ovládania poradia kategórií v zozname,"
@@ -2520,7 +2513,6 @@ sk:
         save: "Uložiť"
         new: "Nový"
         new_style: "Nový štýl"
-        import: "Import"
         delete: "Odstrániť"
         color: "Farba"
         opacity: "Nepriesvitnosť"
@@ -2540,9 +2532,6 @@ sk:
           theme_name: "Názov témy"
           component_name: "Názov komponentu"
           create: "Vytvoriť:"
-          create_type: "Typ:"
-          create_name: "Meno:"
-          name_too_short: "Meno musí mať minimálne 4 znaky."
           long_title: "Upraviť farby, CSS a obsah HTML Vašej stránky"
           edit: "Upraviť"
           common: "Spoločné"
@@ -2561,14 +2550,10 @@ sk:
           empty: "Žiadne položky"
         colors:
           title: "Farby"
-          long_title: "Farebné schémy"
-          new_name: "Nová farebná schéma"
           copy_name_prefix: "Kópia"
-          delete_confirm: "Zmazať túto farebnú schému?"
           undo: "späť"
           undo_title: "Zrušiť zmeny farby a vrátiť sa k predchádzajucej uloženej verzii. "
           revert: "vrátiť zmeny"
-          revert_title: "Nastaviť východziu farebnú schému Discourse. "
           primary:
             name: "primárny"
             description: "Väčšina textov, ikony, a okraje."
