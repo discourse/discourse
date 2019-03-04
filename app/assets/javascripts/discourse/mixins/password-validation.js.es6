@@ -3,11 +3,15 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   rejectedPasswords: null,
+  rejectedPasswordsMessages: null,
 
   init() {
     this._super(...arguments);
-    this.set("rejectedPasswords", []);
-    this.set("rejectedPasswordsMessages", new Map());
+
+    this.setProperties({
+      rejectedPasswords: [],
+      rejectedPasswordsMessages: new Map()
+    });
   },
 
   @computed("passwordMinLength")

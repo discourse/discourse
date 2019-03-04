@@ -1,7 +1,11 @@
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
-import { on } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes,
+  on
+} from "ember-addons/ember-computed-decorators";
 import { emailValid } from "discourse/lib/utilities";
 import InputValidation from "discourse/models/input-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -10,6 +14,8 @@ import NameValidation from "discourse/mixins/name-validation";
 import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
+
+const { A } = Ember;
 
 export default Ember.Controller.extend(
   ModalFunctionality,
@@ -24,7 +30,7 @@ export default Ember.Controller.extend(
     accountPasswordConfirm: 0,
     accountChallenge: 0,
     formSubmitted: false,
-    rejectedEmails: Ember.A([]),
+    rejectedEmails: A([]),
     prefilledUsername: null,
     userFields: null,
     isDeveloper: false,
@@ -51,18 +57,7 @@ export default Ember.Controller.extend(
       this._createUserFields();
     },
 
-    submitDisabled: function() {
-      if (!this.get("emailValidation.failed") && !this.get("passwordRequired"))
-        return false; // 3rd party auth
-      if (this.get("formSubmitted")) return true;
-      if (this.get("nameValidation.failed")) return true;
-      if (this.get("emailValidation.failed")) return true;
-      if (this.get("usernameValidation.failed")) return true;
-      if (this.get("passwordValidation.failed")) return true;
-      if (this.get("userFieldsValidation.failed")) return true;
-
-      return false;
-    }.property(
+    @computed(
       "passwordRequired",
       "nameValidation.failed",
       "emailValidation.failed",
@@ -70,43 +65,61 @@ export default Ember.Controller.extend(
       "passwordValidation.failed",
       "userFieldsValidation.failed",
       "formSubmitted"
-    ),
+    )
+    submitDisabled(
+      passwordRequired,
+      nameValidationFailed,
+      emailValidationFailed,
+      usernameValidationFailed,
+      passwordValidationFailed,
+      userFieldsValidationFailed,
+      formSubmitted
+    ) {
+      // 3rd party auth
+      if (!emailValidationFailed && !passwordRequired) return false;
+
+      if (formSubmitted) return true;
+      if (nameValidationFailed) return true;
+      if (emailValidationFailed) return true;
+      if (usernameValidationFailed) return true;
+      if (passwordValidationFailed) return true;
+      if (userFieldsValidationFailed) return true;
+
+      return false;
+    },
 
     usernameRequired: Ember.computed.not("authOptions.omit_username"),
 
-    fullnameRequired: function() {
+    @computed
+    fullnameRequired() {
       return (
         this.get("siteSettings.full_name_required") ||
         this.get("siteSettings.enable_names")
       );
-    }.property(),
+    },
 
-    passwordRequired: function() {
-      return Ember.isEmpty(this.get("authOptions.auth_provider"));
-    }.property("authOptions.auth_provider"),
+    passwordRequired: Ember.computed.isEmpty("authOptions.auth_provider"),
 
-    disclaimerHtml: function() {
+    @computed
+    disclaimerHtml() {
       return I18n.t("create_account.disclaimer", {
         tos_link: this.get("siteSettings.tos_url") || Discourse.getURL("/tos"),
         privacy_link:
           this.get("siteSettings.privacy_policy_url") ||
           Discourse.getURL("/privacy")
       });
-    }.property(),
+    },
 
-    // Check the email address
-    emailValidation: function() {
+    @computed("accountEmail", "rejectedEmails.[]")
+    emailValidation(accountEmail, rejectedEmails) {
       // If blank, fail without a reason
-      let email;
-      if (Ember.isEmpty(this.get("accountEmail"))) {
-        return InputValidation.create({
-          failed: true
-        });
+      if (Ember.isEmpty(accountEmail)) {
+        return InputValidation.create({ failed: true });
       }
 
-      email = this.get("accountEmail");
+      let email = accountEmail;
 
-      if (this.get("rejectedEmails").includes(email)) {
+      if (rejectedEmails.includes(email)) {
         return InputValidation.create({
           failed: true,
           reason: I18n.t("user.email.invalid")
@@ -138,33 +151,35 @@ export default Ember.Controller.extend(
         failed: true,
         reason: I18n.t("user.email.invalid")
       });
-    }.property("accountEmail", "rejectedEmails.[]"),
+    },
 
-    emailValidated: function() {
-      return (
-        this.get("authOptions.email") === this.get("accountEmail") &&
-        this.get("authOptions.email_valid")
-      );
-    }.property("accountEmail", "authOptions.email", "authOptions.email_valid"),
+    @computed("accountEmail", "authOptions.email", "authOptions.email_valid")
+    emailValidated(accountEmail, authOptionsEmail, authOptionsEmailValid) {
+      return authOptionsEmail === accountEmail && authOptionsEmailValid;
+    },
 
     authProviderDisplayName(providerName) {
-      const matchingProvider = findAll().find(provider => {
-        return provider.name === providerName;
-      });
+      const matchingProvider = findAll().find(
+        provider => provider.name === providerName
+      );
+
       return matchingProvider
         ? matchingProvider.get("prettyName")
         : providerName;
     },
 
-    prefillUsername: function() {
+    @observes("emailValidation", "accountEmail")
+    prefillUsername() {
       if (this.get("prefilledUsername")) {
         // If username field has been filled automatically, and email field just changed,
         // then remove the username.
         if (this.get("accountUsername") === this.get("prefilledUsername")) {
           this.set("accountUsername", "");
         }
+
         this.set("prefilledUsername", null);
       }
+
       if (
         this.get("emailValidation.ok") &&
         (Ember.isEmpty(this.get("accountUsername")) ||
@@ -175,12 +190,12 @@ export default Ember.Controller.extend(
         // then look for a registered username that matches the email.
         this.fetchExistingUsername();
       }
-    }.observes("emailValidation", "accountEmail"),
+    },
 
-    // Determines whether at least one login button is enabled
-    hasAtLeastOneLoginButton: function() {
+    @computed
+    hasAtLeastOneLoginButton() {
       return findAll(this.siteSettings).length > 0;
-    }.property(),
+    },
 
     @on("init")
     fetchConfirmationValue() {
