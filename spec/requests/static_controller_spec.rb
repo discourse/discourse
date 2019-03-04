@@ -103,16 +103,6 @@ describe StaticController do
         expect(response.body).to include(I18n.t('js.faq'))
         expect(response.body).to include("<title>FAQ - Discourse</title>")
       end
-
-      it "should return the right response for /signup" do
-        get "/signup"
-        expect(response.status).to eq(200)
-      end
-
-      it "should return the right response for /password-reset" do
-        get "/password-reset"
-        expect(response.status).to eq(200)
-      end
     end
 
     [
@@ -148,6 +138,18 @@ describe StaticController do
       it "should respond 404" do
         get "/static/does-not-exist"
         expect(response.status).to eq(404)
+      end
+
+      context "modal pages" do
+        it "should return the right response for /signup" do
+          get "/signup"
+          expect(response.status).to eq(200)
+        end
+
+        it "should return the right response for /password-reset" do
+          get "/password-reset"
+          expect(response.status).to eq(200)
+        end
       end
     end
 
