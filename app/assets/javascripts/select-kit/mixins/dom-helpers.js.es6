@@ -116,6 +116,7 @@ export default Ember.Mixin.create({
 
   expand() {
     if (this.get("isExpanded")) return;
+
     this.setProperties({
       isExpanded: true,
       renderedBodyOnce: true,
@@ -135,6 +136,8 @@ export default Ember.Mixin.create({
   },
 
   collapse() {
+    if (!this.get("isExpanded")) return;
+
     this.set("isExpanded", false);
 
     Ember.run.next(() => {
