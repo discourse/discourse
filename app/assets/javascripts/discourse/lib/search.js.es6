@@ -16,6 +16,7 @@ export function translateResults(results, opts) {
   results.posts = results.posts || [];
   results.categories = results.categories || [];
   results.tags = results.tags || [];
+  results.groups = results.groups || [];
 
   const topicMap = {};
   results.topics = results.topics.map(function(topic) {
@@ -43,6 +44,17 @@ export function translateResults(results, opts) {
     })
     .compact();
 
+  results.groups = results.groups
+    .map(group => {
+      const groupName = Handlebars.Utils.escapeExpression(group.name);
+      return {
+        id: group.id,
+        name: groupName,
+        url: Discourse.getURL(`/g/${groupName}`)
+      };
+    })
+    .compact();
+
   results.tags = results.tags
     .map(function(tag) {
       const tagName = Handlebars.Utils.escapeExpression(tag.name);
@@ -62,7 +74,8 @@ export function translateResults(results, opts) {
       ["topic", "posts"],
       ["category", "categories"],
       ["tag", "tags"],
-      ["user", "users"]
+      ["user", "users"],
+      ["group", "groups"]
     ].forEach(function(pair) {
       const type = pair[0];
       const name = pair[1];

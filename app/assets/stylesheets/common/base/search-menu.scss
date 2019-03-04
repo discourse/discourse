@@ -38,6 +38,8 @@
     flex-direction: row;
 
     .list {
+      min-width: 100px;
+
       .item {
         .blurb {
           // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
@@ -93,6 +95,25 @@
               font-size: $font-0;
               padding: 5px;
             }
+          }
+        }
+      }
+
+      .search-result-group {
+        .search-link {
+          color: $primary-high;
+
+          &:hover {
+            color: $primary;
+          }
+        }
+
+        .discourse-group {
+          display: inline-block;
+          word-break: break-all;
+
+          .d-icon {
+            margin-right: s(1);
           }
         }
       }
