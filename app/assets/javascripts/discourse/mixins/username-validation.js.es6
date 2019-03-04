@@ -10,19 +10,20 @@ export default Ember.Mixin.create({
   minUsernameLength: setting("min_username_length"),
 
   fetchExistingUsername: debounce(function() {
-    const self = this;
-    Discourse.User.checkUsername(null, this.get("accountEmail")).then(function(
-      result
-    ) {
-      if (
-        result.suggestion &&
-        (Ember.isEmpty(self.get("accountUsername")) ||
-          self.get("accountUsername") === self.get("authOptions.username"))
-      ) {
-        self.set("accountUsername", result.suggestion);
-        self.set("prefilledUsername", result.suggestion);
+    Discourse.User.checkUsername(null, this.get("accountEmail")).then(
+      result => {
+        if (
+          result.suggestion &&
+          (Ember.isEmpty(this.get("accountUsername")) ||
+            this.get("accountUsername") === this.get("authOptions.username"))
+        ) {
+          this.setProperties({
+            accountUsername: result.suggestion,
+            prefilledUsername: result.suggestion
+          });
+        }
       }
-    });
+    );
   }, 500),
 
   @computed("accountUsername")
@@ -38,9 +39,7 @@ export default Ember.Mixin.create({
 
     // If blank, fail without a reason
     if (Ember.isEmpty(accountUsername)) {
-      return InputValidation.create({
-        failed: true
-      });
+      return InputValidation.create({ failed: true });
     }
 
     // If too short
@@ -67,7 +66,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  shouldCheckUsernameAvailability: function() {
+  shouldCheckUsernameAvailability() {
     return (
       !Ember.isEmpty(this.get("accountUsername")) &&
       this.get("accountUsername").length >= this.get("minUsernameLength")
@@ -85,6 +84,7 @@ export default Ember.Mixin.create({
           if (result.is_developer) {
             this.set("isDeveloper", true);
           }
+
           return this.set(
             "uniqueUsernameValidation",
             InputValidation.create({
@@ -118,10 +118,7 @@ export default Ember.Mixin.create({
   }, 500),
 
   // Actually wait for the async name check before we're 100% sure we're good to go
-  @computed("uniqueUsernameValidation", "basicUsernameValidation")
-  usernameValidation() {
-    const basicValidation = this.get("basicUsernameValidation");
-    const uniqueUsername = this.get("uniqueUsernameValidation");
-    return uniqueUsername ? uniqueUsername : basicValidation;
-  }
+  usernameValidation: Ember.computed.or(
+    "{uniqueUsernameValidation,basicUsernameValidation}"
+  )
 });
