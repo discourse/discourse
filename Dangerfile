@@ -22,21 +22,23 @@ files = (git.added_files + git.modified_files)
   .select { |path| !path.start_with?("plugins/") }
   .select { |path| path.end_with?("es6") || path.end_with?("rb") }
 
-js_test_files = files.select { |path| path.end_with?("-test.js.es6") }
+js_files = files.select { |path| path.end_with?(".js.es6") }
+js_test_files = js_files.select { |path| path.end_with?("-test.js.es6") }
 
 super_offenses = []
-jquery_find_offenses = []
-
-files.each do |path|
+self_offenses = []
+js_files.each do |path|
   diff = git.diff_for_file(path)
 
   next if !diff
 
   diff.patch.lines.grep(/^\+\s\s/).each do |added_line|
     super_offenses << path if added_line['this._super()']
+    self_offenses << path if added_line['self']
   end
 end
 
+jquery_find_offenses = []
 js_test_files.each do |path|
   diff = git.diff_for_file(path)
 
@@ -45,6 +47,13 @@ js_test_files.each do |path|
   diff.patch.lines.grep(/^\+\s\s/).each do |added_line|
     jquery_find_offenses << path if added_line['this.$(']
   end
+end
+
+if !self_offenses.empty?
+  warn(%{
+Use fat arrow instead of self pattern.`\n
+#{self_offenses.uniq.map { |o| github.html_link(o) }.join("\n")}
+  })
 end
 
 if !super_offenses.empty?
