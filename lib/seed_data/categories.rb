@@ -1,0 +1,140 @@
+module SeedData
+  class Categories
+    def self.with_default_locale
+      SeedData::Categories.new(SiteSetting.default_locale)
+    end
+
+    def initialize(locale)
+      @locale = locale
+    end
+
+    def create
+      I18n.with_locale(@locale) do
+        categories.each { |params| create_category(params) }
+      end
+    end
+
+    def update
+      I18n.with_locale(@locale) do
+        categories.each do |params|
+          params.slice!(:site_setting_name, :name, :description)
+          update_category(params)
+        end
+      end
+    end
+
+    private
+
+    def categories
+      [
+        {
+          site_setting_name: 'uncategorized_category_id',
+          name: I18n.t('uncategorized_category_name'),
+          description: nil,
+          position: 0,
+          color: '0088CC',
+          text_color: 'FFFFFF',
+          permissions: { everyone: :full },
+          force_permissions: true,
+          force_existence: true
+        },
+        {
+          site_setting_name: 'meta_category_id',
+          name: I18n.t('meta_category_name'),
+          description: I18n.t('meta_category_description'),
+          position: 1,
+          color: '808281',
+          text_color: 'FFFFFF',
+          permissions: { everyone: :full },
+          force_permissions: true
+        },
+        {
+          site_setting_name: 'staff_category_id',
+          name: I18n.t('staff_category_name'),
+          description: I18n.t('staff_category_description'),
+          position: 2,
+          color: 'E45735',
+          text_color: 'FFFFFF',
+          permissions: { staff: :full },
+          force_permissions: true
+        },
+        {
+          site_setting_name: 'lounge_category_id',
+          name: I18n.t('vip_category_name'),
+          description: I18n.t('vip_category_description'),
+          position: 3,
+          color: 'A461EF',
+          text_color: '652D90',
+          permissions: { trust_level_3: :full },
+          force_permissions: false
+        }
+      ]
+    end
+
+    def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
+                        permissions:, force_permissions:, force_existence: false)
+      category_id = SiteSetting.send(site_setting_name)
+
+      if should_create_category?(category_id, force_existence)
+        category = Category.new(
+          name: unused_category_name(category_id, name),
+          description: description,
+          user_id: Discourse::SYSTEM_USER_ID,
+          position: position,
+          color: color,
+          text_color: text_color
+        )
+
+        category.skip_category_definition = true if description.blank?
+        category.set_permissions(permissions)
+        category.save!
+
+        SiteSetting.send("#{site_setting_name}=", category.id)
+      elsif category = Category.find_by(id: category_id)
+        if !category.topic_id && description.present?
+          category.description = description
+          category.create_category_definition
+        end
+
+        if force_permissions
+          category.set_permissions(permissions)
+          category.save! if category.changed?
+        end
+      end
+    end
+
+    def should_create_category?(category_id, force_existence)
+      if category_id > 0
+        force_existence ? !Category.exists?(category_id) : false
+      else
+        true
+      end
+    end
+
+    def unused_category_name(category_id, name)
+      category_exists = Category.where(
+        'id <> :id AND LOWER(name) = :name',
+        id: category_id,
+        name: name.downcase
+      ).exists?
+
+      category_exists ? "#{name}#{SecureRandom.hex}" : name
+    end
+
+    def update_category(site_setting_name:, name:, description:)
+      category_id = SiteSetting.send(site_setting_name)
+      category = Category.find_by(id: category_id) if category_id > 0
+      return unless category
+
+      name = unused_category_name(category_id, name)
+      category.name = name
+      category.slug = Slug.for(name, '')
+      category.save!
+
+      if description.present? && description_post = category&.topic&.first_post
+        changes = { title: I18n.t("category.topic_prefix", category: name), raw: description }
+        description_post.revise(Discourse.system_user, changes, skip_validations: true)
+      end
+    end
+  end
+end
