@@ -56,7 +56,7 @@ export default Ember.Controller.extend({
 
   showSearch: Ember.computed.gte("totalInvites", 10),
 
-  @computed("invitesCount.total", "invitesCount.pending}")
+  @computed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.pending_tab_with_count", {
