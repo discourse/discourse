@@ -75,7 +75,7 @@ class PostSerializer < BasicPostSerializer
              :ignored,
              :excerpt
 
-    def initialize(object, opts)
+  def initialize(object, opts)
     super(object, opts)
     PostSerializer::INSTANCE_VARS.each do |name|
       if opts.include? name
