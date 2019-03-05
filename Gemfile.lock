@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    onebox (1.8.79)
+    onebox (1.8.80)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -13,7 +13,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.0)
-    backports (3.11.4)
+    backports (3.12.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     coderay (1.1.2)
@@ -63,13 +63,14 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    parallel (1.13.0)
+    parallel (1.14.0)
     parser (2.6.0.0)
       ast (~> 2.4.0)
     powerpack (0.1.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    psych (3.1.0)
     rack (1.6.11)
     rack-protection (1.5.5)
       rack
@@ -93,11 +94,12 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.64.0)
+    rubocop (0.65.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
+      psych (>= 3.1.0)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.4.0)
