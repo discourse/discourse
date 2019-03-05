@@ -53,9 +53,9 @@
                   <li>
                   {{#if model.ignored}}
                     {{d-button class="btn-default"
-                               action=(action "watchUser")
+                               action=(action "unignoreUser")
                                icon="far-eye"
-                               label="user.watch"}}
+                               label="user.unignore"}}
                   {{else}}
                     {{d-button class="btn-danger"
                                action=(action "ignoreUser")
