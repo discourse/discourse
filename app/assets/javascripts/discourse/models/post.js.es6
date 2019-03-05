@@ -378,10 +378,10 @@ Post.reopenClass({
     });
   },
 
-  deleteMany(post_ids, { deferFlags = false } = {}) {
+  deleteMany(post_ids, { agreeWithFirstReplyFlag = true } = {}) {
     return ajax("/posts/destroy_many", {
       type: "DELETE",
-      data: { post_ids, defer_flags: deferFlags }
+      data: { post_ids, agree_with_first_reply_flag: agreeWithFirstReplyFlag }
     });
   },
 
