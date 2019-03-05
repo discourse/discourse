@@ -104,7 +104,7 @@ class Group < ActiveRecord::Base
       SQL
 
       if user&.moderator && SiteSetting.allow_moderators_to_create_categories
-        sql = <<~SQL
+        sql += <<~SQL
           SELECT g.id FROM groups g WHERE g.id = 0
 
           UNION ALL
