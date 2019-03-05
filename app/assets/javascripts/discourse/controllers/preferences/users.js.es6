@@ -9,9 +9,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
       this.set("saved", false);
       return this.get("model")
         .save(this.get("saveAttrNames"))
-        .then(() => {
-          this.set("saved", true);
-        })
+        .then(() => this.set("saved", true))
         .catch(popupAjaxError);
     }
   }
