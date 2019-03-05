@@ -9,39 +9,36 @@ module Onebox
 
       def to_html
         og = get_opengraph
-        return video_html(og) if !Onebox::Helpers::blank?(og[:video_secure_url])
+        return video_html(og) if !og.video_secure_url.nil?
         return album_html(og) if is_album?
-        return image_html(og) if !Onebox::Helpers::blank?(og[:image])
+        return image_html(og) if !og.image.nil?
         nil
       end
 
       private
 
       def video_html(og)
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:video_secure_url])
-
         <<-HTML
-            <video width='#{og[:video_width]}' height='#{og[:video_height]}' #{Helpers.title_attr(og)} controls loop>
-              <source src='#{escaped_src}' type='video/mp4'>
-              <source src='#{escaped_src.gsub('mp4', 'webm')}' type='video/webm'>
+            <video width='#{og.video_width}' height='#{og.video_height}' #{og.title_attr} controls loop>
+              <source src='#{og.video_secure_url}' type='video/mp4'>
+              <source src='#{og.video_secure_url.gsub('mp4', 'webm')}' type='video/webm'>
             </video>
           HTML
       end
 
       def album_html(og)
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
-        album_title = "[Album] #{Onebox::Helpers.truncate(og[:title], 80)}"
+        album_title = "[Album] #{og.title}"
 
         <<-HTML
             <div class='onebox imgur-album'>
               <a href='#{escaped_url}' target='_blank'>
-                <span class='outer-box' style='width:#{og[:image_width]}px'>
+                <span class='outer-box' style='width:#{og.image_width}px'>
                   <span class='inner-box'>
                     <span class='album-title'>#{album_title}</span>
                   </span>
                 </span>
-                <img src='#{escaped_src}' #{Helpers.title_attr(og)} height='#{og[:image_height]}' width='#{og[:image_width]}'>
+                <img src='#{og.get_secure_image}' #{og.title_attr} height='#{og.image_height}' width='#{og.image_width}'>
               </a>
             </div>
           HTML
@@ -56,21 +53,13 @@ module Onebox
 
       def image_html(og)
         escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
 
         <<-HTML
             <a href='#{escaped_url}' target='_blank' class="onebox">
-              <img src='#{escaped_src}' #{Helpers.title_attr(og)} alt='Imgur' height='#{og[:image_height]}' width='#{og[:image_width]}'>
+              <img src='#{og.get_secure_image}' #{og.title_attr} alt='Imgur' height='#{og.image_height}' width='#{og.image_width}'>
             </a>
           HTML
       end
-
-      def get_secure_link(link)
-        secure_link = URI(link)
-        secure_link.scheme = 'https'
-        secure_link.to_s
-      end
-
     end
   end
 end

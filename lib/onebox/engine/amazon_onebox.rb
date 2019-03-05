@@ -1,4 +1,5 @@
 require 'json'
+require "onebox/open_graph"
 
 module Onebox
   module Engine
@@ -76,7 +77,7 @@ module Onebox
       end
 
       def data
-        og = ::Onebox::Helpers.extract_opengraph(raw)
+        og = ::Onebox::OpenGraph.new(raw)
 
         if raw.at_css('#dp.book_mobile') #printed books
           title = raw.at("h1#title")&.inner_text
@@ -100,7 +101,7 @@ module Onebox
             link: link,
             title: title,
             by_info: authors,
-            image: og[:image] || image,
+            image: og.image || image,
             description: raw.at("#productDescription")&.inner_text,
             rating: "#{rating}#{', ' if rating && (!isbn&.empty? || !price&.empty?)}",
             price: price,
@@ -131,7 +132,7 @@ module Onebox
             link: link,
             title: title,
             by_info: authors,
-            image: og[:image] || image,
+            image: og.image || image,
             description: raw.at("#productDescription")&.inner_text,
             rating: "#{rating}#{', ' if rating && (!asin&.empty? || !price&.empty?)}",
             price: price,
@@ -142,11 +143,11 @@ module Onebox
           }
 
         else
-          title = og[:title] || CGI.unescapeHTML(raw.css("title").inner_text)
+          title = og.title || CGI.unescapeHTML(raw.css("title").inner_text)
           result = {
             link: link,
             title: title,
-            image: og[:image] || image,
+            image: og.image || image,
             price: price
           }
 
@@ -154,7 +155,7 @@ module Onebox
           result[:by_info] = Onebox::Helpers.clean(result[:by_info].inner_html) if result[:by_info]
 
           summary = raw.at("#productDescription")
-          result[:description] = og[:description] || (summary && summary.inner_text)
+          result[:description] = og.description || (summary && summary.inner_text)
         end
 
         result[:price] = nil if result[:price].start_with?("$0") || result[:price] == 0

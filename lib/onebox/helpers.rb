@@ -18,27 +18,6 @@ module Onebox
       html.gsub(/<[^>]+>/, ' ').gsub(/\n/, '')
     end
 
-    def self.extract_opengraph(doc)
-      return {} unless doc
-
-      og = {}
-
-      doc.css('meta').each do |m|
-        if (m["property"] && m["property"][/^(?:og|article|product):(.+)$/i]) || (m["name"] && m["name"][/^(?:og|article|product):(.+)$/i])
-          value = (m["content"] || m["value"]).to_s
-          og[$1.tr('-:', '_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
-        end
-      end
-
-      # Attempt to retrieve the title from the meta tag
-      title_element = doc.at_css('title')
-      if title_element && title_element.text
-        og[:title] ||= title_element.text unless Onebox::Helpers.blank?(title_element.text)
-      end
-
-      og
-    end
-
     def self.fetch_html_doc(url, headers = nil)
       response = (fetch_response(url, nil, nil, headers) rescue nil)
       doc = Nokogiri::HTML(response)
@@ -169,13 +148,7 @@ module Onebox
     end
 
     def self.truncate(string, length = 50)
-      string = sanitize(string)
       string.size > length ? string[0...(string.rindex(" ", length) || length)] + "..." : string
-    end
-
-    def self.title_attr(meta)
-      title = get(meta, :title)
-      !title.nil? ? "title='#{title}'" : ""
     end
 
     def self.get(meta, attr)

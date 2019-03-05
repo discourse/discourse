@@ -9,12 +9,11 @@ module Onebox
 
       def placeholder_html
         oembed = get_oembed
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(oembed[:image])
-        "<img src='#{escaped_src}' height='#{oembed[:height]}' #{Helpers.title_attr(oembed)}>"
+        "<img src='#{oembed.image}' height='#{oembed.height}' #{oembed.title_attr}>"
       end
 
       def to_html
-        get_oembed[:html]
+        get_oembed.html
       end
     end
   end

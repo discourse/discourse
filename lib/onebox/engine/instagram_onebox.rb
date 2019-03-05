@@ -12,24 +12,18 @@ module Onebox
 
       def data
         og = get_opengraph
-        title = og[:title].split(":")[0].strip.gsub(" on Instagram", "")
-        html_entities = HTMLEntities.new
+        title = og.title.split(":")[0].strip.gsub(" on Instagram", "")
 
         json_data = html_doc.xpath('//script[contains(text(),"window._sharedData")]').text.to_s
         title = "[Album] #{title}" if json_data =~ /"edge_sidecar_to_children"/
 
-        result = { link: og[:url],
-                   title: html_entities.decode(Onebox::Helpers.truncate(title, 80)),
-                   description: html_entities.decode(Onebox::Helpers.truncate(og[:description], 250))
+        result = { link: og.url,
+                   title: Onebox::Helpers.truncate(title, 80),
+                   description: og.description(250)
                   }
 
-        if !Onebox::Helpers.blank?(og[:image])
-          result[:image] = ::Onebox::Helpers.normalize_url_for_output(og[:image])
-        end
-
-        if !Onebox::Helpers.blank?(og[:video_secure_url])
-          result[:video_link] = og[:url]
-        end
+        result[:image] = og.image if !og.image.nil?
+        result[:video_link] = og.url if !og.video_secure_url.nil?
 
         result
       end

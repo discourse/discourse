@@ -22,7 +22,7 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.truncate(test_string, 9)).to eq("Chops off...") }
     it { expect(described_class.truncate(test_string, 10)).to eq("Chops off...") }
     it { expect(described_class.truncate(test_string, 100)).to eq("Chops off on spaces") }
-    it { expect(described_class.truncate(" #{test_string} ", 6)).to eq("Chops...") }
+    it { expect(described_class.truncate(" #{test_string} ", 6)).to eq(" Chops...") }
   end
 
   describe "fetch_response" do

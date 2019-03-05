@@ -9,13 +9,12 @@ module Onebox
 
       def placeholder_html
         og = get_opengraph
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:image])
         <<-HTML
           <div style='width:100%; height:190px; background-color:#262626; color:#9e9e9e; margin:15px 0;'>
             <div style='padding:10px'>
-              <h3 style='color:#fff; margin:10px 0 10px 5px;'>#{og[:title]}</h3>
-              <img src='#{escaped_src}' style='float:left; max-width:184px; margin:5px 15px 0 5px'/>
-              <p>#{og[:description]}</p>
+              <h3 style='color:#fff; margin:10px 0 10px 5px;'>#{og.title}</h3>
+              <img src='#{og.image}' style='float:left; max-width:184px; margin:5px 15px 0 5px'/>
+              <p>#{og.description}</p>
             </div>
           </div>
         HTML

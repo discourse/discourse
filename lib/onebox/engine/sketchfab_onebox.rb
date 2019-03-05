@@ -8,15 +8,13 @@ module Onebox
       always_https
 
       def to_html
-        opengraph = get_opengraph
-
-        src = opengraph[:video_url].gsub("autostart=1", "")
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
+        og = get_opengraph
+        src = og.video_url.gsub("autostart=1", "")
 
         <<-HTML
-          <iframe src="#{escaped_src}"
-                  width="#{opengraph[:video_width]}"
-                  height="#{opengraph[:video_height]}"
+          <iframe src="#{src}"
+                  width="#{og.video_width}"
+                  height="#{og.video_height}"
                   scrolling="no"
                   frameborder="0"
                   allowfullscreen>
@@ -25,9 +23,7 @@ module Onebox
       end
 
       def placeholder_html
-        opengraph = get_opengraph
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(opengraph[:image])
-        "<img src='#{escaped_src}'>"
+        "<img src='#{get_opengraph.image}'>"
       end
 
     end
