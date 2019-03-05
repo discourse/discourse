@@ -637,7 +637,7 @@ en:
       private_message: "Message"
       private_messages: "Messages"
       ignore: "Ignore"
-      watch: "Watch"
+      unignore: "Unignore"
       activity_stream: "Activity"
       preferences: "Preferences"
       profile_hidden: "This user's public profile is hidden."
