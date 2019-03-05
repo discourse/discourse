@@ -512,7 +512,7 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true
+    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true || @post.whisper?
   end
 
   def is_last_post?

@@ -236,9 +236,6 @@ class PostsController < ApplicationController
       opts[:skip_validations] = true
     end
 
-    # Bypass bump for whisper edits
-    opts[:bypass_bump] = true if post.whisper?
-
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
