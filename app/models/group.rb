@@ -101,7 +101,17 @@ class Group < ActiveRecord::Base
           SELECT g.id FROM groups g WHERE g.visibility_level = :public
 
           UNION ALL
+      SQL
 
+      if user&.moderator && SiteSetting.allow_moderators_to_create_categories
+        sql = <<~SQL
+          SELECT g.id FROM groups g WHERE g.id = 0
+
+          UNION ALL
+        SQL
+      end
+
+      sql += <<~SQL
           SELECT g.id FROM groups g
           JOIN group_users gu ON gu.group_id = g.id AND
                                  gu.user_id = :user_id
