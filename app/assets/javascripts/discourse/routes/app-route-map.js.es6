@@ -147,6 +147,7 @@ export default function() {
         this.route("emails");
         this.route("notifications");
         this.route("categories");
+        this.route("users");
         this.route("tags");
         this.route("interface");
         this.route("apps");
