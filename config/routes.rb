@@ -403,6 +403,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/notifications" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/categories" => "users#preferences", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/users" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
