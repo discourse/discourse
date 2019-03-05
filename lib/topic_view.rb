@@ -18,7 +18,7 @@ class TopicView
   end
 
   def self.default_post_custom_fields
-    @default_post_custom_fields ||= ["action_code_who"]
+    @default_post_custom_fields ||= ["action_code_who", "post_notice_type", "post_notice_time"]
   end
 
   def self.post_custom_fields_whitelisters

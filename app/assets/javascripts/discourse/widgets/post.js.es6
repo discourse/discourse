@@ -13,6 +13,7 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import hbs from "discourse/widgets/hbs-compiler";
+import { relativeAge } from "discourse/lib/formatter";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -427,6 +428,29 @@ createWidget("post-contents", {
   }
 });
 
+createWidget("post-notice", {
+  tagName: "div.post-notice",
+
+  html(attrs) {
+    let text, icon;
+    if (attrs.postNoticeType === "first") {
+      icon = "handshake";
+      text = I18n.t("post.notice.first", { user: attrs.username });
+    } else if (attrs.postNoticeType === "return") {
+      icon = "comments";
+      text = I18n.t("post.notice.return", {
+        user: attrs.username,
+        time: relativeAge(attrs.postNoticeTime, {
+          format: "tiny",
+          addAgo: true
+        })
+      });
+    }
+
+    return h("p", [iconNode(icon), text]);
+  }
+});
+
 createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
@@ -503,6 +527,10 @@ createWidget("post-article", {
           ])
         )
       );
+    }
+
+    if (attrs.postNoticeType) {
+      rows.push(h("div.row", [this.attach("post-notice", attrs)]));
     }
 
     rows.push(
