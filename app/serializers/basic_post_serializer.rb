@@ -35,9 +35,16 @@ class BasicPostSerializer < ApplicationSerializer
       else
         I18n.t('flagging.user_must_edit')
       end
+    elsif ignored_first_post?
+      I18n.t('ignored.hidden_content')
     else
       object.filter_quotes(@parent_post)
     end
+  end
+
+  def ignored_first_post?
+    object.is_first_post? && IgnoredUser.where(user_id: scope.current_user&.id,
+                                               ignored_user_id: object.user_id).present?
   end
 
   def include_name?

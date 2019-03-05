@@ -868,6 +868,9 @@ en:
     you_must_edit: '<p>Your post was flagged by the community. Please <a href="%{path}">see your messages</a>.</p>'
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
 
+  ignored:
+    hidden_content: '<i>Hidden content</i>'
+
   archetypes:
     regular:
       title: "Regular Topic"
