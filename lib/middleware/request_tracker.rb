@@ -15,26 +15,7 @@ class Middleware::RequestTracker
   #   # do stuff with env and data
   # end
   def self.register_detailed_request_logger(callback)
-
-    unless @patched_instrumentation
-      MethodProfiler.patch(PG::Connection, [
-        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query, :exec_params
-      ], :sql)
-
-      MethodProfiler.patch(Redis::Client, [
-        :call, :call_pipeline
-      ], :redis)
-
-      MethodProfiler.patch(Net::HTTP, [
-        :request
-      ], :net, no_recurse: true)
-
-      MethodProfiler.patch(Excon::Connection, [
-        :request
-      ], :net)
-      @patched_instrumentation = true
-    end
-
+    MethodProfiler.ensure_discourse_instrumentation!
     (@@detailed_request_loggers ||= []) << callback
   end
 

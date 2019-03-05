@@ -203,50 +203,39 @@
   border: 1px solid $primary-low;
 }
 
-.d-editor-preview img {
-  padding-bottom: 20px;
-  &.emoji,
-  &.avatar {
-    padding-bottom: 0;
-  }
-}
-
 .d-editor-preview .image-wrapper {
   position: relative;
-  padding-bottom: 20px;
-  display: inline-block;
-
-  img {
-    padding-bottom: 0px;
-  }
-
   &:hover {
     .button-wrapper {
-      opacity: 1;
+      opacity: 0.9;
     }
   }
   .button-wrapper {
-    transition: opacity 0.2s ease-in;
     opacity: 0;
+    background: $secondary;
     position: absolute;
-    left: 0;
-    width: 30px;
-    bottom: 0px;
+    transition: all 0.25s;
     display: flex;
-
+    align-items: center;
+    bottom: 0.75em;
+    left: 0.75em;
+    box-shadow: shadow("dropdown");
     .separator {
-      margin: 0 5px;
+      color: $primary-low;
     }
 
     .scale-btn {
       color: $tertiary;
+      padding: 0.2em 0.6em;
 
       &.active {
-        font-weight: 700;
+        font-weight: bold;
+        color: $primary;
       }
 
-      &:hover {
+      &:not(.active):hover {
         text-decoration: underline;
+        cursor: pointer;
       }
     }
   }
