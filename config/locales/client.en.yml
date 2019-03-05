@@ -2130,6 +2130,8 @@ en:
       reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
+      ignored:
+        hidden_content: 'Hidden content'
       show_full: "Show Full Post"
       show_hidden: "View hidden content."
       deleted_by_author:

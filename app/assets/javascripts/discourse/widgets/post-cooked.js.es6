@@ -28,7 +28,12 @@ export default class PostCooked {
   }
 
   init() {
-    const $html = $(`<div class='cooked'>${this.attrs.cooked}</div>`);
+    let $html = null;
+    if(this.attrs.ignored) {
+      $html = $(`<div class='cooked post-ignored'>${I18n.t("post.ignored.hidden_content")}</div>`);
+    } else {
+      $html = $(`<div class='cooked'>${this.attrs.cooked}</div>`);
+    }
     this._insertQuoteControls($html);
     this._showLinkCounts($html);
     this._fixImageSizes($html);
