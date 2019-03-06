@@ -66,7 +66,6 @@ class User < ActiveRecord::Base
   has_one :user_avatar, dependent: :destroy
   has_many :user_associated_accounts, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
-  has_one :google_user_info, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
