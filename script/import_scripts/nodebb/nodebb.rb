@@ -144,6 +144,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
         suspended_till: suspended_till,
         primary_group_id: group_id_from_imported_group_id(user["groupTitle"]),
         created_at: user["joindate"],
+        active: true,
         custom_fields: {
           import_pass: user["password"]
         },
@@ -197,13 +198,14 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
       upload = UploadCreator.new(file, filename).create_for(imported_user.id)
     else
-      # remove "/assets/uploads/" from attachment
+      # remove "/assets/uploads/" and "/uploads" from attachment
       picture = picture.gsub("/assets/uploads", "")
+      picture = picture.gsub("/uploads", "")
       filepath = File.join(ATTACHMENT_DIR, picture)
       filename = File.basename(picture)
 
       unless File.exists?(filepath)
-        puts "Avatar file doesn't exist: #{filename}"
+        puts "Avatar file doesn't exist: #{filepath}"
         return nil
       end
 
@@ -256,13 +258,14 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
       upload = UploadCreator.new(file, filename).create_for(imported_user.id)
     else
-      # remove "/assets/uploads/" from attachment
+      # remove "/assets/uploads/" and "/uploads" from attachment
       picture = picture.gsub("/assets/uploads", "")
+      picture = picture.gsub("/uploads", "")
       filepath = File.join(ATTACHMENT_DIR, picture)
       filename = File.basename(picture)
 
       unless File.exists?(filepath)
-        puts "Background file doesn't exist: #{filename}"
+        puts "Background file doesn't exist: #{filepath}"
         return nil
       end
 
@@ -507,13 +510,6 @@ class ImportScripts::NodeBB < ImportScripts::Base
       else
         "/404"
       end
-    end
-
-    # @username with dash to underscore
-    raw = raw.gsub(/@([a-zA-Z0-9-]+)/) do
-      username = $1
-
-      username.gsub('-', '_')
     end
 
     raw
