@@ -600,6 +600,24 @@ QUnit.test("Checks for existing draft", async assert => {
   toggleCheckDraftPopup(false);
 });
 
+QUnit.test("Loading draft also replaces the recipients", async assert => {
+  toggleCheckDraftPopup(true);
+
+  // prettier-ignore
+  server.get("/draft.json", () => { // eslint-disable-line no-undef
+    return [ 200, { "Content-Type": "application/json" }, {
+       "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
+       "draft_sequence":0
+    } ];
+  });
+
+  await visit("/u/charlie");
+  await click("button.compose-pm");
+  await click(".modal .btn-default");
+
+  assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
+});
+
 const assertImageResized = (assert, uploads) => {
   assert.equal(
     find(".d-editor-input").val(),
