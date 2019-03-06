@@ -902,7 +902,7 @@ export default Ember.Controller.extend({
     composerModel.set("composeState", Composer.OPEN);
     composerModel.set("isWarning", false);
 
-    if (opts.usernames) {
+    if (opts.usernames && !this.get("model.targetUsernames")) {
       this.set("model.targetUsernames", opts.usernames);
     }
 
