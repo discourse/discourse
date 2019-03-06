@@ -24,7 +24,7 @@ module Jobs
             BadgeGranter.grant(badge, user)
 
             SystemMessage.new(user).create('new_user_of_the_month',
-              month_year: Time.now.strftime("%B %Y"),
+              month_year: I18n.l(Time.now, format: :no_day),
               url: "#{Discourse.base_url}/badges"
             )
           end
