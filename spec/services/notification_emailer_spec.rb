@@ -78,7 +78,7 @@ describe NotificationEmailer do
     include_examples "enqueue"
 
     it "doesn't enqueue a job if the user has mention emails disabled" do
-      notification.user.user_option.update_columns(email_direct: false)
+      notification.user.user_option.update_columns(email_level: 2)
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       NotificationEmailer.process_notification(notification)
     end
@@ -88,7 +88,7 @@ describe NotificationEmailer do
     include_examples "enqueue"
 
     it "doesn't enqueue a job if the user has private message emails disabled" do
-      notification.user.user_option.update_columns(email_private_messages: false)
+      notification.user.user_option.update_columns(email_messages_level: 2)
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
       NotificationEmailer.process_notification(notification)
     end

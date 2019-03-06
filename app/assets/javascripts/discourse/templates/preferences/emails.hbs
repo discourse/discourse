@@ -7,23 +7,35 @@
 {{/unless}}
 <div class="control-group pref-email-settings">
   <label class="control-label">{{i18n 'user.email_settings'}}</label>
+
+  <div class='controls controls-dropdown'>
+    <label for="user-email-messages-level">{{i18n 'user.email_messages_level'}}</label>
+    {{combo-box valueAttribute="value"
+                content=emailLevelOptions
+                value=model.user_option.email_messages_level
+                id="user-email-messages-level"}}
+    {{#if emailMessageLevelAway}}
+      <div class='instructions'>{{emailFrequencyInstructions}}</div>
+    {{/if}}
+  </div>
+
+  <div class='controls controls-dropdown'>
+    <label for="user-email-level">{{i18n 'user.email_level.title'}}</label>
+    {{combo-box valueAttribute="value"
+                content=emailLevelOptions
+                value=model.user_option.email_level
+                id="user-email-level"}}
+    {{#if emailLevelAway}}
+      <div class='instructions'>{{emailFrequencyInstructions}}</div>
+    {{/if}}
+  </div>
+
   <div class='controls controls-dropdown'>
     <label>{{i18n 'user.email_previous_replies.title'}}</label>
     {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
   </div>
   {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
-  {{preference-checkbox labelKey="user.email_private_messages" checked=model.user_option.email_private_messages}}
-  {{preference-checkbox labelKey="user.email_direct" checked=model.user_option.email_direct}}
-  {{preference-checkbox labelKey="user.email_always" checked=model.user_option.email_always}}
-  {{#unless model.user_option.email_always}}
-  <div class='instructions'>
-    {{#if siteSettings.email_time_window_mins}}
-      {{i18n 'user.email.frequency' count=siteSettings.email_time_window_mins}}
-    {{else}}
-      {{i18n 'user.email.frequency_immediately'}}
-    {{/if}}
-  </div>
-  {{/unless}}
+
   {{plugin-outlet name="user-preferences-emails-pref-email-settings" args=(hash model=model save=(action "save"))}}
 </div>
 

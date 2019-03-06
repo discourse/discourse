@@ -40,11 +40,10 @@ class UserAnonymizer
       @user.primary_email.update_attribute(:email, "#{@user.username}@anonymized.invalid")
 
       options = @user.user_option
-      options.email_always = false
       options.mailing_list_mode = false
       options.email_digests = false
-      options.email_private_messages = false
-      options.email_direct = false
+      options.email_level = 2
+      options.email_messages_level = 2
       options.save!
 
       if profile = @user.user_profile

@@ -48,7 +48,7 @@ class AnonymousShadowCreator
       )
 
       shadow.user_option.update_columns(
-        email_private_messages: false,
+        email_messages_level: 2,
         email_digests: false
       )
 

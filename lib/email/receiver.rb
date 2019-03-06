@@ -1154,8 +1154,8 @@ module Email
 
     def enable_email_pm_setting(user)
       # ensure user PM emails are enabled (since user is posting via email)
-      if !user.staged && !user.user_option.email_private_messages
-        user.user_option.update!(email_private_messages: true)
+      if !user.staged && user.user_option.email_messages_level == UserOption.email_level_types[:never]
+        user.user_option.update!(email_messages_level: 0)
       end
     end
   end

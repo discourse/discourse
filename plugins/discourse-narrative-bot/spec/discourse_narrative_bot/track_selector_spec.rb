@@ -109,7 +109,7 @@ describe DiscourseNarrativeBot::TrackSelector do
 
           it 'should not enqueue any user email' do
             NotificationEmailer.enable
-            user.user_option.update!(email_always: true)
+            user.user_option.update!(email_level: 0)
 
             post.update!(
               raw: 'show me what you can do',

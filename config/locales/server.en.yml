@@ -873,7 +873,7 @@ en:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
 
   ignored:
-    hidden_content: '<p>Hidden content</p>'
+    hidden_content: "<p>Hidden content</p>"
 
   archetypes:
     regular:
@@ -1907,12 +1907,11 @@ en:
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
-    default_email_personal_messages: "Send an email when someone messages the user by default."
-    default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
+    default_email_level: "Set default email notification level when someone quotes/replies to/mentions or invites user."
+    default_email_messages_level: "Set default email notification level when someone messages user."
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode."
-    default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."

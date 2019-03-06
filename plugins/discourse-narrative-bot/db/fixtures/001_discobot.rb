@@ -50,8 +50,8 @@ end
 bot.update!(admin: true, moderator: false)
 
 bot.user_option.update!(
-  email_private_messages: false,
-  email_direct: false
+  email_messages_level: 2,
+  email_level: 2
 )
 
 if !bot.user_profile.bio_raw

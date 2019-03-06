@@ -246,9 +246,8 @@ EOM
 
     user_option = user.user_option
     user_option.email_digests = false
-    user_option.email_private_messages = false
-    user_option.email_direct = false
-    user_option.email_always = false
+    user_option.email_level = 2
+    user_option.email_messages_level = 2
     user_option.save!
 
     if user.save

@@ -91,10 +91,9 @@ class EmailController < ApplicationController
     end
 
     if params["unsubscribe_all"]
-      user.user_option.update_columns(email_always: false,
-                                      email_digests: false,
-                                      email_direct: false,
-                                      email_private_messages: false)
+      user.user_option.update_columns(email_digests: false,
+                                      email_level: 2,
+                                      email_messages_level: 2)
       updated = true
     end
 

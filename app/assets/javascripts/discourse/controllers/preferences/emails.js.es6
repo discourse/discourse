@@ -4,13 +4,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend(PreferencesTabController, {
   saveAttrNames: [
-    "email_always",
+    "email_level",
+    "email_messages_level",
     "mailing_list_mode",
     "mailing_list_mode_frequency",
     "email_digests",
-    "email_direct",
     "email_in_reply_to",
-    "email_private_messages",
     "email_previous_replies",
     "digest_after_minutes",
     "include_tl0_in_digests"
@@ -42,6 +41,12 @@ export default Ember.Controller.extend(PreferencesTabController, {
     { name: I18n.t("user.email_previous_replies.never"), value: 2 }
   ],
 
+  emailLevelOptions: [
+    { name: I18n.t("user.email_level.always"), value: 0 },
+    { name: I18n.t("user.email_level.only_when_away"), value: 1 },
+    { name: I18n.t("user.email_level.never"), value: 2 }
+  ],
+
   digestFrequencies: [
     { name: I18n.t("user.email_digests.every_30_minutes"), value: 30 },
     { name: I18n.t("user.email_digests.every_hour"), value: 60 },
@@ -50,6 +55,25 @@ export default Ember.Controller.extend(PreferencesTabController, {
     { name: I18n.t("user.email_digests.weekly"), value: 10080 },
     { name: I18n.t("user.email_digests.every_two_weeks"), value: 20160 }
   ],
+
+  @computed("model.user_option.email_messages_level")
+  emailMessageLevelAway(level) {
+    return level === 1;
+  },
+
+  @computed("model.user_option.email_level")
+  emailLevelAway(level) {
+    return level === 1;
+  },
+
+  @computed()
+  emailFrequencyInstructions() {
+    if (this.siteSettings.email_time_window_mins)
+      return I18n.t("user.email.frequency", {
+        count: this.siteSettings.email_time_window_mins
+      });
+    else return I18n.t("user.email.frequency_immediately");
+  },
 
   actions: {
     save() {
