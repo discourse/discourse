@@ -113,12 +113,15 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
   def update_key(key, value)
     old_value = I18n.t(key)
-    translation_override = TranslationOverride.upsert!(I18n.locale, key, value)
+
+    unless old_value.is_a?(Hash)
+      translation_override = TranslationOverride.upsert!(I18n.locale, key, value)
+    end
 
     {
       key: key,
       old_value: old_value,
-      error_messages: translation_override.errors.full_messages
+      error_messages: translation_override&.errors&.full_messages
     }
   end
 
