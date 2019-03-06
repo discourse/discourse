@@ -80,6 +80,7 @@ export function transformBasicPost(post) {
     expandablePost: false,
     replyCount: post.reply_count,
     locked: post.locked,
+    ignored: post.ignored,
     userCustomFields: post.user_custom_fields
   };
 
