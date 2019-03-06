@@ -66,7 +66,7 @@
 
   form {
     margin-top: 20px;
-    input[type="text"] {
+    input:not(.filter-input)[type="text"] {
       box-sizing: border-box;
       width: 100%;
     }
