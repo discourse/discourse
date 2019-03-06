@@ -2,7 +2,7 @@ import { propertyEqual } from "discourse/lib/computed";
 
 export default Ember.Component.extend({
   tagName: "li",
-  classNameBindings: ["active", "tabClassName"],
+  classNameBindings: ["tabClassName"],
 
   tabClassName: function() {
     return "edit-category-" + this.get("tab");
