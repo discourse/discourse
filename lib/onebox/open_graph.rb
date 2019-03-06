@@ -36,14 +36,16 @@ module Onebox
       end
     end
 
-    def get(attr, length = nil)
+    def get(attr, length = nil, sanitize = true)
       return nil if Onebox::Helpers::blank?(data)
 
       value = data[attr]
 
       return nil if Onebox::Helpers::blank?(value)
 
-      value = Sanitize.fragment(html_entities.decode(value)).strip
+      value = html_entities.decode(value)
+      value = Sanitize.fragment(value) if sanitize
+      value.strip!
       value = Onebox::Helpers.truncate(value, length) unless length.nil?
 
       value

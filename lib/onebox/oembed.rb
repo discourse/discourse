@@ -8,5 +8,8 @@ module Onebox
       data.delete(:html) if data[:html] && data[:html]["wp-embedded-content"]
     end
 
+    def html
+      get(:html, nil, false)
+    end
   end
 end
