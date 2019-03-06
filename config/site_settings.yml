@@ -532,6 +532,7 @@ users:
   ignore_user_enabled:
     hidden: true
     default: false
+    client: true
 
 groups:
   enable_group_directory:
@@ -1250,7 +1251,7 @@ security:
     list_type: compact
   blacklisted_crawler_user_agents:
     type: list
-    default: "mauibot|semrushbot|ahrefsbot"
+    default: "mauibot|semrushbot|ahrefsbot|blexbot"
     list_type: compact
   slow_down_crawler_user_agents:
     type: list

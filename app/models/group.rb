@@ -290,7 +290,7 @@ class Group < ActiveRecord::Base
     # way to have the membership in a table
     case name
     when :everyone
-      group.visibility_level = Group.visibility_levels[:owners]
+      group.visibility_level = Group.visibility_levels[:staff]
       group.save!
       return group
     when :moderators

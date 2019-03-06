@@ -251,6 +251,10 @@ describe Email::Receiver do
       )
     end
 
+    let :topic_user do
+      TopicUser.find_by(topic_id: topic.id, user_id: user.id)
+    end
+
     it "uses MD5 of 'mail_string' there is no message_id" do
       mail_string = email(:missing_message_id)
       expect { Email::Receiver.new(mail_string).process! }.to change { IncomingEmail.count }
@@ -285,14 +289,34 @@ describe Email::Receiver do
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
     end
 
-    it "raises a TopicClosedError when the topic was closed" do
-      topic.update_columns(closed: true)
-      expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
-    end
+    context "a closed topic" do
 
-    it "does not raise TopicClosedError when performing a like action" do
-      topic.update_columns(closed: true)
-      expect { process(:like) }.to change(PostAction, :count)
+      before do
+        topic.update_columns(closed: true)
+      end
+
+      it "raises a TopicClosedError when the topic was closed" do
+        expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
+      end
+
+      it "Can watch topics via the watch command" do
+        # TODO support other locales as well, the tricky thing is that these string live in
+        # client.yml not on server yml so it is a bit tricky to find
+
+        topic.update_columns(closed: true)
+        process(:watch)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:watching])
+      end
+
+      it "Can mute topics via the mute command" do
+        process(:mute)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:muted])
+      end
+
+      it "can track a topic via the track command" do
+        process(:track)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
+      end
     end
 
     it "raises an InvalidPost when there was an error while creating the post" do

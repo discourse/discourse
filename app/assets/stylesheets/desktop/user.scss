@@ -115,6 +115,14 @@
 .user-invite-list {
   width: 100%;
   margin-top: 15px;
+  tr {
+    td {
+      padding: 0.667em;
+    }
+    td:nth-of-type(n + 3) {
+      text-align: right;
+    }
+  }
 }
 
 .user-invite-search {

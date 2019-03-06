@@ -26,7 +26,7 @@ module Jobs
         @data["database"] = db # DB name - multisite db name it ran on
         @data["job_name"] = job_class.name # Job Name - eg: Jobs::AboutStats
         @data["job_type"] = job_class.try(:scheduled?) ? "scheduled" : "regular" # Job Type - either s for scheduled or r for regular
-        @data["opts"] = opts # Params - json encoded params for the job
+        @data["opts"] = opts.to_json # Params - json encoded params for the job
 
         @data["status"] = 'pending'
         @start_timestamp = Process.clock_gettime(Process::CLOCK_MONOTONIC)
