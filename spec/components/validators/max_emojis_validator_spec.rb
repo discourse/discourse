@@ -14,7 +14,9 @@ describe MaxEmojisValidator do
   shared_examples "validating any topic title" do
     it 'adds an error when emoji count is greater than SiteSetting.max_emojis_in_title' do
       SiteSetting.max_emojis_in_title = 3
-      record.title = '🧐 Lots of emojis here 🎃 :joy: :)'
+      CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))
+      Emoji.clear_cache
+      record.title = '🧐 Lots of emojis here 🎃 :trout: :)'
       validate
       expect(record.errors[:title][0]).to eq(I18n.t("errors.messages.max_emojis", max_emojis_count: 3))
 
