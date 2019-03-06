@@ -161,13 +161,8 @@ class UserUpdater
         INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
-        WHERE
-          id in (:desired_ids) AND
-          id NOT IN (
-            SELECT muted_user_id
-            FROM muted_users
-            WHERE user_id = :user_id
-          )
+        WHERE id in (:desired_ids)
+        ON CONFLICT DO NOTHING
       SQL
     end
   end
@@ -185,13 +180,8 @@ class UserUpdater
         INSERT into ignored_users(user_id, ignored_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
-        WHERE
-          id in (:desired_ids) AND
-          id NOT IN (
-            SELECT ignored_user_id
-            FROM ignored_users
-            WHERE user_id = :user_id
-          )
+        WHERE id in (:desired_ids)
+        ON CONFLICT DO NOTHING
       SQL
     end
   end
