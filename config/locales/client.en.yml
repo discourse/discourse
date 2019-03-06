@@ -1809,6 +1809,7 @@ en:
         when: "When:"
         public_timer_types: Topic Timers
         private_timer_types: User Topic Timers
+        time_frame_required: Please select a time frame
       auto_update_input:
         none: "Select a timeframe"
         later_today: "Later today"
