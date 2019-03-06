@@ -65,7 +65,11 @@ module Jobs
       end
 
       def self.raw_log(message)
-        @@logger ||= Logger.new("#{Rails.root}/log/sidekiq.log")
+        @@logger ||= begin
+          f = File.open "#{Rails.root}/log/sidekiq.log", "a"
+          f.sync = true
+          Logger.new f
+        end
         @@log_queue ||= Queue.new
         @@log_thread ||= Thread.new do
           begin
@@ -99,7 +103,7 @@ module Jobs
           begin
             loop do
               sleep interval.to_i
-              @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval }
+              @@active_jobs.each { |j| j.write_to_log if j.current_duration > interval.to_i }
             end
           rescue Exception => e
             Discourse.warn_exception(e, message: "Sidekiq interval logging thread terminated unexpectedly")
