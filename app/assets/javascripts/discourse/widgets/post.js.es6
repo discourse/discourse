@@ -608,6 +608,9 @@ export default createWidget("post", {
     } else {
       classNames.push("regular");
     }
+    if (attrs.ignored) {
+      classNames.push("post-ignored");
+    }
     if (addPostClassesCallbacks) {
       for (let i = 0; i < addPostClassesCallbacks.length; i++) {
         let pluginClasses = addPostClassesCallbacks[i].call(this, attrs);

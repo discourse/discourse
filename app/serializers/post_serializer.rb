@@ -72,7 +72,6 @@ class PostSerializer < BasicPostSerializer
              :action_code_who,
              :last_wiki_edit,
              :locked,
-             :ignored,
              :excerpt
 
   def initialize(object, opts)
@@ -366,11 +365,6 @@ class PostSerializer < BasicPostSerializer
 
   def locked
     true
-  end
-
-  def ignored
-    object.is_first_post? && IgnoredUser.where(user_id: scope.current_user&.id,
-                                               ignored_user_id: object.user_id).present?
   end
 
   # Only show locked posts to the users who made the post and staff
