@@ -71,6 +71,7 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       evil_trout.reload
       expect(evil_trout.approved).to eq(true)
+      expect(UserHistory.where(action: UserHistory.actions[:approve_user], target_user_id: evil_trout.id).count).to eq(1)
     end
   end
 
