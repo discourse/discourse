@@ -1226,6 +1226,7 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
+      :ignored_usernames,
       :theme_ids,
       :locale,
       :bio_raw,
