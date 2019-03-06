@@ -249,6 +249,7 @@ const User = RestModel.extend({
       "custom_fields",
       "user_fields",
       "muted_usernames",
+      "ignored_usernames",
       "profile_background",
       "card_background",
       "muted_tags",

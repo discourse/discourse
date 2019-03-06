@@ -128,6 +128,10 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
+      if attributes.key?(:ignored_usernames)
+        update_ignored_users(attributes[:ignored_usernames])
+      end
+
       name_changed = user.name_changed?
       if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
          (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
@@ -162,6 +166,30 @@ class UserUpdater
           id NOT IN (
             SELECT muted_user_id
             FROM muted_users
+            WHERE user_id = :user_id
+          )
+      SQL
+    end
+  end
+
+  def update_ignored_users(usernames)
+    usernames ||= ""
+    desired_ids = User.where(username: usernames.split(",")).pluck(:id)
+    if desired_ids.empty?
+      IgnoredUser.where(user_id: user.id).destroy_all
+    else
+      IgnoredUser.where('user_id = ? AND ignored_user_id not in (?)', user.id, desired_ids).destroy_all
+
+      # SQL is easier here than figuring out how to do the same in AR
+      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+        INSERT into ignored_users(user_id, ignored_user_id, created_at, updated_at)
+        SELECT :user_id, id, :now, :now
+        FROM users
+        WHERE
+          id in (:desired_ids) AND
+          id NOT IN (
+            SELECT ignored_user_id
+            FROM ignored_users
             WHERE user_id = :user_id
           )
       SQL
