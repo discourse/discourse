@@ -48,8 +48,7 @@
       }
     }
 
-    &.active > a,
-    > a.active {
+    &.active > a{
       color: $secondary;
       background-color: $quaternary;
 
