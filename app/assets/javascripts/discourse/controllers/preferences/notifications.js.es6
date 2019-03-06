@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default Ember.Controller.extend(PreferencesTabController, {
   saveAttrNames: [
     "muted_usernames",
+    "ignored_usernames",
     "new_topic_duration_minutes",
     "auto_track_topics_after_msecs",
     "notification_level_when_replying",
