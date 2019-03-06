@@ -147,7 +147,7 @@ class PostDestroyer
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
       DB.after_commit do
-        if @opts[:defer_flags].to_s == "true"
+        if @opts[:defer_flags]
           defer_flags
         else
           agree_with_flags
