@@ -197,7 +197,6 @@ createWidget("search-menu-results", {
     const categoriesAndTagsMore = [];
 
     const buildMoreNode = result => {
-      console.log(result);
       const more = [];
 
       const moreArgs = {
@@ -256,7 +255,7 @@ createWidget("search-menu-results", {
       if (["topic"].includes(rt.type)) {
         const more = buildMoreNode(rt);
         if (more) {
-          resultNodeContents.push(h("div.show-more"));
+          resultNodeContents.push(h("div.show-more", more));
         }
       }
 
