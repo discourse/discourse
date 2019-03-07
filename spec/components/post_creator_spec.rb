@@ -780,17 +780,23 @@ describe PostCreator do
     it 'does not increase posts count for small actions' do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user))
 
-      3.times do
+      Fabricate(:post, topic: topic)
+
+      1.upto(3) do |i|
         user = Fabricate(:user)
         topic.invite(topic.user, user.username)
-        expect(topic.reload.posts_count).to eq(0)
+        topic.reload
+        expect(topic.posts_count).to eq(1)
+        expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
+      Fabricate(:post, topic: topic)
       Topic.reset_highest(topic.id)
-      expect(topic.reload.posts_count).to eq(0)
+      expect(topic.reload.posts_count).to eq(2)
 
+      Fabricate(:post, topic: topic)
       Topic.reset_all_highest!
-      expect(topic.reload.posts_count).to eq(0)
+      expect(topic.reload.posts_count).to eq(3)
     end
   end
 

@@ -527,10 +527,10 @@ class Topic < ActiveRecord::Base
   end
 
   # Atomically creates the next post number
-  def self.next_post_number(topic_id, reply = false, whisper = false, post = true)
+  def self.next_post_number(topic_id, opts = {})
     highest = DB.query_single("SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?", topic_id).first.to_i
 
-    if whisper
+    if opts[:whisper]
 
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
@@ -543,8 +543,8 @@ class Topic < ActiveRecord::Base
 
     else
 
-      reply_sql = reply ? ", reply_count = reply_count + 1" : ""
-      posts_sql = post  ? ", posts_count = posts_count + 1" : ""
+      reply_sql = opts[:reply] ? ", reply_count = reply_count + 1" : ""
+      posts_sql = opts[:post]  ? ", posts_count = posts_count + 1" : ""
 
       result = DB.query_single(<<~SQL, highest: highest, topic_id: topic_id)
         UPDATE topics
