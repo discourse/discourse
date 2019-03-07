@@ -434,10 +434,10 @@ createWidget("post-notice", {
   html(attrs) {
     let text, icon;
     if (attrs.postNoticeType === "first") {
-      icon = "handshake";
+      icon = "hands-helping";
       text = I18n.t("post.notice.first", { user: attrs.username });
-    } else if (attrs.postNoticeType === "return") {
-      icon = "comments";
+    } else if (attrs.postNoticeType === "returning") {
+      icon = "far-smile";
       text = I18n.t("post.notice.return", {
         user: attrs.username,
         time: relativeAge(attrs.postNoticeTime, {

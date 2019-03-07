@@ -165,13 +165,13 @@ class PostCreator
       transaction do
         build_post_stats
         create_topic
+        create_post_notice
         save_post
         extract_links
         track_topic
         update_topic_stats
         update_topic_auto_close
         update_user_counts
-        create_post_notice
         create_embedded_topic
         link_post_uploads
         ensure_in_allowed_users if guardian.is_staff?
@@ -511,19 +511,16 @@ class PostCreator
 
   def create_post_notice
     last_post_time = Post.where(user_id: @user.id)
-      .where('created_at < ?', 1.day.ago)
-      .order(:created_at)
+      .order(created_at: :desc)
       .limit(1)
       .pluck(:created_at)
       .first
 
     if !last_post_time
       @post.custom_fields["post_notice_type"] = "first"
-      @post.save!
-    elsif last_post_time < 2.months.ago
-      @post.custom_fields["post_notice_type"] = "return"
+    elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
+      @post.custom_fields["post_notice_type"] = "returning"
       @post.custom_fields["post_notice_time"] = last_post_time
-      @post.save!
     end
   end
 

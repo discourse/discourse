@@ -135,7 +135,7 @@ export default function transformPost(
 
   if (post.post_notice_type) {
     postAtts.postNoticeType = post.post_notice_type;
-    if (postAtts.postNoticeType === "return") {
+    if (postAtts.postNoticeType === "returning") {
       postAtts.postNoticeTime = new Date(post.post_notice_time);
     }
   }

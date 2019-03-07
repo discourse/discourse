@@ -807,6 +807,8 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
+  returning_users_days:
+    default: 60
 
 email:
   email_time_window_mins:

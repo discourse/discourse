@@ -857,7 +857,7 @@ widgetTest("post notice", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.set("args", {
-      postNoticeType: "return",
+      postNoticeType: "returning",
       postNoticeTime: new Date("2010-01-01 12:00:00 UTC"),
       username: "codinghorror"
     });

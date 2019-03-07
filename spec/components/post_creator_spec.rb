@@ -1249,17 +1249,13 @@ describe PostCreator do
       post = PostCreator.create(new_user, title: "one of my first topics", raw: "one of my first posts")
       expect(post.custom_fields["post_notice_type"]).to eq("first")
       post = PostCreator.create(new_user, title: "another one of my first topics", raw: "another one of my first posts")
-      expect(post.custom_fields["post_notice_type"]).to eq("first")
-
-      # new users can become regular user
-      freeze_time 2.days.from_now
-      post = PostCreator.create(new_user, title: "a topic from the future", raw: "a post from the future")
       expect(post.custom_fields["post_notice_type"]).to eq(nil)
 
       # returning users
-      old_post = Fabricate(:post, user: returning_user, created_at: 4.months.ago)
+      SiteSetting.returning_users_days = 30
+      old_post = Fabricate(:post, user: returning_user, created_at: 31.days.ago)
       post = PostCreator.create(returning_user, title: "this is a returning topic", raw: "this is a post")
-      expect(post.custom_fields["post_notice_type"]).to eq("return")
+      expect(post.custom_fields["post_notice_type"]).to eq("returning")
       expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.to_s)
     end
 
