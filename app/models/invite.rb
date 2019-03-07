@@ -226,8 +226,9 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  def self.rescind_all_invites_from(user)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user.id).find_each do |invite|
+  def self.rescind_all_expired_invites_from(user)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.created_at < ?',
+                user.id, SiteSetting.invite_expiry_days.days.ago).find_each do |invite|
       invite.trash!(user)
     end
   end
