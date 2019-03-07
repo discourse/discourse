@@ -205,7 +205,9 @@ export default createWidget("topic-admin-menu", {
         action: "showFeatureTopic",
         icon: "thumbtack",
         label: featured ? "actions.unpin" : "actions.pin",
-        title: featured ? "topic.actions.unpin_tooltip" : "topic.actions.pin_tooltip"
+        title: featured
+          ? "topic.actions.unpin_tooltip"
+          : "topic.actions.pin_tooltip"
       });
     }
 
@@ -236,7 +238,9 @@ export default createWidget("topic-admin-menu", {
         action: "toggleArchived",
         icon: "folder",
         label: topic.get("archived") ? "actions.unarchive" : "actions.archive",
-        title: topic.get("archived") ? "topic.actions.unarchive_tooltip" : "topic.actions.archive_tooltip"
+        title: topic.get("archived")
+          ? "topic.actions.unarchive_tooltip"
+          : "topic.actions.archive_tooltip"
       });
     }
 
@@ -247,7 +251,9 @@ export default createWidget("topic-admin-menu", {
       action: "toggleVisibility",
       icon: visible ? "far-eye-slash" : "far-eye",
       label: visible ? "actions.invisible" : "actions.visible",
-      title: visible ? "topic.actions.invisible_tooltip" : "topic.actions.visible_tooltip"
+      title: visible
+        ? "topic.actions.invisible_tooltip"
+        : "topic.actions.visible_tooltip"
     });
 
     if (details.get("can_convert_topic")) {
@@ -258,8 +264,12 @@ export default createWidget("topic-admin-menu", {
           ? "convertToPublicTopic"
           : "convertToPrivateMessage",
         icon: isPrivateMessage ? "comment" : "envelope",
-        label: isPrivateMessage ? "actions.make_public" : "actions.make_private",
-        title: isPrivateMessage ? "topic.actions.make_public_tooltip" : "topic.actions.make_private_tooltip"
+        label: isPrivateMessage
+          ? "actions.make_public"
+          : "actions.make_private",
+        title: isPrivateMessage
+          ? "topic.actions.make_public_tooltip"
+          : "topic.actions.make_private_tooltip"
       });
     }
 
