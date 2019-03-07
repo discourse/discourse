@@ -86,7 +86,7 @@ module JsLocaleHelper
   end
 
   def self.load_translations_merged(*locales)
-    locales = locales.compact
+    locales = locales.uniq.compact
     @loaded_merges ||= {}
     @loaded_merges[locales.join('-')] ||= begin
       all_translations = {}
