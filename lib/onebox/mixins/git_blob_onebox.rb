@@ -115,7 +115,7 @@ module Onebox
           a_lines.each do |l|
             l = l.chomp("\n")  # remove new line
             m = l.match(/^[ ]*/) # find leading spaces 0 or more
-            unless m.nil? || l.size == m[0].size || m[0].size == 0 # no match | only spaces in line | empty line
+            unless m.nil? || l.size == m[0].size || l.size == 0 # no match | only spaces in line | empty line
               m_str_length = m[0].size
               if m_str_length <= 1  # minimum space is 1 or nothing we can break we found our minimum
                 min_space = m_str_length
