@@ -59,6 +59,10 @@ div.poll {
       margin: 0.25em 0;
       color: $primary-medium;
     }
+    .info-text + .info-text,
+    button + .info-text {
+      margin-left: 0.5em;
+    }
   }
 
   .poll-voters:not(:empty) {
