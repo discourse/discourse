@@ -96,12 +96,27 @@ export default Ember.Controller.extend({
 
     acceptRequest(user) {
       this.replyRequest({ user_id: user.get("id"), accept: true });
-      user.set("status", "groups.requests.accepted");
+      user.setProperties({
+        request_accepted: true,
+        request_denied: false
+      });
+    },
+
+    undoAcceptRequest(user) {
+      ajax("/groups/" + this.get("model.id") + "/members.json", {
+        type: "DELETE",
+        data: { user_id: user.get("id") }
+      }).then(() => {
+        user.set("request_undone", true);
+      });
     },
 
     denyRequest(user) {
       this.replyRequest({ user_id: user.get("id") });
-      user.set("status", "groups.requests.denied");
+      user.setProperties({
+        request_accepted: false,
+        request_denied: true
+      });
     }
   }
 });

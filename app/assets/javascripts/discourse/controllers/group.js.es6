@@ -15,8 +15,8 @@ export default Ember.Controller.extend({
   showing: "members",
   destroying: null,
 
-  @computed("showMessages", "model.user_count", "canManageGroup")
-  tabs(showMessages, userCount, canManageGroup) {
+  @computed("showMessages", "model.user_count", "canManageGroup", "model.allow_membership_requests")
+  tabs(showMessages, userCount, canManageGroup, allowMembershipRequests) {
     const membersTab = Tab.create({
       name: "members",
       route: "group.index",
@@ -28,7 +28,7 @@ export default Ember.Controller.extend({
 
     const defaultTabs = [membersTab, Tab.create({ name: "activity" })];
 
-    if (canManageGroup) {
+    if (canManageGroup && allowMembershipRequests) {
       defaultTabs.push(
         Tab.create({
           name: "requests",

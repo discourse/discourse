@@ -512,6 +512,7 @@ Discourse::Application.routes.draw do
         %w{
           activity
           activity/:filter
+          requests
           messages
           messages/inbox
           messages/archive

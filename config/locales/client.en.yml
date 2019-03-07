@@ -442,6 +442,7 @@ en:
         accepted: "accepted"
         deny: "Deny"
         denied: "denied"
+        undone: "request undone"
       manage:
         title: "Manage"
         name: "Name"

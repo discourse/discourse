@@ -412,7 +412,7 @@ class GroupsController < ApplicationController
     group = find_group(:id)
     group_name = group.name
 
-    GroupRequest.create(group: group, user: current_user, reason: params[:reason])
+    GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')

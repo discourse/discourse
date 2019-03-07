@@ -111,13 +111,13 @@ QUnit.test("Group Requests", async assert => {
   );
 
   await click(".group-members tr:first-child .btn-primary");
-  assert.equal(
+  assert.ok(
     find(".group-members tr:first-child td:nth-child(4)")
       .text()
-      .trim(),
-    "accepted"
+      .trim()
+      .indexOf("accepted") === 0
   );
-  assert.deepEqual(requests, [["19", "1"]]);
+  assert.deepEqual(requests, [["19", "true"]]);
 
   await click(".group-members tr:last-child .btn-danger");
   assert.equal(
@@ -126,5 +126,5 @@ QUnit.test("Group Requests", async assert => {
       .trim(),
     "denied"
   );
-  assert.deepEqual(requests, [["19", "1"], ["20", "0"]]);
+  assert.deepEqual(requests, [["19", "true"], ["20", undefined]]);
 });

@@ -26,8 +26,13 @@
             </td>
             <td>{{m.reason}}</td>
             <td>
-              {{#if m.status}}
-                {{i18n m.status}}
+              {{#if m.request_undone}}
+                {{i18n "groups.requests.undone"}}
+              {{else if m.request_accepted}}
+                {{i18n "groups.requests.accepted"}}
+                {{d-button action=(action "undoAcceptRequest") actionParam=m label="undo"}}
+              {{else if m.request_denied}}
+                {{i18n "groups.requests.denied"}}
               {{else}}
                 {{d-button action=(action "acceptRequest") actionParam=m label="groups.requests.accept" class="btn-primary"}}
                 {{d-button action=(action "denyRequest") actionParam=m label="groups.requests.deny" class="btn-danger"}}
