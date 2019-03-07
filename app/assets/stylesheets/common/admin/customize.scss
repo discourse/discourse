@@ -410,7 +410,7 @@
       li {
         margin-right: 0;
         display: flex;
-
+        
         &.spacer {
           flex-grow: 1;
         }
@@ -426,6 +426,11 @@
         label {
           padding: 6px 12px;
           margin-bottom: 0;
+        }
+
+        a.active {
+          background: $primary-medium;
+          color: $secondary;
         }
 
         a.blank:not(.active) {
