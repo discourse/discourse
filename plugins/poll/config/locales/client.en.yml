@@ -73,7 +73,7 @@ en:
 
       automatic_close:
         closes_in: "Closes in <strong>%{timeLeft}</strong>."
-        age: "closed <strong>%{age}</strong>"
+        age: "Closed <strong>%{age}</strong>"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."
