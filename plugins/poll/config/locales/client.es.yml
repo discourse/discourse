@@ -52,8 +52,8 @@ es:
         label: "Cerrar"
         confirm: "¿Seguro que quieres cerrar esta encuesta?"
       automatic_close:
-        closes_in: "cierra en <strong>%{timeLeft}</strong>"
-        age: "cerrado <strong>%{age}</strong>"
+        closes_in: "Cierra en <strong>%{timeLeft}</strong>"
+        age: "Cerrado <strong>%{age}</strong>"
       error_while_toggling_status: "Lo sentimos, hubo un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, hubo un error al registrar tus votos."
       error_while_fetching_voters: "Lo sentimos, hubo un error al mostrar los votantes."

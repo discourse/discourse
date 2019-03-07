@@ -47,8 +47,8 @@ it:
         label: "Chiudi"
         confirm: "Sicuro di voler chiudere questo sondaggio?"
       automatic_close:
-        closes_in: "termina in <strong>%{timeLeft}</strong>"
-        age: "terminato <strong>%{age}</strong>"
+        closes_in: "Termina in <strong>%{timeLeft}</strong>"
+        age: "Terminato <strong>%{age}</strong>"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."

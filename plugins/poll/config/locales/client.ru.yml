@@ -55,8 +55,8 @@ ru:
         label: "Завершить"
         confirm: "Вы уверены, что хотите завершить этот опрос и больше не принимать голоса?"
       automatic_close:
-        closes_in: "закроется через <strong>%{timeLeft}</strong>"
-        age: "закрыто <strong>%{age}</strong>"
+        closes_in: "Закроется через <strong>%{timeLeft}</strong>"
+        age: "Закрыто <strong>%{age}</strong>"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "В процессе получения списка проголосовавших произошла ошибка."
