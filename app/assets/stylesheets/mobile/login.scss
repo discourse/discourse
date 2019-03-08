@@ -50,6 +50,13 @@
       margin-top: 0.75em;
     }
 
+    td label {
+      max-width: 280px;
+      display: block;
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+
     &:not(.instructions) td {
       padding: 2px 0 0 0;
     }
