@@ -870,10 +870,7 @@ a.mention-group {
   border-top: 1px solid $primary-low;
   color: $primary;
   padding: 1em;
-  width: calc(
-    #{$topic-body-width} + #{$topic-avatar-width} - #{$topic-body-width-padding} +
-      3px
-  );
+  margin-bottom: 1em;
 
   p {
     margin: 0;
