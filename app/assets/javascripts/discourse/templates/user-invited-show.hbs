@@ -81,19 +81,19 @@
                 {{else}}
                   <td>{{unbound invite.email}}</td>
                   <td>{{format-date invite.created_at}}</td>
-                  <td colspan='5'>
+                  <td>
                     {{#if invite.expired}}
-                      {{i18n 'user.invited.expired'}}
-                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <div>{{i18n 'user.invited.expired'}}</div>
                     {{/if}}
                     {{#if invite.rescinded}}
                       {{i18n 'user.invited.rescinded'}}
                     {{else}}
                       {{d-button icon="times" action=(action "rescind") actionParam=invite label="user.invited.rescind"}}
                     {{/if}}
-                    &nbsp;&nbsp;&nbsp;&nbsp;
+                   </td>
+                   <td>
                     {{#if invite.reinvited}}
-                      {{i18n 'user.invited.reinvited'}}
+                      <div>{{i18n 'user.invited.reinvited'}}</div>
                     {{else}}
                       {{d-button icon="sync" action=(action "reinvite") actionParam=invite label="user.invited.reinvite"}}
                     {{/if}}

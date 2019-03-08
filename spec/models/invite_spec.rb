@@ -477,16 +477,21 @@ describe Invite do
 
   end
 
-  describe '.rescind_all_invites_from' do
-    it 'removes all invites sent by a user' do
+  describe '.rescind_all_expired_invites_from' do
+    it 'removes all expired invites sent by a user' do
+      SiteSetting.invite_expiry_days = 1
       user = Fabricate(:user)
       invite_1 = Fabricate(:invite, invited_by: user)
       invite_2 = Fabricate(:invite, invited_by: user)
-      Invite.rescind_all_invites_from(user)
+      expired_invite = Fabricate(:invite, invited_by: user)
+      expired_invite.update!(created_at: 2.days.ago)
+      Invite.rescind_all_expired_invites_from(user)
       invite_1.reload
       invite_2.reload
-      expect(invite_1.deleted_at).to be_present
-      expect(invite_2.deleted_at).to be_present
+      expired_invite.reload
+      expect(invite_1.deleted_at).to eq(nil)
+      expect(invite_2.deleted_at).to eq(nil)
+      expect(expired_invite.deleted_at).to be_present
     end
   end
 end

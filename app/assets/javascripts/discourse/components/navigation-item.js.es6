@@ -47,7 +47,10 @@ export default Ember.Component.extend(
         this.set("hidden", false);
       }
 
-      buffer.push(`<a href='${href}'>`);
+      buffer.push(
+        `<a href='${href}'` + (this.get("active") ? 'class="active"' : "") + `>`
+      );
+
       if (content.get("hasIcon")) {
         buffer.push("<span class='" + content.get("name") + "'></span>");
       }

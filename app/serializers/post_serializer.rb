@@ -70,6 +70,8 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
+             :post_notice_type,
+             :post_notice_time,
              :last_wiki_edit,
              :locked,
              :excerpt
@@ -361,6 +363,22 @@ class PostSerializer < BasicPostSerializer
 
   def include_action_code_who?
     include_action_code? && action_code_who.present?
+  end
+
+  def post_notice_type
+    post_custom_fields["post_notice_type"]
+  end
+
+  def include_post_notice_type?
+    post_notice_type.present?
+  end
+
+  def post_notice_time
+    post_custom_fields["post_notice_time"]
+  end
+
+  def include_post_notice_time?
+    post_notice_time.present?
   end
 
   def locked

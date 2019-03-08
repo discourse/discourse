@@ -115,6 +115,11 @@
 .user-invite-list {
   width: 100%;
   margin-top: 15px;
+  tr {
+    td {
+      padding: 0.667em;
+    }
+  }
 }
 
 .user-invite-search {

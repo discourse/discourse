@@ -134,6 +134,29 @@ describe Post do
       end
     end
 
+    context 'a post with notices' do
+      let(:post) {
+        post = Fabricate(:post, post_args)
+        post.custom_fields["post_notice_type"] = "returning"
+        post.custom_fields["post_notice_time"] = 1.day.ago
+        post
+      }
+
+      before do
+        post.trash!
+        post.reload
+      end
+
+      describe 'recovery' do
+        it 'deletes notices' do
+          post.recover!
+
+          expect(post.custom_fields).not_to have_key("post_notice_type")
+          expect(post.custom_fields).not_to have_key("post_notice_time")
+        end
+      end
+    end
+
   end
 
   describe 'flagging helpers' do

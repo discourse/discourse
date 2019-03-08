@@ -687,7 +687,7 @@ class Search
   def groups_search
     groups = Group
       .visible_groups(@guardian.user, "name ASC", include_everyone: false)
-      .where("groups.name ILIKE ?", "%#{@term}%")
+      .where("name ILIKE :term OR full_name ILIKE :term", term: "%#{@term}%")
 
     groups.each { |group| @results.add(group) }
   end

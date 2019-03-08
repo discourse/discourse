@@ -165,6 +165,7 @@ class PostCreator
       transaction do
         build_post_stats
         create_topic
+        create_post_notice
         save_post
         extract_links
         track_topic
@@ -247,7 +248,11 @@ class PostCreator
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
     whisper = post.post_type == Post.types[:whisper]
-    post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?, whisper)
+    increase_posts_count = !post.topic&.private_message? || post.post_type != Post.types[:small_action]
+    post.post_number ||= Topic.next_post_number(post.topic_id,
+      reply: post.reply_to_post_number.present?,
+      whisper: whisper,
+      post: increase_posts_count)
 
     cooking_options = post.cooking_options || {}
     cooking_options[:topic_id] = post.topic_id
@@ -506,6 +511,21 @@ class PostCreator
     @user.user_stat.save!
 
     @user.update_attributes(last_posted_at: @post.created_at)
+  end
+
+  def create_post_notice
+    last_post_time = Post.where(user_id: @user.id)
+      .order(created_at: :desc)
+      .limit(1)
+      .pluck(:created_at)
+      .first
+
+    if !last_post_time
+      @post.custom_fields["post_notice_type"] = "first"
+    elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
+      @post.custom_fields["post_notice_type"] = "returning"
+      @post.custom_fields["post_notice_time"] = last_post_time.iso8601
+    end
   end
 
   def publish

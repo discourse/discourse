@@ -96,7 +96,9 @@ RSpec.describe Users::OmniauthCallbacksController do
           uid: '123545',
           info: OmniAuth::AuthHash::InfoHash.new(
             email: email,
-            name: 'Some name'
+            name: 'Some name',
+            first_name: "Some",
+            last_name: "name"
           ),
           extra: {
             raw_info: OmniAuth::AuthHash.new(
@@ -107,7 +109,7 @@ RSpec.describe Users::OmniauthCallbacksController do
               gender: 'male',
               name: "Some name Huh",
             )
-          },
+          }
         )
 
         Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
@@ -262,7 +264,7 @@ RSpec.describe Users::OmniauthCallbacksController do
           @sso.return_sso_url = "http://somewhere.over.rainbow/sso"
           cookies[:sso_payload] = @sso.payload
 
-          GoogleUserInfo.create!(google_user_id: '12345', user: user)
+          UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
 
           OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
             provider: 'google_oauth2',
@@ -299,7 +301,7 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       context 'when user has not verified his email' do
         before do
-          GoogleUserInfo.create!(google_user_id: '12345', user: user)
+          UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
           user.update!(active: false)
 
           OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
@@ -341,8 +343,8 @@ RSpec.describe Users::OmniauthCallbacksController do
     context 'when attempting reconnect' do
       let(:user2) { Fabricate(:user) }
       before do
-        GoogleUserInfo.create!(google_user_id: '12345', user: user)
-        GoogleUserInfo.create!(google_user_id: '123456', user: user2)
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
+        UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '123456', user: user2)
 
         OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
           provider: 'google_oauth2',
@@ -385,7 +387,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         get "/auth/google_oauth2/callback.json"
         expect(response.status).to eq(200)
         expect(session[:current_user_id]).to eq(user2.id)
-        expect(GoogleUserInfo.count).to eq(2)
+        expect(UserAssociatedAccount.count).to eq(2)
       end
 
       it 'should reconnect if parameter supplied' do
@@ -402,7 +404,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(session[:auth_reconnect]).to eq(nil)
 
         # Disconnect
-        GoogleUserInfo.find_by(user_id: user.id).destroy
+        UserAssociatedAccount.find_by(user_id: user.id).destroy
 
         # Reconnect flow:
         get "/auth/google_oauth2?reconnect=true"
@@ -414,7 +416,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)["authenticated"]).to eq(true)
         expect(session[:current_user_id]).to eq(user.id)
-        expect(GoogleUserInfo.count).to eq(1)
+        expect(UserAssociatedAccount.count).to eq(1)
       end
 
     end

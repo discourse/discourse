@@ -17,6 +17,8 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
+    <%= build_plugin_html 'server:before-script-load' %>
+
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script "ember_jquery" %>
     <%= preload_script "preload-store" %>

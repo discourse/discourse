@@ -192,15 +192,18 @@ en:
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ca_central_1: "Canada (Central)"
         cn_north_1: "China (Beijing)"
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EU (Stockholm)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
-        sa_east_1: "South America (Sao Paulo)"
+        sa_east_1: "South America (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
+        us_gov_east_1: "AWS GovCloud (US-East)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
@@ -1000,9 +1003,9 @@ en:
         expired: "This invite has expired."
         rescind: "Remove"
         rescinded: "Invite removed"
-        rescind_all: "Remove all Invites"
-        rescinded_all: "All Invites removed!"
-        rescind_all_confirm: "Are you sure you want to remove all invites?"
+        rescind_all: "Remove all Expired Invites"
+        rescinded_all: "All Expired Invites removed!"
+        rescind_all_confirm: "Are you sure you want to remove all expired invites?"
         reinvite: "Resend Invite"
         reinvite_all: "Resend all Invites"
         reinvite_all_confirm: "Are you sure you want to resend all invites?"
@@ -1809,6 +1812,7 @@ en:
         when: "When:"
         public_timer_types: Topic Timers
         private_timer_types: User Topic Timers
+        time_frame_required: Please select a time frame
       auto_update_input:
         none: "Select a timeframe"
         later_today: "Later today"
@@ -2144,6 +2148,10 @@ en:
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
+
+      notice:
+        first: "This is the first time {{user}} has posted — let's welcome them to our community!"
+        return: "It's been a while since we've seen {{user}} — their last post was in {{time}}."
 
       unread: "Post is unread"
       has_replies:

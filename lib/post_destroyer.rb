@@ -61,19 +61,11 @@ class PostDestroyer
       mark_for_deletion(delete_removed_posts_after)
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
-    WebHook.enqueue_hooks(:post, :post_destroyed,
-      id: @post.id,
-      category_id: @post&.topic&.category_id,
-      payload: payload
-    ) if WebHook.active_web_hooks(:post).exists?
+    WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
 
     if @post.is_first_post? && @post.topic
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
-      WebHook.enqueue_hooks(:topic, :topic_destroyed,
-        id: topic.id,
-        category_id: topic&.category_id,
-        payload: topic_payload
-      ) if WebHook.active_web_hooks(:topic).exists?
+      WebHook.enqueue_topic_hooks(:topic_destroyed, @post.topic, topic_payload)
     end
   end
 
@@ -147,7 +139,7 @@ class PostDestroyer
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
       DB.after_commit do
-        if @opts[:defer_flags].to_s == "true"
+        if @opts[:defer_flags]
           defer_flags
         else
           agree_with_flags

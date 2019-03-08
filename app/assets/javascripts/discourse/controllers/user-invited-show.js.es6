@@ -24,7 +24,7 @@ export default Ember.Controller.extend({
     this.set("searchTerm", "");
   },
 
-  @observes("searchTearm")
+  @observes("searchTerm")
   _searchTermChanged: debounce(function() {
     Invite.findInvitedBy(
       this.get("user"),
@@ -90,7 +90,6 @@ export default Ember.Controller.extend({
           Invite.rescindAll()
             .then(() => {
               this.set("rescindedAll", true);
-              this.get("model.invites").clear();
             })
             .catch(popupAjaxError);
         }

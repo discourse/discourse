@@ -48,6 +48,8 @@ export default Discourse.Route.extend({
               }
             })
             .catch(() => bootbox.alert(I18n.t("generic_error")));
+        } else {
+          e.send("createNewMessageViaParams", null, params.title, params.body);
         }
       });
     } else {

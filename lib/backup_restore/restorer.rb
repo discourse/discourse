@@ -29,6 +29,7 @@ module BackupRestore
       @client_id = opts[:client_id]
       @filename = opts[:filename]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
+      @disable_emails = opts.fetch(:disable_emails, true)
 
       ensure_restore_is_enabled
       ensure_no_operation_is_running
@@ -402,9 +403,11 @@ module BackupRestore
       log "Reloading site settings..."
       SiteSetting.refresh!
 
-      log "Disabling outgoing emails for non-staff users..."
-      user = User.find_by_email(@user_info[:email]) || Discourse.system_user
-      SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
+      if @disable_emails
+        log "Disabling outgoing emails for non-staff users..."
+        user = User.find_by_email(@user_info[:email]) || Discourse.system_user
+        SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
+      end
     end
 
     def clear_emoji_cache
