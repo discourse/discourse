@@ -1949,7 +1949,7 @@ en:
         visible_tooltip: "Marks the topic as visible and includes the topic in lists and digest emails."
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
-        make_public_tooltip: "Converts to public top and makes it visible for other users."
+        make_public_tooltip: "Converts to public topic and makes it visible for other users."
         make_private: "Make Personal Message"
         make_private_tooltip: "Converts to personal message and makes it invisible for other users."
         reset_bump_date: "Reset Bump Date"
@@ -2982,7 +2982,7 @@ en:
         old_posts: "Old Flagged Posts"
         topics: "Flagged Topics"
         moderation_history: "Moderation History"
-        moderation_history_tooltip: "Shows moderation history for this topic."
+        moderation_history_tooltip: "Shows the moderation history."
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
