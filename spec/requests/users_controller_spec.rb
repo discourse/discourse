@@ -2033,22 +2033,11 @@ describe UsersController do
         sign_in(user)
       end
 
-      describe 'when SiteSetting.ignore_user_enabled is false' do
-        it 'raises an error' do
-          SiteSetting.ignore_user_enabled = false
-          put "/u/#{user.username}/ignore.json"
-          expect(response.status).to eq(404)
-        end
-      end
-
-      describe 'when SiteSetting.ignore_user_enabled is true' do
-        it 'creates IgnoredUser record' do
-          SiteSetting.ignore_user_enabled = true
-          put "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
-          expect(response.status).to eq(200)
-          expect(IgnoredUser.find_by(user_id: user.id,
-                                     ignored_user_id: another_user.id)).to be_present
-        end
+      it 'creates IgnoredUser record' do
+        put "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
+        expect(response.status).to eq(200)
+        expect(IgnoredUser.find_by(user_id: user.id,
+                                   ignored_user_id: another_user.id)).to be_present
       end
     end
   end
@@ -2066,26 +2055,15 @@ describe UsersController do
         sign_in(user)
       end
 
-      describe 'when SiteSetting.ignore_user_enabled is false' do
-        it 'raises an error' do
-          SiteSetting.ignore_user_enabled = false
-          delete "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
-          expect(response.status).to eq(404)
-        end
+      before do
+        Fabricate(:ignored_user, user_id: user.id, ignored_user_id: another_user.id)
       end
 
-      describe 'when SiteSetting.ignore_user_enabled is true' do
-        before do
-          Fabricate(:ignored_user, user_id: user.id, ignored_user_id: another_user.id)
-        end
-
-        it 'destroys IgnoredUser record' do
-          SiteSetting.ignore_user_enabled = true
-          delete "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
-          expect(response.status).to eq(200)
-          expect(IgnoredUser.find_by(user_id: user.id,
-                                     ignored_user_id: another_user.id)).to be_blank
-        end
+      it 'destroys IgnoredUser record' do
+        delete "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
+        expect(response.status).to eq(200)
+        expect(IgnoredUser.find_by(user_id: user.id,
+                                   ignored_user_id: another_user.id)).to be_blank
       end
     end
   end

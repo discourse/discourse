@@ -49,21 +49,19 @@
                     icon="envelope"
                     label="user.private_message"}}
                 </li>
-                {{#if model.can_ignore_user}}
-                  <li>
-                  {{#if model.ignored}}
-                    {{d-button class="btn-default"
-                               action=(action "unignoreUser")
-                               icon="far-eye"
-                               label="user.unignore"}}
-                  {{else}}
-                    {{d-button class="btn-danger"
-                               action=(action "ignoreUser")
-                               icon="eye-slash"
-                               label="user.ignore"}}
-                  {{/if}}
-                  </li>
+                <li>
+                {{#if model.ignored}}
+                  {{d-button class="btn-default"
+                             action=(action "unignoreUser")
+                             icon="far-eye"
+                             label="user.unignore"}}
+                {{else}}
+                  {{d-button class="btn-danger"
+                             action=(action "ignoreUser")
+                             icon="eye-slash"
+                             label="user.ignore"}}
                 {{/if}}
+                </li>
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>

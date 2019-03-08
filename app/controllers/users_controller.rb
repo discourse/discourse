@@ -996,8 +996,6 @@ class UsersController < ApplicationController
   end
 
   def ignore
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
-
     ::IgnoredUser.find_or_create_by!(
       user: current_user,
       ignored_user_id: params[:ignored_user_id])
@@ -1005,8 +1003,6 @@ class UsersController < ApplicationController
   end
 
   def unignore
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
-
     IgnoredUser.where(user: current_user, ignored_user_id: params[:ignored_user_id]).delete_all
     render json: success_json
   end
