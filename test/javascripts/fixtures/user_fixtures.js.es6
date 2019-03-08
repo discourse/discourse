@@ -2340,7 +2340,6 @@ export default {
       can_edit_email: true,
       can_edit_name: true,
       ignored: false,
-      can_ignore_user: false,
       can_send_private_messages: true,
       can_send_private_message_to_user: true,
       trust_level: 3,
