@@ -17,13 +17,14 @@ module Jobs
 
   class Base
     class JobInstrumenter
-      def initialize(job_class:, opts:, db:)
+      def initialize(job_class:, opts:, db:, jid:)
         return unless enabled?
         @data = {}
 
         @data["hostname"] = `hostname`.strip # Hostname
         @data["pid"] = Process.pid # Pid
         @data["database"] = db # DB name - multisite db name it ran on
+        @data["job_id"] = jid # Job unique ID
         @data["job_name"] = job_class.name # Job Name - eg: Jobs::AboutStats
         @data["job_type"] = job_class.try(:scheduled?) ? "scheduled" : "regular" # Job Type - either s for scheduled or r for regular
         @data["opts"] = opts.to_json # Params - json encoded params for the job
@@ -185,7 +186,7 @@ module Jobs
           exception = {}
 
           RailsMultisite::ConnectionManagement.with_connection(db) do
-            job_instrumenter = JobInstrumenter.new(job_class: self.class, opts: opts, db: db)
+            job_instrumenter = JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
             begin
               I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
