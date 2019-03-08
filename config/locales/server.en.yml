@@ -1901,6 +1901,8 @@ en:
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
     watched_words_regular_expressions: "Watched words are regular expressions."
 
+    returning_users_days: "How many days should pass before a user is considered to be returning."
+
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
     default_email_personal_messages: "Send an email when someone messages the user by default."

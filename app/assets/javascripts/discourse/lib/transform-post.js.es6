@@ -134,6 +134,13 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
 
+  if (post.post_notice_type) {
+    postAtts.postNoticeType = post.post_notice_type;
+    if (postAtts.postNoticeType === "returning") {
+      postAtts.postNoticeTime = new Date(post.post_notice_time);
+    }
+  }
+
   const showPMMap =
     topic.archetype === "private_message" && post.post_number === 1;
   if (showPMMap) {

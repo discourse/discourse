@@ -118,6 +118,7 @@ module SvgSprite
     "globe",
     "globe-americas",
     "hand-point-right",
+    "hands-helping",
     "heading",
     "heart",
     "home",

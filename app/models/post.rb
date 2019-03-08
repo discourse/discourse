@@ -194,6 +194,7 @@ class Post < ActiveRecord::Base
   def recover!
     super
     update_flagged_posts_count
+    delete_post_notices
     recover_public_post_actions
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
@@ -379,6 +380,11 @@ class Post < ActiveRecord::Base
 
   def update_flagged_posts_count
     PostAction.update_flagged_posts_count
+  end
+
+  def delete_post_notices
+    self.custom_fields.delete("post_notice_type")
+    self.custom_fields.delete("post_notice_time")
   end
 
   def recover_public_post_actions

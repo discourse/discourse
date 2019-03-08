@@ -165,6 +165,7 @@ class PostCreator
       transaction do
         build_post_stats
         create_topic
+        create_post_notice
         save_post
         extract_links
         track_topic
@@ -506,6 +507,21 @@ class PostCreator
     @user.user_stat.save!
 
     @user.update_attributes(last_posted_at: @post.created_at)
+  end
+
+  def create_post_notice
+    last_post_time = Post.where(user_id: @user.id)
+      .order(created_at: :desc)
+      .limit(1)
+      .pluck(:created_at)
+      .first
+
+    if !last_post_time
+      @post.custom_fields["post_notice_type"] = "first"
+    elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
+      @post.custom_fields["post_notice_type"] = "returning"
+      @post.custom_fields["post_notice_time"] = last_post_time
+    end
   end
 
   def publish
