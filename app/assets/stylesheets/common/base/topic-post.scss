@@ -867,19 +867,22 @@ a.mention-group {
 
 .post-notice {
   background-color: $tertiary-low;
-  border-top: 1px solid $primary-low;
   color: $primary;
-  padding: 1em;
+  padding: 0.8em;
   max-width: calc(
     #{$topic-body-width} + #{$topic-avatar-width} - #{$topic-body-width-padding} +
-      3px
+      0.6em
   );
 
   p {
+    display: flex;
+    align-items: center;
     margin: 0;
   }
 
   .d-icon {
-    margin-right: 1em;
+    font-size: 2em;
+    color: $primary-high;
+    margin-right: 0.65em;
   }
 }
