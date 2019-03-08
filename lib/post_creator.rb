@@ -524,7 +524,7 @@ class PostCreator
       @post.custom_fields["post_notice_type"] = "first"
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
       @post.custom_fields["post_notice_type"] = "returning"
-      @post.custom_fields["post_notice_time"] = last_post_time
+      @post.custom_fields["post_notice_time"] = last_post_time.iso8601
     end
   end
 
