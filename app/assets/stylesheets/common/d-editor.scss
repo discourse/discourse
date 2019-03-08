@@ -206,7 +206,8 @@
 .d-editor-preview img {
   padding-bottom: 1.4em;
   &.emoji,
-  &.avatar {
+  &.avatar,
+  &.site-icon {
     padding-bottom: 0;
   }
 }
