@@ -1238,4 +1238,32 @@ describe PostCreator do
       end
     end
   end
+
+  context "#create_post_notice" do
+    let(:user) { Fabricate(:user) }
+    let(:new_user) { Fabricate(:user) }
+    let(:returning_user) { Fabricate(:user) }
+
+    it "generates post notices" do
+      # new users
+      post = PostCreator.create(new_user, title: "one of my first topics", raw: "one of my first posts")
+      expect(post.custom_fields["post_notice_type"]).to eq("first")
+      post = PostCreator.create(new_user, title: "another one of my first topics", raw: "another one of my first posts")
+      expect(post.custom_fields["post_notice_type"]).to eq(nil)
+
+      # returning users
+      SiteSetting.returning_users_days = 30
+      old_post = Fabricate(:post, user: returning_user, created_at: 31.days.ago)
+      post = PostCreator.create(returning_user, title: "this is a returning topic", raw: "this is a post")
+      expect(post.custom_fields["post_notice_type"]).to eq("returning")
+      expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.to_s)
+    end
+
+    it "does not generate post notices" do
+      Fabricate(:post, user: user, created_at: 3.days.ago)
+      post = PostCreator.create(user, title: "this is another topic", raw: "this is my another post")
+      expect(post.custom_fields["post_notice_type"]).to eq(nil)
+      expect(post.custom_fields["post_notice_time"]).to eq(nil)
+    end
+  end
 end
