@@ -46,11 +46,26 @@ export function translateResults(results, opts) {
 
   results.groups = results.groups
     .map(group => {
-      const groupName = Handlebars.Utils.escapeExpression(group.name);
+      const name = Handlebars.Utils.escapeExpression(group.name);
+      const fullName = Handlebars.Utils.escapeExpression(
+        group.full_name || group.display_name
+      );
+      const flairUrl = Ember.isEmpty(group.flair_url)
+        ? null
+        : Handlebars.Utils.escapeExpression(group.flair_url);
+      const flairColor = Handlebars.Utils.escapeExpression(group.flair_color);
+      const flairBgColor = Handlebars.Utils.escapeExpression(
+        group.flair_bg_color
+      );
+
       return {
         id: group.id,
-        name: groupName,
-        url: Discourse.getURL(`/g/${groupName}`)
+        flairUrl,
+        flairColor,
+        flairBgColor,
+        fullName,
+        name,
+        url: Discourse.getURL(`/g/${name}`)
       };
     })
     .compact();
@@ -72,10 +87,10 @@ export function translateResults(results, opts) {
   if (groupedSearchResult) {
     [
       ["topic", "posts"],
-      ["category", "categories"],
-      ["tag", "tags"],
       ["user", "users"],
-      ["group", "groups"]
+      ["group", "groups"],
+      ["category", "categories"],
+      ["tag", "tags"]
     ].forEach(function(pair) {
       const type = pair[0];
       const name = pair[1];

@@ -152,14 +152,17 @@ export default createWidget("private-message-map", {
     }
 
     const result = [h(`div.participants${hideNamesClass}`, participants)];
+    const controls = [];
 
-    const controls = [
-      this.attach("button", {
-        action: "toggleEditing",
-        label: "private_message_info.edit",
-        className: "btn btn-default add-remove-participant-btn"
-      })
-    ];
+    if (attrs.canRemoveAllowedUsers || attrs.canRemoveSelfId) {
+      controls.push(
+        this.attach("button", {
+          action: "toggleEditing",
+          label: "private_message_info.edit",
+          className: "btn btn-default add-remove-participant-btn"
+        })
+      );
+    }
 
     if (attrs.canInvite && this.state.isEditing) {
       controls.push(
@@ -171,7 +174,9 @@ export default createWidget("private-message-map", {
       );
     }
 
-    result.push(h("div.controls", controls));
+    if (controls.length) {
+      result.push(h("div.controls", controls));
+    }
 
     return result;
   },

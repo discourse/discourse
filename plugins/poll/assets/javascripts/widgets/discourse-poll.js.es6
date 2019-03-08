@@ -420,7 +420,9 @@ createWidget("discourse-poll-buttons", {
       const castVotesDisabled = !attrs.canCastVotes;
       contents.push(
         this.attach("button", {
-          className: `btn cast-votes ${castVotesDisabled ? "" : "btn-primary"}`,
+          className: `btn cast-votes ${
+            castVotesDisabled ? "btn-default" : "btn-primary"
+          }`,
           label: "poll.cast-votes.label",
           title: "poll.cast-votes.title",
           disabled: castVotesDisabled,
@@ -433,7 +435,7 @@ createWidget("discourse-poll-buttons", {
     if (attrs.showResults || hideResultsDisabled) {
       contents.push(
         this.attach("button", {
-          className: "btn toggle-results",
+          className: "btn btn-default toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
           icon: "far-eye-slash",
@@ -449,7 +451,7 @@ createWidget("discourse-poll-buttons", {
       } else {
         contents.push(
           this.attach("button", {
-            className: "btn toggle-results",
+            className: "btn btn-default toggle-results",
             label: "poll.show-results.label",
             title: "poll.show-results.title",
             icon: "far-eye",
@@ -492,7 +494,7 @@ createWidget("discourse-poll-buttons", {
         if (!attrs.isAutomaticallyClosed) {
           contents.push(
             this.attach("button", {
-              className: "btn toggle-status",
+              className: "btn btn-default toggle-status",
               label: "poll.open.label",
               title: "poll.open.title",
               icon: "unlock-alt",

@@ -257,6 +257,33 @@ describe WebHook do
       expect(payload["id"]).to eq(post.topic.id)
     end
 
+    it 'should enqueue the destroyed hooks with tag filter for post events' do
+      tag = Fabricate(:tag)
+      Fabricate(:web_hook, tags: [tag])
+
+      post = PostCreator.create!(user,
+        raw: 'post',
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        skip_validations: true
+      )
+
+      topic.tags = [tag]
+      topic.save!
+
+      Jobs::EmitWebHookEvent.jobs.clear
+      PostDestroyer.new(user, post).destroy
+
+      job = Jobs::EmitWebHookEvent.new
+      job.expects(:web_hook_request).times(2)
+
+      args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
+      job.execute(args.with_indifferent_access)
+
+      args = Jobs::EmitWebHookEvent.jobs[2]["args"].first
+      job.execute(args.with_indifferent_access)
+    end
+
     it 'should enqueue the right hooks for user events' do
       Fabricate(:user_web_hook, active: true)
 

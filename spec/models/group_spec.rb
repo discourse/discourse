@@ -221,9 +221,9 @@ describe Group do
   end
 
   describe '.refresh_automatic_group!' do
-    it "makes sure the everyone group is not visible" do
+    it "makes sure the everyone group is not visible except to staff" do
       g = Group.refresh_automatic_group!(:everyone)
-      expect(g.visibility_level).to eq(Group.visibility_levels[:owners])
+      expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
     end
 
     it "ensures that the moderators group is messageable by all" do

@@ -19,6 +19,11 @@
         <p>{{model.description}}</p>
       </section>
 
+      {{plugin-outlet name="about-after-description"
+              connectorTagName='section'
+              tagName=''
+              args=(hash model=model)}}
+
       {{#if model.admins}}
         <section class='about admins'>
           <h3>{{d-icon "users"}} {{i18n 'about.our_admins'}}</h3>

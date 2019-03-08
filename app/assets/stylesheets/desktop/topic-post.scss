@@ -47,60 +47,69 @@ section.post-menu-area {
 nav.post-controls {
   padding: 0;
   .like-button {
+    // Like button wrapper
     display: inline-flex;
-    .like-count {
-      color: dark-light-choose($primary-low-mid, $secondary-high);
-    }
-    .widget-button {
-      background: none;
-    }
+    color: $primary-low-mid;
+    margin-right: 0.15em;
     &:hover {
-      background: $primary-low;
-      .like-count {
+      // Like button wrapper on hover
+      button {
+        background: $primary-low;
         color: $primary-medium;
+      }
+    }
+    button {
+      margin-left: 0;
+      margin-right: 0;
+      &.my-likes {
+        // Like count on my posts
+        .d-icon {
+          color: $primary-low-mid;
+          padding-left: 0.45em;
+        }
+      }
+      &.like {
+        // Like button with 0 likes
+        &.d-hover {
+          background: $love-low;
+          .d-icon {
+            color: $love;
+          }
+        }
+      }
+      &.has-like {
+        // Like button after I've liked
+        .d-icon {
+          color: $love;
+        }
+        &.d-hover {
+          background: $primary-low;
+          .d-icon {
+            color: $primary-medium;
+          }
+        }
+      }
+      &[disabled] {
+        // Disabled like button
+        cursor: not-allowed;
+      }
+      &.like-count {
+        // Like count button
+        &:not(.my-likes) {
+          padding-right: 0;
+        }
         &.d-hover {
           color: $primary;
         }
-      }
-      .d-hover {
-        background: none;
-      }
-      .d-icon {
-        color: $love;
-      }
-    }
-    &:active {
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-      .widget-button {
-        box-shadow: none;
+        + .toggle-like {
+          // Like button when like count is present
+          padding-left: 0.45em;
+          &.d-hover {
+            background: $primary-low;
+          }
+        }
       }
     }
-    .like {
-      &:focus {
-        background: none;
-      }
-    }
-    .like-count {
-      font-size: $font-up-1;
-      margin-left: 0;
-      .d-icon {
-        padding-left: 10px;
-        color: dark-light-choose($primary-low-mid, $secondary-high);
-      }
-      &.my-likes {
-        margin-right: -2px;
-      }
-      &.regular-likes {
-        margin-right: -12px;
-      }
-    }
-    .toggle-like {
-      padding: 8px 8px;
-      margin-left: 2px;
-    }
-  }
-  .highlight-action {
-    color: dark-light-choose($primary-medium, $secondary-high);
   }
   a,
   button {
@@ -185,23 +194,6 @@ nav.post-controls {
       .d-icon {
         color: $secondary;
       }
-    }
-    &.like.d-hover,
-    &.like:focus {
-      color: $love;
-      background: $love-low;
-      .d-icon {
-        color: $love;
-      }
-    }
-    &.has-like .d-icon {
-      color: $love;
-    }
-    &.has-like[disabled]:hover {
-      background: transparent;
-    }
-    &.has-like[disabled]:active {
-      box-shadow: none;
     }
     &.bookmark {
       padding: 8px 11px;

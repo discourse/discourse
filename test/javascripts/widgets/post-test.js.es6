@@ -852,3 +852,22 @@ widgetTest("pm map", {
     assert.equal(find(".private-message-map .user").length, 1);
   }
 });
+
+widgetTest("post notice", {
+  template: '{{mount-widget widget="post" args=args}}',
+  beforeEach() {
+    this.set("args", {
+      postNoticeType: "returning",
+      postNoticeTime: new Date("2010-01-01 12:00:00 UTC"),
+      username: "codinghorror"
+    });
+  },
+  test(assert) {
+    assert.equal(
+      find(".post-notice")
+        .text()
+        .trim(),
+      I18n.t("post.notice.return", { user: "codinghorror", time: "Jan '10" })
+    );
+  }
+});

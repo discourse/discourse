@@ -214,6 +214,10 @@ aside.quote {
   margin: -2px;
 }
 
+.post-ignored {
+  font-style: italic;
+}
+
 .post-action {
   .undo-action,
   .act-action {
@@ -353,7 +357,10 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 0.5em;
+
+    & + .controls {
+      margin-top: 0.5em;
+    }
 
     &.hide-names .user {
       .username,
@@ -855,5 +862,24 @@ a.mention-group {
   }
   .buttons {
     margin-bottom: 1em;
+  }
+}
+
+.post-notice {
+  background-color: $tertiary-low;
+  border-top: 1px solid $primary-low;
+  color: $primary;
+  padding: 1em;
+  max-width: calc(
+    #{$topic-body-width} + #{$topic-avatar-width} - #{$topic-body-width-padding} +
+      3px
+  );
+
+  p {
+    margin: 0;
+  }
+
+  .d-icon {
+    margin-right: 1em;
   }
 }

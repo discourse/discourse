@@ -407,8 +407,8 @@ class OptimizedImage < ActiveRecord::Base
           # just ditch the optimized image if there was any errors
           optimized_image.destroy
         ensure
-          file&.unlink
           file&.close
+          file&.unlink if file&.respond_to?(:unlink)
         end
       end
     end

@@ -203,8 +203,24 @@
   border: 1px solid $primary-low;
 }
 
+.d-editor-preview img {
+  padding-bottom: 1.4em;
+  &.emoji,
+  &.avatar,
+  &.site-icon {
+    padding-bottom: 0;
+  }
+}
+
 .d-editor-preview .image-wrapper {
   position: relative;
+  display: inline-block;
+  padding-bottom: 1.4em;
+
+  img {
+    padding-bottom: 0;
+  }
+
   &:hover {
     .button-wrapper {
       opacity: 0.9;
@@ -212,21 +228,22 @@
   }
   .button-wrapper {
     opacity: 0;
-    background: $secondary;
     position: absolute;
     transition: all 0.25s;
     display: flex;
     align-items: center;
-    bottom: 0.75em;
-    left: 0.75em;
-    box-shadow: shadow("dropdown");
+    bottom: 0;
+    left: 0;
     .separator {
-      color: $primary-low;
+      color: $primary-low-mid;
     }
 
     .scale-btn {
       color: $tertiary;
-      padding: 0.2em 0.6em;
+      padding: 0 0.4em;
+      &:first-of-type {
+        padding-left: 0;
+      }
 
       &.active {
         font-weight: bold;

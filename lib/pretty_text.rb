@@ -230,10 +230,11 @@ module PrettyText
     return title unless SiteSetting.enable_emoji?
 
     set = SiteSetting.emoji_set.inspect
+    custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set} });
+        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
       JS
     end
   end
