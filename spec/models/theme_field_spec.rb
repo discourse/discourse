@@ -151,6 +151,27 @@ HTML
 
   let(:key) { "themes.settings_errors" }
 
+  it "forces re-transpilation of theme JS when settings YAML changes" do
+    theme = Fabricate(:theme)
+    settings_field = ThemeField.create!(theme: theme, target_id: Theme.targets[:settings], name: "yaml", value: "setting: 5")
+
+    html = <<~HTML
+      <script type="text/discourse-plugin" version="0.8">
+        alert(settings.setting);
+      </script>
+    HTML
+
+    js_field = ThemeField.create!(theme: theme, target_id: ThemeField.types[:html], name: "header", value: html)
+    old_value_baked = js_field.value_baked
+    settings_field.update!(value: "setting: 66")
+    js_field.reload
+
+    expect(js_field.value_baked).to eq(nil)
+    js_field.ensure_baked!
+    expect(js_field.value_baked).to be_present
+    expect(js_field.value_baked).not_to eq(old_value_baked)
+  end
+
   it "generates errors for bad YAML" do
     yaml = "invalid_setting 5"
     field = create_yaml_field(yaml)
