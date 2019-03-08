@@ -1814,7 +1814,7 @@ en:
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
-    ignore_user_enabled: "Allow ignoring users."
+    ignore_user_enabled: "[Beta] Allow ignoring users."
 
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
