@@ -30,7 +30,12 @@ module Jobs
           @data["job_type"] = job_class.try(:scheduled?) ? "scheduled" : "regular" # Job Type - either s for scheduled or r for regular
           @data["opts"] = opts.to_json # Params - json encoded params for the job
 
-          @data["status"] = 'pending'
+          if ENV["DISCOURSE_LOG_SIDEKIQ_INTERVAL"]
+            @data["status"] = "starting"
+            write_to_log
+          end
+
+          @data["status"] = "pending"
           @start_timestamp = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
           self.class.ensure_interval_logging!
