@@ -76,26 +76,22 @@
       flex-direction: column;
       flex: 1 1 auto;
 
-      .classification-results {
-        border-bottom: 1px solid $primary-low;
+      .separator {
         margin-bottom: 1em;
-        padding-bottom: 1em;
-      }
-
-      .search-result-category {
+        margin-top: 1em;
+        height: 1px;
+        background: $primary-low;
       }
 
       .search-result-tag {
-        .list {
-          .item {
-            display: inline-flex;
+        .discourse-tag {
+          font-size: $font-down-1;
+        }
+      }
 
-            .widget-link.search-link {
-              display: inline;
-              font-size: $font-0;
-              padding: 5px;
-            }
-          }
+      .search-result-category {
+        .widget-link {
+          margin-bottom: 0;
         }
       }
 
@@ -108,12 +104,71 @@
           }
         }
 
-        .discourse-group {
-          display: inline-block;
-          word-break: break-all;
+        .group-result {
+          display: flex;
+          align-items: center;
 
-          .d-icon {
-            margin-right: s(1);
+          .d-icon,
+          .avatar-flair {
+            min-width: 25px;
+            margin-right: 0.5em;
+
+            .d-icon {
+              margin-right: 0;
+            }
+          }
+
+          .avatar-flair-image {
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            min-height: 25px;
+          }
+
+          .group-names {
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            line-height: $line-height-medium;
+
+            &:hover {
+              .name,
+              .slug {
+                color: $primary-high;
+              }
+            }
+
+            .name,
+            .slug {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .name {
+              font-weight: 700;
+            }
+
+            .slug {
+              font-size: $font-down-1;
+              color: $primary-high;
+            }
+          }
+        }
+      }
+
+      .search-result-category,
+      .search-result-user,
+      .search-result-group,
+      .search-result-tag {
+        .list {
+          display: block;
+
+          .item {
+            .widget-link.search-link {
+              flex: 1;
+              font-size: $font-0;
+              padding: 5px;
+            }
           }
         }
       }
@@ -145,26 +200,14 @@
 
             .username {
               color: dark-light-choose($primary-high, $secondary-low);
-              font-size: $font-0;
-              font-weight: 700;
+              font-size: $font-down-1;
             }
 
             .name {
               color: dark-light-choose($primary-high, $secondary-low);
-              font-size: $font-down-1;
+              font-size: $font-0;
+              font-weight: 700;
             }
-          }
-        }
-      }
-
-      &.no-main-results .search-result-user {
-        .user-titles {
-          flex-direction: row;
-          align-items: center;
-
-          .name {
-            margin: 0 0 0 0.25em;
-            font-size: $font-0;
           }
         }
       }
