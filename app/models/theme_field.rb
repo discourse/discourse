@@ -220,6 +220,10 @@ class ThemeField < ActiveRecord::Base
     end
 
     self.error = errors.join("\n").presence
+    if !self.error && self.target_id == Theme.targets[:settings]
+      # when settings YAML changes, we need to re-transpile theme JS and CSS
+      theme.theme_fields.where.not(id: self.id).update_all(value_baked: nil)
+    end
   end
 
   def self.guess_type(name:, target:)
