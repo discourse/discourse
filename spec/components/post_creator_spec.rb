@@ -1278,7 +1278,7 @@ describe PostCreator do
       old_post = Fabricate(:post, user: returning_user, created_at: 31.days.ago)
       post = PostCreator.create(returning_user, title: "this is a returning topic", raw: "this is a post")
       expect(post.custom_fields["post_notice_type"]).to eq("returning")
-      expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.to_s)
+      expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.iso8601)
     end
 
     it "does not generate post notices" do
