@@ -4034,6 +4034,7 @@ en:
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
+        more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"
