@@ -7,6 +7,11 @@ class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER"
   API_KEY ||= "api_key"
+  API_USERNAME ||= "api_username"
+  HEADER_API_KEY ||= "HTTP_API_KEY"
+  HEADER_API_USERNAME ||= "HTTP_API_USERNAME"
+  HEADER_API_USER_EXTERNAL_ID ||= "HTTP_API_USER_EXTERNAL_ID"
+  HEADER_API_USER_ID ||= "HTTP_API_USER_ID"
   USER_API_KEY ||= "HTTP_USER_API_KEY"
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID"
   API_KEY_ENV ||= "_DISCOURSE_API"
@@ -40,7 +45,7 @@ class Auth::DefaultCurrentUserProvider
     request = @request
 
     user_api_key = @env[USER_API_KEY]
-    api_key = @env.blank? ? nil : request[API_KEY]
+    api_key = @env.blank? ? nil : request[API_KEY] || @env[HEADER_API_KEY]
 
     auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
 
@@ -279,7 +284,7 @@ class Auth::DefaultCurrentUserProvider
 
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.where(key: api_key_value).includes(:user).first
-      api_username = request["api_username"]
+      api_username = request[API_USERNAME] || @env[HEADER_API_USERNAME]
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
         Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
@@ -290,9 +295,9 @@ class Auth::DefaultCurrentUserProvider
         api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
       elsif api_username
         User.find_by(username_lower: api_username.downcase)
-      elsif user_id = request["api_user_id"]
+      elsif user_id = request["api_user_id"] || @env[HEADER_API_USER_ID]
         User.find_by(id: user_id.to_i)
-      elsif external_id = request["api_user_external_id"]
+      elsif external_id = request["api_user_external_id"] || @env[HEADER_API_USER_EXTERNAL_ID]
         SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
       end
     end
