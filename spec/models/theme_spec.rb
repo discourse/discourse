@@ -310,6 +310,18 @@ HTML
 
       scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include("font-size:30px")
+
+      # Escapes correctly. If not, compiling this would throw an exception
+      setting.value = <<~MULTILINE
+          \#{$fakeinterpolatedvariable}
+          andanothervalue 'withquotes'; margin: 0;
+      MULTILINE
+
+      theme.set_field(target: :common, name: :scss, value: 'body {font-size: quote($font-size)}')
+      theme.save!
+
+      scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
+      expect(scss).to include('font-size:"#{$fakeinterpolatedvariable}\a andanothervalue \'withquotes\'; margin: 0;\a"')
     end
 
     it "allows values to be used in JS" do
