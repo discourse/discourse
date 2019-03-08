@@ -53,9 +53,23 @@
       padding: 5px 0 0 0;
     }
   }
-
-  tr.input label {
+  .tip,
+  td label {
+    display: block;
+    overflow: hidden;
+    word-wrap: break-word;
     margin-bottom: 0;
+    max-width: 280px;
+    @media screen and (min-width: 500px) {
+      max-width: 400px;
+    }
+  }
+}
+
+.has-alt-auth {
+  .tip,
+  td label {
+    max-width: 250px;
   }
 }
 
@@ -129,7 +143,6 @@
       padding: 15px;
       margin-bottom: 5px;
       max-height: 475px;
-      max-width: 350px;
       @media screen and (max-height: 768px) {
         max-height: 60vh;
       }
@@ -220,9 +233,10 @@
     }
     &:not(:empty),
     &:empty + td {
-      display: block;
       min-height: 1.75em;
-      max-width: 240px;
+      &.bad .svg-icon {
+        vertical-align: middle;
+      }
     }
   }
 }
