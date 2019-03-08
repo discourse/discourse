@@ -790,6 +790,8 @@ posting:
     default: true
   embed_support_markdown:
     default: false
+  embed_whitelist_selector:
+    default: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -1471,9 +1473,6 @@ embedding:
     default: 100
     hidden: true
   embed_title_scrubber:
-    default: ""
-    hidden: true
-  embed_whitelist_selector:
     default: ""
     hidden: true
   embed_blacklist_selector:
