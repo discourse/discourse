@@ -357,7 +357,10 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 0.5em;
+
+    & + .controls {
+      margin-top: 0.5em;
+    }
 
     &.hide-names .user {
       .username,
