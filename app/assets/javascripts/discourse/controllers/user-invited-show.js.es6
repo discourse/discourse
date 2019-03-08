@@ -24,7 +24,7 @@ export default Ember.Controller.extend({
     this.set("searchTerm", "");
   },
 
-  @observes("searchTearm")
+  @observes("searchTerm")
   _searchTermChanged: debounce(function() {
     Invite.findInvitedBy(
       this.get("user"),
