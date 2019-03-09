@@ -45,6 +45,13 @@ RSpec.describe Admin::SiteTextsController do
         expect(JSON.parse(response.body)['site_texts']).to include(include("id" => "title"))
       end
 
+      it 'sets has_more to true if more than 50 results were found' do
+        get "/admin/customize/site_texts.json", params: { q: 'e' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts'].size).to eq(50)
+        expect(JSON.parse(response.body)['extras']['has_more']).to be_truthy
+      end
+
       it 'normalizes quotes during search' do
         value = %q|“That’s a ‘magic’ sock.”|
         put "/admin/customize/site_texts/title.json", params: { site_text: { value: value } }
