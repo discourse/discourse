@@ -404,6 +404,7 @@ class UserMerger
 
     builder.where("y.#{user_id_column_name} = :target_user_id")
     conditions.each { |c| builder.where(c) }
+
     builder
   end
 end
