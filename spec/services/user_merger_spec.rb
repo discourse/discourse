@@ -290,6 +290,32 @@ describe UserMerger do
     expect(MutedUser.where(muted_user_id: source_user.id).count).to eq(0)
   end
 
+  it "merges ignored users" do
+    ignored1 = Fabricate(:user)
+    ignored2 = Fabricate(:user)
+    ignored3 = Fabricate(:user)
+    coding_horror = Fabricate(:coding_horror)
+
+    IgnoredUser.create!(user_id: source_user.id, ignored_user_id: ignored1.id)
+    IgnoredUser.create!(user_id: source_user.id, ignored_user_id: ignored2.id)
+    IgnoredUser.create!(user_id: target_user.id, ignored_user_id: ignored2.id)
+    IgnoredUser.create!(user_id: target_user.id, ignored_user_id: ignored3.id)
+    IgnoredUser.create!(user_id: walter.id, ignored_user_id: source_user.id)
+    IgnoredUser.create!(user_id: coding_horror.id, ignored_user_id: source_user.id)
+    IgnoredUser.create!(user_id: coding_horror.id, ignored_user_id: target_user.id)
+
+    merge_users!
+
+    [ignored1, ignored2, ignored3].each do |m|
+      expect(IgnoredUser.where(user_id: target_user.id, ignored_user_id: m.id).count).to eq(1)
+    end
+    expect(IgnoredUser.where(user_id: source_user.id).count).to eq(0)
+
+    expect(IgnoredUser.where(user_id: walter.id, ignored_user_id: target_user.id).count).to eq(1)
+    expect(IgnoredUser.where(user_id: coding_horror.id, ignored_user_id: target_user.id).count).to eq(1)
+    expect(IgnoredUser.where(ignored_user_id: source_user.id).count).to eq(0)
+  end
+
   context "notifications" do
     it "updates notifications" do
       Fabricate(:notification, user: source_user)

@@ -260,6 +260,9 @@ class UserMerger
     update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
     update_user_id(:muted_users, user_id_column_name: "muted_user_id", conditions: "x.user_id = y.user_id")
 
+    update_user_id(:ignored_users, conditions: "x.ignored_user_id = y.ignored_user_id")
+    update_user_id(:ignored_users, user_id_column_name: "ignored_user_id", conditions: "x.user_id = y.user_id")
+
     Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     update_user_id(:post_actions, conditions: ["x.post_id = y.post_id",
@@ -365,6 +368,7 @@ class UserMerger
     DraftSequence.where(user_id: @source_user.id).delete_all
     GivenDailyLike.where(user_id: @source_user.id).delete_all
     MutedUser.where(user_id: @source_user.id).or(MutedUser.where(muted_user_id: @source_user.id)).delete_all
+    IgnoredUser.where(user_id: @source_user.id).or(IgnoredUser.where(ignored_user_id: @source_user.id)).delete_all
     UserAuthTokenLog.where(user_id: @source_user.id).delete_all
     UserAvatar.where(user_id: @source_user.id).delete_all
     UserAction.where(acting_user_id: @source_user.id).delete_all
@@ -400,7 +404,6 @@ class UserMerger
 
     builder.where("y.#{user_id_column_name} = :target_user_id")
     conditions.each { |c| builder.where(c) }
-
     builder
   end
 end
