@@ -143,14 +143,9 @@ describe Post do
         post
       }
 
-      before do
-        post.trash!
-        post.reload
-      end
-
       describe 'recovery' do
         it 'deletes notices' do
-          expect { post.recover! }
+          expect { post.trash! }
             .to change { post.custom_fields.length }.from(2).to(0)
         end
       end

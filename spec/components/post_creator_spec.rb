@@ -1263,29 +1263,35 @@ describe PostCreator do
 
   context "#create_post_notice" do
     let(:user) { Fabricate(:user) }
-    let(:new_user) { Fabricate(:user) }
-    let(:returning_user) { Fabricate(:user) }
+    let(:staged) { Fabricate(:staged) }
 
-    it "generates post notices" do
-      # new users
-      post = PostCreator.create(new_user, title: "one of my first topics", raw: "one of my first posts")
+    it "generates post notices for new users" do
+      post = PostCreator.create(user, title: "one of my first topics", raw: "one of my first posts")
       expect(post.custom_fields["post_notice_type"]).to eq("first")
-      post = PostCreator.create(new_user, title: "another one of my first topics", raw: "another one of my first posts")
+      post = PostCreator.create(user, title: "another one of my first topics", raw: "another one of my first posts")
       expect(post.custom_fields["post_notice_type"]).to eq(nil)
-
-      # returning users
-      SiteSetting.returning_users_days = 30
-      old_post = Fabricate(:post, user: returning_user, created_at: 31.days.ago)
-      post = PostCreator.create(returning_user, title: "this is a returning topic", raw: "this is a post")
-      expect(post.custom_fields["post_notice_type"]).to eq("returning")
-      expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.iso8601)
     end
 
-    it "does not generate post notices" do
-      Fabricate(:post, user: user, created_at: 3.days.ago)
+    it "generates post notices for returning users" do
+      SiteSetting.returning_users_days = 30
+      old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
+
+      post = PostCreator.create(user, title: "this is a returning topic", raw: "this is a post")
+      expect(post.custom_fields["post_notice_type"]).to eq("returning")
+      expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.iso8601)
+
       post = PostCreator.create(user, title: "this is another topic", raw: "this is my another post")
       expect(post.custom_fields["post_notice_type"]).to eq(nil)
       expect(post.custom_fields["post_notice_time"]).to eq(nil)
+    end
+
+    it "does not generate for non-human or staged users" do
+      [Discourse.system_user, staged].each do |user|
+        expect(user.posts.size).to eq(0)
+        post = PostCreator.create(user, title: "#{user.name}'s first topic", raw: "#{user.name}'s first post")
+        expect(post.custom_fields["post_notice_type"]).to eq(nil)
+        expect(post.custom_fields["post_notice_time"]).to eq(nil)
+      end
     end
   end
 end
