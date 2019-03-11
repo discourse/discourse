@@ -132,7 +132,6 @@ id:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "Eropa (London)"
-        sa_east_1: "South America (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Amerika Timur (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
@@ -633,8 +632,6 @@ id:
         expired: "Undangan ini sudah kadaluarsa"
         rescind: "Hapus"
         rescinded: "Undangan dihapus"
-        rescind_all: "Hapus semua undangan"
-        rescinded_all: "Semua Undnagan dibuang!"
         reinvite: "Kirim Ulang Undangan"
         reinvite_all: "Kirim ulang semua Undangan"
         reinvited: "Undangan sudah dikirim ulang"
@@ -893,8 +890,6 @@ id:
       revisions:
         controls:
           first: "Revisi pertama"
-    category:
-      edit_long: "Ubah"
     topic_statuses:
       locked:
         help: "Topik ini telah ditutup; tidak lagi menerima jawaban baru"

@@ -169,7 +169,6 @@ bs_BA:
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
     cannot_delete:
-      uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
   trust_levels:

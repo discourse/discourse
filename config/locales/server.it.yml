@@ -462,7 +462,6 @@ it:
       email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
       description_incomplete: "Il messaggio di descrizione della categoria deve avere almeno un paragrafo."
     cannot_delete:
-      uncategorized: "Non puoi eliminare la categoria \"Nessuna\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
       topic_exists:
         one: "Non puoi cancellare questa categoria perché ha 1 argomento. L'argomento più vecchio è %{topic_link}."

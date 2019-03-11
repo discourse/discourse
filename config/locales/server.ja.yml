@@ -217,7 +217,6 @@ ja:
       email_already_used_in_category: "'%{email}'はすでに'%{category_name}'カテゴリーに使われています。"
       description_incomplete: "カテゴリーの説明文は最低でも1段落必要です。"
     cannot_delete:
-      uncategorized: "未分類カテゴリは削除出来ません"
       has_subcategories: "サブカテゴリを持っているため、このカテゴリを削除できません。"
       topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
     uncategorized_description: "カテゴリーを必要としない、または既存のカテゴリーにマッチしないトピックです。"

@@ -310,7 +310,6 @@ et:
       email_already_used_in_group: "Grupp '%{group_name}' juba kasutab meiliaadressi '%{email}'."
       email_already_used_in_category: "'%{email}' on juba liigi '%{category_name}' poolt kasutusse võetud."
     cannot_delete:
-      uncategorized: "Ei saa kustutada Liigitamata liiki"
       has_subcategories: "Seda foorumit ei saa kustutada, kuna tal on alamfoorumid."
       topic_exists_no_oldest: "Seda foorumit ei saa kustutada, kuna teemade arv on %{count}."
     uncategorized_description: "Teemad, mis ei vaja või mida ei saa liigitada ühegi olemasoleva foorumi alla."

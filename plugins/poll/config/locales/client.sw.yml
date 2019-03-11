@@ -46,9 +46,6 @@ sw:
         title: "Funga uchaguzi"
         label: "Funga"
         confirm: "Unauhakika unataka kufunga uchaguzi huu?"
-      automatic_close:
-        closes_in: "karibu katika<strong>%{timeLeft}</strong>"
-        age: "imefungwa <strong>%{age}</strong>"
       error_while_toggling_status: "Samahani kulikuwa na hitilafu kwenye kubadilisha hali ya uchaguzi huu."
       error_while_casting_votes: "Samahani kulikuwa na hitilafu kwenye kupiga kura."
       error_while_fetching_voters: "Samahani kulikuwa na hitilafu kwenye kuonyesha wapiga kura."

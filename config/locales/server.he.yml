@@ -160,6 +160,11 @@ he:
     permalink: "קישור"
     imported_from: "זה נושא דיון מלווה לערך המקורי ב- %{link}"
     in_reply_to: "◄ %{username}"
+    replies:
+      one: "%{count} הודעות"
+      two: "%{count} הודעות"
+      many: "%{count} הודעות"
+      other: "%{count} הודעות"
   no_mentions_allowed: "מצטערים, אך אינכם יכולים לאזכר משתמשים אחרים."
   too_many_mentions:
     one: "מצטערים, אתם יכולים לאזכר רק משתמש אחד בפוסט"
@@ -403,7 +408,6 @@ he:
       email_already_used_in_category: "'%{email}' כבר בשימוש על ידי הקטגוריה '%{category_name}'."
       description_incomplete: "לתיאור קטגוריה זו צריכה להיות לפחות פסקה אחת."
     cannot_delete:
-      uncategorized: "לא ניתן להסיר תוכן ללא קטגוריה"
       has_subcategories: "לא ניתן להסיר קטגוריה זו משום שיש בה תת-קטגוריות."
       topic_exists_no_oldest: "לא ניתן להסיר קטגוריה זו משום שסך הנושאים הוא %{count}."
     uncategorized_description: "נושאים שלא דורשים קטגוריה מסויימת, או שאינם מתאימים לאף קטגוריה קיימת."

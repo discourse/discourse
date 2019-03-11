@@ -140,7 +140,7 @@ sl:
 
           Medtem vas ne bom motil.
     new_user_narrative:
-      reset_trigger: "novi uporabnik"
+      reset_trigger: "nov uporabnik"
       title: "Priznanje o opravljenem vodiču za novega uporabnika"
       cert_title: "Priznanje za uspešno končan vodič za nove uporabnike."
       hello:
@@ -155,7 +155,7 @@ sl:
           - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
       onebox:
         instructions: |-
-          Kot naslednji korak, Ali lahko delite enega od spodnjih povezav z menoj? Odgovorite z **povezavo v svoji vrstici**, in se bo samodejno razširila tako, da bo vsebovala kratkek povzetek.
+          Kot naslednji korak, ali lahko delite enega od spodnjih povezav z menoj? Odgovorite s **povezavo v svoji vrstici**, in se bo samodejno razširila tako, da bo vsebovala kratkek povzetek.
 
           Za kopiranje poljubne povezave, pritisnite in držite na mobilni napravi ali kliknite na desen gumb na vaši miški:
 
@@ -191,9 +191,9 @@ sl:
           Poskusite naložiti to sliko ali da prilepite povezavo v svojo vrstico!
       formatting:
         instructions: |-
-          Ali lahko naredite nekaj besed **krepkih** ali _povdarjenih_ v vašem odgovoru?
+          Ali lahko naredite nekaj besed **krepkih** ali _poudarjenih_ v vašem odgovoru?
 
-          - napišite `**krepko**` ali `_povdarjeno_`
+          - napišite `**krepko**` ali `_poudarjeno_`
 
           - ali pritisnite <kbd><b>B</b></kbd> ali <kbd><i>I</i></kbd> gumba v urejevalniku
         reply: |-
@@ -201,7 +201,7 @@ sl:
         not_found: |-
           Ah, nisem našel nobenega oblikovanja v vašem odgovoru. :pencil2:
 
-          Ali lahko poskusite ponovno? Uporabite <kbd><b>B</b></kbd> krepko ali <kbd><i>I</i></kbd> povdarjeno gumbe v vašem urejevalniku.
+          Ali lahko poskusite ponovno? Uporabite <kbd><b>B</b></kbd> krepko ali <kbd><i>I</i></kbd> poudarjeno gumbe v vašem urejevalniku.
       quoting:
         instructions: |-
           Ali me lahko poskusite citirati v svojem odgovoru, tako da bom vedel na kateri del sporočila odgovarjate?
@@ -225,7 +225,7 @@ sl:
         instructions: |-
           Če se hočete naučiti kaj novega, izberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**.  Če to storite, se vam mogoče obeta :gift: v prihodnosti!
         reply: |-
-          Enkratno! Sedaj lahko kadarkoli najdete pot nazaj na najin zaseben razgovor, enostavno preko [Zaznamki zavihka v vašem profilu](%{profile_page_url}/activity/bookmarks). Samo izberite vašo profilno sliko zgoraj desno &#8599;
+          Enkratno! Sedaj lahko kadarkoli najdete pot nazaj na najin zaseben pogovor, enostavno preko [Zaznamki zavihka v vašem profilu](%{profile_page_url}/activity/bookmarks). Samo izberite vašo profilno sliko zgoraj desno &#8599;
         not_found: |-
           Oh, ne vidim nobenega zaznamka v tej temi. Ali ste našli zaznamek pod vsakim prispevkom? Uporabite prikaži več <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> za prikaz ostalih akcij.
       emoji:
@@ -249,7 +249,7 @@ sl:
           (Če ste na mobilni napravi, lahko vnesete Emoji tudi neposredno na vaši tipkovnici.)
       mention:
         instructions: |-
-          Kdaj boste hoteli nekoga opozoriti, tudi če mu ne boste odgovorili neposredno. Vnestite `@` in potem vnesite ime uporabnika za omembo.
+          Kdaj boste hoteli nekoga opozoriti na razpravo, tudi če mu ne boste odgovorili neposredno. Vnestite `@` in potem vnesite ime uporabnika za omembo.
 
           Ali lahko omenite **`@%{discobot_username}`** v svojem odgovoru?
         reply: |-
@@ -292,7 +292,7 @@ sl:
           Hmm… izgleda da imate težave. Res mi je žal. Ali ste iskali <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> besedo **capy&#8203;bara**?
       end:
         message: |-
-          Hvala, ker ste vztrajali z menoj, @%{username}! Za vas sem naredil tole, ker mislim, da ste si ga zaslužili:
+          Hvala, ker ste vztrajali z menoj, @%{username}! Ker ste ga res zaslužili sem vam izdelal:
 
           %{certificate}
 
