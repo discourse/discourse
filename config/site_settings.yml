@@ -1030,23 +1030,28 @@ files:
   s3_access_key_id:
     default: ""
     secret: true
+    shadowed_by_global: true
   s3_secret_access_key:
     default: ""
     secret: true
+    shadowed_by_global: true
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"
+    shadowed_by_global: true
   s3_upload_bucket:
     default: ""
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+    shadowed_by_global: true
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
   s3_force_path_style:
     default: false
+    shadowed_by_global: true
   s3_configure_tombstone_policy:
     default: true
     shadowed_by_global: true
