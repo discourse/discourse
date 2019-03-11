@@ -290,7 +290,9 @@ class TopicsController < ApplicationController
       end
 
       if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
-        allowed_tags = category.tags.pluck(:name)
+        category_tags = category.tags.pluck(:name)
+        category_tag_groups = category.tag_groups.joins(:tags).pluck("tags.name")
+        allowed_tags = (category_tags + category_tag_groups).uniq
 
         if topic_tags.present? && allowed_tags.present?
           invalid_tags = topic_tags - allowed_tags
