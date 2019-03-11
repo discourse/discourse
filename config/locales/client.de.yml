@@ -109,9 +109,7 @@ de:
       next_month: "Nächster Monat"
       placeholder: Datum
     share:
-      topic_html: 'Thema: <span class="topic-title">
-
-        %{topicTitle}</span> '
+      topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span> '
       post: "Beitrag #%{postNumber}"
       close: "Schließen"
       twitter: "Auf Twitter teilen"
@@ -162,15 +160,18 @@ de:
         ap_south_1: "Asien-Pazifik (Mumbai)"
         ap_southeast_1: "Asien-Pazifik (Singapur)"
         ap_southeast_2: "Asien-Pazifik (Sydney)"
+        ca_central_1: "Kanada (Zentral)"
         cn_north_1: "China (Peking)"
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EU (Stockholm)"
         eu_west_1: "EU (Irland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
-        sa_east_1: "Südamerika (São Paulo)"
+        sa_east_1: "Südamerika (Sao Paulo)"
         us_east_1: "USA Ost (Nord-Virginia)"
         us_east_2: "USA Ost (Ohio)"
+        us_gov_east_1: "AWS GovCloud (US-Ost)"
         us_gov_west_1: "AWS GovCloud (USA)"
         us_west_1: "USA West (Nordkalifornien)"
         us_west_2: "USA West (Oregon)"
@@ -574,7 +575,7 @@ de:
       private_message: "Nachricht"
       private_messages: "Nachrichten"
       ignore: "Ignorieren"
-      watch: "Beobachten"
+      unignore: "Nicht mehr ignorieren"
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
@@ -656,6 +657,8 @@ de:
       users: "Benutzer"
       muted_users: "Stummgeschaltet"
       muted_users_instructions: "Benachrichtigungen von diesen Benutzern werden unterdrückt."
+      ignored_users: "Ignoriert"
+      ignored_users_instructions: "Liste aller ignorierten Benutzer"
       muted_topics_link: "Zeige stummgeschaltete Themen"
       watched_topics_link: "Zeige beobachtete Themen"
       tracked_topics_link: "Zeige verfolgte Themen"
@@ -692,6 +695,7 @@ de:
         emails: "E-Mails"
         notifications: "Benachrichtigungen"
         categories: "Kategorien"
+        users: "Benutzer"
         tags: "Schlagwörter"
         interface: "Oberfläche"
         apps: "Apps"
@@ -903,9 +907,9 @@ de:
         expired: "Diese Einladung ist abgelaufen."
         rescind: "Einladung zurücknehmen"
         rescinded: "Einladung zurückgenommen"
-        rescind_all: "Alle Eingeladungen entfernen"
-        rescinded_all: "Alle Einladungen wurden entfernt!"
-        rescind_all_confirm: "Alle Einladungen wirklich entfernen?"
+        rescind_all: "Alle ausgelaufenen Einladungen entfernen"
+        rescinded_all: "Alle ausgelaufenen Einladungen entfernt!"
+        rescind_all_confirm: "Sollen alle ausgelaufenen Einladungen entfernt werden?"
         reinvite: "Einladung erneut senden"
         reinvite_all: "Alle Einladungen erneut senden"
         reinvite_all_confirm: "Bist Du dir sicher alle Einladungen nochmals zu senden?"
@@ -1399,7 +1403,7 @@ de:
         other: "<span>{{username}}, {{username2}} und {{count}} andere</span> {{description}}"
       liked_consolidated_description:
         one: "gefällt {{count}} deiner Beiträge"
-        other: "gefällt {{count}} deiner Beiträge"
+        other: "gefallen {{count}} deiner Beiträge"
       liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
@@ -1645,6 +1649,7 @@ de:
         when: "Wann:"
         public_timer_types: Globale Zeitschaltuhren
         private_timer_types: Zeitschaltuhren für Benutzer
+        time_frame_required: Bitte wählen Sie einen Zeitrahmen aus
       auto_update_input:
         none: "Wähle einen Zeitbereich aus"
         later_today: "Im Laufe des Tages"
@@ -1951,6 +1956,9 @@ de:
       gap:
         one: "einen versteckten Beitrag anzeigen"
         other: "{{count}} versteckte Beiträge anzeigen"
+      notice:
+        first: "Es ist das erste Mal, dass {{user}} einen Beitrag schrieb - lasst ihn uns in unserer Community willkommenheissen!"
+        return: "Es ist eine Weile her, dass wir {{user}} gesehen haben. Der letzte Beitrag war in {{time}}."
       unread: "Beitrag ist ungelesen"
       has_replies:
         one: "{{count}} Antwort"
@@ -2146,8 +2154,8 @@ de:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
       choose: "Kategorie&hellip;"
-      edit: "bearbeiten"
-      edit_long: "Bearbeiten"
+      edit: "Bearbeiten"
+      edit_dialog_title: "%{categoryName}bearbeiten"
       view: "Zeige Themen dieser Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
@@ -2184,6 +2192,8 @@ de:
       already_used: "Diese Farbe wird bereits für eine andere Kategorie verwendet."
       security: "Sicherheit"
       special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
+      uncategorized_security_warning: "Diese Kategorie ist besonders. Sie ist als Sammelpunkt gedacht für Themen, die keine Kategorie haben. Sicherheitseinstellungen sind nicht möglich."
+      uncategorized_general_warning: 'Diese Kategorie ist besonders. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie gewählt wurde. Wenn dies verhindert werden und eine Kategoriewahl erzwungen werden soll, bitte  <a href="{settingLink}"> diese Einstellung</a> deaktivieren. Falls Name oder Beschreibung geändert werden soll, kann dies unter<a href="%{customizeLink}">Anpassen / Textinhalte</a> vorgenommen werden.'
       images: "Bilder"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
@@ -3027,7 +3037,7 @@ de:
         location:
           local: "Lokaler Speicherplatz"
           s3: "S3"
-        backup_storage_error: "Kein Zugriff auf Sicherung: \n%{error_message}"
+        backup_storage_error: "Zugriff auf Backup-Speicher fehlgeschlagen: %{error_message}"
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
@@ -3199,16 +3209,16 @@ de:
             title: "Wähle Basis-Farbschema"
             description: "Basis-Schema:"
           title: "Farben"
-          edit: "Farbschemata bearbeiten"
-          long_title: "Farbschemata"
-          about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Erstelle ein neues Farbschema um zu beginnen."
-          new_name: "Neues Farbschema"
+          edit: "Farbpalette bearbeiten"
+          long_title: "Farbpaletten"
+          about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
+          new_name: "Neue Farbpalette"
           copy_name_prefix: "Kopie von"
-          delete_confirm: "Dieses Farbschema löschen?"
+          delete_confirm: "Diese Farbpalette löschen?"
           undo: "rückgängig"
           undo_title: "Die seit dem letzten Speichern an dieser Farbe vorgenommenen Änderungen rückgängig machen."
           revert: "verwerfen"
-          revert_title: "Diese Farbe auf das Discourse-Standard-Farbschema zurücksetzen."
+          revert_title: "Diese Farbe auf den Standardwert aus der Farbpalette zurücksetzen."
           primary:
             name: "erste"
             description: "Die meisten Texte, Bilder und Ränder."

@@ -364,7 +364,6 @@ da:
       email_already_used_in_group: "'%{email}' anvendes allerede af gruppen '%{group_name}'."
       email_already_used_in_category: "'%{email}' bruges allerede af kategorien '%{category_name}'."
     cannot_delete:
-      uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
       topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
     uncategorized_description: "Emner der ikke behøver kategori, eller ikke passer i eksisterende kategori."

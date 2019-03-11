@@ -16,6 +16,7 @@ fr:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, janvier, février, mars, avril, mai, juin, juillet, août, septembre, octobre, novembre, décembre]
     <<: *datetime_formats
@@ -463,6 +464,7 @@ fr:
           attributes:
             word:
               too_many: "Trop de mots pour cette action"
+  uncategorized_category_name: "Non-catégorisé"
   vip_category_name: "Salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
   meta_category_name: "Retours sur le site"
@@ -524,10 +526,10 @@ fr:
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
       description_incomplete: "Le message de description de la catégorie doit avoir au moins un paragraphe."
-      permission_conflict: "Les autorisations de sous-catégorie ne peuvent pas être moins restrictives que celles du parent."
-      disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées par cette catégorie : %{tags}"
+      permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente."
+      disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
     cannot_delete:
-      uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
+      uncategorized: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; elle ne peut pas être supprimée."
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
       topic_exists:
         one: "Vous ne pouvez pas supprimer cette catégorie car elle contient 1 sujet. Le plus vieux sujet est %{topic_link}."
@@ -790,6 +792,8 @@ fr:
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages privés</a>.</p>'
     user_must_edit: "<p>Ce message a été signalé par la communauté et temporairement masqué.</p>"
+  ignored:
+    hidden_content: '<p>Contenu caché</p>'
   archetypes:
     regular:
       title: "Sujet normal"
@@ -1574,7 +1578,7 @@ fr:
     attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     enable_forwarded_emails: "[BÊTA] Autoriser les utilisateurs de créer des sujets en transferant un courriel."
     always_show_trimmed_content: "Toujours montrer la partie réduite des courriels entrants. ATTENTION : cela peut révéler les adresses courriels."
-    private_email: "Ne pas inclure du contenu de messages ou de sujets à des fins de vie privée. REMARQUE : cela désactive aussi le résumé par courriels."
+    private_email: "Ne pas inclure du contenu de messages ou de sujets pour plus de confidentialité. REMARQUE : cela désactive aussi le résumé par courriels."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connexions au serveur POP3. (Recommandé)"
@@ -1628,6 +1632,7 @@ fr:
     show_inactive_accounts: "Autoriser les utilisateurs connectés à parcourir les profils de comptes inactifs."
     hide_suspension_reasons: "Ne pas afficher les raisons d'une suspension sur les profils utilisateurs."
     log_personal_messages_views: "Logguer les vues de messages directs par Admin pour d'autres utilisateurs/groupes."
+    ignore_user_enabled: "[Bêta] Permettre d'ignorer des utilisateurs."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -1685,6 +1690,7 @@ fr:
     code_formatting_style: "Le bouton Code dans l'éditeur utilisera ce style de formatage par défaut"
     max_allowed_message_recipients: "Nombre maximum de destinataires autorisés dans un message."
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
+    returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
     default_email_personal_messages: "Envoyer un courriel quand quelqu'un envoie un message à l'utilisateur par défaut."
@@ -1715,7 +1721,7 @@ fr:
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
     min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
-    allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via clés d'API. Le symbole * peut être utilisé pour remplacer n'importe qu'elle partie de celle-ci (ex : www.exemple.fr/*)."
+    allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via clés d'API. Le symbole * peut être utilisé pour remplacer n'importe quelle partie de celle-ci (ex : www.exemple.fr/*)."
     allowed_user_api_push_urls: "URL autorisées pour le service push du serveur vers l'API utilisateur"
     expire_user_api_keys_days: "Nombre de jours avant l'expiration automatique d'une clé API utilisateur (0 pour jamais)"
     tagging_enabled: "Activer les étiquettes sur les sujets ?"

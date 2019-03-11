@@ -261,7 +261,6 @@ bg:
       email_already_used_in_group: "'%{email}' е вече използван от групата '%{group_name}'."
       email_already_used_in_category: "'%{email}' е вече използван за категорията '%{category_name}'."
     cannot_delete:
-      uncategorized: "Не можете да изтриете Некатегоризиран"
       has_subcategories: "Не можете да изтриете тази категория, защото има подкатегории."
       topic_exists_no_oldest: "Не можете да изтриете тази категория, защото броят на темите е %{count}."
   trust_levels:

@@ -89,7 +89,12 @@ ko:
       next_month: "다음 달"
       placeholder: 날짜
     share:
+      topic_html: '토픽: <span class="topic-title">%{topicTitle}</span>'
+      post: "포스트 #%{postNumber}"
       close: "닫기"
+      twitter: "링크를 트위터에 공유"
+      facebook: "링크를 페이스북에 공유"
+      email: "링크를 이메일로 공유"
     action_codes:
       public_topic: "이 글을 %{when} 에 공개"
       private_topic: "이 토픽을 보관 %{when}"
@@ -140,7 +145,6 @@ ko:
         eu_west_1: "유럽연합 (아일랜드)"
         eu_west_2: "EU (런던)"
         eu_west_3: "EU (파리)"
-        sa_east_1: "남 아메리카 (상파울로)"
         us_east_1: "미국 동부 (N. 버지니아)"
         us_east_2: "미국 동부 (오하이오)"
         us_gov_west_1: "AWS GovCloud(US)"
@@ -227,6 +231,10 @@ ko:
       new_topic: "새로운 토픽 초안"
       new_private_message: "새로운 비공개 메시지 초안"
       topic_reply: "임시 답글"
+      abandon:
+        confirm: "이 토픽에 이미 열어둔 초안이 있습니다. 기존 초안을 버리길 원하시나요?"
+        yes_value: "예, 버립니다."
+        no_value: "아니요, 버리지 않습니다."
     topic_count_latest:
       other: "{{count}}개의 새 토픽이나 업데이트된 토픽"
     topic_count_unread:
@@ -764,9 +772,6 @@ ko:
         expired: "이 초대장의 기한이 만료되었습니다."
         rescind: "삭제"
         rescinded: "초대가 제거되었습니다."
-        rescind_all: "모든 초대를 제거하기"
-        rescinded_all: "모든 초대가 제거되었습니다!"
-        rescind_all_confirm: "정말로 모든 초대를 제거할까요?"
         reinvite: "초대 메일 재전송"
         reinvite_all: "모든 초대장 다시 보내기"
         reinvite_all_confirm: "정말로 모든 초대장을 다시 보낼까요?"
@@ -1792,8 +1797,6 @@ ko:
       none: "(카테고리 없음)"
       all: "모든 카테고리"
       choose: "카테고리&hellip;"
-      edit: "편집"
-      edit_long: "카테고리 편집"
       view: "카테고리 안의 주제 보기"
       general: "일반"
       settings: "설정"

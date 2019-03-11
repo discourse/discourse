@@ -175,7 +175,6 @@ sr:
         eu_central_1: "EU (Frankfurt)"
         eu_west_1: "EU (Irska)"
         eu_west_2: "EU (London)"
-        sa_east_1: "Južna Amerika (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
@@ -1187,8 +1186,6 @@ sr:
     category:
       can: "može&hellip"
       none: "(nema kategorije)"
-      edit: "izmeni"
-      edit_long: "Izmeni"
       view: "Prikaži Teme u Kategoriji"
       general: "Opšti"
       settings: "Podešavanje"

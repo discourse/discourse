@@ -363,7 +363,6 @@ sw:
       email_already_used_in_category: "'%{email}' tayari inatumika kwenye kategoria '%{group_name}'."
       description_incomplete: "Chapisho la maelezo kwenye kategoria lazima ziwe na aya moja au zaidi."
     cannot_delete:
-      uncategorized: "Hauwezi Kufuta Mada Ambazo Hazina Kategoria"
       has_subcategories: "Hauwezi kufuta kategoria kwa sababu ina kategoria zingine."
       topic_exists_no_oldest: "Hauwezi kufuta kategoria hii  kwa sababu ina idadi ya mada %{count}."
     uncategorized_description: "Mada ambazo hazina kategoria, au haziwezi kuwekwa kwenye kategoria zingine."
