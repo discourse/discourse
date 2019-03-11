@@ -451,7 +451,7 @@ describe TopicUser do
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
 
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
       SiteSetting.default_email_mailing_list_mode = true
       SiteSetting.default_email_mailing_list_mode_frequency = 1
 

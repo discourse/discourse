@@ -1280,7 +1280,7 @@ describe Topic do
 
         describe 'user that is watching the new category' do
           it 'should generate the notification for the topic' do
-            SiteSetting.queue_jobs = false
+            run_jobs_synchronously!
 
             topic.posts << Fabricate(:post)
 
@@ -1602,7 +1602,7 @@ describe Topic do
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
-        SiteSetting.queue_jobs = false
+        run_jobs_synchronously!
 
         expect(topic.topic_timers.first.duration).to eq(4)
 
