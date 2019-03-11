@@ -216,7 +216,7 @@ export default Ember.Controller.extend({
       return;
     }
 
-    var args = { q: searchTerm, page: this.get("page") };
+    let args = { q: searchTerm, page: this.get("page") };
 
     this.set("searching", true);
     this.set("loading", true);
