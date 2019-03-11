@@ -294,6 +294,10 @@ class User < ActiveRecord::Base
     self.id > 0
   end
 
+  def bot?
+    !self.human?
+  end
+
   def effective_locale
     if SiteSetting.allow_user_locale && self.locale.present?
       self.locale
