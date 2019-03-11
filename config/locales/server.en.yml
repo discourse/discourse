@@ -2877,7 +2877,7 @@ en:
 
         This threshold can be changed via the `silence_new_user` site settings.
 
-    f:
+    spam_post_blocked:
       title: "Spam Post Blocked"
       subject_template: "New user %{username} posts blocked due to repeated links"
       text_body_template: |
