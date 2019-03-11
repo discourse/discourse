@@ -532,6 +532,14 @@ users:
   ignore_user_enabled:
     default: false
     client: true
+  ignored_users_count_message_threshold:
+    default: 5
+    client: true
+    min: 1
+  ignored_users_message_gap_days:
+    default: 365
+    client: true
+    min: 1
 
 groups:
   enable_group_directory:

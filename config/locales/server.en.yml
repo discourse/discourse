@@ -2819,6 +2819,18 @@ en:
       %{raw}
       ```
 
+    ignored_users_summary:
+      title: "Ignored User passed threshold"
+      subject_template: "New Ignored user passed threshold"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you about a new ignored user who passed the number of ignores threshold which is: %{ignores_threshold}
+
+        Please check the [user's profile](%{base_url}/u/%{username}/summary).
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
     too_many_spam_flags:
       title: "Too Many Spam Flags"
       subject_template: "New account on hold"
@@ -2865,7 +2877,7 @@ en:
 
         This threshold can be changed via the `silence_new_user` site settings.
 
-    spam_post_blocked:
+    f:
       title: "Spam Post Blocked"
       subject_template: "New user %{username} posts blocked due to repeated links"
       text_body_template: |
