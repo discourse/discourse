@@ -429,6 +429,10 @@ export default Ember.Component.extend({
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
+          self.set(
+            "isEditorFocused",
+            $("textarea.d-editor-input").is(":focus")
+          );
           self.set("emojiPickerIsActive", true);
           return "";
         }
@@ -856,6 +860,7 @@ export default Ember.Component.extend({
         return;
       }
 
+      this.set("isEditorFocused", $("textarea.d-editor-input").is(":focus"));
       this.set("emojiPickerIsActive", !this.get("emojiPickerIsActive"));
     },
 
