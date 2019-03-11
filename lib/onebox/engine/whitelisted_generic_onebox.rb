@@ -307,7 +307,7 @@ module Onebox
       end
 
       def card_html
-        escaped_url = ::Onebox::Helpers.normalize_url_for_output(data[:player])
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(data[:player].gsub(' ', '%20'))
 
         <<~RAW
         <iframe src="#{escaped_url}"
