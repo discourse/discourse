@@ -38,7 +38,7 @@ describe UserProfile do
   end
 
   describe 'new' do
-    let(:user_profile) { Fabricate.build(:user_profile) }
+    let(:user_profile) { UserProfile.new(bio_raw: "test") }
 
     it 'is not valid without user' do
       expect(user_profile.valid?).to be false
