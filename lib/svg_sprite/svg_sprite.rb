@@ -189,10 +189,11 @@ module SvgSprite
 
   FA_ICON_MAP = { 'far fa-' => 'far-', 'fab fa-' => 'fab-', 'fas fa-' => '', 'fa-' => '' }
 
-  SVG_SPRITE_PATHS = Dir.glob(["#{Rails.root}/vendor/assets/svg-icons/**/*.svg",
-                               "#{Rails.root}/plugins/*/svg-icons/*.svg"])
+  CORE_SVG_SPRITES = Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
 
-  def self.sprite_paths(theme_ids = [])
+  def self.custom_svg_sprites(theme_ids = [])
+    custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
+
     # Allow themes to provide custom icons in an SVG sprite asset called "icons-sprite"
     ThemeField.where(name: 'icons-sprite', theme_id: Theme.transform_ids(theme_ids))
       .pluck(:upload_id).each do |upload_id|
@@ -204,10 +205,10 @@ module SvgSprite
         original_path = external_copy.try(:path)
       end
 
-      SVG_SPRITE_PATHS << Discourse.store.path_for(upload) if original_path.present?
+      custom_sprite_paths << Discourse.store.path_for(upload) if original_path.present?
     end
 
-    SVG_SPRITE_PATHS
+    custom_sprite_paths
   end
 
   def self.all_icons(theme_ids = [])
@@ -221,6 +222,7 @@ module SvgSprite
         .delete_if { |i| i.blank? || i.include?("/") }
         .map! { |i| process(i.dup) }
         .merge(SVG_ICONS)
+        .merge(custom_icons(theme_ids))
         .sort
     end
   end
@@ -251,7 +253,8 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
 <svg xmlns='http://www.w3.org/2000/svg' style='display: none;'>
 """.dup
 
-    sprite_paths(theme_ids).each do |fname|
+    paths = CORE_SVG_SPRITES.concat(custom_svg_sprites(theme_ids))
+    paths.each do |fname|
       svg_file = Nokogiri::XML(File.open(fname)) do |config|
         config.options = Nokogiri::XML::ParseOptions::NOBLANKS
       end
@@ -271,11 +274,11 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     svg_subset << '</svg>'
   end
 
-  def self.search(searched_icon)
+  def self.search(searched_icon, theme_ids = [])
     searched_icon = process(searched_icon.dup)
 
-    # TODO: pass theme_ids here too?
-    sprite_paths.each do |fname|
+    paths = CORE_SVG_SPRITES.concat(custom_svg_sprites(theme_ids))
+    paths.each do |fname|
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
@@ -348,6 +351,21 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
 
     theme_icon_settings
+  end
+
+  def self.custom_icons(theme_ids)
+    # Automatically register icons in sprites added via themes or plugins
+    icons = []
+    custom_svg_sprites(theme_ids).each do |fname|
+      svg_file = Nokogiri::XML(File.open(fname))
+      svg_filename = "#{File.basename(fname, ".svg")}"
+
+      svg_file.css('symbol').each do |sym|
+        icons << sym.attributes['id'].value
+      end
+    end
+
+    icons
   end
 
   def self.fa4_shim_file
