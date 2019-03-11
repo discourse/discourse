@@ -902,7 +902,7 @@ describe PostCreator do
     end
 
     it 'can post to a group correctly' do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
 
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)

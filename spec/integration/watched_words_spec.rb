@@ -163,7 +163,7 @@ describe WatchedWord do
     end
 
     it "flags on revisions" do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
       post = Fabricate(:post, topic: Fabricate(:topic, user: tl2_user), user: tl2_user)
       expect {
         PostRevisor.new(post).revise!(post.user, { raw: "Want some #{flag_word.word} for cheap?" }, revised_at: post.updated_at + 10.seconds)

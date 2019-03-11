@@ -730,7 +730,7 @@ describe PostsController do
       end
 
       it 'allows to create posts in import_mode' do
-        SiteSetting.queue_jobs = false
+        run_jobs_synchronously!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
         user = Fabricate(:user)

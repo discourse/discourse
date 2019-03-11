@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UsernameChanger do
   before do
-    SiteSetting.queue_jobs = false
+    run_jobs_synchronously!
   end
 
   describe '#change' do
