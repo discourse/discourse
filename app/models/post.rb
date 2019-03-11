@@ -188,13 +188,13 @@ class Post < ActiveRecord::Base
 
   def trash!(trashed_by = nil)
     self.topic_links.each(&:destroy)
+    self.delete_post_notices
     super(trashed_by)
   end
 
   def recover!
     super
     update_flagged_posts_count
-    delete_post_notices
     recover_public_post_actions
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
@@ -385,6 +385,7 @@ class Post < ActiveRecord::Base
   def delete_post_notices
     self.custom_fields.delete("post_notice_type")
     self.custom_fields.delete("post_notice_time")
+    self.save_custom_fields
   end
 
   def recover_public_post_actions

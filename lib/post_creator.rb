@@ -514,6 +514,8 @@ class PostCreator
   end
 
   def create_post_notice
+    return if @user.id < 0 || @user.staged
+
     last_post_time = Post.where(user_id: @user.id)
       .order(created_at: :desc)
       .limit(1)
