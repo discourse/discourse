@@ -193,7 +193,7 @@ describe PostSerializer do
 
     it "will not show for poster and TL2+ users" do
       expect(json_for_user(nil)[:post_notice_type]).to eq(nil)
-      expect(json_for_user(user)[:post_notice_type]).to eq("returning")
+      expect(json_for_user(user)[:post_notice_type]).to eq(nil)
       expect(json_for_user(user_tl1)[:post_notice_type]).to eq(nil)
       expect(json_for_user(user_tl2)[:post_notice_type]).to eq("returning")
     end
