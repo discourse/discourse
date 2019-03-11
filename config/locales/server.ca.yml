@@ -346,7 +346,6 @@ ca:
       email_already_used_in_group: "'%{email}' ja és fa servir pel grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' ja es fa servir per la categoria '%{category_name}'."
     cannot_delete:
-      uncategorized: "No es pot esborrar una descategoritzada"
       has_subcategories: "No es pot esborrar aquesta categoria perquè té subcategories"
       topic_exists_no_oldest: "No es pot esborrar aquesta categoria perquè el recompte de temes és %{count}."
     uncategorized_description: "Temes que no necessiten una categoria o no encaixen a cap altra categoria existent."

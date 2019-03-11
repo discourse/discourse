@@ -228,7 +228,11 @@ def migrate_to_s3
     exit 1
   end
 
-  unless GlobalSetting.use_s3?
+  unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+    ENV["DISCOURSE_S3_REGION"].present? &&
+    ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+    ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+
     puts <<~TEXT
       Please provide the following environment variables
         - DISCOURSE_S3_BUCKET
@@ -496,102 +500,6 @@ def list_missing_uploads(skip_optimized: false)
 end
 
 ################################################################################
-#                              Recover from tombstone                          #
-################################################################################
-
-task "uploads:recover_from_tombstone" => :environment do
-  if ENV["RAILS_DB"]
-    recover_from_tombstone
-  else
-    RailsMultisite::ConnectionManagement.each_connection { recover_from_tombstone }
-  end
-end
-
-def recover_from_tombstone
-  if Discourse.store.external?
-    puts "This task only works for internal storages."
-    return
-  end
-
-  begin
-    previous_image_size      = SiteSetting.max_image_size_kb
-    previous_attachment_size = SiteSetting.max_attachment_size_kb
-    previous_extensions      = SiteSetting.authorized_extensions
-
-    SiteSetting.max_image_size_kb      = 10 * 1024
-    SiteSetting.max_attachment_size_kb = 10 * 1024
-    SiteSetting.authorized_extensions  = "*"
-
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    public_path = Rails.root.join("public")
-    paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
-    max = paths.size
-
-    paths.each_with_index do |path, index|
-      filename = File.basename(path)
-      printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
-
-      Post.where("raw LIKE ?", "%#{filename}%").find_each do |post|
-        doc = Nokogiri::HTML::fragment(post.raw)
-        updated = false
-
-        image_urls = doc.css("img[src]").map { |img| img["src"] }
-        attachment_urls = doc.css("a.attachment[href]").map { |a| a["href"] }
-
-        (image_urls + attachment_urls).each do |url|
-          next if !url.start_with?("/uploads/")
-          next if Upload.exists?(url: url)
-
-          puts "Restoring #{path}..."
-          tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
-
-          if File.exists?(tombstone_path)
-            File.open(tombstone_path) do |file|
-              new_upload = UploadCreator.new(file, File.basename(url)).create_for(Discourse::SYSTEM_USER_ID)
-
-              if new_upload.persisted?
-                puts "Restored into #{new_upload.url}"
-                DbHelper.remap(url, new_upload.url)
-                updated = true
-              else
-                puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
-              end
-            end
-          else
-            puts "Failed to find file (#{tombstone_path}) in tombstone."
-          end
-        end
-
-        post.rebake! if updated
-      end
-
-      sha1 = File.basename(filename, File.extname(filename))
-      short_url = "upload://#{Base62.encode(sha1.hex)}"
-
-      Post.where("raw LIKE ?", "%#{short_url}%").find_each do |post|
-        puts "Restoring #{path}..."
-
-        File.open(path) do |file|
-          new_upload = UploadCreator.new(file, filename).create_for(Discourse::SYSTEM_USER_ID)
-
-          if new_upload.persisted?
-            puts "Restored into #{new_upload.short_url}"
-            DbHelper.remap(short_url, new_upload.short_url) if short_url != new_upload.short_url
-            post.rebake!
-          else
-            puts "Failed to create upload for #{filename}: #{new_upload.errors.full_messages}."
-          end
-        end
-      end
-    end
-  ensure
-    SiteSetting.max_image_size_kb      = previous_image_size
-    SiteSetting.max_attachment_size_kb = previous_attachment_size
-    SiteSetting.authorized_extensions  = previous_extensions
-  end
-end
-
-################################################################################
 #                        regenerate_missing_optimized                          #
 ################################################################################
 
@@ -793,6 +701,10 @@ end
 task "uploads:fix_incorrect_extensions" => :environment do
   require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
+end
+
+task "uploads:recover_from_tombstone" => :environment do
+  Rake::Task["uploads:recover"].invoke
 end
 
 task "uploads:recover" => :environment do

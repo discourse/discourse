@@ -143,7 +143,7 @@ class InvitesController < ApplicationController
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
-    Invite.rescind_all_invites_from(current_user)
+    Invite.rescind_all_expired_invites_from(current_user)
     render body: nil
   end
 

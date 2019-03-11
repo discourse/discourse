@@ -430,6 +430,38 @@ describe Search do
 
   end
 
+  context 'groups' do
+    def search(user = Fabricate(:user))
+      Search.execute(group.name, guardian: Guardian.new(user))
+    end
+
+    let!(:group) { Group[:trust_level_0] }
+
+    it 'shows group' do
+      expect(search.groups.map(&:name)).to eq([group.name])
+    end
+
+    context 'group visibility' do
+      let!(:group) { Fabricate(:group) }
+
+      before do
+        group.update!(visibility_level: 3)
+      end
+
+      context 'staff logged in' do
+        it 'shows group' do
+          expect(search(Fabricate(:admin)).groups.map(&:name)).to eq([group.name])
+        end
+      end
+
+      context 'non staff logged in' do
+        it 'shows doesn’t show group' do
+          expect(search.groups.map(&:name)).to be_empty
+        end
+      end
+    end
+  end
+
   context 'tags' do
     def search
       Search.execute(tag.name)

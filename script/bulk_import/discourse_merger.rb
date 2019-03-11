@@ -151,7 +151,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       copy_model(c, skip_if_merged: true, is_a_user_model: true, skip_processing: true)
     end
 
-    [UserAssociatedAccount, GithubUserInfo, GoogleUserInfo, InstagramUserInfo, Oauth2UserInfo,
+    [UserAssociatedAccount, GithubUserInfo, Oauth2UserInfo,
       SingleSignOnRecord, EmailChangeRequest
     ].each do |c|
       copy_model(c, skip_if_merged: true, is_a_user_model: true)
@@ -625,16 +625,6 @@ class BulkImport::DiscourseMerger < BulkImport::Base
 
   def process_github_user_info(r)
     return nil if GithubUserInfo.where(github_user_id: r['github_user_id']).exists?
-    r
-  end
-
-  def process_google_user_info(r)
-    return nil if GoogleUserInfo.where(google_user_id: r['google_user_id']).exists?
-    r
-  end
-
-  def process_instagram_user_info(r)
-    return nil if InstagramUserInfo.where(instagram_user_id: r['instagram_user_id']).exists?
     r
   end
 

@@ -87,16 +87,16 @@ class FinalDestination
     result
   end
 
-  def small_get(headers)
-    status_code, headers = nil
+  def small_get(request_headers)
+    status_code, response_headers = nil
 
     catch(:done) do
       Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS)) do |http|
         http.open_timeout = timeout
         http.read_timeout = timeout
-        http.request_get(@uri.request_uri, headers) do |resp|
+        http.request_get(@uri.request_uri, request_headers) do |resp|
           status_code = resp.code.to_i
-          headers = resp.to_hash
+          response_headers = resp.to_hash
 
           # see: https://bugs.ruby-lang.org/issues/15624
           # if we allow response to return then body will be read
@@ -106,7 +106,7 @@ class FinalDestination
       end
     end
 
-    [status_code, headers]
+    [status_code, response_headers]
   end
 
   # this is a new interface for simply getting

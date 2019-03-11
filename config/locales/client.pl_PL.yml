@@ -201,7 +201,6 @@ pl_PL:
         eu_west_1: "EU (Irlandia)"
         eu_west_2: "Europa (Londyn)"
         eu_west_3: "EU (Paris)"
-        sa_east_1: "Ameryka Południowa (Sao Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Wschodnie USA (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
@@ -608,6 +607,7 @@ pl_PL:
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
+      ignore: "Ignoruj"
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
@@ -838,6 +838,8 @@ pl_PL:
       location: "Lokalizacja"
       website: "Strona internetowa"
       email_settings: "Email"
+      text_size:
+        title: "Rozmiar tekstu"
       like_notification_frequency:
         title: "Powiadom o lajkach"
         always: "Zawsze"
@@ -906,9 +908,6 @@ pl_PL:
         expired: "To zaproszenie wygasło."
         rescind: "Usuń"
         rescinded: "Zaproszenie usunięte"
-        rescind_all: "Usuń wszystkie Zaproszenia"
-        rescinded_all: "Wszystkie Zaproszenia usunięte!"
-        rescind_all_confirm: "Jesteś pewny, że chcesz usunąć wszystkie zaproszenia?"
         reinvite: "Ponów zaproszenie"
         reinvite_all: "Wyślij ponownie wszystkie zaproszenia"
         reinvite_all_confirm: "Jesteś pewny, że chcesz ponownie wysłać wszystkie zaproszenia?"
@@ -1334,6 +1333,8 @@ pl_PL:
       composer_actions:
         reply: Odpowiedź
         edit: Edycja
+        create_topic:
+          label: "Nowy temat"
     notifications:
       tooltip:
         regular:
@@ -1545,6 +1546,8 @@ pl_PL:
       move_to_inbox:
         title: "Przenieś do skrzynki odbiorczej"
         help: "Przenieś wiadomość z powrotem do skrzynki odbiorczej"
+      edit_message:
+        title: "Edytuj wiadomość"
       list: "Tematy"
       new: "nowy temat"
       unread: "nieprzeczytane"
@@ -1667,6 +1670,7 @@ pl_PL:
         jump_prompt_of: "%{count} postów"
         jump_prompt_long: "Do którego postu chcesz się przenieść ?"
         jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
+        jump_prompt_or: "lub"
         total: w sumie wpisów
         current: obecny wpis
       notifications:
@@ -1815,6 +1819,9 @@ pl_PL:
           many: "{{count}} wpisów"
           other: "{{count}} wpisów"
         cancel: "Usuń filtr"
+      move_to:
+        title: "Przenieś do"
+        action: "przenieś do"
       split_topic:
         title: "Przenieś do nowego tematu"
         action: "przenieś do nowego tematu"
@@ -1833,6 +1840,8 @@ pl_PL:
           few: "Wybierz temat, do którego chcesz przenieść wybrane <b>{{count}}</b> wpisy."
           many: "Wybierz temat, do którego chcesz przenieść <b>{{count}}</b> wybranych wpisów."
           other: "Wybierz temat, do którego chcesz przenieść <b>{{count}}</b> wybranych wpisów."
+      move_to_new_message:
+        radio_label: "Nowa wiadomość"
       merge_posts:
         title: "Scal wybrane posty"
         action: "scal wybrane posty"
@@ -1955,6 +1964,9 @@ pl_PL:
         rebake: "Odśwież HTML"
         unhide: "Wycofaj ukrycie"
         change_owner: "Zmiana właściciela"
+        lock_post: "Zablokuj Wpis"
+        unlock_post: "Odblokuj Wpis"
+        delete_topic: "usuń temat"
       actions:
         flag: "Oflaguj"
         defer_flags:
@@ -2098,8 +2110,6 @@ pl_PL:
       can: "może&hellip; "
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
-      edit: "edytuj"
-      edit_long: "Edytuj"
       view: "Pokaż Tematy w Kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
@@ -2515,6 +2525,7 @@ pl_PL:
       sort_by_name: "nazwa"
       manage_groups: "Zarządzaj grupą tagów"
       manage_groups_description: "Definiowanie grup do organizowania tagów"
+      cancel_delete_unused: "Anuluj"
       filters:
         without_category: "%{filter} %{tag} tematy"
         with_category: "%{filter} %{tag} tematy w %{category}"

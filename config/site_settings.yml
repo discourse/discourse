@@ -530,8 +530,8 @@ users:
     client: true
   log_personal_messages_views: false
   ignore_user_enabled:
-    hidden: true
     default: false
+    client: true
 
 groups:
   enable_group_directory:
@@ -806,6 +806,8 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
+  returning_users_days:
+    default: 60
 
 email:
   email_time_window_mins:
@@ -1250,7 +1252,7 @@ security:
     list_type: compact
   blacklisted_crawler_user_agents:
     type: list
-    default: "mauibot|semrushbot|ahrefsbot"
+    default: "mauibot|semrushbot|ahrefsbot|blexbot"
     list_type: compact
   slow_down_crawler_user_agents:
     type: list

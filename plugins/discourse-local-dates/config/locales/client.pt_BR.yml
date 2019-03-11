@@ -8,7 +8,11 @@
 pt_BR:
   js:
     discourse_local_dates:
-      title: Inserir Data
+      relative_dates:
+        today: Hoje %{time}
+        tomorrow: Amanhã %{time}
+        yesterday: Ontem %{time}
+      title: Inserir data
       create:
         modal_title: Inserir data
         modal_subtitle: " Converteremos automaticamente a data e o tempo para o fuso horário local do visitante."

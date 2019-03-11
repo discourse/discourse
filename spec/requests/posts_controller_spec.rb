@@ -248,15 +248,22 @@ describe PostsController do
         let(:moderator) { Fabricate(:moderator) }
 
         before do
+          sign_in(moderator)
           PostAction.act(moderator, post1, PostActionType.types[:off_topic])
           PostAction.act(moderator, post2, PostActionType.types[:off_topic])
           Jobs::SendSystemMessage.clear
         end
 
-        it "defers the posts" do
-          sign_in(moderator)
+        it "defers the child posts by default" do
           expect(PostAction.flagged_posts_count).to eq(2)
-          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id], defer_flags: true }
+          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+          expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
+          expect(PostAction.flagged_posts_count).to eq(0)
+        end
+
+        it "can defer all posts based on `agree_with_first_reply_flag` param" do
+          expect(PostAction.flagged_posts_count).to eq(2)
+          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id], agree_with_first_reply_flag: false }
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
           expect(PostAction.flagged_posts_count).to eq(0)
         end
@@ -392,6 +399,15 @@ describe PostsController do
 
         post.reload
         expect(post.raw).to eq('edited body')
+      end
+
+      it "won't update bump date if post is a whisper" do
+        post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
+
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(200)
+
+        expect(post.topic.reload.bumped_at).to be < post.created_at
       end
     end
 

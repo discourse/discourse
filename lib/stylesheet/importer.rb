@@ -144,9 +144,8 @@ COMMENT
     end
 
     def to_scss_variable(name, value)
-      escaped = value.to_s.gsub('"', "\\22")
-      escaped.gsub!("\n", "\\A")
-      "$#{name}: unquote(\"#{escaped}\");\n"
+      escaped = SassC::Script::Value::String.quote(value, sass: true)
+      "$#{name}: unquote(#{escaped});\n"
     end
 
     def imports(asset, parent_path)

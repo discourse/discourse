@@ -262,7 +262,6 @@ hu:
       email_already_used_in_group: "'%{email}' már használva van a '%{group_name}' csoport által."
       email_already_used_in_category: "'%{email}' már használva van a '%{category_name}' kategória által."
     cannot_delete:
-      uncategorized: "Nem kategorizált elemet nem lehet törrölni"
       has_subcategories: "Nem lehet kitörölni ezt a kategóriát, mert vannak alkategóriái."
       topic_exists_no_oldest: "Nem lehet törölni ezt a kategóriát, mert benne a témák száma %{count}."
     uncategorized_description: "Témák, amelyeknek nincs szükségük kategóriára, vagy nem férnek bele semmilyen más létező kategóriába."

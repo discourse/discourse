@@ -106,6 +106,13 @@ describe UserAvatar do
       end
     end
 
+    it "should not raise an error when there's no primary_email" do
+      avatar.user.primary_email.destroy
+      avatar.user.reload
+
+      # If raises an error, test fails
+      avatar.update_gravatar!
+    end
   end
 
   context '.import_url_for_user' do

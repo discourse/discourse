@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
-    :ignore, :watch, :revoke_auth_token
+    :ignore, :unignore, :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
@@ -1004,7 +1004,7 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def watch
+  def unignore
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
 
     IgnoredUser.where(user: current_user, ignored_user_id: params[:ignored_user_id]).delete_all
@@ -1226,6 +1226,7 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
+      :ignored_usernames,
       :theme_ids,
       :locale,
       :bio_raw,

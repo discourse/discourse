@@ -949,8 +949,6 @@ te:
     category:
       can: "can&hellip;"
       none: "(ఏ వర్గం లేదు)"
-      edit: "సవరించు"
-      edit_long: "సవరించు"
       view: "ఈ వర్గంలోని విషయాలు చూడు"
       general: "సాధారణ"
       settings: "అమరికలు"

@@ -25,14 +25,16 @@ en:
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
       short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
       short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
       date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core-2.3.1/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
       long: "%B %-d, %Y, %l:%M%P"
+      # Format directives: https://ruby-doc.org/core-2.6.1/Time.html#method-i-strftime
+      no_day: "%B %Y"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
     month_names:
@@ -524,6 +526,8 @@ en:
             word:
               too_many: "Too many words for that action"
 
+  uncategorized_category_name: "Uncategorized"
+
   vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
 
@@ -587,10 +591,10 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
-      permission_conflict: "Subcategory permissions cannot be less restrictive than parent's."
+      permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
     cannot_delete:
-      uncategorized: "Can't delete Uncategorized"
+      uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
       topic_exists:
         one: "Can't delete this category because it has 1 topic. Oldest topic is %{topic_link}."
@@ -867,6 +871,9 @@ en:
   flagging:
     you_must_edit: '<p>Your post was flagged by the community. Please <a href="%{path}">see your messages</a>.</p>'
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
+
+  ignored:
+    hidden_content: '<p>Hidden content</p>'
 
   archetypes:
     regular:
@@ -1807,6 +1814,8 @@ en:
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
+    ignore_user_enabled: "[Beta] Allow ignoring users."
+
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -1893,6 +1902,8 @@ en:
 
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
     watched_words_regular_expressions: "Watched words are regular expressions."
+
+    returning_users_days: "How many days should pass before a user is considered to be returning."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."

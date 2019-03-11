@@ -481,7 +481,6 @@ zh_CN:
       email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
       description_incomplete: "分类描述帖至少要有一段。"
     cannot_delete:
-      uncategorized: "不能删除未分类。"
       has_subcategories: "不能删除该分类，因为它有子分类"
       topic_exists:
         other: "不能删除该分类，因为它有%{count}个主题。最老的主题是%{topic_link}。"

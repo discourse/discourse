@@ -215,7 +215,6 @@ lt:
       not_found: "Kategorijos nėra!"
       uncategorized_parent: "(Be kategorijos) kategorija negali turėti subkategorijų"
     cannot_delete:
-      uncategorized: "Negalima pašalinti kategorijos (be kategorijos)"
       has_subcategories: "Negalima pašalinti kategorijos, nes ji turi subkategorijų."
   trust_levels:
     newuser:

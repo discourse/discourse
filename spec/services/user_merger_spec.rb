@@ -290,6 +290,32 @@ describe UserMerger do
     expect(MutedUser.where(muted_user_id: source_user.id).count).to eq(0)
   end
 
+  it "merges ignored users" do
+    ignored1 = Fabricate(:user)
+    ignored2 = Fabricate(:user)
+    ignored3 = Fabricate(:user)
+    coding_horror = Fabricate(:coding_horror)
+
+    IgnoredUser.create!(user_id: source_user.id, ignored_user_id: ignored1.id)
+    IgnoredUser.create!(user_id: source_user.id, ignored_user_id: ignored2.id)
+    IgnoredUser.create!(user_id: target_user.id, ignored_user_id: ignored2.id)
+    IgnoredUser.create!(user_id: target_user.id, ignored_user_id: ignored3.id)
+    IgnoredUser.create!(user_id: walter.id, ignored_user_id: source_user.id)
+    IgnoredUser.create!(user_id: coding_horror.id, ignored_user_id: source_user.id)
+    IgnoredUser.create!(user_id: coding_horror.id, ignored_user_id: target_user.id)
+
+    merge_users!
+
+    [ignored1, ignored2, ignored3].each do |m|
+      expect(IgnoredUser.where(user_id: target_user.id, ignored_user_id: m.id).count).to eq(1)
+    end
+    expect(IgnoredUser.where(user_id: source_user.id).count).to eq(0)
+
+    expect(IgnoredUser.where(user_id: walter.id, ignored_user_id: target_user.id).count).to eq(1)
+    expect(IgnoredUser.where(user_id: coding_horror.id, ignored_user_id: target_user.id).count).to eq(1)
+    expect(IgnoredUser.where(ignored_user_id: source_user.id).count).to eq(0)
+  end
+
   context "notifications" do
     it "updates notifications" do
       Fabricate(:notification, user: source_user)
@@ -978,8 +1004,6 @@ describe UserMerger do
   it "deletes external auth infos of source user" do
     UserAssociatedAccount.create(user_id: source_user.id, provider_name: "facebook", provider_uid: "1234")
     GithubUserInfo.create(user_id: source_user.id, screen_name: "example", github_user_id: "examplel123123")
-    GoogleUserInfo.create(user_id: source_user.id, google_user_id: "google@gmail.com")
-    InstagramUserInfo.create(user_id: source_user.id, screen_name: "example", instagram_user_id: "examplel123123")
     Oauth2UserInfo.create(user_id: source_user.id, uid: "example", provider: "example")
     SingleSignOnRecord.create(user_id: source_user.id, external_id: "example", last_payload: "looks good")
     UserOpenId.create(user_id: source_user.id, email: source_user.email, url: "http://example.com/openid", active: true)
@@ -988,8 +1012,6 @@ describe UserMerger do
 
     expect(UserAssociatedAccount.where(user_id: source_user.id).count).to eq(0)
     expect(GithubUserInfo.where(user_id: source_user.id).count).to eq(0)
-    expect(GoogleUserInfo.where(user_id: source_user.id).count).to eq(0)
-    expect(InstagramUserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(Oauth2UserInfo.where(user_id: source_user.id).count).to eq(0)
     expect(SingleSignOnRecord.where(user_id: source_user.id).count).to eq(0)
     expect(UserOpenId.where(user_id: source_user.id).count).to eq(0)

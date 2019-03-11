@@ -658,6 +658,9 @@ class Category < ActiveRecord::Base
 
   def check_permissions_compatibility(parent_permissions, child_permissions)
     parent_groups = parent_permissions.map(&:first)
+
+    return if parent_groups.include?(Group[:everyone].id)
+
     child_groups = child_permissions.map(&:first)
     only_in_subcategory = child_groups - parent_groups
 

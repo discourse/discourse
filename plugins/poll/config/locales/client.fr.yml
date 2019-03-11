@@ -52,8 +52,8 @@ fr:
         label: "Fermer"
         confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
       automatic_close:
-        closes_in: "fermera dans <strong>%{timeLeft}</strong>"
-        age: "fermé <strong>%{age}</strong>"
+        closes_in: "Se termine dans <strong>%{timeLeft}</strong>."
+        age: "Fermé <strong>%{age}</strong>"
       error_while_toggling_status: "Désolé, il y a eu une erreur lors du changement de statut de ce sondage."
       error_while_casting_votes: "Désolé, il y a eu une erreur lors de l'envoi de vos votes."
       error_while_fetching_voters: "Désolé, il y a eu une erreur lors de l'affichage des votants."

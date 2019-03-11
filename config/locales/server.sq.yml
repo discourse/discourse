@@ -174,7 +174,6 @@ sq:
       depth: "You can't nest a subcategory under another"
       invalid_email_in: "'%{email}' nuk është një adresë e vlefshme emaili."
     cannot_delete:
-      uncategorized: "Nuk fshij dot kategorinë \"Uncategorized\""
       has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
       topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:

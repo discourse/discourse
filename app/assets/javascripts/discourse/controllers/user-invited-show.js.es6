@@ -24,7 +24,7 @@ export default Ember.Controller.extend({
     this.set("searchTerm", "");
   },
 
-  @observes("searchTearm")
+  @observes("searchTerm")
   _searchTermChanged: debounce(function() {
     Invite.findInvitedBy(
       this.get("user"),
@@ -56,7 +56,7 @@ export default Ember.Controller.extend({
 
   showSearch: Ember.computed.gte("totalInvites", 10),
 
-  @computed("invitesCount.total", "invitesCount.pending}")
+  @computed("invitesCount.total", "invitesCount.pending")
   pendingLabel(invitesCountTotal, invitesCountPending) {
     if (invitesCountTotal > 50) {
       return I18n.t("user.invited.pending_tab_with_count", {
@@ -90,7 +90,6 @@ export default Ember.Controller.extend({
           Invite.rescindAll()
             .then(() => {
               this.set("rescindedAll", true);
-              this.get("model.invites").clear();
             })
             .catch(popupAjaxError);
         }

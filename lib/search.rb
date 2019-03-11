@@ -598,6 +598,7 @@ class Search
         user_search if @term.present?
         category_search if @term.present?
         tags_search if @term.present?
+        groups_search if @term.present?
       end
       topic_search
     end
@@ -681,6 +682,14 @@ class Search
     users.each do |user|
       @results.add(user)
     end
+  end
+
+  def groups_search
+    groups = Group
+      .visible_groups(@guardian.user, "name ASC", include_everyone: false)
+      .where("name ILIKE :term OR full_name ILIKE :term", term: "%#{@term}%")
+
+    groups.each { |group| @results.add(group) }
   end
 
   def tags_search

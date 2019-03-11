@@ -428,6 +428,11 @@
           margin-bottom: 0;
         }
 
+        a.active {
+          background: $primary-medium;
+          color: $secondary;
+        }
+
         a.blank:not(.active) {
           color: $primary-medium;
         }

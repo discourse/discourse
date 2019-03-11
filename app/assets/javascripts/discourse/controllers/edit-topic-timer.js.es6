@@ -103,6 +103,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     saveTimer() {
+      if (!this.get("topicTimer.updateTime")) {
+        this.flash(
+          I18n.t("topic.topic_status_update.time_frame_required"),
+          "alert-error"
+        );
+        return;
+      }
+
       this._setTimer(
         this.get("topicTimer.updateTime"),
         this.get("topicTimer.status_type")

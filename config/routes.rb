@@ -403,6 +403,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/preferences/emails" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/notifications" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/categories" => "users#preferences", constraints: { username: RouteFormat.username }
+    get "#{root_path}/:username/preferences/users" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/interface" => "users#preferences", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/preferences/apps" => "users#preferences", constraints: { username: RouteFormat.username }
@@ -422,7 +423,7 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
     put "#{root_path}/:username/ignore" => "users#ignore", constraints: { username: RouteFormat.username }
-    delete "#{root_path}/:username/ignore" => "users#watch", constraints: { username: RouteFormat.username }
+    delete "#{root_path}/:username/ignore" => "users#unignore", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
