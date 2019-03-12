@@ -19,10 +19,10 @@ export default Ember.Component.extend({
   btnIcon: Ember.computed.notEmpty("icon"),
 
   @computed("icon", "translatedLabel")
-  btnType(icon, translatedLabel) {
-    if (icon) {
-      return translatedLabel ? "btn-icon-text" : "btn-icon";
-    } else if (translatedLabel) {
+  btnType() {
+    if (this.icon) {
+      return this.translatedLabel ? "btn-icon-text" : "btn-icon";
+    } else if (this.translatedLabel) {
       return "btn-text";
     }
   },
@@ -30,25 +30,22 @@ export default Ember.Component.extend({
   noText: Ember.computed.empty("translatedLabel"),
 
   @computed("title")
-  translatedTitle(title) {
-    if (title) return I18n.t(title);
+  translatedTitle() {
+    if (this.title) return I18n.t(this.title);
   },
 
   @computed("label")
-  translatedLabel(label) {
-    if (label) return I18n.t(label);
+  translatedLabel() {
+    if (this.label) return I18n.t(this.label);
   },
 
   click() {
-    if (typeof this.get("action") === "string") {
-      this.sendAction("action", this.get("actionParam"));
-    } else if (
-      typeof this.get("action") === "object" &&
-      this.get("action").value
-    ) {
-      this.get("action").value(this.get("actionParam"));
-    } else if (typeof this.get("action") === "function") {
-      this.get("action")(this.get("actionParam"));
+    if (typeof this.action === "string") {
+      this.sendAction("action", this.actionParam);
+    } else if (typeof this.action === "object" && this.action.value) {
+      this.action.value(this.actionParam);
+    } else if (typeof this.action === "function") {
+      this.action(this.actionParam);
     }
 
     return false;
