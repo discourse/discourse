@@ -399,8 +399,17 @@ class Search
 
     if slug[1]
       # sub category
-      parent_category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
-      category_id = Category.where(slug: slug[1].downcase, parent_category_id: parent_category_id).pluck(:id).first
+      parent_category_id = Category
+        .where("lower(slug) = ? AND parent_category_id IS NULL", slug[0].downcase)
+        .pluck(:id)
+        .first
+
+      category_id = Category
+        .where("lower(slug) = ? AND parent_category_id = ?",
+          slug[1].downcase, parent_category_id
+        )
+        .pluck(:id)
+        .first
     else
       # main category
       if slug[0][0] == "="
@@ -409,7 +418,7 @@ class Search
         exact = false
       end
 
-      category_id = Category.where(slug: slug[0].downcase)
+      category_id = Category.where("lower(slug) = ?", slug[0].downcase)
         .order('case when parent_category_id is null then 0 else 1 end')
         .pluck(:id)
         .first
