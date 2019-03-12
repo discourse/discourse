@@ -873,24 +873,27 @@ describe Search do
 
     it 'supports category slug and tags' do
       # main category
-      category = Fabricate(:category, name: 'category 24', slug: 'category-24')
+      category = Fabricate(:category, name: 'category 24', slug: 'cateGory-24')
       topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
       post = Fabricate(:post, raw: 'Sams first post', topic: topic)
 
-      expect(Search.execute('sams post #category-24').posts.length).to eq(1)
+      expect(Search.execute('sams post #categoRy-24').posts.length).to eq(1)
       expect(Search.execute("sams post category:#{category.id}").posts.length).to eq(1)
-      expect(Search.execute('sams post #category-25').posts.length).to eq(0)
+      expect(Search.execute('sams post #categoRy-25').posts.length).to eq(0)
 
       sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
       second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
       Fabricate(:post, raw: 'sams second post', topic: second_topic)
 
-      expect(Search.execute("sams post category:category-24").posts.length).to eq(2)
-      expect(Search.execute("sams post category:=category-24").posts.length).to eq(1)
+      expect(Search.execute("sams post category:categoRY-24").posts.length).to eq(2)
+      expect(Search.execute("sams post category:=cAtegory-24").posts.length).to eq(1)
 
       expect(Search.execute("sams post #category-24").posts.length).to eq(2)
       expect(Search.execute("sams post #=category-24").posts.length).to eq(1)
       expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
+
+      expect(Search.execute("sams post #categoRY-24:SUB-category").posts.length)
+        .to eq(1)
 
       # tags
       topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет'), Fabricate(:tag, name: 'HeLlO')]
