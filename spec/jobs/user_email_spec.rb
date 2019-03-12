@@ -189,7 +189,8 @@ describe Jobs::UserEmail do
             data: { original_post_id: pm_from_staff.id }.to_json
           )
 
-          Jobs::UserEmail.new.execute(type: :user_private_message,
+          Jobs::UserEmail.new.execute(
+            type: :user_private_message,
             user_id: suspended.id,
             post_id: pm_from_staff.id,
             notification_id: pm_notification.id
@@ -259,7 +260,8 @@ describe Jobs::UserEmail do
         notification.update_column(:read, true)
         user.user_option.update_column(:email_always, true)
 
-        Jobs::UserEmail.new.execute(type: :user_mentioned,
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
           user_id: user.id,
           post_id: post.id,
           notification_id: notification.id
@@ -273,7 +275,8 @@ describe Jobs::UserEmail do
       it "does send the email if the user is using daily mailing list mode" do
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
 
-        Jobs::UserEmail.new.execute(type: :user_mentioned,
+        Jobs::UserEmail.new.execute(
+          type: :user_mentioned,
           user_id: user.id,
           post_id: post.id,
           notification_id: notification.id
@@ -288,7 +291,8 @@ describe Jobs::UserEmail do
         it "doesn't send an email to a user that's been recently seen" do
           user.update!(last_seen_at: 9.minutes.ago)
 
-          Jobs::UserEmail.new.execute(type: :user_replied,
+          Jobs::UserEmail.new.execute(
+            type: :user_replied,
             user_id: user.id,
             post_id: post.id,
             notification_id: notification.id
@@ -301,7 +305,8 @@ describe Jobs::UserEmail do
           user.update!(last_seen_at: 9.minutes.ago)
           user.user_option.update!(email_always: true)
 
-          Jobs::UserEmail.new.execute(type: :user_replied,
+          Jobs::UserEmail.new.execute(
+            type: :user_replied,
             user_id: user.id,
             post_id: post.id,
             notification_id: notification.id
@@ -509,7 +514,8 @@ describe Jobs::UserEmail do
         before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
-          Jobs::UserEmail.new.execute(type: :user_private_message,
+          Jobs::UserEmail.new.execute(
+            type: :user_private_message,
             user_id: anonymous.id,
             post_id: post.id,
             notification_id: notification.id
@@ -527,7 +533,8 @@ describe Jobs::UserEmail do
                                           post_number: pm_from_staff.post_number,
                                           data: { original_post_id: pm_from_staff.id }.to_json
                                       )
-          Jobs::UserEmail.new.execute(type: :user_private_message,
+          Jobs::UserEmail.new.execute(
+            type: :user_private_message,
             user_id: anonymous.id,
             post_id: pm_from_staff.id,
             notification_id: pm_notification.id
