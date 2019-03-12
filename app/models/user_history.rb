@@ -84,7 +84,8 @@ class UserHistory < ActiveRecord::Base
       merge_user: 65,
       entity_export: 66,
       change_password: 67,
-      topic_timestamps_changed: 68
+      topic_timestamps_changed: 68,
+      approve_user: 69
     )
   end
 
@@ -147,7 +148,8 @@ class UserHistory < ActiveRecord::Base
       :merge_user,
       :entity_export,
       :change_name,
-      :topic_timestamps_changed
+      :topic_timestamps_changed,
+      :approve_user
     ]
   end
 
