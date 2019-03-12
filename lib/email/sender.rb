@@ -21,8 +21,13 @@ module Email
       @user = user
     end
 
-    def send
-      return if SiteSetting.disable_emails == "yes" && @email_type.to_s != "admin_login"
+    def send(is_critical: false)
+      if SiteSetting.disable_emails == "yes" &&
+         @email_type.to_s != "admin_login" &&
+         !is_critical
+
+        return
+      end
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)

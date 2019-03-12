@@ -11,7 +11,6 @@ describe Jobs::UserEmail do
   let(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
   let(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now) }
   let(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago) }
-  let(:mailer) { Mail::Message.new(to: user.email) }
 
   it "raises an error when there is no user" do
     expect { Jobs::UserEmail.new.execute(type: :digest) }.to raise_error(Discourse::InvalidParameters)
@@ -26,13 +25,15 @@ describe Jobs::UserEmail do
   end
 
   it "doesn't call the mailer when the user is missing" do
-    UserNotifications.expects(:digest).never
     Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
+
+    expect(ActionMailer::Base.deliveries).to eq([])
   end
 
   it "doesn't call the mailer when the user is staged" do
-    UserNotifications.expects(:digest).never
     Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
+
+    expect(ActionMailer::Base.deliveries).to eq([])
   end
 
   context "bounce score" do
@@ -45,55 +46,48 @@ describe Jobs::UserEmail do
 
       email_log = EmailLog.where(user_id: user.id).last
       expect(email_log.email_type).to eq("signup")
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        user.email
+      )
     end
 
   end
 
   context 'to_address' do
     it 'overwrites a to_address when present' do
-      UserNotifications.expects(:confirm_new_email).returns(mailer)
-      Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
-      expect(mailer.to).to eq(['jake@adventuretime.ooo'])
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        'jake@adventuretime.ooo'
+      )
     end
   end
 
   context "disable_emails setting" do
     it "sends when no" do
       SiteSetting.disable_emails = 'no'
-      Email::Sender.any_instance.expects(:send).once
       Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        user.email
+      )
     end
 
     it "does not send an email when yes" do
       SiteSetting.disable_emails = 'yes'
-      Email::Sender.any_instance.expects(:send).never
       Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
+
+      expect(ActionMailer::Base.deliveries).to eq([])
     end
 
     it "sends when critical" do
       SiteSetting.disable_emails = 'yes'
-      Email::Sender.any_instance.expects(:send)
       Jobs::CriticalUserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
-    end
-  end
 
-  context "recently seen" do
-    let(:post) { Fabricate(:post, user: user) }
-
-    it "doesn't send an email to a user that's been recently seen" do
-      user.update_column(:last_seen_at, 9.minutes.ago)
-      Email::Sender.any_instance.expects(:send).never
-      Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
-    end
-
-    it "does send an email to a user that's been recently seen but has email_always set" do
-      user.update_attributes(last_seen_at: 9.minutes.ago)
-      user.user_option.update_attributes(email_always: true)
-      PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
-
-      Email::Sender.any_instance.expects(:send)
-      Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        user.email
+      )
     end
   end
 
@@ -145,49 +139,65 @@ describe Jobs::UserEmail do
   context 'args' do
 
     it 'passes a token as an argument when a token is present' do
-      UserNotifications.expects(:forgot_password).with(user, email_token: 'asdfasdf').returns(mailer)
-      Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :forgot_password, user_id: user.id, email_token: 'asdfasdf')
+
+      mail = ActionMailer::Base.deliveries.first
+
+      expect(mail.to).to contain_exactly(user.email)
+      expect(mail.body).to include("asdfasdf")
     end
 
     context "post" do
       let(:post) { Fabricate(:post, user: user) }
 
-      it 'passes a post as an argument when a post_id is present' do
-        UserNotifications.expects(:user_private_message).with(user, post: post).returns(mailer)
-        Email::Sender.any_instance.expects(:send)
-        Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
-      end
-
       it "doesn't send the email if you've seen the post" do
-        Email::Sender.any_instance.expects(:send).never
         PostTiming.record_timing(topic_id: post.topic_id, user_id: user.id, post_number: post.post_number, msecs: 6666)
         Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       it "doesn't send the email if the user deleted the post" do
-        Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
         Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       it "doesn't send the email if user of the post has been deleted" do
-        Email::Sender.any_instance.expects(:send).never
         post.update_attributes!(user_id: nil)
         Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       context 'user is suspended' do
         it "doesn't send email for a pm from a regular user" do
-          Email::Sender.any_instance.expects(:send).never
           Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, post_id: post.id)
+
+          expect(ActionMailer::Base.deliveries).to eq([])
         end
 
         it "does send an email for a pm from a staff user" do
           pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
           pm_from_staff.topic.topic_allowed_users.create!(user_id: suspended.id)
-          Email::Sender.any_instance.expects(:send)
-          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, post_id: pm_from_staff.id)
+
+          pm_notification = Fabricate(:notification,
+            user: suspended,
+            topic: pm_from_staff.topic,
+            post_number: pm_from_staff.post_number,
+            data: { original_post_id: pm_from_staff.id }.to_json
+          )
+
+          Jobs::UserEmail.new.execute(type: :user_private_message,
+            user_id: suspended.id,
+            post_id: pm_from_staff.id,
+            notification_id: pm_notification.id
+          )
+
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+            suspended.email
+          )
         end
       end
 
@@ -195,15 +205,17 @@ describe Jobs::UserEmail do
         before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
-          Email::Sender.any_instance.expects(:send).never
           Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, post_id: post.id)
+
+          expect(ActionMailer::Base.deliveries).to eq([])
         end
 
         it "doesn't send email for a pm from a staff user" do
           pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
           pm_from_staff.topic.topic_allowed_users.create!(user_id: anonymous.id)
-          Email::Sender.any_instance.expects(:send).never
           Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, post_id: pm_from_staff.id)
+
+          expect(ActionMailer::Base.deliveries).to eq([])
         end
       end
     end
@@ -244,17 +256,61 @@ describe Jobs::UserEmail do
       end
 
       it "does send the email if the notification has been seen but the user is set for email_always" do
-        Email::Sender.any_instance.expects(:send)
         notification.update_column(:read, true)
         user.user_option.update_column(:email_always, true)
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+
+        Jobs::UserEmail.new.execute(type: :user_mentioned,
+          user_id: user.id,
+          post_id: post.id,
+          notification_id: notification.id
+        )
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          user.email
+        )
       end
 
       it "does send the email if the user is using daily mailing list mode" do
-        Email::Sender.any_instance.expects(:send)
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
 
-        Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id)
+        Jobs::UserEmail.new.execute(type: :user_mentioned,
+          user_id: user.id,
+          post_id: post.id,
+          notification_id: notification.id
+        )
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          user.email
+        )
+      end
+
+      context "recently seen" do
+        it "doesn't send an email to a user that's been recently seen" do
+          user.update!(last_seen_at: 9.minutes.ago)
+
+          Jobs::UserEmail.new.execute(type: :user_replied,
+            user_id: user.id,
+            post_id: post.id,
+            notification_id: notification.id
+          )
+
+          expect(ActionMailer::Base.deliveries).to eq([])
+        end
+
+        it "does send an email to a user that's been recently seen but has email_always set" do
+          user.update!(last_seen_at: 9.minutes.ago)
+          user.user_option.update!(email_always: true)
+
+          Jobs::UserEmail.new.execute(type: :user_replied,
+            user_id: user.id,
+            post_id: post.id,
+            notification_id: notification.id
+          )
+
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+            user.email
+          )
+        end
       end
 
       context 'max_emails_per_day_per_user limit is reached' do
@@ -361,7 +417,6 @@ describe Jobs::UserEmail do
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode" do
-        Email::Sender.any_instance.expects(:send).never
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
         # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
@@ -373,10 +428,11 @@ describe Jobs::UserEmail do
         post = Fabricate(:post)
         post.topic.destroy
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_type: "posted", post_id: post.id)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       it "doesn't send the mail if the user is using individual mailing list mode with no echo" do
-        Email::Sender.any_instance.expects(:send).never
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 2)
         # sometimes, we pass the notification_id
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
@@ -388,12 +444,15 @@ describe Jobs::UserEmail do
         post = Fabricate(:post)
         post.topic.destroy
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_type: "posted", post_id: post.id)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       it "doesn't send the email if the post has been user deleted" do
-        Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
         Jobs::UserEmail.new.execute(type: :user_mentioned, user_id: user.id, notification_id: notification.id, post_id: post.id)
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       context 'user is suspended' do
@@ -450,8 +509,13 @@ describe Jobs::UserEmail do
         before { SiteSetting.allow_anonymous_posting = true }
 
         it "doesn't send email for a pm from a regular user" do
-          Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, notification_id: notification.id)
+          Jobs::UserEmail.new.execute(type: :user_private_message,
+            user_id: anonymous.id,
+            post_id: post.id,
+            notification_id: notification.id
+          )
+
+          expect(ActionMailer::Base.deliveries).to eq([])
         end
 
         it "doesn't send email for a pm from staff" do
@@ -463,8 +527,13 @@ describe Jobs::UserEmail do
                                           post_number: pm_from_staff.post_number,
                                           data: { original_post_id: pm_from_staff.id }.to_json
                                       )
-          Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, notification_id: pm_notification.id)
+          Jobs::UserEmail.new.execute(type: :user_private_message,
+            user_id: anonymous.id,
+            post_id: pm_from_staff.id,
+            notification_id: pm_notification.id
+          )
+
+          expect(ActionMailer::Base.deliveries).to eq([])
         end
       end
     end
