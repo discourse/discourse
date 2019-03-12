@@ -503,6 +503,13 @@ class StaffActionLogger
     ))
   end
 
+  def log_user_approve(user, opts = {})
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:approve_user],
+      target_user_id: user.id
+    ))
+  end
+
   def log_user_deactivate(user, reason, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(params(opts).merge(

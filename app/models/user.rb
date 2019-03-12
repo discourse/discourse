@@ -421,6 +421,8 @@ class User < ActiveRecord::Base
       DiscourseEvent.trigger(:user_approved, self)
     end
 
+    StaffActionLogger.new(approved_by).log_user_approve(self)
+
     result
   end
 
