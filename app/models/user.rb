@@ -410,6 +410,7 @@ class User < ActiveRecord::Base
 
     if approved_by.is_a?(Integer)
       self.approved_by_id = approved_by
+      self.approved_by = User.find(approved_by)
     else
       self.approved_by = approved_by
     end
@@ -421,7 +422,7 @@ class User < ActiveRecord::Base
       DiscourseEvent.trigger(:user_approved, self)
     end
 
-    StaffActionLogger.new(approved_by).log_user_approve(self)
+    StaffActionLogger.new(self.approved_by).log_user_approve(self)
 
     result
   end
