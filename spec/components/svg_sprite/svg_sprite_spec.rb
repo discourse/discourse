@@ -106,7 +106,6 @@ describe SvgSprite do
     upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
 
     theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
-    theme.set_field(target: :settings, name: :yaml, value: "custom_icon: my-custom-theme-icon")
     theme.save!
 
     expect(Upload.where(id: upload.id)).to be_exist
