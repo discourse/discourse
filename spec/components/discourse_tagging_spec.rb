@@ -216,4 +216,29 @@ describe DiscourseTagging do
       end
     end
   end
+
+  describe "staff_tag_names" do
+    let(:tag) { Fabricate(:tag) }
+
+    let(:staff_tag) { Fabricate(:tag) }
+    let(:other_staff_tag) { Fabricate(:tag) }
+
+    let!(:staff_tag_group) {
+      Fabricate(
+        :tag_group,
+        permissions: { "staff" => 1, "everyone" => 3 },
+        tag_names: [staff_tag.name]
+      )
+    }
+
+    it "returns all staff tags" do
+      expect(DiscourseTagging.staff_tag_names).to contain_exactly(staff_tag.name)
+
+      staff_tag_group.update(tag_names: [staff_tag.name, other_staff_tag.name])
+      expect(DiscourseTagging.staff_tag_names).to contain_exactly(staff_tag.name, other_staff_tag.name)
+
+      staff_tag_group.update(tag_names: [other_staff_tag.name])
+      expect(DiscourseTagging.staff_tag_names).to contain_exactly(other_staff_tag.name)
+    end
+  end
 end
