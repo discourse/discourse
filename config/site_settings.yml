@@ -47,6 +47,9 @@ required:
   site_contact_username:
     default: ""
     type: username
+  site_contact_group_name:
+    default: ""
+    type: group
   logo:
     default: -1
     client: true
