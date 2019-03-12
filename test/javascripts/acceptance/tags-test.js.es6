@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { replaceCurrentUser, acceptance } from "helpers/qunit-helpers";
 acceptance("Tags", { loggedIn: true });
 
 QUnit.test("list the tags", async assert => {
@@ -91,4 +91,84 @@ QUnit.test("list the tags in groups", async assert => {
     ["/tags/focus", "/tags/escort"],
     "always uses lowercase URLs for mixed case tags"
   );
+});
+
+test("new topic button is not available for staff-only tags", async assert => {
+  /* global server */
+  server.get("/tags/regular-tag/notifications", () => [
+    200,
+    { "Content-Type": "application/json" },
+    { tag_notification: { id: "regular-tag", notification_level: 1 } }
+  ]);
+
+  server.get("/tags/regular-tag/l/latest.json", () => [
+    200,
+    { "Content-Type": "application/json" },
+    {
+      users: [],
+      primary_groups: [],
+      topic_list: {
+        can_create_topic: true,
+        draft: null,
+        draft_key: "new_topic",
+        draft_sequence: 1,
+        per_page: 30,
+        tags: [
+          {
+            id: 1,
+            name: "regular-tag",
+            topic_count: 1
+          }
+        ],
+        topics: []
+      }
+    }
+  ]);
+
+  server.get("/tags/staff-only-tag/notifications", () => [
+    200,
+    { "Content-Type": "application/json" },
+    { tag_notification: { id: "staff-only-tag", notification_level: 1 } }
+  ]);
+
+  server.get("/tags/staff-only-tag/l/latest.json", () => [
+    200,
+    { "Content-Type": "application/json" },
+    {
+      users: [],
+      primary_groups: [],
+      topic_list: {
+        can_create_topic: true,
+        draft: null,
+        draft_key: "new_topic",
+        draft_sequence: 1,
+        per_page: 30,
+        tags: [
+          {
+            id: 1,
+            name: "staff-only-tag",
+            topic_count: 1,
+            staff: true
+          }
+        ],
+        topics: []
+      }
+    }
+  ]);
+
+  replaceCurrentUser({ staff: false });
+
+  await visit("/tags/regular-tag");
+  assert.ok(find("#create-topic:disabled").length === 0);
+
+  await visit("/tags/staff-only-tag");
+  assert.ok(find("#create-topic:disabled").length === 1);
+
+  replaceCurrentUser({ staff: true });
+
+  await visit("/tags/regular-tag");
+  assert.ok(find("#create-topic:disabled").length === 0);
+
+  await visit("/tags/staff-only-tag");
+  assert.ok(find("#create-topic:disabled").length === 0);
 });

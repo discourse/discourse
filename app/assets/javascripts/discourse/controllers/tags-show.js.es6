@@ -74,9 +74,25 @@ export default Ember.Controller.extend(BulkTopicSelection, {
     return listDraft ? "topic.open_draft" : "topic.create";
   },
 
-  @computed("canCreateTopic", "category", "canCreateTopicOnCategory")
-  createTopicDisabled(canCreateTopic, category, canCreateTopicOnCategory) {
-    return !canCreateTopic || (category && !canCreateTopicOnCategory);
+  @computed(
+    "canCreateTopic",
+    "category",
+    "canCreateTopicOnCategory",
+    "tag",
+    "canCreateTopicOnTag"
+  )
+  createTopicDisabled(
+    canCreateTopic,
+    category,
+    canCreateTopicOnCategory,
+    tag,
+    canCreateTopicOnTag
+  ) {
+    return (
+      !canCreateTopic ||
+      (category && !canCreateTopicOnCategory) ||
+      (tag && !canCreateTopicOnTag)
+    );
   },
 
   queryParams: [

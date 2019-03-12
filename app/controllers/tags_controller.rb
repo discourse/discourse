@@ -98,6 +98,8 @@ class TagsController < ::ApplicationController
   end
 
   def show
+    raise Discourse::NotFound if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_id])
+
     show_latest
   end
 
