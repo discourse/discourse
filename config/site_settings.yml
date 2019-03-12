@@ -806,6 +806,9 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
+  min_post_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
   returning_users_days:
     default: 60
 

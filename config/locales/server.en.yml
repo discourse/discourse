@@ -1903,6 +1903,7 @@ en:
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
     watched_words_regular_expressions: "Watched words are regular expressions."
 
+    min_post_notice_tl: "Minimum trust level required to see post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
