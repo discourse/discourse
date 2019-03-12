@@ -1573,27 +1573,26 @@ class Report
     report.data = []
 
     sql = <<~SQL
-    SELECT
-    u.id as user_id,
-    u.username,
-    u.uploaded_avatar_id,
-    COUNT(*) as ignores_count
-    FROM users AS u
-    INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
-    WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
-    GROUP BY u.id
-    ORDER BY COUNT(*) DESC
-    LIMIT #{report.limit || 250}
+      SELECT
+      u.id as user_id,
+      u.username,
+      u.uploaded_avatar_id,
+      COUNT(*) as ignores_count
+      FROM users AS u
+      INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
+      WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
+      GROUP BY u.id
+      ORDER BY COUNT(*) DESC
+      LIMIT #{report.limit || 250}
     SQL
 
     DB.query(sql).each do |row|
-      data = {}
-      data[:ignored_user_id] = row.user_id
-      data[:ignored_username] = row.username
-      data[:ignored_user_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
-      data[:ignores_count] = row.ignores_count
-
-      report.data << data
+      report.data << {
+        ignored_user_id: row.user_id,
+        ignored_username: row.username,
+        ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+        ignores_count: row.ignores_count,
+      }
     end
   end
 
