@@ -1932,7 +1932,7 @@ en:
         close: "Close Topic"
         close_tooltip: "Marks the topic as closed and prevents new replies."
         multi_select: "Select Posts…"
-        multi_select_tooltip: "Toggles multi select mode in which multiple posts can be edited."
+        multi_select_tooltip: "Toggles multiselect mode in which multiple posts can be selected."
         timed_update: "Set Topic Timer..."
         timed_update_tooltip: "Opens a new window in which a timer for different actions can be set."
         pin: "Pin Topic…"
