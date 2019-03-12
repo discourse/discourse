@@ -215,8 +215,7 @@ class Post < ActiveRecord::Base
   end
 
   def matches_recent_post?
-    post_id = $redis.get(unique_post_key)
-    post_id != (nil) && post_id.to_i != (id)
+    $redis.get(unique_post_key).to_i != id
   end
 
   def raw_hash
