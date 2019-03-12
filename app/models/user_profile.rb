@@ -8,8 +8,6 @@ class UserProfile < ActiveRecord::Base
   validates :user, presence: true
   before_save :cook
   after_save :trigger_badges
-  after_commit :trigger_profile_created_event, on: :create
-  after_commit :trigger_profile_updated_event, on: :update
 
   validates :profile_background, upload_url: true, if: :profile_background_changed?
   validates :card_background, upload_url: true, if: :card_background_changed?
@@ -106,14 +104,6 @@ class UserProfile < ActiveRecord::Base
     # skip saving, we are not connected to the net
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
-  end
-
-  def trigger_profile_created_event
-    DiscourseEvent.trigger(:user_profile_created, self)
-  end
-
-  def trigger_profile_updated_event
-    DiscourseEvent.trigger(:user_profile_updated, self)
   end
 
   protected
