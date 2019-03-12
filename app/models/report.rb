@@ -1577,13 +1577,12 @@ class Report
     u.id as user_id,
     u.username,
     u.uploaded_avatar_id,
-    COUNT(1) as ignores_count
+    COUNT(*) as ignores_count
     FROM users AS u
     INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
     WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
     GROUP BY u.id
-    HAVING COUNT(u.id) > 0
-    ORDER BY COUNT(1) DESC
+    ORDER BY COUNT(*) DESC
     LIMIT #{report.limit || 250}
     SQL
 
