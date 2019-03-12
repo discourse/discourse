@@ -1227,6 +1227,12 @@ en:
         author: Author
         filesize: File size
       description: "List all uploads by extension, filesize and author."
+    top_ignored_users:
+      title: "Top Ignored Users"
+      labels:
+        ignored_user: Ignored User
+        ignores_count: Ignores count
+      description: "List top ignored users."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
