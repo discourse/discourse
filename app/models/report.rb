@@ -1548,6 +1548,54 @@ class Report
     end
   end
 
+  def self.report_top_ignored_users(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          id: :ignored_user_id,
+          username: :ignored_username,
+          avatar: :ignored_user_avatar_template,
+        },
+        title: I18n.t("reports.top_ignored_users.labels.ignored_user")
+      },
+      {
+        type: :number,
+        properties: [
+          :ignores_count,
+        ],
+        title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+      }
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+      SELECT
+      u.id AS user_id,
+      u.username,
+      u.uploaded_avatar_id,
+      COUNT(*) AS ignores_count
+      FROM users AS u
+      INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
+      WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
+      GROUP BY u.id
+      ORDER BY COUNT(*) DESC
+      LIMIT #{report.limit || 250}
+    SQL
+
+    DB.query(sql).each do |row|
+      report.data << {
+        ignored_user_id: row.user_id,
+        ignored_username: row.username,
+        ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+        ignores_count: row.ignores_count,
+      }
+    end
+  end
+
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
       clear_cache(:storage_stats)
