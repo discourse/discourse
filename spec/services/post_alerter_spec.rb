@@ -926,6 +926,29 @@ describe PostAlerter do
         expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
       end
     end
+
+    context "on change" do
+      let(:user) { Fabricate(:user) }
+      let(:other_tag) { Fabricate(:tag) }
+      let(:watched_tag) { Fabricate(:tag) }
+      let(:post) { Fabricate(:post) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.queue_jobs = false
+      end
+
+      it "triggers a notification" do
+        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+      end
+    end
   end
 
   describe '#extract_linked_users' do
