@@ -15,8 +15,7 @@ describe SystemMessage do
       post = system_message.create(:welcome_invite)
       topic = post.topic
 
-      expect(post).to be_present
-      expect(post).to be_valid
+      expect(post.valid?).to eq(true)
       expect(topic).to be_private_message
       expect(topic).to be_valid
       expect(topic.subtype).to eq(TopicSubtype.system_message)
