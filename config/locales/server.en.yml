@@ -2821,7 +2821,7 @@ en:
 
     ignored_users_summary:
       title: "Ignored User passed threshold"
-      subject_template: "New Ignored user passed threshold"
+      subject_template: "A user is being ignored by many other users "
       text_body_template: |
         Hello,
 
