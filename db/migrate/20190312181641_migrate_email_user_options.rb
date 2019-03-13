@@ -11,8 +11,7 @@ class MigrateEmailUserOptions < ActiveRecord::Migration[5.2]
         ELSE 2
       END,
       email_messages_level = CASE
-        WHEN email_private_messages IS TRUE AND email_always IS TRUE THEN 0
-        WHEN email_private_messages IS TRUE AND email_always IS NOT TRUE THEN 1
+        WHEN email_private_messages IS TRUE THEN 0
         ELSE 2
       END
     SQL
