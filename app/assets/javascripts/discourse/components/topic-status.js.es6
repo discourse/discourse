@@ -32,8 +32,13 @@ export default Ember.Component.extend(
 
     buildBuffer(buffer) {
       const canAct = this.get("canAct");
+      const topic = this.get("topic");
 
-      TopicStatusIcons.render(this.get("topic"), function(name, key) {
+      if (!topic) {
+        return;
+      }
+
+      TopicStatusIcons.render(topic, function(name, key) {
         const actionable = ["pinned", "unpinned"].includes(key) && canAct;
         const title = escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
           startTag = actionable ? "a href" : "span",
