@@ -157,7 +157,13 @@ class Emoji
   end
 
   def self.unicode_unescape(string)
-    PrettyText.escape_emoji(string)
+    string.each_char.map do |c|
+      if str = unicode_replacements[c]
+        ":#{str}:"
+      else
+        c
+      end
+    end.join
   end
 
   def self.gsub_emoji_to_unicode(str)
