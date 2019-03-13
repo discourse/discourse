@@ -54,6 +54,14 @@
   .social-link {
     margin-right: s(2);
     font-size: $font-up-4;
+    .d-icon-fab-facebook-square {
+      // Adheres to Facebook brand guidelines
+      color: dark-light-choose($facebook, white);
+    }
+    .d-icon-fab-twitter-square {
+      // Adheres to Twitter brand guidelines
+      color: dark-light-choose($twitter, white);
+    }
   }
   .link {
     font-size: $font-up-3;
