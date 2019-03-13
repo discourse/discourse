@@ -14,9 +14,7 @@ export default Ember.ArrayProxy.extend({
       renderIconIf("archived", "lock", "archived");
     }
 
-    this.forEach(args => {
-      renderIconIf(...args);
-    });
+    this.forEach(args => renderIconIf(...args));
   }
 }).create({
   content: [
