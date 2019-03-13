@@ -11,7 +11,7 @@ describe Jobs::IgnoredUsersSummary do
 
   subject { Jobs::IgnoredUsersSummary.new.execute({}) }
 
-  context "when no ignored users" do
+  context "with no ignored users" do
     it "does nothing" do
       subject
       expect(Post.count).to eq(0)
