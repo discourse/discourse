@@ -1,4 +1,5 @@
 import ComboBoxComponent from "select-kit/components/combo-box";
+import { on } from "ember-addons/ember-computed-decorators";
 import computed from "ember-addons/ember-computed-decorators";
 import PermissionType from "discourse/models/permission-type";
 import Category from "discourse/models/category";
@@ -97,6 +98,16 @@ export default ComboBoxComponent.extend({
     }
 
     return content;
+  },
+
+  @on("didRender")
+  _bindComposerResizing() {
+    this.appEvents.on("composer:resized", this, this.applyDirection);
+  },
+
+  @on("willDestroyElement")
+  _unbindComposerResizing() {
+    this.appEvents.off("composer:resized");
   },
 
   didSelect(computedContentItem) {

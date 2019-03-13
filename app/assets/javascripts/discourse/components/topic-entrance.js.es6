@@ -53,7 +53,7 @@ export default Ember.Component.extend(CleansUp, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.appEvents.on("topic-entrance:show", this, "_show");
+    this.appEvents.on("topic-entrance:show", data => this._show(data));
   },
 
   _setCSS() {
@@ -100,7 +100,7 @@ export default Ember.Component.extend(CleansUp, {
   },
 
   willDestroyElement() {
-    this.appEvents.off("topic-entrance:show", this, "_show");
+    this.appEvents.off("topic-entrance:show");
   },
 
   _jumpTo(destination) {

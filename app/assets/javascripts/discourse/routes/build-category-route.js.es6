@@ -93,7 +93,7 @@ export default (filterArg, params) => {
       const listFilter = `c/${Discourse.Category.slugFor(
           category
         )}/l/${this.filter(category)}`,
-        findOpts = filterQueryParams(transition.to.queryParams, params),
+        findOpts = filterQueryParams(transition.queryParams, params),
         extras = { cached: this.isPoppedState(transition) };
 
       return findTopicList(

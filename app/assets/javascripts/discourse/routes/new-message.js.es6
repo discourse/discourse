@@ -3,8 +3,7 @@ import Group from "discourse/models/group";
 
 export default Discourse.Route.extend({
   beforeModel(transition) {
-    const params = transition.to.queryParams;
-
+    const params = transition.queryParams;
     const groupName = params.groupname || params.group_name;
 
     if (this.currentUser) {

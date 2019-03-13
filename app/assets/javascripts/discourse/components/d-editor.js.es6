@@ -290,27 +290,25 @@ export default Ember.Component.extend({
     });
 
     if (this.get("composerEvents")) {
-      this.appEvents.on("composer:insert-block", this, "_insertBlock");
-      this.appEvents.on("composer:insert-text", this, "_insertText");
-      this.appEvents.on("composer:replace-text", this, "_replaceText");
+      this.appEvents.on("composer:insert-block", text =>
+        this._addBlock(this._getSelected(), text)
+      );
+      this.appEvents.on("composer:insert-text", (text, options) =>
+        this._addText(this._getSelected(), text, options)
+      );
+      this.appEvents.on("composer:replace-text", (oldVal, newVal, opts) =>
+        this._replaceText(oldVal, newVal, opts)
+      );
     }
     this._mouseTrap = mouseTrap;
-  },
-
-  _insertBlock(text) {
-    this._addBlock(this._getSelected(), text);
-  },
-
-  _insertText(text, options) {
-    this._addText(this._getSelected(), text, options);
   },
 
   @on("willDestroyElement")
   _shutDown() {
     if (this.get("composerEvents")) {
-      this.appEvents.off("composer:insert-block", this, "_insertBlock");
-      this.appEvents.off("composer:insert-text", this, "_insertText");
-      this.appEvents.off("composer:replace-text", this, "_replaceText");
+      this.appEvents.off("composer:insert-block");
+      this.appEvents.off("composer:insert-text");
+      this.appEvents.off("composer:replace-text");
     }
 
     const mouseTrap = this._mouseTrap;
