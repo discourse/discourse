@@ -276,10 +276,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     svg_subset << '</svg>'
   end
 
-  def self.search(searched_icon, theme_ids = [])
+  def self.search(searched_icon)
     searched_icon = process(searched_icon.dup)
 
-    sprite_sources(theme_ids).each do |fname|
+    sprite_sources([SiteSetting.default_theme_id]).each do |fname|
       svg_file = Nokogiri::XML(File.open(fname))
       svg_filename = "#{File.basename(fname, ".svg")}"
 
