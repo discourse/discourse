@@ -153,6 +153,10 @@ class PostRevisor
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
 
+    if @post.incoming_email&.imap_uid
+      @post.incoming_email&.update(imap_sync: true)
+    end
+
     old_raw = @post.raw
 
     Post.transaction do

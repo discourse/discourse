@@ -1,0 +1,20 @@
+{{#if currentUser.admin}}
+  <label class="control-label">{{i18n "groups.manage.email.mailboxes.title"}}</label>
+
+  <p>{{d-button action="refresh" disabled=refreshing class="btn" icon="refresh" label="refresh"}}</p>
+
+  {{#if model.extras.mailboxes.length}}
+    <p>{{i18n "groups.manage.email.mailboxes.instructions"}}</p>
+
+    {{#each model.extras.mailboxes as |m|}}
+      <p>
+        {{input type="checkbox" id=(concat "mailbox-" m.id) checked=m.sync}}
+        <label class="mailbox-label" for="mailbox-{{unbound m.id}}">{{m.name}}</label>
+      </p>
+    {{/each}}
+  {{else}}
+    <div class="alert alert-info">
+      {{i18n "groups.manage.email.mailboxes.none"}}
+    </div>
+  {{/if}}
+{{/if}}

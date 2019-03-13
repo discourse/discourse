@@ -1,0 +1,2 @@
+Fabricator(:mailbox) do
+end

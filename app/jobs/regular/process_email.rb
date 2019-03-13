@@ -6,7 +6,7 @@ module Jobs
     sidekiq_options retry: 3
 
     def execute(args)
-      Email::Processor.process!(args[:mail], args[:retry_on_rate_limit] || false)
+      Email::Processor.process!(args[:mail], retry_on_rate_limit: args[:retry_on_rate_limit] || false)
     end
 
     sidekiq_retries_exhausted do |msg|

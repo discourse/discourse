@@ -132,7 +132,8 @@ class GroupsController < ApplicationController
         render_json_dump(
           group: serialize_data(group, GroupShowSerializer, root: nil),
           extras: {
-            visible_group_names: groups.pluck(:name)
+            visible_group_names: groups.pluck(:name),
+            mailboxes: serialize_data(group.mailboxes, GroupMailboxSerializer, root: nil)
           }
         )
       end
@@ -148,6 +149,12 @@ class GroupsController < ApplicationController
   def update
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) unless current_user.admin
+
+    if !group.automatic && mailboxes = params[:group][:mailboxes]
+      mailboxes.each do |_, m|
+        Mailbox.find_by(name: m[:name]).update(sync: m[:sync])
+      end
+    end
 
     if group.update(group_params(automatic: group.automatic))
       GroupActionLogger.new(current_user, group).log_change_group_settings
@@ -500,6 +507,18 @@ class GroupsController < ApplicationController
     render_serialized(groups, BasicGroupSerializer)
   end
 
+  def mailboxes
+    raise Discourse::InvalidAccess if !current_user&.admin
+
+    group = find_group(:group_id)
+    if params[:refresh]
+      Mailbox.refresh!(group)
+    end
+
+    serializer = ActiveModel::ArraySerializer.new(group.mailboxes.reload, each_serializer: GroupMailboxSerializer)
+    render json: MultiJson.dump(serializer)
+  end
+
   private
 
   def group_params(automatic: false)
@@ -532,6 +551,14 @@ class GroupsController < ApplicationController
         if current_user.admin
           default_params.push(*[
             :incoming_email,
+            :email_smtp_server,
+            :email_smtp_port,
+            :email_smtp_ssl,
+            :email_imap_server,
+            :email_imap_port,
+            :email_imap_ssl,
+            :email_username,
+            :email_password,
             :primary_group,
             :visibility_level,
             :name,

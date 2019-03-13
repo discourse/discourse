@@ -24,6 +24,8 @@ class Group < ActiveRecord::Base
   has_many :category_reviews, class_name: 'Category', foreign_key: :reviewable_by_group_id, dependent: :nullify
   has_many :reviewables, foreign_key: :reviewable_by_group_id, dependent: :nullify
 
+  has_many :mailboxes, -> { order 'lower(name)' }, dependent: :destroy
+
   has_and_belongs_to_many :web_hooks
 
   before_save :downcase_incoming_email
@@ -782,6 +784,14 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
+#  email_smtp_server                  :string
+#  email_smtp_port                    :integer
+#  email_smtp_ssl                     :boolean
+#  email_imap_server                  :string
+#  email_imap_port                    :integer
+#  email_imap_ssl                     :boolean
+#  email_username                     :string
+#  email_password                     :string
 #
 # Indexes
 #

@@ -560,6 +560,22 @@ en:
           title: Interaction
           posting: Posting
           notification: Notification
+        email:
+          title: "Email"
+          credentials:
+            title: "Credentials"
+            smtp_server: "SMTP Server"
+            smtp_port: "SMTP Port"
+            smtp_ssl: "Use SSL for SMTP"
+            imap_server: "IMAP Server"
+            imap_port: "IMAP Port"
+            imap_ssl: "Use SSL for IMAP"
+            username: "Username"
+            password: "Password"
+          mailboxes:
+            title: "Mailboxes"
+            instructions: "Please check the mailboxes that you want to synchronize."
+            none: "No mailboxes are currently synced. Please refresh the list of mailboxes."
         membership:
           title: Membership
           access: Access

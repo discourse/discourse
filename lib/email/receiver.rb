@@ -62,20 +62,26 @@ module Email
       @mail = Mail.new(@raw_email)
       @message_id = @mail.message_id.presence || Digest::MD5.hexdigest(mail_string)
       @opts = opts
+      @destinations ||= opts[:destinations]
     end
 
     def process!
       return if is_blacklisted?
       DistributedMutex.synchronize(@message_id) do
         begin
-          return if IncomingEmail.exists?(message_id: @message_id)
+          @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+          if @incoming_email
+            @incoming_email.update(imap_uid_validity: @opts[:uid_validity], imap_uid: @opts[:uid])
+            return
+          end
           ensure_valid_address_lists
           ensure_valid_date
           @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
-          process_internal
+          post = process_internal
           raise BouncedEmailError if is_bounce?
+          return post
         rescue => e
           error = e.to_s
           error = e.class.name if error.blank?
@@ -115,6 +121,8 @@ module Email
         from_address: @from_email,
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
         cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
+        imap_uid_validity: @opts[:uid_validity],
+        imap_uid: @opts[:uid]
       )
     end
 
