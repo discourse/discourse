@@ -14,7 +14,7 @@ describe Jobs::IgnoredUsersSummary do
   context "with no ignored users" do
     it "does nothing" do
       subject
-      expect(Post.count).to eq(0)
+      expect { subject }.to_not change { Post.count }
     end
   end
 
@@ -36,11 +36,7 @@ describe Jobs::IgnoredUsersSummary do
 
         it "does nothing" do
           subject
-          posts = Post.joins(:topic).where(topics: {
-            archetype: Archetype.private_message,
-            subtype: TopicSubtype.system_message
-          })
-          expect(posts.count).to eq(0)
+          expect { subject }.to_not change { Post.count }
         end
       end
 
@@ -66,10 +62,7 @@ describe Jobs::IgnoredUsersSummary do
 
         it "does nothing" do
           subject
-          expect(Post.joins(:topic).where(topics: {
-            archetype: Archetype.private_message,
-            subtype: TopicSubtype.system_message
-          }).count).to eq(0)
+          expect { subject }.to_not change { Post.count }
         end
       end
 
