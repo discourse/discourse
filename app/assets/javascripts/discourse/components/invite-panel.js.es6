@@ -32,9 +32,9 @@ export default Ember.Component.extend({
     "emailOrUsername",
     "invitingToTopic",
     "isPrivateTopic",
-    "topic.groupNames",
-    "topic.saving",
-    "topic.details.can_invite_to"
+    "inviteModel.groupNames.[]",
+    "inviteModel.saving",
+    "inviteModel.details.can_invite_to"
   )
   disabled(
     isAdmin,
@@ -79,7 +79,7 @@ export default Ember.Component.extend({
     "emailOrUsername",
     "inviteModel.saving",
     "isPrivateTopic",
-    "inviteModel.groupNames",
+    "inviteModel.groupNames.[]",
     "hasCustomMessage"
   )
   disabledCopyLink(
