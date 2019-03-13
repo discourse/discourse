@@ -58,6 +58,13 @@ describe Email::Sender do
     Email::Sender.new(message, :hello).send
   end
 
+  it "doesn't deliver when the to address uses the .invalid tld" do
+    message = Mail::Message.new(body: 'hello', to: 'myemail@example.invalid')
+    message.expects(:deliver_now).never
+    expect { Email::Sender.new(message, :hello).send }.
+      to change { SkippedEmailLog.where(reason_type: SkippedEmailLog.reason_types[:sender_message_to_invalid]).count }.by(1)
+  end
+
   it "doesn't deliver when the body is nil" do
     message = Mail::Message.new(to: 'eviltrout@test.domain')
     message.expects(:deliver_now).never
