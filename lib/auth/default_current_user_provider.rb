@@ -45,7 +45,7 @@ class Auth::DefaultCurrentUserProvider
     request = @request
 
     user_api_key = @env[USER_API_KEY]
-    api_key = @env.blank? ? nil : request[API_KEY] || @env[HEADER_API_KEY]
+    api_key = @env.blank? ? nil : @env[HEADER_API_KEY] || request[API_KEY]
 
     auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
 
@@ -284,7 +284,7 @@ class Auth::DefaultCurrentUserProvider
 
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.where(key: api_key_value).includes(:user).first
-      api_username = request[API_USERNAME] || @env[HEADER_API_USERNAME]
+      api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
 
       if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
         Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
@@ -295,15 +295,19 @@ class Auth::DefaultCurrentUserProvider
         api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
       elsif api_username
         User.find_by(username_lower: api_username.downcase)
-      elsif user_id = request["api_user_id"] || @env[HEADER_API_USER_ID]
+      elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
         User.find_by(id: user_id.to_i)
-      elsif external_id = request["api_user_external_id"] || @env[HEADER_API_USER_EXTERNAL_ID]
+      elsif external_id = header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
         SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
       end
     end
   end
 
   private
+
+  def header_api_key?
+    !!@env[HEADER_API_KEY]
+  end
 
   def rate_limit_admin_api_requests(api_key)
     return if Rails.env == "profile"

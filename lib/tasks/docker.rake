@@ -118,6 +118,8 @@ task 'docker:test' do
         puts "travis_fold:start:ruby_tests" if ENV["TRAVIS"]
         unless ENV["SKIP_CORE"]
           params = []
+          params << "--profile"
+          params << "--fail-fast"
           if ENV["BISECT"]
             params << "--bisect"
           end

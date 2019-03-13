@@ -13,7 +13,7 @@ class PostAlerter
 
   def not_allowed?(user, post)
     user.blank? ||
-    user.id < 0 ||
+    user.bot? ||
     user.id == post.user_id
   end
 
@@ -279,8 +279,7 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
-    return if user.blank?
-    return if user.id < 0
+    return if user.blank? || user.bot?
 
     is_liked = type == Notification.types[:liked]
     return if is_liked && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]

@@ -7,6 +7,7 @@ module Jobs
 
       # always remove invalid upload records
       Upload
+        .by_users
         .where("retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours")
         .where("created_at < ?", grace_period.hour.ago)
         .where(url: "")
@@ -44,7 +45,8 @@ module Jobs
         end
       end.compact.uniq
 
-      result = Upload.where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
+      result = Upload.by_users
+        .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
         .joins(<<~SQL)
           LEFT JOIN site_settings ss

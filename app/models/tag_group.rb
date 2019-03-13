@@ -12,6 +12,8 @@ class TagGroup < ActiveRecord::Base
   before_create :init_permissions
   before_save :apply_permissions
 
+  after_commit { DiscourseTagging.clear_cache! }
+
   attr_accessor :permissions
 
   def tag_names=(tag_names_arg)

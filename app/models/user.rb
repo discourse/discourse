@@ -294,6 +294,10 @@ class User < ActiveRecord::Base
     self.id > 0
   end
 
+  def bot?
+    !self.human?
+  end
+
   def effective_locale
     if SiteSetting.allow_user_locale && self.locale.present?
       self.locale
@@ -401,21 +405,17 @@ class User < ActiveRecord::Base
   end
 
   # Approve this user
-  def approve(approved_by, send_mail = true)
+  def approve(approver, send_mail = true)
     self.approved = true
-
-    if approved_by.is_a?(Integer)
-      self.approved_by_id = approved_by
-    else
-      self.approved_by = approved_by
-    end
-
     self.approved_at = Time.zone.now
+    self.approved_by = approver
 
     if result = save
       send_approval_email if send_mail
       DiscourseEvent.trigger(:user_approved, self)
     end
+
+    StaffActionLogger.new(approver).log_user_approve(self)
 
     result
   end

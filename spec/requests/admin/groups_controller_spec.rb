@@ -78,7 +78,7 @@ RSpec.describe Admin::GroupsController do
     let(:user2) { Fabricate(:user, trust_level: 4) }
 
     it "can assign users to a group by email or username" do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
 
       put "/admin/groups/bulk.json", params: {
         group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']

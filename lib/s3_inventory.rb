@@ -54,7 +54,7 @@ class S3Inventory
             WHERE #{model.table_name}.etag IS NULL
               AND url ILIKE '%' || #{table_name}.key")
 
-          uploads = (model == Upload) ? model.where("created_at < ?", inventory_date) : model
+          uploads = (model == Upload) ? model.by_users.where("created_at < ?", inventory_date) : model
           missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
 
           if (missing_count = missing_uploads.count) > 0

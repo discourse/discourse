@@ -1,6 +1,6 @@
 # Available options:
 #
-# default            - The default value of the setting.
+# default            - The default value of the setting. For upload site settings, use the id of the upload seeded in db/fixtures/010_uploads.rb.
 # client             - Set to true if the javascript should have access to this setting's value.
 # refresh            - Set to true if clients should refresh when the setting is changed.
 # min                - For a string setting, the minimum length. For an integer setting, the minimum value.
@@ -47,15 +47,18 @@ required:
   site_contact_username:
     default: ""
     type: username
-  logo:
+  site_contact_group_name:
     default: ""
+    type: group
+  logo:
+    default: -1
     client: true
     type: upload
   logo_url:
     hidden: true
     default: "/images/d-logo-sketch.png"
   logo_small:
-    default: ""
+    default: -2
     client: true
     type: upload
   logo_small_url:
@@ -83,14 +86,14 @@ required:
     hidden: true
     default: ""
   favicon:
-    default: ""
+    default: -3
     client: true
     type: upload
   favicon_url:
     hidden: true
     default: "/images/default-favicon.ico"
   apple_touch_icon:
-    default: ""
+    default: -4
     client: true
     type: upload
   apple_touch_icon_url:
@@ -691,7 +694,13 @@ posting:
   max_users_notified_per_group_mention: 100
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
-  title_max_word_length: 30
+  title_max_word_length:
+    default: 30
+    locale_default:
+      ja: 50
+      ko: 50
+      zh_CN: 50
+      zh_TW: 50
   whitelisted_link_domains:
     default: ""
     type: list
@@ -790,6 +799,8 @@ posting:
     default: true
   embed_support_markdown:
     default: false
+  embed_whitelist_selector:
+    default: ""
   allowed_href_schemes:
     client: true
     default: ""
@@ -806,6 +817,9 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
+  min_post_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
   returning_users_days:
     default: 60
 
@@ -1471,9 +1485,6 @@ embedding:
     default: 100
     hidden: true
   embed_title_scrubber:
-    default: ""
-    hidden: true
-  embed_whitelist_selector:
     default: ""
     hidden: true
   embed_blacklist_selector:
