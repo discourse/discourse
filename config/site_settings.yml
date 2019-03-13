@@ -490,9 +490,6 @@ users:
     default: 15
     min: 1
   redirect_users_to_top_page: true
-  show_email_on_profile:
-    client: true
-    default: false
   prioritize_username_in_ux:
     client: true
     default: true
@@ -1228,7 +1225,10 @@ security:
     regex: "^(Lax|Strict|Disabled)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  allow_moderators_to_create_categories: false
+  moderators_create_categories: false
+  moderators_view_emails:
+    client: true
+    default: false
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna"

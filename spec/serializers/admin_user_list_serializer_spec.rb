@@ -41,16 +41,16 @@ describe AdminUserListSerializer do
       expect(json[:secondary_emails]).to eq(nil)
     end
 
-    it "doesn't return emails for a moderator request when show_email_on_profile is disabled" do
-      SiteSetting.show_email_on_profile = false
+    it "doesn't return emails for a moderator request when moderators_view_emails is disabled" do
+      SiteSetting.moderators_view_emails = false
       fabricate_secondary_emails_for(user)
       json = serialize(user, moderator, emails_desired: true)
       expect(json[:email]).to eq(nil)
       expect(json[:secondary_emails]).to eq(nil)
     end
 
-    it "returns emails for a moderator request when show_email_on_profile is enabled" do
-      SiteSetting.show_email_on_profile = true
+    it "returns emails for a moderator request when moderators_view_emails is enabled" do
+      SiteSetting.moderators_view_emails = true
       fabricate_secondary_emails_for(user)
       json = serialize(user, moderator, emails_desired: true)
       expect(json[:email]).to eq("user@email.com")
