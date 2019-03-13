@@ -1,5 +1,14 @@
-<label class="control-label" for="{{concat 'user-' elementId}}">{{{field.name}}}   {{#if field.required}}<span class='required'>*</span>{{/if}}
-</label>
+{{#if field.name}}
+  <label class="control-label" for="{{concat 'user-' elementId}}">
+    {{{field.name}}}   {{#if field.required}}<span class='required'>*</span>{{/if}}
+  </label>
+{{/if}}
+
 <div class='controls'>
-  <label class="control-label checkbox-label">{{input id=(concat 'user-' elementId) checked=value type="checkbox"}} <span>{{{field.description}}}</span></label>
+  <label class="control-label checkbox-label">
+    {{input id=(concat 'user-' elementId) checked=value type="checkbox"}}
+    <span>
+      {{{field.description}}}   {{#unless field.name}}{{#if field.required}}<span class='required'>*</span>{{/if}}{{/unless}}
+    </span>
+  </label>
 </div>
