@@ -196,7 +196,7 @@ module SvgSprite
   def self.custom_svg_sprites(theme_ids = [])
     custom_sprite_paths = Dir.glob("#{Rails.root}/plugins/*/svg-icons/*.svg")
 
-    ThemeField.where(name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
+    ThemeField.where(type_id: ThemeField.types[:theme_upload_var], name: THEME_SPRITE_VAR_NAME, theme_id: Theme.transform_ids(theme_ids))
       .pluck(:upload_id).each do |upload_id|
 
       upload = Upload.find(upload_id)
