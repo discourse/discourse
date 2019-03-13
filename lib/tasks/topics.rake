@@ -64,15 +64,3 @@ task "topics:apply_autoclose" => :environment do
 
   puts "", "Done"
 end
-
-desc "Update static topics (ToS, Privacy, Guidelines) with latest translated content"
-task "topics:update_static", [:locale] => [:environment] do |_, args|
-  locale = args[:locale]&.to_sym
-
-  if locale.blank? || !I18n.locale_available?(locale)
-    puts "ERROR: Expecting rake topics:update_static[locale]"
-    exit 1
-  end
-
-  SeedData::Topics.new(locale).update
-end
