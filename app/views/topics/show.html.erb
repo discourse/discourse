@@ -47,10 +47,23 @@
       <div class='creator'>
         <span>
           <a href='<%= Discourse.base_uri %>/u/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
-           <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
-           <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
-             <%= post.created_at %>
-           </time>
+          <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+          <%
+            who_username = post.custom_fields["action_code_who"] || ""
+            if post.action_code
+          %>
+            <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username).html_safe %>
+          <% end %>
+          <% if post.updated_at > post.created_at %>
+            <meta itemprop='datePublished' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
+            <time itemprop='dateModified' datetime='<%= post.updated_at.to_formatted_s(:iso8601) %>'>
+              <%= post.updated_at %>
+            </time>
+          <% else %>
+            <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>'>
+              <%= post.created_at %>
+            </time>
+          <% end %>
         </span>
         <span itemprop='position'>#<%= post.post_number %></span>
       </div>
@@ -76,10 +89,10 @@
 <% if @topic_view.prev_page || @topic_view.next_page %>
   <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
     <% if @topic_view.prev_page %>
-      <span itemprop='url'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'name' %></span>
+      <span itemprop='name'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'url' %></span>
     <% end %>
     <% if @topic_view.next_page %>
-      <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'name' %></b></span>
+      <span itemprop='name'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'url' %></b></span>
     <% end %>
   </div>
 <% end %>

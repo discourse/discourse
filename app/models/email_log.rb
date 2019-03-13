@@ -1,13 +1,6 @@
 require_dependency 'distributed_mutex'
 
 class EmailLog < ActiveRecord::Base
-  self.ignored_columns = %w{
-    topic_id
-    reply_key
-    skipped
-    skipped_reason
-  }
-
   CRITICAL_EMAIL_TYPES ||= Set.new %w{
     account_created
     admin_login

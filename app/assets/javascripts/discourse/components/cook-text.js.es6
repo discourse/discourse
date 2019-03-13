@@ -11,7 +11,7 @@ const CookText = Ember.Component.extend({
       this.set("cooked", cooked);
       // no choice but to defer this cause
       // pretty text may only be loaded now
-      Em.run.next(() =>
+      Ember.run.next(() =>
         window
           .requireModule("pretty-text/image-short-url")
           .resolveAllShortUrls(ajax)

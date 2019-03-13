@@ -20,7 +20,7 @@
     margin-left: -2%;
 
     button {
-      flex: 1 1 48%;
+      flex: 1 1 47%;
       max-width: 70%;
       margin: 1% 0 1% 2%;
       font-size: $font-up-1;
@@ -48,6 +48,13 @@
   tr {
     &.input td label {
       margin-top: 0.75em;
+    }
+
+    td label {
+      max-width: 280px;
+      display: block;
+      overflow: hidden;
+      word-wrap: break-word;
     }
 
     &:not(.instructions) td {

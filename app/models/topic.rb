@@ -13,9 +13,6 @@ require_dependency 'topic_posters_summary'
 require_dependency 'topic_featured_users'
 
 class Topic < ActiveRecord::Base
-  # TODO remove 01-01-2019
-  self.ignored_columns = ["percent_rank", "vote_count"]
-
   class UserExists < StandardError; end
   include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
@@ -98,8 +95,7 @@ class Topic < ActiveRecord::Base
             if: Proc.new { |t|
               (t.new_record? || t.category_id_changed?) &&
               !SiteSetting.allow_uncategorized_topics &&
-              (t.archetype.nil? || t.regular?) &&
-              (!t.user_id || !t.user.staff?)
+              (t.archetype.nil? || t.regular?)
             }
 
   validates :featured_link, allow_nil: true, url: true
@@ -531,10 +527,10 @@ class Topic < ActiveRecord::Base
   end
 
   # Atomically creates the next post number
-  def self.next_post_number(topic_id, reply = false, whisper = false)
+  def self.next_post_number(topic_id, opts = {})
     highest = DB.query_single("SELECT coalesce(max(post_number),0) AS max FROM posts WHERE topic_id = ?", topic_id).first.to_i
 
-    if whisper
+    if opts[:whisper]
 
       result = DB.query_single(<<~SQL, highest, topic_id)
         UPDATE topics
@@ -547,13 +543,15 @@ class Topic < ActiveRecord::Base
 
     else
 
-      reply_sql = reply ? ", reply_count = reply_count + 1" : ""
+      reply_sql = opts[:reply] ? ", reply_count = reply_count + 1" : ""
+      posts_sql = opts[:post]  ? ", posts_count = posts_count + 1" : ""
 
       result = DB.query_single(<<~SQL, highest: highest, topic_id: topic_id)
         UPDATE topics
         SET highest_staff_post_number = :highest + 1,
-            highest_post_number = :highest + 1#{reply_sql},
-            posts_count = posts_count + 1
+            highest_post_number = :highest + 1
+            #{reply_sql}
+            #{posts_sql}
         WHERE id = :topic_id
         RETURNING highest_post_number
       SQL
@@ -589,6 +587,43 @@ class Topic < ActiveRecord::Base
         posts_count = Y.posts_count
       FROM X, Y
       WHERE
+        topics.archetype <> 'private_message' AND
+        X.topic_id = topics.id AND
+        Y.topic_id = topics.id AND (
+          topics.highest_staff_post_number <> X.highest_post_number OR
+          topics.highest_post_number <> Y.highest_post_number OR
+          topics.last_posted_at <> Y.last_posted_at OR
+          topics.posts_count <> Y.posts_count
+        )
+    SQL
+
+    DB.exec <<~SQL
+      WITH
+      X as (
+        SELECT topic_id,
+               COALESCE(MAX(post_number), 0) highest_post_number
+        FROM posts
+        WHERE deleted_at IS NULL
+        GROUP BY topic_id
+      ),
+      Y as (
+        SELECT topic_id,
+               coalesce(MAX(post_number), 0) highest_post_number,
+               count(*) posts_count,
+               max(created_at) last_posted_at
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
+        GROUP BY topic_id
+      )
+      UPDATE topics
+      SET
+        highest_staff_post_number = X.highest_post_number,
+        highest_post_number = Y.highest_post_number,
+        last_posted_at = Y.last_posted_at,
+        posts_count = Y.posts_count
+      FROM X, Y
+      WHERE
+        topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
         Y.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
@@ -601,32 +636,39 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
+    archetype = Topic.where(id: topic_id).pluck(:archetype).first
+
+    # ignore small_action replies for private messages
+    post_type = archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ''
+
     result = DB.query_single(<<~SQL, topic_id: topic_id)
       UPDATE topics
       SET
-      highest_staff_post_number = (
+        highest_staff_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL
         ),
-      highest_post_number = (
+        highest_post_number = (
           SELECT COALESCE(MAX(post_number), 0) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
                 post_type <> 4
+                #{post_type}
         ),
         posts_count = (
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
                 post_type <> 4
+                #{post_type}
         ),
-
         last_posted_at = (
           SELECT MAX(created_at) FROM posts
           WHERE topic_id = :topic_id AND
                 deleted_at IS NULL AND
                 post_type <> 4
+                #{post_type}
         )
       WHERE id = :topic_id
       RETURNING highest_post_number
@@ -896,10 +938,10 @@ class Topic < ActiveRecord::Base
   end
 
   def move_posts(moved_by, post_ids, opts)
-    post_mover = PostMover.new(self, moved_by, post_ids)
+    post_mover = PostMover.new(self, moved_by, post_ids, move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message")
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id])
+      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
 
       DiscourseEvent.trigger(:topic_merged,
         post_mover.original_topic,

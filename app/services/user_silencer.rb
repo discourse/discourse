@@ -16,6 +16,12 @@ class UserSilencer
     UserSilencer.new(user, by_user, opts).unsilence
   end
 
+  def self.was_silenced_for?(post)
+    return false if post.blank?
+
+    UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
+  end
+
   def silence
     hide_posts unless @opts[:keep_posts]
     unless @user.silenced_till.present?

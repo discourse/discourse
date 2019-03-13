@@ -9,8 +9,7 @@
           class="input-xxlarge"
           usernames=model.usernames
           placeholderKey="groups.selector_placeholder"
-          id="group-add-members-user-selector"
-          disallowEmails=true}}
+          id="group-add-members-user-selector"}}
     </div>
 
     {{#if currentUser.admin}}
@@ -28,7 +27,7 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action="addMembers"
+  {{d-button action=(action "addMembers")
       class="add btn-primary"
       icon="plus"
       disabled=disableAddButton

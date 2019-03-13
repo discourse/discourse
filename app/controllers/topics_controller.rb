@@ -197,13 +197,17 @@ class TopicsController < ApplicationController
 
   def posts
     params.require(:topic_id)
-    params.permit(:post_ids, :post_number, :username_filters, :filter)
+    params.permit(:post_ids, :post_number, :username_filters, :filter, :include_suggested)
+
+    include_suggested = params[:include_suggested] == "true"
 
     options = {
       filter_post_number: params[:post_number],
       post_ids: params[:post_ids],
       asc: ActiveRecord::Type::Boolean.new.deserialize(params[:asc]),
-      filter: params[:filter]
+      filter: params[:filter],
+      include_suggested: include_suggested,
+      include_related: include_suggested,
     }
 
     fetch_topic_view(options)
@@ -283,6 +287,20 @@ class TopicsController < ApplicationController
         guardian.ensure_can_move_topic_to_category!(category)
       else
         return render_json_error(I18n.t('category.errors.not_found'))
+      end
+
+      if category && topic_tags = (params[:tags] || topic.tags.pluck(:name))
+        category_tags = category.tags.pluck(:name)
+        category_tag_groups = category.tag_groups.joins(:tags).pluck("tags.name")
+        allowed_tags = (category_tags + category_tag_groups).uniq
+
+        if topic_tags.present? && allowed_tags.present?
+          invalid_tags = topic_tags - allowed_tags
+
+          if !invalid_tags.empty?
+            return render_json_error(I18n.t('category.errors.disallowed_topic_tags', tags: invalid_tags.join(", ")))
+          end
+        end
       end
     end
 
@@ -607,13 +625,26 @@ class TopicsController < ApplicationController
   end
 
   def merge_topic
-    params.require(:destination_topic_id)
+    topic_id = params.require(:topic_id)
+    destination_topic_id = params.require(:destination_topic_id)
+    params.permit(:participants)
+    params.permit(:archetype)
 
-    topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
+
+    topic = Topic.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
 
-    dest_topic = topic.move_posts(current_user, topic.posts.pluck(:id), destination_topic_id: params[:destination_topic_id].to_i)
-    render_topic_changes(dest_topic)
+    args = {}
+    args[:destination_topic_id] = destination_topic_id.to_i
+
+    if params[:archetype].present?
+      args[:archetype] = params[:archetype]
+      args[:participants] = params[:participants] if params[:participants].present? && params[:archetype] == "private_message"
+    end
+
+    destination_topic = topic.move_posts(current_user, topic.posts.pluck(:id), args)
+    render_topic_changes(destination_topic)
   end
 
   def move_posts
@@ -621,6 +652,10 @@ class TopicsController < ApplicationController
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
     params.permit(:tags)
+    params.permit(:participants)
+    params.permit(:archetype)
+
+    raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
 
     topic = Topic.with_deleted.find_by(id: topic_id)
     guardian.ensure_can_move_posts!(topic)
@@ -630,8 +665,8 @@ class TopicsController < ApplicationController
       return render_json_error("When moving posts to a new topic, the first post must be a regular post.")
     end
 
-    dest_topic = move_posts_to_destination(topic)
-    render_topic_changes(dest_topic)
+    destination_topic = move_posts_to_destination(topic)
+    render_topic_changes(destination_topic)
   rescue ActiveRecord::RecordInvalid => ex
     render_json_error(ex)
   end
@@ -655,16 +690,21 @@ class TopicsController < ApplicationController
   end
 
   def change_timestamps
-    params.require(:topic_id)
-    params.require(:timestamp)
+    topic_id = params.require(:topic_id).to_i
+    timestamp = params.require(:timestamp).to_f
 
     guardian.ensure_can_change_post_timestamps!
 
+    topic = Topic.with_deleted.find(topic_id)
+    previous_timestamp = topic.first_post.created_at
+
     begin
       TopicTimestampChanger.new(
-        topic_id: params[:topic_id].to_i,
-        timestamp: params[:timestamp].to_f
+        topic: topic,
+        timestamp: timestamp
       ).change!
+
+      StaffActionLogger.new(current_user).log_topic_timestamps_changed(topic, Time.zone.at(timestamp), previous_timestamp)
 
       render json: success_json
     rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError
@@ -893,8 +933,14 @@ class TopicsController < ApplicationController
     args = {}
     args[:title] = params[:title] if params[:title].present?
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[:destination_topic_id].present?
-    args[:category_id] = params[:category_id].to_i if params[:category_id].present?
     args[:tags] = params[:tags] if params[:tags].present?
+
+    if params[:archetype].present?
+      args[:archetype] = params[:archetype]
+      args[:participants] = params[:participants] if params[:participants].present? && params[:archetype] == "private_message"
+    else
+      args[:category_id] = params[:category_id].to_i if params[:category_id].present?
+    end
 
     topic.move_posts(current_user, post_ids_including_replies, args)
   end

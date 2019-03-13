@@ -21,7 +21,7 @@ export default Ember.Route.extend({
   },
 
   setupController(controller, wrapper) {
-    const fields = controller.fieldsForTarget(wrapper.target);
+    const fields = wrapper.model.get("fields")[wrapper.target].map(f => f.name);
     if (!fields.includes(wrapper.field_name)) {
       this.transitionTo(
         "adminCustomizeThemes.edit",

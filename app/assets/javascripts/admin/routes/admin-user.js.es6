@@ -9,7 +9,7 @@ export default Discourse.Route.extend({
   },
 
   model(params) {
-    return AdminUser.find(Em.get(params, "user_id"));
+    return AdminUser.find(Ember.get(params, "user_id"));
   },
 
   renderTemplate() {

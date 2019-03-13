@@ -26,7 +26,7 @@ export default Ember.Component.extend({
   },
 
   _showLoginModal() {
-    this.sendAction("showLogin");
+    this.showLogin();
     $.cookie("destination_url", window.location.href);
   },
 

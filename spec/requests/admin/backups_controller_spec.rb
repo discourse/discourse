@@ -162,12 +162,10 @@ RSpec.describe Admin::BackupsController do
 
   describe '#restore' do
     it "starts a restore" do
-      expect(SiteSetting.disable_emails).to eq("no")
       BackupRestore.expects(:restore!).with(admin.id, filename: backup_filename, publish_to_message_bus: true, client_id: "foo")
 
       post "/admin/backups/#{backup_filename}/restore.json", params: { client_id: "foo" }
 
-      expect(SiteSetting.disable_emails).to eq("yes")
       expect(response.status).to eq(200)
     end
   end

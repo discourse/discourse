@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
 
   @computed("q")
   hasAutofocus(q) {
-    return Em.isEmpty(q);
+    return Ember.isEmpty(q);
   },
 
   @computed("q")
@@ -216,12 +216,14 @@ export default Ember.Controller.extend({
       return;
     }
 
+    let args = { q: searchTerm, page: this.get("page") };
+
     this.set("searching", true);
     this.set("loading", true);
-    this.set("bulkSelectEnabled", false);
-    this.get("selected").clear();
-
-    var args = { q: searchTerm, page: this.get("page") };
+    if (args.page === 1) {
+      this.set("bulkSelectEnabled", false);
+      this.get("selected").clear();
+    }
 
     const sortOrder = this.get("sortOrder");
     if (sortOrder && SortOrders[sortOrder].term) {

@@ -5,6 +5,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import highlightText from "discourse/lib/highlight-text";
 import { escapeExpression, formatUsername } from "discourse/lib/utilities";
+import { iconNode } from "discourse-common/lib/icon-library";
 
 class Highlighted extends RawHtml {
   constructor(html, term) {
@@ -26,15 +27,15 @@ function createSearchResult({ type, linkField, builder }) {
         let searchResultId;
 
         if (type === "topic") {
-          searchResultId = r.get("topic_id");
+          searchResultId = r.topic_id;
         } else {
-          searchResultId = r.get("id");
+          searchResultId = r.id;
         }
 
         return h(
           "li.item",
           this.attach("link", {
-            href: r.get(linkField),
+            href: r[linkField],
             contents: () => builder.call(this, r, attrs.term),
             className: "search-link",
             searchResultId,
@@ -68,12 +69,11 @@ createSearchResult({
   type: "tag",
   linkField: "url",
   builder(t) {
-    const tag = escapeExpression(t.get("id"));
+    const tag = escapeExpression(t.id);
     return h(
-      "a",
+      "span",
       {
-        attributes: { href: t.get("url") },
-        className: `widget-link search-link tag-${tag} discourse-tag ${
+        className: `tag-${tag} discourse-tag ${
           Discourse.SiteSettings.tag_style
         }`
       },
@@ -91,14 +91,46 @@ createSearchResult({
 });
 
 createSearchResult({
+  type: "group",
+  linkField: "url",
+  builder(group) {
+    const fullName = escapeExpression(group.fullName);
+    const name = escapeExpression(group.name);
+    const groupNames = [h("span.name", fullName || name)];
+
+    if (fullName) {
+      groupNames.push(h("span.slug", name));
+    }
+
+    let avatarFlair;
+    if (group.flairUrl) {
+      avatarFlair = this.attach("avatar-flair", {
+        primary_group_flair_url: group.flairUrl,
+        primary_group_flair_bg_color: group.flairBgColor,
+        primary_group_flair_color: group.flairColor,
+        primary_group_name: name
+      });
+    } else {
+      avatarFlair = iconNode("users");
+    }
+
+    const groupResultContents = [avatarFlair, h("div.group-names", groupNames)];
+
+    return h("div.group-result", groupResultContents);
+  }
+});
+
+createSearchResult({
   type: "user",
   linkField: "path",
   builder(u) {
-    const userTitles = [h("span.username", formatUsername(u.username))];
+    const userTitles = [];
 
     if (u.name) {
       userTitles.push(h("span.name", u.name));
     }
+
+    userTitles.push(h("span.username", formatUsername(u.username)));
 
     const userResultContents = [
       avatarImg("small", {
@@ -159,19 +191,12 @@ createWidget("search-menu-results", {
     const resultTypes = results.resultTypes || [];
 
     const mainResultsContent = [];
-    const classificationContents = [];
-    const otherContents = [];
-    const assignContainer = (type, node) => {
-      if (["topic"].includes(type)) {
-        mainResultsContent.push(node);
-      } else if (["category", "tag"].includes(type)) {
-        classificationContents.push(node);
-      } else {
-        otherContents.push(node);
-      }
-    };
+    const usersAndGroups = [];
+    const categoriesAndTags = [];
+    const usersAndGroupsMore = [];
+    const categoriesAndTagsMore = [];
 
-    resultTypes.forEach(rt => {
+    const buildMoreNode = result => {
       const more = [];
 
       const moreArgs = {
@@ -179,23 +204,45 @@ createWidget("search-menu-results", {
         contents: () => [I18n.t("more"), "..."]
       };
 
-      if (rt.moreUrl) {
+      if (result.moreUrl) {
         more.push(
-          this.attach("link", $.extend(moreArgs, { href: rt.moreUrl }))
+          this.attach("link", $.extend(moreArgs, { href: result.moreUrl }))
         );
-      } else if (rt.more) {
+      } else if (result.more) {
         more.push(
           this.attach(
             "link",
             $.extend(moreArgs, {
               action: "moreOfType",
-              actionParam: rt.type,
+              actionParam: result.type,
               className: "filter filter-type"
             })
           )
         );
       }
 
+      if (more.length) {
+        return more;
+      }
+    };
+
+    const assignContainer = (result, node) => {
+      if (["topic"].includes(result.type)) {
+        mainResultsContent.push(node);
+      }
+
+      if (["user", "group"].includes(result.type)) {
+        usersAndGroups.push(node);
+        usersAndGroupsMore.push(buildMoreNode(result));
+      }
+
+      if (["category", "tag"].includes(result.type)) {
+        categoriesAndTags.push(node);
+        categoriesAndTagsMore.push(buildMoreNode(result));
+      }
+    };
+
+    resultTypes.forEach(rt => {
       const resultNodeContents = [
         this.attach(rt.componentName, {
           searchContextEnabled: attrs.searchContextEnabled,
@@ -205,14 +252,14 @@ createWidget("search-menu-results", {
         })
       ];
 
-      if (more.length) {
-        resultNodeContents.push(h("div.show-more", more));
+      if (["topic"].includes(rt.type)) {
+        const more = buildMoreNode(rt);
+        if (more) {
+          resultNodeContents.push(h("div.show-more", more));
+        }
       }
 
-      assignContainer(
-        rt.type,
-        h(`div.${rt.componentName}`, resultNodeContents)
-      );
+      assignContainer(rt, h(`div.${rt.componentName}`, resultNodeContents));
     });
 
     const content = [];
@@ -221,27 +268,25 @@ createWidget("search-menu-results", {
       content.push(h("div.main-results", mainResultsContent));
     }
 
-    if (classificationContents.length || otherContents.length) {
-      const secondaryResultsContent = [];
+    if (usersAndGroups.length || categoriesAndTags.length) {
+      const secondaryResultsContents = [];
 
-      if (classificationContents.length) {
-        secondaryResultsContent.push(
-          h("div.classification-results", classificationContents)
-        );
+      secondaryResultsContents.push(usersAndGroups);
+      secondaryResultsContents.push(usersAndGroupsMore);
+
+      if (usersAndGroups.length && categoriesAndTags.length) {
+        secondaryResultsContents.push(h("div.separator"));
       }
 
-      if (otherContents.length) {
-        secondaryResultsContent.push(h("div.other-results", otherContents));
-      }
+      secondaryResultsContents.push(categoriesAndTags);
+      secondaryResultsContents.push(categoriesAndTagsMore);
 
-      content.push(
-        h(
-          `div.secondary-results${
-            mainResultsContent.length ? "" : ".no-main-results"
-          }`,
-          secondaryResultsContent
-        )
+      const secondaryResults = h(
+        "div.secondary-results",
+        secondaryResultsContents
       );
+
+      content.push(secondaryResults);
     }
 
     return content;

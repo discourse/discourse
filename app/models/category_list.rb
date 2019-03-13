@@ -69,7 +69,6 @@ class CategoryList
     @categories = Category.includes(
       :uploaded_background,
       :uploaded_logo,
-      :uploaded_meta,
       :topic_only_relative_url,
       subcategories: [:topic_only_relative_url]
     ).secured(@guardian)

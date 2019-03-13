@@ -1,4 +1,5 @@
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend(GrantBadgeController, {
   adminUser: Ember.inject.controller(),
@@ -70,9 +71,8 @@ export default Ember.Controller.extend(GrantBadgeController, {
             }
           });
         },
-        function() {
-          // Failure
-          bootbox.alert(I18n.t("generic_error"));
+        function(error) {
+          popupAjaxError(error);
         }
       );
     },

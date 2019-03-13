@@ -81,9 +81,10 @@
   </form>
 
   <div class='controls'>
-    <button class='btn btn-default' {{action 'save'}} disabled={{saveButtonDisabled}}>{{saveButtonText}}</button>
+    {{d-button class="btn-default" translatedLabel=saveButtonText action=(action "save") disabled=saveButtonDisabled}}
+
     {{#unless model.isNew}}
-      {{d-button class="btn-danger" label="admin.web_hooks.destroy" action="destroy"}}
+      {{d-button class="btn-danger" label="admin.web_hooks.destroy" action=(action "destroy")}}
       {{#link-to 'adminWebHooks.showEvents' model.id class="btn"}}
         {{i18n 'admin.web_hooks.events.go_events'}}
       {{/link-to}}

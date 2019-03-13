@@ -228,7 +228,11 @@ def migrate_to_s3
     exit 1
   end
 
-  unless GlobalSetting.use_s3?
+  unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+    ENV["DISCOURSE_S3_REGION"].present? &&
+    ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+    ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+
     puts <<~TEXT
       Please provide the following environment variables
         - DISCOURSE_S3_BUCKET
@@ -244,17 +248,25 @@ def migrate_to_s3
     exit 3
   end
 
-  s3 = Aws::S3::Client.new(
-    region: GlobalSetting.s3_region,
-    access_key_id: GlobalSetting.s3_access_key_id,
-    secret_access_key: GlobalSetting.s3_secret_access_key,
-  )
+  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
 
-  begin
-    s3.head_bucket(bucket: GlobalSetting.s3_bucket)
-  rescue Aws::S3::Errors::NotFound
-    puts "Bucket '#{GlobalSetting.s3_bucket}' not found. Creating it..."
-    s3.create_bucket(bucket: GlobalSetting.s3_bucket) unless dry_run
+  opts = {
+    region: ENV["DISCOURSE_S3_REGION"],
+    access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
+    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
+  }
+
+  # S3::Client ignores the `region` option when an `endpoint` is provided.
+  # Without `region`, non-default region bucket creation will break for S3, so we can only
+  # define endpoint when not using S3 i.e. when SiteSetting.s3_endpoint is provided.
+  opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+  s3 = Aws::S3::Client.new(opts)
+
+  if bucket_has_folder_path
+    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
+    folder = File.join(folder, "/")
+  else
+    bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
   end
 
   puts "Uploading files to S3..."
@@ -270,8 +282,9 @@ def migrate_to_s3
   print " - Listing S3 files"
 
   s3_objects = []
-  prefix = Rails.configuration.multisite ? "#{db}/original/" : "original/"
-  options = { bucket: GlobalSetting.s3_bucket, prefix: prefix }
+  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
+
+  options = { bucket: bucket, prefix: folder + prefix }
 
   loop do
     response = s3.list_objects_v2(options)
@@ -282,7 +295,7 @@ def migrate_to_s3
   end
 
   puts " => #{s3_objects.size} files"
-  print " - Syncing files to S3"
+  puts " - Syncing files to S3"
 
   synced = 0
   failed = []
@@ -291,6 +304,8 @@ def migrate_to_s3
     path = File.join("public", file)
     name = File.basename(path)
     etag = Digest::MD5.file(path).hexdigest
+    key = file[file.index(prefix)..-1]
+    key.prepend(folder) if bucket_has_folder_path
 
     if s3_object = s3_objects.find { |obj| file.ends_with?(obj.key) }
       next if File.size(path) == s3_object.size && s3_object.etag[etag]
@@ -299,13 +314,18 @@ def migrate_to_s3
     options = {
       acl: "public-read",
       body: File.open(path, "rb"),
-      bucket: GlobalSetting.s3_bucket,
+      bucket: bucket,
       content_type: MiniMime.lookup_by_filename(name)&.content_type,
-      key: file[file.index(prefix)..-1],
+      key: key,
     }
 
     if !FileHelper.is_supported_image?(name)
-      options[:content_disposition] = %Q{attachment; filename="#{name}"}
+      upload = Upload.find_by(url: "/#{file}")
+
+      if upload&.original_filename
+        options[:content_disposition] =
+          %Q{attachment; filename="#{upload.original_filename}"}
+      end
     end
 
     if dry_run
@@ -328,47 +348,35 @@ def migrate_to_s3
   elsif s3_objects.size + synced >= local_files.size
     puts "Updating the URLs in the database..."
 
-    excluded_tables = %w{
-      email_logs
-      incoming_emails
-      notifications
-      post_search_data
-      search_logs
-      stylesheet_cache
-      user_auth_token_logs
-      user_auth_tokens
-      web_hooks_events
-    }
-
-    from = "/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
-    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+    from = "/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_base_url}/#{prefix}"
 
     if dry_run
       puts "REPLACING '#{from}' WITH '#{to}'"
     else
-      DbHelper.regexp_replace(from, to, excluded_tables: excluded_tables)
-    end
-
-    # Uploads that were on base hostname will now be on S3 CDN
-    from = "#{Discourse.base_url}#{SiteSetting.Upload.s3_base_url}"
-    to = SiteSetting.Upload.s3_cdn_url
-
-    if dry_run
-      puts "REMAPPING '#{from}' TO '#{to}'"
-    else
-      DbHelper.remap(from, to, excluded_tables: excluded_tables)
+      DbHelper.remap(from, to, anchor_left: true)
     end
 
     if Discourse.asset_host.present?
       # Uploads that were on local CDN will now be on S3 CDN
-      from = "#{Discourse.asset_host}#{SiteSetting.Upload.s3_base_url}"
-      to = SiteSetting.Upload.s3_cdn_url
+      from = "#{Discourse.asset_host}/uploads/#{db}/original/"
+      to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
 
       if dry_run
         puts "REMAPPING '#{from}' TO '#{to}'"
       else
-        DbHelper.remap(from, to, excluded_tables: excluded_tables)
+        DbHelper.remap(from, to)
       end
+    end
+
+    # Uploads that were on base hostname will now be on S3 CDN
+    from = "#{Discourse.base_url}/uploads/#{db}/original/"
+    to = "#{SiteSetting.Upload.s3_cdn_url}/#{prefix}"
+
+    if dry_run
+      puts "REMAPPING '#{from}' TO '#{to}'"
+    else
+      DbHelper.remap(from, to)
     end
   end
 
@@ -489,102 +497,6 @@ end
 
 def list_missing_uploads(skip_optimized: false)
   Discourse.store.list_missing_uploads(skip_optimized: skip_optimized)
-end
-
-################################################################################
-#                              Recover from tombstone                          #
-################################################################################
-
-task "uploads:recover_from_tombstone" => :environment do
-  if ENV["RAILS_DB"]
-    recover_from_tombstone
-  else
-    RailsMultisite::ConnectionManagement.each_connection { recover_from_tombstone }
-  end
-end
-
-def recover_from_tombstone
-  if Discourse.store.external?
-    puts "This task only works for internal storages."
-    return
-  end
-
-  begin
-    previous_image_size      = SiteSetting.max_image_size_kb
-    previous_attachment_size = SiteSetting.max_attachment_size_kb
-    previous_extensions      = SiteSetting.authorized_extensions
-
-    SiteSetting.max_image_size_kb      = 10 * 1024
-    SiteSetting.max_attachment_size_kb = 10 * 1024
-    SiteSetting.authorized_extensions  = "*"
-
-    current_db = RailsMultisite::ConnectionManagement.current_db
-    public_path = Rails.root.join("public")
-    paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
-    max = paths.size
-
-    paths.each_with_index do |path, index|
-      filename = File.basename(path)
-      printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
-
-      Post.where("raw LIKE ?", "%#{filename}%").find_each do |post|
-        doc = Nokogiri::HTML::fragment(post.raw)
-        updated = false
-
-        image_urls = doc.css("img[src]").map { |img| img["src"] }
-        attachment_urls = doc.css("a.attachment[href]").map { |a| a["href"] }
-
-        (image_urls + attachment_urls).each do |url|
-          next if !url.start_with?("/uploads/")
-          next if Upload.exists?(url: url)
-
-          puts "Restoring #{path}..."
-          tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
-
-          if File.exists?(tombstone_path)
-            File.open(tombstone_path) do |file|
-              new_upload = UploadCreator.new(file, File.basename(url)).create_for(Discourse::SYSTEM_USER_ID)
-
-              if new_upload.persisted?
-                puts "Restored into #{new_upload.url}"
-                DbHelper.remap(url, new_upload.url)
-                updated = true
-              else
-                puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
-              end
-            end
-          else
-            puts "Failed to find file (#{tombstone_path}) in tombstone."
-          end
-        end
-
-        post.rebake! if updated
-      end
-
-      sha1 = File.basename(filename, File.extname(filename))
-      short_url = "upload://#{Base62.encode(sha1.hex)}"
-
-      Post.where("raw LIKE ?", "%#{short_url}%").find_each do |post|
-        puts "Restoring #{path}..."
-
-        File.open(path) do |file|
-          new_upload = UploadCreator.new(file, filename).create_for(Discourse::SYSTEM_USER_ID)
-
-          if new_upload.persisted?
-            puts "Restored into #{new_upload.short_url}"
-            DbHelper.remap(short_url, new_upload.short_url) if short_url != new_upload.short_url
-            post.rebake!
-          else
-            puts "Failed to create upload for #{filename}: #{new_upload.errors.full_messages}."
-          end
-        end
-      end
-    end
-  ensure
-    SiteSetting.max_image_size_kb      = previous_image_size
-    SiteSetting.max_attachment_size_kb = previous_attachment_size
-    SiteSetting.authorized_extensions  = previous_extensions
-  end
 end
 
 ################################################################################
@@ -789,6 +701,10 @@ end
 task "uploads:fix_incorrect_extensions" => :environment do
   require_dependency "upload_fixer"
   UploadFixer.fix_all_extensions
+end
+
+task "uploads:recover_from_tombstone" => :environment do
+  Rake::Task["uploads:recover"].invoke
 end
 
 task "uploads:recover" => :environment do

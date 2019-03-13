@@ -25,8 +25,12 @@ class Emoji
     Discourse.cache.fetch(cache_key("aliases_emojis")) { db['aliases'] }
   end
 
-  def self.searchAliases
+  def self.search_aliases
     Discourse.cache.fetch(cache_key("search_aliases_emojis")) { db['searchAliases'] }
+  end
+
+  def self.translations
+    Discourse.cache.fetch(cache_key("translations_emojis")) { load_translations }
   end
 
   def self.custom
@@ -63,13 +67,13 @@ class Emoji
   end
 
   def self.clear_cache
-    %w{custom standard aliases search_aliases all tonable}.each do |key|
+    %w{custom standard aliases search_aliases translations all tonable}.each do |key|
       Discourse.cache.delete(cache_key("#{key}_emojis"))
     end
   end
 
   def self.db_file
-    "#{Rails.root}/lib/emoji/db.json"
+    @db_file ||= "#{Rails.root}/lib/emoji/db.json"
   end
 
   def self.db
@@ -101,6 +105,10 @@ class Emoji
     result
   end
 
+  def self.load_translations
+    db["translations"].merge(Plugin::CustomEmoji.translations)
+  end
+
   def self.base_directory
     "public#{base_url}"
   end
@@ -117,45 +125,39 @@ class Emoji
   end
 
   def self.unicode_replacements
-    return @unicode_replacements if @unicode_replacements
+    @unicode_replacements ||= begin
+      replacements = {}
+      is_tonable_emojis = Emoji.tonable_emojis
+      fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
 
-    @unicode_replacements = {}
-    is_tonable_emojis = Emoji.tonable_emojis
-    fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
+      db['emojis'].each do |e|
+        name = e['name']
+        next if name == 'tm'.freeze
 
-    db['emojis'].each do |e|
-      name = e['name']
-      next if name == 'tm'.freeze
+        code = replacement_code(e['code'])
+        next unless code
 
-      code = replacement_code(e['code'])
-      next unless code
-
-      @unicode_replacements[code] = name
-      if is_tonable_emojis.include?(name)
-        fitzpatrick_scales.each_with_index do |scale, index|
-          toned_code = code.codepoints.insert(1, scale).pack("U*".freeze)
-          @unicode_replacements[toned_code] = "#{name}:t#{index + 2}"
+        replacements[code] = name
+        if is_tonable_emojis.include?(name)
+          fitzpatrick_scales.each_with_index do |scale, index|
+            toned_code = code.codepoints.insert(1, scale).pack("U*".freeze)
+            replacements[toned_code] = "#{name}:t#{index + 2}"
+          end
         end
       end
+
+      replacements["\u{2639}"] = 'frowning'
+      replacements["\u{263A}"] = 'slight_smile'
+      replacements["\u{263B}"] = 'slight_smile'
+      replacements["\u{2661}"] = 'heart'
+      replacements["\u{2665}"] = 'heart'
+
+      replacements
     end
-
-    @unicode_replacements["\u{2639}"] = 'frowning'
-    @unicode_replacements["\u{263A}"] = 'slight_smile'
-    @unicode_replacements["\u{263B}"] = 'slight_smile'
-    @unicode_replacements["\u{2661}"] = 'heart'
-    @unicode_replacements["\u{2665}"] = 'heart'
-
-    @unicode_replacements
   end
 
   def self.unicode_unescape(string)
-    string.each_char.map do |c|
-      if str = unicode_replacements[c]
-        ":#{str}:"
-      else
-        c
-      end
-    end.join
+    PrettyText.escape_emoji(string)
   end
 
   def self.gsub_emoji_to_unicode(str)

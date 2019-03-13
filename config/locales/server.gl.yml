@@ -27,7 +27,7 @@ gl:
   log_in: "Iniciar sesión"
   anonymous: "Anónimo"
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       taken: "xa está en uso"
       accepted: debe ser aceptado
@@ -47,7 +47,7 @@ gl:
       not_a_number: non é un número
       not_an_integer: debe ser un enteiro
       odd: debe ser impar
-      record_invalid: 'Fallou a validación: %{errors}'
+      record_invalid: "Fallou a validación: %{errors}"
       restrict_dependent_destroy:
         one: "Non é posíbel eliminalo porque existe outro %{record} dependente"
         many: "Non é posíbel eliminalo porque existen outros %{record} dependentes"
@@ -59,7 +59,7 @@ gl:
         other: demasiado curto (mínimo %{count} caracteres)
       other_than: "debe ser distinto de %{count}"
     template:
-      body: 'Producíronse problemas cos seguintes campos:'
+      body: "Producíronse problemas cos seguintes campos:"
     embed:
       load_from_remote: "Produciuse un erro cargando esta publicación."
   activemodel:
@@ -205,9 +205,9 @@ gl:
     distance_in_words_verbose:
       half_a_minute: "agora mesmiño"
   password_reset:
-    update: 'Actualizar contrasinal'
-    save: 'Estabelecer o contrasinal'
-    title: 'Contrasinal restabelecido'
+    update: "Actualizar contrasinal"
+    save: "Estabelecer o contrasinal"
+    title: "Contrasinal restabelecido"
   change_email:
     confirmed: "O teu correo electrónico foi actualizado."
     please_continue: "Continuar a %{site_name}"
@@ -218,37 +218,37 @@ gl:
     welcome_to: "Benvido/a a %{site_name}!"
   post_action_types:
     off_topic:
-      title: 'Sen-relación'
-      long_form: 'marcou isto como non relacionado'
+      title: "Sen-relación"
+      long_form: "marcou isto como non relacionado"
     spam:
-      title: 'Spam'
-      long_form: 'denunciou isto como spam'
+      title: "Spam"
+      long_form: "denunciou isto como spam"
     inappropriate:
-      title: 'Inapropiado'
-      long_form: 'denunciou isto como inapropiado'
+      title: "Inapropiado"
+      long_form: "denunciou isto como inapropiado"
     notify_moderators:
       title: "Algo máis"
-      description: 'Esta publicación require a atención dos responsábeis do sitio por unha razón non listada arriba.'
-      long_form: 'denunciou isto para revisión polo equipo'
+      description: "Esta publicación require a atención dos responsábeis do sitio por unha razón non listada arriba."
+      long_form: "denunciou isto para revisión polo equipo"
       email_title: 'Unha publicación en «%{title}» require a atención dos responsábeis do sitio'
     bookmark:
-      title: 'Marcador'
-      description: 'Marcar esta publicación'
-      long_form: 'Marcar este tema'
+      title: "Marcador"
+      description: "Marcar esta publicación"
+      long_form: "Marcar este tema"
     like:
-      title: 'Gústame'
-      description: 'Gústame esta publicación'
-      long_form: 'gustoume isto'
+      title: "Gústame"
+      description: "Gústame esta publicación"
+      long_form: "gustoume isto"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      long_form: 'denunciou isto como spam'
+      title: "Spam"
+      long_form: "denunciou isto como spam"
     inappropriate:
-      title: 'Inapropiado'
-      long_form: 'denunciou isto como inapropiado'
+      title: "Inapropiado"
+      long_form: "denunciou isto como inapropiado"
     notify_moderators:
       title: "Algo máis"
-      long_form: 'denunciou isto para revisión por un moderador'
+      long_form: "denunciou isto para revisión por un moderador"
   archetypes:
     regular:
       title: "Tema normal"
@@ -285,10 +285,6 @@ gl:
       title: "Marcadores"
       xaxis: "Día"
       yaxis: "Número de novos marcadores"
-    starred:
-      title: "Con estrela"
-      xaxis: "Día"
-      yaxis: "Número de novos temas con estrela"
     users_by_trust_level:
       title: "Usuarios por nivel de confianza"
       xaxis: "Nivel de confianza"
@@ -333,7 +329,6 @@ gl:
       title: "Sesión iniciada"
       xaxis: "Día"
     page_view_crawler_reqs:
-      title: "Extractores web"
       xaxis: "Día"
     page_view_total_reqs:
       xaxis: "Día"
@@ -389,8 +384,8 @@ gl:
     enable_emoji: "Activar emojis"
   search:
     types:
-      category: 'Categorías'
-      user: 'Usuarios'
+      category: "Categorías"
+      user: "Usuarios"
   original_poster: "Publicador orixinal"
   most_recent_poster: "Publicador máis recente"
   frequent_poster: "Publicador frecuente"

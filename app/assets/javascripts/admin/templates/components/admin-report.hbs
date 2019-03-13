@@ -69,7 +69,7 @@
             </div>
           {{else}}
             <div class="alert alert-info report-alert no-data">
-              {{d-icon "pie-chart"}}
+              {{d-icon "chart-pie"}}
               {{#if model.reportUrl}}
                 <a href="{{model.reportUrl}}" class="report-url">
                   <span>
@@ -115,7 +115,7 @@
           <div class="modes">
             {{#each displayedModes as |displayedMode|}}
               {{d-button
-                action="changeMode"
+                action=(action "changeMode")
                 actionParam=displayedMode.mode
                 class=displayedMode.cssClass
                 icon=displayedMode.icon}}
@@ -189,7 +189,7 @@
             <div class="input">
               {{d-button
                 class="btn-default export-csv-btn"
-                action="exportCsv"
+                action=(action "exportCsv")
                 label="admin.export_csv.button_text"
                 icon="download"}}
             </div>
@@ -201,9 +201,9 @@
             <div class="input">
               {{d-button
                 class="refresh-report-btn btn-primary"
-                action="refreshReport"
+                action=(action "refreshReport")
                 label="admin.dashboard.reports.refresh_report"
-                icon="refresh"}}
+                icon="sync"}}
             </div>
           </div>
         {{/if}}

@@ -1,4 +1,4 @@
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 QUnit.module("model:topic");
 
@@ -33,7 +33,7 @@ QUnit.test("visited", assert => {
 });
 
 QUnit.test("lastUnreadUrl", assert => {
-  const category = Em.Object.create({
+  const category = Ember.Object.create({
     navigate_to_first_post_after_read: true
   });
 

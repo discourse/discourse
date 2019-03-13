@@ -12,7 +12,11 @@ export default Ember.Component.extend({
         },
         title: "topics.bulk.actions"
       });
-      controller.set("refreshClosure", () => this.sendAction());
+
+      const action = this.get("action");
+      if (action) {
+        controller.set("refreshClosure", () => action());
+      }
     }
   }
 });

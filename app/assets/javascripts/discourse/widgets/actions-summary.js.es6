@@ -56,7 +56,6 @@ createWidget("small-user-list", {
       let buffer = [icons];
       if (description) {
         buffer.push(description);
-        buffer.push(".");
       }
       return buffer;
     }
@@ -162,7 +161,7 @@ createWidget("deleted-post", {
 
   html(attrs) {
     return [
-      iconNode("trash-o"),
+      iconNode("far-trash-alt"),
       " ",
       avatarFor.call(this, "small", {
         template: attrs.deletedByAvatarTemplate,

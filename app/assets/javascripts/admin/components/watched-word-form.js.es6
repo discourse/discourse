@@ -64,7 +64,7 @@ export default Ember.Component.extend({
               showMessage: true,
               message: I18n.t("admin.watched_words.form.success")
             });
-            this.sendAction("action", WatchedWord.create(result));
+            this.action(WatchedWord.create(result));
             Ember.run.schedule("afterRender", () =>
               this.$(".watched-word-input").focus()
             );

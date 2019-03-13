@@ -3,13 +3,11 @@ require_dependency "image_sizer"
 
 class UploadCreator
 
-  TYPES_CONVERTED_TO_JPEG ||= %i{bmp png}
-
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse g line linearGradient path polygon polyline
-    radialGradient rect stop svg text textpath tref tspan use
+    radialGradient rect stop style svg text textpath tref tspan use
   }.each(&:freeze)
 
   # Available options
@@ -47,7 +45,7 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           whitelist_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
-          convert_to_jpeg! if should_convert_to_jpeg?
+          convert_to_jpeg! if convert_png_to_jpeg?
           downsize!        if should_downsize?
 
           return @upload   if is_still_too_big?
@@ -80,8 +78,8 @@ class UploadCreator
       end
 
       fixed_original_filename = nil
-      if is_image
 
+      if is_image
         current_extension = File.extname(@filename).downcase.sub("jpeg", "jpg")
         expected_extension = ".#{image_type}".downcase.sub("jpeg", "jpg")
 
@@ -89,11 +87,7 @@ class UploadCreator
         # otherwise validation will fail and we can not save
         # TODO decide if we only run the validation on the extension
         if current_extension != expected_extension
-          basename = File.basename(@filename, current_extension)
-
-          if basename.length == 0
-            basename = "image"
-          end
+          basename = File.basename(@filename, current_extension).presence || "image"
           fixed_original_filename = "#{basename}#{expected_extension}"
         end
       end
@@ -126,7 +120,8 @@ class UploadCreator
         url = Discourse.store.store_upload(f, @upload)
 
         if url.present?
-          @upload.update!(url: url)
+          @upload.url = url
+          @upload.save!
         else
           @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
         end
@@ -161,8 +156,8 @@ class UploadCreator
 
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
-  def should_convert_to_jpeg?
-    return false if !TYPES_CONVERTED_TO_JPEG.include?(@image_info.type)
+  def convert_png_to_jpeg?
+    return false unless @image_info.type == :png
     return true  if @opts[:pasted]
     return false if SiteSetting.png_to_jpg_quality == 100
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
@@ -172,10 +167,7 @@ class UploadCreator
   MIN_CONVERT_TO_JPEG_SAVING_RATIO = 0.70
 
   def convert_to_jpeg!
-
-    if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
-      return
-    end
+    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
     jpeg_tempfile = Tempfile.new(["image", ".jpg"])
 
@@ -289,7 +281,6 @@ class UploadCreator
 
   def crop!
     max_pixel_ratio = Discourse::PIXEL_RATIOS.max
-
     filename_with_correct_ext = "image.#{@image_info.type}"
 
     case @opts[:type]

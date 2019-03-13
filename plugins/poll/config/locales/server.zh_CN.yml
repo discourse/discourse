@@ -25,6 +25,9 @@ zh_CN:
     default_poll_with_multiple_choices_has_invalid_parameters: "多选投票有无效选项。"
     named_poll_with_multiple_choices_has_invalid_parameters: "“<strong>%{name}</strong>”多选投票有无效参数。"
     requires_at_least_1_valid_option: "你必须选择至少 1 个有效的选项。"
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "在创建%{minutes}分钟后，你无法更改投票。"
+      cannot_edit_named_poll_with_votes: "在创建%{minutes}分钟后，你无法更改投票名<strong>${name}</strong>。"
     no_poll_with_this_name: "投票“<strong>%{name}</strong>”没有被关联到帖子。"
     post_is_deleted: "帖子已经删除，无法操作。"
     user_cant_post_in_topic: "你无法投票，因为你无法在这个主题里发帖"

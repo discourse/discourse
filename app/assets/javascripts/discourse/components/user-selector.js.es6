@@ -15,7 +15,7 @@ export default TextField.extend({
   },
 
   didInsertElement(opts) {
-    this._super();
+    this._super(...arguments);
 
     const bool = n => {
       const val = this.get(n);
@@ -34,7 +34,8 @@ export default TextField.extend({
       single = bool("single"),
       allowAny = bool("allowAny"),
       disabled = bool("disabled"),
-      disallowEmails = bool("disallowEmails");
+      allowEmails = bool("allowEmails"),
+      fullWidthWrap = bool("fullWidthWrap");
 
     function excludedUsernames() {
       // hack works around some issues with allowAny eventing
@@ -54,6 +55,7 @@ export default TextField.extend({
         single: single,
         allowAny: allowAny,
         updateData: opts && opts.updateData ? opts.updateData : false,
+        fullWidthWrap,
 
         dataSource(term) {
           var results = userSearch({
@@ -65,7 +67,7 @@ export default TextField.extend({
             includeMentionableGroups,
             includeMessageableGroups,
             group: self.get("group"),
-            disallowEmails
+            allowEmails
           });
           return results;
         },
@@ -96,7 +98,7 @@ export default TextField.extend({
           self.set("hasGroups", hasGroups);
 
           selected = items;
-          if (self.get("onChangeCallback")) self.sendAction("onChangeCallback");
+          if (self.get("onChangeCallback")) self.onChangeCallback();
         },
 
         reverseTransform(i) {
@@ -106,7 +108,7 @@ export default TextField.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.$().autocomplete("destroy");
   },
 
@@ -114,7 +116,7 @@ export default TextField.extend({
   @observes("usernames")
   _clearInput: function() {
     if (arguments.length > 1) {
-      if (Em.isEmpty(this.get("usernames"))) {
+      if (Ember.isEmpty(this.get("usernames"))) {
         this.$()
           .parent()
           .find("a")

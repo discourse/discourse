@@ -56,7 +56,7 @@ export default {
         willTransition() {
           Discourse.User.currentProp("should_be_redirected_to_top", false);
           Discourse.User.currentProp("redirected_to_top.reason", null);
-          return this._super();
+          return this._super(...arguments);
         }
       }
     });

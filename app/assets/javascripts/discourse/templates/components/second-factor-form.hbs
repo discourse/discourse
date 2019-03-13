@@ -1,12 +1,15 @@
 <div id="second-factor">
   <h3>{{secondFactorTitle}}</h3>
+  {{#if optionalText}}
+    <p>{{{optionalText}}}</p>
+  {{/if}}
   <p>{{secondFactorDescription}}</p>
   {{yield}}
   {{#if backupEnabled}}
     <p>
       {{discourse-linked-text
         class="toggle-second-factor-method"
-        action="toggleSecondFactorMethod"
+        action=(action "toggleSecondFactorMethod")
         text=linkText}}
     </p>
   {{/if}}

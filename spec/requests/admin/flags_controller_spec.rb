@@ -37,7 +37,7 @@ RSpec.describe Admin::FlagsController do
 
   context '#agree' do
     it 'should raise a reasonable error if a flag was deferred and then someone else agreed' do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
 
       _post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
 
@@ -52,7 +52,7 @@ RSpec.describe Admin::FlagsController do
     end
 
     it 'should be able to agree and keep content' do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
 
       post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
 
@@ -69,7 +69,7 @@ RSpec.describe Admin::FlagsController do
 
     it 'should be able to hide spam' do
       SiteSetting.allow_user_locale = true
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
 
       post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
       admin.update!(locale: 'ja')
@@ -90,7 +90,7 @@ RSpec.describe Admin::FlagsController do
     end
 
     it 'should not delete category topic' do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
       category.update_column(:topic_id, first_post.topic_id)
 
       PostAction.act(user, first_post, PostActionType.types[:spam], message: 'bad')
@@ -100,6 +100,28 @@ RSpec.describe Admin::FlagsController do
 
       first_post.reload
       expect(first_post.deleted_at).to eq(nil)
+    end
+  end
+
+  context '#disagree' do
+    it "unhides the post and unsilences the user if disagreed" do
+      SiteSetting.num_spam_flags_to_silence_new_user = 1
+      SiteSetting.num_users_to_silence_new_user = 1
+
+      new_user = Fabricate(:newuser)
+      new_post = create_post(user: new_user)
+
+      PostAction.act(Fabricate(:leader), new_post, PostActionType.types[:spam])
+
+      post "/admin/flags/disagree/#{new_post.id}.json"
+      expect(response.status).to eq(200)
+
+      new_post.reload
+      new_user.reload
+
+      expect(new_post).to_not be_hidden
+      expect(new_post.spam_count).to eq(0)
+      expect(new_user).to_not be_silenced
     end
   end
 end

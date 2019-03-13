@@ -7,7 +7,10 @@ require_dependency "file_store/local_store"
 require_dependency "base62"
 
 class Upload < ActiveRecord::Base
+  include ActionView::Helpers::NumberHelper
+
   SHA1_LENGTH = 40
+  SEEDED_ID_THRESHOLD = 0
 
   belongs_to :user
 
@@ -33,6 +36,8 @@ class Upload < ActiveRecord::Base
     UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
     UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
   end
+
+  scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
   def to_s
     self.url
@@ -208,6 +213,10 @@ class Upload < ActiveRecord::Base
     upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
+  def human_filesize
+    number_to_human_size(self.filesize)
+  end
+
   def self.migrate_to_new_scheme(limit = nil)
     problems = []
 
@@ -289,9 +298,11 @@ end
 #  extension         :string(10)
 #  thumbnail_width   :integer
 #  thumbnail_height  :integer
+#  etag              :string
 #
 # Indexes
 #
+#  index_uploads_on_etag        (etag)
 #  index_uploads_on_extension   (lower((extension)::text))
 #  index_uploads_on_id_and_url  (id,url)
 #  index_uploads_on_sha1        (sha1) UNIQUE

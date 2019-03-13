@@ -1,0 +1,19 @@
+<div class="popular-theme-item">
+  <div class="popular-theme-name">
+    {{theme.name}}
+    {{#if theme.preview}}
+      <a href="{{theme.preview}}" title="Preview" target="_blank">{{d-icon "far-eye"}}</a>
+    {{/if}}
+  </div>
+  <div class="popular-theme-buttons">
+    {{#if theme.installed}}
+      <span>{{I18n "admin.customize.theme.installed"}}</span>
+    {{else}}
+      {{d-button class='btn-small'
+        label="admin.customize.theme.install"
+        disabled=installDisabled
+        icon="upload"
+        action=(action "installThemeFromList" theme.value)}}
+    {{/if}}
+  </div>
+</div>

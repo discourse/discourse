@@ -28,7 +28,7 @@ class Site
   def categories
     @categories ||= begin
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :uploaded_meta)
+        .includes(:uploaded_logo, :uploaded_background)
         .secured(@guardian)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
@@ -69,6 +69,10 @@ class Site
       categories.reject! { |c| c.parent_category_id && !by_id[c.parent_category_id] }
       categories
     end
+  end
+
+  def groups
+    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true)
   end
 
   def suppressed_from_latest_category_ids

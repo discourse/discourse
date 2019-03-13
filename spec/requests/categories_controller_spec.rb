@@ -78,7 +78,7 @@ describe CategoriesController do
 
     describe "logged in" do
       before do
-        SiteSetting.queue_jobs = false
+        run_jobs_synchronously!
         sign_in(admin)
       end
 
@@ -144,8 +144,7 @@ describe CategoriesController do
             permissions: {
               "everyone" => readonly,
               "staff" => create_post
-            },
-            uploaded_meta_id: 2
+            }
           }
 
           expect(response.status).to eq(200)
@@ -158,7 +157,6 @@ describe CategoriesController do
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
           expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
-          expect(category.uploaded_meta_id).to eq(2)
         end
       end
     end
@@ -228,7 +226,7 @@ describe CategoriesController do
 
   context '#update' do
     before do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
     end
 
     it "requires the user to be logged in" do

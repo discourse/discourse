@@ -74,31 +74,30 @@ describe BadgeGranter do
     end
 
     it 'should grant missing badges' do
+      nice_topic = Badge.find(Badge::NiceTopic)
       good_topic = Badge.find(Badge::GoodTopic)
 
       post = Fabricate(:post, like_count: 30)
+
       2.times {
-        BadgeGranter.backfill(Badge.find(Badge::NiceTopic), post_ids: [post.id])
+        BadgeGranter.backfill(nice_topic, post_ids: [post.id])
         BadgeGranter.backfill(good_topic)
       }
 
       # TODO add welcome
-      expect(post.user.user_badges.pluck(:badge_id).sort).to eq([Badge::NiceTopic, Badge::GoodTopic])
-
+      expect(post.user.user_badges.pluck(:badge_id)).to contain_exactly(nice_topic.id, good_topic.id)
       expect(post.user.notifications.count).to eq(2)
 
-      notification = post.user.notifications.last
-      data = notification.data_hash
+      data = post.user.notifications.last.data_hash
       expect(data["badge_id"]).to eq(good_topic.id)
       expect(data["badge_slug"]).to eq(good_topic.slug)
       expect(data["username"]).to eq(post.user.username)
 
-      expect(Badge.find(Badge::NiceTopic).grant_count).to eq(1)
-      expect(Badge.find(Badge::GoodTopic).grant_count).to eq(1)
+      expect(nice_topic.grant_count).to eq(1)
+      expect(good_topic.grant_count).to eq(1)
     end
 
     it 'should grant badges in the user locale' do
-
       SiteSetting.allow_user_locale = true
 
       nice_topic = Badge.find(Badge::NiceTopic)

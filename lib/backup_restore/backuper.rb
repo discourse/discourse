@@ -32,10 +32,13 @@ module BackupRestore
       ### READ-ONLY / START ###
       enable_readonly_mode
 
-      pause_sidekiq
-      wait_for_sidekiq
-
-      dump_public_schema
+      begin
+        pause_sidekiq
+        wait_for_sidekiq
+        dump_public_schema
+      ensure
+        unpause_sidekiq
+      end
 
       disable_readonly_mode
       ### READ-ONLY / END ###
@@ -234,9 +237,11 @@ module BackupRestore
       log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
+          exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', '--warning=no-file-changed', '--file', tar_filename, upload_directory,
-            failure_message: "Failed to archive uploads."
+            'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
+            failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
           )
         else
           log "No uploads found, skipping archiving uploads..."
@@ -246,7 +251,10 @@ module BackupRestore
       remove_tmp_directory
 
       log "Gzipping archive, this may take a while..."
-      Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
+      Discourse::Utils.execute_command(
+        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
+        failure_message: "Failed to gzip archive."
+      )
     end
 
     def upload_archive
@@ -256,9 +264,6 @@ module BackupRestore
       content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
       archive_path = File.join(@archive_directory, @backup_filename)
       @store.upload_file(@backup_filename, archive_path, content_type)
-    ensure
-      log "Removing archive from local storage..."
-      FileUtils.remove_file(archive_path, force: true)
     end
 
     def after_create_hook
@@ -294,11 +299,24 @@ module BackupRestore
 
     def clean_up
       log "Cleaning stuff up..."
+      delete_uploaded_archive
       remove_tar_leftovers
-      unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       refresh_disk_space
+    end
+
+    def delete_uploaded_archive
+      return unless @store.remote?
+
+      archive_path = File.join(@archive_directory, @backup_filename)
+
+      if File.exist?(archive_path)
+        log "Removing archive from local storage..."
+        File.delete(archive_path)
+      end
+    rescue => ex
+      log "Something went wrong while deleting uploaded archive from local storage.", ex
     end
 
     def refresh_disk_space
@@ -323,6 +341,7 @@ module BackupRestore
     end
 
     def unpause_sidekiq
+      return unless Sidekiq.paused?
       log "Unpausing sidekiq..."
       Sidekiq.unpause!
     rescue => ex

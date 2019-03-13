@@ -152,7 +152,7 @@ class SiteSetting < ActiveRecord::Base
       bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-      if SiteSetting.s3_endpoint == "https://s3.amazonaws.com"
+      if SiteSetting.s3_endpoint.blank? || SiteSetting.s3_endpoint.end_with?("amazonaws.com")
         if SiteSetting.Upload.s3_region.start_with?("cn-")
           "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         else
@@ -177,54 +177,22 @@ class SiteSetting < ActiveRecord::Base
     site_favicon_url
   }.each { |client_setting| client_settings << client_setting }
 
-  def self.site_logo_url
-    upload = self.logo
-    upload ? full_cdn_url(upload.url) : self.logo_url(warn: false)
-  end
-
-  def self.site_logo_small_url
-    upload = self.logo_small
-    upload ? full_cdn_url(upload.url) : self.logo_small_url(warn: false)
-  end
-
-  def self.site_digest_logo_url
-    upload = self.digest_logo
-    upload ? full_cdn_url(upload.url) : self.digest_logo_url(warn: false)
-  end
-
-  def self.site_mobile_logo_url
-    upload = self.mobile_logo
-    upload ? full_cdn_url(upload.url) : self.mobile_logo_url(warn: false)
-  end
-
-  def self.site_large_icon_url
-    upload = self.large_icon
-    upload ? full_cdn_url(upload.url) : self.large_icon_url(warn: false)
-  end
-
-  def self.site_favicon_url
-    upload = self.favicon
-    upload ? full_cdn_url(upload.url) : self.favicon_url(warn: false)
-  end
-
-  def self.site_apple_touch_icon_url
-    upload = self.apple_touch_icon
-    upload ? full_cdn_url(upload.url) : self.apple_touch_icon_url(warn: false)
-  end
-
-  def self.opengraph_image_url
-    upload = self.opengraph_image
-    upload ? full_cdn_url(upload.url) : self.default_opengraph_image_url(warn: false)
-  end
-
-  def self.site_twitter_summary_large_image_url
-    self.twitter_summary_large_image&.url ||
-      self.twitter_summary_large_image_url(warn: false)
-  end
-
-  def self.site_push_notifications_icon_url
-    SiteSetting.push_notifications_icon&.url ||
-      SiteSetting.push_notifications_icon_url(warn: false)
+  %i{
+    logo
+    logo_small
+    digest_logo
+    mobile_logo
+    large_icon
+    favicon
+    apple_touch_icon
+    twitter_summary_large_image
+    opengraph_image
+    push_notifications_icon
+  }.each do |setting_name|
+    define_singleton_method("site_#{setting_name}_url") do
+      upload = self.public_send(setting_name)
+      upload ? full_cdn_url(upload.url) : ''
+    end
   end
 
   def self.shared_drafts_enabled?

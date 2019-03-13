@@ -32,7 +32,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
     },
 
     scrolled() {
-      this._super();
+      this._super(...arguments);
       this.saveScrollPosition();
     },
 

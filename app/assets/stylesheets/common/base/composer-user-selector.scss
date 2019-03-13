@@ -1,10 +1,11 @@
 div.ac-wrap.composer-user-selector-limited {
   width: 400px;
-
-  .btn-small {
-    border-radius: 10px;
-    position: relative;
-    top: -2px;
-    float: none;
+  padding: 0 10px;
+  margin-bottom: 5px;
+  .btn-primary {
+    margin-left: 0.5em;
+    padding: 3px 6px 2px;
+    font-size: $font-down-1;
+    min-height: unset;
   }
 }

@@ -1,7 +1,7 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if hasIncoming}}
   <div class="show-mores">
-    <div class='alert alert-info clickable' {{action "showInserted"}}>
+    <div class='alert alert-info clickable' {{action showInserted}}>
       {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
     </div>
   </div>
@@ -46,13 +46,6 @@
                   {{category-link t.category}}
                 </div>
               {{/unless}}
-              {{#if showParticipants}}
-                <div class='participants'>
-                  {{#each participants as |p|}}
-                    <a href="{{unbound p.user.path}}" class="{{unbound p.extras}}">{{avatar p usernamePath="user.username" imageSize="small"}}</a>
-                  {{/each}}
-                </div>
-              {{/if}}
               <div class="clearfix"></div>
             </div>
           </td>

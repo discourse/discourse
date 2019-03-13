@@ -53,30 +53,10 @@ QUnit.test("general tab", async assert => {
 QUnit.test("general tab - activity metrics", async assert => {
   await visit("/admin");
 
-  assert.equal(
-    $(".admin-report.page-view-total-reqs .today-count")
-      .text()
-      .trim(),
-    "1.1k"
-  );
-  assert.equal(
-    $(".admin-report.page-view-total-reqs .yesterday-count")
-      .text()
-      .trim(),
-    "2.5k"
-  );
-  assert.equal(
-    $(".admin-report.page-view-total-reqs .sevendays-count")
-      .text()
-      .trim(),
-    "18.6k"
-  );
-  assert.equal(
-    $(".admin-report.page-view-total-reqs .thirty-days-count")
-      .text()
-      .trim(),
-    "80.8k"
-  );
+  assert.ok(exists(".admin-report.page-view-total-reqs .today-count"));
+  assert.ok(exists(".admin-report.page-view-total-reqs .yesterday-count"));
+  assert.ok(exists(".admin-report.page-view-total-reqs .sevendays-count"));
+  assert.ok(exists(".admin-report.page-view-total-reqs .thirty-days-count"));
 });
 
 QUnit.test("reports tab", async assert => {

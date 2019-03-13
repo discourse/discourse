@@ -1,8 +1,8 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import BufferedContent from "discourse/mixins/buffered-content";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
 
-export default Ember.Controller.extend(BufferedContent, {
+export default Ember.Controller.extend(bufferedProperty("model"), {
   adminBadges: Ember.inject.controller(),
   saving: false,
   savingStatus: "",

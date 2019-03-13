@@ -16,6 +16,20 @@ describe ContentSecurityPolicy do
     end
   end
 
+  describe 'base-uri' do
+    it 'is set to none' do
+      base_uri = parse(policy)['base-uri']
+      expect(base_uri).to eq(["'none'"])
+    end
+  end
+
+  describe 'object-src' do
+    it 'is set to none' do
+      object_srcs = parse(policy)['object-src']
+      expect(object_srcs).to eq(["'none'"])
+    end
+  end
+
   describe 'worker-src' do
     it 'always has self and blob' do
       worker_srcs = parse(policy)['worker-src']
@@ -97,6 +111,8 @@ describe ContentSecurityPolicy do
 
     plugin.enabled = true
     expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+    expect(parse(policy)['object-src']).to include('https://test-stripping.com')
+    expect(parse(policy)['object-src']).to_not include("'none'")
 
     plugin.enabled = false
     expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
@@ -104,31 +120,42 @@ describe ContentSecurityPolicy do
     Discourse.plugins.pop
   end
 
-  it 'can be extended by themes' do
-    policy # call this first to make sure further actions clear the cache
+  context "with a theme" do
+    let!(:theme) {
+      Fabricate(:theme).tap do |t|
+        settings = <<~YML
+          extend_content_security_policy:
+            type: list
+            default: 'script-src: from-theme.com'
+        YML
+        t.set_field(target: :settings, name: :yaml, value: settings)
+        t.save!
+      end
+    }
 
-    theme = Fabricate(:theme)
-    settings = <<~YML
-      extend_content_security_policy:
-        type: list
-        default: 'script-src: from-theme.com'
-    YML
-    theme.set_field(target: :settings, name: :yaml, value: settings)
-    theme.save!
+    def theme_policy
+      policy([theme.id])
+    end
 
-    expect(parse(policy)['script-src']).to include('from-theme.com')
+    it 'can be extended by themes' do
+      policy # call this first to make sure further actions clear the cache
 
-    theme.update_setting(:extend_content_security_policy, "script-src: https://from-theme.net|worker-src: from-theme.com")
-    theme.save!
+      expect(parse(policy)['script-src']).not_to include('from-theme.com')
 
-    expect(parse(policy)['script-src']).to_not include('from-theme.com')
-    expect(parse(policy)['script-src']).to include('https://from-theme.net')
-    expect(parse(policy)['worker-src']).to include('from-theme.com')
+      expect(parse(theme_policy)['script-src']).to include('from-theme.com')
 
-    theme.destroy!
+      theme.update_setting(:extend_content_security_policy, "script-src: https://from-theme.net|worker-src: from-theme.com")
+      theme.save!
 
-    expect(parse(policy)['script-src']).to_not include('https://from-theme.net')
-    expect(parse(policy)['worker-src']).to_not include('from-theme.com')
+      expect(parse(theme_policy)['script-src']).to_not include('from-theme.com')
+      expect(parse(theme_policy)['script-src']).to include('https://from-theme.net')
+      expect(parse(theme_policy)['worker-src']).to include('from-theme.com')
+
+      theme.destroy!
+
+      expect(parse(theme_policy)['script-src']).to_not include('https://from-theme.net')
+      expect(parse(theme_policy)['worker-src']).to_not include('from-theme.com')
+    end
   end
 
   it 'can be extended by site setting' do
@@ -144,7 +171,7 @@ describe ContentSecurityPolicy do
     end.to_h
   end
 
-  def policy
-    ContentSecurityPolicy.policy
+  def policy(theme_ids = [])
+    ContentSecurityPolicy.policy(theme_ids)
   end
 end

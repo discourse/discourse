@@ -10,6 +10,12 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     true
   end
 
+  def primary_email_verified?(auth_token)
+    # Omniauth providers should only provide verified emails in the :info hash.
+    # This method allows additional checks to be added
+    true
+  end
+
   def can_revoke?
     true
   end
@@ -35,7 +41,11 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     end
 
     # Matching an account by email
-    if match_by_email && association.user.nil? && (user = User.find_by_email(auth_token.dig(:info, :email)))
+    if primary_email_verified?(auth_token) &&
+        match_by_email &&
+        association.user.nil? &&
+        (user = User.find_by_email(auth_token.dig(:info, :email)))
+
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       association.user = user
     end
@@ -44,6 +54,8 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     association.info = auth_token[:info] || {}
     association.credentials = auth_token[:credentials] || {}
     association.extra = auth_token[:extra] || {}
+
+    association.last_used = Time.zone.now
 
     # Save to the DB. Do this even if we don't have a user - it might be linked up later in after_create_account
     association.save!
@@ -58,7 +70,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.email = info[:email]
     result.name = "#{info[:first_name]} #{info[:last_name]}"
     result.username = info[:nickname]
-    result.email_valid = true if result.email
+    result.email_valid = primary_email_verified?(auth_token) if result.email
     result.extra_data = {
       provider: auth_token[:provider],
       uid: auth_token[:uid]

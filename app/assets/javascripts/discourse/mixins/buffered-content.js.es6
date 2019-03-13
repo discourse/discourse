@@ -2,7 +2,7 @@
 export function bufferedProperty(property) {
   const mixin = {
     buffered: function() {
-      return Em.ObjectProxy.extend(BufferedProxy).create({
+      return Ember.ObjectProxy.extend(BufferedProxy).create({
         content: this.get(property)
       });
     }.property(property),

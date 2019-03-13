@@ -1,6 +1,7 @@
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Ember.Controller.extend({
   loading: false,
@@ -11,10 +12,15 @@ export default Ember.Controller.extend({
     "model.second_factor_remaining_backup_codes"
   ),
   backupCodes: null,
+  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
-  @computed("secondFactorToken")
-  isValidSecondFactorToken(secondFactorToken) {
-    return secondFactorToken && secondFactorToken.length === 6;
+  @computed("secondFactorToken", "secondFactorMethod")
+  isValidSecondFactorToken(secondFactorToken, secondFactorMethod) {
+    if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
+      return secondFactorToken && secondFactorToken.length === 6;
+    } else if (secondFactorMethod === SECOND_FACTOR_METHODS.BACKUP_CODE) {
+      return secondFactorToken && secondFactorToken.length === 16;
+    }
   },
 
   @computed("isValidSecondFactorToken", "backupEnabled", "loading")
@@ -58,8 +64,13 @@ export default Ember.Controller.extend({
 
       this.set("loading", true);
 
-      this.get("content")
-        .toggleSecondFactor(this.get("secondFactorToken"), false, 2)
+      this.get("model")
+        .toggleSecondFactor(
+          this.get("secondFactorToken"),
+          this.get("secondFactorMethod"),
+          SECOND_FACTOR_METHODS.BACKUP_CODE,
+          false
+        )
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);
@@ -68,7 +79,7 @@ export default Ember.Controller.extend({
 
           this.set("errorMessage", null);
 
-          const usernameLower = this.get("content").username.toLowerCase();
+          const usernameLower = this.get("model").username.toLowerCase();
           DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
         })
         .catch(popupAjaxError)
@@ -78,8 +89,11 @@ export default Ember.Controller.extend({
     generateSecondFactorCodes() {
       if (!this.get("secondFactorToken")) return;
       this.set("loading", true);
-      this.get("content")
-        .generateSecondFactorCodes(this.get("secondFactorToken"))
+      this.get("model")
+        .generateSecondFactorCodes(
+          this.get("secondFactorToken"),
+          this.get("secondFactorMethod")
+        )
         .then(response => {
           if (response.error) {
             this.set("errorMessage", response.error);

@@ -48,7 +48,7 @@ module PostGuardian
         (!SiteSetting.allow_flagging_staff?) &&
         post&.user&.staff?
 
-      if [:notify_user, :notify_moderators].include?(action_key) &&
+      if action_key == :notify_user &&
          (!SiteSetting.enable_personal_messages? ||
          !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages))
 
@@ -108,10 +108,9 @@ module PostGuardian
 
   # Creating Method
   def can_create_post?(parent)
-
     return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
 
-    (!SpamRule::AutoSilence.silence?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
+    (!SpamRule::AutoSilence.prevent_posting?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
       !parent ||
       !parent.category ||
       Category.post_create_allowed(self).where(id: parent.category.id).count == 1
@@ -227,7 +226,7 @@ module PostGuardian
   end
 
   def can_change_post_timestamps?
-    is_admin?
+    is_staff?
   end
 
   def can_wiki?(post)
@@ -267,6 +266,6 @@ module PostGuardian
   end
 
   def can_skip_bump?
-    is_staff?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 end

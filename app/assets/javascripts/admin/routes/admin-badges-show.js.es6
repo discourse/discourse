@@ -4,7 +4,7 @@ import showModal from "discourse/lib/show-modal";
 
 export default Ember.Route.extend({
   serialize(m) {
-    return { badge_id: Em.get(m, "id") || "new" };
+    return { badge_id: Ember.get(m, "id") || "new" };
   },
 
   model(params) {
@@ -49,7 +49,7 @@ export default Ember.Route.extend({
         })
         .catch(function(error) {
           badge.set("preview_loading", false);
-          Em.Logger.error(error);
+          Ember.Logger.error(error);
           bootbox.alert("Network error");
         });
     }

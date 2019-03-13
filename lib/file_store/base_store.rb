@@ -92,10 +92,6 @@ module FileStore
     def purge_tombstone(grace_period)
     end
 
-    def get_depth_for(id)
-      [0, Math.log(id / 1_000.0, 16).ceil].max
-    end
-
     def get_path_for(type, id, sha, extension)
       depth = get_depth_for(id)
       tree = File.join(*sha[0, depth].chars, "")
@@ -116,7 +112,8 @@ module FileStore
 
     def get_path_for_optimized_image(optimized_image)
       upload = optimized_image.upload
-      extension = "_#{OptimizedImage::VERSION}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
+      version = optimized_image.version || 1
+      extension = "_#{version}_#{optimized_image.width}x#{optimized_image.height}#{optimized_image.extension}"
       get_path_for("optimized".freeze, upload.id, upload.sha1, extension)
     end
 
@@ -145,6 +142,12 @@ module FileStore
 
     def not_implemented
       raise "Not implemented."
+    end
+
+    def get_depth_for(id)
+      depths = [0]
+      depths << Math.log(id / 1_000.0, 16).ceil if id.positive?
+      depths.max
     end
 
   end

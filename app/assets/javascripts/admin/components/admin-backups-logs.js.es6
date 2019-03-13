@@ -9,7 +9,7 @@ export default Ember.Component.extend(
     classNames: ["admin-backups-logs"],
 
     init() {
-      this._super();
+      this._super(...arguments);
       this._reset();
     },
 

@@ -58,6 +58,32 @@ describe Admin::EmailController do
       expect(log["id"]).to eq(email_log.id)
       expect(log["reply_key"]).to eq(post_reply_key.reply_key)
     end
+
+    it 'should be able to filter by reply key' do
+      email_log_2 = Fabricate(:email_log, post: post)
+
+      post_reply_key_2 = Fabricate(:post_reply_key,
+        post: post,
+        user: email_log_2.user,
+        reply_key: "2d447423-c625-4fb9-8717-ff04ac60eee8"
+      )
+
+      [
+        "17ff04",
+        "2d447423c6254fb98717ff04ac60eee8"
+      ].each do |reply_key|
+        get "/admin/email/sent.json", params: {
+          reply_key: reply_key
+        }
+
+        expect(response.status).to eq(200)
+
+        logs = JSON.parse(response.body)
+
+        expect(logs.size).to eq(1)
+        expect(logs.first["reply_key"]).to eq(post_reply_key_2.reply_key)
+      end
+    end
   end
 
   describe '#skipped' do
@@ -146,6 +172,14 @@ describe Admin::EmailController do
   describe '#preview_digest' do
     it 'raises an error without the last_seen_at parameter' do
       get "/admin/email/preview-digest.json"
+      expect(response.status).to eq(400)
+    end
+
+    it "returns the right response when username is invalid" do
+      get "/admin/email/preview-digest.json", params: {
+        last_seen_at: 1.week.ago, username: "somerandomeusername"
+      }
+
       expect(response.status).to eq(400)
     end
 

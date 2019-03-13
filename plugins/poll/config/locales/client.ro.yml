@@ -49,9 +49,6 @@ ro:
         title: "Închide sondajul"
         label: "Închide sondajul"
         confirm: "Ești sigur că vrei să închizi acest sondaj?"
-      automatic_close:
-        closes_in: "se închide în <strong>%{timeLeft}</strong>"
-        age: "închis <strong>%{age}</strong>"
       error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
       error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor tale."
       error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."

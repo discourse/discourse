@@ -2,7 +2,7 @@ export default Discourse.Route.extend({
   showFooter: true,
 
   model() {
-    let user = this.modelFor("user");
+    const user = this.modelFor("user");
     if (user.get("profile_hidden")) {
       return this.replaceWith("user.profile-hidden");
     }

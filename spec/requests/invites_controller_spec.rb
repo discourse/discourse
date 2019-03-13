@@ -12,7 +12,7 @@ describe InvitesController do
 
       body = response.body
       expect(body).to_not have_tag(:script, with: { src: '/assets/application.js' })
-      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
+      expect(CGI.unescapeHTML(body)).to include(I18n.t('invite.not_found', site_name: SiteSetting.title, base_url: Discourse.base_url))
     end
 
     it "renders the accept invite page if invite exists" do
@@ -213,6 +213,19 @@ describe InvitesController do
       end
     end
 
+    context 'with an invalid invite record' do
+      let(:invite) { Fabricate(:invite) }
+      it "responds with error message" do
+        invite.update_attribute(:email, "John Doe <john.doe@example.com>")
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(response.status).to eq(200)
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+        expect(json["message"]).to eq(I18n.t('invite.error_message'))
+        expect(session[:current_user_id]).to be_blank
+      end
+    end
+
     context 'with a deleted invite' do
       let(:topic) { Fabricate(:topic) }
 
@@ -335,7 +348,10 @@ describe InvitesController do
               before { invite.update_column(:via_email, true) }
 
               it "doesn't send an activation email and activates the user" do
-                put "/invites/show/#{invite.invite_key}.json", params: { password: "verystrongpassword" }
+                expect do
+                  put "/invites/show/#{invite.invite_key}.json", params: { password: "verystrongpassword" }
+                end.to change { UserAuthToken.count }.by(1)
+
                 expect(response.status).to eq(200)
                 expect(JSON.parse(response.body)["success"]).to eq(true)
 
@@ -352,9 +368,13 @@ describe InvitesController do
               before { invite.update_column(:via_email, false) }
 
               it "sends an activation email and doesn't activate the user" do
-                put "/invites/show/#{invite.invite_key}.json", params: { password: "verystrongpassword" }
+                expect do
+                  put "/invites/show/#{invite.invite_key}.json", params: { password: "verystrongpassword" }
+                end.not_to change { UserAuthToken.count }
+
                 expect(response.status).to eq(200)
                 expect(JSON.parse(response.body)["success"]).to eq(true)
+                expect(JSON.parse(response.body)["message"]).to eq(I18n.t("invite.confirm_email"))
 
                 invited_user = User.find_by_email(invite.email)
                 expect(invited_user.active).to eq(false)

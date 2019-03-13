@@ -6,7 +6,8 @@ class BasicPostSerializer < ApplicationSerializer
              :avatar_template,
              :created_at,
              :cooked,
-             :cooked_hidden
+             :cooked_hidden,
+             :ignored
 
   def name
     object.user && object.user.name
@@ -35,9 +36,16 @@ class BasicPostSerializer < ApplicationSerializer
       else
         I18n.t('flagging.user_must_edit')
       end
+    elsif ignored
+      I18n.t('ignored.hidden_content')
     else
       object.filter_quotes(@parent_post)
     end
+  end
+
+  def ignored
+    object.is_first_post? && IgnoredUser.where(user_id: scope.current_user&.id,
+                                               ignored_user_id: object.user_id).present?
   end
 
   def include_name?

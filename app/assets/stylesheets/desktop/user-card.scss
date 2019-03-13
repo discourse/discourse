@@ -33,6 +33,10 @@ $user_card_background: $secondary;
     z-index: z("composer", "content") + 1;
   }
 
+  &.docked-card {
+    z-index: z("header") + 1;
+  }
+
   .card-content {
     padding: 12px 12px 0 12px;
     background: rgba($user_card_background, 0.85);
@@ -281,11 +285,16 @@ $user_card_background: $secondary;
   .badge-section {
     display: flex;
     align-items: flex-start;
-    width: 500px;
     padding-bottom: 10px;
     margin-top: 5px;
-
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 185px;
+    }
     .user-badge {
+      display: flex;
+      white-space: nowrap;
       margin-right: 0.5em;
       background: $primary-very-low;
       border: 1px solid $primary-low;
@@ -302,6 +311,7 @@ $user_card_background: $secondary;
   .more-user-badges {
     @extend .user-badge;
     padding: 3px 8px;
+    white-space: nowrap;
   }
 
   .suspended {

@@ -113,6 +113,7 @@ export default function(filter, extras) {
             model.get("for_period") ||
             (filter.indexOf("top/") >= 0 ? filter.split("/")[1] : ""),
           selected: [],
+          expandAllPinned: false,
           expandGloballyPinned: true
         };
 

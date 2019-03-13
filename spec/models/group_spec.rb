@@ -221,9 +221,9 @@ describe Group do
   end
 
   describe '.refresh_automatic_group!' do
-    it "makes sure the everyone group is not visible" do
+    it "makes sure the everyone group is not visible except to staff" do
       g = Group.refresh_automatic_group!(:everyone)
-      expect(g.visibility_level).to eq(Group.visibility_levels[:owners])
+      expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
     end
 
     it "ensures that the moderators group is messageable by all" do
@@ -236,7 +236,6 @@ describe Group do
 
     it "does not reset the localized name" do
       begin
-        default_locale = SiteSetting.default_locale
         I18n.locale = SiteSetting.default_locale = 'fi'
 
         group = Group.find(Group::AUTO_GROUPS[:everyone])
@@ -251,40 +250,42 @@ describe Group do
         Group.refresh_automatic_group!(:everyone)
 
         expect(group.reload.name).to eq(I18n.t("groups.default_names.everyone"))
-      ensure
-        I18n.locale = SiteSetting.default_locale = default_locale
       end
     end
 
     it "uses the localized name if name has not been taken" do
       begin
-        default_locale = SiteSetting.default_locale
         I18n.locale = SiteSetting.default_locale = 'de'
 
         group = Group.refresh_automatic_group!(:staff)
 
         expect(group.name).to_not eq('staff')
         expect(group.name).to eq(I18n.t('groups.default_names.staff'))
-      ensure
-        I18n.locale = SiteSetting.default_locale = default_locale
       end
     end
 
     it "does not use the localized name if name has already been taken" do
       begin
-        default_locale = SiteSetting.default_locale
         I18n.locale = SiteSetting.default_locale = 'de'
 
-        _another_group = Fabricate(:group,
-          name: I18n.t('groups.default_names.staff').upcase
-        )
-
+        Fabricate(:group, name: I18n.t('groups.default_names.staff').upcase)
         group = Group.refresh_automatic_group!(:staff)
-
         expect(group.name).to eq('staff')
-      ensure
-        I18n.locale = SiteSetting.default_locale = default_locale
+
+        Fabricate(:user_single_email, username: I18n.t('groups.default_names.moderators').upcase)
+        group = Group.refresh_automatic_group!(:moderators)
+        expect(group.name).to eq('moderators')
       end
+    end
+
+    it "always uses the default locale" do
+      SiteSetting.default_locale = "de"
+      I18n.locale = "en"
+
+      group = Group.refresh_automatic_group!(:staff)
+
+      expect(group.name).to_not eq('staff')
+      expect(group.name).to eq(I18n.t('groups.default_names.staff', locale: "de"))
     end
   end
 

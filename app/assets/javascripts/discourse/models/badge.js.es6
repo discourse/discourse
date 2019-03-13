@@ -3,7 +3,7 @@ import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
 
 const Badge = RestModel.extend({
-  newBadge: Em.computed.none("id"),
+  newBadge: Ember.computed.none("id"),
 
   url: function() {
     return Discourse.getURL(`/badges/${this.get("id")}/${this.get("slug")}`);

@@ -174,7 +174,7 @@ end
 desc "List all users which have been staff in the last month"
 task "users:list_recent_staff" => :environment do
   current_staff_ids = User.human_users.where("admin OR moderator").pluck(:id)
-  recent_actions = UserHistory.where("created_at < ?", 1.month.ago)
+  recent_actions = UserHistory.where("created_at > ?", 1.month.ago)
   recent_admin_ids = recent_actions.where(action: UserHistory.actions[:revoke_admin]).pluck(:target_user_id)
   recent_moderator_ids = recent_actions.where(action: UserHistory.actions[:revoke_moderation]).pluck(:target_user_id)
 

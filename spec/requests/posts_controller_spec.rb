@@ -248,15 +248,22 @@ describe PostsController do
         let(:moderator) { Fabricate(:moderator) }
 
         before do
+          sign_in(moderator)
           PostAction.act(moderator, post1, PostActionType.types[:off_topic])
           PostAction.act(moderator, post2, PostActionType.types[:off_topic])
           Jobs::SendSystemMessage.clear
         end
 
-        it "defers the posts" do
-          sign_in(moderator)
+        it "defers the child posts by default" do
           expect(PostAction.flagged_posts_count).to eq(2)
-          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id], defer_flags: true }
+          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+          expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
+          expect(PostAction.flagged_posts_count).to eq(0)
+        end
+
+        it "can defer all posts based on `agree_with_first_reply_flag` param" do
+          expect(PostAction.flagged_posts_count).to eq(2)
+          delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id], agree_with_first_reply_flag: false }
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
           expect(PostAction.flagged_posts_count).to eq(0)
         end
@@ -392,6 +399,15 @@ describe PostsController do
 
         post.reload
         expect(post.raw).to eq('edited body')
+      end
+
+      it "won't update bump date if post is a whisper" do
+        post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
+
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response.status).to eq(200)
+
+        expect(post.topic.reload.bumped_at).to be < post.created_at
       end
     end
 
@@ -714,7 +730,7 @@ describe PostsController do
       end
 
       it 'allows to create posts in import_mode' do
-        SiteSetting.queue_jobs = false
+        run_jobs_synchronously!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
         user = Fabricate(:user)
@@ -999,6 +1015,34 @@ describe PostsController do
 
           expect(JSON.parse(response.body)["errors"]).to include(I18n.t(:spamming_host))
         end
+
+        context "allow_uncategorized_topics is false" do
+          before do
+            SiteSetting.allow_uncategorized_topics = false
+          end
+
+          it "cant create an uncategorized post" do
+            post "/posts.json", params: {
+              raw: "a new post with no category",
+              title: "a new post with no category"
+            }
+            expect(response).not_to be_successful
+          end
+
+          context "as staff" do
+            before do
+              sign_in(Fabricate(:admin))
+            end
+
+            it "cant create an uncategorized post" do
+              post "/posts.json", params: {
+                raw: "a new post with no category",
+                title: "a new post with no category"
+              }
+              expect(response).not_to be_successful
+            end
+          end
+        end
       end
     end
 
@@ -1160,10 +1204,18 @@ describe PostsController do
         include_examples "it works"
       end
 
+      context "TL4 users" do
+        before do
+          sign_in(Fabricate(:trust_level_4))
+        end
+
+        include_examples "it works"
+      end
+
       context "users" do
         let(:topic) { Fabricate(:topic) }
 
-        [:user, :trust_level_4].each do |user|
+        [:user].each do |user|
           it "will raise an error for #{user}" do
             sign_in(Fabricate(user))
             post "/posts.json", params: {

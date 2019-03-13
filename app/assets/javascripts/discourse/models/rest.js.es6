@@ -24,7 +24,9 @@ const RestModel = Ember.Object.extend({
         const payload = self.__munge(res.payload || res.responseJson);
 
         if (payload.success === "OK") {
-          Ember.warn("An update call should return the updated attributes");
+          Ember.warn("An update call should return the updated attributes", {
+            id: "discourse.rest-model.update-attributes"
+          });
           res = props;
         }
 
@@ -97,7 +99,6 @@ RestModel.reopenClass({
     args = args || {};
     if (!args.store) {
       const container = Discourse.__container__;
-      // Ember.warn('Use `store.createRecord` to create records instead of `.create()`');
       args.store = container.lookup("service:store");
     }
 

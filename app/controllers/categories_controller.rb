@@ -140,7 +140,7 @@ class CategoriesController < ApplicationController
 
       render_serialized(@category, CategorySerializer)
     else
-      return render_json_error(@category) unless @category.save
+      return render_json_error(@category)
     end
   end
 
@@ -280,7 +280,6 @@ class CategoriesController < ApplicationController
                       :auto_close_based_on_last_post,
                       :uploaded_logo_id,
                       :uploaded_background_id,
-                      :uploaded_meta_id,
                       :slug,
                       :allow_badges,
                       :topic_template,

@@ -199,7 +199,7 @@ class Badge < ActiveRecord::Base
 
   def default_badge_grouping_id=(val)
     # allow to correct orphans
-    if !self.badge_grouping_id || self.badge_grouping_id < 0
+    if !self.badge_grouping_id || self.badge_grouping_id <= BadgeGrouping::Other
       self.badge_grouping_id = val
     end
   end

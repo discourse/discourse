@@ -21,10 +21,10 @@ module Discourse
   end
 
   class Utils
-    def self.execute_command(*command, failure_message: "")
+    def self.execute_command(*command, failure_message: "", success_status_codes: [0])
       stdout, stderr, status = Open3.capture3(*command)
 
-      if !status.success?
+      if !status.exited? || !success_status_codes.include?(status.exitstatus)
         failure_message = "#{failure_message}\n" if !failure_message.blank?
         raise "#{caller[0]}: #{failure_message}#{stderr}"
       end
@@ -104,6 +104,8 @@ module Discourse
   class CSRF < StandardError; end
 
   class Deprecation < StandardError; end
+
+  class ScssError < StandardError; end
 
   def self.filters
     @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
@@ -309,7 +311,7 @@ module Discourse
       $redis.set(key, 1)
     else
       $redis.setex(key, READONLY_MODE_KEY_TTL, 1)
-      keep_readonly_mode(key)
+      keep_readonly_mode(key) if !Rails.env.test?
     end
 
     MessageBus.publish(readonly_channel, true)
@@ -319,22 +321,24 @@ module Discourse
 
   def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
-    unless Rails.env.test?
+    @mutex ||= Mutex.new
+
+    @mutex.synchronize do
       @dbs ||= Set.new
       @dbs << RailsMultisite::ConnectionManagement.current_db
       @threads ||= {}
 
       unless @threads[key]&.alive?
         @threads[key] = Thread.new do
-          while @dbs.size > 0
+          while @dbs.size > 0 do
             sleep 30
 
-            @dbs.each do |db|
-              RailsMultisite::ConnectionManagement.with_connection(db) do
-                if readonly_mode?(key)
-                  $redis.expire(key, READONLY_MODE_KEY_TTL)
-                else
-                  @dbs.delete(db)
+            @mutex.synchronize do
+              @dbs.each do |db|
+                RailsMultisite::ConnectionManagement.with_connection(db) do
+                  if !$redis.expire(key, READONLY_MODE_KEY_TTL)
+                    @dbs.delete(db)
+                  end
                 end
               end
             end
@@ -355,6 +359,10 @@ module Discourse
     recently_readonly? || $redis.mget(*keys).compact.present?
   end
 
+  def self.pg_readonly_mode?
+    $redis.get(PG_READONLY_MODE_KEY).present?
+  end
+
   def self.last_read_only
     @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
   end
@@ -370,6 +378,8 @@ module Discourse
 
   def self.clear_readonly!
     last_read_only[$redis.namespace] = nil
+    Site.clear_anon_cache!
+    true
   end
 
   def self.request_refresh!(user_ids: nil)
@@ -455,6 +465,11 @@ module Discourse
       @local_store_loaded ||= require 'file_store/local_store'
       FileStore::LocalStore.new
     end
+  end
+
+  DiscourseEvent.on(:site_setting_saved) do |site_setting|
+    name = site_setting.name.to_s
+    Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
   end
 
   def self.current_user_provider

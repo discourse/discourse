@@ -22,7 +22,8 @@ summary:before {
   margin-right: 0.25em;
 }
 
-details[open] > * {
+details[open] > *,
+details[open] .lightbox-wrapper {
   display: block;
 }
 

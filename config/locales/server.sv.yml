@@ -52,7 +52,7 @@ sv:
         bounced_email_error: "E-post är en studsad e-postrapport."
         screened_email_error: "Händer när sändarens e-postadress redan har kontrollerats."
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "är begränsad till %{max} tecken; du skrev in %{length}. "
       invalid_boolean: "Ogiltig boolean."
@@ -77,7 +77,7 @@ sv:
       not_a_number: är inte ett nummer
       not_an_integer: måste vara ett tal
       odd: måste vara udda
-      record_invalid: 'Validering misslyckades: %{errors}'
+      record_invalid: "Validering misslyckades: %{errors}"
       restrict_dependent_destroy:
         one: "Kan inte radera förteckning på grund av att ett beroende %{record} existerar"
         many: "Kan inte radera förteckning på grund av att beroende %{record} existerar"
@@ -92,10 +92,10 @@ sv:
         other: har fel längd (borde vara %{count} tecken)
       other_than: "måste vara skilt från %{count}"
     template:
-      body: 'Det uppstod problem med följande fält:'
+      body: "Det uppstod problem med följande fält:"
       header:
         one: Ett fel förhindrade %{model} från att sparas
-        other: '%{count} fel förhindrade %{model} från att sparas'
+        other: "%{count} fel förhindrade %{model} från att sparas"
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
     site_settings:
@@ -130,7 +130,6 @@ sv:
     continue: "Fortsätt diskussion"
     error: "Fel vid inbäddningen"
     referer: "Hänvisning:"
-    mismatch: "Hänvisningarna matchade inte någon av följande ägare"
     no_hosts: "Inga värdar var uppsatta för textinbäddningen"
     configure: "konfigurera inbäddningen"
     more_replies:
@@ -215,7 +214,7 @@ sv:
     until_posts:
       one: "1 inlägg"
       other: "%{count} inlägg"
-    'new-topic': |
+    "new-topic": |
       Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation!**
 
       - Låter rubriken intressant om du läser det högt? Är det en bra sammanfattning?
@@ -225,7 +224,7 @@ sv:
       - Inkludera vanligt förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori.
 
       För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
 
       - Bidrar ditt svar något till konversationen på något sätt?
@@ -240,8 +239,8 @@ sv:
       category:
         name: "Kategorinamn"
       topic:
-        title: 'Rubrik'
-        featured_link: 'Skiss länk'
+        title: "Rubrik"
+        featured_link: "Skiss länk"
       post:
         raw: "Inlägg"
       user_profile:
@@ -289,7 +288,6 @@ sv:
     title: "Välkommen till loungen"
   category:
     topic_prefix: "Om kategorin %{category}"
-    replace_paragraph: "(Byt ut den här första paragrafen med en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken. **Tills du har redigerat den här beskrivningen eller skapat nya ämnen så kommer den här kategorin inte att synas på kategorisidan.**)"
     post_template: "%{replace_paragraph}\n\nAnvänd följande paragrafer för en längre beskrivning, eller för att etablera regler eller riktlinjer för kategorin:\n\n- Varför ska medlemmar använda den här kategorin? Vad är den till för?\n\n- Exakt hur är den olik befintliga kategorier?\n\n- Vad borde ämnen i den här kategorin generellt innehålla?\n\n- Behövs den här kategorin? Kan vi sammanfoga den med en annan kategori, eller underkategori?\n"
     errors:
       uncategorized_parent: "Kategorin \"Okategoriserat\" kan inte ha en föräldrer kategori."
@@ -299,7 +297,6 @@ sv:
       email_already_used_in_group: "'%{email}' är redan använd av gruppen '%{group_name}'."
       email_already_used_in_category: "'%{email}' är redan använd av kategorin '%{category_name}'."
     cannot_delete:
-      uncategorized: "Du kan inte ta bort kategorin \"Okategoriserat\""
       has_subcategories: "Du kan inte ta bort den här kategorin för att den har underkategorier."
       topic_exists_no_oldest: "Kan inte ta bort den här kategorin eftersom antalet ämnen är %{count}."
     uncategorized_description: "Ämnen som inte behöver en kategori, eller som inte passar in i någon annan befintlig kategori."
@@ -400,9 +397,9 @@ sv:
     no_token: "Tyvärr, din lösenordslänk har löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
     choose_new: "Välj ett nytt lösenord"
     choose: "Välj ett lösenord"
-    update: 'Uppdatera lösenord'
-    save: 'Välj lösenord'
-    title: 'Återställ lösenord'
+    update: "Uppdatera lösenord"
+    save: "Välj lösenord"
+    title: "Återställ lösenord"
     success: "Du har lyckats med att byta ditt lösenord och är nu inloggad."
     success_unapproved: "Du lyckades med att byta ditt lösenord."
   change_email:
@@ -424,38 +421,38 @@ sv:
     missing_session: "Vi kan inte upptäcka om ditt konto skapades, var god se till att du ha kakor aktiverade."
   post_action_types:
     off_topic:
-      title: 'Orelevant'
-      description: 'Det här inlägget är inte relevant för det nuvarande ämnet, sett till ämnets rubrik och det första inlägget, och borde förmodligen flyttas någon annanstans.'
-      long_form: 'flagga detta som orelevant'
+      title: "Orelevant"
+      description: "Det här inlägget är inte relevant för det nuvarande ämnet, sett till ämnets rubrik och det första inlägget, och borde förmodligen flyttas någon annanstans."
+      long_form: "flagga detta som orelevant"
     spam:
-      title: 'Spam'
-      description: 'Det här inlägget är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på det aktuella ämnet.'
-      short_description: 'Detta är reklam eller vandalism'
-      long_form: 'flagga detta som spam'
+      title: "Spam"
+      description: "Det här inlägget är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på det aktuella ämnet."
+      short_description: "Detta är reklam eller vandalism"
+      long_form: "flagga detta som spam"
       email_title: '"%{title}" flaggades som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Olämpligt'
-      long_form: 'flagga detta som olämpligt'
+      title: "Olämpligt"
+      long_form: "flagga detta som olämpligt"
     notify_user:
-      title: 'Skicka ett meddelande till @{{username}} '
-      long_form: 'notifierad användare'
+      title: "Skicka ett meddelande till @{{username}} "
+      long_form: "notifierad användare"
       email_title: 'Du skrev i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Övrigt"
-      description: 'Det här inlägget kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan.'
-      long_form: 'flaggade det här för granskning av moderatorer'
+      description: "Det här inlägget kräver en moderators uppmärksamhet av ett annat skäl än de som nämns ovan."
+      long_form: "flaggade det här för granskning av moderatorer"
       email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från personalen'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Bokmärk'
-      description: 'Bokmärk detta inlägg'
-      long_form: 'bokmärkte detta inlägg'
+      title: "Bokmärk"
+      description: "Bokmärk detta inlägg"
+      long_form: "bokmärkte detta inlägg"
     like:
-      title: 'Gilla'
-      description: 'Gilla detta inlägg'
-      long_form: 'gillade detta inlägg'
+      title: "Gilla"
+      description: "Gilla detta inlägg"
+      long_form: "gillade detta inlägg"
   user_activity:
     no_bookmarks:
       others: "Inga bokmärken."
@@ -464,19 +461,19 @@ sv:
       others: "Inga gillade inlägg."
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Det här ämnet är en annons. Det är inte användbart eller relevant för den här webbplatsen.'
-      long_form: 'flaggad som spam'
+      title: "Spam"
+      description: "Det här ämnet är en annons. Det är inte användbart eller relevant för den här webbplatsen."
+      long_form: "flaggad som spam"
     inappropriate:
-      title: 'Olämpligt'
-      long_form: 'flaggad som olämplig'
+      title: "Olämpligt"
+      long_form: "flaggad som olämplig"
     notify_moderators:
       title: "Annat"
-      long_form: 'flaggade det här för granskning av moderator'
+      long_form: "flaggade det här för granskning av moderator"
       email_title: 'Ämnet "%{title}" kräver moderators uppmärksamhet'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>Detta inlägg blev flaggat av andra medlemmar i forumet och är dolt för tillfället.</p>'
+    user_must_edit: "<p>Detta inlägg blev flaggat av andra medlemmar i forumet och är dolt för tillfället.</p>"
   archetypes:
     regular:
       title: "Vanligt ämne"
@@ -544,10 +541,6 @@ sv:
       title: "Bokmärken"
       xaxis: "Dag"
       yaxis: "Antal nya bokmärken"
-    starred:
-      title: "Favoriserad"
-      xaxis: "Dag"
-      yaxis: "Antal favoriserade ämnen"
     users_by_trust_level:
       title: "Användare per förtroendenivå"
       xaxis: "Förtroendenivå"
@@ -597,7 +590,6 @@ sv:
       xaxis: "Dag"
       yaxis: "Inloggade sidvisningar"
     page_view_crawler_reqs:
-      title: "Sökrobotar"
       xaxis: "Dag"
       yaxis: "Sökrobotars sidvisningar"
     page_view_total_reqs:
@@ -650,8 +642,8 @@ sv:
     rails_env_warning: "Din server kör i %{env} läge."
     host_names_warning: "Din config/database.yml fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
     sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, sm att skicka e-post, utförs asynkront av sidekiq. Var vänlig se till att minst en sidekiqprocess körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
-    queue_size_warning: 'Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq process(er), eller så kanske du behöver lägga till fler Sidekiqarbetare.'
-    memory_warning: 'Din server körs med mindre än 1 GB minne. Minne på minst 1 GB är rekommenderat.'
+    queue_size_warning: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq process(er), eller så kanske du behöver lägga till fler Sidekiqarbetare."
+    memory_warning: "Din server körs med mindre än 1 GB minne. Minne på minst 1 GB är rekommenderat."
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
     email_polling_errored_recently:
       one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
@@ -692,7 +684,7 @@ sv:
     max_image_height: "Maxhöjd för bildikoner i ett inlägg"
     fixed_category_positions: "Om aktiverad, kommer du kunna ordna kategorier i en bestämd ordning. Om inaktiverad, sorteras kategorierna baserat på aktivitet."
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogen för skapandet av ämnen om den här bockas i (kräver fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med "rake posts:rebake"'
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag / sammanfattning."
     show_pinned_excerpt_mobile: "Visa inte utdrag för klistrade ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
@@ -705,7 +697,6 @@ sv:
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
-    summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta det här ämnet'"
     enable_long_polling: "Meddelande-buss som används för notifiering kan använda long polling"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
     long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
@@ -719,7 +710,6 @@ sv:
     tl2_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 2 (medlem) genom att multiplicera med det här numret "
     tl3_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 3 (regelbundna) genom att multiplicera med det här numret"
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"
-    flag_sockpuppets: "Flagga båda användarnas inlägg som potentiell skräppost om en ny användare svarar på ett ämne från samma IP-adress som den andra nya användaren som skapade ämnet."
     traditional_markdown_linebreaks: "Använd vanliga radmatningar i Markdown, vilka kräver 2 avslutande mellanslag för en radmatning."
     post_undo_action_window_mins: "Antal minuter som en användare tillåts att upphäva handlingar på ett inlägg som gjorts nyligen (gillning, flaggning osv)."
     must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
@@ -742,7 +732,6 @@ sv:
     topics_per_period_in_top_page: "Antal toppämnen som visas i den utvidgade 'Visa mer'-toppämnen. "
     redirect_users_to_top_page: "Omdirigera automatiskt nya och långtidsfrånvarande användare till början av sidan. "
     top_page_default_timeframe: "Standard tidsram för mest sedda-sidan"
-    show_email_on_profile: "Visa en användares e-postadress på deras profil (endast synlig för de själva och för personal)"
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (när inaktiverad så visas namnet först)"
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
@@ -812,7 +801,6 @@ sv:
     s3_upload_bucket: "Namnet på Amazon S3 behållaren som filerna kommer att laddas upp i. VARNING: måste vara gemener, inga punkter och inga understreck."
     s3_access_key_id: "ID för åtkomstnyckeln till Amazon S3 som kommer att användas för att ladda upp bilder."
     s3_secret_access_key: "Den hemliga åtkomstnyckeln till Amazon S3 som kommer att användas för att ladda upp bilder."
-    s3_region: "Regionsnamn för Amazon S3 som kommer att användas för att ladda upp bilder."
     s3_cdn_url: "CDN URL som används för alla S3-tillgångar (till exempel: https://cdn.somewhere.com). VARNING: efter ändring av den här inställningen så måste du uppdatera alla gamla inlägg med rake posts: rebake."
     avatar_sizes: "Lista på automatiskt genererade avatar-storlekar."
     external_system_avatars_enabled: "Använd externa system för avatar-tjänster."
@@ -955,8 +943,6 @@ sv:
     disable_digest_emails: "Inaktivera e-postsammanfattningar för alla användare."
     detect_custom_avatars: "Huruvida det ska kontrolleras att användare har laddat upp anpassade profilbilder."
     max_daily_gravatar_crawls: "Högsta antal gånger per dag som Discourse kommer att kolla efter anpassade avatarer hos Gravatar."
-    public_user_custom_fields: "En vitlista av anpassade fält för en användare som kan visas publikt. "
-    staff_user_custom_fields: "En vitlista av anpassade fält för en användare som kan visas för personalen."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
     enable_group_directory: "Förse en fil till grupper som surfar"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
@@ -972,7 +958,6 @@ sv:
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     permalink_normalizations: "Applicera följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
-    global_notice: "Visa en BRÅDSKANDE global banderollnotis för alla besökare, andra till blank för att dölja den (HTML tillåtet)."
     disable_edit_notifications: "Inaktivera redigering av notifikationer av systemanvändaren när 'download_remote_images_to_local' är aktiverad."
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
@@ -1066,9 +1051,9 @@ sv:
   search:
     within_post: "#%{post_number} av %{username}"
     types:
-      category: 'Kategorier'
-      topic: 'Resultat'
-      user: 'Användare'
+      category: "Kategorier"
+      topic: "Resultat"
+      user: "Användare"
   sso:
     not_found: "Ditt konto kunde inte hittas. Var vänlig kontakta forumets administratör."
     account_not_approved: "Ditt konto inväntar godkännande. Du kommer få en e-postnotifiering när ditt konto är godkänt."
@@ -1085,18 +1070,7 @@ sv:
     errors:
       different_topics: "Inlägg som härrör sig till olika ämnen kan inte läggas ihop."
       different_users: "Inlägg som hör till olika användare kan inte lägga ihop."
-  move_posts:
-    new_topic_moderator_post:
-      one: "Ett inlägg har delats in i ett nytt ämne: %{topic_link}"
-      other: "%{count} inlägg delades in i ett nytt ämne: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "Ett inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
-      other: "%{count} inlägg har sammanfogats med ett existerande ämne: %{topic_link}"
   topic_statuses:
-    archived_enabled: "Detta ämne är nu arkiverat. Det är fryst och kan inte förändras på något sätt."
-    archived_disabled: "Detta ämne är nu oarkiverat. Det är inte längre fruset, och kan ändras."
-    closed_enabled: "Detta ämne är nu stängt. Nya svar tillåts inte längre."
-    closed_disabled: "Detta ämne är nu öppnat. Nya svar är tillåtna."
     autoclosed_message_max_posts:
       one: "Det här ämnet stängdes automatiskt efter att ha nått den övre gränsen av 1 inlägg."
       other: "Det här ämnet stängdes automatiskt efter att ha uppnått den övre gränsen av %{count} inlägg. "
@@ -1123,12 +1097,6 @@ sv:
       other: "Detta ämne stängdes automatiskt %{count} minuter efter det senaste svaret. Nya svar är ej längre tillåtna."
     autoclosed_disabled: "Detta ämne är nu öppet. Nya svar är tillåtna."
     autoclosed_disabled_lastpost: "Detta ämne är nu öppnat. Nya svar är tillåtna."
-    pinned_enabled: "Detta ämne är nu klistrat. Det dyker upp i toppen av dess kategori tills den blir avklistrad av personal för alla, eller av enskilda användare för de själva."
-    pinned_disabled: "Detta ämne är nu oklistrat. Det dyker längre inte upp i toppen av dess kategori."
-    pinned_globally_enabled: "Det här ämnet är nu klistrat globalt. Det dyker upp i toppen av dess kategori och alla andra ämnen tills den blir avklistrad av personal för all, eller av enskilda användare för de själva."
-    pinned_globally_disabled: "Det här ämnet är nu oklistrat. Det dyker inte längre upp i toppen av dess kategori."
-    visible_enabled: "Det här ämnet är nu listat. Det kommer att visas i ämneslistorna."
-    visible_disabled: "Det här ämnet är nu olistat, det kommer inte längre att visas i några ämneslistor och kan bara nås via en direktlänk."
   login:
     not_approved: "Ditt konto har inte blivit godkänt ännu. Du kommer att meddelas via e-post när du kan logga in."
     incorrect_username_email_or_password: "Felaktigt användarnamn, e-post eller lösenord"
@@ -1329,11 +1297,6 @@ sv:
       text_body_template: "Inställningen `download_remote_images_to_local` har avaktiverats eftersom att diskutrymmet har nått sin övre gräns."
     dashboard_problems:
       title: "Instrumentpanels problem"
-      subject_template: "Problem har upptäckts"
-      text_body_template: |
-        Några problem har rapporterats på din översiktspanel på administrationssidorna.
-
-        [Var vänlig och granska och lös dem](%{base_url}/admin).
   unsubscribe_link: |
     [Klicka här ](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
   unsubscribe_link_and_mail: |
@@ -1466,7 +1429,7 @@ sv:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       since_last_visit: "Sedan ditt senaste besök"
@@ -1524,7 +1487,7 @@ sv:
     search_title: "Sök på hemsidan"
   terms_of_service:
     title: "Användarvillkor"
-  deleted: 'raderad'
+  deleted: "raderad"
   upload:
     edit_reason: "nedladdade lokala kopior av bilder"
     unauthorized: "Tyvärr, filen du försöker ladda upp är inte tillåten (tillåtna filtyper: %{authorized_extensions})."
@@ -1721,8 +1684,8 @@ sv:
     initial_topic_title: Prestandarapporter för webbplatsen
   tags:
     title: "Taggar"
-    staff_tag_disallowed: "Taggen \"%{tag}\" kan endast användas av personalen."
-    staff_tag_remove_disallowed: "Taggen \"%{tag}\" kan endast tas bort av personalen."
+    staff_tag_disallowed: 'Taggen "%{tag}" kan endast användas av personalen.'
+    staff_tag_remove_disallowed: 'Taggen "%{tag}" kan endast tas bort av personalen.'
   rss_by_tag: "Ämnen taggade med %{tag}"
   finish_installation:
     congratulations: "Grattis, ert diskussionsforum är installerat"
@@ -1788,14 +1751,6 @@ sv:
         title: "Organisation"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            description: "Föredrar du en ljus eller mörk färgkarta att starta med? Du kan längre fram skräddarsy utseende och känsla på din sida via Admin, Customize."
-            choices:
-              default:
-                label: "Enkelt ljus"
-              dark:
-                label: "Enkelt mörkt"
       logos:
         title: "Logotyper"
       icons:

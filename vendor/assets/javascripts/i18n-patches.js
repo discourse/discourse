@@ -13,7 +13,7 @@
       return oldI18ntoHumanSize.apply(this, [number, options]);
     };
 
-    if (Ember.EXTEND_PROTOTYPES) {
+    if (Ember.typeOf(String.prototype.w) === "function") {
       String.prototype.i18n = function(options) {
         return I18n.t(String(this), options);
       };

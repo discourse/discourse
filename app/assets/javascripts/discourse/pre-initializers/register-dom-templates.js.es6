@@ -1,6 +1,5 @@
 export default {
   name: "register-discourse-dom-templates",
-  before: "domTemplates",
 
   initialize: function() {
     $('script[type="text/x-handlebars"]').each(function() {

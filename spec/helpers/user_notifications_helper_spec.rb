@@ -108,6 +108,16 @@ describe UserNotificationsHelper do
         )
       end
 
+      describe 'when global cdn path is configured' do
+        it 'should return the right url' do
+          GlobalSetting.stubs(:cdn_url).returns('https://some.cdn.com/cluster')
+
+          expect(helper.logo_url).to eq(
+            "http://s3-upload-bucket.s3.dualstack.us-east-1.amazonaws.com/original/1X/somesha1.png"
+          )
+        end
+      end
+
       describe 'when cdn path is configured' do
         before do
           SiteSetting.s3_cdn_url = 'https://some.cdn.com'

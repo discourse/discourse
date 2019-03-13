@@ -21,6 +21,15 @@ export default Ember.Controller.extend({
     }
   },
 
+  @computed
+  actionsMapping() {
+    return {
+      manageGroups: () => this.send("showTagGroups"),
+      uploadTags: () => this.send("showUploader"),
+      deleteUnusedTags: () => this.send("deleteUnused")
+    };
+  },
+
   actions: {
     sortByCount() {
       this.setProperties({

@@ -7,8 +7,11 @@ RSpec.describe PushNotificationPusher do
   end
 
   it "returns custom badges url" do
-    SiteSetting.push_notifications_icon_url = "/test.png"
-    expect(PushNotificationPusher.get_badge).to eq("/test.png")
+    upload = Fabricate(:upload)
+    SiteSetting.push_notifications_icon = upload
+
+    expect(PushNotificationPusher.get_badge)
+      .to eq(UrlHelper.absolute(upload.url))
   end
 
 end

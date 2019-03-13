@@ -40,6 +40,7 @@ describe ThemeJavascriptsController do
       get "/theme-javascripts/#{javascript_cache.digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to eq(javascript_cache.content)
+      expect(response.headers['Content-Length']).to eq(javascript_cache.content.bytesize.to_s)
 
       javascript_cache.destroy!
 

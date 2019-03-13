@@ -4,17 +4,23 @@ describe SvgSpriteController do
 
   context 'show' do
     before do
-      SvgSprite.rebuild_cache
+      SvgSprite.expire_cache
     end
 
     it "should return bundle when version is current" do
-      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{SvgSprite.version}.js"
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
+      expect(response.status).to eq(200)
+
+      theme = Fabricate(:theme)
+      theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")
+      theme.save!
+      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme.id}-#{SvgSprite.version([theme.id])}.js"
       expect(response.status).to eq(200)
     end
 
     it "should redirect to current version" do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
-      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{random_hash}.js"
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
       expect(response.status).to eq(302)
       expect(response.location).to include(SvgSprite.version)

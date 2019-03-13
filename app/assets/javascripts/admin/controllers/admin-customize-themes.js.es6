@@ -12,5 +12,10 @@ export default Ember.Controller.extend({
   @computed("model", "model.@each.component")
   childThemes(themes) {
     return themes.filter(t => t.get("component"));
+  },
+
+  @computed("model", "model.@each.component")
+  installedThemes(themes) {
+    return themes.map(t => t.name);
   }
 });

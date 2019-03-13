@@ -1,36 +1,44 @@
 {{#if ip}}
   <button class="btn btn-default" {{action "lookup"}}>
-    {{d-icon "globe"}}{{i18n 'admin.user.ip_lookup'}}
+    {{d-icon "globe"}}
+    {{i18n "admin.user.ip_lookup"}}
   </button>
 {{/if}}
 {{#if show}}
   <div class="location-box">
     <a class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     {{#if copied}}
-      <a class="btn btn-default btn-hover pull-right">{{d-icon "copy"}} {{i18n "ip_lookup.copied"}}</a>
+      <a class="btn btn-default btn-hover pull-right">
+        {{d-icon "copy"}}
+        {{i18n "ip_lookup.copied"}}
+      </a>
     {{else}}
-      <a class="btn btn-default pull-right no-text" {{action "copy"}}>{{d-icon "copy"}}</a>
+      <a class="btn btn-default pull-right no-text" {{action "copy"}}>
+        {{d-icon "copy"}}
+      </a>
     {{/if}}
-    <h4>{{i18n 'ip_lookup.title'}}</h4>
-    <p class='powered-by'>{{{i18n 'ip_lookup.powered_by'}}}</p>
+    <h4>{{i18n "ip_lookup.title"}}</h4>
+    <p class='powered-by'>{{{i18n "ip_lookup.powered_by"}}}</p>
     <dl>
       {{#if location}}
         {{#if location.hostname}}
-          <dt>{{i18n 'ip_lookup.hostname'}}</dt>
+          <dt>{{i18n "ip_lookup.hostname"}}</dt>
           <dd>{{location.hostname}}</dd>
         {{/if}}
 
-        <dt>{{i18n 'ip_lookup.location'}}</dt>
+        <dt>{{i18n "ip_lookup.location"}}</dt>
         <dd>
           {{#if location.location}}
-            <a href="https://maps.google.com/maps?q={{unbound location.latitude}},{{unbound location.longitude}}" target="_blank">{{location.location}}</a>
+            <a href="https://maps.google.com/maps?q={{unbound location.latitude}},{{unbound location.longitude}}" target="_blank">
+              {{location.location}}
+            </a>
           {{else}}
-            {{i18n 'ip_lookup.location_not_found'}}
+            {{i18n "ip_lookup.location_not_found"}}
           {{/if}}
         </dd>
 
         {{#if location.organization}}
-          <dt>{{i18n 'ip_lookup.organisation'}}</dt>
+          <dt>{{i18n "ip_lookup.organisation"}}</dt>
           <dd>{{location.organization}}</dd>
         {{/if}}
       {{else}}
@@ -38,31 +46,39 @@
       {{/if}}
 
       <dt>
-        {{i18n 'ip_lookup.other_accounts'}}
+        {{i18n "ip_lookup.other_accounts"}}
         <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
           <button class="btn btn-danger pull-right" {{action "deleteOtherAccounts"}}>
-            {{d-icon "warning"}}{{i18n 'ip_lookup.delete_other_accounts' count=otherAccountsToDelete}}
+            {{d-icon "warning"}}
+            {{i18n "ip_lookup.delete_other_accounts" count=otherAccountsToDelete}}
           </button>
         {{/if}}
       </dt>
+
       {{#conditional-loading-spinner size="small" condition=otherAccountsLoading}}
         {{#if other_accounts.length}}
           <dd class="other-accounts">
             <table class="table table-condensed table-hover">
               <thead>
                 <tr>
-                  <th>{{i18n 'ip_lookup.username'}}</th>
-                  <th>{{i18n 'ip_lookup.trust_level'}}</th>
-                  <th>{{i18n 'ip_lookup.read_time'}}</th>
-                  <th>{{i18n 'ip_lookup.topics_entered'}}</th>
-                  <th>{{i18n 'ip_lookup.post_count'}}</th>
+                  <th>{{i18n "ip_lookup.username"}}</th>
+                  <th>{{i18n "ip_lookup.trust_level"}}</th>
+                  <th>{{i18n "ip_lookup.read_time"}}</th>
+                  <th>{{i18n "ip_lookup.topics_entered"}}</th>
+                  <th>{{i18n "ip_lookup.post_count"}}</th>
                 </tr>
               </thead>
               <tbody>
                 {{#each other_accounts as |a|}}
                   <tr>
-                    <td>{{#link-to "adminUser" a}}{{avatar a usernamePath="user.username" imageSize="small"}}&nbsp;{{a.username}}{{/link-to}}</td>
+                    <td>
+                      {{#link-to "adminUser" a}}
+                        {{avatar a usernamePath="user.username" imageSize="small"}}
+                        &nbsp;
+                        <span>{{a.username}}</span>
+                      {{/link-to}}
+                    </td>
                     <td>{{a.trustLevel.id}}</td>
                     <td>{{a.time_read}}</td>
                     <td>{{a.topics_entered}}</td>

@@ -7,12 +7,12 @@ componentTest("preview updates with markdown", {
   template: "{{d-editor value=value}}",
 
   async test(assert) {
-    assert.ok(this.$(".d-editor-button-bar").length);
+    assert.ok(find(".d-editor-button-bar").length);
     await fillIn(".d-editor-input", "hello **world**");
 
     assert.equal(this.get("value"), "hello **world**");
     assert.equal(
-      this.$(".d-editor-preview")
+      find(".d-editor-preview")
         .html()
         .trim(),
       "<p>hello <strong>world</strong></p>"
@@ -26,7 +26,7 @@ componentTest("preview sanitizes HTML", {
   async test(assert) {
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
     assert.equal(
-      this.$(".d-editor-preview")
+      find(".d-editor-preview")
         .html()
         .trim(),
       '<p>"&gt;</p>'
@@ -43,7 +43,7 @@ componentTest("updating the value refreshes the preview", {
 
   async test(assert) {
     assert.equal(
-      this.$(".d-editor-preview")
+      find(".d-editor-preview")
         .html()
         .trim(),
       "<p>evil trout</p>"
@@ -51,7 +51,7 @@ componentTest("updating the value refreshes the preview", {
 
     await this.set("value", "zogstrip");
     assert.equal(
-      this.$(".d-editor-preview")
+      find(".d-editor-preview")
         .html()
         .trim(),
       "<p>zogstrip</p>"
@@ -72,7 +72,7 @@ function testCase(title, testFunc) {
       this.set("value", "hello world.");
     },
     test(assert) {
-      const textarea = jumpEnd(this.$("textarea.d-editor-input")[0]);
+      const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
     }
   });
@@ -85,7 +85,7 @@ function composerTestCase(title, testFunc) {
       this.set("value", "hello world.");
     },
     test(assert) {
-      const textarea = jumpEnd(this.$("textarea.d-editor-input")[0]);
+      const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
       testFunc.call(this, assert, textarea);
     }
   });
@@ -157,7 +157,7 @@ testCase(`bold with a multiline selection`, async function(assert, textarea) {
 testCase(`italic button with no selection`, async function(assert, textarea) {
   await click(`button.italic`);
   const example = I18n.t(`composer.italic_text`);
-  assert.equal(this.get("value"), `hello world._${example}_`);
+  assert.equal(this.get("value"), `hello world.*${example}*`);
 
   assert.equal(textarea.selectionStart, 13);
   assert.equal(textarea.selectionEnd, 13 + example.length);
@@ -168,7 +168,7 @@ testCase(`italic button with a selection`, async function(assert, textarea) {
   textarea.selectionEnd = 11;
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `hello _world_.`);
+  assert.equal(this.get("value"), `hello *world*.`);
   assert.equal(textarea.selectionStart, 7);
   assert.equal(textarea.selectionEnd, 12);
 
@@ -185,7 +185,7 @@ testCase(`italic with a multiline selection`, async function(assert, textarea) {
   textarea.selectionEnd = 12;
 
   await click(`button.italic`);
-  assert.equal(this.get("value"), `_hello_\n\n_world_\n\ntest.`);
+  assert.equal(this.get("value"), `*hello*\n\n*world*\n\ntest.`);
   assert.equal(textarea.selectionStart, 0);
   assert.equal(textarea.selectionEnd, 16);
 
@@ -196,13 +196,13 @@ testCase(`italic with a multiline selection`, async function(assert, textarea) {
 });
 
 testCase("link modal (cancel)", async function(assert) {
-  assert.equal(this.$(".insert-link.hidden").length, 1);
+  assert.equal(find(".insert-link.hidden").length, 1);
 
   await click("button.link");
-  assert.equal(this.$(".insert-link.hidden").length, 0);
+  assert.equal(find(".insert-link.hidden").length, 0);
 
   await click(".insert-link button.btn-danger");
-  assert.equal(this.$(".insert-link.hidden").length, 1);
+  assert.equal(find(".insert-link.hidden").length, 1);
   assert.equal(this.get("value"), "hello world.");
 });
 
@@ -213,7 +213,7 @@ testCase("link modal (simple link)", async function(assert, textarea) {
 
   await fillIn(".insert-link input.link-url", url);
   await click(".insert-link button.btn-primary");
-  assert.equal(this.$(".insert-link.hidden").length, 1);
+  assert.equal(find(".insert-link.hidden").length, 1);
   assert.equal(this.get("value"), `hello world.[${url}](${url})`);
   assert.equal(textarea.selectionStart, 13);
   assert.equal(textarea.selectionEnd, 13 + url.length);
@@ -234,11 +234,11 @@ testCase("link modal (simple link) with selected text", async function(
   textarea.selectionEnd = 12;
 
   await click("button.link");
-  assert.equal(this.$("input.link-text")[0].value, "hello world.");
+  assert.equal(find("input.link-text")[0].value, "hello world.");
 
   await fillIn(".insert-link input.link-url", "http://eviltrout.com");
   await click(".insert-link button.btn-primary");
-  assert.equal(this.$(".insert-link.hidden").length, 1);
+  assert.equal(find(".insert-link.hidden").length, 1);
   assert.equal(this.get("value"), "[hello world.](http://eviltrout.com)");
 });
 
@@ -247,7 +247,7 @@ testCase("link modal (link with description)", async function(assert) {
   await fillIn(".insert-link input.link-url", "http://eviltrout.com");
   await fillIn(".insert-link input.link-text", "evil trout");
   await click(".insert-link button.btn-primary");
-  assert.equal(this.$(".insert-link.hidden").length, 1);
+  assert.equal(find(".insert-link.hidden").length, 1);
   assert.equal(
     this.get("value"),
     "hello world.[evil trout](http://eviltrout.com)"
@@ -271,7 +271,7 @@ function xyz(x, y, z) {
   },
 
   async test(assert) {
-    const textarea = this.$("textarea.d-editor-input")[0];
+    const textarea = find("textarea.d-editor-input")[0];
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -296,7 +296,7 @@ componentTest("code button", {
   },
 
   async test(assert) {
-    const textarea = jumpEnd(this.$("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
 
     await click("button.code");
     assert.equal(this.get("value"), `    ${I18n.t("composer.code_text")}`);
@@ -384,7 +384,7 @@ componentTest("code fences", {
   },
 
   async test(assert) {
-    const textarea = jumpEnd(this.$("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
 
     await click("button.code");
     assert.equal(
@@ -496,7 +496,7 @@ componentTest("quote button - empty lines", {
     this.set("value", "one\n\ntwo\n\nthree");
   },
   async test(assert) {
-    const textarea = jumpEnd(this.$("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
 
     textarea.selectionStart = 0;
 
@@ -517,7 +517,7 @@ componentTest("quote button - selecting empty lines", {
     this.set("value", "one\n\n\n\ntwo");
   },
   async test(assert) {
-    const textarea = jumpEnd(this.$("textarea.d-editor-input")[0]);
+    const textarea = jumpEnd(find("textarea.d-editor-input")[0]);
 
     textarea.selectionStart = 6;
     textarea.selectionEnd = 10;
@@ -650,7 +650,7 @@ componentTest("clicking the toggle-direction button toggles the direction", {
   },
 
   async test(assert) {
-    const textarea = this.$("textarea.d-editor-input");
+    const textarea = find("textarea.d-editor-input");
     await click("button.toggle-direction");
     assert.equal(textarea.attr("dir"), "rtl");
     await click("button.toggle-direction");
@@ -685,15 +685,15 @@ componentTest("emoji", {
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "smile-o",
-          action: "emoji"
+          icon: "far-smile",
+          action: () => toolbar.context.send("emoji")
         });
       });
     });
     this.set("value", "hello world.");
   },
   async test(assert) {
-    jumpEnd(this.$("textarea.d-editor-input")[0]);
+    jumpEnd(find("textarea.d-editor-input")[0]);
     await click("button.emoji");
 
     await click(

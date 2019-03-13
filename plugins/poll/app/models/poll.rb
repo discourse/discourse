@@ -4,7 +4,7 @@ class Poll < ActiveRecord::Base
 
   belongs_to :post
 
-  has_many :poll_options, dependent: :destroy
+  has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
 
   enum type: {
@@ -29,7 +29,7 @@ class Poll < ActiveRecord::Base
     everyone: 1,
   }
 
-  validates :min, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
+  validates :min, numericality: { allow_nil: true, only_integer: true, greater_than_or_equal_to: 0 }
   validates :max, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
   validates :step, numericality: { allow_nil: true, only_integer: true, greater_than: 0 }
 

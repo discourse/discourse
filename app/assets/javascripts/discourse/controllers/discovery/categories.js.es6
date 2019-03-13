@@ -46,5 +46,10 @@ export default DiscoveryController.extend({
         ? "categories_only"
         : style;
     return Ember.String.dasherize(componentName);
+  },
+  actions: {
+    refresh() {
+      this.send("triggerRefresh");
+    }
   }
 });

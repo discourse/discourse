@@ -358,7 +358,7 @@ export default createPreviewComponent(659, 320, {
   },
 
   renderLatest(ctx, colors, width, height) {
-    const rowHeight = height / 10.0;
+    const rowHeight = height / 6.6;
     const textColor = darkLightDiff(colors.primary, colors.secondary, 50, 50);
     const bodyFontSize = height / 440.0;
 
@@ -379,7 +379,7 @@ export default createPreviewComponent(659, 320, {
       ctx.stroke();
     };
 
-    const cols = [0.02, 0.5, 0.65, 0.8, 0.87, 0.93].map(c => c * width);
+    const cols = [0.02, 0.66, 0.8, 0.87, 0.93].map(c => c * width);
 
     // Headings
     const headingY = height * 0.33;
@@ -387,11 +387,9 @@ export default createPreviewComponent(659, 320, {
     ctx.fillStyle = textColor;
     ctx.font = `${bodyFontSize * 0.9}em 'Arial'`;
     ctx.fillText("Topic", cols[0], headingY);
-    ctx.fillText("Category", cols[1], headingY);
-    ctx.fillText("Users", cols[2], headingY);
-    ctx.fillText("Replies", cols[3], headingY);
-    ctx.fillText("Views", cols[4], headingY);
-    ctx.fillText("Activity", cols[5], headingY);
+    ctx.fillText("Replies", cols[2], headingY);
+    ctx.fillText("Views", cols[3], headingY);
+    ctx.fillText("Activity", cols[4], headingY);
 
     // Topics
     let y = headingY + rowHeight / 2.6;
@@ -401,39 +399,39 @@ export default createPreviewComponent(659, 320, {
     ctx.font = `${bodyFontSize}em 'Arial'`;
     ctx.lineWidth = 1;
     this.getTitles().forEach(title => {
-      const textPos = y + rowHeight * 0.7;
+      const textPos = y + rowHeight * 0.4;
       ctx.fillStyle = textColor;
       ctx.fillText(title, cols[0], textPos);
 
       const category = this.categories()[0];
       ctx.beginPath();
       ctx.fillStyle = category.color;
-      const badgeSize = rowHeight * 0.2;
-      ctx.font = `Bold ${bodyFontSize * 0.5}em 'Arial'`;
-      ctx.rect(cols[1], y + rowHeight * 0.5, badgeSize, badgeSize);
+      const badgeSize = rowHeight * 0.15;
+      ctx.font = `Bold ${bodyFontSize * 0.75}em 'Arial'`;
+      ctx.rect(cols[0] + 4, y + rowHeight * 0.6, badgeSize, badgeSize);
       ctx.fill();
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
         category.name,
-        cols[1] + badgeSize * 1.5,
-        y + rowHeight * 0.65
+        cols[0] + badgeSize * 2,
+        y + rowHeight * 0.73
       );
       this.scaleImage(
         this.avatar,
-        cols[2],
-        y + rowHeight * 0.3,
+        cols[1],
+        y + rowHeight * 0.25,
         rowHeight * 0.5,
         rowHeight * 0.5
       );
 
       ctx.fillStyle = textColor;
       ctx.font = `${bodyFontSize}em 'Arial'`;
-      for (let j = 3; j <= 5; j++) {
+      for (let j = 2; j <= 4; j++) {
         ctx.fillText(
           j === 5 ? "1h" : Math.floor(Math.random() * 90) + 10,
           cols[j] + margin,
-          y + rowHeight * 0.7
+          y + rowHeight * 0.6
         );
       }
       drawLine(y + rowHeight * 1);

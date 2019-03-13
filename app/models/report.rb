@@ -170,6 +170,8 @@ class Report
   end
 
   def self.find(type, opts = nil)
+    opts ||= {}
+
     begin
       report = _get(type, opts)
       report_method = :"report_#{type}"
@@ -188,6 +190,10 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
+
+      # In test mode, don't swallow exceptions by default to help debug errors.
+      raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
+
       # ensures that if anything unexpected prevents us from
       # creating a report object we fail elegantly and log an error
       if !report
@@ -204,6 +210,48 @@ class Report
     end
 
     report
+  end
+
+  def self.report_consolidated_page_views(report)
+    filters = %w[
+      page_view_logged_in
+      page_view_anon
+      page_view_crawler
+    ]
+
+    report.modes = [:stacked_chart]
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    danger = ColorScheme.hex_for_name('danger') || 'e45735'
+
+    requests = filters.map do |filter|
+      color = report.rgba_color(tertiary)
+
+      if filter == "page_view_anon"
+        color = report.rgba_color(tertiary, 0.5)
+      end
+
+      if filter == "page_view_crawler"
+        color = report.rgba_color(danger, 0.75)
+      end
+
+      {
+        req: filter,
+        label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
+        color: color,
+        data: ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
+      }
+    end
+
+    requests.each do |request|
+      request[:data] = request[:data].where('date >= ? AND date <= ?', report.start_date, report.end_date)
+        .order(date: :asc)
+        .group(:date)
+        .sum(:count)
+        .map { |date, count| { x: date, y: count } }
+    end
+
+    report.data = requests
   end
 
   def self.req_report(report, filter = nil)
@@ -244,7 +292,7 @@ class Report
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
     add_counts report, UserVisit, 'visited_at'
 
-    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+    report.prev30Days = UserVisit.where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
   end
 
   def self.report_mobile_visits(report)
@@ -617,10 +665,10 @@ class Report
     url = Proc.new { |key| "/admin/users/list/#{key}" }
 
     admins = User.real.admins.count
-    report.data << { url: url.call("admins"), icon: "shield", key: "admins", x: label.call("admin"), y: admins } if admins > 0
+    report.data << { url: url.call("admins"), icon: "shield-alt", key: "admins", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { url: url.call("moderators"), icon: "shield", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { url: url.call("moderators"), icon: "shield-alt", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
     report.data << { url: url.call("suspended"), icon: "ban", key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
@@ -1403,6 +1451,7 @@ class Report
       WHERE t.action = 'suspicious'
         AND t.created_at >= :start_date
         AND t.created_at <= :end_date
+      ORDER BY t.created_at DESC
     SQL
 
     DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
@@ -1497,7 +1546,9 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    /*where*/
+    WHERE up.created_at >= '#{report.start_date}'
+    AND up.created_at <= '#{report.end_date}'
+    AND up.id > #{Upload::SEEDED_ID_THRESHOLD}
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL
@@ -1521,20 +1572,58 @@ class Report
     end
   end
 
+  def self.report_top_ignored_users(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          id: :ignored_user_id,
+          username: :ignored_username,
+          avatar: :ignored_user_avatar_template,
+        },
+        title: I18n.t("reports.top_ignored_users.labels.ignored_user")
+      },
+      {
+        type: :number,
+        properties: [
+          :ignores_count,
+        ],
+        title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+      }
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+      SELECT
+      u.id AS user_id,
+      u.username,
+      u.uploaded_avatar_id,
+      COUNT(*) AS ignores_count
+      FROM users AS u
+      INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
+      WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
+      GROUP BY u.id
+      ORDER BY COUNT(*) DESC
+      LIMIT #{report.limit || 250}
+    SQL
+
+    DB.query(sql).each do |row|
+      report.data << {
+        ignored_user_id: row.user_id,
+        ignored_username: row.username,
+        ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+        ignores_count: row.ignores_count,
+      }
+    end
+  end
+
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
       clear_cache(:storage_stats)
     end
-  end
-
-  private
-
-  def hex_to_rgbs(hex_color)
-    hex_color = hex_color.gsub('#', '')
-    rgbs = hex_color.scan(/../)
-    rgbs
-      .map! { |color| color.hex }
-      .map! { |rgb| rgb.to_i }
   end
 
   def rgba_color(hex, opacity = 1)
@@ -1550,5 +1639,15 @@ class Report
     rgbs = hex_to_rgbs(hex)
 
     "rgba(#{rgbs.join(',')},#{opacity})"
+  end
+
+  private
+
+  def hex_to_rgbs(hex_color)
+    hex_color = hex_color.gsub('#', '')
+    rgbs = hex_color.scan(/../)
+    rgbs
+      .map! { |color| color.hex }
+      .map! { |rgb| rgb.to_i }
   end
 end

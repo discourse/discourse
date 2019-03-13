@@ -42,7 +42,8 @@ class TopicTimer < ActiveRecord::Base
       open: 2,
       publish_to_category: 3,
       delete: 4,
-      reminder: 5
+      reminder: 5,
+      bump: 6
     )
   end
 
@@ -106,6 +107,14 @@ class TopicTimer < ActiveRecord::Base
 
   def cancel_auto_reminder_job
     Jobs.cancel_scheduled_job(:topic_reminder, topic_timer_id: id)
+  end
+
+  def cancel_auto_bump_job
+    Jobs.cancel_scheduled_job(:bump_topic, topic_timer_id: id)
+  end
+
+  def schedule_auto_bump_job(time)
+    Jobs.enqueue_at(time, :bump_topic, topic_timer_id: id)
   end
 
   def schedule_auto_open_job(time)

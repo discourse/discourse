@@ -30,7 +30,7 @@ export default Ember.Component.extend({
       result.className = "disagreed";
       result.label = `${result.disagreed}%`;
     } else {
-      result.icon = "external-link";
+      result.icon = "external-link-alt";
       result.className = "ignored";
       result.label = `${result.ignored}%`;
     }

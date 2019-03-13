@@ -17,7 +17,7 @@
         <h1 class="{{staff}} {{new_user}} {{if nameFirst "full-name" "username"}}">
           <a href={{user.path}} {{action "showUser"}}>{{if nameFirst user.name (format-username username)}} {{user-status user currentUser=currentUser}}</a>
         </h1>
-        {{plugin-outlet name="user-card-after-username" args=(hash user=user) tagName=''}}
+        {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser")) tagName=''}}
 
         {{#unless nameFirst}}
           {{#if user.name}}
@@ -44,7 +44,7 @@
         <li class='compose-pm'>
           {{d-button
             class="btn-primary"
-            action=(action "composePrivateMessage" user post)
+            action=(route-action "composePrivateMessage" user post)
             icon="envelope"
             label="user.private_message"}}
         </li>
@@ -63,7 +63,7 @@
       {{#if hasUserFilters}}
         <li>
           {{d-button
-            action="cancelFilter"
+            action=(action "cancelFilter")
             icon="times"
             label="topic.filters.cancel"}}
         </li>
@@ -73,7 +73,8 @@
         <li>
           {{d-button
             class="btn-danger"
-            action=(action "deleteUser" user)
+            action=(action "deleteUser")
+            actionParam=user
             icon="exclamation-triangle"
             label="admin.user.delete"}}
         </li>
@@ -98,7 +99,7 @@
     {{#if hasLocationOrWebsite}}
       <div class="location-and-website">
         {{#if user.location}}
-          <span class='location'>{{d-icon "map-marker"}} <span>{{user.location}}</span></span>
+          <span class='location'>{{d-icon "map-marker-alt"}} <span>{{user.location}}</span></span>
         {{/if}}
 
         {{#if user.website_name}}
@@ -132,11 +133,11 @@
           </h3>
           {{#if showCheckEmail}}
             <h3 class="email">
-              {{d-icon "envelope-o" title="user.email.title"}}
+              {{d-icon "far-envelope" title="user.email.title"}}
               {{#if user.email}}
                 {{user.email}}
               {{else}}
-                {{d-button action="checkEmail" actionParam=user icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
+                {{d-button action=(action "checkEmail") actionParam=user icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </h3>
           {{/if}}

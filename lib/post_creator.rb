@@ -165,24 +165,24 @@ class PostCreator
       transaction do
         build_post_stats
         create_topic
+        create_post_notice
         save_post
         extract_links
-        store_unique_post_key
         track_topic
         update_topic_stats
         update_topic_auto_close
         update_user_counts
         create_embedded_topic
         link_post_uploads
-
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message
-        @post.advance_draft_sequence
+        @post.advance_draft_sequence unless @opts[:import_mode]
         @post.save_reply_relationships
       end
     end
 
-    if @post && errors.blank?
+    if @post && errors.blank? && !@opts[:import_mode]
+      store_unique_post_key
       # update counters etc.
       @post.topic.reload
 
@@ -194,12 +194,10 @@ class PostCreator
 
       trigger_after_events unless opts[:skip_events]
 
-      auto_close unless @opts[:import_mode]
+      auto_close
     end
 
-    if @post || @spam
-      handle_spam unless @opts[:import_mode]
-    end
+    handle_spam if !opts[:import_mode] && (@post || @spam)
 
     @post
   end
@@ -250,7 +248,11 @@ class PostCreator
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
     whisper = post.post_type == Post.types[:whisper]
-    post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?, whisper)
+    increase_posts_count = !post.topic&.private_message? || post.post_type != Post.types[:small_action]
+    post.post_number ||= Topic.next_post_number(post.topic_id,
+      reply: post.reply_to_post_number.present?,
+      whisper: whisper,
+      post: increase_posts_count)
 
     cooking_options = post.cooking_options || {}
     cooking_options[:topic_id] = post.topic_id
@@ -362,7 +364,7 @@ class PostCreator
                            limit_once_per: 24.hours,
                            message_params: { domains: @post.linked_hosts.keys.join(', ') })
     elsif @post && errors.blank? && !skip_validations?
-      SpamRulesEnforcer.enforce!(@post)
+      SpamRule::FlagSockpuppets.new(@post).perform
     end
   end
 
@@ -428,6 +430,8 @@ class PostCreator
   end
 
   def update_topic_auto_close
+    return if @opts[:import_mode]
+
     if @topic.closed?
       @topic.delete_topic_timer(TopicTimer.types[:close])
     else
@@ -476,7 +480,8 @@ class PostCreator
 
   def save_post
     @post.disable_rate_limits! if skip_validations?
-    saved = @post.save(validate: !skip_validations?)
+    @post.skip_validation = skip_validations?
+    saved = @post.save
     rollback_from_errors!(@post) unless saved
   end
 
@@ -508,10 +513,25 @@ class PostCreator
     @user.update_attributes(last_posted_at: @post.created_at)
   end
 
-  def publish
-    return if @opts[:import_mode]
-    return unless @post.post_number > 1
+  def create_post_notice
+    return if @user.bot? || @user.staged
 
+    last_post_time = Post.where(user_id: @user.id)
+      .order(created_at: :desc)
+      .limit(1)
+      .pluck(:created_at)
+      .first
+
+    if !last_post_time
+      @post.custom_fields["post_notice_type"] = "first"
+    elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
+      @post.custom_fields["post_notice_type"] = "returning"
+      @post.custom_fields["post_notice_time"] = last_post_time.iso8601
+    end
+  end
+
+  def publish
+    return if @opts[:import_mode] || @post.post_number == 1
     @post.publish_change_to_clients! :created
   end
 
@@ -521,7 +541,7 @@ class PostCreator
   end
 
   def track_topic
-    return if @opts[:auto_track] == false
+    return if @opts[:import_mode] || @opts[:auto_track] == false
 
     unless @user.user_option.disable_jump_reply?
       TopicUser.change(@post.user_id,
@@ -539,8 +559,7 @@ class PostCreator
 
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
-    else
-      return if @topic.private_message?
+    elsif !@topic.private_message?
       notification_level = @user.user_option.notification_level_when_replying || NotificationLevels.topic_levels[:tracking]
       TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], notification_level)
     end

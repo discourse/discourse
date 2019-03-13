@@ -140,17 +140,7 @@ pl_PL:
     new_user_narrative:
       reset_trigger: "nowy użytkownik"
       cert_title: "W podziękowaniu za skończony samouczek"
-      hello:
-        title: ":robot: Witaj!"
       onebox:
-        instructions: |-
-          Następnie, czy możesz udostępnić mi jeden z poniższych linków? Odpowiedz przy użyciu **link**, a automatycznie zostanie dodane dobre podsumowanie.
-
-          Aby skopiować link, naciśnij i przytrzymaj na telefonie, lub kliknij prawym przyciskiem myszy.
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         not_found: |-
           Przepraszam, nie mogłem znaleźć linku w twojej odpowiedzi!
           :cry:
@@ -172,7 +162,6 @@ pl_PL:
       formatting:
         instructions: |-
           Czy możesz **pogrubić** lub zastosować _kursywę_ dla części słów w swojej odpowiedzi?
-
 
           - napisz '**pogrub**' lub '_kursywa_'
 

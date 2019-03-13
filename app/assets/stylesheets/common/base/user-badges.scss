@@ -8,13 +8,14 @@
   align-items: center;
   background-color: $secondary;
   margin: 0 0 3px;
-  .d-icon {
-    margin-right: 0.25em;
-  }
 
   img {
     height: 16px;
     width: 16px;
+  }
+
+  .badge-display-name {
+    margin-left: 0.25em;
   }
 
   &.badge-type-gold .fa {
@@ -206,7 +207,7 @@
   &.medium {
     flex: 0 0 auto;
     width: 32%;
-    margin-right: calc(2% - 3px);
+    margin-right: 1.63%;
     @media screen and (min-width: 851px) {
       &:nth-of-type(3n) {
         margin-right: 0;
@@ -327,7 +328,7 @@
 
 .check-display {
   display: inline-block;
-  width: 18px;
+  padding: 0 0.25em;
   border-radius: 10px;
   text-align: center;
   .fa {

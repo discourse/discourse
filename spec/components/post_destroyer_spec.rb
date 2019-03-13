@@ -617,7 +617,7 @@ describe PostDestroyer do
 
   context '@mentions' do
     it 'removes notifications when deleted' do
-      SiteSetting.queue_jobs = false
+      run_jobs_synchronously!
       user = Fabricate(:evil_trout)
       post = create_post(raw: 'Hello @eviltrout')
       expect {
@@ -636,6 +636,7 @@ describe PostDestroyer do
     end
 
     it "should delete public post actions and agree with flags" do
+      url = second_post.url
       second_post.expects(:update_flagged_posts_count)
 
       PostDestroyer.new(moderator, second_post).destroy
@@ -650,7 +651,23 @@ describe PostDestroyer do
       expect(second_post.bookmark_count).to eq(0)
       expect(second_post.off_topic_count).to eq(1)
 
-      expect(Jobs::SendSystemMessage.jobs.size).to eq(1)
+      jobs = Jobs::SendSystemMessage.jobs
+      expect(jobs.size).to eq(1)
+
+      Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+
+      expect(Post.last.raw).to eq(I18n.t(
+        "system_messages.flags_agreed_and_post_deleted.text_body_template",
+        flagged_post_raw_content: second_post.raw,
+        url: url,
+        flag_reason: I18n.t(
+          "flag_reasons.#{PostActionType.flag_types[off_topic.post_action_type_id]}",
+          locale: SiteSetting.default_locale,
+          base_path: Discourse.base_path
+        ),
+        site_name: SiteSetting.title,
+        base_url: Discourse.base_url
+      ).strip)
     end
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do

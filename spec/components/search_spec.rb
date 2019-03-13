@@ -341,11 +341,31 @@ describe Search do
     end
 
     context "search for a topic by url" do
-      let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic') }
-
       it 'returns the topic' do
+        result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')
         expect(result.posts.length).to eq(1)
         expect(result.posts.first.id).to eq(post.id)
+      end
+
+      context 'restrict_to_archetype' do
+        let(:personal_message) { Fabricate(:private_message_topic) }
+        let!(:p1) { Fabricate(:post, topic: personal_message, post_number: 1) }
+
+        it 'restricts result to topics' do
+          result = Search.execute(personal_message.relative_url, search_for_id: true, type_filter: 'topic', restrict_to_archetype: Archetype.default)
+          expect(result.posts.length).to eq(0)
+
+          result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic', restrict_to_archetype: Archetype.default)
+          expect(result.posts.length).to eq(1)
+        end
+
+        it 'restricts result to messages' do
+          result = Search.execute(topic.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(Fabricate(:admin)), restrict_to_archetype: Archetype.private_message)
+          expect(result.posts.length).to eq(0)
+
+          result = Search.execute(personal_message.relative_url, search_for_id: true, type_filter: 'private_messages', guardian: Guardian.new(Fabricate(:admin)), restrict_to_archetype: Archetype.private_message)
+          expect(result.posts.length).to eq(1)
+        end
       end
     end
 
@@ -408,6 +428,38 @@ describe Search do
       expect(search.categories).not_to be_present
     end
 
+  end
+
+  context 'groups' do
+    def search(user = Fabricate(:user))
+      Search.execute(group.name, guardian: Guardian.new(user))
+    end
+
+    let!(:group) { Group[:trust_level_0] }
+
+    it 'shows group' do
+      expect(search.groups.map(&:name)).to eq([group.name])
+    end
+
+    context 'group visibility' do
+      let!(:group) { Fabricate(:group) }
+
+      before do
+        group.update!(visibility_level: 3)
+      end
+
+      context 'staff logged in' do
+        it 'shows group' do
+          expect(search(Fabricate(:admin)).groups.map(&:name)).to eq([group.name])
+        end
+      end
+
+      context 'non staff logged in' do
+        it 'shows doesn’t show group' do
+          expect(search.groups.map(&:name)).to be_empty
+        end
+      end
+    end
   end
 
   context 'tags' do
@@ -681,8 +733,14 @@ describe Search do
       expect(Search.execute('test after:jan').posts.length).to eq(1)
 
       expect(Search.execute('test in:first').posts.length).to eq(1)
+
       expect(Search.execute('boom').posts.length).to eq(1)
+
       expect(Search.execute('boom in:first').posts.length).to eq(0)
+      expect(Search.execute('boom f').posts.length).to eq(0)
+
+      expect(Search.execute('123 in:first').posts.length).to eq(1)
+      expect(Search.execute('123 f').posts.length).to eq(1)
 
       expect(Search.execute('user:nobody').posts.length).to eq(0)
       expect(Search.execute("user:#{_post.user.username}").posts.length).to eq(1)
@@ -815,24 +873,27 @@ describe Search do
 
     it 'supports category slug and tags' do
       # main category
-      category = Fabricate(:category, name: 'category 24', slug: 'category-24')
+      category = Fabricate(:category, name: 'category 24', slug: 'cateGory-24')
       topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
       post = Fabricate(:post, raw: 'Sams first post', topic: topic)
 
-      expect(Search.execute('sams post #category-24').posts.length).to eq(1)
+      expect(Search.execute('sams post #categoRy-24').posts.length).to eq(1)
       expect(Search.execute("sams post category:#{category.id}").posts.length).to eq(1)
-      expect(Search.execute('sams post #category-25').posts.length).to eq(0)
+      expect(Search.execute('sams post #categoRy-25').posts.length).to eq(0)
 
       sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
       second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
       Fabricate(:post, raw: 'sams second post', topic: second_topic)
 
-      expect(Search.execute("sams post category:category-24").posts.length).to eq(2)
-      expect(Search.execute("sams post category:=category-24").posts.length).to eq(1)
+      expect(Search.execute("sams post category:categoRY-24").posts.length).to eq(2)
+      expect(Search.execute("sams post category:=cAtegory-24").posts.length).to eq(1)
 
       expect(Search.execute("sams post #category-24").posts.length).to eq(2)
       expect(Search.execute("sams post #=category-24").posts.length).to eq(1)
       expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
+
+      expect(Search.execute("sams post #categoRY-24:SUB-category").posts.length)
+        .to eq(1)
 
       # tags
       topic.tags = [Fabricate(:tag, name: 'alpha'), Fabricate(:tag, name: 'привет'), Fabricate(:tag, name: 'HeLlO')]
@@ -1030,8 +1091,27 @@ describe Search do
       results = Search.execute('title in:title')
       expect(results.posts.length).to eq(1)
 
+      results = Search.execute('title t')
+      expect(results.posts.length).to eq(1)
+
       results = Search.execute('first in:title')
       expect(results.posts.length).to eq(0)
+
+      results = Search.execute('first t')
+      expect(results.posts.length).to eq(0)
+    end
+
+    it 'works irrespective of the order' do
+      topic = Fabricate(:topic, title: "A topic about Discourse")
+      Fabricate(:post, topic: topic, raw: "This is another post")
+      topic2 = Fabricate(:topic, title: "This is another topic")
+      Fabricate(:post, topic: topic2, raw: "Discourse is awesome")
+
+      results = Search.execute('Discourse in:title status:open')
+      expect(results.posts.length).to eq(1)
+
+      results = Search.execute('in:title status:open Discourse')
+      expect(results.posts.length).to eq(1)
     end
   end
 

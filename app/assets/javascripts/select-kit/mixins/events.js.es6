@@ -1,6 +1,6 @@
 export default Ember.Mixin.create({
   init() {
-    this._super();
+    this._super(...arguments);
 
     this.keys = {
       TAB: 9,

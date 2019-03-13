@@ -47,6 +47,19 @@ QUnit.test("changing value updates dirty state", async assert => {
     "setting isn't marked as overriden after undo"
   );
 
+  await click("button.cancel");
+  assert.ok(
+    exists(".row.setting.overridden"),
+    "setting is marked as overriden after cancel"
+  );
+
+  await click("button.undo");
+  await click("button.ok");
+  assert.ok(
+    !exists(".row.setting.overridden"),
+    "setting isn't marked as overriden after undo"
+  );
+
   await fillIn(".input-setting-string", "Test");
   await keyEvent(".input-setting-string", "keydown", 13); // enter
   assert.ok(

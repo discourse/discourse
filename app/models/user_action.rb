@@ -201,6 +201,7 @@ class UserAction < ActiveRecord::Base
     ignore_private_messages = opts[:ignore_private_messages]
     offset = opts[:offset] || 0
     limit = opts[:limit] || 60
+    acting_username = opts[:acting_username]
 
     # Acting user columns. Can be extended by plugins to include custom avatar
     # columns
@@ -257,6 +258,12 @@ class UserAction < ActiveRecord::Base
     else
       builder.where("a.user_id = :user_id", user_id: user_id.to_i)
       builder.where("a.action_type in (:action_types)", action_types: action_types) if action_types && action_types.length > 0
+
+      if acting_username
+        builder.where("u.username_lower = :acting_username",
+          acting_username: acting_username.downcase
+        )
+      end
 
       unless SiteSetting.enable_mentions?
         builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)

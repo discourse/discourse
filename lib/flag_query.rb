@@ -35,8 +35,8 @@ module FlagQuery
       .group(:post_id)
       .order('MIN(post_actions.created_at) DESC')
 
-    if opts[:filter] != "old" && SiteSetting.min_flags_staff_visibility > 1
-      post_ids_relation = post_ids_relation.having("count(*) >= ?", SiteSetting.min_flags_staff_visibility)
+    if opts[:filter] != "old"
+      post_ids_relation = PostAction.apply_minimum_visibility(post_ids_relation)
     end
 
     post_ids = post_ids_relation.pluck(:post_id).uniq

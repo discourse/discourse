@@ -5,6 +5,12 @@ module Helpers
     @next_seq = (@next_seq || 0) + 1
   end
 
+  # If you don't `queue_jobs` it means you want to run them synchronously. This method
+  # makes that more clear in tests. It is automatically reset after every test.
+  def run_jobs_synchronously!
+    SiteSetting.queue_jobs = false
+  end
+
   def log_in(fabricator = nil)
     user = Fabricate(fabricator || :user)
     log_in_user(user)
@@ -101,5 +107,15 @@ module Helpers
     tag_names.each do |name|
       tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
     end
+  end
+
+  def capture_stdout
+    old_stdout = $stdout
+    io = StringIO.new
+    $stdout = io
+    yield
+    io.string
+  ensure
+    $stdout = old_stdout
   end
 end

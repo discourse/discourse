@@ -166,15 +166,11 @@ class Stylesheet::Manager
          source_map_file: source_map_filename
       )
     rescue SassC::SyntaxError => e
-
-      # we do not need this reported as we will report it in the UI anyway
-      Rails.logger.info "Failed to compile #{@target} stylesheet: #{e.message}"
-
       if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
         # no special errors for theme, handled in theme editor
         ["", nil]
       else
-        [Stylesheet::Compiler.error_as_css(e, "#{@target} stylesheet"), nil]
+        raise Discourse::ScssError, e.message
       end
     end
 

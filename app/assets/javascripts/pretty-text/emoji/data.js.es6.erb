@@ -1,32 +1,6 @@
 export const emojis = <%= Emoji.standard.map(&:name).flatten.inspect %>;
 export const tonableEmojis = <%= Emoji.tonable_emojis.flatten.inspect %>;
 export const aliases = <%= Emoji.aliases.inspect.gsub("=>", ":") %>;
-export const searchAliases = <%= Emoji.searchAliases.inspect.gsub("=>", ":") %>;
-export const translations = {
-  ':)'   : 'slight_smile',
-  ':-)'  : 'slight_smile',
-  '^_^'  : 'slight_smile',
-  '^__^' : 'slight_smile',
-  ':('   : 'frowning',
-  ':-('  : 'frowning',
-  ';)'   : 'wink',
-  ';-)'  : 'wink',
-  ':\'(' : 'cry',
-  ':\'-(': 'cry',
-  ':-\'(': 'cry',
-  ':p'   : 'stuck_out_tongue',
-  ':P'   : 'stuck_out_tongue',
-  ':-P'  : 'stuck_out_tongue',
-  ':O'   : 'open_mouth',
-  ':-O'  : 'open_mouth',
-  ':D'   : 'smiley',
-  ':-D'  : 'smiley',
-  ':|'   : 'expressionless',
-  ':-|'  : 'expressionless',
-  ':/'   : 'confused',
-  '8-)'  : 'sunglasses',
-  ";P"   : 'stuck_out_tongue_winking_eye',
-  ";-P"  : 'stuck_out_tongue_winking_eye',
-  ":$"   : 'blush',
-  ":-$"  : 'blush'
-};
+export const searchAliases = <%= Emoji.search_aliases.inspect.gsub("=>", ":") %>;
+export const translations = <%= Emoji.translations.inspect.gsub("=>", ":") %>;
+export const replacements = <%= Emoji.unicode_replacements_json %>;

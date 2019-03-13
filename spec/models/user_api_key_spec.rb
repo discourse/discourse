@@ -16,9 +16,20 @@ describe UserApiKey do
 
     end
 
+    it "can allow all correct scopes to write" do
+
+      key = UserApiKey.new(scopes: ["write"])
+
+      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(true)
+      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PUT")).to eq(true)
+      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PATCH")).to eq(true)
+      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "DELETE")).to eq(true)
+      expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "POST")).to eq(true)
+    end
+
     it "can allow blanket read" do
 
-      key = UserApiKey.new(scopes: ['read'])
+      key = UserApiKey.new(scopes: ["read"])
 
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "GET")).to eq(true)
       expect(key.allow?("PATH_INFO" => "/random", "REQUEST_METHOD" => "PUT")).to eq(false)

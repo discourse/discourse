@@ -106,6 +106,13 @@ describe UserAvatar do
       end
     end
 
+    it "should not raise an error when there's no primary_email" do
+      avatar.user.primary_email.destroy
+      avatar.user.reload
+
+      # If raises an error, test fails
+      avatar.update_gravatar!
+    end
   end
 
   context '.import_url_for_user' do
@@ -125,8 +132,10 @@ describe UserAvatar do
     end
 
     it 'can leave gravatar alone' do
-      user = Fabricate(:user, uploaded_avatar_id: 1)
-      user.user_avatar.update_columns(gravatar_upload_id: 1)
+      upload = Fabricate(:upload)
+
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+      user.user_avatar.update_columns(gravatar_upload_id: upload.id)
 
       stub_request(:get, "http://thisfakesomething.something.com/")
         .to_return(status: 200, body: file_from_fixtures("logo.png"), headers: {})
@@ -138,8 +147,12 @@ describe UserAvatar do
       end.to change { Upload.count }.by(1)
 
       user.reload
-      expect(user.uploaded_avatar_id).to eq(1)
-      expect(user.user_avatar.custom_upload_id).to eq(Upload.last.id)
+      expect(user.uploaded_avatar_id).to eq(upload.id)
+
+      last_id = Upload.last.id
+
+      expect(last_id).not_to eq(upload.id)
+      expect(user.user_avatar.custom_upload_id).to eq(last_id)
     end
 
     describe 'when avatar url returns an invalid status code' do

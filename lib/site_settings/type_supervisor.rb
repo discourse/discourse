@@ -6,7 +6,7 @@ module SiteSettings; end
 class SiteSettings::TypeSupervisor
   include SiteSettings::Validations
 
-  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type].freeze
+  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type textarea].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error].freeze
 
   # For plugins, so they can tell if a feature is supported
@@ -65,10 +65,15 @@ class SiteSettings::TypeSupervisor
     @types = {}
     @allow_any = {}
     @list_type = {}
+    @textareas = {}
   end
 
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
+
+    if opts[:textarea]
+      @textareas[name] = opts[:textarea]
+    end
 
     if (enum = opts[:enum])
       @enums[name] = enum.is_a?(String) ? enum.constantize : enum
@@ -148,6 +153,8 @@ class SiteSettings::TypeSupervisor
 
     result[:choices] = @choices[name] if @choices.has_key? name
     result[:list_type] = @list_type[name] if @list_type.has_key? name
+    result[:textarea] = @textareas[name] if @textareas.has_key? name
+
     result
   end
 
@@ -170,7 +177,7 @@ class SiteSettings::TypeSupervisor
     elsif type == self.class.types[:enum]
       val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
     elsif type == self.class.types[:upload] && val.present?
-      val = val.id
+      val = val.is_a?(Integer) ? val : val.id
     end
 
     [val, type]

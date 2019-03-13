@@ -140,17 +140,7 @@ ca:
     new_user_narrative:
       reset_trigger: "nou usuari"
       cert_title: "En reconeixement per haver completat satisfactòriament el tutorial de nou usuari"
-      hello:
-        title: ":robot: Salutacions!"
       onebox:
-        instructions: |-
-          Seguidament, pots compartir un d'aquests enllaços amb mi? Respon amb  **un enllaç d'una línia sense res més**, i s'expandirà automàticament per incloure un breu resum.
-
-          Per copiar un enllaç, punteja i mantingues al mòbil o fes clic amb el botó dret del ratolí:
-
-          - https://ca.wikipedia.org/wiki/Patufeta
-          - https://ca.wikipedia.org/wiki/Botifarra_dolça
-          - https://ca.wikipedia.org/wiki/Ortografia_de_la_calculadora
         reply: |-
           Genial! Això funcionarà per a la majoria d'enllaços <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. Recorda, ha d'estar en una línia _tot per si mateix_, res a davant, ni a darrere.
         not_found: |-

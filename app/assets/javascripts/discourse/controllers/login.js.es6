@@ -32,10 +32,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
-  loginRequired: Em.computed.alias("application.loginRequired"),
+  loginRequired: Ember.computed.alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
-  resetForm: function() {
+  resetForm() {
     this.setProperties({
       authenticate: null,
       loggingIn: false,
@@ -67,19 +67,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return loggingIn ? "login.logging_in" : "login.title";
   },
 
-  loginDisabled: Em.computed.or("loggingIn", "loggedIn"),
+  loginDisabled: Ember.computed.or("loggingIn", "loggedIn"),
 
-  showSignupLink: function() {
-    return (
-      this.get("application.canSignUp") &&
-      !this.get("loggingIn") &&
-      Ember.isEmpty(this.get("authenticate"))
-    );
-  }.property("loggingIn", "authenticate"),
+  @computed("loggingIn", "authenticate", "application.canSignUp")
+  showSignupLink(loggingIn, authenticate, canSignUp) {
+    return canSignUp && !loggingIn && Ember.isEmpty(authenticate);
+  },
 
-  showSpinner: function() {
-    return this.get("loggingIn") || this.get("authenticate");
-  }.property("loggingIn", "authenticate"),
+  @computed("loggingIn", "authenticate")
+  showSpinner(loggingIn, authenticate) {
+    return loggingIn || authenticate;
+  },
 
   @computed("canLoginLocalWithEmail", "processingEmailLink")
   showLoginWithEmailLink(canLoginLocalWithEmail, processingEmailLink) {
@@ -108,7 +106,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         data: {
           login: this.get("loginName"),
           password: this.get("loginPassword"),
-          second_factor_token: this.get("loginSecondFactor"),
+          second_factor_token: this.get("secondFactorToken"),
           second_factor_method: this.get("secondFactorMethod")
         }
       }).then(
@@ -204,11 +202,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin: function(loginMethod) {
+    externalLogin(loginMethod) {
       loginMethod.doLogin();
     },
 
-    createAccount: function() {
+    createAccount() {
       const createAccountController = this.get("createAccount");
       if (createAccountController) {
         createAccountController.resetForm();
@@ -222,7 +220,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.send("showCreateAccount");
     },
 
-    forgotPassword: function() {
+    forgotPassword() {
       const forgotPasswordController = this.get("forgotPassword");
       if (forgotPasswordController) {
         forgotPasswordController.set(

@@ -70,6 +70,7 @@ RSpec.configure do |config|
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
+  config.include SiteSettingsHelpers
   config.mock_framework = :mocha
   config.order = 'random'
   config.infer_spec_type_from_file_location!
@@ -135,7 +136,9 @@ RSpec.configure do |config|
     unfreeze_time
     ActionMailer::Base.deliveries.clear
 
-    raise if ActiveRecord::Base.connection_pool.stat[:busy] > 1
+    if ActiveRecord::Base.connection_pool.stat[:busy] > 1
+      raise ActiveRecord::Base.connection_pool.stat.inspect
+    end
   end
 
   config.before :each do |x|
@@ -177,14 +180,15 @@ RSpec.configure do |config|
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true
+
     RailsMultisite::ConnectionManagement.config_filename =
       "spec/fixtures/multisite/two_dbs.yml"
   end
 
   config.after(:each, type: :multisite) do
+    ActiveRecord::Base.clear_all_connections!
     Rails.configuration.multisite = false
     RailsMultisite::ConnectionManagement.clear_settings!
-    ActiveRecord::Base.clear_active_connections!
     ActiveRecord::Base.establish_connection
   end
 
@@ -197,6 +201,27 @@ RSpec.configure do |config|
     def log_off_user(session, cookies)
       session[:current_user_id] = nil
       super
+    end
+  end
+
+  # Normally we `use_transactional_fixtures` to clear out a database after a test
+  # runs. However, this does not apply to tests done for multisite. The second time
+  # a test runs you can end up with stale data that breaks things. This method will
+  # force a rollback after using a multisite connection.
+  def test_multisite_connection(name)
+    RailsMultisite::ConnectionManagement.with_connection(name) do
+      spec_exception = nil
+
+      ActiveRecord::Base.transaction do
+        begin
+          yield
+        rescue Exception => spec_exception
+        ensure
+          raise ActiveRecord::Rollback
+        end
+      end
+
+      raise spec_exception if spec_exception
     end
   end
 

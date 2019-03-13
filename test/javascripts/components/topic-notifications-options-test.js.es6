@@ -8,7 +8,7 @@ const buildTopic = function(archetype) {
     details: {
       notification_level: 1
     },
-    archetype: archetype
+    archetype
   });
 };
 
@@ -70,6 +70,7 @@ componentTest("PM topic notification level descriptions", {
       descriptions.length,
       "it has the correct copy"
     );
+
     uiTexts.forEach((text, index) => {
       assert.equal(
         text.trim(),

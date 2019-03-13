@@ -6,13 +6,6 @@ describe SiteSettings::TypeSupervisor do
     SiteSettings::LocalProcessProvider.new
   end
 
-  def new_settings(provider)
-    Class.new do
-      extend SiteSettingExtension
-      self.provider = provider
-    end
-  end
-
   let :settings do
     new_settings(provider_local)
   end
@@ -197,6 +190,9 @@ describe SiteSettings::TypeSupervisor do
 
         expect(settings.type_supervisor.to_db_value(:type_upload, upload))
           .to eq([upload.id, SiteSetting.types[:upload]])
+
+        expect(settings.type_supervisor.to_db_value(:type_upload, 1))
+          .to eq([1, SiteSetting.types[:upload]])
       end
 
       it 'returns enum value with string default' do
@@ -338,6 +334,7 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, 'string')
       settings.setting(:type_url_list, 'string', type: 'url_list')
+      settings.setting(:type_textarea, 'string', textarea: true)
       settings.setting(:type_enum_choices, '2', type: 'enum', choices: ['1', '2'])
       settings.setting(:type_enum_class, 'a', enum: 'TestEnumClass2')
       settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'], list_type: 'compact')
@@ -361,6 +358,9 @@ describe SiteSettings::TypeSupervisor do
     end
     it 'returns url_list type' do
       expect(settings.type_supervisor.type_hash(:type_url_list)[:type]).to eq 'url_list'
+    end
+    it 'returns textarea type' do
+      expect(settings.type_supervisor.type_hash(:type_textarea)[:textarea]).to eq true
     end
     it 'returns enum type' do
       expect(settings.type_supervisor.type_hash(:type_enum_choices)[:type]).to eq 'enum'

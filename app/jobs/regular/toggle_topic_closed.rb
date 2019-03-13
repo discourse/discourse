@@ -15,7 +15,16 @@ module Jobs
       user = topic_timer.user
 
       if Guardian.new(user).can_close?(topic)
-        topic.update_status('autoclosed', state, user)
+        if state == false && PostAction.auto_close_threshold_reached?(topic)
+          topic.set_or_create_timer(
+            TopicTimer.types[:open],
+            SiteSetting.num_hours_to_close_topic,
+            by_user: Discourse.system_user
+          )
+        else
+          topic.update_status('autoclosed', state, user)
+        end
+
         topic.inherit_auto_close_from_category if state == false
       end
     end

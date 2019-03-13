@@ -1,17 +1,17 @@
 {{#if canJoinGroup}}
-  {{d-button action="joinGroup"
+  {{d-button action=(action "joinGroup")
       class="group-index-join"
       icon="user-plus"
       label="groups.join"
       disabled=updatingMembership}}
 {{else if canLeaveGroup}}
-  {{d-button action="leaveGroup"
+  {{d-button action=(action "leaveGroup")
       class="btn-danger group-index-leave"
       icon="user-times"
       label="groups.leave"
       disabled=updatingMembership}}
 {{else if canRequestMembership}}
-  {{d-button action="showRequestMembershipForm"
+  {{d-button action=(action "showRequestMembershipForm")
       class="group-index-request"
       disabled=loading
       icon="user-plus"

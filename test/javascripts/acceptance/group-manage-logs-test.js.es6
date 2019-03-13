@@ -94,7 +94,7 @@ acceptance("Group logs", {
 });
 
 QUnit.test("Browsing group logs", async assert => {
-  await visit("/groups/snorlax/manage/logs");
+  await visit("/g/snorlax/manage/logs");
   assert.ok(
     find("tr.group-manage-logs-row").length === 2,
     "it should display the right number of logs"

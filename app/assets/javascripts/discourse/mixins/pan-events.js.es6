@@ -4,45 +4,40 @@
  **/
 export const SWIPE_VELOCITY = 40;
 export const SWIPE_DISTANCE_THRESHOLD = 50;
-export const SWIPE_VELOCITY_THRESHOLD = 0.1;
+export const SWIPE_VELOCITY_THRESHOLD = 0.12;
+export const MINIMUM_SWIPE_DISTANCE = 5;
 export default Ember.Mixin.create({
   //velocity is pixels per ms
 
   _panState: null,
 
   didInsertElement() {
-    this._super();
-
-    if (this.site.mobileView) {
-      if ("onpointerdown" in document.documentElement) {
-        this.$()
-          .on("pointerdown", e => this._panStart(e))
-          .on("pointermove", e => this._panMove(e, e))
-          .on("pointerup", e => this._panMove(e, e))
-          .on("pointercancel", e => this._panMove(e, e));
-      } else if ("ontouchstart" in document.documentElement) {
-        this.$()
-          .on("touchstart", e => this._panStart(e.touches[0]))
-          .on("touchmove", e => {
-            const touchEvent = e.touches[0];
-            touchEvent.type = "pointermove";
-            this._panMove(touchEvent, e);
-          })
-          .on("touchend", e => this._panMove({ type: "pointerup" }, e))
-          .on("touchcancel", e => this._panMove({ type: "pointercancel" }, e));
-      }
-    }
+    this._super(...arguments);
+    this.addTouchListeners(this.$());
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
+    this.removeTouchListeners(this.$());
+  },
 
+  addTouchListeners($element) {
     if (this.site.mobileView) {
-      this.$()
-        .off("pointerdown")
-        .off("pointerup")
-        .off("pointermove")
-        .off("pointercancel")
+      $element
+        .on("touchstart", e => this._panStart(e.touches[0]))
+        .on("touchmove", e => {
+          const touchEvent = e.touches[0];
+          touchEvent.type = "pointermove";
+          this._panMove(touchEvent, e);
+        })
+        .on("touchend", e => this._panMove({ type: "pointerup" }, e))
+        .on("touchcancel", e => this._panMove({ type: "pointercancel" }, e));
+    }
+  },
+
+  removeTouchListeners($element) {
+    if (this.site.mobileView) {
+      $element
         .off("touchstart")
         .off("touchmove")
         .off("touchend")
@@ -126,7 +121,7 @@ export default Ember.Mixin.create({
     }
     const previousState = this.get("_panState");
     const newState = this._calculateNewPanState(previousState, e);
-    if (previousState.start && newState.distance < 5) {
+    if (previousState.start && newState.distance < MINIMUM_SWIPE_DISTANCE) {
       return;
     }
     this.set("_panState", newState);

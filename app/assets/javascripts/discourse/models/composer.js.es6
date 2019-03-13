@@ -52,7 +52,7 @@ const CLOSED = "closed",
     featuredLink: "topic.featured_link"
   };
 
-const SAVE_LABELS = {
+export const SAVE_LABELS = {
   [EDIT]: "composer.save_edit",
   [REPLY]: "composer.reply",
   [CREATE_TOPIC]: "composer.create_topic",
@@ -61,8 +61,8 @@ const SAVE_LABELS = {
   [EDIT_SHARED_DRAFT]: "composer.save_edit"
 };
 
-const SAVE_ICONS = {
-  [EDIT]: "pencil",
+export const SAVE_ICONS = {
+  [EDIT]: "pencil-alt",
   [EDIT_SHARED_DRAFT]: "clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",
@@ -117,10 +117,10 @@ const Composer = RestModel.extend({
       : null;
   },
 
-  creatingTopic: Em.computed.equal("action", CREATE_TOPIC),
-  creatingSharedDraft: Em.computed.equal("action", CREATE_SHARED_DRAFT),
-  creatingPrivateMessage: Em.computed.equal("action", PRIVATE_MESSAGE),
-  notCreatingPrivateMessage: Em.computed.not("creatingPrivateMessage"),
+  creatingTopic: Ember.computed.equal("action", CREATE_TOPIC),
+  creatingSharedDraft: Ember.computed.equal("action", CREATE_SHARED_DRAFT),
+  creatingPrivateMessage: Ember.computed.equal("action", PRIVATE_MESSAGE),
+  notCreatingPrivateMessage: Ember.computed.not("creatingPrivateMessage"),
 
   @computed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
@@ -136,17 +136,17 @@ const Composer = RestModel.extend({
     );
   },
 
-  topicFirstPost: Em.computed.or("creatingTopic", "editingFirstPost"),
+  topicFirstPost: Ember.computed.or("creatingTopic", "editingFirstPost"),
 
   @computed("action")
   editingPost: isEdit,
 
-  replyingToTopic: Em.computed.equal("action", REPLY),
+  replyingToTopic: Ember.computed.equal("action", REPLY),
 
-  viewOpen: Em.computed.equal("composeState", OPEN),
-  viewDraft: Em.computed.equal("composeState", DRAFT),
-  viewFullscreen: Em.computed.equal("composeState", FULLSCREEN),
-  viewOpenOrFullscreen: Em.computed.or("viewOpen", "viewFullscreen"),
+  viewOpen: Ember.computed.equal("composeState", OPEN),
+  viewDraft: Ember.computed.equal("composeState", DRAFT),
+  viewFullscreen: Ember.computed.equal("composeState", FULLSCREEN),
+  viewOpenOrFullscreen: Ember.computed.or("viewOpen", "viewFullscreen"),
 
   composeStateChanged: function() {
     let oldOpen = this.get("composerOpened"),
@@ -186,7 +186,7 @@ const Composer = RestModel.extend({
   }.property("archetypeId"),
 
   archetypeChanged: function() {
-    return this.set("metaData", Em.Object.create());
+    return this.set("metaData", Ember.Object.create());
   }.observes("archetype"),
 
   // view detected user is typing
@@ -199,16 +199,19 @@ const Composer = RestModel.extend({
     { leading: false, trailing: true }
   ),
 
-  editingFirstPost: Em.computed.and("editingPost", "post.firstPost"),
+  editingFirstPost: Ember.computed.and("editingPost", "post.firstPost"),
 
-  canEditTitle: Em.computed.or(
+  canEditTitle: Ember.computed.or(
     "creatingTopic",
     "creatingPrivateMessage",
     "editingFirstPost",
     "creatingSharedDraft"
   ),
 
-  canCategorize: Em.computed.and("canEditTitle", "notCreatingPrivateMessage"),
+  canCategorize: Ember.computed.and(
+    "canEditTitle",
+    "notCreatingPrivateMessage"
+  ),
 
   @computed("canEditTitle", "creatingPrivateMessage", "categoryId")
   canEditTopicFeaturedLink(canEditTitle, creatingPrivateMessage, categoryId) {
@@ -366,8 +369,7 @@ const Composer = RestModel.extend({
     return (
       canCategorize &&
       !categoryId &&
-      !this.siteSettings.allow_uncategorized_topics &&
-      !this.user.get("admin")
+      !this.siteSettings.allow_uncategorized_topics
     );
   },
 
@@ -382,27 +384,9 @@ const Composer = RestModel.extend({
     return this.get("titleLength") <= this.siteSettings.max_topic_title_length;
   }.property("minimumTitleLength", "titleLength", "post.static_doc"),
 
-  @computed("action", "whisper")
-  saveIcon(action, whisper) {
-    if (whisper) {
-      return "eye-slash";
-    }
-    return SAVE_ICONS[action];
-  },
-
-  @computed("action", "whisper", "editConflict")
-  saveLabel(action, whisper, editConflict) {
-    if (editConflict) {
-      return "composer.overwrite_edit";
-    } else if (whisper) {
-      return "composer.create_whisper";
-    }
-    return SAVE_LABELS[action];
-  },
-
   hasMetaData: function() {
     const metaData = this.get("metaData");
-    return metaData ? Em.isEmpty(Em.keys(this.get("metaData"))) : false;
+    return metaData ? Ember.isEmpty(Ember.keys(this.get("metaData"))) : false;
   }.property("metaData"),
 
   /**
@@ -601,7 +585,7 @@ const Composer = RestModel.extend({
     if (!opts) opts = {};
     this.set("loading", false);
 
-    const replyBlank = Em.isEmpty(this.get("reply"));
+    const replyBlank = Ember.isEmpty(this.get("reply"));
 
     const composer = this;
     if (
@@ -647,7 +631,7 @@ const Composer = RestModel.extend({
 
     this.setProperties({
       archetypeId: opts.archetypeId || this.site.get("default_archetype"),
-      metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
+      metaData: opts.metaData ? Ember.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
 
@@ -990,7 +974,7 @@ const Composer = RestModel.extend({
     });
 
     if (this._clearingStatus) {
-      Em.run.cancel(this._clearingStatus);
+      Ember.run.cancel(this._clearingStatus);
       this._clearingStatus = null;
     }
 
@@ -1041,7 +1025,7 @@ const Composer = RestModel.extend({
     const self = this;
 
     if (draftStatus && !this._clearingStatus) {
-      this._clearingStatus = Em.run.later(
+      this._clearingStatus = Ember.run.later(
         this,
         function() {
           self.set("draftStatus", null);

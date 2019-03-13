@@ -119,7 +119,7 @@ after_initialize do
   end
 
   self.add_model_callback(User, :after_commit, on: :create) do
-    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0
+    if SiteSetting.discourse_narrative_bot_welcome_post_delay == 0 && !self.staged
       self.enqueue_bot_welcome_post
     end
   end
@@ -154,7 +154,7 @@ after_initialize do
 
   self.add_to_class(:user, :enqueue_narrative_bot_job?) do
     SiteSetting.discourse_narrative_bot_enabled &&
-      self.id > 0 &&
+      self.human? &&
       !self.anonymous? &&
       !self.staged &&
       !SiteSetting.discourse_narrative_bot_ignored_usernames.split('|'.freeze).include?(self.username)

@@ -6,7 +6,7 @@ describe OptimizedImage do
 
   unless ENV["TRAVIS"]
     describe '.crop' do
-      it 'should work correctly' do
+      it 'should produce cropped images (requires ImageMagick 7)' do
         tmp_path = "/tmp/cropped.png"
 
         begin
@@ -17,12 +17,15 @@ describe OptimizedImage do
             5
           )
 
-          fixture_path = "#{Rails.root}/spec/fixtures/images/cropped.png"
-          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+          # we don't want to deal with something new here every time image magick
+          # is upgraded or pngquant is upgraded, lets just test the basics ...
+          # cropped image should be less than 120 bytes
 
-          cropped_hex = Digest::MD5.hexdigest(File.read(tmp_path))
+          cropped_size = File.size(tmp_path)
 
-          expect(cropped_hex).to eq(fixture_hex)
+          expect(cropped_size).to be < 120
+          expect(cropped_size).to be > 50
+
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
@@ -128,7 +131,7 @@ describe OptimizedImage do
     end
 
     describe '.downsize' do
-      it 'should work correctly' do
+      it 'should downsize logo (requires ImageMagick 7)' do
         tmp_path = "/tmp/downsized.png"
 
         begin
@@ -138,12 +141,10 @@ describe OptimizedImage do
             "100x100\>"
           )
 
-          fixture_path = "#{Rails.root}/spec/fixtures/images/downsized.png"
-          fixture_hex = Digest::MD5.hexdigest(File.read(fixture_path))
+          info = FastImage.new(tmp_path)
+          expect(info.size).to eq([100, 27])
+          expect(File.size(tmp_path)).to be < 2300
 
-          downsized_hex = Digest::MD5.hexdigest(File.read(tmp_path))
-
-          expect(downsized_hex).to eq(fixture_hex)
         ensure
           File.delete(tmp_path) if File.exists?(tmp_path)
         end
@@ -154,8 +155,8 @@ describe OptimizedImage do
   describe ".safe_path?" do
 
     it "correctly detects unsafe paths" do
-      expect(OptimizedImage.safe_path?("/path/A-AA/22_00.TIFF")).to eq(true)
-      expect(OptimizedImage.safe_path?("/path/AAA/2200.TIFF")).to eq(true)
+      expect(OptimizedImage.safe_path?("/path/A-AA/22_00.JPG")).to eq(true)
+      expect(OptimizedImage.safe_path?("/path/AAA/2200.JPG")).to eq(true)
       expect(OptimizedImage.safe_path?("/tmp/a.png")).to eq(true)
       expect(OptimizedImage.safe_path?("../a.png")).to eq(false)
       expect(OptimizedImage.safe_path?("/tmp/a.png\\test")).to eq(false)
@@ -199,6 +200,32 @@ describe OptimizedImage do
   end
 
   describe ".create_for" do
+
+    context "versioning" do
+      let(:filename) { 'logo.png' }
+      let(:file) { file_from_fixtures(filename) }
+
+      it "is able to update optimized images on version change" do
+        upload = UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
+        optimized = OptimizedImage.create_for(upload, 10, 10)
+
+        expect(optimized.version).to eq(OptimizedImage::VERSION)
+
+        optimized_again = OptimizedImage.create_for(upload, 10, 10)
+        expect(optimized_again.id).to eq(optimized.id)
+
+        optimized.update_columns(version: nil)
+        old_id = optimized.id
+
+        optimized_new = OptimizedImage.create_for(upload, 10, 10)
+
+        expect(optimized_new.id).not_to eq(old_id)
+
+        # cleanup (which transaction rollback may miss)
+        optimized_new.destroy
+        upload.destroy
+      end
+    end
 
     it "is able to 'optimize' an svg" do
       # we don't really optimize anything, we simply copy

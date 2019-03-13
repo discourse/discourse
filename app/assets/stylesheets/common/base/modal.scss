@@ -27,9 +27,9 @@
 
 .modal-header {
   display: flex;
-  align-items: flex-start;
   padding: 10px 15px;
   border-bottom: 1px solid $primary-low;
+  align-items: center;
 
   .title {
     h3 {
@@ -42,6 +42,7 @@
   }
 
   .modal-close {
+    align-self: flex-start;
     order: 2;
     margin-left: auto;
   }
@@ -104,6 +105,7 @@
   background-clip: padding-box;
   box-shadow: shadow("modal");
   padding: 1px;
+  box-sizing: border-box;
 
   @media screen and (min-width: 475px) {
     min-width: 475px;
@@ -147,6 +149,7 @@
 .modal-form {
   margin-bottom: 0;
 }
+
 .modal-footer {
   padding: 14px 15px 10px;
   border-top: 1px solid $primary-low;
@@ -154,11 +157,13 @@
     margin: 0 5px 5px 0;
   }
 }
+
 .modal-footer:before,
 .modal-footer:after {
   display: table;
   content: "";
 }
+
 .modal-footer:after {
   clear: both;
 }
@@ -315,9 +320,13 @@
     }
   }
 }
+
 .d-modal-cancel {
   margin-left: 1em;
   color: $primary-medium;
+  &:hover {
+    color: $danger;
+  }
 }
 
 .delete-user-modal {
@@ -428,8 +437,17 @@
     }
   }
 
+  .permission-selector {
+    margin-right: 0.25em;
+  }
+
   .add-permission {
-    margin-top: 12px;
+    position: relative;
+    top: 0.1em;
+  }
+
+  .add-permission-icon {
+    margin: 0;
   }
 }
 
@@ -567,7 +585,7 @@
 
       .left,
       .right {
-        flex: 1 0 0;
+        flex: 1 0 0px;
       }
 
       .text {
@@ -578,8 +596,8 @@
   }
 }
 
-// split topic modal
-.split-modal {
+// move-to topic modal
+.move-to-modal {
   // move to existing topic
   .existing-topic {
     .radio {
@@ -590,7 +608,6 @@
     }
     .topic-categories {
       width: 100%;
-      margin-left: 5px;
     }
   }
 }
@@ -602,7 +619,39 @@
   }
 }
 
-.modal-tab {
-  position: absolute;
-  width: 95%;
+.modal:not(.has-tabs) {
+  .modal-tab {
+    position: absolute;
+    width: 95%;
+  }
+}
+
+.modal {
+  &.has-tabs {
+    .modal-tabs {
+      display: inline-flex;
+      flex-wrap: wrap;
+      width: calc(100% - 20px);
+      flex: 1 0 auto;
+      margin: 0;
+
+      .modal-tab {
+        list-style: none;
+        padding: s(1 2);
+        margin-right: s(1);
+        cursor: pointer;
+
+        &.is-active {
+          color: $secondary;
+          background: $danger;
+
+          &.single-tab {
+            background: none;
+            color: $primary;
+            padding: s(1 0);
+          }
+        }
+      }
+    }
+  }
 }

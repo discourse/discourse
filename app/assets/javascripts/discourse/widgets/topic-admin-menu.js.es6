@@ -16,6 +16,7 @@ createWidget("admin-menu-button", {
         action: attrs.action,
         icon: attrs.icon,
         label: attrs.fullLabel || `topic.${attrs.label}`,
+        title: attrs.title,
         secondaryAction: "hideAdminMenu"
       })
     );
@@ -136,7 +137,8 @@ export default createWidget("topic-admin-menu", {
       buttonClass: "btn-default",
       action: "toggleMultiSelect",
       icon: "tasks",
-      label: "actions.multi_select"
+      label: "actions.multi_select",
+      title: "topic.actions.multi_select_tooltip"
     });
 
     const topic = attrs.topic;
@@ -147,8 +149,9 @@ export default createWidget("topic-admin-menu", {
         className: "topic-admin-delete",
         buttonClass: "btn-danger",
         action: "deleteTopic",
-        icon: "trash-o",
-        label: "actions.delete"
+        icon: "far-trash-alt",
+        label: "actions.delete",
+        title: "topic.actions.delete_tooltip"
       });
     }
 
@@ -158,7 +161,8 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "btn-default",
         action: "recoverTopic",
         icon: "undo",
-        label: "actions.recover"
+        label: "actions.recover",
+        title: "topic.actions.recover_tooltip"
       });
     }
 
@@ -168,7 +172,8 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "btn-default",
         action: "toggleClosed",
         icon: "unlock",
-        label: "actions.open"
+        label: "actions.open",
+        title: "topic.actions.open_tooltip"
       });
     } else {
       buttons.push({
@@ -176,7 +181,8 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "btn-default",
         action: "toggleClosed",
         icon: "lock",
-        label: "actions.close"
+        label: "actions.close",
+        title: "topic.actions.close_tooltip"
       });
     }
 
@@ -184,8 +190,9 @@ export default createWidget("topic-admin-menu", {
       className: "topic-admin-status-update",
       buttonClass: "btn-default",
       action: "showTopicStatusUpdate",
-      icon: "clock-o",
-      label: "actions.timed_update"
+      icon: "far-clock",
+      label: "actions.timed_update",
+      title: "topic.actions.timed_update_tooltip"
     });
 
     const isPrivateMessage = topic.get("isPrivateMessage");
@@ -197,29 +204,32 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "btn-default",
         action: "showFeatureTopic",
         icon: "thumbtack",
-        label: featured ? "actions.unpin" : "actions.pin"
-      });
-    }
-
-    if (this.currentUser.admin) {
-      buttons.push({
-        className: "topic-admin-change-timestamp",
-        buttonClass: "btn-default",
-        action: "showChangeTimestamp",
-        icon: "calendar",
-        label: "change_timestamp.title"
+        label: featured ? "actions.unpin" : "actions.pin",
+        title: featured
+          ? "topic.actions.unpin_tooltip"
+          : "topic.actions.pin_tooltip"
       });
     }
 
     if (this.currentUser.get("staff")) {
       buttons.push({
-        className: "topic-admin-reset-bump-date",
+        className: "topic-admin-change-timestamp",
         buttonClass: "btn-default",
-        action: "resetBumpDate",
-        icon: "anchor",
-        label: "actions.reset_bump_date"
+        action: "showChangeTimestamp",
+        icon: "calendar-alt",
+        label: "change_timestamp.title",
+        title: "topic.change_timestamp.tooltip"
       });
     }
+
+    buttons.push({
+      className: "topic-admin-reset-bump-date",
+      buttonClass: "btn-default",
+      action: "resetBumpDate",
+      icon: "anchor",
+      label: "actions.reset_bump_date",
+      title: "topic.actions.reset_bump_date_tooltip"
+    });
 
     if (!isPrivateMessage) {
       buttons.push({
@@ -227,7 +237,10 @@ export default createWidget("topic-admin-menu", {
         buttonClass: "btn-default",
         action: "toggleArchived",
         icon: "folder",
-        label: topic.get("archived") ? "actions.unarchive" : "actions.archive"
+        label: topic.get("archived") ? "actions.unarchive" : "actions.archive",
+        title: topic.get("archived")
+          ? "topic.actions.unarchive_tooltip"
+          : "topic.actions.archive_tooltip"
       });
     }
 
@@ -236,8 +249,11 @@ export default createWidget("topic-admin-menu", {
       className: "topic-admin-visible",
       buttonClass: "btn-default",
       action: "toggleVisibility",
-      icon: visible ? "eye-slash" : "eye",
-      label: visible ? "actions.invisible" : "actions.visible"
+      icon: visible ? "far-eye-slash" : "far-eye",
+      label: visible ? "actions.invisible" : "actions.visible",
+      title: visible
+        ? "topic.actions.invisible_tooltip"
+        : "topic.actions.visible_tooltip"
     });
 
     if (details.get("can_convert_topic")) {
@@ -248,7 +264,12 @@ export default createWidget("topic-admin-menu", {
           ? "convertToPublicTopic"
           : "convertToPrivateMessage",
         icon: isPrivateMessage ? "comment" : "envelope",
-        label: isPrivateMessage ? "actions.make_public" : "actions.make_private"
+        label: isPrivateMessage
+          ? "actions.make_public"
+          : "actions.make_private",
+        title: isPrivateMessage
+          ? "topic.actions.make_public_tooltip"
+          : "topic.actions.make_private_tooltip"
       });
     }
 
@@ -257,7 +278,8 @@ export default createWidget("topic-admin-menu", {
         action: "showModerationHistory",
         buttonClass: "btn-default",
         icon: "list",
-        fullLabel: "admin.flags.moderation_history"
+        fullLabel: "admin.flags.moderation_history",
+        title: "admin.flags.moderation_history_tooltip"
       });
     }
 

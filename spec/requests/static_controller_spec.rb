@@ -9,7 +9,7 @@ describe StaticController do
     before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
 
     after do
-      $redis.flushall
+      DistributedMemoizer.flush!
     end
 
     it 'returns the default favicon for a missing download' do
@@ -96,7 +96,7 @@ describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response" do
+      it "should return the right response for /faq" do
         get "/faq"
 
         expect(response.status).to eq(200)
@@ -138,6 +138,18 @@ describe StaticController do
       it "should respond 404" do
         get "/static/does-not-exist"
         expect(response.status).to eq(404)
+      end
+
+      context "modal pages" do
+        it "should return the right response for /signup" do
+          get "/signup"
+          expect(response.status).to eq(200)
+        end
+
+        it "should return the right response for /password-reset" do
+          get "/password-reset"
+          expect(response.status).to eq(200)
+        end
       end
     end
 

@@ -75,7 +75,7 @@ describe TagUser do
 
     context "with some tag notification settings" do
       before do
-        SiteSetting.queue_jobs = false
+        run_jobs_synchronously!
       end
 
       let :watched_post do

@@ -8,21 +8,10 @@ import { THEMES, COMPONENTS } from "admin/models/theme";
 const THEME_UPLOAD_VAR = 2;
 
 export default Ember.Controller.extend({
-  downloadUrl: url("model.id", "/admin/themes/%@"),
+  downloadUrl: url("model.id", "/admin/customize/themes/%@/export"),
   previewUrl: url("model.id", "/admin/themes/%@/preview"),
-  addButtonDisabled: Em.computed.empty("selectedChildThemeId"),
+  addButtonDisabled: Ember.computed.empty("selectedChildThemeId"),
   editRouteName: "adminCustomizeThemes.edit",
-
-  @computed("model", "allThemes", "model.component")
-  parentThemes(model, allThemes) {
-    if (!model.get("component")) {
-      return null;
-    }
-    const parents = allThemes.filter(theme =>
-      _.contains(theme.get("childThemes"), model)
-    );
-    return parents.length === 0 ? null : parents;
-  },
 
   @computed("model.editedFields")
   editedFieldsFormatted() {
@@ -48,7 +37,7 @@ export default Ember.Controller.extend({
     return colorSchemeId !== existingId;
   },
 
-  @computed("availableChildThemes", "model.childThemes.@each", "model")
+  @computed("availableChildThemes", "model.childThemes.[]", "model")
   selectableChildThemes(available, childThemes) {
     if (available) {
       const themes = !childThemes
@@ -90,10 +79,14 @@ export default Ember.Controller.extend({
     return settings.map(setting => ThemeSettings.create(setting));
   },
 
-  @computed("settings")
-  hasSettings(settings) {
-    return settings.length > 0;
+  hasSettings: Ember.computed.notEmpty("settings"),
+
+  @computed("model.translations")
+  translations(translations) {
+    return translations.map(setting => ThemeSettings.create(setting));
   },
+
+  hasTranslations: Ember.computed.notEmpty("translations"),
 
   @computed("model.remoteError", "updatingRemote")
   showRemoteError(errorMessage, updating) {
@@ -154,6 +147,10 @@ export default Ember.Controller.extend({
       "scss"
     );
   },
+  sourceIsHttp: Ember.computed.match(
+    "model.remote_theme.remote_url",
+    /^http(s)?:\/\//
+  ),
   actions: {
     updateToLatest() {
       this.set("updatingRemote", true);
@@ -210,7 +207,7 @@ export default Ember.Controller.extend({
     },
 
     editTheme() {
-      if (this.get("model.remote_theme")) {
+      if (this.get("model.remote_theme.is_git")) {
         bootbox.confirm(
           I18n.t("admin.customize.theme.edit_confirm"),
           result => {

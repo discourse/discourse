@@ -117,7 +117,7 @@ export default SelectKitComponent.extend({
 
   @computed("computedAsyncContent.[]", "computedValue")
   filteredAsyncComputedContent(computedAsyncContent, computedValue) {
-    computedAsyncContent = computedAsyncContent.filter(c => {
+    computedAsyncContent = (computedAsyncContent || []).filter(c => {
       return computedValue !== get(c, "value");
     });
 
@@ -268,12 +268,18 @@ export default SelectKitComponent.extend({
     if (this.validateSelect(computedContentItem)) {
       this.willSelect(computedContentItem);
       this.clearFilter();
-      this.setProperties({
-        highlighted: null,
-        computedValue: computedContentItem.value
-      });
 
-      run.next(() => this.mutateAttributes());
+      const action = computedContentItem.originalContent.action;
+      if (action) {
+        action();
+      } else {
+        this.setProperties({
+          highlighted: null,
+          computedValue: computedContentItem.value
+        });
+
+        run.next(() => this.mutateAttributes());
+      }
 
       run.schedule("afterRender", () => {
         this.didSelect(computedContentItem);

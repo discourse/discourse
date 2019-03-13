@@ -49,7 +49,7 @@ export default (filterArg, params) => {
       }
 
       this._setupNavigation(model.category);
-      return Em.RSVP.all([
+      return Ember.RSVP.all([
         this._createSubcategoryList(model.category),
         this._retrieveTopicList(model.category, transition)
       ]);
@@ -77,7 +77,7 @@ export default (filterArg, params) => {
     _createSubcategoryList(category) {
       this._categoryList = null;
       if (
-        Em.isNone(category.get("parentCategory")) &&
+        Ember.isNone(category.get("parentCategory")) &&
         category.get("show_subcategory_list")
       ) {
         return CategoryList.listForParent(this.store, category).then(
@@ -86,7 +86,7 @@ export default (filterArg, params) => {
       }
 
       // If we're not loading a subcategory list just resolve
-      return Em.RSVP.resolve();
+      return Ember.RSVP.resolve();
     },
 
     _retrieveTopicList(category, transition) {
@@ -185,7 +185,7 @@ export default (filterArg, params) => {
     },
 
     deactivate() {
-      this._super();
+      this._super(...arguments);
       this.searchService.set("searchContext", null);
     },
 

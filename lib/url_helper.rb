@@ -56,11 +56,20 @@ class UrlHelper
     no_cdn = SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
 
     url = absolute_without_cdn(url)
-    url = Discourse.store.cdn_url(url) unless is_attachment && no_cdn
+
+    unless is_attachment && no_cdn
+      url = Discourse.store.cdn_url(url)
+      url = local_cdn_url(url) if Discourse.store.external?
+    end
 
     schemaless(url)
   rescue URI::Error
     url
+  end
+
+  def self.local_cdn_url(url)
+    return url if Discourse.asset_host.blank?
+    url.sub(Discourse.base_url_no_prefix, Discourse.asset_host)
   end
 
 end

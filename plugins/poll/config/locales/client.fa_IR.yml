@@ -15,6 +15,8 @@ fa_IR:
         one: "مجموع آرا"
         other: "مجموع آرا"
       average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
+      public:
+        title: "آرا <strong>عمومی</strong> هستند."
       multiple:
         help:
           at_least_min_options:

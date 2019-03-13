@@ -57,12 +57,11 @@ QUnit.test("update some fields", async assert => {
   );
   assert.ok(exists(".user-preferences"), "it shows the preferences");
 
-  const savePreferences = () => {
-    click(".save-user");
+  const savePreferences = async () => {
     assert.ok(!exists(".saved-user"), "it hasn't been saved yet");
-    andThen(() => {
-      assert.ok(exists(".saved-user"), "it displays the saved message");
-    });
+    await click(".save-user");
+    assert.ok(exists(".saved-user"), "it displays the saved message");
+    find(".saved-user").remove();
   };
 
   fillIn(".pref-name input[type=text]", "Jon Snow");
@@ -92,15 +91,59 @@ QUnit.test("update some fields", async assert => {
     "tags tab isn't there when tags are disabled"
   );
 
-  // Error: Unhandled request in test environment: /themes/assets/10d71596-7e4e-4dc0-b368-faa3b6f1ce6d?_=1493833562388 (GET)
-  // click(".preferences-nav .nav-interface a");
-  // click('.control-group.other input[type=checkbox]:first');
-  // savePreferences();
+  click(".preferences-nav .nav-interface a");
+  click(".control-group.other input[type=checkbox]:first");
+  savePreferences();
 
   assert.ok(
     !exists(".preferences-nav .nav-apps a"),
     "apps tab isn't there when you have no authorized apps"
   );
+});
+
+QUnit.test("font size change", async assert => {
+  $.removeCookie("text_size");
+
+  const savePreferences = async () => {
+    assert.ok(!exists(".saved-user"), "it hasn't been saved yet");
+    await click(".save-user");
+    assert.ok(exists(".saved-user"), "it displays the saved message");
+    find(".saved-user").remove();
+  };
+
+  await visit("/u/eviltrout/preferences/interface");
+
+  // Live changes without reload
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  assert.ok(document.documentElement.classList.contains("text-size-larger"));
+
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+  assert.ok(document.documentElement.classList.contains("text-size-largest"));
+
+  assert.equal($.cookie("text_size"), null, "cookie is not set");
+
+  // Click save (by default this sets for all browsers, no cookie)
+  await savePreferences();
+
+  assert.equal($.cookie("text_size"), null, "cookie is not set");
+
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("larger", ".text-size .combobox");
+  await click(".text-size input[type=checkbox]");
+
+  await savePreferences();
+
+  assert.equal($.cookie("text_size"), "larger|1", "cookie is set");
+  await click(".text-size input[type=checkbox]");
+  await expandSelectKit(".text-size .combobox");
+  await selectKitSelectRowByValue("largest", ".text-size .combobox");
+
+  await savePreferences();
+  assert.equal($.cookie("text_size"), null, "cookie is removed");
+
+  $.removeCookie("text_size");
 });
 
 QUnit.test("username", async assert => {
@@ -255,6 +298,14 @@ QUnit.test("visit my preferences", async assert => {
 
 QUnit.test("recently connected devices", async assert => {
   await visit("/u/eviltrout/preferences");
+
+  assert.equal(
+    find(".auth-tokens > .auth-token:first .auth-token-device")
+      .text()
+      .trim(),
+    "Linux Computer",
+    "it should display active token first"
+  );
 
   assert.equal(
     find(".pref-auth-tokens > a:first")

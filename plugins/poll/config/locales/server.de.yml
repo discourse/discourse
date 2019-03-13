@@ -12,6 +12,7 @@ de:
     poll_edit_window_mins: "Anzahl Minuten nach der Erstellung eines Beitrags, in denen Umfragen bearbeitet werden können."
     poll_minimum_trust_level_to_create: "Erforderliche Vertrauensstufe, um Umfragen zu erstellen. "
   poll:
+    invalid_argument: "Ungültiger Wert '%{value}' für Argument '%{argument}'."
     multiple_polls_without_name: "Es gibt mehrere namenlose Umfragen. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
     multiple_polls_with_same_name: "Es gibt mehre Umfragen mit dem selben Namen: <strong>%{name}</strong>. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
     default_poll_must_have_at_least_2_options: "Umfragen müssen mindestens 2 Optionen haben."

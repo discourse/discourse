@@ -83,7 +83,9 @@ class UserHistory < ActiveRecord::Base
       post_rejected: 64,
       merge_user: 65,
       entity_export: 66,
-      change_password: 67
+      change_password: 67,
+      topic_timestamps_changed: 68,
+      approve_user: 69
     )
   end
 
@@ -145,7 +147,9 @@ class UserHistory < ActiveRecord::Base
       :post_rejected,
       :merge_user,
       :entity_export,
-      :change_name
+      :change_name,
+      :topic_timestamps_changed,
+      :approve_user
     ]
   end
 
@@ -232,9 +236,10 @@ end
 #
 # Indexes
 #
-#  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
-#  index_user_histories_on_action_and_id                     (action,id)
-#  index_user_histories_on_category_id                       (category_id)
-#  index_user_histories_on_subject_and_id                    (subject,id)
-#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
+#  index_user_histories_on_acting_user_id_and_action_and_id        (acting_user_id,action,id)
+#  index_user_histories_on_action_and_id                           (action,id)
+#  index_user_histories_on_category_id                             (category_id)
+#  index_user_histories_on_subject_and_id                          (subject,id)
+#  index_user_histories_on_target_user_id_and_id                   (target_user_id,id)
+#  index_user_histories_on_topic_id_and_target_user_id_and_action  (topic_id,target_user_id,action)
 #

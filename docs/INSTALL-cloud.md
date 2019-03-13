@@ -107,15 +107,17 @@ After completing the setup wizard, you should see Staff topics and **READ ME FIR
 
 ### Post-Install Maintenance
 
-- We strongly suggest you turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command.
-- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package. We also recommend `apt-get install fail2ban` which will default block any IP addresses for 10 minutes that attempt more than 3 password retries.
-- If you need or want a default firewall, [turn on ufw](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
+- We strongly suggest you turn on automatic security updates for your OS. In Ubuntu use the `dpkg-reconfigure -plow unattended-upgrades` command. In CentOS/RHEL, use the [`yum-cron`](https://www.cyberciti.biz/faq/fedora-automatic-update-retrieval-installation-with-cron/) package.
+- If you are using a password and not a SSH key, be sure to enforce a strong root password. In Ubuntu use the `apt-get install libpam-cracklib` package. We also recommend `fail2ban` which blocks any IP addresses for 10 minutes that attempt more than 3 password retries.
+  - **Ubuntu**: `apt-get install fail2ban`
+  - **CentOS/RHEL**: `sudo yum install fail2ban` (requires [EPEL](https://support.rackspace.com/how-to/install-epel-and-additional-repositories-on-centos-and-red-hat/))
+- If you need or want a default firewall, [turn on ufw](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584) for Ubuntu or use `firewalld` for CentOS/RHEL 7 or later.
 
 You will get email reminders as new versions of Discourse are released. Please stay current to get the latest features and security fixes. To **upgrade Discourse to the latest version**, visit `/admin/upgrade` in your browser and click the Upgrade button.
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
 
-```
+``` text
 Usage: launcher COMMAND CONFIG [--skip-prereqs] [--docker-args STRING]
 Commands:
     start:      Start/initialize a container

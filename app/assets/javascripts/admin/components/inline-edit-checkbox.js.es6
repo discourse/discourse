@@ -4,12 +4,16 @@ import {
 } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
+  classNames: ["inline-edit"],
+
+  checked: null,
+  checkedInternal: null,
+
   init() {
-    this._super();
+    this._super(...arguments);
+
     this.set("checkedInternal", this.get("checked"));
   },
-
-  classNames: ["inline-edit"],
 
   @observes("checked")
   checkedChanged() {
@@ -33,7 +37,7 @@ export default Ember.Component.extend({
 
     finished() {
       this.set("checked", this.get("checkedInternal"));
-      this.sendAction();
+      this.action();
     }
   }
 });

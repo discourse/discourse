@@ -4,11 +4,25 @@
   <div class="controls">
     {{combo-box content=userSelectableThemes value=themeId}}
   </div>
-  <div class="controls">
-    {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
-  </div>
+  {{#if showThemeSetDefault}}
+    <div class="controls">
+      {{preference-checkbox labelKey="user.theme_default_on_all_devices" checked=makeThemeDefault}}
+    </div>
+  {{/if}}
 </div>
 {{/if}}
+
+<div class="control-group text-size">
+  <label class="control-label">{{i18n 'user.text_size.title'}}</label>
+  <div class="controls">
+    {{combo-box valueAttribute="value" content=textSizes value=textSize onSelect=(action "selectTextSize")}}
+  </div>
+  {{#if showTextSetDefault}}
+    <div class="controls">
+      {{preference-checkbox labelKey="user.text_size_default_on_all_devices" checked=makeTextSizeDefault}}
+    </div>
+  {{/if}}
+</div>
 
 {{#if siteSettings.allow_user_locale}}
   <div class="control-group pref-locale">
@@ -41,6 +55,9 @@
     {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics}}
   {{/if}}
   {{preference-checkbox labelKey="user.hide_profile_and_presence" checked=model.user_option.hide_profile_and_presence}}
+  {{#if isiPad}}
+    {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks}}
+  {{/if}}
 </div>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}

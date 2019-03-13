@@ -15,6 +15,8 @@ it:
         one: "voto totale"
         other: "voti totali"
       average_rating: "Voto medio: <strong>%{average}</strong>."
+      public:
+        title: "I voti sono <strong>pubblici</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -44,9 +46,6 @@ it:
         title: "Chiudi il sondaggio"
         label: "Chiudi"
         confirm: "Sicuro di voler chiudere questo sondaggio?"
-      automatic_close:
-        closes_in: "termina in <strong>%{timeLeft}</strong>"
-        age: "terminato <strong>%{age}</strong>"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."

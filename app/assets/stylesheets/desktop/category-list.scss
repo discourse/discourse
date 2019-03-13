@@ -12,17 +12,18 @@
   }
 
   th {
-    text-align: left;
     vertical-align: middle;
-    font-weight: normal;
   }
 
   td:first-of-type {
     padding-left: 10px;
   }
 
-  &.with-topics .category {
-    width: 45%;
+  &.with-topics {
+    margin-left: 3px;
+    .category {
+      width: 45%;
+    }
   }
 
   .topics .badge-notification,
@@ -52,16 +53,24 @@
   .subcategories {
     margin-top: 0.25em;
     clear: both;
+    .subcategory {
+      display: inline-flex;
+      align-items: baseline;
+      margin-right: 0.3em;
+    }
+    .badge-wrapper {
+      margin-right: 0.5em;
+    }
     .badge-notification.new-posts {
+      display: block;
       padding: 0;
-      margin: 0 10px 0 0;
     }
   }
 
   .featured-topic {
     margin: 10px 0 0;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     &:first-of-type {
       margin-top: 13px;
     }
@@ -109,7 +118,7 @@
   flex-flow: row wrap;
 
   div.column {
-    flex: 1 0 0;
+    flex: 1 0 0px;
     flex-direction: row;
     min-width: 300px;
   }

@@ -1,12 +1,11 @@
 import debounce from "discourse/lib/debounce";
 import { i18n } from "discourse/lib/computed";
 import AdminUser from "admin/models/admin-user";
-import { observes } from "ember-addons/ember-computed-decorators";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 
 export default Ember.Controller.extend(CanCheckEmails, {
+  model: null,
   query: null,
-  queryParams: ["order", "ascending"],
   order: null,
   ascending: null,
   showEmails: false,
@@ -14,15 +13,15 @@ export default Ember.Controller.extend(CanCheckEmails, {
   listFilter: null,
   selectAll: false,
 
-  queryNew: Em.computed.equal("query", "new"),
-  queryPending: Em.computed.equal("query", "pending"),
-  queryHasApproval: Em.computed.or("queryNew", "queryPending"),
-  showApproval: Em.computed.and(
+  queryNew: Ember.computed.equal("query", "new"),
+  queryPending: Ember.computed.equal("query", "pending"),
+  queryHasApproval: Ember.computed.or("queryNew", "queryPending"),
+  showApproval: Ember.computed.and(
     "siteSettings.must_approve_users",
     "queryHasApproval"
   ),
   searchHint: i18n("search_hint"),
-  hasSelection: Em.computed.gt("selectedCount", 0),
+  hasSelection: Ember.computed.gt("selectedCount", 0),
 
   selectedCount: function() {
     var model = this.get("model");
@@ -47,8 +46,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     this._refreshUsers();
   }, 250).observes("listFilter"),
 
-  @observes("order", "ascending")
-  _refreshUsers: function() {
+  _refreshUsers() {
     this.set("refreshing", true);
 
     AdminUser.findAll(this.get("query"), {
@@ -57,12 +55,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
       order: this.get("order"),
       ascending: this.get("ascending")
     })
-      .then(result => {
-        this.set("model", result);
-      })
-      .finally(() => {
-        this.set("refreshing", false);
-      });
+      .then(result => this.set("model", result))
+      .finally(() => this.set("refreshing", false));
   },
 
   actions: {
@@ -95,7 +89,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     showEmails: function() {
       this.set("showEmails", true);
-      this._refreshUsers(true);
+      this._refreshUsers();
     }
   }
 });

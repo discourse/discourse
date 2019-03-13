@@ -140,17 +140,7 @@ ko:
     new_user_narrative:
       reset_trigger: "새로운 사용자"
       cert_title: "새로운 사용자 튜토리얼을 성공적으로 마친 것에 대한 보상으로"
-      hello:
-        title: ":robot: 반가워!"
       onebox:
-        instructions: |-
-          자 이제, 이 링크 중 하나를 나한테 공유해볼래? 한줄 당 링크 하나씩 써서 답글을 써봐. 그러면 자동으로 해당 페이지의 요약이 추가된단다.
-
-          링크를 복사하려면, 링크 위에서 마우스 우클릭을 하면 돼. 모바일에서는 링크를 계속 누르고 있으면 되고.
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해.  딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
         not_found: |-

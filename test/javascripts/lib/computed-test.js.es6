@@ -20,7 +20,7 @@ QUnit.module("lib:computed", {
 });
 
 QUnit.test("setting", assert => {
-  var t = Em.Object.extend({
+  var t = Ember.Object.extend({
     vehicle: setting("vehicle"),
     missingProp: setting("madeUpThing")
   }).create();
@@ -38,7 +38,7 @@ QUnit.test("setting", assert => {
 });
 
 QUnit.test("propertyEqual", assert => {
-  var t = Em.Object.extend({
+  var t = Ember.Object.extend({
     same: propertyEqual("cookies", "biscuits")
   }).create({
     cookies: 10,
@@ -51,7 +51,7 @@ QUnit.test("propertyEqual", assert => {
 });
 
 QUnit.test("propertyNotEqual", assert => {
-  var t = Em.Object.extend({
+  var t = Ember.Object.extend({
     diff: propertyNotEqual("cookies", "biscuits")
   }).create({
     cookies: 10,
@@ -64,7 +64,7 @@ QUnit.test("propertyNotEqual", assert => {
 });
 
 QUnit.test("fmt", assert => {
-  var t = Em.Object.extend({
+  var t = Ember.Object.extend({
     exclaimyUsername: fmt("username", "!!! %@ !!!"),
     multiple: fmt("username", "mood", "%@ is %@")
   }).create({
@@ -98,7 +98,7 @@ QUnit.test("fmt", assert => {
 });
 
 QUnit.test("i18n", assert => {
-  var t = Em.Object.extend({
+  var t = Ember.Object.extend({
     exclaimyUsername: i18n("username", "!!! %@ !!!"),
     multiple: i18n("username", "mood", "%@ is %@")
   }).create({
@@ -134,7 +134,7 @@ QUnit.test("i18n", assert => {
 QUnit.test("url", assert => {
   var t, testClass;
 
-  testClass = Em.Object.extend({
+  testClass = Ember.Object.extend({
     userUrl: url("username", "/u/%@")
   });
 

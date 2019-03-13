@@ -229,4 +229,12 @@ describe TextCleaner do
     end
   end
 
+  context "invalid byte sequence" do
+    let(:with_invalid_bytes) { "abc\u3042\x81" }
+    let(:without_invalid_bytes) { "abc\u3042" }
+
+    it "removes invalid bytes" do
+      expect(TextCleaner.clean(with_invalid_bytes)).to eq(without_invalid_bytes)
+    end
+  end
 end

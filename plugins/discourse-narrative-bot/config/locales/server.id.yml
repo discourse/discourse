@@ -139,17 +139,6 @@ id:
     new_user_narrative:
       reset_trigger: "pengguna baru"
       cert_title: "Tercatat telah berhasil menyelesaikan panduan pengguna baru."
-      hello:
-        title: ":robot: Salam!"
-      onebox:
-        instructions: |-
-          Selanjutnya, bisakah Anda membagikan salah satu tautan ini kepada saya? Balas dengan **a link on a line by itself**, otomatis tautan itu akan menjelaskan ringkasan yang menarik.
-
-          Untuk menyalin sebuah tautan, tekan dan tahan pada ponsel, atau klik kanan pada tetikus:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
       images:
         reply: |-
           Gambar yang menarik – Saya telah menekan tombol :heart: supaya Anda tahu kalau saya menghargainya :heart_eyes:

@@ -2,7 +2,7 @@ class UserActionsController < ApplicationController
 
   def index
     params.require(:username)
-    params.permit(:filter, :offset)
+    params.permit(:filter, :offset, :acting_username)
 
     per_chunk = 30
 
@@ -11,13 +11,16 @@ class UserActionsController < ApplicationController
 
     action_types = (params[:filter] || "").split(",").map(&:to_i)
 
-    opts = { user_id: user.id,
-             user: user,
-             offset: params[:offset].to_i,
-             limit: per_chunk,
-             action_types: action_types,
-             guardian: guardian,
-             ignore_private_messages: params[:filter] ? false : true }
+    opts = {
+      user_id: user.id,
+      user: user,
+      offset: params[:offset].to_i,
+      limit: per_chunk,
+      action_types: action_types,
+      guardian: guardian,
+      ignore_private_messages: params[:filter] ? false : true,
+      acting_username: params[:acting_username]
+    }
 
     # Pending is restricted
     stream = if opts[:action_types].include?(UserAction::PENDING)

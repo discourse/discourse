@@ -327,7 +327,6 @@ class GroupsController < ApplicationController
 
     # Maintain backwards compatibility
     params[:usernames] = params[:username] if params[:username].present?
-    params[:user_ids] = params[:user_id] if params[:user_id].present?
     params[:user_emails] = params[:user_email] if params[:user_email].present?
 
     users = users_from_params
@@ -492,8 +491,11 @@ class GroupsController < ApplicationController
     if params[:usernames].present?
       users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
+    elsif params[:user_id].present?
+      users = User.where(id: params[:user_id].to_i)
+      raise Discourse::InvalidParameters.new(:user_id) if users.blank?
     elsif params[:user_ids].present?
-      users = User.where(id: params[:user_ids].split(","))
+      users = User.where(id: params[:user_ids].to_s.split(","))
       raise Discourse::InvalidParameters.new(:user_ids) if users.blank?
     elsif params[:user_emails].present?
       users = User.with_email(params[:user_emails].split(","))

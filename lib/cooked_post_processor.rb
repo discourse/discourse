@@ -6,8 +6,6 @@ require_dependency 'pretty_text'
 require_dependency 'quote_comparer'
 
 class CookedPostProcessor
-  include ActionView::Helpers::NumberHelper
-
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
   LOADING_SIZE = 10
@@ -33,10 +31,10 @@ class CookedPostProcessor
     @disable_loading_image = !!opts[:disable_loading_image]
   end
 
-  def post_process(bypass_bump = false)
+  def post_process(bypass_bump: false, new_post: false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      removed_direct_reply_full_quotes
+      removed_direct_reply_full_quotes if new_post
       post_process_oneboxes
       post_process_images
       post_process_quotes
@@ -422,7 +420,7 @@ class CookedPostProcessor
 
     filename = get_filename(upload, img["src"])
     informations = "#{original_width}×#{original_height}"
-    informations << " #{number_to_human_size(upload.filesize)}" if upload
+    informations << " #{upload.human_filesize}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)
 
@@ -588,8 +586,10 @@ class CookedPostProcessor
       end
     end
 
-    @doc.css("img[src]").each do |img|
-      img["src"] = UrlHelper.cook_url(img["src"].to_s)
+    %w{src data-small-upload}.each do |selector|
+      @doc.css("img[#{selector}]").each do |img|
+        img[selector] = UrlHelper.cook_url(img[selector].to_s)
+      end
     end
   end
 
@@ -655,7 +655,7 @@ class CookedPostProcessor
     )
 
     if title = inline_onebox&.dig(:title)
-      element.children = title
+      element.children = CGI.escapeHTML(title)
       element.add_class(INLINE_ONEBOX_CSS_CLASS)
     end
 

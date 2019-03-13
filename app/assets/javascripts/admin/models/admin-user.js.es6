@@ -226,14 +226,6 @@ const AdminUser = Discourse.User.extend({
       .catch(popupAjaxError);
   },
 
-  refreshBrowsers() {
-    return ajax("/admin/users/" + this.get("id") + "/refresh_browsers", {
-      type: "POST"
-    }).finally(() =>
-      bootbox.alert(I18n.t("admin.user.refresh_browsers_message"))
-    );
-  },
-
   approve() {
     const self = this;
     return ajax("/admin/users/" + this.get("id") + "/approve", {
@@ -305,7 +297,7 @@ const AdminUser = Discourse.User.extend({
     return this.get("trust_level") < 4;
   }.property("trust_level"),
 
-  canSuspend: Em.computed.not("staff"),
+  canSuspend: Ember.computed.not("staff"),
 
   suspendDuration: function() {
     const suspended_at = moment(this.suspended_at),
