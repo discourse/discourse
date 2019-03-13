@@ -6,11 +6,14 @@ describe SystemMessage do
 
   context 'send' do
 
-    it 'should create a post correctly' do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
 
-      admin = Fabricate(:admin)
-      user = Fabricate(:user)
+    before do
       SiteSetting.site_contact_username = admin.username
+    end
+
+    it 'should create a post correctly' do
       system_message = SystemMessage.new(user)
       post = system_message.create(:welcome_invite)
       topic = post.topic
@@ -23,6 +26,18 @@ describe SystemMessage do
       expect(topic.allowed_users.include?(admin)).to eq(true)
 
       expect(UserArchivedMessage.where(user_id: admin.id, topic_id: topic.id).length).to eq(1)
+    end
+
+    it 'should allow site_contact_group_name' do
+      group = Fabricate(:group)
+      SiteSetting.site_contact_group_name = group.name
+
+      post = SystemMessage.create(user, :welcome_invite)
+      expect(post.topic.allowed_groups).to contain_exactly(group)
+
+      group.update!(name: "anewname")
+      post = SystemMessage.create(user, :welcome_invite)
+      expect(post.topic.allowed_groups).to contain_exactly()
     end
   end
 
