@@ -2821,11 +2821,11 @@ en:
 
     ignored_users_summary:
       title: "Ignored User passed threshold"
-      subject_template: "New Ignored user passed threshold"
+      subject_template: "A user is being ignored by many other users "
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you about a new ignored user who passed the number of ignores threshold which is: %{ignores_threshold}
+        This is an automated message from %{site_name} to inform you about a potentially problematic user who has been ignored by %{ignores_threshold} users. It would be smart to review their forum activity.
 
         Please check the [user's profile](%{base_url}/u/%{username}/summary).
 
