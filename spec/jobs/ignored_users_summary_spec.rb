@@ -24,7 +24,7 @@ describe Jobs::IgnoredUsersSummary do
     let(:john) { Fabricate(:user, username: "john") }
 
     before do
-      Fabricate(:ignored_user, user_id: tarek.id, ignored_user_id: matt.id)
+      Fabricate(:ignored_user, user: tarek, ignored_user: matt)
       Fabricate(:ignored_user, user_id: tarek.id, ignored_user_id: john.id)
     end
 
