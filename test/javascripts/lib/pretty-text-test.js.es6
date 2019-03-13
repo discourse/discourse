@@ -1,7 +1,7 @@
 import Quote from "discourse/lib/quote";
 import Post from "discourse/models/post";
 import { default as PrettyText, buildOptions } from "pretty-text/pretty-text";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { IMAGE_VERSION as v } from "pretty-text/emoji";
 import { INLINE_ONEBOX_LOADING_CSS_CLASS } from "pretty-text/inline-oneboxer";
 
 QUnit.module("lib:pretty-text");
