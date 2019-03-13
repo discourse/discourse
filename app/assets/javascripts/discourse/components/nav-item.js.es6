@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   tagName: "li",
   classNameBindings: ["active"],
 
-  @computed
+  @computed()
   router() {
     return getOwner(this).lookup("router:main");
   },
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
       router = this.get("router");
 
     return routeParam
-      ? router.currentRoute.params["filter"] === routeParam
+      ? router.isActive(route, routeParam)
       : router.isActive(route);
   }
 });
