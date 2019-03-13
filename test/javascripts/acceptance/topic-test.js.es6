@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 acceptance("Topic", {
   loggedIn: true,
@@ -118,6 +118,23 @@ QUnit.test("Updating the topic title with emojis", async assert => {
       .trim(),
     `emojis title <img src="/images/emoji/emoji_one/bike.png?v=${v}" title="bike" alt="bike" class="emoji"> <img src="/images/emoji/emoji_one/blonde_woman/6.png?v=${v}" title="blonde_woman:t6" alt="blonde_woman:t6" class="emoji">`,
     "it displays the new title with emojis"
+  );
+});
+
+QUnit.test("Updating the topic title with unicode emojis", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click("#topic-title .d-icon-pencil-alt");
+
+  await fillIn("#edit-title", "emojis title 👨‍🌾");
+
+  await click("#topic-title .submit-edit");
+
+  assert.equal(
+    find(".fancy-title")
+      .html()
+      .trim(),
+    `emojis title <img src="/images/emoji/emoji_one/man_farmer.png?v=${v}" title="man_farmer" alt="man_farmer" class="emoji">`,
+    "it displays the new title with escaped unicode emojis"
   );
 });
 
