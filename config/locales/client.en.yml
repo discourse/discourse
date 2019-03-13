@@ -1927,21 +1927,36 @@ en:
 
       actions:
         recover: "Un-Delete Topic"
+        recover_tooltip: "Restores the topic."
         delete: "Delete Topic"
+        delete_tooltip: "Marks the topic as deleted."
         open: "Open Topic"
+        open_tooltip: "Marks the topic as open and allows new replies."
         close: "Close Topic"
+        close_tooltip: "Marks the topic as closed and prevents new replies."
         multi_select: "Select Posts…"
+        multi_select_tooltip: "Toggles multiselect mode in which multiple posts can be selected."
         timed_update: "Set Topic Timer..."
+        timed_update_tooltip: "Opens a new window in which a timer for different actions can be set."
         pin: "Pin Topic…"
+        pin_tooltip: "Opens a window in which the topic can be featured in different ways."
         unpin: "Un-Pin Topic…"
+        unpin_tooltip: "Unpins the topic and it will no longer be featured."
         unarchive: "Unarchive Topic"
+        unarchive_tooltip: "Unfreezes the topic and allows interacting with it."
         archive: "Archive Topic"
+        archive_tooltip: "Freezes the topic and prevents interacting with it."
         invisible: "Make Unlisted"
+        invisible_tooltip: "Prevents the inclusion of the topic in lists and digest emails."
         visible: "Make Listed"
+        visible_tooltip: "Marks the topic as visible and includes the topic in lists and digest emails."
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
+        make_public_tooltip: "Converts to public topic and makes it visible for other users."
         make_private: "Make Personal Message"
+        make_private_tooltip: "Converts to personal message and makes it invisible for other users."
         reset_bump_date: "Reset Bump Date"
+        reset_bump_date_tooltip: "Puts the topic back into chronological order according to when it was originally created."
 
       feature:
         pin: "Pin Topic"
@@ -2099,6 +2114,7 @@ en:
 
       change_timestamp:
         title: "Change Timestamp..."
+        tooltip: "Opens a window in which the timestamp can be changed."
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -2974,6 +2990,7 @@ en:
         old_posts: "Old Flagged Posts"
         topics: "Flagged Topics"
         moderation_history: "Moderation History"
+        moderation_history_tooltip: "Shows the moderation history."
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
