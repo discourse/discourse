@@ -61,6 +61,7 @@ describe "S3Inventory" do
     CSV.foreach(csv_filename, headers: false) do |row|
       Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], created_at: 2.days.ago)
     end
+
     upload = Fabricate(:upload, etag: "ETag", created_at: 1.days.ago)
     Fabricate(:upload, etag: "ETag2", created_at: Time.now)
 
@@ -91,6 +92,6 @@ describe "S3Inventory" do
       expect { inventory.backfill_etags_and_list_missing }.to change { Upload.where(etag: nil).count }.by(-2)
     end
 
-    expect(Upload.order(:url).pluck(:url, :etag)).to eq(files)
+    expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
   end
 end
