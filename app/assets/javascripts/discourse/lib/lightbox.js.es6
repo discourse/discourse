@@ -6,6 +6,7 @@ export default function($elem) {
   if (!$elem) {
     return;
   }
+  const original_meta = $('meta[name=viewport]');
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function() {
     const spoilers = $elem.find(".spoiler a.lightbox, .spoiled a.lightbox");
     $elem
@@ -23,6 +24,7 @@ export default function($elem) {
 
         callbacks: {
           open() {
+            original_meta.replaceWith( '<meta name="viewport" content="width=device-width, initial-scale=1.0">' );
             const wrap = this.wrap,
               img = this.currItem.img,
               maxHeight = img.css("max-height");
@@ -36,6 +38,7 @@ export default function($elem) {
             });
           },
           beforeClose() {
+            $('meta[name=viewport]').replaceWith( original_meta );
             this.wrap.off("click.pinhandler");
             this.wrap.removeClass("mfp-force-scrollbars");
           }
