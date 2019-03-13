@@ -441,7 +441,10 @@ createWidget("post-notice", {
   },
 
   html(attrs) {
-    const user = this.siteSettings.prioritize_username_in_ux || !attrs.name ? attrs.username : attrs.name;
+    const user =
+      this.siteSettings.prioritize_username_in_ux || !attrs.name
+        ? attrs.username
+        : attrs.name;
     let text, icon;
     if (attrs.postNoticeType === "first") {
       icon = "hands-helping";
