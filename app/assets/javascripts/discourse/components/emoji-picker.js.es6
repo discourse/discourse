@@ -70,7 +70,11 @@ export default Ember.Component.extend({
 
   @on("willDestroyElement")
   _unbindGlobalEvents() {
-    this.appEvents.off("emoji-picker:close");
+    this.appEvents.off("emoji-picker:close", this, "_closeEmojiPicker");
+  },
+
+  _closeEmojiPicker() {
+    this.set("active", false);
   },
 
   @on("didInsertElement")
@@ -78,7 +82,7 @@ export default Ember.Component.extend({
     this.$picker = this.$(".emoji-picker");
     this.$modal = this.$(".emoji-picker-modal");
 
-    this.appEvents.on("emoji-picker:close", () => this.set("active", false));
+    this.appEvents.on("emoji-picker:close", this, "_closeEmojiPicker");
 
     if (!keyValueStore.getObject(EMOJI_USAGE)) {
       keyValueStore.setObject({ key: EMOJI_USAGE, value: [] });

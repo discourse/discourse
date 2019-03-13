@@ -70,8 +70,8 @@ export default Discourse.Route.extend({
     controller.set("loading", true);
 
     const params = controller.getProperties("order", "ascending");
-    params.order = transition.queryParams.order || params.order;
-    params.ascending = transition.queryParams.ascending || params.ascending;
+    params.order = transition.to.queryParams.order || params.order;
+    params.ascending = transition.to.queryParams.ascending || params.ascending;
 
     const categorySlug = this.get("categorySlug");
     const parentCategorySlug = this.get("parentCategorySlug");
