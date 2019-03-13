@@ -49,7 +49,7 @@ gem 'onebox', '1.8.82'
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'discourse-ember-source', '~> 3.7.0'
+gem 'discourse-ember-source', '~> 3.5.1'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 

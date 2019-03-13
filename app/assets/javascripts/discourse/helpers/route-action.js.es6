@@ -9,14 +9,15 @@ const {
   runInDebug
 } = Ember;
 
-function getCurrentRouteInfos(router) {
+function getCurrentHandlerInfos(router) {
   let routerLib = router._routerMicrolib || router.router;
-  return routerLib.currentRouteInfos;
+
+  return routerLib.currentHandlerInfos;
 }
 
 function getRoutes(router) {
-  return emberArray(getCurrentRouteInfos(router))
-    .mapBy("_route")
+  return emberArray(getCurrentHandlerInfos(router))
+    .mapBy("handler")
     .reverse();
 }
 
