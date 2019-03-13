@@ -7,6 +7,7 @@ import {
   isSkinTonableEmoji,
   emojiSearch
 } from "pretty-text/emoji";
+import { safariHacksDisabled } from "discourse/lib/utilities";
 const { run } = Ember;
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
@@ -58,6 +59,12 @@ export default Ember.Component.extend({
       this._scrollTo();
       this._updateSelectedDiversity();
       this._checkVisibleSection(true);
+
+      if (
+        (!this.site.isMobileDevice || this.get("isEditorFocused")) &&
+        !safariHacksDisabled()
+      )
+        this.$filter.find("input[name='filter']").focus();
     });
   },
 
