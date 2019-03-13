@@ -41,15 +41,15 @@ describe Jobs::IgnoredUsersSummary do
       end
 
       context "when threshold is hit" do
-        before do
-          SiteSetting.ignored_users_count_message_threshold = 1
-        end
-
         it "creates a system message" do
           subject
-          expect(Post.count).to eq(2)
-          expect(Post.all[0].raw).to include(matt.username)
-          expect(Post.all[1].raw).to include(john.username)
+          posts = Post.joins(:topic).where(topics: {
+            archetype: Archetype.private_message,
+            subtype: TopicSubtype.system_message
+          })
+          expect(posts.count).to eq(2)
+          expect(posts[0].raw).to include(matt.username)
+          expect(posts[1].raw).to include(john.username)
         end
       end
     end
@@ -62,13 +62,15 @@ describe Jobs::IgnoredUsersSummary do
 
         it "does nothing" do
           subject
-          expect(Post.count).to eq(0)
+          expect(Post.joins(:topic).where(topics: {
+            archetype: Archetype.private_message,
+            subtype: TopicSubtype.system_message
+          }).count).to eq(0)
         end
       end
 
       context "when threshold is hit" do
         before do
-          SiteSetting.ignored_users_count_message_threshold = 1
           Fabricate(:post_custom_field, name: "summary_sent_for_ignored_user", value: matt.id.to_s)
           Fabricate(:post_custom_field, name: "summary_sent_for_ignored_user", value: john.id.to_s)
         end
