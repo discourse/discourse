@@ -28,6 +28,7 @@ class SystemMessage
                        raw: raw,
                        archetype: Archetype.private_message,
                        target_usernames: @recipient.username,
+                       target_group_names: Group.exists?(name: SiteSetting.site_contact_group_name) ? SiteSetting.site_contact_group_name : nil,
                        subtype: TopicSubtype.system_message,
                        skip_validations: true)
 
