@@ -12,10 +12,12 @@ export default {
   initialize(container) {
     // Tell our AJAX system to track a page transition
     const router = container.lookup("router:main");
-    router.on("willTransition", viewTrackingRequired);
-    router.on("didTransition", cleanDOM);
+
+    router.on("routeWillChange", viewTrackingRequired);
+    router.on("routeDidChange", cleanDOM);
 
     let appEvents = container.lookup("app-events:main");
+
     startPageTracking(router, appEvents);
 
     // Out of the box, Discourse tries to track google analytics

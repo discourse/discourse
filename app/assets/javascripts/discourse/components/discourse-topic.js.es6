@@ -77,9 +77,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
       }
     );
 
-    this.appEvents.on("post:highlight", postNumber => {
-      Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
-    });
+    this.appEvents.on("post:highlight", this, "_highlightPost");
 
     this.appEvents.on("header:update-topic", topic => {
       if (topic === null) {
@@ -99,21 +97,27 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     });
     // setup mobile scroll logo
     if (this.site.mobileView) {
-      this.appEvents.on("topic:scrolled", offset =>
-        this.mobileScrollGaurd(offset)
-      );
+      this.appEvents.on("topic:scrolled", this, "mobileScrollGuard");
       // used to animate header contents on scroll
-      this.appEvents.on("header:show-topic", () => {
-        $("header.d-header")
-          .removeClass("scroll-up")
-          .addClass("scroll-down");
-      });
-      this.appEvents.on("header:hide-topic", () => {
-        $("header.d-header")
-          .removeClass("scroll-down")
-          .addClass("scroll-up");
-      });
+      this.appEvents.on("header:show-topic", this, "_showTopic");
+      this.appEvents.on("header:hide-topic", this, "_hideTopic");
     }
+  },
+
+  _showTopic() {
+    $("header.d-header")
+      .removeClass("scroll-up")
+      .addClass("scroll-down");
+  },
+
+  _hideTopic() {
+    $("header.d-header")
+      .removeClass("scroll-down")
+      .addClass("scroll-up");
+  },
+
+  _highlightPost(postNumber) {
+    Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
   },
 
   willDestroyElement() {
@@ -128,10 +132,10 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
     // this happens after route exit, stuff could have trickled in
     this.appEvents.trigger("header:hide-topic");
-    this.appEvents.off("post:highlight");
+    this.appEvents.off("post:highlight", this, "_highlightPost");
     // mobile scroll logo clean up.
     if (this.site.mobileView) {
-      this.appEvents.off("topic:scrolled");
+      this.appEvents.off("topic:scrolled", this, "mobileScrollGuard");
       $("header.d-header").removeClass("scroll-down scroll-up");
     }
   },
@@ -199,7 +203,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
   // determines scroll direction, triggers header topic info on mobile
   // and ensures that the switch happens only once per scroll direction change
-  mobileScrollGaurd(offset) {
+  mobileScrollGuard(offset) {
     // user hasn't scrolled past topic title.
     if (offset < this.dockAt) return;
 
