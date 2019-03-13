@@ -7,18 +7,18 @@ module Jobs
 
       params = {
         threshold: SiteSetting.ignored_users_count_message_threshold,
-        gap_days: SiteSetting.ignored_users_message_gap_days
+        gap_days: SiteSetting.ignored_users_message_gap_days,
       }
       user_ids = DB.query_single(<<~SQL, params)
-        SELECT ig.ignored_user_id AS user_id 
+        SELECT ig.ignored_user_id AS user_id
         FROM ignored_users AS ig
         WHERE NOT EXISTS (SELECT 1
                           FROM post_custom_fields as pcf
                           WHERE pcf.name = 'summary_sent_for_ignored_user'
-                            AND pcf.value = user_id::text
-                            AND pcf.created_at < CURRENT_TIMESTAMP - ':gap_days DAY'::INTERVAL)
+                            AND pcf.value = ignored_user_id::text
+                            AND (pcf.created_at + ':gap_days DAYS'::INTERVAL) > CURRENT_TIMESTAMP)
         GROUP BY ig.ignored_user_id
-        HAVING COUNT(ig.ignored_user_id) > :threshold
+        HAVING COUNT(ig.ignored_user_id) >= :threshold
       SQL
 
       User.where(id: user_ids).find_each { |user| notify_user(user) }
