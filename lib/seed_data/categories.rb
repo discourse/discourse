@@ -14,12 +14,30 @@ module SeedData
       end
     end
 
-    def update
+    def update(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
         categories.each do |params|
+          next if site_setting_names && !site_setting_names.include?(params[:site_setting_name])
+
           params.slice!(:site_setting_name, :name, :description)
+          params[:skip_changed] = skip_changed
           update_category(params)
         end
+      end
+    end
+
+    def reseed_options
+      I18n.with_locale(@locale) do
+        categories.map do |params|
+          category = find_category(params[:site_setting_name])
+          next unless category
+
+          {
+            id: params[:site_setting_name],
+            name: category.name,
+            selected: unchanged?(category)
+          }
+        end.compact
       end
     end
 
@@ -121,12 +139,11 @@ module SeedData
       category_exists ? "#{name}#{SecureRandom.hex}" : name
     end
 
-    def update_category(site_setting_name:, name:, description:)
-      category_id = SiteSetting.send(site_setting_name)
-      category = Category.find_by(id: category_id) if category_id > 0
-      return unless category
+    def update_category(site_setting_name:, name:, description:, skip_changed:)
+      category = find_category(site_setting_name)
+      return if !category || (skip_changed && !unchanged?(category))
 
-      name = unused_category_name(category_id, name)
+      name = unused_category_name(category.id, name)
       category.name = name
       category.slug = Slug.for(name, '')
       category.save!
@@ -135,6 +152,19 @@ module SeedData
         changes = { title: I18n.t("category.topic_prefix", category: name), raw: description }
         description_post.revise(Discourse.system_user, changes, skip_validations: true)
       end
+    end
+
+    def find_category(site_setting_name)
+      category_id = SiteSetting.send(site_setting_name)
+      Category.find_by(id: category_id) if category_id > 0
+    end
+
+    def unchanged?(category)
+      if description_post = category&.topic&.first_post
+        return description_post.last_editor_id == Discourse::SYSTEM_USER_ID
+      end
+
+      true
     end
   end
 end

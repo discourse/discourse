@@ -781,3 +781,15 @@
     }
   }
 }
+
+.reseed-modal {
+  legend {
+    font-size: $font-up-2;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+
+  input[type="checkbox"] {
+    margin-left: 1em;
+  }
+}

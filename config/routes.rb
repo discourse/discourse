@@ -226,6 +226,9 @@ Discourse::Application.routes.draw do
       delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
       delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
 
+      get 'reseed' => 'site_texts#get_reseed_options'
+      post 'reseed' => 'site_texts#reseed'
+
       get 'email_templates'          => 'email_templates#index'
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
       put 'email_templates/(:id)'    => 'email_templates#update', constraints: { id: /[0-9a-z_.]+/ }

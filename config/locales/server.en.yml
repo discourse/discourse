@@ -1268,7 +1268,7 @@ en:
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance"
+    default_locale: "The default language of this Discourse instance. You can reseed system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text Content</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."

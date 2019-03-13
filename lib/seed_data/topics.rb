@@ -14,12 +14,30 @@ module SeedData
       end
     end
 
-    def update
+    def update(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
         topics.each do |params|
+          next if site_setting_names && !site_setting_names.include?(params[:site_setting_name])
+
           params.except!(:category, :after_create)
+          params[:skip_changed] = skip_changed
           update_topic(params)
         end
+      end
+    end
+
+    def reseed_options
+      I18n.with_locale(@locale) do
+        topics.map do |params|
+          post = find_post(params[:site_setting_name])
+          next unless post
+
+          {
+            id: params[:site_setting_name],
+            name: post.topic.title,
+            selected: unchanged?(post)
+          }
+        end.compact
       end
     end
 
@@ -125,10 +143,9 @@ module SeedData
       SiteSetting.send("#{site_setting_name}=", post.topic_id)
     end
 
-    def update_topic(site_setting_name:, title:, raw:, static_first_reply: false)
-      topic_id = SiteSetting.send(site_setting_name)
-      post = Post.find_by(topic_id: topic_id, post_number: 1) if topic_id > 0
-      return unless post
+    def update_topic(site_setting_name:, title:, raw:, static_first_reply: false, skip_changed:)
+      post = find_post(site_setting_name)
+      return if !post || (skip_changed && !unchanged?(post))
 
       changes = { title: title, raw: raw }
       post.revise(Discourse.system_user, changes, skip_validations: true)
@@ -137,6 +154,15 @@ module SeedData
         changes = { raw: first_reply_raw(title) }
         reply.revise(Discourse.system_user, changes, skip_validations: true)
       end
+    end
+
+    def find_post(site_setting_name)
+      topic_id = SiteSetting.send(site_setting_name)
+      Post.find_by(topic_id: topic_id, post_number: 1) if topic_id > 0
+    end
+
+    def unchanged?(post)
+      post.last_editor_id == Discourse::SYSTEM_USER_ID
     end
 
     def setting_value(site_setting_key)
