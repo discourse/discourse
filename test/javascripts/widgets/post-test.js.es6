@@ -853,21 +853,43 @@ widgetTest("pm map", {
   }
 });
 
-widgetTest("post notice", {
+widgetTest("post notice - with username", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
+    this.siteSettings.prioritize_username_in_ux = true;
     this.set("args", {
       postNoticeType: "returning",
       postNoticeTime: new Date("2010-01-01 12:00:00 UTC"),
-      username: "codinghorror"
+      username: "codinghorror",
+      name: "Jeff"
     });
   },
   test(assert) {
     assert.equal(
-      find(".post-notice")
+      find(".post-notice.returning-user")
         .text()
         .trim(),
       I18n.t("post.notice.return", { user: "codinghorror", time: "Jan '10" })
+    );
+  }
+});
+
+widgetTest("post notice - with name", {
+  template: '{{mount-widget widget="post" args=args}}',
+  beforeEach() {
+    this.siteSettings.prioritize_username_in_ux = false;
+    this.set("args", {
+      postNoticeType: "first",
+      username: "codinghorror",
+      name: "Jeff"
+    });
+  },
+  test(assert) {
+    assert.equal(
+      find(".post-notice.new-user")
+        .text()
+        .trim(),
+      I18n.t("post.notice.first", { user: "Jeff", time: "Jan '10" })
     );
   }
 });

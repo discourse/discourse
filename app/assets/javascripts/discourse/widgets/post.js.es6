@@ -431,15 +431,25 @@ createWidget("post-contents", {
 createWidget("post-notice", {
   tagName: "div.post-notice",
 
+  buildClasses(attrs) {
+    if (attrs.postNoticeType === "first") {
+      return ["new-user"];
+    } else if (attrs.postNoticeType === "returning") {
+      return ["returning-user"];
+    }
+    return [];
+  },
+
   html(attrs) {
+    const user = this.siteSettings.prioritize_username_in_ux || !attrs.name ? attrs.username : attrs.name;
     let text, icon;
     if (attrs.postNoticeType === "first") {
       icon = "hands-helping";
-      text = I18n.t("post.notice.first", { user: attrs.username });
+      text = I18n.t("post.notice.first", { user });
     } else if (attrs.postNoticeType === "returning") {
       icon = "far-smile";
       text = I18n.t("post.notice.return", {
-        user: attrs.username,
+        user,
         time: relativeAge(attrs.postNoticeTime, {
           format: "tiny",
           addAgo: true
