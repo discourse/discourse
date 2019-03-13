@@ -376,24 +376,21 @@ export default Ember.Component.extend({
 
   _applyCategoryHashtagAutocomplete() {
     const siteSettings = this.siteSettings;
-    const self = this;
 
     this.$(".d-editor-input").autocomplete({
       template: findRawTemplate("category-tag-autocomplete"),
       key: "#",
-      afterComplete() {
-        self._focusTextArea();
-      },
-      transformComplete(obj) {
+      afterComplete: () => this._focusTextArea(),
+      transformComplete: obj => {
         return obj.text;
       },
-      dataSource(term) {
+      dataSource: term => {
         if (term.match(/\s/)) {
           return null;
         }
         return searchCategoryTag(term, siteSettings);
       },
-      triggerRule(textarea, opts) {
+      triggerRule: (textarea, opts) => {
         return categoryHashtagTriggerRule(textarea, opts);
       }
     });
@@ -404,17 +401,15 @@ export default Ember.Component.extend({
       return;
     }
 
-    const self = this;
-
     $editorInput.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
-      afterComplete(text) {
-        self.set("value", text);
-        self._focusTextArea();
+      afterComplete: text => {
+        this.set("value", text);
+        this._focusTextArea();
       },
 
-      onKeyUp(text, cp) {
+      onKeyUp: (text, cp) => {
         const matches = /(?:^|[^a-z])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
           text.substring(0, cp)
         );
@@ -424,26 +419,26 @@ export default Ember.Component.extend({
         }
       },
 
-      transformComplete(v) {
+      transformComplete: v => {
         if (v.code) {
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
-          self.set(
+          this.set(
             "isEditorFocused",
             $("textarea.d-editor-input").is(":focus")
           );
-          self.set("emojiPickerIsActive", true);
+          this.set("emojiPickerIsActive", true);
           return "";
         }
       },
 
-      dataSource(term) {
+      dataSource: term => {
         return new Ember.RSVP.Promise(resolve => {
           const full = `:${term}`;
           term = term.toLowerCase();
 
-          if (term.length < self.siteSettings.emoji_autocomplete_min_chars) {
+          if (term.length < this.siteSettings.emoji_autocomplete_min_chars) {
             return resolve([]);
           }
 
