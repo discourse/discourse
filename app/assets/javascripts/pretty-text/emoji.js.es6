@@ -1,7 +1,12 @@
-import { emojis, aliases, searchAliases, translations, tonableEmojis, replacements } from 'pretty-text/emoji/data';
-
-// bump up this number to expire all emojis
-export const IMAGE_VERSION = "<%= Emoji::EMOJI_VERSION %>";
+import {
+  emojis,
+  aliases,
+  searchAliases,
+  translations,
+  tonableEmojis,
+  replacements
+} from "pretty-text/emoji/data";
+import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
 const extendedEmoji = {};
 
@@ -17,40 +22,53 @@ export function extendedEmojiList() {
 const emojiHash = {};
 
 // add all default emojis
-emojis.forEach(code => emojiHash[code] = true);
+emojis.forEach(code => (emojiHash[code] = true));
 
 // and their aliases
 const aliasHash = {};
 Object.keys(aliases).forEach(name => {
-  aliases[name].forEach(alias => aliasHash[alias] = name);
+  aliases[name].forEach(alias => (aliasHash[alias] = name));
 });
 
 export function performEmojiUnescape(string, opts) {
-  if (!string) { return; }
+  if (!string) {
+    return;
+  }
 
   return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
     const isEmoticon = !!translations[m];
     const isUnicodeEmoticon = !!replacements[m];
-    const emojiVal = isEmoticon ? translations[m] : isUnicodeEmoticon ? replacements[m] : m.slice(1, m.length - 1);
+    const emojiVal = isEmoticon
+      ? translations[m]
+      : isUnicodeEmoticon
+      ? replacements[m]
+      : m.slice(1, m.length - 1);
     const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
     const url = buildEmojiUrl(emojiVal, opts);
-    const classes = isCustomEmoji(emojiVal, opts) ? "emoji emoji-custom" : "emoji";
+    const classes = isCustomEmoji(emojiVal, opts)
+      ? "emoji emoji-custom"
+      : "emoji";
 
-    return url && (isEmoticon || hasEndingColon || isUnicodeEmoticon) ?
-      `<img src='${url}' ${opts.skipTitle ? '' : `title='${emojiVal}'`} alt='${emojiVal}' class='${classes}'>` : m;
+    return url && (isEmoticon || hasEndingColon || isUnicodeEmoticon)
+      ? `<img src='${url}' ${
+          opts.skipTitle ? "" : `title='${emojiVal}'`
+        } alt='${emojiVal}' class='${classes}'>`
+      : m;
   });
 
   return string;
 }
 
 export function performEmojiEscape(string) {
-  if (!string) { return; }
+  if (!string) {
+    return;
+  }
 
   return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
     if (!!translations[m]) {
-      return ":"+translations[m]+":"
+      return ":" + translations[m] + ":";
     } else if (!!replacements[m]) {
-      return ":"+replacements[m]+":";
+      return ":" + replacements[m] + ":";
     } else {
       return m;
     }
@@ -62,7 +80,8 @@ export function performEmojiEscape(string) {
 export function isCustomEmoji(code, opts) {
   code = code.toLowerCase();
   if (extendedEmoji.hasOwnProperty(code)) return true;
-  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code)) return true;
+  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code))
+    return true;
   return false;
 }
 
@@ -78,8 +97,15 @@ export function buildEmojiUrl(code, opts) {
   }
 
   const noToneMatch = code.match(/([^:]+):?/);
-  if (noToneMatch && !url && (emojiHash.hasOwnProperty(noToneMatch[1]) || aliasHash.hasOwnProperty(noToneMatch[1]))) {
-    url = opts.getURL(`/images/emoji/${opts.emojiSet}/${code.replace(/:t/, '/')}.png`);
+  if (
+    noToneMatch &&
+    !url &&
+    (emojiHash.hasOwnProperty(noToneMatch[1]) ||
+      aliasHash.hasOwnProperty(noToneMatch[1]))
+  ) {
+    url = opts.getURL(
+      `/images/emoji/${opts.emojiSet}/${code.replace(/:t/, "/")}.png`
+    );
   }
 
   if (url) {
@@ -91,15 +117,23 @@ export function buildEmojiUrl(code, opts) {
 
 export function emojiExists(code) {
   code = code.toLowerCase();
-  return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code) || aliasHash.hasOwnProperty(code));
-};
+  return !!(
+    extendedEmoji.hasOwnProperty(code) ||
+    emojiHash.hasOwnProperty(code) ||
+    aliasHash.hasOwnProperty(code)
+  );
+}
 
 let toSearch;
 export function emojiSearch(term, options) {
   const maxResults = (options && options["maxResults"]) || -1;
-  if (maxResults === 0) { return []; }
+  if (maxResults === 0) {
+    return [];
+  }
 
-  toSearch = toSearch || _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
+  toSearch =
+    toSearch ||
+    _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
 
   const results = [];
 
@@ -111,7 +145,7 @@ export function emojiSearch(term, options) {
   }
 
   // if term matches from beginning
-  for (let i=0; i<toSearch.length; i++) {
+  for (let i = 0; i < toSearch.length; i++) {
     const item = toSearch[i];
     if (item.indexOf(term) === 0) addResult(item);
   }
@@ -120,7 +154,7 @@ export function emojiSearch(term, options) {
     results.push.apply(results, searchAliases[term]);
   }
 
-  for (let i=0; i<toSearch.length; i++) {
+  for (let i = 0; i < toSearch.length; i++) {
     const item = toSearch[i];
     if (item.indexOf(term) > 0) addResult(item);
   }
@@ -130,7 +164,7 @@ export function emojiSearch(term, options) {
   } else {
     return results.slice(0, maxResults);
   }
-};
+}
 
 export function isSkinTonableEmoji(term) {
   const match = _.compact(term.split(":"))[0];
