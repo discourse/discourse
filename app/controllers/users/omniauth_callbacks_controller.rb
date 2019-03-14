@@ -57,16 +57,17 @@ class Users::OmniauthCallbacksController < ApplicationController
       rescue URI::Error
       end
 
-      if parsed
-        @origin = "#{parsed.path}?#{parsed.query}"
+      if parsed && (parsed.host == nil || parsed.host == Discourse.current_hostname)
+        @origin = "#{parsed.path}"
+        @origin << "?#{parsed.query}" if parsed.query
       end
     end
 
     if @origin.blank?
       @origin = Discourse.base_uri("/")
-    else
-      @auth_result.destination_url = origin
     end
+
+    @auth_result.destination_url = origin
 
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe

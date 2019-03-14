@@ -20,6 +20,11 @@ module Helpers
   def log_in_user(user)
     provider = Discourse.current_user_provider.new(request.env)
     provider.log_on_user(user, session, cookies)
+    provider
+  end
+
+  def log_out_user(provider)
+    provider.log_off_user(session, cookies)
   end
 
   def fixture_file(filename)
