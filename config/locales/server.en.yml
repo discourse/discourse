@@ -1823,6 +1823,10 @@ en:
 
     ignore_user_enabled: "[Beta] Allow ignoring users."
 
+    ignored_users_count_message_threshold: "Notify moderators if a particular user is ignored by this many other users."
+
+    ignored_users_message_gap_days: "How long wait before notifying moderators again about a user who has been ignored by many others"
+
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -2828,6 +2832,18 @@ en:
       ``` text
       %{raw}
       ```
+
+    ignored_users_summary:
+      title: "Ignored User passed threshold"
+      subject_template: "A user is being ignored by many other users"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you about a potentially problematic user who has been ignored by %{ignores_threshold} users. It would be smart to review their forum activity.
+
+        Please check the [user's profile](%{base_url}/u/%{username}/summary).
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
