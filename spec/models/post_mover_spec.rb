@@ -675,5 +675,29 @@ describe PostMover do
         end
       end
     end
+
+    context 'banner topic' do
+      let(:admin) { Fabricate(:admin) }
+      let(:evil_trout) { Fabricate(:evil_trout) }
+      let(:regular_user) { Fabricate(:trust_level_4) }
+      let(:topic) { Fabricate(:topic) }
+      let(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
+      let(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
+      let!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
+      let!(:p2) { Fabricate(:post, topic: banner_topic, reply_to_post_number: p1.post_number, user: regular_user) }
+
+      context 'move to existing topic' do
+        it "allows moving banner topic posts in regular topic" do
+          banner_topic.move_posts(admin, [p2.id], destination_topic_id: topic.id)
+          expect(p2.reload.topic_id).to eq(topic.id)
+        end
+
+        it "does not allow moving banner topic posts in personal message" do
+          expect {
+            banner_topic.move_posts(admin, [p2.id], destination_topic_id: personal_message.id)
+          }.to raise_error(Discourse::InvalidParameters)
+        end
+      end
+    end
   end
 end
