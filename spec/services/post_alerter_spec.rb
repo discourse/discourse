@@ -213,7 +213,7 @@ describe PostAlerter do
     let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
 
     before do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
     end
 
     it "will notify correctly on linking" do
@@ -289,7 +289,7 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     before do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
     end
 
     it 'notifies a user' do
@@ -591,7 +591,7 @@ describe PostAlerter do
     end
 
     it "correctly pushes notifications if configured correctly" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       2.times do |i|
@@ -935,7 +935,7 @@ describe PostAlerter do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
       end
 
       it "triggers a notification" do

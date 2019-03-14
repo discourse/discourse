@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Post do
 
   before do
-    run_jobs_synchronously!
+    Jobs.run_immediately!
   end
 
   describe '#local_dates' do

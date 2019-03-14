@@ -37,7 +37,7 @@ RSpec.describe Admin::FlagsController do
 
   context '#agree' do
     it 'should raise a reasonable error if a flag was deferred and then someone else agreed' do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
 
       _post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
 
@@ -52,7 +52,7 @@ RSpec.describe Admin::FlagsController do
     end
 
     it 'should be able to agree and keep content' do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
 
       post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
 
@@ -69,7 +69,7 @@ RSpec.describe Admin::FlagsController do
 
     it 'should be able to hide spam' do
       SiteSetting.allow_user_locale = true
-      run_jobs_synchronously!
+      Jobs.run_immediately!
 
       post_action = PostAction.act(user, post_1, PostActionType.types[:spam], message: 'bad')
       admin.update!(locale: 'ja')
@@ -90,7 +90,7 @@ RSpec.describe Admin::FlagsController do
     end
 
     it 'should not delete category topic' do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       category.update_column(:topic_id, first_post.topic_id)
 
       PostAction.act(user, first_post, PostActionType.types[:spam], message: 'bad')

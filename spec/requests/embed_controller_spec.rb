@@ -74,7 +74,7 @@ describe EmbedController do
     let(:headers) { { 'REFERER' => embed_url } }
 
     before do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
     end
 
     it "raises an error with no referer" do
