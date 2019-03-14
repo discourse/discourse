@@ -49,6 +49,20 @@ describe CategoriesController do
 
       expect(response.body).to have_tag "title", text: "Discourse - Official community"
     end
+
+    it "redirects /category paths to /c paths" do
+      get "/category/uncategorized"
+      expect(response.status).to eq(302)
+      expect(response.body).to include("c/uncategorized")
+    end
+
+    it "respects permalinks before redirecting /category paths to /c paths" do
+      perm = Permalink.create!(url: "category/something", category_id: category.id)
+
+      get "/category/something"
+      expect(response.status).to eq(301)
+      expect(response.body).to include(category.slug)
+    end
   end
 
   context 'extensibility event' do
