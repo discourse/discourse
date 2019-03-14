@@ -224,7 +224,10 @@ class Upload < ActiveRecord::Base
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
 
-      scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
+      scope = Upload.by_users
+        .where("url NOT LIKE '%/original/_X/%'")
+        .order(id: :desc)
+
       scope = scope.limit(limit) if limit
 
       scope.each do |upload|
