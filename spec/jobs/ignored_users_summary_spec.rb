@@ -67,14 +67,9 @@ describe Jobs::IgnoredUsersSummary do
       end
 
       context "when threshold is hit" do
-        before do
-          Fabricate(:post_custom_field, name: "summary_sent_for_ignored_user", value: matt.id.to_s)
-          Fabricate(:post_custom_field, name: "summary_sent_for_ignored_user", value: john.id.to_s)
-        end
-
         it "does nothing" do
           subject
-          expect(Post.count).to eq(2)
+          expect { subject }.to_not change { Post.count }
         end
       end
     end

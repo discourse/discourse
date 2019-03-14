@@ -8,17 +8,14 @@ module Jobs
       params = {
         threshold: SiteSetting.ignored_users_count_message_threshold,
         gap_days: SiteSetting.ignored_users_message_gap_days,
+        coalesced_gap_days: SiteSetting.ignored_users_message_gap_days + 1,
       }
       user_ids = DB.query_single(<<~SQL, params)
-        SELECT ig.ignored_user_id AS user_id
-        FROM ignored_users AS ig
-        WHERE NOT EXISTS (SELECT 1
-                          FROM post_custom_fields as pcf
-                          WHERE pcf.name = 'summary_sent_for_ignored_user'
-                            AND pcf.value = ignored_user_id::text
-                            AND (pcf.created_at + ':gap_days DAYS'::INTERVAL) > CURRENT_TIMESTAMP)
-        GROUP BY ig.ignored_user_id
-        HAVING COUNT(ig.ignored_user_id) >= :threshold
+        SELECT ignored_user_id
+        FROM ignored_users
+        WHERE COALESCE(summarized_at, CURRENT_TIMESTAMP + ':coalesced_gap_days DAYS'::INTERVAL) - ':gap_days DAYS'::INTERVAL > CURRENT_TIMESTAMP
+        GROUP BY ignored_user_id
+        HAVING COUNT(ignored_user_id) >= :threshold
       SQL
 
       User.where(id: user_ids).find_each { |user| notify_user(user) }
@@ -38,8 +35,8 @@ module Jobs
         subtype: TopicSubtype.system_message,
         title: title,
         raw: raw,
-        skip_validations: true,
-        custom_fields: { summary_sent_for_ignored_user: user.id.to_s })
+        skip_validations: true)
+      IgnoredUser.where(ignored_user_id: user.id).update_all(summarized_at: Time.zone.now)
     end
   end
 end
