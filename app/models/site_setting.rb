@@ -104,6 +104,11 @@ class SiteSetting < ActiveRecord::Base
     nil
   end
 
+  def self.queue_jobs=(val)
+    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead")
+    val ? Jobs.run_later! : Jobs.run_immediately!
+  end
+
   def self.email_polling_enabled?
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
