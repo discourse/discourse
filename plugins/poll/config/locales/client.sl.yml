@@ -62,8 +62,8 @@ sl:
         label: "Zapri"
         confirm: "Ali ste prepričani da hočete zapreti to anketo?"
       automatic_close:
-        closes_in: "se zapre v <strong>%{timeLeft}</strong>"
-        age: "zaprta <strong>%{age}</strong>"
+        closes_in: "Se zapre v <strong>%{timeLeft}</strong>."
+        age: "Zaprta <strong>%{age}</strong>"
       error_while_toggling_status: "Prišlo je do napake med spreminjanjem statusa te ankete."
       error_while_casting_votes: "Prišlo je do napake med oddajo vašega glasu."
       error_while_fetching_voters: "Prišlo je do napake med prikazom glasovalcev."

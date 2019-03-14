@@ -78,7 +78,7 @@ describe CategoriesController do
 
     describe "logged in" do
       before do
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         sign_in(admin)
       end
 
@@ -226,7 +226,7 @@ describe CategoriesController do
 
   context '#update' do
     before do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
     end
 
     it "requires the user to be logged in" do

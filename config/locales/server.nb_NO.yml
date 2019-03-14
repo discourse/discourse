@@ -9,7 +9,7 @@ nb_NO:
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
-    long_date: "D. MMMM, YYYY h:mma"
+    long_date: "D. MMMM, YYYY k:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -455,7 +455,6 @@ nb_NO:
       email_already_used_in_category: "'%{email}' er allerede i bruk av kategorien '%{category_name}'."
       description_incomplete: "Innlegget som beskriver en kategori må ha minst ett avsnitt."
     cannot_delete:
-      uncategorized: "Kan ikke slette Ukategorisert"
       has_subcategories: "Kan ikke slette denne kategorien fordi den har underkategorier."
       topic_exists:
         one: "Kan ikke slette denne kategorien fordi den har 1 emne. Eldste emne er %{topic_link}."

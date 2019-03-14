@@ -394,22 +394,33 @@ class Search
 
     exact = true
 
-    slug = match.to_s.split(":")
-    next if slug.empty?
+    category_slug, subcategory_slug = match.to_s.split(":")
+    next unless category_slug
 
-    if slug[1]
+    if subcategory_slug
       # sub category
-      parent_category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
-      category_id = Category.where(slug: slug[1].downcase, parent_category_id: parent_category_id).pluck(:id).first
+      parent_category_id = Category
+        .where(
+          "lower(slug) = ? AND parent_category_id IS NULL", category_slug.downcase
+        )
+        .pluck(:id)
+        .first
+
+      category_id = Category
+        .where("lower(slug) = ? AND parent_category_id = ?",
+          subcategory_slug.downcase, parent_category_id
+        )
+        .pluck(:id)
+        .first
     else
       # main category
-      if slug[0][0] == "="
-        slug[0] = slug[0][1..-1]
+      if category_slug[0] == "="
+        category_slug = category_slug[1..-1]
       else
         exact = false
       end
 
-      category_id = Category.where(slug: slug[0].downcase)
+      category_id = Category.where("lower(slug) = ?", category_slug.downcase)
         .order('case when parent_category_id is null then 0 else 1 end')
         .pluck(:id)
         .first
@@ -425,7 +436,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(slug[0]).pluck(:id).first
+      tag_id = Tag.where_name(category_slug).pluck(:id).first
       if (tag_id)
         posts.where("topics.id IN (
           SELECT DISTINCT(tt.topic_id)

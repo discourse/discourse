@@ -995,7 +995,7 @@ describe Post do
       end
 
       before do
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
       end
 
       describe 'when user can not mention a group' do

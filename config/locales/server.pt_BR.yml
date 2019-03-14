@@ -458,7 +458,6 @@ pt_BR:
       email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
       description_incomplete: "A postagem da descrição da categoria deve ter pelo menos um parágrafo."
     cannot_delete:
-      uncategorized: "Não é possível excluir Sem categoria"
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
       topic_exists:
         one: "Não é possível excluir esta categoria porque tem 1 tópico. O tópico mais antigo é%{topic_link}."

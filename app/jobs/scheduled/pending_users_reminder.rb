@@ -20,7 +20,7 @@ module Jobs
 
         if count > 0
           target_usernames = Group[:moderators].users.map do |user|
-            next if user.id < 0
+            next if user.bot?
 
             unseen_count = user.notifications.joins(:topic)
               .where("notifications.id > ?", user.seen_notification_id)

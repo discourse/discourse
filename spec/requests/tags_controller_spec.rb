@@ -64,6 +64,18 @@ describe TagsController do
       get "/tags/%2ftest%2f"
       expect(response.status).to eq(404)
     end
+
+    it "does not show staff-only tags" do
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+      get "/tags/test"
+      expect(response.status).to eq(404)
+
+      sign_in(Fabricate(:admin))
+
+      get "/tags/test"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#check_hashtag' do

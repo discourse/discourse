@@ -16,6 +16,7 @@ sl:
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, Januar, Februar, Marec, April, Maj, Junij, Julij, Avgust, September, Oktober, November, December]
     <<: *datetime_formats
@@ -31,6 +32,7 @@ sl:
   log_in: "Vpis"
   submit: "Pošlji"
   anonymous: "Anonimni"
+  on_another_topic: "Na drugi temi"
   emails:
     incoming:
       default_subject: "Tema potrebuje naslov"
@@ -54,6 +56,7 @@ sl:
       not_a_number: ni številka
       not_an_integer: mora biti celo število
       odd: mora biti liho število
+      emojis_disabled: "ne more imeti emoji"
       too_long:
         one: je predolgo (največ %{count} znak)
         two: je predolgo (največ %{count} znaka)
@@ -80,14 +83,22 @@ sl:
       <p>Če poznate svoje geslo, potem se lahko <a href="%{base_url}/login">prijavite</a>.</p>
 
       <p>Drugače lahko<a href="%{base_url}/password-reset">zamenjate geslo</a>.</p>
+    error_message: "Prišlo je do napake med sprejemom povabila. Kontaktirajte administratorja strani."
     user_exists: "Ni potrebe za povabilo <b>%{email}</b>, ker <a href='%{base_path}/u/%{username}/summary'>je že prijavljen!</a>"
     confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
   topic_invite:
     failed_to_invite: "Uporabnika ne moremo povabiti v to temo ker ni član ene od naslednjih skupin uporabnikov: %{group_names}."
     user_exists: "Uporabnik je bil že povabljen. Uporabnika lahko povabite na vsako temo samo enkrat."
+  backup:
+    file_exists: "Datoteka, ki jo hočete naložiti, že obstaja."
   invalid_grant_badge_reason_link: "Zunanja ali neustrezna discourse povezava ni dovoljena kot razlog za značko"
   reading_time: "Čas branja"
   likes: "Všečki"
+  max_consecutive_replies:
+    one: "Ne morete dodati več kot %{count} zaporedni odgovor. Uredite svoj obstoječi odgovor ali počakajte, da vam nekdo odgovori."
+    two: "Ne morete dodati več kot %{count} zaporedna odgovora. Uredite svoj obstoječi odgovor ali počakajte, da vam nekdo odgovori."
+    few: "Ne morete dodati več kot %{count} zaporedne odgovore. Uredite svoj obstoječi odgovor ali počakajte, da vam nekdo odgovori."
+    other: "Ne morete dodati več kot %{count} zaporednih odgovorov. Uredite svoj obstoječi odgovor ali počakajte, da vam nekdo odgovori."
   embed:
     start_discussion: "Začni razpravo"
     continue: "Nadaljuj razpravo"
@@ -127,6 +138,8 @@ sl:
     few: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezave."
     other: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezav."
   user_is_suspended: "Suspendirani uporabniki ne morejo objavljati."
+  pm_reached_recipients_limit: "Ne morete imeti več kot %{recipients_limit} prejemnikov v sporočilu."
+  removed_direct_reply_full_quotes: "Samodejno odstranjen citat celotnega prejšnega prispevka."
   next_page: "naslednja stran →"
   prev_page: "← prejšnja stran"
   page_num: "Stran %{num}"
@@ -139,6 +152,7 @@ sl:
     latest: "Zadnje teme"
     hot: "Vroče teme"
     badge: "%{display_name} značka na %{site_title}"
+  edit_conflict: "Ta prispevek je bil spremenjen s strani drugega uporabnika zato ne moremo shraniti vaših sprememb."
   excerpt_image: "slika"
   groups:
     default_names:
@@ -218,6 +232,7 @@ sl:
     attributes:
       topic:
         featured_link: "Izpostavljena povezava"
+        category_id: "Kategorija"
     errors:
       <<: *errors
       models:
@@ -229,11 +244,59 @@ sl:
               same_as_email: "je enako kot vaš e-naslov. Uporabite bolj varno geslo."
               same_as_current: "je enako kot vaše trenutno geslo."
               unique_characters: "vsebuje preveč enakih znakov. Uporabite bolj varno geslo."
+  uncategorized_category_name: "Neuvrščeno"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
+  discourse_welcome_topic:
+    body: |2
+
+      Prvi odstavek te pripete teme bo viden kot pozdravno sporočilo vsem novim uporabnikom na vaši domači strani. Zato je pomembno!
+
+      **Uredite** to vsebino kot kratek opis vaše skupnosti:
+
+      - Za koga je ta skupnost?
+      - Kaj lahko tukaj najdejo?
+      - Zakaj naj obiskujejo to stran?
+      - Kje lahko preberejo več (povezave, vsebine, ...)?
+
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      To temo lahko zaprete z administratorsko :wrench: (zgoraj desno ali spodaj), tako da se odgovori ne bodo nabirali pod to objavo.
   lounge_welcome:
     title: "Dobrodošli v loži"
+    body: |2
+
+      Čestitamo! :confetti_ball:
+
+      Če vidite to temo, ste bili nedavno promovirani v **redni** (nivo zaupanja 3).
+
+      Sedaj lahko &hellip;
+
+      * Urejate katerikoli prispevek
+      * Spremenite kategorijo katerekoli teme
+      * Imate samodejno sledenje vašim povezavam ([samodejni nofollow](https://en.wikipedia.org/wiki/Nofollow) je odstranjen)
+      * Dostop do privatne Loža kategorije, ki je dostopna samo uporabnikom na nivoju zaupnja 3 ali višje
+      * Skrivanje spama z samo eno prijavo
+
+      Tukaj je [trenutni seznam vseh rednih uporabnikov](%{base_path}/badges/3/regular). Vsekakor jih pozdravite.
+
+      Hvala, ker ste pomemben del te skupnosti!
+
+      (Za več informacij o nivojih zaupanja [preberite temo][trust]. Samo uporabniki, ki tudi v naprej dosegajo kriterije ostanejo redni uporabniki.)
+
+      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   category:
+    replace_paragraph: "(Zamenjajte ta prvi odstavek z kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"
+    errors:
+      permission_conflict: "Vsaka skupina ki ima dostop do podkategorije mora imeti dostop tudi do nadrejene kategorije."
+      disallowed_topic_tags: "Ta tema vsebuje oznake, ki niso dovoljene na tej kategoriji: '%{tags}'"
+    cannot_delete:
+      uncategorized: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more biti izbrisana."
+      topic_exists:
+        one: "Ne moremo odstraniti to kategorijo ker ima %{count} temo. Najstarejša tema je %{topic_link}."
+        two: "Ne moremo odstraniti to kategorijo ker ima %{count} temi. Najstarejša tema je %{topic_link}."
+        few: "Ne moremo odstraniti to kategorijo ker ima %{count} teme. Najstarejša tema je %{topic_link}."
+        other: "Ne moremo odstraniti to kategorijo ker ima %{count} tem. Najstarejša tema je %{topic_link}."
     uncategorized_description: "Teme, ki ne potrebujejo kategorijo ali ne sodijo v nobeno obstoječo kategorijo."
   trust_levels:
     newuser:
@@ -262,6 +325,7 @@ sl:
       two: "%{count} sekundi"
       few: "%{count} sekunde"
       other: "%{count} sekund"
+    short_time: "nekaj sekund"
   datetime:
     distance_in_words_verbose:
       half_a_minute: "pravkar"
@@ -332,6 +396,32 @@ sl:
   email_login:
     invalid_token: "Povezava za prijavo je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo."
     title: "Prijava z e-naslovom"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      safari: "Safari"
+      firefox: "Firefox"
+      opera: "Opera"
+      ie: "Internet Explorer"
+      edge: "Microsoft Edge"
+      unknown: "neznan brskalnik"
+    device:
+      android: "Android naprava"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      mobile: "Mobilna naprava"
+      mac: "Mac"
+      linux: "GNU/Linux računalnik"
+      windows: "Windows računalnik"
+      unknown: "neznana naprava"
+    os:
+      android: "Android"
+      ios: "iOS"
+      macos: "macOS"
+      linux: "Linux"
+      windows: "Microsoft Windows"
+      unknown: "neznan operacijski sistem"
   change_email:
     confirmed: "Vaš e-naslov je bil spremenjen."
     please_continue: "Nadaljujte na %{site_name}"
@@ -341,6 +431,8 @@ sl:
     authorizing_old:
       title: "Zahvaljujemo se vam za potrditev vašega trenutnega e-naslova"
       description: "Na nov e-naslov smo vam poslali povezavo za potrditev."
+  associated_accounts:
+    revoke_failed: "Nismo uspeli razveljaviti vaš račun pri %{provider_name}."
   activation:
     please_continue: "Vaš nov uporabniški račun je potrjen - preusmerjeni boste na začetno stran."
     welcome_to: "Dobrodošli na %{site_name}!"
@@ -353,6 +445,7 @@ sl:
       short_description: "To je oglas ali vandalizem"
     inappropriate:
       description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
+      short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_user:
       title: "Pošlji zasebno sporočilo uporabniku @{{username}}"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
@@ -385,6 +478,8 @@ sl:
       title: "Drug razlog"
       description: 'Prispevek potrebuje pregled osebja na podlagi <a href="%{base_path}/guidelines">pravil skupnosti</a>, <a href="%{tos_url}">pogojev uporabe</a>, ali iz drugega razloga, ki ni naveden zgoraj.'
       short_description: "Potrebuje pregled osebja iz drugega razloga"
+  ignored:
+    hidden_content: '<p>Skrita vsebina</p>'
   archetypes:
     banner:
       title: "Tema na oglasnem traku"
@@ -415,6 +510,27 @@ sl:
       two: "%{count} prispevka združenih od %{username}"
       few: "%{count} prispevki združenih od %{username}"
       other: "%{count} prispevkov združenih od %{username}"
+  move_posts:
+    new_topic_moderator_post:
+      one: "%{count} prispevek je bil prestavljen v novo temo: %{topic_link}"
+      two: "%{count} prispevka sta bila prestavljena v novo temo:  %{topic_link}"
+      few: "%{count} prispevki so bili prestavljeni v novo temo:  %{topic_link}"
+      other: "%{count} prispevkov je bilo prestavljeno v novo temo: %{topic_link}"
+    new_message_moderator_post:
+      one: "%{count} prispevek je bil prestavljen v novo sporočilo: %{topic_link}"
+      two: "%{count} prispevka sta bila prestavljena v novo sporočilo: %{topic_link}"
+      few: "%{count} prispevki so bili prestavljeni v novo sporočilo: %{topic_link}"
+      other: "%{count} prispevkov je bilo prestavljeno v novo sporočilo: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "%{count} prispevek je bil združen v obstoječo temo: %{topic_link}"
+      two: "%{count} prispevka sta bila združena v obstoječo temo: %{topic_link}"
+      few: "%{count} prispevki so bili združeni v obstoječo temo: %{topic_link}"
+      other: "%{count} prispevkov je bilo združeno v obstoječo temo: %{topic_link}"
+    existing_message_moderator_post:
+      one: "%{count} prispevek je bil združen v obstoječe sporočilo:  %{topic_link}"
+      two: "%{count} prispevka sta bila združena v obstoječe sporočilo: %{topic_link}"
+      few: "%{count} prispevki so bili združeni v obstoječe sporočilo: %{topic_link}"
+      other: "%{count} prispevkov je bilo združeno v obstoječe sporočilo: %{topic_link}"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "To sporočilo je bilo samodejno zaprto, ko je doseglo največjo omejitev %{count} odgovor."
@@ -695,7 +811,7 @@ sl:
       text_body_template: |
         Pozdravljeni! Vidimo da ste pridno spremljali naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 
-        Vesili smo, da ste med nami in bi radi več vedeli o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [začnite novo temo](%{base_url}/categories).
+        Veseli smo, da ste med nami in bi radi več vedeli o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [začnite novo temo](%{base_url}/categories).
     welcome_invite:
       title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
@@ -1016,6 +1132,8 @@ sl:
 
         [Preverite jih v Admin delu](%{base_url}/admin/users/list/pending).
     new_user_of_the_month:
+      title: "Vi ste nov uporabnik meseca!"
+      subject_template: "Vi ste nov uporabnik meseca!"
       text_body_template: |
         Čestitamo, osvojili ste **Nov uporabnik meseca %{month_year}**. :trophy:
 
@@ -1371,7 +1489,7 @@ sl:
         Do vašega računa lahko dostopate s prijavo na:
         %{base_url}
 
-        Če zgornja povezava ne deluje, poizkusite kopirati povezavo v naslov v vašem spletnem brskalniku.
+        Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
 
         %{new_user_tips}
 

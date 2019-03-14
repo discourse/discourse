@@ -150,7 +150,11 @@ sl:
       placeholder: datum
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
+      post: "prispevek #%{postNumber}"
       close: "zapri"
+      twitter: "Deli to povezavo na Twitter"
+      facebook: "Deli to povezavo na Facebook"
+      email: "Deli to povezavo preko e-pošte"
     action_codes:
       public_topic: "je naredil temo javno %{when}"
       private_topic: "je spremenil temo v zasebno sporočilo %{when}"
@@ -196,19 +200,23 @@ sl:
         ap_south_1: "Asia Pacific (Mumbai)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ca_central_1: "Canada (Central)"
         cn_north_1: "China (Beijing)"
         cn_northwest_1: "China (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "EU (Stockholm)"
         eu_west_1: "EU (Ireland)"
         eu_west_2: "EU (London)"
         eu_west_3: "EU (Paris)"
-        sa_east_1: "South America (Sao Paulo)"
+        sa_east_1: "South America (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "US East (Ohio)"
+        us_gov_east_1: "AWS GovCloud (US-East)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "uredi naslov in kategorijo te teme"
+    expand: "Razširi"
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
     yes_value: "Da"
@@ -531,6 +539,7 @@ sl:
           description: "Obveščeni boste o vsakem novem prispevku v vsakem sporočilu in prikazan bo število novih odgovorov."
         watching_first_post:
           title: "Opazujem prvi prispevek"
+          description: "Obveščeni boste o novih sporočilih v tej skupini, ne pa tudi o odgovorih na ta sporočila."
         tracking:
           title: "Sledim"
           description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori. Ob temi bo prikazano število novih odgovorov."
@@ -539,6 +548,7 @@ sl:
           description: "Obveščeni boste, če nekdo omeni vaše @ime ali vam odgovori."
         muted:
           title: "Utišano"
+          description: "Obveščeni boste o vsem na sporočilih v tej skupini."
       flair_url: "Avatar Flair slika"
       flair_url_placeholder: "(neobvezno) URL slike ali Font Awesome razred"
       flair_url_description: 'Uporabite kvadratne slike velikosti vsaj 20px x 20px ali FontAwesome ikone (sprejeti formati: "fa-icon", "far fa-icon" ali "fab fa-icon").'
@@ -628,6 +638,8 @@ sl:
       new_private_message: "Novo ZS"
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
+      ignore: "Prezri"
+      unignore: "Razveljavi prezri"
       activity_stream: "Aktivnost"
       preferences: "Nastavitve"
       profile_hidden: "Profil tega uporabnika je skrit."
@@ -709,6 +721,8 @@ sl:
       users: "Uporabniki"
       muted_users: "Utišano"
       muted_users_instructions: "Onemogoči vsa obvestila povezana s temi uporabniki."
+      ignored_users: "Prezrti"
+      ignored_users_instructions: "Seznam vseh vaših prezrtih uporabnikov."
       muted_topics_link: "Pokaži utišane teme"
       watched_topics_link: "Pokaži opazovane teme"
       tracked_topics_link: "Pokaži sledene teme"
@@ -745,6 +759,7 @@ sl:
         emails: "E-sporočila"
         notifications: "Obvestila"
         categories: "Kategorije"
+        users: "Uporabniki"
         tags: "Oznake"
         interface: "Uporabniški vmesnik"
         apps: "Aplikacije"
@@ -766,6 +781,7 @@ sl:
         copied_to_clipboard: "Prenešeno na odlagališče"
         copy_to_clipboard_error: "Napaka pri prenosu na odlagališče"
         remaining_codes: "Imate <strong>{{count}}</strong> rezervnih potrditvenih kod."
+        use: "<a href>Uporabi rezervno kodo</a>"
         codes:
           title: "Rezervne potrditvene kode ustvarjene"
           description: "Vsaka od rezervnih potrditvenih kod se lahko uporabi samo enkrat. Shranite jih na varno, ampak dostopno mesto."
@@ -783,6 +799,7 @@ sl:
         extended_description: |
           Preverjanje v dveh korakih omogoči dodatno varnost vašega računa saj za prijavo zahteva dodatno enkratno potrditveno kodo poleg vašega gesla. Potrditvene kode se lahko ustvarijo na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ali <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> napravah.
         oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočila prijavo z družabnimi omrežji."
+        use: "<a href>Uporabi Authenticator aplikacijo</a>"
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"
@@ -882,6 +899,7 @@ sl:
       website: "Spletna stran"
       email_settings: "E-sporočila"
       hide_profile_and_presence: "Skrij moj javni profil in prisotnost"
+      enable_physical_keyboard: "Omogoči podporo fizične tipkovnice na iPadu"
       text_size:
         title: "Velikost besedila"
         smaller: "Majhna"
@@ -957,9 +975,9 @@ sl:
         expired: "To povabilo je poteklo."
         rescind: "Odstrani"
         rescinded: "Povabilo odstranjeno"
-        rescind_all: "Odstrani vsa"
-        rescinded_all: "Vsa povabila so odstranjena!"
-        rescind_all_confirm: "Ste prepričani, da želite odstraniti vsa povabila?"
+        rescind_all: "Odstrani vsa pretečena povabila"
+        rescinded_all: "Vsa pretečena povabila odstranjena!"
+        rescind_all_confirm: "Ali ste prepričani, da hočete odstraniti vsa pretečena povabila?"
         reinvite: "Ponovno povabi"
         reinvite_all: "Ponovno pošlji vsa"
         reinvite_all_confirm: "Ste prepričani, da želite ponovno poslati vsa povabila?"
@@ -1396,7 +1414,7 @@ sl:
       bold_text: "krepko"
       italic_label: "I"
       italic_title: "Ležeče"
-      italic_text: "povdarjeno besedilo"
+      italic_text: "poudarjeno"
       link_title: "Povezava"
       link_description: "vnesite opis povezave tukaj"
       link_dialog_title: "Vstavi povezavo"
@@ -1511,6 +1529,7 @@ sl:
         posted: '{{username}} objavil v "{{topic}}" - {{site_title}}'
         private_message: '{{username}} vam je poslal zasebno sporočilo "{{topic}}" - {{site_title}}'
         linked: '{{username}} je dodal povezavo na vaš prispevek iz "{{topic}}" - {{site_title}}'
+        watching_first_post: '{{username}} je ustvaril novo temo "{{topic}}" - {{site_title}}'
         confirm_title: "Obvestila omogočena - %{site_title}"
         confirm_body: "Uspelo! Obvestila so bila omogočena."
     upload_selector:
@@ -1752,6 +1771,7 @@ sl:
         when: "Kdaj:"
         public_timer_types: Opomniki teme
         private_timer_types: Uporabnikovi opomniki teme
+        time_frame_required: Izberite časovni okvir
       auto_update_input:
         none: "Izberi časovni okvir"
         later_today: "Kasneje v dnevu"
@@ -2082,6 +2102,9 @@ sl:
         two: "poglej {{count}} skrita odgovora"
         few: "poglej {{count}} skrite odgovore"
         other: "poglej {{count}} skritih odgovorov"
+      notice:
+        first: "To je prvič, da je {{user}} objavil prispevek — poskrbimo, da bo dobrodošel v skupnosti!"
+        return: "Kar nekaj časa je preteklo od kar smo nazadnje videli {{user}} — zadnji prispevek je objavil {{time}}."
       unread: "Prispevek je neprebran"
       has_replies:
         one: "{{count}} odgovor"
@@ -2325,8 +2348,8 @@ sl:
       none: "(brez kategorije)"
       all: "Vse kategorije"
       choose: "kategorija&hellip;"
-      edit: "uredi"
-      edit_long: "Uredi"
+      edit: "Uredi"
+      edit_dialog_title: "Uredi: %{categoryName}"
       view: "Poglej teme v kategoriji"
       general: "Splošno"
       settings: "Nastavitve"
@@ -2335,6 +2358,7 @@ sl:
       tags_allowed_tags: "V tej kategoriji dovoli samo te oznake:"
       tags_allowed_tag_groups: "V tej kategoriji bodo dovoljene samo oznake teh skupin:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
+      tags_tab_description: "Oznake in skupine oznak navedene tukaj bodo na voljo samo v tej kategoriji in drugih kategorijah, ki jih bodo imele navedene. Ne bodo na voljo v ostalih kategorijah."
       tag_groups_placeholder: "(neobvezno) seznam dovoljenih oznak skupin"
       topic_featured_link_allowed: "Dovoli najboljše povezave v tej kategoriji"
       delete: "Izbriši kategorijo"
@@ -2363,6 +2387,8 @@ sl:
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
       security: "Varnost"
       special_warning: "Ta kategorija je prednastavljena, zato varnostnih nastavitev ni mogoče urejati. Če ne želite uporabljati te kategorije jo raje izbrišite kot uporabljajte v drug namen."
+      uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more imeti varnostnih nastavitev."
+      uncategorized_general_warning: 'Ta kategorija je posebna. Uporabi se kot privzeta kategorija za teme brez kategorije. Če hočete onemogočiti takšen način in hočete obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če hočete spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
       images: "Slike"
       email_in: "Dohodni e-naslov po meri:"
       email_in_allow_strangers: "Dovoli e-sporočila od anonimnih uporabnikov brez računa"
@@ -2950,7 +2976,7 @@ sl:
         agree_flag_silence: "Utišaj uporabnika"
         agree_flag_silence_title: "Potrdi prijavo in utišaj uporabnika"
         agree_flag: "Ohrani prispevek"
-        ignore_flag: "Ignoriraj"
+        ignore_flag: "Prezri"
         delete: "Izbriši"
         delete_post_defer_flag: "Izbriši prispevek in prezri prijavo"
         delete_post_defer_flag_title: "Izbriši prispevek; če je prvi prispevek, izbriši temo"
@@ -3116,6 +3142,8 @@ sl:
             confirm: "Želite ustvariti varnostno kopijo?"
           download:
             label: "Naloži"
+        location:
+          s3: "S3"
       export_csv:
         failed: "Izvoz ni uspel. Preverite dnevnike z napakami."
         button_text: "Izvozi"
@@ -3148,7 +3176,6 @@ sl:
           theme_name: "Ime videza"
           customize_desc: "Prilagodi:"
           title: "Videzi"
-          create: "Ustvari"
           edit: "Uredi"
           common: "Skupno"
           desktop: "Namizno"

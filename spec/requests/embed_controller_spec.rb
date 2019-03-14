@@ -74,7 +74,7 @@ describe EmbedController do
     let(:headers) { { 'REFERER' => embed_url } }
 
     before do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
     end
 
     it "raises an error with no referer" do

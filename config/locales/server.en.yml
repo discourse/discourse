@@ -1227,6 +1227,12 @@ en:
         author: Author
         filesize: File size
       description: "List all uploads by extension, filesize and author."
+    top_ignored_users:
+      title: "Top Ignored Users"
+      labels:
+        ignored_user: Ignored User
+        ignores_count: Ignores count
+      description: "List top ignored users."
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1380,7 +1386,7 @@ en:
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    allow_moderators_to_create_categories: "Allow moderators to create new categories"
+    moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -1400,6 +1406,7 @@ en:
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
+    site_contact_group_name: "A valid group name to be invited to all automated messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
@@ -1411,7 +1418,7 @@ en:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     top_page_default_timeframe: "Default timeframe for the top view page."
-    show_email_on_profile: "Allow moderators to view user emails"
+    moderators_view_emails: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
 
@@ -1870,6 +1877,7 @@ en:
 
     embed_truncate: "Truncate the embedded posts."
     embed_support_markdown: "Support Markdown formatting for embedded posts."
+    embed_whitelist_selector: "A comma separated list of CSS elements that are allowed in embeds."
     allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -1903,6 +1911,7 @@ en:
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
     watched_words_regular_expressions: "Watched words are regular expressions."
 
+    min_post_notice_tl: "Minimum trust level required to see post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
@@ -1979,6 +1988,7 @@ en:
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
+      invalid_group: "There's no group with that name."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
       invalid_integer_max: "Value cannot be higher than %{max}."
@@ -3467,6 +3477,7 @@ en:
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
     sender_post_deleted: "post has been deleted"
+    sender_message_to_invalid: "recipient has invalid email address"
 
   color_schemes:
     base_theme_name: "Base"

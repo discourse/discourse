@@ -16,6 +16,7 @@ es:
       short_no_year: "%-d %B"
       date_only: "%-d %B, %Y"
       long: "%-d %B, %Y, %l:%M%P"
+      no_day: "%B %Y"
   date:
     month_names: [~, Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre]
     <<: *datetime_formats
@@ -456,6 +457,7 @@ es:
           attributes:
             word:
               too_many: "Demasiadas palabras para esa acción"
+  uncategorized_category_name: "Sin categoría"
   vip_category_name: "Sala VIP"
   vip_category_description: "Una categoría exclusiva para miembros con un nivel de confianza de 3 o más."
   meta_category_name: "Sugerencias"
@@ -514,10 +516,10 @@ es:
       email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
       email_already_used_in_category: "'%{email}' ya está siendo utilizado por la categoría '%{category_name}'."
       description_incomplete: "El post que contiene la descripción de la categoría debe contener al menos un párrafo."
-      permission_conflict: "Los permisos de subcategoría no pueden ser menos restrictivos que los de los padres."
+      permission_conflict: "Todos los grupos que tengan acceso a una subcategoría deben tener también acceso a la categoría padre."
       disallowed_topic_tags: "Este tema tiene etiquetas no permitidas en esta categoría: '%{tags}'"
     cannot_delete:
-      uncategorized: "Sin categoría no se puede eliminar"
+      uncategorized: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada, y no puede ser eliminada."
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
       topic_exists:
         one: "No se puede borrar esta categoría porque tiene 1 tema. El tema más antiguo es %{topic_link}."
@@ -780,6 +782,8 @@ es:
   flagging:
     you_must_edit: '<p>Tu post fue reportado por la comunidad. Por favor, <a href="%{path}">mira tus mensajes</a>.</p>'
     user_must_edit: "<p>Esta publicación ha sido reportada por la comunidad y está oculta temporalmente.</p>"
+  ignored:
+    hidden_content: '<p>Contenido oculto</p>'
   archetypes:
     regular:
       title: "Tema normal"
@@ -1618,6 +1622,7 @@ es:
     show_inactive_accounts: "Permitir a usuarios logueados visualizar perfiles de cuentas inactivas."
     hide_suspension_reasons: "No mostrar la razón de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Log de mensajes personales vistos por Admin para otros usuarios/grupos."
+    ignore_user_enabled: "[Beta] Permitir que se puedan ignorar usuarios"
     user_website_domains_whitelist: "El sitio web del usuario será automáticamente verificado con estos dominios. Lista delimitada por barras |"
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de mensajes que un usuario tiene que publicar seguidos antes de que se le recuerde sobre demasiadas respuestas consecutivas."
@@ -1675,6 +1680,7 @@ es:
     code_formatting_style: "El botón de código en el editor se establecerá por defecto a este estilo de formato de código"
     max_allowed_message_recipients: "Destinatarios máximos permitidos en un mensaje."
     watched_words_regular_expressions: "Palabras observadas son expresiones regulares."
+    returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios emails de resumen por defecto."
     default_include_tl0_in_digests: "Incluir temas de usuarios nuevos en los emails de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
     default_email_personal_messages: "Enviar un correo electrónico cuando alguien envíe un mensaje al usuario de manera predeterminada."

@@ -341,7 +341,6 @@ zh_TW:
       email_already_used_in_group: "「%{email}」已被「%{group_name}」群組數用。"
       email_already_used_in_category: "「%{email}」已被「%{category_name}」類別使用。"
     cannot_delete:
-      uncategorized: "不能刪除該分類"
       has_subcategories: "不能刪除該分類，因為它有子分類"
       topic_exists_no_oldest: "不能刪除該分類，因為有 %{count} 個話題"
     uncategorized_description: "不需要分類或者不適合放在現在的任何分類中的主題。"

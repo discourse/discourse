@@ -274,7 +274,7 @@ describe ApplicationHelper do
         ).to include("some-image.png")
 
         expect(helper.crawlable_meta_data).to include(
-          SiteSetting.opengraph_image_url
+          SiteSetting.site_opengraph_image_url
         )
 
         SiteSetting.opengraph_image = nil

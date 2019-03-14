@@ -251,7 +251,6 @@ vi:
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
       email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
     cannot_delete:
-      uncategorized: "Không thể xoá mục Chưa phân loại"
       has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
       topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count}  chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."

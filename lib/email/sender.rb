@@ -21,14 +21,21 @@ module Email
       @user = user
     end
 
-    def send
-      return if SiteSetting.disable_emails == "yes" && @email_type.to_s != "admin_login"
+    def send(is_critical: false)
+      if SiteSetting.disable_emails == "yes" &&
+         @email_type.to_s != "admin_login" &&
+         !is_critical
+
+        return
+      end
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
 
       return skip(SkippedEmailLog.reason_types[:sender_message_blank])    if @message.blank?
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
+
+      return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
 
       if @message.text_part
         if @message.text_part.body.to_s.blank?

@@ -375,7 +375,6 @@ fa_IR:
       email_already_used_in_group: "'%{email}' در حال حاضر  توسط گروه '%{group_name}' استفاده می‌شود."
       email_already_used_in_category: "'%{email}' در حال حاضر توسط دسته‌بندی '{category_name}' استفاده می‌شود."
     cannot_delete:
-      uncategorized: "بدون دسته‌بندی را نمی توان حذف کرد"
       has_subcategories: "این دسته‌بندی به دلیل داشتن زیردسته قابل پاک شدن نیست."
       topic_exists_no_oldest: "این دسته را نمی توان پاک کرد زیرا تعداد موضوع %{count} است "
     uncategorized_description: "موضوعاتی که نیاز به دسته‌بندی ندارند، یا قابل دسته‌بندی نیستند."

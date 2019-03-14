@@ -260,6 +260,9 @@ $mobile-breakpoint: 700px;
       margin-top: 1em;
     }
   }
+  p.warning {
+    color: $danger;
+  }
 }
 
 .content-list {

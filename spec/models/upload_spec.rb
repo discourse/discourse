@@ -250,4 +250,13 @@ describe Upload do
     end
   end
 
+  describe '.migrate_to_new_scheme' do
+    it 'should not migrate system uploads' do
+      SiteSetting.migrate_to_new_scheme = true
+
+      expect { Upload.migrate_to_new_scheme }
+        .to_not change { Upload.pluck(:url) }
+    end
+  end
+
 end

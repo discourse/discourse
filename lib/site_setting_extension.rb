@@ -230,17 +230,25 @@ module SiteSettingExtension
       .map do |s, v|
 
       value = send(s)
+      type_hash = type_supervisor.type_hash(s)
+      default = defaults.get(s, default_locale).to_s
+
+      if type_hash[:type].to_s == "upload" &&
+         default.to_i < Upload::SEEDED_ID_THRESHOLD
+
+        default = default_uploads[default.to_i]
+      end
 
       opts = {
         setting: s,
         description: description(s),
-        default: defaults.get(s, default_locale).to_s,
+        default: default,
         value: value.to_s,
         category: categories[s],
         preview: previews[s],
         secret: secret_settings.include?(s),
         placeholder: placeholder(s)
-      }.merge(type_supervisor.type_hash(s))
+      }.merge!(type_hash)
 
       opts
     end.unshift(locale_setting_hash)
@@ -450,7 +458,7 @@ module SiteSettingExtension
 
         value = value.to_i
 
-        if value > 0
+        if value != Upload::SEEDED_ID_THRESHOLD
           upload = Upload.find_by(id: value)
           uploads[name] = upload if upload
         end
@@ -494,6 +502,14 @@ module SiteSettingExtension
   end
 
   private
+
+  def default_uploads
+    @default_uploads ||= {}
+
+    @default_uploads[provider.current_site] ||= begin
+      Upload.where("id < ?", Upload::SEEDED_ID_THRESHOLD).pluck(:id, :url).to_h
+    end
+  end
 
   def uploads
     @uploads ||= {}

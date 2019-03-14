@@ -32,6 +32,7 @@ class SiteSettings::TypeSupervisor
       category: 16,
       uploaded_image_list: 17,
       upload: 18,
+      group: 19,
     )
   end
 
@@ -177,7 +178,7 @@ class SiteSettings::TypeSupervisor
     elsif type == self.class.types[:enum]
       val = @defaults_provider[name].is_a?(Integer) ? val.to_i : val.to_s
     elsif type == self.class.types[:upload] && val.present?
-      val = val.id
+      val = val.is_a?(Integer) ? val : val.id
     end
 
     [val, type]
@@ -239,6 +240,8 @@ class SiteSettings::TypeSupervisor
       EmailSettingValidator
     when self.class.types[:username]
       UsernameSettingValidator
+    when self.class.types[:group]
+      GroupSettingValidator
     when self.class.types[:integer]
       IntegerSettingValidator
     when self.class.types[:regex]

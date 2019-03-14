@@ -41,7 +41,7 @@ describe PostMover do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
         UserActionCreator.enable
@@ -570,7 +570,7 @@ describe PostMover do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
         UserActionCreator.enable

@@ -1088,7 +1088,7 @@ describe User do
 
       context "with a reply" do
         before do
-          SiteSetting.queue_jobs = false
+          Jobs.run_immediately!
           PostCreator.new(Fabricate(:user),
                             raw: 'whatever this is a raw post',
                             topic_id: topic.id,

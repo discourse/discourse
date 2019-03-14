@@ -297,7 +297,6 @@ sv:
       email_already_used_in_group: "'%{email}' är redan använd av gruppen '%{group_name}'."
       email_already_used_in_category: "'%{email}' är redan använd av kategorin '%{category_name}'."
     cannot_delete:
-      uncategorized: "Du kan inte ta bort kategorin \"Okategoriserat\""
       has_subcategories: "Du kan inte ta bort den här kategorin för att den har underkategorier."
       topic_exists_no_oldest: "Kan inte ta bort den här kategorin eftersom antalet ämnen är %{count}."
     uncategorized_description: "Ämnen som inte behöver en kategori, eller som inte passar in i någon annan befintlig kategori."

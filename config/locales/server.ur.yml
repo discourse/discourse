@@ -430,7 +430,6 @@ ur:
       email_already_used_in_category: "'%{email}' پہلے ہی زُمرہ '%{category_name}' کے ذیرِاستعمال ہے۔"
       description_incomplete: "زُمرہ کی وضاحت والی پوسٹ کا کم ازکم ایک پیراگراف ہونا ضروری ہے۔"
     cannot_delete:
-      uncategorized: "بِلا زُمرہ والوں کو حذف نہیں کیا جا سکتا"
       has_subcategories: "اِس زُمرہ کو حذف نہیں کیا جا سکتا کیونکہ اِس کے ذیلی زُمرہ ہیں۔"
       topic_exists_no_oldest: "اِس زُمرہ کو حذف نہیں کیا جا سکتا کیونکہ ٹاپک تعداد %{count} ہے۔"
     uncategorized_description: "وہ ٹاپک جنہیں کسی زُمرہ کی ضرورت نہیں، یا جو کسی اور موجودہ زُمرہ میں فِٹ نہیں ہوتے۔"

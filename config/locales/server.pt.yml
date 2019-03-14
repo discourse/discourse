@@ -369,7 +369,6 @@ pt:
       email_already_used_in_group: "'%{email}' já é utilizado pelo grupo '%{group_name}'."
       email_already_used_in_category: "'%{email}' já é utilizado pela categoria '%{category_name}'."
     cannot_delete:
-      uncategorized: "Não é possível eliminar Sem Categoria"
       has_subcategories: "Não é possível eliminar esta categoria porque contém sub-categorias."
       topic_exists_no_oldest: "Não é possível eliminar esta categoria porque a contagem de tópicos é de %{count}."
     uncategorized_description: "Tópicos que não precisam de uma categoria ou que não se encaixam em nenhuma outra categoria existente."
