@@ -24,6 +24,10 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     true
   end
 
+  def always_update_user_email?
+    false
+  end
+
   def revoke(user, skip_remote: false)
     association = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
     raise Discourse::NotFound if association.nil?
@@ -59,6 +63,17 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
     # Save to the DB. Do this even if we don't have a user - it might be linked up later in after_create_account
     association.save!
+
+    # Update the user's email address from the auth payload
+    if association.user &&
+        (always_update_user_email? || association.user.email.end_with?(".invalid")) &&
+        primary_email_verified?(auth_token) &&
+        (email = auth_token.dig(:info, :email)) &&
+        (email != association.user.email) &&
+        !User.find_by_email(email)
+
+      association.user.update!(email: email)
+    end
 
     # Update avatar/profile
     retrieve_avatar(association.user, association.info["image"])
