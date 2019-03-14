@@ -540,6 +540,8 @@ users:
     default: 365
     client: true
     min: 1
+  clean_up_inactive_users_after_days:
+    default: 730
 
 groups:
   enable_group_directory:

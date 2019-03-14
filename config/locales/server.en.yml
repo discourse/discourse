@@ -1828,6 +1828,8 @@ en:
 
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
 
+    clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed."
+
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -2199,6 +2201,7 @@ en:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
+      inactive_user: "Inactive user"
 
   flags_reminder:
     flags_were_submitted:
