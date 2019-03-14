@@ -141,6 +141,7 @@ describe CategoriesController do
             text_color: "fff",
             slug: "hello-cat",
             auto_close_hours: 72,
+            search_priority: Searchable::PRIORITIES[:ignore],
             permissions: {
               "everyone" => readonly,
               "staff" => create_post
@@ -156,6 +157,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-cat")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
+          expect(category.search_priority).to eq(Searchable::PRIORITIES[:ignore])
           expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
         end
       end

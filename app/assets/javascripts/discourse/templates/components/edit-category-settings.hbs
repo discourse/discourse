@@ -43,6 +43,17 @@
   </label>
 </section>
 
+<section class="field">
+  <label for="category-search-priority">
+    {{i18n "category.search_priority.label"}}
+  </label>
+
+  {{combo-box valueAttribute="value"
+      id="category-search-priority"
+      content=searchPrioritiesOptions
+      value=category.search_priority}}
+</section>
+
 {{#if isParentCategory}}
   <section class="field show-subcategory-list-field">
     <label>

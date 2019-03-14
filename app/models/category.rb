@@ -44,17 +44,18 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   validates :user_id, presence: true
+
   validates :name, if: Proc.new { |c| c.new_record? || c.will_save_change_to_name? },
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
+
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
+  validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
+
   validate :parent_category_validator
-
   validate :email_in_validator
-
   validate :ensure_slug
-
   validate :permissions_compatibility_validator
 
   validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
