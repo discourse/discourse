@@ -15,8 +15,8 @@ describe Imap::Sync do
     let(:group) {
       Fabricate(:group,
         email_imap_server: "imap.gmail.com",
-        email_username: "weareyodateam@gmail.com",
-        email_password: "yodateam123"
+        email_username: "xxx",
+        email_password: "zzz"
       )
     }
 
@@ -34,7 +34,6 @@ describe Imap::Sync do
 
       before do
         provider = MockedImapProvider.any_instance
-        provider.stubs(:labels).returns(["INBOX"])
         provider.stubs(:mailbox_status).returns(uid_validity: 1)
         provider.stubs(:all_uids).returns([1])
         provider.stubs(:uids_until).returns([1])
@@ -75,59 +74,42 @@ describe Imap::Sync do
       end
     end
 
-    context "creates topic from email with no previous sync" do
+    context "creates topic and posts from email with multiple exchanges" do
       let(:first_email_sender) { "john@free.fr" }
-      let(:first_email_subject) { "Testing email post" }
       let(:second_email_sender) { "sam@free.fr" }
-      let(:second_email_subject) { "Responding to email post" }
+      let(:email_subject) { "Testing email post" }
+      let(:first_body) { "This is the first message of this exchange." }
+      let(:second_body) { "<p>This is an <b>answer</b> to this message.</p>" }
 
-      it "creates a topic" do
+      before do
         provider = MockedImapProvider.any_instance
-        provider.stubs(:labels).returns(["INBOX"])
         provider.stubs(:mailbox_status).returns(uid_validity: 1)
-        provider.stubs(:all_uids).returns([1])
+        provider.stubs(:all_uids).returns([1, 2])
         provider.stubs(:emails).returns([
           {
             "UID" => 1,
-            "LABELS" => ["\\Inbox", "test-label"],
-            "FLAGS" => [:Recent],
-            "RFC822" => EmailFabricator(from: first_email_sender, subject: first_email_subject)
-          }
-        ])
-
-        expect(Topic.count).to eq(0)
-
-        group.mailboxes.where(sync: true).each do |mailbox|
-          sync_handler.process(mailbox)
-        end
-
-        expect(Topic.count).to eq(1)
-
-        @topic = Topic.last
-
-        expect(@topic.posts.where('posts.post_type IN (?)', Post.types[:regular]).count).to eq(1)
-        expect(@topic.title).to eq(first_email_subject)
-        expect(@topic.user.email).to eq(first_email_sender)
-
-        provider = MockedImapProvider.any_instance
-        provider.stubs(:labels).returns(["INBOX"])
-        provider.stubs(:mailbox_status).returns(uid_validity: 1)
-        provider.stubs(:uids_until).returns([1])
-        provider.stubs(:uids_from).returns([2])
-        provider.stubs(:emails).with([1], ["UID", "FLAGS", "LABELS"]).returns([
-          {
-            "UID" => 1,
-            "LABELS" => ["\\Inbox", "test-label"],
+            "LABELS" => ["\\Inbox"],
             "FLAGS" => [:Seen],
-            "RFC822" => EmailFabricator(from: first_email_sender, subject: first_email_subject)
-          }
-        ])
-        provider.stubs(:emails).with([2], ["UID", "FLAGS", "LABELS", "RFC822"]).returns([
+            "RFC822" => EmailFabricator(
+              message_id: "<x@gmail.com>",
+              from: second_email_sender,
+              to: first_email_sender,
+              subject: email_subject,
+              body: first_body
+            )
+          },
           {
             "UID" => 2,
-            "LABELS" => ["\\Inbox", "test-label"],
+            "LABELS" => ["\\Inbox"],
             "FLAGS" => [:Recent],
-            "RFC822" => EmailFabricator(from: second_email_sender, subject: second_email_subject)
+            "RFC822" => EmailFabricator(
+              message_id: "<y@gmail.com>",
+              in_reply_to: "<x@gmail.com>",
+              from: first_email_sender,
+              to: second_email_sender,
+              subject: "Re: #{email_subject}",
+              body: second_body
+            )
           }
         ])
 
@@ -135,19 +117,29 @@ describe Imap::Sync do
           sync_handler.process(mailbox)
         end
 
-        @topic.reload
+        @topic = Topic.last
+        @posts = @topic.posts.where('posts.post_type IN (?)', Post.types[:regular]).by_post_number
+      end
 
-        # posts = @topic.posts.where('posts.post_type IN (?)', Post.types[:regular]).by_post_number
-        #
-        # expect(Topic.count).to eq(1)
-        # expect(posts.count).to eq(2)
-        #
-        # expect(@topic.title).to eq(first_email_subject)
-        # expect(@topic.user.email).to eq(first_email_sender)
-        #
-        # post = posts.last
-        #
-        # p post.user
+      it "creates a topic with posts" do
+        expect(Topic.count).to eq(1)
+        expect(@posts.count).to eq(2)
+      end
+
+      it "has the correct topic infos" do
+        expect(@topic.archived).to eq(false)
+        expect(@topic.user.email).to eq(second_email_sender)
+        expect(@topic.title).to eq(email_subject)
+      end
+
+      it "has the correct post infos" do
+        first_post = @posts[0]
+        expect(first_post.user.email).to eq(second_email_sender)
+        expect(first_post.raw).to eq(first_body)
+
+        second_post = @posts[1]
+        expect(second_post.user.email).to eq(first_email_sender)
+        expect(second_post.raw).to eq(second_body)
       end
     end
   end

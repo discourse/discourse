@@ -13,13 +13,9 @@ module Imap
       )
 
       @provider.connect!
-
-      @labels = @provider.labels
     end
 
     def process(mailbox)
-      @mailbox = mailbox
-
       @status = @provider.mailbox_status(mailbox)
 
       if @status[:uid_validity] != mailbox.uid_validity
@@ -40,19 +36,20 @@ module Imap
       end
 
       if old_uids.present?
-        emails = @provider.emails(old_uids, ["UID", "FLAGS", "LABELS"])
+        emails = @provider.emails(mailbox, old_uids, ["UID", "FLAGS", "LABELS"])
         emails.each do |email|
           incoming_email = IncomingEmail.find_by(
             imap_uid_validity: @status[:uid_validity],
             imap_uid: email["UID"]
           )
 
-          update_topic(email, incoming_email)
+          set_topic_archived_state(email, incoming_email, @group)
+          set_topic_tags(incoming_email, email, mailbox, @provider)
         end
       end
 
       if new_uids.present?
-        emails = @provider.emails(new_uids, ["UID", "FLAGS", "LABELS", "RFC822"])
+        emails = @provider.emails(mailbox, new_uids, ["UID", "FLAGS", "LABELS", "RFC822"])
         emails.each do |email|
           begin
             receiver = Email::Receiver.new(email["RFC822"],
@@ -62,11 +59,11 @@ module Imap
             )
             receiver.process!
 
-            update_topic(email, receiver.incoming_email)
+            set_topic_archived_state(email, receiver.incoming_email, @group)
+            set_topic_tags(receiver.incoming_email, email, mailbox, @provider)
 
             mailbox.last_seen_uid = email["UID"]
           rescue Email::Receiver::ProcessingError => e
-            p e
           end
         end
       end
@@ -78,36 +75,36 @@ module Imap
       # TODO: Client-to-server sync:
       #       - sending emails using SMTP
       #       - sync labels
-
-      # IncomingEmail.where(imap_sync: true).each do |incoming_email|
-      #   update_email(incoming_email)
-      # end
+      IncomingEmail.where(imap_sync: true).each do |incoming_email|
+        update_email(incoming_email, mailbox, @provider)
+      end
     end
 
     def disconnect!
       @provider.disconnect!
     end
 
-    def update_topic(email, incoming_email)
+    private
+
+    def update_email(incoming_email, mailbox, provider)
+      return if incoming_email&.post&.post_number != 1 || !incoming_email.imap_sync
+      return unless email = @provider.emails(mailbox, incoming_email.imap_uid, ["FLAGS", "LABELS"]).first
+
+      incoming_email.update(imap_sync: false)
+
+      topic = incoming_email.topic
+      provider.sync_flags(incoming_email.imap_uid, topic, email)
+    end
+
+    def set_topic_tags(incoming_email, email, mailbox, provider)
       return if incoming_email&.post&.post_number != 1 || incoming_email.imap_sync
 
+      topic = incoming_email.topic
       labels = email["LABELS"]
       flags = email["FLAGS"]
-      topic = incoming_email.topic
 
-      # Sync archived status of topic.
-      old_archived = topic.group_archived_messages.length > 0
-      new_archived = !labels.include?("\\Inbox")
-
-      if old_archived && !new_archived
-        GroupArchivedMessage.move_to_inbox!(@group.id, topic)
-      elsif !old_archived && new_archived
-        GroupArchivedMessage.archive!(@group.id, topic)
-      end
-
-      # Sync email flags and labels with topic tags.
-      tags = [ to_tag(@mailbox.name), flags.include?(:Seen) && "seen" ]
-      labels.each { |label| tags << to_tag(label) }
+      tags = [ provider.to_tag(mailbox.name), flags.include?(:Seen) && "seen" ]
+      labels.each { |label| tags << provider.to_tag(label) }
       tags.reject!(&:blank?)
 
       # TODO: Optimize tagging.
@@ -115,44 +112,17 @@ module Imap
       DiscourseTagging.tag_topic_by_names(topic, Guardian.new(Discourse.system_user), tags)
     end
 
-    def update_email(incoming_email)
-      return if incoming_email&.post&.post_number != 1 || !incoming_email.imap_sync
-      return unless email = @provider.emails(incoming_email.imap_uid, ["FLAGS", "LABELS"]).first
-      # incoming_email.update(imap_sync: false)
+    def set_topic_archived_state(email, incoming_email, group)
+      return if incoming_email&.post&.post_number != 1 || incoming_email.imap_sync
 
-      labels = email["LABELS"]
-      flags = email["FLAGS"]
       topic = incoming_email.topic
-
-      # Sync topic status and labels with email flags and labels.
-      tags = topic.tags.pluck(:name)
-      new_flags = tags.map { |tag| tag_to_flag(tag) }.reject(&:blank?)
-      new_labels = tags.map { |tag| tag_to_label(tag) }.reject(&:blank?)
-      new_labels << "\\Inbox" if topic.group_archived_messages.length == 0
-      store(incoming_email.imap_uid, "FLAGS", flags, new_flags)
-      store(incoming_email.imap_uid, "LABELS", labels, new_labels)
-    end
-
-    def store(uid, attribute, old_set, new_set)
-      additions = new_set.reject { |val| old_set.include?(val) }
-      @provider.uid_store(uid, "+#{attribute}", additions) if additions.length > 0
-      removals = old_set.reject { |val| new_set.include?(val) }
-      @provider.uid_store(uid, "-#{attribute}", removals) if removals.length > 0
-    end
-
-    def tag_to_flag(tag)
-      :Seen if tag == "seen"
-    end
-
-    def tag_to_label(tag)
-      @labels[tag]
-    end
-
-    def to_tag(label)
-      label = label.to_s.gsub("[Gmail]/", "")
-      label = DiscourseTagging.clean_tag(label.to_s)
-
-      label if label != "all-mail" && label != "inbox" && label != "sent"
+      topic_is_archived = topic.group_archived_messages.length > 0
+      email_is_archived = !email["LABELS"].include?("\\Inbox")
+      if topic_is_archived && !email_is_archived
+        GroupArchivedMessage.move_to_inbox!(group.id, topic)
+      elsif !topic_is_archived && email_is_archived
+        GroupArchivedMessage.archive!(group.id, topic)
+      end
     end
   end
 

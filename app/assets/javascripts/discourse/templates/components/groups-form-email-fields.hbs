@@ -1,8 +1,6 @@
 {{#if currentUser.admin}}
   <label class="control-label">{{i18n "groups.manage.email.credentials.title"}}</label>
 
-  {{log model}}
-
   <div class="control-group">
     <label for="smtp_server">{{i18n "groups.manage.email.credentials.smtp_server"}}</label>
     {{input type="text" name="smtp_server" value=model.email_smtp_server}}

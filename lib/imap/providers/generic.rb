@@ -3,12 +3,15 @@ require "net/imap"
 class Imap::Providers::Generic
   IMAP_LIBRARY = Net::IMAP
 
+  attr_reader :remote_labels
+
   def initialize(server, options = {})
     @server = server
     @port = options[:port] || 993
     @ssl = options[:ssl] || true
     @username = options[:username]
     @password = options[:password]
+    @remote_labels = []
   end
 
   def imap
@@ -29,10 +32,8 @@ class Imap::Providers::Generic
 
   def connect!
     imap.login(@username, @password)
-  end
 
-  def labels
-    extract_labels(list_mailboxes)
+    @remote_labels = extract_labels(list_mailboxes)
   end
 
   def select_mailbox(mailbox)
@@ -55,7 +56,7 @@ class Imap::Providers::Generic
     imap.uid_search(uid)
   end
 
-  def emails(uids, fields = [])
+  def emails(mailbox, uids, fields = [])
     imap.uid_fetch(uids, fields).map do |email|
       attributes = {}
 
@@ -72,12 +73,44 @@ class Imap::Providers::Generic
     label if label != "all-mail" && label != "inbox" && label != "sent"
   end
 
+  def tag_to_flag(tag)
+    :Seen if tag == "seen"
+  end
+
+  def tag_to_label(tag, labels)
+    labels[tag]
+  end
+
   def disconnect!
     imap.logout
     imap.disconnect
   end
 
+  def sync_flags(uid, topic, email)
+    topic_tags = topic.tags.pluck(:name)
+
+    flags = email["FLAGS"]
+    new_flags = topic_tags.map { |tag| tag_to_flag(tag) }.reject(&:blank?)
+    store(uid, "FLAGS", flags, new_flags)
+  end
+
   private
+
+  def store(uid, attribute, old_set, new_set)
+    additions = new_set.reject { |val| old_set.include?(val) }
+    add_attribute(attribute, uid, additions)
+
+    removals = old_set.reject { |val| new_set.include?(val) }
+    remove_attribute(attribute, uid, removals)
+  end
+
+  def add_attribute(attribute, uid, values)
+    imap.uid_store(Array(uid), "+#{attribute}", values) if values.length > 0
+  end
+
+  def remove_attribute(attribute, uid, values)
+    imap.uid_store(Array(uid), "-#{attribute}", values) if values.length > 0
+  end
 
   def list_mailboxes
     imap.list('', '*').map(&:name)
