@@ -1,21 +1,24 @@
 class MigrateEmailUserOptions < ActiveRecord::Migration[5.2]
   def up
-    add_column :user_options, :email_level, :integer, default: UserOption.email_level_types[:only_when_away], null: false
-    add_column :user_options, :email_messages_level, :integer, default: UserOption.email_level_types[:always], null: false
+    # see UserOption.email_level_types
+    # always = 0, only_while_away: 1, never: 2
+
+    add_column :user_options, :email_level, :integer, default: 1, null: false
+    add_column :user_options, :email_messages_level, :integer, default: 0, null: false
 
     execute <<~SQL
       UPDATE user_options
       SET email_level = CASE
-        WHEN email_direct IS TRUE AND email_always IS TRUE
-        THEN #{UserOption.email_level_types[:always]}
-        WHEN email_direct IS TRUE AND email_always IS NOT TRUE
-        THEN #{UserOption.email_level_types[:only_when_away]}
-        ELSE #{UserOption.email_level_types[:never]}
+        WHEN email_direct AND email_always
+        THEN 0
+        WHEN email_direct AND email_always IS NOT TRUE
+        THEN 1
+        ELSE 2
       END,
       email_messages_level = CASE
-        WHEN email_private_messages IS TRUE
-        THEN #{UserOption.email_level_types[:always]}
-        ELSE #{UserOption.email_level_types[:never]}
+        WHEN email_private_messages
+        THEN 0
+        ELSE 2
       END
     SQL
   end
