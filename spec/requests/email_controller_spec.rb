@@ -15,9 +15,9 @@ RSpec.describe EmailController do
       user = Fabricate(:user)
       key = UnsubscribeKey.create_key_for(user, "all")
 
-      user.user_option.update_columns(email_level: 2,
-                                      email_digests: true,
-                                      email_messages_level: 2)
+      user.user_option.update_columns(email_digests: true,
+                                      email_level: UserOption.email_level_types[:never],
+                                      email_messages_level: UserOption.email_level_types[:never])
 
       post "/email/unsubscribe/#{key}.json",
         params: { unsubscribe_all: "1" }
@@ -32,8 +32,8 @@ RSpec.describe EmailController do
       user.user_option.reload
 
       expect(user.user_option.email_digests).to eq(false)
-      expect(user.user_option.email_level).to eq(2)
-      expect(user.user_option.email_messages_level).to eq(2)
+      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
     end
 
     it 'can disable mailing list' do

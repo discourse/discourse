@@ -42,8 +42,8 @@ class UserAnonymizer
       options = @user.user_option
       options.mailing_list_mode = false
       options.email_digests = false
-      options.email_level = 2
-      options.email_messages_level = 2
+      options.email_level = UserOption.email_level_types[:never]
+      options.email_messages_level = UserOption.email_level_types[:never]
       options.save!
 
       if profile = @user.user_profile

@@ -93,8 +93,8 @@ module ImportScripts::PhpBB3
       if disable_email
         user_option = user.user_option
         user_option.email_digests = false
-        user_option.email_level = 2
-        user_option.email_messages_level = 2
+        user_option.email_level = UserOption.email_level_types[:never]
+        user_option.email_messages_level = UserOption.email_level_types[:never]
         user_option.save!
       end
 

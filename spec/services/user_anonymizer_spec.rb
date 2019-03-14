@@ -54,15 +54,15 @@ describe UserAnonymizer do
 
     it "turns off all notifications" do
       user.user_option.update_columns(
-        email_level: 0,
-        email_messages_level: 0
+        email_level: UserOption.email_level_types[:always],
+        email_messages_level: UserOption.email_level_types[:always]
       )
 
       make_anonymous
       user.reload
       expect(user.user_option.email_digests).to eq(false)
-      expect(user.user_option.email_level).to eq(2)
-      expect(user.user_option.email_messages_level).to eq(2)
+      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 

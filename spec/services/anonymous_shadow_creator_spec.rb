@@ -36,7 +36,7 @@ describe AnonymousShadowCreator do
       shadow3 = AnonymousShadowCreator.get(user)
 
       expect(shadow3.user_option.email_digests).to eq(false)
-      expect(shadow3.user_option.email_messages_level).to eq(2)
+      expect(shadow3.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
 
       expect(shadow2.id).not_to eq(shadow3.id)
 

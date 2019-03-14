@@ -372,8 +372,8 @@ class ImportScripts::Base
 
       user_option = u.user_option
       user_option.email_digests = false
-      user_option.email_level = 2
-      user_option.email_messages_level = 2
+      user_option.email_level = UserOption.email_level_types[:never]
+      user_option.email_messages_level = UserOption.email_level_types[:never]
       user_option.save!
       if u.save
         StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, ban_reason)

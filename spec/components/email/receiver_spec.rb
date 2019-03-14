@@ -636,10 +636,10 @@ describe Email::Receiver do
       topic.allowed_users << user
       topic.save
 
-      user.user_option.update_columns(email_messages_level: 2)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:reply_user_matching) }.to change { topic.posts.count }
       user.reload
-      expect(user.user_option.email_messages_level).to eq(0)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
   end
@@ -743,10 +743,10 @@ describe Email::Receiver do
 
     it "reenables user's PM email notifications when user emails new topic to group" do
       user = Fabricate(:user, email: "existing@bar.com")
-      user.user_option.update_columns(email_messages_level: 2)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:group_existing_user) }.to change(Topic, :count)
       user.reload
-      expect(user.user_option.email_messages_level).to eq(0)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
     context "with forwarded emails enabled" do

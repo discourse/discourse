@@ -265,8 +265,8 @@ describe User do
         expect(subject.email_tokens).to be_present
         expect(subject.user_stat).to be_present
         expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_messages_level).to eq(0)
-        expect(subject.user_option.email_level).to eq(1)
+        expect(subject.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
@@ -1461,8 +1461,8 @@ describe User do
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
-      SiteSetting.default_email_level = 2
-      SiteSetting.default_email_messages_level = 2
+      SiteSetting.default_email_level = UserOption.email_level_types[:never]
+      SiteSetting.default_email_messages_level = UserOption.email_level_types[:never]
       SiteSetting.default_email_mailing_list_mode = true
 
       SiteSetting.default_other_new_topic_duration_minutes = -1 # not viewed
@@ -1486,8 +1486,8 @@ describe User do
       options = user.user_option
       expect(options.mailing_list_mode).to eq(true)
       expect(options.digest_after_minutes).to eq(1440)
-      expect(options.email_level).to eq(2)
-      expect(options.email_messages_level).to eq(2)
+      expect(options.email_level).to eq(UserOption.email_level_types[:never])
+      expect(options.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
@@ -1516,7 +1516,7 @@ describe User do
 
     it "Creates a UserOption row when a user record is created and destroys once done" do
       user = Fabricate(:user)
-      expect(user.user_option.email_level).to eq(1)
+      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
 
       user_id = user.id
       user.destroy!

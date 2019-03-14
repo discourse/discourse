@@ -107,7 +107,7 @@ describe UserUpdater do
       seq = user.user_option.theme_key_seq
 
       val = updater.update(bio_raw: 'my new bio',
-                           email_level: 2,
+                           email_level: UserOption.email_level_types[:always],
                            mailing_list_mode: true,
                            digest_after_minutes: "45",
                            new_topic_duration_minutes: 100,
@@ -123,7 +123,7 @@ describe UserUpdater do
       user.reload
 
       expect(user.user_profile.bio_raw).to eq 'my new bio'
-      expect(user.user_option.email_level).to eq 2
+      expect(user.user_option.email_level).to eq UserOption.email_level_types[:always]
       expect(user.user_option.mailing_list_mode).to eq true
       expect(user.user_option.digest_after_minutes).to eq 45
       expect(user.user_option.new_topic_duration_minutes).to eq 100
