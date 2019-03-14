@@ -1072,7 +1072,7 @@ describe PostAction do
     end
 
     it "should create a notification in the related topic" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:spam], message: "WAT")
@@ -1089,7 +1089,7 @@ describe PostAction do
     end
 
     it "should not add a moderator post when post is flagged via private message" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:notify_user], message: "WAT")

@@ -995,7 +995,7 @@ describe Post do
       end
 
       before do
-        run_jobs_synchronously!
+        Jobs.run_immediately!
       end
 
       describe 'when user can not mention a group' do

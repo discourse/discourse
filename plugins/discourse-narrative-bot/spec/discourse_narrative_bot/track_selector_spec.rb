@@ -37,7 +37,7 @@ describe DiscourseNarrativeBot::TrackSelector do
   end
 
   before do
-    run_jobs_synchronously!
+    Jobs.run_immediately!
   end
 
   describe '#select' do

@@ -55,7 +55,7 @@ end
 
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 
-SiteSetting.queue_jobs = false
+Jobs.run_immediately!
 
 unless Rails.env == "profile"
   puts "This script should only be used in the profile environment"

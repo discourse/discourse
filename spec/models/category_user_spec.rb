@@ -68,7 +68,7 @@ describe CategoryUser do
 
   context 'integration' do
     before do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       NotificationEmailer.enable
     end
 

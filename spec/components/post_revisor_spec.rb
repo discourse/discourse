@@ -608,7 +608,7 @@ describe PostRevisor do
       let(:mentioned_user) { Fabricate(:user) }
 
       before do
-        run_jobs_synchronously!
+        Jobs.run_immediately!
       end
 
       it "generates a notification for a mention" do

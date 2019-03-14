@@ -1395,9 +1395,6 @@ developer:
   port:
     hidden: true
     default: ""
-  queue_jobs:
-    hidden: true
-    default: true
   enable_long_polling:
     client: true
     default: true

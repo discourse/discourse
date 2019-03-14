@@ -176,6 +176,11 @@ RSpec.configure do |config|
       $test_cleanup_callbacks.reverse_each(&:call)
       $test_cleanup_callbacks = nil
     end
+
+    # Running jobs are expensive and most of our tests are not concern with
+    # code that runs inside jobs. run_later! means they are put on the redis
+    # queue and never processed.
+    Jobs.run_later!
   end
 
   config.before(:each, type: :multisite) do
