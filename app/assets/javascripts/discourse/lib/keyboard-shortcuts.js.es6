@@ -140,6 +140,8 @@ export default {
     this.sendToSelectedPost("replyToPost");
     // lazy but should work for now
     Ember.run.later(() => $(".d-editor .quote").click(), 500);
+
+    return false;
   },
 
   goToFirstSuggestedTopic() {
