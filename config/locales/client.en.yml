@@ -2950,6 +2950,7 @@ en:
         moderation_tab: "Moderation"
         security_tab: "Security"
         reports_tab: "Reports"
+        report_filter_any: "any"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query

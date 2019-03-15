@@ -113,11 +113,17 @@ class Admin::ReportsController < Admin::AdminController
       limit = report_params[:limit].to_i
     end
 
+    filter = nil
+    if report_params.has_key?(:filter)
+      filter = report_params[:filter]
+    end
+
     {
       start_date: start_date,
       end_date: end_date,
       category_id: category_id,
       group_id: group_id,
+      filter: filter,
       facets: facets,
       limit: limit
     }
