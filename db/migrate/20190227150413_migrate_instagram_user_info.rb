@@ -9,15 +9,19 @@ class MigrateInstagramUserInfo < ActiveRecord::Migration[5.2]
       last_used,
       created_at,
       updated_at
-    ) SELECT
-      'instagram',
-      instagram_user_id,
-      user_id,
-      json_build_object('nickname', screen_name),
-      updated_at,
-      created_at,
-      updated_at
-    FROM instagram_user_infos
+    )
+      SELECT
+        'instagram',
+        instagram_user_id,
+        user_id,
+        json_build_object('nickname', screen_name),
+        updated_at,
+        created_at,
+        updated_at
+      FROM instagram_user_infos
+      ORDER BY updated_at DESC
+    ON CONFLICT (provider_name, provider_uid)
+    DO NOTHING
     SQL
   end
 
