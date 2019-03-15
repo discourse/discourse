@@ -99,6 +99,19 @@ describe SvgSprite do
     expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")
   end
 
+  it 'includes custom icons from a sprite in a theme' do
+    theme = Fabricate(:theme)
+    fname = "custom-theme-icon-sprite.svg"
+
+    upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+    theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+    theme.save!
+
+    expect(Upload.where(id: upload.id)).to be_exist
+    expect(SvgSprite.bundle([theme.id])).to match(/my-custom-theme-icon/)
+  end
+
   it 'includes icons from SiteSettings' do
     SiteSetting.svg_icon_subset = "blender|drafting-compass|fab-bandcamp"
 
