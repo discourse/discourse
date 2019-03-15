@@ -3,6 +3,7 @@ require "fileutils"
 require "json"
 require "nokogiri"
 require "open-uri"
+require_dependency "file_helper"
 
 EMOJI_GROUPS_PATH ||= "lib/emoji/groups.json"
 
@@ -215,149 +216,40 @@ EMOJI_ALIASES ||= {
 
 EMOJI_GROUPS ||= [
   {
-    "name" => "people",
-    "fullname" => "People",
-    "tabicon" => "grinning",
-    "sections" => [
-      "face-smiling",
-      "face-affection",
-      "face-tongue",
-      "face-hand",
-      "face-neutral-skeptical",
-      "face-sleepy",
-      "face-unwell",
-      "face-hat",
-      "face-glasses",
-      "face-concerned",
-      "face-negative",
-      "face-costume",
-      "cat-face",
-      "monkey-face",
-      "hand-fingers-open",
-      "hand-fingers-partial",
-      "hand-single-finger",
-      "hand-fingers-closed",
-      "hands",
-      "hand-prop",
-      "body-parts",
-      "person",
-      "person-gesture",
-      "person-role",
-      "person-fantasy",
-      "person-resting",
-      "family",
-      "person-symbol",
-      "skin-tone",
-      "hair-style"
-    ]
+    "name" => "smileys_&_emotion",
+    "tabicon" => "grinning"
   },
   {
-    "name" => "nature",
-    "fullname" => "Nature",
-    "tabicon" => "evergreen_tree",
-    "sections" => [
-      "animal-mammal",
-      "animal-bird",
-      "animal-amphibian",
-      "animal-reptile",
-      "animal-marine",
-      "animal-bug",
-      "plant-flower",
-      "plant-other",
-      "sky_&_weather",
-
-    ]
+    "name" => "people_&_body",
+    "tabicon" => "wave"
   },
   {
-    "name" => "food",
-    "fullname" => "Food & Drink",
-    "tabicon" => "hamburger",
-    "sections" => [
-      "food-fruit",
-      "food-vegetable",
-      "food-prepared",
-      "food-asian",
-      "food-marine",
-      "food-sweet",
-      "drink",
-      "dishware"
-    ]
+    "name" => "animals_&_nature",
+    "tabicon" => "evergreen_tree"
   },
   {
-    "name" => "celebration",
-    "fullname" => "Celebration",
-    "tabicon" => "gift",
-    "sections" => [
-      "event",
-      "emotion"
-    ]
+    "name" => "food_&_drink",
+    "tabicon" => "hamburger"
   },
   {
-    "name" => "activity",
-    "fullname" => "Activities",
-    "tabicon" => "soccer",
-    "sections" => [
-      "person-activity",
-      "person-sport",
-      "sport",
-      "game",
-      "music",
-      "musical-instrument",
-      "arts_&_crafts"
-    ]
+    "name" => "travel_&_places",
+    "tabicon" => "airplane"
   },
   {
-    "name" => "travel",
-    "fullname" => "Travel & Places",
-    "tabicon" => "airplane",
-    "sections" => [
-      "place-map",
-      "place-geographic",
-      "place-building",
-      "place-religious",
-      "place-other",
-      "transport-ground",
-      "transport-water",
-      "transport-air",
-      "hotel",
-      "flag",
-      "country-flag",
-      "subdivision-flag"
-    ]
+    "name" => "activities",
+    "tabicon" => "soccer"
   },
   {
     "name" => "objects",
-    "fullname" => "Objects & Symbols",
-    "tabicon" => "eyeglasses",
-    "sections" => [
-      "clothing",
-      "award-medal",
-      "sound",
-      "phone",
-      "computer",
-      "light_&_video",
-      "book-paper",
-      "money",
-      "mail",
-      "writing",
-      "office",
-      "lock",
-      "tool",
-      "medical",
-      "other-object",
-      "transport-sign",
-      "warning",
-      "arrow",
-      "religion",
-      "zodiac",
-      "av-symbol",
-      "other-symbol",
-      "keycap",
-      "alphanum",
-      "geometric",
-      "time",
-      "gender"
-    ]
+    "tabicon" => "eyeglasses"
+  },
+  {
+    "name" => "symbols",
+    "tabicon" => "white_check_mark"
+  },
+  {
+    "name" => "flags",
+    "tabicon" => "checkered_flag"
   }
 ]
 
@@ -392,13 +284,14 @@ task "emoji:update" do
   copy_emoji_db
 
   json_db = open(File.join(GENERATED_PATH, "db.json")).read
-  keywords = JSON.parse(json_db)
+  db = JSON.parse(json_db)
 
-  write_db_json(keywords)
-  fix_incomplete_sets(keywords)
+  write_db_json(db["emojis"], db["translations"])
+  fix_incomplete_sets(db["emojis"])
   write_aliases
-  groups = generate_emoji_groups(keywords)
-  write_js_groups(keywords, groups)
+  groups = generate_emoji_groups(db["emojis"], db["sections"])
+  write_js_groups(db["emojis"], groups)
+  optimize_images(Dir.glob(File.join(Rails.root, EMOJI_IMAGES_PATH, "/**/*.png")))
 
   TestEmojiUpdate.run_and_summarize
 
@@ -409,6 +302,15 @@ desc "test the emoji generation script"
 task "emoji:test" do
   ENV['EMOJI_TEST'] = "1"
   Rake::Task["emoji:update"].invoke
+end
+
+def optimize_images(images)
+  images.each do |filename|
+    FileHelper.image_optim(
+      allow_pngquant: true,
+      strip_image_metadata: true
+    ).optimize_image!(filename)
+  end
 end
 
 def copy_emoji_db
@@ -444,7 +346,7 @@ def fix_incomplete_sets(emojis)
   end
 end
 
-def generate_emoji_groups(keywords)
+def generate_emoji_groups(keywords, sections)
   puts "Generating groups..."
 
   list = open(EMOJI_ORDERING_URL).read
@@ -453,7 +355,9 @@ def generate_emoji_groups(keywords)
 
   EMOJI_GROUPS.map do |group|
     group["icons"] ||= []
-    group["sections"].each do |section|
+
+    sub_sections = sections[group["name"]]["sub_sections"]
+    sub_sections.each do |section|
       title_section = table.css("tr th a[@name='#{section}']")
       emoji_list_section = title_section.first.parent.parent.next_element
       emoji_list_section.css("a.plain img").each do |link|
@@ -491,7 +395,7 @@ def write_aliases
   end
 end
 
-def write_db_json(emojis)
+def write_db_json(emojis, translations)
   puts "Writing #{EMOJI_DB_PATH}..."
 
   confirm_overwrite(EMOJI_DB_PATH)
@@ -520,7 +424,8 @@ def write_db_json(emojis)
     "emojis" => emojis_without_tones,
     "tonableEmojis" => emoji_with_tones,
     "aliases" => EMOJI_ALIASES,
-    "searchAliases" => SEARCH_ALIASES
+    "searchAliases" => SEARCH_ALIASES,
+    "translations" => translations
   }
 
   File.write(EMOJI_DB_PATH, JSON.pretty_generate(db))

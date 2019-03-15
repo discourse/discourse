@@ -1347,13 +1347,15 @@ en:
 
     emoji_picker:
       filter_placeholder: Search for emoji
-      people: People
-      nature: Nature
-      food: Food
-      activity: Activity
-      travel: Travel
+      smileys_&_emotion: Smileys and Emotion
+      people_&_body: People and Body
+      animals_&_nature: Animals and Nature
+      food_&_drink: Food and Drink
+      travel_&_places: Travel and Places
+      activities: Activities
       objects: Objects
-      celebration: Celebration
+      symbols: Symbols
+      flags: Flags
       custom: Custom emojis
       recent: Recently used
       default_tone: No skin tone
