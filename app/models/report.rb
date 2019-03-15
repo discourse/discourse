@@ -1546,15 +1546,14 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    WHERE up.created_at >= '#{report.start_date}'
-    AND up.created_at <= '#{report.end_date}'
-    AND up.id > #{Upload::SEEDED_ID_THRESHOLD}
+    /*where*/
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL
 
     extension_filter = report.filter_values["file-extension"]
     builder = DB.build(sql)
+    builder.where("up.id > :seeded_id_threshold", seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD)
     builder.where("up.created_at >= :start_date", start_date: report.start_date)
     builder.where("up.created_at < :end_date", end_date: report.end_date)
     builder.where("up.extension = :extension", extension: extension_filter) if extension_filter.present?
@@ -1567,7 +1566,6 @@ class Report
       data[:extension] = row.extension
       data[:file_url] = Discourse.store.cdn_url(row.url)
       data[:file_name] = row.original_filename.truncate(25)
-
       report.data << data
     end
   end
