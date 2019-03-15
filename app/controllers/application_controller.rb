@@ -499,6 +499,13 @@ class ApplicationController < ActionController::Base
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
   end
 
+  def handle_permalink(path)
+    permalink = Permalink.find_by_url(path)
+    if permalink && permalink.target_url
+      redirect_to permalink.target_url, status: :moved_permanently
+    end
+  end
+
   private
 
   def check_readonly_mode

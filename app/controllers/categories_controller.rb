@@ -9,12 +9,7 @@ class CategoriesController < ApplicationController
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
 
   def redirect
-    permalink = Permalink.find_by_url("/category/#{params[:path]}")
-    if permalink && permalink.target_url
-      redirect_to permalink.target_url, status: :moved_permanently
-      return
-    end
-
+    return if handle_permalink("/category/#{params[:path]}")
     redirect_to path("/c/#{params[:path]}")
   end
 
