@@ -147,6 +147,7 @@ describe CategoryList do
     context 'fixed_category_positions is disabled' do
       before do
         SiteSetting.fixed_category_positions = false
+        SiteSetting.desktop_category_page_style = "categories_and_top_topics"
       end
 
       it "returns categories in order of activity" do
@@ -158,6 +159,22 @@ describe CategoryList do
       it "returns categories in order of id when there's no activity" do
         cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
         expect(category_ids).to eq([cat1.id, cat2.id])
+      end
+
+      context "when using categories_and_latest_topics layout" do
+        before do
+          SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+        end
+
+        it "returns categories in order of latest activity" do
+          post1 = Fabricate(:post, created_at: 1.hour.ago)
+          post2 = Fabricate(:post, created_at: 1.day.ago)
+          post3 = Fabricate(:post, created_at: 1.week.ago)
+          cat1 = Fabricate(:category, position: 0, latest_post_id: post2.id)
+          cat2 = Fabricate(:category, position: 1, latest_post_id: post3.id)
+          cat3 = Fabricate(:category, position: 1, latest_post_id: post1.id)
+          expect(category_ids).to eq([cat3.id, cat1.id, cat2.id])
+        end
       end
     end
   end
