@@ -1141,6 +1141,31 @@ describe PostCreator do
       post_creator = PostCreator.new(user, title: '', raw: '')
       expect { post_creator.create! }.to raise_error(ActiveRecord::RecordNotSaved)
     end
+
+    it "does not generate an alert for empty posts" do
+      Jobs.run_immediately!
+
+      user2 = Fabricate(:user)
+      topic = Fabricate(:private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user),
+          Fabricate.build(:topic_allowed_user, user: user2)
+        ],
+      )
+      Fabricate(:topic_user,
+        topic: topic,
+        user: user2,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+
+      expect {
+        PostCreator.create!(user, raw: "", topic_id: topic.id, skip_validations: true)
+      }.to change { user2.notifications.count }.by(0)
+
+      expect {
+        PostCreator.create!(user, raw: "hello world", topic_id: topic.id, skip_validations: true)
+      }.to change { user2.notifications.count }.by(1)
+    end
   end
 
   context 'private message to a user that has disabled private messages' do
