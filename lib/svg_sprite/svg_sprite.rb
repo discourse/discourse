@@ -206,7 +206,7 @@ module SvgSprite
         original_path = external_copy.try(:path)
       end
 
-      custom_sprite_paths << Discourse.store.path_for(upload) if original_path.present?
+      custom_sprite_paths << original_path if original_path.present?
     end
 
     custom_sprite_paths
