@@ -1220,6 +1220,14 @@ trust:
     default: true
 
 security:
+  enforce_second_factor:
+    client: true
+    type: enum
+    default: 'no'
+    choices:
+      - 'no'
+      - 'staff'
+      - 'all'
   force_https:
     default: false
     shadowed_by_global: true

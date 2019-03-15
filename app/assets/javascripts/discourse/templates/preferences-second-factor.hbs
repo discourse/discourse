@@ -1,6 +1,14 @@
 <section class='user-preferences'>
   <form class="form-horizontal">
 
+    {{#if showEnforcedNotice}}
+      <div class="control-group">
+        <div class="controls">
+          <div class='alert alert-error'>{{i18n 'user.second_factor.enforced_notice'}}</div>
+        </div>
+      </div>
+    {{/if}}
+
     {{#if errorMessage}}
       <div class="control-group">
         <div class="controls">
