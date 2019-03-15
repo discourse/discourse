@@ -1814,8 +1814,12 @@ user_preferences:
     enum: "DigestEmailSiteSetting"
     default: 10080
   default_include_tl0_in_digests: false
-  default_email_personal_messages: true
-  default_email_direct: true
+  default_email_level:
+    enum: "EmailLevelSiteSetting"
+    default: 1
+  default_email_messages_level:
+    enum: "EmailLevelSiteSetting"
+    default: 0
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
     enum: "MailingListModeSiteSetting"
@@ -1823,7 +1827,6 @@ user_preferences:
   disable_mailing_list_mode:
     default: false
     client: true
-  default_email_always: false
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"
     default: 2
