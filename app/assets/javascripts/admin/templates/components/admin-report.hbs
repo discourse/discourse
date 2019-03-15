@@ -173,6 +173,18 @@
           </div>
         {{/if}}
 
+        {{#each filterOptions as |filterOption|}}
+          <div class="control">
+            <div class="input">
+              {{combo-box content=filterOption.choices
+                          filterable=true
+                          allowAny=true
+                          value=filterOption.selected
+                          onSelect=(action "filter" filterOption.id)}}
+            </div>
+          </div>
+        {{/each}}
+
         {{#if showExport}}
           <div class="control">
             <div class="input">

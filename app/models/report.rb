@@ -6,11 +6,11 @@ class Report
   SCHEMA_VERSION = 3
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :labels, :async,
-                :prev_period, :facets, :limit, :processing, :average, :percent,
+                :end_date, :category_id, :group_id, :filter,
+                :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error, :primary_color, :secondary_color
+                :dates_filtering, :error, :primary_color, :secondary_color, :filter_options
 
   def self.default_days
     30
@@ -29,6 +29,8 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
+    @filter_options = nil
+    @filter = nil
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
     @primary_color = rgba_color(tertiary)
@@ -43,6 +45,7 @@ class Report
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
       report.group_id,
+      report.filter,
       report.facets,
       report.limit,
       SCHEMA_VERSION,
@@ -73,9 +76,15 @@ class Report
     self.start_date
   end
 
+  def filter_values
+    if self.filter.present?
+      return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h
+    end
+    {}
+  end
+
   def as_json(options = nil)
     description = I18n.t("reports.#{type}.description", default: "")
-
     {
       type: type,
       title: I18n.t("reports.#{type}.title", default: nil),
@@ -90,6 +99,7 @@ class Report
       prev_end_date: prev_end_date&.iso8601,
       category_id: category_id,
       group_id: group_id,
+      filter: self.filter,
       prev30Days: self.prev30Days,
       dates_filtering: self.dates_filtering,
       report_key: Report.cache_key(self),
@@ -113,6 +123,7 @@ class Report
       higher_is_better: self.higher_is_better,
       category_filtering: self.category_filtering,
       group_filtering: self.group_filtering,
+      filter_options: self.filter_options,
       modes: self.modes,
     }.tap do |json|
       json[:icon] = self.icon if self.icon
@@ -141,6 +152,7 @@ class Report
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
+    report.filter = opts[:filter] if opts[:filter]
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false
@@ -1484,7 +1496,14 @@ class Report
 
   def self.report_top_uploads(report)
     report.modes = [:table]
-
+    report.filter_options = [
+      {
+        id: "file-extension",
+        selected: report.filter_values.fetch("file-extension", "any"),
+        choices: (SiteSetting.authorized_extensions.split("|") + report.filter_values.values).uniq,
+        allowAny: true
+      }
+    ]
     report.labels = [
       {
         type: :link,
@@ -1529,14 +1548,18 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    WHERE up.created_at >= '#{report.start_date}'
-    AND up.created_at <= '#{report.end_date}'
-    AND up.id > #{Upload::SEEDED_ID_THRESHOLD}
+    /*where*/
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL
 
-    DB.query(sql).each do |row|
+    extension_filter = report.filter_values["file-extension"]
+    builder = DB.build(sql)
+    builder.where("up.id > :seeded_id_threshold", seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD)
+    builder.where("up.created_at >= :start_date", start_date: report.start_date)
+    builder.where("up.created_at < :end_date", end_date: report.end_date)
+    builder.where("up.extension = :extension", extension: extension_filter) if extension_filter.present?
+    builder.query.each do |row|
       data = {}
       data[:author_id] = row.user_id
       data[:author_username] = row.username
@@ -1545,7 +1568,6 @@ class Report
       data[:extension] = row.extension
       data[:file_url] = Discourse.store.cdn_url(row.url)
       data[:file_name] = row.original_filename.truncate(25)
-
       report.data << data
     end
   end
