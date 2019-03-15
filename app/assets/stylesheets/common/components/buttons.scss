@@ -200,24 +200,43 @@
     .d-icon {
       opacity: 0.9;
     }
+    &:hover {
+      color: currentColor;
+      background: darken($google, 5%);
+    }
   }
   &.instagram {
     background: $instagram;
+    &:hover {
+      background: darken($instagram, 15%);
+    }
   }
   &.facebook {
     background: $facebook;
+    &:hover {
+      background: darken($facebook, 15%);
+    }
   }
   &.cas {
     background: $cas;
   }
   &.twitter {
     background: $twitter;
+    &:hover {
+      background: darken($twitter, 10%);
+    }
   }
   &.yahoo {
     background: $yahoo;
+    &:hover {
+      background: darken($yahoo, 10%);
+    }
   }
   &.github {
     background: $github;
+    &:hover {
+      background: lighten($github, 20%);
+    }
   }
 }
 

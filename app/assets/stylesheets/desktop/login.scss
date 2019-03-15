@@ -5,21 +5,35 @@
 .create-account {
   #login-buttons:not(.hidden) {
     display: flex;
+    flex: 0;
     flex-direction: column;
-    flex-basis: 40%;
-    align-items: center;
+    align-items: stretch;
     min-height: 175px;
     border-left: 1px solid $primary-low;
-    padding: 0 15px;
+    padding: s(0 6);
     order: 2;
 
     button {
+      text-align: left;
       margin: 0.35em;
-      width: 160px;
+      white-space: nowrap;
       &:lang(zh_CN) {
         min-width: 200px;
       }
     }
+  }
+
+  .modal-inner-container {
+    max-width: 450px;
+  }
+
+  form {
+    min-width: 300px;
+  }
+
+  #modal-alert {
+    max-width: 500px;
+    padding: s(2 4);
   }
 
   .login-modal {
@@ -43,8 +57,9 @@
   }
 
   #login-form {
+    box-sizing: border-box;
     flex: 1 0 auto;
-    padding: 0 15px;
+    padding: s(0 6);
   }
 
   tr:not(.instructions) {
@@ -140,7 +155,7 @@
     }
     form {
       box-sizing: border-box;
-      padding: 15px;
+      padding: s(4 6);
       margin-bottom: 5px;
       max-height: 475px;
       @media screen and (max-height: 768px) {
