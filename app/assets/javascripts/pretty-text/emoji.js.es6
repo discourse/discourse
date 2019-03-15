@@ -38,11 +38,14 @@ export function performEmojiUnescape(string, opts) {
   return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
     const isEmoticon = !!translations[m];
     const isUnicodeEmoticon = !!replacements[m];
-    const emojiVal = isEmoticon
-      ? translations[m]
-      : isUnicodeEmoticon
-      ? replacements[m]
-      : m.slice(1, m.length - 1);
+    let emojiVal;
+    if (isEmoticon) {
+      emojiVal = translations[m];
+    } else if (isUnicodeEmoticon) {
+      emojiVal = replacements[m];
+    } else {
+      emojiVal = m.slice(1, m.length - 1);
+    }
     const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
     const url = buildEmojiUrl(emojiVal, opts);
     const classes = isCustomEmoji(emojiVal, opts)
