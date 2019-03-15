@@ -69,6 +69,11 @@ class User < ActiveRecord::Base
   has_many :oauth2_user_infos, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
+
+  has_many :totps, -> {
+    where(method: UserSecondFactor.methods[:totp], enabled: true)
+  }, class_name: "UserSecondFactor"
+
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
