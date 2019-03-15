@@ -1825,7 +1825,7 @@ en:
 
     ignored_users_count_message_threshold: "Notify moderators if a particular user is ignored by this many other users."
 
-    ignored_users_message_gap_days: "How long wait before notifying moderators again about a user who has been ignored by many others"
+    ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
 
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
@@ -2839,9 +2839,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you about a potentially problematic user who has been ignored by %{ignores_threshold} users. It would be smart to review their forum activity.
+        This is an automated message from %{site_name} to inform you that [user's profile](%{base_url}/u/%{username}/summary) has been ignored by %{ignores_threshold} users. This could indicate a problem is developing in your community.
 
-        Please check the [user's profile](%{base_url}/u/%{username}/summary).
+        You might want to review recent posts from this user, and potentially other users in the [ignored user report](%{base_url}/admin/reports/top_ignored_users).
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
