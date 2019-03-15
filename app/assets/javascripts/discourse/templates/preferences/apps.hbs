@@ -6,9 +6,9 @@
     <div>
       <span>{{key.application_name}}</span>
       {{#if key.revoked}}
-        {{d-button action="undoRevokeApiKey" actionParam=key class="btn" label="user.undo_revoke_access"}}
+        {{d-button action=(route-action "undoRevokeApiKey") actionParam=key class="btn" label="user.undo_revoke_access"}}
       {{else}}
-        {{d-button action="revokeApiKey" actionParam=key class="btn" label="user.revoke_access"}}
+        {{d-button action=(route-action "revokeApiKey") actionParam=key class="btn" label="user.revoke_access"}}
       {{/if}}
       <p>
         <ul>
@@ -25,4 +25,4 @@
 </div>
 {{/if}}
 
-{{plugin-outlet name="user-preferences-apps" args=(hash model=model save=(action "save"))}}
+{{plugin-outlet name="user-preferences-apps" args=(hash model=model)}}

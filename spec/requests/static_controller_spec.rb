@@ -4,38 +4,65 @@ describe StaticController do
   let(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
-    let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }
+    let(:filename) { 'smallest.png' }
+    let(:file) { file_from_fixtures(filename) }
 
-    before { FinalDestination.stubs(:lookup_ip).returns("1.2.3.4") }
+    let(:upload) do
+      UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
+    end
 
     after do
-      $redis.flushall
+      DistributedMemoizer.flush!
     end
 
-    it 'returns the default favicon for a missing download' do
-      url = UrlHelper.absolute(upload.url)
-      SiteSetting.favicon = upload
-      stub_request(:get, url).to_return(status: 404)
+    describe 'local store' do
+      it 'returns the default favicon if favicon has not been configured' do
+        get '/favicon/proxied'
 
-      get '/favicon/proxied'
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(SiteSetting.favicon.filesize)
+      end
 
-      favicon = File.read(Rails.root + "public/images/default-favicon.png")
+      it 'returns the configured favicon' do
+        SiteSetting.favicon = upload
 
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq('image/png')
-      expect(response.body.bytesize).to eq(favicon.bytesize)
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(upload.filesize)
+      end
     end
 
-    it 'can proxy a favicon correctly' do
-      url = UrlHelper.absolute(upload.url)
-      SiteSetting.favicon = upload
-      stub_request(:get, url).to_return(status: 200, body: png)
+    describe 'external store' do
+      let(:upload) do
+        Upload.create!(
+          url: '//s3-upload-bucket.s3-us-east-1.amazonaws.com/somewhere/a.png',
+          original_filename: filename,
+          filesize: file.size,
+          user_id: Discourse.system_user.id
+        )
+      end
 
-      get '/favicon/proxied'
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_access_key_id = 'X'
+        SiteSetting.s3_secret_access_key = 'X'
+      end
 
-      expect(response.status).to eq(200)
-      expect(response.content_type).to eq('image/png')
-      expect(response.body.bytesize).to eq(png.bytesize)
+      it 'can proxy a favicon correctly' do
+        SiteSetting.favicon = upload
+
+        stub_request(:get, "https:/#{upload.url}")
+          .to_return(status: 200, body: file)
+
+        get '/favicon/proxied'
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to eq('image/png')
+        expect(response.body.bytesize).to eq(upload.filesize)
+      end
     end
   end
 
@@ -96,7 +123,7 @@ describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response" do
+      it "should return the right response for /faq" do
         get "/faq"
 
         expect(response.status).to eq(200)
@@ -138,6 +165,18 @@ describe StaticController do
       it "should respond 404" do
         get "/static/does-not-exist"
         expect(response.status).to eq(404)
+      end
+
+      context "modal pages" do
+        it "should return the right response for /signup" do
+          get "/signup"
+          expect(response.status).to eq(200)
+        end
+
+        it "should return the right response for /password-reset" do
+          get "/password-reset"
+          expect(response.status).to eq(200)
+        end
       end
     end
 

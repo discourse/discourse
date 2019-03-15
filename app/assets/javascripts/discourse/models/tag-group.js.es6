@@ -9,6 +9,11 @@ export default RestModel.extend({
     return saving || Ember.isEmpty(name) || Ember.isEmpty(tagNames);
   },
 
+  @computed("id")
+  disableDelete(id) {
+    return !parseInt(id);
+  },
+
   @computed("permissions")
   permissionName: {
     get(permissions) {

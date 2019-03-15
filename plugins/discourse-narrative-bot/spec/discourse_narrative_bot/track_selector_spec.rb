@@ -37,7 +37,7 @@ describe DiscourseNarrativeBot::TrackSelector do
   end
 
   before do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
   end
 
   describe '#select' do

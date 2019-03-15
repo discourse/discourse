@@ -339,7 +339,7 @@ const Report = Discourse.Model.extend({
     const formatedValue = () => {
       const topicId = row[properties.id];
       const href = Discourse.getURL(`/t/-/${topicId}`);
-      return `<a href='${href}'>${topicTitle}</a>`;
+      return `<a href='${href}'>${escapeExpression(topicTitle)}</a>`;
     };
 
     return {
@@ -357,7 +357,10 @@ const Report = Discourse.Model.extend({
     return {
       property: properties.title,
       value: postTitle,
-      formatedValue: `<a href='${href}'>${postTitle}</a>`
+      formatedValue:
+        postTitle && href
+          ? `<a href='${href}'>${escapeExpression(postTitle)}</a>`
+          : "—"
     };
   },
 
@@ -478,11 +481,27 @@ Report.reopenClass({
         .utc(report[endDate])
         .locale("en")
         .format("YYYY-MM-DD");
-      report[filledField] = fillMissingDates(
-        JSON.parse(JSON.stringify(report[dataField])),
-        startDateFormatted,
-        endDateFormatted
-      );
+
+      if (report.modes[0] === "stacked_chart") {
+        report[filledField] = report[dataField].map(rep => {
+          return {
+            req: rep.req,
+            label: rep.label,
+            color: rep.color,
+            data: fillMissingDates(
+              JSON.parse(JSON.stringify(rep.data)),
+              startDateFormatted,
+              endDateFormatted
+            )
+          };
+        });
+      } else {
+        report[filledField] = fillMissingDates(
+          JSON.parse(JSON.stringify(report[dataField])),
+          startDateFormatted,
+          endDateFormatted
+        );
+      }
     }
   },
 

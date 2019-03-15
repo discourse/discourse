@@ -2,16 +2,18 @@ module SiteSettings; end
 
 module SiteSettings::DeprecatedSettings
   SETTINGS = [
-    ['logo_url', 'logo', false, '2.4'],
-    ['logo_small_url', 'logo_small', false, '2.4'],
-    ['digest_logo_url', 'digest_logo', false, '2.4'],
-    ['mobile_logo_url', 'mobile_logo', false, '2.4'],
-    ['large_icon_url', 'large_icon', false, '2.4'],
-    ['favicon_url', 'favicon', false, '2.4'],
-    ['apple_touch_icon_url', 'apple_touch_icon', false, '2.4'],
-    ['default_opengraph_image_url', 'opengraph_image', false, '2.4'],
-    ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.4'],
-    ['push_notifications_icon_url', 'push_notifications_icon', false, '2.4']
+    ['logo_url', 'logo', false, '2.3'],
+    ['logo_small_url', 'logo_small', false, '2.3'],
+    ['digest_logo_url', 'digest_logo', false, '2.3'],
+    ['mobile_logo_url', 'mobile_logo', false, '2.3'],
+    ['large_icon_url', 'large_icon', false, '2.3'],
+    ['favicon_url', 'favicon', false, '2.3'],
+    ['apple_touch_icon_url', 'apple_touch_icon', false, '2.3'],
+    ['default_opengraph_image_url', 'opengraph_image', false, '2.3'],
+    ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.3'],
+    ['push_notifications_icon_url', 'push_notifications_icon', false, '2.3'],
+    ['show_email_on_profile', 'moderators_view_emails', true, '2.4'],
+    ['allow_moderators_to_create_categories', 'moderators_create_categories', true, '2.4']
   ]
 
   def setup_deprecated_methods

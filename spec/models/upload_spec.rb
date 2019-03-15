@@ -45,6 +45,16 @@ describe Upload do
     end
   end
 
+  it "supports <style> element in SVG" do
+    SiteSetting.authorized_extensions = "svg"
+
+    upload = UploadCreator.new(image_svg, image_svg_filename).create_for(user_id)
+    expect(upload.valid?).to eq(true)
+
+    path = Discourse.store.path_for(upload)
+    expect(File.read(path)).to match(/<style>/)
+  end
+
   it "can reconstruct dimensions on demand" do
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
 
@@ -237,6 +247,15 @@ describe Upload do
   describe '#to_s' do
     it 'should return the right value' do
       expect(upload.to_s).to eq(upload.url)
+    end
+  end
+
+  describe '.migrate_to_new_scheme' do
+    it 'should not migrate system uploads' do
+      SiteSetting.migrate_to_new_scheme = true
+
+      expect { Upload.migrate_to_new_scheme }
+        .to_not change { Upload.pluck(:url) }
     end
   end
 

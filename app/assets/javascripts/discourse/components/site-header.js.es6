@@ -15,7 +15,7 @@ function addFlagProperty(prop) {
 const PANEL_BODY_MARGIN = 30;
 
 //android supports pulling in from the screen edges
-const SCREEN_EDGE_MARGIN = 30;
+const SCREEN_EDGE_MARGIN = 20;
 const SCREEN_OFFSET = 300;
 
 const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
@@ -137,6 +137,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched(this._leftMenuAction(), "header");
+      window.requestAnimationFrame(() => this.panMove(e));
     } else if (
       windowWidth - center.x < SCREEN_EDGE_MARGIN &&
       !this.$(".menu-panel").length &&
@@ -148,6 +149,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       this._isPanning = true;
       $("header.d-header").removeClass("scroll-down scroll-up");
       this.eventDispatched(this._rightMenuAction(), "header");
+      window.requestAnimationFrame(() => this.panMove(e));
     } else {
       this._isPanning = false;
     }
@@ -225,7 +227,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
+    const { isAndroid } = this.capabilities;
     $(window).on("resize.discourse-menu-panel", () => this.afterRender());
 
     this.appEvents.on("header:show-topic", topic => this.setTopic(topic));
@@ -242,17 +245,16 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
       }
     });
 
-    if (this.site.mobileView) {
-      $("body")
-        .on("pointerdown", e => this._panStart(e))
-        .on("pointermove", e => this._panMove(e))
-        .on("pointerup", e => this._panMove(e))
-        .on("pointercancel", e => this._panMove(e));
+    // Only add listeners for opening menus by swiping them in on Android devices
+    // iOS will respond to these events, but also does swiping for back/forward
+    if (isAndroid) {
+      this.addTouchListeners($("body"));
     }
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
+    const { isAndroid } = this.capabilities;
     $("body").off("keydown.header");
     $(window).off("resize.discourse-menu-panel");
 
@@ -260,13 +262,10 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
     this.appEvents.off("header:hide-topic");
     this.appEvents.off("dom:clean");
 
-    if (this.site.mobileView) {
-      $("body")
-        .off("pointerdown")
-        .off("pointerup")
-        .off("pointermove")
-        .off("pointercancel");
+    if (isAndroid) {
+      this.removeTouchListeners($("body"));
     }
+
     Ember.run.cancel(this._scheduledRemoveAnimate);
     window.cancelAnimationFrame(this._scheduledMovingAnimation);
   },
@@ -367,7 +366,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
           $headerCloak.show();
         }
 
-        const menuTop = this.site.mobileView ? 0 : headerHeight();
+        const menuTop = this.site.mobileView ? headerTop() : headerHeight();
 
         let height;
         const winHeightOffset = 16;
@@ -386,6 +385,7 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
         }
         if (style.top !== menuTop + "px" || style.height !== height) {
           $panel.css({ top: menuTop + "px", height });
+          $(".header-cloak").css({ top: menuTop + "px" });
         }
         $("body").removeClass("drop-down-mode");
       }
@@ -433,4 +433,11 @@ export function headerHeight() {
   return parseInt(
     $header.outerHeight() + headerOffsetTop - $(window).scrollTop()
   );
+}
+
+export function headerTop() {
+  const $header = $("header.d-header");
+  const headerOffset = $header.offset();
+  const headerOffsetTop = headerOffset ? headerOffset.top : 0;
+  return parseInt(headerOffsetTop - $(window).scrollTop());
 }

@@ -8,13 +8,10 @@ module Jobs
 
     def execute(args)
       if SiteSetting.notify_about_flags_after > 0
-
         flagged_posts_count = PostAction.flagged_posts_count
-
         return unless flagged_posts_count > 0
 
         flag_ids = pending_flag_ids
-
         if flag_ids.size > 0 && last_notified_id.to_i < flag_ids.max
 
           usernames = active_moderator_usernames
@@ -35,9 +32,19 @@ module Jobs
     end
 
     def pending_flag_ids
+      by_post = {}
+
       FlagQuery.flagged_post_actions(filter: 'active')
         .where('post_actions.created_at < ?', SiteSetting.notify_about_flags_after.to_i.hours.ago)
-        .pluck(:id)
+        .pluck(:post_id, :id)
+        .each do |row|
+
+        by_post[row[0]] ||= []
+        by_post[row[0]] << row[1]
+      end
+
+      by_post.delete_if { |post_id, flags| flags.size < SiteSetting.min_flags_staff_visibility }
+      by_post.values.flatten.uniq
     end
 
     def last_notified_id

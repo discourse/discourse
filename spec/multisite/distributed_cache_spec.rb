@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Multisite SiteSettings', type: :multisite do
-  let(:conn) { RailsMultisite::ConnectionManagement }
-
   def cache(name, namespace: true)
     DistributedCache.new(name, namespace: namespace)
   end
@@ -15,7 +13,7 @@ RSpec.describe 'Multisite SiteSettings', type: :multisite do
 
       expect(cache1.hash).to eq('default' => true)
 
-      conn.with_connection('second') do
+      test_multisite_connection('second') do
         message = MessageBus.track_publish(DistributedCache::Manager::CHANNEL_NAME) do
           cache1['second'] = true
         end.first

@@ -9,15 +9,15 @@
                               fieldTypes=fieldTypes
                               firstField=sortedFields.firstObject
                               lastField=sortedFields.lastObject
-                              destroyAction="destroy"
-                              moveUpAction="moveUp"
-                              moveDownAction="moveDown"}}
+                              destroyAction=(action "destroy")
+                              moveUpAction=(action "moveUp")
+                              moveDownAction=(action "moveDown")}}
     {{/each}}
   {{/if}}
 
   {{d-button disabled=createDisabled
              class="btn-primary"
-             action="createField"
+             action=(action "createField")
              label="admin.user_fields.create"
              icon="plus"}}
 

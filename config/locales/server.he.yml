@@ -35,7 +35,6 @@ he:
   anonymous: "אלמוני"
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   themes:
-    bad_color_scheme: "לא ניתן לעדכן את התמה, סכמת צבעים שגויה"
     other_error: "ארעה שגיאה בזמן עדכון התמה"
     settings_errors:
       invalid_yaml: "ה־YAML שסופק שגוי."
@@ -61,7 +60,7 @@ he:
         screened_email_error: "מתרחש כאשר כתובת הדוא\"ל של השולחים כבר סוננה."
       unrecognized_error: "תקלה לא מוכרת"
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "מוגבל לאורך של  %{max} תוים: אתם הקשתם %{length}."
       invalid_boolean: "בוליאני לא תקין."
@@ -86,7 +85,7 @@ he:
       not_a_number: אינו מספר
       not_an_integer: חייב להיות מספר שלם
       odd: חייב להיות אי-זוגי
-      record_invalid: 'בדיקה נכשלה: %{errors}'
+      record_invalid: "בדיקה נכשלה: %{errors}"
       restrict_dependent_destroy:
         one: "לא ניתן להסיר בגלל קיומה של רשומה תלויה %{record}"
         many: "לא ניתן להסיר רשומה בגלל קיומה של רשומה תלויה %{record}"
@@ -107,12 +106,12 @@ he:
         other: באורך שגוי (צריך להיות %{count} תוים)
       other_than: "צריך להיות שונה מ-%{count}"
     template:
-      body: 'היו בעיות עם השדות הבאים:'
+      body: "היו בעיות עם השדות הבאים:"
       header:
         one: שגיאה מנעה מ-%{model} להישמר.
-        two: '%{count} שגיאות מנעו מ-%{model} להישמר.'
-        many: '%{count} שגיאות מנעו מ-%{model} להישמר.'
-        other: '%{count} שגיאות מנעו מ-%{model} להישמר.'
+        two: "%{count} שגיאות מנעו מ-%{model} להישמר."
+        many: "%{count} שגיאות מנעו מ-%{model} להישמר."
+        other: "%{count} שגיאות מנעו מ-%{model} להישמר."
     embed:
       load_from_remote: "ארעה שגיאה בטעינת הפוסט הזה."
     site_settings:
@@ -150,7 +149,6 @@ he:
     continue: "המשך דיון"
     error: "תקלה בשילוב"
     referer: "מפנה:"
-    mismatch: "המפנה לא התאים לאף אחד מהשרתים הבאים:"
     no_hosts: "אף שרת לא הוגדר לשילוב."
     configure: "הגדרת שילוב (Embedding)"
     more_replies:
@@ -162,6 +160,11 @@ he:
     permalink: "קישור"
     imported_from: "זה נושא דיון מלווה לערך המקורי ב- %{link}"
     in_reply_to: "◄ %{username}"
+    replies:
+      one: "%{count} הודעות"
+      two: "%{count} הודעות"
+      many: "%{count} הודעות"
+      other: "%{count} הודעות"
   no_mentions_allowed: "מצטערים, אך אינכם יכולים לאזכר משתמשים אחרים."
   too_many_mentions:
     one: "מצטערים, אתם יכולים לאזכר רק משתמש אחד בפוסט"
@@ -260,14 +263,14 @@ he:
       two: "%{count} פוסטים"
       many: "%{count} פוסטים"
       other: "%{count} פוסטים"
-    'new-topic': |
+    "new-topic": |
       ברוכים באים ל%{site_name} &mdash; **תודה שהתחלתם שיחה חדשה! **
       -הכותרת נשמעת מעניינת כשאתם קוראים אותה בקול רם? האם היא תקציר טוב?
       -מי יתעניין בזה? איזה סוג של תגובות אתם רוצים?
       -השתמשו במילים נפוצות בכותרת שלכם כך שאחרים יוכלו למצוא אותה. כדי לשייך את הנושאים שלכם עם נושאים קשורים בחרו קטגוריה.
       -לעוד טיפים, [ראו את כללי התנהלות בקהילה] (/guidelines).
       הפנל הזה יופיע רק עבור %{education_posts_text} הפוסטים הראשונים.
-    'new-reply': |
+    "new-reply": |
       ברוכים הבאים ל %{site_name} &mdash; ** תודה על תרומתך! **
 
       - האם התגובה שלך משפרת את השיחה בדרך כלשהיא?
@@ -318,8 +321,8 @@ he:
       category:
         name: "שם קטגוריה"
       topic:
-        title: 'כותרת'
-        featured_link: 'קישור מומלץ'
+        title: "כותרת"
+        featured_link: "קישור מומלץ"
       post:
         raw: "גוף"
       user_profile:
@@ -379,23 +382,22 @@ he:
     title: "ברוכים הבאים לדיסקורס"
     body: |2
 
-        הפסקה הראשונה של נושא נעוץ זה תראה כהודעת ״ברוכים הבאים״ לכל המבקרים החדשים באתר הבית שלכם. היא חשובה!
+      הפסקה הראשונה של נושא נעוץ זה תראה כהודעת ״ברוכים הבאים״ לכל המבקרים החדשים באתר הבית שלכם. היא חשובה!
 
-        **עירכו זאת** לתיאור קצר של הקהילה שלכם:
+      **עירכו זאת** לתיאור קצר של הקהילה שלכם:
 
-        - למי היא נועדה?
-        - מה הם יכולים למצוא כאן?
-        - למה כדאי להם לבוא לפה?
-        - איפה אפשר לקרוא עוד (קישורים, מקורות, וכד׳)?
+      - למי היא נועדה?
+      - מה הם יכולים למצוא כאן?
+      - למה כדאי להם לבוא לפה?
+      - איפה אפשר לקרוא עוד (קישורים, מקורות, וכד׳)?
 
-        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        ייתכן ותרצו לסגור נושא זה באמצעות :wrench: הניהול (בפינות משמאל למעלה ולמטה), כדי שתגובות לא ייערמו על גבי כרזה.
+      ייתכן ותרצו לסגור נושא זה באמצעות :wrench: הניהול (בפינות משמאל למעלה ולמטה), כדי שתגובות לא ייערמו על גבי כרזה.
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
   category:
     topic_prefix: "אודות הקטגוריה %{category}"
-    replace_paragraph: "(החליפו פסקה ראשונה זו עם תיאור קצר של הקטגוריה החדשה שלכם. הנחיה זו תופיעה באזור בחירת הקטגוריה, אז נסו לשמור על פחות מ 200 אותיות. **עד שתערכו תיאור זה או תיצרו נושאים, קטגוריה זו לא תופיע בדף הקטגוריות.**)"
     post_template: "%{replace_paragraph}\n\nהשתמשו בפסקאות הבאות לתיאור ארוך יותר, או כדי לגבש הנחיות קטגוריה או חוקים:\n\n- למה להשתמש בקטגוריה זו? למה היא נועדה?\n\n- במה בדיוק היא שונה מקטגוריות אחרות שכבר יש לנו?\n\n- מה בגדול נושאים בקטגוריה זו אמורים להכיל?\n\n- האם אנחנו צריכים את הקטגוריה הזו? אולי נוכל למזג אותה עם קטגוריה אחרת, או תת-קטגוריה?\n"
     errors:
       uncategorized_parent: "ללא-קטגוריה לא יכול להיות עם קטגוריית אם"
@@ -406,7 +408,6 @@ he:
       email_already_used_in_category: "'%{email}' כבר בשימוש על ידי הקטגוריה '%{category_name}'."
       description_incomplete: "לתיאור קטגוריה זו צריכה להיות לפחות פסקה אחת."
     cannot_delete:
-      uncategorized: "לא ניתן להסיר תוכן ללא קטגוריה"
       has_subcategories: "לא ניתן להסיר קטגוריה זו משום שיש בה תת-קטגוריות."
       topic_exists_no_oldest: "לא ניתן להסיר קטגוריה זו משום שסך הנושאים הוא %{count}."
     uncategorized_description: "נושאים שלא דורשים קטגוריה מסויימת, או שאינם מתאימים לאף קטגוריה קיימת."
@@ -560,9 +561,9 @@ he:
     no_token: "מצטערים, הקישור לשינוי הסיסמה ישן מדי. לחצו על כפתור הכניסה ובחרו ב\"שכחתי את הסיסמה שלי\" כדי לקבל קישור חדש."
     choose_new: "בחרו סיסמה חדשה"
     choose: "בחרו סיסמה"
-    update: 'עידכון סיסמה'
-    save: 'שמירת סיסמה'
-    title: 'איפוס סיסמה'
+    update: "עידכון סיסמה"
+    save: "שמירת סיסמה"
+    title: "איפוס סיסמה"
     success: "שיניתם את סיסמתכם בהצלחה ואתם עכשיו מחוברים."
     success_unapproved: "שינית את הסיסמה שלך בהצלחה."
   change_email:
@@ -591,42 +592,42 @@ he:
       back_to: "חזרה ל-%{title}"
   post_action_types:
     off_topic:
-      title: 'אוף-טופיק'
-      description: 'פוסט זה אינו רלוונטי לדיון הנוכחי כפי שהוגדר בכותרת ובפרסום הראשון, ולכן כנראה שעליו לעבור למקום אחר.'
-      short_description: 'לא רלוונטי לדיון'
-      long_form: 'דוגלל כאוף-טופיק'
+      title: "אוף-טופיק"
+      description: "פוסט זה אינו רלוונטי לדיון הנוכחי כפי שהוגדר בכותרת ובפרסום הראשון, ולכן כנראה שעליו לעבור למקום אחר."
+      short_description: "לא רלוונטי לדיון"
+      long_form: "דוגלל כאוף-טופיק"
     spam:
-      title: 'ספאם'
-      description: 'פוסט זה הוא פרסומת, או ונדליזם. הוא לא תורם או רלוונטי לנושא הנוכחי.'
-      short_description: 'זוהי פרסומת או ונדליזם'
-      long_form: 'דוגלל כספאם'
+      title: "ספאם"
+      description: "פוסט זה הוא פרסומת, או ונדליזם. הוא לא תורם או רלוונטי לנושא הנוכחי."
+      short_description: "זוהי פרסומת או ונדליזם"
+      long_form: "דוגלל כספאם"
       email_title: '"%{title}" סומן כספאם'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'לא ראוי'
-      long_form: 'דוגלל כלא ראוי'
+      title: "לא ראוי"
+      long_form: "דוגלל כלא ראוי"
     notify_user:
-      title: 'שלחו הודעה ל @{{username}}'
-      long_form: 'הודעה נשלחה למשתמש/ת'
+      title: "שלחו הודעה ל @{{username}}"
+      long_form: "הודעה נשלחה למשתמש/ת"
       email_title: 'הפוסט שלכם ב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
-      description: 'פוסט זה דורש את תשומת לב הצוות מסיבה שאינה מצויינת למעלה.'
-      short_description: 'דורש תשומת לב של הצוות מסיבה אחרת'
-      long_form: 'דוגל לטיפול על ידי הצוות'
+      description: "פוסט זה דורש את תשומת לב הצוות מסיבה שאינה מצויינת למעלה."
+      short_description: "דורש תשומת לב של הצוות מסיבה אחרת"
+      long_form: "דוגל לטיפול על ידי הצוות"
       email_title: 'פוסט ב"%{title}" דורש תשומת לב של הצוות'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'סימנייה'
-      description: 'סמנו פוסט זה עם סימנייה'
-      short_description: 'סמנו פוסט זה'
-      long_form: 'פוסט זה סומן עם סימנייה'
+      title: "סימנייה"
+      description: "סמנו פוסט זה עם סימנייה"
+      short_description: "סמנו פוסט זה"
+      long_form: "פוסט זה סומן עם סימנייה"
     like:
-      title: 'לייק'
-      description: 'תנו לייק לפוסט זה'
-      short_description: 'אהבו פוסט זה'
-      long_form: 'נתתי לזה לייק'
+      title: "לייק"
+      description: "תנו לייק לפוסט זה"
+      short_description: "אהבו פוסט זה"
+      long_form: "נתתי לזה לייק"
   user_activity:
     no_default:
       others: "אין פעילות."
@@ -640,19 +641,19 @@ he:
       others: "אין תגובות."
   topic_flag_types:
     spam:
-      title: 'ספאם'
-      description: 'הנושא הזה הוא פרסמות. הוא אינו שימושי או רלוונטי לאתר הזה, אלא שיווקי באופיו.'
-      long_form: 'דיגלתם זאת כספאם'
+      title: "ספאם"
+      description: "הנושא הזה הוא פרסמות. הוא אינו שימושי או רלוונטי לאתר הזה, אלא שיווקי באופיו."
+      long_form: "דיגלתם זאת כספאם"
     inappropriate:
-      title: 'לא ראוי'
-      long_form: 'דוגלל כלא ראוי'
+      title: "לא ראוי"
+      long_form: "דוגלל כלא ראוי"
     notify_moderators:
       title: "משהו אחר"
-      long_form: 'זה סומן לתשומת הלב של מנחה'
+      long_form: "זה סומן לתשומת הלב של מנחה"
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנחה'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>פוסט זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
+    user_must_edit: "<p>פוסט זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>"
   archetypes:
     regular:
       title: "נושא רגיל"
@@ -680,7 +681,7 @@ he:
     authorize: "אישור"
     read: "קריאה"
     read_write: "קריאה/כתיבה"
-    description: "\"%{application_name}\" מבקשת את הגישה הבאה לחשבון שלכם:"
+    description: '"%{application_name}" מבקשת את הגישה הבאה לחשבון שלכם:'
     no_trust_level: "מצטערים, אין לכם את רמת האמון הנדרשת כדי לגשת ל API של המשתמשים"
     generic_error: "מצטערים, לא הצלחנו לייצר את מפתחות ה API של המשתמש, ייתכן שיכולת זו מנוטרלת על ידי מנהלי האתר"
     scopes:
@@ -721,10 +722,6 @@ he:
       title: "סימניות"
       xaxis: "יום"
       yaxis: "מספר סימניות חדשות"
-    starred:
-      title: "כוכב"
-      xaxis: "יום"
-      yaxis: "מספר נושאים חדשים שכוכבו"
     users_by_trust_level:
       title: "משתמשים בכל רמת אמון"
       xaxis: "רמת אמון"
@@ -774,7 +771,6 @@ he:
       xaxis: "יום"
       yaxis: "צפיות בדפים של מחוברים"
     page_view_crawler_reqs:
-      title: "זחלן רשת"
       xaxis: "יום"
       yaxis: "צפיות בדפים של זחלני רשת"
     page_view_total_reqs:
@@ -827,8 +823,8 @@ he:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת מיילים, מבוצעות אסינכרונית באמצעות Sidekiq. אנא וודאו שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">לימדו על Sidekiq כאן</a>.'
-    queue_size_warning: 'מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers.'
-    memory_warning: 'בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון.'
+    queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
+    memory_warning: "בשרת שלכם יש פחות מ 1 גיגה זיכרון בסך הכל. מומלץ לפחות 1 גיגה זיכרון."
     subfolder_ends_in_slash: "הגדרות תיקיית המשנה שלכם לא נכונות, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
       one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
@@ -873,7 +869,7 @@ he:
     max_image_height: "גובה מקסימלי של תצוגת תמונה מוקטנת בפוסט"
     fixed_category_positions: "אם אפשרות זו מסומנת, תוכלו  לארגן את הקטגוריות כך שיופיעו בסדר קבוע. אם האופציות אינן מסומנות, הקטגוריות יסודרו על פי סדר הפעילות שהתבצעה בהן."
     fixed_category_positions_on_create: "אם האפשרות תסומן, סדר הקטגוריות יוגדר בתפריט יצירת נושא (דורש fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "הוספת התווית rel nofollow לכל תוכן שפורסם על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל מתחם הורה parent domains). אם תשנו אפשרות זו, עליכם לאפות מחדש את כל הפרסומים עם: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'הוספת התווית rel nofollow לכל תוכן שפורסם על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל מתחם הורה parent domains). אם תשנו אפשרות זו, עליכם לאפות מחדש את כל הפרסומים עם: "rake posts:rebake"'
     post_excerpt_maxlength: "אורך מקסימלי של קטע פוסט / סיכום."
     show_pinned_excerpt_mobile: "הצגת קטע בנושאים נעוצים במבט ניידים."
     show_pinned_excerpt_desktop: "הצגת קטע בנושאים נעוצים בתצוגת מחשב-שולחני."
@@ -888,7 +884,6 @@ he:
     summary_posts_required: "מספר הפוסטים המנימלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את % הפוסטים הראשונים"
-    summary_max_results: "מספר הפוסטים שיוחזרו באמצעות \"סיכום נושא זה\""
     enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
     long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
     long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
@@ -902,13 +897,11 @@ he:
     tl2_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl2 (משתמש) באמצעות הכפלה במספר זה. "
     tl3_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור רמת-אמון 3 (רגיל) באמצעות הכפלה במספר זה."
     tl4_additional_likes_per_day_multiplier: "להגדיל את כמות הלייקים האפשרית ביום עבור tl4 (מנהיג) באמצעות הכפלה במספר זה. "
-    flag_sockpuppets: "אם משתמשים חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפוסטים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפוסט (לייק, סימון, וכו')."
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     pending_users_reminder_delay: "הודיעו למנחים אם משתמשים חדשים ממתינים לאישור למעלה מכמות זו של שעות. קבעו ל -1 כדי לנטרל התראות."
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
-    gtm_container_id: "מזהה קונטיינר של מנהל תגיות גוגל. למשל: GTM-ABCDEF"
     allow_moderators_to_create_categories: "אפשרו למנחים ליצור קטגוריות חדשות"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_whitelist: "מנהלים יכולים להתחבר רק אם הכתובת שלהם מופיע ברשימת ה IPs המסוננים (ניהול > לוגים > כתובות IP מסוננות)."
@@ -927,7 +920,6 @@ he:
     topics_per_period_in_top_page: "מספר הנושאים הראשונים המוצגים בתצוגה המורחבת של \"הצג עוד\"."
     redirect_users_to_top_page: "כוון באופן אוטומטי משתמשים חדשים וכאלה שנעדרו במשך זמן לראש העמוד."
     top_page_default_timeframe: "ברירת מחדל של פרק זמן להצגה בדף המובילים."
-    show_email_on_profile: "הצגת כתובת הדוא\"ל של המשתמשים בעמוד הפרופיל שלהם (גלוי רק להם ולצוות)"
     prioritize_username_in_ux: "הציגו שם-משתמש ראשון בדף המשתמש, כרטיס המשתמש ופוסטים (כשמנוטרל השם מופיע קודם)"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     enable_badges: "הפעלת מערכת העיטורים"
@@ -938,7 +930,6 @@ he:
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמש/ת בכל המכשירים"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסה חדשה של Discourse זמינה."
     invite_expiry_days: "מה התוקף מפתחות הזמנת משתמשים, בימים"
-    invite_only: "הרשמה פומבית מנוטרלת, כל המשתמשים החדשים חייבים להיות מוזמנים על ידי הצוות."
     login_required: "דרשו הזדהות לקריאת תוכן באתר זה, אל תאפשרו גישה אנונימית."
     min_username_length: "אורך שמות משתמשים מינימלי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שם קצר יותר, האתר שלכם ישבר!"
     max_username_length: "אורך שמות משתמשים מקסימלי בתווים. אזהרה: אם למשתמשים קיימים או קבוצות כבר יש שמות ארוכים יותר, האתר שלכם ישבר!"
@@ -1005,7 +996,6 @@ he:
     s3_upload_bucket: "שם של Amazon S3 bucket אליו יועלו קבצים. אזהרה: שם זה חייב להיות באותיות קטנות, ללא נקודות וללא קווים תחתונים."
     s3_access_key_id: "מפתח הגישה (access key id) של Amazon S3 שישמש להעלאת התמונות."
     s3_secret_access_key: "מפתח הגישה הסודי (secret access key) של Amazon S3 שישמש להעלאת תמונות."
-    s3_region: "שם האזור (region name) של Amazon S3 שישמש להעלאת תמונות."
     s3_cdn_url: "CDN URL לכל ה assets ב s3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו עליכם לאפות מחדש את כל הפוסטים הישנים."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
@@ -1126,7 +1116,6 @@ he:
     attachment_filename_blacklist: "רשימת מילות מפתח לרשימה שחורה של שמות קבצים מצורפים."
     enable_forwarded_emails: "[בטא] אפשרו למשתמשים ליצור נושא על ידי העברת מייל."
     always_show_trimmed_content: "תמיד הציגו חלק מקוצר של מיילים נכנסים. אזהרה: עלול לחשוף כתובות מייל."
-    private_email: "לא לכלול תוכן מפוסטים או נושאים במיילים לשיפור הפרטיות."
     manual_polling_enabled: "דחיפת מיילים באמצעות ה API לתגובות מייל."
     pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
@@ -1160,8 +1149,6 @@ he:
     email_link_color: "צבע הקישורים במיילים מסוג HTML. הכניסו שם צבע ('blue') או ערך הקסדצימלי ('#0000FF')."
     detect_custom_avatars: "האם לבדוק או לא לבדוק שמשתמשים העלו תמונות פרופיל אישיות."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
-    public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
-    staff_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים לאנשי צוות."
     enable_user_directory: "ספקו ספריייה של משתמשים לגלישה"
     enable_group_directory: "ספקו ספריה של קבוצות לסיור"
     allow_anonymous_posting: "אפשרו למשתמשים לעבור למצב אנונימי"
@@ -1177,7 +1164,6 @@ he:
     disable_avatar_education_message: "ניטרול הודעה שמלמדת על שינוי דמות."
     suppress_uncategorized_badge: "אל תציגו את העיטור לנושאים נטולי קטגוריה ברשימת הנושאים."
     permalink_normalizations: "החילו את הביטויים הרגולריים האלו לפני שמתאימים קישורים-קבועים, למשל: /(topic.*)\\?.*/\\1 יסיר מחרוזות שאילתה מנתיבי נושאים. הפורמט הוא regex+string משתמש ב \\1 וכד׳ כדי לגשת להתאמות"
-    global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
@@ -1237,7 +1223,6 @@ he:
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     max_api_keys_per_user: "מספר מקסימלי של מפתחות API של משתמש לכל משתמש"
     min_trust_level_for_user_api_key: "רמת אמון נדרשת לייצור של מפתחות API של משתמש"
-    allowed_user_api_auth_redirects: "URL מורשה להפניה מחדש לאימות עבור מפתחות API של משתמש"
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
     tagging_enabled: "לאפשר תגיות על נושאים?"
     min_trust_to_create_tag: "רמת האמון המינימלית שנדרשת כדי ליצור תג."
@@ -1278,9 +1263,9 @@ he:
   search:
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
-      category: 'קטגוריות'
-      topic: 'תוצאות'
-      user: 'משתמשים'
+      category: "קטגוריות"
+      topic: "תוצאות"
+      user: "משתמשים"
   sso:
     login_error: "תקלת התחברות"
     not_found: "לא מצאנו את החשבון שלכם. אנא צרו קשר עם מנהל האתר."
@@ -1305,22 +1290,7 @@ he:
     errors:
       different_topics: "לא ניתן למזג פוסטים ששייכים לנושאים שונים."
       different_users: "לא ניתן למזג פוסטים ששייכים למשתמשים שונים."
-  move_posts:
-    new_topic_moderator_post:
-      one: "תגובה פוצלה לנושא חדש: %{topic_link}"
-      two: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
-      many: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
-      other: "%{count} תגובות פוצלו לנושא חדש: %{topic_link}"
-    existing_topic_moderator_post:
-      one: "תגובה אוחדה לנושא קיים:  %{topic_link}"
-      two: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
-      many: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
-      other: "%{count} תגובות אוחדו לנושא קיים: %{topic_link}"
   topic_statuses:
-    archived_enabled: "הנושא הזה נכנס לארכיון. הוא קפוא ולא ניתן לשינוי בכל דרך."
-    archived_disabled: "הנושא הזה הוצא מהארכיון. הוא כבר לא קפוא, וניתן לשינוי."
-    closed_enabled: "הנושא הזה סגור. לא ניתן להגיב תגובות חדשות."
-    closed_disabled: "הנושא הזה פתוח. ניתן להגיב תגובות חדשות."
     autoclosed_message_max_posts:
       one: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: 1 ."
       two: "הודעה זו נסגרה אוטומטית אחרי שהגיעה למספר המקסימלי  של תגובות: %{count} ."
@@ -1393,12 +1363,6 @@ he:
       other: "נושא זה נפתח אוטומטית %{count} דקות אחרי התגובה האחרונה."
     autoclosed_disabled: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
-    pinned_enabled: "הנושא הזה ננעץ. הוא יופיע בראש הקטגוריה שלו עד שיוסר מנעיצה על ידי מנהל או שכפתור נקה נעיצות נלחץ."
-    pinned_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יוצג יותר בראש הקטגוריה שלו."
-    pinned_globally_enabled: "הנושא הזה עכשיו נעוץ גלובאלית. הוא יופיע בראש הקטגוריה שלו ובראש כל רשימות הנושאים עד שיוסר מנעיצה על ידי מנהל או שכפתור הנקה נעיצות יילחץ."
-    pinned_globally_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יא יופיע יותר בראש הקטגוריה שלו."
-    visible_enabled: "נושא זה כרגע רשום. הוא יוצג ברשימות נושאים."
-    visible_disabled: "נושא זה כרגע אינו רשום. הוא לא יוצג יותר ברשימת נושאים כלשהי. הדרך היחידה להגיע לנושא זה היא דרך קישור ישיר."
     auto_deleted_by_timer: "יימחק אוטומטית על ידי שעון."
   login:
     not_approved: "חשבונך טרם אושר. יישלח אליך דואר אלקטרוני כשהוא יהיה מוכן להתחברות."
@@ -1467,7 +1431,6 @@ he:
 
       %{confirm_unsubscribe_link}
 
-
       אם אתם מעוניינים להמשיך לקבל עדכוני מייל, אתם יכולים להתעלם ממייל זה.
   invite_mailer:
     title: "שולח-מיילים להזמנה"
@@ -1525,11 +1488,6 @@ he:
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
     deferred: "תודה שעדכנתם אותנו. אנחנו בודקים את העניין."
     deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפוסט."
-  temporarily_closed_due_to_flags:
-    one: "נושא זה סגור זמנית לשעה 1 עקב מספר רב של דגלי קהילה."
-    two: "נושא זה סגור זמנית ל-%{count} שעות עקב מספר רב של דגלי קהילה."
-    many: "נושא זה סגור זמנית ל-%{count} שעות עקב מספר רב של דגלי קהילה."
-    other: "נושא זה סגור זמנית ל-%{count} שעות עקב מספר רב של דגלי קהילה."
   system_messages:
     private_topic_title: "נושא #%{id}"
     contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."
@@ -1553,49 +1511,15 @@ he:
     backup_succeeded:
       title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."
-      text_body_template: |
-        הגיבוי הצליח.
-
-        בקרו ב [ניהול > גיבויים](%{base_url}/admin/backups) כדי להוריד את הגיבוי החדש שלכם.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     backup_failed:
       title: "גיבוי נכשל"
       subject_template: "הגיבוי נכשל."
-      text_body_template: |
-        הגיבוי נכשל.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     restore_succeeded:
       title: "שחזור הצליח"
       subject_template: "השחזור הסתיים בהצלחה."
-      text_body_template: |
-        השחזור הצליח.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     restore_failed:
       title: "שחזור נכשל"
       subject_template: "השחזור נכשל"
-      text_body_template: |
-        השחזור נכשל.
-
-        הנה היומן:
-
-        ```טקסט
-        %{logs}
-        ```
     bulk_invite_succeeded:
       title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
@@ -1603,14 +1527,6 @@ he:
     bulk_invite_failed:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
-      text_body_template: |
-        קובץ המשתמשים שלכם מעובד כעת, נשלחו %{sent} הזמנות עם %{failed} שגיאה(ות).
-
-        הנה היומן:
-
-        ```text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "יצוא CSV הצליח"
     csv_export_failed:
@@ -1734,11 +1650,6 @@ he:
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
     dashboard_problems:
       title: "בעיות בלוח המכוונים"
-      subject_template: "נמצאו בעיות"
-      text_body_template: |
-        כמה בעיות מדווחות ללוח המכוונים של האדמיניסטרטור.
-
-        [אנא סיקרו וטפלו בהן](%{base_url}/admin).
     new_user_of_the_month:
       title: "אתם המשתמשים החדשים של החודש!"
       subject_template: "אתם המשתמשים החדשים של החודש!"
@@ -1900,7 +1811,7 @@ he:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
       since_last_visit: "מאז ביקורכם האחרון"
@@ -2008,7 +1919,7 @@ he:
       נדרש חשבון. נא ליצור חשבון או להיכנס כדי להמשיך.
   terms_of_service:
     title: "תנאי השימוש"
-  deleted: 'נמחק'
+  deleted: "נמחק"
   image: "תמונה"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
@@ -2030,7 +1941,6 @@ he:
     spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת (%{domain}). ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
   color_schemes:
     base_theme_name: "בסיס"
-    dark: "סכמה כהה"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
   about: "אודות"
@@ -2308,8 +2218,8 @@ he:
     initial_topic_title: דוחות פעילות לאתר
   tags:
     title: "תגיות"
-    staff_tag_disallowed: "התג \"%{tag}\" ניתן רק על ידי הצוות."
-    staff_tag_remove_disallowed: "התג \"%{tag}\" ניתן להסרה רק על ידי הצוות."
+    staff_tag_disallowed: 'התג "%{tag}" ניתן רק על ידי הצוות.'
+    staff_tag_remove_disallowed: 'התג "%{tag}" ניתן להסרה רק על ידי הצוות.'
   rss_by_tag: "נושאים מתוייגים %{tag}"
   finish_installation:
     congratulations: "ברכותינו, התקנתם את דיסקורס!"
@@ -2383,14 +2293,6 @@ he:
         title: "ארגון"
       colors:
         title: "תמה"
-        fields:
-          theme_id:
-            description: "האם אתם מעדיפים להתחיל עם סכמת צבעים בהירה או כהה? תוכלו בהמשך להתאים אישית את הנראות של האתר שלכם תחת ניהול, התאמה-אישית."
-            choices:
-              default:
-                label: "בהיר פשוט"
-              dark:
-                label: "כהה פשוט"
       logos:
         title: "לוגואים"
       icons:

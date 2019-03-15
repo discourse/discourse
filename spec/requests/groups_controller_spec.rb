@@ -1017,6 +1017,15 @@ describe GroupsController do
           expect(response.status).to eq(200)
         end
 
+        it "removes by id with integer in json" do
+          expect do
+            headers = { "CONTENT_TYPE": "application/json" }
+            delete "/groups/#{group.id}/members.json", params: "{\"user_id\":#{user.id}}", headers: headers
+          end.to change { group.users.count }.by(-1)
+
+          expect(response.status).to eq(200)
+        end
+
         it "removes by username" do
           expect do
             delete "/groups/#{group.id}/members.json", params: { username: user.username }
@@ -1098,6 +1107,15 @@ describe GroupsController do
               delete "/groups/#{group1.id}/members.json",
                 params: { user_ids: [user1.id, user2.id].join(",") }
             end.to change { group1.users.count }.by(-2)
+
+            expect(response.status).to eq(200)
+          end
+
+          it "removes by id with integer in json" do
+            expect do
+              headers = { "CONTENT_TYPE": "application/json" }
+              delete "/groups/#{group1.id}/members.json", params: "{\"user_ids\":#{user1.id}}", headers: headers
+            end.to change { group1.users.count }.by(-1)
 
             expect(response.status).to eq(200)
           end

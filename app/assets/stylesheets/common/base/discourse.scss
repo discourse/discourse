@@ -73,7 +73,9 @@ button {
   &.ok {
     background: $success;
     color: $secondary;
-
+    .d-icon {
+      color: currentColor;
+    }
     @include hover {
       background: lighten($success, 10%);
       color: $secondary;
@@ -83,7 +85,9 @@ button {
   &.cancel {
     background: $danger;
     color: $secondary;
-
+    .d-icon {
+      color: currentColor;
+    }
     @include hover {
       background: lighten($danger, 10%);
       color: $secondary;
@@ -272,7 +276,31 @@ select {
   border: 1px solid $primary-low;
 }
 
+table {
+  th {
+    font-weight: normal;
+    color: $primary-medium;
+    text-align: left;
+    padding: 0.5em;
+  }
+}
+
 // Common Classes
+
+.sortable {
+  white-space: nowrap;
+  cursor: pointer;
+  .discourse-no-touch & {
+    &:hover {
+      background-color: $primary-low;
+    }
+  }
+  .d-icon {
+    margin-left: 0.25em;
+  }
+  @include unselectable;
+}
+
 .radio,
 .checkbox {
   min-height: 18px;
@@ -528,21 +556,6 @@ select {
 
   .control-group {
     @include clearfix;
-
-    .table {
-      width: 100%;
-
-      th,
-      td {
-        padding: 10px;
-        text-align: center;
-      }
-    }
-
-    &.highlighted {
-      animation: background-fade-highlight 2.5s ease-out;
-      background-color: dark-light-choose($highlight-low, $highlight);
-    }
   }
 
   .control-label {

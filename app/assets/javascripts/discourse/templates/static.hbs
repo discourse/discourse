@@ -1,15 +1,15 @@
 {{#d-section bodyClass=bodyClass class="container"}}
-  {{#watch-read action="markFaqRead" path=model.path}}
+  {{#watch-read action=(action "markFaqRead") path=model.path}}
     <div class='contents clearfix body-page'>
       {{plugin-outlet name="above-static"}}
       {{{model.html}}}
 
       {{#if showSignupButton}}
-        {{d-button action="showCreateAccount" class="btn-primary sign-up-button" label="sign_up"}}
+        {{d-button action=(route-action "showCreateAccount") class="btn-primary sign-up-button" label="sign_up"}}
       {{/if}}
 
       {{#if showLoginButton}}
-        {{d-button action="showLogin" class="btn-primary login-button" icon="user" label="log_in"}}
+        {{d-button action=(route-action "showLogin") class="btn-primary login-button" icon="user" label="log_in"}}
       {{/if}}
     </div>
   {{/watch-read}}

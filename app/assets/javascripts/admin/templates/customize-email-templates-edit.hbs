@@ -10,9 +10,9 @@
   <label>{{i18n "admin.customize.email_templates.body"}}</label>
   {{d-editor value=buffered.body}}
 
-  {{#save-controls model=emailTemplate action="saveChanges" saved=saved}}
+  {{#save-controls model=emailTemplate action=(action "saveChanges") saved=saved}}
     {{#if emailTemplate.can_revert}}
-      {{d-button action="revertChanges" label="admin.customize.email_templates.revert"}}
+      {{d-button action=(action "revertChanges") label="admin.customize.email_templates.revert"}}
     {{/if}}
   {{/save-controls}}
 </div>

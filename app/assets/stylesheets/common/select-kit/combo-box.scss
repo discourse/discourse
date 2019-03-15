@@ -19,8 +19,8 @@
 
     .select-kit-filter {
       padding: $input-padding;
-      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      border-top: 1px solid $primary-low;
+      border-bottom: 1px solid $primary-low;
 
       .spinner {
         flex: 0 0 auto;

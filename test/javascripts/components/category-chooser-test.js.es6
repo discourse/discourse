@@ -71,6 +71,10 @@ componentTest("with scopedCategoryId", {
       26
     );
     assert.equal(this.get("subject").rows().length, 2);
+
+    await this.get("subject").fillInFilter("dev");
+
+    assert.equal(this.get("subject").rows().length, 3);
   }
 });
 

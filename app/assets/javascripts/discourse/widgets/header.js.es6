@@ -162,7 +162,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
-  tagName: "ul.icons.d-header-icons.clearfix",
+  tagName: "ul.icons.d-header-icons",
 
   buildAttributes() {
     return { role: "navigation" };

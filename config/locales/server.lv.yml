@@ -65,7 +65,7 @@ lv:
       title: "jauns lietotājs"
   post_action_types:
     bookmark:
-      title: 'Grāmatzīmes'
+      title: "Grāmatzīmes"
   reports:
     visits:
       xaxis: "Diena"
@@ -78,8 +78,6 @@ lv:
       xaxis: "Diena"
     bookmarks:
       title: "Grāmatzīmes"
-      xaxis: "Diena"
-    starred:
       xaxis: "Diena"
     emails:
       title: "E-pasti Izsūtīti "

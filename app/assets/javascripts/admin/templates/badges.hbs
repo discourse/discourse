@@ -1,25 +1,26 @@
 <div class="badges">
-
+  <div class="badges-header">
+    <h3 class="badges-heading">{{i18n 'admin.badges.title'}}</h3>
+    <div class="create-new-badge">
+      {{#link-to 'adminBadges.show' 'new' class="btn btn-primary"}}
+        {{d-icon "plus"}}
+        <span>{{i18n 'admin.badges.new'}}</span>
+      {{/link-to}}
+    </div>
+  </div>
   <div class='content-list'>
-    <h3>{{i18n 'admin.badges.title'}}</h3>
-    <ul>
+    <ul class="admin-badge-list">
       {{#each model as |badge|}}
-      <li>
-        {{#link-to 'adminBadges.show' badge.id}}
-          {{badge-button badge=badge}}
-          {{#if badge.newBadge}}
-            <span class="list-badge">{{i18n 'filters.new.lower_title'}}</span>
-          {{/if}}
-        {{/link-to}}
-      </li>
+        <li class="admin-badge-list-item">
+          {{#link-to 'adminBadges.show' badge.id}}
+            {{badge-button badge=badge}}
+            {{#if badge.newBadge}}
+              <span class="list-badge">{{i18n 'filters.new.lower_title'}}</span>
+            {{/if}}
+          {{/link-to}}
+        </li>
       {{/each}}
     </ul>
-    {{#link-to 'adminBadges.show' 'new' class="btn btn-default"}}
-      {{d-icon "plus"}} {{i18n 'admin.badges.new'}}
-    {{/link-to}}
-    <br>
-    <br>
   </div>
-
   {{outlet}}
 </div>

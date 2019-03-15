@@ -1,6 +1,6 @@
 import { propertyEqual } from "discourse/lib/computed";
 
-export default Em.Component.extend({
+export default Ember.Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
 
@@ -15,7 +15,7 @@ export default Em.Component.extend({
   }.property("tab"),
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     Ember.run.scheduleOnce("afterRender", this, this._addToCollection);
   },
 

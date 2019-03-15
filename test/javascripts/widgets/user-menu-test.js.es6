@@ -6,24 +6,48 @@ widgetTest("basics", {
   template: '{{mount-widget widget="user-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".user-menu").length);
-    assert.ok(this.$(".user-activity-link").length);
-    assert.ok(this.$(".user-bookmarks-link").length);
-    assert.ok(this.$(".user-preferences-link").length);
-    assert.ok(this.$(".notifications").length);
-    assert.ok(this.$(".dismiss-link").length);
+    assert.ok(find(".user-menu").length);
+    assert.ok(find(".user-activity-link").length);
+    assert.ok(find(".user-bookmarks-link").length);
+    assert.ok(find(".user-preferences-link").length);
+    assert.ok(find(".notifications").length);
+    assert.ok(find(".dismiss-link").length);
+  }
+});
+
+widgetTest("notifications", {
+  template: '{{mount-widget widget="user-menu"}}',
+
+  test(assert) {
+    const $links = find(".notifications li a");
+
+    assert.equal($links.length, 2);
+    assert.ok($links[0].href.includes("/t/a-slug/123"));
+
+    assert.ok(
+      $links[1].href.includes(
+        "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
+      )
+    );
+
+    assert.equal(
+      $links[1].text,
+      `aquaman ${I18n.t("notifications.liked_consolidated_description", {
+        count: 5
+      })}`
+    );
   }
 });
 
 widgetTest("log out", {
-  template: '{{mount-widget widget="user-menu" logout="logout"}}',
+  template: '{{mount-widget widget="user-menu" logout=(action "logout")}}',
 
   beforeEach() {
     this.on("logout", () => (this.loggedOut = true));
   },
 
   async test(assert) {
-    assert.ok(this.$(".logout").length);
+    assert.ok(find(".logout").length);
 
     await click(".logout");
     assert.ok(this.loggedOut);
@@ -37,7 +61,7 @@ widgetTest("private messages - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".user-pms-link").length);
+    assert.ok(!find(".user-pms-link").length);
   }
 });
 
@@ -48,13 +72,13 @@ widgetTest("private messages - enabled", {
   },
 
   test(assert) {
-    assert.ok(this.$(".user-pms-link").length);
+    assert.ok(find(".user-pms-link").length);
   }
 });
 
 widgetTest("anonymous", {
   template:
-    '{{mount-widget widget="user-menu" toggleAnonymous="toggleAnonymous"}}',
+    '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
 
   beforeEach() {
     this.currentUser.setProperties({ is_anonymous: false, trust_level: 3 });
@@ -65,7 +89,7 @@ widgetTest("anonymous", {
   },
 
   async test(assert) {
-    assert.ok(this.$(".enable-anonymous").length);
+    assert.ok(find(".enable-anonymous").length);
     await click(".enable-anonymous");
     assert.ok(this.anonymous);
   }
@@ -79,13 +103,13 @@ widgetTest("anonymous - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".enable-anonymous").length);
+    assert.ok(!find(".enable-anonymous").length);
   }
 });
 
 widgetTest("anonymous - switch back", {
   template:
-    '{{mount-widget widget="user-menu" toggleAnonymous="toggleAnonymous"}}',
+    '{{mount-widget widget="user-menu" toggleAnonymous=(action "toggleAnonymous")}}',
 
   beforeEach() {
     this.currentUser.setProperties({ is_anonymous: true });
@@ -95,7 +119,7 @@ widgetTest("anonymous - switch back", {
   },
 
   async test(assert) {
-    assert.ok(this.$(".disable-anonymous").length);
+    assert.ok(find(".disable-anonymous").length);
     await click(".disable-anonymous");
     assert.ok(this.anonymous);
   }

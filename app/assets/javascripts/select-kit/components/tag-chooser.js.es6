@@ -16,7 +16,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
   allowAny: Ember.computed.alias("allowCreate"),
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     if (this.get("allowCreate") !== false) {
       this.set("allowCreate", this.site.get("can_create_tag"));
@@ -27,6 +27,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     }
 
     this.set("termMatchesForbidden", false);
+    this.set("termMatchErrorMessage", null);
 
     this.set("templateForRow", rowComponent => {
       const tag = rowComponent.get("computedContent");
@@ -117,6 +118,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     let results = json.results;
 
     context.set("termMatchesForbidden", json.forbidden ? true : false);
+    context.set("termMatchErrorMessage", json.forbidden_message);
 
     if (context.get("blacklist")) {
       results = results.filter(result => {

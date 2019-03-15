@@ -34,6 +34,7 @@ function collapseWeekly(data, average) {
     bucket = bucket || { x: data[i].x, y: 0 };
     bucket.y += data[i].y;
   }
+
   return aggregate;
 }
 
@@ -352,7 +353,7 @@ export default Ember.Component.extend({
   },
 
   _fetchReport() {
-    this._super();
+    this._super(...arguments);
 
     this.setProperties({ isLoading: true, rateLimitationString: null });
 
@@ -434,7 +435,20 @@ export default Ember.Component.extend({
   _loadReport(jsonReport) {
     Report.fillMissingDates(jsonReport, { filledField: "chartData" });
 
-    if (jsonReport.chartData && jsonReport.chartData.length > 40) {
+    if (jsonReport.chartData && jsonReport.modes[0] === "stacked_chart") {
+      jsonReport.chartData = jsonReport.chartData.map(chartData => {
+        if (chartData.length > 40) {
+          return {
+            data: collapseWeekly(chartData.data),
+            req: chartData.req,
+            label: chartData.label,
+            color: chartData.color
+          };
+        } else {
+          return chartData;
+        }
+      });
+    } else if (jsonReport.chartData && jsonReport.chartData.length > 40) {
       jsonReport.chartData = collapseWeekly(
         jsonReport.chartData,
         jsonReport.average

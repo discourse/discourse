@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   triggerAppEvent: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
     const name = this.get("name");
     const html = getCustomHTML(name);
 
@@ -21,14 +21,14 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     if (this.get("triggerAppEvent") === "true") {
       this.appEvents.trigger(`inserted-custom-html:${this.get("name")}`);
     }
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     if (this.get("triggerAppEvent") === "true") {
       this.appEvents.trigger(`destroyed-custom-html:${this.get("name")}`);
     }

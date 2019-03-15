@@ -62,9 +62,21 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed("model.isSaving", "secretValidation", "eventTypeValidation")
-  saveButtonDisabled(isSaving, secretValidation, eventTypeValidation) {
-    return isSaving ? false : secretValidation || eventTypeValidation;
+  @computed(
+    "model.isSaving",
+    "secretValidation",
+    "eventTypeValidation",
+    "model.payload_url"
+  )
+  saveButtonDisabled(
+    isSaving,
+    secretValidation,
+    eventTypeValidation,
+    payloadUrl
+  ) {
+    return isSaving
+      ? false
+      : secretValidation || eventTypeValidation || Ember.isEmpty(payloadUrl);
   },
 
   actions: {

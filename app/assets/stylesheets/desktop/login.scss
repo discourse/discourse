@@ -53,9 +53,23 @@
       padding: 5px 0 0 0;
     }
   }
-
-  tr.input label {
+  .tip,
+  td label {
+    display: block;
+    overflow: hidden;
+    word-wrap: break-word;
     margin-bottom: 0;
+    max-width: 280px;
+    @media screen and (min-width: 500px) {
+      max-width: 400px;
+    }
+  }
+}
+
+.has-alt-auth {
+  .tip,
+  td label {
+    max-width: 250px;
   }
 }
 
@@ -219,9 +233,10 @@
     }
     &:not(:empty),
     &:empty + td {
-      display: block;
       min-height: 1.75em;
-      max-width: 240px;
+      &.bad .svg-icon {
+        vertical-align: middle;
+      }
     }
   }
 }

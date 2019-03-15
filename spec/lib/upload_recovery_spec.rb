@@ -31,7 +31,7 @@ RSpec.describe UploadRecovery do
 
   before do
     SiteSetting.authorized_extensions = 'png|pdf'
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
   end
 
   after do

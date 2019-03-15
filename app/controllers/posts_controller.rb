@@ -336,7 +336,7 @@ class PostsController < ApplicationController
 
   def destroy_many
     params.require(:post_ids)
-    defer_flags = params[:defer_flags] || false
+    agree_with_first_reply_flag = (params[:agree_with_first_reply_flag] || true).to_s == "true"
 
     posts = Post.where(id: post_ids_including_replies)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
@@ -345,7 +345,9 @@ class PostsController < ApplicationController
     posts.each { |p| guardian.ensure_can_delete!(p) }
 
     Post.transaction do
-      posts.each { |p| PostDestroyer.new(current_user, p, defer_flags: defer_flags).destroy }
+      posts.each_with_index do |p, i|
+        PostDestroyer.new(current_user, p, defer_flags: !(agree_with_first_reply_flag && i == 0)).destroy
+      end
     end
 
     render body: nil

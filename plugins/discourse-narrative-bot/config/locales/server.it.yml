@@ -94,6 +94,7 @@ it:
         '8': "Le prospettive sono buone"
         '9': "Sì"
         '10': "I segni indicano di sì"
+        '11': "E' difficile rispondere, prova di nuovo"
         '12': "Rifai la domanda più tardi"
         '13': "Meglio non risponderti adesso"
         '14': "Ora non lo posso prevedere"
@@ -133,7 +134,7 @@ it:
           Sfortunatamente, essendo un robot mal programmato, non l'ho capita bene. :frowning:
         track_response: Puoi provare di nuovo, o se vuoi saltare questo passaggio, dimmi `%{skip_trigger}`. Altrimenti per ricominciare, dimmi `%{reset_trigger}`.
         second_response: |-
-          Oh, scusa. Non sto ancora capendo. :anguished:
+          Oh, scusa. Non ho ancora capito. :anguished:
 
           Sono solo un bot, ma se vuoi contattare una persona reale, guarda [la nostra pagina dei contatti](%{base_path}/about).
 
@@ -142,18 +143,18 @@ it:
       reset_trigger: "nuovo utente"
       cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
       hello:
-        title: ":robot: Benvenuto!"
+        title: "Saluti!"
+        message: |-
+          Grazie per esserti unito a %{title}, e benvenuto!
+
+          - Io sono solo un robot, ma [il nostro amichevole staff](%{base_uri}/about) è qui per aiutarti se hai bisogno di contattare una persona.
+
+          - Per ragioni di sicurezza, abbiamo temporaneamente limitato ciò che i nuovi utenti possono fare. Potrai guadagnare nuove abilità (e [distintivi](%{base_uri}/badges)) appena ti conosceremo meglio.
+
+          - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
-        instructions: |-
-          Adesso, puoi condividere uno di questi collegamenti con me? Rispondi con **un collegamento su una riga a sé stante**, e verrà automaticamente espanso per includere un bel sommario.
-
-          Per copiare un collegamento, toccalo e tienilo premuto su mobile, o fai click col tasto destro del mouse:
-
-          - https://it.wikipedia.org/wiki/Italia
-          - https://it.wikipedia.org/wiki/Pagina_principale
-          - https://it.wikipedia.org/wiki/Traduzione
         reply: |-
-          Fantastico! Questo funzionerà per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, con niente davanti o dietro.
+          Fantastico! Funziona per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, senza niente né davanti né dietro.
         not_found: |-
           Mi dispiace, non riesco a trovare il collegamento nella tua risposta! :cry:
 
@@ -255,6 +256,8 @@ it:
           >  :imp: Ho scritto qualcosa di brutto qui
 
           Penso che tu sappia cosa fare. Va avanti e **segnala questo messaggio** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> come inappropriato!
+        reply: |-
+          [Il nostro staff](%{base_uri}/groups/staff) verrà notificato privatamente della tua segnalazione. Se abbastanza membri della comunità segnalano un messaggio, quest'ultimo verrà automaticamente nascosto per precauzione. (Dal momento che non ho scritto veramente qualcosa di brutto :angel:, ho rimosso la segnalazione per ora.)
         not_found: |-
           Oh no, il mio brutto messaggio non è ancora stato segnalato. :worried: Puoi segnalarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante "mostra altro" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
@@ -278,12 +281,25 @@ it:
           - Se hai una :keyboard: fisica, premi <kbd>?</kbd> per visualizzare delle comode scorciatoie da tastiera.
         not_found: |-
           Hmm… sembra che tu abbia qualche problema. Mi dispiace. Hai cercato <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> il termine **capi&#8203;bara**?
+      end:
+        message: |-
+          Grazie per avermi seguito finora @%{username}! Ho fatto questo certificato per te, penso che te lo sia guadagnato:
+
+          %{certificate}
+
+          E' tutto per ora! Controlla [**gli argomenti delle nostre ultime discussioni**](%{base_uri}/latest) o [**le categorie di discussione**](%{base_uri}/categories). :sunglasses:
+
+          (Se vuoi parlare con me ancora per imparare altro, inviami un messaggio o menzionami scrivendo `@%{discobot_username}` quando vuoi!)
       certificate:
         alt: 'Attestato di Merito'
     advanced_user_narrative:
       reset_trigger: 'utente avanzato'
       cert_title: "In riconoscimento del completamento con successo del tutorial utente avanzato"
       title: ':arrow_up: Funzioni utente avanzato'
+      start_message: |-
+        Come utente _avanzato_, hai già visitato [la pagina delle preferenze](%{base_uri}my/preferences) @%{username}? Ci sono molti modi per personalizzare la tua esperienza, ad esempio selezionando un tema scuro o uno chiaro.
+
+        Ma sto divagando, cominciamo!
       edit:
         bot_created_post_raw: "@%{discobot_username} è, di gran lunga, il bot più interessante che conosco :wink:"
         instructions: |-
@@ -353,7 +369,7 @@ it:
         not_found: |-
           Ooops! Non c'è nessun sondaggio nella tua risposta.
 
-          Usa il pulsante <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opzioni nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
+          Usa l'icona <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">a ingranaggio nell'editor, oppure copia e incolla questo sondaggio nella tua prossima risposta:
 
           ```text
           [poll]

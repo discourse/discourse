@@ -21,10 +21,6 @@ class User < ActiveRecord::Base
   include SecondFactorManager
   include HasDestroyedWebHook
 
-  self.ignored_columns = %w{
-    group_locked_trust_level
-  }
-
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
@@ -33,8 +29,11 @@ class User < ActiveRecord::Base
   has_many :user_api_keys, dependent: :destroy
   has_many :topics
   has_many :user_open_ids, dependent: :destroy
-  has_many :user_actions, dependent: :destroy
-  has_many :post_actions, dependent: :destroy
+
+  # dependent deleting handled via before_destroy
+  has_many :user_actions
+  has_many :post_actions
+
   has_many :user_badges, -> { where('user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)') }, dependent: :destroy
   has_many :badges, through: :user_badges
   has_many :email_logs, dependent: :delete_all
@@ -67,10 +66,14 @@ class User < ActiveRecord::Base
   has_one :user_avatar, dependent: :destroy
   has_many :user_associated_accounts, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
-  has_one :google_user_info, dependent: :destroy
   has_many :oauth2_user_infos, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
+
+  has_many :totps, -> {
+    where(method: UserSecondFactor.methods[:totp], enabled: true)
+  }, class_name: "UserSecondFactor"
+
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -130,6 +133,11 @@ class User < ActiveRecord::Base
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
     PostTiming.where(user_id: self.id).delete_all
     TopicViewItem.where(user_id: self.id).delete_all
+    UserAction.where('user_id = :user_id OR target_user_id = :user_id OR acting_user_id = :user_id', user_id: self.id).delete_all
+
+    # we need to bypass the default scope here, which appears not bypassed for :delete_all
+    # however :destroy it is bypassed
+    PostAction.with_deleted.where(user_id: self.id).delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin
@@ -216,7 +224,7 @@ class User < ActiveRecord::Base
   def self.username_available?(username, email = nil, allow_reserved_username: false)
     lower = username.downcase
     return false if !allow_reserved_username && reserved_username?(lower)
-    return true  if DB.exec(User::USERNAME_EXISTS_SQL, username: lower) == 0
+    return true  if !username_exists?(lower)
 
     # staged users can use the same username since they will take over the account
     email.present? && User.joins(:user_emails).exists?(staged: true, username_lower: lower, user_emails: { primary: true, email: email })
@@ -285,6 +293,14 @@ class User < ActiveRecord::Base
     end
 
     fields.uniq
+  end
+
+  def human?
+    self.id > 0
+  end
+
+  def bot?
+    !self.human?
   end
 
   def effective_locale
@@ -394,21 +410,17 @@ class User < ActiveRecord::Base
   end
 
   # Approve this user
-  def approve(approved_by, send_mail = true)
+  def approve(approver, send_mail = true)
     self.approved = true
-
-    if approved_by.is_a?(Integer)
-      self.approved_by_id = approved_by
-    else
-      self.approved_by = approved_by
-    end
-
     self.approved_at = Time.zone.now
+    self.approved_by = approver
 
     if result = save
       send_approval_email if send_mail
       DiscourseEvent.trigger(:user_approved, self)
     end
+
+    StaffActionLogger.new(approver).log_user_approve(self)
 
     result
   end
@@ -1262,6 +1274,10 @@ class User < ActiveRecord::Base
   (SELECT groups.id, false as is_user FROM groups
   WHERE lower(groups.name) = :username)
   SQL
+
+  def self.username_exists?(username_lower)
+    DB.exec(User::USERNAME_EXISTS_SQL, username: username_lower) > 0
+  end
 
   def username_validator
     username_format_validator || begin

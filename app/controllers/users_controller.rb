@@ -14,13 +14,13 @@ class UsersController < ApplicationController
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
-    :revoke_auth_token
+    :ignore, :unignore, :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset, :update, :account_created,
     :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar,
-    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login
+    :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary
   ]
 
   before_action :respond_to_suspicious_request, only: [:create]
@@ -148,9 +148,11 @@ class UsersController < ApplicationController
 
   def check_emails
     user = fetch_user_from_params(include_inactive: true)
-    guardian.ensure_can_check_emails!(user)
 
-    StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    unless user == current_user
+      guardian.ensure_can_check_emails!(user)
+      StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
+    end
 
     email, *secondary_emails = user.emails
 
@@ -213,13 +215,20 @@ class UsersController < ApplicationController
   end
 
   def summary
-    user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    @user = fetch_user_from_params(include_inactive: current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts))
+    raise Discourse::NotFound unless guardian.can_see_profile?(@user)
 
-    raise Discourse::NotFound unless guardian.can_see_profile?(user)
-
-    summary = UserSummary.new(user, guardian)
+    summary = UserSummary.new(@user, guardian)
     serializer = UserSummarySerializer.new(summary, scope: guardian)
-    render_json_dump(serializer)
+    respond_to do |format|
+      format.html do
+        @restrict_fields = guardian.restrict_user_fields?(@user)
+        render :show
+      end
+      format.json do
+        render_json_dump(serializer)
+      end
+    end
   end
 
   def invited
@@ -468,7 +477,7 @@ class UsersController < ApplicationController
     second_factor_token = params[:second_factor_token]
     second_factor_method = params[:second_factor_method].to_i
 
-    if second_factor_token.present? && second_factor_token[/\d{6}/] && UserSecondFactor.methods[second_factor_method]
+    if second_factor_token.present? && UserSecondFactor.methods[second_factor_method]
       RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
       second_factor_authenticated = @user&.authenticate_second_factor(second_factor_token, second_factor_method)
     end
@@ -858,6 +867,10 @@ class UsersController < ApplicationController
 
     include_groups = params[:include_groups] == "true"
 
+    # blank term is only handy for in-topic search of users after @
+    # we do not want group results ever if term is blank
+    include_groups = groups = nil if term.blank?
+
     if include_groups || groups
       groups = Group.search_groups(term, groups: groups)
       groups = groups.where(visibility_level: Group.visibility_levels[:public]) if include_groups
@@ -982,6 +995,22 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def ignore
+    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+
+    ::IgnoredUser.find_or_create_by!(
+      user: current_user,
+      ignored_user_id: params[:ignored_user_id])
+    render json: success_json
+  end
+
+  def unignore
+    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+
+    IgnoredUser.where(user: current_user, ignored_user_id: params[:ignored_user_id]).delete_all
+    render json: success_json
+  end
+
   def read_faq
     if user = current_user
       user.user_stat.read_faq = 1.second.ago
@@ -1046,7 +1075,7 @@ class UsersController < ApplicationController
   def create_second_factor_backup
     raise Discourse::NotFound if SiteSetting.enable_sso || !SiteSetting.enable_local_logins
 
-    unless current_user.authenticate_totp(params[:second_factor_token])
+    unless current_user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
       return render json: failed_json.merge(
         error: I18n.t("login.invalid_second_factor_code")
       )
@@ -1062,22 +1091,26 @@ class UsersController < ApplicationController
   def update_second_factor
     params.require(:second_factor_token)
     params.require(:second_factor_method)
+    params.require(:second_factor_target)
 
-    second_factor_method = params[:second_factor_method].to_i
+    auth_method = params[:second_factor_method].to_i
+    auth_token = params[:second_factor_token]
+
+    update_second_factor_method = params[:second_factor_target].to_i
 
     [request.remote_ip, current_user.id].each do |key|
       RateLimiter.new(nil, "second-factor-min-#{key}", 3, 1.minute).performed!
     end
 
-    if second_factor_method == UserSecondFactor.methods[:totp]
+    if update_second_factor_method == UserSecondFactor.methods[:totp]
       user_second_factor = current_user.user_second_factors.totp
-    elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+    elsif update_second_factor_method == UserSecondFactor.methods[:backup_codes]
       user_second_factor = current_user.user_second_factors.backup_codes
     end
 
     raise Discourse::InvalidParameters unless user_second_factor
 
-    unless current_user.authenticate_totp(params[:second_factor_token])
+    unless current_user.authenticate_second_factor(auth_token, auth_method)
       return render json: failed_json.merge(
         error: I18n.t("login.invalid_second_factor_code")
       )
@@ -1087,7 +1120,7 @@ class UsersController < ApplicationController
       user_second_factor.update!(enabled: true)
     else
       # when disabling totp, backup is disabled too
-      if second_factor_method == UserSecondFactor.methods[:totp]
+      if update_second_factor_method == UserSecondFactor.methods[:totp]
         current_user.user_second_factors.destroy_all
 
         Jobs.enqueue(
@@ -1095,7 +1128,7 @@ class UsersController < ApplicationController
           type: :account_second_factor_disabled,
           user_id: current_user.id
         )
-      elsif second_factor_method == UserSecondFactor.methods[:backup_codes]
+      elsif update_second_factor_method == UserSecondFactor.methods[:backup_codes]
         current_user.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
       end
     end
@@ -1193,6 +1226,7 @@ class UsersController < ApplicationController
       :title,
       :date_of_birth,
       :muted_usernames,
+      :ignored_usernames,
       :theme_ids,
       :locale,
       :bio_raw,

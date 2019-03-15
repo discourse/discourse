@@ -10,7 +10,7 @@ export default MultiSelectComponent.extend({
   filterable: true,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     if (!isNone(this.get("settingName"))) {
       this.set("nameProperty", this.get("settingName"));

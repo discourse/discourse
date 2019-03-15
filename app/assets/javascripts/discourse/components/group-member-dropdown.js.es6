@@ -32,7 +32,7 @@ export default DropdownSelectBoxComponent.extend({
           description: I18n.t("groups.members.remove_owner_description", {
             username: this.get("member.username")
           }),
-          icon: "shield"
+          icon: "shield-alt"
         });
       } else {
         items.push({
@@ -41,7 +41,7 @@ export default DropdownSelectBoxComponent.extend({
           description: I18n.t("groups.members.make_owner_description", {
             username: this.get("member.username")
           }),
-          icon: "shield"
+          icon: "shield-alt"
         });
       }
     }
@@ -52,13 +52,13 @@ export default DropdownSelectBoxComponent.extend({
   mutateValue(id) {
     switch (id) {
       case "removeMember":
-        this.sendAction("removeMember", this.get("member"));
+        this.removeMember(this.get("member"));
         break;
       case "makeOwner":
-        this.sendAction("makeOwner", this.get("member.username"));
+        this.makeOwner(this.get("member.username"));
         break;
       case "removeOwner":
-        this.sendAction("removeOwner", this.get("member"));
+        this.removeOwner(this.get("member"));
         break;
     }
   }

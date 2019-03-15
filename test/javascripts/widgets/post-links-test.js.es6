@@ -23,7 +23,7 @@ widgetTest("duplicate links", {
   },
   test(assert) {
     assert.equal(
-      this.$(".post-links a.track-link").length,
+      find(".post-links a.track-link").length,
       1,
       "it hides the dupe link"
     );
@@ -47,8 +47,8 @@ widgetTest("collapsed links", {
     });
   },
   async test(assert) {
-    assert.ok(this.$(".expand-links").length === 1, "collapsed by default");
+    assert.ok(find(".expand-links").length === 1, "collapsed by default");
     await click("a.expand-links");
-    assert.equal(this.$(".post-links a.track-link").length, 7);
+    assert.equal(find(".post-links a.track-link").length, 7);
   }
 });

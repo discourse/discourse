@@ -43,12 +43,27 @@
           <section class='controls'>
             <ul>
               {{#if model.can_send_private_message_to_user}}
-              <li>
-                <a class='btn btn-primary compose-pm' {{action "composePrivateMessage" model}}>
-                  {{d-icon "envelope"}}
-                  {{i18n 'user.private_message'}}
-                </a>
-              </li>
+                <li>
+                  {{d-button class="btn-primary compose-pm"
+                    action=(route-action "composePrivateMessage" model)
+                    icon="envelope"
+                    label="user.private_message"}}
+                </li>
+                {{#if model.can_ignore_user}}
+                  <li>
+                  {{#if model.ignored}}
+                    {{d-button class="btn-default"
+                               action=(action "unignoreUser")
+                               icon="far-eye"
+                               label="user.unignore"}}
+                  {{else}}
+                    {{d-button class="btn-default"
+                               action=(action "ignoreUser")
+                               icon="eye-slash"
+                               label="user.ignore"}}
+                  {{/if}}
+                  </li>
+                {{/if}}
               {{/if}}
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
@@ -84,7 +99,7 @@
             {{/if}}
             {{plugin-outlet name="user-post-names" args=(hash model=model)}}
             <h3 class="location-and-website">
-            {{#if model.location}}{{d-icon "map-marker"}} {{model.location}}{{/if}}
+            {{#if model.location}}{{d-icon "map-marker-alt"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
               {{d-icon "globe"}}
               {{#if linkWebsite}}
@@ -165,7 +180,7 @@
               {{#if model.email}}
                 {{model.email}}
               {{else}}
-                {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
+                {{d-button action=(route-action "checkEmail") actionParam=model icon="far-envelope" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </dd>
             </div>
@@ -186,7 +201,7 @@
           {{/if}}
 
           {{#if canDeleteUser}}
-            <div>{{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
+            <div>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
           {{/if}}
         </dl>
         {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}
@@ -207,7 +222,7 @@
         </li>
       {{/if}}
       {{#if showPrivateMessages}}
-        <li>{{#link-to 'userPrivateMessages'}}{{d-icon "envelope-o"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
+        <li>{{#link-to 'userPrivateMessages'}}{{d-icon "far-envelope"}}{{i18n 'user.private_messages'}}{{/link-to}}</li>
       {{/if}}
       {{#if canInviteToForum}}
         <li>{{#link-to 'userInvited'}}{{d-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>

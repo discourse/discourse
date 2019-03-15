@@ -1,5 +1,5 @@
 #!/bin/bash
 
 PARAMS="$@"
-CMD="cd /src && RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 LD_PRELOAD=/usr/lib/libjemalloc.so RAILS_ENV=${RAILS_ENV:=development} bundle exec rake $PARAMS"
+CMD="cd /src && USER=discourse RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 LD_PRELOAD=/usr/lib/libjemalloc.so RAILS_ENV=${RAILS_ENV:=development} bundle exec rake $PARAMS"
 docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"

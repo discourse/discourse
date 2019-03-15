@@ -12,6 +12,7 @@ es:
     poll_edit_window_mins: "Número de minutos tras la creación del mensaje durante los cuales las encuestas pueden ser editadas."
     poll_minimum_trust_level_to_create: "Definir el mínimo nivel de confianza requerido para crear encuestas."
   poll:
+    invalid_argument: "Valor no válido '%{value}' para el argumento '%{argument}'."
     multiple_polls_without_name: "Hay varias encuestas sin nombre. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     default_poll_must_have_at_least_2_options: "La encuesta debe tener al menos 2 opciones."

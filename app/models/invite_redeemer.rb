@@ -133,7 +133,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   def approve_account_if_needed
     if get_existing_user
-      invited_user.approve(invite.invited_by_id, false)
+      invited_user.approve(invite.invited_by, false)
     end
   end
 

@@ -128,7 +128,9 @@
     const sameTimezone = _isEqualZones(displayedTimezone, moment.tz.guess());
     const inCalendarRange = dateTime.isBetween(
       moment().subtract(2, "days"),
-      moment().add(2, "days")
+      moment()
+        .add(1, "days")
+        .endOf("day")
     );
 
     if (options.calendar && inCalendarRange) {
@@ -219,22 +221,24 @@
       timezones.unshift(options.timezone);
     }
 
-    timezones.filter(z => z).forEach(timezone => {
-      if (_isEqualZones(timezone, displayedTimezone)) {
-        return;
-      }
+    timezones
+      .filter(z => z)
+      .forEach(timezone => {
+        if (_isEqualZones(timezone, displayedTimezone)) {
+          return;
+        }
 
-      if (_isEqualZones(timezone, watchingUserTimezone)) {
-        timezone = watchingUserTimezone;
-      }
+        if (_isEqualZones(timezone, watchingUserTimezone)) {
+          timezone = watchingUserTimezone;
+        }
 
-      previewedTimezones.push({
-        timezone,
-        dateTime: options.time
-          ? dateTime.tz(timezone).format("LLL")
-          : _createDateTimeRange(dateTime, timezone)
+        previewedTimezones.push({
+          timezone,
+          dateTime: options.time
+            ? dateTime.tz(timezone).format("LLL")
+            : _createDateTimeRange(dateTime, timezone)
+        });
       });
-    });
 
     if (!previewedTimezones.length) {
       previewedTimezones.push({

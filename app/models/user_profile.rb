@@ -1,9 +1,6 @@
 require_dependency 'upload_creator'
 class UserProfile < ActiveRecord::Base
 
-  # TODO: remove this after Nov 1, 2018
-  self.ignored_columns = %w{card_image_badge_id}
-
   belongs_to :user, inverse_of: :user_profile
 
   validates :bio_raw, length: { maximum: 3000 }

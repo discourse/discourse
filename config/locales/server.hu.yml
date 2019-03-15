@@ -35,9 +35,7 @@ hu:
   anonymous: "Anonim"
   remove_posts_deleted_by_author: "Szerző által törölve"
   themes:
-    bad_color_scheme: "Nem lehet az oldal stílust frissíteni, érvénytelen szín séma."
     other_error: "Hiba történt az oldal stílusának frissítése közben"
-    error_importing: "Nem sikerült klónozni a git repositoryt, hozzáférés megtagadva vagy repository nem található"
     settings_errors:
       invalid_yaml: "Az adott YAML érvénytelen."
       default_value_missing: "'%{name}' beállításnak nincs alapértelmezett értéke"
@@ -56,8 +54,8 @@ hu:
         strangers_not_allowed_error: "Történik, ha egy felhasználó megpróbált létrehozni egy új témát egy kategóriában, amelynek nem tagja."
       unrecognized_error: "Ismeretlen hiba"
   errors: &errors
-    format: '%{attribute} %{message}'
-    format_with_full_message: '<b>%{attribute}</b>:%{message}'
+    format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
       too_long_validation: "limitálva %{max} karakterre; megadott karakterek száma: %{length}."
       invalid_boolean: "Érvénytelen logikai érték."
@@ -81,7 +79,7 @@ hu:
       not_a_number: ez nem szám
       not_an_integer: Az értéknek egész számnak kell lennie
       odd: "páratlan szám kell, hogy legyen"
-      record_invalid: 'Érvényesítés sikertelen: %{error}'
+      record_invalid: "Érvényesítés sikertelen: %{error}"
       max_emojis: "nem lehet több mint %{max_emojis_count} emoji"
       restrict_dependent_destroy:
         one: "Nem lehet törölni rekordot, mert egy függő %{rekord} létezik"
@@ -97,7 +95,7 @@ hu:
         other: nem megfelelő hosszúságú. (%{count} karakter szükséges)
       other_than: "nem lehet %{count}"
     template:
-      body: 'Problémák vannak az alábbi mezőkkel:'
+      body: "Problémák vannak az alábbi mezőkkel:"
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltése során!"
     site_settings:
@@ -220,7 +218,7 @@ hu:
       category:
         name: "Kategória neve"
       topic:
-        title: 'Cím'
+        title: "Cím"
       post:
         raw: "Test"
       user_profile:
@@ -264,7 +262,6 @@ hu:
       email_already_used_in_group: "'%{email}' már használva van a '%{group_name}' csoport által."
       email_already_used_in_category: "'%{email}' már használva van a '%{category_name}' kategória által."
     cannot_delete:
-      uncategorized: "Nem kategorizált elemet nem lehet törrölni"
       has_subcategories: "Nem lehet kitörölni ezt a kategóriát, mert vannak alkategóriái."
       topic_exists_no_oldest: "Nem lehet törölni ezt a kategóriát, mert benne a témák száma %{count}."
     uncategorized_description: "Témák, amelyeknek nincs szükségük kategóriára, vagy nem férnek bele semmilyen más létező kategóriába."
@@ -370,9 +367,9 @@ hu:
     no_token: "Sajnos a jelszómódosítás link túl régi. Ahhoz, hogy egy új linket kapjál, válaszd ki a Bejelentkezés gombot és használd az 'Elfelejtettem a jelszót' opciót."
     choose_new: "Válassz egy új jelszót"
     choose: "Válassz egy jelszót"
-    update: 'Jelszó frissítése'
-    save: 'Jelszó beállítása'
-    title: 'Jelszó visszaállítása'
+    update: "Jelszó frissítése"
+    save: "Jelszó beállítása"
+    title: "Jelszó visszaállítása"
     success: "Sikeresen megváltoztattad a jelszavadat és bejelentkeztél!"
     success_unapproved: "Sikeresen megváltoztattad a jelszavadat!"
   email_login:
@@ -395,31 +392,31 @@ hu:
       back_to: "Vissza %{title}"
   post_action_types:
     off_topic:
-      title: 'Off-Topik'
-      long_form: 'megjelölve mint off-topic'
+      title: "Off-Topik"
+      long_form: "megjelölve mint off-topic"
     spam:
-      title: 'Szemét'
-      long_form: 'spamnek jelölve'
+      title: "Szemét"
+      long_form: "spamnek jelölve"
       email_title: '"%{title}" spam-nek jelölve'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Alkalmatlan'
-      long_form: 'nem a témába tartozónak jelölve'
+      title: "Alkalmatlan"
+      long_form: "nem a témába tartozónak jelölve"
     notify_user:
       email_title: 'A bejegyzésed itt "%{title}"'
     notify_moderators:
       title: "Valami más"
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Könyvjelző'
-      description: 'Bejegyzés hozzáadása a könyvjelzőkhöz'
-      short_description: 'Bejegyzés hozzáadása a könyvjelzőkhöz'
-      long_form: 'a bejegyzés hozzáadva a könyvjelzőkhöz'
+      title: "Könyvjelző"
+      description: "Bejegyzés hozzáadása a könyvjelzőkhöz"
+      short_description: "Bejegyzés hozzáadása a könyvjelzőkhöz"
+      long_form: "a bejegyzés hozzáadva a könyvjelzőkhöz"
     like:
-      title: 'Kedvel'
-      description: 'Bejegyzés kedvelése'
-      short_description: 'Bejegyzés kedvelése'
-      long_form: 'kedvelve'
+      title: "Kedvel"
+      description: "Bejegyzés kedvelése"
+      short_description: "Bejegyzés kedvelése"
+      long_form: "kedvelve"
   user_activity:
     no_default:
       self: "Nincsenek tevékenységek."
@@ -432,11 +429,11 @@ hu:
       others: "Nincsenek válaszok."
   topic_flag_types:
     spam:
-      title: 'Szemét'
-      long_form: 'szemétnek jelölte ezt'
-      short_description: 'Ez egy hirdetés'
+      title: "Szemét"
+      long_form: "szemétnek jelölte ezt"
+      short_description: "Ez egy hirdetés"
     inappropriate:
-      title: 'Alkalmatlan'
+      title: "Alkalmatlan"
     notify_moderators:
       title: "Valami más"
       email_title: 'A következő témakör "%{title}" moderátori figyelmet igényel'
@@ -504,10 +501,6 @@ hu:
       title: "Könyvjelzők"
       xaxis: "Nap"
       yaxis: "Új könyvjelzők száma"
-    starred:
-      title: "Csillagozott"
-      xaxis: "Nap"
-      yaxis: "Új csillagozott témák száma"
     users_by_trust_level:
       title: "Felhasználok láma bizalmi szintenként"
       xaxis: "Bizalmi szint"
@@ -565,7 +558,6 @@ hu:
       title: "Bejelentkezve"
       xaxis: "Nap"
     page_view_crawler_reqs:
-      title: "Kereső Robotok"
       xaxis: "Nap"
     page_view_total_reqs:
       title: "Oldalmegtekintések"
@@ -617,7 +609,7 @@ hu:
   dashboard:
     rails_env_warning: "A szerver jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml file az alapértelmezett 'localhost' domaint használja. Állítsd be az oldalad saját domain nevét."
-    memory_warning: 'A kiszolgálód kevesebb mint 1GB memóriával rendelkezik. Minimum 1GB memória ajánlott.'
+    memory_warning: "A kiszolgálód kevesebb mint 1GB memóriával rendelkezik. Minimum 1GB memória ajánlott."
   site_settings:
     allow_moderators_to_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
     enable_badges: "A jelvény-rendszer engedélyezése"
@@ -640,9 +632,9 @@ hu:
   search:
     within_post: "#%{post_number}, általa: %{username}"
     types:
-      category: 'Kategóriák'
-      topic: 'Eredmények'
-      user: 'Felhasználók'
+      category: "Kategóriák"
+      topic: "Eredmények"
+      user: "Felhasználók"
   original_poster: "Eredeti szerző"
   most_posts: "Legtöbb bejegyzés"
   most_recent_poster: "Legutóbbi szerzők"
@@ -650,11 +642,6 @@ hu:
   redirected_to_top_reasons:
     new_user: "Üdv a közösségünkben! Ezek a legnépszerűbb témakörök."
     not_seen_in_a_month: "Üdv újra itt! Régóta nem láttunk. Ezek a legnépszerűbb témakörök, mióta nem látogattad az oldalt."
-  topic_statuses:
-    archived_enabled: "Ez a témakör jelenleg archíválva van. Be lett fagyasztva, szóval nem lehet megváltoztatni semmilyen módon."
-    archived_disabled: "Ez a topik jelenleg nincs archíválva. Már nincs befagyasztva, így lehet rajta változtatni."
-    closed_enabled: "A témakör le van zárva. Nem lehet mostantól válaszolni rá."
-    closed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
   login:
     not_approved: "Még nem fogadták el a regisztrációs kérelmedet! Értesítve leszel, amint bejelentkezhetsz."
     incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
@@ -725,11 +712,7 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
-
-
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
@@ -737,11 +720,7 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
-
-
 
         %{respond_instructions}
     user_invited_to_topic:
@@ -749,11 +728,7 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
-
-
 
         %{respond_instructions}
     user_replied:
@@ -762,15 +737,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_replied_pm:
@@ -779,15 +748,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_quoted:
@@ -796,15 +759,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_linked:
@@ -813,15 +770,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_mentioned:
@@ -830,15 +781,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_mentioned_pm:
@@ -847,15 +792,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_group_mentioned:
@@ -864,15 +803,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_posted:
@@ -881,15 +814,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_watching_first_post:
@@ -898,15 +825,9 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_posted_pm:
@@ -915,22 +836,14 @@ hu:
 
         %{header_instructions}
 
-
-
         %{message}
 
-
-
         %{context}
-
-
 
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
-
-
 
         %{message}
     account_exists:
@@ -964,20 +877,12 @@ hu:
     recent_topics: "Friss"
     see_more: "Több"
     search_title: "Keresés az oldalon"
-  deleted: 'törölt'
+  deleted: "törölt"
   image: "kép"
   upload:
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehetséges hogy megsérült?"
   color_schemes:
-    light: "Light Scheme"
-    dark: "Dark Scheme"
-    neutral: "Neutral Scheme"
-    grey_amber: "Grey Amber Scheme"
-    shades_of_blue: "Shades of Blue Scheme"
-    latte: "Latte Scheme"
-    summer: "Summer Scheme"
-    dark_rose: "Dark Rose Scheme"
     default_theme_name: "Light"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
@@ -1064,13 +969,6 @@ hu:
         title: "Szervezet"
       colors:
         title: "Téma"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Simple Light"
-              dark:
-                label: "Simple Dark"
       logos:
         title: "Logók"
       icons:
@@ -1099,8 +997,8 @@ hu:
   joined: "Csatlakozott"
   discourse_push_notifications:
     popup:
-      confirm_title: 'Értesítések bekapcsolva - %{site_title}'
-      confirm_body: 'Siker! Értesítések engedélyezve.'
+      confirm_title: "Értesítések bekapcsolva - %{site_title}"
+      confirm_body: "Siker! Értesítések engedélyezve."
   staff_action_logs:
     not_found: "nem található"
     unknown: "ismeretlen"

@@ -80,8 +80,9 @@ export default Ember.Component.extend(
     forceEscape: false,
 
     init() {
-      this._super();
+      this._super(...arguments);
 
+      this.selectKitComponent = true;
       this.noneValue = "__none__";
       this.set(
         "headerComponentOptions",
@@ -143,18 +144,16 @@ export default Ember.Component.extend(
     didComputeAttributes() {},
 
     willComputeContent(content) {
-      return content;
+      return applyContentPluginApiCallbacks(
+        this.get("pluginApiIdentifiers"),
+        content,
+        this
+      );
     },
     computeContent(content) {
       return content;
     },
     _beforeDidComputeContent(content) {
-      content = applyContentPluginApiCallbacks(
-        this.get("pluginApiIdentifiers"),
-        content,
-        this
-      );
-
       let existingCreatedComputedContent = [];
       if (!this.get("allowContentReplacement")) {
         existingCreatedComputedContent = this.get("computedContent").filterBy(
@@ -277,7 +276,9 @@ export default Ember.Component.extend(
         collectionComputedContent.length === 0 &&
         !isLoading
       ) {
-        return I18n.t("select_kit.no_content");
+        return (
+          this.get("termMatchErrorMessage") || I18n.t("select_kit.no_content")
+        );
       }
     },
 
@@ -389,9 +390,8 @@ export default Ember.Component.extend(
     },
 
     highlightSelection(items) {
-      this.propertyWillChange("highlightedSelection");
       this.set("highlightedSelection", makeArray(items));
-      this.propertyDidChange("highlightedSelection");
+      this.notifyPropertyChange("highlightedSelection");
     },
 
     clearHighlightSelection() {

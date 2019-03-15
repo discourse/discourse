@@ -19,7 +19,7 @@ development:
 test:
   prepared_statements: false
   adapter: postgresql
-  database: discourse_test<%= ENV['MULTISITE'] ? "_#{ENV['MULTISITE']}" : '' %>
+  database: "discourse_test<%= ENV['MULTISITE'] ? '_' + ENV['MULTISITE'] : '' %>"
   min_messages: warning
   pool: 5
   timeout: 5000
@@ -36,7 +36,6 @@ profile:
   timeout: 5000
   host_names:
     - "localhost"
-
 # You may be surprised production is not here, it is sourced from application.rb using a monkey patch
 # This is done for 2 reasons
 #

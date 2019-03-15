@@ -5,7 +5,7 @@ acceptance("Managing Group Membership", {
 });
 
 QUnit.test("As an admin", async assert => {
-  await visit("/groups/discourse/manage/membership");
+  await visit("/g/discourse/manage/membership");
 
   assert.ok(
     find('label[for="automatic_membership"]').length === 1,
@@ -70,7 +70,7 @@ QUnit.test("As an admin", async assert => {
 QUnit.test("As a group owner", async assert => {
   replaceCurrentUser({ staff: false, admin: false });
 
-  await visit("/groups/discourse/manage/membership");
+  await visit("/g/discourse/manage/membership");
 
   assert.ok(
     find('label[for="automatic_membership"]').length === 0,

@@ -94,6 +94,7 @@ fi:
         '8': "Siltä näyttäisi"
         '9': "Kyllä"
         '10': "Merkit viittaavat siihen suuntaan"
+        '11': "Näky epäselvä, yritä uudelleen"
         '12': "Palaa myöhemmin asiaan"
         '13': "Parempi, etten kerro vielä"
         '14': "En pysty sanomaan juuri nyt"
@@ -140,18 +141,27 @@ fi:
           En häiritse sinua enempää nyt.
     new_user_narrative:
       reset_trigger: "peruskurssi"
+      title: "Diplomi peruskurssin suorittamisesta"
       cert_title: "Tunnustuksena palstan käytön peruskurssin menestyksekkäästä suorittamisesta"
       hello:
-        title: ":robot: Tervehdys!"
+        title: "Tervehdys!"
+        message: |-
+          Kiitos kun liityit sivustollemme %{title}. Tervetuloa!
+
+          - Olen vain robotti, mutta [avulias henkilökunta](%{base_uri}/about) auttaa myös mielellään, jos sinulla on asiaa heille.
+
+          - Turvallisuussyistä uusi käyttäjä ei voi tehdä ihan kaikkea. Saat uusia toimintoja käyttöösi (ja [ansiomerkkejä](%{base_uri}/badges)) kun tutustumme sinuun.
+
+          - Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
         instructions: |-
           Voisitko nyt jakaa jonkun seuraavista linkeistä minulle? Laita vastaukseesi **linkin osoite yksin omalle rivilleen**, jolloin siitä muotoillaan automaattisesti kätevä tiivistelmälaatikko.
 
-          Kopioi linkki mobiililaitteella koskettamalla sitä hetken aikaa, tai klikkaa sitä hiiresi oikealla painikkeella:
+          Kopioi linkki mobiililaitteella koskettamalla sitä hetken aikaa tai klikkaa sitä hiiresi oikealla painikkeella:
 
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Siistiä! Suurin osa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
         not_found: |-
@@ -255,6 +265,8 @@ fi:
           >  :imp: Kirjoitin tähän jotain tuhmaa.
 
           Tiedät mitä tehdä. **Liputa tämä viesti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> sopimattomaksi!
+        reply: |-
+          [Henkilökuntamme](%{base_uri}/groups/staff) saa ei-julkisen ilmoituksen lipusta. Jos riittävän moni yhteisön jäsen liputtaa viestin, sekin riittää viestin automaattiseen piilottamiseen varotoimena. (Koska en oikeasti kirjoittanut mitään tuhmaa :angel:, menin ja poistin liputuksesi.)
         not_found: |-
           Oh no, my nasty post hasn’t been flagged yet. :worried: Can you flag it as inappropriate using the **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Don’t forget to use the show more button <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> to reveal more actions for each post.
       search:
@@ -278,12 +290,25 @@ fi:
           - Jos sinulla on fyysinen :keyboard:, tarkastele käteviä näppäinoikoteitä painamalla <kbd>?</kbd>.
         not_found: |-
           Hm… sinulla vaikuttaa olevan vaikeuksia. Pahoitteluni. Haitko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> hakusanalla **kapy&#8203;bara**?
+      end:
+        message: |-
+          Kiitos kun jaksoit loppuun asti @%{username}! Tein tämän sinulle, minusta olet ansainnut sen:
+
+          %{certificate}
+
+          Siinä kaikki tältä erää! Tsekkaa [**tuoreimmat ketjut**](%{base_uri}/latest) tai tutki [**keskustelualueita**](%{base_uri}/categories). :sunglasses:
+
+          (Jos haluat vielä jutella kanssani ja oppia lisää, lähetä minulle `@%{discobot_username}` yksityisviesti tai mainitse minut koska vain!)
       certificate:
         alt: 'Diplomi'
     advanced_user_narrative:
       reset_trigger: 'jatkokurssi'
       cert_title: "Tunnustuksena palstan käytön jatkokurssin menestyksekkäästä suorittamisesta"
       title: ':arrow_up: Jatkokurssi'
+      start_message: |-
+        _Edistynyt_ käyttäjä kun olet, oletko @%{username} jo käynyt [käyttäjäasetussivulla](%{base_uri}/my/preferences)? Siellä voit mukauttaa sivustoa makusi mukaan monilla tavoin, esimerkiksi valita tumman ja vaalean teeman väliltä.
+
+        Vaan eipä harhauduta asiasta vaan aloitetaan!
       edit:
         bot_created_post_raw: "@%{discobot_username} on ylivoimaisesti mahtavin botti, jonka tiedän. :wink:"
         instructions: |-
@@ -330,7 +355,7 @@ fi:
           Höh, en näe viittauksia alueisiin. Huomioi, ettei `#` saa olla rivinsä ensimmäinen merkki. Kopioisitko tämän seuraavaan vastaukseesi?
 
           ```text
-          I can create a category link via #
+          Voin luoda aluelinkin käyttäen risuaitaa #
           ```
         reply: |-
           Erinomaista! Muista, että tämä toimii alueiden lisäksi myös tunnisteille, jos ne ovat käytössä täällä.
@@ -343,6 +368,10 @@ fi:
           Kokeillaanpa vaihtaa tämän ketjun ilmoitustasoa. Ketjun alla on painike, joka näyttää sinun tarkkailevan tätä ketjua. Vaihda ilmoitustasoksi **seurataan**.
         not_found: |-
           Näytät yhä tarkkailevan :eyes: tätä ketjua! Jollet meinaa löytää sitä, ilmoitustasopainike sijaitsee ketjun alla.
+        reply: |-
+          Mahtavaa! Toivottavasti et kuitenkaan vaimentanut tätä ketjua, vaikka saatan välillä olla vähän liiankin puhelias. :grin:.
+
+          Huomioi, että kun vastaat ketjuun tai luet sitä kauemmin kuin muutaman minuutin ajan, se saa automaattisesti ilmoitustasokseen 'seurataan'. Tätä voi säätää [käyttäjäasetuksissa](%{base_uri}/my/preferences).
       poll:
         instructions: |-
           Tiesitkö, että viesteihin voi lisätä äänestyksiä? **Luo äänestys** valitsemalla viestieditorin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> hammasrataskuvake.

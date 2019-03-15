@@ -1,5 +1,5 @@
 .post-info a {
-  color: #aaa;
+  color: $primary-medium;
 }
 
 .topic-meta-data-inside {
@@ -13,7 +13,6 @@
 }
 
 #topic-title {
-  //margin-bottom: 20px;
   margin: 0 60px 10px 0;
   h1 {
     font-size: $font-up-3;
@@ -34,15 +33,6 @@
 
 .private_message #topic-title .private-message-glyph {
   display: inline;
-}
-
-/* both blocks that appear under the standard post control buttons */
-.notification-options,
-.pinned-options {
-  float: left;
-  margin-top: 0;
-  padding-top: 1px;
-  clear: both;
 }
 
 .topic-status-info {
@@ -189,13 +179,7 @@ sub sub {
   width: 100%;
 
   input#edit-title {
-    box-sizing: border-box;
     width: 100%;
-    height: 32px;
-  }
-  .btn-small {
-    padding: 6px 12px;
-    margin: 6px 6px 0 0;
   }
 
   .select-kit.combo-box.category-chooser {
@@ -230,4 +214,10 @@ sub sub {
   .btn.pull-right {
     margin-right: 0;
   }
+}
+
+.topic-footer-main-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }

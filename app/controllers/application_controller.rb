@@ -717,12 +717,21 @@ class ApplicationController < ActionController::Base
       layout = 'application' if layout == 'no_ember'
     end
 
-    category_topic_ids = Category.pluck(:topic_id).compact
+    if !SiteSetting.login_required? || current_user
+      key = "page_not_found_topics"
+      if @topics_partial = $redis.get(key)
+        @topics_partial = @topics_partial.html_safe
+      else
+        category_topic_ids = Category.pluck(:topic_id).compact
+        @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
+        @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
+        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+        $redis.setex(key, 10.minutes, @topics_partial)
+      end
+    end
+
     @container_class = "wrap not-found-container"
-    @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
-    @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-    @slug =  params[:slug].class == String ? params[:slug] : ''
-    @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
+    @slug = params[:slug].presence || params[:id].presence || ""
     @slug.tr!('-', ' ')
     @hide_search = true if SiteSetting.login_required
     render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'

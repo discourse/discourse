@@ -8,6 +8,7 @@ export const OPEN_STATUS_TYPE = "open";
 export const PUBLISH_TO_CATEGORY_STATUS_TYPE = "publish_to_category";
 export const DELETE_STATUS_TYPE = "delete";
 export const REMINDER_TYPE = "reminder";
+export const BUMP_TYPE = "bump";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
@@ -31,6 +32,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
       {
         id: PUBLISH_TO_CATEGORY_STATUS_TYPE,
         name: I18n.t("topic.publish_to_category.title")
+      },
+      {
+        id: BUMP_TYPE,
+        name: I18n.t("topic.auto_bump.title")
       }
     ];
     if (this.currentUser.get("staff")) {
@@ -71,7 +76,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         if (time) {
           this.send("closeModal");
 
-          this.get("topicTimer").setProperties({
+          Ember.setProperties(this.get("topicTimer"), {
             execute_at: result.execute_at,
             duration: result.duration,
             category_id: result.category_id
@@ -98,6 +103,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     saveTimer() {
+      if (!this.get("topicTimer.updateTime")) {
+        this.flash(
+          I18n.t("topic.topic_status_update.time_frame_required"),
+          "alert-error"
+        );
+        return;
+      }
+
       this._setTimer(
         this.get("topicTimer.updateTime"),
         this.get("topicTimer.status_type")

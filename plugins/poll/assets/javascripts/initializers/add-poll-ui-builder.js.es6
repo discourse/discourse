@@ -29,7 +29,7 @@ function initializePollUIBuilder(api) {
     }
   });
 
-  api.addToolbarPopupMenuOptionsCallback(function() {
+  api.addToolbarPopupMenuOptionsCallback(() => {
     return {
       action: "showPollBuilder",
       icon: "chart-bar",

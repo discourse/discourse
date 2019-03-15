@@ -2,7 +2,7 @@ class UserApiKey < ActiveRecord::Base
 
   SCOPES = {
     read: [:get],
-    write: [:get, :post, :patch],
+    write: [:get, :post, :patch, :put, :delete],
     message_bus: [[:post, 'message_bus']],
     push: nil,
     notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
@@ -29,7 +29,6 @@ class UserApiKey < ActiveRecord::Base
     verb, action = permission
     actual_verb = env["REQUEST_METHOD"] || ""
 
-    # safe in Ruby 2.3 which is only one supported
     return false unless actual_verb.downcase == verb.to_s
     return true unless action
 

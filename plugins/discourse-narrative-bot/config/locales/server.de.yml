@@ -144,9 +144,9 @@ de:
       title: "Abschlußzertifikat für neue Benutzer Lektionen"
       cert_title: "In Anerkennung deines erfolgreichen Abschlusses eines Tutorials für neue Benutzer"
       hello:
-        title: ":robot: Grüß dich!"
+        title: "Sei gegrüßt!"
         message: |-
-          Danke, dass du %{title}beigetreten bist. Willkommen!
+          Danke, dass du %{title} beigetreten bist. Willkommen!
 
           - Ich bin nur ein Roboter, aber [unser freundliches Team](%{base_uri}/about) ist auch da um zu helfen, wenn du eine Person erreichen möchtest.
 
@@ -159,9 +159,9 @@ de:
 
           Um einen Link zu kopieren, tippe und halte auf mobilen Geräten, oder klicke rechts mit deiner Maus:
 
-          - https://de.wikipedia.org/wiki/Antiwitz
-          - https://de.wikipedia.org/wiki/Tetraphobie
-          - https://de.wikipedia.org/wiki/Beghilos
+          <https://de.wikipedia.org/wiki/Antiwitz>
+          <https://de.wikipedia.org/wiki/Tetraphobie>
+          <https://de.wikipedia.org/wiki/Beghilos>
         reply: |-
           Schick! Das wird für die meisten <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">-Links funktionieren. Denke daran, dass er auf einer _ganz eigenen_ Zeile stehen muss, ohne etwas davor oder dahinter.
         not_found: |-

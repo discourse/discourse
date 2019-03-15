@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   tagName: "section",
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     const pageClass = this.get("pageClass");
     if (pageClass) {
@@ -25,7 +25,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     const pageClass = this.get("pageClass");
     if (pageClass) {
       $("body").removeClass(`${pageClass}-page`);

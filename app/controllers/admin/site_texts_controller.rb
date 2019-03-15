@@ -43,7 +43,8 @@ class Admin::SiteTextsController < Admin::AdminController
       end
     end
 
-    render_serialized(results[0..50], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras)
+    extras[:has_more] = true if results.size > 50
+    render_serialized(results[0..49], SiteTextSerializer, root: 'site_texts', rest_serializer: true, extras: extras)
   end
 
   def show

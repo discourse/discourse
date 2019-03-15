@@ -137,15 +137,7 @@ ar:
     new_user_narrative:
       reset_trigger: "تدريب العضو جديد"
       cert_title: "في اعتراف بأتمام ناجح للدرس التعليمي للاعضاء الجدد"
-      hello:
-        title: ":robot: تحياتي!"
       onebox:
-        instructions: |-
-          التالي, هل يمكنك ان تشارك احد هذه الروابط معي؟ رد مع **وضع الرابط في سطر منفصل**, و سيظهر ملخص للصفحة المشير اليها.
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         not_found: |-
           عذرا, انا لم اجد الرابط في ردك! :cry:
 

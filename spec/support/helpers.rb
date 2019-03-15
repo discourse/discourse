@@ -102,4 +102,14 @@ module Helpers
       tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
     end
   end
+
+  def capture_stdout
+    old_stdout = $stdout
+    io = StringIO.new
+    $stdout = io
+    yield
+    io.string
+  ensure
+    $stdout = old_stdout
+  end
 end

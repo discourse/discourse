@@ -2,6 +2,7 @@
 development:
   :concurrency: 5
   :queues:
-    - [critical,4]
-    - [default, 2]
-    - [low]
+    - [critical, 8]
+    - [default, 4]
+    - [low, 2]
+    - [ultra_low]

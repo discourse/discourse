@@ -1,4 +1,4 @@
-{{#discovery-categories refresh="refresh"}}
+{{#discovery-categories refresh=(action "refresh")}}
   {{component categoryPageStyle
               categories=model.categories
               latestTopicOnly=latestTopicOnly

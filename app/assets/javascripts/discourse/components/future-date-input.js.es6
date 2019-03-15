@@ -18,7 +18,7 @@ export default Ember.Component.extend({
   displayLabel: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
     const input = this.get("input");
 

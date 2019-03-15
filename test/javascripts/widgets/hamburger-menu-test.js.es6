@@ -17,8 +17,8 @@ widgetTest("prioritize faq", {
   },
 
   test(assert) {
-    assert.ok(this.$(".faq-priority").length);
-    assert.ok(!this.$(".faq-link").length);
+    assert.ok(find(".faq-priority").length);
+    assert.ok(!find(".faq-link").length);
   }
 });
 
@@ -31,8 +31,8 @@ widgetTest("prioritize faq - user has read", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".faq-priority").length);
-    assert.ok(this.$(".faq-link").length);
+    assert.ok(!find(".faq-priority").length);
+    assert.ok(find(".faq-link").length);
   }
 });
 
@@ -44,7 +44,7 @@ widgetTest("staff menu - not staff", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".admin-link").length);
+    assert.ok(!find(".admin-link").length);
   }
 });
 
@@ -59,10 +59,10 @@ widgetTest("staff menu", {
   },
 
   test(assert) {
-    assert.ok(this.$(".admin-link").length);
-    assert.ok(this.$(".flagged-posts-link").length);
-    assert.equal(this.$(".flagged-posts").text(), "3");
-    assert.ok(!this.$(".settings-link").length);
+    assert.ok(find(".admin-link").length);
+    assert.ok(find(".flagged-posts-link").length);
+    assert.equal(find(".flagged-posts").text(), "3");
+    assert.ok(!find(".settings-link").length);
   }
 });
 
@@ -74,7 +74,7 @@ widgetTest("staff menu - admin", {
   },
 
   test(assert) {
-    assert.ok(this.$(".settings-link").length);
+    assert.ok(find(".settings-link").length);
   }
 });
 
@@ -90,8 +90,8 @@ widgetTest("queued posts", {
   },
 
   test(assert) {
-    assert.ok(this.$(".queued-posts-link").length);
-    assert.equal(this.$(".queued-posts").text(), "5");
+    assert.ok(find(".queued-posts-link").length);
+    assert.equal(find(".queued-posts").text(), "5");
   }
 });
 
@@ -103,7 +103,7 @@ widgetTest("queued posts - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".queued-posts-link").length);
+    assert.ok(!find(".queued-posts-link").length);
   }
 });
 
@@ -111,8 +111,8 @@ widgetTest("logged in links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".new-topics-link").length);
-    assert.ok(this.$(".unread-topics-link").length);
+    assert.ok(find(".new-topics-link").length);
+    assert.ok(find(".unread-topics-link").length);
   }
 });
 
@@ -121,13 +121,13 @@ widgetTest("general links", {
   anonymous: true,
 
   test(assert) {
-    assert.ok(this.$("li[class='']").length === 0);
-    assert.ok(this.$(".latest-topics-link").length);
-    assert.ok(!this.$(".new-topics-link").length);
-    assert.ok(!this.$(".unread-topics-link").length);
-    assert.ok(this.$(".top-topics-link").length);
-    assert.ok(this.$(".badge-link").length);
-    assert.ok(this.$(".category-link").length > 0);
+    assert.ok(find("li[class='']").length === 0);
+    assert.ok(find(".latest-topics-link").length);
+    assert.ok(!find(".new-topics-link").length);
+    assert.ok(!find(".unread-topics-link").length);
+    assert.ok(find(".top-topics-link").length);
+    assert.ok(find(".badge-link").length);
+    assert.ok(find(".category-link").length > 0);
   }
 });
 
@@ -213,7 +213,7 @@ widgetTest("badges link - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".badge-link").length);
+    assert.ok(!find(".badge-link").length);
   }
 });
 
@@ -221,7 +221,7 @@ widgetTest("badges link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".badge-link").length);
+    assert.ok(find(".badge-link").length);
   }
 });
 
@@ -229,7 +229,7 @@ widgetTest("user directory link", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".user-directory-link").length);
+    assert.ok(find(".user-directory-link").length);
   }
 });
 
@@ -241,7 +241,7 @@ widgetTest("user directory link - disabled", {
   },
 
   test(assert) {
-    assert.ok(!this.$(".user-directory-link").length);
+    assert.ok(!find(".user-directory-link").length);
   }
 });
 
@@ -249,7 +249,7 @@ widgetTest("general links", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   test(assert) {
-    assert.ok(this.$(".about-link").length);
-    assert.ok(this.$(".keyboard-shortcuts-link").length);
+    assert.ok(find(".about-link").length);
+    assert.ok(find(".keyboard-shortcuts-link").length);
   }
 });

@@ -38,42 +38,46 @@ describe Admin::ThemesController do
     end
   end
 
+  describe '#export' do
+    it "exports correctly" do
+      theme = Fabricate(:theme, name: "Awesome Theme")
+      theme.set_field(target: :common, name: :scss, value: '.body{color: black;}')
+      theme.set_field(target: :desktop, name: :after_header, value: '<b>test</b>')
+      theme.save!
+
+      get "/admin/customize/themes/#{theme.id}/export"
+      expect(response.status).to eq(200)
+
+      # Save the output in a temp file (automatically cleaned up)
+      file = Tempfile.new('archive.tar.gz')
+      file.write(response.body)
+      file.rewind
+      uploaded_file = Rack::Test::UploadedFile.new(file.path, "application/x-gzip")
+
+      # Now import it again
+      expect do
+        post "/admin/themes/import.json", params: { theme: uploaded_file }
+        expect(response.status).to eq(201)
+      end.to change { Theme.count }.by (1)
+
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Awesome Theme")
+      expect(json["theme"]["theme_fields"].length).to eq(2)
+    end
+  end
+
   describe '#import' do
-    let(:theme_file) do
-      Rack::Test::UploadedFile.new(file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"))
+    let(:theme_json_file) do
+      Rack::Test::UploadedFile.new(file_from_fixtures("sam-s-simple-theme.dcstyle.json", "json"), "application/json")
+    end
+
+    let(:theme_archive) do
+      Rack::Test::UploadedFile.new(file_from_fixtures("discourse-test-theme.tar.gz", "themes"), "application/x-gzip")
     end
 
     let(:image) do
       file_from_fixtures("logo.png")
-    end
-
-    it 'can import a theme with an upload' do
-      upload = Fabricate(:upload)
-      theme = Fabricate(:theme)
-      upload = UploadCreator.new(image, "logo.png").create_for(-1)
-      theme.set_field(target: :common, name: :logo, upload_id: upload.id, type: :theme_upload_var)
-      theme.save!
-
-      json = ThemeWithEmbeddedUploadsSerializer.new(theme, root: 'theme').to_json
-      theme.destroy
-
-      temp = Tempfile.new
-      temp.write(json)
-      temp.rewind
-
-      uploaded_json = Rack::Test::UploadedFile.new(temp)
-      upload.destroy
-
-      post "/admin/themes/import.json", params: { theme: uploaded_json }
-      expect(response.status).to eq(201)
-      temp.unlink
-
-      theme = Theme.last
-      expect(theme.theme_fields.count).to eq(1)
-      expect(theme.theme_fields.first.upload).not_to eq(nil)
-      expect(theme.theme_fields.first.upload.filesize).to eq(upload.filesize)
-      expect(theme.theme_fields.first.upload.sha1).to eq(upload.sha1)
-      expect(theme.theme_fields.first.upload.original_filename).to eq(upload.original_filename)
     end
 
     it 'can import a theme from Git' do
@@ -85,13 +89,75 @@ describe Admin::ThemesController do
     end
 
     it 'imports a theme' do
-      post "/admin/themes/import.json", params: { theme: theme_file }
+      post "/admin/themes/import.json", params: { theme: theme_json_file }
       expect(response.status).to eq(201)
 
       json = ::JSON.parse(response.body)
 
       expect(json["theme"]["name"]).to eq("Sam's Simple Theme")
       expect(json["theme"]["theme_fields"].length).to eq(2)
+      expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'imports a theme from an archive' do
+      existing_theme = Fabricate(:theme, name: "Header Icons")
+
+      expect do
+        post "/admin/themes/import.json", params: { theme: theme_archive }
+      end.to change { Theme.count }.by (1)
+      expect(response.status).to eq(201)
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Header Icons")
+      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'updates an existing theme from an archive by name' do
+      # Old theme CLI method, remove Jan 2020
+      existing_theme = Fabricate(:theme, name: "Header Icons")
+
+      expect do
+        post "/admin/themes/import.json", params: { bundle: theme_archive }
+      end.to change { Theme.count }.by (0)
+      expect(response.status).to eq(201)
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Header Icons")
+      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'updates an existing theme from an archive by id' do
+      # Used by theme CLI
+      existing_theme = Fabricate(:theme, name: "Header Icons")
+      other_existing_theme = Fabricate(:theme, name: "Some other name")
+
+      expect do
+        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: other_existing_theme.id }
+      end.to change { Theme.count }.by (0)
+      expect(response.status).to eq(201)
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Some other name")
+      expect(json["theme"]["id"]).to eq(other_existing_theme.id)
+      expect(json["theme"]["theme_fields"].length).to eq(5)
+      expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'creates a new theme when id specified as nil' do
+      # Used by theme CLI
+      existing_theme = Fabricate(:theme, name: "Header Icons")
+
+      expect do
+        post "/admin/themes/import.json", params: { bundle: theme_archive, theme_id: nil }
+      end.to change { Theme.count }.by (1)
+      expect(response.status).to eq(201)
+      json = ::JSON.parse(response.body)
+
+      expect(json["theme"]["name"]).to eq("Header Icons")
+      expect(json["theme"]["id"]).not_to eq(existing_theme.id)
+      expect(json["theme"]["theme_fields"].length).to eq(5)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
     end
   end
@@ -205,6 +271,59 @@ describe Admin::ThemesController do
       expect(fields.length).to eq(2)
       expect(json["theme"]["child_themes"].length).to eq(1)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'can update translations' do
+      theme.set_field(target: :translations, name: :en, value: { en: { somegroup: { somestring: "defaultstring" } } }.deep_stringify_keys.to_yaml)
+      theme.save!
+
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          translations: {
+            "somegroup.somestring" => "overridenstring"
+          }
+        }
+      }
+
+      # Response correct
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["theme"]["translations"][0]["value"]).to eq("overridenstring")
+
+      # Database correct
+      theme.reload
+      expect(theme.theme_translation_overrides.count).to eq(1)
+      expect(theme.theme_translation_overrides.first.translation_key).to eq("somegroup.somestring")
+
+      # Set back to default
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: {
+          translations: {
+            "somegroup.somestring" => "defaultstring"
+          }
+        }
+      }
+      # Response correct
+      expect(response.status).to eq(200)
+      json = ::JSON.parse(response.body)
+      expect(json["theme"]["translations"][0]["value"]).to eq("defaultstring")
+
+      # Database correct
+      theme.reload
+      expect(theme.theme_translation_overrides.count).to eq(0)
+    end
+
+    it 'handles import errors on update' do
+      theme.create_remote_theme!(remote_url: "https://example.com/repository")
+
+      # RemoteTheme is extensively tested, and setting up the test scaffold is a large overhead
+      # So use a stub here to test the controller
+      RemoteTheme.any_instance.stubs(:update_from_remote).raises(RemoteTheme::ImportError.new("error message"))
+      put "/admin/themes/#{theme.id}.json", params: {
+        theme: { remote_update: true }
+      }
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)["errors"].first).to eq("error message")
     end
 
     it 'returns the right error message' do

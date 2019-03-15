@@ -51,6 +51,6 @@ export default Ember.Component.extend({
   },
 
   click() {
-    this.sendAction("onToggle");
+    this.onToggle();
   }
 });

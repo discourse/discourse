@@ -3,39 +3,9 @@ require "openssl"
 class WebhooksController < ActionController::Base
 
   def mailgun
-    # can't verify data without an API key
     return mailgun_failure if SiteSetting.mailgun_api_key.blank?
 
-    # token is a random string of 50 characters
-    token = params["token"]
-    return mailgun_failure if token.blank? || token.size != 50
-
-    # prevent replay attack
-    key = "mailgun_token_#{token}"
-    return mailgun_failure unless $redis.setnx(key, 1)
-    $redis.expire(key, 10.minutes)
-
-    # ensure timestamp isn't too far from current time
-    timestamp = params["timestamp"]
-    return mailgun_failure if (Time.at(timestamp.to_i) - Time.now).abs > 24.hours.to_i
-
-    # check the signature
-    return mailgun_failure unless mailgun_verify(timestamp, token, params["signature"])
-
-    event = params["event"]
-    message_id = params["Message-Id"].tr("<>", "")
-    to_address = params["recipient"]
-
-    # only handle soft bounces, because hard bounces are also handled
-    # by the "dropped" event and we don't want to increase bounce score twice
-    # for the same message
-    if event == "bounced".freeze && params["error"]["4."]
-      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
-    elsif event == "dropped".freeze
-      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
-    end
-
-    mailgun_success
+    params["event-data"] ? handle_mailgun_new(params) : handle_mailgun_legacy(params)
   end
 
   def sendgrid
@@ -54,7 +24,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render body: nil, status: 200
+    success
   end
 
   def mailjet
@@ -71,7 +41,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render body: nil, status: 200
+    success
   end
 
   def mandrill
@@ -88,7 +58,7 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render body: nil, status: 200
+    success
   end
 
   def sparkpost
@@ -114,7 +84,21 @@ class WebhooksController < ActionController::Base
       end
     end
 
-    render body: nil, status: 200
+    success
+  end
+
+  def aws
+    raw  = request.raw_post
+    json = JSON.parse(raw)
+
+    case json["Type"]
+    when "SubscriptionConfirmation"
+      Jobs.enqueue(:confirm_sns_subscription, raw: raw, json: json)
+    when "Notification"
+      Jobs.enqueue(:process_sns_notification, raw: raw, json: json)
+    end
+
+    success
   end
 
   private
@@ -123,14 +107,63 @@ class WebhooksController < ActionController::Base
     render body: nil, status: 406
   end
 
-  def mailgun_success
+  def success
     render body: nil, status: 200
   end
 
-  def mailgun_verify(timestamp, token, signature)
-    digest = OpenSSL::Digest::SHA256.new
-    data = "#{timestamp}#{token}"
-    signature == OpenSSL::HMAC.hexdigest(digest, SiteSetting.mailgun_api_key, data)
+  def valid_mailgun_signature?(token, timestamp, signature)
+    # token is a random 50 characters string
+    return false if token.blank? || token.size != 50
+
+    # prevent replay attacks
+    key = "mailgun_token_#{token}"
+    return false unless $redis.setnx(key, 1)
+    $redis.expire(key, 10.minutes)
+
+    # ensure timestamp isn't too far from current time
+    return false if (Time.at(timestamp.to_i) - Time.now).abs > 12.hours.to_i
+
+    # check the signature
+    signature == OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}")
+  end
+
+  def handle_mailgun_legacy(params)
+    return mailgun_failure unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
+
+    event = params["event"]
+    message_id = params["Message-Id"].tr("<>", "")
+    to_address = params["recipient"]
+
+    # only handle soft bounces, because hard bounces are also handled
+    # by the "dropped" event and we don't want to increase bounce score twice
+    # for the same message
+    if event == "bounced".freeze && params["error"]["4."]
+      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+    elsif event == "dropped".freeze
+      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+    end
+
+    success
+  end
+
+  def handle_mailgun_new(params)
+    signature = params["signature"]
+    return mailgun_failure unless valid_mailgun_signature?(signature["token"], signature["timestamp"], signature["signature"])
+
+    data = params["event-data"]
+    message_id = data.dig("message", "headers", "message-id")
+    to_address = data["recipient"]
+    severity = data["severity"]
+
+    if data["event"] == "failed".freeze
+      if severity == "temporary".freeze
+        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+      elsif severity == "permanent".freeze
+        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+      end
+    end
+
+    success
   end
 
   def process_bounce(message_id, to_address, bounce_score)

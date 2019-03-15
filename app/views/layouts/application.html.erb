@@ -17,6 +17,8 @@
       <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
+    <%= build_plugin_html 'server:before-script-load' %>
+
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= preload_script "ember_jquery" %>
     <%= preload_script "preload-store" %>
@@ -36,6 +38,7 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
+      <%= raw theme_translations_lookup %>
       <%= raw theme_lookup("head_tag") %>
     <%- end %>
 
@@ -57,7 +60,6 @@
 
     <%- if !current_user && cookies[:authentication_data] %>
       <meta id="data-authentication" data-authentication-data="<%= cookies.delete(:authentication_data) %>">
-      <%= preload_script "authentication-complete" %>
     <%- end %>
   </head>
 

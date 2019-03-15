@@ -112,34 +112,41 @@ describe SpamRule::FlagSockpuppets do
 
   describe 'flag_sockpuppet_users' do
     let(:post2) { Fabricate(:post, user: Fabricate(:user, ip_address: user1.ip_address), topic: post1.topic) }
+    let(:system) { Discourse.system_user }
+    let(:spam) { PostActionType.types[:spam] }
 
     it 'flags post and first post if both users are new' do
-      PostAction.expects(:act).with(Discourse.system_user, post1, PostActionType.types[:spam], anything).once
-      PostAction.expects(:act).with(Discourse.system_user, post2, PostActionType.types[:spam], anything).once
       described_class.new(post2).flag_sockpuppet_users
+
+      expect(PostAction.where(user: system, post: post1, post_action_type_id: spam).exists?).to eq(true)
+      expect(PostAction.where(user: system, post: post2, post_action_type_id: spam).exists?).to eq(true)
     end
 
     it "doesn't flag the first post more than once" do
-      PostAction.expects(:act).with(Discourse.system_user, post2, PostActionType.types[:spam], anything).once
-      PostAction.stubs(:act).with(Discourse.system_user, post1, PostActionType.types[:spam], anything).raises(PostAction::AlreadyActed)
       described_class.new(post2).flag_sockpuppet_users
+
+      expect(PostAction.where(user: system, post: post2, post_action_type_id: spam).exists?).to eq(true)
+      expect(PostAction.where(post: post2, post_action_type_id: spam).count).to eq(1)
     end
 
     it "doesn't flag the first post if the user is not new" do
       old_user = Fabricate(:user, ip_address: '182.189.119.174', created_at: 25.hours.ago, trust_level:  TrustLevel[1])
       first_post = Fabricate(:post, user: old_user, topic: Fabricate(:topic, user: old_user))
       post2 = Fabricate(:post, user: Fabricate(:user, ip_address: old_user.ip_address), topic: first_post.topic)
-      PostAction.expects(:act).with(anything, post2, anything, anything).once
-      PostAction.expects(:act).with(anything, first_post, anything, anything).never
+
       described_class.new(post2).flag_sockpuppet_users
+
+      expect(PostAction.where(user: system, post: post2, post_action_type_id: spam).exists?).to eq(true)
+      expect(PostAction.where(user: system, post: first_post, post_action_type_id: spam).exists?).to eq(false)
     end
 
     it "doesn't create a flag if user is nil on first post" do
       post1.user_id = nil
       post1.save
-      PostAction.expects(:act).with(anything, post2, anything, anything).once
-      PostAction.expects(:act).with(anything, post1, anything, anything).never
       described_class.new(post2).flag_sockpuppet_users
+
+      expect(PostAction.where(user: system, post: post2, post_action_type_id: spam).exists?).to eq(true)
+      expect(PostAction.where(user: system, post: post1, post_action_type_id: spam).exists?).to eq(false)
     end
   end
 end

@@ -1,5 +1,9 @@
 import { acceptance } from "helpers/qunit-helpers";
-acceptance("Topic Discovery");
+acceptance("Topic Discovery", {
+  settings: {
+    show_pinned_excerpt_desktop: true
+  }
+});
 
 QUnit.test("Visit Discovery Pages", async assert => {
   await visit("/");
@@ -57,5 +61,18 @@ QUnit.test("Visit Discovery Pages", async assert => {
   assert.ok(
     exists(".category-boxes-with-topics .featured-topics"),
     "The featured topics are there too"
+  );
+});
+
+QUnit.test("Clearing state after leaving a category", async assert => {
+  await visit("/c/dev");
+  assert.ok(
+    exists(".topic-list-item[data-topic-id=11994] .topic-excerpt"),
+    "it expands pinned topics in a subcategory"
+  );
+  await visit("/");
+  assert.ok(
+    !exists(".topic-list-item[data-topic-id=11557] .topic-excerpt"),
+    "it doesn't expand all pinned in the latest category"
   );
 });

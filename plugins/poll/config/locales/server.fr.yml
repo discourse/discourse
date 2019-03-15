@@ -12,8 +12,9 @@ fr:
     poll_edit_window_mins: "Nombre de minutes après la création du message durant lesquelles les sondages peuvent être modifiés."
     poll_minimum_trust_level_to_create: "Définir le niveau de confiance minimum requis pour créer des sondages."
   poll:
+    invalid_argument: "Valeur '%{value}' invalide pour paramètre '%{argument}'."
     multiple_polls_without_name: "Plusieurs sondages n'ont pas de nom. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
-    multiple_polls_with_same_name: "Plusieurs sondages ont le même noms : <strong>%{name}</strong>. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
+    multiple_polls_with_same_name: "Plusieurs sondages ont le même nom : <strong>%{name}</strong>. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
     default_poll_must_have_at_least_2_options: "Un sondage doit contenir au moins deux options."
     named_poll_must_have_at_least_2_options: "Le sondage <strong>%{name}</strong> doit contenir au moins deux options."
     default_poll_must_have_less_options:

@@ -9,7 +9,7 @@ export default Ember.Controller.extend(PasswordValidation, {
   isDeveloper: Ember.computed.alias("model.is_developer"),
   admin: Ember.computed.alias("model.admin"),
   secondFactorRequired: Ember.computed.alias("model.second_factor_required"),
-  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
+  backupEnabled: Ember.computed.alias("model.backup_enabled"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
   passwordRequired: true,
   errorMessage: null,
@@ -38,7 +38,7 @@ export default Ember.Controller.extend(PasswordValidation, {
         type: "PUT",
         data: {
           password: this.get("accountPassword"),
-          second_factor_token: this.get("secondFactor"),
+          second_factor_token: this.get("secondFactorToken"),
           second_factor_method: this.get("secondFactorMethod")
         }
       })

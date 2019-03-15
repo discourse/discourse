@@ -1,5 +1,4 @@
 let lastSearch;
-let lastOverridden;
 
 export default Ember.Controller.extend({
   searching: false,
@@ -8,7 +7,7 @@ export default Ember.Controller.extend({
   queryParams: ["q", "overridden"],
 
   q: null,
-  overridden: null,
+  overridden: false,
 
   _performSearch() {
     this.store
@@ -24,14 +23,18 @@ export default Ember.Controller.extend({
       this.transitionToRoute("adminSiteText.edit", siteText.get("id"));
     },
 
-    search(overridden) {
-      if (typeof overridden === "boolean") this.set("overridden", overridden);
+    toggleOverridden() {
+      this.toggleProperty("overridden");
+      this.set("searching", true);
+      Ember.run.debounce(this, this._performSearch, 400);
+    },
+
+    search() {
       const q = this.get("q");
-      if (q !== lastSearch || overridden !== lastOverridden) {
+      if (q !== lastSearch) {
         this.set("searching", true);
         Ember.run.debounce(this, this._performSearch, 400);
         lastSearch = q;
-        lastOverridden = overridden;
       }
     }
   }

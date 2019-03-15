@@ -9,9 +9,7 @@
   box-shadow: shadow("header");
 
   > .wrap {
-    box-sizing: border-box;
-    padding: 0;
-    width: 100%;
+    width: calc(100% - 16px); // accommodates for 8px vertical padding
     height: 100%;
     .contents {
       display: flex;
@@ -102,10 +100,6 @@
     width: 2.2857em;
     height: 2.2857em;
     padding: 0.2143em;
-    color: dark-light-choose(
-      scale-color($header_primary, $lightness: 50%),
-      $header_primary
-    );
     text-decoration: none;
     cursor: pointer;
     border-top: 1px solid transparent;
@@ -114,16 +108,18 @@
     transition: all linear 0.15s;
     outline: none;
     img.avatar {
-      width: 2.2857em;
-      height: 2.2857em;
+      width: 2.1333em;
+      height: 2.1333em;
     }
     &:hover,
     &:focus {
-      color: $primary;
       background-color: $primary-low;
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
+      .d-icon {
+        color: $primary-medium;
+      }
     }
     &:active {
       color: $primary;
@@ -133,13 +129,14 @@
   .drop-down-mode & {
     .active .icon {
       position: relative;
-      color: #7b7b7b;
       background-color: $secondary;
       cursor: default;
       border-top: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
       border-right: 1px solid $primary-low;
-
+      .d-icon {
+        color: $primary-medium;
+      }
       &:after {
         display: block;
         position: absolute;
@@ -162,6 +159,7 @@
     font-size: $font-up-4;
     line-height: $line-height-large;
     display: inline-block;
+    color: $header_primary-low-mid;
   }
   .notifications {
     position: relative;
@@ -180,7 +178,7 @@
     z-index: z("base");
     left: 0;
     top: -4px;
-    min-width: 6px;
+    min-width: 0.6em;
   }
   .unread-notifications {
     left: auto;
@@ -260,7 +258,7 @@
   .badge-wrapper {
     margin-right: 8px;
     &.bullet {
-      padding-top: 1px; // alignment hack
+      padding-top: 2px; // alignment hack
     }
   }
   .badge-wrapper.bullet {
@@ -289,13 +287,81 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       .discourse-tag {
-        display: inline;
+        display: inline; // tags need to stay inline in order for them to truncate
       }
     }
   }
-  // if a topic has both categories and tags, the tag container should shrink
-  // instead of wrapping to the next line.
-  .categories-wrapper + .topic-header-extra {
-    min-width: 0;
+  // the tag container should shrink
+  .topic-header-extra {
+    min-width: 1px; // 1px value is needed to avoid IE11 flexbox bug
+  }
+}
+
+// PM header participants
+
+$avatar-height: 1.641em;
+$mobile-avatar-height: 1.532em;
+
+.topic-header-participants {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  font-size: $font-down-1;
+  &:not(:first-child) {
+    margin-left: 5px;
+  }
+  .trigger-user-card,
+  .trigger-group-card {
+    &:not(:last-of-type) {
+      margin-right: 5px;
+    }
+  }
+
+  .trigger-user-card {
+    .icon {
+      height: $avatar-height;
+      .mobile-view & {
+        height: $mobile-avatar-height;
+      }
+      display: inline-block;
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+
+  .trigger-group-card {
+    padding: 0 5px;
+    border: 1px solid $primary-low;
+    border-radius: 0.25em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      height: $avatar-height;
+      .mobile-view & {
+        height: $mobile-avatar-height;
+      }
+      color: $primary-high;
+
+      .d-icon {
+        margin-right: 5px;
+      }
+    }
+
+    span {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .more-participants {
+    color: $header_primary-high;
+    margin-left: 5px;
   }
 }

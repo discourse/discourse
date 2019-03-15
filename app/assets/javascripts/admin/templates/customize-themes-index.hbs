@@ -2,6 +2,9 @@
   <img src={{womanArtistEmojiURL}}>
   <div class="content-wrapper">
     <h1>{{I18n "admin.customize.theme.themes_intro"}}</h1>
+     <div class="create-actions">
+      {{d-button action=(route-action "installModal") icon="upload" label="admin.customize.install" class="btn-primary"}}
+    </div>
     <div class="external-resources">
       {{#each externalResources as |resource|}}
         <a href={{resource.link}} class="external-link" target="_blank">

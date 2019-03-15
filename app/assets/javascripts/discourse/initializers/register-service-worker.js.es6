@@ -28,7 +28,8 @@ export default {
         navigator.serviceWorker
           .register(`${Discourse.BaseUri}/${Discourse.ServiceWorkerURL}`)
           .catch(error => {
-            Ember.Logger.info(`Failed to register Service Worker: ${error}`);
+            // eslint-disable-next-line no-console
+            console.info(`Failed to register Service Worker: ${error}`);
           });
       } else {
         navigator.serviceWorker.getRegistrations().then(registrations => {

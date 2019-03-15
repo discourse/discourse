@@ -5,19 +5,46 @@ describe Jobs do
 
   describe 'enqueue' do
 
-    describe 'when queue_jobs is true' do
+    describe 'run_later!' do
       before do
-        SiteSetting.expects(:queue_jobs?).at_least_once.returns(true)
+        Jobs.run_later!
       end
 
       it 'enqueues a job in sidekiq' do
-        Sidekiq::Client.expects(:enqueue).with(Jobs::ProcessPost, post_id: 1, current_site_id: 'default')
-        Jobs.enqueue(:process_post, post_id: 1)
+        Sidekiq::Testing.fake! do
+          jobs = Jobs::ProcessPost.jobs
+
+          jobs.clear
+          Jobs.enqueue(:process_post, post_id: 1)
+          expect(jobs.length).to eq(1)
+          job = jobs.first
+
+          expected = {
+            "class" => "Jobs::ProcessPost",
+            "args" => [{ "post_id" => 1, "current_site_id" => "default" }],
+            "queue" => "default"
+          }
+          expect(job.slice("class", "args", "queue")).to eq(expected)
+        end
       end
 
       it "does not pass current_site_id when 'all_sites' is present" do
-        Sidekiq::Client.expects(:enqueue).with(Jobs::ProcessPost, post_id: 1)
-        Jobs.enqueue(:process_post, post_id: 1, all_sites: true)
+        Sidekiq::Testing.fake! do
+          jobs = Jobs::ProcessPost.jobs
+
+          jobs.clear
+          Jobs.enqueue(:process_post, post_id: 1, all_sites: true)
+
+          expect(jobs.length).to eq(1)
+          job = jobs.first
+
+          expected = {
+            "class" => "Jobs::ProcessPost",
+            "args" => [{ "post_id" => 1 }],
+            "queue" => "default"
+          }
+          expect(job.slice("class", "args", "queue")).to eq(expected)
+        end
       end
 
       it "doesn't execute the job" do
@@ -27,16 +54,29 @@ describe Jobs do
       end
 
       it "should enqueue with the correct database id when the current_site_id option is given" do
-        Sidekiq::Client.expects(:enqueue).with do |arg1, arg2|
-          arg2[:current_site_id] == 'test_db' && arg2[:sync_exec].nil?
+
+        Sidekiq::Testing.fake! do
+          jobs = Jobs::ProcessPost.jobs
+
+          jobs.clear
+          Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db')
+
+          expect(jobs.length).to eq(1)
+          job = jobs.first
+
+          expected = {
+            "class" => "Jobs::ProcessPost",
+            "args" => [{ "post_id" => 1, "current_site_id" => "test_db" }],
+            "queue" => "default"
+          }
+          expect(job.slice("class", "args", "queue")).to eq(expected)
         end
-        Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db')
       end
     end
 
-    describe 'when queue_jobs is false' do
+    describe 'run_immediately!' do
       before do
-        SiteSetting.expects(:queue_jobs?).at_least_once.returns(false)
+        Jobs.run_immediately!
       end
 
       it "doesn't enqueue in sidekiq" do

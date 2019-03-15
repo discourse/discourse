@@ -39,7 +39,7 @@ export default Ember.Component.extend(
       "topic.visited"
     ],
     attributeBindings: ["data-topic-id"],
-    "data-topic-id": Em.computed.alias("topic.id"),
+    "data-topic-id": Ember.computed.alias("topic.id"),
 
     @computed
     newDotText() {
@@ -104,6 +104,7 @@ export default Ember.Component.extend(
       return this.get("topic.op_like_count") > 0;
     },
 
+    @computed
     expandPinned: function() {
       const pinned = this.get("topic.pinned");
       if (!pinned) {
@@ -132,7 +133,7 @@ export default Ember.Component.extend(
       }
 
       return false;
-    }.property(),
+    },
 
     showEntrance,
 

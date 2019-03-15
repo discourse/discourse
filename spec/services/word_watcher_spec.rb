@@ -48,6 +48,38 @@ describe WordWatcher do
         expect(m[1]).to eq("acknowledge")
       end
 
+      context "word boundary" do
+        it "handles word boundary" do
+          Fabricate(:watched_word, word: "love", action: WatchedWord.actions[:require_approval])
+          expect(WordWatcher.new("I Love, bananas.").word_matches_for_action?(:require_approval)[1]).to eq("Love")
+          expect(WordWatcher.new("I LOVE; apples.").word_matches_for_action?(:require_approval)[1]).to eq("LOVE")
+          expect(WordWatcher.new("love: is a thing.").word_matches_for_action?(:require_approval)[1]).to eq("love")
+          expect(WordWatcher.new("I love. oranges").word_matches_for_action?(:require_approval)[1]).to eq("love")
+          expect(WordWatcher.new("I :love. pineapples").word_matches_for_action?(:require_approval)[1]).to eq("love")
+          expect(WordWatcher.new("peace ,love and understanding.").word_matches_for_action?(:require_approval)[1]).to eq("love")
+        end
+      end
+
+      context "emojis" do
+        it "handles emoji" do
+          Fabricate(:watched_word, word: ":joy:", action: WatchedWord.actions[:require_approval])
+          m = WordWatcher.new("Lots of emojis here :joy:").word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq(":joy:")
+        end
+
+        it "handles unicode emoji" do
+          Fabricate(:watched_word, word: "🎃", action: WatchedWord.actions[:require_approval])
+          m = WordWatcher.new("Halloween party! 🎃").word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq("🎃")
+        end
+
+        it "handles emoji skin tone" do
+          Fabricate(:watched_word, word: ":woman:t5:", action: WatchedWord.actions[:require_approval])
+          m = WordWatcher.new("To Infinity and beyond! 🚀 :woman:t5:").word_matches_for_action?(:require_approval)
+          expect(m[1]).to eq(":woman:t5:")
+        end
+      end
+
       context "regular expressions" do
         before do
           SiteSetting.watched_words_regular_expressions = true

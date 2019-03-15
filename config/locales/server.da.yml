@@ -34,7 +34,6 @@ da:
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet af forfatteren"
   themes:
-    bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farveskema"
     other_error: "Der opstod en fejl under opdatering af temaet"
   emails:
     incoming:
@@ -56,7 +55,7 @@ da:
         bounced_email_error: "Emailen er en \"bounced email\" rapport"
         screened_email_error: "Dette sker når afsenderens email adresse allerede er screenet."
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
       invalid_boolean: "Ugyldig boolsk operator"
@@ -81,7 +80,7 @@ da:
       not_a_number: er ikke et nummer
       not_an_integer: skal være et heltal
       odd: skal være et ulige tal
-      record_invalid: 'Kunne ikke valideres: %{errors}'
+      record_invalid: "Kunne ikke valideres: %{errors}"
       restrict_dependent_destroy:
         one: "Kan ikke slette fordi en afhængighed %{record} findes"
         many: "Kan ikke slette fordi en afhængighed %{record} findes"
@@ -96,10 +95,10 @@ da:
         other: har forkert længde (burde være  %{count} tegn)
       other_than: "skal være andet end %{count}"
     template:
-      body: 'Der var problemer med følgende felter:'
+      body: "Der var problemer med følgende felter:"
       header:
         one: Een fejl forhindrede denne %{model} for at gemme.
-        other: '%{count} fejl forhindrede denne %{model} i at gemme.'
+        other: "%{count} fejl forhindrede denne %{model} i at gemme."
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
     site_settings:
@@ -135,7 +134,6 @@ da:
     continue: "Fortsæt diskussion"
     error: "Fejl ved indlejring"
     referer: "Henviser:"
-    mismatch: "Henviseren matcher ikke nogen af følgende værter:"
     no_hosts: "Ingen værter var konfigureret til indlejring."
     configure: "Konfigurér indlejring"
     more_replies:
@@ -228,7 +226,7 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    'new-topic': |
+    "new-topic": |
       Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
 
       -  Lyder title interessant hvis du læser den højt? Er det et godt resumé?
@@ -236,7 +234,7 @@ da:
       -  Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
 
       For mere info, [se vores retningslinjer](%{base_path}/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
 
       Husk venligst mens du skriver dit svar:
@@ -264,13 +262,12 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    dominating_topic: |+
+    dominating_topic: |
       ### Lad andre deltage i samtalen
 
       Dette emne er åbenbart vigtigt for dig &ndash; du har oprettet mere end %{percent}% af svarene her.
 
       Er du sikker på, at du giver tilstrækkelig tid til, at andre folk også kan dele deres synspunkter?
-
     get_a_room: |
       ### Overvej at svare flere personer
 
@@ -290,8 +287,8 @@ da:
       category:
         name: "Kategorinavn"
       topic:
-        title: 'Titel'
-        featured_link: 'Fremhævet link'
+        title: "Titel"
+        featured_link: "Fremhævet link"
       post:
         raw: "Brødtekst"
       user_profile:
@@ -343,22 +340,21 @@ da:
     title: "Velkommen til Discourse"
     body: |2
 
-        Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
+      Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
 
-        **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
+      **Redigér dette** til en kortfattet beskrivelse af dit fællesskab:
 
-        - Hvem er det rettet mod?
-        - Hvad kan de finde her?
-        - Hvorfor bør de komme her?
-        - Hvor finde de mere information (links, ressourcer, osv.)?
-        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      - Hvem er det rettet mod?
+      - Hvad kan de finde her?
+      - Hvorfor bør de komme her?
+      - Hvor finde de mere information (links, ressourcer, osv.)?
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
+      Du bør eventuelt lukke dette emne via administratorfunktionen :wrench: (øverst til højre og i bunden), således at der ikke hober sig svar op til denne meddelelse.
   lounge_welcome:
     title: "Velkommen i loungen"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
-    replace_paragraph: "(Beskriv din nye kategori her. Beskriv ramme og formål med kategori således at det er tydeligt for andre. Forsøg at holde beskrivelsen på max 200 tegn. **Kategorien vil ikke fremgå på kategori listen, før du har redigeret beskrivelsen, eller oprettet emner)."
     post_template: "%{replace_paragraph}\n\nBrug de følgende afsnit for en længere beskrivelse, eller introducere kategorien:\n\n- Hvorfor skal man anvende denne kategori? Hvad er formålet?\n\n- Hvordan er kategorien anderledes end de eksisterende kategorier?\n\n- Hvad skal emner i denne kategori indeholde?\n\n- Behøver vi denne kategori? Kan vi ikke flette indholdet ind i en eksisterende kategori, eller subkategori?\n"
     errors:
       uncategorized_parent: "Ukategoriserede  kan ikke have en overordnede kategori"
@@ -368,7 +364,6 @@ da:
       email_already_used_in_group: "'%{email}' anvendes allerede af gruppen '%{group_name}'."
       email_already_used_in_category: "'%{email}' bruges allerede af kategorien '%{category_name}'."
     cannot_delete:
-      uncategorized: "Kan ikke slette Ukategoriseret"
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
       topic_exists_no_oldest: "Kan ikke slette denne kategori fordi antallet af emner er %{count}"
     uncategorized_description: "Emner der ikke behøver kategori, eller ikke passer i eksisterende kategori."
@@ -469,9 +464,9 @@ da:
     no_token: "Beklager, dit kodeords-reset link er udløbet. Vælg 'Log ind' knappen og brug 'Jeg har glemt mit kodeord' for at få et nyt link."
     choose_new: "Vælg en ny adgangskode"
     choose: "Vælg en adgangskode"
-    update: 'opdatér kodeord'
-    save: 'Set kodeord'
-    title: 'nulstil kodeord'
+    update: "opdatér kodeord"
+    save: "Set kodeord"
+    title: "nulstil kodeord"
     success: "Dit kodeord er ændret og du er nu logget ind."
     success_unapproved: "Dit kodeord er ændret."
   change_email:
@@ -500,36 +495,36 @@ da:
       back_to: "Gå tilbage til %{title}"
   post_action_types:
     off_topic:
-      title: 'Uden for emnet'
-      description: 'Dette indlæg er ikke relevant for denne diskussion som defineret af titlen og det første indlæg. Det skal nok flyttes et andet sted hen.'
-      long_form: 'markerede dette som uden for emnet'
+      title: "Uden for emnet"
+      description: "Dette indlæg er ikke relevant for denne diskussion som defineret af titlen og det første indlæg. Det skal nok flyttes et andet sted hen."
+      long_form: "markerede dette som uden for emnet"
     spam:
-      title: 'Spam'
-      long_form: 'markerede dette som spam'
+      title: "Spam"
+      long_form: "markerede dette som spam"
       email_title: '"%{title}" blev markeret som spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Upassende'
-      long_form: 'markerede dette som stødende'
+      title: "Upassende"
+      long_form: "markerede dette som stødende"
     notify_user:
-      title: 'Send @{{username}} en besked'
-      long_form: 'sendt besked til brugeren'
+      title: "Send @{{username}} en besked"
+      long_form: "sendt besked til brugeren"
       email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
-      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href="%{base_path}/faq">Den Gode Tone</a>, <a href="%{tos_url}">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor.'
-      long_form: 'Har flagged dette overfor administrator'
+      description: "Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href=\"%{base_path}/faq\">Den Gode Tone</a>, <a href=\"%{tos_url}\">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor."
+      long_form: "Har flagged dette overfor administrator"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Bogmærk'
-      description: 'Bogmærk dette indlæg'
-      long_form: 'bogmærkede dette indlæg'
+      title: "Bogmærk"
+      description: "Bogmærk dette indlæg"
+      long_form: "bogmærkede dette indlæg"
     like:
-      title: 'Like'
-      description: 'Du liker dette indlæg'
-      long_form: 'like dette'
+      title: "Like"
+      description: "Du liker dette indlæg"
+      long_form: "like dette"
   user_activity:
     no_bookmarks:
       others: "Ingen bogmærker"
@@ -538,19 +533,19 @@ da:
       others: "Ingen 'synes om'-beskeder."
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Dette emne minder mere om en reklame end et debatindlæg. Det er ikke nyttigt eller relevant for diskussionen.'
-      long_form: 'markerede dette som spam'
+      title: "Spam"
+      description: "Dette emne minder mere om en reklame end et debatindlæg. Det er ikke nyttigt eller relevant for diskussionen."
+      long_form: "markerede dette som spam"
     inappropriate:
-      title: 'Upassende'
-      long_form: 'markeret upassende'
+      title: "Upassende"
+      long_form: "markeret upassende"
     notify_moderators:
       title: "Noget andet"
-      long_form: 'markerede dette til gennemsyn'
+      long_form: "markerede dette til gennemsyn"
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>Dette indlæg er blevet markert af fællesskabet, og er midlertidigt skjult.</p>'
+    user_must_edit: "<p>Dette indlæg er blevet markert af fællesskabet, og er midlertidigt skjult.</p>"
   archetypes:
     regular:
       title: "Almindeligt emne"
@@ -578,7 +573,7 @@ da:
     authorize: "Autoriser"
     read: "læst"
     read_write: "læs/skriv"
-    description: "\"%{application_name}\" anmoder om følgende adgang til din konto:"
+    description: '"%{application_name}" anmoder om følgende adgang til din konto:'
     no_trust_level: "Beklager, du har ikke adgang til brugerens API"
     generic_error: "Beklager, vi er ikke i stand til at give dig API nøgler, denne funktionalitet er muligvis bestemt af sitets administrator"
     scopes:
@@ -619,10 +614,6 @@ da:
       title: "Bogmærker"
       xaxis: "Dag"
       yaxis: "Antal nye bogmærker"
-    starred:
-      title: "Favoritter"
-      xaxis: "Dag"
-      yaxis: "Antal nye favoritter"
     users_by_trust_level:
       title: "Brugere pr. tillidsniveau"
       xaxis: "Tillidsniveau"
@@ -672,7 +663,6 @@ da:
       xaxis: "Dag"
       yaxis: "Logged in Sidevisninger"
     page_view_crawler_reqs:
-      title: "Web Crawlers"
       xaxis: "Dag"
       yaxis: "Web Crawler Sidevisninger"
     page_view_total_reqs:
@@ -725,8 +715,8 @@ da:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     host_names_warning: "Filen config/database.yml bruger localhost som værtsnavn. Opdatér den med sitets værtsnavn."
     sidekiq_warning: 'Sidekiq kører ikke. Mange opgaver, som f.eks. udsendelse af e-mail, afvikles asynkront af sidekiq. Du skal sikre dig at der kører mindst én sidekiq-proces. <a href="https://github.com/mperham/sidekiq" target="_blank">Læs mere om Sidekiq her</a>.'
-    queue_size_warning: 'Antallet af job i kø er %{queue_size}, hvilket er højt. Dette kunne indikere at der er et problem med Sidekiq processerne, eller du behøver at tilføre flere Sidekiq resurser.'
-    memory_warning: 'Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse.'
+    queue_size_warning: "Antallet af job i kø er %{queue_size}, hvilket er højt. Dette kunne indikere at der er et problem med Sidekiq processerne, eller du behøver at tilføre flere Sidekiq resurser."
+    memory_warning: "Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse."
     subfolder_ends_in_slash: "Din undermappe er ikke opsat korrekt; DISCOURSE_RELATIVE_URL_ROOT ender med en slash."
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
@@ -780,7 +770,6 @@ da:
     summary_posts_required: "Minimum antal indlæg i et emne, før 'opsummer dette emne' er aktiveret"
     summary_likes_required: "Minimum antal likes på et emne før 'opsummer dette emne' er aktiveret"
     summary_percent_filter: "Når en bruger kllikker 'Opsummer dette Emne' vises top % af indlæg"
-    summary_max_results: "Max antal indlæg indeholdt i 'Opsummer dette Emne'"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
     long_polling_base_url: "URL anvendt for afsteminger (når CDN leverer dynamisk indhold, så sæt dette til oprindelig / orginal) f.eks: http://origin.site.com"
     long_polling_interval: "Mængde tid før serveren bør vente før den svarer klienter når der ikke er ny data at sende (kun for brugere der er logget ind)"
@@ -794,13 +783,11 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af likes pr dag for tl2 (member) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af likes pr. dag for tl4 (leader) ved at gange med dette tal"
-    flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP adresse som den der startede emnet, så rapporter begge at deres indlæg potentielt er spam."
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg (like, flag, etc)."
     must_approve_users: "Personale skal godkende alle nye bruger konti inden de kan tilgå sitet. ADVARSEL: aktivering af dette for et live site vil medføre en ophævning af adgang for eksisterende ikke-personale brugere."
     pending_users_reminder_delay: "Underret moderatorer hvis nye brugere har ventet på godkendelse i længere end så mange timer. Skriv -1 for at deaktivere notifikationer."
     maximum_session_age: "Bruger vil forblive logget in for n hours siden sidste besøg"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF"
     allow_moderators_to_create_categories: "Tillad moderatorer at skabe nye kategorier"
     use_admin_ip_whitelist: "Admins kan kun logge ind hvis de logger på fra en prædefineret IP liste:  (Admin > Logs > Screened Ips)."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -810,7 +797,6 @@ da:
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
-    show_email_on_profile: "Vis en brugers email på deres profil (kun synligt for brugerne selv - samt admin)"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     enable_badges: "Aktiver badge systemet"
     enable_whispers: "Tillad at hjælperteamet har private samtaler i emner."
@@ -914,9 +900,9 @@ da:
   search:
     within_post: "#%{post_number} af %{username}"
     types:
-      category: 'Kategorier'
-      topic: 'Resultater'
-      user: 'Brugere'
+      category: "Kategorier"
+      topic: "Resultater"
+      user: "Brugere"
   original_poster: "Oprindelig forfatter"
   most_posts: "Flest indlæg"
   most_recent_poster: "Seneste forfatter"
@@ -924,10 +910,6 @@ da:
   redirected_to_top_reasons:
     new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
   topic_statuses:
-    archived_enabled: "Dette emne er nu arkiveret. Det er frosset fast og kan ikke ændres på nogen måde."
-    archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."
-    closed_enabled: "Dette emne er nu lukket. Nye indlæg tillades ikke."
-    closed_disabled: "Dette emne er nu åbent. Nye indlæg tillades."
     autoclosed_enabled_days:
       one: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket efter %{count} dage. Nye svar er ikke længere tilladt."
@@ -948,12 +930,6 @@ da:
       other: "Dette emne blev automatisk lukket %{count} minutter efter det seneste svar. Nye svar er ikke længere tilladt."
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     autoclosed_disabled_lastpost: "Dette emne er nu åbent. Nye svar er tilladt."
-    pinned_enabled: "Dette emne er nu fastgjort. Det vil stå i toppen af dets kategori indtil det bliver frigjort af \"staff\" for alle eller af hver bruger individuelt for dem selv."
-    pinned_disabled: "Dette emne er nu frigjort. Det optræder ikke længere i toppen af dets kategori."
-    pinned_globally_enabled: "Emnet er nu fastgjort globalt. Det bliver vist i toppen af kategorien og i alle emnelister indtil hjælperteamet har frigjort det for alle eller individuelle brugere selv har frigjort det."
-    pinned_globally_disabled: "Dette emne er nu frigjort. Det ses ikke længere i toppen af kategorien."
-    visible_enabled: "Dette emne er nu synligt. Det vises i emnelister."
-    visible_disabled: "Dette emne er nu usynligt. Det vises ikke længere på emnelister. Den eneste måde at tilgå dette emne er via et direkte link."
   login:
     not_approved: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
     incorrect_username_email_or_password: "Ugyldigt navn, e-mail eller adgangskode"
@@ -1002,16 +978,14 @@ da:
       other: "%{count} flag venter på at blive håndteret"
   unsubscribe_mailer:
     subject_template: "Bekræft at du ikke længere ønsker at modtage email opdateringer fra %{site_title}"
-    text_body_template: |+
+    text_body_template: |
       Nogen (måske dig?) har bedt om ikke længere at modtage opdateringer fra %{site_domain_name} på denne mailadresse.
 
       Hvis du vil bekræfte anmodningen, så klik på dette link:
 
       %{confirm_unsubscribe_link}
 
-
       Hvis du ønsker at fortsætte med at modtage mailopdateringer, kan du bare ignorere denne mail.
-
   invite_password_instructions:
     subject_template: "Opret password til din %{site_name}-konto"
     text_body_template: |
@@ -1052,9 +1026,6 @@ da:
     disagreed: "Tak for din henvendelse. Vi kigger på det."
     deferred: "Tak for din henvendelse. Vi kigger på det."
     deferred_and_deleted: "Tak for din henvendelse. Vi har fjernet indlægget."
-  temporarily_closed_due_to_flags:
-    one: "Emnet er lukket i 1 time pga. et stort antal flagmarkeringer."
-    other: "Emnet er lukket i %{count} timer pga. et stort antal flagmarkeringer."
   system_messages:
     private_topic_title: "Emne #%{id}"
     contents_hidden: "Gå venligst til indlægget for at se indholdet."
@@ -1067,19 +1038,17 @@ da:
       title: "Velkomst til inviterede brugere"
       subject_template: "Velkommen til %{site_name}!"
     email_reject_inactive_user:
-      text_body_template: |+
+      text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Den konto, der er knyttet til denne mailadresse, er ikke aktiveret. Aktiver din konto, før du sendere flere mails ind.
-
     email_reject_empty:
-      text_body_template: |+
+      text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Vi kunne ikke finde noget indhold i dit svar.
 
         Hvis du modtager dette og du _har_ inkluderet et svar, så prøv igen med en mere simpel formattering.
-
     email_reject_parsing:
       text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
@@ -1100,11 +1069,10 @@ da:
 
         Hvis du får rettet problemet, kan du prøve igen.
     email_reject_invalid_post_action:
-      text_body_template: |+
+      text_body_template: |
         Vi beklager, men din mailbesked til %{destination} (titled %{former_title}) fungerede ikke.
 
         Send-handlingen blev ikke genkendt. Prøv igen, eller send via websitet, hvis det fortsætter.
-
     too_many_spam_flags:
       title: "For Mange Flagmarkeringer for Spam"
       subject_template: "Nyoprettet konto sat på hold"
@@ -1273,7 +1241,7 @@ da:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
@@ -1327,7 +1295,7 @@ da:
     search_title: "Søg på denne side"
   terms_of_service:
     title: "Vilkår"
-  deleted: 'slettet'
+  deleted: "slettet"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
@@ -1467,8 +1435,8 @@ da:
     initial_topic_title: Website præstationsrapport
   tags:
     title: "Tags"
-    staff_tag_disallowed: "Tagget \"%{tag}\" kan kun tildeles af personalet."
-    staff_tag_remove_disallowed: "Tagget \"%{tag}\" kan kun fjernes af personalet."
+    staff_tag_disallowed: 'Tagget "%{tag}" kan kun tildeles af personalet.'
+    staff_tag_remove_disallowed: 'Tagget "%{tag}" kan kun fjernes af personalet.'
   rss_by_tag: "Emner tagget %{tag}"
   wizard:
     step:
@@ -1511,13 +1479,6 @@ da:
         title: "Organisation"
       colors:
         title: "Tema"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Enkel og lyst"
-              dark:
-                label: "Enkelt og mørkt"
       logos:
         title: "Logoer"
       icons:

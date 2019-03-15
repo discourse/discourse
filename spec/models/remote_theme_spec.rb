@@ -9,7 +9,7 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && mkdir desktop mobile common assets`
+      `cd #{repo_dir} && mkdir desktop mobile common assets locales`
       files.each do |name, data|
         File.write("#{repo_dir}/#{name}", data)
         `cd #{repo_dir} && git add #{name}`
@@ -18,22 +18,16 @@ describe RemoteTheme do
       repo_dir
     end
 
-    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing")
+    def about_json(love_color: "FAFAFA", color_scheme_name: "Amazing", about_url: "https://www.site.com/about")
       <<~JSON
         {
           "name": "awesome theme",
-          "about_url": "https://www.site.com/about",
+          "about_url": "#{about_url}",
           "license_url": "https://www.site.com/license",
+          "theme_version": "1.0",
+          "minimum_discourse_version": "1.0.0",
           "assets": {
             "font": "assets/awesome.woff2"
-          },
-          "fields": {
-            "color": {
-              "target": "desktop",
-              "value": "#FEF",
-              "type": "color"
-            },
-            "name": "sam"
           },
           "color_schemes": {
             "#{color_scheme_name}": {
@@ -56,7 +50,8 @@ describe RemoteTheme do
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
         "assets/awesome.woff2" => "FAKE FONT",
-        "settings.yaml" => "boolean_setting: true"
+        "settings.yaml" => "boolean_setting: true",
+        "locales/en.yml" => "sometranslations"
       )
     end
 
@@ -79,8 +74,10 @@ describe RemoteTheme do
 
       expect(remote.about_url).to eq("https://www.site.com/about")
       expect(remote.license_url).to eq("https://www.site.com/license")
+      expect(remote.theme_version).to eq("1.0")
+      expect(remote.minimum_discourse_version).to eq("1.0.0")
 
-      expect(@theme.theme_fields.length).to eq(7)
+      expect(@theme.theme_fields.length).to eq(6)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -88,13 +85,13 @@ describe RemoteTheme do
       expect(mapped["1-scss"]).to eq(scss_data)
       expect(mapped["0-embedded_scss"]).to eq("EMBED")
 
-      expect(mapped["1-color"]).to eq("#FEF")
       expect(mapped["0-font"]).to eq("")
-      expect(mapped["0-name"]).to eq("sam")
 
       expect(mapped["3-yaml"]).to eq("boolean_setting: true")
 
-      expect(mapped.length).to eq(7)
+      expect(mapped["4-en"]).to eq("sometranslations")
+
+      expect(mapped.length).to eq(6)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
@@ -105,8 +102,11 @@ describe RemoteTheme do
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('fafafa')
 
+      expect(@theme.color_scheme_id).to eq(scheme.id)
+      @theme.update(color_scheme_id: nil)
+
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
-      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA"))
+      File.write("#{initial_repo}/about.json", about_json(love_color: "EAEAEA", about_url: "https://newsite.com/about"))
 
       File.write("#{initial_repo}/settings.yml", "integer_setting: 32")
       `cd #{initial_repo} && git add settings.yml`
@@ -128,6 +128,7 @@ describe RemoteTheme do
       scheme = ColorScheme.find_by(theme_id: @theme.id)
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: 'love').hex).to eq('eaeaea')
+      expect(@theme.color_scheme_id).to eq(nil) # Should only be set on first import
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -138,6 +139,7 @@ describe RemoteTheme do
       expect(@theme.settings.first.value).to eq(32)
 
       expect(remote.remote_updated_at).to eq(time)
+      expect(remote.about_url).to eq("https://newsite.com/about")
 
       # It should be able to remove old colors as well
       File.write("#{initial_repo}/about.json", about_json(love_color: "BABABA", color_scheme_name: "Amazing 2"))

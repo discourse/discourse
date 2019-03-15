@@ -1,5 +1,5 @@
 #!/bin/bash
 
 PARAMS="$@"
-CMD="cd /src && RAILS_ENV=${RAILS_ENV:=development} bundle exec sidekiq -q critical -q low -q default"
+CMD="cd /src && USER=discourse RAILS_ENV=${RAILS_ENV:=development} bundle exec sidekiq -q critical -q low -q default -q ultra_low"
 docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"

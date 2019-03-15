@@ -125,9 +125,19 @@ describe WebHook do
     end
 
     describe 'when there are no active hooks' do
-      it 'should not enqueue anything' do
+      it 'should not generate payload and enqueue anything for topic events' do
         topic_web_hook.destroy!
         post = PostCreator.create(user, raw: 'post', title: 'topic', skip_validations: true)
+        expect(Jobs::EmitWebHookEvent.jobs.length).to eq(0)
+
+        WebHook.expects(:generate_payload).times(0)
+        PostDestroyer.new(admin, post).destroy
+        expect(Jobs::EmitWebHookEvent.jobs.length).to eq(0)
+      end
+
+      it 'should not enqueue anything for tag events' do
+        tag = Fabricate(:tag)
+        tag.destroy!
         expect(Jobs::EmitWebHookEvent.jobs.length).to eq(0)
       end
     end
@@ -245,6 +255,33 @@ describe WebHook do
       expect(job_args["event_name"]).to eq("topic_recovered")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(post.topic.id)
+    end
+
+    it 'should enqueue the destroyed hooks with tag filter for post events' do
+      tag = Fabricate(:tag)
+      Fabricate(:web_hook, tags: [tag])
+
+      post = PostCreator.create!(user,
+        raw: 'post',
+        topic_id: topic.id,
+        reply_to_post_number: 1,
+        skip_validations: true
+      )
+
+      topic.tags = [tag]
+      topic.save!
+
+      Jobs::EmitWebHookEvent.jobs.clear
+      PostDestroyer.new(user, post).destroy
+
+      job = Jobs::EmitWebHookEvent.new
+      job.expects(:web_hook_request).times(2)
+
+      args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
+      job.execute(args.with_indifferent_access)
+
+      args = Jobs::EmitWebHookEvent.jobs[2]["args"].first
+      job.execute(args.with_indifferent_access)
     end
 
     it 'should enqueue the right hooks for user events' do

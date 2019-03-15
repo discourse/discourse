@@ -8,6 +8,7 @@ import evenRound from "discourse/plugins/poll/lib/even-round";
 import { avatarFor } from "discourse/widgets/post";
 import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
+import { userPath } from "discourse/lib/url";
 
 function optionHtml(option) {
   return new RawHtml({ html: `<span>${option.html}</span>` });
@@ -44,7 +45,7 @@ createWidget("discourse-poll-option", {
     if (attrs.isMultiple) {
       contents.push(iconNode(chosen ? "far-check-square" : "far-square"));
     } else {
-      contents.push(iconNode(chosen ? "far-dot-circle" : "far-circle"));
+      contents.push(iconNode(chosen ? "circle" : "far-circle"));
     }
 
     contents.push(" ");
@@ -119,6 +120,7 @@ createWidget("discourse-poll-voters", {
           : result.voters[attrs.optionId];
 
       const existingVoters = new Set(state.voters.map(voter => voter.username));
+
       newVoters.forEach(voter => {
         if (!existingVoters.has(voter.username)) {
           existingVoters.add(voter.username);
@@ -143,6 +145,7 @@ createWidget("discourse-poll-voters", {
       return h("li", [
         avatarFor("tiny", {
           username: user.username,
+          url: this.site.mobileView ? userPath(user.username) : undefined,
           template: user.avatar_template
         }),
         " "
@@ -200,8 +203,8 @@ createWidget("discourse-poll-standard-results", {
       });
 
       if (isPublic && !state.loaded) {
+        state.voters = poll.get("preloaded_voters");
         state.loaded = true;
-        this.fetchVoters();
       }
 
       const percentages =
@@ -288,8 +291,8 @@ createWidget("discourse-poll-number-results", {
 
     if (poll.get("public")) {
       if (!state.loaded) {
+        state.voters = poll.get("preloaded_voters");
         state.loaded = true;
-        this.fetchVoters();
       }
 
       contents.push(
@@ -417,7 +420,9 @@ createWidget("discourse-poll-buttons", {
       const castVotesDisabled = !attrs.canCastVotes;
       contents.push(
         this.attach("button", {
-          className: `btn cast-votes ${castVotesDisabled ? "" : "btn-primary"}`,
+          className: `btn cast-votes ${
+            castVotesDisabled ? "btn-default" : "btn-primary"
+          }`,
           label: "poll.cast-votes.label",
           title: "poll.cast-votes.title",
           disabled: castVotesDisabled,
@@ -430,10 +435,10 @@ createWidget("discourse-poll-buttons", {
     if (attrs.showResults || hideResultsDisabled) {
       contents.push(
         this.attach("button", {
-          className: "btn toggle-results",
+          className: "btn btn-default toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
-          icon: "eye-slash",
+          icon: "far-eye-slash",
           disabled: hideResultsDisabled,
           action: "toggleResults"
         })
@@ -446,10 +451,10 @@ createWidget("discourse-poll-buttons", {
       } else {
         contents.push(
           this.attach("button", {
-            className: "btn toggle-results",
+            className: "btn btn-default toggle-results",
             label: "poll.show-results.label",
             title: "poll.show-results.title",
-            icon: "eye",
+            icon: "far-eye",
             disabled: poll.get("voters") === 0,
             action: "toggleResults"
           })
@@ -489,7 +494,7 @@ createWidget("discourse-poll-buttons", {
         if (!attrs.isAutomaticallyClosed) {
           contents.push(
             this.attach("button", {
-              className: "btn toggle-status",
+              className: "btn btn-default toggle-status",
               label: "poll.open.label",
               title: "poll.open.title",
               icon: "unlock-alt",
@@ -560,8 +565,8 @@ export default createWidget("discourse-poll", {
 
   min() {
     let min = parseInt(this.attrs.poll.get("min"), 10);
-    if (isNaN(min) || min < 1) {
-      min = 1;
+    if (isNaN(min) || min < 0) {
+      min = 0;
     }
     return min;
   },

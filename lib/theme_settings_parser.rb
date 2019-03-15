@@ -38,6 +38,8 @@ class ThemeSettingsParser
       opts[:list_type] = raw_opts[:list_type]
     end
 
+    opts[:textarea] = !!raw_opts[:textarea]
+
     opts
   end
 

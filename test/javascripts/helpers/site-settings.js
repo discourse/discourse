@@ -2,6 +2,7 @@
 Discourse.SiteSettingsOriginal = {
   title: "Discourse Meta",
   site_logo_url: "/assets/logo.png",
+  site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
   site_favicon_url:
@@ -13,7 +14,7 @@ Discourse.SiteSettingsOriginal = {
   top_menu: "latest|new|unread|categories|top",
   post_menu: "like-count|like|share|flag|edit|bookmark|delete|admin|reply",
   post_menu_hidden_items: "flag|edit|delete|admin",
-  share_links: "twitter|facebook|google+|email",
+  share_links: "twitter|facebook|email",
   category_colors:
     "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|27AA5B|B3B5B4|E45735",
   enable_mobile_theme: true,

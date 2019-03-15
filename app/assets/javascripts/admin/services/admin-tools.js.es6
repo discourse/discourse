@@ -10,7 +10,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Service.extend({
   init() {
-    this._super();
+    this._super(...arguments);
 
     // TODO: Make `siteSettings` a service that can be injected
     this.siteSettings = getOwner(this).lookup("site-settings:main");
@@ -88,7 +88,7 @@ export default Ember.Service.extend({
 
   _deleteSpammer(adminUser) {
     // Try loading the email if the site supports it
-    let tryEmail = this.siteSettings.show_email_on_profile
+    let tryEmail = this.siteSettings.moderators_view_emails
       ? adminUser.checkEmail()
       : Ember.RSVP.resolve();
 

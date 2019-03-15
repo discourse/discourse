@@ -60,12 +60,15 @@ class AdminUserIndexQuery
       order << "users.username"
     end
 
-    if params[:stats].present? && params[:stats] == false
-      klass.order(order.reject(&:blank?).join(","))
-    else
-      klass.includes(:user_stat, :user_second_factors)
-        .order(order.reject(&:blank?).join(","))
+    query = klass
+      .includes(:totps)
+      .order(order.reject(&:blank?).join(","))
+
+    unless params[:stats].present? && params[:stats] == false
+      query = query.includes(:user_stat)
     end
+
+    query
   end
 
   def filter_by_trust
@@ -76,18 +79,13 @@ class AdminUserIndexQuery
   end
 
   def suspect_users
-    where_conds = []
-
-    # One signal: no reading yet the user has bio text
-    where_conds << "user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1"
-
-    @query.activated
+    @query
+      .activated
       .human_users
-      .references(:user_stats)
-      .includes(:user_profile)
-      .where("COALESCE(user_profiles.bio_raw, '') != ''")
-      .where('users.created_at <= ?', 1.day.ago)
-      .where(where_conds.map { |c| "(#{c})" }.join(" OR "))
+      .joins(:user_profile, :user_stat)
+      .where("users.created_at <= ?", 1.day.ago)
+      .where("LENGTH(COALESCE(user_profiles.bio_raw, '')) > 0")
+      .where("user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1")
   end
 
   def filter_by_query_classification

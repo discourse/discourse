@@ -5,6 +5,7 @@
     <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
     <th class="th-cat">{{i18n "categories.category"}}</th>
     </thead>
+    <tbody>
     {{#each categoriesOrdered as |cat|}}
       <tr data-category-id="{{cat.id}}">
         <td>
@@ -12,23 +13,24 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
           {{/if}}
           {{number-field number=(readonly cat.position) change=(action 'change' cat)}}
-          {{d-button class="btn-default no-text" action="moveUp" actionParam=cat icon="arrow-up"}}
-          {{d-button class="btn-default no-text" action="moveDown" actionParam=cat icon="arrow-down"}}
+          {{d-button class="btn-default no-text" action=(action "moveUp") actionParam=cat icon="arrow-up"}}
+          {{d-button class="btn-default no-text" action=(action "moveDown") actionParam=cat icon="arrow-down"}}
           {{#if cat.hasBufferedChanges}}
-            {{d-button class="no-text ok" action="commit" icon="check"}}
+            {{d-button class="no-text ok" action=(action "commit") icon="check"}}
           {{/if}}
         </td>
         <td>{{category-badge cat allowUncategorized="true"}}</td>
       </tr>
     {{/each}}
+    </tbody>
   </table>
   <div id="rc-scroll-bottom"></div>
 {{/d-modal-body}}
 
 <div class="modal-footer">
   {{#if showApplyAll}}
-    {{d-button action="commit" icon="check" label="categories.reorder.apply_all"}}
+    {{d-button action=(action "commit") icon="check" label="categories.reorder.apply_all"}}
   {{else}}
-    {{d-button class="btn-primary" action="saveOrder" label="categories.reorder.save"}}
+    {{d-button class="btn-primary" action=(action "saveOrder") label="categories.reorder.save"}}
   {{/if}}
 </div>

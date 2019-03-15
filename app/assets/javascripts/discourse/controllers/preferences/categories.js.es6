@@ -20,12 +20,12 @@ export default Ember.Controller.extend(PreferencesTabController, {
     return [].concat(watched, watchedFirst, tracked, muted).filter(t => t);
   },
 
-  canSave: function() {
-    return (
-      this.get("currentUser.id") === this.get("model.id") ||
-      this.get("currentUser.admin")
-    );
-  }.property(),
+  @computed
+  canSee() {
+    return this.get("currentUser.id") === this.get("model.id");
+  },
+
+  canSave: Ember.computed.or("canSee", "currentUser.admin"),
 
   actions: {
     save() {

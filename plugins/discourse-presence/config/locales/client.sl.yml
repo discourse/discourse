@@ -10,3 +10,8 @@ sl:
     presence:
       replying: "odgovarja"
       editing: "urejanje"
+      replying_to_topic:
+        one: "odgovarja"
+        two: "odgovarja"
+        few: "odgovarja"
+        other: "odgovarja"

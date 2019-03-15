@@ -94,8 +94,9 @@ export default Ember.Controller.extend(
                 "successMessage",
                 result.message || I18n.t("invites.success")
               );
-              this.set("redirectTo", result.redirect_to);
-              DiscourseURL.redirectTo(result.redirect_to || "/");
+              if (result.redirect_to) {
+                DiscourseURL.redirectTo(result.redirect_to);
+              }
             } else {
               if (
                 result.errors &&

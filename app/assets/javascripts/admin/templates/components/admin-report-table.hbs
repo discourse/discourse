@@ -55,7 +55,7 @@
   {{#each pages as |pageState|}}
     {{d-button
       translatedLabel=pageState.page
-      action="changePage"
+      action=(action "changePage")
       actionParam=pageState.index
       class=pageState.class}}
   {{/each}}

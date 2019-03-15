@@ -6,5 +6,5 @@ then
   PARAMS="$PARAMS -b 0.0.0.0"
 fi
 
-CMD="cd /src && RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 LD_PRELOAD=/usr/lib/libjemalloc.so RACK_HANDLER=puma RAILS_ENV=${RAILS_ENV:=development} rails $PARAMS"
+CMD="cd /src && USER=discourse RUBY_GLOBAL_METHOD_CACHE_SIZE=131072 LD_PRELOAD=/usr/lib/libjemalloc.so RACK_HANDLER=puma RAILS_ENV=${RAILS_ENV:=development} rails $PARAMS"
 docker exec -it -u discourse:discourse discourse_dev /bin/bash -c "$CMD"

@@ -20,7 +20,7 @@ export default createPreviewComponent(305, 165, {
   },
 
   click() {
-    this.sendAction("onChange", this.get("colorsId"));
+    this.onChange(this.get("colorsId"));
   },
 
   @observes("step.fieldsById.base_scheme_id.value")

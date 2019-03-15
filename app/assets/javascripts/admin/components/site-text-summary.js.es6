@@ -30,11 +30,5 @@ export default Ember.Component.extend({
     }
 
     return this.get("term");
-  },
-
-  actions: {
-    edit() {
-      this.sendAction("editAction", this.get("siteText"));
-    }
   }
 });

@@ -2,6 +2,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { default as DiscourseURL, userPath } from "discourse/lib/url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default Ember.Controller.extend({
   loading: false,
@@ -13,6 +14,8 @@ export default Ember.Controller.extend({
   showSecondFactorKey: false,
   errorMessage: null,
   newUsername: null,
+  backupEnabled: Ember.computed.alias("model.second_factor_backup_enabled"),
+  secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
   loaded: Ember.computed.and("secondFactorImage", "secondFactorKey"),
 
@@ -40,24 +43,28 @@ export default Ember.Controller.extend({
     if (!this.get("secondFactorToken")) return;
     this.set("loading", true);
 
-    this.get("content")
-      .toggleSecondFactor(this.get("secondFactorToken"), enable, 1)
+    this.get("model")
+      .toggleSecondFactor(
+        this.get("secondFactorToken"),
+        this.get("secondFactorMethod"),
+        SECOND_FACTOR_METHODS.TOTP,
+        enable
+      )
       .then(response => {
         if (response.error) {
           this.set("errorMessage", response.error);
-          this.set("loading", false);
           return;
         }
 
         this.set("errorMessage", null);
         DiscourseURL.redirectTo(
-          userPath(`${this.get("content").username.toLowerCase()}/preferences`)
+          userPath(`${this.get("model").username.toLowerCase()}/preferences`)
         );
       })
       .catch(error => {
-        this.set("loading", false);
         popupAjaxError(error);
-      });
+      })
+      .finally(() => this.set("loading", false));
   },
 
   actions: {
@@ -65,7 +72,7 @@ export default Ember.Controller.extend({
       if (!this.get("password")) return;
       this.set("loading", true);
 
-      this.get("content")
+      this.get("model")
         .loadSecondFactorCodes(this.get("password"))
         .then(response => {
           if (response.error) {

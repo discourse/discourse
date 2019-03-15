@@ -13,7 +13,7 @@ ja:
         delimiter: ","
       human:
         storage_units:
-          format: '%n %u'
+          format: "%n %u"
           units:
             byte:
               other: バイト
@@ -85,69 +85,68 @@ ja:
           other: "%{count}か月後"
         x_years:
           other: "%{count}年後"
-      previous_month: '前月'
-      next_month: '翌月'
+      previous_month: "前月"
+      next_month: "翌月"
       placeholder: 日付
     share:
-      topic: 'このトピックのリンクをシェアする'
-      post: '投稿 #%{postNumber}'
-      close: '閉じる'
-      twitter: 'Twitter でこのリンクを共有する'
-      facebook: 'Facebook でこのリンクを共有する'
-      google+: 'Google+ でこのリンクを共有する'
-      email: 'メールでこのリンクを送る'
+      close: "閉じる"
     action_codes:
       public_topic: "トピックを公開しました: %{when} "
+      private_topic: "このトピックを%{when}に個人的なメッセージにする"
       split_topic: "%{when} このトピックは分割されました"
       invited_user: "%{who} から招待されました: %{when}"
       invited_group: "%{when} %{who}に招待されました"
+      user_left: "%{who}は%{when}にこのメッセージから自身を削除しました"
       removed_user: "%{who}が %{when}に削除しました"
       removed_group: "%{when} %{who}に取り除かれました"
+      autobumped: "自動的にトップに上げられました: %{when}"
       autoclosed:
-        enabled: 'クローズされました: %{when}'
-        disabled: '%{when}にオープンしました'
+        enabled: "クローズされました: %{when}"
+        disabled: "%{when}にオープンしました"
       closed:
-        enabled: 'クローズされました: %{when}'
-        disabled: '%{when}にオープンしました'
+        enabled: "クローズされました: %{when}"
+        disabled: "%{when}にオープンしました"
       archived:
-        enabled: '%{when}にアーカイブしました'
-        disabled: '%{when}にアーカイブを解除しました'
+        enabled: "%{when}にアーカイブしました"
+        disabled: "%{when}にアーカイブを解除しました"
       pinned:
-        enabled: '固定表示しました: %{when}'
-        disabled: '%{when}に固定表示を解除しました'
+        enabled: "固定表示しました: %{when}"
+        disabled: "%{when}に固定表示を解除しました"
       pinned_globally:
-        enabled: '%{when}に全体での固定表示をしました'
-        disabled: '%{when}に全体での固定表示を解除しました'
+        enabled: "%{when}に全体での固定表示をしました"
+        disabled: "%{when}に全体での固定表示を解除しました"
       visible:
-        enabled: 'リストに表示: %{when}'
-        disabled: 'リストから非表示: %{when}'
+        enabled: "リストに表示: %{when}"
+        disabled: "リストから非表示: %{when}"
       banner:
-        enabled: 'この広告%{when}を作成して下さい。ユーザーが拒否するまで各ページの上部に表示されます。'
-        disabled: 'このバナー%{when}を削除すると、各ページの最上部に表示しません。'
+        enabled: "この広告%{when}を作成して下さい。ユーザーが拒否するまで各ページの上部に表示されます。"
+        disabled: "このバナー%{when}を削除すると、各ページの最上部に表示しません。"
     topic_admin_menu: "トピックの管理"
     wizard_required: "Discourseへようこそ！ さあ<a href='%{url}' data-auto-route='true'>セットアップウィザード</a>から始めましょう"
     emails_are_disabled: "メールアドレスの送信は管理者によって無効化されています。全てのメール通知は行われません"
+    bootstrap_mode_enabled: "簡単にサイトを立ち上げられるように、ブートストラップモードにしました。\nすべての新規ユーザーはトラストレベル1、毎日のサマリーメールが有効な状態です。この設定は%{min_users}が参加した時に自動的に無効になります。"
     bootstrap_mode_disabled: "ブートストラップモードは24時間以内に無効になります。"
     themes:
       default_description: "デフォルト"
     s3:
       regions:
-        ap_northeast_1: "Asia Pacific (Tokyo)"
-        ap_northeast_2: "Asia Pacific (Seoul)"
+        ap_northeast_1: "アジア(東京)"
+        ap_northeast_2: "アジア(ソウル)"
         ap_south_1: "アジア(ムンバイ)"
-        ap_southeast_1: "Asia Pacific (Singapore)"
-        ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_southeast_1: "アジア(シンガポール)"
+        ap_southeast_2: "アジア(シドニー)"
         cn_north_1: "中国(北京)"
-        eu_central_1: "EU (Frankfurt)"
-        eu_west_1: "EU (Ireland)"
+        cn_northwest_1: "中国(寧夏)"
+        eu_central_1: "EU (フランクフルト)"
+        eu_west_1: "EU (アイルランド)"
         eu_west_2: "EU(ロンドン)"
-        sa_east_1: "South America (Sao Paulo)"
-        us_east_1: "US East (N. Virginia)"
-        us_east_2: "US East (Ohio)"
-        us_gov_west_1: "AWS GovCloud (US)"
-        us_west_1: "US West (N. California)"
-        us_west_2: "US West (Oregon)"
-    edit: 'このトピックのタイトル/カテゴリを編集'
+        eu_west_3: "EU(パリ)"
+        us_east_1: "米東部(バージニア北部)"
+        us_east_2: "米東部(オハイオ)"
+        us_gov_west_1: "AWS GovCloud (アメリカ合衆国)"
+        us_west_1: "米西部(カリフォルニア北部)"
+        us_west_2: "米西部(オレゴン)"
+    edit: "このトピックのタイトル/カテゴリを編集"
     not_implemented: "この機能はまだ実装されていません！"
     no_value: "いいえ"
     yes_value: "はい"
@@ -169,13 +168,14 @@ ja:
     guidelines: "ガイドライン"
     privacy_policy: "プライバシーポリシー"
     privacy: "プライバシー"
-    terms_of_service: "利用規約"
+    tos: "利用規約"
+    rules: "ルール"
     mobile_view: "モバイル表示"
     desktop_view: "デスクトップ表示"
     you: "あなた"
     or: "あるいは"
     now: "たった今"
-    read_more: 'もっと読む'
+    read_more: "もっと読む"
     more: "増やす"
     less: "減らす"
     never: "never"
@@ -189,6 +189,8 @@ ja:
     alternation: "または"
     character_count:
       other: "{{count}}文字"
+    related_messages:
+      title: "関連メッセージ"
     suggested_topics:
       title: "関連トピック"
       pm_title: "他のメッセージ"
@@ -200,6 +202,8 @@ ja:
       our_moderators: "モデレータ"
       stat:
         all_time: "すべて"
+        last_7_days: "過去7日間"
+        last_30_days: "過去30日間"
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
@@ -214,12 +218,20 @@ ja:
         bookmark: "クリックするとトピックの最初の投稿をブックマークします"
         unbookmark: "クリックするとトピック内の全てのブックマークを削除します"
     bookmarks:
-      not_logged_in: "投稿をブックマークするには、ログインする必要があります"
       created: "この投稿をブックマークしました"
       not_bookmarked: "この投稿をブックマークする"
-      last_read: "この投稿をブックマークする"
       remove: "ブックマークを削除"
-      confirm_clear: "このトピックの全てのブックマークを削除してもよいですか？"
+      confirm_clear: "このトピックのすべてのブックマークをクリアしますか?"
+    drafts:
+      resume: "続ける"
+      remove: "削除"
+      new_topic: "新しいトピックの下書き"
+      new_private_message: "プライベートメッセージの下書き"
+      topic_reply: "返信の下書き"
+      abandon:
+        confirm: "このトピックで別の下書きを開いています。これを破棄しますか?"
+        yes_value: "はい、破棄します"
+        no_value: "いいえ、保持します"
     topic_count_latest:
       other: "{{count}}件の新規/更新トピックがあります。"
     topic_count_unread:
@@ -233,11 +245,13 @@ ja:
     saved: "保存しました"
     upload: "アップロード"
     uploading: "アップロード中..."
-    uploading_filename: "{{filename}} をアップロードしています..."
+    uploading_filename: "{{filename}}をアップロードしています…"
+    clipboard: "クリップボード"
     uploaded: "アップロードしました"
     pasting: "貼り付け"
     enable: "有効にする"
     disable: "無効にする"
+    continue: "続く"
     undo: "取り消す"
     revert: "戻す"
     failed: "失敗"
@@ -249,13 +263,18 @@ ja:
     choose_topic:
       none_found: "トピックが見つかりませんでした。"
       title:
-        search: "トピック名、URL、または ID でトピックを検索:"
+        search: "タイトル、URL、IDでトピックを検索:"
         placeholder: "トピックのタイトルを入力"
+    choose_message:
+      none_found: "メッセージは見つかりませんでした。"
+      title:
+        search: "タイトルでメッセージを検索:"
+        placeholder: "メッセージのタイトルをここに入力してください"
     queue:
       topic: "トピック："
-      approve: '承認'
-      reject: 'リジェクト'
-      delete_user: '削除されたユーザー'
+      approve: "承認"
+      reject: "リジェクト"
+      delete_user: "削除されたユーザー"
       title: "承認待ち"
       none: "レビュー待ちの投稿はありません。"
       edit: "編集"
@@ -312,11 +331,22 @@ ja:
         make_user_group_owner: "オーナーにする"
         remove_user_as_group_owner: "オーナーから削除する"
     groups:
+      member_added: "追加済み"
       add_members:
         title: "メンバーを追加する"
         description: "このグループのメンバーシップを管理する"
-        usernames: "ユーザーネーム"
+        usernames: "ユーザー名"
       manage:
+        title: "管理"
+        name: "名前"
+        full_name: "フルネーム"
+        add_members: "メンバーを加える"
+        delete_member_confirm: "%{username}をグループ %{group} から削除しますか?"
+        profile:
+          title: プロフィール
+        interaction:
+          title: 交流
+          notification: 通知
         membership:
           title: メンバーシップ
           access: アクセス
@@ -324,7 +354,12 @@ ja:
           title: "ログ"
           when: "いつ"
           action: "アクション"
+          acting_user: "活動中のユーザー"
           target_user: "ターゲットユーザー"
+          subject: "件名"
+          details: "詳細"
+          from: "発信元"
+          to: "宛先"
       public_admission: "ユーザーがグループへ自由に参加できるようにする (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に離脱できるようにする"
       empty:
@@ -335,6 +370,9 @@ ja:
         topics: "このグループのメンバーによるトピックはありません。"
         logs: "このグループに関するログはありません。"
       add: "追加"
+      join: "参加"
+      leave: "脱退"
+      request: "リクエスト"
       message: "メッセージ"
       allow_membership_requests: "ユーザーがグループオーナーにメンバーシップリクエストを送信できるようにする"
       membership_request_template: "メンバーシップリクエスト送信時に表示するカスタムテンプレート"
@@ -344,14 +382,38 @@ ja:
         reason: "グループに参加したい旨をグループオーナーに伝える"
       membership: "メンバーシップ"
       name: "名前"
+      group_name: "グループ名"
+      user_count: "ユーザー"
       bio: "グループについて"
+      selector_placeholder: "ユーザー名を入力"
       owner: "オーナー"
       index:
         title: "グループ"
+        all: "すべてのグループ"
         empty: "表示するグループはありません。"
+        filter: "グループの種類でフィルタ"
+        owner_groups: "自分が所有するグループ"
+        close_groups: "クローズされたグループ"
+        automatic_groups: "自動で作成されたグループ"
+        automatic: "自動"
+        public: "公開"
+        private: "非公開"
+        public_groups: "公開グループ"
+        automatic_group: 自動作成されたグループ
+        close_group: クローズされたグループ
+        my_groups: "自分のグループ"
+        group_type: "グループ種類"
+        is_group_user: "メンバー"
+        is_group_owner: "オーナー"
       title:
         other: "グループ"
       activity: "アクティビティ"
+      members:
+        title: "メンバー"
+        filter_placeholder_admin: "ユーザー名かメール"
+        filter_placeholder: "ユーザー名"
+        remove_member: "メンバーを削除する"
+        owner: "オーナー"
       topics: "トピック"
       posts: "投稿"
       mentions: "メンション"
@@ -371,7 +433,6 @@ ja:
           description: "全てのメッセージについて通知があり、新規返信数が表示されます。"
         watching_first_post:
           title: "最初の投稿をウォッチする"
-          description: "グループ内の新規トピックに対する最初の投稿のみ通知されます。"
         tracking:
           title: "追跡中"
           description: "誰かがあなた宛に返信をすると通知があり、新規返信数が表示されます。"
@@ -380,9 +441,9 @@ ja:
           description: "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート"
-          description: "グループ内の新規トピックについては何も通知されません。"
       flair_url: "アバター画像"
       flair_url_placeholder: "(オプション) 画像URL or Font Awesomeのクラス名"
+      flair_url_description: '20ピクセルx 20ピクセル以上の正方形の画像またはFontAwesomeアイコン（使用可能な形式： "fa-icon"、 "far fa-icon"、または "fab fa-icon"）を使用します。'
       flair_bg_color: "アバターの背景色"
       flair_bg_color_placeholder: "(オプション) HEXカラー値"
       flair_color: "アバター色"
@@ -402,16 +463,16 @@ ja:
       "12": "アイテム送信"
       "13": "受信ボックス"
       "14": "保留"
+      "15": "下書き"
     categories:
       all: "すべてのカテゴリ"
+      all_subcategories: "すべて"
       no_subcategory: "サブカテゴリなし"
       category: "カテゴリ"
       category_list: "カテゴリリストを表示"
       reorder:
         title: "カテゴリの並び替え"
         title_long: "カテゴリリストを並べ直します"
-        fix_order: "位置を修正"
-        fix_order_tooltip: "全てのカテゴリーは唯一である番地を持っていないので、予期せぬ結果を引き起こすかもしれません。"
         save: "順番を保存"
         apply_all: "適用"
         position: "位置"
@@ -423,8 +484,6 @@ ja:
       subcategories: "サブカテゴリ:"
       topic_sentence:
         other: "%{count}トピック群"
-      topic_stat_sentence:
-        other: "過去 %{unit} 間 %{count} 個の新着トピック。"
     ip_lookup:
       title: IPアドレスを検索
       hostname: ホスト名
@@ -440,7 +499,6 @@ ja:
       topics_entered: "入力したトピック"
       post_count: "# 投稿"
       confirm_delete_other_accounts: "これらのアカウントを削除してもよろしいですか?"
-      powered_by: "powered by <a href='https://ipinfo.io'>ipinfo.io</a>"
     user_fields:
       none: "(オプションを選択)"
     user:
@@ -459,6 +517,7 @@ ja:
       activity_stream: "アクティビティ"
       preferences: "設定"
       expand_profile: "開く"
+      collapse_profile: "折りたたむ"
       bookmarks: "ブックマーク"
       bio: "自己紹介"
       invited_by: "招待した人: "
@@ -466,6 +525,7 @@ ja:
       notifications: "お知らせ"
       statistics: "統計"
       desktop_notifications:
+        label: "ライブ通知"
         not_supported: "申し訳ありません。そのブラウザは通知をサポートしていません。"
         perm_default: "通知を有効にする"
         perm_denied_btn: "アクセス拒否"
@@ -473,13 +533,16 @@ ja:
         disable: "通知を無効にする"
         enable: "通知を有効にする"
         each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
-      dismiss: '閉じる'
+        consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
+      dismiss: "閉じる"
       dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       first_notification: "最初の通知です! 始めるために選択してください。"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規/更新トピックの件数をブラウザのアイコンに表示する"
-      theme_default_on_all_devices: "ご自身の全てのデバイス上で初期テーマを作成して下さい。"
+      theme_default_on_all_devices: "これをすべてのデバイスのデフォルトテーマにする"
+      text_size_default_on_all_devices: "これをすべての端末のデフォルトのテキストサイズにする"
+      allow_private_messages: "他のユーザーが私にパーソナルメッセージを送信できるようにする"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       change: "変更"
@@ -519,7 +582,7 @@ ja:
       watched_first_post_tags: "最初の投稿をウォッチする"
       watched_first_post_tags_instructions: "これらのタグの新規トピック内の新規投稿は通知されます。"
       muted_categories: "通知しない"
-      muted_categories_instructions: "カテゴリー内の新規トピックについて何も通知せず、また最新を表示しません。"
+      muted_categories_instructions: "これらのカテゴリの新しいトピックについては通知されず、カテゴリや最新のページにも表示されません。"
       no_category_access: "モデレータとしてカテゴリーへのアクセスが制限されたので、保存できませんでした。"
       delete_account: "アカウントを削除する"
       delete_account_confirm: "アカウントを削除してもよろしいですか？削除されたアカウントは復元できません。"
@@ -557,6 +620,7 @@ ja:
         move_to_archive: "アーカイブ"
         failed_to_move: "選択したメッセージを移動できませんでした(ネットワークがダウンしている可能性があります)"
         select_all: "すべて選択する"
+        tags: "タグ"
       preferences_nav:
         account: "アカウント"
         profile: "プロフィール"
@@ -574,11 +638,21 @@ ja:
         set_password: "パスワードを設定する"
         choose_new: "新規パスワードを決定"
         choose: "パスワードを決定"
+      second_factor:
+        title: "2段階認証"
+        disable: "2段階認証を無効にする"
+        enable: "アカウントセキュリティを強化するために2段階認証を有効にする"
+        label: "コード"
+        enable_description: |
+          サポートされているアプリ（<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>で、このQRコードをスキャンし、認証コードを入力してください。
+        show_key_description: "手動入力"
+        oauth_enabled_warning: "アカウントで2段階認証が有効になると、ソーシャルログインは無効になります。"
       change_about:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
       change_username:
         title: "ユーザー名を変更"
+        confirm: "ユーザー名を変更してもよろしいですか？"
         taken: "このユーザー名は既に使われています。"
         invalid: "このユーザー名は無効です。英数字のみ利用可能です。"
       change_email:
@@ -598,7 +672,6 @@ ja:
         upload_title: "画像をアップロード"
         upload_picture: "画像をアップロード"
         image_is_not_a_square: "警告: アップロードされた画像は高さと幅が違うため切り落されました。"
-        cache_notice: "プロフィール画像の更新に成功しました。ブラウザのキャッシュのため、反映されるまでに時間がかかる場合があります"
       change_profile_background:
         title: "プロフィールの背景画像"
         instructions: "プロフィールの背景画像は、幅850pxで中央揃えになります"
@@ -614,6 +687,10 @@ ja:
         frequency_immediately: "あなたがまだ読んでいない未送信分の内容について今すぐメールを送ります。"
         frequency:
           other: "最後に利用されてから{{count}}分以上経過した場合にメールを送ります。"
+      associated_accounts:
+        title: "関連アカウント"
+        connect: "接続"
+        revoke: "解除"
       name:
         title: "名前"
         instructions: "氏名(任意)"
@@ -624,13 +701,13 @@ ja:
         title: "ユーザー名"
         instructions: "被らず、空白を含まず、短い名前を入力してください。"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
-        available: "ユーザ名は利用可能です"
+        available: "ユーザー名は利用可能です"
         not_available: "利用できない名前です。 {{suggestion}} などはどうでしょうか？"
         not_available_no_suggestion: "そのユーザー名は利用できません"
-        too_short: "ユーザ名が短すぎます"
-        too_long: "ユーザ名が長すぎます"
-        checking: "ユーザ名が利用可能か確認しています..."
-        prefilled: "この登録ユーザにマッチするメールアドレスが見つかりました"
+        too_short: "ユーザー名が短すぎます"
+        too_long: "ユーザー名が長すぎます"
+        checking: "ユーザー名が利用可能か確認しています..."
+        prefilled: "この登録ユーザー名にマッチするメールアドレスが見つかりました"
       locale:
         title: "表示する言語"
         instructions: "ユーザインターフェイスの言語です。ページを再読み込みした際に変更されます。"
@@ -638,6 +715,10 @@ ja:
         any: "任意"
       password_confirmation:
         title: "もう一度パスワードを入力してください。"
+      auth_tokens:
+        title: "最近使用した端末"
+        log_out_all: "すべてログアウトする"
+        not_you: "あなたではない？"
       last_posted: "最後の投稿"
       last_emailed: "最終メール"
       last_seen: "最後のアクティビティ"
@@ -646,6 +727,13 @@ ja:
       location: "場所"
       website: "ウェブサイト"
       email_settings: "メール"
+      hide_profile_and_presence: "公開プロフィールとプレゼンス機能を非表示にする"
+      text_size:
+        title: "テキストサイズ"
+        smaller: "小"
+        normal: "デフォルト"
+        larger: "大"
+        largest: "最大"
       like_notification_frequency:
         title: "いいねされた時に通知"
         always: "常時"
@@ -658,7 +746,6 @@ ja:
         always: "常に含める"
         never: "含めない"
       email_digests:
-        title: "しばらくここを訪れなかったときは、人気のトピックと返信のサマリーをメールで送信する。"
         every_30_minutes: "30分毎"
         every_hour: "1時間毎"
         daily: "毎日"
@@ -697,6 +784,7 @@ ja:
         title: "招待"
         user: "招待したユーザ"
         sent: "送信済み"
+        none: "表示する招待はありません。"
         truncated:
           other: "{{count}} 件の招待を表示しています。"
         redeemed: "招待を確認する"
@@ -711,15 +799,12 @@ ja:
         expired: "この招待の有効期限が切れました。"
         rescind: "削除"
         rescinded: "取り消された招待"
-        rescind_all: "全ての招待の取り消し"
-        rescinded_all: "全ての招待を取り消しました!"
-        rescind_all_confirm: "本当にすべての招待を取り消したいですか？"
         reinvite: "もう一度招待する"
         reinvite_all: "全ての招待をもう一度"
         reinvite_all_confirm: "本当に全ての招待を再送したいですか?"
         reinvited: "再度招待しました"
         reinvited_all: "全ての招待をもう一度行いました"
-        time_read: "リードタイム"
+        time_read: "読んだ時間"
         days_visited: "閲覧された日数"
         account_age_days: "アカウント有効日数"
         create: "招待する"
@@ -737,19 +822,25 @@ ja:
         common: "このパスワードは他のユーザが使用している可能性があります。"
         same_as_username: "パスワードがユーザ名と一致しています"
         same_as_email: "パスワードとメールアドレスが一致しています"
-        ok: "パスワード OK。"
+        ok: "最適なパスワードです。"
         instructions: "最低 %{count} 文字以上"
       summary:
         title: "サマリー"
         stats: "統計"
         time_read: "読んだ時間"
-        recent_time_read: "現在のリードタイム"
+        recent_time_read: "現在の読んだ時間"
         topic_count:
           other: "つのトピックを作成"
         post_count:
           other: "つの投稿"
+        likes_given:
+          other: "与えた"
+        likes_received:
+          other: "もらった"
         days_visited:
           other: "訪問日数"
+        topics_entered:
+          other: "トピックの閲覧"
         posts_read:
           other: "読んだ投稿"
         bookmark_count:
@@ -769,7 +860,9 @@ ja:
         most_liked_users: "最も「いいね！」した"
         most_replied_to_users: "最も返信した"
         no_likes: "「いいね！」はまだありません。"
-      associated_accounts: "ログイン"
+        top_categories: "トップカテゴリ"
+        topics: "トピック"
+        replies: "返信"
       ip_address:
         title: "最後のIPアドレス"
       registration_ip_address:
@@ -814,24 +907,21 @@ ja:
       enabled: "このサイトは閲覧専用モードになっています。閲覧し続けられますが、返信したりいいねを付けるなどのアクションは現在出来ません。"
       login_disabled: "閲覧専用モードのため、ログインできません。"
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
-    too_few_topics_and_posts_notice: "さあ、<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>盛り上げていきましょう！</a> 現在 <strong>%{currentTopics} / %{requiredTopics}</strong> のトピックと <strong>%{currentPosts} / %{requiredPosts}</strong> の投稿だけです。新しい訪問者も交え、読んだり書いたり、もっと活性化していきましょう。"
-    too_few_topics_notice: "さあ、 <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>盛り上げていきましょう！</a> 現在 <strong>%{currentTopics} / %{requiredTopics}</strong> のトピックだけです。新しい訪問者も交え、読んだり書いたり、もっと活性化していきましょう。"
-    too_few_posts_notice: "さあ <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>盛り上げていきましょう！</a> 現在 <strong>%{currentPosts} / %{requiredPosts}</strong> の投稿だけです。新しい訪問者も交え、読んだり書いたり、もっと活性化していきましょう。"
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> はサイト設定制限 %{siteSettingRate} に到達しています。"
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> はサイト設定制限 %{siteSettingRate} を超えています。"
       rate:
         other: "%{count} エラー/%{duration}"
     learn_more: "より詳しく..."
-    all_time: '合計'
-    all_time_desc: '作成されたトピックの総数'
-    year: '年'
-    year_desc: '過去一年間に投稿されたトピック'
-    month: '月'
-    month_desc: '過去30日間に投稿されたトピック'
-    week: '週'
-    week_desc: '過去7日間に投稿されたトピック'
-    day: '日'
+    all_time: "合計"
+    all_time_desc: "作成されたトピックの総数"
+    year: "年"
+    year_desc: "過去一年間に投稿されたトピック"
+    month: "月"
+    month_desc: "過去30日間に投稿されたトピック"
+    week: "週"
+    week_desc: "過去7日間に投稿されたトピック"
+    day: "日"
     first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
@@ -850,8 +940,8 @@ ja:
       enabled_description: "トピックのまとめを表示されています。"
       description: "<b>{{replyCount}}</b>件の返信があります。"
       description_time: "<b>{{replyCount}}</b> 件の返信があります。 概ね <b>{{readingTime}} 分</b>で読める文量です。"
-      enable: 'このトピックを要訳する'
-      disable: 'すべての投稿を表示する'
+      enable: "このトピックを要訳する"
+      disable: "すべての投稿を表示する"
     deleted_filter:
       enabled_description: "削除された投稿は非表示になっています。"
       disabled_description: "削除された投稿は表示しています。"
@@ -862,19 +952,19 @@ ja:
       invite: "他の人を招待する..."
       remove_allowed_user: "このメッセージから {{name}} を削除してもよろしいですか？"
       remove_allowed_group: "このメッセージから {{name}} を削除してもよろしいですか？"
-    email: 'メール'
-    username: 'ユーザ名'
-    last_seen: '最終アクティビティ'
-    created: '作成'
-    created_lowercase: '投稿者'
-    trust_level: 'トラストレベル'
-    search_hint: 'ユーザ名、メールアドレスまたはIPアドレス'
+    email: "メール"
+    username: "ユーザ名"
+    last_seen: "最終アクティビティ"
+    created: "作成"
+    created_lowercase: "投稿者"
+    trust_level: "トラストレベル"
+    search_hint: "ユーザ名、メールアドレスまたはIPアドレス"
     create_account:
       disclaimer: "登録すると<a href='{{privacy_link}}'>プライバシーポリシー</a>と<a href='{{tos_link}}'>利用規約</a>に同意することになります。"
       title: "アカウントの作成"
       failed: "エラーが発生しました。既にこのメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
     forgot_password:
-      title: "パスワードリセット"
+      title: "パスワードをリセット"
       action: "パスワードを忘れました"
       invite: "ユーザ名かメールアドレスを入力してください。パスワードリセット用のメールを送信します。"
       reset: "パスワードをリセット"
@@ -884,7 +974,6 @@ ja:
       complete_email_found: "<b>%{email}</b>宛にパスワード再設定メールを送信しました。"
       complete_username_not_found: " <b>%{username}</b>は見つかりませんでした"
       complete_email_not_found: "<b>%{email}</b>で登録したアカウントがありません。"
-      help: "メールが届いていませんか？ まずは迷惑メールのフォルダに入っていないか確認してください。<p>どのメールアドレスを使用したか忘れてしまいましたか？メールアドレスを入力いただければ、登録時のものと一致するかどうか確認できます。</p><p>もし登録したメールアドレスが利用できない状況でしたら、<a href='%{basePath}/about'>へルプスタッフ</a>までご連絡ください。</p>"
       button_ok: "OK"
       button_help: "ヘルプ"
     login:
@@ -898,7 +987,7 @@ ja:
       rate_limit: "しばらく待ってから再度ログインをお試しください。"
       blank_username: "あなたのメールアドレスかユーザー名を入力してください。"
       blank_username_or_password: "あなたのメールアドレスかユーザ名、そしてパスワードを入力して下さい。"
-      reset_password: 'パスワードをリセット'
+      reset_password: "パスワードをリセット"
       logging_in: "ログイン中..."
       or: "または"
       authenticating: "認証中..."
@@ -919,9 +1008,6 @@ ja:
       preferences: "ユーザ設定を変更するには、ログインする必要があります。"
       forgot: "アカウントの詳細を忘れてしまった"
       not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
-      google:
-        title: "Google"
-        message: "Google による認証 (ポップアップがブロックされていないことを確認してください)"
       google_oauth2:
         title: "Google"
         message: "Googleによる認証 (ポップアップがブロックされていないことを確認してください)"
@@ -966,9 +1052,11 @@ ja:
       categories_with_featured_topics: "おすすめのトピックのカテゴリ"
       categories_and_latest_topics: "カテゴリと最新トピック"
     shortcut_modifier_key:
-      shift: 'Shift'
-      ctrl: 'Ctrl'
-      alt: 'Alt'
+      shift: "Shift"
+      ctrl: "Ctrl"
+      alt: "Alt"
+    conditional_loading_section:
+      loading: 読み込み中...
     select_kit:
       default_header_text: 選択...
       no_content: 一致する項目が見つかりませんでした
@@ -990,6 +1078,9 @@ ja:
       medium_tone: ミディアムスキントーン
       medium_dark_tone: ミディアムダークスキントーン
       dark_tone: ダークスキントーン
+    shared_drafts:
+      confirm_publish: "この下書きを公開してもよろしいですか？"
+      publishing: "トピック公開中..."
     composer:
       emoji: "絵文字 :)"
       more_emoji: "もっと..."
@@ -1018,8 +1109,8 @@ ja:
         title_too_long: "タイトルは最長で{{max}}未満です。"
         post_missing: "内容が何もありません。"
         post_length: "投稿は{{min}}文字以上必要です。"
-        try_like: '<i class="fa fa-heart"></i> ボタンを試しましたか？'
         category_missing: "カテゴリを選択してください。"
+        tags_missing: "少なくとも {{count}} つのタグが必要です。"
       save_edit: "編集内容を保存"
       reply_original: "オリジナルトピックへ返信"
       reply_here: "ここに返信"
@@ -1036,13 +1127,15 @@ ja:
       topic_featured_link_placeholder: "タイトルにリンクを入力してください。"
       remove_featured_link: "トピックからリンクを削除する。"
       reply_placeholder: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。 画像はドラッグアンドドロップで貼り付けられます。"
+      reply_placeholder_no_images: "文章を入力してください。 Markdown, BBコード, HTMLが使用出来ます。"
+      reply_placeholder_choose_category: "ここに入力する前にカテゴリを選択する必要があります。"
       view_new_post: "新しい投稿を見る。"
       saving: "保存中"
       saved: "保存しました!"
       saved_draft: "編集中の投稿があります。ここをクリックすると編集に戻ります。"
       uploading: "アップロード中..."
-      show_preview: 'プレビューを表示する &raquo;'
-      hide_preview: '&laquo; プレビューを隠す'
+      show_preview: "プレビューを表示する &raquo;"
+      hide_preview: "&laquo; プレビューを隠す"
       quote_post_title: "投稿全体を引用"
       bold_label: "B"
       bold_title: "太字"
@@ -1054,7 +1147,6 @@ ja:
       link_description: "リンクの説明をここに入力"
       link_dialog_title: "ハイパーリンクの挿入"
       link_optional_text: "タイトル(オプション)"
-      link_url_placeholder: "http://example.com"
       quote_title: "引用"
       quote_text: "引用"
       code_title: "整形済みテキスト"
@@ -1073,6 +1165,19 @@ ja:
         title: "受信者の追加を忘れましたか？"
         body: "たった今このメッセージはあなただけに送られました。"
       admin_options_title: "このトピックの詳細設定"
+      composer_actions:
+        reply_to_post:
+          label: "%{postUsername}による投稿%{postNumber}に返信する"
+          desc: 特定の投稿に返信する
+        reply_as_new_topic:
+          label: トピックのリンクを付けて返信
+          desc: このトピックにリンクしている新しいトピックを作成する
+        reply_as_private_message:
+          label: メッセージを作成
+          desc: 新しいパーソナルメッセージを作成する
+        reply_to_topic:
+          label: トピックへ返信
+          desc: 特定の投稿ではなく、トピックに返信する
     notifications:
       title: "@ユーザ名 のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "通知を読み込むことができませんでした。"
@@ -1152,19 +1257,30 @@ ja:
         title: 高度な検索
         posted_by:
           label: 投稿者
+        in_category:
+          label: カテゴリ
         in_group:
           label: グループ内
         with_badge:
           label: バッヂ指定
+        with_tags:
+          label: タグ
         filters:
+          title: タイトルが一致するもの
           likes: 「いいね！」したもの
           posted: 投稿済
           watching: ウォッチ中
+          tracking: 追跡中
+          private: メッセージにあるもの
+          bookmarks: ブックマーク中
           first: 最初の投稿
           pinned: 固定表示されている
           unpinned: 固定表示されていない
+          seen: 既読
           unseen: 未読
           wiki: wiki
+          images: 画像を含む
+          all_tags: 上記のタグを全て含む
         statuses:
           label: トピックのうち
           open: オープンされている
@@ -1180,10 +1296,10 @@ ja:
             before: より前
             after: より後
     hamburger_menu: "他のトピック一覧やカテゴリを見る"
-    new_item: "新着"
-    go_back: '戻る'
-    not_logged_in_user: 'ユーザアクティビティと設定ページ'
-    current_user: 'ユーザページに移動'
+    new_item: "新しい"
+    go_back: "戻る"
+    not_logged_in_user: "ユーザアクティビティと設定ページ"
+    current_user: "ユーザページに移動"
     topics:
       new_messages_marker: "最後の訪問"
       bulk:
@@ -1197,6 +1313,7 @@ ja:
         dismiss_read: "未読をすべて既読にする"
         dismiss_button: "既読..."
         dismiss_tooltip: "新規投稿を既読にしてトピックの追跡を停止"
+        also_dismiss_topics: "トピックの追跡を停止して、未読として表示されないようにする"
         dismiss_new: "既読にする"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
@@ -1240,23 +1357,24 @@ ja:
     topic:
       filter_to:
         other: "トピック内の {{count}} 件を表示"
-      create: '新規トピック'
-      create_long: '新しいトピックの作成'
-      private_message: 'メッセージを書く'
+      create: "新規トピック"
+      create_long: "新しいトピックの作成"
+      open_draft: "下書きを開く"
+      private_message: "メッセージを書く"
       archive_message:
-        help: 'アーカイブにメセージを移しました'
-        title: 'アーカイブ'
+        help: "アーカイブにメセージを移しました"
+        title: "アーカイブ"
       move_to_inbox:
-        title: '受信ボックスへ移動'
-        help: '受信ボックスへメッセージを戻しました'
-      list: 'トピック'
-      new: '新着トピック'
-      unread: '未読'
+        title: "受信ボックスへ移動"
+        help: "受信ボックスへメッセージを戻しました"
+      list: "トピック"
+      new: "新着トピック"
+      unread: "未読"
       new_topics:
-        other: '{{count}}個の新着トピック'
+        other: "{{count}}個の新着トピック"
       unread_topics:
-        other: '{{count}}個の未読トピック'
-      title: 'トピック'
+        other: "{{count}}個の未読トピック"
+      title: "トピック"
       invalid_access:
         title: "トピックはプライベートです"
         description: "申し訳ありませんが、このトピックへのアクセスは許可されていません。"
@@ -1281,7 +1399,6 @@ ja:
       toggle_information: "トピックの詳細を切り替え"
       read_more_in_category: "{{catLink}}の他のトピックを見る or {{latestLink}}。"
       read_more: "{{catLink}} or {{latestLink}}。"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='{basePath}/unread'>未読 1つ</a> } other { <a href='{basePath}/unread'>未読 #つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{} false {} other{}} <a href='{basePath}/new'>新規トピック 1つ</a>} other { {BOTH, select, true{} false {} other{}} <a href='{basePath}/new'>新規トピック #つ</a>} } remaining, or {CATEGORY, select, true {{catLink}の他のトピックを読む} false {{latestLink}} other {}}"
       browse_all_categories: 全てのカテゴリを閲覧する
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: "新しいトピックを作成しませんか?"
@@ -1327,7 +1444,7 @@ ja:
         auto_close_based_on_last_post: "このトピックは最後の返信から%{duration} 後にクローズされます"
         auto_delete: "このトピックはあと%{timeLeft}で自動的に削除されます。"
         auto_reminder: "このトピックについて、%{timeLeft} 後にリマインドします。"
-      auto_close_title: 'オートクローズの設定'
+      auto_close_title: "オートクローズの設定"
       auto_close_immediate:
         other: "このトピックは最終投稿からすでに%{count}時間経過しているため、すぐにクローズされます。"
       timeline:
@@ -1350,19 +1467,19 @@ ja:
         title: このトピックに関する通知頻度を変更
         reasons:
           mailing_list_mode: "メーリングリストモードになっているため、このトピックへの返信はメールで送られます。"
-          "3_10": 'このトピックのタグをウォッチしているため通知されます。'
-          "3_6": 'このカテゴリをウォッチしているため通知されます。'
-          "3_5": 'このトピックをウォッチし始めたため通知されます。'
-          "3_2": 'このトピックをウォッチしているため通知されます。'
-          "3_1": 'このトピックを作成したため通知されます。'
-          "3": 'このトピックをウォッチしているため通知されます。'
-          "2_4": 'このトピックに返信したので、新たな返信のカウント数が表示されます。'
-          "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを購読中なので</a>、新たな返信のカウント数が表示されます。'
-          "1_2": '他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。'
-          "1": '他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。'
-          "0_7": 'このカテゴリに関して一切通知を受け取りません。'
-          "0_2": 'このトピックに関して一切通知を受け取りません。'
-          "0": 'このトピックに関して一切通知を受け取りません。'
+          "3_10": "このトピックのタグをウォッチしているため通知されます。"
+          "3_6": "このカテゴリをウォッチしているため通知されます。"
+          "3_5": "このトピックをウォッチし始めたため通知されます。"
+          "3_2": "このトピックをウォッチしているため通知されます。"
+          "3_1": "このトピックを作成したため通知されます。"
+          "3": "このトピックをウォッチしているため通知されます。"
+          "2_4": "このトピックに返信したので、新たな返信のカウント数が表示されます。"
+          "2": '<a href="{{basePath}}/u/{{username}}/preferences">このトピックを読む</a>ので、新しい返信の数が表示されます。'
+          "1_2": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
+          "1": "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
+          "0_7": "このカテゴリに関して一切通知を受け取りません。"
+          "0_2": "このトピックに関して一切通知を受け取りません。"
+          "0": "このトピックに関して一切通知を受け取りません。"
         watching_pm:
           title: "ウォッチ中"
           description: "未読件数と新しい投稿がトピックの横に表示されます。このトピックに対して新しい投稿があった場合に通知されます。"
@@ -1409,21 +1526,21 @@ ja:
         make_banner: "バナートピック"
         remove_banner: "バナートピックを削除"
       reply:
-        title: '返信する'
-        help: 'このトピックに返信する'
+        title: "返信する"
+        help: "このトピックに返信する"
       clear_pin:
         title: "固定表示を解除する"
         help: "このトピックの固定表示を解除し、トピックリストの先頭に表示されないようにする"
       share:
-        title: 'シェア'
-        help: 'このトピックのリンクをシェアする'
+        title: "シェア"
+        help: "このトピックのリンクをシェアする"
       print:
-        title: '印刷'
-        help: '印刷用の表示にする'
+        title: "印刷"
+        help: "印刷用の表示にする"
       flag_topic:
-        title: '通報'
-        help: 'このトピックを通報するか、またはプライベート通知を送る'
-        success_message: 'このトピックを通報しました。'
+        title: "通報"
+        help: "このトピックを通報するか、またはプライベート通知を送る"
+        success_message: "このトピックを通報しました。"
       feature_topic:
         title: "トピックを特集"
         pin: "{{categoryLink}} カテゴリのトップに表示する"
@@ -1451,7 +1568,7 @@ ja:
       inviting: "招待中..."
       automatically_add_to_groups: "この招待によって、リストされたグループに参加することができます。"
       invite_private:
-        title: 'プライベートメッセージへ招待する'
+        title: "プライベートメッセージへ招待する"
         email_or_username: "招待するユーザのメールアドレスまたはユーザ名"
         email_or_username_placeholder: "メールアドレスまたはユーザ名"
         action: "招待"
@@ -1461,22 +1578,22 @@ ja:
         group_name: "グループ名"
       controls: "オプション"
       invite_reply:
-        title: '招待'
+        title: "招待"
         username_placeholder: "ユーザ名"
-        action: '招待を送る'
-        help: 'このトピックに他のユーザをメールまたは通知で招待する。'
+        action: "招待を送る"
+        help: "このトピックに他のユーザをメールまたは通知で招待する。"
         to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
         sso_enabled: "このトピックに招待したい人のユーザ名を入れてください"
         to_topic_blank: "このトピックに招待したい人のユーザ名かメールアドレスを入れてください"
         to_topic_email: "あなたはメールアドレスを入力しました。フレンドがすぐにこのトピックへ返信できるようにメールで招待します。"
         to_topic_username: "ユーザ名を入力しました。このトピックへの招待リンクの通知を送信します。"
         to_username: "招待したい人のユーザ名を入れてください。このトピックへの招待リンクの通知を送信します。"
-        email_placeholder: 'name@example.com'
+        email_placeholder: "name@example.com"
         success_email: "<b>{{emailOrUsername}}</b>に招待を送信しました。招待が受理されたらお知らせします。招待した人はユーザページの招待タブにて確認できます。"
         success_username: "ユーザをこのトピックへ招待しました。"
         error: "申し訳ありません。その人を招待できませんでした。すでに招待を送信していませんか？ (招待できる数には限りがあります)"
         success_existing_email: "<b>{{emailOrUsername}}</b>はすでにこのトピックへ招待済みです。"
-      login_reply: 'ログインして返信'
+      login_reply: "ログインして返信"
       filters:
         n_posts:
           other: "{{count}} 件"
@@ -1484,7 +1601,6 @@ ja:
       split_topic:
         title: "新規トピックに移動"
         action: "新規トピックに移動"
-        topic_name: "新規トピック名:"
         error: "投稿の新規トピックへの移動中にエラーが発生しました。"
         instructions:
           other: "新たにトピックを作成し、選択した<b>{{count}}</b>個の投稿をこのトピックに移動しようとしています。"
@@ -1499,13 +1615,9 @@ ja:
         action: "選択した投稿を統合"
         error: "選択した投稿の統合に失敗しました。"
       change_owner:
-        title: "投稿者を変更する"
         action: "オーナーシップを変更"
         error: "オーナーの変更ができませんでした。"
-        label: "投稿の新しいオーナー"
-        placeholder: "新しい所有者のユーザ名"
-        instructions:
-          other: "この {{count}} つの投稿の新しいオーナーを選択してください。（前のオーナー：<b>{{old_user}}</b>）"
+        placeholder: "新しいオーナーのユーザー名"
       change_timestamp:
         title: "タイムスタンプを変更してください。"
         action: "タイムスタンプを変更"
@@ -1513,8 +1625,8 @@ ja:
         error: "トピックのタイムスタンプ変更にエラーがありました。"
         instructions: "トピックの新たなタイムスタンプを設定してください。トピック内の各投稿時間はその時間を起点に再計算されます。"
       multi_select:
-        select: '選択'
-        selected: '選択中 ({{count}})'
+        select: "選択"
+        selected: "選択中 ({{count}})"
         delete: 選択中のものを削除
         cancel: 選択を外す
         select_all: すべて選択する
@@ -1532,10 +1644,10 @@ ja:
       continue_discussion: "{{postLink}} から:"
       follow_quote: "引用した投稿に移動"
       show_full: "全て表示"
-      show_hidden: '隠されたコンテンツを表示する'
+      show_hidden: "隠されたコンテンツを表示する"
       deleted_by_author:
         other: "(投稿は投稿者により削除されました。何らかの通報がされていない限り、%{count}時間後に自動的に削除されます)"
-      expand_collapse: "開く/折りたたみ"
+      expand_collapse: "開く/折りたたむ"
       gap:
         other: "{{count}}個の返信をすべて表示する"
       unread: "未読の投稿"
@@ -1554,7 +1666,6 @@ ja:
         upload: "申し訳ありません、ファイルのアップロード中にエラーが発生しました。再度お試しください。"
         file_too_large: "すみません、ファイルが大きすぎます。(最大サイズは{{max_size_kb}}kbです。)サイズの大きいファイルを共有クラウドサービスにアップロードせず、リンクを共有する方法があります。"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
-        too_many_dragged_and_dropped_files: "すみません、一度に10ファイルだけアップロードすることが出来ます。"
         upload_not_authorized: "すみません、アップロードしようとしているファイルは許可されていません。 (許可された拡張子は: {{authorized_extensions}}です。)"
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
@@ -1568,7 +1679,7 @@ ja:
       wiki:
         about: "この投稿はWiki形式です"
       archetypes:
-        save: '保存オプション'
+        save: "保存オプション"
       controls:
         reply: "この投稿の返信を編集"
         like: "この投稿に「いいね！」する"
@@ -1591,14 +1702,13 @@ ja:
         unhide: "表示する"
         change_owner: "オーナーシップを変更"
       actions:
-        flag: '通報'
+        flag: "通報"
         undo:
           off_topic: "通報を取り消す"
           spam: "通報を取り消す"
           inappropriate: "通報を取り消す"
           bookmark: "ブックマークを取り消す"
           like: "「いいね！」を取り消す"
-          vote: "投票を取り消す"
         people:
           off_topic: "関係無い話題として通報"
           spam: "スパムとして通報"
@@ -1607,7 +1717,6 @@ ja:
           notify_user: "メッセージを送信しました。"
           bookmark: "これをブックマークしました。"
           like: "「いいね！」しました"
-          vote: "投票しました"
         by_you:
           off_topic: "関係のない話題として通報しました"
           spam: "スパム報告として通報しました"
@@ -1616,7 +1725,6 @@ ja:
           notify_user: "このユーザにメッセージを送信しました"
           bookmark: "この投稿をブックマークしました"
           like: "あなたが「いいね！」しました"
-          vote: "この投稿に投票しました"
         by_you_and_others:
           off_topic:
             other: "あなたと他{{count}}名が関係無い話題として通報しました"
@@ -1632,8 +1740,6 @@ ja:
             other: "あなたと他{{count}}人がこの投稿をブックマークしました"
           like:
             other: "あなたと他{{count}}人が「いいね！」しました"
-          vote:
-            other: "あなたと他{{count}}人がこの投稿に投票しました"
         by_others:
           off_topic:
             other: "{{count}}名のユーザが関係無い話題として通報しました"
@@ -1649,8 +1755,6 @@ ja:
             other: "{{count}}人のユーザがこの投稿をブックマークしました"
           like:
             other: "{{count}}人のユーザが「いいね！」しました"
-          vote:
-            other: "{{count}}人のユーザがこのポストに投票しました"
       merge:
         confirm:
           other: "これらの{{count}}の投稿を統合したいですか?"
@@ -1665,50 +1769,47 @@ ja:
           revert: "このリビジョンに戻す"
           edit_wiki: "Wikiを編集"
           edit_post: "投稿を編集"
-          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "追加・削除箇所をインラインで表示"
-            button: 'HTML'
+            button: "HTML"
           side_by_side:
             title: "差分を横に並べて表示"
-            button: 'HTML'
+            button: "HTML"
           side_by_side_markdown:
             title: "ソースの差分を横に並べて表示"
-            button: 'Raw'
+            button: "Raw"
       raw_email:
         displays:
           raw:
             title: "メールをソース表示"
-            button: 'Raw'
+            button: "Raw"
           text_part:
             title: "メールのテキスト部分を表示"
-            button: 'Text'
+            button: "Text"
           html_part:
             title: "メールのHTML部分を表示"
-            button: 'HTML'
+            button: "HTML"
     category:
-      can: 'can&hellip; '
-      none: '(カテゴリなし)'
-      all: '全てのカテゴリ'
-      choose: 'カテゴリを選択&hellip;'
-      edit: '編集'
-      edit_long: "カテゴリを編集"
-      view: 'カテゴリ内のトピックを見る'
-      general: '一般'
-      settings: '設定'
+      can: "can&hellip; "
+      none: "(カテゴリなし)"
+      all: "全てのカテゴリ"
+      choose: "カテゴリを選択&hellip;"
+      view: "カテゴリ内のトピックを見る"
+      general: "一般"
+      settings: "設定"
       topic_template: "トピックテンプレート"
       tags: "タグ"
       tags_allowed_tags: "このカテゴリで使用を許可するタグ:"
       tags_allowed_tag_groups: "このカテゴリで使用を許可するタググループ:"
       tags_placeholder: "(オプション) 許可されたタグのリスト"
       tag_groups_placeholder: "(オプション) 許可されたタググループのリスト"
-      delete: 'カテゴリを削除する'
-      create: '新規カテゴリ'
-      create_long: '新しくカテゴリを作ります'
-      save: 'カテゴリを保存する'
-      slug: 'カテゴリのスラッグ'
-      slug_placeholder: '(任意) URLで使用されます'
+      delete: "カテゴリを削除する"
+      create: "新規カテゴリ"
+      create_long: "新しくカテゴリを作ります"
+      save: "カテゴリを保存する"
+      slug: "カテゴリのスラッグ"
+      slug_placeholder: "(任意) URLで使用されます"
       creation_error: カテゴリの作成に失敗しました。
       save_error: カテゴリの保存に失敗しました。
       name: "カテゴリ名"
@@ -1726,7 +1827,7 @@ ja:
       list: "カテゴリをリストする"
       no_description: "このカテゴリの説明はありません。"
       change_in_category_topic: "カテゴリ内容を編集"
-      already_used: 'この色は他のカテゴリで利用しています'
+      already_used: "この色は他のカテゴリで利用しています"
       security: "セキュリティ"
       images: "画像"
       email_in: "カスタムメールアドレス:"
@@ -1735,7 +1836,6 @@ ja:
       email_in_disabled_click: '"email in"設定を有効にしてください'
       allow_badges_label: "このカテゴリでバッジが付与されることを許可"
       edit_permissions: "パーミッションを編集"
-      add_permission: "パーミッションを追加"
       this_year: "今年"
       position: "ポジション"
       default_position: "デフォルトポジション"
@@ -1747,7 +1847,6 @@ ja:
           title: "ウォッチ中"
         watching_first_post:
           title: "最初の投稿をウォッチする"
-          description: "カテゴリー内の新規トピックに対する最初の投稿のみ通知されます。"
         tracking:
           title: "追跡中"
         regular:
@@ -1758,16 +1857,16 @@ ja:
       sort_options:
         views: "表示"
         posts: "投稿"
-        activity: "アクティビティー"
+        activity: "アクティビティ"
         posters: "投稿者"
         category: "カテゴリ"
         created: "作成者"
     flagging:
-      title: '報告していただきありがとうございます。'
-      action: '投稿を通報'
+      title: "報告していただきありがとうございます。"
+      action: "投稿を通報"
       take_action: "アクションをする"
-      notify_action: 'メッセージ'
-      official_warning: '運営スタッフからの警告'
+      notify_action: "メッセージ"
+      official_warning: "運営スタッフからの警告"
       delete_spammer: "スパムの削除"
       yes_delete_spammer: "はい、スパムを削除する"
       ip_address_missing: "(N/A)"
@@ -1775,7 +1874,7 @@ ja:
       submit_tooltip: "プライベートの通報を送信する"
       take_action_tooltip: "誰かが通報するのを待つのではなく、通報しましょう。"
       cant: "現在、この投稿を通報することはできません。"
-      notify_staff: 'スタッフに通報'
+      notify_staff: "スタッフに通報"
       formatted_name:
         off_topic: "オフトピック"
         inappropriate: "不適切"
@@ -1824,8 +1923,6 @@ ja:
       pinned:
         title: "固定表示"
         help: "このトピックは固定表示されています。常にカテゴリのトップに表示されます"
-      invisible:
-        help: "このトピックはリストされていません。トピックリストには表示されません。直接リンクでのみアクセス可能です"
     posts: "投稿"
     posts_long: "このトピックには{{number}}個の投稿があります"
     posts_likes_MF: |
@@ -1850,7 +1947,7 @@ ja:
     users_lowercase:
       other: "ユーザ"
     category_title: "カテゴリ"
-    history: "History"
+    history: "履歴"
     changed_by: "by {{author}}"
     raw_email:
       title: "受信メール"
@@ -1890,7 +1987,7 @@ ja:
         lower_title: "NEW"
         title: "新着"
         title_with_count:
-          other: "最新 ({{count}})"
+          other: "新着 ({{count}})"
         help: "最近投稿されたトピック"
       posted:
         title: "自分の投稿"
@@ -1925,7 +2022,6 @@ ja:
         this_week: "週"
         today: "今日"
         other_periods: "次の期間のトピックを見る"
-    browser_update: '<a href="http://www.discourse.org/faq/#browser">ご利用のブラウザのバージョンが古いです</a>。 <a href="http://browsehappy.com">ブラウザをアップデート</a>してください。'
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -1933,62 +2029,66 @@ ja:
     lightbox:
       download: "ダウンロード"
     keyboard_shortcuts_help:
-      title: 'ショートカットキー'
+      title: "ショートカットキー"
       jump_to:
-        title: 'ページ移動'
-        home: '<b>g</b>, <b>h</b> ホーム'
-        latest: '<b>g</b>, <b>l</b> 最新'
-        new: '<b>g</b>, <b>n</b> 新着'
-        unread: '<b>g</b>, <b>u</b> 未読'
-        categories: '<b>g</b>, <b>c</b> カテゴリ'
-        top: '<b>g</b>, <b>t</b> トップ'
-        bookmarks: '<b>g</b>, <b>b</b> ブックマーク'
-        profile: '<b>g</b>, <b>p</b> プロフィール'
-        messages: '<b>g</b>, <b>m</b> メッセージ'
+        title: "ページ移動"
+        home: "<b>g</b>, <b>h</b> ホーム"
+        latest: "<b>g</b>, <b>l</b> 最新"
+        new: "<b>g</b>, <b>n</b> 新着"
+        unread: "<b>g</b>, <b>u</b> 未読"
+        categories: "<b>g</b>, <b>c</b> カテゴリ"
+        top: "<b>g</b>, <b>t</b> トップ"
+        bookmarks: "<b>g</b>, <b>b</b> ブックマーク"
+        profile: "<b>g</b>, <b>p</b> プロフィール"
+        messages: "<b>g</b>, <b>m</b> メッセージ"
       navigation:
-        title: 'ナビゲーション'
-        jump: '<b>#</b> # 投稿へ'
-        back: '<b>u</b> 戻る'
-        up_down: '<b>k</b>/<b>j</b> 選択を移動 &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> トピックへ'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 選択を次/前へ移動'
+        title: "ナビゲーション"
+        jump: "<b>#</b> # 投稿へ"
+        back: "<b>u</b> 戻る"
+        up_down: "<b>k</b>/<b>j</b> 選択を移動 &uarr; &darr;"
+        open: "<b>o</b> or <b>Enter</b> トピックへ"
+        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 選択を次/前へ移動"
       application:
-        title: 'アプリケーション'
-        create: '<b>c</b> 新しいトピックを作成'
-        notifications: '<b>n</b> お知らせを開く'
-        hamburger_menu: '<b>=</b> メニューを開く'
-        user_profile_menu: '<b>p</b> ユーザーメニューを開く'
-        show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
-        help: '<b>?</b> キーボードヘルプを表示する'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 新規投稿を非表示にする'
-        dismiss_topics: '<b>x</b>, <b>t</b> トピックを既読にする'
-        log_out: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション'
+        title: "アプリケーション"
+        create: "<b>c</b> 新しいトピックを作成"
+        notifications: "<b>n</b> お知らせを開く"
+        hamburger_menu: "<b>=</b> メニューを開く"
+        user_profile_menu: "<b>p</b> ユーザーメニューを開く"
+        show_incoming_updated_topics: "<b>.</b> 更新されたトピックを表示する"
+        search: "<b>/</b> or <b>ctrl</b>+<b>alt</b>+<b>f</b> 検索"
+        help: "<b>?</b> キーボードヘルプを表示する"
+        dismiss_new_posts: "<b>x</b>, <b>r</b> 新規投稿を非表示にする"
+        dismiss_topics: "<b>x</b>, <b>t</b> トピックを既読にする"
+        log_out: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション"
       actions:
-        title: 'アクション'
-        bookmark_topic: '<b>f</b> トピックのブックマークを切り替え'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b>トピックを 固定表示/解除'
-        share_topic: '<b>shift</b>+<b>s</b> トピックをシェア'
-        share_post: '<b>s</b> 投稿をシェアする'
-        reply_as_new_topic: '<b>t</b> トピックへリンクして返信'
-        reply_topic: '<b>shift</b>+<b>r</b> トピックに返信'
-        reply_post: '<b>r</b> 投稿に返信'
-        quote_post: '<b>q</b> 投稿を引用する'
-        like: '<b>l</b> 投稿を「いいね！」する'
-        flag: '<b>!</b> 投稿を通報'
-        bookmark: '<b>b</b> 投稿をブックマークする'
-        edit: '<b>e</b> 投稿を編集'
-        delete: '<b>d</b> 投稿を削除する'
-        mark_muted: '<b>m</b>, <b>m</b> トピックをミュートする'
-        mark_regular: '<b>m</b>, <b>r</b> レギュラー(デフォルト)トピックにする'
-        mark_tracking: '<b>m</b>, <b>t</b> トピックを追跡する'
-        mark_watching: '<b>m</b>, <b>w</b> トピックをウォッチする'
-        print: '<b>ctrl</b>+<b>p</b> トピックを印刷'
+        title: "アクション"
+        bookmark_topic: "<b>f</b> トピックのブックマークを切り替え"
+        pin_unpin_topic: "<b>shift</b>+<b>p</b>トピックを 固定表示/解除"
+        share_topic: "<b>shift</b>+<b>s</b> トピックをシェア"
+        share_post: "<b>s</b> 投稿をシェアする"
+        reply_as_new_topic: "<b>t</b> トピックへリンクして返信"
+        reply_topic: "<b>shift</b>+<b>r</b> トピックに返信"
+        reply_post: "<b>r</b> 投稿に返信"
+        quote_post: "<b>q</b> 投稿を引用する"
+        like: "<b>l</b> 投稿を「いいね！」する"
+        flag: "<b>!</b> 投稿を通報"
+        bookmark: "<b>b</b> 投稿をブックマークする"
+        edit: "<b>e</b> 投稿を編集"
+        delete: "<b>d</b> 投稿を削除する"
+        mark_muted: "<b>m</b>, <b>m</b> トピックをミュートする"
+        mark_regular: "<b>m</b>, <b>r</b> レギュラー(デフォルト)トピックにする"
+        mark_tracking: "<b>m</b>, <b>t</b> トピックを追跡する"
+        mark_watching: "<b>m</b>, <b>w</b> トピックをウォッチする"
+        print: "<b>ctrl</b>+<b>p</b> トピックを印刷"
     badges:
       granted_on: "%{date}にゲット!"
       others_count: "その他のバッジ所有者(%{count})"
       title: バッジ
       badge_count:
         other: "%{count}個のバッジ"
+      badge_grouping:
+        trust_level:
+          name: トラストレベル
     google_search: |
       <h3>Googleで検索</h3>
       <p>
@@ -1999,12 +2099,18 @@ ja:
       </form>
       </p>
     tagging:
+      all_tags: "全てのタグ"
+      other_tags: "他のタグ"
+      selector_all_tags: "全てのタグ"
+      selector_no_tags: "タグなし"
+      sort_by: "並べ替え:"
       notifications:
         watching:
           title: "ウォッチ中"
         watching_first_post:
           title: "最初の投稿をウォッチする"
       groups:
+        new: "新しいグループ"
         parent_tag_label: "親タグ:"
         parent_tag_placeholder: "任意"
         save: "保存する"
@@ -2031,11 +2137,13 @@ ja:
           top: "トップトピックは以上です。"
           bookmarks: "ブックマーク済みのトピックは以上です。"
           search: "検索結果は以上です。"
+    invite:
+      custom_message: "<a href>カスタムメッセージ</a>を作成して、あなたの招待状をもう少し個人的なものにします。"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
-      title: 'Discourseの管理者'
-      moderator: 'モデレータ'
+      title: "Discourseの管理者"
+      moderator: "モデレータ"
       dashboard:
         title: "ダッシュボード"
         last_updated: "ダッシュボード最終更新:"
@@ -2049,19 +2157,16 @@ ja:
         version_check_pending: "アップロードしたてです。素晴らしいです！   "
         installed_version: "インストール済み"
         latest_version: "最新"
-        problems_found: "Discourse のインストールにいくつか問題が発見されました:"
+        problems_found: "現在のサイト設定に基づいたアドバイス"
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"
-        moderators: 'モデレータ:'
-        admins: '管理者:'
-        suspended: '停止中:'
+        moderators: "モデレータ:"
+        admins: "管理者:"
+        suspended: "停止中:"
         private_messages_short: "メッセージ"
         private_messages_title: "メッセージ"
         mobile_title: "モバイル"
-        space_free: "{{size}} 空き"
-        uploads: "アップロード"
-        backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
         page_views: "閲覧数"
@@ -2119,6 +2224,27 @@ ja:
         flagged_topics:
           topic: "トピック"
       groups:
+        new:
+          title: "新しいグループ"
+          name:
+            too_short: "グループ名が短すぎます"
+            blank: "グループ名は空白にできません"
+        manage:
+          interaction:
+            visibility: 可視性
+            visibility_levels:
+              title: "誰がこのグループを閲覧できますか？"
+              members: "グループオーナー、メンバー、管理者"
+              staff: "グループオーナーとスタッフ"
+              owners: "グループオーナーと管理者"
+          membership:
+            automatic: 自動
+            trust_level: トラストレベル
+            trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与されるトラストレベル："
+            automatic_membership_email_domains: "このリストにあるものと完全に一致するメー​​ルドメインで登録したユーザーは、自動的にこのグループに追加されます。"
+            automatic_membership_retroactive: "既存の登録ユーザーを追加するため、同じメールドメインにルールを適用する"
+            primary_group: "自動的にプライマリーグループとして設定する"
+        name_placeholder: "グループ名、スペースなし、ユーザー名のルールと同じ"
         primary: "プライマリーグループ"
         no_primary: "（プライマリーグループなし）"
         title: "グループ"
@@ -2132,6 +2258,8 @@ ja:
         add: "追加"
         custom: "カスタム"
         automatic: "自動で作成されたグループ"
+        default_title: "デフォルトタイトル"
+        default_title_description: "グループ内のすべてのユーザーに適用されます"
         group_owners: オーナー
         add_owners: オーナーを追加
       api:
@@ -2238,10 +2366,8 @@ ja:
         save: "保存"
         new: "新規"
         new_style: "新しいスタイル"
-        import: "インポート"
         delete: "削除"
         delete_confirm: "このテーマを削除しますか?"
-        about: "サイトカスタマイズ設定により、サイトのヘッダとスタイルシートを変更できます。設定を選択するか、編集を開始して新たな設定を追加してください。"
         color: "カラー"
         opacity: "透明度"
         copy: "コピー"
@@ -2268,24 +2394,19 @@ ja:
             text: "</body>"
         colors:
           title: "カラー"
-          edit: "カラースキームの編集"
-          long_title: "カラースキーム"
-          new_name: "カラースキームを作成"
           copy_name_prefix: "のコピー"
-          delete_confirm: "このカラースキームを削除してもよろしいですか？"
           undo: "取り消す"
           undo_title: "変更を元に戻して、前回保存されたカラーにします"
           revert: "取り戻す"
-          revert_title: "デフォルトのカラースキームへ戻す"
           primary:
-            name: 'プライマリー'
-            description: 'テキスト、アイコンと枠の色'
+            name: "プライマリー"
+            description: "テキスト、アイコンと枠の色"
           secondary:
-            name: 'セカンダリー'
-            description: 'メイン背景とボタンのテキスト色'
+            name: "セカンダリー"
+            description: "メイン背景とボタンのテキスト色"
           tertiary:
-            name: 'ターシャリ'
-            description: 'リンク、いくつかのボタン、お知らせ、アクセントカラー'
+            name: "ターシャリ"
+            description: "リンク、いくつかのボタン、お知らせ、アクセントカラー"
           quaternary:
             name: "クォータナリ"
             description: "ナビゲーションリンク"
@@ -2296,22 +2417,21 @@ ja:
             name: "ヘッダープライマリー"
             description: "サイトヘッダーのテキストとアイコン"
           highlight:
-            name: 'ハイライト'
-            description: 'ページのハイライトされた部分(投稿やトピックなど)'
+            name: "ハイライト"
+            description: "ページのハイライトされた部分(投稿やトピックなど)"
           danger:
-            name: '危険'
-            description: '削除された投稿やトピックのハイライトカラー'
+            name: "危険"
+            description: "削除された投稿やトピックのハイライトカラー"
           success:
-            name: '成功'
-            description: '操作が成功したことを示すために使用します'
+            name: "成功"
+            description: "操作が成功したことを示すために使用します"
           love:
-            name: 'love'
+            name: "love"
             description: "「いいね！」ボタンの色"
       email:
         title: "メール"
         settings: "設定"
         templates: "テンプレート"
-        preview_digest: "まとめのプレビュー"
         sending_test: "テストメールを送信中..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "テストメールを送れませんでした。メール設定、またはホストをメールコネクションをブロックされていないようを確認してください。"
@@ -2329,7 +2449,6 @@ ja:
         send_test: "テストメールを送る"
         sent_test: "送信完了!"
         delivery_method: "送信方法"
-        preview_digest_desc: "しばらくログインしていないユーザーに送られるまとめメールです。"
         refresh: "更新"
         send_digest_label: "この結果を送信:"
         send_digest: "送信"
@@ -2367,7 +2486,6 @@ ja:
             address_placeholder: "name@example.com"
             type_placeholder: "まとめ、サインアップ..."
             reply_key_placeholder: "返信キー"
-            skipped_reason_placeholder: "理由"
       logs:
         title: "ログ"
         action: "アクション"
@@ -2378,9 +2496,9 @@ ja:
         topic_id: "トピックID"
         post_id: "投稿ID"
         category_id: "カテゴリID"
-        delete: '削除'
-        edit: '編集'
-        save: '保存'
+        delete: "削除"
+        edit: "編集"
+        save: "保存"
         screened_actions:
           block: "ブロック"
           do_nothing: "何もしない"
@@ -2389,7 +2507,6 @@ ja:
           filter: "フィルタ:"
           title: "スタッフ操作"
           clear_filters: "すべて表示する"
-          staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
           subject: "対象"
           when: "日時"
@@ -2433,6 +2550,7 @@ ja:
             change_readonly_mode: "閲覧専用モードに変更する"
             backup_download: "バックアップをダウンロード"
             backup_destroy: "バックアップを消去"
+            disabled_second_factor: "2段階認証を無効にする"
         screened_emails:
           title: "ブロック対象アドレス"
           description: "新規アカウント作成時、次のメールアドレスからの登録をブロックする。"
@@ -2467,15 +2585,19 @@ ja:
           title: "エラーログ"
       watched_words:
         title: "監視ワード"
+        search: "検索"
+        clear_filter: "クリア"
         actions:
-          flag: '通報'
+          block: "ブロック"
+          flag: "通報"
         action_descriptions:
-          flag: 'これらの言葉を含む投稿を許可しますが、仲裁者がこれをレビューできるよう、不適切であると通報されます。'
+          flag: "これらの言葉を含む投稿を許可しますが、仲裁者がこれをレビューできるよう、不適切であると通報されます。"
         form:
-          label: '新しい単語:'
+          label: "新しい単語:"
           placeholder_regexp: "正規表現"
-          add: '追加'
-          success: '成功'
+          add: "追加"
+          success: "成功"
+          exists: "既に存在します。"
           upload: "アップロード"
           upload_successful: "アップロードが成功し、単語が追加されました。"
       impersonate:
@@ -2484,39 +2606,38 @@ ja:
         not_found: "ユーザが見つかりませんでした。"
         invalid: "申し訳ありませんがこのユーザとして使えません。"
       users:
-        title: 'ユーザ'
-        create: '管理者を追加'
+        title: "ユーザ"
+        create: "管理者を追加"
         last_emailed: "最終メール"
         not_found: "ユーザが見つかりませんでした。"
         id_not_found: "申し訳ありません。そのユーザIDはシステムに存在していません"
-        active: "アクティブ"
         show_emails: "メールアドレスを表示"
         nav:
           new: "新規"
           active: "アクティブ"
           pending: "保留中"
-          staff: 'スタッフ'
-          suspended: '凍結中'
-          suspect: 'マーク中'
+          staff: "スタッフ"
+          suspended: "凍結中"
+          suspect: "マーク中"
         approved: "承認?"
         approved_selected:
           other: "承認ユーザ ({{count}})"
         reject_selected:
           other: "拒否ユーザ ({{count}})"
         titles:
-          active: 'アクティブユーザ'
-          new: '新しいユーザ'
-          pending: '保留中のユーザ'
-          newuser: 'トラストレベル0のユーザ (新しいユーザ)'
-          basic: 'トラストレベル1のユーザ (ベーシックユーザ)'
-          member: 'トラストレベル2のユーザ (メンバー)'
-          regular: 'トラストレベル3のユーザ (レギュラー)'
-          leader: 'トラストレベル4のユーザ (リーダー)'
+          active: "アクティブユーザ"
+          new: "新しいユーザ"
+          pending: "保留中のユーザ"
+          newuser: "トラストレベル0のユーザ (新しいユーザ)"
+          basic: "トラストレベル1のユーザ (ベーシックユーザ)"
+          member: "トラストレベル2のユーザ (メンバー)"
+          regular: "トラストレベル3のユーザ (レギュラー)"
+          leader: "トラストレベル4のユーザ (リーダー)"
           staff: "スタッフ"
-          admins: '管理者ユーザ'
-          moderators: 'モデレータ'
-          suspended: '凍結中のユーザ'
-          suspect: 'マーク中のユーザ'
+          admins: "管理者ユーザ"
+          moderators: "モデレータ"
+          suspended: "凍結中のユーザ"
+          suspect: "マーク中のユーザ"
         reject_successful:
           other: "%{count}人のユーザの拒否に成功しました。"
         reject_failures:
@@ -2548,38 +2669,37 @@ ja:
         suspended: "凍結状態"
         staged: "ステージドモードの状態"
         show_admin_profile: "アカウントの管理"
-        refresh_browsers: "ブラウザを強制更新"
-        refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
         show_public_profile: "パブリックプロフィールを見る"
-        impersonate: 'このユーザになりすます'
+        impersonate: "このユーザになりすます"
         action_logs: "アクションログ"
         ip_lookup: "IPアドレスを検索"
         log_out: "ログアウト"
         logged_out: "すべてのデバイスでログアウトしました"
-        revoke_admin: '管理者権限を剥奪'
-        grant_admin: '管理者権限を付与'
-        revoke_moderation: 'モデレータ権限を剥奪'
-        grant_moderation: 'モデレータ権限を付与'
-        unsuspend: '凍結解除'
-        suspend: '凍結'
+        revoke_admin: "管理者権限を剥奪"
+        grant_admin: "管理者権限を付与"
+        revoke_moderation: "モデレータ権限を剥奪"
+        grant_moderation: "モデレータ権限を付与"
+        unsuspend: "凍結解除"
+        suspend: "凍結"
         reputation: レピュテーション
         permissions: パーミッション
         activity: アクティビティ
         like_count: 「いいね！」付けた/もらった数
-        last_100_days: '過去100日に'
+        last_100_days: "過去100日に"
         private_topics_count: プライベートトピックの数
         posts_read_count: 読んだ投稿数
         post_count: 投稿数
+        second_factor_enabled: 2段階認証を有効にする
         topics_entered: 閲覧したトピックの数
         flags_given_count: 通報した数
         flags_received_count: 通報された数
         warnings_received_count: 警告されました
-        flags_given_received_count: '通報をした / された'
-        approve: '承認'
+        flags_given_received_count: "通報をした / された"
+        approve: "承認"
         approved_by: "承認したユーザ"
         approve_success: "ユーザが承認され、アクティベーション方法を記載したメールが送信されました。"
         approve_bulk_success: "成功!！選択したユーザ全員が承認され、メールが送信されました。"
-        time_read: "リード時間"
+        time_read: "読んだ時間"
         anonymize: "匿名ユーザ"
         anonymize_confirm: "このアカウントと匿名化してよいですか？ユーザ名、メールアドレスが変更され、全てのプロフィール情報がリセットされます"
         anonymize_yes: "はい。アカウントを匿名化してください"
@@ -2593,7 +2713,6 @@ ja:
           other: "全ての投稿を削除できませんでした。%{count}日以上経過した投稿があります。(設定: delete_user_max_post_age)"
         cant_delete_all_too_many_posts:
           other: "全ての投稿を削除できませんでした。ユーザは%{count} 件以上投稿しています。(delete_all_posts_max)"
-        delete_confirm: "このユーザを削除してもよろしいですか？"
         delete_and_block: "アカウントを削除し、同一メールアドレス及びIPアドレスからのサインアップを<b>ブロックします</b>"
         delete_dont_block: "削除する"
         deleted: "ユーザが削除されました。"
@@ -2687,44 +2806,44 @@ ja:
           enabled: "ユーザーカードに表示する"
           disabled: "ユーザーカードに表示しない"
         field_types:
-          text: 'テキストフィールド'
-          confirm: '確認'
+          text: "テキストフィールド"
+          confirm: "確認"
           dropdown: "ドロップダウン"
       site_text:
         description: "フォーラム上のテキストを編集することができます。下のフォームで検索する事ができます:"
         search: "編集したいものを入力して検索"
-        title: 'テキストコンテンツ'
-        edit: '編集'
+        title: "テキストコンテンツ"
+        edit: "編集"
         revert: "変更を元に戻す"
         revert_confirm: "本当に変更を元に戻しますか?"
         go_back: "戻る"
         recommended: "それぞれにあわせて、文章を変えることをオススメします:"
-        show_overriden: '上書き部分のみ表示'
+        show_overriden: "上書き部分のみ表示"
       site_settings:
-        title: '設定'
+        title: "設定"
         no_results: "何も見つかりませんでした。"
         clear_filter: "クリア"
         add_url: "URL追加"
         add_host: "ホストを追加"
         categories:
-          all_results: '全て'
-          required: '必須設定'
-          basic: '基本設定'
-          users: 'ユーザ'
-          posting: '投稿'
-          email: 'メール'
-          files: 'ファイル'
-          trust: 'トラストレベル'
-          security: 'セキュリティ'
+          all_results: "全て"
+          required: "必須設定"
+          basic: "基本設定"
+          users: "ユーザ"
+          posting: "投稿"
+          email: "メール"
+          files: "ファイル"
+          trust: "トラストレベル"
+          security: "セキュリティ"
           onebox: "Onebox"
-          seo: 'SEO'
-          spam: 'スパム'
-          rate_limits: '投稿制限'
-          developer: '開発者向け'
+          seo: "SEO"
+          spam: "スパム"
+          rate_limits: "投稿制限"
+          developer: "開発者向け"
           embedding: "埋め込む"
           legal: "法律に基づく情報"
-          user_api: 'ユーザーAPI'
-          uncategorized: 'その他'
+          user_api: "ユーザーAPI"
+          uncategorized: "その他"
           backups: "バックアップ"
           login: "ログイン"
           plugins: "プラグイン"
@@ -2815,6 +2934,7 @@ ja:
         add_host: "ホストの追加"
         settings: "埋め込みの設定"
         feed_settings: "フィード設定"
+        embed_truncate: "埋め込まれた投稿を削除する"
         embed_whitelist_selector: "埋め込みで許可される要素のCSSセレクタ"
         embed_blacklist_selector: "埋め込みから削除された要素のCSSセレクタ"
         embed_classname_whitelist: "許可されたCSSクラス名"
@@ -2840,11 +2960,13 @@ ja:
   wizard_js:
     wizard:
       done: "完了"
+      finish: "終了"
       back: "戻る"
       next: "次へ"
       step: "%{current} / %{total}"
       upload: "アップロード"
       uploading: "アップロード中..."
+      upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
       quit: "後で"
       staff_count:
         other: "あなたのコミュニティには、あなたを含めて %{count} 名のスタッフがいます。"
@@ -2855,3 +2977,7 @@ ja:
           admin: "管理者"
           moderator: "モデレータ"
           regular: "正規ユーザー"
+      previews:
+        topic_title: "ディスカッショントピック"
+        share_button: "共有"
+        reply_button: "返信"

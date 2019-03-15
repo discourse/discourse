@@ -1,0 +1,108 @@
+.install-theme {
+  min-width: 650px;
+  display: flex;
+}
+
+.install-theme-items {
+  width: 200px;
+}
+
+.install-theme-item {
+  border: 1px solid $primary-low;
+  border-bottom: none;
+  position: relative;
+
+  &:last-child {
+    border-bottom: 1px solid $primary-low;
+  }
+
+  input,
+  .d-icon-caret-right {
+    display: none;
+  }
+
+  label {
+    display: block;
+    padding: 10px 30px 10px 10px;
+    margin-bottom: 0px;
+    cursor: pointer;
+  }
+
+  input:checked + label {
+    color: $secondary;
+    background-color: $tertiary;
+    + .d-icon {
+      display: block;
+      color: $secondary;
+    }
+  }
+
+  .d-icon-caret-right {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    margin-top: -7px;
+  }
+}
+
+.install-theme-content {
+  padding: 0px 0px 10px 20px;
+  width: calc(100% - 200px);
+}
+
+.repo {
+  input[type="text"] {
+    width: 90%;
+  }
+}
+
+.popular-theme-items {
+  height: 65vh;
+  overflow: auto;
+  padding-right: 20px;
+}
+
+.popular-theme-item {
+  border-bottom: 1px solid $primary-low;
+  padding: 8px 0px;
+  display: flex;
+  align-items: center;
+  .popular-theme-name {
+    flex: 1;
+    .popular-theme-type {
+      font-weight: normal;
+      font-size: $font-down-2;
+      color: $primary-medium;
+    }
+
+    a {
+      color: $primary-very-high;
+      font-weight: bold;
+      &:hover,
+      &:visited,
+      &:active {
+        color: $primary-high;
+      }
+    }
+
+    .popular-theme-description {
+      font-size: $font-down-1;
+      padding-right: 20px;
+    }
+  }
+  .popular-theme-buttons {
+    > span {
+      font-style: italic;
+      font-size: $font-down-1;
+      color: $primary-medium;
+      margin-right: 8px;
+    }
+
+    > a {
+      display: block;
+      font-size: $font-down-2;
+      margin-top: 5px;
+      text-align: center;
+    }
+  }
+}

@@ -18,55 +18,20 @@
       convertToPrivateMessage=convertToPrivateMessage}}
   {{/if}}
 
-  {{#unless topic.isPrivateMessage}}
-    {{#if site.mobileView}}
-      {{topic-footer-mobile-dropdown topic=topic
-                                     showInvite=showInvite
-                                     showFlagTopic=showFlagTopic}}
-    {{else}}
-      {{d-button class=(concat "btn-default " bookmarkClass)
-                 title=bookmarkTitle
-                 label=bookmarkLabel
-                 icon="bookmark"
-                 action=toggleBookmark}}
-
-      {{share-button url=topic.shareUrl}}
-
-      {{#if topic.details.can_flag_topic}}
-        {{d-button class="btn-default flag-topic"
-                   title="topic.flag_topic.help"
-                   label="topic.flag_topic.title"
-                   icon="flag"
-                   action=showFlagTopic}}
-      {{/if}}
-
-    {{/if}}
-  {{/unless}}
-
-  {{#if canInviteTo}}
-    {{d-button class="btn-default invite-topic"
-               title="topic.invite_reply.help"
-               label="topic.invite_reply.title"
-               icon="users"
-               action=showInvite
-               disabled=inviteDisabled}}
+  {{#if site.mobileView}}
+    {{topic-footer-mobile-dropdown topic=topic content=dropdownButtons}}
   {{/if}}
 
-  {{#if canArchive}}
-    {{d-button class="btn-default standard archive-topic"
-               title=archiveTitle
-               label=archiveLabel
-               icon=archiveIcon
-               action=toggleArchiveMessage}}
-  {{/if}}
-
-  {{#if showEditOnFooter}}
-    {{d-button class="btn-default edit-message"
-               title="topic.edit_message.help"
-               label="topic.edit_message.title"
-               icon="pencil"
-               action=editFirstPost}}
-  {{/if}}
+  {{#each inlineButtons as |button|}}
+    {{d-button
+      id=(concat "topic-footer-button-" button.id)
+      class=(concat "btn-default topic-footer-button " button.classNames)
+      action=button.action
+      icon=button.icon
+      translatedLabel=button.label
+      translatedTitle=button.title
+      disabled=button.disabled}}
+  {{/each}}
 
   {{plugin-outlet name="topic-footer-main-buttons-before-create"
                   args=(hash topic=topic)

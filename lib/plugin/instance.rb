@@ -16,6 +16,15 @@ class Plugin::CustomEmoji
     @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
     emojis[name] = url
   end
+
+  def self.translations
+    @@translations ||= {}
+  end
+
+  def self.translate(from, to)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + from)[0..10]
+    translations[from] = to
+  end
 end
 
 class Plugin::Instance
@@ -429,6 +438,10 @@ class Plugin::Instance
     Plugin::CustomEmoji.register(name, url)
   end
 
+  def translate_emoji(from, to)
+    Plugin::CustomEmoji.translate(from, to)
+  end
+
   def automatic_assets
     css = styles.join("\n")
     js = javascripts.join("\n")
@@ -511,7 +524,7 @@ class Plugin::Instance
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
-        provider.send "#{sym}=", opts.delete(sym)
+        provider.send "#{sym}=", opts.delete(sym) if opts.has_key?(sym)
       end
 
       begin
@@ -619,11 +632,15 @@ class Plugin::Instance
 
       path = File.join(lib_locale_path, "message_format")
       opts[:message_format] = find_locale_file(locale_chain, path)
-      opts[:message_format] = JsLocaleHelper.find_message_format_locale(locale_chain, false) unless opts[:message_format]
+      opts[:message_format] = JsLocaleHelper.find_message_format_locale(locale_chain, fallback_to_english: false) unless opts[:message_format]
 
       path = File.join(lib_locale_path, "moment_js")
       opts[:moment_js] = find_locale_file(locale_chain, path)
       opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
+
+      path = File.join(lib_locale_path, "moment_js_timezones")
+      opts[:moment_js_timezones] = find_locale_file(locale_chain, path)
+      opts[:moment_js_timezones] = JsLocaleHelper.find_moment_locale(locale_chain, timezone_names: true) unless opts[:moment_js_timezones]
 
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)

@@ -20,7 +20,7 @@ const Group = RestModel.extend({
 
   @computed("automatic_membership_email_domains")
   emailDomains(value) {
-    return Em.isEmpty(value) ? "" : value;
+    return Ember.isEmpty(value) ? "" : value;
   },
 
   @computed("automatic")
@@ -37,7 +37,7 @@ const Group = RestModel.extend({
   },
 
   findMembers(params) {
-    if (Em.isEmpty(this.get("name"))) {
+    if (Ember.isEmpty(this.get("name"))) {
       return;
     }
 
@@ -257,7 +257,7 @@ const Group = RestModel.extend({
           p.user = User.create(p.user);
           p.topic = Topic.create(p.topic);
           p.category = Category.findById(p.category_id);
-          return Em.Object.create(p);
+          return Ember.Object.create(p);
         });
       }
     );

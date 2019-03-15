@@ -18,7 +18,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     if (!this.get("hasSelection")) {
       content.label = `<span>${I18n.t("groups.index.all")}</span>`;
@@ -34,7 +34,7 @@ export default ComboBoxComponent.extend({
       (this.currentUser && this.currentUser.get("staff"))
     ) {
       return `
-        <a href="${Discourse.getURL("/groups")}" class="group-dropdown-filter">
+        <a href="${Discourse.getURL("/g")}" class="group-dropdown-filter">
           ${I18n.t("groups.index.all").toLowerCase()}
         </a>
       `.htmlSafe();
@@ -43,7 +43,7 @@ export default ComboBoxComponent.extend({
 
   actions: {
     onSelect(groupName) {
-      DiscourseURL.routeTo(Discourse.getURL(`/groups/${groupName}`));
+      DiscourseURL.routeTo(Discourse.getURL(`/g/${groupName}`));
     }
   }
 });

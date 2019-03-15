@@ -178,5 +178,4 @@ if (!Array.prototype.find) {
     writable: true
   });
 }
-
 /* eslint-enable */

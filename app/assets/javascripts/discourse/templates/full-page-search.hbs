@@ -4,8 +4,8 @@
   <div class="search-advanced">
     {{#unless site.mobileView}}
       <div class="search-bar">
-        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" action="search" hasAutofocus=hasAutofocus}}
-        {{d-button action="search" icon="search" class="btn-primary search-cta" disabled=searching}}
+        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
+        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searching}}
       </div>
     {{/unless}}
 
@@ -34,8 +34,8 @@
         {{/if}}
 
         {{#if canBulkSelect}}
-          {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
-          {{bulk-select-button selected=selected action="search"}}
+          {{d-button icon="list" class="btn-default bulk-select" title="topics.bulk.toggle" action=(action "toggleBulkSelect")}}
+          {{bulk-select-button selected=selected action=(action "search")}}
         {{/if}}
 
         {{#if bulkSelectEnabled}}
@@ -62,7 +62,7 @@
    {{plugin-outlet name="full-page-search-below-search-info" args=(hash search=searchTerm)}}
 
     <div class="search-results">
-      {{#load-more selector=".fps-result" action="loadMore"}}
+      {{#load-more selector=".fps-result" action=(action "loadMore")}}
         {{#each model.posts as |result|}}
           <div class='fps-result'>
             <div class='author'>
@@ -163,8 +163,8 @@
   <div class="search-advanced-sidebar">
     {{#if site.mobileView}}
       <div class="search-bar">
-        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" action="search" hasAutofocus=hasAutofocus}}
-        {{d-button action="search" icon="search" class="btn-primary search-cta" disabled=searching}}
+        {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
+        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searching}}
       </div>
     {{/if}}
 
@@ -190,7 +190,7 @@
 
         {{d-button
           label="submit"
-          action="search"
+          action=(action "search")
           icon="search"
           class="btn-primary search-cta"
           disabled=searching}}

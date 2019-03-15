@@ -1,10 +1,12 @@
 {{#if isEditing}}
-  {{d-icon "pencil"}}
+  {{d-icon "pencil-alt"}}
 {{else}}
   {{composer-actions
     composerModel=model
     options=model.replyOptions
     canWhisper=canWhisper
+    openComposer=openComposer
+    closeComposer=closeComposer
     action=model.action
     tabindex=tabindex}}
 {{/if}}

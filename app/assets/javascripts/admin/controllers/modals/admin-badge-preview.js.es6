@@ -1,3 +1,4 @@
+import { default as computed } from "ember-addons/ember-computed-decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default Ember.Controller.extend({
@@ -5,43 +6,42 @@ export default Ember.Controller.extend({
   errors: Ember.computed.alias("model.errors"),
   count: Ember.computed.alias("model.grant_count"),
 
-  count_warning: function() {
-    if (this.get("count") <= 10) {
-      return this.get("sample.length") !== this.get("count");
+  @computed("count", "sample.length")
+  countWarning(count, sampleLength) {
+    if (count <= 10) {
+      return sampleLength !== count;
     } else {
-      return this.get("sample.length") !== 10;
+      return sampleLength !== 10;
     }
-  }.property("count", "sample.length"),
+  },
 
-  has_query_plan: function() {
-    return !!this.get("model.query_plan");
-  }.property("model.query_plan"),
+  @computed("model.query_plan")
+  hasQueryPlan(queryPlan) {
+    return !!queryPlan;
+  },
 
-  query_plan_html: function() {
-    var raw = this.get("model.query_plan"),
-      returned = "<pre class='badge-query-plan'>";
+  @computed("model.query_plan")
+  queryPlanHtml(queryPlan) {
+    let output = `<pre class="badge-query-plan">`;
 
-    raw.forEach(linehash => {
-      returned += escapeExpression(linehash["QUERY PLAN"]);
-      returned += "<br>";
+    queryPlan.forEach(linehash => {
+      output += escapeExpression(linehash["QUERY PLAN"]);
+      output += "<br>";
     });
 
-    returned += "</pre>";
-    return returned;
-  }.property("model.query_plan"),
+    output += "</pre>";
+    return output;
+  },
 
-  processed_sample: Ember.computed.map("model.sample", function(grant) {
-    var i18nKey = "admin.badges.preview.grant.with",
-      i18nParams = { username: escapeExpression(grant.username) };
+  processedSample: Ember.computed.map("model.sample", grant => {
+    let i18nKey = "admin.badges.preview.grant.with";
+    const i18nParams = { username: escapeExpression(grant.username) };
 
     if (grant.post_id) {
       i18nKey += "_post";
-      i18nParams.link =
-        "<a href='/p/" +
-        grant.post_id +
-        "' data-auto-route='true'>" +
-        Handlebars.Utils.escapeExpression(grant.title) +
-        "</a>";
+      i18nParams.link = `<a href="/p/${grant.post_id}" data-auto-route="true">
+        ${Handlebars.Utils.escapeExpression(grant.title)}
+      </a>`;
     }
 
     if (grant.granted_at) {

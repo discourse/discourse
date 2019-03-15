@@ -7,6 +7,8 @@ class ContentSecurityPolicy
 
     def initialize
       @directives = {}.tap do |directives|
+        directives[:base_uri] = [:none]
+        directives[:object_src] = [:none]
         directives[:script_src] = script_src
         directives[:worker_src] = worker_src
         directives[:report_uri] = report_uri if SiteSetting.content_security_policy_collect_reports

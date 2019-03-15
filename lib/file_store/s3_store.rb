@@ -19,12 +19,14 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+      url
     end
 
     def store_optimized_image(file, optimized_image, content_type = nil)
       path = get_path_for_optimized_image(optimized_image)
-      store_file(file, path, content_type: content_type)
+      url, optimized_image.etag = store_file(file, path, content_type: content_type)
+      url
     end
 
     # options
@@ -42,13 +44,14 @@ module FileStore
       }
       # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
-      # if this fails, it will throw an exception
 
       path.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
-      path = @s3_helper.upload(file, path, options)
 
-      # return the upload url
-      File.join(absolute_base_url, path)
+      # if this fails, it will throw an exception
+      path, etag = @s3_helper.upload(file, path, options)
+
+      # return the upload url and etag
+      return File.join(absolute_base_url, path), etag
     end
 
     def remove_file(url, path)
@@ -121,8 +124,14 @@ module FileStore
     end
 
     def list_missing_uploads(skip_optimized: false)
-      list_missing(Upload, "original/")
-      list_missing(OptimizedImage, "optimized/") unless skip_optimized
+      if SiteSetting.enable_s3_inventory
+        require 's3_inventory'
+        S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
+        S3Inventory.new(s3_helper, :optimized).backfill_etags_and_list_missing unless skip_optimized
+      else
+        list_missing(Upload.by_users, "original/")
+        list_missing(OptimizedImage, "optimized/") unless skip_optimized
+      end
     end
 
     private
@@ -137,7 +146,7 @@ module FileStore
         verified_ids = []
 
         files.each do |f|
-          id = model.where("url LIKE '%#{f.key}'").pluck(:id).first if f.size > 0
+          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pluck(:id).first
           verified_ids << id if id.present?
           marker = f.key
         end
@@ -147,7 +156,7 @@ module FileStore
         files = @s3_helper.list(prefix, marker)
       end
 
-      missing_uploads = model.where("id NOT IN (SELECT val FROM verified_ids)")
+      missing_uploads = model.joins('LEFT JOIN verified_ids ON verified_ids.val = id').where("verified_ids.val IS NULL")
       missing_count = missing_uploads.count
 
       if missing_count > 0

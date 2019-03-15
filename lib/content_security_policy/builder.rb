@@ -4,13 +4,14 @@ require_dependency 'content_security_policy/default'
 class ContentSecurityPolicy
   class Builder
     EXTENDABLE_DIRECTIVES = %i[
+      base_uri
+      object_src
       script_src
       worker_src
     ].freeze
 
     # Make extending these directives no-op, until core includes them in default CSP
     TO_BE_EXTENDABLE = %i[
-      base_uri
       connect_src
       default_src
       font_src
@@ -20,7 +21,6 @@ class ContentSecurityPolicy
       img_src
       manifest_src
       media_src
-      object_src
       prefetch_src
       style_src
     ].freeze
@@ -65,6 +65,8 @@ class ContentSecurityPolicy
       else
         @directives[directive] << sources
       end
+
+      @directives[directive].delete(:none) if @directives[directive].count > 1
     end
 
     def extendable?(directive)

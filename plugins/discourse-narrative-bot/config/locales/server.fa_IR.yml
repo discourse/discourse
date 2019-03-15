@@ -139,17 +139,7 @@ fa_IR:
     new_user_narrative:
       reset_trigger: "کاربر جدید"
       cert_title: "با توجه به اتمام موفقیت آمیز راهنمای جدید کاربران"
-      hello:
-        title: ":robot: با درود!"
       onebox:
-        instructions: |-
-          در ادامه، میتوانی یکی از پیوند های زیر را با من به اشتراک بگذاری؟ اگر طوری پاسخ بدهی که پیوند **تنها و بدون پس و پیش در یک خط** باشد، به طور اتوماتیک باز می‌شود و خلاصه ای از محتوای آن اضافه می‌گردد.
-
-          برای کپی کردن پیوند، در موبایل انگشتت را روی لینک نگه دار، و یا با موس کلیک راست کن.
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           عالی! این کار برای اکثر پیوندها <img src="%{base_uri}/images/font-awesome-link.png" width="16" height="16"> صدق میکنه. به یاد داشته باش که لینک بایستی در یک خط به تنهایی و _بدون پس و پیش_ قرار بگیرد.
         not_found: |-

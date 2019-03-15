@@ -3,6 +3,10 @@
 require_dependency 'distributed_cache'
 
 class Category < ActiveRecord::Base
+  self.ignored_columns = %w{
+    uploaded_meta_id
+  }
+
   include Searchable
   include Positionable
   include HasCustomFields
@@ -28,7 +32,6 @@ class Category < ActiveRecord::Base
   belongs_to :latest_post, class_name: "Post"
   belongs_to :uploaded_logo, class_name: "Upload"
   belongs_to :uploaded_background, class_name: "Upload"
-  belongs_to :uploaded_meta, class_name: "Upload"
 
   has_many :topics
   has_many :category_users
@@ -51,6 +54,8 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
 
   validate :ensure_slug
+
+  validate :permissions_compatibility_validator
 
   validates :auto_close_hours, numericality: { greater_than: 0, less_than_or_equal_to: 87600 }, allow_nil: true
 
@@ -109,6 +114,9 @@ class Category < ActiveRecord::Base
   # permission is just used by serialization
   # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
+
+  # Allows us to skip creating the category definition topic in tests.
+  attr_accessor :skip_category_definition
 
   @topic_id_cache = DistributedCache.new('category_topic_ids')
 
@@ -209,6 +217,8 @@ class Category < ActiveRecord::Base
   end
 
   def create_category_definition
+    return if skip_category_definition
+
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
     t.ignore_category_auto_close = true
@@ -575,6 +585,7 @@ class Category < ActiveRecord::Base
     url = +"#{Discourse.base_uri}/c"
     url << "/#{parent_category.slug}" if parent_category_id
     url << "/#{old_slug}"
+    url = Permalink.normalize_url(url)
 
     if Permalink.where(url: url).exists?
       Permalink.where(url: url).update_all(category_id: id)
@@ -623,6 +634,46 @@ class Category < ActiveRecord::Base
       true
     end
   end
+
+  def permissions_compatibility_validator
+    # when saving subcategories
+    if @permissions && parent_category_id.present?
+      return if parent_category.category_groups.empty?
+
+      parent_permissions = parent_category.category_groups.pluck(:group_id, :permission_type)
+      child_permissions = @permissions.empty? ? [[Group[:everyone].id, CategoryGroup.permission_types[:full]]] : @permissions
+      check_permissions_compatibility(parent_permissions, child_permissions)
+
+    # when saving parent category
+    elsif @permissions && subcategories.present?
+      return if @permissions.empty?
+
+      parent_permissions = @permissions
+      child_permissions = subcategories_permissions.uniq
+
+      check_permissions_compatibility(parent_permissions, child_permissions)
+    end
+  end
+
+  private
+
+  def check_permissions_compatibility(parent_permissions, child_permissions)
+    parent_groups = parent_permissions.map(&:first)
+
+    return if parent_groups.include?(Group[:everyone].id)
+
+    child_groups = child_permissions.map(&:first)
+    only_in_subcategory = child_groups - parent_groups
+
+    errors.add(:base, I18n.t("category.errors.permission_conflict")) if only_in_subcategory.present?
+  end
+
+  def subcategories_permissions
+    CategoryGroup.joins(:category)
+      .where(['categories.parent_category_id = ?', self.id])
+      .pluck(:group_id, :permission_type)
+      .uniq
+  end
 end
 
 # == Schema Information
@@ -666,7 +717,6 @@ end
 #  sort_ascending                    :boolean
 #  uploaded_logo_id                  :integer
 #  uploaded_background_id            :integer
-#  uploaded_meta_id                  :integer
 #  topic_featured_link_allowed       :boolean          default(TRUE)
 #  all_topics_wiki                   :boolean          default(FALSE), not null
 #  show_subcategory_list             :boolean          default(FALSE)
@@ -676,7 +726,7 @@ end
 #  default_top_period                :string(20)       default("all")
 #  mailinglist_mirror                :boolean          default(FALSE), not null
 #  suppress_from_latest              :boolean          default(FALSE)
-#  minimum_required_tags             :integer          default(0)
+#  minimum_required_tags             :integer          default(0), not null
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #
 # Indexes

@@ -15,6 +15,13 @@ fi:
         one: "ääni"
         other: "ääntä"
       average_rating: "Keskiarvo: <strong>%{average}</strong>"
+      public:
+        title: "Äänet ovat <strong>julkisia</strong>."
+      results:
+        vote:
+          title: "Näet äänet, kun <strong>olet äänestänyt</strong>."
+        closed:
+          title: "Tulokset näytetään äänestyksen <strong>sulkeuduttua</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -44,9 +51,6 @@ fi:
         title: "Sulje äänestys"
         label: "Sulje"
         confirm: "Suljetaanko äänestys?"
-      automatic_close:
-        closes_in: "sulkeutuu <strong>%{timeLeft}</strong>"
-        age: "sulkeutui <strong>%{age}</strong>"
       error_while_toggling_status: "Pahoittelut, äänestyksen tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Pahoittelut, ääntä annettaessa tapahtui virhe."
       error_while_fetching_voters: "Pahoittelut, äänestäneiden näyttämisessä tapahtui virhe."
@@ -62,6 +66,11 @@ fi:
           regular: Valitaan yksi
           multiple: Valitaan useita
           number: Numeroarviointi
+        poll_result:
+          label: Tulokset
+          always: Näkyvät aina
+          vote: Kun on äänestänyt
+          closed: Kun äänestys suljettu
         poll_config:
           max: Enint.
           min: Väh.

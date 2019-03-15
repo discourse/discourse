@@ -27,30 +27,32 @@ export default Ember.Component.extend({
     const self = this,
       currentTopicId = this.get("currentTopicId");
 
-    if (Em.isEmpty(title)) {
+    if (Ember.isEmpty(title)) {
       self.setProperties({ topics: null, loading: false });
       return;
     }
 
-    searchForTerm(title, { typeFilter: "topic", searchForId: true }).then(
-      function(results) {
-        if (results && results.posts && results.posts.length > 0) {
-          self.set(
-            "topics",
-            results.posts
-              .mapBy("topic")
-              .filter(t => t.get("id") !== currentTopicId)
-          );
-        } else {
-          self.setProperties({ topics: null, loading: false });
-        }
+    searchForTerm(title, {
+      typeFilter: "topic",
+      searchForId: true,
+      restrictToArchetype: "regular"
+    }).then(function(results) {
+      if (results && results.posts && results.posts.length > 0) {
+        self.set(
+          "topics",
+          results.posts
+            .mapBy("topic")
+            .filter(t => t.get("id") !== currentTopicId)
+        );
+      } else {
+        self.setProperties({ topics: null, loading: false });
       }
-    );
+    });
   }, 300),
 
   actions: {
     chooseTopic(topic) {
-      const topicId = Em.get(topic, "id");
+      const topicId = Ember.get(topic, "id");
       this.set("selectedTopicId", topicId);
       Ember.run.next(() =>
         $("#choose-topic-" + topicId).prop("checked", "true")

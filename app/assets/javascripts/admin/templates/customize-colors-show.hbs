@@ -11,7 +11,7 @@
       {{i18n "admin.customize.theme_owner"}}
       {{#link-to "adminCustomizeThemes.show" model.theme_id}}{{model.theme_name}}{{/link-to}}
       {{else}}
-      <button {{action "destroy"}} class='btn btn-danger'>{{d-icon "trash-o"}} {{i18n 'admin.customize.delete'}}</button>
+      <button {{action "destroy"}} class='btn btn-danger'>{{d-icon "far-trash-alt"}} {{i18n 'admin.customize.delete'}}</button>
       {{/if}}
       <span class="saving {{unless model.savingStatus 'hidden'}}">{{model.savingStatus}}</span>
     </div>

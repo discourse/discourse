@@ -53,7 +53,7 @@ et:
         bounced_email_error: "Meil on tagasipõrgatatud meili vearaport."
         screened_email_error: "Juhtub, kui saatja on varjestatud."
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "piirang on %{max} tähemärki; sina sisestasid %{length}."
       invalid_boolean: "Vigane tõeväärtus."
@@ -78,7 +78,7 @@ et:
       not_a_number: ei ole number
       not_an_integer: peab olema täisarv
       odd: peab olema paaritu
-      record_invalid: 'Valideerimine ebaõnnestus: %{errors}'
+      record_invalid: "Valideerimine ebaõnnestus: %{errors}"
       restrict_dependent_destroy:
         one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
         many: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
@@ -93,10 +93,10 @@ et:
         other: on vale pikkus (peaks olema %{count} tähemärki)
       other_than: "peab olema midagi muud, kui %{count}"
     template:
-      body: 'Järgmiste väljadega oli probleeme:'
+      body: "Järgmiste väljadega oli probleeme:"
       header:
         one: 1 viga takistas mudeli %{model} salvestamist
-        other: '%{count} viga takistasid mudeli %{model} salvestamist'
+        other: "%{count} viga takistasid mudeli %{model} salvestamist"
     embed:
       load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
     site_settings:
@@ -130,7 +130,6 @@ et:
     continue: "Jätka arutelu"
     error: "Sängitamine ebaõnnestus"
     referer: "Sissetulev link:"
-    mismatch: "Sissetulev link ei kattu ühegagi järgmistest hostidest:"
     no_hosts: "Sängitamiseks pole ühtegi hosti seadistatud."
     configure: "Sängitamise seadistamine"
     more_replies:
@@ -215,7 +214,7 @@ et:
     until_posts:
       one: "1 postitus"
       other: "%{count} postitust"
-    'new-topic': |
+    "new-topic": |
       Teretulemast saidile %{site_name} &mdash; **tänud uue vestluse alustamise eest!**
 
       - Kas pealkiri kõlab kuvitavalt kui sa seda kõvasti loed? Kas see on hea kokkuvõte?
@@ -225,7 +224,7 @@ et:
       - Lisa enim kasutatud sõnad oma teemasse et teised *leiaksid* selle üles. Et grupeerida oma teema teiste sarnaste teemadega vali liik.
 
       Rohkema info saamiseks [vaata meie kommuuni juhiseid](%{base_path}/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Teretulemast saidile %{site_name} &mdash; **täname osalemast!**
 
       - Kas sinu vastus parandab vestlust mingil moel?
@@ -240,8 +239,8 @@ et:
       category:
         name: "Liigi nimetus"
       topic:
-        title: 'Pealkiri'
-        featured_link: 'Põhiloo viide'
+        title: "Pealkiri"
+        featured_link: "Põhiloo viide"
       post:
         raw: "Sisu"
       user_profile:
@@ -285,23 +284,22 @@ et:
     title: "Teretulemast Discourse'i"
     body: |2
 
-        Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
+      Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
 
-        **Muuda see** enda kommuuni lühitutvustuseks:
+      **Muuda see** enda kommuuni lühitutvustuseks:
 
-        - Kellele see on?
-        - Mida siit leiab?
-        - Miks peaks keegi siia tulema?
-        - Kust saab rohkem infot (lingid, ressursid jne)?
+      - Kellele see on?
+      - Mida siit leiab?
+      - Miks peaks keegi siia tulema?
+      - Kust saab rohkem infot (lingid, ressursid jne)?
 
-        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
+      Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
     title: "Teretulemast Lounge'i"
   category:
     topic_prefix: "Liigist %{category}"
-    replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
     post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
     errors:
       not_found: "Kategooriat ei leitud!"
@@ -312,7 +310,6 @@ et:
       email_already_used_in_group: "Grupp '%{group_name}' juba kasutab meiliaadressi '%{email}'."
       email_already_used_in_category: "'%{email}' on juba liigi '%{category_name}' poolt kasutusse võetud."
     cannot_delete:
-      uncategorized: "Ei saa kustutada Liigitamata liiki"
       has_subcategories: "Seda foorumit ei saa kustutada, kuna tal on alamfoorumid."
       topic_exists_no_oldest: "Seda foorumit ei saa kustutada, kuna teemade arv on %{count}."
     uncategorized_description: "Teemad, mis ei vaja või mida ei saa liigitada ühegi olemasoleva foorumi alla."
@@ -416,9 +413,9 @@ et:
     no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
     choose_new: "Vali uus parool"
     choose: "Vali parool"
-    update: 'Uuenda parooli'
-    save: 'Määra Parool'
-    title: 'Uuenda Parool'
+    update: "Uuenda parooli"
+    save: "Määra Parool"
+    title: "Uuenda Parool"
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
   user_auth_tokens:
@@ -466,37 +463,37 @@ et:
     missing_session: "Me ei saa kontrollida kas Teie konto on loodud, palun kontrolli et brauseris oleks küpsised lubatud."
   post_action_types:
     off_topic:
-      title: 'Teemaväline'
-      description: 'Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada.'
-      long_form: 'tähistasin selle kui teemavälise'
+      title: "Teemaväline"
+      description: "Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada."
+      long_form: "tähistasin selle kui teemavälise"
     spam:
-      title: 'Spämm'
-      long_form: 'tähistasin selle kui spämmi'
+      title: "Spämm"
+      long_form: "tähistasin selle kui spämmi"
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Ebasünnis'
-      long_form: 'tähistasin selle kui sobimatu'
+      title: "Ebasünnis"
+      long_form: "tähistasin selle kui sobimatu"
     notify_user:
-      title: 'Saada kasutajale @{{username}} sõnum'
-      long_form: 'saatsin kasutajale sõnumi'
+      title: "Saada kasutajale @{{username}} sõnum"
+      long_form: "saatsin kasutajale sõnumi"
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Miski muu"
-      description: 'See postitus nõuab meeskonna tähelepanu eelpool loetlemata põhjusel.'
-      long_form: 'tähistasin selle kui meeskonna tähelepanu vajava'
+      description: "See postitus nõuab meeskonna tähelepanu eelpool loetlemata põhjusel."
+      long_form: "tähistasin selle kui meeskonna tähelepanu vajava"
       email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Järjehoidja'
-      description: 'Lisa sellele postitusele järjehoidja'
-      short_description: 'Lisa sellele postitusele järjehoidja'
-      long_form: 'lisasin sellele postitusele järjehoidja'
+      title: "Järjehoidja"
+      description: "Lisa sellele postitusele järjehoidja"
+      short_description: "Lisa sellele postitusele järjehoidja"
+      long_form: "lisasin sellele postitusele järjehoidja"
     like:
-      title: 'Laigi'
-      description: 'Laigi seda postitust'
-      long_form: 'laikis seda'
+      title: "Laigi"
+      description: "Laigi seda postitust"
+      long_form: "laikis seda"
   user_activity:
     no_default:
       others: "Tegevusi pole."
@@ -509,16 +506,16 @@ et:
       others: "Vastuseid pole."
   topic_flag_types:
     spam:
-      title: 'Spämm'
-      description: 'See teema on reklaam. See ei ole ei kasulik ega teemakohane.'
-      long_form: 'tähistasin selle kui spämmi'
-      short_description: 'See on reklaam'
+      title: "Spämm"
+      description: "See teema on reklaam. See ei ole ei kasulik ega teemakohane."
+      long_form: "tähistasin selle kui spämmi"
+      short_description: "See on reklaam"
     inappropriate:
-      title: 'Ebasobiv'
-      long_form: 'tähistasin selle kui sobimatu'
+      title: "Ebasobiv"
+      long_form: "tähistasin selle kui sobimatu"
     notify_moderators:
       title: "Miski muu"
-      long_form: 'tähistasin selle kui moderaatori tähelepanu vajava'
+      long_form: "tähistasin selle kui moderaatori tähelepanu vajava"
       email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -547,13 +544,11 @@ et:
         percent: Protsent
         day: Päev
     post_edits:
-      title: "Postituse muutmised"
       labels:
         post: Postitus
         author: Autor
         edit_reason: Põhjus
     moderators_activity:
-      title: "Modereerimise tegevus"
       labels:
         moderator: Moderaator
         time_read: Lugemise aeg
@@ -604,8 +599,6 @@ et:
       title: "Järjehoidjad"
       xaxis: "Päev"
       yaxis: "Uute järjehoidjate arv"
-    starred:
-      xaxis: "Päev"
     users_by_trust_level:
       xaxis: "Usaldustase"
       yaxis: "Kasutajate arv"
@@ -743,8 +736,8 @@ et:
       invalid_integer: "Väärtuseks peab olema täisarv."
   search:
     types:
-      category: 'Liigid'
-      user: 'Kasutajad'
+      category: "Liigid"
+      user: "Kasutajad"
   original_poster: "Esialgne postitaja"
   most_posts: "Enamus postitusi"
   most_recent_poster: "Viimane postitaja"
@@ -772,7 +765,7 @@ et:
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
-          %{message}
+        %{message}
     digest:
       new_topics: "Uued teemad"
       unread_messages: "Lugemata sõnumid"
@@ -801,12 +794,11 @@ et:
     search_title: "Otsi sellelt saidilt"
   terms_of_service:
     title: "Teenuse tingimused"
-  deleted: 'kustutatud'
+  deleted: "kustutatud"
   image: "pilt"
   upload:
     pasted_image_filename: "Asetatud pilt"
   color_schemes:
-    dark: "Tume skeem"
     default_theme_name: "Hele"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
@@ -938,8 +930,8 @@ et:
     submit_button: "Saada kiri"
   tags:
     title: "Sildid"
-    staff_tag_disallowed: "Sildi \"%{tag}\" võib lisada ainult meeskonna liige."
-    staff_tag_remove_disallowed: "Sildi \"%{tag}\" võib eemaldada ainult meeskonna liige."
+    staff_tag_disallowed: 'Sildi "%{tag}" võib lisada ainult meeskonna liige.'
+    staff_tag_remove_disallowed: 'Sildi "%{tag}" võib eemaldada ainult meeskonna liige.'
   rss_by_tag: "%{tag}-ga sildistatud teemad"
   finish_installation:
     congratulations: "Palju õnne, Discourse on paigaldatud!"
@@ -1002,13 +994,6 @@ et:
         title: "Organisatsioon"
       colors:
         title: "Kujundusteema"
-        fields:
-          theme_id:
-            choices:
-              default:
-                label: "Lihtne hele"
-              dark:
-                label: "Lihtne tume"
       logos:
         title: "Logod"
       icons:

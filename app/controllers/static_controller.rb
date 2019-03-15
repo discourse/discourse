@@ -9,6 +9,7 @@ class StaticController < ApplicationController
   skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
+  MODAL_PAGES = ['password_reset', 'signup']
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
@@ -69,6 +70,11 @@ class StaticController < ApplicationController
       return
     end
 
+    if MODAL_PAGES.include?(@page)
+      render html: nil, layout: true
+      return
+    end
+
     raise Discourse::NotFound
   end
 
@@ -103,32 +109,43 @@ class StaticController < ApplicationController
 
   FAVICON ||= -"favicon"
 
-  # We need to be able to draw our favicon on a canvas
-  # and pull it off the canvas into a data uri
-  # This can work by ensuring people set all the right CORS
-  # settings in the CDN asset, BUT its annoying and error prone
-  # instead we cache the favicon in redis and serve it out real quick with
-  # a huge expiry, we also cache these assets in nginx so it bypassed if needed
+  # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
+  # that draws the notification count on top of favicon (per user default off)
+  #
+  # With s3 the original upload is going to be stored at s3, we don't have a local copy of the favicon.
+  # To allow canvas to work with s3 we are going to need to add special CORS headers and use
+  # a special crossorigin hint on the original, this is not easily workable.
+  #
+  # Forcing all consumers to set magic CORS headers on a CDN is also not workable for us.
+  #
+  # So we cache the favicon in redis and serve it out real quick with
+  # a huge expiry, we also cache these assets in nginx so it is bypassed if needed
   def favicon
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.site_favicon_url, 60 * 30) do
-        begin
-          file = FileHelper.download(
-            UrlHelper.absolute(SiteSetting.site_favicon_url),
-            max_file_size: 50.kilobytes,
-            tmp_file_name: FAVICON,
-            follow_redirect: true
-          )
-          file ||= Tempfile.new([FAVICON, ".png"])
-          data = file.read
-          file.unlink
-          data
-        rescue => e
-          AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-          Rails.logger.debug("Invalid favicon_url #{SiteSetting.site_favicon_url}: #{e}\n#{e.backtrace}")
-          ""
+      data = DistributedMemoizer.memoize("FAVICON#{SiteSetting.site_favicon_url}", 60 * 30) do
+        favicon = SiteSetting.favicon
+        next "" unless favicon
+
+        if Discourse.store.external?
+          begin
+            file = FileHelper.download(
+              UrlHelper.absolute(favicon.url),
+              max_file_size: favicon.filesize,
+              tmp_file_name: FAVICON,
+              follow_redirect: true
+            )
+
+            file&.read || ""
+          rescue => e
+            AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
+            Rails.logger.warn("Failed to fetch faivcon #{favicon.url}: #{e}\n#{e.backtrace}")
+          ensure
+            file&.unlink
+          end
+        else
+          File.read(Rails.root.join("public", favicon.url[1..-1]))
         end
       end
 

@@ -69,7 +69,7 @@ class IncomingLinksReport
   end
 
   def self.per_user(start_date:, end_date:, category_id:)
-    @per_user_query ||= public_incoming_links(category_id: category_id)
+    public_incoming_links(category_id: category_id)
       .where('incoming_links.created_at > ? AND incoming_links.created_at < ? AND incoming_links.user_id IS NOT NULL', start_date, end_date)
       .joins(:user)
       .group('users.username')

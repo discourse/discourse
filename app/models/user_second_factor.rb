@@ -5,6 +5,10 @@ class UserSecondFactor < ActiveRecord::Base
     where(method: UserSecondFactor.methods[:backup_codes], enabled: true)
   end
 
+  scope :totps, -> do
+    where(method: UserSecondFactor.methods[:totp], enabled: true)
+  end
+
   def self.methods
     @methods ||= Enum.new(
       totp: 1,

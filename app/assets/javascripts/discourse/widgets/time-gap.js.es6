@@ -16,7 +16,7 @@ function description(attrs) {
 }
 
 export default createWidget("time-gap", {
-  tagName: "div.time-gap.small-action.clearfix",
+  tagName: "div.time-gap.small-action",
 
   html(attrs) {
     return [

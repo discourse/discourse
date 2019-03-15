@@ -580,8 +580,9 @@ describe PostCreator do
 
       it "returns blank for another post with the same content" do
         creator.create
-        new_post_creator.create
-        expect(new_post_creator.errors).to be_present
+        post = new_post_creator.create
+
+        expect(post.errors[:raw]).to include(I18n.t(:just_posted_that))
       end
 
       it "returns a post for admins" do
@@ -775,6 +776,28 @@ describe PostCreator do
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
     end
+
+    it 'does not increase posts count for small actions' do
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user))
+
+      Fabricate(:post, topic: topic)
+
+      1.upto(3) do |i|
+        user = Fabricate(:user)
+        topic.invite(topic.user, user.username)
+        topic.reload
+        expect(topic.posts_count).to eq(1)
+        expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
+      end
+
+      Fabricate(:post, topic: topic)
+      Topic.reset_highest(topic.id)
+      expect(topic.reload.posts_count).to eq(2)
+
+      Fabricate(:post, topic: topic)
+      Topic.reset_all_highest!
+      expect(topic.reload.posts_count).to eq(3)
+    end
   end
 
   context "warnings" do
@@ -879,7 +902,7 @@ describe PostCreator do
     end
 
     it 'can post to a group correctly' do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
 
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)
@@ -1234,6 +1257,40 @@ describe PostCreator do
         )
         expect(pc).to be_valid
         expect(pc.errors).to be_blank
+      end
+    end
+  end
+
+  context "#create_post_notice" do
+    let(:user) { Fabricate(:user) }
+    let(:staged) { Fabricate(:staged) }
+
+    it "generates post notices for new users" do
+      post = PostCreator.create(user, title: "one of my first topics", raw: "one of my first posts")
+      expect(post.custom_fields["post_notice_type"]).to eq("first")
+      post = PostCreator.create(user, title: "another one of my first topics", raw: "another one of my first posts")
+      expect(post.custom_fields["post_notice_type"]).to eq(nil)
+    end
+
+    it "generates post notices for returning users" do
+      SiteSetting.returning_users_days = 30
+      old_post = Fabricate(:post, user: user, created_at: 31.days.ago)
+
+      post = PostCreator.create(user, title: "this is a returning topic", raw: "this is a post")
+      expect(post.custom_fields["post_notice_type"]).to eq("returning")
+      expect(post.custom_fields["post_notice_time"]).to eq(old_post.created_at.iso8601)
+
+      post = PostCreator.create(user, title: "this is another topic", raw: "this is my another post")
+      expect(post.custom_fields["post_notice_type"]).to eq(nil)
+      expect(post.custom_fields["post_notice_time"]).to eq(nil)
+    end
+
+    it "does not generate for non-human or staged users" do
+      [Discourse.system_user, staged].each do |user|
+        expect(user.posts.size).to eq(0)
+        post = PostCreator.create(user, title: "#{user.name}'s first topic", raw: "#{user.name}'s first post")
+        expect(post.custom_fields["post_notice_type"]).to eq(nil)
+        expect(post.custom_fields["post_notice_time"]).to eq(nil)
       end
     end
   end

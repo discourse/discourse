@@ -4,12 +4,15 @@ export default Ember.Component.extend({
   // subclasses need this
   layoutName: "components/d-button",
 
+  form: null,
+
   tagName: "button",
   classNameBindings: [":btn", "noText", "btnType"],
   attributeBindings: [
+    "form",
     "disabled",
     "translatedTitle:title",
-    "translatedTitle:aria-label",
+    "translatedLabel:aria-label",
     "tabindex"
   ],
 
@@ -37,7 +40,17 @@ export default Ember.Component.extend({
   },
 
   click() {
-    this.sendAction("action", this.get("actionParam"));
+    if (typeof this.get("action") === "string") {
+      this.sendAction("action", this.get("actionParam"));
+    } else if (
+      typeof this.get("action") === "object" &&
+      this.get("action").value
+    ) {
+      this.get("action").value(this.get("actionParam"));
+    } else if (typeof this.get("action") === "function") {
+      this.get("action")(this.get("actionParam"));
+    }
+
     return false;
   }
 });

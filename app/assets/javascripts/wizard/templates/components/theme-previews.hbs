@@ -4,11 +4,11 @@
       {{theme-preview colorsId=choice.id
                       wizard=wizard
                       selectedId=field.value
-                      onChange="changed"}}
+                      onChange=(action "changed")}}
       {{radio-button radioValue=choice.id
                      label=choice.id
                      value=field.value
-                     onChange="changed"}}
+                     onChange=(action "changed")}}
     </li>
   {{/each}}
 </ul>

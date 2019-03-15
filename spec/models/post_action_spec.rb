@@ -160,6 +160,26 @@ describe PostAction do
       expect(PostAction.flagged_posts_count).to eq(1)
     end
 
+    it "tl3 hidden posts will supersede min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      codinghorror.update_column(:trust_level, 3)
+      post.user.update_column(:trust_level, 0)
+      PostAction.act(codinghorror, post, PostActionType.types[:spam])
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
+    it "tl4 hidden posts will supersede min_flags_staff_visibility" do
+      SiteSetting.min_flags_staff_visibility = 2
+      expect(PostAction.flagged_posts_count).to eq(0)
+
+      codinghorror.update_column(:trust_level, 4)
+      PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
+
+      expect(PostAction.flagged_posts_count).to eq(1)
+    end
+
     it "should reset counts when a topic is deleted" do
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
       post.topic.trash!
@@ -255,28 +275,316 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
-
-    it 'should generate notifications correctly' do
-
+    before do
       PostActionNotifier.enable
+    end
+
+    it 'should generate and remove notifications correctly' do
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+
+      expect(Notification.count).to eq(1)
+
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
+
+      PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+
+      expect(Notification.count).to eq(0)
 
       PostAction.act(codinghorror, post, PostActionType.types[:like])
-      expect(Notification.count).to eq(1)
-
-      mutee = Fabricate(:user)
-
-      post = Fabricate(:post)
-      MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
-      PostAction.act(mutee, post, PostActionType.types[:like])
 
       expect(Notification.count).to eq(1)
 
-      # you can not mute admin, sorry
-      MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
+    end
+
+    it 'should not notify when never is selected' do
+      post.user.user_option.update!(
+        like_notification_frequency:
+          UserOption.like_notification_frequency_type[:never]
+      )
+
+      expect do
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it 'notifies on likes correctly' do
+      PostAction.act(eviltrout, post, PostActionType.types[:like])
       PostAction.act(admin, post, PostActionType.types[:like])
 
-      expect(Notification.count).to eq(2)
+      # one like
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
 
+      post.user.user_option.update!(
+        like_notification_frequency: UserOption.like_notification_frequency_type[:always]
+      )
+
+      admin2 = Fabricate(:admin)
+
+      # Travel 1 hour in time to test that order post_actions by `created_at`
+      freeze_time 1.hour.from_now
+
+      expect do
+        PostAction.act(admin2, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+
+      # adds info to the notification
+      notification = Notification.find_by(
+        post_number: 1,
+        topic_id: post.topic_id
+      )
+
+      expect(notification.data_hash["count"].to_i).to eq(2)
+      expect(notification.data_hash["username2"]).to eq(eviltrout.username)
+
+      # this is a tricky thing ... removing a like should fix up the notifications
+      PostAction.remove_act(eviltrout, post, PostActionType.types[:like])
+
+      # rebuilds the missing notification
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(1)
+
+      notification = Notification.find_by(
+        post_number: 1,
+        topic_id: post.topic_id
+      )
+
+      expect(notification.data_hash["count"]).to eq(2)
+      expect(notification.data_hash["username"]).to eq(admin2.username)
+      expect(notification.data_hash["username2"]).to eq(admin.username)
+
+      post.user.user_option.update!(
+        like_notification_frequency:
+        UserOption.like_notification_frequency_type[:first_time_and_daily]
+      )
+
+      # this gets skipped
+      admin3 = Fabricate(:admin)
+      PostAction.act(admin3, post, PostActionType.types[:like])
+
+      freeze_time 2.days.from_now
+
+      admin4 = Fabricate(:admin)
+      PostAction.act(admin4, post, PostActionType.types[:like])
+
+      # first happend within the same day, no need to notify
+      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
+        .to eq(2)
+    end
+
+    describe 'likes consolidation' do
+      let(:liker) { Fabricate(:user) }
+      let(:liker2) { Fabricate(:user) }
+      let(:likee) { Fabricate(:user) }
+
+      it "can be disabled" do
+        SiteSetting.likes_notification_consolidation_threshold = 0
+
+        expect do
+          PostAction.act(
+            liker,
+            Fabricate(:post, user: likee),
+            PostActionType.types[:like]
+          )
+        end.to change { likee.reload.notifications.count }.by(1)
+
+        SiteSetting.likes_notification_consolidation_threshold = 1
+
+        expect do
+          PostAction.act(
+            liker,
+            Fabricate(:post, user: likee),
+            PostActionType.types[:like]
+          )
+        end.to_not change { likee.reload.notifications.count }
+      end
+
+      describe 'frequency first_time_and_daily' do
+        before do
+          likee.user_option.update!(
+            like_notification_frequency:
+              UserOption.like_notification_frequency_type[:first_time_and_daily]
+          )
+        end
+
+        it 'should consolidate likes notification when the threshold is reached' do
+          SiteSetting.likes_notification_consolidation_threshold = 2
+
+          expect do
+            3.times do
+              PostAction.act(
+                liker,
+                Fabricate(:post, user: likee),
+                PostActionType.types[:like]
+              )
+            end
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+
+          expect(notification.notification_type).to eq(
+            Notification.types[:liked_consolidated]
+          )
+
+          data = JSON.parse(notification.data)
+
+          expect(data["username"]).to eq(liker.username)
+          expect(data["display_username"]).to eq(liker.username)
+          expect(data["count"]).to eq(3)
+
+          notification.update!(read: true)
+
+          expect do
+            2.times do
+              PostAction.act(
+                liker,
+                Fabricate(:post, user: likee),
+                PostActionType.types[:like]
+              )
+            end
+          end.to_not change { likee.reload.notifications.count }
+
+          data = JSON.parse(notification.reload.data)
+
+          expect(notification.read).to eq(false)
+          expect(data["count"]).to eq(5)
+
+          # Like from a different user shouldn't be consolidated
+          expect do
+            PostAction.act(
+              Fabricate(:user),
+              Fabricate(:post, user: likee),
+              PostActionType.types[:like]
+            )
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+
+          expect(notification.notification_type).to eq(
+            Notification.types[:liked]
+          )
+
+          freeze_time((
+            SiteSetting.likes_notification_consolidation_window_mins.minutes +
+            1
+          ).since)
+
+          expect do
+            PostAction.act(
+              liker,
+              Fabricate(:post, user: likee),
+              PostActionType.types[:like]
+            )
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+
+          expect(notification.notification_type).to eq(Notification.types[:liked])
+        end
+      end
+
+      describe 'frequency always' do
+        before do
+          likee.user_option.update!(
+            like_notification_frequency:
+              UserOption.like_notification_frequency_type[:always]
+          )
+        end
+
+        it 'should consolidate liked notifications when threshold is reached' do
+          SiteSetting.likes_notification_consolidation_threshold = 2
+
+          post = Fabricate(:post, user: likee)
+
+          expect do
+            [liker2, liker].each do |user|
+              PostAction.act(user, post, PostActionType.types[:like])
+            end
+          end.to change { likee.reload.notifications.count }.by(1)
+
+          notification = likee.notifications.last
+          data_hash = notification.data_hash
+
+          expect(data_hash["original_username"]).to eq(liker.username)
+          expect(data_hash["username2"]).to eq(liker2.username)
+          expect(data_hash["count"].to_i).to eq(2)
+
+          expect do
+            2.times do
+              PostAction.act(
+                liker,
+                Fabricate(:post, user: likee),
+                PostActionType.types[:like]
+              )
+            end
+          end.to change { likee.reload.notifications.count }.by(2)
+
+          expect(likee.notifications.pluck(:notification_type).uniq)
+            .to contain_exactly(Notification.types[:liked])
+
+          expect do
+            PostAction.act(
+              liker,
+              Fabricate(:post, user: likee),
+              PostActionType.types[:like]
+            )
+          end.to change { likee.reload.notifications.count }.by(-1)
+
+          notification = likee.notifications.last
+
+          expect(notification.notification_type).to eq(
+            Notification.types[:liked_consolidated]
+          )
+
+          expect(notification.data_hash["count"].to_i).to eq(3)
+          expect(notification.data_hash["username"]).to eq(liker.username)
+        end
+      end
+    end
+
+    it "should not generate a notification if liker has been muted" do
+      mutee = Fabricate(:user)
+      MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
+
+      expect do
+        PostAction.act(mutee, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it 'should not generate a notification if liker has the topic muted' do
+      post = Fabricate(:post, user: eviltrout)
+
+      TopicUser.create!(
+        topic: post.topic,
+        user: eviltrout,
+        notification_level: TopicUser.notification_levels[:muted]
+      )
+
+      expect do
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
+      end.to_not change { Notification.count }
+    end
+
+    it "should generate a notification if liker is an admin irregardles of \
+      muting" do
+
+      MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
+
+      expect do
+        PostAction.act(admin, post, PostActionType.types[:like])
+      end.to change { Notification.count }.by(1)
+
+      notification = Notification.last
+
+      expect(notification.user_id).to eq(post.user_id)
+      expect(notification.notification_type).to eq(Notification.types[:liked])
     end
 
     it 'should increase the `like_count` and `like_score` when a user likes something' do
@@ -295,18 +603,21 @@ describe PostAction do
       post.reload
       expect(post.like_count).to eq(2)
       expect(post.like_score).to eq(4)
+      expect(post.topic.like_count).to eq(2)
 
       # Removing likes
       PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
       post.reload
       expect(post.like_count).to eq(1)
       expect(post.like_score).to eq(3)
+      expect(post.topic.like_count).to eq(1)
       expect(value_for(codinghorror.id, Date.today)).to eq(0)
 
       PostAction.remove_act(moderator, post, PostActionType.types[:like])
       post.reload
       expect(post.like_count).to eq(0)
       expect(post.like_score).to eq(0)
+      expect(post.topic.like_count).to eq(0)
     end
 
     it "shouldn't change given_likes unless likes are given or removed" do
@@ -327,25 +638,6 @@ describe PostAction do
         actual_count = value_for(codinghorror.id, Date.today)
         expect(actual_count).to eq(1), "Expected likes_given to be 1 when removing '#{type_name}', but got #{actual_count}"
       end
-    end
-
-    it 'should increase the like counts when a user votes' do
-      expect {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.reload
-      }.to change(post, :like_count).by(1)
-    end
-
-    it 'should increase the forum topic vote count when a user votes' do
-      expect {
-        PostAction.act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.to change(post.topic, :like_count).by(1)
-
-      expect {
-        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
-        post.topic.reload
-      }.to change(post.topic, :like_count).by(-1)
     end
   end
 
@@ -532,6 +824,12 @@ describe PostAction do
 
       expect(post.hidden).to be_falsey
 
+      post = create_post(user: user)
+      PostAction.act(Fabricate(:moderator), post, post_action_type)
+      post.reload
+
+      expect(post.hidden).to be_falsey
+
       user = Fabricate(:trust_level_4)
       post = create_post(user: user)
       PostAction.act(tl4_user, post, post_action_type)
@@ -569,54 +867,124 @@ describe PostAction do
       expect(post.hidden).to eq(false)
     end
 
-    it "will automatically pause a topic due to large community flagging" do
-      SiteSetting.flags_required_to_hide_post = 0
-      SiteSetting.num_flags_to_close_topic = 3
-      SiteSetting.num_flaggers_to_close_topic = 2
-      SiteSetting.num_hours_to_close_topic = 1
+    context "topic auto closing" do
+      let(:topic) { Fabricate(:topic) }
+      let(:post1) { create_post(topic: topic) }
+      let(:post2) { create_post(topic: topic) }
+      let(:post3) { create_post(topic: topic) }
 
-      topic = Fabricate(:topic)
-      post1 = create_post(topic: topic)
-      post2 = create_post(topic: topic)
-      post3 = create_post(topic: topic)
+      let(:flagger1) { Fabricate(:user) }
+      let(:flagger2) { Fabricate(:user) }
 
-      flagger1 = Fabricate(:user)
-      flagger2 = Fabricate(:user)
-
-      # reaching `num_flaggers_to_close_topic` isn't enough
-      [flagger1, flagger2].each do |flagger|
-        PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+      before do
+        SiteSetting.flags_required_to_hide_post = 0
+        SiteSetting.num_flags_to_close_topic = 3
+        SiteSetting.num_flaggers_to_close_topic = 2
+        SiteSetting.num_hours_to_close_topic = 1
       end
 
-      expect(topic.reload.closed).to eq(false)
+      it "will automatically pause a topic due to large community flagging" do
+        # reaching `num_flaggers_to_close_topic` isn't enough
+        [flagger1, flagger2].each do |flagger|
+          PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+        end
 
-      # clean up
-      PostAction.where(post: post1).delete_all
+        expect(topic.reload.closed).to eq(false)
 
-      # reaching `num_flags_to_close_topic` isn't enough
-      [post1, post2, post3].each do |post|
-        PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
-      end
+        # clean up
+        PostAction.where(post: post1).delete_all
 
-      expect(topic.reload.closed).to eq(false)
-
-      # clean up
-      PostAction.where(post: [post1, post2, post3]).delete_all
-
-      # reaching both should close the topic
-      [flagger1, flagger2].each do |flagger|
+        # reaching `num_flags_to_close_topic` isn't enough
         [post1, post2, post3].each do |post|
-          PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
+        end
+
+        expect(topic.reload.closed).to eq(false)
+
+        # clean up
+        PostAction.where(post: [post1, post2, post3]).delete_all
+
+        # reaching both should close the topic
+        [flagger1, flagger2].each do |flagger|
+          [post1, post2, post3].each do |post|
+            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          end
+        end
+
+        expect(topic.reload.closed).to eq(true)
+
+        topic_status_update = TopicTimer.last
+
+        expect(topic_status_update.topic).to eq(topic)
+        expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
+        expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
+      end
+
+      context "on a staff post" do
+        let(:staff_user) { Fabricate(:user, moderator: true) }
+        let(:topic) { Fabricate(:topic, user: staff_user) }
+
+        it "will not close topics opened by staff" do
+          [flagger1, flagger2].each do |flagger|
+            [post1, post2, post3].each do |post|
+              PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+            end
+          end
+
+          expect(topic.reload.closed).to eq(false)
         end
       end
 
-      expect(topic.reload.closed).to eq(true)
+      it "will keep the topic in closed status until the community flags are handled" do
+        freeze_time
 
-      topic_status_update = TopicTimer.last
+        SiteSetting.num_flaggers_to_close_topic = 1
+        SiteSetting.num_flags_to_close_topic = 1
 
-      expect(topic_status_update.topic).to eq(topic)
-      expect(topic_status_update.execute_at).to be_within(1.second).of(1.hour.from_now)
-      expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
+        post = Fabricate(:post, topic: topic)
+        PostAction.act(flagger1, post, PostActionType.types[:spam])
+        expect(topic.reload.closed).to eq(true)
+
+        timer = TopicTimer.last
+        expect(timer.execute_at).to eq(1.hour.from_now)
+
+        freeze_time timer.execute_at
+        Jobs.expects(:enqueue_in).with(
+          1.hour.to_i,
+          :toggle_topic_closed,
+          topic_timer_id: timer.id,
+          state: false
+        ).returns(true)
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect(topic.reload.closed).to eq(true)
+        expect(timer.reload.execute_at).to eq(1.hour.from_now)
+
+        freeze_time timer.execute_at
+        SiteSetting.num_flaggers_to_close_topic = 10
+        SiteSetting.num_flags_to_close_topic = 10
+
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
+
+        expect(topic.reload.closed).to eq(false)
+      end
+
+      it "will reopen topic after the flags are auto handled" do
+        freeze_time
+        [flagger1, flagger2].each do |flagger|
+          [post1, post2, post3].each do |post|
+            PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+          end
+        end
+
+        expect(topic.reload.closed).to eq(true)
+
+        freeze_time 61.days.from_now
+        Jobs::AutoQueueHandler.new.execute({})
+        Jobs::ToggleTopicClosed.new.execute(topic_timer_id: TopicTimer.last.id, state: false)
+
+        expect(topic.reload.closed).to eq(false)
+      end
     end
 
   end
@@ -704,7 +1072,7 @@ describe PostAction do
     end
 
     it "should create a notification in the related topic" do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:spam], message: "WAT")
@@ -721,7 +1089,7 @@ describe PostAction do
     end
 
     it "should not add a moderator post when post is flagged via private message" do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:notify_user], message: "WAT")

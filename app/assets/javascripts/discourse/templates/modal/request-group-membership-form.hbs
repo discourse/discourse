@@ -13,9 +13,9 @@
     {{d-button class="btn-primary"
         disabled=disableSubmit
         label="groups.membership_request.submit"
-        action="requestMember"}}
+        action=(action "requestMember")}}
 
-    {{d-modal-cancel close=(action "closeModal")}}
+    {{d-modal-cancel close=(route-action "closeModal")}}
     {{conditional-loading-spinner size="small" condition=loading}}
   </div>
 </form>

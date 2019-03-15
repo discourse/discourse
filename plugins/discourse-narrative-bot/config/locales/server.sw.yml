@@ -138,16 +138,8 @@ sw:
       reset_trigger: "mtumiaji mpya"
       cert_title: "Utambulisho wa kumaliza mafunzo ya mtumiaji mpya"
       hello:
-        title: ":robot: Habari!"
+        title: "Habari!"
       onebox:
-        instructions: |-
-          Baada ya hapo, je unaweza kunipa hivi viungo na mimi? Jibu na **kila kiungo kwenye mstari wake**, na itaongezeka kuonyesha muhtasari kuhusiana na hicho kiungo.
-
-          Kunakili kiungo, bonyeza bila kuachia kwenye simu yako ya mkononi, au bonyeza upande wa kulia wa puku ya komputa yako:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Vizuri! Hii itafaa kwa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> viungo. Kumbuka, inabidi kiwe kwenye mstari mmoja _yenyewe_, bila maneno yoyote mbele, au nyuma yake.
         not_found: |-
@@ -200,7 +192,6 @@ sw:
 
           Chagua maneno yoyote &uarr; nukulu unayopendelea, na bonyeza kitufe cha **Nukulu** kitakacho tokea - au kifute cha **Jibu** chini kabisa ya hizi taariga.
 
-
           Chini ya nukulu, andika neno moja au mawili kwa nini umechagua nukulu hiyo, kwa sababu ningependa kujua :thinking:
         reply: |-
           Umefanya vizuri, umechagua nukulu ninayoipenda pia! :left_speech_bubble:
@@ -252,6 +243,8 @@ sw:
           > :imp: Nimeandika kitu ambacho hakifai
 
           Nadhani unajua chakufanya, **Bonyeza hiyo bendera**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> kuashiria kuwa kuna tatizo na ujumbe uliosoma!
+        reply: |-
+          [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
         not_found: |-
           Jamani, taarifa yangu chafu nilioandika bado haijapewa bendera. :worried: Unaweza ukamjulisha mtu kuwa ni chafu kwa kutumia **flag**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Usisahau kutumia kitufe za zaidi<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">kuonyesha vitendo zaidi kwa ajili ya kila taarifa.
       search:

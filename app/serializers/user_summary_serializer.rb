@@ -18,8 +18,16 @@ class UserSummarySerializer < ApplicationSerializer
     end
   end
 
-  class UserWithCountSerializer < BasicUserSerializer
-    attributes :count, :name
+  class UserWithCountSerializer < ApplicationSerializer
+    attributes :id, :username, :name, :count, :avatar_template
+
+    def include_name?
+      SiteSetting.enable_names?
+    end
+
+    def avatar_template
+      User.avatar_template(object[:username], object[:uploaded_avatar_id])
+    end
   end
 
   class CategoryWithCountsSerializer < ApplicationSerializer

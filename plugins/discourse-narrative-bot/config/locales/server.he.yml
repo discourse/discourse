@@ -139,17 +139,6 @@ he:
     new_user_narrative:
       reset_trigger: "משתמש/ת חדש/ה"
       cert_title: "כהוקרה על סיום מוצלח של מדריך המשתמשים החדש"
-      hello:
-        title: ":robot: ברכות!"
-      onebox:
-        instructions: |-
-          כעת, האם תוכלו לשתף את אחד הקישורים האלו איתי? השיבו עם **קישור בשורה בפני עצמו**, והוא יפתח לכלול סיכום.
-
-          להעתקת קישור, לחצו והחזיקו במכשיר נייד, או לחצו עם הכפתור הימני של העכבר:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
       images:
         reply: |-
           תמונה שווה - לחצתי על כפתור :heart: הלייק כדי שתדעו כמה אני מעריך זאת :heart_eyes:

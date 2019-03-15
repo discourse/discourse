@@ -128,6 +128,12 @@ describe ThemeSettingsManager do
 
       expect { string_setting.value = ("a" * 21) }.to raise_error(Discourse::InvalidParameters)
     end
+
+    it "can be a textarea" do
+      string_setting = find_by_name(:string_setting_02)
+      expect(find_by_name(:string_setting_02).textarea).to eq(false)
+      expect(find_by_name(:string_setting_03).textarea).to eq(true)
+    end
   end
 
   context "List" do

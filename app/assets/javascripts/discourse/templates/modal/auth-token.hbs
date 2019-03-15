@@ -7,8 +7,8 @@
   <div>
     <h3>{{i18n 'user.auth_tokens.details'}}</h3>
     <ul style="list-style-type:none">
-      <li>{{d-icon "clock-o"}} {{format-date model.seen_at}}</li>
-      <li>{{d-icon "map-marker"}} {{model.location}}</li>
+      <li>{{d-icon "far-clock"}} {{format-date model.seen_at}}</li>
+      <li>{{d-icon "map-marker-alt"}} {{model.location}}</li>
       <li>{{d-icon model.icon}} {{i18n "user.auth_tokens.browser_and_device" browser=model.browser device=model.device}}</li>
     </ul>
   </div>
@@ -30,6 +30,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button class="btn btn-primary" icon="lock" label="user.auth_tokens.secure_account" action="highlightSecure"}}
-  {{d-modal-cancel close=(action "closeModal")}}
+  {{d-button class="btn btn-primary" icon="lock" label="user.auth_tokens.secure_account" action=(action "highlightSecure")}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

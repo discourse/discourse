@@ -1,19 +1,19 @@
 production:
-    rails:
-        server:
-            unique_name: frontend
-        configuration:
-            ignore_missing_schema: true
+  rails:
+    server:
+      unique_name: frontend
+    configuration:
+      ignore_missing_schema: true
 staging:
-    rails:
-        server:
-            unique_name: frontend
-        configuration:
-            ignore_missing_schema: true
+  rails:
+    server:
+      unique_name: frontend
+    configuration:
+      ignore_missing_schema: true
 development:
-    rails:
-        server:
-            unique_name: frontend
-        configuration:
-            use_asset_pipeline: false
-            ignore_missing_schema: true
+  rails:
+    server:
+      unique_name: frontend
+    configuration:
+      use_asset_pipeline: false
+      ignore_missing_schema: true

@@ -88,8 +88,12 @@ class Group < ActiveRecord::Base
   validates :mentionable_level, inclusion: { in: ALIAS_LEVELS.values }
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
-  scope :visible_groups, Proc.new { |user, order|
-    groups = Group.order(order || "name ASC").where("groups.id > 0")
+  scope :visible_groups, Proc.new { |user, order, opts|
+    groups = Group.order(order || "name ASC")
+
+    if !opts || !opts[:include_everyone]
+      groups = groups.where("groups.id > 0")
+    end
 
     unless user&.admin
       sql = <<~SQL
@@ -275,10 +279,10 @@ class Group < ActiveRecord::Base
     end
 
     # don't allow shoddy localization to break this
-    localized_name = I18n.t("groups.default_names.#{name}").downcase
+    localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale).downcase
     validator = UsernameValidator.new(localized_name)
 
-    if !Group.where("LOWER(name) = ?", localized_name).exists? && validator.valid_format?
+    if validator.valid_format? && !User.username_exists?(localized_name)
       group.name = localized_name
     end
 
@@ -286,7 +290,7 @@ class Group < ActiveRecord::Base
     # way to have the membership in a table
     case name
     when :everyone
-      group.visibility_level = Group.visibility_levels[:owners]
+      group.visibility_level = Group.visibility_levels[:staff]
       group.save!
       return group
     when :moderators
@@ -622,15 +626,8 @@ class Group < ActiveRecord::Base
     UsernameValidator.perform_validation(self, 'name') || begin
       name_lower = self.name.downcase
 
-      if self.will_save_change_to_name? && self.name_was&.downcase != name_lower
-
-        existing = DB.exec(
-          User::USERNAME_EXISTS_SQL, username: name_lower
-        ) > 0
-
-        if existing
-          errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
-        end
+      if self.will_save_change_to_name? && self.name_was&.downcase != name_lower && User.username_exists?(name_lower)
+        errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
       end
     end
   end

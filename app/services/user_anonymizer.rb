@@ -26,7 +26,6 @@ class UserAnonymizer
 
       @user.reload
       @user.password = SecureRandom.hex
-      @user.email = "#{@user.username}@anonymized.invalid"
       @user.name = SiteSetting.full_name_required ? @user.username : nil
       @user.date_of_birth = nil
       @user.title = nil
@@ -37,7 +36,8 @@ class UserAnonymizer
         @user.registration_ip_address = @opts[:anonymize_ip]
       end
 
-      @user.save
+      @user.save!
+      @user.primary_email.update_attribute(:email, "#{@user.username}@anonymized.invalid")
 
       options = @user.user_option
       options.email_always = false
@@ -45,7 +45,7 @@ class UserAnonymizer
       options.email_digests = false
       options.email_private_messages = false
       options.email_direct = false
-      options.save
+      options.save!
 
       if profile = @user.user_profile
         profile.update(location: nil, website: nil, bio_raw: nil, bio_cooked: nil,
@@ -53,7 +53,6 @@ class UserAnonymizer
       end
 
       @user.user_avatar.try(:destroy)
-      @user.google_user_info.try(:destroy)
       @user.github_user_info.try(:destroy)
       @user.single_sign_on_record.try(:destroy)
       @user.oauth2_user_infos.try(:destroy_all)
@@ -61,6 +60,7 @@ class UserAnonymizer
       @user.instagram_user_info.try(:destroy)
       @user.user_open_ids.find_each { |x| x.destroy }
       @user.api_key.try(:destroy)
+      @user.user_emails.secondary.destroy_all
 
       @user_history = log_action
     end
@@ -101,6 +101,6 @@ class UserAnonymizer
       history_details[:details] = "username: #{@prev_username}"
     end
 
-    UserHistory.create(history_details)
+    UserHistory.create!(history_details)
   end
 end

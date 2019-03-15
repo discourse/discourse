@@ -28,7 +28,7 @@ zh_CN:
     bio: "你好，我不是真人，而是一个教你如何使用站点的机器人。你可以给我发消息或在任意地方提及 **`@%{discobot_username}`** 与我交互。"
     timeout:
       message: |-
-        你好，@%{username}。好久没见到你了，一切可好？
+        你好， @%{username}。好久没见到你了，一切可好？
 
         - 你可以在任意时候回复我。
 
@@ -112,7 +112,7 @@ zh_CN:
       help_trigger: '帮助'
       random_mention:
         reply: |-
-          你好！想看看我能做什么吗？说`@%{discobot_username} %{help_trigger}`。
+          你好！想看看我能做什么吗？说 `@%{discobot_username} %{help_trigger}`。
         tracks: |-
           我现在知道怎么做这些：
 
@@ -144,24 +144,15 @@ zh_CN:
       title: "新用户欢迎教程完毕证明"
       cert_title: "你已经成功完成新用户教程了"
       hello:
-        title: ":robot: 你好!"
         message: |-
-          感谢你加入%{title}，欢迎！
+          感谢加入%{title}， 欢迎！
 
-          - 我只是一个机器人，但[我们友好的工作人员]（%{base_uri} / about）也可以帮到你，如果你需要接触一个人。
+          - 我只是个机器人，但是如果你需要真人帮助，请找找[我们友善的管理人员](%{base_uri}/about)帮忙。
 
-          - 出于安全原因，我们暂时限制新用户可以执行的操作。 当我们了解你时，你将获得新的能力（以及[徽章]（%{base_uri} /徽章））。
+          - 出于安全考虑，我们暂时限制了新用户能使用的功能。当我们更了解你的时候，你就可以使用更多功能（和 [徽章](%{base_uri}/badges)）了。
 
-          - 我们始终相信[文明社区行为]（%{base_uri} /指南）。
+          - 我们始终相信[文明社区行为准则](%{base_uri}/guidelines)。
       onebox:
-        instructions: |-
-          接下来，你能分享下列链接给我么？回复**单独一行的链接**，然后它会自动展开显示一个有用的摘要。
-
-          要复制链接，在移动端点击并且保持，或者用你的鼠标右键：
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           酷！这对许多<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">链接都管用。请记住，它必须占**单独的一行**，前后都没东西。
         not_found: |-
@@ -255,7 +246,7 @@ zh_CN:
         reply: |-
           **谁在找我！？** :raised_hand: 我觉得是你！ :wave:  好吧，我在这儿！感谢你提到我。 :ok_hand:
         not_found: |-
-          我没有在任何地方看到我的名字 :frowning: 你可以再`@%{discobot_username}` 我试试？
+          我没有在任何地方看到我的名字 :frowning: 你可以再 `@%{discobot_username}` 我试试？
 
           （是的，我的用户名是**disco**，和 1970 年流行的舞蹈同名）
       flag:
@@ -266,7 +257,7 @@ zh_CN:
 
           我猜你知道要做什么了。点击**标记该贴**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">为不合适！
         reply: |-
-          [我们的管理人员]（%{base_uri}/组/管理人员）将私下通知你的标记。如果有足够的社区成员标记帖子，作为预防措施它也会自动隐藏。（因为我实际上并没有写一篇讨厌的帖子:angel:我现在已经取消了标记。）
+          [我们的管理人员](%{base_uri}/groups/staff)将私下通知你的标记。如果有足够的社区成员标记帖子，作为预防措施它也会自动隐藏。（因为我实际上并没有写一篇讨厌的帖子:angel:我现在已经取消了标记。）
         not_found: |-
           啊不，我糟糕的帖子还没被标记。 :worried: 你能**标记**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">其为不合适的吗？不要忘记用显示更多按钮来显示每个帖子的更多操作。
       search:
@@ -292,11 +283,11 @@ zh_CN:
           哈…看起来你碰到了些麻烦。抱歉。你试过搜索<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">**capy&#8203;bara**了吗？
       end:
         message: |-
-          感谢你坚持使用@%{username}！我为你做了这个，我想你已经赢得了它：
+          感谢你坚持使用 @%{username}！我为你做了这个，我想你已经赢得了它：
 
           %{certificate}
 
-          目前为止就这样了！查看[**我们最新的讨论主题**]（％{base_uri}/最新）或[**在分类讨论**]（%{base_uri}/分类）。:sunglasses:
+          目前为止就这样了！查看[**我们最新的讨论主题**](%{base_uri}/latest)或[**在分类讨论**](%{base_uri}/categories)。:sunglasses:
 
           （如果你想再次与我交谈以了解更多信息，请随时留言或提及`@%{discobot_username}`！）
       certificate:
@@ -306,7 +297,7 @@ zh_CN:
       cert_title: "你已经成功完成高级用户教程了"
       title: ':arrow_up: 高级用户特性'
       start_message: |-
-        作为_advanced_用户，你是否访问过[你的偏好设置页面]（%{base_uri}/我的/设置）@%{username}？ 有很多方法可以自定义你的体验，例如选择深色或浅色主题
+        作为_advanced_用户，你是否访问过[你的偏好设置页面](%{base_uri}/my/preferences) @%{username}？ 有很多方法可以自定义你的体验，例如选择深色或浅色主题
 
         但我离题了，让我们开始吧！
       edit:
@@ -335,7 +326,7 @@ zh_CN:
 
           为了讨论的连贯性，删除不会立即发生，所以帖子将在之后移除。
       recover:
-        deleted_post_raw: '为什么@%{discobot_username}删除了我的帖子？:anguished:'
+        deleted_post_raw: '为什么 @%{discobot_username}删除了我的帖子？:anguished:'
         instructions: |-
           哦不！看起来我不小心删除了我刚刚给你创建的一个新帖子。
 
@@ -371,7 +362,7 @@ zh_CN:
         reply: |-
           太棒了！我希望你没有把这个话题静音，因为我有时会说话有点健谈:grin:。
 
-          请注意，当你回复主题或阅读主题超过几分钟时，它会自动设置为“跟踪”的通知级别。 你可以在[你的用户首选项]（%{base_uri}/我的/设置）中更改此设置。
+          请注意，当你回复主题或阅读主题超过几分钟时，它会自动设置为“跟踪”的通知级别。 你可以在[你的用户首选项](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
           你知道你可以在任何帖子中添加投票吗？试试用编辑器中的<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16">齿轮图标来**发起投票**。

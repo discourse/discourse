@@ -6,7 +6,6 @@ class Admin::UsersController < Admin::AdminController
 
   before_action :fetch_user, only: [:suspend,
                                     :unsuspend,
-                                    :refresh_browsers,
                                     :log_out,
                                     :revoke_admin,
                                     :grant_admin,
@@ -32,12 +31,13 @@ class Admin::UsersController < Admin::AdminController
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
+    opts = {}
     if params[:show_emails] == "true"
-      guardian.can_see_emails = true
-      StaffActionLogger.new(current_user).log_show_emails(users)
+      StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
+      opts[:emails_desired] = true
     end
 
-    render_serialized(users, AdminUserListSerializer)
+    render_serialized(users, AdminUserListSerializer, opts)
   end
 
   def show
@@ -172,11 +172,6 @@ class Admin::UsersController < Admin::AdminController
     else
       render json: { error: I18n.t('admin_js.admin.users.id_not_found') }, status: 404
     end
-  end
-
-  def refresh_browsers
-    refresh_browser @user
-    render body: nil
   end
 
   def revoke_admin
@@ -408,6 +403,7 @@ class Admin::UsersController < Admin::AdminController
 
     options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
     options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+    options[:prepare_for_destroy] = true
 
     hijack do
       begin

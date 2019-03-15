@@ -1,14 +1,14 @@
 {{#composer-body composer=model
                  showPreview=showPreview
-                 openIfDraft="openIfDraft"
-                 typed="typed"
-                 cancelled="cancelled"
-                 save="save"}}
-
+                 openIfDraft=(action "openIfDraft")
+                 typed=(action "typed")
+                 cancelled=(action "cancelled")
+                 save=(action "save")}}
+  <div class="grippie"></div>
   {{#if visible}}
       {{composer-messages composer=model
                           messageCount=messageCount
-                          addLinkLookup="addLinkLookup"}}
+                          addLinkLookup=(action "addLinkLookup")}}
       {{#if model.viewOpenOrFullscreen}}
         <div class="reply-area {{if canEditTags 'with-tags'}}">
           <div class='composer-fields'>
@@ -16,12 +16,17 @@
             <div class='reply-to'>
               {{#unless model.viewFullscreen}}
                 <div class="reply-details">
-                  {{composer-action-title model=model canWhisper=canWhisper tabindex=8}}
+                  {{composer-action-title
+                    model=model
+                    openComposer=(action "openComposer")
+                    closeComposer=(action "closeComposer")
+                    canWhisper=canWhisper
+                    tabindex=8}}
                   {{plugin-outlet name="composer-action-after" noTags=true args=(hash model=model)}}
 
                   {{#unless site.mobileView}}
-                    {{#if model.whisper}}
-                      <span class='whisper'>{{d-icon 'eye-slash'}}</span>
+                    {{#if isWhispering}}
+                      <span class='whisper'>{{d-icon "far-eye-slash"}}</span>
                     {{/if}}
                     {{#if model.unlistTopic}}
                       <span class='whisper'>({{i18n 'composer.unlist'}})</span>
@@ -91,8 +96,9 @@
                             composer=model
                             lastValidatedAt=lastValidatedAt
                             canWhisper=canWhisper
-                            storeToolbarState="storeToolbarState"
+                            storeToolbarState=(action "storeToolbarState")
                             onPopupMenuAction=(action "onPopupMenuAction")
+                            showUploadModal=(route-action "showUploadSelector")
                             popupMenuOptions=popupMenuOptions
                             draftStatus=model.draftStatus
                             isUploading=isUploading
@@ -100,13 +106,13 @@
                             uploadIcon=uploadIcon
                             isCancellable=isCancellable
                             uploadProgress=uploadProgress
-                            groupsMentioned="groupsMentioned"
-                            cannotSeeMention="cannotSeeMention"
-                            importQuote="importQuote"
-                            togglePreview="togglePreview"
+                            groupsMentioned=(action "groupsMentioned")
+                            cannotSeeMention=(action "cannotSeeMention")
+                            importQuote=(action "importQuote")
+                            togglePreview=(action "togglePreview")
                             showToolbar=showToolbar
-                            showUploadSelector="showUploadSelector"
-                            afterRefresh="afterRefresh"}}
+                            afterRefresh=(action "afterRefresh")
+                            focusTarget=focusTarget}}
 
           <div class='submit-panel'>
             {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
@@ -114,8 +120,8 @@
             <div class='save-or-cancel'>
               {{#unless model.viewFullscreen}}
                 {{composer-save-button action=(action "save")
-                                       icon=model.saveIcon
-                                       label=model.saveLabel
+                                       icon=saveIcon
+                                       label=saveLabel
                                        disableSubmit=disableSubmit}}
 
               {{#if site.mobileView}}
@@ -123,7 +129,7 @@
                   {{#if canEdit}}
                     {{d-icon "times"}}
                   {{else}}
-                    {{d-icon "trash-o"}}
+                    {{d-icon "far-trash-alt"}}
                   {{/if}}
                 </a>
               {{else}}
@@ -135,7 +141,7 @@
               {{#if site.mobileView}}
                 {{#if whisperOrUnlistTopic}}
                   <span class='whisper'>
-                    {{d-icon "eye-slash"}}
+                    {{d-icon "far-eye-slash"}}
                   </span>
                 {{/if}}
                 {{#if model.noBump}}
@@ -169,7 +175,7 @@
                 {{/if}}
 
                 {{#if showPreview}}
-                  {{d-button action='togglePreview' class='hide-preview' label='composer.hide_preview'}}
+                  {{d-button action=(action "togglePreview") class="hide-preview" label="composer.hide_preview"}}
                 {{/if}}
               {{else}}
                 <a href {{action "togglePreview"}} class='toggle-preview'>{{{toggleText}}}</a>
@@ -190,7 +196,7 @@
 
         <div class='draft-text'>
           {{#if model.topic}}
-            {{d-icon "mail-forward"}} {{{draftTitle}}}
+            {{d-icon "share"}} {{{draftTitle}}}
           {{else}}
             {{i18n "composer.saved_draft"}}
           {{/if}}

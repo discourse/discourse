@@ -1,10 +1,11 @@
 class FakeLogger
-  attr_reader :warnings, :errors, :infos
+  attr_reader :warnings, :errors, :infos, :fatals
 
   def initialize
     @warnings = []
     @errors = []
     @infos = []
+    @fatals = []
   end
 
   def info(message = nil)
@@ -17,5 +18,12 @@ class FakeLogger
 
   def error(message)
     @errors << message
+  end
+
+  def fatal(message)
+    @fatals << message
+  end
+
+  def formatter
   end
 end

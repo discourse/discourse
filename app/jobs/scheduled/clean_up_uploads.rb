@@ -7,6 +7,7 @@ module Jobs
 
       # always remove invalid upload records
       Upload
+        .by_users
         .where("retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours")
         .where("created_at < ?", grace_period.hour.ago)
         .where(url: "")
@@ -44,7 +45,8 @@ module Jobs
         end
       end.compact.uniq
 
-      result = Upload.where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
+      result = Upload.by_users
+        .where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
         .where("uploads.created_at < ?", grace_period.hour.ago)
         .joins(<<~SQL)
           LEFT JOIN site_settings ss
@@ -55,7 +57,7 @@ module Jobs
         .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
         .joins("LEFT JOIN user_avatars ua ON ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id")
         .joins("LEFT JOIN user_profiles up ON up.profile_background = uploads.url OR up.card_background = uploads.url")
-        .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id OR c.uploaded_meta_id = uploads.id")
+        .joins("LEFT JOIN categories c ON c.uploaded_logo_id = uploads.id OR c.uploaded_background_id = uploads.id")
         .joins("LEFT JOIN custom_emojis ce ON ce.upload_id = uploads.id")
         .joins("LEFT JOIN theme_fields tf ON tf.upload_id = uploads.id")
         .joins("LEFT JOIN user_exports ue ON ue.upload_id = uploads.id")

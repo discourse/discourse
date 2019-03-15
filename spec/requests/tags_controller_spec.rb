@@ -64,6 +64,18 @@ describe TagsController do
       get "/tags/%2ftest%2f"
       expect(response.status).to eq(404)
     end
+
+    it "does not show staff-only tags" do
+      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+
+      get "/tags/test"
+      expect(response.status).to eq(404)
+
+      sign_in(Fabricate(:admin))
+
+      get "/tags/test"
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#check_hashtag' do
@@ -319,14 +331,33 @@ describe TagsController do
         expect(json['results'].map { |j| j['id'] }).to eq(['tag', 'tag2'])
       end
 
-      it "can say if given tag is not allowed" do
-        yup, nope = Fabricate(:tag, name: 'yup'), Fabricate(:tag, name: 'nope')
-        category = Fabricate(:category, tags: [yup])
-        get "/tags/filter/search.json", params: { q: 'nope', categoryId: category.id }
-        expect(response.status).to eq(200)
-        json = ::JSON.parse(response.body)
-        expect(json["results"].map { |j| j["id"] }.sort).to eq([])
-        expect(json["forbidden"]).to be_present
+      context 'with category restriction' do
+        let(:yup) { Fabricate(:tag, name: 'yup') }
+        let(:category) { Fabricate(:category, tags: [yup]) }
+
+        it "can say if given tag is not allowed" do
+          nope = Fabricate(:tag, name: 'nope')
+          get "/tags/filter/search.json", params: { q: nope.name, categoryId: category.id }
+          expect(response.status).to eq(200)
+          json = ::JSON.parse(response.body)
+          expect(json["results"].map { |j| j["id"] }.sort).to eq([])
+          expect(json["forbidden"]).to be_present
+          expect(json["forbidden_message"]).to eq(I18n.t("tags.forbidden.in_this_category", tag_name: nope.name))
+        end
+
+        it "can say if given tag is restricted to different category" do
+          category
+          get "/tags/filter/search.json", params: { q: yup.name, categoryId: Fabricate(:category).id }
+          json = ::JSON.parse(response.body)
+          expect(json["results"].map { |j| j["id"] }.sort).to eq([])
+          expect(json["forbidden"]).to be_present
+          expect(json["forbidden_message"]).to eq(I18n.t(
+            "tags.forbidden.restricted_to",
+            count: 1,
+            tag_name: yup.name,
+            category_names: category.name
+          ))
+        end
       end
 
       it "matches tags after sanitizing input" do

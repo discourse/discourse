@@ -19,8 +19,8 @@ acceptance("Tags intersection", {
           draft_key: "new_topic",
           topics: [{ id: 16, posters: [] }],
           tags: [
-            { id: 1, name: "first", topic_count: 1 },
-            { id: 2, name: "second", topic_count: 1 }
+            { id: 1, name: "second", topic_count: 1 },
+            { id: 2, name: "first", topic_count: 1 }
           ]
         }
       });

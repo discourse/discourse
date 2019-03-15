@@ -58,7 +58,8 @@ task 'assets:precompile:css' => 'environment' do
         STDERR.puts "Compiling css for #{db} #{Time.zone.now}"
         begin
           Stylesheet::Manager.precompile_css
-        rescue => PG::UndefinedColumn
+        rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError => e
+          STDERR.puts "#{e.class} #{e.message}: #{e.backtrace.join("\n")}"
           STDERR.puts "Skipping precompilation of CSS cause schema is old, you are precompiling prior to running migrations."
         end
       end

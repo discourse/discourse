@@ -188,6 +188,38 @@ describe UserBadgesController do
 
       expect(response.status).to eq(200)
     end
+
+    describe 'with relative_url_root' do
+      before do
+        @orig_relative_url_root = ActionController::Base.config.relative_url_root
+        ActionController::Base.config.relative_url_root = "/discuss"
+      end
+
+      after do
+        ActionController::Base.config.relative_url_root = @orig_relative_url_root
+      end
+
+      it 'grants badge when valid post/topic link is given in reason' do
+        admin = Fabricate(:admin)
+        post = create_post
+
+        sign_in(admin)
+
+        post "/user_badges.json", params: {
+          badge_id: badge.id,
+          username: user.username,
+          reason: "#{Discourse.base_url}#{post.url}"
+        }
+
+        expect(response.status).to eq(200)
+
+        expect(UserBadge.exists?(
+          badge_id: badge.id,
+          post_id: post.id,
+          granted_by: admin.id)
+        ).to eq(true)
+      end
+    end
   end
 
   context 'destroy' do

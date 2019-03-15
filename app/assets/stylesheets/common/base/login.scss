@@ -17,7 +17,7 @@
     width: 100%;
   }
   a {
-    color: dark-light-choose($primary-high, $secondary-low);
+    color: $primary-high;
   }
   td {
     padding-right: 5px;
@@ -32,9 +32,6 @@
 #new-account-link {
   cursor: pointer;
 }
-
-$label-width: 92px;
-$input-width: 220px;
 
 .login-modal,
 .create-account {
@@ -61,25 +58,13 @@ $input-width: 220px;
 }
 
 .create-account {
-  table {
-    td.label {
-      width: $label-width;
-    }
-
-    td input {
-      width: $input-width;
-    }
-  }
-
   .disclaimer {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
     margin-top: 0.5em;
   }
 
   .user-field {
     > label {
-      width: $label-width;
-      float: left;
       margin-top: 0.75em;
       margin-bottom: 0;
       padding-top: 5px;
@@ -99,7 +84,6 @@ $input-width: 220px;
 
     .controls {
       padding-top: 5px;
-      margin-left: $label-width;
       label {
         width: auto;
         text-align: left;
@@ -107,18 +91,17 @@ $input-width: 220px;
       }
       .instructions {
         margin-top: 0.15em;
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-medium;
         line-height: $line-height-medium;
       }
     }
-    clear: both;
   }
 }
 
 .password-reset {
   .instructions {
     label {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-medium;
     }
   }
 }
@@ -150,7 +133,7 @@ $input-width: 220px;
       margin-bottom: 10px;
     }
     .instructions {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-medium;
       margin: 0;
       font-size: $font-down-1;
       font-weight: normal;
@@ -171,7 +154,7 @@ $input-width: 220px;
   flex-direction: column;
   margin-top: 0.15em;
   label {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
   }
 }
 
@@ -180,5 +163,5 @@ $input-width: 220px;
 button#login-link,
 button#new-account-link {
   background: transparent;
-  color: dark-light-choose($primary-high, $secondary-low);
+  color: $primary-high;
 }

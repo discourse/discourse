@@ -138,8 +138,6 @@ sk:
           Zatiaľ sa Ti nebudem pliesť do cesty.
     new_user_narrative:
       reset_trigger: "nový používateľ"
-      hello:
-        title: ":robot: Zdravím!"
       quoting:
         reply: |-
           Pekná práca, vybrali ste môj obľúbený citát! :left_speech_bubble:

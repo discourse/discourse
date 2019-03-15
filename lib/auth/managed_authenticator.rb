@@ -10,12 +10,22 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     true
   end
 
+  def primary_email_verified?(auth_token)
+    # Omniauth providers should only provide verified emails in the :info hash.
+    # This method allows additional checks to be added
+    true
+  end
+
   def can_revoke?
     true
   end
 
   def can_connect_existing_user?
     true
+  end
+
+  def always_update_user_email?
+    false
   end
 
   def revoke(user, skip_remote: false)
@@ -35,7 +45,11 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     end
 
     # Matching an account by email
-    if match_by_email && association.user.nil? && (user = User.find_by_email(auth_token.dig(:info, :email)))
+    if primary_email_verified?(auth_token) &&
+        match_by_email &&
+        association.user.nil? &&
+        (user = User.find_by_email(auth_token.dig(:info, :email)))
+
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       association.user = user
     end
@@ -45,8 +59,21 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     association.credentials = auth_token[:credentials] || {}
     association.extra = auth_token[:extra] || {}
 
+    association.last_used = Time.zone.now
+
     # Save to the DB. Do this even if we don't have a user - it might be linked up later in after_create_account
     association.save!
+
+    # Update the user's email address from the auth payload
+    if association.user &&
+        (always_update_user_email? || association.user.email.end_with?(".invalid")) &&
+        primary_email_verified?(auth_token) &&
+        (email = auth_token.dig(:info, :email)) &&
+        (email != association.user.email) &&
+        !User.find_by_email(email)
+
+      association.user.update!(email: email)
+    end
 
     # Update avatar/profile
     retrieve_avatar(association.user, association.info["image"])
@@ -58,7 +85,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.email = info[:email]
     result.name = "#{info[:first_name]} #{info[:last_name]}"
     result.username = info[:nickname]
-    result.email_valid = true if result.email
+    result.email_valid = primary_email_verified?(auth_token) if result.email
     result.extra_data = {
       provider: auth_token[:provider],
       uid: auth_token[:uid]

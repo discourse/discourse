@@ -3,6 +3,6 @@
     {{{diff}}}
   {{/d-modal-body}}
   <div class="modal-footer">
-    <button class='btn btn-primary' {{action "closeModal"}}>{{i18n 'close'}}</button>
+    {{d-button class="btn btn-primary" action=(route-action "closeModal") label="close"}}
   </div>
 </div>

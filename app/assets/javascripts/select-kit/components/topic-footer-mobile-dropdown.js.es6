@@ -6,87 +6,30 @@ export default ComboBoxComponent.extend({
   filterable: false,
   autoFilterable: false,
   allowInitialValueMutation: false,
+  allowAutoSelectFirst: false,
+  nameProperty: "label",
+  isHidden: Ember.computed.empty("content"),
 
   computeHeaderContent() {
-    let content = this._super();
+    const content = this._super(...arguments);
+
     content.name = I18n.t("topic.controls");
     return content;
   },
 
-  computeContent(content) {
-    const topic = this.get("topic");
-    const details = topic.get("details");
+  mutateAttributes() {},
 
-    if (details.get("can_invite_to")) {
-      content.push({
-        id: "invite",
-        icon: "users",
-        name: I18n.t("topic.invite_reply.title")
-      });
-    }
+  willComputeContent(content) {
+    content = this._super(content);
 
-    if (topic.get("bookmarked")) {
-      content.push({
-        id: "bookmark",
-        icon: "bookmark",
-        name: I18n.t("bookmarked.clear_bookmarks")
-      });
-    } else {
-      content.push({
-        id: "bookmark",
-        icon: "bookmark",
-        name: I18n.t("bookmarked.title")
-      });
-    }
-
-    content.push({
-      id: "share",
-      icon: "link",
-      name: I18n.t("topic.share.title")
+    // TODO: this is for backward compat reasons, should be removed
+    // when plugins have been updated for long enough
+    content.forEach(c => {
+      if (c.name) {
+        c.label = c.name;
+      }
     });
 
-    if (details.get("can_flag_topic")) {
-      content.push({
-        id: "flag",
-        icon: "flag",
-        name: I18n.t("topic.flag_topic.title")
-      });
-    }
-
     return content;
-  },
-
-  autoHighlight() {},
-
-  mutateValue(value) {
-    const topic = this.get("topic");
-
-    if (!topic.get("id")) {
-      return;
-    }
-
-    const refresh = () => this.deselect(this.get("selection"));
-
-    switch (value) {
-      case "invite":
-        this.attrs.showInvite();
-        refresh();
-        break;
-      case "bookmark":
-        topic.toggleBookmark().then(() => refresh());
-        break;
-      case "share":
-        this.appEvents.trigger(
-          "share:url",
-          topic.get("shareUrl"),
-          $("#topic-footer-buttons")
-        );
-        refresh();
-        break;
-      case "flag":
-        this.attrs.showFlagTopic();
-        refresh();
-        break;
-    }
   }
 });

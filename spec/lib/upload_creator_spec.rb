@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'file_store/s3_store'
 
 RSpec.describe UploadCreator do
   let(:user) { Fabricate(:user) }
@@ -98,6 +99,27 @@ RSpec.describe UploadCreator do
       end
     end
 
+    describe 'pngquant' do
+      let(:filename) { "pngquant.png" }
+      let(:file) { file_from_fixtures(filename) }
+
+      it 'should apply pngquant to optimized images' do
+        upload = UploadCreator.new(file, filename,
+          pasted: true,
+          force_optimize: true
+        ).create_for(user.id)
+
+        # no optimisation possible without losing details
+        expect(upload.filesize).to eq(9558)
+
+        thumbnail_size = upload.get_optimized_image(upload.width, upload.height, {}).filesize
+
+        # pngquant will lose some colors causing some extra size reduction
+        expect(thumbnail_size).to be < 7500
+      end
+
+    end
+
     describe 'converting to jpeg' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
@@ -143,6 +165,35 @@ RSpec.describe UploadCreator do
         expect(upload.extension).to eq('jpeg')
         expect(File.extname(upload.url)).to eq('.jpeg')
         expect(upload.original_filename).to eq('should_be_jpeg.jpg')
+      end
+    end
+
+    describe 'uploading to s3' do
+      let(:filename) { "should_be_jpeg.png" }
+      let(:file) { file_from_fixtures(filename) }
+
+      before do
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.s3_region = 'us-west-1'
+        SiteSetting.enable_s3_uploads = true
+
+        store = FileStore::S3Store.new
+        s3_helper = store.instance_variable_get(:@s3_helper)
+        client = Aws::S3::Client.new(stub_responses: true)
+        s3_helper.stubs(:s3_client).returns(client)
+        Discourse.stubs(:store).returns(store)
+      end
+
+      it 'should store the file and return etag' do
+        expect {
+          UploadCreator.new(file, filename).create_for(user.id)
+        }.to change { Upload.count }.by(1)
+
+        upload = Upload.last
+
+        expect(upload.etag).to eq('ETag')
       end
     end
   end

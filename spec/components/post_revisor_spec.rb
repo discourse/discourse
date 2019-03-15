@@ -608,7 +608,7 @@ describe PostRevisor do
       let(:mentioned_user) { Fabricate(:user) }
 
       before do
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
       end
 
       it "generates a notification for a mention" do

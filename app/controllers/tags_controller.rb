@@ -98,6 +98,8 @@ class TagsController < ::ApplicationController
   end
 
   def show
+    raise Discourse::NotFound if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_id])
+
     show_latest
   end
 
@@ -210,9 +212,24 @@ class TagsController < ::ApplicationController
 
     json_response = { results: tags }
 
-    if Tag.where_name(clean_name).exists? && !tags.find { |h| h[:id].downcase == clean_name.downcase }
+    if !tags.find { |h| h[:id].downcase == clean_name.downcase } && tag = Tag.where_name(clean_name).first
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
+
+      category_names = tag.categories.where(id: guardian.allowed_category_ids).pluck(:name)
+      category_names += Category.joins(tag_groups: :tags).where(id: guardian.allowed_category_ids, "tags.id": tag.id).pluck(:name)
+
+      if category_names.present?
+        category_names.uniq!
+        json_response[:forbidden_message] = I18n.t(
+          "tags.forbidden.restricted_to",
+          count: category_names.count,
+          tag_name: tag.name,
+          category_names: category_names.join(", ")
+        )
+      else
+        json_response[:forbidden_message] = I18n.t("tags.forbidden.in_this_category", tag_name: tag.name)
+      end
     end
 
     render json: json_response
