@@ -2,16 +2,24 @@ require 'rails_helper'
 require_dependency 'user'
 
 describe AdminUserListSerializer do
+  let(:user) { Fabricate(:user_second_factor_totp).user }
+  let(:admin) { Fabricate(:admin) }
+  let(:guardian) { Guardian.new(admin) }
+
+  let(:serializer) do
+    AdminUserListSerializer.new(user, scope: guardian, root: false)
+  end
+
+  it "returns the right values when user has second factor totp enabled" do
+    json = serializer.as_json
+
+    expect(json[:second_factor_enabled]).to eq(true)
+  end
 
   context "emails" do
     let(:admin) { Fabricate(:user_single_email, admin: true, email: "admin@email.com") }
     let(:moderator) { Fabricate(:user_single_email, moderator: true, email: "moderator@email.com") }
     let(:user) { Fabricate(:user_single_email, email: "user@email.com") }
-    let(:guardian) { Guardian.new(admin) }
-
-    let(:serializer) do
-      AdminUserListSerializer.new(user, scope: guardian, root: false)
-    end
 
     def serialize(user, viewed_by, opts = nil)
       AdminUserListSerializer.new(
