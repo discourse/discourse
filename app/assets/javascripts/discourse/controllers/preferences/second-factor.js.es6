@@ -39,6 +39,26 @@ export default Ember.Controller.extend({
     return findAll().length > 0;
   },
 
+  @computed(
+    "siteSettings.enforce_second_factor",
+    "currentUser",
+    "currentUser.second_factor_enabled",
+    "currentUser.staff"
+  )
+  showEnforcedNotice(
+    enforce_second_factor,
+    user,
+    second_factor_enabled,
+    staff
+  ) {
+    return (
+      user &&
+      !second_factor_enabled &&
+      (enforce_second_factor === "all" ||
+        (enforce_second_factor === "staff" && staff))
+    );
+  },
+
   toggleSecondFactor(enable) {
     if (!this.get("secondFactorToken")) return;
     this.set("loading", true);
