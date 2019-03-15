@@ -1764,6 +1764,14 @@
         "diversity": false
       },
       {
+        "name": "sloth",
+        "diversity": false
+      },
+      {
+        "name": "otter",
+        "diversity": false
+      },
+      {
         "name": "kangaroo",
         "diversity": false
       },
@@ -1825,6 +1833,10 @@
       },
       {
         "name": "owl",
+        "diversity": false
+      },
+      {
+        "name": "flamingo",
         "diversity": false
       },
       {
@@ -2190,6 +2202,10 @@
         "diversity": false
       },
       {
+        "name": "waffle",
+        "diversity": false
+      },
+      {
         "name": "cheese",
         "diversity": false
       },
@@ -2471,6 +2487,10 @@
       },
       {
         "name": "cup_with_straw",
+        "diversity": false
+      },
+      {
+        "name": "ice_cube",
         "diversity": false
       },
       {
@@ -3197,6 +3217,10 @@
       },
       {
         "name": "sun_with_face",
+        "diversity": false
+      },
+      {
+        "name": "ringer_planet",
         "diversity": false
       },
       {
