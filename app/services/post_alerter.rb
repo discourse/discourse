@@ -569,8 +569,7 @@ class PostAlerter
         # Do not send the email to the receiver or sender
         # (they already have it in their mailbox).
         next if email == post.incoming_email&.from_address || email == group.email_username
-        Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
-          :group_smtp_email,
+        Jobs.enqueue(:group_smtp_email,
           group_id: group.id,
           email: email,
           topic_id: post.topic.id,
