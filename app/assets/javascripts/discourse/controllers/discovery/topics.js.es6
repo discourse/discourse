@@ -25,6 +25,9 @@ const controllerOpts = {
 
   resetParams() {
     this.setProperties({ order: "default", ascending: false });
+    Object.keys(this.get("model.params") || {}).forEach(key =>
+      this.set(key, null)
+    );
   },
 
   actions: {
