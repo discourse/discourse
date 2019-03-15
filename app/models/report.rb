@@ -77,7 +77,9 @@ class Report
   end
 
   def filter_values
-    return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h if self.filter.present?
+    if self.filter.present?
+      return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h
+    end
     {}
   end
 
@@ -1498,7 +1500,7 @@ class Report
       {
         id: "file-extension",
         selected: report.filter_values.fetch("file-extension", "any"),
-        choices: SiteSetting.authorized_extensions.split("|"),
+        choices: (SiteSetting.authorized_extensions.split("|") + report.filter_values.values).uniq,
         allowAny: true
       }
     ]
