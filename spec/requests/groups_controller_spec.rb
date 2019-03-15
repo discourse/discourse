@@ -1298,7 +1298,7 @@ describe GroupsController do
         group_name: group.name
       ))
 
-      expect(post.raw).to eq('Please add me in')
+      expect(post.raw).to start_with('Please add me in')
       expect(topic.archetype).to eq(Archetype.private_message)
       expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
       expect(topic.allowed_groups).to eq([])

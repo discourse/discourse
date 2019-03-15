@@ -72,7 +72,7 @@ acceptance("Group Requests", {
       });
     });
 
-    server.put("/groups/42/membership_request.json", request => {
+    server.put("/groups/42/handle_membership_request.json", request => {
       const body = parsePostData(request.requestBody);
       requests.push([body["user_id"], body["accept"]]);
       return helper.success();

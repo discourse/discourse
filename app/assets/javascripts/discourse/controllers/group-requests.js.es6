@@ -82,8 +82,8 @@ export default Ember.Controller.extend({
     }
   },
 
-  replyRequest(data) {
-    ajax(`/groups/${this.get("model.id")}/membership_request.json`, {
+  handleRequest(data) {
+    ajax(`/groups/${this.get("model.id")}/handle_membership_request.json`, {
       data,
       type: "PUT"
     }).catch(popupAjaxError);
@@ -95,7 +95,7 @@ export default Ember.Controller.extend({
     },
 
     acceptRequest(user) {
-      this.replyRequest({ user_id: user.get("id"), accept: true });
+      this.handleRequest({ user_id: user.get("id"), accept: true });
       user.setProperties({
         request_accepted: true,
         request_denied: false
@@ -112,7 +112,7 @@ export default Ember.Controller.extend({
     },
 
     denyRequest(user) {
-      this.replyRequest({ user_id: user.get("id") });
+      this.handleRequest({ user_id: user.get("id") });
       user.setProperties({
         request_accepted: false,
         request_denied: true

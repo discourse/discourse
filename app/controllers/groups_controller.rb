@@ -327,11 +327,11 @@ class GroupsController < ApplicationController
     end
   end
 
-  def membership_request
-    group = Group.find(params[:id])
+  def handle_membership_request
+    group = Group.find_by(id: params[:id])
     guardian.ensure_can_edit!(group)
 
-    user = User.find(params[:user_id])
+    user = User.find_by(id: params[:user_id])
     raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
     if params[:accept]
@@ -412,8 +412,6 @@ class GroupsController < ApplicationController
     group = find_group(:id)
     group_name = group.name
 
-    GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
-
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')
         .order("users.last_seen_at DESC")
@@ -421,13 +419,24 @@ class GroupsController < ApplicationController
         .pluck("users.username")
     )
 
+    raw = <<~EOF
+      #{params[:reason]}
+
+      ---
+      <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
+        #{I18n.t('groups.request_membership_pm.handle')}
+      </a>
+    EOF
+
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
-      raw: params[:reason],
+      raw: raw,
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
       skip_validations: true
     ).create!
+
+    GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
 
     render json: success_json.merge(relative_url: post.topic.relative_url)
   end
