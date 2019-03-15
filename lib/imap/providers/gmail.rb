@@ -11,10 +11,10 @@ class Imap::Providers::Gmail < Imap::Providers::Generic
     end
   end
 
-  def emails(uids, fields)
+  def emails(mailbox, uids, fields)
     fields[fields.index("LABELS")] = X_GM_LABELS
 
-    emails = super(uids, fields)
+    emails = super(mailbox, uids, fields)
 
     emails.each do |email|
       email["LABELS"] = Array(email["LABELS"])

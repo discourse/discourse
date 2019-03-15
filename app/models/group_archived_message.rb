@@ -4,21 +4,23 @@ class GroupArchivedMessage < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
-  def self.move_to_inbox!(group_id, topic)
+  def self.move_to_inbox!(group_id, topic, opts = {})
     topic_id = topic.id
     GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
     trigger(:move_to_inbox, group_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "move_to_inbox" }, group_ids: [group_id])
     publish_topic_tracking_state(topic)
+    set_imap_sync(topic_id) if !opts[:skip_imap_sync]
   end
 
-  def self.archive!(group_id, topic)
+  def self.archive!(group_id, topic, opts = {})
     topic_id = topic.id
     GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
     GroupArchivedMessage.create!(group_id: group_id, topic_id: topic_id)
     trigger(:archive_message, group_id, topic_id)
     MessageBus.publish("/topic/#{topic_id}", { type: "archived" }, group_ids: [group_id])
     publish_topic_tracking_state(topic)
+    set_imap_sync(topic_id) if !opts[:skip_imap_sync]
   end
 
   def self.trigger(event, group_id, topic_id)
@@ -35,6 +37,13 @@ class GroupArchivedMessage < ActiveRecord::Base
     TopicTrackingState.publish_private_message(
       topic, group_archive: true
     )
+  end
+
+  def self.set_imap_sync(topic_id)
+    IncomingEmail.joins(:post)
+      .where('imap_uid IS NOT NULL')
+      .where(topic_id: topic_id, posts: { post_number: 1 })
+      .update_all(imap_sync: true)
   end
 end
 

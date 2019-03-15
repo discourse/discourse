@@ -61,7 +61,7 @@ class Imap::Providers::Generic
     }
   end
 
-  def emails(uids, fields)
+  def emails(mailbox, uids, fields)
     imap.uid_fetch(uids, fields).map do |email|
       attributes = {}
 
@@ -81,7 +81,7 @@ class Imap::Providers::Generic
   end
 
   def to_tag(label)
-    label = DiscourseTagging.clean_tag(label)
+    label = DiscourseTagging.clean_tag(label.to_s)
     label if label != "all-mail" && label != "inbox" && label != "sent"
   end
 
