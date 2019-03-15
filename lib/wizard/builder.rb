@@ -1,5 +1,7 @@
 require_dependency 'introduction_updater'
 require_dependency 'emoji_set_site_setting'
+require_dependency 'seed_data/categories'
+require_dependency 'seed_data/topics'
 
 class Wizard
   class Builder
