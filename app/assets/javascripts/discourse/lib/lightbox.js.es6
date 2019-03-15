@@ -6,7 +6,7 @@ export default function($elem) {
   if (!$elem) {
     return;
   }
-  const original_meta = $("meta[name=viewport]");
+  const originalMeta = $("meta[name=viewport]").attr("content");
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function() {
     const spoilers = $elem.find(".spoiler a.lightbox, .spoiled a.lightbox");
     $elem
@@ -24,8 +24,9 @@ export default function($elem) {
 
         callbacks: {
           open() {
-            original_meta.replaceWith(
-              '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+            $("meta[name=viewport]").attr(
+              "content",
+              "width=device-width, initial-scale=1.0"
             );
             const wrap = this.wrap,
               img = this.currItem.img,
@@ -40,7 +41,7 @@ export default function($elem) {
             });
           },
           beforeClose() {
-            $("meta[name=viewport]").replaceWith(original_meta);
+            $("meta[name=viewport]").attr("content", originalMeta);
             this.wrap.off("click.pinhandler");
             this.wrap.removeClass("mfp-force-scrollbars");
           }
