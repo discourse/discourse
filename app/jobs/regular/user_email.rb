@@ -102,7 +102,7 @@ module Jobs
       return if user.staged && type.to_s == "digest"
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
-      seen_recently = false if user.user_option.email_always || user.staged
+      seen_recently = false if always_email_regular?(user, type) || always_email_private_message?(user, type) || user.staged
 
       email_args = {}
 
@@ -133,7 +133,7 @@ module Jobs
           return [nil, nil]
         end
 
-        unless user.user_option.email_always?
+        unless always_email_regular?(user, type) || always_email_private_message?(user, type)
           if (notification && notification.read?) || (post && post.seen?(user))
             return skip_message(SkippedEmailLog.reason_types[:user_email_notification_already_read])
           end
@@ -217,7 +217,7 @@ module Jobs
           return SkippedEmailLog.reason_types[:user_email_user_suspended]
         end
 
-        already_read = !user.user_option.email_always? && PostTiming.exists?(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id)
+        already_read = user.user_option.email_level != UserOption.email_level_types[:always] && PostTiming.exists?(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id)
         if already_read
           return SkippedEmailLog.reason_types[:user_email_already_read]
         end
@@ -236,6 +236,13 @@ module Jobs
       )
     end
 
+    def always_email_private_message?(user, type)
+      type == :user_private_message && user.user_option.email_messages_level == UserOption.email_level_types[:always]
+    end
+
+    def always_email_regular?(user, type)
+      type != :user_private_message && user.user_option.email_level == UserOption.email_level_types[:always]
+    end
   end
 
 end

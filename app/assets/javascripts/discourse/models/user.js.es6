@@ -264,14 +264,13 @@ const User = RestModel.extend({
     );
 
     let userOptionFields = [
-      "email_always",
       "mailing_list_mode",
       "mailing_list_mode_frequency",
       "external_links_in_new_tab",
       "email_digests",
-      "email_direct",
       "email_in_reply_to",
-      "email_private_messages",
+      "email_messages_level",
+      "email_level",
       "email_previous_replies",
       "dynamic_favicon",
       "enable_quoting",

@@ -950,12 +950,14 @@ en:
         every_three_days: "every three days"
         weekly: "weekly"
         every_two_weeks: "every two weeks"
-
+      email_level:
+        title: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+        always: "always"
+        only_when_away: "only when away"
+        never: "never"
+      email_messages_level: "Send me an email when someone messages me"
       include_tl0_in_digests: "Include content from new users in summary emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
-      email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
-      email_private_messages: "Send me an email when someone messages me"
-      email_always: "Send me email notifications even when I am active on the site"
 
       other_settings: "Other"
       categories_settings: "Categories"
