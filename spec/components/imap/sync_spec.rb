@@ -14,7 +14,7 @@ describe Imap::Sync do
 
     let(:group) {
       Fabricate(:group,
-        email_imap_server: "imap.gmail.com",
+        imap_server: "imap.gmail.com",
         email_username: "xxx",
         email_password: "zzz"
       )
@@ -34,10 +34,10 @@ describe Imap::Sync do
 
       before do
         provider = MockedImapProvider.any_instance
-        provider.stubs(:mailbox_status).returns(uid_validity: 1)
-        provider.stubs(:all_uids).returns([1])
-        provider.stubs(:uids_until).returns([1])
-        provider.stubs(:uids_from).returns([])
+        provider.stubs(:open_mailbox).returns(uid_validity: 1)
+        provider.stubs(:uids).with().returns([1])
+        provider.stubs(:uids).with(to: 1).returns([1])
+        provider.stubs(:uids).with(from: 2).returns([])
         provider.stubs(:emails).returns([
           {
             "UID" => 1,
@@ -83,8 +83,8 @@ describe Imap::Sync do
 
       before do
         provider = MockedImapProvider.any_instance
-        provider.stubs(:mailbox_status).returns(uid_validity: 1)
-        provider.stubs(:all_uids).returns([1, 2])
+        provider.stubs(:open_mailbox).returns(uid_validity: 1)
+        provider.stubs(:uids).with().returns([1, 2])
         provider.stubs(:emails).returns([
           {
             "UID" => 1,

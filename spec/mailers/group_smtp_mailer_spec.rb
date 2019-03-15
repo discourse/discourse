@@ -8,12 +8,12 @@ describe GroupSmtpMailer do
       name: "Testers",
       title: "Tester",
       full_name: "Testers Group",
-      email_smtp_server: "smtp.gmail.com",
-      email_smtp_port: 587,
-      email_smtp_ssl: true,
-      email_imap_server: "imap.gmail.com",
-      email_imap_port: 993,
-      email_imap_ssl: true,
+      smtp_server: "smtp.gmail.com",
+      smtp_port: 587,
+      smtp_ssl: true,
+      imap_server: "imap.gmail.com",
+      imap_port: 993,
+      imap_ssl: true,
       email_username: "bugs@gmail.com",
       email_password: "super$secret$password"
     )

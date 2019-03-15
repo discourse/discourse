@@ -1,9 +1,6 @@
 require "net/imap"
 
 class Imap::Providers::Generic
-  IMAP_LIBRARY = Net::IMAP
-
-  attr_reader :remote_labels
 
   def initialize(server, options = {})
     @server = server
@@ -11,52 +8,60 @@ class Imap::Providers::Generic
     @ssl = options[:ssl] || true
     @username = options[:username]
     @password = options[:password]
-    @remote_labels = []
   end
 
   def imap
-    @imap ||= IMAP_LIBRARY.new(@server, @port, @ssl, nil, false)
-  end
-
-  def all_uids
-    imap.uid_search('ALL')
-  end
-
-  def uids_until(uid)
-    imap.uid_search("UID 1:#{uid}")
-  end
-
-  def uids_from(uid)
-    imap.uid_search("UID #{uid + 1}:*")
+    @imap ||= Net::IMAP.new(@server, @port, @ssl, nil, false)
   end
 
   def connect!
     imap.login(@username, @password)
-
-    @remote_labels = extract_labels(list_mailboxes)
   end
 
-  def select_mailbox(mailbox)
-    imap.select(mailbox.name)
+  def disconnect!
+    imap.logout
+    imap.disconnect
   end
 
-  def mailbox_status(mailbox)
-    # TODO: Server-to-client sync:
-    #       - check mailbox validity
-    #       - discover changes to old messages
-    #       - fetch new messages
-    imap.examine(mailbox.name)
+  def uids(opts = {})
+    if opts[:from] && opts[:to]
+      imap.uid_search("UID #{opts[:from]}:#{opts[:to]}")
+    elsif opts[:from]
+      imap.uid_search("UID #{opts[:from]}:*")
+    elsif opts[:to]
+      imap.uid_search("UID 1:#{opts[:to]}")
+    else
+      imap.uid_search('ALL')
+    end
+  end
+
+  def labels
+    @labels ||= begin
+      labels = {}
+
+      list_mailboxes.each do |name|
+        if tag = to_tag(name)
+          labels[tag] = name
+        end
+      end
+
+      labels
+    end
+  end
+
+  def open_mailbox(mailbox, write = false)
+    if write
+      imap.select(mailbox.name)
+    else
+      imap.examine(mailbox.name)
+    end
 
     {
       uid_validity: imap.responses["UIDVALIDITY"][-1]
     }
   end
 
-  def uid_search(uid)
-    imap.uid_search(uid)
-  end
-
-  def emails(mailbox, uids, fields = [])
+  def emails(uids, fields)
     imap.uid_fetch(uids, fields).map do |email|
       attributes = {}
 
@@ -68,8 +73,15 @@ class Imap::Providers::Generic
     end
   end
 
+  def store(uid, attribute, old_set, new_set)
+    additions = new_set.reject { |val| old_set.include?(val) }
+    imap.uid_store(uid, "+#{attribute}", additions) if additions.length > 0
+    removals = old_set.reject { |val| new_set.include?(val) }
+    imap.uid_store(uid, "-#{attribute}", removals) if removals.length > 0
+  end
+
   def to_tag(label)
-    label = DiscourseTagging.clean_tag(label.to_s)
+    label = DiscourseTagging.clean_tag(label)
     label if label != "all-mail" && label != "inbox" && label != "sent"
   end
 
@@ -77,55 +89,11 @@ class Imap::Providers::Generic
     :Seen if tag == "seen"
   end
 
-  def tag_to_label(tag, labels)
+  def tag_to_label(tag)
     labels[tag]
-  end
-
-  def disconnect!
-    imap.logout
-    imap.disconnect
-  end
-
-  def sync_flags(uid, topic, email)
-    topic_tags = topic.tags.pluck(:name)
-
-    flags = email["FLAGS"]
-    new_flags = topic_tags.map { |tag| tag_to_flag(tag) }.reject(&:blank?)
-    store(uid, "FLAGS", flags, new_flags)
-  end
-
-  private
-
-  def store(uid, attribute, old_set, new_set)
-    additions = new_set.reject { |val| old_set.include?(val) }
-    add_attribute(attribute, uid, additions)
-
-    removals = old_set.reject { |val| new_set.include?(val) }
-    remove_attribute(attribute, uid, removals)
-  end
-
-  def add_attribute(attribute, uid, values)
-    imap.uid_store(Array(uid), "+#{attribute}", values) if values.length > 0
-  end
-
-  def remove_attribute(attribute, uid, values)
-    imap.uid_store(Array(uid), "-#{attribute}", values) if values.length > 0
   end
 
   def list_mailboxes
     imap.list('', '*').map(&:name)
   end
-
-  def extract_labels(mailboxes)
-    labels = {}
-
-    mailboxes.each do |name|
-      if tag = to_tag(name)
-        labels[tag] = name
-      end
-    end
-
-    labels
-  end
-
 end

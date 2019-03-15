@@ -553,8 +553,16 @@ class PostAlerter
     warn_if_not_sidekiq
 
     if notify_imap_users?(post)
-      group = post.topic.allowed_groups.where('email_smtp_server IS NOT NULL').first
-      email_addresses = post.topic.incoming_email.pluck(:from_address)
+      group = post.topic.allowed_groups.where('smtp_server IS NOT NULL').first
+
+      # Retrieve all email addresses.
+      email_addresses = post.topic.incoming_email.pluck(:from_address, :to_addresses, :cc_addresses)
+      email_addresses.flatten!
+      email_addresses.uniq!
+      email_addresses.reject!(&:blank?)
+      email_addresses.map! { |emails| emails.split(",") }
+      email_addresses.flatten!
+      email_addresses.uniq!
       email_addresses << group.email_username
 
       email_addresses.each do |email|

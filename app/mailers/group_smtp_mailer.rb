@@ -5,13 +5,13 @@ class GroupSmtpMailer < ActionMailer::Base
 
   def send_mail(from_group, to_address, topic, post)
     delivery_options = {
-      address: from_group.email_smtp_server,
-      port: from_group.email_smtp_port,
+      address: from_group.smtp_server,
+      port: from_group.smtp_port,
       domain: from_group.email_username.split("@").last,
       user_name: from_group.email_username,
       password: from_group.email_password,
       authentication: GlobalSetting.smtp_authentication,
-      enable_starttls_auto: from_group.email_smtp_ssl
+      enable_starttls_auto: from_group.smtp_ssl
     }
 
     build_email(to_address,

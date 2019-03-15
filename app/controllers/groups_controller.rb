@@ -551,12 +551,12 @@ class GroupsController < ApplicationController
         if current_user.admin
           default_params.push(*[
             :incoming_email,
-            :email_smtp_server,
-            :email_smtp_port,
-            :email_smtp_ssl,
-            :email_imap_server,
-            :email_imap_port,
-            :email_imap_ssl,
+            :smtp_server,
+            :smtp_port,
+            :smtp_ssl,
+            :imap_server,
+            :imap_port,
+            :imap_ssl,
             :email_username,
             :email_password,
             :primary_group,

@@ -1,3 +1,5 @@
+require_dependency 'imap'
+
 module Jobs
   class PollImap < Jobs::Scheduled
     every SiteSetting.imap_polling_period_mins.minutes
@@ -13,7 +15,7 @@ module Jobs
         begin
           provider = Imap::Providers::Generic
 
-          if group.email_imap_server == "imap.gmail.com"
+          if group.imap_server == "imap.gmail.com"
             provider = Imap::Providers::Gmail
           end
 

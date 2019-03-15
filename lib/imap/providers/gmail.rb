@@ -11,16 +11,10 @@ class Imap::Providers::Gmail < Imap::Providers::Generic
     end
   end
 
-  def to_tag(label)
-    label = label.to_s.gsub("[Gmail]/", "")
-
-    super(label)
-  end
-
-  def emails(mailbox, uids, fields = [])
+  def emails(uids, fields)
     fields[fields.index("LABELS")] = X_GM_LABELS
 
-    emails = super(mailbox, uids, fields)
+    emails = super(uids, fields)
 
     emails.each do |email|
       email["LABELS"] = Array(email["LABELS"])
@@ -38,23 +32,29 @@ class Imap::Providers::Gmail < Imap::Providers::Generic
     emails
   end
 
-  def sync_flags(uid, topic, email)
-    super
-
-    topic_tags = topic.tags.pluck(:name)
-
-    labels = email["LABELS"]
-    new_labels = topic_tags.map { |tag| tag_to_label(tag, @remote_labels) }.reject(&:blank?)
-    new_labels << "\\Inbox" if topic.group_archived_messages.length == 0
-
-    store(uid, X_GM_LABELS, labels, new_labels)
+  def store(uid, attribute, old_set, new_set)
+    attribute = X_GM_LABELS if attribute == "LABELS"
+    super(uid, attribute, old_set, new_set)
   end
 
-  private
+  def to_tag(label)
+    # Label `\\Starred` is Gmail equivalent of :Flagged (both present)
+    return "starred" if label == :Flagged
 
-  def extract_labels(mailboxes)
-    labels = super
-    labels["important"] = "\\Important"
-    labels
+    label = label.to_s.gsub("[Gmail]/", "")
+    super(label)
+  end
+
+  def tag_to_flag(tag)
+    return :Flagged if tag == "starred"
+
+    super(tag)
+  end
+
+  def tag_to_label(tag)
+    return "\\Important" if tag == "important"
+    return "\\Starred" if tag == "starred"
+
+    super(tag)
   end
 end

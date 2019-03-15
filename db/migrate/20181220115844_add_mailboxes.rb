@@ -1,12 +1,12 @@
 class AddMailboxes < ActiveRecord::Migration[5.2]
   def change
-    add_column :groups, :email_smtp_server, :string
-    add_column :groups, :email_smtp_port, :integer
-    add_column :groups, :email_smtp_ssl, :boolean
+    add_column :groups, :smtp_server, :string
+    add_column :groups, :smtp_port, :integer
+    add_column :groups, :smtp_ssl, :boolean
 
-    add_column :groups, :email_imap_server, :string
-    add_column :groups, :email_imap_port, :integer
-    add_column :groups, :email_imap_ssl, :boolean
+    add_column :groups, :imap_server, :string
+    add_column :groups, :imap_port, :integer
+    add_column :groups, :imap_ssl, :boolean
 
     add_column :groups, :email_username, :string
     add_column :groups, :email_password, :string

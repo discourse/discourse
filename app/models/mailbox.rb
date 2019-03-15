@@ -7,7 +7,7 @@ class Mailbox < ActiveRecord::Base
     DistributedMutex.synchronize("group_refresh_mailboxes_#{group.id}") do
       Rails.logger.info("Refreshing mailboxes for group #{group.name} (ID = #{group.id}).")
 
-      @imap = Net::IMAP.new(group.email_imap_server, group.email_imap_port, group.email_imap_ssl)
+      @imap = Net::IMAP.new(group.imap_server, group.imap_port, group.imap_ssl)
       @imap.login(group.email_username, group.email_password)
 
       old_mailboxes = group.mailboxes.map { |m| m.name if m.sync }.compact

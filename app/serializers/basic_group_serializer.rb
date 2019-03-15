@@ -15,12 +15,12 @@ class BasicGroupSerializer < ApplicationSerializer
              :title,
              :grant_trust_level,
              :incoming_email,
-             :email_smtp_server,
-             :email_smtp_port,
-             :email_smtp_ssl,
-             :email_imap_server,
-             :email_imap_port,
-             :email_imap_ssl,
+             :smtp_server,
+             :smtp_port,
+             :smtp_ssl,
+             :imap_server,
+             :imap_port,
+             :imap_ssl,
              :email_username,
              :email_password,
              :has_messages,
@@ -61,27 +61,27 @@ class BasicGroupSerializer < ApplicationSerializer
     scope.is_admin?
   end
 
-  def include_email_smtp_server?
+  def include_smtp_server?
     staff?
   end
 
-  def include_email_smtp_port?
+  def include_smtp_port?
     staff?
   end
 
-  def include_email_smtp_ssl?
+  def include_smtp_ssl?
     staff?
   end
 
-  def include_email_imap_server?
+  def include_imap_server?
     staff?
   end
 
-  def include_email_imap_port?
+  def include_imap_port?
     staff?
   end
 
-  def include_email_imap_ssl?
+  def include_imap_ssl?
     staff?
   end
 

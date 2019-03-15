@@ -784,12 +784,12 @@ end
 #  membership_request_template        :text
 #  messageable_level                  :integer          default(0)
 #  mentionable_level                  :integer          default(0)
-#  email_smtp_server                  :string
-#  email_smtp_port                    :integer
-#  email_smtp_ssl                     :boolean
-#  email_imap_server                  :string
-#  email_imap_port                    :integer
-#  email_imap_ssl                     :boolean
+#  smtp_server                        :string
+#  smtp_port                          :integer
+#  smtp_ssl                           :boolean
+#  imap_server                        :string
+#  imap_port                          :integer
+#  imap_ssl                           :boolean
 #  email_username                     :string
 #  email_password                     :string
 #
