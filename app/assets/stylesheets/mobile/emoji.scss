@@ -1,4 +1,8 @@
 .emoji-picker {
-  height: 250px;
+  max-height: 280px;
   border: none;
+}
+
+.emoji-picker .category-icon {
+  margin: 2px;
 }
