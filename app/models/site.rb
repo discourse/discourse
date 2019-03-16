@@ -5,8 +5,12 @@ require_dependency 'trust_level'
 class Site
   include ActiveModel::Serialization
 
+  cattr_accessor :preloaded_category_custom_fields
+  self.preloaded_category_custom_fields = Set.new
+
   def initialize(guardian)
     @guardian = guardian
+    Category.preload_custom_fields(categories, preloaded_category_custom_fields) if preloaded_category_custom_fields.present?
   end
 
   def site_setting
