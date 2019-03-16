@@ -1561,8 +1561,8 @@ en:
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use an <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> to grant access to the S3 bucket. NOTE: enabling this requires Discourse to be running in an appropriately-configured EC2 instance, and overrides the "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
-    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
-    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
+    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images, attachments, and backups."
+    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
 
