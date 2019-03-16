@@ -826,7 +826,7 @@ posting:
     default: 2
     enum: "TrustLevelSetting"
   returning_users_days:
-    default: 60
+    default: 120
 
 email:
   email_time_window_mins:
