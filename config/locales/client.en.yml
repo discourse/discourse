@@ -726,7 +726,7 @@ en:
       muted_users: "Muted"
       muted_users_instructions: "Suppress all notifications from these users."
       ignored_users: "Ignored"
-      ignored_users_instructions: "Lists all your ignored users."
+      ignored_users_instructions: "Suppress all posts and notifications from these users."
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
       tracked_topics_link: "Show tracked topics"
