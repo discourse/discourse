@@ -70,3 +70,90 @@ QUnit.test(
     );
   }
 );
+
+QUnit.test(
+  "changing the position number of a category should place it at given position",
+  function(assert) {
+    const store = createStore();
+
+    const elem1 = store.createRecord("category", {
+      id: 1,
+      position: 0,
+      slug: "foo"
+    });
+
+    const elem2 = store.createRecord("category", {
+      id: 2,
+      position: 1,
+      slug: "bar"
+    });
+
+    const elem3 = store.createRecord("category", {
+      id: 3,
+      position: 2,
+      slug: "test"
+    });
+
+    const categories = [elem1, elem2, elem3];
+    const site = Ember.Object.create({ categories: categories });
+    const reorderCategoriesController = this.subject({ site });
+
+    reorderCategoriesController.actions.change.call(
+      reorderCategoriesController,
+      elem1,
+      { target: "<input value='2'>" }
+    );
+
+    assert.deepEqual(
+      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      ["test", "bar", "foo"]
+    );
+  }
+);
+
+QUnit.test(
+  "changing the position number of a category should place it at given position and respect children",
+  function(assert) {
+    const store = createStore();
+
+    const elem1 = store.createRecord("category", {
+      id: 1,
+      position: 0,
+      slug: "foo"
+    });
+
+    const child1 = store.createRecord("category", {
+      id: 4,
+      position: 1,
+      slug: "foochild",
+      parent_category_id: 1
+    });
+
+    const elem2 = store.createRecord("category", {
+      id: 2,
+      position: 2,
+      slug: "bar"
+    });
+
+    const elem3 = store.createRecord("category", {
+      id: 3,
+      position: 3,
+      slug: "test"
+    });
+
+    const categories = [elem1, child1, elem2, elem3];
+    const site = Ember.Object.create({ categories: categories });
+    const reorderCategoriesController = this.subject({ site });
+
+    reorderCategoriesController.actions.change.call(
+      reorderCategoriesController,
+      elem1,
+      { target: "<input value='3'>" }
+    );
+
+    assert.deepEqual(
+      reorderCategoriesController.get("categoriesOrdered").mapBy("slug"),
+      ["test", "bar", "foo", "foochild"]
+    );
+  }
+);
