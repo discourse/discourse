@@ -97,4 +97,8 @@ class CategorySerializer < BasicCategorySerializer
   def allowed_tag_groups
     object.tag_groups.pluck(:name)
   end
+
+  def custom_fields
+    object.custom_fields
+  end
 end
