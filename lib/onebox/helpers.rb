@@ -164,6 +164,7 @@ module Onebox
       return "" unless url
       url = url.dup
       # expect properly encoded url, remove any unsafe chars
+      url.gsub!(' ', '%20')
       url.gsub!("'", "&apos;")
       url.gsub!('"', "&quot;")
       url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=%]/, "")
