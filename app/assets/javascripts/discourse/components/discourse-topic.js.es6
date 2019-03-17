@@ -5,7 +5,7 @@ import Scrolling from "discourse/mixins/scrolling";
 import { selectedText } from "discourse/lib/utilities";
 import { observes } from "ember-addons/ember-computed-decorators";
 
-const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 100;
+const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 
