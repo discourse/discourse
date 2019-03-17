@@ -1100,6 +1100,11 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
+  restrict_letter_avatar_colors:
+    default: ''
+    type: list
+    list_type: compact
+    validator: "ColorListValidator"
   selectable_avatars_enabled:
     default: false
     client: true
