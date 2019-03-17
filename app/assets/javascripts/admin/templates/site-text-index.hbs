@@ -7,7 +7,7 @@
                autofocus="true"
                key-up=(action "search")}}
 
-  <div class='extra-options'>
+  <div class="reseed">
     {{d-button action=(route-action "showReseedModal")
                class="btn-default"
                label="admin.reseed.action.label"
@@ -15,7 +15,7 @@
                icon="sync"}}
   </div>
 
-  <p>
+  <p class="filter-options">
     <label>
       {{input type="checkbox" checked=overridden click=(action "toggleOverridden")}}
       {{i18n 'admin.site_text.show_overriden'}}
