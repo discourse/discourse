@@ -783,13 +783,13 @@
 }
 
 .reseed-modal {
-  legend {
+  .options-group-title {
     font-size: $font-up-2;
     font-weight: bold;
     margin: 8px 0;
   }
 
-  input[type="checkbox"] {
+  .option {
     margin-left: 1em;
   }
 }

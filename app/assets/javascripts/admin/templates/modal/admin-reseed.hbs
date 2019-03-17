@@ -2,12 +2,12 @@
   {{#conditional-loading-spinner condition=loading}}
     {{#if categories}}
       <fieldset>
-        <legend>{{i18n "admin.reseed.modal.categories"}}</legend>
+        <legend class="options-group-title">{{i18n "admin.reseed.modal.categories"}}</legend>
 
         {{#each categories as |category|}}
           <label>
-            {{input type="checkbox" checked=category.selected}}
-            {{category.name}}
+            {{input class="option" type="checkbox" checked=category.selected}}
+            <span>{{category.name}}</span>
           </label>
         {{/each}}
       </fieldset>
@@ -17,12 +17,12 @@
 
     {{#if topics}}
       <fieldset>
-        <legend>{{i18n "admin.reseed.modal.topics"}}</legend>
+        <legend class="options-group-title">{{i18n "admin.reseed.modal.topics"}}</legend>
 
         {{#each topics as |topic|}}
           <label>
-            {{input type="checkbox" checked=topic.selected}}
-            {{topic.name}}
+            {{input class="option" type="checkbox" checked=topic.selected}}
+            <span>{{topic.name}}</span>
           </label>
         {{/each}}
       </fieldset>
@@ -31,6 +31,6 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
-  {{d-button action=(action "reseed") class="btn btn-danger" label="go_ahead" disabled=reseeding}}
+  {{d-button action=(action "reseed") class="btn-danger" label="go_ahead" disabled=reseeding}}
   {{d-modal-cancel close=(route-action "closeModal")}}
 </div>

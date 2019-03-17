@@ -10,8 +10,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
     ajax("/admin/customize/reseed")
       .then(result => {
-        this.set("categories", result.categories);
-        this.set("topics", result.topics);
+        this.setProperties({
+          categories: result.categories,
+          topics: result.topics
+        });
       })
       .finally(() => this.set("loading", false));
   },
