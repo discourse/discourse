@@ -910,7 +910,7 @@ export default Ember.Controller.extend({
       opts.topicTitle &&
       opts.topicTitle.length <= this.siteSettings.max_topic_title_length
     ) {
-      this.set("model.title", escapeExpression(opts.topicTitle));
+      this.set("model.title", opts.topicTitle);
     }
 
     if (opts.topicCategoryId) {
