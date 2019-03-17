@@ -6,9 +6,6 @@ import { selectedText } from "discourse/lib/utilities";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 100;
-// Amount of delay between when the user reaches the very bottom of the topic
-// and when the mobile header switches back - for a smoother transition.
-const MOBILE_DELAY_BEFORE_BOTTOM_HEADER_SWITCH = 100;
 // Small buffer so that very tiny scrolls don't trigger mobile header switch
 const MOBILE_SCROLL_TOLERANCE = 5;
 
@@ -225,11 +222,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     if (distanceToTopicBottom > 0) return;
 
     // We're at the bottom now, so we reset the direction.
-    Ember.run.later(
-      this,
-      this.set("mobileScrollDirection", null),
-      MOBILE_DELAY_BEFORE_BOTTOM_HEADER_SWITCH
-    );
+    this.set("mobileScrollDirection", null);
   },
 
   // We observe the scroll direction on mobile and if it's down, we show the topic
