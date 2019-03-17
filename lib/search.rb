@@ -4,6 +4,9 @@ class Search
   INDEX_VERSION = 2.freeze
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
+  cattr_accessor :preloaded_topic_custom_fields
+  self.preloaded_topic_custom_fields = Set.new
+
   def self.per_facet
     5
   end
@@ -241,6 +244,11 @@ class Search
     end
 
     find_grouped_results unless @results.posts.present?
+
+    if preloaded_topic_custom_fields.present? && @results.posts.present?
+      topics = @results.posts.map(&:topic)
+      Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
+    end
 
     @results
   end
