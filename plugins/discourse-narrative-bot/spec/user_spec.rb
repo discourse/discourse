@@ -13,7 +13,7 @@ describe User do
   end
 
   before do
-    run_jobs_synchronously!
+    Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 

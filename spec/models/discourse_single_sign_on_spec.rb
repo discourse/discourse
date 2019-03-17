@@ -8,7 +8,7 @@ describe DiscourseSingleSignOn do
     SiteSetting.sso_url = @sso_url
     SiteSetting.enable_sso = true
     SiteSetting.sso_secret = @sso_secret
-    run_jobs_synchronously!
+    Jobs.run_immediately!
   end
 
   def make_sso

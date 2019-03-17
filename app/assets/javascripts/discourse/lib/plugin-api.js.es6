@@ -41,9 +41,10 @@ import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
+import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.29";
+const PLUGIN_API_VERSION = "0.8.30";
 
 class PluginApi {
   constructor(version, container) {
@@ -801,7 +802,6 @@ class PluginApi {
   }
 
   /**
-   *
    * Registers a function to handle uploads for specified file types
    * The normal uploading functionality will be bypassed if function returns
    * a falsy value.
@@ -815,6 +815,18 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a criteria that can be used as default topic order on category
+   * pages.
+   *
+   * Example:
+   *
+   * categorySortCriteria("votes");
+   */
+  addCategorySortCriteria(criteria) {
+    addCategorySortCriteria(criteria);
   }
 
   /**

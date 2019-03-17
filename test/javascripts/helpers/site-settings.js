@@ -2,7 +2,7 @@
 Discourse.SiteSettingsOriginal = {
   title: "Discourse Meta",
   site_logo_url: "/assets/logo.png",
-  site_home_logo_url: "/assets/logo.png",
+  site_logo_url: "/assets/logo.png",
   site_logo_small_url: "/assets/logo-single.png",
   site_mobile_logo_url: "",
   site_favicon_url:

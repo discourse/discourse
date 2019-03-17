@@ -85,9 +85,9 @@
     {{i18n "category.sort_order"}}
   </label>
   <div class="controls">
-  {{combo-box valueAttribute="value" id="category-sort-order" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+  {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
   {{#unless isDefaultSortOrder}}
-    {{combo-box castBoolean=true valueAttribute="value" id="category-sort-order" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+    {{combo-box castBoolean=true valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
   {{/unless}}
     </div>
 </section>

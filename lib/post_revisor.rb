@@ -83,7 +83,14 @@ class PostRevisor
         tc.check_result(false)
         next
       end
-      tc.record_change('tags', prev_tags, tags) unless prev_tags.sort == tags.sort
+      if prev_tags.sort != tags.sort
+        tc.record_change('tags', prev_tags, tags)
+        DB.after_commit do
+          post = tc.topic.ordered_posts.first
+          notified_user_ids = [post.user_id, post.last_editor_id].uniq
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids)
+        end
+      end
     end
   end
 

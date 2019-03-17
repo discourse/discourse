@@ -22,7 +22,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   let(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }
 
   before do
-    run_jobs_synchronously!
+    Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
   end
 

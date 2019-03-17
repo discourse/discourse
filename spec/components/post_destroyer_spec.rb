@@ -617,7 +617,7 @@ describe PostDestroyer do
 
   context '@mentions' do
     it 'removes notifications when deleted' do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       user = Fabricate(:evil_trout)
       post = create_post(raw: 'Hello @eviltrout')
       expect {

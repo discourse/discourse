@@ -140,11 +140,10 @@ def insert_user_options
   DB.exec <<-SQL
     INSERT INTO user_options (
                   user_id,
-                  email_always,
                   mailing_list_mode,
                   mailing_list_mode_frequency,
-                  email_direct,
-                  email_private_messages,
+                  email_level,
+                  email_messages_level,
                   email_previous_replies,
                   email_in_reply_to,
                   email_digests,
@@ -161,11 +160,10 @@ def insert_user_options
                   like_notification_frequency
                 )
              SELECT u.id
-                  , #{SiteSetting.default_email_always}
                   , #{SiteSetting.default_email_mailing_list_mode}
                   , #{SiteSetting.default_email_mailing_list_mode_frequency}
-                  , #{SiteSetting.default_email_direct}
-                  , #{SiteSetting.default_email_personal_messages}
+                  , #{SiteSetting.default_email_level}
+                  , #{SiteSetting.default_email_messages_level}
                   , #{SiteSetting.default_email_previous_replies}
                   , #{SiteSetting.default_email_in_reply_to}
                   , #{SiteSetting.default_email_digest_frequency.to_i > 0}

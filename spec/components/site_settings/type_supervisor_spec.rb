@@ -190,6 +190,9 @@ describe SiteSettings::TypeSupervisor do
 
         expect(settings.type_supervisor.to_db_value(:type_upload, upload))
           .to eq([upload.id, SiteSetting.types[:upload]])
+
+        expect(settings.type_supervisor.to_db_value(:type_upload, 1))
+          .to eq([1, SiteSetting.types[:upload]])
       end
 
       it 'returns enum value with string default' do

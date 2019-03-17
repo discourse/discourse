@@ -3,6 +3,7 @@ require "fileutils"
 require "json"
 require "nokogiri"
 require "open-uri"
+require_dependency "file_helper"
 
 EMOJI_GROUPS_PATH ||= "lib/emoji/groups.json"
 
@@ -215,131 +216,40 @@ EMOJI_ALIASES ||= {
 
 EMOJI_GROUPS ||= [
   {
-    "name" => "people",
-    "fullname" => "People",
-    "tabicon" => "grinning",
-    "sections" => [
-      "face-positive",
-      "face-neutral",
-      "face-negative",
-      "face-sick",
-      "face-role",
-      "face-fantasy",
-      "cat-face",
-      "monkey-face",
-      "skin-tone",
-      "person",
-      "person-role",
-      "person-fantasy",
-      "person-gesture",
-      "family",
-      "body"
-    ]
+    "name" => "smileys_&_emotion",
+    "tabicon" => "grinning"
   },
   {
-    "name" => "nature",
-    "fullname" => "Nature",
-    "tabicon" => "evergreen_tree",
-    "sections" => [
-      "animal-mammal",
-      "animal-bird",
-      "animal-amphibian",
-      "animal-reptile",
-      "animal-marine",
-      "animal-bug",
-      "plant-flower",
-      "plant-other",
-      "sky_&_weather",
-
-    ]
+    "name" => "people_&_body",
+    "tabicon" => "wave"
   },
   {
-    "name" => "food",
-    "fullname" => "Food & Drink",
-    "tabicon" => "hamburger",
-    "sections" => [
-      "food-fruit",
-      "food-vegetable",
-      "food-prepared",
-      "food-asian",
-      "food-sweet",
-      "drink",
-      "dishware"
-    ]
+    "name" => "animals_&_nature",
+    "tabicon" => "evergreen_tree"
   },
   {
-    "name" => "celebration",
-    "fullname" => "Celebration",
-    "tabicon" => "gift",
-    "sections" => [
-      "event",
-      "emotion"
-    ]
+    "name" => "food_&_drink",
+    "tabicon" => "hamburger"
   },
   {
-    "name" => "activity",
-    "fullname" => "Activities",
-    "tabicon" => "soccer",
-    "sections" => [
-      "person-activity",
-      "person-sport",
-      "sport",
-      "game",
-      "music",
-      "musical-instrument"
-    ]
+    "name" => "travel_&_places",
+    "tabicon" => "airplane"
   },
   {
-    "name" => "travel",
-    "fullname" => "Travel & Places",
-    "tabicon" => "airplane",
-    "sections" => [
-      "place-map",
-      "place-geographic",
-      "place-building",
-      "place-religious",
-      "place-other",
-      "transport-ground",
-      "transport-water",
-      "transport-air",
-      "hotel",
-      "flag",
-      "country-flag",
-      "subdivision-flag"
-    ]
+    "name" => "activities",
+    "tabicon" => "soccer"
   },
   {
     "name" => "objects",
-    "fullname" => "Objects & Symbols",
-    "tabicon" => "eyeglasses",
-    "sections" => [
-      "clothing",
-      "award-medal",
-      "sound",
-      "phone",
-      "computer",
-      "light_&_video",
-      "book-paper",
-      "money",
-      "mail",
-      "writing",
-      "office",
-      "lock",
-      "tool",
-      "medical",
-      "other-object",
-      "transport-sign",
-      "warning",
-      "arrow",
-      "religion",
-      "zodiac",
-      "av-symbol",
-      "other-symbol",
-      "keycap",
-      "alphanum",
-      "geometric",
-      "time"
-    ]
+    "tabicon" => "eyeglasses"
+  },
+  {
+    "name" => "symbols",
+    "tabicon" => "white_check_mark"
+  },
+  {
+    "name" => "flags",
+    "tabicon" => "checkered_flag"
   }
 ]
 
@@ -349,169 +259,8 @@ DEFAULT_SET ||= "twitter"
 
 # Replace the platform by another when downloading the image (accepts names or categories)
 EMOJI_IMAGES_PATCH ||= {
-  "windows" => {
-    "infinity" => "twitter",
-    "pirate_flag" => "twitter"
-  },
-  "apple" => {
-    "snowboarder" => "twitter",
-    "smiling_face_with_three_Hearts" => "twitter",
-    "hot_face" => "twitter",
-    "cold_face" => "twitter",
-    "partying_face" => "twitter",
-    "woozy_face" => "twitter",
-    "pleading_face" => "twitter",
-    "man_red_haired" => "twitter",
-    "man_curly_haired" => "twitter",
-    "man_white_haired" => "twitter",
-    "man_bald" => "twitter",
-    "woman_red_haired" => "twitter",
-    "woman_curly_haired" => "twitter",
-    "woman_white_haired" => "twitter",
-    "woman_bald" => "twitter",
-    "superhero" => "twitter",
-    "man_superhero" => "twitter",
-    "woman_superhero" => "twitter",
-    "supervillain" => "twitter",
-    "woman_supervillain" => "twitter",
-    "man_supervillain" => "twitter",
-    "leg" => "twitter",
-    "foot" => "twitter",
-    "bone" => "twitter",
-    "tooth" => "twitter",
-    "goggles" => "twitter",
-    "lab_coat" => "twitter",
-    "hiking_boot" => "twitter",
-    "flat_shoe" => "twitter",
-    "raccoon" => "twitter",
-    "llama" => "twitter",
-    "hippopotamus" => "twitter",
-    "kangaroo" => "twitter",
-    "badger" => "twitter",
-    "swan" => "twitter",
-    "peacock" => "twitter",
-    "parrot" => "twitter",
-    "lobster" => "twitter",
-    "mosquito" => "twitter",
-    "microbe" => "twitter",
-    "mango" => "twitter",
-    "leafy_green" => "twitter",
-    "bagel" => "twitter",
-    "salt" => "twitter",
-    "moon_cake" => "twitter",
-    "cupcake" => "twitter",
-    "compass" => "twitter",
-    "brick" => "twitter",
-    "skateboard" => "twitter",
-    "luggage" => "twitter",
-    "firecracker" => "twitter",
-    "red_gift_envelope" => "twitter",
-    "flying_disc" => "twitter",
-    "lacrosse" => "twitter",
-    "nazar_amulet" => "twitter",
-    "jigsaw" => "twitter",
-    "teddy_bear" => "twitter",
-    "chess_pawn" => "twitter",
-    "thread" => "twitter",
-    "yarn" => "twitter",
-    "abacus" => "twitter",
-    "receipt" => "twitter",
-    "toolbox" => "twitter",
-    "magnet" => "twitter",
-    "test_tube" => "twitter",
-    "petri_dish" => "twitter",
-    "dna" => "twitter",
-    "lotion_bottle" => "twitter",
-    "safety_pin" => "twitter",
-    "broom" => "twitter",
-    "basket" => "twitter",
-    "roll_of_toilet_paper" => "twitter",
-    "soap" => "twitter",
-    "sponge" => "twitter",
-    "fire_extinguisher" => "twitter",
-    "infinity" => "twitter",
-    "pirate_flag" => "twitter"
-  },
-  "emoji_one" => {
-    "country-flag" => "twitter"
-  },
-  "facebook" => {
-    "smiling_face_with_three_Hearts" => "twitter",
-    "hot_face" => "twitter",
-    "cold_face" => "twitter",
-    "partying_face" => "twitter",
-    "woozy_face" => "twitter",
-    "pleading_face" => "twitter",
-    "man_red_haired" => "twitter",
-    "man_curly_haired" => "twitter",
-    "man_white_haired" => "twitter",
-    "man_bald" => "twitter",
-    "woman_red_haired" => "twitter",
-    "woman_curly_haired" => "twitter",
-    "woman_white_haired" => "twitter",
-    "woman_bald" => "twitter",
-    "man_superhero" => "twitter",
-    "woman_superhero" => "twitter",
-    "woman_supervillain" => "twitter",
-    "man_supervillain" => "twitter",
-    "leg" => "twitter",
-    "foot" => "twitter",
-    "bone" => "twitter",
-    "tooth" => "twitter",
-    "goggles" => "twitter",
-    "lab_coat" => "twitter",
-    "hiking_boot" => "twitter",
-    "flat_shoe" => "twitter",
-    "raccoon" => "twitter",
-    "llama" => "twitter",
-    "hippopotamus" => "twitter",
-    "kangaroo" => "twitter",
-    "badger" => "twitter",
-    "swan" => "twitter",
-    "peacock" => "twitter",
-    "parrot" => "twitter",
-    "lobster" => "twitter",
-    "mosquito" => "twitter",
-    "microbe" => "twitter",
-    "mango" => "twitter",
-    "leafy_green" => "twitter",
-    "bagel" => "twitter",
-    "salt" => "twitter",
-    "moon_cake" => "twitter",
-    "cupcake" => "twitter",
-    "compass" => "twitter",
-    "brick" => "twitter",
-    "skateboard" => "twitter",
-    "luggage" => "twitter",
-    "firecracker" => "twitter",
-    "red_gift_envelope" => "twitter",
-    "softball" => "twitter",
-    "flying_disc" => "twitter",
-    "lacrosse" => "twitter",
-    "nazar_amulet" => "twitter",
-    "jigsaw" => "twitter",
-    "teddy_bear" => "twitter",
-    "chess_pawn" => "twitter",
-    "thread" => "twitter",
-    "yarn" => "twitter",
-    "abacus" => "twitter",
-    "receipt" => "twitter",
-    "toolbox" => "twitter",
-    "magnet" => "twitter",
-    "test_tube" => "twitter",
-    "petri_dish" => "twitter",
-    "dna" => "twitter",
-    "lotion_bottle" => "twitter",
-    "safety_pin" => "twitter",
-    "broom" => "twitter",
-    "basket" => "twitter",
-    "roll_of_toilet_paper" => "twitter",
-    "soap" => "twitter",
-    "sponge" => "twitter",
-    "fire_extinguisher" => "twitter",
-    "infinity" => "twitter",
-    "pirate_flag" => "twitter"
-  }
+  "apple" => { "snowboarder" => "twitter" },
+  "emoji_one" => { "country-flag" => "twitter" }
 }
 
 EMOJI_SETS ||= {
@@ -535,13 +284,14 @@ task "emoji:update" do
   copy_emoji_db
 
   json_db = open(File.join(GENERATED_PATH, "db.json")).read
-  keywords = JSON.parse(json_db)
+  db = JSON.parse(json_db)
 
-  write_db_json(keywords)
-  fix_incomplete_sets(keywords)
+  write_db_json(db["emojis"], db["translations"])
+  fix_incomplete_sets(db["emojis"])
   write_aliases
-  groups = generate_emoji_groups(keywords)
-  write_js_groups(keywords, groups)
+  groups = generate_emoji_groups(db["emojis"], db["sections"])
+  write_js_groups(db["emojis"], groups)
+  optimize_images(Dir.glob(File.join(Rails.root, EMOJI_IMAGES_PATH, "/**/*.png")))
 
   TestEmojiUpdate.run_and_summarize
 
@@ -552,6 +302,15 @@ desc "test the emoji generation script"
 task "emoji:test" do
   ENV['EMOJI_TEST'] = "1"
   Rake::Task["emoji:update"].invoke
+end
+
+def optimize_images(images)
+  images.each do |filename|
+    FileHelper.image_optim(
+      allow_pngquant: true,
+      strip_image_metadata: true
+    ).optimize_image!(filename)
+  end
 end
 
 def copy_emoji_db
@@ -587,7 +346,7 @@ def fix_incomplete_sets(emojis)
   end
 end
 
-def generate_emoji_groups(keywords)
+def generate_emoji_groups(keywords, sections)
   puts "Generating groups..."
 
   list = open(EMOJI_ORDERING_URL).read
@@ -596,7 +355,9 @@ def generate_emoji_groups(keywords)
 
   EMOJI_GROUPS.map do |group|
     group["icons"] ||= []
-    group["sections"].each do |section|
+
+    sub_sections = sections[group["name"]]["sub_sections"]
+    sub_sections.each do |section|
       title_section = table.css("tr th a[@name='#{section}']")
       emoji_list_section = title_section.first.parent.parent.next_element
       emoji_list_section.css("a.plain img").each do |link|
@@ -634,7 +395,7 @@ def write_aliases
   end
 end
 
-def write_db_json(emojis)
+def write_db_json(emojis, translations)
   puts "Writing #{EMOJI_DB_PATH}..."
 
   confirm_overwrite(EMOJI_DB_PATH)
@@ -663,7 +424,8 @@ def write_db_json(emojis)
     "emojis" => emojis_without_tones,
     "tonableEmojis" => emoji_with_tones,
     "aliases" => EMOJI_ALIASES,
-    "searchAliases" => SEARCH_ALIASES
+    "searchAliases" => SEARCH_ALIASES,
+    "translations" => translations
   }
 
   File.write(EMOJI_DB_PATH, JSON.pretty_generate(db))
@@ -767,12 +529,12 @@ class TestEmojiUpdate < MiniTest::Test
   end
 
   def test_default_set
-    original_image = image_path("twitter", "macau")
-
-    alias_image = image_path("emoji_one", "macau")
+    original_image = image_path("twitter", "snowboarder")
+    alias_image = image_path("apple", "snowboarder")
     assert_equal File.size(original_image), File.size(alias_image)
 
-    alias_image = image_path("win10", "macau")
+    original_image = image_path("twitter", "macau")
+    alias_image = image_path("emoji_one", "macau")
     assert_equal File.size(original_image), File.size(alias_image)
   end
 end

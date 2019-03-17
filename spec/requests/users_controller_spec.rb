@@ -1494,14 +1494,14 @@ describe UsersController do
           put "/u/#{user.username}.json", params: {
             muted_usernames: "",
             theme_ids: [theme.id],
-            email_direct: false
+            email_level: UserOption.email_level_types[:always]
           }
 
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_ids).to eq([theme.id])
-          expect(user.user_option.email_direct).to eq(false)
+          expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
         end
 
         context 'a locale is chosen that differs from I18n.locale' do

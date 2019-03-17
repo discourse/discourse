@@ -2,16 +2,24 @@ require 'rails_helper'
 require_dependency 'user'
 
 describe AdminUserListSerializer do
+  let(:user) { Fabricate(:user_second_factor_totp).user }
+  let(:admin) { Fabricate(:admin) }
+  let(:guardian) { Guardian.new(admin) }
+
+  let(:serializer) do
+    AdminUserListSerializer.new(user, scope: guardian, root: false)
+  end
+
+  it "returns the right values when user has second factor totp enabled" do
+    json = serializer.as_json
+
+    expect(json[:second_factor_enabled]).to eq(true)
+  end
 
   context "emails" do
     let(:admin) { Fabricate(:user_single_email, admin: true, email: "admin@email.com") }
     let(:moderator) { Fabricate(:user_single_email, moderator: true, email: "moderator@email.com") }
     let(:user) { Fabricate(:user_single_email, email: "user@email.com") }
-    let(:guardian) { Guardian.new(admin) }
-
-    let(:serializer) do
-      AdminUserListSerializer.new(user, scope: guardian, root: false)
-    end
 
     def serialize(user, viewed_by, opts = nil)
       AdminUserListSerializer.new(
@@ -41,16 +49,16 @@ describe AdminUserListSerializer do
       expect(json[:secondary_emails]).to eq(nil)
     end
 
-    it "doesn't return emails for a moderator request when show_email_on_profile is disabled" do
-      SiteSetting.show_email_on_profile = false
+    it "doesn't return emails for a moderator request when moderators_view_emails is disabled" do
+      SiteSetting.moderators_view_emails = false
       fabricate_secondary_emails_for(user)
       json = serialize(user, moderator, emails_desired: true)
       expect(json[:email]).to eq(nil)
       expect(json[:secondary_emails]).to eq(nil)
     end
 
-    it "returns emails for a moderator request when show_email_on_profile is enabled" do
-      SiteSetting.show_email_on_profile = true
+    it "returns emails for a moderator request when moderators_view_emails is enabled" do
+      SiteSetting.moderators_view_emails = true
       fabricate_secondary_emails_for(user)
       json = serialize(user, moderator, emails_desired: true)
       expect(json[:email]).to eq("user@email.com")

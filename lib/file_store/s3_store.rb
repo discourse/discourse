@@ -129,7 +129,7 @@ module FileStore
         S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
         S3Inventory.new(s3_helper, :optimized).backfill_etags_and_list_missing unless skip_optimized
       else
-        list_missing(Upload, "original/")
+        list_missing(Upload.by_users, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized
       end
     end

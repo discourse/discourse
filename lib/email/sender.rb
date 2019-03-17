@@ -35,6 +35,8 @@ module Email
       return skip(SkippedEmailLog.reason_types[:sender_message_blank])    if @message.blank?
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
 
+      return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
+
       if @message.text_part
         if @message.text_part.body.to_s.blank?
           return skip(SkippedEmailLog.reason_types[:sender_text_part_body_blank])

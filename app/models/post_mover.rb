@@ -16,7 +16,10 @@ class PostMover
     @move_type = PostMover.move_types[:existing_topic]
 
     topic = Topic.find_by_id(id)
-    raise Discourse::InvalidParameters unless topic.archetype == @original_topic.archetype
+    if topic.archetype != @original_topic.archetype &&
+       [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
+      raise Discourse::InvalidParameters
+    end
 
     Topic.transaction do
       move_posts_to topic

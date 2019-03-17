@@ -111,14 +111,18 @@ export default Discourse.Route.extend({
     ).then(list => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
-        tag.set("id", list.topic_list.tags[0].name);
+        tag.setProperties({
+          id: list.topic_list.tags[0].name,
+          staff: list.topic_list.tags[0].staff
+        });
       }
       controller.setProperties({
         list,
         canCreateTopic: list.get("can_create_topic"),
         loading: false,
         canCreateTopicOnCategory:
-          this.get("category.permission") === PermissionType.FULL
+          this.get("category.permission") === PermissionType.FULL,
+        canCreateTopicOnTag: !tag.get("staff") || this.get("currentUser.staff")
       });
     });
   },

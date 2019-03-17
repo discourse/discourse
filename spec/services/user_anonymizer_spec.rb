@@ -54,15 +54,15 @@ describe UserAnonymizer do
 
     it "turns off all notifications" do
       user.user_option.update_columns(
-        email_always: true
+        email_level: UserOption.email_level_types[:always],
+        email_messages_level: UserOption.email_level_types[:always]
       )
 
       make_anonymous
       user.reload
       expect(user.user_option.email_digests).to eq(false)
-      expect(user.user_option.email_private_messages).to eq(false)
-      expect(user.user_option.email_direct).to eq(false)
-      expect(user.user_option.email_always).to eq(false)
+      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
@@ -136,7 +136,7 @@ describe UserAnonymizer do
     end
 
     it "updates the avatar in posts" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       upload = Fabricate(:upload, user: user)
       user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences
@@ -214,7 +214,7 @@ describe UserAnonymizer do
 
     context "executes job" do
       before do
-        run_jobs_synchronously!
+        Jobs.run_immediately!
       end
 
       it "removes invites" do
@@ -302,7 +302,7 @@ describe UserAnonymizer do
     end
 
     it "exhaustively replaces all user ips" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       link = IncomingLink.create!(current_user_id: user.id, ip_address: old_ip, post_id: post.id)
 
       screened_email = ScreenedEmail.create!(email: user.email, ip_address: old_ip)

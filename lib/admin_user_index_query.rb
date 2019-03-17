@@ -60,12 +60,15 @@ class AdminUserIndexQuery
       order << "users.username"
     end
 
-    if params[:stats].present? && params[:stats] == false
-      klass.order(order.reject(&:blank?).join(","))
-    else
-      klass.includes(:user_stat, :user_second_factors)
-        .order(order.reject(&:blank?).join(","))
+    query = klass
+      .includes(:totps)
+      .order(order.reject(&:blank?).join(","))
+
+    unless params[:stats].present? && params[:stats] == false
+      query = query.includes(:user_stat)
     end
+
+    query
   end
 
   def filter_by_trust

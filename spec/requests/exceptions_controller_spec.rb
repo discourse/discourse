@@ -10,16 +10,14 @@ RSpec.describe ExceptionsController do
       expect(response.body).to have_tag(
         "img",
         with: {
-          src: SiteSetting.site_home_logo_url
+          src: SiteSetting.site_logo_url
         }
       )
     end
 
     describe "text site logo" do
-      let(:title) { "some awesome title" }
-
       before do
-        SiteSetting.title = title
+        SiteSetting.logo = nil
       end
 
       it "should return the right response" do
@@ -29,7 +27,7 @@ RSpec.describe ExceptionsController do
 
         expect(response.body).to have_tag(
           "h2",
-          text: title
+          text: SiteSetting.title
         )
       end
     end

@@ -631,15 +631,15 @@ describe Email::Receiver do
       expect { process(:reply_user_not_matching_but_known) }.to change { topic.posts.count }
     end
 
-    it "re-enables user's email_private_messages setting when user replies to a private topic" do
+    it "re-enables user's PM email notifications when user replies to a private topic" do
       topic.update_columns(category_id: nil, archetype: Archetype.private_message)
       topic.allowed_users << user
       topic.save
 
-      user.user_option.update_columns(email_private_messages: false)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:reply_user_matching) }.to change { topic.posts.count }
       user.reload
-      expect(user.user_option.email_private_messages).to eq(true)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
   end
@@ -741,12 +741,12 @@ describe Email::Receiver do
       expect(Post.last.uploads.length).to eq 1
     end
 
-    it "enables user's email_private_messages setting when user emails new topic to group" do
+    it "reenables user's PM email notifications when user emails new topic to group" do
       user = Fabricate(:user, email: "existing@bar.com")
-      user.user_option.update_columns(email_private_messages: false)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:group_existing_user) }.to change(Topic, :count)
       user.reload
-      expect(user.user_option.email_private_messages).to eq(true)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
     context "with forwarded emails enabled" do

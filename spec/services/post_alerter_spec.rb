@@ -213,7 +213,7 @@ describe PostAlerter do
     let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
 
     before do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
     end
 
     it "will notify correctly on linking" do
@@ -289,7 +289,7 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     before do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
     end
 
     it 'notifies a user' do
@@ -591,7 +591,7 @@ describe PostAlerter do
     end
 
     it "correctly pushes notifications if configured correctly" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       2.times do |i|
@@ -924,6 +924,29 @@ describe PostAlerter do
           PostAlerter.post_created(post)
         end
         expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+      end
+    end
+
+    context "on change" do
+      let(:user) { Fabricate(:user) }
+      let(:other_tag) { Fabricate(:tag) }
+      let(:watched_tag) { Fabricate(:tag) }
+      let(:post) { Fabricate(:post) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        Jobs.run_immediately!
+      end
+
+      it "triggers a notification" do
+        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
       end
     end
   end

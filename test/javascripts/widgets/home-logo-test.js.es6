@@ -10,7 +10,7 @@ const title = "Cool Forum";
 widgetTest("basics", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    this.siteSettings.site_home_logo_url = bigLogo;
+    this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
     this.set("args", { minimized: false });
@@ -28,7 +28,7 @@ widgetTest("basics", {
 widgetTest("basics - minimized", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    this.siteSettings.site_home_logo_url = bigLogo;
+    this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
     this.set("args", { minimized: true });
@@ -44,7 +44,7 @@ widgetTest("basics - minimized", {
 widgetTest("no logo", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    this.siteSettings.site_home_logo_url = "";
+    this.siteSettings.site_logo_url = "";
     this.siteSettings.site_logo_small_url = "";
     this.siteSettings.title = title;
     this.set("args", { minimized: false });
@@ -59,7 +59,7 @@ widgetTest("no logo", {
 widgetTest("no logo - minimized", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    this.siteSettings.site_home_logo_url = "";
+    this.siteSettings.site_logo_url = "";
     this.siteSettings.site_logo_small_url = "";
     this.siteSettings.title = title;
     this.set("args", { minimized: true });
@@ -87,7 +87,7 @@ widgetTest("mobile logo", {
 widgetTest("mobile without logo", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
-    this.siteSettings.site_home_logo_url = bigLogo;
+    this.siteSettings.site_logo_url = bigLogo;
     this.site.mobileView = true;
   },
 
@@ -101,7 +101,7 @@ widgetTest("basics, subfolder", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
     Discourse.BaseUri = "/forum";
-    this.siteSettings.site_home_logo_url = bigLogo;
+    this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
     this.set("args", { minimized: false });
@@ -118,7 +118,7 @@ widgetTest("basics, subfolder - minimized", {
   template: '{{mount-widget widget="home-logo" args=args}}',
   beforeEach() {
     Discourse.BaseUri = "/forum";
-    this.siteSettings.site_home_logo_url = bigLogo;
+    this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
     this.siteSettings.title = title;
     this.set("args", { minimized: true });

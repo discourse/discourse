@@ -154,7 +154,11 @@ export default createWidget("private-message-map", {
     const result = [h(`div.participants${hideNamesClass}`, participants)];
     const controls = [];
 
-    if (attrs.canRemoveAllowedUsers || attrs.canRemoveSelfId) {
+    if (
+      attrs.canInvite ||
+      attrs.canRemoveAllowedUsers ||
+      attrs.canRemoveSelfId
+    ) {
       controls.push(
         this.attach("button", {
           action: "toggleEditing",

@@ -585,6 +585,7 @@ class Category < ActiveRecord::Base
     url = +"#{Discourse.base_uri}/c"
     url << "/#{parent_category.slug}" if parent_category_id
     url << "/#{old_slug}"
+    url = Permalink.normalize_url(url)
 
     if Permalink.where(url: url).exists?
       Permalink.where(url: url).update_all(category_id: id)

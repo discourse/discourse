@@ -514,7 +514,7 @@ class PostCreator
   end
 
   def create_post_notice
-    return if @user.bot? || @user.staged
+    return if @opts[:import_mode] || @user.bot? || @user.staged
 
     last_post_time = Post.where(user_id: @user.id)
       .order(created_at: :desc)

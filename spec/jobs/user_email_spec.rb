@@ -91,6 +91,71 @@ describe Jobs::UserEmail do
     end
   end
 
+  context "recently seen" do
+    let(:post) { Fabricate(:post, user: user) }
+    let(:notification) { Fabricate(
+        :notification,
+        user: user,
+        topic: post.topic,
+        post_number: post.post_number,
+        data: { original_post_id: post.id }.to_json
+      )
+    }
+    before do
+      user.update_column(:last_seen_at, 9.minutes.ago)
+    end
+
+    it "doesn't send an email to a user that's been recently seen" do
+      Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
+
+    it "does send an email to a user that's been recently seen but has email_level set to always" do
+      user.user_option.update_attributes(email_level: UserOption.email_level_types[:always])
+      PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
+
+      Jobs::UserEmail.new.execute(
+        type: :user_replied,
+        user_id: user.id,
+        post_id: post.id,
+        notification_id: notification.id
+      )
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        user.email
+      )
+    end
+
+    it "sends an email by default for a PM to a user that's been recently seen" do
+      Jobs::UserEmail.new.execute(
+        type: :user_private_message,
+        user_id: user.id,
+        post_id: post.id,
+        notification_id: notification.id
+      )
+
+      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+        user.email
+      )
+    end
+
+    it "doesn't send a PM email to a user that's been recently seen and has email_messages_level set to never" do
+      user.user_option.update_attributes(email_messages_level: UserOption.email_level_types[:never])
+      user.user_option.update_attributes(email_level: UserOption.email_level_types[:always])
+      Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
+
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
+
+    it "doesn't send a regular post email to a user that's been recently seen and has email_level set to never" do
+      user.user_option.update_attributes(email_messages_level: UserOption.email_level_types[:always])
+      user.user_option.update_attributes(email_level: UserOption.email_level_types[:never])
+      Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
+
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
+  end
+
   context "email_log" do
     let(:post) { Fabricate(:post) }
 
@@ -256,9 +321,9 @@ describe Jobs::UserEmail do
         )).to eq(true)
       end
 
-      it "does send the email if the notification has been seen but the user is set for email_always" do
+      it "does send the email if the notification has been seen but user has email_level set to always" do
         notification.update_column(:read, true)
-        user.user_option.update_column(:email_always, true)
+        user.user_option.update_column(:email_level, UserOption.email_level_types[:always])
 
         Jobs::UserEmail.new.execute(
           type: :user_mentioned,
@@ -301,9 +366,9 @@ describe Jobs::UserEmail do
           expect(ActionMailer::Base.deliveries).to eq([])
         end
 
-        it "does send an email to a user that's been recently seen but has email_always set" do
+        it "does send an email to a user that's been recently seen but has email_level set to always" do
           user.update!(last_seen_at: 9.minutes.ago)
-          user.user_option.update!(email_always: true)
+          user.user_option.update!(email_level: UserOption.email_level_types[:always])
 
           Jobs::UserEmail.new.execute(
             type: :user_replied,

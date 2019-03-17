@@ -2,6 +2,11 @@ import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import computed from "ember-addons/ember-computed-decorators";
 
+const categorySortCriteria = [];
+export function addCategorySortCriteria(criteria) {
+  categorySortCriteria.push(criteria);
+}
+
 export default buildCategoryPanel("settings", {
   emailInEnabled: setting("email_in"),
   showPositionInput: setting("fixed_category_positions"),
@@ -64,10 +69,9 @@ export default buildCategoryPanel("settings", {
       "category",
       "created"
     ]
+      .concat(categorySortCriteria)
       .map(s => ({ name: I18n.t("category.sort_options." + s), value: s }))
-      .sort((a, b) => {
-        return a.name > b.name;
-      });
+      .sort((a, b) => a.name.localeCompare(b.name));
   },
 
   @computed
