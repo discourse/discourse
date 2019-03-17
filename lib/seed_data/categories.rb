@@ -8,17 +8,15 @@ module SeedData
       @locale = locale
     end
 
-    def create
+    def create(site_setting_names: nil)
       I18n.with_locale(@locale) do
-        categories.each { |params| create_category(params) }
+        categories(site_setting_names).each { |params| create_category(params) }
       end
     end
 
     def update(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
-        categories.each do |params|
-          next if site_setting_names && !site_setting_names.include?(params[:site_setting_name])
-
+        categories(site_setting_names).each do |params|
           params.slice!(:site_setting_name, :name, :description)
           params[:skip_changed] = skip_changed
           update_category(params)
@@ -43,8 +41,8 @@ module SeedData
 
     private
 
-    def categories
-      [
+    def categories(site_setting_names = nil)
+      categories = [
         {
           site_setting_name: 'uncategorized_category_id',
           name: I18n.t('uncategorized_category_name'),
@@ -87,6 +85,12 @@ module SeedData
           force_permissions: false
         }
       ]
+
+      if site_setting_names
+        categories.select! { |c| site_setting_names.include?(c[:site_setting_name]) }
+      end
+
+      categories
     end
 
     def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
@@ -109,7 +113,7 @@ module SeedData
 
         SiteSetting.send("#{site_setting_name}=", category.id)
       elsif category = Category.find_by(id: category_id)
-        if !category.topic_id && description.present?
+        if description.present? && (category.topic_id.blank? || !Topic.exists?(category.topic_id))
           category.description = description
           category.create_category_definition
         end
