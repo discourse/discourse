@@ -15,6 +15,8 @@ import UserFieldsValidation from "discourse/mixins/user-fields-validation";
 import { userPath } from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 
+const { A } = Ember;
+
 export default Ember.Controller.extend(
   ModalFunctionality,
   PasswordValidation,
@@ -28,7 +30,7 @@ export default Ember.Controller.extend(
     accountPasswordConfirm: 0,
     accountChallenge: 0,
     formSubmitted: false,
-    rejectedEmails: Ember.A([]),
+    rejectedEmails: A([]),
     prefilledUsername: null,
     userFields: null,
     isDeveloper: false,
