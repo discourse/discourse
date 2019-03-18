@@ -1917,6 +1917,7 @@ en:
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     min_post_notice_tl: "Minimum trust level required to see post notices."
+    old_post_notice_days: "Days before post notice becomes old"
     returning_users_days: "How many days should pass before a user is considered to be returning."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
