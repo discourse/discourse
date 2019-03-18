@@ -9,6 +9,7 @@ class CategoriesController < ApplicationController
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
 
   def redirect
+    return if handle_permalink("/category/#{params[:path]}")
     redirect_to path("/c/#{params[:path]}")
   end
 
