@@ -3,6 +3,9 @@ if ENV['COVERAGE']
   SimpleCov.start
 end
 
+require "knapsack"
+Knapsack::Adapters::RSpecAdapter.bind
+
 require 'rubygems'
 require 'rbtrace'
 

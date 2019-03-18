@@ -14,10 +14,12 @@ env:
     - TRAVIS_NODE_VERSION="10"
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GLOBAL_METHOD_CACHE_SIZE=131072
+    - RAILS_MASTER=0
+    - CI_NODE_TOTAL=2
   matrix:
-    - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=0"
-    - "RAILS_MASTER=0 QUNIT_RUN=1 RUN_LINT=0"
-    - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=1"
+    - "RUN_LINT_AND_QUNIT=1"
+    - "RUN_LINT_AND_QUNIT=0 CI_NODE_INDEX=0"
+    - "RUN_LINT_AND_QUNIT=0 CI_NODE_INDEX=1 PLUGINS=1"
 
 addons:
   chrome: stable
@@ -25,10 +27,10 @@ addons:
   apt:
     update: true
     packages:
-    - gifsicle
-    - jpegoptim
-    - optipng
-    - jhead
+      - gifsicle
+      - jpegoptim
+      - optipng
+      - jhead
 
 matrix:
   fast_finish: true
@@ -67,27 +69,29 @@ before_install:
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
-  - bash -c "if [ '$QUNIT_RUN' == '1' ] || [ '$RUN_LINT' == '1' ]; then yarn install --dev; fi"
-  - bash -c "if [ '$RUN_LINT' != '1' ]; then LOAD_PLUGINS=1 bundle exec rake db:create db:migrate; fi"
+  - bash -c "if [ '$PLUGINS' == '1' ]; then LOAD_PLUGINS=1 bundle exec rake db:create db:migrate; fi"
+  - bash -c "if [ '$PLUGINS' != '1' ]; then bundle exec rake db:create db:migrate; fi"
 
 script:
   - |
     bash -c "
-      if [ '$RUN_LINT' == '1' ]; then
+      if [ '$RUN_LINT_AND_QUNIT' == '1' ]; then
         bundle exec rubocop --parallel && \
         bundle exec danger && \
+        yarn install && \
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \
         yarn eslint --ext .es6 plugins/**/test/javascripts && \
-        yarn eslint app/assets/javascripts test/javascripts
+        yarn eslint app/assets/javascripts test/javascripts && \
+        bundle exec rake qunit:test['1200000'] && \
+        bundle exec rake qunit:test['100000','/wizard/qunit'] && \
+        bundle exec rake plugin:qunit
       else
-        if [ '$QUNIT_RUN' == '1' ]; then
-          bundle exec rake qunit:test['1200000'] && \
-          bundle exec rake qunit:test['1200000','/wizard/qunit'] && \
-          bundle exec rake plugin:qunit
+        if [ '$PLUGINS' == '1' ]; then
+          bundle exec rake knapsack:rspec && bundle exec rake plugin:spec
         else
-          bundle exec rspec && bundle exec rake plugin:spec
+          bundle exec rake knapsack:rspec
         fi
       fi
     "

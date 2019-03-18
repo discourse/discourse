@@ -172,6 +172,8 @@ GEM
       thor (>= 0.14, < 2.0)
     jwt (2.1.0)
     kgio (2.11.2)
+    knapsack (1.17.1)
+      rake
     kramdown (1.17.0)
     libv8 (6.7.288.46.1)
     listen (3.1.5)
@@ -479,6 +481,7 @@ DEPENDENCIES
   hiredis
   htmlentities
   http_accept_language (~> 2.0.5)
+  knapsack
   listen
   lograge
   logstash-event
