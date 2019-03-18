@@ -441,7 +441,7 @@ createWidget("post-notice", {
     }
 
     if (
-      +new Date() - +new Date(attrs.created_at) >
+      new Date() - new Date(attrs.created_at) >
       this.siteSettings.old_post_notice_days * 86400000
     ) {
       classes.push("old");
