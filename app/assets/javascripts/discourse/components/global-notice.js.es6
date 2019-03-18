@@ -5,7 +5,7 @@ import { bufferedRender } from "discourse-common/lib/buffered-render";
 
 export default Ember.Component.extend(
   bufferedRender({
-    rerenderTriggers: ["site.isReadOnly"],
+    rerenderTriggers: ["site.isReadOnly", "siteSettings.disable_emails"],
 
     buildBuffer(buffer) {
       let notices = [];
