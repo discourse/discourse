@@ -6331,6 +6331,30 @@
     {
       "code": "1f3f4-200d-2620",
       "name": "pirate_flag"
+    },
+    {
+      "code": "1f9c7",
+      "name": "waffle"
+    },
+    {
+      "code": "1f9a6",
+      "name": "otter"
+    },
+    {
+      "code": "1f9a5",
+      "name": "sloth"
+    },
+    {
+      "code": "1f9ca",
+      "name": "ice_cube"
+    },
+    {
+      "code": "1fa90",
+      "name": "ringer_planet"
+    },
+    {
+      "code": "1f9a9",
+      "name": "flamingo"
     }
   ],
   "tonableEmojis": [
