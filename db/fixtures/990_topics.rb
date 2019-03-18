@@ -1,3 +1,5 @@
+require 'seed_data/topics'
+
 User.reset_column_information
 Topic.reset_column_information
 Post.reset_column_information

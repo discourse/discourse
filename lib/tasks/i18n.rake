@@ -1,4 +1,6 @@
 require 'i18n/locale_file_checker'
+require 'seed_data/categories'
+require 'seed_data/topics'
 require 'colored2'
 
 desc "Checks locale files for errors"
