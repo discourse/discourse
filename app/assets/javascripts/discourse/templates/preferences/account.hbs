@@ -41,6 +41,9 @@
         {{/if}}
       </div>
       <div class='instructions'>
+        {{#if siteSettings.sso_overrides_email}}
+          {{i18n 'user.email.sso_override_instructions'}}
+        {{/if}}
         {{i18n 'user.email.instructions'}}
       </div>
     {{else}}
