@@ -828,6 +828,9 @@ posting:
   min_post_notice_tl:
     default: 2
     enum: "TrustLevelSetting"
+  old_post_notice_days:
+    default: 14
+    client: true
   returning_users_days:
     default: 120
 
