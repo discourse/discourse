@@ -218,7 +218,7 @@ def migrate_to_s3
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
 
-  if Upload.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
+  if Upload.by_users.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
     puts <<~TEXT
       Some uploads were not migrated to the new scheme. Please run these commands in the rails console
 
