@@ -63,12 +63,6 @@
       color: dark-light-choose($twitter, white);
     }
   }
-  .link {
-    font-size: $font-up-3;
-    a {
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
-  }
 
   input[type="text"] {
     font-size: $font-up-1;
@@ -77,11 +71,36 @@
 
   .actions {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     margin-top: s(2);
 
-    .link {
-      margin-left: auto;
+    .sources {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      flex-direction: row;
+      max-width: 45%;
+
+      .social-link {
+        margin-right: s(2);
+      }
+    }
+
+    .alt-actions {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      justify-content: flex-end;
+      height: 36px;
+
+      .close-share {
+        font-size: $font-up-3;
+        color: dark-light-choose($primary-medium, $secondary-medium);
+      }
+
+      .new-topic {
+        margin-right: s(4);
+      }
     }
   }
 }
