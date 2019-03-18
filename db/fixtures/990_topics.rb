@@ -3,7 +3,7 @@ Topic.reset_column_information
 Post.reset_column_information
 
 if !Rails.env.test?
-  seed_welcome_topics = !Topic.where(<<~SQL).exists?
+  topics_exist = Topic.where(<<~SQL).exists?
     id NOT IN (
       SELECT topic_id
       FROM categories
@@ -11,5 +11,5 @@ if !Rails.env.test?
     )
   SQL
 
-  SeedData::Topics.with_default_locale.create(seed_welcome_topics)
+  SeedData::Topics.with_default_locale.create(include_welcome_topics: !topics_exist)
 end

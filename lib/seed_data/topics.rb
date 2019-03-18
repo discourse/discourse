@@ -8,17 +8,17 @@ module SeedData
       @locale = locale
     end
 
-    def create(include_welcome_topics)
+    def create(site_setting_names: nil, include_welcome_topics: true)
       I18n.with_locale(@locale) do
-        topics(include_welcome_topics).each { |params| create_topic(params) }
+        topics(site_setting_names, include_welcome_topics).each do |params|
+          create_topic(params)
+        end
       end
     end
 
     def update(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
-        topics.each do |params|
-          next if site_setting_names && !site_setting_names.include?(params[:site_setting_name])
-
+        topics(site_setting_names).each do |params|
           params.except!(:category, :after_create)
           params[:skip_changed] = skip_changed
           update_topic(params)
@@ -43,7 +43,7 @@ module SeedData
 
     private
 
-    def topics(include_welcome_topics = true)
+    def topics(site_setting_names = nil, include_welcome_topics = true)
       staff_category = Category.find_by(id: SiteSetting.staff_category_id)
 
       topics = [
@@ -114,6 +114,10 @@ module SeedData
         }
       end
 
+      if site_setting_names
+        topics.select! { |t| site_setting_names.include?(t[:site_setting_name]) }
+      end
+
       topics
     end
 
@@ -145,12 +149,14 @@ module SeedData
 
     def update_topic(site_setting_name:, title:, raw:, static_first_reply: false, skip_changed:)
       post = find_post(site_setting_name)
-      return if !post || (skip_changed && !unchanged?(post))
+      return if !post
 
-      changes = { title: title, raw: raw }
-      post.revise(Discourse.system_user, changes, skip_validations: true)
+      if !skip_changed || unchanged?(post)
+        changes = { title: title, raw: raw }
+        post.revise(Discourse.system_user, changes, skip_validations: true)
+      end
 
-      if static_first_reply && reply = first_reply(post)
+      if static_first_reply && (reply = first_reply(post)) && (!skip_changed || unchanged?(reply))
         changes = { raw: first_reply_raw(title) }
         reply.revise(Discourse.system_user, changes, skip_validations: true)
       end
