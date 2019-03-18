@@ -40,6 +40,21 @@ QUnit.test("Editing the category", async assert => {
   );
 });
 
+QUnit.test("Edit the description without loosing progress", async assert => {
+  let win = { focus: function() {} };
+  let windowOpen = sandbox.stub(window, "open").returns(win);
+  sandbox.stub(win, "focus");
+
+  await visit("/c/bug");
+
+  await click(".edit-category");
+  await click(".edit-category-description");
+  assert.ok(
+    windowOpen.calledWith("/t/category-definition-for-bug/2", "_blank"),
+    "opens the category topic in a new tab"
+  );
+});
+
 QUnit.test("Error Saving", async assert => {
   await visit("/c/bug");
 
