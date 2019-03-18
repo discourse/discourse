@@ -94,7 +94,7 @@ export default buildCategoryPanel("general", {
 
   actions: {
     showCategoryTopic() {
-      DiscourseURL.routeTo(this.get("category.topic_url"));
+      window.open(this.get("category.topic_url"), "_blank").focus();
       return false;
     }
   }
