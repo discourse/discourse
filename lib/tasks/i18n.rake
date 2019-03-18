@@ -55,3 +55,16 @@ task "i18n:check", [:locale] => [:environment] do |_, args|
   puts ""
   exit 1 unless failed_locales.empty?
 end
+
+desc "Update seeded topics and categories with latest translations"
+task "i18n:reseed", [:locale] => [:environment] do |_, args|
+  locale = args[:locale]&.to_sym
+
+  if locale.blank? || !I18n.locale_available?(locale)
+    puts "ERROR: Expecting rake i18n:reseed[locale]"
+    exit 1
+  end
+
+  SeedData::Categories.new(locale).update
+  SeedData::Topics.new(locale).update
+end

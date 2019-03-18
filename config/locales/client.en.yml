@@ -4227,6 +4227,17 @@ en:
           add: "Add"
           filter: "Search (URL or External URL)"
 
+      reseed:
+        action:
+          label: "Reseed…"
+          title: "Update content created by Discourse with latest translations"
+
+        modal:
+          title: "Reseed"
+          subtitle: "Update seeded categories and topics with latest translations"
+          categories: "Categories"
+          topics: "Topics"
+
   wizard_js:
     wizard:
       done: "Done"
