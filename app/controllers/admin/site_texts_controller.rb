@@ -78,6 +78,31 @@ class Admin::SiteTextsController < Admin::AdminController
     render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
   end
 
+  def get_reseed_options
+    render_json_dump(
+      categories: SeedData::Categories.with_default_locale.reseed_options,
+      topics: SeedData::Topics.with_default_locale.reseed_options
+    )
+  end
+
+  def reseed
+    hijack do
+      if params[:category_ids].present?
+        SeedData::Categories.with_default_locale.update(
+          site_setting_names: params[:category_ids]
+        )
+      end
+
+      if params[:topic_ids].present?
+        SeedData::Topics.with_default_locale.update(
+          site_setting_names: params[:topic_ids]
+        )
+      end
+
+      render json: success_json
+    end
+  end
+
   protected
 
   def record_for(k, value = nil)
