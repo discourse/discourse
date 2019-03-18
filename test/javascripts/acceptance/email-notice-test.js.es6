@@ -1,28 +1,35 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Email Disabled Banner", {
   loggedIn: true
 });
 
 QUnit.test("shows banner when required", async assert => {
-  Discourse.SiteSettings.disable_email = "no";
+  Discourse.set("SiteSettings.disable_emails", "no");
   await visit("/");
   assert.notOk(
     exists(".alert-emails-disabled"),
     "alert is not displayed when email enabled"
   );
 
-  Discourse.SiteSettings.disable_email = "yes";
-  await visit("/");
-  assert.notOk(
+  Discourse.set("SiteSettings.disable_emails", "yes");
+  await visit("/latest");
+  assert.ok(
     exists(".alert-emails-disabled"),
     "alert is displayed when email disabled"
   );
 
-  Discourse.SiteSettings.disable_email = "non-staff";
+  Discourse.set("SiteSettings.disable_emails", "non-staff");
   await visit("/");
-  assert.notOk(
+  assert.ok(
     exists(".alert-emails-disabled"),
     "alert is displayed when email disabled for non-staff"
+  );
+
+  replaceCurrentUser({ staff: true, moderator: true });
+  await visit("/");
+  assert.ok(
+    exists(".alert-emails-disabled"),
+    "alert is displayed to staff when email disabled for non-staff"
   );
 });
