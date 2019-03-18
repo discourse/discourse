@@ -2453,6 +2453,11 @@ en:
         muted:
           title: "Muted"
           description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
+      search_priority:
+        label: "Search Priority"
+        options:
+          normal: "Normal"
+          ignore: "Ignore"
       sort_options:
         default: "default"
         likes: "Likes"

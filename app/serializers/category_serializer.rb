@@ -18,7 +18,8 @@ class CategorySerializer < BasicCategorySerializer
              :custom_fields,
              :allowed_tags,
              :allowed_tag_groups,
-             :topic_featured_link_allowed
+             :topic_featured_link_allowed,
+             :search_priority
 
   def group_permissions
     @group_permissions ||= begin

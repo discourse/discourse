@@ -16,27 +16,22 @@ QUnit.test("Can open the category modal", async assert => {
   assert.ok(!visible(".d-modal"), "it closes the modal");
 });
 
-QUnit.test("Change the category color", async assert => {
+QUnit.test("Editing the category", async assert => {
   await visit("/c/bug");
 
   await click(".edit-category");
   await fillIn("#edit-text-color", "#ff0000");
-  await click("#save-category");
-  assert.ok(!visible(".d-modal"), "it closes the modal");
-  assert.equal(
-    DiscourseURL.redirectedTo,
-    "/c/bug",
-    "it does one of the rare full page redirects"
-  );
-});
 
-QUnit.test("Change the topic template", async assert => {
-  await visit("/c/bug");
-
-  await click(".edit-category");
   await click(".edit-category-topic-template");
   await fillIn(".d-editor-input", "this is the new topic template");
+
+  await click(".edit-category-settings");
+  const searchPriorityChooser = selectKit("#category-search-priority");
+  await searchPriorityChooser.expand();
+  await searchPriorityChooser.selectRowByValue(1);
+
   await click("#save-category");
+
   assert.ok(!visible(".d-modal"), "it closes the modal");
   assert.equal(
     DiscourseURL.redirectedTo,
