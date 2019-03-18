@@ -410,6 +410,7 @@ login:
   sso_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
+    client: true
   sso_overrides_username: false
   sso_overrides_name: false
   sso_overrides_avatar:
