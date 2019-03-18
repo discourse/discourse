@@ -432,12 +432,22 @@ createWidget("post-notice", {
   tagName: "div.post-notice",
 
   buildClasses(attrs) {
+    const classes = [];
+
     if (attrs.postNoticeType === "first") {
-      return ["new-user"];
+      classes.push("new-user");
     } else if (attrs.postNoticeType === "returning") {
-      return ["returning-user"];
+      classes.push("returning-user");
     }
-    return [];
+
+    if (
+      new Date() - new Date(attrs.created_at) >
+      this.siteSettings.old_post_notice_days * 86400000
+    ) {
+      classes.push("old");
+    }
+
+    return classes;
   },
 
   html(attrs) {

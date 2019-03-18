@@ -867,12 +867,14 @@ a.mention-group {
 
 .post-notice {
   background-color: $tertiary-low;
+  border-top: 1px solid $primary-low;
   color: $primary;
   padding: 0.8em;
-  max-width: calc(
-    #{$topic-body-width} + #{$topic-avatar-width} - #{$topic-body-width-padding} +
-      0.6em
-  );
+  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+
+  &.old {
+    background-color: unset;
+  }
 
   p {
     display: flex;
