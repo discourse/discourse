@@ -226,6 +226,7 @@ class Auth::DefaultCurrentUserProvider
       @user_token.destroy
     end
 
+    cookies.delete('authentication_data')
     cookies.delete(TOKEN_COOKIE)
   end
 
