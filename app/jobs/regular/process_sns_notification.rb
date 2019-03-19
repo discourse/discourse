@@ -4,11 +4,17 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return unless raw  = args[:raw].presence
+      return unless raw = args[:raw].presence
       return unless json = args[:json].presence
-
       return unless message = json["Message"].presence
-      return unless message["notificationType"] == "Bounce"
+
+      message = begin
+        JSON.parse(message)
+      rescue JSON::ParserError
+        nil
+      end
+
+      return unless message && message["notificationType"] == "Bounce"
       return unless message_id = message.dig("mail", "messageId").presence
       return unless bounce_type = message.dig("bounce", "bounceType").presence
 
