@@ -17,36 +17,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     expect(reviewable.reload.potential_spam?).to eq(true)
   end
 
-  describe "flag_stats" do
-    let(:user_post) { Fabricate(:post, user: user) }
-    let(:reviewable) { PostActionCreator.spam(user, post).reviewable }
-
-    it "increases flags_agreed when agreed" do
-      expect(user.user_stat.flags_agreed).to eq(0)
-      reviewable.perform(Discourse.system_user, :agree_and_keep)
-      expect(user.user_stat.reload.flags_agreed).to eq(1)
-    end
-
-    it "increases flags_disagreed when disagreed" do
-      expect(user.user_stat.flags_disagreed).to eq(0)
-      reviewable.perform(Discourse.system_user, :disagree)
-      expect(user.user_stat.reload.flags_disagreed).to eq(1)
-    end
-
-    it "increases flags_ignored when ignored" do
-      expect(user.user_stat.flags_ignored).to eq(0)
-      reviewable.perform(Discourse.system_user, :ignore)
-      expect(user.user_stat.reload.flags_ignored).to eq(1)
-    end
-
-    it "doesn't increase stats when you flag yourself" do
-      expect(user.user_stat.flags_agreed).to eq(0)
-      self_flag = PostActionCreator.spam(user, user_post).reviewable
-      self_flag.perform(Discourse.system_user, :agree_and_keep)
-      expect(user.user_stat.reload.flags_agreed).to eq(0)
-    end
-  end
-
   describe "actions" do
     let!(:result) { PostActionCreator.spam(user, post) }
     let(:reviewable) { result.reviewable }
