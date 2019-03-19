@@ -54,6 +54,9 @@
   .extra-info-wrapper + .panel {
     flex: 0;
     min-width: 0;
+    .header-buttons {
+      display: none;
+    }
   }
   // Fade in header avatar + icons if topic title is not visible in mobile header
   .panel {
