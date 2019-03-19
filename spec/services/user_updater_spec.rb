@@ -30,7 +30,7 @@ describe UserUpdater do
       updater = UserUpdater.new(u1, u1)
       updater.update_muted_users("#{u1.username},#{u2.username}")
 
-      expect(MutedUser.where(user_id: u1.id).count).to eq 1
+      expect(MutedUser.where(muted_user_id: u2.id).count).to eq 1
     end
   end
 
@@ -60,7 +60,7 @@ describe UserUpdater do
       updater = UserUpdater.new(u1, u1)
       updater.update_ignored_users("#{u1.username},#{u2.username}")
 
-      expect(IgnoredUser.where(user_id: u1.id).count).to eq 1
+      expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 1
     end
   end
 
