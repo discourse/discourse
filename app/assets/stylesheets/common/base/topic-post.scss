@@ -874,6 +874,11 @@ a.mention-group {
 
   &.old {
     background-color: unset;
+    color: $primary-medium;
+
+    .d-icon {
+      color: $primary-medium;
+    }
   }
 
   p {
