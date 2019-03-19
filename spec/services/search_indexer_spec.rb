@@ -81,4 +81,26 @@ describe SearchIndexer do
     raw_data = PostSearchData.where(post_id: post_id).pluck(:raw_data)[0]
     expect(raw_data).to eq("tester")
   end
+
+  describe '.index' do
+    let(:post) { Fabricate(:post) }
+
+    before do
+      SearchIndexer.enable
+    end
+
+    after do
+      SearchIndexer.disable
+    end
+
+    it 'should index posts correctly' do
+      expect { post }.to change { PostSearchData.count }.by(1)
+
+      expect { post.update!(raw: "this is new content") }
+        .to change { post.reload.post_search_data.raw_data }
+
+      expect { post.update!(topic_id: Fabricate(:topic).id) }
+        .to change { post.reload.post_search_data.raw_data }
+    end
+  end
 end
