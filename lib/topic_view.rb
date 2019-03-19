@@ -603,7 +603,18 @@ class TopicView
     @filtered_posts = unfiltered_posts
 
     if SiteSetting.ignore_user_enabled
-      ignored_user_ids = IgnoredUser.where(user_id: @user&.id).pluck(:ignored_user_id)
+
+      sql = <<~SQL
+            SELECT ignored_user_id
+            FROM ignored_users as ig
+            JOIN users as u ON u.id = ig.ignored_user_id
+            WHERE ig.user_id = :current_user_id
+              AND ig.ignored_user_id <> :current_user_id
+              AND u.admin = FALSE
+              AND u.moderator = FALSE
+      SQL
+
+      ignored_user_ids = DB.query_single(sql, current_user_id: @user&.id)
 
       if ignored_user_ids.present?
         @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?", ignored_user_ids, first_post_id)
