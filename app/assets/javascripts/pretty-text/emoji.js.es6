@@ -3,8 +3,7 @@ import {
   aliases,
   searchAliases,
   translations,
-  tonableEmojis,
-  replacements
+  tonableEmojis
 } from "pretty-text/emoji/data";
 import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
@@ -35,47 +34,24 @@ export function performEmojiUnescape(string, opts) {
     return;
   }
 
-  return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
-    const isEmoticon = !!translations[m];
-    const isUnicodeEmoticon = !!replacements[m];
-    let emojiVal;
-    if (isEmoticon) {
-      emojiVal = translations[m];
-    } else if (isUnicodeEmoticon) {
-      emojiVal = replacements[m];
-    } else {
-      emojiVal = m.slice(1, m.length - 1);
-    }
-    const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
-    const url = buildEmojiUrl(emojiVal, opts);
-    const classes = isCustomEmoji(emojiVal, opts)
-      ? "emoji emoji-custom"
-      : "emoji";
+  // this can be further improved by supporting matches of emoticons that don't begin with a colon
+  if (string.indexOf(":") >= 0) {
+    return string.replace(/\B:[^\s:]+(?::t\d)?:?\B/g, m => {
+      const isEmoticon = !!translations[m];
+      const emojiVal = isEmoticon ? translations[m] : m.slice(1, m.length - 1);
+      const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
+      const url = buildEmojiUrl(emojiVal, opts);
+      const classes = isCustomEmoji(emojiVal, opts)
+        ? "emoji emoji-custom"
+        : "emoji";
 
-    return url && (isEmoticon || hasEndingColon || isUnicodeEmoticon)
-      ? `<img src='${url}' ${
-          opts.skipTitle ? "" : `title='${emojiVal}'`
-        } alt='${emojiVal}' class='${classes}'>`
-      : m;
-  });
-
-  return string;
-}
-
-export function performEmojiEscape(string) {
-  if (!string) {
-    return;
+      return url && (isEmoticon || hasEndingColon)
+        ? `<img src='${url}' ${
+            opts.skipTitle ? "" : `title='${emojiVal}'`
+          } alt='${emojiVal}' class='${classes}'>`
+        : m;
+    });
   }
-
-  return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
-    if (!!translations[m]) {
-      return ":" + translations[m] + ":";
-    } else if (!!replacements[m]) {
-      return ":" + replacements[m] + ":";
-    } else {
-      return m;
-    }
-  });
 
   return string;
 }
