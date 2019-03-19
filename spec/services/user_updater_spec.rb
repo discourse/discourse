@@ -23,6 +23,15 @@ describe UserUpdater do
       expect(MutedUser.where(user_id: u1.id).count).to eq 2
       expect(MutedUser.where(user_id: u3.id).count).to eq 0
     end
+
+    it 'excludes acting user' do
+      u1 = Fabricate(:user)
+      u2 = Fabricate(:user)
+      updater = UserUpdater.new(u1, u1)
+      updater.update_muted_users("#{u1.username},#{u2.username}")
+
+      expect(MutedUser.where(user_id: u1.id).count).to eq 1
+    end
   end
 
   describe '#update_ignored_users' do
@@ -43,6 +52,15 @@ describe UserUpdater do
       expect(IgnoredUser.where(user_id: u2.id).count).to eq 2
       expect(IgnoredUser.where(user_id: u1.id).count).to eq 2
       expect(IgnoredUser.where(user_id: u3.id).count).to eq 0
+    end
+
+    it 'excludes acting user' do
+      u1 = Fabricate(:user)
+      u2 = Fabricate(:user)
+      updater = UserUpdater.new(u1, u1)
+      updater.update_ignored_users("#{u1.username},#{u2.username}")
+
+      expect(IgnoredUser.where(user_id: u1.id).count).to eq 1
     end
   end
 
