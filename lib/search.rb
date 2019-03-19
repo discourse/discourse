@@ -392,6 +392,7 @@ class Search
           Category.where('parent_category_id = ?', category_ids.first).pluck(:id)
       end
 
+      @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
       posts.where("1 = 0")
@@ -441,6 +442,8 @@ class Search
         category_ids +=
           Category.where('parent_category_id = ?', category_id).pluck(:id)
       end
+
+      @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
@@ -804,7 +807,8 @@ class Search
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         end
       else
-        categories_ignored(posts)
+        posts = categories_ignored(posts) unless @category_filter_matched
+        posts
       end
 
     if @order == :latest || (@term.blank? && !@order)
