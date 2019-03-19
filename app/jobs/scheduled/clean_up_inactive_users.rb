@@ -9,10 +9,11 @@ module Jobs
       destroyer = UserDestroyer.new(Discourse.system_user)
 
       User.joins("LEFT JOIN posts ON posts.user_id = users.id")
-        .where(last_posted_at: nil)
-        .where("posts.user_id IS NULL")
-        .where("users.last_seen_at < ?", SiteSetting.clean_up_inactive_users_after_days.days.ago)
-        .where(trust_level: 0)
+        .where(last_posted_at: nil, trust_level: TrustLevel.levels[:newuser])
+        .where(
+          "posts.user_id IS NULL AND users.last_seen_at < ?",
+          SiteSetting.clean_up_inactive_users_after_days.days.ago
+        )
         .find_each do |user|
 
         begin

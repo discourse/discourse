@@ -1,30 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe Jobs::CleanUpInactiveUsers do
-  context 'when user is inactive' do
-    let(:user) { Fabricate(:user) }
-    let(:active_user) { Fabricate(:active_user) }
+  it "should clean up new users that have been inactive" do
+    SiteSetting.clean_up_inactive_users_after_days = 0
 
-    it 'should clean up the user' do
-      user.update!(last_seen_at: 3.years.ago, trust_level: 0)
-      active_user
+    user = Fabricate(:user,
+      last_seen_at: 5.days.ago,
+      trust_level: TrustLevel.levels[:newuser]
+    )
 
-      expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
-      expect(User.find_by(id: user.id)).to eq(nil)
-    end
-  end
+    Fabricate(:active_user)
 
-  context 'when user is not inactive' do
+    Fabricate(:post, user: Fabricate(:user,
+      trust_level: TrustLevel.levels[:newuser],
+      last_seen_at: 5.days.ago
+    )).user
 
-    let!(:active_user_1) { Fabricate(:post, user: Fabricate(:user, trust_level: 0)).user }
-    let!(:active_user_2) { Fabricate(:user, trust_level: 0, last_seen_at: 2.days.ago) }
-    let!(:active_user_3) { Fabricate(:user, trust_level: 1) }
+    Fabricate(:user,
+      trust_level: TrustLevel.levels[:newuser],
+      last_seen_at: 2.days.ago
+    )
 
-    it 'should not clean up active users' do
-      expect { described_class.new.execute({}) }.to_not change { User.count }
-      expect(User.find_by(id: active_user_1.id)).to_not eq(nil)
-      expect(User.find_by(id: active_user_2.id)).to_not eq(nil)
-      expect(User.find_by(id: active_user_3.id)).to_not eq(nil)
-    end
+    Fabricate(:user, trust_level: TrustLevel.levels[:basic])
+
+    expect { described_class.new.execute({}) }.to_not change { User.count }
+
+    SiteSetting.clean_up_inactive_users_after_days = 4
+
+    expect { described_class.new.execute({}) }
+      .to change { User.count }.by(-1)
+
+    expect(User.exists?(id: user.id)).to eq(false)
   end
 end
