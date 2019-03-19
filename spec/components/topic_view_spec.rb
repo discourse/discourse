@@ -94,7 +94,7 @@ describe TopicView do
           let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
 
           it "filters out ignored user excluding the staff user" do
-            tv = TopicView.new(topic.id, nil)
+            tv = TopicView.new(topic.id, evil_trout)
             expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
           end
         end
