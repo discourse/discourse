@@ -1138,6 +1138,20 @@ describe User do
 
   end
 
+  describe "#letter_avatar_color" do
+    before do
+      SiteSetting.restrict_letter_avatar_colors = "2F70AC|ED207B|AAAAAA|77FF33"
+    end
+
+    it "returns custom color if restrict_letter_avatar_colors site setting is set" do
+      colors = SiteSetting.restrict_letter_avatar_colors.split("|")
+      expect(User.letter_avatar_color("username_one")).to eq("2F70AC")
+      expect(User.letter_avatar_color("username_two")).to eq("ED207B")
+      expect(User.letter_avatar_color("username_three")).to eq("AAAAAA")
+      expect(User.letter_avatar_color("username_four")).to eq("77FF33")
+    end
+  end
+
   describe ".small_avatar_url" do
 
     let(:user) { build(:user, username: 'Sam') }

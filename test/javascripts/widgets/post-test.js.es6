@@ -857,16 +857,18 @@ widgetTest("post notice - with username", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.siteSettings.prioritize_username_in_ux = true;
+    this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
       postNoticeType: "returning",
-      postNoticeTime: new Date("2010-01-01 12:00:00 UTC"),
+      postNoticeTime: new Date(2010, 0, 1),
       username: "codinghorror",
-      name: "Jeff"
+      name: "Jeff",
+      created_at: new Date()
     });
   },
   test(assert) {
     assert.equal(
-      find(".post-notice.returning-user")
+      find(".post-notice.returning-user:not(.old)")
         .text()
         .trim(),
       I18n.t("post.notice.return", { user: "codinghorror", time: "Jan '10" })
@@ -878,15 +880,17 @@ widgetTest("post notice - with name", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
     this.siteSettings.prioritize_username_in_ux = false;
+    this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
       postNoticeType: "first",
       username: "codinghorror",
-      name: "Jeff"
+      name: "Jeff",
+      created_at: new Date(2019, 0, 1)
     });
   },
   test(assert) {
     assert.equal(
-      find(".post-notice.new-user")
+      find(".post-notice.old.new-user")
         .text()
         .trim(),
       I18n.t("post.notice.first", { user: "Jeff", time: "Jan '10" })

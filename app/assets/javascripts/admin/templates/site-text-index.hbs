@@ -7,12 +7,20 @@
                autofocus="true"
                key-up=(action "search")}}
 
-  <div class='extra-options'>
+  <div class="reseed">
+    {{d-button action=(route-action "showReseedModal")
+               class="btn-default"
+               label="admin.reseed.action.label"
+               title="admin.reseed.action.title"
+               icon="sync"}}
+  </div>
+
+  <p class="filter-options">
     <label>
       {{input type="checkbox" checked=overridden click=(action "toggleOverridden")}}
       {{i18n 'admin.site_text.show_overriden'}}
     </label>
-  </div>
+  </p>
 </div>
 
 {{#conditional-loading-spinner condition=searching}}

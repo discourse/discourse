@@ -4,12 +4,25 @@ require 'rails_helper'
 require_dependency 'post_creator'
 
 describe Category do
+  let(:user) { Fabricate(:user) }
+
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
     is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
+  end
+
+  it 'validates inclusion of search_priority' do
+    category = Fabricate.build(:category, user: user)
+
+    expect(category.valid?).to eq(true)
+
+    category.search_priority = Searchable::PRIORITIES.values.last + 1
+
+    expect(category.valid?).to eq(false)
+    expect(category.errors.keys).to contain_exactly(:search_priority)
   end
 
   it 'validates uniqueness in case insensitive way' do

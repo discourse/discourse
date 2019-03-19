@@ -413,19 +413,77 @@ describe Search do
   end
 
   context 'categories' do
+    let(:category) { Fabricate(:category, name: "monkey Category 2") }
+    let(:topic) { Fabricate(:topic, category: category) }
+    let!(:post) { Fabricate(:post, topic: topic, raw: "snow monkey") }
 
-    let!(:category) { Fabricate(:category) }
-    def search
-      Search.execute(category.name)
+    let!(:ignored_category) do
+      Fabricate(:category,
+        name: "monkey Category 1",
+        slug: "test",
+        search_priority: Searchable::PRIORITIES[:ignore]
+      )
     end
 
-    it 'returns the correct result' do
-      expect(search.categories).to be_present
+    it "should return the right categories" do
+      search = Search.execute("monkey")
 
-      category.set_permissions({})
-      category.save
+      expect(search.categories).to contain_exactly(
+        category, ignored_category
+      )
 
-      expect(search.categories).not_to be_present
+      expect(search.posts).to contain_exactly(category.topic.first_post, post)
+
+      search = Search.execute("monkey #test")
+
+      expect(search.posts).to contain_exactly(ignored_category.topic.first_post)
+    end
+
+    describe "with child categories" do
+      let!(:child_of_ignored_category) do
+        Fabricate(:category,
+          name: "monkey Category 3",
+          parent_category: ignored_category
+        )
+      end
+
+      let!(:post2) do
+        Fabricate(:post,
+          topic: Fabricate(:topic, category: child_of_ignored_category),
+          raw: "snow monkey park"
+        )
+      end
+
+      it 'returns the right results' do
+        search = Search.execute("monkey")
+
+        expect(search.categories).to contain_exactly(
+          category, ignored_category, child_of_ignored_category
+        )
+
+        expect(search.posts).to contain_exactly(
+          category.topic.first_post,
+          post,
+          child_of_ignored_category.topic.first_post,
+          post2
+        )
+
+        search = Search.execute("snow")
+        expect(search.posts).to contain_exactly(post, post2)
+
+        category.set_permissions({})
+        category.save
+        search = Search.execute("monkey")
+
+        expect(search.categories).to contain_exactly(
+          ignored_category, child_of_ignored_category
+        )
+
+        expect(search.posts).to contain_exactly(
+          child_of_ignored_category.topic.first_post,
+          post2
+        )
+      end
     end
 
   end
@@ -576,7 +634,10 @@ describe Search do
     end
 
     it 'can use category as a search context' do
-      category = Fabricate(:category)
+      category = Fabricate(:category,
+        search_priority: Searchable::PRIORITIES[:ignore]
+      )
+
       topic = Fabricate(:topic, category: category)
       topic_no_cat = Fabricate(:topic)
 

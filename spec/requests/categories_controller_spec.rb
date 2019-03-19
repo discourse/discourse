@@ -49,6 +49,20 @@ describe CategoriesController do
 
       expect(response.body).to have_tag "title", text: "Discourse - Official community"
     end
+
+    it "redirects /category paths to /c paths" do
+      get "/category/uncategorized"
+      expect(response.status).to eq(302)
+      expect(response.body).to include("c/uncategorized")
+    end
+
+    it "respects permalinks before redirecting /category paths to /c paths" do
+      perm = Permalink.create!(url: "category/something", category_id: category.id)
+
+      get "/category/something"
+      expect(response.status).to eq(301)
+      expect(response.body).to include(category.slug)
+    end
   end
 
   context 'extensibility event' do
@@ -141,6 +155,7 @@ describe CategoriesController do
             text_color: "fff",
             slug: "hello-cat",
             auto_close_hours: 72,
+            search_priority: Searchable::PRIORITIES[:ignore],
             permissions: {
               "everyone" => readonly,
               "staff" => create_post
@@ -156,6 +171,7 @@ describe CategoriesController do
           expect(category.slug).to eq("hello-cat")
           expect(category.color).to eq("ff0")
           expect(category.auto_close_hours).to eq(72)
+          expect(category.search_priority).to eq(Searchable::PRIORITIES[:ignore])
           expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
         end
       end

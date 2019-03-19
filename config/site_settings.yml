@@ -410,6 +410,7 @@ login:
   sso_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
+    client: true
   sso_overrides_username: false
   sso_overrides_name: false
   sso_overrides_avatar:
@@ -540,6 +541,8 @@ users:
     default: 365
     client: true
     min: 1
+  clean_up_inactive_users_after_days:
+    default: 730
 
 groups:
   enable_group_directory:
@@ -825,6 +828,9 @@ posting:
   min_post_notice_tl:
     default: 2
     enum: "TrustLevelSetting"
+  old_post_notice_days:
+    default: 14
+    client: true
   returning_users_days:
     default: 120
 
@@ -1105,6 +1111,11 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
+  restrict_letter_avatar_colors:
+    default: ''
+    type: list
+    list_type: compact
+    validator: "ColorListValidator"
   selectable_avatars_enabled:
     default: false
     client: true
@@ -1758,6 +1769,15 @@ uncategorized:
     default: -1
     hidden: true
   privacy_topic_id:
+    default: -1
+    hidden: true
+  welcome_topic_id:
+    default: -1
+    hidden: true
+  lounge_welcome_topic_id:
+    default: -1
+    hidden: true
+  admin_quick_start_topic_id:
     default: -1
     hidden: true
 

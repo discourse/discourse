@@ -12,11 +12,29 @@
 </div>
 
 <div class="actions">
-  {{#each sources as |s|}}
-    {{share-source source=s title=model.title action=(action "share")}}
-  {{/each}}
+  <div class="sources">
+    {{#each sources as |s|}}
+      {{share-source source=s title=model.title action=(action "share")}}
+    {{/each}}
+  </div>
 
-  <div class="link">
+  <div class="alt-actions">
+    {{#if topic.details.can_reply_as_new_topic}}
+      <div class="reply-as-new-topic">
+        {{#if topic.isPrivateMessage}}
+          <a href class="new-topic" {{action "replyAsNewTopic"}} aria-label={{i18n "post.reply_as_new_private_message"}} title={{i18n "post.reply_as_new_private_message"}}>
+            {{d-icon "plus"}}
+            {{i18n "user.new_private_message"}}
+          </a>
+        {{else}}
+          <a href class="new-topic" {{action "replyAsNewTopic"}} aria-label={{i18n "post.reply_as_new_topic"}} title={{i18n "post.reply_as_new_topic"}}>
+            {{d-icon "plus"}}
+            {{i18n "topic.create"}}
+          </a>
+        {{/if}}
+      </div>
+    {{/if}}
+
     <a href {{action "close"}} class="close-share" aria-label={{i18n "share.close"}} title={{i18n "share.close"}}>
       {{d-icon "times"}}
     </a>

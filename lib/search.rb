@@ -4,6 +4,9 @@ class Search
   INDEX_VERSION = 2.freeze
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
+  cattr_accessor :preloaded_topic_custom_fields
+  self.preloaded_topic_custom_fields = Set.new
+
   def self.per_facet
     5
   end
@@ -240,7 +243,12 @@ class Search
       end
     end
 
-    find_grouped_results unless @results.posts.present?
+    find_grouped_results if @results.posts.blank?
+
+    if preloaded_topic_custom_fields.present? && @results.posts.present?
+      topics = @results.posts.map(&:topic)
+      Topic.preload_custom_fields(topics, preloaded_topic_custom_fields)
+    end
 
     @results
   end
@@ -384,6 +392,7 @@ class Search
           Category.where('parent_category_id = ?', category_ids.first).pluck(:id)
       end
 
+      @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
       posts.where("1 = 0")
@@ -433,6 +442,8 @@ class Search
         category_ids +=
           Category.where('parent_category_id = ?', category_id).pluck(:id)
       end
+
+      @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
@@ -600,7 +611,6 @@ class Search
   end
 
   def find_grouped_results
-
     if @results.type_filter.present?
       raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
       send("#{@results.type_filter}_search")
@@ -719,6 +729,7 @@ class Search
 
   def posts_query(limit, opts = nil)
     opts ||= {}
+
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
@@ -760,6 +771,7 @@ class Search
         weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
         posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
         exact_terms = @term.scan(/"([^"]+)"/).flatten
+
         exact_terms.each do |exact|
           posts = posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
         end
@@ -775,25 +787,29 @@ class Search
     end if @filters
 
     # If we have a search context, prioritize those posts first
-    if @search_context.present?
+    posts =
+      if @search_context.present?
+        if @search_context.is_a?(User)
+          if opts[:private_messages]
+            posts.private_posts_for_user(@search_context)
+          else
+            posts.where("posts.user_id = #{@search_context.id}")
+          end
+        elsif @search_context.is_a?(Category)
+          category_ids = Category
+            .where(parent_category_id: @search_context.id)
+            .pluck(:id)
+            .push(@search_context.id)
 
-      if @search_context.is_a?(User)
-
-        if opts[:private_messages]
-          posts = posts.private_posts_for_user(@search_context)
-        else
-          posts = posts.where("posts.user_id = #{@search_context.id}")
+          posts.where("topics.category_id in (?)", category_ids)
+        elsif @search_context.is_a?(Topic)
+          posts.where("topics.id = #{@search_context.id}")
+            .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         end
-
-      elsif @search_context.is_a?(Category)
-        category_ids = [@search_context.id] + Category.where(parent_category_id: @search_context.id).pluck(:id)
-        posts = posts.where("topics.category_id in (?)", category_ids)
-      elsif @search_context.is_a?(Topic)
-        posts = posts.where("topics.id = #{@search_context.id}")
-          .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
+      else
+        posts = categories_ignored(posts) unless @category_filter_matched
+        posts
       end
-
-    end
 
     if @order == :latest || (@term.blank? && !@order)
       if opts[:aggregate_search]
@@ -837,6 +853,14 @@ class Search
 
     posts = posts.offset(offset)
     posts.limit(limit)
+  end
+
+  def categories_ignored(posts)
+    posts.where(<<~SQL, Searchable::PRIORITIES[:ignore])
+    categories.id NOT IN (
+      SELECT categories.id WHERE categories.search_priority = ?
+    )
+    SQL
   end
 
   def self.default_ts_config

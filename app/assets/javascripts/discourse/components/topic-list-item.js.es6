@@ -71,6 +71,10 @@ export default Ember.Component.extend(
         classes.push("category-" + topic.get("category.fullSlug"));
       }
 
+      if (topic.get("tags")) {
+        topic.get("tags").forEach(tagName => classes.push("tag-" + tagName));
+      }
+
       if (topic.get("hasExcerpt")) {
         classes.push("has-excerpt");
       }

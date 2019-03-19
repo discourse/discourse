@@ -1,3 +1,5 @@
+import showModal from "discourse/lib/show-modal";
+
 export default Ember.Route.extend({
   queryParams: {
     q: { replace: true },
@@ -13,5 +15,11 @@ export default Ember.Route.extend({
 
   setupController(controller, model) {
     controller.set("siteTexts", model);
+  },
+
+  actions: {
+    showReseedModal() {
+      showModal("admin-reseed", { admin: true });
+    }
   }
 });

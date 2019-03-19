@@ -85,8 +85,11 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
   actions: {
     change(cat, e) {
       let position = parseInt($(e.target).val());
-      cat.set("position", position);
-      this.fixIndices();
+      let amount = Math.min(
+        Math.max(position, 0),
+        this.get("categoriesOrdered").length - 1
+      );
+      this.moveDir(cat, amount - this.get("categoriesOrdered").indexOf(cat));
     },
 
     moveUp(cat) {
