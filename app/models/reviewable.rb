@@ -189,6 +189,8 @@ class Reviewable < ActiveRecord::Base
 
       if result.success?
         transition_to(result.transition_to, performed_by) if result.transition_to
+        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+
         recalculate_score if result.recalculate_score
       end
     end
@@ -375,6 +377,27 @@ protected
     end
   end
 
+private
+
+  def update_flag_stats(status:, user_ids:)
+    return unless [:agreed, :disagreed, :ignored].include?(status)
+
+    # Don't count self-flags
+    user_ids -= [post&.user_id]
+    return if user_ids.blank?
+
+    result = DB.query(<<~SQL, user_ids: user_ids)
+      UPDATE user_stats
+      SET flags_#{status} = flags_#{status} + 1
+      WHERE user_id IN (:user_ids)
+      RETURNING user_id, flags_agreed + flags_disagreed + flags_ignored AS total
+    SQL
+
+    Jobs.enqueue(
+      :truncate_user_flag_stats,
+      user_ids: result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
+    )
+  end
 end
 
 # == Schema Information
