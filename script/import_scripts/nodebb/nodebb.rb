@@ -73,7 +73,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
     category_ids = category_map.keys
     categories = category_map.values
 
-    top_level_categories = categories.select { |c| c["parentCid"] == "0" }
+    top_level_categories = categories.select { |c| c["parentCid"] == "0" && c["disabled"] != "1" }
 
     create_categories(top_level_categories) do |category|
       {
@@ -86,7 +86,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     puts "", "importing child categories..."
 
-    children_categories = categories.select { |c| c["parentCid"] != "0" }
+    children_categories = categories.select { |c| c["parentCid"] != "0" && c["disabled"] != "1" }
     top_level_category_ids = Set.new(top_level_categories.map { |c| c["cid"] })
 
     # cut down the tree to only 2 levels of categories
@@ -105,6 +105,12 @@ class ImportScripts::NodeBB < ImportScripts::Base
         parent_category_id: category_id_from_imported_category_id(category["parentCid"])
       }
     end
+
+    categories.each do |source_category|
+      cid = category_id_from_imported_category_id(source_category['cid'])
+      Permalink.create(url: "/category/#{source_category['slug']}", category_id: cid) rescue nil
+    end
+
   end
 
   def import_users
@@ -356,6 +362,11 @@ class ImportScripts::NodeBB < ImportScripts::Base
         data[:pinned_at] = data[:created_at] if topic["pinned"] == "1"
 
         data
+      end
+
+      topics.each do |import_topic|
+        topic = topic_lookup_from_imported_post_id("t#{import_topic["tid"]}")
+        Permalink.create(url: "/topic/#{import_topic['slug']}", topic_id: topic[:topic_id]) rescue nil
       end
     end
   end
