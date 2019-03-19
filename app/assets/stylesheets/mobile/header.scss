@@ -54,7 +54,8 @@
   .extra-info-wrapper + .panel {
     flex: 0;
     min-width: 0;
-    .header-buttons {
+    .header-buttons,
+    .badge-notification {
       display: none;
     }
   }
