@@ -605,13 +605,13 @@ class TopicView
     if SiteSetting.ignore_user_enabled
 
       sql = <<~SQL
-            SELECT ignored_user_id
-            FROM ignored_users as ig
-            JOIN users as u ON u.id = ig.ignored_user_id
-            WHERE ig.user_id = :current_user_id
-              AND ig.ignored_user_id <> :current_user_id
-              AND u.admin = FALSE
-              AND u.moderator = FALSE
+          SELECT ignored_user_id
+          FROM ignored_users as ig
+          JOIN users as u ON u.id = ig.ignored_user_id
+          WHERE ig.user_id = :current_user_id
+            AND ig.ignored_user_id <> :current_user_id
+            AND NOT u.admin
+            AND NOT u.moderator
       SQL
 
       ignored_user_ids = DB.query_single(sql, current_user_id: @user&.id)

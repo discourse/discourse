@@ -996,9 +996,7 @@ class UsersController < ApplicationController
   end
 
   def ignore
-    unless SiteSetting.ignore_user_enabled
-      raise Discourse::NotFound
-    end
+    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
 
     unless current_user.id != params[:ignored_user_id] && User.where(id: params[:ignored_user_id], admin: false, moderator: false).exists?
       return render json: failed_json, status: 422
