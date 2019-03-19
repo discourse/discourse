@@ -282,7 +282,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_ignore_user
-    SiteSetting.ignore_user_enabled
+    SiteSetting.ignore_user_enabled && (scope.user&.admin? || scope.user&.moderator?)
   end
 
   # Needed because 'send_private_message_to_user' will always return false
