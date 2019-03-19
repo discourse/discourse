@@ -134,7 +134,13 @@ class SearchIndexer
     category_name = topic.category&.name if topic
     tag_names = topic.tags.pluck(:name).join(' ') if topic
 
-    if Post === obj && (obj.saved_change_to_cooked? || force)
+    if Post === obj &&
+       (
+         obj.saved_change_to_cooked? ||
+         obj.saved_change_to_topic_id? ||
+         force
+       )
+
       if topic
         SearchIndexer.update_posts_index(obj.id, topic.title, category_name, tag_names, obj.cooked)
         SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
