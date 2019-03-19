@@ -37,7 +37,13 @@ class SingleSignOn
     suppress_welcome_message
   }
 
-  NONCE_EXPIRY_TIME = 10.minutes
+  def self.nonce_expiry_time
+    @nonce_expiry_time ||= 10.minutes
+  end
+
+  def self.nonce_expiry_time=(v)
+    @nonce_expiry_time = v
+  end
 
   attr_accessor(*ACCESSORS)
   attr_writer :sso_secret, :sso_url
