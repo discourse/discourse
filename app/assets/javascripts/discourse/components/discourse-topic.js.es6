@@ -134,10 +134,10 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     // On mobile, we show the header topic if the user has scrolled past the topic
     // title and the current scroll direction is down
     // On desktop the user only needs to scroll past the topic title.
-
-    return this.site.mobileView
-      ? offset > this.dockAt && this.mobileScrollDirection === "down"
-      : offset > this.dockAt;
+    return (
+      offset > this.dockAt &&
+      (!this.site.mobileView || this.mobileScrollDirection === "down")
+    );
   },
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   scrolled() {
@@ -191,7 +191,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
   _mobileScrollDirectionCheck(offset) {
     // Difference between this scroll and the one before it.
-    const delta = parseInt(offset - this._mobileLastScroll, 10);
+    const delta = Math.floor(offset - this._mobileLastScroll);
 
     // This is a tiny scroll, so we ignore it.
     if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE)
@@ -200,22 +200,17 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     const prevDirection = this.mobileScrollDirection;
     const currDirection = delta > 0 ? "down" : "up";
 
-    if (currDirection === "down" && prevDirection !== "down") {
-      // Delta is positive so the direction is down
-      this.set("mobileScrollDirection", "down");
-    } else if (currDirection === "up" && prevDirection !== "up") {
-      // Delta is negative so the direction is up
-      this.set("mobileScrollDirection", "up");
+    if (currDirection !== prevDirection) {
+      this.set("mobileScrollDirection", currDirection);
     }
 
     // We store this to compare against it the next time the user scrolls
-    this._mobileLastScroll = parseInt(offset, 10);
+    this._mobileLastScroll = Math.floor(offset);
 
     // If the user reaches the very bottom of the topic, we want to reset the
     // scroll direction in order for the header to switch back.
-    const distanceToTopicBottom = parseInt(
-      $("body").height() - offset - $(window).height(),
-      10
+    const distanceToTopicBottom = Math.floor(
+      $("body").height() - offset - $(window).height()
     );
 
     // Not at the bottom yet
@@ -229,8 +224,9 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   // in the header, otherwise, we hide it.
   @observes("mobileScrollDirection")
   toggleMobileHeaderTopic() {
-    return this.mobileScrollDirection === "down"
-      ? this.appEvents.trigger("header:update-topic", this.get("topic"))
-      : this.appEvents.trigger("header:update-topic", null);
+    return this.appEvents.trigger(
+      "header:update-topic",
+      this.mobileScrollDirection === "down" ? this.get("topic") : null
+    );
   }
 });
