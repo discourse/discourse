@@ -2640,6 +2640,32 @@ describe Guardian do
     end
   end
 
+  describe '#can_ignore_user?' do
+    let(:guardian) { Guardian.new(user) }
+
+    context "when ignored user is the same as guardian user" do
+      it 'does not allow ignoring user' do
+        expect(guardian.can_ignore_user?(user.id)).to be_falsey
+      end
+    end
+
+    context "when ignored user is a staff user" do
+      let!(:admin) { Fabricate(:user, admin: true) }
+
+      it 'does not allow ignoring user' do
+        expect(guardian.can_ignore_user?(admin.id)).to be_falsey
+      end
+    end
+
+    context "when ignored user is a normal user" do
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to be_truthy
+      end
+    end
+  end
+
   describe "#allow_themes?" do
     let(:theme) { Fabricate(:theme) }
     let(:theme2) { Fabricate(:theme) }

@@ -92,6 +92,18 @@ describe TopicView do
             expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post3.id, post4.id])
           end
         end
+
+        describe "when a staff user is ignored" do
+          let!(:admin) { Fabricate(:user, admin: true) }
+          let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
+          let!(:post4) { Fabricate(:post, topic: topic, user: admin_ignored_user) }
+
+          it "filters out ignored user excluding the staff user" do
+            tv = TopicView.new(topic.id, nil)
+            expect(tv.filtered_post_ids.size).to eq(3)
+            expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post4.id])
+          end
+        end
       end
     end
   end
