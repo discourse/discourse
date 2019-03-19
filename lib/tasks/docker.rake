@@ -136,7 +136,7 @@ task 'docker:test' do
             spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
             # quick and dirty load balancing
             if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(60))
+              spec_partials[0].concat(spec_partials[total - 1].shift(40))
             end
 
             params << spec_partials[subset].join(' ')
