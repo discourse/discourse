@@ -2645,7 +2645,7 @@ describe Guardian do
 
     context "when ignored user is the same as guardian user" do
       it 'does not allow ignoring user' do
-        expect(guardian.can_ignore_user?(user.id)).to be_falsey
+        expect(guardian.can_ignore_user?(user.id)).to eq(false)
       end
     end
 
@@ -2653,7 +2653,7 @@ describe Guardian do
       let!(:admin) { Fabricate(:user, admin: true) }
 
       it 'does not allow ignoring user' do
-        expect(guardian.can_ignore_user?(admin.id)).to be_falsey
+        expect(guardian.can_ignore_user?(admin.id)).to eq(false)
       end
     end
 
@@ -2661,7 +2661,7 @@ describe Guardian do
       let!(:another_user) { Fabricate(:user) }
 
       it 'allows ignoring user' do
-        expect(guardian.can_ignore_user?(another_user.id)).to be_truthy
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
       end
     end
   end
