@@ -84,14 +84,15 @@ class ReviewableFlaggedPost < Reviewable
       action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
     end
 
-    update_flag_stats(:ignored, actions.map(&:user_id))
-
     if actions.first.present?
       DiscourseEvent.trigger(:flag_reviewed, post)
       DiscourseEvent.trigger(:flag_deferred, actions.first)
     end
 
-    create_result(:success, :ignored) { |result| result.recalculate_score = true }
+    create_result(:success, :ignored) do |result|
+      result.update_flag_stats = { status: :ignored, user_ids: actions.map(&:user_id) }
+      result.recalculate_score = true
+    end
   end
 
   # Penalties are handled by the modal after the action is performed
@@ -159,8 +160,6 @@ class ReviewableFlaggedPost < Reviewable
       action.add_moderator_post_if_needed(performed_by, :disagreed)
     end
 
-    update_flag_stats(:disagreed, actions.map(&:user_id))
-
     # reset all cached counters
     cached = {}
     action_type_ids.each do |atid|
@@ -181,7 +180,10 @@ class ReviewableFlaggedPost < Reviewable
       UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
     end
 
-    create_result(:success, :rejected) { |result| result.recalculate_score = true }
+    create_result(:success, :rejected) do |result|
+      result.update_flag_stats = { status: :disagreed, user_ids: actions.map(&:user_id) }
+      result.recalculate_score = true
+    end
   end
 
   def perform_delete_and_ignore(performed_by, args)
@@ -195,27 +197,6 @@ class ReviewableFlaggedPost < Reviewable
     PostDestroyer.new(performed_by, post).destroy
     result
   end
-
-  def update_flag_stats(status, user_ids)
-    return unless [:agreed, :disagreed, :ignored].include?(status)
-
-    # Don't count self-flags
-    user_ids -= [post&.user_id]
-    return if user_ids.blank?
-
-    result = DB.query(<<~SQL, user_ids: user_ids)
-      UPDATE user_stats
-      SET flags_#{status} = flags_#{status} + 1
-      WHERE user_id IN (:user_ids)
-      RETURNING user_id, flags_agreed + flags_disagreed + flags_ignored AS total
-    SQL
-
-    Jobs.enqueue(
-      :truncate_user_flag_stats,
-      user_ids: result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
-    )
-  end
-
 protected
 
   def agree(performed_by, args)
@@ -233,8 +214,6 @@ protected
       trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
     end
 
-    update_flag_stats(:agreed, actions.map(&:user_id))
-
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
 
     if actions.first.present?
@@ -243,7 +222,10 @@ protected
       yield(actions.first) if block_given?
     end
 
-    create_result(:success, :approved) { |result| result.recalculate_score = true }
+    create_result(:success, :approved) do |result|
+      result.update_flag_stats = { status: :agreed, user_ids: actions.map(&:user_id) }
+      result.recalculate_score = true
+    end
   end
 
   def build_action(actions, id, icon:, bundle: nil, client_action: nil, confirm: false)
