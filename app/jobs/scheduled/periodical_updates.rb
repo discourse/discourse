@@ -15,7 +15,7 @@ module Jobs
       (@call_count % 24) == 1
     end
 
-    def execute(args)
+    def execute(args = nil)
       # Feature topics in categories
       CategoryFeaturedTopic.feature_topics(batched: true)
 
@@ -29,7 +29,7 @@ module Jobs
 
       # Forces rebake of old posts where needed, as long as no system avatars need updating
       if !SiteSetting.automatically_download_gravatars || !UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first
-        problems = Post.rebake_old(SiteSetting.rebake_old_posts_count)
+        problems = Post.rebake_old(SiteSetting.rebake_old_posts_count, priority: :ultra_low)
         problems.each do |hash|
           post_id = hash[:post].id
           Discourse.handle_job_exception(hash[:ex], error_context(args, "Rebaking post id #{post_id}", post_id: post_id))

@@ -1,4 +1,4 @@
-class MiniSqlMultisiteConnection < MiniSql::Connection
+class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
 
   class CustomBuilder < MiniSql::Builder
 

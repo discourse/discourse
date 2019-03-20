@@ -30,10 +30,16 @@ class Admin::EmailController < Admin::AdminController
 
     email_logs = filter_logs(email_logs, params)
 
-    if params[:reply_key].present?
-      email_logs = email_logs.where(
-        "post_reply_keys.reply_key ILIKE ?", "%#{params[:reply_key]}%"
-      )
+    if (reply_key = params[:reply_key]).present?
+      email_logs =
+        if reply_key.length == 32
+          email_logs.where("post_reply_keys.reply_key = ?", reply_key)
+        else
+          email_logs.where(
+            "replace(post_reply_keys.reply_key::VARCHAR, '-', '') ILIKE ?",
+            "%#{reply_key}%"
+          )
+        end
     end
 
     email_logs = email_logs.to_a
@@ -51,8 +57,8 @@ class Admin::EmailController < Admin::AdminController
           *tuples
         )
         .pluck(:post_id, :user_id, "reply_key::text")
-        .each do |post_id, user_id, reply_key|
-          reply_keys[[post_id, user_id]] = reply_key
+        .each do |post_id, user_id, key|
+          reply_keys[[post_id, user_id]] = key
         end
     end
 
@@ -83,6 +89,8 @@ class Admin::EmailController < Admin::AdminController
     params.require(:last_seen_at)
     params.require(:username)
     user = User.find_by_username(params[:username])
+    raise Discourse::InvalidParameters unless user
+
     renderer = Email::Renderer.new(UserNotifications.digest(user, since: params[:last_seen_at]))
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end

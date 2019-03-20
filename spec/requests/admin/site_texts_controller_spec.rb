@@ -28,7 +28,11 @@ RSpec.describe Admin::SiteTextsController do
       put "/admin/customize/site_texts/some_key.json", params: {
         site_text: { value: 'foo' }
       }
+      expect(response.status).to eq(404)
 
+      put "/admin/customize/reseed.json", params: {
+        category_ids: [], topic_ids: []
+      }
       expect(response.status).to eq(404)
     end
   end
@@ -43,6 +47,13 @@ RSpec.describe Admin::SiteTextsController do
         get "/admin/customize/site_texts.json", params: { q: 'title' }
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)['site_texts']).to include(include("id" => "title"))
+      end
+
+      it 'sets has_more to true if more than 50 results were found' do
+        get "/admin/customize/site_texts.json", params: { q: 'e' }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)['site_texts'].size).to eq(50)
+        expect(JSON.parse(response.body)['extras']['has_more']).to be_truthy
       end
 
       it 'normalizes quotes during search' do
@@ -234,6 +245,58 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         json = ::JSON.parse(response.body)
         expect(json['site_text']['value']).to_not eq(ru_mf_text)
+      end
+    end
+
+    context "reseeding" do
+      before do
+        staff_category = Fabricate(
+          :category,
+          name: "Staff EN",
+          user: Discourse.system_user
+        )
+        SiteSetting.staff_category_id = staff_category.id
+
+        guidelines_topic = Fabricate(
+          :topic,
+          title: "The English Guidelines",
+          category: @staff_category,
+          user: Discourse.system_user
+        )
+        Fabricate(:post, topic: guidelines_topic, user: Discourse.system_user)
+        SiteSetting.guidelines_topic_id = guidelines_topic.id
+      end
+
+      describe '#get_reseed_options' do
+        it 'returns correct json' do
+          get "/admin/customize/reseed.json"
+          expect(response.status).to eq(200)
+
+          expected_reseed_options = {
+            categories: [
+              { id: "uncategorized_category_id", name: I18n.t("uncategorized_category_name"), selected: true },
+              { id: "staff_category_id", name: "Staff EN", selected: true }
+            ],
+            topics: [{ id: "guidelines_topic_id", name: "The English Guidelines", selected: true }]
+          }
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to eq(expected_reseed_options)
+        end
+      end
+
+      describe '#reseed' do
+        it 'reseeds categories and topics' do
+          SiteSetting.default_locale = :de
+
+          post "/admin/customize/reseed.json", params: {
+            category_ids: ["staff_category_id"],
+            topic_ids: ["guidelines_topic_id"]
+          }
+          expect(response.status).to eq(200)
+
+          expect(Category.find(SiteSetting.staff_category_id).name).to eq(I18n.t("staff_category_name"))
+          expect(Topic.find(SiteSetting.guidelines_topic_id).title).to eq(I18n.t("guidelines_topic.title"))
+        end
       end
     end
   end

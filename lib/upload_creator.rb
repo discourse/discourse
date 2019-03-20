@@ -3,13 +3,11 @@ require_dependency "image_sizer"
 
 class UploadCreator
 
-  TYPES_CONVERTED_TO_JPEG ||= %i{bmp png}
-
   TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
 
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle clippath defs ellipse g line linearGradient path polygon polyline
-    radialGradient rect stop svg text textpath tref tspan use
+    radialGradient rect stop style svg text textpath tref tspan use
   }.each(&:freeze)
 
   # Available options
@@ -39,6 +37,7 @@ class UploadCreator
 
       is_image = FileHelper.is_supported_image?(@filename)
       is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
+      is_image = false if @opts[:for_theme]
 
       if is_image
         extract_image_info!
@@ -47,7 +46,7 @@ class UploadCreator
         if @image_info.type.to_s == "svg"
           whitelist_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
-          convert_to_jpeg! if should_convert_to_jpeg?
+          convert_to_jpeg! if convert_png_to_jpeg?
           downsize!        if should_downsize?
 
           return @upload   if is_still_too_big?
@@ -158,8 +157,8 @@ class UploadCreator
 
   MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
 
-  def should_convert_to_jpeg?
-    return false if !TYPES_CONVERTED_TO_JPEG.include?(@image_info.type)
+  def convert_png_to_jpeg?
+    return false unless @image_info.type == :png
     return true  if @opts[:pasted]
     return false if SiteSetting.png_to_jpg_quality == 100
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG

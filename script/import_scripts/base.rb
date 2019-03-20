@@ -302,8 +302,6 @@ class ImportScripts::Base
     # Allow the || operations to work with empty strings ''
     opts[:username] = nil if opts[:username].blank?
 
-    opts[:name] = User.suggest_name(opts[:email]) unless opts[:name]
-
     if opts[:username].blank? ||
       opts[:username].length < User.username_length.begin ||
       opts[:username].length > User.username_length.end ||
@@ -374,9 +372,8 @@ class ImportScripts::Base
 
       user_option = u.user_option
       user_option.email_digests = false
-      user_option.email_private_messages = false
-      user_option.email_direct = false
-      user_option.email_always = false
+      user_option.email_level = UserOption.email_level_types[:never]
+      user_option.email_messages_level = UserOption.email_level_types[:never]
       user_option.save!
       if u.save
         StaffActionLogger.new(Discourse.system_user).log_user_suspend(u, ban_reason)
@@ -565,7 +562,7 @@ class ImportScripts::Base
     post_creator = PostCreator.new(user, opts)
     post = post_creator.create
     post_create_action.try(:call, post) if post
-    post ? post : post_creator.errors.full_messages
+    post && post_creator.errors.empty? ? post : post_creator.errors.full_messages
   end
 
   def create_upload(user_id, path, source_filename)
@@ -782,26 +779,12 @@ class ImportScripts::Base
 
   def update_feature_topic_users
     puts "", "Updating featured topic users"
-
-    count = 0
-    total = Topic.count
-
-    Topic.find_each do |topic|
-      topic.feature_topic_users
-      print_status(count += 1, total, get_start_time("feature_topic_user"))
-    end
+    TopicFeaturedUsers.ensure_consistency!
   end
 
   def reset_topic_counters
     puts "", "Resetting topic counters"
-
-    count = 0
-    total = Topic.count
-
-    Topic.find_each do |topic|
-      Topic.reset_highest(topic.id)
-      print_status(count += 1, total, get_start_time("topic_counters"))
-    end
+    Topic.reset_all_highest!
   end
 
   def update_category_featured_topics

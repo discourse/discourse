@@ -4,7 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Mixin.create({
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
 
     const searchDebounce = this.get("searchDebounce");
     if (searchDebounce) run.cancel(searchDebounce);

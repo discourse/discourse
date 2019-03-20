@@ -24,7 +24,9 @@ const controllerOpts = {
   expandAllPinned: false,
 
   resetParams() {
-    this.setProperties({ order: "default", ascending: false });
+    Object.keys(this.get("model.params") || {}).forEach(key =>
+      this.set(key, null)
+    );
   },
 
   actions: {
@@ -43,7 +45,7 @@ const controllerOpts = {
       const tracker = this.topicTrackingState;
 
       // Move inserted into topics
-      this.get("content").loadBefore(tracker.get("newIncoming"), true);
+      this.get("model").loadBefore(tracker.get("newIncoming"), true);
       tracker.resetTracking();
       return false;
     },
@@ -115,16 +117,16 @@ const controllerOpts = {
     );
   }.property("model.filter", "model.topics.length"),
 
-  hasTopics: Em.computed.gt("model.topics.length", 0),
-  allLoaded: Em.computed.empty("model.more_topics_url"),
+  hasTopics: Ember.computed.gt("model.topics.length", 0),
+  allLoaded: Ember.computed.empty("model.more_topics_url"),
   latest: endWith("model.filter", "latest"),
   new: endWith("model.filter", "new"),
-  top: Em.computed.notEmpty("period"),
-  yearly: Em.computed.equal("period", "yearly"),
-  quarterly: Em.computed.equal("period", "quarterly"),
-  monthly: Em.computed.equal("period", "monthly"),
-  weekly: Em.computed.equal("period", "weekly"),
-  daily: Em.computed.equal("period", "daily"),
+  top: Ember.computed.notEmpty("period"),
+  yearly: Ember.computed.equal("period", "yearly"),
+  quarterly: Ember.computed.equal("period", "quarterly"),
+  monthly: Ember.computed.equal("period", "monthly"),
+  weekly: Ember.computed.equal("period", "weekly"),
+  daily: Ember.computed.equal("period", "daily"),
 
   footerMessage: function() {
     if (!this.get("allLoaded")) {

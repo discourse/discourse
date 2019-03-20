@@ -12,7 +12,7 @@ class S3Helper
 
     @s3_bucket_name, @s3_bucket_folder_path = begin
       raise Discourse::InvalidParameters.new("s3_bucket_name") if s3_bucket_name.blank?
-      s3_bucket_name.downcase.split("/".freeze, 2)
+      self.class.get_bucket_and_folder_path(s3_bucket_name)
     end
 
     @tombstone_prefix =
@@ -21,6 +21,10 @@ class S3Helper
       else
         tombstone_prefix
       end
+  end
+
+  def self.get_bucket_and_folder_path(s3_bucket_name)
+    s3_bucket_name.downcase.split("/".freeze, 2)
   end
 
   def upload(file, path, options = {})
@@ -39,7 +43,7 @@ class S3Helper
       end
     end
 
-    return path, etag
+    return path, etag.gsub('"', '')
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
@@ -62,10 +66,10 @@ class S3Helper
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
       if @s3_bucket_folder_path
-        bucket_folder, filename = begin
+        folder, filename = begin
           source.split("/".freeze, 2)
         end
-        options[:copy_source] = File.join(@s3_bucket_name, bucket_folder, multisite_upload_path, filename)
+        options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
       else
         options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
       end
@@ -189,9 +193,10 @@ class S3Helper
   def self.s3_options(obj)
     opts = {
       region: obj.s3_region,
-      endpoint: SiteSetting.s3_endpoint,
       force_path_style: SiteSetting.s3_force_path_style
     }
+
+    opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
@@ -199,6 +204,20 @@ class S3Helper
     end
 
     opts
+  end
+
+  def download_file(filename, destination_path, failure_message = nil)
+    unless object(filename).download_file(destination_path)
+      raise failure_message&.to_s || "Failed to download file"
+    end
+  end
+
+  def s3_client
+    @s3_client ||= Aws::S3::Client.new(@s3_options)
+  end
+
+  def s3_inventory_path(path = 'inventory')
+    get_path_for_s3_upload(path)
   end
 
   private
@@ -222,10 +241,6 @@ class S3Helper
 
   def multisite_upload_path
     File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
-  end
-
-  def s3_client
-    @s3_client ||= Aws::S3::Client.new(@s3_options)
   end
 
   def s3_resource

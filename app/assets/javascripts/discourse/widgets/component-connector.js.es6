@@ -20,6 +20,12 @@ export default class ComponentConnector {
         .lookupFactory(`component:${componentName}`)
         .create(opts);
 
+      // component connector is not triggering didReceiveAttrs
+      // so we make sure to compute the component attrs
+      if (view.selectKitComponent) {
+        view._compute();
+      }
+
       if (Ember.setOwner) {
         Ember.setOwner(view, Ember.getOwner(mounted));
       }

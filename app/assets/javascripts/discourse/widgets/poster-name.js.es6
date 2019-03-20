@@ -17,7 +17,7 @@ createWidget("poster-name-title", {
   html(attrs) {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName) {
-      const href = Discourse.getURL(`/groups/${attrs.primaryGroupName}`);
+      const href = Discourse.getURL(`/g/${attrs.primaryGroupName}`);
       titleContents = h(
         "a.user-group",
         {
@@ -42,7 +42,9 @@ export default createWidget("poster-name", {
   // TODO: Allow extensibility
   posterGlyph(attrs) {
     if (attrs.moderator) {
-      return iconNode("shield", { title: I18n.t("user.moderator_tooltip") });
+      return iconNode("shield-alt", {
+        title: I18n.t("user.moderator_tooltip")
+      });
     }
   },
 

@@ -165,9 +165,9 @@ class PostCreator
       transaction do
         build_post_stats
         create_topic
+        create_post_notice
         save_post
         extract_links
-        store_unique_post_key
         track_topic
         update_topic_stats
         update_topic_auto_close
@@ -182,6 +182,7 @@ class PostCreator
     end
 
     if @post && errors.blank? && !@opts[:import_mode]
+      store_unique_post_key
       # update counters etc.
       @post.topic.reload
 
@@ -247,7 +248,11 @@ class PostCreator
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
     whisper = post.post_type == Post.types[:whisper]
-    post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?, whisper)
+    increase_posts_count = !post.topic&.private_message? || post.post_type != Post.types[:small_action]
+    post.post_number ||= Topic.next_post_number(post.topic_id,
+      reply: post.reply_to_post_number.present?,
+      whisper: whisper,
+      post: increase_posts_count)
 
     cooking_options = post.cooking_options || {}
     cooking_options[:topic_id] = post.topic_id
@@ -359,7 +364,7 @@ class PostCreator
                            limit_once_per: 24.hours,
                            message_params: { domains: @post.linked_hosts.keys.join(', ') })
     elsif @post && errors.blank? && !skip_validations?
-      SpamRulesEnforcer.enforce!(@post)
+      SpamRule::FlagSockpuppets.new(@post).perform
     end
   end
 
@@ -506,6 +511,23 @@ class PostCreator
     @user.user_stat.save!
 
     @user.update_attributes(last_posted_at: @post.created_at)
+  end
+
+  def create_post_notice
+    return if @opts[:import_mode] || @user.bot? || @user.staged
+
+    last_post_time = Post.where(user_id: @user.id)
+      .order(created_at: :desc)
+      .limit(1)
+      .pluck(:created_at)
+      .first
+
+    if !last_post_time
+      @post.custom_fields["post_notice_type"] = "first"
+    elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
+      @post.custom_fields["post_notice_type"] = "returning"
+      @post.custom_fields["post_notice_time"] = last_post_time.iso8601
+    end
   end
 
   def publish

@@ -67,7 +67,7 @@ export default Ember.Mixin.create({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     afterTransition(this.$(), this._hide.bind(this));
     const id = this.get("elementId");
     const triggeringLinkClass = this.get("triggeringLinkClass");
@@ -97,6 +97,10 @@ export default Ember.Mixin.create({
           }
 
           this._close();
+
+          if (this.site.mobileView) {
+            return false;
+          }
         }
 
         return true;
@@ -124,8 +128,7 @@ export default Ember.Mixin.create({
     });
 
     this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
-      this.set("isFixed", true);
-      this.set("isDocked", true);
+      this.setProperties({ isFixed: true, isDocked: true });
       return this._show(username, $target);
     });
   },
@@ -188,8 +191,9 @@ export default Ember.Mixin.create({
             }
           }
 
-          if (isDocked && position.top < 44) {
-            position.top = 44;
+          const avatarOverflowSize = 44;
+          if (isDocked && position.top < avatarOverflowSize) {
+            position.top = avatarOverflowSize;
           }
 
           this.$().css(position);
@@ -226,7 +230,7 @@ export default Ember.Mixin.create({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     const clickOutsideEventName = this.get("clickOutsideEventName");
     const clickDataExpand = this.get("clickDataExpand");
     const clickMention = this.get("clickMention");

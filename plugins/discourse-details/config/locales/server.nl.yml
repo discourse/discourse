@@ -5,4 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nl: {}
+nl:
+  site_settings:
+    details_enabled: "Zet de details functie aan. Als je dit wijzigt moet je alle posts veranderen met: \"rake posts:rebake\"."

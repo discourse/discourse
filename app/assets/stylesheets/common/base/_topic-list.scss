@@ -42,6 +42,9 @@
       }
     }
   }
+  .category-heading {
+    max-width: 100%;
+  }
 }
 
 .topic-list-item.visited,
@@ -115,15 +118,12 @@
     vertical-align: middle;
   }
   th {
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-    font-size: $font-0;
     button .d-icon {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+      color: $primary-medium;
     }
   }
   td {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
     font-size: $font-0;
   }
 
@@ -134,7 +134,14 @@
   .link-bottom-line {
     font-size: $font-down-1;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    .discourse-tags {
+      flex-wrap: wrap;
+      // IE11 is being very stubborn but this is only protection for topics with
+      // a very excessive number of extra long tags - edge case.
+      -ms-flex: 1 0 0px;
+    }
     a.badge-wrapper.box,
     a.discourse-tag.box {
       padding-top: 0;
@@ -143,9 +150,6 @@
     .discourse-tag.simple:after,
     .discourse-tag.box {
       margin-right: 0.25em;
-    }
-    .topic-excerpt {
-      flex: 1 1 0%; // IE11 fix - unit on flexbasis is required
     }
   }
 
@@ -269,6 +273,9 @@ ol.category-breadcrumb {
 
 div.education {
   color: dark-light-choose($primary-medium, $secondary-medium);
+  .badge-notification.new-posts {
+    vertical-align: text-bottom;
+  }
 }
 
 .list-cell {
@@ -292,4 +299,6 @@ div.education {
 //     right *
 .topic-post-badges {
   white-space: nowrap;
+  align-self: center;
+  line-height: $line-height-medium;
 }

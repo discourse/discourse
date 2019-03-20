@@ -9,6 +9,7 @@ class StaticController < ApplicationController
   skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
+  MODAL_PAGES = ['password_reset', 'signup']
 
   def show
     return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
@@ -69,6 +70,11 @@ class StaticController < ApplicationController
       return
     end
 
+    if MODAL_PAGES.include?(@page)
+      render html: nil, layout: true
+      return
+    end
+
     raise Discourse::NotFound
   end
 
@@ -118,22 +124,28 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize(FAVICON + SiteSetting.site_favicon_url, 60 * 30) do
-        begin
-          file = FileHelper.download(
-            UrlHelper.absolute(SiteSetting.site_favicon_url),
-            max_file_size: 50.kilobytes,
-            tmp_file_name: FAVICON,
-            follow_redirect: true
-          )
-          file ||= Tempfile.new([FAVICON, ".png"])
-          data = file.read
-          file.unlink
-          data
-        rescue => e
-          AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-          Rails.logger.debug("Invalid favicon_url #{SiteSetting.site_favicon_url}: #{e}\n#{e.backtrace}")
-          ""
+      data = DistributedMemoizer.memoize("FAVICON#{SiteSetting.site_favicon_url}", 60 * 30) do
+        favicon = SiteSetting.favicon
+        next "" unless favicon
+
+        if Discourse.store.external?
+          begin
+            file = FileHelper.download(
+              UrlHelper.absolute(favicon.url),
+              max_file_size: favicon.filesize,
+              tmp_file_name: FAVICON,
+              follow_redirect: true
+            )
+
+            file&.read || ""
+          rescue => e
+            AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
+            Rails.logger.warn("Failed to fetch faivcon #{favicon.url}: #{e}\n#{e.backtrace}")
+          ensure
+            file&.unlink
+          end
+        else
+          File.read(Rails.root.join("public", favicon.url[1..-1]))
         end
       end
 

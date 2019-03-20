@@ -196,10 +196,20 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       display: flex;
       align-items: flex-start;
       .user-badge {
+        display: flex;
+        white-space: nowrap;
         margin: 0 0.5em 0 0;
         background: $primary-very-low;
         border: 1px solid $primary-low;
         color: $primary;
+      }
+      .badge-display-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 185px;
+      }
+      .more-user-badges {
+        overflow: hidden;
       }
     }
   }

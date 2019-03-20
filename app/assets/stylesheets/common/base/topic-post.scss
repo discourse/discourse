@@ -18,6 +18,8 @@
   flex: 1 1 auto;
   overflow: hidden;
   span.first {
+    display: flex;
+    align-items: baseline;
     font-weight: bold;
   }
 
@@ -30,7 +32,6 @@
     text-overflow: ellipsis;
     vertical-align: middle;
     a {
-      vertical-align: middle;
       color: dark-light-choose($primary-high, $secondary-low);
     }
   }
@@ -213,6 +214,10 @@ aside.quote {
   margin: -2px;
 }
 
+.post-ignored {
+  font-style: italic;
+}
+
 .post-action {
   .undo-action,
   .act-action {
@@ -352,7 +357,10 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 0.5em;
+
+    & + .controls {
+      margin-top: 0.5em;
+    }
 
     &.hide-names .user {
       .username,
@@ -396,7 +404,7 @@ aside.quote {
 
       .remove-invited {
         display: flex;
-        flex: 1 0 0;
+        flex: 1 0 0px;
         align-items: center;
         justify-content: center;
         box-sizing: border-box;
@@ -471,6 +479,7 @@ aside.quote {
   width: 16px;
   height: 16px;
   bottom: -3px;
+  color: $primary;
   &.rounded {
     background-size: 12px 12px;
     border-radius: 8px;
@@ -479,8 +488,8 @@ aside.quote {
     bottom: -2px;
     right: 0;
   }
-  .fa {
-    font-size: $font-0;
+  .d-icon {
+    font-size: $font-down-2;
   }
 }
 .topic-avatar .poster-avatar-extra {
@@ -520,10 +529,6 @@ aside.quote {
     margin-right: 0;
   }
   &.via-email,
-  &.whisper {
-    line-height: $line-height-medium;
-  }
-  &.via-email,
   &.whisper,
   &.post-locked {
     .d-icon {
@@ -548,7 +553,7 @@ pre {
   code {
     word-wrap: normal;
     display: block;
-    padding: 5px 10px;
+    padding: 0.5em;
     color: $primary;
     background: blend-primary-secondary(5%);
     max-height: 500px;
@@ -590,7 +595,7 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 4.6em;
+  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
   color: dark-light-choose($primary-medium, $secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -609,16 +614,16 @@ blockquote > *:last-child {
 .cooked table,
 .d-editor-preview table {
   thead {
-    border-bottom: 2px solid lighten($primary, 80%);
     th {
       text-align: left;
       padding-bottom: 2px;
+      font-weight: bold;
+      color: $primary;
     }
   }
 
-  td,
-  th {
-    padding: 3px 3px 3px 10px;
+  td {
+    padding: 3px 3px 3px 0.5em;
   }
 }
 
@@ -632,6 +637,7 @@ blockquote > *:last-child {
     padding: 0.7em 0;
     border-top: none;
     margin-right: 11px;
+    flex: 0 0 auto;
     .d-icon {
       font-size: 2em;
       width: 45px;
@@ -731,6 +737,11 @@ a.mention-group {
 .suggested-topics {
   .topics {
     padding-bottom: 15px;
+  }
+  .suggested-topics-message {
+    .badge-wrapper {
+      margin-right: 0;
+    }
   }
 }
 
@@ -851,5 +862,34 @@ a.mention-group {
   }
   .buttons {
     margin-bottom: 1em;
+  }
+}
+
+.post-notice {
+  background-color: $tertiary-low;
+  border-top: 1px solid $primary-low;
+  color: $primary;
+  padding: 0.8em;
+  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+
+  &.old {
+    background-color: unset;
+    color: $primary-medium;
+
+    .d-icon {
+      color: $primary-medium;
+    }
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  .d-icon {
+    font-size: 2em;
+    color: $primary-high;
+    margin-right: 0.65em;
   }
 }

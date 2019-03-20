@@ -6,7 +6,7 @@ componentTest("renders correctly with no properties set", {
   template: `{{text-field}}`,
 
   test(assert) {
-    assert.ok(this.$("input[type=text]").length);
+    assert.ok(find("input[type=text]").length);
   }
 });
 
@@ -18,8 +18,8 @@ componentTest("support a placeholder", {
   },
 
   test(assert) {
-    assert.ok(this.$("input[type=text]").length);
-    assert.equal(this.$("input").prop("placeholder"), "placeholder.i18n.key");
+    assert.ok(find("input[type=text]").length);
+    assert.equal(find("input").prop("placeholder"), "placeholder.i18n.key");
   }
 });
 
@@ -30,7 +30,7 @@ componentTest("sets the dir attribute to ltr for Hebrew text", {
   },
 
   test(assert) {
-    assert.equal(this.$("input").attr("dir"), "rtl");
+    assert.equal(find("input").attr("dir"), "rtl");
   }
 });
 
@@ -41,6 +41,6 @@ componentTest("sets the dir attribute to ltr for English text", {
   },
 
   test(assert) {
-    assert.equal(this.$("input").attr("dir"), "ltr");
+    assert.equal(find("input").attr("dir"), "ltr");
   }
 });

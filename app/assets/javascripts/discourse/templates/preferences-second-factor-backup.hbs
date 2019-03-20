@@ -1,12 +1,7 @@
 <section class="user-preferences second-factor-backup-preferences">
   <form class="form-horizontal">
     <div class="control-group">
-      <div class="controls">
-        <h3>{{i18n "user.second_factor_backup.title"}}</h3>
-        {{#if backupEnabled}}
-          <p>{{{i18n "user.second_factor_backup.remaining_codes" count=remainingCodes}}}</p>
-        {{/if}}
-      </div>
+
       <div class="controls">
         {{#if successMessage}}
           <div class="alert alert-success">
@@ -22,17 +17,17 @@
       </div>
     </div>
 
-    <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
     <div class="control-group">
       <div class="controls">
-        {{second-factor-input
-          value=secondFactorToken
-          maxlength=6
-          inputId="second-factor-token"}}
-
-        <div class='instructions'>
-          {{i18n "user.second_factor.disable_description"}}
-        </div>
+        {{#second-factor-form
+            secondFactorMethod=secondFactorMethod
+            backupEnabled=backupEnabled
+            secondFactorToken=secondFactorToken
+            secondFactorTitle=(i18n 'user.second_factor_backup.title')
+            optionalText=(if backupEnabled (i18n "user.second_factor_backup.remaining_codes" count=remainingCodes))
+            isLogin=false}}
+          {{second-factor-input value=secondFactorToken inputId='second-factor-token' secondFactorMethod=secondFactorMethod}}
+        {{/second-factor-form}}
       </div>
     </div>
 
@@ -40,13 +35,13 @@
       <div class="controls">
         <div class="actions">
             {{d-button
-              action="generateSecondFactorCodes"
+              action=(action "generateSecondFactorCodes")
               class="btn btn-primary"
               disabled=isDisabledGenerateBackupCodeBtn
               label=generateBackupCodeBtnLabel}}
           {{#if backupEnabled}}
             {{d-button
-              action="disableSecondFactorBackup"
+              action=(action "disableSecondFactorBackup")
               class="btn btn-danger"
               disabled=isDisabledDisableBackupCodeBtn
               label="user.second_factor_backup.disable"}}

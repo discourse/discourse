@@ -1,40 +1,46 @@
 <div class="themes-list-header">
   <div {{action "changeView" THEMES}} class="themes-tab tab {{if themesTabActive 'active' ''}}">
-    {{d-icon "cube"}}
     {{I18n "admin.customize.theme.title"}}
   </div><div {{action "changeView" COMPONENTS}} class="components-tab tab {{if componentsTabActive 'active' ''}}">
+    {{d-icon "puzzle-piece"}}
     {{I18n "admin.customize.theme.components"}}
   </div>
 </div>
 
 <div class="themes-list-container">
   {{#if hasThemes}}
-    {{#if componentsTabActive}}
-      {{#each themesList as |theme|}}
+    {{#if hasActiveThemes}}
+      {{#each activeThemes as |theme|}}
         {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
       {{/each}}
-    {{else}}
-      {{#if hasUserThemes}}
-        {{#each userThemes as |theme|}}
-          {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
-        {{/each}}
-
-        {{#if hasInactiveThemes}}
-          <div class="themes-list-item inactive-indicator">
-            <span class="empty">{{I18n "admin.customize.theme.inactive_themes"}}</span>
-          </div>
-        {{/if}}
-      {{/if}}
 
       {{#if hasInactiveThemes}}
-        {{#each inactiveThemes as |theme|}}
-          {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
-        {{/each}}
+        <div class="themes-list-item inactive-indicator">
+          <span class="empty">
+            {{#if themesTabActive}}
+              {{I18n "admin.customize.theme.inactive_themes"}}
+            {{else}}
+              {{I18n "admin.customize.theme.inactive_components"}}
+            {{/if}}
+          </span>
+        </div>
       {{/if}}
+    {{/if}}
+
+    {{#if hasInactiveThemes}}
+      {{#each inactiveThemes as |theme|}}
+        {{themes-list-item theme=theme navigateToTheme=(action "navigateToTheme" theme)}}
+      {{/each}}
     {{/if}}
   {{else}}
     <div class="themes-list-item">
       <span class="empty">{{I18n "admin.customize.theme.empty"}}</span>
     </div>
   {{/if}}
+
+
+</div>
+
+<div class="create-actions">
+  {{d-button action=installModal icon="upload" label="admin.customize.install" class="btn-primary"}}
 </div>

@@ -10,7 +10,7 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("filters", Ember.Object.create());
   },
 

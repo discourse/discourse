@@ -155,8 +155,8 @@ describe OptimizedImage do
   describe ".safe_path?" do
 
     it "correctly detects unsafe paths" do
-      expect(OptimizedImage.safe_path?("/path/A-AA/22_00.TIFF")).to eq(true)
-      expect(OptimizedImage.safe_path?("/path/AAA/2200.TIFF")).to eq(true)
+      expect(OptimizedImage.safe_path?("/path/A-AA/22_00.JPG")).to eq(true)
+      expect(OptimizedImage.safe_path?("/path/AAA/2200.JPG")).to eq(true)
       expect(OptimizedImage.safe_path?("/tmp/a.png")).to eq(true)
       expect(OptimizedImage.safe_path?("../a.png")).to eq(false)
       expect(OptimizedImage.safe_path?("/tmp/a.png\\test")).to eq(false)

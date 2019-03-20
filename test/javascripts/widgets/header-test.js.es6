@@ -5,14 +5,14 @@ moduleForWidget("header");
 widgetTest("rendering basics", {
   template: '{{mount-widget widget="header"}}',
   test(assert) {
-    assert.ok(this.$("header.d-header").length);
-    assert.ok(this.$("#site-logo").length);
+    assert.ok(find("header.d-header").length);
+    assert.ok(find("#site-logo").length);
   }
 });
 
 widgetTest("sign up / login buttons", {
   template:
-    '{{mount-widget widget="header" showCreateAccount="showCreateAccount" showLogin="showLogin" args=args}}',
+    '{{mount-widget widget="header" showCreateAccount=(action "showCreateAccount") showLogin=(action "showLogin") args=args}}',
   anonymous: true,
 
   beforeEach() {
@@ -22,8 +22,8 @@ widgetTest("sign up / login buttons", {
   },
 
   async test(assert) {
-    assert.ok(this.$("button.sign-up-button").length);
-    assert.ok(this.$("button.login-button").length);
+    assert.ok(find("button.sign-up-button").length);
+    assert.ok(find("button.login-button").length);
 
     await click("button.sign-up-button");
     assert.ok(this.signupShown);
@@ -35,7 +35,7 @@ widgetTest("sign up / login buttons", {
 
 widgetTest("anon when login required", {
   template:
-    '{{mount-widget widget="header" showCreateAccount="showCreateAccount" showLogin="showLogin" args=args}}',
+    '{{mount-widget widget="header" showCreateAccount=(action "showCreateAccount") showLogin=(action "showLogin") args=args}}',
   anonymous: true,
 
   beforeEach() {
@@ -55,7 +55,7 @@ widgetTest("anon when login required", {
 
 widgetTest("logged in when login required", {
   template:
-    '{{mount-widget widget="header" showCreateAccount="showCreateAccount" showLogin="showLogin" args=args}}',
+    '{{mount-widget widget="header" showCreateAccount=(action "showCreateAccount") showLogin=(action "showLogin") args=args}}',
 
   beforeEach() {
     this.set("args", { canSignUp: true });

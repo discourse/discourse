@@ -15,10 +15,10 @@ export default Ember.Component.extend({
     return userPath(username);
   },
 
-  "data-username": Em.computed.alias("user.username"),
+  "data-username": Ember.computed.alias("user.username"),
 
   // TODO: In later ember releases `hasBlock` works without this
-  hasBlock: Em.computed.alias("template"),
+  hasBlock: Ember.computed.alias("template"),
 
   @computed("user.name", "user.username")
   name(name, username) {

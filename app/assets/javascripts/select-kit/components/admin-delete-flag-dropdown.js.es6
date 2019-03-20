@@ -6,10 +6,10 @@ export default DropdownSelectBox.extend({
   classNames: ["delete-flag", "admin-delete-flag-dropdown"],
   adminTools: Ember.inject.service(),
   nameProperty: "label",
-  headerIcon: "trash-o",
+  headerIcon: "far-trash-alt",
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     content.name = `${I18n.t("admin.flags.delete")}...`;
     return content;
   },
@@ -29,7 +29,7 @@ export default DropdownSelectBox.extend({
     const canDeleteSpammer = this.get("canDeleteSpammer");
 
     content.push({
-      icon: "external-link",
+      icon: "external-link-alt",
       id: "delete-defer",
       action: () => this.send("deletePostDeferFlag"),
       label: I18n.t("admin.flags.delete_post_defer_flag"),

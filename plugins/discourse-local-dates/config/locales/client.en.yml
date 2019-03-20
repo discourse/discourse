@@ -10,6 +10,7 @@ en:
         modal_title: Insert date
         modal_subtitle: "We will automatically convert the date and time to the viewer’s local time zone."
         form:
+          to: "to"
           insert: Insert
           advanced_mode: Advanced mode
           simple_mode: Simple mode

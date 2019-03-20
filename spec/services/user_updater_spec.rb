@@ -22,7 +22,27 @@ describe UserUpdater do
       expect(MutedUser.where(user_id: u2.id).count).to eq 2
       expect(MutedUser.where(user_id: u1.id).count).to eq 2
       expect(MutedUser.where(user_id: u3.id).count).to eq 0
+    end
+  end
 
+  describe '#update_ignored_users' do
+    it 'updates ignored users' do
+      u1 = Fabricate(:user)
+      u2 = Fabricate(:user)
+      u3 = Fabricate(:user)
+
+      updater = UserUpdater.new(u1, u1)
+      updater.update_ignored_users("#{u2.username},#{u3.username}")
+
+      updater = UserUpdater.new(u2, u2)
+      updater.update_ignored_users("#{u3.username},#{u1.username}")
+
+      updater = UserUpdater.new(u3, u3)
+      updater.update_ignored_users("")
+
+      expect(IgnoredUser.where(user_id: u2.id).count).to eq 2
+      expect(IgnoredUser.where(user_id: u1.id).count).to eq 2
+      expect(IgnoredUser.where(user_id: u3.id).count).to eq 0
     end
   end
 
@@ -87,7 +107,7 @@ describe UserUpdater do
       seq = user.user_option.theme_key_seq
 
       val = updater.update(bio_raw: 'my new bio',
-                           email_always: 'true',
+                           email_level: UserOption.email_level_types[:always],
                            mailing_list_mode: true,
                            digest_after_minutes: "45",
                            new_topic_duration_minutes: 100,
@@ -103,7 +123,7 @@ describe UserUpdater do
       user.reload
 
       expect(user.user_profile.bio_raw).to eq 'my new bio'
-      expect(user.user_option.email_always).to eq true
+      expect(user.user_option.email_level).to eq UserOption.email_level_types[:always]
       expect(user.user_option.mailing_list_mode).to eq true
       expect(user.user_option.digest_after_minutes).to eq 45
       expect(user.user_option.new_topic_duration_minutes).to eq 100

@@ -119,6 +119,9 @@ $pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
     background-repeat: no-repeat;
     background-size: 75% 75%;
     opacity: .5;
+    @if (lightness($secondary) < 50) { // invert the black png if the background is dark
+        filter: invert(1); 
+    } 
 
     &:hover {
         opacity: 1;

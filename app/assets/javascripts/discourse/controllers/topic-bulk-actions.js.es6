@@ -22,7 +22,7 @@ function addBulkButton(action, key, opts) {
 
 // Default buttons
 addBulkButton("showChangeCategory", "change_category", {
-  icon: "pencil",
+  icon: "pencil-alt",
   class: "btn-default"
 });
 addBulkButton("closeTopics", "close_topics", {
@@ -42,12 +42,12 @@ addBulkButton("resetRead", "reset_read", {
   class: "btn-default"
 });
 addBulkButton("unlistTopics", "unlist_topics", {
-  icon: "eye-slash",
+  icon: "far-eye-slash",
   class: "btn-default",
   buttonVisible: topics => topics.some(t => t.visible)
 });
 addBulkButton("relistTopics", "relist_topics", {
-  icon: "eye",
+  icon: "far-eye",
   class: "btn-default",
   buttonVisible: topics => topics.some(t => !t.visible)
 });

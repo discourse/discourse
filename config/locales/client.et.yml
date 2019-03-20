@@ -13,7 +13,7 @@ et:
         delimiter: ","
       human:
         storage_units:
-          format: '%n %u'
+          format: "%n %u"
           units:
             byte:
               one: Bait
@@ -105,17 +105,11 @@ et:
         x_years:
           one: "1 aasta hiljem"
           other: "%{count} aastat hiljem"
-      previous_month: 'Eelmine Kuu'
-      next_month: 'Järgmine Kuu'
+      previous_month: "Eelmine Kuu"
+      next_month: "Järgmine Kuu"
       placeholder: kuupäev
     share:
-      topic: 'jaga teema viidet'
-      post: 'post nr%{postNumber}'
-      close: 'Sulge'
-      twitter: 'Jaga seda viidet Twitteris'
-      facebook: 'jaga seda viidet Facebookis'
-      google+: 'jaga seda viidet Google-plussis'
-      email: 'Jaga viidet meiliga'
+      close: "Sulge"
     action_codes:
       public_topic: "muutsin selle teema avalikuks %{when}"
       split_topic: "poolita teema %{when} juurest"
@@ -124,23 +118,23 @@ et:
       removed_user: "kõrvaldatud %{who} %{when}"
       removed_group: "kõrvaldasin %{who} %{when}"
       autoclosed:
-        enabled: 'suletud %{when}'
-        disabled: 'avatud %{when}'
+        enabled: "suletud %{when}"
+        disabled: "avatud %{when}"
       closed:
-        enabled: 'suletud %{when}'
-        disabled: 'avatud %{when}'
+        enabled: "suletud %{when}"
+        disabled: "avatud %{when}"
       archived:
-        enabled: 'arhiveeritud %{when}'
-        disabled: 'lahti pakitud %{when}'
+        enabled: "arhiveeritud %{when}"
+        disabled: "lahti pakitud %{when}"
       pinned:
-        enabled: 'esiletõstetud %{when}'
-        disabled: 'esiletõstmine eemaldatud %{when}'
+        enabled: "esiletõstetud %{when}"
+        disabled: "esiletõstmine eemaldatud %{when}"
       pinned_globally:
-        enabled: 'esiletõstetud igal pool %{when}'
-        disabled: 'esiletõstmine eemaldatud %{when}'
+        enabled: "esiletõstetud igal pool %{when}"
+        disabled: "esiletõstmine eemaldatud %{when}"
       visible:
-        enabled: 'lisatud %{when}'
-        disabled: 'eemaldatud %{when}'
+        enabled: "lisatud %{when}"
+        disabled: "eemaldatud %{when}"
     topic_admin_menu: "teema admintegevused"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     themes:
@@ -158,13 +152,12 @@ et:
         eu_west_1: "EL (Iirimaa)"
         eu_west_2: "EU (London)"
         eu_west_3: "EL (Pariis)"
-        sa_east_1: "Lõuna-Ameerika (Sao Paulo)"
         us_east_1: "US Ida (N. Virginia)"
         us_east_2: "US Ida (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
         us_west_1: "US Lääs (N. California)"
         us_west_2: "US Lääs (Oregon)"
-    edit: 'muuda teema pealkirja ja foorumit'
+    edit: "muuda teema pealkirja ja foorumit"
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
     yes_value: "Jah"
@@ -195,7 +188,7 @@ et:
     you: "Sina"
     or: "või"
     now: "just nüüd"
-    read_more: 'loe edasi'
+    read_more: "loe edasi"
     more: "Veel"
     less: "Peida"
     never: "mitte kunagi"
@@ -288,9 +281,9 @@ et:
         placeholder: "kirjuta teema pealkiri siia"
     queue:
       topic: "Teema:"
-      approve: 'Kinnita'
-      reject: 'Lükka tagasi'
-      delete_user: 'Kustuta kasutaja'
+      approve: "Kinnita"
+      reject: "Lükka tagasi"
+      delete_user: "Kustuta kasutaja"
       title: "Vajab kinnitust"
       none: "Ülevaatamist vajavaid postitusi ei ole."
       edit: "Muuda"
@@ -356,9 +349,9 @@ et:
         description: "Halda selle grupi liikmeid"
         usernames: "Kasutajanimed"
       manage:
-        title: 'Halda'
-        name: 'Nimi'
-        full_name: 'Täisnimi'
+        title: "Halda"
+        name: "Nimi"
+        full_name: "Täisnimi"
         add_members: "Lisa liikmeid"
         delete_member_confirm: "Kas eemaldada '%{username}' grupist '%{group}'?"
         profile:
@@ -461,7 +454,6 @@ et:
           description: "Sind teavitatakse, kui keegi sinu @name mainib või sulle vastab."
         muted:
           title: "Vaigistatud"
-          description: "Sind ei teavitata ühestki uuest teemast selles grupis."
       flair_url: "Avatari andekuse pilt"
       flair_url_placeholder: "(Valikuline) Pildi URL või Font Awesome klass"
       flair_bg_color: "Avatari andekuse taustavärv"
@@ -556,13 +548,12 @@ et:
         disable: "Keela teavitused"
         enable: "Luba teavitused"
         each_browser_note: "Märkus: see säte tuleb muuta igas kasutusel olevas brauseris."
-      dismiss: 'Ignoreeri'
+      dismiss: "Ignoreeri"
       dismiss_notifications: "Ignoreeri kõiki"
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
       first_notification: "Sinu esimene teavitus! Vali see et alustada."
       disable_jump_reply: "Ära hüppa minu postitusse peale vastamist"
       dynamic_favicon: "Kuva uute / muudetud teemade arvu brauseri ikoonil"
-      theme_default_on_all_devices: "Tee see minu vaikimisi kujunduseks kõigil seadmetel"
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
       enable_quoting: "Luba esiletõstetud tekstile tsitaadiga vastata"
@@ -825,9 +816,6 @@ et:
         expired: "See kutse on aegunud."
         rescind: "Eemalda"
         rescinded: "Kutse eemaldatud"
-        rescind_all: "Eemalda kõik kutsed"
-        rescinded_all: "Kõik kutsed on eemaldatud!"
-        rescind_all_confirm: "Oled sa kindel, et soovid kõiki kutseid eemaldada?"
         reinvite: "Saada kutse uuesti"
         reinvite_all: "Saada kõik kutsed uuesti"
         reinvite_all_confirm: "Oled sa kindel, et soovid kõik kutsed uuesti saata?"
@@ -951,15 +939,15 @@ et:
         one: "1 viga/%{duration}"
         other: "%{count} viga/%{duration}"
     learn_more: "uuri veel..."
-    all_time: 'kokku'
-    all_time_desc: 'kokku teemasid loodud'
-    year: 'aasta'
-    year_desc: 'teemat loodud viimase 365 päeva jooksul'
-    month: 'kuu'
-    month_desc: 'teemat loodud viimase 30 päeva jooksul'
-    week: 'nädal'
-    week_desc: 'teemat loodud viimase 7 päeva jooksul'
-    day: 'päev'
+    all_time: "kokku"
+    all_time_desc: "kokku teemasid loodud"
+    year: "aasta"
+    year_desc: "teemat loodud viimase 365 päeva jooksul"
+    month: "kuu"
+    month_desc: "teemat loodud viimase 30 päeva jooksul"
+    week: "nädal"
+    week_desc: "teemat loodud viimase 7 päeva jooksul"
+    day: "päev"
     first_post: Esimene postitus
     mute: Vaigista
     unmute: Tühista vaigistus
@@ -978,8 +966,8 @@ et:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
       description: "Kokku on <b>{{replyCount}}</b> vastust."
       description_time: "Kokku on <b>{{replyCount}}</b> vastust mille lugemiseks kulub hinnanguliselt <b>{{readingTime}} minutit</b>."
-      enable: 'Võta see teema kokku'
-      disable: 'Näita kõiki postitusi'
+      enable: "Võta see teema kokku"
+      disable: "Näita kõiki postitusi"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
       disabled_description: "Selle teema kustutatud postitused on nähtaval."
@@ -991,13 +979,13 @@ et:
       edit: "Lisa või eemalda..."
       remove_allowed_user: "Kas soovid tõesti {{name}} sellest sõnumist eemaldada?"
       remove_allowed_group: "Kas soovid tõesti {{name}} sellest sõnumist eemaldada?"
-    email: 'Meiliaadress'
-    username: 'Kasutajanimi'
-    last_seen: 'Vaadatud'
-    created: 'Loodud'
-    created_lowercase: 'loodud'
-    trust_level: 'Usaldustase'
-    search_hint: 'kasutajanimi, meil või IP-aadress'
+    email: "Meiliaadress"
+    username: "Kasutajanimi"
+    last_seen: "Vaadatud"
+    created: "Loodud"
+    created_lowercase: "loodud"
+    trust_level: "Usaldustase"
+    search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
       disclaimer: "Registreerudes nõustud nii <a href='{{privacy_link}}'> puutumatusnormide</a> kui ka <a href='{{tos_link}}'>teenuse tingimustega</a>."
       title: "Loo uus konto"
@@ -1024,7 +1012,7 @@ et:
       error: "Tundmatu viga"
       rate_limit: "Palun oota veidi enne järgmist sisselogimiskatset."
       blank_username_or_password: "Palun sisesta oma meiliaadress või kasutajanimi ja parool."
-      reset_password: 'Uuenda parool'
+      reset_password: "Uuenda parool"
       logging_in: "Login sisse..."
       or: "Või"
       authenticating: "Autendin..."
@@ -1091,9 +1079,9 @@ et:
       categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
       categories_and_latest_topics: "Foorumid ja viimased teemad"
     shortcut_modifier_key:
-      shift: 'Shift'
-      ctrl: 'Ctrl'
-      alt: 'Alt'
+      shift: "Shift"
+      ctrl: "Ctrl"
+      alt: "Alt"
     conditional_loading_section:
       loading: Laadimine...
     select_kit:
@@ -1136,7 +1124,7 @@ et:
       saved_local_draft_tip: "salvestatud lokaalselt"
       similar_topics: "Sinu teema sarnaneb..."
       drafts_offline: "mustandid vallasrežiimis"
-      edit_conflict: 'muuda konflikti'
+      edit_conflict: "muuda konflikti"
       group_mentioned:
         one: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>1 inimest</a> – oled selles kindel?"
         other: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>{{count}} inimest</a> – oled selles kindel?"
@@ -1177,8 +1165,8 @@ et:
       saved: "Salvestatud!"
       saved_draft: "Postituse mustand on pooleli. Jätkamiseks vali."
       uploading: "Laen üles..."
-      show_preview: 'näita eelvaadet &raquo;'
-      hide_preview: '&laquo; peida eelvaade'
+      show_preview: "näita eelvaadet &raquo;"
+      hide_preview: "&laquo; peida eelvaade"
       quote_post_title: "Tsiteeri kogu postitust"
       bold_label: "B"
       bold_title: "Rasvane"
@@ -1337,9 +1325,9 @@ et:
             after: pärast
     hamburger_menu: "mine teise teemaloetelu või foorumi juurde"
     new_item: "uus"
-    go_back: 'tagasi'
-    not_logged_in_user: 'kasutajaleht koos toimingute ja eelistuste kokkuvõttega'
-    current_user: 'mine oma kasutajalehele'
+    go_back: "tagasi"
+    not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
+    current_user: "mine oma kasutajalehele"
     topics:
       new_messages_marker: "viimane visiit"
       bulk:
@@ -1398,28 +1386,28 @@ et:
       filter_to:
         one: "1 postitus teemas"
         other: "{{count}} postitust teemas"
-      create: 'Uus teema'
-      create_long: 'Loo uus teema'
+      create: "Uus teema"
+      create_long: "Loo uus teema"
       open_draft: "Ava mustand"
-      private_message: 'Alusta sõnumit'
+      private_message: "Alusta sõnumit"
       archive_message:
-        help: 'Liiguta sõnum oma arhiivi'
-        title: 'Arhiiv'
+        help: "Liiguta sõnum oma arhiivi"
+        title: "Arhiiv"
       move_to_inbox:
-        title: 'Liiguta Postkasti'
-        help: 'Liiguta sõnum tagasi Postkasti'
+        title: "Liiguta Postkasti"
+        help: "Liiguta sõnum tagasi Postkasti"
       edit_message:
-        title: 'Muuda sõnumit'
-      list: 'Teemad'
-      new: 'uus teema'
-      unread: 'lugemata'
+        title: "Muuda sõnumit"
+      list: "Teemad"
+      new: "uus teema"
+      unread: "lugemata"
       new_topics:
-        one: '1 uus teema'
-        other: '{{count}} uut teemat'
+        one: "1 uus teema"
+        other: "{{count}} uut teemat"
       unread_topics:
-        one: '1 lugemata teema'
-        other: '{{count}} lugemata teemat'
-      title: 'Teema'
+        one: "1 lugemata teema"
+        other: "{{count}} lugemata teemat"
+      title: "Teema"
       invalid_access:
         title: "Teema on privaatne"
         description: "Vabanda, Sul puudub juurdepääs sellele teemale!"
@@ -1493,7 +1481,7 @@ et:
         title: "Kustuta teema automaatselt"
       reminder:
         title: "Tuleta mulle meelde"
-      auto_close_title: 'Automaatse sulgumise sätted'
+      auto_close_title: "Automaatse sulgumise sätted"
       auto_close_immediate:
         one: "Viimane postitus selles teemas on juba 1 tund aega vana, seega sulgub see teema nüüd."
         other: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
@@ -1517,17 +1505,17 @@ et:
         title: muuda kui tihti sind sellest teemast teavitatakse
         reasons:
           mailing_list_mode: "Sul on aktiveeritud postiloendi režiim, seega teavitatakse sind vastustest siia teemasse meili teel."
-          "3_10": 'Sulle saabuvad teavitused, kuna jälgid selle teemaga seotud silti.'
-          "3_6": 'Sulle saabuvad teavitused, kuna vaatled seda foorumit.'
-          "3_5": 'Sulle saabuvad teavitused kuna hakkasid seda teemat automaatselt jälgima.'
-          "3_2": 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          "3_1": 'Sulle saabuvad teavitused kuna lõid selle teema.'
-          "3": 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          "1_2": 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
-          "1": 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
-          "0_7": 'Eirad kõiki teavitusi selles foorumis.'
-          "0_2": 'Eirad kõiki teavitusi selle teema kohta.'
-          "0": 'Eirad kõiki teavitusi selles foorumis.'
+          "3_10": "Sulle saabuvad teavitused, kuna jälgid selle teemaga seotud silti."
+          "3_6": "Sulle saabuvad teavitused, kuna vaatled seda foorumit."
+          "3_5": "Sulle saabuvad teavitused kuna hakkasid seda teemat automaatselt jälgima."
+          "3_2": "Sulle saabuvad teavitused kuna jälgid seda teemat."
+          "3_1": "Sulle saabuvad teavitused kuna lõid selle teema."
+          "3": "Sulle saabuvad teavitused kuna jälgid seda teemat."
+          "1_2": "Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab."
+          "1": "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
+          "0_7": "Eirad kõiki teavitusi selles foorumis."
+          "0_2": "Eirad kõiki teavitusi selle teema kohta."
+          "0": "Eirad kõiki teavitusi selles foorumis."
         watching_pm:
           title: "Vaatlemine"
           description: "Saad teavituse iga uue vastuse kohta sellele sõnumile koos uute vastuste koguarvu näitamisega."
@@ -1575,21 +1563,21 @@ et:
         make_banner: "Tee teema bänneriks"
         remove_banner: "Eemalda teema bännerist"
       reply:
-        title: 'Vasta'
-        help: 'kirjuta sellele teemale vastus'
+        title: "Vasta"
+        help: "kirjuta sellele teemale vastus"
       clear_pin:
         title: "Kustuta esiletõstmine"
         help: "Eemalda sellelt teemalt esiletõstetu staatus nii, et ta enam ei ilmuks teemade loetelu tipus"
       share:
-        title: 'Jaga'
-        help: 'jaga viidet sellele teemale'
+        title: "Jaga"
+        help: "jaga viidet sellele teemale"
       print:
-        title: 'Trüki'
-        help: 'Ava selle teema prindikõlblik versioon'
+        title: "Trüki"
+        help: "Ava selle teema prindikõlblik versioon"
       flag_topic:
-        title: 'Tähista'
-        help: 'tähista see teema privaatselt meelespidamiseks või saada selle kohta privaatsõnum'
-        success_message: 'Tähistasid selle teema edukalt.'
+        title: "Tähista"
+        help: "tähista see teema privaatselt meelespidamiseks või saada selle kohta privaatsõnum"
+        success_message: "Tähistasid selle teema edukalt."
       feature_topic:
         title: "Kajasta seda teemat"
         pin: "Lisa see teema foorumi {{categoryLink}} tippu kuni"
@@ -1619,7 +1607,7 @@ et:
       inviting: "Kutsun..."
       automatically_add_to_groups: "See kutse annab juurdepääsu ka gruppidele:"
       invite_private:
-        title: 'Kutsu sõnumisse'
+        title: "Kutsu sõnumisse"
         email_or_username: "Kutsutava meiliaadress või kasutajanimi"
         email_or_username_placeholder: "meiliaadress või kasutajanimi"
         action: "Kutsu"
@@ -1629,21 +1617,21 @@ et:
         group_name: "grupi nimi"
       controls: "Teema juhtpult"
       invite_reply:
-        title: 'Kutsu'
+        title: "Kutsu"
         username_placeholder: "kasutajanimi"
-        action: 'Saada kutse'
-        help: 'kutsu teisi siia teemasse meili või teavitustega'
+        action: "Saada kutse"
+        help: "kutsu teisi siia teemasse meili või teavitustega"
         to_forum: "Saadame su sõbrale lühikese meili koos viitega, mis lubab tal teemaga ühe klikiga liituda, sisselogimist nõudmata."
         sso_enabled: "Sisesta selle isiku kasutajanimi, keda soovid siia teemasse kutsuda."
         to_topic_blank: "Sisesta selle isiku kasutajanimi või meiliaadress, keda soovid siia teemasse kutsuda."
         to_topic_email: "Sisestasid meiliaadressi. Saadame su sõbrale kutse, mis lubab tal kohe sellesse teemasse vastata."
         to_topic_username: "Sisestasid kasutajanime. Saadame su sõbrale kutse, mis lubab tal viivitamatult sellesse teemasse vastata."
         to_username: "Sisesta selle isiku kasutajanimi, keda soovid kutsuda. Saadame talle teavituse koos viitega, mis sisaldab kutset siia teemasse."
-        email_placeholder: 'nimi@kuskil.ee'
+        email_placeholder: "nimi@kuskil.ee"
         success_email: "Saatsime kutse kasutajale <b>{{emailOrUsername}}</b>. Teatame sulle, kui kutse on aktsepteeritud. Vaata kutsete sakki sinu saadetud kutsete osas ülevaate saamiseks."
         success_username: "Oleme kutsunud selle kasutaja teemas osalema."
         error: "Vabanda, meil ei õnnestunud seda kasutajat kutsuda. Kas on võimalik et ta on juba kutsutud? (Kutsete saatmise sagedus on piiratud)"
-      login_reply: 'Vastamiseks logi sisse'
+      login_reply: "Vastamiseks logi sisse"
       filters:
         n_posts:
           one: "1 postitus"
@@ -1679,13 +1667,13 @@ et:
         error: "Teema ajatempli muutmisel tekkis viga."
         instructions: "Palun vali teemale uus ajatempel. Teema postituste ajad nihkuvad sama ajavahe võrra."
       multi_select:
-        select: 'vali'
-        selected: 'valitud ({{count}})'
+        select: "vali"
+        selected: "valitud ({{count}})"
         select_post:
-          label: 'vali'
-          title: 'Lisa postitus valikusse'
+          label: "vali"
+          title: "Lisa postitus valikusse"
         selected_post:
-          label: 'valitud'
+          label: "valitud"
         delete: kustuta valitud
         cancel: tühista valimine
         select_all: vali kõik
@@ -1704,7 +1692,7 @@ et:
       continue_discussion: "Jätkates vestlust viitelt {{postLink}}:"
       follow_quote: "mine tsiteeritud postituse juurde"
       show_full: "Näita kogu postitust"
-      show_hidden: 'Vaata peidetud vastust'
+      show_hidden: "Vaata peidetud vastust"
       deleted_by_author:
         one: "(autori poolt tagasivõetud postitus kustutatakse automaatselt %{count} tunni pärast, kui ei ole tähistatud)"
         other: "(autori poolt tagasivõetud postitus kustutatakse automaatselt %{count} tunni pärast, kui ei ole tähistatud)"
@@ -1747,7 +1735,7 @@ et:
       wiki:
         about: "see postitus on wiki"
       archetypes:
-        save: 'Salvesta suvandid'
+        save: "Salvesta suvandid"
       few_likes_left: "Aitäh poolehoiu jagamise eest! Tänaseks on vaid mõned meeldimised jäänud jagada."
       controls:
         reply: "alusta sellele postitusele vastuse koostamist"
@@ -1775,7 +1763,7 @@ et:
         lock_post: "Lukusta postitus"
         delete_topic: "kustuta teema"
       actions:
-        flag: 'Tähis'
+        flag: "Tähis"
         undo:
           off_topic: "Tühista tähise andmine"
           spam: "Tühista tähise andmine"
@@ -1864,41 +1852,39 @@ et:
         displays:
           inline:
             title: "Näita renderdatud väljundit koos lisamiste ja eemaldamistega tekstisiseselt"
-            button: 'HTML'
+            button: "HTML"
           side_by_side:
             title: "Näita renderdatud väljundi erinevusi kõrvuti"
-            button: 'HTML'
+            button: "HTML"
           side_by_side_markdown:
             title: "Näita töötlemata lähteandmete erinevusi kõrvuti"
-            button: 'Töötlemata'
+            button: "Töötlemata"
       raw_email:
         displays:
           raw:
-            button: 'Töötlemata'
+            button: "Töötlemata"
           text_part:
-            button: 'Tekst'
+            button: "Tekst"
           html_part:
-            button: 'HTML'
+            button: "HTML"
     category:
-      can: 'saab&hellip; '
-      none: '(foorum puudub)'
-      all: 'Kõik foorumid'
-      edit: 'muuda'
-      edit_long: "Muuda"
-      view: 'Vaata teemasid foorumis'
-      general: 'Üldine'
-      settings: 'Sätted'
+      can: "saab&hellip; "
+      none: "(foorum puudub)"
+      all: "Kõik foorumid"
+      view: "Vaata teemasid foorumis"
+      general: "Üldine"
+      settings: "Sätted"
       topic_template: "Teema mall"
       tags: "Sildid"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
       topic_featured_link_allowed: "Luba selles foorumis esiletõstetud linke "
-      delete: 'Kustuta foorum'
-      create: 'Uus foorum'
-      create_long: 'Loo uus foorum'
-      save: 'Salvesta foorum'
-      slug: 'Foorumi toorik'
-      slug_placeholder: '(Valikulised) sidekriipsuga-sõnad url-i jaoks'
+      delete: "Kustuta foorum"
+      create: "Uus foorum"
+      create_long: "Loo uus foorum"
+      save: "Salvesta foorum"
+      slug: "Foorumi toorik"
+      slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Foorumi loomisel tekkis viga.
       save_error: Foorumi salvestamisel tekkis viga.
       name: "Foorumi nimetus"
@@ -1916,7 +1902,7 @@ et:
       list: "Loetle foorumid"
       no_description: "Palun lisa sellele foorumile kirjeldus."
       change_in_category_topic: "Muuda kirjeldust"
-      already_used: 'Teine foorum juba kasutab seda värvi'
+      already_used: "Teine foorum juba kasutab seda värvi"
       security: "Turve"
       special_warning: "Hoiatus: See on eelseadistatud foorum mille turvasätteid muuta ei saa. Kui Sa seda foorumit kasutada ei soovi, kustuta see ümberkohandamise asemel."
       images: "Pildid"
@@ -1927,7 +1913,6 @@ et:
       show_subcategory_list: "Näita selles foorumis alamfoorumite nimekirja teemadest üleval pool."
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
-      add_permission: "Lisa kasutusõigus"
       this_year: "sel aastal"
       default_position: "Vaikepositsioon"
       position_disabled: "Foorumid kuvatakse aktiivsuse järjekorras. Foorumite järjestuse seadistamiseks loeteludes,"
@@ -1958,14 +1943,14 @@ et:
         posters: "Postitajad"
         category: "Foorum"
         created: "Loodud"
-      sort_ascending: 'Ülenev'
-      sort_descending: 'Alanev'
+      sort_ascending: "Ülenev"
+      sort_descending: "Alanev"
     flagging:
-      title: 'Täname, et aitad meie kogukonna viisakust säilitada!'
-      action: 'Tähista postitus'
+      title: "Täname, et aitad meie kogukonna viisakust säilitada!"
+      action: "Tähista postitus"
       take_action: "Tegutse"
-      notify_action: 'Sõnum'
-      official_warning: 'Ametlik hoiatus'
+      notify_action: "Sõnum"
+      official_warning: "Ametlik hoiatus"
       delete_spammer: "Kustuta spämmija"
       delete_confirm_MF: "Oled kustutamas {POSTS, plural, one {<b>1</b> postitust} other {<b>#</b> postitust}} ja {TOPICS, plural, one {<b>1</b> teemat} other {<b>#</b> teemat}} sellelt kasutajalt, eemaldamas tema kontot, blokeerimas registreerumisi tema IP-aadressilt <b>{ip_address}</b>, ja lisamas tema meiliaddressi <b>{email}</b> püsiva blokeeringu loetellu. Oled kindel, et see kasutaja on tõesti spämmija?"
       yes_delete_spammer: "Jah, kustuta spämmija"
@@ -1974,7 +1959,7 @@ et:
       submit_tooltip: "Saada privaatne tähis"
       take_action_tooltip: "Liigu kohe tähise künniseni, ilma kogukonnalt täiendavaid tähiseid ootamata"
       cant: "Vabandame, seda postitust ei saa praegu tähistada."
-      notify_staff: 'Hoiata meeskonda privaatselt'
+      notify_staff: "Hoiata meeskonda privaatselt"
       formatted_name:
         off_topic: "See on teemaväline"
         inappropriate: "See on sobimatu"
@@ -2028,8 +2013,6 @@ et:
       pinned:
         title: "Esiletõstetud"
         help: "OIed selle teema on esile tõstnud; kuvatakse Sulle oma foorumi esimeste seas"
-      invisible:
-        help: "See teema on salastatud; teda ei kuvata teemade loendites ning on kättesaadav vaid otseviite kaudu"
     posts: "Postitused"
     posts_long: "selles teemas on {{number}} postitust"
     posts_likes_MF: |
@@ -2145,58 +2128,56 @@ et:
     lightbox:
       download: "lae alla"
     keyboard_shortcuts_help:
-      title: 'Klaviatuuri kiirvalikud'
+      title: "Klaviatuuri kiirvalikud"
       jump_to:
-        title: 'Hüppa'
-        home: '<b>g</b>, <b>h</b> Avaleht'
-        latest: '<b>g</b>, <b>l</b> Viimased'
-        new: '<b>g</b>, <b>n</b> Uued'
-        unread: '<b>g</b>, <b>u</b> Lugemata'
-        categories: '<b>g</b>, <b>c</b> Foorumid'
-        top: '<b>g</b>, <b>t</b> Parimad'
-        bookmarks: '<b>g</b>, <b>b</b> Järjehoidjad'
-        profile: '<b>g</b>, <b>p</b> Profiil'
-        messages: '<b>g</b>, <b>m</b> Sõnumid'
+        title: "Hüppa"
+        home: "<b>g</b>, <b>h</b> Avaleht"
+        latest: "<b>g</b>, <b>l</b> Viimased"
+        new: "<b>g</b>, <b>n</b> Uued"
+        unread: "<b>g</b>, <b>u</b> Lugemata"
+        categories: "<b>g</b>, <b>c</b> Foorumid"
+        top: "<b>g</b>, <b>t</b> Parimad"
+        bookmarks: "<b>g</b>, <b>b</b> Järjehoidjad"
+        profile: "<b>g</b>, <b>p</b> Profiil"
+        messages: "<b>g</b>, <b>m</b> Sõnumid"
       navigation:
-        title: 'Navigatsioon'
-        jump: '<b>#</b> Mine postitusse #'
-        back: '<b>u</b> Tagasi'
-        up_down: '<b>k</b>/<b>j</b> Liiguta valitut &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Ava valitud teema'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Järgmine/eelmine sektsioon'
+        title: "Navigatsioon"
+        jump: "<b>#</b> Mine postitusse #"
+        back: "<b>u</b> Tagasi"
+        up_down: "<b>k</b>/<b>j</b> Liiguta valitut &uarr; &darr;"
+        open: "<b>o</b> or <b>Enter</b> Ava valitud teema"
+        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Järgmine/eelmine sektsioon"
       application:
-        title: 'Rakendus'
-        create: '<b>c</b> Loo uus teema'
-        notifications: '<b>n</b> Ava teavitused'
-        hamburger_menu: '<b>=</b> Ava rippmenüü'
-        user_profile_menu: '<b>p</b> Ava kasutajamenüü'
-        show_incoming_updated_topics: '<b>.</b> Näita uuendatud teemasid'
-        help: '<b>?</b> Ava klaviatuuri abimenüü'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Ignoreeri uusi/postitusi'
-        dismiss_topics: '<b>x</b>, <b>t</b> Ignoreeri teemasid'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Logi välja'
+        title: "Rakendus"
+        create: "<b>c</b> Loo uus teema"
+        notifications: "<b>n</b> Ava teavitused"
+        hamburger_menu: "<b>=</b> Ava rippmenüü"
+        user_profile_menu: "<b>p</b> Ava kasutajamenüü"
+        show_incoming_updated_topics: "<b>.</b> Näita uuendatud teemasid"
+        help: "<b>?</b> Ava klaviatuuri abimenüü"
+        dismiss_new_posts: "<b>x</b>, <b>r</b> Ignoreeri uusi/postitusi"
+        dismiss_topics: "<b>x</b>, <b>t</b> Ignoreeri teemasid"
+        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Logi välja"
       actions:
-        title: 'Tegevused'
-        bookmark_topic: '<b>f</b> Lülita teema järjehoidja sisse/välja
-
-           '
-        pin_unpin_topic: '<b>shift</b>+<b>p</b>  Kinnita/Vabasta teema'
-        share_topic: '<b>shift</b>+<b>s</b> Jaga teemat'
-        share_post: '<b>s</b> Jaga postitust'
-        reply_as_new_topic: '<b>t</b> Vasta viidates teemale'
-        reply_topic: '<b>shift</b>+<b>r</b> Vasta teemale'
-        reply_post: '<b>r</b> Vasta postitusele'
-        quote_post: '<b>q</b> Tsiteeri postitust'
-        like: '<b>l</b> Märgi postitus meeldivaks'
-        flag: '<b>!</b> Tähista postitus'
-        bookmark: '<b>b</b> Pane postitusele järjehoidja'
-        edit: '<b>e</b> Muuda postitust'
-        delete: '<b>d</b> Kustuta postitus'
-        mark_muted: '<b>m</b>, <b>m</b> Vaigista teema'
-        mark_regular: '<b>m</b>, <b>r</b> Tavaline (vaikimisi) teema'
-        mark_tracking: '<b>m</b>, <b>t</b> Jälgi teemat'
-        mark_watching: '<b>m</b>, <b>w</b> Vaatle teemat'
-        print: '<b>ctrl</b>+<b>p</b> Prindi teema'
+        title: "Tegevused"
+        bookmark_topic: "<b>f</b> Lülita teema järjehoidja sisse/välja\n "
+        pin_unpin_topic: "<b>shift</b>+<b>p</b>  Kinnita/Vabasta teema"
+        share_topic: "<b>shift</b>+<b>s</b> Jaga teemat"
+        share_post: "<b>s</b> Jaga postitust"
+        reply_as_new_topic: "<b>t</b> Vasta viidates teemale"
+        reply_topic: "<b>shift</b>+<b>r</b> Vasta teemale"
+        reply_post: "<b>r</b> Vasta postitusele"
+        quote_post: "<b>q</b> Tsiteeri postitust"
+        like: "<b>l</b> Märgi postitus meeldivaks"
+        flag: "<b>!</b> Tähista postitus"
+        bookmark: "<b>b</b> Pane postitusele järjehoidja"
+        edit: "<b>e</b> Muuda postitust"
+        delete: "<b>d</b> Kustuta postitus"
+        mark_muted: "<b>m</b>, <b>m</b> Vaigista teema"
+        mark_regular: "<b>m</b>, <b>r</b> Tavaline (vaikimisi) teema"
+        mark_tracking: "<b>m</b>, <b>t</b> Jälgi teemat"
+        mark_watching: "<b>m</b>, <b>w</b> Vaatle teemat"
+        print: "<b>ctrl</b>+<b>p</b> Prindi teema"
     badges:
       earned_n_times:
         one: "Teenis selle märgise 1 kord"
@@ -2310,8 +2291,8 @@ et:
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
-      title: 'Discourse Admin'
-      moderator: 'Moderaator'
+      title: "Discourse Admin"
+      moderator: "Moderaator"
       dashboard:
         title: "Armatuurlaud"
         last_updated: "Armatuurlaud viimati värskendatud:"
@@ -2325,14 +2306,13 @@ et:
         version_check_pending: "Näib, et oled hiljuti uuendanud. Fantastiline!"
         installed_version: "Paigaldatud"
         latest_version: "Viimased"
-        problems_found: "Leidsime Sinu Discourse paigalduses mõned probleemid:"
         last_checked: "Viimati kontrollitud"
         refresh_problems: "Värskenda"
         no_problems: "Probleeme ei tuvastatud."
-        moderators: 'Moderaatorid:'
-        admins: 'Adminnid:'
-        silenced: 'Vaigistatud:'
-        suspended: 'Peatatud:'
+        moderators: "Moderaatorid:"
+        admins: "Adminnid:"
+        silenced: "Vaigistatud:"
+        suspended: "Peatatud:"
         private_messages_short: "Sõnumid"
         private_messages_title: "Sõnumid"
         mobile_title: "Mobiil"
@@ -2597,8 +2577,6 @@ et:
             label: "Pööra tagasi"
             title: "Pööra andmebaas tagasi viimati toiminud olekusse"
             confirm: "Oled kindel, et soovid andmebaasi tagasi viimati toiminud olekusse pöörata?"
-        location:
-          s3: "Amazon S3"
       export_csv:
         success: "Eksportimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
         failed: "Eksportimine ebaõnnestus. Kontrolli logisid."
@@ -2621,7 +2599,6 @@ et:
         save: "Salvesta"
         new: "Uus"
         new_style: "Uus stiil"
-        import: "Impordi"
         delete: "Kustuta"
         delete_confirm: "Kustutan selle teema?"
         color: "Värv"
@@ -2643,12 +2620,9 @@ et:
           components: "Komponendid"
           theme_name: "Teema nimi"
           component_name: "Komponendi nimi"
-          import_theme: "Impordi teema"
           customize_desc: "Kohanda:"
           title: "Kujundused"
           create: "Loo"
-          create_type: "Liik:"
-          create_name: "Nimi:"
           edit: "Muuda"
           common: "Tavaline"
           desktop: "Töölaud"
@@ -2656,7 +2630,6 @@ et:
           settings: "Seaded"
           preview: "Eelvaade"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
-          color_scheme: "Värvid"
           theme_components: "Kujunduse osad"
           convert: "Konverdi"
           collapse: Ahenda
@@ -2664,7 +2637,6 @@ et:
           add_upload: "Lisa üleslaadimine"
           upload: "Laadi üles"
           select_component: "Vali komponent..."
-          about_theme: "Kujunduse info"
           license: "Litsents"
           updating: "Uuendamine..."
           add: "Lisa"
@@ -2682,23 +2654,19 @@ et:
             text: "</body>"
         colors:
           title: "Värvid"
-          long_title: "Värvistikud"
-          new_name: "Uus värvistik"
           copy_name_prefix: "Koopia sellest"
-          delete_confirm: "Kustutan selle värvistiku?"
           undo: "ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
           revert: "võta tagasi"
-          revert_title: "Lähtesta see värvus Discourse'i vaikimisi värvistiku omale."
           primary:
-            name: 'primaarne'
-            description: 'Enamik tekste, ikoone ja ääri.'
+            name: "primaarne"
+            description: "Enamik tekste, ikoone ja ääri."
           secondary:
-            name: 'teise astme'
-            description: 'Peamine taustavärv ja teksti värv mõnedel nuppudel.'
+            name: "teise astme"
+            description: "Peamine taustavärv ja teksti värv mõnedel nuppudel."
           tertiary:
-            name: 'kolmanda astme'
-            description: 'Viited, mõned nupud, teavitused ja rõhuvärv.'
+            name: "kolmanda astme"
+            description: "Viited, mõned nupud, teavitused ja rõhuvärv."
           quaternary:
             name: "neljanda astme"
             description: "Navigatsiooniviited"
@@ -2709,16 +2677,16 @@ et:
             name: "päise primaarne"
             description: "Tekst ja ikoonid saidi päises."
           highlight:
-            name: 'esiletõst'
-            description: 'Taustavärv esiletõstetud elementidel lehel, nagu postitused ja teemad.'
+            name: "esiletõst"
+            description: "Taustavärv esiletõstetud elementidel lehel, nagu postitused ja teemad."
           danger:
-            name: 'oht'
-            description: 'Esiletõstetud tegevuste värv nagu postituste ja teemade kustutamine.'
+            name: "oht"
+            description: "Esiletõstetud tegevuste värv nagu postituste ja teemade kustutamine."
           success:
-            name: 'edu'
-            description: 'Näitab, et tegevus oli edukas.'
+            name: "edu"
+            description: "Näitab, et tegevus oli edukas."
           love:
-            name: 'armastus'
+            name: "armastus"
             description: "Meeldimise nupu värvus."
       email:
         title: "Meilid"
@@ -2799,9 +2767,9 @@ et:
         topic_id: "Teema ID"
         post_id: "Postituse ID"
         category_id: "Foorumi ID"
-        delete: 'Kustuta'
-        edit: 'Muuda'
-        save: 'Salvesta'
+        delete: "Kustuta"
+        edit: "Muuda"
+        save: "Salvesta"
         screened_actions:
           block: "blokeeri"
           do_nothing: "ära tee midagi"
@@ -2904,15 +2872,15 @@ et:
         search: "otsi"
         clear_filter: "Tühjenda"
         actions:
-          block: 'Blokeeri'
-          censor: 'Tsenseeri'
-          require_approval: 'Nõua heakskiitu'
-          flag: 'Tähista'
+          block: "Blokeeri"
+          censor: "Tsenseeri"
+          require_approval: "Nõua heakskiitu"
+          flag: "Tähista"
         form:
-          label: 'Uus sõna:'
+          label: "Uus sõna:"
           placeholder_regexp: "regulaaravaldis"
-          add: 'isa'
-          success: 'Korras'
+          add: "isa"
+          success: "Korras"
           upload: "Laadi üles"
       impersonate:
         title: "Kehasta"
@@ -2920,21 +2888,20 @@ et:
         not_found: "Seda kasutajat ei leitud."
         invalid: "Vabanda, ent Sa ei saa selle kasutajana esineda."
       users:
-        title: 'Kasutajad'
-        create: 'Lisa admin-kasutaja'
+        title: "Kasutajad"
+        create: "Lisa admin-kasutaja"
         last_emailed: "Viimati meilitud"
         not_found: "Vabanda, sellist kasutajanime ei eksisteeri meie süsteemis."
         id_not_found: "Vabanda, sellist kasutajatunnust ei eksisteeri meie süsteemis."
-        active: "Aktiivne"
         show_emails: "Näita meile"
         nav:
           new: "Uus"
           active: "Aktiivne"
           pending: "Ootel"
-          staff: 'Meeskond'
-          suspended: 'Peatatud'
-          silenced: 'Vaigistatud'
-          suspect: 'Kahtlane'
+          staff: "Meeskond"
+          suspended: "Peatatud"
+          silenced: "Vaigistatud"
+          suspect: "Kahtlane"
         approved: "Heakskiidetud?"
         approved_selected:
           one: "kiida heaks kasutaja"
@@ -2943,20 +2910,20 @@ et:
           one: "lükka tagasi kasutaja"
           other: "lükka tagasi ({{count}}) kasutajat"
         titles:
-          active: 'Aktiivsed kasutajad'
-          new: 'Uued kasutajad'
-          pending: 'Kasutajad kontrolli ootel'
-          newuser: 'Kasutajad usaldustasemel 0 (Uued kasutajad)'
-          basic: 'Kasutajad usaldustasemel 1 (Kasutajad)'
-          member: 'Kasutajad usaldustasemel 2 (Liikmed)'
-          regular: 'Kasutajad usaldustasemel 3 (Püsiliikmed)'
-          leader: 'Kasutajad usaldustasemel 4 (Vedajad)'
+          active: "Aktiivsed kasutajad"
+          new: "Uued kasutajad"
+          pending: "Kasutajad kontrolli ootel"
+          newuser: "Kasutajad usaldustasemel 0 (Uued kasutajad)"
+          basic: "Kasutajad usaldustasemel 1 (Kasutajad)"
+          member: "Kasutajad usaldustasemel 2 (Liikmed)"
+          regular: "Kasutajad usaldustasemel 3 (Püsiliikmed)"
+          leader: "Kasutajad usaldustasemel 4 (Vedajad)"
           staff: "Meeskond"
-          admins: 'Admin-kasutajad'
-          moderators: 'Moderaatorid'
-          silenced: 'Vaigistatud kasutajad'
-          suspended: 'Peatatud kasutajad'
-          suspect: 'Kahtlased kasutajad'
+          admins: "Admin-kasutajad"
+          moderators: "Moderaatorid"
+          silenced: "Vaigistatud kasutajad"
+          suspended: "Peatatud kasutajad"
+          suspect: "Kahtlased kasutajad"
         reject_successful:
           one: "Tagasi lükatud 1 kasutaja."
           other: "Edukalt tagasi lükatud %{count} kasutajat."
@@ -2989,25 +2956,23 @@ et:
         suspended: "Peatatud?"
         staged: "Ettevalmistamisel?"
         show_admin_profile: "Admin"
-        refresh_browsers: "Sunni brauserit värskendama"
-        refresh_browsers_message: "Sõnum saadetud kõigile klientidele!"
         show_public_profile: "Näita avalikku profiili"
-        impersonate: 'Kehasta'
+        impersonate: "Kehasta"
         action_logs: "Toimingute logi"
         ip_lookup: "IP otsimine"
         log_out: "Logi välja"
         logged_out: "Kasutaja logiti välja kõigil seadmetel"
-        revoke_admin: 'Eemalda admini õigused'
-        grant_admin: 'Anna admini õigused'
-        revoke_moderation: 'Eemalda modereerimise õigused'
-        grant_moderation: 'Anna modereerimise õigused'
-        unsuspend: 'Taasluba'
-        suspend: 'Peata'
+        revoke_admin: "Eemalda admini õigused"
+        grant_admin: "Anna admini õigused"
+        revoke_moderation: "Eemalda modereerimise õigused"
+        grant_moderation: "Anna modereerimise õigused"
+        unsuspend: "Taasluba"
+        suspend: "Peata"
         reputation: Maine
         permissions: Õigused
         activity: Tegevused
         like_count: Meeldimisi antud / saadud
-        last_100_days: 'viimase 100 päeva jooksul'
+        last_100_days: "viimase 100 päeva jooksul"
         private_topics_count: Privaatsed teemad
         posts_read_count: Positusi loetud
         post_count: Postitusi loodud
@@ -3015,8 +2980,8 @@ et:
         flags_given_count: Omistatud tähised
         flags_received_count: Saadud tähised
         warnings_received_count: Hoiatust saadud
-        flags_given_received_count: 'Antud / saadud tähised'
-        approve: 'Kinnita'
+        flags_given_received_count: "Antud / saadud tähised"
+        approve: "Kinnita"
         approved_by: "kiitis heaks"
         approve_success: "Kasutaja heaks kiidetud ja meil saadetud aktiveerimisjuhistega."
         approve_bulk_success: "Edu! Kõik kasutajad on heaks kiidetud ja teavitatud."
@@ -3037,7 +3002,6 @@ et:
         cant_delete_all_too_many_posts:
           one: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  1 postitus. (delete_all_posts_max)"
           other: "Ei saa kustutada kõiki postitusi, sest kasutajal on rohkem, kui  %{count} postitust. (delete_all_posts_max)"
-        delete_confirm: "Oled Sa KINDEL, et soovid kustutada seda kasutajat? See kustutamine on lõplik!"
         delete_and_block: "Kustuta ja <b>blokeeri</b> see meiliaadress ja  IP-aadress"
         delete_dont_block: "Kustuta vaid"
         deleted: "See kasutaja kustutati."
@@ -3133,45 +3097,45 @@ et:
           enabled: "kuvatud kasutaja profiilil"
           disabled: "ei kuvata kasutaja profiilil"
         field_types:
-          text: 'Tekstiväli'
-          confirm: 'Kinnitus'
+          text: "Tekstiväli"
+          confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
         description: "Võid oma foorumi kõiki tekste muuta. Alustamiseks otsi allolevast:"
         search: "Otsi teksi, mida soovid muuta"
-        title: 'Teksti sisu'
-        edit: 'muuda'
+        title: "Teksti sisu"
+        edit: "muuda"
         revert: "Pööra tagasi muudatused"
         revert_confirm: "Oled Sa kindel, et soovid tagasi pöörata muudatusi?"
         go_back: "Tagasi otsingusse"
         recommended: "Soovitame järgnevat teksti oma vajadustele vastavalt kohandada:"
-        show_overriden: 'Näita vaid käsitsi muudetuid'
+        show_overriden: "Näita vaid käsitsi muudetuid"
       site_settings:
-        title: 'Sätted'
+        title: "Sätted"
         no_results: "Ei leidnud midagi."
         clear_filter: "Puhasta"
         add_url: "lisa URL"
         add_host: "lisa teenusepakkuja"
         categories:
-          all_results: 'Kõik'
-          required: 'Nõutud'
-          basic: 'Baassätted'
-          users: 'Kasutajad'
-          posting: 'Postitan'
-          email: 'Meiliaadress'
-          files: 'Failid'
-          trust: 'Usaldustasemed'
-          security: 'Turve'
+          all_results: "Kõik"
+          required: "Nõutud"
+          basic: "Baassätted"
+          users: "Kasutajad"
+          posting: "Postitan"
+          email: "Meiliaadress"
+          files: "Failid"
+          trust: "Usaldustasemed"
+          security: "Turve"
           onebox: "Onebox"
-          seo: 'SEO'
-          spam: 'Spämm'
-          rate_limits: 'Suhte piirang'
-          developer: 'Arendaja'
+          seo: "SEO"
+          spam: "Spämm"
+          rate_limits: "Suhte piirang"
+          developer: "Arendaja"
           embedding: "Manustamised"
           legal: "Õiguslik"
-          api: 'API'
-          user_api: 'Kasutaja API'
-          uncategorized: 'Muu'
+          api: "API"
+          user_api: "Kasutaja API"
+          uncategorized: "Muu"
           backups: "Varukoopiad"
           login: "Sisselogimine"
           plugins: "Pistikprogrammid"

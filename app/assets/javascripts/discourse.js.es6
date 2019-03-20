@@ -41,7 +41,7 @@ const Discourse = Ember.Application.extend({
 
   Resolver: buildResolver("discourse"),
 
-  @observes("_docTitle", "hasFocus", "notifyCount")
+  @observes("_docTitle", "hasFocus", "contextCount", "notificationCount")
   _titleChanged() {
     let title = this.get("_docTitle") || Discourse.SiteSettings.title;
 
@@ -51,22 +51,34 @@ const Discourse = Ember.Application.extend({
       $("title").text(title);
     }
 
-    const notifyCount = this.get("notifyCount");
-    if (notifyCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
-      title = `(${notifyCount}) ${title}`;
+    var displayCount = Discourse.User.current()
+      ? this.get("notificationCount")
+      : this.get("contextCount");
+
+    if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
+      title = `(${displayCount}) ${title}`;
     }
 
     document.title = title;
   },
 
-  @observes("notifyCount")
+  @observes("contextCount", "notificationCount")
   faviconChanged() {
     if (Discourse.User.currentProp("dynamic_favicon")) {
       let url = Discourse.SiteSettings.site_favicon_url;
+
+      // Since the favicon is cached on the browser for a really long time, we
+      // append the favicon_url as query params to the path so that the cache
+      // is not used when the favicon changes.
       if (/^http/.test(url)) {
         url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
-      new window.Favcount(url).set(this.get("notifyCount"));
+
+      var displayCount = Discourse.User.current()
+        ? this.get("notificationCount")
+        : this.get("contextCount");
+
+      new window.Favcount(url).set(displayCount);
     }
   },
 
@@ -78,23 +90,33 @@ const Discourse = Ember.Application.extend({
     });
   },
 
-  notifyTitle(count) {
-    this.set("notifyCount", count);
+  updateContextCount(count) {
+    this.set("contextCount", count);
   },
 
-  notifyBackgroundCountIncrement() {
+  updateNotificationCount(count) {
+    if (!this.get("hasFocus")) {
+      this.set("notificationCount", count);
+    }
+  },
+
+  incrementBackgroundContextCount() {
     if (!this.get("hasFocus")) {
       this.set("backgroundNotify", true);
-      this.set("notifyCount", (this.get("notifyCount") || 0) + 1);
+      this.set("contextCount", (this.get("contextCount") || 0) + 1);
     }
   },
 
   @observes("hasFocus")
-  resetBackgroundNotifyCount() {
+  resetCounts() {
     if (this.get("hasFocus") && this.get("backgroundNotify")) {
-      this.set("notifyCount", 0);
+      this.set("contextCount", 0);
     }
     this.set("backgroundNotify", false);
+
+    if (this.get("hasFocus")) {
+      this.set("notificationCount", 0);
+    }
   },
 
   authenticationComplete(options) {

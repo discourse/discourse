@@ -6,8 +6,14 @@ $rollback-darker: darken($rollback, 20%) !default;
 .btn-rollback {
   color: $secondary;
   background: $rollback;
+  .d-icon {
+    color: $secondary;
+  }
   &:hover {
     background: $rollback-dark;
+    .d-icon {
+      color: currentColor;
+    }
   }
   &:active {
     @include linear-gradient($rollback-darker, $rollback-dark);

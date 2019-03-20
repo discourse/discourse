@@ -29,14 +29,14 @@ Fabricator(:moderator_post, from: :post) do
 end
 
 Fabricator(:basic_reply, from: :post) do
-  user(:coding_horror)
+  user(fabricator: :coding_horror)
   reply_to_post_number 1
   topic
   raw 'this reply has no quotes'
 end
 
 Fabricator(:reply, from: :post) do
-  user(:coding_horror)
+  user(fabricator: :coding_horror)
   topic
   raw '
     [quote="Evil Trout, post:1"]hello[/quote]

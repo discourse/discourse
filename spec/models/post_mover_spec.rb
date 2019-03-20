@@ -41,7 +41,7 @@ describe PostMover do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
         UserActionCreator.enable
@@ -248,7 +248,6 @@ describe PostMover do
             expected_text = I18n.with_locale(:en) do
               I18n.t("move_posts.new_topic_moderator_post",
                      count: 2,
-                     entity: "topic",
                      topic_link: "[#{new_topic.title}](#{new_topic.relative_url})")
             end
 
@@ -571,7 +570,7 @@ describe PostMover do
 
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
         p1.replies << p3
         p2.replies << p4
         UserActionCreator.enable
@@ -580,13 +579,15 @@ describe PostMover do
 
       context 'move to new message' do
         it "adds post users as topic allowed users" do
-          personal_message.move_posts(admin, [p2.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
+          personal_message.move_posts(admin, [p2.id, p3.id, p4.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
 
           p2.reload
-          expect(p2.topic.archetype).to eq(Archetype.private_message)
-          expect(p2.topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
-          expect(p2.topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
-          expect(p2.topic.tags.pluck(:name)).to eq([])
+          destination_topic = p2.topic
+          expect(destination_topic.archetype).to eq(Archetype.private_message)
+          expect(destination_topic.topic_allowed_users.where(user_id: user.id).count).to eq(1)
+          expect(destination_topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
+          expect(destination_topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
+          expect(destination_topic.tags.pluck(:name)).to eq([])
         end
 
         it "can add tags to new message when allow_staff_to_tag_pms is enabled" do
@@ -618,7 +619,7 @@ describe PostMover do
 
           old_message.reload
           move_message = old_message.posts.find_by(post_number: 2)
-          expect(move_message.post_type).to eq(Post.types[:small_action])
+          expect(move_message.post_type).to eq(Post.types[:whisper])
           expect(move_message.raw).to include("2 posts were split")
         end
       end
@@ -657,6 +658,44 @@ describe PostMover do
           personal_message.reload
           expect(personal_message.closed).to eq(true)
           expect(moved_to.posts_count).to eq(6)
+        end
+
+        it "uses the correct small action post" do
+          moved_to = personal_message.move_posts(admin, [p2.id], destination_topic_id: another_personal_message.id, archetype: "private_message")
+          post = Post.find_by(topic_id: personal_message.id, post_type: Post.types[:whisper])
+
+          expected_text = I18n.t(
+            "move_posts.existing_message_moderator_post",
+            count: 1,
+            topic_link: "[#{moved_to.title}](#{p2.reload.url})",
+            locale: :en
+          )
+
+          expect(post.raw).to eq(expected_text)
+        end
+      end
+    end
+
+    context 'banner topic' do
+      let(:admin) { Fabricate(:admin) }
+      let(:evil_trout) { Fabricate(:evil_trout) }
+      let(:regular_user) { Fabricate(:trust_level_4) }
+      let(:topic) { Fabricate(:topic) }
+      let(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
+      let(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
+      let!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
+      let!(:p2) { Fabricate(:post, topic: banner_topic, reply_to_post_number: p1.post_number, user: regular_user) }
+
+      context 'move to existing topic' do
+        it "allows moving banner topic posts in regular topic" do
+          banner_topic.move_posts(admin, [p2.id], destination_topic_id: topic.id)
+          expect(p2.reload.topic_id).to eq(topic.id)
+        end
+
+        it "does not allow moving banner topic posts in personal message" do
+          expect {
+            banner_topic.move_posts(admin, [p2.id], destination_topic_id: personal_message.id)
+          }.to raise_error(Discourse::InvalidParameters)
         end
       end
     end

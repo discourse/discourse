@@ -1,16 +1,18 @@
 <section class='field'>
   <label>{{i18n 'category.logo'}}</label>
   {{image-uploader
-      imageId=logoImageId
-      imageUrl=logoImageUrl
-      type="category_logo"
-      class="no-repeat contain-image"}}
+    imageUrl=logoImageUrl
+    onUploadDone=(action "logoUploadDone")
+    onUploadDeleted=(action "logoUploadDeleted")
+    type="category_logo"
+    class="no-repeat contain-image"}}
 </section>
 
 <section class='field'>
   <label>{{i18n 'category.background_image'}}</label>
   {{image-uploader
-      imageId=backgroundImageId
-      imageUrl=backgroundImageUrl
-      type="category_background"}}
+    imageUrl=backgroundImageUrl
+    onUploadDone=(action "backgroundUploadDone")
+    onUploadDeleted=(action "backgroundUploadDeleted")
+    type="category_background"}}
 </section>

@@ -39,7 +39,7 @@ class AdminUserListSerializer < BasicUserSerializer
   def include_email?
     # staff members can always see their email
     (scope.is_staff? && (object.id == scope.user.id || object.staged?)) ||
-    (scope.is_admin? && scope.can_see_emails?)
+      (@options[:emails_desired] && scope.can_check_emails?(object))
   end
 
   alias_method :include_secondary_emails?, :include_email?
@@ -119,7 +119,9 @@ class AdminUserListSerializer < BasicUserSerializer
   end
 
   def include_second_factor_enabled?
-    object.totp_enabled?
+    !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins &&
+      object.totps.present?
   end
 
   def second_factor_enabled

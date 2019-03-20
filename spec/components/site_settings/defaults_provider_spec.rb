@@ -14,14 +14,6 @@ describe SiteSettings::DefaultsProvider do
     MessageBus.on
   end
 
-  def new_settings(provider)
-    Class.new do
-      extend SiteSettingExtension
-      self.listen_for_changes = false
-      self.provider = provider
-    end
-  end
-
   let(:settings) do
     new_settings(provider_local)
   end

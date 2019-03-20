@@ -22,6 +22,10 @@ export default DropdownSelectBoxRoxComponent.extend({
 
   @computed("_start")
   description(_start) {
+    if (this.site && this.site.mobileView) {
+      return null;
+    }
+
     return Handlebars.escapeExpression(I18n.t(`${_start}.description`));
   },
 

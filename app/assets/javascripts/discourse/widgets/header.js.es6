@@ -67,7 +67,10 @@ createWidget("header-notifications", {
 
     const unreadPMs = user.get("unread_private_messages");
     if (!!unreadPMs) {
-      if (!user.get("read_first_notification")) {
+      if (
+        !user.get("read_first_notification") &&
+        !user.get("enforcedSecondFactor")
+      ) {
         contents.push(h("span.ring"));
         if (!attrs.active && attrs.ringBackdrop) {
           contents.push(h("span.ring-backdrop-spotlight"));
@@ -162,7 +165,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
-  tagName: "ul.icons.d-header-icons.clearfix",
+  tagName: "ul.icons.d-header-icons",
 
   buildAttributes() {
     return { role: "navigation" };

@@ -24,7 +24,7 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
 
     @observes("incomingCount")
     _updateTitle() {
-      Discourse.notifyTitle(this.get("incomingCount"));
+      Discourse.updateContextCount(this.get("incomingCount"));
     },
 
     saveScrollPosition() {
@@ -32,13 +32,13 @@ const DiscoveryTopicsListComponent = Ember.Component.extend(
     },
 
     scrolled() {
-      this._super();
+      this._super(...arguments);
       this.saveScrollPosition();
     },
 
     actions: {
       loadMore() {
-        Discourse.notifyTitle(0);
+        Discourse.updateContextCount(0);
         this.get("model")
           .loadMore()
           .then(hasMoreResults => {

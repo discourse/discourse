@@ -141,14 +141,6 @@ ur:
       reset_trigger: "نیا صارف"
       cert_title: "نیا صارف ٹیوٹوریل کی کامیاب تکمیل کے اعتراف میں"
       onebox:
-        instructions: |-
-          پھر، کیا آپ اِن لنکس میں سے ایک میرے ساتھ شئیر کر سکتے ہیں؟ **ایک لائن پر ایک لنک** کے طور پر جواب دیں، اور یہ خود بخود اُس کا ایک اچھا خلاصہ شامل کردے گا۔
-
-          ایک لنک کاپی کرنے کیلئے، موبائل پرٹَیپ اور ہولڈ کریں یا اپنے ماؤز پر دایاں کلک کریں:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          -  https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           یہ زیادہ تر <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> لنکس کے لئے کام کرے گا۔ یاد رہے کہ یہ ایک لائن پر _صرف اکیلا_ ہونا چاہئے، بغیر اس کے سامنے یا پیچھے کچھ ہوے۔
         not_found: |-

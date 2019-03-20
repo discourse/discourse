@@ -9,6 +9,7 @@ class CategoriesController < ApplicationController
   skip_before_action :check_xhr, only: [:index, :categories_and_latest, :categories_and_top, :redirect]
 
   def redirect
+    return if handle_permalink("/category/#{params[:path]}")
     redirect_to path("/c/#{params[:path]}")
   end
 
@@ -140,7 +141,7 @@ class CategoriesController < ApplicationController
 
       render_serialized(@category, CategorySerializer)
     else
-      return render_json_error(@category) unless @category.save
+      return render_json_error(@category)
     end
   end
 
@@ -280,7 +281,6 @@ class CategoriesController < ApplicationController
                       :auto_close_based_on_last_post,
                       :uploaded_logo_id,
                       :uploaded_background_id,
-                      :uploaded_meta_id,
                       :slug,
                       :allow_badges,
                       :topic_template,
@@ -294,6 +294,7 @@ class CategoriesController < ApplicationController
                       :default_top_period,
                       :minimum_required_tags,
                       :navigate_to_first_post_after_read,
+                      :search_priority,
                       custom_fields: [params[:custom_fields].try(:keys)],
                       permissions: [*p.try(:keys)],
                       allowed_tags: [],

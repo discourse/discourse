@@ -2,6 +2,7 @@
 //= require ./pretty-text/guid
 //= require ./pretty-text/censored-words
 //= require ./pretty-text/emoji/data
+//= require ./pretty-text/emoji/version
 //= require ./pretty-text/emoji
 //= require ./pretty-text/engines/discourse-markdown-it
 //= require xss.min

@@ -16,7 +16,10 @@
         {{plugin-outlet name="flagged-topic-row" noTags=true args=(hash topic=ft.topic)}}
 
         <td class="topic-title">
-          <a href={{ft.topic.relative_url}} target="_blank">{{replace-emoji ft.topic.fancy_title}}</a>
+          <div class='combined-title'>
+            {{topic-status topic=ft.topic}}
+            <a href={{ft.topic.relative_url}} target="_blank">{{replace-emoji ft.topic.fancy_title}}</a>
+          </div>
         </td>
         <td class="flag-counts">
           {{#each ft.flag_counts as |fc|}}

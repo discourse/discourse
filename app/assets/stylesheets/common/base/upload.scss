@@ -1,6 +1,33 @@
 .uploaded-image-preview {
   background: $primary center;
   background-size: cover;
+  position: relative;
+
+  .image-upload-controls {
+    display: flex;
+
+    .btn {
+      margin-right: 5px;
+    }
+
+    .image-uploader-lightbox-btn {
+      background: none;
+      margin-right: 0;
+      margin-left: auto;
+
+      .d-icon {
+        color: $primary-low;
+      }
+
+      &:hover {
+        background: none;
+
+        .d-icon {
+          color: $primary;
+        }
+      }
+    }
+  }
 }
 
 .image-uploader.no-repeat {

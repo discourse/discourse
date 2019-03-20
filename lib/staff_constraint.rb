@@ -7,7 +7,7 @@ class StaffConstraint
     provider.current_user &&
       provider.current_user.staff? &&
       custom_staff_check(request)
-  rescue Discourse::InvalidAccess
+  rescue Discourse::InvalidAccess, Discourse::ReadOnly
     false
   end
 

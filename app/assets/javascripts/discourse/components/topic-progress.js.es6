@@ -1,4 +1,3 @@
-import { getOwner } from "discourse-common/lib/get-owner";
 import {
   default as computed,
   observes
@@ -89,7 +88,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     this.appEvents
       .on("composer:will-open", this, this._dock)
@@ -113,7 +112,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this.appEvents
       .off("composer:will-open", this, this._dock)
       .off("composer:resized", this, this._dock)
@@ -155,14 +154,17 @@ export default Ember.Component.extend({
     const $wrapper = this.$();
     if (!$wrapper || $wrapper.length === 0) return;
 
-    const offset = window.pageYOffset || $("html").scrollTop(),
-      progressHeight = this.site.mobileView ? 0 : $("#topic-progress").height(),
-      maximumOffset = $("#topic-bottom").offset().top + progressHeight,
-      windowHeight = $(window).height(),
-      bodyHeight = $("body").height(),
-      composerHeight = $("#reply-control").height() || 0,
-      isDocked = offset >= maximumOffset - windowHeight + composerHeight,
-      bottom = bodyHeight - maximumOffset;
+    const $html = $("html");
+    const offset = window.pageYOffset || $html.scrollTop();
+    const progressHeight = this.site.mobileView
+      ? 0
+      : $("#topic-progress").height();
+    const maximumOffset = $("#topic-bottom").offset().top + progressHeight;
+    const windowHeight = $(window).height();
+    const composerHeight = $("#reply-control").height() || 0;
+    const isDocked = offset >= maximumOffset - windowHeight + composerHeight;
+    const bottom = $("body").height() - maximumOffset;
+    const wrapperDir = $html.hasClass("rtl") ? "left" : "right";
 
     if (composerHeight > 0) {
       $wrapper.css("bottom", isDocked ? bottom : composerHeight);
@@ -174,28 +176,9 @@ export default Ember.Component.extend({
 
     const $replyArea = $("#reply-control .reply-area");
     if ($replyArea && $replyArea.length > 0) {
-      $wrapper.css("right", `${$replyArea.offset().left}px`);
+      $wrapper.css(wrapperDir, `${$replyArea.offset().left}px`);
     } else {
-      $wrapper.css("right", "1em");
-    }
-
-    // switch mobile scroll logo at the very bottom of topics
-    if (this.site.mobileView) {
-      const isIOS = this.capabilities.isIOS,
-        switchHeight = bodyHeight - offset - windowHeight,
-        appEvents = getOwner(this).lookup("app-events:main");
-
-      if (isIOS && switchHeight < -10) {
-        // match elastic-scroll behaviour in iOS
-        setTimeout(function() {
-          appEvents.trigger("header:hide-topic");
-        }, 300);
-      } else if (!isIOS && switchHeight < 5) {
-        // normal switch for everyone else
-        setTimeout(function() {
-          appEvents.trigger("header:hide-topic");
-        }, 300);
-      }
+      $wrapper.css(wrapperDir, "1em");
     }
   },
 

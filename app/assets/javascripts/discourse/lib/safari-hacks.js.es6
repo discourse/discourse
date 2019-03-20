@@ -1,4 +1,4 @@
-import { isAppleDevice } from "discourse/lib/utilities";
+import { isAppleDevice, safariHacksDisabled } from "discourse/lib/utilities";
 
 // we can't tell what the actual visible window height is
 // because we cannot account for the height of the mobile keyboard
@@ -65,7 +65,7 @@ export function isWorkaroundActive() {
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
 function positioningWorkaround($fixedElement) {
-  if (!isAppleDevice()) {
+  if (!isAppleDevice() || safariHacksDisabled()) {
     return;
   }
 
@@ -191,7 +191,14 @@ function positioningWorkaround($fixedElement) {
     });
   }, 100);
 
-  fixedElement.addEventListener("DOMNodeInserted", checkForInputs);
+  const config = {
+    childList: true,
+    subtree: true,
+    attributes: false,
+    characterData: false
+  };
+  const observer = new MutationObserver(checkForInputs);
+  observer.observe(fixedElement, config);
 }
 
 export default positioningWorkaround;

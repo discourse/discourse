@@ -27,7 +27,7 @@ widgetTest("single, selected", {
   },
 
   test(assert) {
-    assert.ok(find("li .d-icon-far-dot-circle:eq(0)").length === 1);
+    assert.ok(find("li .d-icon-circle:eq(0)").length === 1);
   }
 });
 

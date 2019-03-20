@@ -63,8 +63,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.set("fileSelected", false);
   },
 
-  enabled: Em.computed.and("nameValid", "fileSelected"),
-  disabled: Em.computed.not("enabled"),
+  enabled: Ember.computed.and("nameValid", "fileSelected"),
+  disabled: Ember.computed.not("enabled"),
 
   @computed("name", "adminCustomizeThemesShow.model.theme_fields")
   errorMessage(name, themeFields) {
@@ -105,7 +105,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     updateName() {
       let name = this.get("name");
-      if (Em.isEmpty(name)) {
+      if (Ember.isEmpty(name)) {
         name = $("#file-input")[0].files[0].name;
         this.set("name", name.split(".")[0]);
       }

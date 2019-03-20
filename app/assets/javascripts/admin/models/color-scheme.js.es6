@@ -3,7 +3,7 @@ import ColorSchemeColor from "admin/models/color-scheme-color";
 
 const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   init: function() {
-    this._super();
+    this._super(...arguments);
     this.startTrackingChanges();
   },
 
@@ -30,7 +30,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
     var newScheme = ColorScheme.create({
       name: this.get("name"),
       can_edit: true,
-      colors: Em.A()
+      colors: Ember.A()
     });
     this.get("colors").forEach(c => {
       newScheme.colors.pushObject(

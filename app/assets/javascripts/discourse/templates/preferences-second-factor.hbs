@@ -1,11 +1,13 @@
 <section class='user-preferences'>
   <form class="form-horizontal">
 
-    <div class="control-group">
-      <div class="controls">
-        <h3>{{i18n 'user.second_factor.title'}}</h3>
+    {{#if showEnforcedNotice}}
+      <div class="control-group">
+        <div class="controls">
+          <div class='alert alert-error'>{{i18n 'user.second_factor.enforced_notice'}}</div>
+        </div>
       </div>
-    </div>
+    {{/if}}
 
     {{#if errorMessage}}
       <div class="control-group">
@@ -16,26 +18,29 @@
     {{/if}}
 
     {{#if model.second_factor_enabled}}
-      <label class='control-label'>{{i18n 'user.second_factor.label'}}</label>
-
       <div class="control-group">
         <div class="controls">
-          {{second-factor-input maxlength=6 value=secondFactorToken inputId='second-factor-token'}}
-        </div>
-
-        <div class='instructions controls'>
-          {{i18n 'user.second_factor.disable_description'}}
+          {{#second-factor-form
+              secondFactorMethod=secondFactorMethod
+              backupEnabled=backupEnabled
+              secondFactorToken=secondFactorToken
+              secondFactorTitle=(i18n 'user.second_factor.title')
+              isLogin=false}}
+            {{second-factor-input value=secondFactorToken inputId='second-factor-token' secondFactorMethod=secondFactorMethod}}
+          {{/second-factor-form}}
         </div>
       </div>
 
       <div class="control-group">
         <div class="controls">
-          {{d-button action="disableSecondFactor"
+          {{d-button action=(action "disableSecondFactor")
               class="btn btn-primary"
               disabled=loading
               label=disableButtonText}}
 
-          {{cancel-link route="preferences.account" args= model.username}}
+          {{#unless showEnforcedNotice}}
+            {{cancel-link route="preferences.account" args= model.username}}
+          {{/unless}}
         </div>
       </div>
     {{else}}
@@ -78,12 +83,14 @@
 
         <div class="control-group">
           <div class="controls">
-            {{d-button action="enableSecondFactor"
+            {{d-button action=(action "enableSecondFactor")
                 class="btn btn-primary"
                 disabled=loading
                 label=enableButtonText}}
 
-            {{cancel-link route="preferences.account" args= model.username}}
+            {{#unless showEnforcedNotice}}
+              {{cancel-link route="preferences.account" args= model.username}}
+            {{/unless}}
           </div>
         </div>
       {{else}}
@@ -91,26 +98,27 @@
           <label class='control-label'>{{i18n 'user.password.title'}}</label>
 
           <div class="controls">
-            {{text-field value=password
+            <div>
+              {{text-field value=password
                 id="password"
                 type="password"
                 classNames="input-xxlarge"
                 autofocus="autofocus"}}
-          </div>
-
-          <div class='instructions controls'>
-            {{i18n 'user.second_factor.confirm_password_description'}}
+            </div>
+            <div class='instructions'>
+              {{i18n 'user.second_factor.confirm_password_description'}}
+            </div>
           </div>
         </div>
 
         <div class="control-group">
           <div class="controls">
-            {{d-button action="confirmPassword"
+            {{d-button action=(action "confirmPassword")
                 class="btn btn-primary"
                 disabled=loading
                 label=submitButtonText}}
 
-            {{d-button action="resetPassword"
+            {{d-button action=(action "resetPassword")
                 class="btn"
                 disabled=resetPasswordLoading
                 icon="envelope"
@@ -118,7 +126,9 @@
 
             {{resetPasswordProgress}}
 
-            {{cancel-link route="preferences.account" args= model.username}}
+            {{#unless showEnforcedNotice}}
+              {{cancel-link route="preferences.account" args= model.username}}
+            {{/unless}}
           </div>
         </div>
       {{/if}}

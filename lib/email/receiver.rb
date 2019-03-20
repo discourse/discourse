@@ -899,6 +899,22 @@ module Email
       create_post_with_attachments(options)
     end
 
+    def notification_level_for(body)
+      # since we are stripping save all this work on long replies
+      return nil if body.length > 40
+
+      body = body.strip.downcase
+      case body
+      when "mute"
+        NotificationLevels.topic_levels[:muted]
+      when "track"
+        NotificationLevels.topic_levels[:tracking]
+      when "watch"
+        NotificationLevels.topic_levels[:watching]
+      else nil
+      end
+    end
+
     def create_reply(options = {})
       raise TopicNotFoundError if options[:topic].nil? || options[:topic].trashed?
       raise BouncedEmailError if options[:bounce] && options[:topic].archetype != Archetype.private_message
@@ -908,6 +924,8 @@ module Email
 
       if post_action_type = post_action_for(options[:raw])
         create_post_action(options[:user], options[:post], post_action_type)
+      elsif notification_level = notification_level_for(options[:raw])
+        TopicUser.change(options[:user].id, options[:post].topic_id, notification_level: notification_level)
       else
         raise TopicClosedError if options[:topic].closed?
         options[:topic_id] = options[:topic].id
@@ -931,18 +949,21 @@ module Email
     end
 
     def attachments
-      # strip blacklisted attachments (mostly signatures)
       @attachments ||= begin
-        attachments =  @mail.parts.select { |part| part.attachment? && is_whitelisted_attachment?(part) }
+        attachments = @mail.attachments.select { |attachment| is_whitelisted_attachment?(attachment) }
         attachments << @mail if @mail.attachment? && is_whitelisted_attachment?(@mail)
+
+        @mail.parts.each do |part|
+          attachments << part if part.attachment? && is_whitelisted_attachment?(part)
+        end
+
+        attachments.uniq!
         attachments
       end
     end
 
     def create_post_with_attachments(options = {})
-      # deal with attachments
       options[:raw] = add_attachments(options[:raw], options[:user], options)
-
       create_post(options)
     end
 
@@ -1133,8 +1154,8 @@ module Email
 
     def enable_email_pm_setting(user)
       # ensure user PM emails are enabled (since user is posting via email)
-      if !user.staged && !user.user_option.email_private_messages
-        user.user_option.update!(email_private_messages: true)
+      if !user.staged && user.user_option.email_messages_level == UserOption.email_level_types[:never]
+        user.user_option.update!(email_messages_level: UserOption.email_level_types[:always])
       end
     end
   end

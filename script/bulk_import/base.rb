@@ -323,9 +323,6 @@ class BulkImport::Base
   def create_group_users(rows, &block)
     create_records(rows, "group_user", GROUP_USER_COLUMNS, &block)
   end
-  def create_categories(rows, &block)
-    create_records(rows, "category", CATEGORY_COLUMNS, &block)
-  end
   def create_topics(rows, &block)
     create_records(rows, "topic", TOPIC_COLUMNS, &block)
   end

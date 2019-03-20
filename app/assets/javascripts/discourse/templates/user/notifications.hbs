@@ -40,7 +40,7 @@
 {{/d-section}}
 
 <section class='user-right'>
-  {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action="loadMore"}}
+  {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action=(action "loadMore")}}
     {{outlet}}
     {{conditional-loading-spinner condition=model.loadingMore}}
   {{/load-more}}

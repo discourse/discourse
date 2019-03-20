@@ -47,20 +47,24 @@ class InvitesController < ApplicationController
       begin
         user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields])
         if user.present?
-          log_on_user(user)
+          log_on_user(user) if user.active?
           post_process_invite(user)
         end
 
-        topic = user.present? ? invite.topics.first : nil
+        response = { success: true }
+        if user.present? && user.active?
+          topic = invite.topics.first
+          response[:redirect_to] = topic.present? ? path("#{topic.relative_url}") : path("/")
+        else
+          response[:message] = I18n.t('invite.confirm_email')
+        end
 
-        render json: {
-          success: true,
-          redirect_to: topic.present? ? path("#{topic.relative_url}") : path("/")
-        }
+        render json: response
       rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
         render json: {
           success: false,
-          errors: e.record&.errors&.to_hash || {}
+          errors: e.record&.errors&.to_hash || {},
+          message: I18n.t('invite.error_message')
         }
       end
     else
@@ -139,7 +143,7 @@ class InvitesController < ApplicationController
   def rescind_all_invites
     guardian.ensure_can_rescind_all_invites!(current_user)
 
-    Invite.rescind_all_invites_from(current_user)
+    Invite.rescind_all_expired_invites_from(current_user)
     render body: nil
   end
 

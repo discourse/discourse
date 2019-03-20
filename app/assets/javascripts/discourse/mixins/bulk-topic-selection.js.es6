@@ -4,7 +4,7 @@ export default Ember.Mixin.create({
   bulkSelectEnabled: false,
   selected: null,
 
-  canBulkSelect: Em.computed.alias("currentUser.staff"),
+  canBulkSelect: Ember.computed.alias("currentUser.staff"),
 
   resetSelected: function() {
     this.set("selected", []);

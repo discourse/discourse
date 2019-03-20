@@ -16,7 +16,7 @@ function updateState(state, opts) {
     post
       .update(args)
       .then(() => {
-        this.sendAction("removePost", post);
+        this.removePost(post);
       })
       .catch(popupAjaxError);
   };

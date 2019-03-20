@@ -2,6 +2,7 @@
 // These styles are also used for "/groups" — test those pages if making significant changes
 .user-right {
   .list-actions {
+    display: flex;
     margin-bottom: 10px;
 
     .btn {
@@ -58,6 +59,9 @@
         color: $primary;
 
         &.groups {
+          span:not(:last-of-type) {
+            margin-right: 0.25em;
+          }
           span:after {
             content: ",";
           }
@@ -86,9 +90,7 @@
       }
 
       h2 {
-        font-size: $font-up-2;
         font-weight: normal;
-        margin-top: 10px;
         max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
@@ -97,9 +99,7 @@
 
       h3 {
         font-weight: normal;
-        font-size: $font-0;
-        margin: 5px 0;
-
+        margin-bottom: 0.5em;
         .d-icon:not(:first-of-type) {
           margin-left: 10px;
         }
@@ -299,6 +299,14 @@
       }
     }
   }
+  .user-content {
+    .admin-controls nav {
+      margin: 0;
+      .nav-pills {
+        overflow-x: auto;
+      }
+    }
+  }
 }
 
 .user-field {
@@ -380,10 +388,6 @@
   p.error {
     color: $danger;
   }
-}
-
-.new-private-message {
-  margin-bottom: 15px;
 }
 
 .user-nav {

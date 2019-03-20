@@ -69,7 +69,6 @@ class CategoryList
     @categories = Category.includes(
       :uploaded_background,
       :uploaded_logo,
-      :uploaded_meta,
       :topic_only_relative_url,
       subcategories: [:topic_only_relative_url]
     ).secured(@guardian)
@@ -79,10 +78,7 @@ class CategoryList
     if SiteSetting.fixed_category_positions
       @categories = @categories.order(:position, :id)
     else
-      @categories = @categories.order('COALESCE(categories.posts_week, 0) DESC')
-        .order('COALESCE(categories.posts_month, 0) DESC')
-        .order('COALESCE(categories.posts_year, 0) DESC')
-        .order('id ASC')
+      @categories = @categories.includes(:latest_post).order("posts.created_at DESC NULLS LAST").order('categories.id ASC')
     end
 
     @categories = @categories.to_a

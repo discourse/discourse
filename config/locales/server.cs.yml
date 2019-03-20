@@ -35,7 +35,6 @@ cs:
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
   themes:
-    bad_color_scheme: "Nelze aktualizovat skin (theme), neplatné barevné schéma"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
   emails:
     incoming:
@@ -53,8 +52,8 @@ cs:
         topic_closed_error: "Toto se stává, když přijde odpověď k uzavřenému tématu."
       unrecognized_error: "Neznámá chyba"
   errors: &errors
-    format: '%{attribute} %{message}'
-    format_with_full_message: '<b>%{attribute}</b>: %{message}'
+    format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
       invalid_boolean: "Nevalidní boolean."
@@ -79,7 +78,7 @@ cs:
       not_a_number: není číslo
       not_an_integer: musí být celé číslo
       odd: musí být lichý
-      record_invalid: 'Ověření selhalo: %{errors}'
+      record_invalid: "Ověření selhalo: %{errors}"
       restrict_dependent_destroy:
         one: "Nelze odstranit záznam, protože závisející %{record} existuje"
         many: "Nelze smazat záznam protože na něm závisí %{record}."
@@ -100,12 +99,12 @@ cs:
         other: špatná délka (má být %{count} znaků)
       other_than: "musí být jiný než %{count}"
     template:
-      body: 'Nastaly problémy s následujícími poli: '
+      body: "Nastaly problémy s následujícími poli: "
       header:
         one: 1 chyba zamezila uložení modelu %{model}
-        few: '%{count} chyb zamezilo uložení modelu %{model}'
-        many: '%{count} chyb zamezilo uložení modelu %{model}'
-        other: '%{count} chyb zamezilo uložení modelu %{model}'
+        few: "%{count} chyb zamezilo uložení modelu %{model}"
+        many: "%{count} chyb zamezilo uložení modelu %{model}"
+        other: "%{count} chyb zamezilo uložení modelu %{model}"
     embed:
       load_from_remote: "Při načítání příspěvku nastala chyba."
     site_settings:
@@ -253,7 +252,7 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
-    'new-topic': |
+    "new-topic": |
       Vítejte na %{site_name} &mdash; **díky za nové téma!**
 
       - Zní název zajímavě, když si jej přečtete nahlas? Je to dobré shrnutí daného tématu?
@@ -263,7 +262,7 @@ cs:
       - Používejte ve svém tématu klíčová slova, aby jej ostatní mohli *najít*. Zařaďte své téma do vhodné kategorie.
 
       Více se dozvíte v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    'new-reply': |
+    "new-reply": |
       Vítejte na %{site_name} &mdash; **díky za přispěvek!**
 
       - Přispívá nějak vaše odpověď k diskuzi?
@@ -273,7 +272,7 @@ cs:
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
 
       Další doporučení máme v [pravidlech komunity](%{base_path}/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    avatar: |+
+    avatar: |
       ### Nechcete si nastavit svůj profilový obrázek?
 
       Přidali jste několik témat a příspěvků, ale Váš profilový obrázek není tak jedinečný jako Vy - je to len písmeno.
@@ -281,13 +280,12 @@ cs:
       Zvažovali jste **[navštívit svůj uživatelský profil]()** a nahrát v něm obrázek, který vás vystihuje?
 
       Je jednodušší sledovat diskusi a nalézt v konverzaci zajímavé lidi, když má každý jedinečný profilový obrázek!
-
   activerecord:
     attributes:
       category:
         name: "Název kategorie"
       topic:
-        title: 'Nadpis'
+        title: "Nadpis"
       post:
         raw: "Tělo"
       user_profile:
@@ -354,23 +352,22 @@ cs:
     title: "Vítejte v Discourse"
     body: |2
 
-        První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
+      První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
 
-        **Upravte tento text** do stručného popisu Vaší komunity:
+      **Upravte tento text** do stručného popisu Vaší komunity:
 
-        - Pro koho tu je?
-        - Co zde lze nalézt?
-        - Proč by sem měli lidé chodit?
-        - Kde se lze dozvědět víc (odkazy, zdroje, atd.)?
+      - Pro koho tu je?
+      - Co zde lze nalézt?
+      - Proč by sem měli lidé chodit?
+      - Kde se lze dozvědět víc (odkazy, zdroje, atd.)?
 
-        <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
-        Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
+      Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
   lounge_welcome:
     title: "Vítejte ve VIP"
   category:
     topic_prefix: "O kategorii %{category}"
-    replace_paragraph: "(Nahraďte tento první odstavec stručným popisem nové kategorie. Tento návod se objeví v seznamu kategorií, takže se zkuste vejít do 200 znaků. **Kategorie se neobjeví v seznamu kategorií pokud neupravíte tento popis nebo v ní nevytvoříte témata.**)"
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
     errors:
       uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
@@ -381,7 +378,6 @@ cs:
       email_already_used_in_category: "'%{email}' už je použit pro kategorii '%{category_name}'."
       description_incomplete: "Příspěvek s popisem kategorie musí obsahovat alespoň jeden odstavec."
     cannot_delete:
-      uncategorized: "„Bez kategorie“ nejde smazat"
       has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
       topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
     uncategorized_description: "Témata bez kategorií, případně která nepasují do stávajících kategorií."
@@ -534,9 +530,9 @@ cs:
   password_reset:
     choose_new: "Vyberte si nové heslo"
     choose: "Vybrat heslo"
-    update: 'změnit heslo'
-    save: 'Nastavit heslo'
-    title: 'Resetovat heslo'
+    update: "změnit heslo"
+    save: "Nastavit heslo"
+    title: "Resetovat heslo"
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
   change_email:
@@ -552,36 +548,36 @@ cs:
     approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
   post_action_types:
     off_topic:
-      title: 'Off-Topic'
-      description: 'Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam.'
-      short_description: 'Není relevantní k diskuzi'
-      long_form: 'označil příspěvek jako off-topic'
+      title: "Off-Topic"
+      description: "Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam."
+      short_description: "Není relevantní k diskuzi"
+      long_form: "označil příspěvek jako off-topic"
     spam:
-      title: 'Spam'
-      long_form: 'označeno jako spam'
+      title: "Spam"
+      long_form: "označeno jako spam"
       email_title: '"%{title}" byl označen jako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Nevhodné'
-      long_form: 'nahlášeno jako nevhodné'
+      title: "Nevhodné"
+      long_form: "nahlášeno jako nevhodné"
     notify_user:
-      title: 'Poslat @{{username}} zprávu'
-      long_form: 'obeslaný uživatel'
+      title: "Poslat @{{username}} zprávu"
+      long_form: "obeslaný uživatel"
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
       title: "Něco jiného"
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
-      title: 'Založit'
-      description: 'Přidat záložku k tomuto příspěvku'
-      short_description: 'Přidat záložku k tomuto příspěvku'
-      long_form: 'přidal záložku k tomuto příspěvku'
+      title: "Založit"
+      description: "Přidat záložku k tomuto příspěvku"
+      short_description: "Přidat záložku k tomuto příspěvku"
+      long_form: "přidal záložku k tomuto příspěvku"
     like:
-      title: 'To se mi líbí'
-      description: 'Tento příspěvek se mi líbí'
-      short_description: 'Tento příspěvek se mi líbí'
-      long_form: 'se líbí'
+      title: "To se mi líbí"
+      description: "Tento příspěvek se mi líbí"
+      short_description: "Tento příspěvek se mi líbí"
+      long_form: "se líbí"
   user_activity:
     no_bookmarks:
       others: "Žádné záložky."
@@ -591,15 +587,15 @@ cs:
       others: "Žádné odpovědi."
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Toto téma je reklama. Není užitečné a důležité pro tento web, je naopak propagační.'
-      long_form: 'označeno jako spam'
+      title: "Spam"
+      description: "Toto téma je reklama. Není užitečné a důležité pro tento web, je naopak propagační."
+      long_form: "označeno jako spam"
     inappropriate:
-      title: 'Nevhodné'
-      long_form: 'nahlášeno jako nevhodné'
+      title: "Nevhodné"
+      long_form: "nahlášeno jako nevhodné"
     notify_moderators:
       title: "Něco jiného"
-      long_form: 'nahlášeno moderátorům'
+      long_form: "nahlášeno moderátorům"
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
   archetypes:
@@ -747,7 +743,7 @@ cs:
     rails_env_warning: "Váš server běží v módu %{env}."
     host_names_warning: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
     sidekiq_warning: 'Sidekiq neběží. Řada úloh, jako je zasílání emailů, se provádí asynchronně na pozadí přes sidekiq. Prosím, ujistěte se, že alespoň jeden process sidekiq běží. <a href="https://github.com/mperham/sidekiq">Více o Sidekiq</a>.'
-    memory_warning: 'Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti.'
+    memory_warning: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
   site_settings:
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
@@ -794,8 +790,8 @@ cs:
       invalid_string: "Neplatná hodnota."
   search:
     types:
-      category: 'Kategorie'
-      user: 'Uživatelé'
+      category: "Kategorie"
+      user: "Uživatelé"
   original_poster: "Autor tématu"
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední přispěvatel"
@@ -804,14 +800,8 @@ cs:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
     not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
   topic_statuses:
-    archived_enabled: "Toto téma je archivováno. Je zmraženo a již nemůže být nijak změněno."
-    archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
-    closed_enabled: "Toto téma je uzavřeno. Nové odpovědi nebudou přijímány."
-    closed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     autoclosed_disabled_lastpost: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
-    pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
-    pinned_globally_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
   login:
     not_approved: "Váš účet ještě nebyl schválen. Až se tak stane, obdržíte oznámení emailem."
     incorrect_username_email_or_password: "Neplatné uživatelské jméno, email nebo heslo"
@@ -884,6 +874,15 @@ cs:
       click_here: "klikněte zde"
       from: "%{site_name} - přehled"
       preheader: "Krátký souhrn od poslední návštěvy v %{last_seen_at}"
+    forgot_password:
+      subject_template: "[%{email_prefix}] Obnovení hesla"
+      text_body_template: |
+        Někdo zažádal o změna Tvého hesla na [%{site_name}](%{base_url}).
+
+        Pokud jsi to Ty nebyl, můžeš v klidu ignorovat tento email.
+
+        Pro změnu hesla klikni na tento odkaz:
+        %{base_url}/u/password-reset/%{email_token}
     account_created:
       title: "Účet vytvořen"
     signup_after_approval:
@@ -894,7 +893,7 @@ cs:
     see_more: "Více"
   terms_of_service:
     title: "Podmínky používání"
-  deleted: 'smazáno'
+  deleted: "smazáno"
   upload:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
@@ -923,6 +922,8 @@ cs:
       name: Populární odkaz
     admired:
       name: Obdivovaný
+    first_emoji:
+      name: První smajlík
   admin_login:
     success: "E-mail odeslán"
     submit_button: "Odeslat e-mail"

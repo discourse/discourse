@@ -42,7 +42,10 @@
 .close {
   font-size: $font-up-3;
   text-decoration: none;
-  color: dark-light-choose($primary-high, $secondary-low);
+  color: $primary-high;
+  &:visited {
+    color: $primary-high;
+  }
   cursor: pointer;
   &:hover {
     color: $primary;
@@ -120,7 +123,9 @@
   }
 
   #move-selected {
-    width: 475px;
+    // prevents content from moving when user selects differnt move options 525px
+    // is the same width we set on category edit modal
+    width: 525px;
 
     p {
       margin-top: 0;

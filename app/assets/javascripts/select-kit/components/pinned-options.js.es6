@@ -10,7 +10,7 @@ export default DropdownSelectBoxComponent.extend({
   autoHighlight() {},
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     const pinnedGlobally = this.get("topic.pinned_globally");
     const pinned = this.get("computedValue");
     const globally = pinnedGlobally ? "_globally" : "";

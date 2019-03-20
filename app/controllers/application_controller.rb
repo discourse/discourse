@@ -499,6 +499,13 @@ class ApplicationController < ActionController::Base
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
   end
 
+  def handle_permalink(path)
+    permalink = Permalink.find_by_url(path)
+    if permalink && permalink.target_url
+      redirect_to permalink.target_url, status: :moved_permanently
+    end
+  end
+
   private
 
   def check_readonly_mode
@@ -685,10 +692,9 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_login_if_required
-    return if current_user || (request.format.json? && is_api?)
+    return if request.format.json? && is_api?
 
-    if SiteSetting.login_required?
-
+    if !current_user && SiteSetting.login_required?
       flash.keep
       dont_cache_page
 
@@ -704,6 +710,18 @@ class ApplicationController < ActionController::Base
         redirect_to path("/login")
       end
     end
+
+    if current_user &&
+      !current_user.totp_enabled? &&
+      !request.format.json? &&
+      !is_api? &&
+      ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
+        SiteSetting.enforce_second_factor == 'all')
+      redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+      if !request.fullpath.start_with?(redirect_path)
+        redirect_to path(redirect_path)
+      end
+    end
   end
 
   def block_if_readonly_mode
@@ -717,12 +735,21 @@ class ApplicationController < ActionController::Base
       layout = 'application' if layout == 'no_ember'
     end
 
-    category_topic_ids = Category.pluck(:topic_id).compact
+    if !SiteSetting.login_required? || current_user
+      key = "page_not_found_topics"
+      if @topics_partial = $redis.get(key)
+        @topics_partial = @topics_partial.html_safe
+      else
+        category_topic_ids = Category.pluck(:topic_id).compact
+        @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
+        @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
+        @topics_partial = render_to_string partial: '/exceptions/not_found_topics', formats: [:html]
+        $redis.setex(key, 10.minutes, @topics_partial)
+      end
+    end
+
     @container_class = "wrap not-found-container"
-    @top_viewed = TopicQuery.new(nil, except_topic_ids: category_topic_ids).list_top_for("monthly").topics.first(10)
-    @recent = Topic.includes(:category).where.not(id: category_topic_ids).recent(10)
-    @slug =  params[:slug].class == String ? params[:slug] : ''
-    @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
+    @slug = params[:slug].presence || params[:id].presence || ""
     @slug.tr!('-', ' ')
     @hide_search = true if SiteSetting.login_required
     render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'

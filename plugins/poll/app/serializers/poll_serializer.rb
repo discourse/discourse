@@ -9,7 +9,8 @@ class PollSerializer < ApplicationSerializer
              :step,
              :options,
              :voters,
-             :close
+             :close,
+             :preloaded_voters
 
   def public
     true
@@ -45,6 +46,14 @@ class PollSerializer < ApplicationSerializer
 
   def include_close?
     object.close_at.present?
+  end
+
+  def preloaded_voters
+    DiscoursePoll::Poll.serialized_voters(object)
+  end
+
+  def include_preloaded_voters?
+    object.can_see_voters?(scope)
   end
 
 end

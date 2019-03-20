@@ -30,6 +30,16 @@ export default class WidgetGlue {
 
   rerenderWidget() {
     Ember.run.cancel(this._timeout);
+
+    // in test mode return early if store cannot be found
+    if (Ember.testing) {
+      try {
+        this.register.lookup("service:store");
+      } catch (e) {
+        return;
+      }
+    }
+
     const newTree = new this._widgetClass(this.attrs, this.register, {
       dirtyKeys: this.dirtyKeys
     });

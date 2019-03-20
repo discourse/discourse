@@ -30,7 +30,7 @@
           <td class="created_at"><div class="label">{{i18n 'admin.logs.created_at'}}</div>{{age-with-tooltip item.created_at}}</td>
           <td class="ip_address">{{item.ip_address}}</td>
           <td class="action">
-            {{d-button action="clearBlock" actionParam=item icon="check" label="admin.logs.screened_emails.actions.allow"}}
+            {{d-button action=(action "clearBlock") actionParam=item icon="check" label="admin.logs.screened_emails.actions.allow"}}
           </td>
         </tr>
       {{/each}}

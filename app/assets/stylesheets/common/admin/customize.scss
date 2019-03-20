@@ -59,23 +59,6 @@
 }
 
 .admin-customize.admin-customize-themes {
-  .customize-themes-header {
-    border-bottom: 1px solid $primary-low;
-    padding-bottom: 8px;
-    display: flex;
-
-    .title {
-      color: $primary-medium;
-      flex-grow: 1;
-      h3 {
-        margin-bottom: 0;
-      }
-    }
-
-    .create-actions {
-      margin-left: auto;
-    }
-  }
   .admin-container {
     padding: 0;
   }
@@ -99,9 +82,6 @@
       margin-bottom: 0;
       font-size: $font-down-2;
     }
-    .btn-small {
-      font-size: $font-down-2;
-    }
   }
 
   .field-error {
@@ -109,18 +89,6 @@
     margin-bottom: 10px;
     background-color: $quaternary-low;
     padding: 5px;
-  }
-
-  .edit-main-nav {
-    .nav-pills:after,
-    .nav-pills:before {
-      display: inline;
-      content: "";
-    }
-    .show-overidden {
-      float: right;
-    }
-    margin-bottom: 10px;
   }
 
   .admin-container {
@@ -140,20 +108,50 @@
     display: inline-block;
     vertical-align: top;
 
-    .url {
-      margin-bottom: 10px;
+    .btn {
+      line-height: $line-height-medium; // Temporary button-height fix
     }
 
     .title {
       font-size: $font-up-4;
       font-weight: bold;
       margin-bottom: 10px;
+      a {
+        font-size: $font-down-2;
+      }
+      .btn {
+        line-height: $line-height-small;
+      }
     }
-    .about-url,
-    license-url {
+
+    .theme-description {
       display: block;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
+
+    .metadata {
+      .authors,
+      .version {
+        display: block;
+
+        .heading {
+          font-weight: bold;
+        }
+      }
+    }
+
+    div.remote-url {
+      font-size: $font-down-1;
+      margin-bottom: 7px;
+    }
+
+    a.remote-url,
+    a.about-url,
+    a.license-url {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
     .mini-title {
       font-size: $font-up-1;
       font-weight: bold;
@@ -187,31 +185,35 @@
       vertical-align: top;
       margin-top: 5px;
     }
+    .create-actions {
+      margin-bottom: 1em;
+    }
     .content-wrapper {
       display: inline-block;
       vertical-align: top;
       width: 65%;
       h1 {
         display: inline-block;
+        line-height: $line-height-medium;
       }
     }
     .external-link {
-      display: inline-block;
       display: block;
       margin-bottom: 5px;
     }
   }
   .themes-list {
-    border-right: 1px solid $primary-low;
-    border-bottom: 1px solid $primary-low;
     display: inline-block;
-    overflow: hidden;
+    .create-actions {
+      margin-top: 0.5em;
+    }
   }
 
   .themes-list-header {
     width: 100%;
     border-bottom: 1px solid $primary-low;
-
+    border-top: 1px solid $primary-low;
+    border-right: 1px solid $primary-low;
     .tab {
       display: inline-block;
       padding: 10px;
@@ -222,7 +224,8 @@
 
       &.active {
         font-weight: bold;
-        color: $tertiary;
+        color: $secondary;
+        background: $danger;
       }
 
       &:not(.active) {
@@ -236,10 +239,18 @@
   }
 
   .themes-list-container {
-    overflow-y: scroll;
+    overflow-y: auto;
     box-sizing: content-box;
-    max-height: 700px;
-    width: 100%; /* overridden in javascript to hide scrollbar */
+    max-height: 60vh;
+    @media screen and (max-height: 1000px) {
+      max-height: 50vh;
+    }
+    @media screen and (max-height: 800px) {
+      max-height: 40vh;
+    }
+    border-right: 1px solid $primary-low;
+    border-bottom: 1px solid $primary-low;
+    width: 100%;
 
     .themes-list-item:last-child {
       border-bottom: none;
@@ -271,6 +282,9 @@
       &.selected {
         color: $secondary;
         background-color: $tertiary;
+        .components-list {
+          color: $secondary;
+        }
         .fa {
           color: inherit;
         }
@@ -293,15 +307,12 @@
 
       .info {
         overflow: hidden;
+        display: flex;
         font-weight: bold;
         font-size: $font-up-1;
 
-        .name {
-          float: left;
-        }
-
         .icons {
-          float: right;
+          margin-left: auto;
         }
       }
 
@@ -336,13 +347,15 @@
   }
 
   .theme.settings {
-    .theme-setting {
+    .theme-setting,
+    .theme-translation {
       padding-bottom: 0;
       margin-top: 18px;
       min-height: 35px;
     }
     .setting-label {
       width: 25%;
+      word-wrap: break-word;
       h3 {
         margin-top: 0;
         margin-bottom: 0.5rem;
@@ -370,9 +383,6 @@
     }
   }
 
-  .nav-pills.fields {
-    margin-left: 10px;
-  }
   .content-list,
   .current-style {
     float: left;
@@ -387,34 +397,55 @@
       margin: 0;
     }
 
-    .nav.target {
-      margin-top: 15px;
-
-      li {
-        position: relative;
-
-        a {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-      }
-
-      .fa {
-        margin-left: 8px;
-      }
-
-      .d-icon-mobile {
-        position: relative;
-        top: -3px;
-        font-size: $font-up-3;
-        max-height: 20px;
-      }
+    .edit-main-nav .nav-pills > li a.active {
+      background-color: $quaternary;
+      color: $secondary;
     }
 
-    .toggle-maximize {
-      position: absolute;
-      right: -5px;
+    .edit-main-nav ul {
+      padding-bottom: 0;
+    }
+
+    .nav-pills {
+      li {
+        margin-right: 0;
+        display: flex;
+
+        &.spacer {
+          flex-grow: 1;
+        }
+
+        &:last-of-type > a {
+          margin-right: 0;
+        }
+
+        a.no-text .d-icon {
+          margin-right: 0;
+        }
+
+        label {
+          padding: 6px 12px;
+          margin-bottom: 0;
+        }
+
+        a.active {
+          background: $primary-medium;
+          color: $secondary;
+        }
+
+        a.blank:not(.active) {
+          color: $primary-medium;
+        }
+
+        input {
+          margin-bottom: 0;
+          margin-left: 6px;
+        }
+
+        button {
+          margin-right: 0;
+        }
+      }
     }
 
     .ace-wrapper {
@@ -748,5 +779,17 @@
     .clearfix {
       clear: both;
     }
+  }
+}
+
+.reseed-modal {
+  .options-group-title {
+    font-size: $font-up-2;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+
+  .option {
+    margin-left: 1em;
   }
 }

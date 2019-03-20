@@ -565,3 +565,16 @@ aside.onebox.stackexchange .onebox-body {
 .onebox.google-photos-album {
   @extend .imgur-album;
 }
+
+// Force oneboxed videos to 16:9 aspect ratio
+.onebox.video-onebox {
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+
+  video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+}

@@ -2,9 +2,9 @@
 
 These instructions assume you have read and understood the **[Discourse Advanced Developer Install Guide](DEVELOPER-ADVANCED.md)**.
 
-OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](http://discourse.org)** in your native environment. These instructions should get you there.
+OS X has become a popular platform for developing Ruby on Rails applications; as such, if you run OS X, you might find it more congenial to work on **[Discourse](https://www.discourse.org)** in your native environment. These instructions should get you there.
 
-Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.5+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
+Obviously, if you **already** develop Ruby on OS X, a lot of this will be redundant, because you'll have already done it, or something like it. If that's the case, you may well be able to just install Ruby 2.6+ using RVM and get started! Discourse has enough dependencies, however (note: not a criticism!) that there's a good chance you'll find **something** else in this document that's useful for getting your Discourse development started!
 
 ## Quick Setup
 
@@ -31,7 +31,7 @@ en_US.UTF-8
 
 ## OS X Development Tools
 
-As the [RVM website](http://rvm.io) makes clear, there are some serious issues between MRI Ruby and the modern Xcode command line tools, which are based on CLANG and LLVM, rather than classic GCC.
+As the [RVM website](https://rvm.io) makes clear, there are some serious issues between MRI Ruby and the modern Xcode command line tools, which are based on CLANG and LLVM, rather than classic GCC.
 
 This means that you need to do a little bit of groundwork if you do not already have an environment that you know for certain yields working rubies and gems.
 
@@ -41,7 +41,7 @@ You will then need the old GCC-4.2 compilers, which leads us to...
 
 ## Homebrew
 
-**[Homebrew](http://mxcl.github.com/homebrew)** is a package manager for ports of various Open Source packages that Apple doesn't already include (or newer versions of the ones they do), and competes in that space with MacPorts and a few others. Brew is very different from Apt, in that it often installs from source, and almost always installs development files as well as binaries, especially for libraries, so there are no special "-dev" packages.
+**[Homebrew](https://brew.sh)** is a package manager for ports of various Open Source packages that Apple doesn't already include (or newer versions of the ones they do), and competes in that space with MacPorts and a few others. Brew is very different from Apt, in that it often installs from source, and almost always installs development files as well as binaries, especially for libraries, so there are no special "-dev" packages.
 
 RVM (below) can automatically install homebrew for you with the autolibs setting, but doesn't install the GCC-4.2 compiler package when it does so, possibly because that package is not part of the mainstream homebrew repository.
 
@@ -76,11 +76,11 @@ If you do already have RVM installed, this should make sure everything is up to 
     # If autolibs is set to 0-2, it will give an error for things that are missing, instead.
     rvm requirements
 
-Either way, you'll now want to install Ruby 2.5+ (we recommend 2.5.2 or higher).
+Either way, you'll now want to install Ruby 2.6+ (we recommend 2.6.1 or higher).
 
     # Now, install Ruby
-    rvm install 2.5.3
-    rvm use 2.5.3 --default # Careful with this if you're already developing Ruby
+    rvm install 2.6.1
+    rvm use 2.6.1 --default # Careful with this if you're already developing Ruby
 
 ## Git
 
@@ -94,15 +94,15 @@ You should now be able to check out a clone of Discourse.
 
 ### SourceTree
 
-Atlassian has a free Git client for OS X called [SourceTree](http://www.sourcetreeapp.com/download/) which can be extremely useful for keeping visual track of what's going on in Git-land. While it's arguably not a full substitute for command-line git (especially if you know the command line well), it's extremely powerful for a GUI version-control client.
+Atlassian has a free Git client for OS X called [SourceTree](https://www.sourcetreeapp.com/download/) which can be extremely useful for keeping visual track of what's going on in Git-land. While it's arguably not a full substitute for command-line git (especially if you know the command line well), it's extremely powerful for a GUI version-control client.
 
 ## Postgres 10
 
-OS X might ship with Postgres 9.x, but you're better off going with 10 and above from Homebrew or [Postgres.app](http://postgresapp.com).
+OS X might ship with Postgres 9.x, but you're better off going with 10 and above from Homebrew or [Postgres.app](https://postgresapp.com).
 
 ### Using Postgres.app
 
-After installing [Postgres.app](http://postgresapp.com/), there are some additional setup steps that are necessary for discourse to create a database on your machine.
+After installing [Postgres.app](https://postgresapp.com/), there are some additional setup steps that are necessary for discourse to create a database on your machine.
 
 Open this file:
 ```
@@ -203,7 +203,7 @@ cd ~/Library/Fonts
 fondu /System/Library/Fonts/Helvetica.dfont
 mkdir ~/.magick
 cd ~/.magick
-curl http://www.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
+curl https://www.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
 find /System/Library/Fonts /Library/Fonts ~/Library/Fonts -name "*.[to]tf" | perl type_gen -f - > type.xml
 cd /usr/local/Cellar/imagemagick/<version>/etc/ImageMagick-6
 ```
@@ -281,4 +281,4 @@ These commands assume an empty Discourse database, and an otherwise empty redis 
     redis-cli flushall
     bundle exec rspec # re-running to see if tests pass
 
-Search http://meta.discourse.org for solutions to other problems.
+Search https://meta.discourse.org for solutions to other problems.

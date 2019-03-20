@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe QuotedPost do
   it 'correctly extracts quotes' do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
 
     topic = Fabricate(:topic)
     post1 = create_post(topic: topic, post_number: 1, raw: "foo bar")
@@ -34,7 +34,7 @@ describe QuotedPost do
   end
 
   it "doesn't count quotes from the same post" do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
 
     topic = Fabricate(:topic)
     post = create_post(topic: topic, post_number: 1, raw: "foo bar")

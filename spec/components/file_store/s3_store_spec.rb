@@ -38,17 +38,19 @@ describe FileStore::S3Store do
   context 'uploading to s3' do
     include_context "s3 helpers"
 
+    let(:s3_object) { stub }
     let(:etag) { "etag" }
+
+    before do
+      s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+    end
 
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-        s3_object = stub
 
         s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
-
-        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
         expect(store.store_upload(uploaded_file, upload)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
@@ -64,11 +66,8 @@ describe FileStore::S3Store do
         it "returns an absolute schemaless url" do
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          s3_object = stub
 
           s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
-
-          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
@@ -82,12 +81,9 @@ describe FileStore::S3Store do
       it "returns an absolute schemaless url" do
         store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_object = stub
         path = "optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
 
         s3_bucket.expects(:object).with(path).returns(s3_object)
-
-        s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
         expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
           "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
@@ -103,12 +99,9 @@ describe FileStore::S3Store do
         it "returns an absolute schemaless url" do
           store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          s3_object = stub
           path = "discourse-uploads/optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
 
           s3_bucket.expects(:object).with(path).returns(s3_object)
-
-          s3_object.stubs(:put).returns(Aws::S3::Types::PutObjectOutput.new(etag: etag))
 
           expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
             "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}"
@@ -162,6 +155,24 @@ describe FileStore::S3Store do
         s3_object.expects(:delete)
 
         store.remove_upload(upload)
+      end
+
+      it "removes the optimized image from s3 with the right paths" do
+        optimized = Fabricate(:optimized_image, version: 1)
+        upload = optimized.upload
+        path = "optimized/1X/#{upload.sha1}_#{optimized.version}_#{optimized.width}x#{optimized.height}.png"
+
+        store.expects(:get_depth_for).with(upload.id).returns(0)
+        s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
+        optimized.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{path}")
+        s3_object = stub
+
+        s3_bucket.expects(:object).with("tombstone/#{path}").returns(s3_object)
+        s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/#{path}")
+        s3_bucket.expects(:object).with(path).returns(s3_object)
+        s3_object.expects(:delete)
+
+        store.remove_optimized_image(optimized)
       end
 
       describe "when s3_upload_bucket includes folders path" do

@@ -458,6 +458,16 @@ export default function() {
       ]);
     });
 
+    this.get("/admin/users/list/suspect.json", () => {
+      return response(200, [
+        {
+          id: 2,
+          username: "sam",
+          email: "<small>sam@example.com</small>"
+        }
+      ]);
+    });
+
     this.get("/admin/customize/site_texts", request => {
       if (request.queryParams.overridden) {
         return response(200, { site_texts: [overridden] });
@@ -505,6 +515,10 @@ export default function() {
     this.post("/admin/badges", success);
     this.delete("/admin/badges/:id", success);
 
+    this.get("/admin/logs/staff_action_logs.json", () => {
+      return response(200, { staff_action_logs: [], user_history_actions: [] });
+    });
+
     this.get("/admin/logs/watched_words", () => {
       return response(200, fixturesByUrl["/admin/logs/watched_words.json"]);
     });
@@ -529,6 +543,15 @@ export default function() {
           title: "Search Count",
           data: [{ x: "2017-07-20", y: 2 }]
         }
+      });
+    });
+
+    this.post("/uploads/lookup-metadata", () => {
+      return response(200, {
+        imageFilename: "somefile.png",
+        imageFilesize: "10 KB",
+        imageWidth: "1",
+        imageHeight: "1"
       });
     });
 

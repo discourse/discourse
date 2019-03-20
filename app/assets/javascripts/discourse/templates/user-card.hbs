@@ -1,17 +1,12 @@
 {{user-card-contents
   currentPath=application.currentPath
   topic=topic.model
-  showUser="showUser"
-  togglePosts="togglePosts"
-  composePrivateMessage="composePrivateMessage"
-  createNewMessageViaParams="createNewMessageViaParams"
-  deleteUser="deleteUser"}}
+  showUser=(action "showUser")
+  togglePosts=(action "togglePosts")
+  createNewMessageViaParams=(route-action "createNewMessageViaParams")}}
 
 {{group-card-contents
   currentPath=application.currentPath
   topic=topic.model
-  showUser="showUser"
-  togglePosts="togglePosts"
-  composePrivateMessage="composePrivateMessage"
-  createNewMessageViaParams="createNewMessageViaParams"
-  deleteUser="deleteUser"}}
+  showUser=(action "showUser")
+  createNewMessageViaParams=(route-action "createNewMessageViaParams")}}

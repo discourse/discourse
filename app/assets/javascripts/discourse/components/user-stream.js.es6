@@ -13,7 +13,7 @@ export default Ember.Component.extend(LoadMore, {
   classNames: ["user-stream"],
 
   _scrollTopOnModelChange: function() {
-    Em.run.schedule("afterRender", () => $(document).scrollTop(0));
+    Ember.run.schedule("afterRender", () => $(document).scrollTop(0));
   }.observes("stream.user.id"),
 
   _inserted: function() {

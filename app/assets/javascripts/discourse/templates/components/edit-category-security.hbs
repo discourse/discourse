@@ -1,19 +1,25 @@
 <section class='field'>
   {{#if category.is_special}}
-    <p class="warning">{{i18n 'category.special_warning'}}</p>
+    {{#if category.isUncategorizedCategory}}
+      <p class="warning">{{i18n 'category.uncategorized_security_warning'}}</p>
+    {{else}}
+      <p class="warning">{{i18n 'category.special_warning'}}</p>
+    {{/if}}
   {{/if}}
-  <ul class='permission-list'>
-    {{#each category.permissions as |p|}}
-      <li>
-        <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
-        {{{i18n "category.can"}}}
-        <span class="permission">{{p.permission.description}}</span>
-        {{#if editingPermissions}}
-        <a class="remove-permission" href {{action "removePermission" p}}>{{d-icon "times-circle"}}</a>
-        {{/if}}
-      </li>
-    {{/each}}
-  </ul>
+  {{#unless category.isUncategorizedCategory}}
+    <ul class='permission-list'>
+      {{#each category.permissions as |p|}}
+        <li>
+          <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
+          {{{i18n "category.can"}}}
+          <span class="permission">{{p.permission.description}}</span>
+          {{#if editingPermissions}}
+            <a class="remove-permission" href {{action "removePermission" p}}>{{d-icon "times-circle"}}</a>
+          {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+  {{/unless}}
   {{#if editingPermissions}}
     {{#if category.availableGroups}}
       {{combo-box class="available-groups"
@@ -26,13 +32,13 @@
                   nameProperty="description"
                   content=category.availablePermissions
                   value=selectedPermission}}
-      <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-small add-permission">
-        {{i18n 'category.add_permission'}}
+      <button {{action "addPermission" selectedGroup selectedPermission}} class="btn btn-default add-permission">
+        {{d-icon 'plus' class="add-permission-icon"}}
       </button>
     {{/if}}
   {{else}}
     {{#unless category.is_special}}
-      <button {{action "editPermissions"}} class="btn btn-default btn-small edit-permission">{{i18n 'category.edit_permissions'}}</button>
+      <button {{action "editPermissions"}} class="btn btn-default btn-default edit-permission">{{i18n 'category.edit_permissions'}}</button>
     {{/unless}}
   {{/if}}
 </section>

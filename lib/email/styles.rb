@@ -119,6 +119,7 @@ module Email
       style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
       style('aside.onebox .onebox-body', "clear: both")
       style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox .onebox-body img.thumbnail', "width: 60px;")
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
 

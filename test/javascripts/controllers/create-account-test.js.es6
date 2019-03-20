@@ -7,12 +7,13 @@ moduleFor("controller:create-account", "controller:create-account", {
   needs: ["controller:modal", "controller:login"]
 });
 
-QUnit.test("basicUsernameValidation", function(assert) {
-  var subject = this.subject;
+test("basicUsernameValidation", async function(assert) {
+  const subject = this.subject;
 
-  var testInvalidUsername = function(username, expectedReason) {
-    var controller = subject({ siteSettings: Discourse.SiteSettings });
+  const testInvalidUsername = async (username, expectedReason) => {
+    const controller = await subject({ siteSettings: Discourse.SiteSettings });
     controller.set("accountUsername", username);
+
     assert.equal(
       controller.get("basicUsernameValidation.failed"),
       true,
@@ -32,9 +33,12 @@ QUnit.test("basicUsernameValidation", function(assert) {
     I18n.t("user.username.too_long")
   );
 
-  var controller = subject({ siteSettings: Discourse.SiteSettings });
-  controller.set("accountUsername", "porkchops");
-  controller.set("prefilledUsername", "porkchops");
+  const controller = await subject({ siteSettings: Discourse.SiteSettings });
+  controller.setProperties({
+    accountUsername: "porkchops",
+    prefilledUsername: "porkchops"
+  });
+
   assert.equal(
     controller.get("basicUsernameValidation.ok"),
     true,
@@ -47,16 +51,17 @@ QUnit.test("basicUsernameValidation", function(assert) {
   );
 });
 
-QUnit.test("passwordValidation", function(assert) {
-  var subject = this.subject;
+test("passwordValidation", async function(assert) {
+  const controller = await this.subject({
+    siteSettings: Discourse.SiteSettings
+  });
 
-  var controller = subject({ siteSettings: Discourse.SiteSettings });
   controller.set("passwordRequired", true);
   controller.set("accountEmail", "pork@chops.com");
   controller.set("accountUsername", "porkchops");
   controller.set("prefilledUsername", "porkchops");
-
   controller.set("accountPassword", "b4fcdae11f9167");
+
   assert.equal(controller.get("passwordValidation.ok"), true, "Password is ok");
   assert.equal(
     controller.get("passwordValidation.reason"),
@@ -64,16 +69,16 @@ QUnit.test("passwordValidation", function(assert) {
     "Password is valid"
   );
 
-  var testInvalidPassword = function(password, expectedReason) {
-    var c = subject({ siteSettings: Discourse.SiteSettings });
-    c.set("accountPassword", password);
+  const testInvalidPassword = (password, expectedReason) => {
+    controller.set("accountPassword", password);
+
     assert.equal(
-      c.get("passwordValidation.failed"),
+      controller.get("passwordValidation.failed"),
       true,
       "password should be invalid: " + password
     );
     assert.equal(
-      c.get("passwordValidation.reason"),
+      controller.get("passwordValidation.reason"),
       expectedReason,
       "password validation reason: " + password + ", " + expectedReason
     );
@@ -85,7 +90,7 @@ QUnit.test("passwordValidation", function(assert) {
   testInvalidPassword("pork@chops.com", I18n.t("user.password.same_as_email"));
 });
 
-QUnit.test("authProviderDisplayName", function(assert) {
+test("authProviderDisplayName", async function(assert) {
   const controller = this.subject({ siteSettings: Discourse.SiteSettings });
 
   assert.equal(
@@ -93,6 +98,7 @@ QUnit.test("authProviderDisplayName", function(assert) {
     I18n.t("login.facebook.name"),
     "provider name is translated correctly"
   );
+
   assert.equal(
     controller.authProviderDisplayName("idontexist"),
     "idontexist",

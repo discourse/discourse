@@ -18,7 +18,7 @@ class UserSummary
       .listable_topics
       .visible
       .where(user: @user)
-      .order('like_count DESC, created_at ASC')
+      .order('like_count DESC, created_at DESC')
       .limit(MAX_SUMMARY_RESULTS)
   end
 
@@ -30,7 +30,7 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where('post_number > 1')
-      .order('posts.like_count DESC, posts.created_at ASC')
+      .order('posts.like_count DESC, posts.created_at DESC')
       .limit(MAX_SUMMARY_RESULTS)
   end
 
@@ -42,7 +42,7 @@ class UserSummary
       .merge(Topic.listable_topics.visible.secured(@guardian))
       .where(user: @user)
       .where(internal: false, reflection: false, quote: false)
-      .order('clicks DESC, topic_links.created_at ASC')
+      .order('clicks DESC, topic_links.created_at DESC')
       .limit(MAX_SUMMARY_RESULTS)
   end
 

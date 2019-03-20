@@ -8,7 +8,7 @@ require_relative 'base/generic_database'
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/zendesk_api.rb SOURCE_URL DIRNAME AUTH_EMAIL AUTH_TOKEN
-class ImportScripts::Zendesk < ImportScripts::Base
+class ImportScripts::ZendeskApi < ImportScripts::Base
   BATCH_SIZE = 1000
 
   def initialize(source_url, path, auth_email, auth_token)
@@ -193,7 +193,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
     last_row_id = 0
 
     batches do |offset|
-      rows, last_row_id = @db.fetch_posts(last_row_id)
+      rows, last_row_id = @db.fetch_sorted_posts(last_row_id)
       break if rows.empty?
 
       create_posts(rows, total: total_count, offset: offset) do |row|
@@ -303,4 +303,4 @@ unless ARGV.length == 4 && Dir.exist?(ARGV[1])
   exit 1
 end
 
-ImportScripts::Zendesk.new(ARGV[0], ARGV[1], ARGV[2], ARGV[3]).perform
+ImportScripts::ZendeskApi.new(ARGV[0], ARGV[1], ARGV[2], ARGV[3]).perform

@@ -6,6 +6,7 @@ export default function($elem) {
   if (!$elem) {
     return;
   }
+  const originalMeta = $("meta[name=viewport]").attr("content");
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function() {
     const spoilers = $elem.find(".spoiler a.lightbox, .spoiled a.lightbox");
     $elem
@@ -23,6 +24,10 @@ export default function($elem) {
 
         callbacks: {
           open() {
+            $("meta[name=viewport]").attr(
+              "content",
+              "width=device-width, initial-scale=1.0"
+            );
             const wrap = this.wrap,
               img = this.currItem.img,
               maxHeight = img.css("max-height");
@@ -36,6 +41,7 @@ export default function($elem) {
             });
           },
           beforeClose() {
+            $("meta[name=viewport]").attr("content", originalMeta);
             this.wrap.off("click.pinhandler");
             this.wrap.removeClass("mfp-force-scrollbars");
           }

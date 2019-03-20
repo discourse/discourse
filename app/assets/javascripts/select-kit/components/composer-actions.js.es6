@@ -19,7 +19,6 @@ export function _clearSnapshots() {
 }
 
 export default DropdownSelectBoxComponent.extend({
-  composerController: Ember.inject.controller("composer"),
   pluginApiIdentifiers: ["composer-actions"],
   classNames: "composer-actions",
   fullWidthOnMobile: true,
@@ -31,7 +30,7 @@ export default DropdownSelectBoxComponent.extend({
   isHidden: Ember.computed.empty("content"),
 
   didReceiveAttrs() {
-    this._super();
+    this._super(...arguments);
 
     // if we change topic we want to change both snapshots
     if (
@@ -54,17 +53,17 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     switch (this.get("action")) {
       case PRIVATE_MESSAGE:
       case CREATE_TOPIC:
       case REPLY:
-        content.icon = "mail-forward";
+        content.icon = "share";
         content.title = I18n.t("composer.composer_actions.reply");
         break;
       case EDIT:
-        content.icon = "pencil";
+        content.icon = "pencil-alt";
         content.title = I18n.t("composer.composer_actions.edit");
         break;
       case CREATE_SHARED_DRAFT:
@@ -107,7 +106,7 @@ export default DropdownSelectBoxComponent.extend({
           postUsername: _postSnapshot.get("username")
         }),
         description: I18n.t("composer.composer_actions.reply_to_post.desc"),
-        icon: "mail-forward",
+        icon: "share",
         id: "reply_to_post"
       });
     }
@@ -137,7 +136,7 @@ export default DropdownSelectBoxComponent.extend({
       items.push({
         name: I18n.t("composer.composer_actions.reply_to_topic.label"),
         description: I18n.t("composer.composer_actions.reply_to_topic.desc"),
-        icon: "mail-forward",
+        icon: "share",
         id: "reply_to_topic"
       });
     }
@@ -152,7 +151,7 @@ export default DropdownSelectBoxComponent.extend({
       items.push({
         name: I18n.t("composer.composer_actions.toggle_whisper.label"),
         description: I18n.t("composer.composer_actions.toggle_whisper.desc"),
-        icon: "eye-slash",
+        icon: "far-eye-slash",
         id: "toggle_whisper"
       });
     }
@@ -187,7 +186,7 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t(
           "composer.composer_actions.reply_as_new_topic.desc"
         ),
-        icon: "mail-forward",
+        icon: "share",
         id: "create_topic"
       });
     }
@@ -210,38 +209,14 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   _replyFromExisting(options, post, topic) {
-    const reply = this.get("composerModel.reply");
+    this.closeComposer();
 
-    let url;
-    if (post) url = post.get("url");
-    if (!post && topic) url = topic.get("url");
-
-    let topicTitle;
-    if (topic) topicTitle = topic.get("title");
-
-    this.get("composerController").close();
-    this.get("composerController")
-      .open(options)
-      .then(() => {
-        if (!url || !topicTitle) return;
-
-        url = `${location.protocol}//${location.host}${url}`;
-        const link = `[${Handlebars.escapeExpression(topicTitle)}](${url})`;
-        const continueDiscussion = I18n.t("post.continue_discussion", {
-          postLink: link
-        });
-
-        if (!reply.includes(continueDiscussion)) {
-          this.get("composerController")
-            .get("model")
-            .prependText(continueDiscussion, { new_line: true });
-        }
-      });
+    this.openComposer(options, post, topic);
   },
 
   _openComposer(options) {
-    this.get("composerController").close();
-    this.get("composerController").open(options);
+    this.closeComposer();
+    this.openComposer(options);
   },
 
   toggleWhisperSelected(options, model) {
@@ -267,6 +242,7 @@ export default DropdownSelectBoxComponent.extend({
   replyAsNewTopicSelected(options) {
     options.action = CREATE_TOPIC;
     options.categoryId = this.get("composerModel.topic.category.id");
+    options.disableScopedCategory = true;
     this._replyFromExisting(options, _postSnapshot, _topicSnapshot);
   },
 
@@ -301,6 +277,7 @@ export default DropdownSelectBoxComponent.extend({
     options.action = action;
     options.categoryId = this.get("composerModel.categoryId");
     options.topicTitle = this.get("composerModel.title");
+    options.tags = this.get("composerModel.tags");
     options.skipDraftCheck = true;
     this._openComposer(options);
   },
@@ -319,11 +296,17 @@ export default DropdownSelectBoxComponent.extend({
       if (this[action]) {
         let model = this.get("composerModel");
         this[action](
-          model.getProperties("draftKey", "draftSequence", "reply"),
+          model.getProperties(
+            "draftKey",
+            "draftSequence",
+            "reply",
+            "disableScopedCategory"
+          ),
           model
         );
       } else {
-        Ember.Logger.error(`No method '${action}' found`);
+        // eslint-disable-next-line no-console
+        console.error(`No method '${action}' found`);
       }
     }
   }

@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { resetCache } from "discourse/components/emoji-picker";
 
 acceptance("EmojiPicker", {
@@ -66,7 +66,7 @@ QUnit.test("emoji picker has a list of recently used emojis", async assert => {
   await click("button.emoji.btn");
 
   await click(
-    ".emoji-picker .section[data-section='people'] button.emoji[title='grinning']"
+    ".emoji-picker .section[data-section='smileys_&_emotion'] button.emoji[title='grinning']"
   );
   assert.equal(
     find('.emoji-picker .section[data-section="recent"]').css("display"),

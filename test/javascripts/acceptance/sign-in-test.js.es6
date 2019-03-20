@@ -114,8 +114,12 @@ QUnit.test("create account", async assert => {
   await fillIn("#new-account-name", "Dr. Good Tuna");
   await fillIn("#new-account-password", "cool password bro");
 
-  // Check username
+  // without this double fill, field will sometimes being empty
+  // got consistent repro by having browser search bar focused when starting test
   await fillIn("#new-account-email", "good.tuna@test.com");
+  await fillIn("#new-account-email", "good.tuna@test.com");
+
+  // Check username
   await fillIn("#new-account-username", "taken");
   assert.ok(
     exists("#username-validation.bad"),

@@ -2,17 +2,17 @@
 
   {{#if model.isPrivateMessage}}
     <div class="radios">
-      {{#if canSplitTopic}}
+      {{#if canSplitToPM}}
         <label class="radio-label" for="move-to-new-message">
           {{radio-button id='move-to-new-message' name="move-to-entity" value="new_message" selection=selection}}
           <b>{{i18n 'topic.move_to_new_message.radio_label'}}</b>
         </label>
       {{/if}}
 
-        <label class="radio-label" for="move-to-existing-message">
-          {{radio-button id='move-to-existing-message' name="move-to-entity" value="existing_message" selection=selection}}
-          <b>{{i18n 'topic.move_to_existing_message.radio_label'}}</b>
-        </label>
+      <label class="radio-label" for="move-to-existing-message">
+        {{radio-button id='move-to-existing-message' name="move-to-entity" value="existing_message" selection=selection}}
+        <b>{{i18n 'topic.move_to_existing_message.radio_label'}}</b>
+      </label>
     </div>
 
     {{#if canSplitTopic}}
@@ -55,7 +55,7 @@
         <b>{{i18n 'topic.merge_topic.radio_label'}}</b>
       </label>
 
-      {{#if canSplitTopic}}
+      {{#if canSplitToPM}}
         <label class="radio-label" for="move-to-new-message">
           {{radio-button id='move-to-new-message' name="move-to-entity" value="new_message" selection=selection}}
           <b>{{i18n 'topic.move_to_new_message.radio_label'}}</b>
@@ -107,6 +107,6 @@
 
 <div class="modal-footer">
   {{#d-button class="btn-primary" disabled=buttonDisabled action=(action "performMove")}}
-    {{d-icon 'sign-out'}} {{buttonTitle}}
+    {{d-icon "sign-out-alt"}} {{buttonTitle}}
   {{/d-button}}
 </div>

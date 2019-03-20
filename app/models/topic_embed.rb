@@ -209,7 +209,7 @@ class TopicEmbed < ActiveRecord::Base
 
   def self.topic_id_for_embed(embed_url)
     embed_url = normalize_url(embed_url).sub(/^https?\:\/\//, '')
-    TopicEmbed.where("embed_url ~* '^https?://#{Regexp.escape(embed_url)}$'").pluck(:topic_id).first
+    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pluck(:topic_id).first
   end
 
   def self.first_paragraph_from(html)

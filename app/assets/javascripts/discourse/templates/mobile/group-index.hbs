@@ -6,20 +6,20 @@
   {{#if canManageGroup}}
     {{#if currentUser.admin}}
       {{group-members-dropdown
-          showAddMembersModal="showAddMembersModal"
-          showBulkAddModal="showBulkAddModal"}}
+        showAddMembersModal=(route-action "showAddMembersModal")
+        showBulkAddModal=(route-action "showBulkAddModal")}}
     {{else}}
       {{d-button
           icon="plus"
           label="groups.add_members.title"
           class="group-members-add"
-          action="showAddMembersModal"}}
+          action=(route-action "showAddMembersModal")}}
     {{/if}}
   {{/if}}
 </div>
 
 {{#if hasMembers}}
-  {{#load-more selector=".group-members .user-info" action="loadMore"}}
+  {{#load-more selector=".group-members .user-info" action=(action "loadMore")}}
     <div class="group-members">
       {{#each model.members as |user|}}
         <div class="group-member">
@@ -38,9 +38,9 @@
 
             {{#if canManageGroup}}
               {{group-member-dropdown
-                  removeMember="removeMember"
-                  makeOwner="makeOwner"
-                  removeOwner="removeOwner"
+                  removeMember=(action "removeMember")
+                  makeOwner=(action "makeOwner")
+                  removeOwner=(action "removeOwner")
                   member=user}}
             {{/if}}
           {{/user-info}}

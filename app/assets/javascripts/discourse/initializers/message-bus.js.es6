@@ -4,7 +4,7 @@ import { handleLogoff } from "discourse/lib/ajax";
 
 function ajax(opts) {
   if (opts.complete) {
-    let oldComplete = opts.complete;
+    const oldComplete = opts.complete;
     opts.complete = function(xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);

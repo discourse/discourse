@@ -28,7 +28,6 @@
     "currentURL": true,
     "define": true,
     "Discourse": true,
-    "Em": true,
     "Ember": true,
     "exists": true,
     "expandSelectKit": true,
@@ -63,6 +62,7 @@
     "triggerEvent": true,
     "visible": true,
     "visit": true,
+    "pauseTest": true
   },
   "rules": {
     "block-scoped-var": 2,

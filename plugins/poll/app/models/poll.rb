@@ -4,7 +4,7 @@ class Poll < ActiveRecord::Base
 
   belongs_to :post
 
-  has_many :poll_options, dependent: :destroy
+  has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
 
   enum type: {

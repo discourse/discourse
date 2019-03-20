@@ -82,20 +82,15 @@
 table.group-manage-logs {
   width: 100%;
 
-  th {
-    text-align: left;
-    padding: 5px 0;
-  }
-
   td {
-    padding: 10px 0;
+    padding: 0.5em;
   }
 
   .group-manage-logs-expand-details {
     cursor: pointer;
 
     .d-icon {
-      color: blend-primary-secondary(50%);
+      color: $primary-medium;
     }
   }
 }
@@ -119,25 +114,14 @@ table.group-members {
 
   th {
     text-align: center;
-    padding: 5px 0 5px 5px;
-    color: dark-light-choose($primary-medium, $secondary-medium);
-    font-weight: normal;
-  }
-
-  th.sortable {
-    .d-icon {
-      margin-left: 5px;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background-color: $primary-low;
-    }
   }
 
   tr {
     .user-info {
       display: block;
+      .avatar-flair {
+        color: $primary;
+      }
     }
 
     td:first-child {

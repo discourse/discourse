@@ -19,7 +19,7 @@
             <a href="{{user.path}}" {{action "showUser"}}>{{if nameFirst user.name (format-username username)}}
               {{user-status user currentUser=currentUser}}</a>
           </h1>
-          {{plugin-outlet name="user-card-after-username" args=(hash user=user) tagName=''}}
+          {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser")) tagName=''}}
           {{#unless nameFirst}}
             {{#if user.name}}
               <h2 class='full-name'>{{user.name}}</h2>
@@ -41,7 +41,7 @@
           <li class='compose-pm'>
             {{d-button
             class="btn-primary"
-            action=(action "composePrivateMessage" user post)
+            action=(route-action "composePrivateMessage" user post)
             icon="envelope"
             label="user.private_message"}}
           </li>
@@ -67,7 +67,8 @@
           <li>
             {{d-button
             class="btn-danger"
-            action=(action "deleteUser" user)
+            action=(action "deleteUser")
+            actionParam=user
             icon="exclamation-triangle"
             label="admin.user.delete"}}
           </li>
@@ -104,7 +105,7 @@
       <div class="card-row third-row">
         <div class="location-and-website">
           {{#if user.location}}
-            <span class='location'>{{d-icon "map-marker"}}
+            <span class='location'>{{d-icon "map-marker-alt"}}
               <span>{{user.location}}</span></span>
           {{/if}}
           {{#if user.website_name}}
@@ -142,14 +143,14 @@
             </h3>
             {{#if showCheckEmail}}
               <h3 class="email">
-                {{d-icon "envelope-o" title="user.email.title"}}
+                {{d-icon "far-envelope" title="user.email.title"}}
                 {{#if user.email}}
                   {{user.email}}
                 {{else}}
                   {{d-button
                   action=(action "checkEmail")
                   actionParam=user
-                  icon="envelope-o"
+                  icon="far-envelope"
                   label="admin.users.check_email.text"
                   class="btn-primary"}}
                 {{/if}}
@@ -174,9 +175,10 @@
             {{/if}}
           {{/each}}
         </div>
-        {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
       </div>
     {{/if}}
+
+    {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
 
     {{#if showBadges}}
       <div class="card-row sixth-row">

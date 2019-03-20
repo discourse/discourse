@@ -3,11 +3,10 @@ require_dependency 'stylesheet/compiler'
 require_dependency 'stylesheet/manager'
 require_dependency 'theme_settings_parser'
 require_dependency 'theme_settings_manager'
+require_dependency 'theme_translation_parser'
+require_dependency 'theme_translation_manager'
 
 class Theme < ActiveRecord::Base
-
-  # TODO: remove in 2019
-  self.ignored_columns = ["key"]
 
   @cache = DistributedCache.new('theme')
 
@@ -15,12 +14,16 @@ class Theme < ActiveRecord::Base
   belongs_to :color_scheme
   has_many :theme_fields, dependent: :destroy
   has_many :theme_settings, dependent: :destroy
+  has_many :theme_translation_overrides, dependent: :destroy
   has_many :child_theme_relation, class_name: 'ChildTheme', foreign_key: 'parent_theme_id', dependent: :destroy
+  has_many :parent_theme_relation, class_name: 'ChildTheme', foreign_key: 'child_theme_id', dependent: :destroy
   has_many :child_themes, -> { order(:name) }, through: :child_theme_relation, source: :child_theme
+  has_many :parent_themes, -> { order(:name) }, through: :parent_theme_relation, source: :parent_theme
   has_many :color_schemes
-  belongs_to :remote_theme
+  belongs_to :remote_theme, autosave: true
 
   has_one :settings_field, -> { where(target_id: Theme.targets[:settings], name: "yaml") }, class_name: 'ThemeField'
+  has_many :locale_fields, -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) }, class_name: 'ThemeField'
 
   validate :component_validations
 
@@ -47,9 +50,6 @@ class Theme < ActiveRecord::Base
     changed_fields.clear
 
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
-
-    @dependant_themes = nil
-    @included_themes = nil
 
     remove_from_cache!
     clear_cached_settings!
@@ -120,16 +120,25 @@ class Theme < ActiveRecord::Base
   end
 
   def self.transform_ids(ids, extend: true)
-    return [] if ids.blank?
+    return [] if ids.nil?
+    get_set_cache "#{extend ? "extended_" : ""}transformed_ids_#{ids.join("_")}" do
+      next [] if ids.blank?
 
-    ids.uniq!
-    parent = ids.first
+      ids = ids.dup
+      ids.uniq!
+      parent = ids.shift
 
-    components = ids[1..-1]
-    components.push(*components_for(parent)) if extend
-    components.sort!.uniq!
+      components = ids
+      components.push(*components_for(parent)) if extend
+      components.sort!.uniq!
 
-    [parent, *components]
+      all_ids = [parent, *components]
+
+      disabled_ids = Theme.where(id: all_ids).includes(:remote_theme)
+        .reject(&:enabled?).pluck(:id)
+
+      all_ids - disabled_ids
+    end
   end
 
   def set_default!
@@ -144,6 +153,18 @@ class Theme < ActiveRecord::Base
 
   def default?
     SiteSetting.default_theme_id == id
+  end
+
+  def enabled?
+    if minimum_version = remote_theme&.minimum_discourse_version
+      return false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)
+    end
+
+    if maximum_version = remote_theme&.maximum_discourse_version
+      return false unless Discourse.has_needed_version?(maximum_version, Discourse::VERSION::STRING)
+    end
+
+    true
   end
 
   def component_validations
@@ -203,7 +224,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4)
   end
 
   def self.lookup_target(target_id)
@@ -222,14 +243,15 @@ class Theme < ActiveRecord::Base
     if all_themes
       message = theme_ids.map { |id| refresh_message_for_targets(targets, id) }.flatten
     else
-      message = refresh_message_for_targets(targets, theme_ids).flatten
+      parent_ids = Theme.where(id: theme_ids).joins(:parent_themes).pluck(:parent_theme_id).uniq
+      message = refresh_message_for_targets(targets, theme_ids | parent_ids).flatten
     end
 
     MessageBus.publish('/file-change', message)
   end
 
   def notify_theme_change(with_scheme: false)
-    theme_ids = (dependant_themes&.pluck(:id) || []).unshift(self.id)
+    theme_ids = Theme.transform_ids([id])
     self.class.notify_theme_change(theme_ids, with_scheme: with_scheme)
   end
 
@@ -239,40 +261,22 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def dependant_themes
-    @dependant_themes ||= resolve_dependant_themes(:up)
-  end
-
-  def included_themes
-    @included_themes ||= resolve_dependant_themes(:down)
-  end
-
-  def resolve_dependant_themes(direction)
-    if direction == :up
-      join_field = "parent_theme_id"
-      where_field = "child_theme_id"
-    elsif direction == :down
-      join_field = "child_theme_id"
-      where_field = "parent_theme_id"
-    else
-      raise "Unknown direction"
-    end
-
-    return [] unless id
-
-    Theme.joins("JOIN child_themes ON themes.id = child_themes.#{join_field}").where("#{where_field} = ?", id)
-  end
-
   def self.resolve_baked_field(theme_ids, target, name)
     list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
 
   def self.list_baked_fields(theme_ids, target, name)
     target = target.to_sym
+    name = name.to_sym
 
-    fields = ThemeField.find_by_theme_ids(theme_ids)
-      .where(target_id: [Theme.targets[target], Theme.targets[:common]])
-      .where(name: name.to_s)
+    if target == :translations
+      fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
+    else
+      fields = ThemeField.find_by_theme_ids(theme_ids)
+        .where(target_id: [Theme.targets[target], Theme.targets[:common]])
+        .where(name: name.to_s)
+        .order(:target_id)
+    end
 
     fields.each(&:ensure_baked!)
     fields
@@ -283,7 +287,7 @@ class Theme < ActiveRecord::Base
   end
 
   def list_baked_fields(target, name)
-    theme_ids = (included_themes&.pluck(:id) || []).unshift(self.id)
+    theme_ids = Theme.transform_ids([id])
     self.class.list_baked_fields(theme_ids, target, name)
   end
 
@@ -305,7 +309,7 @@ class Theme < ActiveRecord::Base
     target_id = Theme.targets[target.to_sym]
     raise "Unknown target #{target} passed to set field" unless target_id
 
-    type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name)
+    type_id ||= type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name: name, target: target)
     raise "Unknown type #{type} passed to set field" unless type_id
 
     value ||= ""
@@ -328,7 +332,7 @@ class Theme < ActiveRecord::Base
 
   def all_theme_variables
     fields = {}
-    ids = (included_themes&.pluck(:id) || []).unshift(self.id)
+    ids = Theme.transform_ids([id])
     ThemeField.find_by_theme_ids(ids).where(type_id: ThemeField.theme_var_type_ids).each do |field|
       next if fields.key?(field.name)
       fields[field.name] = field
@@ -339,11 +343,30 @@ class Theme < ActiveRecord::Base
   def add_child_theme!(theme)
     new_relation = child_theme_relation.new(child_theme_id: theme.id)
     if new_relation.save
-      @included_themes = nil
       child_themes.reload
       save!
+      Theme.clear_cache!
     else
       raise Discourse::InvalidParameters.new(new_relation.errors.full_messages.join(", "))
+    end
+  end
+
+  def internal_translations
+    translations(internal: true)
+  end
+
+  def translations(internal: false)
+    fallbacks = I18n.fallbacks[I18n.locale]
+    begin
+      data = locale_fields.first&.translation_data(with_overrides: false, internal: internal, fallback_fields: locale_fields)
+      return {} if data.nil?
+      best_translations = {}
+      fallbacks.reverse.each do |locale|
+        best_translations.deep_merge! data[locale] if data[locale]
+      end
+      ThemeTranslationManager.list_from_hash(theme: self, hash: best_translations, locale: I18n.locale)
+    rescue ThemeTranslationParser::InvalidYaml
+      {}
     end
   end
 
@@ -375,7 +398,7 @@ class Theme < ActiveRecord::Base
   def included_settings
     hash = {}
 
-    self.included_themes.each do |theme|
+    Theme.where(id: Theme.transform_ids([id])).each do |theme|
       hash.merge!(theme.cached_settings)
     end
 
@@ -388,6 +411,55 @@ class Theme < ActiveRecord::Base
     raise Discourse::NotFound unless target_setting
 
     target_setting.value = new_value
+  end
+
+  def update_translation(translation_key, new_value)
+    target_translation = translations.find { |translation| translation.key == translation_key }
+    raise Discourse::NotFound unless target_translation
+    target_translation.value = new_value
+  end
+
+  def translation_override_hash
+    hash = {}
+    theme_translation_overrides.each do |override|
+      cursor = hash
+      path = [override.locale] + override.translation_key.split(".")
+      path[0..-2].each do |key|
+        cursor = (cursor[key] ||= {})
+      end
+      cursor[path[-1]] = override.value
+    end
+    hash
+  end
+
+  def generate_metadata_hash
+    {}.tap do |meta|
+      meta[:name] = name
+      meta[:component] = component
+
+      RemoteTheme::METADATA_PROPERTIES.each do |property|
+        meta[property] = remote_theme&.public_send(property)
+        meta[property] = nil if meta[property] == "URL" # Clean up old discourse_theme CLI placeholders
+      end
+
+      meta[:assets] = {}.tap do |hash|
+        theme_fields.where(type_id: ThemeField.types[:theme_upload_var]).each do |field|
+          hash[field.name] = field.file_path
+        end
+      end
+
+      meta[:color_schemes] = {}.tap do |hash|
+        schemes = self.color_schemes
+        # The selected color scheme may not belong to the theme, so include it anyway
+        schemes = [self.color_scheme] + schemes if self.color_scheme
+        schemes.uniq.each do |scheme|
+          hash[scheme.name] = {}.tap { |colors| scheme.colors.each { |color| colors[color.name] = color.hex } }
+        end
+      end
+
+      meta[:learn_more] = "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
+
+    end
   end
 end
 

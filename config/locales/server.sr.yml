@@ -42,7 +42,7 @@ sr:
       less_than: "mora biti manje od 1%{count}"
       not_a_number: nije broj
       not_an_integer: mora biti ceo broj
-      record_invalid: 'Verifikacija neuspešna: 1%{errors}'
+      record_invalid: "Verifikacija neuspešna: 1%{errors}"
     embed:
       load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
     site_settings:
@@ -100,7 +100,7 @@ sr:
       category:
         name: "Ime kategorije"
       topic:
-        title: 'Naslov'
+        title: "Naslov"
       user_profile:
         bio_raw: "O meni"
     errors:
@@ -119,7 +119,6 @@ sr:
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
-    flag_sockpuppets: "Ako novi korisnik odgovara na temu sa iste IP adrese kao i novi korisnik koji je pokrenuo temu, označi obe njihove poruke kao potencijalni spam."
     pending_users_reminder_delay: "Obavesti moderatore ako novi korisnik čeka na odobrenje duže nego ovoliko časova. Podesiti na -1 da bi se onemogućile notifikacije."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
     max_image_megapixels: "Maksimalan dozvoljeni broj megapiksela za slike."
@@ -132,7 +131,6 @@ sr:
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
     ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
     enable_forwarded_emails: "[BETA] Dozvoli korisnicima da kreiraju temu prosleđivanjem email poruke."
-    private_email: "Ne uključuj sadržaj  poruka ili tema u email porukama radi dodatne privatnosti."
     pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
     pop3_polling_period_mins: "Period u minutima za proveru novih email poruka na POP3 nalogu. NAPOMENA: zahteva ponovno pokretanje. "
     pop3_polling_port: "Port za proveru POP3 naloga."

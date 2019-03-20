@@ -40,8 +40,6 @@ hu:
         title: "A szavazás lezárása"
         label: "Bezárás"
         confirm: "Biztosan lezárod ezt a szavazást?"
-      automatic_close:
-        closes_in: "le lesz zárva <strong>%{timeLeft}</strong>"
       error_while_toggling_status: "Elnézést, a szavazat állapotának vizsgálatakor hiba lépett fel."
       error_while_casting_votes: "Sajnáljuk, hiba történt a szavazatod elküldésekor."
       error_while_fetching_voters: "Elnézést, a szavazatok kiírásakor hiba lépett fel."

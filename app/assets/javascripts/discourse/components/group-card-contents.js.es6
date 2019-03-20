@@ -40,7 +40,7 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
 
   @computed("group")
   groupPath(group) {
-    return `${Discourse.BaseUri}/groups/${group.name}`;
+    return `${Discourse.BaseUri}/g/${group.name}`;
   },
 
   _showCallback(username, $target) {
@@ -60,10 +60,9 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
   },
 
   _close() {
-    this._super();
-    this.setProperties({
-      group: null
-    });
+    this._super(...arguments);
+
+    this.set("group", null);
   },
 
   cleanUp() {
@@ -82,16 +81,12 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
       this._close();
     },
 
-    composePrivateMessage(...args) {
-      this.sendAction("composePrivateMessage", ...args);
-    },
-
     messageGroup() {
-      this.sendAction("createNewMessageViaParams", this.get("group.name"));
+      this.createNewMessageViaParams(this.get("group.name"));
     },
 
-    showGroup() {
-      this.sendAction("showGroup", this.get("group"));
+    showGroup(group) {
+      this.showGroup(group);
       this._close();
     }
   }

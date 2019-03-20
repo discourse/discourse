@@ -10,7 +10,7 @@ export default Ember.Mixin.create({
   queueDockCheck: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.queueDockCheck = () => {
       Ember.run.debounce(this, this.safeDockCheck, 5);
     };
@@ -24,7 +24,7 @@ export default Ember.Mixin.create({
   },
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
 
     $(window).bind("scroll.discourse-dock", this.queueDockCheck);
     $(document).bind("touchmove.discourse-dock", this.queueDockCheck);
@@ -33,7 +33,7 @@ export default Ember.Mixin.create({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     $(window).unbind("scroll.discourse-dock", this.queueDockCheck);
     $(document).unbind("touchmove.discourse-dock", this.queueDockCheck);
   }

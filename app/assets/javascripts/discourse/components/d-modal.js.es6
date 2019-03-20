@@ -1,9 +1,17 @@
 import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
-  classNameBindings: [":modal", ":d-modal", "modalClass", "modalStyle"],
+  classNameBindings: [
+    ":modal",
+    ":d-modal",
+    "modalClass",
+    "modalStyle",
+    "hasPanels"
+  ],
   attributeBindings: ["data-keyboard"],
   dismissable: true,
+  title: null,
+  subtitle: null,
 
   init() {
     this._super(...arguments);
@@ -23,7 +31,7 @@ export default Ember.Component.extend({
   setUp() {
     $("html").on("keydown.discourse-modal", e => {
       if (e.which === 27 && this.get("dismissable")) {
-        Em.run.next(() => $(".modal-header a.close").click());
+        Ember.run.next(() => $(".modal-header a.close").click());
       }
     });
 

@@ -13,7 +13,7 @@ class PostAlerter
 
   def not_allowed?(user, post)
     user.blank? ||
-    user.id < 0 ||
+    user.bot? ||
     user.id == post.user_id
   end
 
@@ -193,7 +193,7 @@ class PostAlerter
     end
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned].map { |t|
+  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :group_mentioned, :watching_first_post].map { |t|
     Notification.types[t]
   }
 
@@ -279,10 +279,10 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
-    return if user.blank?
-    return if user.id < 0
+    return if user.blank? || user.bot?
 
-    return if type == Notification.types[:liked] && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+    is_liked = type == Notification.types[:liked]
+    return if is_liked && user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
 
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
@@ -316,23 +316,38 @@ class PostAlerter
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
       .order("notifications.id DESC")
-      .find_by(topic_id: post.topic_id,
-               post_number: post.post_number,
-               notification_type: type)
+      .find_by(
+        topic_id: post.topic_id,
+        post_number: post.post_number,
+        notification_type: type
+      )
 
     return if existing_notification && !should_notify_previous?(user, existing_notification, opts)
 
     notification_data = {}
 
-    if  existing_notification &&
+    if is_liked
+      if existing_notification &&
         existing_notification.created_at > 1.day.ago &&
-        user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:always]
+        (
+          user.user_option.like_notification_frequency ==
+          UserOption.like_notification_frequency_type[:always]
+        )
 
-      data = existing_notification.data_hash
-      notification_data["username2"] = data["display_username"]
-      notification_data["count"] = (data["count"] || 1).to_i + 1
-      # don't use destroy so we don't trigger a notification count refresh
-      Notification.where(id: existing_notification.id).destroy_all
+        data = existing_notification.data_hash
+        notification_data["username2"] = data["display_username"]
+        notification_data["count"] = (data["count"] || 1).to_i + 1
+        # don't use destroy so we don't trigger a notification count refresh
+        Notification.where(id: existing_notification.id).destroy_all
+      elsif !SiteSetting.likes_notification_consolidation_threshold.zero?
+        notification = consolidate_liked_notifications(
+          user,
+          post,
+          opts[:display_username]
+        )
+
+        return notification if notification
+      end
     end
 
     collapsed = false
@@ -601,4 +616,81 @@ class PostAlerter
     Rails.logger.warn("PostAlerter.#{caller_locations(1, 1)[0].label} was called outside of sidekiq") unless Sidekiq.server?
   end
 
+  private
+
+  def consolidate_liked_notifications(user, post, username)
+    user_notifications = user.notifications
+
+    consolidation_window =
+      SiteSetting.likes_notification_consolidation_window_mins.minutes.ago
+
+    liked_by_user_notifications =
+      user_notifications
+        .filter_by_display_username_and_type(
+          username, Notification.types[:liked]
+        )
+        .where(
+          "created_at > ? AND data::json ->> 'username2' IS NULL",
+          consolidation_window
+        )
+
+    user_liked_consolidated_notification =
+      user_notifications
+        .filter_by_display_username_and_type(
+          username, Notification.types[:liked_consolidated]
+        )
+        .where("created_at > ?", consolidation_window)
+        .first
+
+    if user_liked_consolidated_notification
+      return update_consolidated_liked_notification_count!(
+        user_liked_consolidated_notification
+      )
+    elsif (
+      liked_by_user_notifications.count >=
+      SiteSetting.likes_notification_consolidation_threshold
+    )
+      return create_consolidated_liked_notification!(
+        liked_by_user_notifications,
+        post,
+        username
+      )
+    end
+  end
+
+  def update_consolidated_liked_notification_count!(notification)
+    data = notification.data_hash
+    data["count"] += 1
+
+    notification.update!(
+      data: data.to_json,
+      read: false
+    )
+
+    notification
+  end
+
+  def create_consolidated_liked_notification!(notifications, post, username)
+    notification = nil
+
+    Notification.transaction do
+      timestamp = notifications.last.created_at
+
+      notification = Notification.create!(
+        notification_type: Notification.types[:liked_consolidated],
+        user_id: post.user_id,
+        data: {
+          username: username,
+          display_username: username,
+          count: notifications.count + 1
+        }.to_json,
+        updated_at: timestamp,
+        created_at: timestamp
+      )
+
+      notifications.each(&:destroy!)
+    end
+
+    notification
+  end
 end

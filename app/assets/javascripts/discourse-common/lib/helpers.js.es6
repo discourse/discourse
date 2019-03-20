@@ -32,7 +32,11 @@ function resolveParams(ctx, options) {
     if (options.hashTypes) {
       Object.keys(hash).forEach(function(k) {
         const type = options.hashTypes[k];
-        if (type === "STRING" || type === "StringLiteral") {
+        if (
+          type === "STRING" ||
+          type === "StringLiteral" ||
+          type === "SubExpression"
+        ) {
           params[k] = hash[k];
         } else if (type === "ID" || type === "PathExpression") {
           params[k] = get(ctx, hash[k], options);
@@ -46,19 +50,24 @@ function resolveParams(ctx, options) {
 }
 
 export function registerUnbound(name, fn) {
-  const func = function(property, options) {
-    if (
-      options.types &&
-      (options.types[0] === "ID" || options.types[0] === "PathExpression")
-    ) {
-      property = get(this, property, options);
+  const func = function(...args) {
+    const options = args.pop();
+    const properties = args;
+
+    for (let i = 0; i < properties.length; i++) {
+      if (
+        options.types &&
+        (options.types[i] === "ID" || options.types[i] === "PathExpression")
+      ) {
+        properties[i] = get(this, properties[i], options);
+      }
     }
 
-    return fn.call(this, property, resolveParams(this, options));
+    return fn.call(this, ...properties, resolveParams(this, options));
   };
 
   _helpers[name] = Ember.Helper.extend({
-    compute: (params, args) => fn(params[0], args)
+    compute: (params, args) => fn(...params, args)
   });
   Handlebars.registerHelper(name, func);
 }

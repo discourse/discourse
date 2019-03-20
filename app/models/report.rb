@@ -6,11 +6,11 @@ class Report
   SCHEMA_VERSION = 3
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :labels, :async,
-                :prev_period, :facets, :limit, :processing, :average, :percent,
+                :end_date, :category_id, :group_id, :filter,
+                :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
                 :higher_is_better, :icon, :modes, :category_filtering,
                 :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error, :primary_color, :secondary_color
+                :dates_filtering, :error, :primary_color, :secondary_color, :filter_options
 
   def self.default_days
     30
@@ -29,6 +29,8 @@ class Report
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
+    @filter_options = nil
+    @filter = nil
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
     @primary_color = rgba_color(tertiary)
@@ -43,6 +45,7 @@ class Report
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
       report.group_id,
+      report.filter,
       report.facets,
       report.limit,
       SCHEMA_VERSION,
@@ -73,9 +76,15 @@ class Report
     self.start_date
   end
 
+  def filter_values
+    if self.filter.present?
+      return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h
+    end
+    {}
+  end
+
   def as_json(options = nil)
     description = I18n.t("reports.#{type}.description", default: "")
-
     {
       type: type,
       title: I18n.t("reports.#{type}.title", default: nil),
@@ -90,6 +99,7 @@ class Report
       prev_end_date: prev_end_date&.iso8601,
       category_id: category_id,
       group_id: group_id,
+      filter: self.filter,
       prev30Days: self.prev30Days,
       dates_filtering: self.dates_filtering,
       report_key: Report.cache_key(self),
@@ -113,6 +123,7 @@ class Report
       higher_is_better: self.higher_is_better,
       category_filtering: self.category_filtering,
       group_filtering: self.group_filtering,
+      filter_options: self.filter_options,
       modes: self.modes,
     }.tap do |json|
       json[:icon] = self.icon if self.icon
@@ -141,6 +152,7 @@ class Report
     report.end_date = opts[:end_date] if opts[:end_date]
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
+    report.filter = opts[:filter] if opts[:filter]
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false
@@ -160,6 +172,8 @@ class Report
   end
 
   def self.find(type, opts = nil)
+    opts ||= {}
+
     begin
       report = _get(type, opts)
       report_method = :"report_#{type}"
@@ -178,6 +192,10 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
+
+      # In test mode, don't swallow exceptions by default to help debug errors.
+      raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
+
       # ensures that if anything unexpected prevents us from
       # creating a report object we fail elegantly and log an error
       if !report
@@ -194,6 +212,48 @@ class Report
     end
 
     report
+  end
+
+  def self.report_consolidated_page_views(report)
+    filters = %w[
+      page_view_logged_in
+      page_view_anon
+      page_view_crawler
+    ]
+
+    report.modes = [:stacked_chart]
+
+    tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
+    danger = ColorScheme.hex_for_name('danger') || 'e45735'
+
+    requests = filters.map do |filter|
+      color = report.rgba_color(tertiary)
+
+      if filter == "page_view_anon"
+        color = report.rgba_color(tertiary, 0.5)
+      end
+
+      if filter == "page_view_crawler"
+        color = report.rgba_color(danger, 0.75)
+      end
+
+      {
+        req: filter,
+        label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
+        color: color,
+        data: ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
+      }
+    end
+
+    requests.each do |request|
+      request[:data] = request[:data].where('date >= ? AND date <= ?', report.start_date, report.end_date)
+        .order(date: :asc)
+        .group(:date)
+        .sum(:count)
+        .map { |date, count| { x: date, y: count } }
+    end
+
+    report.data = requests
   end
 
   def self.req_report(report, filter = nil)
@@ -234,7 +294,7 @@ class Report
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
     add_counts report, UserVisit, 'visited_at'
 
-    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+    report.prev30Days = UserVisit.where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
   end
 
   def self.report_mobile_visits(report)
@@ -607,10 +667,10 @@ class Report
     url = Proc.new { |key| "/admin/users/list/#{key}" }
 
     admins = User.real.admins.count
-    report.data << { url: url.call("admins"), icon: "shield", key: "admins", x: label.call("admin"), y: admins } if admins > 0
+    report.data << { url: url.call("admins"), icon: "shield-alt", key: "admins", x: label.call("admin"), y: admins } if admins > 0
 
     moderators = User.real.moderators.count
-    report.data << { url: url.call("moderators"), icon: "shield", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
+    report.data << { url: url.call("moderators"), icon: "shield-alt", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
 
     suspended = User.real.suspended.count
     report.data << { url: url.call("suspended"), icon: "ban", key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
@@ -1393,6 +1453,7 @@ class Report
       WHERE t.action = 'suspicious'
         AND t.created_at >= :start_date
         AND t.created_at <= :end_date
+      ORDER BY t.created_at DESC
     SQL
 
     DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
@@ -1435,7 +1496,14 @@ class Report
 
   def self.report_top_uploads(report)
     report.modes = [:table]
-
+    report.filter_options = [
+      {
+        id: "file-extension",
+        selected: report.filter_values.fetch("file-extension", "any"),
+        choices: (SiteSetting.authorized_extensions.split("|") + report.filter_values.values).uniq,
+        allowAny: true
+      }
+    ]
     report.labels = [
       {
         type: :link,
@@ -1480,12 +1548,18 @@ class Report
     FROM uploads up
     JOIN users u
     ON u.id = up.user_id
-    WHERE up.created_at >= '#{report.start_date}' AND up.created_at <= '#{report.end_date}'
+    /*where*/
     ORDER BY up.filesize DESC
     LIMIT #{report.limit || 250}
     SQL
 
-    DB.query(sql).each do |row|
+    extension_filter = report.filter_values["file-extension"]
+    builder = DB.build(sql)
+    builder.where("up.id > :seeded_id_threshold", seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD)
+    builder.where("up.created_at >= :start_date", start_date: report.start_date)
+    builder.where("up.created_at < :end_date", end_date: report.end_date)
+    builder.where("up.extension = :extension", extension: extension_filter) if extension_filter.present?
+    builder.query.each do |row|
       data = {}
       data[:author_id] = row.user_id
       data[:author_username] = row.username
@@ -1494,8 +1568,55 @@ class Report
       data[:extension] = row.extension
       data[:file_url] = Discourse.store.cdn_url(row.url)
       data[:file_name] = row.original_filename.truncate(25)
-
       report.data << data
+    end
+  end
+
+  def self.report_top_ignored_users(report)
+    report.modes = [:table]
+
+    report.labels = [
+      {
+        type: :user,
+        properties: {
+          id: :ignored_user_id,
+          username: :ignored_username,
+          avatar: :ignored_user_avatar_template,
+        },
+        title: I18n.t("reports.top_ignored_users.labels.ignored_user")
+      },
+      {
+        type: :number,
+        properties: [
+          :ignores_count,
+        ],
+        title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+      }
+    ]
+
+    report.data = []
+
+    sql = <<~SQL
+      SELECT
+      u.id AS user_id,
+      u.username,
+      u.uploaded_avatar_id,
+      COUNT(*) AS ignores_count
+      FROM users AS u
+      INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
+      WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
+      GROUP BY u.id
+      ORDER BY COUNT(*) DESC
+      LIMIT #{report.limit || 250}
+    SQL
+
+    DB.query(sql).each do |row|
+      report.data << {
+        ignored_user_id: row.user_id,
+        ignored_username: row.username,
+        ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+        ignores_count: row.ignores_count,
+      }
     end
   end
 
@@ -1503,16 +1624,6 @@ class Report
     if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
       clear_cache(:storage_stats)
     end
-  end
-
-  private
-
-  def hex_to_rgbs(hex_color)
-    hex_color = hex_color.gsub('#', '')
-    rgbs = hex_color.scan(/../)
-    rgbs
-      .map! { |color| color.hex }
-      .map! { |rgb| rgb.to_i }
   end
 
   def rgba_color(hex, opacity = 1)
@@ -1528,5 +1639,15 @@ class Report
     rgbs = hex_to_rgbs(hex)
 
     "rgba(#{rgbs.join(',')},#{opacity})"
+  end
+
+  private
+
+  def hex_to_rgbs(hex_color)
+    hex_color = hex_color.gsub('#', '')
+    rgbs = hex_color.scan(/../)
+    rgbs
+      .map! { |color| color.hex }
+      .map! { |rgb| rgb.to_i }
   end
 end

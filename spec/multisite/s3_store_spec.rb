@@ -2,9 +2,12 @@ require 'rails_helper'
 require 'file_store/s3_store'
 
 RSpec.describe 'Multisite s3 uploads', type: :multisite do
-  let(:conn) { RailsMultisite::ConnectionManagement }
   let(:uploaded_file) { file_from_fixtures("smallest.png") }
-  let(:upload) { Fabricate(:upload, sha1: Digest::SHA1.hexdigest(File.read(uploaded_file))) }
+  let(:upload_sha1) { Digest::SHA1.hexdigest(File.read(uploaded_file)) }
+
+  def build_upload
+    Fabricate.build(:upload, sha1: upload_sha1, id: 1)
+  end
 
   context 'uploading to s3' do
     before(:each) do
@@ -20,14 +23,16 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       let(:store) { FileStore::S3Store.new(s3_helper) }
 
       it "returns the correct url for default and second multisite db" do
-        conn.with_connection('default') do
+        test_multisite_connection('default') do
+          upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/default/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
           expect(upload.etag).to eq("ETag")
         end
 
-        conn.with_connection('second') do
+        test_multisite_connection('second') do
+          upload = build_upload
           expect(store.store_upload(uploaded_file, upload)).to eq(
             "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-east-1.amazonaws.com/uploads/second/original/1X/c530c06cf89c410c0355d7852644a73fc3ec8c04.png"
           )
@@ -54,7 +59,8 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       let(:s3_helper) { store.s3_helper }
 
       it "removes the file from s3 on multisite" do
-        conn.with_connection('default') do
+        test_multisite_connection('default') do
+          upload = build_upload
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/default/original/1X/#{upload.sha1}.png")
@@ -70,7 +76,8 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
 
       it "removes the file from s3 on another multisite db" do
-        conn.with_connection('second') do
+        test_multisite_connection('second') do
+          upload = build_upload
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/second/original/1X/#{upload.sha1}.png")
@@ -91,7 +98,8 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
         end
 
         it "removes the file from s3 on multisite" do
-          conn.with_connection('default') do
+          test_multisite_connection('default') do
+            upload = build_upload
             store.expects(:get_depth_for).with(upload.id).returns(0)
             s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
             upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png")

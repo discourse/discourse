@@ -5,6 +5,7 @@ export default {
   after: "inject-discourse-objects",
 
   initialize(container, app) {
+    app.unregister("router:main");
     app.register("router:main", mapRoutes());
 
     // HACK to fix: https://github.com/emberjs/ember.js/issues/10310

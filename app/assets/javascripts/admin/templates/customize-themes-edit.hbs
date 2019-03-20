@@ -1,66 +1,17 @@
 <div class="current-style {{if maximized 'maximized'}}">
   <div class='wrapper'>
-    <h2>{{i18n 'admin.customize.theme.edit_css_html'}} {{#link-to 'adminCustomizeThemes.show' model.id replace=true}}{{model.name}}{{/link-to}}</h2>
+    <h2>{{i18n 'admin.customize.theme.edit_css_html'}} {{#link-to showRouteName model.id replace=true}}{{model.name}}{{/link-to}}</h2>
 
-    {{#if error}}
-      <pre class='field-error'>{{error}}</pre>
-    {{/if}}
-
-    <div class='edit-main-nav'>
-      <ul class='nav nav-pills target'>
-        {{#if showCommon}}
-          <li>
-            {{#link-to 'adminCustomizeThemes.edit' model.id 'common' fieldName replace=true}}
-              {{i18n 'admin.customize.theme.common'}}
-            {{/link-to}}
-          </li>
-        {{/if}}
-        {{#if showDesktop}}
-          <li>
-            {{#link-to 'adminCustomizeThemes.edit' model.id 'desktop' fieldName replace=true}}
-              {{i18n 'admin.customize.theme.desktop'}}
-              {{d-icon 'desktop'}}
-            {{/link-to}}
-          </li>
-        {{/if}}
-        {{#if showMobile}}
-          <li class='mobile'>
-            {{#link-to 'adminCustomizeThemes.edit' model.id 'mobile' fieldName replace=true}}
-              {{i18n 'admin.customize.theme.mobile'}}
-              {{d-icon 'mobile'}}
-            {{/link-to}}
-          </li>
-        {{/if}}
-      </ul>
-      <div class='show-overidden'>
-        <label>
-          {{input type="checkbox" checked=onlyOverridden}}
-          {{i18n 'admin.settings.show_overriden'}}
-        </label>
-      </div>
-      <div class='clearfix'></div>
-    </div>
-
-    <div class='admin-controls'>
-      <ul class='nav nav-pills fields'>
-        {{#each fields as |field|}}
-          <li>
-            {{#link-to 'adminCustomizeThemes.edit' model.id currentTargetName field.name replace=true title=field.title}}
-              {{#if field.icon}}{{d-icon field.icon}} {{/if}}
-              {{i18n field.key}}
-            {{/link-to}}
-          </li>
-        {{/each}}
-        <li class='toggle-maximize'>
-          <a {{action "toggleMaximize"}}>
-            {{d-icon maximizeIcon}}
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    {{ace-editor content=activeSection editorId=editorId mode=activeSectionMode autofocus="true"}}
-
+    {{admin-theme-editor 
+      theme=model 
+      editRouteName=editRouteName 
+      currentTargetName=currentTargetName
+      fieldName=fieldName
+      fieldAdded=(action 'fieldAdded')
+      maximized=maximized
+      onlyOverriddenChanged=(action 'onlyOverriddenChanged')
+    }}
+    
     <div class='admin-footer'>
       <div class='status-actions'>
         {{#unless model.changed}}
@@ -69,7 +20,7 @@
       </div>
 
       <div class='buttons'>
-        {{#d-button action="save" disabled=saveDisabled class='btn-primary'}}
+        {{#d-button action=(action "save") disabled=saveDisabled class='btn-primary'}}
           {{saveButtonText}}
         {{/d-button}}
       </div>

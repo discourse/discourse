@@ -104,17 +104,12 @@ function addLocalDate(buffer, matches, state) {
 
   buffer.push(token);
 
-  let emailPreview;
-  const emailTimezone = (config.timezones || "Etc/UTC").split("|")[0];
-  const formattedDateTime = dateTime.tz(emailTimezone).format(config.format);
-  const formattedTimezone = emailTimezone.replace("/", ": ").replace("_", " ");
-
-  if (formattedDateTime.match(/TZ/)) {
-    emailPreview = formattedDateTime.replace("TZ", formattedTimezone);
-  } else {
-    emailPreview = `${formattedDateTime} (${formattedTimezone})`;
-  }
-  token.attrs.push(["data-email-preview", emailPreview]);
+  const formattedDateTime = dateTime
+    .tz("Etc/UTC")
+    .format(
+      state.md.options.discourse.datesEmailFormat || moment.defaultFormat
+    );
+  token.attrs.push(["data-email-preview", `${formattedDateTime} UTC`]);
 
   closeBuffer(buffer, state, dateTime.utc().format(config.format));
 }
@@ -139,6 +134,8 @@ export function setup(helper) {
   ]);
 
   helper.registerOptions((opts, siteSettings) => {
+    opts.datesEmailFormat = siteSettings.discourse_local_dates_email_format;
+
     opts.features[
       "discourse-local-dates"
     ] = !!siteSettings.discourse_local_dates_enabled;
@@ -146,7 +143,7 @@ export function setup(helper) {
 
   helper.registerPlugin(md => {
     const rule = {
-      matcher: /\[date(.+?)\]/,
+      matcher: /\[date(=.+?)\]/,
       onMatch: addLocalDate
     };
 

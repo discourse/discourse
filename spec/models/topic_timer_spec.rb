@@ -190,7 +190,7 @@ RSpec.describe TopicTimer, type: :model do
       end
 
       before do
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
       end
 
       it 'should close the topic' do
@@ -219,7 +219,7 @@ RSpec.describe TopicTimer, type: :model do
       end
 
       before do
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
       end
 
       it 'should open the topic' do

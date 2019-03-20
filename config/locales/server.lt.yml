@@ -36,13 +36,10 @@ lt:
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
   themes:
-    bad_color_scheme: "Nepavyko atnaujinti temos, netinkamos spalvų schemos"
     other_error: "Įvyko klaida atnaujinant temą"
-    error_importing: "Klaida git kapinyno klonavimui, prieiga atmetama arba saugykla nerasta"
     errors:
       component_no_user_selectable: "Tematikos komponentai negali būti pasirinktini vartotojui"
       component_no_default: "Tema komponentai negali būti numatytoji tema"
-      component_no_color_scheme: "Tematikos komponentai negali turėti spalvų schemos"
       no_multilevels_components: "Temos su vaikų temomis negali būti patys vaikų temos"
     settings_errors:
       invalid_yaml: "Nurodytas YAML negalimas."
@@ -62,8 +59,8 @@ lt:
         no_message_id_error: "Taip atsitinka, kai laiške nėra antraštės \"Message-Id\"."
       unrecognized_error: "Nenustatyta klaida"
   errors: &errors
-    format: '%{attribute} %{message}'
-    format_with_full_message: '<b>%{attribute}</b>:%{message}'
+    format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
       taken: "jau užimtas"
       accepted: privalo buti patvirtintas
@@ -79,7 +76,7 @@ lt:
       invalid: netinkamas
       not_a_number: nera skaičius
       not_an_integer: privalo buti integruotas
-      record_invalid: 'Patvirtinimas nepavyko: %{errors}'
+      record_invalid: "Patvirtinimas nepavyko: %{errors}"
       max_emojis: "negali turėti daugiau nei %{max_emojis_count}emoji"
     embed:
       load_from_remote: "Klaida ikeliant įrašą"
@@ -176,8 +173,8 @@ lt:
       category:
         name: "Kategorijos pavadinimas"
       topic:
-        title: 'Antraštė'
-        featured_link: 'Išskirtinė nuoroda'
+        title: "Antraštė"
+        featured_link: "Išskirtinė nuoroda"
       post:
         raw: "Tekstas"
       user_profile:
@@ -218,7 +215,6 @@ lt:
       not_found: "Kategorijos nėra!"
       uncategorized_parent: "(Be kategorijos) kategorija negali turėti subkategorijų"
     cannot_delete:
-      uncategorized: "Negalima pašalinti kategorijos (be kategorijos)"
       has_subcategories: "Negalima pašalinti kategorijos, nes ji turi subkategorijų."
   trust_levels:
     newuser:
@@ -369,9 +365,9 @@ lt:
   password_reset:
     choose_new: "Pasirinkite naują slaptažodį"
     choose: "Pasirinkite slaptažodį"
-    update: 'Atnaujinti slaptažodį'
-    save: 'Nustatykite slaptažodį'
-    title: 'Keisti slaptažodį'
+    update: "Atnaujinti slaptažodį"
+    save: "Nustatykite slaptažodį"
+    title: "Keisti slaptažodį"
     success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
@@ -389,32 +385,32 @@ lt:
       back_to: "Grįžti į %{title}"
   post_action_types:
     off_topic:
-      title: 'Ne į temą'
+      title: "Ne į temą"
     spam:
-      title: 'Šlamštas'
-      long_form: 'pažymėtas kaip šlamštas'
+      title: "Šlamštas"
+      long_form: "pažymėtas kaip šlamštas"
       email_title: '"%{title}" pažymėta kaip šlamštas'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Nederamas'
+      title: "Nederamas"
     notify_user:
-      title: 'Siųsti @{{username}} žinutę'
-      long_form: 'išsiuntėte nariui'
+      title: "Siųsti @{{username}} žinutę"
+      long_form: "išsiuntėte nariui"
       email_title: 'Jūsų įrašas temote "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Kažkas kito"
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Žymės'
-      description: 'Išsaugoti šį įrašą'
-      short_description: 'Išsaugoti šį įrašą'
-      long_form: 'išsaugojote šį įrašą'
+      title: "Žymės"
+      description: "Išsaugoti šį įrašą"
+      short_description: "Išsaugoti šį įrašą"
+      long_form: "išsaugojote šį įrašą"
     like:
-      title: 'Patinka'
-      description: 'Mėgti šį įrašą'
-      short_description: 'Mėgti šį įrašą'
-      long_form: 'mėgstate'
+      title: "Patinka"
+      description: "Mėgti šį įrašą"
+      short_description: "Mėgti šį įrašą"
+      long_form: "mėgstate"
   user_activity:
     no_default:
       self: "Jūsų dar neturite jokios veklos"
@@ -425,8 +421,8 @@ lt:
       others: "Jokių atsakymų."
   topic_flag_types:
     spam:
-      title: 'Šlamštas'
-      long_form: 'pažymėtas kaip šlamštas'
+      title: "Šlamštas"
+      long_form: "pažymėtas kaip šlamštas"
     notify_moderators:
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -545,7 +541,6 @@ lt:
       title: "Prisijungęs"
       xaxis: "Diena"
     page_view_crawler_reqs:
-      title: "Interneto skaitytuvai"
       xaxis: "Diena"
     page_view_total_reqs:
       xaxis: "Diena"
@@ -578,9 +573,9 @@ lt:
     enable_emoji: "Įgalinti Emoji"
   search:
     types:
-      category: 'Kategorijos'
-      topic: 'Rezultatai'
-      user: 'Vartotojai'
+      category: "Kategorijos"
+      topic: "Rezultatai"
+      user: "Vartotojai"
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
@@ -763,7 +758,7 @@ lt:
     search_button: "Paieška"
   terms_of_service:
     title: "Paslaugų teikimo sąlygos"
-  deleted: 'ištrintas'
+  deleted: "ištrintas"
   image: "paveikslėlis"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
@@ -946,8 +941,8 @@ lt:
   joined: "Prisijungė"
   discourse_push_notifications:
     popup:
-      confirm_title: 'Pranešimai įgalinti - %{site_title} svetainėje'
-      confirm_body: 'Pavyko! Pranešimai buvo įgalinti.'
+      confirm_title: "Pranešimai įgalinti - %{site_title} svetainėje"
+      confirm_body: "Pavyko! Pranešimai buvo įgalinti."
   staff_action_logs:
     not_found: "nerastas"
     unknown: "nežinoma"

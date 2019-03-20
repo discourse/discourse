@@ -24,7 +24,7 @@ describe UserAnonymizer do
 
   describe "make_anonymous" do
     let(:original_email) { "edward@example.net" }
-    let(:user) { Fabricate(:user, username: "edward", email: original_email) }
+    let(:user) { Fabricate(:user_single_email, username: "edward", email: original_email) }
     let(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
@@ -33,22 +33,36 @@ describe UserAnonymizer do
       expect(user.reload.username).to match(/^anon\d{3,}$/)
     end
 
-    it "changes email address" do
+    it "changes the primary email address" do
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
     end
 
+    it "changes the primary email address when there is an email domain whitelist" do
+      SiteSetting.email_domains_whitelist = 'example.net|wayne.com|discourse.org'
+
+      make_anonymous
+      expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
+    end
+
+    it "deletes secondary email addresses" do
+      Fabricate(:secondary_email, user: user, email: "secondary_email@example.com")
+
+      make_anonymous
+      expect(user.reload.secondary_emails).to be_blank
+    end
+
     it "turns off all notifications" do
       user.user_option.update_columns(
-        email_always: true
+        email_level: UserOption.email_level_types[:always],
+        email_messages_level: UserOption.email_level_types[:always]
       )
 
       make_anonymous
       user.reload
       expect(user.user_option.email_digests).to eq(false)
-      expect(user.user_option.email_private_messages).to eq(false)
-      expect(user.user_option.email_direct).to eq(false)
-      expect(user.user_option.email_always).to eq(false)
+      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
@@ -122,7 +136,7 @@ describe UserAnonymizer do
     end
 
     it "updates the avatar in posts" do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       upload = Fabricate(:upload, user: user)
       user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences
@@ -176,16 +190,13 @@ describe UserAnonymizer do
     end
 
     it "removes external auth assocations" do
-      user.google_user_info = GoogleUserInfo.create(user_id: user.id, google_user_id: "google@gmail.com")
       user.github_user_info = GithubUserInfo.create(user_id: user.id, screen_name: "example", github_user_id: "examplel123123")
       user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
       user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
       user.oauth2_user_infos = [Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")]
-      user.instagram_user_info = InstagramUserInfo.create(user_id: user.id, screen_name: "example", instagram_user_id: "examplel123123")
       UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
       make_anonymous
       user.reload
-      expect(user.google_user_info).to eq(nil)
       expect(user.github_user_info).to eq(nil)
       expect(user.user_associated_accounts).to be_empty
       expect(user.single_sign_on_record).to eq(nil)
@@ -203,7 +214,7 @@ describe UserAnonymizer do
 
     context "executes job" do
       before do
-        SiteSetting.queue_jobs = false
+        Jobs.run_immediately!
       end
 
       it "removes invites" do
@@ -291,7 +302,7 @@ describe UserAnonymizer do
     end
 
     it "exhaustively replaces all user ips" do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       link = IncomingLink.create!(current_user_id: user.id, ip_address: old_ip, post_id: post.id)
 
       screened_email = ScreenedEmail.create!(email: user.email, ip_address: old_ip)

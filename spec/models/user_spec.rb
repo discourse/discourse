@@ -265,8 +265,8 @@ describe User do
         expect(subject.email_tokens).to be_present
         expect(subject.user_stat).to be_present
         expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_private_messages).to eq(true)
-        expect(subject.user_option.email_direct).to eq(true)
+        expect(subject.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
@@ -427,9 +427,9 @@ describe User do
 
       UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
       UserAssociatedAccount.create(user_id: user.id, provider_name: "facebook", provider_uid: "1234", info: { email: "test@example.com" })
-      GoogleUserInfo.create(user_id: user.id, email: "sam@sam.com", google_user_id: 1)
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "instagram", provider_uid: "examplel123123", info: { nickname: "sam" })
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "google_oauth2", provider_uid: "1", info: { email: "sam@sam.com" })
       GithubUserInfo.create(user_id: user.id, screen_name: "sam", github_user_id: 1)
-      InstagramUserInfo.create(user_id: user.id, screen_name: "sam", instagram_user_id: "examplel123123")
 
       user.reload
       expect(user.associated_accounts.map { |a| a[:name] }).to contain_exactly('twitter', 'facebook', 'google_oauth2', 'github', 'instagram')
@@ -1088,7 +1088,7 @@ describe User do
 
       context "with a reply" do
         before do
-          SiteSetting.queue_jobs = false
+          Jobs.run_immediately!
           PostCreator.new(Fabricate(:user),
                             raw: 'whatever this is a raw post',
                             topic_id: topic.id,
@@ -1138,6 +1138,20 @@ describe User do
 
   end
 
+  describe "#letter_avatar_color" do
+    before do
+      SiteSetting.restrict_letter_avatar_colors = "2F70AC|ED207B|AAAAAA|77FF33"
+    end
+
+    it "returns custom color if restrict_letter_avatar_colors site setting is set" do
+      colors = SiteSetting.restrict_letter_avatar_colors.split("|")
+      expect(User.letter_avatar_color("username_one")).to eq("2F70AC")
+      expect(User.letter_avatar_color("username_two")).to eq("ED207B")
+      expect(User.letter_avatar_color("username_three")).to eq("AAAAAA")
+      expect(User.letter_avatar_color("username_four")).to eq("77FF33")
+    end
+  end
+
   describe ".small_avatar_url" do
 
     let(:user) { build(:user, username: 'Sam') }
@@ -1147,7 +1161,7 @@ describe User do
       expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
 
       SiteSetting.external_system_avatars_enabled = true
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar_proxy/v2/letter/s/5f9b8f/45.png")
+      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar_proxy/v3/letter/s/5f9b8f/45.png")
     end
 
   end
@@ -1461,10 +1475,9 @@ describe User do
 
     before do
       SiteSetting.default_email_digest_frequency = 1440 # daily
-      SiteSetting.default_email_personal_messages = false
-      SiteSetting.default_email_direct = false
+      SiteSetting.default_email_level = UserOption.email_level_types[:never]
+      SiteSetting.default_email_messages_level = UserOption.email_level_types[:never]
       SiteSetting.default_email_mailing_list_mode = true
-      SiteSetting.default_email_always = true
 
       SiteSetting.default_other_new_topic_duration_minutes = -1 # not viewed
       SiteSetting.default_other_auto_track_topics_after_msecs = 0 # immediately
@@ -1485,16 +1498,15 @@ describe User do
     it "has overriden preferences" do
       user = Fabricate(:user)
       options = user.user_option
-      expect(options.email_always).to eq(true)
       expect(options.mailing_list_mode).to eq(true)
       expect(options.digest_after_minutes).to eq(1440)
-      expect(options.email_private_messages).to eq(false)
+      expect(options.email_level).to eq(UserOption.email_level_types[:never])
+      expect(options.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
       expect(options.disable_jump_reply).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
-      expect(options.email_direct).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)
       expect(options.auto_track_topics_after_msecs).to eq(0)
       expect(options.notification_level_when_replying).to eq(3)
@@ -1518,7 +1530,7 @@ describe User do
 
     it "Creates a UserOption row when a user record is created and destroys once done" do
       user = Fabricate(:user)
-      expect(user.user_option.email_always).to eq(false)
+      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
 
       user_id = user.id
       user.destroy!
@@ -1964,6 +1976,39 @@ describe User do
         contact_user.revoke_moderation!
         expect(SiteSetting.site_contact_username).to eq(SiteSetting.defaults[:site_contact_username])
       end
+    end
+  end
+
+  context "#destroy!" do
+    it 'clears up associated data on destroy!' do
+      user = Fabricate(:user)
+      post = Fabricate(:post)
+
+      PostAction.act(user, post, PostActionType.types[:like])
+      PostAction.remove_act(user, post, PostActionType.types[:like])
+
+      UserAction.create!(user_id: user.id, action_type: UserAction::LIKE)
+      UserAction.create!(user_id: -1, action_type: UserAction::LIKE, target_user_id: user.id)
+      UserAction.create!(user_id: -1, action_type: UserAction::LIKE, acting_user_id: user.id)
+
+      user.reload
+
+      user.destroy!
+
+      expect(UserAction.where(user_id: user.id).length).to eq(0)
+      expect(UserAction.where(target_user_id: user.id).length).to eq(0)
+      expect(UserAction.where(acting_user_id: user.id).length).to eq(0)
+      expect(PostAction.with_deleted.where(user_id: user.id).length).to eq(0)
+    end
+  end
+
+  context "human?" do
+    it "returns true for a regular user" do
+      expect(Fabricate(:user)).to be_human
+    end
+
+    it "returns false for the system user" do
+      expect(Discourse.system_user).not_to be_human
     end
   end
 end

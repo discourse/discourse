@@ -15,3 +15,18 @@ sl:
       title: Vnesi datum
       create:
         modal_title: Vnesi datum
+        modal_subtitle: "Samodejno bomo pretvorili datum in čas v uporabnikov lokalni čas."
+        form:
+          insert: Dodaj
+          advanced_mode: Napredni način
+          simple_mode: Enostavni način
+          format_description: "Format, ki se uporablja za prikazovanje datuma. Uporabite \"\\T\\Z\" za prikaz uporabnikovega časovnega pasu z besedo (Europe/Paris)"
+          timezones_title: Časovni pas za prikaz
+          timezones_description: Časovni pas bo uporabljen za prikaz v predogledu ali kot rezerva.
+          recurring_title: Ponovitev
+          recurring_description: "Določite ponovitev dogodka. Lahko ročno vnesete ponovitev pripravljeno iz obrazca in uporabite naslednje ključe: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Brez ponovitve
+          invalid_date: Napačen datum - poskrbite, da sta datum in čas pravilna
+          date_title: Datum
+          time_title: Čas
+          format_title: Format datuma

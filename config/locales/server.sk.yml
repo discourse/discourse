@@ -35,9 +35,7 @@ sk:
   remove_posts_deleted_by_author: "Zmazané autorom"
   redirect_warning: "Neboli sme schopní overiť, či vami vybraný link bol pridaný na fórum. Ak chcete aj tak pokračovať, vyberte link nižšie."
   themes:
-    bad_color_scheme: "Nepodarilo sa aktualizovať tému, neplatná farebná schéma"
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
-    error_importing: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
       data_type_not_a_number: "Hodnota nastavenia typu `%{name}` nie je podporovaná. Podporované typy sú `integer`, `bool`, `list` a `enum`"
@@ -58,7 +56,7 @@ sk:
         bounced_email_error: "Email report bol odoslaný emailom"
       unrecognized_error: "Chyba nebola rozpoznaná."
   errors: &errors
-    format: '%{attribute} %{message}'
+    format: "%{attribute} %{message}"
     messages:
       too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
       invalid_boolean: "Neplatná logická hodnota."
@@ -83,7 +81,7 @@ sk:
       not_a_number: nie je číslo
       not_an_integer: musí byť číslo
       odd: musí byť nepárne
-      record_invalid: 'Validácia zlyhala s chybami: %{errors}'
+      record_invalid: "Validácia zlyhala s chybami: %{errors}"
       restrict_dependent_destroy:
         one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
         many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
@@ -104,12 +102,12 @@ sk:
         other: nesprávna dĺžka (musí byť %{count} znakov)
       other_than: "musí byť iný než %{count}"
     template:
-      body: 'Nastal problém s nasledujúcimi položkami:'
+      body: "Nastal problém s nasledujúcimi položkami:"
       header:
         one: Uloženie  %{model} zlyhalo kôli chybe
-        few: 'Uloženie  %{model} zlyhalo kôli %{count} chybám'
-        many: 'Uloženie  %{model} zlyhalo kôli %{count} chybám '
-        other: 'Uloženie  %{model} zlyhalo kôli %{count} chybám '
+        few: "Uloženie  %{model} zlyhalo kôli %{count} chybám"
+        many: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
+        other: "Uloženie  %{model} zlyhalo kôli %{count} chybám "
     embed:
       load_from_remote: "Nastala chyba pri načítaní príspevku"
     site_settings:
@@ -238,57 +236,35 @@ sk:
       few: "%{count} príspevky"
       many: "%{count} príspevkov"
       other: "%{count} príspevkov"
-    'new-topic': |2
+    "new-topic": |2
 
       Víitajte na %{site_name} &mdash; **Ďakujeme za založenie novej konverzácie!**
 
-
-
       - Znie titulok zaujímavo ak ho čítate nahlas ? Zodpovedá obsahu ?
-
-
 
       - Koho by to mohlo zaujímať ? Prečo je to dôležité ? Akú reakciu očakávate ?
 
-
-
       - Vložte často používane slová vo vašej téme aby ju ostatní vedeli "nájsť". Pre zlúčenie vašej témy so súvisiacimi témami vyberte kategóriu .
 
-
-
       Pre viac informácií, [pozri návody](%{base_path}/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
-    'new-reply': |2
+    "new-reply": |2
 
       Vitajte na %{site_name} &mdash; **Ďakujeme za príspevok!**
 
-
-
       - Vylepší vaša odpoveď nejakým spôsobom diskusiu ?
-
-
 
       - Buďte ohľaduplní k ostatným členom komunity.
 
-
-
       - Konštruktívna kritika je vítana, avšak kritizujte "nápady", nie ľudí.
-
-
 
       Pre viac informácií, [pozri návody](%{base_path}/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
     avatar: |2
 
       ### Čo takto nastaviť svoj profilový obrázok?
 
-
-
       Pridali ste niekoľko tém a odpovedí, ale Váš profilový obrázok nie je taký jedinečný ako Vy - je to len písmeno.
 
-
-
       Uvažovali ste **[návštíviť svoj používateľský profil](%{profile_path})** a nahrať obrázok, ktorý vás vystihuje?
-
-
 
       Je jednoduchšie sledovať diskusiu a nájsť zaujímavých ľudí v rozhovoroch, keď má každý jedinečný profilový obrázok!
   activerecord:
@@ -296,7 +272,7 @@ sk:
       category:
         name: "Názov kategórie"
       topic:
-        title: 'Názov'
+        title: "Názov"
       post:
         raw: "Telo"
       user_profile:
@@ -338,7 +314,6 @@ sk:
     title: "Vítajte v Salóne"
   category:
     topic_prefix: "O kategórii: %{category} "
-    replace_paragraph: "(Nahraďte tento prvý odstavec stručným popisom Vašej novej kategórie. Tento návod sa objaví v zozname kategórií, tak sa snažte ho udržať pod 200 znakov. **Kategória sa neobjaví v zozname kategórií pokým neupravíte tento popis alebo v nej nevytvoríte témy.**)"
     post_template: "%{replace_paragraph}\n\nDo tohoto odstavce dajte dlhší popis kategórie, alebo popíšte pokyny alebo pravidlá:\n\n- Prečo by ľudia mali použiť túto kategóriu? Na čo je určená?\n\n- V čom sa líši od ostatných existujúcich kategórií ktoré už máte?\n\n- Čo by vo všeobecnosti mala obsahovať téma v tejto kategórií?\n\n- Potrebujeme túto kategóriu? Môžeme ju spojiť s inóu kategóriou alebo pod-kategóriou?\n"
     errors:
       uncategorized_parent: "Nekategorizovaná nemôže mať nadradenú kategóriu"
@@ -348,7 +323,6 @@ sk:
       email_already_used_in_group: "'%{email}' už je použité skupinou '%{group_name}'."
       email_already_used_in_category: "'%{email}' už je použité kategóriou '%{category_name}'."
     cannot_delete:
-      uncategorized: "Nemôžete vymazať kategóriu nezaradených"
       has_subcategories: "Nemôžete vymazať kategóriu pretože obsahuje podkategórie."
       topic_exists_no_oldest: "Nemôžete vymazať túto kategóriu pretože obsahuje %{count} tém."
     uncategorized_description: "Témy, ktoré nepotrebujú kategóriu, alebo sa do žiadnej existujúcej nehodia."
@@ -502,9 +476,9 @@ sk:
     no_token: "Ľutujeme, tento odkaz na zmenu hesla je už príliš starý. Stlačte tlačidlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie nového odkazu."
     choose_new: "Napíš nové heslo"
     choose: "Napíš heslo"
-    update: 'Aktualizujte heslo'
-    save: 'Nastavte heslo'
-    title: 'Obnoviť heslo'
+    update: "Aktualizujte heslo"
+    save: "Nastavte heslo"
+    title: "Obnoviť heslo"
     success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
     success_unapproved: "Heslo bolo úspešne zmenené."
   change_email:
@@ -524,54 +498,54 @@ sk:
       back_to: "Vráť sa na %{title}"
   post_action_types:
     off_topic:
-      title: 'Mimo témy'
-      description: 'Tento príspevok nesúvisí s danou témou popísanou v názve a prvom príspevku a pravdepodobne by mal byť presunutý niekam inam'
-      long_form: 'toto je označené ako "Mimo témy"'
+      title: "Mimo témy"
+      description: "Tento príspevok nesúvisí s danou témou popísanou v názve a prvom príspevku a pravdepodobne by mal byť presunutý niekam inam"
+      long_form: "toto je označené ako \"Mimo témy\""
     spam:
-      title: 'Spam'
-      long_form: 'označiť toto ako spam'
+      title: "Spam"
+      long_form: "označiť toto ako spam"
       email_title: '"%{title}"  bol označený ako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Nevhodné'
-      long_form: 'toto označ ako nevhodné'
+      title: "Nevhodné"
+      long_form: "toto označ ako nevhodné"
     notify_user:
-      title: 'Poslať @{{username}} správu'
-      long_form: 'úživateľovi bola zaslaná správa'
+      title: "Poslať @{{username}} správu"
+      long_form: "úživateľovi bola zaslaná správa"
       email_title: 'Váš príspevok v "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Niečo iné"
-      description: 'Tento príspevok vyžaduje pozornosť obsluhy z iného dôvodu ako je uvedené vyššie.'
-      long_form: 'označené do pozornosti obsluhy'
+      description: "Tento príspevok vyžaduje pozornosť obsluhy z iného dôvodu ako je uvedené vyššie."
+      long_form: "označené do pozornosti obsluhy"
       email_title: 'Príspevok "%{title}" vyžaduje pozornosť obsluhy'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Záložka'
-      description: 'Vytvor záložku na tento príspevok'
-      long_form: 'záložka na tento príspevok bola vytvorená '
+      title: "Záložka"
+      description: "Vytvor záložku na tento príspevok"
+      long_form: "záložka na tento príspevok bola vytvorená "
     like:
-      title: 'Páči sa mi'
-      description: 'Páči sa  mi tento príspevok'
-      long_form: 'páčilo sa'
+      title: "Páči sa mi"
+      description: "Páči sa  mi tento príspevok"
+      long_form: "páčilo sa"
   user_activity:
     no_default:
       others: "Žiadna aktivita"
   topic_flag_types:
     spam:
-      title: 'Spam'
-      description: 'Tento príspevok je reklama. Nijako nesúvisí s danou stránkou, má propagačný charakter.'
-      long_form: 'označiť toto ako spam'
+      title: "Spam"
+      description: "Tento príspevok je reklama. Nijako nesúvisí s danou stránkou, má propagačný charakter."
+      long_form: "označiť toto ako spam"
     inappropriate:
-      title: 'Nevhodné'
-      long_form: 'toto označ ako nevhodné'
+      title: "Nevhodné"
+      long_form: "toto označ ako nevhodné"
     notify_moderators:
       title: "Niečo iné"
-      long_form: 'označené do pozornosti moderátora'
+      long_form: "označené do pozornosti moderátora"
       email_title: 'Téma "%{title}" vyžaduje pozornosť moderátora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: '<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>'
+    user_must_edit: "<p>Tento príspevok bol označený komunitou a je dočasne skrytý</p>"
   archetypes:
     regular:
       title: "Bežná téma"
@@ -677,7 +651,6 @@ sk:
       title: "Prihlásený"
       xaxis: "Deň"
     page_view_crawler_reqs:
-      title: "Webové prehľadávače"
       xaxis: "Deň"
     page_view_total_reqs:
       xaxis: "Deň"
@@ -724,8 +697,8 @@ sk:
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
     sidekiq_warning: 'Sidekiq neni spustený. Množstvo úloh, ako napríklad posielanie emailov, je vykonávaných asynchrónne prostrednictvom sidekiq. Prosim zabezpečte aby bol spustený aspoň jeden proces sidekiq <a href="https://github.com/mperham/sidekiq" target="_blank">Viac o Sidekiq</a>.'
-    queue_size_warning: 'Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov.'
-    memory_warning: 'Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. '
+    queue_size_warning: "Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov."
+    memory_warning: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
   site_settings:
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
@@ -755,7 +728,7 @@ sk:
     max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
     fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
     fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
-    add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""
+    add_rel_nofollow_to_user_content: 'Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: "rake posts:rebake"'
     post_excerpt_maxlength: "Maximálna dĺžka príspevku okrem zhrnutia."
     post_onebox_maxlength: "Maximálna dĺžka vloženého Discourse príspevku v znakoch."
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
@@ -764,7 +737,6 @@ sk:
     summary_posts_required: "Minimálny počet príspevkou predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_likes_required: "Minimálny počet páči sa mi predtým ako je zapnuté 'Sumarizuj túto tému'"
     summary_percent_filter: "Ak používateľ klikne na 'Sumarizuj túto tému', zobraz najlepších % príspevkov"
-    summary_max_results: "Maximálny počet príspevkov vrátených pomocou 'Sumarizuj túto tému'"
     enable_long_polling: "Zbernica správ pre upozornenia môže používať techniku long-polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     long_polling_interval: "Ako dlho má server čakať pred odpovedaním klientom ak nie sú na zaslanie žiadne dáta  (iba pre prihlásených používateľov)"
@@ -775,7 +747,6 @@ sk:
     tl2_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 2 (člen) vynásobením týmto číslom"
     tl3_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 3 (bežný) vynásobením týmto číslom"
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
-    flag_sockpuppets: "Ak nový používateľ odpovedá na tému z rovnakej IP adresy, ako nový používateľ, ktorý danú tému vytvoril, označ oba ich príspevky ako potencionálny spam."
     traditional_markdown_linebreaks: "V Markdown použiť tradičné oddeľovače riadkov, čo vyžaduje dve koncové medzery ako oddeľovač riadku."
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     must_approve_users: "Obsluha musí povoliť účty všetkým novým používateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
@@ -797,7 +768,6 @@ sk:
     topics_per_period_in_top_page: "Zobrazovaný počet najlepších tém vzozname po rozbalení 'Ukáž viac' najlepších tém."
     redirect_users_to_top_page: "Automaticky presmeruj nových a dlho neprihlásených používateľov na hlavnú stránku. "
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
-    show_email_on_profile: "Zobraziť používateľov email na ich profile (viditeľné len nimi samotnými a obsluhou)"
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     enable_badges: "Povoliť systém odznakov"
     allow_index_in_robots_txt: "V súbore robots.txt nastaviť, že tieto stránky je povolené indexovať vyhľadávačmi."
@@ -854,7 +824,6 @@ sk:
     s3_upload_bucket: "Amazon S3 bucket name, do ktorého budú nahraté súbory. POZOR: musí byť malými písmenami, žiadne bodky a žiadne podtržítka."
     s3_access_key_id: "Amazon S3 access key id, ktoré bude použité pre nahrávanie obrázkov."
     s3_secret_access_key: "Amazon S3 secret access key, ktorý bude použitý pre nahrávanie obrázkov."
-    s3_region: "Amazon S3 region name, ktorý bude použitý pre nahrávanie súborov."
     s3_cdn_url: "CDN URL ktoré sa použije na všetky dáta v s3 (napríklad https://cdn.niekde.com). VAROVANIE: po zmene tohoto nastavenia musíte použiť príkaz rebake na všetky staré príspevky."
     avatar_sizes: "Zoznam automaticky generovaných veľkostí avatarov."
     external_system_avatars_enabled: "Použiť externú avatar službu."
@@ -958,8 +927,6 @@ sk:
     automatically_download_gravatars: "Po vytvorení účtu alebo zmene heslo stiahnuť používateľov Gravatar."
     detect_custom_avatars: "Má alebo nemá sa kontrolovať nahratie vlastného profilového obrázka používateľa?"
     max_daily_gravatar_crawls: "Koľkokrát denne má Discourse kontrolovať Gravatar na zistenie vlastného avatara."
-    public_user_custom_fields: "Schválený zoznam vlastných polí používateľa, ktoré budú verejne zobrazené."
-    staff_user_custom_fields: "Schválený zoznam vlastných polí používateľa, ktoré budú zobrazené zamestnancom."
     enable_user_directory: "Povoliť prezeranie zoznamu používateľov."
     allow_anonymous_posting: "Povoliť používateľom prepnutie do anonymného režimu."
     anonymous_posting_min_trust_level: "Minimálna úroveň dôvery na zapnutie anonymného prispievania."
@@ -971,7 +938,6 @@ sk:
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
     disable_avatar_education_message: "Vypnúť informatívnu hlášku na zmenu avatara."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
-    global_notice: "Pre všetkých návštevníkov zobraz URGENTNÉ, KRÍZOVÉ globálné záhlavie, zmeň na čierne a schovaj (HTML povolené)."
     disable_edit_notifications: "Ak je premenná 'download_remote_images_to_local' aktívna, vypnúť notifikácie o úpravách systémového používateľa."
     automatically_unpin_topics: "Automaticky odopnúť témy ak používateľ dostanie posledný príspevok."
     read_time_word_count: "Počet slov za minútu určený na výpočet odkazovaného času čítania."
@@ -1032,9 +998,9 @@ sk:
   search:
     within_post: "#%{post_number} od %{username}"
     types:
-      category: 'Kategórie'
-      topic: 'Výsledky'
-      user: 'Používatelia'
+      category: "Kategórie"
+      topic: "Výsledky"
+      user: "Používatelia"
   original_poster: "Pôvodný autor"
   most_posts: "Najviac príspevkov"
   most_recent_poster: "Najaktuálnejší prispievateľ"
@@ -1043,10 +1009,6 @@ sk:
     new_user: "Vitajte v našej komunite! Toto sú najpopulárnejšie z posledných tém."
     not_seen_in_a_month: "Vitajte späť! Nevideli sme Vás už nejaký čas. Toto sú najpopulárnejšie témy odkedy ste boli preč."
   topic_statuses:
-    archived_enabled: "Táto téma je archivovaná. Je zmrazená a už sa nedá nijako meniť. "
-    archived_disabled: "Táto téma je vyňatá z archivu. Už nie je zmrazená a môže sa opäť meniť. "
-    closed_enabled: "Táto téma je už uzavretá. Nové odpovede už nie sú povolené."
-    closed_disabled: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     autoclosed_message_max_posts:
       one: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu 1 odpovede."
       few: "Táto správa bola automaticky uzavretá po dosiahnutí maximálneho limitu %{count} odpovedí."
@@ -1089,12 +1051,6 @@ sk:
       other: "Táto téma bola automaticky uzavretá po %{count} minútach od poslednej odpovede. Nové odpovede už nie sú povolené."
     autoclosed_disabled: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
     autoclosed_disabled_lastpost: "Táto téma je teraz otvorená. Nové odpovede sú povolené."
-    pinned_enabled: "Táto téma je teraz pripnutá. Bude zobrazená na vrchu danej kategórie pokiaľ ju neodopnú zamestnanci pre všetkých alebo samostatne každý používateľ."
-    pinned_disabled: "Táto téma je teraz odopnutá. Ďalej sa nebude zobrazovať na vrchu danej kategórie."
-    pinned_globally_enabled: "Táto téma je teraz pripnutá globálne. Zobrazí sa na vrchu danej kategórie a vrchu všetkých tém pokiaľ ju neodopnú zamestnanci pre všetkých alebo samostatne každý používateľ."
-    pinned_globally_disabled: "Táto téma je teraz odopnutá. Ďalej sa nebude zobrazovať na vrchu danej kategórie."
-    visible_enabled: "Táto téma je teraz uvedená v zozname. Bude zobrazená v zozname tém."
-    visible_disabled: "Táto téma odteraz nie je uvedená v zozname. Odteraz sa nebude zobrazovať v žiadnom zozname tém. Jediný spôsob ako pristúpiť na danú tému je priamym odkazom."
   login:
     not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
     incorrect_username_email_or_password: "Nesprávne meno, email, alebo heslo"
@@ -1175,19 +1131,13 @@ sk:
 
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
-
-
         Váš účet asociovaný s touto emailovou adresou nie je aktivovaný. Prosím aktivujte svoj účet pred posielaním emailov.
     email_reject_empty:
       text_body_template: |2
 
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
-
-
         Vo Vašom emaile sa nám nepodarilo nájsť žiadny pridávaný obsah.
-
-
 
         Ak ste si istý, že ste obsah pridali, pokúste sa znovu a použite jednoduchšie formátovanie.
     email_reject_parsing:
@@ -1195,15 +1145,11 @@ sk:
 
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
-
-
         Vo Vašom emaile se nepodarilo nájsť pridávaný obsah. **Uistite sa, že ste odpoveď uviedli na začiatku emailu** -- nedokážeme spracovať vložené odpovede.
     email_reject_invalid_post:
       text_body_template: |2
 
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-
 
         Medzi možnými príčinami môže byť: komplexné formátovanie, správa je príliš veľká, správa je príliš krátka. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
     email_reject_invalid_post_specified:
@@ -1211,23 +1157,15 @@ sk:
 
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
-
-
         Dôvod:
 
-
-
         %{post_error}
-
-
 
         Ak tento problém dokážete odstrániť, prosíme pokus opakujte.
     email_reject_invalid_post_action:
       text_body_template: |2
 
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
-
-
 
         Akcia uverejnenia nebola rozpoznaná. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
     pending_users_reminder:
@@ -1262,7 +1200,7 @@ sk:
     search_title: "Prehľadať tieto stránky"
   terms_of_service:
     title: "Podmienky používania"
-  deleted: 'vymazané'
+  deleted: "vymazané"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
     unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu  (povolené prípony sú: %{authorized_extensions})."
@@ -1285,63 +1223,36 @@ sk:
   csv_export:
     boolean_yes: "Áno"
     boolean_no: "Nie"
-  static_topic_first_reply: |2+
+  static_topic_first_reply: |2
 
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
-
-
-
   guidelines_topic:
     title: "FAQ/Pravidlá"
     body: |2
 
       <a name="civilized"></a>
 
-
-
       ## [Toto je civilizované miesto na verejnú diskusiu](#civilized)
-
-
 
       Prosím, správajte sa k tomuto diskusnému fóru s rovnakým rešpektom ako k verejnému parku. Aj my sme spoločným zdrojom komunity – miesto, kde sa prostredníctvom neutíchajúcej diskusie delíme o zručnosti, vedomosti a záujmy.
 
-
-
       Tieto pravidlá nie sú presne dané a nemenné, sú to len usmernenia, ktoré majú pomôcť úsudku členov našej komunity a udržať toto miesto na civilizovanú verejnú diskusiu čisté a prehľadné.
-
-
 
       <a name="improve"></a>
 
-
-
       ## [Zlepšujte diskusiu](#improve)
-
-
 
       Pomôžte nám tu vytvoriť skvelé miesto na diskusiu tým, že sa vždy budete snažiť diskusiu posunúť k lepšiemu, aj keď len o málo. Ak si nie ste istí, či váš príspevok niečím prispeje k diskusii, premyslite si, čo chcete povedať a skúste to neskôr.
 
-
-
       Záleží nám na témach, o ktorých sa tu diskutuje, a chceme, aby ste sa správali tak, že na nich záleží aj vám. Rešpektujte témy a ľudí, ktorí o nich diskutujú, a to aj v prípade, že s niečím, čo niekto povedal, nesúhlasíte.
-
-
 
       Jedným zo spôsobov zlepšenia diskusie je objavovanie tých, ktoré prebiehajú. Skôr, než odpoviete alebo vytvoríte vlastnú tému, prezrite si témy, ktoré tu už sú, a budete mať lepšiu šancu nájsť iných ľudí s rovnakými záujmami.
 
-
-
       <a name="agreeable"></a>
-
-
 
       ## [Buďte milí, aj keď nesúhlasíte](#agreeable)
 
-
-
       Možno budete chcieť s ničím vyjadriť svoj nesúhlas. To je v poriadku. Ale majte na pamäti, že máte kritizovať myšlienky, nie ľudí. Prosím, vyhýbajte sa:
-
-
 
       * nadávkam
 
@@ -1351,59 +1262,31 @@ sk:
 
       * neuváženému oponovaniu
 
-
-
       Namiesto toho ponúknite podložené protiargumenty, ktoré konverzáciu posunú dopredu.
-
-
 
       <a name="participate"></a>
 
-
-
       ## [Na vašej účasti záleží](#participate)
-
-
 
       Konverzácie, ktoré tu máme, udávajú tón pre nových členov. Pomôžte nám ovplyvniť budúcnosť tejto komunity tým, že sa zapojíte do diskusií, ktoré robia toto fórum zaujímavým, a vyhnete sa tým, ktoré nie.
 
-
-
       V diskusii sú k dispozícii nástroje, ktoré umožňujú, aby komunita spoločne vybrala najlepšie (a najhoršie) príspevky: záložky, tlačidlá „Páči sa mi“, nahlásenie nevhodných príspevkov, odpovede, úprava príspevkov a tak ďalej. Používajte tieto nástroje na zlepšenie vlastného zážitku, ale aj zážitku ostatných.
-
-
 
       Zanechajme komunitu lepšiu, než sme ju našli.
 
-
-
       <a name="flag-problems"></a>
-
-
 
       ## [Ak uvidíte problém, nahláste ho.](#flag-problems)
 
-
-
       Moderátori diskusií majú špeciálne právomoci – sú za toto fórum zodpovední. No vy tiež. S vašou pomocou môžu byť moderátori v komunite sprostredkovateľmi, nie len správcami či políciou.
-
-
 
       Ak si všimnete zlé správanie, nereagujte naň. Odpoveď zlé správanie podporuje tým, že ho prijme za rovnocenné, a navyše vám berie energiu a ostatným čas. Jednoducho ho nahláste. Ak takéto správanie nahlásia viacerí, budú proti nemu podniknuté kroky, či už automaticky alebo zásahom moderátora.
 
-
-
       Aby bolo možné komunitu udržať, moderátori si vyhradzujú právo kedykoľvek a z akéhokoľvek dôvodu vymazať akýkoľvek obsah alebo účet. Moderátori nekontrolujú nové príspevky. Moderátori a prevádzkovatelia webovej lokality nenesú žiadnu zodpovednosť za akýkoľvek obsah pridaný komunitou.
-
-
 
       <a name="be-civil"></a>
 
-
-
       ## [Stále buďte zdvorilí](#be-civil)
-
-
 
       Nič nenarúša zdravú diskusiu tak ako hrubosť.
 
@@ -1415,27 +1298,15 @@ sk:
 
       * Rešpektujte naše fórum. Neuverejňujte spam ani inak fórum úmyselne nepoškodzujte.
 
-
-
       Toto nie sú konkrétne výrazy s presnou definíciou – no vyhýbajte sa všetkému, čo takto môže čo i len pôsobiť. Ak si nie ste istí, opýtajte sa sami seba, ako by ste sa cítili, keby váš príspevok uverejnili na titulnej strane New York Times.
-
-
 
       Toto je verejné fórum a vyhľadávače naše diskusie indexujú. Používajte taký jazyk, prepojenia a obrázky, ktoré budú prístupné pre vašu rodinu a priateľov.
 
-
-
       <a name="keep-tidy"></a>
-
-
 
       ## [Udržujte poriadok](#keep-tidy)
 
-
-
       Usilujte sa umiestniť veci na správne miesto, aby sme mohli stráviť diskutovaním viac času než upratovaním. Preto:
-
-
 
       * Nezačínajte novú tému v nesprávnej kategórii.
 
@@ -1447,43 +1318,23 @@ sk:
 
       * Príspevky nepodpisujte – ku každému príspevku sú pripojené informácie z vášho profilu.
 
-
-
       Nepridávajte príspevky s textom „+1“ či „súhlasím“. Radšej použite tlačidlo „Páči sa mi“. Nemeňte príliš smerovanie existujúcej témy, radšej použite možnosť odpovedať prostredníctvom súvisiacej témy.
-
-
 
       <a name="stealing"></a>
 
-
-
       ## [Uverejňujte len vlastné veci](#stealing)
-
-
 
       Bez povolenia nesmiete uverejňovať nič digitálne, čo patrí niekomu inému. Nesmiete uverejňovať opis a metódy krádeže duševného vlastníctva niekoho iného (softvéru, videí, audio nahrávok, obrázkov) alebo iného porušenia zákona, či na ne odkazovať.
 
-
-
       <a name="power"></a>
-
-
 
       ## [Poháňané Vami](#power)
 
-
-
       Túto webovú lokalitu spravuje [priateľský kolektív adminov a moderátorov](%{base_path}/about) spolu s *vami*, komunitou. Ak máte akékoľvek otázky o tom, ako by to tu malo fungovať, otvorte novú tému v kategórii [O tejto stránke](%{base_path}/c/site-feedback) a môžeme o tom podiskutovať! Ak sa vyskytne kritická alebo naliehavá záležitosť, ktorú nie je možné vyriešiť metatémou alebo nahlásením, kontaktujte nás prostredníctvom stránky [O fóre](%{base_path}/about).
-
-
 
       <a name="tos"></a>
 
-
-
       ## [Podmienky používania](#tos)
-
-
 
       Áno, právne záležitosti sú nudné, no my musíme chrániť seba a následne aj vás a vaše údaje proti „tým zlým“. Máme [Podmienky používania](%{base_path}/tos), ktoré opisujú vaše (a naše) správanie a práva súvisiace s obsahom, súkromím a právnymi predpismi. Aby ste mohli túto službu využívať, musíte súhlasiť s našimi [Podmienkami používania](%{base_path}/tos).
   tos_topic:

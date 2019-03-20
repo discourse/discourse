@@ -1,22 +1,27 @@
 # Cross-process locking using Redis.
 class DistributedMutex
+  DEFAULT_VALIDITY ||= 60
 
-  def self.synchronize(key, redis = nil, &blk)
-    self.new(key, redis).synchronize(&blk)
+  def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
+    self.new(
+      key,
+      redis: redis,
+      validity: validity
+    ).synchronize(&blk)
   end
 
-  def initialize(key, redis = nil)
+  def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
     @key = key
     @using_global_redis = true if !redis
     @redis = redis || $redis
     @mutex = Mutex.new
+    @validity = validity
   end
 
   CHECK_READONLY_ATTEMPT ||= 10
 
   # NOTE wrapped in mutex to maintain its semantics
   def synchronize
-
     @mutex.lock
     attempts = 0
 
@@ -25,6 +30,7 @@ class DistributedMutex
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly?
         attempts += 1
+
         if attempts > CHECK_READONLY_ATTEMPT
           raise Discourse::ReadOnly
         end
@@ -42,16 +48,18 @@ class DistributedMutex
 
   def try_to_get_lock
     got_lock = false
-    if @redis.setnx @key, Time.now.to_i + 60
-      @redis.expire @key, 60
+
+    if @redis.setnx @key, Time.now.to_i + @validity
+      @redis.expire @key, @validity
       got_lock = true
     else
       begin
         @redis.watch @key
         time = @redis.get @key
+
         if time && time.to_i < Time.now.to_i
           got_lock = @redis.multi do
-            @redis.set @key, Time.now.to_i + 60
+            @redis.set @key, Time.now.to_i + @validity
           end
         end
       ensure

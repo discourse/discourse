@@ -1,5 +1,5 @@
 {{#each buttons as |b|}}
-  <button class="btn btn-social {{b.name}}" {{action "externalLogin" b}}>
+  <button class="btn btn-social {{b.name}}" {{action externalLogin b}}>
     {{#if b.hasRegularIcon}}
       {{d-icon b.name}}
     {{else}}
@@ -11,7 +11,7 @@
 
 {{#if showLoginWithEmailLink}}
   {{d-button
-    action="emailLogin"
+    action=emailLogin
     label="email_login.button_label"
     disabled=processingEmailLink
     icon="far-envelope"

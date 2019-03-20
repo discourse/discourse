@@ -6,9 +6,6 @@ app/assets/javascripts/ember-addons/
 app/assets/javascripts/discourse/lib/autosize.js.es6
 lib/javascripts/locale/
 lib/javascripts/messageformat.js
-lib/javascripts/moment.js
-lib/javascripts/moment-timezone-with-data.js
-lib/javascripts/moment_locale/
 lib/highlight_js/
 plugins/**/lib/javascripts/locale
 public/javascripts/

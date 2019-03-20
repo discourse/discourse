@@ -13,7 +13,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username) {
   var who = "";
   if (username) {
     if (actionCode === "invited_group" || actionCode === "removed_group") {
-      who = `<a class="mention-group" href="/groups/${username}">@${username}</a>`;
+      who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
     } else {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
     }
@@ -62,7 +62,7 @@ export function addPostSmallActionIcon(key, icon) {
 
 export default createWidget("post-small-action", {
   buildKey: attrs => `post-small-act-${attrs.id}`,
-  tagName: "div.small-action.onscreen-post.clearfix",
+  tagName: "div.small-action.onscreen-post",
 
   buildId(attrs) {
     return `post_${attrs.post_number}`;
@@ -81,7 +81,7 @@ export default createWidget("post-small-action", {
       contents.push(
         this.attach("button", {
           className: "small-action-delete",
-          icon: "trash",
+          icon: "trash-alt",
           action: "deletePost",
           title: "post.controls.delete"
         })
@@ -92,7 +92,7 @@ export default createWidget("post-small-action", {
       contents.push(
         this.attach("button", {
           className: "small-action-edit",
-          icon: "pencil",
+          icon: "pencil-alt",
           action: "editPost",
           title: "post.controls.edit"
         })
@@ -102,7 +102,7 @@ export default createWidget("post-small-action", {
     contents.push(
       avatarFor.call(this, "small", {
         template: attrs.avatar_template,
-        username: attrs.avatar,
+        username: attrs.username,
         url: attrs.usernameUrl
       })
     );

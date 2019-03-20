@@ -61,13 +61,7 @@ class UserBadgesController < ApplicationController
         return render json: failed_json.merge(message: I18n.t('invalid_grant_badge_reason_link')), status: 400
       end
 
-      path = begin
-        URI.parse(params[:reason]).path
-      rescue URI::Error
-      end
-
-      route = Rails.application.routes.recognize_path(path) if path
-      if route
+      if route = Discourse.route_for(params[:reason])
         topic_id = route[:topic_id].to_i
         post_number = route[:post_number] || 1
 

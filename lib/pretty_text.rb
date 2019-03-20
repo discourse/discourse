@@ -230,10 +230,11 @@ module PrettyText
     return title unless SiteSetting.enable_emoji?
 
     set = SiteSetting.emoji_set.inspect
+    custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set} });
+        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
       JS
     end
   end
@@ -254,22 +255,11 @@ module PrettyText
       add_rel_nofollow_to_user_content(doc)
     end
 
-    if SiteSetting.Upload.enable_s3_uploads && SiteSetting.Upload.s3_cdn_url.present?
-      add_s3_cdn(doc)
-    end
-
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
     end
 
     doc.to_html
-  end
-
-  def self.add_s3_cdn(doc)
-    doc.css("img").each do |img|
-      next unless img["src"]
-      img["src"] = Discourse.store.cdn_url(img["src"])
-    end
   end
 
   def self.add_rel_nofollow_to_user_content(doc)
@@ -440,10 +430,10 @@ module PrettyText
 
         case type
         when USER_TYPE
-          element['href'] = "/u/#{name}"
+          element['href'] = "#{Discourse::base_uri}/u/#{name}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "/groups/#{name}"
+          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
         end
       end
     end

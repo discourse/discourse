@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   invalid: false,
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.set("users", []);
 
     this.set("roles", [

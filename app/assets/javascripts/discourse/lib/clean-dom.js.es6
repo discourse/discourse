@@ -22,7 +22,7 @@ function _clean() {
     .not(".no-blur")
     .blur();
 
-  Discourse.set("notifyCount", 0);
+  Discourse.set("contextCount", 0);
   Discourse.__container__.lookup("route:application").send("closeModal");
   const hideDropDownFunction = $("html").data("hide-dropdown");
   if (hideDropDownFunction) {

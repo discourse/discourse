@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <span class="to-indicator"><span>to</span></span>
+        <span class="to-indicator"><span>{{i18n "discourse_local_dates.create.form.to"}}</span></span>
 
         <div class="to">
           <div class="control-group date">
@@ -113,7 +113,7 @@
 <div class="modal-footer discourse-local-dates-create-modal-footer">
   {{#if isValid}}
     {{d-button class="btn btn-default"
-      action="save"
+      action=(action "save")
       label="discourse_local_dates.create.form.insert"}}
   {{/if}}
 

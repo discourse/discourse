@@ -97,10 +97,6 @@ export default createWidget("search-menu", {
     const ctx = contextEnabled ? this.searchContext() : null;
     const type = ctx ? Ember.get(ctx, "type") : null;
 
-    if (contextEnabled && type === "topic") {
-      return;
-    }
-
     let url = "/search";
     const params = [];
 
@@ -315,8 +311,6 @@ export default createWidget("search-menu", {
     if (url) {
       this.sendWidgetEvent("linkClicked");
       DiscourseURL.routeTo(url);
-    } else if (searchData.contextEnabled) {
-      this.triggerSearch();
     }
   }
 });

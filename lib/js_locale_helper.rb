@@ -27,12 +27,7 @@ module JsLocaleHelper
     end
   end
 
-  def self.load_translations(locale, opts = nil)
-    opts ||= {}
-
-    @loaded_translations = nil if opts[:force]
-    @plugin_translations = nil if opts[:force]
-
+  def self.load_translations(locale)
     @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
@@ -91,7 +86,7 @@ module JsLocaleHelper
   end
 
   def self.load_translations_merged(*locales)
-    locales = locales.compact
+    locales = locales.uniq.compact
     @loaded_merges ||= {}
     @loaded_merges[locales.join('-')] ||= begin
       all_translations = {}
@@ -115,6 +110,12 @@ module JsLocaleHelper
 
     I18n.locale = locale_sym
 
+    if Rails.env.development?
+      @loaded_translations = nil
+      @plugin_translations = nil
+      @loaded_merges = nil
+    end
+
     translations =
       if locale_sym == :en
         load_translations(locale_sym)
@@ -136,7 +137,7 @@ module JsLocaleHelper
 
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
     message_formats.merge!(strip_out_message_formats!(translations[locale_str]['admin_js']))
-    mf_locale, mf_filename = find_message_format_locale([locale_str], true)
+    mf_locale, mf_filename = find_message_format_locale([locale_str], fallback_to_english: true)
     result = generate_message_format(message_formats, mf_locale, mf_filename)
 
     translations.keys.each do |l|
@@ -152,42 +153,54 @@ module JsLocaleHelper
     result << "I18n.pluralizationRules.#{locale_str} = MessageFormat.locale.#{mf_locale};\n" if mf_locale != "en"
 
     # moment
-    result << File.read("#{Rails.root}/lib/javascripts/moment.js")
-    result << File.read("#{Rails.root}/lib/javascripts/moment-timezone-with-data.js")
+    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment.js")
+    result << File.read("#{Rails.root}/vendor/assets/javascripts/moment-timezone-with-data.js")
     result << moment_locale(locale_str)
+    result << moment_locale(locale_str, timezone_names: true)
     result << moment_formats
 
     result
   end
 
-  def self.find_moment_locale(locale_chain)
-    path = "#{Rails.root}/lib/javascripts/moment_locale"
+  def self.find_moment_locale(locale_chain, timezone_names: false)
+    if timezone_names
+      path = "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale"
+      type = :moment_js_timezones
+    else
+      path = "#{Rails.root}/vendor/assets/javascripts/moment-locale"
+      type = :moment_js
+    end
 
-    # moment.js uses a different naming scheme for locale files
-    locale_chain = locale_chain.map { |l| l.tr('_', '-').downcase }
+    find_locale(locale_chain, path, type, fallback_to_english: false) do |locale|
+      # moment.js uses a different naming scheme for locale files
+      locale.tr('_', '-').downcase
+    end
 
-    find_locale(locale_chain, path, :moment_js, false)
   end
 
-  def self.find_message_format_locale(locale_chain, fallback_to_english)
+  def self.find_message_format_locale(locale_chain, fallback_to_english:)
     path = "#{Rails.root}/lib/javascripts/locale"
-    find_locale(locale_chain, path, :message_format, fallback_to_english)
+    find_locale(locale_chain, path, :message_format, fallback_to_english: fallback_to_english)
   end
 
-  def self.find_locale(locale_chain, path, type, fallback_to_english)
+  def self.find_locale(locale_chain, path, type, fallback_to_english:)
     locale_chain.each do |locale|
       plugin_locale = DiscoursePluginRegistry.locales[locale]
       return plugin_locale[type] if plugin_locale&.has_key?(type)
 
+      locale = yield(locale) if block_given?
       filename = File.join(path, "#{locale}.js")
       return [locale, filename] if File.exist?(filename)
     end
 
+    locale_chain.map! { |locale| yield(locale) } if block_given?
+
     # try again, but this time only with the language itself
     locale_chain = locale_chain.map { |l| l.split(/[-_]/)[0] }
       .uniq.reject { |l| locale_chain.include?(l) }
-    unless locale_chain.empty?
-      locale_data = find_locale(locale_chain, path, type, false)
+
+    if locale_chain.any?
+      locale_data = find_locale(locale_chain, path, type, fallback_to_english: false)
       return locale_data if locale_data
     end
 
@@ -208,8 +221,8 @@ module JsLocaleHelper
     "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 
-  def self.moment_locale(locale)
-    _, filename = find_moment_locale([locale])
+  def self.moment_locale(locale, timezone_names: false)
+    _, filename = find_moment_locale([locale], timezone_names: timezone_names)
     filename && File.exist?(filename) ? File.read(filename) << "\n" : ""
   end
 

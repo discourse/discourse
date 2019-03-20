@@ -27,9 +27,10 @@ export default Ember.Component.extend({
       items: _.isArray(groupNames)
         ? groupNames
         : Ember.isEmpty(groupNames)
-          ? []
-          : [groupNames],
+        ? []
+        : [groupNames],
       single: this.get("single"),
+      fullWidthWrap: this.get("fullWidthWrap"),
       updateData: opts && opts.updateData ? opts.updateData : false,
       onChangeItems: items => {
         selectedGroups = items;

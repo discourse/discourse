@@ -1,4 +1,4 @@
-{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword loginSecondFactor=loginSecondFactor action="login"}}
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{#d-modal-body title="login.title" class=(concat "login-modal" " " (if hasAtLeastOneLoginButton "has-alt-auth"))}}
 
     {{#if canLoginLocal}}
@@ -21,8 +21,13 @@
             </tr>
           </table>
         </div>
-        {{#second-factor-form secondFactorMethod=secondFactorMethod loginSecondFactor=loginSecondFactor backupEnabled=backupEnabled class=secondFactorClass}}
-          {{second-factor-input value=loginSecondFactor inputId='login-second-factor' secondFactorMethod=secondFactorMethod}}
+        {{#second-factor-form
+          secondFactorMethod=secondFactorMethod
+          secondFactorToken=secondFactorToken
+          class=secondFactorClass
+          backupEnabled=backupEnabled
+          isLogin=true}}
+          {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
         {{/second-factor-form}}
       </form>
     {{/if}}
@@ -30,18 +35,20 @@
       {{login-buttons
         showLoginWithEmailLink=showLoginWithEmailLink
         processingEmailLink=processingEmailLink
-        emailLogin='emailLogin'
-        externalLogin='externalLogin'}}
+        emailLogin=(action "emailLogin")
+        externalLogin=(action "externalLogin")}}
     {{/if}}
   {{/d-modal-body}}
 
   <div class="modal-footer">
     {{#if canLoginLocal}}
-      {{d-button action="login"
-          icon="unlock"
-          label=loginButtonLabel
-          disabled=loginDisabled
-          class='btn btn-large btn-primary'}}
+      {{d-button
+        action=(action "login")
+        form="login-form"
+        icon="unlock"
+        label=loginButtonLabel
+        disabled=loginDisabled
+        class='btn btn-large btn-primary'}}
 
       {{#if showSignupLink}}
         <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>

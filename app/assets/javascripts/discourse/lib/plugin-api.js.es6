@@ -19,6 +19,7 @@ import { addFlagProperty } from "discourse/components/site-header";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
+import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addUserMenuGlyph } from "discourse/widgets/user-menu";
@@ -30,6 +31,7 @@ import {
   replaceIcon
 } from "discourse-common/lib/icon-library";
 import { replaceCategoryLinkRenderer } from "discourse/helpers/category-link";
+import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { addNavItem } from "discourse/models/nav-item";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -39,9 +41,10 @@ import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import Sharing from "discourse/lib/sharing";
 import { addComposerUploadHandler } from "discourse/components/composer-editor";
+import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = "0.8.27";
+const PLUGIN_API_VERSION = "0.8.30";
 
 class PluginApi {
   constructor(version, container) {
@@ -55,7 +58,19 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
-    return this.container.lookup("current-user:main");
+    return this._lookupContainer("current-user:main");
+  }
+
+  _lookupContainer(path) {
+    if (
+      !this.container ||
+      this.container.isDestroying ||
+      this.container.isDestroyed
+    ) {
+      return;
+    }
+
+    return this.container.lookup(path);
   }
 
   _resolveClass(resolverName, opts) {
@@ -125,7 +140,7 @@ class PluginApi {
    * you can register a renderer that will return an icon in the
    * format required.
    *
-   * For example, the follwing resolver will render a smile in the place
+   * For example, the following resolver will render a smile in the place
    * of every icon on Discourse.
    *
    * api.registerIconRenderer({
@@ -133,12 +148,20 @@ class PluginApi {
    *
    *   // for the place in code that render a string
    *   string() {
-   *     return "<i class='fa fa-smile-o'></i>";
+   *     return "<svg class=\"fa d-icon d-icon-far-smile svg-icon\" aria-hidden=\"true\"><use xlink:href=\"#far-smile\"></use></svg>";
    *   },
    *
    *   // for the places in code that render virtual dom elements
    *   node() {
-   *     return h('i', { className: 'fa fa-smile-o' });
+   *     return h("svg", {
+   *          attributes: { class: "fa d-icon d-icon-far-smile", "aria-hidden": true },
+   *          namespace: "http://www.w3.org/2000/svg"
+   *        },[
+   *          h("use", {
+   *          "xlink:href": attributeHook("http://www.w3.org/1999/xlink", `#far-smile`),
+   *          namespace: "http://www.w3.org/2000/svg"
+   *        })]
+   *     );
    *   }
    * });
    **/
@@ -147,7 +170,7 @@ class PluginApi {
   }
 
   /**
-   * Replace all ocurrences of one icon with another without having to
+   * Replace all occurrences of one icon with another without having to
    * resort to a custom IconRenderer. If you want to do something more
    * complicated than a simple replacement then create a new icon renderer.
    *
@@ -194,7 +217,7 @@ class PluginApi {
    *
    * This function can be used to add an icon with a link that will be displayed
    * beside a poster's name. The `callback` is called with the post's user custom
-   * fields and post attrions. An icon will be rendered if the callback returns
+   * fields and post attributes. An icon will be rendered if the callback returns
    * an object with the appropriate attributes.
    *
    * The returned object can have the following attributes:
@@ -214,7 +237,7 @@ class PluginApi {
    * ```
    **/
   addPosterIcon(cb) {
-    const site = this.container.lookup("site:main");
+    const site = this._lookupContainer("site:main");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, dec => {
@@ -369,7 +392,7 @@ class PluginApi {
    * api.addToolbarPopupMenuOptionsCallback(() => {
    *  return {
    *    action: 'toggleWhisper',
-   *    icon: 'eye-slash',
+   *    icon: 'far-eye-slash',
    *    label: 'composer.toggle_whisper',
    *    condition: "canWhisper"
    *  };
@@ -416,8 +439,8 @@ class PluginApi {
     ```
   **/
   onAppEvent(name, fn) {
-    let appEvents = this.container.lookup("app-events:main");
-    appEvents.on(name, fn);
+    const appEvents = this._lookupContainer("app-events:main");
+    appEvents && appEvents.on(name, fn);
   }
 
   /**
@@ -450,8 +473,9 @@ class PluginApi {
 
   /**
    * Registers a callback that will be invoked when the server calls
-   * Post#publish_change_to_clients! please ensure your type does not
-   * match acted,revised,rebaked,recovered, created,move_to_inbox or archived
+   * Post#publish_change_to_clients! Please ensure your type does not
+   * match acted, revised, rebaked, recovered, created, move_to_inbox
+   * or archived
    *
    * callback will be called with topicController and Message
    *
@@ -505,7 +529,7 @@ class PluginApi {
   /**
    * Exposes the widget update ability to plugins. Updates the widget
    * registry for the given widget name to include the properties on args
-   * See `reopenWidget` in `discourse/widgets/widget` from more ifo.
+   * See `reopenWidget` in `discourse/widgets/widget` from more info.
    **/
 
   reopenWidget(name, args) {
@@ -554,7 +578,8 @@ class PluginApi {
    * will issue a request to `/mice.json`
    **/
   addStorePluralization(thing, plural) {
-    this.container.lookup("service:store").addPluralization(thing, plural);
+    const store = this._lookupContainer("service:store");
+    store && store.addPluralization(thing, plural);
   }
 
   /**
@@ -576,6 +601,21 @@ class PluginApi {
    **/
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
+  }
+
+  /**
+   * Register a small icon to be used for custom small post actions
+   *
+   * ```javascript
+   * api.registerTopicFooterButton({
+   *   key: "flag"
+   *   icon: "flag"
+   *   action: (context) => console.log(context.get("topic.id"))
+   * });
+   * ```
+   **/
+  registerTopicFooterButton(action) {
+    registerTopicFooterButton(action);
   }
 
   /**
@@ -763,9 +803,9 @@ class PluginApi {
   }
 
   /**
-   *
    * Registers a function to handle uploads for specified file types
-   * The normal uploading functionality will be bypassed
+   * The normal uploading functionality will be bypassed if function returns
+   * a falsy value.
    * This only for uploads of individual files
    *
    * Example:
@@ -776,6 +816,18 @@ class PluginApi {
    */
   addComposerUploadHandler(extensions, method) {
     addComposerUploadHandler(extensions, method);
+  }
+
+  /**
+   * Registers a criteria that can be used as default topic order on category
+   * pages.
+   *
+   * Example:
+   *
+   * categorySortCriteria("votes");
+   */
+  addCategorySortCriteria(criteria) {
+    addCategorySortCriteria(criteria);
   }
 
   /**
@@ -790,6 +842,21 @@ class PluginApi {
    **/
   replaceCategoryLinkRenderer(fn) {
     replaceCategoryLinkRenderer(fn);
+  }
+
+  /**
+   * Registers a renderer that overrides the display of a tag.
+   *
+   * Example:
+   *
+   * function testTagRenderer(tag, params) {
+   *   const visibleName = Handlebars.Utils.escapeExpression(tag);
+   *   return `testing: ${visibleName}`;
+   * }
+   * api.replaceTagRenderer(testTagRenderer);
+   **/
+  replaceTagRenderer(fn) {
+    replaceTagRenderer(fn);
   }
 
   /**

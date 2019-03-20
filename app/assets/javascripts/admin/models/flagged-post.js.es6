@@ -136,7 +136,9 @@ export default Post.extend({
             label: I18n.t("yes_value"),
             class: "btn-danger",
             callback() {
-              Post.deleteMany(replies.map(r => r.id), { deferFlags: true })
+              Post.deleteMany(replies.map(r => r.id), {
+                agreeWithFirstReplyFlag: false
+              })
                 .then(action)
                 .then(resolve)
                 .catch(error => {

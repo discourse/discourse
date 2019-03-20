@@ -29,14 +29,15 @@ export default Ember.Component.extend({
   search: debounce(function(title) {
     const currentTopicId = this.get("currentTopicId");
 
-    if (Em.isEmpty(title)) {
+    if (Ember.isEmpty(title)) {
       this.setProperties({ messages: null, loading: false });
       return;
     }
 
     searchForTerm(title, {
       typeFilter: "private_messages",
-      searchForId: true
+      searchForId: true,
+      restrictToArchetype: "private_message"
     }).then(results => {
       if (results && results.posts && results.posts.length > 0) {
         this.set(
@@ -53,7 +54,7 @@ export default Ember.Component.extend({
 
   actions: {
     chooseMessage(message) {
-      const messageId = Em.get(message, "id");
+      const messageId = Ember.get(message, "id");
       this.set("selectedTopicId", messageId);
       Ember.run.next(() =>
         $(`#choose-message-${messageId}`).prop("checked", "true")

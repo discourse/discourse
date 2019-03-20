@@ -51,7 +51,7 @@ export default Ember.Component.extend({
   actions: {
     ok() {
       this.set("hidden", true);
-      this.sendAction("okAction");
+      this.okAction();
     },
 
     cancel() {

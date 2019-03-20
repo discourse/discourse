@@ -10,6 +10,9 @@ acceptance("Composer", {
         draft_sequence: 42
       });
     });
+    server.post("/uploads/lookup-urls", () => {
+      return helper.response([]);
+    });
   },
   settings: {
     enable_whispers: true
@@ -384,7 +387,7 @@ QUnit.test("Composer can toggle whispers", async assert => {
   await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
     "it sets the post type to whisper"
   );
 
@@ -392,7 +395,7 @@ QUnit.test("Composer can toggle whispers", async assert => {
   await menu.selectRowByValue("toggleWhisper");
 
   assert.ok(
-    find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
     "it removes the whisper mode"
   );
 
@@ -404,6 +407,44 @@ QUnit.test("Composer can toggle whispers", async assert => {
   assert.ok(
     menu.rowByValue("toggleWhisper").exists(),
     "whisper toggling is still present when going fullscreen"
+  );
+});
+
+QUnit.test("Switching composer whisper state", async assert => {
+  const menu = selectKit(".toolbar-popup-menu-options");
+
+  await visit("/t/this-is-a-test-topic/9");
+  await click(".topic-post:eq(0) button.reply");
+
+  await menu.expand();
+  await menu.selectRowByValue("toggleWhisper");
+
+  await fillIn(".d-editor-input", "this is the content of my reply");
+  await click("#reply-control button.create");
+
+  assert.ok(find(".topic-post:last").hasClass("whisper"));
+
+  await click("#topic-footer-buttons .btn.create");
+
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+    "doesn’t set topic reply as whisper"
+  );
+
+  await click(".topic-post:last button.reply");
+
+  assert.ok(find(".topic-post:last").hasClass("whisper"));
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
+    "sets post reply as a whisper"
+  );
+
+  await click(".topic-post:nth-last-child(2) button.reply");
+
+  assert.notOk(find(".topic-post:nth-last-child(2)").hasClass("whisper"));
+  assert.ok(
+    find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
+    "doesn’t set post reply as a whisper"
   );
 });
 
@@ -461,7 +502,7 @@ QUnit.test(
     );
 
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 1,
+      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 1,
       "it sets the post type to whisper"
     );
 
@@ -470,7 +511,7 @@ QUnit.test(
 
     await click("#create-topic");
     assert.ok(
-      find(".composer-fields .whisper .d-icon-eye-slash").length === 0,
+      find(".composer-fields .whisper .d-icon-far-eye-slash").length === 0,
       "it should reset the state of the composer's model"
     );
 
@@ -557,4 +598,98 @@ QUnit.test("Checks for existing draft", async assert => {
   await click(".modal-footer .btn.btn-default");
 
   toggleCheckDraftPopup(false);
+});
+
+QUnit.test("Loading draft also replaces the recipients", async assert => {
+  toggleCheckDraftPopup(true);
+
+  // prettier-ignore
+  server.get("/draft.json", () => { // eslint-disable-line no-undef
+    return [ 200, { "Content-Type": "application/json" }, {
+       "draft":"{\"reply\":\"hello\",\"action\":\"privateMessage\",\"title\":\"hello\",\"categoryId\":null,\"archetypeId\":\"private_message\",\"metaData\":null,\"usernames\":\"codinghorror\",\"composerTime\":9159,\"typingTime\":2500}",
+       "draft_sequence":0
+    } ];
+  });
+
+  await visit("/u/charlie");
+  await click("button.compose-pm");
+  await click(".modal .btn-default");
+
+  assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
+});
+
+const assertImageResized = (assert, uploads) => {
+  assert.equal(
+    find(".d-editor-input").val(),
+    uploads.join("\n"),
+    "it resizes uploaded image"
+  );
+};
+
+QUnit.test("Image resizing buttons", async assert => {
+  await visit("/");
+  await click("#create-topic");
+
+  let uploads = [
+    "![test|690x313](upload://test.png)",
+    "[img]http://example.com/image.jpg[/img]",
+    "![anotherOne|690x463](upload://anotherOne.jpeg)",
+    "![](upload://withoutAltAndSize.jpeg)",
+    "`![test|690x313](upload://test.png)`",
+    "![withoutSize](upload://withoutSize.png)",
+    "<img src='http://someimage.jpg' wight='20' height='20'>",
+    "![onTheSameLine1|200x200](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)",
+    "![identicalImage|300x300](upload://identicalImage.png)",
+    "![identicalImage|300x300](upload://identicalImage.png)"
+  ];
+
+  await fillIn(".d-editor-input", uploads.join("\n"));
+
+  assert.ok(
+    find(".button-wrapper").length === 0,
+    "it does not append scaling buttons before hovering images"
+  );
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  assert.ok(
+    find(".button-wrapper").length === 6,
+    "it adds correct amount of scaling button groups"
+  );
+
+  uploads[0] = "![test|690x313,50%](upload://test.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[0]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[2] = "![anotherOne|690x463,75%](upload://anotherOne.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[1]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[7] =
+    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250](upload://onTheSameLine2.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[2]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[7] =
+    "![onTheSameLine1|200x200,50%](upload://onTheSameLine1.jpeg) ![onTheSameLine2|250x250,75%](upload://onTheSameLine2.jpeg)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[3]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[8] = "![identicalImage|300x300,50%](upload://identicalImage.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='50']")[4]);
+  assertImageResized(assert, uploads);
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
+  await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
+  assertImageResized(assert, uploads);
 });

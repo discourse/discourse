@@ -15,12 +15,11 @@ class UserUpdater
   }
 
   OPTION_ATTR = [
-    :email_always,
     :mailing_list_mode,
     :mailing_list_mode_frequency,
     :email_digests,
-    :email_direct,
-    :email_private_messages,
+    :email_level,
+    :email_messages_level,
     :external_links_in_new_tab,
     :enable_quoting,
     :dynamic_favicon,
@@ -37,7 +36,8 @@ class UserUpdater
     :theme_ids,
     :allow_private_messages,
     :homepage_id,
-    :hide_profile_and_presence
+    :hide_profile_and_presence,
+    :text_size
   ]
 
   def initialize(actor, user)
@@ -95,6 +95,10 @@ class UserUpdater
       end
     end
 
+    if attributes.key?(:text_size)
+      user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s != attributes[:text_size]
+    end
+
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
@@ -121,6 +125,10 @@ class UserUpdater
     User.transaction do
       if attributes.key?(:muted_usernames)
         update_muted_users(attributes[:muted_usernames])
+      end
+
+      if attributes.key?(:ignored_usernames)
+        update_ignored_users(attributes[:ignored_usernames])
       end
 
       name_changed = user.name_changed?
@@ -152,13 +160,27 @@ class UserUpdater
         INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
-        WHERE
-          id in (:desired_ids) AND
-          id NOT IN (
-            SELECT muted_user_id
-            FROM muted_users
-            WHERE user_id = :user_id
-          )
+        WHERE id in (:desired_ids)
+        ON CONFLICT DO NOTHING
+      SQL
+    end
+  end
+
+  def update_ignored_users(usernames)
+    usernames ||= ""
+    desired_ids = User.where(username: usernames.split(",")).pluck(:id)
+    if desired_ids.empty?
+      IgnoredUser.where(user_id: user.id).destroy_all
+    else
+      IgnoredUser.where('user_id = ? AND ignored_user_id not in (?)', user.id, desired_ids).destroy_all
+
+      # SQL is easier here than figuring out how to do the same in AR
+      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+        INSERT into ignored_users(user_id, ignored_user_id, created_at, updated_at)
+        SELECT :user_id, id, :now, :now
+        FROM users
+        WHERE id in (:desired_ids)
+        ON CONFLICT DO NOTHING
       SQL
     end
   end

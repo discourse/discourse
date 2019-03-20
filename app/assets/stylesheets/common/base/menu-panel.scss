@@ -52,6 +52,10 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+
+  .badge-notification {
+    vertical-align: text-bottom;
+  }
 }
 
 .menu-links.columned {
@@ -132,7 +136,7 @@
   }
 
   span.badge-category {
-    max-width: 90px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -149,11 +153,12 @@
       margin: 0.5em 0;
     }
 
-    .fa {
-      color: dark-light-choose($primary-medium, $secondary-medium);
+    .d-icon,
+    &:hover .d-icon {
+      color: $primary-medium;
     }
     .icon {
-      color: dark-light-choose($primary-high, $secondary-low);
+      color: $primary-high;
     }
     li {
       background-color: $tertiary-low;
@@ -191,7 +196,7 @@
       .d-icon {
         float: left;
         margin-right: 5px;
-        padding-top: 2px;
+        padding-top: 0.2em;
       }
     }
     .is-warning {

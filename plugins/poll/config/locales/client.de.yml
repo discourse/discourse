@@ -52,8 +52,8 @@ de:
         label: "Beenden"
         confirm: "Möchtest du diese Umfrage wirklich beenden?"
       automatic_close:
-        closes_in: "schließt in <strong>%{timeLeft}</strong>"
-        age: "geschlossen <strong>%{age}</strong>"
+        closes_in: "Schließt in <strong>%{timeLeft}</strong>."
+        age: "Geschlossen <strong>%{age}</strong>"
       error_while_toggling_status: "Entschuldige, beim Wechseln des Status dieser Umfrage ist ein Fehler aufgetreten."
       error_while_casting_votes: "Entschuldige, beim Abgeben deiner Stimme ist ein Fehler aufgetreten."
       error_while_fetching_voters: "Entschuldige, beim Anzeigen der Teilnehmer ist ein Fehler aufgetreten."

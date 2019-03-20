@@ -3,8 +3,8 @@
 
   <p style='margin-top: 1em'>{{i18n "login.preferences"}}</p>
 
-  {{d-button class="btn-primary" action="showLogin" label="log_in"}}
+  {{d-button class="btn-primary" action=(route-action "showLogin") label="log_in"}}
   {{#unless siteSettings.enable_sso}}
-    {{d-button action="showForgotPassword" label="login.forgot"}}
+    {{d-button action=(action "showForgotPassword") label="login.forgot"}}
   {{/unless}}
 </div>

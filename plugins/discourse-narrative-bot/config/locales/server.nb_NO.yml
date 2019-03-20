@@ -141,14 +141,6 @@ nb_NO:
       reset_trigger: "ny bruker"
       cert_title: "Som bevis for vellykket gjennomføring av introduksjonen for nye brukere"
       onebox:
-        instructions: |-
-          Neste steg, kan du dele en av disse lenkene med meg? Svar med **en frittstående lenke på en ny linje**, da vil den automatisk utvides til å inkludere et stilig sammendrag.
-
-          For å kopiere en lenke, trykk og hold på den med en mobil enhet, eller høyreklikk med en gammeldags mus:
-
-          - https://en.wikipedia.org/wiki/Inherently_funny_word
-          - https://en.wikipedia.org/wiki/Death_by_coconut
-          - https://en.wikipedia.org/wiki/Calculator_spelling
         reply: |-
           Kult! Dette fungerer for de aller fleste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> lenkene. Bare husk at de må ha en linje _helt for seg selv_ når du limer dem inn, uten noe annet foran eller bak.
         not_found: |-
@@ -304,7 +296,7 @@ nb_NO:
         reply: |-
           Whoa! :boom:
 
-          For å bevare den røde tråden i diskusjoner forsvinner ikke slettede innlegg umiddelbart, men de fjernes helt etter at det har gått en stund.
+          For å bevare den røde tråden i diskusjoner forsvinner ikke slettede innlegg umiddelbart, så innlegget vil bli fjernet om litt.
       recover:
         deleted_post_raw: 'Hvorfor slettet @%{discobot_username}innlegget mitt? :anguished:'
         instructions: |-

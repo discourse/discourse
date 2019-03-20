@@ -165,8 +165,11 @@ describe DiscourseRedis do
     it "should return the slave config when master is still loading data" do
       Redis::Client.any_instance
         .expects(:call)
-        .with([:info])
-        .returns("someconfig:haha\r\nloading:1")
+        .with([:info, :persistence])
+        .returns("
+          someconfig:haha\r
+          #{DiscourseRedis::FallbackHandler::MASTER_LOADING_STATUS}
+        ")
 
       config = connector.resolve
 
@@ -205,16 +208,32 @@ describe DiscourseRedis do
 
       it 'should fallback to the master server once it is up' do
         fallback_handler.master = false
-        redis_connection = mock('test')
-        Redis::Client.expects(:new).with(DiscourseRedis.slave_config).returns(redis_connection)
+        master_conn = mock('master')
+        slave_conn = mock('slave')
 
-        redis_connection.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
+        Redis::Client.expects(:new)
+          .with(DiscourseRedis.config)
+          .returns(master_conn)
+
+        Redis::Client.expects(:new)
+          .with(DiscourseRedis.slave_config)
+          .returns(slave_conn)
+
+        master_conn.expects(:call)
+          .with([:info])
+          .returns("
+            #{DiscourseRedis::FallbackHandler::MASTER_ROLE_STATUS}\r\n
+            #{DiscourseRedis::FallbackHandler::MASTER_LOADED_STATUS}
+          ")
 
         DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
-          redis_connection.expects(:call).with([:client, [:kill, 'type', connection_type]])
+          slave_conn.expects(:call).with(
+            [:client, [:kill, 'type', connection_type]]
+          )
         end
 
-        redis_connection.expects(:disconnect)
+        master_conn.expects(:disconnect)
+        slave_conn.expects(:disconnect)
 
         expect(fallback_handler.initiate_fallback_to_master).to eq(true)
         expect(fallback_handler.master).to eq(true)

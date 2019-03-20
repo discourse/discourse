@@ -14,7 +14,7 @@ export default Ember.Controller.extend({
   closedPollResult: "on_close",
 
   init() {
-    this._super();
+    this._super(...arguments);
     this._setupPoll();
   },
 

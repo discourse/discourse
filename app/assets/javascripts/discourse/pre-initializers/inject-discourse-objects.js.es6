@@ -25,8 +25,10 @@ export default {
     // backwards compatibility: remove when plugins have updated
     app.register("store:main", Store);
 
-    app.register("service:store", Store);
-    ALL_TARGETS.forEach(t => app.inject(t, "store", "service:store"));
+    if (!app.hasRegistration("service:store")) {
+      app.register("service:store", Store);
+      ALL_TARGETS.forEach(t => app.inject(t, "store", "service:store"));
+    }
 
     const messageBus = window.MessageBus;
     app.register("message-bus:main", messageBus, { instantiate: false });

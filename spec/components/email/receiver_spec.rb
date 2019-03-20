@@ -241,7 +241,7 @@ describe Email::Receiver do
     let(:category) { Fabricate(:category) }
     let(:user) { Fabricate(:user, email: "discourse@bar.com") }
     let(:topic) { create_topic(category: category, user: user) }
-    let(:post) { create_post(topic: topic, user: user) }
+    let(:post) { create_post(topic: topic) }
 
     let!(:post_reply_key) do
       Fabricate(:post_reply_key,
@@ -249,6 +249,10 @@ describe Email::Receiver do
         user: user,
         post: post
       )
+    end
+
+    let :topic_user do
+      TopicUser.find_by(topic_id: topic.id, user_id: user.id)
     end
 
     it "uses MD5 of 'mail_string' there is no message_id" do
@@ -285,14 +289,34 @@ describe Email::Receiver do
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
     end
 
-    it "raises a TopicClosedError when the topic was closed" do
-      topic.update_columns(closed: true)
-      expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
-    end
+    context "a closed topic" do
 
-    it "does not raise TopicClosedError when performing a like action" do
-      topic.update_columns(closed: true)
-      expect { process(:like) }.to change(PostAction, :count)
+      before do
+        topic.update_columns(closed: true)
+      end
+
+      it "raises a TopicClosedError when the topic was closed" do
+        expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
+      end
+
+      it "Can watch topics via the watch command" do
+        # TODO support other locales as well, the tricky thing is that these string live in
+        # client.yml not on server yml so it is a bit tricky to find
+
+        topic.update_columns(closed: true)
+        process(:watch)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:watching])
+      end
+
+      it "Can mute topics via the mute command" do
+        process(:mute)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:muted])
+      end
+
+      it "can track a topic via the track command" do
+        process(:track)
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
+      end
     end
 
     it "raises an InvalidPost when there was an error while creating the post" do
@@ -522,45 +546,54 @@ describe Email::Receiver do
     end
 
     it "supports attachments" do
-      SiteSetting.authorized_extensions = "txt"
+      SiteSetting.authorized_extensions = "txt|jpg"
       expect { process(:attached_txt_file) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>text\.txt<\/a>/)
-      expect(topic.posts.last.uploads.length).to eq 1
+      post = topic.posts.last
+      expect(post.raw).to match(/\APlease find some text file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?txt'>text\.txt<\/a> \(20 Bytes\)\z/)
+      expect(post.uploads.size).to eq 1
+
+      expect { process(:apple_mail_attachment) }.to change { topic.posts.count }
+      post = topic.posts.last
+      expect(post.raw).to match(/\APicture below\.\s+<img.+?src="\/uploads\/default\/original\/.+?jpeg" class="">\s+Picture above\.\z/)
+      expect(post.uploads.size).to eq 1
     end
 
     it "supports eml attachments" do
       SiteSetting.authorized_extensions = "eml"
       expect { process(:attached_eml_file) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>sample\.eml<\/a>/)
-      expect(topic.posts.last.uploads.length).to eq 1
+      post = topic.posts.last
+      expect(post.raw).to match(/\APlease find the eml file attached\.\s+<a class='attachment' href='\/uploads\/default\/original\/.+?eml'>sample\.eml<\/a> \(193 Bytes\)\z/)
+      expect(post.uploads.size).to eq 1
     end
 
     context "when attachment is rejected" do
       it "sends out the warning email" do
         expect { process(:attached_txt_file) }.to change { EmailLog.count }.by(1)
         expect(EmailLog.last.email_type).to eq("email_reject_attachment")
-        expect(topic.posts.last.uploads.length).to eq 0
+        expect(topic.posts.last.uploads.size).to eq 0
       end
 
       it "doesn't send out the warning email if sender is staged user" do
         user.update_columns(staged: true)
         expect { process(:attached_txt_file) }.not_to change { EmailLog.count }
-        expect(topic.posts.last.uploads.length).to eq 0
+        expect(topic.posts.last.uploads.size).to eq 0
       end
 
       it "creates the post with attachment missing message" do
         missing_attachment_regex = Regexp.escape(I18n.t('emails.incoming.missing_attachment', filename: "text.txt"))
         expect { process(:attached_txt_file) }.to change { topic.posts.count }
-        expect(topic.posts.last.raw).to match(/#{missing_attachment_regex}/)
-        expect(topic.posts.last.uploads.length).to eq 0
+        post = topic.posts.last
+        expect(post.raw).to match(/#{missing_attachment_regex}/)
+        expect(post.uploads.size).to eq 0
       end
     end
 
     it "supports emails with just an attachment" do
       SiteSetting.authorized_extensions = "pdf"
       expect { process(:attached_pdf_file) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to match(/<a\sclass='attachment'[^>]*>discourse\.pdf<\/a>/)
-      expect(topic.posts.last.uploads.length).to eq 1
+      post = topic.posts.last
+      expect(post.raw).to match(/\A\s+<a class='attachment' href='\/uploads\/default\/original\/.+?pdf'>discourse\.pdf<\/a> \(64 KB\)\z/)
+      expect(post.uploads.size).to eq 1
     end
 
     it "supports liking via email" do
@@ -598,15 +631,15 @@ describe Email::Receiver do
       expect { process(:reply_user_not_matching_but_known) }.to change { topic.posts.count }
     end
 
-    it "re-enables user's email_private_messages setting when user replies to a private topic" do
+    it "re-enables user's PM email notifications when user replies to a private topic" do
       topic.update_columns(category_id: nil, archetype: Archetype.private_message)
       topic.allowed_users << user
       topic.save
 
-      user.user_option.update_columns(email_private_messages: false)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:reply_user_matching) }.to change { topic.posts.count }
       user.reload
-      expect(user.user_option.email_private_messages).to eq(true)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
   end
@@ -708,12 +741,12 @@ describe Email::Receiver do
       expect(Post.last.uploads.length).to eq 1
     end
 
-    it "enables user's email_private_messages setting when user emails new topic to group" do
+    it "reenables user's PM email notifications when user emails new topic to group" do
       user = Fabricate(:user, email: "existing@bar.com")
-      user.user_option.update_columns(email_private_messages: false)
+      user.user_option.update_columns(email_messages_level: UserOption.email_level_types[:never])
       expect { process(:group_existing_user) }.to change(Topic, :count)
       user.reload
-      expect(user.user_option.email_private_messages).to eq(true)
+      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
     end
 
     context "with forwarded emails enabled" do

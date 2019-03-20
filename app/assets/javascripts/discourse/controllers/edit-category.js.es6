@@ -30,12 +30,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   title: function() {
     if (this.get("model.id")) {
-      return I18n.t("category.edit_long") + " : " + this.get("model.name");
+      return I18n.t("category.edit_dialog_title", {
+        categoryName: this.get("model.name")
+      });
     }
-    return (
-      I18n.t("category.create") +
-      (this.get("model.name") ? " : " + this.get("model.name") : "")
-    );
+    return I18n.t("category.create");
   }.property("model.id", "model.name"),
 
   titleChanged: function() {
@@ -60,35 +59,38 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   saveLabel: function() {
     if (this.get("saving")) return "saving";
-    if (this.get("model.isUncategorizedCategory")) return "save";
     return this.get("model.id") ? "category.save" : "category.create";
   }.property("saving", "model.id"),
 
   actions: {
     saveCategory() {
-      const self = this,
-        model = this.get("model"),
-        parentCategory = this.site
-          .get("categories")
-          .findBy("id", parseInt(model.get("parent_category_id"), 10));
+      const model = this.get("model");
+
+      const parentCategory = this.site
+        .get("categories")
+        .findBy("id", parseInt(model.get("parent_category_id"), 10));
 
       this.set("saving", true);
       model.set("parentCategory", parentCategory);
 
-      this.get("model")
+      model
         .save()
-        .then(function(result) {
-          self.set("saving", false);
-          self.send("closeModal");
+        .then(result => {
+          this.set("saving", false);
+
           model.setProperties({
             slug: result.category.slug,
             id: result.category.id
           });
-          DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
+
+          if (this.get("selectedTab") !== "settings") {
+            this.send("closeModal");
+            DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
+          }
         })
-        .catch(function(error) {
-          self.flash(extractError(error), "error");
-          self.set("saving", false);
+        .catch(error => {
+          this.flash(extractError(error), "error");
+          this.set("saving", false);
         });
     },
 

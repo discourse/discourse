@@ -58,7 +58,7 @@ id:
       not_a_number: bukan numerik
       not_an_integer: harus integer
       odd: harus ganjil
-      record_invalid: 'Validasi gagal: %{errors}'
+      record_invalid: "Validasi gagal: %{errors}"
       restrict_dependent_destroy:
         one: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
         many: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
@@ -70,9 +70,9 @@ id:
         other: jumlah karakter salah (seharusnya %{count} karakter)
       other_than: "harus lain dari %{count}"
     template:
-      body: 'Ada masalah dengan objek-objek berikut:'
+      body: "Ada masalah dengan objek-objek berikut:"
       header:
-        other: '%{count} kesalahan menyebabkan %{model} ini tidak bisa disimpan'
+        other: "%{count} kesalahan menyebabkan %{model} ini tidak bisa disimpan"
     embed:
       load_from_remote: "Ada kesalahan dalam memuat posting itu."
     site_settings:
@@ -166,7 +166,7 @@ id:
       category:
         name: "Nama Kategori"
       topic:
-        title: 'Judul'
+        title: "Judul"
       post:
         raw: "Konten"
       user_profile:
@@ -247,7 +247,7 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    update: 'Perbaharui Kata Sandi'
+    update: "Perbaharui Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
   change_email:
@@ -269,21 +269,21 @@ id:
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
   post_action_types:
     off_topic:
-      title: 'Diluar topik'
+      title: "Diluar topik"
     notify_user:
-      title: 'Kirim @{{username}} sebuah pesan'
+      title: "Kirim @{{username}} sebuah pesan"
     notify_moderators:
       title: "Hal Lain"
     bookmark:
-      title: 'Penandaan'
+      title: "Penandaan"
   topic_flag_types:
     spam:
-      long_form: 'menandai sebagai spam'
+      long_form: "menandai sebagai spam"
     inappropriate:
-      long_form: 'menandai sebagai tidak pantas'
+      long_form: "menandai sebagai tidak pantas"
     notify_moderators:
       title: "Hal Lain"
-      long_form: 'menandai sebagai membutuhkan perhatian moderator'
+      long_form: "menandai sebagai membutuhkan perhatian moderator"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -366,7 +366,6 @@ id:
     page_view_logged_in_reqs:
       xaxis: "Hari"
     page_view_crawler_reqs:
-      title: "Penjelajah Web"
       xaxis: "Hari"
     page_view_total_reqs:
       xaxis: "Hari"
@@ -403,7 +402,7 @@ id:
   dashboard:
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
-    memory_warning: 'Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB.'
+    memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
   site_settings:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
@@ -412,8 +411,6 @@ id:
     errors:
       invalid_email: "Alamat email tidak valid."
   topic_statuses:
-    closed_enabled: "Topik telah ditutup. Jawaban baru tidak lagi diijinkan."
-    closed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
   user:

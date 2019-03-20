@@ -10,9 +10,6 @@ require 'archetype'
 require 'digest/sha1'
 
 class Post < ActiveRecord::Base
-  # TODO: Remove this after 19th Dec 2018
-  self.ignored_columns = %w{vote_count}
-
   include RateLimiter::OnCreateRecord
   include Trashable
   include Searchable
@@ -191,6 +188,7 @@ class Post < ActiveRecord::Base
 
   def trash!(trashed_by = nil)
     self.topic_links.each(&:destroy)
+    self.delete_post_notices
     super(trashed_by)
   end
 
@@ -384,6 +382,12 @@ class Post < ActiveRecord::Base
     PostAction.update_flagged_posts_count
   end
 
+  def delete_post_notices
+    self.custom_fields.delete("post_notice_type")
+    self.custom_fields.delete("post_notice_time")
+    self.save_custom_fields
+  end
+
   def recover_public_post_actions
     PostAction.publics
       .with_deleted
@@ -515,7 +519,7 @@ class Post < ActiveRecord::Base
     PostRevisor.new(self).revise!(updated_by, changes, opts)
   end
 
-  def self.rebake_old(limit)
+  def self.rebake_old(limit, priority: :normal, rate_limiter: true)
 
     limiter = RateLimiter.new(
       nil,
@@ -534,10 +538,10 @@ class Post < ActiveRecord::Base
         break if !limiter.can_perform?
 
         post = Post.find(id)
-        post.rebake!
+        post.rebake!(priority: priority)
 
         begin
-          limiter.performed!
+          limiter.performed! if rate_limiter
         rescue RateLimiter::LimitExceeded
           break
         end
@@ -560,15 +564,13 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(opts = nil)
-    opts ||= {}
-
-    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
+  def rebake!(invalidate_broken_images: false, invalidate_oneboxes: false, priority: nil)
+    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
-    if opts.fetch(:invalidate_broken_images, false)
+    if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
       save_custom_fields
     end
@@ -578,7 +580,7 @@ class Post < ActiveRecord::Base
     QuotedPost.extract_from(self)
 
     # make sure we trigger the post process
-    trigger_post_process(bypass_bump: true)
+    trigger_post_process(bypass_bump: true, priority: priority)
 
     publish_change_to_clients!(:rebaked)
 
@@ -692,14 +694,20 @@ class Post < ActiveRecord::Base
   end
 
   # Enqueue post processing for this post
-  def trigger_post_process(bypass_bump: false)
+  def trigger_post_process(bypass_bump: false, priority: :normal, new_post: false)
     args = {
       post_id: id,
       bypass_bump: bypass_bump,
+      new_post: new_post,
     }
     args[:image_sizes] = image_sizes if image_sizes.present?
     args[:invalidate_oneboxes] = true if invalidate_oneboxes.present?
     args[:cooking_options] = self.cooking_options
+
+    if priority && priority != :normal
+      args[:queue] = priority.to_s
+    end
+
     Jobs.enqueue(:process_post, args)
     DiscourseEvent.trigger(:after_trigger_post_process, self)
   end

@@ -45,12 +45,12 @@ class PostDestroyer
   end
 
   def destroy
-    payload = WebHook.generate_payload(:post, @post)
+    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
     topic = @post.topic
 
     if @post.is_first_post? && topic
       topic_view = TopicView.new(topic.id, Discourse.system_user)
-      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
+      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
     end
 
     delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
@@ -61,19 +61,11 @@ class PostDestroyer
       mark_for_deletion(delete_removed_posts_after)
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
-    WebHook.enqueue_hooks(:post, :post_destroyed,
-      id: @post.id,
-      category_id: @post&.topic&.category_id,
-      payload: payload
-    )
+    WebHook.enqueue_post_hooks(:post_destroyed, @post, payload)
 
     if @post.is_first_post? && @post.topic
       DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
-      WebHook.enqueue_hooks(:topic, :topic_destroyed,
-        id: topic.id,
-        category_id: topic&.category_id,
-        payload: topic_payload
-      )
+      WebHook.enqueue_topic_hooks(:topic_destroyed, @post.topic, topic_payload)
     end
   end
 
@@ -147,7 +139,7 @@ class PostDestroyer
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
       DB.after_commit do
-        if @opts[:defer_flags].to_s == "true"
+        if @opts[:defer_flags]
           defer_flags
         else
           agree_with_flags
@@ -226,12 +218,13 @@ class PostDestroyer
   end
 
   def agree_with_flags
-    if @post.has_active_flag? && @user.id > 0 && @user.staff?
+    if @post.has_active_flag? && @user.human? && @user.staff?
       Jobs.enqueue(
         :send_system_message,
         user_id: @post.user_id,
         message_type: :flags_agreed_and_post_deleted,
         message_options: {
+          flagged_post_raw_content: @post.raw,
           url: @post.url,
           flag_reason: I18n.t(
             "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",

@@ -32,7 +32,7 @@ describe Jobs::PullHotlinkedImages do
 
   describe '#execute' do
     before do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       FastImage.expects(:size).returns([100, 100]).at_least_once
     end
 
@@ -72,7 +72,6 @@ describe Jobs::PullHotlinkedImages do
       let(:api_url) { "https://en.wikipedia.org/w/api.php?action=query&titles=#{media}&prop=imageinfo&iilimit=50&iiprop=timestamp|user|url&iiurlwidth=500&format=json" }
 
       before do
-        SiteSetting.queue_jobs = true
         stub_request(:head, url)
         stub_request(:get, url).to_return(body: '')
         stub_request(:get, api_url).to_return(body: "{

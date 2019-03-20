@@ -160,102 +160,6 @@ describe PostAlerter do
     end
   end
 
-  context 'likes' do
-
-    it 'notifies on likes after an undo' do
-      PostActionNotifier.enable
-
-      post = Fabricate(:post, raw: 'I love waffles')
-
-      PostAction.act(evil_trout, post, PostActionType.types[:like])
-      PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
-      PostAction.act(evil_trout, post, PostActionType.types[:like])
-
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(1)
-    end
-
-    it 'notifies on does not notify when never is selected' do
-      PostActionNotifier.enable
-
-      post = Fabricate(:post, raw: 'I love waffles')
-
-      post.user.user_option.update_columns(like_notification_frequency:
-                                           UserOption.like_notification_frequency_type[:never])
-
-      PostAction.act(evil_trout, post, PostActionType.types[:like])
-
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(0)
-    end
-
-    it 'notifies on likes correctly' do
-      PostActionNotifier.enable
-
-      post = Fabricate(:post, raw: 'I love waffles')
-
-      PostAction.act(evil_trout, post, PostActionType.types[:like])
-      admin = Fabricate(:admin)
-      PostAction.act(admin, post, PostActionType.types[:like])
-
-      # one like
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
-        .to eq(1)
-
-      post.user.user_option.update_columns(
-        like_notification_frequency: UserOption.like_notification_frequency_type[:always]
-      )
-
-      admin2 = Fabricate(:admin)
-
-      # Travel 1 hour in time to test that order post_actions by `created_at`
-      freeze_time 1.hour.from_now
-      PostAction.act(admin2, post, PostActionType.types[:like])
-
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
-        .to eq(1)
-
-      # adds info to the notification
-      notification = Notification.find_by(
-        post_number: 1,
-        topic_id: post.topic_id
-      )
-
-      expect(notification.data_hash["count"].to_i).to eq(2)
-      expect(notification.data_hash["username2"]).to eq(evil_trout.username)
-
-      # this is a tricky thing ... removing a like should fix up the notifications
-      PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
-
-      # rebuilds the missing notification
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count)
-        .to eq(1)
-
-      notification = Notification.find_by(
-        post_number: 1,
-        topic_id: post.topic_id
-      )
-
-      expect(notification.data_hash["count"]).to eq(2)
-      expect(notification.data_hash["username"]).to eq(admin2.username)
-      expect(notification.data_hash["username2"]).to eq(admin.username)
-
-      post.user.user_option.update_columns(like_notification_frequency:
-                                           UserOption.like_notification_frequency_type[:first_time_and_daily])
-
-      # this gets skipped
-      admin3 = Fabricate(:admin)
-      PostAction.act(admin3, post, PostActionType.types[:like])
-
-      freeze_time 2.days.from_now
-
-      admin4 = Fabricate(:admin)
-      PostAction.act(admin4, post, PostActionType.types[:like])
-
-      # first happend within the same day, no need to notify
-      expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(2)
-
-    end
-  end
-
   context 'quotes' do
 
     it 'does not notify for muted users' do
@@ -309,7 +213,7 @@ describe PostAlerter do
     let(:linking_post) { create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}") }
 
     before do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
     end
 
     it "will notify correctly on linking" do
@@ -385,7 +289,7 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     before do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
     end
 
     it 'notifies a user' do
@@ -687,7 +591,7 @@ describe PostAlerter do
     end
 
     it "correctly pushes notifications if configured correctly" do
-      SiteSetting.queue_jobs = false
+      Jobs.run_immediately!
       SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
 
       2.times do |i|
@@ -1020,6 +924,29 @@ describe PostAlerter do
           PostAlerter.post_created(post)
         end
         expect(events).to include(event_name: :before_create_notifications_for_users, params: [[user], post])
+      end
+    end
+
+    context "on change" do
+      let(:user) { Fabricate(:user) }
+      let(:other_tag) { Fabricate(:tag) }
+      let(:watched_tag) { Fabricate(:tag) }
+      let(:post) { Fabricate(:post) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        Jobs.run_immediately!
+      end
+
+      it "triggers a notification" do
+        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
       end
     end
   end

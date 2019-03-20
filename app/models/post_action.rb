@@ -231,6 +231,8 @@ class PostAction < ActiveRecord::Base
     end
 
     update_flagged_posts_count
+
+    undo_hide_and_silence(post)
   end
 
   def self.defer_flags!(post, moderator, delete_post = false)
@@ -373,6 +375,13 @@ class PostAction < ActiveRecord::Base
     # can happen despite being .create
     # since already bookmarked
     PostAction.where(where_attrs).first
+  end
+
+  def self.undo_hide_and_silence(post)
+    return unless post.hidden?
+
+    post.unhide!
+    UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
   end
 
   def self.copy(original_post, target_post)
@@ -537,7 +546,7 @@ class PostAction < ActiveRecord::Base
     post = Post.with_deleted.where(id: post_id).first
     PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
-    SpamRulesEnforcer.enforce!(post.user)
+    SpamRule::AutoSilence.new(post.user, post).perform
   end
 
   def create_user_action
@@ -564,9 +573,8 @@ class PostAction < ActiveRecord::Base
 
   MAXIMUM_FLAGS_PER_POST = 3
 
-  def self.auto_close_if_threshold_reached(topic)
-    return if topic.nil? || topic.closed?
-
+  def self.auto_close_threshold_reached?(topic)
+    return if topic.user&.staff?
     flags = PostAction.active
       .flags
       .joins(:post)
@@ -579,6 +587,13 @@ class PostAction < ActiveRecord::Base
     return if flags.count < SiteSetting.num_flaggers_to_close_topic
     # we need a minimum number of flags
     return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
+
+    true
+  end
+
+  def self.auto_close_if_threshold_reached(topic)
+    return if topic.nil? || topic.closed?
+    return unless auto_close_threshold_reached?(topic)
 
     # the threshold has been reached, we will close the topic waiting for intervention
     topic.update_status("closed", true, Discourse.system_user,
@@ -608,6 +623,7 @@ class PostAction < ActiveRecord::Base
     elsif PostActionType.auto_action_flag_types.include?(post_action_type)
 
       if acting_user.has_trust_level?(TrustLevel[4]) &&
+         !acting_user.staff? &&
          post.user&.trust_level != TrustLevel[4]
 
         hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl4_user])

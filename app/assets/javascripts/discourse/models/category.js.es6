@@ -99,7 +99,7 @@ const Category = RestModel.extend({
         color: this.get("color"),
         text_color: this.get("text_color"),
         secure: this.get("secure"),
-        permissions: this.get("permissionsForUpdate"),
+        permissions: this._permissionsForUpdate(),
         auto_close_hours: this.get("auto_close_hours"),
         auto_close_based_on_last_post: this.get(
           "auto_close_based_on_last_post"
@@ -129,14 +129,15 @@ const Category = RestModel.extend({
         minimum_required_tags: this.get("minimum_required_tags"),
         navigate_to_first_post_after_read: this.get(
           "navigate_to_first_post_after_read"
-        )
+        ),
+        search_priority: this.get("search_priority")
       },
       type: id ? "PUT" : "POST"
     });
   },
 
-  @computed("permissions")
-  permissionsForUpdate(permissions) {
+  _permissionsForUpdate() {
+    const permissions = this.get("permissions");
     let rval = {};
     permissions.forEach(p => (rval[p.group_name] = p.permission.id));
     return rval;
@@ -160,7 +161,7 @@ const Category = RestModel.extend({
 
   @computed
   permissions() {
-    return Em.A([
+    return Ember.A([
       { group_name: "everyone", permission: PermissionType.create({ id: 1 }) },
       { group_name: "admins", permission: PermissionType.create({ id: 2 }) },
       { group_name: "crap", permission: PermissionType.create({ id: 3 }) }
@@ -219,15 +220,15 @@ Category.reopenClass({
   slugFor(category, separator = "/") {
     if (!category) return "";
 
-    const parentCategory = Em.get(category, "parentCategory");
+    const parentCategory = Ember.get(category, "parentCategory");
     let result = "";
 
     if (parentCategory) {
       result = Category.slugFor(parentCategory) + separator;
     }
 
-    const id = Em.get(category, "id"),
-      slug = Em.get(category, "slug");
+    const id = Ember.get(category, "id"),
+      slug = Ember.get(category, "slug");
 
     return !slug || slug.trim().length === 0
       ? `${result}${id}-category`

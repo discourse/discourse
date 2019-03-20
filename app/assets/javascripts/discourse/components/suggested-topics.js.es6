@@ -32,7 +32,7 @@ export default Ember.Component.extend({
 
     if (
       category &&
-      Em.get(category, "id") ===
+      Ember.get(category, "id") ===
         Discourse.Site.currentProp("uncategorized_category_id")
     ) {
       category = null;

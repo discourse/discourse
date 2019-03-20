@@ -5,7 +5,7 @@ export default MountWidget.extend({
   widget: "user-notifications-large",
 
   init() {
-    this._super();
+    this._super(...arguments);
     this.args = { notifications: this.get("notifications") };
   },
 

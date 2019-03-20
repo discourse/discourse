@@ -66,11 +66,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     });
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
-    const canSplitTopic = this.get("canSplitTopic");
     if (isPrivateMessage) {
-      this.set("selection", canSplitTopic ? "new_message" : "existing_message");
-    } else if (!canSplitTopic) {
+      this.set(
+        "selection",
+        this.get("canSplitToPM") ? "new_message" : "existing_message"
+      );
+    } else if (!this.get("canSplitTopic")) {
       this.set("selection", "existing_topic");
+      Ember.run.next(() => $("#choose-topic-title").focus());
     }
   },
 
@@ -82,6 +85,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
       selectedPosts.sort((a, b) => a.post_number - b.post_number)[0]
         .post_type === this.site.get("post_types.regular")
     );
+  },
+
+  @computed("canSplitTopic")
+  canSplitToPM(canSplitTopic) {
+    return canSplitTopic && (this.currentUser && this.currentUser.admin);
   },
 
   actions: {

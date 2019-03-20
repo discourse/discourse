@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   _slug: null,
 
   didInsertElement() {
-    this._super();
+    this._super(...arguments);
     this.refreshClass();
   },
 
@@ -31,7 +31,7 @@ export default Ember.Component.extend({
   },
 
   willDestroyElement() {
-    this._super();
+    this._super(...arguments);
     this._removeClass();
   }
 });

@@ -15,7 +15,7 @@ export default SingleSelectComponent.extend({
   clearable: false,
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
     content.hasSelection = this.get("hasSelection");
     return content;
   },

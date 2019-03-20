@@ -4,12 +4,14 @@ import {
 } from "discourse/lib/utilities";
 import getUrl from "discourse-common/lib/get-url";
 
-export default Em.Mixin.create({
+export default Ember.Mixin.create({
   uploading: false,
   uploadProgress: 0,
 
   uploadDone() {
-    Em.warn("You should implement `uploadDone`");
+    Ember.warn("You should implement `uploadDone`", {
+      id: "discourse.upload.missing-upload-done"
+    });
   },
 
   validateUploadedFilesOptions() {

@@ -1,4 +1,3 @@
-import DiscourseURL from "discourse/lib/url";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
@@ -6,7 +5,15 @@ import computed from "ember-addons/ember-computed-decorators";
 
 export default buildCategoryPanel("general", {
   foregroundColors: ["FFFFFF", "000000"],
-  canSelectParentCategory: Em.computed.not("category.isUncategorizedCategory"),
+  canSelectParentCategory: Ember.computed.not(
+    "category.isUncategorizedCategory"
+  ),
+  uncategorizedSiteSettingLink: Discourse.getURL(
+    "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
+  ),
+  customizeTextContentLink: Discourse.getURL(
+    "/admin/customize/site_texts?q=uncategorized"
+  ),
 
   // background colors are available as a pipe-separated string
   @computed
@@ -86,7 +93,7 @@ export default buildCategoryPanel("general", {
 
   actions: {
     showCategoryTopic() {
-      DiscourseURL.routeTo(this.get("category.topic_url"));
+      window.open(this.get("category.topic_url"), "_blank").focus();
       return false;
     }
   }

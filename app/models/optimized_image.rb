@@ -29,7 +29,6 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.create_for(upload, width, height, opts = {})
-
     return unless width > 0 && height > 0
     return if upload.try(:sha1).blank?
 
@@ -180,7 +179,7 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  IM_DECODERS ||= /\A(jpe?g|png|tiff?|bmp|ico|gif)\z/i
+  IM_DECODERS ||= /\A(jpe?g|png|ico|gif)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}
@@ -330,7 +329,7 @@ class OptimizedImage < ActiveRecord::Base
   MAX_PNGQUANT_SIZE = 500_000
 
   def self.convert_with(instructions, to, opts = {})
-    Discourse::Utils.execute_command(*instructions)
+    Discourse::Utils.execute_command("nice", "-n", "10", *instructions)
 
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
     FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
@@ -408,8 +407,8 @@ class OptimizedImage < ActiveRecord::Base
           # just ditch the optimized image if there was any errors
           optimized_image.destroy
         ensure
-          file&.unlink
           file&.close
+          file&.unlink if file&.respond_to?(:unlink)
         end
       end
     end
@@ -431,9 +430,12 @@ end
 #  upload_id :integer          not null
 #  url       :string           not null
 #  filesize  :integer
+#  etag      :string
+#  version   :integer
 #
 # Indexes
 #
+#  index_optimized_images_on_etag                            (etag)
 #  index_optimized_images_on_upload_id                       (upload_id)
 #  index_optimized_images_on_upload_id_and_width_and_height  (upload_id,width,height) UNIQUE
 #

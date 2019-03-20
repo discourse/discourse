@@ -10,3 +10,8 @@ pl_PL:
     presence:
       replying: "odpowiada"
       editing: "edytuje"
+      replying_to_topic:
+        one: "odpowiada"
+        few: "odpowiadają"
+        many: "odpowiadają"
+        other: "odpowiadają"

@@ -75,11 +75,28 @@ class UploadsController < ApplicationController
         }
         opts[:disposition]   = "inline" if params[:inline]
         opts[:disposition] ||= "attachment" unless FileHelper.is_supported_image?(upload.original_filename)
-        send_file(Discourse.store.path_for(upload), opts)
+
+        file_path = Discourse.store.path_for(upload)
+        return render_404 unless file_path
+
+        send_file(file_path, opts)
       else
         render_404
       end
     end
+  end
+
+  def metadata
+    params.require(:url)
+    upload = Upload.get_from_url(params[:url])
+    raise Discourse::NotFound unless upload
+
+    render json: {
+      original_filename: upload.original_filename,
+      width: upload.width,
+      height: upload.height,
+      human_filesize: upload.human_filesize
+    }
   end
 
   protected

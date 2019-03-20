@@ -1,4 +1,4 @@
-{{#load-more selector=".email-list tr" action="loadMore"}}
+{{#load-more selector=".email-list tr" action=(action "loadMore")}}
   <table class='table email-list'>
     <thead>
       <tr>
@@ -44,7 +44,9 @@
         </td>
       </tr>
     {{else}}
-      <tr><td colspan="5">{{i18n 'admin.email.logs.none'}}</td></tr>
+      {{#unless loading}}
+        <tr><td colspan="5">{{i18n 'admin.email.logs.none'}}</td></tr>
+      {{/unless}}
     {{/each}}
 
   </table>

@@ -53,6 +53,8 @@ function rule(state) {
 }
 
 export function setup(helper) {
+  const opts = helper.getOptions();
+  if (opts.previewing) helper.whiteList(["img.resizable"]);
   helper.whiteList(["img[data-orig-src]"]);
   helper.registerPlugin(md => {
     md.core.ruler.push("image-protocol", rule);

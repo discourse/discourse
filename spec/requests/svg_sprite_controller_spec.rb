@@ -4,17 +4,23 @@ describe SvgSpriteController do
 
   context 'show' do
     before do
-      SvgSprite.rebuild_cache
+      SvgSprite.expire_cache
     end
 
     it "should return bundle when version is current" do
-      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{SvgSprite.version}.js"
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{SvgSprite.version}.js"
+      expect(response.status).to eq(200)
+
+      theme = Fabricate(:theme)
+      theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")
+      theme.save!
+      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{theme.id}-#{SvgSprite.version([theme.id])}.js"
       expect(response.status).to eq(200)
     end
 
     it "should redirect to current version" do
       random_hash = Digest::SHA1.hexdigest("somerandomstring")
-      get "/svg-sprite/#{Discourse.current_hostname}/svg-#{random_hash}.js"
+      get "/svg-sprite/#{Discourse.current_hostname}/svg--#{random_hash}.js"
 
       expect(response.status).to eq(302)
       expect(response.location).to include(SvgSprite.version)
@@ -40,6 +46,24 @@ describe SvgSpriteController do
 
       get "/svg-sprite/search/fa-not-a-valid-icon"
       expect(response.status).to eq(404)
+    end
+
+    it "should find a custom icon in default theme" do
+      theme = Fabricate(:theme)
+      fname = "custom-theme-icon-sprite.svg"
+
+      upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+      theme.save!
+
+      SiteSetting.default_theme_id = theme.id
+
+      user = sign_in(Fabricate(:user))
+
+      get "/svg-sprite/search/fa-my-custom-theme-icon"
+      expect(response.status).to eq(200)
+      expect(response.body).to include('my-custom-theme-icon')
     end
   end
 end

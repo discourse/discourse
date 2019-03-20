@@ -28,7 +28,7 @@ export default Ember.Component.extend({
     return !usernames || !(usernames.length > 0);
   },
 
-  showingFirst: Em.computed.lte("currentPage", 1),
+  showingFirst: Ember.computed.lte("currentPage", 1),
   showingLast: propertyEqual("currentPage", "totalPages"),
 
   actions: {
@@ -60,7 +60,7 @@ export default Ember.Component.extend({
     },
 
     addMembers() {
-      if (Em.isEmpty(this.get("model.usernames"))) {
+      if (Ember.isEmpty(this.get("model.usernames"))) {
         return;
       }
       this.get("model")

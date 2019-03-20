@@ -13,7 +13,7 @@ lv:
         delimiter: ","
       human:
         storage_units:
-          format: '%n %u'
+          format: "%n %u"
           units:
             byte:
               zero: baiti
@@ -117,17 +117,11 @@ lv:
           zero: "pēc 0 gadiem"
           one: "pēc 1 gada"
           other: "pēc %{count} gadiem"
-      previous_month: 'Iepriekšējais mēnesis'
-      next_month: 'Nākamais mēnesis'
+      previous_month: "Iepriekšējais mēnesis"
+      next_month: "Nākamais mēnesis"
       placeholder: datums
     share:
-      topic: 'padalīties ar saiti uz šo tēmu'
-      post: 'ieraksts #%{postNumber}'
-      close: 'aizvērt'
-      twitter: 'padalīties ar šo saiti Twitter'
-      facebook: 'padalīties ar šo saiti Facebook'
-      google+: 'padalīties ar šo saiti Google+'
-      email: 'nosūtīt šo saiti e-pastā'
+      close: "aizvērt"
     action_codes:
       public_topic: "padarīja tēmu publisku %{when}"
       split_topic: "sadalīja šo tēmu %{when}"
@@ -136,26 +130,26 @@ lv:
       removed_user: "izdzēsa %{who} %{when}"
       removed_group: "izdzēsa %{who} %{when}"
       autoclosed:
-        enabled: 'slēdza %{when}'
-        disabled: 'atvēra %{when}'
+        enabled: "slēdza %{when}"
+        disabled: "atvēra %{when}"
       closed:
-        enabled: 'slēdza %{when}'
-        disabled: 'atvēra %{when}'
+        enabled: "slēdza %{when}"
+        disabled: "atvēra %{when}"
       archived:
-        enabled: 'pievienoja arhīvam %{when}'
-        disabled: 'izņēma no arhīva %{when}'
+        enabled: "pievienoja arhīvam %{when}"
+        disabled: "izņēma no arhīva %{when}"
       pinned:
-        enabled: 'piesprauda %{when}'
-        disabled: 'atsprauda %{when}'
+        enabled: "piesprauda %{when}"
+        disabled: "atsprauda %{when}"
       pinned_globally:
-        enabled: 'piesprauda globāli %{when}'
-        disabled: 'atsprauda globāli %{when}'
+        enabled: "piesprauda globāli %{when}"
+        disabled: "atsprauda globāli %{when}"
       visible:
-        enabled: 'pievienoja uzskaitei %{when}'
-        disabled: 'izņēma no uzskaites %{when}'
+        enabled: "pievienoja uzskaitei %{when}"
+        disabled: "izņēma no uzskaites %{when}"
       banner:
-        enabled: 'padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs.'
-        disabled: 'noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā.'
+        enabled: "padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
+        disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
     topic_admin_menu: "tēmas pārvaldīšana"
     wizard_required: "Laipni lūgti jūsu jaunajā Discourse! Sāksim ar <a href='%{url}' data-auto-route='true'>uzstādīšanas palīgu</a> ✨"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
@@ -172,13 +166,12 @@ lv:
         eu_central_1: "ES (Frankfurte)"
         eu_west_1: "ES (Īrija)"
         eu_west_2: "ES (Londona)"
-        sa_east_1: "Dienvidamerika (Sanpaulu)"
         us_east_1: "ASV austrumi (Z-Virdžīnija)"
         us_east_2: "ASV austrumi (Ohaijo)"
         us_gov_west_1: "AWS GovCloud (ASV)"
         us_west_1: "ASV rietumi (Z-Kalifornija)"
         us_west_2: "ASV rietumi (Oregona)"
-    edit: 'labot šīs tēmas nosaukumu un sadaļu'
+    edit: "labot šīs tēmas nosaukumu un sadaļu"
     not_implemented: "Šī funkcionalitāte vēl nav ieviesta, atvainojiet!"
     no_value: "Nē"
     yes_value: "Jā"
@@ -208,7 +201,7 @@ lv:
     you: "Tu"
     or: "vai"
     now: "tikko"
-    read_more: 'lasīt vairāk'
+    read_more: "lasīt vairāk"
     more: "Vairāk"
     less: "Mazāk"
     never: "nekad"
@@ -275,9 +268,9 @@ lv:
         placeholder: "ierakstiet tēmas nosaukumu šeit"
     queue:
       topic: "Tēma:"
-      approve: 'Apstiprināt'
-      reject: 'Noraidīt'
-      delete_user: 'Dzēst lietotāju'
+      approve: "Apstiprināt"
+      reject: "Noraidīt"
+      delete_user: "Dzēst lietotāju"
       title: "Nepieciešama apstiprināšana"
       none: "Šobrīd nav pārbaudāmu ierakstu"
       edit: "Labot"
@@ -385,7 +378,6 @@ lv:
           description: "Jums paziņos, ja kāds pieminēs jūsu @vārdu vai atbildēs Jums."
         muted:
           title: "Noklusināts"
-          description: "Jums nekad neko neziņos par jauniem ierakstiem šajā grupā."
       flair_url: "Avatāra attēls"
       flair_url_placeholder: "(Neobligāti) Saite uz attēlu vai Font Awesome klasi"
       flair_bg_color: "Avatāra attēla fona krāsa"
@@ -480,7 +472,6 @@ lv:
       first_notification: "Jūsu pirmais paziņojums! Izvēlieties to, lai sāktu."
       disable_jump_reply: "Nepāriet uz manu ierakstu pēc atbildēšanas"
       dynamic_favicon: "Rādīt jauno / papildināto tēmu skaitu pārlūkprogrammas ikonā"
-      theme_default_on_all_devices: "Padarīt šo par manu noklusējuma motīvu visās manās ierīcēs"
       external_links_in_new_tab: "Atvērt visas saites jaunā cilnē"
       enable_quoting: "Ieslēgt atbildi ar iezīmētā teksta citēšanu"
       change: "mainīt"
@@ -708,9 +699,6 @@ lv:
         expired: "Šis ielūgums ir izbeidzies."
         rescind: "Atcelt"
         rescinded: "Ielūgums atcelts"
-        rescind_all: "Atcelt visus ielūgumus"
-        rescinded_all: "Visi uzaicinājumi ir atcelti!"
-        rescind_all_confirm: "Vai tiešām atcelt visus uzaicinājumus?"
         reinvite: "Atkārtot ielūgumu"
         reinvite_all: "Atkārtot visus ielūgumus"
         reinvite_all_confirm: "Vai tiešām vēlaties atkārtot visus ielūgumus?"
@@ -827,15 +815,15 @@ lv:
         one: "%{count} kļūda/%{duration}"
         other: "%{count} kļūdas/%{duration}"
     learn_more: "uzzināt vairāk..."
-    all_time: 'kopā'
-    all_time_desc: 'pavisam izveidotas tēmas'
-    year: 'gads'
-    year_desc: 'pēdējās 365 dienās izveidotie ieraksti'
-    month: 'mēnesis'
-    month_desc: 'pēdējās 30 dienās izveidotās tēmas'
-    week: 'nedēļa'
-    week_desc: 'pēdējās 7 dienās izveidotās tēmas'
-    day: 'diena'
+    all_time: "kopā"
+    all_time_desc: "pavisam izveidotas tēmas"
+    year: "gads"
+    year_desc: "pēdējās 365 dienās izveidotie ieraksti"
+    month: "mēnesis"
+    month_desc: "pēdējās 30 dienās izveidotās tēmas"
+    week: "nedēļa"
+    week_desc: "pēdējās 7 dienās izveidotās tēmas"
+    day: "diena"
     first_post: Pirmais ieraksts
     mute: Noklusināt
     unmute: Pārtraukt klusināšanu
@@ -853,8 +841,8 @@ lv:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
       description: "Ir <b>{{replyCount}}</b> atbildes."
       description_time: "Ir <b>{{replyCount}}</b> atbildes ar paredzamo lasīšanas laiku: <b>{{readingTime}} minūtes</b>."
-      enable: 'Tēmas kopsavilkums'
-      disable: 'Parādīt visus ierakstus'
+      enable: "Tēmas kopsavilkums"
+      disable: "Parādīt visus ierakstus"
     deleted_filter:
       enabled_description: "Šī tēma satur dzēstus ierakstus, kuri ir paslēpti."
       disabled_description: "Dzēstie ieraksti šajā tēmā ir redzami."
@@ -864,13 +852,13 @@ lv:
       title: "Ziņa"
       remove_allowed_user: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst {{name}} no šīs ziņas?"
-    email: 'E-pasts'
-    username: 'Lietotājvārds'
-    last_seen: 'Redzēts'
-    created: 'Izveidots'
-    created_lowercase: 'izveidots'
-    trust_level: 'Uzticības līmenis'
-    search_hint: 'lietotājvārds, e-pasts vai IP adrese'
+    email: "E-pasts"
+    username: "Lietotājvārds"
+    last_seen: "Redzēts"
+    created: "Izveidots"
+    created_lowercase: "izveidots"
+    trust_level: "Uzticības līmenis"
+    search_hint: "lietotājvārds, e-pasts vai IP adrese"
     create_account:
       disclaimer: "Reģistrējoties jūs piekrītat <a href='{{privacy_link}}'>konfidencialitātes politikai</a> un <a href='{{tos_link}}'>pakalpojumu sniegšanas noteikumiem</a>."
       title: "Izveidot jaunu profilu"
@@ -898,7 +886,7 @@ lv:
       error: "Nezināma kļūda"
       rate_limit: "Lūdzu uzgaidiet pirms nākamā mēģinājuma ieiet sistēmā"
       blank_username_or_password: "Lūdzu ievadiet savu e-pastu vai lietotājvārdu un paroli"
-      reset_password: 'Atjaunot paroli'
+      reset_password: "Atjaunot paroli"
       logging_in: "Ieejam sistēmā..."
       or: "Vai"
       authenticating: "Autorizējam..."
@@ -962,9 +950,9 @@ lv:
       categories_with_featured_topics: "Sadaļas un to labākās tēmas"
       categories_and_latest_topics: "Sadaļas un jaunākās tēmas"
     shortcut_modifier_key:
-      shift: 'Shift'
-      ctrl: 'Ctrl'
-      alt: 'Alt'
+      shift: "Shift"
+      ctrl: "Ctrl"
+      alt: "Alt"
     emoji_picker:
       filter_placeholder: Meklēt emoji
       people: Cilvēki
@@ -1033,8 +1021,8 @@ lv:
       saved: "Saglabāts!"
       saved_draft: "Ieraksta melnraksts. Spiediet šeit, lai turpinātu."
       uploading: "Augšuplādē..."
-      show_preview: 'rādīt priekšskatījumu &raquo;'
-      hide_preview: '&laquo; slēpt priekšskatījumu'
+      show_preview: "rādīt priekšskatījumu &raquo;"
+      hide_preview: "&laquo; slēpt priekšskatījumu"
       quote_post_title: "Citēt visu ierakstu"
       bold_label: "B"
       bold_title: "Treknraksts"
@@ -1146,9 +1134,9 @@ lv:
             after: pēc
     hamburger_menu: "iet uz citu tēmu sarakstu vai sadaļu"
     new_item: "jauns"
-    go_back: 'atgriezties'
-    not_logged_in_user: 'lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi'
-    current_user: 'doties uz jūsu lietotāja lapu'
+    go_back: "atgriezties"
+    not_logged_in_user: "lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi"
+    current_user: "doties uz jūsu lietotāja lapu"
     topics:
       new_messages_marker: "pēdējais apmeklējums"
       bulk:
@@ -1210,27 +1198,27 @@ lv:
         zero: "tēmā ziņu nav"
         one: "1 ziņa tēmā"
         other: "{{count}} ziņas tēmā"
-      create: 'Jauna tēma'
-      create_long: 'Izveidot jaunu tēmu '
-      private_message: 'Rakstīt ziņu '
+      create: "Jauna tēma"
+      create_long: "Izveidot jaunu tēmu "
+      private_message: "Rakstīt ziņu "
       archive_message:
-        help: 'Pārvietot ziņu uz arhīvu '
-        title: 'Arhīvs'
+        help: "Pārvietot ziņu uz arhīvu "
+        title: "Arhīvs"
       move_to_inbox:
-        title: 'Pārvietot uz iesūtni'
-        help: 'Atgriezt ziņu uz iesūtni '
-      list: 'Tēmas'
-      new: 'Jauna tēma'
-      unread: 'nelasīti'
+        title: "Pārvietot uz iesūtni"
+        help: "Atgriezt ziņu uz iesūtni "
+      list: "Tēmas"
+      new: "Jauna tēma"
+      unread: "nelasīti"
       new_topics:
-        zero: 'Jaunu tēmu nav'
-        one: '1 jauna tēma'
-        other: '{{count}} jaunas tēmas '
+        zero: "Jaunu tēmu nav"
+        one: "1 jauna tēma"
+        other: "{{count}} jaunas tēmas "
       unread_topics:
-        zero: 'Nelasītu tēmu nav'
-        one: '1 nelasīta tēma'
-        other: '{{count}} nelasītas tēmas'
-      title: 'Tēma'
+        zero: "Nelasītu tēmu nav"
+        one: "1 nelasīta tēma"
+        other: "{{count}} nelasītas tēmas"
+      title: "Tēma"
       invalid_access:
         title: "Šī tēma ir privāta "
         description: "Atvainojiet, jums nav pieejas šai tēmai!"
@@ -1309,7 +1297,7 @@ lv:
         auto_close_based_on_last_post: "Šo tēmu slēgs %{duration} pēc pēdējās atbildes."
         auto_delete: "Šo tēmu automātiski dzēsīs pēc %{timeLeft}."
         auto_reminder: "Jums atgādinās par šo tēmu pēc %{timeLeft}."
-      auto_close_title: 'Automātiskās slēgšanas iestatījumi'
+      auto_close_title: "Automātiskās slēgšanas iestatījumi"
       auto_close_immediate:
         zero: "Pēdējais ieraksts tēmā ir %{count} stundas vecs, tāpēc tēma tiks slēgta nekavējoties."
         one: "Pēdējais ieraksts tēmā ir 1 stundu vecs, tāpēc tēma tiks slēgta nekavējoties."
@@ -1334,21 +1322,21 @@ lv:
         title: "izmainīt to, cik bieži jūs saņemsiet paziņojumus par šo temu"
         reasons:
           mailing_list_mode: "Jums ir ieslēgts vēstkopas ieraksts, tāpēc par atbildēm šai tēmā ziņosim e-pastā."
-          "3_10": 'Jūs saņemsiet paziņojumus, jo novērojat tagu, kas ir šai tēmai.'
-          "3_6": 'Jūs saņemsiet paziņojumus, jo novērojat šo sadaļu.'
-          "3_5": 'Jūs saņemsiet paziņojumus, jo sākāt novērot šo tēmu automātiski.'
-          "3_2": 'Jūs saņemsiet paziņojumus, jo novērojat šo tēmu.'
-          "3_1": 'Jūs saņemsiet paziņojumus, jo izveidojāt šo tēmu.'
-          "3": 'Jūs saņemsiet paziņojumus, jo jūs novērojat šo tēmu.'
-          "2_8": 'Jūs redzēsiet jauno atbilžu skaitu, jo sekojat šai sadaļai.'
-          "2_4": 'Jūs redzēsiet jauno atbilžu skaitu, jo atbildējāt šajā tēmā.'
-          "2_2": 'Jūs redzēsiet jauno atbilžu skaitu, jo jūs sekojat šai tēmai.'
+          "3_10": "Jūs saņemsiet paziņojumus, jo novērojat tagu, kas ir šai tēmai."
+          "3_6": "Jūs saņemsiet paziņojumus, jo novērojat šo sadaļu."
+          "3_5": "Jūs saņemsiet paziņojumus, jo sākāt novērot šo tēmu automātiski."
+          "3_2": "Jūs saņemsiet paziņojumus, jo novērojat šo tēmu."
+          "3_1": "Jūs saņemsiet paziņojumus, jo izveidojāt šo tēmu."
+          "3": "Jūs saņemsiet paziņojumus, jo jūs novērojat šo tēmu."
+          "2_8": "Jūs redzēsiet jauno atbilžu skaitu, jo sekojat šai sadaļai."
+          "2_4": "Jūs redzēsiet jauno atbilžu skaitu, jo atbildējāt šajā tēmā."
+          "2_2": "Jūs redzēsiet jauno atbilžu skaitu, jo jūs sekojat šai tēmai."
           "2": 'Jūs redzēsiet jauno atbilžu skaitu, jo jūs <a href="{{basePath}}/u/{{username}}/preferences">lasījāt šo tēmu</a>.'
-          "1_2": 'Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums.'
-          "1": 'Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums.'
-          "0_7": 'Nesaņemt nekādus paziņojumus par šo sadaļu.'
-          "0_2": 'Nesaņemt nekādus paziņojumus par šo tēmu.'
-          "0": 'Nesaņemt nekādus paziņojumus par šo tēmu.'
+          "1_2": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
+          "1": "Jūs saņemsiet paziņojumu, ja kāds pieminēs jūsu vārdu paziņos, ja @pseidonīmu vai atbildēs jums."
+          "0_7": "Nesaņemt nekādus paziņojumus par šo sadaļu."
+          "0_2": "Nesaņemt nekādus paziņojumus par šo tēmu."
+          "0": "Nesaņemt nekādus paziņojumus par šo tēmu."
         watching_pm:
           title: "Novērot"
           description: "Jums paziņos par katru jaunu atbildi šai ziņai un rādīs jauno atbilžu skaitu."
@@ -1395,21 +1383,21 @@ lv:
         make_banner: "Banera tēma"
         remove_banner: "Noņemt banera tēmu"
       reply:
-        title: 'Atbildēt'
-        help: 'sākt rakstīt atbildi šai tēmai'
+        title: "Atbildēt"
+        help: "sākt rakstīt atbildi šai tēmai"
       clear_pin:
         title: "Noņemt piespraušanu"
         help: "Noņemt šai tēmai statusu 'piesprausta', lai tā vairs neparādītos jūsu tēmu saraksta augšgalā"
       share:
-        title: 'Dalīties'
-        help: 'dalīties ar saiti uz so tēmu'
+        title: "Dalīties"
+        help: "dalīties ar saiti uz so tēmu"
       print:
-        title: 'Drukāt'
-        help: 'Atvērt šīs tēmas drukas versiju'
+        title: "Drukāt"
+        help: "Atvērt šīs tēmas drukas versiju"
       flag_topic:
-        title: 'Ziņot'
-        help: 'privāti atzīmēt šo tēmu vai nosūtīt privāti ziņojumu par to'
-        success_message: 'Jūs veiksmīgi ziņojāt par šo tēmu.'
+        title: "Ziņot"
+        help: "privāti atzīmēt šo tēmu vai nosūtīt privāti ziņojumu par to"
+        success_message: "Jūs veiksmīgi ziņojāt par šo tēmu."
       feature_topic:
         title: "Novietot šo tēmu augšgalā"
         pin: "Nostiprināt šo tēmu sadaļas {{categoryLink}} augšgalā līdz"
@@ -1441,7 +1429,7 @@ lv:
       inviting: "Ielūdzam..."
       automatically_add_to_groups: "Šis ielūgums ietver arī piekļuvi šīm grupām:"
       invite_private:
-        title: 'Ielūgums rakstīt ziņas'
+        title: "Ielūgums rakstīt ziņas"
         email_or_username: "Ielūdzamā e-pasts vai lietotājvārds"
         email_or_username_placeholder: "e-pasta adrese vai lietotāja vārds"
         action: "Ielūgt"
@@ -1451,22 +1439,22 @@ lv:
         group_name: "grupas nosaukums"
       controls: "Tēmas pārvaldīšana"
       invite_reply:
-        title: 'Ielūgt'
+        title: "Ielūgt"
         username_placeholder: "lietotājvārds"
-        action: 'Nosūtīt ielūgumu'
-        help: 'Ielūgt citus uz šo tēmu, izmantojot e-pastu vai paziņojumus'
+        action: "Nosūtīt ielūgumu"
+        help: "Ielūgt citus uz šo tēmu, izmantojot e-pastu vai paziņojumus"
         to_forum: "Mēs nosūtīsim īsu e-pastu, kas ļaus jūsu draugam nekavējoties pievienoties, uzklikšķinot uz saites un bez ienākšanas forumā."
         sso_enabled: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu."
         to_topic_blank: "Ievadiet personas, ko vēlētos ielūgt šai tēmā, lietotājvārdu vai e-pastu."
         to_topic_email: "Jūs esat ievadījis e-pasta adresi. Mēs nosūtīsim e-pastā ielūgumu, kas ļaus jūsu draugam nekavējoties atbildēt šai tēmā."
         to_topic_username: "Jūs esat ievadījis lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
         to_username: "Ievadiet personas, ko vēlētos ielūgt, lietotājvārdu. Mēs nosūtīsim paziņojumu ar saiti, kas ļaus pievienoties šai tēmai."
-        email_placeholder: 'vards@piemers.com'
+        email_placeholder: "vards@piemers.com"
         success_email: "Mēs nosūtījām ielūguma e-pastu uz <b>{{emailOrUsername}}</b>. Mēs paziņosim jums, kad ielūgums būs izmantots. Pārbaudiet ielūgumu cilni jūsu lietotāja lapā, lai sekotu līdzi savu ielūgumu statusiem."
         success_username: "Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
         error: "Atvainojiet, mēs nevarējām ielūgt šo cilvēku. Varbūt jau ir nosūtīts ielūgums?"
         success_existing_email: "Jau pastāv lietotājs ar e-pastu <b>{{emailOrUsername}}</b>. Mēs ielūdzām šo lietotāju piedalīties šai tēmā."
-      login_reply: 'Lai atbildētu, ienāc forumā'
+      login_reply: "Lai atbildētu, ienāc forumā"
       filters:
         n_posts:
           zero: "{{count}} ieraksti"
@@ -1504,8 +1492,8 @@ lv:
         error: "Mainot ieraksta laika zīmogu, notika kļūda."
         instructions: "Lūdzu izvēlieties tēmas jauno laika zīmogu. Tēmas ieraksti tiks atjaunināti, ņemot vērā attiecīgo laika starpību."
       multi_select:
-        select: 'izvēlēties'
-        selected: 'izvēlēti ({{count}})'
+        select: "izvēlēties"
+        selected: "izvēlēti ({{count}})"
         delete: dzēst izvēlētos
         cancel: atcelt izvēlēšanos
         select_all: izvēlēties visu
@@ -1525,7 +1513,7 @@ lv:
       continue_discussion: "Turpinot diskusiju no {{postLink}}:"
       follow_quote: "doties uz citēto ierakstu"
       show_full: "Parādīt visu ierakstu"
-      show_hidden: 'Skatīt slēpto saturu.'
+      show_hidden: "Skatīt slēpto saturu."
       deleted_by_author:
         zero: "(autors atcēlis ierakstu, tas tiks automātiski dzēsts pēc %{count} stundām, ja neviens nav ziņojis par to)"
         one: "(autors atcēlis ierakstu, tas tiks automātiski dzēsts pēc %{count} stundas, ja neviens nav ziņojis par to)"
@@ -1573,7 +1561,7 @@ lv:
       wiki:
         about: "šis ieraksts ir wiki"
       archetypes:
-        save: 'Saglabāšanas iespējas'
+        save: "Saglabāšanas iespējas"
       few_likes_left: "Paldies par dalīšanos ar atzinību! Jums šodien ir palikušas tikai dažas iespējas izteikt atzinību."
       controls:
         reply: "sākt rakstīt atbildi šim ierakstam"
@@ -1597,7 +1585,7 @@ lv:
         unhide: "Noņemt slēpšanu"
         change_owner: "Mainīt īpašnieku"
       actions:
-        flag: 'Ziņot'
+        flag: "Ziņot"
         undo:
           off_topic: "Atcelt ziņošanu"
           spam: "Atcelt ziņošanu"
@@ -1696,38 +1684,36 @@ lv:
           edit_post: "Rediģēt ierakstu"
         displays:
           inline:
-            button: 'HTML'
+            button: "HTML"
           side_by_side:
-            button: 'HTML'
+            button: "HTML"
           side_by_side_markdown:
             title: "Parādīt izejas koda atšķirības"
       raw_email:
         displays:
           text_part:
             title: "Parādīt e-pasta teksta daļu"
-            button: 'Teksts'
+            button: "Teksts"
           html_part:
             title: "Parādīt e-pasta html daļu"
-            button: 'HTML'
+            button: "HTML"
     category:
-      can: 'var&hellip;'
-      none: '(nav sadaļas)'
-      all: 'Visas sadaļas'
-      edit: 'rediģēt'
-      edit_long: "Rediģēt"
-      view: 'Aplūkot sadaļas ierakstus'
-      general: 'Vispārīgi'
-      settings: 'Iestatījumi'
+      can: "var&hellip;"
+      none: "(nav sadaļas)"
+      all: "Visas sadaļas"
+      view: "Aplūkot sadaļas ierakstus"
+      general: "Vispārīgi"
+      settings: "Iestatījumi"
       topic_template: "Tēmas šablons"
       tags: "Tagi"
       tags_allowed_tags: "Šai sadaļā atļaut izmantot tikai šos tagus:"
       tags_allowed_tag_groups: "Šai sadaļā atļaut izmantot tikai tagus no šīm grupām:"
       tags_placeholder: "(Pēc izvēles) atļauto tagu saraksts"
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
-      delete: 'Dzēst sadaļu'
-      create: 'Jauna sadaļa'
-      create_long: 'Izveidot jaunu sadaļu'
-      save: 'Saglabāt sadaļu'
+      delete: "Dzēst sadaļu"
+      create: "Jauna sadaļa"
+      create_long: "Izveidot jaunu sadaļu"
+      save: "Saglabāt sadaļu"
       creation_error: "Izveidojot šo sadaļu, notika kļūda."
       save_error: "Saglabājot šo sadaļu, notika kļūda."
       name: "Sadaļas nosaukums"
@@ -1745,7 +1731,7 @@ lv:
       list: "Uzskaitīt sadaļas"
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
       change_in_category_topic: "Rediģēt aprakstu"
-      already_used: 'Šī krāsa ir izmantota citai sadaļai'
+      already_used: "Šī krāsa ir izmantota citai sadaļai"
       security: "Drošība"
       special_warning: "Brīdinājums: šī sadaļa ir automātiski izveidota un tās drošības uzstādījumi nav maināmi. Ja jūs nevēlaties šo sadaļu izmantot, izdzēsiet to, nevis pielietojiet citiem mērķiem."
       images: "Attēli"
@@ -1759,7 +1745,6 @@ lv:
       default_top_period: "Noklusējuma topa periods:"
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       edit_permissions: "Mainīt atļaujas"
-      add_permission: "Pievienot atļauju"
       this_year: "šogad"
       default_position: "Noklusētā pozīcija"
       position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"
@@ -1790,18 +1775,18 @@ lv:
         posters: "Plakāti"
         category: "Sadaļas"
         created: "Izveidots"
-      sort_ascending: 'Augoši'
-      sort_descending: 'Dilstoši'
+      sort_ascending: "Augoši"
+      sort_descending: "Dilstoši"
       subcategory_list_styles:
         rows: "Rindas"
         rows_with_featured_topics: "Rindas ar labākajām tēmām"
         boxes: "Kastes"
         boxes_with_featured_topics: "Kastes ar labākajām tēmām"
     flagging:
-      title: 'Paldies, ka palīdzat uzturēt mūsu forumu civilizētu!'
-      action: 'Ziņot par ierakstu'
-      notify_action: 'Ziņa'
-      official_warning: 'Oficiāls brīdinājums'
+      title: "Paldies, ka palīdzat uzturēt mūsu forumu civilizētu!"
+      action: "Ziņot par ierakstu"
+      notify_action: "Ziņa"
+      official_warning: "Oficiāls brīdinājums"
       delete_spammer: "Dzēst spamotāju"
       delete_confirm_MF: "Jūs grasāties izdzēst šī lietotāja {IERAKSTUS, plural, one {<b>1</b> ierakstu} other {<b>#</b> ierakstus}} un {TĒMAS, plural, one {<b>1</b> tēmu} other {<b>#</b> tēmas}}, izdzēst viņa profilu, bloķēt reģistrēšanos no viņa IP adreses <b>{ip_address}</b> un pievienot viņa e-pasta adresi <b>{email}</b> pastāvīgajam bloķēto sarakstam. Vai jūs esat pārliecināts, ka šis lietotājs patiešām ir spameris?"
       yes_delete_spammer: "Jā, izdzēst spameri"
@@ -1810,7 +1795,7 @@ lv:
       submit_tooltip: "Paziņot privāti"
       take_action_tooltip: "Sasniegt ziņojumu robežu uzreiz, nevis gaidīt vēl ziņojumus no lietotājiem"
       cant: "Atvainojiet, šobrīd jūs nevarat ziņot par šo ierakstu."
-      notify_staff: 'Ziņot darbiniekiem privāti'
+      notify_staff: "Ziņot darbiniekiem privāti"
       formatted_name:
         off_topic: "Nav saistīts ar tēmu"
         inappropriate: "Tas ir nepiedienīgs"
@@ -1868,8 +1853,6 @@ lv:
       pinned:
         title: "Piesprausts"
         help: "Jums šī tēma ir piesprausta; tā parādīsies savas sadaļas augšgalā"
-      invisible:
-        help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
     posts_long: "šai tēmā ir {{number}} ieraksts"
     posts_likes_MF: |
@@ -1996,55 +1979,55 @@ lv:
     lightbox:
       download: "lejuplādēt"
     keyboard_shortcuts_help:
-      title: 'Klaviatūras saīsnes'
+      title: "Klaviatūras saīsnes"
       jump_to:
-        title: 'Pāriet uz'
-        home: '<b>g</b>, <b>h</b> Sākums'
-        latest: '<b>g</b>, <b>l</b> Pēdējais'
-        new: '<b>g</b>, <b>n</b> Jaunākais'
-        unread: '<b>g</b>, <b>u</b> Nelasītais'
-        categories: '<b>g</b>, <b>c</b> Sadaļas'
-        top: '<b>g</b>, <b>t</b> Populārākais'
-        bookmarks: '<b>g</b>, <b>b</b> Grāmatzīmes'
-        profile: '<b>g</b>, <b>p</b> Profils'
-        messages: '<b>g</b>, <b>m</b> Ziņas'
+        title: "Pāriet uz"
+        home: "<b>g</b>, <b>h</b> Sākums"
+        latest: "<b>g</b>, <b>l</b> Pēdējais"
+        new: "<b>g</b>, <b>n</b> Jaunākais"
+        unread: "<b>g</b>, <b>u</b> Nelasītais"
+        categories: "<b>g</b>, <b>c</b> Sadaļas"
+        top: "<b>g</b>, <b>t</b> Populārākais"
+        bookmarks: "<b>g</b>, <b>b</b> Grāmatzīmes"
+        profile: "<b>g</b>, <b>p</b> Profils"
+        messages: "<b>g</b>, <b>m</b> Ziņas"
       navigation:
-        title: 'Pārvietošanās'
-        jump: '<b>#</b> Doties uz ierakstu #'
-        back: '<b>u</b> Atgriezties'
-        up_down: '<b>k</b>/<b>j</b> Pārvietot atlasīto &uarr; &darr;'
-        open: '<b>o</b> vai <b>Enter</b> Atvērt izvēlēto tēmu'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nākamā/iepriekšējā sadaļa'
+        title: "Pārvietošanās"
+        jump: "<b>#</b> Doties uz ierakstu #"
+        back: "<b>u</b> Atgriezties"
+        up_down: "<b>k</b>/<b>j</b> Pārvietot atlasīto &uarr; &darr;"
+        open: "<b>o</b> vai <b>Enter</b> Atvērt izvēlēto tēmu"
+        next_prev: "<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nākamā/iepriekšējā sadaļa"
       application:
-        title: 'Lietotne'
-        create: '<b>c</b> Izveidot jaunu tēmu'
-        notifications: '<b>n</b> Atvērt paziņojumus'
-        user_profile_menu: '<b>p</b> Atvērt lietotaja menu'
-        show_incoming_updated_topics: '<b>.</b> Parādīt tēmas ar izmaiņām'
-        help: '<b>?</b> Atvērt klaviatūras palīdzību'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Ignorēt jauno/ierakstus'
-        dismiss_topics: '<b>x</b>, <b>t</b> Ignorēt tēmas'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Iziet no foruma'
+        title: "Lietotne"
+        create: "<b>c</b> Izveidot jaunu tēmu"
+        notifications: "<b>n</b> Atvērt paziņojumus"
+        user_profile_menu: "<b>p</b> Atvērt lietotaja menu"
+        show_incoming_updated_topics: "<b>.</b> Parādīt tēmas ar izmaiņām"
+        help: "<b>?</b> Atvērt klaviatūras palīdzību"
+        dismiss_new_posts: "<b>x</b>, <b>r</b> Ignorēt jauno/ierakstus"
+        dismiss_topics: "<b>x</b>, <b>t</b> Ignorēt tēmas"
+        log_out: "<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Iziet no foruma"
       actions:
-        title: 'Darbības'
-        bookmark_topic: '<b>f</b> Mainīt tēmas grāmatzīmes statusu'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Piespraust/atspraust tēmu'
-        share_topic: '<b>shift</b>+<b>s</b> Dalīties ar tēmu'
-        share_post: '<b>s</b> Dalīties ar ierakstu'
-        reply_as_new_topic: '<b>t</b> Atbildēt ar saistītu tēmu'
-        reply_topic: '<b>shift</b>+<b>r</b> Atbildēt tēmai'
-        reply_post: '<b>r</b> Atbildēt ierakstam'
-        quote_post: '<b>q</b> Citēt ierakstu'
-        like: '<b>l</b> Izteikt atzinību ierakstam'
-        flag: '<b>!</b> Ziņot par ierakstu'
-        bookmark: '<b>b</b> Pievienot ierakstu grāmatzīmēm'
-        edit: '<b>e</b> Rediģēt ierakstu'
-        delete: '<b>d</b> Dzēst ierakstu'
-        mark_muted: '<b>m</b>, <b>m</b> Klusināt ierakstu'
-        mark_regular: '<b>m</b>, <b>r</b> Parasta tēma'
-        mark_tracking: '<b>m</b>, <b>t</b> Sekot tēmai'
-        mark_watching: '<b>m</b>, <b>w</b> Novērot tēmu'
-        print: '<b>ctrl</b>+<b>p</b> Drukāt tēmu'
+        title: "Darbības"
+        bookmark_topic: "<b>f</b> Mainīt tēmas grāmatzīmes statusu"
+        pin_unpin_topic: "<b>shift</b>+<b>p</b> Piespraust/atspraust tēmu"
+        share_topic: "<b>shift</b>+<b>s</b> Dalīties ar tēmu"
+        share_post: "<b>s</b> Dalīties ar ierakstu"
+        reply_as_new_topic: "<b>t</b> Atbildēt ar saistītu tēmu"
+        reply_topic: "<b>shift</b>+<b>r</b> Atbildēt tēmai"
+        reply_post: "<b>r</b> Atbildēt ierakstam"
+        quote_post: "<b>q</b> Citēt ierakstu"
+        like: "<b>l</b> Izteikt atzinību ierakstam"
+        flag: "<b>!</b> Ziņot par ierakstu"
+        bookmark: "<b>b</b> Pievienot ierakstu grāmatzīmēm"
+        edit: "<b>e</b> Rediģēt ierakstu"
+        delete: "<b>d</b> Dzēst ierakstu"
+        mark_muted: "<b>m</b>, <b>m</b> Klusināt ierakstu"
+        mark_regular: "<b>m</b>, <b>r</b> Parasta tēma"
+        mark_tracking: "<b>m</b>, <b>t</b> Sekot tēmai"
+        mark_watching: "<b>m</b>, <b>w</b> Novērot tēmu"
+        print: "<b>ctrl</b>+<b>p</b> Drukāt tēmu"
     badges:
       earned_n_times:
         zero: "Nopelnīja šo žetonu %{count} reizes"
@@ -2158,8 +2141,8 @@ lv:
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:
-      title: 'Discourse administrators'
-      moderator: 'Moderators'
+      title: "Discourse administrators"
+      moderator: "Moderators"
       dashboard:
         title: "Administrācijas panelis"
         last_updated: "Pēdējais administrācijas paneļa atjauninājums:"
@@ -2173,13 +2156,12 @@ lv:
         version_check_pending: "Izskatās, ka nesen esat veicies atjauninājumus. Lieliski!"
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
-        problems_found: "Jūsu Discourse instalācijā ir atrastas dažas problēmas:"
         last_checked: "Pēdējā pārbaude"
         refresh_problems: "Pārlādēt"
         no_problems: "Problēmas nav atrastas."
-        moderators: 'Moderatori:'
-        admins: 'Administratori:'
-        suspended: 'Īslaicīgi bloķētie:'
+        moderators: "Moderatori:"
+        admins: "Administratori:"
+        suspended: "Īslaicīgi bloķētie:"
         private_messages_short: "Ziņas"
         private_messages_title: "Ziņās"
         mobile_title: "Mobilais"
@@ -2396,7 +2378,6 @@ lv:
         save: "Saglabāt"
         new: "Jauns"
         new_style: "Jauns stils"
-        import: "Importēt"
         delete: "Dzēst"
         delete_confirm: "Dzēst šo dizainu?"
         color: "Krāsa"
@@ -2415,7 +2396,6 @@ lv:
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
         theme:
-          import_theme: "Importēt dizainu"
           customize_desc: "Pielāgot:"
           title: "Dizaini"
           long_title: "Labot jūsu vietnes krāsas, CSS un HTML saturu"
@@ -2426,7 +2406,6 @@ lv:
           preview: "Priekšskatījums"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
-          color_scheme: "Krāsu shēma"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
@@ -2440,8 +2419,6 @@ lv:
           edit_css_html_help: "Jūs neesat izmainījis nekādus CSS vai HTML failus"
           delete_upload_confirm: "Dzēst šo resursu? (Dizaina CSS var pārtraukt darboties!)"
           import_web_tip: "Repozitorijs, kas satur dizainu"
-          import_file_tip: ".dcstyle.json fails, kas satur dizainu"
-          about_theme: "Par dizainu"
           license: "Licence"
           update_to_latest: "Atjaunināt uz pēdējo"
           check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
@@ -2524,9 +2501,9 @@ lv:
         topic_id: "Tēmas ID"
         post_id: "Ieraksta ID"
         category_id: "Kategorijas ID"
-        delete: 'Dzēst'
-        edit: 'Labot'
-        save: 'Saglabāt'
+        delete: "Dzēst"
+        edit: "Labot"
+        save: "Saglabāt"
         screened_actions:
           block: "Bloķēt"
           do_nothing: "Nedarīt neko"
@@ -2627,19 +2604,19 @@ lv:
           one: "1 vārds"
           other: "%{count} vārdi"
         actions:
-          block: 'Bloķēt'
-          censor: 'Cenzēt'
-          require_approval: 'Pieprasīt apstiprinājumu'
-          flag: 'Sūdzība'
+          block: "Bloķēt"
+          censor: "Cenzēt"
+          require_approval: "Pieprasīt apstiprinājumu"
+          flag: "Sūdzība"
         action_descriptions:
-          block: 'Neļaut publicēt ierakstus, kas satur šos vārdus. Lietotājs redzēs kļūdas paziņojumu, kad mēģinās nosūtīt savu ierakstu.'
-          censor: 'Atļaut ierakstus, kas satur šos vārdus, taču aizvietot tos ar simboliem, kas tos paslēps.'
-          require_approval: 'Ierakstiem, kas satur šos vārdus, būs nepieciešams darbinieku apstiprinājums, pirms tos varēs redzēt citi.'
-          flag: 'Atļaut ierakstus, kas satur šos vārdus, taču atzīmēt tos kā nepiedienīgus, lai moderatori var tos pārbaudīt.'
+          block: "Neļaut publicēt ierakstus, kas satur šos vārdus. Lietotājs redzēs kļūdas paziņojumu, kad mēģinās nosūtīt savu ierakstu."
+          censor: "Atļaut ierakstus, kas satur šos vārdus, taču aizvietot tos ar simboliem, kas tos paslēps."
+          require_approval: "Ierakstiem, kas satur šos vārdus, būs nepieciešams darbinieku apstiprinājums, pirms tos varēs redzēt citi."
+          flag: "Atļaut ierakstus, kas satur šos vārdus, taču atzīmēt tos kā nepiedienīgus, lai moderatori var tos pārbaudīt."
         form:
-          label: 'Jauns vārds:'
-          add: 'Pievienot'
-          success: 'Veiksmīgi'
+          label: "Jauns vārds:"
+          add: "Pievienot"
+          success: "Veiksmīgi"
           upload: "Augšupielādēt"
           upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
       impersonate:
@@ -2648,20 +2625,19 @@ lv:
         not_found: "Šāds lietotājs nav atrasts."
         invalid: "Piedod, tu nevari izlikties (impersonate) par šo lietotāju."
       users:
-        title: 'Lietotāji'
-        create: 'Pievienot administratoru'
+        title: "Lietotāji"
+        create: "Pievienot administratoru"
         last_emailed: "Pēdējo reizi saņēmis e-pastu"
         not_found: "Piedod, šāds lietotājvārds neeksistē mūsu sistēmā."
         id_not_found: "Piedod, šāds lietotāja ID neeksistē mūsu sistēmā."
-        active: "Aktīvi"
         show_emails: "Parādīt E-pastus"
         nav:
           new: "Jauns"
           active: "Aktīvi"
           pending: "Neizlemts"
-          staff: 'Personāls'
-          suspended: 'Apturēts'
-          suspect: 'Novērot'
+          staff: "Personāls"
+          suspended: "Apturēts"
+          suspect: "Novērot"
         approved: "Apstiprināt?"
         approved_selected:
           zero: "Apstiprināt lietotāju"
@@ -2672,19 +2648,19 @@ lv:
           one: "Atteikt lietotāju"
           other: "Atteikt lietotājus ({{count}})"
         titles:
-          active: 'Aktīvi lietotāji'
-          new: 'Jauni lietotāji'
-          pending: 'Lietotāji, kas jāizskata'
-          newuser: 'Lietotāji ar 0. uzticības pakāpi (Jauns lietotājs)'
-          basic: 'Lietotāji ar 1. uzticības pakāpi (Biedri)'
-          member: 'Lietotāji ar 2. uzticības pakāpi (Biedri)'
-          regular: 'Lietotāji ar 3. uzticības pakāpi (Aktīvie atbalstītāji)'
-          leader: 'Lietotāji ar 4. uzticības pakāpi (Vadītāji)'
+          active: "Aktīvi lietotāji"
+          new: "Jauni lietotāji"
+          pending: "Lietotāji, kas jāizskata"
+          newuser: "Lietotāji ar 0. uzticības pakāpi (Jauns lietotājs)"
+          basic: "Lietotāji ar 1. uzticības pakāpi (Biedri)"
+          member: "Lietotāji ar 2. uzticības pakāpi (Biedri)"
+          regular: "Lietotāji ar 3. uzticības pakāpi (Aktīvie atbalstītāji)"
+          leader: "Lietotāji ar 4. uzticības pakāpi (Vadītāji)"
           staff: "Personāls"
-          admins: 'Administratori'
-          moderators: 'Moderātori'
-          suspended: 'Atceltie lietotāji'
-          suspect: 'Novēroti (suspect) lietotāji'
+          admins: "Administratori"
+          moderators: "Moderātori"
+          suspended: "Atceltie lietotāji"
+          suspect: "Novēroti (suspect) lietotāji"
         reject_successful:
           zero: "Veiksmīgi atteikts 1 lietotājs."
           one: "Veiksmīgi atteikts 1 lietotājs."
@@ -2711,26 +2687,24 @@ lv:
         suspended: "Neapturēts?"
         staged: "Izveidots?"
         show_admin_profile: "Administrators"
-        refresh_browsers: "Piespiest pārlūka atsvaidzināšanu (Force browser refresh)"
-        refresh_browsers_message: "Ziņa nosūtīta visiem klientiem!"
         show_public_profile: "Parādīt publisko profilu"
-        impersonate: 'Izlikties (Impersonate)'
+        impersonate: "Izlikties (Impersonate)"
         action_logs: "Aktivitāšu saraksts"
         ip_lookup: "IP meklēšana"
         log_out: "Iziet"
         logged_out: "Lietotājs tika atslēgts no visām ierīcēm"
-        revoke_admin: 'Atsaukt Administratora pakāpi'
-        grant_admin: 'Piešķirt Administratora pakāpi'
+        revoke_admin: "Atsaukt Administratora pakāpi"
+        grant_admin: "Piešķirt Administratora pakāpi"
         grant_admin_confirm: "Mēs nosūtījām jums e-pastu, lai jūs apstiprinātu jauno administratoru. Lūdzu atver e-pastu un seko instrukcijām."
-        revoke_moderation: 'Atsaukt Moderātora pakāpi'
-        grant_moderation: 'Piešķirt Moderātora pakāpi'
-        unsuspend: 'Neapturēt'
-        suspend: 'Apturēt'
+        revoke_moderation: "Atsaukt Moderātora pakāpi"
+        grant_moderation: "Piešķirt Moderātora pakāpi"
+        unsuspend: "Neapturēt"
+        suspend: "Apturēt"
         reputation: Reputācija
         permissions: Atļaujas / Pieejas
         activity: Aktivitāte
         like_count: "\"Patīk\" doti / saņemti"
-        last_100_days: 'Pēdējās 100 dienās'
+        last_100_days: "Pēdējās 100 dienās"
         private_topics_count: Privātas tēmas
         posts_read_count: Ieraksti izlasīti
         post_count: Ieraksti
@@ -2738,8 +2712,8 @@ lv:
         flags_given_count: Atzīmes izveidotas
         flags_received_count: Atzīmes saņemtas
         warnings_received_count: Brīdinājumi saņemti
-        flags_given_received_count: 'Atzīmes Izdotas / Saņemtas'
-        approve: 'Apstiprināt'
+        flags_given_received_count: "Atzīmes Izdotas / Saņemtas"
+        approve: "Apstiprināt"
         approved_by: "apstiprināja"
         approve_success: "Lietotāji tika apstiprināti un tika nosūtīts e-pasts ar autorizēšanās instrukciju."
         approve_bulk_success: "Visi izvēlētie lietotāji tika apstiprināti un informēti."
@@ -2763,7 +2737,6 @@ lv:
           zero: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā 1 ieraksts. (delete_all_posts_max)"
           one: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā 1 ieraksts. (delete_all_posts_max)"
           other: "Nevar dzēst visus ierakstus jo lietotājam ir vairāk kā %{count} ieraksti. (delete_all_posts_max)"
-        delete_confirm: "Vai esi drošs, ka vēlies dzēst šo lietotāju? Šis ir neatgriezeniski."
         delete_and_block: "Dzēst un <b>bloķēt</b> e-pastu un IP adresi"
         delete_dont_block: "Tikai Dzēst"
         deleted: "Lietotājs tika dzēsts."
@@ -2861,44 +2834,44 @@ lv:
           enabled: "redzams lietotāja kartē"
           disabled: "nav redzams lietotāja kartē"
         field_types:
-          text: 'Teksta Lauks'
-          confirm: 'Apstiprinājums'
+          text: "Teksta Lauks"
+          confirm: "Apstiprinājums"
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
         description: "Jūs varat pielāgot jebkuru tekstu jūsu forumā. Sāciet, meklējot sekojošo:"
         search: "Meklēt tekstu, kuru vēlies rediģēt"
-        title: 'Teksta Saturs'
-        edit: 'labot'
+        title: "Teksta Saturs"
+        edit: "labot"
         revert: "Atsaukt Izmaiņas"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"
         go_back: "Atpakaļ pie meklētāja"
         recommended: "Iesakām pielāgot šo tekstu jūsu vajadzībām:"
-        show_overriden: 'Rādīt tikai aizstātos'
+        show_overriden: "Rādīt tikai aizstātos"
       site_settings:
-        title: 'Iestatījumi'
+        title: "Iestatījumi"
         no_results: "Nekas nav atrasts."
         clear_filter: "Noņemt"
         add_url: "Pievienot URL"
         add_host: "Pievienot \"Hostu\""
         categories:
-          all_results: 'Viss'
-          required: 'Nepieciešams'
-          basic: 'Pamata Iestatījumi'
-          users: 'Lietotāji'
-          posting: 'Ieraksti'
-          email: 'E-pasts'
-          files: 'Faili'
-          trust: 'Uzticības Līmenis'
-          security: 'Drošība'
+          all_results: "Viss"
+          required: "Nepieciešams"
+          basic: "Pamata Iestatījumi"
+          users: "Lietotāji"
+          posting: "Ieraksti"
+          email: "E-pasts"
+          files: "Faili"
+          trust: "Uzticības Līmenis"
+          security: "Drošība"
           onebox: "Onebox"
-          seo: 'SEO'
-          spam: 'Spams'
-          rate_limits: '(Rate Limits)'
-          developer: 'Izstrādātājs'
+          seo: "SEO"
+          spam: "Spams"
+          rate_limits: "(Rate Limits)"
+          developer: "Izstrādātājs"
           embedding: "Ieguldīšana"
           legal: "Jurid."
-          user_api: 'Lietotāja API'
-          uncategorized: 'Citi'
+          user_api: "Lietotāja API"
+          uncategorized: "Citi"
           backups: "Dublējums (Backups)"
           login: "Ielogoties"
           plugins: "Spraudņi"

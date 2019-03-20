@@ -9,7 +9,7 @@
   box-shadow: shadow("header");
 
   > .wrap {
-    width: 100%;
+    width: calc(100% - 16px); // accommodates for 8px vertical padding
     height: 100%;
     .contents {
       display: flex;
@@ -38,7 +38,7 @@
   }
 
   .d-icon-home {
-    font-size: $font-up-5;
+    font-size: $font-up-6;
   }
 
   .panel {
@@ -100,10 +100,6 @@
     width: 2.2857em;
     height: 2.2857em;
     padding: 0.2143em;
-    color: dark-light-choose(
-      scale-color($header_primary, $lightness: 50%),
-      $header_primary
-    );
     text-decoration: none;
     cursor: pointer;
     border-top: 1px solid transparent;
@@ -112,16 +108,18 @@
     transition: all linear 0.15s;
     outline: none;
     img.avatar {
-      width: 2.2857em;
-      height: 2.2857em;
+      width: 2.1333em;
+      height: 2.1333em;
     }
     &:hover,
     &:focus {
-      color: $primary;
       background-color: $primary-low;
       border-top: 1px solid transparent;
       border-left: 1px solid transparent;
       border-right: 1px solid transparent;
+      .d-icon {
+        color: $primary-medium;
+      }
     }
     &:active {
       color: $primary;
@@ -131,13 +129,14 @@
   .drop-down-mode & {
     .active .icon {
       position: relative;
-      color: #7b7b7b;
       background-color: $secondary;
       cursor: default;
       border-top: 1px solid $primary-low;
       border-left: 1px solid $primary-low;
       border-right: 1px solid $primary-low;
-
+      .d-icon {
+        color: $primary-medium;
+      }
       &:after {
         display: block;
         position: absolute;
@@ -160,6 +159,7 @@
     font-size: $font-up-4;
     line-height: $line-height-large;
     display: inline-block;
+    color: $header_primary-low-mid;
   }
   .notifications {
     position: relative;
@@ -178,7 +178,7 @@
     z-index: z("base");
     left: 0;
     top: -4px;
-    min-width: 6px;
+    min-width: 0.6em;
   }
   .unread-notifications {
     left: auto;
@@ -247,9 +247,12 @@
   }
   .categories-wrapper {
     display: inline-flex;
-    max-width: 100%;
-    // only truncate the last category name.
-    > a:last-of-type {
+    // Protection against a very rare edge case in mobile header for topics with
+    // very long category names and lots of tags at the same time
+    max-width: 80%;
+    flex: 0 1 auto;
+    min-width: 1px;
+    .badge-wrapper {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

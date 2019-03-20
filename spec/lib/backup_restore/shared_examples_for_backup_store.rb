@@ -57,7 +57,7 @@ shared_examples "backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           expect(store.files).to eq([backup5, backup4])
         end
       end
@@ -74,7 +74,7 @@ shared_examples "backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           expect(store.latest_file).to eq(backup5)
         end
       end
@@ -82,8 +82,10 @@ shared_examples "backup store" do
 
     describe "#reset_cache" do
       it "resets the storage stats report" do
+        Report.stubs(:report_storage_stats)
         report_type = "storage_stats"
         report = Report.find(report_type)
+
         Report.cache(report, 35.minutes)
         expect(Report.find_cached(report_type)).to be_present
 
@@ -110,7 +112,7 @@ shared_examples "backup store" do
       it "works with multisite", type: :multisite do
         SiteSetting.maximum_backups = 1
 
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           store.delete_old
           expect(store.files).to eq([backup5])
         end
@@ -132,7 +134,7 @@ shared_examples "backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           file = store.file(backup4.filename, include_download_source: true)
           expect(file.source).to match(source_regex("second", backup4.filename, multisite: true))
         end
@@ -153,7 +155,7 @@ shared_examples "backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           expect(store.files).to include(backup5)
           store.delete_file(backup5.filename)
           expect(store.files).to_not include(backup5)
@@ -182,7 +184,7 @@ shared_examples "backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           expect(store.files).to include(backup5)
           store.delete_file(backup5.filename)
           expect(store.files).to_not include(backup5)
@@ -239,7 +241,7 @@ shared_examples "remote backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           upload_file
         end
       end
@@ -266,7 +268,7 @@ shared_examples "remote backup store" do
       end
 
       it "works with multisite", type: :multisite do
-        RailsMultisite::ConnectionManagement.with_connection("second") do
+        test_multisite_connection("second") do
           filename = "foo.tar.gz"
           url = store.generate_upload_url(filename)
 

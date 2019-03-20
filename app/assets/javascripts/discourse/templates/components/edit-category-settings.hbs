@@ -43,6 +43,17 @@
   </label>
 </section>
 
+<section class="field">
+  <label for="category-search-priority">
+    {{i18n "category.search_priority.label"}}
+  </label>
+
+  {{combo-box valueAttribute="value"
+      id="category-search-priority"
+      content=searchPrioritiesOptions
+      value=category.search_priority}}
+</section>
+
 {{#if isParentCategory}}
   <section class="field show-subcategory-list-field">
     <label>
@@ -85,9 +96,9 @@
     {{i18n "category.sort_order"}}
   </label>
   <div class="controls">
-  {{combo-box valueAttribute="value" id="category-sort-order" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+  {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
   {{#unless isDefaultSortOrder}}
-    {{combo-box castBoolean=true valueAttribute="value" id="category-sort-order" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+    {{combo-box castBoolean=true valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
   {{/unless}}
     </div>
 </section>
@@ -147,7 +158,7 @@
 
     <section class='field'>
       <label for="category-email-in">
-        {{d-icon "envelope-o"}}
+        {{d-icon "far-envelope"}}
         {{i18n 'category.email_in'}}
       </label>
               {{text-field id="category-email-in" class="email-in" value=category.email_in}}

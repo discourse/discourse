@@ -80,7 +80,7 @@ export default ComboBoxComponent.extend({
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     if (this.get("hasSelection")) {
       const category = Category.findById(content.value);
@@ -159,6 +159,16 @@ export default ComboBoxComponent.extend({
       }
 
       let results = Discourse.Category.search(filter);
+
+      if (!this.siteSettings.allow_uncategorized_topics) {
+        results = results.filter(result => {
+          return (
+            result.id !==
+            Discourse.Site.currentProp("uncategorized_category_id")
+          );
+        });
+      }
+
       results = results.sort((a, b) => {
         if (a.parent_category_id && !b.parent_category_id) {
           return 1;

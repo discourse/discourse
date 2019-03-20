@@ -39,11 +39,12 @@ describe Auth::ManagedAuthenticator do
   describe 'after_authenticate' do
     it 'can match account from an existing association' do
       user = Fabricate(:user)
-      associated = UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234")
+      associated = UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234", last_used: 1.year.ago)
       result = authenticator.after_authenticate(hash)
 
       expect(result.user.id).to eq(user.id)
       associated.reload
+      expect(associated.last_used).to be >= 1.day.ago
       expect(associated.info["name"]).to eq("Best Display Name")
       expect(associated.info["email"]).to eq("awesome@example.com")
       expect(associated.credentials["token"]).to eq("supersecrettoken")
@@ -176,6 +177,35 @@ describe Auth::ManagedAuthenticator do
           user.user_profile.reload
           expect(user.user_profile[profile_key]).to eq("New Value")
         end
+      end
+    end
+
+    describe "email update" do
+      let(:user) { Fabricate(:user) }
+      let!(:associated) { UserAssociatedAccount.create!(user: user, provider_name: 'myauth', provider_uid: "1234") }
+
+      it "updates the user's email if currently invalid" do
+        user.update!(email: "someemail@discourse.org")
+        # Existing email is valid, do not change
+        expect { result = authenticator.after_authenticate(hash) }
+          .not_to change { user.reload.email }
+
+        user.update!(email: "someemail@discourse.invalid")
+        # Existing email is invalid, expect change
+        expect { result = authenticator.after_authenticate(hash) }
+          .to change { user.reload.email }
+
+        expect(user.email).to eq("awesome@example.com")
+      end
+
+      it "doesn't raise error if email is taken" do
+        other_user = Fabricate(:user, email: "awesome@example.com")
+        user.update!(email: "someemail@discourse.invalid")
+
+        expect { result = authenticator.after_authenticate(hash) }
+          .not_to change { user.reload.email }
+
+        expect(user.email).to eq("someemail@discourse.invalid")
       end
     end
 

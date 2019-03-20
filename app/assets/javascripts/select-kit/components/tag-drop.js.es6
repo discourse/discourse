@@ -42,7 +42,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
   },
 
   computeHeaderContent() {
-    let content = this._super();
+    let content = this._super(...arguments);
 
     if (!content.value) {
       if (this.get("tagId")) {
