@@ -149,7 +149,6 @@
 
     .details {
       padding: 0 0 4px 0;
-      margin-top: -200px;
       transition: margin 0.15s linear;
 
       img.avatar {
@@ -164,10 +163,14 @@
             text-decoration: underline;
           }
           .location-and-website {
+            display: flex;
             max-width: 100%;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            .user-profile-location {
+              margin-right: 1em;
+            }
           }
         }
 
@@ -184,6 +187,7 @@
     &.has-background {
       .details {
         padding: 15px 15px 4px 15px;
+        margin-top: 240px;
       }
     }
 
@@ -221,6 +225,7 @@
 
       .details {
         padding: 0 0 2px 0;
+        margin-top: 0;
         border-bottom: 1px solid $primary-low;
       }
 

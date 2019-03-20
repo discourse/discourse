@@ -1,79 +1,33 @@
 // Mobile styles for "/user" section
-.user-right {
-  &,
-  > .user-stream {
-    > .alert:first-child {
-      margin-top: 20px;
-    }
-  }
-}
 
 .user-main {
-  margin-top: 10px;
-  table.group-members {
-    width: 100%;
-    p {
-      max-width: 600px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    th {
-      text-align: right;
-    }
-    td {
-      padding: 0.5em;
-      border-bottom: 1px solid $primary-low;
-      img {
-        margin-right: 10px;
-      }
-      span.text {
-        float: right;
-        color: $primary;
-      }
-    }
-    .user-info {
-      width: 245px;
-    }
-  }
+  margin-top: s(3);
 
   .user-content {
-    background-color: $secondary;
     box-sizing: border-box;
-    margin-top: 10px;
-
-    .btn.right {
-      float: right;
-    }
-
+    background-color: $secondary;
+    margin-top: s(3);
     table {
       width: 100%;
-      margin-top: 10px;
+      margin-top: s(3);
     }
   }
 
   .about {
-    background: dark-light-diff($primary, $secondary, 0%, -75%) center;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     color: $secondary;
 
-    &.no-background {
-      .profile-image {
-        display: none;
-      }
-    }
-
     .secondary {
+      margin-bottom: s(3);
       dl {
-        padding: 5px 0;
+        padding: s(2) 0;
       }
     }
 
     .details {
-      padding: 15px 5px 5px 5px;
+      background: $secondary;
 
       h1 {
-        margin: 0;
         line-height: $line-height-small;
       }
 
@@ -81,32 +35,82 @@
         line-height: $line-height-medium;
       }
 
-      .primary {
-        display: flex;
-        flex-wrap: wrap;
-        color: $primary;
-
-        .avatar {
-          margin: 0 5px 10px 5px;
+      .user-profile-avatar {
+        .avatar-flair {
+          right: 2px;
         }
-
-        .primary-textual {
-          flex: 1 1 40%;
-          padding-left: 5px;
-          word-break: break-word;
-          a[href] {
-            color: $primary;
-          }
-        }
-
-        .bio {
-          color: $primary;
-          max-width: 700px;
+        display: block;
+        float: none;
+        margin: s(2 auto);
+        img.avatar {
+          float: none;
         }
       }
 
-      .user-profile-avatar .avatar-flair {
-        right: 2px;
+      .user-profile-names {
+        text-align: center;
+      }
+
+      .location-and-website {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: $font-0;
+        .d-icon {
+          width: 0.8em;
+          height: 0.8em;
+          margin-right: 0.25em;
+        }
+        a {
+          text-decoration: underline;
+        }
+      }
+
+      .user-profile-location {
+        margin-right: 1em;
+      }
+
+      .user-profile-location,
+      .user-profile-website {
+        justify-content: center;
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .primary {
+      display: flex;
+      flex-wrap: wrap;
+      color: $primary;
+
+      .avatar {
+        margin: 0 0 s(3);
+      }
+
+      .primary-textual {
+        flex: 1 1 100%;
+        word-break: break-word;
+        margin: 0;
+      }
+
+      .bio {
+        color: $primary;
+        margin: 0 auto s(2);
+        max-width: 700px;
+        text-align: center;
+      }
+    }
+
+    &.has-background {
+      background-size: contain;
+      background-position: top center;
+      background-repeat: no-repeat;
+
+      .user-profile-avatar {
+        margin-top: s(-24);
+      }
+      .details {
+        margin-top: 200px;
       }
     }
 
@@ -120,17 +124,17 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-      }
-
-      li {
-        display: flex;
-        flex: 1 1 auto;
-        margin: 0 5px;
-      }
-
-      span {
-        flex: 0 1 100%;
-        margin: 0 5px;
+        margin-left: -1em;
+        li,
+        > span {
+          display: flex;
+          flex: 1 1 45%;
+          margin-left: 1em;
+          button,
+          a {
+            width: 100%;
+          }
+        }
       }
 
       .user-profile-controls-outlet {
@@ -145,22 +149,6 @@
         min-width: 120px;
       }
     }
-
-    &.collapsed-info {
-      .details {
-        .primary {
-          .primary-textual {
-            margin: 0 10px 5px 0;
-          }
-          .avatar {
-            margin: 0 5px 10px 5px;
-          }
-        }
-      }
-      .user-profile-avatar .avatar-flair {
-        bottom: 12px;
-      }
-    }
   }
 
   .user-field {
@@ -172,13 +160,31 @@
   }
 }
 
-.profile-image {
-  height: 25px;
-  width: 100%;
+.user-main .collapsed-info.about.has-background {
+  background-image: none !important; // todo: make changes to behavior to remove this
+  .details {
+    margin-top: 0;
+  }
 }
 
-.has-background .details {
-  margin-top: 200px;
+.user-main .collapsed-info.about .details {
+  display: flex;
+  .user-profile-avatar {
+    margin: 0;
+    flex: 0 0 auto;
+    align-self: flex-start;
+  }
+  .primary .primary-textual {
+    flex: 1 0 80%;
+    margin: 0;
+  }
+  .user-profile-names {
+    text-align: left;
+  }
+  .controls {
+    margin: s(2) 0 s(3);
+    border-bottom: 1px solid $primary-low;
+  }
 }
 
 .form-horizontal .control-group.category {
@@ -201,7 +207,6 @@
   }
 }
 
-// mobile fixups for badges
 .badge-card.medium {
   width: 100%;
 }
@@ -210,40 +215,13 @@
   margin-bottom: 2em;
 }
 
-.show-badge-details {
-  margin-bottom: 1em;
-
-  .badge-grant-info {
-    display: none;
-  }
-}
-
 .user-preferences {
   .instructions {
-    margin-top: 5px;
-  }
-
-  .category-controls {
-    padding-top: 8px;
+    margin-top: s(1);
   }
 
   .controls-dropdown {
-    margin-top: 10px;
-    margin-bottom: 15px;
-
-    select {
-      width: 280px;
-    }
-  }
-
-  .save-button {
-    width: 100%;
-    overflow: auto;
-    max-width: 200px;
-
-    button {
-      display: block;
-    }
+    margin-bottom: s(4);
   }
 
   .delete-account {
@@ -261,10 +239,20 @@
     }
   }
 
-  .desktop-notifications button {
-    float: none;
-  }
   .apps .controls button {
     float: right;
+  }
+}
+
+.staff-counters {
+  margin-bottom: s(4);
+}
+
+.user-right {
+  &,
+  > .user-stream {
+    > .alert:first-child {
+      margin-top: 20px;
+    }
   }
 }
