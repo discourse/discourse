@@ -55,7 +55,7 @@ describe GroupSmtpMailer do
   let(:raw) { "hello, how are you doing?" }
 
   before do
-    SiteSetting.queue_jobs = false
+    Jobs.run_immediately!
   end
 
   it "sends an email as reply" do
