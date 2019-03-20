@@ -21,7 +21,7 @@ describe UserUpdater do
 
       expect(MutedUser.where(user_id: u2.id).pluck(:muted_user_id)).to match_array([u3.id, u1.id])
       expect(MutedUser.where(user_id: u1.id).pluck(:muted_user_id)).to match_array([u2.id, u3.id])
-      expect(MutedUser.where(user_id: u3.id)).to match_array([])
+      expect(MutedUser.where(user_id: u3.id).count).to eq(0)
     end
 
     it 'excludes acting user' do
@@ -54,7 +54,7 @@ describe UserUpdater do
       expect(IgnoredUser.where(user_id: u3.id)).to match_array([])
       expect(MutedUser.where(user_id: u2.id).pluck(:muted_user_id)).to match_array([u3.id, u1.id])
       expect(MutedUser.where(user_id: u1.id).pluck(:muted_user_id)).to match_array([u2.id, u3.id])
-      expect(MutedUser.where(user_id: u3.id)).to match_array([])
+      expect(MutedUser.where(user_id: u3.id).count).to eq(0)
     end
 
     it 'excludes acting user' do
@@ -74,7 +74,7 @@ describe UserUpdater do
         updater = UserUpdater.new(u1, u1)
         updater.update_ignored_users("#{u2.username}")
 
-        expect(IgnoredUser.where(user_id: u1.id)).to match_array([])
+        expect(IgnoredUser.where(user_id: u1.id).count).to eq(0)
       end
     end
   end
