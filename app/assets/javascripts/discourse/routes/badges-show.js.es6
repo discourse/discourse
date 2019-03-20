@@ -30,7 +30,8 @@ export default Discourse.Route.extend({
   },
 
   afterModel(model, transition) {
-    const username = transition.queryParams && transition.queryParams.username;
+    const username =
+      transition.to.queryParams && transition.to.queryParams.username;
 
     const userBadgesGrant = UserBadge.findByBadgeId(model.get("id"), {
       username
