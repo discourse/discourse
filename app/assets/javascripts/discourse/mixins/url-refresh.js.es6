@@ -7,12 +7,12 @@ export default {
   didInsertElement() {
     this._super(...arguments);
 
-    this.appEvents.on("url:refresh", this.refresh);
+    this.appEvents.on("url:refresh", this, "refresh");
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    this.appEvents.off("url:refresh");
+    this.appEvents.off("url:refresh", this, "refresh");
   }
 };

@@ -51,6 +51,27 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     }
   },
 
+  _highlightPost(postNumber) {
+    Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
+  },
+
+  _updateTopic(topic) {
+    if (topic === null) {
+      this._lastShowTopic = false;
+      this.appEvents.trigger("header:hide-topic");
+      return;
+    }
+
+    const offset = window.pageYOffset || $("html").scrollTop();
+    this._lastShowTopic = this.showTopicInHeader(topic, offset);
+
+    if (this._lastShowTopic) {
+      this.appEvents.trigger("header:show-topic", topic);
+    } else {
+      this.appEvents.trigger("header:hide-topic");
+    }
+  },
+
   didInsertElement() {
     this._super(...arguments);
     this.bindScrolling({ name: "topic-view" });
@@ -81,26 +102,9 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
       }
     );
 
-    this.appEvents.on("post:highlight", postNumber => {
-      Ember.run.scheduleOnce("afterRender", null, highlight, postNumber);
-    });
+    this.appEvents.on("post:highlight", this, "_highlightPost");
 
-    this.appEvents.on("header:update-topic", topic => {
-      if (topic === null) {
-        this._lastShowTopic = false;
-        this.appEvents.trigger("header:hide-topic");
-        return;
-      }
-
-      const offset = window.pageYOffset || $("html").scrollTop();
-      this._lastShowTopic = this.showTopicInHeader(topic, offset);
-
-      if (this._lastShowTopic) {
-        this.appEvents.trigger("header:show-topic", topic);
-      } else {
-        this.appEvents.trigger("header:hide-topic");
-      }
-    });
+    this.appEvents.on("header:update-topic", this, "_updateTopic");
   },
 
   willDestroyElement() {
@@ -115,8 +119,8 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
     // this happens after route exit, stuff could have trickled in
     this.appEvents.trigger("header:hide-topic");
-    this.appEvents.off("post:highlight");
-    this.appEvents.off("header:update-topic");
+    this.appEvents.off("post:highlight", this, "_highlightPost");
+    this.appEvents.off("header:update-topic", this, "_updateTopic");
   },
 
   @observes("Discourse.hasFocus")

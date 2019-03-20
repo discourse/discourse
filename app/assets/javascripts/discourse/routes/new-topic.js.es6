@@ -6,11 +6,11 @@ export default Discourse.Route.extend({
     if (Discourse.User.current()) {
       let category, category_id;
 
-      if (transition.queryParams.category_id) {
-        category_id = transition.queryParams.category_id;
+      if (transition.to.queryParams.category_id) {
+        category_id = transition.to.queryParams.category_id;
         category = Category.findById(category_id);
-      } else if (transition.queryParams.category) {
-        const splitCategory = transition.queryParams.category.split("/");
+      } else if (transition.to.queryParams.category) {
+        const splitCategory = transition.to.queryParams.category.split("/");
         category = this._getCategory(
           splitCategory[0],
           splitCategory[1],
@@ -46,10 +46,10 @@ export default Discourse.Route.extend({
             Ember.run.next(function() {
               e.send(
                 "createNewTopicViaParams",
-                transition.queryParams.title,
-                transition.queryParams.body,
+                transition.to.queryParams.title,
+                transition.to.queryParams.body,
                 category_id,
-                transition.queryParams.tags
+                transition.to.queryParams.tags
               );
             });
           }
@@ -60,10 +60,10 @@ export default Discourse.Route.extend({
             Ember.run.next(function() {
               e.send(
                 "createNewTopicViaParams",
-                transition.queryParams.title,
-                transition.queryParams.body,
+                transition.to.queryParams.title,
+                transition.to.queryParams.body,
                 null,
-                transition.queryParams.tags
+                transition.to.queryParams.tags
               );
             });
           }
