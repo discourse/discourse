@@ -282,7 +282,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_ignore_user
-    SiteSetting.ignore_user_enabled? && !object.staff?
+    SiteSetting.ignore_user_enabled? && !object.staff? && scope.current_user != object
   end
 
   # Needed because 'send_private_message_to_user' will always return false
