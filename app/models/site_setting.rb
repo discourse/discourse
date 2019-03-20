@@ -139,10 +139,6 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
     end
 
-    def self.s3_force_path_style
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_force_path_style : GlobalSetting.s3_force_path_style
-    end
-
     def self.enable_s3_uploads
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end
@@ -163,8 +159,6 @@ class SiteSetting < ActiveRecord::Base
         else
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
         end
-      elsif SiteSetting.s3_force_path_style
-        "//#{url_basename}/#{bucket}"
       else
         "//#{bucket}.#{url_basename}"
       end

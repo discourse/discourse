@@ -78,6 +78,17 @@ describe UserUpdater do
         expect(MutedUser.where(muted_user_id: u2.id).count).to eq 0
       end
     end
+
+    context 'when acting user\'s trust level is below tl2' do
+      it 'excludes acting user' do
+        u1 = Fabricate(:user, trust_level: 1)
+        u2 = Fabricate(:user)
+        updater = UserUpdater.new(u1, u1)
+        updater.update_ignored_users("#{u2.username}")
+
+        expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 0
+      end
+    end
   end
 
   describe '#update' do

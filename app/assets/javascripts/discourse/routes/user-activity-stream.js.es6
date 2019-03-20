@@ -14,7 +14,7 @@ export default Discourse.Route.extend(ViewingActionType, {
       filter: this.get("userActionType"),
       noContentHelpKey:
         this.get("noContentHelpKey") || "user_activity.no_default",
-      actingUsername: transition.queryParams.acting_username
+      actingUsername: transition.to.queryParams.acting_username
     });
   },
 

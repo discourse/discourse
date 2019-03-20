@@ -134,10 +134,10 @@ export default Ember.Component.extend(
       this.removeObserver(
         `content.@each.${this.get("nameProperty")}`,
         this,
-        this._compute
+        "_compute"
       );
-      this.removeObserver(`content.[]`, this, this._compute);
-      this.removeObserver(`asyncContent.[]`, this, this._compute);
+      this.removeObserver(`content.[]`, this, "_compute");
+      this.removeObserver(`asyncContent.[]`, this, "_compute");
     },
 
     willComputeAttributes() {},
