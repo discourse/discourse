@@ -583,6 +583,18 @@ class StaffActionLogger
     ))
   end
 
+  def log_webhook(webhook, opts = {})
+    details = [
+      "webhook_id: #{webhook.id}",
+      "payload_url: #{webhook.payload_url}"
+    ]
+    UserHistory.create!(params(opts).merge(
+      action: UserHistory.actions[:webhook],
+      details: details.join("\n"),
+      context: I18n.t("staff_action_logs.#{opts[:action]}")
+    ))
+  end
+
   private
 
   def params(opts = nil)

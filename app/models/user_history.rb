@@ -85,7 +85,8 @@ class UserHistory < ActiveRecord::Base
       entity_export: 66,
       change_password: 67,
       topic_timestamps_changed: 68,
-      approve_user: 69
+      approve_user: 69,
+      webhook: 70
     )
   end
 
@@ -149,7 +150,8 @@ class UserHistory < ActiveRecord::Base
       :entity_export,
       :change_name,
       :topic_timestamps_changed,
-      :approve_user
+      :approve_user,
+      :webhook
     ]
   end
 

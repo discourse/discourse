@@ -34,6 +34,7 @@ describe Admin::WebHooksController do
 
         json = ::JSON.parse(response.body)
         expect(json["web_hook"]["payload_url"]).to eq("https://meta.discourse.org/")
+        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:webhook], context: "Created").count).to eq(1)
       end
 
       it 'returns error when field is not filled correctly' do

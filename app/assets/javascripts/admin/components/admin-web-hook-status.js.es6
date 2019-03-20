@@ -4,8 +4,8 @@ import { bufferedRender } from "discourse-common/lib/buffered-render";
 
 export default Ember.Component.extend(
   bufferedRender({
-    classes: ["text-muted", "text-danger", "text-successful"],
-    icons: ["circle-o", "times-circle", "circle"],
+    classes: ["text-muted", "text-danger", "text-successful", "text-muted"],
+    icons: ["circle-o", "times-circle", "circle", "circle"],
 
     @computed("deliveryStatuses", "model.last_delivery_status")
     status(deliveryStatuses, lastDeliveryStatus) {
