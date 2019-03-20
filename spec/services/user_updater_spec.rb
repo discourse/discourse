@@ -35,6 +35,10 @@ describe UserUpdater do
   end
 
   describe '#update_ignored_users' do
+    before do
+      SiteSetting.ignore_user_enabled = true
+    end
+
     it 'updates ignored users' do
       u1 = Fabricate(:user, trust_level: 2)
       u2 = Fabricate(:user, trust_level: 2)
