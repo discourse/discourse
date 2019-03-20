@@ -36,9 +36,9 @@ describe UserUpdater do
 
   describe '#update_ignored_users' do
     it 'updates ignored users' do
-      u1 = Fabricate(:user)
-      u2 = Fabricate(:user)
-      u3 = Fabricate(:user)
+      u1 = Fabricate(:user, trust_level: 2)
+      u2 = Fabricate(:user, trust_level: 2)
+      u3 = Fabricate(:user, trust_level: 2)
 
       updater = UserUpdater.new(u1, u1)
       updater.update_ignored_users("#{u2.username},#{u3.username}")
@@ -55,12 +55,23 @@ describe UserUpdater do
     end
 
     it 'excludes acting user' do
-      u1 = Fabricate(:user)
+      u1 = Fabricate(:user, trust_level: 2)
       u2 = Fabricate(:user)
       updater = UserUpdater.new(u1, u1)
       updater.update_ignored_users("#{u1.username},#{u2.username}")
 
       expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 1
+    end
+
+    context 'when acting user\'s trust level is below tl2' do
+      it 'excludes acting user' do
+        u1 = Fabricate(:user, trust_level: 1)
+        u2 = Fabricate(:user)
+        updater = UserUpdater.new(u1, u1)
+        updater.update_ignored_users("#{u2.username}")
+
+        expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 0
+      end
     end
   end
 

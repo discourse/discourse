@@ -282,7 +282,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def can_ignore_user
-    SiteSetting.ignore_user_enabled? && !object.staff? && scope.current_user != object
+    SiteSetting.ignore_user_enabled? && !object.staff? && scope.current_user != object && (scope.current_user.staff? || scope.current_user.trust_level >= 2)
   end
 
   # Needed because 'send_private_message_to_user' will always return false

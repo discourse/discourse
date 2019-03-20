@@ -2664,6 +2664,25 @@ describe Guardian do
         expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
       end
     end
+
+    context "when ignorer's trust level is below tl2" do
+      let(:guardian) { Guardian.new(trust_level_1) }
+      let!(:another_user) { Fabricate(:user) }
+      let!(:trust_level_1) { build(:user, trust_level: 1) }
+
+      it 'does not allow ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(false)
+      end
+    end
+
+    context "when ignorer's trust level is tl2" do
+      let(:guardian) { Guardian.new(trust_level_2) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
   end
 
   describe "#allow_themes?" do
