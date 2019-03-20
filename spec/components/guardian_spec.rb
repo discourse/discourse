@@ -2675,6 +2675,15 @@ describe Guardian do
       end
     end
 
+    context "when ignorer is staff" do
+      let(:guardian) { Guardian.new(admin) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
+
     context "when ignorer's trust level is tl2" do
       let(:guardian) { Guardian.new(trust_level_2) }
       let!(:another_user) { Fabricate(:user) }
