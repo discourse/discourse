@@ -1032,7 +1032,7 @@ const Composer = RestModel.extend({
           self.set("draftConflictUser", null);
           self._clearingStatus = null;
         },
-        1000
+        Ember.Test ? 0 : 1000
       );
     }
   }.observes("title", "reply")
