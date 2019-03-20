@@ -19,9 +19,9 @@ describe UserUpdater do
       updater = UserUpdater.new(u3, u3)
       updater.update_muted_users("")
 
-      expect(MutedUser.where(user_id: u2.id).count).to eq 2
-      expect(MutedUser.where(user_id: u1.id).count).to eq 2
-      expect(MutedUser.where(user_id: u3.id).count).to eq 0
+      expect(MutedUser.where(user_id: u2.id).pluck(:muted_user_id)).to match_array([u3.id, u1.id])
+      expect(MutedUser.where(user_id: u1.id).pluck(:muted_user_id)).to match_array([u2.id, u3.id])
+      expect(MutedUser.where(user_id: u3.id).count).to eq(0)
     end
 
     it 'excludes acting user' do
@@ -30,7 +30,7 @@ describe UserUpdater do
       updater = UserUpdater.new(u1, u1)
       updater.update_muted_users("#{u1.username},#{u2.username}")
 
-      expect(MutedUser.where(muted_user_id: u2.id).count).to eq 1
+      expect(MutedUser.where(muted_user_id: u2.id).pluck(:muted_user_id)).to match_array([u2.id])
     end
   end
 
@@ -49,9 +49,9 @@ describe UserUpdater do
       updater = UserUpdater.new(u3, u3)
       updater.update_ignored_users("")
 
-      expect(IgnoredUser.where(user_id: u2.id).count).to eq 2
-      expect(IgnoredUser.where(user_id: u1.id).count).to eq 2
-      expect(IgnoredUser.where(user_id: u3.id).count).to eq 0
+      expect(IgnoredUser.where(user_id: u2.id).pluck(:ignored_user_id)).to match_array([u3.id, u1.id])
+      expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id, u3.id])
+      expect(IgnoredUser.where(user_id: u3.id).count).to eq(0)
     end
 
     it 'excludes acting user' do
@@ -60,7 +60,7 @@ describe UserUpdater do
       updater = UserUpdater.new(u1, u1)
       updater.update_ignored_users("#{u1.username},#{u2.username}")
 
-      expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 1
+      expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id])
     end
 
     context 'when acting user\'s trust level is below tl2' do
@@ -70,7 +70,18 @@ describe UserUpdater do
         updater = UserUpdater.new(u1, u1)
         updater.update_ignored_users("#{u2.username}")
 
-        expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 0
+        expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq(0)
+      end
+    end
+
+    context 'when acting user is admin' do
+      it 'excludes acting user' do
+        u1 = Fabricate(:admin)
+        u2 = Fabricate(:user)
+        updater = UserUpdater.new(u1, u1)
+        updater.update_ignored_users("#{u1.username},#{u2.username}")
+
+        expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id])
       end
     end
   end

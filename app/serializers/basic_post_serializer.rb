@@ -46,7 +46,6 @@ class BasicPostSerializer < ApplicationSerializer
   def ignored
     object.is_first_post? &&
       scope.current_user&.id != object.user_id &&
-      !object.user&.staff? &&
       IgnoredUser.where(user_id: scope.current_user&.id,
                         ignored_user_id: object.user_id).exists?
   end
