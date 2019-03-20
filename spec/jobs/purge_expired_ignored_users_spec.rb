@@ -7,7 +7,6 @@ describe Jobs::PurgeExpiredIgnoredUsers do
 
   context "with no ignored users" do
     it "does nothing" do
-      subject
       expect { subject }.to_not change { IgnoredUser.count }
     end
   end
@@ -24,19 +23,20 @@ describe Jobs::PurgeExpiredIgnoredUsers do
 
     context "when no expired ignored users" do
       it "does nothing" do
-        subject
         expect { subject }.to_not change { IgnoredUser.count }
       end
     end
 
     context "when there are expired ignored users" do
+      let(:fred) { Fabricate(:user, username: "fred") }
+
       it "purges expired ignored users" do
         freeze_time(5.months.ago) do
-          fred = Fabricate(:user, username: "fred")
           Fabricate(:ignored_user, user: tarek, ignored_user: fred)
         end
 
-        expect { subject }.to change { IgnoredUser.count }.from(3).to(2)
+        subject
+        expect(IgnoredUser.find_by(ignored_user: fred)).to be_nil
       end
     end
   end
