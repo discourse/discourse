@@ -836,12 +836,18 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     else
-      data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
+      data_ranking = <<~SQL
+      TS_RANK_CD(
+        post_search_data.search_data, #{ts_query(weight_filter: weights)}
+      )
+      SQL
+
       if opts[:aggregate_search]
         posts = posts.order("MAX(#{data_ranking}) DESC")
       else
         posts = posts.order("#{data_ranking} DESC")
       end
+
       posts = posts.order("topics.bumped_at DESC")
     end
 
