@@ -174,7 +174,7 @@ const TopicRoute = Discourse.Route.extend({
           this,
           "_replaceUnlessScrolling",
           postUrl,
-          SCROLL_DELAY
+          Ember.Test ? 0 : SCROLL_DELAY
         );
       }
     },
