@@ -15,7 +15,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
     @client = adapter.new(
       host: "localhost",
       port: "6379",
-      db: 0
+      db: 14
     )
 
     load_merged_posts
@@ -150,6 +150,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
         suspended_till: suspended_till,
         primary_group_id: group_id_from_imported_group_id(user["groupTitle"]),
         created_at: user["joindate"],
+        bio_raw: user["aboutme"],
         active: true,
         custom_fields: {
           import_pass: user["password"]
