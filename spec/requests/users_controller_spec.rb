@@ -2048,6 +2048,8 @@ describe UsersController do
           expect(response.status).to eq(200)
           expect(IgnoredUser.find_by(user_id: user.id,
                                      ignored_user_id: another_user.id)).to be_present
+          expect(MutedUser.find_by(user_id: user.id,
+                                   muted_user_id: another_user.id)).to be_present
         end
       end
     end

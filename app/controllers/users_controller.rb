@@ -1000,6 +1000,7 @@ class UsersController < ApplicationController
     guardian.ensure_can_ignore_user!(params[:ignored_user_id])
 
     IgnoredUser.find_or_create_by!(user: current_user, ignored_user_id: params[:ignored_user_id])
+    MutedUser.find_or_create_by!(user: current_user, muted_user_id: params[:ignored_user_id])
     render json: success_json
   end
 

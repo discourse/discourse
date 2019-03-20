@@ -52,6 +52,9 @@ describe UserUpdater do
       expect(IgnoredUser.where(user_id: u2.id).count).to eq 2
       expect(IgnoredUser.where(user_id: u1.id).count).to eq 2
       expect(IgnoredUser.where(user_id: u3.id).count).to eq 0
+      expect(MutedUser.where(user_id: u2.id).count).to eq 2
+      expect(MutedUser.where(user_id: u1.id).count).to eq 2
+      expect(MutedUser.where(user_id: u3.id).count).to eq 0
     end
 
     it 'excludes acting user' do
@@ -61,6 +64,7 @@ describe UserUpdater do
       updater.update_ignored_users("#{u1.username},#{u2.username}")
 
       expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 1
+      expect(MutedUser.where(muted_user_id: u2.id).count).to eq 1
     end
 
     context 'when acting user\'s trust level is below tl2' do
@@ -71,6 +75,7 @@ describe UserUpdater do
         updater.update_ignored_users("#{u2.username}")
 
         expect(IgnoredUser.where(ignored_user_id: u2.id).count).to eq 0
+        expect(MutedUser.where(muted_user_id: u2.id).count).to eq 0
       end
     end
   end

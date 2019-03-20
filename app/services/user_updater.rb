@@ -187,6 +187,8 @@ class UserUpdater
         ON CONFLICT DO NOTHING
       SQL
     end
+
+    update_muted_users(usernames)
   end
 
   private
