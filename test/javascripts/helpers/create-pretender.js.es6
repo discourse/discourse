@@ -454,6 +454,11 @@ export default function() {
           id: 1,
           username: "eviltrout",
           email: "<small>eviltrout@example.com</small>"
+        },
+        {
+          id: 3,
+          username: "discobot",
+          email: "<small>discobot_email</small>"
         }
       ]);
     });
