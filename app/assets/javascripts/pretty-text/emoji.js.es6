@@ -63,7 +63,6 @@ export function performEmojiUnescape(string, opts) {
 }
 
 export function performEmojiEscape(string) {
-
   return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
     if (!!translations[m]) {
       return ":" + translations[m] + ":";
