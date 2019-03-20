@@ -51,7 +51,7 @@ describe UserUpdater do
 
       expect(IgnoredUser.where(user_id: u2.id).pluck(:ignored_user_id)).to match_array([u3.id, u1.id])
       expect(IgnoredUser.where(user_id: u1.id).pluck(:ignored_user_id)).to match_array([u2.id, u3.id])
-      expect(IgnoredUser.where(user_id: u3.id)).to match_array([])
+      expect(IgnoredUser.where(user_id: u3.id).count).to eq(0)
       expect(MutedUser.where(user_id: u2.id).pluck(:muted_user_id)).to match_array([u3.id, u1.id])
       expect(MutedUser.where(user_id: u1.id).pluck(:muted_user_id)).to match_array([u2.id, u3.id])
       expect(MutedUser.where(user_id: u3.id).count).to eq(0)
