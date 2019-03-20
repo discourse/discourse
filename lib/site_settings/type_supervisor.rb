@@ -103,7 +103,9 @@ class SiteSettings::TypeSupervisor
 
     opts[:validator] = opts[:validator].try(:constantize)
     if (validator_type = (opts[:validator] || validator_for(@types[name])))
-      @validators[name] = { class: validator_type, opts: opts.slice(*VALIDATOR_OPTS) }
+      validator_opts = opts.slice(*VALIDATOR_OPTS)
+      validator_opts[:name] = name
+      @validators[name] = { class: validator_type, opts: validator_opts }
     end
   end
 
