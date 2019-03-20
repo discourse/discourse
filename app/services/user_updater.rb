@@ -168,6 +168,8 @@ class UserUpdater
   end
 
   def update_ignored_users(usernames)
+    return if user.trust_level < TrustLevel.levels[:member]
+
     usernames ||= ""
     desired_usernames = usernames.split(",").reject { |username| user.username == username }
     desired_ids = User.where(username: desired_usernames).where(admin: false, moderator: false).pluck(:id)
