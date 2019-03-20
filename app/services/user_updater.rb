@@ -149,7 +149,8 @@ class UserUpdater
 
   def update_muted_users(usernames)
     usernames ||= ""
-    desired_ids = User.where(username: usernames.split(",")).pluck(:id)
+    desired_usernames = usernames.split(",").reject { |username| user.username == username }
+    desired_ids = User.where(username: desired_usernames).pluck(:id)
     if desired_ids.empty?
       MutedUser.where(user_id: user.id).destroy_all
     else
@@ -168,7 +169,8 @@ class UserUpdater
 
   def update_ignored_users(usernames)
     usernames ||= ""
-    desired_ids = User.where(username: usernames.split(",")).pluck(:id)
+    desired_usernames = usernames.split(",").reject { |username| user.username == username }
+    desired_ids = User.where(username: desired_usernames).where(admin: false, moderator: false).pluck(:id)
     if desired_ids.empty?
       IgnoredUser.where(user_id: user.id).destroy_all
     else

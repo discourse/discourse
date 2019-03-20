@@ -390,6 +390,10 @@ class Guardian
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
+  def can_ignore_user?(user_id)
+    @user.id != user_id && User.where(id: user_id, admin: false, moderator: false).exists?
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 

@@ -44,8 +44,7 @@ describe TopicView do
           SiteSetting.ignore_user_enabled = false
 
           tv = TopicView.new(topic.id, evil_trout)
-          expect(tv.filtered_post_ids.size).to eq(3)
-          expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post3.id])
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id])
         end
       end
 
@@ -57,8 +56,7 @@ describe TopicView do
 
         it "filters out ignored user posts" do
           tv = TopicView.new(topic.id, evil_trout)
-          expect(tv.filtered_post_ids.size).to eq(2)
-          expect(tv.filtered_post_ids).to match_array([post.id, post2.id])
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id])
         end
 
         describe "when an ignored user made the original post" do
@@ -66,8 +64,7 @@ describe TopicView do
 
           it "filters out ignored user posts only" do
             tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids.size).to eq(2)
-            expect(tv.filtered_post_ids).to match_array([post.id, post2.id])
+            expect(tv.filtered_post_ids).to eq([post.id, post2.id])
           end
         end
 
@@ -77,8 +74,7 @@ describe TopicView do
 
           it "filters out ignored user posts only" do
             tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids.size).to eq(3)
-            expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post4.id])
+            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
           end
         end
 
@@ -88,8 +84,18 @@ describe TopicView do
 
           it "filters out ignored user posts only" do
             tv = TopicView.new(topic.id, nil)
-            expect(tv.filtered_post_ids.size).to eq(4)
-            expect(tv.filtered_post_ids).to match_array([post.id, post2.id, post3.id, post4.id])
+            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id, post4.id])
+          end
+        end
+
+        describe "when a staff user is ignored" do
+          let!(:admin) { Fabricate(:user, admin: true) }
+          let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
+          let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
+
+          it "filters out ignored user excluding the staff user" do
+            tv = TopicView.new(topic.id, evil_trout)
+            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
           end
         end
       end
