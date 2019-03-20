@@ -5,15 +5,16 @@ import Scrolling from "discourse/mixins/scrolling";
 import { selectedText } from "discourse/lib/utilities";
 import { observes } from "ember-addons/ember-computed-decorators";
 
+const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
+// Small buffer so that very tiny scrolls don't trigger mobile header switch
+const MOBILE_SCROLL_TOLERANCE = 5;
+
 function highlight(postNumber) {
   const $contents = $(`#post_${postNumber} .topic-body`);
 
   $contents.addClass("highlighted");
   $contents.on("animationend", () => $contents.removeClass("highlighted"));
 }
-
-// used to determine scroll direction on mobile
-let lastScroll, scrollDirection, delta;
 
 export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   userFilters: Ember.computed.alias("topic.userFilters"),
@@ -33,6 +34,9 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   dockAt: 0,
 
   _lastShowTopic: null,
+
+  mobileScrollDirection: null,
+  _mobileLastScroll: null,
 
   @observes("enteredAt")
   _enteredTopic() {
@@ -97,23 +101,6 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
         this.appEvents.trigger("header:hide-topic");
       }
     });
-    // setup mobile scroll logo
-    if (this.site.mobileView) {
-      this.appEvents.on("topic:scrolled", offset =>
-        this.mobileScrollGaurd(offset)
-      );
-      // used to animate header contents on scroll
-      this.appEvents.on("header:show-topic", () => {
-        $("header.d-header")
-          .removeClass("scroll-up")
-          .addClass("scroll-down");
-      });
-      this.appEvents.on("header:hide-topic", () => {
-        $("header.d-header")
-          .removeClass("scroll-down")
-          .addClass("scroll-up");
-      });
-    }
   },
 
   willDestroyElement() {
@@ -129,11 +116,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     // this happens after route exit, stuff could have trickled in
     this.appEvents.trigger("header:hide-topic");
     this.appEvents.off("post:highlight");
-    // mobile scroll logo clean up.
-    if (this.site.mobileView) {
-      this.appEvents.off("topic:scrolled");
-      $("header.d-header").removeClass("scroll-down scroll-up");
-    }
+    this.appEvents.off("header:update-topic");
   },
 
   @observes("Discourse.hasFocus")
@@ -148,17 +131,13 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   showTopicInHeader(topic, offset) {
-    // conditions for showing topic title in the header for mobile
-    if (
-      this.site.mobileView &&
-      scrollDirection !== "up" &&
-      offset > this.dockAt
-    ) {
-      return true;
-      // condition for desktops
-    } else {
-      return offset > this.dockAt;
-    }
+    // On mobile, we show the header topic if the user has scrolled past the topic
+    // title and the current scroll direction is down
+    // On desktop the user only needs to scroll past the topic title.
+    return (
+      offset > this.dockAt &&
+      (!this.site.mobileView || this.mobileScrollDirection === "down")
+    );
   },
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   scrolled() {
@@ -193,25 +172,61 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
       }
     }
 
+    // Since the user has scrolled, we need to check the scroll direction on mobile.
+    // We use throttle instead of debounce because we want the switch to occur
+    // at the start of the scroll. This feels a lot more snappy compared to waiting
+    // for the scroll to end if we debounce.
+    if (this.site.mobileView && this.hasScrolled) {
+      Ember.run.throttle(
+        this,
+        this._mobileScrollDirectionCheck,
+        offset,
+        MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE
+      );
+    }
+
     // Trigger a scrolled event
     this.appEvents.trigger("topic:scrolled", offset);
   },
 
-  // determines scroll direction, triggers header topic info on mobile
-  // and ensures that the switch happens only once per scroll direction change
-  mobileScrollGaurd(offset) {
-    // user hasn't scrolled past topic title.
-    if (offset < this.dockAt) return;
+  _mobileScrollDirectionCheck(offset) {
+    // Difference between this scroll and the one before it.
+    const delta = Math.floor(offset - this._mobileLastScroll);
 
-    delta = offset - lastScroll;
-    // 3px buffer so that the switch doesn't happen with tiny scrolls
-    if (delta > 3 && scrollDirection !== "down") {
-      scrollDirection = "down";
-      this.appEvents.trigger("header:show-topic", this.topic);
-    } else if (delta < -3 && scrollDirection !== "up") {
-      scrollDirection = "up";
-      this.appEvents.trigger("header:hide-topic");
+    // This is a tiny scroll, so we ignore it.
+    if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE)
+      return;
+
+    const prevDirection = this.mobileScrollDirection;
+    const currDirection = delta > 0 ? "down" : "up";
+
+    if (currDirection !== prevDirection) {
+      this.set("mobileScrollDirection", currDirection);
     }
-    lastScroll = offset;
+
+    // We store this to compare against it the next time the user scrolls
+    this._mobileLastScroll = Math.floor(offset);
+
+    // If the user reaches the very bottom of the topic, we want to reset the
+    // scroll direction in order for the header to switch back.
+    const distanceToTopicBottom = Math.floor(
+      $("body").height() - offset - $(window).height()
+    );
+
+    // Not at the bottom yet
+    if (distanceToTopicBottom > 0) return;
+
+    // We're at the bottom now, so we reset the direction.
+    this.set("mobileScrollDirection", null);
+  },
+
+  // We observe the scroll direction on mobile and if it's down, we show the topic
+  // in the header, otherwise, we hide it.
+  @observes("mobileScrollDirection")
+  toggleMobileHeaderTopic() {
+    return this.appEvents.trigger(
+      "header:update-topic",
+      this.mobileScrollDirection === "down" ? this.get("topic") : null
+    );
   }
 });

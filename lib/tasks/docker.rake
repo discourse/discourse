@@ -134,6 +134,11 @@ task 'docker:test' do
             subset = parts[0].to_i - 1
 
             spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
+            # quick and dirty load balancing
+            if (spec_partials.count > 3)
+              spec_partials[0].concat(spec_partials[total - 1].shift(40))
+            end
+
             params << spec_partials[subset].join(' ')
 
             puts "Running spec subset #{subset + 1} of #{total}"
