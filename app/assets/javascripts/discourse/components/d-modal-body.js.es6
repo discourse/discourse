@@ -14,14 +14,14 @@ export default Ember.Component.extend({
     }
 
     Ember.run.scheduleOnce("afterRender", this, this._afterFirstRender);
-    this.appEvents.on("modal-body:flash", msg => this._flash(msg));
-    this.appEvents.on("modal-body:clearFlash", () => this._clearFlash());
+    this.appEvents.on("modal-body:flash", this, "_flash");
+    this.appEvents.on("modal-body:clearFlash", this, "_clearFlash");
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.appEvents.off("modal-body:flash");
-    this.appEvents.off("modal-body:clearFlash");
+    this.appEvents.off("modal-body:flash", this, "_flash");
+    this.appEvents.off("modal-body:clearFlash", this, "_clearFlash");
   },
 
   _afterFirstRender() {

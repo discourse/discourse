@@ -28,6 +28,6 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   mutateValue(value) {
-    this.sendAction(value);
+    this.get(value)();
   }
 });

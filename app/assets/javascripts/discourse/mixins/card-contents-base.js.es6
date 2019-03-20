@@ -122,15 +122,17 @@ export default Ember.Mixin.create({
       return this._show($target.text().replace(/^@/, ""), $target);
     });
 
-    this.appEvents.on(previewClickEvent, $target => {
-      this.set("isFixed", true);
-      return this._show($target.text().replace(/^@/, ""), $target);
-    });
+    this.appEvents.on(previewClickEvent, this, "_previewClick");
 
     this.appEvents.on(`topic-header:trigger-${id}`, (username, $target) => {
       this.setProperties({ isFixed: true, isDocked: true });
       return this._show(username, $target);
     });
+  },
+
+  _previewClick($target) {
+    this.set("isFixed", true);
+    return this._show($target.text().replace(/^@/, ""), $target);
   },
 
   _positionCard(target) {
@@ -239,7 +241,7 @@ export default Ember.Mixin.create({
     $("#main")
       .off(clickDataExpand)
       .off(clickMention);
-    this.appEvents.off(previewClickEvent);
+    this.appEvents.off(previewClickEvent, this, "_previewClick");
   },
 
   keyUp(e) {

@@ -100,7 +100,7 @@ export default Ember.Component.extend({
 
         if (this.appEvents) {
           // xxx: don't run during qunit tests
-          this.appEvents.on("ace:resize", () => this.resize());
+          this.appEvents.on("ace:resize", this, "resize");
         }
 
         if (this.get("autofocus")) {
