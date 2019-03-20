@@ -5,7 +5,7 @@
     {{#unless site.mobileView}}
       <div class="search-bar">
         {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
-        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searching}}
+        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searchButtonDisabled}}
       </div>
     {{/unless}}
 
@@ -168,7 +168,7 @@
     {{#if site.mobileView}}
       <div class="search-bar">
         {{search-text-field value=searchTerm class="full-page-search search no-blur search-query" enter=(action "search") hasAutofocus=hasAutofocus}}
-        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searching}}
+        {{d-button action=(action "search") icon="search" class="btn-primary search-cta" disabled=searchButtonDisabled}}
       </div>
     {{/if}}
 
@@ -197,7 +197,7 @@
           action=(action "search")
           icon="search"
           class="btn-primary search-cta"
-          disabled=searching}}
+          disabled=searchButtonDisabled}}
       </div>
     {{/if}}
   </div>
