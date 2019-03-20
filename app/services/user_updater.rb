@@ -168,7 +168,7 @@ class UserUpdater
   end
 
   def update_ignored_users(usernames)
-    return if user.trust_level < TrustLevel.levels[:member]
+    return if user.trust_level < TrustLevel.levels[:member] && !user.staff?
 
     usernames ||= ""
     desired_usernames = usernames.split(",").reject { |username| user.username == username }
