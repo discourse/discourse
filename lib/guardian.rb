@@ -396,6 +396,10 @@ class Guardian
       User.where(id: user_id, admin: false, moderator: false).exists?
   end
 
+  def can_ignore_users?
+    @user.id != user_id && (@user.staff? || @user.trust_level >= TrustLevel.levels[:member])
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 
