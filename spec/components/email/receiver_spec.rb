@@ -1401,4 +1401,78 @@ describe Email::Receiver do
     end
 
   end
+
+  context "find_related_post" do
+
+    let(:user) { Fabricate(:user) }
+    let(:group) { Fabricate(:group, users: [user]) }
+
+    let (:email_1) { <<~EOF
+      MIME-Version: 1.0
+      Date: Wed, 01 Jan 2019 12:00:00 +0200
+      Message-ID: <7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com>
+      Subject: Lorem ipsum dolor sit amet
+      From: Dan Ungureanu <dan@discourse.org>
+      To: team-test@discourse.org
+      Content-Type: text/plain; charset="UTF-8"
+
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
+      semper, erat tempor sodales commodo, mi diam tempus lorem, in vehicula
+      leo libero quis lacus. Nullam justo nunc, sagittis nec metus placerat,
+      auctor condimentum neque. Sed risus purus, fermentum eget purus
+      porttitor, finibus efficitur orci. Integer tempus mi nec odio
+      elementum pulvinar. Pellentesque sed fringilla nulla, ac mollis quam.
+      Vivamus semper lacinia scelerisque. Cras urna magna, porttitor nec
+      libero quis, congue viverra sapien. Nulla sodales ac tellus a
+      suscipit.
+      EOF
+    }
+
+    let (:post_2) {
+      incoming_email = IncomingEmail.find_by(message_id: "7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com")
+
+      PostCreator.create(user,
+        raw: "Vestibulum rutrum tortor vitae arcu varius, non vestibulum ipsum tempor. Integer nibh libero, dignissim eu velit vel, interdum posuere mi. Aliquam erat volutpat. Pellentesque id nulla ultricies, eleifend ipsum non, fringilla purus. Aliquam pretium dolor lobortis urna volutpat, vel consectetur arcu porta. In non erat quis nibh gravida pharetra consequat vel risus. Aliquam rutrum consectetur est ac posuere. Praesent mattis nunc risus, a molestie lectus accumsan porta.",
+        topic_id: incoming_email.topic_id
+      )
+    }
+
+    let (:email_3) { <<~EOF
+      MIME-Version: 1.0
+      Date: Wed, 01 Jan 2019 12:00:00 +0200
+      References: <7aN1uwcokt2xkfG3iYrpKmiuVhy4w9b5@mail.gmail.com> <topic/#{post_2.topic_id}/#{post_2.id}@test.localhost>
+      In-Reply-To: <topic/#{post_2.topic_id}/#{post_2.id}@test.localhost>
+      Message-ID: <w1vdxT8ebJjZQQp7XyDdEJaSscE9qRjr@mail.gmail.com>
+      Subject: Re: Lorem ipsum dolor sit amet
+      From: Dan Ungureanu <dan@discourse.org>
+      To: team-test@discourse.org
+      Content-Type: text/plain; charset="UTF-8"
+
+      Integer mattis suscipit facilisis. Ut ullamcorper libero at faucibus
+      sodales. Ut suscipit elit ac dui porta consequat. Suspendisse potenti.
+      Nam ut accumsan dui, eget commodo sapien. Etiam ultrices elementum
+      cursus. Vivamus et diam et orci lobortis porttitor. Aliquam
+      scelerisque ex a imperdiet ornare. Donec interdum laoreet posuere.
+      Nulla sagittis, velit id posuere sollicitudin, elit nunc laoreet
+      libero, vitae aliquet tortor eros at est. Donec vitae massa vehicula,
+      aliquet libero non, porttitor ipsum. Phasellus pellentesque sodales
+      lacus eu sagittis. Aliquam ut condimentum nisi. Nulla in placerat
+      felis. Sed pellentesque, massa auctor venenatis gravida, risus lorem
+      iaculis mi, at hendrerit nisi turpis sit amet metus. Nulla egestas
+      ante eget nisi luctus consectetur.
+      EOF
+    }
+
+    def receive(email_string)
+      Email::Receiver.new(email_string,
+        destinations: [{ type: :group, obj: group }]
+      ).process!
+    end
+
+    it "makes all posts in same topic" do
+      expect { receive(email_1) }.to change { Topic.count }.by(1).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+      expect { post_2 }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+      expect { receive(email_3) }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+    end
+  end
 end

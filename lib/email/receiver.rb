@@ -727,11 +727,12 @@ module Email
       incoming_emails = IncomingEmail
         .where(message_id: message_ids)
         .addressed_to_user(user)
-        .pluck(:post_id, :to_addresses, :cc_addresses)
+        .pluck(:post_id, :from_address, :to_addresses, :cc_addresses)
 
-      incoming_emails.each do |post_id, to_addresses, cc_addresses|
-        post_ids << post_id if contains_email_address_of_user?(to_addresses, user) ||
-          contains_email_address_of_user?(cc_addresses, user)
+      incoming_emails.each do |post_id, from_address, to_addresses, cc_addresses|
+        post_ids << post_id if contains_email_address_of_user?(from_address, user) ||
+                               contains_email_address_of_user?(to_addresses, user) ||
+                               contains_email_address_of_user?(cc_addresses, user)
       end
 
       if post_ids.any? && post = Post.where(id: post_ids).order(:created_at).last
