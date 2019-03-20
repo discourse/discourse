@@ -2641,11 +2641,11 @@ describe Guardian do
   end
 
   describe '#can_ignore_user?' do
-    let(:guardian) { Guardian.new(user) }
+    let(:guardian) { Guardian.new(trust_level_2) }
 
     context "when ignored user is the same as guardian user" do
       it 'does not allow ignoring user' do
-        expect(guardian.can_ignore_user?(user.id)).to eq(false)
+        expect(guardian.can_ignore_user?(trust_level_2.id)).to eq(false)
       end
     end
 
