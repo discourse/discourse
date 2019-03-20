@@ -746,6 +746,15 @@ const User = RestModel.extend({
     } else {
       $.removeCookie("text_size", { path: "/", expires: 1 });
     }
+  },
+
+  @computed("second_factor_enabled", "staff")
+  enforcedSecondFactor(secondFactorEnabled, staff) {
+    const enforce = Discourse.SiteSettings.enforce_second_factor;
+    return (
+      !secondFactorEnabled &&
+      (enforce === "all" || (enforce === "staff" && staff))
+    );
   }
 });
 
