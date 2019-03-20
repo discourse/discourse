@@ -1,3 +1,5 @@
+/*eslint no-console: ["error", { allow: ["log", "error"] }] */
+
 // Chrome QUnit Test Runner
 // Author: David Taylor
 // Requires chrome-launcher and chrome-remote-interface from npm
@@ -21,7 +23,12 @@ const fs = require("fs");
 if (QUNIT_RESULT) {
   (async () => {
     await fs.stat(QUNIT_RESULT, (err, stats) => {
-      if (stats && stats.isFile()) fs.unlink(QUNIT_RESULT);
+      if (stats && stats.isFile())
+        fs.unlink(QUNIT_RESULT, unlinkErr => {
+          if (unlinkErr) {
+            console.log("Error deleting " + QUNIT_RESULT + " " + unlinkErr);
+          }
+        });
     });
   })();
 }
