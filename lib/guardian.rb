@@ -391,9 +391,12 @@ class Guardian
   end
 
   def can_ignore_user?(user_id)
-    @user.id != user_id &&
-      (@user.staff? || @user.trust_level >= TrustLevel.levels[:member]) &&
-      User.where(id: user_id, admin: false, moderator: false).exists?
+    can_ignore_users? && @user.id != user_id && User.where(id: user_id, admin: false, moderator: false).exists?
+  end
+
+  def can_ignore_users?
+    return false if anonymous?
+    SiteSetting.ignore_user_enabled? && (@user.staff? || @user.trust_level >= TrustLevel.levels[:member])
   end
 
   def allow_themes?(theme_ids, include_preview: false)
