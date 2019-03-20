@@ -391,7 +391,8 @@ class Guardian
   end
 
   def can_ignore_user?(user_id)
-    @user.id != user_id &&
+    SiteSetting.ignore_user_enabled? &&
+      @user.id != user_id &&
       (@user.staff? || @user.trust_level >= TrustLevel.levels[:member]) &&
       User.where(id: user_id, admin: false, moderator: false).exists?
   end
