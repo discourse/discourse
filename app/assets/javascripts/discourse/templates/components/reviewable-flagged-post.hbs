@@ -18,15 +18,7 @@
   <div class='post-body'>
     {{{reviewable.cooked}}}
   </div>
-
-  {{#if reviewable.payload.tags}}
-    <div class="list-tags">
-      {{#each reviewable.payload.tags as |t|}}
-        {{discourse-tag t}}
-      {{/each}}
-    </div>
-  {{/if}}
-
+  
   {{#if reviewable.reviewable_scores}}
     <table class='reviewable-scores'>
       <tr>
