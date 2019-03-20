@@ -395,6 +395,7 @@ class Guardian
   end
 
   def can_ignore_users?
+    return false if anonymous?
     SiteSetting.ignore_user_enabled? && (@user.staff? || @user.trust_level >= TrustLevel.levels[:member])
   end
 
