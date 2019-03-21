@@ -72,7 +72,7 @@ module Jobs
       )
 
       body = build_web_hook_body(args, web_hook)
-      web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id)
+      web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id, payload: body)
       response = nil
 
       begin
@@ -107,13 +107,13 @@ module Jobs
 
         web_hook_event.update!(
           headers: MultiJson.dump(headers),
-          payload: body,
           status: response.status,
           response_headers: MultiJson.dump(response.headers),
           response_body: response.body,
           duration: ((Time.zone.now - now) * 1000).to_i
         )
       rescue => e
+        web_hook_event.update!(headers: MultiJson.dump(headers))
         Rails.logger.error("Webhook event failed: #{e}")
       end
 
