@@ -1,26 +1,25 @@
 require_dependency 'upload_creator'
 
 class Admin::EmojisController < Admin::AdminController
-
   def index
     render_serialized(Emoji.custom, EmojiSerializer, root: false)
   end
 
   def create
     file = params[:file] || params[:files].first
-    name = params[:name] || File.basename(file.original_filename, ".*")
+    name = params[:name] || File.basename(file.original_filename, '.*')
 
     hijack do
       # fix the name
-      name = name.gsub(/[^a-z0-9]+/i, '_')
-        .gsub(/_{2,}/, '_')
-        .downcase
+      name = name.gsub(/[^a-z0-9]+/i, '_').gsub(/_{2,}/, '_').downcase
 
-      upload = UploadCreator.new(
-        file.tempfile,
-        file.original_filename,
-        type: 'custom_emoji'
-      ).create_for(current_user.id)
+      upload =
+        UploadCreator.new(
+          file.tempfile,
+          file.original_filename,
+          type: 'custom_emoji'
+        )
+          .create_for(current_user.id)
 
       good = true
 
@@ -56,5 +55,4 @@ class Admin::EmojisController < Admin::AdminController
 
     render json: success_json
   end
-
 end

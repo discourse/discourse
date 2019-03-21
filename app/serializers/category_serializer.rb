@@ -1,5 +1,4 @@
 class CategorySerializer < BasicCategorySerializer
-
   attributes :read_restricted,
              :available_groups,
              :auto_close_hours,
@@ -22,22 +21,29 @@ class CategorySerializer < BasicCategorySerializer
              :search_priority
 
   def group_permissions
-    @group_permissions ||= begin
-      perms = object.category_groups.joins(:group).includes(:group).order("groups.name").map do |cg|
-        {
-          permission_type: cg.permission_type,
-          group_name: cg.group.name
-        }
+    @group_permissions ||=
+      begin
+        perms =
+          object.category_groups.joins(:group).includes(:group).order(
+            'groups.name'
+          )
+            .map do |cg|
+            { permission_type: cg.permission_type, group_name: cg.group.name }
+          end
+        if perms.length == 0 && !object.read_restricted
+          perms <<
+            {
+              permission_type: CategoryGroup.permission_types[:full],
+              group_name: Group[:everyone]&.name.presence || :everyone
+            }
+        end
+        perms
       end
-      if perms.length == 0 && !object.read_restricted
-        perms << { permission_type: CategoryGroup.permission_types[:full], group_name: Group[:everyone]&.name.presence || :everyone }
-      end
-      perms
-    end
   end
 
   def available_groups
-    Group.order(:name).pluck(:name) - group_permissions.map { |g| g[:group_name] }
+    Group.order(:name).pluck(:name) -
+      group_permissions.map { |g| g[:group_name] }
   end
 
   def can_delete
@@ -45,8 +51,11 @@ class CategorySerializer < BasicCategorySerializer
   end
 
   def include_is_special?
-    [SiteSetting.meta_category_id, SiteSetting.staff_category_id, SiteSetting.uncategorized_category_id]
-      .include? object.id
+    [
+      SiteSetting.meta_category_id,
+      SiteSetting.staff_category_id,
+      SiteSetting.uncategorized_category_id
+    ].include? object.id
   end
 
   def is_special
@@ -79,8 +88,13 @@ class CategorySerializer < BasicCategorySerializer
 
   def notification_level
     user = scope && scope.user
-   object.notification_level ||
-     (user && CategoryUser.where(user: user, category: object).first.try(:notification_level))
+    object.notification_level ||
+      (
+        user &&
+          CategoryUser.where(user: user, category: object).first.try(
+            :notification_level
+          )
+      )
   end
 
   def include_allowed_tags?

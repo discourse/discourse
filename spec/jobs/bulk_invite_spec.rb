@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe Jobs::BulkInvite do
-
   context '.execute' do
-
     it 'raises an error when the filename is missing' do
       user = Fabricate(:user)
-      expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
+      expect do
+        Jobs::BulkInvite.new.execute(current_user_id: user.id)
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     context '.read_csv_file' do
@@ -17,8 +17,8 @@ describe Jobs::BulkInvite do
       it 'reads csv file' do
         bulk_invite.current_user = user
         bulk_invite.read_csv_file(csv_file)
-        expect(Invite.where(email: "robin@outlook.com").exists?).to eq(true)
-        expect(Invite.where(email: "jeff@gmail.com").exists?).to eq(true) # handles BOM
+        expect(Invite.where(email: 'robin@outlook.com').exists?).to eq(true)
+        expect(Invite.where(email: 'jeff@gmail.com').exists?).to eq(true) # handles BOM
       end
     end
 
@@ -27,7 +27,7 @@ describe Jobs::BulkInvite do
       let(:user) { Fabricate(:user) }
       let(:group) { Fabricate(:group) }
       let(:topic) { Fabricate(:topic) }
-      let(:email) { "evil@trout.com" }
+      let(:email) { 'evil@trout.com' }
       let(:csv_info) { [] }
 
       it 'creates an invite' do
@@ -46,7 +46,9 @@ describe Jobs::BulkInvite do
         bulk_invite.send_invite(csv_info, 1)
         invite = Invite.where(email: email).first
         expect(invite).to be_present
-        expect(InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?).to eq(true)
+        expect(
+          InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?
+        ).to eq(true)
       end
 
       it 'creates an invite with topic' do
@@ -57,7 +59,9 @@ describe Jobs::BulkInvite do
         bulk_invite.send_invite(csv_info, 1)
         invite = Invite.where(email: email).first
         expect(invite).to be_present
-        expect(TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?).to eq(true)
+        expect(
+          TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?
+        ).to eq(true)
       end
 
       it 'creates an invite with group and topic' do
@@ -69,12 +73,13 @@ describe Jobs::BulkInvite do
         bulk_invite.send_invite(csv_info, 1)
         invite = Invite.where(email: email).first
         expect(invite).to be_present
-        expect(InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?).to eq(true)
-        expect(TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?).to eq(true)
+        expect(
+          InvitedGroup.where(invite_id: invite.id, group_id: group.id).exists?
+        ).to eq(true)
+        expect(
+          TopicInvite.where(invite_id: invite.id, topic_id: topic.id).exists?
+        ).to eq(true)
       end
-
     end
-
   end
-
 end

@@ -27,7 +27,7 @@ class WizardFieldChoiceSerializer < ApplicationSerializer
   end
 
   def description
-    I18n.t("#{i18nkey}.description", default: "")
+    I18n.t("#{i18nkey}.description", default: '')
   end
 
   def include_description?

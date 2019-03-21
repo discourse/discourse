@@ -1,8 +1,7 @@
 class EmailLogSerializer < ApplicationSerializer
   include EmailLogsMixin
 
-  attributes :reply_key,
-             :bounced
+  attributes :reply_key, :bounced
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
@@ -12,6 +11,6 @@ class EmailLogSerializer < ApplicationSerializer
   end
 
   def reply_key
-    @options[:reply_keys][[object.post_id, object.user_id]].delete("-")
+    @options[:reply_keys][[object.post_id, object.user_id]].delete('-')
   end
 end

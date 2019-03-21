@@ -8,24 +8,34 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   # Populates the category featured topics.
   def self.feature_topics(batched: false, batch_size: nil)
     current = {}
-    CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank).each do |f|
-      (current[f.category_id] ||= []) << f.topic_id
-    end
+    CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank)
+      .each { |f| (current[f.category_id] ||= []) << f.topic_id }
 
     batch_size ||= DEFAULT_BATCH_SIZE
 
     next_category_id = batched ? $redis.get(NEXT_CATEGORY_ID_KEY).to_i : 0
 
-    categories = Category.select(:id, :topic_id, :num_featured_topics)
-      .where('id >= ?', next_category_id)
-      .order('id ASC')
-      .limit(batch_size)
-      .to_a
+    categories =
+      Category.select(:id, :topic_id, :num_featured_topics).where(
+        'id >= ?',
+        next_category_id
+      )
+        .order('id ASC')
+        .limit(batch_size)
+        .to_a
 
     if batched
       if categories.length == batch_size
-        next_id = Category.where('id > ?', categories.last.id).order('id asc').limit(1).pluck(:id)[0]
-        next_id ? $redis.setex(NEXT_CATEGORY_ID_KEY, 1.day, next_id) : clear_batch!
+        next_id =
+          Category.where('id > ?', categories.last.id).order('id asc').limit(1)
+            .pluck(:id)[
+            0
+          ]
+        if next_id
+          $redis.setex(NEXT_CATEGORY_ID_KEY, 1.day, next_id)
+        else
+          clear_batch!
+        end
       else
         clear_batch!
       end
@@ -61,7 +71,11 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     results = query.list_category_topic_ids(c).uniq
 
     # Add some topics that are visible to everyone:
-    anon_query = TopicQuery.new(nil, query_opts.merge(except_topic_ids: [c.topic_id] + results))
+    anon_query =
+      TopicQuery.new(
+        nil,
+        query_opts.merge(except_topic_ids: [c.topic_id] + results)
+      )
     results += anon_query.list_category_topic_ids(c).uniq
 
     return if results == existing
@@ -87,7 +101,6 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     admin.id = -1
     admin
   end
-
 end
 
 # == Schema Information

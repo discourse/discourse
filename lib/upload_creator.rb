@@ -1,14 +1,34 @@
-require "fastimage"
-require_dependency "image_sizer"
+require 'fastimage'
+require_dependency 'image_sizer'
 
 class UploadCreator
+  TYPES_TO_CROP ||=
+    %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
-  TYPES_TO_CROP ||= %w{avatar card_background custom_emoji profile_background}.each(&:freeze)
-
-  WHITELISTED_SVG_ELEMENTS ||= %w{
-    circle clippath defs ellipse g line linearGradient path polygon polyline
-    radialGradient rect stop style svg text textpath tref tspan use
-  }.each(&:freeze)
+  WHITELISTED_SVG_ELEMENTS ||=
+    %w[
+      circle
+      clippath
+      defs
+      ellipse
+      g
+      line
+      linearGradient
+      path
+      polygon
+      polyline
+      radialGradient
+      rect
+      stop
+      style
+      svg
+      text
+      textpath
+      tref
+      tspan
+      use
+    ]
+      .each(&:freeze)
 
   # Available options
   #  - type (string)
@@ -20,40 +40,47 @@ class UploadCreator
   #  - for_export (boolean)
   def initialize(file, filename, opts = {})
     @file = file
-    @filename = (filename || "").gsub(/[^[:print:]]/, "")
+    @filename = (filename || '').gsub(/[^[:print:]]/, '')
     @upload = Upload.new(original_filename: @filename, filesize: 0)
     @opts = opts
   end
 
   def create_for(user_id)
     if filesize <= 0
-      @upload.errors.add(:base, I18n.t("upload.empty"))
+      @upload.errors.add(:base, I18n.t('upload.empty'))
       return @upload
     end
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
       # test for image regardless of input
-      @image_info = FastImage.new(@file) rescue nil
+      @image_info =
+        begin
+          FastImage.new(@file)
+        rescue StandardError
+          nil
+        end
 
       is_image = FileHelper.is_supported_image?(@filename)
-      is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
+      is_image ||=
+        @image_info &&
+          FileHelper.is_supported_image?("test.#{@image_info.type}")
       is_image = false if @opts[:for_theme]
 
       if is_image
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        if @image_info.type.to_s == "svg"
+        if @image_info.type.to_s == 'svg'
           whitelist_svg!
         elsif !Rails.env.test? || @opts[:force_optimize]
           convert_to_jpeg! if convert_png_to_jpeg?
-          downsize!        if should_downsize?
+          downsize! if should_downsize?
 
-          return @upload   if is_still_too_big?
+          return @upload if is_still_too_big?
 
           fix_orientation! if should_fix_orientation?
-          crop!            if should_crop?
-          optimize!        if should_optimize?
+          crop! if should_crop?
+          optimize! if should_optimize?
         end
 
         # conversion may have switched the type
@@ -74,45 +101,49 @@ class UploadCreator
 
       # return the previous upload if any
       if @upload
-        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+        if user_id
+          UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id)
+        end
         return @upload
       end
 
       fixed_original_filename = nil
 
       if is_image
-        current_extension = File.extname(@filename).downcase.sub("jpeg", "jpg")
-        expected_extension = ".#{image_type}".downcase.sub("jpeg", "jpg")
+        current_extension = File.extname(@filename).downcase.sub('jpeg', 'jpg')
+        expected_extension = ".#{image_type}".downcase.sub('jpeg', 'jpg')
 
         # we have to correct original filename here, no choice
         # otherwise validation will fail and we can not save
         # TODO decide if we only run the validation on the extension
         if current_extension != expected_extension
-          basename = File.basename(@filename, current_extension).presence || "image"
+          basename =
+            File.basename(@filename, current_extension).presence || 'image'
           fixed_original_filename = "#{basename}#{expected_extension}"
         end
       end
 
       # create the upload otherwise
       @upload = Upload.new
-      @upload.user_id           = user_id
+      @upload.user_id = user_id
       @upload.original_filename = fixed_original_filename || @filename
-      @upload.filesize          = filesize
-      @upload.sha1              = sha1
-      @upload.url               = ""
-      @upload.origin            = @opts[:origin][0...1000] if @opts[:origin]
-      @upload.extension         = image_type || File.extname(@filename)[1..10]
+      @upload.filesize = filesize
+      @upload.sha1 = sha1
+      @upload.url = ''
+      @upload.origin = @opts[:origin][0...1000] if @opts[:origin]
+      @upload.extension = image_type || File.extname(@filename)[1..10]
 
       if is_image
-        @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(*@image_info.size)
+        @upload.thumbnail_width, @upload.thumbnail_height =
+          ImageSizer.resize(*@image_info.size)
         @upload.width, @upload.height = @image_info.size
       end
 
       @upload.for_private_message = true if @opts[:for_private_message]
-      @upload.for_group_message   = true if @opts[:for_group_message]
-      @upload.for_theme           = true if @opts[:for_theme]
-      @upload.for_export          = true if @opts[:for_export]
-      @upload.for_site_setting    = true if @opts[:for_site_setting]
+      @upload.for_group_message = true if @opts[:for_group_message]
+      @upload.for_theme = true if @opts[:for_theme]
+      @upload.for_export = true if @opts[:for_export]
+      @upload.for_site_setting = true if @opts[:for_site_setting]
 
       return @upload unless @upload.save
 
@@ -124,16 +155,28 @@ class UploadCreator
           @upload.url = url
           @upload.save!
         else
-          @upload.errors.add(:url, I18n.t("upload.store_failure", upload_id: @upload.id, user_id: user_id))
+          @upload.errors.add(
+            :url,
+            I18n.t(
+              'upload.store_failure',
+              upload_id: @upload.id, user_id: user_id
+            )
+          )
         end
       end
 
-      if @upload.errors.empty? && is_image && @opts[:type] == "avatar" && @upload.extension != "svg"
-        Jobs.enqueue(:create_avatar_thumbnails, upload_id: @upload.id, user_id: user_id)
+      if @upload.errors.empty? && is_image && @opts[:type] == 'avatar' &&
+         @upload.extension != 'svg'
+        Jobs.enqueue(
+          :create_avatar_thumbnails,
+          upload_id: @upload.id, user_id: user_id
+        )
       end
 
       if @upload.errors.empty?
-        UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
+        if user_id
+          UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id)
+        end
       end
 
       @upload
@@ -143,15 +186,23 @@ class UploadCreator
   end
 
   def extract_image_info!
-    @image_info = FastImage.new(@file) rescue nil
+    @image_info =
+      begin
+        FastImage.new(@file)
+      rescue StandardError
+        nil
+      end
     @file.rewind
 
     if @image_info.nil?
-      @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
+      @upload.errors.add(
+        :base,
+        I18n.t('upload.images.not_supported_or_corrupted')
+      )
     elsif filesize <= 0
-      @upload.errors.add(:base, I18n.t("upload.empty"))
+      @upload.errors.add(:base, I18n.t('upload.empty'))
     elsif pixels == 0
-      @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+      @upload.errors.add(:base, I18n.t('upload.images.size_not_found'))
     end
   end
 
@@ -159,7 +210,7 @@ class UploadCreator
 
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png
-    return true  if @opts[:pasted]
+    return true if @opts[:pasted]
     return false if SiteSetting.png_to_jpg_quality == 100
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
@@ -170,19 +221,24 @@ class UploadCreator
   def convert_to_jpeg!
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
-    jpeg_tempfile = Tempfile.new(["image", ".jpg"])
+    jpeg_tempfile = Tempfile.new(%w[image .jpg])
 
     from = @file.path
     to = jpeg_tempfile.path
 
     OptimizedImage.ensure_safe_paths!(from, to)
 
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
+    from =
+      OptimizedImage.prepend_decoder!(
+        from,
+        nil,
+        filename: "image.#{@image_info.type}"
+      )
     to = OptimizedImage.prepend_decoder!(to)
 
     begin
       execute_convert(from, to)
-    rescue
+    rescue StandardError
       # retry with debugging enabled
       execute_convert(from, to, true)
     end
@@ -202,18 +258,24 @@ class UploadCreator
 
   def execute_convert(from, to, debug = false)
     command = [
-      "convert",
+      'convert',
       from,
-      "-auto-orient",
-      "-background", "white",
-      "-interlace", "none",
-      "-flatten",
-      "-quality", SiteSetting.png_to_jpg_quality.to_s
+      '-auto-orient',
+      '-background',
+      'white',
+      '-interlace',
+      'none',
+      '-flatten',
+      '-quality',
+      SiteSetting.png_to_jpg_quality.to_s
     ]
-    command << "-debug" << "all" if debug
+    command << '-debug' << 'all' if debug
     command << to
 
-    Discourse::Utils.execute_command(*command, failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"))
+    Discourse::Utils.execute_command(
+      *command,
+      failure_message: I18n.t('upload.png_to_jpg_conversion_failure_message')
+    )
   end
 
   def should_downsize?
@@ -242,10 +304,22 @@ class UploadCreator
 
   def is_still_too_big?
     if max_image_pixels > 0 && pixels >= max_image_pixels
-      @upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels))
+      @upload.errors.add(
+        :base,
+        I18n.t(
+          'upload.images.larger_than_x_megapixels',
+          max_image_megapixels: SiteSetting.max_image_megapixels
+        )
+      )
       true
     elsif max_image_size > 0 && filesize >= max_image_size
-      @upload.errors.add(:base, I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb))
+      @upload.errors.add(
+        :base,
+        I18n.t(
+          'upload.images.too_large',
+          max_size_kb: SiteSetting.max_image_size_kb
+        )
+      )
       true
     else
       false
@@ -253,7 +327,7 @@ class UploadCreator
   end
 
   def whitelist_svg!
-    doc = Nokogiri::XML(@file)
+    doc = Nokogiri.XML(@file)
     doc.xpath(svg_whitelist_xpath).remove
     File.write(@file.path, doc.to_s)
     @file.rewind
@@ -269,7 +343,12 @@ class UploadCreator
     path = @file.path
 
     OptimizedImage.ensure_safe_paths!(path)
-    path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
+    path =
+      OptimizedImage.prepend_decoder!(
+        path,
+        nil,
+        filename: "image.#{@image_info.type}"
+      )
 
     Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
 
@@ -285,19 +364,50 @@ class UploadCreator
     filename_with_correct_ext = "image.#{@image_info.type}"
 
     case @opts[:type]
-    when "avatar"
+    when 'avatar'
       width = height = Discourse.avatar_sizes.max
-      OptimizedImage.resize(@file.path, @file.path, width, height, filename: filename_with_correct_ext, allow_animation: allow_animation)
-    when "profile_background"
+      OptimizedImage.resize(
+        @file.path,
+        @file.path,
+        width,
+        height,
+        filename: filename_with_correct_ext, allow_animation: allow_animation
+      )
+    when 'profile_background'
       max_width = 850 * max_pixel_ratio
-      width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
-    when "card_background"
+      width, height =
+        ImageSizer.resize(
+          @image_info.size[0],
+          @image_info.size[1],
+          max_width: max_width, max_height: max_width
+        )
+      OptimizedImage.downsize(
+        @file.path,
+        @file.path,
+        "#{width}x#{height}\>",
+        filename: filename_with_correct_ext, allow_animation: allow_animation
+      )
+    when 'card_background'
       max_width = 590 * max_pixel_ratio
-      width, height = ImageSizer.resize(@image_info.size[0], @image_info.size[1], max_width: max_width, max_height: max_width)
-      OptimizedImage.downsize(@file.path, @file.path, "#{width}x#{height}\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
-    when "custom_emoji"
-      OptimizedImage.downsize(@file.path, @file.path, "100x100\>", filename: filename_with_correct_ext, allow_animation: allow_animation)
+      width, height =
+        ImageSizer.resize(
+          @image_info.size[0],
+          @image_info.size[1],
+          max_width: max_width, max_height: max_width
+        )
+      OptimizedImage.downsize(
+        @file.path,
+        @file.path,
+        "#{width}x#{height}\>",
+        filename: filename_with_correct_ext, allow_animation: allow_animation
+      )
+    when 'custom_emoji'
+      OptimizedImage.downsize(
+        @file.path,
+        @file.path,
+        '100x100\>',
+        filename: filename_with_correct_ext, allow_animation: allow_animation
+      )
     end
 
     extract_image_info!
@@ -338,11 +448,18 @@ class UploadCreator
   end
 
   def allow_animation
-    @allow_animation ||= @opts[:type] == "avatar" ? SiteSetting.allow_animated_avatars : SiteSetting.allow_animated_thumbnails
+    @allow_animation ||=
+      if @opts[:type] == 'avatar'
+        SiteSetting.allow_animated_avatars
+      else
+        SiteSetting.allow_animated_thumbnails
+      end
   end
 
   def svg_whitelist_xpath
-    @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
+    @@svg_whitelist_xpath ||=
+      "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(
+        ' and '
+      )}]"
   end
-
 end

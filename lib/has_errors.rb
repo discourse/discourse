@@ -28,5 +28,4 @@ module HasErrors
       errors[:base] << msg unless errors[:base].include?(msg)
     end
   end
-
 end

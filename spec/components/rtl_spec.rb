@@ -2,15 +2,11 @@ require 'rails_helper'
 require_dependency 'rtl'
 
 describe Rtl do
-
   let(:user) { Fabricate.build(:user) }
 
   describe '.css_class' do
-
     context 'user locale is allowed' do
-      before {
-        SiteSetting.allow_user_locale = true
-      }
+      before { SiteSetting.allow_user_locale = true }
 
       context 'user locale is RTL' do
         before { user.locale = 'he' }
@@ -25,7 +21,6 @@ describe Rtl do
           expect(Rtl.new(user).css_class).to eq('')
         end
       end
-
     end
 
     context 'user locale is not allowed' do
@@ -51,6 +46,5 @@ describe Rtl do
         end
       end
     end
-
   end
 end

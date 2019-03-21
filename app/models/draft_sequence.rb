@@ -11,7 +11,10 @@ class DraftSequence < ActiveRecord::Base
     c.sequence ||= 0
     c.sequence += 1
     c.save!
-    DB.exec("DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence", draft_key: key, user_id: user_id, sequence: c.sequence)
+    DB.exec(
+      'DELETE FROM drafts WHERE user_id = :user_id AND draft_key = :draft_key AND sequence < :sequence',
+      draft_key: key, user_id: user_id, sequence: c.sequence
+    )
     c.sequence
   end
 
@@ -22,7 +25,12 @@ class DraftSequence < ActiveRecord::Base
     user_id = user.id unless user.is_a?(Integer)
 
     # perf critical path
-    r, _ = DB.query_single('select sequence from draft_sequences where user_id = ? and draft_key = ?', user_id, key)
+    r, _ =
+      DB.query_single(
+        'select sequence from draft_sequences where user_id = ? and draft_key = ?',
+        user_id,
+        key
+      )
     r.to_i
   end
 end

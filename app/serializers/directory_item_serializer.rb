@@ -1,11 +1,9 @@
 class DirectoryItemSerializer < ApplicationSerializer
-
   class UserSerializer < UserNameSerializer
     include UserPrimaryGroupMixin
   end
 
-  attributes :id,
-             :time_read
+  attributes :id, :time_read
 
   has_one :user, embed: :objects, serializer: UserSerializer
   attributes *DirectoryItem.headings
@@ -21,5 +19,4 @@ class DirectoryItemSerializer < ApplicationSerializer
   def include_time_read?
     object.period_type == DirectoryItem.period_types[:all]
   end
-
 end

@@ -1,7 +1,13 @@
 class Wizard
   class Step
     attr_reader :id, :updater
-    attr_accessor :index, :fields, :next, :previous, :banner, :disabled, :description_vars
+    attr_accessor :index,
+                  :fields,
+                  :next,
+                  :previous,
+                  :banner,
+                  :disabled,
+                  :description_vars
 
     def initialize(id)
       @id = id

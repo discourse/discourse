@@ -1,29 +1,31 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Positionable do
-
   def positions
     TestItem.order('position asc, id asc').pluck(:id)
   end
 
-  context "move_to" do
+  context 'move_to' do
     before do
       class TestItem < ActiveRecord::Base
         include Positionable
       end
 
-      DB.exec("create temporary table test_items(id int primary key, position int)")
+      DB.exec(
+        'create temporary table test_items(id int primary key, position int)'
+      )
     end
 
     after do
-      DB.exec("drop table test_items")
+      DB.exec('drop table test_items')
 
       # import is making my life hard, we need to nuke this out of orbit
-      des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
+      des =
+        ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
       des[ActiveRecord::Base].delete(TestItem)
     end
 
-    it "can position stuff correctly" do
+    it 'can position stuff correctly' do
       5.times do |i|
         DB.exec("insert into test_items(id,position) values(#{i}, #{i})")
       end

@@ -2,10 +2,9 @@ require 'rails_helper'
 require_dependency 'distributed_memoizer'
 
 describe DistributedMemoizer do
-
   before do
-    $redis.del(DistributedMemoizer.redis_key("hello"))
-    $redis.del(DistributedMemoizer.redis_lock_key("hello"))
+    $redis.del(DistributedMemoizer.redis_key('hello'))
+    $redis.del(DistributedMemoizer.redis_lock_key('hello'))
     $redis.unwatch
   end
 
@@ -13,43 +12,36 @@ describe DistributedMemoizer do
   # let(:mock_redis) { MockRedis.new }
 
   def memoize(&block)
-    DistributedMemoizer.memoize("hello", duration = 120, &block)
+    DistributedMemoizer.memoize('hello', duration = 120, &block)
   end
 
-  it "returns the value of a block" do
-    expect(memoize do
-      "abc"
-    end).to eq("abc")
+  it 'returns the value of a block' do
+    expect(memoize { 'abc' }).to eq('abc')
   end
 
-  it "return the old value once memoized" do
+  it 'return the old value once memoized' do
+    memoize { 'abc' }
 
-    memoize do
-      "abc"
-    end
-
-    expect(memoize do
-      "world"
-    end).to eq("abc")
+    expect(memoize { 'world' }).to eq('abc')
   end
 
-  it "memoizes correctly when used concurrently" do
+  it 'memoizes correctly when used concurrently' do
     results = []
     threads = []
 
     5.times do
-      threads << Thread.new do
-        results << memoize do
-          sleep 0.001
-          SecureRandom.hex
+      threads <<
+        Thread.new do
+          results <<
+            memoize do
+              sleep 0.001
+              SecureRandom.hex
+            end
         end
-      end
     end
 
     threads.each(&:join)
     expect(results.uniq.length).to eq(1)
     expect(results.count).to eq(5)
-
   end
-
 end

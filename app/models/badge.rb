@@ -70,11 +70,14 @@ class Badge < ActiveRecord::Base
   attr_accessor :has_badge
 
   def self.trigger_hash
-    Hash[*(
-      Badge::Trigger.constants.map { |k|
-        [k.to_s.underscore, Badge::Trigger.const_get(k)]
-      }.flatten
-    )]
+    Hash[
+      *(
+        Badge::Trigger.constants.map do |k|
+          [k.to_s.underscore, Badge::Trigger.const_get(k)]
+        end
+          .flatten
+      )
+    ]
   end
 
   module Trigger
@@ -112,16 +115,20 @@ class Badge < ActiveRecord::Base
 
   before_create :ensure_not_system
 
-  after_commit do
-    SvgSprite.expire_cache
-  end
+  after_commit { SvgSprite.expire_cache }
 
   # fields that can not be edited on system badges
   def self.protected_system_fields
-    [
-      :name, :badge_type_id, :multiple_grant,
-      :target_posts, :show_posts, :query,
-      :trigger, :auto_revoke, :listable
+    %i[
+      name
+      badge_type_id
+      multiple_grant
+      target_posts
+      show_posts
+      query
+      trigger
+      auto_revoke
+      listable
     ]
   end
 
@@ -130,14 +137,15 @@ class Badge < ActiveRecord::Base
   end
 
   def self.like_badge_counts
-    @like_badge_counts ||= {
-      NicePost => 10,
-      GoodPost => 25,
-      GreatPost => 50,
-      NiceTopic => 10,
-      GoodTopic => 25,
-      GreatTopic => 50
-    }
+    @like_badge_counts ||=
+      {
+        NicePost => 10,
+        GoodPost => 25,
+        GreatPost => 50,
+        NiceTopic => 10,
+        GoodTopic => 25,
+        GreatTopic => 50
+      }
   end
 
   def self.ensure_consistency!
@@ -189,7 +197,7 @@ class Badge < ActiveRecord::Base
   def default_icon=(val)
     unless self.image
       self.icon ||= val
-      self.icon = val if self.icon == "fa-certificate"
+      self.icon = val if self.icon == 'fa-certificate'
     end
   end
 
@@ -210,7 +218,10 @@ class Badge < ActiveRecord::Base
 
   def long_description
     key = "badges.#{i18n_name}.long_description"
-    I18n.t(key, default: self[:long_description] || '', base_uri: Discourse.base_uri)
+    I18n.t(
+      key,
+      default: self[:long_description] || '', base_uri: Discourse.base_uri
+    )
   end
 
   def long_description=(val)

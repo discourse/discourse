@@ -1,9 +1,8 @@
 class UserField < ActiveRecord::Base
-
   include AnonCacheInvalidator
 
   validates_presence_of :description, :field_type
-  validates_presence_of :name, unless: -> { field_type == "confirm" }
+  validates_presence_of :name, unless: -> { field_type == 'confirm' }
   has_many :user_field_options, dependent: :destroy
   accepts_nested_attributes_for :user_field_options
 

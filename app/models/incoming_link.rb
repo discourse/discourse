@@ -35,45 +35,48 @@ class IncomingLink < ActiveRecord::Base
     end
 
     if host != opts[:host] && (user_id || referer)
-
       post_id = opts[:post_id]
-      post_id ||= Post.where(topic_id: opts[:topic_id],
-                             post_number: opts[:post_number] || 1)
-        .pluck(:id).first
+      post_id ||=
+        Post.where(
+          topic_id: opts[:topic_id], post_number: opts[:post_number] || 1
+        )
+          .pluck(:id)
+          .first
 
       cid = current_user ? (current_user.id) : (nil)
       ip_address = nil if cid
 
       unless cid && cid == user_id
-
-        create(referer: referer,
-               user_id: user_id,
-               post_id: post_id,
-               current_user_id: cid,
-               ip_address: ip_address) if post_id
-
+        if post_id
+          create(
+            referer: referer,
+            user_id: user_id,
+            post_id: post_id,
+            current_user_id: cid,
+            ip_address: ip_address
+          )
+        end
       end
     end
-
   end
 
   def referer=(referer)
     self.incoming_referer_id = nil
 
     # will set incoming_referer_id
-    unless referer.present?
-      return
-    end
+    return unless referer.present?
 
     parsed = URI.parse(referer)
 
-    if parsed.scheme == "http" || parsed.scheme == "https"
+    if parsed.scheme == 'http' || parsed.scheme == 'https'
       domain = IncomingDomain.add!(parsed)
 
-      referer_record = IncomingReferer.add!(path: parsed.path, incoming_domain: domain) if domain
+      if domain
+        referer_record =
+          IncomingReferer.add!(path: parsed.path, incoming_domain: domain)
+      end
       self.incoming_referer_id = referer_record.id if referer_record
     end
-
   rescue URI::Error
     # ignore
   end
@@ -85,26 +88,31 @@ class IncomingLink < ActiveRecord::Base
   end
 
   def domain
-    if incoming_referer
-      incoming_referer.incoming_domain.name
-    end
+    incoming_referer.incoming_domain.name if incoming_referer
   end
 
   # Internal: Update appropriate link counts.
   def update_link_counts
-    DB.exec("UPDATE topics
+    DB.exec(
+      'UPDATE topics
               SET incoming_link_count = incoming_link_count + 1
-              WHERE id = (SELECT topic_id FROM posts where id = ?)", post_id)
-    DB.exec("UPDATE posts
+              WHERE id = (SELECT topic_id FROM posts where id = ?)',
+      post_id
+    )
+    DB.exec(
+      'UPDATE posts
               SET incoming_link_count = incoming_link_count + 1
-              WHERE id = ?", post_id)
+              WHERE id = ?',
+      post_id
+    )
   end
 
   protected
 
   def referer_valid
     return true unless referer
-    if (referer.length < 3 || referer.length > 100) || (domain.length < 1 || domain.length > 100)
+    if (referer.length < 3 || referer.length > 100) ||
+       (domain.length < 1 || domain.length > 100)
       # internal, no need to localize
       errors.add(:referer, 'referer is invalid')
       false

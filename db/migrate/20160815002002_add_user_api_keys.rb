@@ -12,8 +12,8 @@ class AddUserApiKeys < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :user_api_keys, [:key], unique: true
-    add_index :user_api_keys, [:user_id]
-    add_index :user_api_keys, [:client_id]
+    add_index :user_api_keys, %i[key], unique: true
+    add_index :user_api_keys, %i[user_id]
+    add_index :user_api_keys, %i[client_id]
   end
 end

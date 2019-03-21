@@ -9,7 +9,7 @@ class AddUserAvatars < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :user_avatars, [:user_id]
+    add_index :user_avatars, %i[user_id]
 
     execute <<SQL
    INSERT INTO user_avatars(user_id, custom_upload_id)

@@ -11,11 +11,13 @@ module Jobs
 
       raise Discourse::InvalidParameters.new(:to_address) if to_address.blank?
       raise Discourse::InvalidParameters.new(:token) if token.blank?
-      raise Discourse::InvalidParameters.new(:target_username) if target_username.blank?
+      if target_username.blank?
+        raise Discourse::InvalidParameters.new(:target_username)
+      end
 
-      message = AdminConfirmationMailer.send_email(to_address, target_username, token)
+      message =
+        AdminConfirmationMailer.send_email(to_address, target_username, token)
       Email::Sender.new(message, :admin_confirmation_message).send
     end
-
   end
 end

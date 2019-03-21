@@ -41,7 +41,8 @@ module Helpers
 
   def create_post(args = {})
     args[:title] ||= "This is my title #{Helpers.next_seq}"
-    args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
+    args[:raw] ||=
+      "This is the raw body of my post, it is cool #{Helpers.next_seq}"
     args[:topic_id] = args[:topic].id if args[:topic]
     user = args.delete(:user) || Fabricate(:user)
     args[:category] = args[:category].id if args[:category].is_a?(Category)
@@ -49,7 +50,7 @@ module Helpers
     post = creator.create
 
     if creator.errors.present?
-      raise StandardError.new(creator.errors.full_messages.join(" "))
+      raise StandardError.new(creator.errors.full_messages.join(' '))
     end
 
     post
@@ -80,10 +81,10 @@ module Helpers
   end
 
   def fill_email(mail, from, to, body = nil, subject = nil, cc = nil)
-    result = mail.gsub("FROM", from).gsub("TO", to)
-    result.gsub!(/Hey.*/m, body)  if body
+    result = mail.gsub('FROM', from).gsub('TO', to)
+    result.gsub!(/Hey.*/m, body) if body
     result.sub!(/We .*/, subject) if subject
-    result.sub!("CC", cc.presence || "")
+    result.sub!('CC', cc.presence || '')
     result
   end
 
@@ -104,7 +105,8 @@ module Helpers
       permission_type: TagGroupPermission.permission_types[:full]
     )
     tag_names.each do |name|
-      tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
+      tag_group.tags <<
+        (Tag.where(name: name).first || Fabricate(:tag, name: name))
     end
   end
 

@@ -1,6 +1,5 @@
 module Jobs
   class RunHeartbeat < Jobs::Base
-
     sidekiq_options queue: 'critical'
 
     def self.heartbeat_key

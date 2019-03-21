@@ -2,14 +2,16 @@ require 'rails_helper'
 require_dependency 'migration/table_dropper'
 
 describe Migration::TableDropper do
-
   def table_exists?(table_name)
-    DB.exec(<<~SQL) > 0
+    DB.exec(
+      <<~SQL
       SELECT 1
       FROM INFORMATION_SCHEMA.TABLES
       WHERE table_schema = 'public' AND
             table_name = '#{table_name}'
     SQL
+    ) >
+      0
   end
 
   let(:table_name) { 'table_with_old_name' }
@@ -22,34 +24,35 @@ describe Migration::TableDropper do
     SQL
   end
 
-  describe ".execute_drop" do
-    it "should drop the table" do
+  describe '.execute_drop' do
+    it 'should drop the table' do
       Migration::TableDropper.execute_drop(table_name)
 
       expect(table_exists?(table_name)).to eq(false)
     end
   end
 
-  describe ".readonly_only_table" do
-    before do
-      Migration::TableDropper.read_only_table(table_name)
-    end
+  describe '.readonly_only_table' do
+    before { Migration::TableDropper.read_only_table(table_name) }
 
     after do
       ActiveRecord::Base.connection.reset!
 
-      DB.exec(<<~SQL)
+      DB.exec(
+        <<~SQL
         DROP TABLE IF EXISTS #{table_name};
-        DROP FUNCTION IF EXISTS #{Migration::BaseDropper.readonly_function_name(table_name)} CASCADE;
+        DROP FUNCTION IF EXISTS #{Migration::BaseDropper
+          .readonly_function_name(table_name)} CASCADE;
       SQL
+      )
     end
 
     it 'should be droppable' do
       Migration::TableDropper.execute_drop(table_name)
 
-      expect(has_trigger?(Migration::BaseDropper.readonly_trigger_name(
-        table_name
-      ))).to eq(false)
+      expect(
+        has_trigger?(Migration::BaseDropper.readonly_trigger_name(table_name))
+      ).to eq(false)
 
       expect(table_exists?(table_name)).to eq(false)
     end
@@ -63,9 +66,8 @@ describe Migration::TableDropper do
         [
           "Discourse: #{table_name} is read only",
           'discourse_functions.raise_table_with_old_name_readonly()'
-        ].each do |message|
-          expect(e.message).to include(message)
-        end
+        ]
+          .each { |message| expect(e.message).to include(message) }
       end
     end
   end

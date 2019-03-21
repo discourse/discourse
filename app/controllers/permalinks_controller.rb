@@ -14,5 +14,4 @@ class PermalinksController < ApplicationController
       raise Discourse::NotFound
     end
   end
-
 end

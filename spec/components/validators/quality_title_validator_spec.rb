@@ -11,25 +11,27 @@ module QualityTitleValidatorSpec
   end
 end
 
-describe "A record validated with QualityTitleValidator" do
-  let(:valid_title) { "hello this is my cool topic! welcome: all;" }
-  let(:short_title) { valid_title.slice(0, SiteSetting.min_topic_title_length - 1) }
-  let(:long_title) { valid_title.center(SiteSetting.max_topic_title_length + 1, 'x') }
+describe 'A record validated with QualityTitleValidator' do
+  let(:valid_title) { 'hello this is my cool topic! welcome: all;' }
+  let(:short_title) do
+    valid_title.slice(0, SiteSetting.min_topic_title_length - 1)
+  end
+  let(:long_title) do
+    valid_title.center(SiteSetting.max_topic_title_length + 1, 'x')
+  end
   let(:xxxxx_title) { valid_title.gsub(/./, 'x') }
 
   subject(:topic) { QualityTitleValidatorSpec::Validatable.new }
 
-  before(:each) do
-    topic.stubs(private_message?: false)
-  end
+  before(:each) { topic.stubs(private_message?: false) }
 
-  it "allows a regular title with a few ascii characters" do
+  it 'allows a regular title with a few ascii characters' do
     topic.title = valid_title
     expect(topic).to be_valid
   end
 
-  it "allows non ascii" do
-    topic.title = "Iñtërnâtiônàlizætiøn"
+  it 'allows non ascii' do
+    topic.title = 'Iñtërnâtiônàlizætiøn'
     expect(topic).to be_valid
   end
 
@@ -38,7 +40,7 @@ describe "A record validated with QualityTitleValidator" do
     expect(topic).to be_valid
   end
 
-  it "allows anything in a private message" do
+  it 'allows anything in a private message' do
     topic.stubs(private_message?: true)
     [short_title, long_title, xxxxx_title].each do |bad_title|
       topic.title = bad_title
@@ -46,8 +48,9 @@ describe "A record validated with QualityTitleValidator" do
     end
   end
 
-  it "strips a title when identifying length" do
-    topic.title = short_title.center(SiteSetting.min_topic_title_length + 1, ' ')
+  it 'strips a title when identifying length' do
+    topic.title =
+      short_title.center(SiteSetting.min_topic_title_length + 1, ' ')
     expect(topic).not_to be_valid
   end
 

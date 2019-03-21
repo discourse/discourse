@@ -17,7 +17,7 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def self.fragment_cache
-    @cache ||= DistributedCache.new("am_serializer_fragment_cache")
+    @cache ||= DistributedCache.new('am_serializer_fragment_cache')
   end
 
   protected
@@ -27,10 +27,6 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def cache_anon_fragment(name, &blk)
-    if scope.anonymous?
-      cache_fragment(name, &blk)
-    else
-      blk.call
-    end
+    scope.anonymous? ? cache_fragment(name, &blk) : blk.call
   end
 end

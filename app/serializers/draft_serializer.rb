@@ -52,5 +52,4 @@ class DraftSerializer < ApplicationSerializer
   def include_category_id?
     object.category_id.present?
   end
-
 end

@@ -2,21 +2,26 @@ require 'rails_helper'
 require 'unread'
 
 describe Unread do
-
-  let (:user) { Fabricate.build(:user, id: 1) }
+  let (:user) do
+    Fabricate.build(:user, id: 1)
+  end
   let (:topic) do
-    Fabricate.build(:topic,
-                       posts_count: 13,
-                       highest_staff_post_number: 15,
-                       highest_post_number: 13,
-                       id: 1)
+    Fabricate.build(
+      :topic,
+      posts_count: 13,
+      highest_staff_post_number: 15,
+      highest_post_number: 13,
+      id: 1
+    )
   end
 
   let (:topic_user) do
-    Fabricate.build(:topic_user,
-                        notification_level: TopicUser.notification_levels[:tracking],
-                        topic_id: topic.id,
-                        user_id: user.id)
+    Fabricate.build(
+      :topic_user,
+      notification_level: TopicUser.notification_levels[:tracking],
+      topic_id: topic.id,
+      user_id: user.id
+    )
   end
 
   def unread
@@ -25,7 +30,6 @@ describe Unread do
 
   describe 'staff counts' do
     it 'shoule correctly return based on staff post number' do
-
       user.admin = true
 
       topic_user.last_read_post_number = 13
@@ -83,5 +87,4 @@ describe Unread do
       expect(unread.new_posts).to eq(0)
     end
   end
-
 end

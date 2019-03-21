@@ -1,8 +1,9 @@
 class CorrectPostNumberIndex < ActiveRecord::Migration[4.2]
   def change
-
-    begin
-      a = execute <<SQL
+    until a.cmdtuples == 0
+      begin
+        a =
+          execute <<SQL
       UPDATE posts SET post_number = post_number + 1
       WHERE id IN (
         SELECT p1.id
@@ -18,9 +19,10 @@ class CorrectPostNumberIndex < ActiveRecord::Migration[4.2]
                 p1.id <> pp.min_id
       )
 SQL
-    end until a.cmdtuples == 0
+      end
+    end
 
-    remove_index :posts, [:topic_id, :post_number]
-    add_index :posts, [:topic_id, :post_number], unique: true
+    remove_index :posts, %i[topic_id post_number]
+    add_index :posts, %i[topic_id post_number], unique: true
   end
 end

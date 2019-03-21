@@ -1,7 +1,6 @@
 require_dependency 'single_sign_on'
 
 class DiscourseSingleSignOn < SingleSignOn
-
   def self.sso_url
     SiteSetting.sso_url
   end
@@ -10,15 +9,15 @@ class DiscourseSingleSignOn < SingleSignOn
     SiteSetting.sso_secret
   end
 
-  def self.generate_sso(return_path = "/")
+  def self.generate_sso(return_path = '/')
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
-    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
+    sso.return_sso_url = Discourse.base_url + '/session/sso_login'
     sso
   end
 
-  def self.generate_url(return_path = "/")
+  def self.generate_url(return_path = '/')
     generate_sso(return_path).to_url
   end
 
@@ -33,13 +32,11 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def return_path
-    $redis.get(nonce_key) || "/"
+    $redis.get(nonce_key) || '/'
   end
 
   def expire_nonce!
-    if nonce
-      $redis.del nonce_key
-    end
+    $redis.del nonce_key if nonce
   end
 
   def nonce_key
@@ -62,16 +59,17 @@ class DiscourseSingleSignOn < SingleSignOn
 
     change_external_attributes_and_override(sso_record, user)
 
-    if sso_record && (user = sso_record.user) && !user.active && !require_activation
+    if sso_record && (user = sso_record.user) && !user.active &&
+       !require_activation
       user.active = true
       user.save!
-      user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
+      unless suppress_welcome_message
+        user.enqueue_welcome_message('welcome_user')
+      end
       user.set_automatic_groups
     end
 
-    custom_fields.each do |k, v|
-      user.custom_fields[k] = v
-    end
+    custom_fields.each { |k, v| user.custom_fields[k] = v }
 
     user.ip_address = ip_address
 
@@ -84,7 +82,8 @@ class DiscourseSingleSignOn < SingleSignOn
     user.user_avatar.save! if user.user_avatar
     user.save!
 
-    if bio && (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
+    if bio &&
+       (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
       user.user_profile.bio_raw = bio
       user.user_profile.save!
     end
@@ -100,9 +99,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
     sso_record.save!
 
-    if sso_record.user
-      apply_group_rules(sso_record.user)
-    end
+    apply_group_rules(sso_record.user) if sso_record.user
 
     sso_record && sso_record.user
   end
@@ -110,12 +107,12 @@ class DiscourseSingleSignOn < SingleSignOn
   private
 
   def synchronize_groups(user)
-    names = (groups || "").split(",").map(&:downcase)
+    names = (groups || '').split(',').map(&:downcase)
     ids = Group.where('LOWER(NAME) in (?) AND NOT automatic', names).pluck(:id)
 
-    group_users = GroupUser
-      .where('group_id IN (SELECT id FROM groups WHERE NOT automatic)')
-      .where(user_id: user.id)
+    group_users =
+      GroupUser.where('group_id IN (SELECT id FROM groups WHERE NOT automatic)')
+        .where(user_id: user.id)
 
     delete_group_users = group_users
     if ids.length > 0
@@ -137,9 +134,10 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if add_groups
-      split = add_groups.split(",").map(&:downcase)
+      split = add_groups.split(',').map(&:downcase)
       if split.length > 0
-        Group.where('LOWER(name) in (?) AND NOT automatic', split).pluck(:id).each do |id|
+        Group.where('LOWER(name) in (?) AND NOT automatic', split).pluck(:id)
+          .each do |id|
           unless GroupUser.where(group_id: id, user_id: user.id).exists?
             GroupUser.create(group_id: id, user_id: user.id)
           end
@@ -148,11 +146,12 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if remove_groups
-      split = remove_groups.split(",").map(&:downcase)
+      split = remove_groups.split(',').map(&:downcase)
       if split.length > 0
-        GroupUser
-          .where(user_id: user.id)
-          .where('group_id IN (SELECT id FROM groups WHERE LOWER(name) in (?))', split)
+        GroupUser.where(user_id: user.id).where(
+          'group_id IN (SELECT id FROM groups WHERE LOWER(name) in (?))',
+          split
+        )
           .destroy_all
       end
     end
@@ -170,18 +169,27 @@ class DiscourseSingleSignOn < SingleSignOn
         user_params = {
           primary_email: UserEmail.new(email: email, primary: true),
           name: try_name || User.suggest_name(try_username || email),
-          username: UserNameSuggester.suggest(try_username || try_name || email),
+          username:
+            UserNameSuggester.suggest(try_username || try_name || email),
           ip_address: ip_address
         }
 
-        if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+        if SiteSetting.allow_user_locale && locale &&
+           LocaleSiteSetting.valid_value?(locale)
           user_params[:locale] = locale
         end
 
         user = User.create!(user_params)
 
         if SiteSetting.verbose_sso_logging
-          Rails.logger.warn("Verbose SSO log: New User (user_id: #{user.id}) Params: #{user_params} User Params: #{user.attributes} User Errors: #{user.errors.full_messages} Email: #{user.primary_email.attributes} Email Error: #{user.primary_email.errors.full_messages}")
+          Rails.logger.warn(
+            "Verbose SSO log: New User (user_id: #{user
+              .id}) Params: #{user_params} User Params: #{user
+              .attributes} User Errors: #{user.errors
+              .full_messages} Email: #{user.primary_email
+              .attributes} Email Error: #{user.primary_email.errors
+              .full_messages}"
+          )
         end
       end
 
@@ -191,7 +199,8 @@ class DiscourseSingleSignOn < SingleSignOn
           sso_record.external_id = external_id
         else
           if avatar_url.present?
-            Jobs.enqueue(:download_avatar_from_url,
+            Jobs.enqueue(
+              :download_avatar_from_url,
               url: avatar_url,
               user_id: user.id,
               override_gravatar: SiteSetting.sso_overrides_avatar
@@ -199,7 +208,8 @@ class DiscourseSingleSignOn < SingleSignOn
           end
 
           if profile_background_url.present?
-            Jobs.enqueue(:download_profile_background_from_url,
+            Jobs.enqueue(
+              :download_profile_background_from_url,
               url: profile_background_url,
               user_id: user.id,
               is_card_background: false
@@ -207,7 +217,8 @@ class DiscourseSingleSignOn < SingleSignOn
           end
 
           if card_background_url.present?
-            Jobs.enqueue(:download_profile_background_from_url,
+            Jobs.enqueue(
+              :download_profile_background_from_url,
               url: card_background_url,
               user_id: user.id,
               is_card_background: true
@@ -241,7 +252,8 @@ class DiscourseSingleSignOn < SingleSignOn
       if user.username.downcase == username.downcase
         user.username = username # there may be a change of case
       elsif user.username != username
-        user.username = UserNameSuggester.suggest(username || name || email, user.username)
+        user.username =
+          UserNameSuggester.suggest(username || name || email, user.username)
       end
     end
 
@@ -249,40 +261,65 @@ class DiscourseSingleSignOn < SingleSignOn
       user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
-    if locale_force_update && SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)
+    if locale_force_update && SiteSetting.allow_user_locale && locale &&
+       LocaleSiteSetting.valid_value?(locale)
       user.locale = locale
     end
 
-    avatar_missing = user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
+    avatar_missing =
+      user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
 
-    if (avatar_missing || avatar_force_update || SiteSetting.sso_overrides_avatar) && avatar_url.present?
+    if (
+       avatar_missing || avatar_force_update || SiteSetting.sso_overrides_avatar
+     ) &&
+       avatar_url.present?
       avatar_changed = sso_record.external_avatar_url != avatar_url
 
       if avatar_force_update || avatar_changed || avatar_missing
-        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id, override_gravatar: SiteSetting.sso_overrides_avatar)
-      end
-    end
-
-    profile_background_missing = user.user_profile.profile_background.blank? || Upload.get_from_url(user.user_profile.profile_background).blank?
-    if (profile_background_missing || SiteSetting.sso_overrides_profile_background) && profile_background_url.present?
-      profile_background_changed = sso_record.external_profile_background_url != profile_background_url
-      if profile_background_changed || profile_background_missing
-        Jobs.enqueue(:download_profile_background_from_url,
-            url: profile_background_url,
-            user_id: user.id,
-            is_card_background: false
+        Jobs.enqueue(
+          :download_avatar_from_url,
+          url: avatar_url,
+          user_id: user.id,
+          override_gravatar: SiteSetting.sso_overrides_avatar
         )
       end
     end
 
-    card_background_missing = user.user_profile.card_background.blank? || Upload.get_from_url(user.user_profile.card_background).blank?
-    if (card_background_missing || SiteSetting.sso_overrides_profile_background) && card_background_url.present?
-      card_background_changed = sso_record.external_card_background_url != card_background_url
+    profile_background_missing =
+      user.user_profile.profile_background.blank? ||
+        Upload.get_from_url(user.user_profile.profile_background).blank?
+
+    if (
+       profile_background_missing ||
+         SiteSetting.sso_overrides_profile_background
+     ) &&
+       profile_background_url.present?
+      profile_background_changed =
+        sso_record.external_profile_background_url != profile_background_url
+      if profile_background_changed || profile_background_missing
+        Jobs.enqueue(
+          :download_profile_background_from_url,
+          url: profile_background_url,
+          user_id: user.id,
+          is_card_background: false
+        )
+      end
+    end
+
+    card_background_missing =
+      user.user_profile.card_background.blank? ||
+        Upload.get_from_url(user.user_profile.card_background).blank?
+
+    if (
+       card_background_missing || SiteSetting.sso_overrides_profile_background
+     ) &&
+       card_background_url.present?
+      card_background_changed =
+        sso_record.external_card_background_url != card_background_url
       if card_background_changed || card_background_missing
-        Jobs.enqueue(:download_profile_background_from_url,
-            url: card_background_url,
-            user_id: user.id,
-            is_card_background: true
+        Jobs.enqueue(
+          :download_profile_background_from_url,
+          url: card_background_url, user_id: user.id, is_card_background: true
         )
       end
     end

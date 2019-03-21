@@ -1,5 +1,4 @@
 class CreateApiKeys < ActiveRecord::Migration[4.2]
-
   def up
     create_table :api_keys do |t|
       t.string :key, limit: 64, null: false
@@ -18,5 +17,4 @@ class CreateApiKeys < ActiveRecord::Migration[4.2]
   def down
     raise ActiveRecord::IrreversibleMigration.new
   end
-
 end

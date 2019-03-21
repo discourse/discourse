@@ -4,29 +4,27 @@ describe BadgesController do
   let!(:badge) { Fabricate(:badge) }
   let(:user) { Fabricate(:user) }
 
-  before do
-    SiteSetting.enable_badges = true
-  end
+  before { SiteSetting.enable_badges = true }
 
   context 'index' do
     it 'should return a list of all badges' do
-      get "/badges.json"
+      get '/badges.json'
 
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      expect(parsed["badges"].length).to eq(Badge.count)
+      expect(parsed['badges'].length).to eq(Badge.count)
     end
   end
 
   context 'show' do
-    it "should return a badge" do
+    it 'should return a badge' do
       get "/badges/#{badge.id}.json"
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      expect(parsed["badge"]).to be_present
+      expect(parsed['badge']).to be_present
     end
 
-    it "should mark the notification as viewed" do
+    it 'should mark the notification as viewed' do
       sign_in(user)
       user_badge = BadgeGranter.grant(badge, user)
       expect(user_badge.notification.read).to eq(false)

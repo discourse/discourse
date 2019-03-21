@@ -2,18 +2,19 @@ require 'topic_publisher'
 require 'rails_helper'
 
 describe TopicPublisher do
-
-  context "shared drafts" do
+  context 'shared drafts' do
     let(:shared_drafts_category) { Fabricate(:category) }
     let(:category) { Fabricate(:category) }
 
-    before do
-      SiteSetting.shared_drafts_category = shared_drafts_category.id
-    end
+    before { SiteSetting.shared_drafts_category = shared_drafts_category.id }
 
-    context "publishing" do
-      let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
-      let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
+    context 'publishing' do
+      let(:topic) do
+        Fabricate(:topic, category: shared_drafts_category, visible: false)
+      end
+      let(:shared_draft) do
+        Fabricate(:shared_draft, topic: topic, category: category)
+      end
       let(:moderator) { Fabricate(:moderator) }
       let(:op) { Fabricate(:post, topic: topic) }
 
@@ -23,10 +24,11 @@ describe TopicPublisher do
         op.reload
       end
 
-      it "will publish the topic properly" do
+      it 'will publish the topic properly' do
         published_at = 1.hour.from_now.change(usec: 0)
         freeze_time(published_at) do
-          TopicPublisher.new(topic, moderator, shared_draft.category_id).publish!
+          TopicPublisher.new(topic, moderator, shared_draft.category_id)
+            .publish!
 
           topic.reload
           expect(topic.category).to eq(category)
@@ -34,10 +36,12 @@ describe TopicPublisher do
           expect(topic.created_at).to eq(published_at)
           expect(topic.updated_at).to eq(published_at)
           expect(topic.shared_draft).to be_blank
-          expect(UserHistory.where(
-            acting_user_id: moderator.id,
-            action: UserHistory.actions[:topic_published]
-          )).to be_present
+          expect(
+            UserHistory.where(
+              acting_user_id: moderator.id,
+              action: UserHistory.actions[:topic_published]
+            )
+          ).to be_present
           op.reload
 
           # Should delete any edits on the OP
@@ -50,7 +54,5 @@ describe TopicPublisher do
         end
       end
     end
-
   end
-
 end

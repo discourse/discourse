@@ -4,7 +4,6 @@
 
 module ActiveSupport
   module Inflector
-
     LRU_CACHE_SIZE = 200
     LRU_CACHES = []
 
@@ -22,19 +21,25 @@ module ActiveSupport
 
         define_method(method_name) do |*arguments|
           # this avoids recursive locks
-          found = true
+          found =
+            true
           data = cache.fetch(arguments) { found = false }
-          unless found
-            cache[arguments] = data = send(uncached, *arguments)
-          end
+          cache[arguments] = data = send(uncached, *arguments) unless found
           # so cache is never corrupted
           data.dup
         end
       end
     end
 
-    memoize :pluralize, :singularize, :camelize, :underscore, :humanize,
-            :titleize, :tableize, :classify, :foreign_key
+    memoize :pluralize,
+            :singularize,
+            :camelize,
+            :underscore,
+            :humanize,
+            :titleize,
+            :tableize,
+            :classify,
+            :foreign_key
   end
 end
 
@@ -53,7 +58,13 @@ module ActiveSupport
         end
       end
 
-      clear_memoize :acronym, :plural, :singular, :irregular, :uncountable, :human, :clear
+      clear_memoize :acronym,
+                    :plural,
+                    :singular,
+                    :irregular,
+                    :uncountable,
+                    :human,
+                    :clear
     end
   end
 end

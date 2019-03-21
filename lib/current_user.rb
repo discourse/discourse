@@ -1,5 +1,4 @@
 module CurrentUser
-
   def self.has_auth_cookie?(env)
     Discourse.current_user_provider.new(env).has_auth_cookie?
   end
@@ -43,5 +42,4 @@ module CurrentUser
   def current_user_provider
     @current_user_provider ||= Discourse.current_user_provider.new(request.env)
   end
-
 end

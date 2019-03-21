@@ -12,7 +12,9 @@ class ThemeSettingsParser
     if desc.is_a?(Hash)
       default_locale = SiteSetting.default_locale.to_sym
       fallback_locale = desc.keys.find { |key| I18n.locale_available?(key) }
-      locale = desc[I18n.locale] || desc[default_locale] || desc[:en] || desc[fallback_locale]
+      locale =
+        desc[I18n.locale] || desc[default_locale] || desc[:en] ||
+          desc[fallback_locale]
 
       locale if locale.is_a?(String)
     end
@@ -30,13 +32,13 @@ class ThemeSettingsParser
     end
 
     if [@types[:integer], @types[:string], @types[:float]].include?(type)
-      opts[:max] = raw_opts[:max].is_a?(Numeric) ? raw_opts[:max] : Float::INFINITY
-      opts[:min] = raw_opts[:min].is_a?(Numeric) ? raw_opts[:min] : -Float::INFINITY
+      opts[:max] =
+        raw_opts[:max].is_a?(Numeric) ? raw_opts[:max] : Float::INFINITY
+      opts[:min] =
+        raw_opts[:min].is_a?(Numeric) ? raw_opts[:min] : -Float::INFINITY
     end
 
-    if raw_opts[:list_type]
-      opts[:list_type] = raw_opts[:list_type]
-    end
+    opts[:list_type] = raw_opts[:list_type] if raw_opts[:list_type]
 
     opts[:textarea] = !!raw_opts[:textarea]
 
@@ -51,7 +53,9 @@ class ThemeSettingsParser
     rescue Psych::SyntaxError, Psych::DisallowedClass => e
       raise InvalidYaml.new(e.message)
     end
-    raise InvalidYaml.new(I18n.t("themes.settings_errors.invalid_yaml")) unless parsed.is_a?(Hash)
+    unless parsed.is_a?(Hash)
+      raise InvalidYaml.new(I18n.t('themes.settings_errors.invalid_yaml'))
+    end
 
     parsed.deep_symbolize_keys!
 
@@ -60,7 +64,12 @@ class ThemeSettingsParser
         result = [setting, value, type, create_opts(value, type)]
       elsif (hash = value).is_a?(Hash)
         default = hash[:default]
-        type = hash.key?(:type) ? @types[hash[:type]&.to_sym] : ThemeSetting.guess_type(default)
+        type =
+          if hash.key?(:type)
+            @types[hash[:type]&.to_sym]
+          else
+            ThemeSetting.guess_type(default)
+          end
 
         result = [setting, default, type, create_opts(default, type, hash)]
       else

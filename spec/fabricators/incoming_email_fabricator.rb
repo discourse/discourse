@@ -1,8 +1,8 @@
 Fabricator(:incoming_email) do
-  message_id "12345@example.com"
-  subject "Hello world"
-  from_address "foo@example.com"
-  to_addresses "someone@else.com"
+  message_id '12345@example.com'
+  subject 'Hello world'
+  from_address 'foo@example.com'
+  to_addresses 'someone@else.com'
 
   raw <<~RAW
     Return-Path: <foo@example.com>

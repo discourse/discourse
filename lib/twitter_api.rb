@@ -1,14 +1,18 @@
 # lightweight Twitter api calls
 class TwitterApi
-
   class << self
     include ActionView::Helpers::NumberHelper
 
     def prettify_tweet(tweet)
-      text = tweet["full_text"].dup
-      if (entities = tweet["entities"]) && (urls = entities["urls"])
+      text = tweet['full_text'].dup
+      if (entities = tweet['entities']) && (urls = entities['urls'])
         urls.each do |url|
-          text.gsub!(url["url"], "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>")
+          text.gsub!(
+            url['url'],
+            "<a target='_blank' href='#{url['expanded_url']}'>#{url[
+              'display_url'
+            ]}</a>"
+          )
         end
       end
 
@@ -16,15 +20,24 @@ class TwitterApi
 
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
-      if tweet['extended_entities'] && media = tweet['extended_entities']['media']
+      if tweet['extended_entities'] &&
+         media = tweet['extended_entities']['media']
         media.each do |m|
           if m['type'] == 'photo'
             if large = m['sizes']['large']
-              result << "<div class='tweet-images'><img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'></div>"
+              result <<
+                "<div class='tweet-images'><img class='tweet-image' src='#{m[
+                  'media_url_https'
+                ]}' width='#{large['w']}' height='#{large['h']}'></div>"
             end
           elsif m['type'] == 'video'
             if large = m['sizes']['large']
-              result << "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0' allowfullscreen></iframe></div>"
+              result <<
+                "<div class='tweet-images'><iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet[
+                  'id_str'
+                ]}' width='#{large['w']}' height='#{large[
+                  'h'
+                ]}' frameborder='0' allowfullscreen></iframe></div>"
             end
           end
         end
@@ -34,7 +47,12 @@ class TwitterApi
     end
 
     def prettify_number(count)
-      number_to_human(count, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
+      number_to_human(
+        count,
+        format: '%n%u',
+        precision: 2,
+        units: { thousand: 'K', million: 'M', billion: 'B' }
+      )
     end
 
     def user_timeline(screen_name)
@@ -59,11 +77,15 @@ class TwitterApi
 
     def link_handles_in(text)
       text.scan(/(?:^|\s)@(\w+)/).flatten.uniq.each do |handle|
-        text.gsub!(/(?:^|\s)@#{handle}/, [
-          " <a href='https://twitter.com/#{handle}' target='_blank'>",
+        text.gsub!(
+          /(?:^|\s)@#{handle}/,
+          [
+            " <a href='https://twitter.com/#{handle}' target='_blank'>",
             "@#{handle}",
-          "</a>"
-        ].join)
+            '</a>'
+          ]
+            .join
+        )
       end
 
       text.strip
@@ -71,12 +93,16 @@ class TwitterApi
 
     def link_hashtags_in(text)
       text.scan(/(?:^|\s)#(\w+)/).flatten.uniq.each do |hashtag|
-        text.gsub!(/(?:^|\s)##{hashtag}/, [
-          " <a href='https://twitter.com/search?q=%23#{hashtag}' ",
-          "target='_blank'>",
+        text.gsub!(
+          /(?:^|\s)##{hashtag}/,
+          [
+            " <a href='https://twitter.com/search?q=%23#{hashtag}' ",
+            "target='_blank'>",
             "##{hashtag}",
-          "</a>"
-        ].join)
+            '</a>'
+          ]
+            .join
+        )
       end
 
       text.strip
@@ -90,9 +116,7 @@ class TwitterApi
       URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}&tweet_mode=extended"
     end
 
-    unless defined? BASE_URL
-      BASE_URL = 'https://api.twitter.com'.freeze
-    end
+    BASE_URL = 'https://api.twitter.com'.freeze unless defined?(BASE_URL)
 
     def twitter_get(uri)
       request = Net::HTTP::Get.new(uri)
@@ -103,10 +127,9 @@ class TwitterApi
     def authorization
       request = Net::HTTP::Post.new(auth_uri)
 
-      request.add_field 'Authorization',
-        "Basic #{bearer_token_credentials}"
+      request.add_field 'Authorization', "Basic #{bearer_token_credentials}"
       request.add_field 'Content-Type',
-        'application/x-www-form-urlencoded;charset=UTF-8'
+                        'application/x-www-form-urlencoded;charset=UTF-8'
 
       request.set_form_data 'grant_type' => 'client_credentials'
 
@@ -119,7 +142,7 @@ class TwitterApi
 
     def bearer_token_credentials
       Base64.strict_encode64(
-        "#{URI::encode(consumer_key)}:#{URI::encode(consumer_secret)}"
+        "#{URI.encode(consumer_key)}:#{URI.encode(consumer_secret)}"
       )
     end
 
@@ -138,6 +161,5 @@ class TwitterApi
     def consumer_secret
       SiteSetting.twitter_consumer_secret
     end
-
   end
 end

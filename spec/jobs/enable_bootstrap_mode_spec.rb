@@ -1,16 +1,15 @@
 require 'rails_helper'
 
 describe Jobs::EnableBootstrapMode do
-
   context '.execute' do
     let(:admin) { Fabricate(:admin) }
 
-    before do
-      SiteSetting.bootstrap_mode_enabled = false
-    end
+    before { SiteSetting.bootstrap_mode_enabled = false }
 
     it 'raises an error when user_id is missing' do
-      expect { Jobs::EnableBootstrapMode.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
+      expect { Jobs::EnableBootstrapMode.new.execute({}) }.to raise_error(
+            Discourse::InvalidParameters
+          )
     end
 
     it 'does not execute if bootstrap mode is already enabled' do

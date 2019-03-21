@@ -18,10 +18,10 @@
 # https://github.com/open-uri-redirections/open_uri_redirections
 #
 
-require "open-uri"
+require 'open-uri'
 
 module OpenURI
-  class <<self
+  class << self
     alias_method :open_uri_original, :open_uri
     alias_method :redirectable_cautious?, :redirectable?
 
@@ -61,10 +61,11 @@ module OpenURI
   def self.open_uri(name, *rest, &block)
     Thread.current[:__open_uri_redirections__] = allow_redirections(rest)
 
-    block2 = lambda do |io|
-      Thread.current[:__open_uri_redirections__] = nil
-      block[io]
-    end
+    block2 =
+      lambda do |io|
+        Thread.current[:__open_uri_redirections__] = nil
+        block[io]
+      end
 
     begin
       open_uri_original name, *rest, &(block ? block2 : nil)
@@ -85,11 +86,11 @@ module OpenURI
   end
 
   def self.http_to_https?(uri1, uri2)
-    schemes_from([uri1, uri2]) == %w(http https)
+    schemes_from([uri1, uri2]) == %w[http https]
   end
 
   def self.https_to_http?(uri1, uri2)
-    schemes_from([uri1, uri2]) == %w(https http)
+    schemes_from([uri1, uri2]) == %w[https http]
   end
 
   def self.schemes_from(uris)

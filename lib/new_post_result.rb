@@ -30,5 +30,4 @@ class NewPostResult
   def failed?
     !@success
   end
-
 end

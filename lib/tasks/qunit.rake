@@ -1,29 +1,33 @@
-desc "Runs the qunit test suite"
+desc 'Runs the qunit test suite'
 
-task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
-  require "rack"
-  require "socket"
+task 'qunit:test', %i[timeout qunit_path] => :environment do |_, args|
+  require 'rack'
+  require 'socket'
   require 'rbconfig'
 
   if RbConfig::CONFIG['host_os'][/darwin|mac os/]
-    google_chrome_cli = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+    google_chrome_cli =
+      '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
   else
-    google_chrome_cli = "google-chrome"
+    google_chrome_cli = 'google-chrome'
   end
 
   unless system("command -v \"#{google_chrome_cli}\" >/dev/null")
-    abort "Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html"
+    abort 'Chrome is not installed. Download from https://www.google.com/chrome/browser/desktop/index.html'
   end
 
-  if Gem::Version.new(`\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-    abort "Chrome 59 or higher is required to run tests in headless mode."
+  if Gem::Version.new(
+     `\"#{google_chrome_cli}\" --version`.match(/[\d\.]+/)[0]
+   ) <
+     Gem::Version.new('59')
+    abort 'Chrome 59 or higher is required to run tests in headless mode.'
   end
 
-  unless system("command -v yarn >/dev/null;")
-    abort "Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/"
+  unless system('command -v yarn >/dev/null;')
+    abort 'Yarn is not installed. Download from https://yarnpkg.com/lang/en/docs/install/'
   end
 
-  system("yarn install --dev")
+  system('yarn install --dev')
 
   # ensure we have this port available
   def port_available?(port)
@@ -36,36 +40,30 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
 
   port = ENV['TEST_SERVER_PORT'] || 60099
 
-  while !port_available? port
-    port += 1
-  end
+  port += 1 while !port_available? port
 
   unless pid = fork
     Discourse.after_fork
-    Rack::Server.start(config: "config.ru",
-                       AccessLog: [],
-                       Port: port)
+    Rack::Server.start(config: 'config.ru', AccessLog: [], Port: port)
     exit
   end
 
   begin
     success = true
     test_path = "#{Rails.root}/test"
-    qunit_path = args[:qunit_path] || "/qunit"
+    qunit_path = args[:qunit_path] || '/qunit'
     cmd = "node #{test_path}/run-qunit.js http://localhost:#{port}#{qunit_path}"
-    options = { seed: (ENV["QUNIT_SEED"] || Random.new.seed) }
+    options = { seed: (ENV['QUNIT_SEED'] || Random.new.seed) }
 
-    %w{module filter qunit_skip_core qunit_single_plugin}.each do |arg|
+    %w[module filter qunit_skip_core qunit_single_plugin].each do |arg|
       options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present?
     end
 
     if options.present?
-      cmd += "?#{options.to_query.gsub('+', '%20').gsub("&", '\\\&')}"
+      cmd += "?#{options.to_query.gsub('+', '%20').gsub('&', "\\\&")}"
     end
 
-    if args[:timeout].present?
-      cmd += " #{args[:timeout]}"
-    end
+    cmd += " #{args[:timeout]}" if args[:timeout].present?
 
     @now = Time.now
     def elapsed
@@ -75,16 +73,16 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     # wait for server to accept connections
     require 'net/http'
     uri = URI("http://localhost:#{port}/assets/test_helper.js")
-    puts "Warming up Rails server"
+    puts 'Warming up Rails server'
     begin
       Net::HTTP.get(uri)
     rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout
       sleep 1
-      retry unless elapsed() > 60
-      puts "Timed out. Can no connect to forked server!"
+      retry unless elapsed > 60
+      puts 'Timed out. Can no connect to forked server!'
       exit 1
     end
-    puts "Rails server is warmed up"
+    puts 'Rails server is warmed up'
 
     sh(cmd)
 
@@ -97,10 +95,9 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     end
 
     success &&= $?.success?
-
   ensure
     # was having issues with HUP
-    Process.kill "KILL", pid
+    Process.kill 'KILL', pid
   end
 
   if success
@@ -109,5 +106,4 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     puts "\nTests Failed"
     exit(1)
   end
-
 end

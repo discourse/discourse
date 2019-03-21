@@ -1,4 +1,4 @@
-require_dependency "upload_recovery"
+require_dependency 'upload_recovery'
 
 module Jobs
   class PostUploadsRecovery < Jobs::Onceoff
@@ -6,10 +6,9 @@ module Jobs
     MAX_PERIOD = 120
 
     def execute_onceoff(args)
-      UploadRecovery.new.recover(Post.where(
-        "baked_at >= ?",
-        grace_period.days.ago
-      ))
+      UploadRecovery.new.recover(
+        Post.where('baked_at >= ?', grace_period.days.ago)
+      )
     end
 
     def grace_period

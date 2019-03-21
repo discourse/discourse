@@ -1,5 +1,4 @@
-class UserFieldOption < ActiveRecord::Base
-end
+class UserFieldOption < ActiveRecord::Base; end
 
 # == Schema Information
 #

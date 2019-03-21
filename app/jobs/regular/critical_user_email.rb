@@ -3,7 +3,6 @@ require_dependency "#{Rails.root}/app/jobs/regular/user_email.rb"
 
 module Jobs
   class CriticalUserEmail < UserEmail
-
     sidekiq_options queue: 'critical'
 
     def quit_email_early?

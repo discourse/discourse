@@ -7,7 +7,13 @@ class UnsubscribeKey < ActiveRecord::Base
 
   def self.create_key_for(user, type)
     if Post === type
-      create(user_id: user.id, unsubscribe_key_type: "topic", topic_id: type.topic_id, post_id: type.id).key
+      create(
+        user_id: user.id,
+        unsubscribe_key_type: 'topic',
+        topic_id: type.topic_id,
+        post_id: type.id
+      )
+        .key
     else
       create(user_id: user.id, unsubscribe_key_type: type).key
     end

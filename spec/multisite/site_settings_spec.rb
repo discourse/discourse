@@ -6,9 +6,7 @@ RSpec.describe 'Multisite SiteSettings', type: :multisite do
     SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
   end
 
-  after do
-    SiteSetting.provider = @original_provider
-  end
+  after { SiteSetting.provider = @original_provider }
 
   describe '#default_locale' do
     it 'should return the right locale' do

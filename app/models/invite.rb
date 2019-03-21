@@ -18,13 +18,9 @@ class Invite < ActiveRecord::Base
   validates_presence_of :invited_by_id
   validates :email, email: true, format: { with: EmailValidator.email_regex }
 
-  before_create do
-    self.invite_key ||= SecureRandom.hex
-  end
+  before_create { self.invite_key ||= SecureRandom.hex }
 
-  before_validation do
-    self.email = Email.downcase(email) unless email.nil?
-  end
+  before_validation { self.email = Email.downcase(email) unless email.nil? }
 
   validate :user_doesnt_already_exist
   attr_accessor :email_already_exists
@@ -54,11 +50,18 @@ class Invite < ActiveRecord::Base
   end
 
   def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil)
-    InviteRedeemer.new(self, username, name, password, user_custom_fields).redeem unless expired? || destroyed? || !link_valid?
+    unless expired? || destroyed? || !link_valid?
+      InviteRedeemer.new(self, username, name, password, user_custom_fields)
+        .redeem
+    end
   end
 
-  def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
-    create_invite_by_email(email, invited_by,
+  def self.invite_by_email(
+    email, invited_by, topic = nil, group_ids = nil, custom_message = nil
+  )
+    create_invite_by_email(
+      email,
+      invited_by,
       topic: topic,
       group_ids: group_ids,
       custom_message: custom_message,
@@ -68,11 +71,12 @@ class Invite < ActiveRecord::Base
 
   # generate invite link
   def self.generate_invite_link(email, invited_by, topic = nil, group_ids = nil)
-    invite = create_invite_by_email(email, invited_by,
-      topic: topic,
-      group_ids: group_ids,
-      send_email: false
-    )
+    invite =
+      create_invite_by_email(
+        email,
+        invited_by,
+        topic: topic, group_ids: group_ids, send_email: false
+      )
 
     "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
   end
@@ -90,17 +94,22 @@ class Invite < ActiveRecord::Base
     lower_email = Email.downcase(email)
 
     if user = find_user_by_email(lower_email)
-      raise UserExists.new(I18n.t("invite.user_exists",
-        email: lower_email,
-        username: user.username,
-        base_path: Discourse.base_path
-      ))
+      raise UserExists.new(
+              I18n.t(
+                'invite.user_exists',
+                email: lower_email,
+                username: user.username,
+                base_path: Discourse.base_path
+              )
+            )
     end
 
-    invite = Invite.with_deleted
-      .where(email: lower_email, invited_by_id: invited_by.id)
-      .order('created_at DESC')
-      .first
+    invite =
+      Invite.with_deleted.where(
+        email: lower_email, invited_by_id: invited_by.id
+      )
+        .order('created_at DESC')
+        .first
 
     if invite && (invite.expired? || invite.deleted_at)
       invite.destroy
@@ -115,9 +124,7 @@ class Invite < ActiveRecord::Base
       )
     else
       create_args = {
-        invited_by: invited_by,
-        email: lower_email,
-        via_email: send_email
+        invited_by: invited_by, email: lower_email, via_email: send_email
       }
 
       create_args[:moderator] = true if opts[:moderator]
@@ -153,38 +160,47 @@ class Invite < ActiveRecord::Base
     group_ids = []
     if group_names
       group_names = group_names.split(',')
-      group_names.each { |group_name|
+      group_names.each do |group_name|
         group_detail = Group.find_by_name(group_name)
         group_ids.push(group_detail.id) if group_detail
-      }
+      end
     end
     group_ids
   end
 
-  def self.find_all_invites_from(inviter, offset = 0, limit = SiteSetting.invites_per_page)
-    Invite.where(invited_by_id: inviter.id)
-      .where('invites.email IS NOT NULL')
+  def self.find_all_invites_from(
+    inviter, offset = 0, limit = SiteSetting.invites_per_page
+  )
+    Invite.where(invited_by_id: inviter.id).where('invites.email IS NOT NULL')
       .includes(user: :user_stat)
-      .order("CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END, user_stats.time_read DESC, invites.redeemed_at DESC")
+      .order(
+      'CASE WHEN invites.user_id IS NOT NULL THEN 0 ELSE 1 END, user_stats.time_read DESC, invites.redeemed_at DESC'
+    )
       .limit(limit)
       .offset(offset)
       .references('user_stats')
   end
 
   def self.find_pending_invites_from(inviter, offset = 0)
-    find_all_invites_from(inviter, offset).where('invites.user_id IS NULL').order('invites.created_at DESC')
+    find_all_invites_from(inviter, offset).where('invites.user_id IS NULL')
+      .order('invites.created_at DESC')
   end
 
   def self.find_redeemed_invites_from(inviter, offset = 0)
-    find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL').order('invites.redeemed_at DESC')
+    find_all_invites_from(inviter, offset).where('invites.user_id IS NOT NULL')
+      .order('invites.redeemed_at DESC')
   end
 
   def self.find_pending_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL').reorder(nil).count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NULL')
+      .reorder(nil)
+      .count
   end
 
   def self.find_redeemed_invites_count(inviter)
-    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL').reorder(nil).count
+    find_all_invites_from(inviter, 0, nil).where('invites.user_id IS NOT NULL')
+      .reorder(nil)
+      .count
   end
 
   def self.filter_by(email_or_username)
@@ -209,9 +225,7 @@ class Invite < ActiveRecord::Base
 
   def self.redeem_from_email(email)
     invite = Invite.find_by(email: Email.downcase(email))
-    if invite
-      InviteRedeemer.new(invite).redeem
-    end
+    InviteRedeemer.new(invite).redeem if invite
     invite
   end
 
@@ -221,31 +235,46 @@ class Invite < ActiveRecord::Base
   end
 
   def self.resend_all_invites_from(user_id)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id).find_each do |invite|
-      invite.resend_invite
-    end
+    Invite.where(
+      'invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?',
+      user_id
+    )
+      .find_each(&:resend_invite)
   end
 
   def self.rescind_all_expired_invites_from(user)
-    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.created_at < ?',
-                user.id, SiteSetting.invite_expiry_days.days.ago).find_each do |invite|
-      invite.trash!(user)
-    end
+    Invite.where(
+      'invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ? AND invites.created_at < ?',
+      user.id,
+      SiteSetting.invite_expiry_days.days.ago
+    )
+      .find_each { |invite| invite.trash!(user) }
   end
 
   def limit_invites_per_day
-    RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
+    RateLimiter.new(
+      invited_by,
+      'invites-per-day',
+      SiteSetting.max_invites_per_day,
+      1.day.to_i
+    )
   end
 
   def self.base_directory
-    File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
+    File.join(
+      Rails.root,
+      'public',
+      'uploads',
+      'csv',
+      RailsMultisite::ConnectionManagement.current_db
+    )
   end
 
   def self.create_csv(file, name)
     extension = File.extname(file.original_filename)
     path = "#{Invite.base_directory}/#{name}#{extension}"
     FileUtils.mkdir_p(Pathname.new(path).dirname)
-    File.open(path, "wb") { |f| f << file.tempfile.read }
+    File.open(path, 'wb') { |f| f << file.tempfile.read }
     path
   end
 end

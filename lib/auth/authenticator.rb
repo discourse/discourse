@@ -35,7 +35,7 @@ class Auth::Authenticator
   #  connected accounts under the user's preferences. Empty string
   #  indicates not connected
   def description_for_user(user)
-    ""
+    ''
   end
 
   # can authorisation for this provider be revoked?

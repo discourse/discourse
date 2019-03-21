@@ -1,5 +1,4 @@
 class UsernameSettingValidator
-
   include RegexSettingValidation
 
   def initialize(opts = {})

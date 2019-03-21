@@ -1,5 +1,4 @@
 class BasicCategorySerializer < ApplicationSerializer
-
   attributes :id,
              :name,
              :color,
@@ -30,18 +29,30 @@ class BasicCategorySerializer < ApplicationSerializer
              :custom_fields
 
   has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
-  has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer
+  has_one :uploaded_background,
+          embed: :object, serializer: CategoryUploadSerializer
 
   def include_parent_category_id?
     parent_category_id
   end
 
   def name
-    object.uncategorized? ? I18n.t('uncategorized_category_name', locale: SiteSetting.default_locale) : object.name
+    if object.uncategorized?
+      I18n.t('uncategorized_category_name', locale: SiteSetting.default_locale)
+    else
+      object.name
+    end
   end
 
   def description
-    object.uncategorized? ? I18n.t('category.uncategorized_description', locale: SiteSetting.default_locale) : object.description
+    if object.uncategorized?
+      I18n.t(
+        'category.uncategorized_description',
+        locale: SiteSetting.default_locale
+      )
+    else
+      object.description
+    end
   end
 
   def can_edit

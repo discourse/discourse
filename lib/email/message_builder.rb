@@ -1,16 +1,13 @@
 # Builds a Mail::Message we can use for sending. Optionally supports using a template
 # for the body and subject
 module Email
-
   module BuildEmailHelper
     def build_email(*builder_args)
       builder = Email::MessageBuilder.new(*builder_args)
       headers(builder.header_args) if builder.header_args.present?
-      mail(builder.build_args).tap { |message|
-        if message && h = builder.html_part
-          message.html_part = h
-        end
-      }
+      mail(builder.build_args).tap do |message|
+        message.html_part = h if message && h = builder.html_part
+      end
     end
   end
 
@@ -23,40 +20,54 @@ module Email
       @to = to
       @opts = opts || {}
 
-      @template_args = {
-        site_name: SiteSetting.title,
-        email_prefix: SiteSetting.email_prefix.presence || SiteSetting.title,
-        base_url: Discourse.base_url,
-        user_preferences_url: "#{Discourse.base_url}/my/preferences",
-        hostname: Discourse.current_hostname,
-      }.merge!(@opts)
+      @template_args =
+        {
+          site_name: SiteSetting.title,
+          email_prefix: SiteSetting.email_prefix.presence || SiteSetting.title,
+          base_url: Discourse.base_url,
+          user_preferences_url: "#{Discourse.base_url}/my/preferences",
+          hostname: Discourse.current_hostname
+        }
+          .merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] ||= I18n.t('user_notifications.header_instructions', @template_args)
+        @template_args[:header_instructions] ||=
+          I18n.t('user_notifications.header_instructions', @template_args)
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ''
-          @template_args[:respond_instructions] = I18n.t('user_notifications.pm_participants', @template_args) if @opts[:private_reply]
+          if @opts[:private_reply]
+            @template_args[:respond_instructions] =
+              I18n.t('user_notifications.pm_participants', @template_args)
+          end
         else
           if @opts[:only_reply_by_email]
-            string = "user_notifications.only_reply_by_email"
-            string << "_pm" if @opts[:private_reply]
+            string = 'user_notifications.only_reply_by_email'
+            string << '_pm' if @opts[:private_reply]
           else
-            string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
-            string << "_pm" if @opts[:private_reply]
+            string =
+              if allow_reply_by_email?
+                'user_notifications.reply_by_email'
+              else
+                'user_notifications.visit_link_to_respond'
+              end
+            string << '_pm' if @opts[:private_reply]
           end
-          @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
+          @template_args[:respond_instructions] =
+            "---\n" + I18n.t(string, @template_args)
         end
 
         if @opts[:add_unsubscribe_link]
-          unsubscribe_string = if @opts[:mailing_list_mode]
-            "unsubscribe_mailing_list"
-          elsif SiteSetting.unsubscribe_via_email_footer
-            "unsubscribe_link_and_mail"
-          else
-            "unsubscribe_link"
-          end
-          @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
+          unsubscribe_string =
+            if @opts[:mailing_list_mode]
+              'unsubscribe_mailing_list'
+            elsif SiteSetting.unsubscribe_via_email_footer
+              'unsubscribe_link_and_mail'
+            else
+              'unsubscribe_link'
+            end
+          @template_args[:unsubscribe_instructions] =
+            I18n.t(unsubscribe_string, @template_args)
         end
       end
     end
@@ -64,12 +75,34 @@ module Email
     def subject
       if @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
-        subject.gsub!("%{site_name}", @template_args[:email_prefix])
-        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re') : '')
-        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? @template_args[:subject_pm] : '')
-        subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
-        subject.gsub!("%{optional_tags}", @template_args[:show_tags_in_subject] ? "#{@template_args[:show_tags_in_subject]} " : '')
-        subject.gsub!("%{topic_title}", @template_args[:topic_title]) if @template_args[:topic_title] # must be last for safety
+        subject.gsub!('%{site_name}', @template_args[:email_prefix])
+        subject.gsub!(
+          '%{optional_re}',
+          @opts[:add_re_to_subject] ? I18n.t('subject_re') : ''
+        )
+        subject.gsub!(
+          '%{optional_pm}',
+          @opts[:private_reply] ? @template_args[:subject_pm] : ''
+        )
+        subject.gsub!(
+          '%{optional_cat}',
+          if @template_args[:show_category_in_subject]
+            "[#{@template_args[:show_category_in_subject]}] "
+          else
+            ''
+          end
+        )
+        subject.gsub!(
+          '%{optional_tags}',
+          if @template_args[:show_tags_in_subject]
+            "#{@template_args[:show_tags_in_subject]} "
+          else
+            ''
+          end
+        )
+        if @template_args[]
+          subject.gsub!('%{topic_title}', @template_args[:topic_title])
+        end
       elsif @opts[:use_topic_title_subject]
         subject = @opts[:add_re_to_subject] ? I18n.t('subject_re') : ''
         subject = "#{subject}#{@template_args[:topic_title]}"
@@ -85,31 +118,44 @@ module Email
       return unless html_override = @opts[:html_override]
 
       if @template_args[:unsubscribe_instructions].present?
-        unsubscribe_instructions = PrettyText.cook(@template_args[:unsubscribe_instructions], sanitize: false).html_safe
-        html_override.gsub!("%{unsubscribe_instructions}", unsubscribe_instructions)
+        unsubscribe_instructions =
+          PrettyText.cook(
+            @template_args[:unsubscribe_instructions],
+            sanitize: false
+          )
+            .html_safe
+        html_override.gsub!(
+          '%{unsubscribe_instructions}',
+          unsubscribe_instructions
+        )
       else
-        html_override.gsub!("%{unsubscribe_instructions}", "")
+        html_override.gsub!('%{unsubscribe_instructions}', '')
       end
 
       if @template_args[:header_instructions].present?
-        header_instructions = PrettyText.cook(@template_args[:header_instructions], sanitize: false).html_safe
-        html_override.gsub!("%{header_instructions}", header_instructions)
+        header_instructions =
+          PrettyText.cook(@template_args[:header_instructions], sanitize: false)
+            .html_safe
+        html_override.gsub!('%{header_instructions}', header_instructions)
       else
-        html_override.gsub!("%{header_instructions}", "")
+        html_override.gsub!('%{header_instructions}', '')
       end
 
       if @template_args[:respond_instructions].present?
-        respond_instructions = PrettyText.cook(@template_args[:respond_instructions], sanitize: false).html_safe
-        html_override.gsub!("%{respond_instructions}", respond_instructions)
+        respond_instructions =
+          PrettyText.cook(
+            @template_args[:respond_instructions],
+            sanitize: false
+          )
+            .html_safe
+        html_override.gsub!('%{respond_instructions}', respond_instructions)
       else
-        html_override.gsub!("%{respond_instructions}", "")
+        html_override.gsub!('%{respond_instructions}', '')
       end
 
       styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
-      if style = @opts[:style]
-        styled.send("format_#{style}")
-      end
+      styled.send("format_#{style}") if style = @opts[:style]
 
       Mail::Part.new do
         content_type 'text/html; charset=UTF-8'
@@ -119,7 +165,10 @@ module Email
 
     def body
       body = @opts[:body]
-      body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
+      if @opts[:template]
+        body =
+          I18n.t("#{@opts[:template]}.text_body_template", template_args).dup
+      end
 
       if @template_args[:unsubscribe_instructions].present?
         body << "\n"
@@ -142,11 +191,13 @@ module Email
     def header_args
       result = {}
       if @opts[:add_unsubscribe_link]
-        unsubscribe_url = @template_args[:unsubscribe_url].presence || @template_args[:user_preferences_url]
+        unsubscribe_url =
+          @template_args[:unsubscribe_url].presence ||
+            @template_args[:user_preferences_url]
         result['List-Unsubscribe'] = "<#{unsubscribe_url}>"
       end
 
-      result['X-Discourse-Post-Id']  = @opts[:post_id].to_s  if @opts[:post_id]
+      result['X-Discourse-Post-Id'] = @opts[:post_id].to_s if @opts[:post_id]
       result['X-Discourse-Topic-Id'] = @opts[:topic_id].to_s if @opts[:topic_id]
 
       # please, don't send us automatic responses...
@@ -159,28 +210,31 @@ module Email
         result['Reply-To'] = from_value
       end
 
-      result.merge(MessageBuilder.custom_headers(SiteSetting.email_custom_headers))
+      result.merge(
+        MessageBuilder.custom_headers(SiteSetting.email_custom_headers)
+      )
     end
 
     def self.custom_headers(string)
       result = {}
-      string.split('|').each { |item|
-        header = item.split(':', 2)
-        if header.length == 2
-          name = header[0].strip
-          value = header[1].strip
-          result[name] = value if name.length > 0 && value.length > 0
+      unless string.nil?
+        string.split('|').each do |item|
+          header = item.split(':', 2)
+          if header.length == 2
+            name = header[0].strip
+            value = header[1].strip
+            result[name] = value if name.length > 0 && value.length > 0
+          end
         end
-      } unless string.nil?
+      end
       result
     end
 
     protected
 
     def allow_reply_by_email?
-      SiteSetting.reply_by_email_enabled? &&
-      reply_by_email_address.present? &&
-      @opts[:allow_reply_by_email]
+      SiteSetting.reply_by_email_enabled? && reply_by_email_address.present? &&
+        @opts[:allow_reply_by_email]
     end
 
     def private_reply?
@@ -208,13 +262,15 @@ module Email
     end
 
     def alias_email(source)
-      return source if @opts[:from_alias].blank? &&
-        SiteSetting.email_site_title.blank? &&
-        SiteSetting.title.blank?
+      if @opts[:from_alias].blank? && SiteSetting.email_site_title.blank? &&
+         SiteSetting.title.blank?
+        return source
+      end
 
       if @opts[:from_alias].present?
-        %Q|"#{Email.cleanup_alias(@opts[:from_alias])}" <#{source}>|
-      elsif source == SiteSetting.notification_email || source == SiteSetting.reply_by_email_address
+        "\"#{Email.cleanup_alias(@opts[:from_alias])}\" <#{source}>"
+      elsif source == SiteSetting.notification_email ||
+            source == SiteSetting.reply_by_email_address
         site_alias_email(source)
       else
         source
@@ -223,9 +279,7 @@ module Email
 
     def site_alias_email(source)
       from_alias = Email.site_title
-      %Q|"#{Email.cleanup_alias(from_alias)}" <#{source}>|
+      "\"#{Email.cleanup_alias(from_alias)}\" <#{source}>"
     end
-
   end
-
 end

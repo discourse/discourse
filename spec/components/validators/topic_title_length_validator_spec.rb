@@ -4,14 +4,13 @@ require 'rails_helper'
 require 'validators/topic_title_length_validator'
 
 describe TopicTitleLengthValidator do
-
   # simulate Rails behavior (singleton)
   def validate
     @validator ||= TopicTitleLengthValidator.new(attributes: :title)
     @validator.validate_each(record, :title, record.title)
   end
 
-  shared_examples "validating any topic title" do
+  shared_examples 'validating any topic title' do
     it 'adds an error when topic title is greater than SiteSetting.max_topic_title_length' do
       record.title = 'a' * (SiteSetting.max_topic_title_length + 1)
       validate
@@ -46,7 +45,7 @@ describe TopicTitleLengthValidator do
       expect(record.errors[:title]).to_not be_present
     end
 
-    include_examples "validating any topic title"
+    include_examples 'validating any topic title'
   end
 
   describe 'private message' do
@@ -64,7 +63,6 @@ describe TopicTitleLengthValidator do
       expect(record.errors[:title]).to_not be_present
     end
 
-    include_examples "validating any topic title"
+    include_examples 'validating any topic title'
   end
-
 end

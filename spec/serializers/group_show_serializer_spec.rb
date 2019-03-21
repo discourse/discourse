@@ -17,9 +17,7 @@ describe GroupShowSerializer do
   end
 
   context 'group owner' do
-    before do
-      group.add_owner(user)
-    end
+    before { group.add_owner(user) }
 
     it 'should return the right attributes' do
       json = GroupShowSerializer.new(group, scope: Guardian.new(user)).as_json
@@ -30,7 +28,9 @@ describe GroupShowSerializer do
   end
 
   describe '#mentionable' do
-    let(:group) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+    let(:group) do
+      Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
+    end
 
     it 'should return the right value' do
       json = GroupShowSerializer.new(group, scope: Guardian.new).as_json

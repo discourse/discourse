@@ -13,6 +13,5 @@ module Plugin
     def self.apply(name, context, result)
       manager.apply(name, context, result)
     end
-
   end
 end

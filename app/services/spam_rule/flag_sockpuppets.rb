@@ -1,5 +1,4 @@
 class SpamRule::FlagSockpuppets
-
   def initialize(post)
     @post = post
   end
@@ -21,23 +20,44 @@ class SpamRule::FlagSockpuppets
     first_post = @post.topic.posts.by_post_number.first
     return false if first_post.user.nil?
 
-    !first_post.user.staff? &&
-    !@post.user.staff? &&
-    !first_post.user.staged? &&
-    !@post.user.staged? &&
-    @post.user != first_post.user &&
-    @post.user.ip_address == first_post.user.ip_address &&
-    @post.user.new_user? &&
-    !ScreenedIpAddress.is_whitelisted?(@post.user.ip_address)
+    !first_post.user.staff? && !@post.user.staff? && !first_post.user.staged? &&
+      !@post.user.staged? &&
+      @post.user != first_post.user &&
+      @post.user.ip_address == first_post.user.ip_address &&
+      @post.user.new_user? &&
+      !ScreenedIpAddress.is_whitelisted?(@post.user.ip_address)
   end
 
   def flag_sockpuppet_users
-    message = I18n.t('flag_reason.sockpuppet', ip_address: @post.user.ip_address, base_path: Discourse.base_path)
-    PostAction.act(Discourse.system_user, @post, PostActionType.types[:spam], message: message) rescue PostAction::AlreadyActed
+    message =
+      I18n.t(
+        'flag_reason.sockpuppet',
+        ip_address: @post.user.ip_address, base_path: Discourse.base_path
+      )
+    begin
+      PostAction.act(
+        Discourse.system_user,
+        @post,
+        PostActionType.types[:spam],
+        message: message
+      )
+    rescue StandardError
+      PostAction::AlreadyActed
+    end
 
-    if (first_post = @post.topic.posts.by_post_number.first).try(:user).try(:new_user?)
-      PostAction.act(Discourse.system_user, first_post, PostActionType.types[:spam], message: message) rescue PostAction::AlreadyActed
+    if (first_post = @post.topic.posts.by_post_number.first).try(:user).try(
+       :new_user?
+     )
+      begin
+        PostAction.act(
+          Discourse.system_user,
+          first_post,
+          PostActionType.types[:spam],
+          message: message
+        )
+      rescue StandardError
+        PostAction::AlreadyActed
+      end
     end
   end
-
 end

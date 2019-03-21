@@ -1,5 +1,4 @@
 class IPAddr
-
   def self.handle_wildcards(val)
     return if val.blank?
 
@@ -8,7 +7,7 @@ class IPAddr
     return val if num_wildcards == 0
 
     # strip ranges like "/16" from the end if present
-    v = val.gsub(/\/.*/, '')
+    v = val.gsub(%r{\/.*}, '')
 
     return if v[v.index('*')..-1] =~ /[^\.\*]/
 
@@ -22,14 +21,9 @@ class IPAddr
   def to_cidr_s
     if @addr
       mask = @mask_addr.to_s(2).count('1')
-      if mask == 32
-        to_s
-      else
-        "#{to_s}/#{mask}"
-      end
+      mask == 32 ? to_s : "#{to_s}/#{mask}"
     else
       nil
     end
   end
-
 end

@@ -1,14 +1,14 @@
 class EmbedController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_action :ensure_embeddable, except: [ :info ]
-  before_action :get_embeddable_css_class, except: [ :info ]
-  before_action :ensure_api_request, only: [ :info ]
+  before_action :ensure_embeddable, except: %i[info]
+  before_action :get_embeddable_css_class, except: %i[info]
+  before_action :ensure_api_request, only: %i[info]
 
   layout 'embed'
 
   rescue_from Discourse::InvalidAccess do
-    response.headers['X-Frame-Options'] = "ALLOWALL"
+    response.headers['X-Frame-Options'] = 'ALLOWALL'
     if current_user.try(:admin?)
       @setup_url = "#{Discourse.base_url}/admin/customize/embedding"
       @show_reason = true
@@ -29,17 +29,21 @@ class EmbedController < ApplicationController
     end
 
     if topic_id
-      @topic_view = TopicView.new(topic_id,
-                                  current_user,
-                                  limit: SiteSetting.embed_post_limit,
-                                  exclude_first: true,
-                                  exclude_deleted_users: true,
-                                  exclude_hidden: true)
+      @topic_view =
+        TopicView.new(
+          topic_id,
+          current_user,
+          limit: SiteSetting.embed_post_limit,
+          exclude_first: true,
+          exclude_deleted_users: true,
+          exclude_hidden: true
+        )
 
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
       if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
-        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
+        @posts_left =
+          @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
       end
 
       if @topic_view
@@ -47,12 +51,13 @@ class EmbedController < ApplicationController
         @reply_count = 0 if @reply_count < 0
       end
     elsif embed_url.present?
-      Jobs.enqueue(:retrieve_topic,
-                      user_id: current_user.try(:id),
-                      embed_url: embed_url,
-                      author_username: embed_username,
-                      referer: request.env['HTTP_REFERER']
-                  )
+      Jobs.enqueue(
+        :retrieve_topic,
+        user_id: current_user.try(:id),
+        embed_url: embed_url,
+        author_username: embed_username,
+        referer: request.env['HTTP_REFERER']
+      )
       render 'loading'
     end
 
@@ -73,12 +78,18 @@ class EmbedController < ApplicationController
     by_url = {}
 
     if embed_urls.present?
-      urls = embed_urls.map { |u| u.sub(/#discourse-comments$/, '').sub(/\/$/, '') }
-      topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
+      urls =
+        embed_urls.map do |u|
+          u.sub(/#discourse-comments$/, '').sub(%r{\/$}, '')
+        end
+      topic_embeds =
+        TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
       topic_embeds.each do |te|
         url = te.embed_url
-        url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+        unless params[:embed_url].include?(url)
+          url = "#{url}#discourse-comments"
+        end
         if te.topic.present?
           by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
         else
@@ -93,9 +104,11 @@ class EmbedController < ApplicationController
   private
 
   def get_embeddable_css_class
-    @embeddable_css_class = ""
+    @embeddable_css_class = ''
     embeddable_host = EmbeddableHost.record_for_url(request.referer)
-    @embeddable_css_class = " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? && embeddable_host.class_name.present?
+    if embeddable_host.present? && embeddable_host.class_name.present?
+      @embeddable_css_class = " class=\"#{embeddable_host.class_name}\""
+    end
   end
 
   def ensure_api_request
@@ -111,9 +124,8 @@ class EmbedController < ApplicationController
       end
     end
 
-    response.headers['X-Frame-Options'] = "ALLOWALL"
+    response.headers['X-Frame-Options'] = 'ALLOWALL'
   rescue URI::Error
     raise Discourse::InvalidAccess.new('invalid referer host')
   end
-
 end

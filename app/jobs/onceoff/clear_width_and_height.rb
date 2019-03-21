@@ -5,11 +5,13 @@ module Jobs
       # we could have old versions of height / width
       # this column used to store thumbnail size instead of
       # actual size
-      DB.exec(<<~SQL)
+      DB.exec(
+        <<~SQL
         UPDATE uploads
         SET width = null, height = null
         WHERE width IS NOT NULL OR height IS NOT NULL
       SQL
+      )
     end
   end
 end

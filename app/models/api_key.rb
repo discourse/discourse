@@ -14,11 +14,13 @@ class ApiKey < ActiveRecord::Base
   def self.create_master_key
     api_key = ApiKey.find_by(user_id: nil, hidden: false)
     if api_key.blank?
-      api_key = ApiKey.create(key: SecureRandom.hex(32), created_by: Discourse.system_user)
+      api_key =
+        ApiKey.create(
+          key: SecureRandom.hex(32), created_by: Discourse.system_user
+        )
     end
     api_key
   end
-
 end
 
 # == Schema Information

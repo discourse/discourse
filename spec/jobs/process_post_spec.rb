@@ -2,13 +2,13 @@ require 'rails_helper'
 require 'jobs/regular/process_post'
 
 describe Jobs::ProcessPost do
-
-  it "returns when the post cannot be found" do
-    expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
+  it 'returns when the post cannot be found' do
+    expect do
+      Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true)
+    end.not_to raise_error
   end
 
   context 'with a post' do
-
     let(:post) { Fabricate(:post) }
 
     it 'does not erase posts when CookedPostProcessor malfunctions' do
@@ -25,7 +25,7 @@ describe Jobs::ProcessPost do
     it 'recooks if needed' do
       cooked = post.cooked
 
-      post.update_columns(cooked: "frogs")
+      post.update_columns(cooked: 'frogs')
       Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
 
       post.reload
@@ -33,7 +33,11 @@ describe Jobs::ProcessPost do
     end
 
     it 'processes posts' do
-      post = Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
+      post =
+        Fabricate(
+          :post,
+          raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>"
+        )
       expect(post.cooked).to match(/http/)
 
       Jobs::ProcessPost.new.execute(post_id: post.id)
@@ -43,38 +47,58 @@ describe Jobs::ProcessPost do
       expect(post.cooked).not_to match(/http/)
     end
 
-    it "always re-extracts links on post process" do
-      post.update_columns(raw: "sam has a blog at https://samsaffron.com")
-      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(1)
+    it 'always re-extracts links on post process' do
+      post.update_columns(raw: 'sam has a blog at https://samsaffron.com')
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change do
+        TopicLink.count
+      end
+        .by(1)
     end
 
-    it "extracts links to quoted posts" do
-      quoted_post = Fabricate(:post, raw: "This is a post with a link to https://www.discourse.org", post_number: 42)
-      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]\n#{quoted_post.excerpt}\n[/quote]")
+    it 'extracts links to quoted posts' do
+      quoted_post =
+        Fabricate(
+          :post,
+          raw: 'This is a post with a link to https://www.discourse.org',
+          post_number: 42
+        )
+      post.update_columns(
+        raw:
+          "This quote is the best\n\n[quote=\"#{quoted_post.user
+            .username}, topic:#{quoted_post.topic_id}, post:#{quoted_post
+            .post_number}\"]\n#{quoted_post.excerpt}\n[/quote]"
+      )
       # when creating a quote, we also create the reflexion link
-      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change do
+        TopicLink.count
+      end
+        .by(2)
     end
 
-    it "extracts links to oneboxed topics" do
+    it 'extracts links to oneboxed topics' do
       oneboxed_post = Fabricate(:post)
-      post.update_columns(raw: "This post is the best\n\n#{oneboxed_post.full_url}")
+      post.update_columns(
+        raw: "This post is the best\n\n#{oneboxed_post.full_url}"
+      )
       # when creating a quote, we also create the reflexion link
-      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change do
+        TopicLink.count
+      end
+        .by(2)
     end
 
-    it "works for posts that belong to no existing user" do
+    it 'works for posts that belong to no existing user' do
       cooked = post.cooked
 
-      post.update_columns(cooked: "frogs", user_id: nil)
+      post.update_columns(cooked: 'frogs', user_id: nil)
       Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
       post.reload
       expect(post.cooked).to eq(cooked)
 
-      post.update_columns(cooked: "frogs", user_id: User.maximum("id") + 1)
+      post.update_columns(cooked: 'frogs', user_id: User.maximum('id') + 1)
       Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
       post.reload
       expect(post.cooked).to eq(cooked)
     end
   end
-
 end

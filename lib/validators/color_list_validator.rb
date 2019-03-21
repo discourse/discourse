@@ -5,7 +5,7 @@ class ColorListValidator
 
   def valid_value?(value)
     hex_regex = /\A\h{6}\z/
-    value.split("|").all? { |c| c =~ hex_regex }
+    value.split('|').all? { |c| c =~ hex_regex }
   end
 
   def error_message

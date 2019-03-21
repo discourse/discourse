@@ -7,6 +7,6 @@ class CreateBadgeTypes < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :badge_types, [:name], unique: true
+    add_index :badge_types, %i[name], unique: true
   end
 end

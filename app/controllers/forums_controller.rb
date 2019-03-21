@@ -8,5 +8,4 @@ class ForumsController < ActionController::Base
       render plain: 'ok'
     end
   end
-
 end

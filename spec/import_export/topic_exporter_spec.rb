@@ -1,11 +1,8 @@
-require "rails_helper"
-require "import_export/topic_exporter"
+require 'rails_helper'
+require 'import_export/topic_exporter'
 
 describe ImportExport::TopicExporter do
-
-  before do
-    STDOUT.stubs(:write)
-  end
+  before { STDOUT.stubs(:write) }
 
   let(:user) { Fabricate(:user) }
   let(:topic) { Fabricate(:topic, user: user) }
@@ -24,7 +21,9 @@ describe ImportExport::TopicExporter do
     it 'export multiple topics' do
       topic2 = Fabricate(:topic, user: user)
       post2 = Fabricate(:post, user: user, topic: topic2)
-      data = ImportExport::TopicExporter.new([topic.id, topic2.id]).perform.export_data
+      data =
+        ImportExport::TopicExporter.new([topic.id, topic2.id]).perform
+          .export_data
 
       expect(data[:categories].blank?).to eq(true)
       expect(data[:groups].blank?).to eq(true)
@@ -32,5 +31,4 @@ describe ImportExport::TopicExporter do
       expect(data[:users].map { |u| u[:id] }).to match_array([user.id])
     end
   end
-
 end

@@ -10,23 +10,15 @@ class DraftsController < ApplicationController
 
     user = fetch_user_from_params
 
-    unless user == current_user
-      raise Discourse::InvalidAccess
-    end
+    raise Discourse::InvalidAccess unless user == current_user
 
-    opts = {
-      user: user,
-      offset: params[:offset],
-      limit: params[:limit]
-    }
+    opts = { user: user, offset: params[:offset], limit: params[:limit] }
 
     stream = Draft.stream(opts)
     stream.each do |d|
       parsed_data = JSON.parse(d.data)
       if parsed_data
-        if parsed_data['reply']
-          d.raw = parsed_data['reply']
-        end
+        d.raw = parsed_data['reply'] if parsed_data['reply']
         if parsed_data['categoryId'].present? && !d.category_id.present?
           d.category_id = parsed_data['categoryId']
         end
@@ -34,10 +26,8 @@ class DraftsController < ApplicationController
     end
 
     render json: {
-      drafts: stream ? serialize_data(stream, DraftSerializer) : [],
-      no_results_help: I18n.t("user_activity.no_drafts.self")
-    }
-
+             drafts: stream ? serialize_data(stream, DraftSerializer) : [],
+             no_results_help: I18n.t('user_activity.no_drafts.self')
+           }
   end
-
 end

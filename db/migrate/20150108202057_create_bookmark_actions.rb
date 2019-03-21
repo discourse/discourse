@@ -1,6 +1,6 @@
 class CreateBookmarkActions < ActiveRecord::Migration[4.2]
   def up
-    execute "INSERT INTO user_actions (action_type,
+    execute 'INSERT INTO user_actions (action_type,
                                        user_id,
                                        target_topic_id,
                                        target_post_id,
@@ -18,7 +18,7 @@ class CreateBookmarkActions < ActiveRecord::Migration[4.2]
              INNER JOIN posts AS p ON p.id = pa.post_id AND p.post_number = 1
              WHERE NOT EXISTS (SELECT 1 FROM user_actions AS ua WHERE ua.target_post_id = pa.post_id AND ua.action_type = 3 AND ua.user_id = pa.user_id)
              AND pa.post_action_type_id = 1
-             AND pa.deleted_at IS NULL"
+             AND pa.deleted_at IS NULL'
   end
 
   def down

@@ -83,7 +83,9 @@ module I18n
       # the original translations before applying our overrides.
       def lookup(locale, key, scope = [], options = {})
         existing_translations = super(locale, key, scope, options)
-        return existing_translations if scope.is_a?(Array) && scope.include?(:models)
+        if scope.is_a?(Array) && scope.include?(:models)
+          return existing_translations
+        end
 
         overrides = options.dig(:overrides, locale)
 
@@ -99,7 +101,9 @@ module I18n
             result = {}
 
             remapped_translations.merge(overrides).each do |k, v|
-              result[k.split('.').last.to_sym] = v if k != key && k.start_with?(key.to_s)
+              if k != key && k.start_with?(key.to_s)
+                result[k.split('.').last.to_sym] = v
+              end
             end
             return result if result.size > 0
           end
@@ -109,7 +113,6 @@ module I18n
 
         existing_translations
       end
-
     end
   end
 end

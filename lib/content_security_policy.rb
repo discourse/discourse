@@ -17,7 +17,9 @@ class ContentSecurityPolicy
   def build(theme_ids)
     builder = Builder.new
 
-    Extension.theme_extensions(theme_ids).each { |extension| builder << extension }
+    Extension.theme_extensions(theme_ids).each do |extension|
+      builder << extension
+    end
     Extension.plugin_extensions.each { |extension| builder << extension }
     builder << Extension.site_setting_extension
 

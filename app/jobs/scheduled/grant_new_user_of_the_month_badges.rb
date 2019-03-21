@@ -11,19 +11,21 @@ module Jobs
       return unless SiteSetting.enable_badges? && badge.enabled?
 
       # Don't award it if a month hasn't gone by
-      return if UserBadge.where("badge_id = ? AND granted_at >= ?",
-        badge.id,
-        (1.month.ago + 1.day)  # give it a day slack just in case
-      ).exists?
+      from = (1.month.ago + 1.day) # give it a day slack just in case
+      existing_badge =
+        UserBadge.where('badge_id = ? AND granted_at >= ?', badge.id, from)
+          .exists?
+      return if existing_badge
 
       scores.each do |user_id, score|
-        # Don't bother awarding to users who haven't received any likes
         if score > 0.0
+          # Only award to users who have received likes
           user = User.find(user_id)
           if user.badges.where(id: Badge::NewUserOfTheMonth).blank?
             BadgeGranter.grant(badge, user)
 
-            SystemMessage.new(user).create('new_user_of_the_month',
+            SystemMessage.new(user).create(
+              'new_user_of_the_month',
               month_year: I18n.l(Time.now, format: :no_day),
               url: "#{Discourse.base_url}/badges"
             )
@@ -33,7 +35,8 @@ module Jobs
     end
 
     def scores
-      current_owners = UserBadge.where(badge_id: Badge::NewUserOfTheMonth).pluck(:user_id)
+      current_owners =
+        UserBadge.where(badge_id: Badge::NewUserOfTheMonth).pluck(:user_id)
       current_owners = [-1] if current_owners.blank?
 
       # Find recent accounts and come up with a score based on how many likes they
@@ -59,19 +62,26 @@ module Jobs
         FROM users AS u
         INNER JOIN user_stats        AS us       ON u.id = us.user_id
         LEFT OUTER JOIN posts        AS p        ON p.user_id = u.id
-        LEFT OUTER JOIN post_actions AS pa       ON pa.post_id = p.id AND pa.post_action_type_id = #{PostActionType.types[:like]}
+        LEFT OUTER JOIN post_actions AS pa       ON pa.post_id = p.id AND pa.post_action_type_id = #{PostActionType
+        .types[
+        :like
+      ]}
         LEFT OUTER JOIN users        AS liked_by ON liked_by.id = pa.user_id
         LEFT OUTER JOIN topics       AS t        ON t.id = p.topic_id
         WHERE u.active
           AND u.id > 0
-          AND u.id NOT IN (#{current_owners.join(',')})
+          AND u.id NOT IN (#{current_owners
+        .join(
+        ','
+      )})
           AND NOT u.staged
           AND NOT u.admin
           AND NOT u.moderator
           AND u.suspended_at IS NULL
           AND u.suspended_till IS NULL
           AND u.created_at >= CURRENT_TIMESTAMP - '1 month'::INTERVAL
-          AND t.archetype <> '#{Archetype.private_message}'
+          AND t.archetype <> '#{Archetype
+        .private_message}'
           AND t.deleted_at IS NULL
           AND p.deleted_at IS NULL
         GROUP BY u.id
@@ -84,6 +94,5 @@ module Jobs
 
       Hash[*DB.query_single(sql)]
     end
-
   end
 end

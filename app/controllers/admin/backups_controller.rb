@@ -1,16 +1,26 @@
-require "backup_restore/backup_restore"
-require "backup_restore/backup_store"
+require 'backup_restore/backup_restore'
+require 'backup_restore/backup_store'
 
 class Admin::BackupsController < Admin::AdminController
   before_action :ensure_backups_enabled
-  skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
+  skip_before_action :check_xhr,
+                     only: %i[
+                       index
+                       show
+                       logs
+                       check_backup_chunk
+                       upload_backup_chunk
+                     ]
 
   def index
     respond_to do |format|
       format.html do
-        store_preloaded("operations_status", MultiJson.dump(BackupRestore.operations_status))
-        store_preloaded("logs", MultiJson.dump(BackupRestore.logs))
-        render "default/empty"
+        store_preloaded(
+          'operations_status',
+          MultiJson.dump(BackupRestore.operations_status)
+        )
+        store_preloaded('logs', MultiJson.dump(BackupRestore.logs))
+        render 'default/empty'
       end
 
       format.json do
@@ -32,12 +42,12 @@ class Admin::BackupsController < Admin::AdminController
   def create
     opts = {
       publish_to_message_bus: true,
-      with_uploads: params.fetch(:with_uploads) == "true",
-      client_id: params[:client_id],
+      with_uploads: params.fetch(:with_uploads) == 'true',
+      client_id: params[:client_id]
     }
     BackupRestore.backup!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
-    render_error("backup.operation_already_running")
+    render_error('backup.operation_already_running')
   else
     StaffActionLogger.new(current_user).log_backup_create
     render json: success_json
@@ -46,7 +56,7 @@ class Admin::BackupsController < Admin::AdminController
   def cancel
     BackupRestore.cancel!
   rescue BackupRestore::OperationRunningError
-    render_error("backup.operation_already_running")
+    render_error('backup.operation_already_running')
   else
     render json: success_json
   end
@@ -70,7 +80,10 @@ class Admin::BackupsController < Admin::AdminController
   def show
     if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
       @error = I18n.t('download_backup_mailer.no_token')
-      return render template: 'admin/backups/show.html.erb', layout: 'no_ember', status: 422
+
+      return render template: 'admin/backups/show.html.erb',
+             layout: 'no_ember',
+             status: 422
     end
 
     store = BackupRestore::BackupStore.create
@@ -103,20 +116,23 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def logs
-    store_preloaded("operations_status", MultiJson.dump(BackupRestore.operations_status))
-    store_preloaded("logs", MultiJson.dump(BackupRestore.logs))
-    render "default/empty"
+    store_preloaded(
+      'operations_status',
+      MultiJson.dump(BackupRestore.operations_status)
+    )
+    store_preloaded('logs', MultiJson.dump(BackupRestore.logs))
+    render 'default/empty'
   end
 
   def restore
     opts = {
       filename: params.fetch(:id),
       client_id: params.fetch(:client_id),
-      publish_to_message_bus: true,
+      publish_to_message_bus: true
     }
     BackupRestore.restore!(current_user.id, opts)
   rescue BackupRestore::OperationRunningError
-    render_error("backup.operation_already_running")
+    render_error('backup.operation_already_running')
   else
     render json: success_json
   end
@@ -124,13 +140,13 @@ class Admin::BackupsController < Admin::AdminController
   def rollback
     BackupRestore.rollback!
   rescue BackupRestore::OperationRunningError
-    render_error("backup.operation_already_running")
+    render_error('backup.operation_already_running')
   else
     render json: success_json
   end
 
   def readonly
-    enable = params.fetch(:enable).to_s == "true"
+    enable = params.fetch(:enable).to_s == 'true'
     readonly_mode_key = Discourse::USER_READONLY_MODE_KEY
 
     if enable
@@ -151,9 +167,18 @@ class Admin::BackupsController < Admin::AdminController
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
     # path to chunk file
-    chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
+    chunk =
+      BackupRestore::LocalBackupStore.chunk_path(
+        identifier,
+        filename,
+        chunk_number
+      )
     # check chunk upload status
-    status = HandleChunkUpload.check_chunk(chunk, current_chunk_size: current_chunk_size)
+    status =
+      HandleChunkUpload.check_chunk(
+        chunk,
+        current_chunk_size: current_chunk_size
+      )
 
     render body: nil, status: status
   end
@@ -162,9 +187,17 @@ class Admin::BackupsController < Admin::AdminController
     filename = params.fetch(:resumableFilename)
     total_size = params.fetch(:resumableTotalSize).to_i
 
-    return render status: 415, plain: I18n.t("backup.backup_file_should_be_tar_gz") unless valid_extension?(filename)
-    return render status: 415, plain: I18n.t("backup.not_enough_space_on_disk") unless has_enough_space_on_disk?(total_size)
-    return render status: 415, plain: I18n.t("backup.invalid_filename") unless valid_filename?(filename)
+    unless valid_extension?(filename)
+      return render status: 415,
+             plain: I18n.t('backup.backup_file_should_be_tar_gz')
+    end
+    unless has_enough_space_on_disk?(total_size)
+      return render status: 415,
+             plain: I18n.t('backup.not_enough_space_on_disk')
+    end
+    unless valid_filename?(filename)
+      return render status: 415, plain: I18n.t('backup.invalid_filename')
+    end
 
     file = params.fetch(:file)
     identifier = params.fetch(:resumableIdentifier)
@@ -173,7 +206,12 @@ class Admin::BackupsController < Admin::AdminController
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
     # path to chunk file
-    chunk = BackupRestore::LocalBackupStore.chunk_path(identifier, filename, chunk_number)
+    chunk =
+      BackupRestore::LocalBackupStore.chunk_path(
+        identifier,
+        filename,
+        chunk_number
+      )
     # upload chunk
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
@@ -181,7 +219,11 @@ class Admin::BackupsController < Admin::AdminController
     # when all chunks are uploaded
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread
-      Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
+      Jobs.enqueue_in(
+        5.seconds,
+        :backup_chunks_merger,
+        filename: filename, identifier: identifier, chunks: chunk_number
+      )
     end
 
     render body: nil
@@ -191,15 +233,19 @@ class Admin::BackupsController < Admin::AdminController
     params.require(:filename)
     filename = params.fetch(:filename)
 
-    return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(filename)
-    return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(filename)
+    unless valid_extension?(filename)
+      return render_json_error(I18n.t('backup.backup_file_should_be_tar_gz'))
+    end
+    unless valid_filename?(filename)
+      return render_json_error(I18n.t('backup.invalid_filename'))
+    end
 
     store = BackupRestore::BackupStore.create
 
     begin
       upload_url = store.generate_upload_url(filename)
     rescue BackupRestore::BackupStore::BackupFileExists
-      return render_json_error(I18n("backup.file_exists"))
+      return render_json_error(I18n('backup.file_exists'))
     rescue BackupRestore::BackupStore::StorageError => e
       return render_json_error(e)
     end
@@ -210,7 +256,9 @@ class Admin::BackupsController < Admin::AdminController
   private
 
   def has_enough_space_on_disk?(size)
-    `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
+    `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`
+      .to_i >
+      size
   end
 
   def ensure_backups_enabled

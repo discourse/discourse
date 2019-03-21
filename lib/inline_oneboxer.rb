@@ -1,7 +1,6 @@
 require_dependency 'retrieve_title'
 
 class InlineOneboxer
-
   MIN_TITLE_LENGTH = 2
 
   def initialize(urls, opts = nil)
@@ -33,26 +32,29 @@ class InlineOneboxer
     return unless url
 
     if route = Discourse.route_for(url)
-      if route[:controller] == "topics" &&
-        route[:action] == "show" &&
-        topic = Topic.where(id: route[:topic_id].to_i).first
-
-        return onebox_for(url, topic.title, opts) if Guardian.new.can_see?(topic)
+      if route[:controller] == 'topics' && route[:action] == 'show' &&
+         topic = Topic.where(id: route[:topic_id].to_i).first
+        if Guardian.new.can_see?(topic)
+          return onebox_for(url, topic.title, opts)
+        end
       end
     end
 
     always_allow = SiteSetting.enable_inline_onebox_on_all_domains
-    domains = SiteSetting.inline_onebox_domains_whitelist&.split('|') unless always_allow
+    unless always_allow
+      domains = SiteSetting.inline_onebox_domains_whitelist&.split('|')
+    end
 
     if always_allow || domains
-      uri = begin
-        URI(url)
-      rescue URI::Error
-      end
+      uri =
+        begin
+          URI(url)
+        rescue URI::Error
 
-      if uri.present? &&
-        uri.hostname.present? &&
-        (always_allow || domains.include?(uri.hostname))
+        end
+
+      if uri.present? && uri.hostname.present? &&
+         (always_allow || domains.include?(uri.hostname))
         title = RetrieveTitle.crawl(url)
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
@@ -65,10 +67,7 @@ class InlineOneboxer
   private
 
   def self.onebox_for(url, title, opts)
-    onebox = {
-      url: url,
-      title: title && Emoji.gsub_emoji_to_unicode(title)
-    }
+    onebox = { url: url, title: title && Emoji.gsub_emoji_to_unicode(title) }
     unless opts[:skip_cache]
       Rails.cache.write(cache_key(url), onebox, expires_in: 1.day)
     end
@@ -79,5 +78,4 @@ class InlineOneboxer
   def self.cache_key(url)
     "inline_onebox:#{url}"
   end
-
 end

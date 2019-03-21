@@ -6,11 +6,14 @@ module Migration
       BaseDropper.create_readonly_function(table_name)
 
       DB.exec <<~SQL
-        CREATE TRIGGER #{BaseDropper.readonly_trigger_name(table_name)}
+        CREATE TRIGGER #{BaseDropper.readonly_trigger_name(
+                table_name
+              )}
         BEFORE INSERT OR UPDATE OR DELETE OR TRUNCATE
         ON #{table_name}
         FOR EACH STATEMENT
-        EXECUTE PROCEDURE #{BaseDropper.readonly_function_name(table_name)};
+        EXECUTE PROCEDURE #{BaseDropper
+                .readonly_function_name(table_name)};
       SQL
     end
 

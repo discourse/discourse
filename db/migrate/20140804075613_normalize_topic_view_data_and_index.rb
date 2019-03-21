@@ -1,7 +1,7 @@
 class NormalizeTopicViewDataAndIndex < ActiveRecord::Migration[4.2]
   def change
-    remove_index :topic_views, [:topic_id]
-    remove_index :topic_views, [:user_id, :topic_id]
+    remove_index :topic_views, %i[topic_id]
+    remove_index :topic_views, %i[user_id topic_id]
 
     execute 'CREATE TEMPORARY TABLE tmp_views_user(user_id int, topic_id int, viewed_at date, ip_address inet)'
 
@@ -32,7 +32,7 @@ class NormalizeTopicViewDataAndIndex < ActiveRecord::Migration[4.2]
     execute 'CREATE UNIQUE INDEX user_id_topic_id_topic_views ON topic_views(user_id, topic_id) WHERE user_id IS NOT NULL'
     execute 'CREATE UNIQUE INDEX ip_address_topic_id_topic_views ON topic_views(ip_address, topic_id) WHERE user_id IS NULL'
 
-    add_index :topic_views, [:topic_id, :viewed_at]
-    add_index :topic_views, [:viewed_at, :topic_id]
+    add_index :topic_views, %i[topic_id viewed_at]
+    add_index :topic_views, %i[viewed_at topic_id]
   end
 end

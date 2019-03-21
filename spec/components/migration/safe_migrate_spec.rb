@@ -2,9 +2,7 @@ require 'rails_helper'
 require_dependency 'migration/safe_migrate'
 
 describe Migration::SafeMigrate do
-  before do
-    Migration::SafeMigrate::SafeMigration.disable_safe!
-  end
+  before { Migration::SafeMigrate::SafeMigration.disable_safe! }
 
   after do
     Migration::SafeMigrate.disable!
@@ -16,85 +14,82 @@ describe Migration::SafeMigrate do
     ActiveRecord::Migrator.new(:up, migrations, migrations.first.version).run
   end
 
-  it "bans all table removal" do
+  it 'bans all table removal' do
     Migration::SafeMigrate.enable!
 
     path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_table"
 
-    output = capture_stdout do
-      expect(lambda do
-        migrate_up(path)
-      end).to raise_error(StandardError)
-    end
+    output =
+      capture_stdout do
+        expect(lambda { migrate_up(path) }).to raise_error(StandardError)
+      end
 
-    expect(output).to include("rails g post_migration")
+    expect(output).to include('rails g post_migration')
 
     expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
   end
 
-  it "bans all table renames" do
+  it 'bans all table renames' do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_table"
+    path =
+      File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_table"
 
-    output = capture_stdout do
-      expect(lambda do
-        migrate_up(path)
-      end).to raise_error(StandardError)
-    end
+    output =
+      capture_stdout do
+        expect(lambda { migrate_up(path) }).to raise_error(StandardError)
+      end
 
     expect { User.first }.not_to raise_error
     expect(User.first).not_to eq(nil)
 
-    expect(output).to include("rails g post_migration")
+    expect(output).to include('rails g post_migration')
   end
 
-  it "bans all column removal" do
+  it 'bans all column removal' do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/remove_column"
+    path =
+      File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/remove_column"
 
-    output = capture_stdout do
-      expect(lambda do
-        migrate_up(path)
-      end).to raise_error(StandardError)
-    end
+    output =
+      capture_stdout do
+        expect(lambda { migrate_up(path) }).to raise_error(StandardError)
+      end
 
-    expect(output).to include("rails g post_migration")
+    expect(output).to include('rails g post_migration')
 
     expect(User.first).not_to eq(nil)
     expect { User.first.username }.not_to raise_error
   end
 
-  it "bans all column renames" do
+  it 'bans all column renames' do
     Migration::SafeMigrate.enable!
 
-    path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_column"
+    path =
+      File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/rename_column"
 
-    output = capture_stdout do
-      expect(lambda do
-        migrate_up(path)
-      end).to raise_error(StandardError)
-    end
+    output =
+      capture_stdout do
+        expect(lambda { migrate_up(path) }).to raise_error(StandardError)
+      end
 
-    expect(output).to include("rails g post_migration")
+    expect(output).to include('rails g post_migration')
 
     expect(User.first).not_to eq(nil)
     expect { User.first.username }.not_to raise_error
   end
 
-  it "supports being disabled" do
+  it 'supports being disabled' do
     Migration::SafeMigrate.enable!
     Migration::SafeMigrate.disable!
 
     path = File.expand_path "#{Rails.root}/spec/fixtures/db/migrate/drop_table"
 
-    output = capture_stdout do
-      migrate_up(path)
-    end
+    output = capture_stdout { migrate_up(path) }
 
-    expect(output).to include("drop_table(:email_logs)")
+    expect(output).to include('drop_table(:email_logs)')
   end
 
   describe 'for a post deployment migration' do
@@ -104,11 +99,9 @@ describe Migration::SafeMigrate do
 
       path = File.expand_path "#{Rails.root}/spec/fixtures/db/post_migrate"
 
-      output = capture_stdout do
-        migrate_up(path)
-      end
+      output = capture_stdout { migrate_up(path) }
 
-      expect(output).to include("drop_table(:email_logs)")
+      expect(output).to include('drop_table(:email_logs)')
       expect(user.reload).to eq(user)
     end
   end

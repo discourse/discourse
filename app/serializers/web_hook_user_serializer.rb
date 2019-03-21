@@ -2,10 +2,9 @@ class WebHookUserSerializer < UserSerializer
   attributes :external_id
 
   # remove staff attributes
-  def staff_attributes(*attrs)
-  end
+  def staff_attributes(*attrs); end
 
-  %i{
+  %i[
     can_edit
     can_edit_username
     can_edit_email
@@ -26,11 +25,8 @@ class WebHookUserSerializer < UserSerializer
     group_users
     user_auth_tokens
     user_auth_token_logs
-  }.each do |attr|
-    define_method("include_#{attr}?") do
-      false
-    end
-  end
+  ]
+    .each { |attr| define_method("include_#{attr}?") { false } }
 
   def include_email?
     scope.is_admin?
@@ -43,5 +39,4 @@ class WebHookUserSerializer < UserSerializer
   def external_id
     object.single_sign_on_record.external_id
   end
-
 end

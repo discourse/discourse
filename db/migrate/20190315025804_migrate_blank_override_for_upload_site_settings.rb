@@ -11,10 +11,16 @@ class MigrateBlankOverrideForUploadSiteSettings < ActiveRecord::Migration[5.2]
       'default_opengraph_image_url' => 'opengraph_image',
       'twitter_summary_large_image_url' => 'twitter_summary_large_image',
       'push_notifications_icon_url' => 'push_notifications_icon'
-    }.each do |old_name, new_name|
-      if DB.query_single("SELECT 1 FROM site_settings WHERE name = '#{old_name}' AND value = ''").present? &&
-         DB.query_single("SELECT 1 FROM site_settings WHERE name = '#{new_name}'").empty?
-
+    }
+      .each do |old_name, new_name|
+      if DB.query_single(
+         "SELECT 1 FROM site_settings WHERE name = '#{old_name}' AND value = ''"
+       )
+         .present? &&
+         DB.query_single(
+           "SELECT 1 FROM site_settings WHERE name = '#{new_name}'"
+         )
+           .empty?
         ActiveRecord::Base.connection.execute <<~SQL
         INSERT INTO site_settings (
           name,

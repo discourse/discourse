@@ -11,7 +11,8 @@ class CategoryTagStat < ActiveRecord::Base
 
     if to_category_id
       sql = <<~SQL
-        UPDATE #{self.table_name}
+        UPDATE #{self
+        .table_name}
            SET topic_count = topic_count + 1
          WHERE tag_id in (:tag_ids)
            AND category_id = :category_id
@@ -19,10 +20,13 @@ class CategoryTagStat < ActiveRecord::Base
       SQL
 
       tag_ids = topic.tags.map(&:id)
-      updated_tag_ids = DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
+      updated_tag_ids =
+        DB.query_single(sql, tag_ids: tag_ids, category_id: to_category_id)
 
       (tag_ids - updated_tag_ids).each do |tag_id|
-        CategoryTagStat.create!(tag_id: tag_id, category_id: to_category_id, topic_count: 1)
+        CategoryTagStat.create!(
+          tag_id: tag_id, category_id: to_category_id, topic_count: 1
+        )
       end
     end
   end

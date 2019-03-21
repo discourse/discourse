@@ -1,8 +1,8 @@
 class BadgesOnlyOnPublicCategories < ActiveRecord::Migration[4.2]
   def up
-    execute "DROP VIEW badge_posts"
+    execute 'DROP VIEW badge_posts'
 
-    execute "CREATE VIEW badge_posts AS
+    execute 'CREATE VIEW badge_posts AS
     SELECT p.*
     FROM posts p
     JOIN topics t ON t.id = p.topic_id
@@ -11,13 +11,13 @@ class BadgesOnlyOnPublicCategories < ActiveRecord::Migration[4.2]
           p.deleted_at IS NULL AND
           t.deleted_at IS NULL AND
           NOT c.read_restricted AND
-          t.visible"
+          t.visible'
   end
 
   def down
-    execute "DROP VIEW badge_posts"
+    execute 'DROP VIEW badge_posts'
 
-    execute "CREATE VIEW badge_posts AS
+    execute 'CREATE VIEW badge_posts AS
     SELECT p.*
     FROM posts p
     JOIN topics t ON t.id = p.topic_id
@@ -25,6 +25,6 @@ class BadgesOnlyOnPublicCategories < ActiveRecord::Migration[4.2]
     WHERE c.allow_badges AND
           p.deleted_at IS NULL AND
           t.deleted_at IS NULL AND
-          t.visible"
+          t.visible'
   end
 end

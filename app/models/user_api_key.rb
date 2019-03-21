@@ -1,11 +1,14 @@
 class UserApiKey < ActiveRecord::Base
-
   SCOPES = {
-    read: [:get],
-    write: [:get, :post, :patch, :put, :delete],
+    read: %i[get],
+    write: %i[get post patch put delete],
     message_bus: [[:post, 'message_bus']],
     push: nil,
-    notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
+    notifications: [
+      [:post, 'message_bus'],
+      [:get, 'notifications#index'],
+      [:put, 'notifications#mark_read']
+    ],
     session_info: [
       [:get, 'session#current'],
       [:get, 'users#topic_tracking_state'],
@@ -18,7 +21,7 @@ class UserApiKey < ActiveRecord::Base
   belongs_to :user
 
   def self.allowed_scopes
-    Set.new(SiteSetting.allow_user_api_key_scopes.split("|"))
+    Set.new(SiteSetting.allow_user_api_key_scopes.split('|'))
   end
 
   def self.available_scopes
@@ -27,13 +30,16 @@ class UserApiKey < ActiveRecord::Base
 
   def self.allow_permission?(permission, env)
     verb, action = permission
-    actual_verb = env["REQUEST_METHOD"] || ""
+    actual_verb = env['REQUEST_METHOD'] || ''
 
     return false unless actual_verb.downcase == verb.to_s
     return true unless action
 
     # not a rails route, special handling
-    return true if action == "message_bus" && env["PATH_INFO"] =~ /^\/message-bus\/.*\/poll/
+    if action == 'message_bus' &&
+       env['PATH_INFO'] =~ %r{^\/message-bus\/.*\/poll}
+      return true
+    end
 
     params = env['action_dispatch.request.path_parameters']
 
@@ -45,24 +51,21 @@ class UserApiKey < ActiveRecord::Base
 
   def self.allow_scope?(name, env)
     if allowed = SCOPES[name.to_sym]
-      good = allowed.any? do |permission|
-        allow_permission?(permission, env)
-      end
+      good = allowed.any? { |permission| allow_permission?(permission, env) }
 
       good || allow_permission?([:post, 'user_api_keys#revoke'], env)
     end
   end
 
   def has_push?
-    (scopes.include?("push") || scopes.include?("notifications")) && push_url.present? && SiteSetting.allowed_user_api_push_urls.include?(push_url)
+    (scopes.include?('push') || scopes.include?('notifications')) &&
+      push_url.present? &&
+      SiteSetting.allowed_user_api_push_urls.include?(push_url)
   end
 
   def allow?(env)
-    scopes.any? do |name|
-      UserApiKey.allow_scope?(name, env)
-    end
+    scopes.any? { |name| UserApiKey.allow_scope?(name, env) }
   end
-
 end
 
 # == Schema Information

@@ -1,21 +1,18 @@
 require 'rails_helper'
 
 describe Admin::ApiController do
-
-  it "is a subclass of AdminController" do
+  it 'is a subclass of AdminController' do
     expect(Admin::ApiController < Admin::AdminController).to eq(true)
   end
 
   let(:admin) { Fabricate(:admin) }
 
-  context "as an admin" do
-    before do
-      sign_in(admin)
-    end
+  context 'as an admin' do
+    before { sign_in(admin) }
 
     describe '#index' do
-      it "succeeds" do
-        get "/admin/api/keys.json"
+      it 'succeeds' do
+        get '/admin/api/keys.json'
         expect(response.status).to eq(200)
       end
     end
@@ -23,14 +20,14 @@ describe Admin::ApiController do
     describe '#regenerate_key' do
       let(:api_key) { Fabricate(:api_key) }
 
-      it "returns 404 when there is no key" do
-        put "/admin/api/key.json", params: { id: 1234 }
+      it 'returns 404 when there is no key' do
+        put '/admin/api/key.json', params: { id: 1234 }
         expect(response.status).to eq(404)
       end
 
       it "delegates to the api key's `regenerate!` method" do
         prev_value = api_key.key
-        put "/admin/api/key.json", params: { id: api_key.id }
+        put '/admin/api/key.json', params: { id: api_key.id }
         expect(response.status).to eq(200)
 
         api_key.reload
@@ -42,13 +39,13 @@ describe Admin::ApiController do
     describe '#revoke_key' do
       let(:api_key) { Fabricate(:api_key) }
 
-      it "returns 404 when there is no key" do
-        delete "/admin/api/key.json", params: { id: 1234 }
+      it 'returns 404 when there is no key' do
+        delete '/admin/api/key.json', params: { id: 1234 }
         expect(response.status).to eq(404)
       end
 
       it "delegates to the api key's `regenerate!` method" do
-        delete "/admin/api/key.json", params: { id: api_key.id }
+        delete '/admin/api/key.json', params: { id: api_key.id }
         expect(response.status).to eq(200)
         expect(ApiKey.where(key: api_key.key).count).to eq(0)
       end
@@ -56,21 +53,16 @@ describe Admin::ApiController do
   end
 
   describe '#create_master_key' do
-    it "creates a record" do
+    it 'creates a record' do
       sign_in(admin)
-      expect do
-        post "/admin/api/key.json"
-      end.to change(ApiKey, :count).by(1)
+      expect { post '/admin/api/key.json' }.to change(ApiKey, :count).by(1)
       expect(response.status).to eq(200)
     end
 
     it "doesn't allow moderators to create master keys" do
       sign_in(Fabricate(:moderator))
-      expect do
-        post "/admin/api/key.json"
-      end.to change(ApiKey, :count).by(0)
+      expect { post '/admin/api/key.json' }.to change(ApiKey, :count).by(0)
       expect(response.status).to eq(404)
     end
-
   end
 end

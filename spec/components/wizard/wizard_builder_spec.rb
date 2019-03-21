@@ -11,30 +11,30 @@ describe Wizard::Builder do
   let(:moderator) { Fabricate.build(:moderator) }
   let(:wizard) { Wizard::Builder.new(moderator).build }
 
-  it "returns a wizard with steps when enabled" do
+  it 'returns a wizard with steps when enabled' do
     SiteSetting.wizard_enabled = true
 
     expect(wizard).to be_present
     expect(wizard.steps).to be_present
   end
 
-  it "returns a wizard without steps when enabled, but not staff" do
+  it 'returns a wizard without steps when enabled, but not staff' do
     wizard = Wizard::Builder.new(Fabricate.build(:user)).build
     expect(wizard).to be_present
     expect(wizard.steps).to be_blank
   end
 
-  it "returns a wizard without steps when disabled" do
+  it 'returns a wizard without steps when disabled' do
     SiteSetting.wizard_enabled = false
 
     expect(wizard).to be_present
     expect(wizard.steps).to be_blank
   end
 
-  it "returns wizard with disabled invites step when local_logins are off" do
+  it 'returns wizard with disabled invites step when local_logins are off' do
     SiteSetting.enable_local_logins = false
 
-    invites_step = wizard.steps.find { |s| s.id == "invites" }
+    invites_step = wizard.steps.find { |s| s.id == 'invites' }
     expect(invites_step.fields).to be_blank
     expect(invites_step.disabled).to be_truthy
   end
@@ -54,9 +54,13 @@ describe Wizard::Builder do
       logo_small_field = fields.last
 
       expect(logo_field.id).to eq('logo')
-      expect(logo_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
+      expect(logo_field.value).to eq(
+            GlobalPathInstance.full_cdn_url(upload.url)
+          )
       expect(logo_small_field.id).to eq('logo_small')
-      expect(logo_small_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
+      expect(logo_small_field.value).to eq(
+            GlobalPathInstance.full_cdn_url(upload2.url)
+          )
     end
   end
 
@@ -75,9 +79,13 @@ describe Wizard::Builder do
       apple_touch_icon_field = fields.last
 
       expect(favicon_field.id).to eq('favicon')
-      expect(favicon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
+      expect(favicon_field.value).to eq(
+            GlobalPathInstance.full_cdn_url(upload.url)
+          )
       expect(apple_touch_icon_field.id).to eq('apple_touch_icon')
-      expect(apple_touch_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
+      expect(apple_touch_icon_field.value).to eq(
+            GlobalPathInstance.full_cdn_url(upload2.url)
+          )
     end
   end
 
@@ -107,7 +115,11 @@ describe Wizard::Builder do
 
       it 'enables step if welcome topic is present' do
         topic = Fabricate(:topic, title: 'Welcome to Discourse')
-        welcome_post = Fabricate(:post, topic: topic, raw: "this will be the welcome topic post\n\ncool!")
+        welcome_post =
+          Fabricate(
+            :post,
+            topic: topic, raw: "this will be the welcome topic post\n\ncool!"
+          )
 
         expect(introduction_step.disabled).to be_nil
       end

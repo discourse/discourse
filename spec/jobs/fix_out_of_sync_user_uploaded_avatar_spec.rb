@@ -8,8 +8,7 @@ RSpec.describe Jobs::FixOutOfSyncUserUploadedAvatar do
     user_with_custom_upload.update!(uploaded_avatar: custom_upload1)
 
     user_with_custom_upload.user_avatar.update!(
-      custom_upload: custom_upload1,
-      gravatar_upload: gravatar_upload1
+      custom_upload: custom_upload1, gravatar_upload: gravatar_upload1
     )
 
     user_out_of_sync = Fabricate(:user)
@@ -21,8 +20,7 @@ RSpec.describe Jobs::FixOutOfSyncUserUploadedAvatar do
     user_out_of_sync.update!(uploaded_avatar_id: prev_gravatar_upload.id)
 
     user_out_of_sync.user_avatar.update!(
-      custom_upload: custom_upload2,
-      gravatar_upload: gravatar_upload2
+      custom_upload: custom_upload2, gravatar_upload: gravatar_upload2
     )
 
     user_without_uploaded_avatar = Fabricate(:user)
@@ -37,8 +35,6 @@ RSpec.describe Jobs::FixOutOfSyncUserUploadedAvatar do
     expect(user_with_custom_upload.reload.uploaded_avatar).to eq(custom_upload1)
     expect(user_out_of_sync.reload.uploaded_avatar).to eq(gravatar_upload2)
 
-    expect(user_without_uploaded_avatar.reload.uploaded_avatar)
-      .to eq(nil)
-
+    expect(user_without_uploaded_avatar.reload.uploaded_avatar).to eq(nil)
   end
 end

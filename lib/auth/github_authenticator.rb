@@ -1,9 +1,8 @@
 require_dependency 'has_errors'
 
 class Auth::GithubAuthenticator < Auth::Authenticator
-
   def name
-    "github"
+    'github'
   end
 
   def enabled?
@@ -12,7 +11,7 @@ class Auth::GithubAuthenticator < Auth::Authenticator
 
   def description_for_user(user)
     info = GithubUserInfo.find_by(user_id: user.id)
-    info&.screen_name || ""
+    info&.screen_name || ''
   end
 
   def can_revoke?
@@ -38,7 +37,6 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       @validator.validate_each(self, :email, @email)
       return errors.blank?
     end
-
   end
 
   def can_connect_existing_user?
@@ -55,18 +53,19 @@ class Auth::GithubAuthenticator < Auth::Authenticator
     github_user_id = auth_token[:uid]
 
     result.extra_data = {
-      github_user_id: github_user_id,
-      github_screen_name: screen_name,
+      github_user_id: github_user_id, github_screen_name: screen_name
     }
 
     user_info = GithubUserInfo.find_by(github_user_id: github_user_id)
 
-    if existing_account && (user_info.nil? || existing_account.id != user_info.user_id)
+    if existing_account &&
+       (user_info.nil? || existing_account.id != user_info.user_id)
       user_info.destroy! if user_info
-      user_info = GithubUserInfo.create(
-        user_id: existing_account.id,
-        screen_name: screen_name,
-        github_user_id: github_user_id
+      user_info =
+        GithubUserInfo.create(
+          user_id: existing_account.id,
+          screen_name: screen_name,
+          github_user_id: github_user_id
         )
     end
 
@@ -80,25 +79,30 @@ class Auth::GithubAuthenticator < Auth::Authenticator
       # Potentially use *any* of the emails from GitHub to find a match or
       # register a new user, with preference given to the primary email.
       all_emails = Array.new(auth_token[:extra][:all_emails])
-      primary = all_emails.detect { |email| email[:primary] && email[:verified] }
+      primary =
+        all_emails.detect { |email| email[:primary] && email[:verified] }
       all_emails.unshift(primary) if primary.present?
 
       # Only consider verified emails to match an existing user.  We don't want
       # someone to be able to create a GitHub account with an unverified email
       # in order to access someone else's Discourse account!
       all_emails.each do |candidate|
-        if !!candidate[:verified] && (user = User.find_by_email(candidate[:email]))
+        if !!candidate[:verified] &&
+           (user = User.find_by_email(candidate[:email]))
           result.email = candidate[:email]
           result.email_valid = !!candidate[:verified]
 
-          GithubUserInfo
-            .where('user_id = ? OR github_user_id = ?', user.id, github_user_id)
+          GithubUserInfo.where(
+            'user_id = ? OR github_user_id = ?',
+            user.id,
+            github_user_id
+          )
             .destroy_all
 
           GithubUserInfo.create!(
-              user_id: user.id,
-              screen_name: screen_name,
-              github_user_id: github_user_id
+            user_id: user.id,
+            screen_name: screen_name,
+            github_user_id: github_user_id
           )
           break
         end
@@ -124,7 +128,8 @@ class Auth::GithubAuthenticator < Auth::Authenticator
         if !found_email
           result.failed = true
           escaped = Rack::Utils.escape_html(screen_name)
-          result.failed_reason = I18n.t("login.authenticator_error_no_valid_email", account: escaped)
+          result.failed_reason =
+            I18n.t('login.authenticator_error_no_valid_email', account: escaped)
         end
       end
     end
@@ -147,20 +152,26 @@ class Auth::GithubAuthenticator < Auth::Authenticator
   end
 
   def register_middleware(omniauth)
-    omniauth.provider :github,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:client_id] = SiteSetting.github_client_id
-              strategy.options[:client_secret] = SiteSetting.github_client_secret
-           },
-           scope: "user:email"
+    setup =
+      lambda do |env|
+        strategy = env['omniauth.strategy']
+        strategy.options[:client_id] = SiteSetting.github_client_id
+        strategy.options[:client_secret] = SiteSetting.github_client_secret
+      end
+    omniauth.provider :github, setup: setup, scope: 'user:email'
   end
 
   private
 
   def retrieve_avatar(user, data)
-    return unless data[:image].present? && user && user.user_avatar&.custom_upload_id.blank?
+    unless data[:image].present? && user &&
+           user.user_avatar&.custom_upload_id.blank?
+      return
+    end
 
-    Jobs.enqueue(:download_avatar_from_url, url: data[:image], user_id: user.id, override_gravatar: false)
+    Jobs.enqueue(
+      :download_avatar_from_url,
+      url: data[:image], user_id: user.id, override_gravatar: false
+    )
   end
 end

@@ -1,7 +1,6 @@
 # This class performs calculations to determine if a user qualifies for
 # the Leader (3) trust level.
 class TrustLevel3Requirements
-
   class PenaltyCounts
     attr_reader :silenced, :suspended
 
@@ -19,19 +18,32 @@ class TrustLevel3Requirements
 
   LOW_WATER_MARK = 0.9
 
-  attr_accessor :days_visited, :min_days_visited,
-                :num_topics_replied_to, :min_topics_replied_to,
-                :topics_viewed, :min_topics_viewed,
-                :posts_read, :min_posts_read,
-                :topics_viewed_all_time, :min_topics_viewed_all_time,
-                :posts_read_all_time, :min_posts_read_all_time,
-                :num_flagged_posts, :max_flagged_posts,
-                :num_likes_given, :min_likes_given,
-                :num_likes_received, :min_likes_received,
-                :num_likes_received, :min_likes_received,
-                :num_likes_received_days, :min_likes_received_days,
-                :num_likes_received_users, :min_likes_received_users,
-                :trust_level_locked, :on_grace_period
+  attr_accessor :days_visited,
+                :min_days_visited,
+                :num_topics_replied_to,
+                :min_topics_replied_to,
+                :topics_viewed,
+                :min_topics_viewed,
+                :posts_read,
+                :min_posts_read,
+                :topics_viewed_all_time,
+                :min_topics_viewed_all_time,
+                :posts_read_all_time,
+                :min_posts_read_all_time,
+                :num_flagged_posts,
+                :max_flagged_posts,
+                :num_likes_given,
+                :min_likes_given,
+                :num_likes_received,
+                :min_likes_received,
+                :num_likes_received,
+                :min_likes_received,
+                :num_likes_received_days,
+                :min_likes_received_days,
+                :num_likes_received_users,
+                :min_likes_received_users,
+                :trust_level_locked,
+                :on_grace_period
 
   def initialize(user)
     @user = user
@@ -40,9 +52,7 @@ class TrustLevel3Requirements
   def requirements_met?
     return false if trust_level_locked
 
-    (!@user.suspended?) &&
-      (!@user.silenced?) &&
-      penalty_counts.total == 0 &&
+    (!@user.suspended?) && (!@user.silenced?) && penalty_counts.total == 0 &&
       days_visited >= min_days_visited &&
       num_topics_replied_to >= min_topics_replied_to &&
       topics_viewed >= min_topics_viewed &&
@@ -60,9 +70,7 @@ class TrustLevel3Requirements
   def requirements_lost?
     return false if trust_level_locked
 
-    @user.suspended? ||
-      @user.silenced? ||
-      penalty_counts.total > 0 ||
+    @user.suspended? || @user.silenced? || penalty_counts.total > 0 ||
       days_visited < min_days_visited * LOW_WATER_MARK ||
       num_topics_replied_to < min_topics_replied_to * LOW_WATER_MARK ||
       topics_viewed < min_topics_viewed * LOW_WATER_MARK ||
@@ -90,7 +98,11 @@ class TrustLevel3Requirements
   end
 
   def days_visited
-    @user.user_visits.where("visited_at > ? and posts_read > 0", time_period.days.ago).count
+    @user.user_visits.where(
+      'visited_at > ? and posts_read > 0',
+      time_period.days.ago
+    )
+      .count
   end
 
   def penalty_counts
@@ -130,7 +142,11 @@ class TrustLevel3Requirements
   end
 
   def num_topics_replied_to
-    @user.posts.select('distinct topic_id').where('created_at > ? AND post_number > 1', time_period.days.ago).count
+    @user.posts.select('distinct topic_id').where(
+      'created_at > ? AND post_number > 1',
+      time_period.days.ago
+    )
+      .count
   end
 
   def min_topics_replied_to
@@ -147,20 +163,33 @@ class TrustLevel3Requirements
 
   def min_topics_viewed
     [
-      (TrustLevel3Requirements.num_topics_in_time_period.to_i * (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)).round,
+      (
+        TrustLevel3Requirements.num_topics_in_time_period.to_i *
+          (SiteSetting.tl3_requires_topics_viewed.to_f / 100.0)
+      )
+        .round,
       SiteSetting.tl3_requires_topics_viewed_cap
-    ].min
+    ]
+      .min
   end
 
   def posts_read
-    @user.user_visits.where('visited_at > ?', time_period.days.ago).pluck(:posts_read).sum
+    @user.user_visits.where('visited_at > ?', time_period.days.ago).pluck(
+      :posts_read
+    )
+      .sum
   end
 
   def min_posts_read
     [
-      (TrustLevel3Requirements.num_posts_in_time_period.to_i * (SiteSetting.tl3_requires_posts_read.to_f / 100.0)).round,
+      (
+        TrustLevel3Requirements.num_posts_in_time_period.to_i *
+          (SiteSetting.tl3_requires_posts_read.to_f / 100.0)
+      )
+        .round,
       SiteSetting.tl3_requires_posts_read_cap
-    ].min
+    ]
+      .min
   end
 
   def topics_viewed_all_time
@@ -180,12 +209,14 @@ class TrustLevel3Requirements
   end
 
   def num_flagged_posts
-    PostAction.with_deleted
-      .where(post_id: flagged_post_ids)
-      .where.not(user_id: @user.id)
-      .where.not(agreed_at: nil)
+    PostAction.with_deleted.where(post_id: flagged_post_ids).where.not(
+      user_id: @user.id
+    )
+      .where
+      .not(agreed_at: nil)
       .pluck(:post_id)
-      .uniq.count
+      .uniq
+      .count
   end
 
   def max_flagged_posts
@@ -193,12 +224,15 @@ class TrustLevel3Requirements
   end
 
   def num_flagged_by_users
-    @_num_flagged_by_users ||= PostAction.with_deleted
-      .where(post_id: flagged_post_ids)
-      .where.not(user_id: @user.id)
-      .where.not(agreed_at: nil)
-      .pluck(:user_id)
-      .uniq.count
+    @_num_flagged_by_users ||=
+      PostAction.with_deleted.where(post_id: flagged_post_ids).where.not(
+        user_id: @user.id
+      )
+        .where
+        .not(agreed_at: nil)
+        .pluck(:user_id)
+        .uniq
+        .count
   end
 
   def max_flagged_by_users
@@ -206,7 +240,11 @@ class TrustLevel3Requirements
   end
 
   def num_likes_given
-    UserAction.where(user_id: @user.id, action_type: UserAction::LIKE).where('created_at > ?', time_period.days.ago).count
+    UserAction.where(user_id: @user.id, action_type: UserAction::LIKE).where(
+      'created_at > ?',
+      time_period.days.ago
+    )
+      .count
   end
 
   def min_likes_given
@@ -214,7 +252,8 @@ class TrustLevel3Requirements
   end
 
   def num_likes_received_query
-    UserAction.where(user_id: @user.id, action_type: UserAction::WAS_LIKED).where('created_at > ?', time_period.days.ago)
+    UserAction.where(user_id: @user.id, action_type: UserAction::WAS_LIKED)
+      .where('created_at > ?', time_period.days.ago)
   end
 
   def num_likes_received
@@ -251,29 +290,41 @@ class TrustLevel3Requirements
   end
 
   CACHE_DURATION = 1.day.seconds - 60
-  NUM_TOPICS_KEY = "tl3_num_topics"
-  NUM_POSTS_KEY  = "tl3_num_posts"
+  NUM_TOPICS_KEY = 'tl3_num_topics'
+  NUM_POSTS_KEY = 'tl3_num_posts'
 
   def self.num_topics_in_time_period
-    $redis.get(NUM_TOPICS_KEY) || begin
-      count = Topic.listable_topics.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
-      $redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
-      count
-    end
+    $redis.get(NUM_TOPICS_KEY) ||
+      begin
+        count =
+          Topic.listable_topics.visible.created_since(
+            SiteSetting.tl3_time_period.days.ago
+          )
+            .count
+        $redis.setex NUM_TOPICS_KEY, CACHE_DURATION, count
+        count
+      end
   end
 
   def self.num_posts_in_time_period
-    $redis.get(NUM_POSTS_KEY) || begin
-      count = Post.public_posts.visible.created_since(SiteSetting.tl3_time_period.days.ago).count
-      $redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
-      count
-    end
+    $redis.get(NUM_POSTS_KEY) ||
+      begin
+        count =
+          Post.public_posts.visible.created_since(
+            SiteSetting.tl3_time_period.days.ago
+          )
+            .count
+        $redis.setex NUM_POSTS_KEY, CACHE_DURATION, count
+        count
+      end
   end
 
   def flagged_post_ids
-    @_flagged_post_ids ||= @user.posts
-      .with_deleted
-      .where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', time_period.days.ago)
-      .pluck(:id)
+    @_flagged_post_ids ||=
+      @user.posts.with_deleted.where(
+        'created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)',
+        time_period.days.ago
+      )
+        .pluck(:id)
   end
 end

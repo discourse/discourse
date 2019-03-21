@@ -1,2 +1,1 @@
-Fabricator(:user_option) do
-end
+Fabricator(:user_option) {  }

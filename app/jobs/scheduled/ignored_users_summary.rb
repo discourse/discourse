@@ -8,15 +8,17 @@ module Jobs
       params = {
         threshold: SiteSetting.ignored_users_count_message_threshold,
         gap_days: SiteSetting.ignored_users_message_gap_days,
-        coalesced_gap_days: SiteSetting.ignored_users_message_gap_days + 1,
+        coalesced_gap_days: SiteSetting.ignored_users_message_gap_days + 1
       }
-      user_ids = DB.query_single(<<~SQL, params)
-        SELECT ignored_user_id
-        FROM ignored_users
-        WHERE COALESCE(summarized_at, CURRENT_TIMESTAMP + ':coalesced_gap_days DAYS'::INTERVAL) - ':gap_days DAYS'::INTERVAL > CURRENT_TIMESTAMP
-        GROUP BY ignored_user_id
-        HAVING COUNT(ignored_user_id) >= :threshold
-      SQL
+      user_ids =
+        sql = <<~SQL
+          SELECT ignored_user_id
+          FROM ignored_users
+          WHERE COALESCE(summarized_at, CURRENT_TIMESTAMP + ':coalesced_gap_days DAYS'::INTERVAL) - ':gap_days DAYS'::INTERVAL > CURRENT_TIMESTAMP
+          GROUP BY ignored_user_id
+          HAVING COUNT(ignored_user_id) >= :threshold
+        SQL
+      DB.query_single(sql, params)
 
       User.where(id: user_ids).find_each { |user| notify_user(user) }
     end
@@ -24,9 +26,16 @@ module Jobs
     private
 
     def notify_user(user)
-      params = SystemMessage.new(user).defaults.merge(ignores_threshold: SiteSetting.ignored_users_count_message_threshold)
-      title = I18n.t("system_messages.ignored_users_summary.subject_template")
-      raw = I18n.t("system_messages.ignored_users_summary.text_body_template", params)
+      params =
+        SystemMessage.new(user).defaults.merge(
+          ignores_threshold: SiteSetting.ignored_users_count_message_threshold
+        )
+      title = I18n.t('system_messages.ignored_users_summary.subject_template')
+      raw =
+        I18n.t(
+          'system_messages.ignored_users_summary.text_body_template',
+          params
+        )
 
       PostCreator.create(
         Discourse.system_user,
@@ -35,8 +44,11 @@ module Jobs
         subtype: TopicSubtype.system_message,
         title: title,
         raw: raw,
-        skip_validations: true)
-      IgnoredUser.where(ignored_user_id: user.id).update_all(summarized_at: Time.zone.now)
+        skip_validations: true
+      )
+      IgnoredUser.where(ignored_user_id: user.id).update_all(
+        summarized_at: Time.zone.now
+      )
     end
   end
 end

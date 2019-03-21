@@ -1,7 +1,6 @@
 require 'socket'
 
 class SocketServer
-
   def initialize(socket_path)
     @socket_path = socket_path
     @server = nil
@@ -10,9 +9,7 @@ class SocketServer
   def start(&blk)
     @server = UNIXServer.new(@socket_path)
     @accept_thread = new_accept_thread
-    if blk
-      @blk = blk
-    end
+    @blk = blk if blk
   end
 
   def stop
@@ -29,9 +26,7 @@ class SocketServer
     Thread.new do
       begin
         done = false
-        while !done
-          done = !accept_connection(server)
-        end
+        done = !accept_connection(server) while !done
       ensure
         self.stop
         Rails.logger.info("Cleaned up socket server at #{@socket_path}")
@@ -49,7 +44,7 @@ class SocketServer
     end
 
     start = Time.now
-    line = ""
+    line = ''
 
     while Time.now - start < 10
       if IO.select([socket], nil, nil, 10)
@@ -62,15 +57,17 @@ class SocketServer
       break if line.include?("\n")
     end
 
-    if line.include?("\n")
-      socket.write get_response(line.strip)
-    end
+    socket.write get_response(line.strip) if line.include?("\n")
 
     true
-  rescue IOError, Errno::EPIPE
+
     # nothing to do here, case its normal on shutdown
+  rescue IOError, Errno::EPIPE
+
   rescue => e
-    Rails.logger.warn("Failed to handle connection #{e}:\n#{e.backtrace.join("\n")}")
+    Rails.logger.warn(
+      "Failed to handle connection #{e}:\n#{e.backtrace.join("\n")}"
+    )
   ensure
     socket&.close
   end
@@ -79,8 +76,7 @@ class SocketServer
     if @blk
       @blk.call(command)
     else
-      raise "Must be implemented by child"
+      raise 'Must be implemented by child'
     end
   end
-
 end

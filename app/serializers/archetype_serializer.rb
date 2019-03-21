@@ -1,5 +1,4 @@
 class ArchetypeSerializer < ApplicationSerializer
-
   attributes :id, :name, :options
 
   def options
@@ -16,5 +15,4 @@ class ArchetypeSerializer < ApplicationSerializer
   def name
     I18n.t("archetypes.#{object.id}.title")
   end
-
 end

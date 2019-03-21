@@ -13,7 +13,7 @@ if Rails.env.development?
 end
 
 module Discourse
-  DB_POST_MIGRATE_PATH ||= "db/post_migrate"
+  DB_POST_MIGRATE_PATH ||= 'db/post_migrate'
 
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
@@ -21,7 +21,9 @@ module Discourse
   end
 
   class Utils
-    def self.execute_command(*command, failure_message: "", success_status_codes: [0])
+    def self.execute_command(
+      *command, failure_message: '', success_status_codes: [0]
+    )
       stdout, stderr, status = Open3.capture3(*command)
 
       if !status.exited? || !success_status_codes.include?(status.exitstatus)
@@ -50,10 +52,11 @@ module Discourse
     parent_logger ||= SidekiqExceptionHandler
 
     cm = RailsMultisite::ConnectionManagement
-    parent_logger.handle_exception(ex, {
-      current_db: cm.current_db,
-      current_hostname: cm.current_hostname
-    }.merge(context))
+    parent_logger.handle_exception(
+      ex,
+      { current_db: cm.current_db, current_hostname: cm.current_hostname }
+        .merge(context)
+    )
   end
 
   # Expected less matches than what we got in a find
@@ -83,7 +86,9 @@ module Discourse
     attr_reader :check_permalinks
     attr_reader :original_path
 
-    def initialize(message = nil, status: 404, check_permalinks: false, original_path: nil)
+    def initialize(
+      message = nil, status: 404, check_permalinks: false, original_path: nil
+    )
       @status = status
       @check_permalinks = check_permalinks
       @original_path = original_path
@@ -108,19 +113,20 @@ module Discourse
   class ScssError < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
+    @filters ||= %i[latest unread new read posted bookmarks]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest, :top, :categories]
+    @anonymous_filters ||= %i[latest top categories]
   end
 
   def self.top_menu_items
-    @top_menu_items ||= Discourse.filters + [:category, :categories, :top]
+    @top_menu_items ||= Discourse.filters + %i[category categories top]
   end
 
   def self.anonymous_top_menu_items
-    @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
+    @anonymous_top_menu_items ||=
+      Discourse.anonymous_filters + %i[category categories top]
   end
 
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]
@@ -129,10 +135,8 @@ module Discourse
     # TODO: should cache these when we get a notification system for site settings
     set = Set.new
 
-    SiteSetting.avatar_sizes.split("|").map(&:to_i).each do |size|
-      PIXEL_RATIOS.each do |pixel_ratio|
-        set << size * pixel_ratio
-      end
+    SiteSetting.avatar_sizes.split('|').map(&:to_i).each do |size|
+      PIXEL_RATIOS.each { |pixel_ratio| set << size * pixel_ratio }
     end
 
     set
@@ -142,18 +146,21 @@ module Discourse
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
     if Rails.env.development?
-      plugin_hash = Digest::SHA1.hexdigest(all_plugins.map { |p| p.path }.sort.join('|'))
+      plugin_hash =
+        Digest::SHA1.hexdigest(all_plugins.map(&:path).sort.join('|'))
       hash_file = "#{Rails.root}/tmp/plugin-hash"
 
-      old_hash = begin
-        File.read(hash_file)
-      rescue Errno::ENOENT
-      end
+      old_hash =
+        begin
+          File.read(hash_file)
+        rescue Errno::ENOENT
+
+        end
 
       if old_hash && old_hash != plugin_hash
-        puts "WARNING: It looks like your discourse plugins have recently changed."
-        puts "It is highly recommended to remove your `tmp` directory, otherwise"
-        puts "plugins might not work."
+        puts 'WARNING: It looks like your discourse plugins have recently changed.'
+        puts 'It is highly recommended to remove your `tmp` directory, otherwise'
+        puts 'plugins might not work.'
         puts
       else
         File.write(hash_file, plugin_hash)
@@ -167,7 +174,8 @@ module Discourse
         p.activate!
         @plugins << p
       else
-        STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
+        STDERR.puts "Could not activate #{p.metadata
+                      .name}, discourse does not meet required version (#{v})"
       end
     end
   end
@@ -201,34 +209,55 @@ module Discourse
   end
 
   def self.assets_digest
-    @assets_digest ||= begin
-      digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
+    @assets_digest ||=
+      begin
+        digest =
+          Digest::MD5.hexdigest(
+            ActionView::Base.assets_manifest.assets.values.sort.join
+          )
 
-      channel = "/global/asset-version"
-      message = MessageBus.last_message(channel)
+        channel = '/global/asset-version'
+        message = MessageBus.last_message(channel)
 
-      unless message && message.data == digest
-        MessageBus.publish channel, digest
+        unless message && message.data == digest
+          MessageBus.publish channel, digest
+        end
+        digest
       end
-      digest
-    end
   end
 
-  BUILTIN_AUTH ||= [
-    Auth::AuthProvider.new(authenticator: Auth::FacebookAuthenticator.new, frame_width: 580, frame_height: 400),
-    Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500),
-    Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true)),
-    Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new),
-    Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new),
-    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new)
-  ]
+  BUILTIN_AUTH ||=
+    [
+      Auth::AuthProvider.new(
+        authenticator: Auth::FacebookAuthenticator.new,
+        frame_width: 580,
+        frame_height: 400
+      ),
+      Auth::AuthProvider.new(
+        authenticator: Auth::GoogleOAuth2Authenticator.new,
+        frame_width: 850,
+        frame_height: 500
+      ),
+      Auth::AuthProvider.new(
+        authenticator:
+          Auth::OpenIdAuthenticator.new(
+            'yahoo',
+            'https://me.yahoo.com',
+            'enable_yahoo_logins',
+            trusted: true
+          )
+      ),
+      Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new),
+      Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new),
+      Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new)
+    ]
 
   def self.auth_providers
     BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
   end
 
   def self.enabled_auth_providers
-    auth_providers.select { |provider|  provider.authenticator.enabled?  }
+    auth_providers.select { |provider| provider.authenticator.enabled? }
   end
 
   def self.authenticators
@@ -238,7 +267,7 @@ module Discourse
   end
 
   def self.enabled_authenticators
-    authenticators.select { |authenticator|  authenticator.enabled?  }
+    authenticators.select(&:enabled?)
   end
 
   def self.cache
@@ -247,21 +276,24 @@ module Discourse
 
   # Get the current base URL for the current site
   def self.current_hostname
-    SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname
+    SiteSetting.force_hostname.presence ||
+      RailsMultisite::ConnectionManagement.current_hostname
   end
 
-  def self.base_uri(default_value = "")
+  def self.base_uri(default_value = '')
     ActionController::Base.config.relative_url_root.presence || default_value
   end
 
   def self.base_protocol
-    SiteSetting.force_https? ? "https" : "http"
+    SiteSetting.force_https? ? 'https' : 'http'
   end
 
   def self.base_url_no_prefix
     default_port = SiteSetting.force_https? ? 443 : 80
     url = "#{base_protocol}://#{current_hostname}"
-    url << ":#{SiteSetting.port}" if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
+    if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
+      url << ":#{SiteSetting.port}"
+    end
     url
   end
 
@@ -271,16 +303,22 @@ module Discourse
 
   def self.route_for(uri)
     unless uri.is_a?(URI)
-      uri = begin
-        URI(uri)
-      rescue URI::Error
-      end
+      uri =
+        begin
+          URI(uri)
+        rescue URI::Error
+
+        end
     end
 
     return unless uri
 
-    path = uri.path || ""
-    if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
+    path = uri.path || ''
+    if !uri.host ||
+       (
+         uri.host == Discourse.current_hostname &&
+           path.start_with?(Discourse.base_uri)
+       )
       path.slice!(Discourse.base_uri)
       return Rails.application.routes.recognize_path(path)
     end
@@ -295,16 +333,13 @@ module Discourse
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 
-  READONLY_MODE_KEY_TTL  ||= 60
-  READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
-  PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze
+  READONLY_MODE_KEY_TTL ||= 60
+  READONLY_MODE_KEY ||= 'readonly_mode'.freeze
+  PG_READONLY_MODE_KEY ||= 'readonly_mode:postgres'.freeze
   USER_READONLY_MODE_KEY ||= 'readonly_mode:user'.freeze
 
-  READONLY_KEYS ||= [
-    READONLY_MODE_KEY,
-    PG_READONLY_MODE_KEY,
-    USER_READONLY_MODE_KEY
-  ]
+  READONLY_KEYS ||=
+    [READONLY_MODE_KEY, PG_READONLY_MODE_KEY, USER_READONLY_MODE_KEY]
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY)
     if key == USER_READONLY_MODE_KEY
@@ -329,21 +364,22 @@ module Discourse
       @threads ||= {}
 
       unless @threads[key]&.alive?
-        @threads[key] = Thread.new do
-          while @dbs.size > 0 do
-            sleep 30
+        @threads[key] =
+          Thread.new do
+            while @dbs.size > 0
+              sleep 30
 
-            @mutex.synchronize do
-              @dbs.each do |db|
-                RailsMultisite::ConnectionManagement.with_connection(db) do
-                  if !$redis.expire(key, READONLY_MODE_KEY_TTL)
-                    @dbs.delete(db)
+              @mutex.synchronize do
+                @dbs.each do |db|
+                  RailsMultisite::ConnectionManagement.with_connection(db) do
+                    if !$redis.expire(key, READONLY_MODE_KEY_TTL)
+                      @dbs.delete(db)
+                    end
                   end
                 end
               end
             end
           end
-        end
       end
     end
   end
@@ -388,7 +424,7 @@ module Discourse
     # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
     # it spreads the refreshes out over a time period
     if user_ids
-      MessageBus.publish("/refresh_client", 'clobber', user_ids: user_ids)
+      MessageBus.publish('/refresh_client', 'clobber', user_ids: user_ids)
     else
       MessageBus.publish('/global/asset-version', 'clobber')
     end
@@ -434,20 +470,21 @@ module Discourse
 
     begin
       version_value = `#{git_cmd}`.strip
-    rescue
+    rescue StandardError
       version_value = default_value
     end
 
-    if version_value.empty?
-      version_value = default_value
-    end
+    version_value = default_value if version_value.empty?
 
     version_value
   end
 
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
-    user = User.find_by(username_lower: SiteSetting.site_contact_username.downcase) if SiteSetting.site_contact_username.present?
+    if SiteSetting.site_contact_username.present?
+      user =
+        User.find_by(username_lower: SiteSetting.site_contact_username.downcase)
+    end
     user ||= (system_user || User.admins.real.order(:id).first)
   end
 
@@ -469,7 +506,9 @@ module Discourse
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     name = site_setting.name.to_s
-    Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
+    if name.include?('s3_inventory') || name == 's3_upload_bucket'
+      Jobs.enqueue(:update_s3_inventory)
+    end
   end
 
   def self.current_user_provider
@@ -485,7 +524,7 @@ module Discourse
   end
 
   def self.readonly_channel
-    "/site/read-only"
+    '/site/read-only'
   end
 
   # all forking servers must call this
@@ -507,15 +546,17 @@ module Discourse
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
-    JsLocaleHelper.reset_context if defined? JsLocaleHelper
+    if defined?(Tilt::ES6ModuleTranspilerTemplate)
+      Tilt::ES6ModuleTranspilerTemplate.reset_context
+    end
+    JsLocaleHelper.reset_context if defined?(JsLocaleHelper)
     nil
   end
 
   # you can use Discourse.warn when you want to report custom environment
   # with the error, this helps with grouping
   def self.warn(message, env = nil)
-    append = env ? (+" ") << env.map { |k, v|"#{k}: #{v}" }.join(" ") : ""
+    append = env ? (+' ') << env.map { |k, v| "#{k}: #{v}" }.join(' ') : ''
 
     if !(Logster::Logger === Rails.logger)
       Rails.logger.warn("#{message}#{append}")
@@ -523,9 +564,7 @@ module Discourse
     end
 
     loggers = [Rails.logger]
-    if Rails.logger.chained
-      loggers.concat(Rails.logger.chained)
-    end
+    loggers.concat(Rails.logger.chained) if Rails.logger.chained
 
     logster_env = env
 
@@ -533,9 +572,7 @@ module Discourse
       logster_env = Logster::Message.populate_from_env(old_env)
 
       # a bit awkward by try to keep the new params
-      env.each do |k, v|
-        logster_env[k] = v
-      end
+      env.each { |k, v| logster_env[k] = v }
     end
 
     loggers.each do |logger|
@@ -546,7 +583,7 @@ module Discourse
 
       logger.store.report(
         ::Logger::Severity::WARN,
-        "discourse",
+        'discourse',
         message,
         env: logster_env
       )
@@ -555,7 +592,8 @@ module Discourse
     if old_env
       env.each do |k, v|
         # do not leak state
-        logster_env.delete(k)
+        logster_env
+          .delete(k)
       end
     end
 
@@ -563,9 +601,8 @@ module Discourse
   end
 
   # report a warning maintaining backtrack for logster
-  def self.warn_exception(e, message: "", env: nil)
+  def self.warn_exception(e, message: '', env: nil)
     if Rails.logger.respond_to? :add_with_opts
-
       env ||= {}
       env[:current_db] ||= RailsMultisite::ConnectionManagement.current_db
 
@@ -573,21 +610,22 @@ module Discourse
       Rails.logger.add_with_opts(
         ::Logger::Severity::WARN,
         "#{message} : #{e}",
-        "discourse-exception",
-        backtrace: e.backtrace.join("\n"),
-        env: env
+        'discourse-exception',
+        backtrace: e.backtrace.join("\n"), env: env
       )
     else
       # no logster ... fallback
       Rails.logger.warn("#{message} #{e}")
     end
-  rescue
+  rescue StandardError
     STDERR.puts "Failed to report exception #{e} #{message}"
   end
 
   def self.start_connection_reaper
-    return if GlobalSetting.connection_reaper_age < 1 ||
-              GlobalSetting.connection_reaper_interval < 1
+    if GlobalSetting.connection_reaper_age < 1 ||
+       GlobalSetting.connection_reaper_interval < 1
+      return
+    end
 
     # this helps keep connection counts in check
     Thread.new do
@@ -596,7 +634,7 @@ module Discourse
           sleep GlobalSetting.connection_reaper_interval
           reap_connections(GlobalSetting.connection_reaper_age)
         rescue => e
-          Discourse.warn_exception(e, message: "Error reaping connections")
+          Discourse.warn_exception(e, message: 'Error reaping connections')
         end
       end
     end
@@ -604,15 +642,17 @@ module Discourse
 
   def self.reap_connections(idle)
     pools = []
-    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool) { |pool| pools << pool }
+    ObjectSpace.each_object(
+      ActiveRecord::ConnectionAdapters::ConnectionPool
+    ) { |pool| pools << pool }
 
     pools.each do |pool|
-      # reap recovers connections that were aborted
-      # eg a thread died or a dev forgot to check it in
-      # flush removes idle connections
-      # after fork we have "deadpools" so ignore them, they have been discarded
-      # so @connections is set to nil
       if pool.connections
+        # reap recovers connections that were aborted
+        # eg a thread died or a dev forgot to check it in
+        # flush removes idle connections
+        # after fork we have "deadpools" so ignore them, they have been discarded
+        # so @connections is set to nil
         pool.reap
         pool.flush(idle)
       end
@@ -620,27 +660,26 @@ module Discourse
   end
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false)
-    location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
-    warning = ["Deprecation notice:", warning]
+    location =
+      caller_locations[1].yield_self do |l|
+        "#{l.path}:#{l.lineno}:in \`#{l.label}\`"
+      end
+    warning = ['Deprecation notice:', warning]
     warning << "(deprecated since Discourse #{since})" if since
     warning << "(removal in Discourse #{drop_from})" if drop_from
     warning << "\nAt #{location}"
-    warning = warning.join(" ")
+    warning = warning.join(' ')
 
-    if raise_error
-      raise Deprecation.new(warning)
-    end
+    raise Deprecation.new(warning) if raise_error
 
-    if Rails.env == "development"
-      STDERR.puts(warning)
-    end
+    STDERR.puts(warning) if Rails.env == 'development'
 
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
     if !$redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
-      $redis.without_namespace.setex(redis_key, 3600, "x")
+      $redis.without_namespace.setex(redis_key, 3600, 'x')
     end
     warning
   end
@@ -654,15 +693,21 @@ module Discourse
   end
 
   def self.static_doc_topic_ids
-    [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
+    [
+      SiteSetting.tos_topic_id,
+      SiteSetting.guidelines_topic_id,
+      SiteSetting.privacy_topic_id
+    ]
   end
 
   cattr_accessor :last_ar_cache_reset
 
   def self.reset_active_record_cache_if_needed(e)
     last_cache_reset = Discourse.last_ar_cache_reset
-    if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate."
+    if e && e.message =~ /UndefinedColumn/ &&
+       (last_cache_reset.nil? || last_cache_reset < 30.seconds.ago)
+      Rails
+        .logger.warn 'Clearing Active Record cache, this can happen if schema changed while site is running or in a multisite various databases are running different schemas. Consider running rake multisite:migrate.'
       Discourse.last_ar_cache_reset = Time.zone.now
       Discourse.reset_active_record_cache
     end
@@ -670,18 +715,22 @@ module Discourse
 
   def self.reset_active_record_cache
     ActiveRecord::Base.connection.query_cache.clear
-    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      table.classify.constantize.reset_column_information rescue nil
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations versions])
+      .each do |table|
+      begin
+        table.classify.constantize.reset_column_information
+      rescue StandardError
+        nil
+      end
     end
     nil
   end
 
   def self.running_in_rack?
-    ENV["DISCOURSE_RUNNING_IN_RACK"] == "1"
+    ENV['DISCOURSE_RUNNING_IN_RACK'] == '1'
   end
 
   def self.skip_post_deployment_migrations?
-    ['1', 'true'].include?(ENV["SKIP_POST_DEPLOYMENT_MIGRATIONS"]&.to_s)
+    %w[1 true].include?(ENV['SKIP_POST_DEPLOYMENT_MIGRATIONS']&.to_s)
   end
-
 end

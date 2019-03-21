@@ -1,6 +1,5 @@
 class AddPostStats < ActiveRecord::Migration[4.2]
   def change
-
     add_column :drafts, :revisions, :int, null: false, default: 1
 
     create_table :post_stats do |t|
@@ -11,6 +10,6 @@ class AddPostStats < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :post_stats, [:post_id]
+    add_index :post_stats, %i[post_id]
   end
 end

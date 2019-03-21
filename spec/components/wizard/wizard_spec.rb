@@ -2,33 +2,29 @@ require 'rails_helper'
 require 'wizard'
 
 describe Wizard do
-  before do
-    SiteSetting.wizard_enabled = true
-  end
+  before { SiteSetting.wizard_enabled = true }
 
-  context "defaults" do
-    it "has default values" do
+  context 'defaults' do
+    it 'has default values' do
       wizard = Wizard.new(Fabricate.build(:moderator))
       expect(wizard.steps).to be_empty
       expect(wizard.user).to be_present
     end
   end
 
-  describe "append_step" do
+  describe 'append_step' do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }
     let(:step1) { wizard.create_step('first-step') }
     let(:step2) { wizard.create_step('second-step') }
 
-    it "works with a block format" do
-      wizard.append_step('wat') do |step|
-        expect(step).to be_present
-      end
+    it 'works with a block format' do
+      wizard.append_step('wat') { |step| expect(step).to be_present }
 
       expect(wizard.steps.size).to eq(1)
     end
 
-    it "adds the step correctly" do
+    it 'adds the step correctly' do
       expect(step1.index).to be_blank
 
       wizard.append_step(step1)
@@ -43,7 +39,7 @@ describe Wizard do
       expect(step1.fields).to eq([field])
     end
 
-    it "sequences multiple steps" do
+    it 'sequences multiple steps' do
       wizard.append_step(step1)
       wizard.append_step(step2)
 
@@ -57,11 +53,11 @@ describe Wizard do
     end
   end
 
-  describe "completed?" do
+  describe 'completed?' do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }
 
-    it "is complete when all steps with fields have logs" do
+    it 'is complete when all steps with fields have logs' do
       wizard.append_step('first') do |step|
         step.add_field(id: 'element', type: 'text')
       end
@@ -96,8 +92,7 @@ describe Wizard do
     end
   end
 
-  describe "#requires_completion?" do
-
+  describe '#requires_completion?' do
     def build_simple(user)
       wizard = Wizard.new(user)
       wizard.append_step('simple') do |step|
@@ -106,12 +101,14 @@ describe Wizard do
       wizard
     end
 
-    it "is false for anonymous" do
+    it 'is false for anonymous' do
       expect(build_simple(nil).requires_completion?).to eq(false)
     end
 
-    it "is false for regular users" do
-      expect(build_simple(Fabricate.build(:user)).requires_completion?).to eq(false)
+    it 'is false for regular users' do
+      expect(build_simple(Fabricate.build(:user)).requires_completion?).to eq(
+            false
+          )
     end
 
     it "it's false when the wizard is disabled" do
@@ -120,13 +117,13 @@ describe Wizard do
       expect(build_simple(admin).requires_completion?).to eq(false)
     end
 
-    it "its false when the wizard is bypassed" do
+    it 'its false when the wizard is bypassed' do
       SiteSetting.bypass_wizard_check = true
       admin = Fabricate(:admin)
       expect(build_simple(admin).requires_completion?).to eq(false)
     end
 
-    it "its automatically bypasses after you reach topic limit" do
+    it 'its automatically bypasses after you reach topic limit' do
       Fabricate(:topic)
       admin = Fabricate(:admin)
       wizard = build_simple(admin)
@@ -146,7 +143,7 @@ describe Wizard do
       expect(build_simple(second_admin).requires_completion?).to eq(true)
     end
 
-    it "is false for staff when complete" do
+    it 'is false for staff when complete' do
       wizard = build_simple(Fabricate(:admin))
       updater = wizard.create_updater('simple', name: 'Evil Trout')
       updater.update
@@ -157,7 +154,5 @@ describe Wizard do
       wizard = build_simple(Fabricate(:admin))
       expect(wizard.requires_completion?).to eq(false)
     end
-
   end
-
 end

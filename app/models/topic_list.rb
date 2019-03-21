@@ -14,16 +14,12 @@ class TopicList
   def self.cancel_preload(&blk)
     if @preload
       @preload.delete blk
-      if @preload.length == 0
-        @preload = nil
-      end
+      @preload = nil if @preload.length == 0
     end
   end
 
   def self.preload(topics, object)
-    if @preload
-      @preload.each { |preload| preload.call(topics, object) }
-    end
+    @preload.each { |preload| preload.call(topics, object) } if @preload
   end
 
   attr_accessor(
@@ -48,13 +44,9 @@ class TopicList
     @topics_input = topics
     @opts = opts || {}
 
-    if @opts[:category]
-      @category = Category.find_by(id: @opts[:category_id])
-    end
+    @category = Category.find_by(id: @opts[:category_id]) if @opts[:category]
 
-    if @opts[:tags]
-      @tags = Tag.where(id: @opts[:tags]).all
-    end
+    @tags = Tag.where(id: @opts[:tags]).all if @opts[:tags]
   end
 
   def top_tags
@@ -65,7 +57,7 @@ class TopicList
 
   def preload_key
     if @category
-      "topic_list_#{@category.url.sub(/^\//, '')}/l/#{@filter}"
+      "topic_list_#{@category.url.sub(%r{^\/}, '')}/l/#{@filter}"
     else
       "topic_list_#{@filter}"
     end
@@ -80,14 +72,16 @@ class TopicList
     @topics = @topics_input
 
     # Attach some data for serialization to each topic
-    @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
+    if @current_user
+      @topic_lookup = TopicUser.lookup_for(@current_user, @topics)
+    end
 
     post_action_type =
       if @current_user
         if @opts[:filter].present?
-          if @opts[:filter] == "bookmarked"
+          if @opts[:filter] == 'bookmarked'
             PostActionType.types[:bookmark]
-          elsif @opts[:filter] == "liked"
+          elsif @opts[:filter] == 'liked'
             PostActionType.types[:like]
           end
         end
@@ -95,16 +89,22 @@ class TopicList
 
     # Include bookmarks if you have bookmarked topics
     if @current_user && !post_action_type
-      post_action_type = PostActionType.types[:bookmark] if @topic_lookup.any? { |_, tu| tu && tu.bookmarked }
+      if @topic_lookup.any? { |_, tu| tu && tu.bookmarked }
+        post_action_type = PostActionType.types[:bookmark]
+      end
     end
 
     # Data for bookmarks or likes
-    post_action_lookup = PostAction.lookup_for(@current_user, @topics, post_action_type) if post_action_type
+    if post_action_type
+      post_action_lookup =
+        PostAction.lookup_for(@current_user, @topics, post_action_type)
+    end
 
     # Create a lookup for all the user ids we need
     user_ids = []
     @topics.each do |ft|
-      user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
+      user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids <<
+        ft.allowed_user_ids
     end
 
     avatar_lookup = AvatarLookup.new(user_ids)
@@ -113,16 +113,21 @@ class TopicList
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
 
-      if ft.user_data && post_action_lookup && actions = post_action_lookup[ft.id]
+      if ft.user_data && post_action_lookup &&
+         actions = post_action_lookup[ft.id]
         ft.user_data.post_action_data = { post_action_type => actions }
       end
 
-      ft.posters = ft.posters_summary(
-        avatar_lookup: avatar_lookup,
-        primary_group_lookup: primary_group_lookup
-      )
+      ft.posters =
+        ft.posters_summary(
+          avatar_lookup: avatar_lookup,
+          primary_group_lookup: primary_group_lookup
+        )
 
-      ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
+      ft.participants =
+        ft.participants_summary(
+          avatar_lookup: avatar_lookup, user: @current_user
+        )
       ft.topic_list = self
     end
 

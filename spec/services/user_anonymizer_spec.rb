@@ -1,17 +1,16 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe UserAnonymizer do
-
   let(:admin) { Fabricate(:admin) }
 
-  describe "event" do
-    let(:user) { Fabricate(:user, username: "edward") }
-    subject(:make_anonymous) { described_class.make_anonymous(user, admin, anonymize_ip: '2.2.2.2') }
+  describe 'event' do
+    let(:user) { Fabricate(:user, username: 'edward') }
+    subject(:make_anonymous) do
+      described_class.make_anonymous(user, admin, anonymize_ip: '2.2.2.2')
+    end
 
-    it "triggers the event" do
-      events = DiscourseEvent.track_events do
-        make_anonymous
-      end
+    it 'triggers the event' do
+      events = DiscourseEvent.track_events { make_anonymous }
 
       anon_event = events.detect { |e| e[:event_name] == :user_anonymized }
       expect(anon_event).to be_present
@@ -22,37 +21,43 @@ describe UserAnonymizer do
     end
   end
 
-  describe "make_anonymous" do
-    let(:original_email) { "edward@example.net" }
-    let(:user) { Fabricate(:user_single_email, username: "edward", email: original_email) }
+  describe 'make_anonymous' do
+    let(:original_email) { 'edward@example.net' }
+    let(:user) do
+      Fabricate(:user_single_email, username: 'edward', email: original_email)
+    end
     let(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
-    it "changes username" do
+    it 'changes username' do
       make_anonymous
       expect(user.reload.username).to match(/^anon\d{3,}$/)
     end
 
-    it "changes the primary email address" do
+    it 'changes the primary email address' do
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
     end
 
-    it "changes the primary email address when there is an email domain whitelist" do
-      SiteSetting.email_domains_whitelist = 'example.net|wayne.com|discourse.org'
+    it 'changes the primary email address when there is an email domain whitelist' do
+      SiteSetting.email_domains_whitelist =
+        'example.net|wayne.com|discourse.org'
 
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
     end
 
-    it "deletes secondary email addresses" do
-      Fabricate(:secondary_email, user: user, email: "secondary_email@example.com")
+    it 'deletes secondary email addresses' do
+      Fabricate(
+        :secondary_email,
+        user: user, email: 'secondary_email@example.com'
+      )
 
       make_anonymous
       expect(user.reload.secondary_emails).to be_blank
     end
 
-    it "turns off all notifications" do
+    it 'turns off all notifications' do
       user.user_option.update_columns(
         email_level: UserOption.email_level_types[:always],
         email_messages_level: UserOption.email_level_types[:always]
@@ -61,27 +66,33 @@ describe UserAnonymizer do
       make_anonymous
       user.reload
       expect(user.user_option.email_digests).to eq(false)
-      expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
-      expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
+      expect(user.user_option.email_level).to eq(
+            UserOption.email_level_types[:never]
+          )
+      expect(user.user_option.email_messages_level).to eq(
+            UserOption.email_level_types[:never]
+          )
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
-    context "Site Settings do not require full name" do
-      before do
-        SiteSetting.full_name_required = false
-      end
+    context 'Site Settings do not require full name' do
+      before { SiteSetting.full_name_required = false }
 
-      it "resets profile to default values" do
-        user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+      it 'resets profile to default values' do
+        user.update_attributes(
+          name: 'Bibi', date_of_birth: 19.years.ago, title: 'Super Star'
+        )
 
         profile = user.reload.user_profile
-        profile.update_attributes(location: "Moose Jaw",
-                                  website: "www.bim.com",
-                                  bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  profile_background: "http://example.com/bg.jpg",
-                                  bio_cooked_version: 2,
-                                  card_background: "http://example.com/cb.jpg")
+        profile.update_attributes(
+          location: 'Moose Jaw',
+          website: 'www.bim.com',
+          bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
+          bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
+          profile_background: 'http://example.com/bg.jpg',
+          bio_cooked_version: 2,
+          card_background: 'http://example.com/cb.jpg'
+        )
 
         prev_username = user.username
 
@@ -106,15 +117,15 @@ describe UserAnonymizer do
       end
     end
 
-    context "Site Settings require full name" do
-      before do
-        SiteSetting.full_name_required = true
-      end
+    context 'Site Settings require full name' do
+      before { SiteSetting.full_name_required = true }
 
-      it "changes name to anonymized username" do
+      it 'changes name to anonymized username' do
         prev_username = user.username
 
-        user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+        user.update_attributes(
+          name: 'Bibi', date_of_birth: 19.years.ago, title: 'Super Star'
+        )
 
         make_anonymous
         user.reload
@@ -124,9 +135,10 @@ describe UserAnonymizer do
       end
     end
 
-    it "removes the avatar" do
+    it 'removes the avatar' do
       upload = Fabricate(:upload, user: user)
-      user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
+      user.user_avatar =
+        UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences
       user.save!
       make_anonymous
@@ -135,35 +147,44 @@ describe UserAnonymizer do
       expect(user.uploaded_avatar_id).to eq(nil)
     end
 
-    it "updates the avatar in posts" do
+    it 'updates the avatar in posts' do
       Jobs.run_immediately!
       upload = Fabricate(:upload, user: user)
-      user.user_avatar = UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
+      user.user_avatar =
+        UserAvatar.new(user_id: user.id, custom_upload_id: upload.id)
       user.uploaded_avatar_id = upload.id # chosen in user preferences
       user.save!
 
       topic = Fabricate(:topic, user: user)
-      quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
-      post = create_post(raw: <<~RAW)
+      quoted_post =
+        create_post(
+          user: user, topic: topic, post_number: 1, raw: 'quoted post'
+        )
+      post =
+        create_post(
+          raw: <<~RAW
         Lorem ipsum
 
-        [quote="#{quoted_post.username}, post:1, topic:#{quoted_post.topic.id}"]
+        [quote="#{quoted_post
+            .username}, post:1, topic:#{quoted_post.topic
+            .id}"]
         quoted post
         [/quote]
       RAW
+        )
 
-      old_avatar_url = user.avatar_template.gsub("{size}", "40")
+      old_avatar_url = user.avatar_template.gsub('{size}', '40')
       expect(post.cooked).to include(old_avatar_url)
 
       make_anonymous
       post.reload
-      new_avatar_url = user.reload.avatar_template.gsub("{size}", "40")
+      new_avatar_url = user.reload.avatar_template.gsub('{size}', '40')
 
       expect(post.cooked).to_not include(old_avatar_url)
       expect(post.cooked).to include(new_avatar_url)
     end
 
-    it "logs the action with the original details" do
+    it 'logs the action with the original details' do
       SiteSetting.log_anonymizer_details = true
       helper = UserAnonymizer.new(user, admin)
       orig_email = user.email
@@ -176,7 +197,7 @@ describe UserAnonymizer do
       expect(history.details).to match(orig_username)
     end
 
-    it "logs the action without the original details" do
+    it 'logs the action without the original details' do
       SiteSetting.log_anonymizer_details = false
       helper = UserAnonymizer.new(user, admin)
       orig_email = user.email
@@ -189,12 +210,33 @@ describe UserAnonymizer do
       expect(history.details).not_to match(orig_username)
     end
 
-    it "removes external auth assocations" do
-      user.github_user_info = GithubUserInfo.create(user_id: user.id, screen_name: "example", github_user_id: "examplel123123")
-      user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
-      user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
-      user.oauth2_user_infos = [Oauth2UserInfo.create(user_id: user.id, uid: "example", provider: "example")]
-      UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
+    it 'removes external auth assocations' do
+      user.github_user_info =
+        GithubUserInfo.create(
+          user_id: user.id,
+          screen_name: 'example',
+          github_user_id: 'examplel123123'
+        )
+      user.user_associated_accounts = [
+        UserAssociatedAccount.create(
+          user_id: user.id, provider_uid: 'example', provider_name: 'facebook'
+        )
+      ]
+      user.single_sign_on_record =
+        SingleSignOnRecord.create(
+          user_id: user.id, external_id: 'example', last_payload: 'looks good'
+        )
+      user.oauth2_user_infos = [
+        Oauth2UserInfo.create(
+          user_id: user.id, uid: 'example', provider: 'example'
+        )
+      ]
+      UserOpenId.create(
+        user_id: user.id,
+        email: user.email,
+        url: 'http://example.com/openid',
+        active: true
+      )
       make_anonymous
       user.reload
       expect(user.github_user_info).to eq(nil)
@@ -205,19 +247,17 @@ describe UserAnonymizer do
       expect(user.user_open_ids.count).to eq(0)
     end
 
-    it "removes api key" do
-      ApiKey.create(user_id: user.id, key: "123123123")
+    it 'removes api key' do
+      ApiKey.create(user_id: user.id, key: '123123123')
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
       user.reload
       expect(user.api_key).to eq(nil)
     end
 
-    context "executes job" do
-      before do
-        Jobs.run_immediately!
-      end
+    context 'executes job' do
+      before { Jobs.run_immediately! }
 
-      it "removes invites" do
+      it 'removes invites' do
         Fabricate(:invite, user: user)
         Fabricate(:invite, user: another_user)
 
@@ -225,7 +265,7 @@ describe UserAnonymizer do
         expect(Invite.where(user_id: user.id).count).to eq(0)
       end
 
-      it "removes email tokens" do
+      it 'removes email tokens' do
         Fabricate(:email_token, user: user)
         Fabricate(:email_token, user: another_user)
 
@@ -233,7 +273,7 @@ describe UserAnonymizer do
         expect(EmailToken.where(user_id: user.id).count).to eq(0)
       end
 
-      it "removes email log entries" do
+      it 'removes email log entries' do
         Fabricate(:email_log, user: user)
         Fabricate(:email_log, user: another_user)
 
@@ -241,52 +281,80 @@ describe UserAnonymizer do
         expect(EmailLog.where(user_id: user.id).count).to eq(0)
       end
 
-      it "removes incoming emails" do
+      it 'removes incoming emails' do
         Fabricate(:incoming_email, user: user, from_address: user.email)
-        Fabricate(:incoming_email, from_address: user.email, error: "Some error")
-        Fabricate(:incoming_email, user: another_user, from_address: another_user.email)
+        Fabricate(
+          :incoming_email,
+          from_address: user.email, error: 'Some error'
+        )
+        Fabricate(
+          :incoming_email,
+          user: another_user, from_address: another_user.email
+        )
 
         expect { make_anonymous }.to change { IncomingEmail.count }.by(-2)
         expect(IncomingEmail.where(user_id: user.id).count).to eq(0)
         expect(IncomingEmail.where(from_address: original_email).count).to eq(0)
       end
 
-      it "removes raw email from posts" do
-        post1 = Fabricate(:post, user: user, via_email: true, raw_email: "raw email from user")
-        post2 = Fabricate(:post, user: another_user, via_email: true, raw_email: "raw email from another user")
+      it 'removes raw email from posts' do
+        post1 =
+          Fabricate(
+            :post,
+            user: user, via_email: true, raw_email: 'raw email from user'
+          )
+        post2 =
+          Fabricate(
+            :post,
+            user: another_user,
+            via_email: true,
+            raw_email: 'raw email from another user'
+          )
 
         make_anonymous
 
         expect(post1.reload).to have_attributes(via_email: true, raw_email: nil)
-        expect(post2.reload).to have_attributes(via_email: true, raw_email: "raw email from another user")
+        expect(post2.reload).to have_attributes(
+              via_email: true, raw_email: 'raw email from another user'
+            )
       end
 
-      it "does not delete profile views" do
-        UserProfileView.add(user.id, '127.0.0.1', another_user.id, Time.now, true)
+      it 'does not delete profile views' do
+        UserProfileView.add(
+          user.id,
+          '127.0.0.1',
+          another_user.id,
+          Time.now,
+          true
+        )
         expect { make_anonymous }.to_not change { UserProfileView.count }
       end
 
-      it "removes user field values" do
+      it 'removes user field values' do
         field1 = Fabricate(:user_field)
         field2 = Fabricate(:user_field)
 
         user.custom_fields = {
-          "some_field": "123",
-          "user_field_#{field1.id}": "foo",
-          "user_field_#{field2.id}": "bar",
-          "another_field": "456"
+          :"some_field" => '123',
+          :"user_field_#{field1.id}" => 'foo',
+          :"user_field_#{field2.id}" => 'bar',
+          :"another_field" => '456'
         }
 
         expect { make_anonymous }.to change { user.custom_fields }
-        expect(user.reload.custom_fields).to eq("some_field" => "123", "another_field" => "456")
+        expect(user.reload.custom_fields).to eq(
+              'some_field' => '123', 'another_field' => '456'
+            )
       end
     end
   end
 
-  describe "anonymize_ip" do
-    let(:old_ip) { "1.2.3.4" }
-    let(:anon_ip) { "0.0.0.0" }
-    let(:user) { Fabricate(:user, ip_address: old_ip, registration_ip_address: old_ip) }
+  describe 'anonymize_ip' do
+    let(:old_ip) { '1.2.3.4' }
+    let(:anon_ip) { '0.0.0.0' }
+    let(:user) do
+      Fabricate(:user, ip_address: old_ip, registration_ip_address: old_ip)
+    end
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
@@ -295,46 +363,57 @@ describe UserAnonymizer do
       expect(user.ip_address).to eq(old_ip)
     end
 
-    it "is called if you pass an option" do
+    it 'is called if you pass an option' do
       UserAnonymizer.make_anonymous(user, admin, anonymize_ip: anon_ip)
       user.reload
       expect(user.ip_address).to eq(anon_ip)
     end
 
-    it "exhaustively replaces all user ips" do
+    it 'exhaustively replaces all user ips' do
       Jobs.run_immediately!
-      link = IncomingLink.create!(current_user_id: user.id, ip_address: old_ip, post_id: post.id)
+      link =
+        IncomingLink.create!(
+          current_user_id: user.id, ip_address: old_ip, post_id: post.id
+        )
 
-      screened_email = ScreenedEmail.create!(email: user.email, ip_address: old_ip)
+      screened_email =
+        ScreenedEmail.create!(email: user.email, ip_address: old_ip)
 
-      search_log = SearchLog.create!(
-        term: 'wat',
-        search_type: SearchLog.search_types[:header],
-        user_id: user.id,
-        ip_address: old_ip
-      )
+      search_log =
+        SearchLog.create!(
+          term: 'wat',
+          search_type: SearchLog.search_types[:header],
+          user_id: user.id,
+          ip_address: old_ip
+        )
 
-      topic_link = TopicLink.create!(
-        user_id: admin.id,
+      topic_link =
+        TopicLink.create!(
+          user_id: admin.id,
+          topic_id: topic.id,
+          url: 'https://discourse.org',
+          domain: 'discourse.org'
+        )
+
+      topic_link_click =
+        TopicLinkClick.create!(
+          topic_link_id: topic_link.id, user_id: user.id, ip_address: old_ip
+        )
+
+      user_profile_view =
+        UserProfileView.create!(
+          user_id: user.id,
+          user_profile_id: admin.user_profile.id,
+          ip_address: old_ip,
+          viewed_at: Time.now
+        )
+
+      TopicViewItem.create!(
         topic_id: topic.id,
-        url: 'https://discourse.org',
-        domain: 'discourse.org'
-      )
-
-      topic_link_click = TopicLinkClick.create!(
-        topic_link_id: topic_link.id,
         user_id: user.id,
-        ip_address: old_ip
-      )
-
-      user_profile_view = UserProfileView.create!(
-        user_id: user.id,
-        user_profile_id: admin.user_profile.id,
         ip_address: old_ip,
         viewed_at: Time.now
       )
-
-      TopicViewItem.create!(topic_id: topic.id, user_id: user.id, ip_address: old_ip, viewed_at: Time.now)
       delete_history = StaffActionLogger.new(admin).log_user_deletion(user)
       user_history = StaffActionLogger.new(user).log_backup_create
 
@@ -344,13 +423,12 @@ describe UserAnonymizer do
       expect(screened_email.reload.ip_address).to eq(anon_ip)
       expect(search_log.reload.ip_address).to eq(anon_ip)
       expect(topic_link_click.reload.ip_address).to eq(anon_ip)
-      topic_view = TopicViewItem.where(topic_id: topic.id, user_id: user.id).first
+      topic_view =
+        TopicViewItem.where(topic_id: topic.id, user_id: user.id).first
       expect(topic_view.ip_address).to eq(anon_ip)
       expect(delete_history.reload.ip_address).to eq(anon_ip)
       expect(user_history.reload.ip_address).to eq(anon_ip)
       expect(user_profile_view.reload.ip_address).to eq(anon_ip)
     end
-
   end
-
 end

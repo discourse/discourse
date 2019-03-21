@@ -4,6 +4,6 @@ class RemoveColumn < ActiveRecord::Migration[5.1]
   end
 
   def down
-    raise "not tested"
+    raise 'not tested'
   end
 end

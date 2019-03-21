@@ -1,14 +1,13 @@
 module DiscourseUpdates
-
   class << self
-
     def check_version
       attrs = {
         installed_version: Discourse::VERSION::STRING,
-        installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
+        installed_sha:
+          (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
         installed_describe: Discourse.full_version,
         git_branch: Discourse.git_branch,
-        updated_at: updated_at,
+        updated_at: updated_at
       }
 
       unless updated_at.nil?
@@ -23,18 +22,27 @@ module DiscourseUpdates
 
       # replace -commit_count with +commit_count
       if version_info.installed_describe =~ /-(\d+)-/
-        version_info.installed_describe = version_info.installed_describe.gsub(/-(\d+)-.*/, " +#{$1}")
+        version_info.installed_describe =
+          version_info.installed_describe.gsub(/-(\d+)-.*/, " +#{$1}")
       end
 
       if SiteSetting.version_checks?
         is_stale_data =
-          (version_info.missing_versions_count == 0 && version_info.latest_version != version_info.installed_version) ||
-          (version_info.missing_versions_count != 0 && version_info.latest_version == version_info.installed_version)
+          (
+            version_info.missing_versions_count == 0 &&
+              version_info.latest_version != version_info.installed_version
+          ) ||
+            (
+              version_info.missing_versions_count != 0 &&
+                version_info.latest_version == version_info.installed_version
+            )
 
         # Handle cases when version check data is old so we report something that makes sense
-        if version_info.updated_at.nil? || # never performed a version check
-           last_installed_version != Discourse::VERSION::STRING || # upgraded since the last version check
+        if version_info.updated_at.nil? ||
+           last_installed_version != Discourse::VERSION::STRING ||
            is_stale_data
+          # never performed a version check
+          # upgraded since the last version check
 
           Jobs.enqueue(:version_check, all_sites: true)
           version_info.version_check_pending = true
@@ -47,8 +55,8 @@ module DiscourseUpdates
 
         version_info.stale_data =
           version_info.version_check_pending ||
-          (updated_at && updated_at < 48.hours.ago) ||
-          is_stale_data
+            (updated_at && updated_at < 48.hours.ago) ||
+            is_stale_data
       end
 
       version_info
@@ -80,7 +88,13 @@ module DiscourseUpdates
       $redis.set updated_at_key, time_with_zone.as_json
     end
 
-    ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
+    %w[
+      last_installed_version
+      latest_version
+      missing_versions_count
+      critical_updates_available
+    ]
+      .each do |name|
       eval "define_method :#{name}= do |arg|
         $redis.set #{name}_key, arg
       end"

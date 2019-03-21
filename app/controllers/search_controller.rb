@@ -1,25 +1,26 @@
 require_dependency 'search'
 
 class SearchController < ApplicationController
-
   skip_before_action :check_xhr, only: :show
 
   def self.valid_context_types
-    %w{user topic category private_messages}
+    %w[user topic category private_messages]
   end
 
   def show
     @search_term = params[:q]
-    raise Discourse::InvalidParameters.new(:q) if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length
+    if @search_term.present? &&
+       @search_term.length < SiteSetting.min_search_term_length
+      raise Discourse::InvalidParameters.new(:q)
+    end
 
+    page = [params[:page].to_i, 1].max if params[:page].to_i <= 10
     search_args = {
       type_filter: 'topic',
       guardian: guardian,
       include_blurbs: true,
       blurb_length: 300,
-      page: if params[:page].to_i <= 10
-              [params[:page].to_i, 1].max
-            end
+      page: page
     }
 
     context, type = lookup_search_context
@@ -37,15 +38,12 @@ class SearchController < ApplicationController
 
     result.find_user_data(guardian) if result
 
-    serializer = serialize_data(result, GroupedSearchResultSerializer, result: result)
+    serializer =
+      serialize_data(result, GroupedSearchResultSerializer, result: result)
 
     respond_to do |format|
-      format.html do
-        store_preloaded("search", MultiJson.dump(serializer))
-      end
-      format.json do
-        render_json_dump(serializer)
-      end
+      format.html { store_preloaded('search', MultiJson.dump(serializer)) }
+      format.json { render_json_dump(serializer) }
     end
   end
 
@@ -54,9 +52,13 @@ class SearchController < ApplicationController
 
     search_args = { guardian: guardian }
 
-    search_args[:type_filter] = params[:type_filter]                 if params[:type_filter].present?
-    search_args[:include_blurbs] = params[:include_blurbs] == "true" if params[:include_blurbs].present?
-    search_args[:search_for_id] = true                               if params[:search_for_id].present?
+    if params[:type_filter].present?
+      search_args[:type_filter] = params[:type_filter]
+    end
+    if params[:include_blurbs].present?
+      search_args[:include_blurbs] = params[:include_blurbs] == 'true'
+    end
+    search_args[:search_for_id] = true if params[:search_for_id].present?
 
     context, type = lookup_search_context
 
@@ -68,7 +70,9 @@ class SearchController < ApplicationController
     search_args[:search_type] = :header
     search_args[:ip_address] = request.remote_ip
     search_args[:user_id] = current_user.id if current_user.present?
-    search_args[:restrict_to_archetype] = params[:restrict_to_archetype] if params[:restrict_to_archetype].present?
+    if params[:restrict_to_archetype].present?
+      search_args[:restrict_to_archetype] = params[:restrict_to_archetype]
+    end
 
     search = Search.new(params[:term], search_args)
     result = search.execute
@@ -107,8 +111,7 @@ class SearchController < ApplicationController
   protected
 
   def lookup_search_context
-
-    return if params[:skip_context] == "true"
+    return if params[:skip_context] == 'true'
 
     search_context = params[:search_context]
     unless search_context
@@ -118,12 +121,18 @@ class SearchController < ApplicationController
     end
 
     if search_context.present?
-      raise Discourse::InvalidParameters.new(:search_context) unless SearchController.valid_context_types.include?(search_context[:type])
-      raise Discourse::InvalidParameters.new(:search_context) if search_context[:id].blank?
+      unless SearchController.valid_context_types.include?(
+             search_context[:type]
+           )
+        raise Discourse::InvalidParameters.new(:search_context)
+      end
+      if search_context[:id].blank?
+        raise Discourse::InvalidParameters.new(:search_context)
+      end
 
       # A user is found by username
       context_obj = nil
-      if ['user', 'private_messages'].include? search_context[:type]
+      if %w[user private_messages].include? search_context[:type]
         context_obj = User.find_by(username_lower: search_context[:id].downcase)
       elsif 'category' == search_context[:type]
         context_obj = Category.find_by(id: search_context[:id].to_i)
@@ -141,5 +150,4 @@ class SearchController < ApplicationController
       [context_obj, type_filter]
     end
   end
-
 end

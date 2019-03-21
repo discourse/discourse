@@ -1,5 +1,4 @@
 class ScoreCalculator
-
   def self.default_score_weights
     {
       reply_count: 5,
@@ -29,32 +28,37 @@ class ScoreCalculator
 
     components = []
     @weightings.each_key { |k| components << "COALESCE(posts.#{k}, 0) * :#{k}" }
-    components = components.join(" + ")
+    components = components.join(' + ')
 
-    builder = DB.build <<SQL
-       UPDATE posts p
+    sql = <<~SQL
+      UPDATE posts p
         SET score = x.score
-       FROM (
+      FROM (
         SELECT posts.id, #{components} as score FROM posts
         join topics on posts.topic_id = topics.id
         /*where*/
         limit #{limit}
-       ) AS x
-       WHERE x.id = p.id
-SQL
-
-    builder.where("posts.score IS NULL OR posts.score <> #{components}", @weightings)
+      ) AS x
+      WHERE x.id = p.id
+    SQL
+    builder = DB.build(sql)
+    builder.where(
+      "posts.score IS NULL OR posts.score <> #{components}",
+      @weightings
+    )
 
     filter_topics(builder, opts)
 
     while builder.exec == limit
+      begin
+
+      end
     end
   end
 
   def update_posts_rank(opts)
     limit = 20000
-
-    builder = DB.build <<~SQL
+    sql = <<~SQL
       UPDATE posts
       SET percent_rank = X.percent_rank
       FROM (
@@ -71,18 +75,22 @@ SQL
       ) AS X
       WHERE posts.id = X.id
     SQL
-
-    builder.where("posts.percent_rank IS NULL OR Y.percent_rank <> posts.percent_rank")
+    builder = DB.build(sql)
+    builder.where(
+      'posts.percent_rank IS NULL OR Y.percent_rank <> posts.percent_rank'
+    )
 
     filter_topics(builder, opts)
 
     while builder.exec == limit
-    end
+      begin
 
+      end
+    end
   end
 
   def update_topics_rank(opts)
-    builder = DB.build <<~SQL
+    sql = <<~SQL
       UPDATE topics AS topics
       SET has_summary = (topics.like_count >= :likes_required AND
                          topics.posts_count >= :posts_required AND
@@ -95,6 +103,7 @@ SQL
             GROUP BY p.topic_id) AS x
             /*where*/
     SQL
+    builder = DB.build(sql)
 
     defaults = {
       likes_required: SiteSetting.summary_likes_required,
@@ -102,7 +111,7 @@ SQL
       score_required: SiteSetting.summary_score_threshold
     }
 
-    builder.where(<<~SQL, defaults)
+    sql = <<~SQL
       x.topic_id = topics.id AND
       (
         (topics.score <> x.avg_score OR topics.score IS NULL) OR
@@ -113,6 +122,7 @@ SQL
         ))
       )
     SQL
+    builder.where(sql, defaults)
 
     filter_topics(builder, opts)
 
@@ -123,15 +133,15 @@ SQL
     return builder unless opts
 
     if min_topic_age = opts[:min_topic_age]
-      builder.where("topics.bumped_at > :bumped_at ",
-                 bumped_at: min_topic_age)
+      builder.where('topics.bumped_at > :bumped_at ', bumped_at: min_topic_age)
     end
     if max_topic_length = opts[:max_topic_length]
-      builder.where("topics.posts_count < :max_topic_length",
-                 max_topic_length: max_topic_length)
+      builder.where(
+        'topics.posts_count < :max_topic_length',
+        max_topic_length: max_topic_length
+      )
     end
 
     builder
   end
-
 end

@@ -16,5 +16,4 @@ describe ApiKey do
     expect(api_key.save).to eq(false)
     expect(api_key.errors).to include(:user_id)
   end
-
 end

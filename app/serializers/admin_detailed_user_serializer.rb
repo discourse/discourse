@@ -1,5 +1,4 @@
 class AdminDetailedUserSerializer < AdminUserSerializer
-
   attributes :moderator,
              :can_grant_admin,
              :can_revoke_admin,
@@ -33,7 +32,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
   has_one :silenced_by, serializer: BasicUserSerializer, embed: :objects
-  has_one :tl3_requirements, serializer: TrustLevel3RequirementsSerializer, embed: :objects
+  has_one :tl3_requirements,
+          serializer: TrustLevel3RequirementsSerializer, embed: :objects
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
 
   def second_factor_enabled
@@ -115,5 +115,4 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   def post_count
     object.posts.count
   end
-
 end

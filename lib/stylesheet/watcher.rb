@@ -2,7 +2,7 @@ require 'listen'
 
 module Stylesheet
   class Watcher
-    REDIS_KEY = "dev_last_used_theme_id"
+    REDIS_KEY = 'dev_last_used_theme_id'
 
     def self.theme_id=(v)
       $redis.set(REDIS_KEY, v)
@@ -26,20 +26,18 @@ module Stylesheet
     def self.default_paths
       return @default_paths if @default_paths
 
-      @default_paths = ["app/assets/stylesheets"]
+      @default_paths = %w[app/assets/stylesheets]
       Discourse.plugins.each do |p|
-        @default_paths << File.dirname(p.path).sub(Rails.root.to_s, '').sub(/^\//, '')
+        @default_paths <<
+          File.dirname(p.path).sub(Rails.root.to_s, '').sub(%r{^\/}, '')
       end
       @default_paths
     end
 
     def start
-
       Thread.new do
         begin
-          while true
-            worker_loop
-          end
+          worker_loop while true
         rescue => e
           STDERR.puts "CSS change notifier crashed #{e}"
         end
@@ -53,12 +51,16 @@ module Stylesheet
       @paths.each do |watch|
         Thread.new do
           begin
-            listener = Listen.to("#{root}/#{watch}", listener_opts) do |modified, added, _|
-              paths = [modified, added].flatten
-              paths.compact!
-              paths.map! { |long| long[(root.length + 1)..-1] }
-              process_change(paths)
-            end
+            listener =
+              Listen.to(
+                "#{root}/#{watch}",
+                listener_opts
+              ) do |modified, added, _|
+                paths = [modified, added].flatten
+                paths.compact!
+                paths.map! { |long| long[(root.length + 1)..-1] }
+                process_change(paths)
+              end
           rescue => e
             STDERR.puts "Failed to listen for CSS changes at: #{watch}\n#{e}"
           end
@@ -70,25 +72,23 @@ module Stylesheet
 
     def worker_loop
       @queue.pop
-      while @queue.length > 0
-        @queue.pop
-      end
+      @queue.pop while @queue.length > 0
 
       Stylesheet::Manager.cache.clear
 
-      message = ["desktop", "mobile", "admin"].map do |name|
-        Stylesheet::Manager.stylesheet_data(name.to_sym, Stylesheet::Watcher.theme_id)
-      end.flatten
+      message =
+        %w[desktop mobile admin].map do |name|
+          Stylesheet::Manager.stylesheet_data(
+            name.to_sym,
+            Stylesheet::Watcher.theme_id
+          )
+        end
+          .flatten
       MessageBus.publish '/file-change', message
     end
 
     def process_change(paths)
-      paths.each do |path|
-        if path =~ /\.(css|scss)$/
-          @queue.push path
-        end
-      end
+      paths.each { |path| @queue.push path if path =~ /\.(css|scss)$/ }
     end
-
   end
 end

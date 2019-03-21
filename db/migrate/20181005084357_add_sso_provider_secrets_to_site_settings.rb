@@ -1,6 +1,8 @@
 class AddSsoProviderSecretsToSiteSettings < ActiveRecord::Migration[5.2]
   def up
-    return unless SiteSetting.enable_sso_provider && SiteSetting.sso_secret.present?
+    unless SiteSetting.enable_sso_provider && SiteSetting.sso_secret.present?
+      return
+    end
     sso_secret = SiteSetting.sso_secret
     sso_secret_insert = ActiveRecord::Base.connection.quote("*|#{sso_secret}")
 

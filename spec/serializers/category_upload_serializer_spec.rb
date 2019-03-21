@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe CategoryUploadSerializer do
-
   let(:upload) { Fabricate(:upload) }
   let(:subject) { described_class.new(upload, root: false) }
 
@@ -9,5 +8,4 @@ describe CategoryUploadSerializer do
     expect(subject.width).to eq(upload.width)
     expect(subject.height).to eq(upload.height)
   end
-
 end

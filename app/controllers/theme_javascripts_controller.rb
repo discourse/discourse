@@ -8,10 +8,10 @@ class ThemeJavascriptsController < ApplicationController
     :preload_json,
     :redirect_to_login_if_required,
     :verify_authenticity_token,
-    only: [:show]
+    only: %i[show]
   )
 
-  before_action :is_asset_path, :no_cookies, only: [:show]
+  before_action :is_asset_path, :no_cookies, only: %i[show]
 
   def show
     raise Discourse::NotFound unless last_modified.present?
@@ -29,7 +29,7 @@ class ThemeJavascriptsController < ApplicationController
     end
 
     # this is only required for NGINX X-SendFile it seems
-    response.headers["Content-Length"] = File.size(cache_file).to_s
+    response.headers['Content-Length'] = File.size(cache_file).to_s
     set_cache_control_headers
     send_file(cache_file, disposition: :inline)
   end
@@ -47,7 +47,7 @@ class ThemeJavascriptsController < ApplicationController
   def not_modified?
     cache_time =
       begin
-        Time.rfc2822(request.env["HTTP_IF_MODIFIED_SINCE"])
+        Time.rfc2822(request.env['HTTP_IF_MODIFIED_SINCE'])
       rescue ArgumentError
         nil
       end
@@ -60,7 +60,9 @@ class ThemeJavascriptsController < ApplicationController
       response.headers['Last-Modified'] = Time.zone.now.httpdate
       immutable_for(1.second)
     else
-      response.headers['Last-Modified'] = last_modified.httpdate if last_modified
+      if last_modified
+        response.headers['Last-Modified'] = last_modified.httpdate
+      end
       immutable_for(1.year)
     end
   end

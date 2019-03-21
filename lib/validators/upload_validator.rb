@@ -1,26 +1,29 @@
-require_dependency "file_helper"
+require_dependency 'file_helper'
 
 module Validators; end
 
 class Validators::UploadValidator < ActiveModel::Validator
-
   def validate(upload)
     # staff can upload any file in PM
-    if (upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm)
+
+    if (
+       upload.for_private_message &&
+         SiteSetting.allow_staff_to_upload_any_file_in_pm
+     )
       return true if upload.user&.staff?
     end
 
     # check the attachment blacklist
-    if upload.for_group_message && SiteSetting.allow_all_attachments_for_group_messages
-      return upload.original_filename =~ SiteSetting.attachment_filename_blacklist_regex
+    if upload.for_group_message &&
+       SiteSetting.allow_all_attachments_for_group_messages
+      return upload.original_filename =~
+        SiteSetting.attachment_filename_blacklist_regex
     end
 
-    extension = File.extname(upload.original_filename)[1..-1] || ""
+    extension = File.extname(upload.original_filename)[1..-1] || ''
 
-    if upload.for_site_setting &&
-       upload.user&.staff? &&
+    if upload.for_site_setting && upload.user&.staff? &&
        FileHelper.is_supported_image?(upload.original_filename)
-
       return true
     end
 
@@ -44,7 +47,7 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def maximum_image_file_size(upload)
-    maximum_file_size(upload, "image")
+    maximum_file_size(upload, 'image')
   end
 
   def authorized_attachment_extension(upload, extension)
@@ -52,7 +55,7 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def maximum_attachment_file_size(upload)
-    maximum_file_size(upload, "attachment")
+    maximum_file_size(upload, 'attachment')
   end
 
   private
@@ -60,23 +63,22 @@ class Validators::UploadValidator < ActiveModel::Validator
   def extensions_to_set(exts)
     extensions = Set.new
 
-    exts
-      .gsub(/[\s\.]+/, "")
-      .downcase
-      .split("|")
-      .each { |extension| extensions << extension unless extension.include?("*") }
+    exts.gsub(/[\s\.]+/, '').downcase.split('|').each do |extension|
+      extensions << extension unless extension.include?('*')
+    end
 
     extensions
   end
 
   def authorized_extensions(upload)
-    extensions = if upload.for_theme
-      SiteSetting.theme_authorized_extensions
-    elsif upload.for_export
-      SiteSetting.export_authorized_extensions
-    else
-      SiteSetting.authorized_extensions
-    end
+    extensions =
+      if upload.for_theme
+        SiteSetting.theme_authorized_extensions
+      elsif upload.for_export
+        SiteSetting.export_authorized_extensions
+      else
+        SiteSetting.authorized_extensions
+      end
     extensions_to_set(extensions)
   end
 
@@ -90,16 +92,17 @@ class Validators::UploadValidator < ActiveModel::Validator
 
   def authorizes_all_extensions?(upload)
     if upload.user&.staff?
-      return true if SiteSetting.authorized_extensions_for_staff.include?("*")
+      return true if SiteSetting.authorized_extensions_for_staff.include?('*')
     end
-    extensions = if upload.for_theme
-      SiteSetting.theme_authorized_extensions
-    elsif upload.for_export
-      SiteSetting.export_authorized_extensions
-    else
-      SiteSetting.authorized_extensions
-    end
-    extensions.include?("*")
+    extensions =
+      if upload.for_theme
+        SiteSetting.theme_authorized_extensions
+      elsif upload.for_export
+        SiteSetting.export_authorized_extensions
+      else
+        SiteSetting.authorized_extensions
+      end
+    extensions.include?('*')
   end
 
   def extension_authorized?(upload, extension, extensions)
@@ -107,12 +110,17 @@ class Validators::UploadValidator < ActiveModel::Validator
 
     staff_extensions = Set.new
     if upload.user&.staff?
-      staff_extensions = extensions_to_set(SiteSetting.authorized_extensions_for_staff)
+      staff_extensions =
+        extensions_to_set(SiteSetting.authorized_extensions_for_staff)
       return true if staff_extensions.include?(extension.downcase)
     end
 
     unless authorized = extensions.include?(extension.downcase)
-      message = I18n.t("upload.unauthorized", authorized_extensions: (extensions | staff_extensions).to_a.join(", "))
+      message =
+        I18n.t(
+          'upload.unauthorized',
+          authorized_extensions: (extensions | staff_extensions).to_a.join(', ')
+        )
       upload.errors.add(:original_filename, message)
     end
 
@@ -120,11 +128,12 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def maximum_file_size(upload, type)
-    max_size_kb = if upload.for_export
-      SiteSetting.max_export_file_size_kb
-    else
-      SiteSetting.send("max_#{type}_size_kb")
-    end
+    max_size_kb =
+      if upload.for_export
+        SiteSetting.max_export_file_size_kb
+      else
+        SiteSetting.send("max_#{type}_size_kb")
+      end
     max_size_bytes = max_size_kb.kilobytes
 
     if upload.filesize > max_size_bytes
@@ -132,5 +141,4 @@ class Validators::UploadValidator < ActiveModel::Validator
       upload.errors.add(:filesize, message)
     end
   end
-
 end

@@ -4,7 +4,6 @@ require_dependency 'enum'
 require_dependency 'user_name_suggester'
 
 class Users::OmniauthCallbacksController < ApplicationController
-
   skip_before_action :redirect_to_login_if_required
 
   layout 'no_ember'
@@ -17,22 +16,29 @@ class Users::OmniauthCallbacksController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :complete
 
   def complete
-    auth = request.env["omniauth.auth"]
-    raise Discourse::NotFound unless request.env["omniauth.auth"]
+    auth = request.env['omniauth.auth']
+    raise Discourse::NotFound unless request.env['omniauth.auth']
 
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
-    provider = DiscoursePluginRegistry.auth_providers.find { |p| p.name == params[:provider] }
+    provider =
+      DiscoursePluginRegistry.auth_providers.find do |p|
+        p.name == params[:provider]
+      end
 
-    if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
+    if session.delete(:auth_reconnect) &&
+       authenticator.can_connect_existing_user? &&
+       current_user
       # If we're reconnecting, don't actually try and log the user in
-      @auth_result = authenticator.after_authenticate(auth, existing_account: current_user)
+      @auth_result =
+        authenticator.after_authenticate(auth, existing_account: current_user)
       if provider&.full_screen_login || cookies['fsl']
         cookies.delete('fsl')
-        return redirect_to Discourse.base_uri("/my/preferences/account")
+        return redirect_to Discourse.base_uri('/my/preferences/account')
       else
         @auth_result.authenticated = true
+
         return respond_to do |format|
           format.html
           format.json { render json: @auth_result.to_client_hash }
@@ -45,27 +51,28 @@ class Users::OmniauthCallbacksController < ApplicationController
     origin = request.env['omniauth.origin']
 
     if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
-      origin = session_sso_provider_url + "?" + payload
+      origin = session_sso_provider_url + '?' + payload
     elsif cookies[:destination_url].present?
       origin = cookies[:destination_url]
       cookies.delete(:destination_url)
     end
 
     if origin.present?
-      parsed = begin
-        URI.parse(origin)
-      rescue URI::Error
-      end
+      parsed =
+        begin
+          URI.parse(origin)
+        rescue URI::Error
 
-      if parsed && (parsed.host == nil || parsed.host == Discourse.current_hostname)
+        end
+
+      if parsed &&
+         (parsed.host == nil || parsed.host == Discourse.current_hostname)
         @origin = "#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
     end
 
-    if @origin.blank?
-      @origin = Discourse.base_uri("/")
-    end
+    @origin = Discourse.base_uri('/') if @origin.blank?
 
     @auth_result.destination_url = origin
 
@@ -91,7 +98,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    flash[:error] = I18n.t("login.omniauth_error")
+    flash[:error] = I18n.t('login.omniauth_error')
     render 'failure'
   end
 
@@ -128,13 +135,14 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       # ensure there is an active email token
       unless EmailToken.where(email: user.email, confirmed: true).exists? ||
-        user.email_tokens.active.where(email: user.email).exists?
-
+             user.email_tokens.active.where(email: user.email).exists?
         user.email_tokens.create!(email: user.email)
       end
 
       user.activate
-      user.update!(registration_ip_address: request.remote_ip) if user.registration_ip_address.blank?
+      if user.registration_ip_address.blank?
+        user.update!(registration_ip_address: request.remote_ip)
+      end
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
@@ -154,5 +162,4 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
   end
-
 end

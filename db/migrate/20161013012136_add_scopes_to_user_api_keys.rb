@@ -1,6 +1,9 @@
 class AddScopesToUserApiKeys < ActiveRecord::Migration[4.2]
   def change
-    add_column :user_api_keys, :scopes, :text, array: true, null: false, default: []
+    add_column :user_api_keys,
+               :scopes,
+               :text,
+               array: true, null: false, default: []
 
     execute "UPDATE user_api_keys SET scopes = scopes || ARRAY['write'] WHERE write"
     execute "UPDATE user_api_keys SET scopes = scopes || ARRAY['read'] WHERE read"

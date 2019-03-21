@@ -2,21 +2,13 @@ require 'rails_helper'
 require_dependency 'site_settings/defaults_provider'
 
 describe SiteSettings::DefaultsProvider do
-  let(:provider_local) do
-    SiteSettings::LocalProcessProvider.new
-  end
+  let(:provider_local) { SiteSettings::LocalProcessProvider.new }
 
-  before do
-    MessageBus.off
-  end
+  before { MessageBus.off }
 
-  after do
-    MessageBus.on
-  end
+  after { MessageBus.on }
 
-  let(:settings) do
-    new_settings(provider_local)
-  end
+  let(:settings) { new_settings(provider_local) }
 
   describe '.db_all' do
     it 'can collect values from db' do
@@ -28,16 +20,32 @@ describe SiteSettings::DefaultsProvider do
 
   describe 'expose default cache according to locale' do
     before do
-      settings.setting(:test_override, 'default', locale_default: { zh_CN: 'cn' })
-      settings.setting(:test_boolean_override, true, locale_default: { zh_CN: false })
+      settings.setting(
+        :test_override,
+        'default',
+        locale_default: { zh_CN: 'cn' }
+      )
+      settings.setting(
+        :test_boolean_override,
+        true,
+        locale_default: { zh_CN: false }
+      )
       settings.setting(:test_default, 'test', regex: '^\S+$')
       settings.refresh!
     end
 
     describe '.all' do
       it 'returns all values according to locale' do
-        expect(settings.defaults.all).to eq(test_override: 'default', test_default: 'test', test_boolean_override: true)
-        expect(settings.defaults.all('zh_CN')).to eq(test_override: 'cn', test_default: 'test', test_boolean_override: false)
+        expect(settings.defaults.all).to eq(
+              test_override: 'default',
+              test_default: 'test',
+              test_boolean_override: true
+            )
+        expect(settings.defaults.all('zh_CN')).to eq(
+              test_override: 'cn',
+              test_default: 'test',
+              test_boolean_override: false
+            )
       end
     end
 
@@ -57,7 +65,9 @@ describe SiteSettings::DefaultsProvider do
       end
 
       it 'returns the correct locale_default for boolean site settings' do
-        expect(settings.defaults.get(:test_boolean_override, :zh_CN)).to eq false
+        expect(
+          settings.defaults.get(:test_boolean_override, :zh_CN)
+        ).to eq false
       end
     end
 
@@ -81,15 +91,18 @@ describe SiteSettings::DefaultsProvider do
       end
 
       it 'raises when the setting does not exists' do
-        expect {
+        expect do
           settings.defaults.set_regardless_of_locale(:not_exist, 1)
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
 
       it 'raises when the value is not valid' do
-        expect {
-          settings.defaults.set_regardless_of_locale(:test_default, 'regex will fail')
-        }.to raise_error(Discourse::InvalidParameters)
+        expect do
+          settings.defaults.set_regardless_of_locale(
+            :test_default,
+            'regex will fail'
+          )
+        end.to raise_error(Discourse::InvalidParameters)
       end
     end
   end
@@ -129,5 +142,4 @@ describe SiteSettings::DefaultsProvider do
       expect(settings.defaults.has_setting?('question')).to be_truthy
     end
   end
-
 end

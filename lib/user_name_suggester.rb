@@ -1,5 +1,17 @@
 module UserNameSuggester
-  GENERIC_NAMES = ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team']
+  GENERIC_NAMES = %w[
+    i
+    me
+    info
+    support
+    admin
+    webmaster
+    hello
+    mail
+    office
+    contact
+    team
+  ]
 
   def self.suggest(name, allow_username = nil)
     return unless name.present?
@@ -21,13 +33,15 @@ module UserNameSuggester
     name = fix_username(name)
     i = 1
     attempt = name
-    until attempt == allow_username || User.username_available?(attempt) || i > 100
+    until attempt == allow_username || User.username_available?(attempt) ||
+      i > 100
       suffix = i.to_s
       max_length = User.username_length.end - suffix.length - 1
       attempt = "#{name[0..max_length]}#{suffix}"
       i += 1
     end
-    until attempt == allow_username || User.username_available?(attempt) || i > 200
+    until attempt == allow_username || User.username_available?(attempt) ||
+      i > 200
       attempt = SecureRandom.hex[1..SiteSetting.max_username_length]
       i += 1
     end
@@ -41,19 +55,19 @@ module UserNameSuggester
   def self.sanitize_username(name)
     name = ActiveSupport::Inflector.transliterate(name.to_s)
     # 1. replace characters that aren't allowed with '_'
-    name.gsub!(UsernameValidator::CONFUSING_EXTENSIONS, "_")
-    name.gsub!(/[^\w.-]/, "_")
+    name.gsub!(UsernameValidator::CONFUSING_EXTENSIONS, '_')
+    name.gsub!(/[^\w.-]/, '_')
     # 2. removes unallowed leading characters
-    name.gsub!(/^\W+/, "")
+    name.gsub!(/^\W+/, '')
     # 3. removes unallowed trailing characters
     name = remove_unallowed_trailing_characters(name)
     # 4. unify special characters
-    name.gsub!(/[-_.]{2,}/, "_")
+    name.gsub!(/[-_.]{2,}/, '_')
     name
   end
 
   def self.remove_unallowed_trailing_characters(name)
-    name.gsub!(/[^A-Za-z0-9]+$/, "")
+    name.gsub!(/[^A-Za-z0-9]+$/, '')
     name
   end
 
@@ -62,5 +76,4 @@ module UserNameSuggester
     name = remove_unallowed_trailing_characters(name)
     name.ljust(User.username_length.begin, '1')
   end
-
 end

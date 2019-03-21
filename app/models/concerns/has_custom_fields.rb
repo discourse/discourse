@@ -2,28 +2,25 @@ module HasCustomFields
   extend ActiveSupport::Concern
 
   module Helpers
-
     def self.append_field(target, key, value, types)
       if target.has_key?(key)
         target[key] = [target[key]] if !target[key].is_a? Array
-        target[key] << cast_custom_field(key, value, types, _return_array = false)
+        target[key] <<
+          cast_custom_field(key, value, types, _return_array = false)
       else
         target[key] = cast_custom_field(key, value, types)
       end
     end
 
-    CUSTOM_FIELD_TRUE ||= ['1', 't', 'true', 'T', 'True', 'TRUE'].freeze
+    CUSTOM_FIELD_TRUE ||= %w[1 t true T True TRUE].freeze
 
     def self.get_custom_field_type(types, key)
       return unless types
 
-      sorted_types = types.keys.select { |k| k.end_with?("*") }
-        .sort_by(&:length)
-        .reverse
+      sorted_types =
+        types.keys.select { |k| k.end_with?('*') }.sort_by(&:length).reverse
 
-      sorted_types.each do |t|
-        return types[t] if key =~ /^#{t}/i
-      end
+      sorted_types.each { |t| return types[t] if key =~ /^#{t}/i }
 
       types[key]
     end
@@ -40,9 +37,12 @@ module HasCustomFields
 
       result =
         case type
-        when :boolean then !!CUSTOM_FIELD_TRUE.include?(value)
-        when :integer then value.to_i
-        when :json    then parse_json_value(value, key)
+        when :boolean
+          !!CUSTOM_FIELD_TRUE.include?(value)
+        when :integer
+          value.to_i
+        when :json
+          parse_json_value(value, key)
         else
           value
         end
@@ -53,13 +53,16 @@ module HasCustomFields
     def self.parse_json_value(value, key)
       ::JSON.parse(value)
     rescue JSON::ParserError
-      Rails.logger.warn("Value '#{value}' for custom field '#{key}' is not json, it is being ignored.")
+      Rails.logger.warn(
+        "Value '#{value}' for custom field '#{key}' is not json, it is being ignored."
+      )
       {}
     end
   end
 
   included do
-    has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
+    has_many :_custom_fields,
+             dependent: :destroy, class_name: "#{name}CustomField"
     after_save :save_custom_fields
 
     attr_accessor :preloaded_custom_fields
@@ -74,8 +77,12 @@ module HasCustomFields
 
       return result if whitelisted_fields.blank?
 
-      klass.where(foreign_key => ids, :name => whitelisted_fields)
-        .pluck(foreign_key, :name, :value).each do |cf|
+      klass.where(foreign_key => ids, name: whitelisted_fields).pluck(
+        foreign_key,
+        :name,
+        :value
+      )
+        .each do |cf|
         result[cf[0]] ||= {}
         append_custom_field(result[cf[0]], cf[1], cf[2])
       end
@@ -84,7 +91,12 @@ module HasCustomFields
     end
 
     def self.append_custom_field(target, key, value)
-      HasCustomFields::Helpers.append_field(target, key, value, @custom_field_types)
+      HasCustomFields::Helpers.append_field(
+        target,
+        key,
+        value,
+        @custom_field_types
+      )
     end
 
     def self.register_custom_field_type(name, type)
@@ -102,31 +114,32 @@ module HasCustomFields
         map = {}
 
         empty = {}
-        fields.each do |field|
-          empty[field] = nil
-        end
+        fields.each { |field| empty[field] = nil }
 
         objects.each do |obj|
           map[obj.id] = obj
           obj.preloaded_custom_fields = empty.dup
         end
 
-        fk = (name.underscore << "_id")
+        fk = (name.underscore << '_id')
 
-        "#{name}CustomField".constantize
-          .where("#{fk} in (?)", map.keys)
-          .where("name in (?)", fields)
-          .pluck(fk, :name, :value).each do |id, name, value|
-
+        "#{name}CustomField".constantize.where("#{fk} in (?)", map.keys).where(
+          'name in (?)',
+          fields
+        )
+          .pluck(fk, :name, :value)
+          .each do |id, name, value|
           preloaded = map[id].preloaded_custom_fields
 
-            if preloaded[name].nil?
-              preloaded.delete(name)
-            end
+          preloaded.delete(name) if preloaded[name].nil?
 
-            HasCustomFields::Helpers.append_field(preloaded, name, value, @custom_field_types)
+          HasCustomFields::Helpers.append_field(
+            preloaded,
+            name,
+            value,
+            @custom_field_types
+          )
         end
-
       end
     end
   end
@@ -155,7 +168,8 @@ module HasCustomFields
         @preloaded[key]
       else
         # for now you can not mix preload an non preload, it better just to fail
-        raise StandardError, "Attempting to access a non preloaded custom field, this is disallowed to prevent N+1 queries."
+        raise StandardError,
+              'Attempting to access a non preloaded custom field, this is disallowed to prevent N+1 queries.'
       end
     end
   end
@@ -184,9 +198,7 @@ module HasCustomFields
   def upsert_custom_fields(fields)
     fields.each do |k, v|
       row_count = _custom_fields.where(name: k).update_all(value: v)
-      if row_count == 0
-        _custom_fields.create!(name: k, value: v)
-      end
+      _custom_fields.create!(name: k, value: v) if row_count == 0
       custom_fields[k] = v
     end
   end
@@ -206,26 +218,19 @@ module HasCustomFields
               array_fields[f.name] << f
             end
           elsif dup[f.name].is_a?(Hash)
-            if dup[f.name].to_json != f.value
-              f.destroy!
-            else
-              dup.delete(f.name)
-            end
+            dup[f.name].to_json != f.value ? f.destroy! : dup.delete(f.name)
           else
             t = {}
             self.class.append_custom_field(t, f.name, f.value)
 
-            if dup[f.name] != t[f.name]
-              f.destroy!
-            else
-              dup.delete(f.name)
-            end
+            dup[f.name] != t[f.name] ? f.destroy! : dup.delete(f.name)
           end
         end
 
         # let's iterate through our arrays and compare them
         array_fields.each do |field_name, fields|
-          if fields.length == dup[field_name].length && fields.map(&:value) == dup[field_name]
+          if fields.length == dup[field_name].length &&
+             fields.map(&:value) == dup[field_name]
             dup.delete(field_name)
           else
             fields.each(&:destroy!)
@@ -260,5 +265,4 @@ module HasCustomFields
     @custom_fields_orig = target
     @custom_fields = @custom_fields_orig.dup
   end
-
 end

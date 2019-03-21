@@ -14,5 +14,4 @@ class ScreenedUrlSerializer < ApplicationSerializer
   def ip_address
     object.ip_address.try(:to_s)
   end
-
 end

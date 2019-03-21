@@ -1,20 +1,19 @@
 # frozen_string_literal: true
 
-require_dependency "mobile_detection"
-require_dependency "crawler_detection"
-require_dependency "guardian"
+require_dependency 'mobile_detection'
+require_dependency 'crawler_detection'
+require_dependency 'guardian'
 
 module Middleware
   class AnonymousCache
-
     def self.anon_cache(env, duration)
-      env["ANON_CACHE_DURATION"] = duration
+      env['ANON_CACHE_DURATION'] = duration
     end
 
     class Helper
-      USER_AGENT = "HTTP_USER_AGENT"
-      RACK_SESSION = "rack.session"
-      ACCEPT_ENCODING = "HTTP_ACCEPT_ENCODING"
+      USER_AGENT = 'HTTP_USER_AGENT'
+      RACK_SESSION = 'rack.session'
+      ACCEPT_ENCODING = 'HTTP_ACCEPT_ENCODING'
 
       def initialize(env)
         @env = env
@@ -22,13 +21,12 @@ module Middleware
       end
 
       def blocked_crawler?
-        @request.get? &&
-        !@request.xhr? &&
-        !@request.path.ends_with?('robots.txt') &&
-        !@request.path.ends_with?('srv/status') &&
-        @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-        @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-        CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
+        @request.get? && !@request.xhr? &&
+          !@request.path.ends_with?('robots.txt') &&
+          !@request.path.ends_with?('srv/status') &&
+          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
+          CrawlerDetection.is_blocked_crawler?(@request.env['HTTP_USER_AGENT'])
       end
 
       def is_mobile=(val)
@@ -44,7 +42,11 @@ module Middleware
             params = {}
             user_agent = @env[USER_AGENT]
 
-            MobileDetection.resolve_mobile_view!(user_agent, params, session) ? :true : :false
+            if MobileDetection.resolve_mobile_view!(user_agent, params, session)
+              :true
+            else
+              :false
+            end
           end
 
         @is_mobile == :true
@@ -68,17 +70,17 @@ module Middleware
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids.join(",")}"
+        @cache_key ||=
+          "ANON_CACHE_#{@env['HTTP_ACCEPT']}_#{@env['HTTP_HOST']}#{@env[
+            'REQUEST_URI'
+          ]}|m=#{is_mobile?}|c=#{is_crawler?}|b=#{has_brotli?}|t=#{theme_ids
+            .join(',')}"
       end
 
       def theme_ids
         ids, _ = @request.cookies['theme_ids']&.split('|')
-        ids = ids&.split(",")&.map(&:to_i)
-        if ids && Guardian.new.allow_themes?(ids)
-          Theme.transform_ids(ids)
-        else
-          []
-        end
+        ids = ids&.split(',')&.map(&:to_i)
+        ids && Guardian.new.allow_themes?(ids) ? Theme.transform_ids(ids) : []
       end
 
       def cache_key_body
@@ -90,7 +92,7 @@ module Middleware
       end
 
       def get?
-        @env["REQUEST_METHOD"] == "GET"
+        @env['REQUEST_METHOD'] == 'GET'
       end
 
       def has_auth_cookie?
@@ -116,12 +118,13 @@ module Middleware
       end
 
       def logged_in_anon_limiter
-        @logged_in_anon_limiter ||= RateLimiter.new(
-          nil,
-          "logged_in_anon_cache_#{@env["HOST"]}/#{@env["REQUEST_URI"]}",
-          GlobalSetting.force_anonymous_min_per_10_seconds,
-          10
-        )
+        @logged_in_anon_limiter ||=
+          RateLimiter.new(
+            nil,
+            "logged_in_anon_cache_#{@env['HOST']}/#{@env['REQUEST_URI']}",
+            GlobalSetting.force_anonymous_min_per_10_seconds,
+            10
+          )
       end
 
       def check_logged_in_rate_limit!
@@ -158,7 +161,7 @@ module Middleware
       end
 
       def cache_duration
-        @env["ANON_CACHE_DURATION"]
+        @env['ANON_CACHE_DURATION']
       end
 
       # NOTE in an ideal world cache still serves out cached content except for one magic worker
@@ -168,15 +171,20 @@ module Middleware
         status, headers, response = result
 
         if status == 200 && cache_duration
-          headers_stripped = headers.dup.delete_if { |k, _| ["Set-Cookie", "X-MiniProfiler-Ids"].include? k }
-          headers_stripped["X-Discourse-Cached"] = "true"
+          headers_stripped =
+            headers.dup.delete_if do |k, _|
+              %w[Set-Cookie X-MiniProfiler-Ids].include? k
+            end
+          headers_stripped['X-Discourse-Cached'] = 'true'
           parts = []
-          response.each do |part|
-            parts << part
-          end
+          response.each { |part| parts << part }
 
-          $redis.setex(cache_key_body,  cache_duration, parts.join)
-          $redis.setex(cache_key_other, cache_duration, [status, headers_stripped].to_json)
+          $redis.setex(cache_key_body, cache_duration, parts.join)
+          $redis.setex(
+            cache_key_other,
+            cache_duration,
+            [status, headers_stripped].to_json
+          )
         else
           parts = response
         end
@@ -188,7 +196,6 @@ module Middleware
         $redis.del(cache_key_body)
         $redis.del(cache_key_other)
       end
-
     end
 
     def initialize(app, settings = {})
@@ -200,12 +207,12 @@ module Middleware
       force_anon = false
 
       if helper.blocked_crawler?
-        env["discourse.request_tracker.skip"] = true
-        return [403, {}, ["Crawler is not allowed!"]]
+        env['discourse.request_tracker.skip'] = true
+        return [403, {}, ['Crawler is not allowed!']]
       end
 
       if helper.should_force_anonymous?
-        force_anon = env["DISCOURSE_FORCE_ANON"] = true
+        force_anon = env['DISCOURSE_FORCE_ANON'] = true
         helper.force_anonymous!
       end
 
@@ -216,14 +223,9 @@ module Middleware
           @app.call(env)
         end
 
-      if force_anon
-        result[1]["Set-Cookie"] = "dosp=1; Path=/"
-      end
+      result[1]['Set-Cookie'] = 'dosp=1; Path=/' if force_anon
 
       result
-
     end
-
   end
-
 end

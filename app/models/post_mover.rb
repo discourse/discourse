@@ -17,13 +17,13 @@ class PostMover
 
     topic = Topic.find_by_id(id)
     if topic.archetype != @original_topic.archetype &&
-       [@original_topic.archetype, topic.archetype].include?(Archetype.private_message)
+       [@original_topic.archetype, topic.archetype].include?(
+         Archetype.private_message
+       )
       raise Discourse::InvalidParameters
     end
 
-    Topic.transaction do
-      move_posts_to topic
-    end
+    Topic.transaction { move_posts_to topic }
     add_allowed_users(participants) if participants.present? && @move_to_pm
     topic
   end
@@ -36,13 +36,14 @@ class PostMover
     archetype = @move_to_pm ? Archetype.private_message : Archetype.default
 
     Topic.transaction do
-      new_topic = Topic.create!(
-        user: post.user,
-        title: title,
-        category_id: category_id,
-        created_at: post.created_at,
-        archetype: archetype
-      )
+      new_topic =
+        Topic.create!(
+          user: post.user,
+          title: title,
+          category_id: category_id,
+          created_at: post.created_at,
+          archetype: archetype
+        )
       DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
       move_posts_to new_topic
       watch_new_topic
@@ -64,9 +65,7 @@ class PostMover
     update_user_actions
     update_last_post_stats
 
-    if moving_all_posts
-      @original_topic.update_status('closed', true, @user)
-    end
+    @original_topic.update_status('closed', true, @user) if moving_all_posts
 
     destination_topic.reload
     destination_topic
@@ -84,40 +83,49 @@ class PostMover
         @move_map[post.post_number] = 1
       end
       if post.reply_to_post_number.present?
-        @reply_count[post.reply_to_post_number] = (@reply_count[post.reply_to_post_number] || 0) + 1
+        @reply_count[post.reply_to_post_number] =
+          (@reply_count[post.reply_to_post_number] || 0) + 1
       end
     end
 
     posts.each do |post|
       post.is_first_post? ? create_first_post(post) : move(post)
 
-      if @move_to_pm && !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
+      if @move_to_pm &&
+         !destination_topic.topic_allowed_users.exists?(user_id: post.user_id)
         destination_topic.topic_allowed_users.create!(user_id: post.user_id)
       end
     end
 
-    PostReply.where("reply_id IN (:post_ids) OR post_id IN (:post_ids)", post_ids: post_ids).each do |post_reply|
-      if post_reply.post && post_reply.reply && post_reply.reply.topic_id != post_reply.post.topic_id
-        PostReply
-          .where(reply_id: post_reply.reply.id, post_id: post_reply.post.id)
+    PostReply.where(
+      'reply_id IN (:post_ids) OR post_id IN (:post_ids)',
+      post_ids: post_ids
+    )
+      .each do |post_reply|
+      if post_reply.post && post_reply.reply &&
+         post_reply.reply.topic_id != post_reply.post.topic_id
+        PostReply.where(
+          reply_id: post_reply.reply.id, post_id: post_reply.post.id
+        )
           .delete_all
       end
     end
   end
 
   def create_first_post(post)
-    new_post = PostCreator.create(
-      post.user,
-      raw: post.raw,
-      topic_id: destination_topic.id,
-      acting_user: user,
-      cook_method: post.cook_method,
-      via_email: post.via_email,
-      raw_email: post.raw_email,
-      skip_validations: true,
-      created_at: post.created_at,
-      guardian: Guardian.new(user)
-    )
+    new_post =
+      PostCreator.create(
+        post.user,
+        raw: post.raw,
+        topic_id: destination_topic.id,
+        acting_user: user,
+        cook_method: post.cook_method,
+        via_email: post.via_email,
+        raw_email: post.raw_email,
+        skip_validations: true,
+        created_at: post.created_at,
+        guardian: Guardian.new(user)
+      )
 
     move_incoming_emails(post, new_post)
     move_email_logs(post, new_post)
@@ -143,9 +151,7 @@ class PostMover
       sort_order: @move_map[post.post_number]
     }
 
-    unless @move_map[post.reply_to_post_number]
-      update[:reply_to_user_id] = nil
-    end
+    update[:reply_to_user_id] = nil unless @move_map[post.reply_to_post_number]
 
     post.attributes = update
     post.save(validate: false)
@@ -168,16 +174,18 @@ class PostMover
   end
 
   def move_email_logs(old_post, new_post)
-    EmailLog
-      .where(post_id: old_post.id)
-      .update_all(post_id: new_post.id)
+    EmailLog.where(post_id: old_post.id).update_all(post_id: new_post.id)
   end
 
   def update_statistics
     destination_topic.update_statistics
     original_topic.update_statistics
-    TopicUser.update_post_action_cache(topic_id: original_topic.id, post_action_type: :bookmark)
-    TopicUser.update_post_action_cache(topic_id: destination_topic.id, post_action_type: :bookmark)
+    TopicUser.update_post_action_cache(
+      topic_id: original_topic.id, post_action_type: :bookmark
+    )
+    TopicUser.update_post_action_cache(
+      topic_id: destination_topic.id, post_action_type: :bookmark
+    )
   end
 
   def update_user_actions
@@ -190,49 +198,54 @@ class PostMover
   end
 
   def enqueue_notification_job
-    Jobs.enqueue(
-      :notify_moved_posts,
-      post_ids: post_ids,
-      moved_by_id: user.id
-    )
+    Jobs.enqueue(:notify_moved_posts, post_ids: post_ids, moved_by_id: user.id)
   end
 
   def create_moderator_post_in_original_topic
     move_type_str = PostMover.move_types[@move_type].to_s
-    move_type_str.sub!("topic", "message") if @move_to_pm
+    move_type_str.sub!('topic', 'message') if @move_to_pm
 
-    message = I18n.with_locale(SiteSetting.default_locale) do
-      I18n.t(
-        "move_posts.#{move_type_str}_moderator_post",
-        count: posts.length,
-        topic_link: posts.first.is_first_post? ?
-          "[#{destination_topic.title}](#{destination_topic.relative_url})" :
-          "[#{destination_topic.title}](#{posts.first.url})"
-      )
-    end
+    message =
+      I18n.with_locale(SiteSetting.default_locale) do
+        I18n.t(
+          "move_posts.#{move_type_str}_moderator_post",
+          count: posts.length,
+          topic_link:
+            if posts.first.is_first_post?
+              "[#{destination_topic.title}](#{destination_topic.relative_url})"
+            else
+              "[#{destination_topic.title}](#{posts.first.url})"
+            end
+        )
+      end
 
     post_type = @move_to_pm ? Post.types[:whisper] : Post.types[:small_action]
     original_topic.add_moderator_post(
-      user, message,
+      user,
+      message,
       post_type: post_type,
-      action_code: "split_topic",
+      action_code: 'split_topic',
       post_number: @first_post_number_moved
     )
   end
 
   def posts
-    @posts ||= begin
-      Post.where(topic: @original_topic, id: post_ids)
-        .where.not(post_type: Post.types[:small_action])
-        .order(:created_at).tap do |posts|
-
-        raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
+    @posts ||=
+      begin
+        Post.where(topic: @original_topic, id: post_ids).where.not(
+          post_type: Post.types[:small_action]
+        )
+          .order(:created_at)
+          .tap do |posts|
+          raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
+        end
       end
-    end
   end
 
   def update_last_post_stats
-    post = destination_topic.ordered_posts.where.not(post_type: Post.types[:whisper]).last
+    post =
+      destination_topic.ordered_posts.where.not(post_type: Post.types[:whisper])
+        .last
     if post && post_ids.include?(post.id)
       attrs = {}
       attrs[:last_posted_at] = post.created_at
@@ -257,7 +270,10 @@ class PostMover
 
     names = usernames.split(',').flatten
     User.where(username: names).find_each do |user|
-      destination_topic.topic_allowed_users.build(user_id: user.id) unless destination_topic.topic_allowed_users.where(user_id: user.id).exists?
+      unless destination_topic.topic_allowed_users.where(user_id: user.id)
+             .exists?
+        destination_topic.topic_allowed_users.build(user_id: user.id)
+      end
     end
     destination_topic.save!
   end

@@ -1,10 +1,9 @@
-require "rails_helper"
-require "excerpt_parser"
+require 'rails_helper'
+require 'excerpt_parser'
 
 describe ExcerptParser do
-
-  it "handles nested <details> blocks" do
-    html = <<~HTML.strip
+  it 'handles nested <details> blocks' do
+    html = <<~HTML
       <details>
       <summary>
       FOO</summary>
@@ -15,21 +14,36 @@ describe ExcerptParser do
       </details>
       </details>
     HTML
+      .strip
 
-    expect(ExcerptParser.get_excerpt(html, 50, {})).to match_html(<<~HTML)
+    expect(ExcerptParser.get_excerpt(html, 50, {})).to match_html(
+          <<~HTML
       <details><summary>FOO</summary>BAR
       Lorem ipsum dolor sit amet, consectetur adi&hellip;</details>
     HTML
+        )
 
-    expect(ExcerptParser.get_excerpt(html, 6, {})).to match_html('<details><summary>FOO</summary>BAR&hellip;</details>')
-    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html('<details class="disabled"><summary>FOO</summary></details>')
+    expect(ExcerptParser.get_excerpt(html, 6, {})).to match_html(
+          '<details><summary>FOO</summary>BAR&hellip;</details>'
+        )
+    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html(
+          '<details class="disabled"><summary>FOO</summary></details>'
+        )
   end
 
-  it "respects length parameter for <details> block" do
+  it 'respects length parameter for <details> block' do
     html = '<details><summary>foo</summary><p>bar</p></details>'
-    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html('<details><summary>foo</summary>bar</details>')
-    expect(ExcerptParser.get_excerpt(html, 5, {})).to match_html('<details><summary>foo</summary>ba&hellip;</details>')
-    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html('<details class="disabled"><summary>foo</summary></details>')
-    expect(ExcerptParser.get_excerpt(html, 2, {})).to match_html('<details class="disabled"><summary>fo&hellip;</summary></details>')
+    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html(
+          '<details><summary>foo</summary>bar</details>'
+        )
+    expect(ExcerptParser.get_excerpt(html, 5, {})).to match_html(
+          '<details><summary>foo</summary>ba&hellip;</details>'
+        )
+    expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html(
+          '<details class="disabled"><summary>foo</summary></details>'
+        )
+    expect(ExcerptParser.get_excerpt(html, 2, {})).to match_html(
+          '<details class="disabled"><summary>fo&hellip;</summary></details>'
+        )
   end
 end

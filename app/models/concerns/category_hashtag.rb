@@ -1,7 +1,7 @@
 module CategoryHashtag
   extend ActiveSupport::Concern
 
-  SEPARATOR = ":".freeze
+  SEPARATOR = ':'.freeze
 
   class_methods do
     def query_from_hashtag_slug(category_slug)
@@ -10,7 +10,10 @@ module CategoryHashtag
       category = Category.where(slug: parent_slug, parent_category_id: nil)
 
       if child_slug
-        Category.where(slug: child_slug, parent_category_id: category.pluck(:id).first).first
+        Category.where(
+          slug: child_slug, parent_category_id: category.pluck(:id).first
+        )
+          .first
       else
         category.first
       end

@@ -2,7 +2,6 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
-
   class << self
     attr_writer :javascripts
     attr_writer :auth_providers
@@ -142,9 +141,7 @@ class DiscoursePluginRegistry
         next if each_options[:admin]
       end
 
-      Dir.glob("#{root}/**/*") do |f|
-        yield f, ext
-      end
+      Dir.glob("#{root}/**/*") { |f| yield f, ext }
     end
   end
 
@@ -197,19 +194,23 @@ class DiscoursePluginRegistry
 
   def self.seed_paths
     result = SeedFu.fixture_paths.dup
-    unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+    unless Rails.env.test? && ENV['LOAD_PLUGINS'] != '1'
       seed_path_builders.each { |b| result += b.call }
     end
     result.uniq
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "vendor/assets/javascripts/moment.js",
-    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js"
+    'moment.js' => 'vendor/assets/javascripts/moment.js',
+    'moment-timezone.js' =>
+      'vendor/assets/javascripts/moment-timezone-with-data.js'
   }
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
-    raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset
+    unless asset
+      raise KeyError,
+            "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}"
+    end
     asset
   end
 
@@ -284,5 +285,4 @@ class DiscoursePluginRegistry
     plugin = plugin_class.new(registry)
     plugin.setup
   end
-
 end

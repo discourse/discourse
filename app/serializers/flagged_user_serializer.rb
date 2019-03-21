@@ -43,5 +43,4 @@ class FlaggedUserSerializer < BasicUserSerializer
 
     result
   end
-
 end

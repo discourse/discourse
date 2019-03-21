@@ -2,10 +2,8 @@ require 'rails_helper'
 
 describe TrustLevel do
   describe 'levels' do
-    context "verify enum sequence" do
-      before do
-        @levels = TrustLevel.levels
-      end
+    context 'verify enum sequence' do
+      before { @levels = TrustLevel.levels }
 
       it "'newuser' should be at 0 position" do
         expect(@levels[:newuser]).to eq(0)

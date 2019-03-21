@@ -1,17 +1,17 @@
 # see https://samsaffron.com/archive/2017/10/18/fastest-way-to-profile-a-method-in-ruby
 class MethodProfiler
   def self.patch(klass, methods, name, no_recurse: false)
-    patches = methods.map do |method_name|
-
-      recurse_protection = ""
-      if no_recurse
-        recurse_protection = <<~RUBY
+    patches =
+      methods.map do |method_name|
+        recurse_protection = ''
+        if no_recurse
+          recurse_protection = <<~RUBY
           return #{method_name}__mp_unpatched(*args, &blk) if @mp_recurse_protect_#{method_name}
           @mp_recurse_protect_#{method_name} = true
         RUBY
-      end
+        end
 
-      <<~RUBY
+        <<~RUBY
       unless defined?(#{method_name}__mp_unpatched)
         alias_method :#{method_name}__mp_unpatched, :#{method_name}
         def #{method_name}(*args, &blk)
@@ -26,12 +26,15 @@ class MethodProfiler
             data = (prof[:#{name}] ||= {duration: 0.0, calls: 0})
             data[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
             data[:calls] += 1
-            #{"@mp_recurse_protect_#{method_name} = false" if no_recurse}
+            #{if no_recurse
+          "@mp_recurse_protect_#{method_name} = false"
+        end}
           end
         end
       end
       RUBY
-    end.join("\n")
+      end
+        .join("\n")
 
     klass.class_eval patches
   end
@@ -43,9 +46,8 @@ class MethodProfiler
   end
 
   def self.start(transfer = nil)
-    Thread.current[:_method_profiler] = transfer || {
-      __start: Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    }
+    Thread.current[:_method_profiler] =
+      transfer || { __start: Process.clock_gettime(Process::CLOCK_MONOTONIC) }
   end
 
   def self.clear
@@ -63,24 +65,27 @@ class MethodProfiler
   end
 
   def self.ensure_discourse_instrumentation!
-    @@instrumentation_setup ||= begin
-      MethodProfiler.patch(PG::Connection, [
-        :exec, :async_exec, :exec_prepared, :send_query_prepared, :query, :exec_params
-      ], :sql)
+    @@instrumentation_setup ||=
+      begin
+        MethodProfiler.patch(
+          PG::Connection,
+          %i[
+            exec
+            async_exec
+            exec_prepared
+            send_query_prepared
+            query
+            exec_params
+          ],
+          :sql
+        )
 
-      MethodProfiler.patch(Redis::Client, [
-        :call, :call_pipeline
-      ], :redis)
+        MethodProfiler.patch(Redis::Client, %i[call call_pipeline], :redis)
 
-      MethodProfiler.patch(Net::HTTP, [
-        :request
-      ], :net, no_recurse: true)
+        MethodProfiler.patch(Net::HTTP, %i[request], :net, no_recurse: true)
 
-      MethodProfiler.patch(Excon::Connection, [
-        :request
-      ], :net)
-      true
-    end
+        MethodProfiler.patch(Excon::Connection, %i[request], :net)
+        true
+      end
   end
-
 end

@@ -32,7 +32,7 @@ class BasicPostSerializer < ApplicationSerializer
   def cooked
     if cooked_hidden
       if scope.current_user && object.user_id == scope.current_user.id
-        I18n.t('flagging.you_must_edit', path: "/my/messages")
+        I18n.t('flagging.you_must_edit', path: '/my/messages')
       else
         I18n.t('flagging.user_must_edit')
       end
@@ -45,14 +45,14 @@ class BasicPostSerializer < ApplicationSerializer
 
   def ignored
     return false unless SiteSetting.ignore_user_enabled?
-    object.is_first_post? &&
-      scope.current_user&.id != object.user_id &&
-      IgnoredUser.where(user_id: scope.current_user&.id,
-                        ignored_user_id: object.user_id).exists?
+    object.is_first_post? && scope.current_user&.id != object.user_id &&
+      IgnoredUser.where(
+        user_id: scope.current_user&.id, ignored_user_id: object.user_id
+      )
+        .exists?
   end
 
   def include_name?
     SiteSetting.enable_names?
   end
-
 end

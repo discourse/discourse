@@ -1,5 +1,4 @@
 class TopicRetriever
-
   def initialize(embed_url, opts = nil)
     @embed_url = embed_url
     @author_username = opts[:author_username]
@@ -21,8 +20,8 @@ class TopicRetriever
     return false if @opts[:no_throttle]
 
     # Throttle other users to once every 60 seconds
-    retrieved_key = "retrieved_topic"
-    if $redis.setnx(retrieved_key, "1")
+    retrieved_key = 'retrieved_topic'
+    if $redis.setnx(retrieved_key, '1')
       $redis.expire(retrieved_key, 60)
       return false
     end
@@ -55,5 +54,4 @@ class TopicRetriever
 
     TopicEmbed.import_remote(user, @embed_url)
   end
-
 end

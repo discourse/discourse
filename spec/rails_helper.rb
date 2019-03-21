@@ -15,7 +15,6 @@ require 'certified'
 require 'webmock/rspec'
 
 class RspecErrorTracker
-
   def self.last_exception=(ex)
     @ex = ex
   end
@@ -36,25 +35,24 @@ class RspecErrorTracker
       raise e
     end
   ensure
+
   end
 end
 
-ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
+ENV['RAILS_ENV'] ||= 'test'
+require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'shoulda'
 require 'sidekiq/testing'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/fabricators/*.rb')].each { |f| require f }
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
-if ENV['LOAD_PLUGINS'] == "1"
-  Dir[Rails.root.join("plugins/*/spec/plugin_helper.rb")].each do |f|
-    require f
-  end
+if ENV['LOAD_PLUGINS'] == '1'
+  Dir[Rails.root.join('plugins/*/spec/plugin_helper.rb')].each { |f| require f }
 end
 
 # let's not run seed_fu every test
@@ -65,7 +63,7 @@ SiteSetting.automatically_download_gravatars = false
 SeedFu.seed
 
 RSpec.configure do |config|
-  config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
+  config.fail_fast = ENV['RSPEC_FAIL_FAST'] == '1'
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -91,7 +89,7 @@ RSpec.configure do |config|
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
-    DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
+    DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != '1'
     Discourse.current_user_provider = TestCurrentUserProvider
 
     SiteSetting.refresh!
@@ -102,8 +100,10 @@ RSpec.configure do |config|
     #  and pretend they are default.
     # There are a bunch of settings that are seeded, they must be loaded as defaults
     SiteSetting.current.each do |k, v|
-      # skip setting defaults for settings that are in unloaded plugins
-      SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
+      if SiteSetting.respond_to? k
+        # skip setting defaults for settings that are in unloaded plugins
+        SiteSetting.defaults.set_regardless_of_locale(k, v)
+      end
     end
 
     require_dependency 'site_settings/local_process_provider'
@@ -151,8 +151,8 @@ RSpec.configure do |config|
     #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
     #
     # $redis = DiscourseMockRedis.new
-
-    RateLimiter.disable
+    RateLimiter
+      .disable
     PostActionNotifier.disable
     SearchIndexer.disable
     UserActionCreator.disable
@@ -187,7 +187,7 @@ RSpec.configure do |config|
     Rails.configuration.multisite = true
 
     RailsMultisite::ConnectionManagement.config_filename =
-      "spec/fixtures/multisite/two_dbs.yml"
+      'spec/fixtures/multisite/two_dbs.yml'
   end
 
   config.after(:each, type: :multisite) do
@@ -221,6 +221,7 @@ RSpec.configure do |config|
         begin
           yield
         rescue Exception => spec_exception
+
         ensure
           raise ActiveRecord::Rollback
         end
@@ -229,7 +230,6 @@ RSpec.configure do |config|
       raise spec_exception if spec_exception
     end
   end
-
 end
 
 class TrackTimeStub
@@ -247,9 +247,7 @@ def global_setting(name, value)
 
   GlobalSetting.stubs(name).returns(value)
 
-  before_next_spec do
-    GlobalSetting.reset_s3_cache!
-  end
+  before_next_spec { GlobalSetting.reset_s3_cache! }
 end
 
 def set_env(var, value)
@@ -282,7 +280,7 @@ def freeze_time(now = Time.now)
   time = Time.parse(now.to_s)
 
   if block_given?
-    raise "nested freeze time not supported" if TrackTimeStub.stubbed
+    raise 'nested freeze time not supported' if TrackTimeStub.stubbed
   end
 
   DateTime.stubs(:now).returns(datetime)
@@ -306,18 +304,26 @@ def unfreeze_time
   TrackTimeStub.unstub(:stubbed)
 end
 
-def file_from_fixtures(filename, directory = "images")
-  FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
-  FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
+def file_from_fixtures(filename, directory = 'images')
+  unless Dir.exists?("#{Rails.root}/tmp/spec")
+    FileUtils.mkdir_p("#{Rails.root}/tmp/spec")
+  end
+  FileUtils.cp(
+    "#{Rails.root}/spec/fixtures/#{directory}/#{filename}",
+    "#{Rails.root}/tmp/spec/#{filename}"
+  )
   File.new("#{Rails.root}/tmp/spec/#{filename}")
 end
 
 def has_trigger?(trigger_name)
-  DB.exec(<<~SQL) != 0
+  DB.exec(
+    <<~SQL
     SELECT 1
     FROM INFORMATION_SCHEMA.TRIGGERS
     WHERE trigger_name = '#{trigger_name}'
   SQL
+  ) !=
+    0
 end
 
 def silence_stdout

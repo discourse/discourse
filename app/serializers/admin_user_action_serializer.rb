@@ -62,7 +62,8 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def moderator_action
-    object.post_type == Post.types[:moderator_action] || object.post_type == Post.types[:small_action]
+    object.post_type == Post.types[:moderator_action] ||
+      object.post_type == Post.types[:small_action]
   end
 
   def deleted_by
@@ -75,8 +76,11 @@ class AdminUserActionSerializer < ApplicationSerializer
 
   def action_type
     object.user_actions.select { |ua| ua.user_id = object.user_id }
-      .select { |ua| [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type }
-      .first.try(:action_type)
+      .select do |ua|
+      [UserAction::REPLY, UserAction::RESPONSE].include? ua.action_type
+    end
+      .first
+      .try(:action_type)
   end
 
   private
@@ -88,5 +92,4 @@ class AdminUserActionSerializer < ApplicationSerializer
     @topic = object.topic || Topic.with_deleted.find(object.topic_id)
     @topic
   end
-
 end

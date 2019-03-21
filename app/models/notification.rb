@@ -9,23 +9,31 @@ class Notification < ActiveRecord::Base
   validates_presence_of :notification_type
 
   scope :unread, lambda { where(read: false) }
-  scope :recent, lambda { |n = nil| n ||= 10; order('notifications.created_at desc').limit(n) }
-  scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
-    .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
+  scope :recent, lambda do |n = nil|
+    n ||= 10
+    order('notifications.created_at desc').limit(n)
+  end
+  scope :visible, lambda do
+    joins('LEFT JOIN topics ON notifications.topic_id = topics.id').where(
+      'topics.id IS NULL OR topics.deleted_at IS NULL'
+    )
+  end
 
-  scope :filter_by_display_username_and_type, ->(username, notification_type) {
-    where("data::json ->> 'display_username' = ?", username)
-      .where(notification_type: notification_type)
+  scope :filter_by_display_username_and_type,
+        lambda do |username, notification_type|
+    where("data::json ->> 'display_username' = ?", username).where(
+      notification_type: notification_type
+    )
       .order(created_at: :desc)
-  }
+  end
 
   attr_accessor :skip_send_email
 
   after_commit :send_email, on: :create
-  after_commit :refresh_notification_count, on: [:create, :update, :destroy]
+  after_commit :refresh_notification_count, on: %i[create update destroy]
 
   def self.ensure_consistency!
-    DB.exec(<<~SQL, Notification.types[:private_message])
+    sql = <<~SQL
       DELETE
         FROM notifications n
        WHERE notification_type = ?
@@ -39,62 +47,66 @@ class Notification < ActiveRecord::Base
                AND t.id = n.topic_id
           )
     SQL
+    DB.exec(sql, Notification.types[:private_message])
   end
 
   def self.types
-    @types ||= Enum.new(mentioned: 1,
-                        replied: 2,
-                        quoted: 3,
-                        edited: 4,
-                        liked: 5,
-                        private_message: 6,
-                        invited_to_private_message: 7,
-                        invitee_accepted: 8,
-                        posted: 9,
-                        moved_post: 10,
-                        linked: 11,
-                        granted_badge: 12,
-                        invited_to_topic: 13,
-                        custom: 14,
-                        group_mentioned: 15,
-                        group_message_summary: 16,
-                        watching_first_post: 17,
-                        topic_reminder: 18,
-                        liked_consolidated: 19,
-                       )
+    @types ||=
+      Enum.new(
+        mentioned: 1,
+        replied: 2,
+        quoted: 3,
+        edited: 4,
+        liked: 5,
+        private_message: 6,
+        invited_to_private_message: 7,
+        invitee_accepted: 8,
+        posted: 9,
+        moved_post: 10,
+        linked: 11,
+        granted_badge: 12,
+        invited_to_topic: 13,
+        custom: 14,
+        group_mentioned: 15,
+        group_message_summary: 16,
+        watching_first_post: 17,
+        topic_reminder: 18,
+        liked_consolidated: 19
+      )
   end
 
   def self.mark_posts_read(user, topic_id, post_numbers)
-    Notification
-      .where(
-        user_id: user.id,
-        topic_id: topic_id,
-        post_number: post_numbers,
-        read: false
-      )
+    Notification.where(
+      user_id: user.id,
+      topic_id: topic_id,
+      post_number: post_numbers,
+      read: false
+    )
       .update_all(read: true)
   end
 
   def self.read(user, notification_ids)
-    Notification
-      .where(
-        id: notification_ids,
-        user_id: user.id,
-        read: false
-      )
+    Notification.where(id: notification_ids, user_id: user.id, read: false)
       .update_all(read: true)
   end
 
   def self.interesting_after(min_date)
-    result = where("created_at > ?", min_date)
-      .includes(:topic)
-      .visible
-      .unread
-      .limit(20)
-      .order("CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
-                           WHEN notification_type = #{Notification.types[:mentioned]} THEN 2
+    result =
+      where('created_at > ?', min_date).includes(:topic).visible.unread.limit(
+        20
+      )
+        .order(
+        "CASE WHEN notification_type = #{Notification.types[
+          :replied
+        ]} THEN 1
+                           WHEN notification_type = #{Notification
+          .types[
+          :mentioned
+        ]} THEN 2
                            ELSE 3
-                      END, created_at DESC").to_a
+                      END, created_at DESC"
+      )
+        .to_a
 
     # Remove any duplicates by type and topic
     if result.present?
@@ -123,14 +135,15 @@ class Notification < ActiveRecord::Base
 
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
-    @data_hash ||= begin
-      return nil if data.blank?
+    @data_hash ||=
+      begin
+        return nil if data.blank?
 
-      parsed = JSON.parse(data)
-      return nil if parsed.blank?
+        parsed = JSON.parse(data)
+        return nil if parsed.blank?
 
-      parsed.with_indifferent_access
-    end
+        parsed.with_indifferent_access
+      end
   end
 
   def url
@@ -146,43 +159,40 @@ class Notification < ActiveRecord::Base
     return unless user && user.user_option
 
     count ||= 10
-    notifications = user.notifications
-      .visible
-      .recent(count)
-      .includes(:topic)
+    notifications = user.notifications.visible.recent(count).includes(:topic)
 
-    if user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
-      [
-        Notification.types[:liked],
-        Notification.types[:liked_consolidated]
-      ].each do |notification_type|
-        notifications = notifications.where(
-          'notification_type <> ?', notification_type
-        )
+    if user.user_option.like_notification_frequency ==
+       UserOption.like_notification_frequency_type[:never]
+      [Notification.types[:liked], Notification.types[:liked_consolidated]]
+        .each do |notification_type|
+        notifications =
+          notifications.where('notification_type <> ?', notification_type)
       end
     end
 
     notifications = notifications.to_a
 
     if notifications.present?
-
-      ids = DB.query_single(<<~SQL, count.to_i)
-         SELECT n.id FROM notifications n
-         WHERE
-           n.notification_type = 6 AND
-           n.user_id = #{user.id.to_i} AND
-           NOT read
+      sql = <<~SQL
+        SELECT n.id FROM notifications n
+        WHERE
+         n.notification_type = 6 AND
+         n.user_id = #{user
+        .id
+        .to_i} AND
+         NOT read
         ORDER BY n.id ASC
         LIMIT ?
       SQL
+      ids = DB.query_single(sql, count.to_i)
 
       if ids.length > 0
-        notifications += user
-          .notifications
-          .order('notifications.created_at DESC')
-          .where(id: ids)
-          .joins(:topic)
-          .limit(count)
+        notifications +=
+          user.notifications.order('notifications.created_at DESC').where(
+            id: ids
+          )
+            .joins(:topic)
+            .limit(count)
       end
 
       notifications.uniq(&:id).sort do |x, y|
@@ -193,11 +203,11 @@ class Notification < ActiveRecord::Base
         else
           y.created_at <=> x.created_at
         end
-      end.take(count)
+      end
+        .take(count)
     else
       []
     end
-
   end
 
   def unread_pm?
@@ -221,7 +231,6 @@ class Notification < ActiveRecord::Base
   def send_email
     NotificationEmailer.process_notification(self) if !skip_send_email
   end
-
 end
 
 # == Schema Information

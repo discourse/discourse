@@ -12,9 +12,14 @@ class UserExport < ActiveRecord::Base
   end
 
   def self.base_directory
-    File.join(Rails.root, "public", "uploads", "csv_exports", RailsMultisite::ConnectionManagement.current_db)
+    File.join(
+      Rails.root,
+      'public',
+      'uploads',
+      'csv_exports',
+      RailsMultisite::ConnectionManagement.current_db
+    )
   end
-
 end
 
 # == Schema Information

@@ -30,7 +30,7 @@ class AdminEmailTemplateSerializer < ApplicationSerializer
 
     I18n.overrides_disabled do
       return I18n.t("#{object}.subject_template") != current_subject ||
-             I18n.t("#{object}.text_body_template") != current_body
+        I18n.t("#{object}.text_body_template") != current_body
     end
   end
 end

@@ -4,19 +4,20 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.where("raw LIKE '%upload:\/\/%' OR raw LIKE '%href=%'").find_each do |post|
+    posts.where("raw LIKE '%upload:\/\/%' OR raw LIKE '%href=%'")
+      .find_each do |post|
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
-        analyzer.cooked_stripped.css("img", "a").each do |media|
-          if media.name == "img"
-            if dom_class = media["class"]
+        analyzer.cooked_stripped.css('img', 'a').each do |media|
+          if media.name == 'img'
+            if dom_class = media['class']
               if (Post.white_listed_image_classes & dom_class.split).count > 0
                 next
               end
             end
 
-            orig_src = media["data-orig-src"]
+            orig_src = media['data-orig-src']
 
             if orig_src
               if @dry_run
@@ -25,8 +26,8 @@ class UploadRecovery
                 recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
               end
             end
-          elsif media.name == "a"
-            href = media["href"]
+          elsif media.name == 'a'
+            href = media['href']
 
             if href && data = Upload.extract_upload_url(href)
               sha1 = data[2]
@@ -49,11 +50,11 @@ class UploadRecovery
   end
 
   def recover_user_profile_backgrounds
-    UserProfile
-      .where("profile_background IS NOT NULL OR card_background IS NOT NULL")
+    UserProfile.where(
+      'profile_background IS NOT NULL OR card_background IS NOT NULL'
+    )
       .find_each do |user_profile|
-
-      %i{card_background profile_background}.each do |column|
+      %i[card_background profile_background].each do |column|
         background = user_profile.public_send(column)
 
         if background.present? && !Upload.exists?(url: background)
@@ -64,8 +65,13 @@ class UploadRecovery
           if @dry_run
             puts "#{background}"
           else
-            recover_user_profile_background(sha1, user_profile.user_id) do |upload|
-              user_profile.update!("#{column}" => upload.url) if upload.persisted?
+            recover_user_profile_background(
+              sha1,
+              user_profile.user_id
+            ) do |upload|
+              if upload.persisted?
+                user_profile.update!("#{column}" => upload.url)
+              end
             end
           end
         end
@@ -90,10 +96,7 @@ class UploadRecovery
   def recover_post_upload(post, sha1)
     return unless valid_sha1?(sha1)
 
-    attributes = {
-      post: post,
-      sha1: sha1
-    }
+    attributes = { post: post, sha1: sha1 }
 
     if Discourse.store.external?
       recover_post_upload_from_s3(attributes)
@@ -115,26 +118,34 @@ class UploadRecovery
   end
 
   def recover_from_local(sha1:, user_id:)
-    public_path = Rails.root.join("public")
+    public_path = Rails.root.join('public')
 
-    @paths ||= begin
-      Dir.glob(File.join(
-        public_path,
-        'uploads',
-        'tombstone',
-        RailsMultisite::ConnectionManagement.current_db,
-        'original',
-        '**',
-        '*.*'
-      )).concat(Dir.glob(File.join(
-        public_path,
-        'uploads',
-        RailsMultisite::ConnectionManagement.current_db,
-        'original',
-        '**',
-        '*.*'
-      )))
-    end
+    @paths ||=
+      begin
+        Dir.glob(
+          File.join(
+            public_path,
+            'uploads',
+            'tombstone',
+            RailsMultisite::ConnectionManagement.current_db,
+            'original',
+            '**',
+            '*.*'
+          )
+        )
+          .concat(
+          Dir.glob(
+            File.join(
+              public_path,
+              'uploads',
+              RailsMultisite::ConnectionManagement.current_db,
+              'original',
+              '**',
+              '*.*'
+            )
+          )
+        )
+      end
 
     @paths.each do |path|
       if path =~ /#{sha1}/
@@ -153,13 +164,16 @@ class UploadRecovery
   end
 
   def recover_from_s3(sha1:, user_id:)
-    @object_keys ||= begin
-      s3_helper = Discourse.store.s3_helper
+    @object_keys ||=
+      begin
+        s3_helper = Discourse.store.s3_helper
 
-      s3_helper.list("original").map(&:key).concat(
-        s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(&:key)
-      )
-    end
+        s3_helper.list('original').map(&:key).concat(
+          s3_helper.list("#{FileStore::S3Store::TOMBSTONE_PREFIX}original").map(
+            &:key
+          )
+        )
+      end
 
     @object_keys.each do |key|
       if key =~ /#{sha1}/
@@ -167,23 +181,24 @@ class UploadRecovery
 
         if key.include?(tombstone_prefix)
           old_key = key
-          key = key.sub(tombstone_prefix, "")
+          key = key.sub(tombstone_prefix, '')
 
           Discourse.store.s3_helper.copy(
             old_key,
             key,
-            options: { acl: "public-read" }
+            options: { acl: 'public-read' }
           )
         end
 
         url = "https:#{SiteSetting.Upload.absolute_base_url}/#{key}"
 
         begin
-          tmp = FileHelper.download(
-            url,
-            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-            tmp_file_name: "recover_from_s3"
-          )
+          tmp =
+            FileHelper.download(
+              url,
+              max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+              tmp_file_name: 'recover_from_s3'
+            )
 
           if tmp
             upload = create_upload(tmp, File.basename(key), user_id)

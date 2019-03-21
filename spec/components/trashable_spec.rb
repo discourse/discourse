@@ -3,7 +3,7 @@ require_dependency 'trashable'
 
 describe Trashable do
   # post is trashable, just use it.
-  it "works correctly" do
+  it 'works correctly' do
     p1 = Fabricate(:post)
     p2 = Fabricate(:post)
 

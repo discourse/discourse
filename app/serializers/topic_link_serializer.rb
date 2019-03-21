@@ -1,5 +1,4 @@
 class TopicLinkSerializer < ApplicationSerializer
-
   attributes :url,
              :title,
              # :fancy_title,
@@ -10,10 +9,9 @@ class TopicLinkSerializer < ApplicationSerializer
              :user_id,
              :domain,
              :root_domain,
-
-  def attachment
-    Discourse.store.has_been_uploaded?(object.url)
-  end
+             def attachment
+               Discourse.store.has_been_uploaded?(object.url)
+             end
 
   def include_user_id?
     object.user_id.present?
@@ -22,5 +20,4 @@ class TopicLinkSerializer < ApplicationSerializer
   def root_domain
     MiniSuffix.domain(domain)
   end
-
 end

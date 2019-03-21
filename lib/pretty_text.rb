@@ -32,20 +32,21 @@ module PrettyText
     if filename
       source = File.read("#{root_path}#{filename}")
 
-      if filename =~ /\.erb$/
-        source = ERB.new(source).result(binding)
-      end
+      source = ERB.new(source).result(binding) if filename =~ /\.erb$/
 
-      template = Tilt::ES6ModuleTranspilerTemplate.new {}
-      transpiled = template.module_transpile(source, "#{Rails.root}/app/assets/javascripts/", part_name)
+      template = Tilt::ES6ModuleTranspilerTemplate.new {  }
+      transpiled =
+        template.module_transpile(
+          source,
+          "#{Rails.root}/app/assets/javascripts/",
+          part_name
+        )
       ctx.eval(transpiled)
     else
       # Look for vendored stuff
       vendor_root = "#{Rails.root}/vendor/assets/javascripts/"
       filename = find_file(vendor_root, part_name)
-      if filename
-        ctx.eval(File.read("#{vendor_root}#{filename}"))
-      end
+      ctx.eval(File.read("#{vendor_root}#{filename}")) if filename
     end
   end
 
@@ -55,12 +56,16 @@ module PrettyText
 
     manifest.each_line do |l|
       l = l.chomp
-      if l =~ /\/\/= require (\.\/)?(.*)$/
+      if l =~ %r{\/\/= require (\.\/)?(.*)$}
         apply_es6_file(ctx, root_path, Regexp.last_match[2])
-      elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
+      elsif l =~ %r{\/\/= require_tree (\.\/)?(.*)$}
         path = Regexp.last_match[2]
         Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, ''))
+          apply_es6_file(
+            ctx,
+            root_path,
+            f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, '')
+          )
         end
       end
     end
@@ -69,22 +74,22 @@ module PrettyText
   def self.create_es6_context
     ctx = MiniRacer::Context.new(timeout: 15000)
 
-    ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
+    ctx.eval('window = {}; window.devicePixelRatio = 2;') # hack to make code think stuff is retina
 
     if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc { |l| p l })
+      ctx.attach('console.log', proc { |l| p l })
       ctx.eval('window.console = console;')
     end
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
-    ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
-    ctx_load_manifest(ctx, "pretty-text-bundle.js")
-    ctx_load_manifest(ctx, "markdown-it-bundle.js")
+    ctx_load(ctx, 'vendor/assets/javascripts/lodash.js')
+    ctx_load_manifest(ctx, 'pretty-text-bundle.js')
+    ctx_load_manifest(ctx, 'markdown-it-bundle.js')
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
-    apply_es6_file(ctx, root_path, "discourse/helpers/parse-html")
-    apply_es6_file(ctx, root_path, "discourse/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/lib/utilities")
+    apply_es6_file(ctx, root_path, 'discourse/helpers/parse-html')
+    apply_es6_file(ctx, root_path, 'discourse/lib/to-markdown')
+    apply_es6_file(ctx, root_path, 'discourse/lib/utilities')
 
     PrettyText::Helpers.instance_methods.each do |method|
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
@@ -97,7 +102,7 @@ module PrettyText
       to_load << a if File.file?(a) && a =~ /discourse-markdown/
     end
     to_load.uniq.each do |f|
-      if f =~ /^.+assets\/javascripts\//
+      if f =~ %r{^.+assets\/javascripts\/}
         root = Regexp.last_match[0]
         apply_es6_file(ctx, root, f.sub(root, '').sub(/\.js\.es6$/, ''))
       end
@@ -137,7 +142,7 @@ module PrettyText
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
     baked = nil
-    text = text || ""
+    text = text || ''
 
     protect do
       context = v8
@@ -147,7 +152,8 @@ module PrettyText
 
       buffer = <<~JS
         __optInput = {};
-        __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        __optInput.siteSettings = #{SiteSetting
+        .client_settings_json};
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
         __optInput.getCurrentUser = __getCurrentUser;
@@ -156,10 +162,14 @@ module PrettyText
         __optInput.formatUsername = __formatUsername;
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
-        __optInput.customEmoji = #{custom_emoji.to_json};
+        __optInput.customEmoji = #{custom_emoji
+        .to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.lookupImageUrls = __lookupImageUrls;
-        __optInput.censoredWords = #{WordWatcher.words_for_action(:censor).join('|').to_json};
+        __optInput.censoredWords = #{WordWatcher
+        .words_for_action(:censor)
+        .join('|')
+        .to_json};
       JS
 
       if opts[:topicId]
@@ -171,12 +181,10 @@ module PrettyText
       end
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
-      buffer << ("__pt = new __PrettyText(__textOptions);")
+      buffer << ('__pt = new __PrettyText(__textOptions);')
 
       # Be careful disabling sanitization. We allow for custom emails
-      if opts[:sanitize] == false
-        buffer << ('__pt.disableSanitizer();')
-      end
+      buffer << ('__pt.disableSanitizer();') if opts[:sanitize] == false
 
       opts = context.eval(buffer)
 
@@ -202,8 +210,8 @@ module PrettyText
 
   def self.paths_json
     paths = {
-      baseUri: Discourse::base_uri,
-      CDN: Rails.configuration.action_controller.asset_host,
+      baseUri: Discourse.base_uri,
+      CDN: Rails.configuration.action_controller.asset_host
     }
 
     if SiteSetting.Upload.enable_s3_uploads
@@ -219,10 +227,14 @@ module PrettyText
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect do
-      v8.eval(<<~JS)
+      v8.eval(
+        <<~JS
         __paths = #{paths_json};
-        __utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
+        __utils.avatarImg({size: #{size
+          .inspect}, avatarTemplate: #{avatar_template
+          .inspect}}, __getURL);
       JS
+      )
     end
   end
 
@@ -232,10 +244,13 @@ module PrettyText
     set = SiteSetting.emoji_set.inspect
     custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
     protect do
-      v8.eval(<<~JS)
+      v8.eval(
+        <<~JS
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
+        __performEmojiUnescape(#{title
+          .inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
       JS
+      )
     end
   end
 
@@ -243,9 +258,11 @@ module PrettyText
     return unless title
 
     protect do
-      v8.eval(<<~JS)
+      v8.eval(
+        <<~JS
         __performEmojiEscape(#{title.inspect});
       JS
+      )
     end
   end
 
@@ -265,9 +282,7 @@ module PrettyText
       add_rel_nofollow_to_user_content(doc)
     end
 
-    if SiteSetting.enable_mentions
-      add_mentions(doc, user_id: opts[:user_id])
-    end
+    add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
 
     doc.to_html
   end
@@ -279,24 +294,23 @@ module PrettyText
     whitelist = domains.split('|') if domains.present?
 
     site_uri = nil
-    doc.css("a").each do |l|
-      href = l["href"].to_s
+    doc.css('a').each do |l|
+      href = l['href'].to_s
       begin
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
 
-        if !uri.host.present? ||
-           uri.host == site_uri.host ||
-           uri.host.ends_with?("." << site_uri.host) ||
-           whitelist.any? { |u| uri.host == u || uri.host.ends_with?("." << u) }
+        if !uri.host.present? || uri.host == site_uri.host ||
+           uri.host.ends_with?('.' << site_uri.host) ||
+           whitelist.any? { |u| uri.host == u || uri.host.ends_with?('.' << u) }
           # we are good no need for nofollow
-          l.remove_attribute("rel")
+          l.remove_attribute('rel')
         else
-          l["rel"] = "nofollow noopener"
+          l['rel'] = 'nofollow noopener'
         end
       rescue URI::Error
         # add a nofollow anyway
-        l["rel"] = "nofollow noopener"
+        l['rel'] = 'nofollow noopener'
       end
     end
   end
@@ -308,28 +322,32 @@ module PrettyText
     doc = Nokogiri::HTML.fragment(html)
 
     # remove href inside quotes & elided part
-    doc.css("aside.quote a, .elided a").each { |a| a["href"] = "" }
+    doc.css('aside.quote a, .elided a').each { |a| a['href'] = '' }
 
     # extract all links
-    doc.css("a").each do |a|
-      if a["href"].present? && a["href"][0] != "#".freeze
-        links << DetectedLink.new(a["href"], false)
+    doc.css('a').each do |a|
+      if a['href'].present? && a['href'][0] != '#'.freeze
+        links << DetectedLink.new(a['href'], false)
       end
     end
 
     # extract quotes
-    doc.css("aside.quote[data-topic]").each do |aside|
-      if aside["data-topic"].present?
-        url = "/t/topic/#{aside["data-topic"]}"
-        url << "/#{aside["data-post"]}" if aside["data-post"].present?
+    doc.css('aside.quote[data-topic]').each do |aside|
+      if aside['data-topic'].present?
+        url = "/t/topic/#{aside['data-topic']}"
+        url << "/#{aside['data-post']}" if aside['data-post'].present?
         links << DetectedLink.new(url, true)
       end
     end
 
     # extract Youtube links
-    doc.css("div[data-youtube-id]").each do |div|
-      if div["data-youtube-id"].present?
-        links << DetectedLink.new("https://www.youtube.com/watch?v=#{div['data-youtube-id']}", false)
+    doc.css('div[data-youtube-id]').each do |div|
+      if div['data-youtube-id'].present?
+        links <<
+          DetectedLink.new(
+            "https://www.youtube.com/watch?v=#{div['data-youtube-id']}",
+            false
+          )
       end
     end
 
@@ -356,13 +374,13 @@ module PrettyText
 
   def self.make_all_links_absolute(doc)
     site_uri = nil
-    doc.css("a").each do |link|
-      href = link["href"].to_s
+    doc.css('a').each do |link|
+      href = link['href'].to_s
       begin
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
         unless uri.host.present? || href.start_with?('mailto')
-          link["href"] = "#{site_uri}#{link['href']}"
+          link['href'] = "#{site_uri}#{link['href']}"
         end
       rescue URI::Error
         # leave it
@@ -371,7 +389,7 @@ module PrettyText
   end
 
   def self.strip_image_wrapping(doc)
-    doc.css(".lightbox-wrapper .meta").remove
+    doc.css('.lightbox-wrapper .meta').remove
   end
 
   def self.convert_vimeo_iframes(doc)
@@ -399,21 +417,16 @@ module PrettyText
       @message = message
       @backtrace = backtrace
     end
-
   end
 
   def self.protect
     rval = nil
-    @mutex.synchronize do
-      rval = yield
-    end
+    @mutex.synchronize { rval = yield }
     rval
   end
 
   def self.ctx_load(ctx, *files)
-    files.each do |file|
-      ctx.load(app_root + file)
-    end
+    files.each { |file| ctx.load(app_root + file) }
   end
 
   private
@@ -422,28 +435,27 @@ module PrettyText
   GROUP_TYPE ||= 'group'
 
   def self.add_mentions(doc, user_id: nil)
-    elements = doc.css("span.mention")
+    elements = doc.css('span.mention')
     names = elements.map { |element| element.text[1..-1] }
 
     mentions = lookup_mentions(names, user_id: user_id)
 
-    doc.css("span.mention").each do |element|
+    doc.css('span.mention').each do |element|
       name = element.text[1..-1]
       name.downcase!
 
       if type = mentions[name]
         element.name = 'a'
 
-        element.children = PrettyText::Helpers.format_username(
-          element.children.text
-        )
+        element.children =
+          PrettyText::Helpers.format_username(element.children.text)
 
         case type
         when USER_TYPE
-          element['href'] = "#{Discourse::base_uri}/u/#{name}"
+          element['href'] = "#{Discourse.base_uri}/u/#{name}"
         when GROUP_TYPE
           element['class'] = 'mention-group'
-          element['href'] = "#{Discourse::base_uri}/groups/#{name}"
+          element['href'] = "#{Discourse.base_uri}/groups/#{name}"
         end
       end
     end
@@ -466,24 +478,26 @@ module PrettyText
         :group_type AS type,
         lower(name) AS name
       FROM groups
-      WHERE lower(name) IN (:names) AND (#{Group.mentionable_sql_clause})
+      WHERE lower(name) IN (:names) AND (#{Group
+      .mentionable_sql_clause})
     )
     SQL
 
     user = User.find_by(id: user_id)
     names.each(&:downcase!)
 
-    results = DB.query(sql,
-      names: names,
-      user_type: USER_TYPE,
-      group_type: GROUP_TYPE,
-      levels: Group.alias_levels(user),
-      user_id: user_id
-    )
+    results =
+      DB.query(
+        sql,
+        names: names,
+        user_type: USER_TYPE,
+        group_type: GROUP_TYPE,
+        levels: Group.alias_levels(user),
+        user_id: user_id
+      )
 
     mentions = {}
     results.each { |result| mentions[result.name] = result.type }
     mentions
   end
-
 end

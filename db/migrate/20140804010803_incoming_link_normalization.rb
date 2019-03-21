@@ -36,10 +36,10 @@ class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
             ) X
           WHERE a[2] IS NOT NULL"
 
-    execute "UPDATE incoming_links l
+    execute 'UPDATE incoming_links l
     SET incoming_referer_id = r.id
     FROM incoming_referers r
-    WHERE r.url = l.referer"
+    WHERE r.url = l.referer'
 
     create_table :incoming_domains do |t|
       t.string :name, limit: 100, null: false
@@ -49,14 +49,14 @@ class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
 
     # shuffle part 2
     #
-    execute "INSERT INTO incoming_domains(name, port, https)
+    execute 'INSERT INTO incoming_domains(name, port, https)
     SELECT DISTINCT domain, port, https
-    FROM incoming_referers"
+    FROM incoming_referers'
 
-    execute "UPDATE incoming_referers l
+    execute 'UPDATE incoming_referers l
     SET incoming_domain_id = d.id
     FROM incoming_domains d
-    WHERE d.name = l.domain AND d.https = l.https AND d.port = l.port"
+    WHERE d.name = l.domain AND d.https = l.https AND d.port = l.port'
 
     remove_column :incoming_referers, :domain
     remove_column :incoming_referers, :port
@@ -64,8 +64,8 @@ class IncomingLinkNormalization < ActiveRecord::Migration[4.2]
 
     change_column :incoming_referers, :incoming_domain_id, :integer, null: false
 
-    add_index :incoming_referers, [:path, :incoming_domain_id], unique: true
-    add_index :incoming_domains, [:name, :https, :port], unique: true
+    add_index :incoming_referers, %i[path incoming_domain_id], unique: true
+    add_index :incoming_domains, %i[name https port], unique: true
 
     remove_column :incoming_links, :referer
   end

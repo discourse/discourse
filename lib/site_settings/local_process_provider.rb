@@ -1,10 +1,11 @@
 module SiteSettings; end
 
 class SiteSettings::LocalProcessProvider
-
   attr_accessor :current_site
 
-  Setting = Struct.new(:name, :value, :data_type) unless defined? SiteSettings::LocalProcessProvider::Setting
+  unless defined?(SiteSettings::LocalProcessProvider::Setting)
+    Setting = Struct.new(:name, :value, :data_type)
+  end
 
   def settings
     @settings[current_site] ||= {}
@@ -12,7 +13,7 @@ class SiteSettings::LocalProcessProvider
 
   def initialize
     @settings = {}
-    self.current_site = "test"
+    self.current_site = 'test'
   end
 
   def all
@@ -37,5 +38,4 @@ class SiteSettings::LocalProcessProvider
   def clear
     @settings[current_site] = {}
   end
-
 end

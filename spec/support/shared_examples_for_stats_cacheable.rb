@@ -1,8 +1,6 @@
 shared_examples_for 'stats cachable' do
   describe 'fetch_cached_stats' do
-    after do
-      $redis.del(described_class.stats_cache_key)
-    end
+    after { $redis.del(described_class.stats_cache_key) }
 
     it 'returns the cached stats' do
       stats = described_class.fetch_stats.to_json
@@ -14,7 +12,9 @@ shared_examples_for 'stats cachable' do
       freeze_time
 
       $redis.del(described_class.stats_cache_key)
-      expect(described_class.fetch_cached_stats).to eq(JSON.parse(described_class.fetch_stats.to_json))
+      expect(described_class.fetch_cached_stats).to eq(
+            JSON.parse(described_class.fetch_stats.to_json)
+          )
     end
   end
 

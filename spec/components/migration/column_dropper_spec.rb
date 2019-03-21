@@ -3,7 +3,7 @@ require_dependency 'migration/column_dropper'
 
 RSpec.describe Migration::ColumnDropper do
   def has_column?(table, column)
-    DB.exec(<<~SQL, table: table, column: column) == 1
+    sql = <<~SQL
       SELECT 1
       FROM INFORMATION_SCHEMA.COLUMNS
       WHERE
@@ -11,10 +11,11 @@ RSpec.describe Migration::ColumnDropper do
         table_name = :table AND
         column_name = :column
     SQL
+    DB.exec(sql, table: table, column: column) == 1
   end
 
-  describe ".execute_drop" do
-    let(:columns) { %w{junk junk2} }
+  describe '.execute_drop' do
+    let(:columns) { %w[junk junk2] }
 
     before do
       columns.each do |column|
@@ -28,8 +29,8 @@ RSpec.describe Migration::ColumnDropper do
       end
     end
 
-    it "drops the columns" do
-      Migration::ColumnDropper.execute_drop("topics", columns)
+    it 'drops the columns' do
+      Migration::ColumnDropper.execute_drop('topics', columns)
 
       columns.each do |column|
         expect(has_column?('topics', column)).to eq(false)
@@ -38,7 +39,7 @@ RSpec.describe Migration::ColumnDropper do
   end
 
   describe '.mark_readonly' do
-    let(:table_name) { "table_with_readonly_column" }
+    let(:table_name) { 'table_with_readonly_column' }
 
     before do
       DB.exec <<~SQL
@@ -56,16 +57,19 @@ RSpec.describe Migration::ColumnDropper do
 
       DB.exec <<~SQL
       DROP TABLE IF EXISTS #{table_name};
-      DROP FUNCTION IF EXISTS #{Migration::BaseDropper.readonly_function_name(table_name, 'email')} CASCADE;
+      DROP FUNCTION IF EXISTS #{Migration::BaseDropper
+                .readonly_function_name(table_name, 'email')} CASCADE;
       SQL
     end
 
     it 'should be droppable' do
-      Migration::ColumnDropper.execute_drop(table_name, ['email'])
+      Migration::ColumnDropper.execute_drop(table_name, %w[email])
 
-      expect(has_trigger?(Migration::BaseDropper.readonly_trigger_name(
-        table_name, 'email'
-      ))).to eq(false)
+      expect(
+        has_trigger?(
+          Migration::BaseDropper.readonly_trigger_name(table_name, 'email')
+        )
+      ).to eq(false)
 
       expect(has_column?(table_name, 'email')).to eq(false)
     end
@@ -81,9 +85,8 @@ RSpec.describe Migration::ColumnDropper do
         [
           "Discourse: email in #{table_name} is readonly",
           'discourse_functions.raise_table_with_readonly_column_email_readonly()'
-        ].each do |message|
-          expect(e.message).to include(message)
-        end
+        ]
+          .each { |message| expect(e.message).to include(message) }
       end
     end
 
@@ -96,7 +99,7 @@ RSpec.describe Migration::ColumnDropper do
 
       expect(
         ActiveRecord::Base.exec_sql("SELECT * FROM #{table_name};").values
-      ).to include([2, "something@email.com"])
+      ).to include([2, 'something@email.com'])
     end
 
     it 'should prevent insertions to the readonly column' do
@@ -106,9 +109,9 @@ RSpec.describe Migration::ColumnDropper do
         VALUES (2, 'something@email.com');
         SQL
       end.to raise_error(
-        PG::RaiseException,
-        /Discourse: email in table_with_readonly_column is readonly/
-      )
+            PG::RaiseException,
+            /Discourse: email in table_with_readonly_column is readonly/
+          )
     end
 
     it 'should allow insertions to the other columns' do

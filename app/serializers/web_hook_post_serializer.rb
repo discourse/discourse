@@ -1,12 +1,11 @@
 class WebHookPostSerializer < PostSerializer
-
   attributes :topic_posts_count
 
   def include_topic_title?
     true
   end
 
-  %i{
+  %i[
     can_view
     can_edit
     can_delete
@@ -20,14 +19,10 @@ class WebHookPostSerializer < PostSerializer
     primary_group_flair_color
     post_notice_time
     post_notice_type
-  }.each do |attr|
-    define_method("include_#{attr}?") do
-      false
-    end
-  end
+  ]
+    .each { |attr| define_method("include_#{attr}?") { false } }
 
   def topic_posts_count
     object.topic ? object.topic.posts_count : 0
   end
-
 end

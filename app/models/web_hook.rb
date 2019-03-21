@@ -8,7 +8,7 @@ class WebHook < ActiveRecord::Base
 
   default_scope { order('id ASC') }
 
-  validates :payload_url, presence: true, format: URI::regexp(%w(http https))
+  validates :payload_url, presence: true, format: URI.regexp(%w[http https])
   validates :secret, length: { minimum: 12 }, allow_blank: true
   validates_presence_of :content_type
   validates_presence_of :last_delivery_status
@@ -17,18 +17,22 @@ class WebHook < ActiveRecord::Base
   before_save :strip_url
 
   def tag_names=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
+    DiscourseTagging.add_or_create_tags_by_name(
+      self,
+      tag_names_arg,
+      unlimited: true
+    )
   end
 
   def self.content_types
-    @content_types ||= Enum.new('application/json' => 1,
-                                'application/x-www-form-urlencoded' => 2)
+    @content_types ||=
+      Enum.new(
+        'application/json' => 1, 'application/x-www-form-urlencoded' => 2
+      )
   end
 
   def self.last_delivery_statuses
-    @last_delivery_statuses ||= Enum.new(inactive: 1,
-                                         failed: 2,
-                                         successful: 3)
+    @last_delivery_statuses ||= Enum.new(inactive: 1, failed: 2, successful: 3)
   end
 
   def self.default_event_types
@@ -36,21 +40,28 @@ class WebHook < ActiveRecord::Base
   end
 
   def strip_url
-    self.payload_url = (payload_url || "").strip.presence
+    self.payload_url = (payload_url || '').strip.presence
   end
 
   def self.active_web_hooks(type)
-    WebHook.where(active: true)
-      .joins(:web_hook_event_types)
-      .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, type.to_s)
+    WebHook.where(active: true).joins(:web_hook_event_types).where(
+      'web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?',
+      true,
+      type.to_s
+    )
       .distinct
   end
 
   def self.enqueue_hooks(type, event, opts = {})
     active_web_hooks(type).each do |web_hook|
-      Jobs.enqueue(:emit_web_hook_event, opts.merge(
-        web_hook_id: web_hook.id, event_name: event.to_s, event_type: type.to_s
-      ))
+      Jobs.enqueue(
+        :emit_web_hook_event,
+        opts.merge(
+          web_hook_id: web_hook.id,
+          event_name: event.to_s,
+          event_type: type.to_s
+        )
+      )
     end
   end
 
@@ -58,21 +69,25 @@ class WebHook < ActiveRecord::Base
     if active_web_hooks(type).exists?
       payload = WebHook.generate_payload(type, object, serializer)
 
-      WebHook.enqueue_hooks(type, event,
-        id: object.id,
-        payload: payload
-      )
+      WebHook.enqueue_hooks(type, event, id: object.id, payload: payload)
     end
   end
 
   def self.enqueue_topic_hooks(event, topic, payload = nil)
     if active_web_hooks('topic').exists? && topic.present?
-      payload ||= begin
-        topic_view = TopicView.new(topic.id, Discourse.system_user)
-        WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
-      end
+      payload ||=
+        begin
+          topic_view = TopicView.new(topic.id, Discourse.system_user)
+          WebHook.generate_payload(
+            :topic,
+            topic_view,
+            WebHookTopicViewSerializer
+          )
+        end
 
-      WebHook.enqueue_hooks(:topic, event,
+      WebHook.enqueue_hooks(
+        :topic,
+        event,
         id: topic.id,
         category_id: topic.category_id,
         tag_ids: topic.tags.pluck(:id),
@@ -85,7 +100,9 @@ class WebHook < ActiveRecord::Base
     if active_web_hooks('post').exists? && post.present?
       payload ||= WebHook.generate_payload(:post, post)
 
-      WebHook.enqueue_hooks(:post, event,
+      WebHook.enqueue_hooks(
+        :post,
+        event,
         id: post.id,
         category_id: post.topic&.category_id,
         tag_ids: post.topic&.tags&.pluck(:id),
@@ -98,10 +115,7 @@ class WebHook < ActiveRecord::Base
     serializer ||= TagSerializer if type == :tag
     serializer ||= "WebHook#{type.capitalize}Serializer".constantize
 
-    serializer.new(object,
-      scope: self.guardian,
-      root: false
-    ).to_json
+    serializer.new(object, scope: self.guardian, root: false).to_json
   end
 
   private

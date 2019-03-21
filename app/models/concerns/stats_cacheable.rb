@@ -12,7 +12,7 @@ module StatsCacheable
 
     # Could be configurable, multisite need to support it.
     def recalculate_stats_interval
-      30 # minutes
+      30
     end
 
     def fetch_cached_stats
@@ -33,7 +33,9 @@ module StatsCacheable
     def set_cache(stats)
       # Add some extra time to the expiry so that the next job run has plenty of time to
       # finish before previous cached value expires.
-      $redis.setex stats_cache_key, (recalculate_stats_interval + 5).minutes, stats
-    end
+      $redis.setex stats_cache_key,
+                   (recalculate_stats_interval + 5).minutes,
+                   stats
+    end # minutes
   end
 end

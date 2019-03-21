@@ -5,9 +5,7 @@ RSpec.describe EnableSsoValidator do
 
   describe '#valid_value?' do
     describe "when 'sso url' is empty" do
-      before do
-        SiteSetting.sso_url = ""
-      end
+      before { SiteSetting.sso_url = '' }
 
       describe 'when val is false' do
         it 'should be valid' do
@@ -19,17 +17,15 @@ RSpec.describe EnableSsoValidator do
         it 'should not be valid' do
           expect(subject.valid_value?('t')).to eq(false)
 
-          expect(subject.error_message).to eq(I18n.t(
-            'site_settings.errors.sso_url_is_empty'
-          ))
+          expect(subject.error_message).to eq(
+                I18n.t('site_settings.errors.sso_url_is_empty')
+              )
         end
       end
     end
 
     describe "when 'sso url' is present" do
-      before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
-      end
+      before { SiteSetting.sso_url = 'https://www.example.com/sso' }
 
       describe 'when value is false' do
         it 'should be valid' do
@@ -43,6 +39,5 @@ RSpec.describe EnableSsoValidator do
         end
       end
     end
-
   end
 end

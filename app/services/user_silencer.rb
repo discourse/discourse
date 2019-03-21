@@ -1,7 +1,6 @@
 require_dependency 'staff_message_format'
 
 class UserSilencer
-
   attr_reader :user_history
 
   def initialize(user, by_user = nil, opts = {})
@@ -19,7 +18,8 @@ class UserSilencer
   def self.was_silenced_for?(post)
     return false if post.blank?
 
-    UserHistory.where(action: UserHistory.actions[:silence_user], post: post).exists?
+    UserHistory.where(action: UserHistory.actions[:silence_user], post: post)
+      .exists?
   end
 
   def silence
@@ -29,23 +29,24 @@ class UserSilencer
       if @user.save
         message_type = @opts[:message] || :silenced_by_staff
 
-        details = StaffMessageFormat.new(
-          :silence,
-          @opts[:reason],
-          @opts[:message_body]
-        ).format
+        details =
+          StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body])
+            .format
 
-        context = "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"
+        context =
+          "#{message_type}: '#{begin
+            post.topic&.title
+          rescue StandardError
+            ''
+          end}' #{@opts[:reason]}"
         SystemMessage.create(@user, message_type)
 
         if @by_user
           log_params = { context: context, details: details }
           log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
 
-          @user_history = StaffActionLogger.new(@by_user).log_silence_user(
-            @user,
-            log_params
-          )
+          @user_history =
+            StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
         end
 
         DiscourseEvent.trigger(
@@ -69,9 +70,22 @@ class UserSilencer
   def hide_posts
     return unless @user.trust_level == TrustLevel[0]
 
-    Post.where(user_id: @user.id).where("created_at > ?", 24.hours.ago).update_all(["hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Post.hidden_reasons[:new_user_spam_threshold_reached]])
-    topic_ids = Post.where(user_id: @user.id, post_number: 1).where("created_at > ?", 24.hours.ago).pluck(:topic_id)
-    Topic.where(id: topic_ids).update_all(visible: false) unless topic_ids.empty?
+    Post.where(user_id: @user.id).where('created_at > ?', 24.hours.ago)
+      .update_all(
+      [
+        'hidden = true, hidden_reason_id = COALESCE(hidden_reason_id, ?)',
+        Post.hidden_reasons[:new_user_spam_threshold_reached]
+      ]
+    )
+    topic_ids =
+      Post.where(user_id: @user.id, post_number: 1).where(
+        'created_at > ?',
+        24.hours.ago
+      )
+        .pluck(:topic_id)
+    unless topic_ids.empty?
+      Topic.where(id: topic_ids).update_all(visible: false)
+    end
   end
 
   def unsilence
@@ -82,5 +96,4 @@ class UserSilencer
       StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
     end
   end
-
 end

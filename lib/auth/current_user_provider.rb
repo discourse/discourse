@@ -1,6 +1,5 @@
 module Auth; end
 class Auth::CurrentUserProvider
-
   # do all current user initialization here
   def initialize(env)
     raise NotImplementedError
@@ -17,8 +16,7 @@ class Auth::CurrentUserProvider
   end
 
   # optional interface to be called to refresh cookies etc if needed
-  def refresh_session(user, session, cookies)
-  end
+  def refresh_session(user, session, cookies); end
 
   # api has special rights return true if api was detected
   def is_api?

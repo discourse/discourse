@@ -6,7 +6,6 @@
 # want to display the gap once.
 #
 class Gaps
-
   attr_reader :before, :after
 
   def initialize(subset, original)
@@ -29,8 +28,7 @@ class Gaps
     gaps = {}
     current_gap = []
 
-    while
-      e1 = @subset[i]
+    while e1 = @subset[i]
       e2 = @original[j]
 
       if (e1 == e2)
@@ -50,5 +48,4 @@ class Gaps
 
     @after[@subset[i - 1]] = @original[j..-1] if j < @original.size
   end
-
 end

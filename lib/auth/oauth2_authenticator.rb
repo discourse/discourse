@@ -1,5 +1,4 @@
 class Auth::OAuth2Authenticator < Auth::Authenticator
-
   def name
     @name
   end
@@ -11,7 +10,6 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
   end
 
   def after_authenticate(auth_token)
-
     result = Auth::Result.new
 
     oauth2_provider = auth_token[:provider]
@@ -20,23 +18,24 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
     result.email = email = data[:email]
     result.name = name = data[:name]
 
-    oauth2_user_info = Oauth2UserInfo.find_by(uid: oauth2_uid, provider: oauth2_provider)
+    oauth2_user_info =
+      Oauth2UserInfo.find_by(uid: oauth2_uid, provider: oauth2_provider)
 
     if !oauth2_user_info && @opts[:trusted] && user = User.find_by_email(email)
-      oauth2_user_info = Oauth2UserInfo.create(uid: oauth2_uid,
-                                               provider: oauth2_provider,
-                                               name: name,
-                                               email: email,
-                                               user: user)
+      oauth2_user_info =
+        Oauth2UserInfo.create(
+          uid: oauth2_uid,
+          provider: oauth2_provider,
+          name: name,
+          email: email,
+          user: user
+        )
     end
 
     result.user = oauth2_user_info.try(:user)
     result.email_valid = @opts[:trusted]
 
-    result.extra_data = {
-      uid: oauth2_uid,
-      provider: oauth2_provider
-    }
+    result.extra_data = { uid: oauth2_uid, provider: oauth2_provider }
 
     result
   end
@@ -54,6 +53,6 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
 
   def description_for_user(user)
     info = Oauth2UserInfo.find_by(user_id: user.id, provider: @name)
-    info&.email || info&.name || info&.uid || ""
+    info&.email || info&.name || info&.uid || ''
   end
 end

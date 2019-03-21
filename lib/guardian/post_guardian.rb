@@ -1,8 +1,8 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
-
   def unrestricted_link_posting?
-    authenticated? && @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
+    authenticated? &&
+      @user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_post_links])
   end
 
   def link_posting_access
@@ -25,52 +25,72 @@ module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
-    return false unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
+    unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
+      return false
+    end
 
     # no warnings except for staff
-    return false if (action_key == :notify_user && !is_staff? && opts[:is_warning].present? && opts[:is_warning] == 'true')
+
+    if (
+       action_key == :notify_user && !is_staff? && opts[:is_warning].present? &&
+         opts[:is_warning] == 'true'
+     )
+      return false
+    end
 
     taken = opts[:taken_actions].try(:keys).to_a
     is_flag = PostActionType.notify_flag_types[action_key]
-    already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
-    already_did_flagging      = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
+    already_taken_this_action =
+      taken.any? && taken.include?(PostActionType.types[action_key])
+    already_did_flagging =
+      taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 
-    result = if authenticated? && post && !@user.anonymous?
+    result =
+      if authenticated? && post && !@user.anonymous?
+        # Silenced users can't flag
+        return false if is_flag && @user.silenced?
 
-      # Silenced users can't flag
-      return false if is_flag && @user.silenced?
+        # Hidden posts can't be flagged
+        return false if is_flag && post.hidden?
 
-      # Hidden posts can't be flagged
-      return false if is_flag && post.hidden?
+        # post made by staff, but we don't allow staff flags
+        if is_flag && (!SiteSetting.allow_flagging_staff?) && post&.user&.staff?
+          return false
+        end
 
-      # post made by staff, but we don't allow staff flags
-      return false if is_flag &&
-        (!SiteSetting.allow_flagging_staff?) &&
-        post&.user&.staff?
+        if action_key == :notify_user &&
+           (
+             !SiteSetting.enable_personal_messages? ||
+               !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages)
+           )
+          return false
+        end
 
-      if action_key == :notify_user &&
-         (!SiteSetting.enable_personal_messages? ||
-         !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages))
+        # we allow flagging for trust level 1 and higher
+        # always allowed for private messages
 
-        return false
+        (
+          is_flag && !already_did_flagging &&
+            (
+              @user.has_trust_level?(
+                TrustLevel[SiteSetting.min_trust_to_flag_posts]
+              ) ||
+                post.topic.private_message?
+            )
+        ) ||
+          !is_flag ||
+          already_taken_this_action && !post.topic&.archived? &&
+            !post.trashed? &&
+            !action_key == :like &&
+            is_my_own?(post)
+        # not a flagging action, and haven't done it already
+
+        # nothing except flagging on archived topics
+
+        # nothing except flagging on deleted posts
+
+        # don't like your own stuff
       end
-
-      # we allow flagging for trust level 1 and higher
-      # always allowed for private messages
-      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[SiteSetting.min_trust_to_flag_posts]) || post.topic.private_message?)) ||
-
-      # not a flagging action, and haven't done it already
-      not(is_flag || already_taken_this_action) &&
-
-      # nothing except flagging on archived topics
-      not(post.topic&.archived?) &&
-
-      # nothing except flagging on deleted posts
-      not(post.trashed?) &&
-
-      # don't like your own stuff
-      not(action_key == :like && is_my_own?(post))
-    end
 
     !!result
   end
@@ -99,22 +119,35 @@ module PostGuardian
   end
 
   def can_delete_all_posts?(user)
-    is_staff? &&
-    user &&
-    !user.admin? &&
-    (user.first_post_created_at.nil? || user.first_post_created_at >= SiteSetting.delete_user_max_post_age.days.ago) &&
-    user.post_count <= SiteSetting.delete_all_posts_max.to_i
+    is_staff? && user && !user.admin? &&
+      (
+        user.first_post_created_at.nil? ||
+          user.first_post_created_at >=
+            SiteSetting.delete_user_max_post_age.days.ago
+      ) &&
+      user.post_count <= SiteSetting.delete_all_posts_max.to_i
   end
 
   # Creating Method
   def can_create_post?(parent)
-    return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
+    if !SiteSetting.enable_system_message_replies? &&
+       parent.try(:subtype) == 'system_message'
+      return false
+    end
 
-    (!SpamRule::AutoSilence.prevent_posting?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
-      !parent ||
-      !parent.category ||
-      Category.post_create_allowed(self).where(id: parent.category.id).count == 1
-    )
+    (
+      !SpamRule::AutoSilence.prevent_posting?(@user) ||
+        (
+          !!parent.try(:private_message?) &&
+            parent.allowed_users.include?(@user)
+        )
+    ) &&
+      (
+        !parent || !parent.category ||
+          Category.post_create_allowed(self).where(id: parent.category.id)
+            .count ==
+            1
+      )
   end
 
   # Editing Method
@@ -128,33 +161,36 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    return can_create_post?(post.topic) if (
-      is_staff? ||
-      (
-        SiteSetting.trusted_users_can_edit_others? &&
-        @user.has_trust_level?(TrustLevel[4])
-      )
-    )
+    if (
+       is_staff? ||
+         (
+           SiteSetting.trusted_users_can_edit_others? &&
+             @user.has_trust_level?(TrustLevel[4])
+         )
+     )
+      return can_create_post?(post.topic)
+    end
 
     if post.topic&.archived? || post.user_deleted || post.deleted_at
       return false
     end
 
-    if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+    if post.wiki &&
+       (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
       return can_create_post?(post.topic)
     end
 
-    if @user.trust_level < SiteSetting.min_trust_to_edit_post
-      return false
-    end
+    return false if @user.trust_level < SiteSetting.min_trust_to_edit_post
 
     if is_my_own?(post)
-
       return false if @user.silenced?
 
       if post.hidden?
-        return false if post.hidden_at.present? &&
-                        post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+        if post.hidden_at.present? &&
+           post.hidden_at >=
+             SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+          return false
+        end
 
         # If it's your own post and it's hidden, you can still edit it
         return true
@@ -193,17 +229,20 @@ module PostGuardian
 
   def can_delete_post_action?(post_action)
     # You can only undo your own actions
-    is_my_own?(post_action) && not(post_action.is_private_message?) &&
-
+    is_my_own?(post_action) && !post_action.is_private_message? &&
+      post_action.created_at >
+        SiteSetting.post_undo_action_window_mins.minutes.ago
     # Make sure they want to delete it within the window
-    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
   def can_see_post?(post)
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_topic?(post.topic)
-    return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
+    unless post.user == @user ||
+           Topic.visible_post_types(@user).include?(post.post_type)
+      return false
+    end
     return false if !is_moderator? && post.deleted_at.present?
 
     true
@@ -217,8 +256,11 @@ module PostGuardian
     end
 
     authenticated? &&
-    (is_staff? || @user.has_trust_level?(TrustLevel[4]) || @user.id == post.user_id) &&
-    can_see_post?(post)
+      (
+        is_staff? || @user.has_trust_level?(TrustLevel[4]) ||
+          @user.id == post.user_id
+      ) &&
+      can_see_post?(post)
   end
 
   def can_change_post_owner?
@@ -233,7 +275,8 @@ module PostGuardian
     return false unless authenticated?
     return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
 
-    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) && is_my_own?(post)
+    if @user.has_trust_level?(SiteSetting.min_trust_to_allow_self_wiki) &&
+       is_my_own?(post)
       return false if post.hidden?
       return !post.edit_time_limit_expired?
     end

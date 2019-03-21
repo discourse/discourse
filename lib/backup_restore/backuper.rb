@@ -1,7 +1,6 @@
-require "mini_mime"
+require 'mini_mime'
 
 module BackupRestore
-
   class Backuper
     attr_reader :success
 
@@ -19,7 +18,7 @@ module BackupRestore
     end
 
     def run
-      log "[STARTED]"
+      log '[STARTED]'
       log "'#{@user.username}' has started the backup!"
 
       mark_backup_as_running
@@ -43,16 +42,16 @@ module BackupRestore
       disable_readonly_mode
       ### READ-ONLY / END ###
 
-      log "Finalizing backup..."
+      log 'Finalizing backup...'
 
       @with_uploads ? create_archive : move_dump_backup
       upload_archive
 
       after_create_hook
     rescue SystemExit
-      log "Backup process was cancelled!"
+      log 'Backup process was cancelled!'
     rescue Exception => ex
-      log "EXCEPTION: " + ex.message
+      log 'EXCEPTION: ' + ex.message
       log ex.backtrace.join("\n")
       @success = false
     else
@@ -62,15 +61,17 @@ module BackupRestore
       delete_old
       clean_up
       notify_user
-      log "Finished!"
+      log 'Finished!'
 
-      @success ? log("[SUCCESS]") : log("[FAILED]")
+      @success ? log('[SUCCESS]') : log('[FAILED]')
     end
 
     protected
 
     def ensure_no_operation_is_running
-      raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
+      if BackupRestore.is_operation_running?
+        raise BackupRestore::OperationRunningError
+      end
     end
 
     def ensure_we_have_a_user
@@ -82,12 +83,20 @@ module BackupRestore
       @success = false
       @store = BackupRestore::BackupStore.create
       @current_db = RailsMultisite::ConnectionManagement.current_db
-      @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
-      @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
+      @timestamp = Time.now.strftime('%Y-%m-%d-%H%M%S')
+      @tmp_directory =
+        File.join(Rails.root, 'tmp', 'backups', @current_db, @timestamp)
       @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
-      @archive_directory = BackupRestore::LocalBackupStore.base_directory(db: @current_db)
-      filename = @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
-      @archive_basename = File.join(@archive_directory, "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
+      @archive_directory =
+        BackupRestore::LocalBackupStore.base_directory(db: @current_db)
+      filename =
+        @filename_override || "#{SiteSetting.title.parameterize}-#{@timestamp}"
+      @archive_basename =
+        File.join(
+          @archive_directory,
+          "#{filename}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore
+            .current_version}"
+        )
 
       @backup_filename =
         if @with_uploads
@@ -97,7 +106,8 @@ module BackupRestore
         end
 
       @logs = []
-      @readonly_mode_was_enabled = Discourse.readonly_mode? || !SiteSetting.readonly_mode_during_backup
+      @readonly_mode_was_enabled =
+        Discourse.readonly_mode? || !SiteSetting.readonly_mode_during_backup
     end
 
     def listen_for_shutdown_signal
@@ -110,29 +120,31 @@ module BackupRestore
     end
 
     def mark_backup_as_running
-      log "Marking backup as running..."
+      log 'Marking backup as running...'
       BackupRestore.mark_as_running!
     end
 
     def enable_readonly_mode
       return if @readonly_mode_was_enabled
-      log "Enabling readonly mode..."
+      log 'Enabling readonly mode...'
       Discourse.enable_readonly_mode
     end
 
     def pause_sidekiq
-      log "Pausing sidekiq..."
+      log 'Pausing sidekiq...'
       Sidekiq.pause!
     end
 
     def wait_for_sidekiq
-      log "Waiting for sidekiq to finish running jobs..."
+      log 'Waiting for sidekiq to finish running jobs...'
       iterations = 1
       while sidekiq_has_running_jobs?
         log "Waiting for sidekiq to finish running jobs... ##{iterations}"
         sleep 5
         iterations += 1
-        raise "Sidekiq did not finish running all the jobs in the allowed time!" if iterations > 6
+        if iterations > 6
+          raise 'Sidekiq did not finish running all the jobs in the allowed time!'
+        end
       end
     end
 
@@ -147,13 +159,15 @@ module BackupRestore
     end
 
     def dump_public_schema
-      log "Dumping the public schema of the database..."
+      log 'Dumping the public schema of the database...'
 
       logs = Queue.new
       pg_dump_running = true
 
       Thread.new do
-        RailsMultisite::ConnectionManagement::establish_connection(db: @current_db)
+        RailsMultisite::ConnectionManagement.establish_connection(
+          db: @current_db
+        )
         while pg_dump_running
           message = logs.pop.strip
           log(message) unless message.blank?
@@ -162,41 +176,57 @@ module BackupRestore
 
       IO.popen("#{pg_dump_command} 2>&1") do |pipe|
         begin
-          while line = pipe.readline
-            logs << line
-          end
+          logs << line while line = pipe.readline
         rescue EOFError
           # finished reading...
         ensure
           pg_dump_running = false
-          logs << ""
+          logs << ''
         end
       end
 
-      raise "pg_dump failed" unless $?.success?
+      raise 'pg_dump failed' unless $?.success?
     end
 
     def pg_dump_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
-      host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
-      port_argument     = "--port=#{db_conf.port}"         if db_conf.port.present?
-      username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
+      if db_conf.password.present?
+        password_argument = "PGPASSWORD='#{db_conf.password}'"
+      end
+      host_argument = "--host=#{db_conf.host}" if db_conf.host.present?
+      port_argument = "--port=#{db_conf.port}" if db_conf.port.present?
+      if db_conf.username.present?
+        username_argument = "--username=#{db_conf.username}"
+      end
 
-      [ password_argument,            # pass the password to pg_dump (if any)
-        "pg_dump",                    # the pg_dump command
-        "--schema=public",            # only public schema
-        "--file='#{@dump_filename}'", # output to the dump.sql file
-        "--no-owner",                 # do not output commands to set ownership of objects
-        "--no-privileges",            # prevent dumping of access privileges
-        "--verbose",                  # specifies verbose mode
-        "--compress=4",               # Compression level of 4
-        host_argument,                # the hostname to connect to (if any)
-        port_argument,                # the port to connect to (if any)
-        username_argument,            # the username to connect as (if any)
-        db_conf.database              # the name of the database to dump
-      ].join(" ")
+      [
+        password_argument,
+        # pass the password to pg_dump (if any)
+        'pg_dump',
+        # the pg_dump command
+        '--schema=public',
+        # only public schema
+        "--file='#{@dump_filename}'",
+        # output to the dump.sql file
+        '--no-owner',
+        # do not output commands to set ownership of objects
+        '--no-privileges',
+        # prevent dumping of access privileges
+        '--verbose',
+        # specifies verbose mode
+        '--compress=4',
+        # Compression level of 4
+        host_argument,
+        # the hostname to connect to (if any)
+        port_argument,
+        # the port to connect to (if any)
+        username_argument,
+        # the username to connect as (if any)
+        db_conf
+          .database # the name of the database to dump
+      ]
+        .join(' ')
     end
 
     def move_dump_backup
@@ -205,8 +235,10 @@ module BackupRestore
       archive_filename = File.join(@archive_directory, @backup_filename)
 
       Discourse::Utils.execute_command(
-        'mv', @dump_filename, archive_filename,
-        failure_message: "Failed to move database dump file."
+        'mv',
+        @dump_filename,
+        archive_filename,
+        failure_message: 'Failed to move database dump file.'
       )
 
       remove_tmp_directory
@@ -217,67 +249,93 @@ module BackupRestore
 
       tar_filename = "#{@archive_basename}.tar"
 
-      log "Making sure archive does not already exist..."
+      log 'Making sure archive does not already exist...'
       Discourse::Utils.execute_command('rm', '-f', tar_filename)
       Discourse::Utils.execute_command('rm', '-f', "#{tar_filename}.gz")
 
-      log "Creating empty archive..."
-      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
+      log 'Creating empty archive...'
+      Discourse::Utils.execute_command(
+        'tar',
+        '--create',
+        '--file',
+        tar_filename,
+        '--files-from',
+        '/dev/null'
+      )
 
-      log "Archiving data dump..."
+      log 'Archiving data dump...'
       FileUtils.cd(File.dirname(@dump_filename)) do
         Discourse::Utils.execute_command(
-          'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
-          failure_message: "Failed to archive data dump."
+          'tar',
+          '--append',
+          '--dereference',
+          '--file',
+          tar_filename,
+          File.basename(@dump_filename),
+          failure_message: 'Failed to archive data dump.'
         )
       end
 
-      upload_directory = "uploads/" + @current_db
+      upload_directory = 'uploads/' + @current_db
 
-      log "Archiving uploads..."
-      FileUtils.cd(File.join(Rails.root, "public")) do
+      log 'Archiving uploads...'
+      FileUtils.cd(File.join(Rails.root, 'public')) do
         if File.directory?(upload_directory)
-          exclude_optimized = SiteSetting.include_thumbnails_in_backups ? '' : "--exclude=#{upload_directory}/optimized"
+          exclude_optimized =
+            if SiteSetting.include_thumbnails_in_backups
+              ''
+            else
+              "--exclude=#{upload_directory}/optimized"
+            end
 
           Discourse::Utils.execute_command(
-            'tar', '--append', '--dereference', exclude_optimized, '--file', tar_filename, upload_directory,
-            failure_message: "Failed to archive uploads.", success_status_codes: [0, 1]
+            'tar',
+            '--append',
+            '--dereference',
+            exclude_optimized,
+            '--file',
+            tar_filename,
+            upload_directory,
+            failure_message: 'Failed to archive uploads.',
+            success_status_codes: [0, 1]
           )
         else
-          log "No uploads found, skipping archiving uploads..."
+          log 'No uploads found, skipping archiving uploads...'
         end
       end
 
       remove_tmp_directory
 
-      log "Gzipping archive, this may take a while..."
+      log 'Gzipping archive, this may take a while...'
       Discourse::Utils.execute_command(
-        'gzip', "-#{SiteSetting.backup_gzip_compression_level_for_uploads}", tar_filename,
-        failure_message: "Failed to gzip archive."
+        'gzip',
+        "-#{SiteSetting.backup_gzip_compression_level_for_uploads}",
+        tar_filename,
+        failure_message: 'Failed to gzip archive.'
       )
     end
 
     def upload_archive
       return unless @store.remote?
 
-      log "Uploading archive..."
+      log 'Uploading archive...'
       content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
       archive_path = File.join(@archive_directory, @backup_filename)
       @store.upload_file(@backup_filename, archive_path, content_type)
     end
 
     def after_create_hook
-      log "Executing the after_create_hook for the backup..."
+      log 'Executing the after_create_hook for the backup...'
       DiscourseEvent.trigger(:backup_created)
     end
 
     def delete_old
       return if Rails.env.development?
 
-      log "Deleting old backups..."
+      log 'Deleting old backups...'
       @store.delete_old
     rescue => ex
-      log "Something went wrong while deleting old backups.", ex
+      log 'Something went wrong while deleting old backups.', ex
     end
 
     def notify_user
@@ -286,19 +344,22 @@ module BackupRestore
       log "Notifying '#{@user.username}' of the end of the backup..."
       status = @success ? :backup_succeeded : :backup_failed
 
-      post = SystemMessage.create_from_system_user(
-        @user, status, logs: Discourse::Utils.pretty_logs(@logs)
-      )
+      post =
+        SystemMessage.create_from_system_user(
+          @user,
+          status,
+          logs: Discourse::Utils.pretty_logs(@logs)
+        )
 
       if @user.id == Discourse::SYSTEM_USER_ID
         post.topic.invite_group(@user, Group[:admins])
       end
     rescue => ex
-      log "Something went wrong while notifying user.", ex
+      log 'Something went wrong while notifying user.', ex
     end
 
     def clean_up
-      log "Cleaning stuff up..."
+      log 'Cleaning stuff up...'
       delete_uploaded_archive
       remove_tar_leftovers
       disable_readonly_mode if Discourse.readonly_mode?
@@ -312,23 +373,26 @@ module BackupRestore
       archive_path = File.join(@archive_directory, @backup_filename)
 
       if File.exist?(archive_path)
-        log "Removing archive from local storage..."
+        log 'Removing archive from local storage...'
         File.delete(archive_path)
       end
     rescue => ex
-      log "Something went wrong while deleting uploaded archive from local storage.", ex
+      log 'Something went wrong while deleting uploaded archive from local storage.',
+          ex
     end
 
     def refresh_disk_space
-      log "Refreshing disk stats..."
+      log 'Refreshing disk stats...'
       @store.reset_cache
     rescue => ex
-      log "Something went wrong while refreshing disk stats.", ex
+      log 'Something went wrong while refreshing disk stats.', ex
     end
 
     def remove_tar_leftovers
       log "Removing '.tar' leftovers..."
-      Dir["#{@archive_directory}/*.tar"].each { |filename| File.delete(filename) }
+      Dir["#{@archive_directory}/*.tar"].each do |filename|
+        File.delete(filename)
+      end
     rescue => ex
       log "Something went wrong while removing '.tar' leftovers.", ex
     end
@@ -337,30 +401,31 @@ module BackupRestore
       log "Removing tmp '#{@tmp_directory}' directory..."
       FileUtils.rm_rf(@tmp_directory) if Dir[@tmp_directory].present?
     rescue => ex
-      log "Something went wrong while removing the following tmp directory: #{@tmp_directory}", ex
+      log "Something went wrong while removing the following tmp directory: #{@tmp_directory}",
+          ex
     end
 
     def unpause_sidekiq
       return unless Sidekiq.paused?
-      log "Unpausing sidekiq..."
+      log 'Unpausing sidekiq...'
       Sidekiq.unpause!
     rescue => ex
-      log "Something went wrong while unpausing Sidekiq.", ex
+      log 'Something went wrong while unpausing Sidekiq.', ex
     end
 
     def disable_readonly_mode
       return if @readonly_mode_was_enabled
-      log "Disabling readonly mode..."
+      log 'Disabling readonly mode...'
       Discourse.disable_readonly_mode
     rescue => ex
-      log "Something went wrong while disabling readonly mode.", ex
+      log 'Something went wrong while disabling readonly mode.', ex
     end
 
     def mark_backup_as_not_running
-      log "Marking backup as finished..."
+      log 'Marking backup as finished...'
       BackupRestore.mark_as_not_running!
     rescue => ex
-      log "Something went wrong while marking backup as finished.", ex
+      log 'Something went wrong while marking backup as finished.', ex
     end
 
     def ensure_directory_exists(directory)
@@ -369,7 +434,7 @@ module BackupRestore
     end
 
     def log(message, ex = nil)
-      timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+      timestamp = Time.now.strftime('%Y-%m-%d %H:%M:%S')
       puts(message)
       publish_log(message, timestamp)
       save_log(message, timestamp)
@@ -378,14 +443,16 @@ module BackupRestore
 
     def publish_log(message, timestamp)
       return unless @publish_to_message_bus
-      data = { timestamp: timestamp, operation: "backup", message: message }
-      MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id], client_ids: [@client_id])
+      data = { timestamp: timestamp, operation: 'backup', message: message }
+      MessageBus.publish(
+        BackupRestore::LOGS_CHANNEL,
+        data,
+        user_ids: [@user_id], client_ids: [@client_id]
+      )
     end
 
     def save_log(message, timestamp)
       @logs << "[#{timestamp}] #{message}"
     end
-
   end
-
 end

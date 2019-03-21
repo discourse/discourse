@@ -3,21 +3,24 @@ require 'i18n/backend/discourse_i18n'
 require 'translation_override'
 
 describe I18n::Backend::DiscourseI18n do
-
   let(:backend) { I18n::Backend::DiscourseI18n.new }
 
   before do
     backend.reload!
-    backend.store_translations(:en, foo: 'Foo in :en', bar: 'Bar in :en', wat: 'Hello %{count}')
-    backend.store_translations(:en, items: { one: 'one item', other: '%{count} items' })
+    backend.store_translations(
+      :en,
+      foo: 'Foo in :en', bar: 'Bar in :en', wat: 'Hello %{count}'
+    )
+    backend.store_translations(
+      :en,
+      items: { one: 'one item', other: '%{count} items' }
+    )
     backend.store_translations(:de, bar: 'Bar in :de')
     backend.store_translations(:ru, baz: 'Baz in :ru')
     backend.store_translations(:en, link: '[text](url)')
   end
 
-  after do
-    backend.reload!
-  end
+  after { backend.reload! }
 
   it 'translates the basics as expected' do
     expect(backend.translate(:en, 'foo')).to eq('Foo in :en')

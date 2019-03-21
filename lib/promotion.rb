@@ -2,7 +2,6 @@
 # Check whether a user is ready for a new trust level.
 #
 class Promotion
-
   def initialize(user)
     @user = user
   end
@@ -24,7 +23,9 @@ class Promotion
 
   def review_tl0
     if Promotion.tl1_met?(@user) && change_trust_level!(TrustLevel[1])
-      @user.enqueue_member_welcome_message unless @user.badges.where(id: Badge::BasicUser).count > 0
+      unless @user.badges.where(id: Badge::BasicUser).count > 0
+        @user.enqueue_member_welcome_message
+      end
       return true
     end
     false
@@ -48,10 +49,13 @@ class Promotion
       next_up = new_level + 1
       key = "tl#{next_up}_met?"
       if self.class.respond_to?(key) && self.class.send(key, @user)
-        raise Discourse::InvalidAccess.new, I18n.t('trust_levels.change_failed_explanation',
-             user_name: @user.name,
-             new_trust_level: new_level,
-             current_trust_level: old_level)
+        raise Discourse::InvalidAccess.new,
+              I18n.t(
+                'trust_levels.change_failed_explanation',
+                user_name: @user.name,
+                new_trust_level: new_level,
+                current_trust_level: old_level
+              )
       end
     end
 
@@ -62,18 +66,27 @@ class Promotion
 
     @user.transaction do
       if admin
-        StaffActionLogger.new(admin).log_trust_level_change(@user, old_level, new_level)
+        StaffActionLogger.new(admin).log_trust_level_change(
+          @user,
+          old_level,
+          new_level
+        )
       else
-        UserHistory.create!(action: UserHistory.actions[:auto_trust_level_change],
-                            target_user_id: @user.id,
-                            previous_value: old_level,
-                            new_value: new_level)
+        UserHistory.create!(
+          action: UserHistory.actions[:auto_trust_level_change],
+          target_user_id: @user.id,
+          previous_value: old_level,
+          new_value: new_level
+        )
       end
       @user.save!
       @user.user_profile.recook_bio
       @user.user_profile.save!
       Group.user_trust_level_change!(@user.id, @user.trust_level)
-      BadgeGranter.queue_badge_grant(Badge::Trigger::TrustLevelChange, user: @user)
+      BadgeGranter.queue_badge_grant(
+        Badge::Trigger::TrustLevelChange,
+        user: @user
+      )
     end
 
     true
@@ -81,24 +94,42 @@ class Promotion
 
   def self.tl2_met?(user)
     stat = user.user_stat
-    return false if stat.topics_entered < SiteSetting.tl2_requires_topics_entered
+    if stat.topics_entered < SiteSetting.tl2_requires_topics_entered
+      return false
+    end
     return false if stat.posts_read_count < SiteSetting.tl2_requires_read_posts
-    return false if (stat.time_read / 60) < SiteSetting.tl2_requires_time_spent_mins
-    return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl2_requires_time_spent_mins
+    if (stat.time_read / 60) < SiteSetting.tl2_requires_time_spent_mins
+      return false
+    end
+    if ((Time.now - user.created_at) / 60) <
+       SiteSetting.tl2_requires_time_spent_mins
+      return false
+    end
     return false if stat.days_visited < SiteSetting.tl2_requires_days_visited
-    return false if stat.likes_received < SiteSetting.tl2_requires_likes_received
+    if stat.likes_received < SiteSetting.tl2_requires_likes_received
+      return false
+    end
     return false if stat.likes_given < SiteSetting.tl2_requires_likes_given
-    return false if stat.topic_reply_count < SiteSetting.tl2_requires_topic_reply_count
+    if stat.topic_reply_count < SiteSetting.tl2_requires_topic_reply_count
+      return false
+    end
 
     true
   end
 
   def self.tl1_met?(user)
     stat = user.user_stat
-    return false if stat.topics_entered < SiteSetting.tl1_requires_topics_entered
+    if stat.topics_entered < SiteSetting.tl1_requires_topics_entered
+      return false
+    end
     return false if stat.posts_read_count < SiteSetting.tl1_requires_read_posts
-    return false if (stat.time_read / 60) < SiteSetting.tl1_requires_time_spent_mins
-    return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl1_requires_time_spent_mins
+    if (stat.time_read / 60) < SiteSetting.tl1_requires_time_spent_mins
+      return false
+    end
+    if ((Time.now - user.created_at) / 60) <
+       SiteSetting.tl1_requires_time_spent_mins
+      return false
+    end
 
     return true
   end
@@ -115,18 +146,14 @@ class Promotion
   def self.recalculate(user, performed_by = nil)
     # First, use the manual locked level
     unless user.manual_locked_trust_level.nil?
-      return user.update!(
-        trust_level: user.manual_locked_trust_level
-      )
+      return user.update!(trust_level: user.manual_locked_trust_level)
     end
 
     # Then consider the group locked level
     user_group_granted_trust_level = user.group_granted_trust_level
 
     unless user_group_granted_trust_level.blank?
-      return user.update!(
-        trust_level: user_group_granted_trust_level
-      )
+      return user.update!(trust_level: user_group_granted_trust_level)
     end
 
     user.update_column(:trust_level, TrustLevel[0])
@@ -136,8 +163,10 @@ class Promotion
     p.review_tl1
     p.review_tl2
     if user.trust_level == 3 && Promotion.tl3_lost?(user)
-      user.change_trust_level!(2, log_action_for: performed_by || Discourse.system_user)
+      user.change_trust_level!(
+        2,
+        log_action_for: performed_by || Discourse.system_user
+      )
     end
   end
-
 end

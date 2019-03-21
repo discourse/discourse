@@ -11,9 +11,12 @@ class MinUsernameLengthValidator
 
   def error_message
     if @username.blank?
-      I18n.t("site_settings.errors.min_username_length_range")
+      I18n.t('site_settings.errors.min_username_length_range')
     else
-      I18n.t("site_settings.errors.min_username_length_exists", username: @username)
+      I18n.t(
+        'site_settings.errors.min_username_length_exists',
+        username: @username
+      )
     end
   end
 end

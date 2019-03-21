@@ -26,11 +26,13 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def last_poster_username
-    posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
+    posters.find { |poster| poster.user.id == object.last_post_user_id }.try(
+      :user
+    )
+      .try(:username)
   end
 
   def category_id
-
     # If it's a shared draft, show the destination topic instead
     if object.includes_destination_category && object.shared_draft
       return object.shared_draft.category_id
@@ -52,8 +54,7 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_post_action?(action)
-    object.user_data &&
-      object.user_data.post_action_data &&
+    object.user_data && object.user_data.post_action_data &&
       object.user_data.post_action_data.key?(PostActionType.types[action])
   end
 
@@ -83,5 +84,4 @@ class TopicListItemSerializer < ListableTopicSerializer
   def include_featured_link_root_domain?
     SiteSetting.topic_featured_link_enabled && object.featured_link.present?
   end
-
 end

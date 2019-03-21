@@ -48,9 +48,10 @@ class TopMenuItem
   def initialize_filter(value)
     if value
       if value.start_with?('-')
-        value[1..-1] # all but the leading -
+        value[]
       else
-        Rails.logger.warn "WARNING: found top_menu_item with invalid filter, ignoring '#{value}'..."
+        Rails
+          .logger.warn "WARNING: found top_menu_item with invalid filter, ignoring '#{value}'..."
         nil
       end
     end

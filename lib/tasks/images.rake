@@ -1,6 +1,6 @@
-require_dependency "file_helper"
+require_dependency 'file_helper'
 
-task "images:compress" => :environment do
+task 'images:compress' => :environment do
   images = Dir.glob("#{Rails.root}/app/**/*.png")
   image_sizes = images.map { |i| [i, File.size(i)] }.to_h
 

@@ -1,6 +1,5 @@
 class PostActionUserSerializer < BasicUserSerializer
-  attributes :post_url,
-             :username_lower
+  attributes :post_url, :username_lower
 
   def id
     object.user.id
@@ -21,5 +20,4 @@ class PostActionUserSerializer < BasicUserSerializer
   def post_url
     object.related_post.url if object.related_post_id && object.related_post
   end
-
 end

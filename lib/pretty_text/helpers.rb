@@ -6,7 +6,7 @@ module PrettyText
 
     # functions here are available to v8
     def t(key, opts)
-      key = "js." + key
+      key = 'js.' + key
       unless opts
         I18n.t(key)
       else
@@ -17,20 +17,20 @@ module PrettyText
     end
 
     def avatar_template(username)
-      return "" unless username
+      return '' unless username
       user = User.find_by(username_lower: username.downcase)
-      return "" unless user.present?
+      return '' unless user.present?
 
       # TODO: Add support for ES6 and call `avatar-template` directly
       UrlHelper.schemaless(UrlHelper.absolute(user.avatar_template))
     end
 
     def lookup_primary_user_group(username)
-      return "" unless username
+      return '' unless username
       user = User.find_by(username_lower: username.downcase)
-      return "" unless user.present?
+      return '' unless user.present?
 
-      user.primary_group.try(:name) || ""
+      user.primary_group.try(:name) || ''
     end
 
     # Overwrite this in a plugin to change how markdown can format
@@ -81,13 +81,10 @@ module PrettyText
       # TODO this only handles public topics, secured one do not get this
       topic = Topic.find_by(id: topic_id)
       if topic && Guardian.new.can_see?(topic)
-        {
-          title: Rack::Utils.escape_html(topic.title),
-          href: topic.url
-        }
+        { title: Rack::Utils.escape_html(topic.title), href: topic.url }
       elsif topic
         {
-          title: I18n.t("on_another_topic"),
+          title: I18n.t('on_another_topic'),
           href: Discourse.base_url + topic.slugless_url
         }
       end
@@ -100,7 +97,10 @@ module PrettyText
       if !is_tag && category = Category.query_from_hashtag_slug(text)
         [category.url_with_id, text]
       elsif (!is_tag && tag = Tag.find_by(name: text)) ||
-            (is_tag && tag = Tag.find_by(name: text.gsub!("#{tag_postfix}", '')))
+            (
+              is_tag &&
+                tag = Tag.find_by(name: text.gsub!("#{tag_postfix}", ''))
+            )
         ["#{Discourse.base_url}/tags/#{tag.name}", text]
       else
         nil
@@ -109,7 +109,7 @@ module PrettyText
 
     def get_current_user(user_id)
       return unless user_id.is_a?(Integer)
-      { staff: User.where(id: user_id).where("moderator OR admin").exists? }
+      { staff: User.where(id: user_id).where('moderator OR admin').exists? }
     end
   end
 end

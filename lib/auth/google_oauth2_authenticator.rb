@@ -1,6 +1,6 @@
 class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
   def name
-    "google_oauth2"
+    'google_oauth2'
   end
 
   def enabled?
@@ -15,19 +15,21 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
   def register_middleware(omniauth)
     options = {
-      setup: lambda { |env|
-        strategy = env["omniauth.strategy"]
-        strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
-        strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
+      setup:
+        lambda do |env|
+          strategy = env['omniauth.strategy']
+          strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
+          strategy.options[:client_secret] =
+            SiteSetting.google_oauth2_client_secret
 
-        if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
-          strategy.options[:hd] = google_oauth2_hd
-        end
+          if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
+            strategy.options[:hd] = google_oauth2_hd
+          end
 
-        if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
-          strategy.options[:prompt] = google_oauth2_prompt.gsub("|", " ")
+          if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
+            strategy.options[:prompt] = google_oauth2_prompt.gsub('|', ' ')
+          end
         end
-      }
     }
     omniauth.provider :google_oauth2, options
   end

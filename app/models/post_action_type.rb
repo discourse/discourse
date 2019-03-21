@@ -9,48 +9,38 @@ class PostActionType < ActiveRecord::Base
   include AnonCacheInvalidator
 
   def expire_cache
-    ApplicationSerializer.expire_cache_fragment!("post_action_types")
-    ApplicationSerializer.expire_cache_fragment!("post_action_flag_types")
+    ApplicationSerializer.expire_cache_fragment!('post_action_types')
+    ApplicationSerializer.expire_cache_fragment!('post_action_flag_types')
   end
 
   class << self
-
     def flag_settings
       unless @flag_settings
         @flag_settings = FlagSettings.new
         @flag_settings.add(
           3,
           :off_topic,
-          notify_type: true,
-          auto_action_type: true
+          notify_type: true, auto_action_type: true
         )
         @flag_settings.add(
           4,
           :inappropriate,
-          topic_type: true,
-          notify_type: true,
-          auto_action_type: true
+          topic_type: true, notify_type: true, auto_action_type: true
         )
         @flag_settings.add(
           8,
           :spam,
-          topic_type: true,
-          notify_type: true,
-          auto_action_type: true
+          topic_type: true, notify_type: true, auto_action_type: true
         )
         @flag_settings.add(
           6,
           :notify_user,
-          topic_type: false,
-          notify_type: false,
-          custom_type: true
+          topic_type: false, notify_type: false, custom_type: true
         )
         @flag_settings.add(
           7,
           :notify_moderators,
-          topic_type: true,
-          notify_type: true,
-          custom_type: true
+          topic_type: true, notify_type: true, custom_type: true
         )
       end
 
@@ -68,10 +58,7 @@ class PostActionType < ActiveRecord::Base
 
     def types
       unless @types
-        @types = Enum.new(
-          bookmark: 1,
-          like: 2
-        )
+        @types = Enum.new(bookmark: 1, like: 2)
         @types.merge!(flag_settings.flag_types)
       end
 

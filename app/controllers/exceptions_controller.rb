@@ -17,5 +17,4 @@ class ExceptionsController < ApplicationController
   def hide_search
     @hide_search = true if SiteSetting.login_required
   end
-
 end

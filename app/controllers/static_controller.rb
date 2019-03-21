@@ -2,25 +2,50 @@ require_dependency 'distributed_memoizer'
 require_dependency 'file_helper'
 
 class StaticController < ApplicationController
-
   skip_before_action :check_xhr, :redirect_to_login_if_required
-  skip_before_action :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
-  skip_before_action :preload_json, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
-  skip_before_action :handle_theme, only: [:brotli_asset, :cdn_asset, :enter, :favicon, :service_worker_asset]
+  skip_before_action :verify_authenticity_token,
+                     only: %i[
+                       brotli_asset
+                       cdn_asset
+                       enter
+                       favicon
+                       service_worker_asset
+                     ]
+  skip_before_action :preload_json,
+                     only: %i[
+                       brotli_asset
+                       cdn_asset
+                       enter
+                       favicon
+                       service_worker_asset
+                     ]
+  skip_before_action :handle_theme,
+                     only: %i[
+                       brotli_asset
+                       cdn_asset
+                       enter
+                       favicon
+                       service_worker_asset
+                     ]
 
-  PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
-  MODAL_PAGES = ['password_reset', 'signup']
+  PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
+  MODAL_PAGES = %w[password_reset signup]
 
   def show
-    return redirect_to(path '/') if current_user && (params[:id] == 'login' || params[:id] == 'signup')
-    if SiteSetting.login_required? && current_user.nil? && ['faq', 'guidelines'].include?(params[:id])
+    if current_user && (params[:id] == 'login' || params[:id] == 'signup')
+      return redirect_to(path '/')
+    end
+    if SiteSetting.login_required? && current_user.nil? &&
+       %w[faq guidelines].include?(params[:id])
       return redirect_to path('/login')
     end
 
     map = {
-      "faq" => { redirect: "faq_url", topic_id: "guidelines_topic_id" },
-      "tos" => { redirect: "tos_url", topic_id: "tos_topic_id" },
-      "privacy" => { redirect: "privacy_policy_url", topic_id: "privacy_topic_id" }
+      'faq' => { redirect: 'faq_url', topic_id: 'guidelines_topic_id' },
+      'tos' => { redirect: 'tos_url', topic_id: 'tos_topic_id' },
+      'privacy' => {
+        redirect: 'privacy_policy_url', topic_id: 'privacy_topic_id'
+      }
     }
 
     @page = params[:id]
@@ -40,20 +65,19 @@ class StaticController < ApplicationController
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
-      title_prefix = if I18n.exists?("js.#{@page}")
-        I18n.t("js.#{@page}")
-      else
-        @topic.title
-      end
+      title_prefix =
+        I18n.exists?("js.#{@page}") ? I18n.t("js.#{@page}") : @topic.title
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
-      render :show, layout: !request.xhr?, formats: [:html]
+      render :show, layout: !request.xhr?, formats: %i[html]
       return
     end
 
     if I18n.exists?("static.#{@page}")
-      render html: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
+      render html: I18n.t("static.#{@page}"),
+             layout: !request.xhr?,
+             formats: %i[html]
       return
     end
 
@@ -62,11 +86,13 @@ class StaticController < ApplicationController
     end
 
     file = "static/#{@page}.#{I18n.locale}"
-    file = "static/#{@page}.en" if lookup_context.find_all("#{file}.html").empty?
-    file = "static/#{@page}"    if lookup_context.find_all("#{file}.html").empty?
+    if lookup_context.find_all("#{file}.html").empty?
+      file = "static/#{@page}.en"
+    end
+    file = "static/#{@page}" if lookup_context.find_all("#{file}.html").empty?
 
     if lookup_context.find_all("#{file}.html").any?
-      render file, layout: !request.xhr?, formats: [:html]
+      render file, layout: !request.xhr?, formats: %i[html]
       return
     end
 
@@ -85,7 +111,7 @@ class StaticController < ApplicationController
     params.delete(:username)
     params.delete(:password)
 
-    destination = path("/")
+    destination = path('/')
 
     if params[:redirect].present? && !params[:redirect].match(login_path)
       begin
@@ -95,9 +121,11 @@ class StaticController < ApplicationController
         if uri.path.present? &&
            (uri.host.blank? || uri.host == forum_uri.host) &&
            uri.path !~ /\./
-
           destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/ || uri.path =~ /user-api-key/
+          if uri.path =~ /new-topic/ || uri.path =~ /new-message/ ||
+             uri.path =~ /user-api-key/
+            destination = "#{uri.path}?#{uri.query}"
+          end
         end
       rescue URI::Error
         # Do nothing if the URI is invalid
@@ -107,7 +135,7 @@ class StaticController < ApplicationController
     redirect_to destination
   end
 
-  FAVICON ||= -"favicon"
+  FAVICON ||= -'favicon'
 
   # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
   # that draws the notification count on top of favicon (per user default off)
@@ -124,41 +152,52 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize("FAVICON#{SiteSetting.site_favicon_url}", 60 * 30) do
-        favicon = SiteSetting.favicon
-        next "" unless favicon
+      data =
+        DistributedMemoizer.memoize(
+          "FAVICON#{SiteSetting.site_favicon_url}",
+          60 * 30
+        ) do
+          favicon = SiteSetting.favicon
+          next '' unless favicon
 
-        if Discourse.store.external?
-          begin
-            file = FileHelper.download(
-              UrlHelper.absolute(favicon.url),
-              max_file_size: favicon.filesize,
-              tmp_file_name: FAVICON,
-              follow_redirect: true
-            )
+          if Discourse.store.external?
+            begin
+              file =
+                FileHelper.download(
+                  UrlHelper.absolute(favicon.url),
+                  max_file_size: favicon.filesize,
+                  tmp_file_name: FAVICON,
+                  follow_redirect: true
+                )
 
-            file&.read || ""
-          rescue => e
-            AdminDashboardData.add_problem_message('dashboard.bad_favicon_url', 1800)
-            Rails.logger.warn("Failed to fetch faivcon #{favicon.url}: #{e}\n#{e.backtrace}")
-          ensure
-            file&.unlink
+              file&.read || ''
+            rescue => e
+              AdminDashboardData.add_problem_message(
+                'dashboard.bad_favicon_url',
+                1800
+              )
+              Rails.logger.warn(
+                "Failed to fetch faivcon #{favicon.url}: #{e}\n#{e.backtrace}"
+              )
+            ensure
+              file&.unlink
+            end
+          else
+            File.read(Rails.root.join('public', favicon.url[1..-1]))
           end
-        else
-          File.read(Rails.root.join("public", favicon.url[1..-1]))
         end
-      end
 
       if data.bytesize == 0
-        @@default_favicon ||= File.read(Rails.root + "public/images/default-favicon.png")
-        response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
-        render body: @@default_favicon, content_type: "image/png"
+        @@default_favicon ||=
+          File.read(Rails.root + 'public/images/default-favicon.png')
+        response.headers['Content-Length'] = @@default_favicon.bytesize.to_s
+        render body: @@default_favicon, content_type: 'image/png'
       else
         immutable_for 1.year
-        response.headers["Expires"] = 1.year.from_now.httpdate
-        response.headers["Content-Length"] = data.bytesize.to_s
-        response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
-        render body: data, content_type: "image/png"
+        response.headers['Expires'] = 1.year.from_now.httpdate
+        response.headers['Content-Length'] = data.bytesize.to_s
+        response.headers['Last-Modified'] = Time.new('2000-01-01').httpdate
+        render body: data, content_type: 'image/png'
       end
     end
   end
@@ -166,9 +205,7 @@ class StaticController < ApplicationController
   def brotli_asset
     is_asset_path
 
-    serve_asset(".br") do
-      response.headers["Content-Encoding"] = 'br'
-    end
+    serve_asset('.br') { response.headers['Content-Encoding'] = 'br' }
   end
 
   def cdn_asset
@@ -188,11 +225,19 @@ class StaticController < ApplicationController
         immutable_for 1.year
 
         if Rails.application.assets_manifest.assets['service-worker.js']
-          path = File.expand_path(Rails.root + "public/assets/#{Rails.application.assets_manifest.assets['service-worker.js']}")
-          response.headers["Last-Modified"] = File.ctime(path).httpdate
+          path =
+            File.expand_path(
+              Rails.root +
+                "public/assets/#{Rails.application.assets_manifest.assets[
+                  'service-worker.js'
+                ]}"
+            )
+          response.headers['Last-Modified'] = File.ctime(path).httpdate
         end
         render(
-          plain: Rails.application.assets_manifest.find_sources('service-worker.js').first,
+          plain:
+            Rails.application.assets_manifest.find_sources('service-worker.js')
+              .first,
           content_type: 'application/javascript'
         )
       end
@@ -202,22 +247,29 @@ class StaticController < ApplicationController
   protected
 
   def serve_asset(suffix = nil)
-
-    path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
+    path =
+      File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
 
     # SECURITY what if path has /../
-    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
+    unless path.start_with?(Rails.root.to_s + '/public/assets')
+      raise Discourse::NotFound
+    end
 
-    response.headers["Expires"] = 1.year.from_now.httpdate
-    response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]
+    response.headers['Expires'] = 1.year.from_now.httpdate
+    if params[:origin]
+      response.headers['Access-Control-Allow-Origin'] = params[:origin]
+    end
 
     begin
-      response.headers["Last-Modified"] = File.ctime(path).httpdate
+      response.headers['Last-Modified'] = File.ctime(path).httpdate
     rescue Errno::ENOENT
       begin
         if GlobalSetting.fallback_assets_path.present?
-          path = File.expand_path("#{GlobalSetting.fallback_assets_path}/#{params[:path]}#{suffix}")
-          response.headers["Last-Modified"] = File.ctime(path).httpdate
+          path =
+            File.expand_path(
+              "#{GlobalSetting.fallback_assets_path}/#{params[:path]}#{suffix}"
+            )
+          response.headers['Last-Modified'] = File.ctime(path).httpdate
         else
           raise
         end
@@ -229,7 +281,7 @@ class StaticController < ApplicationController
       end
     end
 
-    response.headers["Content-Length"] = File.size(path).to_s
+    response.headers['Content-Length'] = File.size(path).to_s
 
     yield if block_given?
 
@@ -239,9 +291,7 @@ class StaticController < ApplicationController
     request.env['sendfile.type'] = ''
 
     opts = { disposition: nil }
-    opts[:type] = "application/javascript" if params[:path] =~ /\.js$/
+    opts[:type] = 'application/javascript' if params[:path] =~ /\.js$/
     send_file(path, opts)
-
   end
-
 end

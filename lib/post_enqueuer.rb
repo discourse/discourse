@@ -11,12 +11,15 @@ class PostEnqueuer
   end
 
   def enqueue(args)
-    queued_post = QueuedPost.new(queue: @queue,
-                                 state: QueuedPost.states[:new],
-                                 user_id: @user.id,
-                                 topic_id: args[:topic_id],
-                                 raw: args[:raw],
-                                 post_options: args[:post_options] || {})
+    queued_post =
+      QueuedPost.new(
+        queue: @queue,
+        state: QueuedPost.states[:new],
+        user_id: @user.id,
+        topic_id: args[:topic_id],
+        raw: args[:raw],
+        post_options: args[:post_options] || {}
+      )
 
     validate_method = :"validate_#{@queue}"
     if respond_to?(validate_method)
@@ -41,5 +44,4 @@ class PostEnqueuer
     post_creator = PostCreator.new(@user, create_options)
     validate_child(post_creator)
   end
-
 end

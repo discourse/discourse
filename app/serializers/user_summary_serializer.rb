@@ -1,5 +1,4 @@
 class UserSummarySerializer < ApplicationSerializer
-
   class TopicSerializer < ListableTopicSerializer
     attributes :category_id, :like_count
   end
@@ -31,19 +30,29 @@ class UserSummarySerializer < ApplicationSerializer
   end
 
   class CategoryWithCountsSerializer < ApplicationSerializer
-    attributes :topic_count, :post_count,
-      :id, :name, :color, :text_color, :slug,
-      :read_restricted, :parent_category_id
+    attributes :topic_count,
+               :post_count,
+               :id,
+               :name,
+               :color,
+               :text_color,
+               :slug,
+               :read_restricted,
+               :parent_category_id
   end
 
   has_many :topics, serializer: TopicSerializer
   has_many :replies, serializer: ReplySerializer, embed: :object
   has_many :links, serializer: LinkSerializer, embed: :object
-  has_many :most_liked_by_users, serializer: UserWithCountSerializer, embed: :object
-  has_many :most_liked_users, serializer: UserWithCountSerializer, embed: :object
-  has_many :most_replied_to_users, serializer: UserWithCountSerializer, embed: :object
+  has_many :most_liked_by_users,
+           serializer: UserWithCountSerializer, embed: :object
+  has_many :most_liked_users,
+           serializer: UserWithCountSerializer, embed: :object
+  has_many :most_replied_to_users,
+           serializer: UserWithCountSerializer, embed: :object
   has_many :badges, serializer: UserBadgeSerializer, embed: :object
-  has_many :top_categories, serializer: CategoryWithCountsSerializer, embed: :object
+  has_many :top_categories,
+           serializer: CategoryWithCountsSerializer, embed: :object
 
   attributes :likes_given,
              :likes_received,

@@ -3,12 +3,13 @@ require_dependency 'jobs/base'
 require 'jobs/regular/process_post'
 
 describe Jobs::FeatureTopicUsers do
-
-  it "raises an error without a topic_id" do
-    expect { Jobs::FeatureTopicUsers.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
+  it 'raises an error without a topic_id' do
+    expect { Jobs::FeatureTopicUsers.new.execute({}) }.to raise_error(
+          Discourse::InvalidParameters
+        )
   end
 
-  it "raises no error with a missing topic_id" do
+  it 'raises no error with a missing topic_id' do
     Jobs::FeatureTopicUsers.new.execute(topic_id: 123)
   end
 
@@ -22,28 +23,31 @@ describe Jobs::FeatureTopicUsers do
 
     it "won't feature the OP" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
-      expect(topic.reload.featured_user_ids.include?(topic.user_id)).to eq(false)
+      expect(topic.reload.featured_user_ids.include?(topic.user_id)).to eq(
+            false
+          )
     end
 
-    it "features the second poster" do
+    it 'features the second poster' do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
-      expect(topic.reload.featured_user_ids.include?(coding_horror.id)).to eq(true)
+      expect(topic.reload.featured_user_ids.include?(coding_horror.id)).to eq(
+            true
+          )
     end
 
     it "won't feature the last poster" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
-      expect(topic.reload.featured_user_ids.include?(evil_trout.id)).to eq(false)
+      expect(topic.reload.featured_user_ids.include?(evil_trout.id)).to eq(
+            false
+          )
     end
-
   end
 
-  context "participant count" do
-
+  context 'participant count' do
     let!(:post) { create_post }
     let(:topic) { post.topic }
 
-    it "it works as expected" do
-
+    it 'it works as expected' do
       # It has 1 participant after creation
       expect(topic.participant_count).to eq(1)
 
@@ -60,9 +64,6 @@ describe Jobs::FeatureTopicUsers do
       create_post(topic: topic, user: Fabricate(:evil_trout))
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
       expect(topic.reload.participant_count).to eq(2)
-
     end
-
   end
-
 end

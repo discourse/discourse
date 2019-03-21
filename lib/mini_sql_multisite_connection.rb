@@ -1,16 +1,19 @@
 class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
-
   class CustomBuilder < MiniSql::Builder
-
     def initialize(connection, sql)
       super
     end
 
     def secure_category(secure_category_ids, category_alias = 'c')
       if secure_category_ids.present?
-        where("NOT COALESCE(" << category_alias << ".read_restricted, false) OR " << category_alias << ".id in (:secure_category_ids)", secure_category_ids: secure_category_ids)
+        where(
+          'NOT COALESCE(' << category_alias << '.read_restricted, false) OR ' <<
+            category_alias <<
+            '.id in (:secure_category_ids)',
+          secure_category_ids: secure_category_ids
+        )
       else
-        where("NOT COALESCE(" << category_alias << ".read_restricted, false)")
+        where('NOT COALESCE(' << category_alias << '.read_restricted, false)')
       end
       self
     end
@@ -59,11 +62,6 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
   end
 
   def sql_fragment(query, *args)
-    if args.length > 0
-      param_encoder.encode(query, *args)
-    else
-      query
-    end
+    args.length > 0 ? param_encoder.encode(query, *args) : query
   end
-
 end

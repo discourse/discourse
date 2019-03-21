@@ -1,5 +1,4 @@
 class WizardStepSerializer < ApplicationSerializer
-
   attributes :id, :next, :previous, :description, :title, :index, :banner
   has_many :fields, serializer: WizardFieldSerializer, embed: :objects
 
@@ -39,7 +38,7 @@ class WizardStepSerializer < ApplicationSerializer
   end
 
   def description
-    key = object.disabled ? "disabled" : "description"
+    key = object.disabled ? 'disabled' : 'description'
     translate(key, object.description_vars)
   end
 
@@ -48,7 +47,7 @@ class WizardStepSerializer < ApplicationSerializer
   end
 
   def title
-    translate("title")
+    translate('title')
   end
 
   def include_title?
@@ -62,5 +61,4 @@ class WizardStepSerializer < ApplicationSerializer
   def include_banner?
     object.banner.present?
   end
-
 end

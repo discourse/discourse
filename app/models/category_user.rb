@@ -21,7 +21,10 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.batch_set(user, level, category_ids)
-    records = CategoryUser.where(user: user, notification_level: notification_levels[level])
+    records =
+      CategoryUser.where(
+        user: user, notification_level: notification_levels[level]
+      )
     old_ids = records.pluck(:category_id)
     changed = false
 
@@ -34,7 +37,11 @@ class CategoryUser < ActiveRecord::Base
     end
 
     (category_ids - old_ids).each do |id|
-      CategoryUser.create!(user: user, category_id: id, notification_level: notification_levels[level])
+      CategoryUser.create!(
+        user: user,
+        category_id: id,
+        notification_level: notification_levels[level]
+      )
       changed = true
     end
 
@@ -56,7 +63,9 @@ class CategoryUser < ActiveRecord::Base
       record.save!
     else
       begin
-        CategoryUser.create!(user: user, category_id: category_id, notification_level: level)
+        CategoryUser.create!(
+          user: user, category_id: category_id, notification_level: level
+        )
       rescue ActiveRecord::RecordNotUnique
         # does not matter
       end
@@ -67,8 +76,8 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.auto_track(opts = {})
-
-    builder = DB.build <<~SQL
+    builder =
+      DB.build <<~SQL
       UPDATE topic_users tu
       SET notification_level = :tracking,
           notifications_reason_id = :auto_track_category
@@ -76,22 +85,24 @@ class CategoryUser < ActiveRecord::Base
       /*where*/
     SQL
 
-    builder.where("tu.topic_id = t.id AND
+    builder.where(
+      'tu.topic_id = t.id AND
                   cu.category_id = t.category_id AND
                   cu.user_id = tu.user_id AND
                   cu.notification_level = :tracking AND
-                  tu.notification_level = :regular")
+                  tu.notification_level = :regular'
+    )
 
     if category_id = opts[:category_id]
-      builder.where("t.category_id = :category_id", category_id: category_id)
+      builder.where('t.category_id = :category_id', category_id: category_id)
     end
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+      builder.where('tu.topic_id = :topic_id', topic_id: topic_id)
     end
 
     if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
+      builder.where('tu.user_id = :user_id', user_id: user_id)
     end
 
     builder.exec(
@@ -102,8 +113,8 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.auto_watch(opts = {})
-
-    builder = DB.build <<~SQL
+    builder =
+      DB.build <<~SQL
       UPDATE topic_users tu
       SET notification_level =
         CASE WHEN should_track THEN :tracking
@@ -136,21 +147,21 @@ class CategoryUser < ActiveRecord::Base
       /*where*/
     SQL
 
-    builder.where("X.topic_id = tu.topic_id AND X.user_id = tu.user_id")
-    builder.where("should_watch OR should_track")
+    builder.where('X.topic_id = tu.topic_id AND X.user_id = tu.user_id')
+    builder.where('should_watch OR should_track')
 
     if category_id = opts[:category_id]
-      builder.where2("t.category_id = :category_id", category_id: category_id)
+      builder.where2('t.category_id = :category_id', category_id: category_id)
     end
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
-      builder.where2("tu1.topic_id = :topic_id", topic_id: topic_id)
+      builder.where('tu.topic_id = :topic_id', topic_id: topic_id)
+      builder.where2('tu1.topic_id = :topic_id', topic_id: topic_id)
     end
 
     if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
-      builder.where2("tu1.user_id = :user_id", user_id: user_id)
+      builder.where('tu.user_id = :user_id', user_id: user_id)
+      builder.where2('tu1.user_id = :user_id', user_id: user_id)
     end
 
     builder.exec(
@@ -159,7 +170,6 @@ class CategoryUser < ActiveRecord::Base
       regular: notification_levels[:regular],
       auto_watch_category: TopicUser.notification_reasons[:auto_watch_category]
     )
-
   end
 
   def self.ensure_consistency!
@@ -172,7 +182,6 @@ class CategoryUser < ActiveRecord::Base
         )
     SQL
   end
-
 end
 
 # == Schema Information

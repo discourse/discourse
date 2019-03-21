@@ -4,7 +4,7 @@ module Roleable
   included do
     scope :admins, -> { where(admin: true) }
     scope :moderators, -> { where(moderator: true) }
-    scope :staff, -> { where("moderator or admin ") }
+    scope :staff, -> { where('moderator or admin ') }
   end
 
   # any user that is either a moderator or an admin
@@ -43,5 +43,4 @@ module Roleable
     self.send("#{permission_name}=", value)
     save_and_refresh_staff_groups!
   end
-
 end

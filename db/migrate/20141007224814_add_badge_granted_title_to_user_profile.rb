@@ -7,10 +7,10 @@ class AddBadgeGrantedTitleToUserProfile < ActiveRecord::Migration[4.2]
       SELECT 1 FROM users WHERE users.id = user_id AND title IN ('Leader', 'Regular')
     )"
 
-    execute "UPDATE user_profiles SET badge_granted_title = true
+    execute 'UPDATE user_profiles SET badge_granted_title = true
     WHERE EXISTS (
       SELECT 1 FROM users WHERE users.id = user_id AND title IN (SELECT name FROM badges WHERE allow_title)
-    )"
+    )'
   end
 
   def down

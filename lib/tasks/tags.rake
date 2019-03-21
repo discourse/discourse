@@ -1,5 +1,6 @@
-task "tags:bulk_tag_category", [:tags, :category] => [:environment] do |_, args|
-  tags = args[:tags].split("|")
+task 'tags:bulk_tag_category',
+     %i[tags category] => %i[environment] do |_, args|
+  tags = args[:tags].split('|')
   category_id = args[:category]
 
   if !tags || !category_id
@@ -18,9 +19,10 @@ task "tags:bulk_tag_category", [:tags, :category] => [:environment] do |_, args|
     print_status(tagged += 1, total)
   end
 
-  puts "", "Done!", ""
+  puts '', 'Done!', ''
 end
 
 def print_status(current, max)
-  print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+  print "\r%9d / %d (%5.1f%%)" %
+          [current, max, ((current.to_f / max.to_f) * 100).round(1)]
 end

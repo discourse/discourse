@@ -2,11 +2,10 @@ require 'rails_helper'
 require_dependency 'flag_query'
 
 describe FlagQuery do
-
   let(:codinghorror) { Fabricate(:coding_horror) }
 
-  describe "flagged_topics" do
-    it "respects `min_flags_staff_visibility`" do
+  describe 'flagged_topics' do
+    it 'respects `min_flags_staff_visibility`' do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
 
@@ -33,15 +32,14 @@ describe FlagQuery do
       ft = result[:flagged_topics].first
       expect(ft.topic).to eq(post.topic)
       expect(ft.flag_counts).to eq(
-        PostActionType.types[:spam] => 1,
-        PostActionType.types[:inappropriate] => 1
-      )
+            PostActionType.types[:spam] => 1,
+            PostActionType.types[:inappropriate] => 1
+          )
     end
-
   end
 
-  describe "flagged_posts_report" do
-    it "does not return flags on system posts" do
+  describe 'flagged_posts_report' do
+    it 'does not return flags on system posts' do
       admin = Fabricate(:admin)
       post = create_post(user: Discourse.system_user)
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
@@ -52,7 +50,7 @@ describe FlagQuery do
       expect(users).to be_blank
     end
 
-    it "operates correctly" do
+    it 'operates correctly' do
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
 
@@ -64,7 +62,13 @@ describe FlagQuery do
 
       PostAction.act(codinghorror, post, PostActionType.types[:spam])
       PostAction.act(user2, post, PostActionType.types[:spam])
-      mod_message = PostAction.act(user3, post, PostActionType.types[:notify_moderators], message: "this is a :one::zero:")
+      mod_message =
+        PostAction.act(
+          user3,
+          post,
+          PostActionType.types[:notify_moderators],
+          message: 'this is a :one::zero:'
+        )
 
       PostAction.act(codinghorror, post2, PostActionType.types[:spam])
       PostAction.act(user2, post2, PostActionType.types[:spam])
@@ -82,8 +86,12 @@ describe FlagQuery do
       second = posts[1]
 
       expect(second[:post_actions].count).to eq(3)
-      expect(second[:post_actions].first[:permalink]).to eq(mod_message.related_post.topic.relative_url)
-      expect(second[:post_actions].first[:conversation][:response][:excerpt]).to match("<img src=")
+      expect(second[:post_actions].first[:permalink]).to eq(
+            mod_message.related_post.topic.relative_url
+          )
+      expect(
+        second[:post_actions].first[:conversation][:response][:excerpt]
+      ).to match('<img src=')
 
       posts, users = FlagQuery.flagged_posts_report(admin, offset: 1)
       expect(posts.count).to eq(1)
@@ -112,7 +120,7 @@ describe FlagQuery do
       expect(posts.count).to eq(1)
     end
 
-    it "respects `min_flags_staff_visibility`" do
+    it 'respects `min_flags_staff_visibility`' do
       admin = Fabricate(:admin)
       flagger = Fabricate(:user)
 
@@ -133,7 +141,7 @@ describe FlagQuery do
       expect(users).to be_present
     end
 
-    it "respects `min_flags_staff_visibility` for tl3 hidden spam" do
+    it 'respects `min_flags_staff_visibility` for tl3 hidden spam' do
       admin = Fabricate(:admin)
       tl3 = Fabricate(:user, trust_level: 3)
       post = create_post
@@ -148,7 +156,7 @@ describe FlagQuery do
       expect(users).to be_present
     end
 
-    it "respects `min_flags_staff_visibility` for tl4 hidden posts" do
+    it 'respects `min_flags_staff_visibility` for tl4 hidden posts' do
       admin = Fabricate(:admin)
       tl4 = Fabricate(:user, trust_level: 4)
       post = create_post
@@ -160,6 +168,5 @@ describe FlagQuery do
       expect(topics).to be_present
       expect(users).to be_present
     end
-
   end
 end

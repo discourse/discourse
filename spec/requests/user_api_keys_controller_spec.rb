@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe UserApiKeysController do
-
   let :public_key do
     <<~TXT
     -----BEGIN PUBLIC KEY-----
@@ -36,7 +35,7 @@ describe UserApiKeysController do
   let :args do
     {
       scopes: 'read',
-      client_id: "x" * 32,
+      client_id: 'x' * 32,
       auth_redirect: 'http://over.the/rainbow',
       application_name: 'foo',
       public_key: public_key,
@@ -45,27 +44,26 @@ describe UserApiKeysController do
   end
 
   context 'new' do
-    it "supports a head request cleanly" do
-      head "/user-api-key/new"
+    it 'supports a head request cleanly' do
+      head '/user-api-key/new'
       expect(response.status).to eq(200)
-      expect(response.headers["Auth-Api-Version"]).to eq("3")
+      expect(response.headers['Auth-Api-Version']).to eq('3')
     end
   end
 
   context 'create' do
-
-    it "does not allow anon" do
-      post "/user-api-key.json", params: args
+    it 'does not allow anon' do
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(403)
     end
 
-    it "refuses to redirect to disallowed place" do
+    it 'refuses to redirect to disallowed place' do
       sign_in(Fabricate(:user))
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(403)
     end
 
-    it "will allow tokens for staff without TL" do
+    it 'will allow tokens for staff without TL' do
       SiteSetting.min_trust_level_for_user_api_key = 2
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
@@ -73,181 +71,180 @@ describe UserApiKeysController do
 
       sign_in(user)
 
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(302)
     end
 
-    it "will not create token unless TL is met" do
+    it 'will not create token unless TL is met' do
       SiteSetting.min_trust_level_for_user_api_key = 2
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
       user = Fabricate(:user, trust_level: 1)
       sign_in(user)
 
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(403)
     end
 
-    it "will deny access if requesting more rights than allowed" do
+    it 'will deny access if requesting more rights than allowed' do
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-      SiteSetting.allow_user_api_key_scopes = "write"
+      SiteSetting.allow_user_api_key_scopes = 'write'
 
       user = Fabricate(:user, trust_level: 0)
       sign_in(user)
 
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(403)
     end
 
-    it "allows for a revoke with no id" do
+    it 'allows for a revoke with no id' do
       key = Fabricate(:readonly_user_api_key)
-      post "/user-api-key/revoke.json", headers: { HTTP_USER_API_KEY: key.key }
+      post '/user-api-key/revoke.json', headers: { HTTP_USER_API_KEY: key.key }
 
       expect(response.status).to eq(200)
       key.reload
       expect(key.revoked_at).not_to eq(nil)
     end
 
-    it "will not allow readonly api keys to revoke others" do
+    it 'will not allow readonly api keys to revoke others' do
       key1 = Fabricate(:readonly_user_api_key)
       key2 = Fabricate(:readonly_user_api_key)
 
-      post "/user-api-key/revoke.json",
-        params: { id: key2.id },
-        headers: { HTTP_USER_API_KEY: key1.key }
+      post '/user-api-key/revoke.json',
+           params: { id: key2.id }, headers: { HTTP_USER_API_KEY: key1.key }
 
       expect(response.status).to eq(403)
     end
 
-    it "will allow readonly api keys to revoke self" do
+    it 'will allow readonly api keys to revoke self' do
       key = Fabricate(:readonly_user_api_key)
-      post "/user-api-key/revoke.json",
-        params: { id: key.id },
-        headers: { HTTP_USER_API_KEY: key.key }
+      post '/user-api-key/revoke.json',
+           params: { id: key.id }, headers: { HTTP_USER_API_KEY: key.key }
 
       expect(response.status).to eq(200)
       key.reload
       expect(key.revoked_at).not_to eq(nil)
     end
 
-    it "will not return p access if not yet configured" do
+    it 'will not return p access if not yet configured' do
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
-      args[:scopes] = "push,read"
-      args[:push_url] = "https://push.it/here"
+      args[:scopes] = 'push,read'
+      args[:push_url] = 'https://push.it/here'
 
       user = Fabricate(:user, trust_level: 0)
       sign_in(user)
 
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(302)
 
       uri = URI.parse(response.redirect_url)
 
       query = uri.query
-      payload = query.split("payload=")[1]
+      payload = query.split('payload=')[1]
       encrypted = Base64.decode64(CGI.unescape(payload))
 
       key = OpenSSL::PKey::RSA.new(private_key)
 
       parsed = JSON.parse(key.private_decrypt(encrypted))
 
-      expect(parsed["nonce"]).to eq(args[:nonce])
-      expect(parsed["push"]).to eq(false)
-      expect(parsed["api"]).to eq(3)
+      expect(parsed['nonce']).to eq(args[:nonce])
+      expect(parsed['push']).to eq(false)
+      expect(parsed['api']).to eq(3)
 
       key = user.user_api_keys.first
-      expect(key.scopes).to include("push")
-      expect(key.push_url).to eq("https://push.it/here")
+      expect(key.scopes).to include('push')
+      expect(key.push_url).to eq('https://push.it/here')
     end
 
-    it "will redirect correctly with valid token" do
+    it 'will redirect correctly with valid token' do
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-      SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
+      SiteSetting.allowed_user_api_push_urls = 'https://push.it/here'
 
-      args[:scopes] = "push,notifications,message_bus,session_info"
-      args[:push_url] = "https://push.it/here"
+      args[:scopes] = 'push,notifications,message_bus,session_info'
+      args[:push_url] = 'https://push.it/here'
 
       user = Fabricate(:user, trust_level: 0)
       sign_in(user)
 
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(302)
 
       uri = URI.parse(response.redirect_url)
 
       query = uri.query
-      payload = query.split("payload=")[1]
+      payload = query.split('payload=')[1]
       encrypted = Base64.decode64(CGI.unescape(payload))
 
       key = OpenSSL::PKey::RSA.new(private_key)
 
       parsed = JSON.parse(key.private_decrypt(encrypted))
 
-      expect(parsed["nonce"]).to eq(args[:nonce])
-      expect(parsed["push"]).to eq(true)
+      expect(parsed['nonce']).to eq(args[:nonce])
+      expect(parsed['push']).to eq(true)
 
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.find_by(key: parsed['key'])
 
       expect(api_key.user_id).to eq(user.id)
-      expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info"].sort)
-      expect(api_key.push_url).to eq("https://push.it/here")
+      expect(api_key.scopes.sort).to eq(
+            %w[push message_bus notifications session_info].sort
+          )
+      expect(api_key.push_url).to eq('https://push.it/here')
 
-      uri.query = ""
-      expect(uri.to_s).to eq(args[:auth_redirect] + "?")
+      uri.query = ''
+      expect(uri.to_s).to eq(args[:auth_redirect] + '?')
 
       # should overwrite if needed
-      args["access"] = "pr"
-      post "/user-api-key.json", params: args
+      args['access'] = 'pr'
+      post '/user-api-key.json', params: args
 
       expect(response.status).to eq(302)
     end
 
-    it "will just show the payload if no redirect" do
+    it 'will just show the payload if no redirect' do
       user = Fabricate(:user, trust_level: 0)
       sign_in(user)
 
       args.delete(:auth_redirect)
 
       SiteSetting.min_trust_level_for_user_api_key = 0
-      post "/user-api-key", params: args
+      post '/user-api-key', params: args
       expect(response.status).not_to eq(302)
-      payload = Nokogiri::HTML(response.body).at('code').content
+      payload = Nokogiri.HTML(response.body).at('code').content
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.find_by(key: parsed['key'])
       expect(api_key.user_id).to eq(user.id)
     end
 
-    it "will just show the JSON payload if no redirect" do
+    it 'will just show the JSON payload if no redirect' do
       user = Fabricate(:user, trust_level: 0)
       sign_in(user)
 
       args.delete(:auth_redirect)
 
       SiteSetting.min_trust_level_for_user_api_key = 0
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).not_to eq(302)
-      payload = JSON.parse(response.body)["payload"]
+      payload = JSON.parse(response.body)['payload']
       encrypted = Base64.decode64(payload)
       key = OpenSSL::PKey::RSA.new(private_key)
       parsed = JSON.parse(key.private_decrypt(encrypted))
-      api_key = UserApiKey.find_by(key: parsed["key"])
+      api_key = UserApiKey.find_by(key: parsed['key'])
       expect(api_key.user_id).to eq(user.id)
-
     end
 
-    it "will allow redirect to wildcard urls" do
+    it 'will allow redirect to wildcard urls' do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + '/*'
       args[:auth_redirect] = args[:auth_redirect] + '/bluebirds/fly'
 
       sign_in(Fabricate(:user))
 
-      post "/user-api-key.json", params: args
+      post '/user-api-key.json', params: args
       expect(response.status).to eq(302)
     end
   end

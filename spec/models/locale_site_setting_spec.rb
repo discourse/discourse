@@ -23,7 +23,9 @@ describe LocaleSiteSetting do
 
   describe 'values' do
     it 'returns all the locales that we have translations for' do
-      expect(LocaleSiteSetting.values.map { |x| x[:value] }).to include(*core_locales)
+      expect(LocaleSiteSetting.values.map { |x| x[:value] }).to include(
+            *core_locales
+          )
     end
 
     it 'returns native names' do
@@ -35,20 +37,32 @@ describe LocaleSiteSetting do
 
   context 'with locales from plugin' do
     before do
-      DiscoursePluginRegistry.register_locale("foo", name: "Foo", nativeName: "Native Foo")
-      DiscoursePluginRegistry.register_locale("bar", name: "Bar", nativeName: "Native Bar")
-      DiscoursePluginRegistry.register_locale("de", name: "Renamed German", nativeName: "Native renamed German")
-      DiscoursePluginRegistry.register_locale("de_AT", name: "German (Austria)", nativeName: "Österreichisch", fallbackLocale: "de")
-      DiscoursePluginRegistry.register_locale("tlh")
+      DiscoursePluginRegistry.register_locale(
+        'foo',
+        name: 'Foo', nativeName: 'Native Foo'
+      )
+      DiscoursePluginRegistry.register_locale(
+        'bar',
+        name: 'Bar', nativeName: 'Native Bar'
+      )
+      DiscoursePluginRegistry.register_locale(
+        'de',
+        name: 'Renamed German', nativeName: 'Native renamed German'
+      )
+      DiscoursePluginRegistry.register_locale(
+        'de_AT',
+        name: 'German (Austria)',
+        nativeName: 'Österreichisch',
+        fallbackLocale: 'de'
+      )
+      DiscoursePluginRegistry.register_locale('tlh')
 
       # Plugins normally register a locale before LocaleSiteSetting is initialized.
       # That's not happening in tests, so we need to call reset!
       LocaleSiteSetting.reset!
     end
 
-    after do
-      DiscoursePluginRegistry.reset!
-    end
+    after { DiscoursePluginRegistry.reset! }
 
     describe 'valid_value?' do
       it 'returns true for locales from core' do

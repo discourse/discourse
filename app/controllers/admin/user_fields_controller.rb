@@ -1,19 +1,28 @@
 class Admin::UserFieldsController < Admin::AdminController
-
   def self.columns
-    [:name, :field_type, :editable, :description, :required, :show_on_profile, :show_on_user_card, :position]
+    %i[
+      name
+      field_type
+      editable
+      description
+      required
+      show_on_profile
+      show_on_user_card
+      position
+    ]
   end
 
   def create
-    field = UserField.new(params.require(:user_field).permit(*Admin::UserFieldsController.columns))
+    field =
+      UserField.new(
+        params.require(:user_field).permit(*Admin::UserFieldsController.columns)
+      )
 
     field.position = (UserField.maximum(:position) || 0) + 1
-    field.required = params[:user_field][:required] == "true"
+    field.required = params[:user_field][:required] == 'true'
     update_options(field)
 
-    json_result(field, serializer: UserFieldSerializer) do
-      field.save
-    end
+    json_result(field, serializer: UserFieldSerializer) { field.save }
   end
 
   def index
@@ -26,9 +35,7 @@ class Admin::UserFieldsController < Admin::AdminController
     field = UserField.where(id: params.require(:id)).first
 
     Admin::UserFieldsController.columns.each do |col|
-      unless field_params[col].nil?
-        field.send("#{col}=", field_params[col])
-      end
+      field.send("#{col}=", field_params[col]) unless field_params[col].nil?
     end
     update_options(field)
 
@@ -51,7 +58,8 @@ class Admin::UserFieldsController < Admin::AdminController
     options = params[:user_field][:options]
     if options.present?
       UserFieldOption.where(user_field_id: field.id).delete_all
-      field.user_field_options_attributes = options.map { |o| { value: o } }.uniq
+      field.user_field_options_attributes =
+        options.map { |o| { value: o } }.uniq
     end
   end
 end

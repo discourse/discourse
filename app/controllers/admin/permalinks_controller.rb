@@ -1,6 +1,5 @@
 class Admin::PermalinksController < Admin::AdminController
-
-  before_action :fetch_permalink, only: [:destroy]
+  before_action :fetch_permalink, only: %i[destroy]
 
   def index
     url = params[:filter]
@@ -13,7 +12,11 @@ class Admin::PermalinksController < Admin::AdminController
     params.require(:permalink_type)
     params.require(:permalink_type_value)
 
-    permalink = Permalink.new(:url => params[:url], params[:permalink_type] => params[:permalink_type_value])
+    permalink =
+      Permalink.new(
+        url: params[:url],
+        params[:permalink_type] => params[:permalink_type_value]
+      )
     if permalink.save
       render_serialized(permalink, PermalinkSerializer)
     else
@@ -31,5 +34,4 @@ class Admin::PermalinksController < Admin::AdminController
   def fetch_permalink
     @permalink = Permalink.find(params[:id])
   end
-
 end

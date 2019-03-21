@@ -1,6 +1,7 @@
 class UserAuthenticator
-
-  def initialize(user, session, authenticator_finder = Users::OmniauthCallbacksController)
+  def initialize(
+    user, session, authenticator_finder = Users::OmniauthCallbacksController
+  )
     @user = user
     @session = session[:authentication]
     @authenticator_finder = authenticator_finder
@@ -13,7 +14,9 @@ class UserAuthenticator
       @user.password_required!
     end
 
-    @user.skip_email_validation = true if @session && @session[:skip_email_validation].present?
+    if @session && @session[:skip_email_validation].present?
+      @user.skip_email_validation = true
+    end
   end
 
   def has_authenticator?
@@ -33,7 +36,8 @@ class UserAuthenticator
   end
 
   def authenticated?
-    @session && @session[:email]&.downcase == @user.email.downcase && @session[:email_valid].to_s == "true"
+    @session && @session[:email]&.downcase == @user.email.downcase &&
+      @session[:email_valid].to_s == 'true'
   end
 
   private
@@ -47,12 +51,12 @@ class UserAuthenticator
 
   def authenticator
     if authenticator_name
-      @authenticator ||= @authenticator_finder.find_authenticator(authenticator_name)
+      @authenticator ||=
+        @authenticator_finder.find_authenticator(authenticator_name)
     end
   end
 
   def authenticator_name
     @session && @session[:authenticator_name]
   end
-
 end

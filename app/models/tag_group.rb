@@ -17,15 +17,25 @@ class TagGroup < ActiveRecord::Base
   attr_accessor :permissions
 
   def tag_names=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
+    DiscourseTagging.add_or_create_tags_by_name(
+      self,
+      tag_names_arg,
+      unlimited: true
+    )
   end
 
   def parent_tag_name=(tag_names_arg)
     if tag_names_arg.empty?
       self.parent_tag = nil
     else
-      if tag_name = DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user)).first
-        self.parent_tag = Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
+      if tag_name =
+         DiscourseTagging.tags_for_saving(
+           tag_names_arg,
+           Guardian.new(Discourse.system_user)
+         )
+           .first
+        self.parent_tag =
+          Tag.find_by_name(tag_name) || Tag.create(name: tag_name)
       end
     end
   end
@@ -38,11 +48,14 @@ class TagGroup < ActiveRecord::Base
     everyone_group_id = Group::AUTO_GROUPS[:everyone]
     full = TagGroupPermission.permission_types[:full]
 
-    mapped = permissions.map do |group, permission|
-      group_id = Group.group_id_from_param(group)
-      permission = TagGroupPermission.permission_types[permission] unless permission.is_a?(Integer)
-      [group_id, permission]
-    end
+    mapped =
+      permissions.map do |group, permission|
+        group_id = Group.group_id_from_param(group)
+        unless permission.is_a?(Integer)
+          permission = TagGroupPermission.permission_types[permission]
+        end
+        [group_id, permission]
+      end
   end
 
   def init_permissions
@@ -58,7 +71,9 @@ class TagGroup < ActiveRecord::Base
     if @permissions
       tag_group_permissions.destroy_all
       @permissions.each do |group_id, permission_type|
-        tag_group_permissions.build(group_id: group_id, permission_type: permission_type)
+        tag_group_permissions.build(
+          group_id: group_id, permission_type: permission_type
+        )
       end
       @permissions = nil
     end
@@ -78,7 +93,11 @@ class TagGroup < ActiveRecord::Base
         )
       SQL
 
-      TagGroup.where(filter_sql, guardian.allowed_category_ids, Group::AUTO_GROUPS[:everyone])
+      TagGroup.where(
+        filter_sql,
+        guardian.allowed_category_ids,
+        Group::AUTO_GROUPS[:everyone]
+      )
     end
   end
 end

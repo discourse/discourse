@@ -1,4 +1,4 @@
-require_dependency "discourse_diff"
+require_dependency 'discourse_diff'
 
 class PostRevision < ActiveRecord::Base
   belongs_to :post
@@ -39,7 +39,6 @@ class PostRevision < ActiveRecord::Base
   def create_notification
     PostActionNotifier.after_create_post_revision(self)
   end
-
 end
 
 # == Schema Information

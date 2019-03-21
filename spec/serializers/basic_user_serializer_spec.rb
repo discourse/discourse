@@ -4,10 +4,12 @@ require_dependency 'user'
 describe BasicUserSerializer do
   describe '#as_json' do
     let(:user) { Fabricate.build(:user) }
-    let(:serializer) { BasicUserSerializer.new(user, scope: Guardian.new(user), root: false) }
+    let(:serializer) do
+      BasicUserSerializer.new(user, scope: Guardian.new(user), root: false)
+    end
     let(:json) { serializer.as_json }
 
-    it "returns the username" do
+    it 'returns the username' do
       expect(json[:username]).to eq(user.username)
       expect(json[:name]).to eq(user.name)
       expect(json[:avatar_template]).to eq(user.avatar_template)

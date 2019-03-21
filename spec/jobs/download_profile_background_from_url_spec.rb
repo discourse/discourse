@@ -7,8 +7,7 @@ RSpec.describe Jobs::DownloadProfileBackgroundFromUrl do
     it 'should not raise any error' do
       expect do
         described_class.new.execute(
-          url: '/assets/something/nice.jpg',
-          user_id: user.id
+          url: '/assets/something/nice.jpg', user_id: user.id
         )
       end.to_not raise_error
     end

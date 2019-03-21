@@ -42,8 +42,8 @@ module Jobs
       post_ids = load_problem_post_ids(limit)
 
       post_ids.each do |id|
-        # could be deleted while iterating through batch
         if post = Post.find_by(id: id)
+          # could be deleted while iterating through batch
           SearchIndexer.index(post, force: true)
         end
       end
@@ -61,45 +61,60 @@ module Jobs
     private
 
     def load_problem_post_ids(limit)
-      Post.joins(:topic)
-        .where('posts.id IN (
+      Post.joins(:topic).where(
+        'posts.id IN (
                 SELECT p2.id FROM posts p2
                 LEFT JOIN post_search_data pd ON pd.locale = ? AND pd.version = ? AND p2.id = pd.post_id
                 WHERE pd.post_id IS NULL
-                )', SiteSetting.default_locale, Search::INDEX_VERSION)
+                )',
+        SiteSetting.default_locale,
+        Search::INDEX_VERSION
+      )
         .limit(limit)
         .order('posts.id DESC')
         .pluck(:id)
     end
 
     def load_problem_category_ids(limit)
-      Category.joins(:category_search_data)
-        .where('category_search_data.locale != ?
-                OR category_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+      Category.joins(:category_search_data).where(
+        'category_search_data.locale != ?
+                OR category_search_data.version != ?',
+        SiteSetting.default_locale,
+        Search::INDEX_VERSION
+      )
         .limit(limit)
         .pluck(:id)
     end
 
     def load_problem_topic_ids(limit)
-      Topic.joins(:topic_search_data)
-        .where('topic_search_data.locale != ?
-                OR topic_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+      Topic.joins(:topic_search_data).where(
+        'topic_search_data.locale != ?
+                OR topic_search_data.version != ?',
+        SiteSetting.default_locale,
+        Search::INDEX_VERSION
+      )
         .limit(limit)
         .pluck(:id)
     end
 
     def load_problem_user_ids(limit)
-      User.joins(:user_search_data)
-        .where('user_search_data.locale != ?
-                OR user_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+      User.joins(:user_search_data).where(
+        'user_search_data.locale != ?
+                OR user_search_data.version != ?',
+        SiteSetting.default_locale,
+        Search::INDEX_VERSION
+      )
         .limit(limit)
         .pluck(:id)
     end
 
     def load_problem_tag_ids(limit)
-      Tag.joins(:tag_search_data)
-        .where('tag_search_data.locale != ?
-                OR tag_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+      Tag.joins(:tag_search_data).where(
+        'tag_search_data.locale != ?
+                OR tag_search_data.version != ?',
+        SiteSetting.default_locale,
+        Search::INDEX_VERSION
+      )
         .limit(limit)
         .pluck(:id)
     end

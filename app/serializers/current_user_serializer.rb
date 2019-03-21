@@ -1,7 +1,6 @@
 require_dependency 'new_post_manager'
 
 class CurrentUserSerializer < BasicUserSerializer
-
   attributes :name,
              :unread_notifications,
              :unread_private_messages,
@@ -47,7 +46,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :second_factor_enabled
 
   def groups
-    object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
+    object.visible_groups.pluck(:id, :name).map do |id, name|
+      { id: id, name: name.downcase }
+    end
   end
 
   def link_posting_access
@@ -168,15 +169,21 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def top_category_ids
-    omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
-    CategoryUser.where(user_id: object.id)
-      .where.not(notification_level: omitted_notification_levels)
-      .order("
+    omitted_notification_levels = [
+      CategoryUser.notification_levels[:muted],
+      CategoryUser.notification_levels[:regular]
+    ]
+    CategoryUser.where(user_id: object.id).where.not(
+      notification_level: omitted_notification_levels
+    )
+      .order(
+      '
         CASE
           WHEN notification_level = 3 THEN 1
           WHEN notification_level = 2 THEN 2
           WHEN notification_level = 4 THEN 3
-        END")
+        END'
+    )
       .pluck(:category_id)
       .slice(0, SiteSetting.header_dropdown_category_count)
   end

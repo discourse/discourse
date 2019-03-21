@@ -10,15 +10,11 @@ describe StatsSocket do
     StatsSocket.new(socket_path)
   end
 
-  before do
-    stats_socket.start
-  end
+  before { stats_socket.start }
 
-  after do
-    stats_socket.stop
-  end
+  after { stats_socket.stop }
 
-  it "can respond to various stats commands" do
+  it 'can respond to various stats commands' do
     line = nil
 
     # ensure this works more than once :)
@@ -30,7 +26,7 @@ describe StatsSocket do
     end
 
     socket = UNIXSocket.new(socket_path)
-    socket.send "gc_st", 0
+    socket.send 'gc_st', 0
     socket.flush
     sleep 0.001
     socket.send "at\n", 0
@@ -42,7 +38,7 @@ describe StatsSocket do
     expect(parsed.keys.sort).to eq(GC.stat.keys.map(&:to_s).sort)
 
     # make sure we have libv8 going
-    PrettyText.cook("x")
+    PrettyText.cook('x')
 
     socket = UNIXSocket.new(socket_path)
     socket.send "v8_stat\n", 0
@@ -53,5 +49,4 @@ describe StatsSocket do
 
     expect(parsed['total_physical_size']).to be > (0)
   end
-
 end

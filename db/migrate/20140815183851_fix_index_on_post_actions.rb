@@ -1,7 +1,10 @@
 class FixIndexOnPostActions < ActiveRecord::Migration[4.2]
   def change
     execute 'UPDATE post_actions SET targets_topic = false WHERE targets_topic IS NULL'
-    change_column :post_actions, :targets_topic, :boolean, default: false, null: false
+    change_column :post_actions,
+                  :targets_topic,
+                  :boolean,
+                  default: false, null: false
 
     execute '
     DELETE FROM post_actions pa
@@ -15,12 +18,11 @@ class FixIndexOnPostActions < ActiveRecord::Migration[4.2]
           x.deleted_at IS NULL
     '
 
-    remove_index "post_actions", name: "idx_unique_actions"
-    add_index "post_actions",
-                ["user_id", "post_action_type_id",
-                 "post_id", "targets_topic"],
-                name: "idx_unique_actions",
-                unique: true,
-                where: 'deleted_at IS NULL'
+    remove_index 'post_actions', name: 'idx_unique_actions'
+    add_index 'post_actions',
+              %w[user_id post_action_type_id post_id targets_topic],
+              name: 'idx_unique_actions',
+              unique: true,
+              where: 'deleted_at IS NULL'
   end
 end

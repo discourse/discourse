@@ -1,27 +1,29 @@
 require 'rails_helper'
 
 describe AnonymousShadowCreator do
-
-  it "returns no shadow by default" do
+  it 'returns no shadow by default' do
     expect(AnonymousShadowCreator.get(Fabricate.build(:user))).to eq(nil)
   end
 
-  context "Anonymous posting is enabled" do
-
+  context 'Anonymous posting is enabled' do
     before { SiteSetting.allow_anonymous_posting = true }
 
     let(:user) { Fabricate(:user_single_email, trust_level: 3) }
 
-    it "returns no shadow if trust level is not met" do
-      expect(AnonymousShadowCreator.get(Fabricate.build(:user, trust_level: 0))).to eq(nil)
+    it 'returns no shadow if trust level is not met' do
+      expect(
+        AnonymousShadowCreator.get(Fabricate.build(:user, trust_level: 0))
+      ).to eq(nil)
     end
 
-    it "returns no shadow if must_approve_users is true and user is not approved" do
+    it 'returns no shadow if must_approve_users is true and user is not approved' do
       SiteSetting.must_approve_users = true
-      expect(AnonymousShadowCreator.get(Fabricate.build(:user, approved: false))).to eq(nil)
+      expect(
+        AnonymousShadowCreator.get(Fabricate.build(:user, approved: false))
+      ).to eq(nil)
     end
 
-    it "returns a new shadow once time expires" do
+    it 'returns a new shadow once time expires' do
       SiteSetting.anonymous_account_duration_minutes = 1
 
       shadow = AnonymousShadowCreator.get(user)
@@ -36,20 +38,21 @@ describe AnonymousShadowCreator do
       shadow3 = AnonymousShadowCreator.get(user)
 
       expect(shadow3.user_option.email_digests).to eq(false)
-      expect(shadow3.user_option.email_messages_level).to eq(UserOption.email_level_types[:never])
+      expect(shadow3.user_option.email_messages_level).to eq(
+            UserOption.email_level_types[:never]
+          )
 
       expect(shadow2.id).not_to eq(shadow3.id)
-
     end
 
-    it "returns a shadow for a legit user" do
+    it 'returns a shadow for a legit user' do
       shadow = AnonymousShadowCreator.get(user)
       shadow2 = AnonymousShadowCreator.get(user)
 
       expect(shadow.id).to eq(shadow2.id)
 
       expect(shadow.trust_level).to eq(1)
-      expect(shadow.username).to eq("anonymous")
+      expect(shadow.username).to eq('anonymous')
 
       expect(shadow.created_at).not_to eq(user.created_at)
 
@@ -61,17 +64,16 @@ describe AnonymousShadowCreator do
       expect(shadow.anonymous?).to eq(true)
     end
 
-    it "works even when names are required" do
+    it 'works even when names are required' do
       SiteSetting.full_name_required = true
 
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end
 
-    it "works when there is an email whitelist" do
-      SiteSetting.email_domains_whitelist = "wayne.com"
+    it 'works when there is an email whitelist' do
+      SiteSetting.email_domains_whitelist = 'wayne.com'
 
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end
   end
-
 end

@@ -2,17 +2,20 @@ require 'rails_helper'
 require_dependency 'user_destroyer'
 
 describe UserDestroyer do
-
   let(:user) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
 
   describe 'new' do
     it 'raises an error when user is nil' do
-      expect { UserDestroyer.new(nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { UserDestroyer.new(nil) }.to raise_error(
+            Discourse::InvalidParameters
+          )
     end
 
     it 'raises an error when user is not a User' do
-      expect { UserDestroyer.new(5) }.to raise_error(Discourse::InvalidParameters)
+      expect { UserDestroyer.new(5) }.to raise_error(
+            Discourse::InvalidParameters
+          )
     end
   end
 
@@ -23,18 +26,24 @@ describe UserDestroyer do
     end
 
     it 'raises an error when user is nil' do
-      expect { UserDestroyer.new(@admin).destroy(nil) }.to raise_error(Discourse::InvalidParameters)
+      expect { UserDestroyer.new(@admin).destroy(nil) }.to raise_error(
+            Discourse::InvalidParameters
+          )
     end
 
     it 'raises an error when user is not a User' do
-      expect { UserDestroyer.new(@admin).destroy('nothing') }.to raise_error(Discourse::InvalidParameters)
+      expect { UserDestroyer.new(@admin).destroy('nothing') }.to raise_error(
+            Discourse::InvalidParameters
+          )
     end
 
     it 'raises an error when regular user tries to delete another user' do
-      expect { UserDestroyer.new(@user).destroy(Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
+      expect do
+        UserDestroyer.new(@user).destroy(Fabricate(:user))
+      end.to raise_error(Discourse::InvalidAccess)
     end
 
-    shared_examples "successfully destroy a user" do
+    shared_examples 'successfully destroy a user' do
       it 'should delete the user' do
         expect { destroy }.to change { User.count }.by(-1)
       end
@@ -46,14 +55,23 @@ describe UserDestroyer do
       end
 
       it 'should log the action' do
-        StaffActionLogger.any_instance.expects(:log_user_deletion).with(@user, anything).once
+        StaffActionLogger.any_instance.expects(:log_user_deletion).with(
+          @user,
+          anything
+        )
+          .once
         destroy
       end
 
-      it "should not log the action if quiet is true" do
-        expect {
-          UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge(quiet: true))
-        }.to_not change { UserHistory.where(action: UserHistory.actions[:delete_user]).count }
+      it 'should not log the action if quiet is true' do
+        expect do
+          UserDestroyer.new(@admin).destroy(
+            @user,
+            destroy_opts.merge(quiet: true)
+          )
+        end.to_not change do
+          UserHistory.where(action: UserHistory.actions[:delete_user]).count
+        end
       end
 
       it 'triggers a extensibility event' do
@@ -64,43 +82,57 @@ describe UserDestroyer do
       end
     end
 
-    shared_examples "email block list" do
+    shared_examples 'email block list' do
       it "doesn't add email to block list by default" do
         ScreenedEmail.expects(:block).never
         destroy
       end
 
-      it "adds emails to block list if block_email is true" do
-        expect {
-          UserDestroyer.new(@admin).destroy(@user, destroy_opts.merge(block_email: true))
-        }.to change { ScreenedEmail.count }.by(2)
+      it 'adds emails to block list if block_email is true' do
+        expect do
+          UserDestroyer.new(@admin).destroy(
+            @user,
+            destroy_opts.merge(block_email: true)
+          )
+        end.to change { ScreenedEmail.count }.by(2)
       end
     end
 
     context 'user deletes self' do
-      let(:destroy_opts) { { delete_posts: true, context: "/u/username/preferences/account" } }
-      subject(:destroy) { UserDestroyer.new(@user).destroy(@user, destroy_opts) }
+      let(:destroy_opts) do
+        { delete_posts: true, context: '/u/username/preferences/account' }
+      end
+      subject(:destroy) do
+        UserDestroyer.new(@user).destroy(@user, destroy_opts)
+      end
 
-      include_examples "successfully destroy a user"
+      include_examples 'successfully destroy a user'
 
       it 'should log proper context' do
         destroy
-        expect(UserHistory.where(action: UserHistory.actions[:delete_user]).last.context).to eq(I18n.t("staff_action_logs.user_delete_self", url: "/u/username/preferences/account"))
+        expect(
+          UserHistory.where(action: UserHistory.actions[:delete_user]).last
+            .context
+        ).to eq(
+              I18n.t(
+                'staff_action_logs.user_delete_self',
+                url: '/u/username/preferences/account'
+              )
+            )
       end
     end
 
-    context "with a queued post" do
+    context 'with a queued post' do
       let!(:qp) { Fabricate(:queued_post, user: user) }
 
-      it "removes the queued post" do
+      it 'removes the queued post' do
         UserDestroyer.new(admin).destroy(user)
         expect(QueuedPost.where(user_id: user.id).count).to eq(0)
       end
     end
 
-    context "with a directory item record" do
-
-      it "removes the directory item" do
+    context 'with a directory item record' do
+      it 'removes the directory item' do
         DirectoryItem.create!(
           user: user,
           period_type: 1,
@@ -115,10 +147,10 @@ describe UserDestroyer do
       end
     end
 
-    context "with a draft" do
+    context 'with a draft' do
       let!(:draft) { Draft.set(user, 'test', 1, 'test') }
 
-      it "removed the draft" do
+      it 'removed the draft' do
         UserDestroyer.new(admin).destroy(user)
         expect(Draft.where(user_id: user.id).count).to eq(0)
       end
@@ -130,7 +162,7 @@ describe UserDestroyer do
       let!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
       let!(:post) { Fabricate(:post, user: @user, topic: topic) }
 
-      context "delete_posts is false" do
+      context 'delete_posts is false' do
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
         before do
           @user.stubs(:post_count).returns(1)
@@ -144,28 +176,30 @@ describe UserDestroyer do
         end
       end
 
-      context "delete_posts is true" do
+      context 'delete_posts is true' do
         let(:destroy_opts) { { delete_posts: true } }
 
-        context "staff deletes user" do
-          subject(:destroy) { UserDestroyer.new(@admin).destroy(@user, destroy_opts) }
+        context 'staff deletes user' do
+          subject(:destroy) do
+            UserDestroyer.new(@admin).destroy(@user, destroy_opts)
+          end
 
-          include_examples "successfully destroy a user"
-          include_examples "email block list"
+          include_examples 'successfully destroy a user'
+          include_examples 'email block list'
 
-          it "deletes the posts" do
+          it 'deletes the posts' do
             destroy
             expect(post.reload.deleted_at).not_to eq(nil)
             expect(post.user_id).to eq(nil)
           end
 
-          it "does not delete topics started by others in which the user has replies" do
+          it 'does not delete topics started by others in which the user has replies' do
             destroy
             expect(topic.reload.deleted_at).to eq(nil)
             expect(topic.user_id).not_to eq(nil)
           end
 
-          it "deletes topics started by the deleted user" do
+          it 'deletes topics started by the deleted user' do
             spammer_topic = Fabricate(:topic, user: @user)
             Fabricate(:post, user: @user, topic: spammer_topic)
             destroy
@@ -173,13 +207,17 @@ describe UserDestroyer do
             expect(spammer_topic.user_id).to eq(nil)
           end
 
-          context "delete_as_spammer is true" do
-
+          context 'delete_as_spammer is true' do
             before { destroy_opts[:delete_as_spammer] = true }
 
             it "agrees with flags on user's posts" do
               spammer_post = Fabricate(:post, user: @user)
-              flag = PostAction.act(@admin, spammer_post, PostActionType.types[:inappropriate])
+              flag =
+                PostAction.act(
+                  @admin,
+                  spammer_post,
+                  PostActionType.types[:inappropriate]
+                )
               expect(flag.agreed_at).to eq(nil)
 
               destroy
@@ -187,17 +225,18 @@ describe UserDestroyer do
               flag.reload
               expect(flag.agreed_at).not_to eq(nil)
             end
-
           end
         end
 
-        context "users deletes self" do
-          subject(:destroy) { UserDestroyer.new(@user).destroy(@user, destroy_opts) }
+        context 'users deletes self' do
+          subject(:destroy) do
+            UserDestroyer.new(@user).destroy(@user, destroy_opts)
+          end
 
-          include_examples "successfully destroy a user"
-          include_examples "email block list"
+          include_examples 'successfully destroy a user'
+          include_examples 'email block list'
 
-          it "deletes the posts" do
+          it 'deletes the posts' do
             destroy
             expect(post.reload.deleted_at).not_to eq(nil)
             expect(post.user_id).to eq(nil)
@@ -212,15 +251,22 @@ describe UserDestroyer do
         @user.user_stat.update_attribute(:post_count, 1)
       end
       let(:destroy_opts) { {} }
-      subject(:destroy) { UserDestroyer.new(@user).destroy(@user, delete_posts: false) }
+      subject(:destroy) do
+        UserDestroyer.new(@user).destroy(@user, delete_posts: false)
+      end
 
-      include_examples "successfully destroy a user"
+      include_examples 'successfully destroy a user'
     end
 
     context 'user has deleted posts' do
-      let!(:deleted_post) { Fabricate(:post, user: @user, deleted_at: 1.hour.ago) }
+      let!(:deleted_post) do
+        Fabricate(:post, user: @user, deleted_at: 1.hour.ago)
+      end
       it "should mark the user's deleted posts as belonging to a nuked user" do
-        expect { UserDestroyer.new(@admin).destroy(@user) }.to change { User.count }.by(-1)
+        expect { UserDestroyer.new(@admin).destroy(@user) }.to change do
+          User.count
+        end
+          .by(-1)
         expect(deleted_post.reload.user_id).to eq(nil)
       end
     end
@@ -230,8 +276,8 @@ describe UserDestroyer do
         let(:destroy_opts) { {} }
         subject(:destroy) { UserDestroyer.new(@admin).destroy(@user) }
 
-        include_examples "successfully destroy a user"
-        include_examples "email block list"
+        include_examples 'successfully destroy a user'
+        include_examples 'email block list'
       end
 
       context 'and destroy fails' do
@@ -257,9 +303,17 @@ describe UserDestroyer do
           UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
         end
 
-        it "adds ScreenedUrl records when :block_urls is true" do
-          ScreenedUrl.expects(:watch).with(anything, anything, has_key(:ip_address)).at_least_once
-          UserDestroyer.new(@admin).destroy(@user, delete_posts: true, block_urls: true)
+        it 'adds ScreenedUrl records when :block_urls is true' do
+          ScreenedUrl.expects(:watch).with(
+            anything,
+            anything,
+            has_key(:ip_address)
+          )
+            .at_least_once
+          UserDestroyer.new(@admin).destroy(
+            @user,
+            delete_posts: true, block_urls: true
+          )
         end
       end
 
@@ -272,7 +326,10 @@ describe UserDestroyer do
 
         it "doesn't add ScreenedUrl records" do
           ScreenedUrl.expects(:watch).never
-          UserDestroyer.new(@admin).destroy(@user, delete_posts: true, block_urls: true)
+          UserDestroyer.new(@admin).destroy(
+            @user,
+            delete_posts: true, block_urls: true
+          )
         end
       end
 
@@ -284,7 +341,10 @@ describe UserDestroyer do
 
         it "doesn't add ScreenedUrl records" do
           ScreenedUrl.expects(:watch).never
-          UserDestroyer.new(@admin).destroy(@user, delete_posts: true, block_urls: true)
+          UserDestroyer.new(@admin).destroy(
+            @user,
+            delete_posts: true, block_urls: true
+          )
         end
       end
     end
@@ -295,16 +355,21 @@ describe UserDestroyer do
         UserDestroyer.new(@admin).destroy(@user)
       end
 
-      context "block_ip is true" do
-        it "creates a new screened_ip_address record" do
-          ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(stub_everything)
+      context 'block_ip is true' do
+        it 'creates a new screened_ip_address record' do
+          ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(
+            stub_everything
+          )
           UserDestroyer.new(@admin).destroy(@user, block_ip: true)
         end
 
-        it "creates two new screened_ip_address records when registration_ip_address is different than last ip_address" do
+        it 'creates two new screened_ip_address records when registration_ip_address is different than last ip_address' do
           @user.registration_ip_address = '12.12.12.12'
-          ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(stub_everything)
-          ScreenedIpAddress.expects(:watch).with(@user.registration_ip_address).returns(stub_everything)
+          ScreenedIpAddress.expects(:watch).with(@user.ip_address).returns(
+            stub_everything
+          )
+          ScreenedIpAddress.expects(:watch).with(@user.registration_ip_address)
+            .returns(stub_everything)
           UserDestroyer.new(@admin).destroy(@user, block_ip: true)
         end
       end
@@ -313,7 +378,7 @@ describe UserDestroyer do
     context 'user created a category' do
       let!(:category) { Fabricate(:category, user: @user) }
 
-      it "assigns the system user to the categories" do
+      it 'assigns the system user to the categories' do
         UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
         expect(category.reload.user_id).to eq(Discourse.system_user.id)
         expect(category.topic).to be_present
@@ -324,10 +389,10 @@ describe UserDestroyer do
     context 'user got an email' do
       let!(:email_log) { Fabricate(:email_log, user: user) }
 
-      it "deletes the email log" do
-        expect {
+      it 'deletes the email log' do
+        expect do
           UserDestroyer.new(@admin).destroy(user, delete_posts: true)
-        }.to change { EmailLog.count }.by(-1)
+        end.to change { EmailLog.count }.by(-1)
       end
     end
 
@@ -339,9 +404,9 @@ describe UserDestroyer do
       end
 
       it 'should destroy the like' do
-        expect {
+        expect do
           UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
-        }.to change { PostAction.count }.by(-1)
+        end.to change { PostAction.count }.by(-1)
         expect(@post.reload.like_count).to eq(0)
       end
     end
@@ -349,15 +414,11 @@ describe UserDestroyer do
     context 'user belongs to groups that grant trust level' do
       let(:group) { Fabricate(:group, grant_trust_level: 2) }
 
-      before do
-        group.add(user)
-      end
+      before { group.add(user) }
 
       it 'can delete the user' do
         d = UserDestroyer.new(admin)
-        expect {
-          d.destroy(user)
-        }.to change { User.count }.by(-1)
+        expect { d.destroy(user) }.to change { User.count }.by(-1)
       end
     end
 
@@ -371,17 +432,20 @@ describe UserDestroyer do
         )
       end
 
-      it "should keep the staff action log and add the username" do
+      it 'should keep the staff action log and add the username' do
         username = user.username
-        log = UserHistory.staff_action_records(
-          Discourse.system_user,
-          acting_user: username
-        ).to_a[0]
+        log =
+          UserHistory.staff_action_records(
+            Discourse.system_user,
+            acting_user: username
+          )
+            .to_a[
+            0
+          ]
         UserDestroyer.new(admin).destroy(user, delete_posts: true)
         log.reload
         expect(log.details).to include(username)
       end
     end
   end
-
 end

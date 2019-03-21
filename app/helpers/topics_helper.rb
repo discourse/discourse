@@ -18,5 +18,4 @@ module TopicsHelper
 
     Plugin::Filter.apply(:topic_categories_breadcrumb, topic, breadcrumb)
   end
-
 end

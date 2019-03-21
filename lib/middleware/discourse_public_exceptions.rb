@@ -2,7 +2,6 @@
 # we need to handle certain exceptions here
 module Middleware
   class DiscoursePublicExceptions < ::ActionDispatch::PublicExceptions
-
     def initialize(path)
       super
     end
@@ -13,7 +12,7 @@ module Middleware
       # this can happen if we have an exception in a route constraint in some cases
       # this code re-dispatches the exception to our application controller so we can
       # properly translate the exception to a page
-      exception = env["action_dispatch.exception"]
+      exception = env['action_dispatch.exception']
       response = ActionDispatch::Response.new
 
       # Special handling for invalid params, in this case we can not re-dispatch
@@ -29,20 +28,22 @@ module Middleware
           fake_controller.response = response
           fake_controller.request = ActionDispatch::Request.new(env)
 
-          if ApplicationController.rescue_with_handler(exception, object: fake_controller)
+          if ApplicationController.rescue_with_handler(
+             exception,
+             object: fake_controller
+           )
             body = response.body
-            if String === body
-              body = [body]
-            end
+            body = [body] if String === body
             return [response.status, response.headers, body]
           end
         rescue => e
-          Discourse.warn_exception(e, message: "Failed to handle exception in exception app middleware")
+          Discourse.warn_exception(
+            e,
+            message: 'Failed to handle exception in exception app middleware'
+          )
         end
-
       end
       super
     end
-
   end
 end

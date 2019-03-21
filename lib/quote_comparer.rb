@@ -7,7 +7,8 @@ class QuoteComparer
     @topic_id = topic_id
     @post_number = post_number
     @text = text
-    @parent_post = Post.where(topic_id: @topic_id, post_number: @post_number).first
+    @parent_post =
+      Post.where(topic_id: @topic_id, post_number: @post_number).first
   end
 
   # This algorithm is far from perfect, but it follows the Discourse
@@ -16,7 +17,10 @@ class QuoteComparer
   def modified?
     return true if @text.blank? || @parent_post.blank?
 
-    parent_text = Nokogiri::HTML::fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
+    parent_text =
+      Nokogiri::HTML.fragment(@parent_post.cooked).text.delete(
+        QuoteComparer.whitespace
+      )
     text = @text.delete(QuoteComparer.whitespace)
 
     !parent_text.include?(text)

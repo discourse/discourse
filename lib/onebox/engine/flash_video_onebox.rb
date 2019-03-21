@@ -3,7 +3,7 @@ module Onebox
     class FlashVideoOnebox
       include Engine
 
-      matches_regexp /^https?:\/\/.*\.(swf|flv)$/
+      matches_regexp %r{^https?:\/\/.*\.(swf|flv)$}
 
       def to_html
         if SiteSetting.enable_flash_video_onebox

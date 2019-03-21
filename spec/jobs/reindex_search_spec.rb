@@ -8,7 +8,7 @@ describe Jobs::ReindexSearch do
   # This works since test db has a small record less than limit.
   # Didn't check `topic` because topic doesn't have posts in fabrication
   # thus no search data
-  %w(post category user).each do |m|
+  %w[post category user].each do |m|
     it "should rebuild `#{m}` when default_locale changed" do
       SiteSetting.default_locale = 'en'
       model = Fabricate(m.to_sym)

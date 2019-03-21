@@ -5,13 +5,15 @@ class DiscourseLogstashLogger
     LogStashLogger.new(
       uri: uri,
       sync: true,
-      customize_event: ->(event) {
-        event['hostname'] = `hostname`.chomp
-        event['severity_name'] = event['severity']
-        event['severity'] = Object.const_get("Logger::Severity::#{event['severity']}")
-        event['type'] = type
-        event['pid'] = Process.pid
-      },
+      customize_event:
+        lambda do |event|
+          event['hostname'] = `hostname`.chomp
+          event['severity_name'] = event['severity']
+          event['severity'] =
+            Object.const_get("Logger::Severity::#{event['severity']}")
+          event['type'] = type
+          event['pid'] = Process.pid
+        end
     )
   end
 end

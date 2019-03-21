@@ -6,9 +6,7 @@ class WatchedWordListSerializer < ApplicationSerializer
   end
 
   def words
-    object.map do |word|
-      WatchedWordSerializer.new(word, root: false)
-    end
+    object.map { |word| WatchedWordSerializer.new(word, root: false) }
   end
 
   # No point making this site setting `client: true` when it's only used

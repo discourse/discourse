@@ -2,7 +2,7 @@ class AddLikeScoreToPosts < ActiveRecord::Migration[4.2]
   def change
     add_column :posts, :like_score, :integer, default: 0, null: false
 
-    execute "UPDATE posts p
+    execute 'UPDATE posts p
               set like_score = x.like_score
               FROM (SELECT pa.post_id,
                             SUM(CASE
@@ -12,6 +12,6 @@ class AddLikeScoreToPosts < ActiveRecord::Migration[4.2]
                     FROM post_actions AS pa
                     INNER JOIN users AS u ON u.id = pa.user_id
                     GROUP BY pa.post_id) AS x
-              WHERE x.post_id = p.id"
+              WHERE x.post_id = p.id'
   end
 end

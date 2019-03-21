@@ -24,6 +24,5 @@ class FakeLogger
     @fatals << message
   end
 
-  def formatter
-  end
+  def formatter; end
 end

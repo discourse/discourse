@@ -1,5 +1,4 @@
 class InviteSerializer < ApplicationSerializer
-
   attributes :email, :created_at, :redeemed_at, :expired, :user
 
   def include_email?
@@ -15,5 +14,4 @@ class InviteSerializer < ApplicationSerializer
     ser.invited_by = object.invited_by
     ser.as_json
   end
-
 end

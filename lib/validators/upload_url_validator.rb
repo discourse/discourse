@@ -5,10 +5,12 @@ class UploadUrlValidator < ActiveModel::EachValidator
         begin
           URI.parse(value)
         rescue URI::Error
+
         end
 
       unless uri && Upload.exists?(url: value)
-        record.errors[attribute] << (options[:message] || I18n.t('errors.messages.invalid'))
+        record.errors[attribute] <<
+          (options[:message] || I18n.t('errors.messages.invalid'))
       end
     end
   end

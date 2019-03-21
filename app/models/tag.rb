@@ -4,9 +4,9 @@ class Tag < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 
-  scope :where_name, ->(name) do
+  scope :where_name, lambda do |name|
     name = Array(name).map(&:downcase)
-    where("lower(name) IN (?)", name)
+    where('lower(name) IN (?)', name)
   end
 
   scope :unused, -> { where(topic_count: 0, pm_topic_count: 0) }
@@ -80,20 +80,30 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
-    filter_sql = guardian&.is_staff? ? '' : " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id).to_sql})"
+    filter_sql =
+      if guardian&.is_staff?
+        ''
+      else
+        " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id)
+          .to_sql})"
+      end
 
-    tag_names_with_counts = DB.query <<~SQL
+    tag_names_with_counts =
+      DB.query <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
-       WHERE stats.category_id in (#{scope_category_ids.join(',')})
+       WHERE stats.category_id in (#{scope_category_ids
+                 .join(
+                 ','
+               )})
        #{filter_sql}
     GROUP BY tags.name
     ORDER BY sum_topic_count DESC, tag_name ASC
        LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| row.tag_name }
+    tag_names_with_counts.map(&:tag_name)
   end
 
   def self.pm_tags(limit_arg: nil, guardian: nil, allowed_user: nil)
@@ -101,7 +111,8 @@ class Tag < ActiveRecord::Base
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
     user_id = allowed_user.id
 
-    DB.query_hash(<<~SQL).map!(&:symbolize_keys!)
+    DB.query_hash(
+      <<~SQL
       SELECT tags.name as id, tags.name as text, COUNT(topics.id) AS count
         FROM tags
         JOIN topic_tags ON tags.id = topic_tags.tag_id
@@ -121,6 +132,8 @@ class Tag < ActiveRecord::Base
        GROUP BY tags.name
        LIMIT #{limit}
     SQL
+    )
+      .map!(&:symbolize_keys!)
   end
 
   def self.include_tags?
@@ -135,11 +148,7 @@ class Tag < ActiveRecord::Base
     SearchIndexer.index(self)
   end
 
-  %i{
-    tag_created
-    tag_updated
-    tag_destroyed
-  }.each do |event|
+  %i[tag_created tag_updated tag_destroyed].each do |event|
     define_method("trigger_#{event}_event") do
       DiscourseEvent.trigger(event, self)
       true

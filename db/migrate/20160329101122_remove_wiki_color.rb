@@ -3,6 +3,5 @@ class RemoveWikiColor < ActiveRecord::Migration[4.2]
     execute "DELETE FROM color_scheme_colors WHERE name = 'wiki'"
   end
 
-  def down
-  end
+  def down; end
 end

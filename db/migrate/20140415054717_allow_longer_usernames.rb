@@ -4,6 +4,5 @@ class AllowLongerUsernames < ActiveRecord::Migration[4.2]
     change_column :users, :username_lower, :string, limit: 60
   end
 
-  def down
-  end
+  def down; end
 end

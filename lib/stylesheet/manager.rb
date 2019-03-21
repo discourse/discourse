@@ -4,7 +4,6 @@ require_dependency 'stylesheet/compiler'
 module Stylesheet; end
 
 class Stylesheet::Manager
-
   CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
@@ -13,31 +12,35 @@ class Stylesheet::Manager
   @lock = Mutex.new
 
   def self.cache
-    @cache ||= DistributedCache.new("discourse_stylesheet")
+    @cache ||= DistributedCache.new('discourse_stylesheet')
   end
 
   def self.clear_theme_cache!
-    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }
+    cache.hash.keys.select { |k| k =~ /theme/ }.each { |k| cache.delete(k) }
   end
 
   def self.stylesheet_data(target = :desktop, theme_ids = :missing)
-    stylesheet_details(target, "all", theme_ids)
+    stylesheet_details(target, 'all', theme_ids)
   end
 
-  def self.stylesheet_link_tag(target = :desktop, media = 'all', theme_ids = :missing)
+  def self.stylesheet_link_tag(
+    target = :desktop, media = 'all', theme_ids = :missing
+  )
     stylesheets = stylesheet_details(target, media, theme_ids)
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
       theme_id = stylesheet[:theme_id]
-      data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
-      %[<link href="#{href}" media="#{media}" rel="stylesheet" data-target="#{target}" #{data_theme_id}/>]
-    end.join("\n").html_safe
+      data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ''
+      "<link href=\"#{href}\" media=\"#{media}\" rel=\"stylesheet\" data-target=\"#{target}\" #{data_theme_id}/>"
+    end
+      .join("\n")
+      .html_safe
   end
 
-  def self.stylesheet_details(target = :desktop, media = 'all', theme_ids = :missing)
-    if theme_ids == :missing
-      theme_ids = [SiteSetting.default_theme_id]
-    end
+  def self.stylesheet_details(
+    target = :desktop, media = 'all', theme_ids = :missing
+  )
+    theme_ids = [SiteSetting.default_theme_id] if theme_ids == :missing
 
     target = target.to_sym
 
@@ -47,7 +50,8 @@ class Stylesheet::Manager
 
     current_hostname = Discourse.current_hostname
 
-    array_cache_key = "array_themes_#{theme_ids.join(",")}_#{target}_#{current_hostname}"
+    array_cache_key =
+      "array_themes_#{theme_ids.join(',')}_#{target}_#{current_hostname}"
     stylesheets = cache[array_cache_key]
     return stylesheets if stylesheets.present?
 
@@ -73,7 +77,9 @@ class Stylesheet::Manager
           cache[cache_key] = href
         end
 
-        data[:theme_id] = theme_id if theme_id.present? && data[:theme_id].blank?
+        if theme_id.present? && data[:theme_id].blank?
+          data[:theme_id] = theme_id
+        end
         data[:new_href] = href
         stylesheets << data
       end
@@ -83,10 +89,13 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    themes = Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id).pluck(:id, :name)
+    themes =
+      Theme.where('user_selectable OR id = ?', SiteSetting.default_theme_id)
+        .pluck(:id, :name)
     themes << nil
     themes.each do |id, name|
-      [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :desktop_theme, :mobile_theme, :admin].each do |target|
+      %i[desktop mobile desktop_rtl mobile_rtl desktop_theme mobile_theme admin]
+        .each do |target|
         theme_id = id || SiteSetting.default_theme_id
         next if target =~ THEME_REGEX && theme_id == -1
         cache_key = "#{target}_#{theme_id}"
@@ -102,31 +111,35 @@ class Stylesheet::Manager
 
   def self.last_file_updated
     if Rails.env.production?
-      @last_file_updated ||= if File.exists?(MANIFEST_FULL_PATH)
-        File.readlines(MANIFEST_FULL_PATH, 'r')[0]
-      else
-        mtime = max_file_mtime
-        FileUtils.mkdir_p(MANIFEST_DIR)
-        File.open(MANIFEST_FULL_PATH, "w") { |f| f.print(mtime) }
-        mtime
-      end
+      @last_file_updated ||=
+        if File.exists?(MANIFEST_FULL_PATH)
+          File.readlines(MANIFEST_FULL_PATH, 'r')[0]
+        else
+          mtime = max_file_mtime
+          FileUtils.mkdir_p(MANIFEST_DIR)
+          File.open(MANIFEST_FULL_PATH, 'w') { |f| f.print(mtime) }
+          mtime
+        end
     else
       max_file_mtime
     end
   end
 
   def self.max_file_mtime
-    globs = ["#{Rails.root}/app/assets/stylesheets/**/*.*css",
-             "#{Rails.root}/app/assets/images/**/*.*"]
+    globs = [
+      "#{Rails.root}/app/assets/stylesheets/**/*.*css",
+      "#{Rails.root}/app/assets/images/**/*.*"
+    ]
 
     Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
       globs << "#{path}/plugin.rb"
       globs << "#{path}/**/*.*css"
     end
 
-    globs.map do |pattern|
-      Dir.glob(pattern).map { |x| File.mtime(x) }.max
-    end.compact.max.to_i
+    globs.map { |pattern| Dir.glob(pattern).map { |x| File.mtime(x) }.max }
+      .compact
+      .max
+      .to_i
   end
 
   def self.cache_fullpath
@@ -141,16 +154,25 @@ class Stylesheet::Manager
   def compile(opts = {})
     unless opts[:force]
       if File.exists?(stylesheet_fullpath)
-        unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
+        unless StylesheetCache.where(target: qualified_target, digest: digest)
+               .exists?
           begin
-            source_map = begin
-              File.read(source_map_fullpath)
-            rescue Errno::ENOENT
-            end
+            source_map =
+              begin
+                File.read(source_map_fullpath)
+              rescue Errno::ENOENT
 
-            StylesheetCache.add(qualified_target, digest, File.read(stylesheet_fullpath), source_map)
+              end
+
+            StylesheetCache.add(
+              qualified_target,
+              digest,
+              File.read(stylesheet_fullpath),
+              source_map
+            )
           rescue => e
-            Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
+            Rails
+              .logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
           end
         end
         return true
@@ -158,32 +180,27 @@ class Stylesheet::Manager
     end
 
     rtl = @target.to_s =~ /_rtl$/
-    css, source_map = begin
-      Stylesheet::Compiler.compile_asset(
-        @target,
-         rtl: rtl,
-         theme_id: theme&.id,
-         source_map_file: source_map_filename
-      )
-    rescue SassC::SyntaxError => e
-      if %w{embedded_theme mobile_theme desktop_theme}.include?(@target.to_s)
-        # no special errors for theme, handled in theme editor
-        ["", nil]
-      else
-        raise Discourse::ScssError, e.message
+    css, source_map =
+      begin
+        Stylesheet::Compiler.compile_asset(
+          @target,
+          rtl: rtl, theme_id: theme&.id, source_map_file: source_map_filename
+        )
+      rescue SassC::SyntaxError => e
+        if %w[embedded_theme mobile_theme desktop_theme].include?(@target.to_s)
+          # no special errors for theme, handled in theme editor
+          ['', nil]
+        else
+          raise Discourse::ScssError, e.message
+        end
       end
-    end
 
     FileUtils.mkdir_p(cache_fullpath)
 
-    File.open(stylesheet_fullpath, "w") do |f|
-      f.puts css
-    end
+    File.open(stylesheet_fullpath, 'w') { |f| f.puts css }
 
     if source_map.present?
-      File.open(source_map_fullpath, "w") do |f|
-        f.puts source_map
-      end
+      File.open(source_map_fullpath, 'w') { |f| f.puts source_map }
     end
 
     begin
@@ -238,7 +255,8 @@ class Stylesheet::Manager
     if is_theme?
       "#{@target}_#{theme.id}"
     else
-      scheme_string = theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ""
+      scheme_string =
+        theme && theme.color_scheme ? "_#{theme.color_scheme.id}" : ''
       "#{@target}#{scheme_string}"
     end
   end
@@ -258,13 +276,10 @@ class Stylesheet::Manager
 
   # digest encodes the things that trigger a recompile
   def digest
-    @digest ||= begin
-      if is_theme?
-        theme_digest
-      else
-        color_scheme_digest
+    @digest ||=
+      begin
+        is_theme? ? theme_digest : color_scheme_digest
       end
-    end
   end
 
   def theme
@@ -273,18 +288,21 @@ class Stylesheet::Manager
   end
 
   def theme_digest
-    scss = ""
+    scss = ''
 
-    if [:mobile_theme, :desktop_theme].include?(@target)
+    if %i[mobile_theme desktop_theme].include?(@target)
       scss = theme.resolve_baked_field(:common, :scss)
-      scss += theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
+      scss += theme.resolve_baked_field(@target.to_s.sub('_theme', ''), :scss)
     elsif @target == :embedded_theme
       scss = theme.resolve_baked_field(:common, :embedded_scss)
     else
-      raise "attempting to look up theme digest for invalid field"
+      raise 'attempting to look up theme digest for invalid field'
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest + uploads_digest)
+    Digest::SHA1.hexdigest(
+      scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest +
+        uploads_digest
+    )
   end
 
   # this protects us from situations where new versions of a plugin removed a file
@@ -302,29 +320,39 @@ class Stylesheet::Manager
     theme_ids = Theme.components_for(@theme_id).dup
     theme_ids << @theme_id
 
-    fields = ThemeField.where(
-      name: "yaml",
-      type_id: ThemeField.types[:yaml],
-      theme_id: theme_ids
-    ).pluck(:updated_at)
+    fields =
+      ThemeField.where(
+        name: 'yaml', type_id: ThemeField.types[:yaml], theme_id: theme_ids
+      )
+        .pluck(:updated_at)
 
     settings = ThemeSetting.where(theme_id: theme_ids).pluck(:updated_at)
-    timestamps = fields.concat(settings).map!(&:to_f).sort!.join(",")
+    timestamps = fields.concat(settings).map!(&:to_f).sort!.join(',')
 
     Digest::SHA1.hexdigest(timestamps)
   end
 
   def uploads_digest
-    Digest::SHA1.hexdigest(ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(:sha1).join(","))
+    Digest::SHA1.hexdigest(
+      ThemeField.joins(:upload).where(id: theme&.all_theme_variables).pluck(
+        :sha1
+      )
+        .join(',')
+    )
   end
 
   def color_scheme_digest
-
     cs = theme&.color_scheme
-    category_updated = Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
+    category_updated =
+      Category.where('uploaded_background_id IS NOT NULL').pluck(:updated_at)
+        .map(&:to_i)
+        .sum
 
     if cs || category_updated > 0
-      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{Stylesheet::Manager.last_file_updated}-#{category_updated}"
+      Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement
+                               .current_db}-#{cs&.id}-#{cs
+                               &.version}-#{Stylesheet::Manager
+                               .last_file_updated}-#{category_updated}"
     else
       digest_string = "defaults-#{Stylesheet::Manager.last_file_updated}"
 

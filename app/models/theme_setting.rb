@@ -10,12 +10,15 @@ class ThemeSetting < ActiveRecord::Base
     theme.remove_from_cache!
     theme.theme_fields.update_all(value_baked: nil)
     theme.theme_settings.reload
-    SvgSprite.expire_cache if self.name.to_s.include?("_icon")
-    CSP::Extension.clear_theme_extensions_cache! if name.to_s == CSP::Extension::THEME_SETTING
+    SvgSprite.expire_cache if self.name.to_s.include?('_icon')
+    if name.to_s == CSP::Extension::THEME_SETTING
+      CSP::Extension.clear_theme_extensions_cache!
+    end
   end
 
   def self.types
-    @types ||= Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5)
+    @types ||=
+      Enum.new(integer: 0, float: 1, string: 2, bool: 3, list: 4, enum: 5)
   end
 
   def self.acceptable_value_for_type?(value, type)

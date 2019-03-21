@@ -1,20 +1,21 @@
 class QueuedPost < ActiveRecord::Base
-
   class InvalidStateTransition < StandardError; end
 
   belongs_to :user
   belongs_to :topic
-  belongs_to :approved_by, class_name: "User"
-  belongs_to :rejected_by, class_name: "User"
+  belongs_to :approved_by, class_name: 'User'
+  belongs_to :rejected_by, class_name: 'User'
 
   after_commit :trigger_queued_post_event, on: :create
 
   def create_pending_action
-    UserAction.log_action!(action_type: UserAction::PENDING,
-                           user_id: user_id,
-                           acting_user_id: user_id,
-                           target_topic_id: topic_id,
-                           queued_post_id: id)
+    UserAction.log_action!(
+      action_type: UserAction::PENDING,
+      user_id: user_id,
+      acting_user_id: user_id,
+      target_topic_id: topic_id,
+      queued_post_id: id
+    )
   end
 
   def trigger_queued_post_event
@@ -28,7 +29,7 @@ class QueuedPost < ActiveRecord::Base
 
   # By default queues are hidden from moderators
   def self.visible_queues
-    @visible_queues ||= Set.new(['default'])
+    @visible_queues ||= Set.new(%w[default])
   end
 
   def self.visible
@@ -70,11 +71,13 @@ class QueuedPost < ActiveRecord::Base
   def approve!(approved_by)
     created_post = nil
 
-    creator = PostCreator.new(user, create_options.merge(
-      skip_validations: true,
-      skip_jobs: true,
-      skip_events: true
-    ))
+    creator =
+      PostCreator.new(
+        user,
+        create_options.merge(
+          skip_validations: true, skip_jobs: true, skip_events: true
+        )
+      )
 
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
@@ -84,17 +87,20 @@ class QueuedPost < ActiveRecord::Base
       created_post = creator.create
 
       unless created_post && creator.errors.blank?
-        raise StandardError.new(creator.errors.full_messages.join(" "))
+        raise StandardError.new(creator.errors.full_messages.join(' '))
       else
         # Log post approval
         StaffActionLogger.new(approved_by).log_post_approved(created_post)
       end
     end
 
-    if create_options[:tags].present? &&
-      created_post.post_number == 1 &&
-      created_post.topic.tags.blank?
-      DiscourseTagging.tag_topic_by_names(created_post.topic, Guardian.new(approved_by), create_options[:tags])
+    if create_options[:tags].present? && created_post.post_number == 1 &&
+       created_post.topic.tags.blank?
+      DiscourseTagging.tag_topic_by_names(
+        created_post.topic,
+        Guardian.new(approved_by),
+        create_options[:tags]
+      )
     end
 
     # Do sidekiq work outside of the transaction
@@ -110,17 +116,22 @@ class QueuedPost < ActiveRecord::Base
   def change_to!(state, changed_by)
     state_val = QueuedPost.states[state]
 
-    updates = { state: state_val,
-                "#{state}_by_id" => changed_by.id,
-                "#{state}_at" => Time.now }
+    updates = {
+      state: state_val,
+      "#{state}_by_id" => changed_by.id,
+      "#{state}_at" => Time.now
+    }
 
     # We use an update with `row_count` trick here to avoid stampeding requests to
     # update the same row simultaneously. Only one state change should go through and
     # we can use the DB to enforce this
-    row_count = QueuedPost.where('id = ? AND state <> ?', id, state_val).update_all(updates)
+    row_count =
+      QueuedPost.where('id = ? AND state <> ?', id, state_val).update_all(
+        updates
+      )
     raise InvalidStateTransition.new if row_count == 0
 
-    if [:rejected, :approved].include?(state)
+    if %i[rejected approved].include?(state)
       UserAction.where(queued_post_id: id).destroy_all
     end
 
@@ -130,7 +141,6 @@ class QueuedPost < ActiveRecord::Base
 
     QueuedPost.broadcast_new! if visible?
   end
-
 end
 
 # == Schema Information

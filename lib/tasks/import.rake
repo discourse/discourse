@@ -1,7 +1,7 @@
 # Use http://tatiyants.com/pev/#/plans/new if you want to optimize a query
 
-task "import:ensure_consistency" => :environment do
-  log "Starting..."
+task 'import:ensure_consistency' => :environment do
+  log 'Starting...'
 
   insert_post_timings
   insert_post_replies
@@ -21,13 +21,13 @@ task "import:ensure_consistency" => :environment do
   update_groups
   update_tag_stats
 
-  log "Done!"
+  log 'Done!'
 end
 
 MS_SPEND_CREATING_POST ||= 5000
 
 def insert_post_timings
-  log "Inserting post timings..."
+  log 'Inserting post timings...'
 
   DB.exec <<-SQL
     INSERT INTO post_timings (topic_id, post_number, user_id, msecs)
@@ -39,7 +39,7 @@ def insert_post_timings
 end
 
 def insert_post_replies
-  log "Inserting post replies..."
+  log 'Inserting post replies...'
 
   DB.exec <<-SQL
     INSERT INTO post_replies (post_id, reply_id, created_at, updated_at)
@@ -51,7 +51,7 @@ def insert_post_replies
 end
 
 def insert_topic_users
-  log "Inserting topic users..."
+  log 'Inserting topic users...'
 
   DB.exec <<-SQL
     INSERT INTO topic_users (user_id, topic_id, posted, last_read_post_number, highest_seen_post_number, first_visited_at, last_visited_at, total_msecs_viewed)
@@ -64,7 +64,7 @@ def insert_topic_users
 end
 
 def insert_topic_views
-  log "Inserting topic views..."
+  log 'Inserting topic views...'
 
   DB.exec <<-SQL
     WITH X AS (
@@ -84,7 +84,7 @@ def insert_topic_views
 end
 
 def insert_user_actions
-  log "Inserting user actions for NEW_TOPIC = 4..."
+  log 'Inserting user actions for NEW_TOPIC = 4...'
 
   DB.exec <<-SQL
     INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
@@ -98,7 +98,7 @@ def insert_user_actions
     ON CONFLICT DO NOTHING
   SQL
 
-  log "Inserting user actions for REPLY = 5..."
+  log 'Inserting user actions for REPLY = 5...'
 
   DB.exec <<-SQL
     INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
@@ -112,7 +112,7 @@ def insert_user_actions
     ON CONFLICT DO NOTHING
   SQL
 
-  log "Inserting user actions for RESPONSE = 6..."
+  log 'Inserting user actions for RESPONSE = 6...'
 
   DB.exec <<-SQL
     INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
@@ -135,7 +135,7 @@ def insert_user_actions
 end
 
 def insert_user_options
-  log "Inserting user options..."
+  log 'Inserting user options...'
 
   DB.exec <<-SQL
     INSERT INTO user_options (
@@ -160,24 +160,44 @@ def insert_user_options
                   like_notification_frequency
                 )
              SELECT u.id
-                  , #{SiteSetting.default_email_mailing_list_mode}
-                  , #{SiteSetting.default_email_mailing_list_mode_frequency}
-                  , #{SiteSetting.default_email_level}
-                  , #{SiteSetting.default_email_messages_level}
-                  , #{SiteSetting.default_email_previous_replies}
-                  , #{SiteSetting.default_email_in_reply_to}
-                  , #{SiteSetting.default_email_digest_frequency.to_i > 0}
-                  , #{SiteSetting.default_email_digest_frequency}
-                  , #{SiteSetting.default_include_tl0_in_digests}
-                  , #{SiteSetting.default_topics_automatic_unpin}
-                  , #{SiteSetting.default_other_enable_quoting}
-                  , #{SiteSetting.default_other_external_links_in_new_tab}
-                  , #{SiteSetting.default_other_dynamic_favicon}
-                  , #{SiteSetting.default_other_disable_jump_reply}
-                  , #{SiteSetting.default_other_new_topic_duration_minutes}
-                  , #{SiteSetting.default_other_auto_track_topics_after_msecs}
-                  , #{SiteSetting.default_other_notification_level_when_replying}
-                  , #{SiteSetting.default_other_like_notification_frequency}
+                  , #{SiteSetting
+            .default_email_mailing_list_mode}
+                  , #{SiteSetting
+            .default_email_mailing_list_mode_frequency}
+                  , #{SiteSetting
+            .default_email_level}
+                  , #{SiteSetting
+            .default_email_messages_level}
+                  , #{SiteSetting
+            .default_email_previous_replies}
+                  , #{SiteSetting
+            .default_email_in_reply_to}
+                  , #{SiteSetting
+            .default_email_digest_frequency
+            .to_i >
+            0}
+                  , #{SiteSetting
+            .default_email_digest_frequency}
+                  , #{SiteSetting
+            .default_include_tl0_in_digests}
+                  , #{SiteSetting
+            .default_topics_automatic_unpin}
+                  , #{SiteSetting
+            .default_other_enable_quoting}
+                  , #{SiteSetting
+            .default_other_external_links_in_new_tab}
+                  , #{SiteSetting
+            .default_other_dynamic_favicon}
+                  , #{SiteSetting
+            .default_other_disable_jump_reply}
+                  , #{SiteSetting
+            .default_other_new_topic_duration_minutes}
+                  , #{SiteSetting
+            .default_other_auto_track_topics_after_msecs}
+                  , #{SiteSetting
+            .default_other_notification_level_when_replying}
+                  , #{SiteSetting
+            .default_other_like_notification_frequency}
                FROM users u
           LEFT JOIN user_options uo ON uo.user_id = u.id
               WHERE uo.user_id IS NULL
@@ -185,7 +205,7 @@ def insert_user_options
 end
 
 def insert_user_stats
-  log "Inserting user stats..."
+  log 'Inserting user stats...'
 
   DB.exec <<-SQL
     INSERT INTO user_stats (user_id, new_since)
@@ -196,7 +216,7 @@ def insert_user_stats
 end
 
 def insert_user_visits
-  log "Inserting user visits..."
+  log 'Inserting user visits...'
 
   DB.exec <<-SQL
     INSERT INTO user_visits (user_id, visited_at, posts_read)
@@ -209,7 +229,7 @@ def insert_user_visits
 end
 
 def insert_draft_sequences
-  log "Inserting draft sequences..."
+  log 'Inserting draft sequences...'
 
   DB.exec <<-SQL
     INSERT INTO draft_sequences (user_id, draft_key, sequence)
@@ -222,7 +242,7 @@ def insert_draft_sequences
 end
 
 def update_user_stats
-  log "Updating user stats..."
+  log 'Updating user stats...'
 
   # TODO: topic_count is counting all topics you replied in as if you started the topic.
   # TODO: post_count is counting first posts.
@@ -282,7 +302,7 @@ def update_user_stats
 end
 
 def update_posts
-  log "Updating posts..."
+  log 'Updating posts...'
 
   DB.exec <<-SQL
     WITH Y AS (
@@ -309,7 +329,7 @@ def update_posts
 end
 
 def update_topics
-  log "Updating topics..."
+  log 'Updating topics...'
 
   DB.exec <<-SQL
     WITH X AS (
@@ -349,7 +369,7 @@ def update_topics
 end
 
 def update_categories
-  log "Updating categories..."
+  log 'Updating categories...'
 
   DB.exec <<-SQL
     WITH X AS (
@@ -381,7 +401,7 @@ def update_categories
 end
 
 def update_users
-  log "Updating users..."
+  log 'Updating users...'
 
   DB.exec <<-SQL
     WITH X AS (
@@ -405,7 +425,7 @@ def update_users
 end
 
 def update_groups
-  log "Updating groups..."
+  log 'Updating groups...'
 
   DB.exec <<-SQL
     WITH X AS (
@@ -426,36 +446,47 @@ def update_tag_stats
 end
 
 def log(message)
-  puts "[#{DateTime.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
+  puts "[#{DateTime.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
 end
 
-task "import:create_phpbb_permalinks" => :environment do
+task 'import:create_phpbb_permalinks' => :environment do
   log 'Creating Permalinks...'
 
   # /[^\/]+\/.*-t(\d+).html/
-  SiteSetting.permalink_normalizations = '/[^\/]+\/.*-t(\d+).html/thread/\1'
+  SiteSetting.permalink_normalizations = "/[^\/]+\/.*-t(\d+).html/thread/\1"
 
   Topic.listable_topics.find_each do |topic|
     tcf = topic.custom_fields
-    if tcf && tcf["import_id"]
-      Permalink.create(url: "thread/#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    if tcf && tcf['import_id']
+      begin
+        Permalink.create(url: "thread/#{tcf['import_id']}", topic_id: topic.id)
+      rescue StandardError
+        nil
+      end
     end
   end
 
-  log "Done!"
+  log 'Done!'
 end
 
-task "import:remap_old_phpbb_permalinks" => :environment do
+task 'import:remap_old_phpbb_permalinks' => :environment do
   log 'Remapping Permalinks...'
 
   i = 0
-  Post.where("raw LIKE ?", "%discussions.example.com%").each do |p|
+  Post.where('raw LIKE ?', '%discussions.example.com%').each do |p|
     begin
       new_raw = p.raw.dup
       # \((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)
-      new_raw.gsub!(/\((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)/) do
+      new_raw.gsub!(
+        %r{\((https?:\/\/discussions\.example\.com\/\S*-t\d+.html)\)}
+      ) do
         normalized_url = Permalink.normalize_url($1)
-        permalink = Permalink.find_by_url(normalized_url) rescue nil
+        permalink =
+          begin
+            Permalink.find_by_url(normalized_url)
+          rescue StandardError
+            nil
+          end
         if permalink && permalink.target_url
           "(#{permalink.target_url})"
         else
@@ -464,11 +495,15 @@ task "import:remap_old_phpbb_permalinks" => :environment do
       end
 
       if new_raw != p.raw
-        p.revise(Discourse.system_user, { raw: new_raw }, bypass_bump: true, skip_revision: true)
-        putc "."
+        p.revise(
+          Discourse.system_user,
+          { raw: new_raw },
+          bypass_bump: true, skip_revision: true
+        )
+        putc '.'
         i += 1
       end
-    rescue
+    rescue StandardError
       # skip
     end
   end
@@ -476,33 +511,46 @@ task "import:remap_old_phpbb_permalinks" => :environment do
   log "Done! #{i} posts remapped."
 end
 
-task "import:create_vbulletin_permalinks" => :environment do
+task 'import:create_vbulletin_permalinks' => :environment do
   log 'Creating Permalinks...'
 
   # /showthread.php\?t=(\d+).*/
-  SiteSetting.permalink_normalizations = '/showthread.php\?t=(\d+).*/showthread.php?t=\1'
+  SiteSetting.permalink_normalizations =
+    "/showthread.php\?t=(\d+).*/showthread.php?t=\1"
 
   Topic.listable_topics.find_each do |topic|
     tcf = topic.custom_fields
-    if tcf && tcf["import_id"]
-      Permalink.create(url: "showthread.php?t=#{tcf["import_id"]}", topic_id: topic.id) rescue nil
+    if tcf && tcf['import_id']
+      begin
+        Permalink.create(
+          url: "showthread.php?t=#{tcf['import_id']}", topic_id: topic.id
+        )
+      rescue StandardError
+        nil
+      end
     end
   end
 
   Category.find_each do |cat|
     ccf = cat.custom_fields
-    if ccf && ccf["import_id"]
-      Permalink.create(url: "forumdisplay.php?f=#{ccf["import_id"]}", category_id: cat.id) rescue nil
+    if ccf && ccf['import_id']
+      begin
+        Permalink.create(
+          url: "forumdisplay.php?f=#{ccf['import_id']}", category_id: cat.id
+        )
+      rescue StandardError
+        nil
+      end
     end
   end
 
-  log "Done!"
+  log 'Done!'
 end
 
 desc 'Import existing exported file'
-task 'import:file', [:file_name] => [:environment] do |_, args|
-  require "import_export/import_export"
+task 'import:file', %i[file_name] => %i[environment] do |_, args|
+  require 'import_export/import_export'
 
   ImportExport.import(args[:file_name])
-  puts "", "Done", ""
+  puts '', 'Done', ''
 end

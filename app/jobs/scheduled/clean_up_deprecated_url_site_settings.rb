@@ -4,7 +4,8 @@ module Jobs
 
     def execute(args)
       Jobs::MigrateUrlSiteSettings::SETTINGS.each do |old_setting, new_setting|
-        if SiteSetting.where("name = ? AND value IS NOT NULL", new_setting).exists?
+        if SiteSetting.where('name = ? AND value IS NOT NULL', new_setting)
+           .exists?
           SiteSetting.public_send("#{old_setting}=", nil, warn: false)
           SiteSetting.find_by(name: old_setting).destroy!
         end

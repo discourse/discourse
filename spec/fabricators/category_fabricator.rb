@@ -4,7 +4,7 @@ Fabricator(:category) do
 end
 
 Fabricator(:diff_category, from: :category) do
-  name "Different Category"
+  name 'Different Category'
   user
 end
 
@@ -22,12 +22,17 @@ Fabricator(:private_category, from: :category) do
   user
   after_build do |cat, transients|
     cat.update!(read_restricted: true)
-    cat.category_groups.build(group_id: transients[:group].id, permission_type: CategoryGroup.permission_types[:full])
+    cat.category_groups.build(
+      group_id: transients[:group].id,
+      permission_type: CategoryGroup.permission_types[:full]
+    )
   end
 end
 
 Fabricator(:link_category, from: :category) do
-  before_validation { |category, transients| category.topic_featured_link_allowed = true }
+  before_validation do |category, transients|
+    category.topic_featured_link_allowed = true
+  end
 end
 
 Fabricator(:mailinglist_mirror_category, from: :category) do

@@ -4,7 +4,10 @@ class MigrateEmailUserOptions < ActiveRecord::Migration[5.2]
     # always = 0, only_while_away: 1, never: 2
 
     add_column :user_options, :email_level, :integer, default: 1, null: false
-    add_column :user_options, :email_messages_level, :integer, default: 0, null: false
+    add_column :user_options,
+               :email_messages_level,
+               :integer,
+               default: 0, null: false
 
     execute <<~SQL
       UPDATE user_options

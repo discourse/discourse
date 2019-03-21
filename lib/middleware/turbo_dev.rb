@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 module Middleware
-
   # Cheat and bypass Rails in development mode if the client attempts to download a static asset
   # that's already been downloaded.
   #
@@ -24,11 +23,9 @@ module Middleware
       # hack to bypass all middleware if serving assets, a lot faster 4.5 seconds -> 1.5 seconds
       if (etag = env['HTTP_IF_NONE_MATCH']) && is_asset
         name = env['REQUEST_PATH'][(root.length)..-1]
-        etag = etag.gsub "\"", ""
+        etag = etag.gsub '\"', ''
         asset = Rails.application.assets.find_asset(name)
-        if asset && asset.digest == etag
-          return [304, {}, []]
-        end
+        return [304, {}, []] if asset && asset.digest == etag
       end
 
       status, headers, response = @app.call(env)
@@ -36,5 +33,4 @@ module Middleware
       [status, headers, response]
     end
   end
-
 end

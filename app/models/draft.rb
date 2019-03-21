@@ -9,15 +9,18 @@ class Draft < ActiveRecord::Base
     if d = find_draft(user, key)
       return if d.sequence > sequence
 
-      DB.exec(<<~SQL, id: d.id, sequence: sequence, data: data)
+      sql = <<~SQL
         UPDATE drafts
            SET sequence = :sequence
              , data = :data
              , revisions = revisions + 1
          WHERE id = :id
       SQL
+      DB.exec(sql, id: d.id, sequence: sequence, data: data)
     else
-      Draft.create!(user_id: user.id, draft_key: key, data: data, sequence: sequence)
+      Draft.create!(
+        user_id: user.id, draft_key: key, data: data, sequence: sequence
+      )
     end
 
     true
@@ -49,7 +52,8 @@ class Draft < ActiveRecord::Base
     limit = (opts[:limit] || 30).to_i
 
     # JOIN of topics table based on manipulating draft_key seems imperfect
-    builder = DB.build <<~SQL
+    builder =
+      DB.build <<~SQL
       SELECT
         d.*, t.title, t.id topic_id, t.archetype,
         t.category_id, t.closed topic_closed, t.archived topic_archived,
@@ -72,16 +76,17 @@ class Draft < ActiveRecord::Base
       /*limit*/
     SQL
 
-    builder
-      .where('d.user_id = :user_id', user_id: user_id.to_i)
-      .order_by('d.updated_at desc')
+    builder.where('d.user_id = :user_id', user_id: user_id.to_i).order_by(
+      'd.updated_at desc'
+    )
       .offset(offset)
       .limit(limit)
       .query
   end
 
   def self.cleanup!
-    DB.exec(<<~SQL)
+    DB.exec(
+      <<~SQL
       DELETE FROM drafts
        WHERE sequence < (
         SELECT MAX(s.sequence)
@@ -90,12 +95,13 @@ class Draft < ActiveRecord::Base
            AND s.user_id = drafts.user_id
       )
     SQL
+    )
 
     # remove old drafts
-    delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
-    Draft.where("updated_at < ?", delete_drafts_older_than_n_days).destroy_all
+    delete_drafts_older_than_n_days =
+      SiteSetting.delete_drafts_older_than_n_days.days.ago
+    Draft.where('updated_at < ?', delete_drafts_older_than_n_days).destroy_all
   end
-
 end
 
 # == Schema Information

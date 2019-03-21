@@ -2,21 +2,29 @@ require 'rails_helper'
 require_dependency 'site'
 
 describe Site do
-
   def expect_correct_themes(guardian)
     json = Site.json_for(guardian)
     parsed = JSON.parse(json)
 
-    expected = Theme.where('id = :default OR user_selectable',
-                    default: SiteSetting.default_theme_id)
-      .order(:name)
-      .pluck(:id, :name)
-      .map { |id, n| { "theme_id" => id, "name" => n, "default" => id == SiteSetting.default_theme_id } }
+    expected =
+      Theme.where(
+        'id = :default OR user_selectable',
+        default: SiteSetting.default_theme_id
+      )
+        .order(:name)
+        .pluck(:id, :name)
+        .map do |id, n|
+        {
+          'theme_id' => id,
+          'name' => n,
+          'default' => id == SiteSetting.default_theme_id
+        }
+      end
 
-    expect(parsed["user_themes"]).to eq(expected)
+    expect(parsed['user_themes']).to eq(expected)
   end
 
-  it "includes user themes and expires them as needed" do
+  it 'includes user themes and expires them as needed' do
     default_theme = Fabricate(:theme)
     SiteSetting.default_theme_id = default_theme.id
     user_theme = Fabricate(:theme, user_selectable: true)
@@ -37,10 +45,9 @@ describe Site do
 
     expect_correct_themes(anon_guardian)
     expect_correct_themes(user_guardian)
-
   end
 
-  it "omits categories users can not write to from the category list" do
+  it 'omits categories users can not write to from the category list' do
     category = Fabricate(:category)
     user = Fabricate(:user)
 
@@ -51,12 +58,11 @@ describe Site do
 
     guardian = Guardian.new(user)
 
-    expect(Site.new(guardian)
-        .categories
-        .keep_if { |c| c.name == category.name }
+    expect(
+      Site.new(guardian).categories.keep_if { |c| c.name == category.name }
         .first
-        .permission)
-      .not_to eq(CategoryGroup.permission_types[:full])
+        .permission
+    ).not_to eq(CategoryGroup.permission_types[:full])
 
     # If a parent category is not visible, the child categories should not be returned
     category.set_permissions(staff: :full)
@@ -66,11 +72,12 @@ describe Site do
     expect(Site.new(guardian).categories).not_to include(sub_category)
   end
 
-  it "omits groups user can not see" do
+  it 'omits groups user can not see' do
     user = Fabricate(:user)
     site = Site.new(Guardian.new(user))
 
-    staff_group = Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
+    staff_group =
+      Fabricate(:group, visibility_level: Group.visibility_levels[:staff])
     expect(site.groups.pluck(:name)).not_to include(staff_group.name)
 
     public_group = Fabricate(:group)
@@ -78,22 +85,31 @@ describe Site do
 
     admin = Fabricate(:admin)
     site = Site.new(Guardian.new(admin))
-    expect(site.groups.pluck(:name)).to include(staff_group.name, public_group.name, "everyone")
+    expect(site.groups.pluck(:name)).to include(
+          staff_group.name,
+          public_group.name,
+          'everyone'
+        )
   end
 
-  it "includes all enabled authentication providers" do
+  it 'includes all enabled authentication providers' do
     SiteSetting.enable_twitter_logins = true
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
-    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+    expect(data['auth_providers'].map { |a| a['name'] }).to contain_exactly(
+          'facebook',
+          'twitter'
+        )
   end
 
-  it "includes all enabled authentication providers for anon when login_required" do
+  it 'includes all enabled authentication providers for anon when login_required' do
     SiteSetting.login_required = true
     SiteSetting.enable_twitter_logins = true
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
-    expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly('facebook', 'twitter')
+    expect(data['auth_providers'].map { |a| a['name'] }).to contain_exactly(
+          'facebook',
+          'twitter'
+        )
   end
-
 end

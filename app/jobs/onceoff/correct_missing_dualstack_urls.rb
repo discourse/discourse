@@ -8,19 +8,21 @@ module Jobs
       return if !base_url.match?(/s3\.dualstack/)
 
       old = base_url.sub('s3.dualstack.', 's3-')
-      old_like = %"#{old}%"
+      old_like = "#{old}%"
 
-      DB.exec(<<~SQL, from: old, to: base_url, old_like: old_like)
+      sql = <<~SQL
         UPDATE uploads
         SET url = replace(url, :from, :to)
         WHERE url ilike :old_like
       SQL
+      DB.exec(sql, from: old, to: base_url, old_like: old_like)
 
-      DB.exec(<<~SQL, from: old, to: base_url, old_like: old_like)
+      sql = <<~SQL
         UPDATE optimized_images
         SET url = replace(url, :from, :to)
         WHERE url ilike :old_like
       SQL
+      DB.exec(sql, from: old, to: base_url, old_like: old_like)
     end
   end
 end

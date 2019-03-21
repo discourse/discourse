@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Jobs::CleanUpCrawlerStats do
   subject { Jobs::CleanUpCrawlerStats.new.execute({}) }
 
-  it "deletes records older than 30 days old" do
+  it 'deletes records older than 30 days old' do
     freeze_time
 
     today = Fabricate(:web_crawler_request, date: Time.zone.now.to_date)
@@ -14,7 +14,7 @@ describe Jobs::CleanUpCrawlerStats do
     expect(WebCrawlerRequest.where(id: too_old.id)).to_not exist
   end
 
-  it "keeps only the top records from the previous day" do
+  it 'keeps only the top records from the previous day' do
     freeze_time
 
     WebCrawlerRequest.stubs(:max_records_per_day).returns(3)

@@ -6,13 +6,16 @@ class ContentSecurityPolicy
     attr_reader :directives
 
     def initialize
-      @directives = {}.tap do |directives|
-        directives[:base_uri] = [:none]
-        directives[:object_src] = [:none]
-        directives[:script_src] = script_src
-        directives[:worker_src] = worker_src
-        directives[:report_uri] = report_uri if SiteSetting.content_security_policy_collect_reports
-      end
+      @directives =
+        {}.tap do |directives|
+          directives[:base_uri] = %i[none]
+          directives[:object_src] = %i[none]
+          directives[:script_src] = script_src
+          directives[:worker_src] = worker_src
+          if SiteSetting.content_security_policy_collect_reports
+            directives[:report_uri] = report_uri
+          end
+        end
     end
 
     private
@@ -20,18 +23,26 @@ class ContentSecurityPolicy
     delegate :base_url, to: :ContentSecurityPolicy
 
     SCRIPT_ASSET_DIRECTORIES = [
-      # [dir, can_use_s3_cdn, can_use_cdn]
-      ['/assets/',             true, true],
-      ['/brotli_asset/',       true, true],
-      ['/extra-locales/',      false, false],
-      ['/highlight-js/',       false, true],
-      ['/javascripts/',        false, true],
-      ['/plugins/',            false, true],
-      ['/theme-javascripts/',  false, true],
-      ['/svg-sprite/',         false, true],
+      [
+        # [dir, can_use_s3_cdn, can_use_cdn]
+        '/assets/',
+        true,
+        true
+      ],
+      ['/brotli_asset/', true, true],
+      ['/extra-locales/', false, false],
+      ['/highlight-js/', false, true],
+      ['/javascripts/', false, true],
+      ['/plugins/', false, true],
+      ['/theme-javascripts/', false, true],
+      ['/svg-sprite/', false, true]
     ]
 
-    def script_assets(base = base_url, s3_cdn = GlobalSetting.s3_cdn_url, cdn = GlobalSetting.cdn_url)
+    def script_assets(
+      base = base_url,
+      s3_cdn = GlobalSetting.s3_cdn_url,
+      cdn = GlobalSetting.cdn_url
+    )
       SCRIPT_ASSET_DIRECTORIES.map do |dir, can_use_s3_cdn, can_use_cdn|
         if can_use_s3_cdn && s3_cdn
           s3_cdn + dir
@@ -51,17 +62,20 @@ class ContentSecurityPolicy
         "#{base_url}/sidekiq/",
         "#{base_url}/mini-profiler-resources/",
         *script_assets
-      ].tap do |sources|
-        sources << 'https://www.google-analytics.com/analytics.js' if SiteSetting.ga_universal_tracking_code.present?
-        sources << 'https://www.googletagmanager.com/gtm.js' if SiteSetting.gtm_container_id.present?
+      ]
+        .tap do |sources|
+        if SiteSetting.ga_universal_tracking_code.present?
+          sources << 'https://www.google-analytics.com/analytics.js'
+        end
+        if SiteSetting.gtm_container_id.present?
+          sources << 'https://www.googletagmanager.com/gtm.js'
+        end
       end
     end
 
     def worker_src
-      [
-        :self,
-        :blob, # ACE editor registers a service worker with a blob for syntax checking
-      ]
+      # ACE editor registers a service worker with a blob for syntax checking
+      %i[self blob]
     end
 
     def report_uri

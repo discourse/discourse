@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe SkippedEmailLog, type: :model do
   let(:custom_skipped_email_log) do
-    Fabricate.build(:skipped_email_log,
+    Fabricate.build(
+      :skipped_email_log,
       reason_type: SkippedEmailLog.reason_types[:custom]
     )
   end
@@ -31,8 +32,9 @@ RSpec.describe SkippedEmailLog, type: :model do
           it 'should not be valid' do
             expect(custom_skipped_email_log.valid?).to eq(false)
 
-            expect(custom_skipped_email_log.errors.messages)
-              .to include(:custom_reason)
+            expect(custom_skipped_email_log.errors.messages).to include(
+                  :custom_reason
+                )
           end
         end
 
@@ -65,7 +67,7 @@ RSpec.describe SkippedEmailLog, type: :model do
   end
 
   describe '.reason_types' do
-    describe "verify enum sequence" do
+    describe 'verify enum sequence' do
       it 'should return the right sequence' do
         expect(SkippedEmailLog.reason_types[:custom]).to eq(1)
         expect(SkippedEmailLog.reason_types[:user_email_already_read]).to eq(15)
@@ -83,20 +85,29 @@ RSpec.describe SkippedEmailLog, type: :model do
 
     describe 'for a non custom log' do
       it 'should return the right output' do
-        expect(skipped_email_log.reason).to eq("
-          #{I18n.t('skipped_email_log.exceeded_emails_limit')}
-        ".strip)
+        expect(skipped_email_log.reason).to eq(
+              "
+          #{I18n.t(
+                'skipped_email_log.exceeded_emails_limit'
+              )}
+        "
+                .strip
+            )
 
         skipped_email_log.reason_type =
           SkippedEmailLog.reason_types[:user_email_no_user]
 
         skipped_email_log.user_id = 9999
 
-        expect(skipped_email_log.reason).to eq("
+        expect(skipped_email_log.reason).to eq(
+              "
           #{I18n.t(
-            'skipped_email_log.user_email_no_user', user_id: 9999
-          )}
-        ".strip)
+                'skipped_email_log.user_email_no_user',
+                user_id: 9999
+              )}
+        "
+                .strip
+            )
       end
     end
   end

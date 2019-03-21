@@ -4,13 +4,13 @@ class CategoryAndTopicListsSerializer < ApplicationSerializer
   has_many :users, serializer: BasicUserSerializer, embed: :objects
 
   def users
-    users = object.topic_list.topics.map do |t|
-      t.posters.map { |poster| poster.try(:user) }
-    end
+    users =
+      object.topic_list.topics.map do |t|
+        t.posters.map { |poster| poster.try(:user) }
+      end
     users.flatten!
     users.compact!
     users.uniq!(&:id)
     users
   end
-
 end

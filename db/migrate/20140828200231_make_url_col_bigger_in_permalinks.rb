@@ -5,6 +5,5 @@ class MakeUrlColBiggerInPermalinks < ActiveRecord::Migration[4.2]
     add_index :permalinks, :url, unique: true
   end
 
-  def down
-  end
+  def down; end
 end

@@ -2,7 +2,7 @@ if github.pr_json && (github.pr_json["additions"] || 0) > 250 || (github.pr_json
   warn("This pull request is big! We prefer smaller PRs whenever possible, as they are easier to review. Can this be split into a few smaller PRs?")
 end
 
-prettier_offenses = `yarn --silent prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"`.split("\n")
+prettier_offenses = `yarn --silent prettier --list-different "{app,db,lib,spec}/**/*.{rb,rake}" "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"`.split("\n")
 
 unless prettier_offenses.empty?
   fail(%{

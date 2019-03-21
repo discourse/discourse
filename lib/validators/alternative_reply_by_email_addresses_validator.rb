@@ -9,7 +9,7 @@ class AlternativeReplyByEmailAddressesValidator
     return true if val.blank?
 
     validator = ReplyByEmailAddressValidator.new(@opts)
-    val.split("|").all? { |v| validator.valid_value?(v) }
+    val.split('|').all? { |v| validator.valid_value?(v) }
   end
 
   def error_message

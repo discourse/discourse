@@ -1,6 +1,5 @@
 module Plugin
   class FilterManager
-
     def initialize
       @map = {}
     end
@@ -13,9 +12,7 @@ module Plugin
 
     def apply(name, context, result)
       if filters = @map[name]
-        filters.each do |blk|
-          result = blk.call(context, result)
-        end
+        filters.each { |blk| result = blk.call(context, result) }
       end
       result
     end

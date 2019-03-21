@@ -5,79 +5,80 @@ describe CategoriesController do
   let!(:category) { Fabricate(:category, user: admin) }
 
   context 'index' do
-
     it 'suppresses categories correctly' do
       post = create_post(title: 'super AMAZING AMAZING post')
 
-      get "/categories"
+      get '/categories'
       expect(response.body).to include('AMAZING AMAZING')
 
       post.topic.category.update_columns(suppress_from_latest: true)
 
-      get "/categories"
+      get '/categories'
       expect(response.body).not_to include('AMAZING AMAZING')
     end
 
     it 'web crawler view has correct urls for subfolder install' do
       GlobalSetting.stubs(:relative_url_root).returns('/forum')
-      Discourse.stubs(:base_uri).returns("/forum")
+      Discourse.stubs(:base_uri).returns('/forum')
       get '/categories', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
-      html = Nokogiri::HTML(response.body)
+      html = Nokogiri.HTML(response.body)
       expect(html.css('body.crawler')).to be_present
       expect(html.css("a[href=\"/forum/c/#{category.slug}\"]")).to be_present
     end
 
-    it "properly preloads topic list" do
+    it 'properly preloads topic list' do
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
-      get "/categories"
+      get '/categories'
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-        expect(json['topic_list_latest']).to include(%{"more_topics_url":"/latest"})
+      expect(response.body).to have_tag('div#data-preloaded') do |element|
+        json =
+          JSON.parse(element.current_scope.attribute('data-preloaded').value)
+        expect(json['topic_list_latest']).to include(
+              '"more_topics_url":"/latest"'
+            )
       end
     end
 
-    it "Shows correct title if category list is set for homepage" do
-      SiteSetting.top_menu = "categories|latest"
-      get "/"
+    it 'Shows correct title if category list is set for homepage' do
+      SiteSetting.top_menu = 'categories|latest'
+      get '/'
 
-      expect(response.body).to have_tag "title", text: "Discourse"
+      expect(response.body).to have_tag 'title', text: 'Discourse'
 
-      SiteSetting.short_site_description = "Official community"
-      get "/"
+      SiteSetting.short_site_description = 'Official community'
+      get '/'
 
-      expect(response.body).to have_tag "title", text: "Discourse - Official community"
+      expect(response.body).to have_tag 'title',
+                   text: 'Discourse - Official community'
     end
 
-    it "redirects /category paths to /c paths" do
-      get "/category/uncategorized"
+    it 'redirects /category paths to /c paths' do
+      get '/category/uncategorized'
       expect(response.status).to eq(302)
-      expect(response.body).to include("c/uncategorized")
+      expect(response.body).to include('c/uncategorized')
     end
 
-    it "respects permalinks before redirecting /category paths to /c paths" do
-      perm = Permalink.create!(url: "category/something", category_id: category.id)
+    it 'respects permalinks before redirecting /category paths to /c paths' do
+      perm =
+        Permalink.create!(url: 'category/something', category_id: category.id)
 
-      get "/category/something"
+      get '/category/something'
       expect(response.status).to eq(301)
       expect(response.body).to include(category.slug)
     end
   end
 
   context 'extensibility event' do
-    before do
-      sign_in(admin)
-    end
+    before { sign_in(admin) }
 
-    it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events {
-        put "/categories/#{category.id}.json", params: {
-          name: 'hello',
-          color: 'ff0',
-          text_color: 'fff'
-        }
-      }.last
+    it 'triggers a extensibility event' do
+      event =
+        DiscourseEvent.track_events do
+          put "/categories/#{category.id}.json",
+              params: { name: 'hello', color: 'ff0', text_color: 'fff' }
+        end
+          .last
 
       expect(event[:event_name]).to eq(:category_updated)
       expect(event[:params].first).to eq(category)
@@ -85,12 +86,12 @@ describe CategoriesController do
   end
 
   context '#create' do
-    it "requires the user to be logged in" do
-      post "/categories.json"
+    it 'requires the user to be logged in' do
+      post '/categories.json'
       expect(response.status).to eq(403)
     end
 
-    describe "logged in" do
+    describe 'logged in' do
       before do
         Jobs.run_immediately!
         sign_in(admin)
@@ -98,80 +99,88 @@ describe CategoriesController do
 
       it "raises an exception when they don't have permission to create it" do
         sign_in(Fabricate(:user))
-        post "/categories.json", params: {
-          name: 'hello', color: 'ff0', text_color: 'fff'
-        }
+        post '/categories.json',
+             params: { name: 'hello', color: 'ff0', text_color: 'fff' }
 
         expect(response).to be_forbidden
       end
 
-      it "raises an exception when the name is missing" do
-        post "/categories.json", params: { color: "ff0", text_color: "fff" }
+      it 'raises an exception when the name is missing' do
+        post '/categories.json', params: { color: 'ff0', text_color: 'fff' }
         expect(response.status).to eq(400)
       end
 
-      it "raises an exception when the color is missing" do
-        post "/categories.json", params: { name: "hello", text_color: "fff" }
+      it 'raises an exception when the color is missing' do
+        post '/categories.json', params: { name: 'hello', text_color: 'fff' }
         expect(response.status).to eq(400)
       end
 
-      it "raises an exception when the text color is missing" do
-        post "/categories.json", params: { name: "hello", color: "ff0" }
+      it 'raises an exception when the text color is missing' do
+        post '/categories.json', params: { name: 'hello', color: 'ff0' }
         expect(response.status).to eq(400)
       end
 
-      describe "failure" do
-        it "returns errors on a duplicate category name" do
+      describe 'failure' do
+        it 'returns errors on a duplicate category name' do
           category = Fabricate(:category, user: admin)
 
-          post "/categories.json", params: {
-            name: category.name, color: "ff0", text_color: "fff"
-          }
+          post '/categories.json',
+               params: { name: category.name, color: 'ff0', text_color: 'fff' }
 
           expect(response.status).to eq(422)
         end
 
-        it "returns errors with invalid group" do
+        it 'returns errors with invalid group' do
           category = Fabricate(:category, user: admin)
           readonly = CategoryGroup.permission_types[:readonly]
 
-          post "/categories.json", params: {
-            name: category.name, color: "ff0", text_color: "fff", permissions: { "invalid_group" => readonly }
-          }
+          post '/categories.json',
+               params: {
+                 name: category.name,
+                 color: 'ff0',
+                 text_color: 'fff',
+                 permissions: { 'invalid_group' => readonly }
+               }
 
           expect(response.status).to eq(422)
           expect(JSON.parse(response.body)['errors']).to be_present
         end
       end
 
-      describe "success" do
-        it "works" do
+      describe 'success' do
+        it 'works' do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
-          post "/categories.json", params: {
-            name: "hello",
-            color: "ff0",
-            text_color: "fff",
-            slug: "hello-cat",
-            auto_close_hours: 72,
-            search_priority: Searchable::PRIORITIES[:ignore],
-            permissions: {
-              "everyone" => readonly,
-              "staff" => create_post
-            }
-          }
+          post '/categories.json',
+               params: {
+                 name: 'hello',
+                 color: 'ff0',
+                 text_color: 'fff',
+                 slug: 'hello-cat',
+                 auto_close_hours: 72,
+                 search_priority: Searchable::PRIORITIES[:ignore],
+                 permissions: { 'everyone' => readonly, 'staff' => create_post }
+               }
 
           expect(response.status).to eq(200)
-          category = Category.find_by(name: "hello")
-          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
-            [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
-          ])
-          expect(category.name).to eq("hello")
-          expect(category.slug).to eq("hello-cat")
-          expect(category.color).to eq("ff0")
+          category = Category.find_by(name: 'hello')
+          expect(
+            category.category_groups.map { |g| [g.group_id, g.permission_type] }
+              .sort
+          ).to eq(
+                [
+                  [Group[:everyone].id, readonly],
+                  [Group[:staff].id, create_post]
+                ]
+              )
+          expect(category.name).to eq('hello')
+          expect(category.slug).to eq('hello-cat')
+          expect(category.color).to eq('ff0')
           expect(category.auto_close_hours).to eq(72)
-          expect(category.search_priority).to eq(Searchable::PRIORITIES[:ignore])
+          expect(category.search_priority).to eq(
+                Searchable::PRIORITIES[:ignore]
+              )
           expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
         end
       end
@@ -179,12 +188,12 @@ describe CategoriesController do
   end
 
   context '#destroy' do
-    it "requires the user to be logged in" do
-      delete "/categories/category.json"
+    it 'requires the user to be logged in' do
+      delete '/categories/category.json'
       expect(response.status).to eq(403)
     end
 
-    describe "logged in" do
+    describe 'logged in' do
       it "raises an exception if they don't have permission to delete it" do
         admin.update!(admin: false)
         sign_in(admin)
@@ -192,11 +201,13 @@ describe CategoriesController do
         expect(response).to be_forbidden
       end
 
-      it "deletes the record" do
+      it 'deletes the record' do
         sign_in(admin)
-        expect do
-          delete "/categories/#{category.slug}.json"
-        end.to change(Category, :count).by(-1)
+        expect { delete "/categories/#{category.slug}.json" }.to change(
+              Category,
+              :count
+            )
+              .by(-1)
         expect(response.status).to eq(200)
         expect(UserHistory.count).to eq(1)
       end
@@ -204,7 +215,7 @@ describe CategoriesController do
   end
 
   context '#reorder' do
-    it "reorders the categories" do
+    it 'reorders the categories' do
       sign_in(admin)
 
       c1 = category
@@ -212,7 +223,9 @@ describe CategoriesController do
       c3 = Fabricate(:category)
       c4 = Fabricate(:category)
       if c3.id < c2.id
-        tmp = c3; c2 = c3; c3 = tmp
+        tmp = c3
+        c2 = c3
+        c3 = tmp
       end
       c1.position = 8
       c2.position = 6
@@ -225,137 +238,140 @@ describe CategoriesController do
       payload[c3.id] = 6
       payload[c4.id] = 5
 
-      post "/categories/reorder.json", params: { mapping: MultiJson.dump(payload) }
+      post '/categories/reorder.json',
+           params: { mapping: MultiJson.dump(payload) }
 
       SiteSetting.fixed_category_positions = true
       list = CategoryList.new(Guardian.new(admin))
 
-      expect(list.categories).to eq([
-        Category.find(SiteSetting.uncategorized_category_id),
-        c1,
-        c4,
-        c2,
-        c3
-      ])
+      expect(list.categories).to eq(
+            [
+              Category.find(SiteSetting.uncategorized_category_id),
+              c1,
+              c4,
+              c2,
+              c3
+            ]
+          )
     end
   end
 
   context '#update' do
-    before do
-      Jobs.run_immediately!
-    end
+    before { Jobs.run_immediately! }
 
-    it "requires the user to be logged in" do
-      put "/categories/category.json"
+    it 'requires the user to be logged in' do
+      put '/categories/category.json'
       expect(response.status).to eq(403)
     end
 
-    describe "logged in" do
-      let(:valid_attrs) { { id: category.id, name: "hello", color: "ff0", text_color: "fff" } }
-
-      before do
-        sign_in(admin)
+    describe 'logged in' do
+      let(:valid_attrs) do
+        { id: category.id, name: 'hello', color: 'ff0', text_color: 'fff' }
       end
+
+      before { sign_in(admin) }
 
       it "raises an exception if they don't have permission to edit it" do
         sign_in(Fabricate(:user))
-        put "/categories/#{category.slug}.json", params: {
-          name: 'hello',
-          color: 'ff0',
-          text_color: 'fff'
-        }
+        put "/categories/#{category.slug}.json",
+            params: { name: 'hello', color: 'ff0', text_color: 'fff' }
         expect(response).to be_forbidden
       end
 
-      it "requires a name" do
-        put "/categories/#{category.slug}.json", params: {
-          color: 'fff',
-          text_color: '0ff',
-        }
+      it 'requires a name' do
+        put "/categories/#{category.slug}.json",
+            params: { color: 'fff', text_color: '0ff' }
         expect(response.status).to eq(400)
       end
 
-      it "requires a color" do
-        put "/categories/#{category.slug}.json", params: {
-          name: 'asdf',
-          text_color: '0ff',
-        }
+      it 'requires a color' do
+        put "/categories/#{category.slug}.json",
+            params: { name: 'asdf', text_color: '0ff' }
         expect(response.status).to eq(400)
       end
 
-      it "requires a text color" do
-        put "/categories/#{category.slug}.json", params: { name: 'asdf', color: 'fff' }
+      it 'requires a text color' do
+        put "/categories/#{category.slug}.json",
+            params: { name: 'asdf', color: 'fff' }
         expect(response.status).to eq(400)
       end
 
-      it "returns errors on a duplicate category name" do
-        other_category = Fabricate(:category, name: "Other", user: admin)
-        put "/categories/#{category.id}.json", params: {
-          name: other_category.name,
-          color: "ff0",
-          text_color: "fff",
-        }
+      it 'returns errors on a duplicate category name' do
+        other_category = Fabricate(:category, name: 'Other', user: admin)
+        put "/categories/#{category.id}.json",
+            params: {
+              name: other_category.name, color: 'ff0', text_color: 'fff'
+            }
         expect(response.status).to eq(422)
       end
 
-      it "returns 422 if email_in address is already in use for other category" do
-        other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com")
+      it 'returns 422 if email_in address is already in use for other category' do
+        other_category =
+          Fabricate(:category, name: 'Other', email_in: 'mail@examle.com')
 
-        put "/categories/#{category.id}.json", params: {
-          name: "Email",
-          email_in: "mail@examle.com",
-          color: "ff0",
-          text_color: "fff",
-        }
+        put "/categories/#{category.id}.json",
+            params: {
+              name: 'Email',
+              email_in: 'mail@examle.com',
+              color: 'ff0',
+              text_color: 'fff'
+            }
         expect(response.status).to eq(422)
       end
 
-      describe "success" do
-        it "updates the group correctly" do
+      describe 'success' do
+        it 'updates the group correctly' do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
-          put "/categories/#{category.id}.json", params: {
-            name: "hello",
-            color: "ff0",
-            text_color: "fff",
-            slug: "hello-category",
-            auto_close_hours: 72,
-            permissions: {
-              "everyone" => readonly,
-              "staff" => create_post
-            },
-            custom_fields: {
-              "dancing" => "frogs"
-            },
-            minimum_required_tags: ""
-          }
+          put "/categories/#{category.id}.json",
+              params: {
+                name: 'hello',
+                color: 'ff0',
+                text_color: 'fff',
+                slug: 'hello-category',
+                auto_close_hours: 72,
+                permissions: { 'everyone' => readonly, 'staff' => create_post },
+                custom_fields: { 'dancing' => 'frogs' },
+                minimum_required_tags: ''
+              }
 
           expect(response.status).to eq(200)
           category.reload
-          expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
-            [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
-          ])
-          expect(category.name).to eq("hello")
-          expect(category.slug).to eq("hello-category")
-          expect(category.color).to eq("ff0")
+          expect(
+            category.category_groups.map { |g| [g.group_id, g.permission_type] }
+              .sort
+          ).to eq(
+                [
+                  [Group[:everyone].id, readonly],
+                  [Group[:staff].id, create_post]
+                ]
+              )
+          expect(category.name).to eq('hello')
+          expect(category.slug).to eq('hello-category')
+          expect(category.color).to eq('ff0')
           expect(category.auto_close_hours).to eq(72)
-          expect(category.custom_fields).to eq("dancing" => "frogs")
+          expect(category.custom_fields).to eq('dancing' => 'frogs')
           expect(category.minimum_required_tags).to eq(0)
         end
 
         it 'logs the changes correctly' do
-          category.update!(permissions: { "admins" => CategoryGroup.permission_types[:create_post] })
-
-          put "/categories/#{category.id}.json", params: {
-            name: 'new name',
-            color: category.color,
-            text_color: category.text_color,
-            slug: category.slug,
+          category.update!(
             permissions: {
-              "everyone" => CategoryGroup.permission_types[:create_post]
-            },
-          }
+              'admins' => CategoryGroup.permission_types[:create_post]
+            }
+          )
+
+          put "/categories/#{category.id}.json",
+              params: {
+                name: 'new name',
+                color: category.color,
+                text_color: category.text_color,
+                slug: category.slug,
+                permissions: {
+                  'everyone' => CategoryGroup.permission_types[:create_post]
+                }
+              }
           expect(response.status).to eq(200)
           expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
@@ -368,17 +384,18 @@ describe CategoriesController do
           category.navigate_to_first_post_after_read = false
           category.save!
 
-          put "/categories/#{category.id}.json", params: {
-            name: category.name,
-            color: category.color,
-            text_color: category.text_color,
-            navigate_to_first_post_after_read: true,
-            custom_fields: {
-              require_reply_approval: true,
-              require_topic_approval: true,
-              num_auto_bump_daily: 10
-            }
-          }
+          put "/categories/#{category.id}.json",
+              params: {
+                name: category.name,
+                color: category.color,
+                text_color: category.text_color,
+                navigate_to_first_post_after_read: true,
+                custom_fields: {
+                  require_reply_approval: true,
+                  require_topic_approval: true,
+                  num_auto_bump_daily: 10
+                }
+              }
 
           category.reload
           expect(category.require_topic_approval?).to eq(true)
@@ -392,16 +409,14 @@ describe CategoriesController do
 
   context '#update_slug' do
     it 'requires the user to be logged in' do
-      put "/category/category/slug.json"
+      put '/category/category/slug.json'
       expect(response.status).to eq(403)
     end
 
     describe 'logged in' do
       let(:valid_attrs) { { id: category.id, slug: 'fff' } }
 
-      before do
-        sign_in(admin)
-      end
+      before { sign_in(admin) }
 
       it 'rejects blank' do
         put "/category/#{category.id}/slug.json", params: { slug: nil }
@@ -416,7 +431,8 @@ describe CategoriesController do
       end
 
       it 'accepts not well formed custom slug' do
-        put "/category/#{category.id}/slug.json", params: { slug: ' valid slug' }
+        put "/category/#{category.id}/slug.json",
+            params: { slug: ' valid slug' }
 
         expect(response.status).to eq(200)
         expect(category.reload.slug).to eq('valid-slug')
@@ -424,7 +440,8 @@ describe CategoriesController do
 
       it 'accepts and sanitize custom slug when the slug generation method is not ascii' do
         SiteSetting.slug_generation_method = 'none'
-        put "/category/#{category.id}/slug.json", params: { slug: ' another !_ slug @' }
+        put "/category/#{category.id}/slug.json",
+            params: { slug: ' another !_ slug @' }
 
         expect(response.status).to eq(200)
         expect(category.reload.slug).to eq('another-slug')

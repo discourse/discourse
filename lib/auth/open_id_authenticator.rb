@@ -1,5 +1,4 @@
 class Auth::OpenIdAuthenticator < Auth::Authenticator
-
   attr_reader :name, :identifier
 
   def initialize(name, identifier, enabled_site_setting, opts = {})
@@ -14,8 +13,11 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def description_for_user(user)
-    info = UserOpenId.where("url LIKE ?", "#{@identifier}%").find_by(user_id: user.id)
-    info&.email || ""
+    info =
+      UserOpenId.where('url LIKE ?', "#{@identifier}%").find_by(
+        user_id: user.id
+      )
+    info&.email || ''
   end
 
   def can_revoke?
@@ -23,7 +25,10 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def revoke(user, skip_remote: false)
-    info = UserOpenId.where("url LIKE ?", "#{@identifier}%").find_by(user_id: user.id)
+    info =
+      UserOpenId.where('url LIKE ?', "#{@identifier}%").find_by(
+        user_id: user.id
+      )
     raise Discourse::NotFound if info.nil?
 
     info.destroy!
@@ -49,13 +54,23 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
     user_open_id = UserOpenId.find_by_url(identity_url)
 
-    if existing_account && (user_open_id.nil? || existing_account.id != user_open_id.user_id)
+    if existing_account &&
+       (user_open_id.nil? || existing_account.id != user_open_id.user_id)
       user_open_id.destroy! if user_open_id
-      user_open_id = UserOpenId.create!(url: identity_url , user_id: existing_account.id, email: email, active: true)
+      user_open_id =
+        UserOpenId.create!(
+          url: identity_url,
+          user_id: existing_account.id,
+          email: email,
+          active: true
+        )
     end
 
     if !user_open_id && @opts[:trusted] && user = User.find_by_email(email)
-      user_open_id = UserOpenId.create(url: identity_url , user_id: user.id, email: email, active: true)
+      user_open_id =
+        UserOpenId.create(
+          url: identity_url, user_id: user.id, email: email, active: true
+        )
     end
 
     result.user = user_open_id.try(:user)
@@ -81,26 +96,30 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def register_middleware(omniauth)
+    setup =
+      lambda do |env|
+        strategy = env['omniauth.strategy']
+        strategy.options[:store] = OpenID::Store::Redis.new($redis)
+
+        # Add CSRF protection in addition to OpenID Specification
+        def strategy.query_string
+          session['omniauth.state'] = state = SecureRandom.hex(24)
+          "?state=#{state}"
+        end
+
+        def strategy.callback_phase
+          stored_state = session.delete('omniauth.state')
+          provided_state = request.params['state']
+          unless provided_state == stored_state
+            return fail!(:invalid_credentials)
+          end
+          super
+        end
+      end
     omniauth.provider :open_id,
-         setup: lambda { |env|
-           strategy = env["omniauth.strategy"]
-           strategy.options[:store] = OpenID::Store::Redis.new($redis)
-
-           # Add CSRF protection in addition to OpenID Specification
-           def strategy.query_string
-             session["omniauth.state"] = state = SecureRandom.hex(24)
-             "?state=#{state}"
-           end
-
-           def strategy.callback_phase
-             stored_state = session.delete("omniauth.state")
-             provided_state = request.params["state"]
-             return fail!(:invalid_credentials) unless provided_state == stored_state
-             super
-           end
-         },
-         name: name,
-         identifier: identifier,
-         require: "omniauth-openid"
+                      setup: setup,
+                      name: name,
+                      identifier: identifier,
+                      require: 'omniauth-openid'
   end
 end

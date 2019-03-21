@@ -10,10 +10,15 @@ class TopicTag < ActiveRecord::Base
         tag.increment!(:topic_count)
 
         if topic.category_id
-          if stat = CategoryTagStat.find_by(tag_id: tag_id, category_id: topic.category_id)
+          if stat =
+             CategoryTagStat.find_by(
+               tag_id: tag_id, category_id: topic.category_id
+             )
             stat.increment!(:topic_count)
           else
-            CategoryTagStat.create(tag_id: tag_id, category_id: topic.category_id, topic_count: 1)
+            CategoryTagStat.create(
+              tag_id: tag_id, category_id: topic.category_id, topic_count: 1
+            )
           end
         end
       end
@@ -25,7 +30,11 @@ class TopicTag < ActiveRecord::Base
       if topic.archetype == Archetype.private_message
         tag.decrement!(:pm_topic_count)
       else
-        if topic.category_id && stat = CategoryTagStat.find_by(tag_id: tag_id, category: topic.category_id)
+        if topic.category_id &&
+           stat =
+             CategoryTagStat.find_by(
+               tag_id: tag_id, category: topic.category_id
+             )
           stat.topic_count == 1 ? stat.destroy : stat.decrement!(:topic_count)
         end
 

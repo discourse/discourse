@@ -10,11 +10,10 @@ class SourceURL < Tilt::Template
     context.metadata.merge(data: result)
   end
 
-  def prepare
-  end
+  def prepare; end
 
   def evaluate(scope, locals, &block)
-    code = "eval("
+    code = 'eval('
     code << data.inspect
     code << " + \"\\n//# sourceURL=#{scope.logical_path}\""
     code << ");\n"

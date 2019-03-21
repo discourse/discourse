@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe UserSummary do
-
-  it "produces secure summaries" do
+  it 'produces secure summaries' do
     topic = create_post.topic
     user = topic.user
     _reply = create_post(user: topic.user, topic: topic)
@@ -28,7 +27,9 @@ describe UserSummary do
     expect(summary.top_categories.length).to eq(0)
 
     category = Fabricate(:category)
-    topic.update_columns(category_id: category.id, deleted_at: nil, visible: true)
+    topic.update_columns(
+      category_id: category.id, deleted_at: nil, visible: true
+    )
 
     category.set_permissions(staff: :full)
     category.save
@@ -38,7 +39,7 @@ describe UserSummary do
     expect(summary.top_categories.length).to eq(0)
   end
 
-  it "is robust enough to handle bad data" do
+  it 'is robust enough to handle bad data' do
     UserActionCreator.enable
 
     liked_post = create_post

@@ -3,11 +3,7 @@ class DistributedMutex
   DEFAULT_VALIDITY ||= 60
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
-    self.new(
-      key,
-      redis: redis,
-      validity: validity
-    ).synchronize(&blk)
+    self.new(key, redis: redis, validity: validity).synchronize(&blk)
   end
 
   def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
@@ -31,14 +27,11 @@ class DistributedMutex
       if @using_global_redis && Discourse.recently_readonly?
         attempts += 1
 
-        if attempts > CHECK_READONLY_ATTEMPT
-          raise Discourse::ReadOnly
-        end
+        raise Discourse::ReadOnly if attempts > CHECK_READONLY_ATTEMPT
       end
     end
 
     yield
-
   ensure
     @redis.del @key
     @mutex.unlock
@@ -58,9 +51,7 @@ class DistributedMutex
         time = @redis.get @key
 
         if time && time.to_i < Time.now.to_i
-          got_lock = @redis.multi do
-            @redis.set @key, Time.now.to_i + @validity
-          end
+          got_lock = @redis.multi { @redis.set @key, Time.now.to_i + @validity }
         end
       ensure
         @redis.unwatch
@@ -69,5 +60,4 @@ class DistributedMutex
 
     got_lock
   end
-
 end

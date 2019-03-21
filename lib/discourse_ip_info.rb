@@ -23,7 +23,10 @@ class DiscourseIpInfo
       Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
       nil
     rescue => e
-      Discourse.warn_exception(e, "MaxMindDB (#{filepath}) could not be loaded.")
+      Discourse.warn_exception(
+        e,
+        "MaxMindDB (#{filepath}) could not be loaded."
+      )
       nil
     end
   end
@@ -38,14 +41,23 @@ class DiscourseIpInfo
         if result&.found?
           ret[:country] = result.country.name(locale) || result.country.name
           ret[:country_code] = result.country.iso_code
-          ret[:region] = result.subdivisions.most_specific.name(locale) || result.subdivisions.most_specific.name
+          ret[:region] =
+            result.subdivisions.most_specific.name(locale) ||
+              result.subdivisions.most_specific.name
           ret[:city] = result.city.name(locale) || result.city.name
           ret[:latitude] = result.location.latitude
           ret[:longitude] = result.location.longitude
-          ret[:location] = ret.values_at(:city, :region, :country).reject(&:blank?).uniq.join(", ")
+          ret[:location] =
+            ret.values_at(:city, :region, :country).reject(&:blank?).uniq.join(
+              ', '
+            )
         end
       rescue => e
-        Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-City database.")
+        Discourse.warn_exception(
+          e,
+          message:
+            "IP #{ip} could not be looked up in MaxMind GeoLite2-City database."
+        )
       end
     end
 
@@ -54,11 +66,15 @@ class DiscourseIpInfo
         result = @asn_mmdb.lookup(ip)
         if result&.found?
           result = result.to_hash
-          ret[:asn] = result["autonomous_system_number"]
-          ret[:organization] = result["autonomous_system_organization"]
+          ret[:asn] = result['autonomous_system_number']
+          ret[:organization] = result['autonomous_system_organization']
         end
       rescue => e
-        Discourse.warn_exception(e, message: "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database.")
+        Discourse.warn_exception(
+          e,
+          message:
+            "IP #{ip} could not be looked up in MaxMind GeoLite2-ASN database."
+        )
       end
     end
 
@@ -69,6 +85,7 @@ class DiscourseIpInfo
         result = Resolv::DNS.new.getname(ip)
         ret[:hostname] = result&.to_s
       rescue Resolv::ResolvError
+
       end
     end
 

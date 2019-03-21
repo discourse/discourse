@@ -1,6 +1,6 @@
 class Auth::InstagramAuthenticator < Auth::ManagedAuthenticator
   def name
-    "instagram"
+    'instagram'
   end
 
   def enabled?
@@ -8,11 +8,10 @@ class Auth::InstagramAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    omniauth.provider :instagram,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:client_id] = SiteSetting.instagram_consumer_key
-              strategy.options[:client_secret] = SiteSetting.instagram_consumer_secret
-           }
+    omniauth.provider :instagram, setup: lambda do |env|
+      strategy = env['omniauth.strategy']
+      strategy.options[:client_id] = SiteSetting.instagram_consumer_key
+      strategy.options[:client_secret] = SiteSetting.instagram_consumer_secret
+    end
   end
 end

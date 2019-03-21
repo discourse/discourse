@@ -22,10 +22,9 @@ class SiteSetting < ActiveRecord::Base
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
 
-  unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
-    Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
-      load_settings(file)
-    end
+  unless Rails.env.test? && ENV['LOAD_PLUGINS'] != '1'
+    Dir[File.join(Rails.root, 'plugins', '*', 'config', 'settings.yml')]
+      .each { |file| load_settings(file) }
   end
 
   setup_deprecated_methods
@@ -68,8 +67,9 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.anonymous_homepage
-    top_menu_items.map { |item| item.name }
-      .select { |item| anonymous_menu_items.include?(item) }
+    top_menu_items.map(&:name).select do |item|
+      anonymous_menu_items.include?(item)
+    end
       .first
   end
 
@@ -84,16 +84,18 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.scheme
-    force_https? ? "https" : "http"
+    force_https? ? 'https' : 'http'
   end
 
   def self.default_categories_selected
     [
-      SiteSetting.default_categories_watching.split("|"),
-      SiteSetting.default_categories_tracking.split("|"),
-      SiteSetting.default_categories_muted.split("|"),
-      SiteSetting.default_categories_watching_first_post.split("|")
-    ].flatten.to_set
+      SiteSetting.default_categories_watching.split('|'),
+      SiteSetting.default_categories_tracking.split('|'),
+      SiteSetting.default_categories_muted.split('|'),
+      SiteSetting.default_categories_watching_first_post.split('|')
+    ]
+      .flatten
+      .to_set
   end
 
   def self.min_redirected_to_top_period(duration)
@@ -105,7 +107,9 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.queue_jobs=(val)
-    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead")
+    Discourse.deprecate(
+      'queue_jobs is deprecated. Please use Jobs.run_immediately! instead'
+    )
     val ? Jobs.run_later! : Jobs.run_immediately!
   end
 
@@ -114,29 +118,47 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.attachment_content_type_blacklist_regex
-    @attachment_content_type_blacklist_regex ||= Regexp.union(SiteSetting.attachment_content_type_blacklist.split("|"))
+    @attachment_content_type_blacklist_regex ||=
+      Regexp.union(SiteSetting.attachment_content_type_blacklist.split('|'))
   end
 
   def self.attachment_filename_blacklist_regex
-    @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
+    @attachment_filename_blacklist_regex ||=
+      Regexp.union(SiteSetting.attachment_filename_blacklist.split('|'))
   end
 
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_cdn_url : GlobalSetting.s3_cdn_url
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_cdn_url
+      else
+        GlobalSetting.s3_cdn_url
+      end
     end
 
     def self.s3_region
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_region : GlobalSetting.s3_region
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_region
+      else
+        GlobalSetting.s3_region
+      end
     end
 
     def self.s3_upload_bucket
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_upload_bucket
+      else
+        GlobalSetting.s3_bucket
+      end
     end
 
     def self.s3_endpoint
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
+      if SiteSetting.enable_s3_uploads
+        SiteSetting.s3_endpoint
+      else
+        GlobalSetting.s3_endpoint
+      end
     end
 
     def self.enable_s3_uploads
@@ -144,20 +166,27 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.s3_base_url
-      path = self.s3_upload_bucket.split("/", 2)[1]
+      path = self.s3_upload_bucket.split('/', 2)[1]
       "#{self.absolute_base_url}#{path ? '/' + path : ''}"
     end
 
     def self.absolute_base_url
       url_basename = SiteSetting.s3_endpoint.split('/')[-1]
-      bucket = SiteSetting.enable_s3_uploads ? Discourse.store.s3_bucket_name : GlobalSetting.s3_bucket_name
+      bucket =
+        if SiteSetting.enable_s3_uploads
+          Discourse.store.s3_bucket_name
+        else
+          GlobalSetting.s3_bucket_name
+        end
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
-      if SiteSetting.s3_endpoint.blank? || SiteSetting.s3_endpoint.end_with?("amazonaws.com")
-        if SiteSetting.Upload.s3_region.start_with?("cn-")
+      if SiteSetting.s3_endpoint.blank? ||
+         SiteSetting.s3_endpoint.end_with?('amazonaws.com')
+        if SiteSetting.Upload.s3_region.start_with?('cn-')
           "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         else
-          "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
+          "//#{bucket}.s3.dualstack.#{SiteSetting.Upload
+            .s3_region}.amazonaws.com"
         end
       else
         "//#{bucket}.#{url_basename}"
@@ -169,14 +198,10 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting::Upload
   end
 
-  %i{
-    site_logo_url
-    site_logo_small_url
-    site_mobile_logo_url
-    site_favicon_url
-  }.each { |client_setting| client_settings << client_setting }
+  %i[site_logo_url site_logo_small_url site_mobile_logo_url site_favicon_url]
+    .each { |client_setting| client_settings << client_setting }
 
-  %i{
+  %i[
     logo
     logo_small
     digest_logo
@@ -187,7 +212,8 @@ class SiteSetting < ActiveRecord::Base
     twitter_summary_large_image
     opengraph_image
     push_notifications_icon
-  }.each do |setting_name|
+  ]
+    .each do |setting_name|
     define_singleton_method("site_#{setting_name}_url") do
       upload = self.public_send(setting_name)
       upload ? full_cdn_url(upload.url) : ''
@@ -198,7 +224,6 @@ class SiteSetting < ActiveRecord::Base
     c = SiteSetting.shared_drafts_category
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
   end
-
 end
 
 # == Schema Information

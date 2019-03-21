@@ -6,6 +6,5 @@ class RemoveEnglishFromPostActionTypes < ActiveRecord::Migration[4.2]
     remove_column :post_action_types, :description
   end
 
-  def down
-  end
+  def down; end
 end

@@ -6,48 +6,60 @@ describe Validators::UploadValidator do
 
   describe 'validate' do
     let(:user) { Fabricate(:user) }
-    let(:filename) { "discourse.csv" }
-    let(:csv_file) { file_from_fixtures(filename, "csv") }
+    let(:filename) { 'discourse.csv' }
+    let(:csv_file) { file_from_fixtures(filename, 'csv') }
 
-    it "should create an invalid upload when the filename is blank" do
-      SiteSetting.authorized_extensions = "*"
+    it 'should create an invalid upload when the filename is blank' do
+      SiteSetting.authorized_extensions = '*'
       created_upload = UploadCreator.new(csv_file, nil).create_for(user.id)
       validator.validate(created_upload)
       expect(created_upload).to_not be_valid
-      expect(created_upload.errors.full_messages.first).to include(I18n.t("activerecord.errors.messages.blank"))
+      expect(created_upload.errors.full_messages.first).to include(
+            I18n.t('activerecord.errors.messages.blank')
+          )
     end
 
     it "allows 'gz' as extension when uploading export file" do
-      SiteSetting.authorized_extensions = ""
+      SiteSetting.authorized_extensions = ''
 
-      expect(UploadCreator.new(csv_file, "#{filename}.gz", for_export: true).create_for(user.id)).to be_valid
+      expect(
+        UploadCreator.new(csv_file, "#{filename}.gz", for_export: true)
+          .create_for(user.id)
+      ).to be_valid
     end
 
-    it "allows uses max_export_file_size_kb when uploading export file" do
-      SiteSetting.max_attachment_size_kb = "0"
-      SiteSetting.authorized_extensions = "gz"
+    it 'allows uses max_export_file_size_kb when uploading export file' do
+      SiteSetting.max_attachment_size_kb = '0'
+      SiteSetting.authorized_extensions = 'gz'
 
-      expect(UploadCreator.new(csv_file, "#{filename}.gz", for_export: true).create_for(user.id)).to be_valid
+      expect(
+        UploadCreator.new(csv_file, "#{filename}.gz", for_export: true)
+          .create_for(user.id)
+      ).to be_valid
     end
 
     describe 'when allow_staff_to_upload_any_file_in_pm is true' do
       it 'should allow uploads for pm' do
-        upload = Fabricate.build(:upload,
-          user: Fabricate(:admin),
-          original_filename: 'test.ico',
-          for_private_message: true
-        )
+        upload =
+          Fabricate.build(
+            :upload,
+            user: Fabricate(:admin),
+            original_filename: 'test.ico',
+            for_private_message: true
+          )
 
         expect(subject.validate(upload)).to eq(true)
       end
 
       describe 'for a normal user' do
         it 'should not allow uploads for pm' do
-          upload = Fabricate.build(:upload,
-            user: Fabricate(:user),
-            original_filename: 'test.ico',
-            for_private_message: true
-          )
+          upload =
+            Fabricate.build(
+              :upload,
+              user: Fabricate(:user),
+              original_filename: 'test.ico',
+              for_private_message: true
+            )
 
           expect(subject.validate(upload)).to eq(nil)
         end
@@ -58,16 +70,13 @@ describe Validators::UploadValidator do
       let(:user) { Fabricate(:admin) }
 
       let(:upload) do
-        Fabricate.build(:upload,
-          user: user,
-          original_filename: 'test.ico',
-          for_site_setting: true
+        Fabricate.build(
+          :upload,
+          user: user, original_filename: 'test.ico', for_site_setting: true
         )
       end
 
-      before do
-        SiteSetting.authorized_extensions = 'png'
-      end
+      before { SiteSetting.authorized_extensions = 'png' }
 
       describe 'for admin user' do
         it 'should allow the upload' do

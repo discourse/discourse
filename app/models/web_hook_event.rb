@@ -7,8 +7,10 @@ class WebHookEvent < ActiveRecord::Base
 
   def self.purge_old
     where(
-      'created_at < ?', SiteSetting.retain_web_hook_events_period_days.days.ago
-    ).delete_all
+      'created_at < ?',
+      SiteSetting.retain_web_hook_events_period_days.days.ago
+    )
+      .delete_all
   end
 
   def update_web_hook_delivery_status

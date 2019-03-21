@@ -6,8 +6,20 @@ describe SuggestedTopicSerializer do
 
   describe '#featured_link and #featured_link_root_domain' do
     let(:featured_link) { 'http://meta.discourse.org' }
-    let(:topic) { Fabricate(:topic, featured_link: featured_link, category: Fabricate(:category, topic_featured_link_allowed: true)) }
-    subject(:json) { SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json }
+    let(:topic) do
+      Fabricate(
+        :topic,
+        featured_link: featured_link,
+        category: Fabricate(:category, topic_featured_link_allowed: true)
+      )
+    end
+    subject(:json) do
+      SuggestedTopicSerializer.new(
+        topic,
+        scope: Guardian.new(user), root: false
+      )
+        .as_json
+    end
 
     context 'when topic featured link is disable' do
       before do
@@ -23,9 +35,7 @@ describe SuggestedTopicSerializer do
     end
 
     context 'when topic featured link is enabled' do
-      before do
-        SiteSetting.topic_featured_link_enabled = true
-      end
+      before { SiteSetting.topic_featured_link_enabled = true }
 
       it 'should return featured link attrs' do
         expect(json[:featured_link]).to eq(featured_link)
@@ -37,7 +47,12 @@ describe SuggestedTopicSerializer do
   describe 'hidden tags' do
     let(:topic) { Fabricate(:topic) }
     let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
-    let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+    let(:staff_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: { 'staff' => 1 }, tag_names: [hidden_tag.name]
+      )
+    end
 
     before do
       SiteSetting.tagging_enabled = true
@@ -46,12 +61,22 @@ describe SuggestedTopicSerializer do
     end
 
     it 'returns hidden tag to staff' do
-      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
+      json =
+        SuggestedTopicSerializer.new(
+          topic,
+          scope: Guardian.new(admin), root: false
+        )
+          .as_json
       expect(json[:tags]).to eq([hidden_tag.name])
     end
 
     it 'does not return hidden tag to non-staff' do
-      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      json =
+        SuggestedTopicSerializer.new(
+          topic,
+          scope: Guardian.new(user), root: false
+        )
+          .as_json
       expect(json[:tags]).to eq([])
     end
   end

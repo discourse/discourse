@@ -8,12 +8,11 @@ class CreatePostActions < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :post_actions, ["post_id"]
+    add_index :post_actions, %w[post_id]
 
     # no support for this till rails 4
     execute 'create unique index idx_unique_actions on
       post_actions(user_id, post_action_type_id, post_id) where deleted_at is null'
-
   end
   def down
     drop_table :post_actions

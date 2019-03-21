@@ -4,7 +4,11 @@ class PushNotificationController < ApplicationController
   skip_before_action :preload_json
 
   def subscribe
-    PushNotificationPusher.subscribe(current_user, push_params, params[:send_confirmation])
+    PushNotificationPusher.subscribe(
+      current_user,
+      push_params,
+      params[:send_confirmation]
+    )
     render json: success_json
   end
 
@@ -16,6 +20,6 @@ class PushNotificationController < ApplicationController
   private
 
   def push_params
-    params.require(:subscription).permit(:endpoint, keys: [:p256dh, :auth])
+    params.require(:subscription).permit(:endpoint, keys: %i[p256dh auth])
   end
 end

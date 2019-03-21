@@ -1,9 +1,7 @@
-require "demon/rails_autospec"
+require 'demon/rails_autospec'
 
 module Autospec
-
   class QunitRunner < BaseRunner
-
     WATCHERS = {}
     def self.watch(pattern, &blk)
       WATCHERS[pattern] = blk
@@ -13,8 +11,12 @@ module Autospec
     end
 
     # Discourse specific
-    watch(%r{^app/assets/javascripts/discourse/(.+)\.js.es6$}) { |m| "test/javascripts/#{m[1]}-test.js.es6" }
-    watch(%r{^app/assets/javascripts/admin/(.+)\.js.es6$})     { |m| "test/javascripts/admin/#{m[1]}-test.js.es6" }
+    watch(%r{^app/assets/javascripts/discourse/(.+)\.js.es6$}) do |m|
+      "test/javascripts/#{m[1]}-test.js.es6"
+    end
+    watch(%r{^app/assets/javascripts/admin/(.+)\.js.es6$}) do |m|
+      "test/javascripts/admin/#{m[1]}-test.js.es6"
+    end
     watch(%r{^test/javascripts/.+\.js.es6$})
 
     RELOADERS = Set.new
@@ -28,11 +30,11 @@ module Autospec
     # Discourse specific
     reload(%r{^test/javascripts/fixtures/.+_fixtures\.js(\.es6)?$})
     reload(%r{^test/javascripts/(helpers|mixins)/.+\.js(\.es6)?$})
-    reload("test/javascripts/test_helper.js")
+    reload('test/javascripts/test_helper.js')
 
     watch(%r{^plugins/.*/test/.+\.js.es6$})
 
-    require "socket"
+    require 'socket'
 
     class ChromeNotInstalled < StandardError; end
 
@@ -44,7 +46,7 @@ module Autospec
       # ensure we can launch the rails server
       unless port_available?(port)
         puts "Port #{port} is not available"
-        puts "Either kill the process using that port or use the `TEST_SERVER_PORT` environment variable"
+        puts 'Either kill the process using that port or use the `TEST_SERVER_PORT` environment variable'
         return
       end
 
@@ -65,8 +67,8 @@ module Autospec
 
       qunit_url = "http://localhost:#{port}/qunit"
 
-      if specs != "spec"
-        module_or_filename, test_id, _name = specs.strip.split(":::")
+      if specs != 'spec'
+        module_or_filename, test_id, _name = specs.strip.split(':::')
         module_name = module_or_filename
         if !test_id
           module_name = try_to_find_module_name(module_or_filename)
@@ -76,7 +78,9 @@ module Autospec
         end
       end
 
-      cmd = "node #{Rails.root}/test/run-qunit.js \"#{qunit_url}\" 3000000 ./tmp/qunit_result"
+      cmd =
+        "node #{Rails
+          .root}/test/run-qunit.js \"#{qunit_url}\" 3000000 ./tmp/qunit_result"
 
       @pid = Process.spawn(cmd)
       _, status = Process.wait2(@pid)
@@ -114,14 +118,18 @@ module Autospec
     private
 
     def ensure_chrome_is_installed
-
-      binary = "google-chrome-stable" if system("command -v google-chrome-stable >/dev/null;")
-      binary ||= "google-chrome" if system("command -v google-chrome >/dev/null;")
+      if system('command -v google-chrome-stable >/dev/null;')
+        binary = 'google-chrome-stable'
+      end
+      if system('command -v google-chrome >/dev/null;')
+        binary ||= 'google-chrome'
+      end
 
       raise ChromeNotInstalled.new if !binary
 
-      if Gem::Version.new(`#{binary} --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
-        raise "Chrome 59 or higher is required"
+      if Gem::Version.new(`#{binary} --version`.match(/[\d\.]+/)[0]) <
+         Gem::Version.new('59')
+        raise 'Chrome 59 or higher is required'
       end
     end
 
@@ -133,7 +141,7 @@ module Autospec
     end
 
     def port
-      @port ||= ENV["TEST_SERVER_PORT"] || 60099
+      @port ||= ENV['TEST_SERVER_PORT'] || 60099
     end
 
     def start_rails_server
@@ -154,8 +162,18 @@ module Autospec
 
     def kill_process(pid)
       return unless pid
-      Process.kill("INT", pid) rescue nil
-      while (Process.getpgid(pid) rescue nil)
+      begin
+        Process.kill('INT', pid)
+      rescue StandardError
+        nil
+      end
+      while (
+        begin
+          Process.getpgid(pid)
+        rescue StandardError
+          nil
+        end
+      )
         sleep 0.001
       end
     end
@@ -163,27 +181,19 @@ module Autospec
     def try_to_find_module_name(file)
       file, _ = file.split(/:\d+$/)
       return unless File.exists?(file)
-      File.open(file, "r").each_line do |line|
-        if m = /module\(['"]([^'"]+)/i.match(line)
-          return m[1]
-        end
+      File.open(file, 'r').each_line do |line|
+        return m[1] if m = /module\(['"]([^'"]+)/i.match(line)
         if m = /moduleForWidget\(['"]([^"']+)/i.match(line)
           return "widget:#{m[1]}"
         end
         if m = /acceptance\(['"]([^"']+)/i.match(line)
           return "Acceptance: #{m[1]}"
         end
-        if m = /moduleFor\(['"]([^'"]+)/i.match(line)
-          return m[1]
-        end
-        if m = /moduleForComponent\(['"]([^"']+)/i.match(line)
-          return m[1]
-        end
+        return m[1] if m = /moduleFor\(['"]([^'"]+)/i.match(line)
+        return m[1] if m = /moduleForComponent\(['"]([^"']+)/i.match(line)
       end
 
       nil
     end
-
   end
-
 end

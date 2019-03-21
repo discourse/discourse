@@ -6,9 +6,7 @@ describe WebCrawlerRequest do
     WebCrawlerRequest.clear_cache!
   end
 
-  after do
-    WebCrawlerRequest.clear_cache!
-  end
+  after { WebCrawlerRequest.clear_cache! }
 
   def inc(user_agent, opts = nil)
     WebCrawlerRequest.increment!(user_agent, opts)
@@ -29,8 +27,12 @@ describe WebCrawlerRequest do
     inc('Googlebot')
     inc('Googlebot')
 
-    $redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
-    $redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
+    $redis.without_namespace.stubs(:incr).raises(
+      Redis::CommandError.new('READONLY')
+    )
+    $redis.without_namespace.stubs(:eval).raises(
+      Redis::CommandError.new('READONLY')
+    )
 
     inc('Googlebot', autoflush: 3)
     WebCrawlerRequest.write_cache!

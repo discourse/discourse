@@ -4,7 +4,9 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def index
-    render_json_dump(site_settings: SiteSetting.all_settings, diags: SiteSetting.diags)
+    render_json_dump(
+      site_settings: SiteSetting.all_settings, diags: SiteSetting.diags
+    )
   end
 
   def update
@@ -27,8 +29,8 @@ class Admin::SiteSettingsController < Admin::AdminController
   def raise_access_hidden_setting(id)
     # note, as of Ruby 2.3 symbols are GC'd so this is considered safe
     if SiteSetting.hidden_settings.include?(id.to_sym)
-      raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
+      raise Discourse::InvalidParameters,
+            'You are not allowed to change hidden settings'
     end
   end
-
 end

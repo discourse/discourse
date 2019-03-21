@@ -6,9 +6,10 @@ module Jobs
       return if SiteSetting.disallow_reply_by_email_after_days <= 0
 
       PostReplyKey.where(
-        "created_at < ?",
+        'created_at < ?',
         SiteSetting.disallow_reply_by_email_after_days.days.ago
-      ).delete_all
+      )
+        .delete_all
     end
   end
 end

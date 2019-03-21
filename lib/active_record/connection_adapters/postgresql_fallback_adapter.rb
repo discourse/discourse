@@ -17,11 +17,11 @@ class PostgreSQLFallbackHandler
     @initialized = false
 
     MessageBus.subscribe(DATABASE_DOWN_CHANNEL) do |payload|
-      if @initialized && payload.data["pid"].to_i != Process.pid
+      if @initialized && payload.data['pid'].to_i != Process.pid
         begin
-          RailsMultisite::ConnectionManagement.with_connection(payload.data['db']) do
-            clear_connections
-          end
+          RailsMultisite::ConnectionManagement.with_connection(
+            payload.data['db']
+          ) { clear_connections }
         rescue PG::UnableToSend
           # Site has already failed over
         end
@@ -32,15 +32,16 @@ class PostgreSQLFallbackHandler
   def verify_master
     synchronize { return if @thread && @thread.alive? }
 
-    @thread = Thread.new do
-      while true do
-        thread = Thread.new { initiate_fallback_to_master }
-        thread.abort_on_exception = true
-        thread.join
-        break if synchronize { @masters_down.hash.empty? }
-        sleep 5
+    @thread =
+      Thread.new do
+        while true
+          thread = Thread.new { initiate_fallback_to_master }
+          thread.abort_on_exception = true
+          thread.join
+          break if synchronize { @masters_down.hash.empty? }
+          sleep 5
+        end
       end
-    end
 
     @thread.abort_on_exception = true
   end
@@ -52,7 +53,7 @@ class PostgreSQLFallbackHandler
   def master_down
     synchronize do
       @masters_down[namespace] = true
-      Sidekiq.pause!("pg_failover") if !Sidekiq.paused?
+      Sidekiq.pause!('pg_failover') if !Sidekiq.paused?
       MessageBus.publish(DATABASE_DOWN_CHANNEL, db: namespace, pid: Process.pid)
     end
   end
@@ -89,7 +90,8 @@ class PostgreSQLFallbackHandler
               Sidekiq.unpause!
             end
           rescue => e
-            logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
+            logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e
+                          .message}'"
           end
         end
       end
@@ -165,10 +167,10 @@ module ActiveRecord
     end
 
     def replica_postgresql_connection(config)
-      config = config.dup.merge(
-        host: config[:replica_host],
-        port: config[:replica_port]
-      )
+      config =
+        config.dup.merge(
+          host: config[:replica_host], port: config[:replica_port]
+        )
 
       connection = postgresql_connection(config)
       verify_replica(connection)
@@ -178,8 +180,8 @@ module ActiveRecord
     private
 
     def verify_replica(connection)
-      value = connection.exec_query("SELECT pg_is_in_recovery()").rows[0][0]
-      raise "Replica database server is not in recovery mode." if !value
+      value = connection.exec_query('SELECT pg_is_in_recovery()').rows[0][0]
+      raise 'Replica database server is not in recovery mode.' if !value
     end
   end
 end

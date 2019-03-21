@@ -28,12 +28,15 @@ class TopicPostersSummary
   end
 
   def descriptions_by_id
-    @descriptions_by_id ||= begin
-      user_ids_with_descriptions.each_with_object({}) do |(id, description), descriptions|
-        descriptions[id] ||= []
-        descriptions[id] << description
+    @descriptions_by_id ||=
+      begin
+        user_ids_with_descriptions.each_with_object(
+          {}
+        ) do |(id, description), descriptions|
+          descriptions[id] ||= []
+          descriptions[id] << description
+        end
       end
-    end
   end
 
   def descriptions_for(user)
@@ -49,14 +52,17 @@ class TopicPostersSummary
   end
 
   def user_ids_with_descriptions
-    user_ids.zip([
-      :original_poster,
-      :most_recent_poster,
-      :frequent_poster,
-      :frequent_poster,
-      :frequent_poster,
-      :frequent_poster
-      ].map { |description| I18n.t(description) })
+    user_ids.zip(
+      %i[
+        original_poster
+        most_recent_poster
+        frequent_poster
+        frequent_poster
+        frequent_poster
+        frequent_poster
+      ]
+        .map { |description| I18n.t(description) }
+    )
   end
 
   def last_poster_is_topic_creator?
@@ -72,7 +78,7 @@ class TopicPostersSummary
   end
 
   def user_ids
-    [ topic.user_id, topic.last_post_user_id, *topic.featured_user_ids ]
+    [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
   end
 
   def avatar_lookup
@@ -80,6 +86,7 @@ class TopicPostersSummary
   end
 
   def primary_group_lookup
-    @primary_group_lookup ||= options[:primary_group_lookup] || PrimaryGroupLookup.new(user_ids)
+    @primary_group_lookup ||=
+      options[:primary_group_lookup] || PrimaryGroupLookup.new(user_ids)
   end
 end

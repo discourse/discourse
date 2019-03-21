@@ -1,5 +1,4 @@
 class FlagSettings
-
   attr_reader(
     :without_custom_types,
     :notify_types,
@@ -38,5 +37,4 @@ class FlagSettings
   def flag_types
     @all_flag_types
   end
-
 end

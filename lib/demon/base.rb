@@ -2,7 +2,6 @@ module Demon; end
 
 # intelligent fork based demonizer
 class Demon::Base
-
   def self.demons
     @demons
   end
@@ -16,9 +15,7 @@ class Demon::Base
 
   def self.stop
     return unless @demons
-    @demons.values.each do |demon|
-      demon.stop
-    end
+    @demons.values.each(&:stop)
   end
 
   def self.restart
@@ -30,9 +27,7 @@ class Demon::Base
   end
 
   def self.ensure_running
-    @demons.values.each do |demon|
-      demon.ensure_running
-    end
+    @demons.values.each(&:ensure_running)
   end
 
   attr_reader :pid, :parent_pid, :started, :index
@@ -54,15 +49,11 @@ class Demon::Base
 
   def alive?(pid = nil)
     pid ||= @pid
-    if pid
-      Demon::Base.alive?(pid)
-    else
-      false
-    end
+    pid ? Demon::Base.alive?(pid) : false
   end
 
   def stop_signal
-    "HUP"
+    'HUP'
   end
 
   def stop
@@ -70,23 +61,33 @@ class Demon::Base
     if @pid
       Process.kill(stop_signal, @pid)
 
-      wait_for_stop = lambda {
-        timeout = @stop_timeout
+      wait_for_stop =
+        lambda do
+          timeout = @stop_timeout
 
-        while alive? && timeout > 0
-          timeout -= (@stop_timeout / 10.0)
-          sleep(@stop_timeout / 10.0)
-          Process.waitpid(@pid, Process::WNOHANG) rescue -1
+          while alive? && timeout > 0
+            timeout -= (@stop_timeout / 10.0)
+            sleep(@stop_timeout / 10.0)
+            begin
+              Process.waitpid(@pid, Process::WNOHANG)
+            rescue StandardError
+              -1
+            end
+          end
+
+          begin
+            Process.waitpid(@pid, Process::WNOHANG)
+          rescue StandardError
+            -1
+          end
         end
-
-        Process.waitpid(@pid, Process::WNOHANG) rescue -1
-      }
 
       wait_for_stop.call
 
       if alive?
-        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}"
-        Process.kill("KILL", @pid)
+        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self
+                      .class}"
+        Process.kill('KILL', @pid)
       end
 
       wait_for_stop.call
@@ -105,7 +106,12 @@ class Demon::Base
       return
     end
 
-    dead = Process.waitpid(@pid, Process::WNOHANG) rescue -1
+    dead =
+      begin
+        Process.waitpid(@pid, Process::WNOHANG)
+      rescue StandardError
+        -1
+      end
     if dead
       STDERR.puts "Detected dead worker #{@pid}, restarting..."
       @pid = nil
@@ -120,7 +126,7 @@ class Demon::Base
     if existing = already_running?
       # should not happen ... so kill violently
       STDERR.puts "Attempting to kill pid #{existing}"
-      Process.kill("TERM", existing)
+      Process.kill('TERM', existing)
     end
 
     @started = true
@@ -141,9 +147,7 @@ class Demon::Base
   def already_running?
     if File.exists? pid_file
       pid = File.read(pid_file).to_i
-      if Demon::Base.alive?(pid)
-        return pid
-      end
+      return pid if Demon::Base.alive?(pid)
     end
 
     nil
@@ -152,24 +156,20 @@ class Demon::Base
   def self.alive?(pid)
     Process.kill(0, pid)
     true
-  rescue
+  rescue StandardError
     false
   end
 
   private
 
   def verbose(msg)
-    if @verbose
-      puts msg
-    end
+    puts msg if @verbose
   end
 
   def write_pid_file
     verbose("writing pid file #{pid_file} for #{@pid}")
-    FileUtils.mkdir_p(@rails_root + "tmp/pids")
-    File.open(pid_file, 'w') do |f|
-      f.write(@pid)
-    end
+    FileUtils.mkdir_p(@rails_root + 'tmp/pids')
+    File.open(pid_file, 'w') { |f| f.write(@pid) }
   end
 
   def delete_pid_file
@@ -181,9 +181,9 @@ class Demon::Base
       while true
         begin
           unless alive?(@parent_pid)
-            Process.kill "TERM", Process.pid
+            Process.kill 'TERM', Process.pid
             sleep 10
-            Process.kill "KILL", Process.pid
+            Process.kill 'KILL', Process.pid
           end
         rescue => e
           STDERR.puts "URGENT monitoring thread had an exception #{e}"
@@ -204,20 +204,19 @@ class Demon::Base
   def establish_app
     Discourse.after_fork if defined?(Discourse)
 
-    Signal.trap("HUP") do
+    Signal.trap('HUP') do
       begin
         delete_pid_file
       ensure
         # TERM is way cleaner than exit
-        Process.kill("TERM", Process.pid)
+        Process.kill('TERM', Process.pid)
       end
     end
 
     # keep stuff simple for now
-    $stdout.reopen("/dev/null", "w") if suppress_stdout
-    $stderr.reopen("/dev/null", "w") if suppress_stderr
+    $stdout.reopen('/dev/null', 'w') if suppress_stdout
+    $stderr.reopen('/dev/null', 'w') if suppress_stderr
   end
 
-  def after_fork
-  end
+  def after_fork; end
 end

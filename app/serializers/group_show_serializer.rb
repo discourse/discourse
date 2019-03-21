@@ -1,5 +1,9 @@
 class GroupShowSerializer < BasicGroupSerializer
-  attributes :is_group_user, :is_group_owner, :is_group_owner_display, :mentionable, :messageable
+  attributes :is_group_user,
+             :is_group_owner,
+             :is_group_owner_display,
+             :mentionable,
+             :messageable
 
   def include_is_group_user?
     authenticated?

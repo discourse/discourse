@@ -1,5 +1,4 @@
 class ThemeJavascriptCompiler
-
   module PrecompilerExtension
     def initialize(theme_id)
       super()
@@ -140,14 +139,13 @@ class ThemeJavascriptCompiler
     end
   end
 
-  class CompileError < StandardError
-  end
+  class CompileError < StandardError; end
 
   attr_accessor :content
 
   def initialize(theme_id)
     @theme_id = theme_id
-    @content = ""
+    @content = ''
   end
 
   def prepend_settings(settings_hash)
@@ -156,7 +154,8 @@ class ThemeJavascriptCompiler
         if ('Discourse' in window && Discourse.__container__) {
           Discourse.__container__
             .lookup("service:theme-settings")
-            .registerSettings(#{@theme_id}, #{settings_hash.to_json});
+            .registerSettings(#{@theme_id}, #{settings_hash
+                       .to_json});
         }
       })();
     JS
@@ -166,7 +165,8 @@ class ThemeJavascriptCompiler
   def append_ember_template(name, hbs_template)
     name = name.inspect
     compiled = EmberTemplatePrecompiler.new(@theme_id).compile(hbs_template)
-    content << <<~JS
+    content <<
+      <<~JS
       (function() {
         if ('Ember' in window) {
           Ember.TEMPLATES[#{name}] = Ember.HTMLBars.template(#{compiled});
@@ -180,7 +180,8 @@ class ThemeJavascriptCompiler
   def append_raw_template(name, hbs_template)
     name = name.sub(/\.raw$/, '').inspect
     compiled = RawTemplatePrecompiler.new(@theme_id).compile(hbs_template)
-    @content << <<~JS
+    @content <<
+      <<~JS
       (function() {
         if ('Discourse' in window) {
           Discourse.RAW_TEMPLATES[#{name}] = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
@@ -200,13 +201,14 @@ class ThemeJavascriptCompiler
   end
 
   def append_js_error(message)
-    @content << "console.error('Theme Transpilation Error:', #{message.inspect});"
+    @content <<
+      "console.error('Theme Transpilation Error:', #{message.inspect});"
   end
 
   private
 
   def transpile(es6_source, version)
-    template = Tilt::ES6ModuleTranspilerTemplate.new {}
+    template = Tilt::ES6ModuleTranspilerTemplate.new {  }
     wrapped = <<~PLUGIN_API_JS
       (function() {
         if ('Discourse' in window && typeof Discourse._registerPluginCode === 'function') {

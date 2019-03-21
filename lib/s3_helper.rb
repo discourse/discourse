@@ -1,7 +1,6 @@
-require "aws-sdk-s3"
+require 'aws-sdk-s3'
 
 class S3Helper
-
   class SettingMissing < StandardError; end
 
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
@@ -10,10 +9,13 @@ class S3Helper
     @s3_client = options.delete(:client)
     @s3_options = default_s3_options.merge(options)
 
-    @s3_bucket_name, @s3_bucket_folder_path = begin
-      raise Discourse::InvalidParameters.new("s3_bucket_name") if s3_bucket_name.blank?
-      self.class.get_bucket_and_folder_path(s3_bucket_name)
-    end
+    @s3_bucket_name, @s3_bucket_folder_path =
+      begin
+        if s3_bucket_name.blank?
+          raise Discourse::InvalidParameters.new('s3_bucket_name')
+        end
+        self.class.get_bucket_and_folder_path(s3_bucket_name)
+      end
 
     @tombstone_prefix =
       if @s3_bucket_folder_path
@@ -24,24 +26,26 @@ class S3Helper
   end
 
   def self.get_bucket_and_folder_path(s3_bucket_name)
-    s3_bucket_name.downcase.split("/".freeze, 2)
+    s3_bucket_name.downcase.split('/'.freeze, 2)
   end
 
   def upload(file, path, options = {})
     path = get_path_for_s3_upload(path)
     obj = s3_bucket.object(path)
 
-    etag = begin
-      if File.size(file.path) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
-        options[:multipart_threshold] = Aws::S3::FileUploader::FIFTEEN_MEGABYTES
-        obj.upload_file(file, options)
-        obj.load
-        obj.etag
-      else
-        options[:body] = file
-        obj.put(options).etag
+    etag =
+      begin
+        if File.size(file.path) >= Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+          options[:multipart_threshold] =
+            Aws::S3::FileUploader::FIFTEEN_MEGABYTES
+          obj.upload_file(file, options)
+          obj.load
+          obj.etag
+        else
+          options[:body] = file
+          obj.put(options).etag
+        end
       end
-    end
 
     return path, etag.gsub('"', '')
   end
@@ -59,6 +63,7 @@ class S3Helper
     s3_filename.prepend(multisite_upload_path) if Rails.configuration.multisite
     s3_bucket.object(get_path_for_s3_upload(s3_filename)).delete
   rescue Aws::S3::Errors::NoSuchKey
+
   end
 
   def copy(source, destination, options: {})
@@ -66,17 +71,18 @@ class S3Helper
       options[:copy_source] = File.join(@s3_bucket_name, source)
     else
       if @s3_bucket_folder_path
-        folder, filename = begin
-          source.split("/".freeze, 2)
-        end
-        options[:copy_source] = File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
+        folder, filename =
+          begin
+            source.split('/'.freeze, 2)
+          end
+        options[:copy_source] =
+          File.join(@s3_bucket_name, folder, multisite_upload_path, filename)
       else
-        options[:copy_source] = File.join(@s3_bucket_name, multisite_upload_path, source)
+        options[:copy_source] =
+          File.join(@s3_bucket_name, multisite_upload_path, source)
       end
     end
-    s3_bucket
-      .object(destination)
-      .copy_from(options)
+    s3_bucket.object(destination).copy_from(options)
   end
 
   # make sure we have a cors config for assets
@@ -85,26 +91,27 @@ class S3Helper
     rule = nil
 
     begin
-      rule = s3_resource.client.get_bucket_cors(
-        bucket: @s3_bucket_name
-      ).cors_rules&.first
+      rule =
+        s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules
+          &.first
     rescue Aws::S3::Errors::NoSuchCORSConfiguration
       # no rule
     end
 
     unless rule
-      rules = [{
-        allowed_headers: ["Authorization"],
-        allowed_methods: ["GET", "HEAD"],
-        allowed_origins: ["*"],
-        max_age_seconds: 3000
-      }] if rules.nil?
+      if rules.nil?
+        rules = [
+          {
+            allowed_headers: %w[Authorization],
+            allowed_methods: %w[GET HEAD],
+            allowed_origins: %w[*],
+            max_age_seconds: 3000
+          }
+        ]
+      end
 
       s3_resource.client.put_bucket_cors(
-        bucket: @s3_bucket_name,
-        cors_configuration: {
-          cors_rules: rules
-        }
+        bucket: @s3_bucket_name, cors_configuration: { cors_rules: rules }
       )
     end
   end
@@ -120,52 +127,48 @@ class S3Helper
 
     # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
     rule = {
-      id: id,
-      status: "Enabled",
-      expiration: { days: days },
-      filter: filter
+      id: id, status: 'Enabled', expiration: { days: days }, filter: filter
     }
 
     rules = []
 
     begin
-      rules = s3_resource.client.get_bucket_lifecycle_configuration(bucket: @s3_bucket_name).rules
+      rules =
+        s3_resource.client.get_bucket_lifecycle_configuration(
+          bucket: @s3_bucket_name
+        )
+          .rules
     rescue Aws::S3::Errors::NoSuchLifecycleConfiguration
       # skip trying to merge
     end
 
     # in the past we has a rule that was called purge-tombstone vs purge_tombstone
     # just go ahead and normalize for our bucket
-    rules.delete_if do |r|
-      r.id.gsub('_', '-') == id.gsub('_', '-')
-    end
+    rules.delete_if { |r| r.id.gsub('_', '-') == id.gsub('_', '-') }
 
     rules << rule
 
     # normalize filter in rules, due to AWS library bug
-    rules = rules.map do |r|
-      r = r.to_h
-      prefix = r.delete(:prefix)
-      if prefix
-        r[:filter] = { prefix: prefix }
+    rules =
+      rules.map do |r|
+        r = r.to_h
+        prefix = r.delete(:prefix)
+        r[:filter] = { prefix: prefix } if prefix
+        r
       end
-      r
-    end
 
     s3_resource.client.put_bucket_lifecycle_configuration(
-      bucket: @s3_bucket_name,
-      lifecycle_configuration: {
-        rules: rules
-    })
+      bucket: @s3_bucket_name, lifecycle_configuration: { rules: rules }
+    )
   end
 
   def update_tombstone_lifecycle(grace_period)
     return if !SiteSetting.s3_configure_tombstone_policy
     return if @tombstone_prefix.blank?
-    update_lifecycle("purge_tombstone", grace_period, prefix: @tombstone_prefix)
+    update_lifecycle('purge_tombstone', grace_period, prefix: @tombstone_prefix)
   end
 
-  def list(prefix = "", marker = nil)
+  def list(prefix = '', marker = nil)
     options = { prefix: get_path_for_s3_upload(prefix) }
     options[:marker] = marker if marker.present?
     s3_bucket.objects(options)
@@ -173,16 +176,10 @@ class S3Helper
 
   def tag_file(key, tags)
     tag_array = []
-    tags.each do |k, v|
-      tag_array << { key: k.to_s, value: v.to_s }
-    end
+    tags.each { |k, v| tag_array << { key: k.to_s, value: v.to_s } }
 
     s3_resource.client.put_object_tagging(
-      bucket: @s3_bucket_name,
-      key: key,
-      tagging: {
-        tag_set: tag_array
-      }
+      bucket: @s3_bucket_name, key: key, tagging: { tag_set: tag_array }
     )
   end
 
@@ -191,11 +188,11 @@ class S3Helper
   end
 
   def self.s3_options(obj)
-    opts = {
-      region: obj.s3_region
-    }
+    opts = { region: obj.s3_region }
 
-    opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+    if SiteSetting.s3_endpoint.present?
+      opts[:endpoint] = SiteSetting.s3_endpoint
+    end
 
     unless obj.s3_use_iam_profile
       opts[:access_key_id] = obj.s3_access_key_id
@@ -207,7 +204,7 @@ class S3Helper
 
   def download_file(filename, destination_path, failure_message = nil)
     unless object(filename).download_file(destination_path)
-      raise failure_message&.to_s || "Failed to download file"
+      raise failure_message&.to_s || 'Failed to download file'
     end
   end
 
@@ -239,7 +236,7 @@ class S3Helper
   end
 
   def multisite_upload_path
-    File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
+    File.join('uploads', RailsMultisite::ConnectionManagement.current_db, '/')
   end
 
   def s3_resource
@@ -247,17 +244,22 @@ class S3Helper
   end
 
   def s3_bucket
-    @s3_bucket ||= begin
-      bucket = s3_resource.bucket(@s3_bucket_name)
-      bucket.create unless bucket.exists?
-      bucket
-    end
+    @s3_bucket ||=
+      begin
+        bucket = s3_resource.bucket(@s3_bucket_name)
+        bucket.create unless bucket.exists?
+        bucket
+      end
   end
 
   def check_missing_site_options
     unless SiteSetting.s3_use_iam_profile
-      raise SettingMissing.new("access_key_id") if SiteSetting.s3_access_key_id.blank?
-      raise SettingMissing.new("secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+      if SiteSetting.s3_access_key_id.blank?
+        raise SettingMissing.new('access_key_id')
+      end
+      if SiteSetting.s3_secret_access_key.blank?
+        raise SettingMissing.new('secret_access_key')
+      end
     end
   end
 end

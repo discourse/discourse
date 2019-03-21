@@ -5,16 +5,20 @@ class DestroyTask
   def self.destroy_topics(category, parent_category = nil)
     c = Category.find_by_slug(category, parent_category)
     log = []
-    descriptive_slug = parent_category ? "#{parent_category}/#{category}" : category
-    return "A category with the slug: #{descriptive_slug} could not be found" if c.nil?
-    topics = Topic.where(category_id: c.id, pinned_at: nil).where.not(user_id: -1)
-    log << "There are #{topics.count} topics to delete in #{descriptive_slug} category"
+    descriptive_slug =
+      parent_category ? "#{parent_category}/#{category}" : category
+    if c.nil?
+      return "A category with the slug: #{descriptive_slug} could not be found"
+    end
+    topics =
+      Topic.where(category_id: c.id, pinned_at: nil).where.not(user_id: -1)
+    log <<
+      "There are #{topics
+        .count} topics to delete in #{descriptive_slug} category"
     topics.each do |topic|
       log << "Deleting #{topic.slug}..."
       first_post = topic.ordered_posts.first
-      if first_post.nil?
-        return log << "Topic.ordered_posts.first was nil"
-      end
+      return log << 'Topic.ordered_posts.first was nil' if first_post.nil?
       system_user = User.find(-1)
       log << PostDestroyer.new(system_user, first_post).destroy
     end
@@ -31,7 +35,7 @@ class DestroyTask
   end
 
   def self.destroy_private_messages
-    pms = Topic.where(archetype: "private_message")
+    pms = Topic.where(archetype: 'private_message')
     current_user = User.find(-1) #system
     log = []
     pms.each do |pm|
@@ -67,7 +71,10 @@ class DestroyTask
           log << "#{user.username} not deleted"
         end
       rescue UserDestroyer::PostsExistError
-        raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
+        raise Discourse::InvalidAccess.new(
+                "User #{user.username} has #{user
+                  .post_count} posts, so can't be deleted."
+              )
       rescue NoMethodError
         log << "#{user.username} could not be deleted"
       end

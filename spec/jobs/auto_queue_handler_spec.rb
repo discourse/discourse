@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 describe Jobs::AutoQueueHandler do
-
   subject { Jobs::AutoQueueHandler.new.execute({}) }
 
-  context "old flag" do
+  context 'old flag' do
     let!(:old) { Fabricate(:flag, created_at: 61.days.ago) }
     let!(:not_old) { Fabricate(:flag, created_at: 59.days.ago) }
 
-    it "defers the old flag if auto_handle_queued_age is 60" do
+    it 'defers the old flag if auto_handle_queued_age is 60' do
       SiteSetting.auto_handle_queued_age = 60
       subject
       expect(not_old.reload.deferred_at).to be_nil
@@ -23,11 +22,15 @@ describe Jobs::AutoQueueHandler do
     end
   end
 
-  context "old queued post" do
-    let!(:old) { Fabricate(:queued_post, created_at: 61.days.ago, queue: 'default') }
-    let!(:not_old) { Fabricate(:queued_post, created_at: 59.days.ago, queue: 'default') }
+  context 'old queued post' do
+    let!(:old) do
+      Fabricate(:queued_post, created_at: 61.days.ago, queue: 'default')
+    end
+    let!(:not_old) do
+      Fabricate(:queued_post, created_at: 59.days.ago, queue: 'default')
+    end
 
-    it "rejects the post when auto_handle_queued_age is 60" do
+    it 'rejects the post when auto_handle_queued_age is 60' do
       SiteSetting.auto_handle_queued_age = 60
       subject
       expect(not_old.reload.state).to eq(QueuedPost.states[:new])
@@ -41,5 +44,4 @@ describe Jobs::AutoQueueHandler do
       expect(old.reload.state).to eq(QueuedPost.states[:new])
     end
   end
-
 end

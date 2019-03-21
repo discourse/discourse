@@ -1,13 +1,15 @@
 module Discourse
-  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/ unless defined? ::Discourse::VERSION_REGEXP
+  unless defined?(::Discourse::VERSION_REGEXP)
+    VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
+  end
 
   # work around reloader
-  unless defined? ::Discourse::VERSION
+  unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       MAJOR = 2
       MINOR = 3
-      TINY  = 0
-      PRE   = 'beta5'
+      TINY = 0
+      PRE = 'beta5'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join('.')
     end

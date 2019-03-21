@@ -1,7 +1,6 @@
 # Use "An O(NP) Sequence Comparison Algorithm" as described by Sun Wu, Udi Manber and Gene Myers
 # in http://www.itu.dk/stud/speciale/bepjea/xwebtex/litt/an-onp-sequence-comparison-algorithm.pdf
 class ONPDiff
-
   def initialize(a, b)
     @a, @b = a, b
     @m, @n = a.length, b.length
@@ -32,24 +31,28 @@ class ONPDiff
     @path = Array.new(size) { |i| -1 }
     p = -1
 
-    begin
-      p += 1
+    until fp[@delta + @offset] == @n
+      begin
+        p += 1
 
-      k = -p
-      while k <= @delta - 1
-        fp[k + @offset] = snake(k, fp[k - 1 + @offset] + 1, fp[k + 1 + @offset])
-        k += 1
+        k = -p
+        while k <= @delta - 1
+          fp[k + @offset] =
+            snake(k, fp[k - 1 + @offset] + 1, fp[k + 1 + @offset])
+          k += 1
+        end
+
+        k = @delta + p
+        while k >= @delta + 1
+          fp[k + @offset] =
+            snake(k, fp[k - 1 + @offset] + 1, fp[k + 1 + @offset])
+          k -= 1
+        end
+
+        fp[@delta + @offset] =
+          snake(@delta, fp[@delta - 1 + @offset] + 1, fp[@delta + 1 + @offset])
       end
-
-      k = @delta + p
-      while k >= @delta + 1
-        fp[k + @offset] = snake(k, fp[k - 1 + @offset] + 1, fp[k + 1 + @offset])
-        k -= 1
-      end
-
-      fp[@delta + @offset] = snake(@delta, fp[@delta - 1 + @offset] + 1, fp[@delta + 1 + @offset])
-
-    end until fp[@delta + @offset] == @n
+    end
 
     r = @path[@delta + @offset]
 
@@ -83,6 +86,7 @@ class ONPDiff
     x, y = 1, 1
     px, py = 0, 0
     i = shortest_path.length - 1
+
     while i >= 0
       while px < shortest_path[i][0] || py < shortest_path[i][1]
         if shortest_path[i][1] - shortest_path[i][0] > py - px
@@ -113,6 +117,7 @@ class ONPDiff
     x, y = 1, 1
     px, py = 0, 0
     i = shortest_path.length - 1
+
     while i >= 0
       while px < shortest_path[i][0] || py < shortest_path[i][1]
         if shortest_path[i][1] - shortest_path[i][0] > py - px
@@ -149,5 +154,4 @@ class ONPDiff
     end
     ses
   end
-
 end

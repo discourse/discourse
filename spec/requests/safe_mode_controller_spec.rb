@@ -23,6 +23,5 @@ RSpec.describe SafeModeController do
         expect(response.status).to redirect_to(safe_mode_path)
       end
     end
-
   end
 end

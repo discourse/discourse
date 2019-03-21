@@ -30,11 +30,21 @@ describe UserVisit do
       user.user_visits.create(visited_at: 2.days.ago)
       user.user_visits.create(visited_at: 4.days.ago)
     end
-    let(:visits_by_day) { { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.zone.now.to_date => 1 } }
+    let(:visits_by_day) do
+      {
+        1.day.ago.to_date => 2,
+        2.days.ago.to_date => 1,
+        Time.zone.now.to_date => 1
+      }
+    end
 
     it 'collect closed interval visits' do
-      expect(UserVisit.by_day(2.days.ago, Time.zone.now)).to include(visits_by_day)
-      expect(UserVisit.by_day(2.days.ago, Time.zone.now)).not_to include(4.days.ago.to_date => 1)
+      expect(UserVisit.by_day(2.days.ago, Time.zone.now)).to include(
+            visits_by_day
+          )
+      expect(UserVisit.by_day(2.days.ago, Time.zone.now)).not_to include(
+                4.days.ago.to_date => 1
+              )
     end
   end
 end

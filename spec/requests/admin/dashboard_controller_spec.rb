@@ -7,25 +7,21 @@ describe Admin::DashboardController do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
 
-  it "is a subclass of AdminController" do
+  it 'is a subclass of AdminController' do
     expect(Admin::DashboardController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
     let(:admin) { Fabricate(:admin) }
 
-    before do
-      sign_in(admin)
-    end
+    before { sign_in(admin) }
 
     describe '#index' do
       context 'version checking is enabled' do
-        before do
-          SiteSetting.version_checks = true
-        end
+        before { SiteSetting.version_checks = true }
 
         it 'returns discourse version info' do
-          get "/admin/dashboard.json"
+          get '/admin/dashboard.json'
 
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)['version_check']).to be_present
@@ -33,12 +29,10 @@ describe Admin::DashboardController do
       end
 
       context 'version checking is disabled' do
-        before do
-          SiteSetting.version_checks = false
-        end
+        before { SiteSetting.version_checks = false }
 
         it 'does not return discourse version info' do
-          get "/admin/dashboard.json"
+          get '/admin/dashboard.json'
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
           expect(json['version_check']).not_to be_present
@@ -48,12 +42,10 @@ describe Admin::DashboardController do
 
     describe '#problems' do
       context 'when there are no problems' do
-        before do
-          AdminDashboardData.stubs(:fetch_problems).returns([])
-        end
+        before { AdminDashboardData.stubs(:fetch_problems).returns([]) }
 
         it 'returns an empty array' do
-          get "/admin/dashboard/problems.json"
+          get '/admin/dashboard/problems.json'
 
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -63,11 +55,13 @@ describe Admin::DashboardController do
 
       context 'when there are problems' do
         before do
-          AdminDashboardData.stubs(:fetch_problems).returns(['Not enough awesome', 'Too much sass'])
+          AdminDashboardData.stubs(:fetch_problems).returns(
+            ['Not enough awesome', 'Too much sass']
+          )
         end
 
         it 'returns an array of strings' do
-          get "/admin/dashboard/problems.json"
+          get '/admin/dashboard/problems.json'
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
           expect(json['problems'].size).to eq(2)

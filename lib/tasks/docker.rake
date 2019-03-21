@@ -61,7 +61,7 @@ task 'docker:test' do
         @good &&= run_or_fail("yarn eslint --ext .es6 plugins/#{ENV['SINGLE_PLUGIN']}")
 
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
-        @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
+        @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.{rb,rake}", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.es6")
       else
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
         @good &&= run_or_fail("yarn eslint app/assets/javascripts test/javascripts") unless ENV["SKIP_CORE"]
@@ -69,12 +69,12 @@ task 'docker:test' do
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('yarn prettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.es6" "test/javascripts/**/*.es6"')
+          @good &&= run_or_fail_prettier("{app,db,lib,spec}/**/*.{rb,rake}", "app/assets/stylesheets/**/*.scss", "app/assets/javascripts/**/*.es6", "test/javascripts/**/*.es6")
         end
 
         unless ENV["SKIP_PLUGINS"]
           puts "Listing prettier offenses in plugins:"
-          @good &&= run_or_fail('yarn prettier --list-different "plugins/**/*.scss" "plugins/**/*.es6"')
+          @good &&= run_or_fail_prettier("plugins/**/*.{rb,rake}", "plugins/**/*.scss", "plugins/**/*.es6")
         end
       end
       puts "travis_fold:end:lint" if ENV["TRAVIS"]

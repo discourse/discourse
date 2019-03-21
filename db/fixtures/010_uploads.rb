@@ -1,9 +1,10 @@
 {
-  -1 => "d-logo-sketch.png",
-  -2 => "d-logo-sketch-small.png",
-  -3 => "default-favicon.ico",
-  -4 => "default-apple-touch-icon.png"
-}.each do |id, filename|
+  -1 => 'd-logo-sketch.png',
+  -2 => 'd-logo-sketch-small.png',
+  -3 => 'default-favicon.ico',
+  -4 => 'default-apple-touch-icon.png'
+}
+  .each do |id, filename|
   path = Rails.root.join("public/images/#{filename}")
 
   Upload.seed do |upload|

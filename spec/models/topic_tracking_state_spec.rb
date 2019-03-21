@@ -1,14 +1,9 @@
 require 'rails_helper'
 
 describe TopicTrackingState do
+  let(:user) { Fabricate(:user) }
 
-  let(:user) do
-    Fabricate(:user)
-  end
-
-  let(:post) do
-    create_post
-  end
+  let(:post) { create_post }
 
   let(:topic) { post.topic }
   let(:private_message_post) { Fabricate(:private_message_post) }
@@ -16,22 +11,25 @@ describe TopicTrackingState do
 
   describe '#publish_latest' do
     it 'can correctly publish latest' do
-      message = MessageBus.track_publish("/latest") do
-        described_class.publish_latest(topic)
-      end.first
+      message =
+        MessageBus.track_publish('/latest') do
+          described_class.publish_latest(topic)
+        end
+          .first
 
       data = message.data
 
-      expect(data["topic_id"]).to eq(topic.id)
-      expect(data["message_type"]).to eq(described_class::LATEST_MESSAGE_TYPE)
-      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+      expect(data['topic_id']).to eq(topic.id)
+      expect(data['message_type']).to eq(described_class::LATEST_MESSAGE_TYPE)
+      expect(data['payload']['archetype']).to eq(Archetype.default)
     end
 
     describe 'private message' do
       it 'should not publish any message' do
-        messages = MessageBus.track_publish do
-          described_class.publish_latest(private_message_topic)
-        end
+        messages =
+          MessageBus.track_publish do
+            described_class.publish_latest(private_message_topic)
+          end
 
         expect(messages).to eq([])
       end
@@ -39,16 +37,18 @@ describe TopicTrackingState do
   end
 
   describe '#publish_unread' do
-    it "can correctly publish unread" do
-      message = MessageBus.track_publish(described_class.unread_channel_key(post.user.id)) do
-        TopicTrackingState.publish_unread(post)
-      end.first
+    it 'can correctly publish unread' do
+      message =
+        MessageBus.track_publish(
+          described_class.unread_channel_key(post.user.id)
+        ) { TopicTrackingState.publish_unread(post) }
+          .first
 
       data = message.data
 
-      expect(data["topic_id"]).to eq(topic.id)
-      expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
-      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+      expect(data['topic_id']).to eq(topic.id)
+      expect(data['message_type']).to eq(described_class::UNREAD_MESSAGE_TYPE)
+      expect(data['payload']['archetype']).to eq(Archetype.default)
     end
 
     describe 'for a private message' do
@@ -61,9 +61,10 @@ describe TopicTrackingState do
       end
 
       it 'should not publish any message' do
-        messages = MessageBus.track_publish do
-          TopicTrackingState.publish_unread(private_message_post)
-        end
+        messages =
+          MessageBus.track_publish do
+            TopicTrackingState.publish_unread(private_message_post)
+          end
 
         expect(messages).to eq([])
       end
@@ -77,23 +78,26 @@ describe TopicTrackingState do
       it 'should publish the right message' do
         allowed_users = private_message_topic.allowed_users
 
-        messages = MessageBus.track_publish do
-          TopicTrackingState.publish_private_message(private_message_topic)
-        end
+        messages =
+          MessageBus.track_publish do
+            TopicTrackingState.publish_private_message(private_message_topic)
+          end
 
         expect(messages.count).to eq(1)
 
         message = messages.first
 
         expect(message.channel).to eq('/private-messages/inbox')
-        expect(message.data["topic_id"]).to eq(private_message_topic.id)
+        expect(message.data['topic_id']).to eq(private_message_topic.id)
         expect(message.user_ids).to eq(allowed_users.map(&:id))
       end
     end
 
     describe 'topic with groups' do
       let(:group1) { Fabricate(:group, users: [Fabricate(:user)]) }
-      let(:group2) { Fabricate(:group, users: [Fabricate(:user), Fabricate(:user)]) }
+      let(:group2) do
+        Fabricate(:group, users: [Fabricate(:user), Fabricate(:user)])
+      end
 
       before do
         [group1, group2].each do |group|
@@ -101,67 +105,67 @@ describe TopicTrackingState do
         end
       end
 
-      it "should publish the right message" do
-        messages = MessageBus.track_publish do
-          TopicTrackingState.publish_private_message(
-            private_message_topic
-          )
-        end
-
-        expect(messages.map(&:channel)).to contain_exactly(
-          '/private-messages/inbox',
-          "/private-messages/group/#{group1.name}",
-          "/private-messages/group/#{group2.name}"
-        )
-
-        message = messages.find do |m|
-          m.channel == '/private-messages/inbox'
-        end
-
-        expect(message.data["topic_id"]).to eq(private_message_topic.id)
-        expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
-
-        [group1, group2].each do |group|
-          message = messages.find do |m|
-            m.channel == "/private-messages/group/#{group.name}"
+      it 'should publish the right message' do
+        messages =
+          MessageBus.track_publish do
+            TopicTrackingState.publish_private_message(private_message_topic)
           end
 
-          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+        expect(messages.map(&:channel)).to contain_exactly(
+              '/private-messages/inbox',
+              "/private-messages/group/#{group1.name}",
+              "/private-messages/group/#{group2.name}"
+            )
+
+        message = messages.find { |m| m.channel == '/private-messages/inbox' }
+
+        expect(message.data['topic_id']).to eq(private_message_topic.id)
+        expect(message.user_ids).to eq(
+              private_message_topic.allowed_users.map(&:id)
+            )
+
+        [group1, group2].each do |group|
+          message =
+            messages.find do |m|
+              m.channel == "/private-messages/group/#{group.name}"
+            end
+
+          expect(message.data['topic_id']).to eq(private_message_topic.id)
           expect(message.user_ids).to eq(group.users.map(&:id))
         end
       end
 
-      describe "archiving topic" do
-        it "should publish the right message" do
-          messages = MessageBus.track_publish do
-            TopicTrackingState.publish_private_message(
-              private_message_topic,
-              group_archive: true
-            )
-          end
+      describe 'archiving topic' do
+        it 'should publish the right message' do
+          messages =
+            MessageBus.track_publish do
+              TopicTrackingState.publish_private_message(
+                private_message_topic,
+                group_archive: true
+              )
+            end
 
           expect(messages.map(&:channel)).to contain_exactly(
-            '/private-messages/inbox',
-            "/private-messages/group/#{group1.name}",
-            "/private-messages/group/#{group1.name}/archive",
-            "/private-messages/group/#{group2.name}",
-            "/private-messages/group/#{group2.name}/archive",
-          )
+                '/private-messages/inbox',
+                "/private-messages/group/#{group1.name}",
+                "/private-messages/group/#{group1.name}/archive",
+                "/private-messages/group/#{group2.name}",
+                "/private-messages/group/#{group2.name}/archive"
+              )
 
           message = messages.find { |m| m.channel == '/private-messages/inbox' }
 
-          expect(message.data["topic_id"]).to eq(private_message_topic.id)
-          expect(message.user_ids).to eq(private_message_topic.allowed_users.map(&:id))
+          expect(message.data['topic_id']).to eq(private_message_topic.id)
+          expect(message.user_ids).to eq(
+                private_message_topic.allowed_users.map(&:id)
+              )
 
           [group1, group2].each do |group|
             group_channel = "/private-messages/group/#{group.name}"
 
-            [
-              group_channel,
-              "#{group_channel}/archive"
-            ].each do |channel|
+            [group_channel, "#{group_channel}/archive"].each do |channel|
               message = messages.find { |m| m.channel == channel }
-              expect(message.data["topic_id"]).to eq(private_message_topic.id)
+              expect(message.data['topic_id']).to eq(private_message_topic.id)
               expect(message.user_ids).to eq(group.users.map(&:id))
             end
           end
@@ -172,12 +176,7 @@ describe TopicTrackingState do
     describe 'topic with new post' do
       let(:user) { private_message_topic.allowed_users.last }
 
-      let!(:post) do
-        Fabricate(:post,
-          topic: private_message_topic,
-          user: user
-        )
-      end
+      let!(:post) { Fabricate(:post, topic: private_message_topic, user: user) }
 
       let!(:group) do
         group = Fabricate(:group, users: [Fabricate(:user)])
@@ -186,12 +185,13 @@ describe TopicTrackingState do
       end
 
       it 'should publish the right message' do
-        messages = MessageBus.track_publish do
-          TopicTrackingState.publish_private_message(
-            private_message_topic,
-            post: post
-          )
-        end
+        messages =
+          MessageBus.track_publish do
+            TopicTrackingState.publish_private_message(
+              private_message_topic,
+              post: post
+            )
+          end
 
         expected_channels = [
           '/private-messages/inbox',
@@ -201,14 +201,17 @@ describe TopicTrackingState do
 
         expect(messages.map(&:channel)).to contain_exactly(*expected_channels)
 
-        expected_channels.zip([
-          private_message_topic.allowed_users.map(&:id),
-          [user.id],
-          [group.users.first.id]
-        ]).each do |channel, user_ids|
+        expected_channels.zip(
+          [
+            private_message_topic.allowed_users.map(&:id),
+            [user.id],
+            [group.users.first.id]
+          ]
+        )
+          .each do |channel, user_ids|
           message = messages.find { |m| m.channel == channel }
 
-          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+          expect(message.data['topic_id']).to eq(private_message_topic.id)
           expect(message.user_ids).to eq(user_ids)
         end
       end
@@ -216,24 +219,25 @@ describe TopicTrackingState do
 
     describe 'archived topic' do
       it 'should publish the right message' do
-        messages = MessageBus.track_publish do
-          TopicTrackingState.publish_private_message(
-            private_message_topic,
-            archive_user_id: private_message_post.user_id,
-          )
-        end
+        messages =
+          MessageBus.track_publish do
+            TopicTrackingState.publish_private_message(
+              private_message_topic,
+              archive_user_id: private_message_post.user_id
+            )
+          end
 
-        expected_channels = [
-          "/private-messages/archive",
-          "/private-messages/inbox",
-          "/private-messages/sent",
+        expected_channels = %w[
+          /private-messages/archive
+          /private-messages/inbox
+          /private-messages/sent
         ]
 
         expect(messages.map(&:channel)).to eq(expected_channels)
 
         expected_channels.each do |channel|
           message = messages.find { |m| m.channel = channel }
-          expect(message.data["topic_id"]).to eq(private_message_topic.id)
+          expect(message.data['topic_id']).to eq(private_message_topic.id)
           expect(message.user_ids).to eq([private_message_post.user_id])
         end
       end
@@ -243,40 +247,46 @@ describe TopicTrackingState do
       it 'should not publish any message' do
         topic.allowed_users << Fabricate(:user)
 
-        messages = MessageBus.track_publish do
-          TopicTrackingState.publish_private_message(topic)
-        end
+        messages =
+          MessageBus.track_publish do
+            TopicTrackingState.publish_private_message(topic)
+          end
 
         expect(messages).to eq([])
       end
     end
   end
 
-  it "correctly handles muted categories" do
-
+  it 'correctly handles muted categories' do
     user = Fabricate(:user)
     post
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
 
-    CategoryUser.create!(user_id: user.id,
-                         notification_level: CategoryUser.notification_levels[:muted],
-                         category_id: post.topic.category_id
-                         )
+    CategoryUser.create!(
+      user_id: user.id,
+      notification_level: CategoryUser.notification_levels[:muted],
+      category_id: post.topic.category_id
+    )
 
     create_post(topic_id: post.topic_id)
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 
-    TopicUser.create!(user_id: user.id, topic_id: post.topic_id, last_read_post_number: 1, notification_level: 3)
+    TopicUser.create!(
+      user_id: user.id,
+      topic_id: post.topic_id,
+      last_read_post_number: 1,
+      notification_level: 3
+    )
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
   end
 
-  it "correctly handles capping" do
+  it 'correctly handles capping' do
     user = Fabricate(:user)
 
     post1 = create_post
@@ -300,10 +310,9 @@ describe TopicTrackingState do
 
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(3)
-
   end
 
-  it "correctly gets the tracking state" do
+  it 'correctly gets the tracking state' do
     report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 

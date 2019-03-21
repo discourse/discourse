@@ -10,6 +10,5 @@ class AutoTrackAllTopicsRepliedTo < ActiveRecord::Migration[4.2]
     '
   end
 
-  def down
-  end
+  def down; end
 end

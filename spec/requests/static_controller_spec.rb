@@ -11,9 +11,7 @@ describe StaticController do
       UploadCreator.new(file, filename).create_for(Discourse.system_user.id)
     end
 
-    after do
-      DistributedMemoizer.flush!
-    end
+    after { DistributedMemoizer.flush! }
 
     describe 'local store' do
       it 'returns the default favicon if favicon has not been configured' do
@@ -54,8 +52,9 @@ describe StaticController do
       it 'can proxy a favicon correctly' do
         SiteSetting.favicon = upload
 
-        stub_request(:get, "https:/#{upload.url}")
-          .to_return(status: 200, body: file)
+        stub_request(:get, "https:/#{upload.url}").to_return(
+          status: 200, body: file
+        )
 
         get '/favicon/proxied'
 
@@ -68,7 +67,7 @@ describe StaticController do
 
   context '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
-      get "/brotli_asset/missing.js"
+      get '/brotli_asset/missing.js'
 
       expect(response.status).to eq(404)
       expect(response.headers['Content-Encoding']).not_to eq('br')
@@ -77,19 +76,19 @@ describe StaticController do
 
     it 'can handle fallback brotli assets' do
       begin
-        assets_path = Rails.root.join("tmp/backup_assets")
+        assets_path = Rails.root.join('tmp/backup_assets')
 
         GlobalSetting.stubs(:fallback_assets_path).returns(assets_path.to_s)
 
         FileUtils.mkdir_p(assets_path)
 
-        file_path = assets_path.join("test.js.br")
+        file_path = assets_path.join('test.js.br')
         File.write(file_path, 'fake brotli file')
 
-        get "/brotli_asset/test.js"
+        get '/brotli_asset/test.js'
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to match(/public/)
+        expect(response.headers['Cache-Control']).to match(/public/)
       ensure
         File.delete(file_path)
       end
@@ -97,17 +96,17 @@ describe StaticController do
 
     it 'has correct headers for brotli assets' do
       begin
-        assets_path = Rails.root.join("public/assets")
+        assets_path = Rails.root.join('public/assets')
 
         FileUtils.mkdir_p(assets_path)
 
-        file_path = assets_path.join("test.js.br")
+        file_path = assets_path.join('test.js.br')
         File.write(file_path, 'fake brotli file')
 
-        get "/brotli_asset/test.js"
+        get '/brotli_asset/test.js'
 
         expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to match(/public/)
+        expect(response.headers['Cache-Control']).to match(/public/)
       ensure
         File.delete(file_path)
       end
@@ -123,20 +122,20 @@ describe StaticController do
     end
 
     context "with a static file that's present" do
-      it "should return the right response for /faq" do
-        get "/faq"
+      it 'should return the right response for /faq' do
+        get '/faq'
 
         expect(response.status).to eq(200)
         expect(response.body).to include(I18n.t('js.faq'))
-        expect(response.body).to include("<title>FAQ - Discourse</title>")
+        expect(response.body).to include('<title>FAQ - Discourse</title>')
       end
     end
 
     [
       ['tos', :tos_url, I18n.t('terms_of_service.title')],
       ['privacy', :privacy_policy_url, I18n.t('privacy')]
-    ].each do |id, setting_name, text|
-
+    ]
+      .each do |id, setting_name, text|
       context "#{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
@@ -149,7 +148,10 @@ describe StaticController do
 
         context "when #{setting_name} site setting is set" do
           before do
-            SiteSetting.public_send("#{setting_name}=", 'http://example.com/page')
+            SiteSetting.public_send(
+              "#{setting_name}=",
+              'http://example.com/page'
+            )
           end
 
           it "redirects to the #{setting_name}" do
@@ -161,20 +163,20 @@ describe StaticController do
       end
     end
 
-    context "with a missing file" do
-      it "should respond 404" do
-        get "/static/does-not-exist"
+    context 'with a missing file' do
+      it 'should respond 404' do
+        get '/static/does-not-exist'
         expect(response.status).to eq(404)
       end
 
-      context "modal pages" do
-        it "should return the right response for /signup" do
-          get "/signup"
+      context 'modal pages' do
+        it 'should return the right response for /signup' do
+          get '/signup'
           expect(response.status).to eq(200)
         end
 
-        it "should return the right response for /password-reset" do
-          get "/password-reset"
+        it 'should return the right response for /password-reset' do
+          get '/password-reset'
           expect(response.status).to eq(200)
         end
       end
@@ -182,28 +184,28 @@ describe StaticController do
 
     it 'should redirect to / when logged in and path is /login' do
       sign_in(Fabricate(:user))
-      get "/login"
+      get '/login'
       expect(response).to redirect_to('/')
     end
 
-    it "should display the login template when login is required" do
+    it 'should display the login template when login is required' do
       SiteSetting.login_required = true
 
-      get "/login"
+      get '/login'
 
       expect(response.status).to eq(200)
 
-      expect(response.body).to include(PrettyText.cook(I18n.t(
-        'login_required.welcome_message', title: SiteSetting.title
-      )))
+      expect(response.body).to include(
+            PrettyText.cook(
+              I18n.t('login_required.welcome_message', title: SiteSetting.title)
+            )
+          )
     end
 
-    context "when login_required is enabled" do
-      before do
-        SiteSetting.login_required = true
-      end
+    context 'when login_required is enabled' do
+      before { SiteSetting.login_required = true }
 
-      ['faq', 'guidelines', 'rules', 'conduct'].each do |page_name|
+      %w[faq guidelines rules conduct].each do |page_name|
         it "#{page_name} page redirects to login page for anon" do
           get "/#{page_name}"
           expect(response).to redirect_to '/login'
@@ -225,11 +227,11 @@ describe StaticController do
       end
     end
 
-    context "crawler view" do
-      it "should include correct title" do
+    context 'crawler view' do
+      it 'should include correct title' do
         get '/faq', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
         expect(response.status).to eq(200)
-        expect(response.body).to include("<title>FAQ - Discourse</title>")
+        expect(response.body).to include('<title>FAQ - Discourse</title>')
       end
     end
   end
@@ -237,49 +239,49 @@ describe StaticController do
   describe '#enter' do
     context 'without a redirect path' do
       it 'redirects to the root url' do
-        post "/login.json"
+        post '/login.json'
         expect(response).to redirect_to('/')
       end
     end
 
     context 'with a redirect path' do
       it 'redirects to the redirect path' do
-        post "/login.json", params: { redirect: '/foo' }
+        post '/login.json', params: { redirect: '/foo' }
         expect(response).to redirect_to('/foo')
       end
     end
 
     context 'with a full url' do
       it 'redirects to the correct path' do
-        post "/login.json", params: { redirect: "#{Discourse.base_url}/foo" }
+        post '/login.json', params: { redirect: "#{Discourse.base_url}/foo" }
         expect(response).to redirect_to('/foo')
       end
     end
 
     context 'with a period to force a new host' do
       it 'redirects to the root path' do
-        post "/login.json", params: { redirect: ".org/foo" }
+        post '/login.json', params: { redirect: '.org/foo' }
         expect(response).to redirect_to('/')
       end
     end
 
     context 'with a full url to someone else' do
       it 'redirects to the root path' do
-        post "/login.json", params: { redirect: "http://eviltrout.com/foo" }
+        post '/login.json', params: { redirect: 'http://eviltrout.com/foo' }
         expect(response).to redirect_to('/')
       end
     end
 
     context 'with an invalid URL' do
-      it "redirects to the root" do
-        post "/login.json", params: { redirect: "javascript:alert('trout')" }
+      it 'redirects to the root' do
+        post '/login.json', params: { redirect: "javascript:alert('trout')" }
         expect(response).to redirect_to('/')
       end
     end
 
     context 'when the redirect path is the login page' do
       it 'redirects to the root url' do
-        post "/login.json", params: { redirect: login_path }
+        post '/login.json', params: { redirect: login_path }
         expect(response).to redirect_to('/')
       end
     end

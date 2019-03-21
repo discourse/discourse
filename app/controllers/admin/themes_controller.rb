@@ -3,8 +3,7 @@ require_dependency 'theme_store/tgz_exporter'
 require 'base64'
 
 class Admin::ThemesController < Admin::AdminController
-
-  skip_before_action :check_xhr, only: [:show, :preview, :export]
+  skip_before_action :check_xhr, only: %i[show preview export]
 
   def preview
     @theme = Theme.find(params[:id])
@@ -17,7 +16,10 @@ class Admin::ThemesController < Admin::AdminController
     hijack do
       File.open(path) do |file|
         filename = params[:file]&.original_filename || File.basename(path)
-        upload = UploadCreator.new(file, filename, for_theme: true).create_for(theme_user.id)
+        upload =
+          UploadCreator.new(file, filename, for_theme: true).create_for(
+            theme_user.id
+          )
         if upload.errors.count > 0
           render_json_error upload
         else
@@ -31,42 +33,41 @@ class Admin::ThemesController < Admin::AdminController
     require 'sshkey'
     k = SSHKey.generate
 
-    render json: {
-      private_key: k.private_key,
-      public_key: k.ssh_public_key
-    }
+    render json: { private_key: k.private_key, public_key: k.ssh_public_key }
   end
 
   def import
     @theme = nil
-    if params[:theme] && params[:theme].content_type == "application/json"
+    if params[:theme] && params[:theme].content_type == 'application/json'
       # .dcstyle.json import. Deprecated, but still available to allow conversion
-      json = JSON::parse(params[:theme].read)
+      json = JSON.parse(params[:theme].read)
       theme = json['theme']
 
-      @theme = Theme.new(name: theme["name"], user_id: theme_user.id)
-      theme["theme_fields"]&.each do |field|
-
-        if field["raw_upload"]
+      @theme = Theme.new(name: theme['name'], user_id: theme_user.id)
+      theme['theme_fields']&.each do |field|
+        if field['raw_upload']
           begin
             tmp = Tempfile.new
             tmp.binmode
-            file = Base64.decode64(field["raw_upload"])
+            file = Base64.decode64(field['raw_upload'])
             tmp.write(file)
             tmp.rewind
-            upload = UploadCreator.new(tmp, field["filename"]).create_for(theme_user.id)
-            field["upload_id"] = upload.id
+            upload =
+              UploadCreator.new(tmp, field['filename']).create_for(
+                theme_user.id
+              )
+            field['upload_id'] = upload.id
           ensure
             tmp.unlink
           end
         end
 
         @theme.set_field(
-          target: field["target"],
-          name: field["name"],
-          value: field["value"],
-          type_id: field["type_id"],
-          upload_id: field["upload_id"]
+          target: field['target'],
+          name: field['name'],
+          value: field['value'],
+          type_id: field['type_id'],
+          upload_id: field['upload_id']
         )
       end
 
@@ -79,61 +80,91 @@ class Admin::ThemesController < Admin::AdminController
     elsif params[:remote]
       begin
         branch = params[:branch] ? params[:branch] : nil
-        @theme = RemoteTheme.import_theme(params[:remote], theme_user, private_key: params[:private_key], branch: branch)
+        @theme =
+          RemoteTheme.import_theme(
+            params[:remote],
+            theme_user,
+            private_key: params[:private_key], branch: branch
+          )
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
-    elsif params[:bundle] || (params[:theme] && ["application/x-gzip", "application/gzip"].include?(params[:theme].content_type))
+    elsif params[:bundle] ||
+          (
+            params[:theme] &&
+              %w[application/x-gzip application/gzip].include?(
+                params[:theme].content_type
+              )
+          )
       # params[:bundle] used by theme CLI. params[:theme] used by admin UI
       bundle = params[:bundle] || params[:theme]
       theme_id = params[:theme_id]
       match_theme_by_name = !!params[:bundle] && !params.key?(:theme_id) # Old theme CLI behavior, match by name. Remove Jan 2020
       begin
-        @theme = RemoteTheme.update_tgz_theme(bundle.path, match_theme: match_theme_by_name, user: theme_user, theme_id: theme_id)
+        @theme =
+          RemoteTheme.update_tgz_theme(
+            bundle.path,
+            match_theme: match_theme_by_name,
+            user: theme_user,
+            theme_id: theme_id
+          )
         log_theme_change(nil, @theme)
         render json: @theme, status: :created
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end
     else
-      render_json_error I18n.t("themes.import_error.unknown_file_type"), status: :unprocessable_entity
+      render_json_error I18n.t('themes.import_error.unknown_file_type'),
+                        status: :unprocessable_entity
     end
   end
 
   def index
-    @themes = Theme.order(:name).includes(:child_themes,
-                                          :parent_themes,
-                                          :remote_theme,
-                                          :theme_settings,
-                                          :settings_field,
-                                          :locale_fields,
-                                          :user,
-                                          :color_scheme,
-                                          theme_fields: :upload
-                                          )
-    @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
-    light = ColorScheme.new(name: I18n.t("color_schemes.light"))
+    @themes =
+      Theme.order(:name).includes(
+        :child_themes,
+        :parent_themes,
+        :remote_theme,
+        :theme_settings,
+        :settings_field,
+        :locale_fields,
+        :user,
+        :color_scheme,
+        theme_fields: :upload
+      )
+    @color_schemes =
+      ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
+    light = ColorScheme.new(name: I18n.t('color_schemes.light'))
     @color_schemes.unshift(light)
 
     payload = {
-      themes: ActiveModel::ArraySerializer.new(@themes, each_serializer: ThemeSerializer),
+      themes:
+        ActiveModel::ArraySerializer.new(
+          @themes,
+          each_serializer: ThemeSerializer
+        ),
       extras: {
-        color_schemes: ActiveModel::ArraySerializer.new(@color_schemes, each_serializer: ColorSchemeSerializer)
+        color_schemes:
+          ActiveModel::ArraySerializer.new(
+            @color_schemes,
+            each_serializer: ColorSchemeSerializer
+          )
       }
     }
 
-    respond_to do |format|
-      format.json { render json: payload }
-    end
+    respond_to { |format| format.json { render json: payload } }
   end
 
   def create
-    @theme = Theme.new(name: theme_params[:name],
-                       user_id: theme_user.id,
-                       user_selectable: theme_params[:user_selectable] || false,
-                       color_scheme_id: theme_params[:color_scheme_id],
-                       component: [true, "true"].include?(theme_params[:component]))
+    @theme =
+      Theme.new(
+        name: theme_params[:name],
+        user_id: theme_user.id,
+        user_selectable: theme_params[:user_selectable] || false,
+        color_scheme_id: theme_params[:color_scheme_id],
+        component: [true, 'true'].include?(theme_params[:component])
+      )
     set_fields
 
     respond_to do |format|
@@ -142,7 +173,9 @@ class Admin::ThemesController < Admin::AdminController
         log_theme_change(nil, @theme)
         format.json { render json: @theme, status: :created }
       else
-        format.json { render json: @theme.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @theme.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -152,10 +185,8 @@ class Admin::ThemesController < Admin::AdminController
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
 
-    [:name, :color_scheme_id, :user_selectable].each do |field|
-      if theme_params.key?(field)
-        @theme.send("#{field}=", theme_params[field])
-      end
+    %i[name color_scheme_id user_selectable].each do |field|
+      @theme.send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
 
     if theme_params.key?(:child_theme_ids)
@@ -169,9 +200,7 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
 
-      Theme.where(id: expected).each do |theme|
-        @theme.add_child_theme!(theme)
-      end
+      Theme.where(id: expected).each { |theme| @theme.add_child_theme!(theme) }
     end
 
     set_fields
@@ -192,7 +221,6 @@ class Admin::ThemesController < Admin::AdminController
 
     respond_to do |format|
       if @theme.save
-
         @theme.remote_theme.save! if save_remote
 
         update_default_theme
@@ -202,11 +230,13 @@ class Admin::ThemesController < Admin::AdminController
         format.json { render json: @theme, status: :ok }
       else
         format.json do
-          error = @theme.errors.full_messages.join(", ").presence
-          error = I18n.t("themes.bad_color_scheme") if @theme.errors[:color_scheme].present?
-          error ||= I18n.t("themes.other_error")
+          error = @theme.errors.full_messages.join(', ').presence
+          if @theme.errors[:color_scheme].present?
+            error = I18n.t('themes.bad_color_scheme')
+          end
+          error ||= I18n.t('themes.other_error')
 
-          render json: { errors: [ error ] }, status: :unprocessable_entity
+          render json: { errors: [error] }, status: :unprocessable_entity
         end
       end
     end
@@ -219,9 +249,7 @@ class Admin::ThemesController < Admin::AdminController
     StaffActionLogger.new(current_user).log_theme_destroy(@theme)
     @theme.destroy
 
-    respond_to do |format|
-      format.json { head :no_content }
-    end
+    respond_to { |format| format.json { head :no_content } }
   end
 
   def show
@@ -236,8 +264,8 @@ class Admin::ThemesController < Admin::AdminController
     file_path = exporter.package_filename
     headers['Content-Length'] = File.size(file_path).to_s
     send_data File.read(file_path),
-      filename: File.basename(file_path),
-      content_type: "application/x-gzip"
+              filename: File.basename(file_path),
+              content_type: 'application/x-gzip'
   ensure
     exporter.cleanup!
   end
@@ -246,7 +274,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def update_default_theme
     if theme_params.key?(:default)
-      is_default = theme_params[:default].to_s == "true"
+      is_default = theme_params[:default].to_s == 'true'
       if @theme.id == SiteSetting.default_theme_id && !is_default
         Theme.clear_default!
       elsif is_default
@@ -259,7 +287,9 @@ class Admin::ThemesController < Admin::AdminController
     @theme_params ||=
       begin
         # deep munge is a train wreck, work around it for now
-        params[:theme][:child_theme_ids] ||= [] if params[:theme].key?(:child_theme_ids)
+        if params[:theme].key?(:child_theme_ids)
+          params[:theme][:child_theme_ids] ||= []
+        end
 
         params.require(:theme).permit(
           :name,
@@ -269,7 +299,7 @@ class Admin::ThemesController < Admin::AdminController
           :component,
           settings: {},
           translations: {},
-          theme_fields: [:name, :target, :value, :upload_id, :type_id],
+          theme_fields: %i[name target value upload_id type_id],
           child_theme_ids: []
         )
       end
@@ -311,9 +341,9 @@ class Admin::ThemesController < Admin::AdminController
 
   def handle_switch
     param = theme_params[:component]
-    if param.to_s == "false" && @theme.component?
+    if param.to_s == 'false' && @theme.component?
       @theme.switch_to_theme!
-    elsif param.to_s == "true" && !@theme.component?
+    elsif param.to_s == 'true' && !@theme.component?
       @theme.switch_to_component!
     end
   end

@@ -31,9 +31,7 @@ module CachedCounting
         return
       end
 
-      if (Time.now.utc - last_flush).to_i > autoflush_seconds
-        write_cache!
-      end
+      write_cache! if (Time.now.utc - last_flush).to_i > autoflush_seconds
     end
 
     def write_cache!(date = nil)
@@ -50,7 +48,9 @@ module CachedCounting
     # for concurrent calls without double counting
     def get_and_reset(key)
       namespaced_key = $redis.namespace_key(key)
-      val = $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key]).to_i
+      val =
+        $redis.without_namespace.eval(GET_AND_RESET, keys: [namespaced_key])
+          .to_i
       $redis.expire(key, 259200) # SET removes expiry, so set it again
       val
     end
@@ -58,12 +58,9 @@ module CachedCounting
     def request_id(query_params, retries = 0)
       id = where(query_params).pluck(:id).first
       id ||= create!(query_params.merge(count: 0)).id
-    rescue # primary key violation
-      if retries == 0
-        request_id(query_params, 1)
-      else
-        raise
-      end
+    rescue StandardError
+      # primary key violation
+      retries == 0 ? request_id(query_params, 1) : raise
     end
   end
 end

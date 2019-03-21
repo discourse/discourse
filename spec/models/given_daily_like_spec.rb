@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe GivenDailyLike do
-
   it 'no errors without a user' do
     expect(-> { GivenDailyLike.increment_for(nil) }).not_to raise_error
     expect(-> { GivenDailyLike.decrement_for(nil) }).not_to raise_error
@@ -43,7 +42,5 @@ describe GivenDailyLike do
       expect(value_for(user.id, dt)).to eq(0)
       expect(limit_reached_for(user.id, dt)).to eq(false)
     end
-
   end
-
 end

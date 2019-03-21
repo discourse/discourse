@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe DestroyTask do
-
   describe 'destroy topics' do
     let!(:c) { Fabricate(:category) }
     let!(:t) { Fabricate(:topic, category: c) }
@@ -14,13 +13,17 @@ describe DestroyTask do
     let!(:p3) { Fabricate(:post, topic: t3) }
 
     it 'destroys all topics in a category' do
-      expect { DestroyTask.destroy_topics(c.slug) }
-        .to change { Topic.where(category_id: c.id).count }.by (-1)
+      expect { DestroyTask.destroy_topics(c.slug) }.to change do
+        Topic.where(category_id: c.id).count
+      end
+        .by
     end
 
     it 'destroys all topics in a sub category' do
-      expect { DestroyTask.destroy_topics(sc.slug, c.slug) }
-        .to change { Topic.where(category_id: sc.id).count }.by(-1)
+      expect { DestroyTask.destroy_topics(sc.slug, c.slug) }.to change do
+        Topic.where(category_id: sc.id).count
+      end
+        .by(-1)
     end
 
     it "doesn't destroy system topics" do
@@ -40,7 +43,7 @@ describe DestroyTask do
 
     it 'destroys all private messages' do
       DestroyTask.destroy_private_messages
-      expect(Topic.where(archetype: "private_message").count).to eq 0
+      expect(Topic.where(archetype: 'private_message').count).to eq 0
     end
   end
 

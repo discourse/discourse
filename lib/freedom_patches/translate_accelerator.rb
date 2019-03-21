@@ -9,7 +9,6 @@
 # This patch depends on the convention that locale yml files must be named [locale_name].yml
 
 module I18n
-
   # this accelerates translation a tiny bit (halves the time it takes)
   class << self
     alias_method :translate_no_cache, :translate
@@ -41,7 +40,8 @@ module I18n
           # load plural rules from plugins
           DiscoursePluginRegistry.locales.each do |plugin_locale, options|
             if options[:plural]
-              I18n.backend.store_translations(plugin_locale,
+              I18n.backend.store_translations(
+                plugin_locale,
                 i18n: { plural: options[:plural] }
               )
             end
@@ -49,7 +49,9 @@ module I18n
         end
 
         # load it
-        I18n.backend.load_translations(I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml$/))
+        I18n.backend.load_translations(
+          I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml$/)
+        )
 
         @loaded_locales << locale
       end
@@ -95,16 +97,14 @@ module I18n
     def translate_no_override(*args)
       return translate_no_cache(*args) if args.length > 1 && args[1].present?
 
-      options  = args.last.is_a?(Hash) ? args.pop.dup : {}
-      key      = args.shift
-      locale   = options[:locale] || config.locale
+      options = args.last.is_a?(Hash) ? args.pop.dup : {}
+      key = args.shift
+      locale = options[:locale] || config.locale
 
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
       k = "#{key}#{locale}#{config.backend.object_id}"
 
-      @cache.getset(k) do
-        translate_no_cache(key, options).freeze
-      end
+      @cache.getset(k) { translate_no_cache(key, options).freeze }
     end
 
     def overrides_by_locale(locale)
@@ -117,7 +117,12 @@ module I18n
 
       if !by_site.has_key?(locale)
         # Load overrides
-        translations_overrides = TranslationOverride.where(locale: locale).pluck(:translation_key, :value, :compiled_js)
+        translations_overrides =
+          TranslationOverride.where(locale: locale).pluck(
+            :translation_key,
+            :value,
+            :compiled_js
+          )
 
         if translations_overrides.empty?
           by_site[locale] = {}
@@ -135,16 +140,19 @@ module I18n
     end
 
     def client_overrides_json(locale)
-      client_json = (overrides_by_locale(locale) || {}).select { |k, _| k[/^(admin_js|js)\./] }
+      client_json =
+        (overrides_by_locale(locale) || {}).select do |k, _|
+          k[/^(admin_js|js)\./]
+        end
       MultiJson.dump(client_json)
     end
 
     def translate(*args)
       execute_reload if @requires_reload
 
-      options  = args.last.is_a?(Hash) ? args.pop.dup : {}
-      key      = args.shift
-      locale   = options[:locale] || config.locale
+      options = args.last.is_a?(Hash) ? args.pop.dup : {}
+      key = args.shift
+      locale = options[:locale] || config.locale
 
       load_locale(locale) unless @loaded_locales.include?(locale)
 
@@ -160,15 +168,9 @@ module I18n
             options[:overrides] = overrides
 
             # I18n likes to use throw...
-            catch(:exception) do
-              return backend.translate(locale, key, options)
-            end
+            catch(:exception) { return backend.translate(locale, key, options) }
           else
-            overrides.each do |_k, v|
-              if result = v[key]
-                return result
-              end
-            end
+            overrides.each { |_k, v| return result if result = v[key] }
           end
         end
       end

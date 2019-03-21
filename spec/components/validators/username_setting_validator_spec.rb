@@ -4,7 +4,7 @@ describe UsernameSettingValidator do
   describe '#valid_value?' do
     subject(:validator) { described_class.new }
 
-    it "returns true for blank values" do
+    it 'returns true for blank values' do
       expect(validator.valid_value?('')).to eq(true)
       expect(validator.valid_value?(nil)).to eq(true)
     end
@@ -18,7 +18,7 @@ describe UsernameSettingValidator do
       expect(validator.valid_value?('no way')).to eq(false)
     end
 
-    context "regex support" do
+    context 'regex support' do
       let!(:darthvader) { Fabricate(:user, username: 'darthvader') }
       let!(:luke) { Fabricate(:user, username: 'luke') }
 
@@ -28,7 +28,7 @@ describe UsernameSettingValidator do
         expect(v.valid_value?('vader')).to eq(false)
       end
 
-      it "returns true if regex matches" do
+      it 'returns true if regex matches' do
         v = described_class.new(regex: 'darth')
         expect(v.valid_value?('darthvader')).to eq(true)
       end

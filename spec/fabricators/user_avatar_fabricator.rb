@@ -1,3 +1,1 @@
-Fabricator(:user_avatar) do
-  user
-end
+Fabricator(:user_avatar) { user }

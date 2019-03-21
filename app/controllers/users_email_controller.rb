@@ -3,21 +3,21 @@ require_dependency 'email_validator'
 require_dependency 'email_updater'
 
 class UsersEmailController < ApplicationController
+  requires_login only: %i[index update]
 
-  requires_login only: [:index, :update]
+  skip_before_action :check_xhr, only: %i[confirm]
+  skip_before_action :redirect_to_login_if_required, only: %i[confirm]
 
-  skip_before_action :check_xhr, only: [:confirm]
-  skip_before_action :redirect_to_login_if_required, only: [:confirm]
-
-  def index
-  end
+  def index; end
 
   def update
     params.require(:email)
     user = fetch_user_from_params
 
-    RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
-    RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
+    RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour)
+      .performed!
+    RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute)
+      .performed!
 
     updater = EmailUpdater.new(guardian, user)
     updater.change_to(params[:email])
@@ -28,7 +28,7 @@ class UsersEmailController < ApplicationController
 
     render body: nil
   rescue RateLimiter::LimitExceeded
-    render_json_error(I18n.t("rate_limiter.slow_down"))
+    render_json_error(I18n.t('rate_limiter.slow_down'))
   end
 
   def confirm
@@ -42,14 +42,24 @@ class UsersEmailController < ApplicationController
         user.email_change_requests.where(new_email_token_id: token.id).first
       end
 
-    if change_request&.change_state == EmailChangeRequest.states[:authorizing_new] &&
-       user.totp_enabled? && !user.authenticate_second_factor(params[:second_factor_token], params[:second_factor_method].to_i)
-
+    if change_request&.change_state ==
+       EmailChangeRequest.states[:authorizing_new] &&
+       user.totp_enabled? &&
+       !user.authenticate_second_factor(
+         params[:second_factor_token],
+         params[:second_factor_method].to_i
+       )
       @update_result = :invalid_second_factor
       @backup_codes_enabled = true if user.backup_codes_enabled?
 
       if params[:second_factor_token].present?
-        RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 3, 1.minute).performed!
+        RateLimiter.new(
+          nil,
+          "second-factor-min-#{request.remote_ip}",
+          3,
+          1.minute
+        )
+          .performed!
         @show_invalid_second_factor_error = true
       end
     else
@@ -64,5 +74,4 @@ class UsersEmailController < ApplicationController
 
     render layout: 'no_ember'
   end
-
 end

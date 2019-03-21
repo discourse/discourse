@@ -1,5 +1,4 @@
 module ImageSizer
-
   # Resize an image to the aspect ratio we want
   def self.resize(width, height, opts = {})
     return if width.blank? || height.blank?
@@ -31,5 +30,4 @@ module ImageSizer
 
     [[max_width, w].min.floor, [max_height, (h * ratio)].min.floor]
   end
-
 end

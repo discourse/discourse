@@ -6,11 +6,7 @@ class CategoryList
   cattr_accessor :preloaded_topic_custom_fields
   self.preloaded_topic_custom_fields = Set.new
 
-  attr_accessor :categories,
-                :uncategorized,
-                :draft,
-                :draft_key,
-                :draft_sequence
+  attr_accessor :categories, :uncategorized, :draft, :draft_key, :draft_sequence
 
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
@@ -40,7 +36,7 @@ class CategoryList
   end
 
   def preload_key
-    "categories_list".freeze
+    'categories_list'.freeze
   end
 
   private
@@ -49,13 +45,18 @@ class CategoryList
     @topics_by_id = {}
     @topics_by_category_id = {}
 
-    category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
+    category_featured_topics =
+      CategoryFeaturedTopic.select(%i[category_id topic_id]).order(:rank)
 
     @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
-    @all_topics = @all_topics.includes(:last_poster) if @options[:include_topics]
+    if @options[:include_topics]
+      @all_topics = @all_topics.includes(:last_poster)
+    end
     @all_topics.each do |t|
-      # hint for the serializer
-      t.include_last_poster = true if @options[:include_topics]
+      if @options[:include_topics]
+        # hint for the serializer
+        t.include_last_poster = true
+      end
       @topics_by_id[t.id] = t
     end
 
@@ -66,19 +67,31 @@ class CategoryList
   end
 
   def find_categories
-    @categories = Category.includes(
-      :uploaded_background,
-      :uploaded_logo,
-      :topic_only_relative_url,
-      subcategories: [:topic_only_relative_url]
-    ).secured(@guardian)
+    @categories =
+      Category.includes(
+        :uploaded_background,
+        :uploaded_logo,
+        :topic_only_relative_url,
+        subcategories: %i[topic_only_relative_url]
+      )
+        .secured(@guardian)
 
-    @categories = @categories.where("categories.parent_category_id = ?", @options[:parent_category_id].to_i) if @options[:parent_category_id].present?
+    if @options[:parent_category_id].present?
+      @categories =
+        @categories.where(
+          'categories.parent_category_id = ?',
+          @options[:parent_category_id].to_i
+        )
+    end
 
     if SiteSetting.fixed_category_positions
       @categories = @categories.order(:position, :id)
     else
-      @categories = @categories.includes(:latest_post).order("posts.created_at DESC NULLS LAST").order('categories.id ASC')
+      @categories =
+        @categories.includes(:latest_post).order(
+          'posts.created_at DESC NULLS LAST'
+        )
+          .order('categories.id ASC')
     end
 
     @categories = @categories.to_a
@@ -86,14 +99,25 @@ class CategoryList
     category_user = {}
     default_notification_level = nil
     unless @guardian.anonymous?
-      category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
+      category_user =
+        Hash[
+          *CategoryUser.where(user: @guardian.user).pluck(
+            :category_id,
+            :notification_level
+          )
+            .flatten
+        ]
       default_notification_level = CategoryUser.notification_levels[:regular]
     end
 
-    allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
+    allowed_topic_create =
+      Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
     @categories.each do |category|
-      category.notification_level = category_user[category.id] || default_notification_level
-      category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
+      category.notification_level =
+        category_user[category.id] || default_notification_level
+      if allowed_topic_create.include?(category.id)
+        category.permission = CategoryGroup.permission_types[:full]
+      end
       category.has_children = category.subcategories.present?
     end
 
@@ -131,11 +155,15 @@ class CategoryList
 
   def prune_empty
     return if SiteSetting.allow_uncategorized_topics
-    @categories.delete_if { |c| c.uncategorized? && c.displayable_topics.blank? }
+    @categories.delete_if do |c|
+      c.uncategorized? && c.displayable_topics.blank?
+    end
   end
 
   def prune_muted
-    @categories.delete_if { |c| c.notification_level == CategoryUser.notification_levels[:muted] }
+    @categories.delete_if do |c|
+      c.notification_level == CategoryUser.notification_levels[:muted]
+    end
   end
 
   # Attach some data for serialization to each topic
@@ -150,7 +178,10 @@ class CategoryList
   def sort_unpinned
     if @guardian.current_user && @all_topics.present?
       @categories.each do |c|
-        next if c.displayable_topics.blank? || c.displayable_topics.size <= c.num_featured_topics
+        if c.displayable_topics.blank? ||
+           c.displayable_topics.size <= c.num_featured_topics
+          next
+        end
         unpinned = []
         c.displayable_topics.each do |t|
           unpinned << t if t.pinned_at && PinnedCheck.unpinned?(t, t.user_data)
@@ -168,5 +199,4 @@ class CategoryList
       c.displayable_topics = c.displayable_topics[0, c.num_featured_topics]
     end
   end
-
 end

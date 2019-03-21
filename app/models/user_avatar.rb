@@ -20,33 +20,42 @@ class UserAvatar < ActiveRecord::Base
         # The user could be deleted before this executes
         return if user.blank? || user.primary_email.blank?
 
-        email_hash = user_id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
-        gravatar_url = "https://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
+        email_hash =
+          if user_id == Discourse::SYSTEM_USER_ID
+            User.email_hash('info@discourse.org')
+          else
+            user.email_hash
+          end
+        gravatar_url =
+          "https://www.gravatar.com/avatar/#{email_hash}.png?s=#{max}&d=404"
 
         # follow redirects in case gravatar change rules on us
-        tempfile = FileHelper.download(
-          gravatar_url,
-          max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-          tmp_file_name: "gravatar",
-          skip_rate_limit: true,
-          verbose: false,
-          follow_redirect: true
-        )
+        tempfile =
+          FileHelper.download(
+            gravatar_url,
+            max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+            tmp_file_name: 'gravatar',
+            skip_rate_limit: true,
+            verbose: false,
+            follow_redirect: true
+          )
 
         if tempfile
           ext = File.extname(tempfile)
           ext = '.png' if ext.blank?
 
-          upload = UploadCreator.new(
-            tempfile,
-            "gravatar#{ext}",
-            origin: gravatar_url,
-            type: "avatar"
-          ).create_for(user_id)
+          upload =
+            UploadCreator.new(
+              tempfile,
+              "gravatar#{ext}",
+              origin: gravatar_url, type: 'avatar'
+            )
+              .create_for(user_id)
 
           if gravatar_upload_id != upload.id
             User.transaction do
-              if gravatar_upload_id && user.uploaded_avatar_id == gravatar_upload_id
+              if gravatar_upload_id &&
+                 user.uploaded_avatar_id == gravatar_upload_id
                 user.update!(uploaded_avatar_id: upload.id)
               end
 
@@ -55,9 +64,7 @@ class UserAvatar < ActiveRecord::Base
           end
         end
       rescue OpenURI::HTTPError => e
-        if e.io&.status[0].to_i != 404
-          raise e
-        end
+        raise e if e.io&.status[0].to_i != 404
       ensure
         tempfile&.close!
       end
@@ -65,21 +72,26 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.local_avatar_url(hostname, username, upload_id, size)
-    self.local_avatar_template(hostname, username, upload_id).gsub("{size}", size.to_s)
+    self.local_avatar_template(hostname, username, upload_id).gsub(
+      '{size}',
+      size.to_s
+    )
   end
 
   def self.local_avatar_template(hostname, username, upload_id)
     version = self.version(upload_id)
-    "#{Discourse.base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
+    "#{Discourse
+      .base_uri}/user_avatar/#{hostname}/#{username}/{size}/#{version}.png"
   end
 
   def self.external_avatar_url(user_id, upload_id, size)
-    self.external_avatar_template(user_id, upload_id).gsub("{size}", size.to_s)
+    self.external_avatar_template(user_id, upload_id).gsub('{size}', size.to_s)
   end
 
   def self.external_avatar_template(user_id, upload_id)
     version = self.version(upload_id)
-    "#{Discourse.store.absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
+    "#{Discourse.store
+      .absolute_base_url}/avatars/#{user_id}/{size}/#{version}.png"
   end
 
   def self.version(upload_id)
@@ -87,19 +99,26 @@ class UserAvatar < ActiveRecord::Base
   end
 
   def self.import_url_for_user(avatar_url, user, options = nil)
-    tempfile = FileHelper.download(
-      avatar_url,
-      max_file_size: SiteSetting.max_image_size_kb.kilobytes,
-      tmp_file_name: "sso-avatar",
-      follow_redirect: true
-    )
+    tempfile =
+      FileHelper.download(
+        avatar_url,
+        max_file_size: SiteSetting.max_image_size_kb.kilobytes,
+        tmp_file_name: 'sso-avatar',
+        follow_redirect: true
+      )
 
     return unless tempfile
 
     ext = FastImage.type(tempfile).to_s
     tempfile.rewind
 
-    upload = UploadCreator.new(tempfile, "external-avatar." + ext, origin: avatar_url, type: "avatar").create_for(user.id)
+    upload =
+      UploadCreator.new(
+        tempfile,
+        'external-avatar.' + ext,
+        origin: avatar_url, type: 'avatar'
+      )
+        .create_for(user.id)
 
     user.create_user_avatar! unless user.user_avatar
 
@@ -108,13 +127,11 @@ class UserAvatar < ActiveRecord::Base
       override_gravatar = !options || options[:override_gravatar]
 
       if user.uploaded_avatar_id.nil? ||
-          !user.user_avatar.contains_upload?(user.uploaded_avatar_id) ||
-          override_gravatar
-
+         !user.user_avatar.contains_upload?(user.uploaded_avatar_id) ||
+         override_gravatar
         user.update!(uploaded_avatar_id: upload.id)
       end
     end
-
   rescue Net::ReadTimeout, OpenURI::HTTPError
     # skip saving, we are not connected to the net
   ensure

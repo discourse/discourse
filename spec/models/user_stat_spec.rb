@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe UserStat do
-
-  it "is created automatically when a user is created" do
+  it 'is created automatically when a user is created' do
     user = Fabricate(:evil_trout)
     expect(user.user_stat).to be_present
 
@@ -11,14 +10,16 @@ describe UserStat do
   end
 
   context '#update_view_counts' do
-
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
 
     context 'topics_entered' do
       context 'without any views' do
         it "doesn't increase the user's topics_entered" do
-          expect { UserStat.update_view_counts; stat.reload }.not_to change(stat, :topics_entered)
+          expect do
+            UserStat.update_view_counts
+            stat.reload
+          end.not_to change(stat, :topics_entered)
         end
       end
 
@@ -26,11 +27,9 @@ describe UserStat do
         let(:topic) { Fabricate(:topic) }
         let!(:view) { TopicViewItem.add(topic.id, '127.0.0.1', user.id) }
 
-        before do
-          user.update_column :last_seen_at, 1.second.ago
-        end
+        before { user.update_column :last_seen_at, 1.second.ago }
 
-        it "adds one to the topics entered" do
+        it 'adds one to the topics entered' do
           UserStat.update_view_counts
           stat.reload
           expect(stat.topics_entered).to eq(1)
@@ -42,28 +41,33 @@ describe UserStat do
           stat.reload
           expect(stat.topics_entered).to eq(1)
         end
-
       end
     end
 
     context 'posts_read_count' do
       context 'without any post timings' do
         it "doesn't increase the user's posts_read_count" do
-          expect { UserStat.update_view_counts; stat.reload }.not_to change(stat, :posts_read_count)
+          expect do
+            UserStat.update_view_counts
+            stat.reload
+          end.not_to change(stat, :posts_read_count)
         end
       end
 
       context 'with a post timing' do
         let!(:post) { Fabricate(:post) }
         let!(:post_timings) do
-          PostTiming.record_timing(msecs: 1234, topic_id: post.topic_id, user_id: user.id, post_number: post.post_number)
+          PostTiming.record_timing(
+            msecs: 1234,
+            topic_id: post.topic_id,
+            user_id: user.id,
+            post_number: post.post_number
+          )
         end
 
-        before do
-          user.update_column :last_seen_at, 1.second.ago
-        end
+        before { user.update_column :last_seen_at, 1.second.ago }
 
-        it "increases posts_read_count" do
+        it 'increases posts_read_count' do
           UserStat.update_view_counts
           stat.reload
           expect(stat.posts_read_count).to eq(1)
@@ -110,6 +114,5 @@ describe UserStat do
       stat.reload
       expect(stat.time_read).to eq(0)
     end
-
   end
 end

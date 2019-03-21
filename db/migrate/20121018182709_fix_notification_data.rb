@@ -3,6 +3,5 @@ class FixNotificationData < ActiveRecord::Migration[4.2]
     execute "UPDATE notifications SET data = replace(data, 'thread_title', 'topic_title')"
   end
 
-  def down
-  end
+  def down; end
 end

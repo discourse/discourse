@@ -1,13 +1,14 @@
 class Admin::BadgesController < Admin::AdminController
-
   def index
     data = {
       badge_types: BadgeType.all.order(:id).to_a,
       badge_groupings: BadgeGrouping.all.order(:position).to_a,
-      badges: Badge.includes(:badge_grouping)
-        .includes(:badge_type)
-        .references(:badge_grouping)
-        .order('badge_groupings.position, badge_type_id, badges.name').to_a,
+      badges:
+        Badge.includes(:badge_grouping).includes(:badge_type).references(
+          :badge_grouping
+        )
+          .order('badge_groupings.position, badge_type_id, badges.name')
+          .to_a,
       protected_system_fields: Badge.protected_system_fields,
       triggers: Badge.trigger_hash
     }
@@ -16,24 +17,25 @@ class Admin::BadgesController < Admin::AdminController
 
   def preview
     unless SiteSetting.enable_badge_sql
-      return render json: "preview not allowed", status: 403
+      return render json: 'preview not allowed', status: 403
     end
 
-    render json: BadgeGranter.preview(params[:sql],
-                                      target_posts: params[:target_posts] == "true",
-                                      explain: params[:explain] == "true",
-                                      trigger: params[:trigger].to_i)
+    render json:
+             BadgeGranter.preview(
+               params[:sql],
+               target_posts: params[:target_posts] == 'true',
+               explain: params[:explain] == 'true',
+               trigger: params[:trigger].to_i
+             )
   end
 
-  def new
-  end
+  def new; end
 
-  def show
-  end
+  def show; end
 
   def badge_types
     badge_types = BadgeType.all.to_a
-    render_serialized(badge_types, BadgeTypeSerializer, root: "badge_types")
+    render_serialized(badge_types, BadgeTypeSerializer, root: 'badge_types')
   end
 
   def save_badge_groupings
@@ -53,7 +55,11 @@ class Admin::BadgesController < Admin::AdminController
     end
 
     badge_groupings = BadgeGrouping.all.order(:position).to_a
-    render_serialized(badge_groupings, BadgeGroupingSerializer, root: "badge_groupings")
+    render_serialized(
+      badge_groupings,
+      BadgeGroupingSerializer,
+      root: 'badge_groupings'
+    )
   end
 
   def create
@@ -64,7 +70,7 @@ class Admin::BadgesController < Admin::AdminController
       render_json_error errors
     else
       StaffActionLogger.new(current_user).log_badge_creation(badge)
-      render_serialized(badge, AdminBadgeSerializer, root: "badge")
+      render_serialized(badge, AdminBadgeSerializer, root: 'badge')
     end
   end
 
@@ -76,7 +82,7 @@ class Admin::BadgesController < Admin::AdminController
       render_json_error errors
     else
       StaffActionLogger.new(current_user).log_badge_change(badge)
-      render_serialized(badge, AdminBadgeSerializer, root: "badge")
+      render_serialized(badge, AdminBadgeSerializer, root: 'badge')
     end
   end
 
@@ -98,21 +104,22 @@ class Admin::BadgesController < Admin::AdminController
   def update_badge_from_params(badge, opts = {})
     errors = []
     Badge.transaction do
-      allowed  = Badge.column_names.map(&:to_sym)
-      allowed -= [:id, :created_at, :updated_at, :grant_count]
+      allowed = Badge.column_names.map(&:to_sym)
+      allowed -= %i[id created_at updated_at grant_count]
       allowed -= Badge.protected_system_fields if badge.system?
-      allowed -= [:query] unless SiteSetting.enable_badge_sql
+      allowed -= %i[query] unless SiteSetting.enable_badge_sql
 
       params.permit(*allowed)
 
-      allowed.each do |key|
-        badge.send("#{key}=" , params[key]) if params[key]
-      end
+      allowed.each { |key| badge.send("#{key}=", params[key]) if params[key] }
 
       # Badge query contract checks
       begin
         if SiteSetting.enable_badge_sql
-          BadgeGranter.contract_checks!(badge.query, target_posts: badge.target_posts, trigger: badge.trigger)
+          BadgeGranter.contract_checks!(
+            badge.query,
+            target_posts: badge.target_posts, trigger: badge.trigger
+          )
         end
       rescue => e
         errors << e.message

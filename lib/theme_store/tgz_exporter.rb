@@ -1,12 +1,14 @@
 module ThemeStore; end
 
 class ThemeStore::TgzExporter
-
   def initialize(theme)
     @theme = theme
-    @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
+    @temp_folder =
+      "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @export_name = @theme.name.downcase.gsub(/[^0-9a-z.\-]/, '-')
-    @export_name = "discourse-#{@export_name}" unless @export_name.starts_with?("discourse")
+    unless @export_name.starts_with?('discourse')
+      @export_name = "discourse-#{@export_name}"
+    end
   end
 
   def package_filename
@@ -31,21 +33,33 @@ class ThemeStore::TgzExporter
         # sanitized, but check for attempts to leave the temp directory anyway
         pathname = Pathname.new("#{@export_name}/#{path}")
         folder_path = pathname.parent.realdirpath
-        raise RuntimeError.new("Theme exporter tried to leave directory") unless folder_path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
+        unless folder_path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
+          raise RuntimeError.new('Theme exporter tried to leave directory')
+        end
         folder_path.mkpath
         path = pathname.realdirpath
-        raise RuntimeError.new("Theme exporter tried to leave directory") unless path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
+        unless path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
+          raise RuntimeError.new('Theme exporter tried to leave directory')
+        end
 
         if ThemeField.types[field.type_id] == :theme_upload_var
           filename = Discourse.store.path_for(field.upload)
-          content = filename ? File.read(filename) : Discourse.store.download(field.upload).read
+          content =
+            if filename
+              File.read(filename)
+            else
+              Discourse.store.download(field.upload).read
+            end
         else
           content = field.value
         end
         File.write(path, content)
       end
 
-      File.write("#{@export_name}/about.json", JSON.pretty_generate(@theme.generate_metadata_hash))
+      File.write(
+        "#{@export_name}/about.json",
+        JSON.pretty_generate(@theme.generate_metadata_hash)
+      )
     end
     @temp_folder
   end
@@ -54,10 +68,21 @@ class ThemeStore::TgzExporter
     export_to_folder
     Dir.chdir(@temp_folder) do
       tar_filename = "#{@export_name}.tar"
-      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, @export_name, failure_message: "Failed to tar theme.")
-      Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
+      Discourse::Utils.execute_command(
+        'tar',
+        '--create',
+        '--file',
+        tar_filename,
+        @export_name,
+        failure_message: 'Failed to tar theme.'
+      )
+      Discourse::Utils.execute_command(
+        'gzip',
+        '-5',
+        tar_filename,
+        failure_message: 'Failed to gzip archive.'
+      )
       "#{@temp_folder}/#{tar_filename}.gz"
     end
   end
-
 end

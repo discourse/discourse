@@ -10,26 +10,28 @@ describe CspReportsController do
       Rails.logger = @fake_logger = FakeLogger.new
     end
 
-    after do
-      Rails.logger = @orig_logger
-    end
+    after { Rails.logger = @orig_logger }
 
     def send_report
-      post '/csp_reports', params: {
-        "csp-report": {
-          "document-uri": "http://localhost:3000/",
-          "referrer": "",
-          "violated-directive": "script-src",
-          "effective-directive": "script-src",
-          "original-policy": "script-src 'unsafe-eval' www.google-analytics.com; report-uri /csp_reports",
-          "disposition": "report",
-          "blocked-uri": "http://suspicio.us/assets.js",
-          "line-number": 25,
-          "source-file": "http://localhost:3000/",
-          "status-code": 200,
-          "script-sample": ""
-        }
-      }.to_json, headers: { "Content-Type": "application/csp-report" }
+      post '/csp_reports',
+           params: {
+             :"csp-report" => {
+               :"document-uri" => 'http://localhost:3000/',
+               :"referrer" => '',
+               :"violated-directive" => 'script-src',
+               :"effective-directive" => 'script-src',
+               :"original-policy" =>
+                 "script-src 'unsafe-eval' www.google-analytics.com; report-uri /csp_reports",
+               :"disposition" => 'report',
+               :"blocked-uri" => 'http://suspicio.us/assets.js',
+               :"line-number" => 25,
+               :"source-file" => 'http://localhost:3000/',
+               :"status-code" => 200,
+               :"script-sample" => ''
+             }
+           }
+             .to_json,
+           headers: { :"Content-Type" => 'application/csp-report' }
     end
 
     it 'is enabled by SiteSetting' do
@@ -50,7 +52,9 @@ describe CspReportsController do
 
     it 'logs the violation report' do
       send_report
-      expect(Rails.logger.warnings).to include("CSP Violation: 'http://suspicio.us/assets.js'")
+      expect(Rails.logger.warnings).to include(
+            "CSP Violation: 'http://suspicio.us/assets.js'"
+          )
     end
   end
 end

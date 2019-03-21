@@ -1,7 +1,7 @@
 require_dependency 'notification_levels'
 
 class GroupUser < ActiveRecord::Base
-  belongs_to :group, counter_cache: "user_count"
+  belongs_to :group, counter_cache: 'user_count'
   belongs_to :user
 
   after_save :update_title
@@ -28,10 +28,11 @@ class GroupUser < ActiveRecord::Base
   end
 
   def remove_primary_group
-    DB.exec("
+    DB.exec(
+      '
       UPDATE users
       SET primary_group_id = NULL
-      WHERE id = :user_id AND primary_group_id = :id",
+      WHERE id = :user_id AND primary_group_id = :id',
       id: group.id, user_id: user_id
     )
   end
@@ -44,7 +45,8 @@ class GroupUser < ActiveRecord::Base
 
   def update_title
     if group.title.present?
-      DB.exec("
+      DB.exec(
+        "
         UPDATE users SET title = :title
         WHERE (title IS NULL OR title = '') AND id = :id",
         id: user_id, title: group.title

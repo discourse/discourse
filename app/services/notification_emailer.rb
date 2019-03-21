@@ -1,5 +1,4 @@
 class NotificationEmailer
-
   class EmailUser
     attr_reader :notification
 
@@ -48,14 +47,15 @@ class NotificationEmailer
     end
 
     def self.notification_params(notification, type)
-      post_id = (notification.data_hash[:original_post_id] || notification.post_id).to_i
+      post_id =
+        (notification.data_hash[:original_post_id] || notification.post_id).to_i
 
       hash = {
         type: type,
         user_id: notification.user_id,
         notification_id: notification.id,
         notification_data_hash: notification.data_hash,
-        notification_type: Notification.types[notification.notification_type],
+        notification_type: Notification.types[notification.notification_type]
       }
 
       hash[:post_id] = post_id if post_id > 0
@@ -64,15 +64,18 @@ class NotificationEmailer
 
     private
 
-    EMAILABLE_POST_TYPES ||= Set.new [Post.types[:regular], Post.types[:whisper]]
+    EMAILABLE_POST_TYPES ||=
+      Set.new [Post.types[:regular], Post.types[:whisper]]
 
     def enqueue(type, delay = default_delay)
-      return if notification.user.user_option.email_level == UserOption.email_level_types[:never]
+      if notification.user.user_option.email_level ==
+         UserOption.email_level_types[:never]
+        return
+      end
       perform_enqueue(type, delay)
     end
 
     def enqueue_private(type, delay = private_delay)
-
       if notification.user.user_option.nil?
         # this can happen if we roll back user creation really early
         # or delete user
@@ -80,18 +83,27 @@ class NotificationEmailer
         return
       end
 
-      return if notification.user.user_option.email_messages_level == UserOption.email_level_types[:never]
+      if notification.user.user_option.email_messages_level ==
+         UserOption.email_level_types[:never]
+        return
+      end
       perform_enqueue(type, delay)
     end
 
     def perform_enqueue(type, delay)
       user = notification.user
       return unless user.active? || user.staged?
-      return if SiteSetting.must_approve_users? && !user.approved? && !user.staged?
+      if SiteSetting.must_approve_users? && !user.approved? && !user.staged?
+        return
+      end
 
       return unless EMAILABLE_POST_TYPES.include?(post_type)
 
-      Jobs.enqueue_in(delay, :user_email, self.class.notification_params(notification, type))
+      Jobs.enqueue_in(
+        delay,
+        :user_email,
+        self.class.notification_params(notification, type)
+      )
     end
 
     def default_delay
@@ -103,13 +115,15 @@ class NotificationEmailer
     end
 
     def post_type
-      @post_type ||= begin
-        type = notification.data_hash["original_post_type"] if notification.data_hash
-        type ||= notification.post.try(:post_type)
-        type
-      end
+      @post_type ||=
+        begin
+          if notification.data_hash
+            type = notification.data_hash['original_post_type']
+          end
+          type ||= notification.post.try(:post_type)
+          type
+        end
     end
-
   end
 
   def self.disable
@@ -123,10 +137,9 @@ class NotificationEmailer
   def self.process_notification(notification)
     return if @disabled
 
-    email_user   = EmailUser.new(notification)
+    email_user = EmailUser.new(notification)
     email_method = Notification.types[notification.notification_type]
 
     email_user.send(email_method) if email_user.respond_to? email_method
   end
-
 end

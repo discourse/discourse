@@ -5,6 +5,5 @@ class CorrectMailingListModeFrequency < ActiveRecord::Migration[4.2]
     execute 'UPDATE user_options SET mailing_list_mode_frequency = 1 where mailing_list_mode'
   end
 
-  def down
-  end
+  def down; end
 end

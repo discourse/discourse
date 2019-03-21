@@ -3,37 +3,42 @@ require_dependency 'admin_user_index_query'
 require_dependency 'admin_confirmation'
 
 class Admin::UsersController < Admin::AdminController
-
-  before_action :fetch_user, only: [:suspend,
-                                    :unsuspend,
-                                    :log_out,
-                                    :revoke_admin,
-                                    :grant_admin,
-                                    :revoke_moderation,
-                                    :grant_moderation,
-                                    :approve,
-                                    :activate,
-                                    :deactivate,
-                                    :silence,
-                                    :unsilence,
-                                    :trust_level,
-                                    :trust_level_lock,
-                                    :add_group,
-                                    :remove_group,
-                                    :primary_group,
-                                    :generate_api_key,
-                                    :revoke_api_key,
-                                    :anonymize,
-                                    :reset_bounce_score,
-                                    :disable_second_factor,
-                                    :delete_posts_batch]
+  before_action :fetch_user,
+                only: %i[
+                  suspend
+                  unsuspend
+                  log_out
+                  revoke_admin
+                  grant_admin
+                  revoke_moderation
+                  grant_moderation
+                  approve
+                  activate
+                  deactivate
+                  silence
+                  unsilence
+                  trust_level
+                  trust_level_lock
+                  add_group
+                  remove_group
+                  primary_group
+                  generate_api_key
+                  revoke_api_key
+                  anonymize
+                  reset_bounce_score
+                  disable_second_factor
+                  delete_posts_batch
+                ]
 
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
     opts = {}
-    if params[:show_emails] == "true"
-      StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
+    if params[:show_emails] == 'true'
+      StaffActionLogger.new(current_user).log_show_emails(
+        users,
+        context: request.path
+      )
       opts[:emails_desired] = true
     end
 
@@ -55,7 +60,6 @@ class Admin::UsersController < Admin::AdminController
 
   # DELETE action to delete penalty history for a user
   def penalty_history
-
     # We don't delete any history, we merely remove the action type
     # with a removed type. It can still be viewed in the logs but
     # will not affect TL3 promotions.
@@ -87,7 +91,8 @@ class Admin::UsersController < Admin::AdminController
         :removed_unsilence_user,
         :removed_suspend_user,
         :removed_unsuspend_user
-      ).merge(user_id: params[:user_id].to_i)
+      )
+        .merge(user_id: params[:user_id].to_i)
     )
 
     render json: success_json
@@ -106,12 +111,12 @@ class Admin::UsersController < Admin::AdminController
       @user.save!
       @user.revoke_api_key
 
-      user_history = StaffActionLogger.new(current_user).log_user_suspend(
-        @user,
-        params[:reason],
-        message: message,
-        post_id: params[:post_id]
-      )
+      user_history =
+        StaffActionLogger.new(current_user).log_user_suspend(
+          @user,
+          params[:reason],
+          message: message, post_id: params[:post_id]
+        )
     end
     @user.logged_out
 
@@ -157,11 +162,7 @@ class Admin::UsersController < Admin::AdminController
 
     DiscourseEvent.trigger(:user_unsuspended, user: @user)
 
-    render_json_dump(
-      suspension: {
-        suspended: false
-      }
-    )
+    render_json_dump(suspension: { suspended: false })
   end
 
   def log_out
@@ -170,7 +171,8 @@ class Admin::UsersController < Admin::AdminController
       @user.logged_out
       render json: success_json
     else
-      render json: { error: I18n.t('admin_js.admin.users.id_not_found') }, status: 404
+      render json: { error: I18n.t('admin_js.admin.users.id_not_found') },
+             status: 404
     end
   end
 
@@ -254,7 +256,8 @@ class Admin::UsersController < Admin::AdminController
     level = params[:level].to_i
 
     if @user.manual_locked_trust_level.nil?
-      if [0, 1, 2].include?(level) && Promotion.send("tl#{level + 1}_met?", @user)
+      if [0, 1, 2].include?(level) &&
+         Promotion.send("tl#{level + 1}_met?", @user)
         @user.manual_locked_trust_level = level
         @user.save
       elsif level == 3 && Promotion.tl3_lost?(@user)
@@ -278,7 +281,8 @@ class Admin::UsersController < Admin::AdminController
       return render_json_error I18n.t('errors.invalid_boolean')
     end
 
-    @user.manual_locked_trust_level = (new_lock == "true") ? @user.trust_level : nil
+    @user.manual_locked_trust_level =
+      (new_lock == 'true') ? @user.trust_level : nil
     @user.save
 
     StaffActionLogger.new(current_user).log_lock_trust_level(@user)
@@ -303,16 +307,25 @@ class Admin::UsersController < Admin::AdminController
   def activate
     guardian.ensure_can_activate!(@user)
     # ensure there is an active email token
-    @user.email_tokens.create(email: @user.email) unless @user.email_tokens.active.exists?
+    unless @user.email_tokens.active.exists?
+      @user.email_tokens.create(email: @user.email)
+    end
     @user.activate
-    StaffActionLogger.new(current_user).log_user_activate(@user, I18n.t('user.activated_by_staff'))
+    StaffActionLogger.new(current_user).log_user_activate(
+      @user,
+      I18n.t('user.activated_by_staff')
+    )
     render json: success_json
   end
 
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
-    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'), params.slice(:context))
+    StaffActionLogger.new(current_user).log_user_deactivate(
+      @user,
+      I18n.t('user.deactivated_by_staff'),
+      params.slice(:context)
+    )
     refresh_browser @user
     render body: nil
   end
@@ -322,15 +335,16 @@ class Admin::UsersController < Admin::AdminController
 
     message = params[:message]
 
-    silencer = UserSilencer.new(
-      @user,
-      current_user,
-      silenced_till: params[:silenced_till],
-      reason: params[:reason],
-      message_body: message,
-      keep_posts: true,
-      post_id: params[:post_id]
-    )
+    silencer =
+      UserSilencer.new(
+        @user,
+        current_user,
+        silenced_till: params[:silenced_till],
+        reason: params[:reason],
+        message_body: message,
+        keep_posts: true,
+        post_id: params[:post_id]
+      )
     if silencer.silence && message.present?
       Jobs.enqueue(
         :critical_user_email,
@@ -371,13 +385,19 @@ class Admin::UsersController < Admin::AdminController
     d = UserDestroyer.new(current_user)
 
     User.where(id: params[:users]).each do |u|
-      success_count += 1 if guardian.can_delete_user?(u) && d.destroy(u, params.slice(:context)) rescue UserDestroyer::PostsExistError
+      begin
+        if guardian.can_delete_user?(u) && d.destroy(u, params.slice(:context))
+          success_count += 1
+        end
+      rescue StandardError
+        UserDestroyer::PostsExistError
+      end
     end
 
     render json: {
-      success: success_count,
-      failed: (params[:users].try(:size) || 0) - success_count
-    }
+             success: success_count,
+             failed: (params[:users].try(:size) || 0) - success_count
+           }
   end
 
   def disable_second_factor
@@ -390,8 +410,7 @@ class Admin::UsersController < Admin::AdminController
 
     Jobs.enqueue(
       :critical_user_email,
-      type: :account_second_factor_disabled,
-      user_id: @user.id
+      type: :account_second_factor_disabled, user_id: @user.id
     )
 
     render json: success_json
@@ -401,8 +420,16 @@ class Admin::UsersController < Admin::AdminController
     user = User.find_by(id: params[:id].to_i)
     guardian.ensure_can_delete_user!(user)
 
-    options = params.slice(:block_email, :block_urls, :block_ip, :context, :delete_as_spammer)
-    options[:delete_posts] = ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
+    options =
+      params.slice(
+        :block_email,
+        :block_urls,
+        :block_ip,
+        :context,
+        :delete_as_spammer
+      )
+    options[:delete_posts] =
+      ActiveModel::Type::Boolean.new.cast(params[:delete_posts])
     options[:prepare_for_destroy] = true
 
     hijack do
@@ -411,24 +438,26 @@ class Admin::UsersController < Admin::AdminController
           render json: { deleted: true }
         else
           render json: {
-            deleted: false,
-            user: AdminDetailedUserSerializer.new(user, root: false).as_json
-          }
+                   deleted: false,
+                   user:
+                     AdminDetailedUserSerializer.new(user, root: false).as_json
+                 }
         end
       rescue UserDestroyer::PostsExistError
         render json: {
-          deleted: false,
-          message: "User #{user.username} has #{user.post_count} posts, so they can't be deleted."
-        }, status: 403
+                 deleted: false,
+                 message:
+                   "User #{user.username} has #{user
+                     .post_count} posts, so they can't be deleted."
+               },
+               status: 403
       end
     end
   end
 
-  def badges
-  end
+  def badges; end
 
-  def tl3_requirements
-  end
+  def tl3_requirements; end
 
   def ip_info
     params.require(:ip)
@@ -440,9 +469,11 @@ class Admin::UsersController < Admin::AdminController
     return render body: nil, status: 404 unless SiteSetting.enable_sso
 
     begin
-      sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
+      sso =
+        DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
     rescue DiscourseSingleSignOn::ParseError => e
-      return render json: failed_json.merge(message: I18n.t("sso.login_error")), status: 422
+      return render json: failed_json.merge(message: I18n.t('sso.login_error')),
+             status: 422
     end
 
     begin
@@ -465,7 +496,8 @@ class Admin::UsersController < Admin::AdminController
       block_urls: true,
       block_ip: true,
       delete_as_spammer: true,
-      context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: params[:ip])
+      context:
+        I18n.t('user.destroy_reasons.same_ip_address', ip_address: params[:ip])
     }
 
     AdminUserIndexQuery.new(params).find_users(50).each do |user|
@@ -506,16 +538,19 @@ class Admin::UsersController < Admin::AdminController
     email_token = user.email_tokens.create(email: user.email)
 
     unless params[:send_email] == '0' || params[:send_email] == 'false'
-      Jobs.enqueue(:critical_user_email,
-                    type: :account_created,
-                    user_id: user.id,
-                    email_token: email_token.token)
+      Jobs.enqueue(
+        :critical_user_email,
+        type: :account_created, user_id: user.id, email_token: email_token.token
+      )
     end
 
-    render json: success_json.merge!(
-      password_url: "#{Discourse.base_url}#{password_reset_token_path(token: email_token.token)}"
-    )
-
+    render json:
+             success_json.merge!(
+               password_url:
+                 "#{Discourse.base_url}#{password_reset_token_path(
+                   token: email_token.token
+                 )}"
+             )
   end
 
   def anonymize
@@ -523,7 +558,11 @@ class Admin::UsersController < Admin::AdminController
     if user = UserAnonymizer.new(@user, current_user).make_anonymous
       render json: success_json.merge(username: user.username)
     else
-      render json: failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
+      render json:
+               failed_json.merge(
+                 user:
+                   AdminDetailedUserSerializer.new(user, root: false).as_json
+               )
     end
   end
 
@@ -536,8 +575,7 @@ class Admin::UsersController < Admin::AdminController
   private
 
   def perform_post_action
-    return unless params[:post_id].present? &&
-      params[:post_action].present?
+    return unless params[:post_id].present? && params[:post_action].present?
 
     if post = Post.where(id: params[:post_id]).first
       case params[:post_action]
@@ -549,9 +587,8 @@ class Admin::UsersController < Admin::AdminController
         # Take what the moderator edited in as gospel
         revisor.revise!(
           current_user,
-          { raw:  params[:post_edit] },
-          skip_validations: true,
-          skip_revision: true
+          { raw: params[:post_edit] },
+          skip_validations: true, skip_revision: true
         )
       end
     end
@@ -563,7 +600,6 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def refresh_browser(user)
-    MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+    MessageBus.publish '/file-change', %w[refresh], user_ids: [user.id]
   end
-
 end

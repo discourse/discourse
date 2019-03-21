@@ -10,17 +10,29 @@ module SiteSettings::DeprecatedSettings
     ['favicon_url', 'favicon', false, '2.3'],
     ['apple_touch_icon_url', 'apple_touch_icon', false, '2.3'],
     ['default_opengraph_image_url', 'opengraph_image', false, '2.3'],
-    ['twitter_summary_large_image_url', 'twitter_summary_large_image', false, '2.3'],
+    [
+      'twitter_summary_large_image_url',
+      'twitter_summary_large_image',
+      false,
+      '2.3'
+    ],
     ['push_notifications_icon_url', 'push_notifications_icon', false, '2.3'],
     ['show_email_on_profile', 'moderators_view_emails', true, '2.4'],
-    ['allow_moderators_to_create_categories', 'moderators_create_categories', true, '2.4']
+    [
+      'allow_moderators_to_create_categories',
+      'moderators_create_categories',
+      true,
+      '2.4'
+    ]
   ]
 
   def setup_deprecated_methods
     SETTINGS.each do |old_setting, new_setting, override, version|
       unless override
         SiteSetting.singleton_class.public_send(
-          :alias_method, :"_#{old_setting}", :"#{old_setting}"
+          :alias_method,
+          :"_#{old_setting}",
+          :"#{old_setting}"
         )
       end
 
@@ -28,8 +40,8 @@ module SiteSettings::DeprecatedSettings
         if warn
           logger.warn(
             "`SiteSetting.#{old_setting}` has been deprecated and will be " +
-            "removed in the #{version} Release. Please use " +
-            "`SiteSetting.#{new_setting}` instead"
+              "removed in the #{version} Release. Please use " +
+              "`SiteSetting.#{new_setting}` instead"
           )
         end
 
@@ -38,7 +50,9 @@ module SiteSettings::DeprecatedSettings
 
       unless override
         SiteSetting.singleton_class.public_send(
-          :alias_method, :"_#{old_setting}?", :"#{old_setting}?"
+          :alias_method,
+          :"_#{old_setting}?",
+          :"#{old_setting}?"
         )
       end
 
@@ -46,17 +60,19 @@ module SiteSettings::DeprecatedSettings
         if warn
           logger.warn(
             "`SiteSetting.#{old_setting}?` has been deprecated and will be " +
-            "removed in the #{version} Release. Please use " +
-            "`SiteSetting.#{new_setting}?` instead"
+              "removed in the #{version} Release. Please use " +
+              "`SiteSetting.#{new_setting}?` instead"
           )
         end
 
-        self.public_send("#{override ? new_setting : "_" + old_setting}?")
+        self.public_send("#{override ? new_setting : '_' + old_setting}?")
       end
 
       unless override
         SiteSetting.singleton_class.public_send(
-          :alias_method, :"_#{old_setting}=", :"#{old_setting}="
+          :alias_method,
+          :"_#{old_setting}=",
+          :"#{old_setting}="
         )
       end
 
@@ -64,12 +80,12 @@ module SiteSettings::DeprecatedSettings
         if warn
           logger.warn(
             "`SiteSetting.#{old_setting}=` has been deprecated and will be " +
-            "removed in the #{version} Release. Please use " +
-            "`SiteSetting.#{new_setting}=` instead"
+              "removed in the #{version} Release. Please use " +
+              "`SiteSetting.#{new_setting}=` instead"
           )
         end
 
-        self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
+        self.public_send("#{override ? new_setting : '_' + old_setting}=", val)
       end
     end
   end

@@ -1,24 +1,27 @@
-require_dependency "backup_restore/local_backup_store"
-require_dependency "backup_restore/backup_store"
+require_dependency 'backup_restore/local_backup_store'
+require_dependency 'backup_restore/backup_store'
 
 module Jobs
-
   class BackupChunksMerger < Jobs::Base
     sidekiq_options queue: 'critical', retry: false
 
     def execute(args)
-      filename   = args[:filename]
+      filename = args[:filename]
       identifier = args[:identifier]
-      chunks     = args[:chunks].to_i
+      chunks = args[:chunks].to_i
 
-      raise Discourse::InvalidParameters.new(:filename)   if filename.blank?
+      raise Discourse::InvalidParameters.new(:filename) if filename.blank?
       raise Discourse::InvalidParameters.new(:identifier) if identifier.blank?
-      raise Discourse::InvalidParameters.new(:chunks)     if chunks <= 0
+      raise Discourse::InvalidParameters.new(:chunks) if chunks <= 0
 
-      backup_path = "#{BackupRestore::LocalBackupStore.base_directory}/#{filename}"
+      backup_path =
+        "#{BackupRestore::LocalBackupStore.base_directory}/#{filename}"
       tmp_backup_path = "#{backup_path}.tmp"
       # path to tmp directory
-      tmp_directory = File.dirname(BackupRestore::LocalBackupStore.chunk_path(identifier, filename, 0))
+      tmp_directory =
+        File.dirname(
+          BackupRestore::LocalBackupStore.chunk_path(identifier, filename, 0)
+        )
 
       # merge all chunks
       HandleChunkUpload.merge_chunks(
@@ -32,10 +35,17 @@ module Jobs
 
       # push an updated list to the clients
       store = BackupRestore::BackupStore.create
-      data = ActiveModel::ArraySerializer.new(store.files, each_serializer: BackupFileSerializer).as_json
-      MessageBus.publish("/admin/backups", data, user_ids: User.staff.pluck(:id))
+      data =
+        ActiveModel::ArraySerializer.new(
+          store.files,
+          each_serializer: BackupFileSerializer
+        )
+          .as_json
+      MessageBus.publish(
+        '/admin/backups',
+        data,
+        user_ids: User.staff.pluck(:id)
+      )
     end
-
   end
-
 end

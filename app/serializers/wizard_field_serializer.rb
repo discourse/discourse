@@ -1,5 +1,4 @@
 class WizardFieldSerializer < ApplicationSerializer
-
   attributes :id, :type, :required, :value, :label, :placeholder, :description
   has_many :choices, serializer: WizardFieldChoiceSerializer, embed: :objects
 
@@ -35,7 +34,7 @@ class WizardFieldSerializer < ApplicationSerializer
   end
 
   def label
-    translate("label")
+    translate('label')
   end
 
   def include_label?
@@ -43,7 +42,7 @@ class WizardFieldSerializer < ApplicationSerializer
   end
 
   def placeholder
-    translate("placeholder")
+    translate('placeholder')
   end
 
   def include_placeholder?
@@ -51,11 +50,10 @@ class WizardFieldSerializer < ApplicationSerializer
   end
 
   def description
-    translate("description", base_path: Discourse.base_path)
+    translate('description', base_path: Discourse.base_path)
   end
 
   def include_description?
     description.present?
   end
-
 end

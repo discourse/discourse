@@ -5,7 +5,6 @@ require_dependency 'email/sender'
 require_dependency 'email/styles'
 
 module Email
-
   def self.is_valid?(email)
     return false unless String === email
     !!(EmailValidator.email_regex =~ email)
@@ -28,7 +27,7 @@ module Email
     if mail.multipart?
       text = mail.text_part
       html = mail.html_part
-    elsif mail.content_type.to_s["text/html"]
+    elsif mail.content_type.to_s['text/html']
       html = mail
     else
       text = mail
@@ -40,5 +39,4 @@ module Email
   def self.site_title
     SiteSetting.email_site_title.presence || SiteSetting.title
   end
-
 end

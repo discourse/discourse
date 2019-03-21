@@ -4,6 +4,6 @@ class AddSiteIdToUsers < ActiveRecord::Migration[4.2]
     add_column :users, :bio, :text
 
     add_index :users, :site_id
-    execute "UPDATE users SET site_id = 1"
+    execute 'UPDATE users SET site_id = 1'
   end
 end

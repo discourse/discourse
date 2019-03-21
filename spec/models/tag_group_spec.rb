@@ -9,14 +9,34 @@ describe TagGroup do
 
     let(:group) { Fabricate(:group) }
 
-    let!(:everyone_tag_group) { Fabricate(:tag_group, name: 'Visible & usable by everyone', tag_names: ['foo-bar']) }
-    let!(:visible_tag_group) { Fabricate(:tag_group, name: 'Visible by everyone, usable by staff', tag_names: ['foo']) }
-    let!(:staff_only_tag_group) { Fabricate(:tag_group, name: 'Staff only', tag_names: ['bar']) }
+    let!(:everyone_tag_group) do
+      Fabricate(
+        :tag_group,
+        name: 'Visible & usable by everyone', tag_names: %w[foo-bar]
+      )
+    end
+    let!(:visible_tag_group) do
+      Fabricate(
+        :tag_group,
+        name: 'Visible by everyone, usable by staff', tag_names: %w[foo]
+      )
+    end
+    let!(:staff_only_tag_group) do
+      Fabricate(:tag_group, name: 'Staff only', tag_names: %w[bar])
+    end
 
-    let!(:public_tag_group) { Fabricate(:tag_group, name: 'Public', tag_names: ['public1']) }
-    let!(:private_tag_group) { Fabricate(:tag_group, name: 'Private', tag_names: ['privatetag1']) }
-    let!(:staff_tag_group) { Fabricate(:tag_group, name: 'Staff Talk', tag_names: ['stafftag1']) }
-    let!(:unrestricted_tag_group) { Fabricate(:tag_group, name: 'Unrestricted', tag_names: ['use-anywhere']) }
+    let!(:public_tag_group) do
+      Fabricate(:tag_group, name: 'Public', tag_names: %w[public1])
+    end
+    let!(:private_tag_group) do
+      Fabricate(:tag_group, name: 'Private', tag_names: %w[privatetag1])
+    end
+    let!(:staff_tag_group) do
+      Fabricate(:tag_group, name: 'Staff Talk', tag_names: %w[stafftag1])
+    end
+    let!(:unrestricted_tag_group) do
+      Fabricate(:tag_group, name: 'Unrestricted', tag_names: %w[use-anywhere])
+    end
 
     let!(:public_category) { Fabricate(:category, name: 'Public Category') }
     let!(:private_category) { Fabricate(:private_category, group: group) }
@@ -52,24 +72,41 @@ describe TagGroup do
       staff_only_tag_group.save!
     end
 
-    it "returns correct groups based on category & tag group permissions" do
-      expect(TagGroup.visible(Guardian.new(admin)).pluck(:name)).to match_array(TagGroup.pluck(:name))
-      expect(TagGroup.visible(Guardian.new(moderator)).pluck(:name)).to match_array(TagGroup.pluck(:name))
+    it 'returns correct groups based on category & tag group permissions' do
+      expect(TagGroup.visible(Guardian.new(admin)).pluck(:name)).to match_array(
+            TagGroup.pluck(:name)
+          )
+      expect(
+        TagGroup.visible(Guardian.new(moderator)).pluck(:name)
+      ).to match_array(TagGroup.pluck(:name))
 
-      expect(TagGroup.visible(Guardian.new(user2)).pluck(:name)).to match_array([
-        public_tag_group.name, unrestricted_tag_group.name, private_tag_group.name,
-        everyone_tag_group.name, visible_tag_group.name,
-      ])
+      expect(TagGroup.visible(Guardian.new(user2)).pluck(:name)).to match_array(
+            [
+              public_tag_group.name,
+              unrestricted_tag_group.name,
+              private_tag_group.name,
+              everyone_tag_group.name,
+              visible_tag_group.name
+            ]
+          )
 
-      expect(TagGroup.visible(Guardian.new(user1)).pluck(:name)).to match_array([
-        public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
-        visible_tag_group.name,
-      ])
+      expect(TagGroup.visible(Guardian.new(user1)).pluck(:name)).to match_array(
+            [
+              public_tag_group.name,
+              unrestricted_tag_group.name,
+              everyone_tag_group.name,
+              visible_tag_group.name
+            ]
+          )
 
-      expect(TagGroup.visible(Guardian.new(nil)).pluck(:name)).to match_array([
-        public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
-        visible_tag_group.name,
-      ])
+      expect(TagGroup.visible(Guardian.new(nil)).pluck(:name)).to match_array(
+            [
+              public_tag_group.name,
+              unrestricted_tag_group.name,
+              everyone_tag_group.name,
+              visible_tag_group.name
+            ]
+          )
     end
   end
 end

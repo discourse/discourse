@@ -6,14 +6,16 @@ class QuotedPost < ActiveRecord::Base
   #  however topic links exclude quotes and links within a topic
   #  we are double parsing this fragment, this may be worth optimising later
   def self.extract_from(post)
-
     doc = Nokogiri::HTML.fragment(post.cooked)
 
     uniq = {}
 
-    DB.exec("DELETE FROM quoted_posts WHERE post_id = :post_id", post_id: post.id)
+    DB.exec(
+      'DELETE FROM quoted_posts WHERE post_id = :post_id',
+      post_id: post.id
+    )
 
-    doc.css("aside.quote[data-topic]").each do |a|
+    doc.css('aside.quote[data-topic]').each do |a|
       topic_id = a['data-topic'].to_i
       post_number = a['data-post'].to_i
 
@@ -25,7 +27,7 @@ class QuotedPost < ActiveRecord::Base
 
       begin
         # It would be so much nicer if we used post_id in quotes
-        DB.exec(<<~SQL, post_id: post.id, post_number: post_number, topic_id: topic_id)
+        sql = <<~SQL
           INSERT INTO quoted_posts (post_id, quoted_post_id, created_at, updated_at)
             SELECT :post_id, p.id, current_timestamp, current_timestamp
             FROM posts p
@@ -34,6 +36,10 @@ class QuotedPost < ActiveRecord::Base
                   topic_id = :topic_id AND
                   q.id IS NULL
         SQL
+        DB.exec(
+          sql,
+          post_id: post.id, post_number: post_number, topic_id: topic_id
+        )
       rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
         # it's fine
       end
@@ -43,14 +49,22 @@ class QuotedPost < ActiveRecord::Base
     reply_quoted = false
 
     if post.reply_to_post_number
-      reply_post_id = Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number).pluck(:id).first
-      reply_quoted = reply_post_id.present? && QuotedPost.where(post_id: post.id, quoted_post_id: reply_post_id).count > 0
+      reply_post_id =
+        Post.where(
+          topic_id: post.topic_id, post_number: post.reply_to_post_number
+        )
+          .pluck(:id)
+          .first
+      reply_quoted =
+        reply_post_id.present? &&
+          QuotedPost.where(post_id: post.id, quoted_post_id: reply_post_id)
+            .count >
+            0
     end
 
     if reply_quoted != post.reply_quoted
       post.update_columns(reply_quoted: reply_quoted)
     end
-
   end
 end
 

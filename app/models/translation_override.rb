@@ -1,14 +1,14 @@
 require 'js_locale_helper'
-require "i18n/i18n_interpolation_keys_finder"
+require 'i18n/i18n_interpolation_keys_finder'
 
 class TranslationOverride < ActiveRecord::Base
   # Whitelist i18n interpolation keys that can be included when customizing translations
   CUSTOM_INTERPOLATION_KEYS_WHITELIST = {
-    "user_notifications.user_" => %w{
+    'user_notifications.user_' => %w[
       topic_title_url_encoded
       site_title_url_encoded
       context
-    }
+    ]
   }
 
   validates_uniqueness_of :translation_key, scope: :locale
@@ -21,8 +21,13 @@ class TranslationOverride < ActiveRecord::Base
 
     data = { value: value }
     if key.end_with?('_MF')
-      _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
-      data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, value)
+      _, filename =
+        JsLocaleHelper.find_message_format_locale(
+          [locale],
+          fallback_to_english: false
+        )
+      data[:compiled_js] =
+        JsLocaleHelper.compile_message_format(filename, locale, value)
     end
 
     translation_override = find_or_initialize_by(params)
@@ -40,16 +45,18 @@ class TranslationOverride < ActiveRecord::Base
     I18n.reload!
     MessageBus.publish('/i18n-flush', refresh: true)
 
-    keys.flatten.each do |key|
-      return if expire_cache(key)
-    end
+    keys.flatten.each { |key| return if expire_cache(key) }
   end
 
   def self.expire_cache(key)
     if key.starts_with?('post_action_types.')
-      ApplicationSerializer.expire_cache_fragment!("post_action_types_#{I18n.locale}")
+      ApplicationSerializer.expire_cache_fragment!(
+        "post_action_types_#{I18n.locale}"
+      )
     elsif key.starts_with?('topic_flag_types.')
-      ApplicationSerializer.expire_cache_fragment!("post_action_flag_types_#{I18n.locale}")
+      ApplicationSerializer.expire_cache_fragment!(
+        "post_action_flag_types_#{I18n.locale}"
+      )
     else
       return false
     end
@@ -64,12 +71,14 @@ class TranslationOverride < ActiveRecord::Base
   private
 
   def check_interpolation_keys
-    original_text = I18n.overrides_disabled do
-      I18n.backend.send(:lookup, self.locale, self.translation_key)
-    end
+    original_text =
+      I18n.overrides_disabled do
+        I18n.backend.send(:lookup, self.locale, self.translation_key)
+      end
 
     if original_text
-      original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
+      original_interpolation_keys =
+        I18nInterpolationKeysFinder.find(original_text)
       new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
 
       custom_interpolation_keys = []
@@ -80,21 +89,24 @@ class TranslationOverride < ActiveRecord::Base
         end
       end
 
-      invalid_keys = (original_interpolation_keys | new_interpolation_keys) -
-        original_interpolation_keys -
-        custom_interpolation_keys
+      invalid_keys =
+        (original_interpolation_keys | new_interpolation_keys) -
+          original_interpolation_keys -
+          custom_interpolation_keys
 
       if invalid_keys.present?
-        self.errors.add(:base, I18n.t(
-          'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
-          keys: invalid_keys.join(', ')
-        ))
+        self.errors.add(
+          :base,
+          I18n.t(
+            'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
+            keys: invalid_keys.join(', ')
+          )
+        )
 
         return false
       end
     end
   end
-
 end
 
 # == Schema Information

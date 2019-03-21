@@ -8,7 +8,8 @@ class AdminConfirmationMailer < ActionMailer::Base
       to_address,
       template: 'admin_confirmation_mailer',
       target_username: target_username,
-      admin_confirm_url: confirm_admin_url(token: token, host: Discourse.base_url)
+      admin_confirm_url:
+        confirm_admin_url(token: token, host: Discourse.base_url)
     )
   end
 end

@@ -2,7 +2,6 @@ require_dependency 'email/styles'
 
 module Email
   class Renderer
-
     def initialize(message, opts = nil)
       @message = message
       @opts = opts || {}
@@ -10,7 +9,9 @@ module Email
 
     def text
       return @text if @text
-      @text = (+(@message.text_part ? @message.text_part : @message).body.to_s).force_encoding('UTF-8')
+      @text =
+        (+(@message.text_part ? @message.text_part : @message).body.to_s)
+          .force_encoding('UTF-8')
       @text = CGI.unescapeHTML(@text)
     end
 
@@ -26,6 +27,5 @@ module Email
 
       style.to_html
     end
-
   end
 end

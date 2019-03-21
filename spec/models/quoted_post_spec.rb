@@ -5,42 +5,60 @@ describe QuotedPost do
     Jobs.run_immediately!
 
     topic = Fabricate(:topic)
-    post1 = create_post(topic: topic, post_number: 1, raw: "foo bar")
-    post2 = create_post(topic: topic, post_number: 2, raw: "lorem ipsum")
-    post3 = create_post(topic: topic, post_number: 3, raw: "test post")
+    post1 = create_post(topic: topic, post_number: 1, raw: 'foo bar')
+    post2 = create_post(topic: topic, post_number: 2, raw: 'lorem ipsum')
+    post3 = create_post(topic: topic, post_number: 3, raw: 'test post')
 
     raw = <<~RAW
       #{post1.full_url}
 
-      [quote="#{post2.user.username}, post:#{post2.post_number}, topic:#{post2.topic.id}"]
+      [quote="#{post2.user.username}, post:#{post2
+      .post_number}, topic:#{post2.topic
+      .id}"]
       lorem
       [/quote]
 
       this is a test post
 
-      #{post3.full_url}
+      #{post3
+      .full_url}
     RAW
 
-    post4 = create_post(topic: topic, raw: raw, post_number: 4, reply_to_post_number: post3.post_number)
+    post4 =
+      create_post(
+        topic: topic,
+        raw: raw,
+        post_number: 4,
+        reply_to_post_number: post3.post_number
+      )
 
-    expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(post1.id, post2.id, post3.id)
+    expect(
+      QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)
+    ).to contain_exactly(post1.id, post2.id, post3.id)
     expect(post4.reload.reply_quoted).to eq(true)
 
     SiteSetting.editing_grace_period = 1.minute.to_i
-    post5 = create_post(topic: topic, post_number: 5, raw: "post 5")
+    post5 = create_post(topic: topic, post_number: 5, raw: 'post 5')
     raw.sub!(post3.full_url, post5.full_url)
-    post4.revise(post4.user, { raw: raw }, revised_at: post4.updated_at + 2.minutes)
-    expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(post1.id, post2.id, post5.id)
+    post4.revise(
+      post4.user,
+      { raw: raw },
+      revised_at: post4.updated_at + 2.minutes
+    )
+    expect(
+      QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)
+    ).to contain_exactly(post1.id, post2.id, post5.id)
   end
 
   it "doesn't count quotes from the same post" do
     Jobs.run_immediately!
 
     topic = Fabricate(:topic)
-    post = create_post(topic: topic, post_number: 1, raw: "foo bar")
+    post = create_post(topic: topic, post_number: 1, raw: 'foo bar')
 
     post.cooked = <<-HTML
-      <aside class="quote" data-post="#{post.post_number}" data-topic="#{post.topic_id}">
+      <aside class="quote" data-post="#{post.post_number}" data-topic="#{post
+      .topic_id}">
         <div class="title">
           <div class="quote-controls"></div>
           <img width="20" height="20" src="/user_avatar/meta.discourse.org/techapj/20/3281.png" class="avatar">techAPJ:
@@ -60,7 +78,8 @@ describe QuotedPost do
     post2 = Fabricate(:post)
 
     post2.cooked = <<-HTML
-      <aside class="quote" data-post="#{post1.post_number}" data-topic="#{post1.topic_id}">
+      <aside class="quote" data-post="#{post1.post_number}" data-topic="#{post1
+      .topic_id}">
         <div class="title">
           <div class="quote-controls"></div>
           <img width="20" height="20" src="/user_avatar/meta.discourse.org/techapj/20/3281.png" class="avatar">techAPJ:
@@ -73,7 +92,9 @@ describe QuotedPost do
 
     QuotedPost.extract_from(post2)
     expect(QuotedPost.where(post_id: post2.id).count).to eq(1)
-    expect(QuotedPost.find_by(post_id: post2.id, quoted_post_id: post1.id)).not_to eq(nil)
+    expect(
+      QuotedPost.find_by(post_id: post2.id, quoted_post_id: post1.id)
+    ).not_to eq(nil)
 
     expect(post2.reply_quoted).to eq(false)
   end

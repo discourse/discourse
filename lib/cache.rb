@@ -1,15 +1,14 @@
 # Discourse specific cache, enforces 1 day expiry
 
 class Cache < ActiveSupport::Cache::Store
-
   # nothing is cached for longer than 1 day EVER
   # there is no reason to have data older than this clogging redis
   # it is dangerous cause if we rename keys we will be stuck with
   # pointless data
-  MAX_CACHE_AGE = 1.day unless defined? MAX_CACHE_AGE
+  MAX_CACHE_AGE = 1.day unless defined?(MAX_CACHE_AGE)
 
   def initialize(opts = {})
-    @namespace = opts[:namespace] || "_CACHE_"
+    @namespace = opts[:namespace] || '_CACHE_'
     super(opts)
   end
 
@@ -21,14 +20,12 @@ class Cache < ActiveSupport::Cache::Store
     redis.reconnect
   end
 
-  def keys(pattern = "*")
+  def keys(pattern = '*')
     redis.scan_each(match: "#{@namespace}:#{pattern}").to_a
   end
 
   def clear
-    keys.each do |k|
-      redis.del(k)
-    end
+    keys.each { |k| redis.del(k) }
   end
 
   def normalize_key(key, opts = nil)
@@ -42,7 +39,7 @@ class Cache < ActiveSupport::Cache::Store
       data = Marshal.load(data)
       ActiveSupport::Cache::Entry.new data
     end
-  rescue
+  rescue StandardError
     # corrupt cache, fail silently for now, remove rescue later
   end
 
@@ -56,5 +53,4 @@ class Cache < ActiveSupport::Cache::Store
   def delete_entry(key, options)
     redis.del key
   end
-
 end

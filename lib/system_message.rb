@@ -4,7 +4,6 @@ require_dependency 'topic_subtype'
 require_dependency 'discourse'
 
 class SystemMessage
-
   def self.create(recipient, type, params = {})
     self.new(recipient).create(type, params)
   end
@@ -23,21 +22,31 @@ class SystemMessage
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw = I18n.t("system_messages.#{type}.text_body_template", params)
 
-    creator = PostCreator.new(Discourse.site_contact_user,
-                       title: title,
-                       raw: raw,
-                       archetype: Archetype.private_message,
-                       target_usernames: @recipient.username,
-                       target_group_names: Group.exists?(name: SiteSetting.site_contact_group_name) ? SiteSetting.site_contact_group_name : nil,
-                       subtype: TopicSubtype.system_message,
-                       skip_validations: true)
+    creator =
+      PostCreator.new(
+        Discourse.site_contact_user,
+        title: title,
+        raw: raw,
+        archetype: Archetype.private_message,
+        target_usernames: @recipient.username,
+        target_group_names:
+          if Group.exists?(name: SiteSetting.site_contact_group_name)
+            SiteSetting.site_contact_group_name
+          else
+            nil
+          end,
+        subtype: TopicSubtype.system_message,
+        skip_validations: true
+      )
 
     post = creator.create
     if creator.errors.present?
-      raise StandardError, creator.errors.full_messages.join(" ")
+      raise StandardError, creator.errors.full_messages.join(' ')
     end
 
-    UserArchivedMessage.create!(user: Discourse.site_contact_user, topic: post.topic)
+    UserArchivedMessage.create!(
+      user: Discourse.site_contact_user, topic: post.topic
+    )
 
     post
   end
@@ -48,24 +57,30 @@ class SystemMessage
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw = I18n.t("system_messages.#{type}.text_body_template", params)
 
-    PostCreator.create!(Discourse.system_user,
-                       title: title,
-                       raw: raw,
-                       archetype: Archetype.private_message,
-                       target_usernames: @recipient.username,
-                       subtype: TopicSubtype.system_message,
-                       skip_validations: true)
+    PostCreator.create!(
+      Discourse.system_user,
+      title: title,
+      raw: raw,
+      archetype: Archetype.private_message,
+      target_usernames: @recipient.username,
+      subtype: TopicSubtype.system_message,
+      skip_validations: true
+    )
   end
 
   def defaults
     {
       site_name: SiteSetting.title,
       username: @recipient.username,
-      user_preferences_url: "#{Discourse.base_url}/u/#{@recipient.username_lower}/preferences",
-      new_user_tips: I18n.t('system_messages.usage_tips.text_body_template', base_url: Discourse.base_url),
-      site_password: "",
-      base_url: Discourse.base_url,
+      user_preferences_url:
+        "#{Discourse.base_url}/u/#{@recipient.username_lower}/preferences",
+      new_user_tips:
+        I18n.t(
+          'system_messages.usage_tips.text_body_template',
+          base_url: Discourse.base_url
+        ),
+      site_password: '',
+      base_url: Discourse.base_url
     }
   end
-
 end

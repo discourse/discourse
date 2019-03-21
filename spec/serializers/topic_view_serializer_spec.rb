@@ -3,7 +3,11 @@ require 'rails_helper'
 describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
-    TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+    TopicViewSerializer.new(
+      topic_view,
+      scope: Guardian.new(user_arg), root: false
+    )
+      .as_json
   end
 
   before do
@@ -45,9 +49,7 @@ describe TopicViewSerializer do
   describe '#suggested_topics' do
     let(:topic2) { Fabricate(:topic) }
 
-    before do
-      TopicUser.update_last_read(user, topic2.id, 0, 0, 0)
-    end
+    before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
 
     describe 'when loading last chunk' do
       it 'should include suggested topics' do
@@ -66,7 +68,12 @@ describe TopicViewSerializer do
         post2
         topic_view = TopicView.new(topic.id, user, post_ids: [post.id])
         topic_view.next_page
-        json = described_class.new(topic_view, scope: Guardian.new(user), root: false).as_json
+        json =
+          described_class.new(
+            topic_view,
+            scope: Guardian.new(user), root: false
+          )
+            .as_json
 
         expect(json[:suggested_topics]).to eq(nil)
       end
@@ -77,10 +84,14 @@ describe TopicViewSerializer do
     let(:moderator) { Fabricate(:moderator) }
     let(:tag) { Fabricate(:tag) }
     let(:pm) do
-      Fabricate(:private_message_topic, tags: [tag], topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: moderator),
-        Fabricate.build(:topic_allowed_user, user: user)
-      ])
+      Fabricate(
+        :private_message_topic,
+        tags: [tag],
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: moderator),
+          Fabricate.build(:topic_allowed_user, user: user)
+        ]
+      )
     end
 
     before do
@@ -88,19 +99,19 @@ describe TopicViewSerializer do
       SiteSetting.allow_staff_to_tag_pms = true
     end
 
-    it "should not include the tag for normal users" do
+    it 'should not include the tag for normal users' do
       json = serialize_topic(pm, user)
       expect(json[:tags]).to eq(nil)
     end
 
-    it "should include the tag for staff users" do
+    it 'should include the tag for staff users' do
       [moderator, admin].each do |user|
         json = serialize_topic(pm, user)
         expect(json[:tags]).to eq([tag.name])
       end
     end
 
-    it "should not include the tag if pm tags disabled" do
+    it 'should not include the tag if pm tags disabled' do
       SiteSetting.allow_staff_to_tag_pms = false
 
       [moderator, admin].each do |user|
@@ -112,7 +123,12 @@ describe TopicViewSerializer do
 
   describe 'with hidden tags' do
     let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
-    let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+    let(:staff_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: { 'staff' => 1 }, tag_names: [hidden_tag.name]
+      )
+    end
 
     before do
       SiteSetting.tagging_enabled = true

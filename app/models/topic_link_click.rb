@@ -8,7 +8,7 @@ class TopicLinkClick < ActiveRecord::Base
 
   validates_presence_of :topic_link_id
 
-  WHITELISTED_REDIRECT_HOSTNAMES = Set.new(%W{www.youtube.com youtu.be})
+  WHITELISTED_REDIRECT_HOSTNAMES = Set.new(%W[www.youtube.com youtu.be])
 
   # Create a click from a URL and post_id
   def self.create_from(args = {})
@@ -34,31 +34,35 @@ class TopicLinkClick < ActiveRecord::Base
 
     # link can have query params, and analytics can add more to the end:
     i = url.length
-    while i = url.rindex('&', i - 1)
-      urls << url[0...i]
-    end
+    urls << url[0...i] while i = url.rindex('&', i - 1)
 
     # add a cdn link
     if uri
       if Discourse.asset_host.present?
-        cdn_uri = begin
-          URI.parse(Discourse.asset_host)
-        rescue URI::Error
-        end
+        cdn_uri =
+          begin
+            URI.parse(Discourse.asset_host)
+          rescue URI::Error
 
-        if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
+          end
+
+        if cdn_uri && cdn_uri.hostname == uri.hostname &&
+           uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           urls << uri.path[cdn_uri.path.length..-1]
         end
       end
 
       if SiteSetting.Upload.s3_cdn_url.present?
-        cdn_uri = begin
-          URI.parse(SiteSetting.Upload.s3_cdn_url)
-        rescue URI::Error
-        end
+        cdn_uri =
+          begin
+            URI.parse(SiteSetting.Upload.s3_cdn_url)
+          rescue URI::Error
 
-        if cdn_uri && cdn_uri.hostname == uri.hostname && uri.path.starts_with?(cdn_uri.path)
+          end
+
+        if cdn_uri && cdn_uri.hostname == uri.hostname &&
+           uri.path.starts_with?(cdn_uri.path)
           is_cdn_link = true
           path = uri.path[cdn_uri.path.length..-1]
           urls << path
@@ -67,10 +71,10 @@ class TopicLinkClick < ActiveRecord::Base
       end
     end
 
-    link = TopicLink.select([:id, :user_id])
+    link = TopicLink.select(%i[id user_id])
 
     # test for all possible URLs
-    link = link.where(Array.new(urls.count, "url = ?").join(" OR "), *urls)
+    link = link.where(Array.new(urls.count, 'url = ?').join(' OR '), *urls)
 
     # Find the forum topic link
     link = link.where(post_id: args[:post_id]) if args[:post_id].present?
@@ -82,7 +86,9 @@ class TopicLinkClick < ActiveRecord::Base
     # If no link is found...
     unless link.present?
       # ... return the url for relative links or when using the same host
-      return url if url =~ /^\/[^\/]/ || uri.try(:host) == Discourse.current_hostname
+      if url =~ %r{^\/[^\/]} || uri.try(:host) == Discourse.current_hostname
+        return url
+      end
 
       # If we have it somewhere else on the site, just allow the redirect.
       # This is likely due to a onebox of another topic.
@@ -92,7 +98,9 @@ class TopicLinkClick < ActiveRecord::Base
       return nil unless uri
 
       # Only redirect to whitelisted hostnames
-      return url if WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) || is_cdn_link
+      if WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) || is_cdn_link
+        return url
+      end
 
       return nil
     end
@@ -101,15 +109,16 @@ class TopicLinkClick < ActiveRecord::Base
 
     # Rate limit the click counts to once in 24 hours
     rate_key = "link-clicks:#{link.id}:#{args[:user_id] || args[:ip]}"
-    if $redis.setnx(rate_key, "1")
+    if $redis.setnx(rate_key, '1')
       $redis.expire(rate_key, 1.day.to_i)
       args[:ip] = nil if args[:user_id]
-      create!(topic_link_id: link.id, user_id: args[:user_id], ip_address: args[:ip])
+      create!(
+        topic_link_id: link.id, user_id: args[:user_id], ip_address: args[:ip]
+      )
     end
 
     url
   end
-
 end
 
 # == Schema Information

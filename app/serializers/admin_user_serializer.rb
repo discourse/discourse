@@ -1,7 +1,6 @@
 require_dependency 'admin_user_list_serializer'
 
 class AdminUserSerializer < AdminUserListSerializer
-
   attributes :name,
              :associated_accounts,
              :can_send_activation_email,
@@ -10,7 +9,8 @@ class AdminUserSerializer < AdminUserListSerializer
              :ip_address,
              :registration_ip_address
 
-  has_one :single_sign_on_record, serializer: SingleSignOnRecordSerializer, embed: :objects
+  has_one :single_sign_on_record,
+          serializer: SingleSignOnRecordSerializer, embed: :objects
 
   def can_send_activation_email
     scope.can_send_activation_email?(object)
@@ -31,5 +31,4 @@ class AdminUserSerializer < AdminUserListSerializer
   def registration_ip_address
     object.registration_ip_address.try(:to_s)
   end
-
 end

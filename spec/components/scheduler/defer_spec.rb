@@ -9,9 +9,7 @@ describe Scheduler::Defer do
 
   def wait_for(timeout, &blk)
     till = Time.now + (timeout.to_f / 1000)
-    while Time.now < till && !blk.call
-      sleep 0.001
-    end
+    sleep 0.001 while Time.now < till && !blk.call
   end
 
   class TrackingLogger < ::Logger
@@ -39,37 +37,30 @@ describe Scheduler::Defer do
     @defer.async = true
   end
 
-  after do
-    @defer.stop!
-  end
+  after { @defer.stop! }
 
-  it "supports timeout reporting" do
+  it 'supports timeout reporting' do
     @defer.timeout = 0.05
 
-    m = track_log_messages do |messages|
-      10.times do
-        @defer.later("fast job") {}
-      end
-      @defer.later "weird slow job" do
-        sleep
-      end
+    m =
+      track_log_messages do |messages|
+        10.times { @defer.later('fast job') {  } }
+        @defer.later 'weird slow job' do
+          sleep
+        end
 
-      wait_for(200) do
-        messages.length == 1
+        wait_for(200) { messages.length == 1 }
       end
-    end
 
     expect(m.length).to eq(1)
-    expect(m[0][2]).to include("weird slow job")
+    expect(m[0][2]).to include('weird slow job')
   end
 
-  it "can pause and resume" do
+  it 'can pause and resume' do
     x = 1
     @defer.pause
 
-    @defer.later do
-      x = 2
-    end
+    @defer.later { x = 2 }
 
     expect(@defer.length).to eq(1)
 
@@ -79,49 +70,34 @@ describe Scheduler::Defer do
 
     @defer.resume
 
-    @defer.later do
-      x = 3
-    end
+    @defer.later { x = 3 }
 
-    wait_for(10) do
-      x == 3
-    end
+    wait_for(10) { x == 3 }
 
     expect(x).to eq(3)
   end
 
-  it "recovers from a crash / fork" do
+  it 'recovers from a crash / fork' do
     s = nil
     @defer.stop!
-    wait_for(10) do
-      @defer.stopped?
-    end
+    wait_for(10) { @defer.stopped? }
     # hack allow thread to die
     sleep 0.005
 
-    @defer.later do
-      s = "good"
-    end
+    @defer.later { s = 'good' }
 
-    wait_for(10) do
-      s == "good"
-    end
+    wait_for(10) { s == 'good' }
 
-    expect(s).to eq("good")
+    expect(s).to eq('good')
   end
 
-  it "can queue jobs properly" do
+  it 'can queue jobs properly' do
     s = nil
 
-    @defer.later do
-      s = "good"
-    end
+    @defer.later { s = 'good' }
 
-    wait_for(10) do
-      s == "good"
-    end
+    wait_for(10) { s == 'good' }
 
-    expect(s).to eq("good")
+    expect(s).to eq('good')
   end
-
 end

@@ -1,5 +1,4 @@
-class PluginStoreRow < ActiveRecord::Base
-end
+class PluginStoreRow < ActiveRecord::Base; end
 
 # == Schema Information
 #

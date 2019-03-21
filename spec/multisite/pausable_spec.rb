@@ -1,10 +1,9 @@
 require 'rails_helper'
 require_dependency 'sidekiq/pausable'
 
-RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
-
+RSpec.describe 'Pausing/Unpausing Sidekiq', type: :multisite do
   describe '#pause!, #unpause! and #paused?' do
-    it "can pause and unpause" do
+    it 'can pause and unpause' do
       Sidekiq.pause!
       expect(Sidekiq.paused?).to eq(true)
 
@@ -17,11 +16,11 @@ RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
       expect(Sidekiq.paused?).to eq(false)
 
       test_multisite_connection('second') do
-        Sidekiq.pause!("test")
+        Sidekiq.pause!('test')
         expect(Sidekiq.paused?).to eq(true)
       end
 
-      expect(Sidekiq.paused_dbs).to eq(["second"])
+      expect(Sidekiq.paused_dbs).to eq(%w[second])
 
       Sidekiq.unpause_all!
 
@@ -33,11 +32,9 @@ RSpec.describe "Pausing/Unpausing Sidekiq", type: :multisite do
 end
 
 RSpec.describe Sidekiq::Pausable do
-  after do
-    Sidekiq.unpause_all!
-  end
+  after { Sidekiq.unpause_all! }
 
-  it "can still run heartbeats when paused" do
+  it 'can still run heartbeats when paused' do
     Sidekiq.pause!
 
     freeze_time 1.week.from_now
@@ -46,8 +43,8 @@ RSpec.describe Sidekiq::Pausable do
     jobs.clear
     middleware = Sidekiq::Pausable.new
 
-    middleware.call(Jobs::RunHeartbeat.new, { "args" => [{}] }, "critical") do
-      "done"
+    middleware.call(Jobs::RunHeartbeat.new, { 'args' => [{}] }, 'critical') do
+      'done'
     end
 
     jobs = Sidekiq::ScheduledSet.new
@@ -58,11 +55,11 @@ RSpec.describe Sidekiq::Pausable do
     let(:middleware) { Sidekiq::Pausable.new }
 
     def call_middleware(db = RailsMultisite::ConnectionManagement::DEFAULT)
-      middleware.call(Jobs::PostAlert.new, {
-        "args" => [{ "current_site_id" => db }]
-      }, "critical") do
-        yield
-      end
+      middleware.call(
+        Jobs::PostAlert.new,
+        { 'args' => [{ 'current_site_id' => db }] },
+        'critical'
+      ) { yield }
     end
 
     it 'should delay the job' do

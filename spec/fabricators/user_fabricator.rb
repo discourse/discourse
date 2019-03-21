@@ -1,5 +1,4 @@
-Fabricator(:user_stat) do
-end
+Fabricator(:user_stat) {  }
 
 Fabricator(:user_single_email, class_name: :user) do
   name 'Bruce Wayne'
@@ -100,11 +99,9 @@ Fabricator(:anonymous, from: :user) do
   manual_locked_trust_level TrustLevel[1]
 
   before_create do |user|
-    user.custom_fields["master_id"] = 1
+    user.custom_fields['master_id'] = 1
     user.save!
   end
 end
 
-Fabricator(:staged, from: :user) do
-  staged true
-end
+Fabricator(:staged, from: :user) { staged true }

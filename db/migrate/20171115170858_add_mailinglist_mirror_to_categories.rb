@@ -1,6 +1,9 @@
 class AddMailinglistMirrorToCategories < ActiveRecord::Migration[5.1]
   def up
-    add_column :categories, :mailinglist_mirror, :boolean, default: false, null: false
+    add_column :categories,
+               :mailinglist_mirror,
+               :boolean,
+               default: false, null: false
   end
 
   def down

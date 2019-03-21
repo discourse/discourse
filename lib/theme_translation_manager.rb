@@ -7,11 +7,19 @@ class ThemeTranslationManager
     hash.map do |key, value|
       this_key_array = parent_keys + [key]
       if value.is_a?(Hash)
-        self.list_from_hash(locale: locale, hash: value, theme: theme, parent_keys: this_key_array)
+        self.list_from_hash(
+          locale: locale, hash: value, theme: theme, parent_keys: this_key_array
+        )
       else
-        self.new(locale: locale, theme: theme, key: this_key_array.join("."), default: value)
+        self.new(
+          locale: locale,
+          theme: theme,
+          key: this_key_array.join('.'),
+          default: value
+        )
       end
-    end.flatten
+    end
+      .flatten
   end
 
   def initialize(locale:, key:, default:, theme:)
@@ -52,6 +60,9 @@ class ThemeTranslationManager
   end
 
   def create_record!(value)
-    record = ThemeTranslationOverride.create!(locale: @locale, translation_key: @key, theme: @theme, value: value)
+    record =
+      ThemeTranslationOverride.create!(
+        locale: @locale, translation_key: @key, theme: @theme, value: value
+      )
   end
 end

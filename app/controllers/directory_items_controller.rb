@@ -2,7 +2,9 @@ class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
 
   def index
-    raise Discourse::InvalidAccess.new(:enable_user_directory) unless SiteSetting.enable_user_directory?
+    unless SiteSetting.enable_user_directory?
+      raise Discourse::InvalidAccess.new(:enable_user_directory)
+    end
 
     period = params.require(:period)
     period_type = DirectoryItem.period_types[period.to_sym]
@@ -10,13 +12,19 @@ class DirectoryItemsController < ApplicationController
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
     if params[:group]
-      result = result.includes(user: :groups).where(users: { groups: { name: params[:group] } })
+      result =
+        result.includes(user: :groups).where(
+          users: { groups: { name: params[:group] } }
+        )
     else
       result = result.includes(user: :primary_group)
     end
 
     if params[:exclude_usernames]
-      result = result.references(:user).where.not(users: { username: params[:exclude_usernames].split(",") })
+      result =
+        result.references(:user).where.not(
+          users: { username: params[:exclude_usernames].split(',') }
+        )
     end
 
     order = params[:order] || DirectoryItem.headings.first
@@ -32,7 +40,10 @@ class DirectoryItemsController < ApplicationController
 
     user_ids = nil
     if params[:name].present?
-      user_ids = UserSearch.new(params[:name], include_staged_users: true).search.pluck(:id)
+      user_ids =
+        UserSearch.new(params[:name], include_staged_users: true).search.pluck(
+          :id
+        )
       if user_ids.present?
         # Add the current user if we have at least one other match
         if current_user && result.dup.where(user_id: user_ids).exists?
@@ -45,7 +56,9 @@ class DirectoryItemsController < ApplicationController
     end
 
     if params[:username]
-      user_id = User.where(username_lower: params[:username].to_s.downcase).pluck(:id).first
+      user_id =
+        User.where(username_lower: params[:username].to_s.downcase).pluck(:id)
+          .first
       if user_id
         result = result.where(user_id: user_id)
       else
@@ -61,19 +74,23 @@ class DirectoryItemsController < ApplicationController
 
     # Put yourself at the top of the first page
     if result.present? && current_user.present? && page == 0
-
       position = result.index { |r| r.user_id == current_user.id }
 
       # Don't show the record unless you're not in the top positions already
       if (position || 10) >= 10
-        your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
+        your_item =
+          DirectoryItem.where(
+            period_type: period_type, user_id: current_user.id
+          )
+            .first
         result.insert(0, your_item) if your_item
       end
-
     end
 
-    render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
-                     total_rows_directory_items: result_count,
-                     load_more_directory_items: directory_items_path(more_params))
+    render_json_dump(
+      directory_items: serialize_data(result, DirectoryItemSerializer),
+      total_rows_directory_items: result_count,
+      load_more_directory_items: directory_items_path(more_params)
+    )
   end
 end

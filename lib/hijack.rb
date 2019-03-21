@@ -6,12 +6,10 @@ require 'method_profiler'
 # For cases where we are making remote calls like onebox or proxying files and so on this helps
 # free up a unicorn worker while the remote IO is happening
 module Hijack
-
   def hijack(&blk)
     controller_class = self.class
 
     if hijack = request.env['rack.hijack']
-
       request.env['discourse.request_tracker.skip'] = true
       request_tracker = request.env['discourse.request_tracker']
 
@@ -31,14 +29,16 @@ module Hijack
       # on the way down the stack
       original_headers = response.headers.dup
 
-      Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]}") do
-
+      Scheduler::Defer.later(
+        "hijack #{params['controller']} #{params['action']}"
+      ) do
         MethodProfiler.start(transfer_timings)
+
         begin
           Thread.current[Logster::Logger::LOGSTER_ENV] = env
           # do this first to confirm we have a working connection
           # before doing any work
-          io.write "HTTP/1.1 "
+          io.write 'HTTP/1.1 '
 
           # this trick avoids double render, also avoids any litter that the controller hooks
           # place on the response
@@ -47,18 +47,20 @@ module Hijack
           instance.response = response
 
           instance.request = request_copy
-          original_headers&.each do |k, v|
-            instance.response.headers[k] = v
-          end
+          original_headers&.each { |k, v| instance.response.headers[k] = v }
 
           view_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
           begin
             instance.instance_eval(&blk)
           rescue => e
             # TODO we need to reuse our exception handling in ApplicationController
-            Discourse.warn_exception(e, message: "Failed to process hijacked response correctly", env: env)
+            Discourse.warn_exception(
+              e,
+              message: 'Failed to process hijacked response correctly', env: env
+            )
           end
-          view_runtime = Process.clock_gettime(Process::CLOCK_MONOTONIC) - view_start
+          view_runtime =
+            Process.clock_gettime(Process::CLOCK_MONOTONIC) - view_start
 
           unless instance.response_body || response.committed?
             instance.status = 500
@@ -74,25 +76,24 @@ module Hijack
             Discourse::Cors.apply_headers(cors_origins, env, headers)
           end
 
-          headers['Content-Type'] ||= response.content_type || "text/plain"
+          headers['Content-Type'] ||= response.content_type || 'text/plain'
           headers['Content-Length'] = body.bytesize
-          headers['Connection'] = "close"
+          headers['Connection'] = 'close'
 
           if env[Auth::DefaultCurrentUserProvider::BAD_TOKEN]
             headers['Discourse-Logged-Out'] = '1'
           end
 
-          status_string = Rack::Utils::HTTP_STATUS_CODES[response.status.to_i] || "Unknown"
+          status_string =
+            Rack::Utils::HTTP_STATUS_CODES[response.status.to_i] || 'Unknown'
           io.write "#{response.status} #{status_string}\r\n"
 
           timings = MethodProfiler.stop
           if timings && duration = timings[:total_duration]
-            headers["X-Runtime"] = "#{"%0.6f" % duration}"
+            headers['X-Runtime'] = "#{'%0.6f' % duration}"
           end
 
-          headers.each do |name, val|
-            io.write "#{name}: #{val}\r\n"
-          end
+          headers.each { |name, val| io.write "#{name}: #{val}\r\n" }
 
           io.write "\r\n"
           io.write body
@@ -100,30 +101,35 @@ module Hijack
           # happens if client terminated before we responded, ignore
           io = nil
         ensure
-
           if Rails.configuration.try(:lograge).try(:enabled)
             if timings
               db_runtime = 0
-              if timings[:sql]
-                db_runtime = timings[:sql][:duration]
-              end
+              db_runtime = timings[:sql][:duration] if timings[:sql]
 
               subscriber = Lograge::RequestLogSubscriber.new
-              payload = ActiveSupport::HashWithIndifferentAccess.new(
-                controller: self.class.name,
-                action: action_name,
-                params: request.filtered_parameters,
-                headers: request.headers,
-                format: request.format.ref,
-                method: request.request_method,
-                path: request.fullpath,
-                view_runtime: view_runtime * 1000.0,
-                db_runtime: db_runtime * 1000.0,
-                timings: timings,
-                status: response.status
-              )
+              payload =
+                ActiveSupport::HashWithIndifferentAccess.new(
+                  controller: self.class.name,
+                  action: action_name,
+                  params: request.filtered_parameters,
+                  headers: request.headers,
+                  format: request.format.ref,
+                  method: request.request_method,
+                  path: request.fullpath,
+                  view_runtime: view_runtime * 1000.0,
+                  db_runtime: db_runtime * 1000.0,
+                  timings: timings,
+                  status: response.status
+                )
 
-              event = ActiveSupport::Notifications::Event.new("hijack", Time.now, Time.now + timings[:total_duration], "", payload)
+              event =
+                ActiveSupport::Notifications::Event.new(
+                  'hijack',
+                  Time.now,
+                  Time.now + timings[:total_duration],
+                  '',
+                  payload
+                )
               subscriber.process_action(event)
             end
           end
@@ -131,18 +137,31 @@ module Hijack
           MethodProfiler.clear
           Thread.current[Logster::Logger::LOGSTER_ENV] = nil
 
-          io.close if io rescue nil
+          begin
+            io.close if io
+          rescue StandardError
+            nil
+          end
 
           if request_tracker
-            status = response.status rescue 500
-            request_tracker.log_request_info(env, [status, headers || {}, []], timings)
+            status =
+              begin
+                response.status
+              rescue StandardError
+                500
+              end
+            request_tracker.log_request_info(
+              env,
+              [status, headers || {}, []],
+              timings
+            )
           end
 
           tempfiles&.each(&:close!)
         end
       end
       # not leaked out, we use 418 ... I am a teapot to denote that we are hijacked
-      render plain: "", status: 418
+      render plain: '', status: 418
     else
       blk.call
     end

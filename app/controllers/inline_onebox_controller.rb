@@ -6,7 +6,7 @@ class InlineOneboxController < ApplicationController
   def show
     hijack do
       oneboxes = InlineOneboxer.new(params[:urls] || []).process
-      render json: { "inline-oneboxes" => oneboxes }
+      render json: { 'inline-oneboxes' => oneboxes }
     end
   end
 end

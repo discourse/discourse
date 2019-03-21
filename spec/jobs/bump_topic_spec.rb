@@ -4,7 +4,7 @@ describe Jobs::BumpTopic do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }
 
-  it "can bump a topic" do
+  it 'can bump a topic' do
     topic = Fabricate(:topic_timer, user: admin).topic
     create_post(topic: topic)
 
@@ -17,7 +17,7 @@ describe Jobs::BumpTopic do
     expect(topic.reload.public_topic_timer).to eq(nil)
   end
 
-  it "respects the guardian" do
+  it 'respects the guardian' do
     topic = Fabricate(:topic_timer, user: user).topic
     create_post(topic: topic)
     topic.category = Fabricate(:private_category, group: Fabricate(:group))
@@ -31,5 +31,4 @@ describe Jobs::BumpTopic do
 
     expect(topic.reload.public_topic_timer).to eq(nil)
   end
-
 end

@@ -1,4 +1,6 @@
-class AddAutoTrackAfterSecondsAndBanningAndDobToUser < ActiveRecord::Migration[4.2]
+class AddAutoTrackAfterSecondsAndBanningAndDobToUser < ActiveRecord::Migration[
+  4.2
+]
   def change
     add_column :users, :banned_at, :datetime
     add_column :users, :banned_till, :datetime
@@ -8,7 +10,10 @@ class AddAutoTrackAfterSecondsAndBanningAndDobToUser < ActiveRecord::Migration[4
 
     remove_column :users, :auto_track_topics
 
-    add_column :topic_users, :total_msecs_viewed, :integer, null: false, default: 0
+    add_column :topic_users,
+               :total_msecs_viewed,
+               :integer,
+               null: false, default: 0
 
     execute 'update topic_users set total_msecs_viewed =
        (

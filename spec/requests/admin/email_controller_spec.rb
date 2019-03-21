@@ -4,26 +4,20 @@ describe Admin::EmailController do
   let(:admin) { Fabricate(:admin) }
   let(:email_log) { Fabricate(:email_log) }
 
-  before do
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
-  it "is a subclass of AdminController" do
+  it 'is a subclass of AdminController' do
     expect(Admin::EmailController < Admin::AdminController).to eq(true)
   end
 
   describe '#index' do
     before do
-      Admin::EmailController.any_instance
-        .expects(:action_mailer_settings)
-        .returns(
-          username: 'username',
-          password: 'secret'
-        )
+      Admin::EmailController.any_instance.expects(:action_mailer_settings)
+        .returns(username: 'username', password: 'secret')
     end
 
     it 'does not include the password in the response' do
-      get "/admin/email.json"
+      get '/admin/email.json'
       mail_settings = JSON.parse(response.body)['settings']
 
       expect(
@@ -40,48 +34,45 @@ describe Admin::EmailController do
       Fabricate(:post_reply_key, post: post, user: email_log.user)
     end
 
-    it "should return the right response" do
+    it 'should return the right response' do
       email_log
-      get "/admin/email/sent.json"
+      get '/admin/email/sent.json'
 
       expect(response.status).to eq(200)
       log = JSON.parse(response.body).first
-      expect(log["id"]).to eq(email_log.id)
-      expect(log["reply_key"]).to eq(nil)
+      expect(log['id']).to eq(email_log.id)
+      expect(log['reply_key']).to eq(nil)
 
       post_reply_key
 
-      get "/admin/email/sent.json"
+      get '/admin/email/sent.json'
 
       expect(response.status).to eq(200)
       log = JSON.parse(response.body).first
-      expect(log["id"]).to eq(email_log.id)
-      expect(log["reply_key"]).to eq(post_reply_key.reply_key)
+      expect(log['id']).to eq(email_log.id)
+      expect(log['reply_key']).to eq(post_reply_key.reply_key)
     end
 
     it 'should be able to filter by reply key' do
       email_log_2 = Fabricate(:email_log, post: post)
 
-      post_reply_key_2 = Fabricate(:post_reply_key,
-        post: post,
-        user: email_log_2.user,
-        reply_key: "2d447423-c625-4fb9-8717-ff04ac60eee8"
-      )
+      post_reply_key_2 =
+        Fabricate(
+          :post_reply_key,
+          post: post,
+          user: email_log_2.user,
+          reply_key: '2d447423-c625-4fb9-8717-ff04ac60eee8'
+        )
 
-      [
-        "17ff04",
-        "2d447423c6254fb98717ff04ac60eee8"
-      ].each do |reply_key|
-        get "/admin/email/sent.json", params: {
-          reply_key: reply_key
-        }
+      %w[17ff04 2d447423c6254fb98717ff04ac60eee8].each do |reply_key|
+        get '/admin/email/sent.json', params: { reply_key: reply_key }
 
         expect(response.status).to eq(200)
 
         logs = JSON.parse(response.body)
 
         expect(logs.size).to eq(1)
-        expect(logs.first["reply_key"]).to eq(post_reply_key_2.reply_key)
+        expect(logs.first['reply_key']).to eq(post_reply_key_2.reply_key)
       end
     end
   end
@@ -91,45 +82,46 @@ describe Admin::EmailController do
     let!(:log1) { Fabricate(:skipped_email_log, user: user) }
     let!(:log2) { Fabricate(:skipped_email_log) }
 
-    it "succeeds" do
-      get "/admin/email/skipped.json"
+    it 'succeeds' do
+      get '/admin/email/skipped.json'
 
       expect(response.status).to eq(200)
 
       logs = JSON.parse(response.body)
 
-      expect(logs.first["id"]).to eq(log2.id)
-      expect(logs.last["id"]).to eq(log1.id)
+      expect(logs.first['id']).to eq(log2.id)
+      expect(logs.last['id']).to eq(log1.id)
     end
 
     describe 'when filtered by username' do
       it 'should return the right response' do
-        get "/admin/email/skipped.json", params: {
-          user: user.username
-        }
+        get '/admin/email/skipped.json', params: { user: user.username }
 
         expect(response.status).to eq(200)
 
         logs = JSON.parse(response.body)
 
         expect(logs.count).to eq(1)
-        expect(logs.first["id"]).to eq(log1.id)
+        expect(logs.first['id']).to eq(log1.id)
       end
     end
   end
 
   describe '#test' do
     it 'raises an error without the email parameter' do
-      post "/admin/email/test.json"
+      post '/admin/email/test.json'
       expect(response.status).to eq(400)
     end
 
     context 'with an email address' do
       it 'enqueues a test email job' do
-        post "/admin/email/test.json", params: { email_address: 'eviltrout@test.domain' }
+        post '/admin/email/test.json',
+             params: { email_address: 'eviltrout@test.domain' }
 
         expect(response.status).to eq(200)
-        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include('eviltrout@test.domain')
+        expect(ActionMailer::Base.deliveries.map(&:to).flatten).to include(
+              'eviltrout@test.domain'
+            )
       end
     end
 
@@ -140,82 +132,95 @@ describe Admin::EmailController do
       it 'does not sends mail to anyone when setting is "yes"' do
         SiteSetting.disable_emails = 'yes'
 
-        post "/admin/email/test.json", params: { email_address: admin.email }
+        post '/admin/email/test.json', params: { email_address: admin.email }
 
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled"))
+        expect(incoming['sent_test_email_message']).to eq(
+              I18n.t('admin.email.sent_test_disabled')
+            )
       end
 
       it 'sends mail to everyone when setting is "non-staff"' do
         SiteSetting.disable_emails = 'non-staff'
 
-        post "/admin/email/test.json", params: { email_address: admin.email }
+        post '/admin/email/test.json', params: { email_address: admin.email }
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+        expect(incoming['sent_test_email_message']).to eq(
+              I18n.t('admin.email.sent_test')
+            )
 
-        post "/admin/email/test.json", params: { email_address: eviltrout.email }
+        post '/admin/email/test.json',
+             params: { email_address: eviltrout.email }
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+        expect(incoming['sent_test_email_message']).to eq(
+              I18n.t('admin.email.sent_test')
+            )
       end
 
       it 'sends mail to everyone when setting is "no"' do
         SiteSetting.disable_emails = 'no'
 
-        post "/admin/email/test.json", params: { email_address: eviltrout.email }
+        post '/admin/email/test.json',
+             params: { email_address: eviltrout.email }
 
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+        expect(incoming['sent_test_email_message']).to eq(
+              I18n.t('admin.email.sent_test')
+            )
       end
     end
   end
 
   describe '#preview_digest' do
     it 'raises an error without the last_seen_at parameter' do
-      get "/admin/email/preview-digest.json"
+      get '/admin/email/preview-digest.json'
       expect(response.status).to eq(400)
     end
 
-    it "returns the right response when username is invalid" do
-      get "/admin/email/preview-digest.json", params: {
-        last_seen_at: 1.week.ago, username: "somerandomeusername"
-      }
+    it 'returns the right response when username is invalid' do
+      get '/admin/email/preview-digest.json',
+          params: { last_seen_at: 1.week.ago, username: 'somerandomeusername' }
 
       expect(response.status).to eq(400)
     end
 
-    it "previews the digest" do
-      get "/admin/email/preview-digest.json", params: {
-        last_seen_at: 1.week.ago, username: admin.username
-      }
+    it 'previews the digest' do
+      get '/admin/email/preview-digest.json',
+          params: { last_seen_at: 1.week.ago, username: admin.username }
       expect(response.status).to eq(200)
     end
   end
 
   describe '#handle_mail' do
     it 'should enqueue the right job' do
-      expect { post "/admin/email/handle_mail.json", params: { email: email('cc') } }
-        .to change { Jobs::ProcessEmail.jobs.count }.by(1)
+      expect do
+        post '/admin/email/handle_mail.json', params: { email: email('cc') }
+      end.to change { Jobs::ProcessEmail.jobs.count }.by(1)
       expect(response.status).to eq(200)
     end
   end
 
   describe '#rejected' do
     it 'should provide a string for a blank error' do
-      Fabricate(:incoming_email, error: "")
-      get "/admin/email/rejected.json"
+      Fabricate(:incoming_email, error: '')
+      get '/admin/email/rejected.json'
       expect(response.status).to eq(200)
       rejected = JSON.parse(response.body)
-      expect(rejected.first['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+      expect(rejected.first['error']).to eq(
+            I18n.t('emails.incoming.unrecognized_error')
+          )
     end
   end
 
   describe '#incoming' do
     it 'should provide a string for a blank error' do
-      incoming_email = Fabricate(:incoming_email, error: "")
+      incoming_email = Fabricate(:incoming_email, error: '')
       get "/admin/email/incoming/#{incoming_email.id}.json"
       expect(response.status).to eq(200)
       incoming = JSON.parse(response.body)
-      expect(incoming['error']).to eq(I18n.t("emails.incoming.unrecognized_error"))
+      expect(incoming['error']).to eq(
+            I18n.t('emails.incoming.unrecognized_error')
+          )
     end
   end
 
@@ -234,11 +239,11 @@ describe Admin::EmailController do
 
         This part should be elided.
       EMAIL
-      post "/admin/email/advanced-test.json", params: { email: email }
+      post '/admin/email/advanced-test.json', params: { email: email }
       expect(response.status).to eq(200)
       incoming = JSON.parse(response.body)
       expect(incoming['format']).to eq(1)
-      expect(incoming['text']).to eq("Hello, this is a test!")
+      expect(incoming['text']).to eq('Hello, this is a test!')
       expect(incoming['elided']).to eq("---\n\nThis part should be elided.")
     end
   end

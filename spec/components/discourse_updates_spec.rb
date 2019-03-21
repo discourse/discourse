@@ -2,7 +2,6 @@ require 'rails_helper'
 require_dependency 'discourse_updates'
 
 describe DiscourseUpdates do
-
   def stub_data(latest, missing, critical, updated_at)
     DiscourseUpdates.stubs(:latest_version).returns(latest)
     DiscourseUpdates.stubs(:missing_versions_count).returns(missing)
@@ -10,15 +9,15 @@ describe DiscourseUpdates do
     DiscourseUpdates.stubs(:updated_at).returns(updated_at)
   end
 
-  before do
-    Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
-  end
+  before { Jobs::VersionCheck.any_instance.stubs(:execute).returns(true) }
 
   subject { DiscourseUpdates.check_version }
 
   context 'version check was done at the current installed version' do
     before do
-      DiscourseUpdates.stubs(:last_installed_version).returns(Discourse::VERSION::STRING)
+      DiscourseUpdates.stubs(:last_installed_version).returns(
+        Discourse::VERSION::STRING
+      )
     end
 
     context 'a good version check request happened recently' do
@@ -81,7 +80,7 @@ describe DiscourseUpdates do
     # These cases should never happen anymore, but keep the specs to be sure
     # they're handled in a sane way.
     context 'old version check data' do
-      shared_examples "queue version check and report that version is ok" do
+      shared_examples 'queue version check and report that version is ok' do
         it 'queues a version check' do
           Jobs.expects(:enqueue).with(:version_check, anything)
           subject
@@ -98,22 +97,20 @@ describe DiscourseUpdates do
 
       context 'installed is latest' do
         before { stub_data(Discourse::VERSION::STRING, 1, false, 8.hours.ago) }
-        include_examples "queue version check and report that version is ok"
+        include_examples 'queue version check and report that version is ok'
       end
 
       context 'installed does not match latest version, but missing_versions_count is 0' do
         before { stub_data('0.10.10.123', 0, false, 8.hours.ago) }
-        include_examples "queue version check and report that version is ok"
+        include_examples 'queue version check and report that version is ok'
       end
     end
   end
 
   context 'version check was done at a different installed version' do
-    before do
-      DiscourseUpdates.stubs(:last_installed_version).returns('0.9.1')
-    end
+    before { DiscourseUpdates.stubs(:last_installed_version).returns('0.9.1') }
 
-    shared_examples "when last_installed_version is old" do
+    shared_examples 'when last_installed_version is old' do
       it 'queues a version check' do
         Jobs.expects(:enqueue).with(:version_check, anything)
         subject
@@ -130,12 +127,12 @@ describe DiscourseUpdates do
 
     context 'missing_versions_count is 0' do
       before { stub_data('0.9.7', 0, false, 8.hours.ago) }
-      include_examples "when last_installed_version is old"
+      include_examples 'when last_installed_version is old'
     end
 
     context 'missing_versions_count is not 0' do
       before { stub_data('0.9.7', 1, false, 8.hours.ago) }
-      include_examples "when last_installed_version is old"
+      include_examples 'when last_installed_version is old'
     end
   end
 end

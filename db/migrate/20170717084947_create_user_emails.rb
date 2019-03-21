@@ -10,9 +10,9 @@ class CreateUserEmails < ActiveRecord::Migration[4.2]
     end
 
     add_index :user_emails, :user_id
-    add_index :user_emails, [:user_id, :primary], unique: true
+    add_index :user_emails, %i[user_id primary], unique: true
 
-    execute "CREATE UNIQUE INDEX index_user_emails_on_email ON user_emails (lower(email));"
+    execute 'CREATE UNIQUE INDEX index_user_emails_on_email ON user_emails (lower(email));'
 
     execute <<~SQL
     INSERT INTO user_emails (

@@ -1,8 +1,11 @@
 require_dependency 'letter_avatar'
 
 class UserAvatarsController < ApplicationController
-
-  skip_before_action :preload_json, :redirect_to_login_if_required, :check_xhr, :verify_authenticity_token, only: [:show, :show_letter, :show_proxy_letter]
+  skip_before_action :preload_json,
+                     :redirect_to_login_if_required,
+                     :check_xhr,
+                     :verify_authenticity_token,
+                     only: %i[show show_letter show_proxy_letter]
 
   def refresh_gravatar
     user = User.find_by(username_lower: params[:username].downcase)
@@ -13,17 +16,19 @@ class UserAvatarsController < ApplicationController
         user.create_user_avatar(user_id: user.id) unless user.user_avatar
         user.user_avatar.update_gravatar!
 
-        gravatar = if user.user_avatar.gravatar_upload_id
-          {
-            gravatar_upload_id: user.user_avatar.gravatar_upload_id,
-            gravatar_avatar_template: User.avatar_template(user.username, user.user_avatar.gravatar_upload_id)
-          }
-        else
-          {
-            gravatar_upload_id: nil,
-            gravatar_avatar_template: nil
-          }
-        end
+        gravatar =
+          if user.user_avatar.gravatar_upload_id
+            {
+              gravatar_upload_id: user.user_avatar.gravatar_upload_id,
+              gravatar_avatar_template:
+                User.avatar_template(
+                  user.username,
+                  user.user_avatar.gravatar_upload_id
+                )
+            }
+          else
+            { gravatar_upload_id: nil, gravatar_avatar_template: nil }
+          end
 
         render json: gravatar
       end
@@ -35,7 +40,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ /^\/letter(_avatar)?_proxy/
+    if SiteSetting.external_system_avatars_url !~ %r{^\/letter(_avatar)?_proxy}
       raise Discourse::NotFound
     end
 
@@ -44,7 +49,12 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
     hijack do
-      proxy_avatar("https://avatars.discourse.org/#{params[:version]}/letter/#{params[:letter]}/#{params[:color]}/#{params[:size]}.png", Time.new('1990-01-01'))
+      proxy_avatar(
+        "https://avatars.discourse.org/#{params[:version]}/letter/#{params[
+          :letter
+        ]}/#{params[:color]}/#{params[:size]}.png",
+        Time.new('1990-01-01')
+      )
     end
   end
 
@@ -62,8 +72,8 @@ class UserAvatarsController < ApplicationController
     hijack do
       image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
-      response.headers["Last-Modified"] = File.ctime(image).httpdate
-      response.headers["Content-Length"] = File.size(image).to_s
+      response.headers['Last-Modified'] = File.ctime(image).httpdate
+      response.headers['Content-Length'] = File.size(image).to_s
       immutable_for(1.year)
       send_file image, disposition: nil
     end
@@ -74,27 +84,24 @@ class UserAvatarsController < ApplicationController
 
     # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      hijack do
-        show_in_site(params[:hostname])
-      end
+      hijack { show_in_site(params[:hostname]) }
     end
   end
 
   protected
 
   def show_in_site(hostname)
-
     username = params[:username].to_s
-    return render_blank unless user = User.find_by(username_lower: username.downcase)
+    unless user = User.find_by(username_lower: username.downcase)
+      return render_blank
+    end
 
-    upload_id, version = params[:version].split("_")
+    upload_id, version = params[:version].split('_')
 
     version = (version || OptimizedImage::VERSION).to_i
 
     # old versions simply get new avatar
-    if version > OptimizedImage::VERSION
-      return render_blank
-    end
+    return render_blank if version > OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
     return render_blank unless upload_id > 0
@@ -103,29 +110,49 @@ class UserAvatarsController < ApplicationController
     return render_blank if size < 8 || size > 1000
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
-      closest = Discourse.avatar_sizes.to_a.min { |a, b| (size - a).abs <=> (size - b).abs }
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, upload_id, closest)
+      closest =
+        Discourse.avatar_sizes.to_a.min do |a, b|
+          (size - a).abs <=> (size - b).abs
+        end
+      avatar_url =
+        UserAvatar.local_avatar_url(
+          hostname,
+          user.username_lower,
+          upload_id,
+          closest
+        )
       return redirect_to cdn_path(avatar_url)
     end
 
-    upload = Upload.find_by(id: upload_id) if user&.user_avatar&.contains_upload?(upload_id)
+    if user&.user_avatar&.contains_upload?(upload_id)
+      upload = Upload.find_by(id: upload_id)
+    end
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == upload_id
 
     if user.uploaded_avatar && !upload
-      avatar_url = UserAvatar.local_avatar_url(hostname, user.username_lower, user.uploaded_avatar_id, size)
+      avatar_url =
+        UserAvatar.local_avatar_url(
+          hostname,
+          user.username_lower,
+          user.uploaded_avatar_id,
+          size
+        )
       return redirect_to cdn_path(avatar_url)
     elsif upload && optimized = get_optimized_image(upload, size)
       if optimized.local?
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exists?(optimized_path)
       else
-        return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
+        return proxy_avatar(
+          Discourse.store.cdn_url(optimized.url),
+          upload.created_at
+        )
       end
     end
 
     if image
-      response.headers["Last-Modified"] = File.ctime(image).httpdate
-      response.headers["Content-Length"] = File.size(image).to_s
+      response.headers['Last-Modified'] = File.ctime(image).httpdate
+      response.headers['Content-Length'] = File.size(image).to_s
       immutable_for 1.year
       send_file image, disposition: nil
     else
@@ -135,11 +162,10 @@ class UserAvatarsController < ApplicationController
     render_blank
   end
 
-  PROXY_PATH = Rails.root + "tmp/avatar_proxy"
+  PROXY_PATH = Rails.root + 'tmp/avatar_proxy'
   def proxy_avatar(url, last_modified)
-
-    if url[0..1] == "//"
-      url = (SiteSetting.force_https ? "https:" : "http:") + url
+    if url[0..1] == '//'
+      url = (SiteSetting.force_https ? 'https:' : 'http:') + url
     end
 
     sha = Digest::SHA1.hexdigest(url)
@@ -148,28 +174,29 @@ class UserAvatarsController < ApplicationController
 
     unless File.exist? path
       FileUtils.mkdir_p PROXY_PATH
-      tmp = FileHelper.download(
-        url,
-        max_file_size: 1.megabyte,
-        tmp_file_name: filename,
-        follow_redirect: true,
-        read_timeout: 10
-      )
+      tmp =
+        FileHelper.download(
+          url,
+          max_file_size: 1.megabyte,
+          tmp_file_name: filename,
+          follow_redirect: true,
+          read_timeout: 10
+        )
       FileUtils.mv tmp.path, path
     end
 
-    response.headers["Last-Modified"] = last_modified.httpdate
-    response.headers["Content-Length"] = File.size(path).to_s
+    response.headers['Last-Modified'] = last_modified.httpdate
+    response.headers['Content-Length'] = File.size(path).to_s
     immutable_for(1.year)
     send_file path, disposition: nil
   end
 
   # this protects us from a DoS
   def render_blank
-    path = Rails.root + "public/images/avatar.png"
+    path = Rails.root + 'public/images/avatar.png'
     expires_in 10.minutes, public: true
-    response.headers["Last-Modified"] = Time.new('1990-01-01').httpdate
-    response.headers["Content-Length"] = File.size(path).to_s
+    response.headers['Last-Modified'] = Time.new('1990-01-01').httpdate
+    response.headers['Content-Length'] = File.size(path).to_s
     send_file path, disposition: nil
   end
 
@@ -179,10 +206,13 @@ class UserAvatarsController < ApplicationController
 
   def get_optimized_image(upload, size)
     return if !upload
-    return upload if upload.extension == "svg"
+    return upload if upload.extension == 'svg'
 
-    upload.get_optimized_image(size, size, allow_animation: SiteSetting.allow_animated_avatars)
+    upload.get_optimized_image(
+      size,
+      size,
+      allow_animation: SiteSetting.allow_animated_avatars
+    )
     # TODO decide if we want to detach here
   end
-
 end

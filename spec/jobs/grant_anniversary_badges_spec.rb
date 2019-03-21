@@ -2,7 +2,6 @@ require 'rails_helper'
 require_dependency 'jobs/scheduled/grant_anniversary_badges'
 
 describe Jobs::GrantAnniversaryBadges do
-
   let(:granter) { described_class.new }
 
   it "doesn't award to a user who is less than a year old" do
@@ -24,7 +23,8 @@ describe Jobs::GrantAnniversaryBadges do
   end
 
   it "doesn't award to a silenced user" do
-    user = Fabricate(:user, created_at: 400.days.ago, silenced_till: 1.year.from_now)
+    user =
+      Fabricate(:user, created_at: 400.days.ago, silenced_till: 1.year.from_now)
     Fabricate(:post, user: user, created_at: 1.week.ago)
     granter.execute({})
 
@@ -78,7 +78,7 @@ describe Jobs::GrantAnniversaryBadges do
     expect(badge.count).to eq(0)
   end
 
-  it "awards the badge to a user with a post active for a year" do
+  it 'awards the badge to a user with a post active for a year' do
     user = Fabricate(:user, created_at: 400.days.ago)
     Fabricate(:post, user: user, created_at: 1.week.ago)
 
@@ -87,7 +87,7 @@ describe Jobs::GrantAnniversaryBadges do
     expect(badge.count).to eq(1)
   end
 
-  context "repeated grants" do
+  context 'repeated grants' do
     it "won't award twice in the same year" do
       user = Fabricate(:user, created_at: 400.days.ago)
       Fabricate(:post, user: user, created_at: 1.week.ago)
@@ -98,13 +98,11 @@ describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(1)
     end
 
-    it "will award again if a year has passed" do
+    it 'will award again if a year has passed' do
       user = Fabricate(:user, created_at: 800.days.ago)
       Fabricate(:post, user: user, created_at: 450.days.ago)
 
-      freeze_time(400.days.ago) do
-        granter.execute({})
-      end
+      freeze_time(400.days.ago) { granter.execute({}) }
 
       badge = user.user_badges.where(badge_id: Badge::Anniversary)
       expect(badge.count).to eq(1)
@@ -115,7 +113,7 @@ describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(2)
     end
 
-    it "supports date ranges" do
+    it 'supports date ranges' do
       user = Fabricate(:user, created_at: 3.years.ago)
       Fabricate(:post, user: user, created_at: 750.days.ago)
 
@@ -133,5 +131,4 @@ describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(2)
     end
   end
-
 end

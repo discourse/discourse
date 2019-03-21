@@ -1,7 +1,6 @@
 require_dependency 'configurable_urls'
 
 class PostActionTypeSerializer < ApplicationSerializer
-
   attributes(
     :id,
     :name_key,

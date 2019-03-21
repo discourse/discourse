@@ -1,5 +1,4 @@
 class UserUpdater
-
   CATEGORY_IDS = {
     watched_first_post_category_ids: :watching_first_post,
     watched_category_ids: :watching,
@@ -14,30 +13,30 @@ class UserUpdater
     muted_tags: :muted
   }
 
-  OPTION_ATTR = [
-    :mailing_list_mode,
-    :mailing_list_mode_frequency,
-    :email_digests,
-    :email_level,
-    :email_messages_level,
-    :external_links_in_new_tab,
-    :enable_quoting,
-    :dynamic_favicon,
-    :disable_jump_reply,
-    :automatically_unpin_topics,
-    :digest_after_minutes,
-    :new_topic_duration_minutes,
-    :auto_track_topics_after_msecs,
-    :notification_level_when_replying,
-    :email_previous_replies,
-    :email_in_reply_to,
-    :like_notification_frequency,
-    :include_tl0_in_digests,
-    :theme_ids,
-    :allow_private_messages,
-    :homepage_id,
-    :hide_profile_and_presence,
-    :text_size
+  OPTION_ATTR = %i[
+    mailing_list_mode
+    mailing_list_mode_frequency
+    email_digests
+    email_level
+    email_messages_level
+    external_links_in_new_tab
+    enable_quoting
+    dynamic_favicon
+    disable_jump_reply
+    automatically_unpin_topics
+    digest_after_minutes
+    new_topic_duration_minutes
+    auto_track_topics_after_msecs
+    notification_level_when_replying
+    email_previous_replies
+    email_in_reply_to
+    like_notification_frequency
+    include_tl0_in_digests
+    theme_ids
+    allow_private_messages
+    homepage_id
+    hide_profile_and_presence
+    text_size
   ]
 
   def initialize(actor, user)
@@ -48,31 +47,34 @@ class UserUpdater
 
   def update(attributes = {})
     user_profile = user.user_profile
-    user_profile.location = attributes.fetch(:location) { user_profile.location }
-    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
-    user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
+    user_profile.location =
+      attributes.fetch(:location) { user_profile.location }
+    if attributes[:dismissed_banner_key].present?
+      user_profile.dismissed_banner_key = attributes[:dismissed_banner_key]
+    end
+    user_profile.website =
+      format_url(attributes.fetch(:website) { user_profile.website })
     unless SiteSetting.enable_sso && SiteSetting.sso_overrides_bio
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
-    user_profile.profile_background = attributes.fetch(:profile_background) { user_profile.profile_background }
-    user_profile.card_background = attributes.fetch(:card_background) { user_profile.card_background }
+    user_profile.profile_background =
+      attributes.fetch(:profile_background) { user_profile.profile_background }
+    user_profile.card_background =
+      attributes.fetch(:card_background) { user_profile.card_background }
 
-    old_user_name = user.name.present? ? user.name : ""
+    old_user_name = user.name.present? ? user.name : ''
     user.name = attributes.fetch(:name) { user.name }
 
     user.locale = attributes.fetch(:locale) { user.locale }
     user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
-    if attributes[:title] &&
-      attributes[:title] != user.title &&
-      guardian.can_grant_title?(user, attributes[:title])
+    if attributes[:title] && attributes[:title] != user.title &&
+       guardian.can_grant_title?(user, attributes[:title])
       user.title = attributes[:title]
     end
 
     CATEGORY_IDS.each do |attribute, level|
-      if ids = attributes[attribute]
-        CategoryUser.batch_set(user, level, ids)
-      end
+      CategoryUser.batch_set(user, level, ids) if ids = attributes[attribute]
     end
 
     TAG_NAMES.each do |attribute, level|
@@ -89,14 +91,18 @@ class UserUpdater
       attributes[:theme_ids].reject!(&:blank?)
       attributes[:theme_ids].map!(&:to_i)
       if user_guardian.allow_themes?(attributes[:theme_ids])
-        user.user_option.theme_key_seq += 1 if user.user_option.theme_ids != attributes[:theme_ids]
+        if user.user_option.theme_ids != attributes[:theme_ids]
+          user.user_option.theme_key_seq += 1
+        end
       else
         attributes.delete(:theme_ids)
       end
     end
 
     if attributes.key?(:text_size)
-      user.user_option.text_size_seq += 1 if user.user_option.text_size.to_s != attributes[:text_size]
+      if user.user_option.text_size.to_s != attributes[:text_size]
+        user.user_option.text_size_seq += 1
+      end
     end
 
     OPTION_ATTR.each do |attribute|
@@ -116,9 +122,7 @@ class UserUpdater
     user.user_option.email_digests = false if user.user_option.mailing_list_mode
 
     fields = attributes[:custom_fields]
-    if fields.present?
-      user.custom_fields = user.custom_fields.merge(fields)
-    end
+    user.custom_fields = user.custom_fields.merge(fields) if fields.present?
 
     saved = nil
 
@@ -132,9 +136,13 @@ class UserUpdater
       end
 
       name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && user_profile.save && user.save) &&
-         (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
+      if (
+         saved =
+           (!save_options || user.user_option.save) && user_profile.save &&
+             user.save
+       ) &&
+         (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
           old_user_name,
@@ -148,44 +156,62 @@ class UserUpdater
   end
 
   def update_muted_users(usernames)
-    usernames ||= ""
-    desired_usernames = usernames.split(",").reject { |username| user.username == username }
+    usernames ||= ''
+    desired_usernames =
+      usernames.split(',').reject { |username| user.username == username }
     desired_ids = User.where(username: desired_usernames).pluck(:id)
     if desired_ids.empty?
       MutedUser.where(user_id: user.id).destroy_all
     else
-      MutedUser.where('user_id = ? AND muted_user_id not in (?)', user.id, desired_ids).destroy_all
+      MutedUser.where(
+        'user_id = ? AND muted_user_id not in (?)',
+        user.id,
+        desired_ids
+      )
+        .destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
-      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+      sql = <<~SQL
         INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
         WHERE id in (:desired_ids)
         ON CONFLICT DO NOTHING
       SQL
+      DB.exec(sql, now: Time.now, user_id: user.id, desired_ids: desired_ids)
     end
   end
 
   def update_ignored_users(usernames)
     return unless guardian.can_ignore_users?
 
-    usernames ||= ""
-    desired_usernames = usernames.split(",").reject { |username| user.username == username }
-    desired_ids = User.where(username: desired_usernames).where(admin: false, moderator: false).pluck(:id)
+    usernames ||= ''
+    desired_usernames =
+      usernames.split(',').reject { |username| user.username == username }
+    desired_ids =
+      User.where(username: desired_usernames).where(
+        admin: false, moderator: false
+      )
+        .pluck(:id)
     if desired_ids.empty?
       IgnoredUser.where(user_id: user.id).destroy_all
     else
-      IgnoredUser.where('user_id = ? AND ignored_user_id not in (?)', user.id, desired_ids).destroy_all
+      IgnoredUser.where(
+        'user_id = ? AND ignored_user_id not in (?)',
+        user.id,
+        desired_ids
+      )
+        .destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
-      DB.exec(<<~SQL, now: Time.now, user_id: user.id, desired_ids: desired_ids)
+      sql = <<~SQL
         INSERT into ignored_users(user_id, ignored_user_id, created_at, updated_at)
         SELECT :user_id, id, :now, :now
         FROM users
         WHERE id in (:desired_ids)
         ON CONFLICT DO NOTHING
       SQL
+      DB.exec(sql, now: Time.now, user_id: user.id, desired_ids: desired_ids)
     end
   end
 

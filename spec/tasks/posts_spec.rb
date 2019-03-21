@@ -2,8 +2,10 @@ require 'rails_helper'
 require 'highline/import'
 require 'highline/simulate'
 
-RSpec.describe "Post rake tasks" do
-  let!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
+RSpec.describe 'Post rake tasks' do
+  let!(:post) do
+    Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog')
+  end
   let!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
 
   before do
@@ -15,7 +17,7 @@ RSpec.describe "Post rake tasks" do
   describe 'remap' do
     it 'should remap posts' do
       HighLine::Simulate.with('y') do
-        Rake::Task['posts:remap'].invoke("brown", "red")
+        Rake::Task['posts:remap'].invoke('brown', 'red')
       end
 
       post.reload
@@ -51,7 +53,9 @@ RSpec.describe "Post rake tasks" do
         Rake::Task['posts:rebake_match'].invoke('brown')
       end
 
-      expect(post.reload.cooked).to eq('<p>The quick brown fox jumps over the lazy dog</p>')
+      expect(post.reload.cooked).to eq(
+            '<p>The quick brown fox jumps over the lazy dog</p>'
+          )
     end
   end
 end

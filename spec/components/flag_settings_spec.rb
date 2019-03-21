@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'flag_settings'
 
 RSpec.describe FlagSettings do
-
   let(:settings) { FlagSettings.new }
 
   describe 'add' do

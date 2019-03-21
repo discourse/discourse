@@ -1,26 +1,33 @@
 class ThemesController < ::ApplicationController
   def assets
-    theme_ids = params[:ids].to_s.split("-").map(&:to_i)
+    theme_ids = params[:ids].to_s.split('-').map(&:to_i)
 
-    if params[:ids] == "default"
+    if params[:ids] == 'default'
       theme_ids = nil
     else
       raise Discourse::NotFound unless guardian.allow_themes?(theme_ids)
     end
 
-    targets = view_context.mobile_view? ? [:mobile, :mobile_theme] : [:desktop, :desktop_theme]
+    targets =
+      if view_context.mobile_view?
+        %i[mobile mobile_theme]
+      else
+        %i[desktop desktop_theme]
+      end
     targets << :admin if guardian.is_staff?
 
-    object = targets.map do |target|
-      Stylesheet::Manager.stylesheet_data(target, theme_ids).map do |hash|
-        next hash unless Rails.env.development?
+    object =
+      targets.map do |target|
+        Stylesheet::Manager.stylesheet_data(target, theme_ids).map do |hash|
+          next hash unless Rails.env.development?
 
-        dup_hash = hash.dup
-        dup_hash[:new_href] << (dup_hash[:new_href].include?("?") ? "&" : "?")
-        dup_hash[:new_href] << SecureRandom.hex
-        dup_hash
+          dup_hash = hash.dup
+          dup_hash[:new_href] << (dup_hash[:new_href].include?('?') ? '&' : '?')
+          dup_hash[:new_href] << SecureRandom.hex
+          dup_hash
+        end
       end
-    end.flatten
+        .flatten
 
     render json: object.as_json
   end

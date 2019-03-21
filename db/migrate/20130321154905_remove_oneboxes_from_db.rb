@@ -4,6 +4,5 @@ class RemoveOneboxesFromDb < ActiveRecord::Migration[4.2]
     drop_table :onebox_renders
   end
 
-  def down
-  end
+  def down; end
 end

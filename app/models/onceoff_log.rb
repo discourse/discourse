@@ -1,5 +1,4 @@
-class OnceoffLog < ActiveRecord::Base
-end
+class OnceoffLog < ActiveRecord::Base; end
 
 # == Schema Information
 #

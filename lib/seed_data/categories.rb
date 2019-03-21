@@ -35,7 +35,8 @@ module SeedData
             name: category.name,
             selected: unchanged?(category)
           }
-        end.compact
+        end
+          .compact
       end
     end
 
@@ -87,25 +88,37 @@ module SeedData
       ]
 
       if site_setting_names
-        categories.select! { |c| site_setting_names.include?(c[:site_setting_name]) }
+        categories.select! do |c|
+          site_setting_names.include?(c[:site_setting_name])
+        end
       end
 
       categories
     end
 
-    def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
-                        permissions:, force_permissions:, force_existence: false)
+    def create_category(
+      site_setting_name:,
+      name:,
+      description:,
+      position:,
+      color:,
+      text_color:,
+      permissions:,
+      force_permissions:,
+      force_existence: false
+    )
       category_id = SiteSetting.send(site_setting_name)
 
       if should_create_category?(category_id, force_existence)
-        category = Category.new(
-          name: unused_category_name(category_id, name),
-          description: description,
-          user_id: Discourse::SYSTEM_USER_ID,
-          position: position,
-          color: color,
-          text_color: text_color
-        )
+        category =
+          Category.new(
+            name: unused_category_name(category_id, name),
+            description: description,
+            user_id: Discourse::SYSTEM_USER_ID,
+            position: position,
+            color: color,
+            text_color: text_color
+          )
 
         category.skip_category_definition = true if description.blank?
         category.set_permissions(permissions)
@@ -113,7 +126,8 @@ module SeedData
 
         SiteSetting.send("#{site_setting_name}=", category.id)
       elsif category = Category.find_by(id: category_id)
-        if description.present? && (category.topic_id.blank? || !Topic.exists?(category.topic_id))
+        if description.present? &&
+           (category.topic_id.blank? || !Topic.exists?(category.topic_id))
           category.description = description
           category.create_category_definition
         end
@@ -134,11 +148,12 @@ module SeedData
     end
 
     def unused_category_name(category_id, name)
-      category_exists = Category.where(
-        'id <> :id AND LOWER(name) = :name',
-        id: category_id,
-        name: name.downcase
-      ).exists?
+      category_exists =
+        Category.where(
+          'id <> :id AND LOWER(name) = :name',
+          id: category_id, name: name.downcase
+        )
+          .exists?
 
       category_exists ? "#{name}#{SecureRandom.hex}" : name
     end
@@ -153,8 +168,15 @@ module SeedData
       category.save!
 
       if description.present? && description_post = category&.topic&.first_post
-        changes = { title: I18n.t("category.topic_prefix", category: name), raw: description }
-        description_post.revise(Discourse.system_user, changes, skip_validations: true)
+        changes = {
+          title: I18n.t('category.topic_prefix', category: name),
+          raw: description
+        }
+        description_post.revise(
+          Discourse.system_user,
+          changes,
+          skip_validations: true
+        )
       end
     end
 

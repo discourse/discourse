@@ -1,7 +1,6 @@
 require_dependency 'html_to_markdown'
 
 class ComposerController < ApplicationController
-
   requires_login
 
   def parse_html

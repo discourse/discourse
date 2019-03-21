@@ -1,3 +1,1 @@
-Fabricator(:tag_group) do
-  name { sequence(:name) { |i| "tag_group_#{i}" } }
-end
+Fabricator(:tag_group) { name { sequence(:name) { |i| "tag_group_#{i}" } } }

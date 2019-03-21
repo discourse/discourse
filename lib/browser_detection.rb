@@ -1,5 +1,4 @@
 module BrowserDetection
-
   def self.browser(user_agent)
     case user_agent
     when /Edge/i
@@ -58,5 +57,4 @@ module BrowserDetection
       :unknown
     end
   end
-
 end

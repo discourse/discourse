@@ -9,8 +9,7 @@ class UserActivator
     @message = nil
   end
 
-  def start
-  end
+  def start; end
 
   def finish
     @message = activator.activate
@@ -31,13 +30,16 @@ class UserActivator
 
     if !user.active?
       EmailActivator
-    elsif SiteSetting.must_approve_users? && !(invite.present? && !invite.expired? && !invite.destroyed? && invite.link_valid?)
+    elsif SiteSetting.must_approve_users? &&
+          !(
+            invite.present? && !invite.expired? && !invite.destroyed? &&
+              invite.link_valid?
+          )
       ApprovalActivator
     else
       LoginActivator
     end
   end
-
 end
 
 class ApprovalActivator < UserActivator
@@ -46,26 +48,27 @@ class ApprovalActivator < UserActivator
   end
 
   def success_message
-    I18n.t("login.wait_approval")
+    I18n.t('login.wait_approval')
   end
 end
 
 class EmailActivator < UserActivator
   def activate
     email_token = user.email_tokens.unconfirmed.active.first
-    email_token = user.email_tokens.create(email: user.email) if email_token.nil?
+    if email_token.nil?
+      email_token = user.email_tokens.create(email: user.email)
+    end
 
-    Jobs.enqueue(:critical_user_email,
-      type: :signup,
-      user_id: user.id,
-      email_token: email_token.token
+    Jobs.enqueue(
+      :critical_user_email,
+      type: :signup, user_id: user.id, email_token: email_token.token
     )
 
     success_message
   end
 
   def success_message
-    I18n.t("login.activate_email", email: Rack::Utils.escape_html(user.email))
+    I18n.t('login.activate_email', email: Rack::Utils.escape_html(user.email))
   end
 end
 
@@ -79,6 +82,6 @@ class LoginActivator < UserActivator
   end
 
   def success_message
-    I18n.t("login.active")
+    I18n.t('login.active')
   end
 end

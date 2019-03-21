@@ -1,7 +1,14 @@
 require 'base64'
 
 class ThemeFieldSerializer < ApplicationSerializer
-  attributes :name, :target, :value, :error, :type_id, :upload_id, :url, :filename
+  attributes :name,
+             :target,
+             :value,
+             :error,
+             :type_id,
+             :upload_id,
+             :url,
+             :filename
 
   def include_url?
     object.upload
@@ -45,9 +52,22 @@ class BasicThemeSerializer < ApplicationSerializer
 end
 
 class RemoteThemeSerializer < ApplicationSerializer
-  attributes :id, :remote_url, :remote_version, :local_version, :commits_behind,
-             :remote_updated_at, :updated_at, :github_diff_link, :last_error_text, :is_git?,
-             :license_url, :about_url, :authors, :theme_version, :minimum_discourse_version, :maximum_discourse_version
+  attributes :id,
+             :remote_url,
+             :remote_version,
+             :local_version,
+             :commits_behind,
+             :remote_updated_at,
+             :updated_at,
+             :github_diff_link,
+             :last_error_text,
+             :is_git?,
+             :license_url,
+             :about_url,
+             :authors,
+             :theme_version,
+             :minimum_discourse_version,
+             :maximum_discourse_version
 
   # wow, AMS has some pretty nutty logic where it tries to find the path here
   # from action dispatch, tell it not to
@@ -61,7 +81,14 @@ class RemoteThemeSerializer < ApplicationSerializer
 end
 
 class ThemeSerializer < BasicThemeSerializer
-  attributes :color_scheme, :color_scheme_id, :user_selectable, :remote_theme_id, :settings, :errors, :enabled?, :description
+  attributes :color_scheme,
+             :color_scheme_id,
+             :user_selectable,
+             :remote_theme_id,
+             :settings,
+             :errors,
+             :enabled?,
+             :description
 
   has_one :user, serializer: UserNameSerializer, embed: :object
 
@@ -69,7 +96,8 @@ class ThemeSerializer < BasicThemeSerializer
   has_many :child_themes, serializer: BasicThemeSerializer, embed: :objects
   has_many :parent_themes, serializer: BasicThemeSerializer, embed: :objects
   has_one :remote_theme, serializer: RemoteThemeSerializer, embed: :objects
-  has_many :translations, serializer: ThemeTranslationSerializer, embed: :objects
+  has_many :translations,
+           serializer: ThemeTranslationSerializer, embed: :objects
 
   def initialize(theme, options = {})
     super
@@ -85,7 +113,9 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def settings
-    object.settings.map { |setting| ThemeSettingsSerializer.new(setting, root: false) }
+    object.settings.map do |setting|
+      ThemeSettingsSerializer.new(setting, root: false)
+    end
   rescue ThemeSettingsParser::InvalidYaml => e
     @errors << e.message
     nil
@@ -104,6 +134,9 @@ class ThemeSerializer < BasicThemeSerializer
   end
 
   def description
-    object.internal_translations.find  { |t| t.key == "theme_metadata.description" } &.value
+    object.internal_translations.find do |t|
+      t.key == 'theme_metadata.description'
+    end
+      &.value
   end
 end

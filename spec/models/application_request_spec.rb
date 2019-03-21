@@ -6,9 +6,7 @@ describe ApplicationRequest do
     $redis.flushall
   end
 
-  after do
-    ApplicationRequest.clear_cache!
-  end
+  after { ApplicationRequest.clear_cache! }
 
   def inc(key, opts = nil)
     ApplicationRequest.increment!(key, opts)
@@ -19,15 +17,19 @@ describe ApplicationRequest do
     ApplicationRequest.last_flush = Time.now.utc
   end
 
-  context "readonly test" do
+  context 'readonly test' do
     it 'works even if redis is in readonly' do
       disable_date_flush!
 
       inc(:http_total)
       inc(:http_total)
 
-      $redis.without_namespace.stubs(:incr).raises(Redis::CommandError.new("READONLY"))
-      $redis.without_namespace.stubs(:eval).raises(Redis::CommandError.new("READONLY"))
+      $redis.without_namespace.stubs(:incr).raises(
+        Redis::CommandError.new('READONLY')
+      )
+      $redis.without_namespace.stubs(:eval).raises(
+        Redis::CommandError.new('READONLY')
+      )
 
       # flush will be deferred no error raised
       inc(:http_total, autoflush: 3)
@@ -108,6 +110,5 @@ describe ApplicationRequest do
     expect(ApplicationRequest.http_total.first.count).to eq(3)
     expect(ApplicationRequest.http_2xx.first.count).to eq(2)
     expect(ApplicationRequest.http_3xx.first.count).to eq(4)
-
   end
 end

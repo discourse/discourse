@@ -9,10 +9,7 @@ class Archetype
   end
 
   def attributes
-    {
-      id: @id,
-      options: @options
-    }
+    { id: @id, options: @options }
   end
 
   def self.default
@@ -41,5 +38,4 @@ class Archetype
   register 'regular'
   register 'private_message'
   register 'banner'
-
 end

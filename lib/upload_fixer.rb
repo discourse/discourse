@@ -1,6 +1,6 @@
 class UploadFixer
   def self.fix_all_extensions
-    Upload.where("uploads.extension IS NOT NULL").find_each do |upload|
+    Upload.where('uploads.extension IS NOT NULL').find_each do |upload|
       fix_extension_on_upload(upload)
     end
   end
@@ -10,11 +10,7 @@ class UploadFixer
     previous_url = upload.url.dup
 
     source =
-      if is_external
-        "https:#{previous_url}"
-      else
-        Discourse.store.path_for(upload)
-      end
+      is_external ? "https:#{previous_url}" : Discourse.store.path_for(upload)
 
     correct_extension = FastImage.type(source).to_s.downcase
     current_extension = upload.extension.to_s.downcase
@@ -24,10 +20,8 @@ class UploadFixer
       current_extension = 'jpg' if current_extension == 'jpeg'
 
       if correct_extension != current_extension
-        new_filename = change_extension(
-          upload.original_filename,
-          correct_extension
-        )
+        new_filename =
+          change_extension(upload.original_filename, correct_extension)
 
         new_url = change_extension(previous_url, correct_extension)
 
@@ -36,11 +30,7 @@ class UploadFixer
           source = Discourse.store.get_path_for_upload(upload)
           destination = change_extension(source, correct_extension)
 
-          Discourse.store.copy_file(
-            previous_url,
-            source,
-            destination
-          )
+          Discourse.store.copy_file(previous_url, source, destination)
 
           upload.update!(
             original_filename: new_filename,
@@ -62,19 +52,16 @@ class UploadFixer
 
           DbHelper.remap(previous_url, upload.url)
 
-          tombstone_path = source.sub("/uploads/", "/uploads/tombstone/")
+          tombstone_path = source.sub('/uploads/', '/uploads/tombstone/')
           FileUtils.mkdir_p(File.dirname(tombstone_path))
 
-          FileUtils.move(
-            source,
-            tombstone_path
-          )
+          FileUtils.move(source, tombstone_path)
         end
-
       end
     end
   rescue => e
-    STDERR.puts "Skipping upload: failed to correct extension on upload id: #{upload.id} #{current_extension} => #{correct_extension}"
+    STDERR.puts "Skipping upload: failed to correct extension on upload id: #{upload
+                  .id} #{current_extension} => #{correct_extension}"
     STDERR.puts e
   end
 
@@ -82,7 +69,7 @@ class UploadFixer
 
   def self.change_extension(path, extension)
     pathname = Pathname.new(path)
-    dirname = pathname.dirname.to_s != "." ? "#{pathname.dirname}/" : ""
+    dirname = pathname.dirname.to_s != '.' ? "#{pathname.dirname}/" : ''
     basename = File.basename(path, File.extname(path))
     "#{dirname}#{basename}.#{extension}"
   end

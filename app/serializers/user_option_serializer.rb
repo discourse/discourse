@@ -27,19 +27,21 @@ class UserOptionSerializer < ApplicationSerializer
              :text_size_seq
 
   def auto_track_topics_after_msecs
-    object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
+    object.auto_track_topics_after_msecs ||
+      SiteSetting.default_other_auto_track_topics_after_msecs
   end
 
   def notification_level_when_replying
-    object.notification_level_when_replying || SiteSetting.default_other_notification_level_when_replying
+    object.notification_level_when_replying ||
+      SiteSetting.default_other_notification_level_when_replying
   end
 
   def new_topic_duration_minutes
-    object.new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes
+    object.new_topic_duration_minutes ||
+      SiteSetting.default_other_new_topic_duration_minutes
   end
 
   def theme_ids
     object.theme_ids.presence || [SiteSetting.default_theme_id]
   end
-
 end

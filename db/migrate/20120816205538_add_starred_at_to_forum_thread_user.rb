@@ -7,7 +7,8 @@ class AddStarredAtToForumThreadUser < ActiveRecord::Migration[4.2]
         select f1.forum_thread_id, f1.user_id, t.created_at from forum_thread_users f1
         left join forum_threads t on f1.forum_thread_id = t.id
       ) x
-    where x.forum_thread_id = f.forum_thread_id and x.user_id = f.user_id', [DateTime.now]
+    where x.forum_thread_id = f.forum_thread_id and x.user_id = f.user_id',
+            [DateTime.now]
 
     # probably makes sense to move this out to forum_thread_actions
     execute 'alter table forum_thread_users add constraint test_starred_at check(starred = false or starred_at is not null)'

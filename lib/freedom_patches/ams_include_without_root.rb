@@ -49,7 +49,10 @@ module ActiveModel
         if association.embed_in_root? && hash.nil?
           # Don't raise an error!
         elsif association.embed_in_root? && association.embeddable?
-          merge_association hash, association.root, association.serializables, unique_values
+          merge_association hash,
+                            association.root,
+                            association.serializables,
+                            unique_values
         end
       elsif association.embed_objects?
         node[association.key] = association.serialize

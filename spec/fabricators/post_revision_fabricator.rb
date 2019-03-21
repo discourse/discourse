@@ -3,6 +3,6 @@ Fabricator(:post_revision) do
   user
   number 2
   modifications do
-    { "cooked" => ["<p>BEFORE</p>", "<p>AFTER</p>"], "raw" => ["BEFORE", "AFTER"] }
+    { 'cooked' => %w[<p>BEFORE</p> <p>AFTER</p>], 'raw' => %w[BEFORE AFTER] }
   end
 end

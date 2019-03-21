@@ -21,7 +21,13 @@ task 'build_test_topic' => :environment do
   #     meta_data             - Topic meta data hash
   evil_trout = User.find_by_username('EvilTrout')
 
-  first_post = PostCreator.new(evil_trout, raw: "This is the original post.", title: "pushState/replaceState test topic").create
+  first_post =
+    PostCreator.new(
+      evil_trout,
+      raw: 'This is the original post.',
+      title: 'pushState/replaceState test topic'
+    )
+      .create
   topic = first_post.topic
 
   topic_url = "#{Discourse.base_url}/t/#{Slug.for(topic.title)}/#{topic.id}"
@@ -45,5 +51,4 @@ eos
 
     PostCreator.new(evil_trout, raw: raw, topic_id: topic.id).create
   end
-
 end

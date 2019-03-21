@@ -2,7 +2,7 @@ class AddPublicTypeToTopicTimers < ActiveRecord::Migration[4.2]
   def up
     add_column :topic_timers, :public_type, :boolean, default: true
 
-    execute("DROP INDEX IF EXISTS idx_topic_id_status_type_deleted_at")
+    execute('DROP INDEX IF EXISTS idx_topic_id_status_type_deleted_at')
 
     # Only one public timer per topic (close, open, delete):
     execute <<~SQL
@@ -14,7 +14,7 @@ class AddPublicTypeToTopicTimers < ActiveRecord::Migration[4.2]
   end
 
   def down
-    execute "DROP INDEX IF EXISTS idx_topic_id_public_type_deleted_at"
+    execute 'DROP INDEX IF EXISTS idx_topic_id_public_type_deleted_at'
 
     execute <<~SQL
     CREATE UNIQUE INDEX idx_topic_id_status_type_deleted_at

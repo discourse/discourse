@@ -1,11 +1,11 @@
 class WordWatcher
-
   def initialize(raw)
     @raw = raw
   end
 
   def self.words_for_action(action)
-    WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000).pluck(:word)
+    WatchedWord.where(action: WatchedWord.actions[action.to_sym]).limit(1000)
+      .pluck(:word)
   end
 
   def self.words_for_action_exists?(action)
@@ -13,15 +13,24 @@ class WordWatcher
   end
 
   def self.word_matcher_regexp(action)
-    s = Discourse.cache.fetch(word_matcher_regexp_key(action), expires_in: 1.day) do
-      words = words_for_action(action)
-      if words.empty?
-        nil
-      else
-        regexp = '(' + words.map { |w| word_to_regexp(w) }.join('|'.freeze) + ')'
-        SiteSetting.watched_words_regular_expressions? ? regexp : "(?<!\\w)(#{regexp})(?!\\w)"
+    s =
+      Discourse.cache.fetch(
+        word_matcher_regexp_key(action),
+        expires_in: 1.day
+      ) do
+        words = words_for_action(action)
+        if words.empty?
+          nil
+        else
+          regexp =
+            '(' + words.map { |w| word_to_regexp(w) }.join('|'.freeze) + ')'
+          if SiteSetting.watched_words_regular_expressions?
+            regexp
+          else
+            "(?<!\\w)(#{regexp})(?!\\w)"
+          end
+        end
       end
-    end
     s.present? ? Regexp.new(s, Regexp::IGNORECASE) : nil
   end
 
@@ -29,7 +38,7 @@ class WordWatcher
     if SiteSetting.watched_words_regular_expressions?
       # Strip ruby regexp format if present, we're going to make the whole thing
       # case insensitive anyway
-      return word.start_with?("(?-mix:") ? word[7..-2] : word
+      return word.start_with?('(?-mix:') ? word[7..-2] : word
     end
     Regexp.escape(word).gsub("\\*", '\S*')
   end
@@ -60,5 +69,4 @@ class WordWatcher
     r = self.class.word_matcher_regexp(action)
     r ? r.match(@raw) : false
   end
-
 end

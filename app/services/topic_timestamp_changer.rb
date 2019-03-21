@@ -21,7 +21,9 @@ class TopicTimestampChanger
           update_post(post, @timestamp)
         else
           new_created_at = Time.at(post.created_at.to_f + @time_difference)
-          new_created_at = @current_timestamp if new_created_at > @current_timestamp
+          if new_created_at > @current_timestamp
+            new_created_at = @current_timestamp
+          end
           last_posted_at = new_created_at if new_created_at > last_posted_at
           update_post(post, new_created_at)
         end
@@ -33,7 +35,9 @@ class TopicTimestampChanger
     end
 
     # Burst the cache for stats
-    [AdminDashboardData, About].each { |klass| $redis.del klass.stats_cache_key }
+    [AdminDashboardData, About].each do |klass|
+      $redis.del klass.stats_cache_key
+    end
   end
 
   private

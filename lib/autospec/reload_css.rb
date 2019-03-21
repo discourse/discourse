@@ -1,7 +1,6 @@
 module Autospec; end
 
 class Autospec::ReloadCss
-
   WATCHERS = {}
   def self.watch(pattern, &blk)
     WATCHERS[pattern] = blk
@@ -18,7 +17,7 @@ class Autospec::ReloadCss
       bus.site_id_lookup do
         # this is going to be dev the majority of the time
         # if you have multisite configured in dev stuff may be different
-        "default"
+        'default'
       end
     end
   end
@@ -27,24 +26,25 @@ class Autospec::ReloadCss
     if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
       # todo connect to dev instead?
       ActiveRecord::Base.establish_connection
-      [:desktop, :mobile].each do |style|
+      %i[desktop mobile].each do |style|
         s = DiscourseStylesheets.new(style)
         s.compile
-        paths << "public" + s.stylesheet_relpath_no_digest
+        paths << 'public' + s.stylesheet_relpath_no_digest
       end
       ActiveRecord::Base.clear_active_connections!
     end
     paths.map! do |p|
       hash = nil
       fullpath = "#{Rails.root}/#{p}"
-      hash = Digest::MD5.hexdigest(File.read(fullpath)) if File.exists?(fullpath)
-      p = p.sub(/\.sass\.erb/, "")
-      p = p.sub(/\.sass/, "")
-      p = p.sub(/\.scss/, "")
-      p = p.sub(/^app\/assets\/stylesheets/, "assets")
+      if File.exists?(fullpath)
+        hash = Digest::MD5.hexdigest(File.read(fullpath))
+      end
+      p = p.sub(/\.sass\.erb/, '')
+      p = p.sub(/\.sass/, '')
+      p = p.sub(/\.scss/, '')
+      p = p.sub(%r{^app\/assets\/stylesheets}, 'assets')
       { name: p, hash: hash || SecureRandom.hex }
     end
-    message_bus.publish "/file-change", paths
+    message_bus.publish '/file-change', paths
   end
-
 end

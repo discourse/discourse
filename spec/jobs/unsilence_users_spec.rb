@@ -1,7 +1,7 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Jobs::UnsilenceUsers do
-  it "unsilence users" do
+  it 'unsilence users' do
     user = Fabricate(:user)
     UserSilencer.silence(user, Discourse.system_user, silenced_till: 2.days.ago)
 

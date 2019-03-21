@@ -1,11 +1,8 @@
 class UserBadgeSerializer < ApplicationSerializer
-
   class UserSerializer < BasicUserSerializer
     include UserPrimaryGroupMixin
 
-    attributes :name,
-               :moderator,
-               :admin
+    attributes :name, :moderator, :admin
   end
 
   attributes :id, :granted_at, :count, :post_id, :post_number
@@ -23,8 +20,8 @@ class UserBadgeSerializer < ApplicationSerializer
     object.badge.show_posts && object.post_id && object.post
   end
 
-  alias :include_topic? :include_post_id?
-  alias :include_post_number? :include_post_id?
+  alias include_topic? include_post_id?
+  alias include_post_number? include_post_id?
 
   def post_number
     object.post && object.post.post_number

@@ -1,5 +1,4 @@
 class TrustLevelGranter
-
   def initialize(trust_level, user)
     @trust_level, @user = trust_level, user
   end

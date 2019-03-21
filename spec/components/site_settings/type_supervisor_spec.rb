@@ -14,13 +14,16 @@ describe SiteSettings::TypeSupervisor do
 
   describe 'constants' do
     it 'validator opts are the subset of consumed opts' do
-      expect(Set.new(SiteSettings::TypeSupervisor::CONSUMED_OPTS).superset?(
-        Set.new(SiteSettings::TypeSupervisor::VALIDATOR_OPTS))).to be_truthy
+      expect(
+        Set.new(SiteSettings::TypeSupervisor::CONSUMED_OPTS).superset?(
+          Set.new(SiteSettings::TypeSupervisor::VALIDATOR_OPTS)
+        )
+      ).to be_truthy
     end
   end
 
   describe '#types' do
-    context "verify enum sequence" do
+    context 'verify enum sequence' do
       it "'string' should be at 1st position" do
         expect(SiteSettings::TypeSupervisor.types[:string]).to eq(1)
       end
@@ -70,7 +73,9 @@ describe SiteSettings::TypeSupervisor do
         expect(SiteSettings::TypeSupervisor.types[:category]).to eq(16)
       end
       it "'uploaded_image_list' should be at 17th position" do
-        expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
+        expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(
+              17
+            )
       end
 
       it "'upload' should be at the right position" do
@@ -89,7 +94,9 @@ describe SiteSettings::TypeSupervisor do
     end
 
     it 'returns :integer type when the value is large int' do
-      expect(subject.parse_value_type(99999999999999999999999999999999999)).to eq(SiteSetting.types[:integer])
+      expect(
+        subject.parse_value_type(99999999999999999999999999999999999)
+      ).to eq(SiteSetting.types[:integer])
     end
 
     it 'returns :float type when the value is float' do
@@ -105,11 +112,10 @@ describe SiteSettings::TypeSupervisor do
     end
 
     it 'raises when the value is not listed' do
-      expect {
+      expect do
         subject.parse_value_type(Object.new)
-      }.to raise_error ArgumentError
+      end.to raise_error ArgumentError
     end
-
   end
 
   context 'with different data types' do
@@ -118,7 +124,7 @@ describe SiteSettings::TypeSupervisor do
         self.values.include?(v)
       end
       def self.values
-        ['en']
+        %w[en]
       end
       def self.translate_names?
         false
@@ -126,8 +132,7 @@ describe SiteSettings::TypeSupervisor do
     end
 
     class TestSmallThanTenValidator
-      def initialize(opts)
-      end
+      def initialize(opts); end
       def valid_value?(v)
         v < 10
       end
@@ -143,9 +148,17 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_false, false)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, 'string')
-      settings.setting(:type_enum_default_string, '2', type: 'enum', choices: ['2'])
+      settings.setting(
+        :type_enum_default_string,
+        '2',
+        type: 'enum', choices: %w[2]
+      )
       settings.setting(:type_enum_class, 'en', enum: 'TestEnumClass')
-      settings.setting(:type_validator, 5, validator: 'TestSmallThanTenValidator')
+      settings.setting(
+        :type_validator,
+        5,
+        validator: 'TestSmallThanTenValidator'
+      )
       settings.setting(:type_mock_validate_method, 'no_value')
       settings.setting(:type_custom, 'custom', type: 'list')
       settings.setting(:type_upload, '', type: 'upload')
@@ -157,77 +170,125 @@ describe SiteSettings::TypeSupervisor do
       let(:false_val) { 'f' }
 
       it 'returns nil value' do
-        expect(settings.type_supervisor.to_db_value(:type_null, nil)).to eq [nil, SiteSetting.types[:null]]
+        expect(settings.type_supervisor.to_db_value(:type_null, nil)).to eq [
+                 nil,
+                 SiteSetting.types[:null]
+               ]
       end
 
       it 'gives a second chance to guess even told :null type' do
-        expect(settings.type_supervisor.to_db_value(:type_null, 1)).to eq [1, SiteSetting.types[:integer]]
+        expect(settings.type_supervisor.to_db_value(:type_null, 1)).to eq [
+                 1,
+                 SiteSetting.types[:integer]
+               ]
       end
 
       it 'writes `t` or `f` given the possible bool value' do
-        expect(settings.type_supervisor.to_db_value(:type_true, true)).to eq [true_val, SiteSetting.types[:bool]]
-        expect(settings.type_supervisor.to_db_value(:type_true, 't')).to eq [true_val, SiteSetting.types[:bool]]
-        expect(settings.type_supervisor.to_db_value(:type_true, 'true')).to eq [true_val, SiteSetting.types[:bool]]
-        expect(settings.type_supervisor.to_db_value(:type_true, false)).to eq [false_val, SiteSetting.types[:bool]]
+        expect(settings.type_supervisor.to_db_value(:type_true, true)).to eq [
+                 true_val,
+                 SiteSetting.types[:bool]
+               ]
+        expect(settings.type_supervisor.to_db_value(:type_true, 't')).to eq [
+                 true_val,
+                 SiteSetting.types[:bool]
+               ]
+        expect(settings.type_supervisor.to_db_value(:type_true, 'true')).to eq [
+                 true_val,
+                 SiteSetting.types[:bool]
+               ]
+        expect(settings.type_supervisor.to_db_value(:type_true, false)).to eq [
+                 false_val,
+                 SiteSetting.types[:bool]
+               ]
       end
 
       it 'writes `f` if given not `true` value' do
-        expect(settings.type_supervisor.to_db_value(:type_true, '')).to eq [false_val, SiteSetting.types[:bool]]
-        expect(settings.type_supervisor.to_db_value(:type_true, nil)).to eq [false_val, SiteSetting.types[:bool]]
+        expect(settings.type_supervisor.to_db_value(:type_true, '')).to eq [
+                 false_val,
+                 SiteSetting.types[:bool]
+               ]
+        expect(settings.type_supervisor.to_db_value(:type_true, nil)).to eq [
+                 false_val,
+                 SiteSetting.types[:bool]
+               ]
       end
 
       it 'returns floats value' do
-        expect(settings.type_supervisor.to_db_value(:type_float, 1.2)).to eq [1.2, SiteSetting.types[:float]]
-        expect(settings.type_supervisor.to_db_value(:type_float, 1)).to eq [1.0, SiteSetting.types[:float]]
+        expect(settings.type_supervisor.to_db_value(:type_float, 1.2)).to eq [
+                 1.2,
+                 SiteSetting.types[:float]
+               ]
+        expect(settings.type_supervisor.to_db_value(:type_float, 1)).to eq [
+                 1.0,
+                 SiteSetting.types[:float]
+               ]
       end
 
       it 'returns string value' do
-        expect(settings.type_supervisor.to_db_value(:type_string, 'a')).to eq ['a', SiteSetting.types[:string]]
+        expect(settings.type_supervisor.to_db_value(:type_string, 'a')).to eq [
+                 'a',
+                 SiteSetting.types[:string]
+               ]
       end
 
       it 'returns the upload id' do
         upload = Fabricate(:upload)
 
-        expect(settings.type_supervisor.to_db_value(:type_upload, upload))
-          .to eq([upload.id, SiteSetting.types[:upload]])
+        expect(
+          settings.type_supervisor.to_db_value(:type_upload, upload)
+        ).to eq([upload.id, SiteSetting.types[:upload]])
 
-        expect(settings.type_supervisor.to_db_value(:type_upload, 1))
-          .to eq([1, SiteSetting.types[:upload]])
+        expect(settings.type_supervisor.to_db_value(:type_upload, 1)).to eq(
+              [1, SiteSetting.types[:upload]]
+            )
       end
 
       it 'returns enum value with string default' do
-        expect(settings.type_supervisor.to_db_value(:type_enum_default_string, 2)).to eq ['2', SiteSetting.types[:enum]]
-        expect(settings.type_supervisor.to_db_value(:type_enum_default_string, '2')).to eq ['2', SiteSetting.types[:enum]]
+        expect(
+          settings.type_supervisor.to_db_value(:type_enum_default_string, 2)
+        ).to eq ['2', SiteSetting.types[:enum]]
+        expect(
+          settings.type_supervisor.to_db_value(:type_enum_default_string, '2')
+        ).to eq ['2', SiteSetting.types[:enum]]
       end
 
       it 'raises when it does not in the enum choices' do
-        expect {
-          settings.type_supervisor.to_db_value(:type_enum_default_string, 'random')
-        }.to raise_error Discourse::InvalidParameters
+        expect do
+          settings.type_supervisor.to_db_value(
+            :type_enum_default_string,
+            'random'
+          )
+        end.to raise_error Discourse::InvalidParameters
       end
 
       it 'returns enum value for the given enum class' do
-        expect(settings.type_supervisor.to_db_value(:type_enum_class, 'en')).to eq ['en', SiteSetting.types[:enum]]
+        expect(
+          settings.type_supervisor.to_db_value(:type_enum_class, 'en')
+        ).to eq ['en', SiteSetting.types[:enum]]
       end
 
       it 'raises when it does not in the enum class' do
-        expect {
+        expect do
           settings.type_supervisor.to_db_value(:type_enum_class, 'random')
-        }.to raise_error Discourse::InvalidParameters
+        end.to raise_error Discourse::InvalidParameters
       end
 
       it 'validates value by validator' do
-        expect(settings.type_supervisor.to_db_value(:type_validator, 1)).to eq [1, SiteSetting.types[:integer]]
+        expect(settings.type_supervisor.to_db_value(:type_validator, 1)).to eq [
+                 1,
+                 SiteSetting.types[:integer]
+               ]
       end
 
       it 'raises when the validator says so' do
-        expect {
+        expect do
           settings.type_supervisor.to_db_value(:type_validator, 11)
-        }.to raise_error Discourse::InvalidParameters
+        end.to raise_error Discourse::InvalidParameters
       end
 
       it 'tries invoke validate methods' do
-        settings.type_supervisor.expects(:validate_type_mock_validate_method).with('no')
+        settings.type_supervisor.expects(:validate_type_mock_validate_method)
+          .with('no')
         settings.type_supervisor.to_db_value(:type_mock_validate_method, 'no')
       end
     end
@@ -237,67 +298,107 @@ describe SiteSettings::TypeSupervisor do
       let(:false_val) { 'f' }
 
       it 'the type can be overriden by a parameter' do
-        expect(settings.type_supervisor.to_rb_value(:type_null, '1', SiteSetting.types[:integer])).to eq(1)
+        expect(
+          settings.type_supervisor.to_rb_value(
+            :type_null,
+            '1',
+            SiteSetting.types[:integer]
+          )
+        ).to eq(1)
       end
 
       it 'returns nil value' do
         expect(settings.type_supervisor.to_rb_value(:type_null, '1')).to eq nil
         expect(settings.type_supervisor.to_rb_value(:type_null, 1)).to eq nil
-        expect(settings.type_supervisor.to_rb_value(:type_null, 'null')).to eq nil
-        expect(settings.type_supervisor.to_rb_value(:type_null, 'nil')).to eq nil
+        expect(
+          settings.type_supervisor.to_rb_value(:type_null, 'null')
+        ).to eq nil
+        expect(
+          settings.type_supervisor.to_rb_value(:type_null, 'nil')
+        ).to eq nil
       end
 
       it 'returns true when it is true or `t` or `true`' do
-        expect(settings.type_supervisor.to_rb_value(:type_true, true)).to eq true
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, true)
+        ).to eq true
         expect(settings.type_supervisor.to_rb_value(:type_true, 't')).to eq true
-        expect(settings.type_supervisor.to_rb_value(:type_true, 'true')).to eq true
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, 'true')
+        ).to eq true
       end
 
       it 'returns false if not one of `true` value' do
-        expect(settings.type_supervisor.to_rb_value(:type_true, 'tr')).to eq false
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, 'tr')
+        ).to eq false
         expect(settings.type_supervisor.to_rb_value(:type_true, '')).to eq false
-        expect(settings.type_supervisor.to_rb_value(:type_true, nil)).to eq false
-        expect(settings.type_supervisor.to_rb_value(:type_true, false)).to eq false
-        expect(settings.type_supervisor.to_rb_value(:type_true, 'f')).to eq false
-        expect(settings.type_supervisor.to_rb_value(:type_true, 'false')).to eq false
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, nil)
+        ).to eq false
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, false)
+        ).to eq false
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, 'f')
+        ).to eq false
+        expect(
+          settings.type_supervisor.to_rb_value(:type_true, 'false')
+        ).to eq false
       end
 
       it 'returns float value' do
         expect(settings.type_supervisor.to_rb_value(:type_float, 1.2)).to eq 1.2
         expect(settings.type_supervisor.to_rb_value(:type_float, 1)).to eq 1.0
-        expect(settings.type_supervisor.to_rb_value(:type_float, '2.2')).to eq 2.2
+        expect(
+          settings.type_supervisor.to_rb_value(:type_float, '2.2')
+        ).to eq 2.2
         expect(settings.type_supervisor.to_rb_value(:type_float, '2')).to eq 2
       end
 
       it 'returns string value' do
-        expect(settings.type_supervisor.to_rb_value(:type_string, 'a')).to eq 'a'
+        expect(
+          settings.type_supervisor.to_rb_value(:type_string, 'a')
+        ).to eq 'a'
         expect(settings.type_supervisor.to_rb_value(:type_string, 2)).to eq '2'
       end
 
       it 'returns the upload record' do
         upload = Fabricate(:upload)
 
-        expect(settings.type_supervisor.to_rb_value(:type_upload, ''))
-          .to eq('')
+        expect(settings.type_supervisor.to_rb_value(:type_upload, '')).to eq('')
 
-        expect(settings.type_supervisor.to_rb_value(:type_upload, upload.id))
-          .to eq(upload.id)
+        expect(
+          settings.type_supervisor.to_rb_value(:type_upload, upload.id)
+        ).to eq(upload.id)
       end
 
       it 'returns value with string default' do
-        expect(settings.type_supervisor.to_rb_value(:type_enum_default_string, 2)).to eq '2'
-        expect(settings.type_supervisor.to_rb_value(:type_enum_default_string, '2')).to eq '2'
+        expect(
+          settings.type_supervisor.to_rb_value(:type_enum_default_string, 2)
+        ).to eq '2'
+        expect(
+          settings.type_supervisor.to_rb_value(:type_enum_default_string, '2')
+        ).to eq '2'
       end
 
       it 'returns value with a custom type' do
         expect(settings.type_supervisor.to_rb_value(:type_custom, 2)).to eq 2
-        expect(settings.type_supervisor.to_rb_value(:type_custom, '2|3')).to eq '2|3'
+        expect(
+          settings.type_supervisor.to_rb_value(:type_custom, '2|3')
+        ).to eq '2|3'
       end
 
       it 'should not modify the types of settings' do
         types = SiteSettings::TypeSupervisor.types
-        settings.type_supervisor.to_rb_value(:default_locale, 'fr', types[:enum])
-        expect(settings.type_supervisor.to_db_value(:default_locale, 'en')).to eq(['en', types[:string]])
+        settings.type_supervisor.to_rb_value(
+          :default_locale,
+          'fr',
+          types[:enum]
+        )
+        expect(
+          settings.type_supervisor.to_db_value(:default_locale, 'en')
+        ).to eq(['en', types[:string]])
       end
     end
   end
@@ -320,7 +421,7 @@ describe SiteSettings::TypeSupervisor do
         self.values.include?(v)
       end
       def self.values
-        ['a', 'b']
+        %w[a b]
       end
       def self.translate_names?
         false
@@ -335,9 +436,13 @@ describe SiteSettings::TypeSupervisor do
       settings.setting(:type_string, 'string')
       settings.setting(:type_url_list, 'string', type: 'url_list')
       settings.setting(:type_textarea, 'string', textarea: true)
-      settings.setting(:type_enum_choices, '2', type: 'enum', choices: ['1', '2'])
+      settings.setting(:type_enum_choices, '2', type: 'enum', choices: %w[1 2])
       settings.setting(:type_enum_class, 'a', enum: 'TestEnumClass2')
-      settings.setting(:type_list, 'a', type: 'list', choices: ['a', 'b'], list_type: 'compact')
+      settings.setting(
+        :type_list,
+        'a',
+        type: 'list', choices: %w[a b], list_type: 'compact'
+      )
       settings.refresh!
     end
 
@@ -345,47 +450,65 @@ describe SiteSettings::TypeSupervisor do
       expect(settings.type_supervisor.type_hash(:type_null)[:type]).to eq 'null'
     end
     it 'returns int type' do
-      expect(settings.type_supervisor.type_hash(:type_int)[:type]).to eq 'integer'
+      expect(
+        settings.type_supervisor.type_hash(:type_int)[:type]
+      ).to eq 'integer'
     end
     it 'returns bool type' do
       expect(settings.type_supervisor.type_hash(:type_true)[:type]).to eq 'bool'
     end
     it 'returns float type' do
-      expect(settings.type_supervisor.type_hash(:type_float)[:type]).to eq 'float'
+      expect(
+        settings.type_supervisor.type_hash(:type_float)[:type]
+      ).to eq 'float'
     end
     it 'returns string type' do
-      expect(settings.type_supervisor.type_hash(:type_string)[:type]).to eq 'string'
+      expect(
+        settings.type_supervisor.type_hash(:type_string)[:type]
+      ).to eq 'string'
     end
     it 'returns url_list type' do
-      expect(settings.type_supervisor.type_hash(:type_url_list)[:type]).to eq 'url_list'
+      expect(
+        settings.type_supervisor.type_hash(:type_url_list)[:type]
+      ).to eq 'url_list'
     end
     it 'returns textarea type' do
-      expect(settings.type_supervisor.type_hash(:type_textarea)[:textarea]).to eq true
+      expect(
+        settings.type_supervisor.type_hash(:type_textarea)[:textarea]
+      ).to eq true
     end
     it 'returns enum type' do
-      expect(settings.type_supervisor.type_hash(:type_enum_choices)[:type]).to eq 'enum'
+      expect(
+        settings.type_supervisor.type_hash(:type_enum_choices)[:type]
+      ).to eq 'enum'
     end
 
     it 'returns list choices' do
-      expect(settings.type_supervisor.type_hash(:type_list)[:choices]).to eq ['a', 'b']
+      expect(settings.type_supervisor.type_hash(:type_list)[:choices]).to eq %w[
+               a
+               b
+             ]
     end
 
     it 'returns list list_type' do
-      expect(settings.type_supervisor.type_hash(:type_list)[:list_type]).to eq 'compact'
+      expect(
+        settings.type_supervisor.type_hash(:type_list)[:list_type]
+      ).to eq 'compact'
     end
 
     it 'returns enum choices' do
       hash = settings.type_supervisor.type_hash(:type_enum_choices)
-      expect(hash[:valid_values]).to eq [{ name: '1', value: '1' }, { name: '2', value: '2' }]
+      expect(hash[:valid_values]).to eq [
+               { name: '1', value: '1' },
+               { name: '2', value: '2' }
+             ]
       expect(hash[:translate_names]).to eq false
     end
 
     it 'returns enum class' do
       hash = settings.type_supervisor.type_hash(:type_enum_class)
-      expect(hash[:valid_values]).to eq ['a', 'b']
+      expect(hash[:valid_values]).to eq %w[a b]
       expect(hash[:translate_names]).to eq false
     end
-
   end
-
 end

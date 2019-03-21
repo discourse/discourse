@@ -8,11 +8,9 @@ RSpec.describe Admin::SearchLogsController do
     SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')
   end
 
-  after do
-    SearchLog.clear_debounce_cache!
-  end
+  after { SearchLog.clear_debounce_cache! }
 
-  context "#index" do
+  context '#index' do
     it "raises an error if you aren't logged in" do
       get '/admin/logs/search_logs.json'
       expect(response.status).to eq(404)
@@ -24,7 +22,7 @@ RSpec.describe Admin::SearchLogsController do
       expect(response.status).to eq(404)
     end
 
-    it "should work if you are an admin" do
+    it 'should work if you are an admin' do
       sign_in(admin)
       get '/admin/logs/search_logs.json'
 
@@ -37,7 +35,7 @@ RSpec.describe Admin::SearchLogsController do
     end
   end
 
-  context "#term" do
+  context '#term' do
     it "raises an error if you aren't logged in" do
       get '/admin/logs/search_logs/term/ruby.json'
       expect(response.status).to eq(404)
@@ -49,9 +47,9 @@ RSpec.describe Admin::SearchLogsController do
       expect(response.status).to eq(404)
     end
 
-    it "should work if you are an admin" do
+    it 'should work if you are an admin' do
       sign_in(admin)
-        get '/admin/logs/search_logs/term/ruby.json'
+      get '/admin/logs/search_logs/term/ruby.json'
 
       expect(response.status).to eq(200)
 

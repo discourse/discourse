@@ -1,7 +1,5 @@
 class UserSerializer < BasicUserSerializer
-
-  attr_accessor :omit_stats,
-                :topic_post_count
+  attr_accessor :omit_stats, :topic_post_count
 
   def self.staff_attributes(*attrs)
     attributes(*attrs)
@@ -83,16 +81,15 @@ class UserSerializer < BasicUserSerializer
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
   has_many :group_users, embed: :object, serializer: BasicGroupUserSerializer
-  has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
+  has_many :featured_user_badges,
+           embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
   has_one :user_option, embed: :object, serializer: UserOptionSerializer
 
   def include_user_option?
     can_edit
   end
 
-  staff_attributes :post_count,
-                   :can_be_deleted,
-                   :can_delete_all_posts
+  staff_attributes :post_count, :can_be_deleted, :can_delete_all_posts
 
   private_attributes :locale,
                      :muted_category_ids,
@@ -138,8 +135,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def groups
-    object.groups.order(:id)
-      .visible_groups(scope.user)
+    object.groups.order(:id).visible_groups(scope.user)
   end
 
   def group_users
@@ -184,15 +180,16 @@ class UserSerializer < BasicUserSerializer
   end
 
   def user_api_keys
-    keys = object.user_api_keys.where(revoked_at: nil).map do |k|
-      {
-        id: k.id,
-        application_name: k.application_name,
-        scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
-        created_at: k.created_at,
-        last_used_at: k.last_used_at,
-      }
-    end
+    keys =
+      object.user_api_keys.where(revoked_at: nil).map do |k|
+        {
+          id: k.id,
+          application_name: k.application_name,
+          scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s}") },
+          created_at: k.created_at,
+          last_used_at: k.last_used_at
+        }
+      end
 
     keys.sort! { |a, b| a[:last_used_at].to_time <=> b[:last_used_at].to_time }
     keys.length > 0 ? keys : nil
@@ -201,16 +198,15 @@ class UserSerializer < BasicUserSerializer
   def user_auth_tokens
     ActiveModel::ArraySerializer.new(
       object.user_auth_tokens,
-      each_serializer: UserAuthTokenSerializer,
-      scope: scope
+      each_serializer: UserAuthTokenSerializer, scope: scope
     )
   end
 
   def user_auth_token_logs
     ActiveModel::ArraySerializer.new(
-      object.user_auth_token_logs.where(
-        action: UserAuthToken::USER_ACTIONS
-      ).order(:created_at).reverse_order,
+      object.user_auth_token_logs.where(action: UserAuthToken::USER_ACTIONS)
+        .order(:created_at)
+        .reverse_order,
       each_serializer: UserAuthTokenLogSerializer
     )
   end
@@ -228,10 +224,12 @@ class UserSerializer < BasicUserSerializer
   end
 
   def website_name
-    uri = begin
-      URI(website.to_s)
-    rescue URI::Error
-    end
+    uri =
+      begin
+        URI(website.to_s)
+      rescue URI::Error
+
+      end
 
     return if uri.nil? || uri.host.nil?
     uri.host.sub(/^www\./, '') + uri.path
@@ -278,7 +276,8 @@ class UserSerializer < BasicUserSerializer
   end
 
   def ignored
-    IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id).exists?
+    IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id)
+      .exists?
   end
 
   def can_ignore_user
@@ -296,7 +295,10 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    object.user_profile.bio_excerpt(350 , keep_newlines: true, keep_emoji_images: true)
+    object.user_profile.bio_excerpt(
+      350,
+      keep_newlines: true, keep_emoji_images: true
+    )
   end
 
   def include_suspend_reason?
@@ -480,5 +482,4 @@ class UserSerializer < BasicUserSerializer
   def include_staged?
     scope.is_staff?
   end
-
 end

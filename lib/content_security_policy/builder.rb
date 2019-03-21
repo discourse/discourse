@@ -3,12 +3,7 @@ require_dependency 'content_security_policy/default'
 
 class ContentSecurityPolicy
   class Builder
-    EXTENDABLE_DIRECTIVES = %i[
-      base_uri
-      object_src
-      script_src
-      worker_src
-    ].freeze
+    EXTENDABLE_DIRECTIVES = %i[base_uri object_src script_src worker_src].freeze
 
     # Make extending these directives no-op, until core includes them in default CSP
     TO_BE_EXTENDABLE = %i[
@@ -23,7 +18,8 @@ class ContentSecurityPolicy
       media_src
       prefetch_src
       style_src
-    ].freeze
+    ]
+      .freeze
 
     def initialize
       @directives = Default.new.directives
@@ -32,7 +28,9 @@ class ContentSecurityPolicy
     def <<(extension)
       return unless valid_extension?(extension)
 
-      extension.each { |directive, sources| extend_directive(normalize(directive), sources) }
+      extension.each do |directive, sources|
+        extend_directive(normalize(directive), sources)
+      end
     end
 
     def build

@@ -1,5 +1,4 @@
 class PostRevisionSerializer < ApplicationSerializer
-
   attributes :created_at,
              :post_id,
              # which revision is hidden
@@ -45,21 +44,24 @@ class PostRevisionSerializer < ApplicationSerializer
   add_compared_field :wiki
 
   def previous_hidden
-    previous["hidden"]
+    previous['hidden']
   end
 
   def current_hidden
-    current["hidden"]
+    current['hidden']
   end
 
   def first_revision
-    revisions.first["revision"]
+    revisions.first['revision']
   end
 
   def previous_revision
-    @previous_revision ||= revisions.select { |r| r["revision"] >= first_revision }
-      .select { |r| r["revision"] < current_revision }
-      .last.try(:[], "revision")
+    @previous_revision ||=
+      revisions.select { |r| r['revision'] >= first_revision }.select do |r|
+        r['revision'] < current_revision
+      end
+        .last
+        .try(:[], 'revision')
   end
 
   def current_revision
@@ -67,17 +69,22 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def next_revision
-    @next_revision ||= revisions.select { |r| r["revision"] <= last_revision }
-      .select { |r| r["revision"] > current_revision }
-      .first.try(:[], "revision")
+    @next_revision ||=
+      revisions.select { |r| r['revision'] <= last_revision }.select do |r|
+        r['revision'] > current_revision
+      end
+        .first
+        .try(:[], 'revision')
   end
 
   def last_revision
-    @last_revision ||= revisions.select { |r| r["revision"] <= post.version }.last["revision"]
+    @last_revision ||=
+      revisions.select { |r| r['revision'] <= post.version }.last['revision']
   end
 
   def current_version
-    @current_version ||= revisions.select { |r| r["revision"] <= current_revision }.count + 1
+    @current_version ||=
+      revisions.select { |r| r['revision'] <= current_revision }.count + 1
   end
 
   def version_count
@@ -106,13 +113,15 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def edit_reason
     # only show 'edit_reason' when revisions are consecutive
-    current["edit_reason"] if scope.can_view_hidden_post_revisions? ||
-                              current["revision"] == previous["revision"] + 1
+    if scope.can_view_hidden_post_revisions? ||
+       current['revision'] == previous['revision'] + 1
+      current['edit_reason']
+    end
   end
 
   def body_changes
-    cooked_diff = DiscourseDiff.new(previous["cooked"], current["cooked"])
-    raw_diff = DiscourseDiff.new(previous["raw"], current["raw"])
+    cooked_diff = DiscourseDiff.new(previous['cooked'], current['cooked'])
+    raw_diff = DiscourseDiff.new(previous['raw'], current['raw'])
 
     {
       inline: cooked_diff.inline_html,
@@ -122,23 +131,21 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def title_changes
-    prev = "<div>#{previous["title"] && CGI::escapeHTML(previous["title"])}</div>"
-    cur = "<div>#{current["title"] && CGI::escapeHTML(current["title"])}</div>"
+    prev =
+      "<div>#{previous['title'] && CGI.escapeHTML(previous['title'])}</div>"
+    cur = "<div>#{current['title'] && CGI.escapeHTML(current['title'])}</div>"
 
     # always show the title for post_number == 1
     return if object.post.post_number > 1 && prev == cur
 
     diff = DiscourseDiff.new(prev, cur)
 
-    {
-      inline: diff.inline_html,
-      side_by_side: diff.side_by_side_html
-    }
+    { inline: diff.inline_html, side_by_side: diff.side_by_side_html }
   end
 
   def user_changes
-    prev = previous["user_id"]
-    cur = current["user_id"]
+    prev = previous['user_id']
+    cur = current['user_id']
     return if prev == cur
 
     # if stuff is messed up, default to system
@@ -146,29 +153,29 @@ class PostRevisionSerializer < ApplicationSerializer
     current = User.find_by(id: cur) || Discourse.system_user
 
     {
-        previous: {
-          username: previous.username_lower,
-          display_username: previous.username,
-          avatar_template: previous.avatar_template
-        },
-        current: {
-          username: current.username_lower,
-          display_username: current.username,
-          avatar_template: current.avatar_template
-        }
+      previous: {
+        username: previous.username_lower,
+        display_username: previous.username,
+        avatar_template: previous.avatar_template
+      },
+      current: {
+        username: current.username_lower,
+        display_username: current.username,
+        avatar_template: current.avatar_template
+      }
     }
   end
 
   def tags_changes
     changes = {
-      previous: filter_visible_tags(previous["tags"]),
-      current: filter_visible_tags(current["tags"])
+      previous: filter_visible_tags(previous['tags']),
+      current: filter_visible_tags(current['tags'])
     }
     changes[:previous] == changes[:current] ? nil : changes
   end
 
   def include_tags_changes?
-    scope.can_see_tags?(topic) && previous["tags"] != current["tags"]
+    scope.can_see_tags?(topic) && previous['tags'] != current['tags']
   end
 
   protected
@@ -182,36 +189,47 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def revisions
-    @revisions ||= all_revisions.select { |r| scope.can_view_hidden_post_revisions? || !r["hidden"] }
+    @revisions ||=
+      all_revisions.select do |r|
+        scope.can_view_hidden_post_revisions? || !r['hidden']
+      end
   end
 
   def all_revisions
     return @all_revisions if @all_revisions
 
-    post_revisions = PostRevision.where(post_id: object.post_id).order(:number).to_a
+    post_revisions =
+      PostRevision.where(post_id: object.post_id).order(:number).to_a
 
     latest_modifications = {
-      "raw" => [post.raw],
-      "cooked" => [post.cooked],
-      "edit_reason" => [post.edit_reason],
-      "wiki" => [post.wiki],
-      "post_type" => [post.post_type],
-      "user_id" => [post.user_id]
+      'raw' => [post.raw],
+      'cooked' => [post.cooked],
+      'edit_reason' => [post.edit_reason],
+      'wiki' => [post.wiki],
+      'post_type' => [post.post_type],
+      'user_id' => [post.user_id]
     }
 
     # Retrieve any `tracked_topic_fields`
     PostRevisor.tracked_topic_fields.each_key do |field|
-      latest_modifications[field.to_s] = [topic.send(field)] if topic.respond_to?(field)
+      if topic.respond_to?(field)
+        latest_modifications[field.to_s] = [topic.send(field)]
+      end
     end
 
-    latest_modifications["featured_link"] = [post.topic.featured_link] if SiteSetting.topic_featured_link_enabled
-    latest_modifications["tags"] = [topic.tags.pluck(:name)] if scope.can_see_tags?(topic)
+    if SiteSetting.topic_featured_link_enabled
+      latest_modifications['featured_link'] = [post.topic.featured_link]
+    end
+    if scope.can_see_tags?(topic)
+      latest_modifications['tags'] = [topic.tags.pluck(:name)]
+    end
 
-    post_revisions << PostRevision.new(
-      number: post_revisions.last.number + 1,
-      hidden: post.hidden,
-      modifications: latest_modifications
-    )
+    post_revisions <<
+      PostRevision.new(
+        number: post_revisions.last.number + 1,
+        hidden: post.hidden,
+        modifications: latest_modifications
+      )
 
     @all_revisions = []
 
@@ -242,11 +260,12 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def previous
-    @previous ||= revisions.select { |r| r["revision"] <= current_revision }.last
+    @previous ||=
+      revisions.select { |r| r['revision'] <= current_revision }.last
   end
 
   def current
-    @current ||= revisions.select { |r| r["revision"] > current_revision }.first
+    @current ||= revisions.select { |r| r['revision'] > current_revision }.first
   end
 
   def user
@@ -262,5 +281,4 @@ class PostRevisionSerializer < ApplicationSerializer
       tags
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class UserAnonymizer
-
   attr_reader :user_history
 
   # opts:
@@ -20,8 +19,10 @@ class UserAnonymizer
       @prev_email = @user.email
       @prev_username = @user.username
 
-      unless UsernameChanger.new(@user, make_anon_username).change(run_update_job: false)
-        raise "Failed to change username"
+      unless UsernameChanger.new(@user, make_anon_username).change(
+             run_update_job: false
+           )
+        raise 'Failed to change username'
       end
 
       @user.reload
@@ -37,7 +38,10 @@ class UserAnonymizer
       end
 
       @user.save!
-      @user.primary_email.update_attribute(:email, "#{@user.username}@anonymized.invalid")
+      @user.primary_email.update_attribute(
+        :email,
+        "#{@user.username}@anonymized.invalid"
+      )
 
       options = @user.user_option
       options.mailing_list_mode = false
@@ -47,8 +51,14 @@ class UserAnonymizer
       options.save!
 
       if profile = @user.user_profile
-        profile.update(location: nil, website: nil, bio_raw: nil, bio_cooked: nil,
-                       profile_background: nil, card_background: nil)
+        profile.update(
+          location: nil,
+          website: nil,
+          bio_raw: nil,
+          bio_cooked: nil,
+          profile_background: nil,
+          card_background: nil
+        )
       end
 
       @user.user_avatar.try(:destroy)
@@ -57,22 +67,26 @@ class UserAnonymizer
       @user.oauth2_user_infos.try(:destroy_all)
       @user.user_associated_accounts.try(:destroy_all)
       @user.instagram_user_info.try(:destroy)
-      @user.user_open_ids.find_each { |x| x.destroy }
+      @user.user_open_ids.find_each(&:destroy)
       @user.api_key.try(:destroy)
       @user.user_emails.secondary.destroy_all
 
       @user_history = log_action
     end
 
-    UsernameChanger.update_username(user_id: @user.id,
-                                    old_username: @prev_username,
-                                    new_username: @user.username,
-                                    avatar_template: @user.avatar_template)
+    UsernameChanger.update_username(
+      user_id: @user.id,
+      old_username: @prev_username,
+      new_username: @user.username,
+      avatar_template: @user.avatar_template
+    )
 
-    Jobs.enqueue(:anonymize_user,
-                 user_id: @user.id,
-                 prev_email: @prev_email,
-                 anonymize_ip: @opts[:anonymize_ip])
+    Jobs.enqueue(
+      :anonymize_user,
+      user_id: @user.id,
+      prev_email: @prev_email,
+      anonymize_ip: @opts[:anonymize_ip]
+    )
 
     DiscourseEvent.trigger(:user_anonymized, user: @user, opts: @opts)
     @user
@@ -83,16 +97,18 @@ class UserAnonymizer
   def make_anon_username
     100.times do
       new_username = "anon#{(SecureRandom.random_number * 100000000).to_i}"
-      return new_username unless User.where(username_lower: new_username).exists?
+      unless User.where(username_lower: new_username).exists?
+        return new_username
+      end
     end
-    raise "Failed to generate an anon username"
+    raise 'Failed to generate an anon username'
   end
 
   def log_action
     history_details = {
       action: UserHistory.actions[:anonymize_user],
       target_user_id: @user.id,
-      acting_user_id: @actor ? @actor.id : @user.id,
+      acting_user_id: @actor ? @actor.id : @user.id
     }
 
     if SiteSetting.log_anonymizer_details?

@@ -8,6 +8,5 @@ class AddBadgeGroupings < ActiveRecord::Migration[4.2]
     end
 
     add_column :badges, :badge_grouping_id, :integer
-
   end
 end

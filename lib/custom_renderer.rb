@@ -6,15 +6,15 @@ class CustomRenderer < AbstractController::Base
   include AbstractController::AssetPaths
   include Rails.application.routes.url_helpers
   helper ApplicationHelper
-  self.view_paths = "app/views"
+  self.view_paths = 'app/views'
   include CurrentUser
 
   def action_name
-    ""
+    ''
   end
 
   def controller_name
-    ""
+    ''
   end
 
   def cookies

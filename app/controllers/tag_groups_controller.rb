@@ -1,18 +1,22 @@
 class TagGroupsController < ApplicationController
-
   requires_login
   before_action :ensure_staff
 
-  skip_before_action :check_xhr, only: [:index, :show]
-  before_action :fetch_tag_group, only: [:show, :update, :destroy]
+  skip_before_action :check_xhr, only: %i[index show]
+  before_action :fetch_tag_group, only: %i[show update destroy]
 
   def index
-    tag_groups = TagGroup.order('name ASC').includes(:parent_tag).preload(:tags).all
-    serializer = ActiveModel::ArraySerializer.new(tag_groups, each_serializer: TagGroupSerializer, root: 'tag_groups')
+    tag_groups =
+      TagGroup.order('name ASC').includes(:parent_tag).preload(:tags).all
+    serializer =
+      ActiveModel::ArraySerializer.new(
+        tag_groups,
+        each_serializer: TagGroupSerializer, root: 'tag_groups'
+      )
     respond_to do |format|
       format.html do
-        store_preloaded "tagGroups", MultiJson.dump(serializer)
-        render "default/empty"
+        store_preloaded 'tagGroups', MultiJson.dump(serializer)
+        render 'default/empty'
       end
       format.json { render_json_dump(serializer) }
     end
@@ -22,8 +26,8 @@ class TagGroupsController < ApplicationController
     serializer = TagGroupSerializer.new(@tag_group)
     respond_to do |format|
       format.html do
-        store_preloaded "tagGroup", MultiJson.dump(serializer)
-        render "default/empty"
+        store_preloaded 'tagGroup', MultiJson.dump(serializer)
+        render 'default/empty'
       end
       format.json { render_json_dump(serializer) }
     end
@@ -53,11 +57,12 @@ class TagGroupsController < ApplicationController
   end
 
   def search
-    matches = if params[:q].present?
-      TagGroup.where('lower(name) ILIKE ?', "%#{params[:q].strip}%")
-    else
-      TagGroup.all
-    end
+    matches =
+      if params[:q].present?
+        TagGroup.where('lower(name) ILIKE ?', "%#{params[:q].strip}%")
+      else
+        TagGroup.all
+      end
 
     matches = matches.order('name').limit(params[:limit] || 5)
 
@@ -72,22 +77,19 @@ class TagGroupsController < ApplicationController
 
   def tag_groups_params
     if permissions = params[:permissions]
-      permissions.each do |k, v|
-        permissions[k] = v.to_i
-      end
+      permissions.each { |k, v| permissions[k] = v.to_i }
     end
 
-    result = params.permit(
-      :id,
-      :name,
-      :one_per_topic,
-      tag_names: [],
-      parent_tag_name: [],
-      permissions: permissions&.keys,
-    )
+    result =
+      params.permit(
+        :id,
+        :name,
+        :one_per_topic,
+        tag_names: [], parent_tag_name: [], permissions: permissions&.keys
+      )
     result[:tag_names] ||= []
     result[:parent_tag_name] ||= []
-    result[:one_per_topic] = (params[:one_per_topic] == "true")
+    result[:one_per_topic] = (params[:one_per_topic] == 'true')
     result
   end
 end

@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe Admin::FlaggedTopicsController do
   let!(:flag) { Fabricate(:flag) }
 
-  shared_examples "successfully retrieve list of flagged topics" do
-    it "returns a list of flagged topics" do
-      get "/admin/flagged_topics.json"
+  shared_examples 'successfully retrieve list of flagged topics' do
+    it 'returns a list of flagged topics' do
+      get '/admin/flagged_topics.json'
       expect(response.status).to eq(200)
 
       data = ::JSON.parse(response.body)
@@ -14,20 +14,15 @@ RSpec.describe Admin::FlaggedTopicsController do
     end
   end
 
-  context "as admin" do
-    before do
-      sign_in(Fabricate(:admin))
-    end
+  context 'as admin' do
+    before { sign_in(Fabricate(:admin)) }
 
-    include_examples "successfully retrieve list of flagged topics"
+    include_examples 'successfully retrieve list of flagged topics'
   end
 
-  context "as moderator" do
-    before do
-      sign_in(Fabricate(:moderator))
-    end
+  context 'as moderator' do
+    before { sign_in(Fabricate(:moderator)) }
 
-    include_examples "successfully retrieve list of flagged topics"
+    include_examples 'successfully retrieve list of flagged topics'
   end
-
 end

@@ -1,21 +1,19 @@
 class PostSerializer < BasicPostSerializer
-
   # To pass in additional information we might need
-  INSTANCE_VARS ||= [
-    :topic_view,
-    :parent_post,
-    :add_raw,
-    :add_title,
-    :single_post_link_counts,
-    :draft_sequence,
-    :post_actions,
-    :all_post_actions,
-    :add_excerpt
-  ]
+  INSTANCE_VARS ||=
+    %i[
+      topic_view
+      parent_post
+      add_raw
+      add_title
+      single_post_link_counts
+      draft_sequence
+      post_actions
+      all_post_actions
+      add_excerpt
+    ]
 
-  INSTANCE_VARS.each do |v|
-    self.send(:attr_accessor, v)
-  end
+  INSTANCE_VARS.each { |v| self.send(:attr_accessor, v) }
 
   attributes :post_number,
              :post_type,
@@ -79,9 +77,7 @@ class PostSerializer < BasicPostSerializer
   def initialize(object, opts)
     super(object, opts)
     PostSerializer::INSTANCE_VARS.each do |name|
-      if opts.include? name
-        self.send("#{name}=", opts[name])
-      end
+      self.send("#{name}=", opts[name]) if opts.include? name
     end
   end
 
@@ -244,20 +240,28 @@ class PostSerializer < BasicPostSerializer
       summary = { id: id, count: count }
       summary[:hidden] = true if sym == :vote
 
-      if scope.post_can_act?(object, sym, opts: { taken_actions: actions }, can_see_post: can_see_post)
+      if scope.post_can_act?(
+         object,
+         sym,
+         opts: { taken_actions: actions }, can_see_post: can_see_post
+       )
         summary[:can_act] = true
       end
 
-      if sym == :notify_user && scope.current_user.present? && scope.current_user == object.user
+      if sym == :notify_user && scope.current_user.present? &&
+         scope.current_user == object.user
         summary.delete(:can_act)
       end
 
       # The following only applies if you're logged in
       if summary[:can_act] && scope.current_user.present?
-        summary[:can_defer_flags] = true if scope.is_staff? &&
-                                                   PostActionType.flag_types_without_custom.values.include?(id) &&
-                                                   active_flags.present? && active_flags.has_key?(id) &&
-                                                   active_flags[id].count > 0
+        if scope.is_staff? &&
+           PostActionType.flag_types_without_custom.values.include?(id) &&
+           active_flags.present? &&
+           active_flags.has_key?(id) &&
+           active_flags[id].count > 0
+          summary[:can_defer_flags] = true
+        end
       end
 
       if actions.present? && actions.has_key?(id)
@@ -273,9 +277,7 @@ class PostSerializer < BasicPostSerializer
       summary.delete(:count) if summary[:count] == 0
 
       # Only include it if the user can do it or it has a count
-      if summary[:can_act] || summary[:count]
-        result << summary
-      end
+      result << summary if summary[:can_act] || summary[:count]
     end
 
     result
@@ -296,7 +298,8 @@ class PostSerializer < BasicPostSerializer
   def include_link_counts?
     return true if @single_post_link_counts.present?
 
-    @topic_view.present? && @topic_view.link_counts.present? && @topic_view.link_counts[object.id].present?
+    @topic_view.present? && @topic_view.link_counts.present? &&
+      @topic_view.link_counts[object.id].present?
   end
 
   def include_read?
@@ -304,7 +307,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_reply_to_user?
-    !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) && object.reply_to_user
+    !(SiteSetting.suppress_reply_when_quoting && object.reply_quoted?) &&
+      object.reply_to_user
   end
 
   def include_bookmarked?
@@ -332,7 +336,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_static_doc?
-    object.is_first_post? && Discourse.static_doc_topic_ids.include?(object.topic_id)
+    object.is_first_post? &&
+      Discourse.static_doc_topic_ids.include?(object.topic_id)
   end
 
   def include_via_email?
@@ -358,7 +363,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def action_code_who
-    post_custom_fields["action_code_who"]
+    post_custom_fields['action_code_who']
   end
 
   def include_action_code_who?
@@ -366,19 +371,23 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_notice_type
-    post_custom_fields["post_notice_type"]
+    post_custom_fields['post_notice_type']
   end
 
   def include_post_notice_type?
-    return false if !scope.user || !scope.user.id || scope.user.id == object.user_id ||
-                    !object.user || object.user.anonymous? || object.user.bot? ||
-                    !scope.user.has_trust_level?(SiteSetting.min_post_notice_tl)
+    if !scope.user || !scope.user.id || scope.user.id == object.user_id ||
+       !object.user ||
+       object.user.anonymous? ||
+       object.user.bot? ||
+       !scope.user.has_trust_level?(SiteSetting.min_post_notice_tl)
+      return false
+    end
 
     post_notice_type.present?
   end
 
   def post_notice_time
-    post_custom_fields["post_notice_time"]
+    post_custom_fields['post_notice_time']
   end
 
   def include_post_notice_time?
@@ -399,9 +408,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_last_wiki_edit?
-    object.wiki &&
-    object.post_number == 1 &&
-    object.revisions.size > 0
+    object.wiki && object.post_number == 1 && object.revisions.size > 0
   end
 
   def include_hidden_reason_id?
@@ -416,7 +423,9 @@ class PostSerializer < BasicPostSerializer
 
   def topic
     @topic = object.topic
-    @topic ||= Topic.with_deleted.find_by(id: object.topic_id) if scope.is_staff?
+    if scope.is_staff?
+      @topic ||= Topic.with_deleted.find_by(id: object.topic_id)
+    end
     @topic
   end
 
@@ -429,11 +438,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def post_custom_fields
-    @post_custom_fields ||= if @topic_view
-      (@topic_view.post_custom_fields || {})[object.id] || {}
-    else
-      object.custom_fields
-    end
+    @post_custom_fields ||=
+      if @topic_view
+        (@topic_view.post_custom_fields || {})[object.id] || {}
+      else
+        object.custom_fields
+      end
   end
-
 end

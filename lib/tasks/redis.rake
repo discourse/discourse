@@ -1,4 +1,4 @@
-task 'redis:clean_up' => ['environment'] do
+task 'redis:clean_up' => %w[environment] do
   return unless Rails.configuration.multisite
 
   dbs = RailsMultisite::ConnectionManagement.all_dbs
@@ -18,9 +18,7 @@ task 'redis:clean_up' => ['environment'] do
         if match = key.match(regexp)
           db_name = match[:message_bus] || match[:namespace]
 
-          if !dbs.include?(db_name)
-            redis.del(key)
-          end
+          redis.del(key) if !dbs.include?(db_name)
         end
       end
     end

@@ -2,12 +2,15 @@ require 'rails_helper'
 require 'new_post_manager'
 
 describe NewPostManager do
-
   let(:topic) { Fabricate(:topic) }
 
-  context "default action" do
-    it "creates the post by default" do
-      manager = NewPostManager.new(topic.user, raw: 'this is a new post', topic_id: topic.id)
+  context 'default action' do
+    it 'creates the post by default' do
+      manager =
+        NewPostManager.new(
+          topic.user,
+          raw: 'this is a new post', topic_id: topic.id
+        )
       result = manager.perform
 
       expect(result.action).to eq(:create_post)
@@ -17,17 +20,20 @@ describe NewPostManager do
     end
   end
 
-  context "default action" do
+  context 'default action' do
     let(:other_user) { Fabricate(:user) }
 
     it "doesn't enqueue private messages" do
       SiteSetting.approve_unless_trust_level = 4
 
-      manager = NewPostManager.new(topic.user,
-                                   raw: 'this is a new post',
-                                   title: 'this is a new title',
-                                   archetype: Archetype.private_message,
-                                   target_usernames: other_user.username)
+      manager =
+        NewPostManager.new(
+          topic.user,
+          raw: 'this is a new post',
+          title: 'this is a new title',
+          archetype: Archetype.private_message,
+          target_usernames: other_user.username
+        )
 
       result = manager.perform
 
@@ -38,9 +44,11 @@ describe NewPostManager do
       expect(result.post).to be_a(Post)
 
       # It doesn't enqueue replies to the private message either
-      manager = NewPostManager.new(topic.user,
-                                   raw: 'this is a new reply',
-                                   topic_id: result.post.topic_id)
+      manager =
+        NewPostManager.new(
+          topic.user,
+          raw: 'this is a new reply', topic_id: result.post.topic_id
+        )
 
       result = manager.perform
 
@@ -50,11 +58,15 @@ describe NewPostManager do
       expect(result.post.topic.private_message?).to eq(true)
       expect(result.post).to be_a(Post)
     end
-
   end
 
-  context "default handler" do
-    let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id) }
+  context 'default handler' do
+    let(:manager) do
+      NewPostManager.new(
+        topic.user,
+        raw: 'this is new post content', topic_id: topic.id
+      )
+    end
 
     context 'with the settings zeroed out' do
       before do
@@ -74,7 +86,7 @@ describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 0
       end
-      it "will return an enqueue result" do
+      it 'will return an enqueue result' do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -86,7 +98,7 @@ describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 1
       end
-      it "will return an enqueue result" do
+      it 'will return an enqueue result' do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -98,7 +110,7 @@ describe NewPostManager do
         SiteSetting.approve_post_count = 100
         topic.user.trust_level = 2
       end
-      it "will return an enqueue result" do
+      it 'will return an enqueue result' do
         result = NewPostManager.default_handler(manager)
         expect(result).to be_nil
       end
@@ -109,24 +121,26 @@ describe NewPostManager do
         SiteSetting.approve_post_count = 100
         user = Fabricate(:user)
         category_group = Fabricate(:category_group, permission_type: 2)
-        group_user = Fabricate(:group_user, group: category_group.group, user_id: user.id)
+        group_user =
+          Fabricate(:group_user, group: category_group.group, user_id: user.id)
 
-        manager = NewPostManager.new(
-          user,
-          raw: 'this is a new topic',
-          title: "Let's start a new topic!",
-          category: category_group.category_id
-        )
+        manager =
+          NewPostManager.new(
+            user,
+            raw: 'this is a new topic',
+            title: "Let's start a new topic!",
+            category: category_group.category_id
+          )
 
-        expect(manager.perform.errors["base"][0]).to eq(I18n.t("js.errors.reasons.forbidden"))
+        expect(manager.perform.errors['base'][0]).to eq(
+              I18n.t('js.errors.reasons.forbidden')
+            )
       end
     end
 
     context 'with a high trust level setting' do
-      before do
-        SiteSetting.approve_unless_trust_level = 4
-      end
-      it "will return an enqueue result" do
+      before { SiteSetting.approve_unless_trust_level = 4 }
+      it 'will return an enqueue result' do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -138,7 +152,7 @@ describe NewPostManager do
         SiteSetting.approve_unless_staged = true
         topic.user.staged = true
       end
-      it "will return an enqueue result" do
+      it 'will return an enqueue result' do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
@@ -146,48 +160,44 @@ describe NewPostManager do
     end
 
     context 'with a high trust level setting for new topics but post responds to existing topic' do
-      before do
-        SiteSetting.approve_new_topics_unless_trust_level = 4
-      end
+      before { SiteSetting.approve_new_topics_unless_trust_level = 4 }
       it "doesn't return a result action" do
         result = NewPostManager.default_handler(manager)
         expect(result).to eq(nil)
       end
     end
-
   end
 
-  context "new topic handler" do
-    let(:manager) { NewPostManager.new(topic.user, raw: 'this is new topic content', title: 'new topic title') }
+  context 'new topic handler' do
+    let(:manager) do
+      NewPostManager.new(
+        topic.user,
+        raw: 'this is new topic content', title: 'new topic title'
+      )
+    end
     context 'with a high trust level setting for new topics' do
-      before do
-        SiteSetting.approve_new_topics_unless_trust_level = 4
-      end
-      it "will return an enqueue result" do
+      before { SiteSetting.approve_new_topics_unless_trust_level = 4 }
+      it 'will return an enqueue result' do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
       end
     end
-
   end
 
-  context "extensibility priority" do
-
-    after do
-      NewPostManager.clear_handlers!
-    end
+  context 'extensibility priority' do
+    after { NewPostManager.clear_handlers! }
 
     let(:default_handler) { NewPostManager.method(:default_handler) }
 
-    it "adds in order by default" do
+    it 'adds in order by default' do
       handler = -> { nil }
 
       NewPostManager.add_handler(&handler)
       expect(NewPostManager.handlers).to eq([default_handler, handler])
     end
 
-    it "can be added in high priority" do
+    it 'can be added in high priority' do
       a = -> { nil }
       b = -> { nil }
       c = -> { nil }
@@ -197,40 +207,44 @@ describe NewPostManager do
       NewPostManager.add_handler(101, &c)
       expect(NewPostManager.handlers).to eq([c, a, b, default_handler])
     end
-
   end
 
-  context "extensibility" do
-
+  context 'extensibility' do
     before do
       @counter = 0
 
-      @counter_handler = lambda do |manager|
-        result = nil
-        if manager.args[:raw] == 'this post increases counter'
-          @counter += 1
-          result = NewPostResult.new(:counter, true)
+      @counter_handler =
+        lambda do |manager|
+          result = nil
+          if manager.args[:raw] == 'this post increases counter'
+            @counter += 1
+            result = NewPostResult.new(:counter, true)
+          end
+
+          result
         end
 
-        result
-      end
-
-      @queue_handler = -> (manager) { manager.args[:raw] =~ /queue me/ ? manager.enqueue('default') : nil }
+      @queue_handler =
+        lambda do |manager|
+          manager.args[:raw] =~ /queue me/ ? manager.enqueue('default') : nil
+        end
 
       NewPostManager.add_handler(&@counter_handler)
       NewPostManager.add_handler(&@queue_handler)
     end
 
-    after do
-      NewPostManager.clear_handlers!
-    end
+    after { NewPostManager.clear_handlers! }
 
-    it "has a queue enabled" do
+    it 'has a queue enabled' do
       expect(NewPostManager.queue_enabled?).to eq(true)
     end
 
-    it "calls custom handlers" do
-      manager = NewPostManager.new(topic.user, raw: 'this post increases counter', topic_id: topic.id)
+    it 'calls custom handlers' do
+      manager =
+        NewPostManager.new(
+          topic.user,
+          raw: 'this post increases counter', topic_id: topic.id
+        )
 
       result = manager.perform
 
@@ -241,15 +255,22 @@ describe NewPostManager do
       expect(QueuedPost.new_count).to be(0)
     end
 
-    it "calls custom enqueuing handlers" do
-      manager = NewPostManager.new(topic.user, raw: 'to the handler I say enqueue me!', title: 'this is the title of the queued post')
+    it 'calls custom enqueuing handlers' do
+      manager =
+        NewPostManager.new(
+          topic.user,
+          raw: 'to the handler I say enqueue me!',
+          title: 'this is the title of the queued post'
+        )
 
       result = manager.perform
 
       enqueued = result.queued_post
 
       expect(enqueued).to be_present
-      expect(enqueued.post_options['title']).to eq('this is the title of the queued post')
+      expect(enqueued.post_options['title']).to eq(
+            'this is the title of the queued post'
+          )
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
       expect(result.pending_count).to eq(1)
@@ -258,8 +279,12 @@ describe NewPostManager do
       expect(@counter).to be(0)
     end
 
-    it "if nothing returns a result it creates a post" do
-      manager = NewPostManager.new(topic.user, raw: 'this is a new post', topic_id: topic.id)
+    it 'if nothing returns a result it creates a post' do
+      manager =
+        NewPostManager.new(
+          topic.user,
+          raw: 'this is a new post', topic_id: topic.id
+        )
 
       result = manager.perform
 
@@ -268,11 +293,9 @@ describe NewPostManager do
       expect(result.post).to be_present
       expect(@counter).to be(0)
     end
-
   end
 
-  context "user needs approval?" do
-
+  context 'user needs approval?' do
     let :user do
       user = Fabricate.build(:user, trust_level: 0)
       user_stat = UserStat.new(post_count: 0)
@@ -280,7 +303,7 @@ describe NewPostManager do
       user
     end
 
-    it "handles post_needs_approval? correctly" do
+    it 'handles post_needs_approval? correctly' do
       u = user
       default = NewPostManager.new(u, {})
       expect(NewPostManager.post_needs_approval?(default)).to eq(false)
@@ -290,7 +313,9 @@ describe NewPostManager do
 
       u.user_stat.post_count = 1
       with_check_and_post = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(
+            false
+          )
 
       u.user_stat.post_count = 0
       u.trust_level = 1
@@ -310,12 +335,13 @@ describe NewPostManager do
       end
 
       it 'enqueues new topics' do
-        manager = NewPostManager.new(
-          user,
-          raw: 'this is a new topic',
-          title: "Let's start a new topic!",
-          category: category.id
-        )
+        manager =
+          NewPostManager.new(
+            user,
+            raw: 'this is a new topic',
+            title: "Let's start a new topic!",
+            category: category.id
+          )
 
         expect(manager.perform.action).to eq(:enqueued)
       end
@@ -330,17 +356,21 @@ describe NewPostManager do
       end
 
       it 'enqueues new posts' do
-        manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
+        manager =
+          NewPostManager.new(
+            user,
+            raw: 'this is a new post', topic_id: topic.id
+          )
         expect(manager.perform.action).to eq(:enqueued)
       end
 
       it "doesn't blow up with invalid topic_id" do
         expect do
-          manager = NewPostManager.new(
-            user,
-            raw: 'this is a new topic',
-            topic_id: 97546
-          )
+          manager =
+            NewPostManager.new(
+              user,
+              raw: 'this is a new topic', topic_id: 97546
+            )
           expect(manager.perform.action).to eq(:create_post)
         end.not_to raise_error
       end

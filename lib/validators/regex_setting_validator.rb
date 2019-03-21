@@ -1,6 +1,7 @@
 class RegexSettingValidator
-
-  LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget sem non elit tincidunt rhoncus.'.freeze
+  LOREM =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget sem non elit tincidunt rhoncus.'
+      .freeze
 
   def initialize(opts = {})
     @opts = opts
@@ -15,7 +16,7 @@ class RegexSettingValidator
     r = Regexp.new(val)
     matches = r.match(LOREM)
     matches.nil? || matches[0].length < (LOREM.length - 10)
-  rescue
+  rescue StandardError
     false
   end
 

@@ -24,18 +24,17 @@ class Jobs::Onceoff < Jobs::Base
         $redis.del(running_key_name) if has_lock
       end
     end
-
   end
 
   def self.enqueue_all
     previously_ran = OnceoffLog.pluck(:job_name).uniq
 
-    ObjectSpace.each_object(Class).select { |klass| klass < self }.each do |klass|
+    ObjectSpace.each_object(Class).select { |klass| klass < self }
+      .each do |klass|
       job_name = name_for(klass)
       unless previously_ran.include?(job_name)
         Jobs.enqueue(job_name.underscore.to_sym)
       end
     end
   end
-
 end

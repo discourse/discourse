@@ -1,5 +1,4 @@
 class GroupSettingValidator
-
   def initialize(opts = {})
     @opts = opts
   end

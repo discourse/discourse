@@ -26,10 +26,9 @@ class PostJobsEnqueuer
   private
 
   def enqueue_post_alerts
-    Jobs.enqueue(:post_alert,
-      post_id: @post.id,
-      new_record: true,
-      options: @opts[:post_alert_options],
+    Jobs.enqueue(
+      :post_alert,
+      post_id: @post.id, new_record: true, options: @opts[:post_alert_options]
     )
   end
 
@@ -45,9 +44,10 @@ class PostJobsEnqueuer
     TopicTrackingState.publish_unread(@post) if @post.post_number > 1
     TopicTrackingState.publish_latest(@topic, @post.whisper?)
 
-    Jobs.enqueue_in(SiteSetting.email_time_window_mins.minutes,
+    Jobs.enqueue_in(
+      SiteSetting.email_time_window_mins.minutes,
       :notify_mailing_list_subscribers,
-      post_id: @post.id,
+      post_id: @post.id
     )
   end
 
@@ -63,8 +63,7 @@ class PostJobsEnqueuer
   end
 
   def skip_after_create?
-    @opts[:import_mode] ||
-      @topic.private_message? ||
+    @opts[:import_mode] || @topic.private_message? ||
       @post.post_type == Post.types[:moderator_action] ||
       @post.post_type == Post.types[:small_action]
   end

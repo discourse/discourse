@@ -24,5 +24,4 @@ class CreateCategories < ActiveRecord::Migration[4.2]
   def down
     drop_table :categories
   end
-
 end

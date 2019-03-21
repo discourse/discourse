@@ -1,5 +1,4 @@
 module Jobs
-
   class EnqueueOnceoffs < Jobs::Scheduled
     every 10.minutes
 
@@ -7,5 +6,4 @@ module Jobs
       Jobs::Onceoff.enqueue_all
     end
   end
-
 end

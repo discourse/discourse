@@ -1,11 +1,11 @@
-require_dependency "backup_restore/backup_store"
-require_dependency "s3_helper"
+require_dependency 'backup_restore/backup_store'
+require_dependency 's3_helper'
 
 module BackupRestore
   class S3BackupStore < BackupStore
     DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
     UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 21_600 # 6 hours
-    MULTISITE_PREFIX = "backups"
+    MULTISITE_PREFIX = 'backups'
 
     def initialize(opts = {})
       s3_options = S3Helper.s3_options(SiteSetting)
@@ -50,7 +50,10 @@ module BackupRestore
       ensure_cors!
       presigned_url(obj, :put, UPLOAD_URL_EXPIRES_AFTER_SECONDS)
     rescue Aws::Errors::ServiceError => e
-      Rails.logger.warn("Failed to generate upload URL for S3: #{e.message.presence || e.class.name}")
+      Rails.logger.warn(
+        "Failed to generate upload URL for S3: #{e.message.presence ||
+          e.class.name}"
+      )
       raise StorageError
     end
 
@@ -60,14 +63,14 @@ module BackupRestore
       objects = []
 
       @s3_helper.list.each do |obj|
-        if obj.key.match?(file_regex)
-          objects << create_file_from_object(obj)
-        end
+        objects << create_file_from_object(obj) if obj.key.match?(file_regex)
       end
 
       objects
     rescue Aws::Errors::ServiceError => e
-      Rails.logger.warn("Failed to list backups from S3: #{e.message.presence || e.class.name}")
+      Rails.logger.warn(
+        "Failed to list backups from S3: #{e.message.presence || e.class.name}"
+      )
       raise StorageError
     end
 
@@ -76,7 +79,12 @@ module BackupRestore
         filename: File.basename(obj.key),
         size: obj.size,
         last_modified: obj.last_modified,
-        source: include_download_source ? presigned_url(obj, :get, DOWNLOAD_URL_EXPIRES_AFTER_SECONDS) : nil
+        source:
+          if include_download_source
+            presigned_url(obj, :get, DOWNLOAD_URL_EXPIRES_AFTER_SECONDS)
+          else
+            nil
+          end
       )
     end
 
@@ -86,8 +94,8 @@ module BackupRestore
 
     def ensure_cors!
       rule = {
-        allowed_headers: ["*"],
-        allowed_methods: ["PUT"],
+        allowed_headers: %w[*],
+        allowed_methods: %w[PUT],
         allowed_origins: [Discourse.base_url_no_prefix],
         max_age_seconds: 3000
       }
@@ -101,23 +109,28 @@ module BackupRestore
 
     def s3_bucket_name_with_prefix
       if Rails.configuration.multisite
-        File.join(SiteSetting.s3_backup_bucket, MULTISITE_PREFIX, RailsMultisite::ConnectionManagement.current_db)
+        File.join(
+          SiteSetting.s3_backup_bucket,
+          MULTISITE_PREFIX,
+          RailsMultisite::ConnectionManagement.current_db
+        )
       else
         SiteSetting.s3_backup_bucket
       end
     end
 
     def file_regex
-      @file_regex ||= begin
-        path = @s3_helper.s3_bucket_folder_path || ""
+      @file_regex ||=
+        begin
+          path = @s3_helper.s3_bucket_folder_path || ''
 
-        if path.present?
-          path = "#{path}/" unless path.end_with?("/")
-          path = Regexp.quote(path)
+          if path.present?
+            path = "#{path}/" unless path.end_with?('/')
+            path = Regexp.quote(path)
+          end
+
+          %r{^#{path}[^\/]*\.t?gz$}i
         end
-
-        /^#{path}[^\/]*\.t?gz$/i
-      end
     end
 
     def free_bytes

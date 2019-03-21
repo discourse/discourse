@@ -5,6 +5,5 @@ class IncreaseUrlLengthOnTopicEmbed < ActiveRecord::Migration[4.2]
     add_index :topic_embeds, :embed_url, unique: true
   end
 
-  def down
-  end
+  def down; end
 end

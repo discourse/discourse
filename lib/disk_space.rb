@@ -18,7 +18,8 @@ class DiskSpace
   end
 
   def self.uploads_path
-    "#{Rails.root}/public/uploads/#{RailsMultisite::ConnectionManagement.current_db}"
+    "#{Rails.root}/public/uploads/#{RailsMultisite::ConnectionManagement
+      .current_db}"
   end
   private_class_method :uploads_path
 end

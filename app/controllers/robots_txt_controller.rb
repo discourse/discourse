@@ -3,32 +3,33 @@ class RobotsTxtController < ApplicationController
   skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required
 
   # NOTE: order is important!
-  DISALLOWED_PATHS ||= %w{
-    /auth/
-    /assets/browser-update*.js
-    /users/
-    /u/
-    /my/
-    /badges/
-    /search
-    /search/
-    /tags
-    /tags/
-    /email/
-    /session
-    /session/
-    /admin
-    /admin/
-    /user-api-key
-    /user-api-key/
-    /*?api_key*
-    /*?*api_key*
-    /groups
-    /groups/
-    /t/*/*.rss
-    /tags/*.rss
-    /c/*.rss
-  }
+  DISALLOWED_PATHS ||=
+    %w[
+      /auth/
+      /assets/browser-update*.js
+      /users/
+      /u/
+      /my/
+      /badges/
+      /search
+      /search/
+      /tags
+      /tags/
+      /email/
+      /session
+      /session/
+      /admin
+      /admin/
+      /user-api-key
+      /user-api-key/
+      /*?api_key*
+      /*?*api_key*
+      /groups
+      /groups/
+      /t/*/*.rss
+      /tags/*.rss
+      /c/*.rss
+    ]
 
   def index
     if SiteSetting.allow_index_in_robots_txt?
@@ -47,14 +48,15 @@ class RobotsTxtController < ApplicationController
     render json: fetch_robots_info
   end
 
-protected
+  protected
 
   def fetch_robots_info
     deny_paths = DISALLOWED_PATHS.map { |p| Discourse.base_uri + p }
-    deny_all = [ "#{Discourse.base_uri}/" ]
+    deny_all = ["#{Discourse.base_uri}/"]
 
     result = {
-      header: "# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file",
+      header:
+        '# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file',
       agents: []
     }
 
@@ -75,15 +77,15 @@ protected
 
     if SiteSetting.slow_down_crawler_user_agents.present?
       SiteSetting.slow_down_crawler_user_agents.split('|').each do |agent|
-        result[:agents] << {
-          name: agent,
-          delay: SiteSetting.slow_down_crawler_rate,
-          disallow: deny_paths
-        }
+        result[:agents] <<
+          {
+            name: agent,
+            delay: SiteSetting.slow_down_crawler_rate,
+            disallow: deny_paths
+          }
       end
     end
 
     result
   end
-
 end

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe EmailToken do
-
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :email }
   it { is_expected.to belong_to :user }
@@ -9,15 +8,17 @@ describe EmailToken do
   context '#create' do
     let(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
-    let!(:email_token) { user.email_tokens.create(email: 'bubblegum@adevnturetime.ooo') }
+    let!(:email_token) do
+      user.email_tokens.create(email: 'bubblegum@adevnturetime.ooo')
+    end
 
     it 'should create the email token' do
       expect(email_token).to be_present
     end
 
     it 'should downcase the email' do
-      token = user.email_tokens.create(email: "UpperCaseSoWoW@GMail.com")
-      expect(token.email).to eq "uppercasesowow@gmail.com"
+      token = user.email_tokens.create(email: 'UpperCaseSoWoW@GMail.com')
+      expect(token.email).to eq 'uppercasesowow@gmail.com'
     end
 
     it 'is valid' do
@@ -43,7 +44,6 @@ describe EmailToken do
   end
 
   context '#confirm' do
-
     let(:user) { Fabricate(:user, active: false) }
     let(:email_token) { user.email_tokens.first }
 
@@ -71,7 +71,6 @@ describe EmailToken do
     end
 
     context 'taken email address' do
-
       before do
         @other_user = Fabricate(:coding_horror)
         email_token.update_attribute :email, @other_user.email
@@ -80,7 +79,6 @@ describe EmailToken do
       it 'returns nil when the email has been taken since the token has been generated' do
         expect(EmailToken.confirm(email_token.token)).to be_blank
       end
-
     end
 
     context 'welcome message' do
@@ -88,14 +86,12 @@ describe EmailToken do
         user = EmailToken.confirm(email_token.token)
         expect(user.send_welcome_message).to eq true
       end
-
     end
 
     context 'success' do
-
       let!(:confirmed_user) { EmailToken.confirm(email_token.token) }
 
-      it "returns the correct user" do
+      it 'returns the correct user' do
         expect(confirmed_user).to eq user
       end
 
@@ -109,22 +105,26 @@ describe EmailToken do
         expect(email_token).to be_confirmed
       end
 
-      it "will not confirm again" do
+      it 'will not confirm again' do
         expect(EmailToken.confirm(email_token.token)).to be_blank
       end
     end
 
     context 'confirms the token and redeems invite' do
-      before do
-        SiteSetting.must_approve_users = true
+      before { SiteSetting.must_approve_users = true }
+
+      let(:invite) do
+        Fabricate(:invite, email: 'test@example.com', user_id: nil)
+      end
+      let(:invited_user) do
+        Fabricate(:user, active: false, email: invite.email)
+      end
+      let(:user_email_token) { invited_user.email_tokens.first }
+      let!(:confirmed_invited_user) do
+        EmailToken.confirm(user_email_token.token)
       end
 
-      let(:invite) { Fabricate(:invite, email: 'test@example.com', user_id: nil) }
-      let(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
-      let(:user_email_token) { invited_user.email_tokens.first }
-      let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }
-
-      it "returns the correct user" do
+      it 'returns the correct user' do
         expect(confirmed_invited_user).to eq invited_user
       end
 
@@ -148,5 +148,4 @@ describe EmailToken do
       end
     end
   end
-
 end

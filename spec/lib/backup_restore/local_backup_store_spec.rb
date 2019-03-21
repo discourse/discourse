@@ -8,32 +8,65 @@ describe BackupRestore::LocalBackupStore do
     @paths = []
   end
 
-  after(:all) do
-    FileUtils.remove_dir(@root_directory, true)
-  end
+  after(:all) { FileUtils.remove_dir(@root_directory, true) }
 
-  before do
-    SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL
-  end
+  before { SiteSetting.backup_location = BackupLocationSiteSetting::LOCAL }
 
-  subject(:store) { BackupRestore::BackupStore.create(root_directory: @root_directory) }
+  subject(:store) do
+    BackupRestore::BackupStore.create(root_directory: @root_directory)
+  end
   let(:expected_type) { BackupRestore::LocalBackupStore }
 
-  it_behaves_like "backup store"
+  it_behaves_like 'backup store'
 
-  it "is not a remote store" do
+  it 'is not a remote store' do
     expect(store.remote?).to eq(false)
   end
 
   def create_backups
-    create_file(db_name: "default", filename: "b.tar.gz", last_modified: "2018-09-13T15:10:00Z", size_in_bytes: 17)
-    create_file(db_name: "default", filename: "a.tgz", last_modified: "2018-02-11T09:27:00Z", size_in_bytes: 29)
-    create_file(db_name: "default", filename: "r.sql.gz", last_modified: "2017-12-20T03:48:00Z", size_in_bytes: 11)
-    create_file(db_name: "default", filename: "no-backup.txt", last_modified: "2018-09-05T14:27:00Z", size_in_bytes: 12)
-    create_file(db_name: "default/subfolder", filename: "c.tar.gz", last_modified: "2019-01-24T18:44:00Z", size_in_bytes: 23)
+    create_file(
+      db_name: 'default',
+      filename: 'b.tar.gz',
+      last_modified: '2018-09-13T15:10:00Z',
+      size_in_bytes: 17
+    )
+    create_file(
+      db_name: 'default',
+      filename: 'a.tgz',
+      last_modified: '2018-02-11T09:27:00Z',
+      size_in_bytes: 29
+    )
+    create_file(
+      db_name: 'default',
+      filename: 'r.sql.gz',
+      last_modified: '2017-12-20T03:48:00Z',
+      size_in_bytes: 11
+    )
+    create_file(
+      db_name: 'default',
+      filename: 'no-backup.txt',
+      last_modified: '2018-09-05T14:27:00Z',
+      size_in_bytes: 12
+    )
+    create_file(
+      db_name: 'default/subfolder',
+      filename: 'c.tar.gz',
+      last_modified: '2019-01-24T18:44:00Z',
+      size_in_bytes: 23
+    )
 
-    create_file(db_name: "second", filename: "multi-2.tar.gz", last_modified: "2018-11-27T03:16:54Z", size_in_bytes: 19)
-    create_file(db_name: "second", filename: "multi-1.tar.gz", last_modified: "2018-11-26T03:17:09Z", size_in_bytes: 22)
+    create_file(
+      db_name: 'second',
+      filename: 'multi-2.tar.gz',
+      last_modified: '2018-11-27T03:16:54Z',
+      size_in_bytes: 19
+    )
+    create_file(
+      db_name: 'second',
+      filename: 'multi-1.tar.gz',
+      last_modified: '2018-11-26T03:17:09Z',
+      size_in_bytes: 22
+    )
   end
 
   def remove_backups

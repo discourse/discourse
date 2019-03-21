@@ -27,7 +27,9 @@ describe Jobs::Base do
   end
 
   it 'handles errors in multisite' do
-    RailsMultisite::ConnectionManagement.expects(:all_dbs).returns(['default', 'default', 'default'])
+    RailsMultisite::ConnectionManagement.expects(:all_dbs).returns(
+      %w[default default default]
+    )
     # one exception per database
     Discourse.expects(:handle_job_exception).times(3)
 
@@ -42,8 +44,9 @@ describe Jobs::Base do
   end
 
   it 'converts to an indifferent access hash' do
-    Jobs::Base.any_instance.expects(:execute).with(instance_of(HashWithIndifferentAccess))
+    Jobs::Base.any_instance.expects(:execute).with(
+      instance_of(HashWithIndifferentAccess)
+    )
     Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
   end
-
 end

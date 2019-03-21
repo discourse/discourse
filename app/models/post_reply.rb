@@ -11,7 +11,7 @@ class PostReply < ActiveRecord::Base
     if post.topic_id != reply.topic_id
       self.errors.add(
         :base,
-        I18n.t("activerecord.errors.models.post_reply.base.different_topic")
+        I18n.t('activerecord.errors.models.post_reply.base.different_topic')
       )
     end
   end

@@ -2,12 +2,9 @@ require 'rails_helper'
 require_dependency 'queued_post'
 
 describe QueuedPost do
-
   describe '#states' do
-    context "verify enum sequence" do
-      before do
-        @states = QueuedPost.states
-      end
+    context 'verify enum sequence' do
+      before { @states = QueuedPost.states }
 
       it "'new' should be at 1st position" do
         expect(@states[:new]).to eq(1)
@@ -19,13 +16,13 @@ describe QueuedPost do
     end
   end
 
-  context "creating a post" do
+  context 'creating a post' do
     let(:topic) { Fabricate(:topic) }
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
     let(:qp) { Fabricate(:queued_post, topic: topic, user: user) }
 
-    it "returns the appropriate options for posting" do
+    it 'returns the appropriate options for posting' do
       create_options = qp.create_options
 
       expect(create_options[:topic_id]).to eq(topic.id)
@@ -38,10 +35,12 @@ describe QueuedPost do
       expect(create_options[:cooking_options]).to eq(cat: 'hat')
       expect(create_options[:cook_method]).to eq(Post.cook_methods[:raw_html])
       expect(create_options[:not_create_option]).to eq(nil)
-      expect(create_options[:image_sizes]).to eq("http://foo.bar/image.png" => { "width" => 0, "height" => 222 })
+      expect(create_options[:image_sizes]).to eq(
+            'http://foo.bar/image.png' => { 'width' => 0, 'height' => 222 }
+          )
     end
 
-    it "follows the correct workflow for approval" do
+    it 'follows the correct workflow for approval' do
       qp.create_pending_action
       post = qp.approve!(admin)
 
@@ -60,21 +59,25 @@ describe QueuedPost do
       expect(UserAction.where(queued_post_id: qp.id).count).to eq(0)
 
       # We can't approve twice
-      expect(-> { qp.approve!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
+      expect(-> { qp.approve!(admin) }).to raise_error(
+            QueuedPost::InvalidStateTransition
+          )
     end
 
-    it "skips validations" do
+    it 'skips validations' do
       qp.post_options[:title] = 'too short'
       post = qp.approve!(admin)
       expect(post).to be_present
     end
 
-    it "logs post approvals" do
+    it 'logs post approvals' do
       qp.approve!(admin)
-      expect(UserHistory.where(action: UserHistory.actions[:post_approved]).count).to eq(1)
+      expect(
+        UserHistory.where(action: UserHistory.actions[:post_approved]).count
+      ).to eq(1)
     end
 
-    it "follows the correct workflow for rejection" do
+    it 'follows the correct workflow for rejection' do
       qp.create_pending_action
       qp.reject!(admin)
 
@@ -87,34 +90,41 @@ describe QueuedPost do
       expect(UserAction.where(queued_post_id: qp.id).count).to eq(0)
 
       # Logs staff action for rejected post
-      post_rejected_logs = UserHistory.where(action: UserHistory.actions[:post_rejected])
+      post_rejected_logs =
+        UserHistory.where(action: UserHistory.actions[:post_rejected])
       expect(post_rejected_logs.count).to eq(1)
       expect(post_rejected_logs.first.details).to include(qp.raw)
 
       # We can't reject twice
-      expect(-> { qp.reject!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
+      expect(-> { qp.reject!(admin) }).to raise_error(
+            QueuedPost::InvalidStateTransition
+          )
     end
   end
 
-  context "creating a topic" do
+  context 'creating a topic' do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    context "with a valid topic" do
+    context 'with a valid topic' do
       let!(:category) { Fabricate(:category) }
-      let(:qp) { QueuedPost.create(queue: 'eviltrout',
-                                   state: QueuedPost.states[:new],
-                                   user_id: user.id,
-                                   raw: 'This post should be queued up',
-                                   post_options: {
-                                     title: 'This is the topic title to queue up',
-                                     archetype: 'regular',
-                                     category: category.id,
-                                     tags: ['evil', 'trout'],
-                                     meta_data: { evil: 'trout' }
-                                   }) }
+      let(:qp) do
+        QueuedPost.create(
+          queue: 'eviltrout',
+          state: QueuedPost.states[:new],
+          user_id: user.id,
+          raw: 'This post should be queued up',
+          post_options: {
+            title: 'This is the topic title to queue up',
+            archetype: 'regular',
+            category: category.id,
+            tags: %w[evil trout],
+            meta_data: { evil: 'trout' }
+          }
+        )
+      end
 
-      it "returns the appropriate options for creating a topic" do
+      it 'returns the appropriate options for creating a topic' do
         create_options = qp.create_options
 
         expect(create_options[:category]).to eq(category.id)
@@ -122,7 +132,7 @@ describe QueuedPost do
         expect(create_options[:meta_data]).to eq('evil' => 'trout')
       end
 
-      it "creates the post and topic" do
+      it 'creates the post and topic' do
         SiteSetting.tagging_enabled = true
         SiteSetting.min_trust_level_to_tag_topics = 4
         topic_count, post_count = Topic.count, Post.count
@@ -139,7 +149,9 @@ describe QueuedPost do
         expect(topic.category).to eq(category)
         expect(topic.tags.map(&:name)).to contain_exactly('evil', 'trout')
 
-        expect(UserHistory.where(action: UserHistory.actions[:post_approved]).count).to eq(1)
+        expect(
+          UserHistory.where(action: UserHistory.actions[:post_approved]).count
+        ).to eq(1)
       end
 
       it "rejecting doesn't create the post and topic" do
@@ -153,15 +165,15 @@ describe QueuedPost do
     end
   end
 
-  context "visibility" do
-    it "works as expected in the invisible queue" do
+  context 'visibility' do
+    it 'works as expected in the invisible queue' do
       qp = Fabricate(:queued_post, queue: 'invisible')
       expect(qp).to_not be_visible
       expect(QueuedPost.visible).to_not include(qp)
       expect(QueuedPost.new_count).to eq(0)
     end
 
-    it "works as expected in the visible queue" do
+    it 'works as expected in the visible queue' do
       qp = Fabricate(:queued_post, queue: 'default')
       expect(qp).to be_visible
       expect(QueuedPost.visible).to include(qp)
@@ -184,7 +196,9 @@ describe QueuedPost do
     subject { Fabricate(:queued_post) }
 
     it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { subject.approve!(Discourse.system_user) }.last
+      event =
+        DiscourseEvent.track_events { subject.approve!(Discourse.system_user) }
+          .last
 
       expect(event[:event_name]).to eq(:approved_post)
       expect(event[:params].first).to eq(subject)
@@ -195,11 +209,12 @@ describe QueuedPost do
     subject { Fabricate(:queued_post) }
 
     it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { subject.reject!(Discourse.system_user) }.last
+      event =
+        DiscourseEvent.track_events { subject.reject!(Discourse.system_user) }
+          .last
 
       expect(event[:event_name]).to eq(:rejected_post)
       expect(event[:params].first).to eq(subject)
     end
   end
-
 end

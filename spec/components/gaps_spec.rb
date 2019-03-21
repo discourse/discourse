@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'cache'
 
 describe Gaps do
-
   it 'returns no gaps for empty data' do
     expect(Gaps.new(nil, nil)).to be_blank
   end
@@ -15,7 +14,7 @@ describe Gaps do
     expect(Gaps.new([1, 2, 3], [1, 2, 3])).to be_blank
   end
 
-  context "single element gap" do
+  context 'single element gap' do
     let(:gap) { Gaps.new([1, 3], [1, 2, 3]) }
 
     it 'has a gap for post 3' do
@@ -25,7 +24,7 @@ describe Gaps do
     end
   end
 
-  context "larger gap" do
+  context 'larger gap' do
     let(:gap) { Gaps.new([1, 2, 3, 6, 7], [1, 2, 3, 4, 5, 6, 7]) }
 
     it 'has a gap for post 6' do
@@ -35,7 +34,7 @@ describe Gaps do
     end
   end
 
-  context "multiple gaps" do
+  context 'multiple gaps' do
     let(:gap) { Gaps.new([1, 5, 6, 7, 10], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) }
 
     it 'has both gaps' do
@@ -46,7 +45,7 @@ describe Gaps do
     end
   end
 
-  context "a gap in the beginning" do
+  context 'a gap in the beginning' do
     let(:gap) { Gaps.new([2, 3, 4], [1, 2, 3, 4]) }
 
     it 'has the gap' do
@@ -56,7 +55,7 @@ describe Gaps do
     end
   end
 
-  context "a gap in the ending" do
+  context 'a gap in the ending' do
     let(:gap) { Gaps.new([1, 2, 3], [1, 2, 3, 4]) }
 
     it 'has the gap' do
@@ -66,7 +65,7 @@ describe Gaps do
     end
   end
 
-  context "a large gap in the ending" do
+  context 'a large gap in the ending' do
     let(:gap) { Gaps.new([1, 2, 3], [1, 2, 3, 4, 5, 6]) }
 
     it 'has the gap' do
@@ -75,5 +74,4 @@ describe Gaps do
       expect(gap.after[3]).to eq([4, 5, 6])
     end
   end
-
 end

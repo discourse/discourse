@@ -1,7 +1,9 @@
 class TopicPostCountSerializer < BasicUserSerializer
-
-  attributes :post_count, :primary_group_name,
-             :primary_group_flair_url, :primary_group_flair_color, :primary_group_flair_bg_color
+  attributes :post_count,
+             :primary_group_name,
+             :primary_group_flair_url,
+             :primary_group_flair_color,
+             :primary_group_flair_bg_color
 
   def id
     object[:user].id
@@ -31,5 +33,4 @@ class TopicPostCountSerializer < BasicUserSerializer
   def primary_group_flair_color
     object[:user]&.primary_group&.flair_color
   end
-
 end

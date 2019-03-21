@@ -15,13 +15,15 @@ class AddSchemaMigrationDetails < ActiveRecord::Migration[4.2]
       t.datetime :created_at, null: false
     end
 
-    add_index :schema_migration_details, [:version]
+    add_index :schema_migration_details, %i[version]
 
-    execute("INSERT INTO schema_migration_details(version, created_at)
+    execute(
+      'INSERT INTO schema_migration_details(version, created_at)
              SELECT version, current_timestamp
              FROM schema_migrations
              ORDER BY version
-            ")
+            '
+    )
   end
 
   def down

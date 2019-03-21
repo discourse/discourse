@@ -1,5 +1,4 @@
 module TimelineLookup
-
   # Given an array of tuples containing (id, days_ago), return at most `max_values` worth of a
   # lookup table to help the front end timeline display dates associated with posts
   def self.build(tuples, max_values = 300)
@@ -18,10 +17,8 @@ module TimelineLookup
         result << [idx + 1, days_ago]
         last_days_ago = days_ago
       end
-
     end
 
     result
   end
-
 end

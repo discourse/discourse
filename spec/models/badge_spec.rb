@@ -11,11 +11,11 @@ describe Badge do
   it { is_expected.to validate_uniqueness_of(:name) }
 
   it 'has a valid system attribute for new badges' do
-    expect(Badge.create!(name: "test", badge_type_id: 1).system?).to be false
+    expect(Badge.create!(name: 'test', badge_type_id: 1).system?).to be false
   end
 
   it 'auto translates name' do
-    badge = Badge.find_by_name("Basic User")
+    badge = Badge.find_by_name('Basic User')
     name_english = badge.name
 
     begin
@@ -28,7 +28,7 @@ describe Badge do
   end
 
   it 'handles changes on badge description and long description correctly for system badges' do
-    badge = Badge.find_by_name("Basic User")
+    badge = Badge.find_by_name('Basic User')
     badge.description = badge.description.dup
     badge.long_description = badge.long_description.dup
     badge.save
@@ -37,14 +37,14 @@ describe Badge do
     expect(badge[:description]).to eq(nil)
     expect(badge[:long_description]).to eq(nil)
 
-    badge.description = "testing"
-    badge.long_description = "testing it"
+    badge.description = 'testing'
+    badge.long_description = 'testing it'
 
     badge.save
     badge.reload
 
-    expect(badge[:description]).to eq("testing")
-    expect(badge[:long_description]).to eq("testing it")
+    expect(badge[:description]).to eq('testing')
+    expect(badge[:long_description]).to eq('testing it')
   end
 
   it 'can ensure consistency' do
@@ -52,8 +52,15 @@ describe Badge do
     b.grant_count = 100
     b.save
 
-    UserBadge.create!(user_id: -100, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
-    UserBadge.create!(user_id: User.first.id, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
+    UserBadge.create!(
+      user_id: -100, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1
+    )
+    UserBadge.create!(
+      user_id: User.first.id,
+      badge_id: b.id,
+      granted_at: 1.minute.ago,
+      granted_by_id: -1
+    )
 
     Badge.ensure_consistency!
 
@@ -94,44 +101,72 @@ describe Badge do
     end
 
     it 'fallbacks to argument value when translation does not exist' do
-      expect(Badge.display_name('Not In Translations')).to eq('Not In Translations')
+      expect(Badge.display_name('Not In Translations')).to eq(
+            'Not In Translations'
+          )
     end
   end
 
-  context "PopularLink badge" do
-
-    let(:popular_link_badge) do
-      Badge.find(Badge::PopularLink)
-    end
+  context 'PopularLink badge' do
+    let(:popular_link_badge) { Badge.find(Badge::PopularLink) }
 
     before do
       popular_link_badge.query = BadgeQueries.linking_badge(2)
       popular_link_badge.save!
     end
 
-    it "is awarded" do
-      post = create_post(raw: "https://www.discourse.org/")
+    it 'is awarded' do
+      post = create_post(raw: 'https://www.discourse.org/')
 
-      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.100")
+      TopicLinkClick.create_from(
+        url: 'https://www.discourse.org/',
+        post_id: post.id,
+        topic_id: post.topic.id,
+        ip: '192.168.0.100'
+      )
       BadgeGranter.backfill(popular_link_badge)
-      expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
+      expect(
+        UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink)
+          .count
+      ).to eq(0)
 
-      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
+      TopicLinkClick.create_from(
+        url: 'https://www.discourse.org/',
+        post_id: post.id,
+        topic_id: post.topic.id,
+        ip: '192.168.0.101'
+      )
       BadgeGranter.backfill(popular_link_badge)
-      expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(1)
+      expect(
+        UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink)
+          .count
+      ).to eq(1)
     end
 
-    it "is not awarded for links in a restricted category" do
+    it 'is not awarded for links in a restricted category' do
       category = Fabricate(:category)
-      post = create_post(raw: "https://www.discourse.org/", category: category)
+      post = create_post(raw: 'https://www.discourse.org/', category: category)
 
       category.set_permissions({})
       category.save!
 
-      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.100")
-      TopicLinkClick.create_from(url: "https://www.discourse.org/", post_id: post.id, topic_id: post.topic.id, ip: "192.168.0.101")
+      TopicLinkClick.create_from(
+        url: 'https://www.discourse.org/',
+        post_id: post.id,
+        topic_id: post.topic.id,
+        ip: '192.168.0.100'
+      )
+      TopicLinkClick.create_from(
+        url: 'https://www.discourse.org/',
+        post_id: post.id,
+        topic_id: post.topic.id,
+        ip: '192.168.0.101'
+      )
       BadgeGranter.backfill(popular_link_badge)
-      expect(UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink).count).to eq(0)
+      expect(
+        UserBadge.where(user_id: post.user.id, badge_id: Badge::PopularLink)
+          .count
+      ).to eq(0)
     end
   end
 end

@@ -26,7 +26,7 @@ describe StylesheetsController do
   end
 
   it 'can lookup theme specific css' do
-    scheme = ColorScheme.create_from_base(name: "testing", colors: [])
+    scheme = ColorScheme.create_from_base(name: 'testing', colors: [])
     theme = Fabricate(:theme, color_scheme_id: scheme.id)
 
     builder = Stylesheet::Manager.new(:desktop, theme.id)
@@ -34,11 +34,14 @@ describe StylesheetsController do
 
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
-    get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
+    get "/stylesheets/#{builder.stylesheet_filename.sub('.css', '')}.css"
 
     expect(response.status).to eq(200)
 
-    get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(".css", "")}.css"
+    get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(
+          '.css',
+          ''
+        )}.css"
 
     expect(response.status).to eq(200)
 
@@ -47,11 +50,14 @@ describe StylesheetsController do
 
     `rm #{Stylesheet::Manager.cache_fullpath}/*`
 
-    get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
+    get "/stylesheets/#{builder.stylesheet_filename.sub('.css', '')}.css"
 
     expect(response.status).to eq(200)
 
-    get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(".css", "")}.css"
+    get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(
+          '.css',
+          ''
+        )}.css"
 
     expect(response.status).to eq(200)
   end

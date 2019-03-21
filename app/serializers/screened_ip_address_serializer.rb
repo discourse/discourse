@@ -13,5 +13,4 @@ class ScreenedIpAddressSerializer < ApplicationSerializer
   def ip_address
     object.ip_address_with_mask
   end
-
 end

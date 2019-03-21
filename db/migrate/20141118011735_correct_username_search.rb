@@ -6,6 +6,5 @@ class CorrectUsernameSearch < ActiveRecord::Migration[4.2]
             where users.id = user_search_data.user_id"
   end
 
-  def down
-  end
+  def down; end
 end

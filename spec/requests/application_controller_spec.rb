@@ -5,18 +5,18 @@ RSpec.describe ApplicationController do
     let(:admin) { Fabricate(:admin) }
 
     before do
-      admin  # to skip welcome wizard at home page `/`
+      admin # to skip welcome wizard at home page `/`
       SiteSetting.login_required = true
     end
 
-    it "should carry-forward authComplete param to login page redirect" do
-      get "/?authComplete=true"
+    it 'should carry-forward authComplete param to login page redirect' do
+      get '/?authComplete=true'
       expect(response).to redirect_to('/login?authComplete=true')
     end
 
-    it "should never cache a login redirect" do
-      get "/"
-      expect(response.headers["Cache-Control"]).to eq("no-cache, no-store")
+    it 'should never cache a login redirect' do
+      get '/'
+      expect(response.headers['Cache-Control']).to eq('no-cache, no-store')
     end
   end
 
@@ -24,55 +24,59 @@ RSpec.describe ApplicationController do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
 
-    before do
-      admin # to skip welcome wizard at home page `/`
-    end
+    before { admin } # to skip welcome wizard at home page `/`
 
     it "should redirect admins when enforce_second_factor is 'all'" do
-      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.enforce_second_factor = 'all'
       sign_in(admin)
 
-      get "/"
-      expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
+      get '/'
+      expect(response).to redirect_to(
+            "/u/#{admin.username}/preferences/second-factor"
+          )
     end
 
     it "should redirect users when enforce_second_factor is 'all'" do
-      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.enforce_second_factor = 'all'
       sign_in(user)
 
-      get "/"
-      expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+      get '/'
+      expect(response).to redirect_to(
+            "/u/#{user.username}/preferences/second-factor"
+          )
     end
 
     it "should redirect admins when enforce_second_factor is 'staff'" do
-      SiteSetting.enforce_second_factor = "staff"
+      SiteSetting.enforce_second_factor = 'staff'
       sign_in(admin)
 
-      get "/"
-      expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
+      get '/'
+      expect(response).to redirect_to(
+            "/u/#{admin.username}/preferences/second-factor"
+          )
     end
 
     it "should not redirect users when enforce_second_factor is 'staff'" do
-      SiteSetting.enforce_second_factor = "staff"
+      SiteSetting.enforce_second_factor = 'staff'
       sign_in(user)
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect admins when turned off" do
-      SiteSetting.enforce_second_factor = "no"
+    it 'should not redirect admins when turned off' do
+      SiteSetting.enforce_second_factor = 'no'
       sign_in(admin)
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
     end
 
-    it "should not redirect users when turned off" do
-      SiteSetting.enforce_second_factor = "no"
+    it 'should not redirect users when turned off' do
+      SiteSetting.enforce_second_factor = 'no'
       sign_in(user)
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
     end
   end
@@ -84,15 +88,13 @@ RSpec.describe ApplicationController do
       Rails.logger = Logger.new(@logs)
     end
 
-    after do
-      Rails.logger = @old_logger
-    end
+    after { Rails.logger = @old_logger }
 
     it 'should not raise a 500 (nor should it log a warning) for bad params' do
       bad_str = "d\xDE".force_encoding('utf-8')
       expect(bad_str.valid_encoding?).to eq(false)
 
-      get "/latest.json", params: { test: bad_str }
+      get '/latest.json', params: { test: bad_str }
 
       expect(response.status).to eq(400)
 
@@ -101,9 +103,9 @@ RSpec.describe ApplicationController do
       if (log.include? 'exception app middleware')
         # heisentest diagnostics
         puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITENT TEST FAIL"
+        puts 'EXTRA DIAGNOSTICS FOR INTERMITENT TEST FAIL'
         puts log
-        puts ">> action_dispatch.exception"
+        puts '>> action_dispatch.exception'
         ex = request.env['action_dispatch.exception']
         puts ">> exception class: #{ex.class} : #{ex}"
       end
@@ -111,27 +113,24 @@ RSpec.describe ApplicationController do
       expect(log).not_to include('exception app middleware')
 
       expect(JSON.parse(response.body)).to eq(
-        "status" => 400,
-        "error" => "Bad Request"
-      )
-
+            'status' => 400, 'error' => 'Bad Request'
+          )
     end
   end
 
   describe 'missing required param' do
     it 'should return a 400' do
-      get "/search/query.json", params: { trem: "misspelled term" }
+      get '/search/query.json', params: { trem: 'misspelled term' }
 
       expect(response.status).to eq(400)
       expect(JSON.parse(response.body)).to eq(
-        "errors" => ["param is missing or the value is empty: term"]
-      )
+            'errors' => ['param is missing or the value is empty: term']
+          )
     end
   end
 
   describe 'build_not_found_page' do
     describe 'topic not found' do
-
       it 'should not redirect to permalink if topic/category does not exist' do
         topic = create_post.topic
         Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
@@ -161,34 +160,48 @@ RSpec.describe ApplicationController do
 
       it 'supports subfolder with permalinks' do
         GlobalSetting.stubs(:relative_url_root).returns('/forum')
-        Discourse.stubs(:base_uri).returns("/forum")
+        Discourse.stubs(:base_uri).returns('/forum')
 
         trashed_topic = create_post.topic
         trashed_topic.trash!
         new_topic = create_post.topic
-        permalink = Permalink.create!(url: trashed_topic.relative_url, topic_id: new_topic.id)
+        permalink =
+          Permalink.create!(
+            url: trashed_topic.relative_url, topic_id: new_topic.id
+          )
 
         # no subfolder because router doesn't know about subfolder in this test
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
-        expect(response).to redirect_to("/forum/t/#{new_topic.slug}/#{new_topic.id}")
+        expect(response).to redirect_to(
+              "/forum/t/#{new_topic.slug}/#{new_topic.id}"
+            )
 
         permalink.destroy
         category = Fabricate(:category)
-        permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
+        permalink =
+          Permalink.create!(
+            url: trashed_topic.relative_url, category_id: category.id
+          )
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to("/forum/c/#{category.slug}")
 
         permalink.destroy
-        permalink = Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)
+        permalink =
+          Permalink.create!(
+            url: trashed_topic.relative_url, post_id: new_topic.posts.last.id
+          )
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
-        expect(response).to redirect_to("/forum/t/#{new_topic.slug}/#{new_topic.id}/#{new_topic.posts.last.post_number}")
+        expect(response).to redirect_to(
+              "/forum/t/#{new_topic.slug}/#{new_topic.id}/#{new_topic.posts.last
+                .post_number}"
+            )
       end
 
       it 'should return 404 and show Google search' do
-        get "/t/nope-nope/99999999"
+        get '/t/nope-nope/99999999'
         expect(response.status).to eq(404)
         expect(response.body).to include(I18n.t('page_not_found.search_button'))
       end
@@ -196,33 +209,31 @@ RSpec.describe ApplicationController do
       it 'should not include Google search if login_required is enabled' do
         SiteSetting.login_required = true
         sign_in(Fabricate(:user))
-        get "/t/nope-nope/99999999"
+        get '/t/nope-nope/99999999'
         expect(response.status).to eq(404)
         expect(response.body).to_not include('google.com/search')
       end
 
       describe 'no logspam' do
-
         before do
           @orig_logger = Rails.logger
           Rails.logger = @fake_logger = FakeLogger.new
         end
 
-        after do
-          Rails.logger = @orig_logger
-        end
+        after { Rails.logger = @orig_logger }
 
         it 'should handle 404 to a css file' do
-
-          $redis.del("page_not_found_topics")
+          $redis.del('page_not_found_topics')
 
           topic1 = Fabricate(:topic)
-          get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
+          get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css',
+              headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
           expect(response.status).to eq(404)
           expect(response.body).to include(topic1.title)
 
           topic2 = Fabricate(:topic)
-          get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css', headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
+          get '/stylesheets/mobile_1_4cd559272273fe6d3c7db620c617d596a5fdf240.css',
+              headers: { 'HTTP_ACCEPT' => 'text/css,*/*,q=0.1' }
           expect(response.status).to eq(404)
           expect(response.body).to include(topic1.title)
           expect(response.body).to_not include(topic2.title)
@@ -230,12 +241,11 @@ RSpec.describe ApplicationController do
           expect(Rails.logger.fatals.length).to eq(0)
           expect(Rails.logger.errors.length).to eq(0)
           expect(Rails.logger.warnings.length).to eq(0)
-
         end
       end
 
       it 'should cache results' do
-        $redis.del("page_not_found_topics")
+        $redis.del('page_not_found_topics')
 
         topic1 = Fabricate(:topic)
         get '/t/nope-nope/99999999'
@@ -251,97 +261,93 @@ RSpec.describe ApplicationController do
     end
   end
 
-  describe "#handle_theme" do
+  describe '#handle_theme' do
     let(:theme) { Fabricate(:theme, user_selectable: true) }
     let(:theme2) { Fabricate(:theme, user_selectable: true) }
     let(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    before do
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
-    it "selects the theme the user has selected" do
+    it 'selects the theme the user has selected' do
       user.user_option.update_columns(theme_ids: [theme.id])
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id])
 
       theme.update_attribute(:user_selectable, false)
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([SiteSetting.default_theme_id])
     end
 
-    it "can be overridden with a cookie" do
+    it 'can be overridden with a cookie' do
       user.user_option.update_columns(theme_ids: [theme.id])
 
       cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq}"
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
 
       theme2.update!(user_selectable: false, component: true)
       theme.add_child_theme!(theme2)
-      cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
+      cookies['theme_ids'] =
+        "#{theme.id},#{theme2.id}|#{user.user_option.theme_key_seq}"
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id, theme2.id])
     end
 
-    it "falls back to the default theme when the user has no cookies or preferences" do
+    it 'falls back to the default theme when the user has no cookies or preferences' do
       user.user_option.update_columns(theme_ids: [])
-      cookies["theme_ids"] = nil
+      cookies['theme_ids'] = nil
       theme2.set_default!
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
     end
 
-    it "can be overridden with preview_theme_id param" do
+    it 'can be overridden with preview_theme_id param' do
       sign_in(admin)
-      cookies['theme_ids'] = "#{theme.id},#{theme2.id}|#{admin.user_option.theme_key_seq}"
+      cookies['theme_ids'] =
+        "#{theme.id},#{theme2.id}|#{admin.user_option.theme_key_seq}"
 
-      get "/", params: { preview_theme_id: theme2.id }
+      get '/', params: { preview_theme_id: theme2.id }
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme2.id])
 
-      get "/", params: { preview_theme_id: non_selectable_theme.id }
+      get '/', params: { preview_theme_id: non_selectable_theme.id }
       expect(controller.theme_ids).to eq([non_selectable_theme.id])
     end
 
-    it "does not allow non privileged user to preview themes" do
+    it 'does not allow non privileged user to preview themes' do
       sign_in(user)
-      get "/", params: { preview_theme_id: non_selectable_theme.id }
+      get '/', params: { preview_theme_id: non_selectable_theme.id }
       expect(controller.theme_ids).to eq([SiteSetting.default_theme_id])
     end
 
-    it "cookie can fail back to user if out of sync" do
+    it 'cookie can fail back to user if out of sync' do
       user.user_option.update_columns(theme_ids: [theme.id])
-      cookies['theme_ids'] = "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
+      cookies['theme_ids'] =
+        "#{theme2.id}|#{user.user_option.theme_key_seq - 1}"
 
-      get "/"
+      get '/'
       expect(response.status).to eq(200)
       expect(controller.theme_ids).to eq([theme.id])
     end
   end
 
   describe 'Custom hostname' do
-
     it 'does not allow arbitrary host injection' do
-      get("/latest",
-        headers: {
-          "X-Forwarded-Host" => "test123.com"
-        }
-      )
+      get('/latest', headers: { 'X-Forwarded-Host' => 'test123.com' })
 
-      expect(response.body).not_to include("test123")
+      expect(response.body).not_to include('test123')
     end
   end
 
@@ -353,7 +359,9 @@ RSpec.describe ApplicationController do
       get '/'
 
       expect(response.headers).to_not include('Content-Security-Policy')
-      expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
+      expect(response.headers).to_not include(
+                'Content-Security-Policy-Report-Only'
+              )
 
       SiteSetting.content_security_policy = true
       SiteSetting.content_security_policy_report_only = true
@@ -368,14 +376,16 @@ RSpec.describe ApplicationController do
       SiteSetting.content_security_policy = true
 
       get '/'
-      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      script_src =
+        parse(response.headers['Content-Security-Policy'])['script-src']
 
       expect(script_src).to_not include('example.com')
 
       SiteSetting.content_security_policy_script_src = 'example.com'
 
       get '/'
-      script_src = parse(response.headers['Content-Security-Policy'])['script-src']
+      script_src =
+        parse(response.headers['Content-Security-Policy'])['script-src']
 
       expect(script_src).to include('example.com')
       expect(script_src).to include("'unsafe-eval'")
@@ -388,14 +398,17 @@ RSpec.describe ApplicationController do
       get '/latest.json'
 
       expect(response.headers).to_not include('Content-Security-Policy')
-      expect(response.headers).to_not include('Content-Security-Policy-Report-Only')
+      expect(response.headers).to_not include(
+                'Content-Security-Policy-Report-Only'
+              )
     end
 
     def parse(csp_string)
       csp_string.split(';').map do |policy|
         directive, *sources = policy.split
         [directive, sources]
-      end.to_h
+      end
+        .to_h
     end
   end
 end

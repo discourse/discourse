@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'score_calculator'
 
 describe ScoreCalculator do
-
   let!(:post) { Fabricate(:post, reads: 111) }
   let!(:another_post) { Fabricate(:post, topic: post.topic, reads: 222) }
   let(:topic) { post.topic }
@@ -19,39 +18,37 @@ describe ScoreCalculator do
       expect(another_post.score).to eq(666)
     end
 
-    it "creates the percent_ranks" do
+    it 'creates the percent_ranks' do
       expect(another_post.percent_rank).to eq(0.0)
       expect(post.percent_rank).to eq(1.0)
     end
 
-    it "gives the topic a score" do
+    it 'gives the topic a score' do
       expect(topic.score).to be_present
     end
-
   end
 
   context 'summary' do
-
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
       expect(topic.has_summary).to eq(false)
     end
 
-    it "removes the summary flag if the topic no longer qualifies" do
+    it 'removes the summary flag if the topic no longer qualifies' do
       topic.update_column(:has_summary, true)
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
       expect(topic.has_summary).to eq(false)
     end
 
-    it "respects the min_topic_age" do
+    it 'respects the min_topic_age' do
       topic.update_columns(has_summary: true, bumped_at: 1.month.ago)
       ScoreCalculator.new(reads: 3).calculate(min_topic_age: 20.days.ago)
       expect(topic.has_summary).to eq(true)
     end
 
-    it "respects the max_topic_length" do
+    it 'respects the max_topic_length' do
       Fabricate(:post, topic_id: topic.id)
       topic.update_columns(has_summary: true)
       ScoreCalculator.new(reads: 3).calculate(max_topic_length: 1)
@@ -67,7 +64,5 @@ describe ScoreCalculator do
       topic.reload
       expect(topic.has_summary).to eq(true)
     end
-
   end
-
 end

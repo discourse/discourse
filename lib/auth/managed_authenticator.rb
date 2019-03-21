@@ -1,8 +1,9 @@
 class Auth::ManagedAuthenticator < Auth::Authenticator
   def description_for_user(user)
-    info = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)&.info
-    return "" if info.nil?
-    info["email"] || info["nickname"] || info["name"] || ""
+    info =
+      UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)&.info
+    return '' if info.nil?
+    info['email'] || info['nickname'] || info['name'] || ''
   end
 
   # These three methods are designed to be overriden by child classes
@@ -29,7 +30,8 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   end
 
   def revoke(user, skip_remote: false)
-    association = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
+    association =
+      UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
     raise Discourse::NotFound if association.nil?
     association.destroy!
     true
@@ -37,20 +39,25 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def after_authenticate(auth_token, existing_account: nil)
     # Try and find an association for this account
-    association = UserAssociatedAccount.find_or_initialize_by(provider_name: auth_token[:provider], provider_uid: auth_token[:uid])
+    association =
+      UserAssociatedAccount.find_or_initialize_by(
+        provider_name: auth_token[:provider], provider_uid: auth_token[:uid]
+      )
 
     # Reconnecting to existing account
-    if can_connect_existing_user? && existing_account && (association.user.nil? || existing_account.id != association.user_id)
+    if can_connect_existing_user? && existing_account &&
+       (association.user.nil? || existing_account.id != association.user_id)
       association.user = existing_account
     end
 
     # Matching an account by email
-    if primary_email_verified?(auth_token) &&
-        match_by_email &&
-        association.user.nil? &&
-        (user = User.find_by_email(auth_token.dig(:info, :email)))
-
-      UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
+    if primary_email_verified?(auth_token) && match_by_email &&
+       association.user.nil? &&
+       (user = User.find_by_email(auth_token.dig(:info, :email)))
+      UserAssociatedAccount.where(
+        user: user, provider_name: auth_token[:provider]
+      )
+        .destroy_all # Destroy existing associations for the new user
       association.user = user
     end
 
@@ -66,17 +73,19 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
     # Update the user's email address from the auth payload
     if association.user &&
-        (always_update_user_email? || association.user.email.end_with?(".invalid")) &&
-        primary_email_verified?(auth_token) &&
-        (email = auth_token.dig(:info, :email)) &&
-        (email != association.user.email) &&
-        !User.find_by_email(email)
-
+       (
+         always_update_user_email? ||
+           association.user.email.end_with?('.invalid')
+       ) &&
+       primary_email_verified?(auth_token) &&
+       (email = auth_token.dig(:info, :email)) &&
+       (email != association.user.email) &&
+       !User.find_by_email(email)
       association.user.update!(email: email)
     end
 
     # Update avatar/profile
-    retrieve_avatar(association.user, association.info["image"])
+    retrieve_avatar(association.user, association.info['image'])
     retrieve_profile(association.user, association.info)
 
     # Build the Auth::Result object
@@ -87,8 +96,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email
     result.extra_data = {
-      provider: auth_token[:provider],
-      uid: auth_token[:uid]
+      provider: auth_token[:provider], uid: auth_token[:uid]
     }
     result.user = association.user
 
@@ -97,29 +105,35 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
   def after_create_account(user, auth)
     auth_token = auth[:extra_data]
-    association = UserAssociatedAccount.find_or_initialize_by(provider_name: auth_token[:provider], provider_uid: auth_token[:uid])
+    association =
+      UserAssociatedAccount.find_or_initialize_by(
+        provider_name: auth_token[:provider], provider_uid: auth_token[:uid]
+      )
     association.user = user
     association.save!
 
-    retrieve_avatar(user, association.info["image"])
+    retrieve_avatar(user, association.info['image'])
     retrieve_profile(user, association.info)
   end
 
   def retrieve_avatar(user, url)
     return unless user && url
     return if user.user_avatar.try(:custom_upload_id).present?
-    Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
+    Jobs.enqueue(
+      :download_avatar_from_url,
+      url: url, user_id: user.id, override_gravatar: false
+    )
   end
 
   def retrieve_profile(user, info)
     return unless user
 
-    bio = info["description"]
-    location = info["location"]
+    bio = info['description']
+    location = info['location']
 
     if bio || location
       profile = user.user_profile
-      profile.bio_raw  = bio      unless profile.bio_raw.present?
+      profile.bio_raw = bio unless profile.bio_raw.present?
       profile.location = location unless profile.location.present?
       profile.save
     end

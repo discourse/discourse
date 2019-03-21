@@ -3,10 +3,13 @@ class GroupMentionsUpdater
     Post.where(
       "cooked LIKE '%class=\"mention-group\"%' AND raw LIKE :previous_name",
       previous_name: "%@#{previous_name}%"
-    ).find_in_batches do |posts|
-
+    )
+      .find_in_batches do |posts|
       posts.each do |post|
-        post.raw.gsub!(/(^|\s)(@#{previous_name})(\s|$)/, "\\1@#{current_name}\\3")
+        post.raw.gsub!(
+          /(^|\s)(@#{previous_name})(\s|$)/,
+          "\\1@#{current_name}\\3"
+        )
         post.save!(validate: false)
       end
     end

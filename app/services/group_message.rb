@@ -13,7 +13,6 @@ require_dependency 'topic_subtype'
 require_dependency 'discourse'
 
 class GroupMessage
-
   include Rails.application.routes.url_helpers
 
   def self.create(group_name, message_type, opts = {})
@@ -28,14 +27,23 @@ class GroupMessage
 
   def create
     unless sent_recently?
-      post = PostCreator.create(
-        Discourse.system_user,
-        target_group_names: [@group_name],
-        archetype: Archetype.private_message,
-        subtype: TopicSubtype.system_message,
-        title: I18n.t("system_messages.#{@message_type}.subject_template", message_params),
-        raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params)
-      )
+      post =
+        PostCreator.create(
+          Discourse.system_user,
+          target_group_names: [@group_name],
+          archetype: Archetype.private_message,
+          subtype: TopicSubtype.system_message,
+          title:
+            I18n.t(
+              "system_messages.#{@message_type}.subject_template",
+              message_params
+            ),
+          raw:
+            I18n.t(
+              "system_messages.#{@message_type}.text_body_template",
+              message_params
+            )
+        )
       remember_message_sent
       post
     else
@@ -44,14 +52,17 @@ class GroupMessage
   end
 
   def message_params
-    @message_params ||= begin
-      h = { base_url: Discourse.base_url }.merge(@opts[:message_params] || {})
-      if @opts[:user]
-        h.merge!(username: @opts[:user].username,
-                 user_url: user_path(@opts[:user].username))
+    @message_params ||=
+      begin
+        h = { base_url: Discourse.base_url }.merge(@opts[:message_params] || {})
+        if @opts[:user]
+          h.merge!(
+            username: @opts[:user].username,
+            user_url: user_path(@opts[:user].username)
+          )
+        end
+        h
       end
-      h
-    end
   end
 
   def sent_recently?
@@ -61,10 +72,20 @@ class GroupMessage
 
   # default is to send no more than once every 24 hours (24 * 60 * 60 = 86,400 seconds)
   def remember_message_sent
-    $redis.setex(sent_recently_key, @opts[:limit_once_per].try(:to_i) || 86_400, 1) unless @opts[:limit_once_per] == false
+    unless @opts[:limit_once_per] == false
+      $redis.setex(
+        sent_recently_key,
+        @opts[:limit_once_per].try(:to_i) || 86_400,
+        1
+      )
+    end
   end
 
   def sent_recently_key
-    "grpmsg:#{@group_name}:#{@message_type}:#{@opts[:user] ? @opts[:user].username : ''}"
+    "grpmsg:#{@group_name}:#{@message_type}:#{if @opts[:user]
+      @opts[:user].username
+    else
+      ''
+    end}"
   end
 end

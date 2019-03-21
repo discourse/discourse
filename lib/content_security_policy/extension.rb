@@ -37,7 +37,9 @@ class ContentSecurityPolicy
 
       Theme.where(id: Theme.transform_ids(theme_ids)).find_each do |theme|
         theme.cached_settings.each do |setting, value|
-          extensions << build_theme_extension(value) if setting.to_s == THEME_SETTING
+          if setting.to_s == THEME_SETTING
+            extensions << build_theme_extension(value)
+          end
         end
       end
 

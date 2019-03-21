@@ -16,14 +16,17 @@ class TopicFeaturedUsers
   end
 
   def user_ids
-    [topic.featured_user1_id,
-     topic.featured_user2_id,
-     topic.featured_user3_id,
-     topic.featured_user4_id].uniq.compact
+    [
+      topic.featured_user1_id,
+      topic.featured_user2_id,
+      topic.featured_user3_id,
+      topic.featured_user4_id
+    ]
+      .uniq
+      .compact
   end
 
   def self.ensure_consistency!(topic_id = nil)
-
     filter = "#{"AND t.id = #{topic_id.to_i}" if topic_id}"
     filter2 = "#{"AND tt.id = #{topic_id.to_i}" if topic_id}"
 
@@ -39,7 +42,11 @@ WITH cte as (
     JOIN posts p ON p.topic_id = t.id
     WHERE p.deleted_at IS NULL AND
           NOT p.hidden AND
-          p.post_type in (#{Topic.visible_post_types.join(",")}) AND
+          p.post_type in (#{Topic
+      .visible_post_types
+      .join(
+      ','
+    )}) AND
           p.user_id <> t.user_id AND
           p.user_id <> t.last_post_user_id
           #{filter}
@@ -85,7 +92,12 @@ SQL
   private
 
   def update_participant_count
-    count = topic.posts.where('NOT hidden AND post_type in (?)', Topic.visible_post_types).count('distinct user_id')
+    count =
+      topic.posts.where(
+        'NOT hidden AND post_type in (?)',
+        Topic.visible_post_types
+      )
+        .count('distinct user_id')
     topic.update_columns(participant_count: count)
   end
 end

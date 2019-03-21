@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Invite do
-
   it { is_expected.to validate_presence_of :invited_by_id }
 
   it { is_expected.to rate_limit }
@@ -13,43 +12,42 @@ describe Invite do
     let(:user) { Fabricate(:user) }
     let(:invite) { Invite.create(email: user.email, invited_by: coding_horror) }
 
-    it "should not allow an invite with the same email as an existing user" do
+    it 'should not allow an invite with the same email as an existing user' do
       expect(invite).not_to be_valid
     end
 
-    it "should not allow a user to invite themselves" do
+    it 'should not allow a user to invite themselves' do
       expect(invite.email_already_exists).to eq(true)
     end
-
   end
 
   context 'email validators' do
     let(:coding_horror) { Fabricate(:coding_horror) }
 
-    it "should not allow an invite with unformatted email address" do
-      expect {
-        Fabricate(:invite, email: "John Doe <john.doe@example.com>")
-      }.to raise_error(ActiveRecord::RecordInvalid)
+    it 'should not allow an invite with unformatted email address' do
+      expect do
+        Fabricate(:invite, email: 'John Doe <john.doe@example.com>')
+      end.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "should not allow an invite with blacklisted email" do
-      invite = Invite.create(email: "test@mailinator.com", invited_by: coding_horror)
+    it 'should not allow an invite with blacklisted email' do
+      invite =
+        Invite.create(email: 'test@mailinator.com', invited_by: coding_horror)
       expect(invite).not_to be_valid
     end
 
-    it "should allow an invite with non-blacklisted email" do
-      invite = Fabricate(:invite, email: "test@mail.com", invited_by: coding_horror)
+    it 'should allow an invite with non-blacklisted email' do
+      invite =
+        Fabricate(:invite, email: 'test@mail.com', invited_by: coding_horror)
       expect(invite).to be_valid
     end
-
   end
 
   context '#create' do
-
     context 'saved' do
       subject { Fabricate(:invite) }
 
-      it "works" do
+      it 'works' do
         expect(subject.invite_key).to be_present
         expect(subject.email_already_exists).to eq(false)
       end
@@ -72,7 +70,7 @@ describe Invite do
       end
 
       context 'destroyed' do
-        it "can invite the same user after their invite was destroyed" do
+        it 'can invite the same user after their invite was destroyed' do
           Invite.invite_by_email(iceking, inviter, topic).destroy!
           invite = Invite.invite_by_email(iceking, inviter, topic)
           expect(invite).to be_present
@@ -99,39 +97,47 @@ describe Invite do
             expect(new_invite.invite_key).not_to eq(invite.invite_key)
             expect(new_invite.topics).to eq([topic])
           end
-
         end
 
         context 'when adding a duplicate' do
           it 'returns the original invite' do
-            %w{
+            %w[
               iceking@adventuretime.ooo
               iceking@ADVENTURETIME.ooo
               ICEKING@adventuretime.ooo
-            }.each do |email|
-              expect(Invite.invite_by_email(
-                email, inviter, topic
-              )).to eq(invite)
+            ]
+              .each do |email|
+              expect(Invite.invite_by_email(email, inviter, topic)).to eq(
+                    invite
+                  )
             end
           end
 
           it 'updates timestamp of existing invite' do
             invite.update!(created_at: 10.days.ago)
 
-            resend_invite = Invite.invite_by_email(
-              'iceking@adventuretime.ooo', inviter, topic
-            )
+            resend_invite =
+              Invite.invite_by_email(
+                'iceking@adventuretime.ooo',
+                inviter,
+                topic
+              )
 
-            expect(resend_invite.created_at).to be_within(1.minute).of(Time.zone.now)
+            expect(resend_invite.created_at).to be_within(1.minute).of(
+                  Time.zone.now
+                )
           end
 
           it 'returns a new invite if the other has expired' do
             SiteSetting.invite_expiry_days = 1
             invite.update!(created_at: 2.days.ago)
 
-            new_invite = Invite.invite_by_email(
-              'iceking@adventuretime.ooo', inviter, topic
-            )
+            new_invite =
+              Invite.invite_by_email(
+                'iceking@adventuretime.ooo',
+                inviter,
+                topic
+              )
 
             expect(new_invite).not_to eq(invite)
             expect(new_invite).not_to be_expired
@@ -168,27 +174,28 @@ describe Invite do
           Invite.generate_invite_link(iceking, inviter, topic)
           expect(invite.reload.via_email).to eq(false)
         end
-
       end
     end
   end
 
   context 'an existing user' do
-    let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
+    let(:topic) do
+      Fabricate(:topic, category_id: nil, archetype: 'private_message')
+    end
     let(:coding_horror) { Fabricate(:coding_horror) }
 
-    it "works" do
+    it 'works' do
       expect do
         Invite.invite_by_email(coding_horror.email, topic.user, topic)
       end.to raise_error(Invite::UserExists)
     end
-
   end
 
   context 'a staged user' do
     it 'creates an invite for a staged user' do
       Fabricate(:staged, email: 'staged@account.com')
-      invite = Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
+      invite =
+        Invite.invite_by_email('staged@account.com', Fabricate(:coding_horror))
 
       expect(invite).to be_valid
       expect(invite.email).to eq('staged@account.com')
@@ -196,7 +203,6 @@ describe Invite do
   end
 
   context '.redeem' do
-
     let(:invite) { Fabricate(:invite) }
 
     it 'creates a notification for the invitee' do
@@ -219,27 +225,33 @@ describe Invite do
       expect(invite.redeem).to be_blank
     end
 
-    context "deletes duplicate invites" do
+    context 'deletes duplicate invites' do
       let(:another_user) { Fabricate(:user) }
 
       it 'delete duplicate invite' do
-        another_invite = Fabricate(:invite, email: invite.email, invited_by: another_user)
+        another_invite =
+          Fabricate(:invite, email: invite.email, invited_by: another_user)
         invite.redeem
         duplicate_invite = Invite.find_by(id: another_invite.id)
         expect(duplicate_invite).to be_nil
       end
 
       it 'does not delete already redeemed invite' do
-        redeemed_invite = Fabricate(:invite, email: invite.email, invited_by: another_user, redeemed_at: 1.day.ago)
+        redeemed_invite =
+          Fabricate(
+            :invite,
+            email: invite.email,
+            invited_by: another_user,
+            redeemed_at: 1.day.ago
+          )
         invite.redeem
         used_invite = Invite.find_by(id: redeemed_invite.id)
         expect(used_invite).not_to be_nil
       end
-
     end
 
-    context "as a moderator" do
-      it "will give the user a moderator flag" do
+    context 'as a moderator' do
+      it 'will give the user a moderator flag' do
         invite.invited_by = Fabricate(:admin)
         invite.moderator = true
         invite.save
@@ -248,7 +260,7 @@ describe Invite do
         expect(user).to be_moderator
       end
 
-      it "will not give the user a moderator flag if the inviter is not staff" do
+      it 'will not give the user a moderator flag if the inviter is not staff' do
         invite.moderator = true
         invite.save
 
@@ -257,8 +269,8 @@ describe Invite do
       end
     end
 
-    context "when inviting to groups" do
-      it "add the user to the correct groups" do
+    context 'when inviting to groups' do
+      it 'add the user to the correct groups' do
         group = Fabricate(:group)
         invite.invited_groups.build(group_id: group.id)
         invite.save
@@ -268,8 +280,8 @@ describe Invite do
       end
     end
 
-    context "invite trust levels" do
-      it "returns the trust level in default_invitee_trust_level" do
+    context 'invite trust levels' do
+      it 'returns the trust level in default_invitee_trust_level' do
         SiteSetting.default_invitee_trust_level = TrustLevel[3]
         expect(invite.redeem.trust_level).to eq(TrustLevel[3])
       end
@@ -285,7 +297,6 @@ describe Invite do
     end
 
     context 'simple invite' do
-
       let!(:user) { invite.redeem }
 
       it 'works correctly' do
@@ -295,9 +306,7 @@ describe Invite do
       end
 
       context 'after redeeming' do
-        before do
-          invite.reload
-        end
+        before { invite.reload }
 
         it 'works correctly' do
           # has set the user_id attribute
@@ -313,7 +322,6 @@ describe Invite do
           end
         end
       end
-
     end
 
     context 'invited to topics' do
@@ -336,7 +344,9 @@ describe Invite do
 
       context 'invited by another user to the same topic' do
         let(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
-        let!(:another_invite) { topic.invite(another_tl2_user, 'jake@adventuretime.ooo') }
+        let!(:another_invite) do
+          topic.invite(another_tl2_user, 'jake@adventuretime.ooo')
+        end
         let!(:user) { invite.redeem }
 
         it 'adds the user to the topic_users' do
@@ -351,7 +361,9 @@ describe Invite do
         let(:another_topic) { Fabricate(:topic, user: another_tl2_user) }
 
         it 'adds the user to the topic_users of the first topic' do
-          expect(another_topic.invite(another_tl2_user, user.username)).to be_truthy # invited via username
+          expect(
+            another_topic.invite(another_tl2_user, user.username)
+          ).to be_truthy # invited via username
           expect(topic.allowed_users.include?(user)).to eq(true)
         end
       end
@@ -387,17 +399,14 @@ describe Invite do
       inviter = Fabricate(:user)
       Fabricate(
         :invite,
-        invited_by: inviter,
-        user_id: 123,
-        email: 'redeemed@example.com'
+        invited_by: inviter, user_id: 123, email: 'redeemed@example.com'
       )
 
-      pending_invite = Fabricate(
-        :invite,
-        invited_by: inviter,
-        user_id: nil,
-        email: 'pending@example.com'
-      )
+      pending_invite =
+        Fabricate(
+          :invite,
+          invited_by: inviter, user_id: nil, email: 'pending@example.com'
+        )
 
       invites = Invite.find_pending_invites_from(inviter)
 
@@ -413,17 +422,14 @@ describe Invite do
       inviter = Fabricate(:user)
       Fabricate(
         :invite,
-        invited_by: inviter,
-        user_id: nil,
-        email: 'pending@example.com'
+        invited_by: inviter, user_id: nil, email: 'pending@example.com'
       )
 
-      redeemed_invite = Fabricate(
-        :invite,
-        invited_by: inviter,
-        user_id: 123,
-        email: 'redeemed@example.com'
-      )
+      redeemed_invite =
+        Fabricate(
+          :invite,
+          invited_by: inviter, user_id: 123, email: 'redeemed@example.com'
+        )
 
       invites = Invite.find_redeemed_invites_from(inviter)
 
@@ -443,14 +449,24 @@ describe Invite do
     end
 
     it 'sets the matching invite to be invalid' do
-      invite = Fabricate(:invite, invited_by: Fabricate(:user), user_id: nil, email: email)
+      invite =
+        Fabricate(
+          :invite,
+          invited_by: Fabricate(:user), user_id: nil, email: email
+        )
       expect(subject).to eq(invite)
       expect(subject.link_valid?).to eq(false)
       expect(subject).to be_valid
     end
 
     it 'sets the matching invite to be invalid without being case-sensitive' do
-      invite = Fabricate(:invite, invited_by: Fabricate(:user), user_id: nil, email: 'invite.me2@Example.COM')
+      invite =
+        Fabricate(
+          :invite,
+          invited_by: Fabricate(:user),
+          user_id: nil,
+          email: 'invite.me2@Example.COM'
+        )
       result = described_class.invalidate_for_email('invite.me2@EXAMPLE.com')
       expect(result).to eq(invite)
       expect(result.link_valid?).to eq(false)
@@ -460,7 +476,12 @@ describe Invite do
 
   describe '.redeem_from_email' do
     let(:inviter) { Fabricate(:user) }
-    let(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
+    let(:invite) do
+      Fabricate(
+        :invite,
+        invited_by: inviter, email: 'test@example.com', user_id: nil
+      )
+    end
     let(:user) { Fabricate(:user, email: invite.email) }
 
     it 'redeems the invite from email' do
@@ -474,7 +495,6 @@ describe Invite do
       invite.reload
       expect(invite).not_to be_redeemed
     end
-
   end
 
   describe '.rescind_all_expired_invites_from' do

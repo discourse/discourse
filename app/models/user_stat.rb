@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class UserStat < ActiveRecord::Base
-
   belongs_to :user
   after_save :trigger_badges
 
@@ -10,20 +9,18 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.reset_bounce_scores
-    UserStat.where("reset_bounce_score_after < now()")
-      .where("bounce_score > 0")
+    UserStat.where('reset_bounce_score_after < now()').where('bounce_score > 0')
       .update_all(bounce_score: 0)
   end
 
   # Updates the denormalized view counts for all users
   def self.update_view_counts(last_seen = 1.hour.ago)
-
     # NOTE: we only update the counts for users we have seen in the last hour
     #  this avoids a very expensive query that may run on the entire user base
     #  we also ensure we only touch the table if data changes
 
     # Update denormalized topics_entered
-    DB.exec(<<~SQL, seen_at: last_seen)
+    sql = <<~SQL
       UPDATE user_stats SET topics_entered = X.c
        FROM
       (SELECT v.user_id, COUNT(topic_id) AS c
@@ -36,9 +33,10 @@ class UserStat < ActiveRecord::Base
         X.user_id = user_stats.user_id AND
         X.c <> topics_entered
     SQL
+    DB.exec(sql, seen_at: last_seen)
 
     # Update denormalzied posts_read_count
-    DB.exec(<<~SQL, seen_at: last_seen)
+    sql = <<~SQL
       UPDATE user_stats SET posts_read_count = X.c
       FROM
       (SELECT pt.user_id,
@@ -53,20 +51,25 @@ class UserStat < ActiveRecord::Base
        WHERE X.user_id = user_stats.user_id AND
              X.c <> posts_read_count
     SQL
+    DB.exec(sql, seen_at: last_seen)
   end
 
   # topic_reply_count is a count of posts in other users' topics
   def update_topic_reply_count
     self.topic_reply_count =
-        Topic
-      .where(['id in (
+      Topic.where(
+        [
+          'id in (
               SELECT topic_id FROM posts p
               JOIN topics t2 ON t2.id = p.topic_id
               WHERE p.deleted_at IS NULL AND
                 t2.user_id <> p.user_id AND
                 p.user_id = ?
-              )', self.user_id])
-      .count
+              )',
+          self.user_id
+        ]
+      )
+        .count
   end
 
   MAX_TIME_READ_DIFF = 100
@@ -75,9 +78,10 @@ class UserStat < ActiveRecord::Base
     if last_seen = last_seen_cached(id)
       diff = (Time.now.to_f - last_seen.to_f).round
       if diff > 0 && diff < MAX_TIME_READ_DIFF
-        update_args = ["time_read = time_read + ?", diff]
+        update_args = ['time_read = time_read + ?', diff]
         UserStat.where(user_id: id).update_all(update_args)
-        UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date).update_all(update_args)
+        UserVisit.where(user_id: id, visited_at: Time.zone.now.to_date)
+          .update_all(update_args)
       end
     end
     cache_last_seen(id, Time.now.to_f)

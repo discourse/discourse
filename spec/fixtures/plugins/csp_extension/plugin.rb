@@ -4,6 +4,6 @@
 # authors: xrav3nz
 
 extend_content_security_policy(
-  script_src: ['https://from-plugin.com'],
-  object_src: ['https://test-stripping.com']
+  script_src: %w[https://from-plugin.com],
+  object_src: %w[https://test-stripping.com]
 )

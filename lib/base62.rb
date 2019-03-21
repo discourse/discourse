@@ -1,16 +1,17 @@
 # Modified version of: https://github.com/steventen/base62-rb
 
 module Base62
-  KEYS ||= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".freeze
+  KEYS ||=
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.freeze
   KEYS_HASH ||= KEYS.each_char.with_index.to_h
   BASE ||= KEYS.length
 
   # Encodes base10 (decimal) number to base62 string.
   def self.encode(num)
-    return "0" if num == 0
+    return '0' if num == 0
     return nil if num < 0
 
-    str = ""
+    str = ''
     while num > 0
       # prepend base62 charaters
       str = KEYS[num % BASE] + str

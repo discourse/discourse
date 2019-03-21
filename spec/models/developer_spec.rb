@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Developer do
-  it "can correctly flag developer accounts" do
+  it 'can correctly flag developer accounts' do
     user = Fabricate(:user)
     guardian = Guardian.new(user)
 

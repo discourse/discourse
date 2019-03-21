@@ -1,5 +1,4 @@
 module JsonError
-
   def create_errors_json(obj, opts = nil)
     opts ||= {}
 
@@ -19,7 +18,9 @@ module JsonError
     obj = obj.record if obj.is_a?(ActiveRecord::RecordInvalid)
 
     # If it looks like an activerecord object, extract its messages
-    return { errors: obj.errors.full_messages } if obj.respond_to?(:errors) && obj.errors.present?
+    if obj.respond_to?(:errors) && obj.errors.present?
+      return { errors: obj.errors.full_messages }
+    end
 
     # If we're passed an array, it's an array of error messages
     return { errors: obj.map(&:to_s) } if obj.is_a?(Array) && obj.present?
@@ -31,7 +32,11 @@ module JsonError
     end
 
     # Log a warning (unless obj is nil)
-    Rails.logger.warn("create_errors_json called with unrecognized type: #{obj.inspect}") if obj
+    if obj
+      Rails.logger.warn(
+        "create_errors_json called with unrecognized type: #{obj.inspect}"
+      )
+    end
 
     # default to a generic error
     JsonError.generic_error
@@ -40,5 +45,4 @@ module JsonError
   def self.generic_error
     { errors: [I18n.t('js.generic_error')] }
   end
-
 end

@@ -3,15 +3,11 @@ require 'system_message'
 require 'topic_subtype'
 
 describe SystemMessage do
-
   context 'send' do
-
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
 
-    before do
-      SiteSetting.site_contact_username = admin.username
-    end
+    before { SiteSetting.site_contact_username = admin.username }
 
     it 'should create a post correctly' do
       system_message = SystemMessage.new(user)
@@ -25,7 +21,9 @@ describe SystemMessage do
       expect(topic.allowed_users.include?(user)).to eq(true)
       expect(topic.allowed_users.include?(admin)).to eq(true)
 
-      expect(UserArchivedMessage.where(user_id: admin.id, topic_id: topic.id).length).to eq(1)
+      expect(
+        UserArchivedMessage.where(user_id: admin.id, topic_id: topic.id).length
+      ).to eq(1)
     end
 
     it 'should allow site_contact_group_name' do
@@ -35,10 +33,9 @@ describe SystemMessage do
       post = SystemMessage.create(user, :welcome_invite)
       expect(post.topic.allowed_groups).to contain_exactly(group)
 
-      group.update!(name: "anewname")
+      group.update!(name: 'anewname')
       post = SystemMessage.create(user, :welcome_invite)
-      expect(post.topic.allowed_groups).to contain_exactly()
+      expect(post.topic.allowed_groups).to contain_exactly
     end
   end
-
 end

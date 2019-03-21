@@ -13,13 +13,9 @@ Fabricator(:web_hook) do
   end
 end
 
-Fabricator(:inactive_web_hook, from: :web_hook) do
-  active false
-end
+Fabricator(:inactive_web_hook, from: :web_hook) { active false }
 
-Fabricator(:wildcard_web_hook, from: :web_hook) do
-  wildcard_web_hook true
-end
+Fabricator(:wildcard_web_hook, from: :web_hook) { wildcard_web_hook true }
 
 Fabricator(:topic_web_hook, from: :web_hook) do
   transient topic_hook: WebHookEventType.find_by(name: 'topic')

@@ -5,22 +5,22 @@ class Rack::ETag
 
   def digest_body(body)
     parts = []
-   has_body = false
+    has_body = false
 
-   body.each do |part|
-     parts << part
-     has_body ||= part.length > 0
-   end
+    body.each do |part|
+      parts << part
+      has_body ||= part.length > 0
+    end
 
-   hexdigest =
-     if has_body
-       digest = Digest::MD5.new
-       parts.each { |part| digest << part }
-       digest.hexdigest
-     end
+    hexdigest =
+      if has_body
+        digest = Digest::MD5.new
+        parts.each { |part| digest << part }
+        digest.hexdigest
+      end
 
-   [hexdigest, parts]
- end
+    [hexdigest, parts]
+  end
 end
 
 # patch https://github.com/rack/rack/pull/596
@@ -34,9 +34,13 @@ class Rack::ConditionalGet
     if since && since.length >= 16
       # NOTE: there is no trivial way to write this in a non execption way
       #   _rfc2822 returns a hash but is not that usable
-      Time.rfc2822(since) rescue nil
+      begin
+        Time.rfc2822(since)
+      rescue StandardError
+        nil
+      end
     else
       nil
     end
- end
+  end
 end

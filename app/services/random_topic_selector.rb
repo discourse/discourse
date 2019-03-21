@@ -1,5 +1,4 @@
 class RandomTopicSelector
-
   BACKFILL_SIZE = 3000
   BACKFILL_LOW_WATER_MARK = 500
 
@@ -28,12 +27,17 @@ class RandomTopicSelector
 
     query = TopicQuery.new(nil, options)
 
-    results = query.latest_results.order('RANDOM()')
-      .where(closed: false, archived: false)
-      .where("topics.created_at > ?", SiteSetting.suggested_topics_max_days_old.days.ago)
-      .limit(BACKFILL_SIZE)
-      .reorder('RANDOM()')
-      .pluck(:id)
+    results =
+      query.latest_results.order('RANDOM()').where(
+        closed: false, archived: false
+      )
+        .where(
+        'topics.created_at > ?',
+        SiteSetting.suggested_topics_max_days_old.days.ago
+      )
+        .limit(BACKFILL_SIZE)
+        .reorder('RANDOM()')
+        .pluck(:id)
 
     key = cache_key(category)
 
@@ -54,10 +58,11 @@ class RandomTopicSelector
 
     return results if count < 1
 
-    results = $redis.multi do
-      $redis.lrange(key, 0, count - 1)
-      $redis.ltrim(key, count, -1)
-    end
+    results =
+      $redis.multi do
+        $redis.lrange(key, 0, count - 1)
+        $redis.ltrim(key, count, -1)
+      end
 
     if !results.is_a?(Array) # Redis is in readonly mode
       results = $redis.lrange(key, 0, count - 1)
@@ -79,9 +84,7 @@ class RandomTopicSelector
     end
 
     if !backfilled && $redis.llen(key) < BACKFILL_LOW_WATER_MARK
-      Scheduler::Defer.later("backfill") do
-        backfill(category)
-      end
+      Scheduler::Defer.later('backfill') { backfill(category) }
     end
 
     results
@@ -94,5 +97,4 @@ class RandomTopicSelector
   def self.clear_cache!
     $redis.delete_prefixed(cache_key)
   end
-
 end

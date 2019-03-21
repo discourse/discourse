@@ -7,10 +7,7 @@ module Jobs
     RETRY_BACKOFF = 5
 
     def execute(args)
-      %i{
-        web_hook_id
-        event_type
-      }.each do |key|
+      %i[web_hook_id event_type].each do |key|
         raise Discourse::InvalidParameters.new(key) unless args[key].present?
       end
 
@@ -22,16 +19,30 @@ module Jobs
       unless ping_event?(args[:event_type])
         return unless web_hook.active?
 
-        return if web_hook.group_ids.present? && (args[:group_id].present? ||
-          !web_hook.group_ids.include?(args[:group_id]))
+        if web_hook.group_ids.present? &&
+           (
+             args[:group_id].present? ||
+               !web_hook.group_ids.include?(args[:group_id])
+           )
+          return
+        end
 
-        return if web_hook.category_ids.present? && (!args[:category_id].present? ||
-          !web_hook.category_ids.include?(args[:category_id]))
+        if web_hook.category_ids.present? &&
+           (
+             !args[:category_id].present? ||
+               !web_hook.category_ids.include?(args[:category_id])
+           )
+          return
+        end
 
-        return if web_hook.tag_ids.present? && (args[:tag_ids].blank? ||
-          (web_hook.tag_ids & args[:tag_ids]).blank?)
+        if web_hook.tag_ids.present? &&
+           (args[:tag_ids].blank? || (web_hook.tag_ids & args[:tag_ids]).blank?)
+          return
+        end
 
-        raise Discourse::InvalidParameters.new(:payload) unless args[:payload].present?
+        unless args[:payload].present?
+          raise Discourse::InvalidParameters.new(:payload)
+        end
         args[:payload] = JSON.parse(args[:payload])
       end
 
@@ -65,11 +76,11 @@ module Jobs
     def web_hook_request(args, web_hook)
       uri = URI(web_hook.payload_url.strip)
 
-      conn = Excon.new(
-        uri.to_s,
-        ssl_verify_peer: web_hook.verify_certificate,
-        retry_limit: 0
-      )
+      conn =
+        Excon.new(
+          uri.to_s,
+          ssl_verify_peer: web_hook.verify_certificate, retry_limit: 0
+        )
 
       body = build_web_hook_body(args, web_hook)
       web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id)
@@ -96,10 +107,13 @@ module Jobs
           'X-Discourse-Event-Type' => args[:event_type]
         }
 
-        headers['X-Discourse-Event'] = args[:event_name].to_s if args[:event_name].present?
+        if args[:event_name].present?
+          headers['X-Discourse-Event'] = args[:event_name].to_s
+        end
 
         if web_hook.secret.present?
-          headers['X-Discourse-Event-Signature'] = "sha256=#{OpenSSL::HMAC.hexdigest("sha256", web_hook.secret, body)}"
+          headers['X-Discourse-Event-Signature'] =
+            "sha256=#{OpenSSL::HMAC.hexdigest('sha256', web_hook.secret, body)}"
         end
 
         now = Time.zone.now
@@ -114,11 +128,14 @@ module Jobs
           duration: ((Time.zone.now - now) * 1000).to_i
         )
 
-        MessageBus.publish("/web_hook_events/#{web_hook.id}", {
-          web_hook_event_id: web_hook_event.id,
-          event_type: args[:event_type]
-        }, user_ids: User.human_users.staff.pluck(:id))
-      rescue
+        MessageBus.publish(
+          "/web_hook_events/#{web_hook.id}",
+          {
+            web_hook_event_id: web_hook_event.id, event_type: args[:event_type]
+          },
+          user_ids: User.human_users.staff.pluck(:id)
+        )
+      rescue StandardError
         web_hook_event.destroy!
       end
 

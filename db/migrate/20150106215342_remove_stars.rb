@@ -1,6 +1,7 @@
 class RemoveStars < ActiveRecord::Migration[4.2]
   def up
-    r = execute <<SQL
+    r =
+      execute <<SQL
     INSERT INTO post_actions(user_id, post_id, post_action_type_id, created_at, updated_at)
     SELECT tu.user_id, p.id, 1, coalesce(tu.starred_at, now()), coalesce(tu.starred_at, now())
     FROM topic_users tu
@@ -11,9 +12,9 @@ class RemoveStars < ActiveRecord::Migration[4.2]
         pa.post_action_type_id = 1
     WHERE pa.post_id IS NULL AND tu.starred
 SQL
-   puts "#{r.cmd_tuples} stars were converted to bookmarks!"
+    puts "#{r.cmd_tuples} stars were converted to bookmarks!"
 
-   execute <<SQL
+    execute <<SQL
    DELETE FROM user_actions WHERE action_type = 10
 SQL
 

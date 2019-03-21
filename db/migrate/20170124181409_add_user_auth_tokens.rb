@@ -9,24 +9,23 @@ class AddUserAuthTokens < ActiveRecord::Migration[4.2]
 SQL
 
     drop_table :user_auth_tokens
-
   end
 
   def up
     create_table :user_auth_tokens do |t|
       t.integer :user_id, null: false
-      t.string  :auth_token, null: false
-      t.string  :prev_auth_token, null: false
-      t.string  :user_agent
+      t.string :auth_token, null: false
+      t.string :prev_auth_token, null: false
+      t.string :user_agent
       t.boolean :auth_token_seen, default: false, null: false
       t.boolean :legacy, default: false, null: false
-      t.inet    :client_ip
+      t.inet :client_ip
       t.datetime :rotated_at, null: false
       t.timestamps null: false
     end
 
-    add_index :user_auth_tokens, [:auth_token]
-    add_index :user_auth_tokens, [:prev_auth_token]
+    add_index :user_auth_tokens, %i[auth_token]
+    add_index :user_auth_tokens, %i[prev_auth_token]
 
     execute <<~SQL
     INSERT INTO user_auth_tokens(user_id, auth_token, prev_auth_token, legacy, updated_at, created_at, rotated_at)

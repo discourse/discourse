@@ -2,13 +2,14 @@ require_dependency 'pretty_text'
 
 # A very simple formatter for imported emails
 class EmailCook
-
   def self.url_regexp
-    @url_regexp ||= /((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/
+    @url_regexp ||=
+      %r{((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))}
   end
 
   def self.raw_regexp
-    @raw_regexp ||= /^\[plaintext\]$\n(.*)\n^\[\/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[\/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[\/elided\]$)?/m
+    @raw_regexp ||=
+      %r{^\[plaintext\]$\n(.*)\n^\[\/plaintext\]$(?:\s^\[attachments\]$\n(.*)\n^\[\/attachments\]$)?(?:\s^\[elided\]$\n(.*)\n^\[\/elided\]$)?}m
   end
 
   def initialize(raw)
@@ -30,9 +31,9 @@ class EmailCook
 
       if unescaped_line == url
         # this could be oneboxed
-        val = %|<a href="#{url}" class="onebox" target="_blank">#{url}</a>|
+        val = "<a href=\"#{url}\" class=\"onebox\" target=\"_blank\">#{url}</a>"
       else
-        val = %|<a href="#{url}">#{url}</a>|
+        val = "<a href=\"#{url}\">#{url}</a>"
       end
 
       line.gsub!(url, val)
@@ -40,15 +41,16 @@ class EmailCook
   end
 
   def htmlify(text)
-    result = ""
+    result = ''
 
     in_text = false
     in_quote = false
 
-    quote_buffer = ""
+    quote_buffer = ''
     text.each_line do |line|
       # replace indentation with non-breaking spaces
-      line.sub!(/^\s{2,}/) { |s| "\u00A0" * s.length }
+      line
+        .sub!(/^\s{2,}/) { |s| "\u00A0" * s.length }
 
       if line =~ /^\s*>/
         in_quote = true
@@ -58,13 +60,12 @@ class EmailCook
         line = CGI.escapeHTML(line)
         link_string!(line, unescaped_line)
 
-        quote_buffer << line << "<br>"
+        quote_buffer << line << '<br>'
       elsif in_quote
         add_quote(result, quote_buffer)
-        quote_buffer = ""
+        quote_buffer = ''
         in_quote = false
       else
-
         sz = line.size
 
         unescaped_line = line
@@ -72,11 +73,9 @@ class EmailCook
         link_string!(line, unescaped_line)
 
         if sz < 60
-          if in_text && line == "\n"
-            result << "<br>"
-          end
+          result << '<br>' if in_text && line == "\n"
           result << line
-          result << "<br>"
+          result << '<br>'
 
           in_text = false
         else
@@ -86,9 +85,7 @@ class EmailCook
       end
     end
 
-    if in_quote && quote_buffer.present?
-      add_quote(result, quote_buffer)
-    end
+    add_quote(result, quote_buffer) if in_quote && quote_buffer.present?
 
     result.gsub!(/(<br>\n*){3,10}/, '<br><br>')
     result
@@ -98,10 +95,11 @@ class EmailCook
     # fallback to PrettyText if we failed to detect a body
     return PrettyText.cook(@raw, opts) if @body.nil?
 
-    result =  htmlify(@body)
+    result = htmlify(@body)
     result << "\n<br>" << @attachment_html if @attachment_html.present?
-    result << "\n<br><br>" << Email::Receiver.elided_html(htmlify(@elided)) if @elided.present?
+    if @elided.present?
+      result << "\n<br><br>" << Email::Receiver.elided_html(htmlify(@elided))
+    end
     result
   end
-
 end

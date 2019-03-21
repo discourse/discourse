@@ -2,13 +2,9 @@ require 'rails_helper'
 require_dependency 'jobs/base'
 
 describe Jobs do
-
   describe 'enqueue' do
-
     describe 'run_later!' do
-      before do
-        Jobs.run_later!
-      end
+      before { Jobs.run_later! }
 
       it 'enqueues a job in sidekiq' do
         Sidekiq::Testing.fake! do
@@ -20,11 +16,11 @@ describe Jobs do
           job = jobs.first
 
           expected = {
-            "class" => "Jobs::ProcessPost",
-            "args" => [{ "post_id" => 1, "current_site_id" => "default" }],
-            "queue" => "default"
+            'class' => 'Jobs::ProcessPost',
+            'args' => [{ 'post_id' => 1, 'current_site_id' => 'default' }],
+            'queue' => 'default'
           }
-          expect(job.slice("class", "args", "queue")).to eq(expected)
+          expect(job.slice('class', 'args', 'queue')).to eq(expected)
         end
       end
 
@@ -39,11 +35,11 @@ describe Jobs do
           job = jobs.first
 
           expected = {
-            "class" => "Jobs::ProcessPost",
-            "args" => [{ "post_id" => 1 }],
-            "queue" => "default"
+            'class' => 'Jobs::ProcessPost',
+            'args' => [{ 'post_id' => 1 }],
+            'queue' => 'default'
           }
-          expect(job.slice("class", "args", "queue")).to eq(expected)
+          expect(job.slice('class', 'args', 'queue')).to eq(expected)
         end
       end
 
@@ -53,8 +49,7 @@ describe Jobs do
         Jobs.enqueue(:process_post, post_id: 1)
       end
 
-      it "should enqueue with the correct database id when the current_site_id option is given" do
-
+      it 'should enqueue with the correct database id when the current_site_id option is given' do
         Sidekiq::Testing.fake! do
           jobs = Jobs::ProcessPost.jobs
 
@@ -65,27 +60,27 @@ describe Jobs do
           job = jobs.first
 
           expected = {
-            "class" => "Jobs::ProcessPost",
-            "args" => [{ "post_id" => 1, "current_site_id" => "test_db" }],
-            "queue" => "default"
+            'class' => 'Jobs::ProcessPost',
+            'args' => [{ 'post_id' => 1, 'current_site_id' => 'test_db' }],
+            'queue' => 'default'
           }
-          expect(job.slice("class", "args", "queue")).to eq(expected)
+          expect(job.slice('class', 'args', 'queue')).to eq(expected)
         end
       end
     end
 
     describe 'run_immediately!' do
-      before do
-        Jobs.run_immediately!
-      end
+      before { Jobs.run_immediately! }
 
       it "doesn't enqueue in sidekiq" do
         Sidekiq::Client.expects(:enqueue).with(Jobs::ProcessPost, {}).never
         Jobs.enqueue(:process_post, post_id: 1)
       end
 
-      it "executes the job right away" do
-        Jobs::ProcessPost.any_instance.expects(:perform).with(post_id: 1, sync_exec: true, current_site_id: "default")
+      it 'executes the job right away' do
+        Jobs::ProcessPost.any_instance.expects(:perform).with(
+          post_id: 1, sync_exec: true, current_site_id: 'default'
+        )
         Jobs.enqueue(:process_post, post_id: 1)
       end
 
@@ -97,23 +92,21 @@ describe Jobs do
 
         it 'should raise an exception' do
           Jobs::ProcessPost.any_instance.expects(:execute).never
-          RailsMultisite::ConnectionManagement.expects(:establish_connection).never
+          RailsMultisite::ConnectionManagement.expects(:establish_connection)
+            .never
 
-          expect {
+          expect do
             Jobs.enqueue(:process_post, post_id: 1, current_site_id: 'test_db')
-          }.to raise_error(ArgumentError)
+          end.to raise_error(ArgumentError)
         end
       end
     end
-
   end
 
   describe 'cancel_scheduled_job' do
     let(:scheduled_jobs) { Sidekiq::ScheduledSet.new }
 
-    after do
-      scheduled_jobs.clear
-    end
+    after { scheduled_jobs.clear }
 
     it 'deletes the matching job' do
       Sidekiq::Testing.disable! do
@@ -122,8 +115,16 @@ describe Jobs do
 
         Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 123)
         Jobs.enqueue_in(2.years, :run_heartbeat, topic_id: 456)
-        Jobs.enqueue_in(3.years, :run_heartbeat, topic_id: 123, current_site_id: 'foo')
-        Jobs.enqueue_in(4.years, :run_heartbeat, topic_id: 123, current_site_id: 'bar')
+        Jobs.enqueue_in(
+          3.years,
+          :run_heartbeat,
+          topic_id: 123, current_site_id: 'foo'
+        )
+        Jobs.enqueue_in(
+          4.years,
+          :run_heartbeat,
+          topic_id: 123, current_site_id: 'bar'
+        )
 
         expect(scheduled_jobs.size).to eq(4)
 
@@ -131,12 +132,14 @@ describe Jobs do
 
         expect(scheduled_jobs.size).to eq(3)
 
-        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 123, all_sites: true)
+        Jobs.cancel_scheduled_job(
+          :run_heartbeat,
+          topic_id: 123, all_sites: true
+        )
 
         expect(scheduled_jobs.size).to eq(1)
       end
     end
-
   end
 
   describe 'enqueue_at' do
@@ -152,5 +155,4 @@ describe Jobs do
       Jobs.enqueue_at(3.hours.ago, :eat_lunch, {})
     end
   end
-
 end

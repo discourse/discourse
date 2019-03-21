@@ -1,5 +1,4 @@
 module UserPrimaryGroupMixin
-
   def self.included(klass)
     klass.attributes :primary_group_name,
                      :primary_group_flair_url,
@@ -38,5 +37,4 @@ module UserPrimaryGroupMixin
   def include_primary_group_flair_color?
     object&.primary_group&.flair_color.present?
   end
-
 end

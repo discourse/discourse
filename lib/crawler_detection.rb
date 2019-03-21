@@ -1,11 +1,10 @@
 module CrawlerDetection
-
   def self.to_matcher(string, type: nil)
     escaped = string.split('|').map { |agent| Regexp.escape(agent) }.join('|')
 
-    if type == :real && Rails.env == "test"
+    if type == :real && Rails.env == 'test'
       # we need this bypass so we properly render views
-      escaped << "|Rails Testing"
+      escaped << '|Rails Testing'
     end
 
     Regexp.new(escaped, Regexp::IGNORECASE)
@@ -18,12 +17,24 @@ module CrawlerDetection
     @non_crawler_matchers ||= {}
     @matchers ||= {}
 
-    possibly_real = (@non_crawler_matchers[SiteSetting.non_crawler_user_agents] ||= to_matcher(SiteSetting.non_crawler_user_agents, type: :real))
+    possibly_real =
+      (
+        @non_crawler_matchers[SiteSetting.non_crawler_user_agents] ||=
+          to_matcher(SiteSetting.non_crawler_user_agents, type: :real)
+      )
 
     if user_agent.match?(possibly_real)
-      known_bots = (@matchers[SiteSetting.crawler_user_agents] ||= to_matcher(SiteSetting.crawler_user_agents))
+      known_bots =
+        (
+          @matchers[SiteSetting.crawler_user_agents] ||=
+            to_matcher(SiteSetting.crawler_user_agents)
+        )
       if user_agent.match?(known_bots)
-        bypass = (@matchers[SiteSetting.crawler_check_bypass_agents] ||= to_matcher(SiteSetting.crawler_check_bypass_agents))
+        bypass =
+          (
+            @matchers[SiteSetting.crawler_check_bypass_agents] ||=
+              to_matcher(SiteSetting.crawler_check_bypass_agents)
+          )
         !user_agent.match?(bypass)
       else
         false
@@ -31,22 +42,27 @@ module CrawlerDetection
     else
       true
     end
-
   end
 
   # Given a user_agent that returns true from crawler?, should its request be allowed?
   def self.allow_crawler?(user_agent)
-    return true if SiteSetting.whitelisted_crawler_user_agents.blank? &&
-      SiteSetting.blacklisted_crawler_user_agents.blank?
+    if SiteSetting.whitelisted_crawler_user_agents.blank? &&
+       SiteSetting.blacklisted_crawler_user_agents.blank?
+      return true
+    end
 
     @whitelisted_matchers ||= {}
     @blacklisted_matchers ||= {}
 
     if SiteSetting.whitelisted_crawler_user_agents.present?
-      whitelisted = @whitelisted_matchers[SiteSetting.whitelisted_crawler_user_agents] ||= to_matcher(SiteSetting.whitelisted_crawler_user_agents)
+      whitelisted =
+        @whitelisted_matchers[SiteSetting.whitelisted_crawler_user_agents] ||=
+          to_matcher(SiteSetting.whitelisted_crawler_user_agents)
       !user_agent.nil? && user_agent.match?(whitelisted)
     else
-      blacklisted = @blacklisted_matchers[SiteSetting.blacklisted_crawler_user_agents] ||= to_matcher(SiteSetting.blacklisted_crawler_user_agents)
+      blacklisted =
+        @blacklisted_matchers[SiteSetting.blacklisted_crawler_user_agents] ||=
+          to_matcher(SiteSetting.blacklisted_crawler_user_agents)
       user_agent.nil? || !user_agent.match?(blacklisted)
     end
   end

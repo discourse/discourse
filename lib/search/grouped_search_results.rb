@@ -1,7 +1,6 @@
 require 'sanitize'
 
 class Search
-
   class GroupedSearchResults
     include ActiveModel::Serialization
 
@@ -27,7 +26,9 @@ class Search
 
     attr_accessor :search_log_id
 
-    def initialize(type_filter, term, search_context, include_blurbs, blurb_length)
+    def initialize(
+      type_filter, term, search_context, include_blurbs, blurb_length
+    )
       @type_filter = type_filter
       @term = term
       @search_context = search_context
@@ -70,12 +71,19 @@ class Search
 
       if term
         terms = term.split(/\s+/)
-        blurb = TextHelper.excerpt(cooked, terms.first, radius: blurb_length / 2, seperator: " ")
+        blurb =
+          TextHelper.excerpt(
+            cooked,
+            terms.first,
+            radius: blurb_length / 2, seperator: ' '
+          )
       end
 
-      blurb = TextHelper.truncate(cooked, length: blurb_length, seperator: " ") if blurb.blank?
+      if blurb.blank?
+        blurb =
+          TextHelper.truncate(cooked, length: blurb_length, seperator: ' ')
+      end
       Sanitize.clean(blurb)
     end
   end
-
 end

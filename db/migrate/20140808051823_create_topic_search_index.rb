@@ -8,7 +8,7 @@ class CreateTopicSearchIndex < ActiveRecord::Migration[4.2]
       t.tsvector :search_data
     end
 
-    execute "CREATE INDEX idx_search_topic ON topic_search_data USING gin (search_data)"
+    execute 'CREATE INDEX idx_search_topic ON topic_search_data USING gin (search_data)'
   end
 
   def down

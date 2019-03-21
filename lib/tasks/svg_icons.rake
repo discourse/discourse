@@ -7,14 +7,13 @@ def library_src
 end
 
 task 'svgicons:update' do
-
-  yarn = system("yarn install")
+  yarn = system('yarn install')
   abort('Unable to run "yarn install"') unless yarn
 
   dependencies = [
     {
       source: '@fortawesome/fontawesome-free/sprites',
-      destination: 'fontawesome',
+      destination: 'fontawesome'
     }
   ]
 
@@ -24,7 +23,7 @@ task 'svgicons:update' do
     src = "#{library_src}/#{f[:source]}/."
 
     unless f[:destination]
-      filename = f[:source].split("/").last
+      filename = f[:source].split('/').last
     else
       filename = f[:destination]
     end
@@ -34,5 +33,7 @@ task 'svgicons:update' do
     FileUtils.cp_r(src, dest)
   end
 
-  STDERR.puts "Completed copying dependencies: #{(Time.now - start).round(2)} secs"
+  STDERR.puts "Completed copying dependencies: #{(Time.now - start).round(
+                2
+              )} secs"
 end

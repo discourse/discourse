@@ -9,6 +9,5 @@ class RemoveTopicResponseActions < ActiveRecord::Migration[4.2]
     execute 'delete from user_actions where action_type = 8'
   end
 
-  def down
-  end
+  def down; end
 end

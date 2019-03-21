@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ExtraLocalesController < ApplicationController
-
   layout :false
   skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
 
@@ -10,11 +9,10 @@ class ExtraLocalesController < ApplicationController
     raise Discourse::InvalidAccess.new unless bundle =~ /^(admin|wizard)$/
     if params[:v] && params[:v].length == 32
       hash = ExtraLocalesController.bundle_js_hash(bundle)
-      if hash == params[:v]
-        immutable_for 24.hours
-      end
+      immutable_for 24.hours if hash == params[:v]
     end
-    render plain: ExtraLocalesController.bundle_js(bundle), content_type: "application/javascript"
+    render plain: ExtraLocalesController.bundle_js(bundle),
+           content_type: 'application/javascript'
   end
 
   def self.bundle_js_hash(bundle)
@@ -23,8 +21,10 @@ class ExtraLocalesController < ApplicationController
   end
 
   def self.url(bundle)
-    if Rails.env == "production"
-      "#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(bundle)}"
+    if Rails.env == 'production'
+      "#{Discourse.base_uri}/extra-locales/#{bundle}?v=#{bundle_js_hash(
+        bundle
+      )}"
     else
       "#{Discourse.base_uri}/extra-locales/#{bundle}"
     end
@@ -37,23 +37,28 @@ class ExtraLocalesController < ApplicationController
     translations = JsLocaleHelper.translations_for(locale_str)
 
     for_key = {}
-    translations.values.each { |v| for_key.deep_merge!(v[bundle_str]) if v.has_key?(bundle_str) }
+    translations.values.each do |v|
+      for_key.deep_merge!(v[bundle_str]) if v.has_key?(bundle_str)
+    end
 
-    js = ""
+    js = ''
 
     if for_key.present?
-      if plugin_for_key = JsLocaleHelper.plugin_translations(locale_str)[bundle_str]
+      if plugin_for_key =
+         JsLocaleHelper.plugin_translations(locale_str)[bundle_str]
         for_key.deep_merge!(plugin_for_key)
       end
 
-      js = <<~JS.squish
+      js = <<~JS
         (function() {
           if (window.I18n) {
             window.I18n.extras = window.I18n.extras || [];
-            window.I18n.extras.push(#{for_key.to_json});
+            window.I18n.extras.push(#{for_key
+        .to_json});
           }
         })();
       JS
+        .squish
     end
 
     js

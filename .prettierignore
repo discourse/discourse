@@ -3,3 +3,10 @@ plugins/**/assets/stylesheets/vendor/
 package.json
 config/locales/**/*.yml
 !config/locales/**/*.en.yml
+
+// to remove once prettier ruby has support for #prettier-ignore
+lib/db_helper.rb
+lib/freedom_patches/rails4.rb
+lib/plain_text_to_markdown.rb
+lib/slug.rb
+lib/tasks/docker.rake

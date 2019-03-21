@@ -3,16 +3,22 @@ module SecondFactorManager
 
   def totp
     self.create_totp
-    ROTP::TOTP.new(self.user_second_factors.totp.data, issuer: SiteSetting.title)
+    ROTP::TOTP.new(
+      self.user_second_factors.totp.data,
+      issuer: SiteSetting.title
+    )
   end
 
   def create_totp(opts = {})
     if !self.user_second_factors.totp
-      UserSecondFactor.create!({
-        user_id: self.id,
-        method: UserSecondFactor.methods[:totp],
-        data: ROTP::Base32.random_base32
-      }.merge(opts))
+      UserSecondFactor.create!(
+        {
+          user_id: self.id,
+          method: UserSecondFactor.methods[:totp],
+          data: ROTP::Base32.random_base32
+        }
+          .merge(opts)
+      )
     end
   end
 
@@ -28,20 +34,21 @@ module SecondFactorManager
       last_used = self.user_second_factors.totp.last_used.to_i
     end
 
-    authenticated = !token.blank? && totp.verify_with_drift_and_prior(token, 30, last_used)
-    self.user_second_factors.totp.update!(last_used: DateTime.now) if authenticated
+    authenticated =
+      !token.blank? && totp.verify_with_drift_and_prior(token, 30, last_used)
+    if authenticated
+      self.user_second_factors.totp.update!(last_used: DateTime.now)
+    end
     !!authenticated
   end
 
   def totp_enabled?
-    !SiteSetting.enable_sso &&
-      SiteSetting.enable_local_logins &&
+    !SiteSetting.enable_sso && SiteSetting.enable_local_logins &&
       self&.user_second_factors.totps.exists?
   end
 
   def backup_codes_enabled?
-    !SiteSetting.enable_sso &&
-      SiteSetting.enable_local_logins &&
+    !SiteSetting.enable_sso && SiteSetting.enable_local_logins &&
       self&.user_second_factors.backup_codes.exists?
   end
 
@@ -59,21 +66,22 @@ module SecondFactorManager
 
   def generate_backup_codes
     codes = []
-    10.times do
-      codes << SecureRandom.hex(8)
-    end
+    10.times { codes << SecureRandom.hex(8) }
 
-    codes_json = codes.map do |code|
-      salt = SecureRandom.hex(16)
-      { salt: salt,
-        code_hash: hash_backup_code(code, salt)
-      }
-    end
+    codes_json =
+      codes.map do |code|
+        salt = SecureRandom.hex(16)
+
+        { salt: salt, code_hash: hash_backup_code(code, salt) }
+      end
 
     if self.user_second_factors.backup_codes.empty?
       create_backup_codes(codes_json)
     else
-      self.user_second_factors.where(method: UserSecondFactor.methods[:backup_codes]).destroy_all
+      self.user_second_factors.where(
+        method: UserSecondFactor.methods[:backup_codes]
+      )
+        .destroy_all
       create_backup_codes(codes_json)
     end
 
@@ -96,8 +104,8 @@ module SecondFactorManager
       codes = self&.user_second_factors&.backup_codes
 
       codes.each do |code|
-        stored_code = JSON.parse(code.data)["code_hash"]
-        stored_salt = JSON.parse(code.data)["salt"]
+        stored_code = JSON.parse(code.data)['code_hash']
+        stored_salt = JSON.parse(code.data)['salt']
         backup_hash = hash_backup_code(backup_code, stored_salt)
         next unless backup_hash == stored_code
 
@@ -110,6 +118,11 @@ module SecondFactorManager
   end
 
   def hash_backup_code(code, salt)
-    Pbkdf2.hash_password(code, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
+    Pbkdf2.hash_password(
+      code,
+      salt,
+      Rails.configuration.pbkdf2_iterations,
+      Rails.configuration.pbkdf2_algorithm
+    )
   end
 end

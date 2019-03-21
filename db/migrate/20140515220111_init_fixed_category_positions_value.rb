@@ -1,7 +1,10 @@
 class InitFixedCategoryPositionsValue < ActiveRecord::Migration[4.2]
   def up
     # Look at existing categories to determine if positions have been specified
-    result = DB.query_single("SELECT count(*) FROM categories WHERE position IS NOT NULL")
+    result =
+      DB.query_single(
+        'SELECT count(*) FROM categories WHERE position IS NOT NULL'
+      )
 
     # Greater than 4 because uncategorized, meta, staff, lounge all have positions by default
     if result.first.to_i > 4

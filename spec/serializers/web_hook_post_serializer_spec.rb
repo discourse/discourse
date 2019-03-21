@@ -12,17 +12,19 @@ RSpec.describe WebHookPostSerializer do
     count = serialized_for_user(admin).keys.count
     difference = count - 35
 
-    expect(difference).to eq(0), lambda {
-      message = ""
+    expect(difference).to eq(0), lambda do
+      message = ''
 
       if difference < 0
-        message << "#{difference * -1} key(s) have been removed from this serializer."
+        message <<
+          "#{difference * -1} key(s) have been removed from this serializer."
       else
         message << "#{difference} key(s) have been added to this serializer."
       end
 
-      message << "\nPlease verify if those key(s) are required as part of the web hook's payload."
-    }
+      message <<
+        "\nPlease verify if those key(s) are required as part of the web hook's payload."
+    end
   end
 
   it 'should only include deleted topic title for staffs' do

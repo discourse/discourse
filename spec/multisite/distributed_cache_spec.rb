@@ -14,9 +14,11 @@ RSpec.describe 'Multisite SiteSettings', type: :multisite do
       expect(cache1.hash).to eq('default' => true)
 
       test_multisite_connection('second') do
-        message = MessageBus.track_publish(DistributedCache::Manager::CHANNEL_NAME) do
-          cache1['second'] = true
-        end.first
+        message =
+          MessageBus.track_publish(DistributedCache::Manager::CHANNEL_NAME) do
+            cache1['second'] = true
+          end
+            .first
 
         expect(message.data[:hash_key]).to eq('test')
         expect(message.data[:op]).to eq(:set)

@@ -1,5 +1,4 @@
 class MigrateSiteTextToSiteCustomization < ActiveRecord::Migration[4.2]
-
   def up
     execute <<-SQL
       DO
@@ -12,7 +11,8 @@ class MigrateSiteTextToSiteCustomization < ActiveRecord::Migration[4.2]
             'Migrated from Site Text',
             -1,
             't',
-            '#{SecureRandom.uuid}',
+            '#{SecureRandom
+              .uuid}',
             now(),
             now(),
             (SELECT value FROM site_texts WHERE text_type = 'head' LIMIT 1),
@@ -24,7 +24,5 @@ class MigrateSiteTextToSiteCustomization < ActiveRecord::Migration[4.2]
     SQL
   end
 
-  def down
-  end
-
+  def down; end
 end

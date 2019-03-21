@@ -3,9 +3,21 @@ class MigrateDefaultUserEmailOptions < ActiveRecord::Migration[5.2]
     # see UserOption.email_level_types
     # always = 0, only_while_away: 1, never: 2
 
-    email_always = DB.query_single("SELECT value FROM site_settings WHERE name = 'default_email_always'").first
-    email_direct = DB.query_single("SELECT value FROM site_settings WHERE name = 'default_email_direct'").first
-    email_personal_messages = DB.query_single("SELECT value FROM site_settings WHERE name = 'default_email_personal_messages'").first
+    email_always =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'default_email_always'"
+      )
+        .first
+    email_direct =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'default_email_direct'"
+      )
+        .first
+    email_personal_messages =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'default_email_personal_messages'"
+      )
+        .first
 
     default_email_level = nil
     default_email_level = 0 if email_direct != 'f' && email_always == 't'
@@ -17,7 +29,9 @@ class MigrateDefaultUserEmailOptions < ActiveRecord::Migration[5.2]
     end
 
     default_email_messages_level = nil
-    default_email_messages_level = 0 if email_personal_messages != 'f' && email_always == 't'
+    if email_personal_messages != 'f' && email_always == 't'
+      default_email_messages_level = 0
+    end
     default_email_messages_level = 2 if email_personal_messages == 'f'
 
     unless default_email_messages_level.nil?

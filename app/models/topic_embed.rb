@@ -10,7 +10,15 @@ class TopicEmbed < ActiveRecord::Base
   validates_uniqueness_of :embed_url
 
   before_validation(on: :create) do
-    unless (topic_embed = TopicEmbed.with_deleted.where('deleted_at IS NOT NULL AND embed_url = ?', embed_url).first).nil?
+    unless (
+           topic_embed =
+             TopicEmbed.with_deleted.where(
+               'deleted_at IS NOT NULL AND embed_url = ?',
+               embed_url
+             )
+               .first
+         )
+           .nil?
       topic_embed.destroy!
     end
   end
@@ -20,26 +28,27 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.normalize_url(url)
-    url.downcase.sub(/\/$/, '').sub(/\-+/, '-').strip
+    url.downcase.sub(%r{\/$}, '').sub(/\-+/, '-').strip
   end
 
   def self.imported_from_html(url)
-    "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
+    "\n<hr>\n<small>#{I18n.t(
+      'embed.imported_from',
+      link: "<a href='#{url}'>#{url}</a>"
+    )}</small>\n"
   end
 
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
-    return unless url =~ /^https?\:\/\//
+    return unless url =~ %r{^https?\:\/\/}
 
-    if SiteSetting.embed_truncate
-      contents = first_paragraph_from(contents)
-    end
+    contents = first_paragraph_from(contents) if SiteSetting.embed_truncate
     contents ||= ''
     contents << imported_from_html(url)
 
     url = normalize_url(url)
 
-    embed = TopicEmbed.find_by("lower(embed_url) = ?", url)
+    embed = TopicEmbed.find_by('lower(embed_url) = ?', url)
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 
@@ -48,24 +57,30 @@ class TopicEmbed < ActiveRecord::Base
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
 
-        cook_method = if SiteSetting.embed_support_markdown
-          Post.cook_methods[:regular]
-        else
-          Post.cook_methods[:raw_html]
-        end
+        cook_method =
+          if SiteSetting.embed_support_markdown
+            Post.cook_methods[:regular]
+          else
+            Post.cook_methods[:raw_html]
+          end
 
-        creator = PostCreator.new(user,
-                                  title: title,
-                                  raw: absolutize_urls(url, contents),
-                                  skip_validations: true,
-                                  cook_method: cook_method,
-                                  category: eh.try(:category_id))
+        creator =
+          PostCreator.new(
+            user,
+            title: title,
+            raw: absolutize_urls(url, contents),
+            skip_validations: true,
+            cook_method: cook_method,
+            category: eh.try(:category_id)
+          )
         post = creator.create
         if post.present?
-          TopicEmbed.create!(topic_id: post.topic_id,
-                             embed_url: url,
-                             content_sha1: content_sha1,
-                             post_id: post.id)
+          TopicEmbed.create!(
+            topic_id: post.topic_id,
+            embed_url: url,
+            content_sha1: content_sha1,
+            post_id: post.id
+          )
         end
       end
     else
@@ -80,7 +95,8 @@ class TopicEmbed < ActiveRecord::Base
             topic_id: post.topic_id,
             new_owner: user,
             acting_user: Discourse.system_user
-          ).change_owner!
+          )
+            .change_owner!
 
           # make sure the post returned has the right author
           post.reload
@@ -90,8 +106,7 @@ class TopicEmbed < ActiveRecord::Base
           post.revise(
             user,
             { raw: absolutize_urls(url, contents) },
-            skip_validations: true,
-            bypass_rate_limiter: true
+            skip_validations: true, bypass_rate_limiter: true
           )
           embed.update!(content_sha1: content_sha1)
         end
@@ -112,9 +127,15 @@ class TopicEmbed < ActiveRecord::Base
       remove_empty_nodes: false
     }
 
-    opts[:whitelist] = SiteSetting.embed_whitelist_selector if SiteSetting.embed_whitelist_selector.present?
-    opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
-    embed_classname_whitelist = SiteSetting.embed_classname_whitelist if SiteSetting.embed_classname_whitelist.present?
+    if SiteSetting.embed_whitelist_selector.present?
+      opts[:whitelist] = SiteSetting.embed_whitelist_selector
+    end
+    if SiteSetting.embed_blacklist_selector.present?
+      opts[:blacklist] = SiteSetting.embed_blacklist_selector
+    end
+    if SiteSetting.embed_classname_whitelist.present?
+      embed_classname_whitelist = SiteSetting.embed_classname_whitelist
+    end
 
     response = FetchResponse.new
     begin
@@ -123,10 +144,11 @@ class TopicEmbed < ActiveRecord::Base
       return
     end
 
-    raw_doc = Nokogiri::HTML(html)
+    raw_doc = Nokogiri.HTML(html)
     auth_element = raw_doc.at('meta[@name="author"]')
     if auth_element.present?
-      response.author = User.where(username_lower: auth_element[:content].strip).first
+      response.author =
+        User.where(username_lower: auth_element[:content].strip).first
     end
 
     read_doc = Readability::Document.new(html, opts)
@@ -139,7 +161,7 @@ class TopicEmbed < ActiveRecord::Base
       title.strip!
     end
     response.title = title
-    doc = Nokogiri::HTML(read_doc.content)
+    doc = Nokogiri.HTML(read_doc.content)
 
     tags = { 'img' => 'src', 'script' => 'src', 'a' => 'href' }
     doc.search(tags.keys.join(',')).each do |node|
@@ -158,9 +180,17 @@ class TopicEmbed < ActiveRecord::Base
         end
       end
       # only allow classes in the whitelist
-      allowed_classes = if embed_classname_whitelist.blank? then [] else embed_classname_whitelist.split(/[ ,]+/i) end
+      allowed_classes =
+        if embed_classname_whitelist.blank?
+          []
+        else
+          embed_classname_whitelist.split(/[ ,]+/i)
+        end
       doc.search('[class]:not([class=""])').each do |classnode|
-        classes = classnode[:class].split(' ').select { |classname| allowed_classes.include?(classname) }
+        classes =
+          classnode[:class].split(' ').select do |classname|
+            allowed_classes.include?(classname)
+          end
         if classes.length === 0
           classnode.delete('class')
         else
@@ -195,27 +225,29 @@ class TopicEmbed < ActiveRecord::Base
     fragment.css('a').each do |a|
       href = a['href']
       if href.present? && href.start_with?('/')
-        a['href'] = "#{prefix}/#{href.sub(/^\/+/, '')}"
+        a['href'] = "#{prefix}/#{href.sub(%r{^\/+}, '')}"
       end
     end
     fragment.css('img').each do |a|
       src = a['src']
       if src.present? && src.start_with?('/')
-        a['src'] = "#{prefix}/#{src.sub(/^\/+/, '')}"
+        a['src'] = "#{prefix}/#{src.sub(%r{^\/+}, '')}"
       end
     end
     fragment.at('div').inner_html
   end
 
   def self.topic_id_for_embed(embed_url)
-    embed_url = normalize_url(embed_url).sub(/^https?\:\/\//, '')
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pluck(:topic_id).first
+    embed_url = normalize_url(embed_url).sub(%r{^https?\:\/\/}, '')
+    TopicEmbed.where('embed_url ~* ?', "^https?://#{Regexp.escape(embed_url)}$")
+      .pluck(:topic_id)
+      .first
   end
 
   def self.first_paragraph_from(html)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri.HTML(html)
 
-    result = ""
+    result = ''
     doc.css('p').each do |p|
       if p.text.present?
         result << p.to_s
@@ -238,7 +270,6 @@ class TopicEmbed < ActiveRecord::Base
       body
     end
   end
-
 end
 
 # == Schema Information

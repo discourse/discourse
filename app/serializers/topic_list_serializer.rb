@@ -1,5 +1,4 @@
 class TopicListSerializer < ApplicationSerializer
-
   attributes :can_create_topic,
              :more_topics_url,
              :draft,

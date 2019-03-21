@@ -47,7 +47,9 @@ class ThemeSettingsManager
   def db_record
     # theme.theme_settings will already be preloaded, so it is better to use
     # `find` on an array, rather than make a round trip to the database
-    theme.theme_settings.to_a.find { |i| i.name.to_s == @name.to_s && i.data_type.to_s == type.to_s }
+    theme.theme_settings.to_a.find do |i|
+      i.name.to_s == @name.to_s && i.data_type.to_s == type.to_s
+    end
   end
 
   def has_record?
@@ -65,17 +67,19 @@ class ThemeSettingsManager
   end
 
   def invalid_value_error_message
-    name = type == @types[:integer] || type == @types[:float] ? "number" : type_name
+    name =
+      type == @types[:integer] || type == @types[:float] ? 'number' : type_name
     primary_key = "themes.settings_errors.#{name}_value_not_valid"
 
     secondary_key = primary_key
-    secondary_key += "_min" if has_min?
-    secondary_key += "_max" if has_max?
+    secondary_key += '_min' if has_min?
+    secondary_key += '_max' if has_max?
 
     translation = I18n.t(primary_key)
     return translation if secondary_key == primary_key
 
-    translation += " #{I18n.t(secondary_key, min: @opts[:min], max: @opts[:max])}"
+    translation +=
+      " #{I18n.t(secondary_key, min: @opts[:min], max: @opts[:max])}"
     translation
   end
 
@@ -113,11 +117,11 @@ class ThemeSettingsManager
 
   class Bool < self
     def value
-      [true, "true"].include?(super)
+      [true, 'true'].include?(super)
     end
 
     def value=(new_value)
-      new_value = ([true, "true"].include?(new_value)).to_s
+      new_value = ([true, 'true'].include?(new_value)).to_s
       super(new_value)
     end
   end

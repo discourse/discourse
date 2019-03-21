@@ -38,63 +38,64 @@ class UsernameValidator
     errors.empty?
   end
 
-  CONFUSING_EXTENSIONS ||= /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
+  CONFUSING_EXTENSIONS ||=
+    /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
 
   private
 
   def username_exist?
     return unless errors.empty?
-    unless username
-      self.errors << I18n.t(:'user.username.blank')
-    end
+    self.errors << I18n.t(:"user.username.blank") unless username
   end
 
   def username_length_min?
     return unless errors.empty?
     if username.length < User.username_length.begin
-      self.errors << I18n.t(:'user.username.short', min: User.username_length.begin)
+      self.errors <<
+        I18n.t(:"user.username.short", min: User.username_length.begin)
     end
   end
 
   def username_length_max?
     return unless errors.empty?
     if username.length > User.username_length.end
-      self.errors << I18n.t(:'user.username.long', max: User.username_length.end)
+      self.errors <<
+        I18n.t(:"user.username.long", max: User.username_length.end)
     end
   end
 
   def username_char_valid?
     return unless errors.empty?
-    if username =~ /[^\w.-]/
-      self.errors << I18n.t(:'user.username.characters')
-    end
+    self.errors << I18n.t(:"user.username.characters") if username =~ /[^\w.-]/
   end
 
   def username_first_char_valid?
     return unless errors.empty?
     if username[0] =~ /\W/
-      self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric_or_underscore')
+      self.errors <<
+        I18n.t(:"user.username.must_begin_with_alphanumeric_or_underscore")
     end
   end
 
   def username_last_char_valid?
     return unless errors.empty?
     if username[-1] =~ /[^A-Za-z0-9]/
-      self.errors << I18n.t(:'user.username.must_end_with_alphanumeric')
+      self.errors << I18n.t(:"user.username.must_end_with_alphanumeric")
     end
   end
 
   def username_no_double_special?
     return unless errors.empty?
     if username =~ /[-_.]{2,}/
-      self.errors << I18n.t(:'user.username.must_not_contain_two_special_chars_in_seq')
+      self.errors <<
+        I18n.t(:"user.username.must_not_contain_two_special_chars_in_seq")
     end
   end
 
   def username_does_not_end_with_confusing_suffix?
     return unless errors.empty?
     if username =~ CONFUSING_EXTENSIONS
-      self.errors << I18n.t(:'user.username.must_not_end_with_confusing_suffix')
+      self.errors << I18n.t(:"user.username.must_not_end_with_confusing_suffix")
     end
   end
 end

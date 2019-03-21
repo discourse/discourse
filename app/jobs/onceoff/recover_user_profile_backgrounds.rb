@@ -5,19 +5,21 @@ module Jobs
       return if !base_url.match?(/s3\.dualstack/)
 
       old = base_url.sub('s3.dualstack.', 's3-')
-      old_like = %"#{old}%"
+      old_like = "#{old}%"
 
-      DB.exec(<<~SQL, from: old, to: base_url, old_like: old_like)
+      sql = <<~SQL
         UPDATE user_profiles
         SET profile_background = replace(profile_background, :from, :to)
         WHERE profile_background ilike :old_like
       SQL
+      DB.exec(sql, from: old, to: base_url, old_like: old_like)
 
-      DB.exec(<<~SQL, from: old, to: base_url, old_like: old_like)
+      sql = <<~SQL
         UPDATE user_profiles
         SET card_background = replace(card_background, :from, :to)
         WHERE card_background ilike :old_like
       SQL
+      DB.exec(sql, from: old, to: base_url, old_like: old_like)
 
       UploadRecovery.new.recover_user_profile_backgrounds
     end

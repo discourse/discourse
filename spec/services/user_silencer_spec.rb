@@ -1,10 +1,7 @@
 require 'rails_helper'
 
 describe UserSilencer do
-
-  before do
-    SystemMessage.stubs(:create)
-  end
+  before { SystemMessage.stubs(:create) }
 
   describe 'silence' do
     let(:user) { Fabricate(:user) }
@@ -24,7 +21,9 @@ describe UserSilencer do
     context 'given a staff user argument' do
       it 'sends the correct message to the silenced user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
+        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(
+          true
+        )
         UserSilencer.silence(user, Fabricate.build(:admin))
       end
     end
@@ -32,7 +31,9 @@ describe UserSilencer do
     context 'not given a staff user argument' do
       it 'sends a default message to the user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(true)
+        SystemMessage.expects(:create).with(user, :silenced_by_staff).returns(
+          true
+        )
         UserSilencer.silence(user, Fabricate.build(:admin))
       end
     end
@@ -40,8 +41,14 @@ describe UserSilencer do
     context 'given a message option' do
       it 'sends that message to the user' do
         SystemMessage.unstub(:create)
-        SystemMessage.expects(:create).with(user, :the_custom_message).returns(true)
-        UserSilencer.silence(user, Fabricate.build(:admin), message: :the_custom_message)
+        SystemMessage.expects(:create).with(user, :the_custom_message).returns(
+          true
+        )
+        UserSilencer.silence(
+          user,
+          Fabricate.build(:admin),
+          message: :the_custom_message
+        )
       end
     end
 
@@ -59,18 +66,21 @@ describe UserSilencer do
       expect(silence_user).to eq(false)
     end
 
-    it "logs it with context" do
+    it 'logs it with context' do
       SystemMessage.stubs(:create)
-      expect {
-        UserSilencer.silence(user, Fabricate(:admin))
-      }.to change { UserHistory.count }.by(1)
+      expect { UserSilencer.silence(user, Fabricate(:admin)) }.to change do
+        UserHistory.count
+      end
+        .by(1)
       expect(UserHistory.last.context).to be_present
     end
   end
 
   describe 'unsilence' do
-    let(:user)             { stub_everything(save: true) }
-    subject(:unsilence_user) { UserSilencer.unsilence(user, Fabricate.build(:admin)) }
+    let(:user) { stub_everything(save: true) }
+    subject(:unsilence_user) do
+      UserSilencer.unsilence(user, Fabricate.build(:admin))
+    end
 
     it 'unsilences the user' do
       u = Fabricate(:user, silenced_till: 1.year.from_now)
@@ -90,29 +100,27 @@ describe UserSilencer do
       unsilence_user
     end
 
-    it "logs it" do
-      expect {
-        unsilence_user
-      }.to change { UserHistory.count }.by(1)
+    it 'logs it' do
+      expect { unsilence_user }.to change { UserHistory.count }.by(1)
     end
   end
 
   describe 'hide_posts' do
-    let(:user)    { Fabricate(:user, trust_level: 0) }
-    let!(:post)   { Fabricate(:post, user: user) }
-    subject       { UserSilencer.new(user) }
+    let(:user) { Fabricate(:user, trust_level: 0) }
+    let!(:post) { Fabricate(:post, user: user) }
+    subject { UserSilencer.new(user) }
 
     it "hides all the user's posts" do
       subject.silence
       expect(post.reload).to be_hidden
     end
 
-    it "hides the topic if the post was the first post" do
+    it 'hides the topic if the post was the first post' do
       subject.silence
       expect(post.topic.reload).to_not be_visible
     end
 
-    it "allows us to silence the user for a particular post" do
+    it 'allows us to silence the user for a particular post' do
       expect(UserSilencer.was_silenced_for?(post)).to eq(false)
       UserSilencer.new(user, Discourse.system_user, post_id: post.id).silence
       expect(user).to be_silenced
@@ -126,7 +134,7 @@ describe UserSilencer do
       expect(post.topic.reload).to be_visible
     end
 
-    it "only hides posts from the past 24 hours" do
+    it 'only hides posts from the past 24 hours' do
       old_post = Fabricate(:post, user: user, created_at: 2.days.ago)
       subject.silence
       expect(post.reload).to be_hidden
@@ -136,5 +144,4 @@ describe UserSilencer do
       expect(old_post.topic).to be_visible
     end
   end
-
 end

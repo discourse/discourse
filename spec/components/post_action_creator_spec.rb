@@ -8,13 +8,20 @@ describe PostActionCreator do
 
   describe 'perform' do
     it 'creates a post action' do
-      expect { PostActionCreator.new(user, post).perform(like_type_id) }.to change { PostAction.count }.by(1)
-      expect(PostAction.find_by(user: user, post: post, post_action_type_id: like_type_id)).to be_present
+      expect do
+        PostActionCreator.new(user, post).perform(like_type_id)
+      end.to change { PostAction.count }.by(1)
+      expect(
+        PostAction.find_by(
+          user: user, post: post, post_action_type_id: like_type_id
+        )
+      ).to be_present
     end
 
     it 'does not create an invalid post action' do
-      expect { PostActionCreator.new(user, nil).perform(like_type_id) }.to raise_error(Discourse::InvalidAccess)
+      expect do
+        PostActionCreator.new(user, nil).perform(like_type_id)
+      end.to raise_error(Discourse::InvalidAccess)
     end
   end
-
 end

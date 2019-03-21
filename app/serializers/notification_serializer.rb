@@ -1,5 +1,4 @@
 class NotificationSerializer < ApplicationSerializer
-
   attributes :id,
              :notification_type,
              :read,
@@ -16,7 +15,8 @@ class NotificationSerializer < ApplicationSerializer
   end
 
   def is_warning
-    object.topic.present? && object.topic.subtype == TopicSubtype.moderator_warning
+    object.topic.present? &&
+      object.topic.subtype == TopicSubtype.moderator_warning
   end
 
   def include_fancy_title?
@@ -34,5 +34,4 @@ class NotificationSerializer < ApplicationSerializer
   def data
     object.data_hash
   end
-
 end

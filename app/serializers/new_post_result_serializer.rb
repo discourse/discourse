@@ -1,16 +1,12 @@
 require_dependency 'application_serializer'
 
 class NewPostResultSerializer < ApplicationSerializer
-  attributes :action,
-             :post,
-             :errors,
-             :success,
-             :pending_count,
-             :reason
+  attributes :action, :post, :errors, :success, :pending_count, :reason
 
   def post
     post_serializer = PostSerializer.new(object.post, scope: scope, root: false)
-    post_serializer.draft_sequence = DraftSequence.current(scope.user, object.post.topic.draft_key)
+    post_serializer.draft_sequence =
+      DraftSequence.current(scope.user, object.post.topic.draft_key)
     post_serializer.as_json
   end
 
@@ -53,5 +49,4 @@ class NewPostResultSerializer < ApplicationSerializer
   def include_pending_count?
     pending_count.present?
   end
-
 end

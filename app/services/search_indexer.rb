@@ -2,7 +2,6 @@
 require_dependency 'search'
 
 class SearchIndexer
-
   def self.disable
     @disabled = true
   end
@@ -11,7 +10,9 @@ class SearchIndexer
     @disabled = false
   end
 
-  def self.scrub_html_for_search(html, strip_diacritics: SiteSetting.search_ignore_accents)
+  def self.scrub_html_for_search(
+    html, strip_diacritics: SiteSetting.search_ignore_accents
+  )
     HtmlScrubber.scrub(html, strip_diacritics: strip_diacritics)
   end
 
@@ -19,25 +20,26 @@ class SearchIndexer
     # insert some extra words for I.am.a.word so "word" is tokenized
     # I.am.a.word becomes I.am.a.word am a word
     raw.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
-      split = with_dot.split(".")
+      split = with_dot.split('.')
       if split.length > 1
-        with_dot + ((+" ") << split[1..-1].join(" "))
+        with_dot + ((+' ') << split[1..-1].join(' '))
       else
         with_dot
       end
     end
   end
 
-  def self.update_index(table: , id: , raw_data:)
-    search_data = raw_data.map do |data|
-      inject_extra_terms(Search.prepare_data(data || "", :index))
-    end
+  def self.update_index(table:, id:, raw_data:)
+    search_data =
+      raw_data.map do |data|
+        inject_extra_terms(Search.prepare_data(data || '', :index))
+      end
 
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
 
     # for user login and name use "simple" lowercase stemmer
-    stemmer = table == "user" ? "simple" : Search.ts_config
+    stemmer = table == 'user' ? 'simple' : Search.ts_config
 
     ranked_index = <<~SQL
       setweight(to_tsvector('#{stemmer}', coalesce(:a,'')), 'A') ||
@@ -61,39 +63,48 @@ class SearchIndexer
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
     # when inserting data like this.
-    rows = DB.exec(<<~SQL, params)
-       UPDATE #{table_name}
-       SET
-          raw_data = :raw_data,
-          locale = :locale,
-          search_data = #{ranked_index},
-          version = :version
-       WHERE #{foreign_key} = :id
+    sql = <<~SQL
+      UPDATE #{table_name}
+      SET
+        raw_data = :raw_data,
+        locale = :locale,
+        search_data = #{ranked_index},
+        version = :version
+      WHERE #{foreign_key} = :id
     SQL
+    rows = DB.exec(sql, params)
 
     if rows == 0
-      DB.exec(<<~SQL, params)
+      sql = <<~SQL
         INSERT INTO #{table_name}
         (#{foreign_key}, search_data, locale, raw_data, version)
         VALUES (:id, #{ranked_index}, :locale, :raw_data, :version)
       SQL
+      DB.exec(sql, params)
     end
-  rescue
+  rescue StandardError
     # TODO is there any way we can safely avoid this?
     # best way is probably pushing search indexer into a dedicated process so it no longer happens on save
     # instead in the post processor
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    scrubbed_cooked = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    scrubbed_cooked =
+      scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
 
     # a bit inconsitent that we use title as A and body as B when in
     # the post index body is C
-    update_index(table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked])
+    update_index(
+      table: 'topic', id: topic_id, raw_data: [title, scrubbed_cooked]
+    )
   end
 
   def self.update_posts_index(post_id, title, category, tags, cooked)
-    update_index(table: 'post', id: post_id, raw_data: [title, category, tags, scrub_html_for_search(cooked)])
+    update_index(
+      table: 'post',
+      id: post_id,
+      raw_data: [title, category, tags, scrub_html_for_search(cooked)]
+    )
   end
 
   def self.update_users_index(user_id, username, name)
@@ -111,11 +122,12 @@ class SearchIndexer
   def self.queue_post_reindex(topic_id)
     return if @disabled
 
-    DB.exec(<<~SQL, topic_id: topic_id)
+    sql = <<~SQL
       UPDATE post_search_data
       SET version = 0
       WHERE post_id IN (SELECT id FROM posts WHERE topic_id = :topic_id)
     SQL
+    DB.exec(sql, topic_id: topic_id)
   end
 
   def self.index(obj, force: false)
@@ -135,28 +147,45 @@ class SearchIndexer
     tag_names = topic.tags.pluck(:name).join(' ') if topic
 
     if Post === obj &&
-       (
-         obj.saved_change_to_cooked? ||
-         obj.saved_change_to_topic_id? ||
-         force
-       )
-
+       (obj.saved_change_to_cooked? || obj.saved_change_to_topic_id? || force)
       if topic
-        SearchIndexer.update_posts_index(obj.id, topic.title, category_name, tag_names, obj.cooked)
-        SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
+        SearchIndexer.update_posts_index(
+          obj.id,
+          topic.title,
+          category_name,
+          tag_names,
+          obj.cooked
+        )
+        if obj.is_first_post?
+          SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked)
+        end
       else
-        Rails.logger.warn("Orphan post skipped in search_indexer, topic_id: #{obj.topic_id} post_id: #{obj.id} raw: #{obj.raw}")
+        Rails.logger.warn(
+          "Orphan post skipped in search_indexer, topic_id: #{obj
+            .topic_id} post_id: #{obj.id} raw: #{obj.raw}"
+        )
       end
     end
 
-    if User === obj && (obj.saved_change_to_username? || obj.saved_change_to_name? || force)
-      SearchIndexer.update_users_index(obj.id, obj.username_lower || '', obj.name ? obj.name.downcase : '')
+    if User === obj &&
+       (obj.saved_change_to_username? || obj.saved_change_to_name? || force)
+      SearchIndexer.update_users_index(
+        obj.id,
+        obj.username_lower || '',
+        obj.name ? obj.name.downcase : ''
+      )
     end
 
     if Topic === obj && (obj.saved_change_to_title? || force)
       if obj.posts
         if post = obj.posts.find_by(post_number: 1)
-          SearchIndexer.update_posts_index(post.id, obj.title, category_name, tag_names, post.cooked)
+          SearchIndexer.update_posts_index(
+            post.id,
+            obj.title,
+            category_name,
+            tag_names,
+            post.cooked
+          )
           SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)
         end
       end
@@ -172,30 +201,31 @@ class SearchIndexer
   end
 
   class HtmlScrubber < Nokogiri::XML::SAX::Document
-
     attr_reader :scrubbed
 
     def initialize(strip_diacritics: false)
-      @scrubbed = +""
+      @scrubbed = +''
       @strip_diacritics = strip_diacritics
     end
 
     def self.scrub(html, strip_diacritics: false)
-      return +"" if html.blank?
+      return +'' if html.blank?
 
       me = new(strip_diacritics: strip_diacritics)
       Nokogiri::HTML::SAX::Parser.new(me).parse("<div>#{html}</div>")
       me.scrubbed.squish
     end
 
-    ATTRIBUTES ||= %w{alt title href data-youtube-title}
+    ATTRIBUTES ||= %w[alt title href data-youtube-title]
 
     def start_element(_, attributes = [])
       attributes = Hash[*attributes.flatten]
 
       ATTRIBUTES.each do |name|
         if attributes[name].present?
-          characters(attributes[name]) unless name == "href" && UrlHelper.is_local(attributes[name])
+          unless name == 'href' && UrlHelper.is_local(attributes[name])
+            characters(attributes[name])
+          end
         end
       end
     end

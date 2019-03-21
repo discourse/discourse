@@ -14,12 +14,17 @@ class EnableContentSecurityPolicyForNewSites < ActiveRecord::Migration[5.2]
   end
 
   def row_exists?
-    DB.query("SELECT 1 AS one FROM site_settings where name='content_security_policy'").present?
+    DB.query(
+      "SELECT 1 AS one FROM site_settings where name='content_security_policy'"
+    )
+      .present?
   end
 
   def instance_is_new?
-    dates = DB.query_single("SELECT created_at FROM posts ORDER BY created_at ASC LIMIT 1")
+    dates =
+      DB.query_single(
+        'SELECT created_at FROM posts ORDER BY created_at ASC LIMIT 1'
+      )
     dates.empty? || dates.first > 1.week.ago
   end
-
 end

@@ -1,5 +1,4 @@
 class PostActionNotifier
-
   def self.disable
     @disabled = true
   end
@@ -15,11 +14,12 @@ class PostActionNotifier
   def self.refresh_like_notification(post, read)
     return unless post && post.user_id && post.topic
 
-    usernames = post.post_actions.where(post_action_type_id: PostActionType.types[:like])
-      .joins(:user)
-      .order('post_actions.created_at desc')
-      .where('post_actions.created_at > ?', 1.day.ago)
-      .pluck(:username)
+    usernames =
+      post.post_actions.where(post_action_type_id: PostActionType.types[:like])
+        .joins(:user)
+        .order('post_actions.created_at desc')
+        .where('post_actions.created_at > ?', 1.day.ago)
+        .pluck(:username)
 
     if usernames.length > 0
       data = {
@@ -46,8 +46,8 @@ class PostActionNotifier
     # We only care about deleting post actions for now
     return if post_action.deleted_at.blank?
 
-    if post_action.post_action_type_id == PostActionType.types[:like] && post_action.post
-
+    if post_action.post_action_type_id == PostActionType.types[:like] &&
+       post_action.post
       read = true
 
       Notification.where(
@@ -55,7 +55,8 @@ class PostActionNotifier
         user_id: post_action.post.user_id,
         post_number: post_action.post.post_number,
         notification_type: Notification.types[:liked]
-      ).each do |notification|
+      )
+        .each do |notification|
         read = false unless notification.read
         notification.destroy
       end
@@ -96,7 +97,10 @@ class PostActionNotifier
     return if post_revision.user_id == post.user_id
     return if post.topic.blank?
     return if post.topic.private_message?
-    return if SiteSetting.disable_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
+    if SiteSetting.disable_edit_notifications &&
+       post_revision.user_id == Discourse::SYSTEM_USER_ID
+      return
+    end
 
     alerter.create_notification(
       post.user,

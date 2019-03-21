@@ -1,11 +1,11 @@
-require_dependency "backup_restore/backup_store"
-require_dependency "disk_space"
+require_dependency 'backup_restore/backup_store'
+require_dependency 'disk_space'
 
 module BackupRestore
   class LocalBackupStore < BackupStore
     def self.base_directory(db: nil, root_directory: nil)
       current_db = db || RailsMultisite::ConnectionManagement.current_db
-      root_directory ||= File.join(Rails.root, "public", "backups")
+      root_directory ||= File.join(Rails.root, 'public', 'backups')
 
       base_directory = File.join(root_directory, current_db)
       FileUtils.mkdir_p(base_directory) unless Dir.exists?(base_directory)
@@ -13,11 +13,17 @@ module BackupRestore
     end
 
     def self.chunk_path(identifier, filename, chunk_number)
-      File.join(LocalBackupStore.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
+      File.join(
+        LocalBackupStore.base_directory,
+        'tmp',
+        identifier,
+        "#{filename}.part#{chunk_number}"
+      )
     end
 
     def initialize(opts = {})
-      @base_directory = LocalBackupStore.base_directory(root_directory: opts[:root_directory])
+      @base_directory =
+        LocalBackupStore.base_directory(root_directory: opts[:root_directory])
     end
 
     def remote?
@@ -38,15 +44,20 @@ module BackupRestore
       end
     end
 
-    def download_file(filename, destination, failure_message = "")
+    def download_file(filename, destination, failure_message = '')
       path = path_from_filename(filename)
-      Discourse::Utils.execute_command('cp', path, destination, failure_message: failure_message)
+      Discourse::Utils.execute_command(
+        'cp',
+        path,
+        destination,
+        failure_message: failure_message
+      )
     end
 
     private
 
     def unsorted_files
-      files = Dir.glob(File.join(@base_directory, "*.{gz,tgz}"))
+      files = Dir.glob(File.join(@base_directory, '*.{gz,tgz}'))
       files.map! { |filename| create_file_from_path(filename) }
       files
     end

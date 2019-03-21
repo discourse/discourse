@@ -8,6 +8,6 @@ class AddIndexToTopicStatusUpdates < ActiveRecord::Migration[4.2]
   end
 
   def down
-    execute "DROP INDEX idx_topic_id_status_type_deleted_at"
+    execute 'DROP INDEX idx_topic_id_status_type_deleted_at'
   end
 end

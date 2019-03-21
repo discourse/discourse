@@ -4,8 +4,8 @@ class CreateUserProfiles < ActiveRecord::Migration[4.2]
       t.references :user
       t.string :location
     end
-    execute "ALTER TABLE user_profiles ADD PRIMARY KEY (user_id)"
-    execute "INSERT INTO user_profiles (user_id) SELECT id FROM users"
+    execute 'ALTER TABLE user_profiles ADD PRIMARY KEY (user_id)'
+    execute 'INSERT INTO user_profiles (user_id) SELECT id FROM users'
   end
 
   def down

@@ -9,7 +9,6 @@ require_dependency 'word_watcher'
 # with `NewPostManager.add_handler` to take other approaches depending
 # on the user or input.
 class NewPostManager
-
   attr_reader :user, :args
 
   def self.sorted_handlers
@@ -33,19 +32,18 @@ class NewPostManager
     user = manager.user
     args = manager.args
 
-    !!(
-      args[:first_post_checks] &&
-      user.post_count == 0
-    )
+    !!(args[:first_post_checks] && user.post_count == 0)
   end
 
   def self.is_fast_typer?(manager)
     args = manager.args
 
     is_first_post?(manager) &&
-    args[:typing_duration_msecs].to_i < SiteSetting.min_first_post_typing_time &&
-    SiteSetting.auto_silence_fast_typers_on_first_post &&
-    manager.user.trust_level <= SiteSetting.auto_silence_fast_typers_max_trust_level
+      args[:typing_duration_msecs].to_i <
+        SiteSetting.min_first_post_typing_time &&
+      SiteSetting.auto_silence_fast_typers_on_first_post &&
+      manager.user.trust_level <=
+        SiteSetting.auto_silence_fast_typers_max_trust_level
   end
 
   def self.matches_auto_silence_regex?(manager)
@@ -64,7 +62,6 @@ class NewPostManager
     end
 
     "#{args[:title]} #{args[:raw]}" =~ regex
-
   end
 
   def self.exempt_user?(user)
@@ -76,19 +73,28 @@ class NewPostManager
 
     return false if exempt_user?(user)
 
-    (user.trust_level <= TrustLevel.levels[:basic] && user.post_count < SiteSetting.approve_post_count) ||
-    (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
-    (manager.args[:title].present? && user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i) ||
-    is_fast_typer?(manager) ||
-    matches_auto_silence_regex?(manager) ||
-    WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval? ||
-    (SiteSetting.approve_unless_staged && user.staged) ||
-    post_needs_approval_in_its_category?(manager)
+    (
+      user.trust_level <= TrustLevel.levels[:basic] &&
+        user.post_count < SiteSetting.approve_post_count
+    ) ||
+      (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
+      (
+        manager.args[:title].present? &&
+          user.trust_level <
+            SiteSetting.approve_new_topics_unless_trust_level.to_i
+      ) ||
+      is_fast_typer?(manager) ||
+      matches_auto_silence_regex?(manager) ||
+      WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}")
+        .requires_approval? ||
+      (SiteSetting.approve_unless_staged && user.staged) ||
+      post_needs_approval_in_its_category?(manager)
   end
 
   def self.post_needs_approval_in_its_category?(manager)
     if manager.args[:topic_id].present?
-      cat = Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
+      cat =
+        Category.joins(:topics).find_by(topics: { id: manager.args[:topic_id] })
       return false unless cat
       cat.require_reply_approval?
     elsif manager.args[:category].present?
@@ -122,7 +128,7 @@ class NewPostManager
 
         unless manager.user.guardian.can_create_topic_on_category?(category)
           result = NewPostResult.new(:created_post, false)
-          result.errors[:base] << I18n.t("js.errors.reasons.forbidden")
+          result.errors[:base] << I18n.t('js.errors.reasons.forbidden')
           return result
         end
       end
@@ -130,9 +136,18 @@ class NewPostManager
       result = manager.enqueue('default')
 
       if is_fast_typer?(manager)
-        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
+        UserSilencer.silence(
+          manager.user,
+          Discourse.system_user,
+          keep_posts: true, reason: I18n.t('user.new_user_typed_too_fast')
+        )
       elsif matches_auto_silence_regex?(manager)
-        UserSilencer.silence(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_silence_regex"))
+        UserSilencer.silence(
+          manager.user,
+          Discourse.system_user,
+          keep_posts: true,
+          reason: I18n.t('user.content_matches_auto_silence_regex')
+        )
       end
 
       result
@@ -141,11 +156,11 @@ class NewPostManager
 
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 ||
-    SiteSetting.approve_unless_trust_level.to_i > 0 ||
-    SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
-    SiteSetting.approve_unless_staged ||
-    WordWatcher.words_for_action_exists?(:require_approval) ||
-    handlers.size > 1
+      SiteSetting.approve_unless_trust_level.to_i > 0 ||
+      SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
+      SiteSetting.approve_unless_staged ||
+      WordWatcher.words_for_action_exists?(:require_approval) ||
+      handlers.size > 1
   end
 
   def initialize(user, args)
@@ -154,7 +169,9 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
+    if !self.class.exempt_user?(@user) &&
+       matches =
+         WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
       result = NewPostResult.new(:created_post, false)
       result.errors[:base] << I18n.t('contains_blocked_words', word: matches[0])
       return result
@@ -163,17 +180,20 @@ class NewPostManager
     # We never queue private messages
     return perform_create_post if @args[:archetype] == Archetype.private_message
 
-    if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
+    if args[:topic_id] &&
+       Topic.where(id: args[:topic_id], archetype: Archetype.private_message)
+         .exists?
       return perform_create_post
     end
 
     # Perform handlers until one returns a result
-    handled = NewPostManager.handlers.any? do |handler|
-      result = handler.call(self)
-      return result if result
+    handled =
+      NewPostManager.handlers.any? do |handler|
+        result = handler.call(self)
+        return result if result
 
-      false
-    end
+        false
+      end
 
     perform_create_post unless handled
   end
@@ -212,5 +232,4 @@ class NewPostManager
 
     result
   end
-
 end

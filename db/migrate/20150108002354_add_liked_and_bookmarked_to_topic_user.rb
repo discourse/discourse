@@ -18,7 +18,6 @@ class AddLikedAndBookmarkedToTopicUser < ActiveRecord::Migration[4.2]
                                    post_action_type_id = #{type})
     "
     end
-
   end
 
   def down

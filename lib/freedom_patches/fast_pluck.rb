@@ -3,7 +3,6 @@
 #
 #
 class ActiveRecord::Relation
-
   # Note: In discourse, the following code is included in lib/sql_builder.rb
   #
   # class RailsDateTimeDecoder < PG::SimpleDecoder
@@ -41,7 +40,12 @@ class ActiveRecord::Relation
   end
 
   def pluck(*column_names)
-    if loaded? && (column_names.map(&:to_s) - @klass.attribute_names - @klass.attribute_aliases.keys).empty?
+    if loaded? &&
+       (
+         column_names.map(&:to_s) - @klass.attribute_names -
+           @klass.attribute_aliases.keys
+       )
+         .empty?
       return records.pluck(*column_names)
     end
 
@@ -52,9 +56,14 @@ class ActiveRecord::Relation
       enforce_raw_sql_whitelist(column_names)
       relation = spawn
 
-      relation.select_values = column_names.map { |cn|
-        @klass.has_attribute?(cn) || @klass.attribute_alias?(cn) ? arel_attribute(cn) : cn
-      }
+      relation.select_values =
+        column_names.map do |cn|
+          if @klass.has_attribute?(cn) || @klass.attribute_alias?(cn)
+            arel_attribute(cn)
+          else
+            cn
+          end
+        end
 
       klass.connection.select_raw(relation.arel) do |result, _|
         result.type_map = DB.type_map

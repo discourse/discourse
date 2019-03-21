@@ -1,10 +1,10 @@
-require "digest/sha1"
-require_dependency "file_helper"
-require_dependency "url_helper"
-require_dependency "db_helper"
-require_dependency "validators/upload_validator"
-require_dependency "file_store/local_store"
-require_dependency "base62"
+require 'digest/sha1'
+require_dependency 'file_helper'
+require_dependency 'url_helper'
+require_dependency 'db_helper'
+require_dependency 'validators/upload_validator'
+require_dependency 'file_store/local_store'
+require_dependency 'base62'
 
 class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
@@ -33,11 +33,15 @@ class Upload < ActiveRecord::Base
 
   after_destroy do
     User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+    UserAvatar.where(gravatar_upload_id: self.id).update_all(
+      gravatar_upload_id: nil
+    )
+    UserAvatar.where(custom_upload_id: self.id).update_all(
+      custom_upload_id: nil
+    )
   end
 
-  scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
+  scope :by_users, -> { where('uploads.id > ?', SEEDED_ID_THRESHOLD) }
 
   def to_s
     self.url
@@ -56,16 +60,12 @@ class Upload < ActiveRecord::Base
     opts ||= {}
     opts[:allow_animation] = SiteSetting.allow_animated_thumbnails
 
-    if get_optimized_image(width, height, opts)
-      save(validate: false)
-    end
+    save(validate: false) if get_optimized_image(width, height, opts)
   end
 
   # this method attempts to correct old incorrect extensions
   def get_optimized_image(width, height, opts)
-    if (!extension || extension.length == 0)
-      fix_image_extension
-    end
+    fix_image_extension if (!extension || extension.length == 0)
 
     opts = opts.merge(raise_on_error: true)
     begin
@@ -82,25 +82,36 @@ class Upload < ActiveRecord::Base
   end
 
   def fix_image_extension
-    return false if extension == "unknown"
+    return false if extension == 'unknown'
+
+    # this is relatively cheap once cached
 
     begin
-      # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
       if original_path.blank?
-        external_copy = Discourse.store.download(self) rescue nil
+        external_copy =
+          begin
+            Discourse.store.download(self)
+          rescue StandardError
+            nil
+          end
         original_path = external_copy.try(:path)
       end
 
-      image_info = FastImage.new(original_path) rescue nil
-      new_extension = image_info&.type&.to_s || "unknown"
+      image_info =
+        begin
+          FastImage.new(original_path)
+        rescue StandardError
+          nil
+        end
+      new_extension = image_info&.type&.to_s || 'unknown'
 
       if new_extension != self.extension
         self.update_columns(extension: new_extension)
         true
       end
-    rescue
-      self.update_columns(extension: "unknown")
+    rescue StandardError
+      self.update_columns(extension: 'unknown')
       true
     end
   end
@@ -117,7 +128,7 @@ class Upload < ActiveRecord::Base
   end
 
   def local?
-    !(url =~ /^(https?:)?\/\//)
+    !(url =~ %r{^(https?:)?\/\/})
   end
 
   def fix_dimensions!
@@ -145,7 +156,7 @@ class Upload < ActiveRecord::Base
         thumbnail_height: thumbnail_height
       )
     rescue => e
-      Discourse.warn_exception(e, message: "Error getting image dimensions")
+      Discourse.warn_exception(e, message: 'Error getting image dimensions')
     end
     nil
   end
@@ -153,9 +164,7 @@ class Upload < ActiveRecord::Base
   # on demand image size calculation, this allows us to null out image sizes
   # and still handle as needed
   def get_dimension(key)
-    if v = read_attribute(key)
-      return v
-    end
+    return v if v = read_attribute(key)
     fix_dimensions!
     read_attribute(key)
   end
@@ -177,14 +186,10 @@ class Upload < ActiveRecord::Base
   end
 
   def self.sha1_from_short_url(url)
-    if url =~ /(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?/
+    if url =~ %r{(upload:\/\/)?([a-zA-Z0-9]+)(\..*)?}
       sha1 = Base62.decode($2).to_s(16)
 
-      if sha1.length > SHA1_LENGTH
-        nil
-      else
-        sha1.rjust(SHA1_LENGTH, '0')
-      end
+      sha1.length > SHA1_LENGTH ? nil : sha1.rjust(SHA1_LENGTH, '0')
     end
   end
 
@@ -193,16 +198,18 @@ class Upload < ActiveRecord::Base
   end
 
   def self.extract_upload_url(url)
-    url.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+    url.match(%r{(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)})
   end
 
   def self.get_from_url(url)
     return if url.blank?
 
-    uri = begin
-      URI(URI.unescape(url))
-    rescue URI::Error
-    end
+    uri =
+      begin
+        URI(URI.unescape(url))
+      rescue URI::Error
+
+      end
 
     return if uri&.path.blank?
     data = extract_upload_url(uri.path)
@@ -210,7 +217,7 @@ class Upload < ActiveRecord::Base
     sha1 = data[2]
     upload = nil
     upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
-    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
+    upload || Upload.find_by('url LIKE ?', "%#{data[1]}")
   end
 
   def human_filesize
@@ -221,40 +228,48 @@ class Upload < ActiveRecord::Base
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
-      max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
+      max_file_size_kb = [
+        SiteSetting.max_image_size_kb,
+        SiteSetting.max_attachment_size_kb
+      ]
+        .max
+        .kilobytes
       local_store = FileStore::LocalStore.new
 
-      scope = Upload.by_users
-        .where("url NOT LIKE '%/original/_X/%'")
-        .order(id: :desc)
+      scope =
+        Upload.by_users.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
 
       scope = scope.limit(limit) if limit
 
       scope.each do |upload|
         begin
-          # keep track of the url
-          previous_url = upload.url.dup
-          # where is the file currently stored?
-          external = previous_url =~ /^\/\//
+          previous_url = upload.url.dup # keep track of the url
+          external = previous_url =~ %r{^\/\/} # where is the file currently stored?
+
           # download if external
           if external
-            url = SiteSetting.scheme + ":" + previous_url
-            file = FileHelper.download(
-              url,
-              max_file_size: max_file_size_kb,
-              tmp_file_name: "discourse",
-              follow_redirect: true
-            ) rescue nil
+            url = SiteSetting.scheme + ':' + previous_url
+            file =
+              begin
+                FileHelper.download(
+                  url,
+                  max_file_size: max_file_size_kb,
+                  tmp_file_name: 'discourse',
+                  follow_redirect: true
+                )
+              rescue StandardError
+                nil
+              end
             path = file.path
           else
             path = local_store.path_for(upload)
           end
           # compute SHA if missing
-          if upload.sha1.blank?
-            upload.sha1 = Upload.generate_digest(path)
-          end
+          upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
           # optimize if image
-          FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
+          if FileHelper.is_supported_image?(File.basename(path))
+            FileHelper.optimize_image!(path)
+          end
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
@@ -262,12 +277,12 @@ class Upload < ActiveRecord::Base
             upload.save!
           end
           # remap the URLs
-          DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
+          unless external
+            DbHelper.remap(UrlHelper.absolute(previous_url), upload.url)
+          end
           DbHelper.remap(previous_url, upload.url)
           # remove the old file (when local)
-          unless external
-            FileUtils.rm(path, force: true)
-          end
+          FileUtils.rm(path, force: true) unless external
         rescue => e
           problems << { upload: upload, ex: e }
         ensure
@@ -279,7 +294,6 @@ class Upload < ActiveRecord::Base
 
     problems
   end
-
 end
 
 # == Schema Information

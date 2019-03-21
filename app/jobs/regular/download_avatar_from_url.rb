@@ -1,5 +1,4 @@
 module Jobs
-
   class DownloadAvatarFromUrl < Jobs::Base
     sidekiq_options retry: false
 
@@ -22,7 +21,5 @@ module Jobs
         raise e unless e.message == 'url'
       end
     end
-
   end
-
 end

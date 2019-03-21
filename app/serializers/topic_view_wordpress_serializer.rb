@@ -1,10 +1,6 @@
 class TopicViewWordpressSerializer < ApplicationSerializer
-
   # These attributes will be delegated to the topic
-  attributes :id,
-             :posts_count,
-             :filtered_posts_count,
-             :posts
+  attributes :id, :posts_count, :filtered_posts_count, :posts
 
   has_many :participants, serializer: UserWordpressSerializer, embed: :objects
   has_many :posts, serializer: PostWordpressSerializer, embed: :objects
@@ -28,5 +24,4 @@ class TopicViewWordpressSerializer < ApplicationSerializer
   def posts
     object.posts
   end
-
 end

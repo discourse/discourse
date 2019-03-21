@@ -6,33 +6,37 @@ class AddQuotedPosts < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :quoted_posts, [:post_id, :quoted_post_id], unique: true
-    add_index :quoted_posts, [:quoted_post_id, :post_id], unique: true
+    add_index :quoted_posts, %i[post_id quoted_post_id], unique: true
+    add_index :quoted_posts, %i[quoted_post_id post_id], unique: true
 
     # NOTE this can be done in pg but too much of a headache
     id = 0
-    while id = backfill_batch(id, 1000); end
+    while id = backfill_batch(id, 1000)
+      begin
+
+      end
+    end
   end
 
   def backfill_batch(start_id, batch_size)
-
-    results = execute <<SQL
-    SELECT id, cooked
-    FROM posts
-    WHERE raw like '%quote=%' AND id > #{start_id}
-    ORDER BY id
-    LIMIT #{batch_size}
-SQL
+    sql = <<~SQL
+      SELECT id, cooked
+      FROM posts
+      WHERE raw like '%quote=%' AND id > #{start_id}
+      ORDER BY id
+      LIMIT #{batch_size}
+    SQL
+    results = execute(sql)
 
     max_id = nil
 
     results.each do |row|
-      post_id, max_id = row["id"].to_i
-      doc = Nokogiri::HTML.fragment(row["cooked"])
+      post_id, max_id = row['id'].to_i
+      doc = Nokogiri::HTML.fragment(row['cooked'])
 
       uniq = {}
 
-      doc.css("aside.quote[data-topic]").each do |a|
+      doc.css('aside.quote[data-topic]').each do |a|
         topic_id = a['data-topic'].to_i
         post_number = a['data-post'].to_i
 

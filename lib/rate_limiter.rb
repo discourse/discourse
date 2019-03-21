@@ -3,11 +3,10 @@ require_dependency 'rate_limiter/on_create_record'
 
 # A redis backed rate limiter.
 class RateLimiter
-
   attr_reader :max, :secs, :user, :key
 
   def self.key_prefix
-    "l-rate-limit3:"
+    'l-rate-limit3:'
   end
 
   def self.disable
@@ -56,7 +55,7 @@ class RateLimiter
   end
 
   # reloader friendly
-  unless defined? PERFORM_LUA
+  unless defined?(PERFORM_LUA)
     PERFORM_LUA = <<~LUA
       local now = tonumber(ARGV[1])
       local secs = tonumber(ARGV[2])
@@ -85,9 +84,18 @@ class RateLimiter
     now = Time.now.to_i
 
     if ((max || 0) <= 0) ||
-       (eval_lua(PERFORM_LUA, PERFORM_LUA_SHA, [prefixed_key], [now, @secs, @max]) == 0)
-
-      raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type) if raise_error
+       (
+         eval_lua(
+           PERFORM_LUA,
+           PERFORM_LUA_SHA,
+           [prefixed_key],
+           [now, @secs, @max]
+         ) ==
+           0
+       )
+      if raise_error
+        raise RateLimiter::LimitExceeded.new(seconds_to_wait, @type)
+      end
       false
     else
       true
@@ -117,11 +125,7 @@ class RateLimiter
   private
 
   def prefixed_key
-    if @global
-      "GLOBAL::#{key}"
-    else
-      $redis.namespace_key(key)
-    end
+    @global ? "GLOBAL::#{key}" : $redis.namespace_key(key)
   end
 
   def redis
@@ -139,9 +143,8 @@ class RateLimiter
 
   def is_under_limit?
     # number of events in buffer less than max allowed? OR
-    (redis.llen(prefixed_key) < @max) ||
+    (redis.llen(prefixed_key) < @max) || (age_of_oldest > @secs)
     # age bigger than silding window size?
-    (age_of_oldest > @secs)
   end
 
   def rate_unlimited?
@@ -151,10 +154,6 @@ class RateLimiter
   def eval_lua(lua, sha, keys, args)
     redis.evalsha(sha, keys, args)
   rescue Redis::CommandError => e
-    if e.to_s =~ /^NOSCRIPT/
-      redis.eval(lua, keys, args)
-    else
-      raise
-    end
+    e.to_s =~ /^NOSCRIPT/ ? redis.eval(lua, keys, args) : raise
   end
 end

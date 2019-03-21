@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe PostTiming do
-
   it { is_expected.to validate_presence_of :post_number }
   it { is_expected.to validate_presence_of :msecs }
 
@@ -15,16 +14,18 @@ describe PostTiming do
     end
 
     def timing(user_id, post_number)
-      PostTiming.create!(topic_id: topic_id, user_id: user_id, post_number: post_number, msecs: 0)
+      PostTiming.create!(
+        topic_id: topic_id, user_id: user_id, post_number: post_number, msecs: 0
+      )
     end
 
     def topic_user(user_id, last_read_post_number, highest_seen_post_number)
       TopicUser.create!(
-                        topic_id: topic_id,
-                        user_id: user_id,
-                        last_read_post_number: last_read_post_number,
-                        highest_seen_post_number: highest_seen_post_number
-                       )
+        topic_id: topic_id,
+        user_id: user_id,
+        last_read_post_number: last_read_post_number,
+        highest_seen_post_number: highest_seen_post_number
+      )
     end
 
     it 'works correctly' do
@@ -41,9 +42,15 @@ describe PostTiming do
 
       PostTiming.pretend_read(topic_id, 2, 3)
 
-      expect(PostTiming.where(topic_id: topic_id, user_id: 1, post_number: 3).count).to eq(0)
-      expect(PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count).to eq(1)
-      expect(PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count).to eq(1)
+      expect(
+        PostTiming.where(topic_id: topic_id, user_id: 1, post_number: 3).count
+      ).to eq(0)
+      expect(
+        PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count
+      ).to eq(1)
+      expect(
+        PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count
+      ).to eq(1)
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 1)
       expect(tu.last_read_post_number).to eq(1)
@@ -56,7 +63,6 @@ describe PostTiming do
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 3)
       expect(tu.last_read_post_number).to eq(3)
       expect(tu.highest_seen_post_number).to eq(3)
-
     end
   end
 
@@ -65,40 +71,66 @@ describe PostTiming do
       user = Fabricate(:user, created_at: 3.minutes.ago)
       post = Fabricate(:post)
 
-      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 123]])
-      msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
+      PostTiming.process_timings(
+        user,
+        post.topic_id,
+        1,
+        [[post.post_number, 123]]
+      )
+      msecs =
+        PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(
+          :msecs
+        )[
+          0
+        ]
       expect(msecs).to eq(123)
 
-      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 10.minutes.to_i * 1000]])
-      msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
+      PostTiming.process_timings(
+        user,
+        post.topic_id,
+        1,
+        [[post.post_number, 10.minutes.to_i * 1000]]
+      )
+      msecs =
+        PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(
+          :msecs
+        )[
+          0
+        ]
       expect(msecs).to eq(123 + PostTiming::MAX_READ_TIME_PER_BATCH)
     end
-
   end
 
   describe 'process_timings' do
-
     # integration tests
 
     it 'processes timings correctly' do
       PostActionNotifier.enable
 
       post = Fabricate(:post)
-      (2..5).each do |i|
-        Fabricate(:post, topic: post.topic, post_number: i)
-      end
+      (2..5).each { |i| Fabricate(:post, topic: post.topic, post_number: i) }
       user2 = Fabricate(:coding_horror, created_at: 1.day.ago)
 
       PostAction.act(user2, post, PostActionType.types[:like])
 
       expect(post.user.unread_notifications).to eq(1)
 
-      PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
+      PostTiming.process_timings(
+        post.user,
+        post.topic_id,
+        1,
+        [[post.post_number, 100]]
+      )
 
       post.user.reload
       expect(post.user.unread_notifications).to eq(0)
 
-      PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 1.day]])
+      PostTiming.process_timings(
+        post.user,
+        post.topic_id,
+        1,
+        [[post.post_number, 1.day]]
+      )
 
       user_visit = post.user.user_visits.order('id DESC').first
       expect(user_visit.posts_read).to eq(1)
@@ -110,7 +142,12 @@ describe PostTiming do
       # Scroll up
       PostTiming.process_timings(post.user, post.topic_id, 1, [[4, 100]])
       expect(user_visit.reload.posts_read).to eq(3)
-      PostTiming.process_timings(post.user, post.topic_id, 1, [[2, 100], [3, 100]])
+      PostTiming.process_timings(
+        post.user,
+        post.topic_id,
+        1,
+        [[2, 100], [3, 100]]
+      )
       expect(user_visit.reload.posts_read).to eq(5)
     end
 
@@ -118,9 +155,7 @@ describe PostTiming do
       pm = Fabricate(:private_message_topic, user: Fabricate(:admin))
       user1, user2 = pm.topic_allowed_users.map(&:user)
 
-      (1..3).each do |i|
-        Fabricate(:post, topic: pm, user: user1)
-      end
+      (1..3).each { |i| Fabricate(:post, topic: pm, user: user1) }
 
       PostTiming.process_timings(user2, pm.id, 10, [[1, 100]])
       user_visit = user2.user_visits.last
@@ -136,32 +171,40 @@ describe PostTiming do
       @post = Fabricate(:post)
       @topic = @post.topic
       @coding_horror = Fabricate(:coding_horror)
-      @timing_attrs = { msecs: 1234, topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number }
+      @timing_attrs = {
+        msecs: 1234,
+        topic_id: @post.topic_id,
+        user_id: @coding_horror.id,
+        post_number: @post.post_number
+      }
     end
 
     it 'adds a view to the post' do
-      expect {
+      expect do
         PostTiming.record_timing(@timing_attrs)
         @post.reload
-      }.to change(@post, :reads).by(1)
+      end.to change(@post, :reads).by(1)
     end
 
     describe 'multiple calls' do
       it 'correctly works' do
         PostTiming.record_timing(@timing_attrs)
         PostTiming.record_timing(@timing_attrs)
-        timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
+        timing =
+          PostTiming.find_by(
+            topic_id: @post.topic_id,
+            user_id: @coding_horror.id,
+            post_number: @post.post_number
+          )
 
         expect(timing).to be_present
         expect(timing.msecs).to eq(2468)
 
         expect(@coding_horror.user_stat.posts_read_count).to eq(1)
       end
-
     end
 
     describe 'avg times' do
-
       describe 'posts' do
         it 'has no avg_time by default' do
           expect(@post.avg_time).to be_blank
@@ -193,7 +236,6 @@ describe PostTiming do
           @post.reload
           expect(@post.avg_time).to be_blank
         end
-
       end
 
       describe 'with a timing for another user' do
@@ -216,13 +258,8 @@ describe PostTiming do
           it 'has an avg_time from the timing' do
             expect(@topic.avg_time).to be_present
           end
-
         end
-
       end
-
     end
-
   end
-
 end

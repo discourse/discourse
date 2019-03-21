@@ -6,22 +6,28 @@ describe ContentSecurityPolicy::Builder do
 
   describe '#<<' do
     it 'normalizes directive name' do
-      builder << {
-        script_src: ['symbol_underscore'],
-        'script-src': ['symbol_dash'],
-        'script_src' => ['string_underscore'],
-        'script-src' => ['string_dash'],
-      }
+      builder <<
+        {
+          script_src: %w[symbol_underscore],
+          :"script-src" => %w[symbol_dash],
+          'script_src' => %w[string_underscore],
+          'script-src' => %w[string_dash]
+        }
 
       script_srcs = parse(builder.build)['script-src']
 
-      expect(script_srcs).to include(*%w[symbol_underscore symbol_dash string_underscore symbol_underscore])
+      expect(script_srcs).to include(
+            *%w[
+              symbol_underscore
+              symbol_dash
+              string_underscore
+              symbol_underscore
+            ]
+          )
     end
 
     it 'rejects invalid directives and ones that are not allowed to be extended' do
-      builder << {
-        invalid_src: ['invalid'],
-      }
+      builder << { invalid_src: %w[invalid] }
 
       expect(builder.build).to_not include('invalid')
     end
@@ -31,7 +37,7 @@ describe ContentSecurityPolicy::Builder do
 
       builder << nil
       builder << 123
-      builder << "string"
+      builder << 'string'
       builder << []
       builder << {}
 
@@ -43,6 +49,7 @@ describe ContentSecurityPolicy::Builder do
     csp_string.split(';').map do |policy|
       directive, *sources = policy.split
       [directive, sources]
-    end.to_h
+    end
+      .to_h
   end
 end

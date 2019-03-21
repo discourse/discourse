@@ -2,7 +2,6 @@
 # Most work is delegated to a registry.
 
 class DiscoursePlugin
-
   attr_reader :registry
 
   def initialize(registry)
@@ -17,7 +16,7 @@ class DiscoursePlugin
   # A mixin named "UserMixin" will be included into the "User" class.
   def self.include_mixins
     mixins.each do |mixin|
-      original_class = mixin.to_s.demodulize.sub("Mixin", "")
+      original_class = mixin.to_s.demodulize.sub('Mixin', '')
       dependency_file_name = original_class.underscore
       require_dependency(dependency_file_name)
       original_class.constantize.send(:include, mixin)
@@ -26,8 +25,9 @@ class DiscoursePlugin
 
   # Find the modules defined in the plugin with "Mixin" in their name.
   def self.mixins
-    constants.map { |const_name| const_get(const_name) }
-      .select { |const| const.class == Module && const.name["Mixin"] }
+    constants.map { |const_name| const_get(const_name) }.select do |const|
+      const.class == Module && const.name['Mixin']
+    end
   end
 
   def register_js(file, opts = {})
@@ -46,5 +46,4 @@ class DiscoursePlugin
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
   end
-
 end

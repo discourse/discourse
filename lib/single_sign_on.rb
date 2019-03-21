@@ -1,10 +1,10 @@
 class SingleSignOn
-
   class ParseError < RuntimeError; end
 
-  ACCESSORS = %i{
+  ACCESSORS = %i[
     add_groups
-    admin moderator
+    admin
+    moderator
     avatar_force_update
     avatar_url
     bio
@@ -24,18 +24,18 @@ class SingleSignOn
     title
     username
     website
-  }
+  ]
 
   FIXNUMS = []
 
-  BOOLS = %i{
+  BOOLS = %i[
     admin
     avatar_force_update
     locale_force_update
     moderator
     require_activation
     suppress_welcome_message
-  }
+  ]
 
   def self.nonce_expiry_time
     @nonce_expiry_time ||= 10.minutes
@@ -49,11 +49,13 @@ class SingleSignOn
   attr_writer :sso_secret, :sso_url
 
   def self.sso_secret
-    raise RuntimeError, "sso_secret not implemented on class, be sure to set it on instance"
+    raise RuntimeError,
+          'sso_secret not implemented on class, be sure to set it on instance'
   end
 
   def self.sso_url
-    raise RuntimeError, "sso_url not implemented on class, be sure to set it on instance"
+    raise RuntimeError,
+          'sso_url not implemented on class, be sure to set it on instance'
   end
 
   def self.parse(payload, sso_secret = nil)
@@ -61,15 +63,19 @@ class SingleSignOn
     sso.sso_secret = sso_secret if sso_secret
 
     parsed = Rack::Utils.parse_query(payload)
-    decoded = Base64.decode64(parsed["sso"])
+    decoded = Base64.decode64(parsed['sso'])
     decoded_hash = Rack::Utils.parse_query(decoded)
 
     return_sso_url = decoded_hash['return_sso_url']
 
-    if sso.sign(parsed["sso"]) != parsed["sig"]
-      diags = "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
-      if parsed["sso"] =~ /[^a-zA-Z0-9=\r\n\/+]/m
-        raise ParseError, "The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9, +, /, and = characters. Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64 #{diags}"
+    if sso.sign(parsed['sso']) != parsed['sig']
+      diags =
+        "\n\nsso: #{parsed['sso']}\n\nsig: #{parsed[
+          'sig'
+        ]}\n\nexpected sig: #{sso.sign(parsed['sso'])}"
+      if parsed['sso'] =~ %r{[^a-zA-Z0-9=\r\n\/+]}m
+        raise ParseError,
+              "The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9, +, /, and = characters. Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64 #{diags}"
       else
         raise ParseError, "Bad signature for payload #{diags}"
       end
@@ -79,15 +85,13 @@ class SingleSignOn
       val = decoded_hash[k.to_s]
       val = val.to_i if FIXNUMS.include? k
       if BOOLS.include? k
-        val = ["true", "false"].include?(val) ? val == "true" : nil
+        val = %w[true false].include?(val) ? val == 'true' : nil
       end
       sso.send("#{k}=", val)
     end
 
     decoded_hash.each do |k, v|
-      if field = k[/^custom\.(.+)$/, 1]
-        sso.custom_fields[field] = v
-      end
+      sso.custom_fields[field] = v if field = k[/^custom\.(.+)$/, 1]
     end
 
     sso
@@ -111,7 +115,7 @@ class SingleSignOn
 
   def sign(payload, secret = nil)
     secret = secret || sso_secret
-    OpenSSL::HMAC.hexdigest("sha256", secret, payload)
+    OpenSSL::HMAC.hexdigest('sha256', secret, payload)
   end
 
   def to_url(base_url = nil)
@@ -121,7 +125,7 @@ class SingleSignOn
 
   def payload(secret = nil)
     payload = Base64.strict_encode64(unsigned_payload)
-    "sso=#{CGI::escape(payload)}&sig=#{sign(payload, secret)}"
+    "sso=#{CGI.escape(payload)}&sig=#{sign(payload, secret)}"
   end
 
   def unsigned_payload
@@ -129,14 +133,11 @@ class SingleSignOn
 
     ACCESSORS.each do |k|
       next if (val = send k) == nil
-     payload[k] = val
+      payload[k] = val
     end
 
-    @custom_fields&.each do |k, v|
-      payload["custom.#{k}"] = v.to_s
-    end
+    @custom_fields&.each { |k, v| payload["custom.#{k}"] = v.to_s }
 
     Rack::Utils.build_query(payload)
   end
-
 end

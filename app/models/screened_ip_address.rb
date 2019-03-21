@@ -4,7 +4,6 @@ require_dependency 'ip_addr'
 # A ScreenedIpAddress record represents an IP address or subnet that is being watched,
 # and possibly blocked from creating accounts.
 class ScreenedIpAddress < ActiveRecord::Base
-
   include ScreeningModel
 
   default_action :block
@@ -13,7 +12,8 @@ class ScreenedIpAddress < ActiveRecord::Base
   after_validation :check_for_match
 
   def self.watch(ip_address, opts = {})
-    match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
+    match_for_ip_address(ip_address) ||
+      create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
 
   def check_for_match
@@ -48,8 +48,8 @@ class ScreenedIpAddress < ActiveRecord::Base
 
     write_attribute(:ip_address, v)
 
-  # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
-  # handle both exceptions
+    # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
+    # handle both exceptions
   rescue ArgumentError, IPAddr::InvalidAddressError
     self.errors.add(:ip_address, :invalid)
   end
@@ -66,7 +66,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     #
     #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
     #   http://www.postgresql.org/docs/9.1/static/functions-net.html
-    find_by("? <<= ip_address", ip_address.to_s)
+    find_by('? <<= ip_address', ip_address.to_s)
   end
 
   def self.should_block?(ip_address)
@@ -88,16 +88,26 @@ class ScreenedIpAddress < ActiveRecord::Base
     return false unless SiteSetting.use_admin_ip_whitelist
     return false if user.nil?
     return false if !user.admin?
-    return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0
+    if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0
+      return false
+    end
     return true if ip_address.nil?
-    !exists_for_ip_address_and_action?(ip_address, actions[:allow_admin], record_match: false)
+    !exists_for_ip_address_and_action?(
+      ip_address,
+      actions[:allow_admin],
+      record_match: false
+    )
   end
 
   def self.star_subnets_query
-    @star_subnets_query ||= <<~SQL
+    @star_subnets_query ||=
+      <<~SQL
       SELECT network(inet(host(ip_address) || '/24'))::text AS ip_range
         FROM screened_ip_addresses
-       WHERE action_type = #{ScreenedIpAddress.actions[:block]}
+       WHERE action_type = #{ScreenedIpAddress
+        .actions[
+        :block
+      ]}
          AND family(ip_address) = 4
          AND masklen(ip_address) = 32
     GROUP BY ip_range
@@ -106,7 +116,8 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.star_star_subnets_query
-    @star_star_subnets_query ||= <<~SQL
+    @star_star_subnets_query ||=
+      <<~SQL
       WITH weighted_subnets AS (
         SELECT network(inet(host(ip_address) || '/16'))::text AS ip_range,
                CASE masklen(ip_address)
@@ -115,7 +126,10 @@ class ScreenedIpAddress < ActiveRecord::Base
                  ELSE 0
                END AS weight
           FROM screened_ip_addresses
-         WHERE action_type = #{ScreenedIpAddress.actions[:block]}
+         WHERE action_type = #{ScreenedIpAddress
+        .actions[
+        :block
+      ]}
            AND family(ip_address) = 4
       )
       SELECT ip_range
@@ -132,16 +146,23 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   def self.star_star_subnets
     weight = SiteSetting.min_ban_entries_for_roll_up
-    DB.query_single(star_star_subnets_query, min_count: 10, roll_up_weight: weight)
+    DB.query_single(
+      star_star_subnets_query,
+      min_count: 10, roll_up_weight: weight
+    )
   end
 
   def self.roll_up(current_user = Discourse.system_user)
     subnets = [star_subnets, star_star_subnets].flatten
 
-    StaffActionLogger.new(current_user).log_roll_up(subnets) unless subnets.blank?
+    unless subnets.blank?
+      StaffActionLogger.new(current_user).log_roll_up(subnets)
+    end
 
     subnets.each do |subnet|
-      ScreenedIpAddress.create(ip_address: subnet) unless ScreenedIpAddress.where("? <<= ip_address", subnet).exists?
+      unless ScreenedIpAddress.where('? <<= ip_address', subnet).exists?
+        ScreenedIpAddress.create(ip_address: subnet)
+      end
 
       sql = <<~SQL
         UPDATE screened_ip_addresses
@@ -153,7 +174,10 @@ class ScreenedIpAddress < ActiveRecord::Base
                  , MIN(created_at)    AS min_created_at
                  , MAX(last_match_at) AS max_last_match_at
               FROM screened_ip_addresses
-             WHERE action_type = #{ScreenedIpAddress.actions[:block]}
+             WHERE action_type = #{ScreenedIpAddress
+        .actions[
+        :block
+      ]}
                AND family(ip_address) = 4
                AND ip_address << :ip_address
           ) s
@@ -163,14 +187,13 @@ class ScreenedIpAddress < ActiveRecord::Base
       DB.exec(sql, ip_address: subnet)
 
       ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
-        .where("family(ip_address) = 4")
-        .where("ip_address << ?", subnet)
+        .where('family(ip_address) = 4')
+        .where('ip_address << ?', subnet)
         .delete_all
     end
 
     subnets
   end
-
 end
 
 # == Schema Information

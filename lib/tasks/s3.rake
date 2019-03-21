@@ -1,4 +1,4 @@
-require_dependency "s3_helper"
+require_dependency 's3_helper'
 
 def brotli_s3_path(path)
   ext = File.extname(path)
@@ -12,12 +12,11 @@ end
 
 def should_skip?(path)
   return false if ENV['FORCE_S3_UPLOADS']
-  @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
+  @existing_assets ||= Set.new(helper.list('assets/').map(&:key))
   @existing_assets.include?(path)
 end
 
 def upload(path, remote_path, content_type, content_encoding = nil)
-
   options = {
     cache_control: 'max-age=31556952, public, immutable',
     content_type: content_type,
@@ -25,47 +24,46 @@ def upload(path, remote_path, content_type, content_encoding = nil)
     tagging: ''
   }
 
-  if content_encoding
-    options[:content_encoding] = content_encoding
-  end
+  options[:content_encoding] = content_encoding if content_encoding
 
   if should_skip?(remote_path)
     puts "Skipping: #{remote_path}"
   else
     puts "Uploading: #{remote_path}"
 
-    File.open(path) do |file|
-      helper.upload(file, remote_path, options)
-    end
+    File.open(path) { |file| helper.upload(file, remote_path, options) }
   end
 end
 
 def use_db_s3_config
-  ENV["USE_DB_S3_CONFIG"]
+  ENV['USE_DB_S3_CONFIG']
 end
 
 def helper
-  @helper ||= begin
-    bucket, options =
-      if use_db_s3_config
-        [
-          SiteSetting.s3_upload_bucket.downcase,
-          S3Helper.s3_options(SiteSetting)
-        ]
-      else
-        [
-          GlobalSetting.s3_bucket.downcase,
-          S3Helper.s3_options(GlobalSetting)
-        ]
-      end
+  @helper ||=
+    begin
+      bucket, options =
+        if use_db_s3_config
+          [
+            SiteSetting.s3_upload_bucket.downcase,
+            S3Helper.s3_options(SiteSetting)
+          ]
+        else
+          [GlobalSetting.s3_bucket.downcase, S3Helper.s3_options(GlobalSetting)]
+        end
 
-    S3Helper.new(bucket, '', options)
-  end
+      S3Helper.new(bucket, '', options)
+    end
 end
 
 def assets
   cached = Rails.application.assets&.cached
-  manifest = Sprockets::Manifest.new(cached, Rails.root + 'public/assets', Rails.application.config.assets.manifest)
+  manifest =
+    Sprockets::Manifest.new(
+      cached,
+      Rails.root + 'public/assets',
+      Rails.application.config.assets.manifest
+    )
 
   results = []
 
@@ -78,11 +76,13 @@ def assets
     results << [fullpath, asset_path, content_type]
 
     if File.exist?(fullpath + '.br')
-      results << [fullpath + '.br', brotli_s3_path(asset_path), content_type, 'br']
+      results <<
+        [fullpath + '.br', brotli_s3_path(asset_path), content_type, 'br']
     end
 
     if File.exist?(fullpath + '.gz')
-      results << [fullpath + '.gz', gzip_s3_path(asset_path), content_type, 'gzip']
+      results <<
+        [fullpath + '.gz', gzip_s3_path(asset_path), content_type, 'gzip']
     end
 
     if File.exist?(fullpath + '.map')
@@ -99,7 +99,7 @@ end
 
 def ensure_s3_configured!
   unless GlobalSetting.use_s3? || use_db_s3_config
-    STDERR.puts "ERROR: Ensure S3 is configured in config/discourse.conf of environment vars"
+    STDERR.puts 'ERROR: Ensure S3 is configured in config/discourse.conf of environment vars'
     exit 1
   end
 end
@@ -107,14 +107,16 @@ end
 task 's3:correct_acl' => :environment do
   ensure_s3_configured!
 
-  puts "ensuring public-read is set on every upload and optimized image"
+  puts 'ensuring public-read is set on every upload and optimized image'
 
   i = 0
 
   base_url = Discourse.store.absolute_base_url
 
   objects = Upload.pluck(:id, :url).map { |array| array << :upload }
-  objects.concat(OptimizedImage.pluck(:id, :url).map { |array| array << :optimized_image })
+  objects.concat(
+    OptimizedImage.pluck(:id, :url).map { |array| array << :optimized_image }
+  )
 
   puts "#{objects.length} objects found"
 
@@ -126,27 +128,22 @@ task 's3:correct_acl' => :environment do
       begin
         key = url[(base_url.length + 1)..-1]
         object = Discourse.store.s3_helper.object(key)
-        object.acl.put(acl: "public-read")
+        object.acl.put(acl: 'public-read')
       rescue => e
         puts "Skipping #{type} #{id} url is #{url} #{e}"
       end
     end
-    if i % 100 == 0
-      puts "#{i} done"
-    end
+    puts "#{i} done" if i % 100 == 0
   end
-
 end
 
 task 's3:upload_assets' => :environment do
   ensure_s3_configured!
 
-  puts "installing CORS rule"
+  puts 'installing CORS rule'
   helper.ensure_cors!
 
-  assets.each do |asset|
-    upload(*asset)
-  end
+  assets.each { |asset| upload(*asset) }
 end
 
 task 's3:expire_missing_assets' => :environment do
@@ -157,7 +154,7 @@ task 's3:expire_missing_assets' => :environment do
 
   in_manifest = asset_paths
 
-  puts "Ensuring AWS assets are tagged correctly for removal"
+  puts 'Ensuring AWS assets are tagged correctly for removal'
   helper.list('assets/').each do |f|
     if !in_manifest.include?(f.key)
       helper.tag_file(f.key, old: true)
@@ -171,7 +168,10 @@ task 's3:expire_missing_assets' => :environment do
 
   puts "#{count} assets were flagged for removal in 10 days (#{keep} assets will be retained)"
 
-  puts "Ensuring AWS rule exists for purging old assets"
-  helper.update_lifecycle("delete_old_assets", 10, tag: { key: 'old', value: 'true' })
-
+  puts 'Ensuring AWS rule exists for purging old assets'
+  helper.update_lifecycle(
+    'delete_old_assets',
+    10,
+    tag: { key: 'old', value: 'true' }
+  )
 end

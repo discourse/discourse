@@ -1,5 +1,4 @@
 class EmailBackupToken
-
   def self.key(user_id)
     "email-backup-token:#{user_id}"
   end

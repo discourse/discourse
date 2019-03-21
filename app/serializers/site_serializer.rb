@@ -3,7 +3,6 @@ require_dependency 'wizard'
 require_dependency 'wizard/builder'
 
 class SiteSerializer < ApplicationSerializer
-
   attributes(
     :default_archetype,
     :notification_types,
@@ -13,7 +12,8 @@ class SiteSerializer < ApplicationSerializer
     :periods,
     :top_menu_items,
     :anonymous_top_menu_items,
-    :uncategorized_category_id, # this is hidden so putting it here
+    :uncategorized_category_id,
+    # this is hidden so putting it here
     :is_readonly,
     :disabled_plugins,
     :user_field_max_length,
@@ -39,35 +39,49 @@ class SiteSerializer < ApplicationSerializer
   has_many :auth_providers, embed: :objects, serializer: AuthProviderSerializer
 
   def user_themes
-    cache_fragment("user_themes") do
-      Theme.where('id = :default OR user_selectable',
-                    default: SiteSetting.default_theme_id)
+    cache_fragment('user_themes') do
+      Theme.where(
+        'id = :default OR user_selectable',
+        default: SiteSetting.default_theme_id
+      )
         .order(:name)
         .pluck(:id, :name)
-        .map { |id, n| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id } }
+        .map do |id, n|
+        { theme_id: id, name: n, default: id == SiteSetting.default_theme_id }
+      end
         .as_json
     end
   end
 
   def groups
-    cache_anon_fragment("group_names") do
-      object.groups.order(:name).pluck(:id, :name).map { |id, name| { id: id, name: name } }.as_json
+    cache_anon_fragment('group_names') do
+      object.groups.order(:name).pluck(:id, :name).map do |id, name|
+        { id: id, name: name }
+      end
+        .as_json
     end
   end
 
   def post_action_types
     cache_fragment("post_action_types_#{I18n.locale}") do
-      types = PostActionType.types.values.map { |id| PostActionType.new(id: id) }
+      types =
+        PostActionType.types.values.map { |id| PostActionType.new(id: id) }
       ActiveModel::ArraySerializer.new(types).as_json
     end
   end
 
   def topic_flag_types
     cache_fragment("post_action_flag_types_#{I18n.locale}") do
-      types = PostActionType.topic_flag_types.values.map { |id| PostActionType.new(id: id) }
-      ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
+      types =
+        PostActionType.topic_flag_types.values.map do |id|
+          PostActionType.new(id: id)
+        end
+      ActiveModel::ArraySerializer.new(
+        types,
+        each_serializer: TopicFlagTypeSerializer
+      )
+        .as_json
     end
-
   end
 
   def default_archetype
@@ -165,5 +179,4 @@ class SiteSerializer < ApplicationSerializer
   def include_shared_drafts_category_id?
     scope.can_create_shared_draft?
   end
-
 end

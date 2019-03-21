@@ -1,16 +1,19 @@
 class DropKeyColumnFromThemes < ActiveRecord::Migration[5.2]
   def up
-    add_column :user_options, :theme_ids, :integer, array: true,  null: false, default: []
+    add_column :user_options,
+               :theme_ids,
+               :integer,
+               array: true, null: false, default: []
 
     execute(
-      "UPDATE user_options AS uo
+      'UPDATE user_options AS uo
        SET theme_ids = (
          SELECT array_agg(themes.id)
          FROM themes
          INNER JOIN user_options
          ON themes.key = user_options.theme_key
          WHERE user_options.user_id = uo.user_id
-       ) WHERE uo.theme_key IN (SELECT key FROM themes)"
+       ) WHERE uo.theme_key IN (SELECT key FROM themes)'
     )
 
     execute(

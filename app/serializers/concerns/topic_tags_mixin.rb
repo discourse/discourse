@@ -11,11 +11,7 @@ module TopicTagsMixin
     # Calling method `pluck` along with `includes` causing N+1 queries
     tags = topic.tags.map(&:name)
 
-    if scope.is_staff?
-      tags
-    else
-      tags - scope.hidden_tag_names
-    end
+    scope.is_staff? ? tags : tags - scope.hidden_tag_names
   end
 
   def topic

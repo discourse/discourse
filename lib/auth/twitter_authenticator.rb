@@ -1,6 +1,6 @@
 class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
   def name
-    "twitter"
+    'twitter'
   end
 
   def enabled?
@@ -14,11 +14,10 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
   end
 
   def register_middleware(omniauth)
-    omniauth.provider :twitter,
-           setup: lambda { |env|
-             strategy = env["omniauth.strategy"]
-              strategy.options[:consumer_key] = SiteSetting.twitter_consumer_key
-              strategy.options[:consumer_secret] = SiteSetting.twitter_consumer_secret
-           }
+    omniauth.provider :twitter, setup: lambda do |env|
+      strategy = env['omniauth.strategy']
+      strategy.options[:consumer_key] = SiteSetting.twitter_consumer_key
+      strategy.options[:consumer_secret] = SiteSetting.twitter_consumer_secret
+    end
   end
 end

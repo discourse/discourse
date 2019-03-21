@@ -2,7 +2,6 @@ require 'rails_helper'
 require 'image_sizer'
 
 describe ImageSizer do
-
   before do
     SiteSetting.max_image_width = 500
     SiteSetting.max_image_height = 500
@@ -25,10 +24,7 @@ describe ImageSizer do
   end
 
   describe 'when larger than the maximum width' do
-
-    before do
-      @w, @h = ImageSizer.resize(600, 123)
-    end
+    before { @w, @h = ImageSizer.resize(600, 123) }
 
     it 'returns the maxmimum width if larger than the maximum' do
       expect(@w).to eq(500)
@@ -37,14 +33,10 @@ describe ImageSizer do
     it 'resizes the height retaining the aspect ratio' do
       expect(@h).to eq(102)
     end
-
   end
 
   describe 'when larger than the maximum height' do
-
-    before do
-      @w, @h = ImageSizer.resize(123, 600)
-    end
+    before { @w, @h = ImageSizer.resize(123, 600) }
 
     it 'returns the maxmimum height if larger than the maximum' do
       expect(@h).to eq(500)
@@ -53,20 +45,14 @@ describe ImageSizer do
     it 'resizes the width retaining the aspect ratio' do
       expect(@w).to eq(102)
     end
-
   end
 
   describe 'when larger than the maximums' do
-
-    before do
-      @w, @h = ImageSizer.resize(533, 800)
-    end
+    before { @w, @h = ImageSizer.resize(533, 800) }
 
     it 'resizes both dimensions retaining the aspect ratio' do
       expect(@h).to eq(500)
       expect(@w).to eq(333)
     end
-
   end
-
 end

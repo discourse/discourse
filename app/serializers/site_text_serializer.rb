@@ -12,9 +12,7 @@ class SiteTextSerializer < ApplicationSerializer
   def overridden?
     current_val = value
 
-    I18n.overrides_disabled do
-      return I18n.t(object[:id]) != current_val
-    end
+    I18n.overrides_disabled { return I18n.t(object[:id]) != current_val }
   end
 
   alias_method :can_revert?, :overridden?

@@ -20,12 +20,16 @@ class UserHistorySerializer < ApplicationSerializer
 
   def action_name
     key = UserHistory.actions.key(object.action)
-    [:custom, :custom_staff].include?(key) ? object.custom_type : key.to_s
+    %i[custom custom_staff].include?(key) ? object.custom_type : key.to_s
   end
 
   def new_value
     if object.new_value
-      object.new_value_is_json? ? ::JSON.parse(object.new_value) : object.new_value
+      if object.new_value_is_json?
+        ::JSON.parse(object.new_value)
+      else
+        object.new_value
+      end
     else
       nil
     end
@@ -33,7 +37,11 @@ class UserHistorySerializer < ApplicationSerializer
 
   def previous_value
     if object.previous_value
-      object.previous_value_is_json? ? ::JSON.parse(object.previous_value) : object.previous_value
+      if object.previous_value_is_json?
+        ::JSON.parse(object.previous_value)
+      else
+        object.previous_value
+      end
     else
       nil
     end

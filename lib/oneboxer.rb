@@ -1,35 +1,42 @@
 require 'uri'
-require_dependency "onebox/discourse_onebox_sanitize_config"
+require_dependency 'onebox/discourse_onebox_sanitize_config'
 require_dependency 'final_destination'
 
 Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
-  ONEBOX_CSS_CLASS = "onebox"
+  ONEBOX_CSS_CLASS = 'onebox'
 
   # keep reloaders happy
-  unless defined? Oneboxer::Result
-    Result = Struct.new(:doc, :changed) do
-      def to_html
-        doc.to_html
-      end
+  unless defined?(Oneboxer::Result)
+    Result =
+      Struct.new(:doc, :changed) do
+        def to_html
+          doc.to_html
+        end
 
-      def changed?
-        changed
+        def changed?
+          changed
+        end
       end
-    end
   end
 
   def self.ignore_redirects
-    @ignore_redirects ||= ['http://www.dropbox.com', 'http://store.steampowered.com', Discourse.base_url]
+    @ignore_redirects ||=
+      [
+        'http://www.dropbox.com',
+        'http://store.steampowered.com',
+        Discourse.base_url
+      ]
   end
 
   def self.force_get_hosts
-    @force_get_hosts ||= ['http://us.battle.net']
+    @force_get_hosts ||= %w[http://us.battle.net]
   end
 
   def self.allowed_post_types
-    @allowed_post_types ||= [Post.types[:regular], Post.types[:moderator_action]]
+    @allowed_post_types ||=
+      [Post.types[:regular], Post.types[:moderator_action]]
   end
 
   def self.preview(url, options = nil)
@@ -45,23 +52,19 @@ module Oneboxer
   end
 
   def self.cached_onebox(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
-      c[:onebox]
-    end
+    c[:onebox] if c = Rails.cache.read(onebox_cache_key(url))
   rescue => e
     invalidate(url)
     Rails.logger.warn("invalid cached onebox for #{url} #{e}")
-    ""
+    ''
   end
 
   def self.cached_preview(url)
-    if c = Rails.cache.read(onebox_cache_key(url))
-      c[:preview]
-    end
+    c[:preview] if c = Rails.cache.read(onebox_cache_key(url))
   rescue => e
     invalidate(url)
     Rails.logger.warn("invalid cached preview for #{url} #{e}")
-    ""
+    ''
   end
 
   def self.invalidate(url)
@@ -71,7 +74,7 @@ module Oneboxer
   # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc, extra_paths: [])
     doc = string_or_doc
-    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML.fragment(doc) if doc.is_a?(String)
 
     onebox_links = doc.css("a.#{ONEBOX_CSS_CLASS}", *extra_paths)
     if onebox_links.present?
@@ -83,23 +86,64 @@ module Oneboxer
     doc
   end
 
-  HTML5_BLOCK_ELEMENTS ||= %w{address article aside blockquote canvas center dd div dl dt fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr li main nav noscript ol output p pre section table tfoot ul video}
+  HTML5_BLOCK_ELEMENTS ||=
+    %w[
+      address
+      article
+      aside
+      blockquote
+      canvas
+      center
+      dd
+      div
+      dl
+      dt
+      fieldset
+      figcaption
+      figure
+      footer
+      form
+      h1
+      h2
+      h3
+      h4
+      h5
+      h6
+      header
+      hgroup
+      hr
+      li
+      main
+      nav
+      noscript
+      ol
+      output
+      p
+      pre
+      section
+      table
+      tfoot
+      ul
+      video
+    ]
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc
-    doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
+    doc = Nokogiri::HTML.fragment(doc) if doc.is_a?(String)
     changed = false
 
     each_onebox_link(doc, extra_paths: extra_paths) do |url, element|
       onebox, _ = yield(url, element)
 
       if onebox
-        parsed_onebox = Nokogiri::HTML::fragment(onebox)
+        parsed_onebox = Nokogiri::HTML.fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
-        if element&.parent&.node_name&.downcase == "p" &&
+        if element&.parent&.node_name&.downcase == 'p' &&
            element.parent.children.count == 1 &&
-           HTML5_BLOCK_ELEMENTS.include?(parsed_onebox.children[0].node_name.downcase)
+           HTML5_BLOCK_ELEMENTS.include?(
+             parsed_onebox.children[0].node_name.downcase
+           )
           element = element.parent
         end
 
@@ -109,17 +153,17 @@ module Oneboxer
     end
 
     # strip empty <p> elements
-    doc.css("p").each { |p| p.remove if p.children.empty? }
+    doc.css('p').each { |p| p.remove if p.children.empty? }
 
     Result.new(doc, changed)
   end
 
   def self.is_previewing?(user_id)
-    $redis.get(preview_key(user_id)) == "1"
+    $redis.get(preview_key(user_id)) == '1'
   end
 
   def self.preview_onebox!(user_id)
-    $redis.setex(preview_key(user_id), 1.minute, "1")
+    $redis.setex(preview_key(user_id), 1.minute, '1')
   end
 
   def self.onebox_previewed!(user_id)
@@ -137,7 +181,7 @@ module Oneboxer
   end
 
   def self.blank_onebox
-    { preview: "", onebox: "" }
+    { preview: '', onebox: '' }
   end
 
   def self.onebox_cache_key(url)
@@ -160,9 +204,12 @@ module Oneboxer
 
     html =
       case route[:controller]
-      when "uploads" then local_upload_html(url)
-      when "topics"  then local_topic_html(url, route, opts)
-      when "users"   then local_user_html(url, route)
+      when 'uploads'
+        local_upload_html(url)
+      when 'topics'
+        local_topic_html(url, route, opts)
+      when 'users'
+        local_user_html(url, route)
       end
 
     html = html.presence || "<a href='#{url}'>#{url}</a>"
@@ -170,7 +217,7 @@ module Oneboxer
   end
 
   def self.local_upload_html(url)
-    case File.extname(URI(url).path || "")
+    case File.extname(URI(url).path || '')
     when /^\.(mov|mp4|webm|ogv)$/i
       "<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>"
     when /^\.(mp3|ogg|wav|m4a)$/i
@@ -182,7 +229,9 @@ module Oneboxer
     return unless current_user = User.find_by(id: opts[:user_id])
 
     if current_category = Category.find_by(id: opts[:category_id])
-      return unless Guardian.new(current_user).can_see_category?(current_category)
+      unless Guardian.new(current_user).can_see_category?(current_category)
+        return
+      end
     end
 
     if current_topic = Topic.find_by(id: opts[:topic_id])
@@ -200,55 +249,74 @@ module Oneboxer
 
     post_number = route[:post_number].to_i
 
-    post = post_number > 1 ?
-      topic.posts.where(post_number: post_number).first :
-      topic.ordered_posts.first
+    post =
+      if post_number > 1
+        topic.posts.where(post_number: post_number).first
+      else
+        topic.ordered_posts.first
+      end
 
-    return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
+    if !post || post.hidden || !allowed_post_types.include?(post.post_type)
+      return
+    end
 
     if post_number > 1 && current_topic&.id == topic.id
       excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
-      excerpt.gsub!(/[\r\n]+/, " ")
-      excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
+      excerpt.gsub!(/[\r\n]+/, ' ')
+      excerpt.gsub!('[/quote]', '[quote]') # don't break my quote
 
-      quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, post:#{post.post_number}\"]\n#{excerpt}\n[/quote]"
+      quote =
+        "[quote=\"#{post.user.username}, topic:#{topic.id}, post:#{post
+          .post_number}\"]\n#{excerpt}\n[/quote]"
 
       PrettyText.cook(quote)
     else
       args = {
         topic_id: topic.id,
         post_number: post.post_number,
-        avatar: PrettyText.avatar_img(post.user.avatar_template, "tiny"),
+        avatar: PrettyText.avatar_img(post.user.avatar_template, 'tiny'),
         original_url: url,
-        title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
+        title: PrettyText.unescape_emoji(CGI.escapeHTML(topic.title)),
         category_html: CategoryBadge.html_for(topic.category),
-        quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
+        quote:
+          PrettyText.unescape_emoji(
+            post.excerpt(SiteSetting.post_onebox_maxlength)
+          )
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
+      template =
+        File.read(
+          "#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs"
+        )
       Mustache.render(template, args)
     end
   end
 
   def self.local_user_html(url, route)
-    username = route[:username] || ""
+    username = route[:username] || ''
 
     if user = User.find_by(username_lower: username.downcase)
       args = {
         user_id: user.id,
         username: user.username,
-        avatar: PrettyText.avatar_img(user.avatar_template, "extra_large"),
+        avatar: PrettyText.avatar_img(user.avatar_template, 'extra_large'),
         name: user.name,
         bio: user.user_profile.bio_excerpt(230),
         location: user.user_profile.location,
         joined: I18n.t('joined'),
-        created_at: user.created_at.strftime(I18n.t('datetime_formats.formats.date_only')),
+        created_at:
+          user.created_at.strftime(
+            I18n.t('datetime_formats.formats.date_only')
+          ),
         website: user.user_profile.website,
         website_name: UserSerializer.new(user).website_name,
         original_url: url
       }
 
-      template = File.read("#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs")
+      template =
+        File.read(
+          "#{Rails.root}/lib/onebox/templates/discourse_user_onebox.hbs"
+        )
       Mustache.render(template, args)
     else
       nil
@@ -256,18 +324,29 @@ module Oneboxer
   end
 
   def self.blacklisted_domains
-    SiteSetting.onebox_domains_blacklist.split("|")
+    SiteSetting.onebox_domains_blacklist.split('|')
   end
 
   def self.preserve_fragment_url_hosts
-    @preserve_fragment_url_hosts ||= ['http://github.com']
+    @preserve_fragment_url_hosts ||= %w[http://github.com]
   end
 
   def self.external_onebox(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
-      fd = FinalDestination.new(url, ignore_redirects: ignore_redirects, ignore_hostnames: blacklisted_domains, force_get_hosts: force_get_hosts, preserve_fragment_url_hosts: preserve_fragment_url_hosts)
+      fd =
+        FinalDestination.new(
+          url,
+          ignore_redirects: ignore_redirects,
+          ignore_hostnames: blacklisted_domains,
+          force_get_hosts: force_get_hosts,
+          preserve_fragment_url_hosts: preserve_fragment_url_hosts
+        )
       uri = fd.resolve
-      return blank_onebox if uri.blank? || blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }.any?
+      if uri.blank? ||
+         blacklisted_domains.map { |hostname| uri.hostname.match?(hostname) }
+           .any?
+        return blank_onebox
+      end
 
       options = {
         cache: {},
@@ -286,5 +365,4 @@ module Oneboxer
       { onebox: r.to_s, preview: r&.placeholder_html.to_s }
     end
   end
-
 end

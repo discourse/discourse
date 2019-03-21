@@ -10,7 +10,7 @@ class MoveTopicRevisionsToPostRevisions < ActiveRecord::Migration[4.2]
 
 SQL
 
-   execute <<SQL
+    execute <<SQL
 
    UPDATE post_revisions r SET number = 2 + (
     SELECT COUNT(*) FROM post_revisions r2
@@ -33,7 +33,6 @@ SQL
     DROP TABLE topic_revisions
 
 SQL
-
   end
 
   def down

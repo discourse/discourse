@@ -9,7 +9,7 @@ class CreateOptimizedImages < ActiveRecord::Migration[4.2]
     end
 
     add_index :optimized_images, :upload_id
-    add_index :optimized_images, [:upload_id, :width, :height], unique: true
+    add_index :optimized_images, %i[upload_id width height], unique: true
   end
 
   def down

@@ -1,19 +1,25 @@
 class Admin::GroupsController < Admin::AdminController
-  def bulk
-  end
+  def bulk; end
 
   def bulk_perform
     group = Group.find_by(id: params[:group_id].to_i)
     raise Discourse::NotFound unless group
     users_added = 0
 
-    users = (params[:users] || []).map { |user| user.downcase!; user }
+    users =
+      (params[:users] || []).map do |user|
+        user.downcase!
+        user
+      end
     valid_emails = {}
     valid_usernames = {}
 
-    valid_users = User.joins(:user_emails)
-      .where("username_lower IN (:users) OR lower(user_emails.email) IN (:users)", users: users)
-      .pluck(:id, :username_lower, :"user_emails.email")
+    valid_users =
+      User.joins(:user_emails).where(
+        'username_lower IN (:users) OR lower(user_emails.email) IN (:users)',
+        users: users
+      )
+        .pluck(:id, :username_lower, :"user_emails.email")
 
     valid_users.map! do |id, username_lower, email|
       valid_emails[email] = valid_usernames[username_lower] = id
@@ -43,9 +49,10 @@ class Admin::GroupsController < Admin::AdminController
     end
 
     if group_params[:owner_usernames].present?
-      owner_ids = User.where(
-        username: group_params[:owner_usernames].split(",")
-      ).pluck(:id)
+      owner_ids =
+        User.where(username: group_params[:owner_usernames].split(',')).pluck(
+          :id
+        )
 
       owner_ids.each do |user_id|
         group.group_users.build(user_id: user_id, owner: true)
@@ -53,12 +60,11 @@ class Admin::GroupsController < Admin::AdminController
     end
 
     if group_params[:usernames].present?
-      user_ids = User.where(username: group_params[:usernames].split(",")).pluck(:id)
+      user_ids =
+        User.where(username: group_params[:usernames].split(',')).pluck(:id)
       user_ids -= owner_ids if owner_ids
 
-      user_ids.each do |user_id|
-        group.group_users.build(user_id: user_id)
-      end
+      user_ids.each { |user_id| group.group_users.build(user_id: user_id) }
     end
 
     if group.save
@@ -86,7 +92,7 @@ class Admin::GroupsController < Admin::AdminController
     raise Discourse::NotFound unless group
 
     return can_not_modify_automatic if group.automatic
-    users = User.where(username: group_params[:usernames].split(","))
+    users = User.where(username: group_params[:usernames].split(','))
 
     users.each do |user|
       group_action_logger = GroupActionLogger.new(current_user, group)
@@ -112,7 +118,9 @@ class Admin::GroupsController < Admin::AdminController
 
     user = User.find(params[:user_id].to_i)
     group.group_users.where(user_id: user.id).update_all(owner: false)
-    GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
+    GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(
+      user
+    )
 
     Group.reset_counters(group.id, :group_users)
 
@@ -122,7 +130,8 @@ class Admin::GroupsController < Admin::AdminController
   protected
 
   def can_not_modify_automatic
-    render json: { errors: I18n.t('groups.errors.can_not_modify_automatic') }, status: 422
+    render json: { errors: I18n.t('groups.errors.can_not_modify_automatic') },
+           status: 422
   end
 
   private

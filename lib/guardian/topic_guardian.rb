@@ -1,13 +1,11 @@
 #mixin for all guardian methods dealing with topic permisions
 module TopicGuardian
-
   def can_remove_allowed_users?(topic, target_user = nil)
     is_staff? ||
-    (
-      topic.allowed_users.count > 1 &&
-      topic.user != target_user &&
-      !!(target_user && user == target_user)
-    )
+      (
+        topic.allowed_users.count > 1 && topic.user != target_user &&
+          !!(target_user && user == target_user)
+      )
   end
 
   def can_create_shared_draft?
@@ -21,9 +19,11 @@ module TopicGuardian
   # Creating Methods
   def can_create_topic?(parent)
     is_staff? ||
-    (user &&
-      user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
-      can_create_post?(parent))
+      (
+        user &&
+          user.trust_level >= SiteSetting.min_trust_to_create_topic.to_i &&
+          can_create_post?(parent)
+      )
   end
 
   def can_create_topic_on_category?(category)
@@ -31,13 +31,25 @@ module TopicGuardian
     category_id = Category === category ? category.id : category
 
     can_create_topic?(nil) &&
-    (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
+      (
+        !category ||
+          Category.topic_create_allowed(self).where(id: category_id).count == 1
+      )
   end
 
   def can_move_topic_to_category?(category)
-    category = Category === category ? category : Category.find(category || SiteSetting.uncategorized_category_id)
+    category =
+      if Category === category
+        category
+      else
+        Category.find(category || SiteSetting.uncategorized_category_id)
+      end
 
-    is_staff? || (can_create_topic_on_category?(category) && !category.require_topic_approval?)
+    is_staff? ||
+      (
+        can_create_topic_on_category?(category) &&
+          !category.require_topic_approval?
+      )
   end
 
   def can_create_post_on_topic?(topic)
@@ -46,14 +58,17 @@ module TopicGuardian
     return false if topic.trashed?
     return true if is_admin?
 
-    trusted = (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator?
+    trusted =
+      (authenticated? && user.has_trust_level?(TrustLevel[4])) || is_moderator?
 
     (!(topic.closed? || topic.archived?) || trusted) && can_create_post?(topic)
   end
 
   # Editing Method
   def can_edit_topic?(topic)
-    return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
+    if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
+      return false
+    end
     return false unless can_see?(topic)
 
     return true if is_admin?
@@ -63,22 +78,26 @@ module TopicGuardian
     return false if !can_create_topic_on_category?(topic.category)
 
     # TL4 users can edit archived topics, but can not edit private messages
-    return true if (
-      SiteSetting.trusted_users_can_edit_others? &&
-      topic.archived &&
-      !topic.private_message? &&
-      user.has_trust_level?(TrustLevel[4]) &&
-      can_create_post?(topic)
-    )
+
+    if (
+       SiteSetting.trusted_users_can_edit_others? && topic.archived &&
+         !topic.private_message? &&
+         user.has_trust_level?(TrustLevel[4]) &&
+         can_create_post?(topic)
+     )
+      return true
+    end
 
     # TL3 users can not edit archived topics and private messages
-    return true if (
-      SiteSetting.trusted_users_can_edit_others? &&
-      !topic.archived &&
-      !topic.private_message? &&
-      user.has_trust_level?(TrustLevel[3]) &&
-      can_create_post?(topic)
-    )
+
+    if (
+       SiteSetting.trusted_users_can_edit_others? && !topic.archived &&
+         !topic.private_message? &&
+         user.has_trust_level?(TrustLevel[3]) &&
+         can_create_post?(topic)
+     )
+      return true
+    end
 
     return false if topic.archived
     is_my_own?(topic) && !topic.edit_time_limit_expired?
@@ -90,10 +109,8 @@ module TopicGuardian
   end
 
   def can_delete_topic?(topic)
-    !topic.trashed? &&
-    is_staff? &&
-    !(topic.is_category_topic?) &&
-    !Discourse.static_doc_topic_ids.include?(topic.id)
+    !topic.trashed? && is_staff? && !(topic.is_category_topic?) &&
+      !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
   def can_convert_topic?(topic)
@@ -119,7 +136,8 @@ module TopicGuardian
     return false if hide_deleted && topic.deleted_at && !can_see_deleted_topics?
 
     if topic.private_message?
-      return authenticated? && topic.all_allowed_users.where(id: @user.id).exists?
+      return authenticated? &&
+        topic.all_allowed_users.where(id: @user.id).exists?
     end
 
     can_see_category?(topic.category)
@@ -133,7 +151,11 @@ module TopicGuardian
     unless is_admin?
       allowed_ids = allowed_category_ids
       if allowed_ids.length > 0
-        records = records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
+        records =
+          records.where(
+            'topics.category_id IS NULL or topics.category_id IN (?)',
+            allowed_ids
+          )
       else
         records = records.where('topics.category_id IS NULL')
       end
@@ -144,7 +166,11 @@ module TopicGuardian
 
   def can_edit_featured_link?(category_id)
     return false unless SiteSetting.topic_featured_link_enabled
-    Category.where(id: category_id || SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
+    Category.where(
+      id: category_id || SiteSetting.uncategorized_category_id,
+      topic_featured_link_allowed: true
+    )
+      .exists?
   end
 
   def can_update_bumped_at?

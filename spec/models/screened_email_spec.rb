@@ -1,22 +1,23 @@
 require 'rails_helper'
 
 describe ScreenedEmail do
-
   let(:email) { 'block@spamfromhome.org' }
   let(:similar_email) { 'bl0ck@spamfromhome.org' }
 
-  describe "new record" do
-    it "sets a default action_type" do
-      expect(ScreenedEmail.create(email: email).action_type).to eq(ScreenedEmail.actions[:block])
+  describe 'new record' do
+    it 'sets a default action_type' do
+      expect(ScreenedEmail.create(email: email).action_type).to eq(
+            ScreenedEmail.actions[:block]
+          )
     end
 
-    it "last_match_at is null" do
+    it 'last_match_at is null' do
       # If we manually load the table with some emails, we can see whether those emails
       # have ever been blocked by looking at last_match_at.
       expect(ScreenedEmail.create(email: email).last_match_at).to eq(nil)
     end
 
-    it "downcases the email" do
+    it 'downcases the email' do
       s = ScreenedEmail.create(email: 'SPAMZ@EXAMPLE.COM')
       expect(s.email).to eq('spamz@example.com')
     end
@@ -32,7 +33,11 @@ describe ScreenedEmail do
       end
 
       it 'lets action_type be overriden' do
-        record = ScreenedEmail.block(email, action_type: ScreenedEmail.actions[:do_nothing])
+        record =
+          ScreenedEmail.block(
+            email,
+            action_type: ScreenedEmail.actions[:do_nothing]
+          )
         expect(record).not_to be_new_record
         expect(record.email).to eq(email)
         expect(record.action_type).to eq(ScreenedEmail.actions[:do_nothing])
@@ -43,10 +48,12 @@ describe ScreenedEmail do
       let!(:existing) { Fabricate(:screened_email, email: email) }
 
       it "doesn't create a new record" do
-        expect { ScreenedEmail.block(email) }.to_not change { ScreenedEmail.count }
+        expect { ScreenedEmail.block(email) }.to_not change do
+          ScreenedEmail.count
+        end
       end
 
-      it "returns the existing record" do
+      it 'returns the existing record' do
         expect(ScreenedEmail.block(email)).to eq(existing)
       end
     end
@@ -59,13 +66,13 @@ describe ScreenedEmail do
       expect(subject).to eq(false)
     end
 
-    it "returns true when there is a record with the email" do
+    it 'returns true when there is a record with the email' do
       expect(ScreenedEmail.should_block?(email)).to eq(false)
       ScreenedEmail.create(email: email).save
       expect(ScreenedEmail.should_block?(email)).to eq(true)
     end
 
-    it "returns true when there is a record with a similar email" do
+    it 'returns true when there is a record with a similar email' do
       expect(ScreenedEmail.should_block?(email)).to eq(false)
       ScreenedEmail.create(email: similar_email).save
       expect(ScreenedEmail.should_block?(email)).to eq(true)
@@ -76,26 +83,39 @@ describe ScreenedEmail do
       expect(ScreenedEmail.should_block?(email.upcase)).to eq(true)
     end
 
-    shared_examples "when a ScreenedEmail record matches" do
-      it "updates statistics" do
+    shared_examples 'when a ScreenedEmail record matches' do
+      it 'updates statistics' do
         freeze_time(Time.zone.now) do
-          expect { subject }.to change { screened_email.reload.match_count }.by(1)
-          expect(screened_email.last_match_at).to be_within_one_second_of(Time.zone.now)
+          expect { subject }.to change { screened_email.reload.match_count }.by(
+                1
+              )
+          expect(screened_email.last_match_at).to be_within_one_second_of(
+                Time.zone.now
+              )
         end
       end
     end
 
-    context "action_type is :block" do
-      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:block]) }
+    context 'action_type is :block' do
+      let!(:screened_email) do
+        Fabricate(
+          :screened_email,
+          email: email, action_type: ScreenedEmail.actions[:block]
+        )
+      end
       it { is_expected.to eq(true) }
-      include_examples "when a ScreenedEmail record matches"
+      include_examples 'when a ScreenedEmail record matches'
     end
 
-    context "action_type is :do_nothing" do
-      let!(:screened_email) { Fabricate(:screened_email, email: email, action_type: ScreenedEmail.actions[:do_nothing]) }
+    context 'action_type is :do_nothing' do
+      let!(:screened_email) do
+        Fabricate(
+          :screened_email,
+          email: email, action_type: ScreenedEmail.actions[:do_nothing]
+        )
+      end
       it { is_expected.to eq(false) }
-      include_examples "when a ScreenedEmail record matches"
+      include_examples 'when a ScreenedEmail record matches'
     end
   end
-
 end

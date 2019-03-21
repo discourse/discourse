@@ -10,9 +10,9 @@ class TopicViewSerializer < ApplicationSerializer
   def self.attributes_from_topic(*list)
     [list].flatten.each do |attribute|
       attributes(attribute)
-      class_eval %{def #{attribute}
+      class_eval "def #{attribute}
         object.topic.#{attribute}
-      end}
+      end"
     end
   end
 
@@ -74,41 +74,53 @@ class TopicViewSerializer < ApplicationSerializer
     topic = object.topic
 
     result = {
-      created_by: BasicUserSerializer.new(topic.user, scope: scope, root: false),
-      last_poster: BasicUserSerializer.new(topic.last_poster, scope: scope, root: false)
+      created_by:
+        BasicUserSerializer.new(topic.user, scope: scope, root: false),
+      last_poster:
+        BasicUserSerializer.new(topic.last_poster, scope: scope, root: false)
     }
 
     if private_message?(topic)
       allowed_user_ids = Set.new
 
-      result[:allowed_groups] = object.topic.allowed_groups.map do |group|
-        allowed_user_ids.merge(GroupUser.where(group: group).pluck(:user_id))
-        BasicGroupSerializer.new(group, scope: scope, root: false)
-      end
+      result[:allowed_groups] =
+        object.topic.allowed_groups.map do |group|
+          allowed_user_ids.merge(GroupUser.where(group: group).pluck(:user_id))
+          BasicGroupSerializer.new(group, scope: scope, root: false)
+        end
 
-      result[:allowed_users] = object.topic.allowed_users.select do |user|
-        !allowed_user_ids.include?(user.id)
-      end.map! do |user|
-        BasicUserSerializer.new(user, scope: scope, root: false)
-      end
+      result[:allowed_users] =
+        object.topic.allowed_users.select do |user|
+          !allowed_user_ids.include?(user.id)
+        end
+          .map! do |user|
+          BasicUserSerializer.new(user, scope: scope, root: false)
+        end
     end
 
     if object.post_counts_by_user.present?
-      participants = object.post_counts_by_user.reject { |p| object.participants[p].blank? }.map do |pc|
-        TopicPostCountSerializer.new({ user: object.participants[pc[0]], post_count: pc[1] }, scope: scope, root: false)
-      end
+      participants =
+        object.post_counts_by_user.reject { |p| object.participants[p].blank? }
+          .map do |pc|
+          TopicPostCountSerializer.new(
+            { user: object.participants[pc[0]], post_count: pc[1] },
+            scope: scope, root: false
+          )
+        end
       result[:participants] = participants if participants.length > 0
     end
 
     if object.links.present?
-      result[:links] = object.links.map do |user|
-        TopicLinkSerializer.new(user, scope: scope, root: false)
-      end
+      result[:links] =
+        object.links.map do |user|
+          TopicLinkSerializer.new(user, scope: scope, root: false)
+        end
     end
 
     if has_topic_user?
       result[:notification_level] = object.topic_user.notification_level
-      result[:notifications_reason_id] = object.topic_user.notifications_reason_id
+      result[:notifications_reason_id] =
+        object.topic_user.notifications_reason_id
     else
       result[:notification_level] = TopicUser.notification_levels[:regular]
     end
@@ -117,12 +129,20 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_edit] = true if scope.can_edit?(object.topic)
     result[:can_delete] = true if scope.can_delete?(object.topic)
     result[:can_recover] = true if scope.can_recover_topic?(object.topic)
-    result[:can_remove_allowed_users] = true if scope.can_remove_allowed_users?(object.topic)
-    result[:can_remove_self_id] = scope.user.id if scope.can_remove_allowed_users?(object.topic, scope.user)
+    if scope.can_remove_allowed_users?(object.topic)
+      result[:can_remove_allowed_users] = true
+    end
+    if scope.can_remove_allowed_users?(object.topic, scope.user)
+      result[:can_remove_self_id] = scope.user.id
+    end
     result[:can_invite_to] = true if scope.can_invite_to?(object.topic)
-    result[:can_invite_via_email] = true if scope.can_invite_via_email?(object.topic)
+    if scope.can_invite_via_email?(object.topic)
+      result[:can_invite_via_email] = true
+    end
     result[:can_create_post] = true if scope.can_create?(Post, object.topic)
-    result[:can_reply_as_new_topic] = true if scope.can_reply_as_new_topic?(object.topic)
+    if scope.can_reply_as_new_topic?(object.topic)
+      result[:can_reply_as_new_topic] = true
+    end
     result[:can_flag_topic] = actions_summary.any? { |a| a[:can_act] }
     result[:can_convert_topic] = true if scope.can_convert_topic?(object.topic)
     result
@@ -137,7 +157,8 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def is_warning
-    private_message?(object.topic) && object.topic.subtype == TopicSubtype.moderator_warning
+    private_message?(object.topic) &&
+      object.topic.subtype == TopicSubtype.moderator_warning
   end
 
   def include_is_warning?
@@ -213,10 +234,13 @@ class TopicViewSerializer < ApplicationSerializer
     result = []
     return [] unless post = object.posts&.first
     PostActionType.topic_flag_types.each do |sym, id|
-      result << { id: id,
-                  count: 0,
-                  hidden: false,
-                  can_act: scope.post_can_act?(post, sym) }
+      result <<
+        {
+          id: id,
+          count: 0,
+          hidden: false,
+          can_act: scope.post_can_act?(post, sym)
+        }
       # TODO: other keys? :can_defer_flags, :acted, :can_undo
     end
     result
@@ -302,5 +326,4 @@ class TopicViewSerializer < ApplicationSerializer
   def private_message?(topic)
     @private_message ||= topic.private_message?
   end
-
 end

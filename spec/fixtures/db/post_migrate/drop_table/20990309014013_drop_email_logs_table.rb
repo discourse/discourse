@@ -5,6 +5,6 @@ class DropEmailLogsTable < ActiveRecord::Migration[5.2]
   end
 
   def down
-    raise "not tested"
+    raise 'not tested'
   end
 end

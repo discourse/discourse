@@ -5,26 +5,29 @@ describe DiscourseRedis do
   let(:slave_port) { 1234 }
 
   let(:config) do
-    DiscourseRedis.config.dup.merge(slave_host: 'testhost', slave_port: 1234, connector: DiscourseRedis::Connector)
+    DiscourseRedis.config.dup.merge(
+      slave_host: 'testhost',
+      slave_port: 1234,
+      connector: DiscourseRedis::Connector
+    )
   end
 
   let(:fallback_handler) { DiscourseRedis::FallbackHandler.instance }
 
-  it "ignore_readonly returns nil from a pure exception" do
-    result = DiscourseRedis.ignore_readonly { raise Redis::CommandError.new("READONLY") }
+  it 'ignore_readonly returns nil from a pure exception' do
+    result =
+      DiscourseRedis.ignore_readonly do
+        raise Redis::CommandError.new('READONLY')
+      end
     expect(result).to eq(nil)
   end
 
   describe 'redis commands' do
     let(:raw_redis) { Redis.new(DiscourseRedis.config) }
 
-    before do
-      raw_redis.flushall
-    end
+    before { raw_redis.flushall }
 
-    after do
-      raw_redis.flushall
-    end
+    after { raw_redis.flushall }
 
     describe 'when namespace is enabled' do
       let(:redis) { DiscourseRedis.new }
@@ -35,11 +38,9 @@ describe DiscourseRedis do
 
         expect(redis.keys).to include('key')
         expect(redis.keys).to_not include('key2')
-        expect(redis.scan_each.to_a).to eq(['key'])
+        expect(redis.scan_each.to_a).to eq(%w[key])
 
-        redis.scan_each.each do |key|
-          expect(key).to eq('key')
-        end
+        redis.scan_each.each { |key| expect(key).to eq('key') }
 
         redis.del('key')
 
@@ -49,7 +50,7 @@ describe DiscourseRedis do
         raw_redis.set('default:key1', '1')
         raw_redis.set('default:key2', '2')
 
-        expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
+        expect(redis.mget('key1', 'key2')).to eq(%w[1 2])
         expect(redis.scan_each.to_a).to contain_exactly('key1', 'key2')
       end
     end
@@ -70,15 +71,15 @@ describe DiscourseRedis do
         raw_redis.set('key1', '1')
         raw_redis.set('key2', '2')
 
-        expect(redis.mget('key1', 'key2')).to eq(['1', '2'])
+        expect(redis.mget('key1', 'key2')).to eq(%w[1 2])
       end
 
       it 'should noop a readonly redis' do
         expect(Discourse.recently_readonly?).to eq(false)
 
-        redis.without_namespace
-          .expects(:set)
-          .raises(Redis::CommandError.new("READONLY"))
+        redis.without_namespace.expects(:set).raises(
+          Redis::CommandError.new('READONLY')
+        )
 
         redis.set('key', 1)
 
@@ -99,7 +100,9 @@ describe DiscourseRedis do
     it 'should check the status of the master server' do
       begin
         fallback_handler.master = false
-        $redis.without_namespace.expects(:set).raises(Redis::CommandError.new("READONLY"))
+        $redis.without_namespace.expects(:set).raises(
+          Redis::CommandError.new('READONLY')
+        )
         fallback_handler.expects(:verify_master).once
         $redis.set('test', '1')
       ensure
@@ -112,9 +115,7 @@ describe DiscourseRedis do
   describe DiscourseRedis::Connector do
     let(:connector) { DiscourseRedis::Connector.new(config) }
 
-    after do
-      fallback_handler.master = true
-    end
+    after { fallback_handler.master = true }
 
     it 'should return the master config when master is up' do
       expect(connector.resolve).to eq(config)
@@ -129,16 +130,15 @@ describe DiscourseRedis do
         raise @error
       end
 
-      def disconnect
-      end
+      def disconnect; end
     end
 
     it 'should return the slave config when master is down' do
       error = Redis::CannotConnectError
 
-      expect do
-        connector.resolve(BrokenRedis.new(error))
-      end.to raise_error(Redis::CannotConnectError)
+      expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(
+            Redis::CannotConnectError
+          )
 
       config = connector.resolve
 
@@ -149,9 +149,7 @@ describe DiscourseRedis do
     it "should return the slave config when master's hostname cannot be resolved" do
       error = RuntimeError.new('Name or service not known')
 
-      expect do
-        connector.resolve(BrokenRedis.new(error))
-      end.to raise_error(error)
+      expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(error)
 
       expect(fallback_handler.master).to eq(false)
 
@@ -162,14 +160,14 @@ describe DiscourseRedis do
       expect(fallback_handler.master).to eq(false)
     end
 
-    it "should return the slave config when master is still loading data" do
-      Redis::Client.any_instance
-        .expects(:call)
-        .with([:info, :persistence])
-        .returns("
+    it 'should return the slave config when master is still loading data' do
+      Redis::Client.any_instance.expects(:call).with(%i[info persistence])
+        .returns(
+        "
           someconfig:haha\r
           #{DiscourseRedis::FallbackHandler::MASTER_LOADING_STATUS}
-        ")
+        "
+      )
 
       config = connector.resolve
 
@@ -177,20 +175,19 @@ describe DiscourseRedis do
       expect(config[:port]).to eq(slave_port)
     end
 
-    it "should raise the right error" do
+    it 'should raise the right error' do
       error = RuntimeError.new('test')
 
       2.times do
-        expect { connector.resolve(BrokenRedis.new(error)) }
-          .to raise_error(error)
+        expect { connector.resolve(BrokenRedis.new(error)) }.to raise_error(
+              error
+            )
       end
     end
   end
 
   describe DiscourseRedis::FallbackHandler do
-    before do
-      @original_keepalive_interval = MessageBus.keepalive_interval
-    end
+    before { @original_keepalive_interval = MessageBus.keepalive_interval }
 
     after do
       fallback_handler.master = true
@@ -200,7 +197,9 @@ describe DiscourseRedis do
     describe '#initiate_fallback_to_master' do
       it 'should return the right value if the master server is still down' do
         fallback_handler.master = false
-        Redis::Client.any_instance.expects(:call).with([:info]).returns("Some other stuff")
+        Redis::Client.any_instance.expects(:call).with(%i[info]).returns(
+          'Some other stuff'
+        )
 
         expect(fallback_handler.initiate_fallback_to_master).to eq(false)
         expect(MessageBus.keepalive_interval).to eq(0)
@@ -211,22 +210,23 @@ describe DiscourseRedis do
         master_conn = mock('master')
         slave_conn = mock('slave')
 
-        Redis::Client.expects(:new)
-          .with(DiscourseRedis.config)
-          .returns(master_conn)
+        Redis::Client.expects(:new).with(DiscourseRedis.config).returns(
+          master_conn
+        )
 
-        Redis::Client.expects(:new)
-          .with(DiscourseRedis.slave_config)
-          .returns(slave_conn)
+        Redis::Client.expects(:new).with(DiscourseRedis.slave_config).returns(
+          slave_conn
+        )
 
-        master_conn.expects(:call)
-          .with([:info])
-          .returns("
+        master_conn.expects(:call).with(%i[info]).returns(
+          "
             #{DiscourseRedis::FallbackHandler::MASTER_ROLE_STATUS}\r\n
             #{DiscourseRedis::FallbackHandler::MASTER_LOADED_STATUS}
-          ")
+          "
+        )
 
-        DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
+        DiscourseRedis::FallbackHandler::CONNECTION_TYPES
+          .each do |connection_type|
           slave_conn.expects(:call).with(
             [:client, [:kill, 'type', connection_type]]
           )

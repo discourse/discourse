@@ -19,45 +19,44 @@ describe ContentSecurityPolicy do
   describe 'base-uri' do
     it 'is set to none' do
       base_uri = parse(policy)['base-uri']
-      expect(base_uri).to eq(["'none'"])
+      expect(base_uri).to eq(%w['none'])
     end
   end
 
   describe 'object-src' do
     it 'is set to none' do
       object_srcs = parse(policy)['object-src']
-      expect(object_srcs).to eq(["'none'"])
+      expect(object_srcs).to eq(%w['none'])
     end
   end
 
   describe 'worker-src' do
     it 'always has self and blob' do
       worker_srcs = parse(policy)['worker-src']
-      expect(worker_srcs).to eq(%w[
-        'self'
-        blob:
-      ])
+      expect(worker_srcs).to eq(%w['self' blob:])
     end
   end
 
   describe 'script-src' do
     it 'always has self, logster, sidekiq, and assets' do
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include(*%w[
-        'unsafe-eval'
-        'report-sample'
-        http://test.localhost/logs/
-        http://test.localhost/sidekiq/
-        http://test.localhost/mini-profiler-resources/
-        http://test.localhost/assets/
-        http://test.localhost/brotli_asset/
-        http://test.localhost/extra-locales/
-        http://test.localhost/highlight-js/
-        http://test.localhost/javascripts/
-        http://test.localhost/plugins/
-        http://test.localhost/theme-javascripts/
-        http://test.localhost/svg-sprite/
-      ])
+      expect(script_srcs).to include(
+            *%w[
+              'unsafe-eval'
+              'report-sample'
+              http://test.localhost/logs/
+              http://test.localhost/sidekiq/
+              http://test.localhost/mini-profiler-resources/
+              http://test.localhost/assets/
+              http://test.localhost/brotli_asset/
+              http://test.localhost/extra-locales/
+              http://test.localhost/highlight-js/
+              http://test.localhost/javascripts/
+              http://test.localhost/plugins/
+              http://test.localhost/theme-javascripts/
+              http://test.localhost/svg-sprite/
+            ]
+          )
     end
 
     it 'whitelists Google Analytics and Tag Manager when integrated' do
@@ -65,7 +64,9 @@ describe ContentSecurityPolicy do
       SiteSetting.gtm_container_id = 'GTM-ABCDEF'
 
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include('https://www.google-analytics.com/analytics.js')
+      expect(script_srcs).to include(
+            'https://www.google-analytics.com/analytics.js'
+          )
       expect(script_srcs).to include('https://www.googletagmanager.com/gtm.js')
     end
 
@@ -73,38 +74,44 @@ describe ContentSecurityPolicy do
       set_cdn_url('https://cdn.com')
 
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include(*%w[
-        https://cdn.com/assets/
-        https://cdn.com/brotli_asset/
-        https://cdn.com/highlight-js/
-        https://cdn.com/javascripts/
-        https://cdn.com/plugins/
-        https://cdn.com/theme-javascripts/
-        http://test.localhost/extra-locales/
-      ])
+      expect(script_srcs).to include(
+            *%w[
+              https://cdn.com/assets/
+              https://cdn.com/brotli_asset/
+              https://cdn.com/highlight-js/
+              https://cdn.com/javascripts/
+              https://cdn.com/plugins/
+              https://cdn.com/theme-javascripts/
+              http://test.localhost/extra-locales/
+            ]
+          )
 
       global_setting(:s3_cdn_url, 'https://s3-cdn.com')
 
       script_srcs = parse(policy)['script-src']
-      expect(script_srcs).to include(*%w[
-        https://s3-cdn.com/assets/
-        https://s3-cdn.com/brotli_asset/
-        https://cdn.com/highlight-js/
-        https://cdn.com/javascripts/
-        https://cdn.com/plugins/
-        https://cdn.com/theme-javascripts/
-        http://test.localhost/extra-locales/
-      ])
+      expect(script_srcs).to include(
+            *%w[
+              https://s3-cdn.com/assets/
+              https://s3-cdn.com/brotli_asset/
+              https://cdn.com/highlight-js/
+              https://cdn.com/javascripts/
+              https://cdn.com/plugins/
+              https://cdn.com/theme-javascripts/
+              http://test.localhost/extra-locales/
+            ]
+          )
     end
   end
 
   it 'can be extended by plugins' do
-    plugin = Class.new(Plugin::Instance) do
-      attr_accessor :enabled
-      def enabled?
-        @enabled
+    plugin =
+      Class.new(Plugin::Instance) do
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
       end
-    end.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+        .new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
     plugin.activate!
     Discourse.plugins << plugin
@@ -115,13 +122,15 @@ describe ContentSecurityPolicy do
     expect(parse(policy)['object-src']).to_not include("'none'")
 
     plugin.enabled = false
-    expect(parse(policy)['script-src']).to_not include('https://from-plugin.com')
+    expect(parse(policy)['script-src']).to_not include(
+              'https://from-plugin.com'
+            )
 
     Discourse.plugins.pop
   end
 
-  context "with a theme" do
-    let!(:theme) {
+  context 'with a theme' do
+    let!(:theme) do
       Fabricate(:theme).tap do |t|
         settings = <<~YML
           extend_content_security_policy:
@@ -131,7 +140,7 @@ describe ContentSecurityPolicy do
         t.set_field(target: :settings, name: :yaml, value: settings)
         t.save!
       end
-    }
+    end
 
     def theme_policy
       policy([theme.id])
@@ -144,31 +153,43 @@ describe ContentSecurityPolicy do
 
       expect(parse(theme_policy)['script-src']).to include('from-theme.com')
 
-      theme.update_setting(:extend_content_security_policy, "script-src: https://from-theme.net|worker-src: from-theme.com")
+      theme.update_setting(
+        :extend_content_security_policy,
+        'script-src: https://from-theme.net|worker-src: from-theme.com'
+      )
       theme.save!
 
       expect(parse(theme_policy)['script-src']).to_not include('from-theme.com')
-      expect(parse(theme_policy)['script-src']).to include('https://from-theme.net')
+      expect(parse(theme_policy)['script-src']).to include(
+            'https://from-theme.net'
+          )
       expect(parse(theme_policy)['worker-src']).to include('from-theme.com')
 
       theme.destroy!
 
-      expect(parse(theme_policy)['script-src']).to_not include('https://from-theme.net')
+      expect(parse(theme_policy)['script-src']).to_not include(
+                'https://from-theme.net'
+              )
       expect(parse(theme_policy)['worker-src']).to_not include('from-theme.com')
     end
   end
 
   it 'can be extended by site setting' do
-    SiteSetting.content_security_policy_script_src = 'from-site-setting.com|from-site-setting.net'
+    SiteSetting.content_security_policy_script_src =
+      'from-site-setting.com|from-site-setting.net'
 
-    expect(parse(policy)['script-src']).to include('from-site-setting.com', 'from-site-setting.net')
+    expect(parse(policy)['script-src']).to include(
+          'from-site-setting.com',
+          'from-site-setting.net'
+        )
   end
 
   def parse(csp_string)
     csp_string.split(';').map do |policy|
       directive, *sources = policy.split
       [directive, sources]
-    end.to_h
+    end
+      .to_h
   end
 
   def policy(theme_ids = [])

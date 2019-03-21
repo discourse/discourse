@@ -4,7 +4,7 @@ class UrlValidator < ActiveModel::EachValidator
       valid =
         begin
           uri = URI.parse(value)
-          uri.is_a?(URI::HTTP) && !uri.host.nil? && uri.host.include?(".")
+          uri.is_a?(URI::HTTP) && !uri.host.nil? && uri.host.include?('.')
         rescue URI::Error => e
           if (e.message =~ /URI must be ascii only/)
             value = URI.encode(value)
@@ -15,7 +15,8 @@ class UrlValidator < ActiveModel::EachValidator
         end
 
       unless valid
-        record.errors[attribute] << (options[:message] || I18n.t('errors.messages.invalid'))
+        record.errors[attribute] <<
+          (options[:message] || I18n.t('errors.messages.invalid'))
       end
     end
   end

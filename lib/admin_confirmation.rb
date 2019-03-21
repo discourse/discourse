@@ -16,10 +16,13 @@ class AdminConfirmation
     $redis.setex("admin-confirmation:#{@target_user.id}", 3.hours.to_i, @token)
 
     payload = {
-      target_user_id: @target_user.id,
-      performed_by: @performed_by.id
+      target_user_id: @target_user.id, performed_by: @performed_by.id
     }
-    $redis.setex("admin-confirmation-token:#{@token}", 3.hours.to_i, payload.to_json)
+    $redis.setex(
+      "admin-confirmation-token:#{@token}",
+      3.hours.to_i,
+      payload.to_json
+    )
 
     Jobs.enqueue(
       :admin_confirmation_email,
@@ -55,5 +58,4 @@ class AdminConfirmation
     ac.token = token
     ac
   end
-
 end

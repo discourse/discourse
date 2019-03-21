@@ -1,8 +1,8 @@
 class ExcludeWhispersFromBadges < ActiveRecord::Migration[4.2]
   def up
-    execute "DROP VIEW badge_posts"
+    execute 'DROP VIEW badge_posts'
 
-    execute "CREATE VIEW badge_posts AS
+    execute 'CREATE VIEW badge_posts AS
     SELECT p.*
     FROM posts p
     JOIN topics t ON t.id = p.topic_id
@@ -13,7 +13,7 @@ class ExcludeWhispersFromBadges < ActiveRecord::Migration[4.2]
           NOT c.read_restricted AND
           t.visible AND
           p.post_type IN (1,2,3)
-    "
+    '
   end
 
   def down

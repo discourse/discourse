@@ -2,10 +2,10 @@ require_dependency 'wizard'
 require_dependency 'wizard/builder'
 
 class WizardController < ApplicationController
-  requires_login except: [:qunit]
+  requires_login except: %i[qunit]
 
-  before_action :ensure_admin, except: [:qunit]
-  before_action :ensure_wizard_enabled, only: [:index]
+  before_action :ensure_admin, except: %i[qunit]
+  before_action :ensure_wizard_enabled, only: %i[index]
   skip_before_action :check_xhr, :preload_json
 
   layout false
@@ -16,12 +16,11 @@ class WizardController < ApplicationController
         wizard = Wizard::Builder.new(current_user).build
         render_serialized(wizard, WizardSerializer)
       end
-      format.html {}
+      format.html {  }
     end
   end
 
   def qunit
     raise Discourse::InvalidAccess.new if Rails.env.production?
   end
-
 end

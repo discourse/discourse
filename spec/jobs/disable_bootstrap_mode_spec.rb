@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Jobs::DisableBootstrapMode do
-
   context '.execute' do
     let(:admin) { Fabricate(:admin) }
 
@@ -32,9 +31,7 @@ describe Jobs::DisableBootstrapMode do
 
     it 'successfully turns off bootstrap mode' do
       SiteSetting.bootstrap_mode_min_users = 5
-      6.times do
-        Fabricate(:user)
-      end
+      6.times { Fabricate(:user) }
       StaffActionLogger.any_instance.expects(:log_site_setting_change).times(3)
       Jobs::DisableBootstrapMode.new.execute(user_id: admin.id)
     end

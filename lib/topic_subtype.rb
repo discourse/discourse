@@ -51,5 +51,4 @@ class TopicSubtype
   register 'moderator_warning'
   register 'notify_moderators'
   register 'notify_user'
-
 end

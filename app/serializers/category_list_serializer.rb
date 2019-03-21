@@ -1,5 +1,4 @@
 class CategoryListSerializer < ApplicationSerializer
-
   attributes :can_create_category,
              :can_create_topic,
              :draft,
@@ -15,5 +14,4 @@ class CategoryListSerializer < ApplicationSerializer
   def can_create_topic
     scope.can_create?(Topic)
   end
-
 end

@@ -1,11 +1,5 @@
 class FlaggedTopicSummarySerializer < ActiveModel::Serializer
-
-  attributes(
-    :id,
-    :flag_counts,
-    :user_ids,
-    :last_flag_at
-  )
+  attributes(:id, :flag_counts, :user_ids, :last_flag_at)
 
   has_one :topic, serializer: FlaggedTopicSerializer
 

@@ -10,6 +10,6 @@ class CreatePluginStoreRows < ActiveRecord::Migration[4.2]
       table.text :value
     end
 
-    add_index :plugin_store_rows, [:plugin_name, :key], unique: true
+    add_index :plugin_store_rows, %i[plugin_name key], unique: true
   end
 end

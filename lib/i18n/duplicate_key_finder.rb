@@ -1,7 +1,6 @@
-require_relative "locale_file_walker"
+require_relative 'locale_file_walker'
 
 class DuplicateKeyFinder < LocaleFileWalker
-
   def find_duplicates(path)
     @keys_with_count = Hash.new { 0 }
     handle_document(Psych.parse_file(path))

@@ -70,7 +70,12 @@ SQL
     SELECT pa.user_id, min(pa.id) id
     FROM post_actions pa
     JOIN badge_posts p on p.id = pa.post_id
-    WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(",")}) AND
+    WHERE post_action_type_id IN (#{PostActionType
+    .flag_types_without_custom
+    .values
+    .join(
+    ','
+  )}) AND
       (:backfill OR pa.post_id IN (:post_ids) )
     GROUP BY pa.user_id
   ) x
@@ -150,9 +155,11 @@ SQL
         SELECT invited_by_id
         FROM invites i
         JOIN users u2 ON u2.id = i.user_id
-        WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND u2.silenced_till IS NULL
+        WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level
+      .to_i} AND u2.silenced_till IS NULL
         GROUP BY invited_by_id
-        HAVING COUNT(*) >= #{count.to_i}
+        HAVING COUNT(*) >= #{count
+      .to_i}
       ) AND u.active AND u.silenced_till IS NULL AND u.id > 0 AND
         (:backfill OR u.id IN (:user_ids) )
     "
@@ -163,7 +170,12 @@ SQL
     "
       SELECT p.user_id, p.id post_id, p.updated_at granted_at
       FROM badge_posts p
-      WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1" } AND p.like_count >= #{count.to_i} AND
+      WHERE #{if is_topic
+      'p.post_number = 1'
+    else
+      'p.post_number > 1'
+    end} AND p.like_count >= #{count
+      .to_i} AND
         (:backfill OR p.id IN (:post_ids) )
     "
   end
@@ -172,7 +184,8 @@ SQL
     # we can do better with dates, but its hard work figuring this out historically
     "
       SELECT u.id user_id, current_timestamp granted_at FROM users u
-      WHERE trust_level >= #{level.to_i} AND (
+      WHERE trust_level >= #{level
+      .to_i} AND (
         :backfill OR u.id IN (:user_ids)
       )
     "
@@ -261,5 +274,4 @@ SQL
        WHERE "rank" = 1
     SQL
   end
-
 end

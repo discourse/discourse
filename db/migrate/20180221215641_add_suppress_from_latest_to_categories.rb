@@ -6,6 +6,6 @@ class AddSuppressFromLatestToCategories < ActiveRecord::Migration[5.1]
     SQL
   end
   def down
-    raise "can not be removed"
+    raise 'can not be removed'
   end
 end

@@ -1,7 +1,10 @@
 class AddAdminOnlyToUserHistories < ActiveRecord::Migration[4.2]
   def up
     add_column :user_histories, :admin_only, :boolean, default: false
-    execute "UPDATE user_histories SET admin_only = true WHERE action = #{UserHistory.actions[:change_site_setting]}"
+    execute "UPDATE user_histories SET admin_only = true WHERE action = #{UserHistory
+              .actions[
+              :change_site_setting
+            ]}"
   end
 
   def down

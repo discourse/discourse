@@ -2,25 +2,25 @@ module UserNotificationsHelper
   include GlobalPath
 
   def indent(text, by = 2)
-    spacer = " " * by
-    result = ""
-    text.each_line do |line|
-      result << spacer << line
-    end
+    spacer = ' ' * by
+    result = ''
+    text.each_line { |line| result << spacer << line }
     result
   end
 
   def correct_top_margin(html, desired)
     fragment = Nokogiri::HTML.fragment(html)
-    if para = fragment.css("p:first").first
-      para["style"] = "margin-top: #{desired};"
+    if para = fragment.css('p:first').first
+      para['style'] = "margin-top: #{desired};"
     end
     fragment.to_html.html_safe
   end
 
   def logo_url
     logo_url = SiteSetting.site_digest_logo_url
-    logo_url = SiteSetting.site_logo_url if logo_url.blank? || logo_url =~ /\.svg$/i
+    if logo_url.blank? || logo_url =~ /\.svg$/i
+      logo_url = SiteSetting.site_logo_url
+    end
     return nil if logo_url.blank? || logo_url =~ /\.svg$/i
     logo_url
   end
@@ -30,12 +30,13 @@ module UserNotificationsHelper
   end
 
   def first_paragraphs_from(html)
-    doc = Nokogiri::HTML(html)
+    doc = Nokogiri.HTML(html)
 
-    result = ""
+    result = ''
     length = 0
 
-    doc.css('body > p, aside.onebox, body > ul, body > blockquote').each do |node|
+    doc.css('body > p, aside.onebox, body > ul, body > blockquote')
+      .each do |node|
       if node.text.present?
         result << node.to_s
         length += node.inner_text.length
@@ -70,8 +71,7 @@ module UserNotificationsHelper
   def show_name_on_post(post)
     return true unless SiteSetting.prioritize_username_in_ux
 
-    SiteSetting.enable_names? &&
-      SiteSetting.display_name_on_posts? &&
+    SiteSetting.enable_names? && SiteSetting.display_name_on_posts? &&
       post.user.name.present? &&
       normalize_name(post.user.name) != normalize_name(post.user.username)
   end
@@ -102,9 +102,12 @@ module UserNotificationsHelper
   end
 
   def url_for_email(href)
-    URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_uri}#{href}")
+    if URI(href).host.present?
+      href
+    else
+      UrlHelper.absolute("#{Discourse.base_uri}#{href}")
+    end
   rescue URI::Error
     href
   end
-
 end

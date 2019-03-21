@@ -5,10 +5,7 @@ RSpec.describe Jobs::AutoExpireUserApiKeys do
   let(:key2) { Fabricate(:readonly_user_api_key) }
 
   context 'when user api key is unused in last 1 days' do
-
-    before do
-      SiteSetting.expire_user_api_keys_days = true
-    end
+    before { SiteSetting.expire_user_api_keys_days = true }
 
     it 'should revoke the key' do
       freeze_time

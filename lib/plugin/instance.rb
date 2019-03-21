@@ -5,7 +5,7 @@ require_dependency 'auth'
 
 class Plugin::CustomEmoji
   def self.cache_key
-    @@cache_key ||= "plugin-emoji"
+    @@cache_key ||= 'plugin-emoji'
   end
 
   def self.emojis
@@ -28,27 +28,29 @@ class Plugin::CustomEmoji
 end
 
 class Plugin::Instance
-
   attr_accessor :path, :metadata
   attr_reader :admin_route
 
   # Memoized array readers
-  [:assets,
-   :color_schemes,
-   :before_auth_initializers,
-   :initializers,
-   :javascripts,
-   :locales,
-   :service_workers,
-   :styles,
-   :themes,
-   :csp_extensions,
- ].each do |att|
-    class_eval %Q{
+
+  %i[
+    assets
+    color_schemes
+    before_auth_initializers
+    initializers
+    javascripts
+    locales
+    service_workers
+    styles
+    themes
+    csp_extensions
+  ]
+    .each do |att|
+    class_eval "
       def #{att}
         @#{att} ||= []
       end
-    }
+    "
   end
 
   def seed_data
@@ -56,18 +58,20 @@ class Plugin::Instance
   end
 
   def self.find_all(parent_path)
-    [].tap { |plugins|
+    [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-
-        # tagging is included in core, so don't load it
+      Dir[
+        "#{parent_path}/*/plugin.rb"
+      ]
+        .sort
+        .each do |path|
         next if path =~ /discourse-tagging/
 
         source = File.read(path)
         metadata = Plugin::Metadata.parse(source)
         plugins << self.new(metadata, path)
       end
-    }
+    end
   end
 
   def initialize(metadata = nil, path = nil)
@@ -88,9 +92,14 @@ class Plugin::Instance
 
   def add_to_serializer(serializer, attr, define_include_method = true, &block)
     reloadable_patch do |plugin|
-      klass = "#{serializer.to_s.classify}Serializer".constantize rescue "#{serializer.to_s}Serializer".constantize
+      klass =
+        begin
+          "#{serializer.to_s.classify}Serializer".constantize
+        rescue StandardError
+          "#{serializer.to_s}Serializer".constantize
+        end
 
-      unless attr.to_s.start_with?("include_")
+      unless attr.to_s.start_with?('include_')
         klass.attributes(attr)
 
         if define_include_method
@@ -105,9 +114,7 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_report(name, &block)
-    reloadable_patch do |plugin|
-      Report.add_report(name, &block)
-    end
+    reloadable_patch { |plugin| Report.add_report(name, &block) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
@@ -168,7 +175,12 @@ class Plugin::Instance
   # for class methods use `add_class_method`
   def add_to_class(class_name, attr, &block)
     reloadable_patch do |plugin|
-      klass = class_name.to_s.classify.constantize rescue class_name.to_s.constantize
+      klass =
+        begin
+          class_name.to_s.classify.constantize
+        rescue StandardError
+          class_name.to_s.constantize
+        end
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.send(:define_method, hidden_method_name, &block)
 
@@ -181,7 +193,12 @@ class Plugin::Instance
   # Adds a class method to a class, respecting if plugin is enabled
   def add_class_method(klass_name, attr, &block)
     reloadable_patch do |plugin|
-      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
+      klass =
+        begin
+          klass_name.to_s.classify.constantize
+        rescue StandardError
+          klass_name.to_s.constantize
+        end
 
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.send(:define_singleton_method, hidden_method_name, &block)
@@ -194,7 +211,12 @@ class Plugin::Instance
 
   def add_model_callback(klass_name, callback, options = {}, &block)
     reloadable_patch do |plugin|
-      klass = klass_name.to_s.classify.constantize rescue klass_name.to_s.constantize
+      klass =
+        begin
+          klass_name.to_s.classify.constantize
+        rescue StandardError
+          klass_name.to_s.constantize
+        end
 
       # generate a unique method name
       method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
@@ -221,16 +243,12 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_group_custom_field(field)
-    reloadable_patch do |plugin|
-      ::Group.preloaded_custom_field_names << field
-    end
+    reloadable_patch { |plugin| ::Group.preloaded_custom_field_names << field }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_preloaded_topic_list_custom_field(field)
-    reloadable_patch do |plugin|
-      ::TopicList.preloaded_custom_fields << field
-    end
+    reloadable_patch { |plugin| ::TopicList.preloaded_custom_fields << field }
   end
 
   # Add a permitted_create_param to Post, respecting if the plugin is enabled
@@ -271,7 +289,7 @@ class Plugin::Instance
     filenames = good_paths.map { |f| File.basename(f) }
     # nuke old files
     Dir.foreach(auto_generated_path) do |p|
-      next if [".", ".."].include?(p)
+      next if %w[. ..].include?(p)
       next if filenames.include?(p)
       File.delete(auto_generated_path + "/#{p}")
     end
@@ -279,9 +297,7 @@ class Plugin::Instance
 
   def ensure_directory(path)
     dirname = File.dirname(path)
-    unless File.directory?(dirname)
-      FileUtils.mkdir_p(dirname)
-    end
+    FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
   end
 
   def directory
@@ -289,7 +305,7 @@ class Plugin::Instance
   end
 
   def auto_generated_path
-    File.dirname(path) << "/auto_generated"
+    File.dirname(path) << '/auto_generated'
   end
 
   def after_initialize(&block)
@@ -297,15 +313,15 @@ class Plugin::Instance
   end
 
   def before_auth(&block)
-    raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!" if @before_auth_complete
+    if @before_auth_complete
+      raise 'Auth providers must be registered before omniauth middleware. after_initialize is too late!'
+    end
     before_auth_initializers << block
   end
 
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
-    DiscourseEvent.on(event_name) do |*args|
-      block.call(*args) if enabled?
-    end
+    DiscourseEvent.on(event_name) { |*args| block.call(*args) if enabled? }
   end
 
   def notify_after_initialize
@@ -322,15 +338,13 @@ class Plugin::Instance
         # When running `db:migrate` for the first time on a new database,
         # plugin initializers might try to use models.
         # Tolerate it.
-        raise e unless e.message.try(:include?, "PG::UndefinedTable")
+        raise e unless e.message.try(:include?, 'PG::UndefinedTable')
       end
     end
   end
 
   def notify_before_auth
-    before_auth_initializers.each do |callback|
-      callback.call(self)
-    end
+    before_auth_initializers.each { |callback| callback.call(self) }
     @before_auth_complete = true
   end
 
@@ -343,23 +357,17 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_topic_custom_field_type(name, type)
-    reloadable_patch do |plugin|
-      ::Topic.register_custom_field_type(name, type)
-    end
+    reloadable_patch { |plugin| ::Topic.register_custom_field_type(name, type) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_post_custom_field_type(name, type)
-    reloadable_patch do |plugin|
-      ::Post.register_custom_field_type(name, type)
-    end
+    reloadable_patch { |plugin| ::Post.register_custom_field_type(name, type) }
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def register_group_custom_field_type(name, type)
-    reloadable_patch do |plugin|
-      ::Group.register_custom_field_type(name, type)
-    end
+    reloadable_patch { |plugin| ::Group.register_custom_field_type(name, type) }
   end
 
   def register_seedfu_fixtures(paths)
@@ -409,17 +417,14 @@ class Plugin::Instance
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
     else
-      full_path = File.dirname(path) << "/assets/" << file
+      full_path = File.dirname(path) << '/assets/' << file
     end
 
     assets << [full_path, opts]
   end
 
   def register_service_worker(file, opts = nil)
-    service_workers << [
-      File.join(File.dirname(path), 'assets', file),
-      opts
-    ]
+    service_workers << [File.join(File.dirname(path), 'assets', file), opts]
   end
 
   def register_color_scheme(name, colors)
@@ -463,7 +468,6 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-
     if @path
       # Automatically include all ES6 JS and hbs files
       root_path = "#{File.dirname(@path)}/assets/javascripts"
@@ -476,9 +480,7 @@ class Plugin::Instance
     end
 
     self.instance_eval File.read(path), path
-    if auto_assets = generate_automatic_assets!
-      assets.concat(auto_assets)
-    end
+    assets.concat(auto_assets) if auto_assets = generate_automatic_assets!
 
     register_assets! unless assets.blank?
     register_locales!
@@ -492,27 +494,28 @@ class Plugin::Instance
 
     # Automatically include assets
     Rails.configuration.assets.paths << auto_generated_path
-    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-    Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
-    Rails.configuration.assets.paths << File.dirname(path) + "/test/javascripts"
+    Rails.configuration.assets.paths << File.dirname(path) + '/assets'
+    Rails.configuration.assets.paths << File.dirname(path) + '/admin/assets'
+    Rails.configuration.assets.paths << File.dirname(path) + '/test/javascripts'
 
     # Automatically include rake tasks
-    Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
+    Rake.add_rakelib(File.dirname(path) + '/lib/tasks')
 
     # Automatically include migrations
-    migration_paths = Rails.configuration.paths["db/migrate"]
-    migration_paths << File.dirname(path) + "/db/migrate"
+    migration_paths = Rails.configuration.paths['db/migrate']
+    migration_paths << File.dirname(path) + '/db/migrate'
 
     unless Discourse.skip_post_deployment_migrations?
-      migration_paths << "#{File.dirname(path)}/#{Discourse::DB_POST_MIGRATE_PATH}"
+      migration_paths <<
+        "#{File.dirname(path)}/#{Discourse::DB_POST_MIGRATE_PATH}"
     end
 
-    public_data = File.dirname(path) + "/public"
+    public_data = File.dirname(path) + '/public'
     if Dir.exists?(public_data)
-      target = Rails.root.to_s + "/public/plugins/"
+      target = Rails.root.to_s + '/public/plugins/'
 
       Discourse::Utils.execute_command('mkdir', '-p', target)
-      target << name.gsub(/\s/, "_")
+      target << name.gsub(/\s/, '_')
       # TODO a cleaner way of registering and unregistering
       Discourse::Utils.execute_command('rm', '-f', target)
       Discourse::Utils.execute_command('ln', '-s', public_data, target)
@@ -531,9 +534,17 @@ class Plugin::Instance
         provider.authenticator.enabled?
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
-          Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
-          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
-          Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
+          Discourse.deprecate(
+            "#{provider.authenticator.class
+              .name} should define an `enabled?` function. Patching for now."
+          )
+          if provider.enabled_setting
+            return SiteSetting.send(provider.enabled_setting)
+          end
+          Discourse.deprecate(
+            "#{provider.authenticator.class
+              .name} has not defined an enabled_setting. Defaulting to true."
+          )
           true
         end
       end
@@ -577,7 +588,8 @@ class Plugin::Instance
       next if opts == :admin
       next unless asset =~ DiscoursePluginRegistry::HANDLEBARS_REGEX
       asset
-    end.compact
+    end
+      .compact
   end
 
   def javascript_includes
@@ -586,7 +598,8 @@ class Plugin::Instance
       next if opts == :admin
       next unless asset =~ DiscoursePluginRegistry::JS_REGEX
       asset
-    end.compact
+    end
+      .compact
   end
 
   def each_globbed_asset
@@ -597,7 +610,7 @@ class Plugin::Instance
       Dir.glob("#{root_path}/**/*") do |f|
         if File.directory?(f)
           yield [f, true]
-        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs")
+        elsif f.to_s.ends_with?('.js.es6') || f.to_s.ends_with?('.hbs')
           yield [f, false]
         end
       end
@@ -623,31 +636,48 @@ class Plugin::Instance
 
     locales.each do |locale, opts|
       opts = opts.dup
-      opts[:client_locale_file] = File.join(root_path, "config/locales/client.#{locale}.yml")
-      opts[:server_locale_file] = File.join(root_path, "config/locales/server.#{locale}.yml")
-      opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
+      opts[:client_locale_file] =
+        File.join(root_path, "config/locales/client.#{locale}.yml")
+      opts[:server_locale_file] =
+        File.join(root_path, "config/locales/server.#{locale}.yml")
+      opts[:js_locale_file] =
+        File.join(root_path, "assets/locales/#{locale}.js.erb")
 
-      locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
-      lib_locale_path = File.join(root_path, "lib/javascripts/locale")
+      locale_chain =
+        opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
+      lib_locale_path = File.join(root_path, 'lib/javascripts/locale')
 
-      path = File.join(lib_locale_path, "message_format")
+      path = File.join(lib_locale_path, 'message_format')
       opts[:message_format] = find_locale_file(locale_chain, path)
-      opts[:message_format] = JsLocaleHelper.find_message_format_locale(locale_chain, fallback_to_english: false) unless opts[:message_format]
+      unless opts[:message_format]
+        opts[:message_format] =
+          JsLocaleHelper.find_message_format_locale(
+            locale_chain,
+            fallback_to_english: false
+          )
+      end
 
-      path = File.join(lib_locale_path, "moment_js")
+      path = File.join(lib_locale_path, 'moment_js')
       opts[:moment_js] = find_locale_file(locale_chain, path)
-      opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain) unless opts[:moment_js]
+      unless opts[:moment_js]
+        opts[:moment_js] = JsLocaleHelper.find_moment_locale(locale_chain)
+      end
 
-      path = File.join(lib_locale_path, "moment_js_timezones")
+      path = File.join(lib_locale_path, 'moment_js_timezones')
       opts[:moment_js_timezones] = find_locale_file(locale_chain, path)
-      opts[:moment_js_timezones] = JsLocaleHelper.find_moment_locale(locale_chain, timezone_names: true) unless opts[:moment_js_timezones]
+      unless opts[:moment_js_timezones]
+        opts[:moment_js_timezones] =
+          JsLocaleHelper.find_moment_locale(locale_chain, timezone_names: true)
+      end
 
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)
         Rails.configuration.assets.precompile << "locales/#{locale}.js"
+
+        # The logger isn't always present during boot / parsing locales from plugins
       else
         msg = "Invalid locale! #{opts.inspect}"
-        # The logger isn't always present during boot / parsing locales from plugins
+
         if Rails.logger.present?
           Rails.logger.error(msg)
         else
@@ -662,7 +692,7 @@ class Plugin::Instance
   def write_asset(path, contents)
     unless File.exists?(path)
       ensure_directory(path)
-      File.open(path, "w") { |f| f.write(contents) }
+      File.open(path, 'w') { |f| f.write(contents) }
     end
   end
 
@@ -682,7 +712,8 @@ class Plugin::Instance
     File.exist?(custom_locale[:client_locale_file]) &&
       File.exist?(custom_locale[:server_locale_file]) &&
       File.exist?(custom_locale[:js_locale_file]) &&
-      custom_locale[:message_format] && custom_locale[:moment_js]
+      custom_locale[:message_format] &&
+      custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

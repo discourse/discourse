@@ -6,7 +6,7 @@ RSpec.describe SsoOverridesEmailValidator do
   describe '#valid_value?' do
     describe "when 'email editable' is true" do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.sso_url = 'https://www.example.com/sso'
         SiteSetting.enable_sso = true
         SiteSetting.email_editable = true
       end
@@ -21,16 +21,16 @@ RSpec.describe SsoOverridesEmailValidator do
         it 'should not be valid' do
           expect(subject.valid_value?('t')).to eq(false)
 
-          expect(subject.error_message).to eq(I18n.t(
-            'site_settings.errors.email_editable_enabled'
-          ))
+          expect(subject.error_message).to eq(
+                I18n.t('site_settings.errors.email_editable_enabled')
+              )
         end
       end
     end
 
     describe "when 'email editable' is false" do
       before do
-        SiteSetting.sso_url = "https://www.example.com/sso"
+        SiteSetting.sso_url = 'https://www.example.com/sso'
         SiteSetting.enable_sso = true
         SiteSetting.email_editable = false
       end
@@ -49,9 +49,7 @@ RSpec.describe SsoOverridesEmailValidator do
     end
 
     describe "when 'enable sso' is false" do
-      before do
-        SiteSetting.enable_sso = false
-      end
+      before { SiteSetting.enable_sso = false }
 
       describe 'when value is false' do
         it 'should be valid' do
@@ -63,9 +61,9 @@ RSpec.describe SsoOverridesEmailValidator do
         it 'should not be valid' do
           expect(subject.valid_value?('t')).to eq(false)
 
-          expect(subject.error_message).to eq(I18n.t(
-            'site_settings.errors.enable_sso_disabled'
-          ))
+          expect(subject.error_message).to eq(
+                I18n.t('site_settings.errors.enable_sso_disabled')
+              )
         end
       end
     end

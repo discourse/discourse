@@ -16,7 +16,8 @@ class TagUser < ActiveRecord::Base
     tags ||= []
     changed = false
 
-    records = TagUser.where(user: user, notification_level: notification_levels[level])
+    records =
+      TagUser.where(user: user, notification_level: notification_levels[level])
     old_ids = records.pluck(:tag_id)
 
     tag_ids = tags.empty? ? [] : Tag.where_name(tags).pluck(:id)
@@ -28,7 +29,9 @@ class TagUser < ActiveRecord::Base
     end
 
     (tag_ids - old_ids).each do |id|
-      TagUser.create!(user: user, tag_id: id, notification_level: notification_levels[level])
+      TagUser.create!(
+        user: user, tag_id: id, notification_level: notification_levels[level]
+      )
       changed = true
     end
 
@@ -54,7 +57,10 @@ class TagUser < ActiveRecord::Base
       tag_user.notification_level = level
       tag_user.save
     else
-      tag_user = TagUser.create(user_id: user_id, tag_id: tag_id, notification_level: level)
+      tag_user =
+        TagUser.create(
+          user_id: user_id, tag_id: tag_id, notification_level: level
+        )
     end
 
     auto_watch(user_id: user_id)
@@ -66,7 +72,8 @@ class TagUser < ActiveRecord::Base
   end
 
   def self.auto_watch(opts)
-    builder = DB.build <<~SQL
+    builder =
+      DB.build <<~SQL
       UPDATE topic_users
       SET notification_level = CASE WHEN should_watch THEN :watching ELSE :tracking END,
           notifications_reason_id = CASE WHEN should_watch THEN :auto_watch_tag ELSE NULL END
@@ -100,25 +107,27 @@ class TagUser < ActiveRecord::Base
 
     SQL
 
-    builder.where("tu.notification_level in (:tracking, :regular, :watching)")
+    builder.where('tu.notification_level in (:tracking, :regular, :watching)')
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+      builder.where('tu.topic_id = :topic_id', topic_id: topic_id)
     end
 
     if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
+      builder.where('tu.user_id = :user_id', user_id: user_id)
     end
 
-    builder.exec(watching: notification_levels[:watching],
-                 tracking: notification_levels[:tracking],
-                 regular: notification_levels[:regular],
-                 auto_watch_tag: TopicUser.notification_reasons[:auto_watch_tag])
-
+    builder.exec(
+      watching: notification_levels[:watching],
+      tracking: notification_levels[:tracking],
+      regular: notification_levels[:regular],
+      auto_watch_tag: TopicUser.notification_reasons[:auto_watch_tag]
+    )
   end
 
   def self.auto_track(opts)
-    builder = DB.build <<~SQL
+    builder =
+      DB.build <<~SQL
       UPDATE topic_users
       SET notification_level = :tracking, notifications_reason_id = :auto_track_tag
       FROM (
@@ -137,18 +146,19 @@ class TagUser < ActiveRecord::Base
     SQL
 
     if topic_id = opts[:topic_id]
-      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+      builder.where('tu.topic_id = :topic_id', topic_id: topic_id)
     end
 
     if user_id = opts[:user_id]
-      builder.where("tu.user_id = :user_id", user_id: user_id)
+      builder.where('tu.user_id = :user_id', user_id: user_id)
     end
 
-    builder.exec(tracking: notification_levels[:tracking],
-                 regular: notification_levels[:regular],
-                 auto_track_tag: TopicUser.notification_reasons[:auto_track_tag])
+    builder.exec(
+      tracking: notification_levels[:tracking],
+      regular: notification_levels[:regular],
+      auto_track_tag: TopicUser.notification_reasons[:auto_track_tag]
+    )
   end
-
 end
 
 # == Schema Information

@@ -2,12 +2,12 @@ require 'rails_helper'
 
 def create_notification(user_id, resp_code, matcher)
   notification_count = Notification.count
-  post "/notifications.json",
-    params: {
-      notification_type: Notification.types[:mentioned],
-      user_id: user_id,
-      data: { message: 'tada' }.to_json
-    }
+  post '/notifications.json',
+       params: {
+         notification_type: Notification.types[:mentioned],
+         user_id: user_id,
+         data: { message: 'tada' }.to_json
+       }
   expect(response.status).to eq(resp_code)
   expect(Notification.count).send(matcher, eq(notification_count))
 end
@@ -35,12 +35,12 @@ describe NotificationsController do
 
       describe '#index' do
         it 'should succeed for recent' do
-          get "/notifications", params: { recent: true }
+          get '/notifications', params: { recent: true }
           expect(response.status).to eq(200)
         end
 
         it 'should succeed for history' do
-          get "/notifications"
+          get '/notifications'
           expect(response.status).to eq(200)
         end
 
@@ -48,7 +48,7 @@ describe NotificationsController do
           Fabricate(:notification, user: user)
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
-          get "/notifications.json", params: { recent: true }
+          get '/notifications.json', params: { recent: true }
           expect(user.reload.unread_notifications).to eq(0)
           expect(user.reload.total_unread_notifications).to eq(1)
         end
@@ -57,28 +57,28 @@ describe NotificationsController do
           Fabricate(:notification, user: user)
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
-          get "/notifications", params: { recent: true, silent: true }
+          get '/notifications', params: { recent: true, silent: true }
           expect(user.reload.unread_notifications).to eq(1)
           expect(user.reload.total_unread_notifications).to eq(1)
         end
 
         context 'when username params is not valid' do
           it 'should raise the right error' do
-            get "/notifications.json", params: { username: 'somedude' }
+            get '/notifications.json', params: { username: 'somedude' }
             expect(response.status).to eq(404)
           end
         end
       end
 
       it 'should succeed' do
-        put "/notifications/mark-read.json"
+        put '/notifications/mark-read.json'
         expect(response.status).to eq(200)
       end
 
-      it "can update a single notification" do
+      it 'can update a single notification' do
         notification = Fabricate(:notification, user: user)
         notification2 = Fabricate(:notification, user: user)
-        put "/notifications/mark-read.json", params: { id: notification.id }
+        put '/notifications/mark-read.json', params: { id: notification.id }
         expect(response.status).to eq(200)
 
         notification.reload
@@ -88,11 +88,11 @@ describe NotificationsController do
         expect(notification2.read).to eq(false)
       end
 
-      it "updates the `read` status" do
+      it 'updates the `read` status' do
         Fabricate(:notification, user: user)
         expect(user.reload.unread_notifications).to eq(1)
         expect(user.reload.total_unread_notifications).to eq(1)
-        put "/notifications/mark-read.json"
+        put '/notifications/mark-read.json'
         user.reload
         expect(user.reload.unread_notifications).to eq(0)
         expect(user.reload.total_unread_notifications).to eq(0)
@@ -121,21 +121,21 @@ describe NotificationsController do
       let!(:admin) { sign_in(Fabricate(:admin)) }
 
       describe '#create' do
-        it "can create notification" do
+        it 'can create notification' do
           create_notification(admin.id, 200, :to_not)
-          expect(::JSON.parse(response.body)["id"]).to_not eq(nil)
+          expect(::JSON.parse(response.body)['id']).to_not eq(nil)
         end
       end
 
       describe '#update' do
-        it "can update notification" do
+        it 'can update notification' do
           update_notification(8, 200, :to)
-          expect(::JSON.parse(response.body)["topic_id"]).to eq(8)
+          expect(::JSON.parse(response.body)['topic_id']).to eq(8)
         end
       end
 
       describe '#destroy' do
-        it "can delete notification" do
+        it 'can delete notification' do
           delete_notification(200, :to_not)
         end
       end
@@ -143,10 +143,9 @@ describe NotificationsController do
   end
 
   context 'when not logged in' do
-
     describe '#index' do
       it 'should raise an error' do
-        get "/notifications.json", params: { recent: true }
+        get '/notifications.json', params: { recent: true }
         expect(response.status).to eq(403)
       end
     end

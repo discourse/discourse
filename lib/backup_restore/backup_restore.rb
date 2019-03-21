@@ -1,15 +1,14 @@
-require_dependency "backup_restore/backuper"
-require_dependency "backup_restore/restorer"
+require_dependency 'backup_restore/backuper'
+require_dependency 'backup_restore/restorer'
 
 module BackupRestore
-
   class OperationRunningError < RuntimeError; end
 
-  VERSION_PREFIX = "v".freeze
-  DUMP_FILE = "dump.sql.gz".freeze
-  OLD_DUMP_FILE = "dump.sql".freeze
-  METADATA_FILE = "meta.json"
-  LOGS_CHANNEL = "/admin/backups/logs"
+  VERSION_PREFIX = 'v'.freeze
+  DUMP_FILE = 'dump.sql.gz'.freeze
+  OLD_DUMP_FILE = 'dump.sql'.freeze
+  METADATA_FILE = 'meta.json'
+  LOGS_CHANNEL = '/admin/backups/logs'
 
   def self.backup!(user_id, opts = {})
     if opts[:fork] == false
@@ -24,9 +23,11 @@ module BackupRestore
   end
 
   def self.rollback!
-    raise BackupRestore::OperationRunningError if BackupRestore.is_operation_running?
+    if BackupRestore.is_operation_running?
+      raise BackupRestore::OperationRunningError
+    end
     if can_rollback?
-      move_tables_between_schemas("backup", "public")
+      move_tables_between_schemas('backup', 'public')
       after_fork
     end
   end
@@ -37,7 +38,7 @@ module BackupRestore
   end
 
   def self.mark_as_running!
-    $redis.setex(running_key, 60, "1")
+    $redis.setex(running_key, 60, '1')
     save_start_logs_message_id
     keep_it_running
   end
@@ -68,7 +69,7 @@ module BackupRestore
 
   def self.logs
     id = start_logs_message_id
-    MessageBus.backlog(LOGS_CHANNEL, id).map { |m| m.data }
+    MessageBus.backlog(LOGS_CHANNEL, id).map(&:data)
   end
 
   def self.current_version
@@ -103,25 +104,26 @@ module BackupRestore
     SQL
   end
 
-  DatabaseConfiguration = Struct.new(:host, :port, :username, :password, :database)
+  DatabaseConfiguration =
+    Struct.new(:host, :port, :username, :password, :database)
 
   def self.database_configuration
     config = ActiveRecord::Base.connection_pool.spec.config
     config = config.with_indifferent_access
 
     DatabaseConfiguration.new(
-      config["backup_host"] || config["host"],
-      config["backup_port"] || config["port"],
-      config["username"] || ENV["USER"] || "postgres",
-      config["password"],
-      config["database"]
+      config['backup_host'] || config['host'],
+      config['backup_port'] || config['port'],
+      config['username'] || ENV['USER'] || 'postgres',
+      config['password'],
+      config['database']
     )
   end
 
   private
 
   def self.running_key
-    "backup_restore_operation_is_running"
+    'backup_restore_operation_is_running'
   end
 
   def self.keep_it_running
@@ -136,11 +138,11 @@ module BackupRestore
   end
 
   def self.shutdown_signal_key
-    "backup_restore_operation_should_shutdown"
+    'backup_restore_operation_should_shutdown'
   end
 
   def self.set_shutdown_signal!
-    $redis.set(shutdown_signal_key, "1")
+    $redis.set(shutdown_signal_key, '1')
   end
 
   def self.clear_shutdown_signal!
@@ -157,34 +159,35 @@ module BackupRestore
   end
 
   def self.start_logs_message_id_key
-    "start_logs_message_id"
+    'start_logs_message_id'
   end
 
   def self.start!(runner)
-    child = fork do
-      begin
-        after_fork
-        runner.run
-      rescue Exception => e
-        puts "--------------------------------------------"
-        puts "---------------- EXCEPTION -----------------"
-        puts e.message
-        puts e.backtrace.join("\n")
-        puts "--------------------------------------------"
-      ensure
+    child =
+      fork do
         begin
-          clear_shutdown_signal!
+          after_fork
+          runner.run
         rescue Exception => e
-          puts "============================================"
-          puts "================ EXCEPTION ================="
+          puts '--------------------------------------------'
+          puts '---------------- EXCEPTION -----------------'
           puts e.message
           puts e.backtrace.join("\n")
-          puts "============================================"
+          puts '--------------------------------------------'
         ensure
-          exit!(0)
+          begin
+            clear_shutdown_signal!
+          rescue Exception => e
+            puts '============================================'
+            puts '================ EXCEPTION ================='
+            puts e.message
+            puts e.backtrace.join("\n")
+            puts '============================================'
+          ensure
+            exit!(0)
+          end
         end
       end
-    end
 
     Process.detach(child)
 
@@ -196,7 +199,10 @@ module BackupRestore
   end
 
   def self.backup_tables_count
-    DB.query_single("SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'backup'").first.to_i
+    DB.query_single(
+      "SELECT COUNT(*) AS count FROM information_schema.tables WHERE table_schema = 'backup'"
+    )
+      .first
+      .to_i
   end
-
 end

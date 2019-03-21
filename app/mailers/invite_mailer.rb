@@ -21,56 +21,55 @@ class InviteMailer < ActionMailer::Base
     # If they were invited to a topic
     if first_topic.present?
       # get topic excerpt
-      topic_excerpt = ""
-      if first_topic.excerpt
-        topic_excerpt = first_topic.excerpt.tr("\n", " ")
-      end
+      topic_excerpt = ''
+      topic_excerpt = first_topic.excerpt.tr("\n", ' ') if first_topic.excerpt
 
       template = 'invite_mailer'
-      if invite.custom_message.present?
-        template = 'custom_invite_mailer'
-      end
+      template = 'custom_invite_mailer' if invite.custom_message.present?
 
       topic_title = first_topic.try(:title)
       if SiteSetting.private_email?
-        topic_title = I18n.t("system_messages.private_topic_title", id: first_topic.id)
-        topic_excerpt = ""
+        topic_title =
+          I18n.t('system_messages.private_topic_title', id: first_topic.id)
+        topic_excerpt = ''
       end
 
-      build_email(invite.email,
-                  template: template,
-                  inviter_name: inviter_name,
-                  site_domain_name: Discourse.current_hostname,
-                  invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
-                  topic_title: topic_title,
-                  topic_excerpt: topic_excerpt,
-                  site_description: SiteSetting.site_description,
-                  site_title: SiteSetting.title,
-                  user_custom_message: invite.custom_message)
+      build_email(
+        invite.email,
+        template: template,
+        inviter_name: inviter_name,
+        site_domain_name: Discourse.current_hostname,
+        invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
+        topic_title: topic_title,
+        topic_excerpt: topic_excerpt,
+        site_description: SiteSetting.site_description,
+        site_title: SiteSetting.title,
+        user_custom_message: invite.custom_message
+      )
     else
       template = 'invite_forum_mailer'
-      if invite.custom_message.present?
-        template = 'custom_invite_forum_mailer'
-      end
+      template = 'custom_invite_forum_mailer' if invite.custom_message.present?
 
-      build_email(invite.email,
-                  template: template,
-                  inviter_name: inviter_name,
-                  site_domain_name: Discourse.current_hostname,
-                  invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
-                  site_description: SiteSetting.site_description,
-                  site_title: SiteSetting.title,
-                  user_custom_message: invite.custom_message)
+      build_email(
+        invite.email,
+        template: template,
+        inviter_name: inviter_name,
+        site_domain_name: Discourse.current_hostname,
+        invite_link: "#{Discourse.base_url}/invites/#{invite.invite_key}",
+        site_description: SiteSetting.site_description,
+        site_title: SiteSetting.title,
+        user_custom_message: invite.custom_message
+      )
     end
   end
 
   def send_password_instructions(user)
     if user.present?
       email_token = user.email_tokens.create(email: user.email)
-      build_email(user.email,
-                  template: 'invite_password_instructions',
-                  email_token: email_token.token)
+      build_email(
+        user.email,
+        template: 'invite_password_instructions', email_token: email_token.token
+      )
     end
   end
-
 end

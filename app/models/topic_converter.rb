@@ -1,5 +1,4 @@
 class TopicConverter
-
   attr_reader :topic
 
   def initialize(topic, user)
@@ -15,10 +14,12 @@ class TopicConverter
         elsif SiteSetting.allow_uncategorized_topics
           SiteSetting.uncategorized_category_id
         else
-          Category.where(read_restricted: false)
-            .where.not(id: SiteSetting.uncategorized_category_id)
+          Category.where(read_restricted: false).where.not(
+            id: SiteSetting.uncategorized_category_id
+          )
             .order('id asc')
-            .pluck(:id).first
+            .pluck(:id)
+            .first
         end
 
       @topic.archetype = Archetype.default
@@ -74,12 +75,16 @@ class TopicConverter
   def add_allowed_users
     @topic.posts.where(deleted_at: nil).each do |p|
       user = User.find(p.user_id)
-      @topic.topic_allowed_users.build(user_id: user.id) unless @topic.topic_allowed_users.where(user_id: user.id).exists?
+      unless @topic.topic_allowed_users.where(user_id: user.id).exists?
+        @topic.topic_allowed_users.build(user_id: user.id)
+      end
       # update posts count. NOTE that DirectoryItem.refresh will overwrite this by counting UserAction records.
       user.user_stat.post_count -= 1
       user.user_stat.save!
     end
-    @topic.topic_allowed_users.build(user_id: @user.id) unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
+    unless @topic.topic_allowed_users.where(user_id: @user.id).exists?
+      @topic.topic_allowed_users.build(user_id: @user.id)
+    end
     # update topics count
     @topic.user.user_stat.topic_count -= 1
     @topic.user.user_stat.save!
@@ -96,8 +101,9 @@ class TopicConverter
 
   def update_category_topic_count_by(num)
     if @topic.category_id.present?
-      Category.where(['id = ?', @topic.category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+      Category.where(['id = ?', @topic.category_id]).update_all(
+        'topic_count = topic_count ' + (num > 0 ? '+' : '') + "#{num}"
+      )
     end
   end
-
 end

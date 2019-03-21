@@ -2,22 +2,25 @@ require_dependency 'report'
 
 class Admin::ReportsController < Admin::AdminController
   def index
-    reports_methods = ['page_view_total_reqs'] +
-      ApplicationRequest.req_types.keys
-        .select { |r| r =~ /^page_view_/ && r !~ /mobile/ }
-        .map { |r| r + "_reqs" } +
-      Report.singleton_methods.grep(/^report_(?!about|storage_stats)/)
+    reports_methods =
+      %w[page_view_total_reqs] +
+        ApplicationRequest.req_types.keys.select do |r|
+          r =~ /^page_view_/ && r !~ /mobile/
+        end
+          .map { |r| r + '_reqs' } +
+        Report.singleton_methods.grep(/^report_(?!about|storage_stats)/)
 
-    reports = reports_methods.map do |name|
-      type = name.to_s.gsub('report_', '')
-      description = I18n.t("reports.#{type}.description", default: '')
+    reports =
+      reports_methods.map do |name|
+        type = name.to_s.gsub('report_', '')
+        description = I18n.t("reports.#{type}.description", default: '')
 
-      {
-        type: type,
-        title: I18n.t("reports.#{type}.title"),
-        description: description.presence ? description : nil,
-      }
-    end
+        {
+          type: type,
+          title: I18n.t("reports.#{type}.title"),
+          description: description.presence ? description : nil
+        }
+      end
 
     render_json_dump(reports: reports.sort_by { |report| report[:title] })
   end
@@ -39,9 +42,7 @@ class Admin::ReportsController < Admin::AdminController
         else
           report = Report.find(report_type, args)
 
-          if (report_params[:cache]) && report
-            Report.cache(report, 35.minutes)
-          end
+          Report.cache(report, 35.minutes) if (report_params[:cache]) && report
 
           if report.blank?
             report = Report._get(report_type, args)
@@ -64,22 +65,16 @@ class Admin::ReportsController < Admin::AdminController
     args = parse_params(params)
 
     report = nil
-    if (params[:cache])
-      report = Report.find_cached(report_type, args)
-    end
+    report = Report.find_cached(report_type, args) if (params[:cache])
 
-    if report
-      return render_json_dump(report: report)
-    end
+    return render_json_dump(report: report) if report
 
     hijack do
       report = Report.find(report_type, args)
 
       raise Discourse::NotFound if report.blank?
 
-      if (params[:cache])
-        Report.cache(report, 35.minutes)
-      end
+      Report.cache(report, 35.minutes) if (params[:cache])
 
       render_json_dump(report: report)
     end
@@ -88,10 +83,27 @@ class Admin::ReportsController < Admin::AdminController
   private
 
   def parse_params(report_params)
-    start_date = (report_params[:start_date].present? ? Time.parse(report_params[:start_date]).to_date : 1.days.ago).beginning_of_day
-    end_date = (report_params[:end_date].present? ? Time.parse(report_params[:end_date]).to_date : start_date + 30.days).end_of_day
+    start_date =
+      (
+        if report_params[:start_date].present?
+          Time.parse(report_params[:start_date]).to_date
+        else
+          1.days.ago
+        end
+      )
+        .beginning_of_day
+    end_date =
+      (
+        if report_params[:end_date].present?
+          Time.parse(report_params[:end_date]).to_date
+        else
+          start_date + 30.days
+        end
+      )
+        .end_of_day
 
-    if report_params.has_key?(:category_id) && report_params[:category_id].to_i > 0
+    if report_params.has_key?(:category_id) &&
+       report_params[:category_id].to_i > 0
       category_id = report_params[:category_id].to_i
     else
       category_id = nil
@@ -114,9 +126,7 @@ class Admin::ReportsController < Admin::AdminController
     end
 
     filter = nil
-    if report_params.has_key?(:filter)
-      filter = report_params[:filter]
-    end
+    filter = report_params[:filter] if report_params.has_key?(:filter)
 
     {
       start_date: start_date,

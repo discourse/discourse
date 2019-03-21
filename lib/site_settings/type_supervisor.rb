@@ -6,34 +6,49 @@ module SiteSettings; end
 class SiteSettings::TypeSupervisor
   include SiteSettings::Validations
 
-  CONSUMED_OPTS = %i[enum choices type validator min max regex hidden regex_error allow_any list_type textarea].freeze
+  CONSUMED_OPTS = %i[
+    enum
+    choices
+    type
+    validator
+    min
+    max
+    regex
+    hidden
+    regex_error
+    allow_any
+    list_type
+    textarea
+  ]
+    .freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error].freeze
 
   # For plugins, so they can tell if a feature is supported
   SUPPORTED_TYPES = %i[email username list enum].freeze
 
   def self.types
-    @types ||= Enum.new(
-      string: 1,
-      time: 2,
-      integer: 3,
-      float: 4,
-      bool: 5,
-      null: 6,
-      enum: 7,
-      list: 8,
-      url_list: 9,
-      host_list: 10,
-      category_list: 11,
-      value_list: 12,
-      regex: 13,
-      email: 14,
-      username: 15,
-      category: 16,
-      uploaded_image_list: 17,
-      upload: 18,
-      group: 19,
-    )
+    @types ||=
+      Enum.new(
+        string: 1,
+        time: 2,
+        integer: 3,
+        float: 4,
+        bool: 5,
+        null: 6,
+        enum: 7,
+        list: 8,
+        url_list: 9,
+        host_list: 10,
+        category_list: 11,
+        value_list: 12,
+        regex: 13,
+        email: 14,
+        username: 15,
+        category: 16,
+        uploaded_image_list: 17,
+        upload: 18,
+        group: 19
+      )
   end
 
   def self.parse_value_type(val)
@@ -72,9 +87,7 @@ class SiteSettings::TypeSupervisor
   def load_setting(name_arg, opts = {})
     name = name_arg.to_sym
 
-    if opts[:textarea]
-      @textareas[name] = opts[:textarea]
-    end
+    @textareas[name] = opts[:textarea] if opts[:textarea]
 
     if (enum = opts[:enum])
       @enums[name] = enum.is_a?(String) ? enum.constantize : enum
@@ -103,7 +116,9 @@ class SiteSettings::TypeSupervisor
 
     opts[:validator] = opts[:validator].try(:constantize)
     if (validator_type = (opts[:validator] || validator_for(@types[name])))
-      @validators[name] = { class: validator_type, opts: opts.slice(*VALIDATOR_OPTS) }
+      @validators[name] = {
+        class: validator_type, opts: opts.slice(*VALIDATOR_OPTS)
+      }
     end
   end
 
@@ -146,9 +161,14 @@ class SiteSettings::TypeSupervisor
 
     if type == :enum
       if (klass = enum_class(name))
-        result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
+        result.merge!(
+          valid_values: klass.values, translate_names: klass.translate_names?
+        )
       else
-        result.merge!(valid_values: @choices[name].map { |c| { name: c, value: c } }, translate_names: false)
+        result.merge!(
+          valid_values: @choices[name].map { |c| { name: c, value: c } },
+          translate_names: false
+        )
       end
     end
 
@@ -187,22 +207,31 @@ class SiteSettings::TypeSupervisor
   def validate_value(name, type, val)
     if type == self.class.types[:enum]
       if enum_class(name)
-        raise Discourse::InvalidParameters.new(:value) unless enum_class(name).valid_value?(val)
+        unless enum_class(name).valid_value?(val)
+          raise Discourse::InvalidParameters.new(:value)
+        end
       else
         unless (choice = @choices[name])
           raise Discourse::InvalidParameters.new(name)
         end
 
-        raise Discourse::InvalidParameters.new(:value) unless choice.include?(val)
+        unless choice.include?(val)
+          raise Discourse::InvalidParameters.new(:value)
+        end
       end
     end
 
     if type == self.class.types[:list] || type == self.class.types[:string]
       if @allow_any.key?(name) && !@allow_any[name]
-        split = val.to_s.split("|")
+        split = val.to_s.split('|')
         diff = (split - @choices[name])
         if diff.length > 0
-          raise Discourse::InvalidParameters.new(I18n.t('errors.site_settings.invalid_choice', name: diff.join(','), count: diff.length))
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    'errors.site_settings.invalid_choice',
+                    name: diff.join(','), count: diff.length
+                  )
+                )
         end
       end
     end
@@ -210,21 +239,22 @@ class SiteSettings::TypeSupervisor
     if (v = @validators[name])
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters, "#{name.to_s}: #{validator.error_message}"
+        raise Discourse::InvalidParameters,
+              "#{name.to_s}: #{validator.error_message}"
       end
     end
 
     validate_method = "validate_#{name}"
-    if self.respond_to? validate_method
-      send(validate_method, val)
-    end
+    send(validate_method, val) if self.respond_to? validate_method
   end
 
   def get_data_type(name, val)
     # Some types are just for validations like email.
     # Only consider it valid if includes in `types`
     if (static_type = @static_types[name.to_sym])
-      return self.class.types[static_type] if self.class.types.keys.include?(static_type)
+      if self.class.types.keys.include?(static_type)
+        return self.class.types[static_type]
+      end
     end
 
     self.class.parse_value_type(val)
@@ -246,9 +276,12 @@ class SiteSettings::TypeSupervisor
       IntegerSettingValidator
     when self.class.types[:regex]
       RegexSettingValidator
-    when self.class.types[:string], self.class.types[:list], self.class.types[:enum]
+    when self.class.types[:string], self.class.types[:list], self.class.types[
+      :enum
+    ]
       StringSettingValidator
-    else nil
+    else
+      nil
     end
   end
 end

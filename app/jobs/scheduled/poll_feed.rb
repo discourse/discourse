@@ -15,9 +15,11 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      poll_feed if SiteSetting.feed_polling_enabled? &&
-                   SiteSetting.feed_polling_url.present? &&
-                   not_polled_recently?
+      if SiteSetting.feed_polling_enabled? &&
+         SiteSetting.feed_polling_url.present? &&
+         not_polled_recently?
+        poll_feed
+      end
     end
 
     def feed_key
@@ -47,28 +49,31 @@ module Jobs
     def not_polled_recently?
       $redis.set(
         'feed-polled-recently',
-        "1",
+        '1',
         ex: SiteSetting.feed_polling_frequency_mins.minutes - 10.seconds,
         nx: true
       )
     end
 
     def import_topics(feed_topics)
-      feed_topics.each do |topic|
-        import_topic(topic)
-      end
+      feed_topics.each { |topic| import_topic(topic) }
     end
 
     def import_topic(topic)
       if topic.user
-        TopicEmbed.import(topic.user, topic.url, topic.title, CGI.unescapeHTML(topic.content))
+        TopicEmbed.import(
+          topic.user,
+          topic.url,
+          topic.title,
+          CGI.unescapeHTML(topic.content)
+        )
       end
     end
 
     class Feed
       def initialize
         @feed_url = SiteSetting.feed_polling_url
-        @feed_url = "http://#{@feed_url}" if @feed_url !~ /^https?\:\/\//
+        @feed_url = "http://#{@feed_url}" if @feed_url !~ %r{^https?\:\/\/}
       end
 
       def topics
@@ -97,7 +102,10 @@ module Jobs
         return nil if encoded_feed.blank?
 
         if SiteSetting.embed_username_key_from_feed.present?
-          FeedElementInstaller.install(SiteSetting.embed_username_key_from_feed, encoded_feed)
+          FeedElementInstaller.install(
+            SiteSetting.embed_username_key_from_feed,
+            encoded_feed
+          )
         end
 
         RSS::Parser.parse(encoded_feed)
@@ -110,7 +118,8 @@ module Jobs
         feed_final_url = final_destination.resolve
         return nil unless final_destination.status == :resolved
 
-        response = Excon.new(feed_final_url.to_s).request(method: :get, expects: 200)
+        response =
+          Excon.new(feed_final_url.to_s).request(method: :get, expects: 200)
         [response.body, detect_charset(response)]
       rescue Excon::Error::HTTPStatus
         nil
@@ -160,7 +169,7 @@ module Jobs
       private
 
       def url?(link)
-        if link.blank? || link !~ /^https?\:\/\//
+        if link.blank? || link !~ %r{^https?\:\/\/}
           return false
         else
           return true
@@ -168,7 +177,9 @@ module Jobs
       end
 
       def author_username
-        @accessor.element_content(SiteSetting.embed_username_key_from_feed.sub(':', '_'))
+        @accessor.element_content(
+          SiteSetting.embed_username_key_from_feed.sub(':', '_')
+        )
       end
 
       def default_user

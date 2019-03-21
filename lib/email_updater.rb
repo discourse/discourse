@@ -28,7 +28,10 @@ class EmailUpdater
 
     if existing_user = User.find_by_email(email)
       if SiteSetting.hide_email_address_taken
-        Jobs.enqueue(:critical_user_email, type: :account_exists, user_id: existing_user.id)
+        Jobs.enqueue(
+          :critical_user_email,
+          type: :account_exists, user_id: existing_user.id
+        )
       else
         error_message = 'change_email.error'
         error_message << '_staged' if existing_user.staged?
@@ -37,10 +40,7 @@ class EmailUpdater
     end
 
     if errors.blank? && existing_user.nil?
-      args = {
-        old_email: @user.email,
-        new_email: email,
-      }
+      args = { old_email: @user.email, new_email: email }
 
       if authorize_both?
         args[:change_state] = EmailChangeRequest.states[:authorizing_old]
@@ -71,20 +71,28 @@ class EmailUpdater
         token = result[:email_token]
         @user = token.user
 
-        change_req = user.email_change_requests
-          .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', token_id: token.id)
-          .first
+        change_req =
+          user.email_change_requests.where(
+            'old_email_token_id = :token_id OR new_email_token_id = :token_id',
+            token_id: token.id
+          )
+            .first
 
         # Simple state machine
         case change_req.try(:change_state)
         when EmailChangeRequest.states[:authorizing_old]
           new_token = user.email_tokens.create(email: change_req.new_email)
-          change_req.update_columns(change_state: EmailChangeRequest.states[:authorizing_new],
-                                    new_email_token_id: new_token.id)
+          change_req.update_columns(
+            change_state: EmailChangeRequest.states[:authorizing_new],
+            new_email_token_id: new_token.id
+          )
           send_email(:confirm_new_email, new_token)
           confirm_result = :authorizing_new
         when EmailChangeRequest.states[:authorizing_new]
-          change_req.update_column(:change_state, EmailChangeRequest.states[:complete])
+          change_req.update_column(
+            :change_state,
+            EmailChangeRequest.states[:complete]
+          )
           user.primary_email.update!(email: token.email)
           user.set_automatic_groups
           confirm_result = :complete
@@ -118,5 +126,4 @@ class EmailUpdater
                  user_id: @user.id,
                  email_token: email_token.token
   end
-
 end

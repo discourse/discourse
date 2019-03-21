@@ -8,11 +8,10 @@
 # getting reaper_interval=0 into all the specs is not going to be trivial
 # when we eventually do that we can remove this patch
 
-if !defined? ActiveRecord::ConnectionAdapters::ConnectionPool::Reaper
-  raise "Can not find connection Reaper class, this patch will no longer work!"
+if !defined?(ActiveRecord::ConnectionAdapters::ConnectionPool::Reaper)
+  raise 'Can not find connection Reaper class, this patch will no longer work!'
 end
 
 class ActiveRecord::ConnectionAdapters::ConnectionPool::Reaper
-  def run
-  end
+  def run; end
 end

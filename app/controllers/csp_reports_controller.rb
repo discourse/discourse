@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 class CspReportsController < ApplicationController
-  skip_before_action :check_xhr, :preload_json, :verify_authenticity_token, only: [:create]
+  skip_before_action :check_xhr,
+                     :preload_json,
+                     :verify_authenticity_token,
+                     only: %i[create]
 
   def create
     raise Discourse::NotFound unless report_collection_enabled?
@@ -14,19 +17,20 @@ class CspReportsController < ApplicationController
   private
 
   def report
-    @report ||= JSON.parse(request.body.read)['csp-report'].slice(
-      'blocked-uri',
-      'disposition',
-      'document-uri',
-      'effective-directive',
-      'original-policy',
-      'referrer',
-      'script-sample',
-      'status-code',
-      'violated-directive',
-      'line-number',
-      'source-file'
-    )
+    @report ||=
+      JSON.parse(request.body.read)['csp-report'].slice(
+        'blocked-uri',
+        'disposition',
+        'document-uri',
+        'effective-directive',
+        'original-policy',
+        'referrer',
+        'script-sample',
+        'status-code',
+        'violated-directive',
+        'line-number',
+        'source-file'
+      )
   end
 
   def report_collection_enabled?

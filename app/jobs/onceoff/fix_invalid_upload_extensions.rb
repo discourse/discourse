@@ -1,4 +1,4 @@
-require_dependency "upload_fixer"
+require_dependency 'upload_fixer'
 
 module Jobs
   class FixInvalidUploadExtensions < Jobs::Onceoff

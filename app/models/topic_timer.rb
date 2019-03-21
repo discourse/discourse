@@ -9,8 +9,11 @@ class TopicTimer < ActiveRecord::Base
   validates :topic_id, presence: true
   validates :execute_at, presence: true
   validates :status_type, presence: true
-  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }, if: :public_type?
-  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at, :user_id] }, if: :private_type?
+  validates :status_type,
+            uniqueness: { scope: %i[topic_id deleted_at] }, if: :public_type?
+  validates :status_type,
+            uniqueness: { scope: %i[topic_id deleted_at user_id] },
+            if: :private_type?
   validates :category_id, presence: true, if: :publishing_to_category?
 
   validate :ensure_update_will_happen
@@ -19,10 +22,11 @@ class TopicTimer < ActiveRecord::Base
     self.created_at ||= Time.zone.now if execute_at
     self.public_type = self.public_type?
 
-    if (will_save_change_to_execute_at? &&
-       !attribute_in_database(:execute_at).nil?) ||
+    if (
+       will_save_change_to_execute_at? &&
+         !attribute_in_database(:execute_at).nil?
+     ) ||
        will_save_change_to_user_id?
-
       self.send("cancel_auto_#{self.class.types[status_type]}_job")
     end
   end
@@ -37,14 +41,15 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def self.types
-    @types ||= Enum.new(
-      close: 1,
-      open: 2,
-      publish_to_category: 3,
-      delete: 4,
-      reminder: 5,
-      bump: 6
-    )
+    @types ||=
+      Enum.new(
+        close: 1,
+        open: 2,
+        publish_to_category: 3,
+        delete: 4,
+        reminder: 5,
+        bump: 6
+      )
   end
 
   def self.public_types
@@ -56,9 +61,8 @@ class TopicTimer < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    TopicTimer.where("topic_timers.execute_at < ?", Time.zone.now)
+    TopicTimer.where('topic_timers.execute_at < ?', Time.zone.now)
       .find_each do |topic_timer|
-
       topic_timer.send(
         "schedule_auto_#{self.types[topic_timer.status_type]}_job",
         topic_timer.execute_at
@@ -86,9 +90,12 @@ class TopicTimer < ActiveRecord::Base
 
   def ensure_update_will_happen
     if created_at && (execute_at < created_at)
-      errors.add(:execute_at, I18n.t(
-        'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
-      ))
+      errors.add(
+        :execute_at,
+        I18n.t(
+          'activerecord.errors.models.topic_timer.attributes.execute_at.in_the_past'
+        )
+      )
     end
   end
 
@@ -121,9 +128,10 @@ class TopicTimer < ActiveRecord::Base
     return unless topic
     topic.update_status('closed', true, user) if !topic.closed
 
-    Jobs.enqueue_at(time, :toggle_topic_closed,
-      topic_timer_id: id,
-      state: false
+    Jobs.enqueue_at(
+      time,
+      :toggle_topic_closed,
+      topic_timer_id: id, state: false
     )
   end
 
@@ -131,10 +139,7 @@ class TopicTimer < ActiveRecord::Base
     return unless topic
     topic.update_status('closed', false, user) if topic.closed
 
-    Jobs.enqueue_at(time, :toggle_topic_closed,
-      topic_timer_id: id,
-      state: true
-    )
+    Jobs.enqueue_at(time, :toggle_topic_closed, topic_timer_id: id, state: true)
   end
 
   def schedule_auto_publish_to_category_job(time)

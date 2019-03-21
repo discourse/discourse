@@ -1,12 +1,11 @@
 class ExcerptParser < Nokogiri::XML::SAX::Document
-
   attr_reader :excerpt
 
   SPAN_REGEX = /<\s*span[^>]*class\s*=\s*['|"]excerpt['|"][^>]*>/
 
   def initialize(length, options = nil)
     @length = length
-    @excerpt = ""
+    @excerpt = ''
     @current_length = 0
     options || {}
     @strip_links = options[:strip_links] == true
@@ -19,8 +18,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @in_details_depth = 0
-    @summary_contents = ""
-    @detail_contents = ""
+    @summary_contents = ''
+    @detail_contents = ''
   end
 
   def self.get_excerpt(html, length, options)
@@ -28,9 +27,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     length = html.length if html.include?('excerpt') && SPAN_REGEX === html
     me = self.new(length, options)
     parser = Nokogiri::HTML::SAX::Parser.new(me)
-    catch(:done) do
-      parser.parse(html)
-    end
+    catch(:done) { parser.parse(html) }
     excerpt = me.excerpt.strip
     excerpt = excerpt.gsub(/\s*\n+\s*/, "\n\n") if options[:keep_onebox_source]
     excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
@@ -38,138 +35,141 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def escape_attribute(v)
-    return "" unless v
+    return '' unless v
 
     v = v.dup
-    v.gsub!("&", "&amp;")
-    v.gsub!("\"", "&#34;")
-    v.gsub!("<", "&lt;")
-    v.gsub!(">", "&gt;")
+    v.gsub!('&', '&amp;')
+    v.gsub!('\"', '&#34;')
+    v.gsub!('<', '&lt;')
+    v.gsub!('>', '&gt;')
     v
   end
 
   def include_tag(name, attributes)
-    characters("<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }.join(' ')}>",
-               truncate: false, count_it: false, encode: false)
+    characters(
+      "<#{name} #{attributes.map { |k, v| "#{k}=\"#{escape_attribute(v)}\"" }
+        .join(' ')}>",
+      truncate: false, count_it: false, encode: false
+    )
   end
 
   def start_element(name, attributes = [])
     case name
-    when "img"
+    when 'img'
       attributes = Hash[*attributes.flatten]
 
-      if attributes["class"]&.include?('emoji')
+      if attributes['class']&.include?('emoji')
         if @remap_emoji
-          title = (attributes["alt"] || "").gsub(":", "")
-          title = Emoji.lookup_unicode(title) || attributes["alt"]
+          title = (attributes['alt'] || '').gsub(':', '')
+          title = Emoji.lookup_unicode(title) || attributes['alt']
           return characters(title)
         elsif @keep_emoji_images
           return include_tag(name, attributes)
         else
-          return characters(attributes["alt"])
+          return characters(attributes['alt'])
         end
       end
 
       unless @strip_images
         # If include_images is set, include the image in markdown
-        characters("!") if @markdown_images
+        characters('!') if @markdown_images
 
-        if !attributes["alt"].blank?
-          characters("[#{attributes["alt"]}]")
-        elsif !attributes["title"].blank?
-          characters("[#{attributes["title"]}]")
+        if !attributes['alt'].blank?
+          characters("[#{attributes['alt']}]")
+        elsif !attributes['title'].blank?
+          characters("[#{attributes['title']}]")
         else
           characters("[#{I18n.t 'excerpt_image'}]")
         end
 
         characters("(#{attributes['src']})") if @markdown_images
       end
-
-    when "a"
+    when 'a'
       unless @strip_links
         include_tag(name, attributes)
         @in_a = true
       end
-
-    when "aside"
+    when 'aside'
       attributes = Hash[*attributes.flatten]
       unless @keep_onebox_source && attributes['class'].include?('onebox')
         @in_quote = true
       end
-
     when 'article'
-      if @keep_onebox_source && attributes.include?(['class', 'onebox-body'])
+      if @keep_onebox_source && attributes.include?(%w[class onebox-body])
         @in_quote = true
       end
-
-    when "div", "span"
-      if attributes.include?(["class", "excerpt"])
-        @excerpt = ""
+    when 'div', 'span'
+      if attributes.include?(%w[class excerpt])
+        @excerpt = ''
         @current_length = 0
         @start_excerpt = true
       end
       # Preserve spoilers
-      if attributes.include?(["class", "spoiler"])
-        include_tag("span", attributes)
+      if attributes.include?(%w[class spoiler])
+        include_tag('span', attributes)
         @in_spoiler = true
       end
-
-    when "details"
-      @detail_contents = "" if @in_details_depth == 0
+    when 'details'
+      @detail_contents = '' if @in_details_depth == 0
       @in_details_depth += 1
-
-    when "summary"
+    when 'summary'
       if @in_details_depth == 1 && !@in_summary
-        @summary_contents = ""
+        @summary_contents = ''
         @in_summary = true
       end
-
     end
   end
 
   def end_element(name)
     case name
-    when "a"
+    when 'a'
       unless @strip_links
-        characters("</a>", truncate: false, count_it: false, encode: false)
+        characters('</a>', truncate: false, count_it: false, encode: false)
         @in_a = false
       end
-    when "p", "br"
+    when 'p', 'br'
       if @keep_newlines
-        characters("<br>", truncate: false, count_it: false, encode: false)
+        characters('<br>', truncate: false, count_it: false, encode: false)
       else
-        characters(" ")
+        characters(' ')
       end
-    when "aside"
+    when 'aside'
       @in_quote = false
-    when "details"
+    when 'details'
       @in_details_depth -= 1
       if @in_details_depth == 0
         @summary_contents = clean(@summary_contents)
         @detail_contents = clean(@detail_contents)
 
         if @current_length + @summary_contents.length >= @length
-          characters(@summary_contents,
-                     encode: false,
-                     before_string: "<details class='disabled'><summary>",
-                     after_string: "</summary></details>")
+          characters(
+            @summary_contents,
+            encode: false,
+            before_string: "<details class='disabled'><summary>",
+            after_string: '</summary></details>'
+          )
         else
-          characters(@summary_contents,
-                     truncate: false,
-                     encode: false,
-                     before_string: "<details><summary>",
-                     after_string: "</summary>")
+          characters(
+            @summary_contents,
+            truncate: false,
+            encode: false,
+            before_string: '<details><summary>',
+            after_string: '</summary>'
+          )
 
-          characters(@detail_contents,
-                     encode: false,
-                     after_string: "</details>")
+          characters(
+            @detail_contents,
+            encode: false, after_string: '</details>'
+          )
         end
       end
-    when "summary"
+    when 'summary'
       @in_summary = false if @in_details_depth == 1
-    when "div", "span"
+    when 'div', 'span'
       throw :done if @start_excerpt
-      characters("</span>", truncate: false, count_it: false, encode: false) if @in_spoiler
+      if @in_spoiler
+        characters('</span>', truncate: false, count_it: false, encode: false)
+      end
       @in_spoiler = false
     end
   end
@@ -178,17 +178,20 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     ERB::Util.html_escape(str.strip)
   end
 
-  def characters(string, truncate: true, count_it: true, encode: true, before_string: nil, after_string: nil)
+  def characters(
+    string,
+    truncate: true,
+    count_it: true,
+    encode: true,
+    before_string: nil,
+    after_string: nil
+  )
     return if @in_quote
 
     # we call length on this so might as well ensure we have a string
     string = string.to_s
     if @in_details_depth > 0
-      if @in_summary
-        @summary_contents << string
-      else
-        @detail_contents << string
-      end
+      @in_summary ? @summary_contents << string : @detail_contents << string
       return
     end
 
@@ -198,8 +201,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     if count_it && @current_length + string.length > @length
       length = [0, @length - @current_length - 1].max
       @excerpt << encode.call(string[0..length]) if truncate
-      @excerpt << (@text_entities ? "..." : "&hellip;")
-      @excerpt << "</a>" if @in_a
+      @excerpt << (@text_entities ? '...' : '&hellip;')
+      @excerpt << '</a>' if @in_a
       @excerpt << after_string if after_string
       throw :done
     end

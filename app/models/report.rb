@@ -5,12 +5,36 @@ class Report
   # and you want to ensure cache is reset
   SCHEMA_VERSION = 3
 
-  attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :filter,
-                :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
-                :higher_is_better, :icon, :modes, :category_filtering,
-                :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error, :primary_color, :secondary_color, :filter_options
+  attr_accessor :type,
+                :data,
+                :total,
+                :prev30Days,
+                :start_date,
+                :end_date,
+                :category_id,
+                :group_id,
+                :filter,
+                :labels,
+                :async,
+                :prev_period,
+                :facets,
+                :limit,
+                :processing,
+                :average,
+                :percent,
+                :higher_is_better,
+                :icon,
+                :modes,
+                :category_filtering,
+                :group_filtering,
+                :prev_data,
+                :prev_start_date,
+                :prev_end_date,
+                :dates_filtering,
+                :error,
+                :primary_color,
+                :secondary_color,
+                :filter_options
 
   def self.default_days
     30
@@ -26,7 +50,7 @@ class Report
     @higher_is_better = true
     @category_filtering = false
     @group_filtering = false
-    @modes = [:table, :chart]
+    @modes = %i[table chart]
     @prev_data = nil
     @dates_filtering = true
     @filter_options = nil
@@ -38,26 +62,27 @@ class Report
   end
 
   def self.cache_key(report)
-    (+"reports:") <<
-    [
-      report.type,
-      report.category_id,
-      report.start_date.to_date.strftime("%Y%m%d"),
-      report.end_date.to_date.strftime("%Y%m%d"),
-      report.group_id,
-      report.filter,
-      report.facets,
-      report.limit,
-      SCHEMA_VERSION,
-    ].compact.map(&:to_s).join(':')
+    (+'reports:') <<
+      [
+        report.type,
+        report.category_id,
+        report.start_date.to_date.strftime('%Y%m%d'),
+        report.end_date.to_date.strftime('%Y%m%d'),
+        report.group_id,
+        report.filter,
+        report.facets,
+        report.limit,
+        SCHEMA_VERSION
+      ]
+        .compact
+        .map(&:to_s)
+        .join(':')
   end
 
   def self.clear_cache(type = nil)
-    pattern = type ? "reports:#{type}:*" : "reports:*"
+    pattern = type ? "reports:#{type}:*" : 'reports:*'
 
-    Discourse.cache.keys(pattern).each do |key|
-      Discourse.cache.redis.del(key)
-    end
+    Discourse.cache.keys(pattern).each { |key| Discourse.cache.redis.del(key) }
   end
 
   def self.wrap_slow_query(timeout = 20000)
@@ -78,13 +103,16 @@ class Report
 
   def filter_values
     if self.filter.present?
-      return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h
+      return self.filter.delete_prefix('[').delete_suffix(']').split('&')
+        .map { |param| param.split('=') }
+        .to_h
     end
     {}
   end
 
   def as_json(options = nil)
-    description = I18n.t("reports.#{type}.description", default: "")
+    description = I18n.t("reports.#{type}.description", default: '')
+
     {
       type: type,
       title: I18n.t("reports.#{type}.title", default: nil),
@@ -105,18 +133,20 @@ class Report
       report_key: Report.cache_key(self),
       primary_color: self.primary_color,
       secondary_color: self.secondary_color,
-      labels: labels || [
-        {
-          type: :date,
-          property: :x,
-          title: I18n.t("reports.default.labels.day")
-        },
-        {
-          type: :number,
-          property: :y,
-          title: I18n.t("reports.default.labels.count")
-        },
-      ],
+      labels:
+        labels ||
+          [
+            {
+              type: :date,
+              property: :x,
+              title: I18n.t('reports.default.labels.day')
+            },
+            {
+              type: :number,
+              property: :y,
+              title: I18n.t('reports.default.labels.count')
+            }
+          ],
       processing: self.processing,
       average: self.average,
       percent: self.percent,
@@ -124,8 +154,9 @@ class Report
       category_filtering: self.category_filtering,
       group_filtering: self.group_filtering,
       filter_options: self.filter_options,
-      modes: self.modes,
-    }.tap do |json|
+      modes: self.modes
+    }
+      .tap do |json|
       json[:icon] = self.icon if self.icon
       json[:error] = self.error if self.error
       json[:total] = self.total if self.total
@@ -134,7 +165,12 @@ class Report
       json[:limit] = self.limit if self.limit
 
       if type == 'page_view_crawler_reqs'
-        json[:related_report] = Report.find('web_crawlers', start_date: start_date, end_date: end_date)&.as_json
+        json[:related_report] =
+          Report.find(
+            'web_crawlers',
+            start_date: start_date, end_date: end_date
+          )
+            &.as_json
       end
     end
   end
@@ -153,7 +189,7 @@ class Report
     report.category_id = opts[:category_id] if opts[:category_id]
     report.group_id = opts[:group_id] if opts[:group_id]
     report.filter = opts[:filter] if opts[:filter]
-    report.facets = opts[:facets] || [:total, :prev30Days]
+    report.facets = opts[:facets] || %i[total prev30Days]
     report.limit = opts[:limit] if opts[:limit]
     report.processing = false
     report.average = opts[:average] if opts[:average]
@@ -168,7 +204,11 @@ class Report
   end
 
   def self.cache(report, duration)
-    Discourse.cache.write(cache_key(report), report.as_json, force: true, expires_in: duration)
+    Discourse.cache.write(
+      cache_key(report),
+      report.as_json,
+      force: true, expires_in: duration
+    )
   end
 
   def self.find(type, opts = nil)
@@ -192,14 +232,15 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
-
       # In test mode, don't swallow exceptions by default to help debug errors.
       raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
 
       # ensures that if anything unexpected prevents us from
       # creating a report object we fail elegantly and log an error
       if !report
-        Rails.logger.error("Couldn’t create report `#{type}`: <#{e.class} #{e.message}>")
+        Rails.logger.error(
+          "Couldn’t create report `#{type}`: <#{e.class} #{e.message}>"
+        )
         return nil
       end
 
@@ -208,49 +249,54 @@ class Report
       # given reports can be added by plugins we don’t want dashboard failures
       # on report computation, however we do want to log which report is provoking
       # an error
-      Rails.logger.error("Error while computing report `#{report.type}`: #{e.message}\n#{e.backtrace.join("\n")}")
+      Rails.logger.error(
+        "Error while computing report `#{report.type}`: #{e.message}\n#{e
+          .backtrace
+          .join("\n")}"
+      )
     end
 
     report
   end
 
   def self.report_consolidated_page_views(report)
-    filters = %w[
-      page_view_logged_in
-      page_view_anon
-      page_view_crawler
-    ]
+    filters = %w[page_view_logged_in page_view_anon page_view_crawler]
 
-    report.modes = [:stacked_chart]
+    report.modes = %i[stacked_chart]
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
     danger = ColorScheme.hex_for_name('danger') || 'e45735'
 
-    requests = filters.map do |filter|
-      color = report.rgba_color(tertiary)
+    requests =
+      filters.map do |filter|
+        color = report.rgba_color(tertiary)
 
-      if filter == "page_view_anon"
-        color = report.rgba_color(tertiary, 0.5)
+        color = report.rgba_color(tertiary, 0.5) if filter == 'page_view_anon'
+
+        color = report.rgba_color(danger, 0.75) if filter == 'page_view_crawler'
+
+        {
+          req: filter,
+          label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
+          color: color,
+          data:
+            ApplicationRequest.where(
+              req_type: ApplicationRequest.req_types[filter]
+            )
+        }
       end
-
-      if filter == "page_view_crawler"
-        color = report.rgba_color(danger, 0.75)
-      end
-
-      {
-        req: filter,
-        label: I18n.t("reports.consolidated_page_views.xaxis.#{filter}"),
-        color: color,
-        data: ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
-      }
-    end
 
     requests.each do |request|
-      request[:data] = request[:data].where('date >= ? AND date <= ?', report.start_date, report.end_date)
-        .order(date: :asc)
-        .group(:date)
-        .sum(:count)
-        .map { |date, count| { x: date, y: count } }
+      request[:data] =
+        request[:data].where(
+          'date >= ? AND date <= ?',
+          report.start_date,
+          report.end_date
+        )
+          .order(date: :asc)
+          .group(:date)
+          .sum(:count)
+          .map { |date, count| { x: date, y: count } }
     end
 
     report.data = requests
@@ -259,48 +305,73 @@ class Report
   def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
-        ApplicationRequest.where(req_type: [
-          ApplicationRequest.req_types.reject { |k, v| k =~ /mobile/ }.map { |k, v| v if k =~ /page_view/ }.compact
-        ].flatten)
+        ApplicationRequest.where(
+          req_type: [
+            ApplicationRequest.req_types.reject { |k, v| k =~ /mobile/ }
+              .map { |k, v| v if k =~ /page_view/ }
+              .compact
+          ]
+            .flatten
+        )
       else
         ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
       end
 
-    if filter == :page_view_total
-      report.icon = 'file'
-    end
+    report.icon = 'file' if filter == :page_view_total
 
     report.data = []
     data.where('date >= ? AND date <= ?', report.start_date, report.end_date)
       .order(date: :asc)
       .group(:date)
       .sum(:count)
-      .each do |date, count|
-      report.data << { x: date, y: count }
-    end
+      .each { |date, count| report.data << { x: date, y: count } }
 
     report.total = data.sum(:count)
 
-    report.prev30Days = data.where(
+    report.prev30Days =
+      data.where(
         'date >= ? AND date < ?',
-        (report.start_date - 31.days), report.start_date
-      ).sum(:count)
+        (report.start_date - 31.days),
+        report.start_date
+      )
+        .sum(:count)
   end
 
   def self.report_visits(report)
     report.group_filtering = true
     report.icon = 'user'
 
-    basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date, report.group_id
+    basic_report_about report,
+                       UserVisit,
+                       :by_day,
+                       report.start_date,
+                       report.end_date,
+                       report.group_id
     add_counts report, UserVisit, 'visited_at'
 
-    report.prev30Days = UserVisit.where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+    report.prev30Days =
+      UserVisit.where(
+        'visited_at >= ? and visited_at < ?',
+        report.start_date - 30.days,
+        report.start_date
+      )
+        .count
   end
 
   def self.report_mobile_visits(report)
-    basic_report_about report, UserVisit, :mobile_by_day, report.start_date, report.end_date
-    report.total      = UserVisit.where(mobile: true).count
-    report.prev30Days = UserVisit.where(mobile: true).where("visited_at >= ? and visited_at < ?", report.start_date - 30.days, report.start_date).count
+    basic_report_about report,
+                       UserVisit,
+                       :mobile_by_day,
+                       report.start_date,
+                       report.end_date
+    report.total = UserVisit.where(mobile: true).count
+    report.prev30Days =
+      UserVisit.where(mobile: true).where(
+        'visited_at >= ? and visited_at < ?',
+        report.start_date - 30.days,
+        report.start_date
+      )
+        .count
   end
 
   def self.report_signups(report)
@@ -309,7 +380,12 @@ class Report
     report.icon = 'user-plus'
 
     if report.group_id
-      basic_report_about report, User.real, :count_by_signup_date, report.start_date, report.end_date, report.group_id
+      basic_report_about report,
+                         User.real,
+                         :count_by_signup_date,
+                         report.start_date,
+                         report.end_date,
+                         report.group_id
       add_counts report, User.real, 'users.created_at'
     else
       report_about report, User.real, :count_by_signup_date
@@ -324,7 +400,11 @@ class Report
     data = User.real.count_by_first_post(report.start_date, report.end_date)
 
     if report.facets.include?(:prev30Days)
-      prev30DaysData = User.real.count_by_first_post(report.start_date - 30.days, report.start_date)
+      prev30DaysData =
+        User.real.count_by_first_post(
+          report.start_date - 30.days,
+          report.start_date
+        )
       report.prev30Days = prev30DaysData.sum { |k, v| v }
     end
 
@@ -333,14 +413,16 @@ class Report
     end
 
     if report.facets.include?(:prev_period)
-      prev_period_data = User.real.count_by_first_post(report.prev_start_date, report.prev_end_date)
+      prev_period_data =
+        User.real.count_by_first_post(
+          report.prev_start_date,
+          report.prev_end_date
+        )
       report.prev_period = prev_period_data.sum { |k, v| v }
       # report.prev_data = prev_period_data.map { |k, v| { x: k, y: v } }
     end
 
-    data.each do |key, value|
-      report.data << { x: key, y: value }
-    end
+    data.each { |key, value| report.data << { x: key, y: value } }
   end
 
   def self.report_daily_engaged_users(report)
@@ -348,10 +430,15 @@ class Report
 
     report.data = []
 
-    data = UserAction.count_daily_engaged_users(report.start_date, report.end_date)
+    data =
+      UserAction.count_daily_engaged_users(report.start_date, report.end_date)
 
     if report.facets.include?(:prev30Days)
-      prev30DaysData = UserAction.count_daily_engaged_users(report.start_date - 30.days, report.start_date)
+      prev30DaysData =
+        UserAction.count_daily_engaged_users(
+          report.start_date - 30.days,
+          report.start_date
+        )
       report.prev30Days = prev30DaysData.sum { |k, v| v }
     end
 
@@ -360,67 +447,72 @@ class Report
     end
 
     if report.facets.include?(:prev_period)
-      prev_data = UserAction.count_daily_engaged_users(report.prev_start_date, report.prev_end_date)
+      prev_data =
+        UserAction.count_daily_engaged_users(
+          report.prev_start_date,
+          report.prev_end_date
+        )
 
       prev = prev_data.sum { |k, v| v }
-      if prev > 0
-        prev = prev / ((report.end_date - report.start_date) / 1.day)
-      end
+      prev = prev / ((report.end_date - report.start_date) / 1.day) if prev > 0
       report.prev_period = prev
     end
 
-    data.each do |key, value|
-      report.data << { x: key, y: value }
-    end
+    data.each { |key, value| report.data << { x: key, y: value } }
   end
 
   def self.report_dau_by_mau(report)
     report.labels = [
       {
-        type: :date,
-        property: :x,
-        title: I18n.t("reports.default.labels.day")
+        type: :date, property: :x, title: I18n.t('reports.default.labels.day')
       },
       {
         type: :percent,
         property: :y,
-        title: I18n.t("reports.default.labels.percent")
-      },
+        title: I18n.t('reports.default.labels.percent')
+      }
     ]
 
     report.average = true
     report.percent = true
 
-    data_points = UserVisit.count_by_active_users(report.start_date, report.end_date)
+    data_points =
+      UserVisit.count_by_active_users(report.start_date, report.end_date)
 
     report.data = []
 
-    compute_dau_by_mau = Proc.new { |data_point|
-      if data_point["mau"] == 0
-        0
-      else
-        ((data_point["dau"].to_f / data_point["mau"].to_f) * 100).ceil(2)
+    compute_dau_by_mau =
+      Proc.new do |data_point|
+        if data_point['mau'] == 0
+          0
+        else
+          ((data_point['dau'].to_f / data_point['mau'].to_f) * 100).ceil(2)
+        end
       end
-    }
 
-    dau_avg = Proc.new { |start_date, end_date|
-      data_points = UserVisit.count_by_active_users(start_date, end_date)
-      if !data_points.empty?
-        sum = data_points.sum { |data_point| compute_dau_by_mau.call(data_point) }
-        (sum.to_f / data_points.count.to_f).ceil(2)
+    dau_avg =
+      Proc.new do |start_date, end_date|
+        data_points = UserVisit.count_by_active_users(start_date, end_date)
+        if !data_points.empty?
+          sum =
+            data_points.sum { |data_point| compute_dau_by_mau.call(data_point) }
+          (sum.to_f / data_points.count.to_f).ceil(2)
+        end
       end
-    }
 
     data_points.each do |data_point|
-      report.data << { x: data_point["date"], y: compute_dau_by_mau.call(data_point) }
+      report.data <<
+        { x: data_point['date'], y: compute_dau_by_mau.call(data_point) }
     end
 
     if report.facets.include?(:prev_period)
-      report.prev_period = dau_avg.call(report.prev_start_date, report.prev_end_date)
+      report.prev_period =
+        dau_avg.call(report.prev_start_date, report.prev_end_date)
     end
 
     if report.facets.include?(:prev30Days)
-      report.prev30Days = dau_avg.call(report.start_date - 30.days, report.start_date)
+      report.prev30Days =
+        dau_avg.call(report.start_date - 30.days, report.start_date)
     end
   end
 
@@ -428,27 +520,53 @@ class Report
     report.group_filtering = true
     start_date = report.start_date
     end_date = report.end_date
-    basic_report_about report, UserProfileView, :profile_views_by_day, start_date, end_date, report.group_id
+    basic_report_about report,
+                       UserProfileView,
+                       :profile_views_by_day,
+                       start_date,
+                       end_date,
+                       report.group_id
 
     report.total = UserProfile.sum(:views)
-    report.prev30Days = UserProfileView.where("viewed_at >= ? AND viewed_at < ?", start_date - 30.days, start_date + 1).count
+    report.prev30Days =
+      UserProfileView.where(
+        'viewed_at >= ? AND viewed_at < ?',
+        start_date - 30.days,
+        start_date + 1
+      )
+        .count
   end
 
   def self.report_topics(report)
     report.category_filtering = true
-    basic_report_about report, Topic, :listable_count_per_day, report.start_date, report.end_date, report.category_id
+    basic_report_about report,
+                       Topic,
+                       :listable_count_per_day,
+                       report.start_date,
+                       report.end_date,
+                       report.category_id
     countable = Topic.listable_topics
-    countable = countable.in_category_and_subcategories(report.category_id) if report.category_id
+    if report.category_id
+      countable = countable.in_category_and_subcategories(report.category_id)
+    end
     add_counts report, countable, 'topics.created_at'
   end
 
   def self.report_posts(report)
-    report.modes = [:table, :chart]
+    report.modes = %i[table chart]
     report.category_filtering = true
-    basic_report_about report, Post, :public_posts_count_per_day, report.start_date, report.end_date, report.category_id
+    basic_report_about report,
+                       Post,
+                       :public_posts_count_per_day,
+                       report.start_date,
+                       report.end_date,
+                       report.category_id
     countable = Post.public_posts.where(post_type: Post.types[:regular])
     if report.category_id
-      countable = countable.joins(:topic).merge(Topic.in_category_and_subcategories(report.category_id))
+      countable =
+        countable.joins(:topic).merge(
+          Topic.in_category_and_subcategories(report.category_id)
+        )
     end
     add_counts report, countable, 'posts.created_at'
   end
@@ -458,21 +576,38 @@ class Report
     report.icon = 'reply'
     report.higher_is_better = false
     report.data = []
-    Topic.time_to_first_response_per_day(report.start_date, report.end_date, category_id: report.category_id).each do |r|
-      report.data << { x: r["date"], y: r["hours"].to_f.round(2) }
-    end
-    report.total = Topic.time_to_first_response_total(category_id: report.category_id)
-    report.prev30Days = Topic.time_to_first_response_total(start_date: report.start_date - 30.days, end_date: report.start_date, category_id: report.category_id)
+    Topic.time_to_first_response_per_day(
+      report.start_date,
+      report.end_date,
+      category_id: report.category_id
+    )
+      .each { |r| report.data << { x: r['date'], y: r['hours'].to_f.round(2) } }
+    report.total =
+      Topic.time_to_first_response_total(category_id: report.category_id)
+    report.prev30Days =
+      Topic.time_to_first_response_total(
+        start_date: report.start_date - 30.days,
+        end_date: report.start_date,
+        category_id: report.category_id
+      )
   end
 
   def self.report_topics_with_no_response(report)
     report.category_filtering = true
     report.data = []
-    Topic.with_no_response_per_day(report.start_date, report.end_date, report.category_id).each do |r|
-      report.data << { x: r["date"], y: r["count"].to_i }
-    end
+    Topic.with_no_response_per_day(
+      report.start_date,
+      report.end_date,
+      report.category_id
+    )
+      .each { |r| report.data << { x: r['date'], y: r['count'].to_i } }
     report.total = Topic.with_no_response_total(category_id: report.category_id)
-    report.prev30Days = Topic.with_no_response_total(start_date: report.start_date - 30.days, end_date: report.start_date, category_id: report.category_id)
+    report.prev30Days =
+      Topic.with_no_response_total(
+        start_date: report.start_date - 30.days,
+        end_date: report.start_date,
+        category_id: report.category_id
+      )
   end
 
   def self.report_emails(report)
@@ -480,7 +615,11 @@ class Report
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
-    basic_report_about report, subject_class, report_method, report.start_date, report.end_date
+    basic_report_about report,
+                       subject_class,
+                       report_method,
+                       report.start_date,
+                       report.end_date
     add_counts report, subject_class
   end
 
@@ -501,42 +640,45 @@ class Report
 
   def self.add_counts(report, subject_class, query_column = 'created_at')
     if report.facets.include?(:prev_period)
-      prev_data = subject_class
-        .where("#{query_column} >= ? and #{query_column} < ?",
+      prev_data =
+        subject_class.where(
+          "#{query_column} >= ? and #{query_column} < ?",
           report.prev_start_date,
-          report.prev_end_date)
+          report.prev_end_date
+        )
 
       report.prev_period = prev_data.count
     end
 
-    if report.facets.include?(:total)
-      report.total      = subject_class.count
-    end
+    report.total = subject_class.count if report.facets.include?(:total)
 
     if report.facets.include?(:prev30Days)
-      report.prev30Days = subject_class
-        .where("#{query_column} >= ? and #{query_column} < ?",
+      report.prev30Days =
+        subject_class.where(
+          "#{query_column} >= ? and #{query_column} < ?",
           report.start_date - 30.days,
-          report.start_date).count
+          report.start_date
+        )
+          .count
     end
   end
 
   def self.report_users_by_trust_level(report)
     report.data = []
 
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.dates_filtering = false
 
     report.labels = [
       {
         property: :key,
-        title: I18n.t("reports.users_by_trust_level.labels.level")
+        title: I18n.t('reports.users_by_trust_level.labels.level')
       },
       {
         property: :y,
         type: :number,
-        title: I18n.t("reports.default.labels.count")
+        title: I18n.t('reports.default.labels.count')
       }
     ]
 
@@ -553,9 +695,22 @@ class Report
     report.icon = 'flag'
     report.higher_is_better = false
 
-    basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
-    countable = PostAction.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
-    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
+    basic_report_about report,
+                       PostAction,
+                       :flag_count_by_date,
+                       report.start_date,
+                       report.end_date,
+                       report.category_id
+    countable =
+      PostAction.where(
+        post_action_type_id: PostActionType.flag_types_without_custom.values
+      )
+    if report.category_id
+      countable =
+        countable.joins(post: :topic).merge(
+          Topic.in_category_and_subcategories(report.category_id)
+        )
+    end
     add_counts report, countable, 'post_actions.created_at'
   end
 
@@ -573,19 +728,36 @@ class Report
 
   def self.post_action_report(report, post_action_type)
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id, start_date: report.start_date, end_date: report.end_date).each do |date, count|
-      report.data << { x: date, y: count }
-    end
+    PostAction.count_per_day_for_type(
+      post_action_type,
+      category_id: report.category_id,
+      start_date: report.start_date,
+      end_date: report.end_date
+    )
+      .each { |date, count| report.data << { x: date, y: count } }
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
-    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
+    if report.category_id
+      countable =
+        countable.joins(post: :topic).merge(
+          Topic.in_category_and_subcategories(report.category_id)
+        )
+    end
     add_counts report, countable, 'post_actions.created_at'
   end
 
   def self.private_messages_report(report, topic_subtype)
     report.icon = 'envelope'
     subject = Topic.where('topics.user_id > 0')
-    basic_report_about report, subject, :private_message_topics_count_per_day, report.start_date, report.end_date, topic_subtype
-    subject = Topic.private_messages.where('topics.user_id > 0').with_subtype(topic_subtype)
+    basic_report_about report,
+                       subject,
+                       :private_message_topics_count_per_day,
+                       report.start_date,
+                       report.end_date,
+                       topic_subtype
+    subject =
+      Topic.private_messages.where('topics.user_id > 0').with_subtype(
+        topic_subtype
+      )
     add_counts report, subject, 'topics.created_at'
   end
 
@@ -598,8 +770,16 @@ class Report
     report.icon = 'envelope'
     topic_subtype = TopicSubtype.user_to_user
     subject = Post.where('posts.user_id > 0')
-    basic_report_about report, subject, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
-    subject = Post.private_posts.where('posts.user_id > 0').with_topic_subtype(topic_subtype)
+    basic_report_about report,
+                       subject,
+                       :private_messages_count_per_day,
+                       report.start_date,
+                       report.end_date,
+                       topic_subtype
+    subject =
+      Post.private_posts.where('posts.user_id > 0').with_topic_subtype(
+        topic_subtype
+      )
     add_counts report, subject, 'posts.created_at'
   end
 
@@ -628,38 +808,41 @@ class Report
       {
         type: :string,
         property: :user_agent,
-        title: I18n.t("reports.web_crawlers.labels.user_agent")
+        title: I18n.t('reports.web_crawlers.labels.user_agent')
       },
       {
         property: :count,
         type: :number,
-        title: I18n.t("reports.web_crawlers.labels.page_views")
+        title: I18n.t('reports.web_crawlers.labels.page_views')
       }
     ]
-    report.modes = [:table]
-    report.data = WebCrawlerRequest.where('date >= ? and date <= ?', report.start_date, report.end_date)
-      .limit(200)
-      .order('sum_count DESC')
-      .group(:user_agent).sum(:count)
-      .map { |ua, count| { user_agent: ua, count: count } }
+    report.modes = %i[table]
+    report.data =
+      WebCrawlerRequest.where(
+        'date >= ? and date <= ?',
+        report.start_date,
+        report.end_date
+      )
+        .limit(200)
+        .order('sum_count DESC')
+        .group(:user_agent)
+        .sum(:count)
+        .map { |ua, count| { user_agent: ua, count: count } }
   end
 
   def self.report_users_by_type(report)
     report.data = []
 
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.dates_filtering = false
 
     report.labels = [
-      {
-        property: :x,
-        title: I18n.t("reports.users_by_type.labels.type")
-      },
+      { property: :x, title: I18n.t('reports.users_by_type.labels.type') },
       {
         property: :y,
         type: :number,
-        title: I18n.t("reports.default.labels.count")
+        title: I18n.t('reports.default.labels.count')
       }
     ]
 
@@ -667,35 +850,68 @@ class Report
     url = Proc.new { |key| "/admin/users/list/#{key}" }
 
     admins = User.real.admins.count
-    report.data << { url: url.call("admins"), icon: "shield-alt", key: "admins", x: label.call("admin"), y: admins } if admins > 0
+    if admins > 0
+      report.data <<
+        {
+          url: url.call('admins'),
+          icon: 'shield-alt',
+          key: 'admins',
+          x: label.call('admin'),
+          y: admins
+        }
+    end
 
     moderators = User.real.moderators.count
-    report.data << { url: url.call("moderators"), icon: "shield-alt", key: "moderators", x: label.call("moderator"), y: moderators } if moderators > 0
+    if moderators > 0
+      report.data <<
+        {
+          url: url.call('moderators'),
+          icon: 'shield-alt',
+          key: 'moderators',
+          x: label.call('moderator'),
+          y: moderators
+        }
+    end
 
     suspended = User.real.suspended.count
-    report.data << { url: url.call("suspended"), icon: "ban", key: "suspended", x: label.call("suspended"), y: suspended } if suspended > 0
+    if suspended > 0
+      report.data <<
+        {
+          url: url.call('suspended'),
+          icon: 'ban',
+          key: 'suspended',
+          x: label.call('suspended'),
+          y: suspended
+        }
+    end
 
     silenced = User.real.silenced.count
-    report.data << { url: url.call("silenced"), icon: "ban", key: "silenced", x: label.call("silenced"), y: silenced } if silenced > 0
+    if silenced > 0
+      report.data <<
+        {
+          url: url.call('silenced'),
+          icon: 'ban',
+          key: 'silenced',
+          x: label.call('silenced'),
+          y: silenced
+        }
+    end
   end
 
   def self.report_top_referred_topics(report)
     report.category_filtering = true
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
         type: :topic,
-        properties: {
-          title: :topic_title,
-          id: :topic_id
-        },
-        title: I18n.t("reports.top_referred_topics.labels.topic")
+        properties: { title: :topic_title, id: :topic_id },
+        title: I18n.t('reports.top_referred_topics.labels.topic')
       },
       {
         property: :num_clicks,
         type: :number,
-        title: I18n.t("reports.top_referred_topics.labels.num_clicks")
+        title: I18n.t('reports.top_referred_topics.labels.num_clicks')
       }
     ]
 
@@ -712,22 +928,22 @@ class Report
 
   def self.report_top_traffic_sources(report)
     report.category_filtering = true
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
         property: :domain,
-        title: I18n.t("reports.top_traffic_sources.labels.domain")
+        title: I18n.t('reports.top_traffic_sources.labels.domain')
       },
       {
         property: :num_clicks,
         type: :number,
-        title: I18n.t("reports.top_traffic_sources.labels.num_clicks")
+        title: I18n.t('reports.top_traffic_sources.labels.num_clicks')
       },
       {
         property: :num_topics,
         type: :number,
-        title: I18n.t("reports.top_traffic_sources.labels.num_topics")
+        title: I18n.t('reports.top_traffic_sources.labels.num_topics')
       }
     ]
 
@@ -743,27 +959,25 @@ class Report
   end
 
   def self.report_top_referrers(report)
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
         type: :user,
         properties: {
-          username: :username,
-          id: :user_id,
-          avatar: :user_avatar_template,
+          username: :username, id: :user_id, avatar: :user_avatar_template
         },
-        title: I18n.t("reports.top_referrers.labels.user")
+        title: I18n.t('reports.top_referrers.labels.user')
       },
       {
         property: :num_clicks,
         type: :number,
-        title: I18n.t("reports.top_referrers.labels.num_clicks")
+        title: I18n.t('reports.top_referrers.labels.num_clicks')
       },
       {
         property: :num_topics,
         type: :number,
-        title: I18n.t("reports.top_referrers.labels.num_topics")
+        title: I18n.t('reports.top_referrers.labels.num_topics')
       }
     ]
 
@@ -782,35 +996,33 @@ class Report
       {
         property: :term,
         type: :text,
-        title: I18n.t("reports.trending_search.labels.term")
+        title: I18n.t('reports.trending_search.labels.term')
       },
       {
         property: :searches,
         type: :number,
-        title: I18n.t("reports.trending_search.labels.searches")
+        title: I18n.t('reports.trending_search.labels.searches')
       },
       {
         type: :percent,
         property: :ctr,
-        title: I18n.t("reports.trending_search.labels.click_through")
+        title: I18n.t('reports.trending_search.labels.click_through')
       }
     ]
 
     report.data = []
 
-    report.modes = [:table]
+    report.modes = %i[table]
 
-    trends = SearchLog.trending_from(report.start_date,
-      end_date: report.end_date,
-      limit: report.limit
-    )
+    trends =
+      SearchLog.trending_from(
+        report.start_date,
+        end_date: report.end_date, limit: report.limit
+      )
 
     trends.each do |trend|
-      report.data << {
-        term: trend.term,
-        searches: trend.searches,
-        ctr: trend.ctr
-      }
+      report.data <<
+        { term: trend.term, searches: trend.searches, ctr: trend.ctr }
     end
   end
 
@@ -819,45 +1031,43 @@ class Report
       {
         type: :user,
         properties: {
-          username: :username,
-          id: :user_id,
-          avatar: :user_avatar_template,
+          username: :username, id: :user_id, avatar: :user_avatar_template
         },
-        title: I18n.t("reports.moderators_activity.labels.moderator"),
+        title: I18n.t('reports.moderators_activity.labels.moderator')
       },
       {
         property: :flag_count,
         type: :number,
-        title: I18n.t("reports.moderators_activity.labels.flag_count")
+        title: I18n.t('reports.moderators_activity.labels.flag_count')
       },
       {
         type: :seconds,
         property: :time_read,
-        title: I18n.t("reports.moderators_activity.labels.time_read")
+        title: I18n.t('reports.moderators_activity.labels.time_read')
       },
       {
         property: :topic_count,
         type: :number,
-        title: I18n.t("reports.moderators_activity.labels.topic_count")
+        title: I18n.t('reports.moderators_activity.labels.topic_count')
       },
       {
         property: :pm_count,
         type: :number,
-        title: I18n.t("reports.moderators_activity.labels.pm_count")
+        title: I18n.t('reports.moderators_activity.labels.pm_count')
       },
       {
         property: :post_count,
         type: :number,
-        title: I18n.t("reports.moderators_activity.labels.post_count")
+        title: I18n.t('reports.moderators_activity.labels.post_count')
       },
       {
         property: :revision_count,
         type: :number,
-        title: I18n.t("reports.moderators_activity.labels.revision_count")
+        title: I18n.t('reports.moderators_activity.labels.revision_count')
       }
     ]
 
-    report.modes = [:table]
+    report.modes = %i[table]
     report.data = []
 
     query = <<~SQL
@@ -876,8 +1086,10 @@ class Report
     FROM mods m
     JOIN user_visits uv
     ON m.user_id = uv.user_id
-    WHERE uv.visited_at >= '#{report.start_date}'
-    AND uv.visited_at <= '#{report.end_date}'
+    WHERE uv.visited_at >= '#{report
+      .start_date}'
+    AND uv.visited_at <= '#{report
+      .end_date}'
     GROUP BY uv.user_id
     ),
     flag_count AS (
@@ -885,9 +1097,14 @@ class Report
         SELECT agreed_by_id,
         disagreed_by_id
         FROM post_actions
-        WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
-        AND created_at >= '#{report.start_date}'
-        AND created_at <= '#{report.end_date}'
+        WHERE post_action_type_id IN (#{PostActionType
+      .flag_types_without_custom
+      .values
+      .join(',')})
+        AND created_at >= '#{report
+      .start_date}'
+        AND created_at <= '#{report
+      .end_date}'
         ),
         agreed_flags AS (
         SELECT pa.agreed_by_id AS user_id,
@@ -920,8 +1137,10 @@ class Report
     ON pr.user_id = m.user_id
     JOIN posts p
     ON p.id = pr.post_id
-    WHERE pr.created_at >= '#{report.start_date}'
-    AND pr.created_at <= '#{report.end_date}'
+    WHERE pr.created_at >= '#{report
+      .start_date}'
+    AND pr.created_at <= '#{report
+      .end_date}'
     AND p.user_id <> pr.user_id
     GROUP BY pr.user_id
     ),
@@ -932,8 +1151,10 @@ class Report
     JOIN topics t
     ON t.user_id = m.user_id
     WHERE t.archetype = 'regular'
-    AND t.created_at >= '#{report.start_date}'
-    AND t.created_at <= '#{report.end_date}'
+    AND t.created_at >= '#{report
+      .start_date}'
+    AND t.created_at <= '#{report
+      .end_date}'
     GROUP BY t.user_id
     ),
     post_count AS (
@@ -945,8 +1166,10 @@ class Report
     JOIN topics t
     ON t.id = p.topic_id
     WHERE t.archetype = 'regular'
-    AND p.created_at >= '#{report.start_date}'
-    AND p.created_at <= '#{report.end_date}'
+    AND p.created_at >= '#{report
+      .start_date}'
+    AND p.created_at <= '#{report
+      .end_date}'
     GROUP BY p.user_id
     ),
     pm_count AS (
@@ -958,8 +1181,10 @@ class Report
     JOIN topics t
     ON t.id = p.topic_id
     WHERE t.archetype = 'private_message'
-    AND p.created_at >= '#{report.start_date}'
-    AND p.created_at <= '#{report.end_date}'
+    AND p.created_at >= '#{report
+      .start_date}'
+    AND p.created_at <= '#{report
+      .end_date}'
     GROUP BY p.user_id
     )
 
@@ -987,7 +1212,8 @@ class Report
       mod = {}
       mod[:username] = row.username
       mod[:user_id] = row.user_id
-      mod[:user_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      mod[:user_avatar_template] =
+        User.avatar_template(row.username, row.uploaded_avatar_id)
       mod[:time_read] = row.time_read
       mod[:flag_count] = row.flag_count
       mod[:revision_count] = row.revision_count
@@ -999,17 +1225,15 @@ class Report
   end
 
   def self.report_flags_status(report)
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
         type: :post,
         properties: {
-          topic_id: :topic_id,
-          number: :post_number,
-          truncated_raw: :post_type
+          topic_id: :topic_id, number: :post_number, truncated_raw: :post_type
         },
-        title: I18n.t("reports.flags_status.labels.flag")
+        title: I18n.t('reports.flags_status.labels.flag')
       },
       {
         type: :user,
@@ -1018,7 +1242,7 @@ class Report
           id: :staff_id,
           avatar: :staff_avatar_template
         },
-        title: I18n.t("reports.flags_status.labels.assigned")
+        title: I18n.t('reports.flags_status.labels.assigned')
       },
       {
         type: :user,
@@ -1027,7 +1251,7 @@ class Report
           id: :poster_id,
           avatar: :poster_avatar_template
         },
-        title: I18n.t("reports.flags_status.labels.poster")
+        title: I18n.t('reports.flags_status.labels.poster')
       },
       {
         type: :user,
@@ -1035,13 +1259,13 @@ class Report
           username: :flagger_username,
           id: :flagger_id,
           avatar: :flagger_avatar_template
-          },
-        title: I18n.t("reports.flags_status.labels.flagger")
+        },
+        title: I18n.t('reports.flags_status.labels.flagger')
       },
       {
         type: :seconds,
         property: :response_time,
-        title: I18n.t("reports.flags_status.labels.time_to_resolution")
+        title: I18n.t('reports.flags_status.labels.time_to_resolution')
       }
     ]
 
@@ -1064,9 +1288,13 @@ class Report
     user_id,
     COALESCE(disagreed_at, agreed_at, deferred_at) AS responded_at
     FROM post_actions
-    WHERE post_action_type_id IN (#{flag_types.values.join(',')})
-      AND created_at >= '#{report.start_date}'
-      AND created_at <= '#{report.end_date}'
+    WHERE post_action_type_id IN (#{flag_types
+      .values
+      .join(',')})
+      AND created_at >= '#{report
+      .start_date}'
+      AND created_at <= '#{report
+      .end_date}'
     ORDER BY created_at DESC
     ),
     poster_data AS (
@@ -1140,72 +1368,74 @@ class Report
       if row.staff_id
         data[:staff_username] = row.staff_username
         data[:staff_id] = row.staff_id
-        data[:staff_avatar_template] = User.avatar_template(row.staff_username, row.staff_avatar_id)
+        data[:staff_avatar_template] =
+          User.avatar_template(row.staff_username, row.staff_avatar_id)
       end
 
       if row.poster_id
         data[:poster_username] = row.poster_username
         data[:poster_id] = row.poster_id
-        data[:poster_avatar_template] = User.avatar_template(row.poster_username, row.poster_avatar_id)
+        data[:poster_avatar_template] =
+          User.avatar_template(row.poster_username, row.poster_avatar_id)
       end
 
       if row.flagger_id
         data[:flagger_id] = row.flagger_id
         data[:flagger_username] = row.flagger_username
-        data[:flagger_avatar_template] = User.avatar_template(row.flagger_username, row.flagger_avatar_id)
+        data[:flagger_avatar_template] =
+          User.avatar_template(row.flagger_username, row.flagger_avatar_id)
       end
 
       if row.agreed_by_id
-        data[:resolution] = I18n.t("reports.flags_status.values.agreed")
+        data[:resolution] = I18n.t('reports.flags_status.values.agreed')
       elsif row.disagreed_by_id
-        data[:resolution] = I18n.t("reports.flags_status.values.disagreed")
+        data[:resolution] = I18n.t('reports.flags_status.values.disagreed')
       elsif row.deferred_by_id
-        data[:resolution] = I18n.t("reports.flags_status.values.deferred")
+        data[:resolution] = I18n.t('reports.flags_status.values.deferred')
       else
-        data[:resolution] = I18n.t("reports.flags_status.values.no_action")
+        data[:resolution] = I18n.t('reports.flags_status.values.no_action')
       end
-      data[:response_time] = row.responded_at ? row.responded_at - row.created_at : nil
+      data[:response_time] =
+        row.responded_at ? row.responded_at - row.created_at : nil
       report.data << data
     end
   end
 
   def self.report_post_edits(report)
     report.category_filtering = true
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
         type: :post,
         properties: {
-          topic_id: :topic_id,
-          number: :post_number,
-          truncated_raw: :post_raw
+          topic_id: :topic_id, number: :post_number, truncated_raw: :post_raw
         },
-        title: I18n.t("reports.post_edits.labels.post")
+        title: I18n.t('reports.post_edits.labels.post')
       },
       {
         type: :user,
         properties: {
           username: :editor_username,
           id: :editor_id,
-          avatar: :editor_avatar_template,
+          avatar: :editor_avatar_template
         },
-        title: I18n.t("reports.post_edits.labels.editor")
+        title: I18n.t('reports.post_edits.labels.editor')
       },
       {
         type: :user,
         properties: {
           username: :author_username,
           id: :author_id,
-          avatar: :author_avatar_template,
+          avatar: :author_avatar_template
         },
-        title: I18n.t("reports.post_edits.labels.author")
+        title: I18n.t('reports.post_edits.labels.author')
       },
       {
         type: :text,
         property: :edit_reason,
-        title: I18n.t("reports.post_edits.labels.edit_reason")
-      },
+        title: I18n.t('reports.post_edits.labels.edit_reason')
+      }
     ]
 
     report.data = []
@@ -1222,8 +1452,10 @@ class Report
     JOIN users u
     ON u.id = pr.user_id
     WHERE u.id > 0
-    AND pr.created_at >= '#{report.start_date}'
-    AND pr.created_at <= '#{report.end_date}'
+    AND pr.created_at >= '#{report
+      .start_date}'
+    AND pr.created_at <= '#{report
+      .end_date}'
     ORDER BY pr.created_at DESC
     LIMIT 20
     )
@@ -1249,23 +1481,32 @@ class Report
     SQL
 
     if report.category_id
-      sql += <<~SQL
+      sql +=
+        <<~SQL
       JOIN topics t
       ON t.id = p.topic_id
       WHERE t.category_id = ? OR t.category_id IN (SELECT id FROM categories WHERE categories.parent_category_id = ?)
       SQL
     end
-    result = report.category_id ? DB.query(sql, report.category_id, report.category_id) : DB.query(sql)
+    result =
+      if report.category_id
+        DB.query(sql, report.category_id, report.category_id)
+      else
+        DB.query(sql)
+      end
 
     result.each do |r|
       revision = {}
       revision[:editor_id] = r.editor_id
       revision[:editor_username] = r.editor_username
-      revision[:editor_avatar_template] = User.avatar_template(r.editor_username, r.editor_avatar_id)
+      revision[:editor_avatar_template] =
+        User.avatar_template(r.editor_username, r.editor_avatar_id)
       revision[:author_id] = r.author_id
       revision[:author_username] = r.author_username
-      revision[:author_avatar_template] = User.avatar_template(r.author_username, r.author_avatar_id)
-      revision[:edit_reason] = r.revision_version == r.post_version ? r.edit_reason : nil
+      revision[:author_avatar_template] =
+        User.avatar_template(r.author_username, r.author_avatar_id)
+      revision[:edit_reason] =
+        r.revision_version == r.post_version ? r.edit_reason : nil
       revision[:created_at] = r.created_at
       revision[:post_raw] = r.post_raw
       revision[:topic_id] = r.topic_id
@@ -1278,7 +1519,7 @@ class Report
   def self.report_user_flagging_ratio(report)
     report.data = []
 
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.dates_filtering = false
 
@@ -1286,32 +1527,30 @@ class Report
       {
         type: :user,
         properties: {
-          username: :username,
-          id: :user_id,
-          avatar: :avatar_template,
+          username: :username, id: :user_id, avatar: :avatar_template
         },
-        title: I18n.t("reports.user_flagging_ratio.labels.user")
+        title: I18n.t('reports.user_flagging_ratio.labels.user')
       },
       {
         type: :number,
         property: :disagreed_flags,
-        title: I18n.t("reports.user_flagging_ratio.labels.disagreed_flags")
+        title: I18n.t('reports.user_flagging_ratio.labels.disagreed_flags')
       },
       {
         type: :number,
         property: :agreed_flags,
-        title: I18n.t("reports.user_flagging_ratio.labels.agreed_flags")
+        title: I18n.t('reports.user_flagging_ratio.labels.agreed_flags')
       },
       {
         type: :number,
         property: :ignored_flags,
-        title: I18n.t("reports.user_flagging_ratio.labels.ignored_flags")
+        title: I18n.t('reports.user_flagging_ratio.labels.ignored_flags')
       },
       {
         type: :number,
         property: :score,
-        title: I18n.t("reports.user_flagging_ratio.labels.score")
-      },
+        title: I18n.t('reports.user_flagging_ratio.labels.score')
+      }
     ]
 
     sql = <<~SQL
@@ -1336,7 +1575,8 @@ class Report
       flagger = {}
       flagger[:user_id] = row.id
       flagger[:username] = row.username
-      flagger[:avatar_template] = User.avatar_template(row.username, row.avatar_id)
+      flagger[:avatar_template] =
+        User.avatar_template(row.username, row.avatar_id)
       flagger[:disagreed_flags] = row.disagreed_flags
       flagger[:ignored_flags] = row.ignored_flags
       flagger[:agreed_flags] = row.agreed_flags
@@ -1347,7 +1587,7 @@ class Report
   end
 
   def self.report_staff_logins(report)
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.data = []
 
@@ -1355,20 +1595,18 @@ class Report
       {
         type: :user,
         properties: {
-          username: :username,
-          id: :user_id,
-          avatar: :avatar_template,
+          username: :username, id: :user_id, avatar: :avatar_template
         },
-        title: I18n.t("reports.staff_logins.labels.user")
+        title: I18n.t('reports.staff_logins.labels.user')
       },
       {
         property: :location,
-        title: I18n.t("reports.staff_logins.labels.location")
+        title: I18n.t('reports.staff_logins.labels.location')
       },
       {
         property: :created_at,
         type: :precise_date,
-        title: I18n.t("reports.staff_logins.labels.login_at")
+        title: I18n.t('reports.staff_logins.labels.login_at')
       }
     ]
 
@@ -1382,19 +1620,28 @@ class Report
       FROM (
         SELECT DISTINCT ON (t.client_ip, t.user_id) t.client_ip, t.user_id, t.created_at
         FROM user_auth_token_logs t
-        WHERE t.user_id IN (#{User.admins.pluck(:id).join(',')})
+        WHERE t.user_id IN (#{User
+      .admins
+      .pluck(:id)
+      .join(
+      ','
+    )})
           AND t.created_at >= :start_date
           AND t.created_at <= :end_date
         ORDER BY t.client_ip, t.user_id, t.created_at DESC
-        LIMIT #{report.limit || 20}
+        LIMIT #{report
+      .limit ||
+      20}
       ) t1
       JOIN users u ON u.id = t1.user_id
       ORDER BY created_at DESC
     SQL
 
-    DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
+    DB.query(sql, start_date: report.start_date, end_date: report.end_date)
+      .each do |row|
       data = {}
-      data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:avatar_template] =
+        User.avatar_template(row.username, row.uploaded_avatar_id)
       data[:user_id] = row.user_id
       data[:username] = row.username
       data[:location] = DiscourseIpInfo.get(row.client_ip)[:location]
@@ -1405,43 +1652,38 @@ class Report
   end
 
   def self.report_suspicious_logins(report)
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
         type: :user,
         properties: {
-          username: :username,
-          id: :user_id,
-          avatar: :avatar_template,
+          username: :username, id: :user_id, avatar: :avatar_template
         },
-        title: I18n.t("reports.suspicious_logins.labels.user")
+        title: I18n.t('reports.suspicious_logins.labels.user')
       },
       {
         property: :client_ip,
-        title: I18n.t("reports.suspicious_logins.labels.client_ip")
+        title: I18n.t('reports.suspicious_logins.labels.client_ip')
       },
       {
         property: :location,
-        title: I18n.t("reports.suspicious_logins.labels.location")
+        title: I18n.t('reports.suspicious_logins.labels.location')
       },
       {
         property: :browser,
-        title: I18n.t("reports.suspicious_logins.labels.browser")
+        title: I18n.t('reports.suspicious_logins.labels.browser')
       },
       {
         property: :device,
-        title: I18n.t("reports.suspicious_logins.labels.device")
+        title: I18n.t('reports.suspicious_logins.labels.device')
       },
-      {
-        property: :os,
-        title: I18n.t("reports.suspicious_logins.labels.os")
-      },
+      { property: :os, title: I18n.t('reports.suspicious_logins.labels.os') },
       {
         type: :date,
         property: :login_time,
-        title: I18n.t("reports.suspicious_logins.labels.login_time")
-      },
+        title: I18n.t('reports.suspicious_logins.labels.login_time')
+      }
     ]
 
     report.data = []
@@ -1456,7 +1698,8 @@ class Report
       ORDER BY t.created_at DESC
     SQL
 
-    DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
+    DB.query(sql, start_date: report.start_date, end_date: report.end_date)
+      .each do |row|
       data = {}
 
       ipinfo = DiscourseIpInfo.get(row.client_ip)
@@ -1466,7 +1709,8 @@ class Report
 
       data[:username] = row.username
       data[:user_id] = row.user_id
-      data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:avatar_template] =
+        User.avatar_template(row.username, row.uploaded_avatar_id)
       data[:client_ip] = row.client_ip.to_s
       data[:location] = ipinfo[:location]
       data[:browser] = I18n.t("user_auth_tokens.browser.#{browser}")
@@ -1479,11 +1723,12 @@ class Report
   end
 
   def self.report_storage_stats(report)
-    backup_stats = begin
-      BackupRestore::BackupStore.create.stats
-    rescue BackupRestore::BackupStore::StorageError
-      nil
-    end
+    backup_stats =
+      begin
+        BackupRestore::BackupStore.create.stats
+      rescue BackupRestore::BackupStore::StorageError
+        nil
+      end
 
     report.data = {
       backups: backup_stats,
@@ -1495,43 +1740,45 @@ class Report
   end
 
   def self.report_top_uploads(report)
-    report.modes = [:table]
+    report.modes = %i[table]
     report.filter_options = [
       {
-        id: "file-extension",
-        selected: report.filter_values.fetch("file-extension", "any"),
-        choices: (SiteSetting.authorized_extensions.split("|") + report.filter_values.values).uniq,
+        id: 'file-extension',
+        selected: report.filter_values.fetch('file-extension', 'any'),
+        choices:
+          (
+            SiteSetting.authorized_extensions.split('|') +
+              report.filter_values.values
+          )
+            .uniq,
         allowAny: true
       }
     ]
     report.labels = [
       {
         type: :link,
-        properties: [
-          :file_url,
-          :file_name,
-        ],
-        title: I18n.t("reports.top_uploads.labels.filename")
+        properties: %i[file_url file_name],
+        title: I18n.t('reports.top_uploads.labels.filename')
       },
       {
         type: :user,
         properties: {
           username: :author_username,
           id: :author_id,
-          avatar: :author_avatar_template,
+          avatar: :author_avatar_template
         },
-        title: I18n.t("reports.top_uploads.labels.author")
+        title: I18n.t('reports.top_uploads.labels.author')
       },
       {
         type: :text,
         property: :extension,
-        title: I18n.t("reports.top_uploads.labels.extension")
+        title: I18n.t('reports.top_uploads.labels.extension')
       },
       {
         type: :bytes,
         property: :filesize,
-        title: I18n.t("reports.top_uploads.labels.filesize")
-      },
+        title: I18n.t('reports.top_uploads.labels.filesize')
+      }
     ]
 
     report.data = []
@@ -1550,20 +1797,28 @@ class Report
     ON u.id = up.user_id
     /*where*/
     ORDER BY up.filesize DESC
-    LIMIT #{report.limit || 250}
+    LIMIT #{report
+      .limit ||
+      250}
     SQL
 
-    extension_filter = report.filter_values["file-extension"]
+    extension_filter = report.filter_values['file-extension']
     builder = DB.build(sql)
-    builder.where("up.id > :seeded_id_threshold", seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD)
-    builder.where("up.created_at >= :start_date", start_date: report.start_date)
-    builder.where("up.created_at < :end_date", end_date: report.end_date)
-    builder.where("up.extension = :extension", extension: extension_filter) if extension_filter.present?
+    builder.where(
+      'up.id > :seeded_id_threshold',
+      seeded_id_threshold: Upload::SEEDED_ID_THRESHOLD
+    )
+    builder.where('up.created_at >= :start_date', start_date: report.start_date)
+    builder.where('up.created_at < :end_date', end_date: report.end_date)
+    if extension_filter.present?
+      builder.where('up.extension = :extension', extension: extension_filter)
+    end
     builder.query.each do |row|
       data = {}
       data[:author_id] = row.user_id
       data[:author_username] = row.username
-      data[:author_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+      data[:author_avatar_template] =
+        User.avatar_template(row.username, row.uploaded_avatar_id)
       data[:filesize] = row.filesize
       data[:extension] = row.extension
       data[:file_url] = Discourse.store.cdn_url(row.url)
@@ -1573,7 +1828,7 @@ class Report
   end
 
   def self.report_top_ignored_users(report)
-    report.modes = [:table]
+    report.modes = %i[table]
 
     report.labels = [
       {
@@ -1581,16 +1836,14 @@ class Report
         properties: {
           id: :ignored_user_id,
           username: :ignored_username,
-          avatar: :ignored_user_avatar_template,
+          avatar: :ignored_user_avatar_template
         },
-        title: I18n.t("reports.top_ignored_users.labels.ignored_user")
+        title: I18n.t('reports.top_ignored_users.labels.ignored_user')
       },
       {
         type: :number,
-        properties: [
-          :ignores_count,
-        ],
-        title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+        properties: %i[ignores_count],
+        title: I18n.t('reports.top_ignored_users.labels.ignores_count')
       }
     ]
 
@@ -1604,24 +1857,30 @@ class Report
       COUNT(*) AS ignores_count
       FROM users AS u
       INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
-      WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
+      WHERE ig.created_at >= '#{report
+      .start_date}' AND ig.created_at <= '#{report
+      .end_date}'
       GROUP BY u.id
       ORDER BY COUNT(*) DESC
-      LIMIT #{report.limit || 250}
+      LIMIT #{report
+      .limit ||
+      250}
     SQL
 
     DB.query(sql).each do |row|
-      report.data << {
-        ignored_user_id: row.user_id,
-        ignored_username: row.username,
-        ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
-        ignores_count: row.ignores_count,
-      }
+      report.data <<
+        {
+          ignored_user_id: row.user_id,
+          ignored_username: row.username,
+          ignored_user_avatar_template:
+            User.avatar_template(row.username, row.uploaded_avatar_id),
+          ignores_count: row.ignores_count
+        }
     end
   end
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
+    if %w[backup_location s3_backup_bucket].include?(site_setting.name.to_s)
       clear_cache(:storage_stats)
     end
   end
@@ -1632,9 +1891,7 @@ class Report
       hex = chars.zip(chars).flatten.join
     end
 
-    if hex.size < 3
-      hex = hex.ljust(6, hex.last)
-    end
+    hex = hex.ljust(6, hex.last) if hex.size < 3
 
     rgbs = hex_to_rgbs(hex)
 
@@ -1646,8 +1903,6 @@ class Report
   def hex_to_rgbs(hex_color)
     hex_color = hex_color.gsub('#', '')
     rgbs = hex_color.scan(/../)
-    rgbs
-      .map! { |color| color.hex }
-      .map! { |rgb| rgb.to_i }
+    rgbs.map!(&:hex).map!(&:to_i)
   end
 end

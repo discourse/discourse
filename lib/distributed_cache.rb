@@ -6,9 +6,7 @@ class DistributedCache < MessageBus::DistributedCache
   def initialize(key, manager: nil, namespace: true)
     super(
       key,
-      manager: manager,
-      namespace: namespace,
-      app_version: Discourse.git_version
+      manager: manager, namespace: namespace, app_version: Discourse.git_version
     )
   end
 end

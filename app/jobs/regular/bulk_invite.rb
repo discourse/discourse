@@ -2,16 +2,15 @@ require 'csv'
 require_dependency 'system_message'
 
 module Jobs
-
   class BulkInvite < Jobs::Base
     sidekiq_options retry: false
     attr_accessor :current_user
 
     def initialize
       super
-      @logs    = []
-      @sent    = 0
-      @failed  = 0
+      @logs = []
+      @sent = 0
+      @failed = 0
     end
 
     def execute(args)
@@ -39,7 +38,9 @@ module Jobs
             @sent += 1
           else
             # invalid email
-            save_log "Invalid Email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
+            save_log "Invalid Email '#{csv_info[
+                       0
+                     ]}' at line number '#{$INPUT_LINE_NUMBER}'"
             @failed += 1
           end
         end
@@ -55,7 +56,7 @@ module Jobs
       group_ids = []
       if group_names
         group_names = group_names.split(';')
-        group_names.each { |group_name|
+        group_names.each do |group_name|
           group_detail = Group.find_by_name(group_name)
           if group_detail
             # valid group
@@ -65,7 +66,7 @@ module Jobs
             save_log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
             @failed += 1
           end
-        }
+        end
       end
       return group_ids
     end
@@ -89,7 +90,8 @@ module Jobs
       begin
         Invite.invite_by_email(email, @current_user, topic, group_ids)
       rescue => e
-        save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
+        save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new
+                   .sanitize(e.message)}"
         @sent -= 1
         @failed += 1
       end
@@ -111,14 +113,10 @@ module Jobs
           SystemMessage.create_from_system_user(
             @current_user,
             :bulk_invite_failed,
-            sent: @sent,
-            failed: @failed,
-            logs: @logs.join("\n")
+            sent: @sent, failed: @failed, logs: @logs.join("\n")
           )
         end
       end
     end
-
   end
-
 end

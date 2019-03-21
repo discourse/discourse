@@ -1,5 +1,4 @@
 class QueuedPostSerializer < ApplicationSerializer
-
   attributes :id,
              :queue,
              :user_id,
@@ -32,5 +31,4 @@ class QueuedPostSerializer < ApplicationSerializer
   def include_can_delete_user?
     user && user.trust_level == TrustLevel[0]
   end
-
 end

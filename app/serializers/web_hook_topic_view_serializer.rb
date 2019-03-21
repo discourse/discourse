@@ -1,10 +1,9 @@
 require_dependency 'pinned_check'
 
 class WebHookTopicViewSerializer < TopicViewSerializer
-  attributes :created_by,
-             :last_poster
+  attributes :created_by, :last_poster
 
-  %i{
+  %i[
     post_stream
     timeline_lookup
     pm_with_non_human_user
@@ -20,11 +19,8 @@ class WebHookTopicViewSerializer < TopicViewSerializer
     topic_timer
     private_topic_timer
     details
-  }.each do |attr|
-    define_method("include_#{attr}?") do
-      false
-    end
-  end
+  ]
+    .each { |attr| define_method("include_#{attr}?") { false } }
 
   def created_by
     BasicUserSerializer.new(object.topic.user, scope: scope, root: false)

@@ -2,9 +2,7 @@ require 'rails_helper'
 require 'email'
 
 describe Email do
-
-  describe "is_valid?" do
-
+  describe 'is_valid?' do
     it 'treats a nil as invalid' do
       expect(Email.is_valid?(nil)).to eq(false)
     end
@@ -24,11 +22,9 @@ describe Email do
     it 'does not think a word is an email' do
       expect(Email.is_valid?('sam')).to eq(false)
     end
-
   end
 
-  describe "downcase" do
-
+  describe 'downcase' do
     it 'downcases local and host part' do
       expect(Email.downcase('SAM@GMAIL.COM')).to eq('sam@gmail.com')
       expect(Email.downcase('sam@GMAIL.COM')).to eq('sam@gmail.com')
@@ -39,7 +35,5 @@ describe Email do
       expect(Email.downcase('samGMAIL.COM')).to eq('samGMAIL.COM')
       expect(Email.downcase('sam@GM@AIL.COM')).to eq('sam@GM@AIL.COM')
     end
-
   end
-
 end

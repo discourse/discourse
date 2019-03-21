@@ -6,9 +6,9 @@ class UserBadge < ActiveRecord::Base
   belongs_to :post
 
   validates :badge_id,
-    presence: true,
-    uniqueness: { scope: :user_id },
-    if: :single_grant_badge?
+            presence: true,
+            uniqueness: { scope: :user_id },
+            if: :single_grant_badge?
 
   validates :user_id, presence: true
   validates :granted_at, presence: true

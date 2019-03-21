@@ -1,7 +1,8 @@
 module Jobs
   class FixOutOfSyncUserUploadedAvatar < Jobs::Onceoff
     def execute_onceoff(args)
-      DB.exec(<<~SQL)
+      DB.exec(
+        <<~SQL
       WITH X AS (
         SELECT
           u.id AS user_id,
@@ -18,6 +19,7 @@ module Jobs
       WHERE users.id = X.user_id
       AND coalesce(uploaded_avatar_id,-1) <> coalesce(X.gravatar_upload_id,-1)
       SQL
+      )
     end
   end
 end

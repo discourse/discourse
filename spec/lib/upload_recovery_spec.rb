@@ -1,30 +1,24 @@
 require 'rails_helper'
-require_dependency "upload_recovery"
+require_dependency 'upload_recovery'
 
 RSpec.describe UploadRecovery do
   let(:user) { Fabricate(:user) }
 
   let(:upload) do
-    UploadCreator.new(
-      file_from_fixtures("smallest.png"),
-      "logo.png"
-    ).create_for(user.id)
+    UploadCreator.new(file_from_fixtures('smallest.png'), 'logo.png')
+      .create_for(user.id)
   end
 
   let(:upload2) do
-    UploadCreator.new(
-      file_from_fixtures("small.pdf", "pdf"),
-      "some.pdf"
-    ).create_for(user.id)
+    UploadCreator.new(file_from_fixtures('small.pdf', 'pdf'), 'some.pdf')
+      .create_for(user.id)
   end
 
   let(:post) do
-    Fabricate(:post,
-      raw: <<~SQL,
+    raw = <<~SQL
       ![logo.png](#{upload.short_url})
-      SQL
-      user: user
-    ).tap(&:link_post_uploads)
+    SQL
+    Fabricate(:post, raw: raw, user: user).tap(&:link_post_uploads)
   end
 
   let(:upload_recovery) { UploadRecovery.new }
@@ -39,10 +33,8 @@ RSpec.describe UploadRecovery do
       next if u
       public_path = "#{Discourse.store.public_dir}#{u.url}"
 
-      [
-        public_path,
-        public_path.sub("uploads", "uploads/tombstone")
-      ].each { |path| File.delete(path) if File.exists?(path) }
+      [public_path, public_path.sub('uploads', 'uploads/tombstone')]
+        .each { |path| File.delete(path) if File.exists?(path) }
     end
   end
 
@@ -51,14 +43,14 @@ RSpec.describe UploadRecovery do
       it 'should not do anything' do
         upload_recovery.expects(:recover_from_local).never
 
-        post.update!(
-          raw: "![logo.png](upload://#{'a' * 28}.png)"
-        )
+        post.update!(raw: "![logo.png](upload://#{'a' * 28}.png)")
 
         upload_recovery.recover
 
         post.update!(
-          raw: "<a href=#{"/uploads/test/original/3X/a/6%0A/#{upload.sha1}.png"}>test</a>"
+          raw:
+            "<a href=#{"/uploads/test/original/3X/a/6%0A/#{upload
+              .sha1}.png"}>test</a>"
         )
 
         upload_recovery.recover
@@ -70,71 +62,73 @@ RSpec.describe UploadRecovery do
       upload.destroy!
 
       upload_recovery.expects(:recover_from_local).never
-      upload_recovery.recover(Post.where("updated_at >= ?", 1.day.ago))
+      upload_recovery.recover(Post.where('updated_at >= ?', 1.day.ago))
     end
 
     describe 'for a missing attachment' do
       let(:post) do
-        Fabricate(:post,
-          raw: <<~SQL,
-          <a class="attachment" href="#{upload2.url}">some.pdf</a>
+        raw = <<~SQL
+          <a class="attachment" href="#{upload2
+          .url}">some.pdf</a>
           <a>blank</a>
-          SQL
-          user: user
-        ).tap(&:link_post_uploads)
+        SQL
+        Fabricate(:post, raw: raw, user: user).tap(&:link_post_uploads)
       end
 
       it 'should recover the attachment' do
-        expect do
-          upload2.destroy!
-        end.to change { post.reload.uploads.count }.from(1).to(0)
+        expect { upload2.destroy! }.to(
+          change { post.reload.uploads.count }.from(1).to(0)
+        )
 
-        expect do
-          upload_recovery.recover
-        end.to change { post.reload.uploads.count }.from(0).to(1)
+        expect { upload_recovery.recover }.to(
+          change { post.reload.uploads.count }.from(0).to(1)
+        )
 
-        expect(File.read(Discourse.store.path_for(post.uploads.first)))
-          .to eq(File.read(file_from_fixtures("small.pdf", "pdf")))
+        expect(File.read(Discourse.store.path_for(post.uploads.first))).to(
+          eq(File.read(file_from_fixtures('small.pdf', 'pdf')))
+        )
       end
     end
 
     it 'should recover uploads and attachments' do
-      stub_request(:get, "http://test.localhost#{upload.url}")
-        .to_return(status: 200)
+      stub_request(:get, "http://test.localhost#{upload.url}").to_return(
+        status: 200
+      )
 
-      expect do
-        upload.destroy!
-      end.to change { post.reload.uploads.count }.from(1).to(0)
+      expect { upload.destroy! }.to(
+        change { post.reload.uploads.count }.from(1).to(0)
+      )
 
-      expect do
-        upload_recovery.recover
-      end.to change { post.reload.uploads.count }.from(0).to(1)
+      expect { upload_recovery.recover }.to(
+        change { post.reload.uploads.count }.from(0).to(1)
+      )
 
-      expect(File.read(Discourse.store.path_for(post.uploads.first)))
-        .to eq(File.read(file_from_fixtures("smallest.png")))
+      expect(File.read(Discourse.store.path_for(post.uploads.first))).to eq(
+            File.read(file_from_fixtures('smallest.png'))
+          )
     end
   end
 
-  describe "#recover_user_profile_backgrounds" do
+  describe '#recover_user_profile_backgrounds' do
     before do
       user.user_profile.update!(
-        profile_background: upload.url,
-        card_background: upload.url
+        profile_background: upload.url, card_background: upload.url
       )
     end
 
-    it "should recover the background uploads" do
+    it 'should recover the background uploads' do
       user_profile = user.user_profile
       upload.destroy!
 
       user_profile.update_columns(
-        profile_background: user_profile.profile_background.sub("default", "X"),
-        card_background: user_profile.card_background.sub("default", "X")
+        profile_background: user_profile.profile_background.sub('default', 'X'),
+        card_background: user_profile.card_background.sub('default', 'X')
       )
 
-      expect do
-        upload_recovery.recover_user_profile_backgrounds
-      end.to change { Upload.count }.by(1)
+      expect { upload_recovery.recover_user_profile_backgrounds }.to change do
+        Upload.count
+      end
+        .by(1)
 
       user_profile.reload
 
@@ -147,8 +141,8 @@ RSpec.describe UploadRecovery do
         user_profile = user.user_profile
         upload.destroy!
 
-        profile_background = user_profile.profile_background.sub("default", "X")
-        card_background = user_profile.card_background.sub("default", "X")
+        profile_background = user_profile.profile_background.sub('default', 'X')
+        card_background = user_profile.card_background.sub('default', 'X')
 
         user_profile.update_columns(
           profile_background: profile_background,

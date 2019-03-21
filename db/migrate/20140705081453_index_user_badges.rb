@@ -6,6 +6,8 @@ class IndexUserBadges < ActiveRecord::Migration[4.2]
                     user_badges.post_id IS NOT NULL AND
                     user_badges.id < ub2.id
     '
-    add_index :user_badges, [:badge_id, :user_id, :post_id], unique: true, where: 'post_id IS NOT NULL'
+    add_index :user_badges,
+              %i[badge_id user_id post_id],
+              unique: true, where: 'post_id IS NOT NULL'
   end
 end

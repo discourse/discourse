@@ -5,9 +5,7 @@ RSpec.describe EnableLocalLoginsViaEmailValidator do
 
   describe '#valid_value?' do
     describe "when 'enable_local_logins' is false" do
-      before do
-        SiteSetting.enable_local_logins = false
-      end
+      before { SiteSetting.enable_local_logins = false }
 
       describe 'when val is false' do
         it 'should be valid' do
@@ -19,17 +17,15 @@ RSpec.describe EnableLocalLoginsViaEmailValidator do
         it 'should not be valid' do
           expect(subject.valid_value?('t')).to eq(false)
 
-          expect(subject.error_message).to eq(I18n.t(
-            'site_settings.errors.enable_local_logins_disabled'
-          ))
+          expect(subject.error_message).to eq(
+                I18n.t('site_settings.errors.enable_local_logins_disabled')
+              )
         end
       end
     end
 
     describe "when 'enable_local_logins' is true" do
-      before do
-        SiteSetting.enable_local_logins = true
-      end
+      before { SiteSetting.enable_local_logins = true }
 
       describe 'when val is false' do
         it 'should be valid' do

@@ -1,5 +1,4 @@
 class BadgeGrouping < ActiveRecord::Base
-
   GettingStarted = 1
   Community = 2
   Posting = 3

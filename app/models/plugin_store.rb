@@ -29,7 +29,9 @@ class PluginStore
   end
 
   def self.get_all(plugin_name, keys)
-    rows = PluginStoreRow.where('plugin_name = ? AND key IN (?)', plugin_name, keys).to_a
+    rows =
+      PluginStoreRow.where('plugin_name = ? AND key IN (?)', plugin_name, keys)
+        .to_a
 
     Hash[rows.map { |row| [row.key, cast_value(row.type_name, row.value)] }]
   end
@@ -41,7 +43,7 @@ class PluginStore
     row.type_name = determine_type(value)
     # nil are stored as nil
     row.value =
-      if row.type_name == "JSON"
+      if row.type_name == 'JSON'
         value.to_json
       elsif value
         value.to_s
@@ -55,7 +57,7 @@ class PluginStore
   end
 
   def self.determine_type(value)
-    value.is_a?(Hash) || value.is_a?(Array) ? "JSON" : value.class.to_s
+    value.is_a?(Hash) || value.is_a?(Array) ? 'JSON' : value.class.to_s
   end
 
   def self.map_json(item)
@@ -70,10 +72,14 @@ class PluginStore
 
   def self.cast_value(type, value)
     case type
-    when "Integer", "Fixnum" then value.to_i
-    when "TrueClass", "FalseClass" then value == "true"
-    when "JSON" then map_json(::JSON.parse(value))
-    else value
+    when 'Integer', 'Fixnum'
+      value.to_i
+    when 'TrueClass', 'FalseClass'
+      value == 'true'
+    when 'JSON'
+      map_json(::JSON.parse(value))
+    else
+      value
     end
   end
 end

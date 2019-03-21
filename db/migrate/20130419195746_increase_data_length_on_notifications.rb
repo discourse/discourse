@@ -1,6 +1,6 @@
 class IncreaseDataLengthOnNotifications < ActiveRecord::Migration[4.2]
   def up
-    execute "ALTER TABLE notifications ALTER COLUMN data TYPE VARCHAR(1000)"
+    execute 'ALTER TABLE notifications ALTER COLUMN data TYPE VARCHAR(1000)'
   end
 
   def down

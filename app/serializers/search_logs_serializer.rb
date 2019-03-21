@@ -1,5 +1,3 @@
 class SearchLogsSerializer < ApplicationSerializer
-  attributes :term,
-             :searches,
-             :ctr
+  attributes :term, :searches, :ctr
 end

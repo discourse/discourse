@@ -1,5 +1,4 @@
 class CategoryDetailedSerializer < BasicCategorySerializer
-
   attributes :topic_count,
              :post_count,
              :topics_day,
@@ -11,7 +10,8 @@ class CategoryDetailedSerializer < BasicCategorySerializer
              :is_uncategorized,
              :subcategory_ids
 
-  has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
+  has_many :displayable_topics,
+           serializer: ListableTopicSerializer, embed: :objects, key: :topics
 
   def include_displayable_topics?
     displayable_topics.present?
@@ -60,5 +60,4 @@ class CategoryDetailedSerializer < BasicCategorySerializer
     end
     count
   end
-
 end

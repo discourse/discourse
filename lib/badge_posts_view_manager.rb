@@ -1,5 +1,5 @@
 class BadgePostsViewManager
-  VIEW_NAME = "badge_posts".freeze
+  VIEW_NAME = 'badge_posts'.freeze
 
   def self.create!
     sql = <<~SQL

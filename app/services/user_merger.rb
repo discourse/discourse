@@ -27,18 +27,22 @@ class UserMerger
   protected
 
   def update_username
-    UsernameChanger.update_username(user_id: @source_user.id,
-                                    old_username: @source_user.username,
-                                    new_username: @target_user.username,
-                                    avatar_template: @target_user.avatar_template,
-                                    asynchronous: false)
+    UsernameChanger.update_username(
+      user_id: @source_user.id,
+      old_username: @source_user.username,
+      new_username: @target_user.username,
+      avatar_template: @target_user.avatar_template,
+      asynchronous: false
+    )
   end
 
   def move_posts
-    posts = Post.with_deleted
-      .where(user_id: @source_user.id)
-      .order(:topic_id, :post_number)
-      .pluck(:topic_id, :id)
+    posts =
+      Post.with_deleted.where(user_id: @source_user.id).order(
+        :topic_id,
+        :post_number
+      )
+        .pluck(:topic_id, :id)
 
     last_topic_id = nil
     post_ids = []
@@ -63,7 +67,8 @@ class UserMerger
       new_owner: @target_user,
       acting_user: Discourse.system_user,
       skip_revision: true
-    ).change_owner!
+    )
+      .change_owner!
   end
 
   def merge_given_daily_likes
@@ -99,8 +104,10 @@ class UserMerger
   end
 
   def merge_post_timings
-    update_user_id(:post_timings, conditions: ["x.topic_id = y.topic_id",
-                                               "x.post_number = y.post_number"])
+    update_user_id(
+      :post_timings,
+      conditions: ['x.topic_id = y.topic_id', 'x.post_number = y.post_number']
+    )
     sql = <<~SQL
       UPDATE post_timings AS t
       SET msecs = t.msecs + s.msecs
@@ -109,11 +116,14 @@ class UserMerger
             AND t.topic_id = s.topic_id AND t.post_number = s.post_number
     SQL
 
-    DB.exec(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(
+      sql,
+      source_user_id: @source_user.id, target_user_id: @target_user.id
+    )
   end
 
   def merge_user_visits
-    update_user_id(:user_visits, conditions: "x.visited_at = y.visited_at")
+    update_user_id(:user_visits, conditions: 'x.visited_at = y.visited_at')
 
     sql = <<~SQL
       UPDATE user_visits AS t
@@ -125,12 +135,16 @@ class UserMerger
             AND t.visited_at = s.visited_at
     SQL
 
-    DB.exec(sql, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(
+      sql,
+      source_user_id: @source_user.id, target_user_id: @target_user.id
+    )
   end
 
   def update_site_settings
     SiteSetting.all_settings(true).each do |setting|
-      if setting[:type] == "username" && setting[:value] == @source_user.username
+      if setting[:type] == 'username' &&
+         setting[:value] == @source_user.username
         SiteSetting.set_and_log(setting[:setting], @target_user.username)
       end
     end
@@ -138,7 +152,8 @@ class UserMerger
 
   def update_user_stats
     # topics_entered
-    DB.exec(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(
+      <<~SQL
       UPDATE user_stats
       SET topics_entered = (
         SELECT COUNT(topic_id)
@@ -146,10 +161,13 @@ class UserMerger
         WHERE user_id = :target_user_id
       )
       WHERE user_id = :target_user_id
-    SQL
+    SQL,
+      target_user_id: @target_user.id
+    )
 
     # time_read and days_visited
-    DB.exec(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(
+      <<~SQL
       UPDATE user_stats
       SET time_read  = COALESCE(x.time_read, 0),
         days_visited = COALESCE(x.days_visited, 0)
@@ -161,10 +179,13 @@ class UserMerger
              WHERE user_id = :target_user_id
            ) AS x
       WHERE user_id = :target_user_id
-    SQL
+    SQL,
+      target_user_id: @target_user.id
+    )
 
     # posts_read_count
-    DB.exec(<<~SQL, target_user_id: @target_user.id)
+    DB.exec(
+      <<~SQL
       UPDATE user_stats
       SET posts_read_count = (
         SELECT COUNT(1)
@@ -175,10 +196,13 @@ class UserMerger
             WHERE t.archetype = 'regular' AND t.deleted_at IS NULL
         ))
       WHERE user_id = :target_user_id
-    SQL
+    SQL,
+      target_user_id: @target_user.id
+    )
 
     # likes_given, likes_received, new_since, read_faq, first_post_created_at
-    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(
+      <<~SQL
       UPDATE user_stats AS t
       SET likes_given         = t.likes_given + s.likes_given,
         likes_received        = t.likes_received + s.likes_received,
@@ -187,11 +211,14 @@ class UserMerger
         first_post_created_at = LEAST(t.first_post_created_at, s.first_post_created_at)
       FROM user_stats AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
-    SQL
+    SQL,
+      source_user_id: @source_user.id, target_user_id: @target_user.id
+    )
   end
 
   def merge_user_attributes
-    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(
+      <<~SQL
       UPDATE users AS t
       SET created_at              = LEAST(t.created_at, s.created_at),
         updated_at                = LEAST(t.updated_at, s.updated_at),
@@ -212,9 +239,12 @@ class UserMerger
         manual_locked_trust_level = GREATEST(t.manual_locked_trust_level, s.manual_locked_trust_level)
       FROM users AS s
       WHERE t.id = :target_user_id AND s.id = :source_user_id
-    SQL
+    SQL,
+      source_user_id: @source_user.id, target_user_id: @target_user.id
+    )
 
-    DB.exec(<<~SQL, source_user_id: @source_user.id, target_user_id: @target_user.id)
+    DB.exec(
+      <<~SQL
       UPDATE user_profiles AS t
       SET location           = COALESCE(t.location, s.location),
         website              = COALESCE(t.website, s.website),
@@ -228,136 +258,264 @@ class UserMerger
         views                = t.views + s.views
       FROM user_profiles AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
-    SQL
+    SQL,
+      source_user_id: @source_user.id, target_user_id: @target_user.id
+    )
   end
 
   def update_user_ids
-    Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    Category.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    update_user_id(:category_users, conditions: ["x.category_id = y.category_id"])
+    update_user_id(
+      :category_users,
+      conditions: ['x.category_id = y.category_id']
+    )
 
     update_user_id(:developers)
 
-    update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
-    update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
+    update_user_id(:draft_sequences, conditions: 'x.draft_key = y.draft_key')
+    update_user_id(:drafts, conditions: 'x.draft_key = y.draft_key')
 
-    EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    EmailLog.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    GroupHistory.where(acting_user_id: @source_user.id).update_all(acting_user_id: @target_user.id)
-    GroupHistory.where(target_user_id: @source_user.id).update_all(target_user_id: @target_user.id)
+    GroupHistory.where(acting_user_id: @source_user.id).update_all(
+      acting_user_id: @target_user.id
+    )
+    GroupHistory.where(target_user_id: @source_user.id).update_all(
+      target_user_id: @target_user.id
+    )
 
-    update_user_id(:group_users, conditions: "x.group_id = y.group_id")
+    update_user_id(:group_users, conditions: 'x.group_id = y.group_id')
 
-    IncomingEmail.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    IncomingEmail.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    IncomingLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    IncomingLink.where(current_user_id: @source_user.id).update_all(current_user_id: @target_user.id)
+    IncomingLink.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
+    IncomingLink.where(current_user_id: @source_user.id).update_all(
+      current_user_id: @target_user.id
+    )
 
-    Invite.with_deleted.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    Invite.with_deleted.where(invited_by_id: @source_user.id).update_all(invited_by_id: @target_user.id)
-    Invite.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
+    Invite.with_deleted.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
+    Invite.with_deleted.where(invited_by_id: @source_user.id).update_all(
+      invited_by_id: @target_user.id
+    )
+    Invite.with_deleted.where(deleted_by_id: @source_user.id).update_all(
+      deleted_by_id: @target_user.id
+    )
 
-    update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
-    update_user_id(:muted_users, user_id_column_name: "muted_user_id", conditions: "x.user_id = y.user_id")
+    update_user_id(
+      :muted_users,
+      conditions: 'x.muted_user_id = y.muted_user_id'
+    )
+    update_user_id(
+      :muted_users,
+      user_id_column_name: 'muted_user_id', conditions: 'x.user_id = y.user_id'
+    )
 
-    update_user_id(:ignored_users, conditions: "x.ignored_user_id = y.ignored_user_id")
-    update_user_id(:ignored_users, user_id_column_name: "ignored_user_id", conditions: "x.user_id = y.user_id")
+    update_user_id(
+      :ignored_users,
+      conditions: 'x.ignored_user_id = y.ignored_user_id'
+    )
+    update_user_id(
+      :ignored_users,
+      user_id_column_name: 'ignored_user_id',
+      conditions: 'x.user_id = y.user_id'
+    )
 
-    Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    Notification.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    update_user_id(:post_actions, conditions: ["x.post_id = y.post_id",
-                                               "x.post_action_type_id = y.post_action_type_id",
-                                               "x.targets_topic = y.targets_topic"])
+    update_user_id(
+      :post_actions,
+      conditions: [
+        'x.post_id = y.post_id',
+        'x.post_action_type_id = y.post_action_type_id',
+        'x.targets_topic = y.targets_topic'
+      ]
+    )
 
-    PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
-    PostAction.where(deferred_by_id: @source_user.id).update_all(deferred_by_id: @target_user.id)
-    PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
-    PostAction.where(disagreed_by_id: @source_user.id).update_all(disagreed_by_id: @target_user.id)
+    PostAction.where(deleted_by_id: @source_user.id).update_all(
+      deleted_by_id: @target_user.id
+    )
+    PostAction.where(deferred_by_id: @source_user.id).update_all(
+      deferred_by_id: @target_user.id
+    )
+    PostAction.where(agreed_by_id: @source_user.id).update_all(
+      agreed_by_id: @target_user.id
+    )
+    PostAction.where(disagreed_by_id: @source_user.id).update_all(
+      disagreed_by_id: @target_user.id
+    )
 
-    PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    PostRevision.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    Post.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
-    Post.with_deleted.where(last_editor_id: @source_user.id).update_all(last_editor_id: @target_user.id)
-    Post.with_deleted.where(locked_by_id: @source_user.id).update_all(locked_by_id: @target_user.id)
-    Post.with_deleted.where(reply_to_user_id: @source_user.id).update_all(reply_to_user_id: @target_user.id)
+    Post.with_deleted.where(deleted_by_id: @source_user.id).update_all(
+      deleted_by_id: @target_user.id
+    )
+    Post.with_deleted.where(last_editor_id: @source_user.id).update_all(
+      last_editor_id: @target_user.id
+    )
+    Post.with_deleted.where(locked_by_id: @source_user.id).update_all(
+      locked_by_id: @target_user.id
+    )
+    Post.with_deleted.where(reply_to_user_id: @source_user.id).update_all(
+      reply_to_user_id: @target_user.id
+    )
 
-    QueuedPost.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    QueuedPost.where(approved_by_id: @source_user.id).update_all(approved_by_id: @target_user.id)
-    QueuedPost.where(rejected_by_id: @source_user.id).update_all(rejected_by_id: @target_user.id)
+    QueuedPost.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
+    QueuedPost.where(approved_by_id: @source_user.id).update_all(
+      approved_by_id: @target_user.id
+    )
+    QueuedPost.where(rejected_by_id: @source_user.id).update_all(
+      rejected_by_id: @target_user.id
+    )
 
-    SearchLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    SearchLog.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    update_user_id(:tag_users, conditions: "x.tag_id = y.tag_id")
+    update_user_id(:tag_users, conditions: 'x.tag_id = y.tag_id')
 
     Theme.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    update_user_id(:topic_allowed_users, conditions: "x.topic_id = y.topic_id")
+    update_user_id(:topic_allowed_users, conditions: 'x.topic_id = y.topic_id')
 
-    TopicEmbed.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
+    TopicEmbed.with_deleted.where(deleted_by_id: @source_user.id).update_all(
+      deleted_by_id: @target_user.id
+    )
 
-    TopicLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    TopicLinkClick.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    TopicLink.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
+    TopicLinkClick.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    TopicTimer.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
+    TopicTimer.with_deleted.where(deleted_by_id: @source_user.id).update_all(
+      deleted_by_id: @target_user.id
+    )
 
-    update_user_id(:topic_timers, conditions: ["x.status_type = y.status_type",
-                                               "x.topic_id = y.topic_id",
-                                               "y.deleted_at IS NULL"])
+    update_user_id(
+      :topic_timers,
+      conditions: [
+        'x.status_type = y.status_type',
+        'x.topic_id = y.topic_id',
+        'y.deleted_at IS NULL'
+      ]
+    )
 
-    update_user_id(:topic_users, conditions: "x.topic_id = y.topic_id")
+    update_user_id(:topic_users, conditions: 'x.topic_id = y.topic_id')
 
-    update_user_id(:topic_views, conditions: "x.topic_id = y.topic_id")
+    update_user_id(:topic_views, conditions: 'x.topic_id = y.topic_id')
 
-    Topic.with_deleted.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
+    Topic.with_deleted.where(deleted_by_id: @source_user.id).update_all(
+      deleted_by_id: @target_user.id
+    )
 
-    UnsubscribeKey.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    UnsubscribeKey.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
     Upload.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    update_user_id(:user_archived_messages, conditions: "x.topic_id = y.topic_id")
+    update_user_id(
+      :user_archived_messages,
+      conditions: 'x.topic_id = y.topic_id'
+    )
 
-    update_user_id(:user_actions,
-                   user_id_column_name: "user_id",
-                   conditions: ["x.action_type = y.action_type",
-                                "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
-                                "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
-                                "(x.acting_user_id IN (:source_user_id, :target_user_id) OR x.acting_user_id IS NOT DISTINCT FROM y.acting_user_id)"])
-    update_user_id(:user_actions,
-                   user_id_column_name: "acting_user_id",
-                   conditions: ["x.action_type = y.action_type",
-                                "x.user_id = y.user_id",
-                                "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
-                                "x.target_post_id IS NOT DISTINCT FROM y.target_post_id"])
+    update_user_id(
+      :user_actions,
+      user_id_column_name: 'user_id',
+      conditions: [
+        'x.action_type = y.action_type',
+        'x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id',
+        'x.target_post_id IS NOT DISTINCT FROM y.target_post_id',
+        '(x.acting_user_id IN (:source_user_id, :target_user_id) OR x.acting_user_id IS NOT DISTINCT FROM y.acting_user_id)'
+      ]
+    )
+    update_user_id(
+      :user_actions,
+      user_id_column_name: 'acting_user_id',
+      conditions: [
+        'x.action_type = y.action_type',
+        'x.user_id = y.user_id',
+        'x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id',
+        'x.target_post_id IS NOT DISTINCT FROM y.target_post_id'
+      ]
+    )
 
-    update_user_id(:user_badges, conditions: ["x.badge_id = y.badge_id",
-                                              "x.seq = y.seq",
-                                              "x.post_id IS NOT DISTINCT FROM y.post_id"])
+    update_user_id(
+      :user_badges,
+      conditions: [
+        'x.badge_id = y.badge_id',
+        'x.seq = y.seq',
+        'x.post_id IS NOT DISTINCT FROM y.post_id'
+      ]
+    )
 
-    UserBadge.where(granted_by_id: @source_user.id).update_all(granted_by_id: @target_user.id)
+    UserBadge.where(granted_by_id: @source_user.id).update_all(
+      granted_by_id: @target_user.id
+    )
 
-    update_user_id(:user_custom_fields, conditions: "x.name = y.name")
+    update_user_id(:user_custom_fields, conditions: 'x.name = y.name')
 
-    update_user_id(:user_emails, conditions: "x.email = y.email OR y.primary = false", updates: '"primary" = false')
+    update_user_id(
+      :user_emails,
+      conditions: 'x.email = y.email OR y.primary = false',
+      updates: '"primary" = false'
+    )
 
-    UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    UserExport.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    UserHistory.where(target_user_id: @source_user.id).update_all(target_user_id: @target_user.id)
-    UserHistory.where(acting_user_id: @source_user.id).update_all(acting_user_id: @target_user.id)
+    UserHistory.where(target_user_id: @source_user.id).update_all(
+      target_user_id: @target_user.id
+    )
+    UserHistory.where(acting_user_id: @source_user.id).update_all(
+      acting_user_id: @target_user.id
+    )
 
-    UserProfileView.where(user_profile_id: @source_user.id).update_all(user_profile_id: @target_user.id)
-    UserProfileView.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    UserProfileView.where(user_profile_id: @source_user.id).update_all(
+      user_profile_id: @target_user.id
+    )
+    UserProfileView.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
 
-    UserWarning.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    UserWarning.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
+    UserWarning.where(user_id: @source_user.id).update_all(
+      user_id: @target_user.id
+    )
+    UserWarning.where(created_by_id: @source_user.id).update_all(
+      created_by_id: @target_user.id
+    )
 
-    User.where(approved_by_id: @source_user.id).update_all(approved_by_id: @target_user.id)
+    User.where(approved_by_id: @source_user.id).update_all(
+      approved_by_id: @target_user.id
+    )
   end
 
   def delete_source_user
     @source_user.reload
     @source_user.update_attributes(
       admin: false,
-      email: "#{@source_user.username}_#{SecureRandom.hex}@no-email.invalid"
+      email: "#{@source_user
+        .username}_#{SecureRandom
+        .hex}@no-email.invalid"
     )
 
     UserDestroyer.new(Discourse.system_user).destroy(@source_user, quiet: true)
@@ -367,8 +525,14 @@ class UserMerger
     Developer.where(user_id: @source_user.id).delete_all
     DraftSequence.where(user_id: @source_user.id).delete_all
     GivenDailyLike.where(user_id: @source_user.id).delete_all
-    MutedUser.where(user_id: @source_user.id).or(MutedUser.where(muted_user_id: @source_user.id)).delete_all
-    IgnoredUser.where(user_id: @source_user.id).or(IgnoredUser.where(ignored_user_id: @source_user.id)).delete_all
+    MutedUser.where(user_id: @source_user.id).or(
+      MutedUser.where(muted_user_id: @source_user.id)
+    )
+      .delete_all
+    IgnoredUser.where(user_id: @source_user.id).or(
+      IgnoredUser.where(ignored_user_id: @source_user.id)
+    )
+      .delete_all
     UserAuthTokenLog.where(user_id: @source_user.id).delete_all
     UserAvatar.where(user_id: @source_user.id).delete_all
     UserAction.where(acting_user_id: @source_user.id).delete_all
@@ -376,12 +540,18 @@ class UserMerger
 
   def log_merge
     logger = StaffActionLogger.new(@acting_user || Discourse.system_user)
-    logger.log_user_merge(@target_user, @source_user.username, @source_primary_email)
+    logger.log_user_merge(
+      @target_user,
+      @source_user.username,
+      @source_primary_email
+    )
   end
 
   def update_user_id(table_name, opts = {})
     builder = update_user_id_sql_builder(table_name, opts)
-    builder.exec(source_user_id: @source_user.id, target_user_id: @target_user.id)
+    builder.exec(
+      source_user_id: @source_user.id, target_user_id: @target_user.id
+    )
   end
 
   def update_user_id_sql_builder(table_name, opts = {})
@@ -389,7 +559,9 @@ class UserMerger
     conditions = Array.wrap(opts[:conditions])
     updates = Array.wrap(opts[:updates])
 
-    builder = DB.build(<<~SQL)
+    builder =
+      DB.build(
+        <<~SQL
       UPDATE #{table_name} AS x
       /*set*/
       WHERE x.#{user_id_column_name} = :source_user_id AND NOT EXISTS(
@@ -398,6 +570,7 @@ class UserMerger
           /*where*/
       )
     SQL
+    )
 
     builder.set("#{user_id_column_name} = :target_user_id")
     updates.each { |u| builder.set(u) }

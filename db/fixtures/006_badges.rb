@@ -2,36 +2,36 @@ require 'badge_queries'
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::GettingStarted
-  g.name = "Getting Started"
+  g.name = 'Getting Started'
   g.default_position = 10
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::Community
-  g.name = "Community"
+  g.name = 'Community'
   g.default_position = 11
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::Posting
-  g.name = "Posting"
+  g.name = 'Posting'
   g.default_position = 12
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::TrustLevel
-  g.name = "Trust Level"
+  g.name = 'Trust Level'
   g.default_position = 13
 end
 
 BadgeGrouping.seed do |g|
   g.id = BadgeGrouping::Other
-  g.name = "Other"
+  g.name = 'Other'
   g.default_position = 14
 end
 
 # BUGFIX
-DB.exec <<-SQL.squish
+DB.exec <<-SQL
   UPDATE badges
      SET badge_grouping_id = -1
    WHERE NOT EXISTS (
@@ -40,13 +40,15 @@ DB.exec <<-SQL.squish
              WHERE g.id = badge_grouping_id
          ) OR (id < 100 AND badge_grouping_id = #{BadgeGrouping::Other})
 SQL
+          .squish
 
 [
-  [Badge::BasicUser, "Basic User", BadgeType::Bronze],
-  [Badge::Member,    "Member",     BadgeType::Bronze],
-  [Badge::Regular,   "Regular",    BadgeType::Silver],
-  [Badge::Leader,    "Leader",     BadgeType::Gold],
-].each do |id, name, type|
+  [Badge::BasicUser, 'Basic User', BadgeType::Bronze],
+  [Badge::Member, 'Member', BadgeType::Bronze],
+  [Badge::Regular, 'Regular', BadgeType::Silver],
+  [Badge::Leader, 'Leader', BadgeType::Gold]
+]
+  .each do |id, name, type|
   Badge.seed do |b|
     b.id = id
     b.name = name
@@ -56,14 +58,14 @@ SQL
     b.trigger = Badge::Trigger::TrustLevelChange
     # allow title for tl3 and above
     b.default_allow_title = id > Badge::Member
-    b.default_icon = "fa-user"
+    b.default_icon = 'fa-user'
     b.system = true
   end
 end
 
 Badge.seed do |b|
   b.id = Badge::Reader
-  b.name = "Reader"
+  b.name = 'Reader'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -76,7 +78,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::ReadGuidelines
-  b.name = "Read Guidelines"
+  b.name = 'Read Guidelines'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -89,7 +91,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstLink
-  b.name = "First Link"
+  b.name = 'First Link'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -102,7 +104,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstQuote
-  b.name = "First Quote"
+  b.name = 'First Quote'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -115,7 +117,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstLike
-  b.name = "First Like"
+  b.name = 'First Like'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -128,7 +130,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstFlag
-  b.name = "First Flag"
+  b.name = 'First Flag'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -141,14 +143,15 @@ Badge.seed do |b|
 end
 
 [
-  [Badge::Promoter, "Promoter", BadgeType::Bronze, 1, 0],
-  [Badge::Campaigner, "Campaigner", BadgeType::Silver, 3, 1],
-  [Badge::Champion, "Champion", BadgeType::Gold, 5, 2],
-].each do |id, name, type, count, trust_level|
+  [Badge::Promoter, 'Promoter', BadgeType::Bronze, 1, 0],
+  [Badge::Campaigner, 'Campaigner', BadgeType::Silver, 3, 1],
+  [Badge::Champion, 'Champion', BadgeType::Gold, 5, 2]
+]
+  .each do |id, name, type, count, trust_level|
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-user-plus"
+    b.default_icon = 'fa-user-plus'
     b.badge_type_id = type
     b.multiple_grant = false
     b.target_posts = false
@@ -164,7 +167,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstShare
-  b.name = "First Share"
+  b.name = 'First Share'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -177,10 +180,11 @@ Badge.seed do |b|
 end
 
 [
- [Badge::NiceShare, "Nice Share", BadgeType::Bronze, 25],
- [Badge::GoodShare, "Good Share", BadgeType::Silver, 300],
- [Badge::GreatShare, "Great Share", BadgeType::Gold, 1000],
-].each do |id, name, level, count|
+  [Badge::NiceShare, 'Nice Share', BadgeType::Bronze, 25],
+  [Badge::GoodShare, 'Good Share', BadgeType::Silver, 300],
+  [Badge::GreatShare, 'Great Share', BadgeType::Gold, 1000]
+]
+  .each do |id, name, level, count|
   Badge.seed do |b|
     b.id = id
     b.name = name
@@ -198,7 +202,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Welcome
-  b.name = "Welcome"
+  b.name = 'Welcome'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -211,7 +215,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Autobiographer
-  b.name = "Autobiographer"
+  b.name = 'Autobiographer'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = BadgeQueries::Autobiographer
@@ -222,7 +226,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Editor
-  b.name = "Editor"
+  b.name = 'Editor'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = BadgeQueries::Editor
@@ -233,7 +237,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::WikiEditor
-  b.name = "Wiki Editor"
+  b.name = 'Wiki Editor'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -244,13 +248,14 @@ Badge.seed do |b|
 end
 
 [
-  [Badge::NicePost,   "Nice Post",   BadgeType::Bronze, false],
-  [Badge::GoodPost,   "Good Post",   BadgeType::Silver, false],
-  [Badge::GreatPost,  "Great Post",  BadgeType::Gold,   false],
-  [Badge::NiceTopic,  "Nice Topic",  BadgeType::Bronze, true],
-  [Badge::GoodTopic,  "Good Topic",  BadgeType::Silver, true],
-  [Badge::GreatTopic, "Great Topic", BadgeType::Gold,   true],
-].each do |id, name, type, topic|
+  [Badge::NicePost, 'Nice Post', BadgeType::Bronze, false],
+  [Badge::GoodPost, 'Good Post', BadgeType::Silver, false],
+  [Badge::GreatPost, 'Great Post', BadgeType::Gold, false],
+  [Badge::NiceTopic, 'Nice Topic', BadgeType::Bronze, true],
+  [Badge::GoodTopic, 'Good Topic', BadgeType::Silver, true],
+  [Badge::GreatTopic, 'Great Topic', BadgeType::Gold, true]
+]
+  .each do |id, name, type, topic|
   Badge.seed do |b|
     b.id = id
     b.name = name
@@ -267,8 +272,8 @@ end
 
 Badge.seed do |b|
   b.id = Badge::Anniversary
-  b.name = "Anniversary"
-  b.default_icon = "fa-clock-o"
+  b.name = 'Anniversary'
+  b.default_icon = 'fa-clock-o'
   b.badge_type_id = BadgeType::Silver
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.query = nil
@@ -279,10 +284,11 @@ Badge.seed do |b|
 end
 
 [
- [Badge::PopularLink, "Popular Link", BadgeType::Bronze, 50],
- [Badge::HotLink,     "Hot Link",     BadgeType::Silver, 300],
- [Badge::FamousLink,  "Famous Link",  BadgeType::Gold,   1000],
-].each do |id, name, level, count|
+  [Badge::PopularLink, 'Popular Link', BadgeType::Bronze, 50],
+  [Badge::HotLink, 'Hot Link', BadgeType::Silver, 300],
+  [Badge::FamousLink, 'Famous Link', BadgeType::Gold, 1000]
+]
+  .each do |id, name, level, count|
   Badge.seed do |b|
     b.id = id
     b.name = name
@@ -299,14 +305,15 @@ end
 end
 
 [
-  [Badge::Appreciated, "Appreciated", BadgeType::Bronze, 1, 20],
-  [Badge::Respected,   "Respected",   BadgeType::Silver, 2, 100],
-  [Badge::Admired,     "Admired",     BadgeType::Gold,   5, 300],
-].each do |id, name, level, like_count, post_count|
+  [Badge::Appreciated, 'Appreciated', BadgeType::Bronze, 1, 20],
+  [Badge::Respected, 'Respected', BadgeType::Silver, 2, 100],
+  [Badge::Admired, 'Admired', BadgeType::Gold, 5, 300]
+]
+  .each do |id, name, level, like_count, post_count|
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = 'fa-heart'
     b.badge_type_id = level
     b.query = BadgeQueries.liked_posts(post_count, like_count)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -317,14 +324,15 @@ end
 end
 
 [
-  [Badge::ThankYou,   "Thank You",  BadgeType::Bronze, 20, 10],
-  [Badge::GivesBack,  "Gives Back", BadgeType::Silver, 100, 100],
-  [Badge::Empathetic, "Empathetic", BadgeType::Gold,   500, 1000]
-].each do |id, name, level, count, ratio|
+  [Badge::ThankYou, 'Thank You', BadgeType::Bronze, 20, 10],
+  [Badge::GivesBack, 'Gives Back', BadgeType::Silver, 100, 100],
+  [Badge::Empathetic, 'Empathetic', BadgeType::Gold, 500, 1000]
+]
+  .each do |id, name, level, count, ratio|
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = 'fa-heart'
     b.badge_type_id = level
     b.query = BadgeQueries.liked_back(count, ratio)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -335,14 +343,15 @@ end
 end
 
 [
-  [Badge::OutOfLove,   "Out of Love",   BadgeType::Bronze, 1],
-  [Badge::HigherLove,  "Higher Love",   BadgeType::Silver, 5],
-  [Badge::CrazyInLove, "Crazy in Love", BadgeType::Gold,   20],
-].each do |id, name, level, count|
+  [Badge::OutOfLove, 'Out of Love', BadgeType::Bronze, 1],
+  [Badge::HigherLove, 'Higher Love', BadgeType::Silver, 5],
+  [Badge::CrazyInLove, 'Crazy in Love', BadgeType::Gold, 20]
+]
+  .each do |id, name, level, count|
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = 'fa-heart'
     b.badge_type_id = level
     b.query = BadgeQueries.like_rate_limit(count)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -354,7 +363,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstMention
-  b.name = "First Mention"
+  b.name = 'First Mention'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -367,7 +376,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstEmoji
-  b.name = "First Emoji"
+  b.name = 'First Emoji'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -380,7 +389,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstOnebox
-  b.name = "First Onebox"
+  b.name = 'First Onebox'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -393,7 +402,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::FirstReplyByEmail
-  b.name = "First Reply By Email"
+  b.name = 'First Reply By Email'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -406,7 +415,7 @@ end
 
 Badge.seed do |b|
   b.id = Badge::NewUserOfTheMonth
-  b.name = "New User of the Month"
+  b.name = 'New User of the Month'
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -418,14 +427,15 @@ Badge.seed do |b|
 end
 
 [
-  [Badge::Enthusiast, "Enthusiast", BadgeType::Bronze, 10],
-  [Badge::Aficionado, "Aficionado", BadgeType::Silver, 100],
-  [Badge::Devotee,    "Devotee",    BadgeType::Gold,   365],
-].each do |id, name, level, days|
+  [Badge::Enthusiast, 'Enthusiast', BadgeType::Bronze, 10],
+  [Badge::Aficionado, 'Aficionado', BadgeType::Silver, 100],
+  [Badge::Devotee, 'Devotee', BadgeType::Gold, 365]
+]
+  .each do |id, name, level, days|
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-eye"
+    b.default_icon = 'fa-eye'
     b.badge_type_id = level
     b.query = BadgeQueries.consecutive_visits(days)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -435,7 +445,7 @@ end
   end
 end
 
-Badge.where("NOT system AND id < 100").each do |badge|
+Badge.where('NOT system AND id < 100').each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
   old_id = badge.id
   badge.update_columns(id: new_id)

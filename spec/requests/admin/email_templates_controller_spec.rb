@@ -8,8 +8,12 @@ RSpec.describe Admin::EmailTemplatesController do
     I18n.overrides_disabled { I18n.t(key) }
   end
 
-  let(:original_subject) { original_text('user_notifications.admin_login.subject_template') }
-  let(:original_body) { original_text('user_notifications.admin_login.text_body_template') }
+  let(:original_subject) do
+    original_text('user_notifications.admin_login.subject_template')
+  end
+  let(:original_body) do
+    original_text('user_notifications.admin_login.text_body_template')
+  end
   let(:headers) { { ACCEPT: 'application/json' } }
 
   after do
@@ -17,7 +21,7 @@ RSpec.describe Admin::EmailTemplatesController do
     I18n.reload!
   end
 
-  context "#index" do
+  context '#index' do
     it "raises an error if you aren't logged in" do
       get '/admin/customize/email_templates.json'
       expect(response.status).to eq(404)
@@ -29,7 +33,7 @@ RSpec.describe Admin::EmailTemplatesController do
       expect(response.status).to eq(404)
     end
 
-    it "should work if you are an admin" do
+    it 'should work if you are an admin' do
       sign_in(admin)
       get '/admin/customize/email_templates.json'
 
@@ -40,31 +44,29 @@ RSpec.describe Admin::EmailTemplatesController do
     end
   end
 
-  context "#update" do
+  context '#update' do
     it "raises an error if you aren't logged in" do
-      put '/admin/customize/email_templates/some_id', params: {
-        email_template: { subject: 'Subject', body: 'Body' }
-      }, headers: headers
+      put '/admin/customize/email_templates/some_id',
+          params: { email_template: { subject: 'Subject', body: 'Body' } },
+          headers: headers
       expect(response.status).to eq(404)
     end
 
     it "raises an error if you aren't an admin" do
       sign_in(user)
-      put '/admin/customize/email_templates/some_id', params: {
-        email_template: { subject: 'Subject', body: 'Body' }
-      }, headers: headers
+      put '/admin/customize/email_templates/some_id',
+          params: { email_template: { subject: 'Subject', body: 'Body' } },
+          headers: headers
       expect(response.status).to eq(404)
     end
 
-    context "when logged in as admin" do
-      before do
-        sign_in(admin)
-      end
+    context 'when logged in as admin' do
+      before { sign_in(admin) }
 
       it "returns 'not found' when an unknown email template id is used" do
-        put '/admin/customize/email_templates/non_existent_template', params: {
-          email_template: { subject: 'Foo', body: 'Bar' }
-        }, headers: headers
+        put '/admin/customize/email_templates/non_existent_template',
+            params: { email_template: { subject: 'Foo', body: 'Bar' } },
+            headers: headers
 
         expect(response).not_to be_successful
 
@@ -72,11 +74,13 @@ RSpec.describe Admin::EmailTemplatesController do
         expect(json['error_type']).to eq('not_found')
       end
 
-      shared_examples "invalid email template" do
-        it "returns the right error messages" do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+      shared_examples 'invalid email template' do
+        it 'returns the right error messages' do
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
 
           json = ::JSON.parse(response.body)
           expect(json).to be_present
@@ -87,28 +91,42 @@ RSpec.describe Admin::EmailTemplatesController do
         end
 
         it "doesn't create translation overrides" do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
 
-          expect(I18n.t('user_notifications.admin_login.subject_template')).to eq(original_subject)
-          expect(I18n.t('user_notifications.admin_login.text_body_template')).to eq(original_body)
+          expect(
+            I18n.t('user_notifications.admin_login.subject_template')
+          ).to eq(original_subject)
+          expect(
+            I18n.t('user_notifications.admin_login.text_body_template')
+          ).to eq(original_body)
         end
 
         it "doesn't create entries in the Staff Log" do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
 
-          log = UserHistory.find_by_subject('user_notifications.admin_login.subject_template')
+          log =
+            UserHistory.find_by_subject(
+              'user_notifications.admin_login.subject_template'
+            )
           expect(log).to be_nil
 
-          log = UserHistory.find_by_subject('user_notifications.admin_login.text_body_template')
+          log =
+            UserHistory.find_by_subject(
+              'user_notifications.admin_login.text_body_template'
+            )
           expect(log).to be_nil
         end
       end
 
-      context "when subject is invalid" do
+      context 'when subject is invalid' do
         let(:email_subject) { '%{email_wrongfix} Foo' }
         let(:email_body) { 'Body with missing interpolation keys' }
 
@@ -121,10 +139,10 @@ RSpec.describe Admin::EmailTemplatesController do
           ]
         end
 
-        include_examples "invalid email template"
+        include_examples 'invalid email template'
       end
 
-      context "when body is invalid" do
+      context 'when body is invalid' do
         let(:email_subject) { 'Subject with missing interpolation key' }
         let(:email_body) { 'Body with %{invalid} interpolation key' }
 
@@ -137,12 +155,14 @@ RSpec.describe Admin::EmailTemplatesController do
           ]
         end
 
-        include_examples "invalid email template"
+        include_examples 'invalid email template'
       end
 
-      context "when subject and body are invalid invalid" do
+      context 'when subject and body are invalid invalid' do
         let(:email_subject) { 'Subject with %{invalid} interpolation key' }
-        let(:email_body) { 'Body with some invalid interpolation keys: %{invalid}' }
+        let(:email_body) do
+          'Body with some invalid interpolation keys: %{invalid}'
+        end
 
         let(:expected_errors) do
           [
@@ -153,21 +173,25 @@ RSpec.describe Admin::EmailTemplatesController do
             "<b>Body</b>: #{I18n.t(
               'activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys',
               keys: 'invalid'
-            )}",
+            )}"
           ]
         end
 
-        include_examples "invalid email template"
+        include_examples 'invalid email template'
       end
 
-      context "when subject and body contain all required interpolation keys" do
+      context 'when subject and body contain all required interpolation keys' do
         let(:email_subject) { '%{email_prefix} Foo' }
-        let(:email_body) { 'The body contains [%{site_name}](%{base_url}) and %{email_token}.' }
+        let(:email_body) do
+          'The body contains [%{site_name}](%{base_url}) and %{email_token}.'
+        end
 
-        it "returns the successfully updated email template" do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+        it 'returns the successfully updated email template' do
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
 
           expect(response.status).to eq(200)
 
@@ -184,28 +208,42 @@ RSpec.describe Admin::EmailTemplatesController do
           expect(template['can_revert']).to eq(true)
         end
 
-        it "creates translation overrides" do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+        it 'creates translation overrides' do
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
 
-          expect(I18n.t('user_notifications.admin_login.subject_template')).to eq(email_subject)
-          expect(I18n.t('user_notifications.admin_login.text_body_template')).to eq(email_body)
+          expect(
+            I18n.t('user_notifications.admin_login.subject_template')
+          ).to eq(email_subject)
+          expect(
+            I18n.t('user_notifications.admin_login.text_body_template')
+          ).to eq(email_body)
         end
 
-        it "creates entries in the Staff Log" do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+        it 'creates entries in the Staff Log' do
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
 
-          log = UserHistory.find_by_subject('user_notifications.admin_login.subject_template')
+          log =
+            UserHistory.find_by_subject(
+              'user_notifications.admin_login.subject_template'
+            )
 
           expect(log).to be_present
           expect(log.action).to eq(UserHistory.actions[:change_site_text])
           expect(log.previous_value).to eq(original_subject)
           expect(log.new_value).to eq(email_subject)
 
-          log = UserHistory.find_by_subject('user_notifications.admin_login.text_body_template')
+          log =
+            UserHistory.find_by_subject(
+              'user_notifications.admin_login.text_body_template'
+            )
 
           expect(log).to be_present
           expect(log.action).to eq(UserHistory.actions[:change_site_text])
@@ -214,26 +252,30 @@ RSpec.describe Admin::EmailTemplatesController do
         end
       end
 
-      context "when subject has plural keys" do
+      context 'when subject has plural keys' do
         it "doesn't update the subject" do
-          old_subject = I18n.t('system_messages.pending_users_reminder.subject_template')
+          old_subject =
+            I18n.t('system_messages.pending_users_reminder.subject_template')
           expect(old_subject).to be_a(Hash)
 
-          put '/admin/customize/email_templates/system_messages.pending_users_reminder', params: {
-            email_template: { subject: '', body: 'Lorem ipsum' }
-          }, headers: headers
+          put '/admin/customize/email_templates/system_messages.pending_users_reminder',
+              params: { email_template: { subject: '', body: 'Lorem ipsum' } },
+              headers: headers
 
           expect(response.status).to eq(200)
 
-          expect(I18n.t('system_messages.pending_users_reminder.subject_template')).to eq(old_subject)
-          expect(I18n.t('system_messages.pending_users_reminder.text_body_template')).to eq('Lorem ipsum')
+          expect(
+            I18n.t('system_messages.pending_users_reminder.subject_template')
+          ).to eq(old_subject)
+          expect(
+            I18n.t('system_messages.pending_users_reminder.text_body_template')
+          ).to eq('Lorem ipsum')
         end
       end
     end
-
   end
 
-  context "#revert" do
+  context '#revert' do
     it "raises an error if you aren't logged in" do
       delete '/admin/customize/email_templates/some_id', headers: headers
       expect(response.status).to eq(404)
@@ -245,41 +287,54 @@ RSpec.describe Admin::EmailTemplatesController do
       expect(response.status).to eq(404)
     end
 
-    context "when logged in as admin" do
-      before do
-        sign_in(admin)
-      end
+    context 'when logged in as admin' do
+      before { sign_in(admin) }
 
       it "returns 'not found' when an unknown email template id is used" do
-        delete '/admin/customize/email_templates/non_existent_template', headers: headers
+        delete '/admin/customize/email_templates/non_existent_template',
+               headers: headers
         expect(response).not_to be_successful
 
         json = ::JSON.parse(response.body)
         expect(json['error_type']).to eq('not_found')
       end
 
-      context "when email template has translation overrides" do
+      context 'when email template has translation overrides' do
         let(:email_subject) { '%{email_prefix} Foo' }
-        let(:email_body) { 'The body contains [%{site_name}](%{base_url}) and %{email_token}.' }
+        let(:email_body) do
+          'The body contains [%{site_name}](%{base_url}) and %{email_token}.'
+        end
 
         before do
-          put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-            email_template: { subject: email_subject, body: email_body }
-          }, headers: headers
+          put '/admin/customize/email_templates/user_notifications.admin_login',
+              params: {
+                email_template: { subject: email_subject, body: email_body }
+              },
+              headers: headers
         end
 
-        it "restores the original subject and body" do
-          expect(I18n.t('user_notifications.admin_login.subject_template')).to eq(email_subject)
-          expect(I18n.t('user_notifications.admin_login.text_body_template')).to eq(email_body)
+        it 'restores the original subject and body' do
+          expect(
+            I18n.t('user_notifications.admin_login.subject_template')
+          ).to eq(email_subject)
+          expect(
+            I18n.t('user_notifications.admin_login.text_body_template')
+          ).to eq(email_body)
 
-          delete '/admin/customize/email_templates/user_notifications.admin_login', headers: headers
+          delete '/admin/customize/email_templates/user_notifications.admin_login',
+                 headers: headers
 
-          expect(I18n.t('user_notifications.admin_login.subject_template')).to eq(original_subject)
-          expect(I18n.t('user_notifications.admin_login.text_body_template')).to eq(original_body)
+          expect(
+            I18n.t('user_notifications.admin_login.subject_template')
+          ).to eq(original_subject)
+          expect(
+            I18n.t('user_notifications.admin_login.text_body_template')
+          ).to eq(original_body)
         end
 
-        it "returns the restored email template" do
-          delete '/admin/customize/email_templates/user_notifications.admin_login', headers: headers
+        it 'returns the restored email template' do
+          delete '/admin/customize/email_templates/user_notifications.admin_login',
+                 headers: headers
           expect(response.status).to eq(200)
 
           json = ::JSON.parse(response.body)
@@ -295,18 +350,25 @@ RSpec.describe Admin::EmailTemplatesController do
           expect(template['can_revert']).to eq(false)
         end
 
-        it "creates entries in the Staff Log" do
+        it 'creates entries in the Staff Log' do
           UserHistory.delete_all
-          delete '/admin/customize/email_templates/user_notifications.admin_login', headers: headers
+          delete '/admin/customize/email_templates/user_notifications.admin_login',
+                 headers: headers
 
-          log = UserHistory.find_by_subject('user_notifications.admin_login.subject_template')
+          log =
+            UserHistory.find_by_subject(
+              'user_notifications.admin_login.subject_template'
+            )
 
           expect(log).to be_present
           expect(log.action).to eq(UserHistory.actions[:change_site_text])
           expect(log.previous_value).to eq(email_subject)
           expect(log.new_value).to eq(original_subject)
 
-          log = UserHistory.find_by_subject('user_notifications.admin_login.text_body_template')
+          log =
+            UserHistory.find_by_subject(
+              'user_notifications.admin_login.text_body_template'
+            )
 
           expect(log).to be_present
           expect(log.action).to eq(UserHistory.actions[:change_site_text])
@@ -315,10 +377,9 @@ RSpec.describe Admin::EmailTemplatesController do
         end
       end
     end
-
   end
 
-  it "uses only existing email templates" do
+  it 'uses only existing email templates' do
     Admin::EmailTemplatesController.email_keys.each do |key|
       expect(I18n.t(key)).to_not include('translation missing')
     end

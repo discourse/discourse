@@ -63,7 +63,12 @@ class UserActionCreator
       model.topic.topic_allowed_users.each do |ta|
         row = row.dup
         row[:user_id] = ta.user_id
-        row[:action_type] = ta.user_id == model.user_id ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::GOT_PRIVATE_MESSAGE
+        row[:action_type] =
+          if ta.user_id == model.user_id
+            UserAction::NEW_PRIVATE_MESSAGE
+          else
+            UserAction::GOT_PRIVATE_MESSAGE
+          end
         rows << row
       end
     end
@@ -85,7 +90,12 @@ class UserActionCreator
     return unless model.user_id
 
     row = {
-      action_type: model.private_message? ? UserAction::NEW_PRIVATE_MESSAGE : UserAction::NEW_TOPIC,
+      action_type:
+        if model.private_message?
+          UserAction::NEW_PRIVATE_MESSAGE
+        else
+          UserAction::NEW_TOPIC
+        end,
       user_id: model.user_id,
       acting_user_id: model.user_id,
       target_topic_id: model.id,
@@ -93,14 +103,22 @@ class UserActionCreator
       created_at: model.created_at
     }
 
-    UserAction.remove_action!(row.merge(
-      action_type: model.private_message? ? UserAction::NEW_TOPIC : UserAction::NEW_PRIVATE_MESSAGE
-    ))
+    UserAction.remove_action!(
+      row.merge(
+        action_type:
+          if model.private_message?
+            UserAction::NEW_TOPIC
+          else
+            UserAction::NEW_PRIVATE_MESSAGE
+          end
+      )
+    )
 
     rows = [row]
 
     if model.private_message?
-      model.topic_allowed_users.reject { |a| a.user_id == model.user_id }.each do |ta|
+      model.topic_allowed_users.reject { |a| a.user_id == model.user_id }
+        .each do |ta|
         row = row.dup
         row[:user_id] = ta.user_id
         row[:action_type] = UserAction::GOT_PRIVATE_MESSAGE

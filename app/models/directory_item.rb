@@ -5,22 +5,21 @@ class DirectoryItem < ActiveRecord::Base
   has_one :user_stat, foreign_key: :user_id, primary_key: :user_id
 
   def self.headings
-    @headings ||= [:likes_received,
-                   :likes_given,
-                   :topics_entered,
-                   :topic_count,
-                   :post_count,
-                   :posts_read,
-                   :days_visited]
+    @headings ||=
+      %i[
+        likes_received
+        likes_given
+        topics_entered
+        topic_count
+        post_count
+        posts_read
+        days_visited
+      ]
   end
 
   def self.period_types
-    @types ||= Enum.new(all: 1,
-                        yearly: 2,
-                        monthly: 3,
-                        weekly: 4,
-                        daily: 5,
-                        quarterly: 6)
+    @types ||=
+      Enum.new(all: 1, yearly: 2, monthly: 3, weekly: 4, daily: 5, quarterly: 6)
   end
 
   def self.refresh!
@@ -28,31 +27,37 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.refresh_period!(period_type, force: false)
-
     # Don't calculate it if the user directory is disabled
     return unless SiteSetting.enable_user_directory? || force
 
     since =
       case period_type
-      when :daily then 1.day.ago
-      when :weekly then 1.week.ago
-      when :monthly then 1.month.ago
-      when :quarterly then 3.months.ago
-      when :yearly then 1.year.ago
-      else 1000.years.ago
+      when :daily
+        1.day.ago
+      when :weekly
+        1.week.ago
+      when :monthly
+        1.month.ago
+      when :quarterly
+        3.months.ago
+      when :yearly
+        1.year.ago
+      else
+        1000.years.ago
       end
 
     ActiveRecord::Base.transaction do
       # Delete records that belonged to users who have been deleted
-      DB.exec "DELETE FROM directory_items
+      DB.exec 'DELETE FROM directory_items
                 USING directory_items di
                 LEFT JOIN users u ON (u.id = user_id AND u.active AND u.silenced_till IS NULL AND u.id > 0)
                 WHERE di.id = directory_items.id AND
                       u.id IS NULL AND
-                      di.period_type = :period_type", period_type: period_types[period_type]
+                      di.period_type = :period_type',
+              period_type: period_types[period_type]
 
       # Create new records for users who don't have one yet
-      DB.exec "INSERT INTO directory_items(period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
+      DB.exec 'INSERT INTO directory_items(period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
                 SELECT
                     :period_type,
                     u.id,
@@ -66,7 +71,8 @@ class DirectoryItem < ActiveRecord::Base
                 FROM users u
                 LEFT JOIN directory_items di ON di.user_id = u.id AND di.period_type = :period_type
                 WHERE di.id IS NULL AND u.id > 0 AND u.silenced_till IS NULL and u.active
-      ", period_type: period_types[period_type]
+      ',
+              period_type: period_types[period_type]
 
       # Calculate new values and update records
       #
@@ -114,13 +120,13 @@ class DirectoryItem < ActiveRecord::Base
         di.post_count <> x.post_count )
 
       ",
-                  period_type: period_types[period_type],
-                  since: since,
-                  like_type: UserAction::LIKE,
-                  was_liked_type: UserAction::WAS_LIKED,
-                  new_topic_type: UserAction::NEW_TOPIC,
-                  reply_type: UserAction::REPLY,
-                  regular_post_type: Post.types[:regular]
+              period_type: period_types[period_type],
+              since: since,
+              like_type: UserAction::LIKE,
+              was_liked_type: UserAction::WAS_LIKED,
+              new_topic_type: UserAction::NEW_TOPIC,
+              reply_type: UserAction::REPLY,
+              regular_post_type: Post.types[:regular]
 
       if period_type == :all
         DB.exec <<~SQL

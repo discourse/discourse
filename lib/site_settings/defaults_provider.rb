@@ -53,14 +53,16 @@ class SiteSettings::DefaultsProvider
       @defaults[DEFAULT_LOCALE.to_sym][name] = value
       value, type = @site_setting.type_supervisor.to_db_value(name, value)
       @defaults[SiteSetting.default_locale.to_sym] ||= {}
-      @defaults[SiteSetting.default_locale.to_sym][name] = @site_setting.type_supervisor.to_rb_value(name, value, type)
+      @defaults[SiteSetting.default_locale.to_sym][name] =
+        @site_setting.type_supervisor.to_rb_value(name, value, type)
     else
       raise ArgumentError.new("No setting named '#{name}' exists")
     end
   end
 
   def has_setting?(name)
-    has_key?(name.to_sym) || has_key?("#{name.to_s}?".to_sym) || name.to_sym == :default_locale
+    has_key?(name.to_sym) || has_key?("#{name.to_s}?".to_sym) ||
+      name.to_sym == :default_locale
   end
 
   private
@@ -72,5 +74,4 @@ class SiteSettings::DefaultsProvider
   def current_db
     RailsMultisite::ConnectionManagement.current_db
   end
-
 end

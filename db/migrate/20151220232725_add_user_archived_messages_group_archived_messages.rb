@@ -1,4 +1,6 @@
-class AddUserArchivedMessagesGroupArchivedMessages < ActiveRecord::Migration[4.2]
+class AddUserArchivedMessagesGroupArchivedMessages < ActiveRecord::Migration[
+  4.2
+]
   def change
     create_table :user_archived_messages do |t|
       t.integer :user_id, null: false
@@ -6,7 +8,7 @@ class AddUserArchivedMessagesGroupArchivedMessages < ActiveRecord::Migration[4.2
       t.timestamps null: false
     end
 
-    add_index :user_archived_messages, [:user_id, :topic_id], unique: true
+    add_index :user_archived_messages, %i[user_id topic_id], unique: true
 
     create_table :group_archived_messages do |t|
       t.integer :group_id, null: false
@@ -14,6 +16,6 @@ class AddUserArchivedMessagesGroupArchivedMessages < ActiveRecord::Migration[4.2
       t.timestamps null: false
     end
 
-    add_index :group_archived_messages, [:group_id, :topic_id], unique: true
+    add_index :group_archived_messages, %i[group_id topic_id], unique: true
   end
 end

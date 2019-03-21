@@ -1,7 +1,12 @@
 # we should set the locale before the migration
 task 'set_locale' do
   begin
-    I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+    I18n.locale =
+      begin
+        (SiteSetting.default_locale || :en)
+      rescue StandardError
+        :en
+      end
   rescue I18n::InvalidLocale
     I18n.locale = :en
   end
@@ -9,46 +14,53 @@ end
 
 module MultisiteTestHelpers
   def self.load_multisite?
-    Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    Rails.env.test? && !ENV['RAILS_DB'] && !ENV['SKIP_MULTISITE']
   end
 end
 
-task 'db:environment:set' => [:load_config]  do |_, args|
+task 'db:environment:set' => %i[load_config] do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
+    system(
+      'RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set'
+    )
   end
 end
 
-task 'db:create' => [:load_config] do |_, args|
+task 'db:create' => %i[load_config] do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:create")
+    system('RAILS_DB=discourse_test_multisite rake db:create')
   end
 end
 
-task 'db:drop' => [:load_config] do |_, args|
+task 'db:drop' => %i[load_config] do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:drop")
+    system('RAILS_DB=discourse_test_multisite rake db:drop')
   end
 end
 
 # we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
+task 'db:migrate' => %w[environment set_locale] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
   if MultisiteTestHelpers.load_multisite?
-    system("rake db:schema:dump")
-    system("RAILS_DB=discourse_test_multisite rake db:schema:load")
-    system("RAILS_DB=discourse_test_multisite rake db:migrate")
+    system('rake db:schema:dump')
+    system('RAILS_DB=discourse_test_multisite rake db:schema:load')
+    system('RAILS_DB=discourse_test_multisite rake db:migrate')
   end
 end
 
 task 'test:prepare' => 'environment' do
-  I18n.locale = SiteSetting.default_locale rescue :en
+  I18n.locale =
+    begin
+      SiteSetting.default_locale
+    rescue StandardError
+      :en
+    end
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 end
 
 task 'db:api_test_seed' => 'environment' do
-  puts "Loading test data for discourse_api"
+  puts 'Loading test data for discourse_api'
   load Rails.root + 'db/api_test_seeds.rb'
 end
 
@@ -71,7 +83,7 @@ def print_table(array)
     end
   end
 
-  puts "-" * (width.sum + width.length)
+  puts '-' * (width.sum + width.length)
 
   array.each do |row|
     row.each_with_index do |(_, val), i|
@@ -87,7 +99,6 @@ end
 
 desc 'Statistics about database'
 task 'db:stats' => 'environment' do
-
   sql = <<~SQL
     select table_name,
     (
@@ -107,17 +118,21 @@ end
 
 desc 'Rebuild indexes'
 task 'db:rebuild_indexes' => 'environment' do
-  if Import::backup_tables_count > 0
-    raise "Backup from a previous import exists. Drop them before running this job with rake import:remove_backup, or move them to another schema."
+  if Import.backup_tables_count > 0
+    raise 'Backup from a previous import exists. Drop them before running this job with rake import:remove_backup, or move them to another schema.'
   end
 
   Discourse.enable_readonly_mode
 
   backup_schema = Jobs::Importer::BACKUP_SCHEMA
-  table_names = DB.query_single("select table_name from information_schema.tables where table_schema = 'public'")
+  table_names =
+    DB.query_single(
+      "select table_name from information_schema.tables where table_schema = 'public'"
+    )
+
+  # Move all tables to the backup schema:
 
   begin
-    # Move all tables to the backup schema:
     DB.exec("DROP SCHEMA IF EXISTS #{backup_schema} CASCADE")
     DB.exec("CREATE SCHEMA #{backup_schema}")
     table_names.each do |table_name|
@@ -125,18 +140,19 @@ task 'db:rebuild_indexes' => 'environment' do
     end
 
     # Create a new empty db
-    Rake::Task["db:migrate"].invoke
+    Rake::Task['db:migrate'].invoke
 
     # Fetch index definitions from the new db
     index_definitions = {}
     table_names.each do |table_name|
-      index_definitions[table_name] = DB.query_single("SELECT indexdef FROM pg_indexes WHERE tablename = '#{table_name}' and schemaname = 'public';")
+      index_definitions[table_name] =
+        DB.query_single(
+          "SELECT indexdef FROM pg_indexes WHERE tablename = '#{table_name}' and schemaname = 'public';"
+        )
     end
 
     # Drop the new tables
-    table_names.each do |table_name|
-      DB.exec("DROP TABLE public.#{table_name}")
-    end
+    table_names.each { |table_name| DB.exec("DROP TABLE public.#{table_name}") }
 
     # Move the old tables back to the public schema
     table_names.each do |table_name|
@@ -144,7 +160,11 @@ task 'db:rebuild_indexes' => 'environment' do
     end
 
     # Drop their indexes
-    index_names = DB.query_single("SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')")
+    index_names =
+      DB.query_single(
+        "SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names
+          .join("', '")}')"
+      )
     index_names.each do |index_name|
       begin
         puts index_name
@@ -166,7 +186,7 @@ task 'db:rebuild_indexes' => 'environment' do
         end
       end
     end
-  rescue
+  rescue StandardError
     # Can we roll this back?
     raise
   ensure

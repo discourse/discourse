@@ -7,8 +7,8 @@ class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
     object.post
   end
 
-  alias :include_topic_id? :include_post_number?
-  alias :include_topic_title? :include_post_number?
+  alias include_topic_id? include_post_number?
+  alias include_topic_title? include_post_number?
 
   def post_number
     object.post.post_number if object.post
@@ -21,5 +21,4 @@ class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
   def topic_title
     object.post.topic.title if object.post && object.post.topic
   end
-
 end

@@ -1,8 +1,7 @@
 module EmailHelper
-
   def mailing_list_topic(topic, post_count)
     render(
-      partial: partial_for("mailing_list_post"),
+      partial: partial_for('mailing_list_post'),
       locals: { topic: topic, post_count: post_count }
     )
   end
@@ -13,12 +12,13 @@ module EmailHelper
   end
 
   def private_topic_title(topic)
-    I18n.t("system_messages.private_topic_title", id: topic.id)
+    I18n.t('system_messages.private_topic_title', id: topic.id)
   end
 
   def email_topic_link(topic)
     url, title = extract_details(topic)
-    raw "<a href='#{Discourse.base_url}#{url}' style='color: ##{@anchor_color}'>#{title}</a>"
+    raw "<a href='#{Discourse
+          .base_url}#{url}' style='color: ##{@anchor_color}'>#{title}</a>"
   end
 
   protected
@@ -34,5 +34,4 @@ module EmailHelper
   def partial_for(name)
     SiteSetting.private_email? ? "email/secure_#{name}" : "email/#{name}"
   end
-
 end

@@ -92,6 +92,13 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.7.2.tgz#1498c3eb78ee7c78c5488418707de90aaf58d5d7"
   integrity sha512-Ha4HshKdCVKgu4TVCtG8XyPPYdzTzNW4/fvPnn+LT7AosRABryhlRv4cc4+o84dgpvVJN9reN7jo/c+nYujFug==
 
+"@prettier/plugin-ruby@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@prettier/plugin-ruby/-/plugin-ruby-0.9.0.tgz#4ec90a3ea0ad23454fe41784a7287a438d13b88a"
+  integrity sha512-PIhcxPA4k7x05Tg5kMQ9iLizLzbF+/avW1AFHOsjAND+f2RAipM9S7ZmWDzRoN9C0D0vNpogCwrv8MyDa8/DRw==
+  dependencies:
+    prettier "^1.16.4"
+
 "@sinonjs/commons@^1", "@sinonjs/commons@^1.0.2", "@sinonjs/commons@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.3.0.tgz#50a2754016b6f30a994ceda6d9a0a8c36adda849"

@@ -1,5 +1,4 @@
 module Jobs
-
   class CreateAvatarThumbnails < Jobs::Base
     sidekiq_options queue: 'low'
 
@@ -21,7 +20,5 @@ module Jobs
         )
       end
     end
-
   end
-
 end

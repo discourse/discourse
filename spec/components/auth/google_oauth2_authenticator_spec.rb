@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Auth::GoogleOAuth2Authenticator do
-
   it 'does not look up user unless email is verified' do
     # note, emails that come back from google via omniauth are always valid
     # this protects against future regressions
@@ -10,18 +9,11 @@ describe Auth::GoogleOAuth2Authenticator do
     user = Fabricate(:user)
 
     hash = {
-      provider: "google_oauth2",
-      uid: "123456789",
-      info: {
-          name: "John Doe",
-          email: user.email
-      },
+      provider: 'google_oauth2',
+      uid: '123456789',
+      info: { name: 'John Doe', email: user.email },
       extra: {
-        raw_info: {
-          email: user.email,
-          email_verified: false,
-          name: "John Doe"
-        }
+        raw_info: { email: user.email, email_verified: false, name: 'John Doe' }
       }
     }
 
@@ -36,17 +28,12 @@ describe Auth::GoogleOAuth2Authenticator do
       user = Fabricate(:user)
 
       hash = {
-        provider: "google_oauth2",
-        uid: "123456789",
-        info: {
-            name: "John Doe",
-            email: user.email
-        },
+        provider: 'google_oauth2',
+        uid: '123456789',
+        info: { name: 'John Doe', email: user.email },
         extra: {
           raw_info: {
-            email: user.email,
-            email_verified: true,
-            name: "John Doe"
+            email: user.email, email_verified: true, name: 'John Doe'
           }
         }
       }
@@ -61,20 +48,17 @@ describe Auth::GoogleOAuth2Authenticator do
       user1 = Fabricate(:user)
       user2 = Fabricate(:user)
 
-      UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user1.id, provider_uid: 100)
+      UserAssociatedAccount.create!(
+        provider_name: 'google_oauth2', user_id: user1.id, provider_uid: 100
+      )
 
       hash = {
-        provider: "google_oauth2",
-        uid: "100",
-        info: {
-            name: "John Doe",
-            email: user1.email
-        },
+        provider: 'google_oauth2',
+        uid: '100',
+        info: { name: 'John Doe', email: user1.email },
         extra: {
           raw_info: {
-            email: user1.email,
-            email_verified: true,
-            name: "John Doe"
+            email: user1.email, email_verified: true, name: 'John Doe'
           }
         }
       }
@@ -88,19 +72,19 @@ describe Auth::GoogleOAuth2Authenticator do
 
     it 'can create a proper result for non existing users' do
       hash = {
-        provider: "google_oauth2",
-        uid: "123456789",
+        provider: 'google_oauth2',
+        uid: '123456789',
         info: {
-            first_name: "Jane",
-            last_name: "Doe",
-            name: "Jane Doe",
-            email: "jane.doe@the.google.com"
+          first_name: 'Jane',
+          last_name: 'Doe',
+          name: 'Jane Doe',
+          email: 'jane.doe@the.google.com'
         },
         extra: {
           raw_info: {
-            email: "jane.doe@the.google.com",
+            email: 'jane.doe@the.google.com',
             email_verified: true,
-            name: "Jane Doe"
+            name: 'Jane Doe'
           }
         }
       }
@@ -109,7 +93,7 @@ describe Auth::GoogleOAuth2Authenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.user).to eq(nil)
-      expect(result.name).to eq("Jane Doe")
+      expect(result.name).to eq('Jane Doe')
     end
   end
 
@@ -121,12 +105,13 @@ describe Auth::GoogleOAuth2Authenticator do
       expect { authenticator.revoke(user) }.to raise_error(Discourse::NotFound)
     end
 
-      it 'revokes correctly' do
-        UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: user.id, provider_uid: 12345)
-        expect(authenticator.can_revoke?).to eq(true)
-        expect(authenticator.revoke(user)).to eq(true)
-        expect(authenticator.description_for_user(user)).to eq("")
-      end
-
+    it 'revokes correctly' do
+      UserAssociatedAccount.create!(
+        provider_name: 'google_oauth2', user_id: user.id, provider_uid: 12345
+      )
+      expect(authenticator.can_revoke?).to eq(true)
+      expect(authenticator.revoke(user)).to eq(true)
+      expect(authenticator.description_for_user(user)).to eq('')
+    end
   end
 end

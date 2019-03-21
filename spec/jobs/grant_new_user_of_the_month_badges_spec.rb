@@ -2,12 +2,15 @@ require 'rails_helper'
 require_dependency 'jobs/scheduled/grant_new_user_of_the_month_badges'
 
 describe Jobs::GrantNewUserOfTheMonthBadges do
-
   let(:granter) { described_class.new }
 
-  it "runs correctly" do
+  it 'runs correctly' do
     u0 = Fabricate(:user, created_at: 2.weeks.ago)
-    BadgeGranter.grant(Badge.find(Badge::NewUserOfTheMonth), u0, created_at: 1.month.ago)
+    BadgeGranter.grant(
+      Badge.find(Badge::NewUserOfTheMonth),
+      u0,
+      created_at: 1.month.ago
+    )
 
     user = Fabricate(:user, created_at: 1.week.ago)
     p = Fabricate(:post, user: user)
@@ -24,7 +27,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_present
   end
 
-  it "does nothing if badges are disabled" do
+  it 'does nothing if badges are disabled' do
     SiteSetting.enable_badges = false
 
     user = Fabricate(:user, created_at: 1.week.ago)
@@ -43,7 +46,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
     expect(badge).to be_blank
   end
 
-  it "does nothing if the badge is disabled" do
+  it 'does nothing if the badge is disabled' do
     Badge.find(Badge::NewUserOfTheMonth).update_column(:enabled, false)
 
     user = Fabricate(:user, created_at: 1.week.ago)
@@ -82,7 +85,6 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
   end
 
   describe '.scores' do
-
     it "doesn't award it to accounts over a month old" do
       user = Fabricate(:user, created_at: 2.months.ago)
       Fabricate(:post, user: user)
@@ -119,7 +121,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       expect(granter.scores.keys).not_to include(user.id)
     end
 
-    it "requires at least two likes to be considered" do
+    it 'requires at least two likes to be considered' do
       user = Fabricate(:user, created_at: 1.week.ago)
       Fabricate(:post, user: user)
       p = Fabricate(:post, user: user)
@@ -129,7 +131,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       expect(granter.scores.keys).not_to include(user.id)
     end
 
-    it "returns scores for accounts created within the last month" do
+    it 'returns scores for accounts created within the last month' do
       user = Fabricate(:user, created_at: 1.week.ago)
       Fabricate(:post, user: user)
       p = Fabricate(:post, user: user)
@@ -141,7 +143,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       expect(granter.scores.keys).to include(user.id)
     end
 
-    it "likes from older accounts are scored higher" do
+    it 'likes from older accounts are scored higher' do
       user = Fabricate(:user, created_at: 1.week.ago)
       p = Fabricate(:post, user: user)
       Fabricate(:post, user: user)
@@ -169,7 +171,7 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
       expect(granter.scores[user.id]).to eq(1.35625)
     end
 
-    it "is limited to two accounts" do
+    it 'is limited to two accounts' do
       u1 = Fabricate(:user, created_at: 1.week.ago)
       u2 = Fabricate(:user, created_at: 2.weeks.ago)
       u3 = Fabricate(:user, created_at: 3.weeks.ago)
@@ -194,7 +196,5 @@ describe Jobs::GrantNewUserOfTheMonthBadges do
 
       expect(granter.scores.keys.size).to eq(2)
     end
-
   end
-
 end

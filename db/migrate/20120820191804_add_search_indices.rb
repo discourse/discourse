@@ -5,7 +5,7 @@ class AddSearchIndices < ActiveRecord::Migration[4.2]
   end
 
   def down
-    execute "DROP INDEX idx_search_thread"
-    execute "DROP INDEX idx_search_user"
+    execute 'DROP INDEX idx_search_thread'
+    execute 'DROP INDEX idx_search_user'
   end
 end

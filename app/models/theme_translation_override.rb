@@ -4,7 +4,8 @@ class ThemeTranslationOverride < ActiveRecord::Base
   after_commit do
     theme.clear_cached_settings!
     theme.remove_from_cache!
-    theme.theme_fields.where(target_id: Theme.targets[:translations]).update_all(value_baked: nil)
+    theme.theme_fields.where(target_id: Theme.targets[:translations])
+      .update_all(value_baked: nil)
   end
 end
 

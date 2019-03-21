@@ -3,10 +3,11 @@
 # this class contains the logic to delete it.
 #
 class PostDestroyer
-
   def self.destroy_old_hidden_posts
-    Post.where(deleted_at: nil, hidden: true)
-      .where("hidden_at < ?", 30.days.ago)
+    Post.where(deleted_at: nil, hidden: true).where(
+      'hidden_at < ?',
+      30.days.ago
+    )
       .find_each do |post|
       PostDestroyer.new(Discourse.system_user, post).destroy
     end
@@ -16,23 +17,29 @@ class PostDestroyer
     context = I18n.t('remove_posts_deleted_by_author')
 
     # exclude deleted topics and posts that are actively flagged
-    Post.where(deleted_at: nil, user_deleted: true)
-      .where("NOT EXISTS (
+    Post.where(deleted_at: nil, user_deleted: true).where(
+      'NOT EXISTS (
             SELECT 1 FROM topics t
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
-        )")
-      .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
-      .where("NOT EXISTS (
+        )'
+    )
+      .where(
+      'updated_at < ? AND post_number > 1',
+      SiteSetting.delete_removed_posts_after.hours.ago
+    )
+      .where(
+      'NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
                   WHERE pa.post_id = posts.id
                     AND pa.deleted_at IS NULL
                     AND pa.deferred_at IS NULL
                     AND pa.post_action_type_id IN (?)
-              )", PostActionType.notify_flag_type_ids)
+              )',
+      PostActionType.notify_flag_type_ids
+    )
       .find_each do |post|
-
       PostDestroyer.new(Discourse.system_user, post, context: context).destroy
     end
   end
@@ -45,15 +52,26 @@ class PostDestroyer
   end
 
   def destroy
-    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
+    if WebHook.active_web_hooks(:post).exists?
+      payload = WebHook.generate_payload(:post, @post)
+    end
     topic = @post.topic
 
     if @post.is_first_post? && topic
       topic_view = TopicView.new(topic.id, Discourse.system_user)
-      topic_payload = WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer) if WebHook.active_web_hooks(:topic).exists?
+      if WebHook.active_web_hooks(:topic).exists?
+        topic_payload =
+          WebHook.generate_payload(
+            :topic,
+            topic_view,
+            WebHookTopicViewSerializer
+          )
+      end
     end
 
-    delete_removed_posts_after = @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
+    delete_removed_posts_after =
+      @opts[:delete_removed_posts_after] ||
+        SiteSetting.delete_removed_posts_after
 
     if @user.staff? || delete_removed_posts_after < 1
       perform_delete
@@ -82,7 +100,13 @@ class PostDestroyer
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
-      StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
+      if @user.id != @post.user_id
+        StaffActionLogger.new(@user).log_topic_delete_recover(
+          topic,
+          'recover_topic',
+          @opts.slice(:context)
+        )
+      end
     end
   end
 
@@ -101,17 +125,25 @@ class PostDestroyer
 
       if @post.is_first_post?
         # Update stats of all people who replied
-        counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
+        counts =
+          Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id)
+            .where('post_number > 1')
+            .group(:user_id)
+            .count
         counts.each do |user_id, count|
           if user_stat = UserStat.where(user_id: user_id).first
-            user_stat.update_attributes(post_count: user_stat.post_count + count)
+            user_stat.update_attributes(
+              post_count: user_stat.post_count + count
+            )
           end
         end
       end
     end
 
     @post.publish_change_to_clients! :recovered
-    TopicTrackingState.publish_recover(@post.topic) if @post.topic && @post.is_first_post?
+    if @post.topic && @post.is_first_post?
+      TopicTrackingState.publish_recover(@post.topic)
+    end
   end
 
   # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
@@ -130,35 +162,48 @@ class PostDestroyer
       remove_associated_replies
       remove_associated_notifications
       if @post.topic && @post.is_first_post?
-        StaffActionLogger.new(@user).log_topic_delete_recover(@post.topic, "delete_topic", @opts.slice(:context)) if @user.id != @post.user_id
+        if @user.id != @post.user_id
+          StaffActionLogger.new(@user).log_topic_delete_recover(
+            @post.topic,
+            'delete_topic',
+            @opts.slice(:context)
+          )
+        end
         @post.topic.trash!(@user)
       elsif @user.id != @post.user_id
-        StaffActionLogger.new(@user).log_post_deletion(@post, @opts.slice(:context))
+        StaffActionLogger.new(@user).log_post_deletion(
+          @post,
+          @opts.slice(:context)
+        )
       end
       update_associated_category_latest_topic
       update_user_counts
       TopicUser.update_post_action_cache(post_id: @post.id)
-      DB.after_commit do
-        if @opts[:defer_flags]
-          defer_flags
-        else
-          agree_with_flags
-        end
-      end
+      DB.after_commit { @opts[:defer_flags] ? defer_flags : agree_with_flags }
     end
 
     feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
-    TopicTrackingState.publish_delete(@post.topic) if @post.topic && @post.post_number == 1
+    if @post.topic && @post.post_number == 1
+      TopicTrackingState.publish_delete(@post.topic)
+    end
   end
 
   # When a user 'deletes' their own post. We just change the text.
-  def mark_for_deletion(delete_removed_posts_after = SiteSetting.delete_removed_posts_after)
+  def mark_for_deletion(
+    delete_removed_posts_after = SiteSetting.delete_removed_posts_after
+  )
     I18n.with_locale(SiteSetting.default_locale) do
-
       # don't call revise from within transaction, high risk of deadlock
-      @post.revise(@user,
-        { raw: I18n.t('js.post.deleted_by_author', count: delete_removed_posts_after) },
+      @post.revise(
+        @user,
+        {
+          raw:
+            I18n.t(
+              'js.post.deleted_by_author',
+              count: delete_removed_posts_after
+            )
+        },
         force_new_version: true
       )
 
@@ -179,13 +224,24 @@ class PostDestroyer
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
     last_revision = @post.revisions.last
-    @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true) if last_revision.present?
+    if last_revision.present?
+      @post.revise(
+        @user,
+        { raw: last_revision.modifications['raw'][0] },
+        force_new_version: true
+      )
+    end
   end
 
   private
 
   def make_previous_post_the_last_one
-    last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
+    last_post =
+      Post.where('topic_id = ? and id <> ?', @post.topic_id, @post.id).order(
+        'created_at desc'
+      )
+        .limit(1)
+        .first
     if last_post.present? && @post.topic.present?
       topic = @post.topic
       topic.last_posted_at = last_post.created_at
@@ -196,8 +252,17 @@ class PostDestroyer
   end
 
   def clear_user_posted_flag
-    unless Post.exists?(["topic_id = ? and user_id = ? and id <> ?", @post.topic_id, @post.user_id, @post.id])
-      TopicUser.where(topic_id: @post.topic_id, user_id: @post.user_id).update_all 'posted = false'
+    unless Post.exists?(
+           [
+             'topic_id = ? and user_id = ? and id <> ?',
+             @post.topic_id,
+             @post.user_id,
+             @post.id
+           ]
+         )
+      TopicUser.where(
+        topic_id: @post.topic_id, user_id: @post.user_id
+      ).update_all 'posted = false'
     end
   end
 
@@ -209,7 +274,7 @@ class PostDestroyer
     if public_post_actions = PostAction.publics.where(post_id: @post.id)
       public_post_actions.each { |pa| pa.trash!(@user) }
 
-      @post.custom_fields["deleted_public_actions"] = public_post_actions.ids
+      @post.custom_fields['deleted_public_actions'] = public_post_actions.ids
       @post.save_custom_fields
 
       f = PostActionType.public_types.map { |k, _| ["#{k}_count", 0] }
@@ -226,11 +291,12 @@ class PostDestroyer
         message_options: {
           flagged_post_raw_content: @post.raw,
           url: @post.url,
-          flag_reason: I18n.t(
-            "flag_reasons.#{@post.active_flags.last.post_action_type.name_key}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path
-          )
+          flag_reason:
+            I18n.t(
+              "flag_reasons.#{@post.active_flags.last.post_action_type
+                .name_key}",
+              locale: SiteSetting.default_locale, base_path: Discourse.base_path
+            )
         }
       )
     end
@@ -265,19 +331,26 @@ class PostDestroyer
 
     if post_ids.present?
       PostReply.where(reply_id: @post.id).delete_all
-      Post.where(id: post_ids).each { |p| p.update_column :reply_count, p.replies.count }
+      Post.where(id: post_ids).each do |p|
+        p.update_column :reply_count, p.replies.count
+      end
     end
   end
 
   def remove_associated_notifications
-    Notification
-      .where(topic_id: @post.topic_id, post_number: @post.post_number)
+    Notification.where(topic_id: @post.topic_id, post_number: @post.post_number)
       .delete_all
   end
 
   def update_associated_category_latest_topic
     return unless @post.topic && @post.topic.category
-    return unless @post.id == @post.topic.category.latest_post_id || (@post.is_first_post? && @post.topic_id == @post.topic.category.latest_topic_id)
+    unless @post.id == @post.topic.category.latest_post_id ||
+           (
+             @post.is_first_post? &&
+               @post.topic_id == @post.topic.category.latest_topic_id
+           )
+      return
+    end
 
     @post.topic.category.update_latest
   end
@@ -290,11 +363,13 @@ class PostDestroyer
     author.create_user_stat if author.user_stat.nil?
 
     if @post.created_at == author.user_stat.first_post_created_at
-      author.user_stat.first_post_created_at = author.posts.order('created_at ASC').first.try(:created_at)
+      author.user_stat.first_post_created_at =
+        author.posts.order('created_at ASC').first.try(:created_at)
     end
 
     if @post.topic && !@post.topic.private_message?
-      if @post.post_type == Post.types[:regular] && !@post.is_first_post? && !@topic.nil?
+      if @post.post_type == Post.types[:regular] && !@post.is_first_post? &&
+         !@topic.nil?
         author.user_stat.post_count -= 1
       end
       author.user_stat.topic_count -= 1 if @post.is_first_post?
@@ -308,13 +383,18 @@ class PostDestroyer
     author.user_stat.save!
 
     if @post.created_at == author.last_posted_at
-      author.last_posted_at = author.posts.order('created_at DESC').first.try(:created_at)
+      author.last_posted_at =
+        author.posts.order('created_at DESC').first.try(:created_at)
       author.save!
     end
 
     if @post.is_first_post? && @post.topic && !@post.topic.private_message?
       # Update stats of all people who replied
-      counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
+      counts =
+        Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id)
+          .where('post_number > 1')
+          .group(:user_id)
+          .count
       counts.each do |user_id, count|
         if user_stat = UserStat.where(user_id: user_id).first
           user_stat.update_attributes(post_count: user_stat.post_count - count)
@@ -322,5 +402,4 @@ class PostDestroyer
       end
     end
   end
-
 end

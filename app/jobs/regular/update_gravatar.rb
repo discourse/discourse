@@ -1,7 +1,5 @@
 module Jobs
-
   class UpdateGravatar < Jobs::Base
-
     sidekiq_options queue: 'low'
 
     def execute(args)
@@ -16,5 +14,4 @@ module Jobs
       end
     end
   end
-
 end

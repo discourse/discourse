@@ -19,8 +19,12 @@ describe DirectoryHelper do
 
   describe '#tmp_directory' do
     it 'is memoized by prefix' do
-      expect(helper.tmp_directory('prefix')).to eq(helper.tmp_directory('prefix'))
-      expect(helper.tmp_directory('prefix')).not_to eq(helper.tmp_directory('other_prefix'))
+      expect(helper.tmp_directory('prefix')).to eq(
+            helper.tmp_directory('prefix')
+          )
+      expect(helper.tmp_directory('prefix')).not_to eq(
+                helper.tmp_directory('other_prefix')
+              )
     end
   end
 

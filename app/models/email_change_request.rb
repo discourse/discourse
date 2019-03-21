@@ -6,12 +6,12 @@ class EmailChangeRequest < ActiveRecord::Base
   belongs_to :user
 
   validates :old_email, presence: true
-  validates :new_email, presence: true, format: { with: EmailValidator.email_regex }
+  validates :new_email,
+            presence: true, format: { with: EmailValidator.email_regex }
 
   def self.states
     @states ||= Enum.new(authorizing_old: 1, authorizing_new: 2, complete: 3)
   end
-
 end
 
 # == Schema Information

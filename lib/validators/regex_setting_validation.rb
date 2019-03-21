@@ -1,5 +1,4 @@
 module RegexSettingValidation
-
   def initialize_regex_opts(opts = {})
     @regex = Regexp.new(opts[:regex]) if opts[:regex]
     @regex_error = opts[:regex_error] || 'site_settings.errors.regex_mismatch'
@@ -13,5 +12,4 @@ module RegexSettingValidation
 
     true
   end
-
 end

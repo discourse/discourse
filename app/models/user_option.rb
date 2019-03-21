@@ -12,9 +12,7 @@ class UserOption < ActiveRecord::Base
       WHERE o.user_id IS NULL
     SQL
 
-    DB.query_single(sql).each do |id|
-      UserOption.create(user_id: id)
-    end
+    DB.query_single(sql).each { |id| UserOption.create(user_id: id) }
   end
 
   def self.previous_replies_type
@@ -22,7 +20,8 @@ class UserOption < ActiveRecord::Base
   end
 
   def self.like_notification_frequency_type
-    @like_notification_frequency_type ||= Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
+    @like_notification_frequency_type ||=
+      Enum.new(always: 0, first_time_and_daily: 1, first_time: 2, never: 3)
   end
 
   def self.text_sizes
@@ -35,11 +34,13 @@ class UserOption < ActiveRecord::Base
 
   validates :text_size_key, inclusion: { in: UserOption.text_sizes.values }
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
-  validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
+  validates :email_messages_level,
+            inclusion: { in: UserOption.email_level_types.values }
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
-    self.mailing_list_mode_frequency = SiteSetting.default_email_mailing_list_mode_frequency
+    self.mailing_list_mode_frequency =
+      SiteSetting.default_email_mailing_list_mode_frequency
     self.email_level = SiteSetting.default_email_level
     self.email_messages_level = SiteSetting.default_email_messages_level
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
@@ -47,21 +48,27 @@ class UserOption < ActiveRecord::Base
     self.email_in_reply_to = SiteSetting.default_email_in_reply_to
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
-    self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
+    self.external_links_in_new_tab =
+      SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
     self.disable_jump_reply = SiteSetting.default_other_disable_jump_reply
 
-    self.new_topic_duration_minutes = SiteSetting.default_other_new_topic_duration_minutes
-    self.auto_track_topics_after_msecs = SiteSetting.default_other_auto_track_topics_after_msecs
-    self.notification_level_when_replying = SiteSetting.default_other_notification_level_when_replying
+    self.new_topic_duration_minutes =
+      SiteSetting.default_other_new_topic_duration_minutes
+    self.auto_track_topics_after_msecs =
+      SiteSetting.default_other_auto_track_topics_after_msecs
+    self.notification_level_when_replying =
+      SiteSetting.default_other_notification_level_when_replying
 
-    self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
+    self.like_notification_frequency =
+      SiteSetting.default_other_like_notification_frequency
 
     if SiteSetting.default_email_digest_frequency.to_i <= 0
       self.email_digests = false
     else
       self.email_digests = true
-      self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
+      self.digest_after_minutes ||=
+        SiteSetting.default_email_digest_frequency.to_i
     end
 
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
@@ -85,11 +92,15 @@ class UserOption < ActiveRecord::Base
     delay = SiteSetting.active_user_rate_limit_secs
 
     # only update last_redirected_to_top_at once every minute
-    return unless $redis.setnx(key, "1")
+    return unless $redis.setnx(key, '1')
     $redis.expire(key, delay)
 
     # delay the update
-    Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.user_id, redirected_at: Time.zone.now)
+    Jobs.enqueue_in(
+      delay / 2,
+      :update_top_redirection,
+      user_id: self.user_id, redirected_at: Time.zone.now
+    )
   end
 
   def should_be_redirected_to_top
@@ -101,7 +112,10 @@ class UserOption < ActiveRecord::Base
     return unless SiteSetting.redirect_users_to_top_page
 
     # PERF: bypass min_redirected_to_top query for users that were seen already
-    return if user.trust_level > 0 && user.last_seen_at && user.last_seen_at > 1.month.ago
+    if user.trust_level > 0 && user.last_seen_at &&
+       user.last_seen_at > 1.month.ago
+      return
+    end
 
     # top must be in the top_menu
     return unless SiteSetting.top_menu[/\btop\b/i]
@@ -111,12 +125,13 @@ class UserOption < ActiveRecord::Base
 
     if !user.seen_before? || (user.trust_level == 0 && !redirected_to_top_yet?)
       update_last_redirected_to_top!
+
       return {
-        reason: I18n.t('redirected_to_top_reasons.new_user'),
-        period: period
+        reason: I18n.t('redirected_to_top_reasons.new_user'), period: period
       }
     elsif user.last_seen_at < 1.month.ago
       update_last_redirected_to_top!
+
       return {
         reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
         period: period
@@ -128,7 +143,9 @@ class UserOption < ActiveRecord::Base
   end
 
   def treat_as_new_topic_start_date
-    duration = new_topic_duration_minutes || SiteSetting.default_other_new_topic_duration_minutes.to_i
+    duration =
+      new_topic_duration_minutes ||
+        SiteSetting.default_other_new_topic_duration_minutes.to_i
     times = [
       case duration
       when User::NewTopicDuration::ALWAYS
@@ -147,12 +164,18 @@ class UserOption < ActiveRecord::Base
 
   def homepage
     case homepage_id
-    when 1 then "latest"
-    when 2 then "categories"
-    when 3 then "unread"
-    when 4 then "new"
-    when 5 then "top"
-    else SiteSetting.homepage
+    when 1
+      'latest'
+    when 2
+      'categories'
+    when 3
+      'unread'
+    when 4
+      'new'
+    when 5
+      'top'
+    else
+      SiteSetting.homepage
     end
   end
 
@@ -170,7 +193,6 @@ class UserOption < ActiveRecord::Base
     return unless saved_change_to_auto_track_topics_after_msecs?
     TrackedTopicsUpdater.new(id, auto_track_topics_after_msecs).call
   end
-
 end
 
 # == Schema Information

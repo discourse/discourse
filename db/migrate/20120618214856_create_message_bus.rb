@@ -7,7 +7,6 @@ class CreateMessageBus < ActiveRecord::Migration[4.2]
       t.datetime :created_at
     end
 
-    add_index :message_bus, [:created_at]
+    add_index :message_bus, %i[created_at]
   end
-
 end

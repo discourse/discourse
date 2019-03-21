@@ -37,7 +37,9 @@ class WebCrawlerRequest < ActiveRecord::Base
 
       next if val == 0
 
-      self.where(id: req_id(date, user_agent)).update_all(["count = count + ?", val])
+      self.where(id: req_id(date, user_agent)).update_all(
+        ['count = count + ?', val]
+      )
     end
   rescue Redis::CommandError => e
     raise unless e.message =~ /READONLY/

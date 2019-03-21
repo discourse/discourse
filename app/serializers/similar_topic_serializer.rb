@@ -1,5 +1,4 @@
 class SimilarTopicSerializer < ApplicationSerializer
-
   has_one :topic, serializer: TopicListItemSerializer, embed: :ids
   attributes :id, :blurb, :created_at, :url
 

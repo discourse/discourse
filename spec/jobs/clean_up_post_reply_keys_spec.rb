@@ -10,16 +10,18 @@ RSpec.describe Jobs::CleanUpPostReplyKeys do
 
     SiteSetting.disallow_reply_by_email_after_days = 0
 
-    expect { Jobs::CleanUpPostReplyKeys.new.execute({}) }
-      .to change { PostReplyKey.count }.by(0)
+    expect { Jobs::CleanUpPostReplyKeys.new.execute({}) }.to change do
+      PostReplyKey.count
+    end
+      .by(0)
 
     SiteSetting.disallow_reply_by_email_after_days = 2
 
-    expect { Jobs::CleanUpPostReplyKeys.new.execute({}) }
-      .to change { PostReplyKey.count }.by(-1)
+    expect { Jobs::CleanUpPostReplyKeys.new.execute({}) }.to change do
+      PostReplyKey.count
+    end
+      .by(-1)
 
-    expect(PostReplyKey.all).to contain_exactly(
-      reply_key1, reply_key2
-    )
+    expect(PostReplyKey.all).to contain_exactly(reply_key1, reply_key2)
   end
 end

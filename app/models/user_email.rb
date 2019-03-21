@@ -8,10 +8,13 @@ class UserEmail < ActiveRecord::Base
   before_validation :strip_downcase_email
 
   validates :email, presence: true
-  validates :email, email: true, format: { with: EmailValidator.email_regex },
-                    if: :validate_email?
+  validates :email,
+            email: true,
+            format: { with: EmailValidator.email_regex },
+            if: :validate_email?
 
-  validates :primary, uniqueness: { scope: [:user_id] }, if: [:user_id, :primary]
+  validates :primary,
+            uniqueness: { scope: %i[user_id] }, if: %i[user_id primary]
   validate :user_id_not_changed, if: :primary
   validate :unique_email
 
@@ -32,15 +35,19 @@ class UserEmail < ActiveRecord::Base
   end
 
   def unique_email
-    if self.will_save_change_to_email? && self.class.where("lower(email) = ?", email).exists?
+    if self.will_save_change_to_email? &&
+       self.class.where('lower(email) = ?', email).exists?
       self.errors.add(:email, :taken)
     end
   end
 
   def user_id_not_changed
     if self.will_save_change_to_user_id? && self.persisted?
-      self.errors.add(:user_id, I18n.t(
-        'active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email')
+      self.errors.add(
+        :user_id,
+        I18n.t(
+          'active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email'
+        )
       )
     end
   end

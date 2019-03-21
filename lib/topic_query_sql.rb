@@ -3,15 +3,14 @@
 #  SQL fragments used when querying a list of topics.
 #
 module TopicQuerySQL
-
   class << self
-
     def lowest_date
-      "1900-01-01"
+      '1900-01-01'
     end
 
     def order_by_category_sql(dir)
-      -"CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{dir}"
+      -"CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id
+        .to_i} THEN '' ELSE categories.name END #{dir}"
     end
 
     # If you've clearned the pin, use bumped_at, otherwise put it at the top
@@ -34,11 +33,11 @@ module TopicQuerySQL
     end
 
     def order_basic_bumped
-      "CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
+      'CASE WHEN (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC'
     end
 
     def order_nocategory_basic_bumped
-      "CASE WHEN topics.pinned_globally AND (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC"
+      'CASE WHEN topics.pinned_globally AND (topics.pinned_at IS NOT NULL) THEN 0 ELSE 1 END, topics.bumped_at DESC'
     end
 
     def order_top_for(score)
@@ -55,6 +54,5 @@ module TopicQuerySQL
     def order_top_with_notification_levels(score)
       -"COALESCE(topic_users.notification_level, 1) DESC, COALESCE(category_users.notification_level, 1) DESC, COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
     end
-
   end
 end

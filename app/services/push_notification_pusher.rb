@@ -5,15 +5,23 @@ class PushNotificationPusher
 
   def self.push(user, payload)
     message = {
-      title: I18n.t(
-        "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
-        site_title: SiteSetting.title,
-        topic: payload[:topic_title],
-        username: payload[:username]
-      ),
+      title:
+        I18n.t(
+          "discourse_push_notifications.popup.#{Notification.types[
+            payload[:notification_type]
+          ]}",
+          site_title: SiteSetting.title,
+          topic: payload[:topic_title],
+          username: payload[:username]
+        ),
       body: payload[:excerpt],
       badge: get_badge,
-      icon: ActionController::Base.helpers.image_url("push-notifications/#{Notification.types[payload[:notification_type]]}.png"),
+      icon:
+        ActionController::Base.helpers.image_url(
+          "push-notifications/#{Notification.types[
+            payload[:notification_type]
+          ]}.png"
+        ),
       tag: "#{Discourse.current_hostname}-#{payload[:topic_id]}",
       base_url: Discourse.base_url,
       url: payload[:post_url],
@@ -46,12 +54,18 @@ class PushNotificationPusher
       PushSubscription.create!(user: user, data: data)
     end
 
-    if send_confirmation == "true"
+    if send_confirmation == 'true'
       message = {
-        title: I18n.t("discourse_push_notifications.popup.confirm_title",
-                      site_title: SiteSetting.title),
-        body: I18n.t("discourse_push_notifications.popup.confirm_body"),
-        icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+        title:
+          I18n.t(
+            'discourse_push_notifications.popup.confirm_title',
+            site_title: SiteSetting.title
+          ),
+        body: I18n.t('discourse_push_notifications.popup.confirm_body'),
+        icon:
+          ActionController::Base.helpers.image_url(
+            'push-notifications/check.png'
+          ),
         badge: get_badge,
         tag: "#{Discourse.current_hostname}-subscription"
       }
@@ -70,17 +84,19 @@ class PushNotificationPusher
     if (url = SiteSetting.site_push_notifications_icon_url).present?
       url
     else
-      ActionController::Base.helpers.image_url("push-notifications/discourse.png")
+      ActionController::Base.helpers.image_url(
+        'push-notifications/discourse.png'
+      )
     end
   end
 
   def self.send_notification(user, subscription, message)
     begin
       Webpush.payload_send(
-        endpoint: subscription["endpoint"],
+        endpoint: subscription['endpoint'],
         message: message.to_json,
-        p256dh: subscription.dig("keys", "p256dh"),
-        auth: subscription.dig("keys", "auth"),
+        p256dh: subscription.dig('keys', 'p256dh'),
+        auth: subscription.dig('keys', 'auth'),
         vapid: {
           subject: Discourse.base_url,
           public_key: SiteSetting.vapid_public_key,
@@ -91,15 +107,15 @@ class PushNotificationPusher
     rescue Webpush::ExpiredSubscription
       unsubscribe(user, subscription)
     rescue Webpush::ResponseError => e
-      if e.response.message == "MismatchSenderId"
+      if e.response.message == 'MismatchSenderId'
         unsubscribe(user, subscription)
       else
         Discourse.warn_exception(
           e,
-          message: "Failed to send push notification",
+          message: 'Failed to send push notification',
           env: {
             user_id: user.id,
-            endpoint: subscription["endpoint"],
+            endpoint: subscription['endpoint'],
             message: message.to_json
           }
         )

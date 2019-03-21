@@ -5,7 +5,7 @@ class CreateDigestUnsubscribeKeys < ActiveRecord::Migration[4.2]
       t.integer :user_id, null: false
       t.timestamps null: false
     end
-    execute "ALTER TABLE digest_unsubscribe_keys ADD PRIMARY KEY (key)"
+    execute 'ALTER TABLE digest_unsubscribe_keys ADD PRIMARY KEY (key)'
     add_index :digest_unsubscribe_keys, :created_at
 
     migrate_redis_keys
@@ -25,7 +25,7 @@ class CreateDigestUnsubscribeKeys < ActiveRecord::Migration[4.2]
         if ttl > 0
           ttl = "'#{ttl.seconds.ago.strftime('%Y-%m-%d %H:%M:%S')}'"
         else
-          ttl = "CURRENT_TIMESTAMP"
+          ttl = 'CURRENT_TIMESTAMP'
         end
         $redis.del(key)
         key.gsub!('temporary_key:', '')
@@ -33,10 +33,11 @@ class CreateDigestUnsubscribeKeys < ActiveRecord::Migration[4.2]
       end
       temp_keys.compact!
       if temp_keys.present?
-        execute "INSERT INTO digest_unsubscribe_keys (key, user_id, created_at, updated_at) VALUES #{temp_keys.join(', ')}"
+        execute "INSERT INTO digest_unsubscribe_keys (key, user_id, created_at, updated_at) VALUES #{temp_keys
+                  .join(', ')}"
       end
     end
-  rescue
+  rescue StandardError
     # If anything goes wrong, continue with other migrations
   end
 
