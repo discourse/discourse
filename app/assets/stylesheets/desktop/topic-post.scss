@@ -638,6 +638,9 @@ blockquote {
   .cooked {
     padding: 0 $topic-body-width-padding 0.25em $topic-body-width-padding;
   }
+  a.expand-hidden {
+    padding-left: $topic-body-width-padding;
+  }
 }
 
 .topic-avatar {
