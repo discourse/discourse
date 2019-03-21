@@ -107,6 +107,10 @@ task 'docker:test' do
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
 
+      # this shaves all the creation of the multisite db off
+      # for js tests
+      ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
+
       if ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake db:migrate")
       else
