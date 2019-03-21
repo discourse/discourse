@@ -268,7 +268,8 @@ class Reviewable < ActiveRecord::Base
     type: nil,
     limit: nil,
     offset: nil,
-    min_score: nil
+    min_score: nil,
+    target_created_by_id: nil
   )
     min_score ||= SiteSetting.min_score_default_visibility
 
@@ -286,6 +287,7 @@ class Reviewable < ActiveRecord::Base
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
     result = result.where("score >= ?", min_score) if min_score
+    result = result.where(target_created_by_id: target_created_by_id) if target_created_by_id
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result

@@ -18,12 +18,14 @@ class ReviewablesController < ApplicationController
 
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil
+    target_created_by_id = params[:target_created_by_id] ? params[:target_created_by_id].to_i : nil
 
     filters = {
       status: status,
       category_id: category_id,
       topic_id: topic_id,
       min_score: min_score,
+      target_created_by_id: target_created_by_id,
       type: params[:type]
     }
 
@@ -48,7 +50,6 @@ class ReviewablesController < ApplicationController
       json[:meta][:load_more_reviewables] = review_path(filters.merge(offset: offset + PER_PAGE))
     end
     json.merge!(hash)
-
     render_json_dump(json, rest_serializer: true)
   end
 

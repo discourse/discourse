@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
-  queryParams: ["min_score", "type", "status", "category_id", "topic_id"],
+  queryParams: ["min_score", "type", "status", "category_id", "topic_id", "target_created_by_id"],
   type: null,
   status: "pending",
   min_score: null,
@@ -9,6 +9,7 @@ export default Ember.Controller.extend({
   reviewables: null,
   topic_id: null,
   filtersExpanded: false,
+  targetCreatedById: null,
 
   init(...args) {
     this._super(...args);
@@ -62,7 +63,8 @@ export default Ember.Controller.extend({
         type: this.get("filterType"),
         min_score: this.get("filterScore"),
         status: this.get("filterStatus"),
-        category_id: this.get("filterCategoryId")
+        category_id: this.get("filterCategoryId"),
+        targetCreatedById: this.get("targetCreatedById")
       });
       this.send("refreshRoute");
     },
