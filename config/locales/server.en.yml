@@ -2175,6 +2175,7 @@ en:
     email:
       sent_test: "sent!"
       sent_test_disabled: "cannot send because emails are disabled"
+      sent_test_disabled_for_non_staff: "cannot send because emails are disabled for non-staff"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
