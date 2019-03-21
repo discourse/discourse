@@ -583,15 +583,27 @@ class StaffActionLogger
     ))
   end
 
-  def log_webhook(webhook, opts = {})
+  def log_web_hook(web_hook, action, opts = {})
     details = [
-      "webhook_id: #{webhook.id}",
-      "payload_url: #{webhook.payload_url}"
+      "webhook_id: #{web_hook.id}",
+      "payload_url: #{web_hook.payload_url}"
     ]
+
+    if changes = opts[:changes]
+      changes.reject! { |k,v| k == "updated_at" }
+      old_values = []
+      new_values = []
+      changes.each do |k, v|
+        old_values << "#{k}: #{v[0]}"
+        new_values << "#{k}: #{v[1]}"
+      end
+    end
+
     UserHistory.create!(params(opts).merge(
-      action: UserHistory.actions[:webhook],
-      details: details.join("\n"),
-      context: I18n.t("staff_action_logs.#{opts[:action]}")
+      action: action,
+      context: details.join(", "),
+      previous_value: old_values&.join(", "),
+      new_value: new_values&.join(", ")
     ))
   end
 
