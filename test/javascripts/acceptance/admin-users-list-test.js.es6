@@ -56,8 +56,8 @@ QUnit.test("toggles email visibility", async assert => {
 });
 
 QUnit.test("switching tabs", async assert => {
-  const activeUser = "eviltrout@example.com";
-  const suspectUser = "sam@example.com";
+  const activeUser = "eviltrout";
+  const suspectUser = "sam";
   const activeTitle = I18n.t("admin.users.titles.active");
   const suspectTitle = I18n.t("admin.users.titles.suspect");
 
@@ -65,7 +65,7 @@ QUnit.test("switching tabs", async assert => {
 
   assert.equal(find(".admin-title h2").text(), activeTitle);
   assert.ok(
-    find(".users-list .user:nth-child(1) .email")
+    find(".users-list .user:nth-child(1) .username")
       .text()
       .includes(activeUser)
   );
@@ -74,7 +74,7 @@ QUnit.test("switching tabs", async assert => {
 
   assert.equal(find(".admin-title h2").text(), suspectTitle);
   assert.ok(
-    find(".users-list .user:nth-child(1) .email")
+    find(".users-list .user:nth-child(1) .username")
       .text()
       .includes(suspectUser)
   );
@@ -83,7 +83,7 @@ QUnit.test("switching tabs", async assert => {
 
   assert.equal(find(".admin-title h2").text(), suspectTitle);
   assert.ok(
-    find(".users-list .user:nth-child(1) .email")
+    find(".users-list .user:nth-child(1) .username")
       .text()
       .includes(suspectUser)
   );
@@ -92,7 +92,7 @@ QUnit.test("switching tabs", async assert => {
 
   assert.equal(find(".admin-title h2").text(), activeTitle);
   assert.ok(
-    find(".users-list .user:nth-child(1) .email")
+    find(".users-list .user:nth-child(1) .username")
       .text()
       .includes(activeUser)
   );
