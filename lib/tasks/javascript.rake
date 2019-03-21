@@ -19,6 +19,9 @@ task 'javascript:update' do
 
   dependencies = [
     {
+      source: 'bootstrap/js/modal.js',
+      destination: 'bootstrap-modal.js'
+    }, {
       source: 'ace-builds/src-min-noconflict/.',
       destination: 'ace',
       public: true
