@@ -227,7 +227,7 @@ const Topic = RestModel.extend({
 
   @computed("tags")
   tagClasses(tags) {
-    return tags.map(t => `tag-${t}`).join(" ");
+    return tags && tags.map(t => `tag-${t}`).join(" ");
   },
 
   @computed("url")
