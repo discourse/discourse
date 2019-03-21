@@ -4231,7 +4231,7 @@ en:
       reseed:
         action:
           label: "Replace Text…"
-          title: "Replace text of catgegories and topics with translations"
+          title: "Replace text of categories and topics with translations"
 
         modal:
           title: "Replace Text"
