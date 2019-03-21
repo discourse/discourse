@@ -80,15 +80,6 @@ describe Jobs::UserEmail do
 
       expect(ActionMailer::Base.deliveries).to eq([])
     end
-
-    it "sends when critical" do
-      SiteSetting.disable_emails = 'yes'
-      Jobs::CriticalUserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
-
-      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
-        user.email
-      )
-    end
   end
 
   context "recently seen" do
