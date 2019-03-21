@@ -207,11 +207,6 @@ input {
     border-radius: 0;
     box-sizing: border-box;
     min-height: 30px;
-    &:focus {
-      border-color: $tertiary;
-      box-shadow: shadow("focus");
-      outline: 0;
-    }
   }
 }
 

@@ -46,8 +46,10 @@
       font-size: $font-0;
 
       &.is-focused {
-        border: 1px solid $tertiary;
-        box-shadow: shadow("focus");
+        -webkit-box-shadow: 0 0 1px 3px rgb(72, 209, 204), 0 0 1px 2px rgb(72, 209, 204);
+        -moz-box-shadow: 0 0 1px 3px rgb(72, 209, 204), 0 0 1px 2px rgb(72, 209, 204);
+        box-shadow: 0 0 1px 3px rgb(72, 209, 204), 0 0 1px 2px rgb(72, 209, 204);
+        transition: box-shadow 0.3s ease-in-out;
       }
     }
 

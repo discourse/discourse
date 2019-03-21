@@ -27,8 +27,8 @@ body.widget-dragging {
 /***********************/
 code,
 pre {
-  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-    "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono", "Courier New", monospace;
 }
 
 // this removes the unwanted top margin on a paragraph under a heading
@@ -98,6 +98,19 @@ input {
       background-color: transparent;
     }
   }
+}
+
+// styling the custom focus indicator
+a:focus,
+button:focus,
+input:focus,
+textarea:focus {
+  // removes the default focus indicator
+  outline: 0;
+  -webkit-box-shadow: 0 0 1px 3px rgb(72, 209, 204), 0 0 1px 2px rgb(72, 209, 204);
+  -moz-box-shadow: 0 0 1px 3px rgb(72, 209, 204), 0 0 1px 2px rgb(72, 209, 204);
+  box-shadow: 0 0 1px 3px rgb(72, 209, 204), 0 0 1px 2px rgb(72, 209, 204);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .input {
