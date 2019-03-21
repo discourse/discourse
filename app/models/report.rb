@@ -1612,7 +1612,7 @@ class Report
           WHERE created_at >= '#{report.start_date}' AND created_at <= '#{report.end_date}'
           GROUP BY ignored_user_id
           ORDER BY COUNT(*) DESC
-          LIMIT #{report.limit || 250}
+          LIMIT :limit
         ),
         muted_users AS (
           SELECT
@@ -1622,7 +1622,7 @@ class Report
           WHERE created_at >= '#{report.start_date}' AND created_at <= '#{report.end_date}'
           GROUP BY muted_user_id
           ORDER BY COUNT(*) DESC
-          LIMIT #{report.limit || 250}
+          LIMIT :limit
         )
 
         SELECT u.id as user_id,
@@ -1637,7 +1637,7 @@ class Report
         ORDER BY total DESC
     SQL
 
-    DB.query(sql).each do |row|
+    DB.query(sql, limit: report.limit || 250).each do |row|
       report.data << {
         ignored_user_id: row.user_id,
         ignored_username: row.username,
