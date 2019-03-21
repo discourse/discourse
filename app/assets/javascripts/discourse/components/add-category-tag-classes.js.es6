@@ -13,20 +13,24 @@ export default Ember.Component.extend({
       return;
     }
     const slug = this.get("category.fullSlug");
+    const tags = this.get("tags");
+
     this._removeClass();
-    if (slug) {
-      $("body").addClass(`category-${slug}`);
-    }
+
+    let classes = [];
+    if (slug) classes.push(`category-${slug}`);
+    if (tags) tags.forEach(t => classes.push(`tag-${t}`));
+    if (classes.length > 0) $("body").addClass(classes.join(" "));
   },
 
-  @observes("category.fullSlug")
+  @observes("category.fullSlug", "tags")
   refreshClass() {
     Ember.run.scheduleOnce("afterRender", this, this._updateClass);
   },
 
   _removeClass() {
     $("body").removeClass((_, css) =>
-      (css.match(/\bcategory-\S+/g) || []).join(" ")
+      (css.match(/\b(?:category|tag)-\S+/g) || []).join(" ")
     );
   },
 
