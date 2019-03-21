@@ -3788,6 +3788,7 @@ en:
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
         show_emails: "Show Emails"
+        hide_emails: "Hide Emails"
         nav:
           new: "New"
           active: "Active"

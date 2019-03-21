@@ -17,7 +17,6 @@ export default Discourse.Route.extend({
           order: transition.queryParams.order,
           ascending: transition.queryParams.ascending,
           query: params.filter,
-          showEmails: false,
           refreshing: false
         });
 

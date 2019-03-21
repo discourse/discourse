@@ -8,7 +8,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   query: null,
   order: null,
   ascending: null,
-  showEmailsToggle: false,
+  showEmails: false,
   refreshing: false,
   listFilter: null,
   selectAll: false,
@@ -51,7 +51,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
     AdminUser.findAll(this.get("query"), {
       filter: this.get("listFilter"),
-      show_emails: this.get("showEmailsToggle"),
+      show_emails: this.get("showEmails"),
       order: this.get("order"),
       ascending: this.get("ascending")
     })
@@ -87,13 +87,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
       );
     },
 
-    showEmails: function() {
-      this.set("showEmailsToggle", true);
-      this._refreshUsers();
-    },
-
-    hideEmails: function() {
-      this.set("showEmailsToggle", false);
+    toggleEmailVisibility: function() {
+      this.toggleProperty("showEmails");
       this._refreshUsers();
     }
   }
