@@ -113,14 +113,14 @@ module Jobs
           response_body: response.body,
           duration: ((Time.zone.now - now) * 1000).to_i
         )
-
-        MessageBus.publish("/web_hook_events/#{web_hook.id}", {
-          web_hook_event_id: web_hook_event.id,
-          event_type: args[:event_type]
-        }, user_ids: User.human_users.staff.pluck(:id))
-      rescue
-        web_hook_event.destroy!
+      rescue => e
+        Rails.logger.error("Webhook event failed: #{e}")
       end
+
+      MessageBus.publish("/web_hook_events/#{web_hook.id}", {
+        web_hook_event_id: web_hook_event.id,
+        event_type: args[:event_type]
+      }, user_ids: User.human_users.staff.pluck(:id))
 
       retry_web_hook if response&.status != 200
     end
