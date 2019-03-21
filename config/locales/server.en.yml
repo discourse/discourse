@@ -1234,6 +1234,7 @@ en:
       labels:
         ignored_user: Ignored User
         ignores_count: Ignores count
+        mutes_count: Mutes count
       description: "List top ignored users."
 
   dashboard:
