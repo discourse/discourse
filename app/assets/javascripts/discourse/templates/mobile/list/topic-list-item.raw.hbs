@@ -1,7 +1,7 @@
 <td>
   {{~#unless expandPinned}}
   <div class='pull-left'>
-    <a href="{{topic.lastPostUrl}}">{{avatar topic.lastPoster imageSize="large"}}</a>
+    <a href="{{topic.lastPostUrl}}" data-user-card="{{topic.last_poster_username}}">{{avatar topic.lastPoster imageSize="large"}}</a>
   </div>
   <div class='right'>
     {{else}}
