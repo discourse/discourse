@@ -29,7 +29,7 @@ end
 task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
-  if Rails.env.test? && !args[:multisite]
+  if Rails.env.test? && !args[:multisite] && !ENV["SKIP_MULTISITE"]
     system("rails db:schema:dump")
     system("MULTISITE=multisite rails db:schema:load")
     system("RAILS_DB=discourse_test_multisite rails db:migrate['multisite']")
