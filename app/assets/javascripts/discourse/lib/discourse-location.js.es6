@@ -1,3 +1,5 @@
+import { defaultHomepage } from "discourse/lib/utilities";
+
 /**
 @module Discourse
 */
@@ -87,7 +89,10 @@ const DiscourseLocation = Ember.Object.extend({
     path = this.formatURL(path);
 
     if (state && state.path !== path) {
-      this.pushState(path);
+      const paths = [path, state.path];
+      if (!(paths.includes("/") && paths.includes(`/${defaultHomepage()}`))) {
+        this.pushState(path);
+      }
     }
   },
 

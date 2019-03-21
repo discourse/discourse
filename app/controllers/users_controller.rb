@@ -994,10 +994,9 @@ class UsersController < ApplicationController
 
   def ignore
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+    guardian.ensure_can_ignore_user!(params[:ignored_user_id])
 
-    ::IgnoredUser.find_or_create_by!(
-      user: current_user,
-      ignored_user_id: params[:ignored_user_id])
+    IgnoredUser.find_or_create_by!(user: current_user, ignored_user_id: params[:ignored_user_id])
     render json: success_json
   end
 

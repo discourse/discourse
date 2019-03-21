@@ -420,6 +420,7 @@ describe Search do
     let!(:ignored_category) do
       Fabricate(:category,
         name: "monkey Category 1",
+        slug: "test",
         search_priority: Searchable::PRIORITIES[:ignore]
       )
     end
@@ -432,6 +433,10 @@ describe Search do
       )
 
       expect(search.posts).to contain_exactly(category.topic.first_post, post)
+
+      search = Search.execute("monkey #test")
+
+      expect(search.posts).to contain_exactly(ignored_category.topic.first_post)
     end
 
     describe "with child categories" do

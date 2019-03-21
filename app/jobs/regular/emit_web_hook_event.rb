@@ -72,7 +72,7 @@ module Jobs
       )
 
       body = build_web_hook_body(args, web_hook)
-      web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id)
+      web_hook_event = WebHookEvent.create!(web_hook_id: web_hook.id, payload: body)
       response = nil
 
       begin
@@ -107,20 +107,20 @@ module Jobs
 
         web_hook_event.update!(
           headers: MultiJson.dump(headers),
-          payload: body,
           status: response.status,
           response_headers: MultiJson.dump(response.headers),
           response_body: response.body,
           duration: ((Time.zone.now - now) * 1000).to_i
         )
-
-        MessageBus.publish("/web_hook_events/#{web_hook.id}", {
-          web_hook_event_id: web_hook_event.id,
-          event_type: args[:event_type]
-        }, user_ids: User.human_users.staff.pluck(:id))
-      rescue
-        web_hook_event.destroy!
+      rescue => e
+        web_hook_event.update!(headers: MultiJson.dump(headers))
+        Rails.logger.error("Webhook event failed: #{e}")
       end
+
+      MessageBus.publish("/web_hook_events/#{web_hook.id}", {
+        web_hook_event_id: web_hook_event.id,
+        event_type: args[:event_type]
+      }, user_ids: User.human_users.staff.pluck(:id))
 
       retry_web_hook if response&.status != 200
     end

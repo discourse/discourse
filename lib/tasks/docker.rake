@@ -100,6 +100,9 @@ task 'docker:test' do
       @pg_pid = Process.spawn("#{@postgres_bin}postmaster -D tmp/test_data/pg")
 
       ENV["RAILS_ENV"] = "test"
+      # this shaves all the creation of the multisite db off
+      # for js tests
+      ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
 
       @good &&= run_or_fail("bundle exec rake db:create")
 
@@ -134,6 +137,11 @@ task 'docker:test' do
             subset = parts[0].to_i - 1
 
             spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
+            # quick and dirty load balancing
+            if (spec_partials.count > 3)
+              spec_partials[0].concat(spec_partials[total - 1].shift(40))
+            end
+
             params << spec_partials[subset].join(' ')
 
             puts "Running spec subset #{subset + 1} of #{total}"

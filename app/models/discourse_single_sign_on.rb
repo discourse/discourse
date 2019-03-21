@@ -24,7 +24,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
   def register_nonce(return_path)
     if nonce
-      $redis.setex(nonce_key, NONCE_EXPIRY_TIME, return_path)
+      $redis.setex(nonce_key, SingleSignOn.nonce_expiry_time, return_path)
     end
   end
 

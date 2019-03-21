@@ -39,24 +39,9 @@ export default Ember.Controller.extend({
     return findAll().length > 0;
   },
 
-  @computed(
-    "siteSettings.enforce_second_factor",
-    "currentUser",
-    "currentUser.second_factor_enabled",
-    "currentUser.staff"
-  )
-  showEnforcedNotice(
-    enforce_second_factor,
-    user,
-    second_factor_enabled,
-    staff
-  ) {
-    return (
-      user &&
-      !second_factor_enabled &&
-      (enforce_second_factor === "all" ||
-        (enforce_second_factor === "staff" && staff))
-    );
+  @computed("currentUser")
+  showEnforcedNotice(user) {
+    return user && user.get("enforcedSecondFactor");
   },
 
   toggleSecondFactor(enable) {

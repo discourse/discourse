@@ -3,7 +3,17 @@ import { acceptance } from "helpers/qunit-helpers";
 
 acceptance("Category Edit", {
   loggedIn: true,
-  settings: { email_in: true }
+  settings: { email_in: true },
+  pretend(server, helper) {
+    server.post("/categories", () => {
+      return helper.response({
+        category: {
+          slug: "bug",
+          id: 999
+        }
+      });
+    });
+  }
 });
 
 QUnit.test("Can open the category modal", async assert => {
@@ -18,21 +28,25 @@ QUnit.test("Can open the category modal", async assert => {
 
 QUnit.test("Editing the category", async assert => {
   await visit("/c/bug");
-
   await click(".edit-category");
-  await fillIn("#edit-text-color", "#ff0000");
 
-  await click(".edit-category-topic-template");
-  await fillIn(".d-editor-input", "this is the new topic template");
-
-  await click(".edit-category-settings");
+  await click(".edit-category-settings a");
   const searchPriorityChooser = selectKit("#category-search-priority");
   await searchPriorityChooser.expand();
   await searchPriorityChooser.selectRowByValue(1);
+  await click("#save-category");
 
+  assert.ok(visible(".d-modal"), "it does not close the modal");
+
+  await click(".edit-category-general a");
+  await fillIn("#edit-text-color", "#ff0000");
+
+  await click(".edit-category-topic-template a");
+  await fillIn(".d-editor-input", "this is the new topic template");
   await click("#save-category");
 
   assert.ok(!visible(".d-modal"), "it closes the modal");
+
   assert.equal(
     DiscourseURL.redirectedTo,
     "/c/bug",

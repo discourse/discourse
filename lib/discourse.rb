@@ -220,7 +220,7 @@ module Discourse
     Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true)),
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new),
     Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new),
-    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, frame_width: 1, frame_height: 1)
+    Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new)
   ]
 
   def self.auth_providers

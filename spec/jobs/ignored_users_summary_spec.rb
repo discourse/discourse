@@ -48,8 +48,8 @@ describe Jobs::IgnoredUsersSummary do
             subtype: TopicSubtype.system_message
           })
           expect(posts.count).to eq(2)
-          expect(posts[0].raw).to include(matt.username)
-          expect(posts[1].raw).to include(john.username)
+          expect(posts.find { |post| post.raw.include?(matt.username) }).to be_present
+          expect(posts.find { |post| post.raw.include?(john.username) }).to be_present
         end
       end
     end

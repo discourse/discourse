@@ -114,9 +114,13 @@ module Autospec
     private
 
     def ensure_chrome_is_installed
-      raise ChromeNotInstalled.new unless system("command -v google-chrome >/dev/null;")
 
-      if Gem::Version.new(`$(command -v google-chrome) --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
+      binary = "google-chrome-stable" if system("command -v google-chrome-stable >/dev/null;")
+      binary ||= "google-chrome" if system("command -v google-chrome >/dev/null;")
+
+      raise ChromeNotInstalled.new if !binary
+
+      if Gem::Version.new(`#{binary} --version`.match(/[\d\.]+/)[0]) < Gem::Version.new("59")
         raise "Chrome 59 or higher is required"
       end
     end

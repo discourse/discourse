@@ -129,6 +129,7 @@ RSpec.describe Reviewable, type: :model do
 
         expect(reviewables).not_to include filtered_reviewable
       end
+
     end
 
     context "with a category restriction" do

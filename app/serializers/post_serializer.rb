@@ -371,7 +371,7 @@ class PostSerializer < BasicPostSerializer
 
   def include_post_notice_type?
     return false if !scope.user || !scope.user.id || scope.user.id == object.user_id ||
-                    !object.user || object.user.anonymous? ||
+                    !object.user || object.user.anonymous? || object.user.bot? ||
                     !scope.user.has_trust_level?(SiteSetting.min_post_notice_tl)
 
     post_notice_type.present?

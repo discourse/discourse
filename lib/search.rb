@@ -392,6 +392,7 @@ class Search
           Category.where('parent_category_id = ?', category_ids.first).pluck(:id)
       end
 
+      @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
       posts.where("1 = 0")
@@ -441,6 +442,8 @@ class Search
         category_ids +=
           Category.where('parent_category_id = ?', category_id).pluck(:id)
       end
+
+      @category_filter_matched ||= true
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
@@ -804,7 +807,8 @@ class Search
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         end
       else
-        categories_ignored(posts)
+        posts = categories_ignored(posts) unless @category_filter_matched
+        posts
       end
 
     if @order == :latest || (@term.blank? && !@order)
@@ -832,12 +836,18 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     else
-      data_ranking = "TS_RANK_CD(post_search_data.search_data, #{ts_query})"
+      data_ranking = <<~SQL
+      TS_RANK_CD(
+        post_search_data.search_data, #{ts_query(weight_filter: weights)}
+      )
+      SQL
+
       if opts[:aggregate_search]
         posts = posts.order("MAX(#{data_ranking}) DESC")
       else
         posts = posts.order("#{data_ranking} DESC")
       end
+
       posts = posts.order("topics.bumped_at DESC")
     end
 

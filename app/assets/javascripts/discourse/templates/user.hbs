@@ -36,10 +36,9 @@
       {{/if}}
     {{/unless}}
 
-      <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
-          {{user-profile-avatar user=model}}
+          {{user-profile-avatar user=model tagName=""}}
           <section class='controls'>
             <ul>
               {{#if model.can_send_private_message_to_user}}
@@ -66,9 +65,10 @@
                 {{/if}}
               {{/if}}
               {{#if currentUser.staff}}
-                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
+                <li><a href={{model.adminPath}} class="btn btn-default">{{d-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>          
               {{/if}}
               {{plugin-outlet name="user-profile-controls"
+                              tagName=""
                               connectorTagName="li"
                               args=(hash model=model)}}
 
@@ -89,24 +89,28 @@
           </section>
 
           <div class="primary-textual">
-            <h1 class="{{if nameFirst "full-name" "username"}}">{{if nameFirst model.name (format-username model.username)}} {{user-status model currentUser=currentUser}}</h1>
-            <h2 class="{{if nameFirst "username" "full-name"}}">{{#if nameFirst}}{{model.username}}{{else}}{{model.name}}{{/if}}</h2>
-            {{#if model.staged}}
-              <h2 class="staged">{{i18n 'user.staged'}}</h2>
-            {{/if}}
-            {{#if model.title}}
-              <h3>{{model.title}}</h3>
-            {{/if}}
-            {{plugin-outlet name="user-post-names" args=(hash model=model)}}
+            <div class="user-profile-names">
+              <h1 class="{{if nameFirst "full-name" "username"}}">{{if nameFirst model.name (format-username model.username)}} {{user-status model currentUser=currentUser}}</h1>
+              <h2 class="{{if nameFirst "username" "full-name"}}">{{#if nameFirst}}{{model.username}}{{else}}{{model.name}}{{/if}}</h2>
+              {{#if model.staged}}
+                <h2 class="staged">{{i18n 'user.staged'}}</h2>
+              {{/if}}
+              {{#if model.title}}
+                <h3>{{model.title}}</h3>
+              {{/if}}
+              {{plugin-outlet name="user-post-names" args=(hash model=model)}}
+            </div>
             <h3 class="location-and-website">
-            {{#if model.location}}{{d-icon "map-marker-alt"}} {{model.location}}{{/if}}
+            {{#if model.location}}<div class="user-profile-location">{{d-icon "map-marker-alt"}} {{model.location}}</div>{{/if}}
             {{#if model.website_name}}
+            <div class="user-profile-website">
               {{d-icon "globe"}}
               {{#if linkWebsite}}
                 <a href={{model.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{model.website_name}}</a>
               {{else}}
                 <span title={{model.website}}>{{model.website_name}}</span>
               {{/if}}
+              </div>
             {{/if}}
             {{plugin-outlet name="user-location-and-website" args=(hash model=model)}}
             </h3>

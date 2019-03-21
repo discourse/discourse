@@ -297,6 +297,12 @@ class PostAlerter
       .where('NOT admin AND NOT moderator')
       .exists?
 
+    # apply ignored here
+    return if notifier_id && IgnoredUser.where(user_id: user.id, ignored_user_id: notifier_id)
+      .joins(:ignored_user)
+      .where('NOT admin AND NOT moderator')
+      .exists?
+
     # skip if muted on the topic
     return if TopicUser.where(
       topic: post.topic,

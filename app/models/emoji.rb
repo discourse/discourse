@@ -1,6 +1,6 @@
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "8"
+  EMOJI_VERSION = "9"
 
   FITZPATRICK_SCALE ||= [ "1f3fb", "1f3fc", "1f3fd", "1f3fe", "1f3ff" ]
 
@@ -157,13 +157,7 @@ class Emoji
   end
 
   def self.unicode_unescape(string)
-    string.each_char.map do |c|
-      if str = unicode_replacements[c]
-        ":#{str}:"
-      else
-        c
-      end
-    end.join
+    PrettyText.escape_emoji(string)
   end
 
   def self.gsub_emoji_to_unicode(str)

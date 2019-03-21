@@ -574,6 +574,8 @@ en:
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
 
+  admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
+
   category:
     topic_prefix: "About the %{category} category"
     replace_paragraph: "(Replace this first paragraph with a brief description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters.)"
@@ -1228,6 +1230,7 @@ en:
       labels:
         ignored_user: Ignored User
         ignores_count: Ignores count
+        mutes_count: Mutes count
       description: "List top ignored users."
 
   dashboard:
@@ -1262,7 +1265,7 @@ en:
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance"
+    default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text Content</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
@@ -1501,7 +1504,6 @@ en:
     backup_frequency: "The number of days between backups."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
-    s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
@@ -4343,6 +4345,10 @@ en:
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
+    update: "Updated"
+    create: "Created"
+    destroy: "Destroyed"
+
 
   reviewables:
     missing_version: "You must supply a version parameter"

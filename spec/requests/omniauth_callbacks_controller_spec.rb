@@ -338,6 +338,61 @@ RSpec.describe Users::OmniauthCallbacksController do
           expect(response_body["awaiting_activation"]).to eq(true)
         end
       end
+
+      context 'with full screen login' do
+        before do
+          cookies['fsl'] = true
+        end
+
+        it "doesn't attempt redirect to external origin" do
+          get "/auth/google_oauth2?origin=https://example.com/external"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/"
+        end
+
+        it "redirects to internal origin" do
+          get "/auth/google_oauth2?origin=http://test.localhost/t/123"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/t/123"
+        end
+
+        it "redirects to relative origin" do
+          get "/auth/google_oauth2?origin=/t/123"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/t/123"
+        end
+
+        it "redirects with query" do
+          get "/auth/google_oauth2?origin=/t/123?foo=bar"
+          get "/auth/google_oauth2/callback"
+
+          expect(response.status).to eq 302
+          expect(response.location).to eq "http://test.localhost/t/123?foo=bar"
+        end
+
+        it "removes authentication_data cookie on logout" do
+          get "/auth/google_oauth2?origin=https://example.com/external"
+          get "/auth/google_oauth2/callback"
+
+          provider = log_in_user(Fabricate(:user))
+
+          expect(cookies['authentication_data']).to be
+
+          log_out_user(provider)
+
+          expect(cookies['authentication_data']).to be_nil
+        end
+
+        after do
+          cookies.delete('fsl')
+        end
+      end
     end
 
     context 'when attempting reconnect' do

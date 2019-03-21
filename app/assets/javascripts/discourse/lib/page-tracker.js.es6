@@ -15,10 +15,9 @@ export function startPageTracking(router, appEvents) {
   if (_started) {
     return;
   }
-
-  router.on("didTransition", function() {
-    this.send("refreshTitle");
-    const url = Discourse.getURL(this.get("url"));
+  router.on("routeDidChange", () => {
+    router.send("refreshTitle");
+    const url = Discourse.getURL(router.get("url"));
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
@@ -39,6 +38,7 @@ export function startPageTracking(router, appEvents) {
       }
     });
   });
+
   _started = true;
 }
 

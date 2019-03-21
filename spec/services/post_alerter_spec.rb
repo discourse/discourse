@@ -171,6 +171,15 @@ describe PostAlerter do
       }.to change(evil_trout.notifications, :count).by(0)
     end
 
+    it 'does not notify for ignored users' do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      IgnoredUser.create!(user_id: evil_trout.id, ignored_user_id: post.user_id)
+
+      expect {
+        PostAlerter.post_created(post)
+      }.to change(evil_trout.notifications, :count).by(0)
+    end
+
     it 'notifies a user by username' do
       topic = Fabricate(:topic)
 

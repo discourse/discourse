@@ -365,7 +365,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       svg_file = Nokogiri::XML(File.open(fname))
 
       svg_file.css('symbol').each do |sym|
-        icons << sym.attributes['id'].value
+        icons << sym.attributes['id'].value if sym.attributes['id'].present?
       end
     end
     icons

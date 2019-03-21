@@ -781,3 +781,15 @@
     }
   }
 }
+
+.reseed-modal {
+  .options-group-title {
+    font-size: $font-up-2;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+
+  .option {
+    margin-left: 1em;
+  }
+}

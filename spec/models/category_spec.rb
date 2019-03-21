@@ -326,6 +326,13 @@ describe Category do
       expect(Permalink.count).to eq(1)
     end
 
+    it "reuses existing permalink when category slug is changed" do
+      permalink = Permalink.create!(url: "c/#{@category.slug}", category_id: 42)
+
+      expect { @category.update_attributes(slug: 'new-slug') }.to_not change { Permalink.count }
+      expect(permalink.reload.category_id).to eq(@category.id)
+    end
+
     it "creates permalink when sub category slug is changed" do
       sub_category = Fabricate(:category, slug: 'sub-category', parent_category_id: @category.id)
       sub_category.update_attributes(slug: 'new-sub-category')

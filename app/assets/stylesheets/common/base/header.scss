@@ -38,7 +38,7 @@
   }
 
   .d-icon-home {
-    font-size: $font-up-5;
+    font-size: $font-up-6;
   }
 
   .panel {
@@ -247,9 +247,12 @@
   }
   .categories-wrapper {
     display: inline-flex;
-    max-width: 100%;
-    // only truncate the last category name.
-    > a:last-of-type {
+    // Protection against a very rare edge case in mobile header for topics with
+    // very long category names and lots of tags at the same time
+    max-width: 80%;
+    flex: 0 1 auto;
+    min-width: 1px;
+    .badge-wrapper {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

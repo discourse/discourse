@@ -4,7 +4,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return unless raw  = args[:raw].presence
+      return unless raw = args[:raw].presence
       return unless json = args[:json].presence
       return unless subscribe_url = json["SubscribeURL"].presence
 

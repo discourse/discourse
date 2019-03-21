@@ -1074,9 +1074,6 @@ files:
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-  s3_force_path_style:
-    default: false
-    shadowed_by_global: true
   s3_configure_tombstone_policy:
     default: true
     shadowed_by_global: true
@@ -1771,6 +1768,15 @@ uncategorized:
     default: -1
     hidden: true
   privacy_topic_id:
+    default: -1
+    hidden: true
+  welcome_topic_id:
+    default: -1
+    hidden: true
+  lounge_welcome_topic_id:
+    default: -1
+    hidden: true
+  admin_quick_start_topic_id:
     default: -1
     hidden: true
 

@@ -11,6 +11,7 @@ export default Ember.Controller.extend({
   filtersExpanded: false,
   targetCreatedById: null,
 
+
   init(...args) {
     this._super(...args);
     this.set("min_score", this.siteSettings.min_score_default_visibility);

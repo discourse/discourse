@@ -41,7 +41,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :external_id,
              :top_category_ids,
              :hide_profile_and_presence,
-             :groups
+             :groups,
+             :second_factor_enabled
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -196,5 +197,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_external_id?
     SiteSetting.enable_sso
+  end
+
+  def second_factor_enabled
+    object.totp_enabled?
   end
 end

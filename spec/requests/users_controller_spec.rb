@@ -2027,7 +2027,7 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let(:user) { Fabricate(:user) }
+      let(:user) { Fabricate(:user, trust_level: 2) }
       let(:another_user) { Fabricate(:user) }
       before do
         sign_in(user)

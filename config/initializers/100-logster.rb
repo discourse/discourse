@@ -72,6 +72,10 @@ if Rails.env.production?
   Logster.config.env_expandable_keys.push(:hostname, :problem_db)
 end
 
+if GlobalSetting.respond_to?(:max_logster_logs)
+  Logster.store.max_backlog = GlobalSetting.max_logster_logs
+end
+
 # middleware that logs errors sits before multisite
 # we need to establish a connection so redis connection is good
 # and db connection is good
@@ -92,6 +96,7 @@ Logster.config.current_context = lambda { |env, &blk|
 Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"
 
 Logster.config.application_version = Discourse.git_version
+Logster.config.enable_custom_patterns_via_ui = true
 
 store = Logster.store
 redis = Logster.store.redis

@@ -19,7 +19,7 @@ development:
 test:
   prepared_statements: false
   adapter: postgresql
-  database: "discourse_test<%= ENV['MULTISITE'] ? '_' + ENV['MULTISITE'] : '' %>"
+  database: <%= ENV["RAILS_DB"] ? ENV["RAILS_DB"] : "discourse_test" %>
   min_messages: warning
   pool: 5
   timeout: 5000
