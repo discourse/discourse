@@ -522,7 +522,7 @@ zh_CN:
       private_messages: "私信"
       activity_stream: "活动"
       preferences: "设置"
-      profile_hidden: "此用户公共信息已被影藏"
+      profile_hidden: "此用户公共信息已被隐藏"
       expand_profile: "展开"
       collapse_profile: "折叠"
       bookmarks: "收藏"
