@@ -22,6 +22,12 @@ describe Email::Sender do
         message = Mail::Message.new(to: moderator.email , body: "hello")
         Email::Sender.new(message, :admin_login).send
       end
+
+      it "delivers mail when mails are disabled but the email_type is test_message" do
+        Mail::Message.any_instance.expects(:deliver_now).once
+        message = Mail::Message.new(to: moderator.email , body: "hello")
+        Email::Sender.new(message, :test_message).send
+      end
     end
 
     context "disable_emails is enabled for non-staff users" do

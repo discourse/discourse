@@ -54,9 +54,7 @@ module Jobs
       )
 
       if message
-        Email::Sender.new(message, type, user).send(
-          is_critical: self.class == Jobs::CriticalUserEmail
-        )
+        Email::Sender.new(message, type, user).send
 
         if (b = user.user_stat.bounce_score) > SiteSetting.bounce_score_erode_on_send
           # erode bounce score each time we send an email
