@@ -19,6 +19,7 @@ export default Discourse.Route.extend({
     controller.setProperties({
       originalPrimaryGroupId: model.get("primary_group_id"),
       availableGroups: this._availableGroups,
+      customGroupIdsBuffer: null,
       model
     });
   }
