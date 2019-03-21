@@ -297,6 +297,12 @@ class PostAlerter
       .where('NOT admin AND NOT moderator')
       .exists?
 
+    # apply ignored here
+    return if notifier_id && IgnoredUser.where(user_id: user.id, ignored_user_id: notifier_id)
+      .joins(:ignored_user)
+      .where('NOT admin AND NOT moderator')
+      .exists?
+
     # skip if muted on the topic
     return if TopicUser.where(
       topic: post.topic,
@@ -559,39 +565,39 @@ class PostAlerter
     warn_if_not_sidekiq
 
     condition = <<~SQL
-      id IN (
-        SELECT user_id
-          FROM topic_users
-         WHERE notification_level = :watching
-           AND topic_id = :topic_id
+       id IN (
+         SELECT user_id
+           FROM topic_users
+          WHERE notification_level = :watching
+            AND topic_id = :topic_id
 
-         UNION
+          UNION
 
-        SELECT cu.user_id
-          FROM category_users cu
-     LEFT JOIN topic_users tu ON tu.user_id = cu.user_id
-                             AND tu.topic_id = :topic_id
-         WHERE cu.notification_level = :watching
-           AND cu.category_id = :category_id
-           AND tu.user_id IS NULL
+         SELECT cu.user_id
+           FROM category_users cu
+      LEFT JOIN topic_users tu ON tu.user_id = cu.user_id
+                              AND tu.topic_id = :topic_id
+          WHERE cu.notification_level = :watching
+            AND cu.category_id = :category_id
+            AND tu.user_id IS NULL
 
-        /*tags*/
-      )
+         /*tags*/
+       )
     SQL
 
     tag_ids = post.topic.topic_tags.pluck('topic_tags.tag_id')
 
     if tag_ids.present?
       condition.sub! "/*tags*/", <<~SQL
-        UNION
+           UNION
 
-        SELECT tag_users.user_id
-          FROM tag_users
-     LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id
-                             AND tu.topic_id = :topic_id
-         WHERE tag_users.notification_level = :watching
-           AND tag_users.tag_id IN (:tag_ids)
-           AND tu.user_id IS NULL
+           SELECT tag_users.user_id
+             FROM tag_users
+        LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id
+                                AND tu.topic_id = :topic_id
+            WHERE tag_users.notification_level = :watching
+              AND tag_users.tag_id IN (:tag_ids)
+              AND tu.user_id IS NULL
       SQL
     end
 
