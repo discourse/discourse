@@ -167,8 +167,9 @@ class PostDestroyer
     I18n.with_locale(SiteSetting.default_locale) do
 
       # don't call revise from within transaction, high risk of deadlock
+      key = @post.is_first_post? ? 'js.topic.deleted_by_author' : 'js.post.deleted_by_author'
       @post.revise(@user,
-        { raw: I18n.t('js.post.deleted_by_author', count: delete_removed_posts_after) },
+        { raw: I18n.t(key, count: delete_removed_posts_after) },
         force_new_version: true
       )
 
