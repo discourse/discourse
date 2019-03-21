@@ -4349,3 +4349,6 @@ en:
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
+    update: "Updated"
+    create: "Created"
+    destroy: "Destroyed"
