@@ -590,7 +590,7 @@ class StaffActionLogger
     ]
 
     if changes = opts[:changes]
-      changes.reject! { |k,v| k == "updated_at" }
+      changes.reject! { |k, v| k == "updated_at" }
       old_values = []
       new_values = []
       changes.each do |k, v|
