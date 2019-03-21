@@ -61,6 +61,10 @@ class Reviewable < ActiveRecord::Base
     false
   end
 
+  def self.types
+    %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
+  end
+
   # Create a new reviewable, or if the target has already been reviewed return it to the
   # pending state and re-use it.
   #

@@ -40,7 +40,9 @@ class ReviewablesController < ApplicationController
         (hash['actions'] || []).uniq!
         result
       end,
-      meta: filters.merge(total_rows_reviewables: total_rows, types: meta_types)
+      meta: filters.merge(
+        total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types
+      )
     }
     if (offset + PER_PAGE) < total_rows
       json[:meta][:load_more_reviewables] = review_path(filters.merge(offset: offset + PER_PAGE))

@@ -5,7 +5,6 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     let meta = model.resultSetMeta;
-
     controller.setProperties({
       reviewables: model,
       type: meta.type,
@@ -14,7 +13,8 @@ export default Discourse.Route.extend({
       filterTopic: meta.topic_id,
       filterCategoryId: meta.category_id,
       min_score: meta.min_score,
-      filterScore: meta.min_score
+      filterScore: meta.min_score,
+      reviewableTypes: meta.reviewable_types
     });
   },
 
