@@ -100,16 +100,15 @@ task 'docker:test' do
       @pg_pid = Process.spawn("#{@postgres_bin}postmaster -D tmp/test_data/pg")
 
       ENV["RAILS_ENV"] = "test"
+      # this shaves all the creation of the multisite db off
+      # for js tests
+      ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
 
       @good &&= run_or_fail("bundle exec rake db:create")
 
       if ENV["INSTALL_OFFICIAL_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
       end
-
-      # this shaves all the creation of the multisite db off
-      # for js tests
-      ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
 
       if ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rake db:migrate")
