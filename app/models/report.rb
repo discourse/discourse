@@ -1591,23 +1591,50 @@ class Report
           :ignores_count,
         ],
         title: I18n.t("reports.top_ignored_users.labels.ignores_count")
+      },
+      {
+        type: :number,
+        properties: [
+          :mutes_count,
+        ],
+        title: I18n.t("reports.top_ignored_users.labels.mutes_count")
       }
     ]
 
     report.data = []
 
     sql = <<~SQL
-      SELECT
-      u.id AS user_id,
-      u.username,
-      u.uploaded_avatar_id,
-      COUNT(*) AS ignores_count
-      FROM users AS u
-      INNER JOIN ignored_users AS ig ON ig.ignored_user_id = u.id
-      WHERE ig.created_at >= '#{report.start_date}' AND ig.created_at <= '#{report.end_date}'
-      GROUP BY u.id
-      ORDER BY COUNT(*) DESC
-      LIMIT #{report.limit || 250}
+        WITH ignored_users AS (
+          SELECT
+          ignored_user_id as user_id,
+          COUNT(*) AS ignores_count
+          FROM ignored_users
+          WHERE created_at >= '#{report.start_date}' AND created_at <= '#{report.end_date}'
+          GROUP BY ignored_user_id
+          ORDER BY COUNT(*) DESC
+          LIMIT #{report.limit || 250}
+        ),
+        muted_users AS (
+          SELECT
+          muted_user_id as user_id,
+          COUNT(*) AS mutes_count
+          FROM muted_users
+          WHERE created_at >= '#{report.start_date}' AND created_at <= '#{report.end_date}'
+          GROUP BY muted_user_id
+          ORDER BY COUNT(*) DESC
+          LIMIT #{report.limit || 250}
+        )
+
+        SELECT u.id as user_id,
+               u.username as username,
+               u.uploaded_avatar_id as uploaded_avatar_id,
+               ig.ignores_count as ignores_count,
+               COALESCE(mu.mutes_count, 0) as mutes_count,
+               ig.ignores_count + COALESCE(mu.mutes_count, 0) as total
+        FROM users as u
+        JOIN ignored_users as ig ON ig.user_id = u.id
+        LEFT OUTER JOIN muted_users as mu ON mu.user_id = u.id
+        ORDER BY total DESC
     SQL
 
     DB.query(sql).each do |row|
@@ -1616,6 +1643,7 @@ class Report
         ignored_username: row.username,
         ignored_user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
         ignores_count: row.ignores_count,
+        mutes_count: row.mutes_count,
       }
     end
   end

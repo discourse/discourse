@@ -1108,15 +1108,29 @@ describe Report do
 
       it "works" do
         expect(report.data.length).to eq(2)
-        expect_row_to_be_equal(report.data[0], john)
-        expect_row_to_be_equal(report.data[1], matt)
+        expect_row_to_be_equal(report.data[0], john, 1, 0)
+        expect_row_to_be_equal(report.data[1], matt, 1, 0)
       end
 
-      def expect_row_to_be_equal(row, user)
+      def expect_row_to_be_equal(row, user, ignores, mutes)
         expect(row[:ignored_user_id]).to eq(user.id)
         expect(row[:ignored_username]).to eq(user.username)
         expect(row[:ignored_user_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
-        expect(row[:ignores_count]).to eq(1)
+        expect(row[:ignores_count]).to eq(ignores)
+        expect(row[:mutes_count]).to eq(mutes)
+      end
+
+      context "when muted users exist" do
+        before do
+          Fabricate(:muted_user, user: tarek, muted_user: john)
+          Fabricate(:muted_user, user: tarek, muted_user: matt)
+        end
+
+        it "works" do
+          expect(report.data.length).to eq(2)
+          expect_row_to_be_equal(report.data[0], john, 1, 1)
+          expect_row_to_be_equal(report.data[1], matt, 1, 1)
+        end
       end
     end
 
