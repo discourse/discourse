@@ -27,10 +27,10 @@ describe Email::Sender do
     context "disable_emails is enabled for non-staff users" do
       before { SiteSetting.disable_emails = "non-staff" }
 
-      it "delivers mail to normal user" do
-        Mail::Message.any_instance.expects(:deliver_now).once
+      it "doesn't deliver mail to normal user" do
+        Mail::Message.any_instance.expects(:deliver_now).never
         message = Mail::Message.new(to: user.email, body: "hello")
-        Email::Sender.new(message, :hello).send
+        expect(Email::Sender.new(message, :hello).send).to eq(nil)
       end
 
       it "delivers mail to staff user" do

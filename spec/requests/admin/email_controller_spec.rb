@@ -146,7 +146,7 @@ describe Admin::EmailController do
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled"))
       end
 
-      it 'sends mail to everyone when setting is "non-staff"' do
+      it 'sends mail to staff only when setting is "non-staff"' do
         SiteSetting.disable_emails = 'non-staff'
 
         post "/admin/email/test.json", params: { email_address: admin.email }
@@ -155,7 +155,7 @@ describe Admin::EmailController do
 
         post "/admin/email/test.json", params: { email_address: eviltrout.email }
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled_for_non_staff"))
       end
 
       it 'sends mail to everyone when setting is "no"' do

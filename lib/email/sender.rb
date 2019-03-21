@@ -35,6 +35,10 @@ module Email
       return skip(SkippedEmailLog.reason_types[:sender_message_blank])    if @message.blank?
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
 
+      if SiteSetting.disable_emails == "non-staff"
+        return unless User.find_by_email(to_address)&.staff?
+      end
+
       return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
 
       if @message.text_part

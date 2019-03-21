@@ -13,6 +13,8 @@ class Admin::EmailController < Admin::AdminController
       Jobs::TestEmail.new.execute(to_address: params[:email_address])
       if SiteSetting.disable_emails == "yes"
         render json: { sent_test_email_message: I18n.t("admin.email.sent_test_disabled") }
+      elsif SiteSetting.disable_emails == "non-staff" && !User.find_by_email(params[:email_address])&.staff?
+        render json: { sent_test_email_message: I18n.t("admin.email.sent_test_disabled_for_non_staff") }
       else
         render json: { sent_test_email_message: I18n.t("admin.email.sent_test") }
       end
