@@ -461,6 +461,16 @@ export default function() {
           email: "<small>discobot_email</small>"
         }
       ];
+
+      const showEmails = request.queryParams.show_emails;
+
+      if (showEmails === "false") {
+        store = store.map(item => {
+          delete item.email;
+          return item;
+        });
+      }
+
       const ascending = request.queryParams.ascending;
       const order = request.queryParams.order;
 
@@ -469,6 +479,7 @@ export default function() {
           return a[order] - b[order];
         });
       }
+
       if (ascending) {
         store = store.reverse();
       }
