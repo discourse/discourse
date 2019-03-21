@@ -4229,14 +4229,15 @@ en:
 
       reseed:
         action:
-          label: "Reseed…"
-          title: "Update content created by Discourse with latest translations"
+          label: "Replace Text…"
+          title: "Replace text of catgegories and topics with translations"
 
         modal:
-          title: "Reseed"
-          subtitle: "Update seeded categories and topics with latest translations"
+          title: "Replace Text"
+          subtitle: "Replace text of system generated categories and topics with latest translations"
           categories: "Categories"
           topics: "Topics"
+          replace: "Replace"
 
   wizard_js:
     wizard:
