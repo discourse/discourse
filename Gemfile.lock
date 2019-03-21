@@ -384,6 +384,12 @@ GEM
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
+    sassc-rails (2.1.0)
+      railties (>= 4.0.0)
+      sassc (>= 2.0)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
       faraday (~> 0.8, < 1.0)
@@ -539,6 +545,7 @@ DEPENDENCIES
   ruby-readability
   sanitize
   sassc
+  sassc-rails
   seed-fu
   shoulda
   sidekiq
