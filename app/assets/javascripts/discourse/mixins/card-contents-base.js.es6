@@ -2,8 +2,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import afterTransition from "discourse/lib/after-transition";
 import DiscourseURL from "discourse/lib/url";
 
-const AVATAR_OVERFLOW_SIZE = 50;
-
 export default Ember.Mixin.create({
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
@@ -195,8 +193,9 @@ export default Ember.Mixin.create({
             }
           }
 
-          if (isDocked && position.top < AVATAR_OVERFLOW_SIZE) {
-            position.top = AVATAR_OVERFLOW_SIZE;
+          const avatarOverflowSize = 44;
+          if (isDocked && position.top < avatarOverflowSize) {
+            position.top = avatarOverflowSize;
           }
 
           this.$().css(position);
