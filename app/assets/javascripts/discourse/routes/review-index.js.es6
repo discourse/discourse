@@ -14,7 +14,8 @@ export default Discourse.Route.extend({
       filterCategoryId: meta.category_id,
       min_score: meta.min_score,
       filterScore: meta.min_score,
-      reviewableTypes: meta.reviewable_types
+      reviewableTypes: meta.reviewable_types,
+      targetCreatedById: meta.target_created_by_id
     });
   },
 

@@ -18,12 +18,15 @@ class ReviewablesController < ApplicationController
 
     topic_id = params[:topic_id] ? params[:topic_id].to_i : nil
     category_id = params[:category_id] ? params[:category_id].to_i : nil
+    target_created_by_id = params[:target_created_by_id] ? params[:target_created_by_id].to_i : nil
+
 
     filters = {
       status: status,
       category_id: category_id,
       topic_id: topic_id,
       min_score: min_score,
+      target_created_by_id: target_created_by_id,
       type: params[:type]
     }
 
