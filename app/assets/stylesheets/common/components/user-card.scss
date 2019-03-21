@@ -1,0 +1,264 @@
+$card_width: 580px;
+$avatar_width: 120px;
+$avatar_margin: -50px; // negative margin makes avatars extend above cards
+
+// shared styles for user and group cards
+#user-card,
+#group-card {
+  position: absolute;
+  width: $card_width;
+  z-index: z("usercard");
+  box-shadow: shadow("card");
+  color: $primary;
+  background: $secondary center center;
+  background-size: cover;
+  min-height: 175px;
+  transition: opacity 0.2s, transform 0.2s;
+  -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+  opacity: 0;
+  @include transform(scale(0.9));
+  &.show {
+    opacity: 1;
+    @include transform(scale(1));
+  }
+  &.fixed {
+    position: fixed;
+    z-index: z("composer", "content") + 1;
+  }
+
+  &.docked-card {
+    z-index: z("header") + 1;
+  }
+
+  .card-content {
+    padding: 12px;
+    background: rgba($secondary, 0.85);
+    margin-top: 80px;
+    &:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+    a.card-huge-avatar {
+      outline: none;
+    }
+  }
+  &.no-bg {
+    min-height: 50px;
+    .card-content {
+      margin-top: 0;
+    }
+  }
+  .names {
+    flex: 1 1 auto;
+    margin-left: 0.75em;
+    span {
+      display: block;
+    }
+  }
+  h1 {
+    margin: 0;
+    line-height: $line-height-medium;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    a {
+      color: $primary;
+    }
+    .d-icon {
+      font-size: $font-down-1;
+      color: $primary;
+    }
+  }
+  h2 {
+    font-size: $font-up-1;
+    margin: 0;
+    font-weight: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    a {
+      color: $primary;
+    }
+  }
+  h3 {
+    display: inline;
+    margin-right: 0.5em;
+    font-size: $font-0;
+    font-weight: normal;
+    color: $primary;
+    .desc,
+    a {
+      color: $primary-high;
+    }
+  }
+  p {
+    margin: 0 0 5px 0;
+  }
+  .btn {
+    margin-bottom: 5px;
+  }
+  .usercard-controls {
+    list-style-type: none;
+    margin: 0;
+    button {
+      width: 100%;
+      min-width: 150px;
+    }
+  }
+  .card-row:not(.first-row) {
+    margin-top: 0.5em;
+  }
+}
+
+// styles for user cards
+#user-card {
+  // avatar - names - controls
+  .first-row {
+    display: flex;
+    .avatar-placeholder {
+      width: $avatar_width;
+      height: $avatar_width;
+    }
+    .user-card-avatar {
+      margin-right: 10px;
+      margin-top: $avatar_margin;
+    }
+    .new-user a {
+      color: $primary-low-mid;
+    }
+  }
+  // user bio - suspension reason
+  .second-row {
+    max-height: 150px;
+    overflow: auto;
+    .bio {
+      a {
+        color: $primary;
+        text-decoration: underline;
+      }
+      a.mention {
+        text-decoration: none;
+      }
+      .overflow {
+        max-height: 60px;
+        overflow: hidden;
+      }
+    }
+    .suspended {
+      color: $danger;
+      .suspension-reason-title,
+      .suspension-date {
+        font-weight: bold;
+      }
+    }
+  }
+  // location and website
+  .third-row {
+    .location-and-website {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      align-items: center;
+      .location,
+      .website-name {
+        display: flex;
+        overflow: hidden;
+        align-items: center;
+        .d-icon {
+          margin-right: 0.25em;
+        }
+      }
+      .website-name a,
+      .location span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $primary;
+      }
+      .location {
+        margin-right: 0.5em;
+      }
+      .website-name a {
+        text-decoration: underline;
+      }
+    }
+  }
+  // custom user fields
+  .fifth-row {
+    .public-user-fields {
+      margin: 0;
+    }
+  }
+  // badges
+  .sixth-row {
+    .badge-section {
+      display: flex;
+      align-items: flex-start;
+      .user-badge {
+        display: flex;
+        white-space: nowrap;
+        margin: 0 0.5em 0 0;
+        background: $primary-very-low;
+        border: 1px solid $primary-low;
+        color: $primary;
+      }
+      .badge-display-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 185px;
+      }
+      .more-user-badges {
+        overflow: hidden;
+      }
+    }
+  }
+}
+
+// styles for group cards
+#group-card {
+  // avatar - names and controls
+  .first-row {
+    display: flex;
+    .group-card-avatar {
+      margin-top: $avatar_margin;
+    }
+    .group-card-avatar {
+      .avatar-flair {
+        width: $avatar_width;
+        height: $avatar_width;
+        display: flex;
+        color: $primary;
+        .d-icon {
+          margin: auto;
+          font-size: $avatar_width / 1.5;
+        }
+        &.rounded {
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  // group bio
+  .second-row {
+    max-height: 150px;
+    overflow: auto;
+    .bio {
+      a {
+        color: $primary;
+        text-decoration: underline;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      a.mention {
+        text-decoration: none;
+      }
+      .overflow {
+        max-height: 60px;
+        overflow: hidden;
+      }
+    }
+  }
+}
