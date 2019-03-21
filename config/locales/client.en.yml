@@ -3213,6 +3213,7 @@ en:
           inactive: "Inactive"
           failed: "Failed"
           successful: "Successful"
+          disabled: "Disabled"
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
@@ -3702,6 +3703,9 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            web_hook_create: "webhook create"
+            web_hook_update: "webhook update"
+            web_hook_destroy: "webhook destroy"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

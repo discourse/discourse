@@ -28,7 +28,8 @@ class WebHook < ActiveRecord::Base
   def self.last_delivery_statuses
     @last_delivery_statuses ||= Enum.new(inactive: 1,
                                          failed: 2,
-                                         successful: 3)
+                                         successful: 3,
+                                         disabled: 4)
   end
 
   def self.default_event_types
