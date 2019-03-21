@@ -113,7 +113,6 @@ describe Jobs::NotifyMailingListSubscribers do
         include_examples "no emails"
       end
 
-
       context "from a muted topic" do
         before { TopicUser.create(user: mailing_list_user, topic: post.topic, notification_level: TopicUser.notification_levels[:muted]) }
         include_examples "no emails"
