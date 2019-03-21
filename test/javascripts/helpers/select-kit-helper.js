@@ -1,16 +1,16 @@
 function checkSelectKitIsNotExpanded(selector) {
   if (find(selector).hasClass("is-expanded")) {
-    throw new Error(
-      "You expected select-kit to be collapsed but it is expanded."
-    );
+    // eslint-disable-next-line no-console
+    console.warn("You expected select-kit to be collapsed but it is expanded.");
+    click(selector + " .select-kit-header");
   }
 }
 
 function checkSelectKitIsNotCollapsed(selector) {
   if (!find(selector).hasClass("is-expanded")) {
-    throw new Error(
-      "You expected select-kit to be expanded but it is collapsed."
-    );
+    // eslint-disable-next-line no-console
+    console.warn("You expected select-kit to be expanded but it is collapsed.");
+    click(selector + " .select-kit-header");
   }
 }
 
