@@ -378,6 +378,11 @@ def migrate_to_s3
     else
       DbHelper.remap(from, to)
     end
+
+    OptimizedImage
+      .joins("LEFT JOIN uploads u ON optimized_images.upload_id = u.id")
+      .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
+      .destroy_all
   end
 
   puts "Done!"
