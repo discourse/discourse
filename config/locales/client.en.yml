@@ -803,7 +803,7 @@ en:
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
         enable_description: |
-          Scan this QR code in a supported app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> and enter your authentication code.
+          Scan this QR code in a supported app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) and enter your authentication code.
         disable_description: "Please enter the authentication code from your app"
         show_key_description: "Enter manually"
         extended_description: |
