@@ -47,7 +47,7 @@
     }
   }
 
-  .select-kit {
+  .select-kit:not(.is-hidden) {
     display: flex;
     align-self: stretch;
     margin-bottom: 10px;
