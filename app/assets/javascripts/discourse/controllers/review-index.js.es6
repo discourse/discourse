@@ -16,12 +16,12 @@ export default Ember.Controller.extend({
     this.set("filtersExpanded", !this.site.mobileView);
   },
 
-  @computed
+  @computed("reviewableTypes")
   allTypes() {
-    return ["flagged_post", "queued_post", "user"].map(type => {
+    return this.get("reviewableTypes").map(type => {
       return {
-        id: `Reviewable${type.classify()}`,
-        name: I18n.t(`review.types.reviewable_${type}.title`)
+        id: type,
+        name: I18n.t(`review.types.${type.underscore()}.title`)
       };
     });
   },
