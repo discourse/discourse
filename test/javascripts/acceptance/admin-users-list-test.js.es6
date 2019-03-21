@@ -19,7 +19,8 @@ QUnit.test("sorts users", async assert => {
   assert.ok(
     find(".users-list .user:nth-child(1) .username")
       .text()
-      .includes("eviltrout")
+      .includes("eviltrout"),
+    "list should be sorted by username"
   );
 
   await click(".users-list .sortable:nth-child(1)");
@@ -27,7 +28,8 @@ QUnit.test("sorts users", async assert => {
   assert.ok(
     find(".users-list .user:nth-child(1) .username")
       .text()
-      .includes("discobot")
+      .includes("discobot"),
+    "list should be sorted ascending by username"
   );
 });
 
