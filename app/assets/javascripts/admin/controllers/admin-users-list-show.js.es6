@@ -87,8 +87,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
       );
     },
 
-    showEmails: function() {
-      this.set("showEmails", true);
+    toggleEmailVisibility: function() {
+      this.toggleProperty("showEmails");
       this._refreshUsers();
     }
   }
