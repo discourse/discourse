@@ -1233,6 +1233,48 @@ describe PostCreator do
     end
   end
 
+  context "private message to an ignored user" do
+    let(:ignorer) { Fabricate(:evil_trout) }
+    let(:another_user) { Fabricate(:user) }
+
+    context "when post author is ignored" do
+      let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
+
+      it 'should fail' do
+        pc = PostCreator.new(
+          user,
+          title: 'this message is to someone who ignored me!',
+          raw: "you will have to see this even if you ignored me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{ignorer.username},#{another_user.username}"
+        )
+
+        expect(pc).not_to be_valid
+        expect(pc.errors.full_messages).to contain_exactly(
+                                             I18n.t(:not_accepting_pms, username: ignorer.username)
+                                           )
+      end
+    end
+
+    context "when post author is admin who is ignored" do
+      let(:staff_user) { Fabricate(:admin) }
+      let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: staff_user) }
+
+      it 'succeeds if the user is staff' do
+        pc = PostCreator.new(
+          staff_user,
+          title: 'this message is to someone who ignored me!',
+          raw: "you will have to see this even if you ignored me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{ignorer.username}"
+        )
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+
+  end
+
   context "private message recipients limit (max_allowed_message_recipients) reached" do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:evil_trout) }
