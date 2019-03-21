@@ -22,7 +22,8 @@ const SERVER_SIDE_ONLY = [
   /^\/wizard/,
   /\.rss$/,
   /\.json$/,
-  /^\/admin\/upgrade$/
+  /^\/admin\/upgrade$/,
+  /^\/logs($|\/)/
 ];
 
 export function rewritePath(path) {
