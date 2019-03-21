@@ -3,6 +3,10 @@ export default function() {
   this.route("exception", { path: "/exception" });
   this.route("exception-unknown", { path: "/404" });
 
+  this.route("logster", { path: "/logs" }, function() {
+    this.route("logster-routes", { path: "*path" });
+  });
+
   this.route("about", { path: "/about", resetNamespace: true });
 
   this.route("post", { path: "/p/:id" });
