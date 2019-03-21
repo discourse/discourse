@@ -26,8 +26,8 @@ export default Ember.Mixin.create({
 
     username = Ember.Handlebars.Utils.escapeExpression(username.toString());
 
-    // Don't show on mobile or nested
-    if (this.site.mobileView || $target.parents(".card-content").length) {
+    // Don't show if nested
+    if ($target.parents(".card-content").length) {
       this._close();
       DiscourseURL.routeTo($target.attr("href"));
       return false;
