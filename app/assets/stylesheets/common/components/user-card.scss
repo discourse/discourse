@@ -262,7 +262,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       display: flex;
       align-items: flex-start;
       .user-badge {
-        display: flex;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -289,6 +288,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     .sixth-row {
       .badge-section {
         .user-badge {
+          display: block;
           max-width: 185px;
           margin: 0 0.5em 0 0;
         }
@@ -325,6 +325,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
           }
         }
         .user-badge {
+          display: flex;
           margin: 0;
           width: 100%;
         }
