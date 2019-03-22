@@ -85,7 +85,7 @@ class ComposerMessagesFinder
     {
       id: 'avatar',
       templateName: 'education',
-      body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/u/#{@user.username_lower}"))
+      body: PrettyText.cook(I18n.t('education.avatar', profile_path: "/u/#{@user.username_lower}/preferences/account#profile-picture"))
     }
   end
 

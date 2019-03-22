@@ -137,31 +137,39 @@ describe Admin::EmailController do
       let(:eviltrout) { Fabricate(:evil_trout) }
       let(:admin) { Fabricate(:admin) }
 
-      it 'does not sends mail to anyone when setting is "yes"' do
+      it 'bypasses disable when setting is "yes"' do
         SiteSetting.disable_emails = 'yes'
-
         post "/admin/email/test.json", params: { email_address: admin.email }
 
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          admin.email
+        )
+
         incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test_disabled"))
+        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
 
-      it 'sends mail to everyone when setting is "non-staff"' do
+      it 'bypasses disable when setting is "non-staff"' do
         SiteSetting.disable_emails = 'non-staff'
 
-        post "/admin/email/test.json", params: { email_address: admin.email }
-        incoming = JSON.parse(response.body)
-        expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
-
         post "/admin/email/test.json", params: { email_address: eviltrout.email }
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          eviltrout.email
+        )
+
         incoming = JSON.parse(response.body)
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))
       end
 
-      it 'sends mail to everyone when setting is "no"' do
+      it 'works when setting is "no"' do
         SiteSetting.disable_emails = 'no'
 
         post "/admin/email/test.json", params: { email_address: eviltrout.email }
+
+        expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
+          eviltrout.email
+        )
 
         incoming = JSON.parse(response.body)
         expect(incoming['sent_test_email_message']).to eq(I18n.t("admin.email.sent_test"))

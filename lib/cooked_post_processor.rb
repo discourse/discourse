@@ -424,9 +424,10 @@ class CookedPostProcessor
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)
 
+    meta.add_child create_icon_node("far-image")
     meta.add_child create_span_node("filename", a["title"])
     meta.add_child create_span_node("informations", informations)
-    meta.add_child create_span_node("expand")
+    meta.add_child create_icon_node("discourse-expand")
   end
 
   def get_filename(upload, src)

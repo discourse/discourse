@@ -130,7 +130,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def destroy
     OptimizedImage.transaction do
-      Discourse.store.remove_optimized_image(self)
+      Discourse.store.remove_optimized_image(self) if self.upload
       super
     end
   end

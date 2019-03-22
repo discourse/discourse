@@ -357,6 +357,34 @@ def migrate_to_s3
       DbHelper.remap(from, to, anchor_left: true)
     end
 
+    from = "src=\"/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
+    to = "src=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+
+    DbHelper.regexp_replace(from, to)
+
+    from = "src='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)"
+    to = "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+
+    DbHelper.regexp_replace(from, to)
+
+    # BBCode images
+    from = "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]"
+    to = "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
+
+    DbHelper.regexp_replace(from, to)
+
+    # Legacy inline image format
+    Post.where("raw LIKE '%![](/uploads/default/original/%)%'").each do |post|
+      regexp = /!\[\](\/uploads\/#{db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
+
+      post.raw.scan(regexp).each do |upload_url, _|
+        upload = Upload.get_from_url(upload_url)
+        post.raw = post.raw.gsub("![](#{upload_url})", "![](#{upload.short_url})")
+      end
+
+      post.save!(validate: false)
+    end
+
     if Discourse.asset_host.present?
       # Uploads that were on local CDN will now be on S3 CDN
       from = "#{Discourse.asset_host}/uploads/#{db}/original/"
@@ -378,6 +406,17 @@ def migrate_to_s3
     else
       DbHelper.remap(from, to)
     end
+
+    puts "Removing old optimized images..."
+
+    OptimizedImage
+      .joins("LEFT JOIN uploads u ON optimized_images.upload_id = u.id")
+      .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
+      .destroy_all
+
+    puts "Rebaking posts with lightboxes..."
+
+    Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each(&:rebake!)
   end
 
   puts "Done!"

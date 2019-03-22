@@ -64,33 +64,29 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     saveCategory() {
-      const model = this.get("model");
-
-      const parentCategory = this.site
-        .get("categories")
-        .findBy("id", parseInt(model.get("parent_category_id"), 10));
+      const self = this,
+        model = this.get("model"),
+        parentCategory = this.site
+          .get("categories")
+          .findBy("id", parseInt(model.get("parent_category_id"), 10));
 
       this.set("saving", true);
       model.set("parentCategory", parentCategory);
 
-      model
+      this.get("model")
         .save()
-        .then(result => {
-          this.set("saving", false);
-
+        .then(function(result) {
+          self.set("saving", false);
+          self.send("closeModal");
           model.setProperties({
             slug: result.category.slug,
             id: result.category.id
           });
-
-          if (this.get("selectedTab") !== "settings") {
-            this.send("closeModal");
-            DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
-          }
+          DiscourseURL.redirectTo("/c/" + Discourse.Category.slugFor(model));
         })
-        .catch(error => {
-          this.flash(extractError(error), "error");
-          this.set("saving", false);
+        .catch(function(error) {
+          self.flash(extractError(error), "error");
+          self.set("saving", false);
         });
     },
 

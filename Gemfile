@@ -191,6 +191,7 @@ gem 'logstash-logger', require: false
 gem 'logster'
 
 gem 'sassc', require: false
+gem "sassc-rails"
 
 gem 'rotp'
 gem 'rqrcode'

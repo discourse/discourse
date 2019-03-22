@@ -56,8 +56,6 @@ class DbHelper
         "#{column} IS NOT NULL AND #{column} #{match} :pattern"
       end.join(" OR ")
 
-      puts pattern, replacement, flags, match
-
       DB.exec(<<~SQL, pattern: pattern, replacement: replacement, flags: flags, match: match)
         UPDATE #{table}
            SET #{set}

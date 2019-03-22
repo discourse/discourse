@@ -24,16 +24,43 @@ describe Jobs::UserEmail do
     expect { Jobs::UserEmail.new.execute(type: :no_method, user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
   end
 
-  it "doesn't call the mailer when the user is missing" do
-    Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
+  context 'digest can be generated' do
+    let(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
+    let!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
-    expect(ActionMailer::Base.deliveries).to eq([])
-  end
+    it "doesn't call the mailer when the user is missing" do
+      Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
 
-  it "doesn't call the mailer when the user is staged" do
-    Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
+    it "doesn't call the mailer when the user is staged" do
+      staged.update_attributes!(last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
+      expect(ActionMailer::Base.deliveries).to eq([])
+    end
 
-    expect(ActionMailer::Base.deliveries).to eq([])
+    context 'not emailed recently' do
+      before do
+        user.update_attributes!(last_emailed_at: 8.days.ago)
+      end
+
+      it "calls the mailer when the user exists" do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+        expect(ActionMailer::Base.deliveries).to_not be_empty
+      end
+    end
+
+    context 'recently emailed' do
+      before do
+        user.update_attributes!(last_emailed_at: 2.hours.ago)
+        user.user_option.update_attributes!(digest_after_minutes: 1.day.to_i / 60)
+      end
+
+      it 'skips sending digest email' do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+        expect(ActionMailer::Base.deliveries).to eq([])
+      end
+    end
   end
 
   context "bounce score" do
@@ -79,15 +106,6 @@ describe Jobs::UserEmail do
       Jobs::UserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
 
       expect(ActionMailer::Base.deliveries).to eq([])
-    end
-
-    it "sends when critical" do
-      SiteSetting.disable_emails = 'yes'
-      Jobs::CriticalUserEmail.new.execute(type: :confirm_new_email, user_id: user.id)
-
-      expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(
-        user.email
-      )
     end
   end
 
@@ -611,5 +629,4 @@ describe Jobs::UserEmail do
     end
 
   end
-
 end

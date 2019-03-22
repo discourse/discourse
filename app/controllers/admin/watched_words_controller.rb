@@ -25,7 +25,7 @@ class Admin::WatchedWordsController < Admin::AdminController
 
     Scheduler::Defer.later("Upload watched words") do
       begin
-        File.open(file.tempfile, encoding: "ISO-8859-1").each_line do |line|
+        File.open(file.tempfile, encoding: "bom|utf-8").each_line do |line|
           WatchedWord.create_or_update_word(word: line, action_key: action_key) unless line.empty?
         end
         data = { url: '/ok' }

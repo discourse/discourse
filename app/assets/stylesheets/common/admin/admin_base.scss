@@ -435,7 +435,8 @@ $mobile-breakpoint: 700px;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  .show-emails {
+  .show-emails,
+  .hide-emails {
     margin-left: auto;
   }
 }

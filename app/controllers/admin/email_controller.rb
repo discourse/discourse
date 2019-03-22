@@ -10,12 +10,10 @@ class Admin::EmailController < Admin::AdminController
   def test
     params.require(:email_address)
     begin
-      Jobs::TestEmail.new.execute(to_address: params[:email_address])
-      if SiteSetting.disable_emails == "yes"
-        render json: { sent_test_email_message: I18n.t("admin.email.sent_test_disabled") }
-      else
-        render json: { sent_test_email_message: I18n.t("admin.email.sent_test") }
-      end
+      message = TestMailer.send_test(params[:email_address])
+      Email::Sender.new(message, :test_message).send
+
+      render json: { sent_test_email_message: I18n.t("admin.email.sent_test") }
     rescue => e
       render json: { errors: [e.message] }, status: 422
     end

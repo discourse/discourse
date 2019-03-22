@@ -11,6 +11,7 @@ require 'uri'
 require 'net/smtp'
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
+BYPASS_DISABLE_TYPES = ["admin_login", "test_message"]
 
 module Email
   class Sender
@@ -21,11 +22,10 @@ module Email
       @user = user
     end
 
-    def send(is_critical: false)
-      if SiteSetting.disable_emails == "yes" &&
-         @email_type.to_s != "admin_login" &&
-         !is_critical
+    def send
+      bypass_disable = BYPASS_DISABLE_TYPES.include?(@email_type.to_s)
 
+      if SiteSetting.disable_emails == "yes" && !bypass_disable
         return
       end
 
@@ -34,6 +34,10 @@ module Email
 
       return skip(SkippedEmailLog.reason_types[:sender_message_blank])    if @message.blank?
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
+
+      if SiteSetting.disable_emails == "non-staff" && !bypass_disable
+        return unless User.find_by_email(to_address)&.staff?
+      end
 
       return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
 

@@ -72,6 +72,8 @@ if Rails.env.production?
   Logster.config.env_expandable_keys.push(:hostname, :problem_db)
 end
 
+Logster.store.max_backlog = GlobalSetting.max_logster_logs
+
 # middleware that logs errors sits before multisite
 # we need to establish a connection so redis connection is good
 # and db connection is good

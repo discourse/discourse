@@ -1234,6 +1234,7 @@ en:
       labels:
         ignored_user: Ignored User
         ignores_count: Ignores count
+        mutes_count: Mutes count
       description: "List top ignored users."
 
   dashboard:
@@ -2173,7 +2174,6 @@ en:
   admin:
     email:
       sent_test: "sent!"
-      sent_test_disabled: "cannot send because emails are disabled"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
@@ -4342,9 +4342,13 @@ en:
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
+      custom: "Notification from %{site_title}"
 
   staff_action_logs:
     not_found: "not found"
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
+    update: "Updated"
+    create: "Created"
+    destroy: "Destroyed"

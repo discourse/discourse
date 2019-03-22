@@ -12,25 +12,34 @@ describe Email::Sender do
       before { SiteSetting.disable_emails = "yes" }
 
       it "doesn't deliver mail when mails are disabled" do
-        Mail::Message.any_instance.expects(:deliver_now).never
-        message = Mail::Message.new(to: moderator.email , body: "hello")
-        expect(Email::Sender.new(message, :hello).send).to eq(nil)
+        message = UserNotifications.email_login(moderator)
+        Email::Sender.new(message, :email_login).send
+
+        expect(ActionMailer::Base.deliveries).to eq([])
       end
 
       it "delivers mail when mails are disabled but the email_type is admin_login" do
-        Mail::Message.any_instance.expects(:deliver_now).once
-        message = Mail::Message.new(to: moderator.email , body: "hello")
+        message = UserNotifications.admin_login(moderator)
         Email::Sender.new(message, :admin_login).send
+
+        expect(ActionMailer::Base.deliveries.first.to).to eq([moderator.email])
+      end
+
+      it "delivers mail when mails are disabled but the email_type is test_message" do
+        message = TestMailer.send_test(moderator.email)
+        Email::Sender.new(message, :test_message).send
+
+        expect(ActionMailer::Base.deliveries.first.to).to eq([moderator.email])
       end
     end
 
     context "disable_emails is enabled for non-staff users" do
       before { SiteSetting.disable_emails = "non-staff" }
 
-      it "delivers mail to normal user" do
-        Mail::Message.any_instance.expects(:deliver_now).once
+      it "doesn't deliver mail to normal user" do
+        Mail::Message.any_instance.expects(:deliver_now).never
         message = Mail::Message.new(to: user.email, body: "hello")
-        Email::Sender.new(message, :hello).send
+        expect(Email::Sender.new(message, :hello).send).to eq(nil)
       end
 
       it "delivers mail to staff user" do

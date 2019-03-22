@@ -39,6 +39,11 @@ module Jobs
                   )', post.user_id)
             .where('NOT EXISTS (
                       SELECT 1
+                      FROM ignored_users iu
+                      WHERE iu.ignored_user_id = ? AND iu.user_id = users.id
+                  )', post.user_id)
+            .where('NOT EXISTS (
+                      SELECT 1
                       FROM topic_users tu
                       WHERE tu.topic_id = ? AND tu.user_id = users.id AND tu.notification_level = ?
                   )', post.topic_id, TopicUser.notification_levels[:muted])
