@@ -23,18 +23,22 @@
           {{/if}}
         </span>
       </div>
-      <div class="usercard-controls group-details-button">
-        {{group-membership-button
+      <ul class="usercard-controls group-details-button">
+        <li>
+          {{group-membership-button
            model=group
            showLogin=(route-action "showLogin")}}
+        </li>
         {{#if group.messageable}}
-          {{d-button
+          <li>
+            {{d-button
           action=(action "messageGroup")
           class="btn-primary group-message-button inline"
           icon="envelope"
           label="groups.message"}}
+          </li>
         {{/if}}
-      </div>
+      </ul>
     </div>
 
     {{#if group.bio_cooked}}
