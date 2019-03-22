@@ -3,7 +3,7 @@
 
     <div class="card-row first-row">
       <div class="group-card-avatar">
-        <a href="{{groupPath}}" action='(action "showGroup" group)' class="card-huge-avatar">
+        <a href="{{groupPath}}" {{action "showGroup" group}} class="card-huge-avatar">
           {{avatar-flair
           flairURL=group.flair_url
           flairBgColor=group.flair_bg_color
@@ -14,7 +14,7 @@
       <div class="names">
         <span>
           <h1 class="{{group.name}}">
-            <a href="{{groupPath}}" action='(action "showGroup" group)'>{{group.name}}</a>
+            <a href="{{groupPath}}" {{action "showGroup" group}}>{{group.name}}</a>
           </h1>
           {{#if group.full_name}}
             <h2 class='full-name'>{{group.full_name}}</h2>
@@ -71,7 +71,7 @@
       <div class="card-row fourth-row">
         <div class="members metadata">
           {{#each group.members as |user|}}
-            <a href="{{user.path}}" {{action "showUser" user}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
+            <a href="{{user.path}}" {{action 'showUser' user.username}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
           {{/each}}
           {{#if showMoreMembers}}
             <a href="{{groupPath}}" {{action "showGroup" group}} class="more-members-link"><span
