@@ -3,8 +3,7 @@
 
     <div class="card-row first-row">
       <div class="user-card-avatar">
-        <a href="{{user.path}}" action='(action "showUser" user.username)'
-         class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+        <a href="{{user.path}}" {{action 'showUser' user.username}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
         {{#if user.primary_group_name}}
           {{avatar-flair
           flairURL=user.primary_group_flair_url
@@ -17,7 +16,7 @@
       <div class="names">
         <span>
           <h1 class="{{staff}} {{newUser}} {{if nameFirst "full-name" "username"}}">
-            <a href="{{user.path}}" action='(action "showUser" user.username)'>{{if nameFirst user.name (format-username username)}}
+            <a href="{{user.path}}" {{action "showUser" user.username}}>{{if nameFirst user.name (format-username username)}}
               {{user-status user currentUser=currentUser}}</a>
           </h1>
           {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user.username)) tagName=''}}
