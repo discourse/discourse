@@ -21,8 +21,8 @@ To get your Ubuntu 16.04 or 18.04 LTS install up and running to develop Discours
 
     # exit the terminal and open it again to activate RVM
 
-    rvm install 2.6.1
-    rvm --default use 2.6.1 # If this error out check https://rvm.io/integration/gnome-terminal
+    rvm install 2.6.2
+    rvm --default use 2.6.2 # If this error out check https://rvm.io/integration/gnome-terminal
     gem install bundler mailcatcher rake
 
     # Download and install postgresql-10 from https://wiki.postgresql.org/wiki/Apt
