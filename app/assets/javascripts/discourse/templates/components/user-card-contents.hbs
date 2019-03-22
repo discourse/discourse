@@ -188,9 +188,11 @@
               {{user-badge badge=ub.badge user=user}}
             {{/each}}
             {{#if showMoreBadges}}
-              {{#link-to 'user.badges' user class="user-badge more-user-badges"}}
-                {{i18n 'badges.more_badges' count=moreBadgesCount}}
-              {{/link-to}}
+              <span class='more-user-badges'>
+                {{#link-to 'user.badges' user}}
+                  {{i18n 'badges.more_badges' count=moreBadgesCount}}
+                {{/link-to}}
+              </span>
             {{/if}}
           </div>
         {{/if}}
