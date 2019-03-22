@@ -1,3 +1,7 @@
+{{#if site.mobileView}}
+  <div class="card-cloak hidden"></div>
+{{/if}}
+
 {{user-card-contents
   currentPath=application.currentPath
   topic=topic.model
