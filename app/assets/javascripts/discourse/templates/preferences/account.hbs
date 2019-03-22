@@ -143,7 +143,7 @@
 
 {{#unless siteSettings.sso_overrides_avatar}}
   <div class="control-group pref-avatar">
-    <label class="control-label">{{i18n 'user.avatar.title'}}</label>
+    <label class="control-label" id="profile-picture">{{i18n 'user.avatar.title'}}</label>
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar model "huge"}}
