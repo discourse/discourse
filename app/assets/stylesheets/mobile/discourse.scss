@@ -132,3 +132,17 @@ blockquote {
 #simple-container {
   width: 90%;
 }
+
+// this is used to provide visual feedback that indicates that the user / group
+// cards are loading after the user clicks on an avatar. It's mostly for very slow
+// connections. Users on good connections won't notice it.
+[data-user-card]:focus {
+  .avatar,
+  + .avatar-flair {
+    animation: wave 0.75s infinite;
+    animation-delay: 0.5s;
+  }
+  .avatar {
+    position: relative;
+  }
+}
