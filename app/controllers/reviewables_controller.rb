@@ -151,7 +151,7 @@ protected
   end
 
   def allowed_statuses
-    @allowed_statuses ||= ([:reviewed] + Reviewable.statuses.keys)
+    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.keys)
   end
 
   def version_required

@@ -278,11 +278,7 @@ class Reviewable < ActiveRecord::Base
     return [] if user.blank?
     result = viewable_by(user, order: order)
 
-    if status == :reviewed
-      result = result.where(status: [statuses[:approved], statuses[:rejected], statuses[:ignored]])
-    else
-      result = result.where(status: statuses[status])
-    end
+    result = by_status(result, status)
     result = result.where(type: type) if type
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
@@ -380,6 +376,16 @@ protected
       self.version = version_result[0]
     else
       raise UpdateConflict.new
+    end
+  end
+
+  def self.by_status(partial_result, status)
+    return partial_result if status == :all
+
+    if status == :reviewed
+      partial_result.where(status: [statuses[:approved], statuses[:rejected], statuses[:ignored]])
+    else
+      partial_result.where(status: statuses[status])
     end
   end
 

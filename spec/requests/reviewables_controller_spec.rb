@@ -96,6 +96,10 @@ describe ReviewablesController do
         json = ::JSON.parse(response.body)
         expect(json['reviewables']).to be_present
 
+        get "/review.json?type=ReviewableUser&status=all"
+        expect(response.code).to eq("200")
+        json = ::JSON.parse(response.body)
+        expect(json['reviewables']).to be_present
       end
 
       it "raises an error with an invalid status" do

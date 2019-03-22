@@ -410,6 +410,8 @@ en:
           title: "Ignored"
         reviewed:
           title: "(All Reviewed)"
+        all:
+          title: "(Everything)"
 
       types:
         reviewable_flagged_post:
