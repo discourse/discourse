@@ -1,6 +1,7 @@
 function checkSelectKitIsNotExpanded(selector) {
   if (find(selector).hasClass("is-expanded")) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.warn(
       "You expected select-kit to be collapsed but it is expanded."
     );
   }
@@ -8,7 +9,8 @@ function checkSelectKitIsNotExpanded(selector) {
 
 function checkSelectKitIsNotCollapsed(selector) {
   if (!find(selector).hasClass("is-expanded")) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.warn(
       "You expected select-kit to be expanded but it is collapsed."
     );
   }
