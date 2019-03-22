@@ -330,6 +330,18 @@ describe OptimizedImage do
 
   end
 
+  describe '#destroy' do
+    describe 'when upload_id is no longer valid' do
+      it 'should still destroy the record' do
+        image = Fabricate(:optimized_image)
+        image.upload.delete
+        image.reload.destroy
+
+        expect(OptimizedImage.exists?(id: image.id)).to eq(false)
+      end
+    end
+  end
+
 end
 
 class FakeInternalStore
