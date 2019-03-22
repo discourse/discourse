@@ -528,6 +528,14 @@ export default function() {
       });
     });
 
+    this.get("/admin/users/1.json", () => {
+      return response(200, {
+        id: 1,
+        username: "eviltrout",
+        admin: true
+      });
+    });
+
     this.get("/admin/users/2.json", () => {
       return response(200, {
         id: 2,
