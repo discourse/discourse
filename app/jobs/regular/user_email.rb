@@ -97,7 +97,12 @@ module Jobs
         return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm])
       end
 
-      return if user.staged && type.to_s == "digest"
+      if type.to_s == "digest"
+        return if user.staged
+        return if user.last_emailed_at &&
+          user.last_emailed_at >
+            (user.user_option&.digest_after_minutes || SiteSetting.default_email_digest_frequency.to_i).minutes.ago
+      end
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
       seen_recently = false if always_email_regular?(user, type) || always_email_private_message?(user, type) || user.staged
