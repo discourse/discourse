@@ -16,7 +16,7 @@
       <div class="names">
         <span>
           <h1 class="{{staff}} {{newUser}} {{if nameFirst "full-name" "username"}}">
-            <a href="{{user.path}}" {{action "showUser" user.username}}>{{if nameFirst user.name (format-username username)}}
+            <a href="{{user.path}}" {{action "showUser" user.username}} class='user-profile-link'>{{if nameFirst user.name (format-username username)}}
               {{user-status user currentUser=currentUser}}</a>
           </h1>
           {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user.username)) tagName=''}}
