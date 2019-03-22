@@ -367,6 +367,13 @@ def migrate_to_s3
 
     DbHelper.regexp_replace(from, to)
 
+    # BBCode images
+    from = "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]"
+    to = "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
+
+    DbHelper.regexp_replace(from, to)
+
+    # Legacy inline image format
     Post.where("raw LIKE '%![](/uploads/default/original/%)%'").each do |post|
       regexp = /!\[\](\/uploads\/#{db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
 
