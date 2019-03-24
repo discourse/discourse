@@ -174,7 +174,7 @@ class SessionController < ApplicationController
           begin
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)
-              return_path = uri.request_uri
+              return_path = uri.to_s
             elsif !SiteSetting.sso_allows_all_return_paths
               return_path = path("/")
             end
@@ -183,8 +183,10 @@ class SessionController < ApplicationController
           end
         end
 
-        # never redirects back to sso in an sso loop
-        if return_path.start_with?(path("/session/sso"))
+        # this can be done more surgically with a regex
+        # but it the edge case of never supporting redirects back to
+        # any url with `/session/sso` in it anywhere is reasonable
+        if return_path.include?(path("/session/sso"))
           return_path = path("/")
         end
 
