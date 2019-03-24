@@ -5,6 +5,7 @@ require "bundler/inline"
 gemfile(true) do
   source "https://rubygems.org"
 
+  gem "net-http-persistent"
   gem "nokogiri"
   gem "selenium-webdriver"
 end
@@ -13,6 +14,7 @@ require "fileutils"
 require "nokogiri"
 require "optparse"
 require "selenium-webdriver"
+require 'selenium/webdriver/remote/http/persistent'
 require "set"
 require "yaml"
 
@@ -23,7 +25,8 @@ def driver
     chrome_args = ["headless", "disable-gpu"]
     chrome_args << "no-sandbox" << "disable-dev-shm-usage" if inside_container?
     options = Selenium::WebDriver::Chrome::Options.new(args: chrome_args)
-    Selenium::WebDriver.for(:chrome, options: options)
+    http_client = Selenium::WebDriver::Remote::Http::Persistent.new
+    Selenium::WebDriver.for(:chrome, options: options, http_client: http_client)
   end
 end
 
@@ -108,6 +111,17 @@ def crawl_message(url, might_be_deleted)
   filename = File.join(@path, "#{url[/#{@groupname}\/(.+)/, 1].sub("/", "-")}.eml")
   content = find("pre")["innerText"]
 
+  if !@first_message_checked
+    @first_message_checked = true
+
+    if content.match?(/From:.*\.\.\.@.*/i) && !@force_import
+      exit_with_error(<<~MSG)
+        It looks like you do not have permissions to see email addresses. Aborting.
+        Use the --force option to import anyway.
+      MSG
+    end
+  end
+
   File.write(filename, content)
 rescue Selenium::WebDriver::Error::NoSuchElementError
   raise unless might_be_deleted
@@ -121,19 +135,78 @@ def login
   puts "Logging in..."
   get("https://www.google.com/accounts/Login")
 
-  sleep(0.5)
+  sleep(1)
+  email_element = wait_for_element("input[type='email']")
+  exit_with_error("Failed to detect 'email' input on login page") if !email_element
 
-  email_element = find("input[type='email']")
   driver.action.move_to(email_element)
   email_element.send_keys(@email)
   email_element.send_keys("\n")
 
-  sleep(2)
+  sleep(1)
+  password_element = wait_for_element("input[type='password']")
+  exit_with_error("Failed to detect 'password' input on login page") if !password_element
 
-  password_element = find("input[type='password']")
   driver.action.move_to(password_element)
   password_element.send_keys(@password)
   password_element.send_keys("\n")
+
+  sleep(1)
+
+  if driver.current_url.include?("challenge")
+    puts "", "2-Step Verification is required."
+    puts "Unlock on your phone and press Enter"
+    puts "or enter the code from your authenticator app"
+    puts "or enter the code you received via SMS (without the G- prefix)"
+
+    print "Enter code: "
+
+    code = gets.chomp
+
+    if code.empty?
+      # Verification via phone?
+      begin
+        wait_for_url { |url| !url.include?("challenge") }
+      rescue Selenium::WebDriver::Error::TimeOutError
+        exit_with_error("Failed to login. Did you tap 'Yes' on your phone to allow the login?")
+      end
+    else
+      code_element = wait_for_element("input[type='tel']")
+      exit_with_error("Failed to detect 'code' input on login page") if !code_element
+
+      code_element.send_keys(code)
+      code_element.send_keys("\n")
+
+      begin
+        wait_for_url { |url| !url.include?("challenge") }
+      rescue Selenium::WebDriver::Error::TimeOutError
+        exit_with_error("Failed to login. Wrong code?")
+      end
+    end
+  end
+
+  sleep(1)
+  user_element = wait_for_element("a[aria-label*='#{@email}']")
+  exit_with_error("Failed to login") if !user_element
+end
+
+def wait_for_url
+  wait = Selenium::WebDriver::Wait.new(timeout: 5)
+  wait.until { yield(driver.current_url) }
+end
+
+def wait_for_element(css)
+  wait = Selenium::WebDriver::Wait.new(timeout: 5)
+  wait.until { driver.find_element(css: css).displayed? }
+  find(css)
+rescue Selenium::WebDriver::Error::TimeOutError
+  nil
+end
+
+def exit_with_error(message)
+  puts driver.current_url
+  STDERR.puts message
+  exit 1
 end
 
 def crawl
@@ -156,6 +229,8 @@ end
 def parse_arguments
   puts ""
 
+  @force_import = false
+
   parser = OptionParser.new do |opts|
     opts.banner = "Usage: google_groups.rb [options]"
 
@@ -163,6 +238,7 @@ def parse_arguments
     opts.on("-p", "--password PASSWORD", "password of group admin or manager") { |v| @password = v }
     opts.on("-g", "--groupname GROUPNAME") { |v| @groupname = v }
     opts.on("--path PATH", "output path for emails") { |v| @path = v }
+    opts.on("-f", "--force", "force import when user isn't allowed to see email addresses") { @force_import = true }
     opts.on("-h", "--help") do
       puts opts
       exit
