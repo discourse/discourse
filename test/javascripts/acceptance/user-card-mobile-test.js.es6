@@ -14,7 +14,7 @@ QUnit.test("user card", async assert => {
   assert.ok(visible("#user-card"), "mobile user card should appear");
 
   sandbox.stub(DiscourseURL, "routeTo");
-  await click(".card-content a.user-profile-link");
+  await click(".card-content a.mention");
   assert.ok(
     DiscourseURL.routeTo.calledWith("/u/eviltrout"),
     "it should navigate to the user profile"
