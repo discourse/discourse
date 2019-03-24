@@ -403,6 +403,17 @@ RSpec.describe SessionController do
       expect(logged_on_user.admin).to eq(true)
     end
 
+    it 'does not redirect offsite' do
+      sso = get_sso("#{Discourse.base_url}//site.com/xyz")
+      sso.external_id = '666'
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to("#{Discourse.base_url}//site.com/xyz")
+    end
+
     it 'redirects to a non-relative url' do
       sso = get_sso("#{Discourse.base_url}/b/")
       sso.external_id = '666' # the number of the beast
