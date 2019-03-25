@@ -2,16 +2,19 @@
   <div id="rc-scroll-anchor"></div>
   <table>
     <thead>
-    <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
     <th class="th-cat">{{i18n "categories.category"}}</th>
+    <th class="th-pos">{{i18n "categories.reorder.position"}}</th>
     </thead>
     <tbody>
     {{#each categoriesOrdered as |cat|}}
       <tr data-category-id="{{cat.id}}">
         <td>
-          {{#if cat.parent_category_id}}
-            &nbsp;&nbsp;&nbsp;&nbsp;
-          {{/if}}
+          <div class={{if cat.parent_category_id 'reorder-categories-sub-cat' ''}}>
+            {{category-badge cat allowUncategorized="true"}}
+          </div>
+        </td>
+
+        <td>
           {{number-field number=(readonly cat.position) change=(action 'change' cat)}}
           {{d-button class="btn-default no-text" action=(action "moveUp") actionParam=cat icon="arrow-up"}}
           {{d-button class="btn-default no-text" action=(action "moveDown") actionParam=cat icon="arrow-down"}}
@@ -19,7 +22,6 @@
             {{d-button class="no-text ok" action=(action "commit") icon="check"}}
           {{/if}}
         </td>
-        <td>{{category-badge cat allowUncategorized="true"}}</td>
       </tr>
     {{/each}}
     </tbody>
