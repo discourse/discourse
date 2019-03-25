@@ -27,7 +27,7 @@ class AddMissingTopicIdSiteSettings < ActiveRecord::Migration[5.2]
           SELECT 1
           FROM site_settings
           WHERE name = 'lounge_welcome_topic_id'
-        ) AND category_id = (
+        ) AND category_id IN (
         SELECT value::INT
         FROM site_settings
         WHERE name = 'lounge_category_id'
