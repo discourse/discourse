@@ -46,31 +46,19 @@ blockquote {
   font-weight: normal;
 }
 
-.mobile-view .mobile-nav {
+.mobile-nav {
   margin: 0;
   padding: 0;
-  background: $primary-low;
   list-style: none;
   overflow: visible;
   position: relative;
-  width: 45%;
-
-  &.messages-nav,
-  &.notifications-nav,
-  &.activity-nav,
-  &.preferences-nav {
-    position: absolute;
-    right: 0;
-    top: -57px;
-  }
+  border: 1px solid $primary-medium;
 
   a {
     color: $primary;
-
-    .fa {
-      margin-right: 8px;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-      line-height: $line-height-medium;
+    .d-icon {
+      margin-right: .25em;
+      color: $primary-medium;
     }
   }
 
@@ -83,8 +71,11 @@ blockquote {
     box-sizing: border-box;
   }
 
-  .d-icon-caret-down {
-    margin-left: auto;
+  .expander .d-icon {
+    &:last-of-type {
+      margin-left: auto;
+      margin-right: 0;
+    }
   }
 
   .drop {
@@ -99,7 +90,7 @@ blockquote {
       list-style: none;
       margin: 0;
       padding: 5px;
-      border: 1px solid #eaeaea;
+      border: 1px solid $primary-low;
       box-sizing: border-box;
 
       li {
