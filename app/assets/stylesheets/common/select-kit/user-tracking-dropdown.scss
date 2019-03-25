@@ -1,0 +1,16 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.user-tracking-dropdown {
+      text-align: left;
+
+      .select-kit-body {
+        width: 485px;
+        max-width: 485px;
+      }
+      .select-kit-row[data-value="change-to-ignored"] .texts .name,
+      .select-kit-row[data-value="change-to-ignored"] .icons .d-icon {
+        color: $danger;
+      }
+    }
+  }
+}

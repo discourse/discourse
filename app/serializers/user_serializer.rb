@@ -50,6 +50,7 @@ class UserSerializer < BasicUserSerializer
              :can_edit_name,
              :stats,
              :ignored,
+             :muted,
              :can_ignore_user,
              :can_send_private_messages,
              :can_send_private_message_to_user,
@@ -279,6 +280,10 @@ class UserSerializer < BasicUserSerializer
 
   def ignored
     IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id).exists?
+  end
+
+  def muted
+    MutedUser.where(user_id: scope.user&.id, muted_user_id: object.id).exists?
   end
 
   def can_ignore_user

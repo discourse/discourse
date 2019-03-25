@@ -615,17 +615,10 @@ const User = RestModel.extend({
     }
   },
 
-  ignore() {
-    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
+  track(state) {
+    return ajax(`${userPath(this.get("username"))}/track.json`, {
       type: "PUT",
-      data: { ignored_user_id: this.get("id") }
-    });
-  },
-
-  unignore() {
-    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
-      type: "DELETE",
-      data: { ignored_user_id: this.get("id") }
+      data: { state: state, tracked_user_id: this.get("id") }
     });
   },
 

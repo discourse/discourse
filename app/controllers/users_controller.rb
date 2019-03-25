@@ -995,18 +995,21 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def ignore
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
-    guardian.ensure_can_ignore_user!(params[:ignored_user_id])
-
-    IgnoredUser.find_or_create_by!(user: current_user, ignored_user_id: params[:ignored_user_id])
-    render json: success_json
-  end
-
-  def unignore
+  def track
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
 
-    IgnoredUser.where(user: current_user, ignored_user_id: params[:ignored_user_id]).delete_all
+    if params[:state] == "ignore"
+      guardian.ensure_can_ignore_user!(params[:tracked_user_id])
+      MutedUser.where(user: current_user, muted_user_id: params[:tracked_user_id]).delete_all
+      IgnoredUser.find_or_create_by!(user: current_user, ignored_user_id: params[:tracked_user_id])
+    elsif params[:state] == "mute"
+      IgnoredUser.where(user: current_user, ignored_user_id: params[:tracked_user_id]).delete_all
+      MutedUser.find_or_create_by!(user: current_user, muted_user_id: params[:tracked_user_id])
+    elsif params[:state] == "normal"
+      MutedUser.where(user: current_user, muted_user_id: params[:tracked_user_id]).delete_all
+      IgnoredUser.where(user: current_user, ignored_user_id: params[:tracked_user_id]).delete_all
+    end
+
     render json: success_json
   end
 
