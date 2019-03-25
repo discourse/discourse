@@ -615,10 +615,10 @@ const User = RestModel.extend({
     }
   },
 
-  track(state) {
-    return ajax(`${userPath(this.get("username"))}/track.json`, {
+  updateNotificationLevel(level) {
+    return ajax(`${userPath(this.get("username"))}/notification_level.json`, {
       type: "PUT",
-      data: { state: state, tracked_user_id: this.get("id") }
+      data: { notification_level: level, notification_level_user_id: this.get("id") }
     });
   },
 

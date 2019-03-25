@@ -147,9 +147,9 @@ export default Ember.Controller.extend(CanCheckEmails, {
       this.get("adminTools").deleteUser(this.get("model.id"));
     },
 
-    trackUser(state) {
+    updateNotificationLevel(level) {
       const user = this.get("model");
-      return user.track(state);
+      return user.updateNotificationLevel(level);
     }
   }
 });

@@ -50,7 +50,7 @@
                 </li>
                 {{#if canMuteOrIgnoreUser}}
                   <li>
-                    {{user-tracking-dropdown user=model trackUser=(action "trackUser")}}
+                    {{user-notifications-dropdown user=model updateNotificationLevel=(action "updateNotificationLevel")}}
                   </li>
                 {{/if}}
               {{/if}}
