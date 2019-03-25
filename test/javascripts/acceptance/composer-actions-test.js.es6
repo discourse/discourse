@@ -139,7 +139,10 @@ QUnit.test("shared draft", async assert => {
   await visit("/");
   await click("#create-topic");
 
-  await fillIn("#reply-title", "This is the new text for the title");
+  await fillIn(
+    "#reply-title",
+    "This is the new text for the title using 'quotes'"
+  );
   await fillIn(".d-editor-input", "This is the new text for the post");
   await tags.expand();
   await tags.selectRowByValue("monkey");
@@ -148,6 +151,11 @@ QUnit.test("shared draft", async assert => {
   await composerActions.selectRowByValue("shared_draft");
 
   assert.equal(tags.header().value(), "monkey", "tags are not reset");
+
+  assert.equal(
+    find("#reply-title").val(),
+    "This is the new text for the title using 'quotes'"
+  );
 
   assert.equal(
     find("#reply-control .btn-primary.create .d-button-label").text(),
