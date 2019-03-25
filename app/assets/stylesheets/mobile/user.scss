@@ -9,14 +9,15 @@
   .user-primary-navigation {
     grid-column-start: 1;
     grid-row-start: 1;
+    grid-column-end: 2;
   }
   .user-secondary-navigation {
     grid-column-start: 2;
     grid-row-start: 1;
   }
+  .user-additional-controls + .user-content,
   .user-secondary-navigation + .user-content {
     grid-column-start: 1;
-    grid-column-end: span 2;
   }
   .user-additional-controls {
     grid-column-start: 1;
@@ -25,7 +26,7 @@
   .user-content,
   .spinner {
     grid-row-start: 3;
-    grid-column-start: span 2;
+    grid-column-start: 1;
   }
 }
 
