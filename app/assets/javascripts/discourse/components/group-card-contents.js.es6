@@ -2,6 +2,7 @@ import { setting } from "discourse/lib/computed";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
+import { groupPath } from "discourse/lib/url";
 
 const maxMembersToDisplay = 10;
 
@@ -40,7 +41,7 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
 
   @computed("group")
   groupPath(group) {
-    return `${Discourse.BaseUri}/g/${group.name}`;
+    return groupPath(group.name);
   },
 
   _showCallback(username, $target) {
@@ -87,6 +88,11 @@ export default Ember.Component.extend(CardContentsBase, CleansUp, {
 
     showGroup(group) {
       this.showGroup(group);
+      this._close();
+    },
+
+    showUser(user) {
+      this.showUser(user);
       this._close();
     }
   }

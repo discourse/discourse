@@ -14,7 +14,7 @@ QUnit.test("group card", async assert => {
   assert.ok(visible("#group-card"), "mobile group card should appear");
 
   sandbox.stub(DiscourseURL, "routeTo");
-  await click(".card-content a.mention");
+  await click(".card-content a.group-page-link");
   assert.ok(
     DiscourseURL.routeTo.calledWith("/g/discourse"),
     "it should navigate to the group page"

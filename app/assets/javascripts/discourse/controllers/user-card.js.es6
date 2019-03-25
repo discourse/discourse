@@ -1,3 +1,9 @@
+import {
+  default as DiscourseURL,
+  userPath,
+  groupPath
+} from "discourse/lib/url";
+
 export default Ember.Controller.extend({
   topic: Ember.inject.controller(),
   application: Ember.inject.controller(),
@@ -9,7 +15,11 @@ export default Ember.Controller.extend({
     },
 
     showUser(user) {
-      this.transitionToRoute("user", user);
+      DiscourseURL.routeTo(userPath(user.username_lower));
+    },
+
+    showGroup(group) {
+      DiscourseURL.routeTo(groupPath(group.name));
     }
   }
 });
