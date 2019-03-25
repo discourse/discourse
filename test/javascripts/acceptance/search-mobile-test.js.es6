@@ -26,5 +26,9 @@ QUnit.test("search", async assert => {
     "posts",
     "it does not reset input when hitting search icon again"
   );
-  assert.equal($(document).scrollTop(), 0, "it scrolls back to top of document");
+  assert.equal(
+    $(document).scrollTop(),
+    0,
+    "it scrolls back to top of document"
+  );
 });
