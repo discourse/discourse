@@ -370,12 +370,12 @@ def migrate_to_s3
         "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]",
         "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
       ]
-    ].each do |from, to|
+    ].each do |from_url, to_url|
 
       if true
-        puts "REPLACING '#{from}' WITH '#{to}'"
+        puts "REPLACING '#{from_url}' WITH '#{to_url}'"
       else
-        DbHelper.regexp_replace(from, to)
+        DbHelper.regexp_replace(from_url, to_url)
       end
     end
 
