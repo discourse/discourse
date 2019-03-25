@@ -89,6 +89,12 @@ class WebhooksController < ActionController::Base
     success
   end
 
+  def gmail
+    Rails.logger.warn("webhooks#gmail called with #{params.to_json}")
+    data = JSON.parse(Base64.decode64(params["message"]["data"]))
+    Jobs.enqueue(:process_gmail, email_address: data["emailAddress"], history_id: data["historyId"])
+  end
+
   def aws
     raw  = request.raw_post
     json = JSON.parse(raw)

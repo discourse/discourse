@@ -11,7 +11,6 @@ module Imap
         username: group.email_username,
         password: group.email_password
       )
-      @provider.connect!
     end
 
     def disconnect!
@@ -19,6 +18,8 @@ module Imap
     end
 
     def process(mailbox)
+      @provider.connect!
+
       # Server-to-Discourse sync:
       #   - check mailbox validity
       #   - discover changes to old messages (flags and labels)
@@ -50,7 +51,7 @@ module Imap
             imap_uid: email["UID"]
           )
 
-          update_topic(mailbox, email, incoming_email)
+          update_topic(email, incoming_email, mailbox: mailbox)
         end
       end
 
@@ -65,7 +66,7 @@ module Imap
             )
             receiver.process!
 
-            update_topic(mailbox, email, receiver.incoming_email)
+            update_topic(email, receiver.incoming_email, mailbox: mailbox)
 
             mailbox.last_seen_uid = email["UID"]
           rescue Email::Receiver::ProcessingError => e
@@ -83,20 +84,20 @@ module Imap
       end
     end
 
-    private
-
-    def update_topic(mailbox, email, incoming_email)
+    def update_topic(email, incoming_email, opts = {})
       return if incoming_email&.post&.post_number != 1 || incoming_email.imap_sync
 
       topic = incoming_email.topic
 
-      update_topic_archived_state(mailbox, email, topic)
-      update_topic_tags(mailbox, email, topic)
+      update_topic_archived_state(email, topic, opts)
+      update_topic_tags(email, topic, opts)
     end
 
-    def update_topic_archived_state(mailbox, email, topic)
+    private
+
+    def update_topic_archived_state(email, topic, opts = {})
       topic_is_archived = topic.group_archived_messages.length > 0
-      email_is_archived = !email["LABELS"].include?("\\Inbox")
+      email_is_archived = !email["LABELS"].include?("\\Inbox") && !email["LABELS"].include?("INBOX")
 
       if topic_is_archived && !email_is_archived
         GroupArchivedMessage.move_to_inbox!(@group.id, topic, skip_imap_sync: true)
@@ -105,8 +106,9 @@ module Imap
       end
     end
 
-    def update_topic_tags(mailbox, email, topic)
-      tags = [ @provider.to_tag(mailbox.name) ]
+    def update_topic_tags(email, topic, opts = {})
+      tags = []
+      tags << @provider.to_tag(opts[:mailbox].name) if opts[:mailbox]
       email["FLAGS"].each { |flag| tags << @provider.to_tag(flag) }
       email["LABELS"].each { |label| tags << @provider.to_tag(label) }
       tags.reject!(&:blank?)
