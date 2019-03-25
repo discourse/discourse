@@ -69,7 +69,7 @@ export default buildCategoryPanel("settings", {
       });
     }
 
-    return options.sort((a, b) => a.value <= b.value);
+    return options;
   },
 
   @computed

@@ -836,9 +836,27 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     else
+      # 0|32 default normalization scaled into the range zero to one
       data_ranking = <<~SQL
-      TS_RANK_CD(
-        post_search_data.search_data, #{ts_query(weight_filter: weights)}
+      (
+        TS_RANK_CD(
+          post_search_data.search_data,
+          #{ts_query(weight_filter: weights)},
+          0|32
+        ) *
+        (
+          CASE categories.search_priority
+          WHEN #{Searchable::PRIORITIES[:very_low]}
+          THEN #{SiteSetting.category_search_priority_very_low_weight}
+          WHEN #{Searchable::PRIORITIES[:low]}
+          THEN #{SiteSetting.category_search_priority_low_weight}
+          WHEN #{Searchable::PRIORITIES[:high]}
+          THEN #{SiteSetting.category_search_priority_high_weight}
+          WHEN #{Searchable::PRIORITIES[:very_high]}
+          THEN #{SiteSetting.category_search_priority_very_high_weight}
+          ELSE 1
+          END
+        )
       )
       SQL
 

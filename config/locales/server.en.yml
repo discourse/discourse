@@ -1291,6 +1291,10 @@ en:
     search_query_log_max_size: "Maximum amount of search queries to keep"
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     search_ignore_accents: "Ignore accents when searching for text."
+    category_search_priority_very_low_weight: "Weight applied to ranking for very low category search priority."
+    category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
+    category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
+    category_search_priority_very_high_weight: "Weight applied to ranking for very high category search priority."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -2030,6 +2034,11 @@ en:
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
+      category_search_priority:
+        very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
+        low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
+        high_weight_invalid: "You cannot set the weight to be greater or equal to 1 or greater than 'category_search_priority_very_high_weight'."
+        very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
 
     placeholder:
       sso_provider_secrets:
