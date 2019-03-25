@@ -35,8 +35,6 @@ module Jobs
     end
 
     def execute(args)
-      return unless SiteSetting.download_remote_images_to_local?
-
       post_id = args[:post_id]
       raise Discourse::InvalidParameters.new(:post_id) unless post_id.present?
 
@@ -148,6 +146,9 @@ module Jobs
         # Return true if we can't find the upload in the db
         return !Upload.get_from_url(src)
       end
+
+      # Don't download non-local images unless site setting enabled
+      return false unless SiteSetting.download_remote_images_to_local?
 
       # parse the src
       begin

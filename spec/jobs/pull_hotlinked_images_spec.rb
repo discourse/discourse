@@ -151,6 +151,21 @@ describe Jobs::PullHotlinkedImages do
         expect(subject.should_download_image?(src)).to eq(true)
       end
     end
+
+    context "when download_remote_images_to_local? is false" do
+      before do
+        SiteSetting.download_remote_images_to_local = false
+      end
+
+      it "still returns true for optimized" do
+        src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
+        expect(subject.should_download_image?(src)).to eq(true)
+      end
+
+      it 'returns false for valid remote URLs' do
+        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
+      end
+    end
   end
 
   describe "with a lightboxed image" do
