@@ -11,6 +11,14 @@
       .select-kit-row[data-value="change-to-ignored"] .icons .d-icon {
         color: $danger;
       }
+
+      .select-kit-header {
+        justify-content: center;
+      }
+
+      .dropdown-select-box-header {
+        align-items: center;
+      }
     }
   }
 }
