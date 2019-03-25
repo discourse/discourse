@@ -7,13 +7,13 @@ gemfile(true) do
 
   gem "net-http-persistent"
   gem "nokogiri"
-  gem "selenium-webdriver"
+  gem "webdrivers"
 end
 
 require "fileutils"
 require "nokogiri"
 require "optparse"
-require "selenium-webdriver"
+require "webdrivers"
 require 'selenium/webdriver/remote/http/persistent'
 require "set"
 require "yaml"
@@ -23,7 +23,7 @@ DEFAULT_OUTPUT_PATH = "/shared/import/data"
 def driver
   @driver ||= begin
     chrome_args = ["headless", "disable-gpu"]
-    chrome_args << "no-sandbox" << "disable-dev-shm-usage" if inside_container?
+    chrome_args << "no-sandbox" if inside_container?
     options = Selenium::WebDriver::Chrome::Options.new(args: chrome_args)
     http_client = Selenium::WebDriver::Remote::Http::Persistent.new
     Selenium::WebDriver.for(:chrome, options: options, http_client: http_client)
@@ -203,9 +203,8 @@ rescue Selenium::WebDriver::Error::TimeOutError
   nil
 end
 
-def exit_with_error(message)
-  puts driver.current_url
-  STDERR.puts message
+def exit_with_error(*messages)
+  STDERR.puts messages
   exit 1
 end
 
@@ -248,16 +247,14 @@ def parse_arguments
   begin
     parser.parse!
   rescue OptionParser::ParseError => e
-    STDERR.puts e.message, "", parser
-    exit 1
+    exit_with_error(e.message, "", parser)
   end
 
   mandatory = [:email, :password, :groupname]
   missing = mandatory.select { |name| instance_variable_get("@#{name}").nil? }
 
   if missing.any?
-    STDERR.puts "Missing arguments: #{missing.join(', ')}", "", parser
-    exit 1
+    exit_with_error("Missing arguments: #{missing.join(', ')}", "", parser)
   end
 
   @path = File.join(DEFAULT_OUTPUT_PATH, @groupname) if @path.nil?
