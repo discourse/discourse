@@ -18,17 +18,11 @@ QUnit.test("search", async assert => {
 
   assert.ok(find(".fps-topic").length === 1, "has one post");
 
-  await $(document).scrollTop(200);
   await click("#search-button");
 
   assert.equal(
     find("input.full-page-search").val(),
     "posts",
     "it does not reset input when hitting search icon again"
-  );
-  assert.equal(
-    $(document).scrollTop(),
-    0,
-    "it scrolls back to top of document"
   );
 });
