@@ -94,6 +94,15 @@ describe Oneboxer do
       expect(preview("/u/#{user.username}")).to include(user.name)
     end
 
+    it "should respect enable_names site setting" do
+      user = Fabricate(:user)
+
+      SiteSetting.enable_names = true
+      expect(preview("/u/#{user.username}")).to include(user.name)
+      SiteSetting.enable_names = false
+      expect(preview("/u/#{user.username}")).not_to include(user.name)
+    end
+
     it "links to an upload" do
       path = "/uploads/default/original/3X/e/8/e8fcfa624e4fb6623eea57f54941a58ba797f14d"
 
