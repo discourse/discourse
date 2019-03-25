@@ -37,21 +37,22 @@
   }
 }
 
-.user-content-wrapper { // IE11 Support
+.user-content-wrapper {
+  // IE11 Support
   display: -ms-grid;
   -ms-grid-columns: 1fr 5fr;
   -ms-grid-rows: auto auto 1fr auto;
   .user-primary-navigation {
-    -ms-grid-row: 1; 
+    -ms-grid-row: 1;
     -ms-grid-column: 1;
     -ms-grid-column-span: 2;
   }
   .user-secondary-navigation {
-    -ms-grid-row: 1; 
+    -ms-grid-row: 1;
     -ms-grid-column: 2;
   }
   .user-content,
-  .spinner { 
+  .spinner {
     -ms-grid-row: 2;
     -ms-grid-column: 1;
     -ms-grid-column-span: 2;
