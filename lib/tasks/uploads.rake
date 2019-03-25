@@ -372,7 +372,7 @@ def migrate_to_s3
       ]
     ].each do |from_url, to_url|
 
-      if true
+      if dry_run
         puts "REPLACING '#{from_url}' WITH '#{to_url}'"
       else
         DbHelper.regexp_replace(from_url, to_url)
