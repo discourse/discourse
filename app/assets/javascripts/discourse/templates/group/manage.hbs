@@ -1,4 +1,4 @@
-<section class='user-navigation'>
+<section class='user-secondary-navigation'>
   {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=application.currentPath}}
     {{#each tabs as |tab|}}
       <li>
@@ -9,7 +9,6 @@
     {{/each}}
   {{/mobile-nav}}
 </section>
-
-<section class='user-right'>
+<section class="user-content">
   {{outlet}}
-</section>
+  </section>

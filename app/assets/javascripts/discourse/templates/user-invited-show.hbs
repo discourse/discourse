@@ -1,7 +1,7 @@
-{{#d-section pageClass="user-invites"}}
+{{#d-section pageClass="user-invites" tagName=""}}
   {{#if canInviteToForum}}
-    {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .user-invite-list tr" action=(action "loadMore")}}
-      <section class='user-content'>
+    {{#load-more class="user-content" selector=".user-invite-list tr" action=(action "loadMore")}}
+      <section>
         <h2>{{i18n 'user.invited.title'}}</h2>
 
         {{#if model.can_see_invite_details}}
