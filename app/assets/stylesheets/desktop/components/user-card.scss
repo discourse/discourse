@@ -10,8 +10,16 @@
   &.docked-card {
     z-index: z("header") + 1;
   }
-  .names {
-    flex: 1 1 auto;
+  // avatar - names - controls
+  .first-row {
+    .names {
+      flex: 1 1 auto;
+    }
+    .usercard-controls {
+      button {
+        min-width: 150px;
+      }
+    }
   }
   h1 {
     .d-icon {

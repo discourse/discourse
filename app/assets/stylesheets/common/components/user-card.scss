@@ -36,11 +36,27 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       margin-top: 0;
     }
   }
-  .names {
-    padding-left: 1.25em;
-    span {
-      display: block;
+  .card-row:not(.first-row) {
+    margin-top: 0.5em;
+  }
+  // avatar - names - controls
+  .first-row {
+    .names {
+      padding-left: 1.25em;
+      span {
+        display: block;
+      }
     }
+    .usercard-controls {
+      list-style-type: none;
+      margin: 0;
+      button {
+        width: 100%;
+      }
+    }
+  }
+  .btn {
+    margin-bottom: 5px;
   }
   h1 {
     line-height: $line-height-medium;
@@ -77,20 +93,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   }
   p {
     margin: 0 0 5px 0;
-  }
-  .btn {
-    margin-bottom: 5px;
-  }
-  .usercard-controls {
-    list-style-type: none;
-    margin: 0;
-    button {
-      width: 100%;
-      min-width: 150px;
-    }
-  }
-  .card-row:not(.first-row) {
-    margin-top: 0.5em;
   }
 }
 

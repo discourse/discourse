@@ -20,6 +20,9 @@ $avatar_width: 120px;
       display: flex;
       flex: 1;
       margin-top: 1em;
+      button {
+        white-space: nowrap;
+      }
       li {
         flex: 1;
         & + li {
