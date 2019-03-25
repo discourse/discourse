@@ -52,6 +52,10 @@ export function userPath(subPath) {
   return Discourse.getURL(subPath ? `/u/${subPath}` : "/u");
 }
 
+export function groupPath(subPath) {
+  return Discourse.getURL(subPath ? `/g/${subPath}` : "/g");
+}
+
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
   if (_jumpScheduled || Ember.isEmpty(elementId)) {
