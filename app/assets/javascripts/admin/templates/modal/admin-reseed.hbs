@@ -31,6 +31,10 @@
 {{/d-modal-body}}
 
 <div class="modal-footer">
+  {{conditional-loading-spinner condition=reseeding size="small"}}
   {{d-button action=(action "reseed") class="btn-danger" label="admin.reseed.modal.replace" disabled=reseeding}}
-  {{d-modal-cancel close=(route-action "closeModal")}}
+
+  {{#unless reseeding}}
+    {{d-modal-cancel close=(route-action "closeModal")}}
+  {{/unless}}
 </div>
