@@ -249,8 +249,6 @@ en:
     every_hour: "every hour"
     daily: "daily"
     weekly: "weekly"
-    every_two_weeks: "every two weeks"
-    every_three_days: "every three days"
     max_of_count: "max of {{count}}"
     alternation: "or"
     character_count:
@@ -948,9 +946,9 @@ en:
         every_30_minutes: "every 30 minutes"
         every_hour: "hourly"
         daily: "daily"
-        every_three_days: "every three days"
         weekly: "weekly"
-        every_two_weeks: "every two weeks"
+        every_month: "every month"
+        every_six_months: "every six months"
       email_level:
         title: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
         always: "always"

@@ -13,9 +13,9 @@ class DigestEmailSiteSetting < EnumSiteSetting
       { name: 'every_30_minutes', value:  30 },
       { name: 'every_hour',       value:  60 },
       { name: 'daily',            value:  1440 },
-      { name: 'every_three_days', value:  4320 },
       { name: 'weekly',           value:  10080 },
-      { name: 'every_two_weeks',  value:  20160 }
+      { name: 'every_month',      value:  43200 },
+      { name: 'every_six_months', value: 259200 }
     ]
   end
 
