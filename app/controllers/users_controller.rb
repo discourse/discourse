@@ -1003,6 +1003,7 @@ class UsersController < ApplicationController
       MutedUser.where(user: current_user, muted_user_id: params[:notification_level_user_id]).delete_all
       IgnoredUser.find_or_create_by!(user: current_user, ignored_user_id: params[:notification_level_user_id])
     elsif params[:notification_level] == "mute"
+      guardian.ensure_can_mute_user!(params[:notification_level_user_id])
       IgnoredUser.where(user: current_user, ignored_user_id: params[:notification_level_user_id]).delete_all
       MutedUser.find_or_create_by!(user: current_user, muted_user_id: params[:notification_level_user_id])
     elsif params[:notification_level] == "normal"
