@@ -6,7 +6,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applySearchAutocomplete } from "discourse/lib/search";
 import { ajax } from "discourse/lib/ajax";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-
+import { scrollTop } from "discourse/mixins/scroll-top";
 import { h } from "virtual-dom";
 
 const dropdown = {
@@ -403,7 +403,17 @@ export default createWidget("header", {
         }&skip_context=${this.state.skipSearchContext}`;
       }
 
-      return DiscourseURL.routeTo("/search" + params);
+      const currentPath = this.register
+        .lookup("controller:application")
+        .get("currentPath");
+
+      if (currentPath === "full-page-search") {
+        scrollTop();
+        $(".full-page-search").focus();
+        return false;
+      } else {
+        return DiscourseURL.routeTo("/search" + params);
+      }
     }
 
     this.state.searchVisible = !this.state.searchVisible;
