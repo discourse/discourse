@@ -124,21 +124,49 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  describe '#is_valid_image_url' do
+  describe '#should_download_image?' do
     subject { described_class.new }
 
     describe 'when url is invalid' do
       it 'should return false' do
-        expect(subject.is_valid_image_url("null")).to eq(false)
-        expect(subject.is_valid_image_url("meta.discourse.org")).to eq(false)
+        expect(subject.should_download_image?("null")).to eq(false)
+        expect(subject.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe 'when url is valid' do
       it 'should return true' do
-        expect(subject.is_valid_image_url("http://meta.discourse.org")).to eq(true)
-        expect(subject.is_valid_image_url("//meta.discourse.org")).to eq(true)
+        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(true)
+        expect(subject.should_download_image?("//meta.discourse.org")).to eq(true)
       end
+    end
+
+    describe 'when url is an upload' do
+      it 'should return false for original' do
+        expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
+      end
+
+      it 'should return true for optimized' do
+        src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
+        expect(subject.should_download_image?(src)).to eq(true)
+      end
+    end
+  end
+
+  describe "with a lightboxed image" do
+    let(:upload) { Fabricate(:upload) }
+
+    before do
+      FastImage.expects(:size).returns([1750, 2000])
+      OptimizedImage.stubs(:resize).returns(true)
+    end
+
+    it "doesn't remove optimized images from lightboxes" do
+      post = Fabricate(:post, raw: "![alt](#{upload.short_url})")
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.not_to change { Upload.count }
+      expect(post.reload.cooked).to include "/uploads/default/optimized/" # Ensure the lightbox was actually rendered
     end
   end
 
