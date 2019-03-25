@@ -2,7 +2,7 @@ $card_width: 580px;
 $avatar_width: 120px;
 $avatar_margin: -50px; // negative margin makes avatars extend above cards
 
-// shared styles for user and group cards - desktop and mobile
+// shared styles for user and group cards
 #user-card,
 #group-card {
   width: $card_width;
@@ -94,91 +94,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   }
 }
 
-// shared styles for user and group cards - desktop only
-.desktop-view {
-  #user-card,
-  #group-card {
-    position: absolute;
-    z-index: z("usercard");
-    &.fixed {
-      position: fixed;
-      z-index: z("composer", "content") + 1;
-    }
-    &.docked-card {
-      z-index: z("header") + 1;
-    }
-    .names {
-      flex: 1 1 auto;
-    }
-    h1 {
-      .d-icon {
-        font-size: $font-down-1;
-      }
-    }
-    h2 {
-      font-size: $font-up-1;
-    }
-    h3 {
-      font-size: $font-0;
-    }
-  }
-}
-
-// shared styles for user and group cards - mobile only
-.card-cloak {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: z("mobile-composer") + 1; // 1101
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(black, 0.5);
-  animation: fadein 0.2s;
-}
-
-.mobile-view {
-  #user-card,
-  #group-card {
-    position: fixed;
-    // mobile cards should always be on top of everything - 1102
-    z-index: z("mobile-composer") + 2;
-    max-width: 95vw;
-    margin: 0 2.5vw;
-    max-height: 90vh;
-    .first-row {
-      flex-wrap: wrap;
-    }
-    .names {
-      flex: 1 1 calc(100% - #{$avatar_width});
-      box-sizing: border-box;
-    }
-    .usercard-controls {
-      display: flex;
-      flex: 1;
-      margin-top: 1em;
-      li {
-        flex: 1;
-        & + li {
-          margin-left: 0.5em;
-        }
-      }
-    }
-    h1 {
-      font-size: $font-up-3;
-      .d-icon {
-        font-size: $font-down-2;
-      }
-    }
-    h2 {
-      font-size: $font-0;
-    }
-    h3 {
-      font-size: $font-down-1;
-    }
-  }
-}
-
-// styles for user cards only - desktop and mobile
+// styles for user cards only
 #user-card {
   // avatar - names - controls
   .first-row {
@@ -282,59 +198,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   }
 }
 
-// styles for user cards only - desktop only
-.desktop-view {
-  #user-card {
-    .sixth-row {
-      .badge-section {
-        .user-badge {
-          display: block;
-          max-width: 185px;
-          margin: 0 0.5em 0 0;
-        }
-        .more-user-badges {
-          max-width: 125px;
-        }
-      }
-    }
-  }
-}
-
-// styles for user cards only - mobile only
-.mobile-view {
-  #user-card {
-    .first-row {
-      flex-wrap: wrap;
-    }
-    .sixth-row {
-      .badge-section {
-        flex-wrap: wrap;
-        > span {
-          display: flex;
-          flex: 0 1 50%;
-          max-width: 50%; // for text ellipsis
-          padding: 2px 0;
-          box-sizing: border-box;
-          &:nth-of-type(1),
-          &:nth-of-type(3) {
-            padding-right: 4px;
-          }
-          a {
-            width: 100%;
-            display: flex;
-          }
-        }
-        .user-badge {
-          display: flex;
-          margin: 0;
-          width: 100%;
-        }
-      }
-    }
-  }
-}
-
-// styles for group cards only - mobile and desktop
+// styles for group cards only
 #group-card {
   // avatar - names and controls
   .first-row {

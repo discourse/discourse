@@ -1,0 +1,85 @@
+$avatar_width: 120px;
+
+// shared styles for user and group cards
+#user-card,
+#group-card {
+  position: fixed;
+  // mobile cards should always be on top of everything - 1102
+  z-index: z("mobile-composer") + 2;
+  max-width: 95vw;
+  margin: 0 2.5vw;
+  max-height: 90vh;
+  // avatar - names - controls
+  .first-row {
+    flex-wrap: wrap;
+    .names {
+      flex: 1 1 calc(100% - #{$avatar_width});
+      box-sizing: border-box;
+    }
+    .usercard-controls {
+      display: flex;
+      flex: 1;
+      margin-top: 1em;
+      li {
+        flex: 1;
+        & + li {
+          margin-left: 0.5em;
+        }
+      }
+    }
+  }
+  h1 {
+    font-size: $font-up-3;
+    .d-icon {
+      font-size: $font-down-2;
+    }
+  }
+  h2 {
+    font-size: $font-0;
+  }
+  h3 {
+    font-size: $font-down-1;
+  }
+}
+
+// styles for user cards only
+#user-card {
+  // badges
+  .sixth-row {
+    .badge-section {
+      flex-wrap: wrap;
+      > span {
+        display: flex;
+        flex: 0 1 50%;
+        max-width: 50%; // for text ellipsis
+        padding: 2px 0;
+        box-sizing: border-box;
+        &:nth-of-type(1),
+        &:nth-of-type(3) {
+          padding-right: 4px;
+        }
+        a {
+          width: 100%;
+          display: flex;
+        }
+      }
+      .user-badge {
+        display: flex;
+        margin: 0;
+        width: 100%;
+      }
+    }
+  }
+}
+
+// mobile card cloak
+.card-cloak {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: z("mobile-composer") + 1; // 1101
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(black, 0.5);
+  animation: fadein 0.2s;
+}

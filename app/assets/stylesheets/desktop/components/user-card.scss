@@ -1,0 +1,44 @@
+// shared styles for user and group cards
+#user-card,
+#group-card {
+  position: absolute;
+  z-index: z("usercard");
+  &.fixed {
+    position: fixed;
+    z-index: z("composer", "content") + 1;
+  }
+  &.docked-card {
+    z-index: z("header") + 1;
+  }
+  .names {
+    flex: 1 1 auto;
+  }
+  h1 {
+    .d-icon {
+      font-size: $font-down-1;
+    }
+  }
+  h2 {
+    font-size: $font-up-1;
+  }
+  h3 {
+    font-size: $font-0;
+  }
+}
+
+// styles for user cards only
+#user-card {
+  // badges
+  .sixth-row {
+    .badge-section {
+      .user-badge {
+        display: block;
+        max-width: 185px;
+        margin: 0 0.5em 0 0;
+      }
+      .more-user-badges {
+        max-width: 125px;
+      }
+    }
+  }
+}
