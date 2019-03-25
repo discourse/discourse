@@ -1614,6 +1614,22 @@ search:
       ro: true
       sk: true
       tr_TR: true
+  category_search_priority_very_low_weight:
+    default: 0.6
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
+  category_search_priority_low_weight:
+    default: 0.8
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
+  category_search_priority_high_weight:
+    default: 1.2
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
+  category_search_priority_very_high_weight:
+    default: 1.4
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
 
 uncategorized:
   version_checks:

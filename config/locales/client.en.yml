@@ -2459,6 +2459,10 @@ en:
         options:
           normal: "Normal"
           ignore: "Ignore"
+          very_low: "Very Low"
+          low: "Low"
+          high: "High"
+          very_high: "Very High"
       sort_options:
         default: "default"
         likes: "Likes"

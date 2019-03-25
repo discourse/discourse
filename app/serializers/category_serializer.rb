@@ -102,4 +102,8 @@ class CategorySerializer < BasicCategorySerializer
   def custom_fields
     object.custom_fields
   end
+
+  def include_custom_fields?
+    true
+  end
 end

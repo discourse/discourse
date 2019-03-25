@@ -486,6 +486,26 @@ describe Search do
       end
     end
 
+    describe 'categories with different priorities' do
+      let(:category2) { Fabricate(:category) }
+
+      it "should return posts in the right order" do
+        raw = "The pure genuine evian"
+        post = Fabricate(:post, topic: category.topic, raw: raw)
+        post2 = Fabricate(:post, topic: category2.topic, raw: raw)
+
+        search = Search.execute(raw)
+
+        expect(search.posts).to eq([post2, post])
+
+        category.update!(search_priority: Searchable::PRIORITIES[:high])
+
+        search = Search.execute(raw)
+
+        expect(search.posts).to eq([post, post2])
+      end
+    end
+
   end
 
   context 'groups' do

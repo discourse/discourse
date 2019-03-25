@@ -234,11 +234,14 @@ module Oneboxer
     username = route[:username] || ""
 
     if user = User.find_by(username_lower: username.downcase)
+
+      name = user.name if SiteSetting.enable_names
+
       args = {
         user_id: user.id,
         username: user.username,
         avatar: PrettyText.avatar_img(user.avatar_template, "extra_large"),
-        name: user.name,
+        name: name,
         bio: user.user_profile.bio_excerpt(230),
         location: user.user_profile.location,
         joined: I18n.t('joined'),
