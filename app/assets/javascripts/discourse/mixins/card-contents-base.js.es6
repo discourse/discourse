@@ -26,8 +26,8 @@ export default Ember.Mixin.create({
 
     username = Ember.Handlebars.Utils.escapeExpression(username.toString());
 
-    // Don't show on mobile or nested
-    if (this.site.mobileView || $target.parents(".card-content").length) {
+    // Don't show if nested
+    if ($target.parents(".card-content").length) {
       this._close();
       DiscourseURL.routeTo($target.attr("href"));
       return false;
@@ -97,10 +97,6 @@ export default Ember.Mixin.create({
           }
 
           this._close();
-
-          if (this.site.mobileView) {
-            return false;
-          }
         }
 
         return true;
@@ -149,58 +145,67 @@ export default Ember.Mixin.create({
 
     Ember.run.schedule("afterRender", () => {
       if (target) {
-        let position = target.offset();
-        if (position) {
-          position.bottom = "unset";
+        if (!this.site.mobileView) {
+          let position = target.offset();
+          if (position) {
+            position.bottom = "unset";
 
-          if (rtl) {
-            // The site direction is rtl
-            position.right = $(window).width() - position.left + 10;
-            position.left = "auto";
-            let overage = $(window).width() - 50 - (position.right + width);
-            if (overage < 0) {
-              position.right += overage;
-              position.top += target.height() + 48;
-              verticalAdjustments += target.height() + 48;
-            }
-          } else {
-            // The site direction is ltr
-            position.left += target.width() + 10;
-
-            let overage = $(window).width() - 50 - (position.left + width);
-            if (overage < 0) {
-              position.left += overage;
-              position.top += target.height() + 48;
-              verticalAdjustments += target.height() + 48;
-            }
-          }
-
-          position.top -= $("#main-outlet").offset().top;
-          if (isFixed) {
-            position.top -= $("html").scrollTop();
-            //if content is fixed and will be cut off on the bottom, display it above...
-            if (
-              position.top + height + verticalAdjustments >
-              $(window).height() - 50
-            ) {
-              position.bottom =
-                $(window).height() -
-                (target.offset().top - $("html").scrollTop());
-              if (verticalAdjustments > 0) {
-                position.bottom += 48;
+            if (rtl) {
+              // The site direction is rtl
+              position.right = $(window).width() - position.left + 10;
+              position.left = "auto";
+              let overage = $(window).width() - 50 - (position.right + width);
+              if (overage < 0) {
+                position.right += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
               }
-              position.top = "unset";
+            } else {
+              // The site direction is ltr
+              position.left += target.width() + 10;
+
+              let overage = $(window).width() - 50 - (position.left + width);
+              if (overage < 0) {
+                position.left += overage;
+                position.top += target.height() + 48;
+                verticalAdjustments += target.height() + 48;
+              }
             }
-          }
 
-          const avatarOverflowSize = 44;
-          if (isDocked && position.top < avatarOverflowSize) {
-            position.top = avatarOverflowSize;
-          }
+            position.top -= $("#main-outlet").offset().top;
+            if (isFixed) {
+              position.top -= $("html").scrollTop();
+              //if content is fixed and will be cut off on the bottom, display it above...
+              if (
+                position.top + height + verticalAdjustments >
+                $(window).height() - 50
+              ) {
+                position.bottom =
+                  $(window).height() -
+                  (target.offset().top - $("html").scrollTop());
+                if (verticalAdjustments > 0) {
+                  position.bottom += 48;
+                }
+                position.top = "unset";
+              }
+            }
 
-          this.$().css(position);
+            const avatarOverflowSize = 44;
+            if (isDocked && position.top < avatarOverflowSize) {
+              position.top = avatarOverflowSize;
+            }
+
+            this.$().css(position);
+          }
         }
 
+        if (this.site.mobileView) {
+          $(".card-cloak").removeClass("hidden");
+          let position = target.offset();
+          position.top = "10%"; // match modal behaviour
+          position.left = 0;
+          this.$().css(position);
+        }
         this.$().toggleClass("docked-card", isDocked);
 
         // After the card is shown, focus on the first link
@@ -216,6 +221,9 @@ export default Ember.Mixin.create({
   _hide() {
     if (!this.get("visible")) {
       this.$().css({ left: -9999, top: -9999 });
+      if (this.site.mobileView) {
+        $(".card-cloak").addClass("hidden");
+      }
     }
   },
 

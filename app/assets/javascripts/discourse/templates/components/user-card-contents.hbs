@@ -3,7 +3,7 @@
 
     <div class="card-row first-row">
       <div class="user-card-avatar">
-        <a href="{{user.path}}" {{action "showUser"}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+        <a href {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
         {{#if user.primary_group_name}}
           {{avatar-flair
           flairURL=user.primary_group_flair_url
@@ -16,10 +16,12 @@
       <div class="names">
         <span>
           <h1 class="{{staff}} {{newUser}} {{if nameFirst "full-name" "username"}}">
-            <a href="{{user.path}}" {{action "showUser"}}>{{if nameFirst user.name (format-username username)}}
-              {{user-status user currentUser=currentUser}}</a>
+            <a href {{action "showUser" user}} class='user-profile-link'>
+              {{if nameFirst user.name (format-username username)}}
+              {{user-status user currentUser=currentUser}}
+            </a>
           </h1>
-          {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser")) tagName=''}}
+          {{plugin-outlet name="user-card-after-username" args=(hash user=user showUser=(action "showUser" user)) tagName=''}}
           {{#unless nameFirst}}
             {{#if user.name}}
               <h2 class='full-name'>{{user.name}}</h2>
@@ -188,9 +190,11 @@
               {{user-badge badge=ub.badge user=user}}
             {{/each}}
             {{#if showMoreBadges}}
-              {{#link-to 'user.badges' user class="user-badge more-user-badges"}}
-                {{i18n 'badges.more_badges' count=moreBadgesCount}}
-              {{/link-to}}
+              <span class='more-user-badges'>
+                {{#link-to 'user.badges' user}}
+                  {{i18n 'badges.more_badges' count=moreBadgesCount}}
+                {{/link-to}}
+              </span>
             {{/if}}
           </div>
         {{/if}}
