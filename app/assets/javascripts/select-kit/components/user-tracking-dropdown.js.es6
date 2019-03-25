@@ -40,13 +40,15 @@ export default DropdownSelectBox.extend({
       label: I18n.t("user.user_tracking_mute_option")
     });
 
-    content.push({
-      icon: "eye-slash",
-      id: "change-to-ignored",
-      description: I18n.t("user.user_tracking_ignore_option_title"),
-      action: () => this.send("ignore"),
-      label: I18n.t("user.user_tracking_ignore_option")
-    });
+    if(this.get("user.can_ignore_user")) {
+      content.push({
+        icon: "eye-slash",
+        id: "change-to-ignored",
+        description: I18n.t("user.user_tracking_ignore_option_title"),
+        action: () => this.send("ignore"),
+        label: I18n.t("user.user_tracking_ignore_option")
+      });
+    }
 
     return content;
   },

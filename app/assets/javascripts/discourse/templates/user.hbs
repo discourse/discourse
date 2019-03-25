@@ -48,7 +48,7 @@
                     icon="envelope"
                     label="user.private_message"}}
                 </li>
-                {{#if model.can_ignore_user}}
+                {{#if canMuteOrIgnoreUser}}
                   <li>
                     {{user-tracking-dropdown user=model trackUser=(action "trackUser")}}
                   </li>

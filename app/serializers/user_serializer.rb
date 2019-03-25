@@ -52,6 +52,7 @@ class UserSerializer < BasicUserSerializer
              :ignored,
              :muted,
              :can_ignore_user,
+             :can_mute_user,
              :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
@@ -284,6 +285,10 @@ class UserSerializer < BasicUserSerializer
 
   def muted
     MutedUser.where(user_id: scope.user&.id, muted_user_id: object.id).exists?
+  end
+
+  def can_mute_user
+    scope.can_mute_user?(object.id)
   end
 
   def can_ignore_user
