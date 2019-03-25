@@ -38,28 +38,52 @@
   <% end %>
 <% end %>
 
-<div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
-  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
-  <% @list.topics.each_with_index do |t,i| %>
-    <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-      <meta itemprop='position' content='<%= i %>'>
-      <meta itemprop='url' content='<%= t.url %>'>
-      <a href='<%= t.url %>'>
-        <span itemprop='name'><%= t.title %></span>
-      </a>
-      <span class="page-links"><%= page_links(t) %></span>
-      <% if (!@category || @category.has_children?) && t.category %>
-        <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
-      <% end %>
-      <span class='posts' title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+<div itemscope itemtype='http://schema.org/ItemList'>
+  <table class='topic-list'>
 
-      <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt %>
-        <p class='excerpt'>
-          <%= t.excerpt.html_safe %>
-        </p>
+    <thead>
+      <tr>
+        <th>Topic</th>
+        <th>Replies</th>
+        <th>Created On</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+      <% @list.topics.each_with_index do |t,i| %>
+        <tr>
+          <span itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+            <meta itemprop='position' content='<%= i %>'>
+            <meta itemprop='url' content='<%= t.url %>'>
+            <meta itemprop='name' content='<%= t.title %>'>
+            <td>
+              <a href='<%= t.url %>' class='title raw-link raw-topic-link'>
+                <span><%= t.title %></span>
+              </a>
+              <% if (!@category || @category.has_children?) && t.category %>
+                <div>
+                  <a href='<%= t.category.url %>'><span class='category-name'><%= t.category.name %></span></a>
+                </div>
+              <% end %>
+              <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt %>
+                <p class='excerpt'>
+                  <%= t.excerpt.html_safe %>
+                </p>
+              <% end %>
+            </td>
+            <td>
+              <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
+            </td>
+            <td>
+              <%= t.created_at.strftime("%B %e %Y") %>
+            </td>
+          </span>
+        </tr>
       <% end %>
-    </div>
-  <% end %>
+    </tbody>
+
+  </table>
 </div>
 
 <% if @list.topics.length > 0 && @list.more_topics_url %>
