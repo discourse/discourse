@@ -71,6 +71,25 @@ describe SeedData::Categories do
         expect(category.category_groups.count).to eq(1)
         expect(category.category_groups.first).to have_attributes(permissions(:staff, :full))
       end
+
+      it "overwrites permissions even when subcategory has less restrictive permissions" do
+        category = Category.last
+        category.set_permissions(everyone: :full)
+        category.save!
+
+        group = Fabricate(:group)
+
+        subcategory = Fabricate(:category, name: "child", parent_category_id: category.id)
+        subcategory.set_permissions(group => :full)
+        subcategory.save!
+
+        expect { create_category }
+          .to change { CategoryGroup.count }.by(1)
+
+        category.reload
+        expect(category.category_groups.count).to eq(1)
+        expect(category.category_groups.first).to have_attributes(permissions(:staff, :full))
+      end
     end
 
     it "does not override permissions of existing category when not forced" do
