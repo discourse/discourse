@@ -13,6 +13,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
   limit: null,
   blacklist: null,
   attributeBindings: ["categoryId"],
+  allowCreate: null,
   allowAny: Ember.computed.alias("allowCreate"),
 
   init() {
