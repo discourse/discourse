@@ -259,7 +259,7 @@ class Upload < ActiveRecord::Base
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
             upload.filesize = f.size
-            upload.save!
+            upload.save!(validate: false)
           end
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
