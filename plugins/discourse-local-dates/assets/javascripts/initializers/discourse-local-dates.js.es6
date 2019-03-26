@@ -1,11 +1,9 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
-import { registerTooltip } from "discourse/lib/tooltip";
 
 function initializeDiscourseLocalDates(api) {
   api.decorateCooked($elem => {
     $(".discourse-local-date", $elem).applyLocalDates();
-    registerTooltip($(".discourse-local-date", $elem));
   });
 
   api.addToolbarPopupMenuOptionsCallback(() => {
