@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
-    :ignore, :unignore, :revoke_auth_token
+    :notification_level, :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [

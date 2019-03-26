@@ -1,4 +1,5 @@
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default DropdownSelectBox.extend({
   pluginApiIdentifiers: [""],
@@ -59,20 +60,20 @@ export default DropdownSelectBox.extend({
         this.set("user.ignored", false);
         this.set("user.muted", false);
         this.computeHeaderContent();
-      });
+      }).catch(popupAjaxError);
     },
     mute() {
       this.get("updateNotificationLevel")("mute").then(() => {
         this.set("user.ignored", false);
         this.set("user.muted", true);
         this.computeHeaderContent();
-      });
+      }).catch(popupAjaxError);
     },
     ignore() {
       this.get("updateNotificationLevel")("ignore").then(() => {
         this.set("user.ignored", true);
         this.computeHeaderContent();
-      });
+      }).catch(popupAjaxError);
     }
   }
 });
