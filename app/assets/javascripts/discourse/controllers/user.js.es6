@@ -33,7 +33,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
     }
     return (!indexStream || viewingSelf) && !forceExpand;
   },
-  canMuteOrIgnoreUser: Ember.computed.or("model.can_ignore_user", "model.can_mute_user"),
+  canMuteOrIgnoreUser: Ember.computed.or(
+    "model.can_ignore_user",
+    "model.can_mute_user"
+  ),
   hasGivenFlags: Ember.computed.gt("model.number_of_flags_given", 0),
   hasFlaggedPosts: Ember.computed.gt("model.number_of_flagged_posts", 0),
   hasDeletedPosts: Ember.computed.gt("model.number_of_deleted_posts", 0),
