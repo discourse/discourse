@@ -1076,11 +1076,12 @@ describe Report do
 
       it "works" do
         expect(report.data.length).to eq(2)
-        expect_row_to_be_equal(report.data[0], khalil, khalil_upload)
-        expect_row_to_be_equal(report.data[1], tarek, tarek_upload)
+        expect_row_to_be_equal(report.data, khalil, khalil_upload)
+        expect_row_to_be_equal(report.data, tarek, tarek_upload)
       end
 
-      def expect_row_to_be_equal(row, user, upload)
+      def expect_row_to_be_equal(data, user, upload)
+        row = data.find { |row| row[:author_id] == user.id }
         expect(row[:author_id]).to eq(user.id)
         expect(row[:author_username]).to eq(user.username)
         expect(row[:author_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
@@ -1108,16 +1109,8 @@ describe Report do
 
       it "works" do
         expect(report.data.length).to eq(2)
-        expect_row_to_be_equal(report.data[0], john, 1, 0)
-        expect_row_to_be_equal(report.data[1], matt, 1, 0)
-      end
-
-      def expect_row_to_be_equal(row, user, ignores, mutes)
-        expect(row[:ignored_user_id]).to eq(user.id)
-        expect(row[:ignored_username]).to eq(user.username)
-        expect(row[:ignored_user_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
-        expect(row[:ignores_count]).to eq(ignores)
-        expect(row[:mutes_count]).to eq(mutes)
+        expect_row_to_be_equal(report.data, john, 1, 0)
+        expect_row_to_be_equal(report.data, matt, 1, 0)
       end
 
       context "when muted users exist" do
@@ -1128,9 +1121,19 @@ describe Report do
 
         it "works" do
           expect(report.data.length).to eq(2)
-          expect_row_to_be_equal(report.data[0], john, 1, 1)
-          expect_row_to_be_equal(report.data[1], matt, 1, 1)
+          expect_row_to_be_equal(report.data, john, 1, 1)
+          expect_row_to_be_equal(report.data, matt, 1, 1)
         end
+      end
+
+      def expect_row_to_be_equal(data, user, ignores, mutes)
+        row = data.find { |row| row[:ignored_user_id] == user.id }
+        expect(row).to be_present
+        expect(row[:ignored_user_id]).to eq(user.id)
+        expect(row[:ignored_username]).to eq(user.username)
+        expect(row[:ignored_user_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
+        expect(row[:ignores_count]).to eq(ignores)
+        expect(row[:mutes_count]).to eq(mutes)
       end
     end
 
