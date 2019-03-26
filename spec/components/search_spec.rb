@@ -5,10 +5,6 @@ require_dependency 'search'
 
 describe Search do
 
-  class TextHelper
-    extend ActionView::Helpers::TextHelper
-  end
-
   before do
     SearchIndexer.enable
   end
