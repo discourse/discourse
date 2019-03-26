@@ -70,7 +70,16 @@ class Search
 
       if term
         terms = term.split(/\s+/)
-        blurb = TextHelper.excerpt(cooked, terms.first, radius: blurb_length / 2, seperator: " ")
+        phrase = terms.first
+
+        if phrase =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
+          phrase = Regexp.last_match[1]
+        end
+
+        blurb = TextHelper.excerpt(cooked, phrase,
+          radius: blurb_length / 2,
+          seperator: " "
+        )
       end
 
       blurb = TextHelper.truncate(cooked, length: blurb_length, seperator: " ") if blurb.blank?
