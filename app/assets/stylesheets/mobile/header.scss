@@ -52,10 +52,8 @@
 
   // Hide header avatar + icons while topic title is visible in mobile header
   .extra-info-wrapper + .panel {
-    flex: 0;
-    min-width: 0;
     .header-buttons,
-    .badge-notification {
+    .d-header-icons {
       display: none;
     }
   }
