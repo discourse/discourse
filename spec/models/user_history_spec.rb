@@ -34,6 +34,18 @@ describe UserHistory do
         records = described_class.staff_action_records(Fabricate(:moderator)).to_a
         expect(records).to eq([@change_trust_level])
       end
+
+      it 'filters by action' do
+        records = described_class.staff_action_records(Fabricate(:admin), {action: @change_site_setting.id}).to_a
+        expect(records.size).to eq(1)
+        expect(records.first).to eq(@change_site_setting)
+      end
+
+      it 'filters by action_name' do
+        records = described_class.staff_action_records(Fabricate(:admin), {action_name: "change_site_setting"}).to_a
+        expect(records.size).to eq(1)
+        expect(records.first).to eq(@change_site_setting)
+      end
     end
   end
 
