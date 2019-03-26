@@ -390,8 +390,10 @@ module ApplicationHelper
 
   def scheme_id
     return if theme_ids.blank?
-    theme = Theme.find_by(id: theme_ids.first)
-    theme&.color_scheme_id
+    Theme
+      .where(id: theme_ids.first)
+      .pluck(:color_scheme_id)
+      .first
   end
 
   def current_homepage
