@@ -1,4 +1,6 @@
 <div class="control-group notifications">
+      <label class="control-label">{{i18n 'user.notifications'}}</label>
+
   <div class="controls controls-dropdown">
     <label>{{i18n 'user.new_topic_duration.label'}}</label>
     {{combo-box class="duration" valueAttribute="value" content=considerNewTopicOptions value=model.user_option.new_topic_duration_minutes}}

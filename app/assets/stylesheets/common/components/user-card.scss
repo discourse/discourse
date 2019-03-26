@@ -5,14 +5,11 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
 // shared styles for user and group cards
 #user-card,
 #group-card {
-  position: absolute;
   width: $card_width;
-  z-index: z("usercard");
   box-shadow: shadow("card");
   color: $primary;
   background: $secondary center center;
   background-size: cover;
-  min-height: 175px;
   transition: opacity 0.2s, transform 0.2s;
   -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
   opacity: 0;
@@ -21,17 +18,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     opacity: 1;
     @include transform(scale(1));
   }
-  &.fixed {
-    position: fixed;
-    z-index: z("composer", "content") + 1;
-  }
-
-  &.docked-card {
-    z-index: z("header") + 1;
-  }
-
   .card-content {
-    padding: 12px;
+    padding: 10px;
     background: rgba($secondary, 0.85);
     margin-top: 80px;
     &:after {
@@ -44,74 +32,71 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
   }
   &.no-bg {
-    min-height: 50px;
     .card-content {
       margin-top: 0;
     }
   }
-  .names {
-    flex: 1 1 auto;
-    margin-left: 0.75em;
-    span {
-      display: block;
+  .card-row:not(.first-row) {
+    margin-top: 0.5em;
+  }
+  // avatar - names - controls
+  .first-row {
+    .names {
+      padding-left: 1.25em;
+      span {
+        display: block;
+      }
     }
+    .usercard-controls {
+      list-style-type: none;
+      margin: 0;
+      button {
+        width: 100%;
+      }
+    }
+  }
+  .btn {
+    margin-bottom: 5px;
   }
   h1 {
-    margin: 0;
     line-height: $line-height-medium;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    a {
-      color: $primary;
-    }
     .d-icon {
-      font-size: $font-down-1;
-      color: $primary;
-    }
-  }
-  h2 {
-    font-size: $font-up-1;
-    margin: 0;
-    font-weight: normal;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    a {
       color: $primary;
     }
   }
   h3 {
     display: inline;
     margin-right: 0.5em;
-    font-size: $font-0;
-    font-weight: normal;
     color: $primary;
     .desc,
     a {
       color: $primary-high;
     }
   }
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  h1,
+  h2 {
+    a {
+      color: $primary;
+    }
+  }
+  h2,
+  h3 {
+    font-weight: normal;
+  }
   p {
     margin: 0 0 5px 0;
   }
-  .btn {
-    margin-bottom: 5px;
-  }
-  .usercard-controls {
-    list-style-type: none;
-    margin: 0;
-    button {
-      width: 100%;
-      min-width: 150px;
-    }
-  }
-  .card-row:not(.first-row) {
-    margin-top: 0.5em;
-  }
 }
 
-// styles for user cards
+// styles for user cards only
 #user-card {
   // avatar - names - controls
   .first-row {
@@ -121,7 +106,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       height: $avatar_width;
     }
     .user-card-avatar {
-      margin-right: 10px;
       margin-top: $avatar_margin;
     }
     .new-user a {
@@ -196,9 +180,9 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       display: flex;
       align-items: flex-start;
       .user-badge {
-        display: flex;
         white-space: nowrap;
-        margin: 0 0.5em 0 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
         background: $primary-very-low;
         border: 1px solid $primary-low;
         color: $primary;
@@ -206,16 +190,17 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       .badge-display-name {
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 185px;
       }
       .more-user-badges {
-        overflow: hidden;
+        a {
+          @extend .user-badge;
+        }
       }
     }
   }
 }
 
-// styles for group cards
+// styles for group cards only
 #group-card {
   // avatar - names and controls
   .first-row {
@@ -223,19 +208,18 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     .group-card-avatar {
       margin-top: $avatar_margin;
     }
-    .group-card-avatar {
-      .avatar-flair {
-        width: $avatar_width;
-        height: $avatar_width;
-        display: flex;
-        color: $primary;
-        .d-icon {
-          margin: auto;
-          font-size: $avatar_width / 1.5;
-        }
-        &.rounded {
-          border-radius: 50%;
-        }
+    .avatar-flair {
+      display: flex;
+      background-size: contain;
+      width: $avatar_width;
+      height: $avatar_width;
+      color: $primary;
+      .d-icon {
+        margin: auto;
+        font-size: $avatar_width / 1.5;
+      }
+      &.rounded {
+        border-radius: 50%;
       }
     }
   }

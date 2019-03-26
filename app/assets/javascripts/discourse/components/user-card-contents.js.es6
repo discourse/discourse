@@ -205,8 +205,8 @@ export default Ember.Component.extend(
         this._close();
       },
 
-      showUser() {
-        this.showUser(this.get("user"));
+      showUser(username) {
+        this.showUser(username);
         this._close();
       },
 

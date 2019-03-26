@@ -5,10 +5,6 @@ require_dependency 'search'
 
 describe Search do
 
-  class TextHelper
-    extend ActionView::Helpers::TextHelper
-  end
-
   before do
     SearchIndexer.enable
   end
@@ -308,16 +304,35 @@ describe Search do
     end
 
     context 'searching for a post' do
-      let!(:reply) { Fabricate(:basic_reply, topic: topic, user: topic.user) }
-      let(:result) { Search.execute('quotes', type_filter: 'topic', include_blurbs: true) }
+      let!(:reply) do
+        Fabricate(:post_with_long_raw_content,
+          topic: topic,
+          user: topic.user,
+        ).tap { |post| post.update!(raw: "#{post.raw} elephant") }
+      end
+
+      let(:expected_blurb) do
+        "...to satisfy any test conditions that require content longer than the typical test post raw content. elephant"
+      end
 
       it 'returns the post' do
-        expect(result).to be_present
-        expect(result.posts.length).to eq(1)
-        p = result.posts[0]
-        expect(p.topic.id).to eq(topic.id)
-        expect(p.id).to eq(reply.id)
-        expect(result.blurb(p)).to eq("this reply has no quotes")
+        result = Search.execute('elephant',
+          type_filter: 'topic',
+          include_blurbs: true
+        )
+
+        expect(result.posts).to contain_exactly(reply)
+        expect(result.blurb(reply)).to eq(expected_blurb)
+      end
+
+      it 'returns the right post and blurb for searches with phrase' do
+        result = Search.execute('"elephant"',
+          type_filter: 'topic',
+          include_blurbs: true
+        )
+
+        expect(result.posts).to contain_exactly(reply)
+        expect(result.blurb(reply)).to eq(expected_blurb)
       end
     end
 
@@ -854,11 +869,13 @@ describe Search do
     end
 
     it 'can search numbers correctly, and match exact phrases' do
-      topic = Fabricate(:topic, created_at: 3.months.ago)
-      Fabricate(:post, raw: '3.0 eta is in 2 days horrah', topic: topic)
+      post = Fabricate(:post, raw: '3.0 eta is in 2 days horrah')
+      post2 = Fabricate(:post, raw: '3.0 is eta in 2 days horrah')
 
-      expect(Search.execute('3.0 eta').posts.length).to eq(1)
-      expect(Search.execute('"3.0, eta is"').posts.length).to eq(0)
+      expect(Search.execute('3.0 eta').posts).to contain_exactly(post, post2)
+      expect(Search.execute("'3.0 eta'").posts).to contain_exactly(post, post2)
+      expect(Search.execute("\"3.0 eta\"").posts).to contain_exactly(post)
+      expect(Search.execute('"3.0, eta is"').posts).to eq([])
     end
 
     it 'can find by status' do

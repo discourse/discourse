@@ -1,12 +1,41 @@
 // Mobile styles for "/user" section
 
+.user-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  grid-row-gap: s(5);
+  grid-column-gap: s(4);
+  .user-primary-navigation {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    grid-column-end: 2;
+  }
+  .user-secondary-navigation {
+    grid-column-start: 2;
+    grid-row-start: 1;
+  }
+  .user-additional-controls + .user-content,
+  .user-secondary-navigation + .user-content {
+    grid-column-start: 1;
+  }
+  .user-additional-controls {
+    grid-column-start: 1;
+    grid-row-start: 2;
+  }
+  .user-content,
+  .spinner {
+    grid-row-start: 3;
+    grid-column-start: 1;
+  }
+}
+
 .user-main {
   margin-top: s(3);
 
   .user-content {
     box-sizing: border-box;
     background-color: $secondary;
-    margin-top: s(3);
     table {
       width: 100%;
       margin-top: s(3);
@@ -254,5 +283,37 @@
     > .alert:first-child {
       margin-top: 20px;
     }
+  }
+}
+
+.user-invites-page {
+  .admin-controls {
+    flex-wrap: wrap;
+    .pull-right {
+      flex: 1 1 100%;
+      font-size: $font-down-1;
+      padding: 0;
+    }
+  }
+  table {
+    tr:first-of-type {
+      display: none;
+    }
+    tr {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 1em;
+    }
+    td:first-of-type {
+      margin-right: 1em;
+    }
+    td:nth-of-type(n + 3) {
+      display: block;
+      width: 50%;
+      padding: 0.25em 0 1em 0;
+    }
+  }
+  .user-invite-none {
+    margin-top: 1em;
   }
 }

@@ -1646,8 +1646,8 @@ moment@2.x, moment@^2.10.2:
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 "mousetrap@https://github.com/discourse/mousetrap#firefox-alt-key":
-  version "1.6.2"
-  resolved "https://github.com/discourse/mousetrap#51613787a7cb8be79435f039ba2ba3a43efe797d"
+  version "1.6.3"
+  resolved "https://github.com/discourse/mousetrap#0d41aa7b173abfb83a6bec3ad39a6a708bc49108"
 
 ms@2.0.0:
   version "2.0.0"

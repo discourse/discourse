@@ -253,13 +253,12 @@ class Upload < ActiveRecord::Base
           if upload.sha1.blank?
             upload.sha1 = Upload.generate_digest(path)
           end
-          # optimize if image
-          FileHelper.optimize_image!(path) if FileHelper.is_supported_image?(File.basename(path))
+
           # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
             upload.filesize = f.size
-            upload.save!
+            upload.save!(validate: false)
           end
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external

@@ -69,9 +69,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
     { name: I18n.t("user.email_digests.every_30_minutes"), value: 30 },
     { name: I18n.t("user.email_digests.every_hour"), value: 60 },
     { name: I18n.t("user.email_digests.daily"), value: 1440 },
-    { name: I18n.t("user.email_digests.every_three_days"), value: 4320 },
     { name: I18n.t("user.email_digests.weekly"), value: 10080 },
-    { name: I18n.t("user.email_digests.every_two_weeks"), value: 20160 }
+    { name: I18n.t("user.email_digests.every_month"), value: 43200 },
+    { name: I18n.t("user.email_digests.every_six_months"), value: 259200 }
   ],
 
   @computed()

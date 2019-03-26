@@ -1,12 +1,84 @@
 // Common styles for "/user" section
 // These styles are also used for "/groups" — test those pages if making significant changes
-.user-right {
+
+.user-content-wrapper {
+  // Grid layout
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-template-rows: auto auto 1fr auto;
+  grid-row-gap: s(5);
+  .user-primary-navigation {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+  .user-secondary-navigation {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+  .user-content,
+  .spinner {
+    grid-row-start: 2;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+  .user-content {
+    min-width: 100%;
+  }
+  .user-additional-controls + .user-content,
+  .user-secondary-navigation + .user-content {
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+  .user-additional-controls {
+    grid-row-start: 3;
+    align-self: start;
+    justify-self: start;
+  }
+}
+
+.user-content-wrapper {
+  // IE11 Support
+  display: -ms-grid;
+  -ms-grid-columns: 1fr 5fr;
+  -ms-grid-rows: auto auto 1fr auto;
+  .user-primary-navigation {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+  }
+  .user-secondary-navigation {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+  }
+  .user-content,
+  .spinner {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 2;
+  }
+  .user-secondary-navigation + .user-content {
+    -ms-grid-column: 2;
+    -ms-grid-column-span: 1;
+  }
+  .user-additional-controls {
+    -ms-grid-row: 3;
+    -ms-grid-column-align: start;
+    -ms-grid-row-align: start;
+  }
+}
+
+.user-content {
   .list-actions {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: s(3);
 
     .btn {
-      margin-right: 10px;
+      margin-right: s(3);
     }
   }
 
@@ -16,6 +88,10 @@
 
   .show-mores {
     width: 100%;
+  }
+
+  .d-icon-heart {
+    color: $love;
   }
 }
 
@@ -162,14 +238,6 @@
     }
 
     &.collapsed-info {
-      .controls {
-        margin-top: 0;
-      }
-
-      .profile-image {
-        height: 0;
-      }
-
       .details {
         margin-top: 0;
         background: rgba($secondary, 0.8);
@@ -179,12 +247,9 @@
         }
 
         .primary {
-          text-align: left;
-          margin-top: 0;
           width: 100%;
 
           .avatar {
-            float: left;
             margin-right: 10px;
             width: 45px;
             height: 45px;
@@ -196,7 +261,6 @@
 
           h2 {
             font-size: $font-up-1;
-            margin-top: 4px;
           }
           h3,
           h3.location-and-website {
@@ -209,7 +273,7 @@
         .avatar-flair {
           bottom: 8px;
           right: 2px;
-          .fa {
+          .d-icon {
             font-size: $font-0;
           }
         }
@@ -228,15 +292,13 @@
       align-items: baseline;
       flex: 0 1 auto;
       margin: 0 10px 0 0;
+      color: $secondary;
+
       span {
-        padding: 1px 6px;
+        padding: 0 7px 1px;
         border-radius: 10px;
         margin-right: 5px;
       }
-    }
-
-    a {
-      color: $secondary;
     }
 
     .active {
@@ -244,18 +306,8 @@
     }
   }
 
-  .pill {
-    border-radius: 15px;
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: $line-height-large;
-  }
-
   .helpful-flags {
-    background-color: green;
+    background-color: $success;
   }
 
   .flagged-posts {
@@ -263,24 +315,19 @@
   }
 
   .warnings-received {
-    background-color: #ec441b;
+    background-color: $danger-medium;
   }
 
   .deleted-posts {
-    background-color: #ec441b;
+    background-color: $danger-medium;
   }
 
   .suspensions {
-    background-color: #c22020;
+    background-color: $danger;
   }
 
   .user-field {
-    clear: both;
     margin-bottom: 10px;
-
-    &.text {
-      padding-top: 18px;
-    }
 
     .controls {
       label {
@@ -290,11 +337,10 @@
       }
 
       .instructions {
-        color: dark-light-choose($primary-medium, $secondary-medium);
+        color: $primary-medium;
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: $font-down-1;
-        line-height: $line-height-large;
       }
     }
   }
@@ -330,42 +376,7 @@
   }
 }
 
-.user-navigation {
-  .map {
-    height: 50px;
-  }
-
-  .avatar {
-    float: left;
-    width: 45px;
-  }
-
-  nav.buttons {
-    width: 180px;
-    padding: 0;
-    .btn {
-      width: 100%;
-      margin-bottom: 5px;
-      box-sizing: border-box;
-    }
-  }
-
-  h2 {
-    a {
-      font-size: $font-0;
-      color: scale-color($tertiary, $lightness: -10%);
-      cursor: pointer;
-    }
-  }
-}
-
-.user-table {
-  position: relative;
-  margin-top: 20px;
-}
-
 .avatar-selector {
-  padding-bottom: 0 !important;
   label.radio {
     padding-left: 10px;
   }
@@ -387,10 +398,6 @@
   p.error {
     color: $danger;
   }
-}
-
-.user-nav {
-  margin: 5px 0;
 }
 
 .top-section {
@@ -423,14 +430,14 @@
 
   li {
     display: inline-block;
-    padding: 10px 14px;
-    margin: 0 5px 10px 0;
+    padding: 10px 14px 10px 0;
+    margin: 0 10px 10px 0;
 
     &.linked-stat {
       // This makes the entire "box" (the li) clickable instead of a narrow area.
       padding: 0;
       a {
-        padding: 10px 14px;
+        padding: 10px 14px 10px 0;
         width: 100%;
         height: 100%;
         display: block;
@@ -439,23 +446,13 @@
     }
   }
 
-  li:last-of-type {
-    margin: 0;
-  }
-
   .value {
     font-weight: bold;
     font-size: $font-up-2;
   }
 
   .label {
-    // TODO: Remove once all languages have been translated to remove icons from
-    // their user-stat labels
-    .fa:nth-of-type(2) {
-      display: none;
-    }
-
-    color: blend-primary-secondary(50%);
+    color: $primary-medium;
   }
 }
 
@@ -473,7 +470,7 @@
   }
 
   .topic-info {
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-medium;
   }
 
   @media all and (max-width: 600px) {
@@ -493,7 +490,7 @@
 .links-section {
   .domain {
     font-size: $font-down-1;
-    color: dark-light-choose($primary-medium, $secondary-high);
+    color: $primary-medium;
   }
 }
 
@@ -516,7 +513,7 @@
 
 .summary-user-list {
   li {
-    height: 40px;
+    height: 45px;
   }
 }
 
@@ -531,13 +528,22 @@
     height: 100px;
   }
 
+  .tracking-controls {
+    label {
+      align-items: center;
+      .d-icon {
+        margin-right: 3px;
+      }
+    }
+  }
+
   .static {
     color: $primary;
     display: inline-block;
   }
 
   .instructions {
-    color: dark-light-choose($primary-medium, $secondary-medium);
+    color: $primary-medium;
     margin-bottom: 10px;
     font-size: $font-down-1;
     line-height: $line-height-large;
@@ -563,8 +569,7 @@
     margin-bottom: 10px;
   }
 
-  .category-notifications .category-controls,
-  .tag-notifications .tag-controls {
+  .tracking-controls {
     margin-top: 24px;
   }
 
@@ -696,8 +701,4 @@
       }
     }
   }
-}
-
-.user-summary-page .d-icon-heart {
-  color: $love;
 }
