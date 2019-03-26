@@ -125,7 +125,9 @@ module ApplicationHelper
       result << "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
     end
 
-    if current_user.present? && primary_group_name = current_user.primary_group&.name
+    if current_user.present? &&
+        current_user.primary_group_id &&
+        primary_group_name = Group.where(id: current_user.primary_group_id).pluck(:name).first
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
