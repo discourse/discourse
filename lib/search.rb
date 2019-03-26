@@ -727,6 +727,8 @@ class Search
     end
   end
 
+  PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
+
   def posts_query(limit, opts = nil)
     opts ||= {}
 
@@ -770,7 +772,7 @@ class Search
         # D is for cooked
         weights = @in_title ? 'A' : (SiteSetting.tagging_enabled ? 'ABCD' : 'ABD')
         posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
-        exact_terms = @term.scan(/"([^"]+)"/).flatten
+        exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
           posts = posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
