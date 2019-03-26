@@ -130,7 +130,7 @@ export function setup(helper) {
   helper.whiteList([
     "span.discourse-local-date",
     "span[data-*]",
-    "span[title]"
+    "span[aria-label]"
   ]);
 
   helper.registerOptions((opts, siteSettings) => {
