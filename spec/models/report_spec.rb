@@ -1082,7 +1082,7 @@ describe Report do
     end
 
     def expect_uploads_report_data_to_be_equal(data, user, upload)
-      row = data.find { |row| row[:author_id] == user.id }
+      row = data.find { |r| r[:author_id] == user.id }
       expect(row[:author_id]).to eq(user.id)
       expect(row[:author_username]).to eq(user.username)
       expect(row[:author_avatar_template]).to eq(User.avatar_template(user.username, user.uploaded_avatar_id))
@@ -1129,7 +1129,7 @@ describe Report do
     end
 
     def expect_ignored_users_report_data_to_be_equal(data, user, ignores, mutes)
-      row = data.find { |row| row[:ignored_user_id] == user.id }
+      row = data.find { |r| r[:ignored_user_id] == user.id }
       expect(row).to be_present
       expect(row[:ignored_user_id]).to eq(user.id)
       expect(row[:ignored_username]).to eq(user.username)
