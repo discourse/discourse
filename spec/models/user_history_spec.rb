@@ -36,13 +36,13 @@ describe UserHistory do
       end
 
       it 'filters by action' do
-        records = described_class.staff_action_records(Fabricate(:admin), {action: @change_site_setting.id}).to_a
+        records = described_class.staff_action_records(Fabricate(:admin), action_id: @change_site_setting.action_before_type_cast).to_a
         expect(records.size).to eq(1)
         expect(records.first).to eq(@change_site_setting)
       end
 
       it 'filters by action_name' do
-        records = described_class.staff_action_records(Fabricate(:admin), {action_name: "change_site_setting"}).to_a
+        records = described_class.staff_action_records(Fabricate(:admin), action_name: "change_site_setting").to_a
         expect(records.size).to eq(1)
         expect(records.first).to eq(@change_site_setting)
       end
