@@ -633,12 +633,6 @@ QUnit.test("Can switch states without abandon popup", async assert => {
     "entered text should still be there"
   );
 
-  assert.equal(
-    find(".d-editor-input").val(),
-    longText,
-    "entered text should still be there"
-  );
-
   assert.ok(
     find('.action-title a[href="/t/internationalization-localization/280"]'),
     "mode should have changed"
