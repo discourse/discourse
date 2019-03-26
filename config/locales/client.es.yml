@@ -574,6 +574,8 @@ es:
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
+      ignore: "Ignorar"
+      unignore: "Dejar de ignorar"
       activity_stream: "Actividad"
       preferences: "Preferencias"
       profile_hidden: "Este perfil público del usuario ha sido ocultado."

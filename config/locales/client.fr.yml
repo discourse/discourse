@@ -574,6 +574,8 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
+      ignore: "Ignorer"
+      unignore: "Ne plus ignorer"
       activity_stream: "Activité"
       preferences: "Préférences"
       profile_hidden: "Le profil public de cet usagé est caché."

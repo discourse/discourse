@@ -638,6 +638,8 @@ sl:
       new_private_message: "Novo ZS"
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
+      ignore: "Prezri"
+      unignore: "Razveljavi prezri"
       activity_stream: "Aktivnost"
       preferences: "Nastavitve"
       profile_hidden: "Profil tega uporabnika je skrit."

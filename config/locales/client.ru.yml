@@ -638,6 +638,8 @@ ru:
       new_private_message: "Новое сообщение"
       private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
+      ignore: "Игнорировать"
+      unignore: "Показать"
       activity_stream: "Активность"
       preferences: "Настройки"
       profile_hidden: "Публичный профиль пользователя скрыт"
