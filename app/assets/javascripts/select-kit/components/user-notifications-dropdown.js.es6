@@ -2,7 +2,6 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default DropdownSelectBox.extend({
-  pluginApiIdentifiers: [""],
   classNames: ["user-notifications", "user-notifications-dropdown"],
   nameProperty: "label",
   allowInitialValueMutation: false,
