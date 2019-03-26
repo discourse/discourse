@@ -165,13 +165,13 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
-      if SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+      if Email::Sender.bounceable_reply_address?
         email_log.bounce_key = SecureRandom.hex
 
         # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
         # however Rails has special handling for this header and ends up using this value
         # as the Envelope From address so stuff works as expected
-        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+        @message.header[:return_path] = Email::Sender.bounce_address(email_log.bounce_key)
       end
 
       email_log.post_id = post_id if post_id.present?
@@ -282,5 +282,12 @@ module Email
         header_value('Reply-To').gsub!("%{reply_key}", reply_key)
     end
 
+    def self.bounceable_reply_address?
+      SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+    end
+
+    def self.bounce_address(bounce_key)
+      SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{bounce_key}")
+    end
   end
 end
