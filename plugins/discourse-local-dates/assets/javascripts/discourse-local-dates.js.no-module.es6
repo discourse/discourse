@@ -70,7 +70,10 @@
     $element
       .html(DATE_TEMPLATE)
       .attr("aria-label", textPreview)
-      .attr("data-html-tooltip", `<div class="previews">${htmlPreview}</div>`)
+      .attr(
+        "data-html-tooltip",
+        `<div class="locale-dates-previews">${htmlPreview}</div>`
+      )
       .addClass("cooked-date")
       .find(".relative-time")
       .text(formatedDateTime);

@@ -14,24 +14,20 @@
   }
 }
 
-.discourse-local-date + #discourse-tooltip {
-  .tooltip-content {
+#d-popover {
+  .locale-dates-previews {
     max-width: 360px;
-    padding: 0.5em;
+    .preview {
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
 
-    .previews {
-      .preview {
-        display: flex;
-        flex-direction: column;
-        padding: 5px;
+      .timezone {
+        font-weight: 700;
+      }
 
-        .timezone {
-          font-weight: 700;
-        }
-
-        &.current {
-          background: $tertiary-low;
-        }
+      &.current {
+        background: $tertiary-low;
       }
     }
   }
