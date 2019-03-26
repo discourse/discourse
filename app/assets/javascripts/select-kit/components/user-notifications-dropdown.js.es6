@@ -9,10 +9,10 @@ export default DropdownSelectBox.extend({
 
   computeHeaderContent() {
     let content = this._super(...arguments);
-    if(this.get("user.ignored")) {
+    if (this.get("user.ignored")) {
       this.set("headerIcon", "eye-slash");
       content.name = `${I18n.t("user.user_notifications_ignore_option")}`;
-    } else if(this.get("user.muted")) {
+    } else if (this.get("user.muted")) {
       this.set("headerIcon", "times-circle");
       content.name = `${I18n.t("user.user_notifications_mute_option")}`;
     } else {
@@ -41,7 +41,7 @@ export default DropdownSelectBox.extend({
       label: I18n.t("user.user_notifications_mute_option")
     });
 
-    if(this.get("user.can_ignore_user")) {
+    if (this.get("user.can_ignore_user")) {
       content.push({
         icon: "eye-slash",
         id: "change-to-ignored",
@@ -56,24 +56,30 @@ export default DropdownSelectBox.extend({
 
   actions: {
     reset() {
-      this.get("updateNotificationLevel")("normal").then(() => {
-        this.set("user.ignored", false);
-        this.set("user.muted", false);
-        this.computeHeaderContent();
-      }).catch(popupAjaxError);
+      this.get("updateNotificationLevel")("normal")
+        .then(() => {
+          this.set("user.ignored", false);
+          this.set("user.muted", false);
+          this.computeHeaderContent();
+        })
+        .catch(popupAjaxError);
     },
     mute() {
-      this.get("updateNotificationLevel")("mute").then(() => {
-        this.set("user.ignored", false);
-        this.set("user.muted", true);
-        this.computeHeaderContent();
-      }).catch(popupAjaxError);
+      this.get("updateNotificationLevel")("mute")
+        .then(() => {
+          this.set("user.ignored", false);
+          this.set("user.muted", true);
+          this.computeHeaderContent();
+        })
+        .catch(popupAjaxError);
     },
     ignore() {
-      this.get("updateNotificationLevel")("ignore").then(() => {
-        this.set("user.ignored", true);
-        this.computeHeaderContent();
-      }).catch(popupAjaxError);
+      this.get("updateNotificationLevel")("ignore")
+        .then(() => {
+          this.set("user.ignored", true);
+          this.computeHeaderContent();
+        })
+        .catch(popupAjaxError);
     }
   }
 });
