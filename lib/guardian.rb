@@ -398,7 +398,7 @@ class Guardian
 
   def can_mute_users?
     return false if anonymous?
-    (@user.staff? || @user.trust_level >= TrustLevel.levels[:basic])
+    @user.staff? || @user.trust_level >= TrustLevel.levels[:basic]
   end
 
   def can_ignore_user?(user_id)
