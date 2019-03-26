@@ -850,11 +850,13 @@ describe Search do
     end
 
     it 'can search numbers correctly, and match exact phrases' do
-      topic = Fabricate(:topic, created_at: 3.months.ago)
-      Fabricate(:post, raw: '3.0 eta is in 2 days horrah', topic: topic)
+      post = Fabricate(:post, raw: '3.0 eta is in 2 days horrah')
+      post2 = Fabricate(:post, raw: '3.0 is eta in 2 days horrah')
 
-      expect(Search.execute('3.0 eta').posts.length).to eq(1)
-      expect(Search.execute('"3.0, eta is"').posts.length).to eq(0)
+      expect(Search.execute('3.0 eta').posts).to contain_exactly(post, post2)
+      expect(Search.execute("'3.0 eta'").posts).to contain_exactly(post, post2)
+      expect(Search.execute("\"3.0 eta\"").posts).to contain_exactly(post)
+      expect(Search.execute('"3.0, eta is"').posts).to eq([])
     end
 
     it 'can find by status' do
