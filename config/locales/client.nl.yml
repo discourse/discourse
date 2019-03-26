@@ -574,8 +574,6 @@ nl:
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
-      ignore: "Negeren"
-      unignore: "Negeren opheffen"
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
       profile_hidden: "Het openbare profiel van deze gebruiker is verborgen."
