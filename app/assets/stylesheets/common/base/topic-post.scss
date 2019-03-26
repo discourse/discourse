@@ -203,6 +203,15 @@ aside.quote {
   }
 }
 
+blockquote {
+  // due to #image-sizing-hack large images and lightboxes extend past the
+  // limits blockquotes. Since #image-sizing-hack is inline, we need to use
+  // !important here otherwise it won't work.
+  img {
+    max-width: 100% !important;
+  }
+}
+
 .quote-controls,
 .quote-controls .d-icon {
   color: dark-light-choose($primary-low-mid, $secondary-high);
