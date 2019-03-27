@@ -8,7 +8,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     ignore() {
       if (!this.get("ignoredUntil")) {
         this.flash(
-          I18n.t("user_notifications.ignore_duration_time_frame_required"),
+          I18n.t("user.user_notifications.ignore_duration_time_frame_required"),
           "alert-error"
         );
         return;
