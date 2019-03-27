@@ -329,17 +329,20 @@ class GroupsController < ApplicationController
 
   def handle_membership_request
     group = Group.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) if group.blank?
     guardian.ensure_can_edit!(group)
 
-    user = User.find_by(id: params[:user_id])
-    raise Discourse::InvalidParameters.new(:user_id) if user.blank?
+    ActiveRecord::Base.transaction do
+      user = User.find_by(id: params[:user_id])
+      raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
-    if params[:accept]
-      group.add(user)
-      GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+      if params[:accept]
+        group.add(user)
+        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+      end
+
+      GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
     end
-
-    GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
 
     render json: success_json
   end
