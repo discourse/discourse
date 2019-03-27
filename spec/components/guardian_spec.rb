@@ -9,6 +9,7 @@ describe Guardian do
   let(:user) { Fabricate(:user) }
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
+  let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
   let(:trust_level_4)  { build(:user, trust_level: 4) }
@@ -2694,6 +2695,61 @@ describe Guardian do
 
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
+  end
+
+  describe '#can_mute_user?' do
+
+    let(:guardian) { Guardian.new(trust_level_1) }
+
+    context "when muted user is the same as guardian user" do
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(trust_level_1.id)).to eq(false)
+      end
+    end
+
+    context "when muted user is a staff user" do
+      let!(:admin) { Fabricate(:user, admin: true) }
+
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(admin.id)).to eq(false)
+      end
+    end
+
+    context "when muted user is a normal user" do
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when muter's trust level is below tl1" do
+      let(:guardian) { Guardian.new(trust_level_0) }
+      let!(:another_user) { Fabricate(:user) }
+      let!(:trust_level_0) { build(:user, trust_level: 0) }
+
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(false)
+      end
+    end
+
+    context "when muter is staff" do
+      let(:guardian) { Guardian.new(admin) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when muters's trust level is tl1" do
+      let(:guardian) { Guardian.new(trust_level_1) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
       end
     end
   end

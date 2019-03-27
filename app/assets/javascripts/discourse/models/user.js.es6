@@ -615,17 +615,10 @@ const User = RestModel.extend({
     }
   },
 
-  ignore() {
-    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
+  updateNotificationLevel(level) {
+    return ajax(`${userPath(this.get("username"))}/notification_level.json`, {
       type: "PUT",
-      data: { ignored_user_id: this.get("id") }
-    });
-  },
-
-  unignore() {
-    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
-      type: "DELETE",
-      data: { ignored_user_id: this.get("id") }
+      data: { notification_level: level }
     });
   },
 
