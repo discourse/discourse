@@ -76,6 +76,7 @@ export default DropdownSelectBox.extend({
       this.get("updateNotificationLevel")("ignore")
         .then(() => {
           this.set("user.ignored", true);
+          this.set("user.muted", false)
           this.computeHeaderContent();
         })
         .catch(popupAjaxError);

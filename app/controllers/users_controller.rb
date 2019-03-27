@@ -997,18 +997,19 @@ class UsersController < ApplicationController
 
   def notification_level
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+    user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"
-      guardian.ensure_can_ignore_user!(params[:notification_level_user_id])
-      MutedUser.where(user: current_user, muted_user_id: params[:notification_level_user_id]).delete_all
-      IgnoredUser.find_or_create_by!(user: current_user, ignored_user_id: params[:notification_level_user_id])
+      guardian.ensure_can_ignore_user!(user.id)
+      MutedUser.where(user: current_user, muted_user: user).delete_all
+      IgnoredUser.find_or_create_by!(user: current_user, ignored_user: user)
     elsif params[:notification_level] == "mute"
-      guardian.ensure_can_mute_user!(params[:notification_level_user_id])
-      IgnoredUser.where(user: current_user, ignored_user_id: params[:notification_level_user_id]).delete_all
-      MutedUser.find_or_create_by!(user: current_user, muted_user_id: params[:notification_level_user_id])
+      guardian.ensure_can_mute_user!(user.id)
+      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+      MutedUser.find_or_create_by!(user: current_user, muted_user: user)
     elsif params[:notification_level] == "normal"
-      MutedUser.where(user: current_user, muted_user_id: params[:notification_level_user_id]).delete_all
-      IgnoredUser.where(user: current_user, ignored_user_id: params[:notification_level_user_id]).delete_all
+      MutedUser.where(user: current_user, muted_user: user).delete_all
+      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
     end
 
     render json: success_json

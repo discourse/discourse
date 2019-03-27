@@ -391,9 +391,9 @@ class Guardian
   end
 
   def can_mute_user?(user_id)
-    can_mute_users? && @user.id != user_id && User.where(id: user_id,
-                                                         admin: false,
-                                                         moderator: false).exists?
+    can_mute_users? &&
+      @user.id != user_id &&
+      User.where(id: user_id, admin: false, moderator: false).exists?
   end
 
   def can_mute_users?

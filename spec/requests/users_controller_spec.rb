@@ -2022,7 +2022,7 @@ describe UsersController do
 
   describe '#ignore' do
     it 'raises an error when not logged in' do
-      put "/u/#{user.username}/notification_level.json", params: { notification_level: "", notification_level_user_id: "" }
+      put "/u/#{user.username}/notification_level.json", params: { notification_level: "" }
       expect(response.status).to eq(403)
     end
 
@@ -2035,7 +2035,7 @@ describe UsersController do
 
       context 'when ignore_user_enable is OFF' do
         it 'raises an error when not logged in' do
-          put "/u/#{user.username}/notification_level.json", params: { notification_level: "", notification_level_user_id: "" }
+          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "" }
           expect(response.status).to eq(404)
         end
       end
@@ -2050,7 +2050,7 @@ describe UsersController do
 
         context 'when changing notification level to normal' do
           it 'changes notification level to normal' do
-            put "/u/#{user.username}/notification_level.json", params: { notification_level: "normal", notification_level_user_id: another_user.id }
+            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "normal" }
             expect(IgnoredUser.count).to eq(0)
             expect(MutedUser.count).to eq(0)
           end
@@ -2058,7 +2058,7 @@ describe UsersController do
 
         context 'when changing notification level to mute' do
           it 'changes notification level to mute' do
-            put "/u/#{user.username}/notification_level.json", params: { notification_level: "mute", notification_level_user_id: another_user.id }
+            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "mute" }
             expect(IgnoredUser.count).to eq(0)
             expect(MutedUser.find_by(user_id: user.id, muted_user_id: another_user.id)).to be_present
           end
@@ -2066,7 +2066,7 @@ describe UsersController do
 
         context 'when changing notification level to ignore' do
           it 'changes notification level to mute' do
-            put "/u/#{user.username}/notification_level.json", params: { notification_level: "ignore", notification_level_user_id: another_user.id }
+            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore" }
             expect(MutedUser.count).to eq(0)
             expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
           end

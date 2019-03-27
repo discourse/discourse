@@ -2748,7 +2748,7 @@ describe Guardian do
       let(:guardian) { Guardian.new(trust_level_1) }
       let!(:another_user) { Fabricate(:user) }
 
-      it 'allows mutring user' do
+      it 'allows muting user' do
         expect(guardian.can_mute_user?(another_user.id)).to eq(true)
       end
     end
