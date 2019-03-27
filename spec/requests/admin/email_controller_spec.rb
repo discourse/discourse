@@ -227,6 +227,77 @@ describe Admin::EmailController do
     end
   end
 
+  describe '#incoming_from_bounced' do
+    it 'raises an error when the email log entry does not exist' do
+      get "/admin/email/incoming_from_bounced/12345.json"
+      expect(response.status).to eq(404)
+
+      json = JSON.parse(response.body)
+      expect(json["errors"]).to include("Discourse::InvalidParameters")
+    end
+
+    it 'raises an error when the email log entry is not marked as bounced' do
+      get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+      expect(response.status).to eq(404)
+
+      json = JSON.parse(response.body)
+      expect(json["errors"]).to include("Discourse::InvalidParameters")
+    end
+
+    context 'bounced email log entry exists' do
+      let(:email_log) { Fabricate(:email_log, bounced: true, bounce_key: SecureRandom.hex) }
+      let(:error_message) { "Email::Receiver::BouncedEmailError" }
+
+      it 'returns an incoming email sent to the reply_by_email_address' do
+        SiteSetting.reply_by_email_address = "replies+%{reply_key}@example.com"
+
+        Fabricate(:incoming_email,
+                  is_bounce: true,
+                  error: error_message,
+                  to_addresses: Email::Sender.bounce_address(email_log.bounce_key)
+        )
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(200)
+
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq(error_message)
+      end
+
+      it 'returns an incoming email sent to the notification_email address' do
+        Fabricate(:incoming_email,
+                  is_bounce: true,
+                  error: error_message,
+                  to_addresses: SiteSetting.notification_email.sub("@", "+verp-#{email_log.bounce_key}@")
+        )
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(200)
+
+        json = JSON.parse(response.body)
+        expect(json["error"]).to eq(error_message)
+      end
+
+      it 'raises an error if the bounce_key is blank' do
+        email_log.update(bounce_key: nil)
+
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(404)
+
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to include("Discourse::InvalidParameters")
+      end
+
+      it 'raises an error if there is no incoming email' do
+        get "/admin/email/incoming_from_bounced/#{email_log.id}.json"
+        expect(response.status).to eq(404)
+
+        json = JSON.parse(response.body)
+        expect(json["errors"]).to include("Discourse::NotFound")
+      end
+    end
+  end
+
   describe '#advanced_test' do
     it 'should ...' do
       email = <<~EMAIL

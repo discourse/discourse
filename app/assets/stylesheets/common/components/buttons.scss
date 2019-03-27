@@ -238,6 +238,11 @@
       background: lighten($github, 20%);
     }
   }
+  &.oauth2_basic {
+    .d-icon {
+      display: none;
+    }
+  }
 }
 
 // Button Sizes

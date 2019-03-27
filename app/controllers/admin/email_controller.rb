@@ -175,13 +175,20 @@ class Admin::EmailController < Admin::AdminController
     params.require(:id)
 
     begin
-      bounced = EmailLog.find_by(id: params[:id].to_i)
-      raise Discourse::InvalidParameters if bounced.nil?
+      email_log = EmailLog.find_by(id: params[:id].to_i, bounced: true)
+      raise Discourse::InvalidParameters if email_log&.bounce_key.blank?
 
-      email_local_part, email_domain = SiteSetting.notification_email.split('@')
-      bounced_to_address = "#{email_local_part}+verp-#{bounced.bounce_key}@#{email_domain}"
+      if Email::Sender.bounceable_reply_address?
+        bounced_to_address = Email::Sender.bounce_address(email_log.bounce_key)
+        incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
+      end
 
-      incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
+      if incoming_email.nil?
+        email_local_part, email_domain = SiteSetting.notification_email.split('@')
+        bounced_to_address = "#{email_local_part}+verp-#{email_log.bounce_key}@#{email_domain}"
+        incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
+      end
+
       raise Discourse::NotFound if incoming_email.nil?
 
       serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
