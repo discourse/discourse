@@ -230,12 +230,14 @@ export default DropdownSelectBoxComponent.extend({
   replyToTopicSelected(options) {
     options.action = REPLY;
     options.topic = _topicSnapshot;
+    options.skipDraftCheck = true;
     this._openComposer(options);
   },
 
   replyToPostSelected(options) {
     options.action = REPLY;
     options.post = _postSnapshot;
+    options.skipDraftCheck = true;
     this._openComposer(options);
   },
 
