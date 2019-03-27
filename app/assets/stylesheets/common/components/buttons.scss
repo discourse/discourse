@@ -191,7 +191,6 @@
     margin-right: 9px;
     font-size: $font-0;
   }
-  &.google,
   &.google_oauth2 {
     background: $google;
     color: #333;
@@ -236,11 +235,6 @@
     background: $github;
     &:hover {
       background: lighten($github, 20%);
-    }
-  }
-  &.oauth2_basic {
-    .d-icon {
-      display: none;
     }
   }
 }
