@@ -158,6 +158,7 @@ module SvgSprite
     "share",
     "shield-alt",
     "shower",
+    "sign-in-alt",
     "sign-out-alt",
     "signal",
     "step-backward",
