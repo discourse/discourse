@@ -1,0 +1,20 @@
+.select-kit {
+  &.dropdown-select-box {
+    &.user-notifications-dropdown {
+      text-align: left;
+
+      .select-kit-body {
+        width: 485px;
+        max-width: 485px;
+      }
+
+      .select-kit-header {
+        justify-content: center;
+      }
+
+      .dropdown-select-box-header {
+        align-items: center;
+      }
+    }
+  }
+}
