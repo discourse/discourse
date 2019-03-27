@@ -214,6 +214,39 @@ class GroupsController < ApplicationController
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = ""
 
+    if params[:requesters]
+      guardian.ensure_can_edit!(group)
+
+      users = group.requesters
+      total = users.count
+
+      if (filter = params[:filter]).present?
+        filter = filter.split(',') if filter.include?(',')
+
+        if current_user&.admin
+          users = users.filter_by_username_or_email(filter)
+        else
+          users = users.filter_by_username(filter)
+        end
+      end
+
+      users = users
+        .select("users.*, group_requests.reason, group_requests.created_at requested_at")
+        .order(params[:order] == 'requested_at' ? "group_requests.created_at #{dir}" : "")
+        .order(username_lower: dir)
+        .limit(limit)
+        .offset(offset)
+
+      return render json: {
+        members: serialize_data(users, GroupRequesterSerializer),
+        meta: {
+          total: total,
+          limit: limit,
+          offset: offset
+        }
+      }
+    end
+
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
       order = "#{params[:order]} #{dir} NULLS LAST"
     elsif params[:order] == 'added_at'
@@ -294,6 +327,26 @@ class GroupsController < ApplicationController
     end
   end
 
+  def handle_membership_request
+    group = Group.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) if group.blank?
+    guardian.ensure_can_edit!(group)
+
+    ActiveRecord::Base.transaction do
+      user = User.find_by(id: params[:user_id])
+      raise Discourse::InvalidParameters.new(:user_id) if user.blank?
+
+      if params[:accept]
+        group.add(user)
+        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
+      end
+
+      GroupRequest.where(group_id: group.id, user_id: user.id).delete_all
+    end
+
+    render json: success_json
+  end
+
   def mentionable
     group = find_group(:group_id, ensure_can_see: false)
 
@@ -369,13 +422,24 @@ class GroupsController < ApplicationController
         .pluck("users.username")
     )
 
+    raw = <<~EOF
+      #{params[:reason]}
+
+      ---
+      <a href="#{Discourse.base_uri}/g/#{group.name}/requests">
+        #{I18n.t('groups.request_membership_pm.handle')}
+      </a>
+    EOF
+
     post = PostCreator.new(current_user,
       title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
-      raw: params[:reason],
+      raw: raw,
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
       skip_validations: true
     ).create!
+
+    GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
 
     render json: success_json.merge(relative_url: post.topic.relative_url)
   end

@@ -724,6 +724,20 @@ describe GroupsController do
         .to contain_exactly(user1.id, user2.id, user3.id)
     end
 
+    it "can show group requests" do
+      sign_in(Fabricate(:admin))
+
+      user4 = Fabricate(:user)
+      request4 = Fabricate(:group_request, user: user4, group: group)
+
+      get "/groups/#{group.name}/members.json", params: { requesters: true }
+
+      members = JSON.parse(response.body)["members"]
+      expect(members.length).to eq(1)
+      expect(members.first["username"]).to eq(user4.username)
+      expect(members.first["reason"]).to eq(request4.reason)
+    end
+
     describe 'filterable' do
       describe 'as a normal user' do
         it "should not allow members to be filterable by email" do
@@ -1284,7 +1298,7 @@ describe GroupsController do
         group_name: group.name
       ))
 
-      expect(post.raw).to eq('Please add me in')
+      expect(post.raw).to start_with('Please add me in')
       expect(topic.archetype).to eq(Archetype.private_message)
       expect(topic.allowed_users).to contain_exactly(user, owner1, owner2)
       expect(topic.allowed_groups).to eq([])
