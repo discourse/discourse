@@ -43,9 +43,9 @@
 
     <thead>
       <tr>
-        <th>Topic</th>
-        <th>Replies</th>
-        <th>Created On</th>
+        <th><%= t 'js.topic.title' %></th>
+        <th><%= t 'js.replies' %></th>
+        <th><%= t 'js.created' %></th>
       </tr>
     </thead>
 
@@ -76,7 +76,7 @@
               <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
             </td>
             <td>
-              <%= t.created_at.strftime("%B %e %Y") %>
+              <%= I18n.l(t.created_at, format: :date_only) %>
             </td>
           </span>
         </tr>
