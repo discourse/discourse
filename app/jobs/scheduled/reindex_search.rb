@@ -9,6 +9,7 @@ module Jobs
       rebuild_problem_categories
       rebuild_problem_users
       rebuild_problem_tags
+      clean_post_search_data
     end
 
     def rebuild_problem_categories(limit = 500)
@@ -59,6 +60,13 @@ module Jobs
     end
 
     private
+
+    def clean_post_search_data
+      PostSearchData
+        .joins("LEFT JOIN posts p ON p.id = post_search_data.post_id")
+        .where("p.raw = ''")
+        .delete_all
+    end
 
     def load_problem_post_ids(limit)
       Post

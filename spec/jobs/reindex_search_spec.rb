@@ -28,4 +28,15 @@ describe Jobs::ReindexSearch do
       expect(model.send("#{m}_search_data").version).to eq Search::INDEX_VERSION
     end
   end
+
+  it "should clean up post_search_data of posts with empty raw" do
+    post = Fabricate(:post)
+    post2 = Fabricate(:post, post_type: Post.types[:small_action])
+    post2.raw = ""
+    post2.save!(validate: false)
+
+    expect { subject.execute({}) }.to change { PostSearchData.count }.by(-1)
+    expect(Post.all).to contain_exactly(post, post2)
+    expect(PostSearchData.all).to contain_exactly(post.post_search_data)
+  end
 end
