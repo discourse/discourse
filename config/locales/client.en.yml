@@ -640,6 +640,7 @@ en:
       user_notifications:
         ignore_duration_title: "Ignore Timer"
         ignore_duration_when: "When:"
+        ignore_duration_save: "Ignore"
         ignore_duration_time_frame_required: "Please select a time frame"
         ignore_option: "Ignored"
         ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden from you."

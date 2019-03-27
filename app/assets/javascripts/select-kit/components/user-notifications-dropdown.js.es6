@@ -28,7 +28,7 @@ export default DropdownSelectBox.extend({
     content.push({
       icon: "user",
       id: "change-to-normal",
-      description: I18n.t("user.user_notifications_normal_option_title"),
+      description: I18n.t("user.user_notifications.normal_option_title"),
       action: () => this.send("reset"),
       label: I18n.t("user.user_notifications.normal_option")
     });
