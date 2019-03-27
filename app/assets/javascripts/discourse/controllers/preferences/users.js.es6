@@ -2,10 +2,11 @@ import PreferencesTabController from "discourse/mixins/preferences-tab-controlle
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
+import { default as computed } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(PreferencesTabController, {
-  saveAttrNames: ["muted_usernames"],
-  ignoredUsernames: null,
+  saveAttrNames: ["muted_usernames", "ignored_usernames"],
+  ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
   previousIgnoredUsernames: null,
   actions: {
     ignoredUsernamesChanged() {
