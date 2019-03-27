@@ -66,6 +66,7 @@ export default function() {
 
   this.route("group", { path: "/g/:name", resetNamespace: true }, function() {
     this.route("members");
+    this.route("requests");
 
     this.route("activity", function() {
       this.route("posts");
