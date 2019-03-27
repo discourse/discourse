@@ -61,7 +61,7 @@ module Jobs
     private
 
     def load_problem_post_ids(limit)
-      Post.joins(:topic)
+      Post
         .where('posts.id IN (
                 SELECT p2.id FROM posts p2
                 LEFT JOIN post_search_data pd ON pd.locale = ? AND pd.version = ? AND p2.id = pd.post_id
