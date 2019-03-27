@@ -379,6 +379,7 @@ en:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
+      handle: "handle membership request"
 
   education:
     until_posts:

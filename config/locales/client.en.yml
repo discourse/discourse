@@ -430,10 +430,19 @@ en:
 
     groups:
       member_added: "Added"
+      member_requested: "Requested at"
       add_members:
         title: "Add Members"
         description: "Manage the membership of this group"
         usernames: "Usernames"
+      requests:
+        title: "Requests"
+        reason: "Reason"
+        accept: "Accept"
+        accepted: "accepted"
+        deny: "Deny"
+        denied: "denied"
+        undone: "request undone"
       manage:
         title: "Manage"
         name: "Name"
@@ -464,6 +473,7 @@ en:
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
+        requests: "There are no membership requests for this group."
         mentions: "There are no mentions of this group."
         messages: "There are no messages for this group."
         topics: "There are no topics by members of this group."
