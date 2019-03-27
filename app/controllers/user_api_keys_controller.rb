@@ -3,7 +3,7 @@ class UserApiKeysController < ApplicationController
   layout 'no_ember'
 
   requires_login only: [:create, :create_otp, :revoke, :undo_revoke]
-  skip_before_action :redirect_to_login_if_required, only: [:new, :new_otp]
+  skip_before_action :redirect_to_login_if_required, only: [:new, :otp]
   skip_before_action :check_xhr, :preload_json
 
   AUTH_API_VERSION ||= 4
@@ -105,7 +105,7 @@ class UserApiKeysController < ApplicationController
     end
   end
 
-  def new_otp
+  def otp
     require_params_otp
 
     unless current_user

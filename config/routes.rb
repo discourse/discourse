@@ -842,7 +842,7 @@ Discourse::Application.routes.draw do
   post "/user-api-key" => "user_api_keys#create"
   post "/user-api-key/revoke" => "user_api_keys#revoke"
   post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
-  get "/user-api-key/otp" => "user_api_keys#new_otp"
+  get "/user-api-key/otp" => "user_api_keys#otp"
   post "/user-api-key/otp" => "user_api_keys#create_otp"
 
   get "/safe-mode" => "safe_mode#index"

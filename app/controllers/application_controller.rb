@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   before_action :clear_notifications
   before_action :set_locale
   before_action :set_mobile_view
-  before_action :handle_ios_SVC_requests
+  before_action :handle_safari_svc_session
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
@@ -360,9 +360,10 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  def handle_ios_SVC_requests
-    # for requests from mobile app
-    # redirects back to custom URL scheme when auth session is missing
+  def handle_safari_svc_session
+    # Workaround for dropped cookies in DiscourseHub SafariViewController iOS 12+.
+    # If auth session is missing, this redirects back to app using custom URL scheme.
+    # Then app can request a new one-time-password from Safari via ASWebAuthenticationSession.
     if params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect) && current_user.blank?
       begin
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])

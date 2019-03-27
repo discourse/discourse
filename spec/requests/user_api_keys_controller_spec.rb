@@ -182,6 +182,7 @@ describe UserApiKeysController do
       query = uri.query
       payload = query.split("payload=")[1]
       encrypted = Base64.decode64(CGI.unescape(payload))
+
       key = OpenSSL::PKey::RSA.new(private_key)
 
       parsed = JSON.parse(key.private_decrypt(encrypted))
