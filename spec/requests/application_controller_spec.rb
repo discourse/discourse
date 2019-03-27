@@ -345,6 +345,61 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe 'Detect delegated authentication' do
+    let :public_key do
+      <<~TXT
+      -----BEGIN PUBLIC KEY-----
+      MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW/47pqT7w
+      IhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV
+      p16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0n
+      w0z/BYpOgZ8QwnI5ZwIDAQAB
+      -----END PUBLIC KEY-----
+      TXT
+    end
+
+    let :args do
+      {
+        auth_redirect: 'http://no-good.com',
+        user_api_public_key: "not-a-valid-public-key"
+      }
+    end
+
+    it 'does not allow bogus public_key' do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      get "/", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
+    it 'does not allow invalid auth_redirect' do
+      args[:user_api_public_key] = public_key
+      get "/", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_auth_redirect"))
+    end
+
+    it 'does not redirect if one_time_password scope is disallowed' do
+      SiteSetting.allow_user_api_key_scopes = "read|write"
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "discourse://auth_redirect"
+
+      get "/", params: args
+
+      expect(response.status).to_not eq(302)
+      expect(response).to_not redirect_to("#{args[:auth_redirect]}?otp=true")
+    end
+
+    it 'redirects correctly when args are valid' do
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "discourse://auth_redirect"
+
+      get "/", params: args
+
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to("#{args[:auth_redirect]}?otp=true")
+    end
+  end
+
   describe 'Content Security Policy' do
     it 'is enabled by SiteSettings' do
       SiteSetting.content_security_policy = false

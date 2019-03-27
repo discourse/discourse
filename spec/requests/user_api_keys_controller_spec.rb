@@ -48,7 +48,7 @@ describe UserApiKeysController do
     it "supports a head request cleanly" do
       head "/user-api-key/new"
       expect(response.status).to eq(200)
-      expect(response.headers["Auth-Api-Version"]).to eq("3")
+      expect(response.headers["Auth-Api-Version"]).to eq("4")
     end
   end
 
@@ -156,7 +156,7 @@ describe UserApiKeysController do
 
       expect(parsed["nonce"]).to eq(args[:nonce])
       expect(parsed["push"]).to eq(false)
-      expect(parsed["api"]).to eq(3)
+      expect(parsed["api"]).to eq(4)
 
       key = user.user_api_keys.first
       expect(key.scopes).to include("push")
@@ -168,7 +168,7 @@ describe UserApiKeysController do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
 
-      args[:scopes] = "push,notifications,message_bus,session_info"
+      args[:scopes] = "push,notifications,message_bus,session_info,one_time_password"
       args[:push_url] = "https://push.it/here"
 
       user = Fabricate(:user, trust_level: 0)
@@ -182,7 +182,6 @@ describe UserApiKeysController do
       query = uri.query
       payload = query.split("payload=")[1]
       encrypted = Base64.decode64(CGI.unescape(payload))
-
       key = OpenSSL::PKey::RSA.new(private_key)
 
       parsed = JSON.parse(key.private_decrypt(encrypted))
@@ -193,7 +192,7 @@ describe UserApiKeysController do
       api_key = UserApiKey.find_by(key: parsed["key"])
 
       expect(api_key.user_id).to eq(user.id)
-      expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info"].sort)
+      expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info", "one_time_password"].sort)
       expect(api_key.push_url).to eq("https://push.it/here")
 
       uri.query = ""
@@ -204,6 +203,14 @@ describe UserApiKeysController do
       post "/user-api-key.json", params: args
 
       expect(response.status).to eq(302)
+
+      one_time_password = query.split("oneTimePassword=")[1]
+      encrypted_otp = Base64.decode64(CGI.unescape(one_time_password))
+
+      parsed_otp = key.private_decrypt(encrypted_otp)
+      redis_key = "otp_#{parsed_otp}"
+
+      expect($redis.get(redis_key)).to eq(user.username)
     end
 
     it "will just show the payload if no redirect" do
@@ -249,6 +256,80 @@ describe UserApiKeysController do
 
       post "/user-api-key.json", params: args
       expect(response.status).to eq(302)
+    end
+  end
+
+  context '#create-one-time-password' do
+    let :otp_args do
+      {
+        auth_redirect: 'http://somewhere.over.the/rainbow',
+        application_name: 'foo',
+        public_key: public_key
+      }
+    end
+
+    it "does not allow anon" do
+      post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(403)
+    end
+
+    it "refuses to redirect to disallowed place" do
+      sign_in(Fabricate(:user))
+      post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(403)
+    end
+
+    it "will allow one-time-password for staff without TL" do
+      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+
+      user = Fabricate(:user, trust_level: 1, moderator: true)
+
+      sign_in(user)
+
+      post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(302)
+    end
+
+    it "will not allow one-time-password unless TL is met" do
+      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+
+      user = Fabricate(:user, trust_level: 1)
+      sign_in(user)
+
+      post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(403)
+    end
+
+    it "will not allow one-time-password if one_time_password scope is disallowed" do
+      SiteSetting.allow_user_api_key_scopes = "read|write"
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user)
+      sign_in(user)
+
+      post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(403)
+    end
+
+    it "will return one-time-password when args are valid" do
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      user = Fabricate(:user)
+      sign_in(user)
+
+      post "/user-api-key/otp", params: otp_args
+      expect(response.status).to eq(302)
+
+      uri = URI.parse(response.redirect_url)
+
+      query = uri.query
+      payload = query.split("oneTimePassword=")[1]
+      encrypted = Base64.decode64(CGI.unescape(payload))
+      key = OpenSSL::PKey::RSA.new(private_key)
+
+      parsed = key.private_decrypt(encrypted)
+
+      expect($redis.get("otp_#{parsed}")).to eq(user.username)
     end
   end
 end
