@@ -57,7 +57,7 @@
 }
 
 .discourse-local-dates-create-modal {
-  min-height: 300px;
+  min-height: 200px;
   display: flex;
   flex-direction: row;
 
@@ -93,7 +93,8 @@
         .to-indicator {
           display: flex;
           flex-direction: row;
-          margin: 1em 2em;
+          padding-top: 0.5em;
+          margin: 0 1em;
           font-size: $font-up-2;
         }
       }
@@ -131,7 +132,7 @@
     .preview {
       text-align: center;
       margin-top: 0;
-      margin-bottom: 0.5em;
+      margin-bottom: 1em;
     }
 
     .validation-error {
