@@ -639,7 +639,7 @@ en:
       private_messages: "Messages"
       user_notifications:
         ignore_duration_title: "Ignore Timer"
-        ignore_duration_when: "When:"
+        ignore_duration_when: "Duration:"
         ignore_duration_save: "Ignore"
         ignore_duration_time_frame_required: "Please select a time frame"
         ignore_option: "Ignored"
