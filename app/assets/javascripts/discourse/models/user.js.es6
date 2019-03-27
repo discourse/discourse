@@ -615,10 +615,10 @@ const User = RestModel.extend({
     }
   },
 
-  updateNotificationLevel(level) {
+  updateNotificationLevel(level, expiringAt) {
     return ajax(`${userPath(this.get("username"))}/notification_level.json`, {
       type: "PUT",
-      data: { notification_level: level }
+      data: { notification_level: level, expiring_at: expiringAt }
     });
   },
 

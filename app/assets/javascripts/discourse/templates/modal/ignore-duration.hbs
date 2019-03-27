@@ -1,0 +1,16 @@
+{{#d-modal-body title="user_notifications.ignore_duration_title" autoFocus="false"}}
+  {{future-date-input
+    label="user_notifications.ignore_duration_when"
+    input=ignoredUntil
+    statusType=selection
+    includeWeekend=true}}
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button class="btn-primary"
+             disabled=saveDisabled
+             label="user_notifications.ignore_duration_save"
+             action=(action "ignore")}}
+
+  {{conditional-loading-spinner size="small" condition=loading}}
+</div>

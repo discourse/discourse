@@ -1,5 +1,6 @@
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import {popupAjaxError} from "discourse/lib/ajax-error";
+import showModal from "discourse/lib/show-modal";
 
 export default DropdownSelectBox.extend({
   classNames: ["user-notifications", "user-notifications-dropdown"],
@@ -10,13 +11,13 @@ export default DropdownSelectBox.extend({
     let content = this._super(...arguments);
     if (this.get("user.ignored")) {
       this.set("headerIcon", "eye-slash");
-      content.name = `${I18n.t("user.user_notifications_ignore_option")}`;
+      content.name = `${I18n.t("user.user_notifications.ignore_option")}`;
     } else if (this.get("user.muted")) {
       this.set("headerIcon", "times-circle");
-      content.name = `${I18n.t("user.user_notifications_mute_option")}`;
+      content.name = `${I18n.t("user.user_notifications.mute_option")}`;
     } else {
       this.set("headerIcon", "user");
-      content.name = `${I18n.t("user.user_notifications_normal_option")}`;
+      content.name = `${I18n.t("user.user_notifications.normal_option")}`;
     }
     return content;
   },
@@ -29,24 +30,24 @@ export default DropdownSelectBox.extend({
       id: "change-to-normal",
       description: I18n.t("user.user_notifications_normal_option_title"),
       action: () => this.send("reset"),
-      label: I18n.t("user.user_notifications_normal_option")
+      label: I18n.t("user.user_notifications.normal_option")
     });
 
     content.push({
       icon: "times-circle",
       id: "change-to-muted",
-      description: I18n.t("user.user_notifications_mute_option_title"),
+      description: I18n.t("user.user_notifications.mute_option_title"),
       action: () => this.send("mute"),
-      label: I18n.t("user.user_notifications_mute_option")
+      label: I18n.t("user.user_notifications.mute_option")
     });
 
     if (this.get("user.can_ignore_user")) {
       content.push({
         icon: "eye-slash",
         id: "change-to-ignored",
-        description: I18n.t("user.user_notifications_ignore_option_title"),
+        description: I18n.t("user.user_notifications.ignore_option_title"),
         action: () => this.send("ignore"),
-        label: I18n.t("user.user_notifications_ignore_option")
+        label: I18n.t("user.user_notifications.ignore_option")
       });
     }
 
@@ -73,13 +74,12 @@ export default DropdownSelectBox.extend({
         .catch(popupAjaxError);
     },
     ignore() {
-      this.get("updateNotificationLevel")("ignore")
-        .then(() => {
-          this.set("user.ignored", true);
-          this.set("user.muted", false);
-          this.computeHeaderContent();
-        })
-        .catch(popupAjaxError);
+      const controller = showModal("ignore-duration", {
+        model: this.get("user")
+      });
+      controller.setProperties({
+        refreshHeaderContent: () => { this.computeHeaderContent(); }
+      });
     }
   }
 });
