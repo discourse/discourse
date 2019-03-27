@@ -1,5 +1,5 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import {popupAjaxError} from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
@@ -14,7 +14,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         return;
       }
       this.set("loading", true);
-      this.get("model").updateNotificationLevel("ignore", this.get("ignoredUntil"))
+      this.get("model")
+        .updateNotificationLevel("ignore", this.get("ignoredUntil"))
         .then(() => {
           this.set("model.ignored", true);
           this.set("model.muted", false);
