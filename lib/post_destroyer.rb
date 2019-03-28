@@ -89,6 +89,8 @@ class PostDestroyer
   def staff_recovered
     @post.recover!
 
+    mark_topic_changed
+
     if @post.topic && !@post.topic.private_message?
       if author = @post.user
         if @post.is_first_post?
@@ -121,6 +123,7 @@ class PostDestroyer
       @post.trash!(@user)
       if @post.topic
         make_previous_post_the_last_one
+        mark_topic_changed
         clear_user_posted_flag
         Topic.reset_highest(@post.topic_id)
       end
@@ -184,13 +187,33 @@ class PostDestroyer
 
   private
 
+  # we need topics to change if ever a post in them is deleted or created
+  # this ensures users relying on this information can keep unread tracking
+  # working as desired
+  def mark_topic_changed
+    # make this as fast as possible, can bypass everything
+    DB.exec(<<~SQL, updated_at: Time.now, id: @post.topic_id)
+      UPDATE topics
+      SET updated_at = :updated_at
+      WHERE id = :id
+    SQL
+  end
+
   def make_previous_post_the_last_one
-    last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
+    last_post = Post
+      .select(:created_at, :user_id, :post_number)
+      .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
+      .order('created_at desc')
+      .limit(1)
+      .first
+
     if last_post.present? && @post.topic.present?
       topic = @post.topic
       topic.last_posted_at = last_post.created_at
       topic.last_post_user_id = last_post.user_id
       topic.highest_post_number = last_post.post_number
+
+      # we go via save here cause we need to run hooks
       topic.save!(validate: false)
     end
   end

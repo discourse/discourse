@@ -11,6 +11,6 @@ describe 'user api keys integration' do
     get '/session/current.json', headers: {
       HTTP_USER_API_KEY: user_api_key.key,
     }
-    expect(user_api_key.reload.last_used_at).to eq(Time.zone.now)
+    expect(user_api_key.reload.last_used_at).to eq_time(Time.zone.now)
   end
 end

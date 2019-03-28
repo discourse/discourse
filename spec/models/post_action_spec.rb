@@ -946,7 +946,7 @@ describe PostAction do
         expect(topic.reload.closed).to eq(true)
 
         timer = TopicTimer.last
-        expect(timer.execute_at).to eq(1.hour.from_now)
+        expect(timer.execute_at).to eq_time(1.hour.from_now)
 
         freeze_time timer.execute_at
         Jobs.expects(:enqueue_in).with(
