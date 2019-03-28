@@ -124,3 +124,6 @@ vendor/bundle/*
 /package-lock.json
 
 /vendor/data/GeoLite2-City.mmdb
+
+# ignore auto-genarated plugin js assets
+/app/assets/javascripts/plugins/*

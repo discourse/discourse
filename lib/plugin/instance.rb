@@ -517,6 +517,24 @@ class Plugin::Instance
       Discourse::Utils.execute_command('rm', '-f', target)
       Discourse::Utils.execute_command('ln', '-s', public_data, target)
     end
+
+    ensure_directory(Plugin::Instance.js_path)
+
+    contents = []
+    handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
+    javascript_includes.each { |js| contents << "require_asset('#{js}')" }
+
+    each_globbed_asset do |f, is_dir|
+      contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
+    end
+
+    File.delete(js_file_path) if asset_exists?
+
+    if contents.present?
+      contents.insert(0, "<%")
+      contents << "%>"
+      write_asset(js_file_path, contents.join("\n"))
+    end
   end
 
   def auth_provider(opts)
@@ -604,7 +622,23 @@ class Plugin::Instance
     end
   end
 
+  def asset_name
+    @asset_name ||= File.dirname(path).split("/").last
+  end
+
+  def asset_exists?
+    File.exists?(js_file_path)
+  end
+
   protected
+
+  def self.js_path
+    File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
+  end
+
+  def js_file_path
+    @file_path ||= "#{Plugin::Instance.js_path}/#{asset_name}.js.erb"
+  end
 
   def register_assets!
     assets.each do |asset, opts|

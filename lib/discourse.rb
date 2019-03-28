@@ -200,6 +200,15 @@ module Discourse
     plugins.find_all { |p| !p.metadata.official? }
   end
 
+  def self.plugin_assets(args)
+    plugins.find_all do |plugin|
+      next if args[:official] == false && plugin.metadata.official?
+      next if args[:unofficial] == false && !plugin.metadata.official?
+
+      plugin.enabled? && plugin.asset_exists?
+    end.map { |plugin| "plugins/#{plugin.asset_name}" }
+  end
+
   def self.assets_digest
     @assets_digest ||= begin
       digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)

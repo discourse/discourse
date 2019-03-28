@@ -25,11 +25,9 @@
     <%= preload_script "vendor" %>
     <%= preload_script "pretty-text-bundle" %>
     <%= preload_script "application" %>
-    <%- if allow_plugins? %>
-    <%= preload_script "plugin" %>
-    <%- end %>
-    <%- if allow_third_party_plugins? %>
-    <%= preload_script "plugin-third-party" %>
+
+    <%- Discourse.plugin_assets(official: allow_plugins?, unofficial: allow_third_party_plugins?).each do |file| %>
+      <%= preload_script file %>
     <%- end %>
 
     <%- if staff? %>
