@@ -231,7 +231,7 @@ export default Ember.Component.extend({
     return moment.tz.names();
   },
 
-  _generateDateMarkup(config, options) {
+  _generateDateMarkup(config, options, isRange) {
     let text = `[date=${config.date}`;
 
     if (config.time) {
@@ -250,7 +250,7 @@ export default Ember.Component.extend({
       text += ` timezones="${options.timezones.join("|")}"`;
     }
 
-    if (options.recurring) {
+    if (options.recurring && !isRange) {
       text += ` recurring="${options.recurring}"`;
     }
 
@@ -266,16 +266,16 @@ export default Ember.Component.extend({
       : "discourse_local_dates.create.form.advanced_mode";
   },
 
-  @computed("computedConfig.{from,to,options}", "options", "isValid")
-  markup(config, options, isValid) {
+  @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
+  markup(config, options, isValid, isRange) {
     let text;
 
     if (isValid && config.from) {
-      text = this._generateDateMarkup(config.from, options);
+      text = this._generateDateMarkup(config.from, options, isRange);
 
       if (config.to && config.to.range) {
         text += ` → `;
-        text += this._generateDateMarkup(config.to, options);
+        text += this._generateDateMarkup(config.to, options, isRange);
       }
     }
 

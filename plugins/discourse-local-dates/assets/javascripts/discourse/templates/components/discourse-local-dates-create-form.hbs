@@ -97,22 +97,22 @@
 
     {{#if advancedMode}}
       <div class="advanced-options">
-        <div class="control-group recurrence">
-          <label class="control-label">
-            {{i18n "discourse_local_dates.create.form.recurring_title"}}
-          </label>
-          {{#if advancedMode}}
+        {{#unless isRange}}
+          <div class="control-group recurrence">
+            <label class="control-label">
+              {{i18n "discourse_local_dates.create.form.recurring_title"}}
+            </label>
             <p>{{{i18n "discourse_local_dates.create.form.recurring_description"}}}</p>
-          {{/if}}
-          <div class="controls">
-            {{combo-box
-              content=recurringOptions
-              class="recurrence-input"
-              value=recurring
-              onSelect=(action (mut recurring))
-              none="discourse_local_dates.create.form.recurring_none"}}
+            <div class="controls">
+              {{combo-box
+                content=recurringOptions
+                class="recurrence-input"
+                value=recurring
+                onSelect=(action (mut recurring))
+                none="discourse_local_dates.create.form.recurring_none"}}
+            </div>
           </div>
-        </div>
+        {{/unless}}
 
         <div class="control-group format">
           <label>{{i18n "discourse_local_dates.create.form.format_title"}}</label>
