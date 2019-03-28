@@ -54,14 +54,14 @@ widgetTest("staff menu", {
   beforeEach() {
     this.currentUser.setProperties({
       staff: true,
-      site_flagged_posts_count: 3
+      reviewable_count: 3
     });
   },
 
   test(assert) {
     assert.ok(find(".admin-link").length);
-    assert.ok(find(".flagged-posts-link").length);
-    assert.equal(find(".flagged-posts").text(), "3");
+    assert.ok(find(".review").length);
+    assert.equal(find(".reviewables").text(), "3");
     assert.ok(!find(".settings-link").length);
   }
 });
