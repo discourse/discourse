@@ -201,8 +201,6 @@ fa_IR:
     every_hour: "هر ساعت"
     daily: "روزانه"
     weekly: "هفتگی"
-    every_two_weeks: "هر دو هفته"
-    every_three_days: "هر سه روز"
     max_of_count: "حداکثر {{count}}"
     alternation: "یا"
     character_count:
@@ -485,6 +483,7 @@ fa_IR:
       topic_sentence:
         one: "%{count} موضوع"
         other: "%{count} موضوع"
+      n_more: "دسته‌بندی‌ها ( %{count}مورد دیگر)"
     ip_lookup:
       title: جستجوی نشانی IP
       hostname: نام میزبان
@@ -665,7 +664,6 @@ fa_IR:
         instructions: "تصاویر پس زمینه در مرکز قرار خواهند گرفت و عرض  پیشفرض آن 590 پیکسل است"
       email:
         title: "ایمیل"
-        instructions: "هرگز به عموم مردم نشان داده نشده است"
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما توسط {{provider}} تصدیق شد"
@@ -720,14 +718,9 @@ fa_IR:
         every_30_minutes: "هر 30 دقیقه"
         every_hour: "هر ساعت"
         daily: "روزانه"
-        every_three_days: "هر سه روز"
         weekly: "هفتگی"
-        every_two_weeks: "هر دو هفته "
       include_tl0_in_digests: "محتوای ایجاد شده توسط کاربران جدید در ایمیل خلاصه قرار گیرد."
       email_in_reply_to: "خلاصه‌ی پاسخ‌ها را در ایمیل قرار بده."
-      email_direct: "وقتی کسی نوشته‌های من را نقل‌قول کرد، یا به من پاسخ داد، یا به @نام‌کاربری من اشاره کرد، یا به موضوعی دعوت کرد، ایمیل بفرست."
-      email_private_messages: "وقتی کسی به من پیام خصوصی فرستاد، ایمیل بفرست"
-      email_always: "ایمیل های اعلان را وقتی در سایت فعال هستم نیز برایم بفرست"
       other_settings: "موارد دیگر"
       categories_settings: "دسته‌بندی‌ها"
       new_topic_duration:
@@ -799,6 +792,7 @@ fa_IR:
         title: "خلاصه"
         stats: "آمار"
         time_read: " زمان خواندن"
+        recent_time_read: "زمان خواندن اخیر"
         topic_count:
           one: "موضوعات ساخته شدند"
           other: "موضوعات ساخته شدند"
@@ -892,6 +886,9 @@ fa_IR:
     first_post: نوشته نخست
     mute: بی صدا
     unmute: صدادار
+    time_read: خواندن
+    time_read_recently: "اخیراً"
+    time_read_tooltip: "%{time_read} مجموع زمان خواندن "
     last_reply_lowercase: آخرین پاسخ
     replies_lowercase:
       one: 'پاسخ‌ها '
@@ -1015,13 +1012,7 @@ fa_IR:
       ctrl: "Ctrl"
       alt: "Alt"
     emoji_picker:
-      people: مردم
-      nature: طبیعت
-      food: غذا
-      activity: فعالیت
-      travel: سفر
       objects: اشیا
-      celebration: جشن
       recent: اخیرا استفاده شده
     composer:
       emoji: "شکلک :)"
@@ -1176,6 +1167,7 @@ fa_IR:
           first: اولین نوشته هستند
           pinned: سنجاق شدند
           unpinned: سنجاق نشدند
+          seen: خواندم
           unseen: نخواندم
           wiki: دانشنامه هستند
         statuses:
@@ -1585,7 +1577,6 @@ fa_IR:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         upload: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
-        file_too_large: "با عرض پوزش، حجم فایل بسیار بالاست (بالاترین حجم قابل بارگذاری {{max_size_kb}} کیلوبایت) است. چرا فایل‌های حجیم را در سرویس‌های ابری بارگذاری نمی‌کنید و لینک‌های آن را در انجمن قرار نمی‌دهید؟"
         too_many_uploads: "متأسفیم، هر بار تنها می‌توانید یک پرونده را بار‌گذاری کنید."
         upload_not_authorized: "با عرض پوزش، فایلی که در حال‌ بارگذاری آن هستید مجاز نیست. (پسوند‌های قابل بارگذاری: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار‌گذاری کنند."
@@ -2455,6 +2446,7 @@ fa_IR:
           color_scheme_select: "انتخاب رنگ مورد استفاده قالب"
           custom_sections: "بخش‌های سفارشی"
           theme_components: "اجزای قالب"
+          and_x_more: "و {{count}} مورد دیگر"
           uploads: "بارگذاری‌ها"
           no_uploads: "می‌توانید فایل‌های ثابت همراه با قالب خود مثل فونت و تصویر بارگذاری کنید"
           add_upload: "افزودن بارگذاری"

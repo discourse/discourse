@@ -149,6 +149,7 @@ pl_PL:
       next_month: "Następny miesiąc"
       placeholder: data
     share:
+      topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       close: "zamknij"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
@@ -198,9 +199,11 @@ pl_PL:
         cn_north_1: "Chiny (Beijing)"
         cn_northwest_1: "Chiny (Ningxia)"
         eu_central_1: "EU (Frankfurt)"
+        eu_north_1: "Europa (Sztokholm)"
         eu_west_1: "EU (Irlandia)"
         eu_west_2: "Europa (Londyn)"
         eu_west_3: "EU (Paris)"
+        sa_east_1: "Ameryka Południowa (São Paulo)"
         us_east_1: "US East (N. Virginia)"
         us_east_2: "Wschodnie USA (Ohio)"
         us_gov_west_1: "AWS GovCloud (US)"
@@ -248,8 +251,6 @@ pl_PL:
     every_hour: "co godzinę"
     daily: "dziennie"
     weekly: "tygodniowo"
-    every_two_weeks: "co dwa tygodnie"
-    every_three_days: "co trzy dni"
     max_of_count: "max z {{count}}"
     alternation: "lub"
     character_count:
@@ -607,7 +608,6 @@ pl_PL:
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
-      ignore: "Ignoruj"
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
@@ -779,7 +779,6 @@ pl_PL:
         primary: "Podstawowe adres email"
         secondary: "Drugorzędne adresy email"
         no_secondary: "Brak drugorzędnych adresów email"
-        instructions: "nie jest pokazywane publicznie"
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
@@ -855,14 +854,9 @@ pl_PL:
         every_30_minutes: "co 30 minut"
         every_hour: "co godzinę"
         daily: "codziennie"
-        every_three_days: "co trzy dni"
         weekly: "co tydzień"
-        every_two_weeks: "co dwa tygodnie"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Dołącz fragment odpowiedzi w poście do maili "
-      email_direct: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
-      email_private_messages: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
-      email_always: "Wysyłaj powiadomienia email nawet, gdy przejawiam aktywność w serwisie"
       other_settings: "Inne"
       categories_settings: "Kategorie"
       new_topic_duration:
@@ -1225,13 +1219,7 @@ pl_PL:
         other: "Wybierz co najmniej {{count}} elementów."
     emoji_picker:
       filter_placeholder: Szukaj emoji
-      people: Ludzie
-      nature: Natura
-      food: Jedzenie
-      activity: Aktywność
-      travel: Podróż
       objects: Obiekty
-      celebration: Celebracja
       custom: Spersonalizowane emoji
       recent: Ostatnio używane
       default_tone: Brak koloru skóry
@@ -1294,6 +1282,7 @@ pl_PL:
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
       remove_featured_link: "Usuń link z tematu."
       reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML.  Możesz też przeciągnąć tu obrazek."
+      reply_placeholder_no_images: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML."
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisywanie"
       saved: "Zapisano!"
@@ -1312,6 +1301,7 @@ pl_PL:
       link_description: "wprowadź tutaj opis odnośnika"
       link_dialog_title: "Wstaw odnośnik"
       link_optional_text: "opcjonalny tytuł"
+      link_url_placeholder: "http://przyklad.pl"
       quote_title: "Cytat"
       quote_text: "Cytat"
       code_title: "Tekst sformatowany"
@@ -1333,6 +1323,8 @@ pl_PL:
       composer_actions:
         reply: Odpowiedź
         edit: Edycja
+        reply_as_private_message:
+          label: Nowa wiadomość
         create_topic:
           label: "Nowy temat"
     notifications:
@@ -1825,6 +1817,7 @@ pl_PL:
       split_topic:
         title: "Przenieś do nowego tematu"
         action: "przenieś do nowego tematu"
+        radio_label: "Nowy temat"
         error: "Wystąpił błąd podczas przenoszenia wpisów do nowego tematu."
         instructions:
           one: "Masz zamiar utworzyć nowy temat, składający się z wybranego przez ciebie wpisu."
@@ -1842,6 +1835,7 @@ pl_PL:
           other: "Wybierz temat, do którego chcesz przenieść <b>{{count}}</b> wybranych wpisów."
       move_to_new_message:
         radio_label: "Nowa wiadomość"
+        participants: "Uczestnicy"
       merge_posts:
         title: "Scal wybrane posty"
         action: "scal wybrane posty"
@@ -1923,7 +1917,6 @@ pl_PL:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
-        file_too_large: "Przepraszamy, ale plik jest za duży (maksymalny rozmiar to {{max_size_kb}}kb). Załaduj plik na zewnętrzny serwer plików i dodaj udostępniony link."
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
@@ -2146,6 +2139,7 @@ pl_PL:
       already_used: "Ten kolor jest używany przez inną kategorię"
       security: "Bezpieczeństwo"
       special_warning: "Uwaga: Ta kategoria jest generowana automatycznie i jej ustawienia bezpieczeństwa nie mogą być edytowane. Jeśli nie zamierzasz jej używać, skasuj ją, zamiast zmieniać jej przeznaczenie."
+      uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       images: "Obrazy"
       email_in: "Dedykowany adres email kategorii:"
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
@@ -2490,6 +2484,7 @@ pl_PL:
         many: "%{count} przyznanych"
         other: "%{count} przyznanych"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
+      none: "(brak)"
       badge_grouping:
         getting_started:
           name: Pierwsze kroki
@@ -2644,10 +2639,13 @@ pl_PL:
         agree: "Potwierdź"
         agree_title: "Potwierdź to zgłoszenie jako uzasadnione i poprawne"
         agree_flag_restore_post: "Potwierdź i przywróć post"
+        agree_flag: "Zachowaj wpis"
+        ignore_flag: "Ignoruj"
         delete: "Usuń"
         delete_title: "Usuń wpis do którego odnosi się flaga."
         delete_post_defer_flag: "Usuń post i ignoruj flagę"
         delete_post_defer_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
+        delete_post_agree_flag: "Usuń post i potwierdź flagę"
         delete_post_agree_flag_title: "Usuń wpis. Jeśli jest pierwszym w temacie, usuń temat."
         delete_flag_modal_title: "Usuń i…"
         delete_spammer: "Usuń spamera"
@@ -2690,10 +2688,27 @@ pl_PL:
           notify_user: "niestandardowe"
           notify_moderators: "niestandardowe"
       groups:
+        new:
+          title: "Nowa grupa"
+          name:
+            too_short: "Nazwa grupy jest zbyt krótka"
+            too_long: "Nazwa grupy jest zbyt długa"
+            available: "Nazwa grupy jest dostępna"
+            not_available: "Nazwa grupy jest niedostępna"
+            blank: "Nazwa grupy nie może być pusta"
         manage:
           interaction:
+            email: Email
+            visibility: Widoczność
             visibility_levels:
+              title: "Kto może widzieć tę grupę?"
+              public: "Wszyscy"
+              members: "Właściciele grupy, członkowie i administratorzy"
               staff: "Właściciele grupy i zespół"
+              owners: "Właściciele grupy i administratorzy"
+          membership:
+            trust_level: Poziom Zaufania
+            trust_levels_title: "Domyślny poziom zaufania przyznawany dodawanym użytkownikom:"
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"
         title: "Grupy"
@@ -2903,6 +2918,7 @@ pl_PL:
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
         theme:
+          theme: "Motyw"
           customize_desc: "Personalizacja:"
           title: "Motywy"
           long_title: "Zmodyfikuj kolory, kod CSS i kod HTML zawartości Twojej strony"
@@ -2960,6 +2976,8 @@ pl_PL:
           body_tag:
             text: "</body>"
             title: "HTML, który zostanie umieszczony przed tagiem </body>"
+          yaml:
+            text: "YAML"
         colors:
           title: "Kolory"
           copy_name_prefix: "Kopia"

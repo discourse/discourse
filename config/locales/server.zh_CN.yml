@@ -16,6 +16,7 @@ zh_CN:
       short_no_year: "%m月%d日"
       date_only: "%Y年%m月%d日"
       long: "%Y年%m月%d日%H:%M"
+      no_day: "%B %Y"
   date:
     month_names: [~, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
@@ -37,10 +38,19 @@ zh_CN:
   redirect_warning: "我们无法验证你选择的链接是否已实际发布到论坛。如果您仍想继续，请选择以下链接。"
   on_another_topic: "在另外的主题"
   themes:
+    bad_color_scheme: "无法更新主题，无效的调色板"
     other_error: "更新主题时出错"
+    import_error:
+      generic: 导入该主题时发生错误
+      about_json: "导入错误：about.json不存在或格式错误"
+      about_json_values: "about.json包含无效值：%{errors}"
+      git: "克隆 git 版本库时出错，访问被拒绝或找不到版本库"
+      unpack_failed: "无法解压缩文件"
+      unknown_file_type: "你上传的文件似乎不是可用的 Discourse 主题。"
     errors:
       component_no_user_selectable: "主题组件不能由用户选择"
       component_no_default: "主题组件不能是默认主题"
+      component_no_color_scheme: "主题组件不能有调色板"
       no_multilevels_components: "具有子主题的主题本身不能是子主题"
     settings_errors:
       invalid_yaml: "填写的 YAML 无效"
@@ -55,8 +65,12 @@ zh_CN:
       number_value_not_valid_min: "它必须大于或等于%{min}。"
       number_value_not_valid_max: "它必须小于或等于%{max}。"
       string_value_not_valid: "新值长度不在允许的范围内。"
+      string_value_not_valid_min_max: "它的字符长度必须介于%{min}和%{max}之间。"
       string_value_not_valid_min: "它必须至少为%{min}个字符。"
       string_value_not_valid_max: "它必须至多为%{max}个字符。"
+    locale_errors:
+      top_level_locale: "语言环境文件中的顶级键必须与语言环境名称匹配"
+      invalid_yaml: "翻译 YAML 无效"
   emails:
     incoming:
       default_subject: "这个主题需要个标题"
@@ -137,6 +151,7 @@ zh_CN:
         other: "你指定了无效的选择%{name}"
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
+      enable_s3_uploads_is_required: "除非已启用S3上载，否则无法将库存启用到S3。"
       s3_backup_requires_s3_settings: "除非你提供了'%{setting_name}'，否则无法将S3用作备份位置。"
       s3_bucket_reused: "您不可把同一个 bucket 既用作 ‘s3_upload_bucket’ 又用作 ‘s3_backup_bucket’。请选择不同的 bucket 或为每个 bucket 使用不同的路径。"
     conflicting_google_user_id: '此帐户的Google帐户ID已更改; 出于安全原因，需要管理人员干预。请联系工作人员并将其指向<a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -151,6 +166,7 @@ zh_CN:
       <p>如果你还记得密码，可以<a href="%{base_url}/login">登录</a>。</ p>
 
       <p>否则请<a href="%{base_url}/password-reset">重置密码</a>。</p>
+    error_message: "接受邀请时出错。 请联系该网站的管理员。"
     user_exists: "不需要邀请<b>%{email}</b>，他们<a href='%{base_path}/u/%{username}/summary'>已经有账户了！</a>"
     confirm_email: "<p>快完成了！我们发送了一封激活邮件到你的邮件地址。请按照邮件中的步骤来激活你的账户。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱。</p>"
   bulk_invite:
@@ -363,6 +379,7 @@ zh_CN:
       topic:
         title: "标题"
         featured_link: "特色链接"
+        category_id: "分类"
       post:
         raw: "内容"
       user_profile:
@@ -423,6 +440,7 @@ zh_CN:
           attributes:
             word:
               too_many: "对该操作敏感词过多"
+  uncategorized_category_name: "未分类"
   vip_category_name: "贵宾室"
   vip_category_description: "信任等级3的用户参与讨论的分类。"
   meta_category_name: "站点反馈"
@@ -468,8 +486,10 @@ zh_CN:
       （想了解关于信任等级的更多信息，[参见这个主题][trust]。请注意成员需要在将来也维持一定的选择条件的成员才能保持在常规。）
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+  admin_quick_start_title: "首先阅读：管理员快速入门指南"
   category:
     topic_prefix: "关于“%{category}”分类"
+    replace_paragraph: "（将第一段替换为新类别的简要说明。此指南将显示在类别选择区域中，因此请尽量将其保留在200个字符以内。）"
     post_template: "%{replace_paragraph}\n\n在接下来的这段话中多写一些分类的用途，或者设定一个该分类的规则：\n\n- 为什么我们要用这个分类？它用来做什么？\n\n- 这个分类和我们已经有的分类究竟有什么不同？\n\n- 这个分类中一般会包含哪些主题？\n\n- 我们需要这个分类么？我们可以把它和别的分类、或者子分类合并吗？\n"
     errors:
       not_found: "未找到分类！"
@@ -480,7 +500,10 @@ zh_CN:
       email_already_used_in_group: "'%{email}' 已经被群组'%{group_name}'使用了。"
       email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
       description_incomplete: "分类描述帖至少要有一段。"
+      permission_conflict: "还必须允许任何允许访问子类别的分组访问父类别。"
+      disallowed_topic_tags: "此主题包含此类别不允许的标签：%{tags}"
     cannot_delete:
+      uncategorized: "这是个特殊的分类。如果不知道应该话题属于哪个分类，那么请使用这个分类；这个分类不能被删除。"
       has_subcategories: "不能删除该分类，因为它有子分类"
       topic_exists:
         other: "不能删除该分类，因为它有%{count}个主题。最老的主题是%{topic_link}。"
@@ -717,6 +740,8 @@ zh_CN:
   flagging:
     you_must_edit: '<p>你的帖子被社区标记了。请<a href="%{path}">查看你的消息</a>。</p>'
     user_must_edit: "<p>你的帖子已经被社区标记并被临时隐藏。</p>"
+  ignored:
+    hidden_content: "<p>隐藏的内容</p>"
   archetypes:
     regular:
       title: "常规主题"
@@ -747,6 +772,7 @@ zh_CN:
     read: "阅读"
     read_write: "读/写"
     description: '“%{application_name}”正在请求访问你的账户中的以下权限：'
+    instructions: '我们刚刚生成了一个新的用户API密钥供您使用“%{application_name}”，请将以下密钥粘贴到您的应用程序中：'
     no_trust_level: "抱歉，你没有使用用户 API 所需要的信任等级"
     generic_error: "抱歉，我们不能分发用户 API 密钥，该特性已经被站点管理"
     scopes:
@@ -792,6 +818,7 @@ zh_CN:
         post_count: 创建的帖子
         pm_count: 创建的私信
         revision_count: 版本
+      description: 版主动列表，内容包括已审阅的标记，阅读时间，创建的主题，创建的帖子，创建的个人消息和修订。
     flags_status:
       title: "标记状态"
       values:
@@ -821,6 +848,19 @@ zh_CN:
       xaxis: "天"
       yaxis: "新贡献者数"
       description: "此期间首次发布帖子的用户数。"
+    consolidated_page_views:
+      title: "合并的页面访问量"
+      xaxis:
+        page_view_crawler: "爬虫"
+        page_view_anon: "匿名用户"
+        page_view_logged_in: "已登录用户"
+      yaxis: "天"
+      description: "登录用户，匿名用户和爬虫的页面访问总量。"
+      labels:
+        post: 帖子
+        editor: 编辑器
+        author: 作者
+        edit_reason: 理由
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -867,6 +907,7 @@ zh_CN:
       yaxis: "用户数"
       labels:
         level: 等级
+      description: "按信任级别分组的用户数。"
     users_by_type:
       title: "用户类型"
       xaxis: "类型"
@@ -878,40 +919,49 @@ zh_CN:
         moderator: 版主
         suspended: 禁止
         silenced: 禁言
+      description: "按管理员，主持人，冻结和禁言分组的用户数。"
     trending_search:
       title: 趋势搜索条件
       labels:
         term: 术语
         searches: 搜索
         click_through: CTR
+      description: "最受欢迎的搜索字词及其点击率。"
     emails:
       title: "已发送邮件"
       xaxis: "天"
       yaxis: "邮件数"
+      description: "发送的新电子邮件数量。"
     user_to_user_private_messages:
       title: "用户至用户（不包括回复）"
       xaxis: "天"
       yaxis: "私信数"
+      description: "新发起的个人消息的数量。"
     user_to_user_private_messages_with_replies:
       title: "用户至用户（包括回复）"
       xaxis: "天"
       yaxis: "消息数量"
+      description: "所有新的个人消息和回复的数量。"
     system_private_messages:
       title: "系统"
       xaxis: "天"
       yaxis: "私信数"
+      description: "系统自动发送的个人消息数。"
     moderator_warning_private_messages:
       title: "版主警告"
       xaxis: "天"
       yaxis: "私信数"
+      description: "来自版主发送的警告消息的数量。"
     notify_moderators_private_messages:
       title: "版主通知"
       xaxis: "天"
       yaxis: "私信数"
+      description: "因为标记的原因，版主被私下通知的次数。"
     notify_user_private_messages:
       title: "用户通知"
       xaxis: "天"
       yaxis: "私信数"
+      description: "因为标记的原因，用户被私下通知的次数。"
     top_referrers:
       title: "最高引用"
       xaxis: "用户"
@@ -921,6 +971,7 @@ zh_CN:
         user: "用户"
         num_clicks: "点击数"
         num_topics: "主题"
+      description: "按用户共享的链接的点击次数列出的用户。"
     top_traffic_sources:
       title: "最高流量来源"
       xaxis: "域名"
@@ -931,22 +982,28 @@ zh_CN:
         domain: 域名
         num_clicks: 点击数
         num_topics: 主题
+      description: "与此网站链接最多的外部资源。"
     top_referred_topics:
       title: "最多引用主题"
       labels:
         num_clicks: "点击数"
         topic: "主题"
+      description: "从外部来源获得最多点击次数的主题。"
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
       yaxis: "未登录页面访问"
+      description: "未登录访问者的页面访问量(PV)。"
     page_view_logged_in_reqs:
       title: "已登录"
       xaxis: "天"
       yaxis: "已登录页面访问"
+      description: "登陆用户的新页面访问量。"
     page_view_crawler_reqs:
+      title: "Web爬虫页面访问量"
       xaxis: "天"
       yaxis: "Web 爬虫页面访问"
+      description: "一段时间内的Web爬虫页面访问量。"
     page_view_total_reqs:
       title: "浏览量"
       xaxis: "天"
@@ -1010,10 +1067,20 @@ zh_CN:
         os: 操作系统
         login_time: 登录时间
     staff_logins:
+      title: "管理员登陆"
       labels:
         user: 用户
         location: 地点
         login_at: 登录于
+      description: "有地点信息的管理员登录时间列表。"
+    top_uploads:
+      title: "热门上传"
+      labels:
+        filename: 文件名
+        extension: 扩展
+        author: 作者
+        filesize: 文件大小
+      description: "按文件扩展名，大小和作者列出所有上传内容。"
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主机名。请更改成你的站点主机名。"
@@ -1042,7 +1109,6 @@ zh_CN:
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
-    default_locale: "此Discourse实例的默认语言"
     allow_user_locale: "允许用户选择他们自己的语言界面"
     set_locale_from_accept_language_header: "为未登录用户按照他们的浏览器发送的请求头部设置界面语言。（实验性，无法和匿名缓存共同使用）"
     support_mixed_text_direction: "支持混合的从左到右和从右到左的文本方向。"
@@ -1143,7 +1209,6 @@ zh_CN:
     ga_universal_domain_name: "Google Universal Analytics（analytics.js）域名，例如：mysite.com; 请参阅<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "启用Google Universal Analytics（analytics.js）跨域跟踪。 这些域的传出链接将添加客户端ID。请参阅<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google的跨域跟踪指南。</a>"
     enable_escaped_fragments: "如果未检测到webcrawler，则回退到Google的Ajax-Crawling API。请参阅<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    allow_moderators_to_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
     use_admin_ip_whitelist: "当目前的IP刚好处于IP段禁止名单(Admin > Logs > Screened Ips)中的时候，只有管理员才可登入。"
     blacklist_ip_blocks: "Discourse 不会访问抓取的保密 IP 封禁列表"
@@ -1236,7 +1301,6 @@ zh_CN:
     automatic_backups_enabled: "按照定义的备份频率运行自动备份计划"
     backup_frequency: "备份之间的天数。"
     s3_backup_bucket: "远端备份 bucket。警告：确认它使私有的 bucket。"
-    s3_force_path_style: "为您的自定义端点强制执行路径式寻址。注意：使用Minio上载和备份时需要。"
     s3_configure_tombstone_policy: "为逻辑删除上载启用自动删除策略。注意：如果禁用，在删除上载后不会回收空间。"
     s3_disable_cleanup: "当在本地删除备份时不删除 S3 上的备份。"
     backup_time_of_day: "备份的 UTC 时间"
@@ -1279,8 +1343,6 @@ zh_CN:
     enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2实例配置文件</a>授予对S3的访问权限。注意：启用此功能需要Discourse在配置得当的EC2实例中运行，并覆盖“s3访问密钥ID”和“s3 secret访问密钥”设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点，无下划线。"
-    s3_access_key_id: "将用于上传图片的 Amazon S3 access key。"
-    s3_secret_access_key: "将用于上传图片的 Amazon S3 secret key。"
     s3_cdn_url: "用户 S3 资料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改变该设置后你必须重制所有老帖子。"
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
@@ -1533,12 +1595,9 @@ zh_CN:
     watched_words_regular_expressions: "监视词是正则表达式。"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
-    default_email_personal_messages: "默认发私信给用户时发送邮件通知。"
-    default_email_direct: "默认在有人引用、回复、提及或者邀请用户时发送一封邮件通知。"
     default_email_mailing_list_mode: "默认为每一个新帖子发送一封邮件通知。"
     default_email_mailing_list_mode_frequency: "邮件列表模式下，用户收到邮件的默认频率。"
     disable_mailing_list_mode: "禁止用户使用邮件列表模式。"
-    default_email_always: "即使用户活跃时，仍默认发送邮件通知。"
     default_email_previous_replies: "默认在邮件中包含之前的回复。"
     default_email_in_reply_to: "默认在邮件中包含回复的摘要文本。"
     default_other_new_topic_duration_minutes: "近期主题条件的全局缺省设置"
@@ -1718,7 +1777,6 @@ zh_CN:
   admin:
     email:
       sent_test: "已发送！"
-      sent_test_disabled: "邮件禁用无法发送"
   user:
     deactivated: "因发送至“%{email}”的邮件被多次退信，取消激活"
     deactivated_by_staff: "被管理人员禁用"
@@ -2792,6 +2850,14 @@ zh_CN:
     sender_post_deleted: "帖子已被删除"
   color_schemes:
     base_theme_name: "基础"
+    light: "浅色"
+    dark: "深色"
+    neutral: "自然"
+    grey_amber: "灰琥珀色"
+    shades_of_blue: "蓝黑"
+    latte: "棕色"
+    summer: "夏季"
+    dark_rose: "黑红"
     default_theme_name: "亮"
     light_theme_name: "亮"
     dark_theme_name: "暗"
@@ -3425,6 +3491,8 @@ zh_CN:
     staff_tag_remove_disallowed: '“%{tag}”只可由管理人员删除。'
     minimum_required_tags: "你必须至少选择%{count}个标签"
     upload_row_too_long: "CSV文件每行应该有一个标签。可选地，标签后面可以是逗号，然后是标签组名称。"
+    forbidden:
+      in_this_category: '"%{tag_name}不能用于此类别"'
   rss_by_tag: "主题标签 %{tag}"
   finish_installation:
     congratulations: "祝贺，你已经安装好了 Discourse！"

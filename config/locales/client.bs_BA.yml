@@ -223,8 +223,6 @@ bs_BA:
     every_hour: "svaki sat"
     daily: "dnevno"
     weekly: "sedmično"
-    every_two_weeks: "svake dvije sedmice"
-    every_three_days: "Svaka 3 dana"
     max_of_count: "maksimalno {{count}}"
     alternation: "ili"
     character_count:
@@ -716,7 +714,6 @@ bs_BA:
         instructions: "Pozadinske slike će biti centrirane i imati standard širinu od 590 pixela."
       email:
         title: "Email"
-        instructions: "nikad prikazano javno"
         ok: "Izgleda dobro. Poslat ćemo email sa potvrdom."
         invalid: "Molimo vas da unesete validnu email adresu."
         authenticated: "Vaš email je ovjeren od strane {{provider}}."
@@ -772,14 +769,9 @@ bs_BA:
         every_30_minutes: "svakih 30. min"
         every_hour: "po satu"
         daily: "dnevno"
-        every_three_days: "svaka tri dana"
         weekly: "nedeljno"
-        every_two_weeks: "svake dvije sedmice"
       include_tl0_in_digests: "Uključi i sadržaj od strane novih korisnika u e-mail Sažetku"
       email_in_reply_to: "Uključi odlomake sa odgovorenih objava u e-mailovima"
-      email_direct: "Pošalji mi email kada me neko citira, odgovori na moju objavu, spomene moje korisničko @ime ili pozove me u neku temu"
-      email_private_messages: "Pošalji mi email kada mi neko pošalje privatnu poruku"
-      email_always: "Pošalji mi e-mail obavijesti čak iako sam trenutno aktivan na forumu"
       other_settings: "Ostalo"
       categories_settings: "Kategorije"
       new_topic_duration:
@@ -1129,13 +1121,7 @@ bs_BA:
         other: "Označi bar {{count}} predmeta."
     emoji_picker:
       filter_placeholder: Pretraži emotikone
-      people: Osobe
-      nature: Priroda
-      food: Hrana
-      activity: Aktivnosti
-      travel: Putovanje
       objects: Objekti
-      celebration: Veselje
       custom: Sopstveni emotikoni
       recent: Skoro korišteno
       default_tone: Bez tona
@@ -1847,7 +1833,6 @@ bs_BA:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Nažalost, taj fajl je prevelik (maksimalna veličina je {{max_size_kb}} kilobajta). Alternativno možete vaš preveliki fajl spremiti na neki od cloud sharing servisa, a potom ovdje objaviti link do tog fajla?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Nažalost, fajl koji pokušavate da učitate nije dozvoljen za učitavanje (dozvoljene ekstenzije su: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."

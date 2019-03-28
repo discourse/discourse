@@ -141,6 +141,7 @@ it:
           Nel frattempo io me ne starò in disparte.
     new_user_narrative:
       reset_trigger: "nuovo utente"
+      title: "Certificato di completamento del training per nuovi utenti"
       cert_title: "In riconoscimento del successo nel completamento del tutorial come nuovo utente"
       hello:
         title: "Saluti!"
@@ -153,6 +154,14 @@ it:
 
           - Noi crediamo in una [comunità dal comportamento civile](%{base_uri}/guidelines) in ogni momento.
       onebox:
+        instructions: |-
+          Poi, potresti condividere con me uno di questi collegamenti? Rispondi con **un collegamento per linea**, e verrà automaticamente espanso in un sommario molto figo.
+
+          Per copiare un collegamento, su piattaforma mobile basta toccare e tenere premuto, oppure fare un click con il tasto destro del vostro dispositivo di puntamento:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           Fantastico! Funziona per la maggior parte dei  <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> collegamenti. Ricorda, deve essere su una riga _da solo_, senza niente né davanti né dietro.
         not_found: |-

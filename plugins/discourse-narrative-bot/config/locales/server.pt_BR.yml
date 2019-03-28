@@ -296,7 +296,7 @@ pt_BR:
 
           %{certificate}
 
-          Por hoje é só! Dá uma olhada nos [**nossos últimos tópicos de discussão**](%{base_uri}/latest) ou [**categorias de discussões**](%{base_uri}/categories). :sunglasses:
+          Por agora é só! Dá uma olhada nos [**nossos últimos tópicos de discussão**](%{base_uri}/latest) ou [**categorias de discussões**](%{base_uri}/categories). :sunglasses:
 
           (Se você quiser falar comigo de novo para aprender mais, é só me enviar uma mensagem ou mencionar `@%{discobot_username}` a qualquer momento!)
       certificate:
@@ -325,64 +325,69 @@ pt_BR:
           Observe que as edições feitas após 5 minutos aparecerão como revisões de edição pública, e um pequeno ícone de lápis aparecerá no canto superior direito com a contagem de revisões.
       delete:
         instructions: |-
-          Se você quiser retirar uma postagem, pode excluí-la.
+          Se quiser retirar uma postagem, você pode excluí-la.
 
-          Vá em frente e ** delete ** qualquer uma das suas postagens acima usando a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">ação ** delete **. Não exclua a primeira postagem!
+          Vá em frente e **exclua** qualquer uma das suas postagens acima usando a ação **excluir** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">. Mas não exclua a primeira postagem!
         not_found: |-
-          Ainda não vejo nenhuma postagem excluída? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelará <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> delete.
+          Eu ainda não vejo nenhuma postagem excluída. Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelará <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> excluir.
         reply: |-
           Whoa! :boom:
 
-          Para preservar a continuidade das discussões, as exclusões não são imediatas, portanto, a postagem será removida depois de algum tempo.
+          Para preservar a continuidade das discussões, as exclusões não são imediatas; portanto, a postagem será removida depois de um tempo.
       recover:
-        deleted_post_raw: 'Por que @ %{discobot_username} excluiu minha postagem? angustiado:'
+        deleted_post_raw: 'Por que @%{discobot_username} excluiu a minha postagem? :anguished:'
         instructions: |-
-          Ah não! Parece que eu acidentalmente excluí um novo post que acabei de criar para você.
+          Ah não! Parece que eu acidentalmente excluí uma nova postagem que acabei de criar para você.
 
-          Você pode me fazer um favor e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **desfazer** isso?
+          Você pode me fazer um favor e <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **desfazer a exclusão** dela?
         not_found: |-
-          Tem problemas? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelerá<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> desfazer isso.
+          Tendo dificuldades? Lembre-se que <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mostrar mais revelará <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> desfazer exclusão.
         reply: |-
-          Ufa, esse foi um dos próximos! Obrigado por corrigir isso: wink:
+          Ufa, essa foi por pouco! Obrigado por corrigir aquilo :wink:
 
-          Observe que você só tem 24 horas para recuperar uma postagem.
+          Observe que você só tem 24 horas para desfazer a exclusão de uma postagem.
       category_hashtag:
         instructions: |-
-          Você sabia que pode se referir a categorias e tags em sua postagem? Por exemplo, você viu a %{category} categoria?
+          Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, você viu a categoria %{category}?
 
-          Digite `#` no meio de uma sentença e selecione qualquer categoria ou tag.
+          Digite `#` no meio de uma sentença e selecione qualquer categoria ou etiqueta.
         not_found: |-
-          Hmm, eu não vejo uma categoria lá em nenhum lugar. Note que `#` não pode ser o primeiro caractere. Você pode copiar isso na sua próxima resposta?
-          ```texto
+          Hmm, eu não vejo uma categoria em nenhum lugar lá. Observe que `#` não pode ser o primeiro caractere. Você pode copiar isto na sua próxima resposta?
+
+          ```text
           Eu posso criar um link de categoria via #
           ```
         reply: |-
-          Excelente! Lembre-se de que isso funciona para as tags _and_ de categorias, se as tags estiverem ativadas.
+          Excelente! Lembre-se de que isso funciona tanto para categorias quanto para etiquetas, se as etiquetas estiverem ativadas.
       change_topic_notification_level:
         instructions: |-
-          Todo tópico tem um nível de notificação. Começa em "normal", o que significa que você normalmente só será notificado quando alguém estiver falando diretamente com você.
+          Cada tópico tem um nível de notificação. Ela começa em 'normal', o que significa que você normalmente só será notificado quando alguém estiver falando diretamente com você.
 
-          Por padrão, o nível de notificação de uma mensagem particular é definido como o nível mais alto de "observação", o que significa que você será notificado sobre cada nova resposta. Mas você pode substituir o nível de notificação de _qualquer_ tópico para "assistir", "acompanhar" ou "silenciado".
+          Por padrão, o nível de notificação de uma mensagem particular é definida como o nível mais alto de 'observando', o que significa que você será notificado sobre cada nova resposta. Mas você pode substituir o nível de notificação de _qualquer_ tópico para 'observando', 'acompanhando' ou 'silenciado'.
 
-          Vamos tentar alterar o nível de notificação para este tópico. Na parte inferior do tópico, você encontrará um botão que mostra que ** está assistindo ** este tópico. Você pode alterar o nível de notificação para ** rastreamento **?
+          Vamos tentar alterar o nível de notificação para este tópico. Na parte inferior do tópico, você encontrará um botão que mostra que você está **observando** este tópico. Você pode alterar o nível de notificação para **acompanhando**?
         not_found: |-
-          Parece que você ainda está assistindo: eyes: this topic! Se você estiver com dificuldades para encontrá-lo, o botão do nível de notificação está localizado na parte inferior do tópico.
+          Parece que você ainda está observando :eyes: este tópico! Se você estiver com dificuldades para encontrá-lo, o botão do nível de notificação está localizado na parte inferior do tópico.
+        reply: |-
+          Excelente trabalho! Eu espero que você não tenha silenciado este tópico, já que eu posso ser um tagarela de vez em quando :grin:.
+
+          Observe que quando você responde a um tópico, or lê um tópico por mais de alguns minutos, ele é automaticamente alterado para um nível de notificação de 'acompanhando'. Você pode mudar isto em [suas preferências de usuário](%{base_uri}/my/preferences).
       poll:
         instructions: |-
-          Você sabia que pode adicionar uma enquete a qualquer postagem?  Tente usar<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a engrenagem no editor para ** construir uma enquete **
+          Você sabia que pode adicionar uma enquete a qualquer postagem? Tente usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor para **montar uma enquete**.
         not_found: |-
-          Ops! Não houve qualquer pesquisa na sua resposta.
+          Oops! Não havia nenhuma enquete na sua resposta.
 
-          Use o <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> ícone de roda dentada no editor ou copie e cole essa pesquisa na sua próxima resposta:
+          Use o ícone de <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor, ou copie e cole esta enquete na sua próxima resposta:
 
-          ```texto
+          ```text
           [poll]
           * :cat:
           * :dog:
           [/poll]
           ```
         reply: |-
-          Ei, boa enquete! Como eu faço para ensinar você?
+          Ei, boa enquete! Como eu me saí te ensinando?
 
           [poll]
           * :+1:
@@ -390,37 +395,37 @@ pt_BR:
           [/poll]
       details:
         instructions: |-
-          Às vezes, você pode ** ocultar detalhes ** em suas respostas:
+          Às vezes você pode desejar **esconder detalhes** em suas respostas:
 
-          -Quando você está discutindo pontos de trama de um filme ou programa de TV que seria considerado um spoiler.
+          - Quando você estiver discutindo os pontos do enredo de um filme ou série que pudesse ser considerado um spoiler.
 
-          - Quando sua postagem precisar de muitos detalhes opcionais que podem ser impressionantes quando lidos de uma só vez.
+          - Quando a sua postagem precisa de muitos detalhes opcionais que podem ser cansativos quando lidos todos de uma vez.
 
-          [detalhes = Selecione para ver como funciona!]
+          [details=Selecione este para ver como funciona!]
           1. Selecione a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor.
-          2. Selecione "Ocultar detalhes".
-          3. Edite o resumo de detalhes e adicione seu conteúdo.
-          [/ detalhes]
+          2. Selecione "Ocultar Detalhes".
+          3. Edite o resumo dos detalhes e adicione seu conteúdo.
+          [/details]
 
-          Você pode usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor para adicionar uma seção de detalhes para sua próxima resposta?
+          Você pode usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor para adicionar uma seção de detalhes na sua próxima resposta?
         not_found: |-
-          Está com problemas para criar um widget de detalhes? Tente incluir o seguinte na sua próxima resposta:
+          Está com dificuldades para criar um seção de detalhes? Tente incluir o seguinte na sua próxima resposta:
 
-          ```texto
-          [details=Selecione-me para detalhes]
+          ```text
+          [details=Me selecione para detalhes]
           Aqui estão os detalhes
-          [/detalhes]
+          [/details]
           ```
         reply: |-
-          Ótimo trabalho - sua atenção para _detalhes_ é admirável!
+          Ótimo trabalho — sua atenção nos _detalhes_ é admirável!
       end:
         message: |-
-          Você brilhou através disso como um usuário avançado - de fato: arco:
+          Você brilhou através disto como um _usuário avançado_ de fato :bow:
 
           %{certificate}
 
-          É tudo que tenho para você.
+          É tudo o que tenho para você.
 
-          Adeus por agora! Se você quiser falar comigo novamente, envie-me uma mensagem a qualquer momento: óculos de sol:
+          Por agora é só! Se você quiser falar comigo de novo para aprender mais, é só me enviar uma mensagem a qualquer momento :sunglasses:
       certificate:
-        alt: 'Certificado Avançado de Conquista da Trilha do Usuário'
+        alt: 'Certificado de Conquista do Curso de Usuário Avançado'

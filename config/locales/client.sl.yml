@@ -258,8 +258,6 @@ sl:
     every_hour: "vsako uro"
     daily: "dnevno"
     weekly: "tedensko"
-    every_two_weeks: "vsaka dva tedna"
-    every_three_days: "vsake tri dni"
     max_of_count: "največ od {{count}}"
     alternation: "ali"
     character_count:
@@ -638,8 +636,10 @@ sl:
       new_private_message: "Novo ZS"
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
-      ignore: "Prezri"
-      unignore: "Razveljavi prezri"
+      user_notifications_ignore_option: "Prezrti"
+      user_notifications_mute_option: "Utišani"
+      user_notifications_mute_option_title: "Ne boste prejemali obvestil povezanih s tem uporabnikom."
+      user_notifications_normal_option: "Običajno"
       activity_stream: "Aktivnost"
       preferences: "Nastavitve"
       profile_hidden: "Profil tega uporabnika je skrit."
@@ -663,7 +663,7 @@ sl:
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
       dismiss: "Opusti"
       dismiss_notifications: "Opusti vse"
-      dismiss_notifications_tooltip: "Označi vsa neprebrana sporočila kot Prebrana"
+      dismiss_notifications_tooltip: "Označi vsa neprebrana obvestila kot prebrana"
       first_notification: "Vaše prvo obvestilo! Izberite ga za začetek."
       disable_jump_reply: "Ne skoči na moj prispevek po tem ko odgovorim"
       dynamic_favicon: "Pokaži število novih / posodobljenih tem na ikoni brskalnika"
@@ -722,7 +722,7 @@ sl:
       muted_users: "Utišano"
       muted_users_instructions: "Onemogoči vsa obvestila povezana s temi uporabniki."
       ignored_users: "Prezrti"
-      ignored_users_instructions: "Seznam vseh vaših prezrtih uporabnikov."
+      ignored_users_instructions: "Onemogoči vse prispevke in obvestila povezana s temi uporabniki."
       muted_topics_link: "Pokaži utišane teme"
       watched_topics_link: "Pokaži opazovane teme"
       tracked_topics_link: "Pokaži sledene teme"
@@ -793,13 +793,14 @@ sl:
         label: "Koda"
         rate_limit: "Počakajte preden uporabite novo potrditveno kodo."
         enable_description: |
-          Poskenirajte QR kodo v podprti aplikaciji (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> in vnesite vašo potrditveno kodo.
+          Skeniraj to QR kodo v podprti aplikaciji (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) in vnesi vašo potrditveno kodo.
         disable_description: "Vnesite potrditveno kodo iz vaše aplikacije"
         show_key_description: "Vnesite ročno"
         extended_description: |
           Preverjanje v dveh korakih omogoči dodatno varnost vašega računa saj za prijavo zahteva dodatno enkratno potrditveno kodo poleg vašega gesla. Potrditvene kode se lahko ustvarijo na <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ali <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> napravah.
         oauth_enabled_warning: "Preverjanje v dveh korakih bo onemogočila prijavo z družabnimi omrežji."
         use: "<a href>Uporabi Authenticator aplikacijo</a>"
+        enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
       change_about:
         title: "Spremeni O meni"
         error: "Prišlo je do napake pri spreminjanju te vrednosti"
@@ -837,7 +838,8 @@ sl:
         primary: "E-naslov"
         secondary: "Dodatni e-naslovi"
         no_secondary: "Ni dodatnih e-naslovov"
-        instructions: "nikoli ne pokaži javno"
+        sso_override_instructions: "E-naslov se lahko spremeni pri SSO ponudniku."
+        instructions: "Se nikoli ne prikaže javno."
         ok: "Poslali vam bomo e-sporočilo za potrditev."
         invalid: "Prosim vnesite veljaven e-naslov."
         authenticated: "Vaša e-naslov je bil potrjen pri {{provider}}"
@@ -922,14 +924,17 @@ sl:
         every_30_minutes: "vsakih 30 minut"
         every_hour: "vsako uro"
         daily: "dnevno"
-        every_three_days: "vsake tri dni"
         weekly: "tedensko"
-        every_two_weeks: "vsaka dva tedna"
+        every_month: "vsak mesec"
+        every_six_months: "vsakih 6 mesecev"
+      email_level:
+        title: "Pošlji mi e-sporočilo, ko me nekdo citira, odgovori na moj prispevek, omeni moje @ime ali me povabi v temo."
+        always: "vedno"
+        only_when_away: "samo ko sem odsoten"
+        never: "nikoli"
+      email_messages_level: "Pošlji mi e-sporočilo, ko mi nekdo pošlje zasebno sporočilo"
       include_tl0_in_digests: "V e-sporočilo s povzetki vključi vsebino, ki so jo dodali novi uporabniki "
       email_in_reply_to: "Vključi povzetek prispevka v e-sporočilo"
-      email_direct: "Pošlji mi e-sporočilo, kadar me kdo citira, odgovori na moj prispevek, omeni moje @ime ali me povabi k temi"
-      email_private_messages: "Pošlji mi e-sporočilo, kadar prejmem zasebno sporočilo"
-      email_always: "Pošlji mi e-sporočilo tudi kadar sem aktiven na strani"
       other_settings: "Ostalo"
       categories_settings: "Kategorije"
       new_topic_duration:
@@ -1109,7 +1114,7 @@ sl:
     logout: "Bili ste odjavljeni."
     refresh: "Osveži"
     read_only_mode:
-      enabled: "Stran je v načinu samo za branje. Lahko nadaljujete z branjem; odgovori, všečki in druge akcije pa so onemogočene za zdaj."
+      enabled: "Stran je v načinu samo za branje. Lahko nadaljujete z branjem; odgovori, všečki in druga dejanja pa so onemogočena za zdaj."
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
       logout_disabled: "Odjava je onemogočena dokler je stran v načinu za branje."
     too_few_topics_and_posts_notice: "Omogočimo <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/'>da razprava steče!</a> Trenutno je objavljenih <strong>%{currentTopics} / %{requiredTopics}</strong> tem in <strong>%{currentPosts} / %{requiredPosts}</strong> prispevkov. Novi obiskovalci potrebujejo več pogovorov za branje in odgovarjanje."
@@ -1152,8 +1157,8 @@ sl:
       hide_session: "Spomni me jutri"
       hide_forever: "ne, hvala"
       hidden_for_session: "V redu, vas ponovno vprašamo jutri. Vedno lahko uporabite gumb 'Prijava' da ustvarite nov račun."
-      intro: "Pozdravljeni! Vidimo da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
-      value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila, vsakič ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
+      intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
+      value_prop: "Ko registrirate uporabniški račun, si lahko zapomnimo točno kaj ste že prebrali, tako da boste naslednjič lahko nadaljevali od tam, kjer ste končali. Lahko boste tudi prejemali obvestila, tukaj ali preko e-sporočila vsakič, ko vam nekdo odgovori. In lahko boste všečkali prispevke, ki so vam všeč. :heartpulse:"
     summary:
       enabled_description: "Ogledujete si povzetek teme: najbolj zanimive prispevke, kot jih je določila skupnost."
       description: "Obstaja <b>{{replyCount}}</b> odgovorov."
@@ -1255,7 +1260,7 @@ sl:
         message: "Preverjanje s Twittrom (pojavna okna morajo biti omogočena v brskalniku)"
       instagram:
         name: "Instagram"
-        title: "z Instagramom"
+        title: "Instagram"
         message: "Preverjanje z Instagramom (pojavna okna morajo biti omogočena v brskalniku)"
       facebook:
         name: "Facebook"
@@ -1263,11 +1268,11 @@ sl:
         message: "Preverjanje s Facebookom (pojavna okna morajo biti omogočena v brskalniku)"
       yahoo:
         name: "Yahoo"
-        title: "z Yahoojem"
+        title: "Yahoo"
         message: "Preverjanje z Yahoojem (pojavna okna morajo biti omogočena v brskalniku)"
       github:
         name: "GitHub"
-        title: "z GitHubom"
+        title: "GitHub"
         message: "Preverjanje z GitHubom (pojavna okna morajo biti omogočena v brskalniku)"
     invites:
       accept_title: "Povabilo"
@@ -1321,13 +1326,15 @@ sl:
         other: "Izberite vsaj {{count}} stvari."
     emoji_picker:
       filter_placeholder: Išči emoji
-      people: Ljudje
-      nature: Narava
-      food: Hrana
-      activity: Aktivnost
-      travel: Potovanje
+      smileys_&_emotion: Smeški in emotikoni
+      people_&_body: Ljudje in telo
+      animals_&_nature: Živali in narava
+      food_&_drink: Hrana in pijača
+      travel_&_places: Potovanja in lokacije
+      activities: Dejavnosti
       objects: Stvari
-      celebration: Praznovanje
+      symbols: Simboli
+      flags: Zastave
       custom: Po meri emoji
       recent: Nedavno uporabljeni
       default_tone: Brez barve kože
@@ -2103,8 +2110,8 @@ sl:
         few: "poglej {{count}} skrite odgovore"
         other: "poglej {{count}} skritih odgovorov"
       notice:
-        first: "To je prvič, da je {{user}} objavil prispevek — poskrbimo, da bo dobrodošel v skupnosti!"
-        return: "Kar nekaj časa je preteklo od kar smo nazadnje videli {{user}} — zadnji prispevek je objavil {{time}}."
+        first: "Uporabnik {{user}} je prvič objavil prispevek — poskrbimo da bo lepo sprejet v naši skupnosti!"
+        return: "Uporabnik {{user}}že kar nekaj časa ni sodeloval — njihov zadnji prispevek je bil objavljen {{time}}."
       unread: "Prispevek je neprebran"
       has_replies:
         one: "{{count}} odgovor"
@@ -2131,7 +2138,7 @@ sl:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         upload: "Oprostite, pri prenosu datoteke je prišlo do napake. Poskusite ponovno."
-        file_too_large: "Datoteka je prevelika (največja dovoljena velikost je {{max_size_kb}}kb). Naložite vašo veliko datoteko na drugo spletno storitev in delite samo povezavo."
+        file_too_large: "Datoteka je prevelika (največja velikost je {{max_size_kb}}kb). Naložite vašo veliko datoteko na ponudnika v oblaku in objavite povezavo?"
         too_many_uploads: "Oprostite, naenkrat lahko naložite samo eno datoteko."
         too_many_dragged_and_dropped_files: "Oprostite, naenkrat lahko naložite samo {{max}} datotek."
         upload_not_authorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:{{authorized_extensions}})."
@@ -2433,6 +2440,15 @@ sl:
         muted:
           title: "Utišano"
           description: "O novih temah v tej kategoriji ne boste obveščeni in ne bodo se pojavile med najnovejšimi."
+      search_priority:
+        label: "Pomembnost v iskalniku"
+        options:
+          normal: "Običajna"
+          ignore: "Prezri"
+          very_low: "Zelo nizka"
+          low: "Nizka"
+          high: "Visoka"
+          very_high: "Zelo visoka"
       sort_options:
         default: "privzeto"
         likes: "Všečki"
@@ -2925,7 +2941,7 @@ sl:
         page_views: "Ogledov strani"
         page_views_short: "Ogledov strani"
         show_traffic_report: "Pokaži podrobno poročilo prometa"
-        community_health: Zdravje skupnosti
+        community_health: Stanje skupnosti
         moderators_activity: Aktivnosti moderatorjev
         whats_new_in_discourse: "Kaj je novega v Discourse?"
         activity_metrics: Metrike aktivnosti
@@ -3250,7 +3266,7 @@ sl:
         staff_actions:
           all: "vse"
           filter: "Filter:"
-          title: "Aktivnosti osebja"
+          title: "Dejanja osebja"
           clear_filters: "Pokaži vse"
           staff_user: "Uporabnik"
           target_user: "Ciljni uporabnik"
@@ -3379,6 +3395,7 @@ sl:
         last_emailed: "Zadnja e-pošta"
         active: "Aktiviran"
         show_emails: "Pokaži e-naslove"
+        hide_emails: "Skrij e-naslove"
         nav:
           new: "Novi"
           active: "Aktivni"
@@ -3387,7 +3404,7 @@ sl:
           suspended: "Suspendirani"
           silenced: "Utišani"
           suspect: "Sumljivi"
-          staged: "Prirejen"
+          staged: "Prirejeni"
         approved: "Potrjen?"
         approved_selected:
           one: "potrdi uporabnika"
@@ -3467,6 +3484,7 @@ sl:
         action_logs: "Dnevnik akcij"
         ip_lookup: "Poizvedba IP"
         log_out: "Odjava"
+        logged_out: "Uporabnik je bil odjavljen iz vseh naprav."
         grant_admin: "Odobri administratorja"
         grant_admin_confirm: "Poslali smo ti e-sporočilo za potrditev novega administratorja. Odpri ga in sledi navodilom."
         grant_moderation: "Odobri moderatorja"
@@ -3498,6 +3516,12 @@ sl:
         anonymize_yes: "Da, anonimiziraj tega uporabnika"
         delete: "Izbriši uporabnika"
         delete_forbidden_because_staff: "Administratorjev in moderatorjev se ne da izbrisati."
+        delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
+        delete_forbidden:
+          one: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dne ne morejo biti izbrisani.)"
+          two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
+          few: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
+          other: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
         delete_confirm: "Navadno je bolj primerno da se uporabnike anonimizira in ne izbriše, ker se z brisanjem odstrani tudi vsebina iz obstoječih razprav. <br><br>Ali ste PREPRIČANI da hočete odstraniti tega uporabnika? To dejanje je trajno!"
         delete_and_block: "Izbriši in <b>blokiraj</b> ta e-naslov in IP naslov"
         delete_dont_block: "Samo izbriši"
@@ -3595,6 +3619,7 @@ sl:
         search: "Išči besedilo, ki bi ga rad/a uredil/a"
         title: "Vsebina besedila"
         edit: "uredi"
+        more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."
       settings:
         none: "brez"
       site_settings:

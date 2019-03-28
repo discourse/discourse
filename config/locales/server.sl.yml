@@ -112,26 +112,31 @@ sl:
       two: "%{count} odgovora"
       few: "%{count} odgovori"
       other: "%{count} odgovorov"
+  no_mentions_allowed: "Ne morete omenjati drugih uporabnikov."
   too_many_mentions:
     one: "V prispevku lahko omenite samo %{count} uporabnika."
     two: "V prispevku lahko omenite samo %{count} uporabnika."
     few: "V prispevku lahko omenite samo %{count} uporabnike."
     other: "V prispevku lahko omenite samo %{count} uporabnikov."
+  no_mentions_allowed_newuser: "Novi uporabniki ne morejo omenjati drugih uporabnikov."
   too_many_mentions_newuser:
     one: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnika."
     two: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnika."
     few: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnike."
     other: "Novi uporabniki lahko v prispevku omenijo samo %{count} uporabnikov."
+  no_images_allowed: "Novi uporabniki ne morejo dodajati slik v prispevke."
   too_many_images:
     one: "Novi uporabniki lahko v prispevek dodajo samo %{count} sliko."
     two: "Novi uporabniki lahko v prispevek dodajo samo %{count} sliki."
     few: "Novi uporabniki lahko v prispevek dodajo samo %{count} slike."
     other: "Novi uporabniki lahko v prispevek dodajo samo %{count} sliko."
+  no_attachments_allowed: "Novi uporabniki ne morejo dodajati priponk v prispevke."
   too_many_attachments:
     one: "Novi uporabniki lahko v prispevek dodajo samo %{count} priponko."
     two: "Novi uporabniki lahko v prispevek dodajo samo %{count} priponki."
     few: "Novi uporabniki lahko v prispevek dodajo samo %{count} priponke."
     other: "Novi uporabniki lahko v prispevek dodajo samo %{count} priponk."
+  no_links_allowed: "Novi uporabniki ne morejo všečkati prispevke."
   too_many_links:
     one: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezavo."
     two: "Novi uporabniki lahko v prispevek dodajo samo %{count} povezavi."
@@ -285,9 +290,12 @@ sl:
       (Za več informacij o nivojih zaupanja [preberite temo][trust]. Samo uporabniki, ki tudi v naprej dosegajo kriterije ostanejo redni uporabniki.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+  admin_quick_start_title: "PREBERI ME NAJPREJ: Admin vodnik za hitri začetek"
   category:
-    replace_paragraph: "(Zamenjajte ta prvi odstavek z kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"
+    replace_paragraph: "(Zamenjajte ta prvi odstavek s kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"
+    post_template: "%{replace_paragraph}\n\nUporabite naslednje odstavke za daljši opis and za določitev pravil in vodil te kategorije:\n\n- Zakaj naj uporabniku uporabljajo to kategorijo? Čemu je namenjena?\n\n- Kako se razlikuje od ostalih kategorij, ki jih že imamo?\n\n- Katere teme sodijo v to kategorijo?\n\n- Ali potrebujemo to kategorijo? Ali jo lahko združimo z drugo kategorijo ali podkategorijo?\n"
     errors:
+      description_incomplete: "Objava z opisom kategorije mora vsebovati vsaj en odstavek."
       permission_conflict: "Vsaka skupina ki ima dostop do podkategorije mora imeti dostop tudi do nadrejene kategorije."
       disallowed_topic_tags: "Ta tema vsebuje oznake, ki niso dovoljene na tej kategoriji: '%{tags}'"
     cannot_delete:
@@ -429,7 +437,7 @@ sl:
     error_staged: "Prišlo je do napake pri menjavi vašega e-naslova. E-naslov je že v uporabi s strani prirejenega uporabnika."
     already_done: "Oprostite, vendar povezava za potrditev ni več veljavna. Mogoče je bil vaš e-naslov že spremenjen?"
     authorizing_old:
-      title: "Zahvaljujemo se vam za potrditev vašega trenutnega e-naslova"
+      title: "Hvala za potrditev vašega trenutnega e-naslova"
       description: "Na nov e-naslov smo vam poslali povezavo za potrditev."
   associated_accounts:
     revoke_failed: "Nismo uspeli razveljaviti vaš račun pri %{provider_name}."
@@ -479,7 +487,7 @@ sl:
       description: 'Prispevek potrebuje pregled osebja na podlagi <a href="%{base_path}/guidelines">pravil skupnosti</a>, <a href="%{tos_url}">pogojev uporabe</a>, ali iz drugega razloga, ki ni naveden zgoraj.'
       short_description: "Potrebuje pregled osebja iz drugega razloga"
   ignored:
-    hidden_content: '<p>Skrita vsebina</p>'
+    hidden_content: "<p>Skrita vsebina</p>"
   archetypes:
     banner:
       title: "Tema na oglasnem traku"
@@ -754,7 +762,7 @@ sl:
 
         Vendar, če bo prispevek ponovno skrit zaradi prijav članov skupnosti, potem bo skrit dokler ga ne pregleda član osebja foruma.
 
-        Za dodatna navodila preberite [pravila skupnosti](%{base_url}/guidelines).
+        Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     post_hidden_again:
       title: "Prispevek ponovno skrit"
       subject_template: "Prispevek je bil ponovno skrit zaradi prijav iz skupnosti zato smo obvestili osebje"
@@ -769,7 +777,7 @@ sl:
 
         Več članov skupnosti je prijavilo vaš prispevek preden je bil skrit. **Ker je bil prispevek skrit večkrat, bo ostal skrit dokler ga ne pregleda član osebja foruma.**
 
-        Za dodatna navodila preberite [pravila skupnosti](%{base_url}/guidelines).
+        Za dodatna informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     flags_agreed_and_post_deleted:
       title: "Prijavljen prispevek odstranjen s strani osebja"
       subject_template: "Prijavljen prispevek odstranjen s strani osebja"
@@ -807,11 +815,8 @@ sl:
         Lepo se imejte v naši družbi!
     welcome_tl1_user:
       title: "Dobrodošli na nivoju zaupanja 1!"
-      subject_template: "Zahvaljujemo se vam, ker nas spremljate"
-      text_body_template: |
-        Pozdravljeni! Vidimo da ste pridno spremljali naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
-
-        Veseli smo, da ste med nami in bi radi več vedeli o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [začnite novo temo](%{base_url}/categories).
+      subject_template: "Hvala, ker z nami preživljate svoj čas"
+      text_body_template: "Pozdravljeni! \n\nVidimo, da pridno spremljate naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nVeseli smo, da ste med nami in bi radi vedeli več o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [ustvarite novo temo](%{base_url}/categories).\n"
     welcome_invite:
       title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
@@ -1075,7 +1080,33 @@ sl:
       subject_template: "[%{email_prefix}] Napaka e-pošte -- napaka pri POP avtentikaciji"
     email_revoked:
       title: "E-naslov preklican"
+      subject_template: "Ali je vaš e-naslov pravilen?"
+      text_body_template: |
+        Oprostite, imamo težave s pošiljanjem na vaš e-naslov. Vsa naša zadnja e-sporočila so bila vrnjena kot nedostavljiva.
+
+        Ali lahko preverite, da je [vaš e-naslov](%{base_url}/my/preferences/email) pravilen in delujoč? Lahko tudi dodate naš e-naslov v svoj adresar / med kontakte, da izboljšate dostavljivost.
+    email_bounced: |
+      To e-sporočilo je %{email} bilo vrnjeno.
+
+      ### Podrobnosti
+
+      ``` text
+      %{raw}
+      ```
+    ignored_users_summary:
+      title: "Prezrti uporabnik je presegel prag"
+      subject_template: "Uporabnik je prezrt s strani precej drugih uporabnikov"
+      text_body_template: |
+        Pozdravljeni,
+
+        To samodejno sporočilo od %{site_name} vas obvešča da je [uporabnik](%{base_url}/u/%{username}/summary) prezrt s strani %{ignores_threshold} uporabnikov. To je mogoče kaže na to, da imate problem v vaši skupnosti.
+
+        Mogoče bi bilo dobro pregledati zadnje objave tega uporabnika in mogoče tudi drugih uporabnikov v [poročilo prezrtih uporabnikov](%{base_url}/admin/reports/top_ignored_users).
+
+        Za dodatna informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     too_many_spam_flags:
+      title: "Preveč prijav kot neželeno"
+      subject_template: "Nov uporabniški račun je na čakanju"
       text_body_template: |
         Pozdravljeni,
 
@@ -1083,8 +1114,10 @@ sl:
 
         Kot preventivni ukrep je bil vaš uporabniški račun utišan, zato ne boste mogli odgovarjati na prispevke ali teme dokler vas ne pregleda član osebja foruma. Opravičujemo se vam za neprijetnosti.
 
-        Za dodatne informacije preberite [pravila skupnosti](%{base_url}/guidelines).
+        Za dodate informacije preberite [pravila skupnosti](%{base_url}/guidelines).
     too_many_tl3_flags:
+      title: "Preveč TL3 prijav"
+      subject_template: "Nov uporabniški račun je na čakanju"
       text_body_template: |
         Pozdravljeni,
 
@@ -1095,6 +1128,7 @@ sl:
         Za dodatne informacije preberite [pravila skupnosti] (%{base_url}/guidelines).
     silenced_by_staff:
       title: "Utišan s strani osebja"
+      subject_template: "Uporabniški račun začasno na čakanju"
       text_body_template: |
         Pozdravljeni,
 
@@ -1114,7 +1148,20 @@ sl:
         [Preverite prijave](%{base_url}/admin/flags). Če je bil uporabnik %{username} po nepotrebnem utišan, kliknite gumb Ukini utišanje uporabnika na [admin strani uporabnika](%{user_url}).
 
         Ta nastavitev se lahko sprememni preko `silence_new_user` nastavitve.
+    spam_post_blocked:
+      title: "Neželen prispevek blokiran"
+      subject_template: "Prispevek novega uporabnika %{username} je blokiran zaradi ponovljenih povezav"
+      text_body_template: |
+        To je samodejno sporočilo.
+
+        Nov uporabnik [%{username}](%{user_url}) je večkrat poskusil ustvariti več prispevkov z povezavami na %{domains}, ampak ti prispevki so bili blokirani, zato da preprečimo neželeno vsebino. Uporabnik še vedno lahko ustvari nove prispevke, ki ne vsebujejo povezave na %{domains}.
+
+        Prosimo [preverite uporabnika](%{user_url}).
+
+        To se lahko spremeni preko `newuser_spam_host_threshold` in `white_listed_spam_host_domains` nastavitev sistema. Razmislite, da bi dodali %{domains} na belo listo, če naj bi bile izvzete.
     unsilenced:
+      title: "Od-utišan"
+      subject_template: "Uporabniški račun ni več na čakanju"
       text_body_template: |
         Pozdravljeni,
 
@@ -1122,6 +1169,7 @@ sl:
 
         Sedaj lahko odgovarjate in ustvarite nove teme. Hvala za potrpežljivost.
     pending_users_reminder:
+      title: "Opomnik na uporabnike za potrditev"
       subject_template:
         one: "%{count} uporabnik čaka na potrditev"
         two: "%{count} uporabnika čakata na potrditev"
@@ -1131,6 +1179,17 @@ sl:
         Novo registrirani uporabniki čakajo na potrditev (ali zavrnitev) preden lahko dostopajo do foruma..
 
         [Preverite jih v Admin delu](%{base_url}/admin/users/list/pending).
+    download_remote_images_disabled:
+      title: "Prenos oddaljenih slik onemogočen"
+      subject_template: "Prenos oddaljenih slik onemogočen"
+      text_body_template: "Nastavitev `download_remote_images_to_local` je onemogočena, ker je bil dosežena `download_remote_images_threshold` omejitev prostora na disku ."
+    dashboard_problems:
+      title: "Težave nadzorne plošče"
+      subject_template: "Nov nasvet na vaši nadzorni plošči"
+      text_body_template: |
+        Imate nove nasvete in priporočila za vas na podlagi vaših trenutnih nastavitev sistema..
+
+        [Obiščite nadzorno ploščo](%{base_url}/admin) da jih pregledate.
     new_user_of_the_month:
       title: "Vi ste nov uporabnik meseca!"
       subject_template: "Vi ste nov uporabnik meseca!"
@@ -1139,13 +1198,18 @@ sl:
 
         Ta nagrada je podeljena dvem novim uporabnikom vsak mesec in bo stalno vidna  na [seznamu značk](%{url}).
 
-        Hitro ste poslali pomemben član skupnosti. Zahvaljujemo se vam za pridružitev in nadaljujte z dobrim delom!
+        Hitro ste poslali pomemben član skupnosti. Hvala za sodelovanje in nadaljujte z dobrim delom!
     queued_posts_reminder:
+      title: "Opomnik na prispevke za potrditev"
       subject_template:
         one: "%{count} prispevek čaka na pregled"
         two: "%{count} prispevka čakata na pregled"
         few: "%{count} prispevki čakajo na pregled"
         other: "%{count} prispevkov čaka na pregled"
+      text_body_template: |
+        Pozdravljeni,
+
+        Prispevki novih uporabnikov so bili zadržani in čakajo na pregled in potrditev. [Potrdite ali zavrnete jih tukaj](%{base_url}/queued-posts).
   unsubscribe_link: |
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1557,17 +1621,17 @@ sl:
       name: Osnovni uporabnik
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljene</a> vse osnovne funkcije skupnosti"
       long_description: |
-        Ta značka vam je podeljena, ko dosežete nivo zaupanja 1. Zahvaljujemo se vam da ste vztrajali in prebrali nekaj tem in spoznali kaj sploh je naša skupnost. Omejitve za nove uporabnike so umaknjene: omogočene so vam vsi pomembni mehanizmi, kot so zasebna sporočila, prijave, urejanje wiki in možnost objave več slik in povezav.
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 1. Hvala, ker ste vztrajali in prebrali nekaj tem in tako spoznali kaj sploh je naša skupnost. Omejitve za nove uporabnike so umaknjene: omogočene so vam vsi pomembni mehanizmi, kot so zasebna sporočila, prijave, urejanje wiki in možnost objave več slik in povezav.
     member:
       name: Polnopraven član
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> povabila, skupinska zasebna sporočila, več všečkov"
       long_description: |
-        Ta značka vam je podeljena, ko dosežete nivo zaupanja 2. Zahvaljujemo se vam, da ste sodelovali nekaj tednov in resnično postali član skupnosti. Sedaj lahko pošiljate povabila novim uporabnikom na svoji uporabniški strani, ustvarite skupinska zasebna sporočila in lahko podelite več všečkov vsak dan.
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 2. Hvala, ker ste sodelovali nekaj tednov in tako resnično postali član skupnosti. Sedaj lahko pošiljate povabila novim uporabnikom na svoji uporabniški strani, ustvarite skupinska zasebna sporočila in lahko podelite več všečkov vsak dan.
     regular:
       name: Redni član
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> možnost menjave kategorije, preimenovanja, sledenja povezav, wiki, več všečkov"
       long_description: |
-        Ta značka vam je podeljena, ko dosežete nivo zaupanja 3. Zahvaljujemo se vam, da ste reden udeleženec naše skupnosti že nekaj mesecev. Ste eden bolj aktivnih bralcev in zanesljiv sodelavec, ki naredi našo skupnost enkratno. Sedaj lahko menjate kategorije temam, preimenujete teme, lahko uporabljate bolj zmogljive načine prijave, dostopate do zasebne lože in podelite več všečkov vsak dan.
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 3. Hvala, ker ste reden udeleženec naše skupnosti že nekaj mesecev. Ste eden bolj aktivnih bralcev in zanesljiv sodelavec, ki naredi našo skupnost enkratno. Sedaj lahko menjate kategorije temam, preimenujete teme, lahko uporabljate bolj zmogljive načine prijave, dostopate do zasebne lože in podelite več všečkov vsak dan.
     leader:
       name: Vodja
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> možnost globalnega urejanja, pripenjanja, zapiranja, arhiviranja, razdruževanja in združevanja ter več všečkov"
@@ -1622,7 +1686,7 @@ sl:
       name: Zanimiva souporaba
       description: Delili ste povezavo na prispevek s 25 edinstvenimi obiskovalci
       long_description: |
-        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 25 zunanjih obiskovalcev. Zahvaljujemo se vam, ker delite dobro besedo o naših pogovorih in naši skupnosti.
+        Ta značka vam je podeljena, ker ste delili povezavo na katero je kliknilo 25 zunanjih obiskovalcev. Hvala, ker delite dobro besedo o naših razpravah in naši skupnosti.
     good_share:
       name: Dobra souporaba
       description: Delili ste povezavo na prispevek s 300 edinstvenimi obiskovalci
@@ -1656,7 +1720,7 @@ sl:
       name: Šampion
       description: Povabili ste 3 člane
       long_description: |
-        Ta značka vam je podeljena, ker ste povabili 5 oseb, ki so z nami ostali tako dolgo, da so postali polnopravni člani. Zahvaljujemo se vam, ker ste obogatili našo skupnost z novimi člani!
+        Ta značka vam je podeljena, ker ste povabili 5 oseb, ki so z nami ostali tako dolgo, da so postali polnopravni člani. Hvala, ker ste obogatili našo skupnost z novimi člani!
     first_share:
       name: Prva souporaba prispevka
       description: Delili ste prispevek
@@ -1686,17 +1750,17 @@ sl:
       name: Zanimiva povezava
       description: Objavili ste zunanjo povezavo z več kot 50 kliki
       long_description: |
-        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 50 klikov. Zahvaljujemo se vam za uporabno povezavo, ki je dodala zanimiv kontekst k pogovoru.
+        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 50 klikov. Hvala za uporabno povezavo, ki je dodala zanimiv kontekst k pogovoru.
     hot_link:
       name: Vroča povezava
       description: Objavili ste zunanjo povezavo z več kot 300 kliki
       long_description: |
-        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 300 klikov. Zahvaljujemo se vam za navdušujočo povezavo, ki je nesla pogovor in je marsikaj razjasnila.
+        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 300 klikov. Hvala za navdušujočo povezavo, ki je nesla pogovor in je marsikaj razjasnila.
     famous_link:
       name: Slavna povezava
       description: Objavili ste zunanjo povezavo z več kot 1000 kliki
       long_description: |
-        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 1000 klikov. Zahvaljujemo se vam za povezavo, ki je zelo ponesla pogovor in je dodala ključne podrobnosti, kontekst in informacije.
+        Ta značka je podeljena, ker ste objavili zunanjo povezavo, ki je prejela 1000 klikov. Hvala za povezavo, ki je zelo ponesla pogovor in je dodala ključne podrobnosti, kontekst in informacije.
     appreciated:
       name: Cenjeni
       description: Prejeli ste 1 všeček na 20 prispevkih
@@ -1721,7 +1785,7 @@ sl:
       name: Radodarni v ljubezni
       description: 5 krat ste podelili 50 všečkov v enem dnevu
       long_description: |
-        Ta značka vam je podeljena, ker ste že petič podelili vseh 50 všečkov v enem dnevu. Zahvaljujemo se vam ker aktivno vspodbujate najboljše pogovore vsak dan!
+        Ta značka vam je podeljena, ker ste že petič podelili vseh 50 všečkov v enem dnevu. Hvala, ker aktivno vspodbujate najboljše pogovore vsak dan!
     crazy_in_love:
       name: Trapasto zaljubljen
       description: 20 krat ste podelili 50 všečkov v enem dnevu
@@ -1814,6 +1878,7 @@ sl:
       linked: '%{username} je objavil povezavo na vaš prispevek v "%{topic}" - %{site_title}'
       confirm_title: "Obvestila omogočena - %{site_title}"
       confirm_body: "Uspelo! Obvestila so bila omogočena."
+      custom: "Obvestilo od %{site_title}"
   staff_action_logs:
     not_found: "ni mogoče najti"
     unknown: "neznano"

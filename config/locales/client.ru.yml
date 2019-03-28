@@ -258,8 +258,6 @@ ru:
     every_hour: "каждый час"
     daily: "ежедневно"
     weekly: "еженедельно"
-    every_two_weeks: "каждые две недели"
-    every_three_days: "каждые 3 дня"
     max_of_count: "{{count}} макс."
     alternation: "или"
     character_count:
@@ -638,8 +636,6 @@ ru:
       new_private_message: "Новое сообщение"
       private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
-      ignore: "Игнорировать"
-      unignore: "Показать"
       activity_stream: "Активность"
       preferences: "Настройки"
       profile_hidden: "Публичный профиль пользователя скрыт"
@@ -722,7 +718,6 @@ ru:
       muted_users: "Выключено"
       muted_users_instructions: "Не отображать уведомления от этих пользователей."
       ignored_users: "Игнорировать"
-      ignored_users_instructions: "Список всех игнорируемых пользователей."
       muted_topics_link: "Показать темы \"Без уведомлений\""
       watched_topics_link: "Показать наблюдаемые темы"
       tracked_topics_link: "Показать отслеживаемые темы"
@@ -792,7 +787,6 @@ ru:
         confirm_password_description: "Подтвердите ваш пароль чтобы продолжить"
         label: "Код"
         rate_limit: "Пожалуйста, подождите, прежде чем попробовать другой код аутентификации."
-        enable_description: "Сканируйте этот QR-код в поддерживаемом приложении (<a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2\" target=\"_blank\">Android</a> – <a href=\"https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8\" target=\"_blank\">iOS</a> – <a href=\"https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj\" target='_blank'>Windows Phone</a>) и  введите свой код аутентификации. \n"
         disable_description: "Пожалуйста, введите код аутентификации из вашего приложения:"
         show_key_description: "Введите вручную"
         extended_description: |
@@ -835,7 +829,6 @@ ru:
         primary: "Основной адрес электронной почты"
         secondary: "Дополнительный адрес электронной почты"
         no_secondary: "Нет дополнительного адреса электронной почты"
-        instructions: "Не показывать"
         ok: "Мы вышлем вам письмо для подтверждения"
         invalid: "Введите действующий адрес электронной почты"
         authenticated: "Ваш адрес электронной почты подтвержден {{provider}}"
@@ -920,14 +913,9 @@ ru:
         every_30_minutes: "каждые 30 минут"
         every_hour: "каждый час"
         daily: "ежедневно"
-        every_three_days: "каждые 3 дня"
         weekly: "еженедельно"
-        every_two_weeks: "каждые 2 недели"
       include_tl0_in_digests: "Включить контент от новых пользователей в сводки, отправляемые по электронной почте"
       email_in_reply_to: "Добавить предыдущие ответы к концу электронных писем"
-      email_direct: "Присылать почтовое уведомление, когда кто-то цитирует меня, отвечает на мой пост, упоминает мой @псевдоним или приглашает меня в тему"
-      email_private_messages: "Присылать почтовое уведомление, когда кто-то оставляет мне сообщение"
-      email_always: "Присылать почтовое уведомление, даже если я присутствую на сайте"
       other_settings: "Прочее"
       categories_settings: "Разделы"
       new_topic_duration:
@@ -1318,13 +1306,7 @@ ru:
         other: "Введите хотя бы {{count}} элемент."
     emoji_picker:
       filter_placeholder: Искать emoji
-      people: People
-      nature: Nature
-      food: Food
-      activity: Activity
-      travel: Travel
       objects: Objects
-      celebration: Celebration
       custom: Пользовательские смайлы
       recent: Недавно использованные
     shared_drafts:
@@ -1758,6 +1740,7 @@ ru:
         when: "Когда:"
         public_timer_types: Таймер темы
         private_timer_types: Таймер Тем Пользователя
+        time_frame_required: "Пожалуйста, выберите временные рамки"
       auto_update_input:
         none: "Выбор таймфрейма"
         later_today: "Позже сегодня"
@@ -2088,9 +2071,6 @@ ru:
         few: "просмотреть {{count}} скрытых ответов"
         many: "просмотреть {{count}} скрытых ответов"
         other: "просмотреть {{count}} скрытых ответов"
-      notice:
-        first: "Это первая публикация {{user}}  — давайте приветствовать его в нашем сообществе!"
-        return: "Прошло много времени с тех пор, как мы видели {{user}} — его последний пост был {{time}}."
       unread: "Сообщение не прочитано"
       has_replies:
         one: "{{count}} Ответ"
@@ -2117,7 +2097,7 @@ ru:
         create: "К сожалению, не удалось создать сообщение из-за ошибки. Попробуйте ещё раз."
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте ещё раз."
         upload: "К сожалению, не удалось загрузить файл. Попробуйте ещё раз."
-        file_too_large: "К сожалению, этот файл слишком большой (максимально допустимый размер {{max_size_kb}} КБ). Почему бы не загрузить Ваш большой файл в службу облачного обмена, а затем поделиться ссылкой?"
+        file_too_large: "К сожалению, этот файл слишком большой (максимально допустимый размер {{max_size_kb}} КБ). Почему бы не загрузить этот файл в службу облачного обмена, а затем поделиться ссылкой?"
         too_many_uploads: "К сожалению, за один раз можно загрузить только одно изображение."
         too_many_dragged_and_dropped_files: "Извините, вы можете только загрузить {{max}} файл."
         upload_not_authorized: "К сожалению, вы не можете загрузить файл данного типа (список разрешённых типов файлов: {{authorized_extensions}})."
@@ -2335,6 +2315,7 @@ ru:
       all: "Все разделы"
       choose: "категории&hellip;"
       edit: "Изменить"
+      edit_dialog_title: "Редактировать: %{categoryName}"
       view: "Просмотр тем по разделам"
       general: "Общие"
       settings: "Настройки"
@@ -2343,6 +2324,7 @@ ru:
       tags_allowed_tags: "Разрешить использовать в этом разделе только следующие метки:"
       tags_allowed_tag_groups: "Разрешить использовать в этом разделе только теги из этих групп:"
       tags_placeholder: "(Необязательно) список доступных тегов"
+      tags_tab_description: "Теги и группы тегов, указанные здесь, будут доступны только в этой категории и других категориях, в которых они также указаны. Они не будут доступны для использования в других категориях."
       tag_groups_placeholder: "(Необязательно) список доступных групп тегов"
       topic_featured_link_allowed: "Разрешить популярные ссылки в этой категории"
       delete: "Удалить раздел"
@@ -2917,6 +2899,7 @@ ru:
         moderation_tab: "Модерация"
         security_tab: "Безопасность"
         reports_tab: "Отчеты"
+        report_filter_any: "любой"
         disabled: Отключено
         timeout_error: "Извините, запрос занимает слишком много времени, Пожалуйста, выберите более короткий интервал"
         exception_error: "Извините, произошла ошибка при выполнении запроса"

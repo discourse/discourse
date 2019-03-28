@@ -17,6 +17,7 @@ de:
         modal_title: Datum einfügen
         modal_subtitle: "Datum und Uhrzeit werden automatisch an die lokale Zeitzone des Betrachters angepasst."
         form:
+          to: "zu"
           insert: Einfügen
           advanced_mode: Erweiterter Modus
           simple_mode: Einfacher Modus

@@ -185,8 +185,6 @@ gl:
     every_hour: "cada hora"
     daily: "diariamente"
     weekly: "semanalmente"
-    every_two_weeks: "cada dúas semanas"
-    every_three_days: "cada tres días"
     max_of_count: "máx. de {{count}}"
     alternation: "ou"
     character_count:
@@ -521,13 +519,8 @@ gl:
         every_30_minutes: "cada 30 minutos"
         every_hour: "cada hora"
         daily: "diariamente"
-        every_three_days: "cada tres días"
         weekly: "semanalmente"
-        every_two_weeks: "cada dúas semanas"
       email_in_reply_to: "Incluír nos correos un extracto das respostas á publicación"
-      email_direct: "Enviar un correo electrónico cando alguén me cite, responda a unha das miñas publicacións, mencione o meu @nome_do_usuario ou me convide a un tema."
-      email_private_messages: "Enviar correo electrónico cando alguén me mande unha mensaxe"
-      email_always: "Enviar notificación por correo-e incluso cando estea activo no sitio"
       other_settings: "Outro"
       categories_settings: "Categorías"
       new_topic_duration:
