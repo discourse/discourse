@@ -22,6 +22,25 @@ class CreateReviewableHistories < ActiveRecord::Migration[5.2]
         updated_at
       )
       SELECT r.id,
+        0,
+        0,
+        r.created_by_id,
+        r.created_at,
+        r.created_at
+      FROM reviewables AS r
+      WHERE r.type = 'ReviewableUser'
+    SQL
+
+    execute(<<~SQL)
+      INSERT INTO reviewable_histories (
+        reviewable_id,
+        reviewable_history_type,
+        status,
+        created_by_id,
+        created_at,
+        updated_at
+      )
+      SELECT r.id,
         1,
         1,
         r.created_by_id,
