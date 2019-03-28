@@ -4,6 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   ignoredUntil: null,
+  maxDate: new Date((new Date()).getTime() + (120 * 86400000)),
   actions: {
     ignore() {
       if (!this.get("ignoredUntil")) {

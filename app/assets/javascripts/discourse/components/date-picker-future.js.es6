@@ -11,7 +11,8 @@ export default DatePicker.extend({
           .add(1, "day")
           .toDate(),
       setDefaultDate: !!this.get("defaultDate"),
-      minDate: new Date()
+      minDate: this.get("minDate") || new Date(),
+      maxDate: this.get("maxDate") || null
     };
   }
 });
