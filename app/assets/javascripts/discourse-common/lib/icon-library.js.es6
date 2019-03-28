@@ -38,6 +38,7 @@ const REPLACEMENTS = {
 };
 
 // TODO: use lib/svg_sprite/fa4-renames.json here
+// Note: these should not be edited manually. They define the fa4-fa5 migration
 const fa4Replacements = {
   "500px": "fab-500px",
   "address-book-o": "far-address-book",
@@ -167,7 +168,7 @@ const fa4Replacements = {
   "eye-slash": "far-eye-slash",
   eyedropper: "eye-dropper",
   fa: "fab-font-awesome",
-  facebook: "fab-facebook",
+  facebook: "fab-facebook-f",
   "facebook-f": "fab-facebook-f",
   "facebook-official": "fab-facebook",
   "facebook-square": "fab-facebook-square",

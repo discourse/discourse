@@ -392,7 +392,7 @@ describe Auth::DefaultCurrentUserProvider do
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
       u = provider2.current_user
       u.reload
-      expect(u.last_seen_at).to eq(Time.now)
+      expect(u.last_seen_at).to eq_time(Time.now)
 
       freeze_time 20.minutes.from_now
 
