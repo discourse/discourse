@@ -5,6 +5,19 @@
   style="overflow: auto"}}
 
   <div class="form">
+    {{#unless isValid}}
+      <div class="alert alert-error">
+        {{i18n "discourse_local_dates.create.form.invalid_date"}}
+      </div>
+    {{else}}
+      <div class="preview alert alert-info">
+        <b>{{i18n "discourse_local_dates.create.form.preview_for" timezone=currentUserTimezone}}</b>
+        <span>{{currentPreview}}</span>
+      </div>
+    {{/unless}}
+
+    {{computeDate}}
+
     <div class="date-time-configuration">
       <div class="range">
         <div class="from">
@@ -13,7 +26,11 @@
               {{i18n "discourse_local_dates.create.form.date_title"}}
             </label>
             <div class="controls">
-              {{date-picker class="date-input" value=date defaultDate="DD-MM-YYYY"}}
+              {{date-picker
+                onSelect=(action (mut date))
+                class="date-input"
+                value=date
+                defaultDate="DD-MM-YYYY"}}
             </div>
           </div>
 
@@ -22,12 +39,14 @@
               {{i18n "discourse_local_dates.create.form.time_title"}}
             </label>
             <div class="controls">
-              {{input type="time" value=time class="time-input"}}
+              {{input input=(mut time) type="time" value=time class="time-input"}}
             </div>
           </div>
         </div>
 
-        <span class="to-indicator"><span>{{i18n "discourse_local_dates.create.form.to"}}</span></span>
+        <div class="to-indicator">
+          {{if site.mobileView "↓" "→"}}
+        </div>
 
         <div class="to">
           <div class="control-group date">
@@ -35,7 +54,11 @@
               {{i18n "discourse_local_dates.create.form.date_title"}}
             </label>
             <div class="controls">
-              {{date-picker class="date-input" value=toDate defaultDate="DD-MM-YYYY"}}
+              {{date-picker
+                onSelect=(action (mut toDate))
+                class="date-input"
+                value=toDate
+                defaultDate="DD-MM-YYYY"}}
             </div>
           </div>
 
@@ -44,33 +67,49 @@
               {{i18n "discourse_local_dates.create.form.time_title"}}
             </label>
             <div class="controls">
-              {{input type="time" value=toTime class="time-input"}}
+              {{input input=(mut toTime) type="time" value=toTime class="time-input"}}
             </div>
           </div>
         </div>
       </div>
 
-      <span class="preview">{{currentUserTimezone}}</span>
-    </div>
+      <div class="timezone">
+        <div class="control-group time">
+          <label class="control-label">
+            {{i18n "discourse_local_dates.create.form.timezone"}}
+          </label>
+          <div class="controls">
+            {{combo-box
+              class="timezone-input"
+              allowAny=false
+              content=allTimezones
+              value=timezone
+              onSelect=(action (mut timezone))}}
+          </div>
+        </div>
 
-    {{#unless isValid}}
-      <span class="validation-error">{{i18n "discourse_local_dates.create.form.invalid_date"}}</span>
-    {{/unless}}
-
-    <div class="control-group recurrence">
-      <label class="control-label">
-        {{i18n "discourse_local_dates.create.form.recurring_title"}}
-      </label>
-      {{#if advancedMode}}
-        <p>{{{i18n "discourse_local_dates.create.form.recurring_description"}}}</p>
-      {{/if}}
-      <div class="controls">
-        {{combo-box content=recurringOptions class="recurrence-input" value=recurring none="discourse_local_dates.create.form.recurring_none"}}
       </div>
     </div>
 
     {{#if advancedMode}}
       <div class="advanced-options">
+        {{#unless isRange}}
+          <div class="control-group recurrence">
+            <label class="control-label">
+              {{i18n "discourse_local_dates.create.form.recurring_title"}}
+            </label>
+            <p>{{{i18n "discourse_local_dates.create.form.recurring_description"}}}</p>
+            <div class="controls">
+              {{combo-box
+                content=recurringOptions
+                class="recurrence-input"
+                value=recurring
+                onSelect=(action (mut recurring))
+                none="discourse_local_dates.create.form.recurring_none"}}
+            </div>
+          </div>
+        {{/unless}}
+
         <div class="control-group format">
           <label>{{i18n "discourse_local_dates.create.form.format_title"}}</label>
           <p>
@@ -87,7 +126,7 @@
           <ul class="formats">
             {{#each previewedFormats as |previewedFormat|}}
               <li class="format">
-                <a class="moment-format" href {{action "fillFormat" previewedFormat.format}}>
+                <a class="moment-format" href {{action (mut format) previewedFormat.format}}>
                   {{previewedFormat.format}}
                 </a>
                 <span class="previewed-format">

@@ -1,11 +1,11 @@
-import computed from "ember-addons/ember-computed-decorators";
-import { observes } from "ember-addons/ember-computed-decorators";
+import { default as computed } from "ember-addons/ember-computed-decorators";
+import { cookAsync } from "discourse/lib/text";
+import debounce from "discourse/lib/debounce";
 
 export default Ember.Component.extend({
   timeFormat: "HH:mm:ss",
   dateFormat: "YYYY-MM-DD",
   dateTimeFormat: "YYYY-MM-DD HH:mm:ss",
-  config: null,
   date: null,
   toDate: null,
   time: null,
@@ -15,23 +15,152 @@ export default Ember.Component.extend({
   recurring: null,
   advancedMode: false,
   isValid: true,
+  timezone: null,
+  timezones: null,
 
   init() {
-    this._super();
+    this._super(...arguments);
 
-    this.set("date", moment().format(this.dateFormat));
-    this.set("timezones", []);
-    this.set(
-      "formats",
-      (this.siteSettings.discourse_local_dates_default_formats || "")
+    this.setProperties({
+      timezones: [],
+      formats: (this.siteSettings.discourse_local_dates_default_formats || "")
         .split("|")
-        .filter(f => f)
-    );
+        .filter(f => f),
+      timezone: moment.tz.guess(),
+      date: moment().format(this.dateFormat)
+    });
   },
 
-  @observes("date", "time", "toDate", "toTime")
-  _resetFormValidity() {
-    this.set("isValid", true);
+  didInsertElement() {
+    this._super(...arguments);
+
+    this._renderPreview();
+  },
+
+  _renderPreview: debounce(function() {
+    const markup = this.get("markup");
+
+    if (markup) {
+      cookAsync(markup).then(result => {
+        this.set("currentPreview", result);
+
+        Ember.run.schedule("afterRender", () =>
+          this.$(".preview .discourse-local-date").applyLocalDates()
+        );
+      });
+    }
+  }, 250).observes("markup"),
+
+  @computed("date", "toDate", "toTime")
+  isRange(date, toDate, toTime) {
+    return date && (toDate || toTime);
+  },
+
+  @computed("computedConfig", "isRange")
+  isValid(config, isRange) {
+    const fromConfig = config.from;
+    if (!config.from.dateTime || !config.from.dateTime.isValid()) {
+      return false;
+    }
+
+    if (isRange) {
+      const toConfig = config.to;
+
+      if (
+        !toConfig.dateTime ||
+        !toConfig.dateTime.isValid() ||
+        toConfig.dateTime.diff(fromConfig.dateTime) < 0
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+
+  @computed("date", "time", "isRange", "options.{format,timezone}")
+  fromConfig(date, time, isRange, options = {}) {
+    const timeInferred = time ? false : true;
+
+    let dateTime;
+    if (!timeInferred) {
+      dateTime = moment.tz(`${date} ${time}`, options.timezone);
+    } else {
+      dateTime = moment.tz(date, options.timezone);
+    }
+
+    if (!timeInferred) {
+      time = dateTime.format(this.timeFormat);
+    }
+
+    let format = options.format;
+    if (timeInferred && this.get("formats").includes(format)) {
+      format = "LL";
+    }
+
+    return Ember.Object.create({
+      date: dateTime.format(this.dateFormat),
+      time,
+      dateTime,
+      format,
+      range: isRange ? "start" : false
+    });
+  },
+
+  @computed("toDate", "toTime", "isRange", "options.{timezone,format}")
+  toConfig(date, time, isRange, options = {}) {
+    const timeInferred = time ? false : true;
+
+    if (time && !date) {
+      date = moment().format(this.dateFormat);
+    }
+
+    let dateTime;
+    if (!timeInferred) {
+      dateTime = moment.tz(`${date} ${time}`, options.timezone);
+    } else {
+      dateTime = moment.tz(date, options.timezone).endOf("day");
+    }
+
+    if (!timeInferred) {
+      time = dateTime.format(this.timeFormat);
+    }
+
+    let format = options.format;
+    if (timeInferred && this.get("formats").includes(format)) {
+      format = "LL";
+    }
+
+    return Ember.Object.create({
+      date: dateTime.format(this.dateFormat),
+      time,
+      dateTime,
+      format,
+      range: isRange ? "end" : false
+    });
+  },
+
+  @computed("recurring", "timezones", "timezone", "format")
+  options(recurring, timezones, timezone, format) {
+    return Ember.Object.create({
+      recurring,
+      timezones,
+      timezone,
+      format
+    });
+  },
+
+  @computed(
+    "fromConfig.{date}",
+    "toConfig.{date}",
+    "options.{recurring,timezones,timezone,format}"
+  )
+  computedConfig(fromConfig, toConfig, options) {
+    return Ember.Object.create({
+      from: fromConfig,
+      to: toConfig,
+      options
+    });
   },
 
   @computed
@@ -51,15 +180,41 @@ export default Ember.Component.extend({
 
   @computed
   recurringOptions() {
+    const key = "discourse_local_dates.create.form.recurring";
+
     return [
-      { name: "Every day", id: "1.days" },
-      { name: "Every week", id: "1.weeks" },
-      { name: "Every two weeks", id: "2.weeks" },
-      { name: "Every month", id: "1.months" },
-      { name: "Every two months", id: "2.months" },
-      { name: "Every three months", id: "3.months" },
-      { name: "Every six months", id: "6.months" },
-      { name: "Every year", id: "1.years" }
+      {
+        name: I18n.t(`${key}.every_day`),
+        id: "1.days"
+      },
+      {
+        name: I18n.t(`${key}.every_week`),
+        id: "1.weeks"
+      },
+      {
+        name: I18n.t(`${key}.every_two_weeks`),
+        id: "2.weeks"
+      },
+      {
+        name: I18n.t(`${key}.every_month`),
+        id: "1.months"
+      },
+      {
+        name: I18n.t(`${key}.every_two_months`),
+        id: "2.months"
+      },
+      {
+        name: I18n.t(`${key}.every_three_months`),
+        id: "3.months"
+      },
+      {
+        name: I18n.t(`${key}.every_six_months`),
+        id: "6.months"
+      },
+      {
+        name: I18n.t(`${key}.every_year`),
+        id: "1.years"
+      }
     ];
   },
 
@@ -74,107 +229,32 @@ export default Ember.Component.extend({
     return moment.tz.names();
   },
 
-  getConfig(range) {
-    const endOfRange = range && range === "end";
-    const time = endOfRange ? this.get("toTime") : this.get("time");
-    let date = endOfRange ? this.get("toDate") : this.get("date");
-
-    if (endOfRange && time && !date) {
-      date = moment().format(this.dateFormat);
-    }
-
-    const recurring = this.get("recurring");
-    const format = this.get("format");
-    const timezones = this.get("timezones");
-    const timeInferred = time ? false : true;
-    const timezone = this.get("currentUserTimezone");
-
-    let dateTime;
-    if (!timeInferred) {
-      dateTime = moment.tz(`${date} ${time}`, timezone);
-    } else {
-      if (endOfRange) {
-        dateTime = moment.tz(date, timezone).endOf("day");
-      } else {
-        dateTime = moment.tz(date, timezone);
-      }
-    }
-
-    let config = {
-      date: dateTime.format(this.dateFormat),
-      dateTime,
-      recurring,
-      format,
-      timezones,
-      timezone
-    };
-
-    if (!timeInferred) {
-      config.time = dateTime.format(this.timeFormat);
-    }
-
-    if (timeInferred) {
-      config.displayedTimezone = this.get("currentUserTimezone");
-    }
-
-    if (timeInferred && this.get("formats").includes(format)) {
-      config.format = "LL";
-    }
-
-    return config;
-  },
-
-  _generateDateMarkup(config) {
+  _generateDateMarkup(config, options, isRange) {
     let text = `[date=${config.date}`;
 
     if (config.time) {
-      text += ` time=${config.time} `;
+      text += ` time=${config.time}`;
     }
 
     if (config.format && config.format.length) {
-      text += ` format="${config.format}" `;
+      text += ` format="${config.format}"`;
     }
 
-    if (config.timezone) {
-      text += ` timezone="${config.timezone}"`;
+    if (options.timezone) {
+      text += ` timezone="${options.timezone}"`;
     }
 
-    if (config.timezones && config.timezones.length) {
-      text += ` timezones="${config.timezones.join("|")}"`;
+    if (options.timezones && options.timezones.length) {
+      text += ` timezones="${options.timezones.join("|")}"`;
     }
 
-    if (config.recurring) {
-      text += ` recurring="${config.recurring}"`;
+    if (options.recurring && !isRange) {
+      text += ` recurring="${options.recurring}"`;
     }
 
     text += `]`;
 
     return text;
-  },
-
-  valid(isRange) {
-    const fromConfig = this.getConfig(isRange ? "start" : null);
-
-    if (!fromConfig.dateTime || !fromConfig.dateTime.isValid()) {
-      this.set("isValid", false);
-      return false;
-    }
-
-    if (isRange) {
-      const toConfig = this.getConfig("end");
-
-      if (
-        !toConfig.dateTime ||
-        !toConfig.dateTime.isValid() ||
-        toConfig.dateTime.diff(fromConfig.dateTime) < 0
-      ) {
-        this.set("isValid", false);
-        return false;
-      }
-    }
-
-    this.set("isValid", true);
-    return true;
   },
 
   @computed("advancedMode")
@@ -184,33 +264,34 @@ export default Ember.Component.extend({
       : "discourse_local_dates.create.form.advanced_mode";
   },
 
+  @computed("computedConfig.{from,to,options}", "options", "isValid", "isRange")
+  markup(config, options, isValid, isRange) {
+    let text;
+
+    if (isValid && config.from) {
+      text = this._generateDateMarkup(config.from, options, isRange);
+
+      if (config.to && config.to.range) {
+        text += ` → `;
+        text += this._generateDateMarkup(config.to, options, isRange);
+      }
+    }
+
+    return text;
+  },
+
   actions: {
     advancedMode() {
       this.toggleProperty("advancedMode");
     },
 
     save() {
-      const isRange =
-        this.get("date") && (this.get("toDate") || this.get("toTime"));
+      const markup = this.get("markup");
 
-      if (this.valid(isRange)) {
+      if (markup) {
         this._closeModal();
-
-        let text = this._generateDateMarkup(
-          this.getConfig(isRange ? "start" : null)
-        );
-
-        if (isRange) {
-          text += ` → `;
-          text += this._generateDateMarkup(this.getConfig("end"));
-        }
-
-        this.get("toolbarEvent").addText(text);
+        this.get("toolbarEvent").addText(markup);
       }
-    },
-
-    fillFormat(format) {
-      this.set("format", format);
     },
 
     cancel() {
