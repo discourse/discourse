@@ -20,8 +20,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
         .then(() => {
           this.set("model.ignored", true);
           this.set("model.muted", false);
-          if(this.get("refreshHeaderContent")) {
-            this.get("refreshHeaderContent")();
+          if(this.get("onSuccess")) {
+            this.get("onSuccess")();
           }
           this.send("closeModal");
         })
