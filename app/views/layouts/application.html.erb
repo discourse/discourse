@@ -25,11 +25,9 @@
     <%= preload_script "vendor" %>
     <%= preload_script "pretty-text-bundle" %>
     <%= preload_script "application" %>
-
-    <%- Discourse.plugin_assets(official: allow_plugins?, unofficial: allow_third_party_plugins?).each do |file| %>
+    <%- Discourse.find_plugin_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?).each do |file| %>
       <%= preload_script file %>
     <%- end %>
-
     <%- if staff? %>
       <script src="<%= ExtraLocalesController.url('admin') %>"></script>
       <%= preload_script "admin" %>

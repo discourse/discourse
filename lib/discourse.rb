@@ -200,11 +200,11 @@ module Discourse
     plugins.find_all { |p| !p.metadata.official? }
   end
 
-  def self.plugin_assets(args)
+  def self.find_plugin_assets(args)
     plugins.find_all do |plugin|
-      next if args[:official] == false && plugin.metadata.official?
-      next if args[:unofficial] == false && !plugin.metadata.official?
-      next if args[:disabled] != true && !plugin.enabled?
+      next if args[:include_official] == false && plugin.metadata.official?
+      next if args[:include_unofficial] == false && !plugin.metadata.official?
+      next if args[:include_disabled] != true && !plugin.enabled?
 
       plugin.asset_exists?
     end.map { |plugin| "plugins/#{plugin.asset_name}" }
