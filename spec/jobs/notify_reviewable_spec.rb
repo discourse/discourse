@@ -8,7 +8,6 @@ describe Jobs::NotifyReviewable do
     let(:user) { group_user.user }
     let(:group) { group_user.group }
 
-
     it "will notify users of new reviewable content" do
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
 
