@@ -248,6 +248,8 @@ en:
     every_hour: "every hour"
     daily: "daily"
     weekly: "weekly"
+    every_month: "every month"
+    every_six_months: "every six months"
     max_of_count: "max of {{count}}"
     alternation: "or"
     character_count:
