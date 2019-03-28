@@ -188,7 +188,7 @@ QUnit.test("Updating the topic title with unicode emojis", async assert => {
   await visit("/t/internationalization-localization/280");
   await click("#topic-title .d-icon-pencil-alt");
 
-  await fillIn("#edit-title", "emojis title 👨‍🌾");
+  await fillIn("#edit-title", "emojis title 👨‍🌾🙏");
 
   await click("#topic-title .submit-edit");
 
@@ -196,7 +196,7 @@ QUnit.test("Updating the topic title with unicode emojis", async assert => {
     find(".fancy-title")
       .html()
       .trim(),
-    `emojis title <img src="/images/emoji/emoji_one/man_farmer.png?v=${v}" title="man_farmer" alt="man_farmer" class="emoji">`,
+    `emojis title <img src="/images/emoji/emoji_one/man_farmer.png?v=${v}" title="man_farmer" alt="man_farmer" class="emoji"><img src="/images/emoji/emoji_one/pray.png?v=${v}" title="pray" alt="pray" class="emoji">`,
     "it displays the new title with escaped unicode emojis"
   );
 });
