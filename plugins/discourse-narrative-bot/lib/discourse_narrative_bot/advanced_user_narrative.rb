@@ -149,8 +149,8 @@ module DiscourseNarrativeBot
       if SiteSetting.delete_removed_posts_after < 1
         opts[:delete_removed_posts_after] = 1
 
-        flag = PostActionCreator.notify_moderators(self.discobot_user, post).post_action
-        PostAction.defer_flags!(post, self.discobot_user)
+        result = PostActionCreator.notify_moderators(self.discobot_user, post)
+        result.reviewable.perform(self.discobot_user, :ignore)
       end
 
       PostDestroyer.new(@user, post, opts).destroy
