@@ -162,6 +162,10 @@ module JsLocaleHelper
     result
   end
 
+  MOMENT_LOCALE_MAPPING = {
+    "hy" => "hy-am"
+  }
+
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
       path = "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale"
@@ -172,6 +176,7 @@ module JsLocaleHelper
     end
 
     find_locale(locale_chain, path, type, fallback_to_english: false) do |locale|
+      locale = MOMENT_LOCALE_MAPPING[locale] if MOMENT_LOCALE_MAPPING.key?(locale)
       # moment.js uses a different naming scheme for locale files
       locale.tr('_', '-').downcase
     end
