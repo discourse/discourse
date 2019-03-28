@@ -36,7 +36,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   actions: {
-
     toggleEmailVisibility() {
       this.toggleProperty("showEmails");
       this._refreshUsers();
