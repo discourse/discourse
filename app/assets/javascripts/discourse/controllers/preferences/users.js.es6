@@ -8,28 +8,39 @@ export default Ember.Controller.extend(PreferencesTabController, {
   saveAttrNames: ["muted_usernames", "ignored_usernames"],
   ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
   previousIgnoredUsernames: null,
+  init() {
+    this._super(...arguments);
+    this.set("previousIgnoredUsernames", this.get("ignoredUsernames"));
+  },
   actions: {
     ignoredUsernamesChanged() {
       if (
-        this.get("ignoredUsernames") &&
-        (!this.get("previousIgnoredUsernames") ||
-          this.get("ignoredUsernames.length") -
-            this.get("previousIgnoredUsernames.length") >
-            0)
+        (this.get("ignoredUsernames") &&
+          !this.get("previousIgnoredUsernames")) ||
+        this.get("ignoredUsernames.length") -
+          this.get("previousIgnoredUsernames.length") >
+          0
       ) {
         const username = this.get("ignoredUsernames")
           .split(",")
           .pop();
         if (username) {
           User.findByUsername(username).then(user => {
-            const controller = showModal("ignore-duration", {
+            showModal("ignore-duration", {
               model: user
-            });
-            controller.setProperties({
-              refreshHeaderContent: () => {}
             });
           });
         }
+      } else if (
+        (!this.get("ignoredUsernames") &&
+          this.get("previousIgnoredUsernames")) ||
+        this.get("previousIgnoredUsernames.length") -
+          this.get("ignoredUsernames.length") >
+          0
+      ) {
+        return this.get("model")
+          .save(["ignored_usernames"])
+          .catch(popupAjaxError);
       }
 
       this.set("previousIgnoredUsernames", this.get("ignoredUsernames"));

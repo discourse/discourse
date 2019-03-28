@@ -19,7 +19,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
         .then(() => {
           this.set("model.ignored", true);
           this.set("model.muted", false);
-          this.get("refreshHeaderContent")();
+          if(this.get("refreshHeaderContent")) {
+            this.get("refreshHeaderContent")();
+          }
           this.send("closeModal");
         })
         .catch(popupAjaxError)
