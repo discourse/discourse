@@ -121,6 +121,7 @@ const Composer = RestModel.extend({
   creatingSharedDraft: Ember.computed.equal("action", CREATE_SHARED_DRAFT),
   creatingPrivateMessage: Ember.computed.equal("action", PRIVATE_MESSAGE),
   notCreatingPrivateMessage: Ember.computed.not("creatingPrivateMessage"),
+  notPrivateMessage: Ember.computed.not("privateMessage"),
 
   @computed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
@@ -210,7 +211,8 @@ const Composer = RestModel.extend({
 
   canCategorize: Ember.computed.and(
     "canEditTitle",
-    "notCreatingPrivateMessage"
+    "notCreatingPrivateMessage",
+    "notPrivateMessage"
   ),
 
   @computed("canEditTitle", "creatingPrivateMessage", "categoryId")
