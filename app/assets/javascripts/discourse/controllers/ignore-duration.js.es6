@@ -1,10 +1,10 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import {popupAjaxError} from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   ignoredUntil: null,
-  maxDate: new Date(new Date().getTime() + 120 * 86400000),
+  maxDate: moment().utc().add(4, "months").toDate(),
   actions: {
     ignore() {
       if (!this.get("ignoredUntil")) {
