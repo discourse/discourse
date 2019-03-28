@@ -3419,6 +3419,19 @@ en:
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
+    activation_reminder:
+      title: "Activation Reminder"
+      subject_template: "[%{email_prefix}] Reminder to confirm your account"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        This is a friendly reminder to activate your account.
+
+        Click the following link to confirm and activate your new account:
+        %{base_url}/u/activate-account/%{email_token}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
     suspicious_login:
       title: "New Login Alert"
       subject_template: "[%{site_name}] New Login from %{location}"
