@@ -119,8 +119,6 @@ module Discourse
       pretty-text-bundle.js
       wizard-application.js
       wizard-vendor.js
-      plugin.js
-      plugin-third-party.js
       markdown-it-bundle.js
       service-worker.js
       google-tag-manager.js
@@ -246,6 +244,10 @@ module Discourse
       end
     else
       Discourse.activate_plugins!
+    end
+
+    Discourse.plugin_assets(disabled: true).each do |file|
+      config.assets.precompile << "#{file}.js"
     end
 
     require_dependency 'stylesheet/manager'

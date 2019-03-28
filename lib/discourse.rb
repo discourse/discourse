@@ -204,8 +204,9 @@ module Discourse
     plugins.find_all do |plugin|
       next if args[:official] == false && plugin.metadata.official?
       next if args[:unofficial] == false && !plugin.metadata.official?
+      next if args[:disabled] != true && !plugin.enabled?
 
-      plugin.enabled? && plugin.asset_exists?
+      plugin.asset_exists?
     end.map { |plugin| "plugins/#{plugin.asset_name}" }
   end
 
