@@ -22,11 +22,12 @@ module Jobs
       return unless Aws::SNS::MessageVerifier.new.authentic?(raw)
 
       message.dig("bounce", "bouncedRecipients").each do |r|
-        if email_log = EmailLog.find_by(message_id: message_id, to_address: r["emailAddress"])
+        
+        if email_log = EmailLog.order("created_at DESC").where(to_address: r["emailAddress"])[0]
           email_log.update_columns(bounced: true)
 
           if email_log.user&.email.present?
-            if r["status"]&.start_with?["4."] || bounce_type == "Transient"
+            if email_log.user.user_stat.bounce_score.to_s.start_with?("4.") || bounce_type == "Transient"
               Email::Receiver.update_bounce_score(email_log.user.email, SiteSetting.soft_bounce_score)
             else
               Email::Receiver.update_bounce_score(email_log.user.email, SiteSetting.hard_bounce_score)
