@@ -12,7 +12,12 @@ module HighlightJs
   end
 
   def self.bundle(langs)
-    result = File.read(HIGHLIGHTJS_DIR + "highlight.min.js")
+    begin
+      result = File.read(HIGHLIGHTJS_DIR + "highlight.min.js")
+    rescue Errno::ENOENT
+      return ""
+    end
+
     langs.each do |lang|
       begin
         result << "\n" << File.read(HIGHLIGHTJS_DIR + "languages/#{lang}.min.js")
