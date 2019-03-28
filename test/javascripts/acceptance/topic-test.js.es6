@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { IMAGE_VERSION as v } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 acceptance("Topic", {
   loggedIn: true,
@@ -20,6 +20,69 @@ acceptance("Topic", {
       return helper.response({});
     });
   }
+});
+
+QUnit.test("Reply as new topic", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click("button.share:eq(0)");
+  await click(".reply-as-new-topic a");
+
+  assert.ok(exists(".d-editor-input"), "the composer input is visible");
+
+  assert.equal(
+    find(".d-editor-input")
+      .val()
+      .trim(),
+    `Continuing the discussion from [Internationalization / localization](${
+      window.location.origin
+    }/t/internationalization-localization/280):`,
+    "it fills composer with the ring string"
+  );
+  assert.equal(
+    selectKit(".category-chooser")
+      .header()
+      .value(),
+    "2",
+    "it fills category selector with the right category"
+  );
+});
+
+QUnit.test("Reply as new message", async assert => {
+  await visit("/t/pm-for-testing/12");
+  await click("button.share:eq(0)");
+  await click(".reply-as-new-topic a");
+
+  assert.ok(exists(".d-editor-input"), "the composer input is visible");
+
+  assert.equal(
+    find(".d-editor-input")
+      .val()
+      .trim(),
+    `Continuing the discussion from [PM for testing](${
+      window.location.origin
+    }/t/pm-for-testing/12):`,
+    "it fills composer with the ring string"
+  );
+
+  const targets = find(".item span", ".composer-fields");
+
+  assert.equal(
+    $(targets[0]).text(),
+    "someguy",
+    "it fills up the composer with the right user to start the PM to"
+  );
+
+  assert.equal(
+    $(targets[1]).text(),
+    "test",
+    "it fills up the composer with the right user to start the PM to"
+  );
+
+  assert.equal(
+    $(targets[2]).text(),
+    "Group",
+    "it fills up the composer with the right group to start the PM to"
+  );
 });
 
 QUnit.test("Share Modal", async assert => {
@@ -118,6 +181,23 @@ QUnit.test("Updating the topic title with emojis", async assert => {
       .trim(),
     `emojis title <img src="/images/emoji/emoji_one/bike.png?v=${v}" title="bike" alt="bike" class="emoji"> <img src="/images/emoji/emoji_one/blonde_woman/6.png?v=${v}" title="blonde_woman:t6" alt="blonde_woman:t6" class="emoji">`,
     "it displays the new title with emojis"
+  );
+});
+
+QUnit.test("Updating the topic title with unicode emojis", async assert => {
+  await visit("/t/internationalization-localization/280");
+  await click("#topic-title .d-icon-pencil-alt");
+
+  await fillIn("#edit-title", "emojis title 👨‍🌾");
+
+  await click("#topic-title .submit-edit");
+
+  assert.equal(
+    find(".fancy-title")
+      .html()
+      .trim(),
+    `emojis title <img src="/images/emoji/emoji_one/man_farmer.png?v=${v}" title="man_farmer" alt="man_farmer" class="emoji">`,
+    "it displays the new title with escaped unicode emojis"
   );
 });
 

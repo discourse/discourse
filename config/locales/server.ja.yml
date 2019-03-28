@@ -167,6 +167,14 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
+    too_many_replies: |
+      ### このトピックへの返信数の制限に達しました
+
+      新しいユーザーは、同じトピックへの返信数が%{newuser_max_replies_per_topic}件に一時的に制限されています。
+
+      返信を追加する代わりに、次に手段を検討してください。
+      ・これまでの返信を編集する。
+      ・他のトピックを訪れる。
   activerecord:
     attributes:
       category:
@@ -586,7 +594,6 @@ ja:
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
-    default_locale: "この Discourse インスタンスのデフォルト言語"
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
@@ -642,7 +649,6 @@ ja:
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
     must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
-    allow_moderators_to_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
     top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例:  latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
@@ -707,8 +713,6 @@ ja:
     purge_deleted_uploads_grace_period_days: "削除されたアップロードファイルが完全削除されるまでの猶予期間 (単位：日)。"
     enable_s3_uploads: "Amazon S3にアップロードします。重要: 有効なS3 credentials(access key id & secret access key)が必要です"
     s3_upload_bucket: "ファイルをアップロードする Amazon S3のバケット名。　警告: 小文字である必要があり、ピリオドとアンダースコアを含むことはできません"
-    s3_access_key_id: "画像をアップロードするAmazonS3のaccess key id"
-    s3_secret_access_key: "画像をアップロードする Amazon S3 の secret access key"
     s3_cdn_url: "s3アセットに利用するCDNのURL(例: https://cdn.somewhere.com) 警告: 変更後は過去の投稿をrebakeする必要があります"
     avatar_sizes: "自動生成するアバターサイズのリスト"
     external_system_avatars_enabled: "外部のアバターシステムサービスを使用します。"
@@ -832,6 +836,7 @@ ja:
     emoji_set: "How would you like your emoji?"
     approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
     default_email_previous_replies: "デフォルトでメールの文章に以前の返信を含める"
+    tagging_enabled: "トピックでタグを有効にしますか？"
     tag_style: "カテゴリバッジのスタイル"
     errors:
       invalid_email: "不正なメールアドレスです"

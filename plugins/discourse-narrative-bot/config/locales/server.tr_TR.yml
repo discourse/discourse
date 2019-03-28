@@ -6,14 +6,23 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 tr_TR:
+  site_settings:
+    discourse_narrative_bot_enabled: 'Discourse Hikaye Botunu Etkinleştir (discobot)'
+    discourse_narrative_bot_ignored_usernames: "Discourse Hikaye Botunun kullandığı kullanıcı adları"
+    discourse_narrative_bot_disable_public_replies: "Discourse Hikaye Botu tarafından verilen cevapları devre dışı bırak"
   badges:
     certified:
       name: Sertifikalı
       description: "Yeni kullanıcı eğitimi tamamlandı"
+      long_description: |
+        Bu rozet, interaktif yeni kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Temel tartışma araçlarını öğrenmek için inisiyatif kullandınız ve şimdi sertifikalısınız!
     licensed:
       name: Lisanslı
       description: "Gelişmiş kullanıcı eğitimi tamamlandı"
+      long_description: |
+        Bu rozet, interaktif ileri kullanıcı eğitiminin başarılı tamamlanmasının ardından verilir. Gelişmiş tartışma araçlarına hakim oldunuz - ve şimdi tamamen lisanslısınız!
   discourse_narrative_bot:
+    bio: "Merhaba, ben gerçek bir insan değilim. Bu site hakkındaki şeyleri size öğretebilecek bir robotum. Benimle etkileşime geçmek için bana bir mesaj gönderin veya ** `@%{discobot_username}` ** şekliyle herhangi bir yerde beni etiketleyin."
     dice:
       trigger: "yuvarla"
     quote:

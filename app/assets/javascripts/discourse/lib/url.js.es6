@@ -22,7 +22,8 @@ const SERVER_SIDE_ONLY = [
   /^\/wizard/,
   /\.rss$/,
   /\.json$/,
-  /^\/admin\/upgrade$/
+  /^\/admin\/upgrade$/,
+  /^\/logs($|\/)/
 ];
 
 export function rewritePath(path) {
@@ -49,6 +50,10 @@ export function clearRewrites() {
 
 export function userPath(subPath) {
   return Discourse.getURL(subPath ? `/u/${subPath}` : "/u");
+}
+
+export function groupPath(subPath) {
+  return Discourse.getURL(subPath ? `/g/${subPath}` : "/g");
 }
 
 let _jumpScheduled = false;

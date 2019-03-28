@@ -47,5 +47,23 @@ describe SvgSpriteController do
       get "/svg-sprite/search/fa-not-a-valid-icon"
       expect(response.status).to eq(404)
     end
+
+    it "should find a custom icon in default theme" do
+      theme = Fabricate(:theme)
+      fname = "custom-theme-icon-sprite.svg"
+
+      upload = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+
+      theme.set_field(target: :common, name: SvgSprite.theme_sprite_variable_name, upload_id: upload.id, type: :theme_upload_var)
+      theme.save!
+
+      SiteSetting.default_theme_id = theme.id
+
+      user = sign_in(Fabricate(:user))
+
+      get "/svg-sprite/search/fa-my-custom-theme-icon"
+      expect(response.status).to eq(200)
+      expect(response.body).to include('my-custom-theme-icon')
+    end
   end
 end

@@ -40,6 +40,8 @@ class MetadataController < ApplicationController
       ],
       share_target: {
         action: "/new-topic",
+        method: "GET",
+        enctype: "application/x-www-form-urlencoded",
         params: {
           title: "title",
           text: "body"

@@ -5,7 +5,7 @@ import { bufferedRender } from "discourse-common/lib/buffered-render";
 
 export default Ember.Component.extend(
   bufferedRender({
-    rerenderTriggers: ["site.isReadOnly"],
+    rerenderTriggers: ["site.isReadOnly", "siteSettings.disable_emails"],
 
     buildBuffer(buffer) {
       let notices = [];
@@ -25,8 +25,7 @@ export default Ember.Component.extend(
 
       if (
         this.siteSettings.disable_emails === "yes" ||
-        (this.siteSettings.disable_emails === "non-staff" &&
-          !(this.currentUser && this.currentUser.get("staff")))
+        this.siteSettings.disable_emails === "non-staff"
       ) {
         notices.push([I18n.t("emails_are_disabled"), "alert-emails-disabled"]);
       }

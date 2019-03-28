@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
+  has_many :group_requests, dependent: :destroy
   has_many :secure_categories, through: :groups, source: :categories
 
   has_many :user_uploads, dependent: :destroy
@@ -69,6 +70,11 @@ class User < ActiveRecord::Base
   has_many :oauth2_user_infos, dependent: :destroy
   has_one :instagram_user_info, dependent: :destroy
   has_many :user_second_factors, dependent: :destroy
+
+  has_many :totps, -> {
+    where(method: UserSecondFactor.methods[:totp], enabled: true)
+  }, class_name: "UserSecondFactor"
+
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -738,8 +744,21 @@ class User < ActiveRecord::Base
 
   def self.letter_avatar_color(username)
     username ||= ""
-    color = LetterAvatar::COLORS[Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length]
-    color.map { |c| c.to_s(16).rjust(2, '0') }.join
+    if SiteSetting.restrict_letter_avatar_colors.present?
+      hex_length = 6
+      colors = SiteSetting.restrict_letter_avatar_colors
+      length = colors.count("|") + 1
+      num = color_index(username, length)
+      index = (num * hex_length) + num
+      colors[index, hex_length]
+    else
+      color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
+      color.map { |c| c.to_s(16).rjust(2, '0') }.join
+    end
+  end
+
+  def self.color_index(username, length)
+    Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
   end
 
   def avatar_template

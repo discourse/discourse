@@ -5,7 +5,7 @@ module CategoryGuardian
   def can_create_category?(parent = nil)
     is_admin? ||
     (
-      SiteSetting.allow_moderators_to_create_categories &&
+      SiteSetting.moderators_create_categories &&
       is_moderator?
     )
   end
@@ -14,7 +14,7 @@ module CategoryGuardian
   def can_edit_category?(category)
     is_admin? ||
     (
-      SiteSetting.allow_moderators_to_create_categories &&
+      SiteSetting.moderators_create_categories &&
       is_moderator? &&
       can_see_category?(category)
     )

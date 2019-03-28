@@ -216,8 +216,6 @@ es:
     every_hour: "cada hora"
     daily: "cada día"
     weekly: "cada semana"
-    every_two_weeks: "cada dos semanas"
-    every_three_days: "cada tres días"
     max_of_count: "máximo de {{count}}"
     alternation: "o"
     character_count:
@@ -574,8 +572,6 @@ es:
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
-      ignore: "Ignorar"
-      unignore: "Dejar de ignorar"
       activity_stream: "Actividad"
       preferences: "Preferencias"
       profile_hidden: "Este perfil público del usuario ha sido ocultado."
@@ -658,7 +654,7 @@ es:
       muted_users: "Silenciados"
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
       ignored_users: "Ignorado"
-      ignored_users_instructions: "Lista de todos los usuarios que ignoras."
+      ignored_users_instructions: "Omitir todas las publicaciones y mensajes de estos usuarios."
       muted_topics_link: "Mostrar temas silenciados"
       watched_topics_link: "Mostrar temas vigilados"
       tracked_topics_link: "Mostrar temas vigilados"
@@ -729,13 +725,14 @@ es:
         label: "Código"
         rate_limit: "Por favor, espera antes de volver a intentar otro código de autenticación."
         enable_description: |
-          Escanea este código QR en una app soportada (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> e introduce su código de autenticación.
+          Escanea este código QR en una aplicación que lo soporte (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) e introduce el código de verificación.
         disable_description: "Por favor ingrese el código de autenticación desde su aplicación"
         show_key_description: "Ingrese Manualmente"
         extended_description: |
           La verificación en dos pasos añade una capa extra de seguridad requiriendo un token por única vez además de tu contraseña. Los códigos (token) se generan en dispositivos <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>
         oauth_enabled_warning: "Por favor ten en cuenta que los accesos a través de redes sociales serán inhabilitados si habilitas el factor de autenticación en dos pasos de tu cuenta."
         use: "<a href>Usar Authenticator app</a>"
+        enforced_notice: "Tu cuenta está obligada a activar la verificación de dos pasos antes de acceder a este sitio."
       change_about:
         title: "Cambiar 'Acerca de mí'"
         error: "Hubo un error al cambiar este valor."
@@ -773,7 +770,7 @@ es:
         primary: "Correo electrónico principal"
         secondary: "Correos electrónicos secundarios"
         no_secondary: "Sin correos electrónicos secundarios"
-        instructions: "nunca se mostrará al público"
+        instructions: "Nunca se muestra al público."
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
@@ -856,14 +853,15 @@ es:
         every_30_minutes: "cada 30 minutos"
         every_hour: "cada hora"
         daily: "diariamente"
-        every_three_days: "cada tres días"
         weekly: "semanalmente"
-        every_two_weeks: "cada dos semanas"
+      email_level:
+        title: "Enviarme un email cuando alguien me cite, responda, mencione mi @nombre de usuario o me invite a un tema."
+        always: "siempre"
+        only_when_away: "cuando no esté en la página"
+        never: "nunca"
+      email_messages_level: "Enviarme un email cuando alguien me mande un mensaje"
       include_tl0_in_digests: "Incluir contenido de nuevos usuarios en los emails de resumen"
       email_in_reply_to: "Incluir un extracto del post al que se responde en los emails"
-      email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
-      email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
-      email_always: "Quiero recibir notificaciones por email incluso cuando esté de forma activa por el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
       new_topic_duration:
@@ -1229,13 +1227,15 @@ es:
         other: "Seleccionar al menos {{count}} items."
     emoji_picker:
       filter_placeholder: Buscar emoji
-      people: Personas
-      nature: Naturaleza
-      food: Comida
-      activity: Actividad
-      travel: Viajes
+      smileys_&_emotion: Caras y emocione
+      people_&_body: Personas y cuerpo
+      animals_&_nature: Animales y naturalez
+      food_&_drink: Comida y bebida
+      travel_&_places: Viajes y lugares
+      activities: Actividades
       objects: Objetos
-      celebration: Celebraciones
+      symbols: Símbolos
+      flags: Banderas
       custom: Emojis personalizados
       recent: Recientemente usados
       default_tone: Sin tono de piel
@@ -1957,8 +1957,8 @@ es:
         one: "ver 1 post oculto"
         other: "ver {{count}} posts ocultos"
       notice:
-        first: "Esta es la primera vez que  {{user}} ha publicado — ¡vamos a darle la bienvenida a nuestra comunidad!"
-        return: "Hace mucho que no vemos a {{user}} — su último post fue hace {{time}}."
+        first: "Esta es la primera vez que {{user}} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
+        return: "Hacía tiempo que no veíamos a {{user}} — su última publicación fue {{time}}. "
       unread: "Post sin leer"
       has_replies:
         one: "{{count}} Respuesta"
@@ -1977,7 +1977,7 @@ es:
         create: "Lo sentimos, hubo un error al crear tu post. Por favor, inténtalo de nuevo."
         edit: "Lo sentimos, hubo un error al editar tu post. Por favor, inténtalo de nuevo."
         upload: "Lo sentimos, hubo un error al subir el archivo. Por favor, inténtalo de nuevo."
-        file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Quizá podrías subir el archivo a un servicio de almacenamiento en la nube y compartir aquí el enlace?"
+        file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Por qué no lo subes a un servicio de almacenamiento en línea y compartes el enlace?"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
         too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir {{max}} archivos a la vez."
         upload_not_authorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: {{authorized_extensions}})."
@@ -2239,6 +2239,11 @@ es:
         muted:
           title: "Silenciar"
           description: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
+      search_priority:
+        label: "Prioridad de búsqueda"
+        options:
+          normal: "Normal"
+          ignore: "Ignorar"
       sort_options:
         default: "por defecto"
         likes: "Me gusta"
@@ -2694,6 +2699,7 @@ es:
         moderation_tab: "Moderación"
         security_tab: "Seguridad"
         reports_tab: "Informes"
+        report_filter_any: "cualquiera"
         disabled: Desactivado
         timeout_error: "Lo sentimos, la solicitud está durando demasiado, por favor selecciona un periodo más corto"
         exception_error: "Lo siento, ha ocurrido un error al ejecutar la consulta"
@@ -2948,6 +2954,7 @@ es:
           inactive: "Inactivo"
           failed: "Fallado"
           successful: "Exitoso"
+          disabled: "Desactivado"
         events:
           none: "No hay eventos relacionados."
           redeliver: "Reenviar"
@@ -3428,6 +3435,10 @@ es:
             entity_export: "entidad exportadora"
             change_name: "cambiar nombre"
             topic_timestamps_changed: "cambiada la fecha del tema"
+            approve_user: "usuario aprovado"
+            web_hook_create: "crear webhook"
+            web_hook_update: "actualizar webhook"
+            web_hook_destroy: "destruir webhook"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -3511,6 +3522,7 @@ es:
         id_not_found: "Lo sentimos, esa id de usuario no existe en nuestro sistema."
         active: "Activado"
         show_emails: "Mostrar emails"
+        hide_emails: "Ocultar emails"
         nav:
           new: "Nuevo"
           active: "Activo"
@@ -3763,6 +3775,7 @@ es:
         go_back: "Volver a la búsqueda"
         recommended: "Recomendamos personalizar los siguientes textos para que se ajusten a tus necesidades:"
         show_overriden: "Sólo mostrar textos editados"
+        more_than_50_results: "Hay más de 50 resultados. Por favor, usa términos más específicos."
       settings:
         show_overriden: "Solo mostrar anulados"
         reset: "restablecer"
@@ -3935,6 +3948,16 @@ es:
           label: "Nuevo:"
           add: "Añadir"
           filter: "Buscar (URL o URL externa)"
+      reseed:
+        action:
+          label: "Reemplazar texto..."
+          title: "Reemplazar texto de las categorías y temas con traducciones"
+        modal:
+          title: "Reemplazar texto"
+          subtitle: "Reemplazar el texto de las categorías generadas por el sistema con las últimas traducciones"
+          categories: "Categoría"
+          topics: "Temas"
+          replace: "Reemplazar"
   wizard_js:
     wizard:
       done: "Hecho"

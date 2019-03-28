@@ -54,9 +54,7 @@ module Jobs
       )
 
       if message
-        Email::Sender.new(message, type, user).send(
-          is_critical: self.class == Jobs::CriticalUserEmail
-        )
+        Email::Sender.new(message, type, user).send
 
         if (b = user.user_stat.bounce_score) > SiteSetting.bounce_score_erode_on_send
           # erode bounce score each time we send an email
@@ -99,10 +97,15 @@ module Jobs
         return skip_message(SkippedEmailLog.reason_types[:user_email_user_suspended_not_pm])
       end
 
-      return if user.staged && type.to_s == "digest"
+      if type.to_s == "digest"
+        return if user.staged
+        return if user.last_emailed_at &&
+          user.last_emailed_at >
+            (user.user_option&.digest_after_minutes || SiteSetting.default_email_digest_frequency.to_i).minutes.ago
+      end
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
-      seen_recently = false if user.user_option.email_always || user.staged
+      seen_recently = false if always_email_regular?(user, type) || always_email_private_message?(user, type) || user.staged
 
       email_args = {}
 
@@ -133,7 +136,7 @@ module Jobs
           return [nil, nil]
         end
 
-        unless user.user_option.email_always?
+        unless always_email_regular?(user, type) || always_email_private_message?(user, type)
           if (notification && notification.read?) || (post && post.seen?(user))
             return skip_message(SkippedEmailLog.reason_types[:user_email_notification_already_read])
           end
@@ -217,7 +220,7 @@ module Jobs
           return SkippedEmailLog.reason_types[:user_email_user_suspended]
         end
 
-        already_read = !user.user_option.email_always? && PostTiming.exists?(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id)
+        already_read = user.user_option.email_level != UserOption.email_level_types[:always] && PostTiming.exists?(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id)
         if already_read
           return SkippedEmailLog.reason_types[:user_email_already_read]
         end
@@ -236,6 +239,13 @@ module Jobs
       )
     end
 
+    def always_email_private_message?(user, type)
+      type == :user_private_message && user.user_option.email_messages_level == UserOption.email_level_types[:always]
+    end
+
+    def always_email_regular?(user, type)
+      type != :user_private_message && user.user_option.email_level == UserOption.email_level_types[:always]
+    end
   end
 
 end

@@ -18,7 +18,8 @@ class CategorySerializer < BasicCategorySerializer
              :custom_fields,
              :allowed_tags,
              :allowed_tag_groups,
-             :topic_featured_link_allowed
+             :topic_featured_link_allowed,
+             :search_priority
 
   def group_permissions
     @group_permissions ||= begin
@@ -96,5 +97,13 @@ class CategorySerializer < BasicCategorySerializer
 
   def allowed_tag_groups
     object.tag_groups.pluck(:name)
+  end
+
+  def custom_fields
+    object.custom_fields
+  end
+
+  def include_custom_fields?
+    true
   end
 end

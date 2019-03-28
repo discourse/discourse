@@ -50,7 +50,9 @@ class UserSerializer < BasicUserSerializer
              :can_edit_name,
              :stats,
              :ignored,
+             :muted,
              :can_ignore_user,
+             :can_mute_user,
              :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
@@ -281,8 +283,16 @@ class UserSerializer < BasicUserSerializer
     IgnoredUser.where(user_id: scope.user&.id, ignored_user_id: object.id).exists?
   end
 
+  def muted
+    MutedUser.where(user_id: scope.user&.id, muted_user_id: object.id).exists?
+  end
+
+  def can_mute_user
+    scope.can_mute_user?(object.id)
+  end
+
   def can_ignore_user
-    SiteSetting.ignore_user_enabled
+    scope.can_ignore_user?(object.id)
   end
 
   # Needed because 'send_private_message_to_user' will always return false

@@ -50,9 +50,10 @@ describe SearchIndexer do
         <a class="lightbox" href="#{Discourse.base_url_no_prefix}/uploads/episodeinteractive/original/3X/1/6/16790095df3baf318fb2eb1d7e5d7860dc45d48b.jpg" data-download-href="#{Discourse.base_url_no_prefix}/uploads/episodeinteractive/16790095df3baf318fb2eb1d7e5d7860dc45d48b" title="Untitled design (21).jpg" rel="nofollow noopener">
           <img src="#{Discourse.base_url_no_prefix}/uploads/episodeinteractive/optimized/3X/1/6/16790095df3baf318fb2eb1d7e5d7860dc45d48b_1_563x500.jpg" alt="Untitled%20design%20(21)" width="563" height="500">
           <div class="meta">
+            <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg>
             <span class="filename">Untitled design (21).jpg</span>
             <span class="informations">1280x1136 472 KB</span>
-            <span class="expand"></span>
+            <svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
           </div>
         </a>
       </div>
@@ -80,5 +81,27 @@ describe SearchIndexer do
 
     raw_data = PostSearchData.where(post_id: post_id).pluck(:raw_data)[0]
     expect(raw_data).to eq("tester")
+  end
+
+  describe '.index' do
+    let(:post) { Fabricate(:post) }
+
+    before do
+      SearchIndexer.enable
+    end
+
+    after do
+      SearchIndexer.disable
+    end
+
+    it 'should index posts correctly' do
+      expect { post }.to change { PostSearchData.count }.by(1)
+
+      expect { post.update!(raw: "this is new content") }
+        .to change { post.reload.post_search_data.raw_data }
+
+      expect { post.update!(topic_id: Fabricate(:topic).id) }
+        .to change { post.reload.post_search_data.raw_data }
+    end
   end
 end

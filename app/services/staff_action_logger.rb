@@ -583,6 +583,30 @@ class StaffActionLogger
     ))
   end
 
+  def log_web_hook(web_hook, action, opts = {})
+    details = [
+      "webhook_id: #{web_hook.id}",
+      "payload_url: #{web_hook.payload_url}"
+    ]
+
+    if changes = opts[:changes]
+      changes.reject! { |k, v| k == "updated_at" }
+      old_values = []
+      new_values = []
+      changes.each do |k, v|
+        old_values << "#{k}: #{v[0]}"
+        new_values << "#{k}: #{v[1]}"
+      end
+    end
+
+    UserHistory.create!(params(opts).merge(
+      action: action,
+      context: details.join(", "),
+      previous_value: old_values&.join(", "),
+      new_value: new_values&.join(", ")
+    ))
+  end
+
   private
 
   def params(opts = nil)

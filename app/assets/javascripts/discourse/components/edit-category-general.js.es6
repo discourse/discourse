@@ -1,4 +1,3 @@
-import DiscourseURL from "discourse/lib/url";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
@@ -94,7 +93,7 @@ export default buildCategoryPanel("general", {
 
   actions: {
     showCategoryTopic() {
-      DiscourseURL.routeTo(this.get("category.topic_url"));
+      window.open(this.get("category.topic_url"), "_blank").focus();
       return false;
     }
   }

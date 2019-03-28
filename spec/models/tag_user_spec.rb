@@ -75,7 +75,7 @@ describe TagUser do
 
     context "with some tag notification settings" do
       before do
-        run_jobs_synchronously!
+        Jobs.run_immediately!
       end
 
       let :watched_post do

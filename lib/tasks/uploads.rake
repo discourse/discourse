@@ -218,7 +218,7 @@ def migrate_to_s3
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
 
-  if Upload.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
+  if Upload.by_users.where("url NOT LIKE '//%' AND url NOT LIKE '/uploads/#{db}/original/_X/%'").exists?
     puts <<~TEXT
       Some uploads were not migrated to the new scheme. Please run these commands in the rails console
 
@@ -357,6 +357,42 @@ def migrate_to_s3
       DbHelper.remap(from, to, anchor_left: true)
     end
 
+    [
+      [
+        "src=\"/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
+        "src=\"#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+      ],
+      [
+        "src='/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)",
+        "src='#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1"
+      ],
+      [
+        "\\[img\\]/uploads/#{db}/original/(\\dX/(?:[a-f0-9]/)*[a-f0-9]{40}[a-z0-9\\.]*)\\[/img\\]",
+        "[img]#{SiteSetting.Upload.s3_base_url}/#{prefix}\\1[/img]"
+      ]
+    ].each do |from_url, to_url|
+
+      if dry_run
+        puts "REPLACING '#{from_url}' WITH '#{to_url}'"
+      else
+        DbHelper.regexp_replace(from_url, to_url)
+      end
+    end
+
+    unless dry_run
+      # Legacy inline image format
+      Post.where("raw LIKE '%![](/uploads/default/original/%)%'").each do |post|
+        regexp = /!\[\](\/uploads\/#{db}\/original\/(\dX\/(?:[a-f0-9]\/)*[a-f0-9]{40}[a-z0-9\.]*))/
+
+        post.raw.scan(regexp).each do |upload_url, _|
+          upload = Upload.get_from_url(upload_url)
+          post.raw = post.raw.gsub("![](#{upload_url})", "![](#{upload.short_url})")
+        end
+
+        post.save!(validate: false)
+      end
+    end
+
     if Discourse.asset_host.present?
       # Uploads that were on local CDN will now be on S3 CDN
       from = "#{Discourse.asset_host}/uploads/#{db}/original/"
@@ -377,6 +413,19 @@ def migrate_to_s3
       puts "REMAPPING '#{from}' TO '#{to}'"
     else
       DbHelper.remap(from, to)
+    end
+
+    unless dry_run
+      puts "Removing old optimized images..."
+
+      OptimizedImage
+        .joins("LEFT JOIN uploads u ON optimized_images.upload_id = u.id")
+        .where("u.id IS NOT NULL AND u.url LIKE '//%' AND optimized_images.url NOT LIKE '//%'")
+        .destroy_all
+
+      puts "Rebaking posts with lightboxes..."
+
+      Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each(&:rebake!)
     end
   end
 

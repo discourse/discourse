@@ -9,6 +9,7 @@ describe Guardian do
   let(:user) { Fabricate(:user) }
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
+  let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
   let(:trust_level_4)  { build(:user, trust_level: 4) }
@@ -2637,6 +2638,119 @@ describe Guardian do
       expect(user_guardian.can_export_entity?('staff_action')).to be_falsey
       expect(moderator_guardian.can_export_entity?('staff_action')).to be_truthy
       expect(admin_guardian.can_export_entity?('staff_action')).to be_truthy
+    end
+  end
+
+  describe '#can_ignore_user?' do
+    before do
+      SiteSetting.ignore_user_enabled = true
+    end
+
+    let(:guardian) { Guardian.new(trust_level_2) }
+
+    context "when ignored user is the same as guardian user" do
+      it 'does not allow ignoring user' do
+        expect(guardian.can_ignore_user?(trust_level_2.id)).to eq(false)
+      end
+    end
+
+    context "when ignored user is a staff user" do
+      let!(:admin) { Fabricate(:user, admin: true) }
+
+      it 'does not allow ignoring user' do
+        expect(guardian.can_ignore_user?(admin.id)).to eq(false)
+      end
+    end
+
+    context "when ignored user is a normal user" do
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when ignorer's trust level is below tl2" do
+      let(:guardian) { Guardian.new(trust_level_1) }
+      let!(:another_user) { Fabricate(:user) }
+      let!(:trust_level_1) { build(:user, trust_level: 1) }
+
+      it 'does not allow ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(false)
+      end
+    end
+
+    context "when ignorer is staff" do
+      let(:guardian) { Guardian.new(admin) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when ignorer's trust level is tl2" do
+      let(:guardian) { Guardian.new(trust_level_2) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows ignoring user' do
+        expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
+  end
+
+  describe '#can_mute_user?' do
+
+    let(:guardian) { Guardian.new(trust_level_1) }
+
+    context "when muted user is the same as guardian user" do
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(trust_level_1.id)).to eq(false)
+      end
+    end
+
+    context "when muted user is a staff user" do
+      let!(:admin) { Fabricate(:user, admin: true) }
+
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(admin.id)).to eq(false)
+      end
+    end
+
+    context "when muted user is a normal user" do
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when muter's trust level is below tl1" do
+      let(:guardian) { Guardian.new(trust_level_0) }
+      let!(:another_user) { Fabricate(:user) }
+      let!(:trust_level_0) { build(:user, trust_level: 0) }
+
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(false)
+      end
+    end
+
+    context "when muter is staff" do
+      let(:guardian) { Guardian.new(admin) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when muters's trust level is tl1" do
+      let(:guardian) { Guardian.new(trust_level_1) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
     end
   end
 

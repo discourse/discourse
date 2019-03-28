@@ -264,14 +264,13 @@ const User = RestModel.extend({
     );
 
     let userOptionFields = [
-      "email_always",
       "mailing_list_mode",
       "mailing_list_mode_frequency",
       "external_links_in_new_tab",
       "email_digests",
-      "email_direct",
       "email_in_reply_to",
-      "email_private_messages",
+      "email_messages_level",
+      "email_level",
       "email_previous_replies",
       "dynamic_favicon",
       "enable_quoting",
@@ -616,17 +615,10 @@ const User = RestModel.extend({
     }
   },
 
-  ignore() {
-    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
+  updateNotificationLevel(level) {
+    return ajax(`${userPath(this.get("username"))}/notification_level.json`, {
       type: "PUT",
-      data: { ignored_user_id: this.get("id") }
-    });
-  },
-
-  unignore() {
-    return ajax(`${userPath(this.get("username"))}/ignore.json`, {
-      type: "DELETE",
-      data: { ignored_user_id: this.get("id") }
+      data: { notification_level: level }
     });
   },
 
@@ -747,6 +739,15 @@ const User = RestModel.extend({
     } else {
       $.removeCookie("text_size", { path: "/", expires: 1 });
     }
+  },
+
+  @computed("second_factor_enabled", "staff")
+  enforcedSecondFactor(secondFactorEnabled, staff) {
+    const enforce = Discourse.SiteSettings.enforce_second_factor;
+    return (
+      !secondFactorEnabled &&
+      (enforce === "all" || (enforce === "staff" && staff))
+    );
   }
 });
 

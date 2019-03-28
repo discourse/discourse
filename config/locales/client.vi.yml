@@ -176,8 +176,6 @@ vi:
     every_hour: "mỗi giờ"
     daily: "hàng ngày"
     weekly: "hàng tuần"
-    every_two_weeks: "mỗi hai tuần"
-    every_three_days: "mỗi ba ngày"
     max_of_count: "tối đa trong {{count}}"
     alternation: "hoặc"
     character_count:
@@ -566,7 +564,6 @@ vi:
         instructions: "Hình nền sẽ ở giữa và có chiều rộng mặc định là 590px."
       email:
         title: "Email"
-        instructions: "không bao giờ hiển thị công khai"
         ok: "Chúng tôi sẽ gửi thư điện tử xác nhận đến cho bạn"
         invalid: "Vùi lòng nhập một thư điện tử hợp lệ"
         authenticated: "Thư điện tử của bạn đã được xác nhận bởi {{provider}}"
@@ -620,14 +617,9 @@ vi:
         every_30_minutes: "mỗi 30 phút"
         every_hour: "hàng giờ"
         daily: "hàng ngày"
-        every_three_days: "ba ngày một"
         weekly: "hàng tuần"
-        every_two_weeks: "hai tuần một"
       include_tl0_in_digests: "Bao gồm nội dung của những thành viên mới trong email tóm tắt."
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
-      email_direct: "Gửi cho tôi một email khi có người trích dẫn, trả lời cho bài viết của tôi, đề cập đến @username của tôi, hoặc mời tôi đến một chủ đề"
-      email_private_messages: "Gửi cho tôi email khi có ai đó nhắn tin cho tôi"
-      email_always: "Gửi email thông báo cho tôi mỗi khi tôi kích hoạt trên website này"
       other_settings: "Khác"
       categories_settings: "Chuyên mục"
       new_topic_duration:
@@ -899,9 +891,6 @@ vi:
       ctrl: "Ctrl"
       alt: "Alt"
     emoji_picker:
-      people: Mọi ng
-      food: "Thức "
-      activity: "Hoạt "
       objects: Vật th
     composer:
       emoji: "Emoji :)"

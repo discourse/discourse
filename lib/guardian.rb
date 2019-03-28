@@ -390,6 +390,26 @@ class Guardian
     UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
+  def can_mute_user?(user_id)
+    can_mute_users? &&
+      @user.id != user_id &&
+      User.where(id: user_id, admin: false, moderator: false).exists?
+  end
+
+  def can_mute_users?
+    return false if anonymous?
+    @user.staff? || @user.trust_level >= TrustLevel.levels[:basic]
+  end
+
+  def can_ignore_user?(user_id)
+    can_ignore_users? && @user.id != user_id && User.where(id: user_id, admin: false, moderator: false).exists?
+  end
+
+  def can_ignore_users?
+    return false if anonymous?
+    SiteSetting.ignore_user_enabled? && (@user.staff? || @user.trust_level >= TrustLevel.levels[:member])
+  end
+
   def allow_themes?(theme_ids, include_preview: false)
     return true if theme_ids.blank?
 

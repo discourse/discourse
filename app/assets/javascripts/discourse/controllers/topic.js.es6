@@ -1226,7 +1226,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
           case "created": {
             postStream.triggerNewPostInStream(data.id).then(() => refresh());
             if (this.get("currentUser.id") !== data.user_id) {
-              Discourse.notifyBackgroundCountIncrement();
+              Discourse.incrementBackgroundContextCount();
             }
             break;
           }

@@ -39,6 +39,11 @@ export default Ember.Controller.extend({
     return findAll().length > 0;
   },
 
+  @computed("currentUser")
+  showEnforcedNotice(user) {
+    return user && user.get("enforcedSecondFactor");
+  },
+
   toggleSecondFactor(enable) {
     if (!this.get("secondFactorToken")) return;
     this.set("loading", true);

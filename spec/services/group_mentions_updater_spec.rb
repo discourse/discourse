@@ -4,7 +4,7 @@ RSpec.describe GroupMentionsUpdater do
   let(:post) { Fabricate(:post) }
 
   before do
-    run_jobs_synchronously!
+    Jobs.run_immediately!
   end
 
   describe '.update' do

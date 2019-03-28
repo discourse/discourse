@@ -9,6 +9,7 @@ class ThemeField < ActiveRecord::Base
 
   after_commit do |field|
     SvgSprite.expire_cache if field.target_id == Theme.targets[:settings]
+    SvgSprite.expire_cache if field.name == SvgSprite.theme_sprite_variable_name
   end
 
   scope :find_by_theme_ids, ->(theme_ids) {

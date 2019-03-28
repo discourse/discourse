@@ -17,6 +17,7 @@ es:
         modal_title: Insertar fecha
         modal_subtitle: "Convertiremos automáticamente la fecha y la hora en la zona horaria local del lector."
         form:
+          to: "a"
           insert: Insertar
           advanced_mode: Modo Avanzado
           simple_mode: Modo simple

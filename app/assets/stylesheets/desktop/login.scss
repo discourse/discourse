@@ -5,21 +5,39 @@
 .create-account {
   #login-buttons:not(.hidden) {
     display: flex;
+    flex: 0;
     flex-direction: column;
-    flex-basis: 40%;
-    align-items: center;
-    min-height: 175px;
-    border-left: 1px solid $primary-low;
-    padding: 0 15px;
+    align-items: stretch;
+    min-height: 75px;
+    padding: s(0 6);
     order: 2;
 
     button {
+      display: flex;
+      text-align: left;
       margin: 0.35em;
-      width: 160px;
+      white-space: nowrap;
       &:lang(zh_CN) {
         min-width: 200px;
       }
+      &:first-of-type:last-of-type {
+        &.oauth2_basic {
+          // Handles a strange fringe case where OAuth2 and account approval are enabled
+          margin-left: auto;
+          margin-right: auto;
+          justify-content: center;
+        }
+      }
     }
+  }
+
+  form {
+    min-width: 300px;
+  }
+
+  #modal-alert {
+    max-width: 500px;
+    padding: s(2 4);
   }
 
   .login-modal {
@@ -39,12 +57,19 @@
     #login-buttons:not(.hidden) {
       justify-content: flex-start;
       padding-top: 2.7em;
+      + .login-form {
+        border-right: 1px solid $primary-low; // Only show border when login-form is present
+      }
     }
   }
 
   #login-form {
+    box-sizing: border-box;
     flex: 1 0 auto;
-    padding: 0 15px;
+    padding: s(0 6);
+    + #login-buttons {
+      border-left: 1px solid $primary-low; // Only show border when login-form is present
+    }
   }
 
   tr:not(.instructions) {
@@ -110,7 +135,6 @@
   .login-form {
     position: relative;
     display: flex;
-    flex: 1 1 50%;
     overflow: hidden;
 
     &:after,
@@ -140,7 +164,7 @@
     }
     form {
       box-sizing: border-box;
-      padding: 15px;
+      padding: s(4 6);
       margin-bottom: 5px;
       max-height: 475px;
       @media screen and (max-height: 768px) {

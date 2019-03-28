@@ -83,7 +83,7 @@ QUnit.test("update some fields", async assert => {
   await savePreferences();
 
   click(".preferences-nav .nav-categories a");
-  fillIn(".category-controls .category-selector", "faq");
+  fillIn(".tracking-controls .category-selector", "faq");
   await savePreferences();
 
   assert.ok(

@@ -10,14 +10,14 @@ export default Discourse.Route.extend({
     const routeName = "adminUsersList.show";
 
     if (transition.targetName === routeName) {
-      const params = transition.params[routeName];
+      const params = transition.routeInfos.find(a => a.name === routeName)
+        .params;
       const controller = this.controllerFor(routeName);
       if (controller) {
         controller.setProperties({
-          order: transition.queryParams.order,
-          ascending: transition.queryParams.ascending,
+          order: transition.to.queryParams.order,
+          ascending: transition.to.queryParams.ascending,
           query: params.filter,
-          showEmails: false,
           refreshing: false
         });
 

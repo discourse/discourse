@@ -25,7 +25,7 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
   end
 
   def include_error_description?
-    @error_string[EMAIL_RECEIVER_ERROR_PREFIX]
+    @error_string && @error_string[EMAIL_RECEIVER_ERROR_PREFIX]
   end
 
   def headers

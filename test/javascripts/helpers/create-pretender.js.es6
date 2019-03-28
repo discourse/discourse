@@ -448,14 +448,43 @@ export default function() {
       overridden: true
     };
 
-    this.get("/admin/users/list/active.json", () => {
-      return response(200, [
+    this.get("/admin/users/list/active.json", request => {
+      let store = [
         {
           id: 1,
           username: "eviltrout",
           email: "<small>eviltrout@example.com</small>"
+        },
+        {
+          id: 3,
+          username: "discobot",
+          email: "<small>discobot_email</small>"
         }
-      ]);
+      ];
+
+      const showEmails = request.queryParams.show_emails;
+
+      if (showEmails === "false") {
+        store = store.map(item => {
+          delete item.email;
+          return item;
+        });
+      }
+
+      const ascending = request.queryParams.ascending;
+      const order = request.queryParams.order;
+
+      if (order) {
+        store = store.sort(function(a, b) {
+          return a[order] - b[order];
+        });
+      }
+
+      if (ascending) {
+        store = store.reverse();
+      }
+
+      return response(200, store);
     });
 
     this.get("/admin/users/list/suspect.json", () => {
@@ -496,6 +525,14 @@ export default function() {
       return response(200, {
         id: 1234,
         username: "regular"
+      });
+    });
+
+    this.get("/admin/users/1.json", () => {
+      return response(200, {
+        id: 1,
+        username: "eviltrout",
+        admin: true
       });
     });
 

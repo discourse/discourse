@@ -176,6 +176,11 @@ RSpec.configure do |config|
       $test_cleanup_callbacks.reverse_each(&:call)
       $test_cleanup_callbacks = nil
     end
+
+    # Running jobs are expensive and most of our tests are not concern with
+    # code that runs inside jobs. run_later! means they are put on the redis
+    # queue and never processed.
+    Jobs.run_later!
   end
 
   config.before(:each, type: :multisite) do
@@ -273,8 +278,17 @@ def set_cdn_url(cdn_url)
 end
 
 def freeze_time(now = Time.now)
-  datetime = DateTime.parse(now.to_s)
-  time = Time.parse(now.to_s)
+  time = now
+  datetime = now
+
+  if Time === now
+    datetime = now.to_datetime
+  elsif DateTime === now
+    time = now.to_time
+  else
+    datetime = DateTime.parse(now.to_s)
+    time = Time.parse(now.to_s)
+  end
 
   if block_given?
     raise "nested freeze time not supported" if TrackTimeStub.stubbed

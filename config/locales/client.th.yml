@@ -170,8 +170,6 @@ th:
     every_hour: "ทุกชั่วโมง"
     daily: "ทุกวัน"
     weekly: "รายสัปดาห์"
-    every_two_weeks: "ทุกสองอาทิตย์"
-    every_three_days: "ทุกสามวัน"
     max_of_count: "สูงสุดของ  {{count}}"
     alternation: "หรือ"
     character_count:
@@ -483,7 +481,7 @@ th:
         failed_to_move: "เกิดความผิดพลาดในการย้ายหัวข้อที่เลือก (อาจเกิดจาดเครือข่ายของคุณล่ม)"
         select_all: "เลือกทั้งหมด"
       preferences_nav:
-        profile: "ข้อมูลผู้ใช้<br><div><br data-mce-bogus=\"1\"></div>"
+        profile: "ข้อมูลผู้ใช้"
         emails: "อีเมล"
         tags: "ป้าย"
       change_password:
@@ -576,14 +574,9 @@ th:
         every_30_minutes: "ทุก 30 นาที"
         every_hour: "ทุกชั่วโมง"
         daily: "ทุกวัน"
-        every_three_days: "ทุกๆสามวัน"
         weekly: "ทุกสัปดาห์"
-        every_two_weeks: "ทุกๆสองอาทิตย์"
       include_tl0_in_digests: "รวมถึงเนื้อหาจากผู้ใช้ใหม่ในอีเมลสรุป"
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
-      email_direct: "ส่งอีเมลเมื่อมี การอ้างอิงถึง ตอบโพสท์ พูดถึง @username หรือ ถูกเชิญเข้าไปในกระทู้"
-      email_private_messages: "ส่งอีเมลหาฉันเมื่อใครก็ตามส่งข้อความส่วนตัวมาหา"
-      email_always: "ส่งอีเมลเตือนแม้ว่าจะกำลังใช้งานอยู่"
       other_settings: "อื่นๆ"
       categories_settings: "หมวดหมู่"
       new_topic_duration:

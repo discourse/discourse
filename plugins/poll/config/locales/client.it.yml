@@ -17,6 +17,11 @@ it:
       average_rating: "Voto medio: <strong>%{average}</strong>."
       public:
         title: "I voti sono <strong>pubblici</strong>."
+      results:
+        vote:
+          title: "I risultati saranno mostrati al momento del <strong>voto</strong>."
+        closed:
+          title: "I risultati saranno mostrati a sondaggio <strong>chiuso</strong>."
       multiple:
         help:
           at_least_min_options:
@@ -46,6 +51,9 @@ it:
         title: "Chiudi il sondaggio"
         label: "Chiudi"
         confirm: "Sicuro di voler chiudere questo sondaggio?"
+      automatic_close:
+        closes_in: "Chiude in <strong>%{timeLeft}</strong>."
+        age: "Chiuso <strong>%{age}</strong>"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
@@ -61,6 +69,11 @@ it:
           regular: Scelta Singola
           multiple: Scelta Multipla
           number: Votazione Numerica
+        poll_result:
+          label: Risultati
+          always: Sempre visibile
+          vote: Al momento del voto
+          closed: Quando chiuso
         poll_config:
           max: Massimo
           min: Minimo

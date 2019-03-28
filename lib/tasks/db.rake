@@ -7,32 +7,38 @@ task 'set_locale' do
   end
 end
 
-task 'db:environment:set', [:multisite] => [:load_config]  do |_, args|
-  if Rails.env.test? && !args[:multisite]
-    system("MULTISITE=multisite rails db:environment:set['true'] RAILS_ENV=test")
+module MultisiteTestHelpers
+  def self.load_multisite?
+    Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
 end
 
-task 'db:create', [:multisite] => [:load_config] do |_, args|
-  if Rails.env.test? && !args[:multisite]
-    system("MULTISITE=multisite rails db:create['true']")
+task 'db:environment:set' => [:load_config]  do |_, args|
+  if MultisiteTestHelpers.load_multisite?
+    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
   end
 end
 
-task 'db:drop', [:multisite] => [:load_config] do |_, args|
-  if Rails.env.test? && !args[:multisite]
-    system("MULTISITE=multisite rails db:drop['true']")
+task 'db:create' => [:load_config] do |_, args|
+  if MultisiteTestHelpers.load_multisite?
+    system("RAILS_DB=discourse_test_multisite rake db:create")
   end
 end
 
-# we need to run seed_fu every time we run rails db:migrate
-task 'db:migrate', [:multisite] => ['environment', 'set_locale'] do |_, args|
+task 'db:drop' => [:load_config] do |_, args|
+  if MultisiteTestHelpers.load_multisite?
+    system("RAILS_DB=discourse_test_multisite rake db:drop")
+  end
+end
+
+# we need to run seed_fu every time we run rake db:migrate
+task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
-  if Rails.env.test? && !args[:multisite]
-    system("rails db:schema:dump")
-    system("MULTISITE=multisite rails db:schema:load")
-    system("RAILS_DB=discourse_test_multisite rails db:migrate['multisite']")
+  if MultisiteTestHelpers.load_multisite?
+    system("rake db:schema:dump")
+    system("RAILS_DB=discourse_test_multisite rake db:schema:load")
+    system("RAILS_DB=discourse_test_multisite rake db:migrate")
   end
 end
 

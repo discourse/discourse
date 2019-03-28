@@ -270,8 +270,6 @@ ar:
     every_hour: "كل ساعة"
     daily: "يوميا"
     weekly: "أسبوعيا"
-    every_two_weeks: "كل أسبوعين"
-    every_three_days: "كل ثلاثة أيام"
     max_of_count: "أقصى عدد هو {{count}}"
     alternation: "أو"
     character_count:
@@ -760,7 +758,6 @@ ar:
         instructions: "سيتم وضع صورة الخلفية في المنتصف بعرض 590px"
       email:
         title: "البريد الإلكتروني"
-        instructions: "لا يظهر للعموم"
         ok: "سنرسل لك بريدا للتأكيد"
         invalid: "من فضلك أدخل بريدا إلكترونيا صالحا"
         authenticated: "تم توثيق بريدك الإلكتروني بواسطة {{provider}}"
@@ -819,14 +816,9 @@ ar:
         every_30_minutes: "كل 30 دقيقة"
         every_hour: "كل ساعة"
         daily: "يوميا"
-        every_three_days: "كل ثلاثة أيام"
         weekly: "أسبوعيا"
-        every_two_weeks: "كل أسبوعين"
       include_tl0_in_digests: "ارفق محتوى الاعضاء الجدد في رسائل الملخص"
       email_in_reply_to: "ارفق مقتطف من الرد على الموضوع في رسائل البريد الالكتروني"
-      email_direct: "أرسل إليّ رسائل إلكترونية عندما يقتبس أحد كلامي، أو يرد على إحدى منشوراتي، أو يشير إلي @اسمي أو يدعوني إلى أحد الموضوعات"
-      email_private_messages: "أرسل إلي رسالة إلكترونية عندما يبعث أحدهم رسالة إلي"
-      email_always: "أرسل إلي الاشعارات عبر البريد حتى ولو كنت متّصلًا"
       other_settings: "أخرى"
       categories_settings: "التصنيفات"
       new_topic_duration:
@@ -1161,13 +1153,7 @@ ar:
       filter_placeholder_with_any: ابحث أو أنشئً ...
     emoji_picker:
       filter_placeholder: بحث عن الرموز التعبيرية
-      people: الاشخاص
-      nature: طبيعة
-      food: طعام
-      activity: نشاط
-      travel: سفر
       objects: اشياء
-      celebration: احتفال
       custom: الرموز التعبيرية المخصصة
       recent: تم استخدامه مؤخراً
       default_tone: لون البشرة إفتراضي
@@ -1868,7 +1854,6 @@ ar:
         create: "عذرا، حدثت مشكلة اثناء إنشاء منشورك. من فضلك حاول مجددا."
         edit: "عذرا، حدثت مشكلة اثناء تعديل منشورك. من فضلك حاول مجددا."
         upload: "عذرا، حدثت مشكلة اثناء رفع الملف. من فضلك حاول مجددا."
-        file_too_large: "عذرا، هذا الملف كبير جدا (أقصى حجم هو {{max_size_kb}}ك.بايت). ما رأيك برفع الملف على خدمة سحابية، ثم مشاركة رابط الملف؟"
         too_many_uploads: "عذرا، يمكنك فقط رفع ملف واحد كل مرة."
         upload_not_authorized: "عذرا, نوع الملف الذي تحاول رفعة محذور ( الانواع المسموح بها: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "عذرا، لا يمكن للأعضاء الجدد رفع الصور."

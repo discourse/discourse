@@ -1,4 +1,4 @@
-{{#d-section pageClass="user-preferences" class="user-navigation"}}
+{{#d-section pageClass="user-preferences" class="user-secondary-navigation"}}
   {{#mobile-nav class='preferences-nav' desktopClass='preferences-list action-list nav-stacked' currentPath=application.currentPath}}
     <li class='nav-account'>
       {{#link-to 'preferences.account'}}
@@ -53,7 +53,7 @@
   {{/mobile-nav}}
 {{/d-section}}
 
-<section class='user-right user-preferences'>
+<section class='user-content user-preferences'>
   {{plugin-outlet name="above-user-preferences"}}
 
   <form class="form-vertical">

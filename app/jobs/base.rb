@@ -4,6 +4,22 @@ module Jobs
     Sidekiq::Stats.new.enqueued
   end
 
+  def self.run_later?
+    !@run_immediately
+  end
+
+  def self.run_immediately?
+    !!@run_immediately
+  end
+
+  def self.run_immediately!
+    @run_immediately = true
+  end
+
+  def self.run_later!
+    @run_immediately = false
+  end
+
   def self.last_job_performed_at
     Sidekiq.redis do |r|
       int = r.get('last_job_perform_at')
@@ -169,7 +185,7 @@ module Jobs
     def perform(*args)
       opts = args.extract_options!.with_indifferent_access
 
-      if SiteSetting.queue_jobs?
+      if Jobs.run_later?
         Sidekiq.redis do |r|
           r.set('last_job_perform_at', Time.now.to_i)
         end
@@ -272,7 +288,7 @@ module Jobs
     end
 
     # If we are able to queue a job, do it
-    if SiteSetting.queue_jobs?
+    if Jobs.run_later?
       hash = {
         'class' => klass,
         'args' => [opts]

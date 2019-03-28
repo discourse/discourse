@@ -129,7 +129,8 @@ const Category = RestModel.extend({
         minimum_required_tags: this.get("minimum_required_tags"),
         navigate_to_first_post_after_read: this.get(
           "navigate_to_first_post_after_read"
-        )
+        ),
+        search_priority: this.get("search_priority")
       },
       type: id ? "PUT" : "POST"
     });

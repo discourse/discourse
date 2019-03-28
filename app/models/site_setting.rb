@@ -104,6 +104,11 @@ class SiteSetting < ActiveRecord::Base
     nil
   end
 
+  def self.queue_jobs=(val)
+    Discourse.deprecate("queue_jobs is deprecated. Please use Jobs.run_immediately! instead")
+    val ? Jobs.run_later! : Jobs.run_immediately!
+  end
+
   def self.email_polling_enabled?
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
@@ -134,10 +139,6 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.enable_s3_uploads ? SiteSetting.s3_endpoint : GlobalSetting.s3_endpoint
     end
 
-    def self.s3_force_path_style
-      SiteSetting.enable_s3_uploads ? SiteSetting.s3_force_path_style : GlobalSetting.s3_force_path_style
-    end
-
     def self.enable_s3_uploads
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end
@@ -158,8 +159,6 @@ class SiteSetting < ActiveRecord::Base
         else
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
         end
-      elsif SiteSetting.s3_force_path_style
-        "//#{url_basename}/#{bucket}"
       else
         "//#{bucket}.#{url_basename}"
       end

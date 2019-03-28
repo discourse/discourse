@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     :pick_avatar, :destroy_user_image, :destroy, :check_emails,
     :topic_tracking_state, :preferences, :create_second_factor,
     :update_second_factor, :create_second_factor_backup, :select_avatar,
-    :ignore, :unignore, :revoke_auth_token
+    :notification_level, :revoke_auth_token
   ]
 
   skip_before_action :check_xhr, only: [
@@ -995,19 +995,23 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def ignore
+  def notification_level
     raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
+    user = fetch_user_from_params
 
-    ::IgnoredUser.find_or_create_by!(
-      user: current_user,
-      ignored_user_id: params[:ignored_user_id])
-    render json: success_json
-  end
+    if params[:notification_level] == "ignore"
+      guardian.ensure_can_ignore_user!(user.id)
+      MutedUser.where(user: current_user, muted_user: user).delete_all
+      IgnoredUser.find_or_create_by!(user: current_user, ignored_user: user)
+    elsif params[:notification_level] == "mute"
+      guardian.ensure_can_mute_user!(user.id)
+      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+      MutedUser.find_or_create_by!(user: current_user, muted_user: user)
+    elsif params[:notification_level] == "normal"
+      MutedUser.where(user: current_user, muted_user: user).delete_all
+      IgnoredUser.where(user: current_user, ignored_user: user).delete_all
+    end
 
-  def unignore
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
-
-    IgnoredUser.where(user: current_user, ignored_user_id: params[:ignored_user_id]).delete_all
     render json: success_json
   end
 

@@ -755,7 +755,7 @@ pt_BR:
       labels:
         flag: Tipo
         assigned: Atribuído
-        poster: Poster
+        poster: Autor
         flagger: Sinalizador
         time_to_resolution: Tempo de Resolução
     visits:
@@ -953,7 +953,6 @@ pt_BR:
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
-    default_locale: "O idioma padrão desta instância do Discourse"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
     set_locale_from_accept_language_header: "define a língua da interface para os usuários anônimos de acordo com os cabeçalhos de língua de seus navegadores. (EXPERIMENTAL, não funciona com cache anônimo)"
     support_mixed_text_direction: "Suporta direções de texto misturadas da esquerda para a direita e da direita para a esquerda."
@@ -1040,7 +1039,6 @@ pt_BR:
     must_approve_users: "Os moderadores devem aprovar todas novas contas antes que elas sejam permitidas acessarem o site. CUIDADO: habilitar esta opção para um site já em funcionamento irá revogar o acesso para todos usuários já cadastrados que não são moderadores."
     pending_users_reminder_delay: "Notifique os moderadores se novos usuários estiverem aguardando aprovação por mais tempo que muitas horas. Defina como -1 para desativar as notificações."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
-    allow_moderators_to_create_categories: "Permitir a criação de categorias por moderadores"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://.  A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     use_admin_ip_whitelist: "Administradores só podem logar se estiverem na lista de IPs Filtrados (Administração > Logs > IPs Filtrados)."
     blacklist_ip_blocks: "Uma lista de blocos IP privados que nunca devem ser rastreados pelo Discourse"
@@ -1114,7 +1112,6 @@ pt_BR:
     automatic_backups_enabled: "Realizar backups automáticos, como definido na frequência de backup"
     backup_frequency: "O número de dias entre os backups."
     s3_backup_bucket: "O repositório remoto para realizar backups. AVISO: Certifique-se de que é um repositório privado."
-    s3_force_path_style: "Implemente o endereçamento de estilo de caminho para seu endpoint personalizado. IMPORTANTE: Necessário para usar uploads e backups do Minio."
     s3_disable_cleanup: "Desabilitar a remoção de backups na S3 quando removidos localmente."
     backup_time_of_day: "Hora do dia, em UTC, quando o backup deve ocorrer."
     backup_with_uploads: "Incluir uploads nos backups programados. Desabilite para copiar apenas a base de dados. "
@@ -1155,8 +1152,6 @@ pt_BR:
     enable_s3_uploads: "Colocar uploads no armazenamento da Amazon S3. IMPORTANTE: exige credenciais válidas da S3 (ambos id da chave de acesso & segredo da chave de acesso)."
     s3_use_iam_profile: 'Use um  <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> para conceder acesso ao bucket S3. NOTA: habilitar isso requer que o Discourse esteja sendo executado em uma instância EC2 apropriadamente configurada, e sobrescreve as configurações "s3 access key key" e "s3 secret access key".'
     s3_upload_bucket: "Nome do bucket da Amazon S3 no qual os arquivos serão enviados. AVISO: precisa ser em minúsculas, sem pontos, sem underscores."
-    s3_access_key_id: "A id da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
-    s3_secret_access_key: "O segredo da chave de acesso da Amazon S3 que será usada para fazer upload de imagens."
     s3_cdn_url: "O endereço do CDN para usar para todos artefatos do s3 (por exemplo: https://cdn.algumlugar.com). AVISO: depois de mudar esta configuração você deve reconverter todas mensagens antigas."
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     external_system_avatars_enabled: "Usar serviço de avatar externo."
@@ -1399,12 +1394,9 @@ pt_BR:
     watched_words_regular_expressions: "Palavras assistidas são expressões regulares."
     default_email_digest_frequency: "Com que frequência os usuários recebem e-mails de resumo por padrão."
     default_include_tl0_in_digests: "Inclua mensagens de novos usuários em e-mails de resumo por padrão. Os usuários podem mudar isso em suas preferências."
-    default_email_personal_messages: "Envie um e-mail quando alguém enviar uma mensagem ao usuário por padrão."
-    default_email_direct: "Envie um e-mail quando alguém citar / responder / mencionar ou convidar o usuário por padrão."
     default_email_mailing_list_mode: "Envie um e-mail para cada nova postagem por padrão."
     default_email_mailing_list_mode_frequency: "Os usuários que ativam o modo de lista de e-mails receberão e-mails com frequência por padrão."
     disable_mailing_list_mode: "Não permitir que os usuários ativem o modo de lista de discussão."
-    default_email_always: "Envie uma notificação por e-mail mesmo quando o usuário estiver ativo por padrão."
     default_email_previous_replies: "Inclua respostas anteriores em e-mails por padrão."
     default_email_in_reply_to: "Incluir trecho de resposta para postar em e-mails por padrão."
     default_other_new_topic_duration_minutes: "Condição padrão global para a qual um tópico é considerado novo."
@@ -1485,10 +1477,10 @@ pt_BR:
     timeout_expired: "O login de sua conta expirou, por favor tente logar novamente."
     no_email: "Nenhum endereço de e-mail foi fornecido. Por favor, entre em contato com o administrador do site."
     email_error: "Uma conta não pôde ser registrada com o endereço de e-mail <b>%{email}</b>. Por favor, entre em contato com o administrador do site."
-  original_poster: "Postador original"
+  original_poster: "Autor Original"
   most_posts: "Maior parte das postagens"
-  most_recent_poster: "Maior parte das Postagens Recentes"
-  frequent_poster: "Postador frequente"
+  most_recent_poster: "Autor Mais Recente"
+  frequent_poster: "Autor Frequente"
   redirected_to_top_reasons:
     new_user: "Bem vindo a nossa comunidade! Aqui estão os nosso tópicos populares mais recentes."
     not_seen_in_a_month: "Bem-vindo de volta! Nós não o vemos a um tempo. Estes são os principais tópicos de discussão desde que você foi embora."

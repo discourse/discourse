@@ -12,6 +12,9 @@ class WebHookUserSerializer < UserSerializer
     can_edit_name
     can_send_private_messages
     can_send_private_message_to_user
+    can_ignore_user
+    can_mute_user
+    ignored
     uploaded_avatar_id
     has_title_badges
     bio_cooked

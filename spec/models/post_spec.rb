@@ -995,7 +995,7 @@ describe Post do
       end
 
       before do
-        run_jobs_synchronously!
+        Jobs.run_immediately!
       end
 
       describe 'when user can not mention a group' do
@@ -1308,6 +1308,42 @@ describe Post do
       expect(post.reload.post_uploads.pluck(:id)).to_not contain_exactly(
         post_uploads_ids
       )
+    end
+  end
+
+  context 'topic updated_at' do
+    let :topic do
+      create_post.topic
+    end
+
+    def updates_topic_updated_at
+
+      freeze_time 1.day.from_now
+      time = Time.now
+
+      result = yield
+
+      topic.reload
+      expect(topic.updated_at).to eq_time(time)
+
+      result
+    end
+
+    it "will update topic updated_at for all topic related events" do
+      SiteSetting.enable_whispers = true
+
+      post = updates_topic_updated_at do
+        create_post(topic_id: topic.id, post_type: Post.types[:whisper])
+      end
+
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post).destroy
+      end
+
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post).recover
+      end
+
     end
   end
 

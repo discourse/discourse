@@ -203,6 +203,15 @@ aside.quote {
   }
 }
 
+blockquote {
+  // due to #image-sizing-hack large images and lightboxes extend past the
+  // limits blockquotes. Since #image-sizing-hack is inline, we need to use
+  // !important here otherwise it won't work.
+  img {
+    max-width: 100% !important;
+  }
+}
+
 .quote-controls,
 .quote-controls .d-icon {
   color: dark-light-choose($primary-low-mid, $secondary-high);
@@ -867,12 +876,19 @@ a.mention-group {
 
 .post-notice {
   background-color: $tertiary-low;
+  border-top: 1px solid $primary-low;
   color: $primary;
   padding: 0.8em;
-  max-width: calc(
-    #{$topic-body-width} + #{$topic-avatar-width} - #{$topic-body-width-padding} +
-      0.6em
-  );
+  max-width: calc(#{$topic-body-width} + #{$topic-avatar-width} - 0.1em);
+
+  &.old {
+    background-color: unset;
+    color: $primary-medium;
+
+    .d-icon {
+      color: $primary-medium;
+    }
+  }
 
   p {
     display: flex;

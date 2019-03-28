@@ -499,6 +499,13 @@ class ApplicationController < ActionController::Base
     SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
   end
 
+  def handle_permalink(path)
+    permalink = Permalink.find_by_url(path)
+    if permalink && permalink.target_url
+      redirect_to permalink.target_url, status: :moved_permanently
+    end
+  end
+
   private
 
   def check_readonly_mode
@@ -685,10 +692,9 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_login_if_required
-    return if current_user || (request.format.json? && is_api?)
+    return if request.format.json? && is_api?
 
-    if SiteSetting.login_required?
-
+    if !current_user && SiteSetting.login_required?
       flash.keep
       dont_cache_page
 
@@ -702,6 +708,18 @@ class ApplicationController < ActionController::Base
         # save original URL in a cookie (javascript redirects after login in this case)
         cookies[:destination_url] = destination_url
         redirect_to path("/login")
+      end
+    end
+
+    if current_user &&
+      !current_user.totp_enabled? &&
+      !request.format.json? &&
+      !is_api? &&
+      ((SiteSetting.enforce_second_factor == 'staff' && current_user.staff?) ||
+        SiteSetting.enforce_second_factor == 'all')
+      redirect_path = "#{GlobalSetting.relative_url_root}/u/#{current_user.username}/preferences/second-factor"
+      if !request.fullpath.start_with?(redirect_path)
+        redirect_to path(redirect_path)
       end
     end
   end

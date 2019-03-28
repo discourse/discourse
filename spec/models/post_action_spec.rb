@@ -946,7 +946,7 @@ describe PostAction do
         expect(topic.reload.closed).to eq(true)
 
         timer = TopicTimer.last
-        expect(timer.execute_at).to eq(1.hour.from_now)
+        expect(timer.execute_at).to eq_time(1.hour.from_now)
 
         freeze_time timer.execute_at
         Jobs.expects(:enqueue_in).with(
@@ -1072,7 +1072,7 @@ describe PostAction do
     end
 
     it "should create a notification in the related topic" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:spam], message: "WAT")
@@ -1089,7 +1089,7 @@ describe PostAction do
     end
 
     it "should not add a moderator post when post is flagged via private message" do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
       post = Fabricate(:post)
       user = Fabricate(:user)
       action = PostAction.act(user, post, PostActionType.types[:notify_user], message: "WAT")

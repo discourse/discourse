@@ -226,6 +226,9 @@ Discourse::Application.routes.draw do
       delete 'site_texts/:id.json' => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
       delete 'site_texts/:id'      => 'site_texts#revert', constraints: { id: /[\w.\-\+]+/i }
 
+      get 'reseed' => 'site_texts#get_reseed_options'
+      post 'reseed' => 'site_texts#reseed'
+
       get 'email_templates'          => 'email_templates#index'
       get 'email_templates/(:id)'    => 'email_templates#show',   constraints: { id: /[0-9a-z_.]+/ }
       put 'email_templates/(:id)'    => 'email_templates#update', constraints: { id: /[0-9a-z_.]+/ }
@@ -342,6 +345,7 @@ Discourse::Application.routes.draw do
 
   get "my/*path", to: 'users#my_redirect'
   get "user_preferences" => "users#user_preferences_redirect"
+  get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
   %w{users u}.each_with_index do |root_path, index|
     get "#{root_path}" => "users#index", constraints: { format: 'html' }
@@ -422,8 +426,7 @@ Discourse::Application.routes.draw do
     post "#{root_path}/:username/preferences/revoke-auth-token" => "users#revoke_auth_token", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
-    put "#{root_path}/:username/ignore" => "users#ignore", constraints: { username: RouteFormat.username }
-    delete "#{root_path}/:username/ignore" => "users#unignore", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/notification_level" => "users#notification_level", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
@@ -508,6 +511,7 @@ Discourse::Application.routes.draw do
         %w{
           activity
           activity/:filter
+          requests
           messages
           messages/inbox
           messages/archive
@@ -524,6 +528,7 @@ Discourse::Application.routes.draw do
         put "members" => "groups#add_members"
         delete "members" => "groups#remove_member"
         post "request_membership" => "groups#request_membership"
+        put "handle_membership_request" => "groups#handle_membership_request"
         post "notifications" => "groups#set_notifications"
       end
     end

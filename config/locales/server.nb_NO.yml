@@ -954,7 +954,6 @@ nb_NO:
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
-    default_locale: "Standardspråket for denne instansen av Discourse"
     allow_user_locale: "Tillat brukere å velge eget språk"
     set_locale_from_accept_language_header: "sett språket i grensesnittet for anonyme brukere basert på hva nettleseren deres rapporterer. (EKSPERIMENTELL, fungerer ikke med anonym cache) "
     support_mixed_text_direction: "Tillat blanding av skriftspråk som bruker venstre-til-høyre og høyre-til-venstre."
@@ -1019,7 +1018,6 @@ nb_NO:
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."
-    allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
     send_welcome_message: "Send alle nye brukere en velkomstmelding med en rask startveileder."
     topics_per_period_in_top_summary: "Antall emner som vises i standard oppsummering av mest populære emner."
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."

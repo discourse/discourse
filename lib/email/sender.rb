@@ -11,6 +11,7 @@ require 'uri'
 require 'net/smtp'
 
 SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
+BYPASS_DISABLE_TYPES = ["admin_login", "test_message"]
 
 module Email
   class Sender
@@ -21,11 +22,10 @@ module Email
       @user = user
     end
 
-    def send(is_critical: false)
-      if SiteSetting.disable_emails == "yes" &&
-         @email_type.to_s != "admin_login" &&
-         !is_critical
+    def send
+      bypass_disable = BYPASS_DISABLE_TYPES.include?(@email_type.to_s)
 
+      if SiteSetting.disable_emails == "yes" && !bypass_disable
         return
       end
 
@@ -34,6 +34,10 @@ module Email
 
       return skip(SkippedEmailLog.reason_types[:sender_message_blank])    if @message.blank?
       return skip(SkippedEmailLog.reason_types[:sender_message_to_blank]) if @message.to.blank?
+
+      if SiteSetting.disable_emails == "non-staff" && !bypass_disable
+        return unless User.find_by_email(to_address)&.staff?
+      end
 
       return skip(SkippedEmailLog.reason_types[:sender_message_to_invalid]) if to_address.end_with?(".invalid")
 
@@ -161,13 +165,13 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
-      if SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+      if Email::Sender.bounceable_reply_address?
         email_log.bounce_key = SecureRandom.hex
 
         # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
         # however Rails has special handling for this header and ends up using this value
         # as the Envelope From address so stuff works as expected
-        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+        @message.header[:return_path] = Email::Sender.bounce_address(email_log.bounce_key)
       end
 
       email_log.post_id = post_id if post_id.present?
@@ -278,5 +282,12 @@ module Email
         header_value('Reply-To').gsub!("%{reply_key}", reply_key)
     end
 
+    def self.bounceable_reply_address?
+      SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+    end
+
+    def self.bounce_address(bounce_key)
+      SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{bounce_key}")
+    end
   end
 end

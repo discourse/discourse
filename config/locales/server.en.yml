@@ -379,6 +379,7 @@ en:
       trust_level_4: "trust_level_4"
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
+      handle: "handle membership request"
 
   education:
     until_posts:
@@ -577,6 +578,8 @@ en:
       (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+
+  admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 
   category:
     topic_prefix: "About the %{category} category"
@@ -873,7 +876,7 @@ en:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
 
   ignored:
-    hidden_content: '<p>Hidden content</p>'
+    hidden_content: "<p>Hidden content</p>"
 
   archetypes:
     regular:
@@ -1232,6 +1235,7 @@ en:
       labels:
         ignored_user: Ignored User
         ignores_count: Ignores count
+        mutes_count: Mutes count
       description: "List top ignored users."
 
   dashboard:
@@ -1266,7 +1270,7 @@ en:
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
-    default_locale: "The default language of this Discourse instance"
+    default_locale: "The default language of this Discourse instance. You can replace the text of system generated categories and topics at <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text Content</a>."
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers. (EXPERIMENTAL, does not work with anonymous cache)"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
@@ -1288,6 +1292,10 @@ en:
     search_query_log_max_size: "Maximum amount of search queries to keep"
     search_query_log_max_retention_days: "Maximum amount of time to keep search queries, in days."
     search_ignore_accents: "Ignore accents when searching for text."
+    category_search_priority_very_low_weight: "Weight applied to ranking for very low category search priority."
+    category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
+    category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
+    category_search_priority_very_high_weight: "Weight applied to ranking for very high category search priority."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1339,6 +1347,7 @@ en:
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    enforce_second_factor: "Forces users to enable second factor authentication. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
     same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -1386,7 +1395,7 @@ en:
     ga_universal_auto_link_domains: "Enable Google Universal Analytics (analytics.js) cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: third-party scripts loaded by GTM may need to be whitelisted in 'content security policy script src'."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    allow_moderators_to_create_categories: "Allow moderators to create new categories"
+    moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_whitelist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
@@ -1418,7 +1427,7 @@ en:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     top_page_default_timeframe: "Default timeframe for the top view page."
-    show_email_on_profile: "Allow moderators to view user emails"
+    moderators_view_emails: "Allow moderators to view user emails"
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer. (Experimental)"
 
@@ -1504,7 +1513,6 @@ en:
     backup_frequency: "The number of days between backups."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
-    s3_force_path_style: "Enforce path-style addressing for your custom endpoint. IMPORTANT: Required for using Minio uploads and backups."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
     enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
@@ -1560,8 +1568,8 @@ en:
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use an <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 instance profile</a> to grant access to the S3 bucket. NOTE: enabling this requires Discourse to be running in an appropriately-configured EC2 instance, and overrides the "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
-    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
-    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
+    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images, attachments, and backups."
+    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
 
@@ -1569,6 +1577,7 @@ en:
 
     external_system_avatars_enabled: "Use external system avatars service."
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
+    restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
 
     selectable_avatars_enabled: "Force users to choose an avatar from the list."
     selectable_avatars: "List of avatars users can choose from."
@@ -1823,6 +1832,12 @@ en:
 
     ignore_user_enabled: "[Beta] Allow ignoring users."
 
+    ignored_users_count_message_threshold: "Notify moderators if a particular user is ignored by this many other users."
+
+    ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
+
+    clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed."
+
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
@@ -1912,16 +1927,16 @@ en:
     watched_words_regular_expressions: "Watched words are regular expressions."
 
     min_post_notice_tl: "Minimum trust level required to see post notices."
+    old_post_notice_days: "Days before post notice becomes old"
     returning_users_days: "How many days should pass before a user is considered to be returning."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
     default_include_tl0_in_digests: "Include posts from new users in summary emails by default. Users can change this in their preferences."
-    default_email_personal_messages: "Send an email when someone messages the user by default."
-    default_email_direct: "Send an email when someone quotes/replies to/mentions or invites the user by default."
+    default_email_level: "Set default email notification level when someone quotes/replies to/mentions or invites user."
+    default_email_messages_level: "Set default email notification level when someone messages user."
     default_email_mailing_list_mode: "Send an email for every new post by default."
     default_email_mailing_list_mode_frequency: "Users who enable mailing list mode will receive emails this often by default."
     disable_mailing_list_mode: "Disallow users from enabling mailing list mode."
-    default_email_always: "Send an email notification even when the user is active by default."
     default_email_previous_replies: "Include previous replies in emails by default."
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
@@ -2019,6 +2034,12 @@ en:
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
       max_username_length_range: "You cannot set the maximum below the minimum."
+      invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
+      category_search_priority:
+        very_low_weight_invalid: "You cannot set the weight to be greater than 'category_search_priority_low_weight'."
+        low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
+        high_weight_invalid: "You cannot set the weight to be greater or equal to 1 or greater than 'category_search_priority_very_high_weight'."
+        very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
 
     placeholder:
       sso_provider_secrets:
@@ -2163,7 +2184,6 @@ en:
   admin:
     email:
       sent_test: "sent!"
-      sent_test_disabled: "cannot send because emails are disabled"
 
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
@@ -2195,6 +2215,7 @@ en:
       unused_staged_user: "Unused staged user"
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
+      inactive_user: "Inactive user"
 
   flags_reminder:
     flags_were_submitted:
@@ -2828,6 +2849,18 @@ en:
       ``` text
       %{raw}
       ```
+
+    ignored_users_summary:
+      title: "Ignored User passed threshold"
+      subject_template: "A user is being ignored by many other users"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that [user's profile](%{base_url}/u/%{username}/summary) has been ignored by %{ignores_threshold} users. This could indicate a problem is developing in your community.
+
+        You might want to review recent posts from this user, and potentially other users in the [ignored user report](%{base_url}/admin/reports/top_ignored_users).
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
 
     too_many_spam_flags:
       title: "Too Many Spam Flags"
@@ -4319,9 +4352,13 @@ en:
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
+      custom: "Notification from %{site_title}"
 
   staff_action_logs:
     not_found: "not found"
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
+    update: "Updated"
+    create: "Created"
+    destroy: "Destroyed"

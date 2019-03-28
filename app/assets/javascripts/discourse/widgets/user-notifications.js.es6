@@ -34,9 +34,10 @@ export default createWidget("user-notifications", {
       limit = 40;
     }
 
+    const silent = this.currentUser.get("enforcedSecondFactor");
     const stale = this.store.findStale(
       "notification",
-      { recent: true, limit },
+      { recent: true, silent, limit },
       { cacheKey: "recent-notifications" }
     );
 
@@ -59,7 +60,9 @@ export default createWidget("user-notifications", {
     stale
       .refresh()
       .then(notifications => {
-        this.currentUser.set("unread_notifications", 0);
+        if (!silent) {
+          this.currentUser.set("unread_notifications", 0);
+        }
         state.notifications = notifications;
       })
       .catch(() => {

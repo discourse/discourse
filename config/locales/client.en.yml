@@ -249,8 +249,6 @@ en:
     every_hour: "every hour"
     daily: "daily"
     weekly: "weekly"
-    every_two_weeks: "every two weeks"
-    every_three_days: "every three days"
     max_of_count: "max of {{count}}"
     alternation: "or"
     character_count:
@@ -432,10 +430,19 @@ en:
 
     groups:
       member_added: "Added"
+      member_requested: "Requested at"
       add_members:
         title: "Add Members"
         description: "Manage the membership of this group"
         usernames: "Usernames"
+      requests:
+        title: "Requests"
+        reason: "Reason"
+        accept: "Accept"
+        accepted: "accepted"
+        deny: "Deny"
+        denied: "denied"
+        undone: "request undone"
       manage:
         title: "Manage"
         name: "Name"
@@ -466,6 +473,7 @@ en:
       empty:
         posts: "There are no posts by members of this group."
         members: "There are no members in this group."
+        requests: "There are no membership requests for this group."
         mentions: "There are no mentions of this group."
         messages: "There are no messages for this group."
         topics: "There are no topics by members of this group."
@@ -639,8 +647,12 @@ en:
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
-      ignore: "Ignore"
-      unignore: "Unignore"
+      user_notifications_ignore_option: "Ignored"
+      user_notifications_ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden."
+      user_notifications_mute_option: "Muted"
+      user_notifications_mute_option_title: "You will not receive any notifications related to this user."
+      user_notifications_normal_option: "Normal"
+      user_notifications_normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       activity_stream: "Activity"
       preferences: "Preferences"
       profile_hidden: "This user's public profile is hidden."
@@ -726,7 +738,7 @@ en:
       muted_users: "Muted"
       muted_users_instructions: "Suppress all notifications from these users."
       ignored_users: "Ignored"
-      ignored_users_instructions: "Lists all your ignored users."
+      ignored_users_instructions: "Suppress all posts and notifications from these users."
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
       tracked_topics_link: "Show tracked topics"
@@ -803,13 +815,14 @@ en:
         label: "Code"
         rate_limit: "Please wait before trying another authentication code."
         enable_description: |
-          Scan this QR code in a supported app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> and enter your authentication code.
+          Scan this QR code in a supported app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) and enter your authentication code.
         disable_description: "Please enter the authentication code from your app"
         show_key_description: "Enter manually"
         extended_description: |
           Two factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two factor authentication has been enabled on your account."
         use: "<a href>Use Authenticator app</a>"
+        enforced_notice: "You are required to enable two factor authentication before accessing this site."
 
       change_about:
         title: "Change About Me"
@@ -854,7 +867,8 @@ en:
         primary: "Primary Email"
         secondary: "Secondary Emails"
         no_secondary: "No secondary emails"
-        instructions: "never shown to the public"
+        sso_override_instructions: "Email can be updated from SSO provider."
+        instructions: "Never shown to the public."
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
@@ -946,15 +960,17 @@ en:
         every_30_minutes: "every 30 minutes"
         every_hour: "hourly"
         daily: "daily"
-        every_three_days: "every three days"
         weekly: "weekly"
-        every_two_weeks: "every two weeks"
-
+        every_month: "every month"
+        every_six_months: "every six months"
+      email_level:
+        title: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+        always: "always"
+        only_when_away: "only when away"
+        never: "never"
+      email_messages_level: "Send me an email when someone messages me"
       include_tl0_in_digests: "Include content from new users in summary emails"
       email_in_reply_to: "Include an excerpt of replied to post in emails"
-      email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
-      email_private_messages: "Send me an email when someone messages me"
-      email_always: "Send me email notifications even when I am active on the site"
 
       other_settings: "Other"
       categories_settings: "Categories"
@@ -1353,13 +1369,15 @@ en:
 
     emoji_picker:
       filter_placeholder: Search for emoji
-      people: People
-      nature: Nature
-      food: Food
-      activity: Activity
-      travel: Travel
+      smileys_&_emotion: Smileys and Emotion
+      people_&_body: People and Body
+      animals_&_nature: Animals and Nature
+      food_&_drink: Food and Drink
+      travel_&_places: Travel and Places
+      activities: Activities
       objects: Objects
-      celebration: Celebration
+      symbols: Symbols
+      flags: Flags
       custom: Custom emojis
       recent: Recently used
       default_tone: No skin tone
@@ -1927,36 +1945,21 @@ en:
 
       actions:
         recover: "Un-Delete Topic"
-        recover_tooltip: "Restores the topic."
         delete: "Delete Topic"
-        delete_tooltip: "Marks the topic as deleted."
         open: "Open Topic"
-        open_tooltip: "Marks the topic as open and allows new replies."
         close: "Close Topic"
-        close_tooltip: "Marks the topic as closed and prevents new replies."
         multi_select: "Select Posts…"
-        multi_select_tooltip: "Toggles multiselect mode in which multiple posts can be selected."
         timed_update: "Set Topic Timer..."
-        timed_update_tooltip: "Opens a new window in which a timer for different actions can be set."
         pin: "Pin Topic…"
-        pin_tooltip: "Opens a window in which the topic can be featured in different ways."
         unpin: "Un-Pin Topic…"
-        unpin_tooltip: "Unpins the topic and it will no longer be featured."
         unarchive: "Unarchive Topic"
-        unarchive_tooltip: "Unfreezes the topic and allows interacting with it."
         archive: "Archive Topic"
-        archive_tooltip: "Freezes the topic and prevents interacting with it."
         invisible: "Make Unlisted"
-        invisible_tooltip: "Prevents the inclusion of the topic in lists and digest emails."
         visible: "Make Listed"
-        visible_tooltip: "Marks the topic as visible and includes the topic in lists and digest emails."
         reset_read: "Reset Read Data"
         make_public: "Make Public Topic"
-        make_public_tooltip: "Converts to public topic and makes it visible for other users."
         make_private: "Make Personal Message"
-        make_private_tooltip: "Converts to personal message and makes it invisible for other users."
         reset_bump_date: "Reset Bump Date"
-        reset_bump_date_tooltip: "Puts the topic back into chronological order according to when it was originally created."
 
       feature:
         pin: "Pin Topic"
@@ -2114,7 +2117,6 @@ en:
 
       change_timestamp:
         title: "Change Timestamp..."
-        tooltip: "Opens a window in which the timestamp can be changed."
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -2166,8 +2168,8 @@ en:
         other: "view {{count}} hidden replies"
 
       notice:
-        first: "This is the first time {{user}} has posted — let's welcome them to our community!"
-        return: "It's been a while since we've seen {{user}} — their last post was in {{time}}."
+        first: "This is the first time {{user}} has posted — let’s welcome them to our community!"
+        return: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
 
       unread: "Post is unread"
       has_replies:
@@ -2190,7 +2192,7 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
-        file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then share the link?"
+        file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files: "Sorry, you can only upload {{max}} files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: {{authorized_extensions}})."
@@ -2464,6 +2466,15 @@ en:
         muted:
           title: "Muted"
           description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
+      search_priority:
+        label: "Search Priority"
+        options:
+          normal: "Normal"
+          ignore: "Ignore"
+          very_low: "Very Low"
+          low: "Low"
+          high: "High"
+          very_high: "Very High"
       sort_options:
         default: "default"
         likes: "Likes"
@@ -2949,6 +2960,7 @@ en:
         moderation_tab: "Moderation"
         security_tab: "Security"
         reports_tab: "Reports"
+        report_filter_any: "any"
         disabled: Disabled
         timeout_error: Sorry, query is taking too long, please pick a shorter interval
         exception_error: Sorry, an error occurred while executing the query
@@ -2990,7 +3002,6 @@ en:
         old_posts: "Old Flagged Posts"
         topics: "Flagged Topics"
         moderation_history: "Moderation History"
-        moderation_history_tooltip: "Shows the moderation history."
 
         agree: "Agree"
         agree_title: "Confirm this flag as valid and correct"
@@ -3218,6 +3229,7 @@ en:
           inactive: "Inactive"
           failed: "Failed"
           successful: "Successful"
+          disabled: "Disabled"
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
@@ -3707,6 +3719,9 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            web_hook_create: "webhook create"
+            web_hook_update: "webhook update"
+            web_hook_destroy: "webhook destroy"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3793,6 +3808,7 @@ en:
         id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Activated"
         show_emails: "Show Emails"
+        hide_emails: "Hide Emails"
         nav:
           new: "New"
           active: "Active"
@@ -4231,6 +4247,18 @@ en:
           label: "New:"
           add: "Add"
           filter: "Search (URL or External URL)"
+
+      reseed:
+        action:
+          label: "Replace Text…"
+          title: "Replace text of categories and topics with translations"
+
+        modal:
+          title: "Replace Text"
+          subtitle: "Replace text of system generated categories and topics with latest translations"
+          categories: "Categories"
+          topics: "Topics"
+          replace: "Replace"
 
   wizard_js:
     wizard:

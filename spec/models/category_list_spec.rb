@@ -150,9 +150,13 @@ describe CategoryList do
       end
 
       it "returns categories in order of activity" do
-        cat1 = Fabricate(:category, position: 0, posts_week: 1, posts_month: 1, posts_year: 1)
-        cat2 = Fabricate(:category, position: 1, posts_week: 2, posts_month: 1, posts_year: 1)
-        expect(category_ids).to eq([cat2.id, cat1.id])
+        post1 = Fabricate(:post, created_at: 1.hour.ago)
+        post2 = Fabricate(:post, created_at: 1.day.ago)
+        post3 = Fabricate(:post, created_at: 1.week.ago)
+        cat1 = Fabricate(:category, position: 0, latest_post_id: post2.id)
+        cat2 = Fabricate(:category, position: 1, latest_post_id: post3.id)
+        cat3 = Fabricate(:category, position: 1, latest_post_id: post1.id)
+        expect(category_ids).to eq([cat3.id, cat1.id, cat2.id])
       end
 
       it "returns categories in order of id when there's no activity" do

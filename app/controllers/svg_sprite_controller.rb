@@ -27,13 +27,16 @@ class SvgSpriteController < ApplicationController
   end
 
   def search
-    keyword = params.require(:keyword)
-    data = SvgSprite.search(keyword)
+    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
 
-    if data.blank?
-      render body: nil, status: 404
-    else
-      render plain: data.inspect, disposition: nil, content_type: 'text/plain'
+      keyword = params.require(:keyword)
+      data = SvgSprite.search(keyword)
+
+      if data.blank?
+        render body: nil, status: 404
+      else
+        render plain: data.inspect, disposition: nil, content_type: 'text/plain'
+      end
     end
   end
 end

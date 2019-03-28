@@ -246,9 +246,8 @@ EOM
 
     user_option = user.user_option
     user_option.email_digests = false
-    user_option.email_private_messages = false
-    user_option.email_direct = false
-    user_option.email_always = false
+    user_option.email_level = UserOption.email_level_types[:never]
+    user_option.email_messages_level = UserOption.email_level_types[:never]
     user_option.save!
 
     if user.save

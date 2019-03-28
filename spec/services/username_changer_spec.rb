@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe UsernameChanger do
   before do
-    run_jobs_synchronously!
+    Jobs.run_immediately!
   end
 
   describe '#change' do

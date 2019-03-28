@@ -1,3 +1,6 @@
+require_dependency 'seed_data/categories'
+require_dependency 'seed_data/topics'
+
 class Admin::SiteTextsController < Admin::AdminController
 
   def self.preferred_keys
@@ -76,6 +79,31 @@ class Admin::SiteTextsController < Admin::AdminController
     site_text = find_site_text
     StaffActionLogger.new(current_user).log_site_text_change(site_text[:id], site_text[:value], old_text)
     render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
+  end
+
+  def get_reseed_options
+    render_json_dump(
+      categories: SeedData::Categories.with_default_locale.reseed_options,
+      topics: SeedData::Topics.with_default_locale.reseed_options
+    )
+  end
+
+  def reseed
+    hijack do
+      if params[:category_ids].present?
+        SeedData::Categories.with_default_locale.update(
+          site_setting_names: params[:category_ids]
+        )
+      end
+
+      if params[:topic_ids].present?
+        SeedData::Topics.with_default_locale.update(
+          site_setting_names: params[:topic_ids]
+        )
+      end
+
+      render json: success_json
+    end
   end
 
   protected

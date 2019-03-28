@@ -17,6 +17,7 @@ fr:
         modal_title: Insérer date
         modal_subtitle: "Nous convertirons automatiquement la date et l'heure dans le fuseau horaire local de l'utilisateur."
         form:
+          to: "jusqu'à"
           insert: Insérer
           advanced_mode: Mode avancé
           simple_mode: Mode simple

@@ -1494,14 +1494,14 @@ describe UsersController do
           put "/u/#{user.username}.json", params: {
             muted_usernames: "",
             theme_ids: [theme.id],
-            email_direct: false
+            email_level: UserOption.email_level_types[:always]
           }
 
           user.reload
 
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_ids).to eq([theme.id])
-          expect(user.user_option.email_direct).to eq(false)
+          expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
@@ -2022,69 +2022,54 @@ describe UsersController do
 
   describe '#ignore' do
     it 'raises an error when not logged in' do
-      put "/u/#{user.username}/ignore.json", params: { ignored_user_id: "" }
+      put "/u/#{user.username}/notification_level.json", params: { notification_level: "" }
       expect(response.status).to eq(403)
     end
 
     context 'while logged in' do
-      let(:user) { Fabricate(:user) }
+      let(:user) { Fabricate(:user, trust_level: 2) }
       let(:another_user) { Fabricate(:user) }
       before do
         sign_in(user)
       end
 
-      describe 'when SiteSetting.ignore_user_enabled is false' do
-        it 'raises an error' do
-          SiteSetting.ignore_user_enabled = false
-          put "/u/#{user.username}/ignore.json"
+      context 'when ignore_user_enable is OFF' do
+        it 'raises an error when not logged in' do
+          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "" }
           expect(response.status).to eq(404)
         end
       end
 
-      describe 'when SiteSetting.ignore_user_enabled is true' do
-        it 'creates IgnoredUser record' do
-          SiteSetting.ignore_user_enabled = true
-          put "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
-          expect(response.status).to eq(200)
-          expect(IgnoredUser.find_by(user_id: user.id,
-                                     ignored_user_id: another_user.id)).to be_present
-        end
-      end
-    end
-  end
-
-  describe '#watch' do
-    it 'raises an error when not logged in' do
-      delete "/u/#{user.username}/ignore.json"
-      expect(response.status).to eq(403)
-    end
-
-    context 'while logged in' do
-      let(:user) { Fabricate(:user) }
-      let(:another_user) { Fabricate(:user) }
-      before do
-        sign_in(user)
-      end
-
-      describe 'when SiteSetting.ignore_user_enabled is false' do
-        it 'raises an error' do
-          SiteSetting.ignore_user_enabled = false
-          delete "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
-          expect(response.status).to eq(404)
-        end
-      end
-
-      describe 'when SiteSetting.ignore_user_enabled is true' do
+      context 'when ignore_user_enable is ON' do
         before do
-          Fabricate(:ignored_user, user_id: user.id, ignored_user_id: another_user.id)
+          SiteSetting.ignore_user_enabled = true
         end
 
-        it 'destroys IgnoredUser record' do
-          SiteSetting.ignore_user_enabled = true
-          delete "/u/#{user.username}/ignore.json", params: { ignored_user_id: another_user.id }
-          expect(response.status).to eq(200)
-          expect(IgnoredUser.find_by(user_id: user.id,
-                                     ignored_user_id: another_user.id)).to be_blank
+        let!(:ignored_user) { Fabricate(:ignored_user, user: user, ignored_user: another_user) }
+        let!(:muted_user) { Fabricate(:muted_user, user: user, muted_user: another_user) }
+
+        context 'when changing notification level to normal' do
+          it 'changes notification level to normal' do
+            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "normal" }
+            expect(IgnoredUser.count).to eq(0)
+            expect(MutedUser.count).to eq(0)
+          end
+        end
+
+        context 'when changing notification level to mute' do
+          it 'changes notification level to mute' do
+            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "mute" }
+            expect(IgnoredUser.count).to eq(0)
+            expect(MutedUser.find_by(user_id: user.id, muted_user_id: another_user.id)).to be_present
+          end
+        end
+
+        context 'when changing notification level to ignore' do
+          it 'changes notification level to mute' do
+            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore" }
+            expect(MutedUser.count).to eq(0)
+            expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
+          end
         end
       end
     end

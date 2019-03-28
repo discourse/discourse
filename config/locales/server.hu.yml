@@ -611,7 +611,6 @@ hu:
     host_names_warning: "A config/database.yml file az alapértelmezett 'localhost' domaint használja. Állítsd be az oldalad saját domain nevét."
     memory_warning: "A kiszolgálód kevesebb mint 1GB memóriával rendelkezik. Minimum 1GB memória ajánlott."
   site_settings:
-    allow_moderators_to_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
     enable_badges: "A jelvény-rendszer engedélyezése"
     min_password_length: "Minimum jelszó hossz."
     block_common_passwords: "A 10,000 leggyakoribb jelszó tiltása."

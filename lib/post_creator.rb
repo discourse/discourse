@@ -115,10 +115,12 @@ class PostCreator
       User
         .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
         .joins("LEFT JOIN muted_users ON muted_users.user_id = users.id AND muted_users.muted_user_id = #{@user.id.to_i}")
+        .joins("LEFT JOIN ignored_users ON ignored_users.user_id = users.id AND ignored_users.ignored_user_id = #{@user.id.to_i}")
         .where("user_options.user_id IS NOT NULL")
         .where("
           (user_options.user_id IN (:user_ids) AND NOT user_options.allow_private_messages) OR
-          muted_users.user_id IN (:user_ids)
+          muted_users.user_id IN (:user_ids) OR
+          ignored_users.user_id IN (:user_ids)
         ", user_ids: users.keys)
         .pluck(:id).each do |m|
 
@@ -417,16 +419,18 @@ class PostCreator
   end
 
   def update_topic_stats
+    attrs = { updated_at: Time.now }
+
     if @post.post_type != Post.types[:whisper]
-      attrs = {}
       attrs[:last_posted_at] = @post.created_at
       attrs[:last_post_user_id] = @post.user_id
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      attrs[:updated_at] = Time.now
       @topic.update_columns(attrs)
     end
+
+    @topic.update_columns(attrs)
   end
 
   def update_topic_auto_close
@@ -514,7 +518,7 @@ class PostCreator
   end
 
   def create_post_notice
-    return if @user.bot? || @user.staged
+    return if @opts[:import_mode] || @user.bot? || @user.staged
 
     last_post_time = Post.where(user_id: @user.id)
       .order(created_at: :desc)

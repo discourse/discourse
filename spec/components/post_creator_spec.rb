@@ -374,8 +374,8 @@ describe PostCreator do
 
             topic_timer.reload
 
-            expect(topic_timer.execute_at).to eq(Time.zone.now + 12.hours)
-            expect(topic_timer.created_at).to eq(Time.zone.now)
+            expect(topic_timer.execute_at).to eq_time(Time.zone.now + 12.hours)
+            expect(topic_timer.created_at).to eq_time(Time.zone.now)
           end
 
           describe "when auto_close_topics_post_count has been reached" do
@@ -401,7 +401,7 @@ describe PostCreator do
               ))
 
               expect(topic.closed).to eq(true)
-              expect(topic_timer.reload.deleted_at).to eq(Time.zone.now)
+              expect(topic_timer.reload.deleted_at).to eq_time(Time.zone.now)
             end
           end
         end
@@ -902,7 +902,7 @@ describe PostCreator do
     end
 
     it 'can post to a group correctly' do
-      run_jobs_synchronously!
+      Jobs.run_immediately!
 
       expect(post.topic.archetype).to eq(Archetype.private_message)
       expect(post.topic.topic_allowed_users.count).to eq(1)
@@ -1141,6 +1141,31 @@ describe PostCreator do
       post_creator = PostCreator.new(user, title: '', raw: '')
       expect { post_creator.create! }.to raise_error(ActiveRecord::RecordNotSaved)
     end
+
+    it "does not generate an alert for empty posts" do
+      Jobs.run_immediately!
+
+      user2 = Fabricate(:user)
+      topic = Fabricate(:private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: user),
+          Fabricate.build(:topic_allowed_user, user: user2)
+        ],
+      )
+      Fabricate(:topic_user,
+        topic: topic,
+        user: user2,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+
+      expect {
+        PostCreator.create!(user, raw: "", topic_id: topic.id, skip_validations: true)
+      }.to change { user2.notifications.count }.by(0)
+
+      expect {
+        PostCreator.create!(user, raw: "hello world", topic_id: topic.id, skip_validations: true)
+      }.to change { user2.notifications.count }.by(1)
+    end
   end
 
   context 'private message to a user that has disabled private messages' do
@@ -1206,6 +1231,48 @@ describe PostCreator do
       expect(pc).to be_valid
       expect(pc.errors).to be_blank
     end
+  end
+
+  context "private message to an ignored user" do
+    let(:ignorer) { Fabricate(:evil_trout) }
+    let(:another_user) { Fabricate(:user) }
+
+    context "when post author is ignored" do
+      let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
+
+      it 'should fail' do
+        pc = PostCreator.new(
+          user,
+          title: 'this message is to someone who ignored me!',
+          raw: "you will have to see this even if you ignored me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{ignorer.username},#{another_user.username}"
+        )
+
+        expect(pc).not_to be_valid
+        expect(pc.errors.full_messages).to contain_exactly(
+                                             I18n.t(:not_accepting_pms, username: ignorer.username)
+                                           )
+      end
+    end
+
+    context "when post author is admin who is ignored" do
+      let(:staff_user) { Fabricate(:admin) }
+      let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: staff_user) }
+
+      it 'succeeds if the user is staff' do
+        pc = PostCreator.new(
+          staff_user,
+          title: 'this message is to someone who ignored me!',
+          raw: "you will have to see this even if you ignored me!",
+          archetype: Archetype.private_message,
+          target_usernames: "#{ignorer.username}"
+        )
+        expect(pc).to be_valid
+        expect(pc.errors).to be_blank
+      end
+    end
+
   end
 
   context "private message recipients limit (max_allowed_message_recipients) reached" do

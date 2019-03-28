@@ -5,10 +5,6 @@ require_dependency 'search'
 
 describe Search do
 
-  class TextHelper
-    extend ActionView::Helpers::TextHelper
-  end
-
   before do
     SearchIndexer.enable
   end
@@ -308,16 +304,35 @@ describe Search do
     end
 
     context 'searching for a post' do
-      let!(:reply) { Fabricate(:basic_reply, topic: topic, user: topic.user) }
-      let(:result) { Search.execute('quotes', type_filter: 'topic', include_blurbs: true) }
+      let!(:reply) do
+        Fabricate(:post_with_long_raw_content,
+          topic: topic,
+          user: topic.user,
+        ).tap { |post| post.update!(raw: "#{post.raw} elephant") }
+      end
+
+      let(:expected_blurb) do
+        "...to satisfy any test conditions that require content longer than the typical test post raw content. elephant"
+      end
 
       it 'returns the post' do
-        expect(result).to be_present
-        expect(result.posts.length).to eq(1)
-        p = result.posts[0]
-        expect(p.topic.id).to eq(topic.id)
-        expect(p.id).to eq(reply.id)
-        expect(result.blurb(p)).to eq("this reply has no quotes")
+        result = Search.execute('elephant',
+          type_filter: 'topic',
+          include_blurbs: true
+        )
+
+        expect(result.posts).to contain_exactly(reply)
+        expect(result.blurb(reply)).to eq(expected_blurb)
+      end
+
+      it 'returns the right post and blurb for searches with phrase' do
+        result = Search.execute('"elephant"',
+          type_filter: 'topic',
+          include_blurbs: true
+        )
+
+        expect(result.posts).to contain_exactly(reply)
+        expect(result.blurb(reply)).to eq(expected_blurb)
       end
     end
 
@@ -413,19 +428,97 @@ describe Search do
   end
 
   context 'categories' do
+    let(:category) { Fabricate(:category, name: "monkey Category 2") }
+    let(:topic) { Fabricate(:topic, category: category) }
+    let!(:post) { Fabricate(:post, topic: topic, raw: "snow monkey") }
 
-    let!(:category) { Fabricate(:category) }
-    def search
-      Search.execute(category.name)
+    let!(:ignored_category) do
+      Fabricate(:category,
+        name: "monkey Category 1",
+        slug: "test",
+        search_priority: Searchable::PRIORITIES[:ignore]
+      )
     end
 
-    it 'returns the correct result' do
-      expect(search.categories).to be_present
+    it "should return the right categories" do
+      search = Search.execute("monkey")
 
-      category.set_permissions({})
-      category.save
+      expect(search.categories).to contain_exactly(
+        category, ignored_category
+      )
 
-      expect(search.categories).not_to be_present
+      expect(search.posts).to contain_exactly(category.topic.first_post, post)
+
+      search = Search.execute("monkey #test")
+
+      expect(search.posts).to contain_exactly(ignored_category.topic.first_post)
+    end
+
+    describe "with child categories" do
+      let!(:child_of_ignored_category) do
+        Fabricate(:category,
+          name: "monkey Category 3",
+          parent_category: ignored_category
+        )
+      end
+
+      let!(:post2) do
+        Fabricate(:post,
+          topic: Fabricate(:topic, category: child_of_ignored_category),
+          raw: "snow monkey park"
+        )
+      end
+
+      it 'returns the right results' do
+        search = Search.execute("monkey")
+
+        expect(search.categories).to contain_exactly(
+          category, ignored_category, child_of_ignored_category
+        )
+
+        expect(search.posts).to contain_exactly(
+          category.topic.first_post,
+          post,
+          child_of_ignored_category.topic.first_post,
+          post2
+        )
+
+        search = Search.execute("snow")
+        expect(search.posts).to contain_exactly(post, post2)
+
+        category.set_permissions({})
+        category.save
+        search = Search.execute("monkey")
+
+        expect(search.categories).to contain_exactly(
+          ignored_category, child_of_ignored_category
+        )
+
+        expect(search.posts).to contain_exactly(
+          child_of_ignored_category.topic.first_post,
+          post2
+        )
+      end
+    end
+
+    describe 'categories with different priorities' do
+      let(:category2) { Fabricate(:category) }
+
+      it "should return posts in the right order" do
+        raw = "The pure genuine evian"
+        post = Fabricate(:post, topic: category.topic, raw: raw)
+        post2 = Fabricate(:post, topic: category2.topic, raw: raw)
+
+        search = Search.execute(raw)
+
+        expect(search.posts).to eq([post2, post])
+
+        category.update!(search_priority: Searchable::PRIORITIES[:high])
+
+        search = Search.execute(raw)
+
+        expect(search.posts).to eq([post, post2])
+      end
     end
 
   end
@@ -576,7 +669,10 @@ describe Search do
     end
 
     it 'can use category as a search context' do
-      category = Fabricate(:category)
+      category = Fabricate(:category,
+        search_priority: Searchable::PRIORITIES[:ignore]
+      )
+
       topic = Fabricate(:topic, category: category)
       topic_no_cat = Fabricate(:topic)
 
@@ -773,11 +869,13 @@ describe Search do
     end
 
     it 'can search numbers correctly, and match exact phrases' do
-      topic = Fabricate(:topic, created_at: 3.months.ago)
-      Fabricate(:post, raw: '3.0 eta is in 2 days horrah', topic: topic)
+      post = Fabricate(:post, raw: '3.0 eta is in 2 days horrah')
+      post2 = Fabricate(:post, raw: '3.0 is eta in 2 days horrah')
 
-      expect(Search.execute('3.0 eta').posts.length).to eq(1)
-      expect(Search.execute('"3.0, eta is"').posts.length).to eq(0)
+      expect(Search.execute('3.0 eta').posts).to contain_exactly(post, post2)
+      expect(Search.execute("'3.0 eta'").posts).to contain_exactly(post, post2)
+      expect(Search.execute("\"3.0 eta\"").posts).to contain_exactly(post)
+      expect(Search.execute('"3.0, eta is"').posts).to eq([])
     end
 
     it 'can find by status' do

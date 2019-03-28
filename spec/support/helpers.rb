@@ -5,12 +5,6 @@ module Helpers
     @next_seq = (@next_seq || 0) + 1
   end
 
-  # If you don't `queue_jobs` it means you want to run them synchronously. This method
-  # makes that more clear in tests. It is automatically reset after every test.
-  def run_jobs_synchronously!
-    SiteSetting.queue_jobs = false
-  end
-
   def log_in(fabricator = nil)
     user = Fabricate(fabricator || :user)
     log_in_user(user)
@@ -20,6 +14,11 @@ module Helpers
   def log_in_user(user)
     provider = Discourse.current_user_provider.new(request.env)
     provider.log_on_user(user, session, cookies)
+    provider
+  end
+
+  def log_out_user(provider)
+    provider.log_off_user(session, cookies)
   end
 
   def fixture_file(filename)

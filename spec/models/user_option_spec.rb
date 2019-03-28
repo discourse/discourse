@@ -11,7 +11,8 @@ describe UserOption do
 
       user.reload
 
-      expect(user.user_option.email_always).to eq(SiteSetting.default_email_always)
+      expect(user.user_option.email_level).to eq(SiteSetting.default_email_level)
+      expect(user.user_option.email_messages_level).to eq(SiteSetting.default_email_messages_level)
     end
   end
 

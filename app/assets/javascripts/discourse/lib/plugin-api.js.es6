@@ -140,7 +140,7 @@ class PluginApi {
    * you can register a renderer that will return an icon in the
    * format required.
    *
-   * For example, the follwing resolver will render a smile in the place
+   * For example, the following resolver will render a smile in the place
    * of every icon on Discourse.
    *
    * api.registerIconRenderer({
@@ -170,7 +170,7 @@ class PluginApi {
   }
 
   /**
-   * Replace all ocurrences of one icon with another without having to
+   * Replace all occurrences of one icon with another without having to
    * resort to a custom IconRenderer. If you want to do something more
    * complicated than a simple replacement then create a new icon renderer.
    *
@@ -217,7 +217,7 @@ class PluginApi {
    *
    * This function can be used to add an icon with a link that will be displayed
    * beside a poster's name. The `callback` is called with the post's user custom
-   * fields and post attrions. An icon will be rendered if the callback returns
+   * fields and post attributes. An icon will be rendered if the callback returns
    * an object with the appropriate attributes.
    *
    * The returned object can have the following attributes:
@@ -473,8 +473,9 @@ class PluginApi {
 
   /**
    * Registers a callback that will be invoked when the server calls
-   * Post#publish_change_to_clients! please ensure your type does not
-   * match acted,revised,rebaked,recovered, created,move_to_inbox or archived
+   * Post#publish_change_to_clients! Please ensure your type does not
+   * match acted, revised, rebaked, recovered, created, move_to_inbox
+   * or archived
    *
    * callback will be called with topicController and Message
    *
@@ -528,7 +529,7 @@ class PluginApi {
   /**
    * Exposes the widget update ability to plugins. Updates the widget
    * registry for the given widget name to include the properties on args
-   * See `reopenWidget` in `discourse/widgets/widget` from more ifo.
+   * See `reopenWidget` in `discourse/widgets/widget` from more info.
    **/
 
   reopenWidget(name, args) {

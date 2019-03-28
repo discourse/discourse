@@ -434,7 +434,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
-          <span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
           </div></a></div></p>
         HTML
 
@@ -539,7 +539,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_230x500.png" width="230" height="500"><div class="meta">
-          <span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><span class="expand"></span>
+          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1125×2436 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
           </div></a></div></p>
         HTML
 
@@ -575,7 +575,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html). to match_html <<~HTML
           <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="logo.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
-          <span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
           </div></a></div></p>
         HTML
 
@@ -589,7 +589,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/subfolder/uploads/default/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta">
-          <span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
           </div></a></div></p>
         HTML
       end
@@ -619,7 +619,7 @@ describe CookedPostProcessor do
 
         expect(cpp.html).to match_html <<~HTML
           <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/uploads/default/original/1X/1234567890123456.jpg" data-download-href="//test.localhost/uploads/default/#{upload.sha1}" title="WAT"><img src="//test.localhost/uploads/default/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" title="WAT" width="690" height="788"><div class="meta">
-          <span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><span class="expand"></span>
+          <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">WAT</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
           </div></a></div></p>
         HTML
 
@@ -1028,7 +1028,7 @@ describe CookedPostProcessor do
         cpp.optimize_urls
 
         expect(cpp.html).to match_html <<~HTML
-          <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=6" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
+          <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:"> and an external upload</p>
           <p><img src="https://s3.cdn.com/#{stored_path}" alt="smallest.png" width="10" height="20"></p>
         HTML
       end

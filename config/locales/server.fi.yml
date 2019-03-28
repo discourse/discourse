@@ -1149,7 +1149,6 @@ fi:
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
-    default_locale: "Tämän Discourse-ympäristön oletuskieli"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
     set_locale_from_accept_language_header: "Aseta sivuston kieli kirjautumattomille käyttäjille selaimen kielivalinnan perusteella. (KOKEELLINEN, ei toimi anonyymin välimuistin kanssa)"
     support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin."
@@ -1256,7 +1255,6 @@ fi:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) verkkotunnus, esim. mysite.com; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Ota käyttöön Google Universal Analyticsin (analytics.js) verkkotunnusten välinen seurantapalvelu . Poisvieviin näiden verkkotunnusten linkkeihin lisätään client id -tunniste. Katso lisää <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googlen Cross-Domain Tracking -oppaasta.</a>"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    allow_moderators_to_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
     use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blacklist_ip_blocks: "Lista yksityisistä IP-blokeista, joita Discoursen ei tule käydä läpi"
@@ -1286,7 +1284,6 @@ fi:
     topics_per_period_in_top_page: "Ketjujen lukumäärä, joka näytetään laajennetussa Kuumat-listauksessa."
     redirect_users_to_top_page: "Ohjaa uudet ja kauan poissa olleet käyttäjät automaattisesti kuumat-sivulle."
     top_page_default_timeframe: "Kuumat-sivun oletusaikajakso."
-    show_email_on_profile: "Salli valvojien tarkastella käyttäjien sähköpostiosoitteita"
     prioritize_username_in_ux: "Näytä käyttäjänimi ensimmäisenä käyttäjäsivulla, -kortissa ja viesteissä (jos poistetaan käytöstä, nimi näytetään ensin)"
     enable_rich_text_paste: "Ota käyttöön automaattinen muunnos HTML:stä Markdowniin, kun tekstiä liitetään kirjoitusalueelle (kokeellinen)"
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
@@ -1387,8 +1384,6 @@ fi:
     purge_unactivated_users_grace_period_days: "Varoaika (päivissä) ennen kuin aktivoimaton käyttäjätili poistetaan.  Aseta 0 niin aktivoimattomia käyttäjiä ei poisteta ollenkaan."
     enable_s3_uploads: "Lataa liitetiedostot Amazon S3:een. Tärkeää: edellyttää toimivat S3 kirjautumistiedot (access key id ja secret access key)."
     s3_upload_bucket: "Amazon S3 bucket, jonne lataukset sijoitetaan. VAROITUS: täytyy olla pienillä kirjaimilla, ei pisteitä, ei alaviivoja."
-    s3_access_key_id: "Amazon S3 access key id, jota käytetään kuvien sijoittamisessa."
-    s3_secret_access_key: "Amazon S3 secret access key, jota käytetään kuvien sijoittamisessa."
     s3_cdn_url: "CDN URL, jota käytetään S3:ssa sijaitseville tiedostoille (esimerkiksi https://cdn.jossain.com). VAROITUS: tämän asetuksen muuttamisen jälkeen sinun täytyy rakentaa uudelleen kaikki vanhat viestit."
     avatar_sizes: "Profiilikuvista automaattisesti luotavat koot."
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
@@ -1641,12 +1636,9 @@ fi:
     watched_words_regular_expressions: "Tarkkaillut sanat ovat säännöllisiä lausekkeita."
     default_email_digest_frequency: "Kuinka usein käyttäjille lähetetään sähköpostikooste oletuksena."
     default_include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin oletuksena. Tätä voi muuttaa käyttäjäasetuksissa."
-    default_email_personal_messages: "Lähetä käyttäjälle oletuksena sähköpostia, kun joku lähettää hänelle yksityisviestin"
-    default_email_direct: "Lähetä oletuksena sähköposti, kun joku lainaa/vastaa/mainitsee tai kutsuu käyttäjän."
     default_email_mailing_list_mode: "Lähetä oletuksena sähköposti jokaisesta uudesta viestistä."
     default_email_mailing_list_mode_frequency: "Postituslistatilassa käyttäjä saa sähköpostia oletuksena näin usein."
     disable_mailing_list_mode: "Älä salli käyttäjien valita sähköpostilista-moodia."
-    default_email_always: "Lähetä oletuksena sähköposti, vaikka käyttäjä on ollut aktiivinen palstalla."
     default_email_previous_replies: "Sisällytä aiemmat vastaukset sähköposteihin oletuksena."
     default_email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköpostiin oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, koska ketju tulkitaan uudeksi."
@@ -1843,7 +1835,6 @@ fi:
   admin:
     email:
       sent_test: "lähetettiin!"
-      sent_test_disabled: "ei voida lähettää, koska sähköpostien lähettäminen ei ole käytössä"
   user:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"

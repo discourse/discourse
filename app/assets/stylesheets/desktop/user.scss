@@ -1,7 +1,5 @@
 // Desktop styles for "/user" section
-.user-right {
-  display: table-cell;
-
+.user-content-wrapper {
   &,
   > .user-stream {
     > .alert:first-child {
@@ -14,46 +12,16 @@
   }
 }
 
-.profile-image {
-  height: 420px;
-  width: 100%;
-  background-size: cover;
-  transition: height 0.15s linear;
-}
-
-.no-background {
-  .profile-image {
-    height: 200px;
-  }
-}
-
 .form-horizontal .control-group.category {
   margin-top: 18px;
-}
-
-.user-table {
-  width: 100%;
-  display: table;
-  table-layout: fixed;
-
-  .wrapper {
-    display: table-row;
-  }
-
-  .new-private-message {
-    margin-bottom: 15px;
-  }
 }
 
 .user-profile-hidden {
   font-size: 1.5em;
   text-align: center;
 }
-.user-navigation {
-  display: table-cell;
-  vertical-align: top;
-  width: 170px;
-
+.user-secondary-navigation {
+  min-width: 150px;
   .nav-stacked {
     background-color: transparent;
 
@@ -61,12 +29,12 @@
       border-bottom: none;
 
       &.archive {
-        padding-left: 1.81em;
+        padding-left: 1.4em;
       }
     }
 
     a {
-      color: dark-light-choose($primary-medium, $secondary-high);
+      color: $primary-medium;
 
       &.active {
         color: $primary;
@@ -82,9 +50,9 @@
 }
 
 .user-content {
-  padding: 10px 8px;
+  padding-bottom: s(3);
+  margin-bottom: s(3);
   background-color: $secondary;
-  margin-bottom: 10px;
   box-sizing: border-box;
 
   &.user-badges-list {
@@ -103,8 +71,8 @@
 
 .pref-avatar {
   .avatar {
-    max-width: 45px;
-    max-height: 45px;
+    max-width: 90px;
+    max-height: 90px;
   }
 }
 
@@ -128,8 +96,7 @@
 }
 
 .user-invite-none {
-  clear: both;
-  padding: 15px;
+  padding: 15px 0;
 }
 
 .user-main {
@@ -148,8 +115,7 @@
     }
 
     .details {
-      padding: 0 0 4px 0;
-      margin-top: -200px;
+      padding-bottom: s(2);
       transition: margin 0.15s linear;
 
       img.avatar {
@@ -159,15 +125,19 @@
 
       .primary {
         .primary-textual {
-          padding: 3px;
+          padding: s(0 1 1);
           a[href] {
             text-decoration: underline;
           }
           .location-and-website {
+            display: flex;
             max-width: 100%;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            .user-profile-location {
+              margin-right: 1em;
+            }
           }
         }
 
@@ -184,6 +154,7 @@
     &.has-background {
       .details {
         padding: 15px 15px 4px 15px;
+        margin-top: 240px;
       }
     }
 
@@ -194,11 +165,6 @@
 
       .btn {
         min-width: 140px;
-      }
-
-      .right {
-        float: right;
-        margin-left: 5px;
       }
     }
 
@@ -212,7 +178,6 @@
           }
 
           a {
-            padding: 5px 10px;
             margin-bottom: 10px;
             width: auto;
           }
@@ -221,6 +186,7 @@
 
       .details {
         padding: 0 0 2px 0;
+        margin-top: 0;
         border-bottom: 1px solid $primary-low;
       }
 
@@ -251,18 +217,9 @@
   .public-user-fields {
     overflow: hidden;
   }
-
-  .viewing-self & .about.collapsed-info {
-    .secondary,
-    .staff-counters {
-      display: inherit;
-    }
-  }
 }
 
 .user-preferences {
-  display: table-cell;
-  vertical-align: top;
   padding-top: 10px;
   padding-left: 30px;
 
@@ -278,52 +235,13 @@
 
   .category-selector,
   .tag-chooser,
-  textarea {
+  textarea,
+  input.user-selector {
     width: 100%;
-  }
-
-  input {
-    &.user-selector {
-      width: 100%;
-    }
-  }
-
-  .tag-controls,
-  .category-controls {
-    label {
-      align-items: center;
-      .d-icon {
-        margin-right: 3px;
-      }
-    }
   }
 
   .instructions {
     display: inline-block;
-    margin-top: 0;
-  }
-
-  .pref-mailing-list-mode .controls {
-    select {
-      width: 400px;
-    }
-  }
-
-  .notifications,
-  .category-notifications,
-  .tag-notifications,
-  .user-custom-preferences-outlet {
-    .controls select {
-      width: 280px;
-    }
-  }
-
-  .user-main & .user-field.text {
-    padding-top: 0;
-  }
-
-  .image-upload-controls {
-    display: flex;
-    align-items: center;
+    margin-top: s(1);
   }
 }

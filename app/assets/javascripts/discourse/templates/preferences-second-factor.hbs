@@ -1,6 +1,14 @@
 <section class='user-preferences'>
   <form class="form-horizontal">
 
+    {{#if showEnforcedNotice}}
+      <div class="control-group">
+        <div class="controls">
+          <div class='alert alert-error'>{{i18n 'user.second_factor.enforced_notice'}}</div>
+        </div>
+      </div>
+    {{/if}}
+
     {{#if errorMessage}}
       <div class="control-group">
         <div class="controls">
@@ -30,7 +38,9 @@
               disabled=loading
               label=disableButtonText}}
 
-          {{cancel-link route="preferences.account" args= model.username}}
+          {{#unless showEnforcedNotice}}
+            {{cancel-link route="preferences.account" args= model.username}}
+          {{/unless}}
         </div>
       </div>
     {{else}}
@@ -78,7 +88,9 @@
                 disabled=loading
                 label=enableButtonText}}
 
-            {{cancel-link route="preferences.account" args= model.username}}
+            {{#unless showEnforcedNotice}}
+              {{cancel-link route="preferences.account" args= model.username}}
+            {{/unless}}
           </div>
         </div>
       {{else}}
@@ -114,7 +126,9 @@
 
             {{resetPasswordProgress}}
 
-            {{cancel-link route="preferences.account" args= model.username}}
+            {{#unless showEnforcedNotice}}
+              {{cancel-link route="preferences.account" args= model.username}}
+            {{/unless}}
           </div>
         </div>
       {{/if}}

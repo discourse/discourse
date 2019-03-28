@@ -41,4 +41,14 @@ RSpec.describe DbHelper do
       expect(post.reload.cooked).to eq('test')
     end
   end
+
+  describe ".regexp_replace" do
+    it "should remap columns correctly" do
+      post = Fabricate(:post, raw: "this is a [img]test[/img] post")
+
+      DbHelper.regexp_replace("\\[img\\]test\\[/img\\]", "[img]something[/img]")
+
+      expect(post.reload.raw).to include("[img]something[/img]")
+    end
+  end
 end

@@ -410,6 +410,7 @@ login:
   sso_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
+    client: true
   sso_overrides_username: false
   sso_overrides_name: false
   sso_overrides_avatar:
@@ -490,9 +491,6 @@ users:
     default: 15
     min: 1
   redirect_users_to_top_page: true
-  show_email_on_profile:
-    client: true
-    default: false
   prioritize_username_in_ux:
     client: true
     default: true
@@ -535,6 +533,16 @@ users:
   ignore_user_enabled:
     default: false
     client: true
+  ignored_users_count_message_threshold:
+    default: 5
+    client: true
+    min: 1
+  ignored_users_message_gap_days:
+    default: 365
+    client: true
+    min: 1
+  clean_up_inactive_users_after_days:
+    default: 730
 
 groups:
   enable_group_directory:
@@ -820,8 +828,11 @@ posting:
   min_post_notice_tl:
     default: 2
     enum: "TrustLevelSetting"
+  old_post_notice_days:
+    default: 14
+    client: true
   returning_users_days:
-    default: 60
+    default: 120
 
 email:
   email_time_window_mins:
@@ -1063,9 +1074,6 @@ files:
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
-  s3_force_path_style:
-    default: false
-    shadowed_by_global: true
   s3_configure_tombstone_policy:
     default: true
     shadowed_by_global: true
@@ -1100,6 +1108,11 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
+  restrict_letter_avatar_colors:
+    default: ''
+    type: list
+    list_type: compact
+    validator: "ColorListValidator"
   selectable_avatars_enabled:
     default: false
     client: true
@@ -1215,6 +1228,14 @@ trust:
     default: true
 
 security:
+  enforce_second_factor:
+    client: true
+    type: enum
+    default: 'no'
+    choices:
+      - 'no'
+      - 'staff'
+      - 'all'
   force_https:
     default: false
     shadowed_by_global: true
@@ -1228,7 +1249,10 @@ security:
     regex: "^(Lax|Strict|Disabled)$"
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  allow_moderators_to_create_categories: false
+  moderators_create_categories: false
+  moderators_view_emails:
+    client: true
+    default: false
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna"
@@ -1395,9 +1419,6 @@ developer:
   port:
     hidden: true
     default: ""
-  queue_jobs:
-    hidden: true
-    default: true
   enable_long_polling:
     client: true
     default: true
@@ -1593,6 +1614,22 @@ search:
       ro: true
       sk: true
       tr_TR: true
+  category_search_priority_very_low_weight:
+    default: 0.6
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
+  category_search_priority_low_weight:
+    default: 0.8
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
+  category_search_priority_high_weight:
+    default: 1.2
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
+  category_search_priority_very_high_weight:
+    default: 1.4
+    hidden: true
+    validator: "CategorySearchPriorityWeightsValidator"
 
 uncategorized:
   version_checks:
@@ -1747,6 +1784,15 @@ uncategorized:
   privacy_topic_id:
     default: -1
     hidden: true
+  welcome_topic_id:
+    default: -1
+    hidden: true
+  lounge_welcome_topic_id:
+    default: -1
+    hidden: true
+  admin_quick_start_topic_id:
+    default: -1
+    hidden: true
 
   bootstrap_mode_min_users:
     default: 50
@@ -1801,8 +1847,12 @@ user_preferences:
     enum: "DigestEmailSiteSetting"
     default: 10080
   default_include_tl0_in_digests: false
-  default_email_personal_messages: true
-  default_email_direct: true
+  default_email_level:
+    enum: "EmailLevelSiteSetting"
+    default: 1
+  default_email_messages_level:
+    enum: "EmailLevelSiteSetting"
+    default: 0
   default_email_mailing_list_mode: false
   default_email_mailing_list_mode_frequency:
     enum: "MailingListModeSiteSetting"
@@ -1810,7 +1860,6 @@ user_preferences:
   disable_mailing_list_mode:
     default: false
     client: true
-  default_email_always: false
   default_email_previous_replies:
     enum: "PreviousRepliesSiteSetting"
     default: 2
