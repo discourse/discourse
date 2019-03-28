@@ -61,7 +61,7 @@ describe SearchIndexer do
 
     scrubbed = scrub(html)
 
-    expect(scrubbed).to eq("Discourse 51%20PM Untitled design (21).jpg Untitled%20design%20(21) Untitled design (21).jpg 1280x1136 472 KB")
+    expect(scrubbed).to eq("Discourse 51%20PM")
   end
 
   it 'correctly indexes a post according to version' do
@@ -109,6 +109,42 @@ describe SearchIndexer do
         post = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
         post.save!(validate: false)
       end.to_not change { PostSearchData.count }
+    end
+
+    it "should not tokenize urls and duplicate title and href in <a>" do
+      post = Fabricate(:post, raw: <<~RAW)
+      https://meta.discourse.org/some.png
+      RAW
+
+      post.rebake!
+      post.reload
+      topic = post.topic
+
+      expect(post.post_search_data.raw_data).to eq(
+        "#{topic.title} #{topic.category.name} https://meta.discourse.org/some.png meta discourse org"
+      )
+    end
+
+    it 'should not include lightbox in search' do
+      Jobs.run_immediately!
+      SiteSetting.max_image_height = 2000
+      SiteSetting.crawl_images = true
+      FastImage.expects(:size).returns([1750, 2000])
+
+      src = "https://meta.discourse.org/some.png"
+
+      post = Fabricate(:post, raw: <<~RAW)
+      Let me see how I can fix this image
+      <img src="#{src}" width="275" height="299">
+      RAW
+
+      post.rebake!
+      post.reload
+      topic = post.topic
+
+      expect(post.post_search_data.raw_data).to eq(
+        "#{topic.title} #{topic.category.name} Let me see how I can fix this image"
+      )
     end
   end
 end

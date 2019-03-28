@@ -603,7 +603,11 @@ class Post < ActiveRecord::Base
     new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
     old_cooked = cooked
 
-    update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
+    self.update!(
+      cooked: new_cooked,
+      baked_at: Time.zone.now,
+      baked_version: BAKED_VERSION
+    )
 
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
