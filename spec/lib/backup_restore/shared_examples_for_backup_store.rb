@@ -215,7 +215,9 @@ shared_examples "remote backup store" do
 
     describe "#upload_file" do
       def upload_file
-        freeze_time
+        # time has fidelity issues freeze a time that is not going to be prone
+        # to that
+        freeze_time(Time.now.to_s)
 
         backup = BackupFile.new(
           filename: "foo.tar.gz",
