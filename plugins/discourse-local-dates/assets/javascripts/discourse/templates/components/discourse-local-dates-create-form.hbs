@@ -45,11 +45,7 @@
         </div>
 
         <div class="to-indicator">
-          {{#if site.mobileView}}
-            ↓
-          {{else}}
-            →
-          {{/if}}
+          {{if site.mobileView "↓" "→"}}
         </div>
 
         <div class="to">
