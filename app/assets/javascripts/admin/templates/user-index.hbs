@@ -221,7 +221,7 @@
 <section class="details">
   <h1>{{i18n "admin.user.permissions"}}</h1>
 
-  {{#if showApproval}}
+  {{#if siteSettings.must_approve_users}}
     <div class="display-row">
       <div class="field">{{i18n "admin.users.approved"}}</div>
       <div class="value">
@@ -614,12 +614,9 @@
     </div>
     <div class="controls">
       {{#if model.flags_received_count}}
-        {{d-button
-          class="btn-default"
-          action=(action "showFlagsReceived")
-          label="admin.user.show_flags_received"
-          icon="flag"
-        }}
+        {{#link-to 'review' (query-params username=model.username type="ReviewableFlaggedPost" status="all") class="btn"}}
+          {{i18n "admin.user.show_flags_received"}}
+        {{/link-to}}
       {{/if}}
     </div>
   </div>

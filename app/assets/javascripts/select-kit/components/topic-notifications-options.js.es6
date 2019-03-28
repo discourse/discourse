@@ -37,5 +37,7 @@ export default NotificationOptionsComponent.extend({
     if (value !== this.get("value")) {
       this.get("topic.details").updateNotifications(value);
     }
-  }
+  },
+
+  deselect() {}
 });

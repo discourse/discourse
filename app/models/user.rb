@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
 
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users
+  has_many :group_requests, dependent: :destroy
   has_many :secure_categories, through: :groups, source: :categories
 
   has_many :user_uploads, dependent: :destroy
@@ -92,6 +93,8 @@ class User < ActiveRecord::Base
   has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: 'GroupHistory'
   has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: 'GroupHistory'
 
+  has_many :reviewable_scores, dependent: :destroy
+
   delegate :last_sent_email_address, to: :email_logs
 
   validates_presence_of :username
@@ -113,6 +116,7 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
+  after_create :create_reviewable
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -410,19 +414,22 @@ class User < ActiveRecord::Base
   end
 
   # Approve this user
-  def approve(approver, send_mail = true)
-    self.approved = true
-    self.approved_at = Time.zone.now
-    self.approved_by = approver
+  def approve(approved_by, send_mail = true)
+    Discourse.deprecate("User#approve is deprecated. Please use the Reviewable API instead.", output_in_test: true, since: "2.3.0beta5", drop_from: "2.4")
 
-    if result = save
-      send_approval_email if send_mail
-      DiscourseEvent.trigger(:user_approved, self)
+    # Backwards compatibility - in case plugins or something is using the old API which accepted
+    # either a Number or object. Probably should remove at some point
+    approved_by = User.find_by(id: approved_by) if approved_by.is_a?(Numeric)
+
+    if reviewable_user = ReviewableUser.find_by(target: self)
+      result = reviewable_user.perform(approved_by, :approve, send_email: send_mail)
+      if result.success?
+        Reviewable.set_approved_fields!(self, approved_by)
+        return true
+      end
     end
 
-    StaffActionLogger.new(approver).log_user_approve(self)
-
-    result
+    false
   end
 
   def self.email_hash(email)
@@ -812,7 +819,7 @@ class User < ActiveRecord::Base
   def delete_posts_in_batches(guardian, batch_size = 20)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
-    QueuedPost.where(user_id: id).delete_all
+    Reviewable.where(created_by_id: id).delete_all
 
     posts.order("post_number desc").limit(batch_size).each do |p|
       PostDestroyer.new(guardian.user, p).destroy
@@ -973,6 +980,8 @@ class User < ActiveRecord::Base
 
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
+    results = []
+
     disagreed_flag_post_ids = PostAction.where(post_action_type_id: PostActionType.types[:spam])
       .where.not(disagreed_at: nil)
       .pluck(:post_id)
@@ -980,13 +989,12 @@ class User < ActiveRecord::Base
     topic_links.includes(:post)
       .where.not(post_id: disagreed_flag_post_ids)
       .each do |tl|
-      begin
-        message = I18n.t('flag_reason.spam_hosts', domain: tl.domain, base_path: Discourse.base_path)
-        PostAction.act(Discourse.system_user, tl.post, PostActionType.types[:spam], message: message)
-      rescue PostAction::AlreadyActed
-        # If the user has already acted, just ignore it
-      end
+
+      message = I18n.t('flag_reason.spam_hosts', domain: tl.domain, base_path: Discourse.base_path)
+      results << PostActionCreator.create(Discourse.system_user, tl.post, :spam, message: message)
     end
+
+    results
   end
 
   def has_uploaded_avatar
@@ -1230,6 +1238,20 @@ class User < ActiveRecord::Base
     Group.user_trust_level_change!(id, trust_level)
   end
 
+  def create_reviewable
+    return unless SiteSetting.must_approve_users? || SiteSetting.invite_only?
+    return if approved?
+
+    reviewable = ReviewableUser.needs_review!(target: self, created_by: Discourse.system_user, reviewable_by_moderator: true)
+    reviewable.add_score(
+      Discourse.system_user,
+      ReviewableScore.types[:needs_approval],
+      force_review: true
+    )
+
+    reviewable
+  end
+
   def create_user_stat
     stat = UserStat.new(new_since: Time.now)
     stat.user_id = id
@@ -1306,15 +1328,6 @@ class User < ActiveRecord::Base
       if will_save_change_to_username? && existing.present? && !same_user
         errors.add(:username, I18n.t(:'user.username.unique'))
       end
-    end
-  end
-
-  def send_approval_email
-    if SiteSetting.must_approve_users
-      Jobs.enqueue(:critical_user_email,
-        type: :signup_after_approval,
-        user_id: id
-      )
     end
   end
 
@@ -1464,6 +1477,7 @@ end
 #  staged                    :boolean          default(FALSE), not null
 #  first_seen_at             :datetime
 #  silenced_till             :datetime
+#  group_locked_trust_level  :integer
 #  manual_locked_trust_level :integer
 #
 # Indexes

@@ -292,8 +292,8 @@ class PostRevisor
   end
 
   def ninja_edit?
-    return false if @post.has_active_flag?
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
+    return false if @post.reviewable_flag.present?
 
     if new_raw = @fields[:raw]
 
@@ -343,18 +343,16 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      # UserActionCreator will create new UserAction records for the new owner
-
       UserAction.where(target_post_id: @post.id)
         .where(user_id: prev_owner.id)
         .where(action_type: USER_ACTIONS_TO_REMOVE)
-        .destroy_all
+        .update_all(user_id: new_owner.id)
 
       if @post.post_number == 1
         UserAction.where(target_topic_id: @post.topic_id)
           .where(user_id: prev_owner.id)
           .where(action_type: UserAction::NEW_TOPIC)
-          .destroy_all
+          .update_all(user_id: new_owner.id)
       end
     end
 

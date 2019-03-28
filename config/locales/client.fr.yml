@@ -216,8 +216,6 @@ fr:
     every_hour: "chaque heure"
     daily: "quotidiennes"
     weekly: "hebdomadaires"
-    every_two_weeks: "toutes les deux semaines"
-    every_three_days: "tous les trois jours"
     max_of_count: "maximum sur {{count}}"
     alternation: "ou"
     character_count:
@@ -574,8 +572,6 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
-      ignore: "Ignorer"
-      unignore: "Ne plus ignorer"
       activity_stream: "Activité"
       preferences: "Préférences"
       profile_hidden: "Le profil public de cet usagé est caché."
@@ -660,7 +656,7 @@ fr:
       muted_users: "Silencieux"
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
       ignored_users: "Ignoré"
-      ignored_users_instructions: "Liste tous les utilisateurs ignorés."
+      ignored_users_instructions: "Cacher toutes les publications et les notifications de ces utilisateurs."
       muted_topics_link: "Afficher les sujets en silencieux"
       watched_topics_link: "Afficher les sujets surveillés"
       tracked_topics_link: "Afficher les sujets suivis"
@@ -731,12 +727,13 @@ fr:
         label: "Code"
         rate_limit: "Veuillez patienter avant d'essayer un autre code d'identification."
         enable_description: |
-          Scannez ce code QR en utilisant une appli supporté  (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et saisir votre code d'identification.
+          Scannez ce code QR en utilisant une application supportée (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a>– <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) et entrez votre code d'authentification.
         disable_description: "Veuillez saisir le code d'authentification de votre app"
         show_key_description: "Saisir manuellement"
         extended_description: "L'authentification à deux facteurs ajoute une sécurité supplémentaire à votre compte en exigeant un jeton unique en \nplus de votre mot de passe. Les jetons peuvent être générés sur les appareils <a href=\"https://www.google.com/search?q=authenticator+apps+for+android\" target='_blank'>Android</a> et <a href=\"https://www.google.com/search?q=authenticator+apps+for+ios\">iOS</a>.\n"
         oauth_enabled_warning: "Veuillez noter que les connexions sociales seront désactivées une fois que l'authentification à deux facteurs aura été activée sur votre compte."
         use: "<a href>Utiliser l'application Authenticator</a>"
+        enforced_notice: "Vous devez activer l'authentification à deux facteurs pour accéder à ce site."
       change_about:
         title: "Modifier À propos de moi"
         error: "Il y a eu une erreur lors de la modification de cette valeur."
@@ -774,7 +771,8 @@ fr:
         primary: "Adresse courriel principale"
         secondary: "Adresses courriel secondaires"
         no_secondary: "Aucune adresse courriel secondaire"
-        instructions: "jamais visible publiquement"
+        sso_override_instructions: "Le courriel peut être mis à jour à partir du fournisseur SSO."
+        instructions: "Jamais visible publiquement."
         ok: "Nous vous enverrons un courriel de confirmation"
         invalid: "Merci d'entrer une adresse de courriel valide"
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}"
@@ -857,14 +855,15 @@ fr:
         every_30_minutes: "toutes les 30 minutes"
         every_hour: "toutes les heures"
         daily: "quotidien"
-        every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
-        every_two_weeks: "toutes les deux semaines"
+      email_level:
+        title: "M'envoyer un courriel quand quelqu'un me cite, répond à l'un de mes messages, mentionne mon @pseudo ou m'invite à rejoindre un sujet."
+        always: "toujours"
+        only_when_away: "seulement si absent"
+        never: "jamais"
+      email_messages_level: "M'envoyer un courriel quand quelqu'un m'envoie un message direct."
       include_tl0_in_digests: "Inclure les contributions des nouveaux utilisateurs dans les résumés par courriel"
       email_in_reply_to: "Inclure un extrait du message auquel il a été répondu dans les courriels"
-      email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
-      email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message direct"
-      email_always: "Recevoir des notifications par email même lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
       new_topic_duration:
@@ -1230,13 +1229,15 @@ fr:
         other: "Séléctionner au moins {{count}} éléments."
     emoji_picker:
       filter_placeholder: Chercher un emoji
-      people: Personnes
-      nature: Nature
-      food: Nourriture
-      activity: Activité
-      travel: Voyage
+      smileys_&_emotion: Frimousses et Émotions
+      people_&_body: Personnes et Corps
+      animals_&_nature: Animaux et Nature
+      food_&_drink: Nourriture et Boisson
+      travel_&_places: Voyage et Lieux
+      activities: Activités
       objects: Objets
-      celebration: Fête
+      symbols: Symboles
+      flags: Drapeaux
       custom: Emojis personnalisés
       recent: Utilisés récemment
       default_tone: Aucun teint
@@ -1959,7 +1960,7 @@ fr:
         other: "voir {{count}} réponses cachées"
       notice:
         first: "C'est la première fois que {{user}} publie un message — accueillons-le comme il se doit dans notre communauté !"
-        return: "Cela faisait un moment que nous n'avions pas vu {{user}} — son dernier message remontait à {{time}}."
+        return: "Cela faisait un moment que nous n'avions pas vu {{user}} — son dernier message remonte à {{time}}."
       unread: "Ce message est non lu"
       has_replies:
         one: "{{count}} réponse"
@@ -1978,7 +1979,7 @@ fr:
         create: "Désolé, il y a eu une erreur lors de la publication de votre message. Merci de réessayer."
         edit: "Désolé, il y a eu une erreur lors de la modification de votre message. Merci de réessayer."
         upload: "Désolé, il y a eu une erreur lors de l'envoi du fichier. Merci de réessayer."
-        file_too_large: "Désolé, ce fichier est trop gros (la taille maximale est {{max_size_kb}}kb). Pourquoi ne pas télécharger votre gros fichier sur un service partagé cloud, puis partager le lien?"
+        file_too_large: "Désolé, ce fichier est trop volumineux (la taille maximale autorisée est de {{max_size_kb}} Ko). Pourquoi ne téléchargez-vous pas votre gros fichier sur un service d'hébergement externe, pour ensuite coller le lien ici ?"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         too_many_dragged_and_dropped_files: "Désolé, vous ne pouvez télécharger que {{max}} fichiers à la fois."
         upload_not_authorized: "Désolé, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
@@ -2240,6 +2241,11 @@ fr:
         muted:
           title: "Silencieux"
           description: "Vous ne serez jamais notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
+      search_priority:
+        label: "Priorité de recherche"
+        options:
+          normal: "Normal"
+          ignore: "Ignorer"
       sort_options:
         default: "standard"
         likes: "J'aime"
@@ -2708,6 +2714,7 @@ fr:
         moderation_tab: "Modération"
         security_tab: "Sécurité"
         reports_tab: "Rapports"
+        report_filter_any: "tous"
         disabled: Désactivé
         timeout_error: "Désolé, la requête prend trop de temps, veuillez sélectionner un intervalle plus court"
         exception_error: "Désolé, une erreur s'est produite à l'exécution de la requête"
@@ -2962,6 +2969,7 @@ fr:
           inactive: "Inactif"
           failed: "Échec"
           successful: "Succès"
+          disabled: "Désactivé"
         events:
           none: "Il n'y aucun évènement lié."
           redeliver: "Redélivrer"
@@ -3442,6 +3450,10 @@ fr:
             entity_export: "exporter l'entité"
             change_name: "modifier nom"
             topic_timestamps_changed: "date du sujet changée"
+            approve_user: "utilisateur approuvé"
+            web_hook_create: "Créer un webhook"
+            web_hook_update: "Mettre à jour le webhook"
+            web_hook_destroy: "Détruire le webhook"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3525,6 +3537,7 @@ fr:
         id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
         active: "Activé"
         show_emails: "Afficher les adresses de courriels"
+        hide_emails: "Cacher les e-mails"
         nav:
           new: "Nouveaux"
           active: "Actifs"
@@ -3777,6 +3790,7 @@ fr:
         go_back: "Retour à la recherche"
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Ne montrer que ce qui a été personnalisé"
+        more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
       settings:
         show_overriden: "Ne montrer que ce qui a été personnalisé"
         reset: "rétablir"
@@ -3949,6 +3963,16 @@ fr:
           label: "Nouveau :"
           add: "Ajouter"
           filter: "Rechercher (URL ou URL externe)"
+      reseed:
+        action:
+          label: "Remplacement du texte..."
+          title: "Remplacer le texte des catégories et des sujets avec les traductions"
+        modal:
+          title: "Remplacer le texte"
+          subtitle: "Remplacer le texte des catégories et des sujets généré automatiquement par le système avec les dernières traductions"
+          categories: "Catégories"
+          topics: "Sujets"
+          replace: "Remplacer"
   wizard_js:
     wizard:
       done: "Terminer"

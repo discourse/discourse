@@ -1,0 +1,23 @@
+<div class='created-by'>
+  {{#user-link user=reviewable.target_created_by}}
+    {{avatar reviewable.target_created_by imageSize="large"}}
+  {{/user-link}}
+</div>
+
+<div class='post-contents'>
+  <div class='names'>
+    <span class="username">
+      {{#user-link user=reviewable.target_created_by}}
+        {{reviewable.target_created_by.username}}
+      {{/user-link}}
+    </span>
+  </div>
+
+  {{reviewable-topic-link topic=reviewable.topic}}
+
+  <div class='post-body'>
+    {{{reviewable.cooked}}}
+  </div>
+
+  {{yield}}
+</div>

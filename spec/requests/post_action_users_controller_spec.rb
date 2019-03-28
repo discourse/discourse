@@ -7,8 +7,8 @@ describe PostActionUsersController do
     it 'always allows you to see your own actions' do
       notify_mod = PostActionType.types[:notify_moderators]
 
-      PostAction.act(post.user, post, notify_mod, message: 'well something is wrong here!')
-      PostAction.act(Fabricate(:user), post, notify_mod, message: 'well something is not wrong here!')
+      PostActionCreator.new(post.user, post, notify_mod, message: 'well something is wrong here!').perform
+      PostActionCreator.new(Fabricate(:user), post, notify_mod, message: 'well something is not wrong here!').perform
 
       get "/post_action_users.json", params: { id: post.id, post_action_type_id: notify_mod }
       expect(response.status).to eq(200)
@@ -61,7 +61,7 @@ describe PostActionUsersController do
     5.times do
       user = Fabricate(:user)
       user_ids << user["id"]
-      PostAction.act(user, post, PostActionType.types[:like])
+      PostActionCreator.like(user, post)
     end
 
     get "/post_action_users.json",

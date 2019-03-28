@@ -144,7 +144,6 @@ describe WatchedWord do
     end
 
     it "is compatible with flag_sockpuppets" do
-      # e.g., handle PostAction::AlreadyActed
       SiteSetting.flag_sockpuppets = true
       ip_address = '182.189.119.174'
       user1 = Fabricate(:user, ip_address: ip_address, created_at: 2.days.ago)

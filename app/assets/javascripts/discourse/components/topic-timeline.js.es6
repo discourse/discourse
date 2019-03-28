@@ -93,12 +93,5 @@ export default MountWidget.extend(Docking, {
     }
 
     this.dispatch("topic:current-post-scrolled", "timeline-scrollarea");
-  },
-
-  showModerationHistory() {
-    this.get("adminTools").showModerationHistory({
-      filter: "topic",
-      topic_id: this.get("topic.id")
-    });
   }
 });

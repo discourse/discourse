@@ -781,10 +781,11 @@ describe Topic do
     end
 
     context "user actions" do
-      let(:actions) { topic.user.user_actions }
-
       it "should set up actions correctly" do
-        UserActionCreator.enable
+        UserActionManager.enable
+
+        post = create_post(archetype: 'private_message', target_usernames: [Fabricate(:coding_horror).username])
+        actions = post.user.user_actions
 
         expect(actions.map { |a| a.action_type }).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map { |a| a.action_type }).to include(UserAction::NEW_PRIVATE_MESSAGE)
@@ -1582,7 +1583,7 @@ describe Topic do
       closing_topic.set_or_create_timer(TopicTimer.types[:open], nil)
       topic_timer = closing_topic.public_topic_timer
 
-      expect(topic_timer.execute_at).to eq(5.hours.from_now)
+      expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
       expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
     end
 

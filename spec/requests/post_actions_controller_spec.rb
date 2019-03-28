@@ -232,10 +232,12 @@ RSpec.describe PostActionsController do
 
         expect(response.status).to eq(200)
 
-        post_action = PostAction.last
-
-        expect(post_action.post_id).to eq(post_1.id)
+        post_action = PostAction.find_by(post: post_1)
         expect(post_action.staff_took_action).to eq(true)
+
+        reviewable = ReviewableFlaggedPost.find_by(target: post_1)
+        score = reviewable.reviewable_scores.first
+        expect(score.took_action?).to eq(true)
       end
 
       it "doesn't pass take_action through if the user isn't staff" do
@@ -243,35 +245,32 @@ RSpec.describe PostActionsController do
 
         post "/post_actions.json", params: {
           id: post_1.id,
-          post_action_type_id: PostActionType.types[:like]
+          post_action_type_id: PostActionType.types[:inappropriate]
         }
 
         expect(response.status).to eq(200)
 
-        post_action = PostAction.last
-
-        expect(post_action.post_id).to eq(post_1.id)
+        post_action = PostAction.find_by(post: post_1)
         expect(post_action.staff_took_action).to eq(false)
+
+        reviewable = ReviewableFlaggedPost.find_by(target: post_1)
+        score = reviewable.reviewable_scores.first
+        expect(score.took_action?).to eq(false)
       end
     end
   end
 
   describe '#defer_flags' do
-    let!(:flag) do
-      PostAction.create!(
-        post_id: flagged_post.id,
-        user_id: Fabricate(:user).id,
-        post_action_type_id: PostActionType.types[:spam]
-      )
-    end
     let(:flagged_post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+    let!(:reviewable) do
+      PostActionCreator.spam(Fabricate(:user), flagged_post).reviewable
+    end
 
     context "not logged in" do
       it "should not allow them to clear flags" do
         post "/post_actions/defer_flags.json", params: { id: flagged_post.id }
         expect(response.status).to eq(403)
-        flag.reload
-        expect(flag.deferred_at).to be_nil
+        expect(reviewable.reload).not_to be_ignored
       end
     end
 
@@ -281,8 +280,7 @@ RSpec.describe PostActionsController do
       it "raises an error without a post_action_type_id" do
         post "/post_actions/defer_flags.json", params: { id: flagged_post.id }
         expect(response.status).to eq(400)
-        flag.reload
-        expect(flag.deferred_at).to be_nil
+        expect(reviewable.reload).not_to be_ignored
       end
 
       it "raises an error when the user doesn't have access" do
@@ -293,19 +291,17 @@ RSpec.describe PostActionsController do
         }
 
         expect(response).to be_forbidden
-        flag.reload
-        expect(flag.deferred_at).to be_nil
+        expect(reviewable.reload).not_to be_ignored
       end
 
       context "success" do
-        it "delegates to defer_flags" do
+        it "performs the ignore" do
           post "/post_actions/defer_flags.json", params: {
             id: flagged_post.id, post_action_type_id: PostActionType.types[:spam]
           }
 
           expect(response.status).to eq(200)
-          flag.reload
-          expect(flag.deferred_at).to be_present
+          expect(reviewable.reload).to be_ignored
         end
 
         it "works with a deleted post" do
@@ -316,8 +312,7 @@ RSpec.describe PostActionsController do
           }
 
           expect(response.status).to eq(200)
-          flag.reload
-          expect(flag.deferred_at).to be_present
+          expect(reviewable.reload).to be_ignored
         end
       end
     end

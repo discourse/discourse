@@ -54,14 +54,14 @@ widgetTest("staff menu", {
   beforeEach() {
     this.currentUser.setProperties({
       staff: true,
-      site_flagged_posts_count: 3
+      reviewable_count: 3
     });
   },
 
   test(assert) {
     assert.ok(find(".admin-link").length);
-    assert.ok(find(".flagged-posts-link").length);
-    assert.equal(find(".flagged-posts").text(), "3");
+    assert.ok(find(".review").length);
+    assert.equal(find(".reviewables").text(), "3");
     assert.ok(!find(".settings-link").length);
   }
 });
@@ -78,32 +78,18 @@ widgetTest("staff menu - admin", {
   }
 });
 
-widgetTest("queued posts", {
+widgetTest("reviewable content", {
   template: '{{mount-widget widget="hamburger-menu"}}',
 
   beforeEach() {
     this.currentUser.setProperties({
       staff: true,
-      show_queued_posts: true,
-      post_queue_new_count: 5
+      reviewable_count: 5
     });
   },
 
   test(assert) {
-    assert.ok(find(".queued-posts-link").length);
-    assert.equal(find(".queued-posts").text(), "5");
-  }
-});
-
-widgetTest("queued posts - disabled", {
-  template: '{{mount-widget widget="hamburger-menu"}}',
-
-  beforeEach() {
-    this.currentUser.setProperties({ staff: true, show_queued_posts: false });
-  },
-
-  test(assert) {
-    assert.ok(!find(".queued-posts-link").length);
+    assert.equal(this.$(".reviewables").text(), "5");
   }
 });
 

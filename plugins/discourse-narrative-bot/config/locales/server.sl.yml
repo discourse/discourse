@@ -148,9 +148,9 @@ sl:
         message: |-
           Zahvaljujemo se vam za pridružitev %{title} in dobrodošli!
 
-          - Jaz sem samo robot, ampak [naše osebje](%{base_uri}/about) je tudi na voljo, če potrebujete pravo osebo.
+          - Jaz sem samo robot, ampak [naše osebje](%{base_uri}/about) je na voljo, če potrebujete pravo osebo.
 
-          - Iz varnostnih razlogov omejujemo kaj lahko novi uporabniki počno. Dobili boste nove zmožnosti (in [značke](%{base_uri}/badges)), ko vas bolje spoznamo.
+          - Iz varnostnih razlogov omejujemo, kaj lahko novi uporabniki počno. Dobili boste nove zmožnosti (in [značke](%{base_uri}/badges)), ko vas bolje spoznamo.
 
           - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
       onebox:
@@ -279,7 +279,7 @@ sl:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Ali ste opazili, da ste spet na začetku? Nahranite ubogegacapybara tako da **odgovorite z `:herb:` emoji** in to vas bo samodejno prestavilo na konec.
+          Ali ste opazili, da ste spet na začetku? Nahranite ubogega, lačnega capybara tako da **odgovorite z `:herb:` emoji** in to vas bo samodejno prestavilo na konec.
         reply: |-
           Super, našli ste ga :tada:
 

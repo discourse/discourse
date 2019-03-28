@@ -16,58 +16,62 @@ class TopicViewSerializer < ApplicationSerializer
     end
   end
 
-  attributes_from_topic :id,
-                        :title,
-                        :fancy_title,
-                        :posts_count,
-                        :created_at,
-                        :views,
-                        :reply_count,
-                        :like_count,
-                        :last_posted_at,
-                        :visible,
-                        :closed,
-                        :archived,
-                        :has_summary,
-                        :archetype,
-                        :slug,
-                        :category_id,
-                        :word_count,
-                        :deleted_at,
-                        :pending_posts_count,
-                        :user_id,
-                        :featured_link,
-                        :featured_link_root_domain,
-                        :pinned_globally,
-                        :pinned_at,
-                        :pinned_until
+  attributes_from_topic(
+    :id,
+    :title,
+    :fancy_title,
+    :posts_count,
+    :created_at,
+    :views,
+    :reply_count,
+    :like_count,
+    :last_posted_at,
+    :visible,
+    :closed,
+    :archived,
+    :has_summary,
+    :archetype,
+    :slug,
+    :category_id,
+    :word_count,
+    :deleted_at,
+    :user_id,
+    :featured_link,
+    :featured_link_root_domain,
+    :pinned_globally,
+    :pinned_at,
+    :pinned_until
+  )
 
-  attributes :draft,
-             :draft_key,
-             :draft_sequence,
-             :posted,
-             :unpinned,
-             :pinned,
-             :details,
-             :current_post_number,
-             :highest_post_number,
-             :last_read_post_number,
-             :last_read_post_id,
-             :deleted_by,
-             :has_deleted,
-             :actions_summary,
-             :expandable_first_post,
-             :is_warning,
-             :chunk_size,
-             :bookmarked,
-             :message_archived,
-             :topic_timer,
-             :private_topic_timer,
-             :unicode_title,
-             :message_bus_last_id,
-             :participant_count,
-             :destination_category_id,
-             :pm_with_non_human_user
+  attributes(
+    :draft,
+    :draft_key,
+    :draft_sequence,
+    :posted,
+    :unpinned,
+    :pinned,
+    :details,
+    :current_post_number,
+    :highest_post_number,
+    :last_read_post_number,
+    :last_read_post_id,
+    :deleted_by,
+    :has_deleted,
+    :actions_summary,
+    :expandable_first_post,
+    :is_warning,
+    :chunk_size,
+    :bookmarked,
+    :message_archived,
+    :topic_timer,
+    :private_topic_timer,
+    :unicode_title,
+    :message_bus_last_id,
+    :participant_count,
+    :destination_category_id,
+    :pm_with_non_human_user,
+    :pending_posts_count
+  )
 
   # TODO: Split off into proper object / serializer
   def details
@@ -242,10 +246,6 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic_user&.bookmarked
   end
 
-  def include_pending_posts_count?
-    scope.is_staff? && NewPostManager.queue_enabled?
-  end
-
   def topic_timer
     TopicTimerSerializer.new(object.topic.public_topic_timer, root: false)
   end
@@ -295,6 +295,14 @@ class TopicViewSerializer < ApplicationSerializer
     scope.can_create_shared_draft? &&
       object.topic.category_id == SiteSetting.shared_drafts_category.to_i &&
       object.topic.shared_draft.present?
+  end
+
+  def pending_posts_count
+    ReviewableQueuedPost.viewable_by(scope.user).where(topic_id: object.topic.id).pending.count
+  end
+
+  def include_pending_posts_count?
+    scope.is_staff? && NewPostManager.queue_enabled?
   end
 
   private

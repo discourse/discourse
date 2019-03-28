@@ -47,28 +47,6 @@ preload_app true
 # fast LAN.
 check_client_connection false
 
-@stats_socket_dir = ENV["UNICORN_STATS_SOCKET_DIR"]
-
-def clean_up_stats_socket(server, pid)
-  if @stats_socket_dir.present?
-    name = "#{@stats_socket_dir}/#{pid}.sock"
-    FileUtils.rm_f(name)
-    server.logger.info "Cleaned up stats socket at #{name}"
-  end
-rescue => e
-  server.logger.warn "Failed to clean up stats socket #{e}"
-end
-
-def start_stats_socket(server)
-  if @stats_socket_dir.present?
-    name = "#{@stats_socket_dir}/#{Process.pid}.sock"
-    StatsSocket.new(name).start
-    server.logger.info "Started stats socket at #{name}"
-  end
-rescue => e
-  server.logger.warn "Failed to start stats socket #{e}"
-end
-
 initialized = false
 before_fork do |server, worker|
 
@@ -83,18 +61,6 @@ before_fork do |server, worker|
 
     # router warm up
     Rails.application.routes.recognize_path('abc') rescue nil
-
-    if @stats_socket_dir.present?
-      server.logger.info "Initializing stats socket at #{@stats_socket_dir}"
-      begin
-        require 'stats_socket'
-        FileUtils.mkdir_p @stats_socket_dir
-        FileUtils.rm_f Dir.glob("#{@stats_socket_dir}/*.sock")
-        start_stats_socket(server)
-      rescue => e
-        server.logger.info "Failed to initialize stats socket dir #{e}"
-      end
-    end
 
     # preload discourse version
     Discourse.git_version
@@ -125,7 +91,6 @@ before_fork do |server, worker|
 
       require 'demon/sidekiq'
       Demon::Sidekiq.after_fork do
-        start_stats_socket(server) if @stats_socket_dir
         DiscourseEvent.trigger(:sidekiq_fork_started)
       end
 
@@ -220,13 +185,7 @@ before_fork do |server, worker|
   sleep 1
 end
 
-after_worker_exit do |server, worker, status|
-  clean_up_stats_socket(server, status.pid)
-end
-
 after_fork do |server, worker|
-  start_stats_socket(server)
-
   DiscourseEvent.trigger(:web_fork_started)
 
   # warm up v8 after fork, that way we do not fork a v8 context

@@ -1,3 +1,4 @@
+import deprecated from "discourse-common/lib/deprecated";
 import { escapeExpression } from "discourse/lib/utilities";
 
 const fadeSpeed = 300;
@@ -77,12 +78,16 @@ export function hideTooltip() {
 }
 
 export function registerTooltip(jqueryContext) {
+  deprecated("tooltip is getting deprecated. Use d-popover instead");
+
   if (jqueryContext.length) {
     jqueryContext.off("click").on("click", event => showTooltip(event));
   }
 }
 
 export function registerHoverTooltip(jqueryContext) {
+  deprecated("tooltip is getting deprecated. Use d-popover instead");
+
   if (jqueryContext.length) {
     jqueryContext
       .off("mouseenter mouseleave click")

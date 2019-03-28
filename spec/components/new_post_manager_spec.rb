@@ -238,24 +238,43 @@ describe NewPostManager do
       expect(result).to be_success
       expect(result.post).to be_blank
       expect(@counter).to be(1)
-      expect(QueuedPost.new_count).to be(0)
+      expect(Reviewable.list_for(Discourse.system_user).count).to be(0)
     end
 
     it "calls custom enqueuing handlers" do
-      manager = NewPostManager.new(topic.user, raw: 'to the handler I say enqueue me!', title: 'this is the title of the queued post')
+      SiteSetting.min_score_default_visibility = 20.5
+
+      manager = NewPostManager.new(
+        topic.user,
+        raw: 'to the handler I say enqueue me!',
+        title: 'this is the title of the queued post'
+      )
 
       result = manager.perform
 
-      enqueued = result.queued_post
+      reviewable = result.reviewable
 
-      expect(enqueued).to be_present
-      expect(enqueued.post_options['title']).to eq('this is the title of the queued post')
+      expect(reviewable).to be_present
+      expect(reviewable.payload['title']).to eq('this is the title of the queued post')
+      expect(reviewable.reviewable_scores).to be_present
+      expect(reviewable.score).to eq(20.5)
+      expect(reviewable.reviewable_by_moderator?).to eq(true)
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
       expect(result.pending_count).to eq(1)
       expect(result.post).to be_blank
-      expect(QueuedPost.new_count).to eq(1)
+      expect(Reviewable.list_for(Discourse.system_user).count).to eq(1)
       expect(@counter).to be(0)
+
+      reviewable.perform(Discourse.system_user, :approve)
+
+      manager = NewPostManager.new(
+        topic.user,
+        raw: 'another post by this user queue me',
+        title: 'cool title in another topic'
+      )
+      result = manager.perform
+      expect(result.pending_count).to eq(1)
     end
 
     it "if nothing returns a result it creates a post" do

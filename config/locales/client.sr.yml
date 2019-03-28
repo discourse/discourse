@@ -217,8 +217,6 @@ sr:
     every_hour: "svakog sata"
     daily: "svakodnevno"
     weekly: "nedeljno"
-    every_two_weeks: "svake dve nedelje"
-    every_three_days: "svaka tri dana"
     max_of_count: "maksimalno od {{count}}"
     alternation: "ili"
     character_count:
@@ -514,11 +512,7 @@ sr:
       email_digests:
         every_30_minutes: "svakih 30 minuta"
         daily: "dnevno"
-        every_three_days: "svaka tri dana"
         weekly: "nedeljno"
-        every_two_weeks: "svake dve nedelje"
-      email_private_messages: "Pošalji mi email kada mi neko pošalje poruku"
-      email_always: "Šalji mi email notifikacije i kada sam aktivan na sajtu"
       other_settings: "Drugo"
       categories_settings: "Kategorije"
       new_topic_duration:

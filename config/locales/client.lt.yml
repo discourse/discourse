@@ -249,8 +249,6 @@ lt:
     every_hour: "kiekvieną valandą"
     daily: "kas dieną"
     weekly: "kas savaitę"
-    every_two_weeks: "kas antrą savaitę"
-    every_three_days: "kas trečią dieną"
     max_of_count: "daugiausia iš {{count}}"
     alternation: "arba"
     character_count:
@@ -805,14 +803,9 @@ lt:
         every_30_minutes: "kas 30 minučių"
         every_hour: "kas valandą"
         daily: "kas dieną"
-        every_three_days: "kas trečią dieną"
         weekly: "kas savaitę"
-        every_two_weeks: "kas antrą savaitę"
       include_tl0_in_digests: "Įtraukti turinį iš naujų vartotojų taip pat į elektroninių laiškų užklausas."
       email_in_reply_to: "Įtraukti atsakytų įrašų ištraukas taip pat į mano elektroninį paštą"
-      email_direct: "Atsiųskite man el. laišką, jei kažkas mane cituoja, atsako į mano įrašą, pakviečia į temą ar pamini mane."
-      email_private_messages: "Atsiųskite man el. laišką jei kažkas man parašo"
-      email_always: "Siųskite man el. laiškus net jeigu aš tuo metu esu prisijungęs prie puslapio"
       other_settings: "Kita"
       categories_settings: "Kategorijos"
       new_topic_duration:
@@ -1107,11 +1100,7 @@ lt:
         many: "Pasirinkite bent {{count}} elementus."
         other: "Pasirinkite bent {{count}} elementus."
     emoji_picker:
-      food: Maistas
-      activity: Veikla
-      travel: Kelionės
       objects: Objektai
-      celebration: Šventė
       recent: Neseniai naudoti
     shared_drafts:
       publish: "Publikuoti pasidalintą juodraštį"

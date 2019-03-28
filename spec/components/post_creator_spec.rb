@@ -123,7 +123,7 @@ describe PostCreator do
 
       it "generates the correct messages for a secure topic" do
 
-        UserActionCreator.enable
+        UserActionManager.enable
 
         admin = Fabricate(:admin)
 
@@ -157,7 +157,7 @@ describe PostCreator do
 
       it 'generates the correct messages for a normal topic' do
 
-        UserActionCreator.enable
+        UserActionManager.enable
 
         p = nil
         messages = MessageBus.track_publish do
@@ -374,8 +374,8 @@ describe PostCreator do
 
             topic_timer.reload
 
-            expect(topic_timer.execute_at).to eq(Time.zone.now + 12.hours)
-            expect(topic_timer.created_at).to eq(Time.zone.now)
+            expect(topic_timer.execute_at).to eq_time(Time.zone.now + 12.hours)
+            expect(topic_timer.created_at).to eq_time(Time.zone.now)
           end
 
           describe "when auto_close_topics_post_count has been reached" do
@@ -401,7 +401,7 @@ describe PostCreator do
               ))
 
               expect(topic.closed).to eq(true)
-              expect(topic_timer.reload.deleted_at).to eq(Time.zone.now)
+              expect(topic_timer.reload.deleted_at).to eq_time(Time.zone.now)
             end
           end
         end

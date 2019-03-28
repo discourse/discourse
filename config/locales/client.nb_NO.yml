@@ -202,8 +202,6 @@ nb_NO:
     every_hour: "hver time"
     daily: "daglig"
     weekly: "ukentlig"
-    every_two_weeks: "annenhver uke"
-    every_three_days: "hver tredje dag"
     max_of_count: "maksimum av {{count}}"
     alternation: "eller"
     character_count:
@@ -711,7 +709,6 @@ nb_NO:
         primary: "Primær e-post"
         secondary: "Sekundære e-poster"
         no_secondary: "Ingen sekundære e-poster"
-        instructions: "aldri vist til offentligheten"
         ok: "Vi sender deg en e-post for å bekrefte"
         invalid: "Oppgi en gyldig e-postadresse"
         authenticated: "Din e-post har blitt autentisert av {{provider}}"
@@ -771,14 +768,9 @@ nb_NO:
         every_30_minutes: "hvert 30 minutt"
         every_hour: "hver time"
         daily: "daglig"
-        every_three_days: "hver tredje dag"
         weekly: "ukentlig"
-        every_two_weeks: "annenhver uke"
       include_tl0_in_digests: "Inkluder innhold fra nye brukere i oppsummerings-eposter"
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
-      email_direct: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
-      email_private_messages: "Motta en e-post når noen sender meg en melding"
-      email_always: "Send meg varsler på e-post selv når jeg er aktiv på nettstedet"
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -1132,13 +1124,7 @@ nb_NO:
         other: "Velg minst {{count}} elementer."
     emoji_picker:
       filter_placeholder: Søk etter emoji
-      people: Folk
-      nature: Natur
-      food: Mat
-      activity: Aktivitet
-      travel: Reise
       objects: Objekter
-      celebration: Feiring
       custom: Egendefinerte emoji-er
       recent: Nylig brukt
       default_tone: Ingen hudtone
@@ -1835,7 +1821,6 @@ nb_NO:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
         upload: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
-        file_too_large: "Beklager, den filen er for stor. Største tillatte størrelse er {{max_size_kb}} kb. Hvorfor ikke heller laste opp filen til en fildelingstjeneste og dele lenken?"
         too_many_uploads: "Du kan bare laste opp ett bilde av gangen."
         upload_not_authorized: "Beklager, filen du forsøket å laste opp er ikke tillatt. Tillatte filendelser er {{authorized_extensions}}."
         image_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp bilder"

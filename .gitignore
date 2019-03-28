@@ -125,5 +125,8 @@ vendor/bundle/*
 
 /vendor/data/GeoLite2-City.mmdb
 
+# Vagrant
+.vagrant
+
 # ignore auto-genarated plugin js assets
 /app/assets/javascripts/plugins/*

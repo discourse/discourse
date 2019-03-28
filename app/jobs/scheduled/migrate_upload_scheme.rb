@@ -26,9 +26,10 @@ module Jobs
 
       # migrate optimized_images to new scheme
       problems = OptimizedImage.migrate_to_new_scheme(50)
+
       problems.each do |hash|
-        optimized_image_id = hash[:optimized_image].id
-        Discourse.handle_job_exception(hash[:ex], error_context(args, "Migrating optimized_image id #{optimized_image_id}", optimized_image_id: optimized_image_id))
+        image = OptimizedImage.find_by(id:  hash[:optimized_image].id)
+        image.destroy! if image
       end
     end
 

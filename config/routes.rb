@@ -94,8 +94,6 @@ Discourse::Application.routes.draw do
     get "groups/:type" => "groups#show", constraints: AdminConstraint.new
     get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
-    get "moderation_history" => "moderation_history#index"
-
     resources :users, id: RouteFormat.username, except: [:show] do
       collection do
         get "list" => "users#index"
@@ -319,6 +317,15 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get "review" => "reviewables#index" # For ember app
+  get "review/:reviewable_id" => "reviewables#show", constraints: { reviewable_id: /\d+/ }
+  get "review/topics" => "reviewables#topics"
+  put "review/:reviewable_id/perform/:action_id" => "reviewables#perform", constraints: {
+    reviewable_id: /\d+/,
+    action_id: /[a-z\_]+/
+  }
+  put "review/:reviewable_id" => "reviewables#update", constraints: { reviewable_id: /\d+/ }
+
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
   get "session/sso_provider" => "session#sso_provider"
@@ -345,6 +352,7 @@ Discourse::Application.routes.draw do
 
   get "my/*path", to: 'users#my_redirect'
   get "user_preferences" => "users#user_preferences_redirect"
+  get ".well-known/change-password", to: redirect(relative_url_root + 'my/preferences/account', status: 302)
 
   %w{users u}.each_with_index do |root_path, index|
     get "#{root_path}" => "users#index", constraints: { format: 'html' }
@@ -425,8 +433,7 @@ Discourse::Application.routes.draw do
     post "#{root_path}/:username/preferences/revoke-auth-token" => "users#revoke_auth_token", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/staff-info" => "users#staff_info", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/summary" => "users#summary", constraints: { username: RouteFormat.username }
-    put "#{root_path}/:username/ignore" => "users#ignore", constraints: { username: RouteFormat.username }
-    delete "#{root_path}/:username/ignore" => "users#unignore", constraints: { username: RouteFormat.username }
+    put "#{root_path}/:username/notification_level" => "users#notification_level", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited" => "users#invited", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited_count" => "users#invited_count", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/invited/:filter" => "users#invited", constraints: { username: RouteFormat.username }
@@ -440,7 +447,6 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
-    get "#{root_path}/:username/activity/pending" => "users#show", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username, format: /(json|html)/ }
     get "#{root_path}/by-external/:external_id" => "users#show", constraints: { external_id: /[^\/]+/ }
     get "#{root_path}/:username/flagged-posts" => "users#show", constraints: { username: RouteFormat.username }
@@ -511,6 +517,7 @@ Discourse::Application.routes.draw do
         %w{
           activity
           activity/:filter
+          requests
           messages
           messages/inbox
           messages/archive
@@ -527,6 +534,7 @@ Discourse::Application.routes.draw do
         put "members" => "groups#add_members"
         delete "members" => "groups#remove_member"
         post "request_membership" => "groups#request_membership"
+        put "handle_membership_request" => "groups#handle_membership_request"
         post "notifications" => "groups#set_notifications"
       end
     end

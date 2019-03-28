@@ -144,6 +144,7 @@ zh_CN:
       title: "新用户欢迎教程完毕证明"
       cert_title: "你已经成功完成新用户教程了"
       hello:
+        title: "欢迎！"
         message: |-
           感谢加入%{title}， 欢迎！
 

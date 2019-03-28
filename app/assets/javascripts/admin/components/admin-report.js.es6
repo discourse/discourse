@@ -4,10 +4,6 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
-import {
-  registerHoverTooltip,
-  unregisterHoverTooltip
-} from "discourse/lib/tooltip";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -100,18 +96,6 @@ export default Ember.Component.extend({
     } else if (this.get("dataSourceName")) {
       this._fetchReport();
     }
-  },
-
-  didRender() {
-    this._super(...arguments);
-
-    registerHoverTooltip($(".info[data-tooltip]"));
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    unregisterHoverTooltip($(".info[data-tooltip]"));
   },
 
   showError: Ember.computed.or(

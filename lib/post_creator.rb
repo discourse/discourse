@@ -169,6 +169,7 @@ class PostCreator
         create_topic
         create_post_notice
         save_post
+        UserActionManager.post_created(@post)
         extract_links
         track_topic
         update_topic_stats
@@ -419,16 +420,18 @@ class PostCreator
   end
 
   def update_topic_stats
+    attrs = { updated_at: Time.now }
+
     if @post.post_type != Post.types[:whisper]
-      attrs = {}
       attrs[:last_posted_at] = @post.created_at
       attrs[:last_post_user_id] = @post.user_id
       attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
       attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
-      attrs[:updated_at] = Time.now
       @topic.update_columns(attrs)
     end
+
+    @topic.update_columns(attrs)
   end
 
   def update_topic_auto_close

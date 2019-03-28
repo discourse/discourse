@@ -131,8 +131,6 @@ te:
     every_hour: "ప్రతి గంట"
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
-    every_two_weeks: "రెండువారాలకోసారి"
-    every_three_days: "ప్రతి మూడు రోజులకీ"
     max_of_count: "{{count}} గరిష్టం"
     alternation: "లేదా"
     character_count:
@@ -394,9 +392,7 @@ te:
         always: "ఎల్లప్పుడూ"
       email_digests:
         daily: "ప్రతీరోజు"
-        every_three_days: "ప్రతి మూడు రోజులకీ"
         weekly: "ప్రతీవారం"
-        every_two_weeks: "ప్రతి రెండు వారాలకీ"
       other_settings: "ఇతర"
       categories_settings: "వర్గాలు"
       new_topic_duration:
@@ -560,10 +556,6 @@ te:
       twitter: "ట్విట్టర్"
     category_page_style:
       categories_only: "వర్గాలు మాత్రమే"
-    emoji_picker:
-      people: ప్రజలు
-      nature: ప్రకృతి
-      food: ఆహారం
     composer:
       options: "ఎంపికలు"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"

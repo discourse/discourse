@@ -5,4 +5,18 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-pl_PL: {}
+pl_PL:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Dziś %{time}
+      title: Wstaw datę
+      create:
+        modal_title: Wstaw datę
+        form:
+          insert: Wstaw
+          advanced_mode: Tryb zaawansowany
+          simple_mode: Tryb prosty
+          date_title: Data
+          time_title: Czas
+          format_title: Format daty

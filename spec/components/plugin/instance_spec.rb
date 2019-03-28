@@ -462,4 +462,14 @@ describe Plugin::Instance do
     end
   end
 
+  describe '#register_reviewable_types' do
+    it 'Overrides the existing Reviewable types adding new ones' do
+      current_types = Reviewable.types
+      new_type_class = Class
+
+      Plugin::Instance.new.register_reviewable_type new_type_class
+
+      expect(Reviewable.types).to match_array(current_types << new_type_class.name)
+    end
+  end
 end

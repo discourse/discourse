@@ -155,7 +155,7 @@ RSpec.configure do |config|
     RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
-    UserActionCreator.disable
+    UserActionManager.disable
     NotificationEmailer.disable
 
     SiteSetting.provider.all.each do |setting|
@@ -278,8 +278,17 @@ def set_cdn_url(cdn_url)
 end
 
 def freeze_time(now = Time.now)
-  datetime = DateTime.parse(now.to_s)
-  time = Time.parse(now.to_s)
+  time = now
+  datetime = now
+
+  if Time === now
+    datetime = now.to_datetime
+  elsif DateTime === now
+    time = now.to_time
+  else
+    datetime = DateTime.parse(now.to_s)
+    time = Time.parse(now.to_s)
+  end
 
   if block_given?
     raise "nested freeze time not supported" if TrackTimeStub.stubbed

@@ -51,7 +51,7 @@ describe PostsController do
       json = ::JSON.parse(response.body)
       post_id = json["id"]
 
-      expect(Poll.find_by(post_id: post_id).close_at).to eq(1.month.from_now)
+      expect(Poll.find_by(post_id: post_id).close_at).to be_within_one_second_of(1.month.from_now)
 
       job = Jobs::ClosePoll.jobs.first
       job_args = job["args"].first

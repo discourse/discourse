@@ -383,7 +383,7 @@ class TopicView
   end
 
   def all_active_flags
-    @all_active_flags ||= PostAction.active_flags_counts_for(@posts)
+    @all_active_flags ||= ReviewableFlaggedPost.counts_for(@posts)
   end
 
   def links
@@ -421,10 +421,10 @@ class TopicView
   end
 
   # This is pending a larger refactor, that allows custom orders
-  #  for now we need to look for the highest_post_number in the stream
-  #  the cache on topics is not correct if there are deleted posts at
-  #  the end of the stream (for mods), nor is it correct for filtered
-  #  streams
+  # for now we need to look for the highest_post_number in the stream
+  # the cache on topics is not correct if there are deleted posts at
+  # the end of the stream (for mods), nor is it correct for filtered
+  # streams
   def highest_post_number
     @highest_post_number ||= @filtered_posts.maximum(:post_number)
   end

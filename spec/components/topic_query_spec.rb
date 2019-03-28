@@ -102,8 +102,8 @@ describe TopicQuery do
 
       post2 = Fabricate(:post)
 
-      PostAction.act(user, post, PostActionType.types[:bookmark])
-      PostAction.act(user, reply, PostActionType.types[:bookmark])
+      PostActionCreator.create(user, post, :bookmark)
+      PostActionCreator.create(user, reply, :bookmark)
       TopicUser.change(user, post.topic, notification_level: 1)
       TopicUser.change(user, post2.topic, notification_level: 1)
 

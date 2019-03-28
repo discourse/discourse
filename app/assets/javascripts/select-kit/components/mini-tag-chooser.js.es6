@@ -16,7 +16,8 @@ export default ComboBox.extend(TagsMixin, {
   verticalOffset: 3,
   filterable: true,
   noTags: Ember.computed.empty("selection"),
-  allowAny: true,
+  allowCreate: null,
+  allowAny: Ember.computed.alias("allowCreate"),
   caretUpIcon: Ember.computed.alias("caretIcon"),
   caretDownIcon: Ember.computed.alias("caretIcon"),
   isAsync: true,
@@ -27,6 +28,10 @@ export default ComboBox.extend(TagsMixin, {
 
     this.set("termMatchesForbidden", false);
     this.selectionSelector = ".selected-tag";
+
+    if (this.get("allowCreate") !== false) {
+      this.set("allowCreate", this.site.get("can_create_tag"));
+    }
 
     this.set("templateForRow", rowComponent => {
       const tag = rowComponent.get("computedContent");
@@ -205,6 +210,7 @@ export default ComboBox.extend(TagsMixin, {
     // TODO: FIX buffered-proxy.js to support arrays
     this.get("tags").removeObjects(tags);
     this.set("tags", this.get("tags").slice(0));
+    this._tagsChanged();
 
     this.set(
       "searchDebounce",
@@ -216,9 +222,17 @@ export default ComboBox.extend(TagsMixin, {
     this.destroyTags(tags);
   },
 
+  _tagsChanged() {
+    if (this.attrs.onChangeTags) {
+      this.attrs.onChangeTags({ target: { value: this.get("tags") } });
+    }
+  },
+
   actions: {
     onSelect(tag) {
       this.set("tags", makeArray(this.get("tags")).concat(tag));
+      this._tagsChanged();
+
       this._prepareSearch(this.get("filter"));
       this.autoHighlight();
     },

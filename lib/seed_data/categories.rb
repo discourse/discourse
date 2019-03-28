@@ -120,7 +120,7 @@ module SeedData
 
         if force_permissions
           category.set_permissions(permissions)
-          category.save! if category.changed?
+          category.save!(validate: false) if category.changed?
         end
       end
     end

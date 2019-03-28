@@ -9,6 +9,7 @@ describe Guardian do
   let(:user) { Fabricate(:user) }
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
+  let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
   let(:trust_level_4)  { build(:user, trust_level: 4) }
@@ -809,7 +810,7 @@ describe Guardian do
 
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_falsey
 
-        PostAction.act(user, first_post, PostActionType.types[:off_topic])
+        PostActionCreator.create(user, first_post, :off_topic)
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
       end
     end
@@ -1698,6 +1699,21 @@ describe Guardian do
 
   end
 
+  context "can_delete_post_action?" do
+    let(:post) { Fabricate(:post) }
+
+    it "allows us to remove a bookmark" do
+      pa = PostActionCreator.bookmark(user, post).post_action
+      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
+    end
+
+    it "allows us to remove a very old bookmark" do
+      pa = PostActionCreator.bookmark(user, post).post_action
+      pa.update(created_at: 2.years.ago)
+      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
+    end
+  end
+
   context 'can_delete?' do
 
     it 'returns false with a nil object' do
@@ -1857,7 +1873,7 @@ describe Guardian do
         user.id = 1
         post.id = 1
 
-        a = PostAction.new(user: user, post: post, post_action_type_id: 1)
+        a = PostAction.new(user: user, post: post, post_action_type_id: 2)
         a.created_at = 1.minute.ago
         a
       }
@@ -1872,7 +1888,7 @@ describe Guardian do
 
       it "returns false if the window has expired" do
         post_action.created_at = 20.minutes.ago
-        SiteSetting.expects(:post_undo_action_window_mins).returns(10)
+        SiteSetting.post_undo_action_window_mins = 10
         expect(Guardian.new(user).can_delete?(post_action)).to be_falsey
       end
 
@@ -2694,6 +2710,61 @@ describe Guardian do
 
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
+      end
+    end
+  end
+
+  describe '#can_mute_user?' do
+
+    let(:guardian) { Guardian.new(trust_level_1) }
+
+    context "when muted user is the same as guardian user" do
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(trust_level_1.id)).to eq(false)
+      end
+    end
+
+    context "when muted user is a staff user" do
+      let!(:admin) { Fabricate(:user, admin: true) }
+
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(admin.id)).to eq(false)
+      end
+    end
+
+    context "when muted user is a normal user" do
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when muter's trust level is below tl1" do
+      let(:guardian) { Guardian.new(trust_level_0) }
+      let!(:another_user) { Fabricate(:user) }
+      let!(:trust_level_0) { build(:user, trust_level: 0) }
+
+      it 'does not allow muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(false)
+      end
+    end
+
+    context "when muter is staff" do
+      let(:guardian) { Guardian.new(admin) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
+      end
+    end
+
+    context "when muters's trust level is tl1" do
+      let(:guardian) { Guardian.new(trust_level_1) }
+      let!(:another_user) { Fabricate(:user) }
+
+      it 'allows muting user' do
+        expect(guardian.can_mute_user?(another_user.id)).to eq(true)
       end
     end
   end

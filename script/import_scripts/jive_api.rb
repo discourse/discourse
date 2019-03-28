@@ -184,8 +184,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
       break if likes["error"]
       likes["list"].each do |like|
         next unless user_id = user_id_from_imported_user_id(like["id"])
-        next if PostAction.exists?(user_id: user_id, post_id: post_id, post_action_type_id: PostActionType.types[:like])
-        PostAction.act(User.find(user_id), Post.find(post_id), PostActionType.types[:like])
+        PostActionCreator.like(User.find(user_id), Post.find(post_id))
       end
 
       break if likes["list"].size < USER_COUNT || likes.dig("links", "next").blank?
@@ -287,8 +286,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
       favorites["list"].each do |favorite|
         next unless user_id = user_id_from_imported_user_id(favorite["author"]["id"])
         next unless post_id = post_id_from_imported_post_id(favorite["favoriteObject"]["id"])
-        next if PostAction.exists?(user_id: user_id, post_id: post_id, post_action_type_id: PostActionType.types[:bookmark])
-        PostAction.act(User.find(user_id), Post.find(post_id), PostActionType.types[:bookmark])
+        PostActionCreator.create(User.find(user_id), Post.find(post_id), :bookmark)
       end
 
       break if favorites["list"].size < POST_COUNT || favorites.dig("links", "next").blank?

@@ -2013,7 +2013,7 @@ RSpec.describe TopicsController do
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
 
-      PostAction.act(user, post2, bookmark)
+      PostActionCreator.new(user, post2, bookmark).perform
 
       put "/t/#{post.topic_id}/bookmark.json"
       expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(2)
