@@ -216,8 +216,6 @@ nl:
     every_hour: "elk uur"
     daily: "dagelijks"
     weekly: "wekelijks"
-    every_two_weeks: "elke twee weken"
-    every_three_days: "elke drie dagen"
     max_of_count: "maximaal {{count}}"
     alternation: "of"
     character_count:
@@ -440,7 +438,7 @@ nl:
         closed: "Gesloten"
         public: "Openbaar"
         private: "Privé"
-        public_groups: "Publieke groepen"
+        public_groups: "Openbare groepen"
         automatic_group: Automatische groep
         close_group: Besloten groep
         my_groups: "Mijn groepen"
@@ -574,8 +572,6 @@ nl:
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
-      ignore: "Negeren"
-      unignore: "Negeren opheffen"
       activity_stream: "Activiteit"
       preferences: "Voorkeuren"
       profile_hidden: "Het openbare profiel van deze gebruiker is verborgen."
@@ -658,7 +654,7 @@ nl:
       muted_users: "Genegeerd"
       muted_users_instructions: "Alle meldingen van deze gebruikers onderdrukken"
       ignored_users: "Genegeerd"
-      ignored_users_instructions: "Vermeldt al uw genegeerde gebruikers."
+      ignored_users_instructions: "Alle berichten en meldingen van deze gebruikers onderdrukken."
       muted_topics_link: "Genegeerde topics tonen"
       watched_topics_link: "In de gaten gehouden topics tonen"
       tracked_topics_link: "Gevolgde topics tonen"
@@ -729,13 +725,14 @@ nl:
         label: "Code"
         rate_limit: "Wacht even voordat u een andere authenticatiecode probeert."
         enable_description: |
-          Scan deze QR-code in een ondersteunde app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> - <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) en voer uw authenticatiecode in.
+          Scan deze QR-code in een ondersteunde app (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) en voer uw authenticatiecode in.
         disable_description: "Voer de authenticatiecode van uw app in"
         show_key_description: "Voer handmatig in"
         extended_description: |
           Twee-factor-authenticatie voegt extra beveiliging toe aan uw account door naast uw wachtwoord een eenmalige code te vereisen. Tokens kunnen op <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a>- en <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-apparaten worden gegenereerd.
         oauth_enabled_warning: "Hou er rekening mee dat sociale aanmeldingen worden uitgeschakeld als u twee-factor-authenticatie op uw account inschakelt."
         use: "<a href>Authenticator-app gebruiken</a>"
+        enforced_notice: "U dient twee-factor-authenticatie in te schakelen voordat u deze website bezoekt."
       change_about:
         title: "Over mij wijzigen"
         error: "Er is een fout opgetreden bij het wijzigen van deze waarde."
@@ -773,7 +770,8 @@ nl:
         primary: "Primair e-mailadres"
         secondary: "Extra e-mailadressen"
         no_secondary: "Geen extra e-mailadressen"
-        instructions: "nooit openbaar zichtbaar"
+        sso_override_instructions: "E-mailadres kan vanaf SSO-provider worden bijgewerkt."
+        instructions: "Nooit openbaar zichtbaar."
         ok: "We sturen een e-mail ter bevestiging"
         invalid: "Voer een geldig e-mailadres in "
         authenticated: "Uw e-mailadres is geauthenticeerd door {{provider}}"
@@ -856,14 +854,15 @@ nl:
         every_30_minutes: "elke 30 minuten"
         every_hour: "elk uur"
         daily: "dagelijks"
-        every_three_days: "elke drie dagen"
         weekly: "wekelijks"
-        every_two_weeks: "elke twee weken"
+      email_level:
+        title: "Mij een e-mail sturen wanneer iemand mij citeert, op mijn bericht antwoordt, mijn @gebruikersnaam vermeldt, of mij voor een topic uitnodigt"
+        always: "altijd"
+        only_when_away: "alleen wanneer afwezig"
+        never: "nooit"
+      email_messages_level: "Mij een e-mail sturen wanneer iemand mij een bericht stuurt"
       include_tl0_in_digests: "Bijdragen van nieuwe gebruikers in e-mailsamenvattingen bijvoegen"
       email_in_reply_to: "Fragment van antwoord op bericht in e-mails bijvoegen"
-      email_direct: "Mij een e-mail sturen wanneer iemand me citeert, op mijn bericht antwoordt, mijn @gebruikersnaam vermeldt of mij voor een topic uitnodigt"
-      email_private_messages: "Mij een e-mail sturen wanneer iemand mij een bericht stuurt"
-      email_always: "Mij ook e-mailmeldingen sturen wanneer ik op de website actief ben"
       other_settings: "Overige"
       categories_settings: "Categorieën"
       new_topic_duration:
@@ -1229,13 +1228,15 @@ nl:
         other: "Selecteer minstens {{count}} items."
     emoji_picker:
       filter_placeholder: Zoeken naar emoji
-      people: Mensen
-      nature: Natuur
-      food: Voeding
-      activity: Activiteit
-      travel: Reizen
+      smileys_&_emotion: Smileys en Emotie
+      people_&_body: Mensen en Lichaam
+      animals_&_nature: Dieren en Natuur
+      food_&_drink: Eten en Drinken
+      travel_&_places: Reizen en Plaatsen
+      activities: Activiteiten
       objects: Objecten
-      celebration: Viering
+      symbols: Symbolen
+      flags: Vlaggen
       custom: Eigen emoji
       recent: Onlangs gebruikt
       default_tone: Geen huidskleur
@@ -1502,7 +1503,7 @@ nl:
           seen: Ik heb gelezen
           unseen: die ik niet heb gelezen
           wiki: die een wiki zijn
-          images: afbeelding(en) bijvoegen
+          images: die afbeelding(en) bevatten
           all_tags: Alle bovenstaande tags
         statuses:
           label: Waarin topics
@@ -1773,7 +1774,7 @@ nl:
         reset_read: "Leesgegevens herinitialiseren"
         make_public: "Topic openbaar maken"
         make_private: "Persoonlijk bericht maken"
-        reset_bump_date: "Bumpdatum herinitialiseren"
+        reset_bump_date: "Bumpdatum terugzetten"
       feature:
         pin: "Topic vastmaken"
         unpin: "Topic losmaken"
@@ -1977,7 +1978,7 @@ nl:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van uw bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van uw bericht. Probeer het opnieuw."
         upload: "Sorry, er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
-        file_too_large: "Sorry, dat bestand is te groot (maximale grootte is {{max_size_kb}} kB). Misschien kunt u dit bestand uploaden naar een cloudopslagdienst en de koppeling ernaar delen?"
+        file_too_large: "Sorry, dat bestand is te groot (maximale grootte is {{max_size_kb}}kb). Misschien kunt u het uploaden naar een cloudopslagdienst, en dan de koppeling plakken?"
         too_many_uploads: "Sorry, u kunt maar één bestand tegelijk uploaden."
         too_many_dragged_and_dropped_files: "Sorry, u kunt maar {{max}} bestanden tegelijk uploaden."
         upload_not_authorized: "Sorry, het bestand dat u probeert te uploaden is niet geautoriseerd (geautoriseerde extensies: {{authorized_extensions}})."
@@ -2192,7 +2193,7 @@ nl:
       change_in_category_topic: "Omschrijving wijzigen"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
       security: "Beveiliging"
-      special_warning: "Waarschuwing: deze categorie is een vooraf aangemaakte categorie en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
+      special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, en de beveiligingsinstellingen kunnen niet worden bewerkt. Als u deze categorie niet wenst te gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is bijzonder. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben, en kan geen beveiligingsinstellingen bevatten."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij is bedoeld als de standaardcategorie voor nieuwe topics die geen selecteerde categorie hebben. Als u dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als u de naam of omschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
       images: "Afbeeldingen"
@@ -2239,6 +2240,15 @@ nl:
         muted:
           title: "Genegeerd"
           description: "U ontvangt geen enkele melding over nieuwe topics in deze categorieën, en ze verschijnen niet in Nieuwste."
+      search_priority:
+        label: "Zoekprioriteit"
+        options:
+          normal: "Normaal"
+          ignore: "Negeren"
+          very_low: "Zeer laag"
+          low: "Laag"
+          high: "Hoog"
+          very_high: "Zeer hoog"
       sort_options:
         default: "standaard"
         likes: "Likes"
@@ -2694,6 +2704,7 @@ nl:
         moderation_tab: "Moderatie"
         security_tab: "Beveiliging"
         reports_tab: "Rapporten"
+        report_filter_any: "alles"
         disabled: Uitgeschakeld
         timeout_error: "Sorry, de query duurt te lang. Kies een korter interval."
         exception_error: "Sorry, er is een fout opgetreden bij het uitvoeren van de query."
@@ -2948,6 +2959,7 @@ nl:
           inactive: "Inactief"
           failed: "Mislukt"
           successful: "Gelukt"
+          disabled: "Uitgeschakeld"
         events:
           none: "Er zijn geen verwante gebeurtenissen."
           redeliver: "Opnieuw afleveren"
@@ -3428,6 +3440,10 @@ nl:
             entity_export: "entiteit exporteren"
             change_name: "naam wijzigen"
             topic_timestamps_changed: "topictijdstempels gewijzigd"
+            approve_user: "gebruiker goedgekeurd"
+            web_hook_create: "webhook maken"
+            web_hook_update: "webhook bijwerken"
+            web_hook_destroy: "webhook verwijderen"
         screened_emails:
           title: "Gecontroleerde e-mails"
           description: "Als iemand een nieuwe account probeert aan te maken, worden de volgende e-mailadressen gecontroleerd en de registratie geblokkeerd, of een andere actie uitgevoerd."
@@ -3510,7 +3526,8 @@ nl:
         not_found: "Sorry, die gebruikersnaam bestaat niet in ons systeem."
         id_not_found: "Sorry, die gebruikers-ID bestaat niet in ons systeem."
         active: "Geactiveerd"
-        show_emails: "E-mails tonen"
+        show_emails: "E-mailadressen tonen"
+        hide_emails: "E-mailadressen verbergen"
         nav:
           new: "Nieuw"
           active: "Actief"
@@ -3763,6 +3780,7 @@ nl:
         go_back: "Terug naar Zoeken"
         recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste tonen"
+        more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn uw zoekopdracht."
       settings:
         show_overriden: "Alleen aangepaste tonen"
         reset: "terugzetten"
@@ -3935,6 +3953,16 @@ nl:
           label: "Nieuw:"
           add: "Toevoegen"
           filter: "Zoeken (URL of externe URL)"
+      reseed:
+        action:
+          label: "Tekst vervangen…"
+          title: "Tekst van categorieën en topics vervangen door vertalingen"
+        modal:
+          title: "Tekst vervangen"
+          subtitle: "Tekst van door systeem gegenereerde categorieën en topics vervangen door nieuwste vertalingen"
+          categories: "Categorieën"
+          topics: "Topics"
+          replace: "Vervangen"
   wizard_js:
     wizard:
       done: "Gereed"

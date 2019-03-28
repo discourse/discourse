@@ -172,8 +172,6 @@ id:
     every_hour: "setiap jam"
     daily: "harian"
     weekly: "mingguan"
-    every_two_weeks: "setiap dua minggu"
-    every_three_days: "setiap tiga hari"
     max_of_count: "maksimal dari {{count}}"
     alternation: "atau"
     character_count:
@@ -547,7 +545,6 @@ id:
         instructions: "Gambar latar belakang akan ditengahkan dan mempunyai lebar standar 590px"
       email:
         title: "Surel"
-        instructions: "Tidak akan pernah diperlihatkan ke khalayak umum"
         ok: "Kami akan mengirimkan surel kepada anda untuk konfirmasi"
         invalid: "Silahkan masukkan alamat email yang valid"
         authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
@@ -596,10 +593,7 @@ id:
         every_30_minutes: "setiap 30 menit"
         every_hour: "per jam"
         daily: "harian"
-        every_three_days: "setiap tiga hari"
         weekly: "mingguan"
-        every_two_weeks: "setiap dua minggu"
-      email_private_messages: "Kirimkan saya surel bila seseorang mengirimkan pesan kepada saya"
       other_settings: "Lainnya"
       categories_settings: "Kategori"
       new_topic_duration:
@@ -792,12 +786,7 @@ id:
       filter_placeholder: Cari...
     emoji_picker:
       filter_placeholder: Cari emoji
-      people: Orang
-      nature: Alam
-      food: Makanan
-      activity: Aktifitas
       objects: Objek
-      celebration: Perayaan
     composer:
       options: "Pilihan"
       add_warning: "Ini adalah peringatan resmi."

@@ -247,8 +247,6 @@ sk:
     every_hour: "každú hodinu"
     daily: "denne"
     weekly: "týždenne"
-    every_two_weeks: "každé dva týždne"
-    every_three_days: "každé tri dni"
     max_of_count: "najviac {{count}}"
     alternation: "alebo"
     character_count:
@@ -754,8 +752,6 @@ sk:
         confirm_password_description: "Pre pokračovanie potvrďte svoje heslo prosím"
         label: "Kód"
         rate_limit: "Prosím čakajte pred zadaním ďalšieho autentifikačného kódu"
-        enable_description: |
-          Oskentujte tento QR kód v podporovanej aplikácii (<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a> – <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" target="_blank">iOS</a> – <a href="https://www.microsoft.com/en-us/store/p/authenticator/9wzdncrfj3rj" target='_blank'>Windows Phone</a>) a zadajte váš overovací kód.
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
         extended_description: |
@@ -797,7 +793,6 @@ sk:
         primary: "Primárny e-mail"
         secondary: "Sekundárne e-maily"
         no_secondary: "Žiadne sekundárne e-maily"
-        instructions: "nikdy sa nezobrazuje verejne"
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
         authenticated: "Váš email bude autentifikovaný pomocou {{provider}}"
@@ -868,14 +863,9 @@ sk:
         every_30_minutes: "každých 30 mintút"
         every_hour: "každú hodinu"
         daily: "denne"
-        every_three_days: "každé tri dni"
         weekly: "týždenne"
-        every_two_weeks: "každé dva týždne"
       include_tl0_in_digests: "Zahrnúť obsah od nových používateľov do súhrnných emailov"
       email_in_reply_to: "Zahrnúť úryvok príspevku, na ktorý používateľ reagoval, v emailoch"
-      email_direct: "Pošlite mi email ak ma niekto cituje, odpovie na môj príspevok, zmieni moje @meno alebo ma pozve do témy."
-      email_private_messages: "Pošlite mi email keď mi niekto pošle správu"
-      email_always: "Pošlite mi emailovú notifikáciu aj keď som aktívny na stránke"
       other_settings: "Ostatné"
       categories_settings: "Kategórie"
       new_topic_duration:
@@ -1178,10 +1168,6 @@ sk:
       default_header_text: Vybrať...
       filter_placeholder: Hľadať
     emoji_picker:
-      people: Ľudia
-      food: Jedlo
-      activity: Aktivita
-      travel: Cestovanie
       objects: Objekty
     composer:
       emoji: "Emoji :)"
@@ -1734,7 +1720,6 @@ sk:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
         upload: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
-        file_too_large: "Ľutujeme, daný súbor je príliš veľký (maximálna veľkosť je {{max_size_kb}}kB). Čo takto nahrať ten súbor na zdielané cloudové úložisko a nazdielať odkaz?"
         too_many_uploads: "Ľutujeme, ale naraz je možné nahrať iba jeden súbor."
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
         attachment_upload_not_allowed_for_new_user: "Ľutujeme, noví používatelia nemôžu nahrávať prílohy."

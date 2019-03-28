@@ -5,4 +5,29 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nl: {}
+nl:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: Vandaag %{time}
+        tomorrow: Morgen %{time}
+        yesterday: Gisteren %{time}
+      title: Datum invoegen
+      create:
+        modal_title: Datum invoegen
+        modal_subtitle: "We converteren de datum en tijd automatisch naar de lokale tijdzone van de gebruiker."
+        form:
+          to: "tot"
+          insert: Invoegen
+          advanced_mode: Geavanceerde modus
+          simple_mode: Eenvoudige modus
+          format_description: "Gebruikte notatie voor het weergeven van de datum aan de gebruiker. Gebruik \"\\T\\Z\" om de tijdzone van de gebruiker in woorden weer te geven (Europe/Paris)"
+          timezones_title: Tijdzones om weer te geven
+          timezones_description: Tijdzones worden gebruikt voor het weergeven van datums in voorbeeld en terugval.
+          recurring_title: Herhaling
+          recurring_description: "De herhaling van een gebeurtenis definiëren. U kunt de door het formulier gegenereerde herhalingsoptie ook handmatig bewerken en een van de volgende sleutels gebruiken: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_none: Geen herhaling
+          invalid_date: Ongeldige datum; zorg ervoor dat de datum en tijd juist zijn
+          date_title: Datum
+          time_title: Tijd
+          format_title: Datumnotatie

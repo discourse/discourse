@@ -782,6 +782,7 @@ it:
       title: "Iscrizioni"
       xaxis: "Giorno"
       yaxis: "Numero di iscrizioni"
+      description: "Nuovi account registrati durante questo periodo."
     daily_engaged_users:
       xaxis: "Giorno"
       yaxis: "Utenti Impegnati"
@@ -793,6 +794,7 @@ it:
       title: "Argomenti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi argomenti"
+      description: "Nuovi argomenti creati durante questo periodo."
     posts:
       title: "Messaggi"
       xaxis: "Giorno"
@@ -828,6 +830,7 @@ it:
         suspended: Sospeso
         silenced: Silenziato
     trending_search:
+      title: Termini più cercati
       labels:
         term: Termine
         searches: Ricerche
@@ -942,6 +945,9 @@ it:
       labels:
         user_agent: "User Agent"
         page_views: "Pagine viste"
+    suspicious_logins:
+      labels:
+        os: Sistema Operativo
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
@@ -1032,7 +1038,6 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    allow_moderators_to_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
@@ -1132,8 +1137,6 @@ it:
     purge_unactivated_users_grace_period_days: "Il periodo di grazia (in giorni) prima che un utente che non ha attivato il suo account venga eliminato. Impostare su 0 per non eliminare mai gli utenti non attivati."
     enable_s3_uploads: "Mette i caricamenti sullo spazio disco Amazon S3. IMPORTANTE: richiede che siano inserite valide credenziali S3 (sia l'access key id sia l'access key secret)."
     s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere tutto minuscolo, senza punti, senza trattini bassi."
-    s3_access_key_id: "La access key id Amazon S3 che verrà usata per caricare le immagini."
-    s3_secret_access_key: "La access key secret Amazon S3 che verrà usata per caricare le immagini."
     s3_cdn_url: "URL della CDN da usare per tutte le risorse s3 (ad esempio: https://cdn.somewhere.com). ATTENZIONE: dopo aver cambiato questa impostazione devi aggiornare tutti i vecchi messaggi."
     avatar_sizes: "Elenco delle dimensioni degli avatar, generate automaticamente."
     external_system_avatars_enabled: "Utilizza un servizio esterno per gli avatar."
@@ -1351,11 +1354,9 @@ it:
     watched_words_regular_expressions: "Le parole osservate sono espressioni regolari."
     default_email_digest_frequency: "Con quale frequenza gli utenti ricevono email riepilogative di default."
     default_include_tl0_in_digests: "Per impostazione predefinita, includi i messaggi dei nuovi utenti nelle email riepilogative. Gli utenti possono modificare questa impostazione nelle loro preferenze"
-    default_email_direct: "Invia una email quando qualcuno cita/risponde/menziona un utente di default."
     default_email_mailing_list_mode: "Invia una email per ogni nuovo messaggio di default."
     default_email_mailing_list_mode_frequency: "Con quale frequenza gli utenti che hanno attivato la modalità mailing list riceveranno email di default."
     disable_mailing_list_mode: "Impedisci agli utenti di attivare la modalità mailing list."
-    default_email_always: "Invia una notifica via email anche quando l'utente è attivo di default."
     default_email_previous_replies: "Includi risposte precedenti nelle email di default."
     default_email_in_reply_to: "Includi un estratto della risposta ad un messaggio nelle email di default."
     default_other_new_topic_duration_minutes: "Condizione globale predefinita per cui un argomento viene considerato nuovo."
@@ -2834,6 +2835,7 @@ it:
         title: "Il tuo Discourse è Pronto!"
   discourse_push_notifications:
     popup:
+      confirm_title: "Notifiche abilitate - %{site_title}"
       confirm_body: "Successo! Le notifiche sono state abilitate."
   staff_action_logs:
     not_found: "non trovato"

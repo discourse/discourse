@@ -29,13 +29,19 @@ id:
   purge_reason: "Secara otomatis dihapus sebagai akun yang ditinggalkan, dinon-aktifkan."
   disable_remote_images_download_reason: "Unduh gambar jarak jauh dimatikan karena ruang penyimpanan di server tidak cukup."
   anonymous: "Anonim"
+  remove_posts_deleted_by_author: "Dihapus oleh penulis"
+  on_another_topic: "Di topik lain"
   emails:
     incoming:
+      default_subject: "Topik ini membutuhkan judul"
       show_trimmed_content: "Tampilkan konten yang dipersingkat"
       errors:
         empty_email_error: "Terjadi bila surel mentah yang kami terima tidak berisi apapun (kosong)."
         no_message_id_error: "Terjadi bila surel tidak memiliki header 'Message-Id'."
         auto_generated_email_error: "Terjadi bila 'precedence' header ditentukan sebagai: list, junk, bulk atau auto_reply, atau ketika header lainnya mengandung: kumpulkan otomatis, balas otomatis, atau buat otomatis."
+        inactive_user_error: "Terjadi bila pengirim sedang tidak aktif"
+        silenced_user_error: "Terjadi bila pengirim telah dibungkam"
+      unrecognized_error: "Kesalahan Tidak Dikenali"
   errors: &errors
     messages:
       too_long_validation: "Dibatasi hingga %{max} karakter; Anda memasukkan %{length} karakter."
@@ -53,6 +59,7 @@ id:
       has_already_been_used: "telah digunakan"
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
+      is_invalid: "tampak tidak jelas, apakah itu sebuah kalimat yang lengkap?"
       less_than: "harus kurang dari %{count}"
       less_than_or_equal_to: "harus sama dengan atau kurang dari %{count}"
       not_a_number: bukan numerik
@@ -120,6 +127,7 @@ id:
   topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
   invalid_characters: "memuat karakter yang tidak valid"
+  is_invalid: "tampak tidak jelas, apakah itu sebuah kalimat yang lengkap?"
   next_page: "halaman berikutnya →"
   prev_page: "← halaman sebelumnya"
   page_num: "Halaman %{num}"

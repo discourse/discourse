@@ -187,8 +187,6 @@ ko:
     every_hour: "매 한시간 마다"
     daily: "매일"
     weekly: "매주"
-    every_two_weeks: "격주"
-    every_three_days: "3일마다"
     max_of_count: "최대 {{count}}"
     alternation: "또는"
     character_count:
@@ -660,7 +658,6 @@ ko:
         primary: "기본 이메일"
         secondary: "보조 이메일"
         no_secondary: "보조 이메일이 없습니다"
-        instructions: "절대로 공개되지 않습니다"
         ok: "내 이메일로 확인 메일이 전송됩니다."
         invalid: "유효한 이메일 주소를 입력해주세요."
         authenticated: "내 이메일이 {{provider}}에 의해 인증되었습니다."
@@ -723,14 +720,9 @@ ko:
         every_30_minutes: "매 30분 마다"
         every_hour: "매 시간"
         daily: "매일"
-        every_three_days: "매 3일마다"
         weekly: "매주"
-        every_two_weeks: "격주"
       include_tl0_in_digests: "신규 사용자가 작성한 내용도 요약 메일에 포함시키기"
       email_in_reply_to: "이메일에 댓글 내용을 발췌해서 포함"
-      email_direct: "인용, 댓글, @아이디 멘션, 토픽 초대를 받을 때 이메일 받기"
-      email_private_messages: "메시지가 왔을 때 이메일 받기"
-      email_always: "사이트에 접속중일 때도 이메일 알림 전송"
       other_settings: "추가 사항"
       categories_settings: "카테고리"
       new_topic_duration:
@@ -1042,13 +1034,7 @@ ko:
       filter_placeholder: 검색...
     emoji_picker:
       filter_placeholder: 이모지 찾기
-      people: 인물
-      nature: 자연
-      food: 음식
-      activity: 활동
-      travel: 여행
       objects: 사물
-      celebration: 축하
       custom: 커스텀 emoji
       recent: 최근 사용
       default_tone: 피부색 없음
@@ -1655,7 +1641,6 @@ ko:
         create: "죄송합니다. 글을 만드는 동안 오류가 발생했습니다. 다시 시도하십시오."
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
-        file_too_large: "죄송합니다. 파일의 크기가 너무 큽니다. (최대 사이즈는 {{max_size_kb}}kb 입니다). 클라우드 공유 서버에 올리신 다음에 링크를 공유하는 건 어떠세요?"
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
         upload_not_authorized: "죄송합니다. 허가되지 않은 확장자의 파일이 있습니다. (허가된 확장자: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."

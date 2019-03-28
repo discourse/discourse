@@ -201,8 +201,6 @@ sw:
     every_hour: "kila saa"
     daily: "kila siku"
     weekly: "kila wiki"
-    every_two_weeks: "kila wiki mbili"
-    every_three_days: "kila siku tatu"
     max_of_count: "kiwango cha juu cha {{count}}"
     alternation: "au"
     character_count:
@@ -704,7 +702,6 @@ sw:
         title: "Barua pepe"
         primary: "Barua pepe ya awali"
         secondary: "Barua pepe"
-        instructions: "haitoonyeshwa kwa umma"
         ok: "Tutakutumia barua pepe kuthibitisha"
         invalid: "Andika barua pepe iliyo sahihi"
         authenticated: "Barua pepe yako imethibitishwa na {{mkimu}}"
@@ -763,14 +760,9 @@ sw:
         every_30_minutes: "kila baada ya dakika 30"
         every_hour: "kila saa"
         daily: "kila siku"
-        every_three_days: "kila siku tatu"
         weekly: "kila wiki"
-        every_two_weeks: "kila wiki mbili"
       include_tl0_in_digests: "Tia ndani maandishi kutoka kwa watumiaji wapya kwenye muhtasari wa barua pepe"
       email_in_reply_to: "Jumuisha dhana ya majibu ya posti kwenye barua pepe"
-      email_direct: "Tuma barua pepe mtu akinukulu, akijibu chapisho langu, akitaja @jina langu, au akinialika kwenye mada."
-      email_private_messages: "Nitumie barua pepe mtu akinitumia ujumbe"
-      email_always: "Nitumie taarifa kupitia barua pepe nikiwa amilifu kwenye mtandao"
       other_settings: "Zingine"
       categories_settings: "Kategoria"
       new_topic_duration:
@@ -1120,13 +1112,7 @@ sw:
         other: " Chagua japo vitu {{count}}."
     emoji_picker:
       filter_placeholder: Tafuta picha-hisia
-      people: Watu
-      nature: Uasilia
-      food: Chakula
-      activity: utendaji
-      travel: Safiri
       objects: Vitu
-      celebration: Sherehekea
       custom: Ishara binafsi
       recent: Imetumika hivi  karibuni
       default_tone: Mwonekano usio na toni
@@ -1793,7 +1779,6 @@ sw:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
         upload: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
-        file_too_large: "Samahani, hilo faili ni kubwa sana (kiwango cha juu ni {{max_size_kb}}kb). Kwa nini usipakie faili lako kubwa kwenye huduma ya kugawa kwenye wingu kama Google Drive, Dropbox au OneDrive, alafu ukaandika kiungo hapa?"
         too_many_uploads: "Samahani, unaweza kupakia faili 1 tu kwa wakati mmoja."
         upload_not_authorized: "Samahani, faili unalo jaribu kupakia halina kibali (authorized extensions: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia picha."

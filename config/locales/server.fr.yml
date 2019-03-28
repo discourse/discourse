@@ -513,6 +513,7 @@ fr:
       (Pour plus d'informations sur les niveaux de confiance, [voir ce sujet][trust]. Notez que seul les utilisateurs qui continuent de remplir les conditions gardent leur statut d'habitués.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+  admin_quick_start_title: "A LIRE EN PREMIER : Guide de démarrage pour administrateur"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
     replace_paragraph: "(Remplacez ce paragraphe par une courte description de votre nouvelle catégorie. Cette information apparaîtra dans la zone de sélection de la catégorie, donc viser en dessous des 200 caractères.)"
@@ -793,7 +794,7 @@ fr:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="%{path}">consulter vos messages privés</a>.</p>'
     user_must_edit: "<p>Ce message a été signalé par la communauté et temporairement masqué.</p>"
   ignored:
-    hidden_content: '<p>Contenu caché</p>'
+    hidden_content: "<p>Contenu caché</p>"
   archetypes:
     regular:
       title: "Sujet normal"
@@ -1142,6 +1143,13 @@ fr:
         author: Auteur
         filesize: Taille de fichier
       description: "Liste de tous les envois de fichier, par extension, taille de fichier, et auteur."
+    top_ignored_users:
+      title: "Utilisateurs les plus ignorés"
+      labels:
+        ignored_user: Utilisateur ignoré
+        ignores_count: Ignorés
+        mutes_count: Muets
+      description: "Liste les utilisateurs les plus ignorés."
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
@@ -1173,7 +1181,7 @@ fr:
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
-    default_locale: "La langue par défaut de cette instance de Discourse"
+    default_locale: "La langue par défaut de cette instance Discourse. Vous pouvez remplacer le texte des catégories et des sujets généré automatiquement par le système dans <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personnaliser / Contenu</a>."
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     support_mixed_text_direction: "Permettre le mélange de textes gauche-droite et droite-gauche."
@@ -1243,6 +1251,7 @@ fr:
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "Format du sujet personnalisable pour les courriels standards. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    enforce_second_factor: "Forcer les utilisateurs à activer l'authentification à double facteur. Sélectionner « tous » pour l'appliquer à tous les utilisateurs. Sélectionner « responsables » pour l'imposer aux responsables uniquement."
     force_https: "Forcer votre site en HTTPS uniquement. MISE EN GARDE : n'activez PAS cette fonction tant que vous n'avez pas vérifié que le HTTPS est complètement configuré et fonctionne absolument partout ! Avez-vous vérifié que vos CDN, vos connexions via réseaux sociaux ainsi que tous les logos / dépendances tiers sont tous compatibles HTTPS eux aussi ?"
     same_site_cookies: "Utiliser des cookies de même site, qui éliminent tous les vecteurs de Cross Site Request Forgery sur les navigateurs supportés (Lax ou Strict). Avertissement: Strict ne fonctionnera que sur des sites qui imposent la connexion et utilisent le SSO."
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
@@ -1284,7 +1293,7 @@ fr:
     ga_universal_auto_link_domains: "Activer Google Universal Analytics (analytics.js) pour le suivi interdomaine. Les liens sortants vers ces domaines auront l'identifiant client ajouté. Voir le guide <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Cross-Domain Tracking  de Google</a>."
     gtm_container_id: "Identifiant de container Google Tag Manager. P.ex : GTM-ABCDEF. <br/>Note: les scripts tiers chargés par GTM devront peut-être être mis sur liste blanche dans 'content security policy script src'."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
+    moderators_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
     use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP sous surveillance (Admin > Journaux > IP surveillés)."
     blacklist_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être crawlés par Discourse"
@@ -1304,6 +1313,7 @@ fr:
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
     share_links: "Choix des éléments qui doivent apparaître dans la fenêtre de partage, et leur ordre."
     site_contact_username: "Un pseudo de responsable valide pour envoyer tous les message automatiques. Si laissé vide, le compte système sera utilisé."
+    site_contact_group_name: "Un nom de groupe valide à inviter à tous les messages directs automatiques."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     send_tl1_welcome_message: "Envoyer à tous les utilisateurs de niveau de confiance 1 un message de bienvenue."
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."
@@ -1315,7 +1325,7 @@ fr:
     topics_per_period_in_top_page: "Nombre de meilleurs sujets affichés lorsqu'on sélectionne \"Voir plus\" des meilleurs sujets."
     redirect_users_to_top_page: "Rediriger automatiquement les nouveaux utilisateurs et les longues absences sur la page Top."
     top_page_default_timeframe: "Période par défaut pour la page la plus vue."
-    show_email_on_profile: "Permettre aux modérateurs de voir les adresses courriel des utilisateurs"
+    moderators_view_emails: "Permettre aux modérateurs de voir les adresses courriel des utilisateurs"
     prioritize_username_in_ux: "Afficher le pseudonyme en premier sur la page d'un utilisateur, sa carte et ses messages (si désactivé, le nom est affiché en premier)"
     enable_rich_text_paste: "Permettre la conversion automatique de HTML en Markdown lors que du texte est collé dans l'éditeur. (Expérimental)"
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
@@ -1384,7 +1394,6 @@ fr:
     backup_frequency: "Nombre de jours entre sauvegardes"
     s3_backup_bucket: "Bucket distant qui contiendra les sauvegardes. ATTENTION: Vérifiez que c'est un bucket privé"
     s3_endpoint: "Le terminal peut être modifié pour être sauvegardé sur un service compatible S3 comme DigitalOcean Spaces ou Minio. ATTENTION: Laisser vide si vous utilisez AWS S3"
-    s3_force_path_style: "Appliquez l'adressage de type chemin pour votre terminal personnalisé. IMPORTANT : Nécessaire pour utiliser les téléchargements et sauvegardes Minio."
     s3_configure_tombstone_policy: "Activer la suppression automatique des téléchargements non-référencés (?). IMPORTANT: En cas de désactivation, aucun espace disque ne sera récupéré suite à la suppression de téléchargements."
     s3_disable_cleanup: "Désactiver la suppression des sauvegardes de S3 lors de leur suppression locale."
     enable_s3_inventory: "Générer des rapports et vérifier les envois avec l'inventaire Amazon S3. IMPORTANT: nécessite un accès valide à S3 (l'identifiant et la clé secrète). "
@@ -1430,13 +1439,14 @@ fr:
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">profile d''instance AWS EC2 </a> pour accorder l''accès au S3 bucket. NOTE: pour cela, Discourse doit être exécuté dans une instance EC2 correctement configurée, et remplace les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans tirets bas."
-    s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
-    s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
+    s3_access_key_id: "La clé d'accès Amazon S3 qui sera utilisée pour envoyer les images, les pièces joints et les sauvegardes."
+    s3_secret_access_key: "La clé d'accès secrète Amazon S3 qui sera utilisée pour envoyer les images, les pièces joints et les sauvegardes."
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour envoyer des images et sauvegardes."
     s3_cdn_url: "L'adresse du CDN à utiliser pour toutes les ressources s3 (par exemple : https://cdn.monsite.com). ATTENTION : après avoir changé ce paramètre, vous devez régénérer la totalité des messages existants. "
     avatar_sizes: "Liste des tailles des avatars automatiquement générés"
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."
     external_system_avatars_url: "URL du service d'avatars externe. Les remplacements autorisés sont {username} {first_letter} {color} {size}"
+    restrict_letter_avatar_colors: "Une liste de codes à 6 chiffres (format hexadécimal) pour les couleurs des avatars à lettres."
     selectable_avatars_enabled: "Obliger les utilisateurs à choisir un avatar de la liste."
     selectable_avatars: "Liste d'avatars parmi lesquels les utilisateurs peuvent choisir."
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
@@ -1633,6 +1643,9 @@ fr:
     hide_suspension_reasons: "Ne pas afficher les raisons d'une suspension sur les profils utilisateurs."
     log_personal_messages_views: "Logguer les vues de messages directs par Admin pour d'autres utilisateurs/groupes."
     ignore_user_enabled: "[Bêta] Permettre d'ignorer des utilisateurs."
+    ignored_users_count_message_threshold: "Notifier les modérateur si un utilisateur est ignoré par autant d'utilisateurs."
+    ignored_users_message_gap_days: "Combien de temps faut-il attendre avant de notifier à nouveau les modérateurs d'un utilisateur ignoré par beaucoup d'autres."
+    clean_up_inactive_users_after_days: "Nombre de jours avant qu'un utilisateur inactif (niveau de confiance 0 sans aucun messages) soit supprimé."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -1666,6 +1679,7 @@ fr:
     highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances) voir : <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo/</a> pour une démo"
     embed_truncate: "Tronquer les messages embarqués."
     embed_support_markdown: "Prise en charge du formatage Markdown pour les messages intégrés."
+    embed_whitelist_selector: "Une liste séparée par des virgules des éléments CSS autorisés à être intégrés."
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
@@ -1690,15 +1704,16 @@ fr:
     code_formatting_style: "Le bouton Code dans l'éditeur utilisera ce style de formatage par défaut"
     max_allowed_message_recipients: "Nombre maximum de destinataires autorisés dans un message."
     watched_words_regular_expressions: "Les mots surveillés sont des expressions régulières."
+    min_post_notice_tl: "Niveau de confiance minimum requis pour voir les remarques de publication."
+    old_post_notice_days: "Jours avant que la remarque de publication ne devienne obsolète"
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
     default_email_digest_frequency: "Par défaut, à quelle fréquence les utilisateurs reçoivent les résumés par courriel."
     default_include_tl0_in_digests: "Par défaut, inclure les messages des nouveaux utilisateurs dans les résumés par courriel. Les utilisateurs peuvent changer cela dans leurs préférences."
-    default_email_personal_messages: "Envoyer un courriel quand quelqu'un envoie un message à l'utilisateur par défaut."
-    default_email_direct: "Envoyer un courriel quand quelqu'un cite/répond à/mentionne ou invite un utilisateur."
+    default_email_level: "Définissez le niveau de notification courriel par défaut quand quelqu'un cite, répond, mentionne ou invite un utilisateur."
+    default_email_messages_level: "Définissez le niveau de notification courriel par défaut quand quelqu'un envoie un message direct à un utilisateur."
     default_email_mailing_list_mode: "Envoyer un courriel pour chaque nouveau message."
     default_email_mailing_list_mode_frequency: "Par défaut, les utilisateurs ayant activé la liste de diffusion recevront des courriels à cette fréquence."
     disable_mailing_list_mode: "Interdire aux utilisateurs l'activation de la liste de diffusion."
-    default_email_always: "Envoyer une notification courriel même quand l'utilisateur est actif."
     default_email_previous_replies: "Inclure par défaut les réponses précédentes dans les courriels."
     default_email_in_reply_to: "Inclure par défaut l'extrait du message auquel se fait la réponse dans les courriels."
     default_other_new_topic_duration_minutes: "Paramètre global de temps pendant lequel un sujet est considéré comme nouveau."
@@ -1750,6 +1765,7 @@ fr:
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
+      invalid_group: "Il n'y a pas de groupe ayant ce nom."
       invalid_integer_min_max: "La valeur doit être comprise entre %{min} et %{max}."
       invalid_integer_min: "La valeur doit être de %{min} ou plus."
       invalid_integer_max: "La valeur ne peut pas être supérieur à %{max}."
@@ -1780,6 +1796,7 @@ fr:
       min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
       max_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus court qu'un pseudo qui existe déjà (%{username})."
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
+      invalid_hex_value: "Les couleurs doivent être des codes à 6 chiffres au format hexadécimal."
     placeholder:
       sso_provider_secrets:
         key: "www.example.com"
@@ -1911,7 +1928,6 @@ fr:
   admin:
     email:
       sent_test: "envoyé !"
-      sent_test_disabled: "impossible d'envoyer, les courriels sont désactivés"
   user:
     deactivated: "A été désactivé à cause de trop de courriels rejetés vers '%{email}'."
     deactivated_by_staff: "Désactivé par un responsable"
@@ -1942,6 +1958,7 @@ fr:
       unused_staged_user: "Utilisateur distant inutilisé"
       fixed_primary_email: "Correction de l'email primaire pour utilisateur distant"
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
+      inactive_user: "Utilisateur inactif"
   flags_reminder:
     flags_were_submitted:
       one: "Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](%{base_path}/admin/flags)."
@@ -2565,6 +2582,17 @@ fr:
       ``` text
       %{raw}
       ```
+    ignored_users_summary:
+      title: "Un utilisateur ignoré a dépassé le seuil"
+      subject_template: "Un utilisateur a été ignoré par de nombreux utilisateurs"
+      text_body_template: |
+        Bonjour,
+
+        Ceci est un message automatique du site %{site_name} pour vous informer que [ce profil](%{base_url}/u/%{username}/summary) a été ignoré par %{ignores_threshold} utilisateurs. Cela peut indiquer qu'un problème se développe au sein de votre communauté.
+
+        Vous devriez passer en revue les messages récents de cet utilisateur, et vérifier les éventuels autres [utilisateurs ignorés](%{base_url}/admin/reports/top_ignored_users).
+
+        Pour plus d'informations, veuillez vous référer à la [charte communautaire](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Trop de signalements de spam"
       subject_template: "Nouveau compte bloqué"
@@ -3174,6 +3202,7 @@ fr:
     sender_text_part_body_blank: "text_part.body est vide"
     sender_body_blank: "sans contenu"
     sender_post_deleted: "le message a été supprimé"
+    sender_message_to_invalid: "le destinataire a une adresse courriel invalide"
   color_schemes:
     base_theme_name: "Base"
     light: "Clair"
@@ -4037,8 +4066,12 @@ fr:
       linked: '%{username} a créé un lien vers votre message posté dans « %{topic} » - %{site_title}'
       confirm_title: "Notifications activées - %{site_title}"
       confirm_body: "Les notifications ont été activées."
+      custom: "Notification du site %{site_title}"
   staff_action_logs:
     not_found: "non trouvé"
     unknown: "inconnu"
     user_merged: "%{username} a être fusionné avec ce compte"
     user_delete_self: "Supprimer par l'utilisateur depuis %{url}"
+    update: "Mis à jour"
+    create: "Créé"
+    destroy: "Détruit"

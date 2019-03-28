@@ -209,8 +209,6 @@ lv:
     every_hour: "katru stundu"
     daily: "katru dienu"
     weekly: "katru nedēļu"
-    every_two_weeks: "katras divas nedēļas"
-    every_three_days: "katras trīs dienas"
     max_of_count: "ne vairāk kā {{count}}"
     alternation: "vai"
     character_count:
@@ -592,7 +590,6 @@ lv:
         instructions: "Fona attēli būs centrēti un ar noklusējuma platumu 590px."
       email:
         title: "E-pasts"
-        instructions: "nekad nerādīs publiski"
         ok: "Mēs jums nosūtīsim apstiprinājuma e-pastu"
         invalid: "Lūdzu ievadiet derīgu e-pasta adresi"
         authenticated: "Jūsu e-pastu autentificēja {{provider}}"
@@ -648,14 +645,9 @@ lv:
         every_30_minutes: "katras 30 minūtes"
         every_hour: "katru stundu"
         daily: "katru dienu"
-        every_three_days: "katras trīs dienas"
         weekly: "katru nedēļu"
-        every_two_weeks: "katras divas nedēļas"
       include_tl0_in_digests: "Iekļaut kopsavilkuma e-pastos saturu no jaunajiem lietotājiem"
       email_in_reply_to: "Iekļaut e-pastā citātu no atbildes uz ierakstu"
-      email_direct: "Sūtīt man e-pastu, kad kāds citē mani, atbild manam ierakstam, piemin manu @lietotājvārdu vai ielūdz mani kādā tēmā"
-      email_private_messages: "Sūtīt man e-pastu, kad kāds sūta man ziņu"
-      email_always: "Sūtīt man e-pasta paziņojumus pat tad, kad esmu aktīvs vietnē"
       other_settings: "Citi"
       categories_settings: "Sadaļas"
       new_topic_duration:
@@ -955,13 +947,7 @@ lv:
       alt: "Alt"
     emoji_picker:
       filter_placeholder: Meklēt emoji
-      people: Cilvēki
-      nature: Daba
-      food: Ēdiens
-      activity: Aktivitātes
-      travel: Ceļojumi
       objects: Priekšmeti
-      celebration: Svinības
       custom: Lietotāja emoji
       recent: Nesen izmantotie
       default_tone: Noklusējuma ādas krāsa
@@ -1545,7 +1531,6 @@ lv:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         upload: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-        file_too_large: "Atvainojiet, šis fails ir pārāk liels (maksimālais izmērs ir {{max_size_kb}} kb). Varbūt augšuplādējiet jūsu lielo failu uz kādu mākoņservisu, bet pēc tam padalieties ar saiti?"
         too_many_uploads: "Atvainojiet, jūs varat augšuplādēt tikai vienu failu vienā reizē."
         upload_not_authorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."

@@ -196,8 +196,6 @@ et:
     every_hour: "iga tund"
     daily: "iga päev"
     weekly: "iga nädal"
-    every_two_weeks: "iga kahe nädala tagant"
-    every_three_days: "iga kolme päeva tagant"
     max_of_count: "maksimum {{count}}-st"
     alternation: "või"
     character_count:
@@ -693,7 +691,6 @@ et:
         primary: "Peamine e-post"
         secondary: "Teine e-post"
         no_secondary: "Teist e-posti pole"
-        instructions: "ei näidata kunagi avalikult"
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
         authenticated: "Sinu meil on autenditud {{provider}} poolt"
@@ -765,14 +762,9 @@ et:
         every_30_minutes: "iga pooltund"
         every_hour: "iga tund"
         daily: "igapäevaselt"
-        every_three_days: "iga kolme päeva tagant"
         weekly: "iga nädal"
-        every_two_weeks: "iga kahe nädala tagant"
       include_tl0_in_digests: "Kajasta meili teel kokkuvõttes ka uute kasutajate loodud sisu."
       email_in_reply_to: "Lisa e-kirjale katkend eelmisest vastusest"
-      email_direct: "Teavita mind, kui keegi tsiteerib minu postitust, vastab minu postitusele, mainib minu @kasutajanime või kutsub mind teemaga liituma"
-      email_private_messages: "Saada meilile teavitus, kui minuga kontakteerutakse sõnumi teel"
-      email_always: "Saada mulle teavitused meilile, isegi kui ma olen siin aktiivne kasutaja"
       other_settings: "Muu"
       categories_settings: "Foorumid"
       new_topic_duration:
@@ -1091,13 +1083,7 @@ et:
       filter_placeholder_with_any: Otsi või loo...
     emoji_picker:
       filter_placeholder: Otsi emojit
-      people: Inimesed
-      nature: Loodus
-      food: Toit
-      activity: Tegevused
-      travel: Reisimine
       objects: Objektid
-      celebration: Tähistamine
       custom: Kohandatud emoji
       recent: Viimati kasutatud
       default_tone: Nahatooni pole
@@ -1719,7 +1705,6 @@ et:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
         upload: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
-        file_too_large: "Vabandame. see fail on liiga suur (maksimum on {{max_size_kb}}kB). Miks mitte laadida see suur fail mõnda failijagamisteenusesse pilves ja jagada viidet selleni?"
         too_many_uploads: "Vabandame, faile saab üles laadida vaid ühekaupa."
         upload_not_authorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Vabandame, uued kasutajad ei saa pilte üles laadida."

@@ -211,8 +211,6 @@ hu:
     every_hour: "óránként"
     daily: "naponta"
     weekly: "hetente"
-    every_two_weeks: "kéthetente"
-    every_three_days: "háromnaponta"
     max_of_count: "maximum {{count}}"
     alternation: "vagy"
     character_count:
@@ -520,7 +518,7 @@ hu:
       posts: "Bejegyzések"
       topics: "Témák"
       latest: "Legutóbbi"
-      latest_by: "legkésőbb"
+      latest_by: "utolsó hozzászóló"
       toggle_ordering: "rendezés megfordítása"
       subcategories: "Alkategóriák"
       topic_sentence:
@@ -736,7 +734,6 @@ hu:
         primary: "Elsődleges Email"
         secondary: "Másodlagos Emailek"
         no_secondary: "Nincsenek másodlagos emailek"
-        instructions: "soha nem mutatjuk meg senkinek"
         ok: " Jóváhagyás végett e-mailt fogunk küldeni"
         invalid: "Kérünk adj meg egy érvényes e-mail címet"
         authenticated: "Az email címedet {{provider}} azonosította"
@@ -800,13 +797,8 @@ hu:
         every_30_minutes: "minden 30 percben"
         every_hour: "óránként"
         daily: "naponta"
-        every_three_days: "minden három napban"
         weekly: "hetente"
-        every_two_weeks: "kéthetente"
       include_tl0_in_digests: "Új felhasználóktól származó tartalom mellékelése az emailekben"
-      email_direct: "Email küldése, ha valaki idéz, válaszol a bejegyzésemre, megemlíti a @felhasználónevem, vagy meghív egy témába"
-      email_private_messages: "Email küldése, ha valaki üzen nekem"
-      email_always: "Akkor is küldj e-mail értesítőt, ha az oldalon tartózkodom."
       other_settings: "Egyéb"
       categories_settings: "Kategóriák"
       new_topic_duration:
@@ -1013,6 +1005,7 @@ hu:
     trust_level: "Bizalmi szint"
     search_hint: "felhasználónév, e-mail vagy IP-cím"
     create_account:
+      disclaimer: "Fiókod létrehozásával elfogadod az <a href='{{privacy_link}}'>adatvédelmi szabályzatunk</a> és a <a href='{{tos_link}}'>szolgáltatási feltételeinket</a>."
       title: "Új fiók létrehozása"
       failed: "Valami félresikerült! Lehetséges hogy ez az e-mail cím már regisztrálva van. Próbáltad már a jelszóemlékeztetőt?"
     forgot_password:
@@ -1130,13 +1123,7 @@ hu:
       create: "Létrehozás: '{{content}}'"
     emoji_picker:
       filter_placeholder: Emoyi keresése
-      people: Emberek
-      nature: Természet
-      food: Étel
-      activity: Aktivitás
-      travel: Utazás
       objects: Tárgyak
-      celebration: Ünneplés
       custom: Egyéni emojik
       recent: Nemrég használt
       default_tone: Nincs bőrszín

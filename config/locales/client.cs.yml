@@ -246,8 +246,6 @@ cs:
     every_hour: "každou hodinu"
     daily: "denně"
     weekly: "týdně"
-    every_two_weeks: "jednou za 14 dní"
-    every_three_days: "každé tři dny"
     max_of_count: "max z"
     alternation: "nebo"
     character_count:
@@ -749,8 +747,6 @@ cs:
         confirm_password_description: "Prosíme před dalším krokem potvrďte své heslo"
         label: "Kód"
         rate_limit: "Prosím počkejete před tím, než vyskoušíte další ověřovací kód."
-        enable_description: |
-          Vyfoťte tento QR kód v podporované aplikaci (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) a zadejte svůj autentikační kód.
         disable_description: "Zadejte prosím ověřovací kód z vaší aplikace"
         show_key_description: "Vložit ručně"
         extended_description: |
@@ -793,7 +789,6 @@ cs:
         primary: "Hlavní email"
         secondary: "Záložní emailové adresy"
         no_secondary: "Žádné záložní emailové adresy"
-        instructions: "není veřejný"
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
@@ -867,14 +862,9 @@ cs:
         every_30_minutes: "každých 30 minut"
         every_hour: "každou hodinu"
         daily: "denně"
-        every_three_days: "každé tři dny"
         weekly: "týdně"
-        every_two_weeks: "každé dva týdny"
       include_tl0_in_digests: "Zahrnout obsah nových uživatelů v souhrnných emailech"
       email_in_reply_to: "Zahrnout v emailech úryvek příspěvku, na který je reagováno"
-      email_direct: "Zašli mi email, pokud mě někde cituje, odpoví na můj příspěvek, zmíní mé @jméno nebo mě pozve do tématu."
-      email_private_messages: "Zašli mi email, pokud mi někdo pošle zprávu."
-      email_always: "Zašli mi upozornění emailem i když jsem aktivní na fóru"
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
       new_topic_duration:
@@ -1261,13 +1251,7 @@ cs:
         other: "Vyberte nejméně {{count}} položek."
     emoji_picker:
       filter_placeholder: Hledat emoji
-      people: Lidé
-      nature: Příroda
-      food: Jídlo
-      activity: Činnosti
-      travel: Cestování
       objects: Objekty
-      celebration: Slavení
       custom: Vlastní emoji
       recent: Nedávno použité
       default_tone: Bez barvy pleti
@@ -2025,7 +2009,6 @@ cs:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
         upload: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
-        file_too_large: "Soubor, který se snažíte nahrát, je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Co třeba jej nahrát na cloudovou službu a nasdílet sem odkaz?"
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         upload_not_authorized: "Bohužel, soubor, který se snažíš nahrát, není povolený (povolená rozšíření:  {{authorized_extensions}}). "
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."

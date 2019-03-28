@@ -503,6 +503,7 @@ es:
       (Para saber más sobre niveles de confianza, [mira este tema][trust]. Por favor, ten en cuenta que solo los usuarios que continúen cumpliendo los requisitos a lo largo del tiempo seguirán en el nivel de usuarios habituales.)
 
       [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
+  admin_quick_start_title: "LEER PRIMERO: Guía rápida de inicio para administradore"
   category:
     topic_prefix: "Definición de la categoría %{category}"
     replace_paragraph: "(Sustituye este párrafo con una descripción corta de tu nueva categoría. Este texto aparecerá en el área de selección de categoría, así que intenta que no supere los 200 caracteres.)"
@@ -783,7 +784,7 @@ es:
     you_must_edit: '<p>Tu post fue reportado por la comunidad. Por favor, <a href="%{path}">mira tus mensajes</a>.</p>'
     user_must_edit: "<p>Esta publicación ha sido reportada por la comunidad y está oculta temporalmente.</p>"
   ignored:
-    hidden_content: '<p>Contenido oculto</p>'
+    hidden_content: "<p>Contenido oculto</p>"
   archetypes:
     regular:
       title: "Tema normal"
@@ -1132,6 +1133,13 @@ es:
         author: Autor
         filesize: Tamaño del archivo
       description: "Lista de archivos subidos por extensión, tamaño y autor."
+    top_ignored_users:
+      title: "Usuarios más ignorados"
+      labels:
+        ignored_user: Usuario ignorado
+        ignores_count: Número de ignorados
+        mutes_count: Número de silenciados
+      description: "Lista de los usuarios más ignorados."
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
@@ -1163,7 +1171,6 @@ es:
   site_settings:
     censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
-    default_locale: "El idioma por defecto para esta instancia de Discourse "
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     set_locale_from_accept_language_header: "Establece el lenguaje de la interfaz para usuarios anónimos desde el lenguaje declarado por su navegador web. (EXPERIMENTAL, no funciona con caché anónimo)"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
@@ -1274,7 +1281,7 @@ es:
     ga_universal_auto_link_domains: "Habilitar el seguimiento multidominio de Google Universal Analytics (analytics.js). Enlaces salientes de estos dominios serán del client id agregados. Leer <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF. <br/>Nota: los script de terceros que cargan a través de GTM puede que sea necesario ponerlos en la lista blanca en 'content security policy script src'."
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
+    moderators_create_categories: "Permitir que los moderadores creen nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
     use_admin_ip_whitelist: "Los admins solo pueden iniciar sesión si están en una dirección IP definida en la lista de Screened IPs (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Una lista de IPs bloqueadas privadas que nunca deberían ser rastreadas por Discourse"
@@ -1305,7 +1312,7 @@ es:
     topics_per_period_in_top_page: "Número de mejores temas mostrados en la vista expandida al clicar en 'ver más'."
     redirect_users_to_top_page: "Redirigir automáticamente a los nuevos usuarios y a los ausentes de larga duración a la página de mejores temas."
     top_page_default_timeframe: "Período de tiempo por defecto para la página de temas top"
-    show_email_on_profile: "Permitir a los moderadores visualizar los emails de usuarios"
+    moderators_view_emails: "Permitir que los moderadores puedan ver los correos electrónicos de los usuarios"
     prioritize_username_in_ux: "Mostrar username primero en la página de usuario, tarjeta de usuario y mensajes (cuando el nombre ha sido desactivado se muestra primero)"
     enable_rich_text_paste: "Habilitar conversión automática de HTML a Markdown cuando pegues texto en el compositor. (Experimental)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
@@ -1374,7 +1381,6 @@ es:
     backup_frequency: "El número de días entre backups."
     s3_backup_bucket: "El bucket remoto para mantener copias de seguridad. AVISO: Asegúrate de que es un bucket privado."
     s3_endpoint: "El punto final se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
-    s3_force_path_style: "Haga cumplir el direccionamiento de estilo de ruta para su punto final personalizado. IMPORTANTE: se requiere para usar cargas y copias de seguridad desde Minio."
     s3_configure_tombstone_policy: "Habilitar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está deshabilitado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Desactivar el eliminado de backups de S3 cuando se eliminen de forma local."
     enable_s3_inventory: "Genere informes y verifique las cargas utilizando el inventario de Amazon S3. IMPORTANTE: requiere credenciales S3 válidas (tanto la clave de acceso como la clave de acceso secreta)."
@@ -1420,8 +1426,6 @@ es:
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Utilice un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil de instancia de AWS EC2</a> para otorgar acceso al S3 bucket. NOTA: habilitar esto requiere que Discourse se ejecute en una instancia EC2 configurada apropiadamente, y anula las configuraciones de "clave de acceso s3" y "clave secreta s3".'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
-    s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
-    s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes y backups."
     s3_cdn_url: "URL de un CDN a utilizar para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos los posts antiguos."
     avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
@@ -1623,6 +1627,7 @@ es:
     hide_suspension_reasons: "No mostrar la razón de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Log de mensajes personales vistos por Admin para otros usuarios/grupos."
     ignore_user_enabled: "[Beta] Permitir que se puedan ignorar usuarios"
+    ignored_users_count_message_threshold: "Notificar a los moderadores si un usuario en particular es ignorado este número de veces."
     user_website_domains_whitelist: "El sitio web del usuario será automáticamente verificado con estos dominios. Lista delimitada por barras |"
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de mensajes que un usuario tiene que publicar seguidos antes de que se le recuerde sobre demasiadas respuestas consecutivas."
@@ -1680,15 +1685,14 @@ es:
     code_formatting_style: "El botón de código en el editor se establecerá por defecto a este estilo de formato de código"
     max_allowed_message_recipients: "Destinatarios máximos permitidos en un mensaje."
     watched_words_regular_expressions: "Palabras observadas son expresiones regulares."
+    min_post_notice_tl: "Nivel de confianza mínimo para ver notas de publicaciones."
+    old_post_notice_days: "Tiempo a partir del cual una publicación se considera antigua"
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios emails de resumen por defecto."
     default_include_tl0_in_digests: "Incluir temas de usuarios nuevos en los emails de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
-    default_email_personal_messages: "Enviar un correo electrónico cuando alguien envíe un mensaje al usuario de manera predeterminada."
-    default_email_direct: "Enviar un email cuando alguien cite/responda/mencione o invite al usuario por defecto."
     default_email_mailing_list_mode: "Enviar un email por cada nuevo post por defecto."
     default_email_mailing_list_mode_frequency: "Los usuarios que activen el modo lista de correo recibirán correos con esta frecuencia por defecto."
     disable_mailing_list_mode: "No permitir a los usuarios que activen el modo lista de correo."
-    default_email_always: "Enviar una notificación por email aunque el usuario esté activo por defecto."
     default_email_previous_replies: "Incluir por defecto respuestas previas en los emails."
     default_email_in_reply_to: "Incluir por defecto un extracto del post al que se ha respondido en los emails."
     default_other_new_topic_duration_minutes: "Condición por defecto para que un tema sea considerado nuevo"
@@ -1740,6 +1744,7 @@ es:
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
+      invalid_group: "No hay ningún grupo con ese nombre."
       invalid_integer_min_max: "El valor debe estar entre %{min} y %{max}."
       invalid_integer_min: "El valor debe ser igual o mayor que  %{min}. "
       invalid_integer_max: "El valor no puede ser mayor que %{max}."
@@ -1770,6 +1775,7 @@ es:
       min_username_length_range: "No puedes establecer el mínimo por encima del máximo."
       max_username_length_exists: "No puede establecer la longitud de usuario máxima por debajo del nombre de usuario más largo (%{username})."
       max_username_length_range: "No puedes establecer el máximo por debajo del mínimo."
+      invalid_hex_value: "Los colores debe ser códigos de 6 dígitos hexadecimales."
     placeholder:
       sso_provider_secrets:
         key: "www.ejemplo.com"
@@ -1901,7 +1907,6 @@ es:
   admin:
     email:
       sent_test: "¡enviado!"
-      sent_test_disabled: "no se ha podido enviar el email porque están desactivados"
   user:
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
     deactivated_by_staff: "Desactivado por el staff"
@@ -1932,6 +1937,7 @@ es:
       unused_staged_user: "Usuario temporal sin uso"
       fixed_primary_email: "Se arregló el correo electrónico principal para el usuario temporal"
       same_ip_address: "Misma dirección de IP (%{ip_address}) como otros usuarios"
+      inactive_user: "Usuario inactivo"
   flags_reminder:
     flags_were_submitted:
       one: "Hay reportes enviados hace 1 hora. [Por favor, revísalo](%{base_path}/admin/flags)."
@@ -2508,6 +2514,8 @@ es:
       ```text
       %{raw}
       ```
+    ignored_users_summary:
+      subject_template: "Un usuario está siendo ignorado por mucha gente"
     too_many_spam_flags:
       title: "Demasiadas banderas por Spam"
       subject_template: "Nueva cuenta retenida"
@@ -3057,6 +3065,7 @@ es:
     sender_text_part_body_blank: "text_part.body está en blanco"
     sender_body_blank: "el cuerpo está en blanco"
     sender_post_deleted: "post ha sido borrado"
+    sender_message_to_invalid: "el destinatario tiene una dirección de email no válid"
   color_schemes:
     base_theme_name: "Base"
     light: "Claro"
@@ -3789,8 +3798,12 @@ es:
       linked: '%{username} enlazó tu publicación desde "%{topic}" - %{site_title}'
       confirm_title: "Notificaciones habilitadas - %{site_title}"
       confirm_body: "¡Éxito! Las notificaciones han sido habilitadas."
+      custom: "Notificación de %{site_title}"
   staff_action_logs:
     not_found: "no encontrado"
     unknown: "desconocido"
     user_merged: "%{username} se ha unido en esta cuenta"
     user_delete_self: "Eliminado a si mismo de %{url}"
+    update: "Actualizado"
+    create: "Creado"
+    destroy: "Destruido"
