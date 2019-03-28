@@ -28,7 +28,8 @@ class CreateReviewableHistories < ActiveRecord::Migration[5.2]
         r.created_at,
         r.created_at
       FROM reviewables AS r
-      WHERE r.type = 'ReviewableUser'
+      WHERE r.status = 0
+        AND r.type = 'ReviewableUser'
     SQL
   end
 end
