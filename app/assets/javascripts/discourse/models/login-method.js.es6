@@ -99,9 +99,7 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
   }
 
   // exclude FA icon for Google, uses custom SVG
-  methods.forEach(m =>
-    m.set("hasRegularIcon", m.get("name") === "google_oauth2" ? false : true)
-  );
+  methods.forEach(m => m.set("isGoogle", m.get("name") === "google_oauth2"));
 
   return methods;
 }

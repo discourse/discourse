@@ -76,11 +76,11 @@ If you do already have RVM installed, this should make sure everything is up to 
     # If autolibs is set to 0-2, it will give an error for things that are missing, instead.
     rvm requirements
 
-Either way, you'll now want to install Ruby 2.6+ (we recommend 2.6.1 or higher).
+Either way, you'll now want to install Ruby 2.6+ (we recommend 2.6.2 or higher).
 
     # Now, install Ruby
-    rvm install 2.6.1
-    rvm use 2.6.1 --default # Careful with this if you're already developing Ruby
+    rvm install 2.6.2
+    rvm use 2.6.2 --default # Careful with this if you're already developing Ruby
 
 ## Git
 

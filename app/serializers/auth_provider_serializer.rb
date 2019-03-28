@@ -1,7 +1,8 @@
 class AuthProviderSerializer < ApplicationSerializer
 
   attributes :name, :custom_url, :pretty_name_override, :title_override, :message_override,
-             :frame_width, :frame_height, :full_screen_login, :can_connect, :can_revoke
+             :frame_width, :frame_height, :full_screen_login, :can_connect, :can_revoke,
+             :icon
 
   def title_override
     return SiteSetting.send(object.title_setting) if object.title_setting

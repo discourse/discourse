@@ -600,6 +600,47 @@ QUnit.test("Checks for existing draft", async assert => {
   toggleCheckDraftPopup(false);
 });
 
+QUnit.test("Can switch states without abandon popup", async assert => {
+  const composerActions = selectKit(".composer-actions");
+  toggleCheckDraftPopup(true);
+
+  await visit("/t/internationalization-localization/280");
+
+  const longText = "a".repeat(256);
+
+  await click(".btn-primary.create.btn");
+
+  await fillIn(".d-editor-input", longText);
+
+  // prettier-ignore
+  server.get("/draft.json", () => { // eslint-disable-line no-undef
+    return [ 200, { "Content-Type": "application/json" }, {
+      draft: "{\"reply\":\"This is a draft of the first post\",\"action\":\"reply\",\"categoryId\":1,\"archetypeId\":\"regular\",\"metaData\":null,\"composerTime\":2863,\"typingTime\":200}",
+      draft_sequence: 42
+    } ];
+  });
+
+  await click("article#post_3 button.reply");
+
+  await composerActions.expand();
+  await composerActions.selectRowByValue("reply_to_topic");
+
+  assert.equal(find(".modal-body").text(), "", "abandon popup shouldn't come");
+
+  assert.equal(
+    find(".d-editor-input").val(),
+    longText,
+    "entered text should still be there"
+  );
+
+  assert.ok(
+    find('.action-title a[href="/t/internationalization-localization/280"]'),
+    "mode should have changed"
+  );
+
+  toggleCheckDraftPopup(false);
+});
+
 QUnit.test("Loading draft also replaces the recipients", async assert => {
   toggleCheckDraftPopup(true);
 

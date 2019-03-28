@@ -1582,7 +1582,7 @@ describe Topic do
       closing_topic.set_or_create_timer(TopicTimer.types[:open], nil)
       topic_timer = closing_topic.public_topic_timer
 
-      expect(topic_timer.execute_at).to eq(5.hours.from_now)
+      expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
       expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
     end
 
