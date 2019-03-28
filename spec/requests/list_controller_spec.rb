@@ -642,18 +642,27 @@ RSpec.describe ListController do
   end
 
   describe "safe mode" do
+    before do
+      plugin_fixtures = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
+      Discourse.stubs(:plugins).returns(plugin_fixtures)
+      Plugin::Instance.any_instance.stubs(:asset_exists?).returns(true)
+      Plugin::Instance.any_instance.stubs(:enabled?).returns(true)
+      csp_extension = Discourse.plugins.detect { |p| p.asset_name == "csp_extension" }
+      csp_extension.metadata.stubs(:official?).returns(true)
+    end
+
     it "handles safe mode" do
       get "/latest"
-      expect(response.body).to match(/plugin\.js/)
-      expect(response.body).to match(/plugin-third-party\.js/)
+      expect(response.body).to match(/my_plugin\.js/)
+      expect(response.body).to match(/csp_extension\.js/)
 
       get "/latest", params: { safe_mode: "no_plugins" }
-      expect(response.body).not_to match(/plugin\.js/)
-      expect(response.body).not_to match(/plugin-third-party\.js/)
+      expect(response.body).not_to match(/my_plugin\.js/)
+      expect(response.body).not_to match(/csp_extension\.js/)
 
       get "/latest", params: { safe_mode: "only_official" }
-      expect(response.body).to match(/plugin\.js/)
-      expect(response.body).not_to match(/plugin-third-party\.js/)
+      expect(response.body).not_to match(/my_plugin\.js/)
+      expect(response.body).to match(/csp_extension\.js/)
     end
   end
 end
