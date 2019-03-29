@@ -577,11 +577,12 @@ export default function() {
       ]);
     });
 
-    this.get("/admin/logs/search_logs/term/ruby.json", () => {
+    this.get("/admin/logs/search_logs/term.json", () => {
       return response(200, {
         term: {
           type: "search_log_term",
           title: "Search Count",
+          term: "ruby",
           data: [{ x: "2017-07-20", y: 2 }]
         }
       });
