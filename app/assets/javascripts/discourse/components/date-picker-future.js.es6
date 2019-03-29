@@ -10,8 +10,7 @@ export default DatePicker.extend({
         moment()
           .add(1, "day")
           .toDate(),
-      setDefaultDate: !!this.get("defaultDate"),
-      minDate: new Date()
+      setDefaultDate: !!this.get("defaultDate")
     };
   }
 });
