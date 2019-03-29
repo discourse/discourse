@@ -283,7 +283,7 @@ describe PostDestroyer do
         expect(post2.deleted_at).to be_blank
         expect(post2.deleted_by).to be_blank
         expect(post2.user_deleted).to eq(true)
-        expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', count: 24))
+        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author', count: 24))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
         expect(user_stat.reload.post_count).to eq(0)
@@ -337,6 +337,8 @@ describe PostDestroyer do
 
     it "accepts a delete_removed_posts_after option" do
       SiteSetting.delete_removed_posts_after = 0
+
+      post.update!(post_number: 2)
 
       PostDestroyer.new(post.user, post, delete_removed_posts_after: 1).destroy
 

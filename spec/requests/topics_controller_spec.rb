@@ -833,7 +833,7 @@ RSpec.describe TopicsController do
     describe 'when logged in' do
       let(:user) { Fabricate(:user) }
       let(:moderator) { Fabricate(:moderator) }
-      let(:topic) { Fabricate(:topic, user: user) }
+      let(:topic) { Fabricate(:topic, user: user, created_at: 48.hours.ago) }
       let!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
       describe 'without access' do

@@ -2208,6 +2208,10 @@ en:
           one: You have selected <b>1</b> post.
           other: "You have selected <b>{{count}}</b> posts."
 
+      deleted_by_author:
+        one: "(topic withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
+        other: "(topic withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
+
     post:
       quote_reply: "Quote"
       edit_reason: "Reason: "
