@@ -1,5 +1,4 @@
 import loadScript from "discourse/lib/load-script";
-import { number } from "discourse/lib/formatter";
 
 export default Ember.Component.extend({
   tagName: "canvas",
