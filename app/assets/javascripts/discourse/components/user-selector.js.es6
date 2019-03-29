@@ -97,8 +97,9 @@ export default TextField.extend({
           self.set("usernames", items.join(","));
           self.set("hasGroups", hasGroups);
 
+          const previouslySelected = selected;
           selected = items;
-          if (self.get("onChangeCallback")) self.onChangeCallback();
+          if (self.get("onChangeCallback")) self.onChangeCallback(previouslySelected, selected);
         },
 
         reverseTransform(i) {
