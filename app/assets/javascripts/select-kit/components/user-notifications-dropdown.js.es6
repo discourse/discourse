@@ -89,7 +89,9 @@ export default DropdownSelectBox.extend({
   },
 
   _select(id) {
-    this.select(this.collectionComputedContent.find((c) => c.originalContent.id === id));
+    this.select(
+      this.collectionComputedContent.find(c => c.originalContent.id === id)
+    );
   },
 
   actions: {

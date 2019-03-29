@@ -4,7 +4,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
   ignoredUntil: null,
-  maxDate: new Date((new Date()).getTime() + (120 * 86400000)),
+  maxDate: moment()
+    .utc()
+    .add(4, "months")
+    .toDate(),
   actions: {
     ignore() {
       if (!this.get("ignoredUntil")) {
@@ -20,7 +23,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         .then(() => {
           this.set("model.ignored", true);
           this.set("model.muted", false);
-          if(this.get("onSuccess")) {
+          if (this.get("onSuccess")) {
             this.get("onSuccess")();
           }
           this.send("closeModal");

@@ -1004,7 +1004,7 @@ class UsersController < ApplicationController
       MutedUser.where(user: current_user, muted_user: user).delete_all
       ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
       if ignored_user.present?
-        ignored_user.update(expiring_at: Time.parse(params[:expiring_at]))
+        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
       else
         IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
       end

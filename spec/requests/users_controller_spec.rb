@@ -2074,9 +2074,13 @@ describe UsersController do
           context 'when expiring_at param is set' do
             it 'changes notification level to ignore' do
               freeze_time(Time.now) do
-                put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore", expiring_at: 3.days.from_now }
+                expiring_at = 3.days.from_now
+                put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore", expiring_at: expiring_at }
+
+                ignored_user = IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)
+                expect(ignored_user).to be_present
+                expect(ignored_user.expiring_at.to_i).to eq(expiring_at.to_i)
                 expect(MutedUser.count).to eq(0)
-                expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id, expiring_at: 3.days.from_now)).to be_present
               end
             end
           end
