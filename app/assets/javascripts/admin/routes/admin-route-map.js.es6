@@ -133,7 +133,7 @@ export default function() {
           { path: "/search_logs", resetNamespace: true },
           function() {
             this.route("index", { path: "/" });
-            this.route("term", { path: "/term/:term" });
+            this.route("term", { path: "/term" });
           }
         );
         this.route(
