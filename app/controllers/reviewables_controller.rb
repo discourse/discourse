@@ -61,7 +61,10 @@ class ReviewablesController < ApplicationController
 
     # topics isn't indexed on `reviewable_score` and doesn't know what the current user can see,
     # so let's query from the inside out.
-    Reviewable.viewable_by(current_user).pending.each do |r|
+    pending = Reviewable.viewable_by(current_user).pending
+    pending = pending.where("score >= ?", SiteSetting.min_score_default_visibility)
+
+    pending.each do |r|
       topic_ids << r.topic_id
 
       meta = stats[r.topic_id] ||= { count: 0, unique_users: 0 }
