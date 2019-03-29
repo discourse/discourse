@@ -101,9 +101,9 @@
     margin-bottom: 15px;
 
     .secondary {
-      background: $secondary;
+      display: inline-block;
+      width: 100%;
       border-top: 1px solid $primary-low;
-      border-bottom: 1px solid $primary-low;
 
       .btn {
         padding: 4px 12px;
@@ -155,6 +155,7 @@
 
     .details {
       background: rgba($secondary, 0.8);
+      border-bottom: 1px solid $primary-low;
 
       h1 {
         font-size: $font-up-5;
@@ -196,7 +197,6 @@
       .primary {
         width: 100%;
         position: relative;
-        float: left;
 
         h1 {
           font-weight: bold;

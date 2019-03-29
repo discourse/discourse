@@ -47,14 +47,13 @@
     color: $secondary;
 
     .secondary {
-      margin-bottom: s(3);
       dl {
         padding: s(2) 0;
       }
     }
 
     .details {
-      background: $secondary;
+      margin-bottom: s(3);
 
       h1 {
         line-height: $line-height-small;
@@ -131,15 +130,14 @@
     }
 
     &.has-background {
-      background-size: contain;
-      background-position: top center;
-      background-repeat: no-repeat;
-
+      .user-profile-image {
+        height: 200px;
+        background-size: contain;
+        background-position: top center;
+        background-repeat: no-repeat;
+      }
       .user-profile-avatar {
         margin-top: s(-24);
-      }
-      .details {
-        margin-top: 200px;
       }
     }
 
@@ -162,6 +160,13 @@
           button,
           a {
             width: 100%;
+          }
+          .select-kit.dropdown-select-box.user-notifications-dropdown {
+            width: 100%;
+            li {
+              flex: 1 1 100%;
+              margin-left: 0;
+            }
           }
         }
       }
@@ -209,10 +214,6 @@
   }
   .user-profile-names {
     text-align: left;
-  }
-  .controls {
-    margin: s(2) 0 s(3);
-    border-bottom: 1px solid $primary-low;
   }
 }
 
