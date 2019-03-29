@@ -26,7 +26,7 @@ class RequireReviewableScores < ActiveRecord::Migration[5.2]
 
     execute(<<~SQL)
       UPDATE reviewables SET score = (
-        SELECT SUM(score)
+        SELECT COALESCE(SUM(score), 0)
         FROM reviewable_scores
         WHERE reviewable_scores.reviewable_id = reviewables.id
       )
