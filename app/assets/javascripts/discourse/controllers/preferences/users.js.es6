@@ -1,5 +1,5 @@
 import PreferencesTabController from "discourse/mixins/preferences-tab-controller";
-import {popupAjaxError} from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
 
@@ -23,7 +23,9 @@ export default Ember.Controller.extend(PreferencesTabController, {
                 if (!user.get("ignored")) {
                   const usernames = this.get("ignoredUsernames")
                     .split(",")
-                    .removeAt(this.get("ignoredUsernames").split(",").length - 1)
+                    .removeAt(
+                      this.get("ignoredUsernames").split(",").length - 1
+                    )
                     .join(",");
                   this.set("ignoredUsernames", usernames);
                 }
@@ -36,7 +38,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
           .save(["ignored_usernames"])
           .catch(popupAjaxError);
       }
-
     },
     save() {
       this.set("saved", false);

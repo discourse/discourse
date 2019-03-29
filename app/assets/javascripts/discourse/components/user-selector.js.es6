@@ -96,17 +96,18 @@ export default TextField.extend({
           });
 
           let previouslySelected = [];
-          if(Array.isArray(self.get("usernames"))) {
+          if (Array.isArray(self.get("usernames"))) {
             previouslySelected = self.get("usernames");
           } else {
-            if(self.get("usernames")) {
+            if (self.get("usernames")) {
               previouslySelected = self.get("usernames").split(",");
             }
           }
           self.set("usernames", items.join(","));
           self.set("hasGroups", hasGroups);
           selected = items;
-          if (self.get("onChangeCallback")) self.onChangeCallback(previouslySelected, selected);
+          if (self.get("onChangeCallback"))
+            self.onChangeCallback(previouslySelected, selected);
         },
 
         reverseTransform(i) {
