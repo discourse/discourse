@@ -10,9 +10,9 @@
           {{/if}}
           {{#if model.number_of_flagged_posts}}
             <div>
-              {{#link-to 'user.flaggedPosts' model}}
+              {{#link-to 'review' (query-params username=model.username status='all' type='ReviewableFlaggedPost')}}
                 <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n 'user.staff_counters.flagged_posts'}}
-              {{/link-to}}
+              {{/link-to}} 
             </div>
           {{/if}}
           {{#if model.number_of_deleted_posts}}

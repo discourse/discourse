@@ -83,12 +83,24 @@ end
   end
 end
 
-%i(
-  queued_post_created
-  approved_post
-  rejected_post
-).each do |event|
-  DiscourseEvent.on(event) do |queued_post|
-    WebHook.enqueue_object_hooks(:queued_post, queued_post, event, QueuedPostSerializer)
+DiscourseEvent.on(:reviewable_created) do |reviewable|
+  WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_created, reviewable.serializer)
+
+  # TODO: Backwards compatibility for Queued Post webhooks. Remve in favor of Reviewable API
+  if reviewable.is_a?(ReviewableQueuedPost)
+    WebHook.enqueue_object_hooks(:queued_post, reviewable, :queued_post_created, reviewable.serializer)
+  end
+end
+
+DiscourseEvent.on(:reviewable_transitioned_to) do |status, reviewable|
+  WebHook.enqueue_object_hooks(:reviewable, reviewable, :reviewable_transitioned_to, reviewable.serializer)
+
+  # TODO: Backwards compatibility for Queued Post webhooks. Remve in favor of Reviewable API
+  if reviewable.is_a?(ReviewableQueuedPost)
+    if reviewable.approved?
+      WebHook.enqueue_object_hooks(:queued_post, reviewable, :approved_post, QueuedPostSerializer)
+    elsif reviewable.rejected?
+      WebHook.enqueue_object_hooks(:queued_post, reviewable, :rejected_post, QueuedPostSerializer)
+    end
   end
 end

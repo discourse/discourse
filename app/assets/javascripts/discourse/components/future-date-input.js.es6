@@ -16,10 +16,7 @@ export default Ember.Component.extend({
     "selection",
     "set_based_on_last_post"
   ),
-  displayDateAndTimePicker: Ember.computed.and(
-    "includeDateTime",
-    "isCustom"
-  ),
+  displayDateAndTimePicker: Ember.computed.and("includeDateTime", "isCustom"),
   displayLabel: null,
 
   init() {

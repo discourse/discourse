@@ -12,62 +12,75 @@ pt_BR:
         one: "votante"
         other: "votantes"
       total_votes:
-        one: "voto total"
-        other: "votos totais"
-      average_rating: "Resultado médio: <strong>%{average}</strong>."
+        one: "voto no total"
+        other: "votos no total"
+      average_rating: "Classificação média: <strong>%{average}</strong>."
       public:
-        title: "A votação é <strong>pública</strong>."
+        title: "Votos são <strong>públicos</strong>."
+      results:
+        vote:
+          title: "Resultados serão mostrados ao <strong>votar</strong>."
+        closed:
+          title: "Resultados serão mostrados quando a votação <strong>fechar</strong>."
       multiple:
         help:
           at_least_min_options:
-            one: "Você deve escolher pelo menos <strong>%{count}</strong> opções."
-            other: "Você deve escolher pelo menos <strong>%{count}</strong> opções."
+            one: "Escolha pelo menos <strong>1</strong> opção"
+            other: "Escolha pelo menos <strong>%{count}</strong> opções"
           up_to_max_options:
-            one: "Você deve escolher até <strong>%{count}</strong> opções."
-            other: "Você deve escolher até <strong>%{count}</strong> opções."
+            one: "Escolha até <strong>1</strong> opção"
+            other: "Escolha até <strong>%{count}</strong> opções"
           x_options:
-            one: "Você deve escolher <strong>%{count}</strong> opções."
-            other: "Você deve escolher <strong>%{count}</strong> opções."
+            one: "Escolha <strong>1</strong> opção"
+            other: "Escolha <strong>%{count}</strong> opções"
           between_min_and_max_options: "Você pode escolher entre <strong>%{min}</strong> e <strong>%{max}</strong> opções"
       cast-votes:
-        title: "Seus votos"
+        title: "Registre seus votos"
         label: "Votar agora!"
       show-results:
-        title: "Mostrar o resultado da enquete"
+        title: "Mostrar o resultado da votação"
         label: "Mostrar resultados"
       hide-results:
         title: "Voltar para os seus votos"
-        label: "Esconder resultados"
+        label: "Ocultar resultados"
       open:
-        title: "Abrir a enquete"
+        title: "Abrir a votação"
         label: "Abrir"
-        confirm: "Você tem certeza que deseja abrir essa enquete?"
+        confirm: "Você tem certeza de que deseja abrir esta votação?"
       close:
-        title: "Fechar a enquete"
+        title: "Fechar a votação"
         label: "Fechar"
-        confirm: "Você tem certeza que deseja fechar essa enquete?"
-      error_while_toggling_status: "Desculpe, houve um erro ao mudar a situação da enquete.."
-      error_while_casting_votes: "Desculpe, houve um erro ao votar."
+        confirm: "Você tem certeza de que deseja fechar esta votação?"
+      automatic_close:
+        closes_in: "Fecha em <strong>%{timeLeft}</strong>."
+        age: "Fechou <strong>%{age}</strong>"
+      error_while_toggling_status: "Desculpe, houve um erro ao mudar a situação desta votação."
+      error_while_casting_votes: "Desculpe, houve um erro ao registrar os seus votos."
       error_while_fetching_voters: "Desculpe, houve um erro ao mostrar os votantes."
       ui_builder:
-        title: Criar Enquete
-        insert: Inserir resposta
+        title: Criar Votação
+        insert: Inserir Votação
         help:
-          options_count: Enquetes devem ter no mínimo 2 opções
-          invalid_values: O menor valor valor deve ser menor que o valor máximo.
-          min_step_value: O valor mínimo do passo é 1
+          options_count: Insira pelo menos 2 opções
+          invalid_values: O valor mínimo precisa ser menor que o valor máximo.
+          min_step_value: O valor mínimo de intervalo é 1
         poll_type:
           label: Tipo
-          regular: Única escolha
-          multiple: Múltipla escolha
-          number: Classificação numérica
+          regular: Única Escolha
+          multiple: Múltipla Escolha
+          number: Classificação Numérica
+        poll_result:
+          label: Resultados
+          always: Sempre visível
+          vote: Ao votar
+          closed: Quando fechada
         poll_config:
           max: Máx
           min: Mín
-          step: Etapa
+          step: Intervalo
         poll_public:
-          label: Exibir votantes
+          label: Exibir quem votou
         poll_options:
-          label: Insira uma resposta por linha
+          label: Insira uma opção para voto por linha
         automatic_close:
           label: Fechar automaticamente a votação

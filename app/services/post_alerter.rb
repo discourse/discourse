@@ -1,5 +1,5 @@
 require_dependency 'distributed_mutex'
-require_dependency 'user_action_creator'
+require_dependency 'user_action_manager'
 
 class PostAlerter
   def self.post_created(post, opts = {})
@@ -376,7 +376,7 @@ class PostAlerter
       end
     end
 
-    UserActionCreator.log_notification(original_post, user, type, opts[:acting_user_id])
+    UserActionManager.notification_created(original_post, user, type, opts[:acting_user_id])
 
     topic_title = post.topic.title
     # when sending a private message email, keep the original title

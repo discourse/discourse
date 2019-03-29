@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
 describe Post do
   before { Oneboxer.stubs :onebox }
@@ -159,44 +158,39 @@ describe Post do
     let(:admin) { Fabricate(:admin) }
 
     it 'is_flagged? is accurate' do
-      PostAction.act(user, post, PostActionType.types[:off_topic])
-      post.reload
-      expect(post.is_flagged?).to eq(true)
+      PostActionCreator.off_topic(user, post)
+      expect(post.reload.is_flagged?).to eq(true)
 
-      PostAction.remove_act(user, post, PostActionType.types[:off_topic])
-      post.reload
-      expect(post.is_flagged?).to eq(false)
+      PostActionDestroyer.destroy(user, post, :off_topic)
+      expect(post.reload.is_flagged?).to eq(false)
     end
 
     it 'is_flagged? is true if flag was deferred' do
-      PostAction.act(user, post, PostActionType.types[:off_topic])
-      PostAction.defer_flags!(post.reload, admin)
-      post.reload
-      expect(post.is_flagged?).to eq(true)
+      result = PostActionCreator.off_topic(user, post)
+      result.reviewable.perform(admin, :ignore)
+      expect(post.reload.is_flagged?).to eq(true)
     end
 
     it 'is_flagged? is true if flag was cleared' do
-      PostAction.act(user, post, PostActionType.types[:off_topic])
-      PostAction.clear_flags!(post.reload, admin)
-      post.reload
-      expect(post.is_flagged?).to eq(true)
+      result = PostActionCreator.off_topic(user, post)
+      result.reviewable.perform(admin, :disagree)
+      expect(post.reload.is_flagged?).to eq(true)
     end
 
-    it 'has_active_flag? is false for deferred flags' do
-      PostAction.act(user, post, PostActionType.types[:spam])
-      post.reload
-      expect(post.has_active_flag?).to eq(true)
+    it 'reviewable_flag is nil when ignored' do
+      result = PostActionCreator.spam(user, post)
+      expect(post.reviewable_flag).to eq(result.reviewable)
 
-      PostAction.defer_flags!(post, admin)
-      post.reload
-      expect(post.has_active_flag?).to eq(false)
+      result.reviewable.perform(admin, :ignore)
+      expect(post.reviewable_flag).to be_nil
     end
 
-    it 'has_active_flag? is false for cleared flags' do
-      PostAction.act(user, post, PostActionType.types[:spam])
-      PostAction.clear_flags!(post.reload, admin)
-      post.reload
-      expect(post.has_active_flag?).to eq(false)
+    it 'reviewable_flag is nil when disagreed' do
+      result = PostActionCreator.spam(user, post)
+      expect(post.reviewable_flag).to eq(result.reviewable)
+
+      result.reviewable.perform(admin, :disagree)
+      expect(post.reload.reviewable_flag).to be_nil
     end
   end
 

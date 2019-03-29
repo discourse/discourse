@@ -13,6 +13,12 @@ module DiscourseEvent::TestHelper
     @events_trigger = nil
     events_trigger
   end
+
+  def track(event_type)
+    events = track_events { yield }
+    events.find { |e| e[:event_name] == event_type }
+  end
+
 end
 
 DiscourseEvent.singleton_class.prepend DiscourseEvent::TestHelper

@@ -1,5 +1,5 @@
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import {popupAjaxError} from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
 export default DropdownSelectBox.extend({

@@ -281,9 +281,8 @@ class UserMerger
     Post.with_deleted.where(locked_by_id: @source_user.id).update_all(locked_by_id: @target_user.id)
     Post.with_deleted.where(reply_to_user_id: @source_user.id).update_all(reply_to_user_id: @target_user.id)
 
-    QueuedPost.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    QueuedPost.where(approved_by_id: @source_user.id).update_all(approved_by_id: @target_user.id)
-    QueuedPost.where(rejected_by_id: @source_user.id).update_all(rejected_by_id: @target_user.id)
+    Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
+    ReviewableHistory.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
 
     SearchLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 

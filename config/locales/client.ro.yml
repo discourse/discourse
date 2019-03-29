@@ -224,8 +224,6 @@ ro:
     every_hour: "La fiecare oră"
     daily: "Zilnic"
     weekly: "Săptămânal"
-    every_two_weeks: "Odată la două săptamâni"
-    every_three_days: "La fiecare trei zile"
     max_of_count: "max din {{count}}"
     alternation: "sau"
     character_count:
@@ -712,7 +710,6 @@ ro:
         instructions: "Fundalul va fi centrat şi va avea o dimensiune standard de 590px."
       email:
         title: "Email"
-        instructions: "nu afișa niciodată către public"
         ok: "Îți vom trimite un email pentru confirmare."
         invalid: "Introduceți o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către {{provider}}."
@@ -770,14 +767,9 @@ ro:
         every_30_minutes: "La fiecare 30 de minute "
         every_hour: "În fiecare oră"
         daily: "Zilnic"
-        every_three_days: "La fiecare trei zile"
         weekly: "Săptămânal"
-        every_two_weeks: "La fiecare două săptămâni"
       include_tl0_in_digests: "Include conținut de la utilizatori noi în  rezumatul de pe email."
       email_in_reply_to: "Include un fragment din răspunsurile la postare în emailuri"
-      email_direct: "Trimite un email când cineva mă citează, îmi răspunde la o postare, menționează numele meu de utilizator, sau mă invită la un subiect."
-      email_private_messages: "Trimite-mi un email când cineva îmi trimite un mesaj."
-      email_always: "Trimite-mi notificările pe email atunci când sunt activ pe site."
       other_settings: "Altele"
       categories_settings: "Categorii"
       new_topic_duration:
@@ -1020,7 +1012,7 @@ ro:
       button_ok: "Ok"
       button_help: "Ajutor"
     login:
-      title: "Autentificare cu"
+      title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
       email_placeholder: "email sau nume de utilizator"
@@ -1103,13 +1095,7 @@ ro:
       filter_placeholder: Caută...
     emoji_picker:
       filter_placeholder: Caută emoji
-      people: Oameni
-      nature: Natură
-      food: Mâncare
-      activity: Activitate
-      travel: Călătorie
       objects: Obiecte
-      celebration: Sărbători
       custom: Emojii personalizate
       recent: Folosite recent
     shared_drafts:
@@ -1737,6 +1723,8 @@ ro:
         one: "vezi un răspuns ascuns"
         few: "vezi {{count}} răspunsuri ascunse"
         other: "vezi {{count}} de răspunsuri ascunse"
+      notice:
+        first: "Este prima dată când {{user}}a adăugat un comentariu. Să-i spunem bun venit în comunitate!"
       unread: "postarea nu a fost citită"
       has_replies:
         one: "Un răspuns"
@@ -1759,7 +1747,6 @@ ro:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
         upload: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
-        file_too_large: "Ne pare rău, fișierul este prea mare (mărimea maximă este {{max_size_kb}}kb). De ce nu încarci  acest fișier mare pe un serviciu de distribuție prin cloud și apoi să îi partajezi link-ul?"
         too_many_uploads: "Ne pare rău, poți încărca doar câte un fișier."
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."

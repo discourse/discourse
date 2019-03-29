@@ -84,12 +84,8 @@ describe UsernameChanger do
       let(:topic) { Fabricate(:topic, user: user) }
 
       before do
-        UserActionCreator.enable
+        UserActionManager.enable
         Discourse.expects(:warn_exception).never
-      end
-
-      after do
-        UserActionCreator.disable
       end
 
       def create_post_and_change_username(args = {}, &block)

@@ -16,6 +16,7 @@ zh_TW:
       short_no_year: "%B %-d"
       date_only: "%Y年%m月%d日"
       long: "%Y年%m月%d日%H:%M"
+      no_day: "%B %Y"
   date:
     month_names: [~, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
@@ -29,21 +30,64 @@ zh_TW:
   loading: "載入中"
   powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, 建議開啟 JavaScript 瀏覽'
   log_in: "登入"
+  submit: "提交"
   purge_reason: "自動當成遺棄、未啟動的帳戶刪除"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   anonymous: "匿名"
   remove_posts_deleted_by_author: "已由作者刪除"
+  redirect_warning: "我們無法確認您選擇的連結是否已被發送到論壇上，若您想繼續此動作，選擇以下的連結。"
+  on_another_topic: "在另一個話題中"
+  themes:
+    bad_color_scheme: "無法更新佈景主題，無效的調色盤"
+    other_error: "更新佈景主題時發生了錯誤"
+    import_error:
+      generic: 匯入佈景主題時發生了錯誤
+      about_json: "匯入錯誤：about.json 不存在或無效"
+      about_json_values: "about.json 含有無效的數值：%{errors}"
+      git: "複製 git 版本庫時發生錯誤，存取被拒或找不到該版本庫"
+      unpack_failed: "解壓縮檔案失敗"
+      unknown_file_type: "您上傳的檔案不是一個有效的 Discourse 佈景主題"
+    errors:
+      component_no_user_selectable: "用戶無法選擇佈景主題元件"
+      component_no_default: "佈景主題元件不能是預設的佈景主題"
+      component_no_color_scheme: "佈景主題元件不能使用調色盤"
+      no_multilevels_components: "含有兒童佈景主題的主題本身不能是兒童佈景主題"
+    settings_errors:
+      invalid_yaml: "提供的 YAML 無效"
+      data_type_not_a_number: "不支援 `%{name}` 類型設定。支援類型有：`integer`, `bool`, `list` 及`enum`"
+      name_too_long: "此設定名稱過長，長度上限為 255"
+      default_value_missing: "`%{name}` 設定沒有預設數值"
+      default_not_match_type: "`%{name}` 設定的預設值類型與此設定類型不相符。"
+      default_out_range: "`%{name}` 設定的預設值超出指定範圍。"
+      enum_value_not_valid: "已選擇的值不是 enum 中的選擇。"
+      number_value_not_valid: "新數值超出核可範圍。"
+      number_value_not_valid_min_max: "它必須介於%{min}與%{max}之間。"
+      number_value_not_valid_min: "它必須大於或等於%{min}。"
+      number_value_not_valid_max: "它必須小於或等於%{max}。"
+      string_value_not_valid: "新值的長度超出核可範圍。"
+      string_value_not_valid_min_max: "它必須介於%{min}與%{max}個字元。"
+      string_value_not_valid_min: "它最少必須比%{min}個字元長。"
+      string_value_not_valid_max: "它最多必須比%{max}個字元短。"
+    locale_errors:
+      top_level_locale: "本地檔案的最高階金鑰必須與本地名稱相符"
+      invalid_yaml: "YAML 翻譯無效"
   emails:
     incoming:
       default_subject: "無標題的討論話題"
       show_trimmed_content: "顯示截短後的內容"
       maximum_staged_user_per_email_reached: "以達成分期使用者能創造的最大數量信件"
+      no_subject: "(無主旨)"
+      no_body: "(無內文)"
+      missing_attachment: "(附加檔案%{filename}不存在)"
       errors:
         empty_email_error: "當我們收到的原生郵件空白時發生。"
         no_message_id_error: "當郵件沒有「Message-Id」標頭訊息時發生。"
         auto_generated_email_error: "郵件頭部的“precedence”為：list、junk、bulk 或 auto_reply，或者頭部包含了：auto-submitted、auto-replied 或 auto-generated。"
         no_body_detected_error: "無法解析正文並且沒有附件。"
+        no_sender_detected_error: "當我們在「來自」標頭中找不到有效的 email 時會發生。"
+        from_reply_by_address_error: "當「來自」標頭的 email 與回覆的 email 相符時會發生。"
         inactive_user_error: "當寄件者處於非啟動狀態時發生。"
+        silenced_user_error: "當寄件者被禁言時會發生。"
         bad_destination_address: "發至/抄送/密送欄中的所有郵件都不匹配進站郵件地址。"
         strangers_not_allowed_error: "當用戶試圖在尚未晉身為成員之一的分類中新建討論話題時發生。"
         insufficient_trust_level_error: "用戶嘗試在用戶等級不滿足分類要求時發帖。"
@@ -52,8 +96,12 @@ zh_TW:
         topic_closed_error: "當得到回應，但相關討論話題已經關閉時發生。"
         bounced_email_error: "郵件是投遞失敗的錯誤報告。"
         screened_email_error: "發件人郵箱已經被封禁。"
+        unsubscribe_not_allowed: "當這位使用者無法透過 email 取消訂閱時會發生。"
+        email_not_allowed: "當此 email 不在白名單或在黑名單中時會發生。"
+      unrecognized_error: "不知名的錯誤"
   errors: &errors
     format: "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
       too_long_validation: "限制 %{max} 個字元，你已經輸入了 %{length} 個字元"
       invalid_boolean: "無效的真假值。"
@@ -79,6 +127,9 @@ zh_TW:
       not_an_integer: 必須是整數
       odd: 必須是單數
       record_invalid: "驗證失敗： %{errors}"
+      max_emojis: "不能有多於%{max_emojis_count}個表情符號"
+      emojis_disabled: "不能有表情符號"
+      ip_address_already_screened: "已包含在現有的規則中"
       restrict_dependent_destroy:
         one: "不能刪除記錄，因為相關的 %{record} 存在"
         many: "不能刪除記錄，因為相關的 %{record} 存在"
@@ -96,37 +147,65 @@ zh_TW:
     embed:
       load_from_remote: "載入文章時發生了錯誤"
     site_settings:
+      invalid_choice:
+        other: "您定義了無效的選擇%{name}"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
+      enable_s3_uploads_is_required: "您無法啟用資料庫到 S3，除非您已啟用了 S3 的上傳檔案。"
+      s3_backup_requires_s3_settings: "您無法使用 S3 作為備份地址，除非您提供了 '%{setting_name}'。"
+      s3_bucket_reused: "不能把同一個 Amazon bucket 同時使用  ‘s3_upload_bucket’ 及 ‘s3_backup_bucket’。請選擇不同的 bucket 或指定將每個 bucket 設定不同的路徑。"
+    conflicting_google_user_id: '此 Google 帳戶 ID 出於安全原因已更改，請聯絡管理人員並將其<br><a href="https://meta.discourse.org/t/76575">指向 https://meta.discourse.org/t/76575 </a>'
   activemodel:
     errors:
       <<: *errors
   invite:
     not_found: "您的邀請碼無效。請聯絡管理人員。"
+    not_found_template: |
+      你的%{site_name}邀請已被兌換<p>
+
+      <p>如果你還記得密碼，請先<a href="%{base_url}/login">登入</a>。
+
+      <p>若忘記密碼，請<a href="%{base_url}/password-reset">重設密碼</a></p>
+    error_message: "接受邀請時發生問題，請聯絡網站管理員。"
     user_exists: "無需邀請 <b>%{email}</b>，他 <a href='%{base_path}/u/%{username}/summary'>已經有帳號了</a>！"
+    confirm_email: "<p>快完成了！我們發送了一封啟用帳號郵件到你的信箱。請按照信件中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件\b匣。"
   bulk_invite:
     file_should_be_csv: "上傳的檔案必須是 CSV 格式。"
     error: "上傳檔案有錯誤，請再試一次。"
   topic_invite:
+    failed_to_invite: "如果沒有以下任的成員身份，則無法邀請用戶加入此話題：%{group_names}"
     user_exists: "抱歉，用戶已經被邀請了。你可能只想邀請用戶參與主題一次。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
     backup_file_should_be_tar_gz: "備份檔案應使用 .tar.gz 歸檔"
     not_enough_space_on_disk: "沒有足夠的磁碟空間可供備份檔案上傳"
     invalid_filename: "備份檔案名包含無效字元。有效字元為 a-z 0-9 . - _."
+    file_exists: "你嘗試上傳的檔案已存在。"
+    location:
+      local: "本地"
+      s3: "Amazon S3"
+  invalid_params: "提供的參數是無效的，請求失敗：%{message}"
   not_logged_in: "你需要先登入才能那樣做。"
   not_found: "所請求的URL或資源無法找到。"
   invalid_access: "你不允許查看所請求的資源。"
+  authenticator_not_found: "身份驗證方法不存在或已被禁用。"
+  invalid_api_credentials: "你沒有權限可以查看請求的頁面，API 使用者名稱或 API Key 無效。"
+  provider_not_enabled: "你不能查看請求的頁面，身份驗證未啟用。"
+  provider_not_found: "你不能查看請求的頁面，身份驗證不存在。"
   read_only_mode_enabled: "這個網站目前在唯讀模式，無法進行互動功能。"
+  invalid_grant_badge_reason_link: "不允許外部或無效的 Discourse 連結。"
   reading_time: "閱讀時間"
   likes: "個讚"
   too_many_replies:
     other: "我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次"
+  max_consecutive_replies:
+    other: "你留下%{count}次的連續回覆了，請嘗試編輯你之前的留言或等待其他人的回覆。"
   embed:
     start_discussion: "開始討論"
     continue: "繼續討論"
     error: "嵌入時遭遇錯誤"
     referer: "Referer："
+    mismatch: "引用者沒有發送，或者沒有與以下任何主機相符："
     no_hosts: "未設置內嵌用的主機。"
     configure: "配置嵌入"
     more_replies:
@@ -135,12 +214,15 @@ zh_TW:
     permalink: "永久連結"
     imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
+    replies:
+      other: "%{count}個回覆"
   no_mentions_allowed: "抱歉，您無法提及其他用戶。"
   too_many_mentions:
     other: "抱歉，您的文章中只能提及 %{count} 位用戶。"
   no_mentions_allowed_newuser: "抱歉，新用戶不能提及其他用戶。"
   too_many_mentions_newuser:
     other: "抱歉，新使用者在文章中只能提及 %{count} 位用戶。"
+  no_images_allowed_trust: "抱歉，您不能在貼文中插入圖片"
   no_images_allowed: "抱歉，新用戶不能在貼文中放置圖片。"
   too_many_images:
     other: "抱歉，新使用者只能在文章中放置 %{count} 張圖片。"
@@ -148,12 +230,17 @@ zh_TW:
   too_many_attachments:
     other: "抱歉，新使用者只能在文章中放置 %{count} 個附件。"
   no_links_allowed: "抱歉，新用戶不能在貼文中放置連結。"
+  links_require_trust: "抱歉，您不能在貼文中插入連結"
   too_many_links:
     other: "抱歉，新使用者只能在文章中放置 %{count} 個連結。"
+  contains_blocked_words: "您的貼文包含被禁用的文字：%{word}"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   not_accepting_pms: "對不起，%{username} 目前不接收訊息。"
+  max_pm_recepients: "抱歉，您只能一次只能傳送訊息給最多%{recipients_limit}位收件者。"
+  pm_reached_recipients_limit: "抱歉，在一個訊息中不能含有多於%{recipients_limit}位收件者。"
+  removed_direct_reply_full_quotes: "自動刪除上篇貼文引用"
   just_posted_that: "與你最近發表的內容太相似"
   invalid_characters: "包含無效字詞"
   is_invalid: "似乎不清楚，這是完整的句子嗎？"
@@ -173,25 +260,41 @@ zh_TW:
     latest: "最新討論話題"
     hot: "熱門討論話題"
     top: "熱門討論話題"
+    top_all: "最熱門話題"
+    top_yearly: "每年最熱門話題"
+    top_quarterly: "每季最熱門話題"
+    top_monthly: "每月最熱門話題"
     top_weekly: "每週最佳話題"
+    top_daily: "每日最熱門話題"
     posts: " 最近文章"
+    private_posts: "最新個人訊息"
     group_posts: "%{group_name} 的最新貼文"
     group_mentions: "%{group_name} 的最近提及"
     user_posts: "@%{username} 的最新貼文"
     user_topics: "@%{username} 的的最新討論話題"
     tag: "已標籤話題"
+    badge: "%{display_name}徽章在%{site_title}"
   too_late_to_edit: "這文章建立很久了，它已經無法被編輯或刪除"
+  edit_conflict: "那篇貼文已被另一位使用者編輯過，您更改的內容無法被儲存。"
   revert_version_same: "您試圖回復的版本和當前版本相同。"
   excerpt_image: "圖片"
   queue:
     delete_reason: "通過帖子審核隊列刪除"
+    not_found: "無法找到貼文或已被更新。"
   groups:
+    success:
+      bulk_add:
+        other: "%{count}位使用者已被加入這個群組。"
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任層級。"
       can_not_modify_automatic: "你不能修改自動組"
+      member_already_exist:
+        other: "這些使用者已經是此群組的成員：%{username}"
       invalid_domain: "'%{domain}' 不是有效的域名."
       invalid_incoming_email: "「%{email}」不是有效的電子郵件位址。"
       email_already_used_in_group: "「%{email}」已經被「%{group_name}」群組使用。"
       email_already_used_in_category: "「%{email}」已經被「%{category_name}」類別使用。"
+      cant_allow_membership_requests: "您無法核可向沒有擁有者的群組提出的會員申請。"
     default_names:
       everyone: "所有人"
       admins: "管理員"
@@ -202,6 +305,8 @@ zh_TW:
       trust_level_2: "信任等級 2"
       trust_level_3: "信任等級 3"
       trust_level_4: "信任等級 4"
+    request_membership_pm:
+      title: "@%{group_name} 的群組會員要求"
   education:
     until_posts:
       other: "%{count} 篇文章"
@@ -262,6 +367,12 @@ zh_TW:
       非常抱歉，新使用者有只能回覆同一話題 %{newuser_max_replies_per_topic} 次的臨時限制。
 
       除了繼續回覆外，請考慮修改你先前的回應，或參與其他話題。
+    reviving_old_topic: |
+      ### 重新開啟這個話題？
+
+      這個話題的最後一個回覆距離今天已有 **%{time_ago}**。你的回覆將讓話題重新出現在列表頂端，並通知原先參與話題討論的人。
+
+      你確定要開啟這個老話題嗎？
   activerecord:
     attributes:
       category:
@@ -269,6 +380,7 @@ zh_TW:
       topic:
         title: "標題"
         featured_link: "特選連結"
+        category_id: "分類"
       post:
         raw: "內容"
       user_profile:
@@ -279,8 +391,12 @@ zh_TW:
         topic:
           attributes:
             base:
+              warning_requires_pm: "您只能在個人訊息中附加警告。"
               too_many_users: "你只能同時傳送警告給一位使用者。"
+              cant_send_pm: "抱歉，您無法傳送個人訊息給這位使用者。"
               no_user_selected: "你必須選擇有效用戶。"
+              reply_by_email_disabled: "用 email 回覆的功能已被關閉。"
+              target_user_not_found: "您要傳送這個訊息的收件者中，有一位使用者無法被找到。"
             featured_link:
               invalid: "不合法。URL 應包括 http:// 或 https://。"
               invalid_category: "無法在這個類別中編輯。"
@@ -294,10 +410,17 @@ zh_TW:
               unique_characters: "你的密碼有太多重複字元了。請使用其他更安全的密碼。"
             ip_address:
               signup_not_allowed: "不能使用這個帳戶進行登入"
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "不允許將主電子郵件重新分配給其他用戶。"
         color_scheme_color:
           attributes:
             hex:
               invalid: "不是一個有效顏色"
+        post_reply:
+          base:
+            different_topic: "貼文與回覆必須屬於同一個話題。"
         web_hook:
           attributes:
             payload_url:
@@ -306,6 +429,19 @@ zh_TW:
           attributes:
             name:
               taken: 已被其他表情符號使用
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "在未來必須是"
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: '以下的插入操作無效："%{keys}"'
+        watched_word:
+          attributes:
+            word:
+              too_many: "超出描述該動作的字數"
+  uncategorized_category_name: "尚未分類"
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
   meta_category_name: "站點反饋"
@@ -330,18 +466,27 @@ zh_TW:
       你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
   lounge_welcome:
     title: "歡迎來到貴賓室"
+  admin_quick_start_title: "請先閱讀這個：管理員快速啟用導覽"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
+    replace_paragraph: "（以新分類的簡短說明文字取代此段落。這段說明會出現在選擇分類的區塊，因此請將內容限於 200 字以內。）"
     post_template: "%{replace_paragraph}\n\n在接下來的這段話中多寫一些分類的用途，或者設定一個該分類的規則：\n\n- 為什麼我們要用這個分類？它用來做什麼？\n\n- 這個分類和我們已經有的分類究竟有什麼不同？\n\n- 這個分類中一般會包含哪些主題？\n\n- 我們需要這個分類麼？我們可以把它和別的分類、或者子分類合併嗎？\n"
     errors:
+      not_found: "無此分類！"
       uncategorized_parent: "未分類不能有一個父分類"
       self_parent: "一個子分類的上層不能是自己"
       depth: "你不能在子分類下再包含子分類"
       invalid_email_in: "「%{email}」不是有效的電子郵件位址。"
       email_already_used_in_group: "「%{email}」已被「%{group_name}」群組數用。"
       email_already_used_in_category: "「%{email}」已被「%{category_name}」類別使用。"
+      description_incomplete: "分類的說明貼文必須至少長於一個段落。"
+      permission_conflict: "任何能夠存取一個子分類的群組必須同時也能夠存取其主要分類。"
+      disallowed_topic_tags: "這個話題含有此分類下被禁用的標籤：'%{tags}'"
     cannot_delete:
+      uncategorized: "此為特殊分類，僅作為沒有分類的話題暫存區，無法被刪除。"
       has_subcategories: "不能刪除該分類，因為它有子分類"
+      topic_exists:
+        other: "無法刪除此分類因為底下有%{count}個話題。最舊的話題是%{topic_link}。"
       topic_exists_no_oldest: "不能刪除該分類，因為有 %{count} 個話題"
     uncategorized_description: "不需要分類或者不適合放在現在的任何分類中的主題。"
   trust_levels:
@@ -356,13 +501,32 @@ zh_TW:
     leader:
       title: "資深"
     change_failed_explanation: "你嘗試將%{user_name}降至%{new_trust_level}。然而他們的信任等級已經是%{current_trust_level}。%{user_name}將仍處于%{current_trust_level}——如果你想要降級用戶，先鎖定信任等級。"
+  post:
+    image_placeholder:
+      broken: "圖片連結失效"
   rate_limiter:
+    slow_down: "您已重複此動作太多次，請稍後再重試。"
+    too_many_requests: "您已重複此動作太多次，請稍後再重試。"
+    by_type:
+      first_day_replies_per_day: "您已到達新使用者在第一天建立帳號時的回覆數量上限，請等待%{time_left}後重試。"
+      first_day_topics_per_day: "您已到達新使用者在第一天建立帳號時的話題數量，請等待%{time_left}後重試。"
+      create_topic: "\b您建立話題的速度過快，請等%{time_left}後再重試。"
+      create_post: "您回覆的速度過快，請等%{time_left}後再重試。"
+      delete_post: "您刪除貼文的速度過快，請等%{time_left}後再重試。"
+      public_group_membership: "您過於頻繁地加入/離開群組，請等%{time_left}後再重試。"
+      topics_per_day: "您已達建立新話題的數量上限，請等%{time_left}後再重試。"
+      pms_per_day: "您已達傳送訊息的數量上限，請等%{time_left}後再重試。"
+      create_like: "您已達按喜歡的數量上限，請等%{time_left}後再重試。"
+      create_bookmark: "您已達加入書籤的數量上限，請等%{time_left}後再重試。"
+      edit_post: "您已達編輯的數量上限，請等%{time_left}後再重試。"
+      live_post_counts: "您要求的及時貼文數過快，請等%{time_left}後再重試。"
     hours:
       other: "%{count} 小時"
     minutes:
       other: "%{count} 分"
     seconds:
       other: "%{count} 秒"
+    short_time: "幾秒鐘"
   datetime:
     distance_in_words:
       half_a_minute: "< 1分"
@@ -421,6 +585,35 @@ zh_TW:
     title: "重設密碼"
     success: "密碼修改成功，現在已為你登入。"
     success_unapproved: "你的密碼已成功修改。"
+  email_login:
+    invalid_token: "抱歉，該 email 登入連結已失效，請點選登入鍵並使用「忘記密碼」以取得新連結。"
+    title: "Email 登入"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      safari: "Safari"
+      firefox: "Firefox"
+      opera: "Opera"
+      ie: "Internet Explorer"
+      edge: "Microsoft Edge"
+      unknown: "\b不知名的瀏覽器"
+    device:
+      android: "安卓裝置"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      mobile: "行動裝置"
+      mac: "Mac"
+      linux: "GNU/Linux Computer"
+      windows: "Windows Computer"
+      unknown: "不知名的裝置"
+    os:
+      android: "安卓"
+      ios: "iOS"
+      macos: "macOS"
+      linux: "Linux"
+      windows: "Microsoft Windows"
+      unknown: "未知的運作系統"
   change_email:
     confirmed: "你的電子郵箱已更新。"
     please_continue: "繼續連接至 %{site_name}"
@@ -430,6 +623,8 @@ zh_TW:
     authorizing_old:
       title: "感謝你確認你目前的郵箱地址"
       description: "我們正向你的新地址發送確認郵件。"
+  associated_accounts:
+    revoke_failed: "無法使用%{provider_name}刪除你的帳戶。"
   activation:
     action: "點擊此處啟用你的帳戶"
     already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
@@ -439,6 +634,12 @@ zh_TW:
     approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
     missing_session: "無法確認你是否註冊了帳戶，請確定你已經啟用了 cookie。"
     activated: "抱歉，這個帳號已被啟用。"
+    admin_confirm:
+      title: "確認管理員帳號"
+      description: "您是否確定要讓<b>%{target_username}</b>成為管理員？"
+      grant: "授予管理員存取權"
+      complete: "<b>%{target_username}</b>現在是管理員了"
+      back_to: "回到%{title}"
   post_action_types:
     off_topic:
       title: "離題內容"
@@ -454,47 +655,71 @@ zh_TW:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "不當內容"
+      description: '此貼文包含攻擊他人、侮辱或違反<a href="%{base_path}/guidelines">我們社群規範</a>的內容。'
+      short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
       long_form: "投訴為不當內容"
     notify_user:
       title: "給 @{{username}} 送出一則訊息"
+      description: "我想要針對這位使用者的貼文直接和他們溝通。"
+      short_description: "我想要針對這位使用者的貼文直接和他們溝通。"
       long_form: "傳訊給用戶"
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他"
       description: "這個帖子需要版主的注意，但是原因沒有包括在上述選項中。"
+      short_description: "需要管理員注意其他原因"
       long_form: "標記為需版主注意"
       email_title: '"%{title}" 主題需要版主的注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "書籤"
       description: "將此文章加上書籤"
+      short_description: "將此貼文加入書籤"
       long_form: "此文章已加上書籤"
     like:
       title: "讚"
       description: "給此文章按讚"
+      short_description: "喜歡這篇貼文"
       long_form: "已按讚"
   user_activity:
+    no_default:
+      self: "您尚未有任何活動紀錄。"
+      others: "無活動紀錄。"
     no_bookmarks:
+      self: "您沒有加入書籤的貼文，書籤能夠讓您快速的找到特定貼文。"
       others: "沒有書籤。"
     no_likes_given:
       self: "你沒有對任何文章按讚。"
       others: "沒有被讚的帖子。"
+    no_replies:
+      self: "您尚未回覆任何貼文。"
+      others: "沒有回覆。"
+    no_drafts:
+      self: "您沒有任何草稿，開始撰寫任何話題的回應，即會被自動儲存為新的草稿。"
   topic_flag_types:
     spam:
       title: "垃圾內容"
       description: "這個話題是廣告，它對網站沒有關聯與幫助，只有促銷訊息"
       long_form: "投訴為垃圾內容"
+      short_description: "這是廣告"
     inappropriate:
       title: "不當內容"
+      description: '此貼文包含攻擊他人、侮辱或違反<a href="%{base_path}/guidelines">我們社群規範</a>的內容。'
       long_form: "投訴為不當內容"
+      short_description: '違反<a href="%{base_path}/guidelines">我們的社群規範</a>'
     notify_moderators:
       title: "其他"
+      description: '此話題需要版主依據<a href="/guidelines">社群準則</a>、<a href="/tos">服務條款（TOS）</a>或其它未列出的原因來給予關注。'
       long_form: "標記為需版主注意"
+      short_description: "需要管理員注意其他原因"
       email_title: '此討論話題 "%{title}" 需要板主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>你的貼文被社群標記了。請<a href="%{path}">查看你的消息</a>。</p>'
     user_must_edit: "<p>你的帖子已經被社群標記並被臨時隱藏。</p>"
+  ignored:
+    hidden_content: "<p>隱藏內容</p>"
   archetypes:
     regular:
       title: "一般討論話題"
@@ -507,6 +732,7 @@ zh_TW:
     title: "取消訂閱"
     description: "你已經退訂 <b>%{email}</b>。想要變更你的郵件設定，請訪問你的<a href='%{url}'>使用者偏好設定</a>頁面。"
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
+    private_topic_description: "若要重新訂閱，請使用話題底部或右邊的通知控制列。"
   unsubscribe:
     title: "取消訂閱"
     stop_watching_topic: "停止關注這個討論話題，%{link}"
@@ -524,6 +750,7 @@ zh_TW:
     read: "閲讀"
     read_write: "讀/寫"
     description: '“%{application_name}”正在請求訪問你的賬戶中的以下權限：'
+    instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
     no_trust_level: "抱歉，你沒有使用用戶 API 所需要的信任等級"
     generic_error: "抱歉，我們不能分發用戶 API 密鑰，該特性已經被站點管理員禁用"
     scopes:
@@ -533,13 +760,75 @@ zh_TW:
       session_info: "讀取用戶會話信息"
       read: "讀取所有"
       write: "寫入所有"
+  flags:
+    errors:
+      already_handled: "標記已被處理。"
   reports:
+    default:
+      labels:
+        count: 次數
+        percent: 百分比
+        day: 天
+    post_edits:
+      title: "編輯貼文"
+      labels:
+        post: 貼文
+        editor: 編輯者
+        author: 作者
+        edit_reason: 原因
+      description: "新貼文數量"
+    user_flagging_ratio:
+      title: "使用者標記比例"
+      labels:
+        user: 使用者
+        agreed_flags: 同意標記
+        disagreed_flags: 不同意標記
+        ignored_flags: 忽略標記
+        score: 分數
+      description: "根據版主對他們標記回饋的比例去排列用戶名單（從不同意 - 同意）"
+    moderators_activity:
+      title: "版主活動紀錄"
+      labels:
+        moderator: 版主
+        flag_count: 已審核的投訴
+        time_read: 閱讀時間
+        topic_count: 建立的話題
+        post_count: 建立的貼文
+        pm_count: 建立的私人訊息
+        revision_count: 修正
+    flags_status:
+      title: "標記狀態"
+      values:
+        agreed: 同意的
+        disagreed: 不同意的
     visits:
       title: "用戶瀏覽量"
       xaxis: "天"
       yaxis: "瀏覽量"
     signups:
       xaxis: "天"
+    new_contributors:
+      xaxis: "天"
+      yaxis: "新的參與者數量"
+      description: "這段期間第一次發文的使用者數量。"
+    consolidated_page_views:
+      xaxis:
+        page_view_anon: "匿名的使用者"
+        page_view_logged_in: "登入的使用者"
+      yaxis: "天"
+      labels:
+        post: 貼文
+        editor: 編輯者
+        author: 作者
+        edit_reason: 原因
+    dau_by_mau:
+      title: "DAU/MAU"
+      xaxis: "天"
+      yaxis: "\bDAU/MAU"
+    daily_engaged_users:
+      title: "每日活躍的使用者"
+      xaxis: "天"
+      yaxis: "活躍的使用者"
     profile_views:
       title: "查看用戶資料"
       xaxis: "天"
@@ -548,14 +837,17 @@ zh_TW:
       title: "討論話題"
       xaxis: "天"
       yaxis: "新討論話題數量"
+      description: "這段期間新建立的話題"
     posts:
       title: "新發表的文章"
       xaxis: "天"
       yaxis: "新文章數量"
+      description: "這段期間新建立的貼文"
     likes:
       title: "新的讚"
       xaxis: "天"
       yaxis: "新的讚數量"
+      description: "新的喜歡數量"
     flags:
       title: "投訴"
       xaxis: "天"
@@ -568,21 +860,50 @@ zh_TW:
       title: "按信任等級區分的使用者統計"
       xaxis: "信任等級"
       yaxis: "用戶數量"
+      labels:
+        level: 等級
+    users_by_type:
+      title: "每個類型的使用者"
+      xaxis: "類型"
+      yaxis: "使用者數量"
+      labels:
+        type: 類型
+      xaxis_labels:
+        admin: 管理員
+        moderator: 板主
+        suspended: 被停權的
+        silenced: 被禁言的
+    trending_search:
+      title: 熱門的搜尋關鍵字
+      labels:
+        term: 詞語
+        searches: 搜尋結果
+        click_through: CTR
     emails:
       title: "已發送郵件"
       xaxis: "天"
       yaxis: "郵件數量"
+      description: "新的已傳送 email 數量"
     user_to_user_private_messages:
+      title: "使用者對使用者（回覆除外）"
       xaxis: "天"
       yaxis: "訊息數量"
+      description: "新建立的私人訊息數量。"
+    user_to_user_private_messages_with_replies:
+      title: "使用者對使用者（包含回覆）"
+      xaxis: "天"
+      yaxis: "訊息數量"
+      description: "所有新的私人訊息與回覆數量"
     system_private_messages:
       title: "系統"
       xaxis: "天"
       yaxis: "訊息數量"
+      description: "系統自動傳送的私人訊息數量。"
     moderator_warning_private_messages:
       title: "板主警告"
       xaxis: "天"
       yaxis: "訊息數量"
+      description: "管理員透過私人訊息傳送的警告數量。"
     notify_moderators_private_messages:
       title: "板主通知"
       xaxis: "天"
@@ -596,36 +917,53 @@ zh_TW:
       xaxis: "用戶"
       num_clicks: "點擊率"
       num_topics: "討論話題"
+      labels:
+        user: "使用者"
+        num_clicks: "點擊數"
+        num_topics: "話題"
     top_traffic_sources:
       title: "最高流量來源"
       xaxis: "網域"
       num_clicks: "點擊率"
       num_topics: "討論話題"
       num_users: "用戶數量"
+      labels:
+        domain: 網域
+        num_clicks: 點擊數
+        num_topics: 話題
     top_referred_topics:
       title: "最常引用的討論話題"
+      labels:
+        num_clicks: "點擊數"
+        topic: "話題"
+      description: "從外部來源獲取最多點擊數的話題。"
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
       yaxis: "未登錄頁面訪問"
+      description: "來自訪客（未登入帳號）新增的頁面瀏覽次數。"
     page_view_logged_in_reqs:
       title: "已登入"
       xaxis: "天"
       yaxis: "已登錄頁面訪問"
+      description: "來自使用者（已登入）新增的頁面瀏覽次數。"
     page_view_crawler_reqs:
       xaxis: "天"
       yaxis: "Web 爬蟲頁面訪問"
     page_view_total_reqs:
       xaxis: "天"
       yaxis: "總瀏覽量"
+      description: "來自所有訪客新的頁面瀏覽次數。"
     page_view_logged_in_mobile_reqs:
       title: "已登錄頁面訪問"
       xaxis: "天"
       yaxis: "移動端已登錄頁面訪問"
+      description: "來自已登入且使用行動裝置的使用者新的頁面瀏覽次數。"
     page_view_anon_mobile_reqs:
       title: "未登錄頁面訪問"
       xaxis: "天"
       yaxis: "移動端未登錄頁面訪問"
+      description: "來自未登入且使用行動裝置的訪客新的頁面瀏覽次數。"
     http_background_reqs:
       title: "後台"
       xaxis: "天"
@@ -658,9 +996,35 @@ zh_TW:
       title: "沒有回覆的帖子"
       xaxis: "天"
       yaxis: "總量"
+      description: "沒有收到回覆的新建立話題數量。"
     mobile_visits:
+      title: "使用者訪問次數（行動裝置）"
       xaxis: "天"
       yaxis: "訪問次數"
+    web_crawlers:
+      labels:
+        page_views: "頁面瀏覽次數"
+    suspicious_logins:
+      labels:
+        user: 使用者
+        location: 位置
+        browser: 瀏覽器
+        device: 裝置
+        login_time: 登入時間
+    staff_logins:
+      title: "管理員登入次數"
+      labels:
+        user: 使用者
+        location: 位置
+        login_at: 登入位置於
+    top_uploads:
+      labels:
+        filename: 檔案名稱
+        author: 作者
+        filesize: 檔案大小
+    top_ignored_users:
+      labels:
+        ignored_user: 被忽略的使用者
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
     host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
@@ -672,6 +1036,8 @@ zh_TW:
       other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='%{base_path}/logs' target='_blank'>日誌</a>尋找詳情。"
     poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
     poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
+    out_of_date_themes: "以下主題可更新："
+    unreachable_themes: "我們無法檢查以下主題是否可更新："
   site_settings:
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
@@ -679,11 +1045,14 @@ zh_TW:
     set_locale_from_accept_language_header: "為未登錄用戶按照他們的瀏覽器發送的請求頭部設置界面語言。（實驗性，無法和匿名緩存共同使用）"
     min_post_length: "文章允許的最小文字數"
     min_first_post_length: "第一篇文章允許的最少文字數"
+    min_personal_message_post_length: "訊息中貼文的字元數下限"
     max_post_length: "文章允許的最大文字數"
     topic_featured_link_enabled: "允許發連結帖。"
     show_topic_featured_link_in_digest: "在摘要郵件中顯示主題特色連結。"
     min_topic_title_length: "標題允許的最小文字數"
     max_topic_title_length: "標題允許的最大文字數"
+    min_personal_message_title_length: "訊息標題的字元數下限"
+    max_emojis_in_title: "話題標題可含有的表情符號上限"
     min_search_term_length: "搜尋條件允許的最小文字數"
     search_tokenize_chinese_japanese_korean: "在非中/日/韓語站點強制切割中/日/韓語搜索分詞"
     search_prefer_recent_posts: "如果搜索大型論壇較慢，這個選項將優先嘗試最新的帖子"
@@ -728,7 +1097,6 @@ zh_TW:
     polling_interval: "當不再長輪詢時，已登錄的客戶端應該多久輪詢一次（單位 毫秒）"
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
-    flags_required_to_hide_post: "一個帖子累計多少個標記之後會被自動隱藏，並向帖子作者發送私信通知（0 為從不）"
     cooldown_minutes_after_hiding_posts: "如果一個文章因為標記而隱藏，用戶需要等待多少分鐘才能編輯該文章"
     max_topics_in_first_day: "新用戶在24小時內在發表第一帖後允許創建的主題數"
     max_replies_in_first_day: "新用戶在24小時內在發表第一帖後允許創建的回覆數"
@@ -740,7 +1108,6 @@ zh_TW:
     must_approve_users: "新用戶在被允許訪問站點前需要由管理人員批准。警告：在運行的站點中啟用將解除所有非管理人員用戶的訪問權限！"
     pending_users_reminder_delay: "如果新用戶等待批准時間超過此小時設置則通知版主。設置 -1 關閉通知。"
     maximum_session_age: "用戶自訪問後可維持登錄 n 小時"
-    allow_moderators_to_create_categories: "允許板主建立新分類"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
     use_admin_ip_whitelist: "當目前的IP剛好處于IP段禁止名單(Admin > Logs > Screened Ips)中的時候，只有管理員才可登入。"
     top_menu: "選擇在主頁導航列包含哪些項目，以及排列次序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
@@ -757,6 +1124,7 @@ zh_TW:
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     redirect_users_to_top_page: "將新用戶或長時間未使用的用戶自動重新導向至熱門頁面"
     top_page_default_timeframe: "頂部查看頁面的預設時間表"
+    moderators_view_emails: "允許版主瀏覽使用者 email"
     prioritize_username_in_ux: "在用戶頁、用戶卡片和帖子上優先顯示用戶名（未選時，暱稱將先顯示）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
@@ -777,9 +1145,9 @@ zh_TW:
     sso_url: "SSO URL endpoint (必須包含 http:// 或 https://)"
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
     sso_overrides_bio: "在用戶頁面中覆蓋用戶的個人信息並禁止用戶修改"
-    sso_overrides_email: "每一次登錄時，用 SSO 信息中的外部站點的郵件地址覆蓋本地郵件地址，並且阻止本地的郵件地址修改。（警告：因格本地郵件的正規化，郵件地址可能會有所差異）"
-    sso_overrides_username: "每一次登錄時，用 SSO 信息中的外部站點的用戶名覆蓋本地用戶名，並且阻止本地的用戶名修改。（警告：因格本地用戶名的長度和其他要求，用戶名可能會有所差異）"
-    sso_overrides_name: "每一次登錄時，用 SSO 信息中的外部站點的全名覆蓋本地全名，並且阻止本地的全名修改。"
+    sso_overrides_email: "每一次登錄時，用單一登入服務提供者訊息中的外部站點的電子郵件地址更新本站郵件地址，並且阻止本站的郵件地址修改。（警告：郵件地址可能會因本站郵件地址規則而有所差異）"
+    sso_overrides_username: "每一次登錄，單一登入訊息中的外部站點的使用者名稱會更新本站使用者名稱，並且阻止本站使用者名稱的修改。（警告：因應本站用戶名的長度和其他要求，用戶名可能會有所差異）"
+    sso_overrides_name: "每一次登錄時，用單一登入訊息中的外部站點的全名覆蓋本站全名，並且阻止本站全名的修改。"
     sso_not_approved_url: "重定向未受許可的單點登錄賬號至這個 URL"
     sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（預設情況下返回地址必須位於當前站點）"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
@@ -794,6 +1162,7 @@ zh_TW:
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
     automatic_backups_enabled: "按照定義的備份頻率運行自動備份計劃"
+    backup_frequency: "備份之間的天數。"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_disable_cleanup: "當在本地刪除備份時不刪除 S3 上的備份。"
     backup_time_of_day: "備份的 UTC 時間"
@@ -814,8 +1183,13 @@ zh_TW:
     max_bookmarks_per_day: "每個用戶每天最多能建立\"書籤\"的數量"
     max_edits_per_day: "每個用戶每天最大的\"編輯次數\"的數量"
     max_topics_per_day: "每個用戶每天最多建立\"討論話題\"的數量"
+    max_personal_messages_per_day: "使用者每天能建立的訊息數量上限。"
     max_invites_per_day: "每個用戶每天最多能邀請用戶的數量。"
     max_topic_invitations_per_day: "每個用戶每天能創建的邀請至主題數量的最大值。"
+    max_logins_per_ip_per_hour: "每小時每個 IP 可登入的次數上限"
+    max_logins_per_ip_per_minute: "每分鐘每個 IP 可登入的次數上限"
+    max_post_deletions_per_minute: "每分鐘每個使用者可刪除的文章數上限"
+    max_post_deletions_per_day: "每日每個使用者可刪除的文章數上限"
     alert_admins_if_errors_per_minute: "觸發管理員警示的每分鐘錯誤數量。設為 0 會停用這個功能。注意：需要重啟。"
     alert_admins_if_errors_per_hour: "觸發管理員警示的每小時錯誤數量。設為 0 會停用這個功能。注意：需要重新啟動。"
     categories_topics: "/categories 頁面中顯示的主題數。"
@@ -827,13 +1201,13 @@ zh_TW:
     purge_deleted_uploads_grace_period_days: "徹底刪除孤立的上傳檔案的寬限期（單位：天）"
     enable_s3_uploads: "上傳至 Amazon S3 存儲的地址。重要：需要有效的 S3 驗證資料（包括 access key id & secret access key）。"
     s3_upload_bucket: "Amazon S3 保存上傳檔案的 bucket 名稱。警告：必須為小寫，不包含句點 (.) 與底線 (_)。"
-    s3_access_key_id: "上傳至 Amazon S3 的 access key id，將用於上傳圖片"
-    s3_secret_access_key: "上傳至 Amazon S3 的 secret access key，將用於上傳圖片"
     s3_cdn_url: "用戶 S3 資料的 CDN URL（例如：https://cdn.somewhere.com）。警告：在改變該設置後你必須重制所有老帖子。"
     avatar_sizes: "自動生成的頭像大小列表。"
     external_system_avatars_enabled: "使用外部系統頭像服務。"
     external_system_avatars_url: "外部系統頭像服務的 URL 地址。可選參數是 {username} {first_letter} {color} {size}"
+    selectable_avatars: "使用者可選擇的頭像列表。"
     allow_all_attachments_for_group_messages: "允許群組消息中包含任何郵件附件。"
+    allow_staff_to_upload_any_file_in_pm: "允許管理員成員在私人訊息中上傳任何類型的檔案。"
     enable_flash_video_onebox: "在連結預覽中啟用 swf 和 flv (Adobe Flash) 嵌入。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設信任等級（0-4）。警告！改變此項將提高廣告氾濫的風險。"
@@ -865,6 +1239,8 @@ zh_TW:
     min_trust_to_edit_wiki_post: "編輯被標示為維基的文章所需之最低信任等級。"
     min_trust_to_edit_post: "能編輯帖子的最小信任等級。"
     min_trust_to_allow_self_wiki: "用戶將自己的帖子設置為維基模式的最低信任等級。"
+    min_trust_to_post_links: "在貼文中加入連結的最低信任等級需求"
+    min_trust_to_post_images: "在貼文中加入影像的最低信任等級需求"
     newuser_max_links: "新用戶可添加多少連結於一篇文章中"
     newuser_max_images: "新用戶可添加多少張圖片於一篇文章中"
     newuser_max_attachments: "新用戶可添加多少附件於一篇文章中"
@@ -872,8 +1248,10 @@ zh_TW:
     newuser_max_replies_per_topic: "直至有人回覆他們前，新用戶在一個帖子裡的最大回覆數量。"
     max_mentions_per_post: "你可以在一個帖子裡使用 @name 提及的最大數量。"
     max_users_notified_per_group_mention: "當群組被提及時，接受提醒的最大用戶數 ( 超過閾值後將不發送提醒 )"
+    enable_mentions: "允許使用者提及其他的使用者。"
     create_thumbnails: "為太大而無法在帖子裡正常顯示的圖片創造縮略圖及 lightbox 圖片。"
     email_time_window_mins: "等待多少 (n) 分鐘才給用戶發送通知電子郵件，好讓他們有機會自己來編輯和完善他們的帖子。"
+    personal_email_time_window_seconds: "在送出任何私人訊息通知 email 之前，等待 (n) 秒，給使用者編輯與確認內容的機會。"
     email_posts_context: "在通知電郵中包含的作為上下文的回覆數量。"
     flush_timings_secs: "刷新時間資料的頻率，以秒為單位"
     title_max_word_length: "在主題的標題中，允許的詞語長度的最大字元數。"
@@ -1022,13 +1400,13 @@ zh_TW:
     auto_close_messages_post_count: "消息中貼子數上限，達到後自動關閉消息（0 為禁用）"
     auto_close_topics_post_count: "主題中貼子數上限，達到後自動關閉主題 ( 0 為禁用 )"
     code_formatting_style: "編輯器中的代碼格式化按鈕設置的預設格式"
+    max_allowed_message_recipients: "一則訊息可允許的收件者上限。"
+    min_post_notice_tl: "瀏覽貼文通知的最低信任等級需求。"
     default_email_digest_frequency: "用戶收到摘要郵件的預設頻率。"
     default_include_tl0_in_digests: "在摘要郵件中預設包含新用戶的貼文。用戶可以自行在參數設置中更改這個設定。"
-    default_email_direct: "預設在有人引用、回覆、提及或者邀請用戶時發送一封郵件通知。"
     default_email_mailing_list_mode: "預設為每一個新帖子發送一封郵件通知。"
     default_email_mailing_list_mode_frequency: "郵件列表模式下，用戶收到郵件的預設頻率。"
     disable_mailing_list_mode: "禁止用戶使用郵件列表模式。"
-    default_email_always: "即使用戶活躍時，仍預設發送郵件通知。"
     default_email_previous_replies: "預設在郵件中包含之前的回覆。"
     default_email_in_reply_to: "預設在郵件中包含回覆的摘要文本。"
     default_other_new_topic_duration_minutes: "近期主題條件的全局預設設置"
@@ -1044,6 +1422,7 @@ zh_TW:
     default_categories_tracking: "分類列表預設追蹤。"
     default_categories_muted: "分類列表預設不顯示。"
     default_categories_watching_first_post: "預設監看這些分類中每個新主題的第一貼"
+    default_text_size: "預設選定的文字大小"
     allow_user_api_keys: "允許生成用戶API密鑰"
     allow_user_api_key_scopes: "用戶API授權範圍列表"
     max_api_keys_per_user: "每用戶最多持有的用戶 API 數"
@@ -1061,9 +1440,11 @@ zh_TW:
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     remove_muted_tags_from_latest: "在最新主題列表中，不顯示有靜音標籤的主題。"
+    company_name: "公司名稱"
     errors:
       invalid_email: "無效的電子郵件地址"
       invalid_username: "沒有用戶使用該用戶名稱。"
+      invalid_group: "沒有叫該名稱的群組。"
       invalid_integer_min_max: "數值必須介於 %{min} 與 %{max} 之間"
       invalid_integer_min: "數值必須大於 %{min}"
       invalid_integer_max: "數值不能超過 %{max}."
@@ -1084,6 +1465,13 @@ zh_TW:
       email_polling_disabled: "在啟用郵件回覆功能前，你必須啟用手動或者 POP3 輪詢。"
       user_locale_not_enabled: "你必須先設置 'allow user locale' 再啟用該設置。"
       invalid_regex: "正則表達式非法或者不允許。"
+      enable_sso_disabled: "開啟本設定前需要先啟用單一登入服務"
+      min_username_length_range: "您不能將下限設定的高於上限。"
+      max_username_length_range: "您不能將上限設定的低於下限。"
+    placeholder:
+      sso_provider_secrets:
+        key: "www.範例.com"
+        value: "單一登入服務訊息密鑰"
   search:
     within_post: "#{{post_number}} 由 {{username}}"
     types:
@@ -1091,10 +1479,12 @@ zh_TW:
       topic: "結果"
       user: "用戶"
   sso:
+    login_error: "登入錯誤"
     not_found: "無法找到你的賬戶。請聯繫站點管理人員。"
     account_not_approved: "你的帳號尚未被審核通過。一旦你的帳號獲得批准，你就會收到一封電子郵件提醒。"
     unknown_error: "你的賬戶發生了問題。請聯繫站點管理人員。"
     timeout_expired: "賬戶登錄超時，請重新嘗試登錄。"
+    no_email: "沒有 email 被提供，請聯繫網站的管理員。"
   original_poster: "原始作者"
   most_posts: "大部分文章"
   most_recent_poster: "當前大部分文章作者"
@@ -1108,6 +1498,17 @@ zh_TW:
     errors:
       different_topics: "無法合並不同主題的帖子。"
       different_users: "無法合並不同用戶的帖子。"
+  move_posts:
+    new_topic_moderator_post:
+      other: "%{count}則貼文被分割成新的話題：%{topic_link}"
+    new_message_moderator_post:
+      other: "%{count}則貼文被分割成新的訊息：%{topic_link}"
+    existing_topic_moderator_post:
+      other: "%{count}則貼文被合併到一個已存在的話題：%{topic_link}"
+    existing_message_moderator_post:
+      other: "%{count}則貼文被合併到一個已存在的訊息：%{topic_link}"
+  change_owner:
+    post_revision_text: "\b所有權已被轉讓"
   topic_statuses:
     autoclosed_message_max_posts:
       other: "消息中回覆已經達到上限 %{count}，自動鎖定。"
@@ -1125,11 +1526,18 @@ zh_TW:
       other: "該主題在最後一個回覆創建後%{count}小時後自動關閉。不再允許添加新回覆。"
     autoclosed_enabled_lastpost_minutes:
       other: "本主題在最後一個回覆創建後%{count}分鐘後自動鎖定。不再允許添加新回覆。"
+    autoclosed_disabled_days:
+      other: "此話題已於%{count}天後被自動開啟。"
+    autoclosed_disabled_hours:
+      other: "此話題已於%{count}小時後被自動開啟。"
+    autoclosed_disabled_minutes:
+      other: "此話題已於%{count}分鐘後被自動開啟。"
     autoclosed_disabled: "此討論話題已開放，可以發表新的回覆。"
     autoclosed_disabled_lastpost: "本主題現在開放了。可以添加新的回覆。"
   login:
     not_approved: "你的帳號尚未獲得批准。一旦你的帳號獲得批准，你會收到一封電子郵件。"
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"
+    incorrect_password: "密碼錯誤"
     wait_approval: "謝謝註冊帳號。我們會在你的帳號獲得批准之後通知你。"
     active: "你的帳號已經被啟用，可以使用了。"
     activate_email: "<p>快完成了！我們已寄送了一封啟用信件到 <b>%{email}</b>。請按照信中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件收件夾。</p>"
@@ -1149,6 +1557,8 @@ zh_TW:
     email_too_long: "你輸入的郵件太長了。郵箱名不得超過 254 字元，域名必須不超過 253 字元。"
     reserved_username: "該用戶名不可被使用。"
     missing_user_field: "你還沒有填寫完所有用戶字段"
+    auth_complete: "已完成認證。"
+    click_to_continue: "點擊此處繼續。"
     already_logged_in: "喔，看起來你正嘗試查看給另一個用戶的邀請連結。如果你不是%{current_user}，請退出再重試。"
   user:
     deactivated: "因發送至“%{email}”的郵件被多次退信，取消激活"
@@ -1290,9 +1700,9 @@ zh_TW:
     email_reject_inactive_user:
       title: "電子郵件拒絕 用戶尚未啟動"
       text_body_template: |
-        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
+        我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的電子郵件出問題了。
 
-        與你賬戶關聯的郵件地址沒有激活，請先激活你的賬號再發送郵件。
+        與你帳號關聯的郵件地址尚未啟用，請先啟用你的帳號再發送郵件。
     email_reject_reply_user_not_matching:
       title: "點子郵件拒絕 未找到符合的用戶"
     email_reject_no_account:
@@ -2130,3 +2540,13 @@ zh_TW:
         title: "邀請工作人員"
       finished:
         title: "你的 Discourse 已經準備就緒！"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'
+      group_mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'
+      quoted: '%{username}在 "%{topic}" 引用您的內容 - %{site_title}'
+      replied: '%{username}在"%{topic}" 回覆了您 - %{site_title}'
+      posted: '%{username} 在"%{topic}" 中發文 - %{site_title}'
+      private_message: '%{username}在"%{topic}" 中傳了私人訊息給您 - %{site_title}'
+      linked: '%{username}從"%{topic}"連到了您的貼文 - %{site_title}'
+      confirm_title: "通知已啟用 - %{site_title}"

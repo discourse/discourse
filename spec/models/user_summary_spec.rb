@@ -39,11 +39,11 @@ describe UserSummary do
   end
 
   it "is robust enough to handle bad data" do
-    UserActionCreator.enable
+    UserActionManager.enable
 
     liked_post = create_post
     user = Fabricate(:user)
-    PostAction.act(user, liked_post, PostActionType.types[:like])
+    PostActionCreator.like(user, liked_post)
 
     users = UserSummary.new(user, Guardian.new).most_liked_users
 

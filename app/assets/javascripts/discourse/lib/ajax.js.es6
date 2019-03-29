@@ -105,6 +105,8 @@ export function ajax() {
     };
 
     args.error = (xhr, textStatus, errorThrown) => {
+      // 0 represents the `UNSENT` state
+      if (xhr.readyState === 0) return;
       handleLogoff(xhr);
 
       // note: for bad CSRF we don't loop an extra request right away.

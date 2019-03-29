@@ -850,15 +850,11 @@
         "diversity": true
       },
       {
-        "name": "frowning_woman",
-        "diversity": true
-      },
-      {
         "name": "frowning_man",
         "diversity": true
       },
       {
-        "name": "pouting_woman",
+        "name": "frowning_woman",
         "diversity": true
       },
       {
@@ -866,7 +862,7 @@
         "diversity": true
       },
       {
-        "name": "no_good_woman",
+        "name": "pouting_woman",
         "diversity": true
       },
       {
@@ -874,7 +870,7 @@
         "diversity": true
       },
       {
-        "name": "ok_woman",
+        "name": "no_good_woman",
         "diversity": true
       },
       {
@@ -882,7 +878,7 @@
         "diversity": true
       },
       {
-        "name": "tipping_hand_woman",
+        "name": "ok_woman",
         "diversity": true
       },
       {
@@ -890,11 +886,15 @@
         "diversity": true
       },
       {
-        "name": "raising_hand_woman",
+        "name": "tipping_hand_woman",
         "diversity": true
       },
       {
         "name": "raising_hand_man",
+        "diversity": true
+      },
+      {
+        "name": "raising_hand_woman",
         "diversity": true
       },
       {
@@ -1202,19 +1202,19 @@
         "diversity": false
       },
       {
-        "name": "massage_woman",
-        "diversity": true
-      },
-      {
         "name": "massage_man",
         "diversity": true
       },
       {
-        "name": "haircut_woman",
+        "name": "massage_woman",
         "diversity": true
       },
       {
         "name": "haircut_man",
+        "diversity": true
+      },
+      {
+        "name": "haircut_woman",
         "diversity": true
       },
       {

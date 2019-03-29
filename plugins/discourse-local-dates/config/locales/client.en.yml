@@ -10,7 +10,6 @@ en:
         modal_title: Insert date
         modal_subtitle: "We will automatically convert the date and time to the viewer’s local time zone."
         form:
-          to: "to"
           insert: Insert
           advanced_mode: Advanced mode
           simple_mode: Simple mode
@@ -24,3 +23,14 @@ en:
           date_title: Date
           time_title: Time
           format_title: Date format
+          timezone: Timezone
+          preview_for: Preview for %{timezone}
+          recurring:
+            every_day: "Every day"
+            every_week: "Every week"
+            every_two_weeks: "Every two weeks"
+            every_month: "Every month"
+            every_two_months: "Every two months"
+            every_three_months: "Every three months"
+            every_six_months: "Every six months"
+            every_year: "Every year"

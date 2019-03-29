@@ -1,6 +1,7 @@
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
+import DiscourseURL from "discourse/lib/url";
 
 export const ButtonClass = {
   tagName: "button.widget-button.btn",
@@ -81,6 +82,10 @@ export const ButtonClass = {
       .blur();
     if (attrs.secondaryAction) {
       this.sendWidgetAction(attrs.secondaryAction);
+    }
+
+    if (attrs.url) {
+      return DiscourseURL.routeTo(attrs.url);
     }
 
     if (attrs.sendActionEvent) {

@@ -56,7 +56,11 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#approve' do
-    let(:evil_trout) { Fabricate(:evil_trout, approved: false) }
+    before do
+      SiteSetting.must_approve_users = true
+    end
+
+    let(:evil_trout) { Fabricate(:evil_trout) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -76,7 +80,11 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#approve_bulk' do
-    let(:evil_trout) { Fabricate(:evil_trout, approved: false) }
+    before do
+      SiteSetting.must_approve_users = true
+    end
+
+    let(:evil_trout) { Fabricate(:evil_trout) }
 
     it "does nothing without uesrs" do
       put "/admin/users/approve-bulk.json"

@@ -206,8 +206,6 @@ fi:
     every_hour: "tunnin välein"
     daily: "päivittäin"
     weekly: "viikottain"
-    every_two_weeks: "kahden viikon välein"
-    every_three_days: "joka kolmas päivä"
     max_of_count: "korkeintaan {{count}}"
     alternation: "tai"
     character_count:
@@ -710,8 +708,6 @@ fi:
         confirm_password_description: "Jatka vahvistamalla salasanasi"
         label: "Koodi"
         rate_limit: "Odota hetki ennen toisen todennuskoodin tarjoamista."
-        enable_description: |
-          Skannaa QR-koodi laitteellesi sopivalla sovelluksella (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> ja syötä todennuskoodi.
         disable_description: "Syötä sovelluksen tarjoama tunnistautumiskoodi"
         show_key_description: "Syötä manuaalisesti"
         extended_description: |
@@ -754,7 +750,6 @@ fi:
         primary: "Ensisijainen sähköpostiosoite"
         secondary: "Toissijaiset sähköpostiosoitteet"
         no_secondary: "Ei toissijaisia sähköpostiosoitteita"
-        instructions: "ei näytetä julkisesti missään"
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Sähköpostiosoite ei kelpaa."
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
@@ -836,14 +831,9 @@ fi:
         every_30_minutes: "puolen tunnin välein"
         every_hour: "tunneittain"
         daily: "päivittäin"
-        every_three_days: "joka kolmas päivä"
         weekly: "viikottain"
-        every_two_weeks: "joka toinen viikko"
       include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin"
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
-      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @nimeni tai kutsuu minut viestiketjuun"
-      email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
-      email_always: "Lähetä sähköposti-ilmoitukset, vaikka olen aktiivinen palstalla."
       other_settings: "Muut"
       categories_settings: "Keskustelualueet"
       new_topic_duration:
@@ -1206,13 +1196,7 @@ fi:
         other: "Valitse ainakin {{count}} kohdetta."
     emoji_picker:
       filter_placeholder: Etsi emojia
-      people: Ihmiset
-      nature: Luonto
-      food: Ruoka
-      activity: Harrasteet
-      travel: Matkustelu
       objects: Esineet
-      celebration: Juhlinta
       custom: Mukautetut emojit
       recent: Hiljattain käytetyt
       default_tone: Ei ihonsävyä
@@ -1948,7 +1932,6 @@ fi:
         create: "Pahoittelut, viestin luonti ei onnistunut. Ole hyvä ja yritä uudelleen."
         edit: "Pahoittelut, viestin muokkaus ei onnistunut. Ole hyvä ja yritä uudelleen."
         upload: "Pahoittelut, tiedoston lähetys ei onnistunut. Ole hyvä ja yritä uudelleen."
-        file_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri (suurin tiedostokoko on {{max_size_kb}}kb). Mitäpä jos lataisit tiedoston johonkin pilvipalveluun ja jakaisit täällä siihen linkin?"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
         too_many_dragged_and_dropped_files: "Pahoittelut, voit ladata korkeintaan {{max}} tiedostoa kerrallaan."
         upload_not_authorized: "Pahoittelut, tiedosto jota yrität ladata ei ole sallittu (sallitut laajennukset: {{authorized_extensions}})."

@@ -114,8 +114,6 @@ uk:
     every_hour: "щогодини"
     daily: "щодня"
     weekly: "щотижня"
-    every_two_weeks: "кожні два тижні"
-    every_three_days: "Кожні три дня"
     max_of_count: "Не більше {{count}}"
     alternation: "або"
     character_count:
@@ -406,9 +404,7 @@ uk:
         every_30_minutes: "кожні 30 хвилин"
         every_hour: "щогодини"
         daily: "щодня"
-        every_three_days: "кожні 3 дні"
         weekly: "щотижня"
-        every_two_weeks: "кожні 2 тижні"
       other_settings: "Інше"
       categories_settings: "Категорії"
       new_topic_duration:

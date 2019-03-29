@@ -213,14 +213,13 @@
 
               {{#if model.pending_posts_count}}
                 <div class="has-pending-posts">
-                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
+                  <div>
+                    {{{i18n "review.topic_has_pending" count=model.pending_posts_count}}}
+                  </div>
 
-                  {{#if currentUser.show_queued_posts}}
-                    {{#link-to "queued-posts"}}
-                      {{d-icon "check"}}
-                      {{i18n "queue.view_pending"}}
-                    {{/link-to}}
-                  {{/if}}
+                  {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}
+                    {{i18n "review.view_pending"}}
+                  {{/link-to}}
                 </div>
               {{/if}}
 

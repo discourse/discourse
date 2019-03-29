@@ -205,8 +205,6 @@ tr_TR:
     every_hour: "her saat"
     daily: "günlük"
     weekly: "haftalık"
-    every_two_weeks: "her iki haftada bir"
-    every_three_days: "her üç günde bir"
     max_of_count: "maksimum {{count}}"
     alternation: "ya da"
     character_count:
@@ -720,7 +718,6 @@ tr_TR:
         primary: "Öncelikli E-posta"
         secondary: "İkincil E-postalar"
         no_secondary: "İkincil e-posta adresi mevcut değil"
-        instructions: "Kimse görüntüleyemez"
         ok: "Onaylaman için sana e-posta göndereceğiz"
         invalid: "Lütfen geçerli bir e-posta adresi gir"
         authenticated: "E-posta adresin {{provider}} tarafından doğrulandı"
@@ -796,14 +793,9 @@ tr_TR:
         every_30_minutes: "Her 30 dakikada"
         every_hour: "saatlik"
         daily: "günlük"
-        every_three_days: "her üç günde"
         weekly: "haftalık"
-        every_two_weeks: "her iki haftada"
       include_tl0_in_digests: "Yeni kullanıcılardan gelen içeriği özet e-postalarına ekle"
       email_in_reply_to: "Gönderilere gelen cevapların bir örneğini e-postaya ekle"
-      email_direct: "Herhangi biri gönderimi yanıtladığında, benden alıntı yaptığında, @kullanıcıadı şeklinde bahsettiğinde ya da beni bir konuya davet ettiğinde bana e-posta gönder"
-      email_private_messages: "Herhangi biri bana mesaj yazdığında bana e-posta gönder"
-      email_always: "Sitede etkin olduğum sıralarda dahi bana e-posta bildirimleri gönder"
       other_settings: "Diğer"
       categories_settings: "Kategoriler"
       new_topic_duration:
@@ -1151,13 +1143,7 @@ tr_TR:
         other: "En azından {{count}}konuları seçiniz"
     emoji_picker:
       filter_placeholder: Emoji ara
-      people: İnsanlar
-      nature: Doğa
-      food: Gıda
-      activity: Aktivite
-      travel: Seyahat
       objects: Nesneler
-      celebration: Kutlama
       custom: Özel emojiler
       recent: Son zamanlarda kullanılmış
       default_tone: Görünüm rengi yok
@@ -1839,7 +1825,6 @@ tr_TR:
         create: "Üzgünüz, gönderin oluşturulurken bir hata oluştu. Lütfen tekrar dene."
         edit: "Üzgünüz, gönderin düzenlenirken bir hata oluştu. Lütfen tekrar dene. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar dene."
-        file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla {{max_size_kb}}kb). Neden paylaşımını buluta  yükleyip bağlantını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda sadece tek dosya yüklenebilir."
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığın dosya izinli değil (izinli uzantılar : {{izinli uzantılar}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemez."

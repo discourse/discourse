@@ -253,8 +253,6 @@ he:
     every_hour: "כל שעה"
     daily: "יומית"
     weekly: "שבועית"
-    every_two_weeks: "דו-שבועית"
-    every_three_days: "כל שלושה ימים"
     max_of_count: "מקסימום של {{count}}"
     alternation: "או"
     character_count:
@@ -780,8 +778,6 @@ he:
         confirm_password_description: "אנא אשר את סיסמתך בכדי להמשיך"
         label: "קוד"
         rate_limit: "אנא המתינו לפני שתנסו קוד אישור אחר."
-        enable_description: |
-          סרקו את הברקוד באפליקציה נתמכת (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a> והכניסו את קוד האימות שלכם.
         disable_description: "אנא הכניסו את קוד האישור מהיישומון שלכם."
         show_key_description: "הכנס ידנית"
         extended_description: |
@@ -824,7 +820,6 @@ he:
         primary: "כתובת דוא\"ל ראשית"
         secondary: "כתובות דוא\"ל משניות"
         no_secondary: "אין כתובות דוא\"ל משניות"
-        instructions: "לעולם לא מוצג לציבור"
         ok: "נשלח אליכם דואר אלקטרוני לאישור"
         invalid: "בבקשה הכניסו כתובת דואר אלקטרוני תקינה"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}"
@@ -908,14 +903,9 @@ he:
         every_30_minutes: "מידי 30 דקות"
         every_hour: "שעתי"
         daily: "יומית"
-        every_three_days: "כל שלושה ימים"
         weekly: "שבועית"
-        every_two_weeks: "כל שבועיים"
       include_tl0_in_digests: "כללו תכנים ממשתמשים חדשים במיילים מסכמים"
       email_in_reply_to: "הכללת ציטוטים מתגובות לפרסומים שנשלחו בדוא\"ל"
-      email_direct: "שלחו לי דוא\"ל כשמישהם מצטטים אותי, מגיבים לפוסט שלי, מזכירים את @שם-המשתמש/ת שלי, או מזמינים אותי לנושא"
-      email_private_messages: "שלחו לי דוא\"ל כשמישהם שולחים לי הודעות"
-      email_always: "שלח לי התראות מייל גם כשאני פעיל/ה באתר. "
       other_settings: "אחר"
       categories_settings: "קטגוריות"
       new_topic_duration:
@@ -1304,12 +1294,7 @@ he:
         other: "בחרו לפחות {{count}} פריטים."
     emoji_picker:
       filter_placeholder: חיפוש אחר אימוג׳י
-      people: אנשים
-      nature: טבע
-      food: אוכל
-      activity: פעילות
       objects: עצמים
-      celebration: חגיגה
       custom: אימוג׳יז מותאמים
       recent: בשימוש לאחרונה
       default_tone: ללא גוון עור
@@ -2096,7 +2081,6 @@ he:
         create: "סליחה, הייתה שגיאה ביצירת הפוסט שלכם. אנא נסו שנית."
         edit: "סליחה, הייתה שגיאה בעריכת הפוסט שלכם. אנא נסו שנית."
         upload: "סליחה, הייתה שגיאה בהעלאת הקובץ שלך. אנא נסו שנית"
-        file_too_large: "מצטערים, הקובץ גדול מידי (הגודל המירבי הוא {{max_size_kb}}kb). אולי תקצו להעלות קבצים גדולים לשירות שיתוף בענן ולשתף את הקישור."
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
         upload_not_authorized: "מצטערים, הקובץ שאתם מנסים להעלות אינו מורשה (סיומות מורשות: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
