@@ -3,6 +3,8 @@ import { number } from "discourse/lib/formatter";
 
 export default Ember.Component.extend({
   tagName: "canvas",
+  type: "line",
+
   refreshChart() {
     const ctx = this.$()[0].getContext("2d");
     const model = this.get("model");
@@ -14,14 +16,16 @@ export default Ember.Component.extend({
         {
           data: rawData.map(r => r.y),
           label: model.get("title"),
-          backgroundColor: "rgba(200,220,240,0.3)",
+          backgroundColor: `rgba(200,220,240,${
+            this.get("type") === "bar" ? 1 : 0.3
+          })`,
           borderColor: "#08C"
         }
       ]
     };
 
     const config = {
-      type: "line",
+      type: this.get("type"),
       data: data,
       options: {
         responsive: true,
