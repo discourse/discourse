@@ -372,6 +372,19 @@ en:
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User:"
       show_all_topics: "show all topics"
+      user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flag)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flags)"
+        agreed:
+          one: "{{count}}% agree"
+          other: "{{count}}% agree"
+        disagreed:
+          one: "{{count}}% disagree"
+          other: "{{count}}% disagree"
+        ignored:
+          one: "{{count}}% ignore"
+          other: "{{count}}% ignore"
       topics:
         topic: "Topic"
         reviewable_count: "Reviewable Count"

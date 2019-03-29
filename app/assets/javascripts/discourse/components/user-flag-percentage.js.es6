@@ -35,14 +35,14 @@ export default Ember.Component.extend({
       result.label = `${result.ignored}%`;
     }
 
-    result.title = I18n.t("admin.flags.user_percentage.summary", {
-      agreed: I18n.t("admin.flags.user_percentage.agreed", {
+    result.title = I18n.t("review.user_percentage.summary", {
+      agreed: I18n.t("review.user_percentage.agreed", {
         count: result.agreed
       }),
-      disagreed: I18n.t("admin.flags.user_percentage.disagreed", {
+      disagreed: I18n.t("review.user_percentage.disagreed", {
         count: result.disagreed
       }),
-      ignored: I18n.t("admin.flags.user_percentage.ignored", {
+      ignored: I18n.t("review.user_percentage.ignored", {
         count: result.ignored
       }),
       count: total
