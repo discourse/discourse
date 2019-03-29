@@ -35,11 +35,14 @@ class ReviewableUser < Reviewable
 
   def perform_reject(performed_by, args)
     destroyer = UserDestroyer.new(performed_by)
-    destroyer.destroy(target)
+
+    # If a user has posts, we won't delete them to preserve their content.
+    # However the reviable record will be "rejected" and they will remain
+    # unapproved in the database. A staff member can still approve them
+    # via the admin.
+    destroyer.destroy(target) rescue UserDestroyer::PostsExistError
 
     create_result(:success, :rejected)
-  rescue UserDestroyer::PostsExistError
-    create_result(:failed)
   end
 
   # Update's the user's fields for approval but does not save. This
