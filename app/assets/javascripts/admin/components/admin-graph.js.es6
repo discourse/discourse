@@ -40,7 +40,9 @@ export default Ember.Component.extend({
             {
               display: true,
               ticks: {
-                callback: label => number(label),
+                callback: label => {
+                  if (label >= 1) return number(label);
+                },
                 suggestedMin: 0
               }
             }
