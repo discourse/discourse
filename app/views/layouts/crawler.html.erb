@@ -33,7 +33,7 @@
     <div id="main-outlet" class="wrap">
       <%= yield %>
     </div>
-    <footer class="container">
+    <footer class="container wrap">
       <nav class='crawler-nav' itemscope itemtype='http://schema.org/SiteNavigationElement'>
         <a href='<%= path "/" %>'><%= t 'home_title' %></a>
         <%= link_to t('js.filters.categories.title'), path("/categories") %>
