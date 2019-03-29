@@ -1,7 +1,9 @@
+import { DEFAULT_PERIOD } from "admin/controllers/admin-search-logs-index";
+
 export default Ember.Controller.extend({
   loading: false,
   term: null,
-  period: "quarterly",
+  period: DEFAULT_PERIOD,
   searchType: "all",
 
   searchTypeOptions: [
