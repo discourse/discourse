@@ -10,8 +10,9 @@
       <%-if (i+1) < @breadcrumbs.length%>
         itemref="breadcrumb-<%=(i+1)%>"
       <%-end%>>
-      <a href="<%=c[:url]%>" itemprop="url">
-        <span itemprop="title"><%=c[:name]%></span>
+      <a href="<%=c[:url]%>" itemprop="url" class='badge-wrapper bullet'>
+        <span class="badge-category-bg" style='background-color: #CEA9A9;'> </span>
+        <span itemprop="title" style='color: #646464;'><%=c[:name]%></span>
       </a>
     </div>
   <% end %>
@@ -37,12 +38,10 @@
 
 <%= server_plugin_outlet "topic_header" %>
 
-<hr>
-
 <%- if include_crawler_content? %>
 
 <% @topic_view.posts.each do |post| %>
-  <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+  <div itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body' style='margin-top: 5px;'>
     <% if (u = post.user) %>
       <div class='creator'>
         <span>
@@ -56,12 +55,12 @@
           <% end %>
           <% if post.updated_at > post.created_at %>
             <meta itemprop='datePublished' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
-            <time itemprop='dateModified' datetime='<%= post.updated_at.to_formatted_s(:iso8601) %>'>
-              <%= post.updated_at %>
+            <time itemprop='dateModified' datetime='<%= post.updated_at.to_formatted_s(:iso8601) %>' style='float: right;'>
+              <%= post.updated_at.strftime('%e %b %Y %H:%M:%S %Z') %>
             </time>
           <% else %>
-            <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>'>
-              <%= post.created_at %>
+            <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' style='float: right;'>
+              <%= post.created_at.strftime('%e %b %Y %H:%M:%S %Z') %>
             </time>
           <% end %>
         </span>
@@ -73,6 +72,9 @@
       <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
       <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <div class='clearfix'>
+        <span style='float: right;'>Likes: <%= post.like_count %></span>
+      </div>
       <hr>
       <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
         <% @topic_view.link_counts[post.id].each do |link| %>
