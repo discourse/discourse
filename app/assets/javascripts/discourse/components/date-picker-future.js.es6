@@ -10,7 +10,7 @@ export default DatePicker.extend({
         moment()
           .add(1, "day")
           .toDate(),
-      setDefaultDate: !!this.get("defaultDate"),
+      setDefaultDate: !!this.get("defaultDate")
     };
   }
 });
