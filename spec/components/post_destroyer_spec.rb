@@ -177,6 +177,17 @@ describe PostDestroyer do
         expect(@user.user_stat.post_count).to eq(1)
       end
 
+      it 'Recovers the post correctly' do
+        PostDestroyer.new(admin, post).destroy
+
+        post.reload
+        PostDestroyer.new(admin, post).recover
+        recovered_topic = post.reload.topic
+
+        expect(recovered_topic.deleted_at).to be_nil
+        expect(recovered_topic.deleted_by_id).to be_nil
+      end
+
       context "recovered by user" do
         it "should increment the user's post count" do
           PostDestroyer.new(@user, @reply).destroy
