@@ -11,10 +11,11 @@ export default Discourse.Route.extend({
   model(params) {
     this._params = params;
 
-    return ajax(`/admin/logs/search_logs/term/${params.term}.json`, {
+    return ajax(`/admin/logs/search_logs/term.json`, {
       data: {
         period: params.period,
-        search_type: params.searchType
+        search_type: params.searchType,
+        term: params.term
       }
     }).then(json => {
       // Add zero values for missing dates
