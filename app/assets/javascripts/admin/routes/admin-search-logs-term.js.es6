@@ -4,6 +4,7 @@ import { translateResults } from "discourse/lib/search";
 
 export default Discourse.Route.extend({
   queryParams: {
+    term: { refreshModel: true },
     period: { refreshModel: true },
     searchType: { refreshModel: true }
   },

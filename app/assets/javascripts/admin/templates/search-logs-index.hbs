@@ -16,7 +16,9 @@
       {{#each model as |item|}}
         <tr class="admin-list-item">
           <td class="col term">
-            {{#link-to 'adminSearchLogs.term' item.term}}{{item.term}}{{/link-to}}
+            {{#link-to 'adminSearchLogs.term' (query-params term=item.term) class="test"}}
+              {{item.term}}
+            {{/link-to}}
           </td>
           <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.searches'}}</div>{{item.searches}}</td>
           <td class="col"><div class="label">{{i18n 'admin.logs.search_logs.click_through_rate'}}</div>{{item.ctr}}%</td>
