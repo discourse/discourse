@@ -162,19 +162,29 @@ RSpec.describe SearchLog, type: :model do
   end
 
   describe ".term_details" do
-    before do
-      SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1")
-      SearchLog.log(term: 'rUby', search_type: :header, ip_address: '127.0.0.1', user_id: Fabricate(:user).id)
-      SearchLog.log(term: "ruBy", search_type: :full_page, ip_address: "127.0.0.2")
+    it "should only use the date for the period" do
+      time = Time.new(2019, 5, 23, 18, 15, 30)
+      freeze_time(time)
 
-      SearchLog.log(
-        term: "ruby core",
-        search_type: :header,
-        ip_address: "127.0.0.3"
-      )
+      search_log = Fabricate(:search_log, created_at: time - 1.hour)
+      search_log2 = Fabricate(:search_log, created_at: time + 1.hour)
+
+      details = SearchLog.term_details(search_log.term, :daily)
+
+      expect(details[:data].first[:y]).to eq(2)
     end
 
     it "correctly returns term details" do
+      Fabricate(:search_log, term: "ruby")
+      Fabricate(:search_log, term: "ruBy", user: Fabricate(:user))
+      Fabricate(:search_log, term: "ruby core", ip_address: "127.0.0.3")
+
+      Fabricate(:search_log,
+        term: "ruBy",
+        search_type: SearchLog.search_types[:full_page],
+        ip_address: "127.0.0.2"
+      )
+
       term_details = SearchLog.term_details("ruby")
       expect(term_details[:data][0][:y]).to eq(3)
 
