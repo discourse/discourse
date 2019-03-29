@@ -73,7 +73,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   def process_invitation
     approve_account_if_needed
     add_to_private_topics_if_invited
-    add_user_to_invited_topics
     add_user_to_groups
     send_welcome_message
     notify_invitee
@@ -103,16 +102,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def add_to_private_topics_if_invited
-    invite.topics.private_messages.each do |t|
-      t.topic_allowed_users.create(user_id: invited_user.id)
-    end
-  end
-
-  def add_user_to_invited_topics
-    Invite.where('invites.email = ? and invites.id != ?', invite.email, invite.id).includes(:topics).where(topics: { archetype: Archetype::private_message }).each do |i|
-      i.topics.each do |t|
-        t.topic_allowed_users.create(user_id: invited_user.id)
-      end
+    topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: invite.email }).pluck(:id)
+    topic_ids.each do |id|
+      TopicAllowedUser.create(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
     end
   end
 

@@ -926,7 +926,7 @@ class Topic < ActiveRecord::Base
 
   def grant_permission_to_user(lower_email)
     user = User.find_by_email(lower_email)
-    topic_allowed_users.create!(user_id: user.id)
+    topic_allowed_users.create!(user_id: user.id) unless topic_allowed_users.exists?(user_id: user.id)
   end
 
   def max_post_number
@@ -1419,7 +1419,7 @@ class Topic < ActiveRecord::Base
 
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
-      topic_allowed_users.create!(user_id: target_user.id)
+      topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
       add_small_action(invited_by, "invited_user", target_user.username)
 
       create_invite_notification!(
