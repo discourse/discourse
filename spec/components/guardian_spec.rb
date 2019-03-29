@@ -1747,6 +1747,24 @@ describe Guardian do
         SiteSetting.tos_topic_id = tos_topic.id
         expect(Guardian.new(admin).can_delete?(tos_topic)).to be_falsey
       end
+
+      it "returns true for own topics" do
+        topic.update_attribute(:posts_count, 1)
+        topic.update_attribute(:created_at, Time.zone.now)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_truthy
+      end
+
+      it "returns false if delete their own topics" do
+        topic.update_attribute(:posts_count, 2)
+        topic.update_attribute(:created_at, Time.zone.now)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
+      end
+
+      it "returns false if delete their own topics" do
+        topic.update_attribute(:posts_count, 1)
+        topic.update_attribute(:created_at, 48.hours.ago)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
+      end
     end
 
     context 'a Post' do
@@ -1774,13 +1792,8 @@ describe Guardian do
         expect(Guardian.new(Fabricate(:user)).can_delete?(post)).to be_falsey
       end
 
-      it "returns true when it's the OP" do
-        post.update!(post_number: 1)
-        expect(Guardian.new(moderator).can_delete?(post)).to be_falsey
-      end
-
       it "returns false when it's the OP, even as a moderator if there are at least two posts" do
-        post.update!(post_number: 1)
+        post.update_attribute(:post_number, 1)
         Fabricate(:post, topic: post.topic)
         expect(Guardian.new(moderator).can_delete?(post)).to be_falsey
       end
