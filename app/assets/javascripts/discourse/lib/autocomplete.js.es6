@@ -97,7 +97,7 @@ export default function(options) {
     prevTerm = null;
   }
 
-  function addInputSelectedItem(item) {
+  function addInputSelectedItem(item, triggerChangeCallback) {
     var transformed,
       transformedItem = item;
 
@@ -131,7 +131,7 @@ export default function(options) {
       return d[0];
     });
 
-    if (options.onChangeItems) {
+    if (options.onChangeItems && triggerChangeCallback) {
       options.onChangeItems(inputSelectedItems);
     }
 
@@ -164,7 +164,7 @@ export default function(options) {
         if (options.single) {
           me.hide();
         }
-        addInputSelectedItem(term);
+        addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
           term = options.transformComplete(term);
@@ -229,7 +229,7 @@ export default function(options) {
         if (options.single) {
           me.hide();
         }
-        addInputSelectedItem(x);
+        addInputSelectedItem(x, false);
       }
     });
 
@@ -238,7 +238,7 @@ export default function(options) {
         if (options.single) {
           me.hide();
         }
-        addInputSelectedItem(item);
+        addInputSelectedItem(item, true);
       });
     }
 

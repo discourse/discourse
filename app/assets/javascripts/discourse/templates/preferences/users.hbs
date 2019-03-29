@@ -10,7 +10,9 @@
     <div class="controls tracking-controls">
       <label>{{d-icon "eye-slash" class="icon"}} {{i18n 'user.ignored_users'}}</label>
       {{user-selector excludeCurrentUser=true
-                      usernames=model.ignored_usernames class="user-selector"}}
+                      usernames=model.ignored_usernames
+                      onChangeCallback=(action "ignoredUsernamesChanged")
+                      class="user-selector"}}
     </div>
     <div class="instructions">{{i18n 'user.ignored_users_instructions'}}</div>
   {{/if}}
