@@ -387,7 +387,7 @@ en:
           other: "{{count}}% ignore"
       topics:
         topic: "Topic"
-        reviewable_count: "Reviewable Count"
+        reviewable_count: "Count"
         reported_by: "Reported by"
         details: "details"
         unique_users:
