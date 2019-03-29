@@ -87,13 +87,15 @@ class SearchLog < ActiveRecord::Base
     details = []
 
     result = SearchLog.select("COUNT(*) AS count, created_at::date AS date")
-      .where('term LIKE ?', term)
-      .where('created_at > ?', start_of(period))
+      .where(
+        'lower(term) = ? AND created_at > ?',
+        term.downcase, start_of(period)
+      )
 
     result = result.where('search_type = ?', search_types[search_type]) if search_type == :header || search_type == :full_page
     result = result.where('search_result_id IS NOT NULL') if search_type == :click_through_only
 
-    result.group(:term)
+    result
       .order("date")
       .group("date")
       .each do |record|
