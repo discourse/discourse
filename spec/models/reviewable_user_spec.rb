@@ -58,6 +58,20 @@ RSpec.describe ReviewableUser, type: :model do
         reviewable.reload
         expect(reviewable.target).to be_blank
       end
+
+      it "allows us to reject a user who has posts" do
+        Fabricate(:post, user: reviewable.target)
+        result = reviewable.perform(moderator, :reject)
+        expect(result.success?).to eq(true)
+
+        expect(reviewable.pending?).to eq(false)
+        expect(reviewable.rejected?).to eq(true)
+
+        # Rejecting deletes the user record
+        reviewable.reload
+        expect(reviewable.target).to be_present
+        expect(reviewable.target.approved).to eq(false)
+      end
     end
   end
 
