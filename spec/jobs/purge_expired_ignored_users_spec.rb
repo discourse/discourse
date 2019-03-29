@@ -39,5 +39,18 @@ describe Jobs::PurgeExpiredIgnoredUsers do
         expect(IgnoredUser.find_by(ignored_user: fred)).to be_nil
       end
     end
+
+    context "when there are expired ignored users by expiring_at" do
+      let(:fred) { Fabricate(:user, username: "fred") }
+
+      it "purges expired ignored users" do
+        Fabricate(:ignored_user, user: tarek, ignored_user: fred, expiring_at: 1.month.from_now)
+
+        freeze_time(2.months.from_now) do
+          subject
+          expect(IgnoredUser.find_by(ignored_user: fred)).to be_nil
+        end
+      end
+    end
   end
 end
