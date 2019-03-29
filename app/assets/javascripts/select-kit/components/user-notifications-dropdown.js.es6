@@ -74,13 +74,10 @@ export default DropdownSelectBox.extend({
         this.set("headerIcon", "eye-slash");
       },
       onClose: () => {
-        if (this.get("user.ignored")) {
-          this.set("headerIcon", "eye-slash");
-          this._select("changeToIgnored");
-        } else if (this.get("user.muted")) {
+        if (this.get("user.muted")) {
           this.set("headerIcon", "times-circle");
           this._select("changeToMuted");
-        } else {
+        } else if (!this.get("user.muted") && !this.get("user.ignored")) {
           this.set("headerIcon", "user");
           this._select("changeToNormal");
         }
