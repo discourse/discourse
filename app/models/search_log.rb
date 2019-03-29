@@ -148,7 +148,6 @@ class SearchLog < ActiveRecord::Base
       .limit(limit)
   end
 
-
   def self.clean_up
     search_id = SearchLog.order(:id).offset(SiteSetting.search_query_log_max_size).limit(1).pluck(:id)
     if search_id.present?
