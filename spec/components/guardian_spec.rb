@@ -1774,8 +1774,14 @@ describe Guardian do
         expect(Guardian.new(Fabricate(:user)).can_delete?(post)).to be_falsey
       end
 
-      it "returns false when it's the OP, even as a moderator" do
-        post.update_attribute :post_number, 1
+      it "returns true when it's the OP" do
+        post.update!(post_number: 1)
+        expect(Guardian.new(moderator).can_delete?(post)).to be_falsey
+      end
+
+      it "returns false when it's the OP, even as a moderator if there are at least two posts" do
+        post.update!(post_number: 1)
+        Fabricate(:post, topic: post.topic)
         expect(Guardian.new(moderator).can_delete?(post)).to be_falsey
       end
 
