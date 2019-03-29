@@ -372,6 +372,7 @@ en:
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User:"
       show_all_topics: "show all topics"
+      deleted_user: "(deleted user)"
       user_percentage:
         summary:
           one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flag)"

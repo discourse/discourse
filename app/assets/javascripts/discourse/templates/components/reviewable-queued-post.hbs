@@ -1,20 +1,7 @@
-<div class='created-by'>
-  {{#user-link user=reviewable.created_by}}
-    {{avatar reviewable.created_by imageSize="large"}}
-  {{/user-link}}
-</div>
+{{reviewable-created-by user=reviewable.created_by tagName=''}}
 
 <div class='post-contents'>
-  <div class='names'>
-    <span class="username">
-      {{#user-link user=reviewable.created_by}}
-        {{reviewable.created_by.username}}
-      {{/user-link}}
-      {{#if reviewable.created_by.silenced}}
-        {{d-icon "ban" title="user.silenced_tooltip"}}
-      {{/if}}
-    </span>
-  </div>
+  {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
 
   {{#reviewable-topic-link topic=reviewable.topic}}
     {{i18n "review.new_topic"}}
