@@ -3,6 +3,7 @@
 
 .user-content-wrapper {
   // Grid layout
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto 1fr auto;

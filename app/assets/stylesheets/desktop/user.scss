@@ -180,8 +180,13 @@
         width: auto;
 
         > ul {
+          display: inline-flex;
           > li {
             display: inline;
+            margin-left: s(3);
+            .d-button-label {
+              line-height: 1;
+            }
           }
 
           a {
