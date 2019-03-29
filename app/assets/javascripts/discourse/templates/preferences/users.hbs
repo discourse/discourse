@@ -1,5 +1,4 @@
 <label class="control-label">{{i18n 'user.users'}}</label>
-
 <div class="control-group">
   <div class="controls tracking-controls">
     <label>{{d-icon "d-muted" class="``icon"}} {{i18n 'user.muted_users'}}</label>
@@ -18,7 +17,6 @@
     <div class="instructions">{{i18n 'user.ignored_users_instructions'}}</div>
   {{/if}}
 </div>
-
 
 {{plugin-outlet name="user-preferences-notifications" args=(hash model=model save=(action "save"))}}
 
