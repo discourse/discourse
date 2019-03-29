@@ -163,7 +163,7 @@ export const TIMEFRAMES = [
   }),
   buildTimeframe({
     id: "pick_date_and_time",
-    enabled: opts => opts.includeDateAndTime,
+    enabled: opts => opts.includeDateTime,
     icon: "far-calendar-plus"
   }),
   buildTimeframe({
@@ -219,6 +219,7 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       includeWeekend: this.get("includeWeekend"),
       includeMidFuture: this.get("includeMidFuture") || true,
       includeFarFuture: this.get("includeFarFuture"),
+      includeDateTime: this.get("includeDateTime"),
       includeBasedOnLastPost: this.get("statusType") === CLOSE_STATUS_TYPE,
       canScheduleToday: 24 - now.hour() > 6
     };
