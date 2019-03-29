@@ -95,7 +95,7 @@ module TopicGuardian
 
   def can_delete_topic?(topic)
     !topic.trashed? &&
-    (is_staff? || (topic.posts_count <= 1 && topic.created_at && topic.created_at > 24.hours.ago)) &&
+    (is_staff? || (is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at && topic.created_at > 24.hours.ago)) &&
     !topic.is_category_topic? &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
