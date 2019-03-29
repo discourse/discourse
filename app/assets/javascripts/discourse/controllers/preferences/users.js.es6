@@ -2,7 +2,6 @@ import PreferencesTabController from "discourse/mixins/preferences-tab-controlle
 import {popupAjaxError} from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
-import {default as computed} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(PreferencesTabController, {
   saveAttrNames: ["muted_usernames", "ignored_usernames"],
@@ -10,9 +9,7 @@ export default Ember.Controller.extend(PreferencesTabController, {
   actions: {
     ignoredUsernamesChanged(previous, current) {
       if (current.length > previous.length) {
-        const username = this.get("ignoredUsernames")
-          .split(",")
-          .pop();
+        const username = current.pop();
         if (username) {
           User.findByUsername(username).then(user => {
             if (user.get("ignored")) {
@@ -22,8 +19,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
               model: user
             });
             controller.setProperties({
-              onSuccess: () => {
-              },
               onClose: () => {
                 if (!user.get("ignored")) {
                   const usernames = this.get("ignoredUsernames")
