@@ -674,7 +674,7 @@ QUnit.test(
 
     assert.equal(
       find(".d-editor-container textarea").attr("placeholder"),
-      "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images.",
+      I18n.t("composer.reply_placeholder"),
       "it should not block because of missing category"
     );
   }
