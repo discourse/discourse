@@ -1,18 +1,38 @@
 import { ajax } from "discourse/lib/ajax";
 
+const GENERAL_ATTRIBUTES = ["updated_at"];
+
 const AdminDashboard = Discourse.Model.extend({});
 
 AdminDashboard.reopenClass({
-  /**
-    Fetch all dashboard data. This can be an expensive request when the cached data
-    has expired and the server must collect the data again.
+  fetch() {
+    return ajax("/admin/dashboard.json").then(json => {
+      const model = AdminDashboard.create();
+      model.set("version_check", json.version_check);
+      return model;
+    });
+  },
 
-    @method find
-    @return {jqXHR} a jQuery Promise object
-  **/
-  find: function() {
-    return ajax("/admin/dashboard-old.json").then(function(json) {
-      var model = AdminDashboard.create(json);
+  fetchGeneral() {
+    return ajax("/admin/dashboard/general.json").then(json => {
+      const model = AdminDashboard.create();
+
+      const attributes = {};
+      GENERAL_ATTRIBUTES.forEach(a => (attributes[a] = json[a]));
+
+      model.setProperties({
+        reports: json.reports,
+        attributes,
+        loaded: true
+      });
+
+      return model;
+    });
+  },
+
+  fetchProblems() {
+    return ajax("/admin/dashboard/problems.json").then(json => {
+      const model = AdminDashboard.create(json);
       model.set("loaded", true);
       return model;
     });
