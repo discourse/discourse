@@ -630,7 +630,7 @@ class Plugin::Instance
       Reviewable.send(:define_singleton_method, :types) { types }
     end
   end
-  
+
   def asset_name
     @asset_name ||= File.dirname(path).split("/").last
   end
