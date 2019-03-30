@@ -10,7 +10,7 @@
       <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
       <% @category_list.categories.each_with_index do |c, index| %>
         <tr>
-          <td class='category' style='border-color:<%= index % 2 == 0 ? '#0088CC' : '#808281' %>'>
+          <td class='category <%= index % 2 == 0 ? 'blue-border' : 'grey-border' %>'>
             <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
               <meta itemprop='position' content='<%= index %>'>
               <meta itemprop='url' content='<%= "#{c.url}" %>'>
