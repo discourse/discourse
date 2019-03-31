@@ -63,6 +63,11 @@ export default Ember.Mixin.create({
 
     this._showCallback(username, $target);
 
+    // We bind scrolling on mobile after cards are shown to hide them if user scrolls
+    if (this.site.mobileView) {
+      this._bindMobileScroll();
+    }
+
     return false;
   },
 
@@ -75,12 +80,14 @@ export default Ember.Mixin.create({
     const clickDataExpand = `click.discourse-${id}`;
     const clickMention = `click.discourse-${id}-${triggeringLinkClass}`;
     const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
+    const mobileScrollEvent = "scroll.mobile-card-cloak";
 
     this.setProperties({
       clickOutsideEventName,
       clickDataExpand,
       clickMention,
-      previewClickEvent
+      previewClickEvent,
+      mobileScrollEvent
     });
 
     $("html")
@@ -124,6 +131,21 @@ export default Ember.Mixin.create({
       this.setProperties({ isFixed: true, isDocked: true });
       return this._show(username, $target);
     });
+  },
+
+  _bindMobileScroll() {
+    const mobileScrollEvent = this.get("mobileScrollEvent");
+    const onScroll = () => {
+      Ember.run.throttle(this, this._close, 1000);
+    };
+
+    $(window).on(mobileScrollEvent, onScroll);
+  },
+
+  _unbindMobileScroll() {
+    const mobileScrollEvent = this.get("mobileScrollEvent");
+
+    $(window).off(mobileScrollEvent);
   },
 
   _previewClick($target) {
@@ -237,6 +259,11 @@ export default Ember.Mixin.create({
       isFixed: false,
       isDocked: false
     });
+
+    // Card will be removed, so we unbind mobile scrolling
+    if (this.site.mobileView) {
+      this._unbindMobileScroll();
+    }
   },
 
   willDestroyElement() {
@@ -245,6 +272,7 @@ export default Ember.Mixin.create({
     const clickDataExpand = this.get("clickDataExpand");
     const clickMention = this.get("clickMention");
     const previewClickEvent = this.get("previewClickEvent");
+
     $("html").off(clickOutsideEventName);
     $("#main")
       .off(clickDataExpand)
