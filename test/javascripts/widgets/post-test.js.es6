@@ -16,6 +16,24 @@ widgetTest("basic elements", {
   }
 });
 
+widgetTest("post - links", {
+  template: '{{mount-widget widget="post-contents" args=args}}',
+  beforeEach() {
+    this.set("args", {
+      cooked:
+        "<a href='http://link1.example.com/'>first link</a> and <a href='http://link2.example.com/?some=query'>second link</a>",
+      linkCounts: [
+        { url: "http://link1.example.com/", clicks: 1, internal: true },
+        { url: "http://link2.example.com/", clicks: 2, internal: true }
+      ]
+    });
+  },
+  async test(assert) {
+    assert.equal(find(".badge.clicks:nth(0)").text(), "1");
+    assert.equal(find(".badge.clicks:nth(1)").text(), "2");
+  }
+});
+
 widgetTest("wiki", {
   template:
     '{{mount-widget widget="post" args=args showHistory=(action "showHistory")}}',
