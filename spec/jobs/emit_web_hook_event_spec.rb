@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'excon'
 
 describe Jobs::EmitWebHookEvent do
   let(:post_hook) { Fabricate(:web_hook) }
@@ -22,6 +23,16 @@ describe Jobs::EmitWebHookEvent do
     expect do
       subject.execute(web_hook_id: 1, event_type: 'post')
     end.to raise_error(Discourse::InvalidParameters)
+  end
+
+  it "should not destroy webhook event in case of error" do
+    Excon::Connection.any_instance.stubs(:post).raises("error")
+    subject.execute(
+      web_hook_id: post_hook.id,
+      payload: { id: post.id }.to_json,
+      event_type: WebHookEventType::POST
+    )
+    expect(WebHookEvent.last.web_hook_id).to eq(post_hook.id)
   end
 
   context 'when the web hook is failed' do
