@@ -4,7 +4,7 @@ class AdminDashboardData
   include StatsCacheable
 
   # kept for backward compatibility
-  GLOBAL_REPORTS = []
+  GLOBAL_REPORTS ||= []
 
   def initialize(opts = {})
     @opts = opts
