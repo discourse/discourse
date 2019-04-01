@@ -3,7 +3,7 @@
 <div class='post-contents'>
   {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
 
-  {{#reviewable-topic-link topic=reviewable.topic}}
+  {{#reviewable-topic-link reviewable=reviewable}}
     {{i18n "review.new_topic"}}
     {{reviewable.payload.title}}
   {{/reviewable-topic-link}}

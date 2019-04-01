@@ -1,14 +1,12 @@
-{{#if topic}}
-  <div class='post-topic'>
-    {{#if topic}}
-      {{i18n "review.topic"}}
-      {{topic-status topic=topic}}
-      {{topic-link topic}}
-      {{i18n "review.topic_replies" count=topic.reply_count}}
-    {{else}}
-      {{yield}}
-    {{/if}}
-  </div>
-{{else}}
-  {{i18n "topic.deleted"}}
-{{/if}}
+<div class='post-topic'>
+  {{#if reviewable.topic}}
+    {{i18n "review.topic"}}
+    {{topic-status topic=reviewable.topic}}
+    <a href={{reviewable.topic_url}} class='title'>{{reviewable.topic.title}}</a>
+    {{i18n "review.topic_replies" count=reviewable.topic.reply_count}}
+  {{else if (has-block)}}
+    {{yield}}
+  {{else}}
+    {{i18n "topic.deleted"}}
+  {{/if}}
+</div>

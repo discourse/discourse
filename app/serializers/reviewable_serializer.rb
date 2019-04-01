@@ -10,6 +10,7 @@ class ReviewableSerializer < ApplicationSerializer
     :status,
     :type,
     :topic_id,
+    :topic_url,
     :category_id,
     :created_at,
     :can_edit,
@@ -84,6 +85,15 @@ class ReviewableSerializer < ApplicationSerializer
     end
 
     data
+  end
+
+  def topic_url
+    return object.target.url if object.target.is_a?(Post)
+    return object.topic.url
+  end
+
+  def include_topic_url?
+    object.topic_id.present?
   end
 
   def include_topic_id?

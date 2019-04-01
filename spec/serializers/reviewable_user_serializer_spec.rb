@@ -11,6 +11,7 @@ describe ReviewableUserSerializer do
     expect(json[:username]).to eq(reviewable.target.username)
     expect(json[:email]).to eq(reviewable.target.email)
     expect(json[:name]).to eq(reviewable.target.name)
+    expect(json[:topic_url]).to be_blank
   end
 
 end
