@@ -55,6 +55,9 @@
       display: inline-flex;
     }
   }
+  &.awaiting-approval {
+    display: none;
+  }
 }
 
 .create-account {

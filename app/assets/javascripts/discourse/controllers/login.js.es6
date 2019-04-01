@@ -29,6 +29,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   processingEmailLink: false,
   showLoginButtons: true,
   showSecondFactor: false,
+  awaitingApproval: false,
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
@@ -42,7 +43,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       loggedIn: false,
       secondFactorRequired: false,
       showSecondFactor: false,
-      showLoginButtons: true
+      showLoginButtons: true,
+      awaitingApproval: false
     });
   },
 
@@ -54,6 +56,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("showSecondFactor")
   secondFactorClass(showSecondFactor) {
     return showSecondFactor ? "" : "hidden";
+  },
+
+  @computed("awaitingApproval", "hasAtLeastOneLoginButton")
+  modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
+    let classes = ["login-modal"];
+    if (awaitingApproval) classes.push("awaiting-approval");
+    if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+    return classes.join(" ");
   },
 
   // Determines whether at least one login button is enabled
@@ -296,6 +306,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
         self.flash(errorMsg, className || "success");
         self.set("authenticate", null);
       });
+    }
+
+    if (
+      options.awaiting_approval &&
+      !this.get("canLoginLocal") &&
+      !this.get("canLoginLocalWithEmail")
+    ) {
+      this.set("awaitingApproval", true);
     }
 
     if (options.omniauth_disallow_totp) {
