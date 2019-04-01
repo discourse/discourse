@@ -787,7 +787,7 @@ describe Category do
         subcategory.set_permissions(group => :full, group2 => :readonly)
 
         expect(subcategory.valid?).to eq(false)
-        expect(subcategory.errors.full_messages).to eq([I18n.t("category.errors.permission_conflict")])
+        expect(subcategory.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
       end
 
       it "is valid if permissions are same or more restrictive" do
@@ -819,7 +819,7 @@ describe Category do
         parent_category.set_permissions(group => :readonly)
 
         expect(parent_category.valid?).to eq(false)
-        expect(parent_category.errors.full_messages).to eq([I18n.t("category.errors.permission_conflict")])
+        expect(parent_category.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
       end
 
       it "is valid if subcategory permissions are same or more restrictive" do
