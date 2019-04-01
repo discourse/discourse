@@ -35,6 +35,14 @@ RSpec.describe ReviewableHistory, type: :model do
     expect(history[2].created_by).to eq(admin)
   end
 
+  it "won't log a transition to the same state" do
+    p0 = Fabricate(:post)
+    reviewable = PostActionCreator.spam(Fabricate(:user), p0).reviewable
+    expect(reviewable.reviewable_histories.size).to eq(1)
+    PostActionCreator.inappropriate(Fabricate(:user), p0)
+    expect(reviewable.reload.reviewable_histories.size).to eq(1)
+  end
+
   it "adds an `edited` event when edited" do
     reviewable = Fabricate(:reviewable)
     old_category = reviewable.category
