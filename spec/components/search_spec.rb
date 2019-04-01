@@ -334,6 +334,27 @@ describe Search do
         expect(result.posts).to contain_exactly(reply)
         expect(result.blurb(reply)).to eq(expected_blurb)
       end
+
+      it 'does not allow a post with repeated words to dominate the ranking' do
+        category = Fabricate(:category, name: "winter is coming")
+
+        post = Fabricate(:post,
+          raw: "I think winter will end soon",
+          topic: Fabricate(:topic,
+            title: "dragon john snow winter",
+            category: category
+          )
+        )
+
+        post2 = Fabricate(:post,
+          raw: "I think winter winter winter winter winter will end soon",
+          topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
+        )
+
+        result = Search.execute('winter')
+
+        expect(result.posts).to eq([post, post2, category.topic.first_post])
+      end
     end
 
     context 'searching for quoted title' do
@@ -940,22 +961,45 @@ describe Search do
       today        = Date.today
       yesterday    = 1.day.ago
       two_days_ago = 2.days.ago
+      category = Fabricate(:category)
 
-      old_topic    = Fabricate(:topic,
-          title: 'First Topic, testing the created_at sort',
-          created_at: two_days_ago)
+      old_topic = Fabricate(:topic,
+        title: 'First Topic, testing the created_at sort',
+        created_at: two_days_ago,
+        category: category
+      )
+
       latest_topic = Fabricate(:topic,
-          title: 'Second Topic, testing the created_at sort',
-          created_at: yesterday)
+        title: 'Second Topic, testing the created_at sort',
+        created_at: yesterday,
+        category: category
+      )
 
-      old_relevant_topic_post     = Fabricate(:post, topic: old_topic, created_at: yesterday, raw: 'Relevant Topic')
-      latest_irelevant_topic_post = Fabricate(:post, topic: latest_topic, created_at: today, raw: 'Not Relevant')
+      old_relevant_topic_post = Fabricate(:post,
+        topic: old_topic,
+        created_at: yesterday,
+        raw: 'Relevant Relevant Topic'
+      )
+
+      latest_irelevant_topic_post = Fabricate(:post,
+        topic: latest_topic,
+        created_at: today,
+        raw: 'Not Relevant'
+      )
 
       # Expecting the default results
-      expect(Search.execute('Topic').posts.map(&:id)).to eq([old_relevant_topic_post.id, latest_irelevant_topic_post.id])
+      expect(Search.execute('Topic').posts).to contain_exactly(
+        old_relevant_topic_post,
+        latest_irelevant_topic_post,
+        category.topic.first_post
+      )
 
       # Expecting the ordered by topic creation results
-      expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([latest_irelevant_topic_post.id, old_relevant_topic_post.id])
+      expect(Search.execute('Topic order:latest_topic').posts).to contain_exactly(
+        latest_irelevant_topic_post,
+        old_relevant_topic_post,
+        category.topic.first_post
+      )
     end
 
     it 'can tokenize dots' do

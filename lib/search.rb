@@ -838,13 +838,14 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     else
-      # 0|32 default normalization scaled into the range zero to one
+      # 2|32 divides the rank by the document length and scales the range from
+      # zero to one
       data_ranking = <<~SQL
       (
         TS_RANK_CD(
           post_search_data.search_data,
           #{ts_query(weight_filter: weights)},
-          0|32
+          2|32
         ) *
         (
           CASE categories.search_priority
