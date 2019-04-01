@@ -1,6 +1,6 @@
 import { setting } from "discourse/lib/computed";
 import computed from "ember-addons/ember-computed-decorators";
-import AdminDashboardNext from "admin/models/admin-dashboard-next";
+import AdminDashboard from "admin/models/admin-dashboard";
 import Report from "admin/models/report";
 import PeriodComputationMixin from "admin/mixins/period-computation";
 
@@ -88,12 +88,12 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     ) {
       this.set("isLoading", true);
 
-      AdminDashboardNext.fetchGeneral()
-        .then(adminDashboardNextModel => {
+      AdminDashboard.fetchGeneral()
+        .then(adminDashboardModel => {
           this.setProperties({
             dashboardFetchedAt: new Date(),
-            model: adminDashboardNextModel,
-            reports: Ember.makeArray(adminDashboardNextModel.reports).map(x =>
+            model: adminDashboardModel,
+            reports: Ember.makeArray(adminDashboardModel.reports).map(x =>
               Report.create(x)
             )
           });

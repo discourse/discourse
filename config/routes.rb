@@ -240,13 +240,11 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
-    get "dashboard" => "dashboard_next#index"
-    get "dashboard/general" => "dashboard_next#general"
-    get "dashboard/moderation" => "dashboard_next#moderation"
-    get "dashboard/security" => "dashboard_next#security"
-    get "dashboard/reports" => "dashboard_next#reports"
-
-    get "dashboard-old" => "dashboard#index"
+    get "dashboard" => "dashboard#index"
+    get "dashboard/general" => "dashboard#general"
+    get "dashboard/moderation" => "dashboard#moderation"
+    get "dashboard/security" => "dashboard#security"
+    get "dashboard/reports" => "dashboard#reports"
 
     resources :dashboard, only: [:index] do
       collection do
