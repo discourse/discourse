@@ -2,7 +2,7 @@ require_dependency 'flag_query'
 
 module Jobs
 
-  class PendingFlagsReminder < Jobs::Scheduled
+  class PendingReviewablesReminder < Jobs::Scheduled
     every 1.hour
 
     attr_reader :sent_reminder
@@ -27,8 +27,8 @@ module Jobs
             target_group_names: Group[:moderators].name,
             archetype: Archetype.private_message,
             subtype: TopicSubtype.system_message,
-            title: I18n.t('flags_reminder.subject_template', count: reviewable_ids.size),
-            raw: mentions + I18n.t('flags_reminder.flags_were_submitted', count: SiteSetting.notify_about_flags_after, base_path: Discourse.base_path)
+            title: I18n.t('reviewables_reminder.subject_template', count: reviewable_ids.size),
+            raw: mentions + I18n.t('reviewables_reminder.submitted', count: SiteSetting.notify_about_flags_after, base_path: Discourse.base_path)
           ).present?
 
           self.class.last_notified_id = reviewable_ids[0]
