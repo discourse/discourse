@@ -331,6 +331,7 @@ Discourse::Application.routes.draw do
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
   post "session/email-login/:token" => "session#email_login"
+  get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -841,6 +842,8 @@ Discourse::Application.routes.draw do
   post "/user-api-key" => "user_api_keys#create"
   post "/user-api-key/revoke" => "user_api_keys#revoke"
   post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
+  get "/user-api-key/otp" => "user_api_keys#otp"
+  post "/user-api-key/otp" => "user_api_keys#create_otp"
 
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
