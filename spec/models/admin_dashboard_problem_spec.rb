@@ -1,37 +1,37 @@
 require 'rails_helper'
 
-describe AdminDashboardData do
+describe AdminDashboardProblem do
 
   describe "adding new checks" do
     after do
-      AdminDashboardData.reset_problem_checks
+      AdminDashboardProblem.reset_problem_checks
     end
 
     it 'calls the passed block' do
       called = false
-      AdminDashboardData.add_problem_check do
+      AdminDashboardProblem.add_problem_check do
         called = true
       end
 
-      AdminDashboardData.fetch_problems
+      AdminDashboardProblem.fetch_problems
       expect(called).to eq(true)
 
-      AdminDashboardData.fetch_problems(check_force_https: true)
+      AdminDashboardProblem.fetch_problems(check_force_https: true)
       expect(called).to eq(true)
     end
 
     it 'calls the passed method' do
-      $test_AdminDashboardData_global = false
-      class AdminDashboardData
+      $test_AdminDashboardProblem_global = false
+      class AdminDashboardProblem
         def my_test_method
-          $test_AdminDashboardData_global = true
+          $test_AdminDashboardProblem_global = true
         end
       end
-      AdminDashboardData.add_problem_check :my_test_method
+      AdminDashboardProblem.add_problem_check :my_test_method
 
-      AdminDashboardData.fetch_problems
-      expect($test_AdminDashboardData_global).to eq(true)
-      $test_AdminDashboardData_global = nil
+      AdminDashboardProblem.fetch_problems
+      expect($test_AdminDashboardProblem_global).to eq(true)
+      $test_AdminDashboardProblem_global = nil
     end
   end
 
@@ -373,7 +373,7 @@ describe AdminDashboardData do
   end
 
   describe '#problem_message_check' do
-    let(:key) { AdminDashboardData.problem_messages.first }
+    let(:key) { AdminDashboardProblem.problem_messages.first }
 
     before do
       described_class.clear_problem_message(key)
