@@ -255,10 +255,12 @@ export default Ember.Controller.extend({
   _setupPopupMenuOption(callback) {
     let option = callback();
 
-    if (option.condition) {
-      option.condition = this.get(option.condition);
-    } else {
+    if (typeof option.condition === "undefined") {
       option.condition = true;
+    } else if (typeof option.condition === "boolean") {
+      // uses existing value
+    } else {
+      option.condition = this.get(option.condition);
     }
 
     return option;
