@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Jobs::PendingFlagsReminder do
+describe Jobs::PendingReviewablesReminder do
   let(:job) { described_class.new }
 
   def create_flag(created_at)

@@ -2221,13 +2221,13 @@ en:
       same_ip_address: "Same IP address (%{ip_address}) as other users"
       inactive_user: "Inactive user"
 
-  flags_reminder:
-    flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. [Please review them](%{base_path}/admin/flags)."
-      other: "Flags were submitted over %{count} hours ago. [Please review them](%{base_path}/admin/flags)."
+  reviewables_reminder:
+    submitted:
+      one: "Items were submitted over 1 hour ago. [Please review them](%{base_path}/review)."
+      other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
     subject_template:
-      one: "1 flag waiting to be handled"
-      other: "%{count} flags waiting to be handled"
+      one: "1 item needs to be reviewed"
+      other: "%{count} items need to be reviewed"
 
   unsubscribe_mailer:
     title: "Unsubscribe Mailer"
