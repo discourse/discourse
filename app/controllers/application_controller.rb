@@ -46,7 +46,6 @@ class ApplicationController < ActionController::Base
   before_action :clear_notifications
   before_action :set_locale
   before_action :set_mobile_view
-  before_action :handle_delegated_auth
   before_action :block_if_readonly_mode
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
@@ -358,25 +357,6 @@ class ApplicationController < ActionController::Base
 
   def set_mobile_view
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
-  end
-
-  def handle_delegated_auth
-    # Used by clients authenticated via user API.
-    # If auth session is missing, this redirects back to client using provided URL scheme
-    # and client can request a new one-time-password.
-    if params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect) && current_user.blank?
-      begin
-        OpenSSL::PKey::RSA.new(params[:user_api_public_key])
-      rescue OpenSSL::PKey::RSAError
-        return render plain: I18n.t("user_api_key.invalid_public_key")
-      end
-
-      if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
-        return render plain: I18n.t("user_api_key.invalid_auth_redirect")
-      end
-
-      redirect_to("#{params[:auth_redirect]}?otp=true") if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
-    end
   end
 
   NO_CUSTOM = "no_custom"
@@ -751,6 +731,25 @@ class ApplicationController < ActionController::Base
         redirect_to path(redirect_path)
       end
     end
+
+    # Used by clients authenticated via user API.
+    # If auth session is missing, this redirects to provided URL scheme
+    # which client can use to request a new one-time-password.
+    if !current_user &&
+      params.has_key?(:user_api_public_key) &&
+      params.has_key?(:auth_redirect)
+      begin
+        OpenSSL::PKey::RSA.new(params[:user_api_public_key])
+      rescue OpenSSL::PKey::RSAError
+        return render plain: I18n.t("user_api_key.invalid_public_key")
+      end
+
+      if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+        return render plain: I18n.t("user_api_key.invalid_auth_redirect")
+      end
+      redirect_to("#{params[:auth_redirect]}?otp=true") if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
+    end
+
   end
 
   def block_if_readonly_mode
