@@ -69,16 +69,28 @@ module Jobs
     end
 
     def load_problem_post_ids(limit)
-      Post
-        .where('posts.id IN (
-                SELECT p2.id FROM posts p2
-                LEFT JOIN post_search_data pd ON pd.locale = ? AND pd.version = ? AND p2.id = pd.post_id
-                WHERE pd.post_id IS NULL
-                )', SiteSetting.default_locale, Search::INDEX_VERSION)
-        .where("posts.raw != ''")
-        .limit(limit)
-        .order('posts.id DESC')
-        .pluck(:id)
+      params = {
+        locale: SiteSetting.default_locale,
+        version: Search::INDEX_VERSION,
+        limit: limit
+      }
+
+      DB.query_single(<<~SQL, params)
+        SELECT
+          posts.id
+        FROM posts
+        LEFT JOIN post_search_data pd
+          ON pd.locale = :locale
+          AND pd.version = :version
+          AND pd.post_id = posts.id
+        LEFT JOIN topics ON topics.id = posts.topic_id
+        WHERE pd.post_id IS NULL
+        AND topics.id IS NOT NULL
+        AND topics.deleted_at IS NULL
+        AND posts.raw != ''
+        ORDER BY posts.id DESC
+        LIMIT :limit
+      SQL
     end
 
     def load_problem_category_ids(limit)

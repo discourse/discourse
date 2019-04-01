@@ -49,6 +49,18 @@ describe Jobs::ReindexSearch do
       FakeIndexer.reset
     end
 
+    it 'should not reinex posts that belong to a deleted topic' do
+      post = Fabricate(:post)
+      post2 = Fabricate(:post)
+      post.post_search_data.destroy!
+      post2.post_search_data.destroy!
+      post2.topic.trash!
+
+      subject.rebuild_problem_posts(indexer: FakeIndexer)
+
+      expect(FakeIndexer.posts).to contain_exactly(post)
+    end
+
     it 'should not reindex posts with empty raw' do
       post = Fabricate(:post)
       post.post_search_data.destroy!
