@@ -19,11 +19,16 @@ class SearchIndexer
     # insert some extra words for I.am.a.word so "word" is tokenized
     # I.am.a.word becomes I.am.a.word am a word
     raw.gsub(/[^[:space:]]*[\.]+[^[:space:]]*/) do |with_dot|
-      split = with_dot.split(".")
-      if split.length > 1
-        with_dot + ((+" ") << split[1..-1].join(" "))
+      if with_dot.match?(PlainTextToMarkdown::URL_REGEX)
+        "#{with_dot} #{URI.parse(with_dot).hostname.gsub('.', ' ')}"
       else
-        with_dot
+        split = with_dot.split(".")
+
+        if split.length > 1
+          with_dot + ((+" ") << split[1..-1].join(" "))
+        else
+          with_dot
+        end
       end
     end
   end
@@ -183,19 +188,34 @@ class SearchIndexer
     def self.scrub(html, strip_diacritics: false)
       return +"" if html.blank?
 
+      document = Nokogiri::HTML("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
+
+      document.css(
+        "div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}"
+      ).remove
+
+      document.css("a[href]").each do |node|
+        node.remove_attribute("href") if node["href"] == node.text
+      end
+
       me = new(strip_diacritics: strip_diacritics)
-      Nokogiri::HTML::SAX::Parser.new(me).parse("<div>#{html}</div>")
+      Nokogiri::HTML::SAX::Parser.new(me).parse(document.to_html)
       me.scrubbed.squish
     end
 
     ATTRIBUTES ||= %w{alt title href data-youtube-title}
 
-    def start_element(_, attributes = [])
+    def start_element(_name, attributes = [])
       attributes = Hash[*attributes.flatten]
 
-      ATTRIBUTES.each do |name|
-        if attributes[name].present?
-          characters(attributes[name]) unless name == "href" && UrlHelper.is_local(attributes[name])
+      ATTRIBUTES.each do |attribute_name|
+        if attributes[attribute_name].present? &&
+          !(
+            attribute_name == "href" &&
+            UrlHelper.is_local(attributes[attribute_name])
+          )
+
+          characters(attributes[attribute_name])
         end
       end
     end
