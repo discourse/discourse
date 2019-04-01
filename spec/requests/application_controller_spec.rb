@@ -345,7 +345,7 @@ RSpec.describe ApplicationController do
     end
   end
 
-  describe 'Detect SafariViewController app requests' do
+  describe 'Delegated auth' do
     let :public_key do
       <<~TXT
       -----BEGIN PUBLIC KEY-----
@@ -366,14 +366,14 @@ RSpec.describe ApplicationController do
 
     it 'disallows invalid public_key param' do
       args[:auth_redirect] = "discourse://auth_redirect"
-      get "/", params: args
+      get "/latest", params: args
 
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end
 
     it 'does not allow invalid auth_redirect' do
       args[:user_api_public_key] = public_key
-      get "/", params: args
+      get "/latest", params: args
 
       expect(response.body).to eq(I18n.t("user_api_key.invalid_auth_redirect"))
     end
@@ -383,7 +383,7 @@ RSpec.describe ApplicationController do
       args[:user_api_public_key] = public_key
       args[:auth_redirect] = "discourse://auth_redirect"
 
-      get "/", params: args
+      get "/latest", params: args
 
       expect(response.status).to_not eq(302)
       expect(response).to_not redirect_to("#{args[:auth_redirect]}?otp=true")
@@ -393,7 +393,7 @@ RSpec.describe ApplicationController do
       args[:user_api_public_key] = public_key
       args[:auth_redirect] = "discourse://auth_redirect"
 
-      get "/", params: args
+      get "/categories", params: args
 
       expect(response.status).to eq(302)
       expect(response).to redirect_to("#{args[:auth_redirect]}?otp=true")
