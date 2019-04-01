@@ -12,7 +12,7 @@ class SessionController < ApplicationController
   before_action :check_local_login_allowed, only: %i(create forgot_password email_login)
   before_action :rate_limit_login, only: %i(create email_login)
   skip_before_action :redirect_to_login_if_required
-  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login)
+  skip_before_action :preload_json, :check_xhr, only: %i(sso sso_login sso_provider destroy email_login one_time_password)
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -316,6 +316,20 @@ class SessionController < ApplicationController
       end
     else
       @error = I18n.t('email_login.invalid_token')
+    end
+
+    render layout: 'no_ember'
+  end
+
+  def one_time_password
+    otp_username = $redis.get "otp_#{params[:token]}"
+
+    if otp_username && user = User.find_by_username(otp_username)
+      log_on_user(user)
+      $redis.del "otp_#{params[:token]}"
+      return redirect_to path("/")
+    else
+      @error = I18n.t('user_api_key.invalid_token')
     end
 
     render layout: 'no_ember'

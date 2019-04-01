@@ -731,6 +731,26 @@ class ApplicationController < ActionController::Base
         redirect_to path(redirect_path)
       end
     end
+
+    # Used by clients authenticated via user API.
+    # Redirects to provided URL scheme if
+    # - request uses a valid public key and auth_redirect scheme
+    # - one_time_password scope is allowed
+    if !current_user &&
+      params.has_key?(:user_api_public_key) &&
+      params.has_key?(:auth_redirect)
+      begin
+        OpenSSL::PKey::RSA.new(params[:user_api_public_key])
+      rescue OpenSSL::PKey::RSAError
+        return render plain: I18n.t("user_api_key.invalid_public_key")
+      end
+
+      if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+        return render plain: I18n.t("user_api_key.invalid_auth_redirect")
+      end
+      redirect_to("#{params[:auth_redirect]}?otp=true") if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
+    end
+
   end
 
   def block_if_readonly_mode

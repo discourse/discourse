@@ -1288,6 +1288,45 @@ RSpec.describe SessionController do
     end
   end
 
+  describe '#one_time_password' do
+    context 'missing token' do
+      it 'returns the right response' do
+        get "/session/otp"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context 'invalid token' do
+      it 'returns the right response' do
+        get "/session/otp/asd1231dasd123"
+
+        expect(response.status).to eq(404)
+      end
+
+      context 'when token is valid' do
+        it 'should authenticate user and delete token' do
+          user = Fabricate(:user)
+
+          get "/session/current.json"
+          expect(response.status).to eq(404)
+
+          token = SecureRandom.hex
+          $redis.setex "otp_#{token}", 10.minutes, user.username
+
+          get "/session/otp/#{token}"
+
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to("/")
+          expect($redis.get("otp_#{token}")).to eq(nil)
+
+          get "/session/current.json"
+          expect(response.status).to eq(200)
+        end
+      end
+    end
+
+  end
+
   describe '#forgot_password' do
     it 'raises an error without a username parameter' do
       post "/session/forgot_password.json"

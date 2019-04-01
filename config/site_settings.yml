@@ -1109,7 +1109,7 @@ files:
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
   restrict_letter_avatar_colors:
-    default: ''
+    default: ""
     type: list
     list_type: compact
     validator: "ColorListValidator"
@@ -1231,11 +1231,11 @@ security:
   enforce_second_factor:
     client: true
     type: enum
-    default: 'no'
+    default: "no"
     choices:
-      - 'no'
-      - 'staff'
-      - 'all'
+      - "no"
+      - "staff"
+      - "all"
   force_https:
     default: false
     shadowed_by_global: true
@@ -1919,7 +1919,7 @@ user_api:
   allow_user_api_keys:
     default: true
   allow_user_api_key_scopes:
-    default: "read|write|message_bus|push|notifications|session_info"
+    default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
   max_api_keys_per_user:
     default: 10
