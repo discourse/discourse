@@ -3,6 +3,9 @@ require_dependency 'mem_info'
 class AdminDashboardData
   include StatsCacheable
 
+  # kept for backward compatibility
+  GLOBAL_REPORTS ||= []
+
   def initialize(opts = {})
     @opts = opts
   end
