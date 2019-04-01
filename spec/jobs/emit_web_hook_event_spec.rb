@@ -26,19 +26,22 @@ describe Jobs::EmitWebHookEvent do
   end
 
   it "should not destroy webhook event in case of error" do
-    Excon::Connection.any_instance.stubs(:post).raises("error")
+    stub_request(:post, post_hook.payload_url).to_return(status: 500)
+
     subject.execute(
       web_hook_id: post_hook.id,
       payload: { id: post.id }.to_json,
       event_type: WebHookEventType::POST
     )
+
     expect(WebHookEvent.last.web_hook_id).to eq(post_hook.id)
   end
 
   context 'when the web hook is failed' do
     before do
       SiteSetting.retry_web_hook_events = true
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+
+      stub_request(:post, post_hook.payload_url)
         .to_return(body: 'Invalid Access', status: 403)
     end
 
@@ -78,7 +81,7 @@ describe Jobs::EmitWebHookEvent do
   end
 
   it 'does not raise an error for a ping event without payload' do
-    stub_request(:post, "https://meta.discourse.org/webhook_listener")
+    stub_request(:post, post_hook.payload_url)
       .to_return(body: 'OK', status: 200)
 
     subject.execute(
@@ -96,7 +99,7 @@ describe Jobs::EmitWebHookEvent do
   end
 
   it 'emits normally with sufficient arguments' do
-    stub_request(:post, "https://meta.discourse.org/webhook_listener")
+    stub_request(:post, post_hook.payload_url)
       .with(body: "{\"post\":{\"test\":\"some payload\"}}")
       .to_return(body: 'OK', status: 200)
 
@@ -123,7 +126,7 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'emit when event is related with defined categories' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .with(body: "{\"topic\":{\"test\":\"some payload\"}}")
         .to_return(body: 'OK', status: 200)
 
@@ -159,7 +162,7 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'emit when event is related with defined tags' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .with(body: "{\"topic\":{\"test\":\"some payload\"}}")
         .to_return(body: 'OK', status: 200)
 
@@ -174,7 +177,7 @@ describe Jobs::EmitWebHookEvent do
 
   describe '#web_hook_request' do
     it 'creates delivery event record' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .to_return(body: 'OK', status: 200)
 
       WebHookEventType.all.pluck(:name).each do |name|
@@ -191,7 +194,7 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'sets up proper request headers' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .to_return(headers: { test: 'string' }, body: 'OK', status: 200)
 
       subject.execute(
