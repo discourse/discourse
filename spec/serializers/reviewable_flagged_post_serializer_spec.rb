@@ -8,8 +8,8 @@ describe ReviewableFlaggedPostSerializer do
     p0 = Fabricate(:post)
     reviewable = PostActionCreator.spam(Fabricate(:user), p0).reviewable
     json = ReviewableFlaggedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
-    expect(json[:cooked]).to be_present
-    expect(json[:raw]).to be_present
+    expect(json[:cooked]).to eq(p0.cooked)
+    expect(json[:raw]).to eq(p0.raw)
     expect(json[:topic_url]).to eq(p0.url)
   end
 
