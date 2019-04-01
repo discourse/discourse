@@ -149,8 +149,6 @@ class SearchIndexer
       if topic
         SearchIndexer.update_posts_index(obj.id, topic.title, category_name, tag_names, obj.cooked)
         SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
-      else
-        Rails.logger.warn("Orphan post skipped in search_indexer, topic_id: #{obj.topic_id} post_id: #{obj.id} raw: #{obj.raw}")
       end
     end
 
