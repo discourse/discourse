@@ -961,7 +961,7 @@ table#user-badges {
 }
 
 // Styles for subtabs in admin
-@import "common/admin/dashboard_next";
+@import "common/admin/dashboard";
 @import "common/admin/settings";
 @import "common/admin/users";
 @import "common/admin/suspend";
@@ -980,4 +980,3 @@ table#user-badges {
 @import "common/admin/admin_report_stacked_chart";
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
-@import "common/admin/dashboard_previous";

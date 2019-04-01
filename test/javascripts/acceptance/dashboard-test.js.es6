@@ -1,6 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Dashboard Next", {
+acceptance("Dashboard", {
   loggedIn: true,
   settings: {
     dashboard_general_tab_activity_metrics: "page_view_total_reqs"
@@ -9,22 +9,16 @@ acceptance("Dashboard Next", {
 
 QUnit.test("Dashboard", async assert => {
   await visit("/admin");
-  assert.ok(exists(".dashboard-next"), "has dashboard-next class");
+  assert.ok(exists(".dashboard"), "has dashboard-next class");
 });
 
 QUnit.test("tabs", async assert => {
   await visit("/admin");
 
-  assert.ok(exists(".dashboard-next .navigation-item.general"), "general tab");
-  assert.ok(
-    exists(".dashboard-next .navigation-item.moderation"),
-    "moderation tab"
-  );
-  assert.ok(
-    exists(".dashboard-next .navigation-item.security"),
-    "security tab"
-  );
-  assert.ok(exists(".dashboard-next .navigation-item.reports"), "reports tab");
+  assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
+  assert.ok(exists(".dashboard .navigation-item.moderation"), "moderation tab");
+  assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
+  assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
 });
 
 QUnit.test("general tab", async assert => {
@@ -61,33 +55,33 @@ QUnit.test("general tab - activity metrics", async assert => {
 
 QUnit.test("reports tab", async assert => {
   await visit("/admin");
-  await click(".dashboard-next .navigation-item.reports .navigation-link");
+  await click(".dashboard .navigation-item.reports .navigation-link");
 
   assert.equal(
-    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    find(".dashboard .reports-index.section .reports-list .report").length,
     1
   );
 
-  await fillIn(".dashboard-next .filter-reports-input", "flags");
+  await fillIn(".dashboard .filter-reports-input", "flags");
 
   assert.equal(
-    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    find(".dashboard .reports-index.section .reports-list .report").length,
     0
   );
 
-  await click(".dashboard-next .navigation-item.security .navigation-link");
-  await click(".dashboard-next .navigation-item.reports .navigation-link");
+  await click(".dashboard .navigation-item.security .navigation-link");
+  await click(".dashboard .navigation-item.reports .navigation-link");
 
   assert.equal(
-    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    find(".dashboard .reports-index.section .reports-list .report").length,
     1,
     "navigating back and forth resets filter"
   );
 
-  await fillIn(".dashboard-next .filter-reports-input", "activities");
+  await fillIn(".dashboard .filter-reports-input", "activities");
 
   assert.equal(
-    find(".dashboard-next .reports-index.section .reports-list .report").length,
+    find(".dashboard .reports-index.section .reports-list .report").length,
     1,
     "filter is case insensitive"
   );

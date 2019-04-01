@@ -1,4 +1,4 @@
-class AdminDashboardNextIndexData < AdminDashboardNextData
+class AdminDashboardIndexData < AdminDashboardData
   def get_json
     {
       updated_at: Time.zone.now.as_json
