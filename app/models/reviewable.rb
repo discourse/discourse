@@ -93,12 +93,20 @@ class Reviewable < ActiveRecord::Base
       potential_spam: potential_spam
     )
   rescue ActiveRecord::RecordNotUnique
-    updates = {
-      status: statuses[:pending]
-    }
-    updates[:potential_spam] = true if potential_spam
-    where(target: target).update_all(updates)
-    find_by(target: target).tap { |r| r.log_history(:transitioned, created_by) }
+
+    row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
+      UPDATE reviewables
+      SET status = :status
+      WHERE status <> :status
+        AND target_id = :id
+        AND target_type = :type
+    SQL
+
+    where(target: target).update_all(potential_spam: true) if potential_spam
+
+    reviewable = find_by(target: target)
+    reviewable.log_history(:transitioned, created_by) if row_count > 0
+    reviewable
   end
 
   def add_score(
@@ -219,6 +227,7 @@ class Reviewable < ActiveRecord::Base
 
     self.status = Reviewable.statuses[status_symbol]
     save!
+
     log_history(:transitioned, performed_by)
     DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
 
