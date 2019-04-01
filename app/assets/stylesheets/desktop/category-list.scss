@@ -110,12 +110,12 @@
       padding: 0 0 10px 10px;
     }
 
-    .blue-border {
-      border-color: #0088cc;
+    .secondary-border {
+      border-color: $secondary-high;
     }
 
-    .grey-border {
-      border-color: #808281;
+    .primary-border {
+      border-color: $primary-high;
     }
   }
 }
