@@ -190,9 +190,25 @@ class SearchIndexer
 
       document = Nokogiri::HTML("<div>#{html}</div>", nil, Encoding::UTF_8.to_s)
 
-      document.css(
+      nodes = document.css(
         "div.#{CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS}"
-      ).remove
+      )
+
+      if nodes.present?
+        nodes.each do |node|
+          node.traverse do |child_node|
+            next if child_node == node
+
+            if %w{a img}.exclude?(child_node.name)
+              child_node.remove
+            elsif child_node.name == "a"
+              ATTRIBUTES.each do |attribute|
+                child_node.remove_attribute(attribute)
+              end
+            end
+          end
+        end
+      end
 
       document.css("a[href]").each do |node|
         node.remove_attribute("href") if node["href"] == node.text

@@ -61,7 +61,7 @@ describe SearchIndexer do
 
     scrubbed = scrub(html)
 
-    expect(scrubbed).to eq("Discourse 51%20PM")
+    expect(scrubbed).to eq("Discourse 51%20PM Untitled%20design%20(21)")
   end
 
   it 'correctly indexes a post according to version' do
@@ -137,7 +137,7 @@ describe SearchIndexer do
 
       post = Fabricate(:post, raw: <<~RAW)
       Let me see how I can fix this image
-      <img src="#{src}" width="2" height="2">
+      <img src="#{src}" title="GOT" alt="white walkers" width="2" height="2">
       RAW
 
       post.rebake!
@@ -149,7 +149,7 @@ describe SearchIndexer do
       )
 
       expect(post.post_search_data.raw_data).to eq(
-        "#{topic.title} #{topic.category.name} Let me see how I can fix this image"
+        "#{topic.title} #{topic.category.name} Let me see how I can fix this image white walkers GOT"
       )
     end
   end
