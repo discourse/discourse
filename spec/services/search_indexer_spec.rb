@@ -127,20 +127,26 @@ describe SearchIndexer do
 
     it 'should not include lightbox in search' do
       Jobs.run_immediately!
-      SiteSetting.max_image_height = 2000
       SiteSetting.crawl_images = true
-      FastImage.expects(:size).returns([1750, 2000])
+      SiteSetting.max_image_width = 1
+
+      stub_request(:get, "https://meta.discourse.org/some.png")
+        .to_return(status: 200, body: file_from_fixtures("logo.png").read)
 
       src = "https://meta.discourse.org/some.png"
 
       post = Fabricate(:post, raw: <<~RAW)
       Let me see how I can fix this image
-      <img src="#{src}" width="275" height="299">
+      <img src="#{src}" width="2" height="2">
       RAW
 
       post.rebake!
       post.reload
       topic = post.topic
+
+      expect(post.cooked).to include(
+        CookedPostProcessor::LIGHTBOX_WRAPPER_CSS_CLASS
+      )
 
       expect(post.post_search_data.raw_data).to eq(
         "#{topic.title} #{topic.category.name} Let me see how I can fix this image"
