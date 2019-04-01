@@ -431,10 +431,10 @@ private
       RETURNING user_id, flags_agreed + flags_disagreed + flags_ignored AS total
     SQL
 
-    Jobs.enqueue(
-      :truncate_user_flag_stats,
-      user_ids: result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
-    )
+    user_ids = result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
+    return if user_ids.blank?
+
+    Jobs.enqueue(:truncate_user_flag_stats, user_ids: user_ids)
   end
 end
 
