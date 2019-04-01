@@ -578,3 +578,96 @@
     }
   }
 }
+
+.version-checks {
+  display: flex;
+  flex-wrap: wrap;
+  .section-title {
+    flex: 1 1 100%;
+    border-bottom: 1px solid $primary-low;
+    margin-bottom: 0.5em;
+  }
+}
+
+.version-check {
+  display: flex;
+  flex: 1 1 50%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-self: flex-start;
+  justify-content: space-between;
+  padding: 10px 0 10px 0;
+  .upgrade-header {
+    flex: 1 1 100%;
+    @media screen and (max-width: 650px) {
+      margin: 0;
+    }
+    tr {
+      border: none;
+    }
+    th {
+      background: transparent;
+      padding: 0;
+    }
+  }
+  h2 {
+    flex: 1 1 100%;
+  }
+  .version-number {
+    font-size: $font-up-2;
+    line-height: $line-height-medium;
+    box-sizing: border-box;
+    font-weight: bold;
+    margin: 0 0 1em 0;
+    padding-right: 20px;
+    flex: 1 1 27%;
+    h3 {
+      flex: 1 0 auto;
+      white-space: nowrap;
+    }
+    h4 {
+      font-size: $font-down-2;
+      margin-bottom: 0;
+    }
+  }
+  .version-status {
+    display: flex;
+    align-items: center;
+    margin: 0 0 1em 0;
+    flex: 1 1 24%;
+    box-sizing: border-box;
+    padding-right: 20px;
+    min-width: 250px;
+    @include breakpoint(medium) {
+      max-width: unset;
+    }
+    .face {
+      margin: 0 0.75em 0 0;
+      font-size: $font-up-3;
+    }
+  }
+  &.critical .version-notes .normal-note {
+    display: none;
+  }
+  &.normal .version-notes .critical-note {
+    display: none;
+  }
+  .fa {
+    font-size: $font-up-4;
+  }
+  .up-to-date {
+    color: $success;
+  }
+  .updates-available {
+    color: $danger;
+  }
+  .critical-updates-available {
+    color: $danger;
+  }
+}
+
+.update-nag {
+  .d-icon {
+    font-size: $font-up-3;
+  }
+}
