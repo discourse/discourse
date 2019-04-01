@@ -733,8 +733,9 @@ class ApplicationController < ActionController::Base
     end
 
     # Used by clients authenticated via user API.
-    # If auth session is missing, this redirects to provided URL scheme
-    # which client can use to request a new one-time-password.
+    # Redirects to provided URL scheme if
+    # - request uses a valid public key and auth_redirect scheme
+    # - one_time_password scope is allowed
     if !current_user &&
       params.has_key?(:user_api_public_key) &&
       params.has_key?(:auth_redirect)
