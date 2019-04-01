@@ -136,6 +136,10 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
         font-weight: bold;
       }
     }
+    .profile-hidden {
+      font-size: $font-up-1;
+      margin-top: 0.5em;
+    }
   }
   // location and website
   .third-row {
