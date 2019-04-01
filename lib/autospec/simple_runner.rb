@@ -15,7 +15,17 @@ module Autospec
       end
       # we use our custom rspec formatter
       args = ["-r", "#{File.dirname(__FILE__)}/formatter.rb",
-              "-f", "Autospec::Formatter", specs.split].flatten.join(" ")
+        "-f", "Autospec::Formatter"]
+
+      command = begin
+        if ENV["PARALLEL_SPEC"] &&
+              !specs.split.any? { |s| puts s; s =~ /\:/ } # Parallel spec can't run specific groups
+          "parallel_rspec -- #{args.join(" ")} -- #{specs.split.join(" ")}"
+        else
+          "bin/rspec #{args.join(" ")} #{specs.split.join(" ")}"
+        end
+      end
+
       # launch rspec
       Dir.chdir(Rails.root) do
         env = { "RAILS_ENV" => "test" }
@@ -25,7 +35,7 @@ module Autospec
         end
         pid =
           @mutex.synchronize do
-            @pid = Process.spawn(env, "bin/rspec #{args}")
+            @pid = Process.spawn(env, command)
           end
 
         _, status = Process.wait2(pid)
