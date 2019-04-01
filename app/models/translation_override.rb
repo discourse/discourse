@@ -1,4 +1,3 @@
-require 'js_locale_helper'
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
