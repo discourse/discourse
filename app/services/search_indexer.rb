@@ -134,7 +134,7 @@ class SearchIndexer
     category_name = topic.category&.name if topic
     tag_names = topic.tags.pluck(:name).join(' ') if topic
 
-    if Post === obj &&
+    if Post === obj && obj.raw.present? &&
        (
          obj.saved_change_to_cooked? ||
          obj.saved_change_to_topic_id? ||

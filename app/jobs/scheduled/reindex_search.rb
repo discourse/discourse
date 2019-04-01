@@ -9,6 +9,7 @@ module Jobs
       rebuild_problem_categories
       rebuild_problem_users
       rebuild_problem_tags
+      clean_post_search_data
     end
 
     def rebuild_problem_categories(limit = 500)
@@ -60,8 +61,15 @@ module Jobs
 
     private
 
+    def clean_post_search_data
+      PostSearchData
+        .joins("LEFT JOIN posts p ON p.id = post_search_data.post_id")
+        .where("p.raw = ''")
+        .delete_all
+    end
+
     def load_problem_post_ids(limit)
-      Post.joins(:topic)
+      Post
         .where('posts.id IN (
                 SELECT p2.id FROM posts p2
                 LEFT JOIN post_search_data pd ON pd.locale = ? AND pd.version = ? AND p2.id = pd.post_id

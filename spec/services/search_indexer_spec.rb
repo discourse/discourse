@@ -103,5 +103,12 @@ describe SearchIndexer do
       expect { post.update!(topic_id: Fabricate(:topic).id) }
         .to change { post.reload.post_search_data.raw_data }
     end
+
+    it 'should not index posts with empty raw' do
+      expect do
+        post = Fabricate.build(:post, raw: "", post_type: Post.types[:small_action])
+        post.save!(validate: false)
+      end.to_not change { PostSearchData.count }
+    end
   end
 end
