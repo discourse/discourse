@@ -236,6 +236,10 @@ class GlobalSetting
 
   class BlankProvider < BaseProvider
     def lookup(key, default)
+
+      if key == :redis_port
+        return ENV["DISCOURSE_REDIS_PORT"] if ENV["DISCOURSE_REDIS_PORT"]
+      end
       default
     end
 
