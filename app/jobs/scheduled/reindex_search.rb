@@ -12,7 +12,7 @@ module Jobs
       clean_post_search_data
     end
 
-    def rebuild_problem_categories(limit = 500)
+    def rebuild_problem_categories(limit: 500)
       category_ids = load_problem_category_ids(limit)
 
       category_ids.each do |id|
@@ -21,7 +21,7 @@ module Jobs
       end
     end
 
-    def rebuild_problem_users(limit = 10000)
+    def rebuild_problem_users(limit: 10000)
       user_ids = load_problem_user_ids(limit)
 
       user_ids.each do |id|
@@ -30,7 +30,7 @@ module Jobs
       end
     end
 
-    def rebuild_problem_topics(limit = 10000)
+    def rebuild_problem_topics(limit: 10000)
       topic_ids = load_problem_topic_ids(limit)
 
       topic_ids.each do |id|
@@ -39,18 +39,18 @@ module Jobs
       end
     end
 
-    def rebuild_problem_posts(limit = 20000)
+    def rebuild_problem_posts(limit: 20000, indexer: SearchIndexer)
       post_ids = load_problem_post_ids(limit)
 
       post_ids.each do |id|
         # could be deleted while iterating through batch
         if post = Post.find_by(id: id)
-          SearchIndexer.index(post, force: true)
+          indexer.index(post, force: true)
         end
       end
     end
 
-    def rebuild_problem_tags(limit = 10000)
+    def rebuild_problem_tags(limit: 10000)
       tag_ids = load_problem_tag_ids(limit)
 
       tag_ids.each do |id|
@@ -75,6 +75,7 @@ module Jobs
                 LEFT JOIN post_search_data pd ON pd.locale = ? AND pd.version = ? AND p2.id = pd.post_id
                 WHERE pd.post_id IS NULL
                 )', SiteSetting.default_locale, Search::INDEX_VERSION)
+        .where("posts.raw != ''")
         .limit(limit)
         .order('posts.id DESC')
         .pluck(:id)

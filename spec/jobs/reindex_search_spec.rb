@@ -29,14 +29,53 @@ describe Jobs::ReindexSearch do
     end
   end
 
-  it "should clean up post_search_data of posts with empty raw" do
-    post = Fabricate(:post)
-    post2 = Fabricate(:post, post_type: Post.types[:small_action])
-    post2.raw = ""
-    post2.save!(validate: false)
+  describe 'rebuild_problem_posts' do
+    class FakeIndexer
+      def self.index(post, force:)
+        @posts ||= []
+        @posts.push(post)
+      end
 
-    expect { subject.execute({}) }.to change { PostSearchData.count }.by(-1)
-    expect(Post.all).to contain_exactly(post, post2)
-    expect(PostSearchData.all).to contain_exactly(post.post_search_data)
+      def self.posts
+        @posts
+      end
+
+      def self.reset
+        @posts.clear
+      end
+    end
+
+    after do
+      FakeIndexer.reset
+    end
+
+    it 'should not reindex posts with empty raw' do
+      post = Fabricate(:post)
+      post.post_search_data.destroy!
+
+      post2 = Fabricate.build(:post,
+        raw: "",
+        post_type: Post.types[:small_action]
+      )
+
+      post2.save!(validate: false)
+
+      subject.rebuild_problem_posts(indexer: FakeIndexer)
+
+      expect(FakeIndexer.posts).to contain_exactly(post)
+    end
+  end
+
+  describe '#execute' do
+    it "should clean up post_search_data of posts with empty raw" do
+      post = Fabricate(:post)
+      post2 = Fabricate(:post, post_type: Post.types[:small_action])
+      post2.raw = ""
+      post2.save!(validate: false)
+
+      expect { subject.execute({}) }.to change { PostSearchData.count }.by(-1)
+      expect(Post.all).to contain_exactly(post, post2)
+      expect(PostSearchData.all).to contain_exactly(post.post_search_data)
+    end
   end
 end
