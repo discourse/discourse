@@ -54,23 +54,32 @@
 }
 
 .reviewable-actions {
+  margin-right: -0.5em;
+
+  > div,
+  > button {
+    flex: 0 1 47%;
+    margin-right: 0.25em;
+    margin-bottom: 0.5em;
+  }
+
   .reviewable-action,
   .reviewable-action-dropdown .dropdown-select-box-header {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     .d-icon {
-      margin: 0;
+      margin: 0 0.15 0 0;
     }
   }
+}
 
-  .reviewable-action,
-  .reviewable-action-dropdown {
-    flex: 1;
-  }
-
-  .reviewable-action-dropdown:last-of-type {
-    margin-right: 0;
+.reviewable-scores-and-history table {
+  width: 100%;
+  table-layout: fixed;
+  td {
+    display: block;
+    white-space: nowrap;
   }
 }

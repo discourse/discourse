@@ -395,8 +395,8 @@ en:
           one: "1 user"
           other: "{{count}} users"
       topic_replies:
-        one: "(1 reply)"
-        other: "({{count}} replies)"
+        one: "1 reply"
+        other: "{{count}} replies"
       edit: "Edit"
       save: "Save"
       cancel: "Cancel"
@@ -437,12 +437,12 @@ en:
 
       types:
         reviewable_flagged_post:
-          title: 'Flagged Post'
+          title: "Flagged Post"
           flagged_by: "Flagged By"
         reviewable_queued_post:
-          title: 'Queued Post'
+          title: "Queued Post"
         reviewable_user:
-          title: 'User'
+          title: "User"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."

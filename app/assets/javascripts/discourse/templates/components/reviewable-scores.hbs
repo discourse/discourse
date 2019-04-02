@@ -1,24 +1,23 @@
 {{#if scores}}
   <table class='reviewable-scores'>
-    <tr>
-      <th class='user'>{{i18n "review.scores.submitted_by"}}</th>
-      <th>{{i18n "review.scores.description"}}</th>
-      <th>{{i18n "review.scores.score"}}</th>
-    </tr>
+    <tbody>
     {{#each scores as |rs|}}
       <tr class='reviewable-score'>
+
+        <td>{{d-icon "flag"}} {{rs.score_type.title}} <span class="badge-notification new-posts score">{{format-score rs.score}}</span></td>
         <td class='user'>
           {{#user-link user=rs.user}}
             {{avatar rs.user imageSize="tiny"}}
             {{rs.user.username}}
           {{/user-link}}
+
+        </td>
+        <td>
           {{user-flag-percentage
             agreed=rs.agree_stats.agreed
             disagreed=rs.agree_stats.disagreed
             ignored=rs.agree_stats.ignored}}
         </td>
-        <td>{{rs.score_type.title}}</td>
-        <td>{{format-score rs.score}}</td>
       </tr>
       {{#if rs.reviewable_conversation}}
         <tr>
@@ -37,5 +36,6 @@
         </tr>
       {{/if}}
     {{/each}}
+  </tbody>
   </table>
 {{/if}}

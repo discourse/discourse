@@ -2,6 +2,7 @@
   .reviewable-container {
     display: flex;
     flex-direction: row;
+    margin-top: 1em;
 
     .reviewable-list {
       flex: 1;
@@ -91,6 +92,7 @@
 .user-flag-percentage {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   margin-left: 0.5em;
 
   .percentage-label {
@@ -122,11 +124,11 @@
     color: dark-light-choose($primary-medium, $secondary-medium);
     display: flex;
     width: 100%;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.15em;
     font-size: $font-down-1;
-    align-items: center;
+    align-items: baseline;
     .reviewable-type {
-      margin-right: 1em;
+      margin-right: 0.25em;
     }
     .created-at {
       a {
@@ -136,6 +138,7 @@
     }
     .score {
       margin-right: 1em;
+      font-size: $font-down-1;
     }
     .status {
       color: dark-light-choose($primary-high, $secondary-high);
@@ -144,11 +147,17 @@
 
   .reviewable-contents {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .reviewable-actions {
-    margin-top: 0.5em;
+    margin-top: 1.5em;
     display: flex;
+    flex-wrap: wrap;
+
+    button {
+      white-space: nowrap;
+    }
 
     .reviewable-action,
     .reviewable-action-dropdown {
@@ -166,24 +175,48 @@
   margin-top: 1em;
 }
 
+.reviewable-scores-and-history {
+  display: inline-block;
+}
+
 .reviewable-scores,
 .reviewable-histories {
   min-width: 50%;
+  width: 100%;
 
   .user {
     display: flex;
     align-items: center;
+    white-space: nowrap;
 
     .user-flag-percentage {
       margin-left: 0.5em;
     }
   }
-  > tr > th {
-    text-align: left;
+
+  .d-icon {
+    font-size: $font-down-1;
+    color: $primary-high;
   }
-  > tr > th,
-  > tr > td {
-    padding: 0.25em;
+
+  .badge-notification {
+    line-height: $line-height-medium;
+  }
+
+  tbody {
+    border-width: 1px;
+    td:first-of-type {
+      padding-right: 1em;
+      min-width: 150px;
+      width: 25%;
+    }
+    > tr > th {
+      text-align: left;
+    }
+    > tr > th,
+    > tr > td {
+      padding: 0.25em;
+    }
   }
 }
 
@@ -207,24 +240,44 @@
 
 .reviewable-queued-post,
 .reviewable-flagged-post {
-  .reviewable-contents {
-    margin-top: 1em;
-  }
-
   .post-title {
     background-color: yellow;
   }
   .created-by {
     margin-right: 1em;
+    padding-top: 0.35em;
+  }
+
+  .names {
+    font-weight: bold;
+  }
+
+  .post-contents-wrapper {
+    display: flex;
   }
 
   .post-contents {
     width: 100%;
   }
   .post-topic {
+    width: 100%;
     font-weight: bold;
     color: $primary-medium;
-    margin-bottom: 1em;
+    margin-bottom: 0.75em;
+    a {
+      display: block;
+      font-size: $font-up-2;
+      margin-right: 0.75em;
+    }
+    .topic-statuses {
+      &:empty {
+        display: none;
+      }
+    }
+    .reply-count {
+      font-size: $font-down-1;
+      font-weight: normal;
+    }
   }
 }
 
@@ -232,6 +285,7 @@
   .post-body {
     max-width: $topic-body-width;
     max-height: 300px;
+    margin-top: 0.5em;
     overflow-y: auto;
 
     p,
