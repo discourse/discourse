@@ -16,7 +16,7 @@
       {{#each model as |item|}}
         <tr class="admin-list-item">
           <td class="col term">
-            {{#link-to 'adminSearchLogs.term' (query-params term=item.term) class="test"}}
+            {{#link-to 'adminSearchLogs.term' (query-params term=item.term period=period) class="test"}}
               {{item.term}}
             {{/link-to}}
           </td>
