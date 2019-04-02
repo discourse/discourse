@@ -242,6 +242,7 @@ en:
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
+  email_template_cant_be_modified: "This email template can't be modified"
 
   reading_time: "Reading time"
   likes: "Likes"
