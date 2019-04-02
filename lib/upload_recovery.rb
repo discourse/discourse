@@ -15,34 +15,29 @@ class UploadRecovery
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
 
         analyzer.cooked_stripped.css("img", "a").each do |media|
-          if media.name == "img"
+          if media.name == "img" && orig_src = media["data-orig-src"]
             if dom_class = media["class"]
               if (Post.white_listed_image_classes & dom_class.split).count > 0
                 next
               end
             end
 
-            orig_src = media["data-orig-src"]
-
-            if orig_src
-              if @dry_run
-                puts "#{post.full_url} #{orig_src}"
-              else
-                recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
-              end
+            if @dry_run
+              puts "#{post.full_url} #{orig_src}"
+            else
+              recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
             end
-          elsif media.name == "a"
-            href = media["href"]
+          elsif url = (media["href"] || media["src"])
+            data = Upload.extract_upload_url(url)
+            next unless data
 
-            if href && data = Upload.extract_upload_url(href)
-              sha1 = data[2]
+            sha1 = data[2]
 
-              unless upload = Upload.get_from_url(href)
-                if @dry_run
-                  puts "#{post.full_url} #{href}"
-                else
-                  recover_post_upload(post, sha1)
-                end
+            unless upload = Upload.get_from_url(url)
+              if @dry_run
+                puts "#{post.full_url} #{url}"
+              else
+                recover_post_upload(post, sha1)
               end
             end
           end
