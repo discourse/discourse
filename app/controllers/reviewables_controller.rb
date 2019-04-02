@@ -143,6 +143,21 @@ class ReviewablesController < ApplicationController
     end
   end
 
+  def settings
+    raise Discourse::InvalidAccess.new unless current_user.admin?
+
+    post_action_types = PostActionType.where(id: PostActionType.flag_types.values).order('id')
+    data = { reviewable_score_types: post_action_types }
+
+    if request.put?
+      params[:bonuses].each do |id, bonus|
+        PostActionType.where(id: id).update_all(score_bonus: bonus.to_f)
+      end
+    end
+
+    render_serialized(data, ReviewableSettingsSerializer, rest_serializer: true)
+  end
+
 protected
 
   def find_reviewable

@@ -12,6 +12,22 @@ describe ReviewablesController do
       put "/review/123/perform/approve.json"
       expect(response.code).to eq("403")
     end
+
+    it "denies settings" do
+      get "/review/settings.json"
+      expect(response.code).to eq("403")
+    end
+  end
+
+  context "regular user" do
+    before do
+      sign_in(Fabricate(:user))
+    end
+
+    it "does not allow settings" do
+      get "/review/settings.json"
+      expect(response.code).to eq("403")
+    end
   end
 
   context "when logged in" do
@@ -304,6 +320,22 @@ describe ReviewablesController do
         json_topic = json['reviewable_topics'].find { |rt| rt['id'] == post2.topic_id }
         expect(json_topic['stats']['count']).to eq(2)
         expect(json_topic['stats']['unique_users']).to eq(2)
+      end
+    end
+
+    context "#settings" do
+      it "renders the settings as JSON" do
+        get "/review/settings.json"
+        expect(response.code).to eq("200")
+        json = ::JSON.parse(response.body)
+        expect(json['reviewable_settings']).to be_present
+        expect(json['reviewable_score_types']).to be_present
+      end
+
+      it "allows the settings to be updated" do
+        put "/review/settings.json", params: { bonuses: { 8 => 3.45 } }
+        expect(response.code).to eq("200")
+        expect(PostActionType.find_by(id: 8).score_bonus).to eq(3.45)
       end
     end
 

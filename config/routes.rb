@@ -318,6 +318,8 @@ Discourse::Application.routes.draw do
   get "review" => "reviewables#index" # For ember app
   get "review/:reviewable_id" => "reviewables#show", constraints: { reviewable_id: /\d+/ }
   get "review/topics" => "reviewables#topics"
+  get "review/settings" => "reviewables#settings"
+  put "review/settings" => "reviewables#settings"
   put "review/:reviewable_id/perform/:action_id" => "reviewables#perform", constraints: {
     reviewable_id: /\d+/,
     action_id: /[a-z\_]+/
