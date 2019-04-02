@@ -390,6 +390,7 @@ RSpec.describe ApplicationController do
     end
 
     it 'redirects correctly with valid params' do
+      SiteSetting.login_required = true
       args[:user_api_public_key] = public_key
       args[:auth_redirect] = "discourse://auth_redirect"
 
