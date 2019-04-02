@@ -185,3 +185,7 @@ end
 #  created_at         :datetime         not null
 #  search_result_type :integer
 #
+# Indexes
+#
+#  index_search_logs_on_created_at  (created_at)
+#
