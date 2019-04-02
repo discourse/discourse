@@ -13,4 +13,13 @@ describe ReviewableFlaggedPostSerializer do
     expect(json[:topic_url]).to eq(p0.url)
   end
 
+  it "works when the topic is deleted" do
+    reviewable = Fabricate(:reviewable_queued_post)
+    reviewable.topic.update(deleted_at: Time.now)
+    reviewable.reload
+
+    json = ReviewableQueuedPostSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+    expect(json[:id]).to be_present
+  end
+
 end
