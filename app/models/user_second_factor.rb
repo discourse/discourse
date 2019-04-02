@@ -37,5 +37,6 @@ end
 #
 # Indexes
 #
-#  index_user_second_factors_on_user_id  (user_id)
+#  index_user_second_factors_on_method_and_enabled  (method,enabled)
+#  index_user_second_factors_on_user_id             (user_id)
 #

@@ -732,10 +732,12 @@ end
 #  suppress_from_latest              :boolean          default(FALSE)
 #  minimum_required_tags             :integer          default(0), not null
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
+#  search_priority                   :integer          default(0)
 #
 # Indexes
 #
-#  index_categories_on_email_in     (email_in) UNIQUE
-#  index_categories_on_topic_count  (topic_count)
-#  unique_index_categories_on_name  (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  index_categories_on_email_in         (email_in) UNIQUE
+#  index_categories_on_search_priority  (search_priority)
+#  index_categories_on_topic_count      (topic_count)
+#  unique_index_categories_on_name      (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #
