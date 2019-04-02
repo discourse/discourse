@@ -132,12 +132,9 @@
     &.has-background {
       .user-profile-image {
         height: 200px;
-        background-size: contain;
-        background-position: top center;
-        background-repeat: no-repeat;
       }
       .user-profile-avatar {
-        margin-top: s(-24);
+        margin-top: s(-15);
       }
     }
 

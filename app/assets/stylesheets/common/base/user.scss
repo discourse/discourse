@@ -101,6 +101,14 @@
     width: 100%;
     margin-bottom: 15px;
 
+    &.has-background {
+      .user-profile-image {
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+    }
+
     .secondary {
       display: inline-block;
       width: 100%;
