@@ -207,7 +207,7 @@
     border-width: 1px;
     td:first-of-type {
       padding-right: 1em;
-      min-width: 150px;
+      min-width: 180px;
       width: 25%;
     }
     > tr > th {
@@ -264,10 +264,14 @@
     font-weight: bold;
     color: $primary-medium;
     margin-bottom: 0.75em;
-    a {
+    .title-text {
+      color: $primary-high;
       display: block;
       font-size: $font-up-2;
       margin-right: 0.75em;
+    }
+    a.title-text {
+      color: $tertiary;
     }
     .topic-statuses {
       &:empty {

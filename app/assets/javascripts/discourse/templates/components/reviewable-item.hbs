@@ -5,7 +5,9 @@
     <span class='created-at'>
       {{#link-to 'review.show' reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
     </span>
+    {{#if reviewable.topic}}
     <span class='reply-count'>{{i18n "review.topic_replies" count=reviewable.topic.reply_count}}</span>
+    {{/if}}
     <span class='status'>
       {{#if reviewable.approved}}
         {{d-icon "check"}} {{i18n "review.statuses.approved.title"}}
