@@ -3,38 +3,38 @@
 
     <section class="{{if collapsedInfo 'collapsed-info'}} about {{if hasProfileBackground 'has-background' 'no-background'}}" >
     {{#unless collapsedInfo}}
+    {{#if showStaffCounters}}
+      <div class='staff-counters'>
+        {{#if model.number_of_flags_given}}
+          <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>{{i18n 'user.staff_counters.flags_given'}}</div>
+        {{/if}}
+        {{#if model.number_of_flagged_posts}}
+          <div>
+            {{#link-to 'review' (query-params username=model.username status='all' type='ReviewableFlaggedPost')}}
+              <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n 'user.staff_counters.flagged_posts'}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        {{#if model.number_of_deleted_posts}}
+          <div>
+            {{#link-to 'user.deletedPosts' model}}
+              <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>{{i18n 'user.staff_counters.deleted_posts'}}
+            {{/link-to}}
+          </div>
+        {{/if}}
+        {{#if model.number_of_suspensions}}
+          <div>
+            <a {{action "showSuspensions"}}>
+              <span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}
+            </a>
+          </div>
+        {{/if}}
+        {{#if model.warnings_received_count}}
+          <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n 'user.staff_counters.warnings_received'}}</div>
+        {{/if}}
+      </div>
+    {{/if}}
     <div class="user-profile-image" style={{model.profileBackground}}></div>
-      {{#if showStaffCounters}}
-        <div class='staff-counters'>
-          {{#if model.number_of_flags_given}}
-            <div><span class="helpful-flags">{{model.number_of_flags_given}}</span>{{i18n 'user.staff_counters.flags_given'}}</div>
-          {{/if}}
-          {{#if model.number_of_flagged_posts}}
-            <div>
-              {{#link-to 'review' (query-params username=model.username status='all' type='ReviewableFlaggedPost')}}
-                <span class="flagged-posts">{{model.number_of_flagged_posts}}</span>{{i18n 'user.staff_counters.flagged_posts'}}
-              {{/link-to}}
-            </div>
-          {{/if}}
-          {{#if model.number_of_deleted_posts}}
-            <div>
-              {{#link-to 'user.deletedPosts' model}}
-                <span class="deleted-posts">{{model.number_of_deleted_posts}}</span>{{i18n 'user.staff_counters.deleted_posts'}}
-              {{/link-to}}
-            </div>
-          {{/if}}
-          {{#if model.number_of_suspensions}}
-            <div>
-              <a {{action "showSuspensions"}}>
-                <span class="suspensions">{{model.number_of_suspensions}}</span>{{i18n 'user.staff_counters.suspensions'}}
-              </a>
-            </div>
-          {{/if}}
-          {{#if model.warnings_received_count}}
-            <div><span class="warnings-received">{{model.warnings_received_count}}</span>{{i18n 'user.staff_counters.warnings_received'}}</div>
-          {{/if}}
-        </div>
-      {{/if}}
     {{/unless}}
 
       <div class='details'>
