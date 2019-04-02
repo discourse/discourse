@@ -1,8 +1,7 @@
-<p>
+<div class="admin-title">
   {{period-chooser period=period}}
   {{combo-box content=searchTypeOptions value=searchType class='search-logs-filter'}}
-</p>
-<br>
+</div>
 
 <h2>
   {{#link-to 'full-page-search' (query-params q=term)}}{{term}}{{/link-to}}
