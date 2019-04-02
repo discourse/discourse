@@ -359,9 +359,17 @@ en:
         placeholder: "type the message title here"
 
     review:
+      settings:
+        saved: "Saved"
+        save_changes: "Save Changes"
+        title: "Settings"
+        score_bonuses:
+          title: "Score Bonuses"
+          description: "Bonuses allow certain types to be scored higher than others so they can be prioritized. Note: changing these values will not apply to previously scored items."
+
       moderation_history: "Moderation History"
-      view_all: "view all"
-      grouped_by_topic: "grouped by topic"
+      view_all: "View All"
+      grouped_by_topic: "Grouped by Topic"
       none: "There are no items to review."
       view_pending: "view pending"
       topic_has_pending:

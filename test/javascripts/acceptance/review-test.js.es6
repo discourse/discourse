@@ -33,6 +33,16 @@ QUnit.test("Grouped by topic", async assert => {
   );
 });
 
+QUnit.test("Settings", async assert => {
+  await visit("/review/settings");
+
+  assert.ok(find(".reviewable-score-type").length, "has a list of bonuses");
+
+  await fillIn(".reviewable-score-type:eq(0) .field input ", "0.5");
+  await click(".save-settings");
+  assert.ok(find(".reviewable-settings .saved").length, "it saved");
+});
+
 QUnit.test("Flag related", async assert => {
   await visit("/review");
 

@@ -1,4 +1,5 @@
 /* You might be looking for navigation-item. */
+import { iconHTML } from "discourse-common/lib/icon-library";
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
@@ -6,9 +7,13 @@ export default Ember.Component.extend({
   classNameBindings: ["active"],
   router: Ember.inject.service(),
 
-  @computed("path")
-  fullPath(path) {
-    return Discourse.getURL(path);
+  @computed("label", "i18nLabel", "icon")
+  contents(label, i18nLabel, icon) {
+    let text = i18nLabel || I18n.t(label);
+    if (icon) {
+      return `${iconHTML(icon)} ${text}`.htmlSafe();
+    }
+    return text;
   },
 
   @computed("route", "router.currentRoute")

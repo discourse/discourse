@@ -1,0 +1,29 @@
+<div class='reviewable-settings'>
+  <h4>{{i18n "review.settings.score_bonuses.title"}}</h4>
+  <p class='description'>{{i18n "review.settings.score_bonuses.description"}}</p>
+
+  {{#each settings.reviewable_score_types as |rst|}}
+    <div class='reviewable-score-type'>
+      <div class='title'>{{rst.title}}</div>
+      <div class='field'>
+        {{input value=rst.score_bonus}}
+      </div>
+    </div>
+  {{/each}}
+
+  <div class='reviewable-score-type'>
+    <div class='title'></div>
+    <div class='field'>
+      {{d-button
+        icon="check"
+        label="review.settings.save_changes"
+        class="btn-primary save-settings"
+        action=(action "save")
+        disabled=saving}}
+
+      {{#if saved}}
+        <span class='saved'>{{i18n "review.settings.saved"}}</span>
+      {{/if}}
+    </div>
+  </div>
+</div>

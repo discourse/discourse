@@ -1,4 +1,8 @@
 .reviewable {
+  .nav-pills {
+    margin-bottom: 1em;
+  }
+
   .reviewable-container {
     display: flex;
     flex-direction: row;
@@ -19,6 +23,23 @@
 
     .reviewable-list + .reviewable-filters {
       margin-left: 1em;
+    }
+  }
+}
+
+.reviewable-settings {
+  p.description {
+    margin-bottom: 2em;
+  }
+
+  .saved {
+    margin-left: 0.5em;
+  }
+  .reviewable-score-type {
+    display: flex;
+
+    .title {
+      width: 30%;
     }
   }
 }
