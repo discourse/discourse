@@ -169,7 +169,7 @@ export default Ember.Mixin.create({
       if (target) {
         if (!this.site.mobileView) {
           let position = target.offset();
-          if (target.parents('.d-header')) {
+          if (target.parents(".d-header")) {
             position = target.position();
             position.left += 10;
           }
