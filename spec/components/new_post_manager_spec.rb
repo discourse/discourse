@@ -133,6 +133,27 @@ describe NewPostManager do
       end
     end
 
+    context "with uncategorized disabled, and approval" do
+      before do
+        SiteSetting.allow_uncategorized_topics = false
+        SiteSetting.approve_unless_trust_level = 4
+      end
+
+      it "will return an enqueue result" do
+        npm = NewPostManager.new(
+          Fabricate(:user),
+          title: 'this is a new topic title',
+          raw: "this is the raw content",
+          category: Fabricate(:category).id
+        )
+
+        result = NewPostManager.default_handler(npm)
+        expect(NewPostManager.queue_enabled?).to eq(true)
+        expect(result.action).to eq(:enqueued)
+        expect(result.errors).to be_blank
+      end
+    end
+
     context 'with staged moderation setting enabled' do
       before do
         SiteSetting.approve_unless_staged = true
