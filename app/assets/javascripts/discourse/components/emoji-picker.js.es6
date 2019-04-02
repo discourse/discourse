@@ -365,6 +365,7 @@ export default Ember.Component.extend({
             $this.off("touchend");
           });
           $this.on("touchmove", () => $this.off("touchend"));
+          return false;
         });
     } else {
       $emojisContainer
