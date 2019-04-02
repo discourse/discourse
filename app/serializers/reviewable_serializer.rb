@@ -93,7 +93,7 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def include_topic_url?
-    object.topic_id.present?
+    object.topic.present?
   end
 
   def include_topic_id?
