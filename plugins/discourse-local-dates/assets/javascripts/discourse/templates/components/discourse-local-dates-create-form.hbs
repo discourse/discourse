@@ -1,18 +1,17 @@
 {{#d-modal-body
   title="discourse_local_dates.create.modal_title"
-  subtitle="discourse_local_dates.create.modal_subtitle"
   class="discourse-local-dates-create-modal"
   style="overflow: auto"}}
 
   <div class="form">
     {{#unless isValid}}
-      <div class="alert alert-error">
+      <div class="validation-error alert alert-error">
         {{i18n "discourse_local_dates.create.form.invalid_date"}}
       </div>
     {{else}}
       <div class="preview alert alert-info">
         <b>{{i18n "discourse_local_dates.create.form.preview_for" timezone=currentUserTimezone}}</b>
-        <span>{{currentPreview}}</span>
+        {{currentPreview}}
       </div>
     {{/unless}}
 
@@ -87,7 +86,6 @@
               onSelect=(action (mut timezone))}}
           </div>
         </div>
-
       </div>
     </div>
 
