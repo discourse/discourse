@@ -734,7 +734,6 @@ class Search
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
-      .where("topics.deleted_at" => nil)
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
