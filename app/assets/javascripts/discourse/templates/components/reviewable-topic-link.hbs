@@ -1,9 +1,8 @@
 <div class='post-topic'>
   {{#if reviewable.topic}}
-    {{i18n "review.topic"}}
     {{topic-status topic=reviewable.topic}}
     <a href={{reviewable.topic_url}} class='title'>{{reviewable.topic.title}}</a>
-    {{i18n "review.topic_replies" count=reviewable.topic.reply_count}}
+    {{category-badge reviewable.category}}
   {{else if (has-block)}}
     {{yield}}
   {{else}}

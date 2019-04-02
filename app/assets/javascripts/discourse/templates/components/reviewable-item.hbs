@@ -1,16 +1,12 @@
 <div class='reviewable-item {{customClass}}' data-reviewable-id={{reviewable.id}}>
   <div class='reviewable-meta-data'>
-    <div class='reviewable-type'>{{reviewable.humanType}}</div>
-    <div class='reviewable-category'>
-      {{category-badge reviewable.category}}
-    </div>
-
-    <div class='created-at'>
+    <span class='reviewable-type'>{{reviewable.humanType}}</span>
+    <span class='badge-notification new-posts score' title={{i18n "review.scores.score"}}>{{format-score reviewable.score}}</span>
+    <span class='created-at'>
       {{#link-to 'review.show' reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
-    </div>
-    <div class='score' title={{i18n "review.scores.score"}}>{{format-score reviewable.score}}</div>
-
-    <div class='status'>
+    </span>
+    <span class='reply-count'>{{i18n "review.topic_replies" count=reviewable.topic.reply_count}}</span>
+    <span class='status'>
       {{#if reviewable.approved}}
         {{d-icon "check"}} {{i18n "review.statuses.approved.title"}}
       {{else if reviewable.rejected}}
@@ -18,7 +14,7 @@
       {{else if reviewable.ignored}}
         {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}}
       {{/if}}
-    </div>
+    </span>
   </div>
 
   <div class='reviewable-contents'>
@@ -38,8 +34,10 @@
       </div>
     {{else}}
       {{#component reviewableComponent reviewable=reviewable tagName=''}}
-        {{reviewable-scores scores=reviewable.reviewable_scores}}
-        {{reviewable-histories histories=reviewable.reviewable_histories}}
+      <div class='reviewable-scores-and-history'>
+        {{reviewable-scores scores=reviewable.reviewable_scores tagName=''}}
+        {{reviewable-histories histories=reviewable.reviewable_histories tagName=''}}
+      </div>
       {{/component}}
     {{/if}}
   </div>
