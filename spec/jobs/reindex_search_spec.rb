@@ -25,7 +25,7 @@ describe Jobs::ReindexSearch do
       model.reload
 
       subject.execute({})
-      expect(model.send("#{m}_search_data").version).to eq Search::INDEX_VERSION
+      expect(model.send("#{m}_search_data").version).to eq SearchIndexer::INDEX_VERSION
     end
   end
 

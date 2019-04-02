@@ -3,6 +3,14 @@ require 'rails_helper'
 describe SearchIndexer do
   let(:post_id) { 99 }
 
+  before do
+    SearchIndexer.enable
+  end
+
+  after do
+    SearchIndexer.disable
+  end
+
   def scrub(html, strip_diacritics: false)
     SearchIndexer.scrub_html_for_search(html, strip_diacritics: strip_diacritics)
   end
@@ -75,7 +83,7 @@ describe SearchIndexer do
     raw_data, locale, version = PostSearchData.where(post_id: post_id).pluck(:raw_data, :locale, :version)[0]
     expect(raw_data).to eq("This is a test")
     expect(locale).to eq("en")
-    expect(version).to eq(Search::INDEX_VERSION)
+    expect(version).to eq(SearchIndexer::INDEX_VERSION)
 
     SearchIndexer.update_posts_index(post_id, "tester", "", nil, nil)
 
@@ -85,14 +93,6 @@ describe SearchIndexer do
 
   describe '.index' do
     let(:post) { Fabricate(:post) }
-
-    before do
-      SearchIndexer.enable
-    end
-
-    after do
-      SearchIndexer.disable
-    end
 
     it 'should index posts correctly' do
       expect { post }.to change { PostSearchData.count }.by(1)
@@ -150,6 +150,25 @@ describe SearchIndexer do
 
       expect(post.post_search_data.raw_data).to eq(
         "#{topic.title} #{topic.category.name} Let me see how I can fix this image white walkers GOT"
+      )
+    end
+  end
+
+  describe '.queue_post_reindex' do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+
+    it 'should reset the version of search data for all posts in the topic' do
+      post2 = Fabricate(:post)
+
+      SearchIndexer.queue_post_reindex(topic.id)
+
+      expect(post.reload.post_search_data.version).to eq(
+        SearchIndexer::REINDEX_VERSION
+      )
+
+      expect(post2.reload.post_search_data.version).to eq(
+        SearchIndexer::INDEX_VERSION
       )
     end
   end
