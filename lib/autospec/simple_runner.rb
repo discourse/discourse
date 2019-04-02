@@ -14,14 +14,18 @@ module Autospec
         self.abort
       end
       # we use our custom rspec formatter
-      args = ["-r", "#{File.dirname(__FILE__)}/formatter.rb",
-        "-f", "Autospec::Formatter"]
+      args = ["-r", "#{File.dirname(__FILE__)}/formatter.rb"]
 
       command = begin
         if ENV["PARALLEL_SPEC"] &&
               !specs.split.any? { |s| puts s; s =~ /\:/ } # Parallel spec can't run specific groups
+
+          args += ["-f", "progress", "-f", "Autospec::ParallelFormatter", "-o", "./tmp/rspec_result"]
+          args += ["-f", "ParallelTests::RSpec::RuntimeLogger", "-o", "./tmp/parallel_runtime_rspec.log"] if specs == "spec"
+
           "parallel_rspec -- #{args.join(" ")} -- #{specs.split.join(" ")}"
         else
+          args += ["-f", "Autospec::Formatter"]
           "bin/rspec #{args.join(" ")} #{specs.split.join(" ")}"
         end
       end
