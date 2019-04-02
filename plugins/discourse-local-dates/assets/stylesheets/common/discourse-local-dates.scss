@@ -57,9 +57,10 @@
 }
 
 .discourse-local-dates-create-modal {
-  min-height: 200px;
+  min-height: 250px;
   display: flex;
   flex-direction: row;
+  padding: 0.5em;
 
   .form {
     flex: 1 0 0px;
@@ -94,7 +95,7 @@
           display: flex;
           flex-direction: row;
           padding-top: 0.5em;
-          margin: 0 1em;
+          margin: 0 0.5em;
           font-size: $font-up-2;
         }
       }
@@ -115,13 +116,13 @@
       .timezone {
         margin-left: 1em;
         .timezone-input {
-          width: 180px;
+          width: 160px;
         }
       }
 
       .time {
         .time-input {
-          width: 80px;
+          width: auto;
           margin: 0;
           padding: 0;
           text-align: center;
@@ -132,11 +133,20 @@
     .preview {
       text-align: center;
       margin-top: 0;
-      margin-bottom: 1em;
-    }
+      margin-bottom: 0.5em;
+      display: flex;
+      align-items: center;
+      padding: 0.5em;
+      flex-wrap: wrap;
 
-    .validation-error {
-      color: $danger;
+      b {
+        margin-right: 0.5em;
+      }
+
+      b + p {
+        margin: 0;
+        display: inline-block;
+      }
     }
 
     .recurrence {
@@ -144,6 +154,10 @@
         width: 300px;
       }
     }
+  }
+
+  .validation-error {
+    margin-bottom: 0.5em;
   }
 
   .format {
@@ -176,6 +190,11 @@
 
 @media (max-width: 700px) {
   .discourse-local-dates-create-modal {
+    .from,
+    .to {
+      width: 100%;
+    }
+
     .form {
       .date-time-configuration {
         flex-direction: column;
@@ -191,7 +210,19 @@
           }
 
           .to-indicator {
-            margin: 0.5em 1em;
+            margin: 0 0.5em;
+            padding: 0;
+          }
+        }
+
+        .date {
+          .date-input {
+            width: 100%;
+          }
+        }
+        .time {
+          .time-input {
+            width: 100%;
           }
         }
 
