@@ -1429,6 +1429,9 @@ en:
     conditional_loading_section:
       loading: Loading...
 
+    category_row:
+      topic_count: "{{count}} topics in this category"
+
     select_kit:
       default_header_text: Select...
       no_content: No matches found

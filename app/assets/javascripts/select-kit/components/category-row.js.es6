@@ -75,7 +75,7 @@ export default SelectKitRowComponent.extend({
     "options.countSubcategories"
   )
   topicCount(totalCount, topicCount, countSubcats) {
-    return `&times; ${countSubcats ? totalCount : topicCount}`.htmlSafe();
+    return countSubcats ? totalCount : topicCount;
   },
 
   @computed("displayCategoryDescription", "category.description")
