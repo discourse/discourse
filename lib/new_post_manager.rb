@@ -188,6 +188,7 @@ class NewPostManager
       reviewable_by_moderator: true
     )
     reviewable.payload['title'] = @args[:title] if @args[:title].present?
+    reviewable.category_id = args[:category] if args[:category].present?
 
     create_options = reviewable.create_options
 
