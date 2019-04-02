@@ -1907,8 +1907,8 @@ RSpec.describe TopicsController do
 
   describe '#make_banner' do
     it 'needs you to be a staff member' do
-      sign_in(Fabricate(:user))
-      put "/t/99/make-banner.json"
+      topic = Fabricate(:topic, user: sign_in(Fabricate(:trust_level_4)))
+      put "/t/#{topic.id}/make-banner.json"
       expect(response).to be_forbidden
     end
 
@@ -1926,8 +1926,8 @@ RSpec.describe TopicsController do
 
   describe '#remove_banner' do
     it 'needs you to be a staff member' do
-      sign_in(Fabricate(:user))
-      put "/t/99/remove-banner.json"
+      topic = Fabricate(:topic, user: sign_in(Fabricate(:trust_level_4)), archetype: Archetype.banner)
+      put "/t/#{topic.id}/remove-banner.json"
       expect(response).to be_forbidden
     end
 

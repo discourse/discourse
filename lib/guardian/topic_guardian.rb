@@ -154,4 +154,8 @@ module TopicGuardian
   def can_update_bumped_at?
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
+
+  def can_banner_topic?(topic)
+    authenticated? && !topic.private_message? && is_staff?
+  end
 end

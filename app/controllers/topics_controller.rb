@@ -408,7 +408,7 @@ class TopicsController < ApplicationController
 
   def make_banner
     topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_banner_topic!(topic)
 
     topic.make_banner!(current_user)
 
@@ -417,7 +417,7 @@ class TopicsController < ApplicationController
 
   def remove_banner
     topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_banner_topic!(topic)
 
     topic.remove_banner!(current_user)
 
