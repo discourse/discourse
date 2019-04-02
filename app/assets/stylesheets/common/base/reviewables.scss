@@ -116,18 +116,18 @@
 
 .reviewable-item {
   margin-bottom: 1em;
-  border-bottom: 1px solid dark-light-choose($primary-low, $secondary-low);
+  padding-top: 2em;
+  border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
 
   .topic-statuses {
     font-size: $font-up-2;
-    line-height: $line-height-medium;
   }
 
   .reviewable-meta-data {
     color: dark-light-choose($primary-medium, $secondary-medium);
     display: flex;
     width: 100%;
-    margin-bottom: 0.15em;
+    margin-bottom: 0.5em;
     font-size: $font-down-1;
     align-items: baseline;
     .reviewable-type {
@@ -145,6 +145,9 @@
     }
     .status {
       color: dark-light-choose($primary-high, $secondary-high);
+    }
+    .reply-count {
+      margin-right: 1em;
     }
   }
 
@@ -215,7 +218,7 @@
     }
     > tr > th,
     > tr > td {
-      padding: 0.25em;
+      padding: 0.5em;
     }
   }
 }
@@ -261,10 +264,10 @@
   }
   .post-topic {
     width: 100%;
-    font-weight: bold;
     color: $primary-medium;
     margin-bottom: 0.75em;
     .title-text {
+      font-weight: bold;
       color: $primary-high;
       display: block;
       font-size: $font-up-2;
@@ -274,11 +277,6 @@
       &:empty {
         display: none;
       }
-    }
-    .reply-count {
-      font-size: $font-down-1;
-      font-weight: normal;
-      margin-right: 1em;
     }
   }
 }
