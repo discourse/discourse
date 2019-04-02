@@ -1,7 +1,6 @@
 require_dependency 'search/grouped_search_results'
 
 class Search
-  INDEX_VERSION = 2.freeze
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
   cattr_accessor :preloaded_topic_custom_fields

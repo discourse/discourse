@@ -2,6 +2,8 @@
 require_dependency 'search'
 
 class SearchIndexer
+  INDEX_VERSION = 2
+  REINDEX_VERSION = 0
 
   def self.disable
     @disabled = true
@@ -61,7 +63,7 @@ class SearchIndexer
       raw_data: indexed_data,
       id: id,
       locale: SiteSetting.default_locale,
-      version: Search::INDEX_VERSION
+      version: INDEX_VERSION
     }
 
     # Would be nice to use AR here but not sure how to execut Postgres functions
@@ -116,10 +118,12 @@ class SearchIndexer
   def self.queue_post_reindex(topic_id)
     return if @disabled
 
-    DB.exec(<<~SQL, topic_id: topic_id)
+    DB.exec(<<~SQL, topic_id: topic_id, version: REINDEX_VERSION)
       UPDATE post_search_data
-      SET version = 0
-      WHERE post_id IN (SELECT id FROM posts WHERE topic_id = :topic_id)
+      SET version = :version
+      FROM posts
+      WHERE post_search_data.post_id = posts.id
+      AND posts.topic_id = :topic_id
     SQL
   end
 

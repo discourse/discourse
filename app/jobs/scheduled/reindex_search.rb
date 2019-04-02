@@ -71,7 +71,7 @@ module Jobs
     def load_problem_post_ids(limit)
       params = {
         locale: SiteSetting.default_locale,
-        version: Search::INDEX_VERSION,
+        version: SearchIndexer::INDEX_VERSION,
         limit: limit
       }
 
@@ -96,7 +96,7 @@ module Jobs
     def load_problem_category_ids(limit)
       Category.joins(:category_search_data)
         .where('category_search_data.locale != ?
-                OR category_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR category_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
@@ -104,7 +104,7 @@ module Jobs
     def load_problem_topic_ids(limit)
       Topic.joins(:topic_search_data)
         .where('topic_search_data.locale != ?
-                OR topic_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR topic_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
@@ -112,7 +112,7 @@ module Jobs
     def load_problem_user_ids(limit)
       User.joins(:user_search_data)
         .where('user_search_data.locale != ?
-                OR user_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR user_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
@@ -120,7 +120,7 @@ module Jobs
     def load_problem_tag_ids(limit)
       Tag.joins(:tag_search_data)
         .where('tag_search_data.locale != ?
-                OR tag_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR tag_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
