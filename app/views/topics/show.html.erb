@@ -73,7 +73,7 @@
       <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
       <div class='clearfix'>
-        <span class='post-likes'>Likes: <%= post.like_count %></span>
+        <span class='post-likes'><%= t('post.has_likes', count: post.like_count) %></span>
       </div>
       <hr>
       <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
