@@ -141,10 +141,12 @@ RSpec.describe Admin::SiteTextsController do
           site_text: { value: 'foo' }
         }
 
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
 
         json = ::JSON.parse(response.body)
-        expect(json['error_type']).to eq('not_found')
+        expect(json['error_type']).to eq('invalid_access')
+        expect(json['errors'].size).to eq(1)
+        expect(json['errors'].first).to eq(I18n.t('email_template_cant_be_modified'))
       end
 
       it "returns the right error message" do
