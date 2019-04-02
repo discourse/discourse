@@ -58,4 +58,3 @@ class Autospec::ParallelFormatter < ParallelTests::RSpec::LoggerBase
     output.puts notification.example.metadata[:location] + " "
   end
 end
-
