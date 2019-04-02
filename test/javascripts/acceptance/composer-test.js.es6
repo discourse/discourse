@@ -659,6 +659,27 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
   assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
 });
 
+QUnit.test(
+  "Deleting the text content of the first post in a private message",
+  async assert => {
+    Discourse.SiteSettings.allow_uncategorized_topics = false;
+
+    await visit("/t/34");
+
+    await click("#post_1 .d-icon-ellipsis-h");
+
+    await click("#post_1 .d-icon-pencil-alt");
+
+    await fillIn(".d-editor-input", "");
+
+    assert.equal(
+      find(".d-editor-container textarea").attr("placeholder"),
+      I18n.t("composer.reply_placeholder"),
+      "it should not block because of missing category"
+    );
+  }
+);
+
 const assertImageResized = (assert, uploads) => {
   assert.equal(
     find(".d-editor-input").val(),
