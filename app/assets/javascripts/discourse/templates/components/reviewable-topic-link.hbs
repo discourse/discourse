@@ -1,7 +1,7 @@
 <div class='post-topic'>
   {{#if reviewable.topic}}
     {{topic-status topic=reviewable.topic}}
-    <a href={{reviewable.topic_url}} class='title'>{{reviewable.topic.title}}</a>
+    <a href={{reviewable.topic_url}} class='title-text'>{{reviewable.topic.title}}</a>
     {{category-badge reviewable.category}}
   {{else if (has-block)}}
     {{yield}}
