@@ -55,11 +55,15 @@ export default Ember.Controller.extend(
       return availableTitles.length > 0;
     },
 
-    @computed()
-    canChangePassword() {
-      return (
-        !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
-      );
+    @computed("model.is_anonymous")
+    canChangePassword(isAnonymous) {
+      if (isAnonymous) {
+        return false;
+      } else {
+        return (
+          !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
+        );
+      }
     },
 
     @computed("model.associated_accounts")
@@ -92,9 +96,17 @@ export default Ember.Controller.extend(
       return userId !== this.get("currentUser.id");
     },
 
-    @computed("model.second_factor_enabled", "canCheckEmails")
-    canUpdateAssociatedAccounts(secondFactorEnabled, canCheckEmails) {
-      if (secondFactorEnabled || !canCheckEmails) {
+    @computed(
+      "model.second_factor_enabled",
+      "canCheckEmails",
+      "model.is_anonymous"
+    )
+    canUpdateAssociatedAccounts(
+      secondFactorEnabled,
+      canCheckEmails,
+      isAnonymous
+    ) {
+      if (secondFactorEnabled || !canCheckEmails || isAnonymous) {
         return false;
       }
 
