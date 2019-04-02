@@ -1381,10 +1381,6 @@ en:
         name: "Facebook"
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
-      yahoo:
-        name: "Yahoo"
-        title: "with Yahoo"
-        message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
         name: "GitHub"
         title: "with GitHub"

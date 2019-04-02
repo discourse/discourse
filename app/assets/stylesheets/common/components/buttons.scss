@@ -225,12 +225,6 @@
       background: darken($twitter, 10%);
     }
   }
-  &.yahoo {
-    background: $yahoo;
-    &:hover {
-      background: darken($yahoo, 10%);
-    }
-  }
   &.github {
     background: $github;
     &:hover {
