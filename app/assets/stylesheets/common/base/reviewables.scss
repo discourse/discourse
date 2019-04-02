@@ -7,6 +7,8 @@
     .reviewable-list {
       flex: 1;
       box-sizing: border-box;
+      max-width: 760px; // Match topic post width
+      margin-right: auto;
     }
 
     .reviewable-filters {
@@ -117,7 +119,8 @@
   border-bottom: 1px solid dark-light-choose($primary-low, $secondary-low);
 
   .topic-statuses {
-    float: none;
+    font-size: $font-up-2;
+    line-height: $line-height-medium;
   }
 
   .reviewable-meta-data {
@@ -131,10 +134,10 @@
       margin-right: 0.25em;
     }
     .created-at {
+      margin-left: auto;
       a {
         color: dark-light-choose($primary-medium, $secondary-medium);
       }
-      margin-right: 1em;
     }
     .score {
       margin-right: 1em;
@@ -182,7 +185,6 @@
 .reviewable-scores,
 .reviewable-histories {
   min-width: 50%;
-  width: 100%;
 
   .user {
     display: flex;
@@ -207,8 +209,6 @@
     border-width: 1px;
     td:first-of-type {
       padding-right: 1em;
-      min-width: 180px;
-      width: 25%;
     }
     > tr > th {
       text-align: left;
@@ -270,9 +270,6 @@
       font-size: $font-up-2;
       margin-right: 0.75em;
     }
-    a.title-text {
-      color: $tertiary;
-    }
     .topic-statuses {
       &:empty {
         display: none;
@@ -281,6 +278,7 @@
     .reply-count {
       font-size: $font-down-1;
       font-weight: normal;
+      margin-right: 1em;
     }
   }
 }
