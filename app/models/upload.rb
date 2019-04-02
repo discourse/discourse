@@ -272,6 +272,9 @@ class Upload < ActiveRecord::Base
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
           DbHelper.remap(previous_url, upload.url)
+
+          upload.optimized_images.find_each(&:destroy!)
+          upload.rebake_posts_on_old_scheme
           # remove the old file (when local)
           unless external
             FileUtils.rm(path, force: true)
@@ -286,6 +289,12 @@ class Upload < ActiveRecord::Base
     end
 
     problems
+  end
+
+  private
+
+  def rebake_posts_on_old_scheme
+    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
 end
