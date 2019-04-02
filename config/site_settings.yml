@@ -304,6 +304,7 @@ login:
     refresh: true
     client: true
     default: false
+    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
