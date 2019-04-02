@@ -43,7 +43,6 @@ export default Ember.Component.extend({
     if (markup) {
       cookAsync(markup).then(result => {
         this.set("currentPreview", result);
-
         Ember.run.schedule("afterRender", () =>
           this.$(".preview .discourse-local-date").applyLocalDates()
         );
