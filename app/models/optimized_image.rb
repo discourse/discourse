@@ -350,6 +350,25 @@ class OptimizedImage < ActiveRecord::Base
       false
     end
   end
+
+  def self.extract_optimized_url(url)
+    url.match(/(\/optimized\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
+  end
+
+  def self.get_from_url(url)
+    return if url.blank?
+
+    uri = begin
+      URI(URI.unescape(url))
+    rescue URI::Error
+    end
+
+    return if uri&.path.blank?
+    data = extract_optimized_url(uri.path)
+    return if data.blank?
+
+    OptimizedImage.find_by("url LIKE ?", "%#{data[1]}")
+  end
 end
 
 # == Schema Information

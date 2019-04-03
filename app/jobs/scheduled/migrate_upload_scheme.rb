@@ -36,6 +36,30 @@ module Jobs
         optimized_image.destroy!
         upload.rebake_posts_on_old_scheme
       end
+
+      Post.where("cooked LIKE '%<img %'").find_each do |post|
+        missing = post.find_missing_uploads
+        next if missing.blank?
+  
+        missing.each do |src|
+          src.sub!("https://discourse-cdn-sjc1.com/mcneel", "")
+          next unless src.split("/").length == 5
+  
+          source = "#{Discourse.store.public_dir}#{src}"
+          if File.exists?(source)
+            PostCustomField.create!(post_id: post.id, value: src, key: "pu_found")
+            next
+          end
+  
+          source = "#{Discourse.store.tombstone_dir}#{src}"
+          if File.exists?(source)
+            PostCustomField.create!(post_id: post.id, value: src, key: "pu_tombstone")
+            next
+          end
+  
+          PostCustomField.create!(post_id: post.id, value: src, key: "pu_missing")
+        end
+      end
     end
 
   end
