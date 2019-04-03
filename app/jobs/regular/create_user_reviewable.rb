@@ -5,7 +5,16 @@ class Jobs::CreateUserReviewable < Jobs::Base
     if user = User.find_by(id: args[:user_id])
       return if user.approved?
 
-      reviewable = ReviewableUser.create!(target: user, created_by: Discourse.system_user, reviewable_by_moderator: true)
+      reviewable = ReviewableUser.create!(
+        target: user,
+        created_by: Discourse.system_user,
+        reviewable_by_moderator: true,
+        payload: {
+          username: user.username,
+          name: user.name,
+          email: user.email
+        }
+      )
       reviewable.add_score(
         Discourse.system_user,
         ReviewableScore.types[:needs_approval],

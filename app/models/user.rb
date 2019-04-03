@@ -1220,7 +1220,6 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:create_user_reviewable, user_id: self.id)
   end
 
-
   protected
 
   def badge_grant

@@ -34,7 +34,7 @@ class ReviewableUser < Reviewable
   end
 
   def perform_reject(performed_by, args)
-    destroyer = UserDestroyer.new(performed_by)
+    destroyer = UserDestroyer.new(performed_by) unless args[:skip_delete]
 
     # If a user has posts, we won't delete them to preserve their content.
     # However the reviable record will be "rejected" and they will remain
