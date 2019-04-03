@@ -187,6 +187,8 @@ class UserUpdater
         ON CONFLICT DO NOTHING
       SQL
     end
+
+    ReadThroughCache.invalidate(user.id, "ignored_users")
   end
 
   private

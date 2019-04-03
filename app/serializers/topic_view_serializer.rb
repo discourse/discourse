@@ -215,7 +215,9 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def ignored_usernames
-    IgnoredUser.where(user: topic.user).joins(:ignored_user).pluck(:username)
+    ReadThroughCache.fetch(topic.user.id, "ignored_users") do
+      IgnoredUser.where(user: topic.user).joins(:ignored_user).pluck(:username)
+    end
   end
 
   def actions_summary

@@ -1013,7 +1013,7 @@ class UsersController < ApplicationController
       MutedUser.where(user: current_user, muted_user: user).delete_all
       IgnoredUser.where(user: current_user, ignored_user: user).delete_all
     end
-
+    ReadThroughCache.invalidate(current_user.id, "ignored_users")
     render json: success_json
   end
 
