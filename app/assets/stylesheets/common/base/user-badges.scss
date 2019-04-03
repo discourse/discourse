@@ -147,14 +147,10 @@
     display: flex;
     min-height: 128px;
     height: 100%;
+    padding: 0 10%;
 
     .badge-link {
-      display: flex;
-      flex: 1 1 auto;
-      padding: 0 10%;
-      @include breakpoint(mobile) {
-        padding: 0 5%;
-      }
+      color: $primary;
     }
 
     .badge-icon {
@@ -237,12 +233,9 @@
       margin-right: 1.5em;
     }
     .badge-contents {
-      .badge-link {
-        padding: 0 5%;
-        width: 90%;
-        h3 {
-          font-size: $font-up-3;
-        }
+      padding: 0 5%;
+      h3 {
+        font-size: $font-up-3;
       }
     }
   }
