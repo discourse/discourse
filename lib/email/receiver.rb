@@ -96,7 +96,7 @@ module Email
 
     def ensure_valid_date
       if @mail.date.nil?
-        raise InvalidPost, "No post creation date found. Is the e-mail missing a Date: header?"
+        raise InvalidPost, I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid")
       end
     end
 
@@ -149,15 +149,14 @@ module Email
         return
       end
 
-      # Lets create a staged user if there isn't one yet. We will try to
-      # delete staged users in process!() if something bad happens.
-
       if post = find_related_post
         # Most of the time, it is impossible to **reply** without a reply key, so exit early
-        if !user.present? && (sent_to_mailinglist_mirror? || !SiteSetting.find_related_post_with_key)
-          user = stage_from_user
-        elsif !user.present?
-          raise BadDestinationAddress
+        if user.blank?
+          if sent_to_mailinglist_mirror? || !SiteSetting.find_related_post_with_key
+            user = stage_from_user
+          else !user.present?
+            raise BadDestinationAddress
+          end
         end
 
         create_reply(user: user,
@@ -1154,11 +1153,9 @@ module Email
     end
 
     def stage_from_user
-      if @from_user.nil?
-        @from_user = find_or_create_user!(@from_email, @from_display_name)
-        log_and_validate_user(@from_user)
+      @from_user ||= find_or_create_user!(@from_email, @from_display_name).tap do |u|
+        log_and_validate_user(u)
       end
-      @from_user
     end
 
     def delete_staged_users

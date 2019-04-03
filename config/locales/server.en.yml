@@ -2739,6 +2739,7 @@ en:
         %{post_error}
 
         If you can correct the problem, please try again.
+      date_invalid: "No post creation date found. Is the e-mail missing a Date: header?"
 
     email_reject_post_too_short:
       title: "Email Reject Post Too Short"

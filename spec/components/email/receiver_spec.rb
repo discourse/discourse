@@ -1126,6 +1126,10 @@ describe Email::Receiver do
       context "when email has no date" do
         let!(:category) { Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: true) }
 
+        it "includes the translated string in the error" do
+          expect { process(:no_date) }.to raise_error(Email::Receiver::InvalidPost).with_message(I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid"))
+        end
+
         include_examples "does not create staged users", :no_date, Email::Receiver::InvalidPost
       end
     end
