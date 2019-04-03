@@ -23,7 +23,6 @@ en:
           time_title: Time
           format_title: Date format
           timezone: Timezone
-          preview_for: Preview for %{timezone}
           recurring:
             every_day: "Every day"
             every_week: "Every week"
