@@ -1,8 +1,8 @@
 {{#if displayCount}}
-  <span class='grant-count' title={{i18n 'badges.granted' count=displayCount}}>{{displayCount}}</span>
+  <a href={{url}} class='grant-count' title={{i18n 'badges.granted' count=displayCount}}>{{displayCount}}</a>
 {{/if}}
 {{#if badge.has_badge}}
-  <span class='check-display status-checked'>{{d-icon "check"}}</span>
+  <a href={{url}} class='check-display status-checked'>{{d-icon "check"}}</a>
 {{/if}}
 <div class='badge-contents'>
   <div class='badge-icon {{badge.badgeTypeClassName}}'>
