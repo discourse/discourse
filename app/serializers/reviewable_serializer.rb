@@ -73,19 +73,19 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def attributes
-    data = super
+    super.tap do |data|
+      data[:removed_topic_id] = object.topic_id unless object.topic
 
-    if object.target.present?
-      # Automatically add the target id as a "good name" for example a target_type of `User`
-      # becomes `user_id`
-      data[:"#{object.target_type.downcase}_id"] = object.target_id
+      if object.target.present?
+        # Automatically add the target id as a "good name" for example a target_type of `User`
+        # becomes `user_id`
+        data[:"#{object.target_type.downcase}_id"] = object.target_id
+      end
+
+      if self.class._payload_for_serialization.present?
+        data[:payload] = (object.payload || {}).slice(*self.class._payload_for_serialization)
+      end
     end
-
-    if self.class._payload_for_serialization.present?
-      data[:payload] = (object.payload || {}).slice(*self.class._payload_for_serialization)
-    end
-
-    data
   end
 
   def topic_tags

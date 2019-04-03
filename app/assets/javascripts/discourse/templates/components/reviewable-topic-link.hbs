@@ -7,6 +7,9 @@
   {{else if (has-block)}}
     {{yield}}
   {{else}}
-    <span class="title-text">{{i18n "topic.deleted"}}</span>
+    <span class="title-text">
+      {{i18n "review.topics.deleted"}}
+      <a href={{get-url (concat '/t/' reviewable.removed_topic_id)}}>{{i18n "review.topics.original"}}</a>
+    </span>
   {{/if}}
 </div>

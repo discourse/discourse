@@ -404,6 +404,8 @@ en:
         topic: "Topic"
         reviewable_count: "Count"
         reported_by: "Reported by"
+        deleted: "[Topic Deleted]"
+        original: '(original topic)'
         details: "details"
         unique_users:
           one: "1 user"
