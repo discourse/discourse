@@ -192,7 +192,7 @@ export default class PostCooked {
       : this.attrs.topicUrl;
   }
 
-  _updateQuoteElements($aside, desc) {
+  _updateQuoteElements($html, $aside, desc) {
     let navLink = "";
     const quoteTitle = I18n.t("post.follow_quote");
     let postNumber = $aside.data("post");
@@ -212,6 +212,9 @@ export default class PostCooked {
       expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $(".title", $aside).css("cursor", "pointer");
     }
+    if(this.attrs.topic.ignored_usernames.includes($($aside).find('.title').text().trim().slice(0, -1))) {
+      $($aside).find("p").replaceWith("<i>Hidden content</i>");
+    }
     $(".quote-controls", $aside).html(expandContract + navLink);
   }
 
@@ -224,7 +227,7 @@ export default class PostCooked {
     $quotes.each((i, e) => {
       const $aside = $(e);
       if ($aside.data("post")) {
-        this._updateQuoteElements($aside, "chevron-down");
+        this._updateQuoteElements($html, $aside, "chevron-down");
         const $title = $(".title", $aside);
 
         // Unless it's a full quote, allow click to expand

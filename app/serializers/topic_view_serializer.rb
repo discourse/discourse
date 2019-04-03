@@ -70,7 +70,8 @@ class TopicViewSerializer < ApplicationSerializer
     :participant_count,
     :destination_category_id,
     :pm_with_non_human_user,
-    :pending_posts_count
+    :pending_posts_count,
+    :ignored_usernames
   )
 
   # TODO: Split off into proper object / serializer
@@ -211,6 +212,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def unpinned
     PinnedCheck.unpinned?(object.topic, object.topic_user)
+  end
+
+  def ignored_usernames
+    IgnoredUser.where(user: topic.user).joins(:ignored_user).pluck(:username)
   end
 
   def actions_summary

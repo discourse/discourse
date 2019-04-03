@@ -35,6 +35,7 @@ export default MountWidget.extend({
   buildArgs() {
     return this.getProperties(
       "posts",
+      "topic",
       "canCreatePost",
       "multiSelect",
       "gaps",

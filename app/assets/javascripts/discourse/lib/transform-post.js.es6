@@ -81,7 +81,8 @@ export function transformBasicPost(post) {
     replyCount: post.reply_count,
     locked: post.locked,
     ignored: post.ignored,
-    userCustomFields: post.user_custom_fields
+    userCustomFields: post.user_custom_fields,
+    topic: post.topic,
   };
 
   _additionalAttributes.forEach(a => (postAtts[a] = post[a]));
@@ -133,6 +134,7 @@ export default function transformPost(
   postAtts.actionCodeWho = post.action_code_who;
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
+  postAtts.topic = topic
 
   if (post.post_notice_type) {
     postAtts.postNoticeType = post.post_notice_type;
