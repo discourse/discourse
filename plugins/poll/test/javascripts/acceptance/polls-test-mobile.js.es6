@@ -24,9 +24,9 @@ test("Public number poll", async assert => {
     "it should display the right number of voters"
   );
 
-  assert.ok(
+  assert.notOk(
     find(".poll-voters:first li:first a").attr("href"),
-    "user URL exists"
+    "user URL does not exist"
   );
 
   // eslint-disable-next-line
