@@ -2,6 +2,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
+import highlightText from "discourse/lib/highlight-text";
 
 const _decorators = [];
 
@@ -45,7 +46,8 @@ export default class PostCooked {
       if (this._highlighted) {
         $html.unhighlight();
       }
-      $html.highlight(highlight.split(/\s+/));
+
+      highlightText($html, highlight, { defaultClassName: true });
       this._highlighted = true;
     } else if (this._highlighted) {
       $html.unhighlight();

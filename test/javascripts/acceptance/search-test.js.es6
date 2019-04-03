@@ -75,15 +75,22 @@ QUnit.test("Search with context", async assert => {
   await visit("/t/internationalization-localization/280/1");
 
   await click("#search-button");
-  await fillIn("#search-term", "dev");
+  await fillIn("#search-term", "a proper");
   await click(".search-context input[type='checkbox']");
   await keyEvent("#search-term", "keyup", 16);
 
   assert.ok(exists(".search-menu .results ul li"), "it shows results");
 
-  assert.ok(
-    exists(".cooked span.highlight-strong"),
-    "it should highlight the search term"
+  const highlighted = [];
+
+  find("#post_7 span.highlight-strong").map((_, span) => {
+    highlighted.push(span.innerText);
+  });
+
+  assert.deepEqual(
+    highlighted,
+    ["a", "a", "proper", "a"],
+    "it should highlight the post with the search terms correctly"
   );
 
   let callbackCalled = false;
