@@ -79,15 +79,33 @@ describe Jobs::ReindexSearch do
   end
 
   describe '#execute' do
-    it "should clean up post_search_data of posts with empty raw" do
+    it(
+      "should clean up post_search_data of posts with empty raw or posts from " \
+      "trashed topics"
+    ) do
+
       post = Fabricate(:post)
       post2 = Fabricate(:post, post_type: Post.types[:small_action])
       post2.raw = ""
       post2.save!(validate: false)
+      post3 = Fabricate(:post)
+      post3.topic.trash!
+      post4 = nil
 
-      expect { subject.execute({}) }.to change { PostSearchData.count }.by(-1)
-      expect(Post.all).to contain_exactly(post, post2)
-      expect(PostSearchData.all).to contain_exactly(post.post_search_data)
+      freeze_time(1.week.ago) do
+        post4 = Fabricate(:post)
+        post4.topic.trash!
+      end
+
+      expect { subject.execute({}) }.to change { PostSearchData.count }.by(-2)
+
+      expect(Post.all.pluck(:id)).to contain_exactly(
+        post.id, post2.id, post3.id, post4.id
+      )
+
+      expect(PostSearchData.all.pluck(:post_id)).to contain_exactly(
+        post.post_search_data.post_id, post3.post_search_data.post_id
+      )
     end
   end
 end
