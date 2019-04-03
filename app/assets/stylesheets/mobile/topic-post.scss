@@ -478,4 +478,8 @@ span.highlighted {
 
 .post-notice {
   margin-bottom: 1em;
+  &.old {
+    border-top: none;
+    padding-top: 0;
+  }
 }
