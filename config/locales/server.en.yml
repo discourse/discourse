@@ -617,6 +617,9 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+    has_likes:
+      one: "%{count} Like"
+      other: "%{count} Likes"
 
   rate_limiter:
     slow_down: "You’ve performed this action too many times, please try again later."
