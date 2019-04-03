@@ -217,6 +217,10 @@ class Upload < ActiveRecord::Base
     number_to_human_size(self.filesize)
   end
 
+  def rebake_posts_on_old_scheme
+    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
+  end
+
   def self.migrate_to_new_scheme(limit = nil)
     problems = []
 
@@ -288,12 +292,6 @@ class Upload < ActiveRecord::Base
     end
 
     problems
-  end
-
-  private
-
-  def rebake_posts_on_old_scheme
-    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
 end
