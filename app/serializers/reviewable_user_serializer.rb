@@ -1,6 +1,6 @@
 class ReviewableUserSerializer < ReviewableSerializer
 
-  target_attributes(
+  payload_attributes(
     :username,
     :email,
     :name

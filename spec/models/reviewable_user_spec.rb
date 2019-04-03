@@ -36,6 +36,17 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
+  context "when a user is deleted" do
+    it "should reject the reviewable" do
+      Jobs::CreateUserReviewable.new.execute(user_id: user.id)
+      reviewable = Reviewable.find_by(target: user)
+      expect(reviewable.pending?).to eq(true)
+
+      UserDestroyer.new(Discourse.system_user).destroy(user)
+      expect(reviewable.reload.rejected?).to eq(true)
+    end
+  end
+
   context "perform" do
     let(:reviewable) { Fabricate(:reviewable) }
     context "approve" do
