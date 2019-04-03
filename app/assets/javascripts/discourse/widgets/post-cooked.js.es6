@@ -192,7 +192,7 @@ export default class PostCooked {
       : this.attrs.topicUrl;
   }
 
-  _updateQuoteElements($html, $aside, desc) {
+  _updateQuoteElements($aside, desc) {
     let navLink = "";
     const quoteTitle = I18n.t("post.follow_quote");
     let postNumber = $aside.data("post");
@@ -227,7 +227,7 @@ export default class PostCooked {
     $quotes.each((i, e) => {
       const $aside = $(e);
       if ($aside.data("post")) {
-        this._updateQuoteElements($html, $aside, "chevron-down");
+        this._updateQuoteElements($aside, "chevron-down");
         const $title = $(".title", $aside);
 
         // Unless it's a full quote, allow click to expand
