@@ -11,8 +11,6 @@ class QuotedPost < ActiveRecord::Base
 
     uniq = {}
 
-    DB.exec("DELETE FROM quoted_posts WHERE post_id = :post_id", post_id: post.id)
-
     doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic'].to_i
       post_number = a['data-post'].to_i
@@ -22,21 +20,45 @@ class QuotedPost < ActiveRecord::Base
       next if post.topic_id == topic_id && post.post_number == post_number
 
       uniq[[topic_id, post_number]] = true
+    end
 
-      begin
-        # It would be so much nicer if we used post_id in quotes
-        DB.exec(<<~SQL, post_id: post.id, post_number: post_number, topic_id: topic_id)
-          INSERT INTO quoted_posts (post_id, quoted_post_id, created_at, updated_at)
-            SELECT :post_id, p.id, current_timestamp, current_timestamp
-            FROM posts p
-              LEFT JOIN quoted_posts q on q.post_id = :post_id AND q.quoted_post_id = p.id
-            WHERE post_number = :post_number AND
-                  topic_id = :topic_id AND
-                  q.id IS NULL
-        SQL
-      rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
-        # it's fine
-      end
+    if uniq.length == 0
+      DB.exec("DELETE FROM quoted_posts WHERE post_id = :post_id", post_id: post.id)
+    else
+
+      args = {
+        post_id: post.id,
+        topic_ids: uniq.keys.map(&:first),
+        post_numbers: uniq.keys.map(&:second)
+      }
+
+      DB.exec(<<~SQL, args)
+        INSERT INTO quoted_posts (post_id, quoted_post_id, created_at, updated_at)
+        SELECT :post_id, p.id, current_timestamp, current_timestamp
+        FROM posts p
+        JOIN (
+          SELECT
+            unnest(ARRAY[:topic_ids]) topic_id,
+            unnest(ARRAY[:post_numbers]) post_number
+        ) X ON X.topic_id = p.topic_id AND X.post_number = p.post_number
+        LEFT JOIN quoted_posts q on q.post_id = :post_id AND q.quoted_post_id = p.id
+        WHERE q.id IS NULL
+      SQL
+
+      DB.exec(<<~SQL, args)
+        DELETE FROM quoted_posts
+        WHERE post_id = :post_id
+        AND id IN (
+          SELECT q1.id FROM quoted_posts q1
+          LEFT JOIN posts p1 ON p1.id = q1.quoted_post_id
+          LEFT JOIN (
+            SELECT
+              unnest(ARRAY[:topic_ids]) topic_id,
+              unnest(ARRAY[:post_numbers]) post_number
+          ) X on X.topic_id = p1.topic_id AND X.post_number = p1.post_number
+          WHERE q1.post_id = :post_id AND X.topic_id IS NULL
+        )
+      SQL
     end
 
     # simplest place to add this code

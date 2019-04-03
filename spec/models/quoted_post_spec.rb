@@ -70,10 +70,18 @@ describe QuotedPost do
     HTML
 
     QuotedPost.create!(post_id: post2.id, quoted_post_id: 999)
+    quote = QuotedPost.create!(post_id: post2.id, quoted_post_id: post1.id)
+    original_date = quote.created_at
+
+    freeze_time 1.hour.from_now
 
     QuotedPost.extract_from(post2)
     expect(QuotedPost.where(post_id: post2.id).count).to eq(1)
     expect(QuotedPost.find_by(post_id: post2.id, quoted_post_id: post1.id)).not_to eq(nil)
+
+    quote.reload
+
+    expect(original_date).to eq_time(quote.created_at)
 
     expect(post2.reply_quoted).to eq(false)
   end
