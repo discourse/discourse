@@ -290,6 +290,9 @@ describe WebHook do
       Fabricate(:user_web_hook, active: true)
 
       user
+      user.activate
+      Jobs::CreateUserReviewable.new.execute(user_id: user.id)
+
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_created")

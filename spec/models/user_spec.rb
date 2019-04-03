@@ -125,22 +125,57 @@ describe User do
   end
 
   describe 'reviewable' do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, active: false) }
     let(:admin) { Fabricate(:admin) }
 
-    it "creates a reviewable for the user if must_approve_users is true" do
+    before do
+      Jobs.run_immediately!
+    end
+
+    it "creates a reviewable for the user if must_approve_users is true and activate is called" do
       SiteSetting.must_approve_users = true
       user
 
+      # Inactive users don't have reviewables
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_blank
+
+      user.activate
       reviewable = ReviewableUser.find_by(target: user)
       expect(reviewable).to be_present
       expect(reviewable.score > 0).to eq(true)
       expect(reviewable.reviewable_scores).to be_present
     end
 
+    it "creates a reviewable for the user if must_approve_users is true and their token is confirmed" do
+      SiteSetting.must_approve_users = true
+      user
+
+      # Inactive users don't have reviewables
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_blank
+
+      EmailToken.confirm(user.email_tokens.first.token)
+      expect(user.reload.active).to eq(true)
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_present
+    end
+
     it "doesn't create a reviewable if must_approve_users is false" do
       user
       expect(ReviewableUser.find_by(target: user)).to be_blank
+    end
+
+    it "will reject a reviewable if the user is deactivated" do
+      SiteSetting.must_approve_users = true
+      user
+
+      user.activate
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable.pending?).to eq(true)
+
+      user.deactivate(admin)
+      expect(reviewable.reload.rejected?).to eq(true)
     end
   end
 

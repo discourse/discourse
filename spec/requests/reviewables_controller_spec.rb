@@ -144,8 +144,10 @@ describe ReviewablesController do
       end
 
       it "will use the ReviewableUser serializer for its fields" do
+        Jobs.run_immediately!
         SiteSetting.must_approve_users = true
         user = Fabricate(:user)
+        user.activate
         reviewable = ReviewableUser.find_by(target: user)
 
         get "/review.json"
