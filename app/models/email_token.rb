@@ -57,7 +57,7 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
-  def self.confirm(token)
+  def self.confirm(token, skip_reviewable: false)
     User.transaction do
       result = atomic_confirm(token)
       user = result[:user]
@@ -65,8 +65,9 @@ class EmailToken < ActiveRecord::Base
         # If we are activating the user, send the welcome message
         user.send_welcome_message = !user.active?
         user.email = result[:email_token].email
+        user.active = true
         user.save!
-        user.activate
+        user.create_reviewable unless skip_reviewable
         user.set_automatic_groups
       end
 
