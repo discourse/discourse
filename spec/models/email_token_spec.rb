@@ -117,6 +117,7 @@ describe EmailToken do
     context 'confirms the token and redeems invite' do
       before do
         SiteSetting.must_approve_users = true
+        Jobs.run_immediately!
       end
 
       let(:invite) { Fabricate(:invite, email: 'test@example.com', user_id: nil) }
