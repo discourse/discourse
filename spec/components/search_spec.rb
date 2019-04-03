@@ -347,13 +347,15 @@ describe Search do
         )
 
         post2 = Fabricate(:post,
-          raw: "I think winter winter winter winter winter will end soon",
+          raw: "I think #{'winter' * 20} will end soon",
           topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
         )
 
         result = Search.execute('winter')
 
-        expect(result.posts).to eq([post, post2, category.topic.first_post])
+        expect(result.posts.pluck(:id)).to eq([
+          post.id, category.topic.first_post.id, post2.id
+        ])
       end
     end
 
