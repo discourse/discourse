@@ -892,7 +892,7 @@ class User < ActiveRecord::Base
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      user = EmailToken.confirm(email_token.token)
+      user = EmailToken.confirm(email_token.token, skip_reviewable: true)
       self.update!(active: true) if user.nil?
     else
       self.update!(active: true)
