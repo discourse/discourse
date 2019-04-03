@@ -23,7 +23,7 @@ SQL
 SQL
 
   FirstQuote = <<SQL
-  SELECT ids.user_id, q.post_id, q.created_at granted_at
+  SELECT ids.user_id, q.post_id, p3.created_at granted_at
   FROM
   (
     SELECT p1.user_id, MIN(q1.id) id
@@ -34,6 +34,7 @@ SQL
     GROUP BY p1.user_id
   ) ids
   JOIN quoted_posts q ON q.id = ids.id
+  JOIN badge_posts p3 ON q.post_id = p3.id
 SQL
 
   FirstLink = <<SQL
