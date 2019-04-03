@@ -1213,6 +1213,14 @@ class User < ActiveRecord::Base
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
+  def create_reviewable
+    return unless SiteSetting.must_approve_users? || SiteSetting.invite_only?
+    return if approved?
+
+    Jobs.enqueue(:create_user_reviewable, user_id: self.id)
+  end
+
+
   protected
 
   def badge_grant
@@ -1240,13 +1248,6 @@ class User < ActiveRecord::Base
 
   def ensure_in_trust_level_group
     Group.user_trust_level_change!(id, trust_level)
-  end
-
-  def create_reviewable
-    return unless SiteSetting.must_approve_users? || SiteSetting.invite_only?
-    return if approved?
-
-    Jobs.enqueue(:create_user_reviewable, user_id: self.id)
   end
 
   def create_user_stat
