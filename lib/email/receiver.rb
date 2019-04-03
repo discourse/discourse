@@ -182,7 +182,7 @@ module Email
         raise first_exception if first_exception
 
         # We don't stage new users for emails to reply addresses, exit if user is nil
-        raise BadDestinationAddress unless user.present?
+        raise BadDestinationAddress if user.blank?
 
         post = find_related_post(force: true)
 
@@ -664,7 +664,7 @@ module Email
 
       when :reply
         # We don't stage new users for emails to reply addresses, exit if user is nil
-        raise BadDestinationAddress unless user.present?
+        raise BadDestinationAddress if user.blank?
 
         post_reply_key = destination[:obj]
 
