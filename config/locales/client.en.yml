@@ -2259,9 +2259,6 @@ en:
       has_replies:
         one: "{{count}} Reply"
         other: "{{count}} Replies"
-      has_likes:
-        one: "{{count}} Like"
-        other: "{{count}} Likes"
 
       has_likes_title:
         one: "1 person liked this post"
