@@ -262,8 +262,7 @@
   }
 }
 
-.reviewable-queued-post,
-.reviewable-flagged-post {
+.reviewable-item {
   .post-title {
     background-color: yellow;
   }
@@ -283,6 +282,23 @@
   .post-contents {
     width: 100%;
   }
+
+  .post-body {
+    max-width: $topic-body-width;
+    max-height: 300px;
+    margin-top: 0.5em;
+    overflow-y: auto;
+
+    p,
+    aside {
+      margin: 0 0 1em 0;
+    }
+
+    p {
+      word-break: break-all;
+    }
+  }
+
   .post-topic {
     width: 100%;
     color: $primary-medium;
@@ -298,24 +314,6 @@
       &:empty {
         display: none;
       }
-    }
-  }
-}
-
-.reviewable-item {
-  .post-body {
-    max-width: $topic-body-width;
-    max-height: 300px;
-    margin-top: 0.5em;
-    overflow-y: auto;
-
-    p,
-    aside {
-      margin: 0 0 1em 0;
-    }
-
-    p {
-      word-break: break-all;
     }
   }
 }
