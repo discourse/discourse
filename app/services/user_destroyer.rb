@@ -29,7 +29,7 @@ class UserDestroyer
       Reviewable.where(created_by_id: user.id).delete_all
 
       if reviewable = Reviewable.find_by(target: user)
-        reviewable.perform(@actor, :reject, skip_delete: true)
+        reviewable.perform(@actor, :reject, skip_delete: true) rescue Reviewable::InvalidAction
       end
 
       if opts[:delete_posts]

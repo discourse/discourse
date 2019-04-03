@@ -381,6 +381,11 @@ en:
       filtered_user: "User:"
       show_all_topics: "show all topics"
       deleted_user: "(deleted user)"
+      user:
+        username: "Username"
+        email: "Email"
+        name: "Name"
+
       user_percentage:
         summary:
           one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} total flag)"

@@ -44,8 +44,18 @@
   }
 }
 
-.reviewable-user-details {
+.reviewable-user-info {
   margin: 0.5em 0;
+
+  .reviewable-user-details {
+    display: flex;
+    .name {
+      width: 8em;
+      font-weight: bold;
+      margin-right: 1em;
+    }
+    margin-bottom: 0.5em;
+  }
 }
 
 .no-review {
