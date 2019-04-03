@@ -6,7 +6,7 @@
         {{#if user.profile_hidden}}
           <span class="card-huge-avatar">{{bound-avatar user "huge"}}</span>
         {{else}}
-          <a href {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+          <a href="{{user.path}}" {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
         {{/if}}
         {{#if user.primary_group_name}}
           {{avatar-flair
@@ -26,7 +26,7 @@
                 {{user-status user currentUser=currentUser}}
               </span>
             {{else}}
-              <a href {{action "showUser" user}} class='user-profile-link'>
+              <a href="{{user.path}}" {{action "showUser" user}} class='user-profile-link'>
                 {{if nameFirst user.name (format-username username)}}
                 {{user-status user currentUser=currentUser}}
               </a>

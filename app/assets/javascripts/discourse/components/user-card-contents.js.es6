@@ -167,12 +167,9 @@ export default Ember.Component.extend(
         .finally(() => this.set("loading", null));
     },
 
-    didInsertElement() {
-      this._super(...arguments);
-    },
-
     _close() {
       this._super(...arguments);
+
       this.setProperties({
         user: null,
         topicPostCount: null
