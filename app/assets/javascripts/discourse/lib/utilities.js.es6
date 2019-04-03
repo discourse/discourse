@@ -126,7 +126,7 @@ export function selectedText() {
     return "";
   }
 
-  const $div = $("<div>");
+  let $div = $("<div>");
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
     const $ancestor = $(range.commonAncestorContainer);
@@ -140,7 +140,17 @@ export function selectedText() {
     $div.append(range.cloneContents());
   }
 
-  return toMarkdown($div.html());
+  // Remove wrapping elements such as `div` and `p` to prevent a bug
+  // in Tautologistics HTML parser.
+  $div = $div[0];
+  while (
+    ($div.tagName === "P" || $div.tagName === "DIV") &&
+    $div.children.length === 1
+  ) {
+    $div = $div.children[0];
+  }
+
+  return toMarkdown($div.innerHTML || ($div.html && $div.html()));
 }
 
 // Determine the row and col of the caret in an element
