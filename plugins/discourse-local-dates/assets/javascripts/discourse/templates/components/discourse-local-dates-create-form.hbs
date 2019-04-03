@@ -10,7 +10,7 @@
       </div>
     {{else}}
       <div class="preview alert alert-info">
-        <b>{{i18n "discourse_local_dates.create.form.preview_for" timezone=currentUserTimezone}}</b>
+        <b>{{currentUserTimezone}}: </b>
         {{currentPreview}}
       </div>
     {{/unless}}
