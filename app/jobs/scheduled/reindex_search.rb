@@ -66,6 +66,18 @@ module Jobs
         .joins("LEFT JOIN posts p ON p.id = post_search_data.post_id")
         .where("p.raw = ''")
         .delete_all
+
+      DB.exec(<<~SQL, deleted_at: 1.week.ago)
+        DELETE FROM post_search_data
+        WHERE post_id IN (
+          SELECT post_id
+          FROM post_search_data
+          LEFT JOIN posts ON post_search_data.post_id = posts.id
+          INNER JOIN topics ON posts.topic_id = topics.id
+          WHERE topics.deleted_at IS NOT NULL
+          AND topics.deleted_at <= :deleted_at
+        )
+      SQL
     end
 
     def load_problem_post_ids(limit)
