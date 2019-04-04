@@ -15,14 +15,12 @@ describe Jobs::EnsurePostUploadsExistence do
       expect(field.value).to eq(upload.url)
     end
 
-    it 'should not create post custom fields' do
+    it 'should create post custom field with nil value' do
       post = Fabricate(:post, cooked: "A sample post <a href='#{upload.url}'> <img src='#{optimized.url}'>")
-
-      expect {
-        described_class.new.execute({})
-      }.not_to change {
-        PostCustomField.count
-      }
+      described_class.new.execute({})
+      field = PostCustomField.last
+      expect(field.name).to eq(Jobs::EnsurePostUploadsExistence::MISSING_UPLOADS)
+      expect(field.value).to eq(nil)
     end
   end
 end
