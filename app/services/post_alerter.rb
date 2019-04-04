@@ -537,6 +537,7 @@ class PostAlerter
   end
 
   def notify_imap_users?(post)
+    return false if SiteSetting.imap_read_only
     return false if post.post_type != Post.types[:regular]
     # Notify only if post was not created from an email. The sender of the
     # original email is responsible to press the "Reply all" button.

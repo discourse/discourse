@@ -4,6 +4,8 @@ class GroupSmtpMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def send_mail(from_group, to_address, post)
+    raise SecurityError.new("two-way imap sync is disabled") if SiteSetting.imap_read_only
+
     incoming_email = IncomingEmail.joins(:post)
       .where('imap_uid IS NOT NULL')
       .where(topic_id: post.topic_id, posts: { post_number: 1 })

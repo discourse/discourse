@@ -29,7 +29,7 @@ module Jobs
         (list.history || []).each do |history|
           (history.messages || []).each do |message|
             begin
-              message = service.get_user_message(args[:email_address], message.id, format: 'raw')
+              message = service.get_user_message(args[:email_address], message.id, format: "raw")
               email = {
                 "UID" => message.id,
                 "FLAGS" => [],
@@ -38,11 +38,13 @@ module Jobs
               }
 
               receiver = Email::Receiver.new(email["RFC822"],
+                force_sync: true,
                 destinations: [{ type: :group, obj: group }],
                 uid_validity: args[:history_id],
                 uid: -1
               )
               receiver.process!
+
               sync.update_topic(email, receiver.incoming_email)
             rescue Email::Receiver::ProcessingError => e
             end

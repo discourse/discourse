@@ -1811,6 +1811,10 @@ en:
     email_in: 'Allow users to post new topics via email (requires manual or pop3 polling). Configure the addresses in the "Settings" tab of each category.'
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_spam_header: "The email header to detect spam."
+
+    imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
+    imap_read_only: "Disables two-way IMAP synchronization. All write-operations on IMAP accounts are disabled."
+
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
 

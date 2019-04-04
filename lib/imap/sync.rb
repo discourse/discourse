@@ -60,6 +60,7 @@ module Imap
         emails.each do |email|
           begin
             receiver = Email::Receiver.new(email["RFC822"],
+              force_sync: true,
               destinations: [{ type: :group, obj: @group }],
               uid_validity: @status[:uid_validity],
               uid: email["UID"]
@@ -78,9 +79,11 @@ module Imap
 
       # Discourse-to-server sync:
       #   - sync flags and labels
-      @provider.open_mailbox(mailbox, true)
-      IncomingEmail.where(imap_sync: true).each do |incoming_email|
-        update_email(mailbox, incoming_email)
+      if !SiteSetting.imap_read_only
+        @provider.open_mailbox(mailbox, true)
+        IncomingEmail.where(imap_sync: true).each do |incoming_email|
+          update_email(mailbox, incoming_email)
+        end
       end
     end
 
@@ -121,6 +124,7 @@ module Imap
     end
 
     def update_email(mailbox, incoming_email)
+      return if !SiteSetting.tagging_enabled || !SiteSetting.allow_staff_to_tag_pms
       return if incoming_email&.post&.post_number != 1 || !incoming_email.imap_sync
       return unless email = @provider.emails(mailbox, incoming_email.imap_uid, ["FLAGS", "LABELS"]).first
       incoming_email.update(imap_sync: false)

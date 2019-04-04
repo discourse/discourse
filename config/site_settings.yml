@@ -926,7 +926,6 @@ email:
   email_in:
     default: false
     client: true
-  imap_polling_period_mins: 5
   email_in_min_trust:
     default: 2
     enum: "TrustLevelSetting"
@@ -937,6 +936,8 @@ email:
       - none
       - X-Spam-Flag
       - X-Spam-Status
+  imap_polling_period_mins: 5
+  imap_read_only: false
   email_prefix: ""
   email_site_title: ""
   disable_emails:
