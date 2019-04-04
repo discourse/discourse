@@ -199,8 +199,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       # Try to find 3 interesting stats for the top of the digest
+      new_topics_count = Topic.for_digest(user, min_date).count
 
-      new_topics_count = Topic.new_since_last_seen(user, min_date).count
       if new_topics_count == 0
         # We used topics from new users instead, so count should match
         new_topics_count = topics_for_digest.size
