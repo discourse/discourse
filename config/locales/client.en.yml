@@ -385,6 +385,7 @@ en:
         username: "Username"
         email: "Email"
         name: "Name"
+        fields: "Fields"
 
       user_percentage:
         summary:

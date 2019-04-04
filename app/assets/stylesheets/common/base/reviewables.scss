@@ -46,8 +46,14 @@
 
 .reviewable-user-info {
   margin: 0.5em 0;
+  .reviewable-user-fields {
+    margin-bottom: 2em;
+  }
 
   .reviewable-user-details {
+    border-bottom: 1px solid $primary-low;
+    padding-bottom: 0.25em;
+
     display: flex;
     .name {
       width: 8em;
