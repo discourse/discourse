@@ -3,6 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightText from "discourse/lib/highlight-text";
+import PreloadStore from "preload-store";
 
 const _decorators = [];
 
@@ -211,6 +212,11 @@ export default class PostCooked {
     if (!$aside.data("full")) {
       expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $(".title", $aside).css("cursor", "pointer");
+    }
+    const currentUser = PreloadStore.get("currentUser");
+    const ignoredUsers = currentUser.ignored_users;
+    if(ignoredUsers && ignoredUsers.includes($($aside).find('.title').text().trim().slice(0, -1))) {
+      $($aside).find("p").replaceWith("<i>Hidden content</i>");
     }
     $(".quote-controls", $aside).html(expandContract + navLink);
   }

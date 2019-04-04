@@ -42,7 +42,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :top_category_ids,
              :hide_profile_and_presence,
              :groups,
-             :second_factor_enabled
+             :second_factor_enabled,
+             :ignored_users
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -155,6 +156,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def ignored_users
+    IgnoredUser.where(user: object.id).joins(:ignored_user).pluck(:username)
   end
 
   def top_category_ids
