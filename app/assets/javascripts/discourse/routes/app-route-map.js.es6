@@ -173,6 +173,7 @@ export default function() {
     this.route("show", { path: "/:reviewable_id" });
     this.route("index", { path: "/" });
     this.route("topics", { path: "/topics" });
+    this.route("settings", { path: "/settings" });
   });
   this.route("signup", { path: "/signup" });
   this.route("login", { path: "/login" });

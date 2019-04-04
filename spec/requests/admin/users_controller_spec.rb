@@ -71,6 +71,8 @@ RSpec.describe Admin::UsersController do
     end
 
     it 'calls approve' do
+      Jobs.run_immediately!
+      evil_trout.activate
       put "/admin/users/#{evil_trout.id}/approve.json"
       expect(response.status).to eq(200)
       evil_trout.reload
@@ -102,6 +104,8 @@ RSpec.describe Admin::UsersController do
     end
 
     it "approves the user when permitted" do
+      Jobs.run_immediately!
+      evil_trout.activate
       put "/admin/users/approve-bulk.json", params: { users: [evil_trout.id] }
       expect(response.status).to eq(200)
       evil_trout.reload

@@ -1,4 +1,8 @@
 .reviewable {
+  .nav-pills {
+    margin-bottom: 1em;
+  }
+
   .reviewable-container {
     display: flex;
     flex-direction: row;
@@ -23,8 +27,35 @@
   }
 }
 
-.reviewable-user-details {
+.reviewable-settings {
+  p.description {
+    margin-bottom: 2em;
+  }
+
+  .saved {
+    margin-left: 0.5em;
+  }
+  .reviewable-score-type {
+    display: flex;
+
+    .title {
+      width: 30%;
+    }
+  }
+}
+
+.reviewable-user-info {
   margin: 0.5em 0;
+
+  .reviewable-user-details {
+    display: flex;
+    .name {
+      width: 8em;
+      font-weight: bold;
+      margin-right: 1em;
+    }
+    margin-bottom: 0.5em;
+  }
 }
 
 .no-review {
@@ -241,8 +272,7 @@
   }
 }
 
-.reviewable-queued-post,
-.reviewable-flagged-post {
+.reviewable-item {
   .post-title {
     background-color: yellow;
   }
@@ -262,6 +292,23 @@
   .post-contents {
     width: 100%;
   }
+
+  .post-body {
+    max-width: $topic-body-width;
+    max-height: 300px;
+    margin-top: 0.5em;
+    overflow-y: auto;
+
+    p,
+    aside {
+      margin: 0 0 1em 0;
+    }
+
+    p {
+      word-break: break-all;
+    }
+  }
+
   .post-topic {
     width: 100%;
     color: $primary-medium;
@@ -277,24 +324,6 @@
       &:empty {
         display: none;
       }
-    }
-  }
-}
-
-.reviewable-item {
-  .post-body {
-    max-width: $topic-body-width;
-    max-height: 300px;
-    margin-top: 0.5em;
-    overflow-y: auto;
-
-    p,
-    aside {
-      margin: 0 0 1em 0;
-    }
-
-    p {
-      word-break: break-all;
     }
   }
 }

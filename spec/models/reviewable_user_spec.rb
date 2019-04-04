@@ -3,7 +3,11 @@ require 'rails_helper'
 RSpec.describe ReviewableUser, type: :model do
 
   let(:moderator) { Fabricate(:moderator) }
-  let(:user) { Fabricate(:user) }
+  let(:user) do
+    user = Fabricate(:user)
+    user.activate
+    user
+  end
   let(:admin) { Fabricate(:admin) }
 
   context "actions_for" do
@@ -29,6 +33,17 @@ RSpec.describe ReviewableUser, type: :model do
     it "doesn't raise errors with an empty update" do
       expect(reviewable.update_fields(nil, moderator)).to eq(true)
       expect(reviewable.update_fields({}, moderator)).to eq(true)
+    end
+  end
+
+  context "when a user is deleted" do
+    it "should reject the reviewable" do
+      Jobs::CreateUserReviewable.new.execute(user_id: user.id)
+      reviewable = Reviewable.find_by(target: user)
+      expect(reviewable.pending?).to eq(true)
+
+      UserDestroyer.new(Discourse.system_user).destroy(user)
+      expect(reviewable.reload.rejected?).to eq(true)
     end
   end
 
@@ -78,6 +93,7 @@ RSpec.describe ReviewableUser, type: :model do
   describe 'when must_approve_users is true' do
     before do
       SiteSetting.must_approve_users = true
+      Jobs.run_immediately!
     end
 
     it "creates the ReviewableUser for a user, with moderator access" do

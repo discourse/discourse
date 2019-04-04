@@ -505,5 +505,16 @@ describe StaffActionLogger do
       expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
       expect(user_history.details).to include(reviewable.payload['raw'])
     end
+
+    it "works if the user was destroyed" do
+      reviewable.created_by.destroy
+      reviewable.reload
+
+      expect { log_post_rejected }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:post_rejected])
+      expect(user_history.details).to include(reviewable.payload['raw'])
+    end
+
   end
 end
