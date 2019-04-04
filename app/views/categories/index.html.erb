@@ -9,8 +9,8 @@
     <tbody>
       <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
       <% @category_list.categories.each_with_index do |c, index| %>
-        <tr>
-          <td class='category <%= index % 2 == 0 ? 'secondary-border' : 'primary-border' %>'>
+        <tr class='category'>
+          <td>
             <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
               <meta itemprop='position' content='<%= index %>'>
               <meta itemprop='url' content='<%= "#{c.url}" %>'>

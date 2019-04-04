@@ -110,11 +110,11 @@
       padding: 0 0 10px 10px;
     }
 
-    .secondary-border {
+    tr:nth-child(odd) {
       border-color: $secondary-high;
     }
 
-    .primary-border {
+    tr:nth-child(even) {
       border-color: $primary-high;
     }
   }
