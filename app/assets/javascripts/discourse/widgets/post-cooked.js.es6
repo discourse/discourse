@@ -34,6 +34,7 @@ export default class PostCooked {
     this._showLinkCounts($html);
     this._fixImageSizes($html);
     this._applySearchHighlight($html);
+    this._applyIgnoredState($html);
 
     _decorators.forEach(cb => cb($html, this.decoratorHelper));
     return $html[0];
@@ -240,6 +241,12 @@ export default class PostCooked {
         }
       }
     });
+  }
+
+  _applyIgnoredState($html) {
+    if(this.attrs.ignored) {
+      $($html).addClass("post-ignored");
+    }
   }
 }
 
