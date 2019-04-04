@@ -58,14 +58,14 @@ class S3Inventory
           missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
 
           if (missing_count = missing_uploads.count) > 0
-            $redis.set("missing_s3_#{model.table_name}", missing_count)
-
             missing_uploads.select(:id, :url).find_each do |upload|
               log upload.url
             end
 
             log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
           end
+
+          $redis.set("missing_s3_#{model.table_name}", missing_count)
         ensure
           connection.exec("DROP TABLE #{table_name}") unless connection.nil?
         end
