@@ -179,7 +179,7 @@ describe "category tag restrictions" do
           expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
           expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
           expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
-          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4) # tag4 missing
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
         end
       end
 
@@ -191,7 +191,7 @@ describe "category tag restrictions" do
           expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
           expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
           expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
-          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4) # tag2 missing
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
         end
       end
     end
