@@ -1483,6 +1483,9 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_missing_post_uploads_check:
+    default: false
+    hidden: true
 
 embedding:
   feed_polling_enabled:
