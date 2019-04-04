@@ -3,7 +3,6 @@ import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightText from "discourse/lib/highlight-text";
-import PreloadStore from "preload-store";
 
 const _decorators = [];
 
