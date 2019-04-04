@@ -32,7 +32,7 @@ class Reviewable < ActiveRecord::Base
     log_history(:created, created_by)
   end
 
-  after_commit do
+  after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
   end
