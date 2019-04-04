@@ -52,7 +52,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(reviewable.actions_for(guardian).has?(:delete_and_ignore_replies)).to eq(true)
       end
 
-
       it "returns appropriate actions for a hidden post" do
         post.update(hidden: true, hidden_at: Time.now)
         expect(reviewable.actions_for(guardian).has?(:agree_and_hide)).to eq(false)
@@ -161,7 +160,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.reload.deleted_at).to be_present
       expect(reply.reload.deleted_at).to be_present
     end
-
 
     it "disagrees with the flags" do
       reviewable.perform(moderator, :disagree)
