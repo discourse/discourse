@@ -2244,6 +2244,7 @@ en:
 
     post:
       quote_reply: "Quote"
+      quote_ignored: "Hidden content"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
       wiki_last_edited_on: "wiki last edited on"

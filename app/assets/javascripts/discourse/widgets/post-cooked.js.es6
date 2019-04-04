@@ -216,7 +216,7 @@ export default class PostCooked {
     const currentUser = PreloadStore.get("currentUser");
     const ignoredUsers = currentUser.ignored_users;
     if(ignoredUsers && ignoredUsers.includes($($aside).find('.title').text().trim().slice(0, -1))) {
-      $($aside).find("p").replaceWith("<i>Hidden content</i>");
+      $($aside).find("p").replaceWith(`<i>${I18n.t("post.quote_ignored")}</i>`);
     }
     $(".quote-controls", $aside).html(expandContract + navLink);
   }
