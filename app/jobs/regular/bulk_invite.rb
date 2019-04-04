@@ -48,7 +48,7 @@ module Jobs
       save_log "Bulk Invite Process Failed -- '#{e.message}'"
       @failed += 1
     ensure
-      file.close
+      file&.close
     end
 
     def get_group_ids(group_names, csv_line_number)
