@@ -213,21 +213,21 @@ export default class PostCooked {
       expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $(".title", $aside).css("cursor", "pointer");
     }
-    const currentUser = PreloadStore.get("currentUser");
-    const ignoredUsers = currentUser.ignored_users;
-    if (
-      ignoredUsers &&
-      ignoredUsers.includes(
-        $($aside)
+    const { currentUser } = this.decoratorHelper.widget;
+    if (currentUser) {
+      const ignoredUsers = currentUser.ignored_users;
+      if (ignoredUsers && ignoredUsers.length > 0) {
+        const username = $aside
           .find(".title")
           .text()
           .trim()
-          .slice(0, -1)
-      )
-    ) {
-      $($aside)
-        .find("p")
-        .replaceWith(`<i>${I18n.t("post.quote_ignored")}</i>`);
+          .slice(0, -1);
+        if (username.length > 0 && ignoredUsers.includes(username)) {
+          $aside
+            .find("p")
+            .replaceWith(`<i>${I18n.t("post.quote_ignored")}</i>`);
+        }
+      }
     }
     $(".quote-controls", $aside).html(expandContract + navLink);
   }
