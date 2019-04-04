@@ -33,7 +33,7 @@ describe BasicPostSerializer do
 
     context "when ignore_user_enable is OFF" do
       it "ignored is false" do
-        expect(json[:ignored]).to be_falsey
+        expect(json[:ignored]).to eq(false)
       end
     end
 
@@ -46,7 +46,7 @@ describe BasicPostSerializer do
         let(:post) { Fabricate.build(:post, user: another_user, topic: topic) }
 
         it "ignored is true" do
-          expect(json[:ignored]).to be_truthy
+          expect(json[:ignored]).to eq(true)
         end
       end
 
@@ -56,7 +56,7 @@ describe BasicPostSerializer do
         let(:serializer) { BasicPostSerializer.new(reply, scope: Guardian.new(user), root: false) }
 
         it "ignored is true" do
-          expect(json[:ignored]).to be_truthy
+          expect(json[:ignored]).to eq(true)
         end
       end
     end
