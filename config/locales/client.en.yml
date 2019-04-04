@@ -2246,6 +2246,7 @@ en:
       quote_reply: "Quote"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
+      ignored: "Hidden content"
       wiki_last_edited_on: "wiki last edited on"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
