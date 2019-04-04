@@ -67,7 +67,25 @@ class ReviewableFlaggedPost < Reviewable
     if guardian.is_staff?
       delete = actions.add_bundle("#{id}-delete", icon: "far-trash-alt", label: "reviewables.actions.delete.title")
       build_action(actions, :delete_and_ignore, icon: 'external-link-alt', bundle: delete)
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_ignore_replies,
+          icon: 'external-link-alt',
+          confirm: true,
+          bundle: delete
+        )
+      end
       build_action(actions, :delete_and_agree, icon: 'thumbs-up', bundle: delete)
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_agree_replies,
+          icon: 'external-link-alt',
+          bundle: delete,
+          confirm: true
+        )
+      end
     end
   end
 
@@ -192,11 +210,32 @@ class ReviewableFlaggedPost < Reviewable
     result
   end
 
+  def perform_delete_and_ignore_replies(performed_by, args)
+    result = perform_ignore(performed_by, args)
+
+    replies = PostReply.where(post_id: post.id).includes(:reply).map(&:reply)
+    PostDestroyer.new(performed_by, post).destroy
+    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+
+    result
+  end
+
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
     PostDestroyer.new(performed_by, post).destroy
     result
   end
+
+  def perform_delete_and_agree_replies(performed_by, args)
+    result = agree(performed_by, args)
+
+    replies = PostReply.where(post_id: post.id).includes(:reply).map(&:reply)
+    PostDestroyer.new(performed_by, post).destroy
+    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+
+    result
+  end
+
 protected
 
   def agree(performed_by, args)
