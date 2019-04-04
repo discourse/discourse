@@ -408,7 +408,7 @@ en:
         unique_users:
           one: "1 user"
           other: "{{count}} users"
-      topic_replies:
+      replies:
         one: "1 reply"
         other: "{{count}} replies"
       edit: "Edit"
