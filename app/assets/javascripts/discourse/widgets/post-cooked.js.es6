@@ -17,6 +17,10 @@ export default class PostCooked {
     this.expanding = false;
     this._highlighted = false;
     this.decoratorHelper = decoratorHelper;
+    this.currentUser = decoratorHelper.widget.currentUser;
+    if (this.currentUser) {
+      this.ignoredUsers = this.currentUser.ignored_users;
+    }
   }
 
   update(prev) {
@@ -212,16 +216,14 @@ export default class PostCooked {
       expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $(".title", $aside).css("cursor", "pointer");
     }
-    const { currentUser } = this.decoratorHelper.widget;
-    if (currentUser) {
-      const ignoredUsers = currentUser.ignored_users;
-      if (ignoredUsers && ignoredUsers.length > 0) {
+    if (this.currentUser) {
+      if (this.ignoredUsers && this.ignoredUsers.length > 0) {
         const username = $aside
           .find(".title")
           .text()
           .trim()
           .slice(0, -1);
-        if (username.length > 0 && ignoredUsers.includes(username)) {
+        if (username.length > 0 && this.ignoredUsers.includes(username)) {
           $aside.find("p").replaceWith(`<i>${I18n.t("post.ignored")}</i>`);
         }
       }
@@ -257,13 +259,11 @@ export default class PostCooked {
   }
 
   _computeCooked() {
-    const { currentUser } = this.decoratorHelper.widget;
-    if (currentUser) {
-      const ignoredUsers = currentUser.ignored_users;
+    if (this.currentUser) {
       if (
-        ignoredUsers &&
-        ignoredUsers.length > 0 &&
-        ignoredUsers.includes(this.attrs.username)
+        this.ignoredUsers &&
+        this.ignoredUsers.length > 0 &&
+        this.ignoredUsers.includes(this.attrs.username)
       ) {
         return $(
           `<div class='cooked post-ignored'>${I18n.t("post.ignored")}</div>`
