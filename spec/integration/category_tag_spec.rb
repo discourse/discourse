@@ -54,8 +54,6 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
     end
 
-
-
     it "can't create new tags in a restricted category" do
       post = create_post(category: category_with_tags, tags: [tag1.name, "newtag"])
       expect(post.topic.tags).to contain_exactly(tag1)
