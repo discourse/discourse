@@ -244,8 +244,9 @@ aside.onebox {
       }
     }
 
-    // instagram fixes
-    .instagram-images {
+    // instagram + reddit fixes
+    .instagram-images,
+    .scale-images {
       clear: both;
       position: relative;
 
@@ -262,7 +263,8 @@ aside.onebox {
         position: absolute;
       }
 
-      .instagram-image {
+      .instagram-image,
+      .scale-image {
         padding: 5px 5px 5px 5px;
         max-width: 100%;
         max-height: 100%;
