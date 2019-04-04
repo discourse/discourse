@@ -568,7 +568,7 @@ class CookedPostProcessor
           new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
           new_parent.first.add_child(img)
         end
-      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images")) && width > 0 && height > 0
+      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") || parent_class&.include?("scale-images")) && width > 0 && height > 0
         img.remove_attribute("width")
         img.remove_attribute("height")
         img.parent["class"] = "aspect-image-full-size"
