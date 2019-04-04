@@ -45,7 +45,7 @@ class BasicPostSerializer < ApplicationSerializer
 
   def ignored
     return false unless SiteSetting.ignore_user_enabled?
-    object.is_first_post? &&
+    (object.is_first_post? || reply_to_post_number.present?) &&
       scope.current_user&.id != object.user_id &&
       IgnoredUser.where(user_id: scope.current_user&.id,
                         ignored_user_id: object.user_id).exists?
