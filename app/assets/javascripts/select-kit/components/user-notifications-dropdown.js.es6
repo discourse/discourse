@@ -1,6 +1,7 @@
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import PreloadStore from "preload-store";
 
 export default DropdownSelectBox.extend({
   classNames: ["user-notifications", "user-notifications-dropdown"],
@@ -50,6 +51,8 @@ export default DropdownSelectBox.extend({
   changeToNormal() {
     this.get("updateNotificationLevel")("normal")
       .then(() => {
+        const currentUser = PreloadStore.get("currentUser");
+        currentUser.ignored_users.removeObject(this.get("user.username"));
         this.set("user.ignored", false);
         this.set("user.muted", false);
         this.set("headerIcon", "user");
