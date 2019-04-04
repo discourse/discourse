@@ -8,6 +8,8 @@ module Jobs
     MISSING_UPLOADS ||= "missing_uploads"
 
     def execute(args)
+      return unless SiteSetting.enable_missing_post_uploads_check
+
       PostCustomField
         .where(name: MISSING_UPLOADS)
         .where("created_at < ?", 1.month.ago)
