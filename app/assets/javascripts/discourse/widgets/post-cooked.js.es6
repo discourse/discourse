@@ -245,7 +245,7 @@ export default class PostCooked {
 
   _applyIgnoredState($html) {
     if (this.attrs.ignored) {
-      $($html).addClass("post-ignored");
+      $html.addClass("post-ignored");
     }
   }
 }
