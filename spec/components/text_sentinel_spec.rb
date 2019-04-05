@@ -102,9 +102,8 @@ describe TextSentinel do
 
     it "skips long words check (`seems_unpretentious`) for CJK locale" do
       SiteSetting.default_locale = 'zh_CN'
-      expect(TextSentinel.title_sentinel("非常长的文字没有空格分割肯定会触发警告但这不应该是一个错误这个要超过五十个个字符"*2)).to be_valid
+      expect(TextSentinel.title_sentinel("非常长的文字没有空格分割肯定会触发警告但这不应该是一个错误这个要超过五十个个字符" * 2)).to be_valid
     end
-
 
     it "doesn't allow a long alphanumeric string with no spaces" do
       expect(TextSentinel.new("jfewjfoejwfojeojfoejofjeo3" * 5, max_word_length: 30)).not_to be_valid
