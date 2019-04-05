@@ -3,6 +3,7 @@
     {{topic-status topic=reviewable.topic}}
     <a href={{reviewable.topic_url}} class='title-text'>{{reviewable.topic.title}}</a>
     {{category-badge reviewable.category}}
+    {{reviewable-tags tags=reviewable.topic_tags tagName=''}}
   {{else if (has-block)}}
     {{yield}}
   {{else}}

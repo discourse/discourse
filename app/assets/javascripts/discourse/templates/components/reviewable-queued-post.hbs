@@ -1,29 +1,21 @@
-
-
-  {{#reviewable-topic-link reviewable=reviewable tagName=''}}
-    <div class="title-text">{{i18n "review.new_topic"}}
+{{#reviewable-topic-link reviewable=reviewable tagName=''}}
+  <div class="title-text">{{i18n "review.new_topic"}}
     {{reviewable.payload.title}}
   </div>
   {{category-badge reviewable.category}}
-    {{#if reviewable.payload.tags}}
-      <div class="list-tags">
-        {{#each reviewable.payload.tags as |t|}}
-          {{discourse-tag t}}
-        {{/each}}
-      </div>
-    {{/if}}
-  {{/reviewable-topic-link}}
+  {{reviewable-tags tags=reviewable.payload.tags tagName=''}}
+{{/reviewable-topic-link}}
 
 <div class='post-contents-wrapper'>
   {{reviewable-created-by user=reviewable.created_by tagName=''}}
 
-<div class='post-contents'>
-  {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
+  <div class='post-contents'>
+    {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
 
-  <div class='post-body'>
-    {{cook-text reviewable.payload.raw}}
+    <div class='post-body'>
+      {{cook-text reviewable.payload.raw}}
+    </div>
+
+    {{yield}}
   </div>
-
-  {{yield}}
-</div>
 </div>
