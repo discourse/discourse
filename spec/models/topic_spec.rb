@@ -1275,6 +1275,7 @@ describe Topic do
 
       describe 'to a different category' do
         let(:new_category) { Fabricate(:category, user: user, name: '2nd category') }
+        let(:another_user) { Fabricate(:user) }
 
         it 'should work' do
           topic.change_category_to_id(new_category.id)
@@ -1285,7 +1286,8 @@ describe Topic do
         end
 
         describe 'user that is watching the new category' do
-          it 'should generate the notification for the topic' do
+
+          before do
             Jobs.run_immediately!
 
             topic.posts << Fabricate(:post)
@@ -1296,14 +1298,14 @@ describe Topic do
               new_category.id
             )
 
-            another_user = Fabricate(:user)
-
             CategoryUser.set_notification_level_for_category(
               another_user,
               CategoryUser::notification_levels[:watching_first_post],
               new_category.id
             )
+          end
 
+          it 'should generate the notification for the topic' do
             expect do
               topic.change_category_to_id(new_category.id)
             end.to change { Notification.count }.by(2)
@@ -1321,6 +1323,14 @@ describe Topic do
               post_number: 1,
               notification_type: Notification.types[:watching_first_post]
             ).exists?).to eq(true)
+          end
+
+          it "should not generate a notification for unlisted topic" do
+            topic.update_column(:visible, false)
+
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(0)
           end
         end
 
