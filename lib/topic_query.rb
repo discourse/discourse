@@ -469,6 +469,10 @@ class TopicQuery
         staff: @user&.staff?)
       .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
+    if @user
+      result = result.where("topics.updated_at >= (SELECT first_unread_at FROM user_stats WHERE user_id = ?)", @user.id)
+    end
+
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:unread, result, @user, options)
     end
