@@ -9,6 +9,12 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     let meta = model.resultSetMeta;
+
+    // "fast track" to update the current user's reviewable count before the message bus finds out.
+    if (meta.reviewable_count !== undefined) {
+      this.currentUser.set("reviewable_count", meta.reviewable_count);
+    }
+
     controller.setProperties({
       reviewables: model,
       type: meta.type,

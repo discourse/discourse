@@ -48,9 +48,14 @@ export default Ember.Component.extend({
         }
       )
         .then(result => {
-          this.attrs.remove(
-            result.reviewable_perform_result.remove_reviewable_ids
-          );
+          let performResult = result.reviewable_perform_result;
+
+          // "fast track" to update the current user's reviewable count before the message bus finds out.
+          if (performResult.reviewable_count !== undefined) {
+            this.currentUser.set("reviewable_count", result.reviewable_count);
+          }
+
+          this.attrs.remove(performResult.remove_reviewable_ids);
         })
         .catch(popupAjaxError)
         .finally(() => this.set("updating", false));
