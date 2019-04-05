@@ -723,6 +723,8 @@ RSpec.describe TopicsController do
     context 'for last post only' do
 
       it 'should allow you to retain topic timing but remove last post only' do
+        freeze_time
+
         post1 = create_post
         topic = post1.topic
 
@@ -730,6 +732,8 @@ RSpec.describe TopicsController do
 
         PostTiming.create!(topic: topic, user: user, post_number: 1, msecs: 100)
         PostTiming.create!(topic: topic, user: user, post_number: 2, msecs: 100)
+
+        user.user_stat.update!(first_unread_at: Time.now + 1.week)
 
         TopicUser.create!(
           topic: topic,
@@ -746,6 +750,9 @@ RSpec.describe TopicsController do
         expect(PostTiming.where(topic: topic, user: user, post_number: 1).exists?).to eq(true)
 
         expect(TopicUser.where(topic: topic, user: user, last_read_post_number: 1, highest_seen_post_number: 1).exists?).to eq(true)
+
+        user.user_stat.reload
+        expect(user.user_stat.first_unread_at).to eq_time(topic.updated_at)
 
         PostDestroyer.new(Fabricate(:admin), post2).destroy
 

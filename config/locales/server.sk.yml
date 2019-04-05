@@ -212,8 +212,6 @@ sk:
     tag: "Oštítkované témy"
   too_late_to_edit: "Tento príspevok bol vytvorený príliš dávno. Už nemôže byť upravovaný či zmazaný"
   excerpt_image: "Obrázok"
-  queue:
-    delete_reason: "Zmazané moderátorom"
   groups:
     errors:
       can_not_modify_automatic: "Nemôžete upraviť automatickú skupinu"
@@ -892,7 +890,6 @@ sk:
     max_age_unmatched_emails: "Zmazať nevyskytujúce sa kontrolované emailové adresy po (N) dňoch."
     max_age_unmatched_ips: "Zmazať nevyskytujúce sa kontrolované IP adresy po (N) dňoch."
     num_flaggers_to_close_topic: "Minimálny počet rôznych oznamovateľov potrebný na automatické pozastavenie témy pre intervenciu."
-    num_flags_to_close_topic: "Minimálny počet aktívnych príznakov potrebný na automatické pozastavenie témy pre intervenciu."
     auto_respond_to_flag_actions: "Zapnúť automatickú odpoveď pri odstránení označenia."
     min_first_post_typing_time: "Minimalny čas písania prvého príspevku v milisekundách, ak je čas kratší ako je limit, príspevok bude automaticky zaradený do fronty na schválenie. Nastav 0 pre vypnutie (Neoporúča sa)"
     reply_by_email_enabled: "Povoliť odpoveď na tému prostredníctvom emailu."
@@ -1080,12 +1077,6 @@ sk:
     ip_address:
       blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
       max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
-  flags_reminder:
-    subject_template:
-      one: "1 značká čaká na zpracovanie"
-      few: "%{count} značky čakajú na zpracovanie"
-      many: "%{count} značiek čaká na zpracovanie"
-      other: "%{count} značiek čaká na zpracovanie"
   unsubscribe_mailer:
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z  %{site_title}"
   invite_password_instructions:
@@ -1099,8 +1090,6 @@ sk:
     agreed: "Ďakujeme za upozornenie. Súhlasíme s tým, že je tam problém a pracujeme na ňom."
     agreed_and_deleted: "Ďakujeme za upozornenie. Súhlasíme s tým, že je tam problém a príspevok sme odstránili."
     disagreed: "Ďakujeme za upozornenie. Práve to riešime."
-    deferred: "Ďakujeme za upozornenie. Práve to riešime."
-    deferred_and_deleted: "Ďakujeme za upozornenie. Daný príspevok sme odstránili."
   system_messages:
     welcome_user:
       subject_template: "Vitajte na %{site_name}!"

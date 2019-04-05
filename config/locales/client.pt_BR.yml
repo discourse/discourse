@@ -189,7 +189,6 @@ pt_BR:
     age: "Idade"
     joined: "Registrou"
     admin_title: "Admin"
-    flags_title: "Sinalizações"
     show_more: "mostrar mais"
     show_help: "opções"
     links: "Links"
@@ -305,28 +304,6 @@ pt_BR:
       title:
         search: "Procurar por uma Mensagem pelo título:"
         placeholder: "digite o título da mensagem aqui"
-    queue:
-      topic: "Tópico:"
-      approve: "Aprovar"
-      reject: "Rejeitar"
-      delete_user: "Excluir Usuário"
-      title: "Aprovação Necessária"
-      none: "Não existem mensagens para revisar."
-      edit: "Editar"
-      cancel: "Cancelar"
-      view_pending: "ver postagens pendentes"
-      has_pending_posts:
-        one: "Este tópico tem <b>1</b> postagem aguardando aprovação"
-        other: "Este tópico tem <b>{{count}}</b> postagens aguardando aprovação"
-      confirm: "Salvar Mudanças"
-      delete_prompt: "Você tem certeza que quer excluir <b>%{username}</b>? Esta ação irá remover todas as suas postagens e bloquear seu e-mail e endereço IP."
-      approval:
-        title: "Aprovação Necessária da Postagem"
-        description: "Nós recebemos sua nova postagem, mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor, tenha paciência."
-        pending_posts:
-          one: "Você tem <strong>1</strong> postagem pendente."
-          other: "Você tem <strong>{{count}}</strong> postagens pendentes."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postou <a href='{{topicUrl}}'>o tópico</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Você</a> postou <a href='{{topicUrl}}'>o tópico</a>"
@@ -1960,9 +1937,6 @@ pt_BR:
       has_replies:
         one: "{{count}} Resposta"
         other: "{{count}} Respostas"
-      has_likes:
-        one: "{{count}} Curtida"
-        other: "{{count}} Curtidas"
       has_likes_title:
         one: "{{count}} pessoa curtiu esta mensagem"
         other: "{{count}} pessoas curtiram esta mensagem"
@@ -2724,93 +2698,6 @@ pt_BR:
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"
         by: "por"
-      flags:
-        title: "Sinalizações"
-        active_posts: "Posts sinalizados"
-        old_posts: "Posts antigos sinalizados"
-        topics: "Tópicos sinalizados"
-        moderation_history: "Histórico de Moderação"
-        agree: "Concordo"
-        agree_title: "Confirmar esta marcação como válida e correta"
-        agree_flag_hide_post: "Esconder publicação"
-        agree_flag_hide_post_title: "Esconder esta publicação e enviar automaticamente ao usuário uma mensagem pedindo-lhe para editá-lo."
-        agree_flag_restore_post: "Concordar e restaurar post"
-        agree_flag_restore_post_title: "Restaure a postagem para que todos os usuários possam vê-la."
-        agree_flag_suspend: "Suspender usuário"
-        agree_flag_suspend_title: "Concordar com o sinalizador e suspender o usuário."
-        agree_flag_silence: "Silenciar usuário"
-        agree_flag_silence_title: "Concorde com a bandeira e silencie o usuário."
-        agree_flag: "Manter Post"
-        agree_flag_title: "Concorde com o sinalizador e mantenha a postagem inalterada."
-        ignore_flag: "Ignorar"
-        ignore_flag_title: "Remova este sinalizador; não requer nenhuma ação neste momento."
-        delete: "Apagar"
-        delete_title: "Apagar o post ao qual a marcação se refere."
-        delete_post_defer_flag: "Excluir marcador de postagem e ignorar"
-        delete_post_defer_flag_title: "Apaga a resposta; se for a primeira, apagar o tópico"
-        delete_post_agree_flag: "Excluir postagem e concordar com sinalizador"
-        delete_post_agree_flag_title: "Apagar resposta; se for a primeira, excluir o tópico"
-        delete_flag_modal_title: "Apagar e ..."
-        delete_spammer: "Deletar Spammer"
-        delete_spammer_title: "Remover o usuário e todas as suas respostas e tópicos."
-        disagree_flag_unhide_post: "Discordar (reexibir resposta)"
-        disagree_flag_unhide_post_title: "Remover qualquer denúncia desta resposta e fazer ela visível de novo"
-        disagree_flag: "Discordar"
-        disagree_flag_title: "Negar a marcação como inválida ou incorreta"
-        clear_topic_flags: "Concluído"
-        clear_topic_flags_title: "O tópico foi investigado e as questões foram resolvidas. Clique em Concluído para remover as sinalizações."
-        more: "(mais respostas...)"
-        suspend_user: "Suspender usuário"
-        suspend_user_title: "Suspender usuário para esta postagem"
-        replies:
-          one: "[1 resposta]"
-          other: "[%{count} respostas]"
-        delete_replies:
-          one: "Excluir também a %{count} resposta a esta postagem?"
-          other: "Excluir também a  %{count} resposta a esta postagem??"
-        dispositions:
-          agreed: "concordar"
-          disagreed: "discordar"
-          deferred: "ignorado"
-        flagged_by: "Sinalizado por"
-        resolved_by: "Resolvido por"
-        took_action: "Tomar ação"
-        system: "Sistema"
-        error: "Algo deu errado"
-        reply_message: "Responder"
-        no_results: "Não há mensagens sinalizadas."
-        topic_flagged: "Este <strong>tópico</strong> foi sinalizado."
-        show_full: "mostrar post completo"
-        visit_topic: "Visitar o tópico para tomar ações"
-        was_edited: "Resposta foi editada após uma primeira sinalização"
-        previous_flags_count: "Este post já foi marcado {{count}} vezes."
-        show_details: "Mostrar detalhes da bandeira"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} sinalização no total)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} sinalizações no total)"
-          agreed:
-            one: "{{count}}% concorda"
-            other: "{{count}}% concordam"
-          disagreed:
-            one: "{{count}}% discorda"
-            other: "{{count}}% discordam"
-          ignored:
-            one: "{{count}}% ignora"
-            other: "{{count}}% ignoram"
-        details: "detalhes"
-        flagged_topics:
-          topic: "Tópico"
-          type: "Tipo"
-          users: "Usuários"
-          last_flagged: "Última mensagem sinalizada"
-          no_results: "Não há tópicos sinalizados."
-        short_names:
-          off_topic: "fora do assunto"
-          inappropriate: "impróprio"
-          spam: "spam"
-          notify_user: "personalizado"
-          notify_moderators: "personalizado"
       groups:
         new:
           title: "Novo grupo"
@@ -3513,19 +3400,12 @@ pt_BR:
         nav:
           new: "Novos"
           active: "Ativos"
-          pending: "Pendentes"
           staff: "Equipe"
           suspended: "Suspenso"
           silenced: "Silenciado"
           suspect: "Suspeito"
           staged: "Encenado"
         approved: "Aprovado?"
-        approved_selected:
-          one: "aprovar usuário"
-          other: "aprovar usuários ({{count}})"
-        reject_selected:
-          one: "rejeitar usuário"
-          other: "rejeitar usuários ({{count}})"
         titles:
           active: "Usuários Ativos"
           new: "Usuários Novos"
@@ -3542,12 +3422,6 @@ pt_BR:
           suspended: "Usuários Suspensos"
           suspect: "Usuários suspeitos"
           staged: "Usuários em etapas"
-        reject_successful:
-          one: "1 usuário foi rejeitado com sucesso."
-          other: "%{count} usuários foram rejeitados com sucesso."
-        reject_failures:
-          one: "Falha ao rejeitar 1 usuário."
-          other: "Falha ao rejeitar %{count} usuários."
         not_verified: "Não verificado"
         check_email:
           title: "Mostrar endereço de e-mail deste usuário"

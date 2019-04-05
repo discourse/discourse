@@ -166,7 +166,6 @@ da:
     age: "Alder"
     joined: "Tilmeldt"
     admin_title: "Admin"
-    flags_title: "Flagmarkeringer"
     show_more: "vis mere"
     show_help: "indstillinger"
     links: "Links"
@@ -247,28 +246,6 @@ da:
       none_found: "Ingen emner fundet."
       title:
         placeholder: "indtast emnets titel her"
-    queue:
-      topic: "Emne:"
-      approve: "Godkend"
-      reject: "Afvis"
-      delete_user: "Slet bruger"
-      title: "Afventer godkendelse"
-      none: "Der er ingen indlæg at vurdere."
-      edit: "Ret"
-      cancel: "Annuller"
-      view_pending: "vis afventende indlæg"
-      has_pending_posts:
-        one: "Det emne har <b>1</b> indlæg der afventer godkendelse"
-        other: "Dette emne har <b>{{count}}</b> indlæg der afventer godkendelse"
-      confirm: "Gem ændringer"
-      delete_prompt: "Er du sikker på at du vil slette <b>%{username}</b>? Det fjerner alle indlæg og blokerer email og IP-adresse."
-      approval:
-        title: "Indlæg afventer godkendelse"
-        description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
-        pending_posts:
-          one: "Du har <strong>1</strong> afventende indlæg."
-          other: "Du har <strong>{{count}}</strong> afventende indlæg."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> oprettede <a href='{{topicUrl}}'>emnet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> oprettede <a href='{{topicUrl}}'>emnet</a>"
@@ -1491,9 +1468,6 @@ da:
       has_replies:
         one: "{{count}} svar"
         other: "{{count}} svar"
-      has_likes:
-        one: "{{count}} like"
-        other: "{{count}} likes"
       has_likes_title:
         one: "1 likede dette indlæg"
         other: "{{count}} likede dette indlæg"
@@ -2126,40 +2100,6 @@ da:
       commits:
         latest_changes: "Seneste ændringer: opdatér ofte!"
         by: "af"
-      flags:
-        title: "Flag"
-        agree: "Enig"
-        agree_title: "Bekræft dette flag er gyldigt og korrekt"
-        agree_flag_hide_post: "Skjul Indlæg"
-        delete: "Slet"
-        delete_title: "Slet det indlæg, som flaget refererer til."
-        delete_post_defer_flag_title: "Slet indlægget; hvis det er det første, så slet hele emnet"
-        delete_post_agree_flag_title: "Slet indlæg; hvis det er det første indlæg, slet emnet"
-        delete_flag_modal_title: "Slet og..."
-        delete_spammer: "Slet spammer"
-        delete_spammer_title: "Fjern brugeren samt alle dens indlæg og emner."
-        disagree_flag_unhide_post: "Uenig (vis indlæg)"
-        disagree_flag_unhide_post_title: "Fjern alle flag fra dette indlæg og gør det synligt igen"
-        disagree_flag: "Uenig"
-        disagree_flag_title: "Sæt dette flag som invalid eller forkert"
-        clear_topic_flags: "Færdig"
-        clear_topic_flags_title: "Emnet er kontrolleret og fundet ok. Klik på færdig for at fjerne rapporteringer."
-        more: "(flere svar...)"
-        dispositions:
-          agreed: "enig"
-          disagreed: "uenig"
-        flagged_by: "Flaget af"
-        resolved_by: "Løst af"
-        took_action: "Reagerede"
-        system: "System"
-        error: "Noget gik galt"
-        reply_message: "Svar"
-        topic_flagged: "Dette <strong>emne</strong> er blevet rapporteret til administrator."
-        visit_topic: "Besøg emnet for at gøre noget ved det"
-        was_edited: "Indlægget blev redigeret efter det første gang blev flagget"
-        previous_flags_count: "Dette indlæg er allerede blevet markeret {{count}} gange."
-        flagged_topics:
-          users: "Brugere"
       groups:
         manage:
           interaction:
@@ -2627,17 +2567,10 @@ da:
         nav:
           new: "Ny"
           active: "Aktiv"
-          pending: "Afventer"
           staff: "Personale"
           suspended: "Suspenderet"
           suspect: "Mistænkt"
         approved: "Godkendt?"
-        approved_selected:
-          one: "godkend bruger"
-          other: "godkend brugere ({{count}})"
-        reject_selected:
-          one: "afvis bruger"
-          other: "afvis brugere ({{count}})"
         titles:
           active: "Aktive brugere"
           new: "Nye brugere"
@@ -2652,12 +2585,6 @@ da:
           moderators: "Moderatorer"
           suspended: "Suspenderede brugere"
           suspect: "Mistænkte brugere"
-        reject_successful:
-          one: "Afviste 1 bruger."
-          other: "Afviste %{count} brugere."
-        reject_failures:
-          one: "Kunne ikke afvise 1 bruger."
-          other: "Kunne ikke afvise %{count} brugere."
         not_verified: "Ikke verificeret"
         check_email:
           title: "Vis denne brugers email adresse"

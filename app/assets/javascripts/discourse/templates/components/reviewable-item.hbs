@@ -2,20 +2,20 @@
   <div class='reviewable-meta-data'>
     <span class='reviewable-type'>{{reviewable.humanType}}</span>
     <span class='badge-notification new-posts score' title={{i18n "review.scores.score"}}>{{format-score reviewable.score}}</span>
-    {{#if reviewable.topic}}
-    <span class='reply-count'>{{i18n "review.topic_replies" count=reviewable.topic.reply_count}}</span>
+    {{#if reviewable.reply_count}}
+      <span class='reply-count'>{{i18n "review.replies" count=reviewable.reply_count}}</span>
     {{/if}}
-    <span class='status'>
-      {{#if reviewable.approved}}
-        {{d-icon "check"}} {{i18n "review.statuses.approved.title"}}
-      {{else if reviewable.rejected}}
-        {{d-icon "times"}} {{i18n "review.statuses.rejected.title"}}
-      {{else if reviewable.ignored}}
-        {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}}
-      {{/if}}
-    </span>
     <span class='created-at'>
       {{#link-to 'review.show' reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
+    </span>
+    <span class='status'>
+      {{#if reviewable.approved}}
+      <span class="approved">  {{d-icon "check"}} {{i18n "review.statuses.approved.title"}} </span>
+      {{else if reviewable.rejected}}
+      <span class="rejected">   {{d-icon "times"}} {{i18n "review.statuses.rejected.title"}} </span>
+      {{else if reviewable.ignored}}
+      <span class="ignored">   {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}} </span>
+      {{/if}}
     </span>
   </div>
 

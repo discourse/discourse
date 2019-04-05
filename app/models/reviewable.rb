@@ -29,9 +29,12 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores
 
   after_create do
+    log_history(:created, created_by)
+  end
+
+  after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
-    log_history(:created, created_by)
   end
 
   def self.statuses
@@ -208,17 +211,20 @@ class Reviewable < ActiveRecord::Base
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
+    update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
       result = send(perform_method, performed_by, args)
 
       if result.success?
-        transition_to(result.transition_to, performed_by) if result.transition_to
+        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
         recalculate_score if result.recalculate_score
       end
     end
+    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
+
     result
   end
 
@@ -239,7 +245,7 @@ class Reviewable < ActiveRecord::Base
       )
     end
 
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if was_pending
+    was_pending
   end
 
   def post_options

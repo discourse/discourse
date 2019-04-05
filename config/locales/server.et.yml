@@ -191,8 +191,6 @@ et:
   too_late_to_edit: "Postitus loodi kaua aega tagasi. Seda ei saa enam muuta ega kustutada."
   revert_version_same: "Praegune versioon on sama sellega, millele sa püüad tagasi pöörduda."
   excerpt_image: "pilt"
-  queue:
-    delete_reason: "Kustutatud modereerimisjärjekorra kaudu"
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"

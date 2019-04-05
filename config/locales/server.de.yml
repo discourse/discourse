@@ -292,9 +292,6 @@ de:
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
   excerpt_image: "Bild"
-  queue:
-    delete_reason: "Aus der Moderations-Warteschlange für Beiträge gelöscht"
-    not_found: "Seite nicht gefunden oder bereits aktualisiert."
   groups:
     success:
       bulk_add:
@@ -498,7 +495,6 @@ de:
       email_already_used_in_group: "'%{email}' wird bereits von der Gruppe '%{group_name}' verwendet."
       email_already_used_in_category: "'%{email}' wird bereits von der Kategorie '%{category_name}' verwendet."
       description_incomplete: "Die Kategorie-Beschreibung muss mindestens einen Absatz enthalten."
-      permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie haben."
       disallowed_topic_tags: "Dieses Thema hat Tags, die in dieser Kategorie nicht erlaubt sind: '%{tags}'"
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und kann nicht gelöscht werden."
@@ -1152,6 +1148,7 @@ de:
   site_settings:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
+    default_locale: "Die Standardsprache dieser Discourse Instanz. Du kannst den Text systemgenerierter Kategorien und Themen <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Customize / Text Content</a> ändern."
     allow_user_locale: "Erlaube Benutzern, ihre eigene Oberflächensprache zu wählen"
     set_locale_from_accept_language_header: "Sprache der Benutzeroberfläche für anonyme Benutzer an Hand der Spracheinstellung ihres Browsers wählen (EXPERIMENTELL, funktioniert nicht mit Caches für anonyme Benutzer)"
     support_mixed_text_direction: "Unterstütze die Vermischung von rechtsläufigem und linksläufigem Text"
@@ -1247,7 +1244,6 @@ de:
     tl2_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 2 (Mitglied) mit diesem Faktor multiplizieren"
     tl3_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 3 (Stammgast) mit diesem Faktor multiplizieren"
     tl4_additional_likes_per_day_multiplier: "Limit für \"Gefällt mir\" für Benutzer auf Vertrauensstufe 4 (Anführer) mit diesem Faktor multiplizieren"
-    num_spam_flags_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_users_to_silence_new_user verschiedenen Benutzern gemeldet wird, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
     num_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers Spam-Meldungen von num_spam_flags_to_block_new_user verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers ausgeblendet und weitere Beiträge verhindert. Ein Wert von 0 deaktiviert die Funktion."
     num_tl3_flags_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
     num_tl3_users_to_silence_new_user: "Wenn Beiträge eines neuen Benutzers von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 gemeldet werden, verstecke alle Beiträge des Benutzers und erlaube keine weiteren Beiträge. Ein Wert von 0 deaktiviert diese Funktion."
@@ -1419,6 +1415,7 @@ de:
     avatar_sizes: "Liste der Größe von automatisch generierten Profilbildern."
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
+    restrict_letter_avatar_colors: "Eine Liste 6stelliger hexadezimaler Farbwerte für den Letter Avatar Hintergrund."
     selectable_avatars_enabled: "Forciere Benutzer, ein Avatar aus der Liste auszuwählen."
     selectable_avatars: "Liste von Avataren, aus der Benutzer wählen können."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
@@ -1523,7 +1520,6 @@ de:
     max_age_unmatched_emails: "Gefilterte E-Mail-Adressen nach (N) Tagen ohne Treffer löschen."
     max_age_unmatched_ips: "Gefilterte IP-Adressen nach (N) Tagen ohne Treffer löschen."
     num_flaggers_to_close_topic: "Mindestzahl unabhängiger Mitglieder, die ein Thema melden, damit es automatisch für eine Prüfung pausiert wird."
-    num_flags_to_close_topic: "Mindestzahl aktiver Meldungen, die notwendig sind, um ein Thema automatisch für eine Prüfung zu pausieren."
     num_hours_to_close_topic: "Anzahl Stunden, um ein Thema als Maßnahme zu pausieren."
     auto_respond_to_flag_actions: "Automatische Antwort auf abgearbeitete Meldungen aktivieren."
     min_first_post_typing_time: "Minimale Zeit die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0 um dieses Verhalten zu deaktivieren (nicht empfohlen)."
@@ -1614,6 +1610,9 @@ de:
     hide_suspension_reasons: "Zeige Sperrgründe nicht öffentlich auf Benutzerprofilen an."
     log_personal_messages_views: "Protokolliere Ansichten von Nachrichten anderer Benutzer/Gruppen durch Administratoren"
     ignore_user_enabled: "[Beta] Erlaube das Ignorieren von Benutzern."
+    ignored_users_count_message_threshold: "Informiere die Moderatoren wenn ein bestimmter Benutzer von so vielen anderen Benutzern ignoriert wird."
+    ignored_users_message_gap_days: "Wie lange gewartet werden soll, bevor die Moderatoren erneut über einen Benutzer informiert werden, der von vielen anderen ignoriert wird."
+    clean_up_inactive_users_after_days: "Anzahl an Tagen bevor inaktive Benutzer (Vertrauensstufe 0 ohne irgendwelche Beiträge) entfernt werden."
     user_website_domains_whitelist: "Benutzer-Webseiten werden mit diesen Domains abgeglichen. Mehrere Domains können mit einem Pipe-Symbol „|“ getrennt angegeben werden."
     allow_profile_backgrounds: "Erlaubt es Benutzern, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an Beiträgen die ein Benutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
@@ -1647,6 +1646,7 @@ de:
     highlighted_languages: "Aktivierter Regeln für das Syntax-Hervorhebung. (Warnung: Das Aktivieren zu vieler Sprachen kann die Leistung beeinträchtigen) siehe: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> für eine Demonstration"
     embed_truncate: "Kürze die eingebetteten Beiträge"
     embed_support_markdown: "Unterstütze Markdown-Formatierung für eingebettete Beiträge"
+    embed_whitelist_selector: "Eine komma-getrennte Liste von CSS Elementen, die in Einbettungen erlaubt sind."
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig"
@@ -1671,9 +1671,13 @@ de:
     code_formatting_style: "Code-Schaltfläche im Editor wird standardmäßig diesen Formatierungsstil anwenden"
     max_allowed_message_recipients: "Maximale Anzahl von Empfängern in einer Nachricht."
     watched_words_regular_expressions: "Beobachtete Wörter sind reguläre Ausdrücke."
+    min_post_notice_tl: "Minimale Vertrauensstufe, die für Beitragsnotizen benötigt wird."
+    old_post_notice_days: "Anzahl Tage, bevor eine Beitragsnotiz alt wird"
     returning_users_days: "Wieviele Tage sollen vergehen, bis ein Benutzer als wiederkommend angesehen wird?"
     default_email_digest_frequency: "Wie häufig sollen Benutzer standardmäßig E-Mail-Zusammenfassungen erhalten?"
     default_include_tl0_in_digests: "Beiträge von neuen Benutzern in E-Mail-Zusammenfassungen standardmäßig anzeigen. Benutzer können dies in ihren Einstelllungen ändern."
+    default_email_level: "Setze die Standard E-Mail Benachrichtigungs-Stufe wenn jemand einen Benutzer zitiert/antwortet/erwähnt oder einlädt."
+    default_email_messages_level: "Standard E-Mail Benachrichtigungs-Stufe wenn jemand einem Benutzer Nachrichten schickt."
     default_email_mailing_list_mode: "Sende standardmäßig eine E-Mail für jeden neuen Beitrag."
     default_email_mailing_list_mode_frequency: "Benutzer, die den Mailinglisten-Modus einschalten, werden standardmäßig so häufig eine E-Mail erhalten."
     disable_mailing_list_mode: "Verhindere, dass Benutzer den Mailinglisten-Modus aktivieren können."
@@ -1728,6 +1732,7 @@ de:
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
+      invalid_group: "Es gibt keine Gruppe mti diesem Namen."
       invalid_integer_min_max: "Der Wert muss zwischen %{min} und %{max} sein."
       invalid_integer_min: "Der Wert muss %{min} oder größer sein."
       invalid_integer_max: "Der Wert kann nicht höher als %{max} sein."
@@ -1758,6 +1763,12 @@ de:
       min_username_length_range: "Sie können nicht das Minimum größer setzen als das Maximum."
       max_username_length_exists: "Sie können nicht die maximale Länge der Benutzernamen kleiner setzen als der längste Benutzername ist (%{username})."
       max_username_length_range: "Sie können nicht das Maximum kleiner setzen als das Minimum."
+      invalid_hex_value: "Farben müssen als 6stelliger Hexadezimalcode angegeben werden."
+      category_search_priority:
+        very_low_weight_invalid: "Die Gewichtung kann nicht größer als 'category_search_priority_low_weight' sein."
+        low_weight_invalid: "Die Gewichtung kann nicht größer oder gleich 1, oder kleiner als 'category_search_priority_very_low_weight' sein. "
+        high_weight_invalid: "Die Gewichtung kann nicht größer oder gleich 1 oder größer als 'category_search_priority_very_high_weight' sein. "
+        very_high_weight_invalid: "Die Gewichtung kann nicht kleiner als 'category_search_priority_high_weight' sein. "
     placeholder:
       sso_provider_secrets:
         key: "www.example.com"
@@ -1803,7 +1814,7 @@ de:
       other: " %{count} Beiträge wurden in ein existierendes Thema veschoben: %{topic_link} "
     existing_message_moderator_post:
       one: "Ein Beitrag wurde in eine existierende Nachricht veschoben: %{topic_link}"
-      other: " %{count} Beiträge wurden in eine existierende Nachricht veschoben: %{topic_link}"
+      other: "%{count} Beiträge wurden in eine existierende Nachricht verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer übertragen."
   topic_statuses:
@@ -1919,13 +1930,7 @@ de:
       unused_staged_user: "Unbenutztes, vorbereiteter Benutzerkonto"
       fixed_primary_email: "Primäre E-Mail-Adresse für vorbereitetes Benutzerkonto korrigiert"
       same_ip_address: "Gleiche IP-Adresse (%{ip_address}) wie andere Benutzer"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Meldungen wurden vor über 1 Stunde eingereicht. [Bitte übeprüfe sie](%{base_path}/admin/flags)."
-      other: "Es wurden Meldungen vor über %{count} Stunden eingereicht. [Bitte überprüfe sie](%{base_path}/admin/flags)."
-    subject_template:
-      one: "Eine Markierung wartet auf Bearbeitung"
-      other: "%{count} Markierungen warten auf Bearbeitung"
+      inactive_user: "Deaktivierter Benutzer"
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
@@ -2117,8 +2122,6 @@ de:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
-    deferred: "Danke für deine Meldung. Wir sehen uns das an."
-    deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
   temporarily_closed_due_to_flags:
     one: "Dieses Thema wurde vorübergehend für mindestens 1 Stunde gesperrt aufgrund einer großen Anzahl an Community-Meldungen."
     other: "Dieses Thema wurde vorübergehend für mindestens %{count} Stunden geschlossen aufgrund einer großen Anzahl an Community_Meldungen."
@@ -2494,7 +2497,16 @@ de:
       %{raw}
       ```
     ignored_users_summary:
+      title: "Schwellenwert für ignorierte Benutzer"
       subject_template: "Ein Benutzer wird von vielen anderen Benutzern ignoriert"
+      text_body_template: |
+        Hallo,
+
+        dies ist eine automatische Nachricht von %{site_name}. [user's profile](%{base_url}/u/%{username}/summary) wurde von %{ignores_threshold} Benutzern auf ignorieren gesetzt. Das könnte auf ein Problem hinweisen, das in deiner Community entsteht.
+
+        Vielleicht möchtest du die letzten Beiträge dieses Benutzers prüfen, außerdem eventuell auch die potentiellen anderen in [ignored user report](%{base_url}/admin/reports/top_ignored_users).
+
+        Für weitere Hinweise schaue bitte in unsere [Community-Richtlinien](%{base_url}/guidelines).
     too_many_spam_flags:
       title: "Neues Konto gesperrt wegen zu viel Spam"
       subject_template: "Neues Konto gesperrt"
@@ -3044,12 +3056,13 @@ de:
     sender_text_part_body_blank: "text_part.body ist leer"
     sender_body_blank: "Textkörper ist leer"
     sender_post_deleted: "Beitrag wurde gelöscht"
+    sender_message_to_invalid: "Der Empfänger hat eine ungültige E-Mail Adresse"
   color_schemes:
     base_theme_name: "Basis"
     light: "Hell"
     dark: "Dunkel"
     neutral: "Neutral"
-    grey_amber: "Grau Bernstein"
+    grey_amber: "Grauer Bernstein"
     shades_of_blue: "Blau-Schattierungen"
     latte: "Latte"
     summer: "Sommer"
@@ -3849,6 +3862,7 @@ de:
       linked: '%{username} hat deinen Beitrag verlinkt in "%{topic}" - %{site_title}'
       confirm_title: "Benachrichtigungen aktiviert – %{site_title}"
       confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
+      custom: "Benachrichtigungen von %{site_title}"
   staff_action_logs:
     not_found: "nicht gefunden"
     unknown: "unbekannt"

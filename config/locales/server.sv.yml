@@ -191,8 +191,6 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   revert_version_same: "Den nuvarande versionen är samma som den du försöker återgå till."
   excerpt_image: "bild"
-  queue:
-    delete_reason: "Raderad via modereringskön för inlägg"
   groups:
     errors:
       can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
@@ -883,7 +881,6 @@ sv:
     max_age_unmatched_emails: "Ta bort omatchade undersökta e-postinlägg efter (N) dagar."
     max_age_unmatched_ips: "Ta bort omatchade undersökta IP-poster efter (N) dagar."
     num_flaggers_to_close_topic: "Minsta antal unika flaggare som krävs för att automatiskt pausa ett ämne för ingripande"
-    num_flags_to_close_topic: "Minsta antal aktiva flaggor som krävs för att automatiskt pausa ett ämne för ingripande"
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid komponerandet av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
@@ -1131,10 +1128,6 @@ sv:
     ip_address:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
-  flags_reminder:
-    subject_template:
-      one: "1 flagga väntar på att bli hanterad"
-      other: "%{count} flaggor väntar på att bli hanterade"
   unsubscribe_mailer:
     title: "stäng av mail skrivaren"
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
@@ -1162,8 +1155,6 @@ sv:
     agreed: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi undersöker det. "
     agreed_and_deleted: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi har raderat inlägget."
     disagreed: "Tack för att du meddelande oss. Vi undersöker det."
-    deferred: "Tack för att du meddelande oss. Vi undersöker det."
-    deferred_and_deleted: "Tack för att du meddelande oss. Vi har raderat inlägget."
   system_messages:
     post_hidden:
       title: "Gömda inlägg"

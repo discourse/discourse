@@ -34,7 +34,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:disagree)).to eq(true)
         expect(actions.has?(:ignore)).to eq(true)
         expect(actions.has?(:delete_and_ignore)).to eq(true)
+        expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
         expect(actions.has?(:delete_and_agree)).to eq(true)
+        expect(actions.has?(:delete_and_replies)).to eq(false)
 
         expect(actions.has?(:disagree_and_restore)).to eq(false)
       end
@@ -42,6 +44,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       it "returns `agree_and_restore` if the post is user deleted" do
         post.update(user_deleted: true)
         expect(reviewable.actions_for(guardian).has?(:agree_and_restore)).to eq(true)
+      end
+
+      it "returns delete replies options if there are replies" do
+        post.update(reply_count: 3)
+        expect(reviewable.actions_for(guardian).has?(:delete_and_agree_replies)).to eq(true)
+        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore_replies)).to eq(true)
       end
 
       it "returns appropriate actions for a hidden post" do
@@ -107,11 +115,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(score.reload).to be_ignored
     end
 
-    it "delete_and_defer ignores the flags and deletes post" do
+    it "delete_and_ignore ignores the flags and deletes post" do
       reviewable.perform(moderator, :delete_and_ignore)
       expect(reviewable).to be_ignored
       expect(score.reload).to be_ignored
       expect(post.reload.deleted_at).to be_present
+    end
+
+    it "delete_and_ignore_replies ignores the flags and deletes post + replies" do
+      reply = PostCreator.create(
+        Fabricate(:user),
+        raw: 'this is the reply text',
+        reply_to_post_number: post.post_number,
+        topic_id: post.topic_id
+      )
+      post.reload
+
+      reviewable.perform(moderator, :delete_and_ignore_replies)
+      expect(reviewable).to be_ignored
+      expect(score.reload).to be_ignored
+      expect(post.reload.deleted_at).to be_present
+      expect(reply.reload.deleted_at).to be_present
     end
 
     it "delete_and_agree agrees with the flags and deletes post" do
@@ -119,6 +143,22 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post.reload.deleted_at).to be_present
+    end
+
+    it "delete_and_agree_replies agrees w/ the flags and deletes post + replies" do
+      reply = PostCreator.create(
+        Fabricate(:user),
+        raw: 'this is the reply text',
+        reply_to_post_number: post.post_number,
+        topic_id: post.topic_id
+      )
+      post.reload
+
+      reviewable.perform(moderator, :delete_and_agree_replies)
+      expect(reviewable).to be_approved
+      expect(score.reload).to be_agreed
+      expect(post.reload.deleted_at).to be_present
+      expect(reply.reload.deleted_at).to be_present
     end
 
     it "disagrees with the flags" do

@@ -15,9 +15,7 @@ fr:
       title: Insérer date
       create:
         modal_title: Insérer date
-        modal_subtitle: "Nous convertirons automatiquement la date et l'heure dans le fuseau horaire local de l'utilisateur."
         form:
-          to: "jusqu'à"
           insert: Insérer
           advanced_mode: Mode avancé
           simple_mode: Mode simple
@@ -31,3 +29,13 @@ fr:
           date_title: Date
           time_title: Time
           format_title: Format de date
+          timezone: Fuseau horaire
+          recurring:
+            every_day: "Tous les jours"
+            every_week: "Toutes les semaines"
+            every_two_weeks: "Tous les 15 jours"
+            every_month: "Tous les mois"
+            every_two_months: "Tous les deux mois"
+            every_three_months: "Tous les trois mois"
+            every_six_months: "Tous les six mois"
+            every_year: "Tous les ans"

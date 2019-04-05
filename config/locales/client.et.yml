@@ -169,7 +169,6 @@ et:
     age: "Vanus"
     joined: "Liitus"
     admin_title: "Admin"
-    flags_title: "Tähised"
     show_more: "kuva veel"
     show_help: "võimalused"
     links: "Viited"
@@ -277,28 +276,6 @@ et:
       none_found: "Teemasid ei leitud."
       title:
         placeholder: "kirjuta teema pealkiri siia"
-    queue:
-      topic: "Teema:"
-      approve: "Kinnita"
-      reject: "Lükka tagasi"
-      delete_user: "Kustuta kasutaja"
-      title: "Vajab kinnitust"
-      none: "Ülevaatamist vajavaid postitusi ei ole."
-      edit: "Muuda"
-      cancel: "Tühista"
-      view_pending: "vaata kinnitamata postitusi"
-      has_pending_posts:
-        one: "<b>1</b> postitus selles teemas ootab kinnitamist"
-        other: "<b>{{count}}</b> postitust selles teemas ootavad kinnitamist"
-      confirm: "Salvesta muudatused"
-      delete_prompt: "Oled kindel, et soovid <b>%{username}</b> kustutada? Sellega kaasneb tema kõigi postituste kustutamine ja meili- ning IP-aadresside blokeerimine."
-      approval:
-        title: "Postitus vajab kinnitust"
-        description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
-        pending_posts:
-          one: "Sul on <strong>1</strong> kinnitamata postitus."
-          other: "Sul on <strong>{{count}}</strong> kinnitamata postitust."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postitas <a href='{{topicUrl}}'>selle teema</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Sa</a> postitasid <a href='{{topicUrl}}'>selle teema</a>"
@@ -1691,9 +1668,6 @@ et:
       has_replies:
         one: "{{count}} vastus"
         other: "{{count}} vastust"
-      has_likes:
-        one: "{{count}} meeldimine"
-        other: "{{count}} meeldimist"
       has_likes_title:
         one: "Ühele meeldis see postitus"
         other: "{{count}}-le meeldis see postitus"
@@ -2329,54 +2303,6 @@ et:
       commits:
         latest_changes: "Viimased muudatused: palun värskenda tihti!"
         by: "autor"
-      flags:
-        title: "Lipud"
-        active_posts: "Tähistatud postitused"
-        old_posts: "Vanad tähistatud postitused"
-        agree: "Nõustun"
-        agree_title: "Kinnita see tähis kui korrektne ja kehtiv"
-        agree_flag_hide_post: "Peida postitus"
-        agree_flag_silence: "Vaigista kasutaja"
-        ignore_flag: "Ignoreeri"
-        delete: "Kustuta"
-        delete_title: "Kustuta postitus, millele see tähis viitab."
-        delete_post_defer_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
-        delete_post_agree_flag_title: "Kustuta postitus; kui on ainus, kustuta teema"
-        delete_flag_modal_title: "Kustuta ning..."
-        delete_spammer: "Kustuta spämmija"
-        delete_spammer_title: "Kustuta kasutaja ja kõik tema postitused ja teemad."
-        disagree_flag_unhide_post: "Ei nõustu (näita postitust)"
-        disagree_flag_unhide_post_title: "Eemalda sellelt postituselt kõik tähised ja tee ta jälle nähtavaks"
-        disagree_flag: "Ei nõustu"
-        disagree_flag_title: "Ignoreeri seda tähist kui mittekorrektset või kehtetut"
-        clear_topic_flags: "Tehtud"
-        clear_topic_flags_title: "Teemat on uuritud a probleemid lahendatud. Tähiste eemaldamiseks kliki \"Valmis\"."
-        more: "(veel vastuseid...)"
-        dispositions:
-          agreed: "nõustumisi"
-          disagreed: "mittenõustumisi"
-        flagged_by: "Tähistatud kasutaja poolt"
-        resolved_by: "Lahendatud kasutaja poolt"
-        took_action: "Reageeris"
-        system: "Süsteem"
-        error: "Miskit läks nihu"
-        reply_message: "Vasta"
-        topic_flagged: "See <strong>teema</strong> on tähistatud."
-        visit_topic: "Reageerimiseks külasta teemat"
-        was_edited: "Postitust on peale esimest tähist muudetud"
-        previous_flags_count: "Seda postitust on tähistatud juba {{count}} korda."
-        details: "üksikasjad"
-        flagged_topics:
-          topic: "Teema"
-          type: "Tüüp"
-          users: "Kasutajad"
-          last_flagged: "Hiljuti tähistatud"
-        short_names:
-          off_topic: "teemaväline"
-          inappropriate: "kohatu"
-          spam: "spämm"
-          notify_user: "kohandatud"
-          notify_moderators: "kohandatud"
       groups:
         new:
           title: "Uus grupp"
@@ -2882,18 +2808,11 @@ et:
         nav:
           new: "Uus"
           active: "Aktiivne"
-          pending: "Ootel"
           staff: "Meeskond"
           suspended: "Peatatud"
           silenced: "Vaigistatud"
           suspect: "Kahtlane"
         approved: "Heakskiidetud?"
-        approved_selected:
-          one: "kiida heaks kasutaja"
-          other: "kiida heaks ({{count}}) kasutajat"
-        reject_selected:
-          one: "lükka tagasi kasutaja"
-          other: "lükka tagasi ({{count}}) kasutajat"
         titles:
           active: "Aktiivsed kasutajad"
           new: "Uued kasutajad"
@@ -2909,12 +2828,6 @@ et:
           silenced: "Vaigistatud kasutajad"
           suspended: "Peatatud kasutajad"
           suspect: "Kahtlased kasutajad"
-        reject_successful:
-          one: "Tagasi lükatud 1 kasutaja."
-          other: "Edukalt tagasi lükatud %{count} kasutajat."
-        reject_failures:
-          one: "Ei õnnestunud tagasi lükata 1 kasutaja."
-          other: "Ei õnnestunud tagasi lükata %{count} kasutajat."
         not_verified: "Ei ole kontrollitud"
         check_email:
           title: "Näita selle kasutaja meiliaadressi"

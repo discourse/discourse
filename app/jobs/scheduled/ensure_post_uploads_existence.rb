@@ -8,13 +8,15 @@ module Jobs
     MISSING_UPLOADS ||= "missing_uploads"
 
     def execute(args)
+      return unless SiteSetting.enable_missing_post_uploads_check?
+
       PostCustomField
         .where(name: MISSING_UPLOADS)
         .where("created_at < ?", 1.month.ago)
         .destroy_all
 
       Post
-        .joins("LEFT JOIN post_custom_fields cf ON posts.id = cf.post_id AND cf.name = 'missing_uploads'")
+        .joins("LEFT JOIN post_custom_fields cf ON posts.id = cf.post_id AND cf.name = '#{MISSING_UPLOADS}'")
         .where("(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND cf.id IS NULL")
         .find_in_batches(batch_size: 100) do |posts|
 
@@ -34,11 +36,9 @@ module Jobs
           end
 
           if missing.present?
-            post.preloaded_custom_fields = nil
-            post.custom_fields[MISSING_UPLOADS] = missing
-            post.save_custom_fields
-          elsif post.custom_fields[MISSING_UPLOADS].present?
-            PostCustomField.find_by(post_id: post.id, name: MISSING_UPLOADS).destroy!
+            missing.each { |src| PostCustomField.create!(post_id: post.id, name: MISSING_UPLOADS, value: src) }
+          else
+            PostCustomField.create!(post_id: post.id, name: MISSING_UPLOADS, value: nil)
           end
         end
       end

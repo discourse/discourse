@@ -4397,11 +4397,19 @@ en:
       delete:
         title: "Delete..."
       delete_and_ignore:
-        title: "Delete Post and Ignore flag"
+        title: "Delete Post and Ignore"
         description: "Delete post; if the first post, delete the topic as well"
+      delete_and_ignore_replies:
+        title: "Delete Post + Replies and Ignore"
+        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        confirm: "Are you sure you want to delete the replies to the post as well?"
       delete_and_agree:
-        title: "Delete Post and Agree with flag"
+        title: "Delete Post and Agree"
         description: "Delete post; if the first post, delete the topic as well"
+      delete_and_agree_replies:
+        title: "Delete Post + Replies and Agree"
+        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        confirm: "Are you sure you want to delete the replies to the post as well?"
       disagree_and_restore:
         title: "Disagree and Restore Post"
         description: "Restore the post so that all users can see it."

@@ -235,8 +235,6 @@ he:
   too_late_to_edit: "פוסט זה נוצר לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותו."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה אליה אתם מנסים לחזור."
   excerpt_image: "תמונה"
-  queue:
-    delete_reason: "נמחק באמצעות בקרה על תור הפוסטים"
   groups:
     errors:
       can_not_modify_automatic: "אינכם יכולים לערוך קבוצה אוטומטית"
@@ -1083,7 +1081,6 @@ he:
     max_age_unmatched_emails: "מחק ערכי דוא\"ל לא תואמים שמוצגים לאחר (N) ימים."
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של דגלים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
-    num_flags_to_close_topic: "מספר מינימלי של דגלים פעילים שנדרש כדי להשהות באופן אוטומטי את היכולת להתערב בנושא"
     num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
     auto_respond_to_flag_actions: "הפעלת תגובה אוטמטית עם הסרת דגל."
     min_first_post_typing_time: "זמן מינימלי במילי-שניות שמשתמש חייב להקיש בזמן הפוסט הראשון, אם הסף לא נעבר הפוסט אוטומטית יכנס לתור של אלו שצריכים אישור. קיבעו 0 כדי לנטרל (לא מומלץ)"
@@ -1405,17 +1402,6 @@ he:
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
     website:
       domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
-  flags_reminder:
-    flags_were_submitted:
-      one: "דגלים נרשמו לפני יותר משעה. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-      two: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-      many: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-      other: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-    subject_template:
-      one: "דגל אחד ממתין לטיפול"
-      two: "%{count} דגלים ממתינים לטיפול"
-      many: "%{count} דגלים ממתינים לטיפול"
-      other: "%{count} דגלים ממתינים לטיפול"
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
     subject_template: "אשרו שאינכם מעוניינים יותר לקבל עדכוני דוא\"ל מ%{site_title}"
@@ -1480,8 +1466,6 @@ he:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפוסט."
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
-    deferred: "תודה שעדכנתם אותנו. אנחנו בודקים את העניין."
-    deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפוסט."
   system_messages:
     private_topic_title: "נושא #%{id}"
     contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."

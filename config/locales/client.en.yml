@@ -385,6 +385,7 @@ en:
         username: "Username"
         email: "Email"
         name: "Name"
+        fields: "Fields"
 
       user_percentage:
         summary:
@@ -407,7 +408,7 @@ en:
         unique_users:
           one: "1 user"
           other: "{{count}} users"
-      topic_replies:
+      replies:
         one: "1 reply"
         other: "{{count}} replies"
       edit: "Edit"
@@ -2483,11 +2484,13 @@ en:
       settings: "Settings"
       topic_template: "Topic Template"
       tags: "Tags"
-      tags_allowed_tags: "Only allow these tags to be used in this category:"
-      tags_allowed_tag_groups: "Only allow tags from these groups to be used in this category:"
+      tags_allowed_tags: "Restrict these tags to this category:"
+      tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tags_tab_description: "Tags and tag groups specified here will only be available in this category and other categories that also specify them. They won't be available for use in other categories."
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
+      manage_tag_groups_link: "Manage tag groups here."
+      allow_global_tags_label: "Also allow other tags"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"

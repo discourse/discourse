@@ -733,6 +733,7 @@ end
 #  minimum_required_tags             :integer          default(0), not null
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #  search_priority                   :integer          default(0)
+#  allow_global_tags                 :boolean          default(FALSE), not null
 #
 # Indexes
 #

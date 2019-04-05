@@ -295,6 +295,7 @@ class CategoriesController < ApplicationController
                       :minimum_required_tags,
                       :navigate_to_first_post_after_read,
                       :search_priority,
+                      :allow_global_tags,
                       custom_fields: [params[:custom_fields].try(:keys)],
                       permissions: [*p.try(:keys)],
                       allowed_tags: [],

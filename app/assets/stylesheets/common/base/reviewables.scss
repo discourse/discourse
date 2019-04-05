@@ -12,6 +12,7 @@
       flex: 1;
       box-sizing: border-box;
       max-width: 760px; // Match topic post width
+      min-width: 320px;
       margin-right: auto;
     }
 
@@ -46,8 +47,14 @@
 
 .reviewable-user-info {
   margin: 0.5em 0;
+  .reviewable-user-fields {
+    margin-bottom: 2em;
+  }
 
   .reviewable-user-details {
+    border-bottom: 1px solid $primary-low;
+    padding-bottom: 0.25em;
+
     display: flex;
     .name {
       width: 8em;
@@ -64,7 +71,7 @@
 
 .reviewable-filters {
   background-color: $primary-very-low;
-  padding: 0.5em 1em 1em 1em;
+  padding: 1em;
   margin-bottom: 1em;
 
   .reviewable-filter {
@@ -125,7 +132,6 @@
 .user-flag-percentage {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   margin-left: 0.5em;
 
   .percentage-label {
@@ -146,7 +152,6 @@
 }
 
 .reviewable-item {
-  margin-bottom: 1em;
   padding-top: 2em;
   border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
 
@@ -164,31 +169,37 @@
     .reviewable-type {
       margin-right: 0.25em;
     }
+    .reply-count {
+      margin-left: 1em;
+    }
     .created-at {
-      margin-left: auto;
+      margin-left: 1em;
+      margin-right: auto;
       a {
         color: dark-light-choose($primary-medium, $secondary-medium);
       }
     }
     .score {
-      margin-right: 1em;
       font-size: $font-down-1;
     }
     .status {
-      color: dark-light-choose($primary-high, $secondary-high);
-    }
-    .reply-count {
-      margin-right: 1em;
+      color: $primary-medium;
+      span.approved {
+        color: $success;
+      }
+      span.rejected {
+        color: $danger;
+      }
     }
   }
 
   .reviewable-contents {
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 2em;
   }
 
   .reviewable-actions {
-    margin-top: 1.5em;
     display: flex;
     flex-wrap: wrap;
 
@@ -214,6 +225,7 @@
 
 .reviewable-scores-and-history {
   display: inline-block;
+  margin-top: 1em;
 }
 
 .reviewable-scores,
@@ -241,8 +253,15 @@
 
   tbody {
     border-width: 1px;
+    td {
+      white-space: nowrap;
+    }
     td:first-of-type {
       padding-right: 1em;
+    }
+    td:last-of-type {
+      width: 100%;
+      white-space: normal;
     }
     > tr > th {
       text-align: left;
@@ -287,6 +306,9 @@
 
   .post-contents-wrapper {
     display: flex;
+    width: 100%;
+    margin-top: 1em;
+    min-width: 275px;
   }
 
   .post-contents {
@@ -304,7 +326,8 @@
       margin: 0 0 1em 0;
     }
 
-    p {
+    pre,
+    code {
       word-break: break-all;
     }
   }
@@ -315,7 +338,7 @@
     margin-bottom: 0.75em;
     .title-text {
       font-weight: bold;
-      color: $primary-high;
+      color: $primary;
       display: block;
       font-size: $font-up-2;
       margin-right: 0.75em;

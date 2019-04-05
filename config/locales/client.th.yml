@@ -146,7 +146,6 @@ th:
     age: "อายุ"
     joined: "เข้าร่วม"
     admin_title: "ผู้ดูแลระบบ"
-    flags_title: "ธง"
     show_more: "แสดงเพิ่มเติม"
     show_help: "ตัวเลือก"
     links: "ลิงก์"
@@ -224,26 +223,6 @@ th:
       none_found: "ไม่พบกระทู้ใดๆ"
       title:
         placeholder: "ระบุชื่อกระทู้ที่นี่"
-    queue:
-      topic: "กระทู้:"
-      approve: "อนุมัติ"
-      reject: "ละทิ้ง"
-      delete_user: "ลบผู้ใช้"
-      title: "ต้องการอนุมัติ"
-      none: "ไม่มีโพสให้คุณตรวจสอบ"
-      edit: "แก้ไข"
-      cancel: "ยกเลิก"
-      view_pending: "ดูโพสที่กำลังรออยู่"
-      has_pending_posts:
-        other: "กระทู้นี้มีโพสอีก <b>{{count}}</b> โพสที่รอบตรวจสอบอยู่"
-      confirm: "บันทึกการเปลี่ยนแปลง"
-      delete_prompt: "คุณแน่ใจหรือว่าจะลบ <b>%{username}</b>? นี่จะทำให้เราลบโพสและบล็อกอีเมลและไอพีของคนนี้"
-      approval:
-        title: "โพสต์นี้ต้องได้รับการอนุมัติ"
-        description: "เราได้รับโพสของคุณแล้วแต่จำเป็นต้องมีการอนุมัตโดยผู้ดูแลก่อนจึงจะปรากฎขึ้น กรุณารอสักครู่"
-        pending_posts:
-          other: "คุณมี <strong>{{count}}</strong> กระทู้ที่รอการยืนยัน"
-        ok: "ตกลง"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> โพส <a href='{{topicUrl}}'>กระทู้</a>"
       you_posted_topic: "<a href='{{userUrl}}'>คุณ</a> โพส <a href='{{topicUrl}}'>กระทู้</a>"
@@ -1110,8 +1089,6 @@ th:
       unread: "โพสนี้ยังไม่ถูกอ่าน"
       has_replies:
         other: "{{count}} ตอบ"
-      has_likes:
-        other: "{{count}} ชอบ"
       has_likes_title:
         other: "{{count}} ผู้คนที่ชอบโพสนี้"
       has_likes_title_only_you: "คุณชอบโพสนี้"
@@ -1311,27 +1288,6 @@ th:
       commits:
         latest_changes: "การเปลี่ยนแปลงล่าสุด: โปรดอัพเดตบ่อยๆ"
         by: "โดย"
-      flags:
-        title: "ธง"
-        agree: "เห็นด้วย"
-        agree_title: "ยืนยันว่าธงนี้ว่าถูกต้อง"
-        delete: "ลบ"
-        delete_title: "ลบโพสที่ถูกติดป้ายแสดงไว้"
-        delete_post_defer_flag_title: "ลบโพส ถ้าโพสนั้นเป็นโพสแรกให้ลบหัวข้อออก"
-        delete_post_agree_flag_title: "ลบโพส ถ้าเป็นโพสแรกให้ลบหัวข้อออก"
-        delete_flag_modal_title: "ลบและ..."
-        delete_spammer: "ลบสแปมเมอร์"
-        disagree_flag_unhide_post: "ไม่เห็นด้วย (ยกเลิกการซ่อนโพส)"
-        disagree_flag: "ไม่เห็นด้วย"
-        clear_topic_flags: "เสร็จ"
-        dispositions:
-          agreed: "เห็นด้วย"
-          disagreed: "ไม่เห็นด้วย"
-        system: "ระบบ"
-        error: "มีบางอย่างผิดปกติไป"
-        reply_message: "ตอบ"
-        topic_flagged: "ใน <strong>หัวข้อนี้</strong> ถูกปักธงแล้ว"
-        visit_topic: "ดูหัวข้อเพื่อกระทำบางอย่าง"
       groups:
         primary: "กลุ่มหลัก"
         no_primary: "(ไม่มีกลุ่มหลัก)"
@@ -1415,15 +1371,10 @@ th:
         title: "ผู้ใช้"
         nav:
           active: "ใช้งานอยู่"
-          pending: "กำลังรอ"
           staff: "ทีมงาน"
           suspended: "ระงับการใช้งาน"
           suspect: "ต้องสงสัย"
         approved: "ยืนยันหรือไม่"
-        approved_selected:
-          other: "ผู้ใช้งานที่ได้รับยืนยันแล้ว ({{count}})"
-        reject_selected:
-          other: "ผู้ใช้งานที่ไม่ได้รับยืนยันแล้ว ({{count}})"
         titles:
           active: "ผู้ใช้ที่ใช้งานอยู่"
           new: "ผู้ใช้งานใหม่"
