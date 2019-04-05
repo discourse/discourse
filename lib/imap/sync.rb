@@ -2,6 +2,17 @@ require "net/imap"
 
 module Imap
   class Sync
+
+    def self.for_group(group)
+      if group.imap_server == "imap.gmail.com"
+        provider = Imap::Providers::Gmail
+      else
+        provider = Imap::Providers::Generic
+      end
+
+      Imap::Sync.new(group, provider)
+    end
+
     def initialize(group, provider = Imap::Providers::Generic)
       @group = group
 
@@ -27,7 +38,7 @@ module Imap
       @status = @provider.open_mailbox(mailbox)
 
       if @status[:uid_validity] != mailbox.uid_validity
-        Rails.logger.warn("UIDVALIDITY does not match, invalidating IMAP cache and resync emails.")
+        Rails.logger.warn("UIDVALIDITY does not match, invalidating IMAP cache and resync emails for #{@group.name}/#{mailbox.name}.")
         mailbox.last_seen_uid = 0
       end
 
@@ -43,39 +54,42 @@ module Imap
         new_uids = @provider.uids(from: mailbox.last_seen_uid + 1) # seen+1 .. inf
       end
 
+      import_mode = new_uids.size > SiteSetting.imap_batch_import_email if SiteSetting.imap_batch_import_email > -1
+      old_uids = old_uids.sample(SiteSetting.imap_poll_old_emails) if SiteSetting.imap_poll_old_emails > 0
+      new_uids = new_uids[0..SiteSetting.imap_poll_new_emails] if SiteSetting.imap_poll_new_emails > 0
+
       if old_uids.present?
         emails = @provider.emails(mailbox, old_uids, ["UID", "FLAGS", "LABELS"])
         emails.each do |email|
-          incoming_email = IncomingEmail.find_by(
-            imap_uid_validity: @status[:uid_validity],
-            imap_uid: email["UID"]
+          Jobs.enqueue(:process_imap_email,
+            group_id: @group.id,
+            mailbox_name: mailbox.name,
+            uid_validity: @status[:uid_validity],
+            email: email,
           )
-
-          update_topic(email, incoming_email, mailbox: mailbox)
         end
       end
 
       if new_uids.present?
         emails = @provider.emails(mailbox, new_uids, ["UID", "FLAGS", "LABELS", "RFC822"])
         emails.each do |email|
-          begin
-            receiver = Email::Receiver.new(email["RFC822"],
-              force_sync: true,
-              destinations: [{ type: :group, obj: @group }],
-              uid_validity: @status[:uid_validity],
-              uid: email["UID"]
-            )
-            receiver.process!
+          # Pass content as it is and let `Email::Receiver` handle email
+          # encoding.
+          email["RFC822"] = Base64.encode64(email["RFC822"])
 
-            update_topic(email, receiver.incoming_email, mailbox: mailbox)
-
-            mailbox.last_seen_uid = email["UID"]
-          rescue Email::Receiver::ProcessingError => e
-          end
+          Jobs.enqueue(:process_imap_email,
+            group_id: @group.id,
+            mailbox_name: mailbox.name,
+            uid_validity: @status[:uid_validity],
+            email: email,
+            import_mode: import_mode,
+          )
         end
       end
 
-      mailbox.update!(uid_validity: @status[:uid_validity])
+      mailbox.uid_validity = @status[:uid_validity]
+      mailbox.last_seen_uid = new_uids.last
+      mailbox.save!
 
       # Discourse-to-server sync:
       #   - sync flags and labels
@@ -111,7 +125,7 @@ module Imap
 
     def update_topic_tags(email, topic, opts = {})
       tags = []
-      tags << @provider.to_tag(opts[:mailbox].name) if opts[:mailbox]
+      tags << @provider.to_tag(opts[:mailbox_name]) if opts[:mailbox_name]
       email["FLAGS"].each { |flag| tags << @provider.to_tag(flag) }
       email["LABELS"].each { |label| tags << @provider.to_tag(label) }
       tags.reject!(&:blank?)

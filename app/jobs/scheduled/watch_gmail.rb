@@ -6,8 +6,6 @@ module Jobs
   class WatchGmail < Jobs::Scheduled
     every 1.day
 
-    sidekiq_options retry: false
-
     def execute(args)
       Group.all.each do |group|
         service = GmailSync.service_for(group)

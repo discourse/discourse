@@ -4,7 +4,7 @@ require_dependency 'gmail_sync'
 require_dependency 'imap'
 
 module Jobs
-  class ProcessGmail < Jobs::Base
+  class ProcessGmailHistory < Jobs::Base
     def execute(args)
       @args = args || {}
 
@@ -20,7 +20,6 @@ module Jobs
         return
       end
 
-      sync = Imap::Sync.new(group, Imap::Providers::Gmail)
       last_history_id = group.custom_fields[GmailSync::HISTORY_ID_FIELD] || args[:history_id]
       page_token = nil
 
@@ -28,26 +27,19 @@ module Jobs
         list = service.list_user_histories(args[:email_address], start_history_id: last_history_id, page_token: page_token)
         (list.history || []).each do |history|
           (history.messages || []).each do |message|
-            begin
-              message = service.get_user_message(args[:email_address], message.id, format: "raw")
-              email = {
+            message = service.get_user_message(args[:email_address], message.id, format: "raw")
+
+            Jobs.enqueue(:process_imap_email,
+              group_id: group.id,
+              mailbox_name: mailbox.name,
+              uid_validity: -1,
+              email: {
                 "UID" => message.id,
                 "FLAGS" => [],
                 "LABELS" => message.label_ids,
-                "RFC822" => message.raw,
+                "RFC822" => Base64.encode64(message.raw),
               }
-
-              receiver = Email::Receiver.new(email["RFC822"],
-                force_sync: true,
-                destinations: [{ type: :group, obj: group }],
-                uid_validity: args[:history_id],
-                uid: -1
-              )
-              receiver.process!
-
-              sync.update_topic(email, receiver.incoming_email)
-            rescue Email::Receiver::ProcessingError => e
-            end
+            )
           end
 
           last_history_id = history.id

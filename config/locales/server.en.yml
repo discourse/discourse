@@ -1814,6 +1814,9 @@ en:
 
     imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
     imap_read_only: "Disables two-way IMAP synchronization. All write-operations on IMAP accounts are disabled."
+    imap_poll_old_emails: "The maximum number of old emails (processed) to be updated every time an IMAP box is polled (0 for all)."
+    imap_poll_new_emails: "The maximum number of new emails (unprocessed) to be updated every time an IMAP box is polled ."
+    imap_batch_import_email: "The minimum number of new emails that trigger import mode (disables post alerts)."
 
     email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
     email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."

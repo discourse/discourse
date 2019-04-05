@@ -938,6 +938,9 @@ email:
       - X-Spam-Status
   imap_polling_period_mins: 5
   imap_read_only: false
+  imap_poll_old_emails: 1000
+  imap_poll_new_emails: 250
+  imap_batch_import_email: 100
   email_prefix: ""
   email_site_title: ""
   disable_emails:

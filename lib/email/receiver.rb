@@ -1089,6 +1089,8 @@ module Email
     end
 
     def create_post(options = {})
+      options[:import_mode] = @opts[:import_mode]
+
       options[:via_email] = true
       options[:raw_email] = @raw_email
 

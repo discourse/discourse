@@ -12,21 +12,15 @@ module Jobs
         mailboxes = group.mailboxes.where(sync: true)
         next if mailboxes.empty?
 
+        imap_sync = Imap::Sync.for_group(group)
+
         begin
-          provider = Imap::Providers::Generic
-
-          if group.imap_server == "imap.gmail.com"
-            provider = Imap::Providers::Gmail
-          end
-
-          imap_sync = Imap::Sync.new(group, provider)
+          mailboxes.each { |mailbox| imap_sync.process(mailbox) }
         rescue Net::IMAP::Error => e
           Rails.logger.warn("Could not connect to IMAP for group #{group.name}: #{e.message}")
-          return
+        ensure
+          imap_sync.disconnect!
         end
-
-        mailboxes.each { |mailbox| imap_sync.process(mailbox) }
-        imap_sync.disconnect!
       end
 
       nil
