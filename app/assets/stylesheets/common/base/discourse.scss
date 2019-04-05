@@ -118,6 +118,10 @@ label {
   display: flex;
   margin-bottom: 5px;
   align-items: flex-start;
+  > .d-icon {
+    align-self: center;
+    margin-right: 4px;
+  }
 }
 
 input {

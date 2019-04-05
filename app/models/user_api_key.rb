@@ -5,6 +5,7 @@ class UserApiKey < ActiveRecord::Base
     write: [:get, :post, :patch, :put, :delete],
     message_bus: [[:post, 'message_bus']],
     push: nil,
+    one_time_password: nil,
     notifications: [[:post, 'message_bus'], [:get, 'notifications#index'], [:put, 'notifications#mark_read']],
     session_info: [
       [:get, 'session#current'],
@@ -63,6 +64,11 @@ class UserApiKey < ActiveRecord::Base
     end
   end
 
+  def self.invalid_auth_redirect?(auth_redirect)
+    return SiteSetting.allowed_user_api_auth_redirects
+        .split('|')
+        .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
+  end
 end
 
 # == Schema Information

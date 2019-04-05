@@ -354,10 +354,7 @@ class UsersController < ApplicationController
     user = User.new(new_user_params) if user.nil?
 
     # Handle API approval
-    if user.approved
-      user.approved_by_id ||= current_user.id
-      user.approved_at ||= Time.zone.now
-    end
+    ReviewableUser.set_approved_fields!(user, current_user) if user.approved?
 
     # Handle custom fields
     user_fields = UserField.all
@@ -1002,7 +999,12 @@ class UsersController < ApplicationController
     if params[:notification_level] == "ignore"
       guardian.ensure_can_ignore_user!(user.id)
       MutedUser.where(user: current_user, muted_user: user).delete_all
-      IgnoredUser.find_or_create_by!(user: current_user, ignored_user: user)
+      ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
+      if ignored_user.present?
+        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
+      else
+        IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
+      end
     elsif params[:notification_level] == "mute"
       guardian.ensure_can_mute_user!(user.id)
       IgnoredUser.where(user: current_user, ignored_user: user).delete_all

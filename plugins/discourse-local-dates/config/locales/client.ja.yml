@@ -11,7 +11,6 @@ ja:
       title: 日付の挿入
       create:
         modal_title: 日付の挿入
-        modal_subtitle: "日付と時刻を閲覧者の現地時間帯に自動的に変換します。"
         form:
           insert: 挿入
           advanced_mode: アドバンスドモード

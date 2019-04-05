@@ -94,8 +94,6 @@ Discourse::Application.routes.draw do
     get "groups/:type" => "groups#show", constraints: AdminConstraint.new
     get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
-    get "moderation_history" => "moderation_history#index"
-
     resources :users, id: RouteFormat.username, except: [:show] do
       collection do
         get "list" => "users#index"
@@ -181,7 +179,7 @@ Discourse::Application.routes.draw do
       end
       post "watched_words/upload" => "watched_words#upload"
       resources :search_logs,           only: [:index]
-      get 'search_logs/term/:term' => 'search_logs#term'
+      get 'search_logs/term/' => 'search_logs#term'
     end
 
     get "/logs" => "staff_action_logs#index"
@@ -242,13 +240,11 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
-    get "dashboard" => "dashboard_next#index"
-    get "dashboard/general" => "dashboard_next#general"
-    get "dashboard/moderation" => "dashboard_next#moderation"
-    get "dashboard/security" => "dashboard_next#security"
-    get "dashboard/reports" => "dashboard_next#reports"
-
-    get "dashboard-old" => "dashboard#index"
+    get "dashboard" => "dashboard#index"
+    get "dashboard/general" => "dashboard#general"
+    get "dashboard/moderation" => "dashboard#moderation"
+    get "dashboard/security" => "dashboard#security"
+    get "dashboard/reports" => "dashboard#reports"
 
     resources :dashboard, only: [:index] do
       collection do
@@ -319,6 +315,17 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get "review" => "reviewables#index" # For ember app
+  get "review/:reviewable_id" => "reviewables#show", constraints: { reviewable_id: /\d+/ }
+  get "review/topics" => "reviewables#topics"
+  get "review/settings" => "reviewables#settings"
+  put "review/settings" => "reviewables#settings"
+  put "review/:reviewable_id/perform/:action_id" => "reviewables#perform", constraints: {
+    reviewable_id: /\d+/,
+    action_id: /[a-z\_]+/
+  }
+  put "review/:reviewable_id" => "reviewables#update", constraints: { reviewable_id: /\d+/ }
+
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
   get "session/sso_provider" => "session#sso_provider"
@@ -326,6 +333,7 @@ Discourse::Application.routes.draw do
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
   post "session/email-login/:token" => "session#email_login"
+  get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -440,7 +448,6 @@ Discourse::Application.routes.draw do
     get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
     get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
-    get "#{root_path}/:username/activity/pending" => "users#show", constraints: { username: RouteFormat.username }
     delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username, format: /(json|html)/ }
     get "#{root_path}/by-external/:external_id" => "users#show", constraints: { external_id: /[^\/]+/ }
     get "#{root_path}/:username/flagged-posts" => "users#show", constraints: { username: RouteFormat.username }
@@ -837,6 +844,8 @@ Discourse::Application.routes.draw do
   post "/user-api-key" => "user_api_keys#create"
   post "/user-api-key/revoke" => "user_api_keys#revoke"
   post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
+  get "/user-api-key/otp" => "user_api_keys#otp"
+  post "/user-api-key/otp" => "user_api_keys#create_otp"
 
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"

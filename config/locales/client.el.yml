@@ -170,7 +170,6 @@ el:
     age: "Ηλικία"
     joined: "Έγινε μέλος"
     admin_title: "Διαχειριστής"
-    flags_title: "Σημάνσεις"
     show_more: "περισσότερα"
     show_help: "επιλογές"
     links: "Σύνδεσμοι"
@@ -249,28 +248,6 @@ el:
       none_found: "Δεν βρέθηκαν νήματα."
       title:
         placeholder: "γράψε εδώ τον τίτλο του νήματος"
-    queue:
-      topic: "Νήμα:"
-      approve: "Έγκριση"
-      reject: "Απόρριψη"
-      delete_user: "Διαγραφή Χρήστη"
-      title: "Χρειάζεται Έγκριση"
-      none: "Δεν υπάρχουν αναρτήσεις για έλεγχο."
-      edit: "Επεξεργασία"
-      cancel: "Ακύρωση"
-      view_pending: "προβολή εκκρεμών αναρτήσεων"
-      has_pending_posts:
-        one: "Αυτό το θέμα έχει <b>1</b> ανάρτηση που αναμένει έγκριση"
-        other: "Αυτό το νήμα έχει <b>{{count}}</b> αναρτήσεις που αναμένουν έγκριση"
-      confirm: "Αποθήκευση Αλλαγών"
-      delete_prompt: "Είστε σίγουρος πως θέλετε να διαγράψετε τον/την <b>%{username}</b>; Αυτό θα διαγράψει όλες τις αναρτήσεις και θα μπλοκάρει την διεύθυνση email καθώς και την IP διεύθυνση."
-      approval:
-        title: "Απαιτείται Έγκριση Ανάρτησης"
-        description: "Λάβαμε την ανάρτησή σου, αλλά πρέπει πρώτα να εγκριθεί από έναν συντονιστή πριν εμφανιστεί. Παρακαλώ περιμένετε."
-        pending_posts:
-          one: "Έχεις <strong>1</strong> εκκρεμή ανάρτηση."
-          other: "Έχετε <strong>{{count}}</strong> εκκρεμείς αναρτήσεις."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ανάρτησε <a href='{{topicUrl}}'>το νήμα </a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ανάρτησες</a> αυτό <a href='{{topicUrl}}'>το νήμα</a>"
@@ -1544,9 +1521,6 @@ el:
       has_replies:
         one: "{{count}} Απάντηση"
         other: "{{count}} Απαντήσεις"
-      has_likes:
-        one: "{{count}} \"Μου αρέσουν\""
-        other: "{{count}} \"Μου αρέσει\""
       has_likes_title:
         one: "1 άτομο πάτησε \"μου αρέσει\" στη δημοσίευση"
         other: "{{count}} άτομα πάτησαν \"Μου αρέσει\" στην ανάρτηση"
@@ -2208,64 +2182,6 @@ el:
       commits:
         latest_changes: "Τελευταίες αλλαγές: παρακαλούμε ανανεώνετε συχνά!"
         by: "από"
-      flags:
-        title: "Σημάνσεις"
-        active_posts: "Επισημασμένες Αναρτήσεις"
-        old_posts: "Παλιές Επισημασμένες Αναρτήσεις"
-        topics: "Επισημασμένα Νήματα"
-        agree: "Συμφωνώ"
-        agree_title: "Επιβεβαίωσε αυτή τη σήμανση ως έγκυρη και σωστή"
-        agree_flag_hide_post_title: "Κρύψε αυτή την ανάρτηση και αυτόματα στείλε στον χρήστη ένα μήνυμα που θα τους προτρέπει να το επεξεργαστούν."
-        agree_flag_restore_post: "Αποδοχή και επαναφορά ανάρτησης"
-        agree_flag_restore_post_title: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
-        agree_flag_title: "Αποδοχή επισήμανσης και διατήρηση της ανάρτησης αμετάβλητης."
-        delete: "Διαγραφή"
-        delete_title: "Διέγραψε την ανάρτηση στην οποία αναφέρεται αυτή η επισήμανση."
-        delete_post_defer_flag: "Διαγραφή ανάρτησης και αγνόηση επισήμανσης"
-        delete_post_defer_flag_title: "Διέγραψε την ανάρτηση. Αν είναι η πρώτη στο νήμα, διέγραψε και αυτό"
-        delete_post_agree_flag: "Διαγραφή ανάρτησης και αποδοχή επισήμανσης"
-        delete_post_agree_flag_title: "Διέγραψε την ανάρτηση. Αν είναι η πρώτη στο νήμα, διέγραψε και αυτό"
-        delete_flag_modal_title: "Διέγραψε και..."
-        delete_spammer: "Διαγραφή ανεπιθύμητου χρήστη"
-        delete_spammer_title: "Διέγραψε το χρήστη και όλες τις αναρτήσεις και τα νήματά του"
-        disagree_flag_unhide_post: "Διαφωνώ (εμφάνισε την ανάρτηση)"
-        disagree_flag_unhide_post_title: "Απόρριψε όλες τις επισημάνσεις για την ανάρτηση και κάντη και πάλι ορατή"
-        disagree_flag: "Διαφωνώ"
-        disagree_flag_title: "Αρνήσου την επισήμανση ως άκυρη ή εσφαλμένη"
-        clear_topic_flags: "Έγινε"
-        clear_topic_flags_title: "Το νήμα ελέγχθηκε και τα προβλήματα επιλύθηκαν. Κάνε κλίκ στο «έγινε» για να αφαιρέσεις τις επισημάνσεις."
-        more: "(περισσότερες απαντήσεις...)"
-        suspend_user: "Αποβολή Χρήστη"
-        suspend_user_title: "Αποβολή χρήστη για αυτή την ανάρτηση"
-        dispositions:
-          agreed: "συμφώνησε"
-          disagreed: "διαφώνησε"
-          deferred: "Αγνοήθηκε"
-        flagged_by: "Επισημάνθηκε από"
-        resolved_by: "Επιλύθηκε από"
-        took_action: "Ενήργησε"
-        system: "Σύστημα"
-        error: "Κάτι πήγε λάθος"
-        reply_message: "Απάντηση"
-        no_results: "Δεν υπάρχουν επισημασμένες αναρτήσεις."
-        topic_flagged: "Αυτό το <strong>νήμα</strong> έχει επισημανθεί."
-        show_full: "εμφάνιση πλήρους ανάρτησης"
-        visit_topic: "Επισκέψου το νήμα για να ενεργήσεις"
-        was_edited: "Η ανάρτηση έχει υποστεί επεξεργασία μετά την πρώτη επισήμανση"
-        previous_flags_count: "Αυτό το νήμα έχει επισημανθεί ήδη {{count}} φορές"
-        show_details: "Εμφάνιση λεπτομερειών επισήμανσης"
-        details: "λεπτομέρειες"
-        flagged_topics:
-          topic: "Νήμα"
-          type: "Τύπος"
-          users: "Χρήστες"
-          last_flagged: "Τελευταίες Επισημάνσεις"
-        short_names:
-          off_topic: "εκτός θέματος"
-          inappropriate: "ακατάλληλο"
-          spam: "spam"
-          notify_user: "προσαρμοσμένο"
-          notify_moderators: "προσαρμοσμένο"
       groups:
         primary: "Κύρια ομάδα"
         no_primary: "(χωρίς κύρια ομάδα)"
@@ -2775,18 +2691,11 @@ el:
         nav:
           new: "Νέα"
           active: "Ενεργοί"
-          pending: "Εκκρεμή"
           staff: "Συνεργάτες"
           suspended: "Αποβλημένοι"
           silenced: "Σιγήθηκαν"
           suspect: "Ύποπτο"
         approved: "Εγκεκριμένο;"
-        approved_selected:
-          one: "έγκριση χρήστη"
-          other: "έγκριση χρηστών ({{count}})"
-        reject_selected:
-          one: "απόρριψη χρήστη"
-          other: "απόρριψη χρηστών ({{count}})"
         titles:
           active: "Ενεργοί Χρήστες"
           new: "Νέοι Χρήστες"
@@ -2802,12 +2711,6 @@ el:
           silenced: "Σιγημένοι Χρήστες"
           suspended: "Αποβλημένοι Χρήστες"
           suspect: "Ύποπτοι χρήστες"
-        reject_successful:
-          one: "Επιτυχώς απορρίφθηκε 1 χρήστης."
-          other: "Επιτυχώς απορρίφθησαν %{count} χρήστες."
-        reject_failures:
-          one: "Αποτυχία απόρριψης 1 χρήστη."
-          other: "Αποτυχία απόρριψης %{count}χρήστες."
         not_verified: "Μη επαληθευμένος"
         check_email:
           title: "Εμφάνισε το email αυτού του χρήστη"

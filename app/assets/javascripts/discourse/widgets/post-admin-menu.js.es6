@@ -4,13 +4,7 @@ import { ButtonClass } from "discourse/widgets/button";
 
 createWidget(
   "post-admin-menu-button",
-  jQuery.extend(ButtonClass, {
-    tagName: "li.btn",
-    click() {
-      this.sendWidgetAction("closeAdminMenu");
-      return this.sendWidgetAction(this.attrs.action);
-    }
-  })
+  jQuery.extend(ButtonClass, { tagName: "li.btn" })
 );
 
 export function buildManageButtons(attrs, currentUser, siteSettings) {
@@ -23,8 +17,8 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     contents.push({
       icon: "list",
       className: "btn-default",
-      label: "admin.flags.moderation_history",
-      action: "showModerationHistory"
+      label: "review.moderation_history",
+      url: `/review?topic_id=${attrs.topicId}&status=all`
     });
   }
 
@@ -120,6 +114,7 @@ export default createWidget("post-admin-menu", {
 
     buildManageButtons(this.attrs, this.currentUser, this.siteSettings).forEach(
       b => {
+        b.secondaryAction = "closeAdminMenu";
         contents.push(this.attach("post-admin-menu-button", b));
       }
     );

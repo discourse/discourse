@@ -34,7 +34,7 @@ js_files.each do |path|
 
   diff.patch.lines.grep(/^\+\s\s/).each do |added_line|
     super_offenses << path if added_line['this._super()']
-    self_offenses << path if added_line['self']
+    self_offenses << path if added_line[/(?:(^|\W)self\.?)/]
   end
 end
 
@@ -51,7 +51,7 @@ end
 
 if !self_offenses.empty?
   warn(%{
-Use fat arrow instead of self pattern.`\n
+Use fat arrow instead of self pattern.\n
 #{self_offenses.uniq.map { |o| github.html_link(o) }.join("\n")}
   })
 end

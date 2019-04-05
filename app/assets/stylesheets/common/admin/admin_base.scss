@@ -723,15 +723,6 @@ section.details {
   }
 }
 
-#selected-controls {
-  background-color: $tertiary-low;
-  padding: 8px;
-  min-height: 27px;
-  position: fixed;
-  bottom: 0;
-  width: 1075px;
-}
-
 .user-controls {
   padding: 5px;
   clear: both;
@@ -970,14 +961,12 @@ table#user-badges {
 }
 
 // Styles for subtabs in admin
-@import "common/admin/dashboard_next";
+@import "common/admin/dashboard";
 @import "common/admin/settings";
 @import "common/admin/users";
-@import "common/admin/moderation_history";
 @import "common/admin/suspend";
 @import "common/admin/badges";
 @import "common/admin/emails";
-@import "common/admin/flagging";
 @import "common/admin/staff_logs";
 @import "common/admin/customize";
 @import "common/admin/customize-install-theme";
@@ -991,4 +980,3 @@ table#user-badges {
 @import "common/admin/admin_report_stacked_chart";
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
-@import "common/admin/dashboard_previous";

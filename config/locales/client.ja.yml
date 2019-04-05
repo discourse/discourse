@@ -168,7 +168,6 @@ ja:
     age: "経過"
     joined: "参加時刻"
     admin_title: "管理設定"
-    flags_title: "通報"
     show_more: "もっと見る"
     show_help: "オプション"
     links: "リンク"
@@ -193,6 +192,8 @@ ja:
     every_hour: "毎時"
     daily: "毎日"
     weekly: "毎週"
+    every_month: "毎月"
+    every_six_months: "6ヶ月毎"
     max_of_count: "最大 {{count}}"
     alternation: "または"
     character_count:
@@ -278,25 +279,49 @@ ja:
       title:
         search: "タイトルでメッセージを検索:"
         placeholder: "メッセージのタイトルをここに入力してください"
-    queue:
-      topic: "トピック："
-      approve: "承認"
-      reject: "リジェクト"
-      delete_user: "削除されたユーザー"
-      title: "承認待ち"
-      none: "レビュー待ちの投稿はありません。"
+    review:
+      settings:
+        saved: "保存しました"
+        save_changes: "変更を保存"
+        title: "設定"
+      view_all: "すべて見る"
+      grouped_by_topic: "トピックによってグループ分けされた"
+      title: "レビューが必要"
+      topic: "トピック:"
+      filtered_user: "ユーザー:"
+      show_all_topics: "すべてのトピックを表示"
+      deleted_user: "(削除されたユーザー)"
+      user:
+        username: "ユーザー名"
+        email: "Eメール"
+        name: "名前"
+      topics:
+        topic: "トピック"
+        details: "詳細"
       edit: "編集"
+      save: "保存"
       cancel: "キャンセル"
-      view_pending: "保留になっている投稿を見る"
-      has_pending_posts:
-        other: "このトピックで<b>{{count}}</b>件の投稿が承認待ちです"
-      confirm: "変更を保存"
-      delete_prompt: "<b>%{username}</b> を削除してもよろしいですか? これはそのユーザーの投稿をすべて削除し、メールアドレスとIPアドレスをブロックします。"
+      new_topic: "新しいトピック:"
+      filters:
+        type:
+          title: "タイプ:"
+          all: "(すべてのタイプ)"
+        minimum_score: "最小スコア:"
+        status: "ステータス:"
+        category: "カテゴリ:"
+      history:
+        title: "履歴"
+      scores:
+        description: "説明"
+      statuses:
+        pending:
+          title: "保留中"
+        all:
+          title: "(すべて)"
+      types:
+        reviewable_user:
+          title: "ユーザー"
       approval:
-        title: "この投稿は承認が必要です"
-        description: "新しい投稿はモデレータによる承認が必要です。しばらくお待ち下さい。"
-        pending_posts:
-          other: "<strong>{{count}}</strong>件の投稿が保留中です。"
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
@@ -344,6 +369,11 @@ ja:
         title: "メンバーを追加する"
         description: "このグループのメンバーシップを管理する"
         usernames: "ユーザー名"
+      requests:
+        title: "リクエスト"
+        reason: "理由"
+        accept: "受け入れ"
+        deny: "拒否"
       manage:
         title: "管理"
         name: "名前"
@@ -446,6 +476,7 @@ ja:
           description: "全てのメッセージについて通知があり、新規返信数が表示されます。"
         watching_first_post:
           title: "最初の投稿をウォッチする"
+          description: "このグループの新しいメッセージは通知されますが、返信されたメッセージは通知されません。"
         tracking:
           title: "追跡中"
           description: "誰かがあなた宛に返信をすると通知があり、新規返信数が表示されます。"
@@ -454,6 +485,7 @@ ja:
           description: "他のユーザからメンションされた場合か、メッセージ内の投稿に返信された場合に通知されます。"
         muted:
           title: "ミュート"
+          description: "このグループのすべてのメッセージを通知しません。"
       flair_url: "アバター画像"
       flair_url_placeholder: "(オプション) 画像URL or Font Awesomeのクラス名"
       flair_url_description: '20ピクセルx 20ピクセル以上の正方形の画像またはFontAwesomeアイコン（使用可能な形式： "fa-icon"、 "far fa-icon"、または "fab fa-icon"）を使用します。'
@@ -532,6 +564,8 @@ ja:
       new_private_message: "メッセージを作成"
       private_message: "メッセージ"
       private_messages: "メッセージ"
+      user_notifications:
+        normal_option: "通常"
       activity_stream: "アクティビティ"
       preferences: "設定"
       profile_hidden: "このユーザーの公開プロフィールは非公開です"
@@ -964,6 +998,7 @@ ja:
     mute: ミュート
     unmute: ミュート解除
     last_post: 最終投稿
+    time_read: 既読
     last_reply_lowercase: 最後の返信
     replies_lowercase:
       other: 返信
@@ -989,6 +1024,7 @@ ja:
       title: "メッセージ"
       invite: "他の人を招待する..."
       edit: "追加、削除"
+      leave_message: "本当にメッセージから離れますか？"
       remove_allowed_user: "このメッセージから {{name}} を削除してもよろしいですか？"
       remove_allowed_group: "このメッセージから {{name}} を削除してもよろしいですか？"
     email: "メール"
@@ -1023,9 +1059,12 @@ ja:
       username: "ユーザ名"
       password: "パスワード"
       second_factor_title: "２段階認証"
+      second_factor_backup_title: "2段階バックアップ"
+      second_factor_backup_description: "バックアップコードを入力: "
       email_placeholder: "メールアドレスかユーザ名"
       caps_lock_warning: "Caps Lockがオンになっています。"
       error: "不明なエラー"
+      cookies_error: "ブラウザのCookieが無効です。ログインできないかもしれません。"
       rate_limit: "しばらく待ってから再度ログインをお試しください。"
       blank_username: "あなたのメールアドレスかユーザー名を入力してください。"
       blank_username_or_password: "あなたのメールアドレスかユーザ名、そしてパスワードを入力して下さい。"
@@ -1046,26 +1085,33 @@ ja:
       provide_new_email: "新しいメールアドレスを設定します。このあと、確認のメールを送信します。"
       submit_new_email: "メールアドレスの更新"
       sent_activation_email_again: "<b>{{currentEmail}}</b> にアクティベーションメールを再送信しました。メールが届くまで数分掛かることがあります。 (メールが届かない場合は、迷惑メールフォルダの中をご確認ください)。"
+      sent_activation_email_again_generic: "アクティベーションメールを送りました。届くのに少し時間がかかるかもしれません。スパムフォルダーも確認してください。"
       to_continue: "ログインしてください"
       preferences: "ユーザ設定を変更するには、ログインする必要があります。"
       forgot: "アカウントの詳細を忘れてしまった"
       not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
       google_oauth2:
+        name: "Google"
         title: "Google"
         message: "Googleによる認証 (ポップアップがブロックされていないことを確認してください)"
       twitter:
+        name: "Twitter"
         title: "Twitter"
         message: "Twitter による認証 (ポップアップがブロックされていないことを確認してください)"
       instagram:
+        name: "Instagram"
         title: "Instagram"
         message: "Instagram による認証 (ポップアップがブロックされていないことを確認してください)"
       facebook:
+        name: "Facebook"
         title: "Facebook"
         message: "Facebook による認証 (ポップアップがブロックされていないことを確認してください)"
       yahoo:
+        name: "Yahoo"
         title: "Yahoo"
         message: "Yahoo による認証 (ポップアップがブロックされていないことを確認してください)"
       github:
+        name: "GitHub"
         title: "GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
     invites:
@@ -1702,8 +1748,6 @@ ja:
       unread: "未読の投稿"
       has_replies:
         other: "{{count}} 件の返信"
-      has_likes:
-        other: "{{count}} 個のいいね！"
       has_likes_title:
         other: "{{count}}人のユーザがこの返信に「いいね！」しました"
       has_likes_title_only_you: "あなたがいいねした投稿"
@@ -2264,45 +2308,6 @@ ja:
       commits:
         latest_changes: "最新の更新内容:"
         by: "by"
-      flags:
-        title: "通報"
-        agree: "賛成する"
-        agree_title: "この通報が有効で正しいことを確認してください"
-        delete: "削除する"
-        delete_title: "この通報で通報されている投稿を削除します"
-        delete_post_defer_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
-        delete_post_agree_flag_title: "投稿を削除します。最初の投稿を削除した場合、トピックも削除されます。"
-        delete_flag_modal_title: "Delete and..."
-        delete_spammer: "スパムユーザーを削除"
-        delete_spammer_title: "ユーザと投稿した全ての投稿とトピックを削除します"
-        disagree_flag_unhide_post: "反対する（投稿を表示する）"
-        disagree_flag_unhide_post_title: "投稿への通報を削除し、投稿を表示します"
-        disagree_flag: "反対する"
-        disagree_flag_title: "無効または、不正としてこの通報を拒否します"
-        clear_topic_flags: "完了"
-        clear_topic_flags_title: "このトピックについての問題が解決されました。「完了」をクリックして通報の対応を完了します。"
-        more: "(more replies...)"
-        suspend_user: "ユーザを凍結"
-        suspend_user_title: "この投稿においてユーザを凍結"
-        dispositions:
-          agreed: "賛成しました。"
-          disagreed: "反対する"
-        flagged_by: "通報者: "
-        resolved_by: "解決方法"
-        took_action: "Took action"
-        system: "システム"
-        error: "何らかの理由でうまくいきませんでした"
-        reply_message: "返信する"
-        no_results: "通報された投稿はありません。"
-        topic_flagged: "この <strong>トピック</strong> は通報されました。"
-        visit_topic: "トピックを確認"
-        was_edited: "最初の通報後に編集された投稿"
-        previous_flags_count: "この投稿は既に {{count}} 回通報されています"
-        user_percentage:
-          disagreed:
-            other: "不賛成 {{count}}% "
-        flagged_topics:
-          topic: "トピック"
       groups:
         new:
           title: "新しいグループ"
@@ -2696,15 +2701,10 @@ ja:
         nav:
           new: "新規"
           active: "アクティブ"
-          pending: "保留中"
           staff: "スタッフ"
           suspended: "凍結中"
           suspect: "マーク中"
         approved: "承認?"
-        approved_selected:
-          other: "承認ユーザ ({{count}})"
-        reject_selected:
-          other: "拒否ユーザ ({{count}})"
         titles:
           active: "アクティブユーザ"
           new: "新しいユーザ"
@@ -2719,10 +2719,6 @@ ja:
           moderators: "モデレータ"
           suspended: "凍結中のユーザ"
           suspect: "マーク中のユーザ"
-        reject_successful:
-          other: "%{count}人のユーザの拒否に成功しました。"
-        reject_failures:
-          other: "%{count}人のユーザの拒否に失敗しました。"
         not_verified: "検証されていません"
         check_email:
           title: "メールアドレスを表示する"

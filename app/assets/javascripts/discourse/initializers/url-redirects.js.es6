@@ -15,6 +15,7 @@ export default {
     DiscourseURL.rewrite(/\/private-messages\/$/, "/messages/");
     DiscourseURL.rewrite(/^\/users$/, "/u");
     DiscourseURL.rewrite(/^\/users\//, "/u/");
+    DiscourseURL.rewrite(/\/admin\/flags/, "/review");
 
     if (currentUser) {
       const username = currentUser.get("username");

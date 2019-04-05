@@ -10,7 +10,7 @@
           </div>
           <div class="badge-group-list">
             {{#each bg.badges as |b|}}
-              {{badge-card badge=b filterUser=b.has_badge username=currentUser.username}}
+              {{badge-card badge=b username=currentUser.username}}
             {{/each}}
           </div>
         </div>

@@ -810,7 +810,7 @@ describe Guardian do
 
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_falsey
 
-        PostAction.act(user, first_post, PostActionType.types[:off_topic])
+        PostActionCreator.create(user, first_post, :off_topic)
         expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
       end
     end
@@ -1699,6 +1699,21 @@ describe Guardian do
 
   end
 
+  context "can_delete_post_action?" do
+    let(:post) { Fabricate(:post) }
+
+    it "allows us to remove a bookmark" do
+      pa = PostActionCreator.bookmark(user, post).post_action
+      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
+    end
+
+    it "allows us to remove a very old bookmark" do
+      pa = PostActionCreator.bookmark(user, post).post_action
+      pa.update(created_at: 2.years.ago)
+      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
+    end
+  end
+
   context 'can_delete?' do
 
     it 'returns false with a nil object' do
@@ -1732,6 +1747,24 @@ describe Guardian do
         SiteSetting.tos_topic_id = tos_topic.id
         expect(Guardian.new(admin).can_delete?(tos_topic)).to be_falsey
       end
+
+      it "returns true for own topics" do
+        topic.update_attribute(:posts_count, 1)
+        topic.update_attribute(:created_at, Time.zone.now)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_truthy
+      end
+
+      it "returns false if delete their own topics" do
+        topic.update_attribute(:posts_count, 2)
+        topic.update_attribute(:created_at, Time.zone.now)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
+      end
+
+      it "returns false if delete their own topics" do
+        topic.update_attribute(:posts_count, 1)
+        topic.update_attribute(:created_at, 48.hours.ago)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
+      end
     end
 
     context 'a Post' do
@@ -1759,8 +1792,9 @@ describe Guardian do
         expect(Guardian.new(Fabricate(:user)).can_delete?(post)).to be_falsey
       end
 
-      it "returns false when it's the OP, even as a moderator" do
-        post.update_attribute :post_number, 1
+      it "returns false when it's the OP, even as a moderator if there are at least two posts" do
+        post.update_attribute(:post_number, 1)
+        Fabricate(:post, topic: post.topic)
         expect(Guardian.new(moderator).can_delete?(post)).to be_falsey
       end
 
@@ -1858,7 +1892,7 @@ describe Guardian do
         user.id = 1
         post.id = 1
 
-        a = PostAction.new(user: user, post: post, post_action_type_id: 1)
+        a = PostAction.new(user: user, post: post, post_action_type_id: 2)
         a.created_at = 1.minute.ago
         a
       }
@@ -1873,7 +1907,7 @@ describe Guardian do
 
       it "returns false if the window has expired" do
         post_action.created_at = 20.minutes.ago
-        SiteSetting.expects(:post_undo_action_window_mins).returns(10)
+        SiteSetting.post_undo_action_window_mins = 10
         expect(Guardian.new(user).can_delete?(post_action)).to be_falsey
       end
 

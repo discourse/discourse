@@ -32,9 +32,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     user = User.new(user_params) if user.nil?
 
     if !SiteSetting.must_approve_users? || (SiteSetting.must_approve_users? && invite.invited_by.staff?)
-      user.approved = true
-      user.approved_by_id = invite.invited_by_id
-      user.approved_at = Time.zone.now
+      ReviewableUser.set_approved_fields!(user, invite.invited_by)
     end
 
     user_fields = UserField.all
@@ -75,7 +73,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   def process_invitation
     approve_account_if_needed
     add_to_private_topics_if_invited
-    add_user_to_invited_topics
     add_user_to_groups
     send_welcome_message
     notify_invitee
@@ -105,16 +102,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def add_to_private_topics_if_invited
-    invite.topics.private_messages.each do |t|
-      t.topic_allowed_users.create(user_id: invited_user.id)
-    end
-  end
-
-  def add_user_to_invited_topics
-    Invite.where('invites.email = ? and invites.id != ?', invite.email, invite.id).includes(:topics).where(topics: { archetype: Archetype::private_message }).each do |i|
-      i.topics.each do |t|
-        t.topic_allowed_users.create(user_id: invited_user.id)
-      end
+    topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: invite.email }).pluck(:id)
+    topic_ids.each do |id|
+      TopicAllowedUser.create(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
     end
   end
 
@@ -132,8 +122,13 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def approve_account_if_needed
-    if get_existing_user
-      invited_user.approve(invite.invited_by, false)
+    if invited_user.present? && reviewable_user = ReviewableUser.find_by(target: invited_user)
+      reviewable_user.perform(
+        invite.invited_by,
+        :approve,
+        send_email: false,
+        approved_by_invite: true
+      )
     end
   end
 

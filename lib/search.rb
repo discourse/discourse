@@ -1,7 +1,6 @@
 require_dependency 'search/grouped_search_results'
 
 class Search
-  INDEX_VERSION = 2.freeze
   DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
 
   cattr_accessor :preloaded_topic_custom_fields
@@ -735,7 +734,6 @@ class Search
     posts = Post.where(post_type: Topic.visible_post_types(@guardian.user))
       .joins(:post_search_data, :topic)
       .joins("LEFT JOIN categories ON categories.id = topics.category_id")
-      .where("topics.deleted_at" => nil)
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
@@ -838,13 +836,14 @@ class Search
         posts = posts.order("posts.like_count DESC")
       end
     else
-      # 0|32 default normalization scaled into the range zero to one
+      # 1|32 divides the rank by 1 + logarithm of the document length and
+      # scales the range from zero to one
       data_ranking = <<~SQL
       (
         TS_RANK_CD(
           post_search_data.search_data,
           #{ts_query(weight_filter: weights)},
-          0|32
+          1|32
         ) *
         (
           CASE categories.search_priority

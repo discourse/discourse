@@ -20,13 +20,17 @@ $avatar_width: 120px;
       display: flex;
       flex: 1;
       margin-top: 1em;
-      button {
-        white-space: nowrap;
-      }
+      max-width: 100%;
       li {
         flex: 1;
-        & + li {
-          margin-left: 0.5em;
+        min-width: 0;
+        &:nth-child(2) {
+          border-left: 0.5em solid transparent;
+        }
+        button {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

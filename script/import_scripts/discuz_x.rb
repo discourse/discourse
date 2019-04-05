@@ -398,7 +398,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           end
         elsif (m['status'] & 2) >> 1 == 1 # waiting for approve
           mapped[:post_create_action] = lambda do |action_post|
-            PostAction.act(Discourse.system_user, action_post, 6, take_action: false)
+            PostActionCreator.notify_user(Discourse.system_user, action_post)
           end
         end
         skip ? nil : mapped

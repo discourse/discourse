@@ -9,7 +9,7 @@ pt:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
-    long_date: "DD de MMMM de YYYY hh:mm"
+    long_date: "DD MMMM de YYYY, hh:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%m-%d-%Y"
@@ -245,8 +245,6 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
   excerpt_image: "imagem"
-  queue:
-    delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
@@ -787,7 +785,6 @@ pt:
     polling_interval: "Quando não está a ocorrer uma solicitação ao servidor, com que frequência devem os clientes ligados requerer uma atualização, em milissegundos"
     anon_polling_interval: "Com que frequência os clientes não registados podem fazer solicitações ao servidor, em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
-    flags_required_to_hide_post: "Número de denúncias que fazem com que uma mensagem seja automaticamente escondida e uma mensagem enviada ao utilizador (0 se nunca)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
     max_topics_in_first_day: "O número máximo de tópicos que o utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
     max_replies_in_first_day: "O número máximo de respostas que um utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
@@ -968,7 +965,6 @@ pt:
     max_age_unmatched_emails: "Eliminar entradas de email não encontradas após (N) dias."
     max_age_unmatched_ips: "Eliminar entradas IP não encontradas após (N) dias."
     num_flaggers_to_close_topic: "Número mínimo de sinalizações únicas que são necessárias para automaticamente pausar um tópico para intervenção."
-    num_flags_to_close_topic: "Número mínimo de sinalizações ativas que são necessárias para automaticamente pausar um tópico para intervenção."
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
     min_first_post_typing_time: "Quantidade mínima de tempo em milissegundos que um utilizador deve digitar durante a sua primeira mensagem, se o limite não for atingido a mensagem será automaticamente inserida na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
@@ -1223,10 +1219,6 @@ pt:
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
-  flags_reminder:
-    subject_template:
-      one: "1 sinalização à espera de ser tratada"
-      other: "%{count} sinalizações à espera de serem tratadas"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
   invite_password_instructions:
@@ -1251,8 +1243,6 @@ pt:
     agreed: "Obrigado por nos informar. Concordamos que existe um problema e estamos a analisá-lo."
     agreed_and_deleted: "Obrigado por nos informar. Concordamos que existe um problema e removemos a mensagem."
     disagreed: "Obrigado por nos informar. Estamos a analisá-lo."
-    deferred: "Obrigado por nos informar. Estamos a analisá-lo."
-    deferred_and_deleted: "Obrigado por nos informar. Removemos a mensagem."
   system_messages:
     private_topic_title: "Tópico #%{id}"
     contents_hidden: "Por favor, visite o artigo para ver o seu conteúdo."

@@ -88,7 +88,10 @@ class UserHistory < ActiveRecord::Base
       approve_user: 69,
       web_hook_create: 70,
       web_hook_update: 71,
-      web_hook_destroy: 72
+      web_hook_destroy: 72,
+      embeddable_host_create: 73,
+      embeddable_host_update: 74,
+      embeddable_host_destroy: 75
     )
   end
 
@@ -155,7 +158,10 @@ class UserHistory < ActiveRecord::Base
       :approve_user,
       :web_hook_create,
       :web_hook_update,
-      :web_hook_destroy
+      :web_hook_destroy,
+      :embeddable_host_create,
+      :embeddable_host_update,
+      :embeddable_host_destroy
     ]
   end
 

@@ -15,9 +15,7 @@ nl:
       title: Datum invoegen
       create:
         modal_title: Datum invoegen
-        modal_subtitle: "We converteren de datum en tijd automatisch naar de lokale tijdzone van de gebruiker."
         form:
-          to: "tot"
           insert: Invoegen
           advanced_mode: Geavanceerde modus
           simple_mode: Eenvoudige modus
@@ -31,3 +29,13 @@ nl:
           date_title: Datum
           time_title: Tijd
           format_title: Datumnotatie
+          timezone: Tijdzone
+          recurring:
+            every_day: "Elke dag"
+            every_week: "Elke week"
+            every_two_weeks: "Elke twee weken"
+            every_month: "Elke maand"
+            every_two_months: "Elke twee maanden"
+            every_three_months: "Elke drie maanden"
+            every_six_months: "Elke zes maanden"
+            every_year: "Elk jaar"

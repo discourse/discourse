@@ -781,10 +781,11 @@ describe Topic do
     end
 
     context "user actions" do
-      let(:actions) { topic.user.user_actions }
-
       it "should set up actions correctly" do
-        UserActionCreator.enable
+        UserActionManager.enable
+
+        post = create_post(archetype: 'private_message', target_usernames: [Fabricate(:coding_horror).username])
+        actions = post.user.user_actions
 
         expect(actions.map { |a| a.action_type }).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map { |a| a.action_type }).to include(UserAction::NEW_PRIVATE_MESSAGE)
@@ -1274,6 +1275,7 @@ describe Topic do
 
       describe 'to a different category' do
         let(:new_category) { Fabricate(:category, user: user, name: '2nd category') }
+        let(:another_user) { Fabricate(:user) }
 
         it 'should work' do
           topic.change_category_to_id(new_category.id)
@@ -1284,7 +1286,8 @@ describe Topic do
         end
 
         describe 'user that is watching the new category' do
-          it 'should generate the notification for the topic' do
+
+          before do
             Jobs.run_immediately!
 
             topic.posts << Fabricate(:post)
@@ -1295,14 +1298,14 @@ describe Topic do
               new_category.id
             )
 
-            another_user = Fabricate(:user)
-
             CategoryUser.set_notification_level_for_category(
               another_user,
               CategoryUser::notification_levels[:watching_first_post],
               new_category.id
             )
+          end
 
+          it 'should generate the notification for the topic' do
             expect do
               topic.change_category_to_id(new_category.id)
             end.to change { Notification.count }.by(2)
@@ -1320,6 +1323,14 @@ describe Topic do
               post_number: 1,
               notification_type: Notification.types[:watching_first_post]
             ).exists?).to eq(true)
+          end
+
+          it "should not generate a notification for unlisted topic" do
+            topic.update_column(:visible, false)
+
+            expect do
+              topic.change_category_to_id(new_category.id)
+            end.to change { Notification.count }.by(0)
           end
         end
 
@@ -1655,7 +1666,7 @@ describe Topic do
     end
   end
 
-  describe 'for_digest' do
+  describe '.for_digest' do
     let(:user) { Fabricate.build(:user) }
 
     context "no edit grace period" do
@@ -1685,6 +1696,18 @@ describe Topic do
         CategoryUser.set_notification_level_for_category(user, CategoryUser.notification_levels[:muted], category.id)
 
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+      end
+
+      it "doesn't return topics that a user has muted" do
+        user = Fabricate(:user)
+
+        Fabricate(:topic_user,
+          user: user,
+          topic: topic,
+          notification_level: TopicUser.notification_levels[:muted]
+        )
+
+        expect(Topic.for_digest(user, 1.year.ago)).to eq([])
       end
 
       it "doesn't return topics from suppressed categories" do
@@ -1783,21 +1806,24 @@ describe Topic do
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic1])
       end
     end
-
   end
 
-  describe 'secured' do
-    it 'can remove secure groups' do
+  describe '.secured' do
+    it 'should return the right topics' do
       category = Fabricate(:category, read_restricted: true)
-      Fabricate(:topic, category: category, created_at: 1.day.ago)
+      topic = Fabricate(:topic, category: category, created_at: 1.day.ago)
+      group = Fabricate(:group)
+      user = Fabricate(:user)
+      group.add(user)
+      private_category = Fabricate(:private_category, group: group)
 
-      expect(Topic.secured(Guardian.new(nil)).count).to eq(0)
-      expect(Topic.secured(Guardian.new(Fabricate(:admin))).count).to eq(2)
+      expect(Topic.secured(Guardian.new(nil))).to eq([])
 
-      # for_digest
+      expect(Topic.secured(Guardian.new(user)))
+        .to contain_exactly(private_category.topic)
 
-      expect(Topic.for_digest(Fabricate(:user), 1.year.ago).count).to eq(0)
-      expect(Topic.for_digest(Fabricate(:admin), 1.year.ago).count).to eq(1)
+      expect(Topic.secured(Guardian.new(Fabricate(:admin))))
+        .to contain_exactly(category.topic, private_category.topic, topic)
     end
   end
 

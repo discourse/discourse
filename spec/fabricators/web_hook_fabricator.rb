@@ -84,3 +84,11 @@ Fabricator(:queued_post_web_hook, from: :web_hook) do
     web_hook.web_hook_event_types = [transients[:queued_post_hook]]
   end
 end
+
+Fabricator(:reviewable_web_hook, from: :web_hook) do
+  transient reviewable_hook: WebHookEventType.find_by(name: 'reviewable')
+
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:reviewable_hook]]
+  end
+end

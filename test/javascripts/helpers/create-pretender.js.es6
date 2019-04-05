@@ -1,18 +1,15 @@
-import storePretender from "helpers/store-pretender";
-import fixturePretender from "helpers/fixture-pretender";
-import flagPretender from "helpers/flag-pretender";
-
 export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
     const firstSeg = decodeURIComponent(item[0]);
-    const m = /^([^\[]+)\[([^\]]+)\]/.exec(firstSeg);
+    const m = /^([^\[]+)\[(.+)\]/.exec(firstSeg);
 
     const val = decodeURIComponent(item[1]).replace(/\+/g, " ");
     if (m) {
-      result[m[1]] = result[m[1]] || {};
-      result[m[1]][m[2]] = val;
+      let key = m[1];
+      result[key] = result[key] || {};
+      result[key][m[2].replace("][", ".")] = val;
     } else {
       result[firstSeg] = val;
     }
@@ -38,9 +35,16 @@ export let fixturesByUrl;
 
 export default function() {
   const server = new Pretender(function() {
-    storePretender.call(this, helpers);
-    flagPretender.call(this, helpers);
-    fixturesByUrl = fixturePretender.call(this, helpers);
+    // Autoload any `*-pretender` files
+    Object.keys(requirejs.entries).forEach(e => {
+      let m = e.match(/^helpers\/([a-z]+)\-pretender$/);
+      if (m && m[1] !== "create") {
+        let result = requirejs(e).default.call(this, helpers);
+        if (m[1] === "fixture") {
+          fixturesByUrl = result;
+        }
+      }
+    });
 
     this.get("/admin/plugins", () => response({ plugins: [] }));
 
@@ -155,6 +159,7 @@ export default function() {
     this.put("/u/eviltrout.json", () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
+    this.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
     this.get("/t/280/20.json", () => response(fixturesByUrl["/t/280/1.json"]));
     this.get("/t/28830.json", () => response(fixturesByUrl["/t/28830/1.json"]));
     this.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
@@ -573,11 +578,12 @@ export default function() {
       ]);
     });
 
-    this.get("/admin/logs/search_logs/term/ruby.json", () => {
+    this.get("/admin/logs/search_logs/term.json", () => {
       return response(200, {
         term: {
           type: "search_log_term",
           title: "Search Count",
+          term: "ruby",
           data: [{ x: "2017-07-20", y: 2 }]
         }
       });

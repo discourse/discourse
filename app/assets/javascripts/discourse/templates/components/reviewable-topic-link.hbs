@@ -1,0 +1,11 @@
+<div class='post-topic'>
+  {{#if reviewable.topic}}
+    {{topic-status topic=reviewable.topic}}
+    <a href={{reviewable.topic_url}} class='title-text'>{{reviewable.topic.title}}</a>
+    {{category-badge reviewable.category}}
+  {{else if (has-block)}}
+    {{yield}}
+  {{else}}
+    <span class="title-text">{{i18n "topic.deleted"}}</span>
+  {{/if}}
+</div>

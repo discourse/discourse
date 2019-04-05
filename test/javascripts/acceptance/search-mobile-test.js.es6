@@ -11,12 +11,25 @@ QUnit.test("search", async assert => {
     exists("input.full-page-search"),
     "it shows the full page search form"
   );
+
   assert.ok(!exists(".search-results .fps-topic"), "no results by default");
+
+  await click(".search-advanced-title");
+
+  assert.ok(
+    find(".search-advanced-filters").length === 1,
+    "it should expand advanced search filters"
+  );
 
   await fillIn(".search-query", "posts");
   await click(".search-cta");
 
   assert.ok(find(".fps-topic").length === 1, "has one post");
+
+  assert.ok(
+    find(".search-advanced-filters").length === 0,
+    "it should collapse advanced search filters"
+  );
 
   await click("#search-button");
 

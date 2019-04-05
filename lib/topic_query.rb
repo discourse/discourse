@@ -469,6 +469,18 @@ class TopicQuery
         staff: @user&.staff?)
       .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
+    if @user
+
+      # micro optimisation so we don't load up all of user stats which we do not need
+      unread_at = DB.query_single(
+        "select first_unread_at from user_stats where user_id = ?",
+        @user.id).first
+
+      # perf note, in the past we tried doing this in a subquery but performance was
+      # terrible, also tried with a join and it was bad
+      result = result.where("topics.updated_at >= ?", unread_at)
+    end
+
     self.class.results_filter_callbacks.each do |filter_callback|
       result = filter_callback.call(:unread, result, @user, options)
     end

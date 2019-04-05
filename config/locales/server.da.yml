@@ -203,8 +203,6 @@ da:
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
   revert_version_same: "Den nuværende udgave er den samme udgave/version som den du prøver at vende tilbage til."
   excerpt_image: "billede"
-  queue:
-    delete_reason: "Slettet via køen til moderation af indlæg."
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
@@ -776,7 +774,6 @@ da:
     polling_interval: "Når der ikke hentes data langsomt, hvor tit skal en klient der er logget på hente ny data i millisekunder"
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
     background_polling_interval: "Hvor tit skal klienter hente data i millisekunder (når vinduet er i baggrunden)"
-    flags_required_to_hide_post: "Antal flag der forårsager at et indlæg automatisk skjules, og en bresked sendt til brugeren (0 for never)"
     cooldown_minutes_after_hiding_posts: "Antal minutter en bruger må vente indtil de kan redigere et indlæg der er blevet gemt via et flag"
     max_topics_in_first_day: "Det maksimale antal af emner en bruger må lave i en 24 timers periode efter at have skrevet det første indlæg"
     max_replies_in_first_day: "Det maksimale antal af svar en bruger må foretage i 24 timers perioden efter at have skrevet deres første indlæg"
@@ -840,7 +837,6 @@ da:
     staff_like_weight: "Hvor meget ekstra vægt har hjælperteamets likes."
     max_new_accounts_per_registration_ip: "Hvis der allerede er (n) kontoer med tillidsniveau 0 fra en IP (og ingen er en del af hjælperteamet eller på TL2 eller højere), så accepteres nye kontooprettelser fra denne IP ikke."
     num_flaggers_to_close_topic: "Minimum antal flagmarkeringer fra unikke brugere, der skal til for automatisk at pause et emne til ingriben"
-    num_flags_to_close_topic: "Minimum antal aktive flagmarkeringer, der skal til for automatisk at pause et emne til indgriben"
     auto_respond_to_flag_actions: "Aktivér automatisk besvarelse, når en flagmarkering fjernes."
     reply_by_email_enabled: "Aktivér muligheden for at svare til emner via email."
     reply_by_email_address: "Skabelon for e-mail-adressen i formularen, for eksempel: %%{reply_key}@reply.myforum.com."
@@ -969,10 +965,6 @@ da:
     ip_address:
       blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
       max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
-  flags_reminder:
-    subject_template:
-      one: "1 flag venter på at blive håndteret"
-      other: "%{count} flag venter på at blive håndteret"
   unsubscribe_mailer:
     subject_template: "Bekræft at du ikke længere ønsker at modtage email opdateringer fra %{site_title}"
     text_body_template: |
@@ -1021,8 +1013,6 @@ da:
     agreed: "Tak for din henvendelse. Vi er enige i, at der er et problem, og vi kigger på det."
     agreed_and_deleted: "Tak for din henvendelse. Vi er enige i, at der er et problem, og vi har fjernet indlægget."
     disagreed: "Tak for din henvendelse. Vi kigger på det."
-    deferred: "Tak for din henvendelse. Vi kigger på det."
-    deferred_and_deleted: "Tak for din henvendelse. Vi har fjernet indlægget."
   system_messages:
     private_topic_title: "Emne #%{id}"
     contents_hidden: "Gå venligst til indlægget for at se indholdet."

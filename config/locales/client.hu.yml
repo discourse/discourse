@@ -184,7 +184,6 @@ hu:
     age: "Életkor"
     joined: "Tagság kezdete"
     admin_title: "Adminisztrátor"
-    flags_title: "Jelző"
     show_more: "mutass többet"
     show_help: "opciók"
     links: "Hivatkozások"
@@ -211,6 +210,8 @@ hu:
     every_hour: "óránként"
     daily: "naponta"
     weekly: "hetente"
+    every_month: "minden hónapban"
+    every_six_months: "minden hat hónapban"
     max_of_count: "maximum {{count}}"
     alternation: "vagy"
     character_count:
@@ -256,6 +257,7 @@ hu:
       new_private_message: "Új személyes üzenet besorolása"
       topic_reply: "Választervezet"
       abandon:
+        confirm: "Már nyitottál egy másik piszkozatot ebben a témában. Biztos hogy törölni szeretnéd?"
         yes_value: "Igen, visszavonom"
         no_value: "Nem, tartsd meg"
     topic_count_latest:
@@ -299,28 +301,14 @@ hu:
       title:
         search: "Témakör keresése cím alapján:"
         placeholder: "ide írd be a témakör címét"
-    queue:
-      topic: "Téma:"
-      approve: "Jóváhagy"
-      reject: "Elutasít"
-      delete_user: "Felhasználó Törlése"
-      title: "Jóváhagyásra vár"
-      none: "Nincs átnézésre váró bejegyzés"
-      edit: "Szerkesztés"
-      cancel: "Mégse"
-      view_pending: "függőben lévő bejegyzések megtekintése"
-      has_pending_posts:
-        one: "Ebben a témakörben <b>{{count}}</b> hozzászólás vár jóváhagyásra"
-        other: "Ebben a témakörben <b>{{count}}</b> hozzászólás vár jóváhagyásra"
-      confirm: "Módosítások mentése"
-      delete_prompt: "Biztos vagy benne, hogy le akarod törölni <b>%{username}<b> felhasználót? Ezzel letörlöd minden posztját és blokkolod az e-mail és IP címét."
-      approval:
-        title: "A bejegyzés jóváhagyásra vár."
-        description: "Megkaptuk a bejegyzésedet, de egy moderátornak jóvá kell hagynia, mielőtt megjelenne. Köszönjük a türelmedet."
-        pending_posts:
-          one: "1 függőben lévő bejegyzés"
-          other: "<strong>{{count}}</strong> függőben lévő bejegyzése"
-        ok: "Rendben"
+    review:
+      moderation_history: "Moderálási előzmények"
+      none: "Nincs átnézésre váró elem"
+      view_pending: "várakozók megtekintése"
+      title: "Áttekintést igényel"
+      filtered_user: "Felhasználó:"
+      topics:
+        topic: "Téma"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> kitett <a href='{{topicUrl}}'>egy témát</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Te</a> kitettél <a href='{{topicUrl}}'>egy témát</a>"
@@ -1651,9 +1639,6 @@ hu:
       has_replies:
         one: "{{count}} Válasz"
         other: "{{count}} Válaszok"
-      has_likes:
-        one: "{{count}} Tetszik"
-        other: "{{count}}  Tetszések"
       has_likes_title:
         one: "1 ember likeolta a bejegyzést"
         other: "{{count}} emberek likeolták ezt a bejegyzést"
@@ -2184,66 +2169,6 @@ hu:
       commits:
         latest_changes: "Legutóbbi változtatások: kérünk frissíts gyakran!"
         by: "általa: "
-      flags:
-        title: "Jelölések"
-        active_posts: "Megjelölt bejegyzés"
-        old_posts: "Rég megjelölt bejegyzések"
-        topics: "Megjelölt témák"
-        moderation_history: "Moderálási előzmények"
-        agree: "Elfogadás"
-        agree_flag_hide_post: "Bejegyzés elrejtése"
-        agree_flag_restore_post: "Elfogadott és visszaállított bejegyzés"
-        agree_flag_suspend: "Felhasználó felfüggesztése"
-        agree_flag_suspend_title: "Egyezz bele megjelöléssel, és függeszd fel a felhasználót"
-        agree_flag_silence: "Felhasználó elnémítása"
-        agree_flag: "Bejegyzés megtartása"
-        ignore_flag: "Ignorál"
-        delete: "Törlés"
-        delete_title: "A megjelölt bejegyzés törlése."
-        delete_post_defer_flag_title: "Bejegyzés törlése; fő bejegyzés esetén témakör törlése"
-        delete_post_agree_flag_title: "Bejegyzés törlése; fő bejegyzés esetén témakör törlése"
-        delete_flag_modal_title: "Törlés és..."
-        delete_spammer: "Spammer törlése"
-        delete_spammer_title: "Felhasználó törlése, valamennyi témakörével és bejegyzésével együtt."
-        disagree_flag_unhide_post: "Elutasítás (bejegyzés mutatása)"
-        disagree_flag_unhide_post_title: "A bejegyzés összes megjelölésének törlése és bejegyzés újra láthatóvá tétele"
-        disagree_flag: "Elutasítás"
-        disagree_flag_title: "Megjelölés törlése; érvénytelen vagy pontatlan"
-        clear_topic_flags: "Kész"
-        more: "(további válaszok...)"
-        suspend_user: "Felhasználó  felfüggesztése"
-        suspend_user_title: "Felhasználó felfüggesztése a bejegyzés alól"
-        replies:
-          one: "[1 válasz]"
-          other: "[%{count} válaszok]"
-        dispositions:
-          agreed: "elfogadva"
-          disagreed: "elutasítva"
-          deferred: "Ignorált"
-        flagged_by: "Megjelölte"
-        resolved_by: "Megoldotta "
-        system: "Rendszer"
-        error: "Valami félresikerült"
-        reply_message: "Válaszolás"
-        no_results: "Nincsenek megjelölt bejegyzések"
-        topic_flagged: "Ez a <strong>téma</strong> meg lett jelölve."
-        show_full: "Teljes bejegyzés mutatása"
-        visit_topic: "Témakör meglátogatása a művelet végrehajtásához"
-        was_edited: "A bejegyzést szerkesztették az első megjelölés után"
-        previous_flags_count: "Ezt a bejegyzést {{count}} alkalommal jelölték meg. "
-        details: "részletek"
-        flagged_topics:
-          topic: "Téma"
-          type: "fajta"
-          users: "Felhasználók"
-          last_flagged: "Utoljára megjelőlt"
-          no_results: "Nincsenek megjelőlt témák"
-        short_names:
-          off_topic: "Témán kívüli"
-          inappropriate: "helytelen"
-          spam: "spam"
-          notify_user: "Egyéni"
-          notify_moderators: "Egyéni"
       groups:
         new:
           title: "Új csoport"
@@ -2726,19 +2651,12 @@ hu:
         nav:
           new: "Új"
           active: "Aktív"
-          pending: "Folyamatban"
           staff: "Személyzet"
           suspended: "Felfüggesztett"
           silenced: "Némított"
           suspect: "Meggyanúsítás"
           staged: "Lépcsőzetes"
         approved: "Jóváhagyott?"
-        approved_selected:
-          one: "Felhasználó jóváhagyva"
-          other: "Felhasználók jóváhagyása ({{count}})"
-        reject_selected:
-          one: "Felhasználó elutasítva"
-          other: "Felhasználók elutsítva ({{count}})"
         titles:
           active: "Aktív felhasználók"
           new: "Új felhasználók"

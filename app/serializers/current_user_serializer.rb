@@ -8,7 +8,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :read_first_notification?,
              :admin?,
              :notification_channel_position,
-             :site_flagged_posts_count,
              :moderator?,
              :staff?,
              :title,
@@ -30,8 +29,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :muted_category_ids,
              :dismissed_banner_key,
              :is_anonymous,
-             :post_queue_new_count,
-             :show_queued_posts,
+             :reviewable_count,
              :read_faq,
              :automatically_unpin_topics,
              :mailing_list_mode,
@@ -44,7 +42,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :top_category_ids,
              :hide_profile_and_presence,
              :groups,
-             :second_factor_enabled
+             :second_factor_enabled,
+             :ignored_users
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -56,10 +55,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_create_topic
     scope.can_create_topic?(nil)
-  end
-
-  def include_site_flagged_posts_count?
-    object.staff?
   end
 
   def read_faq
@@ -104,10 +99,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def redirected_to_top
     object.user_option.redirected_to_top
-  end
-
-  def site_flagged_posts_count
-    PostAction.flagged_posts_count
   end
 
   def can_send_private_email_messages
@@ -167,6 +158,10 @@ class CurrentUserSerializer < BasicUserSerializer
     CategoryUser.lookup(object, :muted).pluck(:category_id)
   end
 
+  def ignored_users
+    IgnoredUser.where(user: object.id).joins(:ignored_user).pluck(:username)
+  end
+
   def top_category_ids
     omitted_notification_levels = [CategoryUser.notification_levels[:muted], CategoryUser.notification_levels[:regular]]
     CategoryUser.where(user_id: object.id)
@@ -189,20 +184,8 @@ class CurrentUserSerializer < BasicUserSerializer
     object.anonymous?
   end
 
-  def post_queue_new_count
-    QueuedPost.new_count
-  end
-
-  def include_post_queue_new_count?
-    object.staff?
-  end
-
-  def show_queued_posts
-    true
-  end
-
-  def include_show_queued_posts?
-    object.staff? && (NewPostManager.queue_enabled? || QueuedPost.new_count > 0)
+  def reviewable_count
+    Reviewable.list_for(object).count
   end
 
   def mailing_list_mode

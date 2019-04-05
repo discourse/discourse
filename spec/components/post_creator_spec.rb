@@ -123,7 +123,7 @@ describe PostCreator do
 
       it "generates the correct messages for a secure topic" do
 
-        UserActionCreator.enable
+        UserActionManager.enable
 
         admin = Fabricate(:admin)
 
@@ -157,7 +157,7 @@ describe PostCreator do
 
       it 'generates the correct messages for a normal topic' do
 
-        UserActionCreator.enable
+        UserActionManager.enable
 
         p = nil
         messages = MessageBus.track_publish do

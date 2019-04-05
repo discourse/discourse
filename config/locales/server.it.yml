@@ -261,9 +261,6 @@ it:
   too_late_to_edit: "Quel messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
   excerpt_image: "immagine"
-  queue:
-    delete_reason: "Cancellato attraverso la coda di moderazione"
-    not_found: "Messggio non trovato o già aggiornato"
   groups:
     success:
       bulk_add:
@@ -1021,14 +1018,12 @@ it:
     polling_interval: "Se non si esegue il long polling, quanto spesso i client autenticati devono fare poll in millisecondi"
     anon_polling_interval: "Frequenza in millisecondi con cui client anonimi effettuano il poll"
     background_polling_interval: "Quanto spesso i client devono fare poll in millisecondi (quando la finestra è in background)"
-    flags_required_to_hide_post: "Numero di segnalazioni che rendono un messaggio automaticamente nascosto. L'utente riceve un messaggio privato (0 per mai)"
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
     max_topics_in_first_day: "Numero massimo di argomenti che un utente può creare nel periodo di 24 ore successivo alla creazione del suo primo messaggio"
     max_replies_in_first_day: "Numero massimo di risposte che un utente può creare nel periodo di 24 ore successivo alla creazione del suo primo messaggio"
     tl2_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 2 (Assiduo), moltiplicando per questo numero"
     tl3_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 3 (Esperto) moltiplicando per questo numero"
     tl4_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 4 (Veterano), moltiplicando per questo numero"
-    num_spam_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono segnalazioni di spam da num_users_to_silence_new_user diversi utenti, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità. "
     num_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_spam_flags_to_silence_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i suoi messaggi e impediscigli ulteriori invii. 0 per disabilitare. "
     num_tl3_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_silence_new_user differenti utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare. "
     num_tl3_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_silence_new_user segnalazioni da questo numero di utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
@@ -1229,7 +1224,6 @@ it:
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
-    num_flags_to_close_topic: "Il numero minimo di segnalazioni attive richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
     num_hours_to_close_topic: "Numero di ore per mettere in pausa un argomento in attesa dell'intervento di un moderatore."
     auto_respond_to_flag_actions: "Attiva risposta automatica quando viene fatta una segnalazione."
     min_first_post_typing_time: "Quantità minima di tempo in millisecondi che un utente deve impiegare per la digitazione del  primo messaggio, se non viene raggiunta la soglia il messaggio verrà automaticamente inserito nella coda dei messaggi da approvare. Impostare su 0 per disabilitare (non consigliato)"
@@ -1550,13 +1544,6 @@ it:
     destroy_reasons:
       unused_staged_user: "Utente temporaneo non utilizzato"
       fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. [Please review them](%{base_path}/admin/flags)."
-      other: "Delle segnalazioni sono state inviate oltre %{count} ore fa. [Per favore, revisionale](%{base_path}/admin/flags)."
-    subject_template:
-      one: "1 segnalazione in attesa di essere revisionata"
-      other: "%{count} segnalazioni in attesa di essere revisionate"
   unsubscribe_mailer:
     title: "Annullare Iscrizione Mailer"
     subject_template: "Conferma che non desideri più ricevere aggiornamenti via email da %{site_title}"
@@ -1621,8 +1608,6 @@ it:
     agreed: "Grazie per averci informato. Sappiamo che c'è un problema e lo stiamo analizzando."
     agreed_and_deleted: "Grazie per averci informato. Sappiamo che c'è un problema e abbiamo cancellato il messaggio."
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
-    deferred: "Grazie per averci informato. Stiamo provvedendo."
-    deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
   system_messages:
     private_topic_title: "Argomento #%{id}"
     contents_hidden: "Visita il messaggio per vederne i contenuti."
@@ -2503,7 +2488,7 @@ it:
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
     member:
       name: Membro
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Puà utilizzare</a> inviti, messaggi di gruppo e più \"mi piace\""
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> inviti, messaggi di gruppo e più \"mi piace\""
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, a mettere un numero maggiore di "Mi piace" al giorno.
     regular:

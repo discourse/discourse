@@ -15,7 +15,6 @@ sl:
       title: Vnesi datum
       create:
         modal_title: Vnesi datum
-        modal_subtitle: "Samodejno bomo pretvorili datum in čas v uporabnikov lokalni čas."
         form:
           insert: Dodaj
           advanced_mode: Napredni način

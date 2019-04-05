@@ -351,71 +351,24 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  def self.migrate_to_new_scheme(limit = nil)
-    problems = []
-
-    if SiteSetting.migrate_to_new_scheme
-      max_file_size_kb = SiteSetting.max_image_size_kb.kilobytes
-      local_store = FileStore::LocalStore.new
-
-      scope = OptimizedImage.includes(:upload)
-        .where("url NOT LIKE '%/optimized/_X/%'")
-        .order(id: :desc)
-
-      scope.limit(limit) if limit
-
-      scope.each do |optimized_image|
-        begin
-          # keep track of the url
-          previous_url = optimized_image.url.dup
-          # where is the file currently stored?
-          external = previous_url =~ /^\/\//
-          # download if external
-          if external
-            url = SiteSetting.scheme + ":" + previous_url
-            file = FileHelper.download(
-              url,
-              max_file_size: max_file_size_kb,
-              tmp_file_name: "discourse",
-              follow_redirect: true
-            ) rescue nil
-            path = file.path
-          else
-            path = local_store.path_for(optimized_image)
-            file = File.open(path)
-          end
-          # compute SHA if missing
-          if optimized_image.sha1.blank?
-            optimized_image.sha1 = Upload.generate_digest(path)
-          end
-          # optimize if image
-          FileHelper.optimize_image!(path)
-          # store to new location & update the filesize
-          File.open(path) do |f|
-            optimized_image.url = Discourse.store.store_optimized_image(f, optimized_image)
-            optimized_image.save
-          end
-          # remap the URLs
-          DbHelper.remap(UrlHelper.absolute(previous_url), optimized_image.url) unless external
-          DbHelper.remap(previous_url, optimized_image.url)
-          # remove the old file (when local)
-          unless external
-            FileUtils.rm(path, force: true)
-          end
-        rescue => e
-          problems << { optimized_image: optimized_image, ex: e }
-          # just ditch the optimized image if there was any errors
-          optimized_image.destroy
-        ensure
-          file&.close
-          file&.unlink if file&.respond_to?(:unlink)
-        end
-      end
-    end
-
-    problems
+  def self.extract_optimized_url(url)
+    url.match(/(\/optimized\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
   end
 
+  def self.get_from_url(url)
+    return if url.blank?
+
+    uri = begin
+      URI(URI.unescape(url))
+    rescue URI::Error
+    end
+
+    return if uri&.path.blank?
+    data = extract_optimized_url(uri.path)
+    return if data.blank?
+
+    OptimizedImage.find_by("url LIKE ?", "%#{data[1]}")
+  end
 end
 
 # == Schema Information

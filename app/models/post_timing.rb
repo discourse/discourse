@@ -80,6 +80,10 @@ class PostTiming < ActiveRecord::Base
         highest_seen_post_number: last_read,
         last_read_post_number: last_read
       )
+
+      if !topic.private_message?
+        set_minimum_first_unread!(user_id: user.id, date: topic.updated_at)
+      end
     end
   end
 
@@ -92,7 +96,22 @@ class PostTiming < ActiveRecord::Base
       TopicUser
         .where('user_id = ? and topic_id in (?)', user_id, topic_ids)
         .delete_all
+
+      date = Topic.listable_topics.where(id: topic_ids).minimum(:updated_at)
+
+      if date
+        set_minimum_first_unread!(user_id: user_id, date: date)
+      end
     end
+  end
+
+  def self.set_minimum_first_unread!(user_id:, date:)
+    DB.exec(<<~SQL, date: date, user_id: user_id)
+      UPDATE user_stats
+      SET first_unread_at = :date
+      WHERE first_unread_at > :date AND
+            user_id = :user_id
+    SQL
   end
 
   MAX_READ_TIME_PER_BATCH = 60 * 1000.0

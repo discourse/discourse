@@ -1,3 +1,5 @@
+require_dependency 'post_action_destroyer'
+
 class PostOwnerChanger
 
   def initialize(params)
@@ -21,7 +23,7 @@ class PostOwnerChanger
 
       post.topic = @topic
       post.set_owner(@new_owner, @acting_user, @skip_revision)
-      PostAction.remove_act(@new_owner, post, PostActionType.types[:like])
+      PostActionDestroyer.destroy(@new_owner, post, :like)
 
       level = post.is_first_post? ? :watching : :tracking
       TopicUser.change(@new_owner.id, @topic.id, notification_level: NotificationLevels.topic_levels[level])

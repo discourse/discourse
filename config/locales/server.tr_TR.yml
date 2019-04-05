@@ -176,8 +176,6 @@ tr_TR:
   too_late_to_edit: "Gönderi çok uzun zaman önce oluşturulmuş. Artık düzenlenemez ya da silinemez. "
   revert_version_same: "Şu anki sürüm geri dönmeye çalıştığınız sürüm ile aynı."
   excerpt_image: "resim"
-  queue:
-    delete_reason: "Gönderi yönetim sırası aracılığıyla silindi"
   groups:
     errors:
       can_not_modify_automatic: "Otomatik bir grupta değişiklik yapamazsınız"
@@ -648,7 +646,6 @@ tr_TR:
     polling_interval: "Uzun sorgular yapılmadığı zaman, kaç mili saniyede bir giriş yapmış kullanıcılar poll yapmalı"
     anon_polling_interval: "Kaç mili saniyede bir anonim kullanıcılar sorgu yapmalı"
     background_polling_interval: "(Pencere arkaplanda olduğu zaman) kaç mili saniyede bir kullanıcılan sorgu yapmalı"
-    flags_required_to_hide_post: "Gönderinin otomatik olarak gizlenip kullanıcıya ileti gönderilmesi için gereken toplam bildirim sayısı (hiçbir zaman için 0)"
     cooldown_minutes_after_hiding_posts: "Topluluk tarafından bildirilerek gizlenen gönderiyi düzenleyebilmek için, kullanıcının beklemesi gereken dakika süresi "
     max_topics_in_first_day: "Kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik zaman dilimi içerisinde oluşturmasına izin verilen konu sayısı."
     max_replies_in_first_day: "Kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik zaman dilimi içerisinde oluşturabileceği cevap sayısı."
@@ -814,7 +811,6 @@ tr_TR:
     max_age_unmatched_emails: "Taranmış e-posta kayıtlarından karşılığı olmayanları (N) gün sonunda sil. "
     max_age_unmatched_ips: "Taranmış IP girişlerinden karşılığı olmayanları (N) gün sonunda sil."
     num_flaggers_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az tekil bildirim sayısı"
-    num_flags_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az etkin bildirim sayısı "
     auto_respond_to_flag_actions: "Bir bildirim kaldırırken otomatik olarak cevaplamayı etkinleştir"
     min_first_post_typing_time: "Milisaniye olarak bir kullanıcının ilk gönderisini yazarken geçmesi gereken en küçük süre, bu süre geçmezse gönderi otomatik olarak onaylanma kuyruğuna girer. Devre dışı bırakmak için 0'a ayarlayın (tavsiye edilmez)."
     reply_by_email_enabled: "Konulara e-posta üzerinden cevap yazmayı etkinleştir."
@@ -1010,10 +1006,6 @@ tr_TR:
     ip_address:
       blocked: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor."
       max_new_accounts_per_registration_ip: "Mevcut IP adresiniz üzerinden yeni kayıt işlemine izin verilmiyor. (Belirlenen sınır aşıldı.) Bir görevli ile iletişime geçin."
-  flags_reminder:
-    subject_template:
-      one: "İlgilenilmesi gereken %{count} bildirim var"
-      other: "İlgilenilmesi gereken %{count} bildirim var"
   unsubscribe_mailer:
     subject_template: "%{site_title} üzerinden daha fazla e-posta güncellemesi almak istemediğinizi onaylayın"
   invite_password_instructions:
@@ -1027,8 +1019,6 @@ tr_TR:
     agreed: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Bir sorun olduğu konusunda size katılıyoruz ve ilgileniyoruz."
     agreed_and_deleted: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Bir sorun olduğu konusunda size katılıyoruz, gönderiyi kaldırdık. "
     disagreed: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
-    deferred: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Konu ile ilgileniyoruz."
-    deferred_and_deleted: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Gönderiyi kaldırdık."
   system_messages:
     post_hidden:
       subject_template: "Gönderi topluluk bildirimleri tarafından gizlendi"

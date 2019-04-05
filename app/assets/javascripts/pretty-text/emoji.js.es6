@@ -21,6 +21,14 @@ export function extendedEmojiList() {
 
 const emojiHash = {};
 
+const unicodeRegexp = new RegExp(
+  Object.keys(replacements)
+    .sort()
+    .reverse()
+    .join("|") + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
+  "g"
+);
+
 // add all default emojis
 emojis.forEach(code => (emojiHash[code] = true));
 
@@ -35,7 +43,7 @@ export function performEmojiUnescape(string, opts) {
     return;
   }
 
-  return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
+  return string.replace(unicodeRegexp, m => {
     const isEmoticon = !!translations[m];
     const isUnicodeEmoticon = !!replacements[m];
     let emojiVal;
@@ -63,7 +71,7 @@ export function performEmojiUnescape(string, opts) {
 }
 
 export function performEmojiEscape(string) {
-  return string.replace(/[\u1000-\uFFFF]+|\B:[^\s:]+(?::t\d)?:?\B/g, m => {
+  return string.replace(unicodeRegexp, m => {
     if (!!translations[m]) {
       return ":" + translations[m] + ":";
     } else if (!!replacements[m]) {

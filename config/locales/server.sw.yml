@@ -193,8 +193,6 @@ sw:
   too_late_to_edit: "Chapisho lilitengenezwa kitambo sana. Haiwezi kufanyiwa uhariri au kufutwa."
   revert_version_same: "Toleo la sasa ni sawa na toleo unalo jaribu kurudisha."
   excerpt_image: "Picha"
-  queue:
-    not_found: "Chapisho halijaonwa au limesasishwa."
   groups:
     errors:
       grant_trust_level_not_valid: "'%{trust_level}' sio kiwango cha uaminifu."
@@ -1117,8 +1115,6 @@ sw:
     agreed: "Asante kwa kutujulisha. Tunakubali kuwa kuna tatizo na tunaifuatilia."
     agreed_and_deleted: "Asante kwa kutujulisha. Tunakubali kuwa kuna tatizo na tumeondoa chapisho."
     disagreed: "Asante kwa kutujulisha. Tutaifuatilia."
-    deferred: "Asante kwa kutujulisha. Tutaifuatilia."
-    deferred_and_deleted: "Asante kwa kutujulisha. Tumeondoa chapisho."
   system_messages:
     private_topic_title: "Mada #%{id}"
     contents_hidden: "Tafadhali tembelea chapisho kuona taarifa zake."

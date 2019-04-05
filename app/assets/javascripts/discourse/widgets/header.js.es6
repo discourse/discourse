@@ -327,9 +327,6 @@ export default createWidget("header", {
       } else if (state.userVisible) {
         panels.push(this.attach("user-menu"));
       }
-      if (this.site.mobileView) {
-        panels.push(this.attach("header-cloak"));
-      }
 
       additionalPanels.map(panel => {
         if (this.state[panel.toggle]) {
@@ -341,6 +338,10 @@ export default createWidget("header", {
           );
         }
       });
+
+      if (this.site.mobileView) {
+        panels.push(this.attach("header-cloak"));
+      }
 
       return panels;
     };

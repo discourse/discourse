@@ -57,9 +57,10 @@
 }
 
 .discourse-local-dates-create-modal {
-  min-height: 300px;
+  min-height: 250px;
   display: flex;
   flex-direction: row;
+  padding: 0.5em;
 
   .form {
     flex: 1 0 0px;
@@ -70,76 +71,82 @@
 
     .date-time-configuration {
       display: flex;
-      align-items: center;
-      flex-direction: row;
 
-      .range {
+      .range,
+      .timezone {
+        display: flex;
+        justify-content: flex-start;
+        flex: 1;
+        align-items: center;
+
         .from {
-          flex-direction: row;
           display: flex;
+          flex-direction: row;
+          justify-content: space-between;
         }
 
         .to {
-          flex-direction: row;
           display: flex;
+          flex-direction: row;
+          justify-content: space-between;
         }
 
         .to-indicator {
           display: flex;
-          justify-content: center;
-          margin: 0.5em 0;
+          flex-direction: row;
+          padding-top: 0.5em;
+          margin: 0 0.5em;
+          font-size: $font-up-2;
         }
       }
 
       .date {
+        margin-right: 0.5em;
         .date-input {
-          margin-right: 1em;
-
+          width: 100px;
+          text-align: center;
           .date-picker {
-            padding-top: 5px;
-            bottom: 5px;
+            padding: 0;
             margin: 0;
-            width: 120px;
-            text-align: left;
+            width: 100%;
           }
+        }
+      }
+
+      .timezone {
+        margin-left: 1em;
+        .timezone-input {
+          width: 160px;
         }
       }
 
       .time {
         .time-input {
-          margin: 0 0.5em 0 0;
-          width: 120px;
-          padding: 3.5px 10px;
-        }
-      }
-
-      .preview {
-        flex: 1 0 0px;
-        margin-top: 16px;
-        text-align: center;
-      }
-
-      @include breakpoint(medium) {
-        flex-direction: column;
-        align-items: flex-start;
-
-        .range .from,
-        .range .to {
-          flex-direction: column;
-        }
-
-        .date .date-input .date-picker {
-          width: 200px;
-        }
-
-        .time .time-input {
-          width: 200px;
+          width: auto;
+          margin: 0;
+          padding: 0;
+          text-align: center;
         }
       }
     }
 
-    .validation-error {
-      color: $danger;
+    .preview {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      display: flex;
+      align-items: center;
+      padding: 0.5em;
+      flex-wrap: wrap;
+
+      b {
+        margin-right: 0.5em;
+      }
+
+      b + p {
+        margin: 0;
+        display: inline-block;
+      }
     }
 
     .recurrence {
@@ -147,6 +154,10 @@
         width: 300px;
       }
     }
+  }
+
+  .validation-error {
+    margin-bottom: 0.5em;
   }
 
   .format {
@@ -174,5 +185,57 @@
 
   .timezones-input {
     width: 99%;
+  }
+}
+
+@media (max-width: 700px) {
+  .discourse-local-dates-create-modal {
+    .from,
+    .to {
+      width: 100%;
+    }
+
+    .form {
+      .date-time-configuration {
+        flex-direction: column;
+        .range,
+        .timezone {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+
+          .controls,
+          .control-group {
+            width: 100%;
+          }
+
+          .to-indicator {
+            margin: 0 0.5em;
+            padding: 0;
+          }
+        }
+
+        .date {
+          .date-input {
+            width: 100%;
+          }
+        }
+        .time {
+          .time-input {
+            width: 100%;
+          }
+        }
+
+        .timezone {
+          margin: 0.5em 0 0 0;
+          padding: 0.5em 0 0 0;
+          border-top: 1px solid $primary-low;
+
+          .timezone-input {
+            width: 100%;
+          }
+        }
+      }
+    }
   }
 }

@@ -199,8 +199,6 @@ ro:
   too_late_to_edit: "Acea postare este prea veche. Nu mai poate fi editată sau ștearsă."
   revert_version_same: "Versiunea curentă este identică cu cea la care încerci să revii."
   excerpt_image: "imagine"
-  queue:
-    delete_reason: "Şters via coadă de moderare"
   groups:
     errors:
       can_not_modify_automatic: "Nu poți modifica un grup automat"
@@ -760,7 +758,6 @@ ro:
     polling_interval: "Atunci când nu se face long polling, cât de des ar trebui clienții autentificați să facă interogări, în milisecunde."
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"
-    flags_required_to_hide_post: "Număr de marcaje de avertizare care fac ca o postare să fie automat ascunsă și utilizatorului să îi fie trimis automat un mesaj (0 pentru niciodată)"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pe care un utilizator trebuie să le aștepte până când va putea edita o postare ascunsă prin marcaje de avertizare ale comunității."
     max_topics_in_first_day: "Numărul maxim de subiecte pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
     max_replies_in_first_day: "Numărul maxim de răspunsuri pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
@@ -942,7 +939,6 @@ ro:
     max_age_unmatched_emails: "șterge înregistrările emailurilor verificate, care nu corespund, după (N) zile."
     max_age_unmatched_ips: "șterge adresele de IP verificate, care nu corespund, după (N) zile."
     num_flaggers_to_close_topic: "Numărul minim de marcaje de avertizare unice care este necesar pentru a suspenda un subiect în vederea intervenției."
-    num_flags_to_close_topic: "Numărul minim de marcaje de avertizare active care este necesar pentru a suspenda un subiect în vederea intervenției"
     auto_respond_to_flag_actions: "Activează răspunsul automat la gestionarea unui marcaj de avertizare."
     min_first_post_typing_time: "Durata de timp minimă în milisecunde cât este nevoie ca un utilizator să tasteze la prima postare, dacă acest prag nu este atins postarea va intra automat în coada mesajelor care necesită aprobare. Valoarea 0 dezactivează (nerecomandat)"
     reply_by_email_enabled: "Activează răspunsurile către subiecte prin email."
@@ -1206,11 +1202,6 @@ ro:
     ip_address:
       blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
       max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
-  flags_reminder:
-    subject_template:
-      one: "un marcaj de avertizare așteptând să fie gestionat"
-      few: "%{count}  marcaje de avertizare așteptând să fie gestionate"
-      other: "%{count} de marcaje de avertizare așteptând să fie gestionate"
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
@@ -1224,8 +1215,6 @@ ro:
     agreed: "Îți mulțumim pentru avertizare. Suntem de acord că există o problemă și ne vom interesa."
     agreed_and_deleted: "Îți mulțumim pentru avertizare. Suntem de acord că este o problemă și postarea va fi eliminată."
     disagreed: "Îți mulțumim pentru avertizare. O să aruncăm o privire."
-    deferred: "Îți mulțumim că ne-ai informat. O să aruncăm o privire."
-    deferred_and_deleted: "Îți mulțumim că ne-ai informat. Am șters postarea."
   system_messages:
     private_topic_title: "Discuția #%{id}"
     post_hidden:

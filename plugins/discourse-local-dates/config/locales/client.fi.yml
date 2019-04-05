@@ -15,7 +15,6 @@ fi:
       title: Lisää päiväys
       create:
         modal_title: Lisää päiväys
-        modal_subtitle: "Näytämme päivämäärän ja ajan lukijalle paikallisen aikavyöhykkeen ajassa."
         form:
           insert: Lisää
           advanced_mode: Lisäasetukset

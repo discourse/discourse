@@ -86,13 +86,17 @@ module TopicGuardian
 
   # Recovery Method
   def can_recover_topic?(topic)
-    topic && topic.deleted_at && topic.user && is_staff?
+    if is_staff?
+      !!(topic && topic.deleted_at && topic.user)
+    else
+      topic && can_recover_post?(topic.ordered_posts.first)
+    end
   end
 
   def can_delete_topic?(topic)
     !topic.trashed? &&
-    is_staff? &&
-    !(topic.is_category_topic?) &&
+    (is_staff? || (is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at && topic.created_at > 24.hours.ago)) &&
+    !topic.is_category_topic? &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
@@ -149,5 +153,9 @@ module TopicGuardian
 
   def can_update_bumped_at?
     is_staff? || @user.has_trust_level?(TrustLevel[4])
+  end
+
+  def can_banner_topic?(topic)
+    authenticated? && !topic.private_message? && is_staff?
   end
 end

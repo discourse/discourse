@@ -125,10 +125,10 @@ describe PostAlerter do
       coding_horror = Fabricate(:coding_horror)
 
       PostActionNotifier.enable
-      SiteSetting.flags_required_to_hide_post = 2
+      SiteSetting.score_required_to_hide_post = 4.0
 
-      PostAction.act(evil_trout, post, PostActionType.types[:spam])
-      PostAction.act(walterwhite, post, PostActionType.types[:spam])
+      PostActionCreator.spam(evil_trout, post)
+      PostActionCreator.spam(walterwhite, post)
 
       post.reload
       expect(post.hidden).to eq(true)
@@ -146,8 +146,8 @@ describe PostAlerter do
       expect(notification.post_number).to eq(post.post_number)
       expect(notification.data_hash["display_username"]).to eq(post.user.username)
 
-      PostAction.act(coding_horror, post, PostActionType.types[:spam])
-      PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
+      PostActionCreator.create(coding_horror, post, :spam)
+      PostActionCreator.create(walterwhite, post, :off_topic)
 
       post.reload
       expect(post.hidden).to eq(true)
@@ -945,10 +945,10 @@ describe PostAlerter do
       before do
         SiteSetting.tagging_enabled = true
         Jobs.run_immediately!
+        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
       end
 
       it "triggers a notification" do
-        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
 
         PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
@@ -956,6 +956,15 @@ describe PostAlerter do
 
         PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+      end
+
+      it "doesn't trigger a notification if topic is unlisted" do
+        post.topic.update_column(:visible, false)
+
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
       end
     end
   end

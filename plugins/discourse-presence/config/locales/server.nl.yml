@@ -7,5 +7,5 @@
 
 nl:
   site_settings:
-    presence_enabled: 'Gebruikers laten zien die op dit moment aan het reageren zijn op de huidige topic, of het huidige bericht aan het bewerken zijn?'
-    presence_max_users_shown: 'Maximale aantal gebruikers weergegeven.'
+    presence_enabled: 'Gebruikers tonen die momenteel op het huidige topic antwoorden, of die het huidige bericht bewerken?'
+    presence_max_users_shown: 'Maximale aantal getoonde gebruikers.'

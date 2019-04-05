@@ -26,10 +26,6 @@ export default Ember.Service.extend({
     });
   },
 
-  showFlagsReceived(user) {
-    showModal(`admin-flags-received`, { admin: true, model: user });
-  },
-
   checkSpammer(userId) {
     return AdminUser.find(userId).then(au => this.spammerDetails(au));
   },
@@ -53,12 +49,7 @@ export default Ember.Service.extend({
       admin: true,
       modalClass: `${type}-user-modal`
     });
-    if (opts.post) {
-      controller.setProperties({
-        post: opts.post,
-        postEdit: opts.post.get("raw")
-      });
-    }
+    controller.setProperties({ postId: opts.postId, postEdit: opts.postEdit });
 
     return (user.adminUserView
       ? Ember.RSVP.resolve(user)
@@ -79,11 +70,6 @@ export default Ember.Service.extend({
 
   showSuspendModal(user, opts) {
     this._showControlModal("suspend", user, opts);
-  },
-
-  showModerationHistory(target) {
-    let controller = showModal("admin-moderation-history", { admin: true });
-    controller.loadHistory(target);
   },
 
   _deleteSpammer(adminUser) {

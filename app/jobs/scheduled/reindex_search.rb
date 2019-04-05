@@ -9,9 +9,10 @@ module Jobs
       rebuild_problem_categories
       rebuild_problem_users
       rebuild_problem_tags
+      clean_post_search_data
     end
 
-    def rebuild_problem_categories(limit = 500)
+    def rebuild_problem_categories(limit: 500)
       category_ids = load_problem_category_ids(limit)
 
       category_ids.each do |id|
@@ -20,7 +21,7 @@ module Jobs
       end
     end
 
-    def rebuild_problem_users(limit = 10000)
+    def rebuild_problem_users(limit: 10000)
       user_ids = load_problem_user_ids(limit)
 
       user_ids.each do |id|
@@ -29,7 +30,7 @@ module Jobs
       end
     end
 
-    def rebuild_problem_topics(limit = 10000)
+    def rebuild_problem_topics(limit: 10000)
       topic_ids = load_problem_topic_ids(limit)
 
       topic_ids.each do |id|
@@ -38,18 +39,18 @@ module Jobs
       end
     end
 
-    def rebuild_problem_posts(limit = 20000)
+    def rebuild_problem_posts(limit: 20000, indexer: SearchIndexer)
       post_ids = load_problem_post_ids(limit)
 
       post_ids.each do |id|
         # could be deleted while iterating through batch
         if post = Post.find_by(id: id)
-          SearchIndexer.index(post, force: true)
+          indexer.index(post, force: true)
         end
       end
     end
 
-    def rebuild_problem_tags(limit = 10000)
+    def rebuild_problem_tags(limit: 10000)
       tag_ids = load_problem_tag_ids(limit)
 
       tag_ids.each do |id|
@@ -60,22 +61,54 @@ module Jobs
 
     private
 
+    def clean_post_search_data
+      PostSearchData
+        .joins("LEFT JOIN posts p ON p.id = post_search_data.post_id")
+        .where("p.raw = ''")
+        .delete_all
+
+      DB.exec(<<~SQL, deleted_at: 1.week.ago)
+        DELETE FROM post_search_data
+        WHERE post_id IN (
+          SELECT post_id
+          FROM post_search_data
+          LEFT JOIN posts ON post_search_data.post_id = posts.id
+          INNER JOIN topics ON posts.topic_id = topics.id
+          WHERE topics.deleted_at IS NOT NULL
+          AND topics.deleted_at <= :deleted_at
+        )
+      SQL
+    end
+
     def load_problem_post_ids(limit)
-      Post.joins(:topic)
-        .where('posts.id IN (
-                SELECT p2.id FROM posts p2
-                LEFT JOIN post_search_data pd ON pd.locale = ? AND pd.version = ? AND p2.id = pd.post_id
-                WHERE pd.post_id IS NULL
-                )', SiteSetting.default_locale, Search::INDEX_VERSION)
-        .limit(limit)
-        .order('posts.id DESC')
-        .pluck(:id)
+      params = {
+        locale: SiteSetting.default_locale,
+        version: SearchIndexer::INDEX_VERSION,
+        limit: limit
+      }
+
+      DB.query_single(<<~SQL, params)
+        SELECT
+          posts.id
+        FROM posts
+        LEFT JOIN post_search_data pd
+          ON pd.locale = :locale
+          AND pd.version = :version
+          AND pd.post_id = posts.id
+        LEFT JOIN topics ON topics.id = posts.topic_id
+        WHERE pd.post_id IS NULL
+        AND topics.id IS NOT NULL
+        AND topics.deleted_at IS NULL
+        AND posts.raw != ''
+        ORDER BY posts.id DESC
+        LIMIT :limit
+      SQL
     end
 
     def load_problem_category_ids(limit)
       Category.joins(:category_search_data)
         .where('category_search_data.locale != ?
-                OR category_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR category_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
@@ -83,7 +116,7 @@ module Jobs
     def load_problem_topic_ids(limit)
       Topic.joins(:topic_search_data)
         .where('topic_search_data.locale != ?
-                OR topic_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR topic_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
@@ -91,7 +124,7 @@ module Jobs
     def load_problem_user_ids(limit)
       User.joins(:user_search_data)
         .where('user_search_data.locale != ?
-                OR user_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR user_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end
@@ -99,7 +132,7 @@ module Jobs
     def load_problem_tag_ids(limit)
       Tag.joins(:tag_search_data)
         .where('tag_search_data.locale != ?
-                OR tag_search_data.version != ?', SiteSetting.default_locale, Search::INDEX_VERSION)
+                OR tag_search_data.version != ?', SiteSetting.default_locale, SearchIndexer::INDEX_VERSION)
         .limit(limit)
         .pluck(:id)
     end

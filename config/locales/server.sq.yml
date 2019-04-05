@@ -656,7 +656,6 @@ sq:
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -792,10 +791,6 @@ sq:
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
-  flags_reminder:
-    subject_template:
-      one: "1 sinjalizim në pritje për t'u trajtuar"
-      other: "%{count} sinjalizime në pritje për t'u trajtuar"
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
   admin_confirmation_mailer:
@@ -812,8 +807,6 @@ sq:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
     agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
     disagreed: "Thanks for letting us know. We're looking into it."
-    deferred: "Thanks for letting us know. We're looking into it."
-    deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
     post_hidden:
       subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"

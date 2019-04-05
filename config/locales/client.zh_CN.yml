@@ -169,7 +169,6 @@ zh_CN:
     age: "年龄"
     joined: "加入于"
     admin_title: "管理"
-    flags_title: "标记"
     show_more: "显示更多"
     show_help: "选项"
     links: "链接"
@@ -280,26 +279,6 @@ zh_CN:
       title:
         search: "按标题搜索消息："
         placeholder: "在此输入消息标题"
-    queue:
-      topic: "主题："
-      approve: "通过"
-      reject: "否决"
-      delete_user: "删除用户"
-      title: "需要审核"
-      none: "没有帖子需要审核。"
-      edit: "编辑"
-      cancel: "取消"
-      view_pending: "查看待审核帖子"
-      has_pending_posts:
-        other: "这个主题有 <b>{{count}}</b> 个帖子等待审核"
-      confirm: "保存更改"
-      delete_prompt: "你确定要删除<b>%{username}</b>吗？这将删除用户的所有帖子并封禁这个邮箱和 IP 地址。"
-      approval:
-        title: "等待审核中"
-        description: "我们已经保存了你的帖子，不过帖子需要由管理员先审核才能显示。请耐心。"
-        pending_posts:
-          other: "你有 <strong>{{count}}</strong> 个帖子待审核。"
-        ok: "确认"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>发起了<a href='{{topicUrl}}'>该主题</a>"
       you_posted_topic: "<a href='{{userUrl}}'>你</a>发起了<a href='{{topicUrl}}'>该主题</a>"
@@ -1888,8 +1867,6 @@ zh_CN:
       unread: "未读帖子"
       has_replies:
         other: "{{count}} 回复"
-      has_likes:
-        other: "{{count}} 赞"
       has_likes_title:
         other: "{{count}} 人赞了该贴"
       has_likes_title_only_you: "你赞了该贴"
@@ -2611,87 +2588,6 @@ zh_CN:
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
-      flags:
-        title: "标记"
-        active_posts: "被标记帖子"
-        old_posts: "过去被标记帖子"
-        topics: "被标记主题"
-        moderation_history: "管理日志"
-        agree: "确认标记"
-        agree_title: "确认这个标记有效且正确"
-        agree_flag_hide_post: "隐藏帖子"
-        agree_flag_hide_post_title: "隐藏帖子并自动发送私信给作者使其修改"
-        agree_flag_restore_post: "确认并恢复帖子"
-        agree_flag_restore_post_title: "恢复帖子为所有用户可见。"
-        agree_flag_suspend: "暂停用户"
-        agree_flag_suspend_title: "同意标记并暂停用户。"
-        agree_flag_silence: "禁言用户"
-        agree_flag_silence_title: "同意标记并禁言用户。"
-        agree_flag: "保持帖子"
-        agree_flag_title: "确认标记并保持帖子不变。"
-        ignore_flag: "忽略"
-        ignore_flag_title: "移除标记；这次不处理。"
-        delete: "删除"
-        delete_title: "删除标记指向的帖子。"
-        delete_post_defer_flag: "删除帖子并忽略标记"
-        delete_post_defer_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
-        delete_post_agree_flag: "删除帖子并确认标记"
-        delete_post_agree_flag_title: "删除此帖；如果这是这个主题内的第一篇帖子则删除主题"
-        delete_flag_modal_title: "删除并…"
-        delete_spammer: "删除垃圾发布者"
-        delete_spammer_title: "移除该用户及其的所有帖子和主题。"
-        disagree_flag_unhide_post: "否决（显示帖子）"
-        disagree_flag_unhide_post_title: "删除此帖的所有标记并使其重新可见"
-        disagree_flag: "否决"
-        disagree_flag_title: "否却该标记（该标记无效或不正确）"
-        clear_topic_flags: "完成"
-        clear_topic_flags_title: "主题的问题已经已被调查且提案已被解决。单击<strong>完成</strong>以删除报告。"
-        more: "（更多回复…）"
-        suspend_user: "禁用用户"
-        suspend_user_title: "因该贴禁用用户"
-        replies:
-          other: "[%{count} 个回复]"
-        delete_replies:
-          other: "同时删除对此帖子的%{count}回复？"
-        dispositions:
-          agreed: "已确认"
-          disagreed: "被否决"
-          deferred: "忽略"
-        flagged_by: "标记者"
-        resolved_by: "处理者"
-        took_action: "立即执行"
-        system: "系统"
-        error: "出错了"
-        reply_message: "回复"
-        no_results: "没有被标记的主题。"
-        topic_flagged: "<strong>主题</strong>已经被标记。"
-        show_full: "显示全部帖子"
-        visit_topic: "浏览主题才能操作"
-        was_edited: "帖子在第一次标记后被编辑"
-        previous_flags_count: "这篇帖子已经被标记了 {{count}} 次。"
-        show_details: "显示标记细节"
-        user_percentage:
-          summary:
-            other: "{{agreed}}，{{disagreed}}，{{ignored}}，（{{count}}标记总数）"
-          agreed:
-            other: "{{count}}%同意"
-          disagreed:
-            other: "{{count}}%不同意"
-          ignored:
-            other: "{{count}}%忽略"
-        details: "详情"
-        flagged_topics:
-          topic: "主题"
-          type: "类型"
-          users: "用户"
-          last_flagged: "最后标记"
-          no_results: "没有被标记的主题。"
-        short_names:
-          off_topic: "离题"
-          inappropriate: "不恰当"
-          spam: "广告"
-          notify_user: "自定义"
-          notify_moderators: "自定义"
       groups:
         new:
           title: "新建群组"
@@ -3389,17 +3285,12 @@ zh_CN:
         nav:
           new: "新建"
           active: "活跃"
-          pending: "未审核"
           staff: "管理人员"
           suspended: "禁止登录"
           silenced: "已禁言"
           suspect: "怀疑"
           staged: "暂存"
         approved: "已批准？"
-        approved_selected:
-          other: "审核通过用户（{{count）"
-        reject_selected:
-          other: "审核拒绝用户（{{count}}）"
         titles:
           active: "已激活用户"
           new: "新用户"
@@ -3416,10 +3307,6 @@ zh_CN:
           suspended: "被禁用户"
           suspect: "嫌疑用户"
           staged: "暂存用户"
-        reject_successful:
-          other: "成功拒绝 %{count} 个用户。"
-        reject_failures:
-          other: "成功拒绝 %{count} 个用户。"
         not_verified: "未验证"
         check_email:
           title: "显示用户电子邮件"

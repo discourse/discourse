@@ -143,8 +143,6 @@ lt:
     badge: "%{display_name} ženklelis puslapyje %{site_title}"
   too_late_to_edit: "Šis pranešimas buvo sukurtas jau labai senai, todėl jo negalima redaguoti ar ištrinti."
   excerpt_image: "paveikslėlis"
-  queue:
-    not_found: "Puslapis nerastas arba atnaujintas."
   groups:
     success:
       bulk_add:

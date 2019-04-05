@@ -207,8 +207,6 @@ fa_IR:
   too_late_to_edit: "نوشته‌ی مورد نظر مربوط به زمان بسیار گذشته می باشد. امکان ویرایش و حذف آن وجود ندارد."
   revert_version_same: "نسخه فعلی همان نسخه‌ای است که می‌خواهید به آن برگردید."
   excerpt_image: "تصویر"
-  queue:
-    delete_reason: "پاک شد از مدیر زمانبندی نوشته"
   groups:
     errors:
       can_not_modify_automatic: "نمی‌توانید گروه‌های خودکار را تغییر دهید."
@@ -807,7 +805,6 @@ fa_IR:
     polling_interval: "وقتی رای گیری طولانی نیست، هر چند مدت باید وارد سیستم شود برای نظرسنجی مشتری‌ها در هر میلی‌ثانیه."
     anon_polling_interval: "هر چند مدت باید مشتری‌های ناشناس نظرسنجی بشوند در هر میلی ثانیه"
     background_polling_interval: "هر چند وقت یکبار مشتری‌ها باید نظرسنجی بشوند در هر ثانیه (وقتی پنجره  در پس زمینه است)"
-    flags_required_to_hide_post: "تعداد پرچم مورد نیاز برای مخفی شدن خودکار نوشته و پیام ارسالی به کاربر (0 برای هیچوقت)"
     cooldown_minutes_after_hiding_posts: "تعداد دقایقی که کاربر باید قبل از ویرایش مخفی  یک نوشته از طریق پرچم گزاری انجمن صبر کند"
     max_topics_in_first_day: "حداکثر تعداد موضوعاتی که کاربر 24 ساعت بعد از ایجاد اولین نوشته‌اش می‌تواند ایجاد کند."
     max_replies_in_first_day: "حداکثر تعداد پاسخ‌هایی که کاربر 24 ساعت بعد از ایجاد اولین نوشته‌اش می‌تواند ارسال کند."
@@ -1000,7 +997,6 @@ fa_IR:
     max_age_unmatched_emails: "ایمیل های ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند."
     max_age_unmatched_ips: "IP  ورودی همسان نشده نمایش داده شده بعد از (N) روز پاک شوند. "
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    num_flags_to_close_topic: "حداقل تعداد پرچم‌های فعالی که نیاز دارند بصورت خودکار موضوع را از مداخله کردن متوقف کنند"
     num_hours_to_close_topic: "زمان توقف مورد نیاز برای مداخله در یک موضوع"
     auto_respond_to_flag_actions: "فعال کردن پاسخ خودکار برای زمانی که پرچم‌گذاری دفع می شود."
     min_first_post_typing_time: "حداقل زمان تایپ برای اولین نوشته کاربر به واحد میلی ثانیه، اگر این زمان رعایت نشود نوشته نیازمند تایید خواهد بود. 0 برای غیر فعال (توصیه نمی‌شود)"
@@ -1197,6 +1193,13 @@ fa_IR:
     errors:
       different_topics: "نوشته‌ها به موضوعات مختلفی تعلق دارند و امکان ترکیب آن‌ها وجود ندارد."
       different_users: "نوشته‌ها به کاربران مختلفی تعلق دارند و امکان ترکیب آن‌ها وجود ندارد."
+  move_posts:
+    new_topic_moderator_post:
+      one: "نوشته به یک موضوع تازه تبدیل شد: %{topic_link}"
+      other: "%{count}نوشته به موضوع تازه تبدیل شد: %{topic_link}"
+    new_message_moderator_post:
+      one: "یک نوشته به پیام جدیدی تبدیل شد: %{topic_link}"
+      other: "%{count}نوشته به پیام جدیدی تبدیل شد: %{topic_link}"
   topic_statuses:
     autoclosed_message_max_posts:
       one: "این پیام بعد از رسیدن به حداکثر تعداد پاسخ‌ها %{count} بسته شد."
@@ -1290,13 +1293,6 @@ fa_IR:
       max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
     website:
       domain_not_allowed: "سایت نامعتبر است. دامنه‌های مجاز: %{domains}"
-  flags_reminder:
-    flags_were_submitted:
-      one: "پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](%{base_path}/admin/flags)."
-      other: "پرچم‌ها %{count} ساعت پیش ثبت شدند. [لطفا بررسی کنید](%{base_path}/admin/flags)."
-    subject_template:
-      one: "%{count} نشانه ها منتظر استفاده"
-      other: "%{count} نشانه ها منتظر استفاده"
   unsubscribe_mailer:
     title: "لغو اشتراک نامه‌رسان"
     subject_template: "تایید کنید که دیگر نمی‌خواهید از %{site_title} ایمیل بروز‌رسانی دریافت کنید"
@@ -1361,8 +1357,6 @@ fa_IR:
     agreed: "ممنون از اینکه به ما اطلاع دادید. ما قبول کردیم که مشکلی وجود دارد و در حال بررسی هستیم. "
     agreed_and_deleted: "ممنون از اینکه به ما اطلاع دادید. ما قبول کردیم که مشکلی وجود دارد و نوشته را پاک کردیم. "
     disagreed: "ممنون از اینکه به ما اطلاع دادید. ما بررسی می‌کنیم"
-    deferred: "ممنون از اینکه به ما اطلاع دادید. ما بررسی می کنیم"
-    deferred_and_deleted: "ممنون از اینکه به ما اطلاع دادید. ما نوشته را حذف کردیم."
   system_messages:
     private_topic_title: "موضوع #%{id}"
     contents_hidden: "لطفا نوشته را برای نمایش محتویات ببینید"

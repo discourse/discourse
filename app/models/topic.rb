@@ -55,17 +55,18 @@ class Topic < ActiveRecord::Base
       CategoryTagStat.topic_deleted(self) if self.tags.present?
     end
     super(trashed_by)
-    update_flagged_posts_count
     self.topic_embed.trash! if has_topic_embed?
   end
 
-  def recover!
+  def recover!(recovered_by = nil)
     unless deleted_at.nil?
       update_category_topic_count_by(1)
       CategoryTagStat.topic_recovered(self) if self.tags.present?
     end
-    super
-    update_flagged_posts_count
+
+    # Note parens are required because superclass doesn't take `recovered_by`
+    super()
+
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!
     end
@@ -122,7 +123,6 @@ class Topic < ActiveRecord::Base
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_users, through: :topic_allowed_users, source: :user
-  has_many :queued_posts
 
   has_many :topic_tags
   has_many :tags, through: :topic_tags, dependent: :destroy # dependent destroy applies to the topic_tags records
@@ -143,6 +143,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
   has_many :topic_timers, dependent: :destroy
+  has_many :reviewables
 
   has_one :user_warning
   has_one :first_post, -> { where post_number: 1 }, class_name: 'Post'
@@ -246,7 +247,6 @@ class Topic < ActiveRecord::Base
     end
 
     SearchIndexer.index(self)
-    UserActionCreator.log_topic(self)
   end
 
   after_update do
@@ -313,9 +313,7 @@ class Topic < ActiveRecord::Base
   end
 
   def has_flags?
-    FlagQuery.flagged_post_actions(filter: "active")
-      .where("topics.id" => id)
-      .exists?
+    ReviewableFlaggedPost.pending.default_visible.where(topic_id: id).exists?
   end
 
   def is_official_warning?
@@ -363,10 +361,6 @@ class Topic < ActiveRecord::Base
     end
 
     fancy_title
-  end
-
-  def pending_posts_count
-    queued_posts.new_count
   end
 
   # Returns hot topics since a date for display in email digest.
@@ -427,12 +421,6 @@ class Topic < ActiveRecord::Base
     end
 
     topics
-  end
-
-  # Using the digest query, figure out what's  new for a user since last seen
-  def self.new_since_last_seen(user, since, featured_topic_ids = nil)
-    topics = Topic.for_digest(user, since)
-    featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
   end
 
   def meta_data=(data)
@@ -803,6 +791,8 @@ class Topic < ActiveRecord::Base
     cat = Category.find_by(id: new_category_id)
     return false unless cat
 
+    reviewables.update_all(category_id: new_category_id)
+
     changed_to_category(cat)
   end
 
@@ -930,7 +920,7 @@ class Topic < ActiveRecord::Base
 
   def grant_permission_to_user(lower_email)
     user = User.find_by_email(lower_email)
-    topic_allowed_users.create!(user_id: user.id)
+    topic_allowed_users.create!(user_id: user.id) unless topic_allowed_users.exists?(user_id: user.id)
   end
 
   def max_post_number
@@ -961,10 +951,6 @@ class Topic < ActiveRecord::Base
     feature_topic_users
     update_action_counts
     Topic.reset_highest(id)
-  end
-
-  def update_flagged_posts_count
-    PostAction.update_flagged_posts_count
   end
 
   def update_action_counts
@@ -1404,6 +1390,18 @@ class Topic < ActiveRecord::Base
     update!(bumped_at: post.created_at)
   end
 
+  def auto_close_threshold_reached?
+    return if user&.staff?
+
+    scores = ReviewableScore.pending
+      .joins(:reviewable)
+      .where("reviewables.topic_id = ?", self.id)
+      .pluck("COUNT(DISTINCT reviewable_scores.user_id), COALESCE(SUM(reviewable_scores.score), 0.0)")
+      .first
+
+    scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= SiteSetting.score_to_auto_close_topic
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1415,7 +1413,7 @@ class Topic < ActiveRecord::Base
 
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
-      topic_allowed_users.create!(user_id: target_user.id)
+      topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
       add_small_action(invited_by, "invited_user", target_user.username)
 
       create_invite_notification!(
@@ -1529,6 +1527,7 @@ end
 #  spam_count                :integer          default(0), not null
 #  pinned_at                 :datetime
 #  score                     :float
+#  percent_rank              :float            default(1.0), not null
 #  subtype                   :string
 #  slug                      :string
 #  deleted_by_id             :integer
@@ -1540,6 +1539,7 @@ end
 #  fancy_title               :string(400)
 #  highest_staff_post_number :integer          default(0), not null
 #  featured_link             :string
+#  reviewable_score          :float            default(0.0), not null
 #
 # Indexes
 #
@@ -1552,4 +1552,5 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

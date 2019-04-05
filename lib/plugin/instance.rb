@@ -604,6 +604,15 @@ class Plugin::Instance
     end
   end
 
+  def register_reviewable_type(reviewable_type_class)
+    types = Reviewable.types
+    types << reviewable_type_class.name
+
+    reloadable_patch do
+      Reviewable.send(:define_singleton_method, :types) { types }
+    end
+  end
+
   protected
 
   def register_assets!

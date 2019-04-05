@@ -304,6 +304,7 @@ login:
     refresh: true
     client: true
     default: false
+    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
@@ -1109,7 +1110,7 @@ files:
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
   restrict_letter_avatar_colors:
-    default: ''
+    default: ""
     type: list
     list_type: compact
     validator: "ColorListValidator"
@@ -1231,11 +1232,11 @@ security:
   enforce_second_factor:
     client: true
     type: enum
-    default: 'no'
+    default: "no"
     choices:
-      - 'no'
-      - 'staff'
-      - 'all'
+      - "no"
+      - "staff"
+      - "all"
   force_https:
     default: false
     shadowed_by_global: true
@@ -1335,12 +1336,10 @@ onebox:
 
 spam:
   add_rel_nofollow_to_user_content: true
-  flags_required_to_hide_post: 3
+  score_required_to_hide_post: 10
   cooldown_minutes_after_hiding_posts: 10
-  num_spam_flags_to_silence_new_user: 3
+  spam_score_to_silence_new_user: 6.0
   num_users_to_silence_new_user: 3
-  num_tl3_flags_to_silence_new_user: 4
-  num_tl3_users_to_silence_new_user: 2
   notify_mods_when_user_silenced: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
@@ -1355,7 +1354,7 @@ spam:
   max_age_unmatched_emails: 365
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
-  num_flags_to_close_topic: 12
+  score_to_auto_close_topic: 25.0
   num_hours_to_close_topic:
     default: 4
     min: 1
@@ -1367,7 +1366,9 @@ spam:
   flags_default_topics:
     default: false
     client: true
-  min_flags_staff_visibility: 1
+  min_score_default_visibility:
+    default: 0.0
+    client: true
 
 rate_limits:
   unique_posts_mins: 5
@@ -1482,6 +1483,9 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  enable_missing_post_uploads_check:
+    default: false
+    hidden: true
 
 embedding:
   feed_polling_enabled:
@@ -1919,7 +1923,7 @@ user_api:
   allow_user_api_keys:
     default: true
   allow_user_api_key_scopes:
-    default: "read|write|message_bus|push|notifications|session_info"
+    default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
   max_api_keys_per_user:
     default: 10

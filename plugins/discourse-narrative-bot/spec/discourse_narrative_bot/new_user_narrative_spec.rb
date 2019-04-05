@@ -422,7 +422,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
 
       context 'when image is not found' do
         it 'should create the right replies' do
-          PostAction.act(user, post_2, PostActionType.types[:like])
+          PostActionCreator.like(user, post_2)
 
           described_class.any_instance.expects(:enqueue_timeout_job).with(user)
           DiscourseNarrativeBot::TrackSelector.new(:reply, user, post_id: post.id).select
@@ -503,7 +503,7 @@ describe DiscourseNarrativeBot::NewUserNarrative do
           .to eq(new_post.id)
 
         described_class.any_instance.expects(:enqueue_timeout_job).with(user)
-        PostAction.act(user, post_2, PostActionType.types[:like])
+        PostActionCreator.like(user, post_2)
 
         expected_raw = <<~RAW
           #{I18n.t('discourse_narrative_bot.new_user_narrative.images.reply')}

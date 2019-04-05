@@ -419,7 +419,7 @@ after_initialize do
   end
 
   on(:approved_post) do |queued_post, created_post|
-    if queued_post.post_options["is_poll"]
+    if queued_post.payload["is_poll"]
       created_post.validate_polls(true)
     end
   end

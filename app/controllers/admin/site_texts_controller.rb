@@ -119,7 +119,8 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   def find_site_text
-    raise Discourse::NotFound unless I18n.exists?(params[:id]) && !self.class.restricted_keys.include?(params[:id])
+    raise Discourse::NotFound unless I18n.exists?(params[:id])
+    raise Discourse::InvalidAccess.new(nil, nil, custom_message: 'email_template_cant_be_modified') if self.class.restricted_keys.include?(params[:id])
     record_for(params[:id])
   end
 

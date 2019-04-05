@@ -1,0 +1,80 @@
+.reviewable {
+  .reviewable-container {
+    flex-direction: column;
+
+    .reviewable-list {
+      order: 2;
+      width: 100%;
+    }
+
+    .reviewable-filters {
+      order: 1;
+      margin: 0;
+      padding: 0.5em;
+      width: 100%;
+    }
+
+    .reviewable-list + .reviewable-filters {
+      margin: 0 0 0.5em 0;
+    }
+  }
+
+  .reviewable-scores {
+    width: 100%;
+  }
+}
+
+.reviewable-filters {
+  background-color: $primary-very-low;
+  padding: 0.5em 1em 1em 1em;
+  margin-bottom: 1em;
+
+  .reviewable-filters-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .reviewable-filter {
+    margin: 0 0 0.5em 0;
+
+    .filter-label {
+      margin: 0;
+    }
+  }
+}
+
+.reviewable-contents {
+  .post-body {
+    max-width: 295px;
+
+    p {
+      overflow-x: scroll;
+    }
+  }
+}
+
+.reviewable-actions {
+  margin-right: -0.5em;
+
+  > div,
+  > button {
+    flex: 0 1 47%;
+    margin-right: 0.25em;
+    margin-bottom: 0.5em;
+  }
+
+  .reviewable-action,
+  .reviewable-action-dropdown .dropdown-select-box-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .d-icon {
+      margin: 0 0.15 0 0;
+    }
+  }
+}
+
+.reviewable-scores-and-history table {
+  width: 100%;
+}

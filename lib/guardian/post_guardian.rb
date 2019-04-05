@@ -168,7 +168,7 @@ module PostGuardian
 
   # Deleting Methods
   def can_delete_post?(post)
-    can_see_post?(post)
+    return false if !can_see_post?(post)
 
     # Can't delete the first post
     return false if post.is_first_post?
@@ -192,10 +192,11 @@ module PostGuardian
   end
 
   def can_delete_post_action?(post_action)
-    # You can only undo your own actions
-    is_my_own?(post_action) && not(post_action.is_private_message?) &&
+    return false unless is_my_own?(post_action) && !post_action.is_private_message?
 
-    # Make sure they want to delete it within the window
+    # Bookmarks do not have a time constraint
+    return true if post_action.is_bookmark?
+
     post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 

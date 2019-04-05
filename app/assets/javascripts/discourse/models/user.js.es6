@@ -615,10 +615,19 @@ const User = RestModel.extend({
     }
   },
 
-  updateNotificationLevel(level) {
+  updateNotificationLevel(level, expiringAt) {
     return ajax(`${userPath(this.get("username"))}/notification_level.json`, {
       type: "PUT",
-      data: { notification_level: level }
+      data: { notification_level: level, expiring_at: expiringAt }
+    }).then(() => {
+      const currentUser = Discourse.User.current();
+      if (currentUser) {
+        if (level === "normal" || level === "mute") {
+          currentUser.ignored_users.removeObject(this.get("username"));
+        } else if (level === "ignore") {
+          currentUser.ignored_users.addObject(this.get("username"));
+        }
+      }
     });
   },
 

@@ -28,8 +28,8 @@ describe "category tag restrictions" do
   end
 
   context "tags restricted to one category" do
-    let(:category_with_tags) { Fabricate(:category) }
-    let(:other_category)     { Fabricate(:category) }
+    let!(:category_with_tags) { Fabricate(:category) }
+    let!(:other_category)     { Fabricate(:category) }
 
     before do
       category_with_tags.tags = [tag1, tag2]
@@ -49,6 +49,9 @@ describe "category tag restrictions" do
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
       expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name])).to contain_exactly(tag2)
       expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name], term: 'tag')).to contain_exactly(tag2)
+      expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+      expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
+      expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
     end
 
     it "can't create new tags in a restricted category" do
@@ -67,21 +70,44 @@ describe "category tag restrictions" do
       expect { other_category.update(allowed_tags: ['newtag']) }.to change { Tag.count }.by(1)
       expect { other_category.update(allowed_tags: [tag1.name, 'tag-stuff', tag2.name, 'another-tag']) }.to change { Tag.count }.by(2)
     end
+
+    context 'category allows other tags to be used' do
+      before do
+        category_with_tags.update_attributes!(allow_global_tags: true)
+      end
+
+      it "search can show the permitted tags" do
+        expect(filter_allowed_tags.count).to eq(Tag.count)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags)).to contain_exactly(tag1, tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: category_with_tags, selected_tags: [tag1.name], term: 'tag')).to contain_exactly(tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
+      end
+
+      it "works if no tags are restricted to the category" do
+        other_category.update_attributes!(allow_global_tags: true)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name])).to contain_exactly(tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category, selected_tags: [tag3.name], term: 'tag')).to contain_exactly(tag4)
+      end
+    end
   end
 
   context "tag groups restricted to a category" do
     let!(:tag_group1)     { Fabricate(:tag_group) }
-    let(:category)        { Fabricate(:category) }
-    let(:other_category)  { Fabricate(:category) }
+    let!(:category)        { Fabricate(:category) }
+    let!(:other_category)  { Fabricate(:category) }
 
     before do
       tag_group1.tags = [tag1, tag2]
+      category.allowed_tag_groups = [tag_group1.name]
+      category.reload
     end
 
     it "tags in the group are used by category tag restrictions" do
-      category.allowed_tag_groups = [tag_group1.name]
-      category.reload
-
       expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2)
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
 
@@ -92,7 +118,6 @@ describe "category tag restrictions" do
     end
 
     it "groups and individual tags can be mixed" do
-      category.allowed_tag_groups = [tag_group1.name]
       category.allowed_tags = [tag4.name]
       category.reload
 
@@ -102,10 +127,71 @@ describe "category tag restrictions" do
     end
 
     it "enforces restrictions when creating a topic" do
-      category.allowed_tag_groups = [tag_group1.name]
-      category.reload
       post = create_post(category: category, tags: [tag1.name, "newtag"])
       expect(post.topic.tags.map(&:name)).to eq([tag1.name])
+    end
+
+    context 'category allows other tags to be used' do
+      before do
+        category.update_attributes!(allow_global_tags: true)
+      end
+
+      it 'filters tags correctly' do
+        expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag3, tag4)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+
+        tag_group1.tags = [tag2, tag3, tag4]
+        expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag3, tag4)
+        expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag1)
+      end
+
+      it "works if no tags are restricted to the category" do
+        other_category.update_attributes!(allow_global_tags: true)
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag3, tag4)
+        tag_group1.tags = [tag2, tag3, tag4]
+        expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag1)
+      end
+
+      context 'another category has restricted tags using groups' do
+        let(:category2) { Fabricate(:category) }
+        let(:tag_group2) { Fabricate(:tag_group) }
+
+        before do
+          tag_group2.tags = [tag2, tag3]
+          category2.allowed_tag_groups = [tag_group2.name]
+          category2.reload
+        end
+
+        it 'filters tags correctly' do
+          expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
+          expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
+        end
+
+        it "doesn't care about tags in a group that isn't used in a category" do
+          unused_tag_group = Fabricate(:tag_group)
+          unused_tag_group.tags = [tag4]
+          expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
+          expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
+        end
+      end
+
+      context 'another category has restricted tags' do
+        let(:category2) { Fabricate(:category) }
+
+        it "doesn't filter tags that are also restricted in another category" do
+          category2.tags = [tag2, tag3]
+          expect(filter_allowed_tags(for_input: true, category: category2)).to contain_exactly(tag2, tag3)
+          expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: other_category)).to contain_exactly(tag4)
+          expect(filter_allowed_tags(for_input: true, category: category)).to contain_exactly(tag1, tag2, tag4)
+        end
+      end
     end
   end
 

@@ -3441,7 +3441,6 @@ export default {
     category_id: 1,
     word_count: 198,
     deleted_at: null,
-    pending_posts_count: 0,
     draft: null,
     draft_key: "topic_28830",
     draft_sequence: null,
@@ -3890,7 +3889,6 @@ export default {
     category_id: 24,
     word_count: 15,
     deleted_at: null,
-    pending_posts_count: 0,
     user_id: 1,
     draft: null,
     draft_key: "topic_9",
@@ -4455,7 +4453,6 @@ export default {
     category_id: 1,
     word_count: 15,
     deleted_at: null,
-    pending_posts_count: 0,
     user_id: 1,
     draft: null,
     draft_key: "topic_9",
@@ -4751,7 +4748,6 @@ export default {
     category_id: 1,
     word_count: 15,
     deleted_at: null,
-    pending_posts_count: 0,
     user_id: 1,
     draft: null,
     draft_key: "topic_9",
@@ -4873,5 +4869,260 @@ export default {
     ],
     chunk_size: 20,
     bookmarked: false
+  },
+  "/t/34/1.json": {
+    post_stream: {
+      posts: [
+        {
+          id: 398,
+          name: null,
+          username: "tim.lange",
+          avatar_template: "/images/avatar.png",
+          created_at: "2019-03-28T07:57:50.527Z",
+          cooked: "<p>I am writing this private message to you</p>",
+          ignored: false,
+          post_number: 1,
+          post_type: 1,
+          updated_at: "2019-03-28T07:57:50.527Z",
+          reply_count: 0,
+          reply_to_post_number: null,
+          quote_count: 0,
+          avg_time: 15,
+          incoming_link_count: 0,
+          reads: 2,
+          score: 1.15,
+          yours: true,
+          topic_id: 34,
+          topic_slug: "test-pm",
+          display_username: null,
+          primary_group_name: null,
+          primary_group_flair_url: null,
+          primary_group_flair_bg_color: null,
+          primary_group_flair_color: null,
+          version: 1,
+          can_edit: true,
+          can_delete: false,
+          can_recover: null,
+          can_wiki: true,
+          read: true,
+          user_title: null,
+          actions_summary: [
+            {
+              id: 3,
+              can_act: true
+            },
+            {
+              id: 4,
+              can_act: true
+            },
+            {
+              id: 8,
+              can_act: true
+            },
+            {
+              id: 7,
+              can_act: true
+            }
+          ],
+          moderator: false,
+          admin: true,
+          staff: true,
+          user_id: 1,
+          hidden: false,
+          trust_level: 1,
+          deleted_at: null,
+          user_deleted: false,
+          edit_reason: null,
+          can_view_edit_history: true,
+          wiki: false
+        },
+        {
+          id: 419,
+          name: "Tim Lange",
+          username: "vox",
+          avatar_template: "/images/avatar.png",
+          created_at: "2019-03-28T08:04:16.790Z",
+          cooked: "<p>Have a reply for your pm</p>",
+          ignored: false,
+          post_number: 3,
+          post_type: 1,
+          updated_at: "2019-03-28T08:04:16.790Z",
+          reply_count: 0,
+          reply_to_post_number: null,
+          quote_count: 0,
+          avg_time: 16,
+          incoming_link_count: 0,
+          reads: 2,
+          score: 1.2,
+          yours: false,
+          topic_id: 34,
+          topic_slug: "test-pm",
+          display_username: "Tim Lange",
+          primary_group_name: null,
+          primary_group_flair_url: null,
+          primary_group_flair_bg_color: null,
+          primary_group_flair_color: null,
+          version: 1,
+          can_edit: true,
+          can_delete: true,
+          can_recover: null,
+          can_wiki: true,
+          read: true,
+          user_title: null,
+          actions_summary: [
+            {
+              id: 3,
+              can_act: true
+            },
+            {
+              id: 4,
+              can_act: true
+            },
+            {
+              id: 8,
+              can_act: true
+            },
+            {
+              id: 7,
+              can_act: true
+            }
+          ],
+          moderator: false,
+          admin: false,
+          staff: false,
+          user_id: 2,
+          hidden: false,
+          trust_level: 1,
+          deleted_at: null,
+          user_deleted: false,
+          edit_reason: null,
+          can_view_edit_history: true,
+          wiki: false,
+          post_notice_type: "first"
+        }
+      ],
+      stream: [25, 26, 27]
+    },
+    timeline_lookup: [[1, 0]],
+    id: 34,
+    title: "Test PM",
+    fancy_title: "Test PM",
+    posts_count: 3,
+    created_at: "2019-03-28T07:57:50.266Z",
+    views: 2,
+    reply_count: 0,
+    like_count: 0,
+    last_posted_at: "2019-03-28T08:04:16.790Z",
+    visible: true,
+    closed: false,
+    archived: false,
+    has_summary: false,
+    archetype: "private_message",
+    slug: "test-pm",
+    category_id: null,
+    word_count: 23,
+    deleted_at: null,
+    pending_posts_count: 0,
+    user_id: 1,
+    featured_link: null,
+    pinned_globally: false,
+    pinned_at: null,
+    pinned_until: null,
+    draft: null,
+    draft_key: "topic_34",
+    draft_sequence: 2,
+    posted: true,
+    unpinned: null,
+    pinned: false,
+    details: {
+      created_by: {
+        id: 1,
+        username: "tim.lange",
+        name: null,
+        avatar_template: "/images/avatar.png"
+      },
+      last_poster: {
+        id: 2,
+        username: "vox",
+        name: "Tim Lange",
+        avatar_template: "/images/avatar.png"
+      },
+      allowed_groups: [],
+      allowed_users: [
+        {
+          id: 2,
+          username: "vox",
+          name: "Tim Lange",
+          avatar_template: "/images/avatar.png"
+        },
+        {
+          id: 1,
+          username: "tim.lange",
+          name: null,
+          avatar_template: "/images/avatar.png"
+        }
+      ],
+      participants: [
+        {
+          id: 1,
+          username: "tim.lange",
+          name: null,
+          avatar_template: "/images/avatar.png",
+          post_count: 2,
+          primary_group_name: null,
+          primary_group_flair_url: null,
+          primary_group_flair_color: null,
+          primary_group_flair_bg_color: null
+        },
+        {
+          id: 2,
+          username: "vox",
+          name: "Tim Lange",
+          avatar_template: "/images/avatar.png",
+          post_count: 1,
+          primary_group_name: null,
+          primary_group_flair_url: null,
+          primary_group_flair_color: null,
+          primary_group_flair_bg_color: null
+        }
+      ],
+      notification_level: 3,
+      notifications_reason_id: 1,
+      can_move_posts: true,
+      can_edit: true,
+      can_delete: true,
+      can_remove_allowed_users: true,
+      can_remove_self_id: 1,
+      can_invite_to: true,
+      can_invite_via_email: true,
+      can_create_post: true,
+      can_reply_as_new_topic: true,
+      can_flag_topic: true,
+      can_convert_topic: true
+    },
+    current_post_number: 1,
+    highest_post_number: 3,
+    last_read_post_number: 3,
+    last_read_post_id: 27,
+    deleted_by: null,
+    has_deleted: false,
+    actions_summary: [
+      { id: 4, count: 0, hidden: false, can_act: true },
+      {
+        id: 8,
+        count: 0,
+        hidden: false,
+        can_act: true
+      },
+      { id: 7, count: 0, hidden: false, can_act: true }
+    ],
+    chunk_size: 20,
+    bookmarked: false,
+    message_archived: false,
+    topic_timer: null,
+    private_topic_timer: null,
+    message_bus_last_id: 7,
+    participant_count: 2,
+    pm_with_non_human_user: false
   }
 };
