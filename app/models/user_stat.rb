@@ -11,9 +11,9 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.update_first_unread(last_seen, limit: 10_000)
-    DB.exec(<<~SQL, min_date: last_seen, limit: limit)
+    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: 10.minutes.ago)
       UPDATE user_stats us
-      SET first_unread_at = Y.min_date
+      SET first_unread_at = COALESCE(Y.min_date, :now)
       FROM (
         SELECT u1.id user_id,
            X.min min_date
