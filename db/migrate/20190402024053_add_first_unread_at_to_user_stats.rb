@@ -14,14 +14,23 @@ class AddFirstUnreadAtToUserStats < ActiveRecord::Migration[5.2]
       WHERE u.id = us.user_id
     SQL
 
-    # this is quite a big index to carry, but we need it to optimise home page initial load
-    # by covering all these columns we are able to quickly retrieve the set of topics that were
-    # updated in the last N days. We perform a ranged lookup and selectivity may vary a lot
-    add_index :topics,
+    # since DDL transactions are disabled we got to check
+    # this could potentially fail half way and we want it to recover
+    if !index_exists?(
+      :topics,
+      # the big list of columns here is not really needed, but ... why not
       [:updated_at, :visible, :highest_staff_post_number, :highest_post_number, :category_id, :created_at, :id],
-      algorithm: :concurrently,
-      name: 'index_topics_on_updated_at_public',
-      where: "(topics.archetype <> 'private_message') AND (topics.deleted_at IS NULL)"
+      name: 'index_topics_on_updated_at_public'
+    )
+      # this is quite a big index to carry, but we need it to optimise home page initial load
+      # by covering all these columns we are able to quickly retrieve the set of topics that were
+      # updated in the last N days. We perform a ranged lookup and selectivity may vary a lot
+      add_index :topics,
+        [:updated_at, :visible, :highest_staff_post_number, :highest_post_number, :category_id, :created_at, :id],
+        algorithm: :concurrently,
+        name: 'index_topics_on_updated_at_public',
+        where: "(topics.archetype <> 'private_message') AND (topics.deleted_at IS NULL)"
+    end
   end
 
   def down
