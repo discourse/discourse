@@ -172,7 +172,7 @@ class TopicTrackingState
     #
     sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true, staff: user.staff?)
     sql << "\nUNION ALL\n\n"
-    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?)
+    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?, filter_old_unread: true)
 
     DB.query(
       sql,
@@ -193,6 +193,13 @@ class TopicTrackingState
           .where_clause.send(:predicates)
           .join(" AND ")
           .gsub("-999", ":user_id")
+      end
+
+    filter_old_unread =
+      if opts && opts[:filter_old_unread]
+        " topics.updated_at >= us.first_unread_at AND "
+      else
+        ""
       end
 
     new =
@@ -221,6 +228,7 @@ class TopicTrackingState
     JOIN categories c ON c.id = topics.category_id
     LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
     WHERE u.id = :user_id AND
+          #{filter_old_unread}
           topics.archetype <> 'private_message' AND
           ((#{unread}) OR (#{new})) AND
           (topics.visible OR u.admin OR u.moderator) AND

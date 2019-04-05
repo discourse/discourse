@@ -72,6 +72,22 @@ describe UserStat do
     end
   end
 
+  describe 'ensure consistency!' do
+    it 'can update first unread' do
+      post = create_post
+
+      freeze_time 10.minutes.from_now
+      create_post(topic_id: post.topic_id)
+
+      post.user.update!(last_seen_at: Time.now)
+
+      UserStat.ensure_consistency!
+
+      post.user.user_stat.reload
+      expect(post.user.user_stat.first_unread_at).to eq_time(Time.now)
+    end
+  end
+
   describe 'update_time_read!' do
     let(:user) { Fabricate(:user) }
     let(:stat) { user.user_stat }
