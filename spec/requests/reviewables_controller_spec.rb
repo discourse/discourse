@@ -64,6 +64,9 @@ describe ReviewablesController do
 
         expect(json['users'].any? { |u| u['id'] == reviewable.created_by_id }).to eq(true)
         expect(json['users'].any? { |u| u['id'] == reviewable.target_created_by_id }).to eq(true)
+
+        expect(json['meta']['reviewable_count']).to eq(1)
+        expect(json['meta']['status']).to eq("pending")
       end
 
       it "supports filtering by score" do
@@ -274,6 +277,7 @@ describe ReviewablesController do
         expect(json['reviewable_perform_result']['transition_to']).to eq('approved')
         expect(json['reviewable_perform_result']['transition_to_id']).to eq(Reviewable.statuses[:approved])
         expect(json['reviewable_perform_result']['remove_reviewable_ids']).to eq([reviewable.id])
+        expect(json['reviewable_perform_result']['reviewable_count']).to eq(1)
 
         expect(reviewable.reload.version).to eq(1)
         expect(other_reviewable.reload.version).to eq(0)
