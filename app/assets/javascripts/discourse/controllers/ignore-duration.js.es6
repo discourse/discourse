@@ -1,6 +1,5 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import PreloadStore from "preload-store";
 
 export default Ember.Controller.extend(ModalFunctionality, {
   loading: false,
@@ -18,8 +17,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.get("model")
         .updateNotificationLevel("ignore", this.get("ignoredUntil"))
         .then(() => {
-          const currentUser = PreloadStore.get("currentUser");
-          currentUser.ignored_users.push(this.get("model.username"));
           this.set("model.ignored", true);
           this.set("model.muted", false);
           if (this.get("onSuccess")) {
