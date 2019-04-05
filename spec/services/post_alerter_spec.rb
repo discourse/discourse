@@ -945,10 +945,10 @@ describe PostAlerter do
       before do
         SiteSetting.tagging_enabled = true
         Jobs.run_immediately!
+        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
       end
 
       it "triggers a notification" do
-        TagUser.change(user.id, watched_tag.id, TagUser.notification_levels[:watching_first_post])
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
 
         PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
@@ -956,6 +956,15 @@ describe PostAlerter do
 
         PostRevisor.new(post).revise!(Fabricate(:user), tags: [watched_tag.name, other_tag.name])
         expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+      end
+
+      it "doesn't trigger a notification if topic is unlisted" do
+        post.topic.update_column(:visible, false)
+
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
+
+        PostRevisor.new(post).revise!(Fabricate(:user), tags: [other_tag.name, watched_tag.name])
+        expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
       end
     end
   end
