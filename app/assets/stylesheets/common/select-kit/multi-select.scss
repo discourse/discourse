@@ -157,7 +157,7 @@
           color: $primary-low-mid;
           vertical-align: middle;
         }
-        &:hover .d-icon {
+        &:hover .d-icon:last-child {
           color: $danger;
         }
 
