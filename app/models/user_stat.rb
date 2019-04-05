@@ -204,5 +204,5 @@ end
 #  flags_agreed             :integer          default(0), not null
 #  flags_disagreed          :integer          default(0), not null
 #  flags_ignored            :integer          default(0), not null
-#  first_unread_at          :datetime
+#  first_unread_at          :datetime         not null
 #
