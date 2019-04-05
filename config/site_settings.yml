@@ -1845,6 +1845,9 @@ uncategorized:
   always_include_topic_excerpts:
     default: false
     hidden: true
+    
+  disable_dashboard_stats:
+    default: false
 
 user_preferences:
   default_email_digest_frequency:
