@@ -148,7 +148,6 @@ id:
     age: "Umur"
     joined: "Bergabung"
     admin_title: "Admin"
-    flags_title: "Flags"
     show_more: "tampilkan lebih banyak"
     show_help: "pilihan"
     links: "Tautan"
@@ -227,26 +226,6 @@ id:
       none_found: "Tidak ada topik ditemukan."
       title:
         placeholder: "tulis judul topik disini"
-    queue:
-      topic: "Topik:"
-      approve: "Terima"
-      reject: "Tolak"
-      delete_user: "Hapus Pengguna"
-      title: "Membutuhan Persetujuan"
-      none: "Tidak ada pos untuk di pratinjau."
-      edit: "Ubah"
-      cancel: "Batal"
-      view_pending: "lihat postingan tertunda"
-      has_pending_posts:
-        other: "Bahasan ini <b>{{count}}</b> pesan menunggu persetujuan"
-      confirm: "Simpan perubahan"
-      delete_prompt: "Apakah anda yakin akan menghapus <b>%{username}</b> ? Ini akan menghapus semua pesan dan memblokir email dan alamat IP. "
-      approval:
-        title: "Pesan Membutuhkan Persetujuan"
-        description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
-        pending_posts:
-          other: "Anda mempunyai <strong>{{count}}</strong> pesan tertunda."
-        ok: "Ya"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> memposting <a href='{{topicUrl}}'>topik</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Anda</a> memposting <a href='{{topicUrl}}'>the topic</a>"
@@ -910,8 +889,6 @@ id:
         last_checked: "Terakhir dicek"
         reports:
           all_time: "Sepanjang Waktu"
-      flags:
-        system: "Sistem"
       groups:
         delete: "Hapus"
         delete_confirm: "Hapus grup ini?"

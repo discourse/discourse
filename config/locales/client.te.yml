@@ -107,7 +107,6 @@ te:
     age: "వయసు"
     joined: "చేరినారు"
     admin_title: "అధికారి"
-    flags_title: "కేతనాలు"
     show_more: "మరింత చూపు"
     show_help: "ఐచ్చికాలు"
     links: "లంకెలు"
@@ -183,13 +182,6 @@ te:
       none_found: "ఎటువంటి విషయాలూ కనపడలేదు."
       title:
         placeholder: "ఇక్కడ విషయపు శీర్షిక రాయండి"
-    queue:
-      approve: "అంగీకరించు"
-      reject: "తిరస్కరించు"
-      cancel: "రద్దుచేయి"
-      confirm: "మార్పులను భద్రపరచు"
-      approval:
-        ok: "సరే"
     user_action:
       user_posted_topic: "<a href='{{topicUrl}}'>విషయాన్ని</a> <a href='{{userUrl}}'>{{user}}</a> రాసారు "
       you_posted_topic: "<a href='{{userUrl}}'>మీరు</a>  <a href='{{topicUrl}}'>విషయాన్ని</a> రాసారు"
@@ -1129,37 +1121,6 @@ te:
       commits:
         latest_changes: "తాజా మార్పులు: దయచేసి తరచూ ఉన్నతీకరించండి!"
         by: "నుండి"
-      flags:
-        title: "కేతనాలు"
-        agree: "ఒప్పుకోండి"
-        agree_title: "ఈ కేతనం సరైనదిగా చెప్పండి"
-        delete: "తొలగించు"
-        delete_title: "ఈ కేతనం వర్తించే టపా తొలగించు"
-        delete_post_defer_flag_title: "టపా తొలగించు; ఇదే తొలి టపా అయితే ఈ విషయాన్ని తొలగించు"
-        delete_post_agree_flag_title: "టపా తొలగించు; తొలగి టపా అయితే, విషయాన్ని కూడా తొలగించు"
-        delete_flag_modal_title: "తొలగించు మరియు..."
-        delete_spammer: "స్పామరును తొలగించు"
-        delete_spammer_title: "ఈ సభ్యుడిని తొలగించు మరియు ఇతని అన్ని టపాలు, విషయాలూ కూడా తొలగించు. "
-        disagree_flag_unhide_post: "ఒప్పుకోకు (టపా దాచు)"
-        disagree_flag_unhide_post_title: "ఈ టపాకు ఉన్న అన్ని కేతనాలూ తొలగించు మరియు టపాను మరలా సందర్శనీయం చేయి"
-        disagree_flag: "ఒప్పుకోకు"
-        disagree_flag_title: "ఈ కేతనాన్ని చెల్లనిదిగా లేదా తప్పుగా  నిరాకరించు"
-        clear_topic_flags: "ముగిసింది"
-        clear_topic_flags_title: "ఈ విషయం పరిశీలించబడింది మరియు అన్ని సమస్యలూ సరిచేయబడ్డాయి. ముగిసింది నొక్కి అన్ని కేతనాలూ తొలగించు."
-        more: "(మరిన్ని జవాబులు...)"
-        dispositions:
-          agreed: "ఒప్పుకున్నారు"
-          disagreed: "ఒప్పుకోలేదు"
-        flagged_by: "కేతనించినవారు"
-        resolved_by: "సరిచేసినవారు"
-        took_action: "చర్య తీసుకున్నారు"
-        system: "వ్యవస్థ"
-        error: "ఏదే తేడా జరిగింది"
-        reply_message: "జవాబు"
-        topic_flagged: "ఈ <strong>విషయం</strong> కేతనించబడింది."
-        visit_topic: "చర్య తీసుకోడానికి విషయం దర్శించు"
-        was_edited: "తొలి కేతనం తర్వాత టపా సవరించబడింది"
-        previous_flags_count: "ఈ టపా ఇప్పటికే {{count}}  కేతనించబడింది."
       groups:
         primary: "ప్రాథమిక గుంపు"
         no_primary: "(ప్రాథమిక గుంపు లేదు)"
@@ -1402,17 +1363,10 @@ te:
         nav:
           new: "కొత్త"
           active: "క్రియాశీల"
-          pending: "పెండింగు"
           staff: "సిబ్బంది"
           suspended: "సస్పెడయ్యాడు"
           suspect: "అనుమానించు"
         approved: "అంగీకరించు"
-        approved_selected:
-          one: "సభ్యుడిని అంగీకరించు"
-          other: "({{count}}) సభ్యులను అంగీకరించు"
-        reject_selected:
-          one: "సభ్యుడిని నిరాకరించు"
-          other: "({{count}}) సభ్యులను నిరాకరించు"
         titles:
           active: "క్రియాశీల సభ్యులు"
           new: "కొత్త సభ్యులు"
@@ -1424,9 +1378,6 @@ te:
           moderators: "నిర్వాహకులు"
           suspended: "సస్పెండయిన సభ్యులు"
           suspect: "అనుమానిత సభ్యులు"
-        reject_successful:
-          one: "వినియోగదారులు విజయవంతంగా "
-          other: "వినియోగదారులు విజయవంతంగా %{count} తిరస్కరింపబడ్డారు.."
         not_verified: "ద్రువీకరించలేదు"
         check_email:
           title: "ఈ సభ్యుని ఈమెయిల్ చూపు"

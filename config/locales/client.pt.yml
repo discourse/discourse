@@ -189,7 +189,6 @@ pt:
     age: "Idade"
     joined: "Juntou-se"
     admin_title: "Administração"
-    flags_title: "Denúncias"
     show_more: "mostrar mais"
     show_help: "opções"
     links: "Hiperligações"
@@ -305,28 +304,6 @@ pt:
       title:
         search: "Pesquisar por uma Mensagem por título:"
         placeholder: "escreva o título da mensagem aqui"
-    queue:
-      topic: "Tópico:"
-      approve: "Aprovar"
-      reject: "Rejeitar"
-      delete_user: "Eliminar Utilizador"
-      title: "Necessita de Aprovação"
-      none: "Não há publicações para rever."
-      edit: "Editar"
-      cancel: "Cancelar"
-      view_pending: "ver publicações pendentes"
-      has_pending_posts:
-        one: "Este tópico tem <b>1</b> publicação à espera de aprovação"
-        other: "Este tópico tem <b>{{count}}</b> publicações à espera de aprovação"
-      confirm: "Guardar Alterações"
-      delete_prompt: "Tem a certeza que pretende eliminar <b>%{username}</b>? Isto irá remover todas as publicações, bloquear os e-mails e endereços de IP deste utilizador."
-      approval:
-        title: "A Publicação Necessita de Aprovação"
-        description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
-        pending_posts:
-          one: "Tem <strong>1</strong> publicação pendente."
-          other: "Tem <strong>{{count}}</strong> publicações pendentes."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicou <a href='{{topicUrl}}'>o tópico</a>"
       you_posted_topic: "<a href='{{userUrl}}'></a> publicou <a href='{{topicUrl}}'>o tópico</a>"
@@ -1939,9 +1916,6 @@ pt:
       has_replies:
         one: "{{count}} Resposta"
         other: "{{count}} Respostas"
-      has_likes:
-        one: "{{count}} Gosto"
-        other: "{{count}} Gostos"
       has_likes_title:
         one: "1 pessoa gostou desta publicação"
         other: "{{count}} pessoas gostaram desta publicação"
@@ -2552,37 +2526,6 @@ pt:
       commits:
         latest_changes: "Últimas alterações: atualize com frequência!"
         by: "por"
-      flags:
-        title: "Denúncias"
-        agree: "Aceitar"
-        agree_title: "Confirmar esta denúncia como válida e correta"
-        delete: "Eliminar"
-        delete_title: "Eliminar a publicação associada a esta denúncia."
-        delete_post_defer_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
-        delete_post_agree_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
-        delete_flag_modal_title: "Eliminar e…"
-        delete_spammer: "Eliminar Spammer"
-        delete_spammer_title: "Remover utilizador e todos as publicações e tópicos do mesmo."
-        disagree_flag_unhide_post: "Discordar (exibir publicação)"
-        disagree_flag_unhide_post_title: "Remover qualquer denúncia desta publicação e torná-la visível novamente"
-        disagree_flag: "Discordar"
-        disagree_flag_title: "Negar esta denúncia como inválida ou incorreta"
-        clear_topic_flags: "Concluído"
-        clear_topic_flags_title: "Este tópico foi investigado e os problemas foram resolvidos. Clique em Concluído para remover as denúncias."
-        more: "(mais respostas...)"
-        dispositions:
-          agreed: "concordado"
-          disagreed: "discordado"
-        flagged_by: "Denunciado por"
-        resolved_by: "Resolvido por"
-        took_action: "Realizou uma ação"
-        system: "Sistema"
-        error: "Aconteceu um erro"
-        reply_message: "Responder"
-        topic_flagged: "Este <strong>tópico</strong> foi denunciado."
-        visit_topic: "Visitar tópico para acionar medidas"
-        was_edited: "A publicação foi editada após a primeira denúncia"
-        previous_flags_count: "Esta publicação já foi denunciada {{count}} vezes."
       groups:
         primary: "Grupo Primário"
         no_primary: "(nenhum grupo primário)"
@@ -2988,17 +2931,10 @@ pt:
         nav:
           new: "Novo"
           active: "Ativo"
-          pending: "Pendente"
           staff: "Pessoal"
           suspended: "Suspenso"
           suspect: "Suspeito"
         approved: "Aprovado?"
-        approved_selected:
-          one: "aprovar utilizador"
-          other: "aprovar utilizadores ({{count}})"
-        reject_selected:
-          one: "rejeitar utilizador"
-          other: "rejeitar utilizadores ({{count}})"
         titles:
           active: "Utilizadores Ativos"
           new: "Utilizadores Novos"
@@ -3013,12 +2949,6 @@ pt:
           moderators: "Moderadores"
           suspended: "Utilizadores Suspensos"
           suspect: "Utilizadores Suspeitos"
-        reject_successful:
-          one: "1 utilizador foi rejeitado com sucesso."
-          other: "%{count} utilizadores foram rejeitados com sucesso."
-        reject_failures:
-          one: "Falha ao rejeitar 1 utilizador."
-          other: "Falha ao rejeitar %{count} utilizadores."
         not_verified: "Não verificado"
         check_email:
           title: "Revelar o endereço de email deste utilizador"

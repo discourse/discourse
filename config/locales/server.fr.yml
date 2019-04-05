@@ -199,6 +199,7 @@ fr:
   provider_not_found: "Vous n'êtes pas autorisés à voir cette ressources. Le fournisseur d'authentification n'existe pas."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
   invalid_grant_badge_reason_link: "Lien discourse externe ou invalide pas permis dans la raison d'un badge"
+  email_template_cant_be_modified: "Ce modèle de courriel ne peut pas être modifié"
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:
@@ -292,9 +293,6 @@ fr:
   edit_conflict: "Ce message a été modifié par une autre utilisateur, vos modifications ne peuvent plus être sauvegardées."
   revert_version_same: "La version actuelle est la même que la version vers laquelle vous essayez de revenir."
   excerpt_image: "image"
-  queue:
-    delete_reason: "Supprimé depuis la liste des messages en attente de validation"
-    not_found: "Message non trouvé ou déjà mis à jour."
   groups:
     success:
       bulk_add:
@@ -323,6 +321,7 @@ fr:
       trust_level_4: "niveau_confiance_4"
     request_membership_pm:
       title: "Demande d'adhésion pour @%{group_name}"
+      handle: "Gérer demande d'adhésion"
   education:
     until_posts:
       one: "1 message"
@@ -527,7 +526,7 @@ fr:
       email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
       email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
       description_incomplete: "Le message de description de la catégorie doit avoir au moins un paragraphe."
-      permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente."
+      permission_conflict: "Tout groupe autorisé à accéder à une sous-catégorie doit également avoir accès à la catégorie parente. Les groupes suivants ont accès à une des sous-catégories, mais n'ont pas accès à la catégorie parente: %{group_names}."
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
     cannot_delete:
       uncategorized: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; elle ne peut pas être supprimée."
@@ -715,6 +714,9 @@ fr:
       grant: "Accorder l'accès administrateur"
       complete: "<b>%{target_username}</b> est maintenant un administrateur."
       back_to: "Retourner à %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Nécessite l'approbation"
   post_action_types:
     off_topic:
       title: "Hors-sujet"
@@ -826,6 +828,7 @@ fr:
     read_write: "lecture/écriture"
     description: '« %{application_name} » demande l''accès suivant à votre compte :'
     instructions: 'Nous venons de générer une nouvelle clé API utilisateur à utiliser avec "%{application_name}", merci de coller cette clé dans votre application :'
+    otp_description: 'Voulez-vous autoriser "%{application_name}" à accèder à ce site ?'
     no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
     generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité a peut-être été désactivée par l'administrateur"
     scopes:
@@ -835,6 +838,10 @@ fr:
       session_info: "Lire les informations de la session utilisateur"
       read: "Tout lire"
       write: "Tout écrire"
+      one_time_password: "Créer un jeton à accès unique"
+    invalid_public_key: "Désolé, la clef publique est invalide"
+    invalid_auth_redirect: "Désolé, cet hôte auth_redirect n'est pas autorisé"
+    invalid_token: "Jeton manquant, invalid ou échu."
   flags:
     errors:
       already_handled: "Signalement déjà géré"
@@ -1203,6 +1210,10 @@ fr:
     search_query_log_max_size: "Nombre maximum de requêtes de recherche à conserver"
     search_query_log_max_retention_days: "Durée maximum de conservation de requêtes de recherche"
     search_ignore_accents: "Ne pas tenir compte des accents dans les recherches texte."
+    category_search_priority_very_low_weight: "Poids appliqué au classement pour très basse priorité de recherche catégorie."
+    category_search_priority_low_weight: "Poids appliqué au classement pour basse priorité de recherche catégorie."
+    category_search_priority_high_weight: "Poids appliqué au classement pour haute priorité de recherche catégorie."
+    category_search_priority_very_high_weight: "Poids appliqué au classement pour très haute priorité de recherche catégorie."
     allow_uncategorized_topics: "Autorise la création de sujets sans catégorie. ATTENTION : S'il existe des sujets non-catégorisés, vous devez les catégoriser avant de désactiver cette fonction."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
@@ -1267,13 +1278,14 @@ fr:
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence en millisecondes les clients anonymes doivent requêter le serveur"
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
+    score_required_to_hide_post: "Seuil de score qui fait qu'un message est automatiquement masqué et qu'un message est envoyé à l'utilisateur (0 pour désactiver)"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
     max_topics_in_first_day: "Le nombre maximum de sujets qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message"
     max_replies_in_first_day: "Le nombre maximum de réponses qu'un utilisateur est autorisé à créer dans la période de 24h après avoir créé son premier message"
     tl2_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
     tl3_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 3 (réguliers) en la multipliant par ce nombre"
     tl4_additional_likes_per_day_multiplier: "Augmenter la limite de J'aime par jour pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"
-    num_spam_flags_to_silence_new_user: "Si le message d'un nouvel utilisateur obtient plusieurs signalements pour spam de la part de num_users_to_silence_new_user différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
+    spam_score_to_silence_new_user: "Si le message d'un nouvel utilisateur obtient ce score de la part de num_users_to_silence_new_user différents utilisateurs, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     num_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_spam_flags_to_silence_new_user signalements d'autant d'utilisateurs différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs de niveau de confiance 3 différents, masquer tous ses messages et l'empêcher de poster à l'avenir. 0 désactive cette fonctionnalité."
@@ -1550,7 +1562,7 @@ fr:
     max_age_unmatched_emails: "Effacer les adresses de courriel sous surveillance  sans correspondance après (N) jours"
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillance sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
-    num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
+    score_to_auto_close_topic: "Score total de signalements requis pour automatiquement suspendre un sujet pour intervention"
     num_hours_to_close_topic: "Nombre d'heures de fermeture d'un sujet pour intervention."
     auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
     min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, si le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Mettre à 0 pour désactiver (non recommandé)"
@@ -1558,6 +1570,7 @@ fr:
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
     auto_silence_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, mettre sous silence le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a mettre sous slience les premiers messages contenant rageux ou aba ou aca."
     flags_default_topics: "Afficher les sujets signalés par défaut dans la section administrateur"
+    min_score_default_visibility: "N'afficher les éléments à revoir que s'ils atteignent ce score"
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1789,12 +1802,18 @@ fr:
       staged_users_disabled: "Vous devez d'abord activer 'utilisateurs distants' avant d'activer ce paramètre."
       reply_by_email_disabled: "Vous devez d'abord activer 'reply by email' avant d'activer ce paramètre."
       sso_url_is_empty: "Vous devez d'abord configurer un 'sso url' avant d'activer ce paramètre."
+      sso_invite_only: "Vous ne pouvez pas activer sso et 'par invitation seulement' en même temps."
       enable_local_logins_disabled: "Vous devez d'abord activer 'enable local logins' avant d'activer ce paramètre."
       min_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus long qu'un pseudo qui existe déjà (%{username})."
       min_username_length_range: "Il n'est pas possible de définir un minimum plus grand qu'un maximum."
       max_username_length_exists: "Il n'est pas possible de définir une longeur minimale de pseudo qui soit plus court qu'un pseudo qui existe déjà (%{username})."
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       invalid_hex_value: "Les couleurs doivent être des codes à 6 chiffres au format hexadécimal."
+      category_search_priority:
+        very_low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure à 'category_search_priority_low_weight'."
+        low_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure ou égale à 1 ou inférieure à 'category_search_priority_very_low_weight'."
+        high_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur supérieure ou égale à 1 ou supérieure à 'category_search_priority_very_high_weight'."
+        very_high_weight_invalid: "Vous ne pouvez pas fixer le poids à une valeur inférieure à 'category_search_priority_high_weight'."
     placeholder:
       sso_provider_secrets:
         key: "www.example.com"
@@ -1957,13 +1976,13 @@ fr:
       fixed_primary_email: "Correction de l'email primaire pour utilisateur distant"
       same_ip_address: "Même adresse IP (%{ip_address}) que d'autres utilisateurs"
       inactive_user: "Utilisateur inactif"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Des signalements ont été soumis il y a plus de 1 heure. [Veuillez les passer en revue](%{base_path}/admin/flags)."
-      other: "Des signalements ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](%{base_path}/admin/flags)."
+  reviewables_reminder:
+    submitted:
+      one: "Ces éléments ont été soumis il y a plus d'une heure. [Veuillez les passer en revue](%{base_path}/flags)."
+      other: "Ces éléments ont été soumis il y a plus de %{count} heures. [Veuillez les passer en revue](%{base_path}/flags)."
     subject_template:
-      one: "un signalement en attente de traitement"
-      other: "%{count} signalements en attente de traitement."
+      one: "Un élément à passer en revue"
+      other: "%{count} éléments à passer en revue"
   unsubscribe_mailer:
     title: "Désinscription"
     subject_template: "Confirmez que vous ne souhaitez plus recevoir de courriels de mises à jour de %{site_title}"
@@ -2174,8 +2193,8 @@ fr:
     agreed: "Merci de nous en informer. Nous sommes en accord avec votre signalement et nous travaillons à sa résolution."
     agreed_and_deleted: "Merci de nous en informer. Nous sommes en accord avec votre signalement et avons supprimé le message."
     disagreed: "Merci de nous en informer. Nous travaillons à sa résolution."
-    deferred: "Merci de nous en informer. Nous travaillons à sa résolution."
-    deferred_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
+    ignored: "Merci de nous en informer. Nous travaillons à sa résolution."
+    ignored_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   temporarily_closed_due_to_flags:
     one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
     other: "Ce sujet est fermé pour au moins 1 heure suite à plusieurs signalements de la communauté."
@@ -4070,6 +4089,49 @@ fr:
     unknown: "inconnu"
     user_merged: "%{username} a être fusionné avec ce compte"
     user_delete_self: "Supprimer par l'utilisateur depuis %{url}"
-    update: "Mis à jour"
-    create: "Créé"
-    destroy: "Détruit"
+  reviewables:
+    missing_version: "Vous devez fournir un paramètre de version"
+    conflict: "Un conflit de mise à jour empêche rend cette action impossible."
+    actions:
+      agree:
+        title: "Accepter..."
+      agree_and_keep:
+        title: "Conserver le message"
+        description: "Accepter le signalement et conserver le message tel quel."
+      agree_and_suspend:
+        title: "Suspendre l'utilisateur"
+        description: "Accepter le signalement et suspendre l'utilisateur."
+      agree_and_silence:
+        title: "Mettre l'utilisateur sous silence"
+        description: "Accepter le signalement et mettre l'utilisateur sous silence."
+      agree_and_restore:
+        title: "Restaurer message"
+        description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
+      agree_and_hide:
+        title: "Cacher message"
+        description: "Cacher le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
+      delete_spammer:
+        title: "Supprimer le spammeur"
+        description: "Supprimer cet utilisateur, tous ses messages et sujets."
+        confirm: "Êtes-vous sûr de vouloir supprimer tous les messages et sujets de cet utilisateur, et bloquer son courriel ainsi que son adresse IP ?"
+      delete:
+        title: "Supprimer..."
+      delete_and_ignore:
+        description: "Supprimer le message ; si c'est le premier message, le sujet sera supprimé"
+      delete_and_agree:
+        description: "Supprimer le message ; si c'est le premier message, le sujet sera supprimé"
+      disagree_and_restore:
+        title: "Rejeter signalement et rétablir message"
+        description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
+      disagree:
+        title: "Rejeter"
+      ignore:
+        title: "Ignorer"
+      approve:
+        title: "Approuver"
+      reject:
+        title: "Rejeter"
+      delete_user:
+        title: "Supprimer l'utilisateur"
+        confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cela va retirer tous ses messages et va bloquer son courriel ainsi que son adresse IP."
+        reason: "Supprimé via la liste des messages en attente de validation"

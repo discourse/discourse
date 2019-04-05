@@ -296,7 +296,6 @@ sl:
     post_template: "%{replace_paragraph}\n\nUporabite naslednje odstavke za daljši opis and za določitev pravil in vodil te kategorije:\n\n- Zakaj naj uporabniku uporabljajo to kategorijo? Čemu je namenjena?\n\n- Kako se razlikuje od ostalih kategorij, ki jih že imamo?\n\n- Katere teme sodijo v to kategorijo?\n\n- Ali potrebujemo to kategorijo? Ali jo lahko združimo z drugo kategorijo ali podkategorijo?\n"
     errors:
       description_incomplete: "Objava z opisom kategorije mora vsebovati vsaj en odstavek."
-      permission_conflict: "Vsaka skupina ki ima dostop do podkategorije mora imeti dostop tudi do nadrejene kategorije."
       disallowed_topic_tags: "Ta tema vsebuje oznake, ki niso dovoljene na tej kategoriji: '%{tags}'"
     cannot_delete:
       uncategorized: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more biti izbrisana."
@@ -650,17 +649,6 @@ sl:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:
       unused_staged_user: "Neuporabljen prirejen uporabnik"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Prijave so bile podane več kot %{count} uro nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-      two: "Prijave so bile podane več kot %{count} uri nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-      few: "Prijave so bile podane več kot %{count} ure nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-      other: "Prijave so bile podane več kot %{count} ur nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-    subject_template:
-      one: "%{count} prijava čaka na pregled"
-      two: "%{count} prijavi čakata na pregled"
-      few: "%{count} prijave čakajo na pregled"
-      other: "%{count} prijav čaka na pregled"
   invite_mailer:
     subject_template: "%{inviter_name} vas je povabil da sodelujete v '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
@@ -1585,6 +1573,13 @@ sl:
         Če ste bili to vi, ni problema! Ne potrebujete storiti ničesar.
 
         Če to niste bili vi, potem [preverite nedavno uporabljene naprave](%{base_url}/my/preferences/account) in razmislite o zamenjavi gesla.
+  page_not_found:
+    title: "Oops! Ta stran ne obstaja ali je zasebna."
+    popular_topics: "Zanimivo"
+    recent_topics: "Nedavno"
+    see_more: "Več"
+    search_title: "Išči na tem spletnem mestu"
+    search_button: "Išči"
   login_required:
     welcome_message: |
       ## [Dobrodošli na %{title}](#welcome)

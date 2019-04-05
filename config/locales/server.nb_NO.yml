@@ -254,9 +254,6 @@ nb_NO:
   too_late_to_edit: "Det er for lenge siden det innlegget ble skrevet. Det kan ikke lenger redigeres eller slettes."
   revert_version_same: "Den gjeldende versjonen er den samme som den du prøver å rulle tilbake til."
   excerpt_image: "bilde"
-  queue:
-    delete_reason: "Slettet via køen for innleggmoderering"
-    not_found: "Innlegget ble ikke funnet eller er allerede oppdatert."
   groups:
     success:
       bulk_add:
@@ -1013,7 +1010,6 @@ nb_NO:
     summary_posts_required: "Minste antall innlegg før 'Sammendrag for Emnet' aktiveres"
     summary_likes_required: "Minste antall 'likes' i et emne før 'Sammendrag for Emnet' aktiveres"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
-    num_spam_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam av minst num_users_to_silence_new_user forskjellige brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
@@ -1134,8 +1130,6 @@ nb_NO:
   flags_dispositions:
     agreed: "Takk for at du sier ifra. Vi er enig at det er et problem her og vi ser på saken."
     disagreed: "Takk for at du sier ifra. Vi skal se på det. "
-    deferred: "Takk for at du sier ifra. Vi ser på saken. "
-    deferred_and_deleted: "Takk for at du sier ifra. Vi har fjernet innlegget. "
   system_messages:
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"

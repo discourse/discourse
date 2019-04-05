@@ -11,7 +11,6 @@ sw:
       title: Andika tarehe
       create:
         modal_title: Andika tarehe
-        modal_subtitle: "Tutabadilisha moja kwa moja muda na tarehe kuendana na mahali pa mtumiaji"
         form:
           insert: Weka
           advanced_mode: Hali-tumizi ya juu

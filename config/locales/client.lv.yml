@@ -183,7 +183,6 @@ lv:
     age: "Vecums"
     joined: "Pievienojās"
     admin_title: "Administrators"
-    flags_title: "Sūdzības"
     show_more: "parādīt vairāk"
     show_help: "iespējas"
     links: "Saites"
@@ -264,30 +263,6 @@ lv:
       none_found: "Tēmas netika atrastas."
       title:
         placeholder: "ierakstiet tēmas nosaukumu šeit"
-    queue:
-      topic: "Tēma:"
-      approve: "Apstiprināt"
-      reject: "Noraidīt"
-      delete_user: "Dzēst lietotāju"
-      title: "Nepieciešama apstiprināšana"
-      none: "Šobrīd nav pārbaudāmu ierakstu"
-      edit: "Labot"
-      cancel: "Atcelt"
-      view_pending: "aplūkot vēl nepārbaudītos ierakstus"
-      has_pending_posts:
-        zero: "Šai tēmā nav ierakstu, kuri gaida apstiprinājumu"
-        one: "Šai tēmā ir <b>{{count}}</b> ieraksts, kurš gaida apstiprinājumu"
-        other: "Šai tēmā ir <b>{{count}}</b> ieraksti, kuri gaida apstiprinājumu"
-      confirm: "Saglabāt izmaiņas"
-      delete_prompt: "Vai tiešām vēlaties dzēst <b>%{username}</b>? Tas izdzēsīs visus lietotāja ierakstus un bloķēs e-pastu un IP adresi."
-      approval:
-        title: "Ieraksts gaida apstiprinājumu"
-        description: "Mēs saņēmām jūsu ierakstu, taču vispirms to jāapstiprina moderatoram. Lūdzu, esiet pacietīgi."
-        pending_posts:
-          zero: "Šai tēmā nav ierakstu, kuri gaida gaida apstiprinājumu."
-          one: "Šai tēmā ir <strong>1</strong> ieraksts, kurš gaida apstiprinājumu."
-          other: "Šai temā ir <strong>{{count}}</strong> ieraksti, kuri gaida apstiprinājumu."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> pievienoja ierakstus <a href='{{topicUrl}}'>tēmai</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Jūs</a> pievienojāt ierakstu <a href='{{topicUrl}}'>tēmai</a>"
@@ -1514,10 +1489,6 @@ lv:
         zero: "{{count}} atbildes"
         one: "{{count}} atbilde"
         other: "{{count}} atbildes"
-      has_likes:
-        zero: "{{count}} atzinības"
-        one: "{{count}} atzinība"
-        other: "{{count}} atzinības"
       has_likes_title:
         zero: "{{count}} cilvēkiem patika šis ieraksts"
         one: "1 cilvēkam patika šis ieraksts"
@@ -2170,37 +2141,6 @@ lv:
       commits:
         latest_changes: "Pēdējās izmaiņas: lūdzu atjauniniet bieži!"
         by: " "
-      flags:
-        title: "Sūdzības"
-        agree: "Piekrist"
-        agree_title: "Apstiprināt šo ziņojumu kā pamatotu un korektu"
-        delete: "Dzēst"
-        delete_title: "Dzēst ierakstu, par ko ir šī sūdzība."
-        delete_post_defer_flag_title: "Dzēst ierakstu; ja tas ir tēmas pirmais ieraksts, dzēst arī tēmu"
-        delete_post_agree_flag_title: "Dzēst ierakstu; ja tas ir tēmas pirmais ieraksts, dzēst arī tēmu"
-        delete_flag_modal_title: "Dzēst un..."
-        delete_spammer: "Izdzēst spamotāju"
-        delete_spammer_title: "Dzēst lietotāju un visus šī lietotāja ierakstus un tēmas."
-        disagree_flag_unhide_post: "Nepiekrist (padarīt ierakstu atkal redzamu)"
-        disagree_flag_unhide_post_title: "Noņemt visas sūdzības par šo ierakstu un padarīt to atkal redzamu"
-        disagree_flag: "Nepiekrist"
-        disagree_flag_title: "Atteikt šo sūdzību kā nederīgu vai aplamu"
-        clear_topic_flags: "Darīts"
-        clear_topic_flags_title: "Šī tēma tika aplūkota, un problēmas ir atrisinātas. Uzspiediet \"Darīts\", lai dzēstu sūdzības."
-        more: "(pārējās atbildes...)"
-        dispositions:
-          agreed: "piekrita"
-          disagreed: "nepiekrita"
-        flagged_by: "Sūdzība no"
-        resolved_by: "Atrisināja"
-        took_action: "Rīkojās"
-        system: "Sistēma"
-        error: "Kaut kur notika kļūda"
-        reply_message: "Atbilde"
-        topic_flagged: "Par šo <strong>tēmu</strong> ir saņemta sūdzība."
-        visit_topic: "Apmeklēt tēmu, lai rīkotos."
-        was_edited: "Ieraksts tika rediģēts pēc pirmās sūdzības"
-        previous_flags_count: "Par šo ierakstu jau saņemtas {{count}} sūdzības."
       groups:
         primary: "Galvenā grupa"
         no_primary: "(nav galvenās grupas)"
@@ -2619,19 +2559,10 @@ lv:
         nav:
           new: "Jauns"
           active: "Aktīvi"
-          pending: "Neizlemts"
           staff: "Personāls"
           suspended: "Apturēts"
           suspect: "Novērot"
         approved: "Apstiprināt?"
-        approved_selected:
-          zero: "Apstiprināt lietotāju"
-          one: "Apstiprināt lietotāju"
-          other: "Apstiprināt lietotājus ({{count}})"
-        reject_selected:
-          zero: "Atteikt lietotāju"
-          one: "Atteikt lietotāju"
-          other: "Atteikt lietotājus ({{count}})"
         titles:
           active: "Aktīvi lietotāji"
           new: "Jauni lietotāji"
@@ -2646,14 +2577,6 @@ lv:
           moderators: "Moderātori"
           suspended: "Atceltie lietotāji"
           suspect: "Novēroti (suspect) lietotāji"
-        reject_successful:
-          zero: "Veiksmīgi atteikts 1 lietotājs."
-          one: "Veiksmīgi atteikts 1 lietotājs."
-          other: "Veiksmīgi atteikts %{count} lietotājs."
-        reject_failures:
-          zero: "Neizdevās atteikt 1 lietotāju."
-          one: "Neizdevās atteikt 1 lietotāju."
-          other: "Neizdevās atteikt %{count} lietotājus."
         not_verified: "Nav apstiprināts"
         check_email:
           title: "Atklāt šī lietotāja e-pasta adresi"

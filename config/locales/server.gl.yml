@@ -98,8 +98,6 @@ gl:
     posts: "Últimas publicacións"
   too_late_to_edit: "Esta publicación ten moito tempo. Xa non se pode modificar nin eliminar."
   excerpt_image: "imaxe"
-  queue:
-    delete_reason: "Eliminación por medio da cola de moderación de publicacións"
   groups:
     default_names:
       everyone: "todos"
@@ -398,8 +396,6 @@ gl:
     agreed: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e estamos botándolle un ollo."
     agreed_and_deleted: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e xa eliminamos a publicación."
     disagreed: "Grazas por comunicárnolo. Estamos botándolle un ollo."
-    deferred: "Grazas por comunicárnolo. Estamos botándolle un ollo."
-    deferred_and_deleted: "Grazas por comunicárnolo. Xa eliminamos a publicación."
   system_messages:
     welcome_user:
       subject_template: "Benvido/a a %{site_name}!"

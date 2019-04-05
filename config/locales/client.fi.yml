@@ -179,7 +179,6 @@ fi:
     age: "Ikä"
     joined: "Liittynyt"
     admin_title: "Ylläpito"
-    flags_title: "Liput"
     show_more: "näytä lisää"
     show_help: "valinnat"
     links: "Linkit"
@@ -295,28 +294,6 @@ fi:
       title:
         search: "Etsi keskustelua otsikon perusteella:"
         placeholder: "kirjoita keskustelun otsikko tähän"
-    queue:
-      topic: "Ketju:"
-      approve: "Hyväksy"
-      reject: "Hylkää"
-      delete_user: "Poista käyttäjä"
-      title: "Odottaa hyväksyntää"
-      none: "Tarkastettavia viestejä ei ole"
-      edit: "Muokkaa"
-      cancel: "Peruuta"
-      view_pending: "Tarkastele odottavia viestejä"
-      has_pending_posts:
-        one: "<b>1</b> viesti ketjussa odottaa hyväksyntää"
-        other: "<b>{{count}}</b> viestiä ketjussa odottaa hyväksyntää"
-      confirm: "Tallenna muutokset"
-      delete_prompt: "Haluatko todella poistaa käyttäjän <b>%{username}</b>? Kaikki hänen kirjoittamansa viestit poistetaan. Lisäksi hänen sähköposti- ja IP-osoitteillensa laitetaan esto."
-      approval:
-        title: "Viesti odottaa hyväksyntää"
-        description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
-        pending_posts:
-          one: "Sinulla on <strong>1</strong> odottava viesti."
-          other: "Sinulla on <strong>{{count}}</strong> odottavaa viestiä."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> kirjoitti <a href='{{topicUrl}}'>ketjuun</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Sinä</a> kirjoitit <a href='{{topicUrl}}'>ketjuun</a>"
@@ -1918,9 +1895,6 @@ fi:
       has_replies:
         one: "{{count}} vastaus"
         other: "{{count}} vastausta"
-      has_likes:
-        one: "{{count}} tykkäys"
-        other: "{{count}} tykkäystä"
       has_likes_title:
         one: "1 käyttäjä tykkäsi tästä viestistä"
         other: "{{count}} käyttäjää tykkäsi tästä viestistä"
@@ -2675,93 +2649,6 @@ fi:
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
-      flags:
-        title: "Liput"
-        active_posts: "Liputetut viestit"
-        old_posts: "Aiemmin liputetut viestit"
-        topics: "Liputetut ketjut"
-        moderation_history: "Valvontahistoria"
-        agree: "Ole samaa mieltä"
-        agree_title: "Vahvista, että lippu on annettu oikeasta syystä"
-        agree_flag_hide_post: "Piilota viesti"
-        agree_flag_hide_post_title: "Piilota viesti ja lähetä automaattinen yksityisviesti, joka kehottaa käyttäjää muokkaamaan viestiä."
-        agree_flag_restore_post: "Ole samaa mieltä ja palauta viesti"
-        agree_flag_restore_post_title: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
-        agree_flag_suspend: "Hyllytä käyttäjä"
-        agree_flag_suspend_title: "Ole samaa mieltä lipun kanssa ja hyllytä käyttäjä."
-        agree_flag_silence: "Hiljennä käyttäjä"
-        agree_flag_silence_title: "Ole samaa mieltä lipun kanssa ja hiljennä käyttäjä."
-        agree_flag: "Säilytä viesti"
-        agree_flag_title: "Ole samaa mieltä lipun kanssa ja pidä viesti ennallaan"
-        ignore_flag: "Sivuuta"
-        ignore_flag_title: "Poista tämä lippu; toimenpiteitä ei tarvita juuri nyt."
-        delete: "Poista"
-        delete_title: "Poista viesti, johon lippu viittaa."
-        delete_post_defer_flag: "Poista viesti ja sivuuta lippu"
-        delete_post_defer_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
-        delete_post_agree_flag: "Poista viesti ja ole samaa mieltä lipun kanssa"
-        delete_post_agree_flag_title: "Poista viesti; jos se on aloitusviesti, niin poista koko ketju"
-        delete_flag_modal_title: "Poista ja..."
-        delete_spammer: "Poista roskapostittaja"
-        delete_spammer_title: "Poista käyttäjä ja viestit ja ketjut tältä käyttäjältä."
-        disagree_flag_unhide_post: "Ole eri mieltä (poista viestin piilotus)"
-        disagree_flag_unhide_post_title: "Poista kaikki liput tästä viestistä ja tee siitä taas näkyvä"
-        disagree_flag: "Ole eri mieltä"
-        disagree_flag_title: "Kiistä lippu, koska se on kelvoton tai väärä"
-        clear_topic_flags: "Valmis"
-        clear_topic_flags_title: "Tämä ketju on tutkittu ja sitä koskeneet ongelmat ratkaistu. Klikkaa Valmis poistaaksesi liput."
-        more: "(lisää vastauksia...)"
-        suspend_user: "Hyllytä käyttäjä"
-        suspend_user_title: "Hyllytä käyttäjä tämän viestin vuoksi"
-        replies:
-          one: "[1 vastaus]"
-          other: "[%{count} vastausta]"
-        delete_replies:
-          one: "Poista myös viestiin liittyvä %{count} vastaus?"
-          other: "Poista myös viestiin liittyvät %{count} vastausta?"
-        dispositions:
-          agreed: "samaa mieltä"
-          disagreed: "eri mieltä"
-          deferred: "sivuutettu"
-        flagged_by: "Liputtajat"
-        resolved_by: "Selvittäjä"
-        took_action: "Ryhtyi toimenpiteisiin"
-        system: "Järjestelmä"
-        error: "Jotain meni pieleen"
-        reply_message: "Vastaa"
-        no_results: "Liputettuja viestejä ei ole."
-        topic_flagged: "Tämä <strong>ketju</strong> on liputettu."
-        show_full: "näytä koko viesti"
-        visit_topic: "Vieraile ketjussa ryhtyäksesi toimiin"
-        was_edited: "Viestiä muokattiin ensimmäisen lipun jälkeen"
-        previous_flags_count: "Tämä viesti on liputettu {{count}} kertaa."
-        show_details: "Näytä lipun yksityiskohdat"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} lippu yhteensä)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} lippua yhteensä)"
-          agreed:
-            one: "{{count}} % samaa mieltä"
-            other: "{{count}}% samaa mieltä"
-          disagreed:
-            one: "{{count}} % eri mieltä"
-            other: "{{count}} % eri mieltä"
-          ignored:
-            one: "{{count}} % sivuutettu"
-            other: "{{count}} % sivuutettu"
-        details: "yksityiskohdat"
-        flagged_topics:
-          topic: "Ketju"
-          type: "Tyyppi"
-          users: "Käyttäjät"
-          last_flagged: "Viimeksi liputettu"
-          no_results: "Ei ole liputettuja ketjuja."
-        short_names:
-          off_topic: "eksyy aiheesta"
-          inappropriate: "sopimaton"
-          spam: "roskaposti"
-          notify_user: "vapaamuotoinen"
-          notify_moderators: "vapaamuotoinen"
       groups:
         new:
           title: "Uusi ryhmä"
@@ -3433,19 +3320,12 @@ fi:
         nav:
           new: "Uudet"
           active: "Aktiiviset"
-          pending: "Odottaa"
           staff: "Henkilökunta"
           suspended: "Hyllytetyt"
           silenced: "Hiljennetty"
           suspect: "Epäilty"
           staged: "Esikäyttäjät"
         approved: "Hyväksytty?"
-        approved_selected:
-          one: "hyväksy käyttäjä"
-          other: "hyväksy käyttäjiä ({{count}})"
-        reject_selected:
-          one: "torju käyttäjä"
-          other: "torju ({{count}}) käyttäjää"
         titles:
           active: "Viimeksi aktiiviset käyttäjät"
           new: "Uudet käyttäjät"
@@ -3462,12 +3342,6 @@ fi:
           suspended: "Hyllytetyt käyttäjät"
           suspect: "Epäillyt käyttäjät"
           staged: "Esikäyttäjät"
-        reject_successful:
-          one: "Yksi käyttäjä torjuttiin."
-          other: "({{count}}) käyttäjää torjuttiin."
-        reject_failures:
-          one: "Yhden käyttäjän torjuminen epäonnistui."
-          other: "({{count}}) käyttäjän torjuminen epäonnistui."
         not_verified: "Todentamaton"
         check_email:
           title: "Paljasta tämän käyttäjän sähköpostiosoite"
