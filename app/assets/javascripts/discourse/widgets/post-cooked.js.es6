@@ -16,8 +16,14 @@ export default class PostCooked {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
-    this.decoratorHelper = decoratorHelper;
-    this.currentUser = decoratorHelper.widget.currentUser;
+
+    if (decoratorHelper) {
+      this.decoratorHelper = decoratorHelper;
+      if (decoratorHelper.widget && decoratorHelper.currentUser) {
+        this.currentUser = decoratorHelper.currentUser;
+      }
+    }
+
     this.ignoredUsers = this.currentUser
       ? this.currentUser.ignored_users
       : null;
