@@ -11,11 +11,12 @@ class ReviewableSerializer < ApplicationSerializer
     :type,
     :topic_id,
     :topic_url,
+    :topic_tags,
     :category_id,
     :created_at,
     :can_edit,
     :score,
-    :version
+    :version,
   )
 
   has_one :created_by, serializer: BasicUserSerializer, root: 'users'
@@ -85,6 +86,14 @@ class ReviewableSerializer < ApplicationSerializer
     end
 
     data
+  end
+
+  def topic_tags
+    object.topic.tags.map(&:name)
+  end
+
+  def include_topic_tags?
+    object.topic.present? && SiteSetting.tagging_enabled?
   end
 
   def topic_url

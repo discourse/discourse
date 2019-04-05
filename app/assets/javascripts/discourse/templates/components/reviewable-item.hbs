@@ -10,11 +10,11 @@
     </span>
     <span class='status'>
       {{#if reviewable.approved}}
-      <span class="approved">  {{d-icon "check"}} {{i18n "review.statuses.approved.title"}} </span>
+        <span class="approved"> {{d-icon "check"}} {{i18n "review.statuses.approved.title"}} </span>
       {{else if reviewable.rejected}}
-      <span class="rejected">   {{d-icon "times"}} {{i18n "review.statuses.rejected.title"}} </span>
+        <span class="rejected"> {{d-icon "times"}} {{i18n "review.statuses.rejected.title"}} </span>
       {{else if reviewable.ignored}}
-      <span class="ignored">   {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}} </span>
+        <span class="ignored"> {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}} </span>
       {{/if}}
     </span>
   </div>
@@ -36,10 +36,10 @@
       </div>
     {{else}}
       {{#component reviewableComponent reviewable=reviewable tagName=''}}
-      <div class='reviewable-scores-and-history'>
-        {{reviewable-scores scores=reviewable.reviewable_scores tagName=''}}
-        {{reviewable-histories histories=reviewable.reviewable_histories tagName=''}}
-      </div>
+        <div class='reviewable-scores-and-history'>
+          {{reviewable-scores scores=reviewable.reviewable_scores tagName=''}}
+          {{reviewable-histories histories=reviewable.reviewable_histories tagName=''}}
+        </div>
       {{/component}}
     {{/if}}
   </div>
