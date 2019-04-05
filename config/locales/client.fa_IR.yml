@@ -176,7 +176,6 @@ fa_IR:
     age: "سن"
     joined: "ملحق شده"
     admin_title: "مدیر"
-    flags_title: "پرچم‌ها"
     show_more: "بیش‌تر نشان بده"
     show_help: "گزینه‌ها"
     links: "پیوندها"
@@ -268,28 +267,6 @@ fa_IR:
       none_found: "موضوعی یافت نشد."
       title:
         placeholder: "عنوان موضوع را اینجا بنویسید"
-    queue:
-      topic: "موضوع:"
-      approve: "تایید"
-      reject: "رد کردن"
-      delete_user: "پاک کردن کاربر"
-      title: "به تایید نیاز است"
-      none: "نوشته ای برای بازبینی وجود ندارد."
-      edit: "ویرایش"
-      cancel: "لغو کردن"
-      view_pending: "مشاهده نوشته‌های در انتظار "
-      has_pending_posts:
-        one: "این موضوع دارای <b>{{count}}</b> نوشته‌ی در انتظار تایید است"
-        other: "این موضوع دارای <b>{{count}}</b> نوشته‌ی در انتظار تایید است"
-      confirm: "ذخیره تغییرات"
-      delete_prompt: "آیا از حذف <b>%{username}</b> اطمینان دارید؟ این عمل باعث حذف شدن تمامی نوشته های او و همینطور باعث مسدود شدن IP و ایمیل آن‌ها نیز می شود."
-      approval:
-        title: "نوشته نیاز به تایید دارد"
-        description: "ما نوشته شما را دریافت کرده ایم ولی قبل از نمایش نیاز به تایید آن توسط یکی از مدیران است. لطفا صبر داشته باشید."
-        pending_posts:
-          one: "شما دارای  <strong>{{count}}</strong>  نوشته در انتظار هستید "
-          other: "شما دارای  <strong>{{count}}</strong>  نوشته در انتظار هستید "
-        ok: "باشه"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> <a href='{{topicUrl}}'>یک موضوع</a> ایجاد کرد"
       you_posted_topic: "<a href='{{userUrl}}'>شما یک </a><a href='{{topicUrl}}'>موضوع</a> جدید ایجاد کردید."
@@ -1563,9 +1540,6 @@ fa_IR:
       has_replies:
         one: "{{count}} پاسخ"
         other: "{{count}} پاسخ"
-      has_likes:
-        one: "{{count}} پسند"
-        other: "{{count}} پسند"
       has_likes_title:
         one: "{{count}} کاربر این مورد را پسندیده‌اند"
         other: "{{count}} کاربر این مورد را پسندیده‌اند"
@@ -2195,37 +2169,6 @@ fa_IR:
       commits:
         latest_changes: "آخرین تغییرات: لطفا بیشتر به‌روز‌رسانی کنید!"
         by: "توسط"
-      flags:
-        title: "پرچم‌ها"
-        agree: "موافقت کردن"
-        agree_title: "تایید این پرچم به عنوان معتبر و صحیح"
-        delete: "حذف"
-        delete_title: "نوشته‌ای که پرچم به آن اشاره دارد حذف کن."
-        delete_post_defer_flag_title: "حذف نوشته; اگر اولین نوشته است، موضوع را حذف نمایید."
-        delete_post_agree_flag_title: "حذف نوشته; اگر اولین نوشته است، موضوع را حذف نمایید."
-        delete_flag_modal_title: "حذف و..."
-        delete_spammer: "حذف هرزنگار"
-        delete_spammer_title: "حذف کاربر و تمام نوشته ها و موضوعات این کاربر"
-        disagree_flag_unhide_post: "مخالفم (با رویت نوشته)"
-        disagree_flag_unhide_post_title: "حذف تمام پرچم های این نوشته و دوباره نوشته را قابل نمایش کن "
-        disagree_flag: "مخالف"
-        disagree_flag_title: "انکار این پرچم به عنوان نامعتبر است و یا نادرست"
-        clear_topic_flags: "تأیید"
-        clear_topic_flags_title: "موضوع بررسی و موضوع حل شده است. تأیید را بفشارید تا پرچم‌ها برداشته شوند."
-        more: "(پاسخ های بیشتر...)"
-        dispositions:
-          agreed: "موافقت شد"
-          disagreed: "مخالفت شد"
-        flagged_by: "پرچم شده توسط"
-        resolved_by: "حل شده توسط"
-        took_action: "زمان عمل"
-        system: "سیستم"
-        error: "اشتباهی روی داد"
-        reply_message: "پاسخ دادن"
-        topic_flagged: "این <strong>موضوع</strong> پرچم خورده است."
-        visit_topic: " موضوع را برای اقدام لازم ببینید"
-        was_edited: "نوشته پس از پرچم اول ویرایش شد"
-        previous_flags_count: "این موضوع در حال حاضر {{count}} بار پرچم گذاری شده است."
       groups:
         primary: "گروه اصلی"
         no_primary: "(بدون گروه اصلی)"
@@ -2698,17 +2641,10 @@ fa_IR:
         nav:
           new: "جدید"
           active: "فعال"
-          pending: "در انتظار"
           staff: "همکاران"
           suspended: "تعلیق شد "
           suspect: "مشکوک"
         approved: "تایید شده ؟"
-        approved_selected:
-          one: "({{count}}) کاربر تایید شده"
-          other: "({{count}}) کاربر تایید شده"
-        reject_selected:
-          one: "({{count}}) کاربر رد شده"
-          other: "({{count}}) کاربر رد شده"
         titles:
           active: "کاربران فعال"
           new: "کاربران تازه"
@@ -2723,12 +2659,6 @@ fa_IR:
           moderators: "مدیران"
           suspended: "کاربران تعلیق شده"
           suspect: "کاربران مشکوک"
-        reject_successful:
-          one: "%{count} کاربر با موفقیت رد شدند"
-          other: "%{count} کاربر با موفقیت رد شدند"
-        reject_failures:
-          one: "رد %{count} کاربر ناموفق بود"
-          other: "رد %{count} کاربر ناموفق بود"
         not_verified: "تایید نشده"
         check_email:
           title: "ایمیل این کاربران را قابل رویت کن"

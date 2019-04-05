@@ -188,7 +188,6 @@ it:
     age: "Età"
     joined: "Iscritto"
     admin_title: "Amministratore"
-    flags_title: "Segnalazioni"
     show_more: "mostra altro"
     show_help: "opzioni"
     links: "Collegamenti"
@@ -303,28 +302,22 @@ it:
       none_found: "Nessun messaggio trovato."
       title:
         search: "Cerca un Messaggio per titolo:"
-    queue:
-      topic: "Argomento:"
-      approve: "Approva"
-      reject: "Scarta"
-      delete_user: "Elimina Utente"
-      title: "Da Approvare"
-      none: "Non ci sono messaggi da revisionare."
-      edit: "Modifica"
-      cancel: "Annulla"
-      view_pending: "vedi messaggi in attesa"
-      has_pending_posts:
+    review:
+      none: "Non ci sono elementi da revisionare."
+      view_pending: "vedi in attesa"
+      topic_has_pending:
         one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
-        other: "Questo argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
-      confirm: "Salva Modifiche"
-      delete_prompt: "Sei sicuro di voler eliminare <b>%{username}</b>? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'indirizzo IP."
+        other: "Questo Argomento ha  <b>{{count}}</b> messaggi in attesa di approvazione"
+      title: "Richiede Revisione"
+      statuses:
+        pending:
+          title: "In attesa"
+        approved:
+          title: "Approvato:"
       approval:
-        title: "Messaggio Da Approvare"
-        description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
         pending_posts:
-          one: "Hai <strong>1</strong> messaggio in attesa."
-          other: "Hai <strong>{{count}}</strong> messaggi in attesa."
-        ok: "OK"
+          one: "Hai<strong>1</strong> messaggio in attesa."
+          other: "Hai<strong>{{count}}</strong> messaggi in attesa."
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ha pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Tu</a> hai pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
@@ -1930,14 +1923,11 @@ it:
         other: "visualizza {{count}} riposte nascoste"
       notice:
         first: "E' la prima volta che {{user}} invia un messaggio. Diamogli il benvenuto nella nostra comunità!"
-        return: "Era da un bel po' che {{user}} non si faceva vedere: l'ultimo messaggio risale a {{time}}fa."
+        return: "Era da un bel po' che {{user}} non si faceva vedere: l'ultimo messaggio risale a {{time}}."
       unread: "Messaggio non letto"
       has_replies:
         one: "{{count}} Risposta"
         other: "{{count}} Risposte"
-      has_likes:
-        one: "{{count}} \"Mi piace\""
-        other: "{{count}} \"Mi piace\""
       has_likes_title:
         one: "Una persona ha messo \"Mi piace\" a questo messaggio"
         other: "{{count}} persone hanno messo \"Mi piace\" a questo messaggio"
@@ -2664,80 +2654,6 @@ it:
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
-      flags:
-        title: "Segnalazioni"
-        active_posts: "Messaggi Segnalati"
-        old_posts: "Vecchi Messaggi Segnalati"
-        topics: "Argomenti Segnalati"
-        moderation_history: "Storico Moderazione"
-        agree: "Acconsento"
-        agree_title: "Conferma che questa segnalazione è valida e corretta"
-        agree_flag_hide_post: "Nascondi Messaggio"
-        agree_flag_hide_post_title: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
-        agree_flag_restore_post: "Accetta e Ripristina il Messaggio"
-        agree_flag_restore_post_title: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
-        agree_flag_suspend: "Sospendi Utente"
-        agree_flag_suspend_title: "Accetta la segnalazione e sospendi l'utente."
-        agree_flag_silence: "Silenzia Utente"
-        agree_flag_silence_title: "Accetta la segnalazione e silenzia l'utente."
-        agree_flag: "Mantieni il messaggio"
-        agree_flag_title: "Accetta la segnalazione e mantieni invariato il messaggio."
-        ignore_flag: "Ignora"
-        ignore_flag_title: "Rimuovi questa segnalazione; nessuna azione per ora."
-        delete: "Cancella"
-        delete_title: "Cancella il messaggio a cui si riferisce la segnalazione."
-        delete_post_defer_flag: "Elimina il Messaggio e Ignora la segnalazione"
-        delete_post_defer_flag_title: "Cancella il messaggio: se è il primo, cancella l'argomento"
-        delete_post_agree_flag: "Elimina il Messaggio e Accetta la segnalazione"
-        delete_post_agree_flag_title: "Cancella il messaggio: se è il primo, cancella l'argomento"
-        delete_flag_modal_title: "Cancella e..."
-        delete_spammer: "Cancella lo Spammer"
-        delete_spammer_title: "Rimuovi l'utente e tutti i suoi messaggi ed argomenti."
-        disagree_flag_unhide_post: "Rifiuta (mostra il messaggio)"
-        disagree_flag_unhide_post_title: "Rimuovi ogni segnalazione dal messaggio e rendilo nuovamente visibile"
-        disagree_flag: "Rifiuta"
-        disagree_flag_title: "Nega questa segnalazione perché non valida o non corretta"
-        clear_topic_flags: "Fatto"
-        clear_topic_flags_title: "L'argomento è stato esaminato e i problemi risolti. Clicca su Fatto per rimuovere le segnalazioni."
-        more: "(altre risposte...)"
-        suspend_user: "Sospendi Utente"
-        suspend_user_title: "Sospendi l'utente per questo messaggio"
-        replies:
-          one: "[1 risposta]"
-          other: "[%{count} risposte]"
-        delete_replies:
-          one: "Eliminare anche la risposta a questo Messaggio?"
-          other: "Eliminare anche le %{count} risposte a questo Messaggio?"
-        dispositions:
-          agreed: "accettate"
-          disagreed: "non accettate"
-          deferred: "ignorate"
-        flagged_by: "Segnalato da"
-        resolved_by: "Risolto da"
-        took_action: "Azione intrapresa"
-        system: "Sistema"
-        error: "Qualcosa non ha funzionato"
-        reply_message: "Rispondi"
-        no_results: "Non ci sono messaggi segnalati."
-        topic_flagged: "Questo <strong>argomento</strong> è stato segnalato."
-        show_full: "mostra messaggio completo"
-        visit_topic: "Visita l'argomento per intervenire"
-        was_edited: "Il messaggio è stato modificato dopo la prima segnalazione"
-        previous_flags_count: "Questo messaggio è stato già segnalato {{count}} volte."
-        show_details: "Mostra i dettagli della segnalazione"
-        details: "dettagli"
-        flagged_topics:
-          topic: "Argomento"
-          type: "Tipo"
-          users: "Utenti"
-          last_flagged: "Ultima Segnalazione"
-          no_results: "Non ci sono messaggi segnalati."
-        short_names:
-          off_topic: "fuori tema"
-          inappropriate: "inappropriato"
-          spam: "spam"
-          notify_user: "personalizzato"
-          notify_moderators: "personalizzato"
       groups:
         new:
           title: "Nuovo Gruppo"
@@ -3351,19 +3267,12 @@ it:
         nav:
           new: "Nuovi"
           active: "Attivi"
-          pending: "In attesa"
           staff: "Staff"
           suspended: "Sospesi"
           silenced: "Silenziato"
           suspect: "Sospetti"
           staged: "Da approvare"
         approved: "Approvato?"
-        approved_selected:
-          one: "approva l'utente"
-          other: "approva gli utenti ({{count}})"
-        reject_selected:
-          one: "rifiuta l'utente"
-          other: "rifiuta utenti ({{count}})"
         titles:
           active: "Utenti Attivi"
           new: "Nuovi Utenti"
@@ -3380,12 +3289,6 @@ it:
           suspended: "Utenti Sospesi"
           suspect: "Utenti Sospetti"
           staged: "Utenti da approvare"
-        reject_successful:
-          one: "1 utente rifiutato."
-          other: "%{count} utenti rifiutati."
-        reject_failures:
-          one: "Impossibile rifiutare 1 utente"
-          other: "Impossibile rifiutare %{count} utenti."
         not_verified: "Non verificato"
         check_email:
           title: "Mostra l'indirizzo email di questo utente"

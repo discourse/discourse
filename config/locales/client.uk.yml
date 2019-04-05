@@ -87,7 +87,6 @@ uk:
     age: "Вік"
     joined: "Приєднався(-лась)"
     admin_title: "Адмін"
-    flags_title: "Скарги"
     show_more: "показати більше"
     show_help: "налаштування"
     links: "Посилання"
@@ -166,18 +165,6 @@ uk:
       none_found: "Не знайдено тем."
       title:
         placeholder: "введіть назву теми"
-    queue:
-      topic: "Тема:"
-      approve: "Схвалити"
-      reject: "Відхилити"
-      delete_user: "Видалити користувача"
-      title: "Потребує схвалення"
-      edit: "Редагувати"
-      cancel: "Скасувати"
-      confirm: "Зберегти зміни"
-      approval:
-        title: "Допис потребує схвалення"
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> написав(ла) <a href='{{topicUrl}}'>тему</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ви</a> написали <a href='{{topicUrl}}'>тему</a>"
@@ -1075,26 +1062,6 @@ uk:
       commits:
         latest_changes: "Останні зміни: оновлюйте Вашу копію часто!"
         by: "від"
-      flags:
-        title: "Скарги"
-        agree: "Погодитися"
-        agree_title: "Підтвердити, що ця позначка дійсна та коректна"
-        delete: "Видалити"
-        delete_title: "Видалити допис, до якого відноситься ця позначка"
-        delete_post_defer_flag_title: "Видалити допис; якщо допис перший, видалити тему"
-        delete_post_agree_flag_title: "Видалити допис; якщо допис перший, видалити тему"
-        delete_flag_modal_title: "Видалити та..."
-        delete_spammer: "Видалити Спамера"
-        disagree_flag_unhide_post: "Відмовитися(відміна приховання допису )"
-        disagree_flag: "Відмовитися"
-        clear_topic_flags: "Done"
-        clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
-        flagged_by: "Позначено"
-        resolved_by: "Вирішено за допомогою"
-        system: "System"
-        error: "Щось трапилося"
-        reply_message: "Відповісти"
-        topic_flagged: "This <strong>topic</strong> has been flagged."
       groups:
         primary: "Primary Group"
         no_primary: "(no primary group)"
@@ -1403,7 +1370,6 @@ uk:
         nav:
           new: "Нові"
           active: "Активні"
-          pending: "Очікують"
           staff: "Персонал"
           suspended: "Призупинені"
         approved: "Схвалено?"

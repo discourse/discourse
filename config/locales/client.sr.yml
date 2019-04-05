@@ -191,7 +191,6 @@ sr:
     age: "Godine"
     joined: "Pridružen"
     admin_title: "Admin"
-    flags_title: "Zastave"
     show_more: "prikaži više"
     show_help: "opcije"
     links: "Linkovi"
@@ -273,26 +272,6 @@ sr:
       none_found: "Nema pronađenih tema."
       title:
         placeholder: "unesite naslov teme ovde"
-    queue:
-      topic: "Tema:"
-      approve: "Odobri"
-      reject: "Odbij"
-      delete_user: "Obriši korisnika"
-      title: "Potrebno odobrenje"
-      none: "Nema poruka za kontrolni pregled."
-      edit: "Izmeni"
-      cancel: "Otkaži"
-      view_pending: "vidi poruke na čekanju"
-      has_pending_posts:
-        one: "Ova tema ima <b>{{count}}</b> poruku koje čekaju na odobrenje"
-        few: "Ova tema ima <b>{{count}}</b> poruke koje čekaju na odobrenje"
-        other: "Ova tema ima <b>{{count}}</b> poruka koje čekaju na odobrenje"
-      confirm: "Sačuvaj izmene"
-      delete_prompt: "Da li si siguran da želiš obrisati <b>%{username}</b>? Ovim ćeš obrisati sve njegove postove i blokirati njegov email i IP adresu."
-      approval:
-        title: "Potrebno odobrenje"
-        description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> je objavio <a href='{{topicUrl}}'>temu</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Objavio si <a href='{{topicUrl}}'>temu</a>"
@@ -1404,37 +1383,6 @@ sr:
       commits:
         latest_changes: "Posljednje promene: molimo često nadograđujte!"
         by: "od"
-      flags:
-        title: "Zastave"
-        agree: "Slažem se"
-        agree_title: "Potvrdite ovu zastavu kao validnu i tačnu"
-        delete: "Obriši"
-        delete_title: "Obriši poruku na koju ova zastava referira."
-        delete_post_defer_flag_title: "Obriši poruku; ako je prva, obriši temu"
-        delete_post_agree_flag_title: "Obriši poruku; ako je prva, obriši temu"
-        delete_flag_modal_title: "Obriši i..."
-        delete_spammer: "Obriši korisnika"
-        delete_spammer_title: "Ukloni korisnika i sve njegove teme i poruke."
-        disagree_flag_unhide_post: "Odbaci (ponovo prikaži poruku)"
-        disagree_flag_unhide_post_title: "Ukloni zastavu sa ove poruke i učini poruku vidljivom"
-        disagree_flag: "Odbaci"
-        disagree_flag_title: "Poništi ovu poruku kao netačnu"
-        clear_topic_flags: "Gotovo"
-        clear_topic_flags_title: "Ova je tema istražena i problemi su rešeni. Klikni Gotovo da ukloniš zastave."
-        more: "(više odgovora...)"
-        dispositions:
-          agreed: "Slažem se"
-          disagreed: "Odbačeno"
-        flagged_by: "Označio"
-        resolved_by: "Rešeno"
-        took_action: "Preduzeo akciju"
-        system: "Sistem"
-        error: "Nešto nije u redu"
-        reply_message: "Odgovori"
-        topic_flagged: "Ova <strong>tema</strong> je označena zastavom."
-        visit_topic: "Poseti temu da preduzmeš akciju."
-        was_edited: "Poruka je izmenjena nakon prve zastave."
-        previous_flags_count: "Ova je poruka je već označena zastavom {{count}} puta."
       groups:
         primary: "Primarna Grupa"
         no_primary: "(nema primarne grupe)"
@@ -1667,19 +1615,10 @@ sr:
         nav:
           new: "Novo"
           active: "Aktivno"
-          pending: "U toku"
           staff: "Osoblje"
           suspended: "Suspendovani"
           suspect: "Sumnjivi"
         approved: "Potvrđenji?"
-        approved_selected:
-          one: "Potvrdi korisnika"
-          few: "Potvrdi korisnike ({{count}})"
-          other: "Potvrdi korisnike ({{count}})"
-        reject_selected:
-          one: "odbij korisnika"
-          few: "odbij korisnike ({{count}})"
-          other: "odbij korisnike ({{count}})"
         titles:
           active: "Aktivni Korisnici"
           new: "Novi Korisnici"
@@ -1691,14 +1630,6 @@ sr:
           moderators: "Moderatori"
           suspended: "Suspendovani Korisnici"
           suspect: "Sumnjivi korisnici"
-        reject_successful:
-          one: "Uspešno odbio %{count} koriniska."
-          few: "Uspešno odbio %{count} koriniska."
-          other: "Uspešno odbio %{count} koriniska."
-        reject_failures:
-          one: "Neuspešno odbio %{count} korisnika."
-          few: "Neuspešno odbio %{count} korisnika."
-          other: "Neuspešno odbio %{count} korisnika."
         not_verified: "Nije verifikovano"
         check_email:
           title: "Otkrij korisnikovu email adresu"

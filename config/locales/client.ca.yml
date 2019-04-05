@@ -174,7 +174,6 @@ ca:
     age: "Edat"
     joined: "Es va registrar"
     admin_title: "Admin"
-    flags_title: "Avisos"
     show_more: "mostrar més"
     show_help: "opcions"
     links: "Enllaços"
@@ -275,28 +274,6 @@ ca:
       title:
         search: "Busca un Missatge pel Títol:"
         placeholder: "escriu el títol del missatge aquí"
-    queue:
-      topic: "Tema:"
-      approve: "Aprova"
-      reject: "Rebutja"
-      delete_user: "Eliminia persona usuària"
-      title: "Cal aprovació"
-      none: "No hi ha publicacions per revisar"
-      edit: "Edita"
-      cancel: "Cancel·la"
-      view_pending: "mira publicacions pendents"
-      has_pending_posts:
-        one: "Aquest tema té <b>1</b> publicació esperant l'aprovació"
-        other: "Aquest tema té <b>{{count}}</b> publicacions esperant l'aprovació"
-      confirm: "Desa els canvis"
-      delete_prompt: "Segur que vols esborrar <b>%{username}</b>? Això eliminarà totes les seves publicacions i blocarà el correu electrònic i l'adreça IP."
-      approval:
-        title: "La publicació necessita ser aprovada"
-        description: "Hem rebut la teva nova publicació, però cal que sigui aprovada per una persona moderadora abans d'aparèixer. Si us plau, una mica de paciència."
-        pending_posts:
-          one: "Tens <strong>1</strong> publicació pendent."
-          other: "Tens <strong>{{count}}</strong> publicacions pendents."
-        ok: "D'acord"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> va enviar <a href='{{topicUrl}}'>el tema</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Tu</a> has publicat <a href='{{topicUrl}}'>el tema</a>"
@@ -1511,9 +1488,6 @@ ca:
       has_replies:
         one: "{{count}} Resposta"
         other: "{{count}} Respostes"
-      has_likes:
-        one: "{{count}}  M'agrada"
-        other: "{{count}} M'agrades"
       has_likes_title:
         one: "La publicació agrada a 1 persona"
         other: "La publicació agrada a {{count}} persones"
@@ -2123,37 +2097,6 @@ ca:
       commits:
         latest_changes: "Darrers canvis: si us plau actualitza sovint!"
         by: "per"
-      flags:
-        title: "Avisos"
-        agree: "D'acord"
-        agree_title: "Confirma aquesta bandera com a vàlida i correcta"
-        delete: "Esborra"
-        delete_title: "Esborra la publicació a la qual es refereix aquesta bandera."
-        delete_post_defer_flag_title: "Esborra la publicació; si és la primera publicació, esborra el tema"
-        delete_post_agree_flag_title: "Esborra la publicació; si és la primera publicació, esborra el tema"
-        delete_flag_modal_title: "Esborra i..."
-        delete_spammer: "Esborra brossa"
-        delete_spammer_title: "Esborra la persona usuària i totes les publicacions i temes d'aquesta persona usuària."
-        disagree_flag_unhide_post: "En desacord (desfer amagar publicació)"
-        disagree_flag_unhide_post_title: "Esborra qualsevol bandera d'aquesta publicació i torna a fer visible la publicació"
-        disagree_flag: "En desacord"
-        disagree_flag_title: "Nega aquesta bandera per invàlida i incorrecta"
-        clear_topic_flags: "Fet"
-        clear_topic_flags_title: "El tema ha estat investigat i els fets han estat resolts. Clica Fet per esborrar les banderes."
-        more: "(més respostes... )"
-        dispositions:
-          agreed: "d'acord"
-          disagreed: "en desacord"
-        flagged_by: "Abanderat per"
-        resolved_by: "Resolt per"
-        took_action: "Actuat"
-        system: "Sistema"
-        error: "Alguna cosa ha anat malament"
-        reply_message: "Respon"
-        topic_flagged: "Aquest <strong>tema</strong> ha estat abanderat."
-        visit_topic: "Visita el tema per actuar"
-        was_edited: "La publicació va ser editada després de la primera bandera"
-        previous_flags_count: "Aquesta publicació ha estat abanderada {{count}} cops."
       groups:
         primary: "Grup primari"
         no_primary: "(grup no primari)"
@@ -2580,17 +2523,10 @@ ca:
         nav:
           new: "Nou"
           active: "Actiu"
-          pending: "Pendent"
           staff: "Equip"
           suspended: "Suspès"
           suspect: "Sospita"
         approved: "Aprovat?"
-        approved_selected:
-          one: "Aprova persona usuària"
-          other: "Aprova persones usuàries ({{count}})"
-        reject_selected:
-          one: "Refusa persona usuària"
-          other: "Refusa persones usuàries ({{count}})"
         titles:
           active: "Persones usuàries actives"
           new: "Nova persones usuàries"
@@ -2605,12 +2541,6 @@ ca:
           moderators: "Persones moderadores"
           suspended: "Persones usuàries suspeses"
           suspect: "Persones usuàries sospitoses"
-        reject_successful:
-          one: "1 persona usuària refusada amb èxit"
-          other: "%{count} persones usuàries refusades amb èxit"
-        reject_failures:
-          one: "Ha fallat en refusar 1 persona usuària."
-          other: "Ha fallat en refusar %{count} persones usuàries."
         not_verified: "No verificat"
         check_email:
           title: "Mostra correu electrònic d'aquesta persona"

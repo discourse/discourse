@@ -11,7 +11,6 @@ nb_NO:
       title: Sett inn dato
       create:
         modal_title: Sett inn dato
-        modal_subtitle: "Vi vil automatisk konvertere dato og tid til leserens lokale tidssone."
         form:
           insert: Sett inn
           advanced_mode: Avansert modus

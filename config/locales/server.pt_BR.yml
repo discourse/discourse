@@ -257,9 +257,6 @@ pt_BR:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   revert_version_same: "A versão atual é a mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
-  queue:
-    delete_reason: "Deletado pela fila de moderação"
-    not_found: "Post não encontrado ou já atualizado."
   groups:
     success:
       bulk_add:
@@ -1026,7 +1023,6 @@ pt_BR:
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl2 (membros) multiplicando por esse número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl3 (regular) multiplicando por esse número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl4 (lideres) multiplicando por esse número"
-    num_spam_flags_to_silence_new_user: "Se as postagens de um novo usuário receberem muitos sinalizadores de spam de num_users_to_silence_new_user usuários diferentes, oculte todas as postagens e evite postagens futuras. 0 para desabilitar."
     num_users_to_silence_new_user: "Se as postagens de um novo usuário receberem um sinal num_spam_flags_to_silence_new_user spam de vários usuários diferentes, oculte todas as postagens e evite postagens futuras. 0 para desabilitar."
     num_tl3_flags_to_silence_new_user: "Se as postagens de um novo usuário obtiverem muitos sinalizadores de num_tl3_users_to_silence_new_user diferentes usuários do nível de confiança 3, oculte todos os posts e evite postagens futuras. 0 para desabilitar."
     num_tl3_users_to_silence_new_user: "Se as postagens de um novo usuário obtiverem sinalizadores num_tl3_flags_to_silence_new_user a partir dos vários usuários diferentes do nível de confiança 3, oculte todas as postagens e evite postagens futuras. 0 para desativar."
@@ -1256,7 +1252,6 @@ pt_BR:
     max_age_unmatched_emails: "Excluir entradas de emails filtrados não combinadas após (N) dias."
     max_age_unmatched_ips: "Excluir entradas de IPs filtrados não combinadas após (N) dias."
     num_flaggers_to_close_topic: "Número mínimo de usuários sinalizadores únicos que são exigidos para que um tópico seja automaticamente pausado por intervenção"
-    num_flags_to_close_topic: "Número mínimo de sinalizações ativas que são exigidas para que um tópico seja automaticamente pausado por intervenção"
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Habilitar resposta automática quando eliminada marcação."
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
@@ -1599,13 +1594,6 @@ pt_BR:
       unused_staged_user: "Usuário encenado sem uso"
       fixed_primary_email: "E-mail principal fixo para usuário testado"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
-  flags_reminder:
-    flags_were_submitted:
-      one: "As sinalizações foram enviadas há mais de 1 hora. [Por favor, revise-as](%{base_path}/admin/flags)."
-      other: "As sinalizações foram submetidas%{count} horas atrás. [Por favor, revise-as](%{base_path}/admin/flags)."
-    subject_template:
-      one: "1 sinalização aguardando a ser controlada"
-      other: "%{count} sinalizações aguardando a ser controladas"
   unsubscribe_mailer:
     title: "Cancelar mensagem do remetente"
     subject_template: "Confirme que você não deseja mais receber atualizações de e-mail de %{site_title}"
@@ -1730,8 +1718,6 @@ pt_BR:
     agreed: "Obrigado por nos avisar. Concordamos que há um problema e nós estamos olhando para ele."
     agreed_and_deleted: "Obrigado por nos avisar. Concordamos que há um problema e nós removemos o post."
     disagreed: "Obrigado por nos avisar. Nós estamos olhando nele."
-    deferred: "Obrigado por nos avisar. Nós estamos olhando nele."
-    deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
   system_messages:
     private_topic_title: "Tópico #%{id}"
     contents_hidden: "Por favor, visite o post para ver o seu conteúdo."

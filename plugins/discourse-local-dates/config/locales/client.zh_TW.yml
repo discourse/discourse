@@ -5,4 +5,18 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_TW: {}
+zh_TW:
+  js:
+    discourse_local_dates:
+      relative_dates:
+        today: 今天%{time}
+        tomorrow: 明天%{time}
+        yesterday: 昨天%{time}
+      title: 插入日期
+      create:
+        modal_title: 插入日期
+        form:
+          insert: 插入
+          advanced_mode: 進階模式
+          simple_mode: 簡單模式
+          timezones_title: 時區顯示

@@ -162,7 +162,6 @@ bg:
     age: "Години"
     joined: "Присъединен"
     admin_title: "Админ"
-    flags_title: "Сигнали"
     show_more: "покажи повече"
     show_help: "опции"
     links: "Връзки"
@@ -242,28 +241,6 @@ bg:
       none_found: "Няма нови теми."
       title:
         placeholder: "Въведете заглавието на темата тук"
-    queue:
-      topic: "Тема:"
-      approve: "Одобри"
-      reject: "Отхвърли"
-      delete_user: "Изтрий потребител"
-      title: "Чакащи одобрение"
-      none: "Няма публикации за преглед"
-      edit: "Редактирай"
-      cancel: "Прекрати"
-      view_pending: "Покажи предстоящите публикации"
-      has_pending_posts:
-        one: "Тази тема има <b>1</b> публикация чакаща одобрение"
-        other: "Тази тема има  <b>{{count}}</b> публикации които чакат одобрение"
-      confirm: "Запази промените"
-      delete_prompt: "Сигурни ли сте, че искате да изтриете <b>%{username}</b>? Така ще бъдат изтрити всички постове асоциирани с потребителя и ще бъде блокиран email адреса и IP адреса му."
-      approval:
-        title: "Публикацията изисква одобрение"
-        description: "Ние получихме вашата публикация, но тя трябва да бъде одобрена от модератора преди да бъде показана. Моля, проявете търпение."
-        pending_posts:
-          one: "Вие имате  <strong>1</strong> чакаща публикация"
-          other: "Вие имате <strong>{{count}}</strong> чакащи публикации"
-        ok: "ОК"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> публикува <a href='{{topicUrl}}'>тази тема</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Вие</a> публикувахте <a href='{{topicUrl}}'>тази тема</a>"
@@ -1376,9 +1353,6 @@ bg:
       has_replies:
         one: "{{count}} Отговор"
         other: "{{count}} Отговори"
-      has_likes:
-        one: "{{count}} Харесване"
-        other: "{{count}} Харесвания"
       has_likes_title:
         one: "1 човек харесва тази публикация"
         other: "{{count}} човека харесват тази публикация"
@@ -1880,41 +1854,6 @@ bg:
       commits:
         latest_changes: "Последни промени: моля обновявайте често! "
         by: "от"
-      flags:
-        title: "Сигнали"
-        agree: "Съгласен"
-        agree_title: "Потвърдете този сигнал като валиден и коректен"
-        agree_flag_hide_post_title: "Скрий тази публикация и автоматично изпрати съобщение към потребителия спешно да я редактира."
-        agree_flag_restore_post: "Съгласен (възстанови публикацията) "
-        agree_flag_restore_post_title: "Възстанови тази публикация така че всички потребители да могат да я виждат."
-        agree_flag_suspend: "Преустанови потребител"
-        delete: "Изтрий"
-        delete_title: "Изтрий публикацията, за която се отнася този сигнал."
-        delete_post_defer_flag_title: "Изтрий публикацията; ако е първа, изтрий темата"
-        delete_post_agree_flag_title: "Изтрий публикацията; ако е първа, изтрий темата"
-        delete_flag_modal_title: "Изтрий и..."
-        delete_spammer: "Изтрий спамера "
-        delete_spammer_title: "Премахни потребителя и всички негови теми и публикации."
-        disagree_flag_unhide_post: "Не съм съгласен (покажи публикация) "
-        disagree_flag_unhide_post_title: "Премахни сигнала от тази публикация и я направи отново видима"
-        disagree_flag: "Не съм съгласен "
-        disagree_flag_title: "Отхвърли този сигнал като неправилен и невалиден"
-        clear_topic_flags: "Готово"
-        clear_topic_flags_title: "Темата е проверена и проблемите са разрешени. Натиснете Готово, за да премахнете сигнала. "
-        more: "(още отговори...) "
-        dispositions:
-          agreed: "съгласен"
-          disagreed: "не съм съгласен"
-        flagged_by: "Сигнализирано от"
-        resolved_by: "Разрешено от "
-        took_action: "Предприеми действие "
-        system: "Система "
-        error: "Нещо се обърка"
-        reply_message: "Отговори"
-        topic_flagged: "Има сигнал за тази <strong>тема/strong>."
-        visit_topic: "Посети темата за предприемане на действия "
-        was_edited: "Публикацията беше редактирана след първия сигнал"
-        previous_flags_count: "За тази публикация беше сигнализирано {{count}} пъти"
       groups:
         manage:
           interaction:
@@ -2286,17 +2225,10 @@ bg:
         nav:
           new: "Нови"
           active: "Активни"
-          pending: "Чакащи"
           staff: "Персонал"
           suspended: "Отстранени"
           suspect: "Съмнителен "
         approved: "Одобрен?"
-        approved_selected:
-          one: "одобрен потребител"
-          other: "одобрени потребители  ({{count}})"
-        reject_selected:
-          one: "отхвърлен потребител"
-          other: "отхвърлени потребители ({{count}})"
         titles:
           active: "Активни потребители"
           new: "Нови потребители"
@@ -2311,12 +2243,6 @@ bg:
           moderators: "Модератори"
           suspended: "Отстранени"
           suspect: "Съмнителни потребители "
-        reject_successful:
-          one: "Отхвърлите 1 потребител."
-          other: "Успешно отхвърлите %{count} потребителя."
-        reject_failures:
-          one: "Не успяхте да отхвърлите 1 потребител."
-          other: "Не успяхте да отхвърлите %{count} юзъра"
         not_verified: "Непроверен "
         check_email:
           title: "Разкрий имейла на този потребител"

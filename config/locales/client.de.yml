@@ -189,7 +189,6 @@ de:
     age: "Alter"
     joined: "Beigetreten"
     admin_title: "Administration"
-    flags_title: "Meldungen"
     show_more: "mehr anzeigen"
     show_help: "Erweiterte Suche"
     links: "Links"
@@ -305,28 +304,6 @@ de:
       title:
         search: "Suche eine Nachricht anhand der Überschrift:"
         placeholder: "Gib hier die Überschrift der Nachricht ein"
-    queue:
-      topic: "Thema:"
-      approve: "Genehmigen"
-      reject: "Ablehnen"
-      delete_user: "Benutzer löschen"
-      title: "Benötigt Genehmigung"
-      none: "Es sind keine Beiträge zur Überprüfung vorhanden."
-      edit: "Bearbeiten"
-      cancel: "Abbrechen"
-      view_pending: "ausstehende Beiträge anzeigen"
-      has_pending_posts:
-        one: "Dieses Thema hat <b>einen</b> Beitrag, der genehmigt werden muss"
-        other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
-      confirm: "Speichern"
-      delete_prompt: "Möchtest du wirklich <b>%{username}</b> löschen? Damit werden alle Beiträge des Benutzers entfernt und dessen E-Mail- und IP-Adresse geblockt."
-      approval:
-        title: "Beitrag muss genehmigt werden"
-        description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
-        pending_posts:
-          one: "Du hast <strong>1</strong> ausstehenden Beitrag."
-          other: "Du hast <strong>{{count}}</strong> ausstehende Beiträge."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat <a href='{{topicUrl}}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"{{userUrl}}\">Du</a> hast <a href=\"{{topicUrl}}\">das Thema</a> verfasst"
@@ -582,10 +559,6 @@ de:
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
-      user_notifications_ignore_option: "Ignoriert"
-      user_notifications_mute_option: "Stummgeschaltet"
-      user_notifications_mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
-      user_notifications_normal_option: "Normal"
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
@@ -1980,9 +1953,6 @@ de:
       has_replies:
         one: "{{count}} Antwort"
         other: "{{count}} Antworten"
-      has_likes:
-        one: "{{count}} Like"
-        other: "{{count}} Likes"
       has_likes_title:
         one: "dieser Beitrag gefällt 1 Person"
         other: "dieser Beitrag gefällt {{count}} Personen"
@@ -2716,7 +2686,7 @@ de:
         moderation_tab: "Moderation"
         security_tab: "Sicherheit"
         reports_tab: "Berichte"
-        report_filter_any: "jede/r/s"
+        report_filter_any: "alle"
         disabled: Deaktiviert
         timeout_error: "Entschuldige bitte, die Warteschlange ist zu lang, bitte wähle ein kürzeres Intervall"
         exception_error: "Entschuldige, ein Fehler während der Ausführung des Query ist aufgetreten"
@@ -2749,93 +2719,6 @@ de:
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
         by: "von"
-      flags:
-        title: "Meldungen"
-        active_posts: "Gemeldete Beiträge"
-        old_posts: "Alte gemeldete Beiträge"
-        topics: "Gemeldete Themen"
-        moderation_history: "Moderationshistorie"
-        agree: "Zustimmen"
-        agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
-        agree_flag_hide_post: "Beitrag verstecken"
-        agree_flag_hide_post_title: "Verstecke diesen Beitrag und sende dem Benutzer/der Benutzerin eine Nachricht mit der Bitte, ihn zu bearbeiten."
-        agree_flag_restore_post: "Zustimmen und Beitrag wiederherstellen"
-        agree_flag_restore_post_title: "Beitrag wiederherstellen, sodass alle Benutzer/-innen ihn sehen können."
-        agree_flag_suspend: "Benutzer bannen"
-        agree_flag_suspend_title: "Meldung zustimmen und Benutzer bannen."
-        agree_flag_silence: "Benutzer stummschalten"
-        agree_flag_silence_title: "Meldung zustimmen und Benutzer stummschalten."
-        agree_flag: "Beitrag behalten"
-        agree_flag_title: "Meldung zustimmen und den Beitrag unbearbeitet lassen."
-        ignore_flag: "Ignorieren"
-        ignore_flag_title: "Entferne diese Meldung. Derzeit besteht kein Handlungsbedarf."
-        delete: "Löschen"
-        delete_title: "Lösche den Beitrag, auf den diese Meldung verweist."
-        delete_post_defer_flag: "Beitrag löschen und Meldung ignorieren"
-        delete_post_defer_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
-        delete_post_agree_flag: "Beitrag löschen und Meldung zustimmen"
-        delete_post_agree_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
-        delete_flag_modal_title: "Löschen und…"
-        delete_spammer: "Spammer löschen"
-        delete_spammer_title: "Lösche den Benutzer und alle seine Beiträge und Themen."
-        disagree_flag_unhide_post: "Ablehnen (Beitrag einblenden)"
-        disagree_flag_unhide_post_title: "Verwerfe alle Meldungen über diesen Beitrag und blende den Beitrag wieder ein"
-        disagree_flag: "Ablehnen"
-        disagree_flag_title: "Meldung ablehnen, weil diese ungültig oder falsch ist"
-        clear_topic_flags: "Erledigt"
-        clear_topic_flags_title: "Das Thema wurde untersucht und Probleme wurden beseitigt. Klicke auf „Erledigt“, um die Meldungen zu entfernen."
-        more: "(weitere Antworten…)"
-        suspend_user: "Benutzer sperren"
-        suspend_user_title: "Benutzer für diesen Beitrag sperren"
-        replies:
-          one: "[1 Antwort]"
-          other: "[%{count} Antworten]"
-        delete_replies:
-          one: "Auch die %{count} Antwort auf diesen Beitrag löschen?"
-          other: "Auch die %{count} Antworten auf diesen Beitrag löschen?"
-        dispositions:
-          agreed: "zugestimmt"
-          disagreed: "abgelehnt"
-          deferred: "ignoriert"
-        flagged_by: "Gemeldet von"
-        resolved_by: "Geklärt durch"
-        took_action: "Reagiert"
-        system: "System"
-        error: "Etwas ist schief gelaufen"
-        reply_message: "Antworten"
-        no_results: "Es gibt keine gemeldeten Beiträge."
-        topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
-        show_full: "zeige vollständigen Beitrag"
-        visit_topic: "Besuche das Thema, um zu reagieren"
-        was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
-        previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
-        show_details: "Zeige Meldungsdetails"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} Meldung insgesamt)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} Meldungen insgesamt)"
-          agreed:
-            one: "{{count}}% akzeptiert"
-            other: "{{count}}% akzeptiert"
-          disagreed:
-            one: "{{count}}% abgelehnt"
-            other: "{{count}}% abgelehnt"
-          ignored:
-            one: "{{count}}% ignoriert"
-            other: "{{count}}% ignoriert"
-        details: "Details"
-        flagged_topics:
-          topic: "Thema"
-          type: "Art"
-          users: "Benutzer"
-          last_flagged: "Zuletzt gemeldet"
-          no_results: "Es gibt keine gemeldeten Themen."
-        short_names:
-          off_topic: "off-topic"
-          inappropriate: "unangemessen"
-          spam: "spam"
-          notify_user: "benutzerdefiniert"
-          notify_moderators: "benutzerdefiniert"
       groups:
         new:
           title: "Neue Gruppe"
@@ -3543,19 +3426,12 @@ de:
         nav:
           new: "Neu"
           active: "Aktiv"
-          pending: "Genehmigung"
           staff: "Team"
           suspended: "Gesperrt"
           silenced: "Stummgeschaltet"
           suspect: "Verdächtig"
           staged: "Vorbereitet"
         approved: "Genehmigt?"
-        approved_selected:
-          one: "Benutzer genehmigen"
-          other: "Benutzer genehmigen ({{count}})"
-        reject_selected:
-          one: "Benutzer ablehnen"
-          other: "Benutzer ablehnen ({{count}})"
         titles:
           active: "Aktive Benutzer"
           new: "Neue Benutzer"
@@ -3572,12 +3448,6 @@ de:
           suspended: "Gesperrte Benutzer"
           suspect: "Verdächtige Benutzer"
           staged: "Vorbereite Benutzer"
-        reject_successful:
-          one: "Erfolgreich 1 Benutzer abgelehnt."
-          other: "Erfolgreich %{count} Benutzer abgelehnt."
-        reject_failures:
-          one: "Konnte 1 Benutzer nicht ablehnen."
-          other: "Konnte %{count} Benutzer nicht ablehnen."
         not_verified: "Nicht überprüft"
         check_email:
           title: "E-Mail-Adresse des Benutzers anzeigen"

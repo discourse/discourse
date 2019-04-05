@@ -160,7 +160,6 @@ sq:
     age: "Mosha"
     joined: "Anëtarësuar"
     admin_title: "Admin"
-    flags_title: "Sinjalizimet"
     show_more: "trego më shumë"
     show_help: "ndihmë dhe kërko me Google"
     links: "Lidhjet"
@@ -239,28 +238,6 @@ sq:
       none_found: "Asnjë temë nuk u gjet."
       title:
         placeholder: "shkruaj titullin e temës këtu"
-    queue:
-      topic: "Tema:"
-      approve: "Aprovo"
-      reject: "Refuzo"
-      delete_user: "Fshij Anëtarin"
-      title: "Tema që kërkojnë aprovim"
-      none: "Nuk ka postime për të redaktuar."
-      edit: "Redakto"
-      cancel: "Anulo"
-      view_pending: "shiko postimet në pritje"
-      has_pending_posts:
-        one: "This topic has <b>1</b> post awaiting approval"
-        other: "Kjo temë ka <b>{{count}}</b> postime që presin aprovimin"
-      confirm: "Ruaj ndryshimet"
-      delete_prompt: "Vertet doni ta fshini <b>%{username}</b>? Ky veprim do të fshijë çdo postim të tyrin dhe do të bllokojë email-in dhe adresën e tyre IP."
-      approval:
-        title: "Postimi ka nevojë për aprovim"
-        description: "Postimi juaj u morr, por duhet të aprovohet nga një moderator para se të shfaqet në faqe. Kini pak durim. "
-        pending_posts:
-          one: "Ju keni <strong>1</strong> postim në pritje."
-          other: "Ju keni <strong>{{count}}</strong> postime në pritje."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postoi <a href='{{topicUrl}}'>temën</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ju</a> postuat <a href='{{topicUrl}}'>temën</a>"
@@ -1308,9 +1285,6 @@ sq:
       has_replies:
         one: "{{count}} Përgjigje"
         other: "{{count}} përgjigje"
-      has_likes:
-        one: "{{count}} Pëlqim"
-        other: "{{count}} Pëlqime"
       has_likes_title:
         one: "1 person pëlqeu këtë postim"
         other: "{{count}} vetë pëlqyen këtë postim"
@@ -1883,37 +1857,6 @@ sq:
           groups: "Të gjitha grupet"
       commits:
         by: "nga"
-      flags:
-        title: "Sinjalizimet"
-        agree: "Pranoj"
-        agree_title: "Konfirmo këtë sinjalizim si të vlefshëm do korrekt"
-        delete: "Fshij"
-        delete_title: "Fshini postimin e sinjalizuar."
-        delete_post_defer_flag_title: "Fshini postimin; në qoftë postim i parë, fshihet tema"
-        delete_post_agree_flag_title: "Fshini postimin; në qoftë postim i parë, fshihet tema"
-        delete_flag_modal_title: "Fshi dhe..."
-        delete_spammer: "Elimino Spammer"
-        delete_spammer_title: "Fshijeni përdoruesin dhe të gjitha temat e postimet nga ky përdorues."
-        disagree_flag_unhide_post: "Jo dakord (anullo fshehjen e postimit)"
-        disagree_flag_unhide_post_title: "Hiqni të gjitha sinjalizimet mbi këtë postim dhe ripublikojeni postimin"
-        disagree_flag: "Jo dakord"
-        disagree_flag_title: "Refuzo sinjalizimin (është i pavlefshëm ose i pasaktë)"
-        clear_topic_flags: "Përfundo"
-        clear_topic_flags_title: "Kjo temë është shqyrtuar dhe problemet janë zgjidhur. Kliko Përfundo për të hequr sinjalizimet. "
-        more: "(më shumë përgjigje...)"
-        dispositions:
-          agreed: "dakort"
-          disagreed: "nuk ishte dakord"
-        flagged_by: "Sinjalizuar nga"
-        resolved_by: "Zgjidhur nga"
-        took_action: "Mori veprimin"
-        system: "Sistemi"
-        error: "Pati një gabim"
-        reply_message: "Përgjigju"
-        topic_flagged: "Kjo <strong>temë</strong> është sinjalizuar."
-        visit_topic: "Vizito temën për të vepruar"
-        was_edited: "Postimi është redaktuar pas sinjalizimit të parë"
-        previous_flags_count: "Ky postim është sinjalizuar {{count}} herë."
       groups:
         primary: "Grupi Parësor"
         no_primary: "(asnjë grup parësor)"
@@ -2188,17 +2131,10 @@ sq:
         nav:
           new: "E Re"
           active: "Aktiv"
-          pending: "Pezulluar"
           staff: "Stafi"
           suspended: "Të pezulluar"
           suspect: "Të dyshimtë"
         approved: "Aprovuar?"
-        approved_selected:
-          one: "aprovo përdoruesin"
-          other: "aprovo përdoruesit ({{count}})"
-        reject_selected:
-          one: "refuzo përdoruesin"
-          other: "refuzo përdoruesit ({{count}})"
         titles:
           active: "Përdorues Aktivë"
           new: "Përdorues të Rinj"
@@ -2213,12 +2149,6 @@ sq:
           moderators: "Moderatorë"
           suspended: "Përdorues të Pezulluar"
           suspect: "Përdorues të Dyshimtë"
-        reject_successful:
-          one: "Ju refuzuat %{count} përdorues me sukses. "
-          other: "Ju refuzuat %{count} përdoruesë me sukses. "
-        reject_failures:
-          one: "Nuk arritëm të refuzojmë 1 përdorues."
-          other: "Nuk arritëm të refuzojmë %{count} përdoruesë. "
         not_verified: "I pa verifikuar"
         check_email:
           title: "Shfaq adresën email të këtij përdoruesi."

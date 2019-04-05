@@ -172,7 +172,6 @@ sv:
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
-    flags_title: "Flaggningar"
     show_more: "visa mer"
     show_help: "alternativ"
     links: "Länkar"
@@ -259,28 +258,6 @@ sv:
       none_found: "Inga ämnen hittades."
       title:
         placeholder: "skriv ämnets rubrik här"
-    queue:
-      topic: "Ämne:"
-      approve: "Godkänn"
-      reject: "Avvisa"
-      delete_user: "Ta bort användare"
-      title: "Behöver godkännande"
-      none: "Det finns inga inlägg att granska."
-      edit: "Redigera"
-      cancel: "Avbryt"
-      view_pending: "visa väntande inlägg"
-      has_pending_posts:
-        one: "Detta ämne har <b>1</b> ämne som inväntar godkännande"
-        other: "Detta ämne har <b>{{count}}</b> inlägg som inväntar godkännande"
-      confirm: "Spara ändringar"
-      delete_prompt: "Vill du verkligen ta bort <b>%{username}</b>? Dennes alla poster kommer att tas bort samt e-post och IP-adress kommer blockeras."
-      approval:
-        title: "Inlägget behöver godkännande"
-        description: "Vi har mottagit ditt nya inlägg men det behöver bli godkänt av en moderator innan det kan visas. Ha tålamod."
-        pending_posts:
-          one: "Du har <strong>1</strong> väntande inlägg."
-          other: "Du har <strong>{{count}}</strong> väntande inlägg."
-        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> skrev <a href='{{topicUrl}}'>ämnet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> skrev <a href='{{topicUrl}}'>ämnet</a>"
@@ -1430,9 +1407,6 @@ sv:
       has_replies:
         one: "{{count}} svar"
         other: "{{count}} svar"
-      has_likes:
-        one: "{{count}} gillning"
-        other: "{{count}} gillningar"
       has_likes_title:
         one: "1 person gillade detta inlägg"
         other: "{{count}} personer gillade detta inlägg"
@@ -2053,37 +2027,6 @@ sv:
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"
-      flags:
-        title: "Flaggningar"
-        agree: "Godkänn"
-        agree_title: "Bekräfta att den här flaggan är giltig och korrekt"
-        delete: "Ta bort"
-        delete_title: "Ta bort inlägget som den här flaggan refererar till."
-        delete_post_defer_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
-        delete_post_agree_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
-        delete_flag_modal_title: "Ta bort och..."
-        delete_spammer: "Radera spammare"
-        delete_spammer_title: "Radera användaren och alla hans/hennes inlägg och ämnen."
-        disagree_flag_unhide_post: "Håll inte med (visa inlägg)"
-        disagree_flag_unhide_post_title: "Ta bort alla flaggor från detta inlägg och gör det synligt igen"
-        disagree_flag: "Håll inte med"
-        disagree_flag_title: "Neka den här flaggningen som ogiltig eller inkorrekt"
-        clear_topic_flags: "Klar"
-        clear_topic_flags_title: "Ämnet har undersökts och eventuella problem har lösts. Klicka på klar för att ta bort flaggorna."
-        more: "(mer svar...)"
-        dispositions:
-          agreed: "godkände"
-          disagreed: "godkände ej"
-        flagged_by: "Flaggad av"
-        resolved_by: "Löst av"
-        took_action: "Agerade"
-        system: "System"
-        error: "Någonting gick snett"
-        reply_message: "Svara"
-        topic_flagged: "Detta <strong>ämne</strong> har blivit flaggad."
-        visit_topic: "Besök ämnet för att vidta åtgärder"
-        was_edited: "Inlägget redigerades efter den första flaggningen"
-        previous_flags_count: "Det här inlägget har redan flaggats {{count}} gånger."
       groups:
         primary: "Primär grupp"
         no_primary: "(ingen primär grupp)"
@@ -2491,17 +2434,10 @@ sv:
         nav:
           new: "Ny"
           active: "Aktiv"
-          pending: "Avvaktar"
           staff: "Medarbetare"
           suspended: "Avstängd"
           suspect: "Misstänkt"
         approved: "Godkänd?"
-        approved_selected:
-          one: "godkänd användare"
-          other: "godkänd användare ({{count}})"
-        reject_selected:
-          one: "avvisad användare"
-          other: "avvisade användare ({{count}})"
         titles:
           active: "Aktiva användare"
           new: "Nya användare"
@@ -2516,12 +2452,6 @@ sv:
           moderators: "Moderatorer"
           suspended: "Avstängda användare"
           suspect: "Misstänkta användare"
-        reject_successful:
-          one: "1 användare har avvisats."
-          other: "%{count} användare har avvisats."
-        reject_failures:
-          one: "Avvisning av användaren misslyckades."
-          other: "Avvisning av %{count} användare misslyckades."
         not_verified: "Ej verifierad"
         check_email:
           title: "Visa den här användarens e-postadress"
