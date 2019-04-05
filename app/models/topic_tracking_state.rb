@@ -168,11 +168,24 @@ class TopicTrackingState
     #
     # This code needs to be VERY efficient as it is triggered via the message bus and may steal
     #  cycles from usual requests
-    #
-    #
-    sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true, staff: user.staff?)
+    sql = report_raw_sql(
+      topic_id: topic_id,
+      skip_unread: true,
+      skip_order: true,
+      staff: user.staff?,
+      admin: user.admin?
+    )
+
     sql << "\nUNION ALL\n\n"
-    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?, filter_old_unread: true)
+
+    sql << report_raw_sql(
+      topic_id: topic_id,
+      skip_new: true,
+      skip_order: true,
+      staff: user.staff?,
+      filter_old_unread: true,
+      admin: user.admin?
+    )
 
     DB.query(
       sql,
@@ -183,9 +196,10 @@ class TopicTrackingState
   end
 
   def self.report_raw_sql(opts = nil)
+    opts ||= {}
 
     unread =
-      if opts && opts[:skip_unread]
+      if opts[:skip_unread]
         "1=0"
       else
         TopicQuery
@@ -196,30 +210,54 @@ class TopicTrackingState
       end
 
     filter_old_unread =
-      if opts && opts[:filter_old_unread]
+      if opts[:filter_old_unread]
         " topics.updated_at >= us.first_unread_at AND "
       else
         ""
       end
 
     new =
-      if opts && opts[:skip_new]
+      if opts[:skip_new]
         "1=0"
       else
         TopicQuery.new_filter(Topic, "xxx").where_clause.send(:predicates).join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause) +
           " AND topics.created_at > :min_new_topic_date"
       end
 
-    select = (opts && opts[:select]) || "
+    select = (opts[:select]) || "
            u.id AS user_id,
            topics.id AS topic_id,
            topics.created_at,
-           #{opts && opts[:staff] ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
+           #{opts[:staff] ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
            last_read_post_number,
            c.id AS category_id,
            tu.notification_level"
 
-    sql = +<<SQL
+    category_filter =
+      if opts[:admin]
+        ""
+      else
+        append = "OR u.admin" if !opts.key?(:admin)
+        <<~SQL
+          (
+           NOT c.read_restricted #{append} OR category_id IN (
+              SELECT c2.id FROM categories c2
+              JOIN category_groups cg ON cg.category_id = c2.id
+              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
+              WHERE c2.read_restricted )
+          ) AND
+        SQL
+      end
+
+    visibility_filter =
+      if opts[:staff]
+        ""
+      else
+        append = "OR u.admin OR u.moderator" if !opts.key?(:staff)
+        "(topics.visible #{append}) AND"
+      end
+
+    sql = +<<~SQL
     SELECT #{select}
     FROM topics
     JOIN users u on u.id = :user_id
@@ -231,15 +269,10 @@ class TopicTrackingState
           #{filter_old_unread}
           topics.archetype <> 'private_message' AND
           ((#{unread}) OR (#{new})) AND
-          (topics.visible OR u.admin OR u.moderator) AND
+          #{visibility_filter}
           topics.deleted_at IS NULL AND
-          ( NOT c.read_restricted OR u.admin OR category_id IN (
-              SELECT c2.id FROM categories c2
-              JOIN category_groups cg ON cg.category_id = c2.id
-              JOIN group_users gu ON gu.user_id = :user_id AND cg.group_id = gu.group_id
-              WHERE c2.read_restricted )
-          )
-          AND NOT EXISTS( SELECT 1 FROM category_users cu
+          #{category_filter}
+          NOT EXISTS( SELECT 1 FROM category_users cu
                           WHERE last_read_post_number IS NULL AND
                                cu.user_id = :user_id AND
                                cu.category_id = topics.category_id AND
@@ -247,11 +280,11 @@ class TopicTrackingState
 
 SQL
 
-    if opts && opts[:topic_id]
+    if opts[:topic_id]
       sql << " AND topics.id = :topic_id"
     end
 
-    unless opts && opts[:skip_order]
+    unless opts[:skip_order]
       sql << " ORDER BY topics.bumped_at DESC"
     end
 
