@@ -19,8 +19,8 @@ export default class PostCooked {
 
     if (decoratorHelper) {
       this.decoratorHelper = decoratorHelper;
-      if (decoratorHelper.widget && decoratorHelper.currentUser) {
-        this.currentUser = decoratorHelper.currentUser;
+      if (decoratorHelper.widget && decoratorHelper.widget.currentUser) {
+        this.currentUser = decoratorHelper.widget.currentUser;
       }
     }
 
