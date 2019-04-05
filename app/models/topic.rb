@@ -1552,4 +1552,5 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #
