@@ -8,6 +8,7 @@ class MigrateReviewableFlaggedPosts < ActiveRecord::Migration[5.2]
         type,
         status,
         topic_id,
+        reviewable_by_moderator,
         category_id,
         payload,
         target_type,
@@ -27,6 +28,7 @@ class MigrateReviewableFlaggedPosts < ActiveRecord::Migration[5.2]
           ELSE 0
         END,
         t.id,
+        true,
         t.category_id,
         json_build_object(),
         'Post',
