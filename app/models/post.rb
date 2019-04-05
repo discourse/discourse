@@ -86,15 +86,16 @@ class Post < ActiveRecord::Base
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, -> (guardian) { where('posts.post_type IN (?)', Topic.visible_post_types(guardian&.user)) }
+
   scope :for_mailing_list, ->(user, since) {
     q = created_since(since)
-      .joins(:topic)
-      .where(topic: Topic.for_digest(user, Time.at(0))) # we want all topics with new content, regardless when they were created
+      .joins("INNER JOIN (#{Topic.for_digest(user, Time.at(0)).select(:id).to_sql}) AS digest_topics ON digest_topics.id = posts.topic_id") # we want all topics with new content, regardless when they were created
+      .order('posts.created_at ASC')
 
     q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
-
-    q.order('posts.created_at ASC')
+    q
   }
+
   scope :raw_match, -> (pattern, type = 'string') {
     type = type&.downcase
 
