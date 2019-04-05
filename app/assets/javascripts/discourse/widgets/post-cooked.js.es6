@@ -17,6 +17,8 @@ export default class PostCooked {
     this.expanding = false;
     this._highlighted = false;
     this.decoratorHelper = decoratorHelper;
+    this.currentUser = decoratorHelper.widget.currentUser;
+    this.ignoredUsers = this.currentUser ? this.currentUser.ignored_users : null;
   }
 
   update(prev) {
@@ -29,7 +31,7 @@ export default class PostCooked {
   }
 
   init() {
-    const $html = $(`<div class='cooked'>${this.attrs.cooked}</div>`);
+    const $html = this._computeCooked();
     this._insertQuoteControls($html);
     this._showLinkCounts($html);
     this._fixImageSizes($html);
@@ -212,6 +214,16 @@ export default class PostCooked {
       expandContract = iconHTML(desc, { title: "post.expand_collapse" });
       $(".title", $aside).css("cursor", "pointer");
     }
+    if (this.ignoredUsers && this.ignoredUsers.length > 0) {
+      const username = $aside
+        .find(".title")
+        .text()
+        .trim()
+        .slice(0, -1);
+      if (username.length > 0 && this.ignoredUsers.includes(username)) {
+        $aside.find("p").replaceWith(`<i>${I18n.t("post.ignored")}</i>`);
+      }
+    }
     $(".quote-controls", $aside).html(expandContract + navLink);
   }
 
@@ -240,6 +252,20 @@ export default class PostCooked {
         }
       }
     });
+  }
+
+  _computeCooked() {
+    if (
+      this.ignoredUsers &&
+      this.ignoredUsers.length > 0 &&
+      this.ignoredUsers.includes(this.attrs.username)
+    ) {
+      return $(
+        `<div class='cooked post-ignored'>${I18n.t("post.ignored")}</div>`
+      );
+    }
+
+    return $(`<div class='cooked'>${this.attrs.cooked}</div>`);
   }
 }
 
