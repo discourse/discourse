@@ -621,10 +621,10 @@ const User = RestModel.extend({
       data: { notification_level: level, expiring_at: expiringAt }
     }).then(() => {
       const currentUser = Discourse.User.current();
-      if(currentUser) {
-        if(level === "normal" || level === "mute") {
+      if (currentUser) {
+        if (level === "normal" || level === "mute") {
           currentUser.ignored_users.removeObject(this.get("username"));
-        } else if(level === "ignore") {
+        } else if (level === "ignore") {
           currentUser.ignored_users.addObject(this.get("username"));
         }
       }
