@@ -11,7 +11,7 @@
         itemref="breadcrumb-<%=(i+1)%>"
       <%-end%>>
       <a href="<%=c[:url]%>" itemprop="url" class='badge-wrapper bullet'>
-        <span class="badge-category-bg"></span>
+        <span class="badge-category-bg" style='background-color: #<%= c[:color] %>'></span>
         <span itemprop="title" class='category-title'><%=c[:name]%></span>
       </a>
     </div>

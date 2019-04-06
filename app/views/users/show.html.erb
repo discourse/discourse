@@ -1,4 +1,7 @@
-<h2><%= @user.username %></h2>
+<div class='user-crawler'>
+	<img src='<%= get_absolute_image_url(@user.small_avatar_url) %>' alt='Image of <%= @user.username %>' title='<%= @user.username %>' />
+	<h2 class='username'><%= @user.username %></h2>
+</div>
 
 <% unless @restrict_fields %>
 <p><%= raw @user.user_profile.bio_processed %></p>
