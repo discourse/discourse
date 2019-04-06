@@ -8,7 +8,7 @@ module Jobs
 
     def execute(args)
       return if SiteSetting.disable_dashboard_stats == true
-      
+
       problems_started_at = AdminDashboardData.problems_started_at
       if problems_started_at && problems_started_at < 2.days.ago
         # If there have been problems reported on the dashboard for a while,
