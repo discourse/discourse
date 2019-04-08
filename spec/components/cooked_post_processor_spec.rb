@@ -1288,7 +1288,9 @@ describe CookedPostProcessor do
         topic.bumped_at = 1.day.ago
         CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
 
-        expect(topic.posts).to eq([post, hidden, small_action, reply])
+        expect(topic.ordered_posts.pluck(:id))
+          .to eq([post.id, hidden.id, small_action.id, reply.id])
+
         expect(topic.bumped_at).to eq(1.day.ago)
         expect(reply.raw).to eq("and this is the third reply")
         expect(reply.revisions.count).to eq(1)
@@ -1300,7 +1302,7 @@ describe CookedPostProcessor do
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
-      expect(topic.posts).to eq([post, reply])
+      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
 
