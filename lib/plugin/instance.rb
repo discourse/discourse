@@ -605,11 +605,15 @@ class Plugin::Instance
   end
 
   def register_reviewable_type(reviewable_type_class)
-    types = Reviewable.types
-    types << reviewable_type_class.name
+    extend_list_method Reviewable, :types, [reviewable_type_class.name]
+  end
+
+  def extend_list_method(klass, method, new_attributes)
+    current_list = klass.send(method)
+    current_list.concat(new_attributes)
 
     reloadable_patch do
-      Reviewable.send(:define_singleton_method, :types) { types }
+      klass.send(:define_singleton_method, method) { current_list }
     end
   end
 
