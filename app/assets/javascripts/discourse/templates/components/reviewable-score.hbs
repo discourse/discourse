@@ -22,8 +22,8 @@
   <tr>
     <td colspan='3'>
       <div class='reviewable-conversation'>
-        {{#each rs.reviewable_conversation.conversation_posts as |p|}}
-          {{reviewable-conversation-post post=p}}
+        {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
+          {{reviewable-conversation-post post=p index=index}}
         {{/each}}
         <div class='controls'>
           <a href={{rs.reviewable_conversation.permalink}} class='btn btn-small'>
