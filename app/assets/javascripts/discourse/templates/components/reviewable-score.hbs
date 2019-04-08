@@ -1,6 +1,8 @@
 <tr class='reviewable-score'>
   <td>
-    {{d-icon rs.score_type.icon}} {{rs.score_type.title}} <span class="badge-notification new-posts score">{{format-score rs.score}}</span>
+    {{d-icon rs.score_type.icon}}
+    {{title}}
+    <span class="badge-notification new-posts score">{{format-score rs.score}}</span>
   </td>
   <td class='user'>
     {{#user-link user=rs.user}}
