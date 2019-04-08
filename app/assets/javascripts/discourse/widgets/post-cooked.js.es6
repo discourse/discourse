@@ -223,7 +223,7 @@ export default class PostCooked {
         .trim()
         .slice(0, -1);
       if (username.length > 0 && this.ignoredUsers.includes(username)) {
-        $aside.find("p").replaceWith(`<i>${I18n.t("post.ignored")}</i>`);
+        $aside.find("p").remove();
       }
     }
     $(".quote-controls", $aside).html(expandContract + navLink);
