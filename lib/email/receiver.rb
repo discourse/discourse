@@ -154,7 +154,7 @@ module Email
         if user.blank?
           if sent_to_mailinglist_mirror? || !SiteSetting.find_related_post_with_key
             user = stage_from_user
-          else !user.present?
+          elsif user.blank?
             raise BadDestinationAddress
           end
         end
