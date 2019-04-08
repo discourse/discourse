@@ -355,7 +355,7 @@ createWidget("post-contents", {
   },
 
   html(attrs, state) {
-    let result = [new PostCooked(attrs, new DecoratorHelper(this))];
+    let result = [new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)];
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
     if (attrs.cooked_hidden) {

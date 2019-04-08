@@ -12,18 +12,11 @@ export function addDecorator(cb) {
 }
 
 export default class PostCooked {
-  constructor(attrs, decoratorHelper) {
+  constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
-
-    if (decoratorHelper) {
-      this.decoratorHelper = decoratorHelper;
-      if (decoratorHelper.widget && decoratorHelper.widget.currentUser) {
-        this.currentUser = decoratorHelper.widget.currentUser;
-      }
-    }
-
+    this.currentUser = currentUser;
     this.ignoredUsers = this.currentUser
       ? this.currentUser.ignored_users
       : null;
