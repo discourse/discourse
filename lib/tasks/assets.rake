@@ -164,6 +164,18 @@ def concurrent?
 end
 
 task 'assets:precompile' => 'assets:precompile:before' do
+  path = DiscourseIpInfo.mmdb_path('GeoLite2-City')
+  mtime = File.exist?(path) && File.mtime(path)
+
+  if refresh_days = SiteSetting.refresh_maxmind_db_during_precompile_days
+    if !mtime || mtime < refresh_days.days.ago
+      puts "Downloading MaxMindDB..."
+      mmdb_thread = Thread.new do
+        DiscourseIpInfo.mmdb_download('GeoLite2-City')
+        DiscourseIpInfo.mmdb_download('GeoLite2-ASN')
+      end
+    end
+  end
 
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
@@ -218,6 +230,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
     end
   end
 
+  mmdb_thread.join if mmdb_thread
 end
 
 Rake::Task["assets:precompile"].enhance do
