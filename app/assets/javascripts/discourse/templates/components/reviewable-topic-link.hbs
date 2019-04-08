@@ -9,7 +9,7 @@
   {{else}}
     <span class="title-text">
       {{i18n "review.topics.deleted"}}
-      <a href={{get-url (concat '/t/' reviewable.removed_topic_id)}}>{{i18n "review.topics.original"}}</a>
+      {{link-to (i18n "review.topics.original") "topic" "-" reviewable.removed_topic_id}}
     </span>
   {{/if}}
 </div>
