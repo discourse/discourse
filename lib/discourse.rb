@@ -54,6 +54,8 @@ module Discourse
       current_db: cm.current_db,
       current_hostname: cm.current_hostname
     }.merge(context))
+
+    raise ex if Rails.env.test?
   end
 
   # Expected less matches than what we got in a find
