@@ -657,14 +657,6 @@ export default createWidget("post", {
     } else {
       classNames.push("regular");
     }
-    if (
-      this.currentUser &&
-      this.currentUser.ignored_users &&
-      this.currentUser.ignored_users.length > 0 &&
-      this.currentUser.ignored_users.includes(attrs.username)
-    ) {
-      classNames.push("post-ignored");
-    }
     if (addPostClassesCallbacks) {
       for (let i = 0; i < addPostClassesCallbacks.length; i++) {
         let pluginClasses = addPostClassesCallbacks[i].call(this, attrs);

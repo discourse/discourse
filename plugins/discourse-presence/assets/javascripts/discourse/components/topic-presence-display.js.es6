@@ -48,6 +48,15 @@ export default Ember.Component.extend({
 
   @computed("presenceUsers", "currentUser.id")
   users(users, currentUserId) {
+    const currentUser = this.get("currentUser");
+    const ignoredUsers = currentUser.ignored_users;
+    if (
+      ignoredUsers &&
+      ignoredUsers.length > 0 &&
+      ignoredUsers.includes(currentUser.username)
+    ) {
+      return;
+    }
     return (users || []).filter(user => user.id !== currentUserId);
   },
 
