@@ -95,9 +95,8 @@ module Jobs
           ON pd.locale = :locale
           AND pd.version = :version
           AND pd.post_id = posts.id
-        LEFT JOIN topics ON topics.id = posts.topic_id
+        INNER JOIN topics ON topics.id = posts.topic_id
         WHERE pd.post_id IS NULL
-        AND topics.id IS NOT NULL
         AND topics.deleted_at IS NULL
         AND posts.raw != ''
         ORDER BY posts.id DESC
