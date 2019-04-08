@@ -16,6 +16,7 @@ export default class PostCooked {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
+    this.decoratorHelper = decoratorHelper;
     this.currentUser = currentUser;
     this.ignoredUsers = this.currentUser
       ? this.currentUser.ignored_users
