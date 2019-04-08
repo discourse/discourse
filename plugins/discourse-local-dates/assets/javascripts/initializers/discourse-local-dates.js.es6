@@ -8,6 +8,7 @@ function initializeDiscourseLocalDates(api) {
 
   api.onToolbarCreate(toolbar => {
     toolbar.addButton({
+      title: "discourse_local_dates.title",
       id: "local-dates",
       group: "extras",
       icon: "calendar-alt",
