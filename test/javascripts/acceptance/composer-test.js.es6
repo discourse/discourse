@@ -754,4 +754,20 @@ QUnit.test("Image resizing buttons", async assert => {
   uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
   await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
   assertImageResized(assert, uploads);
+
+  await fillIn(
+    ".d-editor-input",
+    `
+![test|690x313](upload://test.png)
+
+\`<script>alert("xss")</script>\`
+    `
+  );
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  assert.ok(
+    find("script").length === 0,
+    "it does not unescapes script tags in code blocks"
+  );
 });
