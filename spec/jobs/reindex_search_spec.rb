@@ -49,12 +49,16 @@ describe Jobs::ReindexSearch do
       FakeIndexer.reset
     end
 
-    it 'should not reinex posts that belong to a deleted topic' do
+    it (
+      'should not reindex posts that belong to a deleted topic ' \
+      'or have been trashed'
+    ) do
       post = Fabricate(:post)
       post2 = Fabricate(:post)
-      post.post_search_data.destroy!
-      post2.post_search_data.destroy!
+      post3 = Fabricate(:post)
+      PostSearchData.delete_all
       post2.topic.trash!
+      post3.trash!
 
       subject.rebuild_problem_posts(indexer: FakeIndexer)
 
