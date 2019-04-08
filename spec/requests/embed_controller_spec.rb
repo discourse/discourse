@@ -140,7 +140,11 @@ describe EmbedController do
       end
 
       it "provides the topic retriever with the discourse username when provided" do
-        TopicRetriever.expects(:new).with(embed_url, has_entry(author_username: discourse_username))
+        retriever = mock
+        retriever.expects(:retrieve).returns(nil)
+        TopicRetriever.expects(:new)
+          .with(embed_url, has_entry(author_username: discourse_username))
+          .returns(retriever)
 
         get '/embed/comments',
           params: { embed_url: embed_url, discourse_username: discourse_username },

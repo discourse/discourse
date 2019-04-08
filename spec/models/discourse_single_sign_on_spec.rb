@@ -529,7 +529,7 @@ describe DiscourseSingleSignOn do
       sso.avatar_url = "http://awesome.com/image.png"
       sso.suppress_welcome_message = true
 
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
@@ -540,8 +540,7 @@ describe DiscourseSingleSignOn do
       # junk avatar id should be updated
       old_id = user.uploaded_avatar_id
       Upload.destroy(old_id)
-
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id

@@ -615,10 +615,12 @@ describe PostAlerter do
       body = nil
       headers = nil
 
-      Excon.expects(:post).with { |_req, _body|
-        headers = _body[:headers]
-        body = _body[:body]
-      }.times(3).returns("OK")
+      stub_request(:post, "https://site2.com/push")
+        .to_return do |request|
+          body = request.body
+          headers = request.headers
+          { status: 200, body: "OK" }
+        end
 
       payload = {
         "secret_key" => SiteSetting.push_api_secret_key,

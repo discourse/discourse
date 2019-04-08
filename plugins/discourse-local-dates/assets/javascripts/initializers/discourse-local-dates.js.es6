@@ -6,19 +6,22 @@ function initializeDiscourseLocalDates(api) {
     $(".discourse-local-date", $elem).applyLocalDates();
   });
 
-  api.addToolbarPopupMenuOptionsCallback(() => {
-    return {
-      action: "insertDiscourseLocalDate",
-      icon: "globe",
-      label: "discourse_local_dates.title"
-    };
+  api.onToolbarCreate(toolbar => {
+    toolbar.addButton({
+      title: "discourse_local_dates.title",
+      id: "local-dates",
+      group: "extras",
+      icon: "calendar-alt",
+      sendAction: event =>
+        toolbar.context.send("insertDiscourseLocalDate", event)
+    });
   });
 
-  api.modifyClass("controller:composer", {
+  api.modifyClass("component:d-editor", {
     actions: {
-      insertDiscourseLocalDate() {
+      insertDiscourseLocalDate(toolbarEvent) {
         showModal("discourse-local-dates-create-modal").setProperties({
-          toolbarEvent: this.get("toolbarEvent")
+          toolbarEvent
         });
       }
     }
