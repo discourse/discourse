@@ -14,9 +14,8 @@
   }
 
   .close {
-    font-size: $font-up-4;
     margin-top: -5px;
-    color: dark-light-choose($primary-low-mid, $secondary-medium);
+    color: $primary-low-mid;
     padding-left: 5px;
     float: right;
   }

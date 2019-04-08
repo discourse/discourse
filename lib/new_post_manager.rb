@@ -183,7 +183,7 @@ class NewPostManager
 
     reviewable = ReviewableQueuedPost.new(
       created_by: @user,
-      payload: { raw: @args[:raw] },
+      payload: { raw: @args[:raw], tags: @args[:tags] },
       topic_id: @args[:topic_id],
       reviewable_by_moderator: true
     )

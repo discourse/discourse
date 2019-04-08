@@ -268,7 +268,8 @@ describe NewPostManager do
       manager = NewPostManager.new(
         topic.user,
         raw: 'to the handler I say enqueue me!',
-        title: 'this is the title of the queued post'
+        title: 'this is the title of the queued post',
+        tags: ['hello', 'world']
       )
 
       result = manager.perform
@@ -280,6 +281,7 @@ describe NewPostManager do
       expect(reviewable.reviewable_scores).to be_present
       expect(reviewable.score).to eq(20.5)
       expect(reviewable.reviewable_by_moderator?).to eq(true)
+      expect(reviewable.payload['tags']).to eq(['hello', 'world'])
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
       expect(result.pending_count).to eq(1)
