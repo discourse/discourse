@@ -9,21 +9,37 @@ import {
   DELETED
 } from "discourse/models/reviewable";
 
-export function htmlStatus(status) {
+function dataFor(status) {
   switch (status) {
     case PENDING:
-      return I18n.t("review.statuses.pending.title");
+      return { name: "pending" };
     case APPROVED:
-      return `${iconHTML("check")} ${I18n.t("review.statuses.approved.title")}`;
+      return { icon: "check", name: "approved" };
     case REJECTED:
-      return `${iconHTML("times")} ${I18n.t("review.statuses.rejected.title")}`;
+      return { icon: "times", name: "rejected" };
     case IGNORED:
-      return `${iconHTML("external-link-alt")} ${I18n.t(
-        "review.statuses.ignored.title"
-      )}`;
+      return { icon: "external-link-alt", name: "ignored" };
     case DELETED:
-      return `${iconHTML("trash")} ${I18n.t("review.statuses.deleted.title")}`;
+      return { icon: "trash", name: "review.statuses.deleted.title" };
   }
+}
+
+export function htmlStatus(status) {
+  let data = dataFor(status);
+  if (!data) {
+    return;
+  }
+
+  let icon = data.icon ? iconHTML(data.icon) : "";
+
+  return `
+    <span class='status'>
+      <span class="${data.name}">
+        ${icon}
+        ${I18n.t("review.statuses." + data.name + ".title")}
+      </span>
+    </span>
+  `;
 }
 
 export default htmlHelper(status => {

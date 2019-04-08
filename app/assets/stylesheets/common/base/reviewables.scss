@@ -1,4 +1,14 @@
 .reviewable {
+  .status {
+    color: $primary-medium;
+    span.approved {
+      color: $success;
+    }
+    span.rejected {
+      color: $danger;
+    }
+  }
+
   .nav-pills {
     margin-bottom: 1em;
   }
@@ -182,15 +192,6 @@
     .score {
       font-size: $font-down-1;
     }
-    .status {
-      color: $primary-medium;
-      span.approved {
-        color: $success;
-      }
-      span.rejected {
-        color: $danger;
-      }
-    }
   }
 
   .reviewable-contents {
@@ -244,7 +245,6 @@
 
   .d-icon {
     font-size: $font-down-1;
-    color: $primary-high;
   }
 
   .badge-notification {

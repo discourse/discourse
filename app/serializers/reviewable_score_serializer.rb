@@ -2,7 +2,7 @@ require_dependency 'reviewable_score_type_serializer'
 
 class ReviewableScoreSerializer < ApplicationSerializer
 
-  attributes :id, :score, :agree_stats
+  attributes :id, :score, :agree_stats, :status
   has_one :user, serializer: BasicUserSerializer, root: 'users'
   has_one :score_type, serializer: ReviewableScoreTypeSerializer
   has_one :reviewable_conversation, serializer: ReviewableConversationSerializer

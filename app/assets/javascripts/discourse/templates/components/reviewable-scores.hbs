@@ -2,39 +2,7 @@
   <table class='reviewable-scores'>
     <tbody>
     {{#each scores as |rs|}}
-      <tr class='reviewable-score'>
-
-        <td>{{d-icon "flag"}} {{rs.score_type.title}} <span class="badge-notification new-posts score">{{format-score rs.score}}</span></td>
-        <td class='user'>
-          {{#user-link user=rs.user}}
-            {{avatar rs.user imageSize="tiny"}}
-            {{rs.user.username}}
-          {{/user-link}}
-
-        </td>
-        <td>
-          {{user-flag-percentage
-            agreed=rs.agree_stats.agreed
-            disagreed=rs.agree_stats.disagreed
-            ignored=rs.agree_stats.ignored}}
-        </td>
-      </tr>
-      {{#if rs.reviewable_conversation}}
-        <tr>
-          <td colspan='3'>
-            <div class='reviewable-conversation'>
-              {{#each rs.reviewable_conversation.conversation_posts as |p|}}
-                {{reviewable-conversation-post post=p}}
-              {{/each}}
-              <div class='controls'>
-                <a href={{rs.reviewable_conversation.permalink}} class='btn btn-small'>
-                  {{i18n "review.conversation.view_full"}}
-                </a>
-              </div>
-            </div>
-          </td>
-        </tr>
-      {{/if}}
+      {{reviewable-score rs=rs tagName=''}}
     {{/each}}
   </tbody>
   </table>
