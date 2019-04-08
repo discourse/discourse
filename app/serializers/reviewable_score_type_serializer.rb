@@ -1,5 +1,5 @@
 class ReviewableScoreTypeSerializer < ApplicationSerializer
-  attributes :id, :title, :score_bonus
+  attributes :id, :title, :score_bonus, :icon
 
   # Allow us to share post action type translations for backwards compatibility
   def title
@@ -13,6 +13,10 @@ class ReviewableScoreTypeSerializer < ApplicationSerializer
 
   def include_score_bonus?
     object.respond_to?(:score_bonus)
+  end
+
+  def icon
+    "flag"
   end
 
 end
