@@ -28,7 +28,6 @@ Discourse.SiteSettingsOriginal = {
   allow_new_registrations: true,
   enable_google_logins: true,
   enable_google_oauth2_logins: false,
-  enable_yahoo_logins: true,
   enable_twitter_logins: true,
   enable_facebook_logins: true,
   enable_github_logins: true,

@@ -77,7 +77,6 @@ module SvgSprite
     "fab-twitter",
     "fab-twitter-square",
     "fab-windows",
-    "fab-yahoo",
     "far-bell",
     "far-bell-slash",
     "far-calendar-plus",

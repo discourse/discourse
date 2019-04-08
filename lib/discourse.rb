@@ -217,7 +217,6 @@ module Discourse
   BUILTIN_AUTH ||= [
     Auth::AuthProvider.new(authenticator: Auth::FacebookAuthenticator.new, frame_width: 580, frame_height: 400, icon: "fab-facebook"),
     Auth::AuthProvider.new(authenticator: Auth::GoogleOAuth2Authenticator.new, frame_width: 850, frame_height: 500), # Custom icon implemented in client
-    Auth::AuthProvider.new(authenticator: Auth::OpenIdAuthenticator.new("yahoo", "https://me.yahoo.com", 'enable_yahoo_logins', trusted: true), icon: "fab-yahoo"),
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
     Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
     Auth::AuthProvider.new(authenticator: Auth::InstagramAuthenticator.new, icon: "fab-instagram")

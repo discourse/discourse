@@ -341,8 +341,6 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
-  enable_yahoo_logins:
-    default: false
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
