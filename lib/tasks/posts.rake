@@ -387,3 +387,28 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
 
   puts "", "Done.", ""
 end
+
+desc 'Finds missing post upload records from cooked HTML content'
+task 'posts:missing_uploads' => :environment do
+  name = "missing_uploads"
+  PostCustomField.where(name: name).destroy_all
+  posts = Post.where("posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %'").select(:id, :cooked)
+  missing = []
+
+  posts.find_each do |post|
+    Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
+      src = media.value
+      next if src.blank? || (src =~ /\/uploads\//).blank?
+
+      src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+      next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
+
+      missing << src unless Upload.get_from_url(src) || OptimizedImage.get_from_url(src)
+    end
+
+    missing.each { |src| PostCustomField.create!(post_id: post.id, name: name, value: src) }
+    putc "."
+  end
+
+  puts "", "#{missing.count} post uploads are missing.", ""
+end

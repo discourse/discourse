@@ -8,9 +8,11 @@ require_dependency "base62"
 
 class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
+  include HasUrl
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
+  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
 
   belongs_to :user
 
@@ -190,27 +192,6 @@ class Upload < ActiveRecord::Base
 
   def self.generate_digest(path)
     Digest::SHA1.file(path).hexdigest
-  end
-
-  def self.extract_upload_url(url)
-    url.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
-  end
-
-  def self.get_from_url(url)
-    return if url.blank?
-
-    uri = begin
-      URI(URI.unescape(url))
-    rescue URI::Error
-    end
-
-    return if uri&.path.blank?
-    data = extract_upload_url(uri.path)
-    return if data.blank?
-    sha1 = data[2]
-    upload = nil
-    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
-    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
   end
 
   def human_filesize
