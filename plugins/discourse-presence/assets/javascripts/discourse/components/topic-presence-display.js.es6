@@ -55,7 +55,7 @@ export default Ember.Component.extend({
       ignoredUsers.length > 0 &&
       ignoredUsers.includes(currentUser.username)
     ) {
-      return;
+      return [];
     }
     return (users || []).filter(user => user.id !== currentUserId);
   },
