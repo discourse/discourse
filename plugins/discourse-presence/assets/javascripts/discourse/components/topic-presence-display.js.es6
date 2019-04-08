@@ -46,9 +46,10 @@ export default Ember.Component.extend({
     return `/presence/topic/${topicId}`;
   },
 
-  @computed("presenceUsers", "currentUser.id")
-  users(users, currentUserId) {
-    return (users || []).filter(user => user.id !== currentUserId);
+  @computed("presenceUsers", "currentUser.{id,ignored_users}")
+  users(users, currentUser) {
+    const ignoredUsers = currentUser.ignored_users || [];
+    return (users || []).filter(user => user.id !== currentUser.id && !ignoredUsers.includes(user.username));
   },
 
   shouldDisplay: Ember.computed.gt("users.length", 0)
