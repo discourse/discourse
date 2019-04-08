@@ -41,7 +41,7 @@ export default createWidget("embedded-post", {
                 shareUrl: attrs.shareUrl
               })
             ]),
-            new PostCooked(attrs, new DecoratorHelper(this))
+            new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
           ])
         ])
       ])
