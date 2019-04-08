@@ -31,7 +31,7 @@
     {{else}}
       {{#component reviewableComponent reviewable=reviewable tagName=''}}
         <div class='reviewable-scores-and-history'>
-          {{reviewable-scores scores=reviewable.reviewable_scores tagName=''}}
+          {{reviewable-scores reviewable=reviewable tagName=''}}
           {{reviewable-histories histories=reviewable.reviewable_histories tagName=''}}
         </div>
       {{/component}}
