@@ -34,7 +34,6 @@ const SCSS_VARIABLE_NAMES = [
   "facebook",
   "cas",
   "twitter",
-  "yahoo",
   "github",
   "base-font-size",
   "base-line-height",
