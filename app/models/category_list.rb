@@ -78,7 +78,12 @@ class CategoryList
     if SiteSetting.fixed_category_positions
       @categories = @categories.order(:position, :id)
     else
-      @categories = @categories.includes(:latest_post).order("posts.created_at DESC NULLS LAST").order('categories.id ASC')
+      allowed_category_ids = @categories.pluck(:id) << nil # `nil` is necessary to include categories without any associated topics
+      @categories = @categories.left_outer_joins(:featured_topics)
+        .where(topics: { category_id: allowed_category_ids })
+        .group('categories.id')
+        .order("max(topics.bumped_at) DESC NULLS LAST")
+        .order('categories.id ASC')
     end
 
     @categories = @categories.to_a
