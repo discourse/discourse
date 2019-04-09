@@ -5,7 +5,7 @@
 $footer-nav-height: 55px;
 
 body.has-mobile-footer-nav {
-  padding-bottom: $footer-nav-height;
+  padding-bottom: $footer-nav-height + 15;
 }
 
 .mobile-footer {
