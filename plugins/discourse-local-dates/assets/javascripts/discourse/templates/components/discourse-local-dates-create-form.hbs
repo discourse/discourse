@@ -1,5 +1,5 @@
 {{#d-modal-body
-  title="discourse_local_dates.create.modal_title"
+  title="discourse_local_dates.title"
   class="discourse-local-dates-create-modal"
   style="overflow: auto"}}
 
@@ -10,8 +10,7 @@
       </div>
     {{else}}
       <div class="preview alert alert-info">
-        <b>{{currentUserTimezone}}: </b>
-        {{currentPreview}}
+        <b>{{formatedCurrentUserTimezone}} </b>{{currentPreview}}
       </div>
     {{/unless}}
 

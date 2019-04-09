@@ -167,6 +167,14 @@ export default Ember.Component.extend({
     return moment.tz.guess();
   },
 
+  @computed("currentUserTimezone")
+  formatedCurrentUserTimezone(timezone) {
+    return timezone
+      .replace("_", " ")
+      .replace("Etc/", "")
+      .split("/");
+  },
+
   @computed("formats")
   previewedFormats(formats) {
     return formats.map(format => {
