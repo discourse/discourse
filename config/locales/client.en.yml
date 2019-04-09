@@ -3009,8 +3009,6 @@ en:
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
-        find_old: "Looking for the old dashboard?"
-        old_link: "visit it here"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
