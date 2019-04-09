@@ -699,7 +699,7 @@
     }
   }
 
-  @media screen and (max-width: 350px) {
+  @include breakpoint(mobile-medium) {
     table.grid tr {
       grid-template-columns: repeat(2, 1fr);
       td.controls {

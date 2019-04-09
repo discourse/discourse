@@ -963,7 +963,11 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      if (this.get("allowUpload") && this.get("uploadIcon")) {
+      if (
+        this.get("allowUpload") &&
+        this.get("uploadIcon") &&
+        !this.site.mobileView
+      ) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",
