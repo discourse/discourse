@@ -880,7 +880,7 @@ en:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
 
   ignored:
-    hidden_content: "<p>Hidden content</p>"
+    hidden_content: "<p>Ignored content</p>"
 
   archetypes:
     regular:
