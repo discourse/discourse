@@ -16,5 +16,12 @@ export default Ember.Controller.extend({
   @computed
   loginRequired() {
     return Discourse.SiteSettings.login_required && !Discourse.User.current();
+  },
+
+  @computed
+  showMobileFooterNav() {
+    const isReactNativeWebView = window.ReactNativeWebView !== undefined;
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches;
+    return isReactNativeWebView || isPWA;
   }
 });

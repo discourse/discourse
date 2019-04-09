@@ -14,5 +14,14 @@ export default {
     site.set("isMobileDevice", Mobile.isMobileDevice);
 
     setResolverOption("mobileView", Mobile.mobileView);
+
+    if (window.ReactNativeWebView) {
+      Ember.run.later(() => {
+        let headerBg = $(".d-header").css("background-color");
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ headerBg: headerBg })
+        );
+      }, 500);
+    }
   }
 };

@@ -80,6 +80,7 @@ $z-layers: (
     "overlay": 1200
   ),
   "fullscreen": 1150,
+  "mobile-footer": 1200,
   "mobile-composer": 1100,
   "header": 1000,
   "tooltip": 600,
@@ -129,6 +130,7 @@ $box-shadow: (
   "card": 0 4px 14px rgba(0, 0, 0, 0.15),
   "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.2),
   "header": 0 2px 4px -1px rgba(0, 0, 0, 0.25),
+  "mobile-footer": 0 2px 4px 1px rgba(0, 0, 0, 0.25),
   "kbd": (
     0 2px 0 rgba(0, 0, 0, 0.2),
     0 0 0 1px dark-light-choose(#fff, #000) inset

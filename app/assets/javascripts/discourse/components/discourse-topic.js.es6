@@ -2,12 +2,11 @@ import DiscourseURL from "discourse/lib/url";
 import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
 import Scrolling from "discourse/mixins/scrolling";
+import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import { selectedText } from "discourse/lib/utilities";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
-// Small buffer so that very tiny scrolls don't trigger mobile header switch
-const MOBILE_SCROLL_TOLERANCE = 5;
 
 function highlight(postNumber) {
   const $contents = $(`#post_${postNumber} .topic-body`);
@@ -16,7 +15,7 @@ function highlight(postNumber) {
   $contents.on("animationend", () => $contents.removeClass("highlighted"));
 }
 
-export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
+export default Ember.Component.extend(AddArchetypeClass, Scrolling, MobileScrollDirection, {
   userFilters: Ember.computed.alias("topic.userFilters"),
   classNameBindings: [
     "multiSelect",
@@ -37,7 +36,6 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   _lastShowTopic: null,
 
   mobileScrollDirection: null,
-  _mobileLastScroll: null,
 
   @observes("enteredAt")
   _enteredTopic() {
@@ -184,7 +182,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     if (this.site.mobileView && this.hasScrolled) {
       Ember.run.throttle(
         this,
-        this._mobileScrollDirectionCheck,
+        this.calculateDirection,
         offset,
         MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE
       );
@@ -192,37 +190,6 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
     // Trigger a scrolled event
     this.appEvents.trigger("topic:scrolled", offset);
-  },
-
-  _mobileScrollDirectionCheck(offset) {
-    // Difference between this scroll and the one before it.
-    const delta = Math.floor(offset - this._mobileLastScroll);
-
-    // This is a tiny scroll, so we ignore it.
-    if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE)
-      return;
-
-    const prevDirection = this.mobileScrollDirection;
-    const currDirection = delta > 0 ? "down" : "up";
-
-    if (currDirection !== prevDirection) {
-      this.set("mobileScrollDirection", currDirection);
-    }
-
-    // We store this to compare against it the next time the user scrolls
-    this._mobileLastScroll = Math.floor(offset);
-
-    // If the user reaches the very bottom of the topic, we want to reset the
-    // scroll direction in order for the header to switch back.
-    const distanceToTopicBottom = Math.floor(
-      $("body").height() - offset - $(window).height()
-    );
-
-    // Not at the bottom yet
-    if (distanceToTopicBottom > 0) return;
-
-    // We're at the bottom now, so we reset the direction.
-    this.set("mobileScrollDirection", null);
   },
 
   // We observe the scroll direction on mobile and if it's down, we show the topic

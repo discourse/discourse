@@ -1,0 +1,43 @@
+// --------------------------------------------------
+// Mobile footer (displayed in DiscourseHub app and PWAs)
+// --------------------------------------------------
+
+$footer-nav-height: 55px;
+
+body.with-mobile-footer-nav {
+  padding-bottom: $footer-nav-height;
+}
+
+.mobile-footer {
+  background-color: $header_background;
+  box-shadow: shadow("mobile-footer");
+  height: $footer-nav-height;
+  position: fixed;
+  bottom: -$footer-nav-height;
+  left: 0;
+  width: 100%;
+  z-index: z("mobile-footer");
+  transition: all linear 0.15s;
+
+  .d-icon {
+    color: $primary-medium;
+  }
+
+  &.visible {
+    bottom: 0px;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-footer-nav {
+    display: flex;
+    justify-content: "space-evenly";
+    @include unselectable;
+    button {
+      flex: 1;
+      margin: 12px;
+      &:disabled {
+        opacity: 0.6;
+      }
+    }
+  }
+}
