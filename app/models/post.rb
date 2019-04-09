@@ -20,6 +20,7 @@ class Post < ActiveRecord::Base
   self.plugin_permitted_create_params = {}
 
   # increase this number to force a system wide post rebake
+  # Recreate `index_for_rebake_old` when the number is increased
   # Version 1, was the initial version
   # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
   BAKED_VERSION = 2
