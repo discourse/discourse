@@ -2947,7 +2947,7 @@ en:
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+        [Please review them](%{base_url}/review).
 
     download_remote_images_disabled:
       title: "Download Remote Images Disabled"
