@@ -51,6 +51,8 @@
   bottom: 0;
   z-index: z("timeline");
   margin-right: 148px;
+  transition: all linear 0.15s;
+  margin-bottom: env(safe-area-inset-bottom);
   .topic-admin-menu-button-container .toggle-admin-menu {
     height: 43px;
   }

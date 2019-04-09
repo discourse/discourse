@@ -4,8 +4,12 @@
 
 $footer-nav-height: 55px;
 
-body.has-mobile-footer-nav {
+body.mobile-footer-nav-visible {
+  border: 2px solid blue;
   padding-bottom: $footer-nav-height + 15;
+  #topic-progress-wrapper {
+    bottom: $footer-nav-height;
+  }
 }
 
 .mobile-footer {

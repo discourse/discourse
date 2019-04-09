@@ -33,7 +33,6 @@ const MobileFooterComponent = MountWidget.extend(
       this.appEvents.on("page:changed", this, "_routeChanged");
       this.appEvents.on("composer:opened", this, "_composerOpened");
       this.appEvents.on("composer:closed", this, "_composerClosed");
-      $("body").addClass("has-mobile-footer-nav");
     },
 
     willDestroyElement() {
@@ -43,7 +42,6 @@ const MobileFooterComponent = MountWidget.extend(
       this.appEvents.off("page:changed", this, "_routeChanged");
       this.appEvents.on("composer:opened", this, "_composerOpened");
       this.appEvents.off("composer:closed", this, "_composerClosed");
-      $("body").removeClass("has-mobile-footer-nav");
     },
 
     // The user has scrolled the window, or it is finished rendering and ready for processing.
@@ -73,6 +71,11 @@ const MobileFooterComponent = MountWidget.extend(
     toggleMobileFooter() {
       this.$().toggleClass(
         "visible",
+        this.mobileScrollDirection === null ? true : false
+      );
+      // body class used to adjust positioning of #topic-progress-wrapper
+      $("body").toggleClass(
+        "mobile-footer-nav-visible",
         this.mobileScrollDirection === null ? true : false
       );
     },
