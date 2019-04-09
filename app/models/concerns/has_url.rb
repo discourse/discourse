@@ -17,8 +17,10 @@ module HasUrl
       return if uri&.path.blank?
       data = extract_url(uri.path)
       return if data.blank?
-
-      self.find_by("url LIKE ?", "%#{data[1]}")
+      sha1 = data[2]
+      result = nil
+      result = self.find_by(sha1: sha1) if sha1&.length == Upload::SHA1_LENGTH
+      result || self.find_by("url LIKE ?", "%#{data[1]}")
     end
   end
 end
