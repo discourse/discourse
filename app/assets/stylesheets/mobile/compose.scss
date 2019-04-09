@@ -39,6 +39,8 @@
   }
 
   &.draft {
+    padding-bottom: env(safe-area-inset-bottom);
+
     .toggle-toolbar,
     .toggler {
       top: 8px;
