@@ -10,7 +10,10 @@ module Jobs
       # clean up failed uploads
       Upload.where("created_at < ?", 1.hour.ago)
         .where("LENGTH(COALESCE(url, '')) = 0")
-        .destroy_all
+        .find_each do |upload|
+
+        upload.destroy!
+      end
 
       # migrate uploads to new scheme
       problems = Upload.migrate_to_new_scheme(50)
@@ -21,9 +24,21 @@ module Jobs
       end
 
       # clean up failed optimized images
-      OptimizedImage.where("LENGTH(COALESCE(url, '')) = 0").destroy_all
+      OptimizedImage
+        .where("LENGTH(COALESCE(url, '')) = 0")
+        .find_each do |optimized_image|
+
+        optimized_image.destroy!
+      end
+
       # Clean up orphan optimized images
-      OptimizedImage.where("upload_id NOT IN (SELECT id FROM uploads)").destroy_all
+      OptimizedImage
+        .joins("LEFT JOIN uploads ON optimized_images.upload_id = uploads.id")
+        .where("uploads.id IS NULL")
+        .find_each do |optimized_image|
+
+        optimized_image.destroy!
+      end
 
       # Clean up optimized images that needs to be regenerated
       OptimizedImage.joins(:upload)
