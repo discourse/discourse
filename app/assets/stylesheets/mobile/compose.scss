@@ -134,8 +134,9 @@
         0
       ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
     }
-    @media all and (max-width: 350px) {
-      padding: 2px 4px;
+    @include breakpoint(mobile-medium) {
+      padding: 4px;
+      font-size: 0.96em;
     }
     &.preview {
       margin: 0;
