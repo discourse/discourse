@@ -5,7 +5,7 @@ export default Ember.Component.extend({
 
   @computed("rs.score_type.title", "reviewable.target_created_by")
   title(title, targetCreatedBy) {
-    if (targetCreatedBy) {
+    if (title && targetCreatedBy) {
       return title.replace("{{username}}", targetCreatedBy.username);
     }
 
