@@ -5,9 +5,8 @@ en:
         today: Today %{time}
         tomorrow: Tomorrow %{time}
         yesterday: Yesterday %{time}
-      title: Insert date
+      title: Insert date / time
       create:
-        modal_title: Insert date
         form:
           insert: Insert
           advanced_mode: Advanced mode
