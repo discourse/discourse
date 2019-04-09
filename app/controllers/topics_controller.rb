@@ -254,10 +254,25 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
+    topic_id = params[:topic_id].to_i
+
     if params[:last].to_s == "1"
-      PostTiming.destroy_last_for(current_user, params[:topic_id])
+      PostTiming.destroy_last_for(current_user, topic_id)
     else
-      PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+      PostTiming.destroy_for(current_user.id, [topic_id])
+    end
+
+    last_notification = Notification
+      .where(
+        user_id: current_user.id,
+        topic_id: topic_id
+      )
+      .order(created_at: :desc)
+      .limit(1)
+      .first
+
+    if last_notification
+      last_notification.update!(read: false)
     end
 
     render body: nil
