@@ -11,6 +11,7 @@ const MobileFooterComponent = MountWidget.extend(
   {
     widget: "mobile-footer-nav",
     mobileScrollDirection: null,
+    scrollEventDisabled: false,
     classNames: ["mobile-footer", "visible"],
     routeHistory: [],
     currentRouteIndex: 0,
@@ -29,8 +30,10 @@ const MobileFooterComponent = MountWidget.extend(
       this._super(...arguments);
       this.bindScrolling({ name: "mobile-footer" });
       $(window).on("resize.mobile-footer-on-scroll", () => this.scrolled());
-      $("body").addClass("with-mobile-footer-nav");
       this.appEvents.on("page:changed", this, "_routeChanged");
+      this.appEvents.on("composer:opened", this, "_composerOpened");
+      this.appEvents.on("composer:closed", this, "_composerClosed");
+      $("body").addClass("has-mobile-footer-nav");
     },
 
     willDestroyElement() {
@@ -38,12 +41,19 @@ const MobileFooterComponent = MountWidget.extend(
       this.unbindScrolling("mobile-footer");
       $(window).unbind("resize.mobile-footer-on-scroll");
       this.appEvents.off("page:changed", this, "_routeChanged");
-      $("body").removeClass("with-mobile-footer-nav");
+      this.appEvents.on("composer:opened", this, "_composerOpened");
+      this.appEvents.off("composer:closed", this, "_composerClosed");
+      $("body").removeClass("has-mobile-footer-nav");
     },
 
     // The user has scrolled the window, or it is finished rendering and ready for processing.
     scrolled() {
-      if (this.isDestroyed || this.isDestroying || this._state !== "inDOM") {
+      if (
+        this.isDestroyed ||
+        this.isDestroying ||
+        this._state !== "inDOM" ||
+        this.scrollEventDisabled
+      ) {
         return;
       }
 
@@ -78,6 +88,16 @@ const MobileFooterComponent = MountWidget.extend(
       this.set("currentRouteIndex", this.routeHistory.length);
 
       this.queueRerender();
+    },
+
+    _composerOpened() {
+      this.set("mobileScrollDirection", "down");
+      this.set("scrollEventDisabled", true);
+    },
+
+    _composerClosed() {
+      this.set("mobileScrollDirection", null);
+      this.set("scrollEventDisabled", false);
     },
 
     goBack() {

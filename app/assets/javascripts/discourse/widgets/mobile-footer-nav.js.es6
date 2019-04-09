@@ -1,5 +1,6 @@
 import { createWidget } from "discourse/widgets/widget";
 import { nativeShare } from "discourse/lib/pwa-utils";
+import { isAppWebview, isPWA } from "discourse/lib/utilities";
 
 createWidget("mobile-footer-nav", {
   tagName: "div.mobile-footer-nav",
@@ -33,13 +34,15 @@ createWidget("mobile-footer-nav", {
       })
     );
 
-    buttons.push(
-      this.attach("flat-button", {
-        action: "dismiss",
-        icon: "chevron-down",
-        className: "btn-large"
-      })
-    );
+    if (isAppWebview()) {
+      buttons.push(
+        this.attach("flat-button", {
+          action: "dismiss",
+          icon: "chevron-down",
+          className: "btn-large"
+        })
+      );
+    }
 
     return buttons;
   },
@@ -49,12 +52,11 @@ createWidget("mobile-footer-nav", {
   },
 
   share() {
-    // post message to iOS app or use Sharing API
-    if (window.ReactNativeWebView) {
+    if (isAppWebview()) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ shareUrl: window.location.href })
       );
-    } else if (window.navigator.share !== undefined) {
+    } else if (isPWA()) {
       nativeShare({ url: window.location.href });
     }
   }

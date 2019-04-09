@@ -1,4 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
+import { isAppWebview, isPWA } from "discourse/lib/utilities";
 
 export default Ember.Controller.extend({
   showTop: true,
@@ -20,8 +21,6 @@ export default Ember.Controller.extend({
 
   @computed
   showMobileFooterNav() {
-    const isReactNativeWebView = window.ReactNativeWebView !== undefined;
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches;
-    return isReactNativeWebView || isPWA;
+    return isAppWebview() || isPWA();
   }
 });
