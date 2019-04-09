@@ -6,8 +6,19 @@ import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { on } from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend(LoadMore, {
+  @on("init")
+  _init() {
+    if (this.get("stream").get("filter").length) {
+      this.set("classNames", [
+        "user-stream",
+        "filter-" + this.get("stream").get("filter")
+      ]);
+    }
+  },
+
   loading: false,
   eyelineSelector: ".user-stream .item",
   classNames: ["user-stream"],
