@@ -30,5 +30,4 @@
 //= require virtual-dom
 //= require virtual-dom-amd
 //= require highlight.js
-//= require htmlparser.js
 //= require intersection-observer

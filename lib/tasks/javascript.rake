@@ -51,8 +51,6 @@ task 'javascript:update' do
       source: 'highlight.js/build/.',
       destination: 'highlightjs'
     }, {
-      source: 'htmlparser/lib/htmlparser.js'
-    }, {
       source: 'jquery-resize/jquery.ba-resize.js'
     }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
