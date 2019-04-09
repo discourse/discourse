@@ -1,5 +1,8 @@
 <tr class='reviewable-score'>
   <td>
+    {{format-date rs.created_at}}
+  </td>
+  <td>
     {{d-icon rs.score_type.icon}}
     {{title}}
     <span class="badge-notification new-posts score">{{format-score rs.score}}</span>
@@ -9,8 +12,6 @@
       {{avatar rs.user imageSize="tiny"}}
       {{rs.user.username}}
     {{/user-link}}
-  </td>
-  <td>
     {{user-flag-percentage
       agreed=rs.agree_stats.agreed
       disagreed=rs.agree_stats.disagreed
@@ -19,10 +20,21 @@
   <td>
     {{reviewable-status rs.status}}
   </td>
+  <td class='reviewed-by'>
+    {{#if rs.reviewed_by}}
+      {{#user-link user=rs.reviewed_by}}
+        {{avatar rs.reviewed_by imageSize="tiny"}}
+        {{rs.reviewed_by.username}}
+      {{/user-link}}
+      {{format-date rs.reviewed_at}}
+    {{else}}
+      &mdash;
+    {{/if}}
+  </td>
 </tr>
 {{#if rs.reviewable_conversation}}
   <tr>
-    <td colspan='3'>
+    <td colspan='4'>
       <div class='reviewable-conversation'>
         {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
           {{reviewable-conversation-post post=p index=index}}

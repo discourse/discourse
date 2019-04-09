@@ -30,10 +30,7 @@
       </div>
     {{else}}
       {{#component reviewableComponent reviewable=reviewable tagName=''}}
-        <div class='reviewable-scores-and-history'>
-          {{reviewable-scores reviewable=reviewable tagName=''}}
-          {{reviewable-histories histories=reviewable.reviewable_histories tagName=''}}
-        </div>
+        {{reviewable-scores reviewable=reviewable tagName=''}}
       {{/component}}
     {{/if}}
   </div>

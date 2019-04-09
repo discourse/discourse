@@ -426,13 +426,13 @@ en:
         category: "Category:"
       conversation:
         view_full: "view full conversation"
-      history:
-        title: "History"
-        edited: "Edited"
       scores:
-        description: "Description"
-        score: "Score"
+        date: "Date"
+        type: "Type"
+        status: "Status"
         submitted_by: "Submitted By"
+        reviewed_by: "Reviewed By"
+
       statuses:
         pending:
           title: "Pending"

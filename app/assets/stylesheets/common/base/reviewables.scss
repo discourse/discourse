@@ -224,15 +224,15 @@
   margin-top: 1em;
 }
 
-.reviewable-scores-and-history {
-  display: inline-block;
-  margin-top: 1em;
-}
-
 .reviewable-scores,
 .reviewable-histories {
   min-width: 50%;
 
+  .reviewed-by {
+    .date {
+      margin-left: 0.5em;
+    }
+  }
   .user {
     display: flex;
     align-items: center;
@@ -251,6 +251,11 @@
     line-height: $line-height-medium;
   }
 
+  thead {
+    th {
+      white-space: nowrap;
+    }
+  }
   tbody {
     border-width: 1px;
     td {
@@ -268,7 +273,7 @@
     }
     > tr > th,
     > tr > td {
-      padding: 0.5em;
+      padding: 0.5em 1em 0.5em 0.5em;
     }
   }
 }
