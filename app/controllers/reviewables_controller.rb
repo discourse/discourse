@@ -180,7 +180,8 @@ protected
   def meta_types
     {
       created_by: 'user',
-      target_created_by: 'user'
+      target_created_by: 'user',
+      reviewed_by: 'user'
     }
   end
 
