@@ -14,9 +14,10 @@ module Jobs
           "posts.user_id IS NULL AND users.last_seen_at < ?",
           SiteSetting.clean_up_inactive_users_after_days.days.ago
         )
-        .find_each do |user|
-
+        .limit(1000)
+        .pluck(:id).each do |id|
         begin
+          user = User.find(id)
           destroyer.destroy(user, context: I18n.t("user.destroy_reasons.inactive_user"))
         rescue => e
           Discourse.handle_job_exception(e,
