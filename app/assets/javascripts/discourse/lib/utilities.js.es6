@@ -643,8 +643,11 @@ export function areCookiesEnabled() {
   }
 }
 
-export function isPWA() {
-  return window.matchMedia("(display-mode: standalone)").matches;
+export function isiOSPWA() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches &&
+    navigator.userAgent.match(/(iPad|iPhone|iPod)/g)
+  );
 }
 
 export function isAppWebview() {
