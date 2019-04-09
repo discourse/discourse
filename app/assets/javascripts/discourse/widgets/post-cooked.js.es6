@@ -145,7 +145,7 @@ export default class PostCooked {
       const $blockQuote = $("> blockquote", $aside);
       $aside.data("original-contents", $blockQuote.html());
 
-      const originalText = $blockQuote.text().trim();
+      const originalText = $blockQuote.text().trim() || $("> blockquote", this.attrs.cooked).text().trim();
       $blockQuote.html(I18n.t("loading"));
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
