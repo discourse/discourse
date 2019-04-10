@@ -191,7 +191,7 @@ describe PostSerializer do
       PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
     end
 
-    it "will not show for poster and TL2+ users" do
+    it "is visible for TL2+ users (except poster)" do
       expect(json_for_user(nil)[:post_notice_type]).to eq(nil)
       expect(json_for_user(user)[:post_notice_type]).to eq(nil)
 
@@ -202,6 +202,22 @@ describe PostSerializer do
       SiteSetting.min_post_notice_tl = 1
       expect(json_for_user(user_tl1)[:post_notice_type]).to eq("returning")
       expect(json_for_user(user_tl2)[:post_notice_type]).to eq("returning")
+    end
+
+    it "is visible when created by anonymous, bots and staged users" do
+      expect(json_for_user(user_tl2)[:post_notice_type]).to eq("returning")
+
+      post.user = nil
+      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
+
+      post.user = AnonymousShadowCreator.get(user)
+      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
+
+      post.user = Discourse.system_user
+      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
+
+      post.user = Fabricate(:staged)
+      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
     end
   end
 
