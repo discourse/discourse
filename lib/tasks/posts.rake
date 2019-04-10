@@ -392,10 +392,12 @@ desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
   name = "missing_uploads"
   PostCustomField.where(name: name).destroy_all
-  posts = Post.where("posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %'").select(:id, :cooked)
-  missing = []
+  posts = Post.where("(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND posts.cooked LIKE '%/uploads/%'").select(:id, :cooked)
+  count = 0
 
   posts.find_each do |post|
+    missing = []
+
     Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
       src = media.value
       next if src.blank? || (src =~ /\/uploads\//).blank?
@@ -406,9 +408,13 @@ task 'posts:missing_uploads' => :environment do
       missing << src unless Upload.get_from_url(src) || OptimizedImage.get_from_url(src)
     end
 
-    missing.each { |src| PostCustomField.create!(post_id: post.id, name: name, value: src) }
+    if missing.present?
+      missing.each { |src| PostCustomField.create!(post_id: post.id, name: name, value: src) }
+      count += missing.count
+    end
+
     putc "."
   end
 
-  puts "", "#{missing.count} post uploads are missing.", ""
+  puts "", "#{count} post uploads are missing.", ""
 end
