@@ -12,10 +12,6 @@
         margin-left: auto;
       }
     }
-    .badge-intro {
-      display: inline-flex;
-      flex: 0 1 50%;
-    }
     .content-list {
       flex: 0 0 27%;
     }
@@ -62,24 +58,6 @@
     .user-badge {
       border: none;
       background-color: unset;
-    }
-  }
-  .badge-intro {
-    margin-top: 10%;
-    h1 {
-      line-height: $line-height-medium;
-    }
-    .badge-intro-emoji {
-      // it's an emoji so we want fixed deminsions
-      height: 55px;
-      width: 55px;
-      margin-top: 5px;
-      margin-right: 5px;
-      flex: 0 0 auto; // IE flex fix
-    }
-    .external-link {
-      display: block;
-      margin-bottom: 5px;
     }
   }
   .current-badge {

@@ -171,37 +171,6 @@
   .add-component-button {
     vertical-align: middle;
   }
-  .themes-intro {
-    display: inline-block;
-    width: 51%;
-    vertical-align: top;
-    margin-left: 20%;
-    margin-top: 60px;
-
-    img {
-      display: inline-block;
-      margin-right: 10px;
-      width: 10%;
-      vertical-align: top;
-      margin-top: 5px;
-    }
-    .create-actions {
-      margin-bottom: 1em;
-    }
-    .content-wrapper {
-      display: inline-block;
-      vertical-align: top;
-      width: 65%;
-      h1 {
-        display: inline-block;
-        line-height: $line-height-medium;
-      }
-    }
-    .external-link {
-      display: block;
-      margin-bottom: 5px;
-    }
-  }
   .themes-list {
     display: inline-block;
     .create-actions {
