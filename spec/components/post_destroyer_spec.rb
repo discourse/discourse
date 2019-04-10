@@ -189,6 +189,16 @@ describe PostDestroyer do
       end
 
       context "recovered by user" do
+
+        it "doesn't raise an error when the raw doesn't change" do
+          PostRevisor.new(@reply).revise!(
+            @user,
+            { edit_reason: 'made a change' },
+            force_new_version: true
+          )
+          PostDestroyer.new(@user, @reply.reload).recover
+        end
+
         it "should increment the user's post count" do
           PostDestroyer.new(@user, @reply).destroy
           expect(@user.user_stat.topic_count).to eq(1)
