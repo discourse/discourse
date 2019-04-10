@@ -3,8 +3,6 @@ module Jobs
     every 1.day
 
     def execute(args)
-      return unless SiteSetting.ignore_user_enabled
-
       params = {
         threshold: SiteSetting.ignored_users_count_message_threshold,
         gap_days: SiteSetting.ignored_users_message_gap_days,

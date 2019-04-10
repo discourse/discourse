@@ -1837,8 +1837,6 @@ en:
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
-    ignore_user_enabled: "[Beta] Allow ignoring users."
-
     ignored_users_count_message_threshold: "Notify moderators if a particular user is ignored by this many other users."
 
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."

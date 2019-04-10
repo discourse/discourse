@@ -39,64 +39,48 @@ describe TopicView do
       let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
       let!(:post3) { Fabricate(:post, topic: topic, user: user) }
 
-      describe "when SiteSetting.ignore_user_enabled is false" do
-        it "does not filter out ignored user posts" do
-          SiteSetting.ignore_user_enabled = false
-
-          tv = TopicView.new(topic.id, evil_trout)
-          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id])
-        end
+      it "filters out ignored user posts" do
+        tv = TopicView.new(topic.id, evil_trout)
+        expect(tv.filtered_post_ids).to eq([post.id, post2.id])
       end
 
-      describe "when SiteSetting.ignore_user_enabled is true" do
+      describe "when an ignored user made the original post" do
+        let!(:post) { Fabricate(:post, topic: topic, user: user) }
 
-        before do
-          SiteSetting.ignore_user_enabled = true
-        end
-
-        it "filters out ignored user posts" do
+        it "filters out ignored user posts only" do
           tv = TopicView.new(topic.id, evil_trout)
           expect(tv.filtered_post_ids).to eq([post.id, post2.id])
         end
+      end
 
-        describe "when an ignored user made the original post" do
-          let!(:post) { Fabricate(:post, topic: topic, user: user) }
+      describe "when an anonymous user made a post" do
+        let(:anonymous) { Fabricate(:anonymous) }
+        let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
-          it "filters out ignored user posts only" do
-            tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id])
-          end
+        it "filters out ignored user posts only" do
+          tv = TopicView.new(topic.id, evil_trout)
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
         end
+      end
 
-        describe "when an anonymous user made a post" do
-          let(:anonymous) { Fabricate(:anonymous) }
-          let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
+      describe "when an anonymous (non signed-in) user is viewing a Topic" do
+        let(:anonymous) { Fabricate(:anonymous) }
+        let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
-          it "filters out ignored user posts only" do
-            tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
-          end
+        it "filters out ignored user posts only" do
+          tv = TopicView.new(topic.id, nil)
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id, post4.id])
         end
+      end
 
-        describe "when an anonymous (non signed-in) user is viewing a Topic" do
-          let(:anonymous) { Fabricate(:anonymous) }
-          let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
+      describe "when a staff user is ignored" do
+        let!(:admin) { Fabricate(:user, admin: true) }
+        let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
+        let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
 
-          it "filters out ignored user posts only" do
-            tv = TopicView.new(topic.id, nil)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id, post4.id])
-          end
-        end
-
-        describe "when a staff user is ignored" do
-          let!(:admin) { Fabricate(:user, admin: true) }
-          let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
-          let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
-
-          it "filters out ignored user excluding the staff user" do
-            tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
-          end
+        it "filters out ignored user excluding the staff user" do
+          tv = TopicView.new(topic.id, evil_trout)
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
         end
       end
     end

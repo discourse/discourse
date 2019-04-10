@@ -2676,9 +2676,6 @@ describe Guardian do
   end
 
   describe '#can_ignore_user?' do
-    before do
-      SiteSetting.ignore_user_enabled = true
-    end
 
     let(:guardian) { Guardian.new(trust_level_2) }
 
