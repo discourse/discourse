@@ -118,6 +118,7 @@ aside.onebox {
   @include onebox-favicon("amazon", "amazon");
   @include onebox-favicon("instagram", "instagram");
   @include onebox-favicon("googledocs", "google_branding/logo_drive_48px");
+  @include onebox-favicon("googledrive", "google_branding/logo_drive_48px");
 
   .onebox-body {
     clear: both;
