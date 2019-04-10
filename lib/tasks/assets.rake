@@ -164,11 +164,10 @@ def concurrent?
 end
 
 task 'assets:precompile' => 'assets:precompile:before' do
-  path = DiscourseIpInfo.mmdb_path('GeoLite2-City')
-  mtime = File.exist?(path) && File.mtime(path)
-
   if refresh_days = SiteSetting.refresh_maxmind_db_during_precompile_days
-    if !mtime || mtime < refresh_days.days.ago
+    mmdb_path = DiscourseIpInfo.mmdb_path('GeoLite2-City')
+    mmdb_time = File.exist?(mmdb_path) && File.mtime(mmdb_path)
+    if !mmdb_time || mmdb_time < refresh_days.days.ago
       puts "Downloading MaxMindDB..."
       mmdb_thread = Thread.new do
         DiscourseIpInfo.mmdb_download('GeoLite2-City')
