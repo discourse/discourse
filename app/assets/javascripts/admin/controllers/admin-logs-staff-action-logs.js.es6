@@ -13,11 +13,9 @@ export default Ember.Controller.extend({
     const filterActionId = this.get("filterActionId");
     if (filterActionId) {
       this._changeFilters({
-        action_name: this.get("userHistoryActions").findBy(
-          "id",
-          parseInt(filterActionId, 10)
-        ).name_raw,
-        action_id: filterActionId
+        action_name: filterActionId,
+        action_id: this.get("userHistoryActions").findBy("id", filterActionId)
+          .action_id
       });
     }
   }.observes("filterActionId"),
@@ -54,11 +52,12 @@ export default Ember.Controller.extend({
       .then(result => {
         this.set("model", result.staff_action_logs);
         if (this.get("userHistoryActions").length === 0) {
-          let actionTypes = result.user_history_actions.map(pair => {
+          let actionTypes = result.user_history_actions.map(action => {
             return {
-              id: pair.id,
-              name: I18n.t("admin.logs.staff_actions.actions." + pair.name),
-              name_raw: pair.name
+              id: action.id,
+              action_id: action.action_id,
+              name: I18n.t("admin.logs.staff_actions.actions." + action.id),
+              name_raw: action.id
             };
           });
           actionTypes = _.sortBy(actionTypes, row => row.name);
