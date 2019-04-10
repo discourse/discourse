@@ -110,7 +110,8 @@ module Email
           "<topic/#{topic_id}/#{post_id}@#{host}>"
 
         referenced_posts = Post.includes(:incoming_email)
-          .where(id: PostReply.where(reply_id: post_id).select(:post_id))
+          .joins("INNER JOIN post_replies ON post_replies.post_id = posts.id ")
+          .where("post_replies.reply_id = ?", post_id)
           .order(id: :desc)
 
         referenced_post_message_ids = referenced_posts.map do |referenced_post|
