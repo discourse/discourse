@@ -11,7 +11,7 @@
     "bootbox": "3.2.0",
     "chart.js": "2.7.3",
     "favcount": "https://github.com/chrishunt/favcount",
-    "handlebars": "4.0.12",
+    "handlebars": "^4.1.1",
     "highlight.js": "https://github.com/highlightjs/highlight.js",
     "htmlparser": "https://github.com/tautologistics/node-htmlparser",
     "intersection-observer": "^0.5.1",
