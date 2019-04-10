@@ -127,9 +127,6 @@
         margin: 0;
         padding: 5px 10px;
         div {
-          &:last-child {
-            float: right;
-          }
           display: inline-flex;
           align-items: baseline;
           margin-right: 15px;
