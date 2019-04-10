@@ -56,18 +56,17 @@ RSpec.describe "Post rake tasks" do
   end
 
   describe 'missing_uploads' do
-    let(:upload) { Fabricate(:upload) }
-    let(:optimized) { Fabricate(:optimized_image, url: '/uploads/default/optimized/1X/d1c2d40ab994e8410c_100x200.png') }
+    let(:url) { "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/1X/d1c2d40ab994e8410c.png" }
+    let(:upload) { Fabricate(:upload, url: url) }
 
     it 'should create post custom field for missing upload' do
-      Fabricate(:post, cooked: "A sample post <img src='#{upload.url}'>")
+      post = Fabricate(:post, raw: "A sample post <img src='#{url}'>")
       upload.destroy!
 
       Rake::Task['posts:missing_uploads'].invoke
 
-      field = PostCustomField.find_by(name: "missing_uploads")
-      expect(field).to be_present
-      expect(field.value).to eq(upload.url)
+      post.reload
+      expect(post.custom_fields[Post::MISSING_UPLOADS]).to eq([url])
     end
   end
 end
