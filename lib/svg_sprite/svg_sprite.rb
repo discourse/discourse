@@ -42,6 +42,7 @@ module SvgSprite
     "check-circle",
     "check-square",
     "chevron-down",
+    "chevron-left",
     "chevron-right",
     "chevron-up",
     "circle",

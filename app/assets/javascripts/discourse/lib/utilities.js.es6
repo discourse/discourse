@@ -643,5 +643,15 @@ export function areCookiesEnabled() {
   }
 }
 
+export function isiOSPWA() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches &&
+    navigator.userAgent.match(/(iPad|iPhone|iPod)/g)
+  );
+}
+
+export function isAppWebview() {
+  return window.ReactNativeWebView !== undefined;
+}
 // This prevents a mini racer crash
 export default {};

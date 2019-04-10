@@ -10,6 +10,7 @@
   z-index: z("mobile-composer");
   .reply-area {
     padding: 0 10px;
+    padding-bottom: env(safe-area-inset-bottom);
     @media screen and (max-width: 374px) {
       padding: 0 5px;
     }
@@ -38,6 +39,8 @@
   }
 
   &.draft {
+    padding-bottom: env(safe-area-inset-bottom);
+
     .toggle-toolbar,
     .toggler {
       top: 8px;
