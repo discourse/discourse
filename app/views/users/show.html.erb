@@ -1,5 +1,5 @@
 <div class='user-crawler'>
-	<img src='<%= get_absolute_image_url(@user.small_avatar_url) %>' alt='<%= t('user.image_alt', username: @user.username) %>' title='<%= @user.username %>' />
+	<img src='<%= UrlHelper.local_cdn_url(get_absolute_image_url(@user.small_avatar_url)) %>' alt='<%= @user.username %>' title='<%= @user.username %>' />
 	<h2 class='username'><%= @user.username %></h2>
 </div>
 

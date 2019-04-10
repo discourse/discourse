@@ -2222,7 +2222,6 @@ en:
       fixed_primary_email: "Fixed primary email for staged user"
       same_ip_address: "Same IP address (%{ip_address}) as other users"
       inactive_user: "Inactive user"
-    image_alt: "Image of %{username}"
 
   reviewables_reminder:
     submitted:
