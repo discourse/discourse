@@ -4,7 +4,6 @@ require_dependency 'jobs/scheduled/ignored_users_summary'
 
 describe Jobs::IgnoredUsersSummary do
   before do
-    SiteSetting.ignore_user_enabled = true
     SiteSetting.ignored_users_count_message_threshold = 1
     SiteSetting.ignored_users_message_gap_days = 365
   end

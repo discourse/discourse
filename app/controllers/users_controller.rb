@@ -993,7 +993,6 @@ class UsersController < ApplicationController
   end
 
   def notification_level
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"
