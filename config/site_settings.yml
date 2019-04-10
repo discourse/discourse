@@ -1481,6 +1481,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  refresh_maxmind_db_during_precompile_days:
+    min: 0
+    max: 120
+    default: 2
+    hidden: true
 
 embedding:
   feed_polling_enabled:
