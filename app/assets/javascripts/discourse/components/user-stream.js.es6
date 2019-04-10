@@ -13,7 +13,7 @@ export default Ember.Component.extend(LoadMore, {
     if (filter) {
       this.set("classNames", [
         "user-stream",
-        "filter-" + filter.replace(",", "-")
+        "filter-" + filter.toString().replace(",", "-")
       ]);
     }
   }.on("init"),
