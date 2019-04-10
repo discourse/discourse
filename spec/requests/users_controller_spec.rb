@@ -2033,7 +2033,6 @@ describe UsersController do
         sign_in(user)
       end
 
-
       let!(:ignored_user) { Fabricate(:ignored_user, user: user, ignored_user: another_user) }
       let!(:muted_user) { Fabricate(:muted_user, user: user, muted_user: another_user) }
 
