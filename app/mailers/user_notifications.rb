@@ -21,6 +21,14 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def activation_reminder(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.activation_reminder",
+      user,
+      opts[:email_token]
+    )
+  end
+
   def signup_after_approval(user, opts = {})
     locale = user_locale(user)
     tips = I18n.t('system_messages.usage_tips.text_body_template',
