@@ -529,9 +529,6 @@ users:
     default: false
     client: true
   log_personal_messages_views: false
-  ignore_user_enabled:
-    default: false
-    client: true
   ignored_users_count_message_threshold:
     default: 5
     client: true

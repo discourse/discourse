@@ -407,7 +407,7 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    SiteSetting.ignore_user_enabled? && (@user.staff? || @user.trust_level >= TrustLevel.levels[:member])
+    @user.staff? || @user.trust_level >= TrustLevel.levels[:member]
   end
 
   def allow_themes?(theme_ids, include_preview: false)
