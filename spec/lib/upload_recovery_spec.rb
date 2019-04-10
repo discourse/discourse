@@ -141,6 +141,33 @@ RSpec.describe UploadRecovery do
       end
     end
 
+    describe 'image markdown' do
+      let(:post) do
+        Fabricate(:post,
+          raw: <<~SQL,
+          ![image](#{upload.url})
+          SQL
+          user: user
+        ).tap(&:link_post_uploads)
+      end
+
+      it 'should recover the upload' do
+        stub_request(:get, "http://test.localhost#{upload.url}")
+          .to_return(status: 200)
+
+        expect do
+          upload.destroy!
+        end.to change { post.reload.uploads.count }.from(1).to(0)
+
+        expect do
+          upload_recovery.recover
+        end.to change { post.reload.uploads.count }.from(0).to(1)
+
+        expect(File.read(Discourse.store.path_for(post.uploads.first)))
+          .to eq(File.read(file_from_fixtures("smallest.png")))
+      end
+    end
+
     describe 'bbcode' do
       let(:post) do
         Fabricate(:post,

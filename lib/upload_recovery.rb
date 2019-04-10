@@ -4,12 +4,7 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.where("
-      raw LIKE '%upload:\/\/%'
-      OR raw LIKE '%href=%'
-      OR raw LIKE '%src=%'
-      OR raw LIKE '%[img]%'
-    ").find_each do |post|
+    posts.have_uploads.find_each do |post|
 
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
