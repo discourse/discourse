@@ -66,6 +66,7 @@ class EmailToken < ActiveRecord::Base
         user.send_welcome_message = !user.active?
         user.email = result[:email_token].email
         user.active = true
+        user.custom_fields.delete('activation_reminder')
         user.save!
         user.create_reviewable unless skip_reviewable
         user.set_automatic_groups
