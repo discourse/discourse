@@ -3,9 +3,15 @@
     color: $primary-medium;
     span.approved {
       color: $success;
+      .d-icon {
+        color: currentColor;
+      }
     }
     span.rejected {
       color: $danger;
+      .d-icon {
+        color: currentColor;
+      }
     }
   }
 
@@ -148,9 +154,15 @@
     margin-right: 0.25em;
     &.agreed {
       color: $success;
+      + .d-icon {
+        color: $success;
+      }
     }
     &.disagreed {
       color: $danger;
+      + .d-icon {
+        color: $danger;
+      }
     }
     &.ignored {
       color: $primary-medium;
@@ -224,9 +236,9 @@
   margin-top: 1em;
 }
 
-.reviewable-scores,
-.reviewable-histories {
+.reviewable-scores {
   min-width: 50%;
+  color: $primary-high;
 
   .reviewed-by {
     .date {
@@ -245,25 +257,27 @@
 
   .d-icon {
     font-size: $font-down-1;
+    color: $primary-medium;
   }
 
   .badge-notification {
     line-height: $line-height-medium;
+    vertical-align: text-top;
   }
 
-  thead {
-    th {
-      white-space: nowrap;
-    }
-  }
   tbody {
     border-width: 1px;
     td {
       white-space: nowrap;
+      vertical-align: baseline;
+      &.user a,
+      &.reviewed-by a {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
-    td:first-of-type {
-      padding-right: 1em;
-    }
+
     td:last-of-type {
       width: 100%;
       white-space: normal;
@@ -273,7 +287,11 @@
     }
     > tr > th,
     > tr > td {
-      padding: 0.5em 1em 0.5em 0.5em;
+      padding: 0.5em 1em 0.5em 0;
+    }
+    .reviewable-score-spacer {
+      padding-left: 0.5em;
+      padding-right: 1.5em;
     }
   }
 }

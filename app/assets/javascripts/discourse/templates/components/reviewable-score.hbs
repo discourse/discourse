@@ -1,12 +1,4 @@
 <tr class='reviewable-score'>
-  <td>
-    {{format-date rs.created_at}}
-  </td>
-  <td>
-    {{d-icon rs.score_type.icon}}
-    {{title}}
-    <span class="badge-notification new-posts score">{{format-score rs.score}}</span>
-  </td>
   <td class='user'>
     {{#user-link user=rs.user}}
       {{avatar rs.user imageSize="tiny"}}
@@ -18,18 +10,38 @@
       ignored=rs.agree_stats.ignored}}
   </td>
   <td>
-    {{reviewable-status rs.status}}
+    {{d-icon rs.score_type.icon}}
+    {{title}}
+    <span class="badge-notification new-posts score">{{format-score rs.score}}</span>
   </td>
+  <td>
+    {{format-date rs.created_at}}
+  </td>
+
+  <td class="reviewable-score-spacer">
+{{d-icon "angle-double-right"}}
+  </td>
+
   <td class='reviewed-by'>
     {{#if rs.reviewed_by}}
       {{#user-link user=rs.reviewed_by}}
         {{avatar rs.reviewed_by imageSize="tiny"}}
         {{rs.reviewed_by.username}}
       {{/user-link}}
-      {{format-date rs.reviewed_at}}
     {{else}}
       &mdash;
     {{/if}}
+  </td>
+
+  <td>
+    {{reviewable-status rs.status}}
+  </td>
+  <td>
+    {{#if rs.reviewed_by}}
+
+    {{format-date rs.reviewed_at format="tiny"}}
+    {{/if}}
+
   </td>
 </tr>
 {{#if rs.reviewable_conversation}}
