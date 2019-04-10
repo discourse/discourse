@@ -87,6 +87,15 @@ RSpec.describe ReviewableUser, type: :model do
         expect(reviewable.target).to be_present
         expect(reviewable.target.approved).to eq(false)
       end
+
+      it "allows us to reject a user who has been deleted" do
+        reviewable.target.destroy!
+        reviewable.reload
+        result = reviewable.perform(moderator, :reject)
+        expect(result.success?).to eq(true)
+        expect(reviewable.rejected?).to eq(true)
+        expect(reviewable.target).to be_blank
+      end
     end
   end
 
