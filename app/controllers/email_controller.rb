@@ -35,6 +35,8 @@ class EmailController < ApplicationController
                 .count
             end
           end
+        else
+          @digest_frequencies = digest_frequencies(@user)
         end
       end
     end
@@ -85,8 +87,13 @@ class EmailController < ApplicationController
       updated = true
     end
 
-    if params["disable_digest_emails"]
-      user.user_option.update_columns(email_digests: false)
+    if params['digest_after_minutes']
+      digest_frequency = params['digest_after_minutes'].to_i
+
+      user.user_option.update_columns(
+        digest_after_minutes: digest_frequency,
+        email_digests: digest_frequency.positive?
+      )
       updated = true
     end
 
@@ -123,4 +130,19 @@ class EmailController < ApplicationController
     @topic = topic if topic && Guardian.new(nil).can_see?(topic)
   end
 
+  private
+
+  def digest_frequencies(user)
+    frequency_in_minutes = user.user_option.digest_after_minutes
+    allowed_frequencies = %w[never weekly every_month every_six_months]
+
+    DigestEmailSiteSetting.values.reduce(frequencies: [], selected: nil) do |memo, v|
+      memo[:selected] = v[:name] if v[:value] == frequency_in_minutes
+      next(memo) unless allowed_frequencies.include?(v[:name])
+
+      memo.tap do |m|
+        m[:frequencies] << [I18n.t("unsubscribe.digest_frequency.#{v[:name]}"), v[:value]]
+      end
+    end
+  end
 end
