@@ -40,7 +40,7 @@ const MobileFooterComponent = MountWidget.extend(
       this.unbindScrolling("mobile-footer");
       $(window).unbind("resize.mobile-footer-on-scroll");
       this.appEvents.off("page:changed", this, "_routeChanged");
-      this.appEvents.on("composer:opened", this, "_composerOpened");
+      this.appEvents.off("composer:opened", this, "_composerOpened");
       this.appEvents.off("composer:closed", this, "_composerClosed");
     },
 
