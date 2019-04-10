@@ -391,8 +391,9 @@ end
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
   name = "missing_uploads"
+  db_name = RailsMultisite::ConnectionManagement.current_db
   PostCustomField.where(name: name).destroy_all
-  posts = Post.where("(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND posts.cooked LIKE '%/uploads/%'").select(:id, :cooked)
+  posts = Post.where("(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND posts.cooked LIKE '%/uploads/#{db_name}/%'").select(:id, :cooked)
   count = 0
 
   posts.find_each do |post|
@@ -400,7 +401,7 @@ task 'posts:missing_uploads' => :environment do
 
     Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
       src = media.value
-      next if src.blank? || (src =~ /\/uploads\//).blank?
+      next if src.blank? || (src =~ /\/uploads\/#{db_name}\//).blank?
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
       next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
