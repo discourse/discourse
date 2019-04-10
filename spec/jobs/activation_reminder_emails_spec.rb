@@ -6,7 +6,7 @@ describe Jobs::ActivationReminderEmails do
   end
 
   it 'should email inactive users' do
-    user = Fabricate(:user, active: false, created_at: 3.days.ago)
+    user = Fabricate(:user, active: false, created_at: 50.hours.ago)
 
     expect { described_class.new.execute({}) }
       .to change { ActionMailer::Base.deliveries.size }.by(1)
