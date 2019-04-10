@@ -1,12 +1,13 @@
 require 'rails_helper'
 
 describe Jobs::ActivationReminderEmails do
-  before do
-    Jobs.run_immediately!
-  end
+  before { Jobs.run_immediately! }
+
+  # should be between 2 and 3 days
+  let(:created_at) { 50.hours.ago }
 
   it 'should email inactive users' do
-    user = Fabricate(:user, active: false, created_at: 50.hours.ago)
+    user = Fabricate(:user, active: false, created_at: created_at)
 
     expect { described_class.new.execute({}) }
       .to change { ActionMailer::Base.deliveries.size }.by(1)
@@ -20,7 +21,15 @@ describe Jobs::ActivationReminderEmails do
   end
 
   it 'should not email active users' do
-    user = Fabricate(:user, active: true, created_at: 3.days.ago)
+    user = Fabricate(:user, active: true, created_at: created_at)
+
+    expect { described_class.new.execute({}) }
+      .to change { ActionMailer::Base.deliveries.size }.by(0)
+      .and change { user.email_tokens.count }.by(0)
+  end
+
+  it 'should not email staged users' do
+    user = Fabricate(:user, active: false, staged: true, created_at: created_at)
 
     expect { described_class.new.execute({}) }
       .to change { ActionMailer::Base.deliveries.size }.by(0)
