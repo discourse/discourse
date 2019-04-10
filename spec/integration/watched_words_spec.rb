@@ -75,6 +75,7 @@ describe WatchedWord do
       manager = NewPostManager.new(tl2_user, raw: "My dog's name is #{require_approval_word.word}.", topic_id: topic.id)
       result = manager.perform
       expect(result.action).to eq(:enqueued)
+      expect(result.reason).to eq(:watched_word)
     end
 
     it "looks at title too" do
