@@ -6,7 +6,8 @@ $footer-nav-height: 55px;
 
 body.mobile-footer-nav-visible {
   padding-bottom: $footer-nav-height + 15;
-  #topic-progress-wrapper {
+  #topic-progress-wrapper,
+  #reply-control.draft {
     bottom: $footer-nav-height;
   }
 }
