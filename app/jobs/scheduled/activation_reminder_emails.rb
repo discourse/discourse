@@ -4,8 +4,8 @@ module Jobs
 
     def execute(args)
       User.joins("LEFT JOIN user_custom_fields ON users.id = user_id AND user_custom_fields.name = 'activation_reminder'")
-        .where(active: false, user_custom_fields: { value: nil })
-        .where('users.created_at < ?', 2.days.ago)
+        .where(active: false, staged: false, user_custom_fields: { value: nil })
+        .where('users.created_at BETWEEN ? AND ?', 3.days.ago, 2.days.ago)
         .find_each do |user|
 
         user.custom_fields['activation_reminder'] = true
