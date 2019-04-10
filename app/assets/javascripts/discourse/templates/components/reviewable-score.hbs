@@ -15,7 +15,7 @@
     <span class="badge-notification new-posts score">{{format-score rs.score}}</span>
   </td>
   <td>
-    {{format-date rs.created_at}}
+    {{format-date rs.created_at format="tiny"}}
   </td>
 
   <td class="reviewable-score-spacer">
@@ -46,7 +46,7 @@
 </tr>
 {{#if rs.reviewable_conversation}}
   <tr>
-    <td colspan='4'>
+    <td colspan='7'>
       <div class='reviewable-conversation'>
         {{#each rs.reviewable_conversation.conversation_posts as |p index|}}
           {{reviewable-conversation-post post=p index=index}}
