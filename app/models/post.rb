@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
@@ -61,10 +60,10 @@ class Post < ActiveRecord::Base
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check, :skip_validation
 
-  LARGE_IMAGES      ||= "large_images"
-  BROKEN_IMAGES     ||= "broken_images"
-  DOWNLOADED_IMAGES ||= "downloaded_images"
-  MISSING_UPLOADS ||= "missing uploads"
+  LARGE_IMAGES      ||= "large_images".freeze
+  BROKEN_IMAGES     ||= "broken_images".freeze
+  DOWNLOADED_IMAGES ||= "downloaded_images".freeze
+  MISSING_UPLOADS ||= "missing uploads".freeze
 
   SHORT_POST_CHARS ||= 1200
 
