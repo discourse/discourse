@@ -27,6 +27,13 @@ const Theme = RestModel.extend({
         icon: "globe",
         advanced: true,
         customNames: true
+      },
+      {
+        id: 5,
+        name: "extra_scss",
+        icon: "paint-brush",
+        advanced: true,
+        customNames: true
       }
     ].map(target => {
       target["edited"] = this.hasEdited(target.name);
@@ -46,6 +53,14 @@ const Theme = RestModel.extend({
       "footer"
     ];
 
+    const scss_fields = (this.get("theme_fields") || [])
+      .filter(f => f.target === "extra_scss" && f.name !== "")
+      .map(f => f.name);
+
+    if (scss_fields.length < 1) {
+      scss_fields.push("importable_scss");
+    }
+
     return {
       common: [...common, "embedded_scss"],
       desktop: common,
@@ -56,7 +71,8 @@ const Theme = RestModel.extend({
         ...(this.get("theme_fields") || [])
           .filter(f => f.target === "translations" && f.name !== "en")
           .map(f => f.name)
-      ]
+      ],
+      extra_scss: scss_fields
     };
   },
 
@@ -71,7 +87,7 @@ const Theme = RestModel.extend({
           error: this.hasError(target, fieldName)
         };
 
-        if (target === "translations") {
+        if (target === "translations" || target === "extra_scss") {
           field.translatedName = fieldName;
         } else {
           field.translatedName = I18n.t(

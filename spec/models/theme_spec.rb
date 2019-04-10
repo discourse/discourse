@@ -238,6 +238,7 @@ HTML
   context "plugin api" do
     def transpile(html)
       f = ThemeField.create!(target_id: Theme.targets[:mobile], theme_id: 1, name: "after_header", value: html)
+      f.ensure_baked!
       return f.value_baked, f.javascript_cache
     end
 
@@ -307,6 +308,7 @@ HTML
 
       setting = theme.settings.find { |s| s.name == :font_size }
       setting.value = '30px'
+      theme.save!
 
       scss, _map = Stylesheet::Compiler.compile('@import "theme_variables"; @import "desktop_theme"; ', "theme.scss", theme_id: theme.id)
       expect(scss).to include("font-size:30px")
@@ -356,6 +358,7 @@ HTML
 
       setting = theme.settings.find { |s| s.name == :name }
       setting.value = 'bill'
+      theme.save!
 
       transpiled = <<~HTML
       (function() {
@@ -428,6 +431,7 @@ HTML
     expect(user_themes).to eq([])
 
     theme = Fabricate(:theme, name: "bob", user_selectable: true)
+    theme.save!
 
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"].map { |t| t["name"] }
@@ -485,6 +489,7 @@ HTML
     expect(cached_settings(theme.id)).to match(/\"boolean_setting\":true/)
 
     theme.settings.first.value = "false"
+    theme.save!
     expect(cached_settings(theme.id)).to match(/\"boolean_setting\":false/)
 
     child.set_field(target: :settings, name: "yaml", value: "integer_setting: 54")

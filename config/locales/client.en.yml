@@ -3390,6 +3390,7 @@ en:
           mobile: "Mobile"
           settings: "Settings"
           translations: "Translations"
+          extra_scss: "Extra SCSS"
           preview: "Preview"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
