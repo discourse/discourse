@@ -390,8 +390,7 @@ end
 
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
-  name = "missing_uploads"
-  PostCustomField.where(name: name).destroy_all
+  PostCustomField.where(name: Post::MISSING_UPLOADS).destroy_all
   posts = Post.have_uploads.select(:id, :cooked)
   count = 0
 
@@ -409,7 +408,7 @@ task 'posts:missing_uploads' => :environment do
     end
 
     if missing.present?
-      missing.each { |src| PostCustomField.create!(post_id: post.id, name: name, value: src) }
+      PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing.to_json)
       count += missing.count
     end
 
