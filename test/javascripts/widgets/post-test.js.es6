@@ -874,13 +874,13 @@ widgetTest("pm map", {
 widgetTest("post notice - with username", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
-    const date_2d_ago = new Date();
-    date_2d_ago.setDate(date_2d_ago.getDate() - 2);
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
       postNoticeType: "returning",
-      postNoticeTime: date_2d_ago,
+      postNoticeTime: twoDaysAgo,
       username: "codinghorror",
       name: "Jeff",
       created_at: new Date()
