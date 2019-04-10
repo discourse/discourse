@@ -3222,6 +3222,9 @@ en:
         queued_post_event:
           name: "Post Approval Event"
           details: "When a new queued post is created, approved or rejected."
+        reviewable_event:
+          name: "Reviewable Event"
+          details: "When a new item is ready for review and when its status is updated."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
