@@ -9,11 +9,11 @@ import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend(LoadMore, {
   _initialize: function() {
-    const stream = this.get("stream");
-    if (stream && stream.get("filter")) {
+    const filter = this.get("stream.filter");
+    if (filter) {
       this.set("classNames", [
         "user-stream",
-        "filter-" + stream.get("filter").replace(",", "-")
+        "filter-" + filter.replace(",", "-")
       ]);
     }
   }.on("init"),
