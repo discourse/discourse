@@ -12,7 +12,7 @@ class ReviewableUser < Reviewable
     return unless pending?
 
     actions.add(:approve) if guardian.can_approve?(target) || args[:approved_by_invite]
-    actions.add(:reject) if guardian.can_delete_user?(target)
+    actions.add(:reject)
   end
 
   def perform_approve(performed_by, args)
@@ -34,13 +34,20 @@ class ReviewableUser < Reviewable
   end
 
   def perform_reject(performed_by, args)
-    destroyer = UserDestroyer.new(performed_by) unless args[:skip_delete]
 
-    # If a user has posts, we won't delete them to preserve their content.
-    # However the reviable record will be "rejected" and they will remain
-    # unapproved in the database. A staff member can still approve them
-    # via the admin.
-    destroyer.destroy(target) rescue UserDestroyer::PostsExistError
+    # We'll delete the user if we can
+    if target.present?
+      destroyer = UserDestroyer.new(performed_by)
+
+      begin
+        destroyer.destroy(target)
+      rescue UserDestroyer::PostsExistError
+        # If a user has posts, we won't delete them to preserve their content.
+        # However the reviable record will be "rejected" and they will remain
+        # unapproved in the database. A staff member can still approve them
+        # via the admin.
+      end
+    end
 
     create_result(:success, :rejected)
   end
