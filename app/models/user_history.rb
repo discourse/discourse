@@ -204,7 +204,14 @@ class UserHistory < ActiveRecord::Base
 
   def self.staff_action_records(viewer, opts = nil)
     opts ||= {}
-    opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+    custom_staff = opts[:action_id].to_i == actions[:custom_staff]
+
+    if custom_staff
+      opts[:custom_type] = opts[:action_name]
+    else
+      opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+    end
+
     query = self.with_filters(opts.slice(*staff_filters)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
     query = query.where(admin_only: false) unless viewer && viewer.admin?
     query
