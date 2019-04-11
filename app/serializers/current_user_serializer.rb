@@ -43,7 +43,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :hide_profile_and_presence,
              :groups,
              :second_factor_enabled,
-             :ignored_users
+             :ignored_users,
+             :title_count_mode
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -87,6 +88,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def dynamic_favicon
     object.user_option.dynamic_favicon
+  end
+
+  def title_count_mode
+    object.user_option.title_count_mode
   end
 
   def automatically_unpin_topics
