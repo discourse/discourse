@@ -4261,10 +4261,12 @@ en:
             choices:
               open:
                 label: "Public"
-                description: "Anyone can access this community and sign up for an account"
+                description: "Anyone can access this community"
               restricted:
                 label: "Private"
-                description: "Only people I have invited or approved can access this community"
+                description: "Only logged in users can access this community"
+          invite_only:
+              placeholder: "People must be explicitly invited. Public registration is disabled."
 
       contact:
         title: "Contact"

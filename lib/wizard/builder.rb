@@ -76,17 +76,22 @@ class Wizard
       end
 
       @wizard.append_step('privacy') do |step|
-        locked = SiteSetting.login_required? && SiteSetting.invite_only?
         privacy = step.add_field(id: 'privacy',
                                  type: 'radio',
                                  required: true,
-                                 value: locked ? 'restricted' : 'open')
+                                 value: SiteSetting.login_required? ? 'restricted' : 'open')
         privacy.add_choice('open', icon: 'unlock')
         privacy.add_choice('restricted', icon: 'lock')
 
+        invite_only = step.add_field(id: 'invite_only',
+                                     type: 'checkbox',
+                                     required: false,
+                                     placeholder: 'wizard.invites.add_user',
+                                     value: SiteSetting.invite_only?)
+
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:privacy] == 'restricted')
-          updater.update_setting(:invite_only, updater.fields[:privacy] == 'restricted')
+          updater.update_setting(:invite_only, updater.fields[:invite_only])
         end
       end
 

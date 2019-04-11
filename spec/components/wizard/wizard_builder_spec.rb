@@ -113,4 +113,22 @@ describe Wizard::Builder do
       end
     end
   end
+
+  context 'privacy step' do
+    let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
+
+    it 'should set the right default value for the fields' do
+      SiteSetting.login_required = true
+      SiteSetting.invite_only = false
+
+      fields = privacy_step.fields
+      login_required_field = fields.first
+      invite_only_field = fields.last
+
+      expect(login_required_field.id).to eq('privacy')
+      expect(login_required_field.value).to eq("restricted")
+      expect(invite_only_field.id).to eq('invite_only')
+      expect(invite_only_field.value).to eq(false)
+    end
+  end
 end
