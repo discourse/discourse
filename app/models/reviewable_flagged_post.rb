@@ -154,9 +154,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_disagree_and_restore(performed_by, args)
-    result = perform_disagree(performed_by, args)
-    PostDestroyer.new(performed_by, post).recover
-    result
+    perform_disagree(performed_by, args)
   end
 
   def perform_disagree(performed_by, args)
