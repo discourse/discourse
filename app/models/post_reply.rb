@@ -29,4 +29,5 @@ end
 # Indexes
 #
 #  index_post_replies_on_post_id_and_reply_id  (post_id,reply_id) UNIQUE
+#  index_post_replies_on_reply_id              (reply_id)
 #
