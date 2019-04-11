@@ -17,6 +17,12 @@ describe Jobs::CreateUserReviewable do
     expect(reviewable.payload['email']).to eq(user.email)
   end
 
+  it "should not raise an error if there is a reviewable already" do
+    SiteSetting.must_approve_users = true
+    described_class.new.execute(user_id: user.id)
+    described_class.new.execute(user_id: user.id)
+  end
+
   describe "reasons" do
     it "does nothing if there's no reason" do
       described_class.new.execute(user_id: user.id)
