@@ -5,14 +5,14 @@ import { observes } from "ember-addons/ember-computed-decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
 
-const MobileFooterComponent = MountWidget.extend(
+const FooterNavComponent = MountWidget.extend(
   Scrolling,
   MobileScrollDirection,
   {
-    widget: "mobile-footer-nav",
+    widget: "footer-nav",
     mobileScrollDirection: null,
     scrollEventDisabled: false,
-    classNames: ["mobile-footer", "visible"],
+    classNames: ["footer-nav", "visible"],
     routeHistory: [],
     currentRouteIndex: 0,
     canGoBack: false,
@@ -28,20 +28,22 @@ const MobileFooterComponent = MountWidget.extend(
 
     didInsertElement() {
       this._super(...arguments);
-      this.bindScrolling({ name: "mobile-footer" });
-      $(window).on("resize.mobile-footer-on-scroll", () => this.scrolled());
+      this.bindScrolling({ name: "footer-nav" });
+      $(window).on("resize.footer-nav-on-scroll", () => this.scrolled());
       this.appEvents.on("page:changed", this, "_routeChanged");
       this.appEvents.on("composer:opened", this, "_composerOpened");
       this.appEvents.on("composer:closed", this, "_composerClosed");
+      $("body").addClass("with-footer-nav");
     },
 
     willDestroyElement() {
       this._super(...arguments);
-      this.unbindScrolling("mobile-footer");
-      $(window).unbind("resize.mobile-footer-on-scroll");
+      this.unbindScrolling("footer-nav");
+      $(window).unbind("resize.footer-nav-on-scroll");
       this.appEvents.off("page:changed", this, "_routeChanged");
       this.appEvents.off("composer:opened", this, "_composerOpened");
       this.appEvents.off("composer:closed", this, "_composerClosed");
+      $("body").removeClass("with-footer-nav");
     },
 
     // The user has scrolled the window, or it is finished rendering and ready for processing.
@@ -75,7 +77,7 @@ const MobileFooterComponent = MountWidget.extend(
       );
       // body class used to adjust positioning of #topic-progress-wrapper
       $("body").toggleClass(
-        "mobile-footer-nav-visible",
+        "footer-nav-visible",
         this.mobileScrollDirection === null ? true : false
       );
     },
@@ -119,10 +121,10 @@ const MobileFooterComponent = MountWidget.extend(
     setBackForward() {
       let index = this.get("currentRouteIndex");
 
-      this.set("canGoBack", index > 1 ? true : false);
+      this.set("canGoBack", (index > 1 || document.referrer) ? true : false);
       this.set("canGoForward", index < this.routeHistory.length ? true : false);
     }
   }
 );
 
-export default MobileFooterComponent;
+export default FooterNavComponent;

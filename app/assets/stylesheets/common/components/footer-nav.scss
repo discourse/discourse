@@ -1,38 +1,42 @@
 // --------------------------------------------------
-// Mobile footer (displayed in DiscourseHub app and PWAs)
+// Footer nav bar (displayed in DiscourseHub app and PWAs)
 // --------------------------------------------------
 
 $footer-nav-height: 55px;
 
-body.mobile-footer-nav-visible {
+body.with-footer-nav {
   padding-bottom: $footer-nav-height + 15;
+}
+
+body.footer-nav-visible {
   #topic-progress-wrapper,
   #reply-control.draft {
     bottom: $footer-nav-height;
   }
 }
 
-.mobile-footer {
-  background-color: $header_background;
-  box-shadow: shadow("mobile-footer");
+.footer-nav {
+  background-color: rgba($header_background, 0.9);
+  box-shadow: shadow("footer-nav");
   height: $footer-nav-height;
   position: fixed;
   bottom: -$footer-nav-height;
   left: 0;
   width: 100%;
-  z-index: z("mobile-footer");
-  transition: all linear 0.15s;
+  z-index: z("footer-nav");
+  transition: all linear 0.1s;
 
   .d-icon {
-    color: $header_primary-low-mid;
+    color: $header_primary-medium;
   }
 
   &.visible {
     bottom: 0px;
+
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .mobile-footer-nav {
+  .footer-nav-widget {
     display: flex;
     justify-content: "space-evenly";
     @include unselectable;
@@ -45,3 +49,11 @@ body.mobile-footer-nav-visible {
     }
   }
 }
+
+@supports (-webkit-backdrop-filter: blur(10px)) {
+  .footer-nav {
+    background-color: rgba($header_background, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
