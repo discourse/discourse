@@ -88,33 +88,13 @@ RSpec.describe ApplicationController do
       Rails.logger = @old_logger
     end
 
-    it 'should not raise a 500 (nor should it log a warning) for bad params' do
+    it 'should clean bad params from request via utf8-cleaner gem' do
       bad_str = "d\xDE".force_encoding('utf-8')
       expect(bad_str.valid_encoding?).to eq(false)
 
       get "/latest.json", params: { test: bad_str }
 
-      expect(response.status).to eq(400)
-
-      log = @logs.string
-
-      if (log.include? 'exception app middleware')
-        # heisentest diagnostics
-        puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITENT TEST FAIL"
-        puts log
-        puts ">> action_dispatch.exception"
-        ex = request.env['action_dispatch.exception']
-        puts ">> exception class: #{ex.class} : #{ex}"
-      end
-
-      expect(log).not_to include('exception app middleware')
-
-      expect(JSON.parse(response.body)).to eq(
-        "status" => 400,
-        "error" => "Bad Request"
-      )
-
+      expect(response.status).to eq(200)
     end
   end
 

@@ -443,6 +443,8 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.12.1)
+    utf8-cleaner (0.2.5)
+      activesupport
     webmock (3.4.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
@@ -568,6 +570,7 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+  utf8-cleaner
   webmock
   webpush
 
