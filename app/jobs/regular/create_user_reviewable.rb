@@ -29,5 +29,7 @@ class Jobs::CreateUserReviewable < Jobs::Base
       )
     end
 
+  rescue ActiveRecord::RecordNotUnique
+    # If the reviewable is somehow queued twice, we can ignore.
   end
 end
