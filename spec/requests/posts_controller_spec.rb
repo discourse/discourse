@@ -801,7 +801,7 @@ describe PostsController do
           expect(user).to be_silenced
 
           rp = ReviewableQueuedPost.find_by(created_by: user)
-          expect(rp.payload['reason']).to eq('fast_typer')
+          expect(rp.reviewable_scores.first.reason).to eq('fast_typer')
 
           mod = Fabricate(:moderator)
           rp.perform(mod, :approve)
@@ -851,7 +851,8 @@ describe PostsController do
 
         expect(parsed["action"]).to eq("enqueued")
         reviewable = ReviewableQueuedPost.find_by(created_by: user)
-        expect(reviewable.payload['reason']).to eq('auto_silence_regex')
+        score = reviewable.reviewable_scores.first
+        expect(score.reason).to eq('auto_silence_regex')
 
         user.reload
         expect(user).to be_silenced

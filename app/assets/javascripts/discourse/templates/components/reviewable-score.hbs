@@ -19,7 +19,7 @@
   </td>
 
   <td class="reviewable-score-spacer">
-{{d-icon "angle-double-right"}}
+    {{d-icon "angle-double-right"}}
   </td>
 
   <td class='reviewed-by'>
@@ -38,12 +38,19 @@
   </td>
   <td>
     {{#if rs.reviewed_by}}
-
-    {{format-date rs.reviewed_at format="tiny"}}
+      {{format-date rs.reviewed_at format="tiny"}}
     {{/if}}
-
   </td>
 </tr>
+
+{{#if rs.reason}}
+  <tr>
+    <td colspan='7'>
+      <div class='reviewable-score-reason'>{{{rs.reason}}}</div>
+    </td>
+  </tr>
+{{/if}}
+
 {{#if rs.reviewable_conversation}}
   <tr>
     <td colspan='7'>

@@ -115,6 +115,7 @@ class Reviewable < ActiveRecord::Base
   def add_score(
     user,
     reviewable_score_type,
+    reason: nil,
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
@@ -130,7 +131,7 @@ class Reviewable < ActiveRecord::Base
       sub_total = SiteSetting.min_score_default_visibility
     end
 
-    rs = reviewable_scores.create!(
+    rs = reviewable_scores.new(
       user: user,
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
@@ -139,6 +140,8 @@ class Reviewable < ActiveRecord::Base
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
     )
+    rs.reason = reason.to_s if reason
+    rs.save!
 
     update(score: self.score + rs.score, latest_score: rs.created_at)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic

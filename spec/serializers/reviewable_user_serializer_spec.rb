@@ -6,6 +6,7 @@ describe ReviewableUserSerializer do
   let(:admin) { Fabricate(:admin) }
 
   it "includes the user fields for review" do
+    SiteSetting.must_approve_users = true
     Jobs::CreateUserReviewable.new.execute(user_id: user.id)
     reviewable = Reviewable.find_by(target: user)
 

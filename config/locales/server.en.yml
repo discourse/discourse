@@ -4385,6 +4385,18 @@ en:
   reviewables:
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
+    reasons:
+      post_count: "The poster has not met the `approve_post_count` requirements."
+      trust_level: "The poster has not met the `approve_unless_trust_level` requirement."
+      new_topics_unless_trust_level: "The poster has not met the `approve_new_topics_unless_trust_level` requirement."
+      fast_typer: "The poster typed in their post suspiciously fast. See: `min_first_post_typing_time`."
+      auto_silence_regexp: "The post matched the `auto_silence_first_post_regex` setting."
+      watched_word: "The post included a Watched Word."
+      staged: "The poster was staged and `approve_unless_staged` was set."
+      category: "The category of the post requires approval."
+      must_approve_users: "The user must be approved because `must_approve_users` is enabled."
+      invite_only: "The user must be approved because `invite_only` is enabled."
+
     actions:
       agree:
         title: "Agree..."
