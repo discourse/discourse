@@ -20,6 +20,7 @@ task "import:ensure_consistency" => :environment do
   update_users
   update_groups
   update_tag_stats
+  create_category_definitions
 
   log "Done!"
 end
@@ -423,6 +424,11 @@ end
 
 def update_tag_stats
   Tag.ensure_consistency!
+end
+
+def create_category_definitions
+  log "Creating category definitions"
+  Category.where(topic_id: nil).each(&:create_category_definition)
 end
 
 def log(message)
