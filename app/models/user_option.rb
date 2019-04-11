@@ -29,6 +29,10 @@ class UserOption < ActiveRecord::Base
     @text_sizes ||= Enum.new(normal: 0, larger: 1, largest: 2, smaller: 3)
   end
 
+  def self.title_count_modes
+    @title_count_modes ||= Enum.new(notifications: 0, contextual: 1)
+  end
+
   def self.email_level_types
     @email_level_type ||= Enum.new(always: 0, only_when_away: 1, never: 2)
   end
@@ -67,6 +71,8 @@ class UserOption < ActiveRecord::Base
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
 
     self.text_size = SiteSetting.default_text_size
+
+    self.title_count_mode = SiteSetting.default_title_count_mode
 
     true
   end
@@ -162,6 +168,14 @@ class UserOption < ActiveRecord::Base
 
   def text_size=(value)
     self.text_size_key = UserOption.text_sizes[value.to_sym]
+  end
+
+  def title_count_mode
+    UserOption.title_count_modes[title_count_mode_key]
+  end
+
+  def title_count_mode=(value)
+    self.title_count_mode_key = UserOption.title_count_modes[value.to_sym]
   end
 
   private

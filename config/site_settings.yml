@@ -1909,7 +1909,13 @@ user_preferences:
       - normal
       - larger
       - largest
-
+  
+  default_title_count_mode:
+    type: enum
+    default: notifications
+    choices:
+      - notifications
+      - contextual
 api:
   retain_web_hook_events_period_days:
     default: 30

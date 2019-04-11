@@ -51,9 +51,11 @@ const Discourse = Ember.Application.extend({
       $("title").text(title);
     }
 
-    var displayCount = Discourse.User.current()
-      ? this.get("notificationCount")
-      : this.get("contextCount");
+    var displayCount =
+      Discourse.User.current() &&
+      Discourse.User.currentProp("title_count_mode") === "notifications"
+        ? this.get("notificationCount")
+        : this.get("contextCount");
 
     if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
       title = `(${displayCount}) ${title}`;
