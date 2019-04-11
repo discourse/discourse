@@ -1,8 +1,8 @@
 import { createWidget } from "discourse/widgets/widget";
-import { isAppWebview } from "discourse/lib/utilities";
+import { isAppWebview, isChromePWA } from "discourse/lib/utilities";
 
-createWidget("mobile-footer-nav", {
-  tagName: "div.mobile-footer-nav",
+createWidget("footer-nav", {
+  tagName: "div.footer-nav-widget",
 
   html(attrs) {
     const buttons = [];
@@ -43,6 +43,15 @@ createWidget("mobile-footer-nav", {
       );
     }
 
+    if (isChromePWA()) {
+      buttons.push(
+        this.attach("flat-button", {
+          action: "refresh",
+          icon: "sync",
+          className: "btn-large"
+        })
+      );
+    }
     return buttons;
   },
 
@@ -54,5 +63,9 @@ createWidget("mobile-footer-nav", {
     window.ReactNativeWebView.postMessage(
       JSON.stringify({ shareUrl: window.location.href })
     );
+  },
+
+  refresh() {
+    window.location.reload();
   }
 });
