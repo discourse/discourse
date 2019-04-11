@@ -1952,7 +1952,6 @@ en:
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
-    default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 

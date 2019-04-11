@@ -548,19 +548,17 @@ class PostCreator
   def track_topic
     return if @opts[:import_mode] || @opts[:auto_track] == false
 
-    unless @user.user_option.disable_jump_reply?
-      TopicUser.change(@post.user_id,
-                       @topic.id,
-                       posted: true,
-                       last_read_post_number: @post.post_number,
-                       highest_seen_post_number: @post.post_number)
+    TopicUser.change(@post.user_id,
+                      @topic.id,
+                      posted: true,
+                      last_read_post_number: @post.post_number,
+                      highest_seen_post_number: @post.post_number)
 
-      # assume it took us 5 seconds of reading time to make a post
-      PostTiming.record_timing(topic_id: @post.topic_id,
-                               user_id: @post.user_id,
-                               post_number: @post.post_number,
-                               msecs: 5000)
-    end
+    # assume it took us 5 seconds of reading time to make a post
+    PostTiming.record_timing(topic_id: @post.topic_id,
+                             user_id: @post.user_id,
+                             post_number: @post.post_number,
+                             msecs: 5000)
 
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])

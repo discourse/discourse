@@ -719,14 +719,9 @@ export default Ember.Controller.extend({
           currentUser.set("reply_count", currentUser.get("reply_count") + 1);
         }
 
-        const disableJumpReply = Discourse.User.currentProp(
-          "disable_jump_reply"
-        );
-        if (!composer.get("replyingToTopic") || !disableJumpReply) {
-          const post = result.target;
-          if (post && !staged) {
-            DiscourseURL.routeTo(post.get("url"));
-          }
+        const post = result.target;
+        if (post && !staged) {
+          DiscourseURL.routeTo(post.get("url"));
         }
       })
       .catch(error => {

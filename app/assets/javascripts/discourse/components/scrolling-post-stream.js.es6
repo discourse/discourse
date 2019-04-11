@@ -261,10 +261,8 @@ export default MountWidget.extend({
   },
 
   _posted(staged) {
-    const disableJumpReply = this.currentUser.get("disable_jump_reply");
-
     this.queueRerender(() => {
-      if (staged && !disableJumpReply) {
+      if (staged) {
         const postNumber = staged.get("post_number");
         DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
       }
