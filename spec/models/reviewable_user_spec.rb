@@ -38,6 +38,7 @@ RSpec.describe ReviewableUser, type: :model do
 
   context "when a user is deleted" do
     it "should reject the reviewable" do
+      SiteSetting.must_approve_users = true
       Jobs::CreateUserReviewable.new.execute(user_id: user.id)
       reviewable = Reviewable.find_by(target: user)
       expect(reviewable.pending?).to eq(true)

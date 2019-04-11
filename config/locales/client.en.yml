@@ -429,6 +429,7 @@ en:
       conversation:
         view_full: "view full conversation"
       scores:
+        score: "Score"
         date: "Date"
         type: "Type"
         status: "Status"

@@ -198,12 +198,9 @@ class NewPostManager
   def enqueue(reason = nil)
     result = NewPostResult.new(:enqueued)
 
-    payload = { raw: @args[:raw], tags: @args[:tags] }
-    payload[:reason] = reason.to_s if reason
-
     reviewable = ReviewableQueuedPost.new(
       created_by: @user,
-      payload: payload,
+      payload: { raw: @args[:raw], tags: @args[:tags] },
       topic_id: @args[:topic_id],
       reviewable_by_moderator: true
     )
@@ -225,6 +222,7 @@ class NewPostManager
         reviewable.add_score(
           Discourse.system_user,
           ReviewableScore.types[:needs_approval],
+          reason: reason,
           force_review: true
         )
       else
