@@ -24,7 +24,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :should_be_redirected_to_top,
              :redirected_to_top,
-             :disable_jump_reply,
              :custom_fields,
              :muted_category_ids,
              :dismissed_banner_key,
@@ -75,10 +74,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def enable_quoting
     object.user_option.enable_quoting
-  end
-
-  def disable_jump_reply
-    object.user_option.disable_jump_reply
   end
 
   def external_links_in_new_tab

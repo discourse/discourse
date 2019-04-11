@@ -771,7 +771,6 @@ en:
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
-      disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"

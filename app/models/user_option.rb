@@ -49,7 +49,6 @@ class UserOption < ActiveRecord::Base
     self.enable_quoting = SiteSetting.default_other_enable_quoting
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
-    self.disable_jump_reply = SiteSetting.default_other_disable_jump_reply
 
     self.new_topic_duration_minutes = SiteSetting.default_other_new_topic_duration_minutes
     self.auto_track_topics_after_msecs = SiteSetting.default_other_auto_track_topics_after_msecs
@@ -172,6 +171,8 @@ class UserOption < ActiveRecord::Base
   end
 
 end
+
+# TODO: Drop disable_jump_reply column. Functionality removed April 2019
 
 # == Schema Information
 #

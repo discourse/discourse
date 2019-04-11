@@ -30,7 +30,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
       "external_links_in_new_tab",
       "dynamic_favicon",
       "enable_quoting",
-      "disable_jump_reply",
       "automatically_unpin_topics",
       "allow_private_messages",
       "homepage_id",

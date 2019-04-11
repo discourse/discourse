@@ -274,7 +274,6 @@ const User = RestModel.extend({
       "email_previous_replies",
       "dynamic_favicon",
       "enable_quoting",
-      "disable_jump_reply",
       "automatically_unpin_topics",
       "digest_after_minutes",
       "new_topic_duration_minutes",
