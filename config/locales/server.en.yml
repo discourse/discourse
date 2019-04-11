@@ -4266,7 +4266,7 @@ en:
                 label: "Private"
                 description: "Only logged in users can access this community"
           invite_only:
-              placeholder: "Account can be created by invitation only, sign ups are disabled."
+              placeholder: "People must be explicitly invited. Public registration is disabled."
 
       contact:
         title: "Contact"
