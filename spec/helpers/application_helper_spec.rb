@@ -5,7 +5,6 @@ describe ApplicationHelper do
   describe "preload_script" do
     it "provides brotli links to brotli cdn" do
       set_cdn_url "https://awesome.com"
-      set_env "COMPRESS_BROTLI", "1"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
@@ -20,7 +19,6 @@ describe ApplicationHelper do
         global_setting :s3_access_key_id, '123'
         global_setting :s3_secret_access_key, '123'
         global_setting :s3_cdn_url, 'https://s3cdn.com'
-        set_env "COMPRESS_BROTLI", "1"
       end
 
       after do
