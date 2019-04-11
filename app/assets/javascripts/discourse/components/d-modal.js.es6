@@ -73,7 +73,7 @@ export default Ember.Component.extend({
     $("html").off("keydown.discourse-modal");
   },
 
-  click(e) {
+  mouseDown(e) {
     if (!this.get("dismissable")) {
       return;
     }
