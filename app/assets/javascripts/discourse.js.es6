@@ -55,31 +55,11 @@ const Discourse = Ember.Application.extend({
       ? this.get("notificationCount")
       : this.get("contextCount");
 
-    if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
+    if (displayCount > 0) {
       title = `(${displayCount}) ${title}`;
     }
 
     document.title = title;
-  },
-
-  @observes("contextCount", "notificationCount")
-  faviconChanged() {
-    if (Discourse.User.currentProp("dynamic_favicon")) {
-      let url = Discourse.SiteSettings.site_favicon_url;
-
-      // Since the favicon is cached on the browser for a really long time, we
-      // append the favicon_url as query params to the path so that the cache
-      // is not used when the favicon changes.
-      if (/^http/.test(url)) {
-        url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
-      }
-
-      var displayCount = Discourse.User.current()
-        ? this.get("notificationCount")
-        : this.get("contextCount");
-
-      new window.Favcount(url).set(displayCount);
-    }
   },
 
   // The classes of buttons to show on a post

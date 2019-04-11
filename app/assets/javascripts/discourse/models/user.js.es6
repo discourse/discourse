@@ -272,7 +272,6 @@ const User = RestModel.extend({
       "email_messages_level",
       "email_level",
       "email_previous_replies",
-      "dynamic_favicon",
       "enable_quoting",
       "disable_jump_reply",
       "automatically_unpin_topics",
@@ -341,8 +340,7 @@ const User = RestModel.extend({
         const userProps = Ember.getProperties(
           this.get("user_option"),
           "enable_quoting",
-          "external_links_in_new_tab",
-          "dynamic_favicon"
+          "external_links_in_new_tab"
         );
         Discourse.User.current().setProperties(userProps);
         this.setProperties(updatedState);

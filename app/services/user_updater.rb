@@ -22,7 +22,6 @@ class UserUpdater
     :email_messages_level,
     :external_links_in_new_tab,
     :enable_quoting,
-    :dynamic_favicon,
     :disable_jump_reply,
     :automatically_unpin_topics,
     :digest_after_minutes,

@@ -6,7 +6,6 @@ class UserOptionSerializer < ApplicationSerializer
              :email_level,
              :email_messages_level,
              :external_links_in_new_tab,
-             :dynamic_favicon,
              :enable_quoting,
              :disable_jump_reply,
              :digest_after_minutes,

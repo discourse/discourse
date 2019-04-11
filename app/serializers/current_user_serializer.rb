@@ -15,7 +15,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :topic_count,
              :enable_quoting,
              :external_links_in_new_tab,
-             :dynamic_favicon,
              :trust_level,
              :can_send_private_email_messages,
              :can_edit,
@@ -83,10 +82,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def external_links_in_new_tab
     object.user_option.external_links_in_new_tab
-  end
-
-  def dynamic_favicon
-    object.user_option.dynamic_favicon
   end
 
   def automatically_unpin_topics

@@ -28,7 +28,6 @@ export default Ember.Controller.extend(PreferencesTabController, {
     let attrs = [
       "locale",
       "external_links_in_new_tab",
-      "dynamic_favicon",
       "enable_quoting",
       "disable_jump_reply",
       "automatically_unpin_topics",

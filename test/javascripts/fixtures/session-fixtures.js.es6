@@ -18,7 +18,6 @@ export default {
       topic_count: 36,
       enable_quoting: true,
       external_links_in_new_tab: false,
-      dynamic_favicon: true,
       trust_level: 4,
       can_edit: true,
       can_invite_to_forum: true,

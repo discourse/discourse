@@ -24,13 +24,12 @@ describe UserSerializer do
 
       user = Fabricate.build(:user,
                               user_profile: Fabricate.build(:user_profile),
-                              user_option: UserOption.new(dynamic_favicon: true),
+                              user_option: UserOption.new(),
                               user_stat: UserStat.new
                             )
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
-      expect(json[:user_option][:dynamic_favicon]).to eq(true)
       expect(json[:user_option][:new_topic_duration_minutes]).to eq(60 * 24)
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
       expect(json[:user_option][:notification_level_when_replying]).to eq(3)

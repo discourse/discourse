@@ -1490,7 +1490,6 @@ describe User do
       SiteSetting.default_other_notification_level_when_replying = 3 # immediately
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_enable_quoting = false
-      SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_disable_jump_reply = true
 
       SiteSetting.default_topics_automatic_unpin = false
@@ -1510,7 +1509,6 @@ describe User do
       expect(options.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
-      expect(options.dynamic_favicon).to eq(true)
       expect(options.disable_jump_reply).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)
