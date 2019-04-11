@@ -400,7 +400,6 @@ export default Ember.Component.extend({
   },
 
   _setPickerMinDate(date) {
-    console.log("_setPickerMinDate", date);
     if (date && !moment(date, this.dateFormat).isValid()) {
       date = null;
     }
