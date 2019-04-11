@@ -121,7 +121,7 @@ const FooterNavComponent = MountWidget.extend(
     setBackForward() {
       let index = this.get("currentRouteIndex");
 
-      this.set("canGoBack", (index > 1 || document.referrer) ? true : false);
+      this.set("canGoBack", index > 1 || document.referrer ? true : false);
       this.set("canGoForward", index < this.routeHistory.length ? true : false);
     }
   }
