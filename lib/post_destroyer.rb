@@ -181,6 +181,8 @@ class PostDestroyer
   end
 
   def user_recovered
+    return unless @post.user_deleted?
+
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true

@@ -173,6 +173,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(reviewable).to be_rejected
       expect(score.reload).to be_disagreed
       expect(post.user_deleted?).to eq(false)
+      expect(post.hidden?).to eq(false)
     end
 
   end
