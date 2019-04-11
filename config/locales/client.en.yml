@@ -1497,8 +1497,6 @@ en:
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving..."
-      saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
