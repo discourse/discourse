@@ -1037,8 +1037,8 @@ en:
 
       title_count_mode:
         title: "Background page title displays count of:"
-        notifications: "Unseen notifications"
-        contextual: "Unseen page content"
+        notifications: "New notifications"
+        contextual: "New page content"
 
       like_notification_frequency:
         title: "Notify when liked"
