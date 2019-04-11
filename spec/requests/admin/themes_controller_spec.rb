@@ -218,6 +218,12 @@ describe Admin::ThemesController do
   describe '#update' do
     let(:theme) { Fabricate(:theme) }
 
+    it 'returns the right response when an invalid id is given' do
+      put "/admin/themes/99999.json"
+
+      expect(response.status).to eq(400)
+    end
+
     it 'can change default theme' do
       SiteSetting.default_theme_id = -1
 
@@ -342,6 +348,12 @@ describe Admin::ThemesController do
   describe '#destroy' do
     let(:theme) { Fabricate(:theme) }
 
+    it 'returns the right response when an invalid id is given' do
+      delete "/admin/themes/9999.json"
+
+      expect(response.status).to eq(400)
+    end
+
     it "deletes the field's javascript cache" do
       theme.set_field(target: :common, name: :header, value: '<script>console.log("test")</script>')
       theme.save!
@@ -354,6 +366,14 @@ describe Admin::ThemesController do
       expect(response.status).to eq(204)
       expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe '#preview' do
+    it "should return the right response when an invalid id is given" do
+      get "/admin/themes/9999/preview.json"
+
+      expect(response.status).to eq(400)
     end
   end
 end
