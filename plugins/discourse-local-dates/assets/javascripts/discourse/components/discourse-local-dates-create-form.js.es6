@@ -323,11 +323,13 @@ export default Ember.Component.extend({
     focusFrom() {
       this.setProperties({ fromSelected: true, toSelected: false });
       this._setPickerDate(this.get("fromConfig.date"));
+      this._setPickerMinDate(null);
     },
 
     focusTo() {
       this.setProperties({ toSelected: true, fromSelected: false });
       this._setPickerDate(this.get("toConfig.date"));
+      this._setPickerMinDate(this.get("fromConfig.date"));
     },
 
     advancedMode() {
@@ -394,6 +396,17 @@ export default Ember.Component.extend({
 
         resolve(new Pikaday(options));
       });
+    });
+  },
+
+  _setPickerMinDate(date) {
+    console.log("_setPickerMinDate", date);
+    if (date && !moment(date, this.dateFormat).isValid()) {
+      date = null;
+    }
+
+    Ember.run.schedule("afterRender", () => {
+      this._picker.setMinDate(moment(date, this.dateFormat).toDate());
     });
   },
 
