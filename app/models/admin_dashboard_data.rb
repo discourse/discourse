@@ -145,7 +145,7 @@ class AdminDashboardData
   end
 
   def ram_check
-    I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total && MemInfo.new.mem_total < 1_000_000
+    I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total && MemInfo.new.mem_total < 950_000
   end
 
   def google_oauth2_config_check
