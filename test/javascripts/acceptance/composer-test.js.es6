@@ -638,6 +638,8 @@ QUnit.test("Can switch states without abandon popup", async assert => {
     "mode should have changed"
   );
 
+  assert.ok(find(".save-animation"), "save animation should show");
+
   toggleCheckDraftPopup(false);
 });
 

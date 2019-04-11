@@ -74,6 +74,8 @@ const Composer = RestModel.extend({
   _categoryId: null,
   unlistTopic: false,
   noBump: false,
+  draftSaving: false,
+  draftSaved: false,
 
   archetypes: function() {
     return this.site.get("archetypes");
@@ -971,7 +973,8 @@ const Composer = RestModel.extend({
     }
 
     this.setProperties({
-      draftStatus: I18n.t("composer.saving_draft_tip"),
+      draftSaved: false,
+      draftSaving: true,
       draftConflictUser: null
     });
 
@@ -1004,18 +1007,21 @@ const Composer = RestModel.extend({
       .then(result => {
         if (result.conflict_user) {
           this.setProperties({
+            draftSaving: false,
             draftStatus: I18n.t("composer.edit_conflict"),
             draftConflictUser: result.conflict_user
           });
         } else {
           this.setProperties({
-            draftStatus: I18n.t("composer.saved_draft_tip"),
+            draftSaving: false,
+            draftSaved: true,
             draftConflictUser: null
           });
         }
       })
       .catch(() => {
         this.setProperties({
+          draftSaving: false,
           draftStatus: I18n.t("composer.drafts_offline"),
           draftConflictUser: null
         });
@@ -1033,6 +1039,8 @@ const Composer = RestModel.extend({
           self.set("draftStatus", null);
           self.set("draftConflictUser", null);
           self._clearingStatus = null;
+          self.set("draftSaving", false);
+          self.set("draftSaved", false);
         },
         Ember.Test ? 0 : 1000
       );
