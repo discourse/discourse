@@ -307,6 +307,14 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    setTime(event) {
+      this._setTimeIfValid(event.target.value, "time");
+    },
+
+    setToTime(event) {
+      this._setTimeIfValid(event.target.value, "toTime");
+    },
+
     eraseToDateTime() {
       this.setProperties({ toDate: null, toTime: null });
       this._setPickerDate(null);
@@ -340,6 +348,17 @@ export default Ember.Component.extend({
     }
   },
 
+  _setTimeIfValid(time, key) {
+    if (Ember.isEmpty(time)) {
+      this.set(key, null);
+      return;
+    }
+
+    if (/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+      this.set(key, time);
+    }
+  },
+
   _setupPicker() {
     return new Ember.RSVP.Promise(resolve => {
       loadScript("/javascripts/pikaday.js").then(() => {
@@ -352,6 +371,7 @@ export default Ember.Component.extend({
           firstDay: 1,
           defaultDate: moment(this.get("date"), this.dateFormat).toDate(),
           setDefaultDate: true,
+          keyboardInput: false,
           i18n: {
             previousMonth: I18n.t("dates.previous_month"),
             nextMonth: I18n.t("dates.next_month"),

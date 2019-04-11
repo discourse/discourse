@@ -54,7 +54,7 @@
         {{#if fromSelected}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            {{input input=(mut time) type="time" value=time class="time-picker"}}
+            {{input maxlength=5 placeholder="hh:mm" input=(action "setTime") type="time" value=(unbound time) class="time-picker"}}
           </div>
         {{/if}}
 
@@ -62,7 +62,7 @@
         {{#if toDate}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            {{input input=(mut toTime) type="time" value=toTime class="time-picker"}}
+            {{input maxlength=5 placeholder="hh:mm" input=(action "setToTime") type="time" value=(unbound toTime) class="time-picker"}}
           </div>
         {{/if}}
         {{/if}}
