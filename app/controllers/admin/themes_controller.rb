@@ -7,8 +7,10 @@ class Admin::ThemesController < Admin::AdminController
   skip_before_action :check_xhr, only: [:show, :preview, :export]
 
   def preview
-    @theme = Theme.find(params[:id])
-    redirect_to path("/?preview_theme_id=#{@theme.id}")
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+
+    redirect_to path("/?preview_theme_id=#{theme.id}")
   end
 
   def upload_asset
@@ -148,7 +150,8 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update
-    @theme = Theme.find(params[:id])
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
 
     original_json = ThemeSerializer.new(@theme, root: false).to_json
 
@@ -215,7 +218,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def destroy
-    @theme = Theme.find(params[:id])
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
     StaffActionLogger.new(current_user).log_theme_destroy(@theme)
     @theme.destroy
 
@@ -225,12 +230,15 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def show
-    @theme = Theme.find(params[:id])
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
     render json: ThemeSerializer.new(@theme)
   end
 
   def export
-    @theme = Theme.find(params[:id])
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
 
     exporter = ThemeStore::TgzExporter.new(@theme)
     file_path = exporter.package_filename
