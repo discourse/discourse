@@ -16,6 +16,7 @@ class EmailController < ApplicationController
       if @user = key.user
         post = key.post
         @topic = post&.topic || key.topic
+        @digest_unsubscribe = !@topic && !SiteSetting.disable_digest_emails
         @type = key.unsubscribe_key_type
         @not_found = false
 
@@ -134,15 +135,25 @@ class EmailController < ApplicationController
 
   def digest_frequencies(user)
     frequency_in_minutes = user.user_option.digest_after_minutes
+    frequencies = DigestEmailSiteSetting.values.dup
+    never = frequencies.delete_at(0)
     allowed_frequencies = %w[never weekly every_month every_six_months]
 
-    DigestEmailSiteSetting.values.reduce(frequencies: [], selected: nil) do |memo, v|
-      memo[:selected] = v[:name] if v[:value] == frequency_in_minutes
+    result = frequencies.reduce(frequencies: [], current: nil, selected: nil, take_next: false) do |memo, v|
+      memo[:current] = v[:name] if v[:value] == frequency_in_minutes
       next(memo) unless allowed_frequencies.include?(v[:name])
 
       memo.tap do |m|
+        m[:selected] = v[:value] if m[:take_next]
         m[:frequencies] << [I18n.t("unsubscribe.digest_frequency.#{v[:name]}"), v[:value]]
+        m[:take_next] = !m[:take_next] && m[:current]
       end
+    end
+
+    result.slice(:frequencies, :current, :selected).tap do |r|
+      r[:frequencies] << [I18n.t("unsubscribe.digest_frequency.#{never[:name]}"), never[:value]]
+      r[:selected] ||= never[:value]
+      r[:current] ||= never[:name]
     end
   end
 end

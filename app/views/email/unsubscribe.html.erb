@@ -52,24 +52,23 @@
         </p>
       <% end %>
 
-      <% unless @topic || SiteSetting.disable_digest_emails %>
+      <% if @digest_unsubscribe %>
           <p>
           
-          <% if @digest_frequencies[:selected] %>
+          <% if @digest_frequencies[:current] %>
             <h3>
             <%= t(
               'unsubscribe.digest_frequency.title', 
-              frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:selected]}")
+              frequency: t("unsubscribe.digest_frequency.#{@digest_frequencies[:current]}")
             ) %>
             </h3>
             <br/>
           <% end %>
           
           <label><%= t 'unsubscribe.digest_frequency.select_title' %></label>
-          <% no_digest_frequency = 0 %>
           <%= 
             select_tag :digest_after_minutes, 
-            options_for_select(@digest_frequencies[:frequencies], no_digest_frequency), 
+            options_for_select(@digest_frequencies[:frequencies], @digest_frequencies[:selected]), 
             class: 'combobox' 
           %>
           </p>

@@ -225,13 +225,34 @@ RSpec.describe EmailController do
 
       it 'Lets you select the digest frequency ranging from never to half a year' do
         selected_digest_frequency = 0
-        slow_digest_frequencies = ['every month', 'every six months', 'never', 'weekly']
+        slow_digest_frequencies = ['weekly', 'every month', 'every six months', 'never']
 
         navigate_to_unsubscribe
 
         source = Nokogiri::HTML::fragment(response.body)
-        expect(source.css(".combobox option").map(&:inner_text)).to match_array(slow_digest_frequencies)
-        expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(selected_digest_frequency.to_s)
+        expect(source.css(".combobox option").map(&:inner_text)).to eq(slow_digest_frequencies)
+      end
+
+      it 'Selects the next slowest frequency by default' do
+        every_month_freq = 43200
+        six_months_freq = 259200
+        user.user_option.update_columns(digest_after_minutes: every_month_freq)
+
+        navigate_to_unsubscribe
+
+        source = Nokogiri::HTML::fragment(response.body)
+        expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(six_months_freq.to_s)
+      end
+
+      it 'Uses never as the selected frequency if current one is six months' do
+        never_frequency = 0
+        six_months_freq = 259200
+        user.user_option.update_columns(digest_after_minutes: six_months_freq)
+
+        navigate_to_unsubscribe
+
+        source = Nokogiri::HTML::fragment(response.body)
+        expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(never_frequency.to_s)
       end
     end
 
