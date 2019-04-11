@@ -21,6 +21,7 @@ const USER_HOMES = {
 };
 
 const TEXT_SIZES = ["smaller", "normal", "larger", "largest"];
+const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default Ember.Controller.extend(PreferencesTabController, {
   @computed("makeThemeDefault")
@@ -35,7 +36,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
       "allow_private_messages",
       "homepage_id",
       "hide_profile_and_presence",
-      "text_size"
+      "text_size",
+      "title_count_mode"
     ];
 
     if (makeDefault) {
@@ -66,6 +68,13 @@ export default Ember.Controller.extend(PreferencesTabController, {
   textSizes() {
     return TEXT_SIZES.map(value => {
       return { name: I18n.t(`user.text_size.${value}`), value };
+    });
+  },
+
+  @computed
+  titleCountModes() {
+    return TITLE_COUNT_MODES.map(value => {
+      return { name: I18n.t(`user.title_count_mode.${value}`), value };
     });
   },
 

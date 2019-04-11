@@ -1965,6 +1965,8 @@ en:
 
     default_text_size: "Text size which is selected by default"
 
+    default_title_count_mode: "Default mode for the page title counter"
+
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
 

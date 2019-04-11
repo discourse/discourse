@@ -58,6 +58,13 @@
   {{#if isiPad}}
     {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks}}
   {{/if}}
+  <div class='controls controls-dropdown'>
+    <label for="user-email-level">{{i18n 'user.title_count_mode.title'}}</label>
+    {{combo-box valueAttribute="value"
+                content=titleCountModes
+                value=model.user_option.title_count_mode
+                id="user-title-count-mode"}}
+  </div>
 </div>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}
