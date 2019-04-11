@@ -11,7 +11,7 @@ class Jobs::CreateUserReviewable < Jobs::Base
     if user = User.find_by(id: args[:user_id])
       return if user.approved?
 
-      reviewable = ReviewableUser.create!(
+      reviewable = ReviewableUser.needs_review!(
         target: user,
         created_by: Discourse.system_user,
         reviewable_by_moderator: true,
@@ -28,8 +28,5 @@ class Jobs::CreateUserReviewable < Jobs::Base
         force_review: true
       )
     end
-
-  rescue ActiveRecord::RecordNotUnique
-    # If the reviewable is somehow queued twice, we can ignore.
   end
 end
