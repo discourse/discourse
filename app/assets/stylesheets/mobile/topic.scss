@@ -51,7 +51,9 @@
   bottom: 0;
   z-index: z("timeline");
   margin-right: 148px;
-  margin-bottom: env(safe-area-inset-bottom);
+  &:not(.docked) {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
   .topic-admin-menu-button-container .toggle-admin-menu {
     height: 43px;
   }
