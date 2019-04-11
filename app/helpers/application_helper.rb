@@ -54,7 +54,6 @@ module ApplicationHelper
   end
 
   def is_brotli_req?
-    ENV["COMPRESS_BROTLI"] == "1" &&
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
