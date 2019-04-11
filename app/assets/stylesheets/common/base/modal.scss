@@ -453,8 +453,13 @@
     label {
       max-width: $category-settings-width;
     }
-    .category-custom-settings-outlet {
-      border-top: 1px solid $primary-low;
+    .category-email-in-outlet {
+      label {
+        flex-wrap: wrap; // Todo: fix all multi-element labels
+        a {
+          margin-left: 1.3em;
+        }
+      }
     }
   }
 }
