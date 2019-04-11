@@ -2538,7 +2538,7 @@ en:
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
-      position: "Position:"
+      position: "Position on the categories page:"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
@@ -2588,6 +2588,11 @@ en:
         rows_with_featured_topics: "Rows with featured topics"
         boxes: "Boxes"
         boxes_with_featured_topics: "Boxes with featured topics"
+      settings_sections:
+        general: "General"
+        moderation: "Moderation"
+        appearance: "Appearance"
+        email: "Email"
 
     flagging:
       title: "Thanks for helping to keep our community civil!"
