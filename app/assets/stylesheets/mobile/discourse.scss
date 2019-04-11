@@ -13,6 +13,13 @@ textarea {
   background-color: $secondary;
 }
 
+textarea {
+  // this increases font size to above 16px
+  // which is the threshold on iOS to trigger zooming
+  // when focusing on a textarea
+  font-size: $font-up-1;
+}
+
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
   padding: 10px 8px 10px 13px;
