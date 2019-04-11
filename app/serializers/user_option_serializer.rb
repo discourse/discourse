@@ -8,7 +8,6 @@ class UserOptionSerializer < ApplicationSerializer
              :external_links_in_new_tab,
              :dynamic_favicon,
              :enable_quoting,
-             :disable_jump_reply,
              :digest_after_minutes,
              :automatically_unpin_topics,
              :auto_track_topics_after_msecs,
