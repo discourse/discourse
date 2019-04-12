@@ -676,7 +676,7 @@ describe UsersController do
         let(:admin) { Fabricate(:admin) }
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
-        it "creates the user as active with a regular key" do
+        it "creates the user as active with a an admin key" do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
@@ -697,6 +697,36 @@ describe UsersController do
           expect(new_user.approved).to eq(true)
           expect(new_user.approved_by_id).to eq(admin.id)
           expect(new_user.approved_at).to_not eq(nil)
+        end
+
+        it "will create a reviewable when a user is created as active but not approved" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to be_truthy
+          expect(new_user.approved).to eq(false)
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_present
+        end
+
+        it "won't create a reviewable when a user is not active" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+
+          post "/u.json", params: post_user_params.merge(api_key: api_key.key)
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to eq(false)
+          expect(new_user.approved).to eq(false)
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
 
         it "won't create the developer as active" do
