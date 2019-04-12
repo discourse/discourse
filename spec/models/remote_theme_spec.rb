@@ -9,7 +9,7 @@ describe RemoteTheme do
       `cd #{repo_dir} && git init . `
       `cd #{repo_dir} && git config user.email 'someone@cool.com'`
       `cd #{repo_dir} && git config user.name 'The Cool One'`
-      `cd #{repo_dir} && mkdir desktop mobile common assets locales`
+      `cd #{repo_dir} && mkdir desktop mobile common assets locales scss`
       files.each do |name, data|
         File.write("#{repo_dir}/#{name}", data)
         `cd #{repo_dir} && git add #{name}`
@@ -46,6 +46,7 @@ describe RemoteTheme do
       setup_git_repo(
         "about.json" => about_json,
         "desktop/desktop.scss" => scss_data,
+        "scss/file.scss" => ".class1{color:red}",
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
@@ -77,7 +78,7 @@ describe RemoteTheme do
       expect(remote.theme_version).to eq("1.0")
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
-      expect(@theme.theme_fields.length).to eq(6)
+      expect(@theme.theme_fields.length).to eq(7)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -91,7 +92,7 @@ describe RemoteTheme do
 
       expect(mapped["4-en"]).to eq("sometranslations")
 
-      expect(mapped.length).to eq(6)
+      expect(mapped.length).to eq(7)
 
       expect(@theme.settings.length).to eq(1)
       expect(@theme.settings.first.value).to eq(true)
@@ -112,6 +113,8 @@ describe RemoteTheme do
       `cd #{initial_repo} && git add settings.yml`
 
       File.delete("#{initial_repo}/settings.yaml")
+      File.delete("#{initial_repo}/scss/file.scss")
+
       `cd #{initial_repo} && git commit -am "update"`
 
       time = Time.new('2001')
@@ -122,7 +125,7 @@ describe RemoteTheme do
       expect(remote.remote_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
 
       remote.update_from_remote
-      @theme.save
+      @theme.save!
       @theme.reload
 
       scheme = ColorScheme.find_by(theme_id: @theme.id)
@@ -131,6 +134,9 @@ describe RemoteTheme do
       expect(@theme.color_scheme_id).to eq(nil) # Should only be set on first import
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
+
+      # Scss file was deleted
+      expect(mapped["5-file"]).to eq(nil)
 
       expect(mapped["0-header"]).to eq("I AM UPDATED")
       expect(mapped["1-scss"]).to eq(scss_data)
