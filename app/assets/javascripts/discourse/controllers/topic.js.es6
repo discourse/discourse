@@ -202,6 +202,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   actions: {
+    deletePending(pending) {
+      return ajax(`/review/${pending.id}`, { type: "DELETE" })
+        .then(() => {
+          this.get("model.pending_posts").removeObject(pending);
+        })
+        .catch(popupAjaxError);
+    },
+
     showPostFlags(post) {
       return this.send("showFlags", post);
     },

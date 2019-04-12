@@ -359,6 +359,8 @@ en:
         placeholder: "type the message title here"
 
     review:
+      awaiting_approval: "Awaiting Approval"
+      delete: "Delete"
       settings:
         saved: "Saved"
         save_changes: "Save Changes"
