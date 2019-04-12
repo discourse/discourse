@@ -13,6 +13,9 @@ export default Ember.Mixin.create({
     if (delta <= MOBILE_SCROLL_TOLERANCE && delta >= -MOBILE_SCROLL_TOLERANCE)
       return;
 
+    // don't calculate when resetting offset (i.e. going to /latest or to next topic in suggested list)
+    if (offset === 0) return;
+
     const prevDirection = this.mobileScrollDirection;
     const currDirection = delta > 0 ? "down" : null;
 
