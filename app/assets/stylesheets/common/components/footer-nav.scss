@@ -4,11 +4,8 @@
 
 $footer-nav-height: 55px;
 
-body.with-footer-nav {
-  padding-bottom: $footer-nav-height + 15;
-}
-
 body.footer-nav-visible {
+  padding-bottom: $footer-nav-height + 15;
   #topic-progress-wrapper,
   #reply-control.draft {
     bottom: $footer-nav-height;
@@ -53,6 +50,6 @@ body.footer-nav-visible {
 @supports (-webkit-backdrop-filter: blur(10px)) {
   .footer-nav {
     background-color: rgba($header_background, 0.7);
-    -webkit-backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(20px);
   }
 }
