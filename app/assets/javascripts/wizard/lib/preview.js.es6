@@ -18,10 +18,11 @@ function canvasFor(image, w, h) {
   h = Math.ceil(h);
 
   const can = document.createElement("canvas");
-  can.width = w;
-  can.height = h;
+  can.width = w * 2;
+  can.height = h * 2;
 
   const ctx = can.getContext("2d");
+  ctx.scale(2, 2);
   ctx.drawImage(image, 0, 0, w, h);
   return can;
 }
@@ -32,6 +33,8 @@ export function createPreviewComponent(width, height, obj) {
       layoutName: "components/theme-preview",
       width,
       height,
+      elementWidth: width * 2,
+      elementHeight: height * 2,
       ctx: null,
       loaded: false,
 
@@ -39,6 +42,7 @@ export function createPreviewComponent(width, height, obj) {
         this._super(...arguments);
         const c = this.$("canvas")[0];
         this.ctx = c.getContext("2d");
+        this.ctx.scale(2, 2);
         this.reload();
       },
 
