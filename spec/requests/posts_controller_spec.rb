@@ -803,6 +803,10 @@ describe PostsController do
           rp = ReviewableQueuedPost.find_by(created_by: user)
           expect(rp.reviewable_scores.first.reason).to eq('fast_typer')
 
+          expect(parsed['pending_post']).to be_present
+          expect(parsed['pending_post']['id']).to eq(rp.id)
+          expect(parsed['pending_post']['raw']).to eq("this is the test content")
+
           mod = Fabricate(:moderator)
           rp.perform(mod, :approve)
 

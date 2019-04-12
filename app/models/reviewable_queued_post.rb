@@ -9,18 +9,20 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_actions(actions, guardian, args)
-    return unless guardian.is_staff?
+    if guardian.is_staff?
+      actions.add(:approve) unless approved?
+      actions.add(:reject) unless rejected?
 
-    actions.add(:approve) unless approved?
-    actions.add(:reject) unless rejected?
-
-    if pending? && guardian.can_delete_user?(created_by)
-      actions.add(:delete_user) do |action|
-        action.icon = 'trash-alt'
-        action.label = 'reviewables.actions.delete_user.title'
-        action.confirm_message = 'reviewables.actions.delete_user.confirm'
+      if pending? && guardian.can_delete_user?(created_by)
+        actions.add(:delete_user) do |action|
+          action.icon = 'trash-alt'
+          action.label = 'reviewables.actions.delete_user.title'
+          action.confirm_message = 'reviewables.actions.delete_user.confirm'
+        end
       end
     end
+
+    actions.add(:delete) if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
@@ -82,6 +84,11 @@ class ReviewableQueuedPost < Reviewable
     create_result(:success, :rejected)
   end
 
+  def perform_delete(performed_by, args)
+    create_result(:success, :deleted)
+  end
+
+
   def perform_delete_user(performed_by, args)
     delete_options = {
       context: I18n.t('reviewables.actions.delete_user.reason'),
@@ -126,8 +133,9 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

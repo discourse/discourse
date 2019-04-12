@@ -430,7 +430,14 @@ export default function() {
       }
 
       if (data.raw === "enqueue this content please") {
-        return response(200, { success: true, action: "enqueued" });
+        return response(200, {
+          success: true,
+          action: "enqueued",
+          pending_post: {
+            id: 1234,
+            raw: data.raw
+          }
+        });
       }
 
       return response(200, {

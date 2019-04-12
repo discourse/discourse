@@ -679,6 +679,13 @@ export default Ember.Controller.extend({
       .then(result => {
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);
+          if (result.responseJson.pending_post) {
+            let pendingPosts = this.get("topicController.model.pending_posts");
+            if (pendingPosts) {
+              pendingPosts.pushObject(result.responseJson.pending_post);
+            }
+          }
+
           this.destroyDraft();
           this.close();
           this.appEvents.trigger("post-stream:refresh");

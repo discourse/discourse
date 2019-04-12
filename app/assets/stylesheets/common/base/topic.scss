@@ -266,3 +266,17 @@ a.topic-featured-link {
     margin-right: 3px;
   }
 }
+
+.topic-area {
+  .pending-posts {
+    max-width: calc(
+      #{$topic-body-width} + #{$topic-avatar-width} + #{$topic-body-width-padding *
+        2}
+    );
+    .reviewable-item {
+      .post-body {
+        max-height: unset;
+      }
+    }
+  }
+}

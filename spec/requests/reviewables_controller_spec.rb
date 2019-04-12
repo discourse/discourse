@@ -17,6 +17,11 @@ describe ReviewablesController do
       get "/review/settings.json"
       expect(response.code).to eq("403")
     end
+
+    it "denies deleting" do
+      delete "/review/123"
+      expect(response.code).to eq("403")
+    end
   end
 
   context "regular user" do
@@ -450,6 +455,32 @@ describe ReviewablesController do
         expect(json['category_id']).to eq(new_category_id.to_s)
       end
 
+    end
+
+    context "#destroy" do
+      let(:user) { Fabricate(:user) }
+
+      before do
+        sign_in(user)
+      end
+
+      it "returns 404 if the reviewable doesn't exist" do
+        delete "/review/1234.json"
+        expect(response.code).to eq("404")
+      end
+
+      it "returns 404 if the user can't see the reviewable" do
+        queued_post = Fabricate(:reviewable_queued_post)
+        delete "/review/#{queued_post.id}.json"
+        expect(response.code).to eq("404")
+      end
+
+      it "returns 200 if the user can delete the reviewable" do
+        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        delete "/review/#{queued_post.id}.json"
+        expect(response.code).to eq("200")
+        expect(queued_post.reload).to be_deleted
+      end
     end
 
   end

@@ -96,6 +96,15 @@ class ReviewablesController < ApplicationController
     )
   end
 
+  def destroy
+    reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: current_user)
+    raise Discourse::NotFound.new if reviewable.blank?
+
+    reviewable.perform(current_user, :delete)
+
+    render json: success_json
+  end
+
   def update
     reviewable = find_reviewable
     editable = reviewable.editable_for(guardian)

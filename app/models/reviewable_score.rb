@@ -86,6 +86,7 @@ end
 #  meta_topic_id         :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  reason                :string
 #
 # Indexes
 #

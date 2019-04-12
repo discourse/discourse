@@ -174,6 +174,12 @@ class Guardian
     SiteSetting.enable_badges && is_staff?
   end
 
+  def can_delete_reviewable_queued_post?(reviewable)
+    reviewable.present? &&
+      authenticated? &&
+      reviewable.created_by_id == @user.id
+  end
+
   def can_see_group?(group)
     return false if group.blank?
     return true if group.visibility_level == Group.visibility_levels[:public]
