@@ -68,6 +68,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     display: inline;
     margin-right: 0.5em;
     color: $primary;
+    &.email,
     .desc,
     a {
       color: $primary-high;
