@@ -81,6 +81,7 @@ describe Admin::ThemesController do
     end
 
     it 'can import a theme from Git' do
+      RemoteTheme.stubs(:import_theme)
       post "/admin/themes/import.json", params: {
         remote: '    https://github.com/discourse/discourse-brand-header       '
       }
