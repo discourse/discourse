@@ -164,7 +164,9 @@
                 {{/if}}
                 {{#if model.draftSaving}}<div class="spinner small"></div>{{/if}}
                 {{#if model.draftSaved}}{{d-icon 'check' class='save-animation'}}{{/if}}
-                {{model.draftStatus}}
+                {{#if model.draftStatus}}
+                  <span title="{{model.draftStatus}}">{{d-icon 'times'}}</span>
+                {{/if}}
               </div>
             </div>
 

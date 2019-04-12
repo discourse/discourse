@@ -4,7 +4,7 @@ acceptance("Composer - Edit conflict", {
   loggedIn: true
 });
 
-QUnit.skip("Edit a post that causes an edit conflict", async assert => {
+QUnit.test("Edit a post that causes an edit conflict", async assert => {
   // prettier-ignore
   server.put("/posts/398", () => [ // eslint-disable-line no-undef
     409, { "Content-Type": "application/json" }, { errors: ["edit conflict"] }
@@ -21,6 +21,8 @@ QUnit.skip("Edit a post that causes an edit conflict", async assert => {
     I18n.t("composer.overwrite_edit"),
     "it shows the overwrite button"
   );
+  assert.ok(find("#draft-status .d-icon-times"), "error icon should be there");
+  await click(".modal .btn-primary");
 });
 
 QUnit.test(
