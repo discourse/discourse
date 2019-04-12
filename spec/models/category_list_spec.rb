@@ -116,12 +116,14 @@ describe CategoryList do
   end
 
   describe 'category order' do
-    def category_list(user)
-      CategoryList.new(Guardian.new(user)).categories.map(&:id) - [SiteSetting.uncategorized_category_id]
+    def ordered_category_list(some_user)
+      categories = Category.secured(Guardian.new(some_user))
+      subcategories = categories.where.not(parent_category_id: nil).pluck(:id)
+      CategoryList.order_categories(categories).pluck(:id) - subcategories.push(SiteSetting.uncategorized_category_id)
     end
 
-    let(:category_ids_admin) { category_list(admin) }
-    let(:category_ids_user) { category_list(user) }
+    let(:category_ids_admin) { ordered_category_list(admin) }
+    let(:category_ids_user) { ordered_category_list(user) }
 
     before do
       uncategorized = Category.find(SiteSetting.uncategorized_category_id)
@@ -135,7 +137,7 @@ describe CategoryList do
       end
 
       it "returns categories in specified order" do
-        cat1 = Fabricate(:category, position: 1),
+        cat1 = Fabricate(:category, position: 1)
         cat2 = Fabricate(:category, position: 0)
         expect(category_ids_admin).to eq([cat2.id, cat1.id])
       end
