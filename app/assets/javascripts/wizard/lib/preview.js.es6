@@ -17,24 +17,27 @@ function canvasFor(image, w, h) {
   w = Math.ceil(w);
   h = Math.ceil(h);
 
+  const scale = window.devicePixelRatio;
+
   const can = document.createElement("canvas");
-  can.width = w * 2;
-  can.height = h * 2;
+  can.width = w * scale;
+  can.height = h * scale;
 
   const ctx = can.getContext("2d");
-  ctx.scale(2, 2);
+  ctx.scale(scale, scale);
   ctx.drawImage(image, 0, 0, w, h);
   return can;
 }
 
 export function createPreviewComponent(width, height, obj) {
+  const scale = window.devicePixelRatio;
   return Ember.Component.extend(
     {
       layoutName: "components/theme-preview",
       width,
       height,
-      elementWidth: width * 2,
-      elementHeight: height * 2,
+      elementWidth: width * scale,
+      elementHeight: height * scale,
       ctx: null,
       loaded: false,
 
