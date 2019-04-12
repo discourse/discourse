@@ -51,6 +51,10 @@ class Theme < ActiveRecord::Base
 
     Theme.expire_site_cache! if saved_change_to_user_selectable? || saved_change_to_name?
 
+    reload
+    settings_field&.ensure_baked! # Other fields require setting to be **baked**
+    theme_fields.each(&:ensure_baked!)
+
     remove_from_cache!
     clear_cached_settings!
     ColorScheme.hex_cache.clear
@@ -76,6 +80,8 @@ class Theme < ActiveRecord::Base
 
     Theme.expire_site_cache!
     ColorScheme.hex_cache.clear
+    CSP::Extension.clear_theme_extensions_cache!
+    SvgSprite.expire_cache
   end
 
   after_commit ->(theme) do
@@ -224,7 +230,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.targets
-    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4)
+    @targets ||= Enum.new(common: 0, desktop: 1, mobile: 2, settings: 3, translations: 4, extra_scss: 5)
   end
 
   def self.lookup_target(target_id)
@@ -267,15 +273,15 @@ class Theme < ActiveRecord::Base
 
   def self.list_baked_fields(theme_ids, target, name)
     target = target.to_sym
-    name = name.to_sym
+    name = name&.to_sym
 
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
       fields = ThemeField.find_by_theme_ids(theme_ids)
         .where(target_id: [Theme.targets[target], Theme.targets[:common]])
-        .where(name: name.to_s)
-        .order(:target_id)
+      fields = fields.where(name: name.to_s) unless name.nil?
+      fields = fields.order(:target_id)
     end
 
     fields.each(&:ensure_baked!)
@@ -325,6 +331,7 @@ class Theme < ActiveRecord::Base
           changed_fields << field
         end
       end
+      field
     else
       theme_fields.build(target_id: target_id, value: value, name: name, type_id: type_id, upload_id: upload_id) if value.present? || upload_id.present?
     end

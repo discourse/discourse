@@ -30,9 +30,9 @@ class ThemeStore::TgzExporter
         # Belt and braces approach here. All the user input should already be
         # sanitized, but check for attempts to leave the temp directory anyway
         pathname = Pathname.new("#{@export_name}/#{path}")
-        folder_path = pathname.parent.realdirpath
-        raise RuntimeError.new("Theme exporter tried to leave directory") unless folder_path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
-        folder_path.mkpath
+        folder_path = pathname.parent.cleanpath
+        raise RuntimeError.new("Theme exporter tried to leave directory") unless folder_path.to_s.starts_with?("#{@export_name}")
+        pathname.parent.mkpath
         path = pathname.realdirpath
         raise RuntimeError.new("Theme exporter tried to leave directory") unless path.to_s.starts_with?("#{@temp_folder}/#{@export_name}")
 

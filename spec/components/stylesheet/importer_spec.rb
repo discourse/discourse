@@ -59,4 +59,52 @@ describe Stylesheet::Importer do
 
   end
 
+  context "extra_scss" do
+    let(:scss) { "body { background: red}" }
+    let(:theme) { Fabricate(:theme).tap { |t|
+      t.set_field(target: :extra_scss, name: "my_files/magic", value: scss)
+      t.save!
+    }}
+
+    let(:importer) { described_class.new(theme: theme) }
+
+    it "should be able to import correctly" do
+      # Import from regular theme file
+      expect(
+        importer.imports(
+          "my_files/magic",
+          "theme_#{theme.id}/desktop-scss-mytheme.scss"
+        ).source).to eq(scss)
+
+      # Import from some deep file
+      expect(
+        importer.imports(
+          "my_files/magic",
+          "theme_#{theme.id}/some/deep/folder/structure/myfile.scss"
+        ).source).to eq(scss)
+
+      # Import from parent dir
+      expect(
+        importer.imports(
+          "../../my_files/magic",
+          "theme_#{theme.id}/my_files/folder1/myfile.scss"
+        ).source).to eq(scss)
+
+      # Import from same dir without ./
+      expect(
+        importer.imports(
+          "magic",
+          "theme_#{theme.id}/my_files/myfile.scss"
+        ).source).to eq(scss)
+
+      # Import from same dir with ./
+      expect(
+        importer.imports(
+          "./magic",
+          "theme_#{theme.id}/my_files/myfile.scss"
+        ).source).to eq(scss)
+    end
+
+  end
+
 end

@@ -14,7 +14,7 @@ module Stylesheet
     end
 
     register_import "theme_field" do
-      Import.new("theme_field.scss", source: @theme_field)
+      Import.new("#{theme_dir}/theme_field.scss", source: @theme_field)
     end
 
     register_import "plugins" do
@@ -119,14 +119,14 @@ module Stylesheet
       fields.map do |field|
         value = field.value
         if value.present?
-          filename = "#{field.theme.id}/#{field.target_name}-#{field.name}-#{field.theme.name.parameterize}.scss"
-          with_comment = <<COMMENT
-// Theme: #{field.theme.name}
-// Target: #{field.target_name} #{field.name}
-// Last Edited: #{field.updated_at}
+          filename = "theme_#{field.theme.id}/#{field.target_name}-#{field.name}-#{field.theme.name.parameterize}.scss"
+          with_comment = <<~COMMENT
+          // Theme: #{field.theme.name}
+          // Target: #{field.target_name} #{field.name}
+          // Last Edited: #{field.updated_at}
 
-#{value}
-COMMENT
+          #{value}
+          COMMENT
           Import.new(filename, source: with_comment)
         end
       end.compact
@@ -137,6 +137,39 @@ COMMENT
         @theme = (@theme_id && Theme.find(@theme_id)) || :nil
       end
       @theme == :nil ? nil : @theme
+    end
+
+    def theme_dir
+      "theme_#{theme.id}"
+    end
+
+    def importable_theme_fields
+      return {} unless theme
+      @importable_theme_fields ||= begin
+        hash = {}
+        @theme.theme_fields.where(target_id: Theme.targets[:extra_scss]).each do |field|
+          hash[field.name] = field.value
+        end
+        hash
+      end
+    end
+
+    def match_theme_import(path, parent_path)
+      # Only allow importing theme stylesheets from within other theme stylesheets
+      return false unless theme && parent_path.start_with?("#{theme_dir}/")
+      parent_dir, _ = File.split(parent_path)
+
+      # Could be relative to the importing file, or relative to the root of the theme directory
+      search_paths = [parent_dir, theme_dir].uniq
+      search_paths.each do |search_path|
+        resolved = Pathname.new("#{search_path}/#{path}").cleanpath.to_s # Remove unnecessary ./ and ../
+        next unless resolved.start_with?("#{theme_dir}/")
+        resolved.sub!("#{theme_dir}/", "")
+        if importable_theme_fields.keys.include?(resolved)
+          return resolved
+        end
+      end
+      false
     end
 
     def category_css(category)
@@ -155,6 +188,8 @@ COMMENT
         end
       elsif callback = Importer.special_imports[asset]
         instance_eval(&callback)
+      elsif resolved = match_theme_import(asset, parent_path)
+        Import.new("#{theme_dir}/#{resolved}", source: importable_theme_fields[resolved])
       else
         Import.new(asset + ".scss")
       end

@@ -108,7 +108,7 @@ describe ThemeStore::TgzExporter do
     # but protection is in place 'just in case'
     expect do
       theme.set_field(target: :translations, name: "en", value: "hacked")
-      theme.theme_fields[0].stubs(:file_path).returns("../../malicious")
+      ThemeField.any_instance.stubs(:file_path).returns("../../malicious")
       theme.save!
       package
     end.to raise_error(RuntimeError)

@@ -276,15 +276,15 @@ class Stylesheet::Manager
     scss = ""
 
     if [:mobile_theme, :desktop_theme].include?(@target)
-      scss = theme.resolve_baked_field(:common, :scss)
-      scss += theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
+      scss_digest = theme.resolve_baked_field(:common, :scss)
+      scss_digest += theme.resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
     elsif @target == :embedded_theme
-      scss = theme.resolve_baked_field(:common, :embedded_scss)
+      scss_digest = theme.resolve_baked_field(:common, :embedded_scss)
     else
       raise "attempting to look up theme digest for invalid field"
     end
 
-    Digest::SHA1.hexdigest(scss.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest + uploads_digest)
+    Digest::SHA1.hexdigest(scss_digest.to_s + color_scheme_digest.to_s + settings_digest + plugins_digest + uploads_digest)
   end
 
   # this protects us from situations where new versions of a plugin removed a file
