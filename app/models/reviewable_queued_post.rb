@@ -88,7 +88,6 @@ class ReviewableQueuedPost < Reviewable
     create_result(:success, :deleted)
   end
 
-
   def perform_delete_user(performed_by, args)
     delete_options = {
       context: I18n.t('reviewables.actions.delete_user.reason'),
