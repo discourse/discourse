@@ -1741,6 +1741,7 @@ en:
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses. Example: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
+    strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
     disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
 

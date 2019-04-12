@@ -353,11 +353,32 @@ module Email
         end
       end
 
+      text_format = Receiver::formats[:plaintext]
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
-        return [markdown, elided_markdown, Receiver::formats[:markdown]]
-      else
-        return [text, elided_text, Receiver::formats[:plaintext]]
+        text, elided_text, text_format = markdown, elided_markdown, Receiver::formats[:markdown]
       end
+
+      if SiteSetting.strip_incoming_email_lines
+        in_code = nil
+
+        text = text.lines.map! do |line|
+          stripped = line.strip << "\n"
+
+          if !in_code && stripped[0..2] == '```'
+            in_code = '```'
+          elsif in_code == '```' && stripped[0..2] == '```'
+            in_code = nil
+          elsif !in_code && stripped[0..4] == '[code'
+            in_code = '[code]'
+          elsif in_code == '[code]' && stripped[0..6] == '[/code]'
+            in_code = nil
+          end
+
+          in_code ? line : stripped
+        end.join
+      end
+
+      [text, elided_text, text_format]
     end
 
     def to_markdown(html, elided_html)
