@@ -21,7 +21,7 @@ describe StaticController do
 
         expect(response.status).to eq(200)
         expect(response.content_type).to eq('image/png')
-        expect(response.body.bytesize).to eq(SiteSetting.favicon.filesize)
+        expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
       end
 
       it 'returns the configured favicon' do

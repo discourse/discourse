@@ -1,13 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe MetadataController do
-  let(:upload) { Fabricate(:upload) }
-
   describe 'manifest.webmanifest' do
+    before do
+      SiteIconManager.enable
+    end
+
+    let(:upload) do
+      UploadCreator.new(file_from_fixtures("smallest.png"), 'logo.png').create_for(Discourse.system_user.id)
+    end
+
     it 'returns the right output' do
       title = 'MyApp'
       SiteSetting.title = title
-      SiteSetting.large_icon = upload
+      SiteSetting.manifest_icon = upload
 
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
@@ -17,17 +23,14 @@ RSpec.describe MetadataController do
       expect(manifest["name"]).to eq(title)
 
       expect(manifest["icons"].first["src"]).to eq(
-        UrlHelper.absolute(upload.url)
+        UrlHelper.absolute(SiteSetting.site_manifest_icon_url)
       )
     end
 
     it 'can guess mime types' do
-      upload = Fabricate(:upload,
-        original_filename: 'test.jpg',
-        extension: 'jpg'
-      )
+      upload = UploadCreator.new(file_from_fixtures("logo.jpg"), 'logo.jpg').create_for(Discourse.system_user.id)
 
-      SiteSetting.large_icon = upload
+      SiteSetting.manifest_icon = upload
       get "/manifest.webmanifest"
 
       expect(response.status).to eq(200)
@@ -36,7 +39,7 @@ RSpec.describe MetadataController do
     end
 
     it 'defaults to png' do
-      SiteSetting.large_icon = upload
+      SiteSetting.manifest_icon = upload
       get "/manifest.webmanifest"
       expect(response.status).to eq(200)
       manifest = JSON.parse(response.body)
@@ -79,6 +82,8 @@ RSpec.describe MetadataController do
   end
 
   describe 'opensearch.xml' do
+    let(:upload) { Fabricate(:upload) }
+
     it 'returns the right output' do
       title = 'MyApp'
       SiteSetting.title = title

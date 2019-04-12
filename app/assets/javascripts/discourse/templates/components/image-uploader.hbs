@@ -1,11 +1,14 @@
 <div class="uploaded-image-preview input-xxlarge" style={{backgroundStyle}}>
+  {{#if showingPlaceholder}}
+    <div class="placeholder-overlay" style={{placeholderStyle}}></div>
+  {{/if}}
   <div class="image-upload-controls">
     <label class="btn btn-default pad-left no-text {{if uploading 'disabled'}}">
       {{d-icon "far-image"}}
       <input class="hidden-upload-field" disabled={{uploading}} type="file" accept="image/*" />
     </label>
 
-    {{#if hasBackgroundStyle}}
+    {{#if imageUrl}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{d-icon "far-trash-alt"}}</button>
     {{/if}}
 

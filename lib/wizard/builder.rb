@@ -177,42 +177,21 @@ class Wizard
         step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
 
         step.on_update do |updater|
-          updater.apply_settings(:logo, :logo_small)
+          if SiteSetting.site_logo_url != updater.fields[:logo] ||
+            SiteSetting.site_logo_small_url != updater.fields[:logo_small]
+            updater.apply_settings(:logo, :logo_small)
+            updater.refresh_required = true
+          end
         end
       end
 
       @wizard.append_step('icons') do |step|
         step.add_field(id: 'favicon', type: 'image', value: SiteSetting.site_favicon_url)
-        step.add_field(id: 'apple_touch_icon', type: 'image', value: SiteSetting.site_apple_touch_icon_url)
+        step.add_field(id: 'large_icon', type: 'image', value: SiteSetting.site_large_icon_url)
 
         step.on_update do |updater|
-          updater.apply_settings(:favicon)
-
-          if updater.fields[:apple_touch_icon] != SiteSetting.apple_touch_icon
-            upload = Upload.find_by_url(updater.fields[:apple_touch_icon])
-            dimensions = 180 # for apple touch icon
-
-            if upload && upload.width > dimensions && upload.height > dimensions
-              updater.update_setting(:large_icon, upload)
-
-              apple_touch_icon_optimized = OptimizedImage.create_for(
-                upload,
-                dimensions,
-                dimensions
-              )
-
-              original_file = File.new(Discourse.store.path_for(apple_touch_icon_optimized)) rescue nil
-
-              if original_file
-                apple_touch_icon_upload = UploadCreator.new(original_file, upload.original_filename).create_for(@wizard.user.id)
-                updater.update_setting(:apple_touch_icon, apple_touch_icon_upload)
-              end
-
-              apple_touch_icon_optimized.destroy! if apple_touch_icon_optimized.present?
-            else
-              updater.apply_settings(:apple_touch_icon)
-            end
-          end
+          updater.apply_settings(:favicon) if SiteSetting.site_favicon_url != updater.fields[:favicon]
+          updater.apply_settings(:large_icon) if SiteSetting.site_large_icon_url != updater.fields[:large_icon]
         end
       end
 

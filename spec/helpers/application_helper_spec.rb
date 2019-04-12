@@ -288,20 +288,14 @@ describe ApplicationHelper do
         )
 
         SiteSetting.large_icon = nil
-
-        expect(helper.crawlable_meta_data).to include(
-          SiteSetting.site_apple_touch_icon_url
-        )
-
-        SiteSetting.apple_touch_icon = nil
-        SiteSetting.apple_touch_icon_url = nil
+        SiteSetting.logo_small = nil
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_logo_url)
 
         SiteSetting.logo = nil
         SiteSetting.logo_url = nil
 
-        expect(helper.crawlable_meta_data).to_not include("/images")
+        expect(helper.crawlable_meta_data).to include(Upload.find(SiteIconManager::SKETCH_LOGO_ID).url)
       end
     end
   end

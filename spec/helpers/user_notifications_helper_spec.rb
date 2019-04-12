@@ -121,6 +121,7 @@ describe UserNotificationsHelper do
       describe 'when cdn path is configured' do
         before do
           SiteSetting.s3_cdn_url = 'https://some.cdn.com'
+
         end
 
         it 'should return the right url' do

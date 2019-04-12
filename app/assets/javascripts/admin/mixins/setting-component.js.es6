@@ -112,6 +112,7 @@ export default Ember.Mixin.create({
         .then(() => {
           this.set("validationMessage", null);
           this.commitBuffer();
+          this.afterSave();
         })
         .catch(e => {
           if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {

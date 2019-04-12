@@ -220,11 +220,7 @@ module ApplicationHelper
         opts[:twitter_summary_large_image] = twitter_summary_large_image_url
       end
 
-      opts[:image] = SiteSetting.site_opengraph_image_url.presence ||
-        twitter_summary_large_image_url.presence ||
-        SiteSetting.site_large_icon_url.presence ||
-        SiteSetting.site_apple_touch_icon_url.presence ||
-        SiteSetting.site_logo_url.presence
+      opts[:image] = SiteSetting.site_opengraph_image_url
     end
 
     # Use the correct scheme for opengraph/twitter image

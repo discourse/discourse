@@ -68,16 +68,16 @@ describe Wizard::Builder do
       upload2 = Fabricate(:upload)
 
       SiteSetting.favicon = upload
-      SiteSetting.apple_touch_icon = upload2
+      SiteSetting.large_icon = upload2
 
       fields = icons_step.fields
       favicon_field = fields.first
-      apple_touch_icon_field = fields.last
+      large_icon_field = fields.last
 
       expect(favicon_field.id).to eq('favicon')
       expect(favicon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
-      expect(apple_touch_icon_field.id).to eq('apple_touch_icon')
-      expect(apple_touch_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
+      expect(large_icon_field.id).to eq('large_icon')
+      expect(large_icon_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end
 

@@ -50,15 +50,26 @@ required:
   site_contact_group_name:
     default: ""
     type: group
+  exclude_rel_nofollow_domains:
+    default: ""
+    type: list
+  company_name:
+    default: ""
+  governing_law:
+    default: ""
+  city_for_disputes:
+    default: ""
+
+branding:
   logo:
-    default: -1
+    default: -5
     client: true
     type: upload
   logo_url:
     hidden: true
     default: "/images/d-logo-sketch.png"
   logo_small:
-    default: -2
+    default: -6
     client: true
     type: upload
   logo_small_url:
@@ -82,18 +93,21 @@ required:
     default: ""
     client: true
     type: upload
+  manifest_icon:
+    default: ""
+    type: upload
   large_icon_url:
     hidden: true
     default: ""
   favicon:
-    default: -3
+    default: ""
     client: true
     type: upload
   favicon_url:
     hidden: true
     default: "/images/default-favicon.ico"
   apple_touch_icon:
-    default: -4
+    default: ""
     client: true
     type: upload
   apple_touch_icon_url:
@@ -110,15 +124,6 @@ required:
     type: upload
   twitter_summary_large_image_url:
     hidden: true
-    default: ""
-  exclude_rel_nofollow_domains:
-    default: ""
-    type: list
-  company_name:
-    default: ""
-  governing_law:
-    default: ""
-  city_for_disputes:
     default: ""
 
 basic:

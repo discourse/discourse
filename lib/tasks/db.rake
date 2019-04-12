@@ -35,6 +35,13 @@ end
 task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
+  unless Discourse.skip_post_deployment_migrations?
+    puts
+    print "Optimizing site icons... "
+    SiteIconManager.ensure_optimized!
+    puts "Done"
+  end
+
   if MultisiteTestHelpers.load_multisite?
     system("rake db:schema:dump")
     system("RAILS_DB=discourse_test_multisite rake db:schema:load")
