@@ -26,7 +26,8 @@ export default {
       custom_fields: {},
       muted_category_ids: [],
       dismissed_banner_key: null,
-      akismet_review_count: 0
+      akismet_review_count: 0,
+      title_count_mode: "notifications"
     }
   }
 };
