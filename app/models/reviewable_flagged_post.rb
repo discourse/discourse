@@ -243,12 +243,16 @@ protected
 
     trigger_spam = false
     actions.each do |action|
-      action.agreed_at = Time.zone.now
-      action.agreed_by_id = performed_by.id
-      # so callback is called
-      action.save
-      action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
-      trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+      ActiveRecord::Base.transaction do
+        action.agreed_at = Time.zone.now
+        action.agreed_by_id = performed_by.id
+        # so callback is called
+        action.save
+        DB.after_commit do
+          action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
+          trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+        end
+      end
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
