@@ -36,10 +36,35 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
 
   moveDir(cat, dir) {
     const cats = this.get("categoriesOrdered");
-    const curIdx = cats.indexOf(cat);
-    const desiredIdx = curIdx + dir;
+    const curIdx = cat.get("position");
+    let desiredIdx = curIdx + dir;
     if (desiredIdx >= 0 && desiredIdx < cats.get("length")) {
-      const otherCat = cats.objectAt(desiredIdx);
+      let otherCat = cats.objectAt(desiredIdx);
+
+      // Respect children
+      const parentIdx = otherCat.get("parent_category_id");
+      if (parentIdx && parentIdx !== cat.get("parent_category_id")) {
+        if (parentIdx === cat.get("id")) {
+          // We want to move down
+          for (let i = curIdx + 1; i < cats.get("length"); i++) {
+            let tmpCat = cats.objectAt(i);
+            if (!tmpCat.get("parent_category_id")) {
+              desiredIdx = cats.indexOf(tmpCat);
+              otherCat = tmpCat;
+              break;
+            }
+          }
+        } else {
+          // We want to move up
+          cats.forEach(function(tmpCat) {
+            if (tmpCat.get("id") === parentIdx) {
+              desiredIdx = cats.indexOf(tmpCat);
+              otherCat = tmpCat;
+            }
+          });
+        }
+      }
+
       otherCat.set("position", curIdx);
       cat.set("position", desiredIdx);
       this.send("commit");
@@ -89,7 +114,7 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
         Math.max(position, 0),
         this.get("categoriesOrdered").length - 1
       );
-      this.moveDir(cat, amount - this.get("categoriesOrdered").indexOf(cat));
+      this.moveDir(cat, amount - cat.get("position"));
     },
 
     moveUp(cat) {
