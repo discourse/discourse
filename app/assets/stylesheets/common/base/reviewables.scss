@@ -245,14 +245,15 @@
       margin-left: 0.5em;
     }
   }
-  .user {
+  .user,
+  .reviewed-by {
     display: flex;
     align-items: center;
     white-space: nowrap;
+  }
 
-    .user-flag-percentage {
-      margin-left: 0.5em;
-    }
+  .user-flag-percentage {
+    margin-left: 0.5em;
   }
 
   .d-icon {
@@ -290,8 +291,7 @@
       padding: 0.5em 1em 0.5em 0;
     }
     .reviewable-score-spacer {
-      padding-left: 0.5em;
-      padding-right: 1.5em;
+      padding-right: 1em;
     }
   }
 }
@@ -397,5 +397,24 @@
       height: 10em;
     }
     margin-bottom: 0.5em;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  table.reviewable-scores {
+    width: 100%;
+    display: block;
+    tbody {
+      width: 100%;
+      display: block;
+    }
+  }
+  tr.reviewable-score {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  td.reviewable-score-spacer {
+    display: none;
   }
 }
