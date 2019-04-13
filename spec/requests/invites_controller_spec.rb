@@ -276,6 +276,9 @@ describe InvitesController do
             expect(response.status).to eq(200)
             expect(session[:current_user_id]).to eq(invite.user_id)
             expect(invite.redeemed?).to be_truthy
+            user = User.find(invite.user_id)
+            expect(user.ip_address).to be_present
+            expect(user.registration_ip_address).to be_present
           end
 
           it 'redirects to the first topic the user was invited to' do
