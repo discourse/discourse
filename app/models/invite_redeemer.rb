@@ -1,4 +1,4 @@
-InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_fields) do
+InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_fields, :ip_address) do
 
   def redeem
     Invite.transaction do
@@ -12,7 +12,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite, username, name, password = nil, user_custom_fields = nil)
+  def self.create_user_from_invite(invite, username, name, password = nil, user_custom_fields = nil, ip_address = nil)
     if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
       available_username = username
     else
@@ -25,7 +25,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
       username: available_username,
       name: available_name,
       active: false,
-      trust_level: SiteSetting.default_invitee_trust_level
+      trust_level: SiteSetting.default_invitee_trust_level,
+      ip_address: ip_address,
+      registration_ip_address: ip_address
     }
 
     user = User.unstage(user_params)
@@ -92,7 +94,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite, username, name, password, user_custom_fields)
+    result ||= InviteRedeemer.create_user_from_invite(invite, username, name, password, user_custom_fields, ip_address)
     result.send_welcome_message = false
     result
   end

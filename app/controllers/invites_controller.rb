@@ -45,7 +45,7 @@ class InvitesController < ApplicationController
 
     if invite.present?
       begin
-        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields])
+        user = invite.redeem(username: params[:username], name: params[:name], password: params[:password], user_custom_fields: params[:user_custom_fields], ip_address: request.remote_ip)
         if user.present?
           log_on_user(user) if user.active?
           post_process_invite(user)

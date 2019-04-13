@@ -53,8 +53,8 @@ class Invite < ActiveRecord::Base
     invalidated_at.nil?
   end
 
-  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil)
-    InviteRedeemer.new(self, username, name, password, user_custom_fields).redeem unless expired? || destroyed? || !link_valid?
+  def redeem(username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil)
+    InviteRedeemer.new(self, username, name, password, user_custom_fields, ip_address).redeem unless expired? || destroyed? || !link_valid?
   end
 
   def self.invite_by_email(email, invited_by, topic = nil, group_ids = nil, custom_message = nil)
