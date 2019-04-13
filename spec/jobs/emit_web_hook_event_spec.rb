@@ -78,6 +78,20 @@ describe Jobs::EmitWebHookEvent do
         )
       end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
     end
+
+    it 'properly logs error on rescue' do
+      stub_request(:post, post_hook.payload_url).to_raise("connection error")
+      subject.execute(
+        web_hook_id: post_hook.id,
+        event_type: described_class::PING_EVENT
+      )
+
+      event = WebHookEvent.last
+      expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
+      expect(event.status).to eq(-1)
+      expect(MultiJson.load(event.response_headers)['error']).to eq('connection error')
+    end
+
   end
 
   it 'does not raise an error for a ping event without payload' do
