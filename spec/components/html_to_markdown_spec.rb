@@ -103,6 +103,10 @@ describe HtmlToMarkdown do
     expect(html_to_markdown("Before<br>Inside<br>After")).to eq("Before\nInside\nAfter")
   end
 
+  it "skips <br> inside <p> if next character is \n" do
+    expect(html_to_markdown("<p>Before<br>\nInside<br>After</p>")).to eq("Before\nInside\nAfter")
+  end
+
   it "converts <hr>" do
     expect(html_to_markdown("Before<hr>Inside<hr>After")).to eq("Before\n\n---\n\nInside\n\n---\n\nAfter")
   end
