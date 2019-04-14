@@ -6,8 +6,12 @@ task "avatars:refresh" => :environment do
   puts
 
   User.find_each do |user|
-    user.refresh_avatar
-    user.user_avatar.update_gravatar!
+    begin
+      user.refresh_avatar
+      user.user_avatar.update_gravatar!
+    rescue
+      # skip
+    end
     putc "." if (i += 1) % 10 == 0
   end
 
