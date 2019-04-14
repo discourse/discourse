@@ -74,14 +74,23 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       });
     }
 
-    const action = attrs.locked ? "unlock" : "lock";
-    contents.push({
-      icon: action,
-      label: `post.controls.${action}_post`,
-      action: `${action}Post`,
-      title: `post.controls.${action}_post_description`,
-      className: `btn-default ${action}-post`
-    });
+    if (attrs.locked) {
+      contents.push({
+        icon: "unlock",
+        label: "post.controls.unlock_post",
+        action: "unlockPost",
+        title: "post.controls.unlock_post_description",
+        className: "btn-default unlock-post"
+      });
+    } else {
+      contents.push({
+        icon: "lock",
+        label: "post.controls.lock_post",
+        action: "lockPost",
+        title: "post.controls.lock_post_description",
+        className: "btn-default lock-post"
+      });
+    }
   }
 
   if (attrs.canManage || attrs.canWiki) {
@@ -98,6 +107,24 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         label: "post.controls.wiki",
         icon: "pencil-square-o",
         className: "btn-default wiki"
+      });
+    }
+  }
+
+  if (currentUser.staff) {
+    if (attrs.noticeType) {
+      contents.push({
+        icon: "asterisk",
+        label: "post.controls.remove_post_notice",
+        action: "removeNotice",
+        className: "btn-default remove-notice"
+      });
+    } else {
+      contents.push({
+        icon: "asterisk",
+        label: "post.controls.add_post_notice",
+        action: "addNotice",
+        className: "btn-default add-notice"
       });
     }
   }

@@ -142,6 +142,12 @@ class Post < ActiveRecord::Base
                                email: 3)
   end
 
+  def self.notices
+    @notices ||= Enum.new(custom: "custom",
+                          new_user: "new_user",
+                          returning_user: "returning_user")
+  end
+
   def self.find_by_detail(key, value)
     includes(:post_details).find_by(post_details: { key: key, value: value })
   end
@@ -389,8 +395,8 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete("post_notice_type")
-    self.custom_fields.delete("post_notice_time")
+    self.custom_fields.delete("notice_type")
+    self.custom_fields.delete("notice_args")
     self.save_custom_fields
   end
 
