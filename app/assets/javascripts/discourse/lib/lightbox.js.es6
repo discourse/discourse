@@ -1,6 +1,7 @@
 import loadScript from "discourse/lib/load-script";
 import { escapeExpression } from "discourse/lib/utilities";
 import { renderIcon } from "discourse-common/lib/icon-library";
+import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 
 export default function($elem) {
   if (!$elem) {
@@ -35,10 +36,23 @@ export default function($elem) {
                 wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
               );
             });
+
+            if (isAppWebview()) {
+              postRNWebviewMessage(
+                "headerBg",
+                $(".mfp-bg").css("background-color")
+              );
+            }
           },
           beforeClose() {
             this.wrap.off("click.pinhandler");
             this.wrap.removeClass("mfp-force-scrollbars");
+            if (isAppWebview()) {
+              postRNWebviewMessage(
+                "headerBg",
+                $(".d-header").css("background-color")
+              );
+            }
           }
         },
 

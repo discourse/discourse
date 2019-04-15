@@ -1,5 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
-import { isAppWebview, isChromePWA } from "discourse/lib/utilities";
+import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 
 createWidget("footer-nav", {
   tagName: "div.footer-nav-widget",
@@ -43,29 +43,14 @@ createWidget("footer-nav", {
       );
     }
 
-    if (isChromePWA()) {
-      buttons.push(
-        this.attach("flat-button", {
-          action: "refresh",
-          icon: "sync",
-          className: "btn-large"
-        })
-      );
-    }
     return buttons;
   },
 
   dismiss() {
-    window.ReactNativeWebView.postMessage(JSON.stringify({ dismiss: true }));
+    postRNWebviewMessage("dismiss", true);
   },
 
   share() {
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({ shareUrl: window.location.href })
-    );
-  },
-
-  refresh() {
-    window.location.reload();
+    postRNWebviewMessage("shareUrl", window.location.href);
   }
 });

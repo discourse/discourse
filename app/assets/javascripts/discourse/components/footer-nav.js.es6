@@ -2,6 +2,8 @@ import MountWidget from "discourse/components/mount-widget";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
 import Scrolling from "discourse/mixins/scrolling";
 import { observes } from "ember-addons/ember-computed-decorators";
+import { isiPad } from "discourse/lib/utilities";
+import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
 
@@ -28,22 +30,40 @@ const FooterNavComponent = MountWidget.extend(
 
     didInsertElement() {
       this._super(...arguments);
-      this.bindScrolling({ name: "footer-nav" });
-      $(window).on("resize.footer-nav-on-scroll", () => this.scrolled());
       this.appEvents.on("page:changed", this, "_routeChanged");
-      this.appEvents.on("composer:opened", this, "_composerOpened");
-      this.appEvents.on("composer:closed", this, "_composerClosed");
-      $("body").addClass("with-footer-nav");
+
+      if (isAppWebview()) {
+        this.appEvents.on("modal:body-shown", this, "_modalOn");
+        this.appEvents.on("modal:body-dismissed", this, "_modalOff");
+      }
+
+      if (isiPad()) {
+        $("body").addClass("footer-nav-ipad");
+      } else {
+        this.bindScrolling({ name: "footer-nav" });
+        $(window).on("resize.footer-nav-on-scroll", () => this.scrolled());
+        this.appEvents.on("composer:opened", this, "_composerOpened");
+        this.appEvents.on("composer:closed", this, "_composerClosed");
+      }
     },
 
     willDestroyElement() {
       this._super(...arguments);
-      this.unbindScrolling("footer-nav");
-      $(window).unbind("resize.footer-nav-on-scroll");
       this.appEvents.off("page:changed", this, "_routeChanged");
-      this.appEvents.off("composer:opened", this, "_composerOpened");
-      this.appEvents.off("composer:closed", this, "_composerClosed");
-      $("body").removeClass("with-footer-nav");
+
+      if (isAppWebview()) {
+        this.appEvents.off("modal:body-shown", this, "_modalOn");
+        this.appEvents.off("modal:body-removed", this, "_modalOff");
+      }
+
+      if (isiPad()) {
+        $("body").removeClass("footer-nav-ipad");
+      } else {
+        this.unbindScrolling("footer-nav");
+        $(window).unbind("resize.footer-nav-on-scroll");
+        this.appEvents.off("composer:opened", this, "_composerOpened");
+        this.appEvents.off("composer:closed", this, "_composerClosed");
+      }
     },
 
     // The user has scrolled the window, or it is finished rendering and ready for processing.
@@ -103,6 +123,17 @@ const FooterNavComponent = MountWidget.extend(
     _composerClosed() {
       this.set("mobileScrollDirection", null);
       this.set("scrollEventDisabled", false);
+    },
+
+    _modalOn() {
+      postRNWebviewMessage(
+        "headerBg",
+        $(".modal-backdrop").css("background-color")
+      );
+    },
+
+    _modalOff() {
+      postRNWebviewMessage("headerBg", $(".d-header").css("background-color"));
     },
 
     goBack() {
