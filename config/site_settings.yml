@@ -896,6 +896,7 @@ email:
   pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
+  strip_incoming_email_lines: false
   email_in:
     default: false
     client: true

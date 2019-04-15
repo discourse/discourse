@@ -1256,4 +1256,91 @@ describe Email::Receiver do
     expect(email.to_addresses).to eq("foo@bar.com")
     expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
   end
+
+  context "#select_body" do
+
+    let(:email) {
+      <<~EOF
+      MIME-Version: 1.0
+      Date: Tue, 01 Jan 2019 00:00:00 +0300
+      Subject: An email with whitespaces
+      From: Foo <foo@discourse.org>
+      To: bar@discourse.org
+      Content-Type: text/plain; charset="UTF-8"
+
+          This is a line that will be stripped
+          This is another line that will be stripped
+
+      This is a line that will not be touched.
+      This is another line that will not be touched.
+
+      [code]
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      ```
+        # comment
+      [/code]
+
+          This is going to be stripped too.
+
+      ```
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      [/code]
+        # comment
+      ```
+
+              This is going to be stripped too.
+
+      Bye!
+      EOF
+    }
+
+    let(:stripped_text) {
+      <<~EOF
+      This is a line that will be stripped
+      This is another line that will be stripped
+
+      This is a line that will not be touched.
+      This is another line that will not be touched.
+
+      [code]
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      ```
+        # comment
+      [/code]
+
+      This is going to be stripped too.
+
+      ```
+        1.upto(10).each do |i|
+          puts i
+        end
+
+      [/code]
+        # comment
+      ```
+
+      This is going to be stripped too.
+
+      Bye!
+      EOF
+    }
+
+    it "strips lines if strip_incoming_email_lines is enabled" do
+      SiteSetting.strip_incoming_email_lines = true
+
+      receiver = Email::Receiver.new(email)
+      text, elided, format = receiver.select_body
+      expect(text).to eq(stripped_text)
+    end
+
+  end
 end
