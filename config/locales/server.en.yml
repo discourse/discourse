@@ -347,7 +347,6 @@ en:
   revert_version_same: "The current version is same as the version you are trying to revert to."
 
   excerpt_image: "image"
-  excerpt_spoiler: "spoiler"
 
   groups:
     success:
@@ -4269,7 +4268,7 @@ en:
                 label: "Private"
                 description: "Only logged in users can access this community"
           invite_only:
-            placeholder: "People must be explicitly invited. Public registration is disabled."
+              placeholder: "People must be explicitly invited. Public registration is disabled."
 
       contact:
         title: "Contact"
