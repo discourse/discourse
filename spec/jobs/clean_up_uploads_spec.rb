@@ -237,10 +237,17 @@ describe Jobs::CleanUpUploads do
   it "does not delete uploads in a queued post" do
     upload = fabricate_upload
     upload2 = fabricate_upload
+    upload3 = fabricate_upload
 
-    ReviewableQueuedPost.create(
-      created_by: Fabricate(:user),
-      payload: { raw: "#{upload.sha1}\n#{upload2.short_url}" },
+    Fabricate(:reviewable_queued_post_topic, payload: {
+      raw: "#{upload.sha1}\n#{upload2.short_url}"
+    })
+
+    Fabricate(:reviewable_queued_post_topic,
+      payload: {
+        raw: "#{upload3.sha1}"
+      },
+      status: Reviewable.statuses[:rejected]
     )
 
     Jobs::CleanUpUploads.new.execute(nil)
@@ -248,6 +255,7 @@ describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: @upload.id)).to eq(false)
     expect(Upload.exists?(id: upload.id)).to eq(true)
     expect(Upload.exists?(id: upload2.id)).to eq(true)
+    expect(Upload.exists?(id: upload3.id)).to eq(false)
   end
 
   it "does not delete uploads in a draft" do
