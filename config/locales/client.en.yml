@@ -407,7 +407,7 @@ en:
         reviewable_count: "Count"
         reported_by: "Reported by"
         deleted: "[Topic Deleted]"
-        original: '(original topic)'
+        original: "(original topic)"
         details: "details"
         unique_users:
           one: "1 user"
@@ -1678,6 +1678,7 @@ en:
         watching_first_post: '{{username}} created a new topic "{{topic}}" - {{site_title}}'
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
+        custom: "Notification from {{username}} on %{site_title}"
 
     upload_selector:
       title: "Add an image"
