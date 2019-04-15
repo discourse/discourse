@@ -19,7 +19,6 @@ class WebHookEvent < ActiveRecord::Base
       else
         WebHook.last_delivery_statuses[:failed]
       end
-
     web_hook.save!
   end
 end

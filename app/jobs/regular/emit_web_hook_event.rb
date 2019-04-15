@@ -113,8 +113,12 @@ module Jobs
           duration: ((Time.zone.now - now) * 1000).to_i
         )
       rescue => e
-        web_hook_event.update!(headers: MultiJson.dump(headers))
-        Rails.logger.error("Webhook event failed: #{e}")
+        web_hook_event.update!(
+          headers: MultiJson.dump(headers),
+          status: -1,
+          response_headers: MultiJson.dump(error: e),
+          duration: ((Time.zone.now - now) * 1000).to_i
+        )
       end
 
       MessageBus.publish("/web_hook_events/#{web_hook.id}", {
