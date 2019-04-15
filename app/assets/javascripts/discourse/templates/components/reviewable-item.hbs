@@ -16,6 +16,13 @@
   <div class='reviewable-contents'>
     {{#if editing}}
       <div class='editable-fields'>
+        {{#if reviewable.created_by}}
+          <div class='editable-created-by'>
+            {{avatar reviewable.created_by imageSize="tiny"}}
+            {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
+          </div>
+        {{/if}}
+
         {{#each reviewable.editable_fields as |f|}}
           <div class='editable-field {{dasherize f.id}}'>
             {{component

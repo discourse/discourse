@@ -381,6 +381,14 @@
 }
 
 .editable-fields {
+  .editable-created-by {
+    display: flex;
+    .avatar {
+      margin-right: 0.25em;
+    }
+    margin-bottom: 0.5em;
+  }
+
   width: 100%;
   .editable-field {
     .mini-tag-chooser {
