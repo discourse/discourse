@@ -13,6 +13,11 @@ body.footer-nav-visible {
   #reply-control.draft {
     bottom: $footer-nav-height;
   }
+
+  #reply-control.draft {
+    margin-bottom: env(safe-area-inset-bottom);
+    padding-bottom: 0px;
+  }
 }
 
 .footer-nav {
