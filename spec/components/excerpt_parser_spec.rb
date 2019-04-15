@@ -32,14 +32,4 @@ describe ExcerptParser do
     expect(ExcerptParser.get_excerpt(html, 3, {})).to match_html('<details class="disabled"><summary>foo</summary></details>')
     expect(ExcerptParser.get_excerpt(html, 2, {})).to match_html('<details class="disabled"><summary>fo&hellip;</summary></details>')
   end
-
-  it "preserves spoilers by default" do
-    html = 'Foo <span class="spoiler">bar</span>'
-    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html('Foo <span class="spoiler">bar</span>')
-  end
-
-  it "strips spoilers when specified" do
-    html = 'Foo <span class="spoiler">bar</span>'
-    expect(ExcerptParser.get_excerpt(html, 100, strip_spoilers: true)).to match_html("Foo [#{I18n.t 'excerpt_spoiler'}]")
-  end
 end

@@ -17,7 +17,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_emoji_images = options[:keep_emoji_images] == true
     @keep_onebox_source = options[:keep_onebox_source] == true
     @remap_emoji = options[:remap_emoji] == true
-    @strip_spoilers = options[:strip_spoilers] == true
     @start_excerpt = false
     @in_details_depth = 0
     @summary_contents = ""
@@ -111,11 +110,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       end
       # Preserve spoilers
       if attributes.include?(["class", "spoiler"])
-        if @strip_spoilers
-          characters("[#{I18n.t 'excerpt_spoiler'}]")
-        else
-          include_tag("span", attributes)
-        end
+        include_tag("span", attributes)
         @in_spoiler = true
       end
 
@@ -198,8 +193,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     end
 
     @excerpt << before_string if before_string
-
-    string = "" if @in_spoiler && @strip_spoilers
 
     encode = encode ? lambda { |s| ERB::Util.html_escape(s) } : lambda { |s| s }
     if count_it && @current_length + string.length > @length
