@@ -32,7 +32,7 @@ task "avatars:clean" => :environment do
     begin
       optimized_image.destroy!
     rescue => e
-      puts "", "Failed to cleanup avatar for #{user.username}", e, e.backtrace.join("\n")
+      puts "", "Failed to cleanup avatar (optimized_image_id: #{optimized_image.id}, optimized_image_url: #{optimized_image.url})", e, e.backtrace.join("\n")
     end
     putc "." if (i += 1) % 10 == 0
   end
