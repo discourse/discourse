@@ -22,6 +22,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
     this.appEvents.off("modal-body:flash", this, "_flash");
     this.appEvents.off("modal-body:clearFlash", this, "_clearFlash");
+    this.appEvents.trigger("modal:body-dismissed");
   },
 
   _afterFirstRender() {

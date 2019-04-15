@@ -654,12 +654,10 @@ export function isAppWebview() {
   return window.ReactNativeWebView !== undefined;
 }
 
-export function isChromePWA() {
-  // Watch out: this doesn't distinguish between mobile or desktop PWAs
-  return (
-    window.matchMedia("(display-mode: standalone)").matches &&
-    navigator.userAgent.match(/(Chrome)/g)
-  );
+export function postRNWebviewMessage(prop, value) {
+  if (window.ReactNativeWebView !== undefined) {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
+  }
 }
 
 // This prevents a mini racer crash

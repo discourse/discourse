@@ -5,7 +5,10 @@
 $footer-nav-height: 55px;
 
 body.footer-nav-visible {
-  padding-bottom: $footer-nav-height + 15;
+  #main-outlet {
+    padding-bottom: $footer-nav-height + 15;
+  }
+
   #topic-progress-wrapper,
   #reply-control.draft {
     bottom: $footer-nav-height;
@@ -48,8 +51,22 @@ body.footer-nav-visible {
 }
 
 @supports (-webkit-backdrop-filter: blur(10px)) {
-  .footer-nav {
+  body:not(.footer-nav-ipad) .footer-nav {
     background-color: rgba($header_background, 0.7);
     -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+body.footer-nav-ipad {
+  padding-top: $footer-nav-height;
+  .footer-nav {
+    bottom: auto;
+    top: 0px;
+    background-color: $header_background;
+    z-index: z("ipad-header-nav");
+  }
+
+  &.docked .d-header {
+    margin-top: $footer-nav-height;
   }
 }

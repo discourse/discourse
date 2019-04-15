@@ -1,5 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
-import { isAppWebview, isiOSPWA, isChromePWA } from "discourse/lib/utilities";
+import { isAppWebview, isiOSPWA } from "discourse/lib/utilities";
 
 export default Ember.Controller.extend({
   showTop: true,
@@ -21,10 +21,6 @@ export default Ember.Controller.extend({
 
   @computed
   showFooterNav() {
-    return (
-      isAppWebview() ||
-      isiOSPWA() ||
-      (!this.site.isMobileDevice && isChromePWA())
-    );
+    return isAppWebview() || isiOSPWA();
   }
 });
