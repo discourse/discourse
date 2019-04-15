@@ -55,8 +55,8 @@ module Jobs
       file&.close
     end
 
-    def get_group_ids(group_names, csv_line_number)
-      group_ids = []
+    def get_groups(group_names, csv_line_number)
+      groups = []
 
       if group_names
         group_names = group_names.split(';')
@@ -67,7 +67,7 @@ module Jobs
 
           if group_detail && guardian.can_edit_group?(group_detail)
             # valid group
-            group_ids.push(group_detail.id)
+            groups.push(group_detail)
           else
             # invalid group
             save_log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
@@ -75,11 +75,13 @@ module Jobs
           end
         }
       end
-      return group_ids
+
+      groups
     end
 
     def get_topic(topic_id, csv_line_number)
       topic = nil
+
       if topic_id
         topic = Topic.find_by_id(topic_id)
         if topic.nil?
@@ -87,15 +89,31 @@ module Jobs
           @failed += 1
         end
       end
+
       return topic
     end
 
     def send_invite(csv_info, csv_line_number)
       email = csv_info[0]
-      group_ids = get_group_ids(csv_info[1], csv_line_number)
+      groups = get_groups(csv_info[1], csv_line_number)
       topic = get_topic(csv_info[2], csv_line_number)
+
       begin
-        Invite.invite_by_email(email, @current_user, topic, group_ids)
+        if user = User.find_by_email(email)
+          if groups.present?
+            Group.transaction do
+              groups.each do |group|
+                group.add(user)
+
+                GroupActionLogger
+                  .new(@current_user, group)
+                  .log_add_user_to_group(user)
+              end
+            end
+          end
+        else
+          Invite.invite_by_email(email, @current_user, topic, groups.map(&:id))
+        end
       rescue => e
         save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
         @sent -= 1
