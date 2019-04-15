@@ -30,6 +30,9 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     a.card-huge-avatar {
       outline: none;
     }
+    .spinner {
+      float: left;
+    }
   }
   &.no-bg {
     .card-content {
