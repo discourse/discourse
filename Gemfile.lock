@@ -424,6 +424,7 @@ GEM
     stackprof (0.2.12)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
+    test-prof (0.8.0)
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.8)
@@ -559,6 +560,7 @@ DEPENDENCIES
   sprockets-rails
   sshkey
   stackprof
+  test-prof
   thor
   tilt
   uglifier

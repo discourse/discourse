@@ -122,6 +122,7 @@ group :test do
   gem 'minitest', require: false
   gem 'danger'
   gem 'simplecov', require: false
+  gem "test-prof"
 end
 
 group :test, :development do
