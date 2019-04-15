@@ -47,6 +47,7 @@ describe RemoteTheme do
         "about.json" => about_json,
         "desktop/desktop.scss" => scss_data,
         "scss/file.scss" => ".class1{color:red}",
+        "scss/empty.scss" => "",
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
