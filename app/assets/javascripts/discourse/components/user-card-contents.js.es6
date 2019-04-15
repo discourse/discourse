@@ -152,7 +152,7 @@ export default Ember.Component.extend(
 
     _showCallback(username, $target) {
       this._positionCard($target);
-      this.setProperties({visible: true, loading: true});
+      this.setProperties({ visible: true, loading: true });
 
       const args = { stats: false };
       args.include_post_count_for = this.get("topic.id");
