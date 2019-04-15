@@ -57,6 +57,12 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(Topic.count).to eq(topic_count)
           expect(Post.count).to eq(post_count + 1)
 
+          notifications = Notification.where(
+            user: reviewable.created_by,
+            notification_type: Notification.types[:post_approved]
+          )
+          expect(notifications).to be_present
+
           # We can't approve twice
           expect(-> { reviewable.perform(moderator, :approve) }).to raise_error(Reviewable::InvalidAction)
         end

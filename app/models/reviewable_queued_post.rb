@@ -72,6 +72,14 @@ class ReviewableQueuedPost < Reviewable
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:approved_post, self, created_post)
 
+    Notification.create!(
+      notification_type: Notification.types[:post_approved],
+      user_id: created_by.id,
+      data: {},
+      topic_id: created_post.topic_id,
+      post_number: created_post.post_number
+    )
+
     create_result(:success, :approved) { |result| result.created_post = created_post }
   end
 
