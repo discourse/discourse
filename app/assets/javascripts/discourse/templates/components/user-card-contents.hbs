@@ -46,6 +46,7 @@
           {{#if user.staged}}
             <h2 class="staged">{{i18n 'user.staged'}}</h2>
           {{/if}}
+          {{conditional-loading-spinner condition=loading}}
           {{plugin-outlet name="user-card-post-names" args=(hash user=user) tagName='div'}}
         </span>
       </div>
