@@ -431,6 +431,7 @@ en:
       conversation:
         view_full: "view full conversation"
       scores:
+        about: "This score is calculated based on the trust level of the reporter, the accuracy of their previous flags, and the priority of the item being reported."
         score: "Score"
         date: "Date"
         type: "Type"
