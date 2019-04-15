@@ -365,13 +365,6 @@ describe Auth::DefaultCurrentUserProvider do
 
   end
 
-  it "should not update last seen for ajax calls without Discourse-Visible header" do
-    expect(provider("/topic/anything/goes",
-                    :method => "POST",
-                    "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest"
-          ).should_update_last_seen?).to eq(false)
-  end
-
   describe "#current_user" do
     let(:user) { Fabricate(:user) }
 
@@ -426,6 +419,11 @@ describe Auth::DefaultCurrentUserProvider do
     end
   end
 
+  it "should update last seen for non ajax" do
+    expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
+    expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
+  end
+
   it "should update ajax reqs with discourse visible" do
     expect(provider("/topic/anything/goes",
                     :method => "POST",
@@ -434,9 +432,23 @@ describe Auth::DefaultCurrentUserProvider do
           ).should_update_last_seen?).to eq(true)
   end
 
-  it "should update last seen for non ajax" do
-    expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
-    expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
+  it "should not update last seen for ajax calls without Discourse-Visible header" do
+    expect(provider("/topic/anything/goes",
+                    :method => "POST",
+                    "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest"
+          ).should_update_last_seen?).to eq(false)
+  end
+
+  it "should update last seen for API calls with Discourse-Visible header" do
+    user = Fabricate(:user)
+    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
+    params = { :method => "POST",
+               "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+               "HTTP_API_KEY" => "hello"
+              }
+
+    expect(provider("/topic/anything/goes", params).should_update_last_seen?).to eq(false)
+    expect(provider("/topic/anything/goes", params.merge("HTTP_DISCOURSE_VISIBLE" => "true")).should_update_last_seen?).to eq(true)
   end
 
   it "correctly rotates tokens" do
