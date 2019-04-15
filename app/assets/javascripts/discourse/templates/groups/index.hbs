@@ -27,9 +27,9 @@
         <div class='container'>
           <div class="groups-boxes">
             {{#each model as |group|}}
-              <div class="group-box">
+            {{#link-to "group.members" group.name class="group-box"}}
                 <div class="group-box-inner">
-                  {{#link-to "group.members" group.name}}
+                  <div class="group-info-wrapper">
                     {{#if group.flair_url}}
                       <span class='group-avatar-flair'>
                         {{avatar-flair
@@ -39,20 +39,28 @@
                           groupName=group.name}}
                       </span>
                     {{/if}}
-
+                    <span class="group-info">
                     {{groups-info group=group}}
-                  {{/link-to}}
 
-                  <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
+                    <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
+                  </span>
+                </div>
+
 
                   <div class="group-description">{{{group.bio_excerpt}}}</div>
 
                   <div class="group-membership">
                     {{#group-membership-button tagName='' model=group showLogin=(route-action "showLogin")}}
                       {{#if group.is_group_owner}}
+                      <span class="is-group-owner">
+                        {{d-icon "shield"}}
                         {{i18n "groups.index.is_group_owner"}}
+                      </span>
                       {{else if group.is_group_user}}
+                      <span class="is-group-member">
+                        {{d-icon "check"}}
                         {{i18n "groups.index.is_group_user"}}
+                      </span>
                       {{else if group.public_admission}}
                         {{i18n 'groups.index.public'}}
                       {{else if group.isPrivate}}
@@ -62,13 +70,14 @@
                         {{#if group.automatic}}
                           {{i18n 'groups.index.automatic'}}
                         {{else}}
+                          {{d-icon "ban"}}
                           {{i18n 'groups.index.closed'}}
                         {{/if}}
                       {{/if}}
                     {{/group-membership-button}}
                   </div>
                 </div>
-              </div>
+                {{/link-to}}
             {{/each}}
           </div>
         </div>

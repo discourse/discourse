@@ -1,7 +1,7 @@
 .groups-header {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  margin-bottom: 1em;
   .groups-header-new {
     order: 2;
     margin-bottom: 0.5em;
@@ -24,33 +24,102 @@
 }
 
 .groups-boxes {
+  margin: 1em 0;
+  width: 100%;
+  // IE11 falls back to flexbox
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  width: 100%;
+  justify-content: space-between;
+  // Everything that's not IE11 uses grid
+  @supports (display: grid) {
+    display: grid;
+    grid-template-columns: repeat(4, 24%);
+    grid-column-gap: 1.333%;
+    grid-row-gap: 1em;
+    @include breakpoint("tablet") {
+      grid-template-columns: repeat(3, 32%);
+      grid-column-gap: 2%;
+    }
+    @include breakpoint("mobile") {
+      grid-template-columns: 100%;
+    }
+  }
+
   .group-box {
+    // Flex and margin are for IE11
+    flex: 1 1 24%;
+    margin: 1%;
+    @include breakpoint("mobile") {
+      margin: 0;
+    }
     display: flex;
-    flex-direction: row;
-    align-content: flex-start;
-    cursor: pointer;
     box-sizing: border-box;
-    border-width: 1px;
-    // border-left-width: 6px;
-    border-style: solid;
-    border-color: #e9e9e9;
-    width: 23%;
-    margin: 0 1% 1.5em 1%;
+    cursor: pointer;
+    border: 1px solid $primary-low;
+    color: $primary;
+    .discourse-no-touch & {
+      transition: all 0.25s;
+      &:hover {
+        box-shadow: shadow("card");
+      }
+    }
+    .group-membership {
+      color: $primary-medium;
+      margin-top: auto;
+      padding-top: 1em;
+      .is-group-owner,
+      .is-group-member {
+        color: $success;
+      }
+    }
     .group-box-inner {
       padding: 1em;
       width: 100%;
       display: flex;
       flex-direction: column;
+      box-sizing: border-box;
+      .group-info-wrapper {
+        display: flex;
+        overflow: hidden;
+        flex: 0 1 auto;
+        .group-avatar-flair {
+          margin-top: 0.3em;
+          margin-right: 8px;
+          flex: 0 0 auto;
+        }
+        .group-info {
+          flex: 1 0 auto;
+          margin-bottom: 1em;
+          width: 70%;
+
+          span {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+      .group-user-count {
+        display: flex;
+        align-items: center;
+        color: $primary-high;
+        .d-icon {
+          margin-right: 0.25em;
+          font-size: 0.8em;
+          color: $primary-medium;
+        }
+      }
+      .group-description {
+        color: $primary-high;
+        word-wrap: break-word;
+      }
     }
+
     .groups-info-name {
+      font-size: $font-up-1;
       font-weight: bold;
-      color: #646464;
+      color: $primary;
     }
 
     $size: 40px;
@@ -58,7 +127,6 @@
 
     .group-avatar-flair {
       display: inline-block;
-      vertical-align: middle;
       color: $primary;
 
       .avatar-flair {
