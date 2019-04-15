@@ -1638,6 +1638,7 @@ en:
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
       more: "view older notifications"
+      post_approved: "Your post was approved"
       total_flagged: "total flagged posts"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
