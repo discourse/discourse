@@ -5,7 +5,6 @@ module Jobs
 
   class BulkInvite < Jobs::Base
     sidekiq_options retry: false
-    attr_accessor :current_user
 
     def initialize
       super
@@ -16,8 +15,11 @@ module Jobs
 
     def execute(args)
       filename = args[:filename]
-      @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:filename) if filename.blank?
+
+      @current_user = User.find_by(id: args[:current_user_id])
+      raise Discourse::InvalidParameters.new(:current_user_id) unless @current_user
+
       csv_path = "#{Invite.base_directory}/#{filename}"
 
       # read csv file, and send out invitations
@@ -28,6 +30,8 @@ module Jobs
 
       FileUtils.rm_rf(csv_path) if csv_path
     end
+
+    private
 
     def read_csv_file(csv_path)
       file = File.open(csv_path, encoding: 'bom|utf-8')
@@ -53,11 +57,15 @@ module Jobs
 
     def get_group_ids(group_names, csv_line_number)
       group_ids = []
+
       if group_names
         group_names = group_names.split(';')
+        guardian = Guardian.new(@current_user)
+
         group_names.each { |group_name|
           group_detail = Group.find_by_name(group_name)
-          if group_detail
+
+          if group_detail && guardian.can_edit_group?(group_detail)
             # valid group
             group_ids.push(group_detail.id)
           else
