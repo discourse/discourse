@@ -22,7 +22,7 @@ module Jobs
         rescue => e
           Discourse.handle_job_exception(e,
             message: "Cleaning up inactive users",
-            extra: { user_id: user.id }
+            extra: { user_id: id }
           )
         end
       end
