@@ -3,6 +3,7 @@ require 'rails_helper'
 describe Jobs::BulkInvite do
   describe '#execute' do
     let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
     let!(:group1) { Fabricate(:group, name: 'group1') }
     let!(:group2) { Fabricate(:group, name: 'group2') }
     let!(:topic) { Fabricate(:topic, id: 999) }
@@ -82,6 +83,22 @@ describe Jobs::BulkInvite do
       expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(
         group1.id
       )
+    end
+
+    it 'adds existing users to valid groups' do
+      existing_user = Fabricate(:user, email: "test@discourse.org")
+
+      group2.update!(automatic: true)
+
+      expect do
+        described_class.new.execute(
+          current_user_id: admin.id,
+          filename: basename
+        )
+      end.to change { Invite.count }.by(1)
+
+      expect(Invite.exists?(email: "test2@discourse.org")).to eq(true)
+      expect(existing_user.reload.groups).to eq([group1])
     end
   end
 
