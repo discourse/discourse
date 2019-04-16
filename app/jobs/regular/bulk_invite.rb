@@ -11,6 +11,8 @@ module Jobs
       @logs    = []
       @sent    = 0
       @failed  = 0
+      @groups = {}
+      @valid_groups = {}
     end
 
     def execute(args)
@@ -19,6 +21,7 @@ module Jobs
 
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:current_user_id) unless @current_user
+      @guardian = Guardian.new(@current_user)
 
       csv_path = "#{Invite.base_directory}/#{filename}"
 
@@ -60,14 +63,13 @@ module Jobs
 
       if group_names
         group_names = group_names.split(';')
-        guardian = Guardian.new(@current_user)
 
         group_names.each { |group_name|
-          group_detail = Group.find_by_name(group_name)
+          group = fetch_group(group_name)
 
-          if group_detail && guardian.can_edit_group?(group_detail)
+          if group && can_edit_group?(group)
             # valid group
-            groups.push(group_detail)
+            groups.push(group)
           else
             # invalid group
             save_log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
@@ -143,6 +145,30 @@ module Jobs
           )
         end
       end
+    end
+
+    def fetch_group(group_name)
+      group_name = group_name.downcase
+      group = @groups[group_name]
+
+      unless group
+        group = Group.find_by("lower(name) = ?", group_name)
+        @groups[group_name] = group
+      end
+
+      group
+    end
+
+    def can_edit_group?(group)
+      group_name = group.name.downcase
+      result = @valid_groups[group_name]
+
+      unless result
+        result = @guardian.can_edit_group?(group)
+        @valid_groups[group_name] = result
+      end
+
+      result
     end
 
   end
