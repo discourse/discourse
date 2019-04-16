@@ -1274,6 +1274,18 @@ describe Email::Receiver do
       This is a line that will not be touched.
       This is another line that will not be touched.
 
+      * list
+
+        * sub-list
+
+      - list
+
+        - sub-list
+
+      + list
+
+        + sub-list
+
       [code]
         1.upto(10).each do |i|
           puts i
@@ -1307,6 +1319,18 @@ describe Email::Receiver do
 
       This is a line that will not be touched.
       This is another line that will not be touched.
+
+      * list
+
+        * sub-list
+
+      - list
+
+        - sub-list
+
+      + list
+
+        + sub-list
 
       [code]
         1.upto(10).each do |i|
