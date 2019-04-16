@@ -33,14 +33,6 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?
-      Scheduler::Defer.later("Null topic slug") do
-        Topic.update_all(slug: nil)
-      end
-    end
-  end
-
   def self.max_fancy_title_length
     400
   end

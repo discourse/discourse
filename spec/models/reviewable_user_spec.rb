@@ -100,6 +100,15 @@ RSpec.describe ReviewableUser, type: :model do
     end
   end
 
+  describe "changing must_approve_users" do
+    it "will approve any existing users" do
+      user = Fabricate(:user)
+      expect(user).not_to be_approved
+      SiteSetting.must_approve_users = true
+      expect(user.reload).to be_approved
+    end
+  end
+
   describe 'when must_approve_users is true' do
     before do
       SiteSetting.must_approve_users = true

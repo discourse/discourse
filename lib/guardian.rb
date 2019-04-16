@@ -220,7 +220,7 @@ class Guardian
 
   # Can we approve it?
   def can_approve?(target)
-    is_staff? && target && target.active? && not(target.approved?)
+    is_staff? && target && target.active? && !target.approved?
   end
 
   def can_activate?(target)

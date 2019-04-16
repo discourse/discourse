@@ -1,6 +1,7 @@
 require_dependency 'reviewable'
 
 class ReviewableUser < Reviewable
+
   def self.create_for(user)
     create(
       created_by_id: Discourse.system_user.id,
