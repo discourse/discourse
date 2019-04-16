@@ -63,13 +63,18 @@ class PostRevisor
   end
 
   # Fields we want to record revisions for by default
-  track_topic_field(:title) do |tc, title|
-    tc.record_change('title', tc.topic.title, title)
-    tc.topic.title = title
+  %i{title archetype}.each do |field|
+    track_topic_field(field) do |tc, attribute|
+      tc.record_change(field, tc.topic.public_send(field), attribute)
+      tc.topic.public_send("#{field}=", attribute)
+    end
   end
 
   track_topic_field(:category_id) do |tc, category_id|
-    if category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+    if category_id == 0 && tc.topic.private_message?
+      tc.record_change('category_id', tc.topic.category_id, nil)
+      tc.topic.category_id = nil
+    elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end

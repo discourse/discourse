@@ -10,16 +10,23 @@ describe TopicConverter do
     let(:first_post) { create_post(user: author, topic: private_message) }
     let(:other_user) { private_message.topic_allowed_users.find { |u| u.user != author }.user }
 
+    let(:uncategorized_category) do
+      Category.find(SiteSetting.uncategorized_category_id)
+    end
+
     context 'success' do
       it "converts private message to regular topic" do
         SiteSetting.allow_uncategorized_topics = true
-        topic = TopicConverter.new(private_message, admin).convert_to_public_topic
-        topic.reload
+        topic = nil
+
+        expect do
+          topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic
+          topic.reload
+        end.to change { uncategorized_category.reload.topic_count }.by(1)
 
         expect(topic).to be_valid
         expect(topic.archetype).to eq("regular")
         expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
-        expect(topic.category.topic_count).to eq(1)
       end
 
       describe 'when uncategorized category is not allowed' do
@@ -29,7 +36,7 @@ describe TopicConverter do
         end
 
         it 'should convert private message into the right category' do
-          topic = TopicConverter.new(private_message, admin).convert_to_public_topic
+          topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic
           topic.reload
 
           expect(topic).to be_valid
@@ -45,7 +52,7 @@ describe TopicConverter do
 
       describe 'when a custom category_id is given' do
         it 'should convert private message into the right category' do
-          topic = TopicConverter.new(private_message, admin).convert_to_public_topic(category.id)
+          topic = TopicConverter.new(first_post.topic, admin).convert_to_public_topic(category.id)
 
           expect(topic.reload.category).to eq(category)
           expect(topic.category.topic_count).to eq(2)
@@ -89,6 +96,7 @@ describe TopicConverter do
     let(:author) { Fabricate(:user) }
     let(:category) { Fabricate(:category) }
     let(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
+    let!(:post) { Fabricate(:post, topic: topic) }
 
     context 'success' do
       it "converts regular topic to private message" do
@@ -142,9 +150,9 @@ describe TopicConverter do
       end
 
       it "works" do
-        private_message = topic.convert_to_private_message(admin)
-        expect(private_message).to be_valid
-        expect(topic.archetype).to eq("private_message")
+        topic.convert_to_private_message(admin)
+
+        expect(topic.reload.archetype).to eq("private_message")
       end
     end
   end
