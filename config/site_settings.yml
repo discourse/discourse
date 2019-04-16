@@ -141,6 +141,10 @@ basic:
     max: 2000
   limit_suggested_to_category:
     default: false
+  suggested_topics_unread_max_days_old:
+    default: 90
+    min: 0
+    max: 10000
   suggested_topics_max_days_old:
     default: 365
     min: 7
