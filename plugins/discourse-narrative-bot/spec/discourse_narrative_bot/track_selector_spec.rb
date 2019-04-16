@@ -335,58 +335,39 @@ describe DiscourseNarrativeBot::TrackSelector do
               )
             end
 
-            it 'should create the right reply' do
+            it 'should create the right reply for simple rolls' do
               post.update!(raw: 'roll 2d1')
               described_class.new(:reply, user, post_id: post.id).select
               new_post = Post.last
 
               expect(new_post.raw).to eq(I18n.t(
-                "discourse_narrative_bot.dice.results", results: '1, 1'
+                "discourse_narrative_bot.dice.result", result: '2', detailed_result: '2d1: 1 + 1 = 2.'
               ))
             end
 
-            describe 'when range of dice request is too high' do
-              before do
-                srand(1)
-              end
+            it 'should create the right reply for rolls with modifiers' do
+              post.update!(raw: 'roll 2d1+1')
+              described_class.new(:reply, user, post_id: post.id).select
+              new_post = Post.last
 
-              it 'should create the right reply' do
-                stub_request(:get, "https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice")
-                  .to_return(status: 200, body: "", headers: {})
-
-                post.update!(raw: "roll 1d#{DiscourseNarrativeBot::Dice::MAXIMUM_RANGE_OF_DICE + 1}")
-                described_class.new(:reply, user, post_id: post.id).select
-                new_post = Post.last
-
-                expected_raw = <<~RAW
-                #{I18n.t('discourse_narrative_bot.dice.out_of_range')}
-
-                #{I18n.t('discourse_narrative_bot.dice.results', results: '38')}
-                RAW
-
-                expect(new_post.raw).to eq(expected_raw.chomp)
-              end
+              expect(new_post.raw).to eq(I18n.t(
+                "discourse_narrative_bot.dice.result", result: '3', detailed_result: '2d1: 1 + 1 = 2. 2 + 1 = 3'
+              ))
             end
 
-            describe 'when number of dice to roll is too high' do
-              it 'should create the right reply' do
-                post.update!(raw: "roll #{DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE + 1}d1")
-                described_class.new(:reply, user, post_id: post.id).select
-                new_post = Post.last
+            it 'should create the right reply for groups of dice' do
+              post.update!(raw: 'roll 2d1 + 2d1')
+              described_class.new(:reply, user, post_id: post.id).select
+              new_post = Post.last
 
-                expected_raw = <<~RAW
-                #{I18n.t('discourse_narrative_bot.dice.not_enough_dice', num_of_dice: DiscourseNarrativeBot::Dice::MAXIMUM_NUM_OF_DICE)}
-
-                #{I18n.t('discourse_narrative_bot.dice.results', results: '1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1')}
-                RAW
-
-                expect(new_post.raw).to eq(expected_raw.chomp)
-              end
+              expect(new_post.raw).to eq(I18n.t(
+                "discourse_narrative_bot.dice.result", result: '4', detailed_result: '2d1: 1 + 1 = 2. 2d1: 1 + 1 = 2. 2 + 2 = 4'
+              ))
             end
 
-            describe 'when dice combination is invalid' do
+            describe 'when dice description is invalid' do
               it 'should create the right reply' do
-                post.update!(raw: "roll 0d1")
+                post.update!(raw: "roll 1d20+π")
                 described_class.new(:reply, user, post_id: post.id).select
 
                 expect(Post.last.raw).to eq(I18n.t(
@@ -543,14 +524,40 @@ describe DiscourseNarrativeBot::TrackSelector do
         end
 
         describe 'when discobot is asked to roll dice' do
-          it 'should create the right reply' do
+          before do
+            narrative.set_data(user,
+                               state: :end,
+                               topic_id: topic.id
+            )
+          end
+
+          it 'should create the right reply for simple rolls' do
             post.update!(raw: '@discobot roll 2d1')
             described_class.new(:reply, user, post_id: post.id).select
             new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t("discourse_narrative_bot.dice.results",
-              results: '1, 1'
+            expect(new_post.raw).to eq(I18n.t(
+              "discourse_narrative_bot.dice.result", result: '2', detailed_result: '2d1: 1 + 1 = 2.'
+            ))
+          end
+
+          it 'should create the right reply for rolls with modifiers' do
+            post.update!(raw: '@discobot roll 2d1+1')
+            described_class.new(:reply, user, post_id: post.id).select
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(I18n.t(
+              "discourse_narrative_bot.dice.result", result: '3', detailed_result: '2d1: 1 + 1 = 2. 2 + 1 = 3'
+            ))
+          end
+
+          it 'should create the right reply for groups of dice' do
+            post.update!(raw: '@discobot roll 2d1 + 2d1')
+            described_class.new(:reply, user, post_id: post.id).select
+            new_post = Post.last
+
+            expect(new_post.raw).to eq(I18n.t(
+              "discourse_narrative_bot.dice.result", result: '4', detailed_result: '2d1: 1 + 1 = 2. 2d1: 1 + 1 = 2. 2 + 2 = 4'
             ))
           end
 

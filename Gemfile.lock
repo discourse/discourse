@@ -149,6 +149,8 @@ GEM
     ffi (1.10.0)
     flamegraph (0.9.5)
     fspath (3.1.0)
+    games_dice (0.3.12)
+      parslet (>= 1.5.0)
     gc_tracer (1.5.1)
     git (1.5.0)
     globalid (0.4.1)
@@ -280,6 +282,7 @@ GEM
       parallel
     parser (2.6.0.0)
       ast (~> 2.4.0)
+    parslet (1.8.2)
     pg (1.1.4)
     powerpack (0.1.2)
     progress (3.5.0)
@@ -489,6 +492,7 @@ DEPENDENCIES
   fast_xs
   fastimage
   flamegraph
+  games_dice (~> 0.3.12)
   gc_tracer
   highline (~> 1.7.0)
   hiredis

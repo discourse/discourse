@@ -1,6 +1,6 @@
 # name: discourse-narrative-bot
 # about: Introduces staff to Discourse
-# version: 1.0
+# version: 1.1
 # authors: Nick Sahler, Alan Tan
 # url: https://github.com/discourse/discourse/tree/master/plugins/discourse-narrative-bot
 

@@ -37,13 +37,13 @@ en:
     dice:
       trigger: "roll"
       invalid: |-
-        I’m sorry, it is mathematically impossible to roll that combination of dice. :confounded:
-      not_enough_dice: |-
-        I only have %{num_of_dice} dice. [Shameful](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), I know!
-      out_of_range: |-
-        Did you know that [the maximum number of sides](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) for a mathematically fair die is 120?
-      results: |-
-        > :game_die: %{results}
+        I’m sorry, it is mathematically impossible to roll that description of dice. :confounded: Please make sure your description is a valid one.
+        For more information, read [String Dice Descriptions](https://github.com/neilslater/games_dice#string-dice-descriptions).
+      result: |-
+        > :game_die: %{result}
+        [details="Detailed Result"]
+        %{detailed_result}
+        [/details]
 
     quote:
       trigger: "quote"
