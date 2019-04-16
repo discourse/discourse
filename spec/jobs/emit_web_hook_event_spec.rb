@@ -189,7 +189,7 @@ describe Jobs::EmitWebHookEvent do
     end
   end
 
-  describe '#web_hook_request' do
+  describe '#send_webhook!' do
     it 'creates delivery event record' do
       stub_request(:post, post_hook.payload_url)
         .to_return(body: 'OK', status: 200)
