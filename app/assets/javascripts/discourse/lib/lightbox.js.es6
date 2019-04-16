@@ -20,7 +20,16 @@ export default function($elem) {
         mainClass: "mfp-zoom-in",
 
         gallery: {
-          enabled: true
+          enabled: true,
+          tPrev: I18n.t("lightbox.previous"),
+          tNext: I18n.t("lightbox.next"),
+          tCounter: I18n.t("lightbox.counter")
+        },
+
+        tClose: I18n.t("lightbox.close"),
+        tLoading: I18n.t("lightbox.loading"),
+        ajax: {
+          tError: I18n.t("lightbox.content_load_error")
         },
 
         callbacks: {
@@ -57,6 +66,7 @@ export default function($elem) {
         },
 
         image: {
+          tError: I18n.t("lightbox.image_load_error"),
           titleSrc(item) {
             const href = item.el.data("download-href") || item.src;
             let src = [
