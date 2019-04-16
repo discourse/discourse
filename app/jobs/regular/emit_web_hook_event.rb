@@ -25,13 +25,8 @@ module Jobs
     private
 
     def validate_arguments!
-      %i{
-        web_hook_id
-        event_type
-      }.each do |key|
-        raise Discourse::InvalidParameters.new(key) unless arguments[key].present?
-      end
-
+      validate_argument!(:web_hook_id)
+      validate_argument!(:event_type)
       raise Discourse::InvalidParameters.new(:web_hook_id) if web_hook.blank?
     end
 
