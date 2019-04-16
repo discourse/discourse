@@ -3,14 +3,13 @@ require_dependency 'topic_subtype'
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 3
+  SCHEMA_VERSION = 4
 
   attr_accessor :type, :data, :total, :prev30Days, :start_date,
-                :end_date, :category_id, :group_id, :filter,
-                :labels, :async, :prev_period, :facets, :limit, :processing, :average, :percent,
-                :higher_is_better, :icon, :modes, :category_filtering,
-                :group_filtering, :prev_data, :prev_start_date, :prev_end_date,
-                :dates_filtering, :error, :primary_color, :secondary_color, :filter_options
+                :end_date, :labels, :prev_period, :facets, :limit, :average,
+                :percent, :higher_is_better, :icon, :modes, :prev_data,
+                :prev_start_date, :prev_end_date, :dates_filtering, :error,
+                :primary_color, :secondary_color, :filters, :available_filters
 
   def self.default_days
     30
@@ -24,13 +23,11 @@ class Report
     @average = false
     @percent = false
     @higher_is_better = true
-    @category_filtering = false
-    @group_filtering = false
     @modes = [:table, :chart]
     @prev_data = nil
     @dates_filtering = true
-    @filter_options = nil
-    @filter = nil
+    @available_filters = {}
+    @filters = {}
 
     tertiary = ColorScheme.hex_for_name('tertiary') || '0088cc'
     @primary_color = rgba_color(tertiary)
@@ -41,15 +38,22 @@ class Report
     (+"reports:") <<
     [
       report.type,
-      report.category_id,
       report.start_date.to_date.strftime("%Y%m%d"),
       report.end_date.to_date.strftime("%Y%m%d"),
-      report.group_id,
-      report.filter,
       report.facets,
       report.limit,
+      report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
     ].compact.map(&:to_s).join(':')
+  end
+
+  def add_filter(name, options = {})
+    default_filter = { allow_any: false, choices: [], default: nil }
+    available_filters[name] = default_filter.merge(options)
+  end
+
+  def remove_filter(name)
+    available_filters.delete(name)
   end
 
   def self.clear_cache(type = nil)
@@ -76,13 +80,6 @@ class Report
     self.start_date
   end
 
-  def filter_values
-    if self.filter.present?
-      return self.filter.delete_prefix("[").delete_suffix("]").split("&").map { |param| param.split("=") }.to_h
-    end
-    {}
-  end
-
   def as_json(options = nil)
     description = I18n.t("reports.#{type}.description", default: "")
     {
@@ -97,14 +94,12 @@ class Report
       prev_data: self.prev_data,
       prev_start_date: prev_start_date&.iso8601,
       prev_end_date: prev_end_date&.iso8601,
-      category_id: category_id,
-      group_id: group_id,
-      filter: self.filter,
       prev30Days: self.prev30Days,
       dates_filtering: self.dates_filtering,
       report_key: Report.cache_key(self),
       primary_color: self.primary_color,
       secondary_color: self.secondary_color,
+      available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
       labels: labels || [
         {
           type: :date,
@@ -117,13 +112,9 @@ class Report
           title: I18n.t("reports.default.labels.count")
         },
       ],
-      processing: self.processing,
       average: self.average,
       percent: self.percent,
       higher_is_better: self.higher_is_better,
-      category_filtering: self.category_filtering,
-      group_filtering: self.group_filtering,
-      filter_options: self.filter_options,
       modes: self.modes,
     }.tap do |json|
       json[:icon] = self.icon if self.icon
@@ -150,15 +141,12 @@ class Report
     report = Report.new(type)
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
-    report.category_id = opts[:category_id] if opts[:category_id]
-    report.group_id = opts[:group_id] if opts[:group_id]
-    report.filter = opts[:filter] if opts[:filter]
     report.facets = opts[:facets] || [:total, :prev30Days]
     report.limit = opts[:limit] if opts[:limit]
-    report.processing = false
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
-    report.higher_is_better = opts[:higher_is_better] if opts[:higher_is_better]
+    report.filters = opts[:filters] if opts[:filters]
+
     report
   end
 
@@ -192,7 +180,6 @@ class Report
         report.error = :timeout
       end
     rescue Exception => e
-
       # In test mode, don't swallow exceptions by default to help debug errors.
       raise if Rails.env.test? && !opts[:wrap_exceptions_in_test]
 
@@ -288,12 +275,15 @@ class Report
   end
 
   def self.post_action_report(report, post_action_type)
+    category_filter = report.filters.dig(:category)
+    report.add_filter('category', default: category_filter)
+
     report.data = []
-    PostAction.count_per_day_for_type(post_action_type, category_id: report.category_id, start_date: report.start_date, end_date: report.end_date).each do |date, count|
+    PostAction.count_per_day_for_type(post_action_type, category_id: category_filter, start_date: report.start_date, end_date: report.end_date).each do |date, count|
       report.data << { x: date, y: count }
     end
     countable = PostAction.unscoped.where(post_action_type_id: post_action_type)
-    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(report.category_id)) if report.category_id
+    countable = countable.joins(post: :topic).merge(Topic.in_category_and_subcategories(category_filter)) if category_filter
     add_counts report, countable, 'post_actions.created_at'
   end
 

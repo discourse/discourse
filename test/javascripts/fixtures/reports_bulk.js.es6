@@ -57,21 +57,20 @@ let signups = {
   ],
   prev_start_date: "2018-05-17T00:00:00Z",
   prev_end_date: "2018-06-17T00:00:00Z",
-  category_id: null,
-  group_id: null,
   prev30Days: null,
   dates_filtering: true,
-  report_key: "reports:signups::20180616:20180716::[:prev_period]:",
+  report_key:
+    'reports:signups:20180616:20180716:[:prev_period]:50:{"group":"88"}:4',
+  available_filters: [
+    { id: "group", allow_any: false, choices: [], default: "88" }
+  ],
   labels: [
     { type: "date", properties: ["x"], title: "Day" },
     { type: "number", properties: ["y"], title: "Count" }
   ],
-  processing: false,
   average: false,
   percent: false,
   higher_is_better: true,
-  category_filtering: false,
-  group_filtering: true,
   modes: ["table", "chart"],
   prev_period: 961
 };
@@ -158,8 +157,6 @@ const page_view_total_reqs = {
   prev_data: null,
   prev_start_date: "2018-06-20T00:00:00Z",
   prev_end_date: "2018-07-23T00:00:00Z",
-  category_id: null,
-  group_id: null,
   prev30Days: 58110,
   dates_filtering: true,
   report_key: `reports:page_view_total_reqs:${startDate.format(
@@ -169,12 +166,9 @@ const page_view_total_reqs = {
     { type: "date", property: "x", title: "Day" },
     { type: "number", property: "y", title: "Count" }
   ],
-  processing: false,
   average: false,
   percent: false,
   higher_is_better: true,
-  category_filtering: false,
-  group_filtering: false,
   modes: ["table", "chart"],
   icon: "file",
   total: 921672
