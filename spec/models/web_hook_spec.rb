@@ -173,6 +173,24 @@ describe WebHook do
         payload = JSON.parse(job_args["payload"])
         expect(payload["id"]).to eq(topic_id)
       end
+
+      category = Fabricate(:category)
+
+      expect do
+        PostRevisor.new(post, post.topic).revise!(
+          post.user,
+          {
+            category_id: category.id,
+          }
+        )
+      end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_edited")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+      expect(payload["category_id"]).to eq(category.id)
     end
 
     describe 'when topic has been deleted' do
