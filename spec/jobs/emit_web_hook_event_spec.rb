@@ -52,10 +52,6 @@ describe Jobs::EmitWebHookEvent do
           event_type: described_class::PING_EVENT
         )
       end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
-
-      job = Jobs::EmitWebHookEvent.jobs.first
-      args = job["args"].first
-      expect(args["retry_count"]).to eq(1)
     end
 
     it 'does not retry for more than maximum allowed times' do

@@ -35,7 +35,8 @@ module Jobs
     end
 
     def memoize_arguments(args)
-      @arguments = args.dup
+      @arguments = args
+      @retry_count = @arguments[:retry_count] || 0
     end
 
     def send_webhook!
@@ -78,9 +79,9 @@ module Jobs
 
     def retry_web_hook
       if SiteSetting.retry_web_hook_events?
-        arguments[:retry_count] = (arguments[:retry_count] || 0) + 1
-        return if arguments[:retry_count] > MAX_RETRY_COUNT
-        delay = RETRY_BACKOFF ** (arguments[:retry_count] - 1)
+        @retry_count += 1
+        return if @retry_count > MAX_RETRY_COUNT
+        delay = RETRY_BACKOFF ** (@retry_count - 1)
         Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, arguments)
       end
     end
@@ -93,7 +94,7 @@ module Jobs
     end
 
     def ping_event?(event_type)
-      PING_EVENT == event_type.to_s
+      PING_EVENT == event_type
     end
 
     def webhook_inactive?
