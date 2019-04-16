@@ -746,6 +746,7 @@ en:
       opera: "Opera"
       ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      discoursehub: "DiscourseHub app"
       unknown: "unknown browser"
     device:
       android: "Android Device"
