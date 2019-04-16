@@ -125,35 +125,35 @@ module Jobs
     end
 
     def event_type
-      @event_type ||= arguments[:event_type].to_s
+      arguments[:event_type]
     end
 
     def event_name
-      @event_name ||= arguments[:event_name].to_s
+      arguments[:event_name]
     end
 
     def retry_count
-      @retry_count ||= @arguments[:retry_count]
+      arguments[:retry_count]
     end
 
     def webhook_id
-      @webhook_id ||= @arguments[:web_hook_id]
+      arguments[:web_hook_id]
     end
 
     def group_id
-      @group_id ||= @arguments[:group_id]
+      arguments[:group_id]
     end
 
     def category_id
-      @category_id ||= @arguments[:category_id]
+      arguments[:category_id]
     end
 
     def tag_ids
-      @tag_ids ||= @arguments[:tag_ids]
+      arguments[:tag_ids]
     end
 
     def payload
-      @payload ||= @arguments[:payload]
+      arguments[:payload]
     end
 
     def parsed_payload
