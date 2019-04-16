@@ -222,7 +222,15 @@ class TopicQuery
         )) unless builder.full?
 
       else
-        builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
+
+        builder.add_results(
+          unread_results(
+            topic: topic,
+            per_page: builder.results_left,
+            max_age: SiteSetting.suggested_topics_unread_max_days_old
+          ), :high
+        )
+
         builder.add_results(new_results(topic: topic, per_page: builder.category_results_left)) unless builder.full?
       end
     end
@@ -470,11 +478,16 @@ class TopicQuery
       .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
 
     if @user
-
       # micro optimisation so we don't load up all of user stats which we do not need
       unread_at = DB.query_single(
         "select first_unread_at from user_stats where user_id = ?",
         @user.id).first
+
+      if max_age = options[:max_age]
+        max_age_date = max_age.days.ago
+        unread_at ||= max_age_date
+        unread_at = unread_at > max_age_date ? unread_at : max_age_date
+      end
 
       # perf note, in the past we tried doing this in a subquery but performance was
       # terrible, also tried with a join and it was bad
