@@ -114,7 +114,7 @@ QUnit.test("escape search term", async assert => {
   );
 });
 
-QUnit.test("update username through advanced search ui", async assert => {
+QUnit.skip("update username through advanced search ui", async assert => {
   await visit("/search");
   await fillIn(".search-query", "none");
   await fillIn(".search-advanced-options .user-selector", "admin");
