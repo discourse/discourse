@@ -30,8 +30,7 @@ module Jobs
     ensure
       # send notification to user regarding progress
       notify_user
-
-      FileUtils.rm_rf(csv_path) if csv_path
+      File.delete(csv_path) if csv_path
     end
 
     private

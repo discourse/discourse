@@ -13,9 +13,9 @@ describe Jobs::BulkInvite do
     let(:filename) { "#{Invite.base_directory}/#{basename}" }
 
     before do
-      FileUtils.cp(
-        "#{Rails.root}/spec/fixtures/csv/#{basename}",
-        filename
+      Invite.create_csv(
+        fixture_file_upload("#{Rails.root}/spec/fixtures/csv/#{basename}"),
+        "bulk_invite"
       )
     end
 
