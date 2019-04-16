@@ -2287,10 +2287,15 @@ describe Topic do
     let(:user) { Fabricate(:user) }
 
     let(:topic) do
-      Fabricate(:private_message_topic, topic_allowed_users: [
-        Fabricate.build(:topic_allowed_user, user: robot),
-        Fabricate.build(:topic_allowed_user, user: user)
-      ])
+      topic = Fabricate(:private_message_topic,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: robot),
+          Fabricate.build(:topic_allowed_user, user: user)
+        ]
+      )
+
+      Fabricate(:post, topic: topic)
+      topic
     end
 
     describe 'when PM is between a human and a non human user' do

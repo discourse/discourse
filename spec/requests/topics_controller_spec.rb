@@ -2138,6 +2138,7 @@ RSpec.describe TopicsController do
     describe 'converting public topic to private message' do
       let(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:topic, user: user) }
+      let!(:post) { Fabricate(:post, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(Fabricate(:user))
@@ -2164,6 +2165,7 @@ RSpec.describe TopicsController do
     describe 'converting private message to public topic' do
       let(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:private_message_topic, user: user) }
+      let!(:post) { Fabricate(:post, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(Fabricate(:user))
@@ -2626,6 +2628,7 @@ RSpec.describe TopicsController do
     describe "#publish" do
       let(:category) { Fabricate(:category) }
       let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+      let!(:post) { Fabricate(:post, topic: topic) }
       let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
       let(:moderator) { Fabricate(:moderator) }
 

@@ -23,10 +23,8 @@ class TopicConverter
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
-        {
-          category_id: category_id,
-          archetype: Archetype.default
-        }
+        category_id: category_id,
+        archetype: Archetype.default
       )
 
       update_user_stats
@@ -43,10 +41,8 @@ class TopicConverter
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
-        {
-          category_id: nil,
-          archetype: Archetype.private_message
-        }
+        category_id: nil,
+        archetype: Archetype.private_message
       )
 
       add_allowed_users

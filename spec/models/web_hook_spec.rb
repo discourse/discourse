@@ -179,9 +179,7 @@ describe WebHook do
       expect do
         PostRevisor.new(post, post.topic).revise!(
           post.user,
-          {
-            category_id: category.id,
-          }
+          category_id: category.id,
         )
       end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
 
