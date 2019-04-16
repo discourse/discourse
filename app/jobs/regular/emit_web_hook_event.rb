@@ -10,7 +10,7 @@ module Jobs
       memoize_arguments(args)
       validate_arguments!
 
-      unless ping_event?(event_type)
+      unless ping_event?(arguments[:event_type])
         validate_argument!(:payload)
 
         return if webhook_inactive?
@@ -81,7 +81,7 @@ module Jobs
       if SiteSetting.retry_web_hook_events?
         @retry_count += 1
         return if @retry_count > MAX_RETRY_COUNT
-        delay = RETRY_BACKOFF**(@retry_count - 1)
+        delay = RETRY_BACKOFF ** (@retry_count - 1)
         Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, arguments)
       end
     end
@@ -89,7 +89,7 @@ module Jobs
     def publish_webhook_event(web_hook_event)
       MessageBus.publish("/web_hook_events/#{web_hook.id}", {
         web_hook_event_id: web_hook_event.id,
-        event_type: event_type
+        event_type: arguments[:event_type]
       }, user_ids: User.human_users.staff.pluck(:id))
     end
 
@@ -102,62 +102,30 @@ module Jobs
     end
 
     def group_webhook_invalid?
-      web_hook.group_ids.present? && (group_id.present? ||
-        !web_hook.group_ids.include?(group_id))
+      web_hook.group_ids.present? && (arguments[:group_id].present? ||
+        !web_hook.group_ids.include?(arguments[:group_id]))
     end
 
     def category_webhook_invalid?
-      web_hook.category_ids.present? && (!category_id.present? ||
-        !web_hook.category_ids.include?(category_id))
+      web_hook.category_ids.present? && (!arguments[:category_id].present? ||
+        !web_hook.category_ids.include?(arguments[:category_id]))
     end
 
     def tag_webhook_invalid?
-      web_hook.tag_ids.present? && (tag_ids.blank? ||
-        (web_hook.tag_ids & tag_ids).blank?)
+      web_hook.tag_ids.present? && (arguments[:tag_ids].blank? ||
+        (web_hook.tag_ids & arguments[:tag_ids]).blank?)
     end
 
     def arguments
       @arguments
     end
 
-    def event_type
-      arguments[:event_type]
-    end
-
-    def event_name
-      arguments[:event_name]
-    end
-
-    def retry_count
-      arguments[:retry_count]
-    end
-
-    def webhook_id
-      arguments[:web_hook_id]
-    end
-
-    def group_id
-      arguments[:group_id]
-    end
-
-    def category_id
-      arguments[:category_id]
-    end
-
-    def tag_ids
-      arguments[:tag_ids]
-    end
-
-    def payload
-      arguments[:payload]
-    end
-
     def parsed_payload
-      @parsed_payload ||= JSON.parse(payload)
+      @parsed_payload ||= JSON.parse(arguments[:payload])
     end
 
     def web_hook
-      @web_hook ||= WebHook.find_by(id: webhook_id)
+      @web_hook ||= WebHook.find_by(id: arguments[:web_hook_id])
     end
 
     def build_webhook_headers(uri, web_hook_body, web_hook_event)
@@ -178,10 +146,10 @@ module Jobs
         'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
         'X-Discourse-Instance' => Discourse.base_url,
         'X-Discourse-Event-Id' => web_hook_event.id,
-        'X-Discourse-Event-Type' => event_type
+        'X-Discourse-Event-Type' => arguments[:event_type]
       }
 
-      headers['X-Discourse-Event'] = event_name if event_name.present?
+      headers['X-Discourse-Event'] = arguments[:event_name] if arguments[:event_name].present?
 
       if web_hook.secret.present?
         headers['X-Discourse-Event-Signature'] = "sha256=#{OpenSSL::HMAC.hexdigest("sha256", web_hook.secret, web_hook_body)}"
@@ -193,10 +161,10 @@ module Jobs
     def build_webhook_body
       body = {}
 
-      if ping_event?(event_type)
+      if ping_event?(arguments[:event_type])
         body['ping'] = "OK"
       else
-        body[event_type] = parsed_payload
+        body[arguments[:event_type]] = parsed_payload
       end
 
       new_body = Plugin::Filter.apply(:after_build_web_hook_body, self, body)
