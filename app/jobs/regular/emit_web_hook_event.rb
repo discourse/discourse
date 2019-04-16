@@ -85,7 +85,7 @@ module Jobs
       if SiteSetting.retry_web_hook_events?
         arguments[:retry_count] = (arguments[:retry_count] || 0) + 1
         return if arguments[:retry_count] > MAX_RETRY_COUNT
-        delay = RETRY_BACKOFF ** (arguments[:retry_count] - 1)
+        delay = RETRY_BACKOFF**(arguments[:retry_count] - 1)
         Jobs.enqueue_in(delay.minutes, :emit_web_hook_event, arguments)
       end
     end
