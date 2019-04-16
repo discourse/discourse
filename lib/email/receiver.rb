@@ -364,6 +364,10 @@ module Email
         text = text.lines.map! do |line|
           stripped = line.strip << "\n"
 
+          # Do not strip list items.
+          next line if (stripped[0] == '*' || stripped[0] == '-' || stripped[0] == '+') && stripped[1] == ' '
+
+          # Match beginning and ending of code blocks.
           if !in_code && stripped[0..2] == '```'
             in_code = '```'
           elsif in_code == '```' && stripped[0..2] == '```'
@@ -374,6 +378,7 @@ module Email
             in_code = nil
           end
 
+          # Strip only lines outside code blocks.
           in_code ? line : stripped
         end.join
       end
