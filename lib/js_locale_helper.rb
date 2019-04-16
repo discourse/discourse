@@ -162,7 +162,7 @@ module JsLocaleHelper
     result
   end
 
-  MOMENT_LOCALE_MAPPING = {
+  MOMENT_LOCALE_MAPPING ||= {
     "hy" => "hy-am"
   }
 

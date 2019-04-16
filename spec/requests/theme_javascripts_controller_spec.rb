@@ -49,7 +49,9 @@ describe ThemeJavascriptsController do
     end
 
     def clear_disk_cache
-      `rm #{ThemeJavascriptsController::DISK_CACHE_PATH}/*`
+      if Dir.exist?(ThemeJavascriptsController::DISK_CACHE_PATH)
+        `rm #{ThemeJavascriptsController::DISK_CACHE_PATH}/*`
+      end
     end
   end
 end
