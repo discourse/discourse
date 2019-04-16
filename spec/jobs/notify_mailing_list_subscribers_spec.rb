@@ -42,6 +42,8 @@ describe Jobs::NotifyMailingListSubscribers do
       before do
         SiteSetting.login_required = true
         SiteSetting.must_approve_users = true
+
+        User.update_all(approved: false)
       end
       include_examples "no emails"
     end

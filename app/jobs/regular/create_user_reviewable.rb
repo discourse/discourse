@@ -1,4 +1,6 @@
 class Jobs::CreateUserReviewable < Jobs::Base
+  attr_reader :reviewable
+
   def execute(args)
     raise Discourse::InvalidParameters unless args[:user_id].present?
 
@@ -11,7 +13,7 @@ class Jobs::CreateUserReviewable < Jobs::Base
     if user = User.find_by(id: args[:user_id])
       return if user.approved?
 
-      reviewable = ReviewableUser.needs_review!(
+      @reviewable = ReviewableUser.needs_review!(
         target: user,
         created_by: Discourse.system_user,
         reviewable_by_moderator: true,
@@ -21,7 +23,7 @@ class Jobs::CreateUserReviewable < Jobs::Base
           email: user.email
         }
       )
-      reviewable.add_score(
+      @reviewable.add_score(
         Discourse.system_user,
         ReviewableScore.types[:needs_approval],
         reason: reason,

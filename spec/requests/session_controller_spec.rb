@@ -1111,6 +1111,7 @@ RSpec.describe SessionController do
 
         context 'with an unapproved user' do
           before do
+            user.update_columns(approved: false)
             post "/session.json", params: {
               login: user.email, password: 'myawesomepassword'
             }

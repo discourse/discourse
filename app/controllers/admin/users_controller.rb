@@ -288,7 +288,12 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def approve
-    Reviewable.bulk_perform_targets(current_user, :approve, 'ReviewableUser', [@user.id])
+    guardian.ensure_can_approve!(@user)
+
+    reviewable = ReviewableUser.find_by(target: @user) ||
+      Jobs::CreateUserReviewable.new.execute(user_id: @user.id).reviewable
+
+    reviewable.perform(current_user, :approve)
     render body: nil
   end
 

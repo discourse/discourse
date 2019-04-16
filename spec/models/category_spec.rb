@@ -434,7 +434,7 @@ describe Category do
     end
 
     it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { @category.destroy }.first
+      event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
 
       expect(event[:event_name]).to eq(:category_destroyed)
       expect(event[:params].first).to eq(@category)
