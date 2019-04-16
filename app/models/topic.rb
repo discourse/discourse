@@ -1402,6 +1402,14 @@ class Topic < ActiveRecord::Base
     scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= SiteSetting.score_to_auto_close_topic
   end
 
+  def update_category_topic_count_by(num)
+    if category_id.present?
+      Category
+        .where(['id = ?', category_id])
+        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+    end
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1450,12 +1458,6 @@ class Topic < ActiveRecord::Base
           invited_by.username
         )
       end
-    end
-  end
-
-  def update_category_topic_count_by(num)
-    if category_id.present?
-      Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
   end
 
