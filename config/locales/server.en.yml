@@ -893,8 +893,8 @@ en:
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
 
   unsubscribed:
-    title: "Unsubscribed!"
-    description: "<b>%{email}</b> has been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
+    title: "Email preferences updated!"
+    description: "email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
@@ -904,11 +904,23 @@ en:
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
     mailing_list_mode: "Turn off mailing list mode"
-    disable_digest_emails: "Stop sending me summary emails"
     all: "Don't send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
     not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
     log_out: "Log Out"
+    submit: "Save preferences"
+    digest_frequency:
+      title: "You are receiving summary emails %{frequency}"
+      select_title: 'Set summary emails frequency to:'
+      
+      never: 'never'
+      every_30_minutes: "every 30 minutes"
+      every_hour: "hourly"
+      daily: "daily"
+      weekly: "weekly"
+      every_month: "every month"
+      every_six_months: "every six months"
+
 
   user_api_key:
     title: "Authorize application access"
