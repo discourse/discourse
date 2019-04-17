@@ -42,8 +42,18 @@ end
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'shoulda'
+require 'shoulda-matchers'
 require 'sidekiq/testing'
+
+# The shoulda-matchers gem no longer detects the test framework
+# you're using or mixes itself into that framework automatically.
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :active_record
+    with.library :active_model
+  end
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
