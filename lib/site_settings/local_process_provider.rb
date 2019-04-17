@@ -8,7 +8,7 @@ class SiteSettings::LocalProcessProvider
     attr_accessor :name, :data_type, :value
 
     def value_changed?
-      true
+      false
     end
 
     def saved_change_to_value?

@@ -2,7 +2,7 @@
 # existing users are approved.
 DiscourseEvent.on(:site_setting_saved) do |site_setting|
   name = site_setting.name.to_sym
-  next unless site_setting.value_changed?
+  next unless site_setting.saved_change_to_value?
 
   if name == :must_approve_users && site_setting.value == 't'
     User.where(approved: false).update_all(approved: true)
