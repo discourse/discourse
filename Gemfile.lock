@@ -400,10 +400,6 @@ GEM
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    shoulda (3.6.0)
-      shoulda-context (~> 1.0, >= 1.0.1)
-      shoulda-matchers (~> 3.0)
-    shoulda-context (1.2.2)
     shoulda-matchers (3.1.3)
       activesupport (>= 4.0.0)
     sidekiq (5.2.5)
@@ -557,7 +553,7 @@ DEPENDENCIES
   sassc
   sassc-rails
   seed-fu
-  shoulda (~> 3.6)
+  shoulda-matchers (~> 3.1, >= 3.1.3)
   sidekiq
   simplecov
   sprockets-rails

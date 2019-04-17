@@ -42,7 +42,7 @@ end
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'shoulda'
+require 'shoulda-matchers'
 require 'sidekiq/testing'
 
 # The shoulda-matchers gem no longer detects the test framework
