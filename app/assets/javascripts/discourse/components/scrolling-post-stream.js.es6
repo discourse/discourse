@@ -254,6 +254,7 @@ export default MountWidget.extend({
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers);
+    this.screenTrack.setPosts(posts);
   },
 
   _scrollTriggered() {

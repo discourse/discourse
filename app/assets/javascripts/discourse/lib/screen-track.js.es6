@@ -58,6 +58,10 @@ export default class {
     this._onscreen = onscreen;
   }
 
+  setPosts(posts) {
+    this._posts = posts;
+  }
+
   // Reset our timers
   reset() {
     const now = getTime();
@@ -105,6 +109,13 @@ export default class {
     const highestSeenByTopic = this.session.get("highestSeenByTopic");
     if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
       highestSeenByTopic[topicId] = highestSeen;
+    }
+
+    const highestPostNumber = this.topicTrackingState.states["t" + this._topicId].highest_post_number;
+    const lastVisiblePostNumber = this._posts.lastObject.post_number;
+    if(highestPostNumber - lastVisiblePostNumber > 1) {
+      highestSeen = highestPostNumber;
+      newTimings[highestPostNumber] = 0;
     }
 
     this.topicTrackingState.updateSeen(topicId, highestSeen);
