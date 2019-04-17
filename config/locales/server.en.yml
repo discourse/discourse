@@ -4269,8 +4269,15 @@ en:
               restricted:
                 label: "Private"
                 description: "Only logged in users can access this community"
-          invite_only:
-            placeholder: "People must be explicitly invited. Public registration is disabled."
+          privacy_options:
+            description: "How do new users sign up for an account?"
+            choices:
+              open:
+                label: "Users can sign up on their own."
+              invite_only:
+                label: "Users can sign up on their own, but must be approved by staff."
+              must_approve:
+                label: "Users must be invited by trusted users or staff before they can sign up."
 
       contact:
         title: "Contact"
