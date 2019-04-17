@@ -2,6 +2,7 @@ import loadScript from "discourse/lib/load-script";
 import { escapeExpression } from "discourse/lib/utilities";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 export default function($elem) {
   if (!$elem) {
@@ -10,6 +11,7 @@ export default function($elem) {
 
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function() {
     const spoilers = $elem.find(".spoiler a.lightbox, .spoiled a.lightbox");
+
     $elem
       .find("a.lightbox")
       .not(spoilers)
@@ -18,6 +20,8 @@ export default function($elem) {
         closeOnContentClick: false,
         removalDelay: 300,
         mainClass: "mfp-zoom-in",
+        tClose: I18n.t("lightbox.close"),
+        tLoading: spinnerHTML,
 
         gallery: {
           enabled: true,
@@ -26,8 +30,6 @@ export default function($elem) {
           tCounter: I18n.t("lightbox.counter")
         },
 
-        tClose: I18n.t("lightbox.close"),
-        tLoading: I18n.t("lightbox.loading"),
         ajax: {
           tError: I18n.t("lightbox.content_load_error")
         },

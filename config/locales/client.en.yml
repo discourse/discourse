@@ -2806,7 +2806,6 @@ en:
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
       close: "Close (Esc)"
-      loading: "Loading…"
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
