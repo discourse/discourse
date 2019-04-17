@@ -291,7 +291,7 @@ describe WebHook do
       PostDestroyer.new(user, post).destroy
 
       job = Jobs::EmitWebHookEvent.new
-      job.expects(:web_hook_request).times(2)
+      job.expects(:send_webhook!).times(2)
 
       args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
       job.execute(args.with_indifferent_access)
