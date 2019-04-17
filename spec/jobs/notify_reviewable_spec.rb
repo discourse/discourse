@@ -11,6 +11,8 @@ describe Jobs::NotifyReviewable do
     let(:group) { group_user.group }
 
     it "will notify users of new reviewable content" do
+      SiteSetting.enable_category_group_review = true
+
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
 
       # Content for admins only
@@ -49,7 +51,20 @@ describe Jobs::NotifyReviewable do
       expect(group_msg.data[:reviewable_count]).to eq(1)
     end
 
+    it "won't notify a group when disabled" do
+      SiteSetting.enable_category_group_review = false
+
+      GroupUser.create!(group_id: group.id, user_id: moderator.id)
+      r3 = Fabricate(:reviewable, reviewable_by_moderator: true, reviewable_by_group: group)
+      messages = MessageBus.track_publish("/reviewable_counts") do
+        described_class.new.execute(reviewable_id: r3.id)
+      end
+      group_msg = messages.find { |m| m.user_ids.include?(user.id) }
+      expect(group_msg).to be_blank
+    end
+
     it "respects visibility" do
+      SiteSetting.enable_category_group_review = true
       SiteSetting.min_score_default_visibility = 2.0
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)

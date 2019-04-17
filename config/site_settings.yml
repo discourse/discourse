@@ -561,6 +561,9 @@ groups:
     default: true
   group_in_subject:
     default: false
+  enable_category_group_review:
+    client: true
+    default: false
 
 posting:
   min_post_length:

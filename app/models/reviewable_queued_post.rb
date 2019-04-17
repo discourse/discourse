@@ -9,28 +9,26 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_actions(actions, guardian, args)
-    if guardian.is_staff?
 
-      unless approved?
-        actions.add(:approve_post) do |a|
-          a.icon = 'check'
-          a.label = "reviewables.actions.approve_post.title"
-        end
+    unless approved?
+      actions.add(:approve_post) do |a|
+        a.icon = 'check'
+        a.label = "reviewables.actions.approve_post.title"
       end
+    end
 
-      unless rejected?
-        actions.add(:reject_post) do |a|
-          a.icon = 'times'
-          a.label = "reviewables.actions.reject_post.title"
-        end
+    unless rejected?
+      actions.add(:reject_post) do |a|
+        a.icon = 'times'
+        a.label = "reviewables.actions.reject_post.title"
       end
+    end
 
-      if pending? && guardian.can_delete_user?(created_by)
-        actions.add(:delete_user) do |action|
-          action.icon = 'trash-alt'
-          action.label = 'reviewables.actions.delete_user.title'
-          action.confirm_message = 'reviewables.actions.delete_user.confirm'
-        end
+    if pending? && guardian.can_delete_user?(created_by)
+      actions.add(:delete_user) do |action|
+        action.icon = 'trash-alt'
+        action.label = 'reviewables.actions.delete_user.title'
+        action.confirm_message = 'reviewables.actions.delete_user.confirm'
       end
     end
 

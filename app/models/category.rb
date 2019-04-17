@@ -71,6 +71,7 @@ class Category < ActiveRecord::Base
   after_save :reset_topic_ids_cache
   after_save :clear_url_cache
   after_save :index_search
+  after_save :update_reviewables
 
   after_destroy :reset_topic_ids_cache
   after_destroy :publish_category_deletion
@@ -92,6 +93,7 @@ class Category < ActiveRecord::Base
   has_many :tags, through: :category_tags
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
+  belongs_to :reviewable_by_group, class_name: 'Group'
 
   scope :latest, -> { order('topic_count DESC') }
 
@@ -610,6 +612,12 @@ class Category < ActiveRecord::Base
 
   def index_search
     SearchIndexer.index(self)
+  end
+
+  def update_reviewables
+    if SiteSetting.enable_category_group_review? && saved_change_to_reviewable_by_group_id?
+      Reviewable.where(category_id: id).update_all(reviewable_by_group_id: reviewable_by_group_id)
+    end
   end
 
   def self.find_by_slug(category_slug, parent_category_slug = nil)
