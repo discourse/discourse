@@ -1,7 +1,10 @@
 import { ajax } from "discourse/lib/ajax";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { setting } from "discourse/lib/computed";
-import { on } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  on
+} from "ember-addons/ember-computed-decorators";
 import { emailValid } from "discourse/lib/utilities";
 import InputValidation from "discourse/models/input-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -51,7 +54,16 @@ export default Ember.Controller.extend(
       this._createUserFields();
     },
 
-    submitDisabled: function() {
+    @computed(
+      "passwordRequired",
+      "nameValidation.failed",
+      "emailValidation.failed",
+      "usernameValidation.failed",
+      "passwordValidation.failed",
+      "userFieldsValidation.failed",
+      "formSubmitted"
+    )
+    submitDisabled() {
       if (!this.get("emailValidation.failed") && !this.get("passwordRequired"))
         return false; // 3rd party auth
       if (this.get("formSubmitted")) return true;
@@ -62,51 +74,44 @@ export default Ember.Controller.extend(
       if (this.get("userFieldsValidation.failed")) return true;
 
       return false;
-    }.property(
-      "passwordRequired",
-      "nameValidation.failed",
-      "emailValidation.failed",
-      "usernameValidation.failed",
-      "passwordValidation.failed",
-      "userFieldsValidation.failed",
-      "formSubmitted"
-    ),
+    },
 
     usernameRequired: Ember.computed.not("authOptions.omit_username"),
 
-    fullnameRequired: function() {
+    @computed
+    fullnameRequired() {
       return (
         this.get("siteSettings.full_name_required") ||
         this.get("siteSettings.enable_names")
       );
-    }.property(),
+    },
 
-    passwordRequired: function() {
-      return Ember.isEmpty(this.get("authOptions.auth_provider"));
-    }.property("authOptions.auth_provider"),
+    @computed("authOptions.auth_provider")
+    passwordRequired(authProvider) {
+      return Ember.isEmpty(authProvider);
+    },
 
-    disclaimerHtml: function() {
+    @computed
+    disclaimerHtml() {
       return I18n.t("create_account.disclaimer", {
         tos_link: this.get("siteSettings.tos_url") || Discourse.getURL("/tos"),
         privacy_link:
           this.get("siteSettings.privacy_policy_url") ||
           Discourse.getURL("/privacy")
       });
-    }.property(),
+    },
 
     // Check the email address
-    emailValidation: function() {
+    @computed("accountEmail", "rejectedEmails.[]")
+    emailValidation(email, rejectedEmails) {
       // If blank, fail without a reason
-      let email;
-      if (Ember.isEmpty(this.get("accountEmail"))) {
+      if (Ember.isEmpty(email)) {
         return InputValidation.create({
           failed: true
         });
       }
 
-      email = this.get("accountEmail");
-
-      if (this.get("rejectedEmails").includes(email)) {
+      if (rejectedEmails.includes(email)) {
         return InputValidation.create({
           failed: true,
           reason: I18n.t("user.email.invalid")
@@ -138,14 +143,15 @@ export default Ember.Controller.extend(
         failed: true,
         reason: I18n.t("user.email.invalid")
       });
-    }.property("accountEmail", "rejectedEmails.[]"),
+    },
 
-    emailValidated: function() {
+    @computed("accountEmail", "authOptions.email", "authOptions.email_valid")
+    emailValidated() {
       return (
         this.get("authOptions.email") === this.get("accountEmail") &&
         this.get("authOptions.email_valid")
       );
-    }.property("accountEmail", "authOptions.email", "authOptions.email_valid"),
+    },
 
     authProviderDisplayName(providerName) {
       const matchingProvider = findAll().find(provider => {
@@ -178,9 +184,10 @@ export default Ember.Controller.extend(
     }.observes("emailValidation", "accountEmail"),
 
     // Determines whether at least one login button is enabled
-    hasAtLeastOneLoginButton: function() {
+    @computed
+    hasAtLeastOneLoginButton() {
       return findAll(this.siteSettings).length > 0;
-    }.property(),
+    },
 
     @on("init")
     fetchConfirmationValue() {

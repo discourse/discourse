@@ -1,4 +1,7 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  observes
+} from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   tagName: "table",
@@ -16,25 +19,29 @@ export default Ember.Component.extend({
     this.refreshLastVisited();
   }.on("init"),
 
-  toggleInTitle: function() {
-    return !this.get("bulkSelectEnabled") && this.get("canBulkSelect");
-  }.property("bulkSelectEnabled"),
+  @computed("bulkSelectEnabled")
+  toggleInTitle(bulkSelectEnabled) {
+    return !bulkSelectEnabled && this.get("canBulkSelect");
+  },
 
-  sortable: function() {
+  @computed
+  sortable() {
     return !!this.get("changeSort");
-  }.property(),
+  },
 
-  skipHeader: function() {
+  skipHeader() {
     return this.site.mobileView;
-  }.property(),
+  },
 
-  showLikes: function() {
-    return this.get("order") === "likes";
-  }.property("order"),
+  @computed("order")
+  showLikes(order) {
+    return order === "likes";
+  },
 
-  showOpLikes: function() {
-    return this.get("order") === "op_likes";
-  }.property("order"),
+  @computed("order")
+  showOpLikes(order) {
+    return order === "op_likes";
+  },
 
   @observes("topics.[]")
   topicsAdded() {

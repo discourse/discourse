@@ -108,7 +108,7 @@ GEM
       terminal-table (~> 1)
     debug_inspector (0.0.3)
     diff-lcs (1.3)
-    discourse-ember-source (3.7.0.2)
+    discourse-ember-source (3.8.0.1)
     discourse_image_optim (0.26.2)
       exifr (~> 1.2, >= 1.2.2)
       fspath (~> 3.0)
@@ -475,7 +475,7 @@ DEPENDENCIES
   colored2
   cppjieba_rb
   danger
-  discourse-ember-source (~> 3.7.0)
+  discourse-ember-source (~> 3.8.0)
   discourse_image_optim
   email_reply_trimmer (~> 0.1)
   ember-handlebars-template (= 0.8.0)

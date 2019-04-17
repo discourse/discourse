@@ -1,5 +1,6 @@
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
+import computed from "ember-addons/ember-computed-decorators";
 
 /*global Resumable:true */
 
@@ -27,18 +28,19 @@ export default Ember.Component.extend(
 
     rerenderTriggers: ["isUploading", "progress"],
 
-    translatedTitle: function() {
-      const title = this.get("title");
-      return title ? I18n.t(title) : this.get("text");
-    }.property("title", "text"),
+    @computed("title", "text")
+    translatedTitle(title, text) {
+      return title ? I18n.t(title) : text;
+    },
 
-    text: function() {
-      if (this.get("isUploading")) {
-        return this.get("progress") + " %";
+    @computed("isUploading", "progress")
+    text(isUploading, progress) {
+      if (isUploading) {
+        return progress + " %";
       } else {
         return this.get("uploadText");
       }
-    }.property("isUploading", "progress"),
+    },
 
     buildBuffer(buffer) {
       const icon = this.get("isUploading") ? "times" : "upload";

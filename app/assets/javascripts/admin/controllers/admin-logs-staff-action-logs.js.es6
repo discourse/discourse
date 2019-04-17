@@ -1,6 +1,7 @@
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import StaffActionLog from "admin/models/staff-action-log";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   loading: false,
@@ -20,14 +21,14 @@ export default Ember.Controller.extend({
     }
   }.observes("filterActionId"),
 
-  actionFilter: function() {
-    var name = this.get("filters.action_name");
+  @computed("filters.action_name")
+  actionFilter(name) {
     if (name) {
       return I18n.t("admin.logs.staff_actions.actions." + name);
     } else {
       return null;
     }
-  }.property("filters.action_name"),
+  },
 
   showInstructions: Ember.computed.gt("model.length", 0),
 

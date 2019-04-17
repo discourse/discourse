@@ -76,25 +76,35 @@ const Report = Discourse.Model.extend({
     }
   },
 
-  todayCount: function() {
+  @computed("data", "average")
+  todayCount() {
     return this.valueAt(0);
-  }.property("data", "average"),
-  yesterdayCount: function() {
-    return this.valueAt(1);
-  }.property("data", "average"),
-  sevenDaysAgoCount: function() {
-    return this.valueAt(7);
-  }.property("data", "average"),
-  thirtyDaysAgoCount: function() {
-    return this.valueAt(30);
-  }.property("data", "average"),
+  },
 
-  lastSevenDaysCount: function() {
+  @computed("data", "average")
+  yesterdayCount() {
+    return this.valueAt(1);
+  },
+
+  @computed("data", "average")
+  sevenDaysAgoCount() {
+    return this.valueAt(7);
+  },
+
+  @computed("data", "average")
+  thirtyDaysAgoCount() {
+    return this.valueAt(30);
+  },
+
+  @computed("data", "average")
+  lastSevenDaysCount() {
     return this.averageCount(7, this.valueFor(1, 7));
-  }.property("data", "average"),
-  lastThirtyDaysCount: function() {
+  },
+
+  @computed("data", "average")
+  lastThirtyDaysCount() {
     return this.averageCount(30, this.valueFor(1, 30));
-  }.property("data", "average"),
+  },
 
   averageCount(count, value) {
     return this.get("average") ? value / count : value;

@@ -30,13 +30,25 @@ export default Ember.Component.extend({
   noText: Ember.computed.empty("translatedLabel"),
 
   @computed("title")
-  translatedTitle(title) {
-    if (title) return I18n.t(title);
+  translatedTitle: {
+    get() {
+      if (this._translatedTitle) return this._translatedTitle;
+      if (this.title) return I18n.t(this.title);
+    },
+    set(value) {
+      return (this._translatedTitle = value);
+    }
   },
 
   @computed("label")
-  translatedLabel(label) {
-    if (label) return I18n.t(label);
+  translatedLabel: {
+    get() {
+      if (this._translatedLabel) return this._translatedLabel;
+      if (this.label) return I18n.t(this.label);
+    },
+    set(value) {
+      return (this._translatedLabel = value);
+    }
   },
 
   click() {

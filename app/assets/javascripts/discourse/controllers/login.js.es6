@@ -284,17 +284,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  authMessage: function() {
-    if (Ember.isEmpty(this.get("authenticate"))) return "";
+  @computed("authenticate")
+  authMessage(authenticate) {
+    if (Ember.isEmpty(authenticate)) return "";
     const method = findAll(
       this.siteSettings,
       this.capabilities,
       this.isMobileDevice
-    ).findBy("name", this.get("authenticate"));
+    ).findBy("name", authenticate);
     if (method) {
       return method.get("message");
     }
-  }.property("authenticate"),
+  },
 
   authenticationComplete(options) {
     const self = this;
