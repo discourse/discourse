@@ -241,7 +241,7 @@ describe ReviewablesController do
       end
 
       it "returns 404 when the reviewable does not exist" do
-        put "/review/12345/perform/approve.json?version=0"
+        put "/review/12345/perform/approve_user.json?version=0"
         expect(response.code).to eq("404")
       end
 
@@ -252,7 +252,7 @@ describe ReviewablesController do
 
       it "ensures the user can see the reviewable" do
         reviewable.update_column(:reviewable_by_moderator, false)
-        put "/review/#{reviewable.id}/perform/approve.json?version=#{reviewable.version}"
+        put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("404")
       end
 
@@ -265,7 +265,7 @@ describe ReviewablesController do
       end
 
       it "requires a version parameter" do
-        put "/review/#{reviewable.id}/perform/approve.json"
+        put "/review/#{reviewable.id}/perform/approve_user.json"
         expect(response.code).to eq("422")
         result = ::JSON.parse(response.body)
         expect(result['errors']).to be_present
@@ -274,7 +274,7 @@ describe ReviewablesController do
       it "succeeds for a valid action" do
         other_reviewable = Fabricate(:reviewable)
 
-        put "/review/#{reviewable.id}/perform/approve.json?version=#{reviewable.version}"
+        put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("200")
         json = ::JSON.parse(response.body)
         expect(json['reviewable_perform_result']['success']).to eq(true)
@@ -290,7 +290,7 @@ describe ReviewablesController do
 
       describe "simultaneous perform" do
         it "fails when the version is wrong" do
-          put "/review/#{reviewable.id}/perform/approve.json?version=#{reviewable.version + 1}"
+          put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version + 1}"
           expect(response.code).to eq("409")
           json = ::JSON.parse(response.body)
           expect(json['errors']).to be_present
