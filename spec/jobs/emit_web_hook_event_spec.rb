@@ -40,54 +40,72 @@ describe Jobs::EmitWebHookEvent do
   context 'when the web hook is failed' do
     before do
       SiteSetting.retry_web_hook_events = true
-
-      stub_request(:post, post_hook.payload_url)
-        .to_return(body: 'Invalid Access', status: 403)
     end
 
-    it 'retry if site setting is enabled' do
-      expect do
+    context 'when the webhook has failed for 404 or 410' do
+      before do
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: 410)
+      end
+
+      it 'disables the webhook' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT,
+            retry_count: described_class::MAX_RETRY_COUNT
+          )
+        end.to change { post_hook.reload.active }.to(false)
+      end
+    end
+
+    context 'when the webhook has failed' do
+      before do
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: 403)
+      end
+
+      it 'retry if site setting is enabled' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+      end
+
+      it 'does not retry for more than maximum allowed times' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT,
+            retry_count: described_class::MAX_RETRY_COUNT
+          )
+        end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
+      end
+
+      it 'does not retry if site setting is disabled' do
+        SiteSetting.retry_web_hook_events = false
+
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+      end
+
+      it 'properly logs error on rescue' do
+        stub_request(:post, post_hook.payload_url).to_raise("connection error")
         subject.execute(
           web_hook_id: post_hook.id,
           event_type: described_class::PING_EVENT
         )
-      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+
+        event = WebHookEvent.last
+        expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
+        expect(event.status).to eq(-1)
+        expect(MultiJson.load(event.response_headers)['error']).to eq('connection error')
+      end
     end
-
-    it 'does not retry for more than maximum allowed times' do
-      expect do
-        subject.execute(
-          web_hook_id: post_hook.id,
-          event_type: described_class::PING_EVENT,
-          retry_count: described_class::MAX_RETRY_COUNT
-        )
-      end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
-    end
-
-    it 'does not retry if site setting is disabled' do
-      SiteSetting.retry_web_hook_events = false
-
-      expect do
-        subject.execute(
-          web_hook_id: post_hook.id,
-          event_type: described_class::PING_EVENT
-        )
-      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
-    end
-
-    it 'properly logs error on rescue' do
-      stub_request(:post, post_hook.payload_url).to_raise("connection error")
-      subject.execute(
-        web_hook_id: post_hook.id,
-        event_type: described_class::PING_EVENT
-      )
-
-      event = WebHookEvent.last
-      expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
-      expect(event.status).to eq(-1)
-      expect(MultiJson.load(event.response_headers)['error']).to eq('connection error')
-    end
-
   end
 
   it 'does not raise an error for a ping event without payload' do

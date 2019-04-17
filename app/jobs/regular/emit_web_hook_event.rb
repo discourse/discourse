@@ -41,27 +41,21 @@ module Jobs
 
     def send_webhook!
       uri = URI(web_hook.payload_url.strip)
-
-      conn = Excon.new(
-        uri.to_s,
-        ssl_verify_peer: web_hook.verify_certificate,
-        retry_limit: 0
-      )
+      conn = Excon.new(uri.to_s, ssl_verify_peer: web_hook.verify_certificate, retry_limit: 0)
 
       web_hook_body = build_webhook_body
       web_hook_event = create_webhook_event(web_hook_body)
       web_hook_headers = build_webhook_headers(uri, web_hook_body, web_hook_event)
-
-      response = nil
+      web_hook_response = nil
 
       begin
         now = Time.zone.now
-        response = conn.post(headers: web_hook_headers, body: web_hook_body)
+        web_hook_response = conn.post(headers: web_hook_headers, body: web_hook_body)
         web_hook_event.update!(
           headers: MultiJson.dump(web_hook_headers),
-          status: response.status,
-          response_headers: MultiJson.dump(response.headers),
-          response_body: response.body,
+          status: web_hook_response.status,
+          response_headers: MultiJson.dump(web_hook_response.headers),
+          response_body: web_hook_response.body,
           duration: ((Time.zone.now - now) * 1000).to_i
         )
       rescue => e
@@ -74,7 +68,20 @@ module Jobs
       end
 
       publish_webhook_event(web_hook_event)
-      retry_web_hook if response&.status != 200
+      process_webhook_response(web_hook_response)
+    end
+
+    def process_webhook_response(web_hook_response)
+      return if web_hook_response&.status.blank?
+
+      case web_hook_response.status
+      when 200..299
+        return
+      when 404, 410
+        web_hook.update_attribute(:active, false) if @retry_count >= MAX_RETRY_COUNT
+      else
+        retry_web_hook
+      end
     end
 
     def retry_web_hook
