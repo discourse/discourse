@@ -325,6 +325,10 @@ module ApplicationHelper
     request.env[ApplicationController::NO_CUSTOM]
   end
 
+  def include_ios_native_app_banner?
+    current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
+  end
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end

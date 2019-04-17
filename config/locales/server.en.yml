@@ -1892,7 +1892,9 @@ en:
 
     topic_page_title_includes_category: "Topic page title includes the category name."
 
-    native_app_install_banner: "Asks recurring visitors to install Discourse native app."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
 
     share_anonymized_statistics: "Share anonymized usage statistics."
 

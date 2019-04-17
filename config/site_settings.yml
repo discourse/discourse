@@ -1826,7 +1826,17 @@ uncategorized:
     default: true
     client: true
 
-  native_app_install_banner: false
+  native_app_install_banner_ios: false
+
+  native_app_install_banner_android: false
+
+  ios_app_id:
+    default: "1173672076"
+    hidden: true
+
+  android_app_id:
+    default: "com.discourse"
+    hidden: true
 
   pwa_display_browser_regex:
     default: "iPad|iPhone"
@@ -1913,7 +1923,7 @@ user_preferences:
       - normal
       - larger
       - largest
-  
+
   default_title_count_mode:
     type: enum
     default: notifications
