@@ -65,7 +65,7 @@ class S3Inventory
             log "#{missing_count} of #{uploads.count} #{model.name.underscore.pluralize} are missing"
           end
 
-          $redis.set("missing_s3_#{model.table_name}", missing_count)
+          Discourse.stats.set("missing_s3_#{model.table_name}", missing_count)
         ensure
           connection.exec("DROP TABLE #{table_name}") unless connection.nil?
         end
