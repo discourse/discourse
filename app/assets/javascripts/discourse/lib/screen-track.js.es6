@@ -111,9 +111,11 @@ export default class {
       highestSeenByTopic[topicId] = highestSeen;
     }
 
-    const highestPostNumber = this.topicTrackingState.states["t" + this._topicId].highest_post_number;
+    const highestPostNumber = this.topicTrackingState.states[
+      "t" + this._topicId
+    ].highest_post_number;
     const lastVisiblePostNumber = this._posts.lastObject.post_number;
-    if(highestPostNumber - lastVisiblePostNumber > 1) {
+    if (highestPostNumber - lastVisiblePostNumber > 1) {
       highestSeen = highestPostNumber;
       newTimings[highestPostNumber] = 0;
     }
