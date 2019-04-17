@@ -86,7 +86,7 @@ GEM
       open4 (~> 1.3)
     coderay (1.1.2)
     colored2 (3.1.2)
-    concurrent-ruby (1.1.4)
+    concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     cork (0.3.0)
       colored2 (~> 3.1)
@@ -161,7 +161,7 @@ GEM
     hkdf (0.3.0)
     htmlentities (4.3.4)
     http_accept_language (2.0.5)
-    i18n (1.5.3)
+    i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     image_size (1.5.0)
     in_threads (1.5.0)
@@ -400,12 +400,8 @@ GEM
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    shoulda (3.5.0)
-      shoulda-context (~> 1.0, >= 1.0.1)
-      shoulda-matchers (>= 1.4.1, < 3.0)
-    shoulda-context (1.2.2)
-    shoulda-matchers (2.8.0)
-      activesupport (>= 3.0.0)
+    shoulda-matchers (3.1.3)
+      activesupport (>= 4.0.0)
     sidekiq (5.2.5)
       connection_pool (~> 2.2, >= 2.2.2)
       rack (>= 1.5.0)
@@ -557,7 +553,7 @@ DEPENDENCIES
   sassc
   sassc-rails
   seed-fu
-  shoulda
+  shoulda-matchers (~> 3.1, >= 3.1.3)
   sidekiq
   simplecov
   sprockets-rails

@@ -11,7 +11,7 @@ describe Category do
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
+    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive
   end
 
   it 'validates inclusion of search_priority' do
