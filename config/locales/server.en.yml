@@ -4461,6 +4461,16 @@ en:
         title: "Ignore"
       approve:
         title: "Approve"
+      approve_user:
+        title: "Approve User"
+      reject_user:
+        title: "Delete User..."
+        delete:
+          title: "Delete User"
+          description: "The user will be deleted from the forum."
+        block:
+          title: "Delete and Block User"
+          description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
       delete_user:

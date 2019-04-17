@@ -421,7 +421,7 @@ class User < ActiveRecord::Base
     approved_by = User.find_by(id: approved_by) if approved_by.is_a?(Numeric)
 
     if reviewable_user = ReviewableUser.find_by(target: self)
-      result = reviewable_user.perform(approved_by, :approve, send_email: send_mail)
+      result = reviewable_user.perform(approved_by, :approve_user, send_email: send_mail)
       if result.success?
         Reviewable.set_approved_fields!(self, approved_by)
         return true
@@ -904,7 +904,7 @@ class User < ActiveRecord::Base
     self.update!(active: false)
 
     if reviewable = ReviewableUser.pending.find_by(target: self)
-      reviewable.perform(performed_by, :reject)
+      reviewable.perform(performed_by, :reject_user_delete)
     end
   end
 

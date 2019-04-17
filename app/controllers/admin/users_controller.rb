@@ -293,12 +293,12 @@ class Admin::UsersController < Admin::AdminController
     reviewable = ReviewableUser.find_by(target: @user) ||
       Jobs::CreateUserReviewable.new.execute(user_id: @user.id).reviewable
 
-    reviewable.perform(current_user, :approve)
+    reviewable.perform(current_user, :approve_user)
     render body: nil
   end
 
   def approve_bulk
-    Reviewable.bulk_perform_targets(current_user, :approve, 'ReviewableUser', params[:users])
+    Reviewable.bulk_perform_targets(current_user, :approve_user, 'ReviewableUser', params[:users])
     render body: nil
   end
 
