@@ -22,7 +22,7 @@ module Jobs
       return unless Aws::SNS::MessageVerifier.new.authentic?(raw)
 
       message.dig("bounce", "bouncedRecipients").each do |r|
-        if email_log = EmailLog.order("created_at DESC").where(to_address: r["emailAddress"])[0]
+        if email_log = EmailLog.order("created_at DESC").where(to_address: r["emailAddress"]).first
           email_log.update_columns(bounced: true)
 
           if email_log.user&.email.present?
