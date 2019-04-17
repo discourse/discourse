@@ -468,6 +468,10 @@ module Discourse
     end
   end
 
+  def self.stats
+    @stats ||= PluginStore.new("stats")
+  end
+
   def self.current_user_provider
     @current_user_provider || Auth::DefaultCurrentUserProvider
   end
