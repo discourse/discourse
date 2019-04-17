@@ -29,10 +29,6 @@ export default Ember.Component.extend({
     return !!this.get("changeSort");
   },
 
-  skipHeader() {
-    return this.site.mobileView;
-  },
-
   @computed("order")
   showLikes(order) {
     return order === "likes";
