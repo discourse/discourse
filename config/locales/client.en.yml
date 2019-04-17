@@ -382,7 +382,8 @@ en:
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User:"
       show_all_topics: "show all topics"
-      deleted_user: "(deleted user)"
+      deleted_post: "(post deleted)"
+      deleted_user: "(user deleted)"
       user:
         username: "Username"
         email: "Email"
