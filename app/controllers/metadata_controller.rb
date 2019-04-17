@@ -51,13 +51,13 @@ class MetadataController < ApplicationController
 
     manifest[:short_name] = SiteSetting.short_title if SiteSetting.short_title.present?
 
-    if SiteSetting.native_app_install_banner
+    if current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_android
       manifest = manifest.merge(
         prefer_related_applications: true,
         related_applications: [
           {
             platform: "play",
-            id: "com.discourse"
+            id: SiteSetting.android_app_id
           }
         ]
       )
