@@ -28,7 +28,7 @@
       flex: 1;
       box-sizing: border-box;
       max-width: 760px; // Match topic post width
-      min-width: 320px;
+      min-width: 0;
       margin-right: auto;
     }
 
@@ -289,6 +289,11 @@
     > tr > th,
     > tr > td {
       padding: 0.5em 1em 0.5em 0;
+      @include breakpoint("mobile") {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 0.5em;
+      }
     }
     .reviewable-score-spacer {
       padding-right: 1em;
@@ -327,6 +332,10 @@
   .created-by {
     margin-right: 1em;
     padding-top: 0.35em;
+    @include breakpoint("mobile") {
+      float: left;
+      margin-bottom: 1em;
+    }
   }
 
   .names {
@@ -334,14 +343,17 @@
   }
 
   .post-contents-wrapper {
-    display: flex;
     width: 100%;
     margin-top: 1em;
     min-width: 275px;
+    @include breakpoint("mobile", min-width) {
+      display: flex;
+    }
   }
 
   .post-contents {
     width: 100%;
+    min-width: 0; // Flexbox fix
   }
 
   .post-body {
@@ -413,8 +425,9 @@
     width: 100%;
     display: block;
     tbody {
-      width: 100%;
+      width: calc(100% - 5px);
       display: block;
+      clear: both;
     }
   }
   tr.reviewable-score {
@@ -424,5 +437,11 @@
   }
   td.reviewable-score-spacer {
     display: none;
+  }
+}
+
+@include breakpoint("mobile") {
+  tr.reviewable-score {
+    grid-template-columns: auto auto auto;
   }
 }
