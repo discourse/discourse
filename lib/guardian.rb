@@ -31,6 +31,9 @@ class Guardian
     def moderator?
       false
     end
+    def anonymous?
+      true
+    end
     def approved?
       false
     end
@@ -105,6 +108,10 @@ class Guardian
 
   def is_staged?
     @user.staged?
+  end
+
+  def is_anonymous?
+    @user.anonymous?
   end
 
   # Can the user see the object?
@@ -220,7 +227,7 @@ class Guardian
 
   # Can we approve it?
   def can_approve?(target)
-    is_staff? && target && target.active? && not(target.approved?)
+    is_staff? && target && target.active? && !target.approved?
   end
 
   def can_activate?(target)

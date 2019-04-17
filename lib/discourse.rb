@@ -468,9 +468,8 @@ module Discourse
     end
   end
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    name = site_setting.name.to_s
-    Jobs.enqueue(:update_s3_inventory) if name.include?("s3_inventory") || name == "s3_upload_bucket"
+  def self.stats
+    @stats ||= PluginStore.new("stats")
   end
 
   def self.current_user_provider

@@ -746,6 +746,7 @@ en:
       opera: "Opera"
       ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      discoursehub: "DiscourseHub app"
       unknown: "unknown browser"
     device:
       android: "Android Device"
@@ -4269,7 +4270,7 @@ en:
                 label: "Private"
                 description: "Only logged in users can access this community"
           invite_only:
-              placeholder: "People must be explicitly invited. Public registration is disabled."
+            placeholder: "People must be explicitly invited. Public registration is disabled."
 
       contact:
         title: "Contact"
@@ -4375,9 +4376,10 @@ en:
       posted: '%{username} posted in "%{topic}" - %{site_title}'
       private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
-      custom: "Notification from %{site_title}"
+      custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
     not_found: "not found"

@@ -329,7 +329,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    expire_cache if site_setting.name.to_s.include?("_icon")
   end
 
   def self.plugin_icons
