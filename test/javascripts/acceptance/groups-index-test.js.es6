@@ -5,11 +5,11 @@ acceptance("Groups");
 QUnit.test("Browsing Groups", async assert => {
   await visit("/g?username=eviltrout");
 
-  assert.equal(count(".groups-table-row"), 1, "it displays user's groups");
+  assert.equal(count(".group-box"), 1, "it displays user's groups");
 
   await visit("/g");
 
-  assert.equal(count(".groups-table-row"), 2, "it displays visible groups");
+  assert.equal(count(".group-box"), 2, "it displays visible groups");
   assert.equal(
     find(".group-index-join").length,
     1,

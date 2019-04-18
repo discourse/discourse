@@ -507,6 +507,7 @@ class GroupsController < ApplicationController
           mentionable_level
           messageable_level
           default_notification_level
+          bio_raw
         }
       else
         default_params = %i{
