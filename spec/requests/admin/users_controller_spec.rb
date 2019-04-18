@@ -56,11 +56,10 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#approve' do
+    let(:evil_trout) { Fabricate(:evil_trout) }
     before do
       SiteSetting.must_approve_users = true
     end
-
-    let(:evil_trout) { Fabricate(:evil_trout) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -70,7 +69,18 @@ RSpec.describe Admin::UsersController do
       expect(evil_trout.approved).to eq(false)
     end
 
+    it "will create a reviewable if one does not exist" do
+      evil_trout.update!(active: true)
+      expect(ReviewableUser.find_by(target: evil_trout)).to be_blank
+      put "/admin/users/#{evil_trout.id}/approve.json"
+      expect(response.code).to eq("200")
+      expect(ReviewableUser.find_by(target: evil_trout)).to be_present
+      expect(evil_trout.reload).to be_approved
+    end
+
     it 'calls approve' do
+      Jobs.run_immediately!
+      evil_trout.activate
       put "/admin/users/#{evil_trout.id}/approve.json"
       expect(response.status).to eq(200)
       evil_trout.reload
@@ -102,6 +112,8 @@ RSpec.describe Admin::UsersController do
     end
 
     it "approves the user when permitted" do
+      Jobs.run_immediately!
+      evil_trout.activate
       put "/admin/users/approve-bulk.json", params: { users: [evil_trout.id] }
       expect(response.status).to eq(200)
       evil_trout.reload

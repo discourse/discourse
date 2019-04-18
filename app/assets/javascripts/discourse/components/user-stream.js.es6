@@ -8,6 +8,16 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Component.extend(LoadMore, {
+  _initialize: function() {
+    const filter = this.get("stream.filter");
+    if (filter) {
+      this.set("classNames", [
+        "user-stream",
+        "filter-" + filter.toString().replace(",", "-")
+      ]);
+    }
+  }.on("init"),
+
   loading: false,
   eyelineSelector: ".user-stream .item",
   classNames: ["user-stream"],

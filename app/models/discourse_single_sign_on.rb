@@ -84,6 +84,9 @@ class DiscourseSingleSignOn < SingleSignOn
     user.user_avatar.save! if user.user_avatar
     user.save!
 
+    # The user might require approval
+    user.create_reviewable
+
     if bio && (user.user_profile.bio_raw.blank? || SiteSetting.sso_overrides_bio)
       user.user_profile.bio_raw = bio
       user.user_profile.save!

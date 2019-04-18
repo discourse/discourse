@@ -44,7 +44,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.82'
+gem 'onebox', '1.8.85'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -121,6 +121,7 @@ group :test do
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
   gem 'danger'
+  gem 'simplecov', require: false
 end
 
 group :test, :development do
@@ -134,11 +135,12 @@ group :test, :development do
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
-  gem 'shoulda', require: false
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
   gem 'rubocop', require: false
+  gem 'parallel_tests'
 end
 
 group :development do

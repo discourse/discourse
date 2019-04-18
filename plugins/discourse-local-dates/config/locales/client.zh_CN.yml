@@ -15,7 +15,6 @@ zh_CN:
       title: 插入日期
       create:
         modal_title: 插入日期
-        modal_subtitle: "我们会自动将日期和时间转换为浏览者本地的时区"
         form:
           insert: 插入
           advanced_mode: 高级模式
@@ -30,3 +29,9 @@ zh_CN:
           date_title: 日期
           time_title: 时间
           format_title: 日期格式
+          timezone: 时区
+          recurring:
+            every_day: "每天"
+            every_week: "每周"
+            every_month: "每月"
+            every_year: "每年"

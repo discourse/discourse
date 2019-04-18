@@ -723,20 +723,44 @@ RSpec.describe TopicsController do
     context 'for last post only' do
 
       it 'should allow you to retain topic timing but remove last post only' do
+        freeze_time
+
         post1 = create_post
+        user = post1.user
+
         topic = post1.topic
 
         post2 = create_post(topic_id: topic.id)
 
-        PostTiming.create!(topic: topic, user: user, post_number: 1, msecs: 100)
         PostTiming.create!(topic: topic, user: user, post_number: 2, msecs: 100)
 
-        TopicUser.create!(
-          topic: topic,
-          user: user,
+        user.user_stat.update!(first_unread_at: Time.now + 1.week)
+
+        topic_user = TopicUser.find_by(
+          topic_id: topic.id,
+          user_id: user.id,
+        )
+
+        topic_user.update!(
           last_read_post_number: 2,
           highest_seen_post_number: 2
         )
+
+        # ensure we have 2 notifications
+        # fake notification on topic but it is read
+        first_notification = Notification.create!(
+          user_id: user.id,
+          topic_id: topic.id,
+          data: "{}",
+          read: true,
+          notification_type: 1
+        )
+
+        freeze_time 1.minute.from_now
+        PostAlerter.post_created(post2)
+
+        second_notification = user.notifications.where(topic_id: topic.id).order(created_at: :desc).first
+        second_notification.update!(read: true)
 
         sign_in(user)
 
@@ -746,6 +770,14 @@ RSpec.describe TopicsController do
         expect(PostTiming.where(topic: topic, user: user, post_number: 1).exists?).to eq(true)
 
         expect(TopicUser.where(topic: topic, user: user, last_read_post_number: 1, highest_seen_post_number: 1).exists?).to eq(true)
+
+        user.user_stat.reload
+        expect(user.user_stat.first_unread_at).to eq_time(topic.updated_at)
+
+        first_notification.reload
+        second_notification.reload
+        expect(first_notification.read).to eq(true)
+        expect(second_notification.read).to eq(false)
 
         PostDestroyer.new(Fabricate(:admin), post2).destroy
 
@@ -833,7 +865,7 @@ RSpec.describe TopicsController do
     describe 'when logged in' do
       let(:user) { Fabricate(:user) }
       let(:moderator) { Fabricate(:moderator) }
-      let(:topic) { Fabricate(:topic, user: user) }
+      let(:topic) { Fabricate(:topic, user: user, created_at: 48.hours.ago) }
       let!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
       describe 'without access' do
@@ -1907,8 +1939,8 @@ RSpec.describe TopicsController do
 
   describe '#make_banner' do
     it 'needs you to be a staff member' do
-      sign_in(Fabricate(:user))
-      put "/t/99/make-banner.json"
+      topic = Fabricate(:topic, user: sign_in(Fabricate(:trust_level_4)))
+      put "/t/#{topic.id}/make-banner.json"
       expect(response).to be_forbidden
     end
 
@@ -1926,8 +1958,8 @@ RSpec.describe TopicsController do
 
   describe '#remove_banner' do
     it 'needs you to be a staff member' do
-      sign_in(Fabricate(:user))
-      put "/t/99/remove-banner.json"
+      topic = Fabricate(:topic, user: sign_in(Fabricate(:trust_level_4)), archetype: Archetype.banner)
+      put "/t/#{topic.id}/remove-banner.json"
       expect(response).to be_forbidden
     end
 
@@ -2106,6 +2138,7 @@ RSpec.describe TopicsController do
     describe 'converting public topic to private message' do
       let(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:topic, user: user) }
+      let!(:post) { Fabricate(:post, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(Fabricate(:user))
@@ -2132,6 +2165,7 @@ RSpec.describe TopicsController do
     describe 'converting private message to public topic' do
       let(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:private_message_topic, user: user) }
+      let!(:post) { Fabricate(:post, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(Fabricate(:user))
@@ -2594,6 +2628,7 @@ RSpec.describe TopicsController do
     describe "#publish" do
       let(:category) { Fabricate(:category) }
       let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
+      let!(:post) { Fabricate(:post, topic: topic) }
       let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
       let(:moderator) { Fabricate(:moderator) }
 

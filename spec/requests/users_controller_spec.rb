@@ -676,7 +676,7 @@ describe UsersController do
         let(:admin) { Fabricate(:admin) }
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
-        it "creates the user as active with a regular key" do
+        it "creates the user as active with a an admin key" do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
@@ -697,6 +697,36 @@ describe UsersController do
           expect(new_user.approved).to eq(true)
           expect(new_user.approved_by_id).to eq(admin.id)
           expect(new_user.approved_at).to_not eq(nil)
+        end
+
+        it "will create a reviewable when a user is created as active but not approved" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+
+          post "/u.json", params: post_user_params.merge(active: true, api_key: api_key.key)
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to be_truthy
+          expect(new_user.approved).to eq(false)
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_present
+        end
+
+        it "won't create a reviewable when a user is not active" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+
+          post "/u.json", params: post_user_params.merge(api_key: api_key.key)
+
+          expect(response.status).to eq(200)
+          json = JSON.parse(response.body)
+
+          new_user = User.find(json["user_id"])
+          expect(json['active']).to eq(false)
+          expect(new_user.approved).to eq(false)
+          expect(ReviewableUser.pending.find_by(target: new_user)).to be_blank
         end
 
         it "won't create the developer as active" do
@@ -2033,55 +2063,42 @@ describe UsersController do
         sign_in(user)
       end
 
-      context 'when ignore_user_enable is OFF' do
-        it 'raises an error when not logged in' do
-          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "" }
-          expect(response.status).to eq(404)
+      let!(:ignored_user) { Fabricate(:ignored_user, user: user, ignored_user: another_user) }
+      let!(:muted_user) { Fabricate(:muted_user, user: user, muted_user: another_user) }
+
+      context 'when changing notification level to normal' do
+        it 'changes notification level to normal' do
+          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "normal" }
+          expect(IgnoredUser.count).to eq(0)
+          expect(MutedUser.count).to eq(0)
         end
       end
 
-      context 'when ignore_user_enable is ON' do
-        before do
-          SiteSetting.ignore_user_enabled = true
+      context 'when changing notification level to mute' do
+        it 'changes notification level to mute' do
+          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "mute" }
+          expect(IgnoredUser.count).to eq(0)
+          expect(MutedUser.find_by(user_id: user.id, muted_user_id: another_user.id)).to be_present
+        end
+      end
+
+      context 'when changing notification level to ignore' do
+        it 'changes notification level to ignore' do
+          put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore" }
+          expect(MutedUser.count).to eq(0)
+          expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
         end
 
-        let!(:ignored_user) { Fabricate(:ignored_user, user: user, ignored_user: another_user) }
-        let!(:muted_user) { Fabricate(:muted_user, user: user, muted_user: another_user) }
-
-        context 'when changing notification level to normal' do
-          it 'changes notification level to normal' do
-            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "normal" }
-            expect(IgnoredUser.count).to eq(0)
-            expect(MutedUser.count).to eq(0)
-          end
-        end
-
-        context 'when changing notification level to mute' do
-          it 'changes notification level to mute' do
-            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "mute" }
-            expect(IgnoredUser.count).to eq(0)
-            expect(MutedUser.find_by(user_id: user.id, muted_user_id: another_user.id)).to be_present
-          end
-        end
-
-        context 'when changing notification level to ignore' do
+        context 'when expiring_at param is set' do
           it 'changes notification level to ignore' do
-            put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore" }
-            expect(MutedUser.count).to eq(0)
-            expect(IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)).to be_present
-          end
+            freeze_time(Time.now) do
+              expiring_at = 3.days.from_now
+              put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore", expiring_at: expiring_at }
 
-          context 'when expiring_at param is set' do
-            it 'changes notification level to ignore' do
-              freeze_time(Time.now) do
-                expiring_at = 3.days.from_now
-                put "/u/#{another_user.username}/notification_level.json", params: { notification_level: "ignore", expiring_at: expiring_at }
-
-                ignored_user = IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)
-                expect(ignored_user).to be_present
-                expect(ignored_user.expiring_at.to_i).to eq(expiring_at.to_i)
-                expect(MutedUser.count).to eq(0)
-              end
+              ignored_user = IgnoredUser.find_by(user_id: user.id, ignored_user_id: another_user.id)
+              expect(ignored_user).to be_present
+              expect(ignored_user.expiring_at.to_i).to eq(expiring_at.to_i)
+              expect(MutedUser.count).to eq(0)
             end
           end
         end

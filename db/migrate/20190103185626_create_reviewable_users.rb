@@ -22,7 +22,7 @@ class CreateReviewableUsers < ActiveRecord::Migration[5.2]
           created_at,
           created_at
         FROM users
-        WHERE approved = false
+        WHERE active AND approved = false
       SQL
     end
   end

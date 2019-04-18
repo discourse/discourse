@@ -14,6 +14,17 @@
   {{/if}}
 </div>
 
+{{#unless siteSettings.sso_overrides_avatar}}
+  <div class="control-group pref-avatar">
+    <label class="control-label" id="profile-picture">{{i18n 'user.avatar.title'}}</label>
+    <div class="controls">
+      {{! we want the "huge" version even though we're downsizing it in CSS }}
+      {{bound-avatar model "huge"}}
+      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil-alt"}}
+    </div>
+  </div>
+{{/unless}}
+
 {{#if canEditName}}
   <div class="control-group pref-name">
     <label class="control-label">{{i18n 'user.name.title'}}</label>
@@ -140,17 +151,6 @@
     {{/if}}
   </div>
 {{/if}}
-
-{{#unless siteSettings.sso_overrides_avatar}}
-  <div class="control-group pref-avatar">
-    <label class="control-label" id="profile-picture">{{i18n 'user.avatar.title'}}</label>
-    <div class="controls">
-      {{! we want the "huge" version even though we're downsizing it in CSS }}
-      {{bound-avatar model "huge"}}
-      {{d-button action=(route-action "showAvatarSelector") actionParam=model class="btn-default pad-left" icon="pencil-alt"}}
-    </div>
-  </div>
-{{/unless}}
 
 {{#if canSelectTitle}}
   <div class="control-group pref-title">

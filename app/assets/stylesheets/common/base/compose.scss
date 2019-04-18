@@ -453,3 +453,25 @@ div.ac-wrap {
     }
   }
 }
+
+.save-animation {
+  -webkit-animation: transformer 5s forwards;
+  animation: transformer 5s forwards;
+}
+
+@-webkit-keyframes transformer {
+  90% {
+    -webkit-filter: opacity(1);
+  }
+  100% {
+    -webkit-filter: opacity(0);
+  }
+}
+@keyframes transformer {
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

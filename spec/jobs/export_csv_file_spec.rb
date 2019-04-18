@@ -42,15 +42,14 @@ describe Jobs::ExportCsvFile do
     Hash[*user_list_header.zip(row).flatten]
   end
 
-  it "experts secondary emails" do
+  it "exports secondary emails" do
     user = Fabricate(:user)
     Fabricate(:secondary_email, user: user, primary: false)
-
-    secondary_emails = user.secondary_emails.join(";")
+    secondary_emails = user.secondary_emails
 
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
-    expect(user["secondary_emails"]).to eq(secondary_emails)
+    expect(user["secondary_emails"].split(";")).to match_array(secondary_emails)
   end
 
   it 'exports sso data' do

@@ -29,9 +29,12 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores
 
   after_create do
+    log_history(:created, created_by)
+  end
+
+  after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
-    log_history(:created, created_by)
   end
 
   def self.statuses
@@ -93,17 +96,26 @@ class Reviewable < ActiveRecord::Base
       potential_spam: potential_spam
     )
   rescue ActiveRecord::RecordNotUnique
-    updates = {
-      status: statuses[:pending]
-    }
-    updates[:potential_spam] = true if potential_spam
-    where(target: target).update_all(updates)
-    find_by(target: target).tap { |r| r.log_history(:transitioned, created_by) }
+
+    row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
+      UPDATE reviewables
+      SET status = :status
+      WHERE status <> :status
+        AND target_id = :id
+        AND target_type = :type
+    SQL
+
+    where(target: target).update_all(potential_spam: true) if potential_spam
+
+    reviewable = find_by(target: target)
+    reviewable.log_history(:transitioned, created_by) if row_count > 0
+    reviewable
   end
 
   def add_score(
     user,
     reviewable_score_type,
+    reason: nil,
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
@@ -119,7 +131,7 @@ class Reviewable < ActiveRecord::Base
       sub_total = SiteSetting.min_score_default_visibility
     end
 
-    rs = reviewable_scores.create!(
+    rs = reviewable_scores.new(
       user: user,
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
@@ -128,6 +140,8 @@ class Reviewable < ActiveRecord::Base
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
     )
+    rs.reason = reason.to_s if reason
+    rs.save!
 
     update(score: self.score + rs.score, latest_score: rs.created_at)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
@@ -200,17 +214,20 @@ class Reviewable < ActiveRecord::Base
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
+    update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
       result = send(perform_method, performed_by, args)
 
       if result.success?
-        transition_to(result.transition_to, performed_by) if result.transition_to
+        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
         recalculate_score if result.recalculate_score
       end
     end
+    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
+
     result
   end
 
@@ -219,6 +236,7 @@ class Reviewable < ActiveRecord::Base
 
     self.status = Reviewable.statuses[status_symbol]
     save!
+
     log_history(:transitioned, performed_by)
     DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
 
@@ -230,7 +248,7 @@ class Reviewable < ActiveRecord::Base
       )
     end
 
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if was_pending
+    was_pending
   end
 
   def post_options
@@ -431,10 +449,10 @@ private
       RETURNING user_id, flags_agreed + flags_disagreed + flags_ignored AS total
     SQL
 
-    Jobs.enqueue(
-      :truncate_user_flag_stats,
-      user_ids: result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
-    )
+    user_ids = result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
+    return if user_ids.blank?
+
+    Jobs.enqueue(:truncate_user_flag_stats, user_ids: user_ids)
   end
 end
 
@@ -464,8 +482,9 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

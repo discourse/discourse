@@ -402,10 +402,6 @@
     margin-bottom: 0.5em;
   }
 
-  .subcategory-list-style-field {
-    margin-left: 16px;
-  }
-
   .disable_info_wrap {
     position: relative;
     display: inline-block;
@@ -431,12 +427,6 @@
     }
   }
 
-  section.minimum-required-tags {
-    input[type="number"] {
-      width: 5em;
-    }
-  }
-
   .permission-selector {
     margin-right: 0.25em;
   }
@@ -448,6 +438,29 @@
 
   .add-permission-icon {
     margin: 0;
+  }
+
+  .edit-category-tab-settings {
+    $category-settings-width: 280px; // Consistent width makes this all easier to read
+    > section {
+      margin-bottom: 1.5em;
+    }
+    input[type="number"],
+    input[type="text"],
+    .select-kit {
+      width: $category-settings-width;
+    }
+    label {
+      max-width: $category-settings-width;
+    }
+    .category-email-in-outlet {
+      label {
+        flex-wrap: wrap; // Todo: fix all multi-element labels
+        a {
+          margin-left: 1.3em;
+        }
+      }
+    }
   }
 }
 

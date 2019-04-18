@@ -11,7 +11,7 @@ describe Category do
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
+    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive
   end
 
   it 'validates inclusion of search_priority' do
@@ -434,7 +434,7 @@ describe Category do
     end
 
     it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { @category.destroy }.first
+      event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
 
       expect(event[:event_name]).to eq(:category_destroyed)
       expect(event[:params].first).to eq(@category)
@@ -787,7 +787,7 @@ describe Category do
         subcategory.set_permissions(group => :full, group2 => :readonly)
 
         expect(subcategory.valid?).to eq(false)
-        expect(subcategory.errors.full_messages).to eq([I18n.t("category.errors.permission_conflict")])
+        expect(subcategory.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
       end
 
       it "is valid if permissions are same or more restrictive" do
@@ -819,7 +819,7 @@ describe Category do
         parent_category.set_permissions(group => :readonly)
 
         expect(parent_category.valid?).to eq(false)
-        expect(parent_category.errors.full_messages).to eq([I18n.t("category.errors.permission_conflict")])
+        expect(parent_category.errors.full_messages).to contain_exactly(I18n.t("category.errors.permission_conflict", group_names: group2.name))
       end
 
       it "is valid if subcategory permissions are same or more restrictive" do

@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
 
   @computed("application.currentPath")
   adminContentsClassName(currentPath) {
-    return currentPath
+    let cssClasses = currentPath
       .split(".")
       .filter(segment => {
         return (
@@ -27,5 +27,12 @@ export default Ember.Controller.extend({
       })
       .map(Ember.String.dasherize)
       .join(" ");
+
+    // this is done to avoid breaking css customizations
+    if (cssClasses.includes("dashboard")) {
+      cssClasses = `${cssClasses} dashboard-next`;
+    }
+
+    return cssClasses;
   }
 });

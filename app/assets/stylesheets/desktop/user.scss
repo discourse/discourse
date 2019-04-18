@@ -103,9 +103,6 @@
   margin-bottom: 50px;
 
   .about {
-    background-position: center center;
-    background-size: cover;
-
     &.group {
       .details {
         padding: 15px 0;
@@ -115,12 +112,8 @@
     }
 
     .details {
-      padding-bottom: s(2);
-      transition: margin 0.15s linear;
-
       img.avatar {
         margin: 0 20px 10px 0;
-        transition: all 0.1s linear;
       }
 
       .primary {
@@ -149,12 +142,21 @@
           }
         }
       }
+
+      .secondary {
+        margin-top: s(4);
+      }
     }
 
     &.has-background {
+      .user-profile-image {
+        height: 300px;
+      }
       .details {
-        padding: 15px 15px 4px 15px;
-        margin-top: 240px;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 15px 0 0 0;
+        bottom: 0;
       }
     }
 
@@ -169,12 +171,20 @@
     }
 
     &.collapsed-info {
+      .user-profile-image {
+        display: none;
+      }
       .controls {
         width: auto;
 
-        ul {
-          li {
+        > ul {
+          display: inline-flex;
+          > li {
             display: inline;
+            margin-left: s(3);
+            .d-button-label {
+              line-height: 1;
+            }
           }
 
           a {
@@ -185,21 +195,12 @@
       }
 
       .details {
-        padding: 0 0 2px 0;
+        position: relative;
+        padding: 0;
         margin-top: 0;
         border-bottom: 1px solid $primary-low;
       }
-
-      &.has-background {
-        .details {
-          padding: 12px 15px 2px 15px;
-        }
-      }
     }
-  }
-
-  .staff-counters {
-    margin-bottom: 20px;
   }
 
   .user-field {

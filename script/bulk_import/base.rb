@@ -303,14 +303,6 @@ class BulkImport::Base
     end
   end
 
-  def create_categories(rows, &block)
-    create_records(rows, "category", CATEGORY_COLUMNS, &block)
-
-    Category.where(topic_id: nil).each do |c|
-      c.create_category_definition
-    end
-  end
-
   def create_user_emails(rows, &block)
     create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block)
   end
@@ -322,6 +314,9 @@ class BulkImport::Base
   end
   def create_group_users(rows, &block)
     create_records(rows, "group_user", GROUP_USER_COLUMNS, &block)
+  end
+  def create_categories(rows, &block)
+    create_records(rows, "category", CATEGORY_COLUMNS, &block)
   end
   def create_topics(rows, &block)
     create_records(rows, "topic", TOPIC_COLUMNS, &block)

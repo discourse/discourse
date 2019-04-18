@@ -305,12 +305,6 @@ class Report
     add_counts report, subject, 'topics.created_at'
   end
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if ["backup_location", "s3_backup_bucket"].include?(site_setting.name.to_s)
-      clear_cache(:storage_stats)
-    end
-  end
-
   def rgba_color(hex, opacity = 1)
     if hex.size == 3
       chars = hex.scan(/\w/)
@@ -374,3 +368,4 @@ require_relative "reports/posts"
 require_relative "reports/time_to_first_response"
 require_relative "reports/topics_with_no_response"
 require_relative "reports/emails"
+require_relative "reports/web_crawlers"

@@ -125,22 +125,57 @@ describe User do
   end
 
   describe 'reviewable' do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, active: false) }
     let(:admin) { Fabricate(:admin) }
 
-    it "creates a reviewable for the user if must_approve_users is true" do
+    before do
+      Jobs.run_immediately!
+    end
+
+    it "creates a reviewable for the user if must_approve_users is true and activate is called" do
       SiteSetting.must_approve_users = true
       user
 
+      # Inactive users don't have reviewables
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_blank
+
+      user.activate
       reviewable = ReviewableUser.find_by(target: user)
       expect(reviewable).to be_present
       expect(reviewable.score > 0).to eq(true)
       expect(reviewable.reviewable_scores).to be_present
     end
 
+    it "creates a reviewable for the user if must_approve_users is true and their token is confirmed" do
+      SiteSetting.must_approve_users = true
+      user
+
+      # Inactive users don't have reviewables
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_blank
+
+      EmailToken.confirm(user.email_tokens.first.token)
+      expect(user.reload.active).to eq(true)
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_present
+    end
+
     it "doesn't create a reviewable if must_approve_users is false" do
       user
       expect(ReviewableUser.find_by(target: user)).to be_blank
+    end
+
+    it "will reject a reviewable if the user is deactivated" do
+      SiteSetting.must_approve_users = true
+      user
+
+      user.activate
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable.pending?).to eq(true)
+
+      user.deactivate(admin)
+      expect(reviewable.reload.rejected?).to eq(true)
     end
   end
 
@@ -1456,7 +1491,6 @@ describe User do
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_dynamic_favicon = true
-      SiteSetting.default_other_disable_jump_reply = true
 
       SiteSetting.default_topics_automatic_unpin = false
 
@@ -1476,7 +1510,6 @@ describe User do
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
-      expect(options.disable_jump_reply).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)
       expect(options.auto_track_topics_after_msecs).to eq(0)

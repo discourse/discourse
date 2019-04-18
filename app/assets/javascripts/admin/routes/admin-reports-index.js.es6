@@ -1,5 +1,5 @@
 export default Discourse.Route.extend({
   beforeModel() {
-    this.transitionTo("admin.dashboardNextReports");
+    this.transitionTo("admin.dashboardReports");
   }
 });

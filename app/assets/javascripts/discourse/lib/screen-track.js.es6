@@ -54,8 +54,9 @@ export default class {
     }
   }
 
-  setOnscreen(onscreen) {
+  setOnscreen(onscreen, readOnscreen) {
     this._onscreen = onscreen;
+    this._readOnscreen = readOnscreen;
   }
 
   // Reset our timers
@@ -68,6 +69,8 @@ export default class {
     this._totalTimings = {};
     this._topicTime = 0;
     this._onscreen = [];
+    this._readOnscreen = [];
+    this._readPosts = {};
     this._inProgress = false;
   }
 
@@ -112,6 +115,7 @@ export default class {
     if (!$.isEmptyObject(newTimings)) {
       if (this.currentUser) {
         this._inProgress = true;
+
         ajax("/topics/timings", {
           data: {
             timings: newTimings,
@@ -198,20 +202,27 @@ export default class {
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
     const rush = Object.keys(timings).some(postNumber => {
-      return timings[postNumber] > 0 && !totalTimings[postNumber];
+      return (
+        timings[postNumber] > 0 &&
+        !totalTimings[postNumber] &&
+        !this._readPosts[postNumber]
+      );
     });
 
     if (!this._inProgress && (this._lastFlush > nextFlush || rush)) {
       this.flush();
     }
 
-    // Don't track timings if we're not in focus
-    if (!Discourse.get("hasFocus")) return;
+    if (Discourse.get("hasFocus")) {
+      this._topicTime += diff;
 
-    this._topicTime += diff;
+      this._onscreen.forEach(
+        postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
+      );
 
-    this._onscreen.forEach(
-      postNumber => (timings[postNumber] = (timings[postNumber] || 0) + diff)
-    );
+      this._readOnscreen.forEach(postNumber => {
+        this._readPosts[postNumber] = true;
+      });
+    }
   }
 }

@@ -16,6 +16,40 @@ class DiscourseIpInfo
     @cache = LruRedux::ThreadSafeCache.new(2000)
   end
 
+  def self.mmdb_path(name)
+    File.join(Rails.root, 'vendor', 'data', "#{name}.mmdb")
+  end
+
+  def self.mmdb_download(name)
+    require 'rubygems/package'
+    require 'zlib'
+
+    uri = URI("https://geolite.maxmind.com/download/geoip/database/#{name}.tar.gz")
+
+    begin
+      tar_gz_file = Tempfile.new
+      tar_gz_file.binmode
+      tar_gz_file.write(Net::HTTP.get(uri))
+      tar_gz_file.close
+
+      begin
+        extractor = Gem::Package::TarReader.new(Zlib::GzipReader.open(tar_gz_file.path))
+        extractor.rewind
+
+        extractor.each do |entry|
+          next unless entry.full_name.ends_with?(".mmdb")
+          File.open(mmdb_path(name), "wb") { |f| f.write(entry.read) }
+        end
+      ensure
+        extractor.close
+      end
+
+    ensure
+      tar_gz_file.close
+      tar_gz_file.unlink
+    end
+  end
+
   def mmdb_load(filepath)
     begin
       MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)

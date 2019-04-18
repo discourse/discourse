@@ -17,7 +17,7 @@ class MigrateReviewableQueuedPosts < ActiveRecord::Migration[5.2]
         user_id,
         true,
         topic_id,
-        nullif(post_options->>'category', '')::int,
+        NULLIF(REGEXP_REPLACE(post_options->>'category', '[^0-9]+', '', 'g'), '')::int,
         json_build_object(
           'old_queued_post_id', id,
           'raw', raw

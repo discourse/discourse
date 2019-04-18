@@ -189,9 +189,6 @@ hu:
   too_late_to_edit: "Ez a bejegyzés túl régen lett létrehozva. Már nem lehet szerkeszteni vagy törölni."
   revert_version_same: "A jelenlegi verzió megegyezik azzal a verzióval amire vissza szeretne térni."
   excerpt_image: "kép"
-  queue:
-    delete_reason: "Törölve lett a moderátori sor által"
-    not_found: "Bejegyzés nem található vagy frissítve lett."
   groups:
     errors:
       can_not_modify_automatic: "Nem módosíthasz automata csoportot"
@@ -668,8 +665,6 @@ hu:
       blocked: "nincs engedélyezve."
   flags_dispositions:
     disagreed: "Köszönjük, hogy jelezted felénk! Utánanézünk!"
-    deferred: "Köszönjük, hogy jelezted felénk! Utánanézünk!"
-    deferred_and_deleted: "Köszönjük, hogy jelezted felénk! Eltávolítottuk a bejegyzést!"
   system_messages:
     welcome_user:
       subject_template: "Üdvözlünk a %{site_name} oldalán!"

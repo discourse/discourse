@@ -311,7 +311,7 @@ describe CategoriesController do
       end
 
       describe "success" do
-        it "updates the group correctly" do
+        it "updates attributes correctly" do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
@@ -328,7 +328,8 @@ describe CategoriesController do
             custom_fields: {
               "dancing" => "frogs"
             },
-            minimum_required_tags: ""
+            minimum_required_tags: "",
+            allow_global_tags: 'true'
           }
 
           expect(response.status).to eq(200)
@@ -342,6 +343,7 @@ describe CategoriesController do
           expect(category.auto_close_hours).to eq(72)
           expect(category.custom_fields).to eq("dancing" => "frogs")
           expect(category.minimum_required_tags).to eq(0)
+          expect(category.allow_global_tags).to eq(true)
         end
 
         it 'logs the changes correctly' do

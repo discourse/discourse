@@ -12,6 +12,8 @@ end
 #  ignored_user_id :integer          not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  summarized_at   :datetime
+#  expiring_at     :datetime
 #
 # Indexes
 #

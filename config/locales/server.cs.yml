@@ -223,9 +223,6 @@ cs:
   too_late_to_edit: "Tento příspěvek byl vytvořen velmi dávno. Už ho není možné smazat ani upravovat."
   revert_version_same: "Aktuální verze je stejná jako verze, na kterou se pokoušíte vrátit."
   excerpt_image: "obrázek"
-  queue:
-    delete_reason: "Smazáno moderátorem"
-    not_found: "Příspěvek nebyl nalezen nebo již byl aktualizován."
   groups:
     errors:
       can_not_modify_automatic: "Nelze měnit automatické skupiny"

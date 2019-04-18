@@ -402,6 +402,9 @@ class UsersController < ApplicationController
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
 
+      # If the user was created as active, they might need to be approved
+      user.create_reviewable if user.active?
+
       render json: {
         success: true,
         active: user.active?,
@@ -993,7 +996,6 @@ class UsersController < ApplicationController
   end
 
   def notification_level
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"

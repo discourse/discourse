@@ -254,10 +254,25 @@ class TopicsController < ApplicationController
   end
 
   def destroy_timings
+    topic_id = params[:topic_id].to_i
+
     if params[:last].to_s == "1"
-      PostTiming.destroy_last_for(current_user, params[:topic_id])
+      PostTiming.destroy_last_for(current_user, topic_id)
     else
-      PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
+      PostTiming.destroy_for(current_user.id, [topic_id])
+    end
+
+    last_notification = Notification
+      .where(
+        user_id: current_user.id,
+        topic_id: topic_id
+      )
+      .order(created_at: :desc)
+      .limit(1)
+      .first
+
+    if last_notification
+      last_notification.update!(read: false)
     end
 
     render body: nil
@@ -284,6 +299,7 @@ class TopicsController < ApplicationController
 
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       category = Category.find_by(id: params[:category_id])
+
       if category || (params[:category_id].to_i == 0)
         guardian.ensure_can_move_topic_to_category!(category)
       else
@@ -408,7 +424,7 @@ class TopicsController < ApplicationController
 
   def make_banner
     topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_banner_topic!(topic)
 
     topic.make_banner!(current_user)
 
@@ -417,7 +433,7 @@ class TopicsController < ApplicationController
 
   def remove_banner
     topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_banner_topic!(topic)
 
     topic.remove_banner!(current_user)
 

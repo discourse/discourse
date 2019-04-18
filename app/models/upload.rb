@@ -8,9 +8,11 @@ require_dependency "base62"
 
 class Upload < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
+  include HasUrl
 
   SHA1_LENGTH = 40
   SEEDED_ID_THRESHOLD = 0
+  URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/
 
   belongs_to :user
 
@@ -192,29 +194,12 @@ class Upload < ActiveRecord::Base
     Digest::SHA1.file(path).hexdigest
   end
 
-  def self.extract_upload_url(url)
-    url.match(/(\/original\/\dX[\/\.\w]*\/([a-zA-Z0-9]+)[\.\w]*)/)
-  end
-
-  def self.get_from_url(url)
-    return if url.blank?
-
-    uri = begin
-      URI(URI.unescape(url))
-    rescue URI::Error
-    end
-
-    return if uri&.path.blank?
-    data = extract_upload_url(uri.path)
-    return if data.blank?
-    sha1 = data[2]
-    upload = nil
-    upload = Upload.find_by(sha1: sha1) if sha1&.length == SHA1_LENGTH
-    upload || Upload.find_by("url LIKE ?", "%#{data[1]}")
-  end
-
   def human_filesize
     number_to_human_size(self.filesize)
+  end
+
+  def rebake_posts_on_old_scheme
+    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
   def self.migrate_to_new_scheme(limit = nil)
@@ -224,8 +209,7 @@ class Upload < ActiveRecord::Base
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
 
-      scope = Upload.by_users
-        .where("url NOT LIKE '%/original/_X/%'")
+      scope = Upload.by_users.where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}%'")
         .order(id: :desc)
 
       scope = scope.limit(limit) if limit
@@ -272,6 +256,9 @@ class Upload < ActiveRecord::Base
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
           DbHelper.remap(previous_url, upload.url)
+
+          upload.optimized_images.find_each(&:destroy!)
+          upload.rebake_posts_on_old_scheme
           # remove the old file (when local)
           unless external
             FileUtils.rm(path, force: true)

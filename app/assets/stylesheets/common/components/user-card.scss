@@ -68,6 +68,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     display: inline;
     margin-right: 0.5em;
     color: $primary;
+    &.email,
     .desc,
     a {
       color: $primary-high;
@@ -135,6 +136,10 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       .suspension-date {
         font-weight: bold;
       }
+    }
+    .profile-hidden {
+      font-size: $font-up-1;
+      margin-top: 0.5em;
     }
   }
   // location and website

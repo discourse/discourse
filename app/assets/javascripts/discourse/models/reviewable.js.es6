@@ -10,11 +10,6 @@ export const IGNORED = 3;
 export const DELETED = 4;
 
 export default RestModel.extend({
-  pending: Ember.computed.equal("status", PENDING),
-  approved: Ember.computed.equal("status", APPROVED),
-  rejected: Ember.computed.equal("status", REJECTED),
-  ignored: Ember.computed.equal("status", IGNORED),
-
   @computed("type")
   humanType(type) {
     return I18n.t(`review.types.${type.underscore()}.title`, {

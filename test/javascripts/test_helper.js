@@ -25,7 +25,6 @@
 //= require markdown-it-bundle
 //= require application
 //= require plugin
-//= require htmlparser.js
 //= require admin
 
 //= require sinon/pkg/sinon

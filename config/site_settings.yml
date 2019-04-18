@@ -141,6 +141,10 @@ basic:
     max: 2000
   limit_suggested_to_category:
     default: false
+  suggested_topics_unread_max_days_old:
+    default: 90
+    min: 0
+    max: 10000
   suggested_topics_max_days_old:
     default: 365
     min: 7
@@ -304,6 +308,7 @@ login:
     refresh: true
     client: true
     default: false
+    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
@@ -340,8 +345,6 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
-  enable_yahoo_logins:
-    default: false
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -530,9 +533,6 @@ users:
     default: false
     client: true
   log_personal_messages_views: false
-  ignore_user_enabled:
-    default: false
-    client: true
   ignored_users_count_message_threshold:
     default: 5
     client: true
@@ -900,6 +900,7 @@ email:
   pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
+  strip_incoming_email_lines: false
   email_in:
     default: false
     client: true
@@ -1109,7 +1110,7 @@ files:
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
   restrict_letter_avatar_colors:
-    default: ''
+    default: ""
     type: list
     list_type: compact
     validator: "ColorListValidator"
@@ -1231,11 +1232,11 @@ security:
   enforce_second_factor:
     client: true
     type: enum
-    default: 'no'
+    default: "no"
     choices:
-      - 'no'
-      - 'staff'
-      - 'all'
+      - "no"
+      - "staff"
+      - "all"
   force_https:
     default: false
     shadowed_by_global: true
@@ -1442,7 +1443,7 @@ developer:
     max: 99000
   flush_timings_secs:
     client: true
-    default: 20
+    default: 60
   active_user_rate_limit_secs: 60
   verbose_localization:
     default: false
@@ -1482,6 +1483,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  refresh_maxmind_db_during_precompile_days:
+    min: 0
+    max: 120
+    default: 2
+    hidden: true
 
 embedding:
   feed_polling_enabled:
@@ -1820,7 +1826,17 @@ uncategorized:
     default: true
     client: true
 
-  native_app_install_banner: false
+  native_app_install_banner_ios: false
+
+  native_app_install_banner_android: false
+
+  ios_app_id:
+    default: "1173672076"
+    hidden: true
+
+  android_app_id:
+    default: "com.discourse"
+    hidden: true
 
   pwa_display_browser_regex:
     default: "iPad|iPhone"
@@ -1878,7 +1894,6 @@ user_preferences:
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_dynamic_favicon: false
-  default_other_disable_jump_reply: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -1909,6 +1924,12 @@ user_preferences:
       - larger
       - largest
 
+  default_title_count_mode:
+    type: enum
+    default: notifications
+    choices:
+      - notifications
+      - contextual
 api:
   retain_web_hook_events_period_days:
     default: 30
@@ -1919,7 +1940,7 @@ user_api:
   allow_user_api_keys:
     default: true
   allow_user_api_key_scopes:
-    default: "read|write|message_bus|push|notifications|session_info"
+    default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
   max_api_keys_per_user:
     default: 10

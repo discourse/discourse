@@ -23,7 +23,6 @@ class UserUpdater
     :external_links_in_new_tab,
     :enable_quoting,
     :dynamic_favicon,
-    :disable_jump_reply,
     :automatically_unpin_topics,
     :digest_after_minutes,
     :new_topic_duration_minutes,
@@ -37,7 +36,8 @@ class UserUpdater
     :allow_private_messages,
     :homepage_id,
     :hide_profile_and_presence,
-    :text_size
+    :text_size,
+    :title_count_mode
   ]
 
   def initialize(actor, user)

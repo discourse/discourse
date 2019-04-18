@@ -116,7 +116,6 @@ class User < ActiveRecord::Base
   after_create :set_random_avatar
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
-  after_create :create_reviewable
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -422,7 +421,7 @@ class User < ActiveRecord::Base
     approved_by = User.find_by(id: approved_by) if approved_by.is_a?(Numeric)
 
     if reviewable_user = ReviewableUser.find_by(target: self)
-      result = reviewable_user.perform(approved_by, :approve, send_email: send_mail)
+      result = reviewable_user.perform(approved_by, :approve_user, send_email: send_mail)
       if result.success?
         Reviewable.set_approved_fields!(self, approved_by)
         return true
@@ -893,15 +892,20 @@ class User < ActiveRecord::Base
 
   def activate
     if email_token = self.email_tokens.active.where(email: self.email).first
-      user = EmailToken.confirm(email_token.token)
+      user = EmailToken.confirm(email_token.token, skip_reviewable: true)
       self.update!(active: true) if user.nil?
     else
       self.update!(active: true)
     end
+    create_reviewable
   end
 
-  def deactivate
+  def deactivate(performed_by)
     self.update!(active: false)
+
+    if reviewable = ReviewableUser.pending.find_by(target: self)
+      reviewable.perform(performed_by, :reject_user_delete)
+    end
   end
 
   def change_trust_level!(level, opts = nil)
@@ -1209,6 +1213,13 @@ class User < ActiveRecord::Base
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
+  def create_reviewable
+    return unless SiteSetting.must_approve_users? || SiteSetting.invite_only?
+    return if approved?
+
+    Jobs.enqueue(:create_user_reviewable, user_id: self.id)
+  end
+
   protected
 
   def badge_grant
@@ -1236,20 +1247,6 @@ class User < ActiveRecord::Base
 
   def ensure_in_trust_level_group
     Group.user_trust_level_change!(id, trust_level)
-  end
-
-  def create_reviewable
-    return unless SiteSetting.must_approve_users? || SiteSetting.invite_only?
-    return if approved?
-
-    reviewable = ReviewableUser.needs_review!(target: self, created_by: Discourse.system_user, reviewable_by_moderator: true)
-    reviewable.add_score(
-      Discourse.system_user,
-      ReviewableScore.types[:needs_approval],
-      force_review: true
-    )
-
-    reviewable
   end
 
   def create_user_stat

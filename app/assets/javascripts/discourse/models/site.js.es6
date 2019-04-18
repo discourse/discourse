@@ -27,6 +27,21 @@ const Site = RestModel.extend({
   topicCountDesc: ["topic_count:desc"],
   categoriesByCount: Ember.computed.sort("categories", "topicCountDesc"),
 
+  collectUserFields(fields) {
+    fields = fields || {};
+
+    let siteFields = this.get("user_fields");
+
+    if (!Ember.isEmpty(siteFields)) {
+      return siteFields.map(f => {
+        let value = fields ? fields[f.id.toString()] : null;
+        value = value || "&mdash;".htmlSafe();
+        return { name: f.name, value };
+      });
+    }
+    return [];
+  },
+
   // Sort subcategories under parents
   @computed("categoriesByCount", "categories.[]")
   sortedCategories(cats) {

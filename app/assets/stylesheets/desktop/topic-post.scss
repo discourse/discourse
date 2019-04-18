@@ -888,3 +888,22 @@ span.highlighted {
     }
   }
 }
+
+.crawler-post {
+  .post-time {
+    float: right;
+  }
+  .post-likes {
+    float: right;
+  }
+  margin-top: 5px;
+}
+
+#breadcrumbs {
+  .badge-category-bg {
+    background-color: $secondary-high;
+  }
+  .category-title {
+    color: $primary;
+  }
+}

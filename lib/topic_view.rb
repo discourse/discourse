@@ -6,8 +6,26 @@ require_dependency 'gaps'
 class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10000
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print, :message_bus_last_id
-  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields, :post_number
+  attr_reader(
+    :topic,
+    :posts,
+    :guardian,
+    :filtered_posts,
+    :chunk_size,
+    :print,
+    :message_bus_last_id,
+    :queued_posts_enabled,
+    :personal_message
+  )
+
+  attr_accessor(
+    :draft,
+    :draft_key,
+    :draft_sequence,
+    :user_custom_fields,
+    :post_custom_fields,
+    :post_number
+  )
 
   def self.print_chunk_size
     1000
@@ -81,6 +99,9 @@ class TopicView
 
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
+
+    @queued_posts_enabled = NewPostManager.queue_enabled?
+    @personal_message = @topic.private_message?
   end
 
   def canonical_path
@@ -378,6 +399,13 @@ class TopicView
     end
   end
 
+  def group_allowed_user_ids
+    return @group_allowed_user_ids unless @group_allowed_user_ids.nil?
+
+    group_ids = @topic.allowed_groups.map(&:id)
+    @group_allowed_user_ids = Set.new(GroupUser.where(group_id: group_ids).pluck('distinct user_id'))
+  end
+
   def all_post_actions
     @all_post_actions ||= PostAction.counts_for(@posts, @user)
   end
@@ -388,6 +416,27 @@ class TopicView
 
   def links
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
+  end
+
+  def pending_posts
+    ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
+  end
+
+  def actions_summary
+    return @actions_summary unless @actions_summary.nil?
+
+    @actions_summary = []
+    return @actions_summary unless post = posts&.first
+    PostActionType.topic_flag_types.each do |sym, id|
+      @actions_summary << {
+        id: id,
+        count: 0,
+        hidden: false,
+        can_act: @guardian.post_can_act?(post, sym)
+      }
+    end
+
+    @actions_summary
   end
 
   def link_counts
@@ -491,6 +540,10 @@ class TopicView
     if highest_post_number.present?
       post_number > highest_post_number ? highest_post_number : post_number
     end
+  end
+
+  def queued_posts_count
+    ReviewableQueuedPost.viewable_by(@user).where(topic_id: @topic.id).pending.count
   end
 
   protected
@@ -602,24 +655,21 @@ class TopicView
     @contains_gaps = false
     @filtered_posts = unfiltered_posts
 
-    if SiteSetting.ignore_user_enabled
+    sql = <<~SQL
+        SELECT ignored_user_id
+        FROM ignored_users as ig
+        JOIN users as u ON u.id = ig.ignored_user_id
+        WHERE ig.user_id = :current_user_id
+          AND ig.ignored_user_id <> :current_user_id
+          AND NOT u.admin
+          AND NOT u.moderator
+    SQL
 
-      sql = <<~SQL
-          SELECT ignored_user_id
-          FROM ignored_users as ig
-          JOIN users as u ON u.id = ig.ignored_user_id
-          WHERE ig.user_id = :current_user_id
-            AND ig.ignored_user_id <> :current_user_id
-            AND NOT u.admin
-            AND NOT u.moderator
-      SQL
+    ignored_user_ids = DB.query_single(sql, current_user_id: @user&.id)
 
-      ignored_user_ids = DB.query_single(sql, current_user_id: @user&.id)
-
-      if ignored_user_ids.present?
-        @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?", ignored_user_ids, first_post_id)
-        @contains_gaps = true
-      end
+    if ignored_user_ids.present?
+      @filtered_posts = @filtered_posts.where.not("user_id IN (?) AND id <> ?", ignored_user_ids, first_post_id)
+      @contains_gaps = true
     end
 
     # Filters

@@ -11,7 +11,6 @@ bs_BA:
       title: Unesite datum
       create:
         modal_title: Unesite datum
-        modal_subtitle: "Automatski ćemo pretvoriti datum i vrijeme na korisnikovu lokalnu vremensku zonu."
         form:
           insert: Unesi
           advanced_mode: Napredni način

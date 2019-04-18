@@ -211,10 +211,41 @@
           {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
             {{#if loadedAllPosts}}
 
-              {{#if model.pending_posts_count}}
+              {{#if model.pending_posts}}
+                <div class='pending-posts'>
+                  {{#each model.pending_posts as |pending|}}
+                    <div class='reviewable-item'>
+                      <div class='reviewable-meta-data'>
+                        <span class='reviewable-type'>
+                          {{i18n "review.awaiting_approval"}}
+                        </span>
+                        <span class='created-at'>
+                          {{age-with-tooltip pending.created_at}}
+                        </span>
+                      </div>
+                      <div class='post-contents-wrapper'>
+                        {{reviewable-created-by user=currentUser tagName=''}}
+                        <div class='post-contents'>
+                          {{reviewable-created-by-name user=currentUser tagName=''}}
+                          <div class='post-body'>{{cook-text pending.raw}}</div>
+                        </div>
+                      </div>
+                      <div class='reviewable-actions'>
+                        {{d-button
+                          class="btn-danger"
+                          label="review.delete"
+                          icon="trash-alt"
+                          action=(action "deletePending" pending) }}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{/if}}
+
+              {{#if model.queued_posts_count}}
                 <div class="has-pending-posts">
                   <div>
-                    {{{i18n "review.topic_has_pending" count=model.pending_posts_count}}}
+                    {{{i18n "review.topic_has_pending" count=model.queued_posts_count}}}
                   </div>
 
                   {{#link-to 'review' (query-params topic_id=model.id type="ReviewableQueuedPost" status="pending")}}

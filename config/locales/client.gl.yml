@@ -160,7 +160,6 @@ gl:
     age: "Idade"
     joined: "Inscrito"
     admin_title: "Admin"
-    flags_title: "Denuncias"
     show_more: "amosar máis"
     show_help: "opcións"
     links: "Ligazóns"
@@ -238,28 +237,6 @@ gl:
       none_found: "Non se atoparon temas."
       title:
         placeholder: "escribe o título do tema aquí"
-    queue:
-      topic: "Tema:"
-      approve: "Aprobar"
-      reject: "Rexeitar"
-      delete_user: "Eliminar usuario"
-      title: "Cómpre aprobación"
-      none: "Non hai publicacións para revisar."
-      edit: "Editar"
-      cancel: "Cancelar"
-      view_pending: "ver as publicacións pendentes"
-      has_pending_posts:
-        one: "Este tema ten <b>{{count}}</b> publicación agardando aprobación"
-        other: "Este tema ten <b>{{count}}</b> publicacións agardando aprobación."
-      confirm: "Gardar os cambios"
-      delete_prompt: "Confirmas a eliminación de <b>%{username}</b>? Eliminaranse todas as súas publicacións e bloquearase o seu correo electrónico e enderezo IP."
-      approval:
-        title: "A publicación necesita aprobación"
-        description: "Recibimos a túa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Ten paciencia."
-        pending_posts:
-          one: "Tes <strong>{{count}}</strong> publicación pendente."
-          other: "Tes <strong>{{count}}</strong> publicacións pendentes."
-        ok: "De acordo"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicou <a href='{{topicUrl}}'>o tema</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ti</a> publicaches <a href='{{topicUrl}}'>o tema</a>"
@@ -1127,9 +1104,6 @@ gl:
       has_replies:
         one: "{{count}} resposta"
         other: "{{count}} respostas"
-      has_likes:
-        one: "{{count}} gústame"
-        other: "{{count}} gústames"
       has_likes_title:
         one: "A unha persoa gustoulle esta publicación"
         other: "A {{count}} persoas gustoulles esta publicación"
@@ -1518,37 +1492,6 @@ gl:
       commits:
         latest_changes: "Últimos cambios: por favor, actualiza a miúdo."
         by: "por"
-      flags:
-        title: "Denuncias"
-        agree: "Aceptar"
-        agree_title: "Confirmar esta denuncia como válida"
-        delete: "Eliminar"
-        delete_title: "Eliminar a publicación á que se refire esta denuncia."
-        delete_post_defer_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema"
-        delete_post_agree_flag_title: "Eliminar publicación. Se é a inicial, eliminar tamén o tema."
-        delete_flag_modal_title: "Eliminar e..."
-        delete_spammer: "Eliminar spammer"
-        delete_spammer_title: "Eliminar o usuario e todas as súas publicacións e temas."
-        disagree_flag_unhide_post: "En desacordo (amosar publicación)"
-        disagree_flag_unhide_post_title: "Eliminar as denuncias desta publicación e facela visíbel de novo"
-        disagree_flag: "Non aceptar"
-        disagree_flag_title: "Denegar esta denuncia por incorrecta"
-        clear_topic_flags: "Feito"
-        clear_topic_flags_title: "Este tema investigouse e as incidencias arranxáronse. Preme Feito para eliminar as denuncias."
-        more: "(máis respostas...)"
-        dispositions:
-          agreed: "aceptar"
-          disagreed: "non aceptar"
-        flagged_by: "Denunciado por"
-        resolved_by: "Arranxado por"
-        took_action: "Tomadas medidas"
-        system: "Sistema"
-        error: "Algo foi mal"
-        reply_message: "Responder"
-        topic_flagged: "Este <strong>tema</strong> foi denunciado."
-        visit_topic: "Visite o tema para actuar"
-        was_edited: "A publicación editouse despois da primeira denuncia"
-        previous_flags_count: "Esta publicación xa se denunciou {{count}} veces."
       groups:
         primary: "Grupo primario"
         no_primary: "(non hai un grupo primario)"
@@ -1860,17 +1803,10 @@ gl:
         nav:
           new: "Novo"
           active: "Activo"
-          pending: "Pendente"
           staff: "Equipo"
           suspended: "Suspendido"
           suspect: "Sospeitoso"
         approved: "Aprobado?"
-        approved_selected:
-          one: "aprobar usuario"
-          other: "aprobar os ({{count}}) usuarios"
-        reject_selected:
-          one: "rexeitar usuario"
-          other: "rexeitar os ({{count}}) usuarios"
         titles:
           active: "Usuarios activos"
           new: "Novos usuarios"
@@ -1885,12 +1821,6 @@ gl:
           moderators: "Moderadores"
           suspended: "Usuarios suspendidos"
           suspect: "Usuarios sospeitosos"
-        reject_successful:
-          one: "Rexeitouse un usuario correctamente."
-          other: "Rexeitáronse %{count} usuarios correctamente."
-        reject_failures:
-          one: "Produciuse un fallo rexeitando o usuario."
-          other: "Produciuse un fallo rexeitando os %{count} usuarios."
         not_verified: "Sen verificar"
         check_email:
           title: "Amosar o enderezo de correo-e deste usuario"

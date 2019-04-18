@@ -37,7 +37,12 @@ ja:
   redirect_warning: "選択されたリンクがこのフォーラムに投稿されたものと確認できませんでした。このまま進むには、下のリンクを選択してください。"
   on_another_topic: "別のトピックで"
   themes:
+    bad_color_scheme: "テーマを更新できません、無効なカラーパレットです"
     other_error: "サーバーに不具合があるので、テーマを更新してください。"
+    import_error:
+      generic: テーマをインポートするときにエラーが起こりました
+      about_json: "重要なエラー: about.json が存在しないか無効です"
+      unpack_failed: "ファイルの解凍に失敗しました"
     errors:
       component_no_user_selectable: "テーマコンポーネントはユーザー選択可能にできません"
       component_no_default: "テーマコンポーネントはデフォルトテーマにできません"
@@ -151,8 +156,6 @@ ja:
     user_topics: "@%{username}からの最新トピック"
   too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
-  queue:
-    delete_reason: "投稿の承認機能を用いて削除されました"
   groups:
     default_names:
       everyone: "みなさん"
@@ -781,7 +784,6 @@ ja:
     max_age_unmatched_emails: "(N)日間一致しなかったスクリーンメールアドレスを削除"
     max_age_unmatched_ips: "(N)日間一致しなかったスクリーンIPアドレスを削除"
     num_flaggers_to_close_topic: "介入するため、自動的にトピックを停止するために必要なフラグを付けたユニークユーザの数"
-    num_flags_to_close_topic: "トピックの介入のため、自動的にトピックを停止するために必要なフラグの数"
     auto_respond_to_flag_actions: "フラグを解除時の自動返信を有効にする"
     min_first_post_typing_time: "最初の投稿に必要なタイピング時間。閾値以下の場合、投稿は自動的に承認キューに追加されます。0を設定すると無効化されます(推奨されません)"
     reply_by_email_enabled: "メールでのトピックへの返信を有効化する"
@@ -925,9 +927,6 @@ ja:
     ip_address:
       blocked: "あなたのIPアドレスからの新規登録は許可されていません"
       max_new_accounts_per_registration_ip: "あなたのIPアドレスからの新規登録は行えません(登録可能な数を超えています)。スタッフへお問い合わせください。"
-  flags_reminder:
-    subject_template:
-      other: "%{count}件の通報が対応待ちです"
   invite_mailer:
     subject_template: "%{inviter_name}が%{site_domain_name}の%{topic_title}に招待しました。"
     text_body_template: |
@@ -1005,8 +1004,6 @@ ja:
     agreed: "伝えてくれてありがとうございます。問題に同意し、調査しています"
     agreed_and_deleted: "伝えてくれてありがとうございます。問題に同意し、投稿を削除します"
     disagreed: "伝えてくれてありがとうございます。調査しています"
-    deferred: "伝えてくれてありがとうございます。調査しています"
-    deferred_and_deleted: "伝えてくれてありがとうございます。投稿を削除しました"
   system_messages:
     private_topic_title: "トピック #%{id}"
     contents_hidden: "内容を確認するためにその投稿にアクセスして下さい。"

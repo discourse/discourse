@@ -878,15 +878,13 @@ export default Ember.Component.extend({
     if ($preview.find(".codeblock-image").length === 0) {
       this.$(".d-editor-preview *")
         .contents()
-        .filter(function() {
-          return this.nodeType === 3; // TEXT_NODE
-        })
         .each(function() {
-          $(this).replaceWith(
-            $(this)
-              .text()
-              .replace(imageScaleRegex, "<span class='codeblock-image'>$&</a>")
-          );
+          if (this.nodeType !== 3) return; // TEXT_NODE
+          const $this = $(this);
+
+          if ($this.text().match(imageScaleRegex)) {
+            $this.wrap("<span class='codeblock-image'></span>");
+          }
         });
     }
 
@@ -965,7 +963,11 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      if (this.get("allowUpload") && this.get("uploadIcon")) {
+      if (
+        this.get("allowUpload") &&
+        this.get("uploadIcon") &&
+        !this.site.mobileView
+      ) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",

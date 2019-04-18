@@ -42,7 +42,8 @@ class ReviewablesController < ApplicationController
         result
       end,
       meta: filters.merge(
-        total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types
+        total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types,
+        reviewable_count: Reviewable.list_for(current_user).count
       )
     }
     if (offset + PER_PAGE) < total_rows
@@ -61,7 +62,10 @@ class ReviewablesController < ApplicationController
 
     # topics isn't indexed on `reviewable_score` and doesn't know what the current user can see,
     # so let's query from the inside out.
-    Reviewable.viewable_by(current_user).pending.each do |r|
+    pending = Reviewable.viewable_by(current_user).pending
+    pending = pending.where("score >= ?", SiteSetting.min_score_default_visibility)
+
+    pending.each do |r|
       topic_ids << r.topic_id
 
       meta = stats[r.topic_id] ||= { count: 0, unique_users: 0 }
@@ -90,6 +94,15 @@ class ReviewablesController < ApplicationController
         types: meta_types
       }
     )
+  end
+
+  def destroy
+    reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: current_user)
+    raise Discourse::NotFound.new if reviewable.blank?
+
+    reviewable.perform(current_user, :delete)
+
+    render json: success_json
   end
 
   def update
@@ -140,6 +153,21 @@ class ReviewablesController < ApplicationController
     end
   end
 
+  def settings
+    raise Discourse::InvalidAccess.new unless current_user.admin?
+
+    post_action_types = PostActionType.where(id: PostActionType.flag_types.values).order('id')
+    data = { reviewable_score_types: post_action_types }
+
+    if request.put?
+      params[:bonuses].each do |id, bonus|
+        PostActionType.where(id: id).update_all(score_bonus: bonus.to_f)
+      end
+    end
+
+    render_serialized(data, ReviewableSettingsSerializer, rest_serializer: true)
+  end
+
 protected
 
   def find_reviewable
@@ -161,7 +189,8 @@ protected
   def meta_types
     {
       created_by: 'user',
-      target_created_by: 'user'
+      target_created_by: 'user',
+      reviewed_by: 'user'
     }
   end
 

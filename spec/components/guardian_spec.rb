@@ -9,6 +9,7 @@ describe Guardian do
   let(:user) { Fabricate(:user) }
   let(:moderator) { Fabricate(:moderator) }
   let(:admin) { Fabricate(:admin) }
+  let(:anonymous_user) { Fabricate(:anonymous) }
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
@@ -1747,6 +1748,24 @@ describe Guardian do
         SiteSetting.tos_topic_id = tos_topic.id
         expect(Guardian.new(admin).can_delete?(tos_topic)).to be_falsey
       end
+
+      it "returns true for own topics" do
+        topic.update_attribute(:posts_count, 1)
+        topic.update_attribute(:created_at, Time.zone.now)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_truthy
+      end
+
+      it "returns false if delete their own topics" do
+        topic.update_attribute(:posts_count, 2)
+        topic.update_attribute(:created_at, Time.zone.now)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
+      end
+
+      it "returns false if delete their own topics" do
+        topic.update_attribute(:posts_count, 1)
+        topic.update_attribute(:created_at, 48.hours.ago)
+        expect(Guardian.new(topic.user).can_delete?(topic)).to be_falsey
+      end
     end
 
     context 'a Post' do
@@ -1774,8 +1793,9 @@ describe Guardian do
         expect(Guardian.new(Fabricate(:user)).can_delete?(post)).to be_falsey
       end
 
-      it "returns false when it's the OP, even as a moderator" do
-        post.update_attribute :post_number, 1
+      it "returns false when it's the OP, even as a moderator if there are at least two posts" do
+        post.update_attribute(:post_number, 1)
+        Fabricate(:post, topic: post.topic)
         expect(Guardian.new(moderator).can_delete?(post)).to be_falsey
       end
 
@@ -2384,6 +2404,20 @@ describe Guardian do
       it "is true for admins" do
         expect(Guardian.new(admin).can_edit_username?(user)).to be_truthy
       end
+
+      it "is true for admins when changing anonymous username" do
+        expect(Guardian.new(admin).can_edit_username?(anonymous_user)).to be_truthy
+      end
+    end
+
+    context "for anonymous user" do
+      before do
+        SiteSetting.allow_anonymous_posting = true
+      end
+
+      it "is false" do
+        expect(Guardian.new(anonymous_user).can_edit_username?(anonymous_user)).to be_falsey
+      end
     end
 
     context 'for a new user' do
@@ -2455,6 +2489,16 @@ describe Guardian do
     context 'when allowed in settings' do
       before do
         SiteSetting.email_editable = true
+      end
+
+      context "for anonymous user" do
+        before do
+          SiteSetting.allow_anonymous_posting = true
+        end
+
+        it "is false" do
+          expect(Guardian.new(anonymous_user).can_edit_email?(anonymous_user)).to be_falsey
+        end
       end
 
       it "is false when not logged in" do
@@ -2533,6 +2577,16 @@ describe Guardian do
 
     it "is false for regular users to edit another user's name" do
       expect(Guardian.new(build(:user)).can_edit_name?(build(:user, created_at: 1.minute.ago))).to be_falsey
+    end
+
+    context "for anonymous user" do
+      before do
+        SiteSetting.allow_anonymous_posting = true
+      end
+
+      it "is false" do
+        expect(Guardian.new(anonymous_user).can_edit_name?(anonymous_user)).to be_falsey
+      end
     end
 
     context 'for a new user' do
@@ -2657,9 +2711,6 @@ describe Guardian do
   end
 
   describe '#can_ignore_user?' do
-    before do
-      SiteSetting.ignore_user_enabled = true
-    end
 
     let(:guardian) { Guardian.new(trust_level_2) }
 

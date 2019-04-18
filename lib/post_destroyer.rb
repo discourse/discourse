@@ -85,7 +85,7 @@ class PostDestroyer
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
-      UserActionManager.topic_created(@post.topic)
+      UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
       StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
     end
@@ -167,8 +167,9 @@ class PostDestroyer
     I18n.with_locale(SiteSetting.default_locale) do
 
       # don't call revise from within transaction, high risk of deadlock
+      key = @post.is_first_post? ? 'js.topic.deleted_by_author' : 'js.post.deleted_by_author'
       @post.revise(@user,
-        { raw: I18n.t('js.post.deleted_by_author', count: delete_removed_posts_after) },
+        { raw: I18n.t(key, count: delete_removed_posts_after) },
         force_new_version: true
       )
 
@@ -180,6 +181,8 @@ class PostDestroyer
   end
 
   def user_recovered
+    return unless @post.user_deleted?
+
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
@@ -187,7 +190,9 @@ class PostDestroyer
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
     last_revision = @post.revisions.last
-    @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true) if last_revision.present?
+    if last_revision.present? && last_revision.modifications['raw'].present?
+      @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
+    end
   end
 
   private

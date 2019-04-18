@@ -18,6 +18,7 @@ class CategorySerializer < BasicCategorySerializer
              :custom_fields,
              :allowed_tags,
              :allowed_tag_groups,
+             :allow_global_tags,
              :topic_featured_link_allowed,
              :search_priority
 

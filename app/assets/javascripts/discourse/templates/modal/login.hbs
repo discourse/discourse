@@ -1,5 +1,5 @@
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
-  {{#d-modal-body title="login.title" class=(concat "login-modal" " " (if hasAtLeastOneLoginButton "has-alt-auth"))}}
+  {{#d-modal-body title="login.title" class=modalBodyClasses}}
 
     {{#if canLoginLocal}}
       <form id='login-form' method='post'>

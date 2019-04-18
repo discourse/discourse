@@ -255,6 +255,8 @@ QUnit.test("Posting on a different topic", async assert => {
 QUnit.test("Create an enqueued Reply", async assert => {
   await visit("/t/internationalization-localization/280");
 
+  assert.notOk(find(".pending-posts .reviewable-item").length);
+
   await click("#topic-footer-buttons .btn.create");
   assert.ok(exists(".d-editor-input"), "the composer input is visible");
   assert.ok(!exists("#reply-title"), "there is no title since this is a reply");
@@ -270,6 +272,8 @@ QUnit.test("Create an enqueued Reply", async assert => {
 
   await click(".modal-footer button");
   assert.ok(invisible(".d-modal"), "the modal can be dismissed");
+
+  assert.ok(find(".pending-posts .reviewable-item").length);
 });
 
 QUnit.test("Edit the first post", async assert => {
@@ -638,6 +642,8 @@ QUnit.test("Can switch states without abandon popup", async assert => {
     "mode should have changed"
   );
 
+  assert.ok(find(".save-animation"), "save animation should show");
+
   toggleCheckDraftPopup(false);
 });
 
@@ -658,6 +664,27 @@ QUnit.test("Loading draft also replaces the recipients", async assert => {
 
   assert.equal(find(".users-input .item:eq(0)").text(), "codinghorror");
 });
+
+QUnit.test(
+  "Deleting the text content of the first post in a private message",
+  async assert => {
+    Discourse.SiteSettings.allow_uncategorized_topics = false;
+
+    await visit("/t/34");
+
+    await click("#post_1 .d-icon-ellipsis-h");
+
+    await click("#post_1 .d-icon-pencil-alt");
+
+    await fillIn(".d-editor-input", "");
+
+    assert.equal(
+      find(".d-editor-container textarea").attr("placeholder"),
+      I18n.t("composer.reply_placeholder"),
+      "it should not block because of missing category"
+    );
+  }
+);
 
 const assertImageResized = (assert, uploads) => {
   assert.equal(
@@ -733,4 +760,20 @@ QUnit.test("Image resizing buttons", async assert => {
   uploads[9] = "![identicalImage|300x300,75%](upload://identicalImage.png)";
   await click(find(".button-wrapper .scale-btn[data-scale='75']")[5]);
   assertImageResized(assert, uploads);
+
+  await fillIn(
+    ".d-editor-input",
+    `
+![test|690x313](upload://test.png)
+
+\`<script>alert("xss")</script>\`
+    `
+  );
+
+  await triggerEvent($(".d-editor-preview img"), "mouseover");
+
+  assert.ok(
+    find("script").length === 0,
+    "it does not unescapes script tags in code blocks"
+  );
 });

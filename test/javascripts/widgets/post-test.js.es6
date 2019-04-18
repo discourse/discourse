@@ -16,6 +16,24 @@ widgetTest("basic elements", {
   }
 });
 
+widgetTest("post - links", {
+  template: '{{mount-widget widget="post-contents" args=args}}',
+  beforeEach() {
+    this.set("args", {
+      cooked:
+        "<a href='http://link1.example.com/'>first link</a> and <a href='http://link2.example.com/?some=query'>second link</a>",
+      linkCounts: [
+        { url: "http://link1.example.com/", clicks: 1, internal: true },
+        { url: "http://link2.example.com/", clicks: 2, internal: true }
+      ]
+    });
+  },
+  async test(assert) {
+    assert.equal(find(".badge.clicks:nth(0)").text(), "1");
+    assert.equal(find(".badge.clicks:nth(1)").text(), "2");
+  }
+});
+
 widgetTest("wiki", {
   template:
     '{{mount-widget widget="post" args=args showHistory=(action "showHistory")}}',
@@ -856,11 +874,13 @@ widgetTest("pm map", {
 widgetTest("post notice - with username", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
       postNoticeType: "returning",
-      postNoticeTime: new Date(2010, 0, 1),
+      postNoticeTime: twoDaysAgo,
       username: "codinghorror",
       name: "Jeff",
       created_at: new Date()
@@ -871,7 +891,7 @@ widgetTest("post notice - with username", {
       find(".post-notice.returning-user:not(.old)")
         .text()
         .trim(),
-      I18n.t("post.notice.return", { user: "codinghorror", time: "Jan '10" })
+      I18n.t("post.notice.return", { user: "codinghorror", time: "2d ago" })
     );
   }
 });

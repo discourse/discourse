@@ -106,11 +106,10 @@
 }
 
 .d-editor-spacer {
-  width: 1px;
-  height: 20px;
+  height: 16px;
   margin: 0 5px;
-  background-color: $primary-low;
   display: inline-block;
+  border-left: 1px solid $primary-low-mid;
 }
 
 .d-editor-preview-wrapper {

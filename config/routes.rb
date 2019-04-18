@@ -240,13 +240,11 @@ Discourse::Application.routes.draw do
 
     get "version_check" => "versions#show"
 
-    get "dashboard" => "dashboard_next#index"
-    get "dashboard/general" => "dashboard_next#general"
-    get "dashboard/moderation" => "dashboard_next#moderation"
-    get "dashboard/security" => "dashboard_next#security"
-    get "dashboard/reports" => "dashboard_next#reports"
-
-    get "dashboard-old" => "dashboard#index"
+    get "dashboard" => "dashboard#index"
+    get "dashboard/general" => "dashboard#general"
+    get "dashboard/moderation" => "dashboard#moderation"
+    get "dashboard/security" => "dashboard#security"
+    get "dashboard/reports" => "dashboard#reports"
 
     resources :dashboard, only: [:index] do
       collection do
@@ -320,11 +318,14 @@ Discourse::Application.routes.draw do
   get "review" => "reviewables#index" # For ember app
   get "review/:reviewable_id" => "reviewables#show", constraints: { reviewable_id: /\d+/ }
   get "review/topics" => "reviewables#topics"
+  get "review/settings" => "reviewables#settings"
+  put "review/settings" => "reviewables#settings"
   put "review/:reviewable_id/perform/:action_id" => "reviewables#perform", constraints: {
     reviewable_id: /\d+/,
     action_id: /[a-z\_]+/
   }
   put "review/:reviewable_id" => "reviewables#update", constraints: { reviewable_id: /\d+/ }
+  delete "review/:reviewable_id" => "reviewables#destroy", constraints: { reviewable_id: /\d+/ }
 
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
@@ -333,6 +334,7 @@ Discourse::Application.routes.draw do
   get "session/csrf" => "session#csrf"
   get "session/email-login/:token" => "session#email_login"
   post "session/email-login/:token" => "session#email_login"
+  get "session/otp/:token" => "session#one_time_password", constraints: { token: /[0-9a-f]+/ }
   get "composer_messages" => "composer_messages#index"
   post "composer/parse_html" => "composer#parse_html"
 
@@ -843,6 +845,8 @@ Discourse::Application.routes.draw do
   post "/user-api-key" => "user_api_keys#create"
   post "/user-api-key/revoke" => "user_api_keys#revoke"
   post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
+  get "/user-api-key/otp" => "user_api_keys#otp"
+  post "/user-api-key/otp" => "user_api_keys#create_otp"
 
   get "/safe-mode" => "safe_mode#index"
   post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"

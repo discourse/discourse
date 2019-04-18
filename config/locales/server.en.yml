@@ -242,6 +242,7 @@ en:
   provider_not_found: "You are not permitted to view the requested resource. The authentication provider does not exist."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
+  email_template_cant_be_modified: "This email template can't be modified"
 
   reading_time: "Reading time"
   likes: "Likes"
@@ -590,7 +591,7 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       description_incomplete: "The category description post must have at least one paragraph."
-      permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category."
+      permission_conflict: "Any group that is allowed to access a subcategory must also be allowed to access the parent category. The following groups have access to one of the subcategories, but no access to parent category: %{group_names}."
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
@@ -616,6 +617,9 @@ en:
   post:
     image_placeholder:
       broken: "This image is broken"
+    has_likes:
+      one: "%{count} Like"
+      other: "%{count} Likes"
 
   rate_limiter:
     slow_down: "You’ve performed this action too many times, please try again later."
@@ -742,6 +746,7 @@ en:
       opera: "Opera"
       ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      discoursehub: "DiscourseHub app"
       unknown: "unknown browser"
     device:
       android: "Android Device"
@@ -876,7 +881,7 @@ en:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
 
   ignored:
-    hidden_content: "<p>Hidden content</p>"
+    hidden_content: "<p>Ignored content</p>"
 
   archetypes:
     regular:
@@ -888,8 +893,8 @@ en:
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
 
   unsubscribed:
-    title: "Unsubscribed!"
-    description: "<b>%{email}</b> has been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
+    title: "Email preferences updated!"
+    description: "email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
@@ -899,11 +904,23 @@ en:
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
     mailing_list_mode: "Turn off mailing list mode"
-    disable_digest_emails: "Stop sending me summary emails"
     all: "Don't send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
     not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
     log_out: "Log Out"
+    submit: "Save preferences"
+    digest_frequency:
+      title: "You are receiving summary emails %{frequency}"
+      select_title: 'Set summary emails frequency to:'
+      
+      never: 'never'
+      every_30_minutes: "every 30 minutes"
+      every_hour: "hourly"
+      daily: "daily"
+      weekly: "weekly"
+      every_month: "every month"
+      every_six_months: "every six months"
+
 
   user_api_key:
     title: "Authorize application access"
@@ -912,6 +929,7 @@ en:
     read_write: "read/write"
     description: '"%{application_name}" is requesting the following access to your account:'
     instructions: 'We just generated a new user API key for you to use with "%{application_name}", please paste the following key into your application:'
+    otp_description: 'Would you like to allow "%{application_name}" to access this site?'
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
     scopes:
@@ -921,7 +939,10 @@ en:
       session_info: "Read user session info"
       read: "Read all"
       write: "Write all"
-
+      one_time_password: "Create a one-time login token"
+    invalid_public_key: "Sorry, the public key is invalid."
+    invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
+    invalid_token: "Missing, invalid or expired token."
   flags:
     errors:
       already_handled: "Flag was already handled"
@@ -1446,7 +1467,7 @@ en:
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by trusted users or staff."
+    invite_only: "All new users must be explicitly invited by trusted users or staff. Public registration is disabled."
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
@@ -1481,7 +1502,6 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_yahoo_logins: "Enable Yahoo authentication"
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Client ID of your Google application."
@@ -1560,6 +1580,7 @@ en:
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
+    suggested_topics_unread_max_days_old: "Suggested unread topics should not be more than n days old."
 
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
@@ -1734,6 +1755,7 @@ en:
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses. Example: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
+    strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
     disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
 
@@ -1830,8 +1852,6 @@ en:
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
-    ignore_user_enabled: "[Beta] Allow ignoring users."
-
     ignored_users_count_message_threshold: "Notify moderators if a particular user is ignored by this many other users."
 
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
@@ -1872,7 +1892,9 @@ en:
 
     topic_page_title_includes_category: "Topic page title includes the category name."
 
-    native_app_install_banner: "Asks recurring visitors to install Discourse native app."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
 
     share_anonymized_statistics: "Share anonymized usage statistics."
 
@@ -1947,7 +1969,6 @@ en:
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
-    default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 
@@ -1959,6 +1980,8 @@ en:
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     default_text_size: "Text size which is selected by default"
+
+    default_title_count_mode: "Default mode for the page title counter"
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
@@ -2029,6 +2052,7 @@ en:
       staged_users_disabled: "You must first enable 'staged users' before enabling this setting."
       reply_by_email_disabled: "You must first enable 'reply by email' before enabling this setting."
       sso_url_is_empty: "You must set a 'sso url' before enabling this setting."
+      sso_invite_only: "You cannot enable sso and invite only at the same time."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
       min_username_length_range: "You cannot set the minimum above the maximum."
@@ -2217,13 +2241,13 @@ en:
       same_ip_address: "Same IP address (%{ip_address}) as other users"
       inactive_user: "Inactive user"
 
-  flags_reminder:
-    flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. [Please review them](%{base_path}/admin/flags)."
-      other: "Flags were submitted over %{count} hours ago. [Please review them](%{base_path}/admin/flags)."
+  reviewables_reminder:
+    submitted:
+      one: "Items were submitted over 1 hour ago. [Please review them](%{base_path}/review)."
+      other: "Items were submitted over %{count} hours ago. [Please review them](%{base_path}/review)."
     subject_template:
-      one: "1 flag waiting to be handled"
-      other: "%{count} flags waiting to be handled"
+      one: "1 item needs to be reviewed"
+      other: "%{count} items need to be reviewed"
 
   unsubscribe_mailer:
     title: "Unsubscribe Mailer"
@@ -2739,6 +2763,7 @@ en:
         %{post_error}
 
         If you can correct the problem, please try again.
+      date_invalid: "No post creation date found. Is the e-mail missing a Date: header?"
 
     email_reject_post_too_short:
       title: "Email Reject Post Too Short"
@@ -2938,7 +2963,7 @@ en:
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+        [Please review them](%{base_url}/review).
 
     download_remote_images_disabled:
       title: "Download Remote Images Disabled"
@@ -3404,6 +3429,19 @@ en:
       subject_template: "[%{email_prefix}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
+
+        Click the following link to confirm and activate your new account:
+        %{base_url}/u/activate-account/%{email_token}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+    activation_reminder:
+      title: "Activation Reminder"
+      subject_template: "[%{email_prefix}] Reminder to confirm your account"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        This is a friendly reminder to activate your account.
 
         Click the following link to confirm and activate your new account:
         %{base_url}/u/activate-account/%{email_token}
@@ -4122,17 +4160,17 @@ en:
         This badge is granted to congratulate two new users each month for their excellent overall contributions, as measured by how often their posts were liked, and by whom.
     enthusiast:
       name: Enthusiast
-      description: Visited 10 days
+      description: Visited 10 consecutive days
       long_description: |
         This badge is granted for visiting 10 consecutive days. Thanks for sticking with us for over a week!
     aficionado:
       name: Aficionado
-      description: Visited 100 days
+      description: Visited 100 consecutive days
       long_description: |
         This badge is granted for visiting 100 consecutive days. That’s more than three months!
     devotee:
       name: Devotee
-      description: Visited 365 days
+      description: Visited 365 consecutive days
       long_description: |
         This badge is granted for visiting 365 consecutive days. Wow, an entire year!
     badge_title_metadata: "%{display_name} badge on %{site_title}"
@@ -4241,10 +4279,12 @@ en:
             choices:
               open:
                 label: "Public"
-                description: "Anyone can access this community and sign up for an account"
+                description: "Anyone can access this community"
               restricted:
                 label: "Private"
-                description: "Only people I have invited or approved can access this community"
+                description: "Only logged in users can access this community"
+          invite_only:
+            placeholder: "People must be explicitly invited. Public registration is disabled."
 
       contact:
         title: "Contact"
@@ -4350,23 +4390,32 @@ en:
       posted: '%{username} posted in "%{topic}" - %{site_title}'
       private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
-      custom: "Notification from %{site_title}"
+      custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
     not_found: "not found"
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
-    update: "Updated"
-    create: "Created"
-    destroy: "Destroyed"
-
 
   reviewables:
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
+    reasons:
+      post_count: "The poster has not met the `approve_post_count` requirements."
+      trust_level: "The poster has not met the `approve_unless_trust_level` requirement."
+      new_topics_unless_trust_level: "The poster has not met the `approve_new_topics_unless_trust_level` requirement."
+      fast_typer: "The poster typed in their post suspiciously fast. See: `min_first_post_typing_time`."
+      auto_silence_regexp: "The post matched the `auto_silence_first_post_regex` setting."
+      watched_word: "The post included a Watched Word."
+      staged: "The poster was staged and `approve_unless_staged` was set."
+      category: "The category of the post requires approval."
+      must_approve_users: "The user must be approved because `must_approve_users` is enabled."
+      invite_only: "The user must be approved because `invite_only` is enabled."
+
     actions:
       agree:
         title: "Agree..."
@@ -4392,11 +4441,19 @@ en:
       delete:
         title: "Delete..."
       delete_and_ignore:
-        title: "Delete Post and Ignore flag"
+        title: "Delete Post and Ignore"
         description: "Delete post; if the first post, delete the topic as well"
+      delete_and_ignore_replies:
+        title: "Delete Post + Replies and Ignore"
+        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        confirm: "Are you sure you want to delete the replies to the post as well?"
       delete_and_agree:
-        title: "Delete Post and Agree with flag"
+        title: "Delete Post and Agree"
         description: "Delete post; if the first post, delete the topic as well"
+      delete_and_agree_replies:
+        title: "Delete Post + Replies and Agree"
+        description: "Delete post and all of its replies; if the first post, delete the topic as well"
+        confirm: "Are you sure you want to delete the replies to the post as well?"
       disagree_and_restore:
         title: "Disagree and Restore Post"
         description: "Restore the post so that all users can see it."
@@ -4406,6 +4463,16 @@ en:
         title: "Ignore"
       approve:
         title: "Approve"
+      approve_user:
+        title: "Approve User"
+      reject_user:
+        title: "Delete User..."
+        delete:
+          title: "Delete User"
+          description: "The user will be deleted from the forum."
+        block:
+          title: "Delete and Block User"
+          description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
       delete_user:

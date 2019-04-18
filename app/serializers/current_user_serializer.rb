@@ -24,7 +24,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_delete_account,
              :should_be_redirected_to_top,
              :redirected_to_top,
-             :disable_jump_reply,
              :custom_fields,
              :muted_category_ids,
              :dismissed_banner_key,
@@ -42,7 +41,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :top_category_ids,
              :hide_profile_and_presence,
              :groups,
-             :second_factor_enabled
+             :second_factor_enabled,
+             :ignored_users,
+             :title_count_mode
 
   def groups
     object.visible_groups.pluck(:id, :name).map { |id, name| { id: id, name: name.downcase } }
@@ -76,16 +77,16 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_option.enable_quoting
   end
 
-  def disable_jump_reply
-    object.user_option.disable_jump_reply
-  end
-
   def external_links_in_new_tab
     object.user_option.external_links_in_new_tab
   end
 
   def dynamic_favicon
     object.user_option.dynamic_favicon
+  end
+
+  def title_count_mode
+    object.user_option.title_count_mode
   end
 
   def automatically_unpin_topics
@@ -155,6 +156,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def muted_category_ids
     CategoryUser.lookup(object, :muted).pluck(:category_id)
+  end
+
+  def ignored_users
+    IgnoredUser.where(user: object.id).joins(:ignored_user).pluck(:username)
   end
 
   def top_category_ids

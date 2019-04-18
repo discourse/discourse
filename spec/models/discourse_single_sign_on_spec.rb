@@ -102,6 +102,31 @@ describe DiscourseSingleSignOn do
     expect(user.name).to eq("Bob O'Bob")
   end
 
+  context "reviewables" do
+    let(:sso) do
+      DiscourseSingleSignOn.new.tap do |sso|
+        sso.username = "staged"
+        sso.name = "Bob O'Bob"
+        sso.email = "bob@obob.com"
+        sso.external_id = "B"
+      end
+    end
+
+    it "doesn't create reviewables if we aren't approving users" do
+      user = sso.lookup_or_create_user(ip_address)
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_blank
+    end
+
+    it "creates reviewables if needed" do
+      SiteSetting.must_approve_users = true
+      user = sso.lookup_or_create_user(ip_address)
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_present
+      expect(reviewable).to be_pending
+    end
+  end
+
   it "can set admin and moderator" do
     admin_group = Group[:admins]
     mod_group = Group[:moderators]
@@ -529,7 +554,7 @@ describe DiscourseSingleSignOn do
       sso.avatar_url = "http://awesome.com/image.png"
       sso.suppress_welcome_message = true
 
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
@@ -540,8 +565,7 @@ describe DiscourseSingleSignOn do
       # junk avatar id should be updated
       old_id = user.uploaded_avatar_id
       Upload.destroy(old_id)
-
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
