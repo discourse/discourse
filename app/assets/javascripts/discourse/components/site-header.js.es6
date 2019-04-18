@@ -7,11 +7,6 @@ import PanEvents, {
   SWIPE_VELOCITY_THRESHOLD
 } from "discourse/mixins/pan-events";
 
-const _flagProperties = [];
-function addFlagProperty(prop) {
-  _flagProperties.pushObject(prop);
-}
-
 const PANEL_BODY_MARGIN = 30;
 
 //android supports pulling in from the screen edges
@@ -32,7 +27,8 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   @observes(
     "currentUser.unread_notifications",
-    "currentUser.unread_private_messages"
+    "currentUser.unread_private_messages",
+    "currentUser.reviewable_count"
   )
   notificationsChanged() {
     this.queueRerender();
@@ -274,10 +270,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 
   buildArgs() {
     return {
-      flagCount: _flagProperties.reduce(
-        (prev, cur) => prev + (this.get(cur) || 0),
-        0
-      ),
       topic: this._topic,
       canSignUp: this.get("canSignUp")
     };
@@ -409,23 +401,6 @@ const SiteHeaderComponent = MountWidget.extend(Docking, PanEvents, {
 });
 
 export default SiteHeaderComponent;
-
-function applyFlaggedProperties() {
-  const args = _flagProperties.slice();
-  args.push(
-    function() {
-      this.queueRerender();
-    }.on("init")
-  );
-
-  SiteHeaderComponent.reopen({
-    _flagsChanged: Ember.observer.apply(this, args)
-  });
-}
-
-addFlagProperty("currentUser.reviewable_count");
-
-export { addFlagProperty, applyFlaggedProperties };
 
 export function headerHeight() {
   const $header = $("header.d-header");
