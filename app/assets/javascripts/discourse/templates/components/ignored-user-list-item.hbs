@@ -1,3 +1,4 @@
-<span class="ignored-user-list-item">
-  {{item}}<a class="remove" {{action "removeItem" item}}>{{d-icon "times"}}</a>
-</span>
+<div class="ignored-user-list-item">
+  <span class="ignored-user-name">{{item}}</span>
+  <a class="remove-ignored-user no-text btn-icon btn" {{action "removeItem" item}}>{{d-icon "times"}}</a>
+</div>

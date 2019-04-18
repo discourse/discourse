@@ -1,6 +1,27 @@
 .ignored-user-list-item {
-  min-width: 60px;
+  border: 1px solid #e9e9e9;
+  border-radius: 0.25em;
+  padding: 0;
+  margin: 0.125em 0.25em 0.125em 0;
+  display: flex;
+  align-items: center;
+  height: 26px;
+  margin: 4px 4px;
 }
-.btn-remove-item {
-  margin: 5px;
+
+.remove-ignored-user {
+  display: flex;
+  flex: 1 0 0px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 0 0.25em 0.25em 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 100%;
+}
+
+.ignored-user-name {
+  padding-left: 5px;
+  padding-right: 5px;
 }

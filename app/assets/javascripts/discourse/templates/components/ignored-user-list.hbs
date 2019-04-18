@@ -1,7 +1,7 @@
-<div class="ac-wrap clearfix" style="width: 480px;">
+<div class="ac-wrap">
   {{#each items as |item|}}
     {{ignored-user-list-item item=item onRemoveItem=(action "removeItem")}}
   {{/each}}
-
-  {{d-button action=(action "newItem") class="btn-default btn-remove-item" icon="plus"}}
 </div>
+<div class="instructions">{{i18n 'user.ignored_users_instructions'}}</div>
+<div>{{#d-button action=(action "newItem") class="btn-default" icon="plus"}}Add ...{{/d-button}}</div>
