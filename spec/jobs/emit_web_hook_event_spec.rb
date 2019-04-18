@@ -47,7 +47,7 @@ describe Jobs::EmitWebHookEvent do
         stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: response_status)
       end
 
-      let(:response_status) { 410}
+      let(:response_status) { 410 }
 
       it 'disables the webhook' do
         expect do
