@@ -4106,6 +4106,7 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
+        add_group: "add group"
         uploaded_image_list:
           label: "Edit list"
           empty: "There are no pictures yet. Please upload one."

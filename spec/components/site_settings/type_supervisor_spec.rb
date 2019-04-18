@@ -72,9 +72,14 @@ describe SiteSettings::TypeSupervisor do
       it "'uploaded_image_list' should be at 17th position" do
         expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
       end
-
       it "'upload' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:upload]).to eq(18)
+      end
+      it "'group' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:group]).to eq(19)
+      end
+      it "'group_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:group_list]).to eq(20)
       end
     end
   end
