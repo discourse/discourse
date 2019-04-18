@@ -1,19 +1,15 @@
-# Enabling `must_approve_users` on an existing site is odd, so we assume that the
-# existing users are approved.
-DiscourseEvent.on(:site_setting_saved) do |site_setting|
-  name = site_setting.name.to_sym
-  next unless site_setting.saved_change_to_value?
-
-  if name == :must_approve_users && site_setting.value == 't'
+DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
+  # Enabling `must_approve_users` on an existing site is odd, so we assume that the
+  # existing users are approved.
+  if name == :must_approve_users && new_value == true
     User.where(approved: false).update_all(approved: true)
   end
 
   if name == :emoji_set
     Emoji.clear_cache
 
-    previous_value = site_setting.attribute_in_database(:value) || SiteSetting.defaults[:emoji_set]
-    before = "/images/emoji/#{previous_value}/"
-    after = "/images/emoji/#{site_setting.value}/"
+    before = "/images/emoji/#{old_value}/"
+    after = "/images/emoji/#{new_value}/"
 
     Scheduler::Defer.later("Fix Emoji Links") do
       DB.exec("UPDATE posts SET cooked = REPLACE(cooked, :before, :after) WHERE cooked LIKE :like",
