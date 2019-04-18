@@ -1,6 +1,6 @@
 /* You might be looking for navigation-item. */
 import computed from "ember-addons/ember-computed-decorators";
-import {popupAjaxError} from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
 
@@ -18,16 +18,14 @@ export default Ember.Component.extend({
       });
     },
     newItem() {
-      const controller = showModal("ignore-duration-with-username", {
+      const modal = showModal("ignore-duration-with-username", {
         model: this.get("model")
       });
-      controller.setProperties({
-        onSuccess: (username) => {
+      modal.setProperties({
+        onSuccess: username => {
           this.get("items").addObject(username);
-        },
-        onClose: () => {
         }
       });
-    },
+    }
   }
 });
