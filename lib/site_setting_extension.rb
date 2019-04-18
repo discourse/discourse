@@ -344,19 +344,23 @@ module SiteSettingExtension
   end
 
   def remove_override!(name)
+    old_val = current[name]
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
     clear_uploads_cache(name)
     clear_cache!
+    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
   end
 
   def add_override!(name, val)
+    old_val = current[name]
     val, type = type_supervisor.to_db_value(name, val)
     provider.save(name, val, type)
     current[name] = type_supervisor.to_rb_value(name, val)
     clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
+    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
   end
 
   def notify_changed!
