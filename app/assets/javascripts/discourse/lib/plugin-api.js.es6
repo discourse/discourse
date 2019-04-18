@@ -536,7 +536,7 @@ class PluginApi {
     return reopenWidget(name, args);
   }
 
-  addFlagProperty(property) {
+  addFlagProperty() {
     deprecated(
       "addFlagProperty has been removed. Use the reviewable API instead."
     );
