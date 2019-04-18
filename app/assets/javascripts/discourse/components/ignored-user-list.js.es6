@@ -1,5 +1,3 @@
-/* You might be looking for navigation-item. */
-import computed from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
