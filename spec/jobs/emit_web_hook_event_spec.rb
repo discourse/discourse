@@ -44,8 +44,10 @@ describe Jobs::EmitWebHookEvent do
 
     context 'when the webhook has failed for 404 or 410' do
       before do
-        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: 410)
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: response_status)
       end
+
+      let(:response_status) { 410}
 
       it 'disables the webhook' do
         expect do
@@ -55,6 +57,20 @@ describe Jobs::EmitWebHookEvent do
             retry_count: described_class::MAX_RETRY_COUNT
           )
         end.to change { post_hook.reload.active }.to(false)
+      end
+
+      it 'logs webhook deactivation reason' do
+        subject.execute(
+          web_hook_id: post_hook.id,
+          event_type: described_class::PING_EVENT,
+          retry_count: described_class::MAX_RETRY_COUNT
+        )
+        user_history = UserHistory.find_by(action: UserHistory.actions[:web_hook_deactivate], acting_user: Discourse.system_user)
+        expect(user_history).to be_present
+        expect(user_history.context).to eq([
+          "webhook_id: #{post_hook.id}",
+          "webhook_response_status: #{response_status}"
+        ].to_s)
       end
     end
 

@@ -78,7 +78,10 @@ module Jobs
       when 200..299
         return
       when 404, 410
-        web_hook.update_attribute(:active, false) if @retry_count >= MAX_RETRY_COUNT
+        if @retry_count >= MAX_RETRY_COUNT
+          web_hook.update_attribute(:active, false)
+          StaffActionLogger.new(Discourse.system_user).log_web_hook_deactivate(web_hook, web_hook_response.status)
+        end
       else
         retry_web_hook
       end
