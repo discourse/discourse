@@ -364,6 +364,7 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
+      already_requested_membership: "You have already requested membership for this group."
     default_names:
       everyone: "everyone"
       admins: "admins"
