@@ -40,54 +40,88 @@ describe Jobs::EmitWebHookEvent do
   context 'when the web hook is failed' do
     before do
       SiteSetting.retry_web_hook_events = true
-
-      stub_request(:post, post_hook.payload_url)
-        .to_return(body: 'Invalid Access', status: 403)
     end
 
-    it 'retry if site setting is enabled' do
-      expect do
-        subject.execute(
-          web_hook_id: post_hook.id,
-          event_type: described_class::PING_EVENT
-        )
-      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
-    end
+    context 'when the webhook has failed for 404 or 410' do
+      before do
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: response_status)
+      end
 
-    it 'does not retry for more than maximum allowed times' do
-      expect do
+      let(:response_status) { 410 }
+
+      it 'disables the webhook' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT,
+            retry_count: described_class::MAX_RETRY_COUNT
+          )
+        end.to change { post_hook.reload.active }.to(false)
+      end
+
+      it 'logs webhook deactivation reason' do
         subject.execute(
           web_hook_id: post_hook.id,
           event_type: described_class::PING_EVENT,
           retry_count: described_class::MAX_RETRY_COUNT
         )
-      end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
+        user_history = UserHistory.find_by(action: UserHistory.actions[:web_hook_deactivate], acting_user: Discourse.system_user)
+        expect(user_history).to be_present
+        expect(user_history.context).to eq([
+          "webhook_id: #{post_hook.id}",
+          "webhook_response_status: #{response_status}"
+        ].to_s)
+      end
     end
 
-    it 'does not retry if site setting is disabled' do
-      SiteSetting.retry_web_hook_events = false
+    context 'when the webhook has failed' do
+      before do
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: 403)
+      end
 
-      expect do
+      it 'retry if site setting is enabled' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+      end
+
+      it 'does not retry for more than maximum allowed times' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT,
+            retry_count: described_class::MAX_RETRY_COUNT
+          )
+        end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
+      end
+
+      it 'does not retry if site setting is disabled' do
+        SiteSetting.retry_web_hook_events = false
+
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+      end
+
+      it 'properly logs error on rescue' do
+        stub_request(:post, post_hook.payload_url).to_raise("connection error")
         subject.execute(
           web_hook_id: post_hook.id,
           event_type: described_class::PING_EVENT
         )
-      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+
+        event = WebHookEvent.last
+        expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
+        expect(event.status).to eq(-1)
+        expect(MultiJson.load(event.response_headers)['error']).to eq('connection error')
+      end
     end
-
-    it 'properly logs error on rescue' do
-      stub_request(:post, post_hook.payload_url).to_raise("connection error")
-      subject.execute(
-        web_hook_id: post_hook.id,
-        event_type: described_class::PING_EVENT
-      )
-
-      event = WebHookEvent.last
-      expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
-      expect(event.status).to eq(-1)
-      expect(MultiJson.load(event.response_headers)['error']).to eq('connection error')
-    end
-
   end
 
   it 'does not raise an error for a ping event without payload' do
