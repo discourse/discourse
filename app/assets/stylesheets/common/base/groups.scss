@@ -1,7 +1,7 @@
 .groups-header {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  margin-bottom: 1em;
   .groups-header-new {
     order: 2;
     margin-bottom: 0.5em;
@@ -23,206 +23,128 @@
   }
 }
 
-.groups-table {
+.groups-boxes {
+  margin: 1em 0;
   width: 100%;
+  // IE11 falls back to flexbox
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  // Everything that's not IE11 uses grid
+  @supports (display: grid) {
+    display: grid;
+    grid-template-columns: repeat(4, 24%);
+    grid-column-gap: 1.333%;
+    grid-row-gap: 1em;
+    @include breakpoint("tablet") {
+      grid-template-columns: repeat(3, 32%);
+      grid-column-gap: 2%;
+    }
+    @include breakpoint("mobile") {
+      grid-template-columns: 100%;
+    }
+  }
 
-  tr {
-    td {
-      padding: 0.8em;
+  .group-box {
+    // Flex and margin are for IE11
+    flex: 1 1 24%;
+    margin: 1%;
+    @include breakpoint("mobile") {
+      margin: 0;
+    }
+    display: flex;
+    box-sizing: border-box;
+    cursor: pointer;
+    border: 1px solid $primary-low;
+    color: $primary;
+    .discourse-no-touch & {
+      transition: all 0.25s;
+      &:hover {
+        box-shadow: shadow("card");
+      }
+    }
+    .group-membership {
       color: $primary-medium;
-    }
-
-    td.groups-info {
-      width: 50%;
-    }
-
-    td.group-user-status {
-      .d-icon {
-        color: $primary;
+      margin-top: auto;
+      padding-top: 1em;
+      .is-group-owner,
+      .is-group-member {
+        color: $success;
       }
     }
-
-    td.groups-user-count {
-      width: 17%;
-      font-size: $font-up-2;
-      .d-icon {
-        display: none;
-      }
-    }
-
-    td.groups-table-type {
-      width: 17%;
-      font-size: $font-up-1;
-    }
-
-    td.groups-table-membership {
-      font-size: $font-up-1;
-
-      .group-membership-button {
-        font-size: $font-down-1;
-        display: inline-block;
-        margin-left: 5px;
-        &:empty {
-          display: none;
-        }
-      }
-    }
-    @include breakpoint(mobile) {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      padding: 10px 0;
-      td.groups-info,
-      td.groups-user-count,
-      td.groups-table-type,
-      td.groups-table-membership {
-        width: 100%;
-        padding: 0;
-        text-align: right;
-        font-size: $font-0;
-      }
-      td.groups-info {
-        grid-column-start: 1;
-        grid-column-end: 4;
-        grid-row-start: 1;
-        grid-row-end: 3;
-        text-align: left;
-        line-height: $line-height-medium;
-        margin-bottom: 0.5em;
-        a {
-          display: flex;
-        }
+    .group-box-inner {
+      padding: 1em;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      .group-info-wrapper {
+        display: flex;
+        overflow: hidden;
+        flex: 0 1 auto;
         .group-avatar-flair {
-          margin-right: 0.5em;
+          margin-top: 0.3em;
+          margin-right: 8px;
+          flex: 0 0 auto;
         }
-        .groups-info-name {
-          word-break: break-all;
-          max-width: 45vw;
-        }
-        .groups-info-full-name {
-          font-size: $font-down-1;
+        .group-info {
+          flex: 1 0 auto;
+          margin-bottom: 1em;
+          width: 70%;
+
+          span {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
-      td.groups-user-count {
+      .group-user-count {
         display: flex;
         align-items: center;
-        grid-column-start: 4;
-        grid-row-start: 1;
-        .d-icon {
-          display: inline-block;
-          margin-right: 0.25em;
-          color: $primary-low-mid;
-        }
-      }
-      td.groups-table-type {
-        grid-row-start: 3;
-        grid-column-start: 1;
-        grid-column-end: 3;
-        text-align: left;
-        align-self: center;
+        color: $primary-high;
         .d-icon {
           margin-right: 0.25em;
+          font-size: 0.8em;
+          color: $primary-medium;
         }
       }
-      td.groups-table-membership {
-        grid-row-start: 3;
-        grid-column-start: 3;
-        grid-column-end: 5;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-end;
-        button {
-          margin-left: 5px;
-          display: flex;
-        }
-        &:empty {
-          display: none;
-        }
+      .group-description {
+        color: $primary-high;
+        word-wrap: break-word;
       }
-
-      // IE11 grid support
-
-      display: -ms-grid;
-      -ms-grid-columns: 1fr 1fr;
-      -ms-grid-rows: 1fr 1fr;
-      td.groups-info {
-        display: -ms-grid;
-        -ms-grid-row: 1;
-        -ms-grid-column: 1;
-      }
-      td.groups-user-count {
-        justify-content: flex-end;
-        -ms-grid-row: 1;
-        -ms-grid-column: 2;
-      }
-      td.groups-table-type {
-        display: flex;
-        align-items: center;
-        -ms-grid-row: 2;
-        -ms-grid-column: 1;
-      }
-      td.groups-table-membership {
-        display: flex;
-        -ms-grid-row: 2;
-        -ms-grid-column: 2;
-      }
-    }
-  }
-
-  @include breakpoint(mobile) {
-    thead {
-      display: none;
-    }
-  }
-
-  .groups-info {
-    .group-info-details {
-      vertical-align: middle;
     }
 
     .groups-info-name {
+      font-size: $font-up-1;
       font-weight: bold;
       color: $primary;
-      color: dark-light-choose($primary-high, $secondary-low);
-    }
-
-    .groups-info-full-name {
-      color: dark-light-choose($primary-high, $secondary-low);
-    }
-
-    .groups-info-title {
-      font-size: $font-down-1;
-      color: dark-light-choose($primary-medium, $secondary-medium);
-    }
-
-    .group-avatar-flair {
-      vertical-align: middle;
-      color: $primary;
-    }
-
-    span {
-      display: inline-block;
     }
 
     $size: 40px;
     $icon-size: $size / 1.8;
 
-    .avatar-flair {
-      background-size: $size;
-      height: $size;
-      width: $size;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-repeat: no-repeat;
+    .group-avatar-flair {
+      display: inline-block;
+      color: $primary;
 
-      .d-icon {
-        height: $icon-size;
-        width: $icon-size;
+      .avatar-flair {
+        background-size: $size;
+        height: $size;
+        width: $size;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-repeat: no-repeat;
+
+        .d-icon {
+          height: $icon-size;
+          width: $icon-size;
+        }
       }
     }
-
     .avatar-flair-image {
       width: $size;
     }

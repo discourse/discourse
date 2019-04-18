@@ -21,6 +21,8 @@ export default Ember.Component.extend({
     }
   },
 
+  canEdit: Ember.computed.not("model.automatic"),
+
   @computed("basicNameValidation", "uniqueNameValidation")
   nameValidation(basicNameValidation, uniqueNameValidation) {
     return uniqueNameValidation ? uniqueNameValidation : basicNameValidation;
