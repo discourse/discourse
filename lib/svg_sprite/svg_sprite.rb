@@ -328,9 +328,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     site_setting_icons
   end
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-  end
-
   def self.plugin_icons
     DiscoursePluginRegistry.svg_icons
   end
