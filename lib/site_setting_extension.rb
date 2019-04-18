@@ -349,7 +349,7 @@ module SiteSettingExtension
     current[name] = defaults.get(name, default_locale)
     clear_uploads_cache(name)
     clear_cache!
-    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
+    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name]) if old_val != current[name]
   end
 
   def add_override!(name, val)
@@ -360,7 +360,7 @@ module SiteSettingExtension
     clear_uploads_cache(name)
     notify_clients!(name) if client_settings.include? name
     clear_cache!
-    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
+    DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name]) if old_val != current[name]
   end
 
   def notify_changed!

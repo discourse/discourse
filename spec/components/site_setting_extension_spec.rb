@@ -163,9 +163,11 @@ describe SiteSettingExtension do
       settings.refresh!
 
       override_events = DiscourseEvent.track_events { settings.test_setting = 2 }
+      no_change_events = DiscourseEvent.track_events { settings.test_setting = 2 }
       default_events = DiscourseEvent.track_events { settings.test_setting = 1 }
 
       expect(override_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed, :site_setting_saved)
+      expect(no_change_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_saved)
       expect(default_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed, :site_setting_saved)
 
       changed_event_1 = override_events.find { |e| e[:event_name] == :site_setting_changed }

@@ -1,6 +1,4 @@
 DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
-  next if old_value == new_value
-
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
   # existing users are approved.
   if name == :must_approve_users && new_value == true
