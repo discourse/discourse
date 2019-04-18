@@ -240,6 +240,32 @@ RSpec.configure do |config|
     end
   end
 
+  # Let's make tests that do too many queries more visible.
+  max_queries = 750000
+  num_queries = 0
+
+  config.before(:all) do
+    ActiveSupport::Notifications
+      .subscribe('sql.active_record') do |name, start, finish, id, event|
+
+      num_queries += 1
+    end
+  end
+
+  config.before(:each) do
+    num_queries = 0
+  end
+
+  config.after(:each) do |example|
+    unless example.metadata[:allow_many_queries]
+      if num_queries > max_queries
+        raise "too many queries, "\
+          "#{num_queries} > #{max_queries}, "\
+          "add the allow_many_queries tag to ignore"
+      end
+    end
+  end
+
 end
 
 class TrackTimeStub
