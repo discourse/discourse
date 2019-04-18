@@ -2,6 +2,27 @@ $card_width: 580px;
 $avatar_width: 120px;
 $avatar_margin: -50px; // negative margin makes avatars extend above cards
 
+// placeholder
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+.animated-placeholder {
+  animation-duration: 1.25s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: darkgray;
+  background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+  height: 20px;
+  position: relative;
+}
+
 // shared styles for user and group cards
 #user-card,
 #group-card {
@@ -29,9 +50,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     }
     a.card-huge-avatar {
       outline: none;
-    }
-    .spinner {
-      float: left;
     }
   }
   &.no-bg {
