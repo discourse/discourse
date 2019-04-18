@@ -21,7 +21,10 @@ QUnit.test("Edit a post that causes an edit conflict", async assert => {
     I18n.t("composer.overwrite_edit"),
     "it shows the overwrite button"
   );
-  assert.ok(find("#draft-status .d-icon-times"), "error icon should be there");
+  assert.ok(
+    find("#draft-status .d-icon-user-edit"),
+    "error icon should be there"
+  );
   await click(".modal .btn-primary");
 });
 
