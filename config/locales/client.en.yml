@@ -739,6 +739,7 @@ en:
       private_messages: "Messages"
       user_notifications:
         ignore_duration_title: "Ignore Timer"
+        ignore_duration_username: "Username"
         ignore_duration_when: "Duration:"
         ignore_duration_save: "Ignore"
         ignore_duration_note: "Please note that all ignores are automatically removed after the ignore duration expires."
