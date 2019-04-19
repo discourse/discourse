@@ -43,9 +43,15 @@ const SearchHelper = {
       this._activeSearch = null;
     }
 
-    const { term, typeFilter, contextEnabled } = searchData;
+    let { term, typeFilter, contextEnabled } = searchData;
     const searchContext = contextEnabled ? widget.searchContext() : null;
     const fullSearchUrl = widget.fullSearchUrl();
+
+    // if the term is only a word starting by a @
+    // treat it as regular term without the @
+    if (!searchContext) {
+      term = term.replace(/^(@)(\S+)$/, "$2");
+    }
 
     if (!isValidSearchTerm(term)) {
       searchData.noResults = true;
