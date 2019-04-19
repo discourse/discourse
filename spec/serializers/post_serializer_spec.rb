@@ -181,8 +181,8 @@ describe PostSerializer do
 
     let(:post) {
       post = Fabricate(:post, user: user)
-      post.custom_fields["post_notice_type"] = "returning"
-      post.custom_fields["post_notice_time"] = 1.day.ago
+      post.custom_fields["notice_type"] = Post.notices[:returning_user]
+      post.custom_fields["notice_args"] = 1.day.ago
       post.save_custom_fields
       post
     }
@@ -192,32 +192,16 @@ describe PostSerializer do
     end
 
     it "is visible for TL2+ users (except poster)" do
-      expect(json_for_user(nil)[:post_notice_type]).to eq(nil)
-      expect(json_for_user(user)[:post_notice_type]).to eq(nil)
+      expect(json_for_user(nil)[:notice_type]).to eq(nil)
+      expect(json_for_user(user)[:notice_type]).to eq(nil)
 
-      SiteSetting.min_post_notice_tl = 2
-      expect(json_for_user(user_tl1)[:post_notice_type]).to eq(nil)
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq("returning")
+      SiteSetting.returning_user_notice_tl = 2
+      expect(json_for_user(user_tl1)[:notice_type]).to eq(nil)
+      expect(json_for_user(user_tl2)[:notice_type]).to eq(Post.notices[:returning_user])
 
-      SiteSetting.min_post_notice_tl = 1
-      expect(json_for_user(user_tl1)[:post_notice_type]).to eq("returning")
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq("returning")
-    end
-
-    it "is visible when created by anonymous, bots and staged users" do
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq("returning")
-
-      post.user = nil
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
-
-      post.user = AnonymousShadowCreator.get(user)
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
-
-      post.user = Discourse.system_user
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
-
-      post.user = Fabricate(:staged)
-      expect(json_for_user(user_tl2)[:post_notice_type]).to eq(nil)
+      SiteSetting.returning_user_notice_tl = 1
+      expect(json_for_user(user_tl1)[:notice_type]).to eq(Post.notices[:returning_user])
+      expect(json_for_user(user_tl2)[:notice_type]).to eq(Post.notices[:returning_user])
     end
   end
 

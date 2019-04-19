@@ -825,12 +825,15 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
-  min_post_notice_tl:
-    default: 2
-    enum: "TrustLevelSetting"
   old_post_notice_days:
     default: 14
     client: true
+  new_user_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
+  returning_user_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
 

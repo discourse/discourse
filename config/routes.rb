@@ -553,6 +553,7 @@ Discourse::Application.routes.draw do
     put "rebake"
     put "unhide"
     put "locked"
+    put "notice"
     get "replies"
     get "revisions/latest" => "posts#latest_revision"
     get "revisions/:revision" => "posts#revisions", constraints: { revision: /\d+/ }
