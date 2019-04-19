@@ -43,6 +43,20 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   .first-row {
     .names {
       padding-left: 1.25em;
+
+      .user-profile-link {
+        display: flex;
+        align-items: center;
+      }
+
+      .d-icon {
+        margin: 0 0.25em;
+      }
+
+      .name-username-wrapper {
+        margin-right: 0;
+        flex: 0 1 auto;
+      }
       span {
         display: block;
       }
