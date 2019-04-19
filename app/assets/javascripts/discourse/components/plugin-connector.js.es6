@@ -20,6 +20,9 @@ export default Ember.Component.extend({
   _argsChanged() {
     const args = this.get("args") || {};
     Object.keys(args).forEach(key => this.set(key, args[key]));
+
+    const connectorClass = this.get("connector.connectorClass");
+    connectorClass.updateComponent.call(this, args, this);
   },
 
   send(name, ...args) {
