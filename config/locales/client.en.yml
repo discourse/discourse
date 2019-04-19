@@ -744,6 +744,7 @@ en:
         ignore_duration_save: "Ignore"
         ignore_duration_note: "Please note that all ignores are automatically removed after the ignore duration expires."
         ignore_duration_time_frame_required: "Please select a time frame"
+        ignore_no_users: "You have no ignored users."
         ignore_option: "Ignored"
         ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden."
         mute_option: "Muted"

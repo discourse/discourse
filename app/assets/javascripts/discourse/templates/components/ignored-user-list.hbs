@@ -1,7 +1,11 @@
 <div class="ignored-list">
-  {{#each items as |item|}}
-    {{ignored-user-list-item item=item onRemoveItem=(action "removeItem")}}
-  {{/each}}
+  {{#if items}}
+    {{#each items as |item|}}
+      {{ignored-user-list-item item=item onRemoveItem=(action "removeItem")}}
+    {{/each}}
+  {{else}}
+    {{i18n 'user.user_notifications.ignore_no_users'}}
+  {{/if}}
 </div>
 <div class="instructions">{{i18n 'user.ignored_users_instructions'}}</div>
 <div>{{#d-button action=(action "newItem") class="btn-default" icon="plus"}}Add ...{{/d-button}}</div>
