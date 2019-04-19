@@ -307,6 +307,11 @@
         margin-right: 5px;
       }
     }
+    #draft-status .d-icon-user-edit {
+      color: $danger;
+      font-size: 20px;
+      vertical-align: -5.5px;
+    }
   }
 
   .composer-bottom-right {
