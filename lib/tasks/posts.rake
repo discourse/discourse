@@ -464,10 +464,10 @@ task 'posts:missing_uploads' => :environment do
     end
   end
 
-  puts "", "#{count} post uploads are missing.", ""
+  puts "", "#{count - unlinked_post_upload_count} post uploads are missing.", ""
 
   if count > 0
-    puts "#{unlinked_post_upload_count} of #{count} are unlinked post uploads." if unlinked_post_upload_count > 0
+    puts "#{unlinked_post_upload_count} are unlinked post uploads." if unlinked_post_upload_count > 0
     puts "#{missing_uploads.count} uploads are missing."
     puts "#{old_scheme_upload_count} of #{missing_uploads.count} are old scheme uploads." if old_scheme_upload_count > 0
     puts "#{get_missing_uploads.count} of #{Post.count} posts are affected.", ""
