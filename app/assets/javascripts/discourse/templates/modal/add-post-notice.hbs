@@ -1,0 +1,12 @@
+{{#d-modal-body title="post.controls.add_post_notice"}}
+  <form>{{textarea value=notice}}</form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button
+    class="btn-primary"
+    action=(action "setNotice")
+    disabled=disabled
+    label=(if saving "saving" "save")}}
+  {{d-modal-cancel close=(route-action "closeModal")}}
+</div>

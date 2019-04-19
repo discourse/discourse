@@ -2274,8 +2274,8 @@ en:
         other: "view {{count}} hidden replies"
 
       notice:
-        first: "This is the first time {{user}} has posted — let’s welcome them to our community!"
-        return: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
+        new_user: "This is the first time {{user}} has posted — let’s welcome them to our community!"
+        returning_user: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
 
       unread: "Post is unread"
       has_replies:
@@ -2358,6 +2358,8 @@ en:
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic: "delete topic"
+        add_post_notice: "Add post notice"
+        remove_post_notice: "Remove post notice"
 
       actions:
         flag: "Flag"

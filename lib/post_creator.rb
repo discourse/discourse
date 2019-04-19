@@ -519,7 +519,7 @@ class PostCreator
   end
 
   def create_post_notice
-    return if @opts[:import_mode] || @user.bot? || @user.staged
+    return if @opts[:import_mode] || @user.anonymous? || @user.bot? || @user.staged
 
     last_post_time = Post.where(user_id: @user.id)
       .order(created_at: :desc)
@@ -528,10 +528,10 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields["post_notice_type"] = "first"
+      @post.custom_fields["notice_type"] = Post.notices[:new_user]
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields["post_notice_type"] = "returning"
-      @post.custom_fields["post_notice_time"] = last_post_time.iso8601
+      @post.custom_fields["notice_type"] = Post.notices[:returning_user]
+      @post.custom_fields["notice_args"] = last_post_time.iso8601
     end
   end
 
