@@ -388,31 +388,58 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   puts "", "Done.", ""
 end
 
+UPLOAD_PATTERNS ||= [
+  /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
+  /\/original\//,
+  /\/optimized\//
+].freeze
+
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
   PostCustomField.where(name: Post::MISSING_UPLOADS).destroy_all
-  posts = Post.have_uploads.select(:id, :cooked)
   count = 0
 
-  posts.find_each do |post|
-    missing = []
+  Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
+    ids = posts.pluck(:id)
+    sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
 
-    Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
-      src = media.value
-      next if src.blank? || (src =~ /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//).blank?
+    posts.each do |post|
+      missing = []
 
-      src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
+      Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
+        src = media.value
+        next if src.blank? || UPLOAD_PATTERNS.none? { |pattern| src =~ pattern }
 
-      missing << src unless Upload.get_from_url(src) || OptimizedImage.get_from_url(src)
+        src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+        next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
+
+        path = begin
+          URI(URI.unescape(src))&.path
+        rescue URI::Error
+        end
+
+        next if path.blank?
+
+        sha1 =
+          if path.include? "optimized"
+            OptimizedImage.extract_sha1(path)
+          else
+            Upload.extract_sha1(path)
+          end
+
+        if sha1.blank? || sha1s.exclude?(sha1)
+          missing << src
+        end
+      end
+
+      if missing.present?
+        PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing.to_json)
+        count += missing.count
+        putc "x"
+      else
+        putc "."
+      end
     end
-
-    if missing.present?
-      PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing.to_json)
-      count += missing.count
-    end
-
-    putc "."
   end
 
   puts "", "#{count} post uploads are missing.", ""
