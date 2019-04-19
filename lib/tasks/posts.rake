@@ -404,6 +404,7 @@ task 'posts:missing_uploads' => :environment do
   missing_uploads = []
   found_uploads = []
   old_scheme_upload_count = 0
+  unlinked_post_upload_count = 0
   count = 0
 
   Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
@@ -437,11 +438,14 @@ task 'posts:missing_uploads' => :environment do
         if sha1.blank? || sha1s.exclude?(sha1)
           missing_post_uploads << src
 
-          if missing_uploads.exclude?(src) && found_uploads.exclude?(src)
+          if found_uploads.include?(src)
+            unlinked_post_upload_count += 1
+          elsif missing_uploads.exclude?(src)
             if sha1.blank?
               old_scheme_upload_count += 1
               missing_uploads << src
             elsif Upload.exists?(sha1: sha1)
+              unlinked_post_upload_count += 1
               found_uploads << src
             else
               missing_uploads << src
@@ -463,6 +467,7 @@ task 'posts:missing_uploads' => :environment do
   puts "", "#{count} post uploads are missing.", ""
 
   if count > 0
+    puts "#{unlinked_post_upload_count} of #{count} are unlinked post uploads." if unlinked_post_upload_count > 0
     puts "#{missing_uploads.count} uploads are missing."
     puts "#{old_scheme_upload_count} of #{missing_uploads.count} are old scheme uploads." if old_scheme_upload_count > 0
     puts "#{get_missing_uploads.count} of #{Post.count} posts are affected.", ""
