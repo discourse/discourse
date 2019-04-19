@@ -18,7 +18,12 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
   background: $primary-low;
-  background: linear-gradient(to right, $primary-low 10%, $primary-low-mid 18%, $primary-low 33%);
+  background: linear-gradient(
+    to right,
+    $primary-low 10%,
+    $primary-low-mid 18%,
+    $primary-low 33%
+  );
   height: 20px;
   position: relative;
 }
@@ -27,7 +32,12 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   height: 120px;
   border-radius: 100%;
   animation-duration: 5s;
-  background: linear-gradient(to right, $primary-low 10%, $primary-low-mid 38%, $primary-low 73%);
+  background: linear-gradient(
+    to right,
+    $primary-low 10%,
+    $primary-low-mid 38%,
+    $primary-low 73%
+  );
 }
 
 // shared styles for user and group cards
