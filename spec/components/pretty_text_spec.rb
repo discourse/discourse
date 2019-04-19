@@ -1310,4 +1310,55 @@ HTML
     expect(cooked).to eq(html)
   end
 
+  describe "d-wrap" do
+    it "wraps the [wrap] tag" do
+      cooked = PrettyText.cook("[wrap=toc]")
+
+      html = <<~HTML
+        <div class=\"d-wrap\" data-wrap=\"toc\"></div>
+      HTML
+
+      expect(cooked).to include(html.strip)
+    end
+
+    it "adds attributes as data-attributes" do
+      cooked = PrettyText.cook("[wrap=toc foo=bar]")
+
+      html = <<~HTML
+        <div class=\"d-wrap\" data-wrap=\"toc\" data-foo=\"bar\"></div>
+      HTML
+
+      expect(cooked).to include(html.strip)
+    end
+
+    it "adds content attribute as content" do
+      cooked = PrettyText.cook("[wrap=toc content=\"You know nothing\"]")
+
+      html = <<~HTML
+        <div class=\"d-wrap\" data-wrap=\"toc\">You know nothing</div>
+      HTML
+
+      expect(cooked).to include(html.strip)
+    end
+
+    it "prevents xss" do
+      cooked = PrettyText.cook('[wrap=toc foo="<script>console.log(1)</script>"]')
+
+      html = <<~HTML
+        <p>[wrap=toc foo=""]</p>
+      HTML
+
+      expect(cooked).to include(html.strip)
+    end
+
+    it "allows a limited set of attributes chars" do
+      cooked = PrettyText.cook('[wrap=toc fo@"èk-"!io=bar]')
+
+      html = <<~HTML
+        <div class=\"d-wrap\" data-wrap=\"toc\" data-io=\"bar\"></div>
+      HTML
+
+      expect(cooked).to include(html.strip)
+    end
+  end
 end
