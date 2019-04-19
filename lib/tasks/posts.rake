@@ -396,7 +396,7 @@ UPLOAD_PATTERNS ||= [
 
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
-  PostCustomField.where(name: Post::MISSING_UPLOADS).destroy_all
+  PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
   count = 0
 
   Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
