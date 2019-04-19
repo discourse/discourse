@@ -688,7 +688,7 @@ class UserNotifications < ActionMailer::Base
     @email_prefix    = SiteSetting.email_prefix.presence || SiteSetting.title
     @header_color    = ColorScheme.hex_for_name('header_primary')
     @header_bgcolor  = ColorScheme.hex_for_name('header_background')
-    @anchor_color    = ColorScheme.hex_for_name('tertiary')
+    @anchor_color    = SiteSetting.email_link_color
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")
   end
