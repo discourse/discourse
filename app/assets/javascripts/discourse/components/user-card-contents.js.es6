@@ -152,8 +152,7 @@ export default Ember.Component.extend(
 
     _showCallback(username, $target) {
       this._positionCard($target);
-      const currentUser = Discourse.__container__.lookup("current-user:main");
-      this.setProperties({ visible: true, loading: true, user: currentUser });
+      this.setProperties({ visible: true, loading: true });
 
       const args = { stats: false };
       args.include_post_count_for = this.get("topic.id");
@@ -165,7 +164,7 @@ export default Ember.Component.extend(
               user.topic_post_count[args.include_post_count_for]
             );
           }
-          this.setProperties({ user, loading: false });
+          this.setProperties({ user });
         })
         .catch(() => this._close())
         .finally(() => this.set("loading", null));
