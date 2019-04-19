@@ -18,7 +18,7 @@ function addWrapper(buffer, matches, state) {
 
   Object.keys(attributes).forEach(tag => {
     const value = state.md.utils.escapeHtml(attributes[tag]);
-    tag = state.md.utils.escapeHtml(tag);
+    tag = state.md.utils.escapeHtml(tag.replace(/[^a-z0-9\-]/g, ""));
     token.attrs.push([`data-${tag}`, value]);
   });
 
