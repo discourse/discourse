@@ -419,7 +419,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <div dir="<%= rtl? ? 'rtl' : 'ltr' %>" class='footer'>
   <%=raw(t 'user_notifications.digest.unsubscribe',
            site_link: html_site_link(@anchor_color),
-           email_preferences_link: link_to(t('user_notifications.digest.your_email_settings'), Discourse.base_url + '/my/preferences/emails'),
+           email_preferences_link: link_to(t('user_notifications.digest.your_email_settings'), Discourse.base_url + '/my/preferences/emails', {:style=>"color: ##{@anchor_color}"} ),
            unsubscribe_link: link_to(t('user_notifications.digest.click_here'), "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}", {:style=>"color: ##{@anchor_color}"}))  %>
 </div>
 
