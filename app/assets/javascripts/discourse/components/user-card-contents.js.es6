@@ -53,7 +53,6 @@ export default Ember.Component.extend(
     showCheckEmail: Ember.computed.and("user.staged", "canCheckEmails"),
 
     user: null,
-    loading: false,
 
     // If inside a topic
     topicPostCount: null,
@@ -151,10 +150,6 @@ export default Ember.Component.extend(
     },
 
     _showCallback(username, $target) {
-      this._positionCard($target);
-      const currentUser = Discourse.__container__.lookup("current-user:main");
-      this.setProperties({ visible: true, loading: true, user: currentUser });
-
       const args = { stats: false };
       args.include_post_count_for = this.get("topic.id");
       User.findByUsername(username, args)
@@ -165,7 +160,8 @@ export default Ember.Component.extend(
               user.topic_post_count[args.include_post_count_for]
             );
           }
-          this.setProperties({ user, loading: false });
+          this._positionCard($target);
+          this.setProperties({ user, visible: true });
         })
         .catch(() => this._close())
         .finally(() => this.set("loading", null));
