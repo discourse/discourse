@@ -399,7 +399,7 @@ task 'posts:missing_uploads' => :environment do
   PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
   count = 0
 
-  Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
+  Post.have_uploads.order(:id).select(:id, :cooked).find_in_batches do |posts|
     ids = posts.pluck(:id)
     sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
 
