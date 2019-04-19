@@ -28,8 +28,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   position: relative;
 }
 .card-avatar-placeholder {
-  width: 120px;
-  height: 120px;
+  width: $avatar_width;
+  height: $avatar_width;
   border-radius: 100%;
   animation-duration: 5s;
   background: linear-gradient(

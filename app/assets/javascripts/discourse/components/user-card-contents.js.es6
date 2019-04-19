@@ -53,7 +53,6 @@ export default Ember.Component.extend(
     showCheckEmail: Ember.computed.and("user.staged", "canCheckEmails"),
 
     user: null,
-    loading: false,
 
     // If inside a topic
     topicPostCount: null,
