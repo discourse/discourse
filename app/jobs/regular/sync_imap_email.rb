@@ -1,7 +1,7 @@
 require_dependency 'imap'
 
 module Jobs
-  class ProcessImapEmail < Jobs::Base
+  class SyncImapEmail < Jobs::Base
     sidekiq_options retry: 3
 
     def execute(args)
@@ -31,7 +31,7 @@ module Jobs
         )
       end
 
-      imap_sync = Imap::Sync.for_group(group)
+      imap_sync = Imap::Sync.for_group(group, offline: true)
       imap_sync.update_topic(email, incoming_email, mailbox_name: args[:mailbox_name])
 
       nil

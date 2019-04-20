@@ -29,7 +29,7 @@ module Jobs
           (history.messages || []).each do |message|
             message = service.get_user_message(args[:email_address], message.id, format: "raw")
 
-            Jobs.enqueue(:process_imap_email,
+            Jobs.enqueue(:sync_imap_email,
               group_id: group.id,
               mailbox_name: mailbox.name,
               uid_validity: -1,

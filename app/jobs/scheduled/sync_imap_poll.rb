@@ -1,7 +1,7 @@
 require_dependency 'imap'
 
 module Jobs
-  class PollImap < Jobs::Scheduled
+  class SyncImapPoll < Jobs::Scheduled
     every SiteSetting.imap_polling_period_mins.minutes
     sidekiq_options retry: false
 

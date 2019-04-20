@@ -3,34 +3,39 @@ require "net/imap"
 module Imap
   class Sync
 
-    def self.for_group(group)
+    def self.for_group(group, opts = {})
       if group.imap_server == "imap.gmail.com"
-        provider = Imap::Providers::Gmail
+        opts[:provider] ||= Imap::Providers::Gmail
       else
-        provider = Imap::Providers::Generic
+        opts[:provider] ||= Imap::Providers::Generic
       end
 
-      Imap::Sync.new(group, provider)
+      Imap::Sync.new(group, opts)
     end
 
-    def initialize(group, provider = Imap::Providers::Generic)
+    def initialize(group, opts = {})
       @group = group
 
-      @provider = provider.new(group.imap_server,
+      opts[:provider] ||= Imap::Providers::Generic
+      @provider = opts[:provider].new(group.imap_server,
         port: group.imap_port,
         ssl: group.imap_ssl,
         username: group.email_username,
         password: group.email_password
       )
+
+      connect! if !opts[:offline]
+    end
+
+    def connect!
+      @provider.connect!
     end
 
     def disconnect!
       @provider.disconnect!
     end
 
-    def process(mailbox)
-      @provider.connect!
-
+    def process(mailbox, idle = false)
       # Server-to-Discourse sync:
       #   - check mailbox validity
       #   - discover changes to old messages (flags and labels)
@@ -42,16 +47,33 @@ module Imap
         mailbox.last_seen_uid = 0
       end
 
-      # Fetching UIDs of already synchronized and newly arrived emails.
-      # Some emails may be considered newly arrived even though they have been
-      # previously processed if the mailbox has been invalidated (UIDVALIDITY
-      # changed).
-      if mailbox.last_seen_uid == 0
+      if idle
+        if !@provider.can?("IDLE")
+          return Rails.logger.warn("IMAP server for #{@group.name} does not support IDLE.")
+        end
+
+        last_response_name = nil
+        @provider.imap.idle do |resp|
+          if resp.kind_of?(Net::IMAP::UntaggedResponse) && resp.name == "EXISTS"
+            last_response_name = resp.name
+            @provider.imap.idle_done
+          end
+        end
+
         old_uids = []
-        new_uids = @provider.uids
+        new_uids = @provider.imap.uid_search("NOT SEEN").filter { |uid| uid > mailbox.last_seen_uid }
       else
-        old_uids = @provider.uids(to: mailbox.last_seen_uid) # 1 .. seen
-        new_uids = @provider.uids(from: mailbox.last_seen_uid + 1) # seen+1 .. inf
+        # Fetching UIDs of already synchronized and newly arrived emails.
+        # Some emails may be considered newly arrived even though they have
+        # been previously processed if the mailbox has been invalidated
+        # (UIDVALIDITY changed).
+        if mailbox.last_seen_uid == 0
+          old_uids = []
+          new_uids = @provider.uids
+        else
+          old_uids = @provider.uids(to: mailbox.last_seen_uid) # 1 .. seen
+          new_uids = @provider.uids(from: mailbox.last_seen_uid + 1) # seen+1 .. inf
+        end
       end
 
       import_mode = new_uids.size > SiteSetting.imap_batch_import_email if SiteSetting.imap_batch_import_email > -1
@@ -61,7 +83,7 @@ module Imap
       if old_uids.present?
         emails = @provider.emails(mailbox, old_uids, ["UID", "FLAGS", "LABELS"])
         emails.each do |email|
-          Jobs.enqueue(:process_imap_email,
+          Jobs.enqueue(:sync_imap_email,
             group_id: @group.id,
             mailbox_name: mailbox.name,
             uid_validity: @status[:uid_validity],
@@ -77,7 +99,7 @@ module Imap
           # encoding.
           email["RFC822"] = Base64.encode64(email["RFC822"])
 
-          Jobs.enqueue(:process_imap_email,
+          Jobs.enqueue(:sync_imap_email,
             group_id: @group.id,
             mailbox_name: mailbox.name,
             uid_validity: @status[:uid_validity],
@@ -88,12 +110,12 @@ module Imap
       end
 
       mailbox.uid_validity = @status[:uid_validity]
-      mailbox.last_seen_uid = new_uids.last
+      mailbox.last_seen_uid = new_uids.last || 0
       mailbox.save!
 
       # Discourse-to-server sync:
       #   - sync flags and labels
-      if !SiteSetting.imap_read_only
+      if !idle && !SiteSetting.imap_read_only
         @provider.open_mailbox(mailbox, true)
         IncomingEmail.where(imap_sync: true).each do |incoming_email|
           update_email(mailbox, incoming_email)

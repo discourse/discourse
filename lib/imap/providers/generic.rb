@@ -16,11 +16,16 @@ class Imap::Providers::Generic
 
   def connect!
     imap.login(@username, @password)
+    @capabilities = imap.responses["CAPABILITY"][-1]
   end
 
   def disconnect!
     imap.logout
     imap.disconnect
+  end
+
+  def can?(capability)
+    @capabilities.include?(capability)
   end
 
   def uids(opts = {})

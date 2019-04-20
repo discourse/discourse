@@ -12,6 +12,8 @@
         <label class="mailbox-label" for="mailbox-{{unbound m.id}}">{{m.name}}</label>
       </p>
     {{/each}}
+
+    {{group-manage-save-button model=model}}
   {{else}}
     <div class="alert alert-info">
       {{i18n "groups.manage.email.mailboxes.none"}}

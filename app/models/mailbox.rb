@@ -14,6 +14,8 @@ class Mailbox < ActiveRecord::Base
       group.mailboxes.delete_all
 
       @imap.list('', '*').each do |m|
+        next if m.attr.include?(:Noselect)
+
         Mailbox.create!(group: group,
                         name: m.name,
                         sync: old_mailboxes.include?(m.name))
@@ -27,14 +29,14 @@ end
 #
 # Table name: mailboxes
 #
-#  id             :integer        not null, primary key
-#  group_id       :integer        not null
-#  name           :string         not null
-#  sync           :boolean        default(FALSE), not null
-#  uid_validity   :integer        default(0), not null
-#  last_seen_uid  :integer        default(0), not null
-#  created_at     :datetime       not null
-#  updated_at     :datetime       not null
+#  id            :bigint           not null, primary key
+#  group_id      :integer          not null
+#  name          :string           not null
+#  sync          :boolean          default(FALSE), not null
+#  uid_validity  :integer          default(0), not null
+#  last_seen_uid :integer          default(0), not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 # Indexes
 #

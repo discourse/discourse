@@ -6,11 +6,12 @@ describe Imap::Sync do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.allow_staff_to_tag_pms = true
+    SiteSetting.imap_read_only = true
+    Jobs.run_immediately!
   end
 
   context "GMAIL provider" do
-    # let(:sync_handler) { Imap::Sync.new(group, Imap::Providers::Gmail) }
-    let(:sync_handler) { Imap::Sync.new(group, MockedImapProvider) }
+    let(:sync_handler) { Imap::Sync.new(group, provider: MockedImapProvider) }
 
     let(:group) {
       Fabricate(:group,
@@ -20,13 +21,9 @@ describe Imap::Sync do
       )
     }
 
-    let(:mailbox) {
-      Fabricate(:mailbox, name: "[Gmail]/All Mail", sync: true, group_id: group.id)
+    let!(:mailbox) {
+      Fabricate(:mailbox, group: group, name: "[Gmail]/All Mail", sync: true)
     }
-
-    before do
-      group.update!(mailboxes: [mailbox])
-    end
 
     context "creates topic from email with no previous sync" do
       let(:email_sender) { "john@free.fr" }

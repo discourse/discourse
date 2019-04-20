@@ -11,6 +11,7 @@ export default Ember.Component.extend({
         data: { refresh: true }
       }).then(results => {
         this.set("model.extras.mailboxes", results);
+      }).finally(() => {
         this.set("refreshing", false);
       });
     }
