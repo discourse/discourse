@@ -185,24 +185,19 @@ describe UserNotifications do
         expect(html).to_not include too_new.title
       end
 
-      it "uses theme color" do
-        cs = Fabricate(:color_scheme, name: 'Fancy', color_scheme_colors: [
-          Fabricate(:color_scheme_color, name: 'header_primary', hex: 'F0F0F0'),
-          Fabricate(:color_scheme_color, name: 'header_background', hex: '1E1E1E'),
-          Fabricate(:color_scheme_color, name: 'tertiary', hex: '858585')
-        ])
-        theme = Fabricate(:theme,
-                          user_selectable: true,
-                          user: Fabricate(:admin),
-                          color_scheme_id: cs.id
-        )
+      it "uses colors from email color settings" do
+       SiteSetting.email_header_bg_color = "#1E1E1E"
+       SiteSetting.email_header_fg_color = "#F0F0F0"
+       SiteSetting.email_accent_bg_color = "#FF1111"
+       SiteSetting.email_accent_fg_color = "#983859"
+       SiteSetting.email_link_color = "#10d510"
 
-        theme.set_default!
-
-        html = subject.html_part.body.to_s
-        expect(html).to include 'F0F0F0'
-        expect(html).to include '1E1E1E'
-        expect(html).to include '858585'
+       html = subject.html_part.body.to_s
+       expect(html).to include '#1E1E1E'
+       expect(html).to include '#F0F0F0'
+       expect(html).to include '#FF1111'
+       expect(html).to include '#983859'
+       expect(html).to include '#10d510'
       end
 
       it "supports subfolder" do
