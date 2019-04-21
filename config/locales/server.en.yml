@@ -911,16 +911,15 @@ en:
     submit: "Save preferences"
     digest_frequency:
       title: "You are receiving summary emails %{frequency}"
-      select_title: 'Set summary emails frequency to:'
-      
-      never: 'never'
+      select_title: "Set summary emails frequency to:"
+
+      never: "never"
       every_30_minutes: "every 30 minutes"
       every_hour: "hourly"
       daily: "daily"
       weekly: "weekly"
       every_month: "every month"
       every_six_months: "every six months"
-
 
   user_api_key:
     title: "Authorize application access"
