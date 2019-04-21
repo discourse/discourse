@@ -162,7 +162,6 @@ module Email
     end
 
     def format_html
-      style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
       style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
