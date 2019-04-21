@@ -28,11 +28,11 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
     </tr>
   </table>
 <%- else %>
-<table dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="background-color:#<%= @header_bgcolor -%>;width:100%;">
+<table dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="background-color:<%= @header_bg_color -%>;width:100%;">
   <tr>
     <td align="center" style="text-align: center;padding: 20px 0; font-family:Helvetica,Arial,sans-serif;">
 
-  <a href="<%= Discourse.base_url %>" style="color:#<%= @header_color -%>;font-size:22px;text-decoration:none;">
+  <a href="<%= Discourse.base_url %>" style="color:<%= @header_fg_color -%>;font-size:22px;text-decoration:none;">
   <%- if logo_url.blank? %>
     <%= SiteSetting.title %>
   <%- else %>
