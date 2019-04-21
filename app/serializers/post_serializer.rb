@@ -70,8 +70,8 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
-             :post_notice_type,
-             :post_notice_time,
+             :notice_type,
+             :notice_args,
              :last_wiki_edit,
              :locked,
              :excerpt
@@ -365,24 +365,33 @@ class PostSerializer < BasicPostSerializer
     include_action_code? && action_code_who.present?
   end
 
-  def post_notice_type
-    post_custom_fields["post_notice_type"]
+  def notice_type
+    post_custom_fields["notice_type"]
   end
 
-  def include_post_notice_type?
-    return false if !scope.user || !scope.user.id || scope.user.id == object.user_id ||
-                    !object.user || object.user.anonymous? || object.user.bot? || object.user.staged ||
-                    !scope.user.has_trust_level?(SiteSetting.min_post_notice_tl)
+  def include_notice_type?
+    case notice_type
+    when Post.notices[:custom]
+      return true
+    when Post.notices[:new_user]
+      min_trust_level = SiteSetting.new_user_notice_tl
+    when Post.notices[:returning_user]
+      min_trust_level = SiteSetting.returning_user_notice_tl
+    else
+      return false
+    end
 
-    post_notice_type.present?
+    scope.user && scope.user.id && object.user &&
+    scope.user.id != object.user_id &&
+    scope.user.has_trust_level?(min_trust_level)
   end
 
-  def post_notice_time
-    post_custom_fields["post_notice_time"]
+  def notice_args
+    post_custom_fields["notice_args"]
   end
 
-  def include_post_notice_time?
-    include_post_notice_type? && post_notice_time.present?
+  def include_notice_args?
+    notice_args.present? && include_notice_type?
   end
 
   def locked

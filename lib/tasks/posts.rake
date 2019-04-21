@@ -394,17 +394,25 @@ UPLOAD_PATTERNS ||= [
   /\/optimized\//
 ].freeze
 
+def get_missing_uploads
+  PostCustomField.where(name: Post::MISSING_UPLOADS)
+end
+
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
-  PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+  get_missing_uploads.delete_all
+  missing_uploads = []
+  found_uploads = []
+  old_scheme_upload_count = 0
+  unlinked_post_upload_count = 0
   count = 0
 
-  Post.have_uploads.order(:id).select(:id, :cooked).find_in_batches do |posts|
+  Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
     ids = posts.pluck(:id)
     sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
 
     posts.each do |post|
-      missing = []
+      missing_post_uploads = []
 
       Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
         src = media.value
@@ -428,13 +436,27 @@ task 'posts:missing_uploads' => :environment do
           end
 
         if sha1.blank? || sha1s.exclude?(sha1)
-          missing << src
+          missing_post_uploads << src
+
+          if found_uploads.include?(src)
+            unlinked_post_upload_count += 1
+          elsif missing_uploads.exclude?(src)
+            if sha1.blank?
+              old_scheme_upload_count += 1
+              missing_uploads << src
+            elsif Upload.exists?(sha1: sha1)
+              unlinked_post_upload_count += 1
+              found_uploads << src
+            else
+              missing_uploads << src
+            end
+          end
         end
       end
 
-      if missing.present?
-        PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing.to_json)
-        count += missing.count
+      if missing_post_uploads.present?
+        PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing_post_uploads.to_json)
+        count += missing_post_uploads.count
         putc "x"
       else
         putc "."
@@ -442,5 +464,12 @@ task 'posts:missing_uploads' => :environment do
     end
   end
 
-  puts "", "#{count} post uploads are missing.", ""
+  puts "", "#{count - unlinked_post_upload_count} post uploads are missing.", ""
+
+  if count > 0
+    puts "#{unlinked_post_upload_count} are unlinked post uploads." if unlinked_post_upload_count > 0
+    puts "#{missing_uploads.count} uploads are missing."
+    puts "#{old_scheme_upload_count} of #{missing_uploads.count} are old scheme uploads." if old_scheme_upload_count > 0
+    puts "#{get_missing_uploads.count} of #{Post.count} posts are affected.", ""
+  end
 end

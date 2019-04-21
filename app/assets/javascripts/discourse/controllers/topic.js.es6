@@ -750,6 +750,22 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
       this.send("showGrantBadgeModal");
     },
 
+    addNotice(post) {
+      return new Ember.RSVP.Promise(function(resolve, reject) {
+        const controller = showModal("add-post-notice");
+        controller.setProperties({ post, resolve, reject });
+      });
+    },
+
+    removeNotice(post) {
+      return post.updatePostField("notice", null).then(() =>
+        post.setProperties({
+          notice_type: null,
+          notice_args: null
+        })
+      );
+    },
+
     toggleParticipant(user) {
       this.get("model.postStream")
         .toggleParticipant(user.get("username"))
