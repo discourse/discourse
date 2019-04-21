@@ -26,7 +26,7 @@ module UserNotificationsHelper
   end
 
   def html_site_link(color)
-    "<a href='#{Discourse.base_url}' style='color: ##{color}'>#{@site_name}</a>"
+    "<a href='#{Discourse.base_url}' style='color: #{color}'>#{@site_name}</a>"
   end
 
   def first_paragraphs_from(html)
