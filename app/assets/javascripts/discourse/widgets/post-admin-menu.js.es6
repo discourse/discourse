@@ -37,22 +37,31 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     contents.push(buttonAtts);
   }
 
-  if (attrs.canManage) {
-    contents.push({
-      icon: "cog",
-      label: "post.controls.rebake",
-      action: "rebakePost",
-      className: "btn-default rebuild-html"
-    });
-
-    if (attrs.hidden) {
+  if (currentUser.staff) {
+    if (attrs.noticeType) {
       contents.push({
-        icon: "far-eye",
-        label: "post.controls.unhide",
-        action: "unhidePost",
-        className: "btn-default unhide-post"
+        icon: "asterisk",
+        label: "post.controls.remove_post_notice",
+        action: "removeNotice",
+        className: "btn-default remove-notice"
+      });
+    } else {
+      contents.push({
+        icon: "asterisk",
+        label: "post.controls.add_post_notice",
+        action: "addNotice",
+        className: "btn-default add-notice"
       });
     }
+  }
+
+  if (attrs.canManage && attrs.hidden) {
+    contents.push({
+      icon: "far-eye",
+      label: "post.controls.unhide",
+      action: "unhidePost",
+      className: "btn-default unhide-post"
+    });
   }
 
   if (currentUser.admin) {
@@ -111,22 +120,13 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     }
   }
 
-  if (currentUser.staff) {
-    if (attrs.noticeType) {
-      contents.push({
-        icon: "asterisk",
-        label: "post.controls.remove_post_notice",
-        action: "removeNotice",
-        className: "btn-default remove-notice"
-      });
-    } else {
-      contents.push({
-        icon: "asterisk",
-        label: "post.controls.add_post_notice",
-        action: "addNotice",
-        className: "btn-default add-notice"
-      });
-    }
+  if (attrs.canManage) {
+    contents.push({
+      icon: "cog",
+      label: "post.controls.rebake",
+      action: "rebakePost",
+      className: "btn-default rebuild-html"
+    });
   }
 
   return contents;
