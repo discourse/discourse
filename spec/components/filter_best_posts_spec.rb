@@ -6,16 +6,16 @@ require 'topic_view'
 
 describe FilterBestPosts do
 
-  let(:topic) { Fabricate(:topic) }
-  let(:coding_horror) { Fabricate(:coding_horror) }
-  let(:first_poster) { topic.user }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:first_poster) { topic.user }
 
-  let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
-  let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5) }
-  let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
+  fab!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
+  fab!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5) }
+  fab!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
-  let(:moderator) { Fabricate(:moderator) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
 
   it "can find the best responses" do
 

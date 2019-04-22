@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe BadgeGranter do
 
-  let(:badge) { Fabricate(:badge) }
-  let(:user) { Fabricate(:user) }
+  fab!(:badge) { Fabricate(:badge) }
+  fab!(:user) { Fabricate(:user) }
 
   describe 'revoke_titles' do
     it 'can correctly revoke titles' do
@@ -182,7 +182,7 @@ describe BadgeGranter do
 
   describe 'revoke' do
 
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
     let!(:user_badge) { BadgeGranter.grant(badge, user) }
 
     it 'revokes the badge and does necessary cleanup' do
@@ -199,8 +199,8 @@ describe BadgeGranter do
   end
 
   context "update_badges" do
-    let(:user) { Fabricate(:user) }
-    let(:liker) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:liker) { Fabricate(:user) }
 
     before do
       BadgeGranter.clear_queue!

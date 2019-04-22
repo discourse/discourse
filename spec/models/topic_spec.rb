@@ -6,7 +6,7 @@ require_dependency 'post_destroyer'
 
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
   let(:topic) { Fabricate(:topic) }
 
   context 'validations' do

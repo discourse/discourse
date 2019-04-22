@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Reviewable, type: :model do
 
   context ".create" do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
 
@@ -34,8 +34,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".needs_review!" do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     it "will return a new reviewable the first them, and re-use the second time" do
       r0 = ReviewableUser.needs_review!(target: user, created_by: admin)
@@ -81,14 +81,14 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".list_for" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "returns an empty list for nil user" do
       expect(Reviewable.list_for(nil)).to eq([])
     end
 
     context "with a pending item" do
-      let(:post) { Fabricate(:post) }
+      fab!(:post) { Fabricate(:post) }
       let(:reviewable) { Fabricate(:reviewable, target: post) }
 
       it "works with the reviewable by moderator flag" do
@@ -160,11 +160,11 @@ RSpec.describe Reviewable, type: :model do
     end
 
     context "with a category restriction" do
-      let(:category) { Fabricate(:category, read_restricted: true) }
+      fab!(:category) { Fabricate(:category, read_restricted: true) }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:post) { Fabricate(:post, topic: topic) }
-      let!(:moderator) { Fabricate(:moderator) }
-      let(:admin) { Fabricate(:admin) }
+      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:admin) { Fabricate(:admin) }
 
       it "respects category id on the reviewable" do
         Group.refresh_automatic_group!(:staff)
@@ -217,7 +217,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context "message bus notifications" do
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "triggers a notification on create" do
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
@@ -251,8 +251,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   describe "flag_stats" do
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post) }
     let(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 
     it "increases flags_agreed when agreed" do

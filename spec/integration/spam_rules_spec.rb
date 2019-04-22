@@ -6,10 +6,10 @@ require 'rails_helper'
 describe "spam rules for users" do
 
   describe 'auto-silence users based on flagging' do
-    let!(:admin)     { Fabricate(:admin) } # needed to send a system message
-    let!(:moderator) { Fabricate(:moderator) }
-    let(:user1)      { Fabricate(:user) }
-    let(:user2)      { Fabricate(:user) }
+    fab!(:admin)     { Fabricate(:admin) } # needed to send a system message
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user1)      { Fabricate(:user) }
+    fab!(:user2)      { Fabricate(:user) }
 
     before do
       SiteSetting.score_required_to_hide_post = 0
@@ -18,7 +18,7 @@ describe "spam rules for users" do
     end
 
     context 'spammer is a new user' do
-      let(:spammer)  { Fabricate(:user, trust_level: TrustLevel[0]) }
+      fab!(:spammer)  { Fabricate(:user, trust_level: TrustLevel[0]) }
 
       context 'spammer post is not flagged enough times' do
         let!(:spam_post)  { create_post(user: spammer) }
@@ -43,7 +43,7 @@ describe "spam rules for users" do
         end
 
         context 'one spam post is flagged enough times by enough users' do
-          let!(:another_topic) { Fabricate(:topic) }
+          fab!(:another_topic) { Fabricate(:topic) }
           let!(:private_messages_count) { spammer.private_topics_count }
           let!(:mod_pm_count) { moderator.private_topics_count }
           let!(:reviewable) { PostActionCreator.spam(user2, spam_post).reviewable }

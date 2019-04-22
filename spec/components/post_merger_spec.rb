@@ -4,9 +4,9 @@ require 'rails_helper'
 require 'post_merger'
 
 describe PostMerger do
-  let(:moderator) { Fabricate(:moderator) }
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
   let(:post) { create_post }
   let(:topic) { post.topic }
 

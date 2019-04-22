@@ -5,7 +5,7 @@ require 'rails_helper'
 require_dependency 'api_key'
 
 describe ApiKey do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }

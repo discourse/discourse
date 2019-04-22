@@ -198,7 +198,7 @@ describe UploadsController do
   describe '#show' do
     let(:site) { "default" }
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     def upload_file(file, folder = "images")
       fake_logo = Rack::Test::UploadedFile.new(file_from_fixtures(file, folder))
@@ -290,7 +290,7 @@ describe UploadsController do
   end
 
   describe '#metadata' do
-    let(:upload) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:upload) }
 
     describe 'when url is missing' do
       it 'should return the right response' do

@@ -37,15 +37,15 @@ describe Stylesheet::Importer do
 
   context "#theme_variables" do
 
-    let(:theme) { Fabricate(:theme) }
+    fab!(:theme) { Fabricate(:theme) }
 
     let(:importer) { described_class.new(theme: theme) }
 
-    let(:upload) { Fabricate(:upload) }
-    let(:upload_s3) { Fabricate(:upload_s3) }
+    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload_s3) { Fabricate(:upload_s3) }
 
-    let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "var", upload: upload, value: "", type_id: ThemeField.types[:theme_upload_var]) }
-    let(:theme_field_s3) { ThemeField.create!(theme: theme, target_id: 1, name: "var_s3", upload: upload_s3, value: "", type_id: ThemeField.types[:theme_upload_var]) }
+    fab!(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "var", upload: upload, value: "", type_id: ThemeField.types[:theme_upload_var]) }
+    fab!(:theme_field_s3) { ThemeField.create!(theme: theme, target_id: 1, name: "var_s3", upload: upload_s3, value: "", type_id: ThemeField.types[:theme_upload_var]) }
 
     it "should contain the URL" do
       theme_field.save!

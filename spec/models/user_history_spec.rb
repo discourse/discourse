@@ -22,7 +22,7 @@ describe UserHistory do
 
   describe '#staff_action_records' do
     context "with some records" do
-      let(:admin) { Fabricate(:admin) }
+      fab!(:admin) { Fabricate(:admin) }
       let(:custom_type) { 'confirmed_ham' }
 
       before do

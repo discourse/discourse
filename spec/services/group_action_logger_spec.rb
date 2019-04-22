@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe GroupActionLogger do
-  let(:group_owner) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
-  let(:user) { Fabricate(:user) }
+  fab!(:group_owner) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
 
   subject { described_class.new(group_owner, group) }
 

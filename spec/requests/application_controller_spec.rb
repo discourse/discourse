@@ -24,7 +24,7 @@ RSpec.describe ApplicationController do
 
   describe '#redirect_to_second_factor_if_required' do
     let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       admin # to skip welcome wizard at home page `/`
@@ -254,11 +254,11 @@ RSpec.describe ApplicationController do
   end
 
   describe "#handle_theme" do
-    let(:theme) { Fabricate(:theme, user_selectable: true) }
-    let(:theme2) { Fabricate(:theme, user_selectable: true) }
-    let(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
-    let(:user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:theme) { Fabricate(:theme, user_selectable: true) }
+    fab!(:theme2) { Fabricate(:theme, user_selectable: true) }
+    fab!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(user)

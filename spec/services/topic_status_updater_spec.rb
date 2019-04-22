@@ -8,8 +8,8 @@ require_dependency 'post_destroyer'
 
 describe TopicStatusUpdater do
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   it "avoids notifying on automatically closed topics" do
     # TODO: TopicStatusUpdater should suppress message bus updates from the users it "pretends to read"

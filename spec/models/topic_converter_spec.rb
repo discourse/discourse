@@ -5,10 +5,10 @@ require 'rails_helper'
 describe TopicConverter do
 
   context 'convert_to_public_topic' do
-    let(:admin) { Fabricate(:admin) }
-    let(:author) { Fabricate(:user) }
-    let(:category) { Fabricate(:category, topic_count: 1) }
-    let(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:author) { Fabricate(:user) }
+    fab!(:category) { Fabricate(:category, topic_count: 1) }
+    fab!(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
     let(:first_post) { create_post(user: author, topic: private_message) }
     let(:other_user) { private_message.topic_allowed_users.find { |u| u.user != author }.user }
 
@@ -94,11 +94,11 @@ describe TopicConverter do
   end
 
   context 'convert_to_private_message' do
-    let(:admin) { Fabricate(:admin) }
-    let(:author) { Fabricate(:user) }
-    let(:category) { Fabricate(:category) }
-    let(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
-    let!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:author) { Fabricate(:user) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
 
     context 'success' do
       it "converts regular topic to private message" do

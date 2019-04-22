@@ -64,7 +64,7 @@ describe Badge do
   end
 
   describe '#manually_grantable?' do
-    let(:badge) { Fabricate(:badge, name: 'Test Badge') }
+    fab!(:badge) { Fabricate(:badge, name: 'Test Badge') }
     subject { badge.manually_grantable? }
 
     context 'when system badge' do

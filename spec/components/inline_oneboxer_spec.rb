@@ -24,7 +24,7 @@ describe InlineOneboxer do
   end
 
   context "caching" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     before do
       InlineOneboxer.purge(topic.url)

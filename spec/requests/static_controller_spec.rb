@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe StaticController do
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
     let(:filename) { 'smallest.png' }

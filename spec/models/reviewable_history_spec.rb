@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe ReviewableHistory, type: :model do
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   it "adds a `created` history event when a reviewable is created" do
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)

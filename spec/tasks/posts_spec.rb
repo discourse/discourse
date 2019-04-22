@@ -5,8 +5,8 @@ require 'highline/import'
 require 'highline/simulate'
 
 RSpec.describe "Post rake tasks" do
-  let!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
-  let!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
+  fab!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
+  fab!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
 
   before do
     Rake::Task.clear

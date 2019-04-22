@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 describe WatchedWord do
-  let(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-  let(:admin) { Fabricate(:admin) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
-  let(:topic) { Fabricate(:topic) }
-  let(:first_post) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:first_post) { Fabricate(:post, topic: topic) }
 
   let(:require_approval_word) { Fabricate(:watched_word, action: WatchedWord.actions[:require_approval]) }
   let(:flag_word) { Fabricate(:watched_word, action: WatchedWord.actions[:flag]) }

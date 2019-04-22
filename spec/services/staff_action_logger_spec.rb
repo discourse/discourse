@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe StaffActionLogger do
 
-  let(:admin)  { Fabricate(:admin) }
+  fab!(:admin)  { Fabricate(:admin) }
   let(:logger) { described_class.new(admin) }
 
   describe 'new' do
@@ -18,7 +18,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_user_deletion' do
-    let(:deleted_user) { Fabricate(:user) }
+    fab!(:deleted_user) { Fabricate(:user) }
 
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 
@@ -50,7 +50,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_post_deletion' do
-    let(:deleted_post) { Fabricate(:post) }
+    fab!(:deleted_post) { Fabricate(:post) }
 
     subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
 
@@ -75,7 +75,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_topic_delete_recover' do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     context "when deleting topic" do
       subject(:log_topic_delete_recover) { described_class.new(admin).log_topic_delete_recover(topic) }
@@ -111,7 +111,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_trust_level_change' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:old_trust_level) { TrustLevel[0] }
     let(:new_trust_level) { TrustLevel[1] }
 
@@ -155,7 +155,7 @@ describe StaffActionLogger do
       expect { logger.log_theme_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    let :theme do
+    fab! :theme do
       Fabricate(:theme)
     end
 
@@ -213,7 +213,7 @@ describe StaffActionLogger do
   end
 
   describe "log_user_suspend" do
-    let(:user) { Fabricate(:user, suspended_at: 10.minutes.ago, suspended_till: 1.day.from_now) }
+    fab!(:user) { Fabricate(:user, suspended_at: 10.minutes.ago, suspended_till: 1.day.from_now) }
 
     it "raises an error when arguments are missing" do
       expect { logger.log_user_suspend(nil, nil) }.to raise_error(Discourse::InvalidParameters)
@@ -234,7 +234,7 @@ describe StaffActionLogger do
   end
 
   describe "log_user_unsuspend" do
-    let(:user) { Fabricate(:user, suspended_at: 1.day.ago, suspended_till: 7.days.from_now) }
+    fab!(:user) { Fabricate(:user, suspended_at: 1.day.ago, suspended_till: 7.days.from_now) }
 
     it "raises an error when argument is missing" do
       expect { logger.log_user_unsuspend(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -265,8 +265,8 @@ describe StaffActionLogger do
   end
 
   describe "log_badge_revoke" do
-    let(:user) { Fabricate(:user) }
-    let(:badge) { Fabricate(:badge) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:badge) { Fabricate(:badge) }
     let(:user_badge) { BadgeGranter.grant(badge, user) }
 
     it "raises an error when argument is missing" do
@@ -357,8 +357,8 @@ describe StaffActionLogger do
   end
 
   describe 'log_category_deletion' do
-    let(:parent_category) { Fabricate(:category) }
-    let(:category) { Fabricate(:category, parent_category: parent_category) }
+    fab!(:parent_category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category, parent_category: parent_category) }
 
     it "raises an error when category is missing" do
       expect { logger.log_category_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -379,7 +379,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_category_creation' do
-    let(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category) }
 
     it "raises an error when category is missing" do
       expect { logger.log_category_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -398,7 +398,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_lock_trust_level' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "raises an error when argument is missing" do
       expect { logger.log_lock_trust_level(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -418,7 +418,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_user_activate' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "raises an error when argument is missing" do
       expect { logger.log_user_activate(nil, nil) }.to raise_error(Discourse::InvalidParameters)
@@ -456,7 +456,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_check_personal_message' do
-    let(:personal_message) { Fabricate(:private_message_topic) }
+    fab!(:personal_message) { Fabricate(:private_message_topic) }
 
     subject(:log_check_personal_message) { described_class.new(admin).log_check_personal_message(personal_message) }
 
@@ -474,7 +474,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_post_approved' do
-    let(:approved_post) { Fabricate(:post) }
+    fab!(:approved_post) { Fabricate(:post) }
 
     subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
 
@@ -492,7 +492,7 @@ describe StaffActionLogger do
   end
 
   describe 'log_post_rejected' do
-    let(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
 
     subject(:log_post_rejected) { described_class.new(admin).log_post_rejected(reviewable, DateTime.now) }
 

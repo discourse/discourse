@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe GroupHistory do
-  let(:group_history) { Fabricate(:group_history) }
+  fab!(:group_history) { Fabricate(:group_history) }
 
   let(:other_group_history) do
     Fabricate(:group_history,

@@ -5,7 +5,7 @@ require 'new_post_manager'
 
 describe NewPostManager do
 
-  let(:topic) { Fabricate(:topic) }
+  fab!(:topic) { Fabricate(:topic) }
 
   context "default action" do
     it "creates the post by default" do
@@ -20,7 +20,7 @@ describe NewPostManager do
   end
 
   context "default action" do
-    let(:other_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
 
     it "doesn't enqueue private messages" do
       SiteSetting.approve_unless_trust_level = 4
@@ -355,8 +355,8 @@ describe NewPostManager do
   end
 
   context 'when posting in the category requires approval' do
-    let(:user) { Fabricate(:user) }
-    let(:category) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:category) { Fabricate(:category) }
 
     context 'when new topics require approval' do
       before do
@@ -379,7 +379,7 @@ describe NewPostManager do
     end
 
     context 'when new posts require approval' do
-      let(:topic) { Fabricate(:topic, category: category) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
 
       before do
         category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true

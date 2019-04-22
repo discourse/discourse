@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 describe GroupShowSerializer do
-  let(:user) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
 
   context 'admin user' do
-    let(:user) { Fabricate(:admin) }
-    let(:group) { Fabricate(:group, users: [user]) }
+    fab!(:user) { Fabricate(:admin) }
+    fab!(:group) { Fabricate(:group, users: [user]) }
 
     it 'should return the right attributes' do
       json = GroupShowSerializer.new(group, scope: Guardian.new(user)).as_json
@@ -32,7 +32,7 @@ describe GroupShowSerializer do
   end
 
   describe '#mentionable' do
-    let(:group) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+    fab!(:group) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     it 'should return the right value' do
       json = GroupShowSerializer.new(group, scope: Guardian.new).as_json

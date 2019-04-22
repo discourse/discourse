@@ -5,8 +5,8 @@ require 'category_list'
 
 describe CategoryList do
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
   context "security" do
@@ -63,10 +63,10 @@ describe CategoryList do
 
   context "with a category" do
 
-    let!(:topic_category) { Fabricate(:category, num_featured_topics: 2) }
+    fab!(:topic_category) { Fabricate(:category, num_featured_topics: 2) }
 
     context "with a topic in a category" do
-      let!(:topic) { Fabricate(:topic, category: topic_category) }
+      fab!(:topic) { Fabricate(:topic, category: topic_category) }
       let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
 
       it "should return the category" do
@@ -77,10 +77,10 @@ describe CategoryList do
     end
 
     context "with pinned topics in a category" do
-      let!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
-      let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
-      let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
-      let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
+      fab!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
+      fab!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
+      fab!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
+      fab!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
       let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
 
       it "returns pinned topic first" do

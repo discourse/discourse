@@ -6,11 +6,11 @@ require 'topic_subtype'
 
 describe PostCreator do
 
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
   let(:topic) { Fabricate(:topic, user: user) }
 
   context "new topic" do
-    let(:category) { Fabricate(:category, user: user) }
+    fab!(:category) { Fabricate(:category, user: user) }
     let(:basic_topic_params) { { title: "hello world topic", raw: "my name is fred", archetype_id: 1 } }
     let(:image_sizes) { { 'http://an.image.host/image.jpg' => { "width" => 111, "height" => 222 } } }
 
@@ -350,7 +350,7 @@ describe PostCreator do
         end
 
         describe "topic's auto close based on last post" do
-          let(:topic_timer) do
+          fab!(:topic_timer) do
             Fabricate(:topic_timer,
               based_on_last_post: true,
               execute_at: Time.zone.now - 12.hours,
@@ -360,8 +360,8 @@ describe PostCreator do
 
           let(:topic) { topic_timer.topic }
 
-          let(:post) do
-            Fabricate(:post, topic: topic)
+          fab!(:post) do
+            Fabricate(:post, topic: topic_timer.topic)
           end
 
           it "updates topic's auto close date" do
@@ -475,7 +475,7 @@ describe PostCreator do
   end
 
   context 'whisper' do
-    let!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
 
     it 'whispers do not mess up the public view' do
       first = PostCreator.new(user,
@@ -544,7 +544,7 @@ describe PostCreator do
 
   context 'uniqueness' do
 
-    let!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
     let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4 } }
     let(:creator) { PostCreator.new(user, basic_topic_params) }
 
@@ -606,7 +606,7 @@ describe PostCreator do
 
   context "host spam" do
 
-    let!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
     let(:basic_topic_params) { { raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4 } }
     let(:creator) { PostCreator.new(user, basic_topic_params) }
 
@@ -633,7 +633,7 @@ describe PostCreator do
 
   # more integration testing ... maximise our testing
   context 'existing topic' do
-    let(:topic) { Fabricate(:topic, user: user, title: 'topic title with 25 chars') }
+    fab!(:topic) { Fabricate(:topic, user: user, title: 'topic title with 25 chars') }
     let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
 
     it 'ensures the user can create the post' do
@@ -686,7 +686,7 @@ describe PostCreator do
   end
 
   context 'closed topic' do
-    let!(:topic) { Fabricate(:topic, user: user, closed: true) }
+    fab!(:topic) { Fabricate(:topic, user: user, closed: true) }
     let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
 
     it 'responds with an error message' do
@@ -698,7 +698,7 @@ describe PostCreator do
   end
 
   context 'missing topic' do
-    let!(:topic) { Fabricate(:topic, user: user, deleted_at: 5.minutes.ago) }
+    let(:topic) { Fabricate(:topic, user: user, deleted_at: 5.minutes.ago) }
     let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
 
     it 'responds with an error message' do
@@ -726,8 +726,8 @@ describe PostCreator do
   # integration test ... minimise db work
   context 'private message' do
     let(:target_user1) { Fabricate(:coding_horror) }
-    let(:target_user2) { Fabricate(:moderator) }
-    let(:unrelated) { Fabricate(:user) }
+    fab!(:target_user2) { Fabricate(:moderator) }
+    fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
       PostCreator.create(user, title: 'hi there welcome to my topic',
                                raw: "this is my awesome message @#{unrelated.username_lower}",
@@ -804,7 +804,7 @@ describe PostCreator do
 
   context "warnings" do
     let(:target_user1) { Fabricate(:coding_horror) }
-    let(:target_user2) { Fabricate(:moderator) }
+    fab!(:target_user2) { Fabricate(:moderator) }
     let(:base_args) do
       { title: 'you need a warning buddy!',
         raw: "you did something bad and I'm telling you about it!",
@@ -885,7 +885,7 @@ describe PostCreator do
 
   context 'private message to group' do
     let(:target_user1) { Fabricate(:coding_horror) }
-    let(:target_user2) { Fabricate(:moderator) }
+    fab!(:target_user2) { Fabricate(:moderator) }
     let(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
@@ -893,7 +893,7 @@ describe PostCreator do
       g.save
       g
     end
-    let(:unrelated) { Fabricate(:user) }
+    fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
       PostCreator.create!(user,
         title: 'hi there welcome to my topic',
@@ -1044,7 +1044,7 @@ describe PostCreator do
   end
 
   context "staged users" do
-    let(:staged) { Fabricate(:staged) }
+    fab!(:staged) { Fabricate(:staged) }
 
     it "automatically watches all messages it participates in" do
       post = PostCreator.create(staged,
@@ -1171,7 +1171,7 @@ describe PostCreator do
   end
 
   context 'private message to a user that has disabled private messages' do
-    let(:another_user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user) }
 
     before do
       another_user.user_option.update!(allow_private_messages: false)
@@ -1195,8 +1195,8 @@ describe PostCreator do
   end
 
   context "private message to a muted user" do
-    let(:muted_me) { Fabricate(:evil_trout) }
-    let(:another_user) { Fabricate(:user) }
+    fab!(:muted_me) { Fabricate(:evil_trout) }
+    fab!(:another_user) { Fabricate(:user) }
 
     it 'should fail' do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1217,7 +1217,7 @@ describe PostCreator do
       )
     end
 
-    let(:staff_user) { Fabricate(:admin) }
+    fab!(:staff_user) { Fabricate(:admin) }
 
     it 'succeeds if the user is staff' do
       updater = UserUpdater.new(muted_me, muted_me)
@@ -1236,8 +1236,8 @@ describe PostCreator do
   end
 
   context "private message to an ignored user" do
-    let(:ignorer) { Fabricate(:evil_trout) }
-    let(:another_user) { Fabricate(:user) }
+    fab!(:ignorer) { Fabricate(:evil_trout) }
+    fab!(:another_user) { Fabricate(:user) }
 
     context "when post author is ignored" do
       let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
@@ -1259,8 +1259,8 @@ describe PostCreator do
     end
 
     context "when post author is admin who is ignored" do
-      let(:staff_user) { Fabricate(:admin) }
-      let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: staff_user) }
+      fab!(:staff_user) { Fabricate(:admin) }
+      fab!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: staff_user) }
 
       it 'succeeds if the user is staff' do
         pc = PostCreator.new(
@@ -1278,9 +1278,9 @@ describe PostCreator do
   end
 
   context "private message recipients limit (max_allowed_message_recipients) reached" do
-    let(:target_user1) { Fabricate(:coding_horror) }
-    let(:target_user2) { Fabricate(:evil_trout) }
-    let(:target_user3) { Fabricate(:walter_white) }
+    fab!(:target_user1) { Fabricate(:coding_horror) }
+    fab!(:target_user2) { Fabricate(:evil_trout) }
+    fab!(:target_user3) { Fabricate(:walter_white) }
 
     before do
       SiteSetting.max_allowed_message_recipients = 2
@@ -1314,7 +1314,7 @@ describe PostCreator do
     end
 
     context "always succeeds if the user is staff" do
-      let(:staff_user) { Fabricate(:admin) }
+      fab!(:staff_user) { Fabricate(:admin) }
 
       it 'when sending message to multiple recipients' do
         pc = PostCreator.new(
@@ -1331,9 +1331,9 @@ describe PostCreator do
   end
 
   context "#create_post_notice" do
-    let(:user) { Fabricate(:user) }
-    let(:staged) { Fabricate(:staged) }
-    let(:anonymous) { Fabricate(:anonymous) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:staged) { Fabricate(:staged) }
+    fab!(:anonymous) { Fabricate(:anonymous) }
 
     it "generates post notices for new users" do
       post = PostCreator.create!(user, title: "one of my first topics", raw: "one of my first posts")

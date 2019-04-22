@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 describe PostRevisionSerializer do
-  let(:post) { Fabricate(:post, version: 2) }
+  fab!(:post) { Fabricate(:post, version: 2) }
 
   context 'hidden tags' do
-    let(:public_tag) { Fabricate(:tag, name: 'public') }
-    let(:public_tag2) { Fabricate(:tag, name: 'visible') }
-    let(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
-    let(:hidden_tag2) { Fabricate(:tag, name: 'secret') }
+    fab!(:public_tag) { Fabricate(:tag, name: 'public') }
+    fab!(:public_tag2) { Fabricate(:tag, name: 'visible') }
+    fab!(:hidden_tag) { Fabricate(:tag, name: 'hidden') }
+    fab!(:hidden_tag2) { Fabricate(:tag, name: 'secret') }
 
     let(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name, hidden_tag2.name]) }
 

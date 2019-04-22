@@ -22,8 +22,8 @@ describe PostMover do
 
   describe 'move_posts' do
     context 'topics' do
-      let(:user) { Fabricate(:user, admin: true) }
-      let(:another_user) { Fabricate(:evil_trout) }
+      fab!(:user) { Fabricate(:user, admin: true) }
+      fab!(:another_user) { Fabricate(:evil_trout) }
       let(:category) { Fabricate(:category, user: user) }
       let!(:topic) { Fabricate(:topic, user: user) }
       let!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
@@ -38,7 +38,7 @@ describe PostMover do
 
       let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
       let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
-      let!(:p5) { Fabricate(:post) }
+      fab!(:p5) { Fabricate(:post) }
       let(:p6) { Fabricate(:post, topic: topic) }
 
       before do
@@ -551,12 +551,12 @@ describe PostMover do
     end
 
     context 'messages' do
-      let(:user) { Fabricate(:user) }
-      let(:admin) { Fabricate(:admin) }
-      let(:evil_trout) { Fabricate(:evil_trout) }
-      let(:another_user) { Fabricate(:user) }
-      let(:regular_user) { Fabricate(:trust_level_4) }
-      let(:topic) { Fabricate(:topic) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:evil_trout) { Fabricate(:evil_trout) }
+      fab!(:another_user) { Fabricate(:user) }
+      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
       let!(:p1) { Fabricate(:post, topic: personal_message, user: user) }
       let!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user) }
@@ -679,10 +679,10 @@ describe PostMover do
     end
 
     context 'banner topic' do
-      let(:admin) { Fabricate(:admin) }
-      let(:evil_trout) { Fabricate(:evil_trout) }
-      let(:regular_user) { Fabricate(:trust_level_4) }
-      let(:topic) { Fabricate(:topic) }
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:evil_trout) { Fabricate(:evil_trout) }
+      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
       let(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
       let!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }

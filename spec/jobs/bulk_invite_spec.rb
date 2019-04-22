@@ -4,11 +4,11 @@ require 'rails_helper'
 
 describe Jobs::BulkInvite do
   describe '#execute' do
-    let(:user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
-    let!(:group1) { Fabricate(:group, name: 'group1') }
-    let!(:group2) { Fabricate(:group, name: 'group2') }
-    let!(:topic) { Fabricate(:topic, id: 999) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:group1) { Fabricate(:group, name: 'group1') }
+    fab!(:group2) { Fabricate(:group, name: 'group2') }
+    fab!(:topic) { Fabricate(:topic, id: 999) }
     let(:email) { "test@discourse.org" }
     let(:basename) { "bulk_invite.csv" }
     let(:filename) { "#{Invite.base_directory}/#{basename}" }

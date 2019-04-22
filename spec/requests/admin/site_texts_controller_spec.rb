@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Admin::SiteTextsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
 
   after do
     TranslationOverride.delete_all

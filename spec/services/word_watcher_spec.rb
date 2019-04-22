@@ -16,7 +16,7 @@ describe WordWatcher do
     end
 
     context "with watched words" do
-      let!(:anise) { Fabricate(:watched_word, word: "anise", action: WatchedWord.actions[:require_approval]) }
+      fab!(:anise) { Fabricate(:watched_word, word: "anise", action: WatchedWord.actions[:require_approval]) }
 
       it "is falsey without a match" do
         expect(WordWatcher.new("No liquorice for me, thanks...").word_matches_for_action?(:require_approval)).to be_falsey

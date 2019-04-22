@@ -8,9 +8,9 @@ describe PostTiming do
   it { is_expected.to validate_presence_of :msecs }
 
   describe 'pretend_read' do
-    let!(:p1) { Fabricate(:post) }
-    let!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
-    let!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
+    fab!(:p1) { Fabricate(:post) }
+    fab!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
+    fab!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
 
     let :topic_id do
       p1.topic_id

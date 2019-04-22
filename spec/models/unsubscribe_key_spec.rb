@@ -22,7 +22,7 @@ describe UnsubscribeKey do
 
   describe 'key' do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:key) { UnsubscribeKey.create_key_for(user, "digest") }
 
     it 'has a temporary key' do

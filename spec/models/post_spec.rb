@@ -155,9 +155,9 @@ describe Post do
   end
 
   describe 'flagging helpers' do
-    let(:post) { Fabricate(:post) }
-    let(:user) { Fabricate(:coding_horror) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:user) { Fabricate(:coding_horror) }
+    fab!(:admin) { Fabricate(:admin) }
 
     it 'is_flagged? is accurate' do
       PostActionCreator.off_topic(user, post)
@@ -197,7 +197,7 @@ describe Post do
   end
 
   describe "maximum images" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
@@ -311,7 +311,7 @@ describe Post do
   end
 
   describe "maximum attachments" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_attachment) { post_with_body('<a class="attachment" href="/uploads/default/1/2082985.txt">file.txt</a>', newuser) }
     let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
@@ -359,7 +359,7 @@ describe Post do
   end
 
   context "links" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
     let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser) }
@@ -423,7 +423,7 @@ describe Post do
   end
 
   describe "maximums" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
     let(:post_onebox) { post_with_body("http://www.google.com", newuser) }
     let(:post_code_link) { post_with_body("<code>http://www.google.com</code>", newuser) }
@@ -548,7 +548,7 @@ describe Post do
 
     context "max mentions" do
 
-      let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
       let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
       let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
 
@@ -787,7 +787,7 @@ describe Post do
 
     describe 'a new reply' do
 
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:other_user) { Fabricate(:coding_horror) }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
       let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
@@ -844,7 +844,7 @@ describe Post do
     let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
     let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
     let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
-    let!(:p4) { Fabricate(:post, percent_rank: 0.99) }
+    fab!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
       SiteSetting.summary_percent_filter = 66
@@ -884,7 +884,7 @@ describe Post do
 
   context "reply_ids" do
 
-    let!(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
     let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
     let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
     let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
@@ -983,7 +983,7 @@ describe Post do
     end
 
     describe 'mentions' do
-      let(:group) do
+      fab!(:group) do
         Fabricate(:group,
           mentionable_level: Group::ALIAS_LEVELS[:members_mods_and_admins]
         )
@@ -1118,8 +1118,8 @@ describe Post do
   end
 
   describe "#set_owner" do
-    let(:post) { Fabricate(:post) }
-    let(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1237,25 +1237,25 @@ describe Post do
   end
 
   describe '#link_post_uploads' do
-    let(:video_upload) do
+    fab!(:video_upload) do
       Fabricate(:upload,
         url: '/uploads/default/original/1X/1/1234567890123456.mp4'
       )
     end
 
-    let(:image_upload) do
+    fab!(:image_upload) do
       Fabricate(:upload,
         url: '/uploads/default/original/1X/1/1234567890123456.jpg'
       )
     end
 
-    let(:audio_upload) do
+    fab!(:audio_upload) do
       Fabricate(:upload,
         url: '/uploads/default/original/1X/1/1234567890123456.ogg'
       )
     end
 
-    let(:attachment_upload) do
+    fab!(:attachment_upload) do
       Fabricate(:upload,
         url: '/uploads/default/original/1X/1/1234567890123456.csv'
       )

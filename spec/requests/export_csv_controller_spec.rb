@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe ExportCsvController do
   context "while logged in as normal user" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     before { sign_in(user) }
 
     describe "#export_entity" do
@@ -43,7 +43,7 @@ describe ExportCsvController do
   end
 
   context "while logged in as an admin" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
     before { sign_in(admin) }
 
     describe "#export_entity" do
@@ -80,7 +80,7 @@ describe ExportCsvController do
   end
 
   context 'while logged in as a moderator' do
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     before { sign_in(moderator) }
 

@@ -234,9 +234,9 @@ HTML
 
   describe "locale fields" do
 
-    let!(:theme) { Fabricate(:theme) }
-    let!(:theme2) { Fabricate(:theme) }
-    let!(:theme3) { Fabricate(:theme) }
+    fab!(:theme) { Fabricate(:theme) }
+    fab!(:theme2) { Fabricate(:theme) }
+    fab!(:theme3) { Fabricate(:theme) }
 
     let!(:en1) {
       ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en",
