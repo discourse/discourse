@@ -75,7 +75,6 @@
       <div class='clearfix'>
         <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
       </div>
-      <hr>
       <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
         <% @topic_view.link_counts[post.id].each do |link| %>
           <% if link[:reflection] && link[:title].present? %>
