@@ -2358,8 +2358,8 @@ en:
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic: "delete topic"
-        add_post_notice: "Add post notice"
-        remove_post_notice: "Remove post notice"
+        add_post_notice: "Add Staff Notice"
+        remove_post_notice: "Remove Staff Notice"
 
       actions:
         flag: "Flag"
