@@ -45,7 +45,7 @@
       <tr>
         <th><%= t 'js.topic.title' %></th>
         <th><%= t 'js.replies' %></th>
-        <th><%= t 'js.created' %></th>
+        <th><%= t 'js.activity' %></th>
       </tr>
     </thead>
 
@@ -75,7 +75,7 @@
             <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
           </td>
           <td>
-            <%= I18n.l(t.created_at, format: :date_only) %>
+            <%= I18n.l(t.last_posted_at, format: :date_only) %>
           </td>
         </tr>
       <% end %>
