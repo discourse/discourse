@@ -73,6 +73,21 @@ body.wizard {
   font-weight: bold;
 }
 
+.wizard-step-privacy {
+  label[for="privacy_options"] .field-description {
+    color: #444;
+    margin-bottom: 1em;
+  }
+
+  .field-privacy-options {
+    margin-bottom: 0.8em;
+
+    .radio-label {
+      font-weight: normal;
+    }
+  }
+}
+
 .wizard-step-form {
   max-height: 500px;
 }
