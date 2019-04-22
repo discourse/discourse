@@ -119,16 +119,28 @@ describe Wizard::Builder do
 
     it 'should set the right default value for the fields' do
       SiteSetting.login_required = true
-      SiteSetting.invite_only = false
+      SiteSetting.invite_only = true
 
       fields = privacy_step.fields
       login_required_field = fields.first
-      invite_only_field = fields.last
+      privacy_options_field = fields.last
 
+      expect(fields.length).to eq(2)
       expect(login_required_field.id).to eq('privacy')
       expect(login_required_field.value).to eq("restricted")
-      expect(invite_only_field.id).to eq('invite_only')
-      expect(invite_only_field.value).to eq(false)
+      expect(privacy_options_field.id).to eq('privacy_options')
+      expect(privacy_options_field.value).to eq("invite_only")
+    end
+
+    it 'should not show privacy_options field on special case' do
+      SiteSetting.invite_only = true
+      SiteSetting.must_approve_users = true
+
+      fields = privacy_step.fields
+      login_required_field = fields.first
+
+      expect(fields.length).to eq(1)
+      expect(login_required_field.id).to eq('privacy')
     end
   end
 end
