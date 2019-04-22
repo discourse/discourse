@@ -4272,8 +4272,7 @@ en:
       privacy:
         title: "Access"
         description:
-          "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>
-          <p>You can always send invites from topics, or from your user profile page, too.</p>"
+          "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>"
 
         fields:
           privacy:
