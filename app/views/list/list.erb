@@ -75,7 +75,7 @@
             <span class='posts' title='<%= t 'posts' %>'><%= t.posts_count %></span>
           </td>
           <td>
-            <%= I18n.l(t.last_posted_at, format: :date_only) %>
+            <%= I18n.l(t.last_posted_at || t.created_at, format: :date_only) %>
           </td>
         </tr>
       <% end %>
