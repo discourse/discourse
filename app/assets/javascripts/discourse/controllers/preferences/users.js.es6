@@ -8,7 +8,10 @@ export default Ember.Controller.extend(PreferencesTabController, {
   ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
   userIsMemberOrAbove: Ember.computed.gte("model.trust_level", 2),
   userIsStaffOrModerator: Ember.computed.or("model.staff", "model.moderator"),
-  ignoredEnabled: Ember.computed.or("userIsMemberOrAbove", "userIsStaffOrModerator"),
+  ignoredEnabled: Ember.computed.or(
+    "userIsMemberOrAbove",
+    "userIsStaffOrModerator"
+  ),
   actions: {
     ignoredUsernamesChanged(previous, current) {
       if (current.length > previous.length) {
