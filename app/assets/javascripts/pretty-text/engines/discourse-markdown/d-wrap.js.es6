@@ -1,48 +1,40 @@
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
 
-function addWrapper(buffer, matches, state) {
-  let token;
+const rule = {
+  tag: "wrap",
 
-  let parsed = parseBBCodeTag(
-    "[wrap wrap" + matches[1] + "]",
-    0,
-    matches[1].length + 11
-  );
+  before(state, tagInfo) {
+    const defaultAttrs = tagInfo.attrs._default || "";
 
-  token = new state.Token("div_open", "div", 1);
-  token.attrs = [["class", "d-wrap"]];
+    let parsed = parseBBCodeTag(
+      "[wrap wrap=" + defaultAttrs + "]",
+      0,
+      defaultAttrs.length + 12
+    );
 
-  const attributes = parsed.attrs || {};
-  const content = attributes.content;
-  delete attributes.content;
+    let token = state.push("bbcode_open", "div", 1);
+    token.attrs = [["class", "d-wrap"]];
 
-  Object.keys(attributes).forEach(tag => {
-    const value = state.md.utils.escapeHtml(attributes[tag]);
-    tag = state.md.utils.escapeHtml(tag.replace(/[^a-z0-9\-]/g, ""));
-    token.attrs.push([`data-${tag}`, value]);
-  });
+    const attributes = parsed.attrs || {};
+    Object.keys(attributes).forEach(tag => {
+      const value = state.md.utils.escapeHtml(attributes[tag]);
+      tag = state.md.utils.escapeHtml(tag.replace(/[^a-z0-9\-]/g, ""));
 
-  buffer.push(token);
+      if (value && tag && tag.length > 1) {
+        token.attrs.push([`data-${tag}`, value]);
+      }
+    });
+  },
 
-  if (content) {
-    token = new state.Token("text", "", 0);
-    token.content = content;
-    buffer.push(token);
+  after(state) {
+    state.push("bbcode_close", "div", -1);
   }
-
-  token = new state.Token("div_close", "div", -1);
-  buffer.push(token);
-}
+};
 
 export function setup(helper) {
-  helper.whiteList(["div.d-wrap"]);
-
   helper.registerPlugin(md => {
-    const rule = {
-      matcher: /\[wrap(=.+?)\]/,
-      onMatch: addWrapper
-    };
-
-    md.core.textPostProcess.ruler.push("d-wrap", rule);
+    md.block.bbcode.ruler.push("wraps", rule);
   });
+
+  helper.whiteList(["div.d-wrap"]);
 }
