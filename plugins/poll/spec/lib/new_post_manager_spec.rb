@@ -30,7 +30,7 @@ describe NewPostManager do
       expect(result.action).to eq(:enqueued)
       expect(result.reviewable).to be_present
 
-      review_result = result.reviewable.perform(admin, :approve)
+      review_result = result.reviewable.perform(admin, :approve_post)
       expect(Poll.where(post: review_result.created_post).exists?).to eq(true)
     end
   end
