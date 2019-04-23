@@ -32,14 +32,6 @@ export default Ember.Component.extend(LoadMore, {
 
     this.$().on("click.details-disabled", "details.disabled", () => false);
     this.$().on("click.discourse-redirect", ".excerpt a", function(e) {
-      const $target = $(e.target);
-      if (
-        $target.hasClass("mention") ||
-        $target.parents(".expanded-embed").length
-      ) {
-        return false;
-      }
-
       return ClickTrack.trackClick(e);
     });
   }.on("didInsertElement"),

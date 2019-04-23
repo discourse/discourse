@@ -5,14 +5,6 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     this.$().on("click.discourse-redirect", "#revisions a", function(e) {
-      const $target = $(e.target);
-      if (
-        $target.hasClass("mention") ||
-        $target.parents(".expanded-embed").length
-      ) {
-        return false;
-      }
-
       return ClickTrack.trackClick(e);
     });
   },

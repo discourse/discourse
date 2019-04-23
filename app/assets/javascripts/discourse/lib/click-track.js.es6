@@ -10,12 +10,16 @@ export function isValidLink($link) {
   //  - links with disabled tracking
   //  - category links
   //  - quote back button
-  if ($link.is(".lightbox, .mention-group, .no-track-link, .hashtag, .back")) {
+  if ($link.is(".lightbox, .mention, .mention-group, .no-track-link, .hashtag, .back")) {
     return false;
   }
 
   // Do not track links in quotes or in elided part
   if ($link.parents("aside.quote, .elided").length !== 0) {
+    return false;
+  }
+
+  if ($link.parents(".expanded-embed").length !== 0) {
     return false;
   }
 
