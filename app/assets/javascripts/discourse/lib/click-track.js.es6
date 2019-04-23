@@ -10,7 +10,11 @@ export function isValidLink($link) {
   //  - links with disabled tracking
   //  - category links
   //  - quote back button
-  if ($link.is(".lightbox, .mention, .mention-group, .no-track-link, .hashtag, .back")) {
+  if (
+    $link.is(
+      ".lightbox, .mention, .mention-group, .no-track-link, .hashtag, .back"
+    )
+  ) {
     return false;
   }
 
@@ -63,10 +67,8 @@ export default {
       return true;
     }
 
-    let href = ($link.attr("href") || $link.data("href")).trim();
-    if (!href) {
-      return false;
-    } else if (href.indexOf("mailto:") === 0) {
+    let href = ($link.attr("href") || $link.data("href") || "").trim();
+    if (!href || href.indexOf("mailto:") === 0) {
       return true;
     }
 
