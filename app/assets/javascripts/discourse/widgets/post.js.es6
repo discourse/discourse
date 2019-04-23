@@ -453,7 +453,7 @@ createWidget("post-notice", {
         : attrs.name;
     let text, icon;
     if (attrs.noticeType === "custom") {
-      icon = "asterisk";
+      icon = "user-shield";
       text = attrs.noticeMessage;
     } else if (attrs.noticeType === "new_user") {
       icon = "hands-helping";

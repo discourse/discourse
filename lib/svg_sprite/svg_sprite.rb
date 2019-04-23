@@ -20,7 +20,6 @@ module SvgSprite
     "arrow-up",
     "arrows-alt-h",
     "arrows-alt-v",
-    "asterisk",
     "at",
     "backward",
     "ban",
@@ -185,6 +184,7 @@ module SvgSprite
     "user-edit",
     "user-plus",
     "user-secret",
+    "user-shield",
     "user-times",
     "users",
     "wrench"
