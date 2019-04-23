@@ -471,7 +471,7 @@ end
 #  id               :integer          not null, primary key
 #  theme_id         :integer          not null
 #  target_id        :integer          not null
-#  name             :string(30)       not null
+#  name             :string(255)      not null
 #  value            :text             not null
 #  value_baked      :text
 #  created_at       :datetime         not null

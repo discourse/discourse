@@ -6,10 +6,12 @@
   </div>
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
 
-  <div class="controls tracking-controls">
-    <label>{{d-icon "eye-slash" class="icon"}} {{i18n 'user.ignored_users'}}</label>
-    {{ignored-user-list model=model items=model.ignored_usernames saving=saved}}
-  </div>
+  {{#if ignoredEnabled}}
+    <div class="controls tracking-controls">
+      <label>{{d-icon "eye-slash" class="icon"}} {{i18n 'user.ignored_users'}}</label>
+      {{ignored-user-list model=model items=model.ignored_usernames saving=saved}}
+    </div>
+  {{/if}}
 </div>
 
 {{plugin-outlet name="user-preferences-notifications" args=(hash model=model save=(action "save"))}}
