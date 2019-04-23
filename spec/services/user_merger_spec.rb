@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe UserMerger do
-  let!(:target_user) { Fabricate(:user_single_email, username: 'alice', email: 'alice@example.com') }
-  let!(:source_user) { Fabricate(:user_single_email, username: 'alice1', email: 'alice@work.com') }
+  let!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
+  let!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
   let(:walter) { Fabricate(:walter_white) }
 
   def merge_users!(source = nil, target =  nil)
@@ -838,7 +838,7 @@ describe UserMerger do
   it "skips merging email adresses when a secondary email address exists" do
     merge_users!(source_user, target_user)
 
-    alice2 = Fabricate(:user_single_email, username: 'alice2', email: 'alice@foo.com')
+    alice2 = Fabricate(:user, username: 'alice2', email: 'alice@foo.com')
     merge_users!(alice2, target_user)
 
     emails = UserEmail.where(user_id: target_user.id).pluck(:email, :primary)
