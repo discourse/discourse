@@ -21,6 +21,9 @@ describe Jobs::CreateUserReviewable do
     SiteSetting.must_approve_users = true
     described_class.new.execute(user_id: user.id)
     described_class.new.execute(user_id: user.id)
+
+    reviewable = Reviewable.find_by(target: user)
+    expect(reviewable.reviewable_scores.size).to eq(1)
   end
 
   describe "reasons" do
