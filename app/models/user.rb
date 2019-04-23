@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
 
-  before_save :update_username_lower
+  before_save :update_usernames
   before_save :ensure_password_is_hashed
   before_save :match_title_to_primary_group_changes
   before_save :check_if_title_is_badged_granted
@@ -224,8 +224,12 @@ class User < ActiveRecord::Base
     SiteSetting.min_username_length.to_i..SiteSetting.max_username_length.to_i
   end
 
+  def self.normalize_username(username)
+    username.unicode_normalize.downcase if username.present?
+  end
+
   def self.username_available?(username, email = nil, allow_reserved_username: false)
-    lower = username.downcase
+    lower = normalize_username(username)
     return false if !allow_reserved_username && reserved_username?(lower)
     return true  if !username_exists?(lower)
 
@@ -234,10 +238,10 @@ class User < ActiveRecord::Base
   end
 
   def self.reserved_username?(username)
-    lower = username.downcase
+    username = normalize_username(username)
 
-    SiteSetting.reserved_usernames.split("|").any? do |reserved|
-      !!lower.match("^#{Regexp.escape(reserved).gsub('\*', '.*')}$")
+    SiteSetting.reserved_usernames.unicode_normalize.split("|").any? do |reserved|
+      username.match?(/^#{Regexp.escape(reserved).gsub('\*', '.*')}$/)
     end
   end
 
@@ -362,7 +366,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username(username)
-    find_by(username_lower: username.downcase)
+    find_by(username_lower: normalize_username(username))
   end
 
   def group_granted_trust_level
@@ -1293,30 +1297,31 @@ class User < ActiveRecord::Base
     self.trust_level ||= SiteSetting.default_trust_level
   end
 
-  def update_username_lower
+  def update_usernames
+    self.username.unicode_normalize!
     self.username_lower = username.downcase
   end
 
   USERNAME_EXISTS_SQL = <<~SQL
-  (SELECT users.id AS id, true as is_user FROM users
-  WHERE users.username_lower = :username)
+    (SELECT users.id AS id, true as is_user FROM users
+    WHERE users.username_lower = :username)
 
-  UNION ALL
+    UNION ALL
 
-  (SELECT groups.id, false as is_user FROM groups
-  WHERE lower(groups.name) = :username)
+    (SELECT groups.id, false as is_user FROM groups
+    WHERE lower(groups.name) = :username)
   SQL
 
-  def self.username_exists?(username_lower)
-    DB.exec(User::USERNAME_EXISTS_SQL, username: username_lower) > 0
+  def self.username_exists?(username)
+    username = normalize_username(username)
+    DB.exec(User::USERNAME_EXISTS_SQL, username: username) > 0
   end
 
   def username_validator
     username_format_validator || begin
-      lower = username.downcase
-
       existing = DB.query(
-        USERNAME_EXISTS_SQL, username: lower
+        USERNAME_EXISTS_SQL,
+        username: self.class.normalize_username(username)
       )
 
       user_id = existing.select { |u| u.is_user }.first&.id

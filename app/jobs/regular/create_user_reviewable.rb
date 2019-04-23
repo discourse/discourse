@@ -23,12 +23,15 @@ class Jobs::CreateUserReviewable < Jobs::Base
           email: user.email
         }
       )
-      @reviewable.add_score(
-        Discourse.system_user,
-        ReviewableScore.types[:needs_approval],
-        reason: reason,
-        force_review: true
-      )
+
+      if @reviewable.created_new
+        @reviewable.add_score(
+          Discourse.system_user,
+          ReviewableScore.types[:needs_approval],
+          reason: reason,
+          force_review: true
+        )
+      end
     end
   end
 end

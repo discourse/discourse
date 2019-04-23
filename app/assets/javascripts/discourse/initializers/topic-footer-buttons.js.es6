@@ -1,5 +1,4 @@
 import showModal from "discourse/lib/show-modal";
-import { nativeShare } from "discourse/lib/pwa-utils";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 export default {
@@ -13,44 +12,40 @@ export default {
       label: "topic.share.title",
       title: "topic.share.help",
       action() {
-        const modal = () => {
-          const panels = [
-            {
-              id: "share",
-              title: "topic.share.extended_title",
-              model: {
-                topic: this.get("topic")
-              }
+        const panels = [
+          {
+            id: "share",
+            title: "topic.share.extended_title",
+            model: {
+              topic: this.get("topic")
             }
-          ];
+          }
+        ];
 
-          if (this.get("canInviteTo") && !this.get("inviteDisabled")) {
-            let invitePanelTitle;
+        if (this.get("canInviteTo") && !this.get("inviteDisabled")) {
+          let invitePanelTitle;
 
-            if (this.get("isPM")) {
-              invitePanelTitle = "topic.invite_private.title";
-            } else if (this.get("invitingToTopic")) {
-              invitePanelTitle = "topic.invite_reply.title";
-            } else {
-              invitePanelTitle = "user.invited.create";
-            }
-
-            panels.push({
-              id: "invite",
-              title: invitePanelTitle,
-              model: {
-                inviteModel: this.get("topic")
-              }
-            });
+          if (this.get("isPM")) {
+            invitePanelTitle = "topic.invite_private.title";
+          } else if (this.get("invitingToTopic")) {
+            invitePanelTitle = "topic.invite_reply.title";
+          } else {
+            invitePanelTitle = "user.invited.create";
           }
 
-          showModal("share-and-invite", {
-            modalClass: "share-and-invite",
-            panels
+          panels.push({
+            id: "invite",
+            title: invitePanelTitle,
+            model: {
+              inviteModel: this.get("topic")
+            }
           });
-        };
+        }
 
-        nativeShare({ url: this.get("topic.shareUrl") }).then(null, modal);
+        showModal("share-and-invite", {
+          modalClass: "share-and-invite",
+          panels
+        });
       },
       dropdown() {
         return this.site.mobileView;

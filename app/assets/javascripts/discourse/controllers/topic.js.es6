@@ -1301,7 +1301,7 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
 
     if ($post.length === 0 || isElementInViewport($post)) return;
 
-    $("body").animate({ scrollTop: $post.offset().top }, 1000);
+    $("html, body").animate({ scrollTop: $post.offset().top }, 1000);
   }, 500),
 
   unsubscribe() {

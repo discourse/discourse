@@ -294,7 +294,7 @@ describe NewPostManager do
       expect(Reviewable.list_for(Discourse.system_user).count).to eq(1)
       expect(@counter).to be(0)
 
-      reviewable.perform(Discourse.system_user, :approve)
+      reviewable.perform(Discourse.system_user, :approve_post)
 
       manager = NewPostManager.new(
         topic.user,

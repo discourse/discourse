@@ -808,7 +808,7 @@ describe PostsController do
           expect(parsed['pending_post']['raw']).to eq("this is the test content")
 
           mod = Fabricate(:moderator)
-          rp.perform(mod, :approve)
+          rp.perform(mod, :approve_post)
 
           user.reload
           expect(user).not_to be_silenced
