@@ -11,7 +11,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
   verticalOffset: 3,
   value: Ember.computed.alias("tagId"),
   headerComponent: "tag-drop/tag-drop-header",
-  rowComponent: "tag-drop/tag-drop-row",
   allowAutoSelectFirst: false,
   tagName: "li",
   showFilterByTag: Ember.computed.alias("siteSettings.show_filter_by_tag"),
@@ -136,7 +135,10 @@ export default ComboBoxComponent.extend(TagsMixin, {
   _transformJson(context, json) {
     let results = json.results;
     results = results.sort((a, b) => a.id > b.id);
-    return results;
+
+    return results.map(r => {
+      return { id: r.id, name: r.text };
+    });
   },
 
   actions: {
