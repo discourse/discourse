@@ -1,40 +1,70 @@
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
 
-const rule = {
+const WRAP_CLASS = "d-wrap";
+
+function parseAttributes(tagInfo) {
+  const attributes = tagInfo.attrs._default || "";
+  return (
+    parseBBCodeTag("[wrap wrap=" + attributes + "]", 0, attributes.length + 12)
+      .attrs || {}
+  );
+}
+
+function applyDataAttributes(token, state, attributes) {
+  Object.keys(attributes).forEach(tag => {
+    const value = state.md.utils.escapeHtml(attributes[tag]);
+    tag = state.md.utils.escapeHtml(tag.replace(/[^a-z0-9\-]/g, ""));
+
+    if (value && tag && tag.length > 1) {
+      token.attrs.push([`data-${tag}`, value]);
+    }
+  });
+}
+
+const blockRule = {
   tag: "wrap",
 
   before(state, tagInfo) {
-    const defaultAttrs = tagInfo.attrs._default || "";
+    let token = state.push("wrap_open", "div", 1);
+    token.attrs = [["class", WRAP_CLASS]];
 
-    let parsed = parseBBCodeTag(
-      "[wrap wrap=" + defaultAttrs + "]",
-      0,
-      defaultAttrs.length + 12
-    );
-
-    let token = state.push("bbcode_open", "div", 1);
-    token.attrs = [["class", "d-wrap"]];
-
-    const attributes = parsed.attrs || {};
-    Object.keys(attributes).forEach(tag => {
-      const value = state.md.utils.escapeHtml(attributes[tag]);
-      tag = state.md.utils.escapeHtml(tag.replace(/[^a-z0-9\-]/g, ""));
-
-      if (value && tag && tag.length > 1) {
-        token.attrs.push([`data-${tag}`, value]);
-      }
-    });
+    applyDataAttributes(token, state, parseAttributes(tagInfo));
   },
 
   after(state) {
-    state.push("bbcode_close", "div", -1);
+    state.push("wrap_close", "div", -1);
+  }
+};
+
+const inlineRule = {
+  tag: "wrap",
+
+  replace(state, tagInfo, content) {
+    let token = state.push("wrap_open", "span", 1);
+    token.attrs = [["class", WRAP_CLASS]];
+
+    applyDataAttributes(token, state, parseAttributes(tagInfo));
+
+    if (content) {
+      token = state.push("text", "", 0);
+      token.content = content;
+    }
+
+    token = state.push("wrap_close", "span", -1);
+    return true;
   }
 };
 
 export function setup(helper) {
   helper.registerPlugin(md => {
-    md.block.bbcode.ruler.push("wraps", rule);
+    md.inline.bbcode.ruler.push("inline-wrap", inlineRule);
+    md.block.bbcode.ruler.push("block-wrap", blockRule);
   });
 
-  helper.whiteList(["div.d-wrap"]);
+  helper.whiteList([
+    "div.d-wrap",
+    "div[data-*]",
+    "span.d-wrap",
+    "span[data-*]"
+  ]);
 }

@@ -1321,6 +1321,14 @@ HTML
       HTML
 
       expect(cooked).to eq(html.strip)
+
+      cooked = PrettyText.cook("Hello [wrap=toc id=1]taco[/wrap] world")
+
+      html = <<~HTML
+        <p>Hello <span class="d-wrap" data-wrap="toc" data-id="1">taco</span> world</p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
     end
 
     it "wraps the [wrap] tag in block" do
