@@ -40,14 +40,14 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
   if (currentUser.staff) {
     if (attrs.noticeType) {
       contents.push({
-        icon: "asterisk",
+        icon: "user-shield",
         label: "post.controls.remove_post_notice",
         action: "removeNotice",
         className: "btn-default remove-notice"
       });
     } else {
       contents.push({
-        icon: "asterisk",
+        icon: "user-shield",
         label: "post.controls.add_post_notice",
         action: "addNotice",
         className: "btn-default add-notice"
