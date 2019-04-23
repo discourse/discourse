@@ -44,9 +44,16 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
         it "creates a post" do
           topic_count, post_count = Topic.count, Post.count
-          result = reviewable.perform(moderator, :approve_post)
+          result = nil
+
+          Jobs.run_immediately!
+          event = DiscourseEvent.track(:before_create_notifications_for_users) do
+            result = reviewable.perform(moderator, :approve_post)
+          end
+
           expect(result.success?).to eq(true)
           expect(result.created_post).to be_present
+          expect(event).to be_present
           expect(result.created_post).to be_valid
           expect(result.created_post.topic).to eq(topic)
           expect(result.created_post.custom_fields['hello']).to eq('world')
