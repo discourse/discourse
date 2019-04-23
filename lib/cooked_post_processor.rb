@@ -40,6 +40,7 @@ class CookedPostProcessor
       post_process_images
       post_process_quotes
       optimize_urls
+      remove_user_ids
       update_post_image
       enforce_nofollow
       pull_hotlinked_images(bypass_bump)
@@ -592,6 +593,19 @@ class CookedPostProcessor
       @doc.css("img[#{selector}]").each do |img|
         img[selector] = UrlHelper.cook_url(img[selector].to_s)
       end
+    end
+  end
+
+  def remove_user_ids
+    @doc.css("a[href]").each do |a|
+      uri = URI(a["href"])
+      next if uri.hostname != Discourse.current_hostname
+
+      query = Rack::Utils.parse_nested_query(uri.query)
+      next if !query.delete("u")
+
+      uri.query = query.map { |k, v| "#{k}=#{v}" }.join("&").presence
+      a["href"] = uri.to_s
     end
   end
 

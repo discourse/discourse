@@ -6,6 +6,16 @@ module HasUrl
       url.match(self::URL_REGEX)
     end
 
+    def extract_sha1(path)
+      data = extract_url(path)
+      return if data.blank?
+
+      sha1 = data[2]
+      return if sha1&.length != Upload::SHA1_LENGTH
+
+      sha1
+    end
+
     def get_from_url(url)
       return if url.blank?
 

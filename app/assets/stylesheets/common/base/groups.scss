@@ -83,7 +83,7 @@
         overflow: hidden;
         flex: 0 1 auto;
         .group-avatar-flair {
-          margin-top: 0.3em;
+          margin-top: 0.2em;
           margin-right: 8px;
           flex: 0 0 auto;
         }
@@ -94,9 +94,8 @@
 
           span {
             width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            word-break: break-word;
+            line-height: $line-height-medium;
           }
         }
       }

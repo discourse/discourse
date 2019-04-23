@@ -233,7 +233,7 @@ class NewPostManager
     result.reviewable = reviewable
     result.reason = reason if reason
     result.check_errors(errors)
-    result.pending_count = Reviewable.where(created_by: @user).pending.count
+    result.pending_count = ReviewableQueuedPost.where(created_by: @user).pending.count
     result
   end
 

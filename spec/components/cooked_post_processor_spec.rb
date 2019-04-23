@@ -1037,6 +1037,30 @@ describe CookedPostProcessor do
 
   end
 
+  context "#remove_user_ids" do
+    let(:topic) { Fabricate(:topic) }
+
+    let(:post) do
+      Fabricate(:post, raw: <<~RAW)
+        link to a topic: #{topic.url}?u=foo
+
+        a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
+
+        link to an external topic: https://google.com/?u=bar
+      RAW
+    end
+
+    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+    it "does remove user ids" do
+      cpp.remove_user_ids
+
+      expect(cpp.html).to have_tag('a', with: { href: topic.url })
+      expect(cpp.html).to have_tag('a', with: { href: "#{topic.url}?bob=bob&jane=jane" })
+      expect(cpp.html).to have_tag('a', with: { href: "https://google.com/?u=bar" })
+    end
+  end
+
   context "#pull_hotlinked_images" do
 
     let(:post) { build(:post, created_at: 20.days.ago) }

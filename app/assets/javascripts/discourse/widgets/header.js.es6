@@ -184,18 +184,18 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       contents() {
-        if (!attrs.flagCount) {
-          return;
+        let { currentUser } = this;
+        if (currentUser && currentUser.reviewable_count) {
+          return h(
+            "div.badge-notification.reviewables",
+            {
+              attributes: {
+                title: I18n.t("notifications.reviewable_items")
+              }
+            },
+            this.currentUser.reviewable_count
+          );
         }
-        return h(
-          "div.badge-notification.flagged-posts",
-          {
-            attributes: {
-              title: I18n.t("notifications.total_flagged")
-            }
-          },
-          attrs.flagCount
-        );
       }
     });
 

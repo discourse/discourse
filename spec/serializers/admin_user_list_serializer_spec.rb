@@ -17,9 +17,9 @@ describe AdminUserListSerializer do
   end
 
   context "emails" do
-    let(:admin) { Fabricate(:user_single_email, admin: true, email: "admin@email.com") }
-    let(:moderator) { Fabricate(:user_single_email, moderator: true, email: "moderator@email.com") }
-    let(:user) { Fabricate(:user_single_email, email: "user@email.com") }
+    let(:admin) { Fabricate(:user, admin: true, email: "admin@email.com") }
+    let(:moderator) { Fabricate(:user, moderator: true, email: "moderator@email.com") }
+    let(:user) { Fabricate(:user, email: "user@email.com") }
 
     def serialize(user, viewed_by, opts = nil)
       AdminUserListSerializer.new(

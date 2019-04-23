@@ -121,6 +121,11 @@ class SiteSetting < ActiveRecord::Base
     @attachment_filename_blacklist_regex ||= Regexp.union(SiteSetting.attachment_filename_blacklist.split("|"))
   end
 
+  def self.unicode_username_character_whitelist_regex
+    @unicode_username_whitelist_regex = SiteSetting.unicode_username_character_whitelist.present? \
+      ? Regexp.new(SiteSetting.unicode_username_character_whitelist) : nil
+  end
+
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url

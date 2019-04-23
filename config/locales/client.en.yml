@@ -1642,7 +1642,7 @@ en:
       empty: "No notifications found."
       more: "view older notifications"
       post_approved: "Your post was approved"
-      total_flagged: "total flagged posts"
+      reviewable_items: "items requiring review"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -2276,8 +2276,8 @@ en:
         other: "view {{count}} hidden replies"
 
       notice:
-        first: "This is the first time {{user}} has posted — let’s welcome them to our community!"
-        return: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
+        new_user: "This is the first time {{user}} has posted — let’s welcome them to our community!"
+        returning_user: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
 
       unread: "Post is unread"
       has_replies:
@@ -2360,6 +2360,8 @@ en:
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic: "delete topic"
+        add_post_notice: "Add Staff Notice"
+        remove_post_notice: "Remove Staff Notice"
 
       actions:
         flag: "Flag"
@@ -3746,6 +3748,7 @@ en:
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"
+            web_hook_deactivate: "webhook deactivate"
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"

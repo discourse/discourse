@@ -173,7 +173,7 @@ ru:
         instructions: |-
           Вот картинка единорога:
 
-          <img src="%{base_uri}/images/unicorn.png" width="520" height="520">
+          <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
           Если вам нравится она, то нажмите на лайк :heart: кнопку внизу поста.
 

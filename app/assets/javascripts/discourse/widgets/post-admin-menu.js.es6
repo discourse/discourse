@@ -37,22 +37,31 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
     contents.push(buttonAtts);
   }
 
-  if (attrs.canManage) {
-    contents.push({
-      icon: "cog",
-      label: "post.controls.rebake",
-      action: "rebakePost",
-      className: "btn-default rebuild-html"
-    });
-
-    if (attrs.hidden) {
+  if (currentUser.staff) {
+    if (attrs.noticeType) {
       contents.push({
-        icon: "far-eye",
-        label: "post.controls.unhide",
-        action: "unhidePost",
-        className: "btn-default unhide-post"
+        icon: "user-shield",
+        label: "post.controls.remove_post_notice",
+        action: "removeNotice",
+        className: "btn-default remove-notice"
+      });
+    } else {
+      contents.push({
+        icon: "user-shield",
+        label: "post.controls.add_post_notice",
+        action: "addNotice",
+        className: "btn-default add-notice"
       });
     }
+  }
+
+  if (attrs.canManage && attrs.hidden) {
+    contents.push({
+      icon: "far-eye",
+      label: "post.controls.unhide",
+      action: "unhidePost",
+      className: "btn-default unhide-post"
+    });
   }
 
   if (currentUser.admin) {
@@ -74,14 +83,23 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
       });
     }
 
-    const action = attrs.locked ? "unlock" : "lock";
-    contents.push({
-      icon: action,
-      label: `post.controls.${action}_post`,
-      action: `${action}Post`,
-      title: `post.controls.${action}_post_description`,
-      className: `btn-default ${action}-post`
-    });
+    if (attrs.locked) {
+      contents.push({
+        icon: "unlock",
+        label: "post.controls.unlock_post",
+        action: "unlockPost",
+        title: "post.controls.unlock_post_description",
+        className: "btn-default unlock-post"
+      });
+    } else {
+      contents.push({
+        icon: "lock",
+        label: "post.controls.lock_post",
+        action: "lockPost",
+        title: "post.controls.lock_post_description",
+        className: "btn-default lock-post"
+      });
+    }
   }
 
   if (attrs.canManage || attrs.canWiki) {
@@ -100,6 +118,15 @@ export function buildManageButtons(attrs, currentUser, siteSettings) {
         className: "btn-default wiki"
       });
     }
+  }
+
+  if (attrs.canManage) {
+    contents.push({
+      icon: "cog",
+      label: "post.controls.rebake",
+      action: "rebakePost",
+      className: "btn-default rebuild-html"
+    });
   }
 
   return contents;

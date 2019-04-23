@@ -24,7 +24,7 @@ describe UserAnonymizer do
 
   describe "make_anonymous" do
     let(:original_email) { "edward@example.net" }
-    let(:user) { Fabricate(:user_single_email, username: "edward", email: original_email) }
+    let(:user) { Fabricate(:user, username: "edward", email: original_email) }
     let(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 

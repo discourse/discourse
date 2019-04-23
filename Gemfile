@@ -14,13 +14,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '5.2.2.1'
-  gem 'actionpack', '5.2.2.1'
-  gem 'actionview', '5.2.2.1'
-  gem 'activemodel', '5.2.2.1'
-  gem 'activerecord', '5.2.2.1'
-  gem 'activesupport', '5.2.2.1'
-  gem 'railties', '5.2.2.1'
+  gem 'actionmailer', '5.2.3'
+  gem 'actionpack', '5.2.3'
+  gem 'actionview', '5.2.3'
+  gem 'activemodel', '5.2.3'
+  gem 'activerecord', '5.2.3'
+  gem 'activesupport', '5.2.3'
+  gem 'railties', '5.2.3'
   gem 'sprockets-rails'
 end
 
@@ -122,6 +122,7 @@ group :test do
   gem 'minitest', require: false
   gem 'danger'
   gem 'simplecov', require: false
+  gem "test-prof"
 end
 
 group :test, :development do

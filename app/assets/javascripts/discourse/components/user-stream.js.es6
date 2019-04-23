@@ -1,6 +1,5 @@
 import LoadMore from "discourse/mixins/load-more";
 import ClickTrack from "discourse/lib/click-track";
-import { selectedText } from "discourse/lib/utilities";
 import Post from "discourse/models/post";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
@@ -32,15 +31,7 @@ export default Ember.Component.extend(LoadMore, {
     $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
     this.$().on("click.details-disabled", "details.disabled", () => false);
-    this.$().on("mouseup.discourse-redirect", ".excerpt a", function(e) {
-      // bypass if we are selecting stuff
-      const selection = window.getSelection && window.getSelection();
-      if (selection.type === "Range" || selection.rangeCount > 0) {
-        if (selectedText() !== "") {
-          return true;
-        }
-      }
-
+    this.$().on("click.discourse-redirect", ".excerpt a", function(e) {
       const $target = $(e.target);
       if (
         $target.hasClass("mention") ||
@@ -60,7 +51,7 @@ export default Ember.Component.extend(LoadMore, {
     this.$().off("click.details-disabled", "details.disabled");
 
     // Unbind link tracking
-    this.$().off("mouseup.discourse-redirect", ".excerpt a");
+    this.$().off("click.discourse-redirect", ".excerpt a");
   }.on("willDestroyElement"),
 
   actions: {
