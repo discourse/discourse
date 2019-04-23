@@ -10,8 +10,20 @@ class ReviewableQueuedPost < Reviewable
 
   def build_actions(actions, guardian, args)
     if guardian.is_staff?
-      actions.add(:approve) unless approved?
-      actions.add(:reject) unless rejected?
+
+      unless approved?
+        actions.add(:approve_post) do |a|
+          a.icon = 'check'
+          a.label = "reviewables.actions.approve_post.title"
+        end
+      end
+
+      unless rejected?
+        actions.add(:reject_post) do |a|
+          a.icon = 'times'
+          a.label = "reviewables.actions.reject_post.title"
+        end
+      end
 
       if pending? && guardian.can_delete_user?(created_by)
         actions.add(:delete_user) do |action|
@@ -46,7 +58,7 @@ class ReviewableQueuedPost < Reviewable
     result
   end
 
-  def perform_approve(performed_by, args)
+  def perform_approve_post(performed_by, args)
     created_post = nil
 
     creator = PostCreator.new(created_by, create_options.merge(
@@ -83,7 +95,7 @@ class ReviewableQueuedPost < Reviewable
     create_result(:success, :approved) { |result| result.created_post = created_post }
   end
 
-  def perform_reject(performed_by, args)
+  def perform_reject_post(performed_by, args)
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
 

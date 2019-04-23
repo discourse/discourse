@@ -35,16 +35,16 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     context "actions" do
 
-      context "approve" do
+      context "approve_post" do
         it 'triggers an extensibility event' do
-          event = DiscourseEvent.track(:approved_post) { reviewable.perform(moderator, :approve) }
+          event = DiscourseEvent.track(:approved_post) { reviewable.perform(moderator, :approve_post) }
           expect(event).to be_present
           expect(event[:params].first).to eq(reviewable)
         end
 
         it "creates a post" do
           topic_count, post_count = Topic.count, Post.count
-          result = reviewable.perform(moderator, :approve)
+          result = reviewable.perform(moderator, :approve_post)
           expect(result.success?).to eq(true)
           expect(result.created_post).to be_present
           expect(result.created_post).to be_valid
@@ -64,12 +64,12 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(notifications).to be_present
 
           # We can't approve twice
-          expect(-> { reviewable.perform(moderator, :approve) }).to raise_error(Reviewable::InvalidAction)
+          expect(-> { reviewable.perform(moderator, :approve_post) }).to raise_error(Reviewable::InvalidAction)
         end
 
         it "skips validations" do
           reviewable.payload['raw'] = 'x'
-          result = reviewable.perform(moderator, :approve)
+          result = reviewable.perform(moderator, :approve_post)
           expect(result.created_post).to be_present
         end
 
@@ -82,28 +82,28 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           SiteSetting.num_users_to_silence_new_user = 1
           expect(Guardian.new(newuser).can_create_post?(topic)).to eq(false)
 
-          result = reviewable.perform(moderator, :approve)
+          result = reviewable.perform(moderator, :approve_post)
           expect(result.success?).to eq(true)
         end
 
       end
 
-      context "reject" do
+      context "reject_post" do
         it 'triggers an extensibility event' do
-          event = DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject) }
+          event = DiscourseEvent.track(:rejected_post) { reviewable.perform(moderator, :reject_post) }
           expect(event).to be_present
           expect(event[:params].first).to eq(reviewable)
         end
 
         it "doesn't create a post" do
           post_count = Post.count
-          result = reviewable.perform(moderator, :reject)
+          result = reviewable.perform(moderator, :reject_post)
           expect(result.success?).to eq(true)
           expect(result.created_post).to be_nil
           expect(Post.count).to eq(post_count)
 
           # We can't reject twice
-          expect(-> { reviewable.perform(moderator, :reject) }).to raise_error(Reviewable::InvalidAction)
+          expect(-> { reviewable.perform(moderator, :reject_post) }).to raise_error(Reviewable::InvalidAction)
         end
       end
 
@@ -147,7 +147,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     it "creates the post and topic when approved" do
       topic_count, post_count = Topic.count, Post.count
-      result = reviewable.perform(moderator, :approve)
+      result = reviewable.perform(moderator, :approve_post)
 
       expect(result.success?).to eq(true)
       expect(result.created_post).to be_present
@@ -163,7 +163,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     it "creates the post and topic when rejected" do
       topic_count, post_count = Topic.count, Post.count
-      result = reviewable.perform(moderator, :reject)
+      result = reviewable.perform(moderator, :reject_post)
 
       expect(result.success?).to eq(true)
       expect(result.created_post).to be_blank

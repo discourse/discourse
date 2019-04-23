@@ -4477,6 +4477,10 @@ en:
         title: "Ignore"
       approve:
         title: "Approve"
+      approve_post:
+        title: "Approve Post"
+      reject_post:
+        title: "Reject Post"
       approve_user:
         title: "Approve User"
       reject_user:

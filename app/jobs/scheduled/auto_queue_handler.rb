@@ -16,7 +16,7 @@ module Jobs
         if reviewable.is_a?(ReviewableFlaggedPost)
           reviewable.perform(Discourse.system_user, :ignore)
         elsif reviewable.is_a?(ReviewableQueuedPost)
-          reviewable.perform(Discourse.system_user, :reject)
+          reviewable.perform(Discourse.system_user, :reject_post)
         elsif reviewable.is_a?(ReviewableUser)
           reviewable.perform(Discourse.system_user, :reject_user_delete)
         end
