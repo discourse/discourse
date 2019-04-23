@@ -98,6 +98,12 @@
   </div>
 <% end %>
 
+<% if @topic_view.topic && @topic_view.topic.category %>
+  <div class="clearfix topic-body">
+    <%= t('js.topic.read_more_in_category', catLink: "<a href=\"#{@topic_view.topic.category.url}\">#{CGI.escapeHTML(@topic_view.topic.category.name)}</a>", latestLink: "<a href=\"/latest\">#{t("js.topic.view_latest_topics")}</a>") %>
+  </div>
+<% end %>
+
 <% end %>
 
 <% content_for :head do %>

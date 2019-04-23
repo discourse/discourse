@@ -1893,7 +1893,7 @@ en:
       options: "Topic Options"
       show_links: "show links within this topic"
       toggle_information: "toggle topic details"
-      read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
+      read_more_in_category: "Want to read more? Browse other topics in %{catLink} or %{latestLink}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
