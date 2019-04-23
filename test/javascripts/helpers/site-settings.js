@@ -94,7 +94,8 @@ Discourse.SiteSettingsOriginal = {
   emoji_set: "emoji_one",
   desktop_category_page_style: "categories_and_latest_topics",
   enable_mentions: true,
-  enable_personal_messages: true
+  enable_personal_messages: true,
+  unicode_usernames: false
 };
 Discourse.SiteSettings = jQuery.extend(
   true,

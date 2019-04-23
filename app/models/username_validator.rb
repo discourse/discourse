@@ -16,9 +16,10 @@ class UsernameValidator
   end
 
   def initialize(username)
-    @username = username
+    @username = username&.unicode_normalize
     @errors = []
   end
+
   attr_accessor :errors
   attr_reader :username
 
@@ -27,10 +28,11 @@ class UsernameValidator
   end
 
   def valid_format?
-    username_exist?
+    username_present?
     username_length_min?
     username_length_max?
     username_char_valid?
+    username_char_whitelisted?
     username_first_char_valid?
     username_last_char_valid?
     username_no_double_special?
@@ -39,62 +41,103 @@ class UsernameValidator
   end
 
   CONFUSING_EXTENSIONS ||= /\.(js|json|css|htm|html|xml|jpg|jpeg|png|gif|bmp|ico|tif|tiff|woff)$/i
+  MAX_CHARS ||= 60
+
+  ASCII_INVALID_CHAR_PATTERN ||= /[^\w.-]/
+  UNICODE_INVALID_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}._-]/
+  INVALID_LEADING_CHAR_PATTERN ||= /^[^\p{Alnum}\p{M}_]+/
+  INVALID_TRAILING_CHAR_PATTERN ||= /[^\p{Alnum}\p{M}]+$/
+  REPEATED_SPECIAL_CHAR_PATTERN ||= /[-_.]{2,}/
 
   private
 
-  def username_exist?
+  def username_present?
     return unless errors.empty?
-    unless username
+
+    if username.blank?
       self.errors << I18n.t(:'user.username.blank')
     end
   end
 
   def username_length_min?
     return unless errors.empty?
-    if username.length < User.username_length.begin
+
+    if username_grapheme_clusters.size < User.username_length.begin
       self.errors << I18n.t(:'user.username.short', min: User.username_length.begin)
     end
   end
 
   def username_length_max?
     return unless errors.empty?
-    if username.length > User.username_length.end
+
+    if username_grapheme_clusters.size > User.username_length.end
       self.errors << I18n.t(:'user.username.long', max: User.username_length.end)
+    elsif username.length > MAX_CHARS
+      self.errors << I18n.t(:'user.username.too_long')
     end
   end
 
   def username_char_valid?
     return unless errors.empty?
-    if username =~ /[^\w.-]/
+
+    if self.class.invalid_char_pattern.match?(username)
+      self.errors << I18n.t(:'user.username.characters')
+    end
+  end
+
+  def username_char_whitelisted?
+    return unless errors.empty? && self.class.char_whitelist_exists?
+
+    if username.chars.any? { |c| !self.class.whitelisted_char?(c) }
       self.errors << I18n.t(:'user.username.characters')
     end
   end
 
   def username_first_char_valid?
     return unless errors.empty?
-    if username[0] =~ /\W/
+
+    if INVALID_LEADING_CHAR_PATTERN.match?(username_grapheme_clusters.first)
       self.errors << I18n.t(:'user.username.must_begin_with_alphanumeric_or_underscore')
     end
   end
 
   def username_last_char_valid?
     return unless errors.empty?
-    if username[-1] =~ /[^A-Za-z0-9]/
+
+    if INVALID_TRAILING_CHAR_PATTERN.match?(username_grapheme_clusters.last)
       self.errors << I18n.t(:'user.username.must_end_with_alphanumeric')
     end
   end
 
   def username_no_double_special?
     return unless errors.empty?
-    if username =~ /[-_.]{2,}/
+
+    if REPEATED_SPECIAL_CHAR_PATTERN.match?(username)
       self.errors << I18n.t(:'user.username.must_not_contain_two_special_chars_in_seq')
     end
   end
 
   def username_does_not_end_with_confusing_suffix?
     return unless errors.empty?
-    if username =~ CONFUSING_EXTENSIONS
+
+    if CONFUSING_EXTENSIONS.match?(username)
       self.errors << I18n.t(:'user.username.must_not_end_with_confusing_suffix')
     end
+  end
+
+  def username_grapheme_clusters
+    @username_grapheme_clusters ||= username.grapheme_clusters
+  end
+
+  def self.invalid_char_pattern
+    SiteSetting.unicode_usernames ? UNICODE_INVALID_CHAR_PATTERN : ASCII_INVALID_CHAR_PATTERN
+  end
+
+  def self.char_whitelist_exists?
+    SiteSetting.unicode_usernames && SiteSetting.unicode_username_character_whitelist_regex.present?
+  end
+
+  def self.whitelisted_char?(c)
+    c.match?(/[\w.-]/) || c.match?(SiteSetting.unicode_username_character_whitelist_regex)
   end
 end
