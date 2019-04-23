@@ -7,7 +7,7 @@ RSpec.describe Jobs::AutoExpireUserApiKeys do
   context 'when user api key is unused in last 1 days' do
 
     before do
-      SiteSetting.expire_user_api_keys_days = true
+      SiteSetting.expire_user_api_keys_days = 1
     end
 
     it 'should revoke the key' do
@@ -17,7 +17,7 @@ RSpec.describe Jobs::AutoExpireUserApiKeys do
 
       described_class.new.execute({})
 
-      expect(key1.reload.revoked_at).to eq(Time.zone.now)
+      expect(key1.reload.revoked_at).to be_within(1.second).of(Time.zone.now)
       expect(key2.reload.revoked_at).to eq(nil)
     end
   end
