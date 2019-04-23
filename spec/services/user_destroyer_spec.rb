@@ -19,7 +19,7 @@ describe UserDestroyer do
   describe 'destroy' do
     before do
       @admin = Fabricate(:admin)
-      @user = Fabricate(:user)
+      @user = Fabricate(:user_with_secondary_email)
     end
 
     it 'raises an error when user is nil' do

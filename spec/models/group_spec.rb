@@ -272,7 +272,7 @@ describe Group do
         group = Group.refresh_automatic_group!(:staff)
         expect(group.name).to eq('staff')
 
-        Fabricate(:user_single_email, username: I18n.t('groups.default_names.moderators').upcase)
+        Fabricate(:user, username: I18n.t('groups.default_names.moderators').upcase)
         group = Group.refresh_automatic_group!(:moderators)
         expect(group.name).to eq('moderators')
       end
