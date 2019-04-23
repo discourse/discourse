@@ -555,6 +555,48 @@ QUnit.test("Mentions", assert => {
     '<p><small>a <span class="mention">@sam</span> c</small></p>',
     "it allows mentions within HTML tags"
   );
+
+  assert.cooked(
+    "@_sam @1sam @ab-cd.123_ABC-xYz @sam1",
+    '<p><span class="mention">@_sam</span> <span class="mention">@1sam</span> <span class="mention">@ab-cd.123_ABC-xYz</span> <span class="mention">@sam1</span></p>',
+    "it detects mentions of valid usernames"
+  );
+
+  assert.cooked(
+    "@.sam @-sam @sam. @sam_ @sam-",
+    '<p>@.sam @-sam <span class="mention">@sam</span>. <span class="mention">@sam</span>_ <span class="mention">@sam</span>-</p>',
+    "it does not detect mentions of invalid usernames"
+  );
+
+  assert.cookedOptions(
+    "Hello @狮子",
+    { siteSettings: { unicode_usernames: false } },
+    "<p>Hello @狮子</p>",
+    "it does not detect mentions of Unicode usernames"
+  );
+});
+
+QUnit.test("Mentions - Unicode usernames enabled", assert => {
+  assert.cookedOptions(
+    "Hello @狮子",
+    { siteSettings: { unicode_usernames: true } },
+    '<p>Hello <span class="mention">@狮子</span></p>',
+    "it detects mentions of Unicode usernames"
+  );
+
+  assert.cookedOptions(
+    "@狮子 @_狮子 @1狮子 @狮-ø.١٢٣_Ö-ழ் @狮子1",
+    { siteSettings: { unicode_usernames: true } },
+    '<p><span class="mention">@狮子</span> <span class="mention">@_狮子</span> <span class="mention">@1狮子</span> <span class="mention">@狮-ø.١٢٣_Ö-ழ்</span> <span class="mention">@狮子1</span></p>',
+    "it detects mentions of valid Unicode usernames"
+  );
+
+  assert.cookedOptions(
+    "@.狮子 @-狮子 @狮子. @狮子_ @狮子-",
+    { siteSettings: { unicode_usernames: true } },
+    '<p>@.狮子 @-狮子 <span class="mention">@狮子</span>. <span class="mention">@狮子</span>_ <span class="mention">@狮子</span>-</p>',
+    "it does not detect mentions of invalid Unicode usernames"
+  );
 });
 
 QUnit.test("Mentions - disabled", assert => {

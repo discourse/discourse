@@ -844,4 +844,13 @@ describe Group do
     group = Group.find(group.id)
     expect(group.flair_url).to eq("fab fa-bandcamp")
   end
+
+  context "Unicode usernames and group names" do
+    before { SiteSetting.unicode_usernames = true }
+
+    it "should normalize the name" do
+      group = Fabricate(:group, name: "Bücherwurm") # NFD
+      expect(group.name).to eq("Bücherwurm") # NFC
+    end
+  end
 end

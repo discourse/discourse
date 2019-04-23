@@ -313,7 +313,7 @@ class UsersController < ApplicationController
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
     end
-    username = params[:username]
+    username = params[:username]&.unicode_normalize
 
     target_user = user_from_params_or_current_user
 

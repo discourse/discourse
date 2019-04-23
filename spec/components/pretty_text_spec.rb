@@ -336,6 +336,21 @@ describe PrettyText do
       expect(PrettyText.cook(". http://test/@sam")).not_to include('mention')
     end
 
+    context "with Unicode usernames disabled" do
+      before { SiteSetting.unicode_usernames = false }
+
+      it 'does not detect mention' do
+        expect(PrettyText.cook("Hello @狮子")).to_not include("mention")
+      end
+    end
+
+    context "with Unicode usernames enabled" do
+      before { SiteSetting.unicode_usernames = true }
+
+      it 'does detect mention' do
+        expect(PrettyText.cook("Hello @狮子")).to match_html '<p>Hello <span class="mention">@狮子</span></p>'
+      end
+    end
   end
 
   describe "code fences" do
