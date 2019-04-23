@@ -84,14 +84,6 @@ export default Ember.Component.extend(
         "click.discourse-redirect",
         ".cooked a, a.track-link",
         function(e) {
-          const $target = $(e.target);
-          if (
-            $target.hasClass("mention") ||
-            $target.parents(".expanded-embed").length
-          ) {
-            return false;
-          }
-
           return ClickTrack.trackClick(e);
         }
       );
