@@ -6,6 +6,8 @@ import User from "discourse/models/user";
 export default Ember.Controller.extend(PreferencesTabController, {
   saveAttrNames: ["muted_usernames", "ignored_usernames"],
   ignoredUsernames: Ember.computed.alias("model.ignored_usernames"),
+  userIsMemberOrAbove: Ember.computed.gte("model.trust_level", 2),
+  ignoredEnabled: Ember.computed.or("userIsMemberOrAbove", "model.staff"),
   actions: {
     ignoredUsernamesChanged(previous, current) {
       if (current.length > previous.length) {
