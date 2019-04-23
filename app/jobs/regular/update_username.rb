@@ -5,16 +5,27 @@ module Jobs
 
     def execute(args)
       @user_id = args[:user_id]
-      @old_username = args[:old_username]
-      @new_username = args[:new_username]
+      @old_username = args[:old_username].unicode_normalize
+      @new_username = args[:new_username].unicode_normalize
       @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
 
-      @raw_mention_regex = /(?:(?<![\w`_])|(?<=_))@#{@old_username}(?:(?![\w\-\.])|(?=[\-\.](?:\s|$)))/i
+      @raw_mention_regex = /
+        (?:
+          (?<![\p{Alnum}\p{M}`])     # make sure there is no preceding letter, number or backtick
+        )
+        @#{@old_username}
+        (?:
+          (?![\p{Alnum}\p{M}_\-.`])  # make sure there is no trailing letter, number, underscore, dash, dot or backtick
+          |                          # or
+          (?=[-_.](?:\s|$))          # there is an underscore, dash or dot followed by a whitespace or end of line
+        )
+      /ix
+
       @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
 
       cooked_username = PrettyText::Helpers.format_username(@old_username)
       @cooked_mention_username_regex = /^@#{cooked_username}$/i
-      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{cooked_username}$/i
+      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{CGI.escape(cooked_username)}$/i
       @cooked_quote_username_regex = /(?<=\s)#{cooked_username}(?=:)/i
 
       update_posts

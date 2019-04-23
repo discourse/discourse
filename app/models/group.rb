@@ -281,7 +281,7 @@ class Group < ActiveRecord::Base
     end
 
     # don't allow shoddy localization to break this
-    localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale).downcase
+    localized_name = User.normalize_username(I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale))
     validator = UsernameValidator.new(localized_name)
 
     if validator.valid_format? && !User.username_exists?(localized_name)
@@ -621,14 +621,14 @@ class Group < ActiveRecord::Base
     # avoid strip! here, it works now
     # but may not continue to work long term, especially
     # once we start returning frozen strings
-    if self.name != (stripped = self.name.strip)
+    if self.name != (stripped = self.name.unicode_normalize.strip)
       self.name = stripped
     end
 
     UsernameValidator.perform_validation(self, 'name') || begin
-      name_lower = self.name.downcase
+      normalized_name = User.normalize_username(self.name)
 
-      if self.will_save_change_to_name? && self.name_was&.downcase != name_lower && User.username_exists?(name_lower)
+      if self.will_save_change_to_name? && User.normalize_username(self.name_was) != normalized_name && User.username_exists?(self.name)
         errors.add(:name, I18n.t("activerecord.errors.messages.taken"))
       end
     end

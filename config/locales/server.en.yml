@@ -912,16 +912,15 @@ en:
     submit: "Save preferences"
     digest_frequency:
       title: "You are receiving summary emails %{frequency}"
-      select_title: 'Set summary emails frequency to:'
-      
-      never: 'never'
+      select_title: "Set summary emails frequency to:"
+
+      never: "never"
       every_30_minutes: "every 30 minutes"
       every_hour: "hourly"
       daily: "daily"
       weekly: "weekly"
       every_month: "every month"
       every_six_months: "every six months"
-
 
   user_api_key:
     title: "Authorize application access"
@@ -1474,6 +1473,8 @@ en:
 
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
+    unicode_usernames: "Allow usernames and group names to contain Unicode letters and numbers."
+    unicode_username_character_whitelist: "Regular expression to allow only some Unicode characters within usernames. ASCII letters and numbers will always be allowed and don't need to be included in the whitelist."
 
     reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
@@ -2066,6 +2067,10 @@ en:
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
         high_weight_invalid: "You cannot set the weight to be greater or equal to 1 or greater than 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
+      unicode_username_whitelist:
+        regex_invalid: "The regular expression is invalid: %{error}"
+        leading_trailing_slash: "The regular expression must not start and end with a slash."
+      unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
 
     placeholder:
       sso_provider_secrets:
@@ -2220,6 +2225,7 @@ en:
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
+      too_long: "is too long"
       characters: "must only include numbers, letters, dashes, and underscores"
       unique: "must be unique"
       blank: "must be present"
@@ -4272,8 +4278,7 @@ en:
 
       privacy:
         title: "Access"
-        description:
-          "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>"
+        description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>"
 
         fields:
           privacy:

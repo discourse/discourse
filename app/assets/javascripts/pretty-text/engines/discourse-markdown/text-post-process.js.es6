@@ -15,9 +15,14 @@ export class TextPostProcessRuler {
 
     this.matcherIndex = [];
 
-    let rules = this.rules.map(
-      r => "(" + r.rule.matcher.toString().slice(1, -1) + ")"
-    );
+    const rules = [];
+    const flags = new Set("g");
+
+    this.rules.forEach(r => {
+      const matcher = r.rule.matcher;
+      rules.push(`(${matcher.source})`);
+      matcher.flags.split("").forEach(f => flags.add(f));
+    });
 
     let i;
     let regexString = "";
@@ -41,7 +46,7 @@ export class TextPostProcessRuler {
       last = "x".match(regex).length - 1;
     }
 
-    this.matcher = new RegExp(rules.join("|"), "g");
+    this.matcher = new RegExp(rules.join("|"), [...flags].join(""));
     return this.matcher;
   }
 
