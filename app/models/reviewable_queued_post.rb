@@ -92,7 +92,15 @@ class ReviewableQueuedPost < Reviewable
       post_number: created_post.post_number
     )
 
-    create_result(:success, :approved) { |result| result.created_post = created_post }
+    create_result(:success, :approved) do |result|
+      result.created_post = created_post
+
+      # Do sidekiq work outside of the transaction
+      result.after_commit = -> {
+        creator.enqueue_jobs
+        creator.trigger_after_events
+      }
+    end
   end
 
   def perform_reject_post(performed_by, args)

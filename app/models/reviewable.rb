@@ -230,6 +230,9 @@ class Reviewable < ActiveRecord::Base
         recalculate_score if result.recalculate_score
       end
     end
+    if result && result.after_commit
+      result.after_commit.call
+    end
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
 
     result
