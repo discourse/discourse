@@ -46,6 +46,8 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
 require 'sidekiq/testing'
+require 'test_prof/recipes/rspec/let_it_be'
+require 'test_prof/before_all/adapters/active_record'
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
@@ -76,8 +78,83 @@ SiteSetting.automatically_download_gravatars = false
 
 SeedFu.seed
 
+module TestSetup
+  # This is run before each test and before each before_all block
+  def self.test_setup(x = nil)
+    # TODO not sure about this, we could use a mock redis implementation here:
+    #   this gives us really clean "flush" semantics, howere the side-effect is that
+    #   we are no longer using a clean redis implementation, a preferable solution may
+    #   be simply flushing before tests, trouble is that redis may be reused with dev
+    #   so that would mean the dev would act weird
+    #
+    #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
+    #
+    # $redis = DiscourseMockRedis.new
+
+    RateLimiter.disable
+    PostActionNotifier.disable
+    SearchIndexer.disable
+    UserActionManager.disable
+    NotificationEmailer.disable
+    SiteIconManager.disable
+
+    SiteSetting.provider.all.each do |setting|
+      SiteSetting.remove_override!(setting.name)
+    end
+
+    # very expensive IO operations
+    SiteSetting.automatically_download_gravatars = false
+
+    Discourse.clear_readonly!
+    Sidekiq::Worker.clear_all
+
+    I18n.locale = :en
+
+    RspecErrorTracker.last_exception = nil
+
+    if $test_cleanup_callbacks
+      $test_cleanup_callbacks.reverse_each(&:call)
+      $test_cleanup_callbacks = nil
+    end
+
+    # Running jobs are expensive and most of our tests are not concern with
+    # code that runs inside jobs. run_later! means they are put on the redis
+    # queue and never processed.
+    Jobs.run_later!
+  end
+end
+
+module ActiveRecordAdapterWithSetup
+  class << self
+    ACTIVE_RECORD_ADAPTER = TestProf::BeforeAll::Adapters::ActiveRecord
+
+    def begin_transaction
+      TestSetup.test_setup
+
+      ACTIVE_RECORD_ADAPTER.begin_transaction
+    end
+
+    def rollback_transaction
+      ACTIVE_RECORD_ADAPTER.rollback_transaction
+    end
+  end
+end
+
+TestProf::BeforeAll.adapter = ActiveRecordAdapterWithSetup
+
+module Prefabrication
+  def fab!(name, &blk)
+    if ENV['PREFABRICATION'] == '0'
+      let!(name, &blk)
+    else
+      let_it_be(name, refind: true, &blk)
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.fail_fast = ENV['RSPEC_FAIL_FAST'] == "1"
+  config.extend Prefabrication
   config.include Helpers
   config.include MessageBus
   config.include RSpecHtmlMatchers
@@ -153,48 +230,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.before :each do |x|
-    # TODO not sure about this, we could use a mock redis implementation here:
-    #   this gives us really clean "flush" semantics, howere the side-effect is that
-    #   we are no longer using a clean redis implementation, a preferable solution may
-    #   be simply flushing before tests, trouble is that redis may be reused with dev
-    #   so that would mean the dev would act weird
-    #
-    #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
-    #
-    # $redis = DiscourseMockRedis.new
-
-    RateLimiter.disable
-    PostActionNotifier.disable
-    SearchIndexer.disable
-    UserActionManager.disable
-    NotificationEmailer.disable
-    SiteIconManager.disable
-
-    SiteSetting.provider.all.each do |setting|
-      SiteSetting.remove_override!(setting.name)
-    end
-
-    # very expensive IO operations
-    SiteSetting.automatically_download_gravatars = false
-
-    Discourse.clear_readonly!
-    Sidekiq::Worker.clear_all
-
-    I18n.locale = :en
-
-    RspecErrorTracker.last_exception = nil
-
-    if $test_cleanup_callbacks
-      $test_cleanup_callbacks.reverse_each(&:call)
-      $test_cleanup_callbacks = nil
-    end
-
-    # Running jobs are expensive and most of our tests are not concern with
-    # code that runs inside jobs. run_later! means they are put on the redis
-    # queue and never processed.
-    Jobs.run_later!
-  end
+  config.before :each, &TestSetup.method(:test_setup)
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true
