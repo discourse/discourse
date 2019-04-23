@@ -15,6 +15,7 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
+  attr_accessor :created_new
   validates_presence_of :type, :status, :created_by_id
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: 'User'
@@ -85,7 +86,7 @@ class Reviewable < ActiveRecord::Base
     topic = target.topic if topic.blank? && target.is_a?(Post)
     category_id = topic.category_id if topic.present?
 
-    create!(
+    reviewable = create!(
       target: target,
       target_created_by_id: target_created_by_id,
       topic: topic,
@@ -95,6 +96,9 @@ class Reviewable < ActiveRecord::Base
       payload: payload,
       potential_spam: potential_spam
     )
+    reviewable.created_new = true
+    reviewable
+
   rescue ActiveRecord::RecordNotUnique
 
     row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
