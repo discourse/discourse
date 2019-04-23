@@ -186,18 +186,18 @@ describe UserNotifications do
       end
 
       it "uses colors from email color settings" do
-       SiteSetting.email_header_bg_color = "#1E1E1E"
-       SiteSetting.email_header_fg_color = "#F0F0F0"
-       SiteSetting.email_accent_bg_color = "#FF1111"
-       SiteSetting.email_accent_fg_color = "#983859"
-       SiteSetting.email_link_color = "#10d510"
+        SiteSetting.email_header_bg_color = "#1E1E1E"
+        SiteSetting.email_header_fg_color = "#F0F0F0"
+        SiteSetting.email_accent_bg_color = "#FF1111"
+        SiteSetting.email_accent_fg_color = "#983859"
+        SiteSetting.email_link_color = "#10d510"
 
-       html = subject.html_part.body.to_s
-       expect(html).to include '#1E1E1E'
-       expect(html).to include '#F0F0F0'
-       expect(html).to include '#FF1111'
-       expect(html).to include '#983859'
-       expect(html).to include '#10d510'
+        html = subject.html_part.body.to_s
+        expect(html).to include '#1E1E1E'
+        expect(html).to include '#F0F0F0'
+        expect(html).to include '#FF1111'
+        expect(html).to include '#983859'
+        expect(html).to include '#10d510'
       end
 
       it "supports subfolder" do
