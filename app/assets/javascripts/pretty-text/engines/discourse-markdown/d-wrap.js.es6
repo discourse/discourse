@@ -62,9 +62,9 @@ export function setup(helper) {
   });
 
   helper.whiteList([
-    "div.d-wrap",
+    `div.${WRAP_CLASS}`,
     "div[data-*]",
-    "span.d-wrap",
+    `span.${WRAP_CLASS}`,
     "span[data-*]"
   ]);
 }
