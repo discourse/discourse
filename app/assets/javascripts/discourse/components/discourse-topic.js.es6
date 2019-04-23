@@ -3,7 +3,6 @@ import AddArchetypeClass from "discourse/mixins/add-archetype-class";
 import ClickTrack from "discourse/lib/click-track";
 import Scrolling from "discourse/mixins/scrolling";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
-import { selectedText } from "discourse/lib/utilities";
 import { observes } from "ember-addons/ember-computed-decorators";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 300;
@@ -82,17 +81,9 @@ export default Ember.Component.extend(
       $(window).on("resize.discourse-on-scroll", () => this.scrolled());
 
       this.$().on(
-        "mouseup.discourse-redirect",
+        "click.discourse-redirect",
         ".cooked a, a.track-link",
         function(e) {
-          // bypass if we are selecting stuff
-          const selection = window.getSelection && window.getSelection();
-          if (selection.type === "Range" || selection.rangeCount > 0) {
-            if (selectedText() !== "") {
-              return true;
-            }
-          }
-
           const $target = $(e.target);
           if (
             $target.hasClass("mention") ||
@@ -116,7 +107,7 @@ export default Ember.Component.extend(
       $(window).unbind("resize.discourse-on-scroll");
 
       // Unbind link tracking
-      this.$().off("mouseup.discourse-redirect", ".cooked a, a.track-link");
+      this.$().off("click.discourse-redirect", ".cooked a, a.track-link");
 
       this.resetExamineDockCache();
 
