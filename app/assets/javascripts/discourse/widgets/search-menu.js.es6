@@ -199,7 +199,7 @@ export default createWidget("search-menu", {
     });
   },
 
-  clickOutside() {
+  mouseDownOutside() {
     this.sendWidgetAction("toggleSearchMenu");
   },
 
