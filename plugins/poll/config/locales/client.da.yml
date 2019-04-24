@@ -58,6 +58,8 @@ da:
           regular: Enkelt valg
           multiple: Flere valg
           number: Nummerbedømmelse
+        poll_result:
+          label: Resultater
         poll_config:
           max: Maks
           min: Min

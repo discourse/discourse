@@ -8,3 +8,9 @@
 lt:
   site_settings:
     discourse_narrative_bot_enabled: 'Įgalinti Discourse Botą (discodot)'
+  discourse_narrative_bot:
+    magic_8_ball:
+      answers:
+        '9': "Taip"
+    new_user_narrative:
+      reset_trigger: "naujas vartotojas"

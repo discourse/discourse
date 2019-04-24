@@ -25,6 +25,7 @@ gl:
   posts: "publicacións"
   loading: "Cargndo"
   log_in: "Iniciar sesión"
+  submit: "Enviar"
   anonymous: "Anónimo"
   errors: &errors
     format: "%{attribute} %{message}"
@@ -117,6 +118,9 @@ gl:
     attributes:
       category:
         name: "Nome da categoría"
+      topic:
+        title: "Título"
+        category_id: "Categoría"
       post:
         raw: "Corpo"
       user_profile:
@@ -214,6 +218,9 @@ gl:
     action: "Preme aquí para activar a conta"
     continue_button: "Continuar a %{site_name}"
     welcome_to: "Benvido/a a %{site_name}!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Cómpre aprobación"
   post_action_types:
     off_topic:
       title: "Sen-relación"
@@ -232,10 +239,12 @@ gl:
     bookmark:
       title: "Marcador"
       description: "Marcar esta publicación"
+      short_description: "Marcar esta publicación"
       long_form: "Marcar este tema"
     like:
       title: "Gústame"
       description: "Gústame esta publicación"
+      short_description: "Gústame esta publicación"
       long_form: "gustoume isto"
   topic_flag_types:
     spam:
@@ -252,12 +261,46 @@ gl:
       title: "Tema normal"
     banner:
       title: "Tema do báner"
+  unsubscribe:
+    log_out: "Saír da sesión"
+    digest_frequency:
+      never: "nunca"
+      every_30_minutes: "cada 30 minutos"
+      every_hour: "cada hora"
+      daily: "diariamente"
+      weekly: "semanalmente"
   reports:
+    default:
+      labels:
+        day: Día
+    post_edits:
+      labels:
+        post: Publicación
+        editor: Editor
+        edit_reason: Razón
+    user_flagging_ratio:
+      labels:
+        user: Usuario
+    moderators_activity:
+      labels:
+        moderator: Moderador
     visits:
       title: "Visitas de usuarios"
       xaxis: "Día"
       yaxis: "Número de visitas"
     signups:
+      xaxis: "Día"
+    new_contributors:
+      xaxis: "Día"
+    consolidated_page_views:
+      yaxis: "Día"
+      labels:
+        post: Publicación
+        editor: Editor
+        edit_reason: Razón
+    dau_by_mau:
+      xaxis: "Día"
+    daily_engaged_users:
       xaxis: "Día"
     profile_views:
       title: "Vistas dos perfís de usuario"
@@ -287,11 +330,20 @@ gl:
       title: "Usuarios por nivel de confianza"
       xaxis: "Nivel de confianza"
       yaxis: "Número de usuarios"
+    users_by_type:
+      yaxis: "Número de usuarios"
+      xaxis_labels:
+        admin: Administración
+        moderator: Moderador
+        suspended: Suspendido
     emails:
       title: "Correos-e enviados"
       xaxis: "Día"
       yaxis: "Número de correos-e enviados"
     user_to_user_private_messages:
+      xaxis: "Día"
+      yaxis: "Número de mensaxes"
+    user_to_user_private_messages_with_replies:
       xaxis: "Día"
       yaxis: "Número de mensaxes"
     system_private_messages:
@@ -314,12 +366,24 @@ gl:
       xaxis: "Usuario"
       num_clicks: "Clics"
       num_topics: "Temas"
+      labels:
+        user: "Usuario"
+        num_clicks: "Clics"
+        num_topics: "Temas"
     top_traffic_sources:
       title: "As maiores fontes de tráfico"
       xaxis: "Dominio"
       num_clicks: "Clics"
       num_topics: "Temas"
       num_users: "Usuarios"
+      labels:
+        domain: Dominio
+        num_clicks: Clics
+        num_topics: Temas
+    top_referred_topics:
+      labels:
+        num_clicks: "Clics"
+        topic: "Tema"
     page_view_anon_reqs:
       title: "Anónimo"
       xaxis: "Día"
@@ -364,11 +428,23 @@ gl:
     mobile_visits:
       xaxis: "Día"
       yaxis: "Número de visitas"
+    suspicious_logins:
+      labels:
+        user: Usuario
+        location: Localización
+    staff_logins:
+      labels:
+        user: Usuario
+        location: Localización
+    top_uploads:
+      labels:
+        filename: Nome do ficheiro
   site_settings:
     delete_old_hidden_posts: "Eliminar automaticamente as publicacións ocultas durante máis de 30 días."
     allow_user_locale: "Permitir os usuarios escoller o idioma da interface"
     min_post_length: "Número mínimo de caracteres permitido para unha publicación"
     min_first_post_length: "Número mínimo de caracteres (corpo do tema) permitido para unha primeira publicación"
+    min_personal_message_post_length: "Número mínimo de caracteres permitido para unha mensaxe"
     max_post_length: "Número máximo de caracteres permitido para unha publicación"
     post_undo_action_window_mins: "Número de minutos que os usuarios teñen para desfacer accións recentes nunha publicación (gústames, denuncias, etc)."
     enable_badges: "Activar o sistema de insignias"
@@ -380,6 +456,8 @@ gl:
     automatically_unpin_topics: "Despegar os temas automaticamente cando o usuario chega ao fondo."
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_emoji: "Activar emojis"
+    errors:
+      min_username_length_range: "O mínimo non pode ser maior que o máximo."
   search:
     types:
       category: "Categorías"
@@ -392,10 +470,15 @@ gl:
   login:
     admin_not_allowed_from_ip_address: "Non podes acceder como administrador desde este enderezo IP."
     new_registrations_disabled: "Neste momento non se permite o rexistro de novas contas."
+  admin:
+    email:
+      sent_test: "enviado!"
   flags_dispositions:
     agreed: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e estamos botándolle un ollo."
     agreed_and_deleted: "Grazas por comunicárnolo. Estamos de acordo en que hai un problema e xa eliminamos a publicación."
     disagreed: "Grazas por comunicárnolo. Estamos botándolle un ollo."
+    ignored: "Grazas por comunicárnolo. Estamos botándolle un ollo."
+    ignored_and_deleted: "Grazas por comunicárnolo. Xa eliminamos a publicación."
   system_messages:
     welcome_user:
       subject_template: "Benvido/a a %{site_name}!"
@@ -405,10 +488,18 @@ gl:
       subject_template: "A copia de seguranza completouse correctamente"
     bulk_invite_succeeded:
       subject_template: "O convite en bloque procesouse correctamente"
+  user_notifications:
+    digest:
+      liked_received: "Gústames recibidos"
+      new_users: "Novos usuarios"
+    set_password:
+      title: "Estabelecer o contrasinal"
   page_not_found:
     see_more: "Máis"
+    search_button: "Buscar"
   terms_of_service:
     title: "Termos do servizo"
+  image: "imaxe"
   about: "Sobre"
   guidelines: "Directrices"
   privacy: "Confidencialidade"
@@ -419,5 +510,102 @@ gl:
     title: "Termos do servizo"
   privacy_topic:
     title: "Política de intimidade"
+  badges:
+    editor:
+      name: Editor
+      description: Edición da publicación inicial
+    basic_user:
+      name: Básico
+    member:
+      name: Membro
+    regular:
+      name: Normal
+    leader:
+      name: Líder
+    welcome:
+      name: Benvido/a
+      description: Recibiu un gústame
+    autobiographer:
+      name: Autobiógrafo
+    anniversary:
+      name: Aniversario
+      description: "Membro activo durante un ano, publicou cando menos unha vez"
+    nice_topic:
+      name: Tema riquiño
+    good_topic:
+      name: Tema bo
+    great_topic:
+      name: Gran tema
+    nice_share:
+      name: Compartición riquiña
+      description: Compartiu unha publicación con 25 visistantes únicos
+    good_share:
+      name: Compartición boa
+      description: Compartiu unha publicación con 300 visistantes únicos
+    great_share:
+      name: Gran compartición
+      description: Compartiu unha publicación con 1000 visistantes únicos
+    first_like:
+      name: Primeiro Gústame
+      description: Gustou unha publicación
+      long_description: |
+        Esta insignia concédese a primeira vez que che gusta unha publicación e usas o botón :heart:. Darlle Gústame a unha publicción e unha gran forma de dicirlles aos membros da comunidade que publicaron algo interesante, útil, riquiño ou divertido. Comparte o amor!
+    first_flag:
+      name: Primeira denuncia
+      description: Denunciou unha publicación
+    promoter:
+      name: Promotor
+      description: Convidou un usuario
+    campaigner:
+      name: Padriño
+    champion:
+      name: Campión
+    first_share:
+      name: Primeira compartición
+      description: Compartiu unha publicación
+    first_link:
+      name: Primeira ligazón
+    first_quote:
+      name: Primeira cita
+    read_guidelines:
+      name: Ler as Directrices
+    reader:
+      name: Lector
+    popular_link:
+      name: Ligazón popular
+    hot_link:
+      name: Ligazón quente
+    famous_link:
+      name: Ligazón popular
   admin_login:
     submit_button: "Enviar correo-e"
+  wizard:
+    step:
+      forum_title:
+        title: "Nome"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "Organización"
+      emoji:
+        title: "Emoji"
+  joined: "Inscrito"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Suspender usuario"
+      delete_spammer:
+        title: "Eliminar spammer"
+      disagree:
+        title: "Non aceptar"
+      approve:
+        title: "Aprobar"
+      reject_user:
+        delete:
+          title: "Eliminar usuario"
+      reject:
+        title: "Rexeitar"
+      delete_user:
+        title: "Eliminar usuario"

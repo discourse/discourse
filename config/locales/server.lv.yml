@@ -10,17 +10,32 @@ lv:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY hh:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d-%m-%Y"
+      short_no_year: "%B %-d"
   date:
     month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tēmas"
   posts: "raksti"
   loading: "Ielāde"
   log_in: "Ienākt"
+  submit: "Iesniegt"
   anonymous: "Anonīmi"
   emails:
     incoming:
       default_subject: "Šim ierakstam ir nepieciešams nosaukums"
+  errors: &errors
+    messages:
+      exclusion: ir rezervēts
+  activemodel:
+    errors:
+      <<: *errors
+  likes: "Patīk"
   embed:
     start_discussion: "Sākt Diskusiju"
     continue: "Turpināt Diskusiju"
@@ -57,31 +72,131 @@ lv:
       other: "%{count} raksti"
   activerecord:
     attributes:
+      category:
+        name: "Sadaļas nosaukums"
+      topic:
+        title: "Virsraksts"
+        category_id: "Sadaļa"
+      post:
+        raw: "Saturs"
       user_profile:
         bio_raw: "Par Mani"
+    errors:
+      <<: *errors
   staff_category_name: "Personāls"
   trust_levels:
     newuser:
       title: "jauns lietotājs"
+    member:
+      title: "biedrs"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1 m"
+    distance_in_words_verbose:
+      half_a_minute: "tikko"
+  password_reset:
+    choose_new: "Izvēlēties jaunu paroli"
+    choose: "Izvēlēties paroli"
+    save: "Iestatīt paroli"
+    title: "Atjaunot paroli"
+  change_email:
+    please_continue: "Turpināt %{site_name}"
+  activation:
+    continue_button: "Turpināt %{site_name}"
+    welcome_to: "Laipni lūdzam %{site_name}!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Nepieciešama apstiprināšana"
   post_action_types:
+    off_topic:
+      long_form: "ziņot par šo kā novirzīšanos no tēmas"
+    spam:
+      title: "Spams"
+      long_form: "ziņot par šo kā spamu"
+    inappropriate:
+      long_form: "ziņot par šo kā nepiedienīgu"
     bookmark:
       title: "Grāmatzīmes"
+    like:
+      long_form: "patika ieraksts"
+  topic_flag_types:
+    spam:
+      title: "Spams"
+      long_form: "ziņot par šo kā spamu"
+    inappropriate:
+      long_form: "ziņot par šo kā nepiedienīgu"
+  archetypes:
+    banner:
+      title: "Banera tēma"
+  unsubscribe:
+    log_out: "Iziet"
+    digest_frequency:
+      never: "nekad"
+      every_30_minutes: "katras 30 minūtes"
+      every_hour: "katru stundu"
+      daily: "katru dienu"
+      weekly: "katru nedēļu"
+  user_api_key:
+    read: "izlasīts"
   reports:
+    default:
+      labels:
+        day: Diena
+    post_edits:
+      labels:
+        post: Ieraksts
+        edit_reason: Iemesls
+    user_flagging_ratio:
+      labels:
+        user: Lietotājs
+    moderators_activity:
+      labels:
+        moderator: Moderātors
     visits:
+      xaxis: "Diena"
+    signups:
+      xaxis: "Diena"
+    new_contributors:
+      xaxis: "Diena"
+    consolidated_page_views:
+      yaxis: "Diena"
+      labels:
+        post: Ieraksts
+        edit_reason: Iemesls
+    dau_by_mau:
+      xaxis: "Diena"
+    daily_engaged_users:
+      xaxis: "Diena"
+    profile_views:
       xaxis: "Diena"
     topics:
       title: "Tēmas"
       xaxis: "Diena"
+    posts:
+      title: "Ieraksti"
+      xaxis: "Diena"
     likes:
       title: "Patīk"
+      xaxis: "Diena"
     flags:
+      title: "Sūdzības"
       xaxis: "Diena"
     bookmarks:
       title: "Grāmatzīmes"
       xaxis: "Diena"
+    users_by_trust_level:
+      xaxis: "Uzticības līmenis"
+    users_by_type:
+      xaxis_labels:
+        admin: Administrators
+        moderator: Moderātors
+        suspended: Apturēts
     emails:
       title: "E-pasti Izsūtīti "
+      xaxis: "Diena"
     user_to_user_private_messages:
+      xaxis: "Diena"
+    user_to_user_private_messages_with_replies:
       xaxis: "Diena"
     system_private_messages:
       title: "Sistēma"
@@ -95,20 +210,157 @@ lv:
     top_referrers:
       xaxis: "Lietotājs"
       num_topics: "Tēmas"
+      labels:
+        user: "Lietotājs"
+        num_topics: "Tēmas"
     top_traffic_sources:
       xaxis: "Domēns"
+      num_topics: "Tēmas"
+      num_users: "Lietotāji"
+      labels:
+        domain: Domēns
+        num_topics: Tēmas
+    top_referred_topics:
+      labels:
+        topic: "Tēmas"
+    page_view_anon_reqs:
+      title: "Anonīmi"
+      xaxis: "Diena"
+    page_view_logged_in_reqs:
+      xaxis: "Diena"
+    page_view_crawler_reqs:
+      xaxis: "Diena"
+    page_view_total_reqs:
+      title: "Lapu skatījumi"
+      xaxis: "Diena"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Diena"
+    page_view_anon_mobile_reqs:
+      xaxis: "Diena"
+    http_background_reqs:
+      xaxis: "Diena"
+    http_2xx_reqs:
+      xaxis: "Diena"
+    http_3xx_reqs:
+      xaxis: "Diena"
+    http_4xx_reqs:
+      xaxis: "Diena"
+    http_5xx_reqs:
+      xaxis: "Diena"
+    http_total_reqs:
+      xaxis: "Diena"
+    time_to_first_response:
+      xaxis: "Diena"
+    topics_with_no_response:
+      xaxis: "Diena"
+    mobile_visits:
+      xaxis: "Diena"
+    web_crawlers:
+      labels:
+        page_views: "Lapu skatījumi"
+    suspicious_logins:
+      labels:
+        user: Lietotājs
+        location: Atrašanās vieta
+    staff_logins:
+      labels:
+        user: Lietotājs
+        location: Atrašanās vieta
+    top_uploads:
+      labels:
+        filename: Faila nosaukums
   site_settings:
     errors:
       invalid_email: "Nepareiza e-pasta adrese."
+  search:
+    types:
+      category: "Sadaļas"
+      user: "Lietotāji"
+  login:
+    not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
+    admin_not_allowed_from_ip_address: "Jūs nevarat ieiet kā administrators no šīs IP adreses."
+  admin:
+    email:
+      sent_test: "nosūtīts!"
+  system_messages:
+    welcome_user:
+      subject_template: "Laipni lūdzam %{site_name}!"
+    welcome_invite:
+      subject_template: "Laipni lūdzam %{site_name}!"
+  user_notifications:
+    digest:
+      liked_received: "Saņemtās atzinības"
+      new_users: "Jauni lietotāji"
+      join_the_discussion: "Lasīt vairāk"
+    set_password:
+      title: "Iestatīt paroli"
   page_not_found:
     popular_topics: "Populāri"
     recent_topics: "Neseni"
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
+    search_button: "Meklēt"
   terms_of_service:
     title: "Pakalpojuma noteikumi"
+  about: "Par"
   guidelines: "Vadlīnijas"
+  privacy: "Privātums"
+  csv_export:
+    boolean_yes: "Jā"
+    boolean_no: "Nē"
   guidelines_topic:
     title: "BUJ/Vadlīnijas"
   tos_topic:
     title: "Pakalpojuma noteikumi"
+  privacy_topic:
+    title: "Privātuma politika"
+  badges:
+    regular:
+      name: Regulārs
+  tags:
+    title: "Birkas"
+  finish_installation:
+    resend_email:
+      title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  wizard:
+    step:
+      forum_title:
+        title: "Vārds"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "vards@piemers.com"
+      corporate:
+        title: "Organizācija"
+      colors:
+        title: "Tēma"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Tikai sadaļas"
+              categories_with_featured_topics:
+                label: "Sadaļas un to labākās tēmas"
+              categories_and_latest_topics:
+                label: "Sadaļas un jaunākās tēmas"
+      emoji:
+        title: "Smaidiņi"
+  joined: "Pievienojās"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Apturētie lietotāji"
+      delete_spammer:
+        title: "Izdzēst spamotāju"
+      disagree:
+        title: "Nepiekrist"
+      approve:
+        title: "Apstiprināt"
+      reject_user:
+        delete:
+          title: "Dzēst lietotāju."
+      reject:
+        title: "Noraidīt"
+      delete_user:
+        title: "Dzēst lietotāju."

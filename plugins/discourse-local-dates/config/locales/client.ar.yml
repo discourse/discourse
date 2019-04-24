@@ -5,4 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ar: {}
+ar:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          date_title: التاريخ
+          time_title: الوقت

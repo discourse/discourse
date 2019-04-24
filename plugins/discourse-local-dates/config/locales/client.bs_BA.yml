@@ -8,9 +8,7 @@
 bs_BA:
   js:
     discourse_local_dates:
-      title: Unesite datum
       create:
-        modal_title: Unesite datum
         form:
           insert: Unesi
           advanced_mode: Napredni način

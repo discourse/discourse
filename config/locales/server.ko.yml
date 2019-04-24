@@ -360,6 +360,10 @@ ko:
           attributes:
             execute_at:
               in_the_past: "미래값으로 설정되어야 합니다."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys: '다음 interpolation key가 유효하지 않습니다: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -625,8 +629,6 @@ ko:
         make: "이 글타래는 배너에 올라왔습니다. 사용자가 내리기 전까지 모든 페이지의 상단에 표시됩니다."
         remove: "이 글타래는 배너에서 내려왔습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
   unsubscribed:
-    title: "구독해지되었습니다!"
-    description: "<b>%{email}</b> 이 구독해지 되었습니다. 이메일 설정은 <a href='%{url}'>사용자 환경설정</a>에서 변경할 수 있습니다."
     topic_description: "%{link}를 재구독하려면 토픽 하단, 또는 우측에 있는 알림 설정을 사용하세요."
   unsubscribe:
     title: "구독해지"
@@ -634,11 +636,18 @@ ko:
     mute_topic: "%{link} 이 토픽에 대한 모든 알림끄기"
     unwatch_category: "%{category} 카테고리의 모든 토픽 주시 중단하기"
     mailing_list_mode: "메일링 리스트 모드 끄기"
-    disable_digest_emails: "요약 메일 그만 받기"
     all: "%{sitename}에서 오는 메일은 전부 받지 않기"
     different_user_description: "우리가 메일을 보낸 사용자가 아닌 다른 사용자로 로그인되어 있습니다. 로그아웃하시거나, 익명 모드를 켜시고 다시 시도해주세요."
     not_found_description: "죄송합니다. 구독 해지할 수 없습니다. 이메일의 구독해지 링크 기한이 만료되지는 않았나요?"
     log_out: "로그아웃"
+    digest_frequency:
+      never: "하지않음"
+      every_30_minutes: "매 30분 마다"
+      every_hour: "매 시간"
+      daily: "매일"
+      weekly: "매주"
+      every_month: "매월"
+      every_six_months: "6개월마다"
   user_api_key:
     title: "어플리케이션 접근 인증하기"
     authorize: "인증하기"
@@ -660,9 +669,13 @@ ko:
   reports:
     default:
       labels:
+        count: 수
         percent: 퍼센트
+        day: 일
     post_edits:
       labels:
+        post: 글
+        editor: 에디터
         edit_reason: 사유
     user_flagging_ratio:
       labels:
@@ -670,10 +683,12 @@ ko:
         score: 점수
     moderators_activity:
       labels:
+        moderator: 운영자
         revision_count: 리비젼
     flags_status:
       labels:
         flag: 종류
+        assigned: 할당됨
     visits:
       title: "사용자 방문"
       xaxis: "일"
@@ -683,13 +698,20 @@ ko:
       xaxis: "일"
     new_contributors:
       title: "새로운 기여자들"
+      xaxis: "일"
     consolidated_page_views:
       xaxis:
         page_view_anon: "익명 사용자"
         page_view_logged_in: "로그인 한 사용자"
+      yaxis: "일"
       labels:
+        post: 글
+        editor: 에디터
         edit_reason: 사유
+    dau_by_mau:
+      xaxis: "일"
     daily_engaged_users:
+      xaxis: "일"
       yaxis: "참여한 사용자"
       description: "마지막 날 좋아요나 글 게시 사용자 수 입니다."
     profile_views:
@@ -730,6 +752,8 @@ ko:
       labels:
         type: 종류
       xaxis_labels:
+        admin: 관리자
+        moderator: 운영자
         suspended: 차단됨
     trending_search:
       labels:
@@ -743,6 +767,7 @@ ko:
       xaxis: "일"
       yaxis: "메세지 수"
     user_to_user_private_messages_with_replies:
+      xaxis: "일"
       yaxis: "메시지 수"
     system_private_messages:
       title: "시스템"
@@ -797,6 +822,7 @@ ko:
       xaxis: "일"
       yaxis: "회원 페이지뷰"
     page_view_crawler_reqs:
+      title: "로봇 페이지뷰"
       xaxis: "일"
       yaxis: "로봇 페이지뷰"
     page_view_total_reqs:
@@ -847,6 +873,9 @@ ko:
     mobile_visits:
       xaxis: "일"
       yaxis: "방문 횟수"
+    web_crawlers:
+      labels:
+        page_views: "페이지뷰"
     suspicious_logins:
       title: "의심스러운 로그인"
       labels:
@@ -892,6 +921,7 @@ ko:
     show_topic_featured_link_in_digest: "요약 메일에 토픽 주요 링크 보이게 하기."
     min_topic_title_length: "글타래 제목의 최소 글자 수"
     max_topic_title_length: "글타래 제목의 최대 글자 수"
+    min_personal_message_title_length: "메세지 제목의 최소 길이"
     max_emojis_in_title: "제목에 허용되는 최대 이모티콘"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
     search_tokenize_chinese_japanese_korean: "CJK(한중일) 설정이 되어 있지 않은 사이트라도, 검색시 한중일 언어를 토크나이징하도록 강제합니다."
@@ -932,6 +962,7 @@ ko:
     summary_posts_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 글 수"
     summary_likes_required: "하나의 글타래에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
+    enable_personal_messages: "신뢰도 1 사용자(메시지 전송을 위한 최소 신뢰도로 설정가능)가 메시지를 작성하고 답장을 쓸 수 있도록 허용합니다. 운영진은 언제나 메시지를 보낼 수 있음을 참고하세요."
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "long polling에 사용 될 Base URL (CDN이 동적 콘텐트를 제공할 시에는 origin pull로 설정) eg: http://origin.site.com"
     long_polling_interval: "보낼 데이터가 없을 때 응답 전에 서버가 기다려야하는 시간 (로그인된 유저 전용)"
@@ -949,6 +980,7 @@ ko:
     must_approve_users: "스태프는 반드시 사이트 엑세스권한을 허용하기 전에 모든 신규가입계정을 승인해야 합니다. 경고: 이것을 활성화하면 기존 스태프 아닌 회원들의 엑세스권한이 회수됩니다."
     pending_users_reminder_delay: "새로운 사용자가 승인을 기다리는 시간이 여기에 지정된 시간횟수보다 더 길어길경우 운영자에게 알려줍니다. 알림을 해제하려면 -1로 설정하세요."
     maximum_session_age: "마지막 방문으로 부터 n시간 동안 사용자의 로그인이 유지됩니다"
+    moderators_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
     cors_origins: "Allowed origins cross-origin requests (CORS). 각 origin은 반드시 http:// 나 https:// 를 포함해야합니다.  DISCOURSE_ENABLE_CORS 환경 변수를 true로 지정해줘야 CORS를 활성화할 수 있습니다."
     use_admin_ip_whitelist: "관리자는 보호IP 목록에 있는 IP에서만 로그인할 수 있게 하기(관리 > 로그 > 보호 IP)."
     blacklist_ip_blocks: "Discourse가 크롤링하지 않는 차단된 사설 IP 목록"
@@ -996,7 +1028,6 @@ ko:
     sso_allows_all_return_paths: "SSO로 제공된 return_paths를 위한 도메인 제한 해제 (기본 return path는 현재 사이트로 설정)"
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
     enable_signup_cta: "재방문한 익명 사용자에게 가입 권유 공지 표시"
-    enable_yahoo_logins: "야후 인증 활성화"
     google_oauth2_client_id: "Google Application의 Client ID"
     google_oauth2_client_secret: "Google Application의 Client Secret"
     enable_instagram_logins: "인스타그램 인증 켜기, instagram_consumer_key 와 instagram_consumer_secret 필요"
@@ -1026,6 +1057,7 @@ ko:
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
     max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 글타래 개수"
+    max_personal_messages_per_day: "하루에 유저가 쓸 수 있는 최대 메세지 갯수"
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     max_topic_invitations_per_day: "하루에 유저가 최대로 보낼 수 있는 글타래 초대장 수"
     max_logins_per_ip_per_hour: "시간 당 동일 IP에서 로그인할 수 있는 최대 사용자 수"
@@ -1250,6 +1282,8 @@ ko:
       invalid_string_max: "글자 수가 %{max}자 이상이어야 합니다."
       invalid_reply_by_email_address: "값이 반드시 '%%{reply_key}'를 갖고 있어야하며 알림 이메일과 달라야합니다."
       invalid_regex: "허용되지 않거나 올바르지 않은 정규표현식입니다."
+      min_username_length_range: "최소값은 최대값보다 크게 설정할 수 없습니다."
+      max_username_length_range: "최대값은 최소값보다 작게 설정할 수 없습니다."
   search:
     within_post: "#%{post_number} by %{username}"
     types:
@@ -1299,9 +1333,13 @@ ko:
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."
     missing_user_field: "사용자 정보 입력을 덜 끝마쳤습니다."
+    second_factor_title: "이중 인증"
     second_factor_backup_description: "백업 코드 중 하나를 입력하세요:"
     second_factor_toggle:
       backup_code: "대신 백업 코드 사용"
+  admin:
+    email:
+      sent_test: "전송됨!"
   user:
     deactivated_by_staff: "운영진에 의해 비활성화됨"
     activated_by_staff: "운영진에 의해 활성화됨"
@@ -1338,9 +1376,19 @@ ko:
     agreed: "알려줘서 감사합니다. 문제가 있음에 동의하며 내용을 살펴보겠습니다."
     agreed_and_deleted: "알려줘서 감사합니다. 문제가 있음에 동의하며 해당 글을 삭제했습니다."
     disagreed: "알려줘서 감사합니다. 살펴보겠습니다."
+    ignored: "알려줘서 감사합니다. 살펴보겠습니다."
+    ignored_and_deleted: "알려줘서 감사합니다. 해당 글을 삭제했습니다."
   system_messages:
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
+      text_body_template: |
+        %{site_name} 사이트에 오신것을 환영합니다!
+
+        %{new_user_tips}
+
+        저희는 [커뮤니티 행동 방침](%{base_url}/guidelines)을 잘 따라주실 것을 믿습니다.
+
+        다시한번 환영합니다!
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
     backup_succeeded:
@@ -1364,21 +1412,30 @@ ko:
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
         이메일에 내용이 안 보입니다. 답글이 이메일 상단에 있는지 확인 해주세요 -- 한줄 답변은 처리 못합니다.
+    email_reject_invalid_post:
+      text_body_template: |
+        죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
+
+        복잡한 포매팅, 대용량 메세지, 너무 짧은 메세지가 문제일 수 있습니다. 다시 시도 해보고 계속 문제 된다면 웹사이트를 통해 글을 올리세요.
+    email_reject_invalid_post_specified:
+      text_body_template: "죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다. \n\n이유:\n\n%{post_error}\n\n문제를 고치고 다시 시도해 보세요.\n"
     email_error_notification:
       title: "이메일 에러 알림"
     email_revoked:
       subject_template: "이메일 주소가 맞습니까?"
+    too_many_spam_flags:
+      subject_template: "대기중인 신규 계정"
     too_many_tl3_flags:
       title: "TL3 Flag가 너무 많음"
       subject_template: "대기중인 신규 계정"
+    spam_post_blocked:
+      title: "스팸 게시글 차단됨"
+      subject_template: "%{username} 신규가입자가 연속 링크로 블락됨"
+    unsilenced:
+      subject_template: "계정의 대기가 해제되었습니다"
     pending_users_reminder:
       subject_template:
         other: "%{count}명의 새로운 사용자가 가입 승인 대기중 입니다."
-      text_body_template: |2
-
-        가입 승인 대기중(또는 거절된)인 새로운 사용자가 있습니다.
-
-        [운영자 색션에서 새로운 사용자들을 리뷰하세요](%{base_path}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "해제된 원격 이미지 다운로드하기"
       subject_template: "외부에서 이미지 다운로드 못함"
@@ -1396,8 +1453,93 @@ ko:
       title: "구독해지"
       description: "이메일들에 관심이 없나요? 아래 구독해지를 눌러서 바로 구독을 해지할 수 있습니다:"
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
+    user_replied:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_quoted:
+      title: "명의 사용자가 인용"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "첫 포스트를 주시하고 있는 사용자"
       subject_template: "[%{email_prefix}] %{topic_title}"
@@ -1477,12 +1619,28 @@ ko:
       too_large: "죄송합니다, 업로드하려는 이미지가 너무 큽니다. (최대 크기 %{max_size_kb}KB). 크기를 줄여서 다시 시도해보세요."
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
   skipped_email_log:
+    exceeded_emails_limit: "max_emails_per_day_per_user 초과"
+    exceeded_bounces_limit: "bounce_score_threshold 초과"
+    user_email_no_user: "ID %{user_id} 인 사용자를 찾을 수 없습니다"
+    user_email_post_not_found: "해당하는 ID %{post_id} 을 찾을 수 없습니다. "
     user_email_anonymous_user: "사용자는 익명입니다"
+    user_email_user_suspended_not_pm: "메세지가 아니라 사용자가 정지됐습니다."
+    user_email_seen_recently: "최근 보여진 사용자"
+    user_email_notification_already_read: "이 알림 이미 읽은 것에 대한 이메일 입니다."
+    user_email_notification_topic_nil: "글 제목이 없음"
+    user_email_post_user_deleted: "이 포스트를 쓴 사용자가 삭제되었습니다"
+    user_email_post_deleted: "글쓴이에 의해 삭제된 글"
     user_email_user_suspended: "사용자가 차단됨"
+    user_email_already_read: "이미 읽은 글"
     sender_message_blank: "메시지 내용이 없습니다"
+    sender_message_to_blank: "메세지가 비어있음"
+    sender_text_part_body_blank: "본문이 비어있음"
     sender_body_blank: "본문 내용이 없습니다"
   color_schemes:
     base_theme_name: "기본 테마 색상"
+    light: "라이트"
+    dark: "다크"
+    default_theme_name: "라이트"
     light_theme_name: "라이트"
     dark_theme_name: "다크"
   about: "소개"
@@ -1704,7 +1862,6 @@ ko:
       help: "시작하려면 새로운 계정을 등록하세요"
     confirm_email:
       title: "이메일을 확인하세요"
-      message: "<p>활성화 메일을 <b>%{email}</b>로 보냈습니다. 안내에 따라 계정을 활성화 하세요.</p><p>만약 메일이 도착하지 않았다면, Discourse를 위한 이메일 설정을 정확히 했는지 확인하시고 스팸폴더를 확인해 보세요.</p>"
     resend_email:
       title: "활성화 이메일 다시 보내기"
       message: "<p>활성화 이메일을 <b>%{email}</b>로 보냈습니다."
@@ -1742,16 +1899,13 @@ ko:
             one_paragraph: "환영 메시지를 딱 한 문단으로 줄여주세요."
       privacy:
         title: "접근성"
-        description: "<p>당신의 커뮤니티는 모두에게 열려있나요? 아니면 멤버십, 초대장, 허가로 제한되어 있나요? 원하신다면 비공개로 만든 다음, 나중에 공개로 전환할 수도 있습니다.</p> <p>초대장은 언제든지 토픽이나 사용자 프로필 페이지에서 보낼 수 있습니다.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "공개"
-                description: "누구나 이 커뮤니티에 접근해서 계정을 생성할 수 있음"
               restricted:
                 label: "비공개"
-                description: "내가 초대하거나 허가한 사람만 이 커뮤니티에 접근 가능"
       contact:
         title: "연락처"
         fields:
@@ -1773,6 +1927,8 @@ ko:
         fields:
           logo:
             label: "기본 로고"
+          logo_small:
+            label: "컴팩트 로고"
       icons:
         title: "아이콘"
         fields:
@@ -1790,6 +1946,8 @@ ko:
                 label: "최신 토픽"
               categories_only:
                 label: "카테고리 만"
+              categories_with_featured_topics:
+                label: "주요 토픽이 있는 카테고리"
               categories_and_latest_topics:
                 label: "카테고리 및 최신 토픽"
       emoji:
@@ -1802,6 +1960,10 @@ ko:
   search_logs:
     graph_title: "검색 횟수"
   joined: "가입함"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "알림 활성 - %{site_title}"
+      confirm_body: "완료! 알림이 활성화되었습니다."
   staff_action_logs:
     not_found: "찾을 수 없음"
     unknown: "알수없음"
@@ -1809,6 +1971,8 @@ ko:
     actions:
       agree:
         title: "동의..."
+      agree_and_suspend:
+        title: "사용자 차단"
       agree_and_restore:
         title: "글 복원"
       agree_and_hide:
@@ -1823,6 +1987,9 @@ ko:
         title: "무시"
       approve:
         title: "승인"
+      reject_user:
+        delete:
+          title: "사용자 삭제"
       reject:
         title: "거부"
       delete_user:

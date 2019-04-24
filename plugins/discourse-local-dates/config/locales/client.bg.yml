@@ -5,4 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-bg: {}
+bg:
+  js:
+    discourse_local_dates:
+      create:
+        form:
+          date_title: Дата
+          time_title: 'Време '

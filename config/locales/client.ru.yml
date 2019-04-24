@@ -357,6 +357,8 @@ ru:
         search: "Поиск в личных сообщениях по названию: "
         placeholder: "введите название сообщения"
     review:
+      awaiting_approval: "В ожидании подтверждения"
+      delete: "Удалить"
       settings:
         saved: "Сохранено"
         save_changes: "Сохранить Изменения"
@@ -374,16 +376,18 @@ ru:
         few: "В этой теме <b>{{count}}</b> поста, ожидающих проверки"
         many: "В этой теме <b>{{count}}</b> постов, ожидающих проверки"
         other: "В этой теме <b>{{count}}</b> постов, ожидающих проверки"
-      title: "Нужен обзор"
+      title: "Обзор запросов"
       topic: "Тема:"
       filtered_topic: "Вы отфильтровали для просмотра содержимое в одной теме."
       filtered_user: "Пользователь:"
       show_all_topics: "показать все темы"
-      deleted_user: "(удаленный пользователь)"
+      deleted_post: "(сообщение удалено)"
+      deleted_user: "(пользователь удален)"
       user:
         username: "Псевдоним"
         email: "Email"
         name: "Имя"
+        fields: "Поля"
       user_percentage:
         summary:
           one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} всего флагов)"
@@ -409,12 +413,19 @@ ru:
         topic: "Тема"
         reviewable_count: "Количество"
         reported_by: "Сообщает"
+        deleted: "[Тема Удалена]"
+        original: "(оригинальная тема)"
         details: "подробности"
         unique_users:
           one: "1 пользователь"
           few: "{{count}} пользователя"
           many: "{{count}} пользователей"
           other: "{{count}} пользователь"
+      replies:
+        one: "1 ответ"
+        few: "{{count}} ответа"
+        many: "{{count}} ответов"
+        other: "{{count}} ответ"
       edit: "Редактировать"
       save: "Сохранить"
       cancel: "Отмена"
@@ -429,13 +440,14 @@ ru:
         category: "Категория:"
       conversation:
         view_full: "просмотреть полный разговор"
-      history:
-        title: "История"
-        edited: "Отредактированный"
       scores:
-        description: "Описание"
+        about: "Эта оценка рассчитывается на основе уровня доверия репортера, точности их предыдущих флагов и приоритета сообщаемого элемента."
         score: "Оценка"
+        date: "Дата"
+        type: "Тип"
+        status: "Статус"
         submitted_by: "Представленный"
+        reviewed_by: "Рассмотрено"
       statuses:
         pending:
           title: "В ожидании"
@@ -770,8 +782,7 @@ ru:
       dismiss_notifications: "Отложить все"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
       first_notification: "Ваше первое уведомление! Выберите его, чтобы начать."
-      disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
-      dynamic_favicon: "Показывать количество новых / обновлённых тем на иконке сообщений"
+      dynamic_favicon: "Показывать количество на значке браузера"
       theme_default_on_all_devices: "Сделать эту тему по умолчанию на всех моих устройствах"
       text_size_default_on_all_devices: "Сделать это размер текста по умолчанию на всех моих устройствах"
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
@@ -1013,6 +1024,10 @@ ru:
         normal: "Нормальный"
         larger: "Большой"
         largest: "Самый большой"
+      title_count_mode:
+        title: "В заголовке фоновой страницы отображается количество:"
+        notifications: "Новое уведомление"
+        contextual: "Содержание новой страницы"
       like_notification_frequency:
         title: "Уведомлять при получении симпатии"
         always: "Всегда"
@@ -1371,10 +1386,6 @@ ru:
         name: "Facebook"
         title: "Facebook"
         message: "Вход с помощью учетной записи Facebook (всплывающие окна должны быть разрешены)"
-      yahoo:
-        name: "Yahoo"
-        title: "Yahoo"
-        message: "Вход с помощью учетной записи Yahoo (убедитесь, что блокировщик всплывающих окон отключен)"
       github:
         name: "GitHub"
         title: "GitHub"
@@ -1444,6 +1455,12 @@ ru:
       flags: Флаги
       custom: Пользовательские смайлы
       recent: Недавно использованные
+      default_tone: Нет скина
+      light_tone: Светлый тон скина
+      medium_light_tone: Средний светлый тон скина
+      medium_tone: Средний тон скина
+      medium_dark_tone: Средний темный тон скина
+      dark_tone: Темный оттенок скина
     shared_drafts:
       title: "Общие Черновики"
       notice: "Эти темы видны только тем, кто может видеть <b>{{category}}</b> категорию."
@@ -1462,8 +1479,6 @@ ru:
       toggle_whisper: "Внутреннее сообщение"
       toggle_unlisted: "Спрятать из списков тем"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
-      saving_draft_tip: "Сохранение..."
-      saved_draft_tip: "Сохранено"
       saved_local_draft_tip: "Сохранено локально"
       similar_topics: "Ваша тема похожа на..."
       drafts_offline: "Черновики, сохраненные в офлайн"
@@ -1569,6 +1584,7 @@ ru:
           label: Ответить на тему
           desc: "Ответ на тему, а не какой-либо конкретный пост"
         toggle_whisper:
+          label: Включить шопот
           desc: Шепот виден только персоналу
         create_topic:
           label: "Новая тема"
@@ -1594,7 +1610,8 @@ ru:
       none: "Уведомления не могут быть загружены."
       empty: "Уведомления не найдены."
       more: "посмотреть более ранние уведомления"
-      total_flagged: "всего сообщений с жалобами"
+      post_approved: "Ваш пост был одобрен"
+      reviewable_items: "пункты, требующие рассмотрения"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1639,6 +1656,7 @@ ru:
         watching_first_post: '{{username}} создал новую тему "{{topic}}" - {{site_title}}'
         confirm_title: "Уведомления включены - %{site_title}"
         confirm_body: "Успешно! Уведомления были включены."
+        custom: "Уведомления от {{username}} до %{site_title}"
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Добавить изображение или файл"
@@ -2195,6 +2213,7 @@ ru:
       quote_reply: "Цитата"
       edit_reason: "Причина:"
       post_number: "сообщение {{number}}"
+      ignored: "Проигнорированное содержание"
       wiki_last_edited_on: "вики редактировалось"
       last_edited_on: "последний раз сообщение редактировалось"
       reply_as_new_topic: "Ответить в новой связанной теме"
@@ -2202,7 +2221,7 @@ ru:
       continue_discussion: "Продолжая обсуждение из {{postLink}}:"
       follow_quote: "перейти к цитируемому сообщению"
       show_full: "Показать полный текст"
-      show_hidden: "Отобразить скрытое содержимое."
+      show_hidden: "Просмотр игнорируемого содержимого."
       deleted_by_author:
         one: "(сообщение отозвано автором и будет автоматически удалено в течение %{count} часа, если только на сообщение не поступит жалоба)"
         few: "(сообщение отозвано автором и будет автоматически удалено в течение %{count} часов, если только на сообщение не поступит жалоба)"
@@ -2217,8 +2236,8 @@ ru:
         many: "просмотреть {{count}} скрытых ответов"
         other: "просмотреть {{count}} скрытых ответов"
       notice:
-        first: "Это первая публикация {{user}}  — давайте приветствовать его в нашем сообществе!"
-        return: "Прошло много времени с тех пор, как мы видели {{user}} — его последний пост был {{time}}."
+        new_user: "Это первая публикация {{user}}  — давайте приветствовать его в нашем сообществе!"
+        returning_user: "Прошло много времени с тех пор, как мы видели {{user}} — его последний пост был {{time}}."
       unread: "Сообщение не прочитано"
       has_replies:
         one: "{{count}} Ответ"
@@ -2301,6 +2320,8 @@ ru:
         delete_topic_disallowed_modal: "У вас нет разрешения на удаление этой темы. Если вы действительно хотите, чтобы она была удалена, используйте функцию флага модератору вместе с аргументацией."
         delete_topic_disallowed: "у вас нет разрешения на удаление этой темы"
         delete_topic: "удалить тему"
+        add_post_notice: "Добавить уведомление персонала"
+        remove_post_notice: "Удалить уведомление персонала"
       actions:
         flag: "Жалоба"
         defer_flags:
@@ -2464,11 +2485,13 @@ ru:
       settings: "Настройки"
       topic_template: "Шаблон темы"
       tags: "Тэги"
-      tags_allowed_tags: "Разрешить использовать в этом разделе только следующие метки:"
-      tags_allowed_tag_groups: "Разрешить использовать в этом разделе только теги из этих групп:"
+      tags_allowed_tags: "Ограничить эти теги данной категорией:"
+      tags_allowed_tag_groups: "Ограничьте эти группы тегов этой категорией:"
       tags_placeholder: "(Необязательно) список доступных тегов"
       tags_tab_description: "Теги и группы тегов, указанные здесь, будут доступны только в этой категории и других категориях, в которых они также указаны. Они не будут доступны для использования в других категориях."
       tag_groups_placeholder: "(Необязательно) список доступных групп тегов"
+      manage_tag_groups_link: "Управлять группами тегов здесь."
+      allow_global_tags_label: "Также разрешить другие теги"
       topic_featured_link_allowed: "Разрешить популярные ссылки в этой категории"
       delete: "Удалить раздел"
       create: "Создать Раздел"
@@ -2518,7 +2541,7 @@ ru:
       require_topic_approval: "Требовать одобрения модератором всех новых тем"
       require_reply_approval: "Требовать одобрения модератором всех новых ответов"
       this_year: "за год"
-      position: "Позиция:"
+      position: "Позиция на странице категории:"
       default_position: "Позиция по умолчанию"
       position_disabled: "Разделы будут показаны в порядке активности. Чтобы настроить порядок разделов,"
       position_disabled_click: 'включите настройку "fixed category positions".'
@@ -2568,6 +2591,11 @@ ru:
         rows_with_featured_topics: "Строки с обсуждаемыми темами"
         boxes: "Блоки"
         boxes_with_featured_topics: "Блоки с обсуждаемыми темами"
+      settings_sections:
+        general: "Основные"
+        moderation: "Модерация"
+        appearance: "Внешний вид"
+        email: "Email"
     flagging:
       title: "Спасибо за вашу помощь в поддержании порядка!"
       action: "Пожаловаться на сообщение"
@@ -2784,6 +2812,12 @@ ru:
       readonly: "Просматривать"
     lightbox:
       download: "скачать"
+      previous: "Предыдущий (клавиша со стрелкой влево)"
+      next: "Далее (клавиша со стрелкой вправо)"
+      counter: "%curr% из %total%"
+      close: "Закрыть (Esc)"
+      content_load_error: '<a href="%url%">Содержимое</a> не удалось загрузить.'
+      image_load_error: '<a href="%url%">Изображение</a> не удалось загрузить.'
     keyboard_shortcuts_help:
       title: "Сочетания клавиш"
       jump_to:
@@ -3005,8 +3039,6 @@ ru:
       dashboard:
         title: "Админка"
         last_updated: "Последнее обновление статистики:"
-        find_old: "Ищете старую приборную панель?"
-        old_link: "посетите это здесь"
         version: "Версия"
         up_to_date: "Обновлений нет"
         critical_available: "Доступно критическое обновление."
@@ -3207,12 +3239,17 @@ ru:
           name: "Категория Событий"
           details: "Когда категория создается, обновляется или удаляется."
         tag_event:
+          name: "Отметить событие"
           details: "Когда тег создан, обновлен или удален."
         flag_event:
+          name: "Отметить событие"
           details: "Когда флаг создан, согласован, не согласен или игнорируется."
         queued_post_event:
           name: "Пост после утверждения"
           details: "Когда новая запись в очереди создается, утверждается или отклоняется."
+        reviewable_event:
+          name: "Пересмотрены События"
+          details: "Когда новый элемент готов к рассмотрению и когда его статус обновляется."
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -3382,6 +3419,7 @@ ru:
           mobile: "Мобильный"
           settings: "Настройки"
           translations: "Переводы"
+          extra_scss: "Дополнительные SCSS"
           preview: "Предпросмотр"
           show_advanced: "Показать дополнительные поля"
           hide_advanced: "Скрыть дополнительные поля"
@@ -3670,6 +3708,8 @@ ru:
             create_category: "создан раздел"
             silence_user: "заблокировать пользователя"
             unsilence_user: "разблокировать пользователя"
+            removed_silence_user: "молчание пользователя (удалено)"
+            removed_unsilence_user: "приостановленный пользователей (удален)"
             grant_admin: "выданы права администратора"
             revoke_admin: "отозваны права администратора"
             grant_moderation: "выданы права модератора"
@@ -3703,9 +3743,11 @@ ru:
             entity_export: "экспортный объект"
             change_name: "изменить имя"
             topic_timestamps_changed: "метки времени темы изменены"
+            approve_user: "одобренный пользователь"
             web_hook_create: "создать webhook"
             web_hook_update: "обновить webhook "
             web_hook_destroy: "удалить webhook"
+            web_hook_deactivate: "деактивировать webhook"
             embeddable_host_create: "создать встраиваемый хост"
             embeddable_host_update: "обновить встраиваемый хост"
             embeddable_host_destroy: "удалить встраиваемый хост"

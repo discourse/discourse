@@ -55,3 +55,8 @@ ja:
         author: "ドクター・スース"
       '4':
         quote: "あなたが誰かに正しい行いを求めるのであれば、自分自身で行ってください。"
+    magic_8_ball:
+      answers:
+        '9': "はい"
+    new_user_narrative:
+      reset_trigger: "新しいユーザー"

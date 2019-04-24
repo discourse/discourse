@@ -12,9 +12,7 @@ id:
         today: Hari ini 1 %{time}
         tomorrow: Besok 1 %{time}
         yesterday: Kemarin 1 %{time}
-      title: Masukkan tanggal
       create:
-        modal_title: Masukkan tanggal
         form:
           insert: Masukkan
           advanced_mode: Mode lanjutan

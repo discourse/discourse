@@ -309,6 +309,7 @@ es:
       email_already_used_in_group: "'%{email}' ya está siendo utilizado por el grupo '%{group_name}'."
       email_already_used_in_category: "'%{email}' ya está siendo utilizado por la categoría '%{category_name}'."
       cant_allow_membership_requests: "No puedes permitir solicitudes de membresía para un grupo sin ningún propietario. "
+      already_requested_membership: "Ya has solicitado membresía para este grupo."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -663,6 +664,7 @@ es:
       opera: "Opera"
       ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      discoursehub: "DiscourseHub app"
       unknown: "navegador desconocido"
     device:
       android: "Dispositivo Android"
@@ -789,7 +791,7 @@ es:
     you_must_edit: '<p>Tu post fue reportado por la comunidad. Por favor, <a href="%{path}">mira tus mensajes</a>.</p>'
     user_must_edit: "<p>Esta publicación ha sido reportada por la comunidad y está oculta temporalmente.</p>"
   ignored:
-    hidden_content: "<p>Contenido oculto</p>"
+    hidden_content: "<p>Contenido ignorado</p>"
   archetypes:
     regular:
       title: "Tema normal"
@@ -799,8 +801,8 @@ es:
         make: "Este tema se utiliza ahora como banner. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario."
         remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
-    title: "¡Suscripción cancelada!"
-    description: "<b>%{email}</b> ha sido desuscrito. Para cambiar la configuración del email <a href='%{url}'>visita las preferencias del usuario</a>."
+    title: "¡Preferencias de email actualizadas!"
+    description: "preferencias de email para <b>%{email}</b> han sido actualizadas. Para cambiar tus configuraciones de email <a href='%{url}'>visita tus preferencias de usuario</a>."
     topic_description: "Para volver a suscribirte a %{link}, utiliza el desplegable de notificación al pie o en la parte derecha del tema."
     private_topic_description: "Para volver a suscribirte, use el control de notificación al pie o en la parte derecha del tema."
   unsubscribe:
@@ -809,11 +811,21 @@ es:
     mute_topic: "Silenciar todas las notificaciones de este tema, %{link}"
     unwatch_category: "Dejar de vigilar todos los temas de %{category}"
     mailing_list_mode: "Desactivar el modo lista de correo"
-    disable_digest_emails: "Dejar de enviarme emails de resumen"
     all: "No enviarme ningún email desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo. Por favor, cierra sesión o entra al modo anónimo, e inténtalo de nuevo."
     not_found_description: "Lo sentimos, no pudimos encontrar esta cancelación de suscripción. ¿Es posible que el enlace de tu email haya caducado?"
     log_out: "Cerrar sesión"
+    submit: "Guardar preferencias"
+    digest_frequency:
+      title: "Estás recibiendo emails de resumen  %{frequency}"
+      select_title: "Configurar la frecuencia de emails de resumen a:"
+      never: "nunca"
+      every_30_minutes: "cada 30 minutos"
+      every_hour: "cada hora"
+      daily: "diariamente"
+      weekly: "semanalmente"
+      every_month: "cada mes"
+      every_six_months: "cada seis meses"
   user_api_key:
     title: "Autorizar acceso de aplicación"
     authorize: "Autorizar"
@@ -1343,7 +1355,7 @@ es:
     version_checks: "Ping el Discourse Hub para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard <a href='/admin' target='_blank'>/admin</a>."
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     invite_expiry_days: "Durante cuánto tiempo son válidas las claves de invitación de usuarios, en días"
-    invite_only: "Los registros públicos están desactivados, todos los nuevos usuarios deben ser invitados por usuarios de confianza o staff."
+    invite_only: "Todos los nuevos usuarios deben ser explícitamente invitados por usuarios de confianza o el staff. Los registros públicos están desactivados."
     login_required: "Se requiere haber iniciado sesión para leer el contenido de este sitio, deshabilita el acceso anónimo."
     min_username_length: "Longitud mínima del nombre de usuario en caracteres. ADVERTENCIA: si existen usuarios o grupos con nombres de menor longitud que ésta, tu sitio se romperá."
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: si tienes usuarios o grupos con mayor cantidad de caracteres que ésta, tu sitio se romperá."
@@ -1372,7 +1384,6 @@ es:
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión con un solo clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
-    enable_yahoo_logins: "Activar autenticación por Yahoo"
     enable_google_oauth2_logins: "Habilita la autenticación con Google Oauth2. Este es el método de autenticación a la que Google da soporte actualmente. Requiere de una clave de cliente y una clave secreta. Ver <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Client ID de tu aplicación Google."
     google_oauth2_client_secret: "Client secret de tu aplicación Google."
@@ -1436,6 +1447,7 @@ es:
     suggested_topics: "Número de temas sugeridos mostrados al pie del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
     suggested_topics_max_days_old: "Los temas sugeridos no deben ser más antiguos de n días."
+    suggested_topics_unread_max_days_old: "Los temas no leídos sugeridos no deben ser más antiguos de n días."
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
@@ -1568,6 +1580,7 @@ es:
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %%{reply_key}@respuesta.ejemplo.com o respuestas+%%{reply_key}@ejemplo.com"
     alternative_reply_by_email_addresses: "Lista de plantillas alternativa para las direcciones de respuesta por email. Ejemplo: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Usar el HTML en vez del texto para email entrante."
+    strip_incoming_email_lines: "Elimina los espacios en blanco iniciales y finales de cada línea de correos electrónicos entrantes."
     disable_emails: "Evite que el Discourse envíe cualquier clase de correos electrónicos. Seleccione 'yes' para desactivar los correos electrónicos para todos los usuarios. Seleccione 'non-staff' para desactivar los correos electrónicos solo para usuarios que no sean del personal."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
@@ -1646,7 +1659,6 @@ es:
     show_inactive_accounts: "Permitir a usuarios logueados visualizar perfiles de cuentas inactivas."
     hide_suspension_reasons: "No mostrar la razón de suspensión públicamente en el perfil de usuario."
     log_personal_messages_views: "Log de mensajes personales vistos por Admin para otros usuarios/grupos."
-    ignore_user_enabled: "[Beta] Permitir que se puedan ignorar usuarios"
     ignored_users_count_message_threshold: "Notificar a los moderadores si un usuario en particular es ignorado este número de veces."
     ignored_users_message_gap_days: "Cuánto esperar antes de notificar a los moderadores de nuevo sobre un usuario que ha sido ignorado por muchos otros."
     clean_up_inactive_users_after_days: "Número de días antes de que un usuario inactivo (nivel de confianza 0 sin ninguna publicación) sea eliminado."
@@ -1667,7 +1679,8 @@ es:
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "El título de la página del tema incluye el nombre de la categoría."
-    native_app_install_banner: "Preguntar a visitantes recurrentes si quieren instalar la app nativa de Discourse"
+    native_app_install_banner_ios: "Muestra el banner de la aplicación DiscourseHub en dispositivos iOS a usuarios regulares (nivel de confianza 1 y superior)."
+    native_app_install_banner_android: "Muestra el banner de la aplicación DiscourseHub en dispositivos Android a usuarios regulares (nivel de confianza 1 y superior)."
     share_anonymized_statistics: "Compartir estadísticas del uso anónimas."
     auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de estos días. Los reportes serán ignorados. Los mensajes en cola y los usuarios serán rechazados. Establezca en 0 para desactivar esta función."
     svg_icon_subset: "Agregue iconos adicionales de FontAwesome 5 que le gustaría incluir en sus activos. Use el prefijo 'fa-' para los iconos sólidos, 'far-' para los iconos regulares y 'fab-' para los iconos de marca."
@@ -1708,8 +1721,9 @@ es:
     code_formatting_style: "El botón de código en el editor se establecerá por defecto a este estilo de formato de código"
     max_allowed_message_recipients: "Destinatarios máximos permitidos en un mensaje."
     watched_words_regular_expressions: "Palabras observadas son expresiones regulares."
-    min_post_notice_tl: "Nivel de confianza mínimo para ver notas de publicaciones."
     old_post_notice_days: "Tiempo a partir del cual una publicación se considera antigua"
+    new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios nuevos."
+    returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
     default_email_digest_frequency: "Cuán a menudo recibirán los usuarios emails de resumen por defecto."
     default_include_tl0_in_digests: "Incluir temas de usuarios nuevos en los emails de resumen por defecto. Los usuarios pueden cambiar esto en sus preferencias."
@@ -1726,7 +1740,6 @@ es:
     default_other_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña por defecto."
     default_other_enable_quoting: "Activar respuesta citando texto seleccionado por defecto."
     default_other_dynamic_favicon: "Mostrar temas nuevos/actualizados en el icono del navegador por defecto"
-    default_other_disable_jump_reply: "No ir a un nuevo post tras publicarlo por defecto"
     default_other_like_notification_frequency: "Notificar a los usuarios de los me gusta por defecto"
     default_topics_automatic_unpin: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     default_categories_watching: "Lista de categorías que están vigiladas por defecto."
@@ -1734,6 +1747,7 @@ es:
     default_categories_muted: "Lista de categorías que están silenciadas por defecto."
     default_categories_watching_first_post: "Lista de categorías en las que el mensaje de cada nuevo tema será vigilado por defecto."
     default_text_size: "Tamaño de texto seleccionado por defecto"
+    default_title_count_mode: "Modo por defecto para el contador del título"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos web fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
     allow_user_api_keys: "Permitir que se generen claves de API de usuario"
@@ -2448,6 +2462,7 @@ es:
         %{post_error}
 
         Si puedes corregir el problema sugerido, por favor inténtalo de nuevo.
+      date_invalid: "No hay fecha de creación de la publicación. ¿Le falta al email un Date: header?"
     email_reject_post_too_short:
       title: "Emails Rechazados Post muy corto"
       subject_template: "[%{email_prefix}] Problemas con el correo -- Post muy corto"
@@ -2626,9 +2641,9 @@ es:
         one: "1 usuario esperando aprobación"
         other: "%{count} usuarios esperando aprobación"
       text_body_template: |
-        Hay nuevos registros de usuario esperando ser aprobados (o rechazados) antes de poder acceder al foro.
+        Hay registros de usuarios nuevos esperando a ser aprobados (o rechazados) antes de que puedan acceder a este foro.
 
-        [Por favor, revisa esto en la sección de administración](%{base_url}/admin/users/list/pending).
+        [Por favor, revísalos](%{base_url}/review)
     download_remote_images_disabled:
       title: "Descargar imágenes remotas deshabilitado"
       subject_template: "Inhabilitar la descarga de imágenes remotas"
@@ -3027,6 +3042,18 @@ es:
         %{base_url}/u/activate-account/%{email_token}
 
         Si al enlace anterior no le puedes hacer clic, prueba copiando y pegándolo en la barra de direcciones de tu navegador.
+    activation_reminder:
+      title: "Recordatorio de activación"
+      subject_template: "[%{email_prefix}] Recordatorio: confirma tu cuenta"
+      text_body_template: |
+        ¡Te damos la bienvenida a %{site_name}!
+
+        Este es un recordatorio amistoso para que no te olvides de activar tu cuenta.
+
+        Haz clic en el siguiente enlace para confirmar y activar tu nueva cuenta:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Si el enlace de arriba no es clicable, prueba a copiarlo y pegarlo en la barra de direcciones de tu navegador web.
     suspicious_login:
       title: "Alerta de nuevo inicio de sesión"
       subject_template: "[%{site_name}] Alerta de nuevo inicio de sesión desde %{location}"
@@ -3647,17 +3674,17 @@ es:
         Esta medalla es otorgada para felicitar a dos nuevos usuarios cada mes por sus excelentes colaboraciones, y estadísticas sobre cuán seguido sus posts han sido valorados y por quiénes.
     enthusiast:
       name: Entusiasta
-      description: 10 días de visitas
+      description: Visitó 10 días consecutivos
       long_description: |
         Esta medalla se concede por visitarnos durante 10 días consecutivos. ¡Gracias por quedarte con nosotros más de una semana!
     aficionado:
       name: Aficionado
-      description: 100 días de visitas
+      description: Visitó 100 días consecutivos
       long_description: |
         Esta medalla se concede por visitarnos durante 100 días consecutivos. ¡Eso es más de tres meses!
     devotee:
       name: Devoto
-      description: 365 días de visitas
+      description: Visitó 365 días consecutivos
       long_description: |
         Esta medalla se concede por visitarnos durante 365 días consecutivos. ¡Wow, un año entero!
     badge_title_metadata: "medalla %{display_name} en %{site_title}"
@@ -3692,7 +3719,7 @@ es:
       no_emails: "Por desgracia, no se han definido emails de administradores durante la configuración inicial, por lo que terminar de instalar el foro será complicado. Por favor, añade un correo de desarrollador en el archivo de configuración o <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>crea una cuenta de administrador desde la consola</a>."
     confirm_email:
       title: "Confirmar tu email"
-      message: "<p>Hemos enviado un email de activación a <b>%{email}</b>. Por favor, sigue las intrucciones en el email para activar tu cuenta.</p><p>Si no llega, asegúrate que el email esté configurado correctamente en Discourse y comprueba tu carpeta de spam</p>"
+      message: "<p>Hemos enviado un correo de activación a <b>%{email}</b>. Por favor, sigue las instrucciones en el email para activar tu cuenta.</p><p>Si no llega, verifica tu carpeta de spam, y  <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>asegúrate de configurar el correo electrónico correctamente</a>.</p>"
     resend_email:
       title: "Volver a enviar email de activación"
       message: "<p>Hemos reenviado el correo de activación a <b>%{email}</b>"
@@ -3735,16 +3762,25 @@ es:
             one_paragraph: "El mensaje de bienvenida no debería ser más de un párrafo."
       privacy:
         title: "Acceso"
-        description: "<p>¿Es tu comunidad abierta a todo el mundo o está restringida a ciertos miembros, ya sea por invitación o aprobación? Si lo prefieres, puedes hacer que sea privada, y hacerla pública más tarde.</p> <p>Recuerda que siempre puedes enviar invitaciones desde temas, o desde tu página de perfil.</p>"
+        description: "<p>¿Es tu comunidad abierta a todo el mundo o está restringida por membresía, invitación o aprobación? Si lo prefieres, puedes hacer que sea privada, y hacerla pública más tarde.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Pública"
-                description: "Todo el mundo puede acceder a la comunidad y registrar una cuenta"
+                description: "Cualquiera puede acceder a esta comunidad"
               restricted:
                 label: "Privada"
-                description: "Solo gente invitada o con aprobación tiene acceso a esta comunidad"
+                description: "Solo los usuarios con una sesión iniciada pueden acceder a esta comunidad"
+          privacy_options:
+            description: "¿Cómo se registran los nuevos usuarios para una cuenta?"
+            choices:
+              open:
+                label: "Los usuarios pueden registrarse por su cuenta."
+              invite_only:
+                label: "Los usuarios pueden registrarse por su cuenta, pero deben ser aprobados por el staff."
+              must_approve:
+                label: "Los usuarios deben ser invitados por usuarios de confianza o el staff antes de que puedan registrarse."
       contact:
         title: "Contacto"
         fields:
@@ -3836,17 +3872,30 @@ es:
       posted: '%{username} publicó en "%{topic}" - %{site_title}'
       private_message: '%{username} te envió un mensaje privado en "%{topic}" - %{site_title}'
       linked: '%{username} enlazó tu publicación desde "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
       confirm_title: "Notificaciones habilitadas - %{site_title}"
       confirm_body: "¡Éxito! Las notificaciones han sido habilitadas."
-      custom: "Notificación de %{site_title}"
+      custom: "Notificación de %{username} on %{site_title}"
   staff_action_logs:
     not_found: "no encontrado"
     unknown: "desconocido"
     user_merged: "%{username} se ha unido en esta cuenta"
     user_delete_self: "Eliminado a si mismo de %{url}"
+    webhook_deactivation_reason: "Tu webhook ha sido desactivado automáticamente. Recibimos varias respuestas '%{status}'  HTTP error de status."
   reviewables:
     missing_version: "Debes incluir un parámetro de versión"
     conflict: "Se ha detectado un conflicto de actualización que no te ha permitido realizar esa acción"
+    reasons:
+      post_count: "El autor no cumple con los requisitos de `approve_post_count`."
+      trust_level: "El autor no ha cumplido con el requisito `approve_unless_trust_level`."
+      new_topics_unless_trust_level: "El autor no ha cumplido el requisito `approve_new_topics_unless_trust_level`."
+      fast_typer: "El autor ha escrito la publicación en un tiempo sospechosamente corto. Ver: `min_first_post_typing_time`."
+      auto_silence_regexp: "La publicación ha coincidido con el ajuste `auto_silence_first_post_regex`."
+      watched_word: "La publicación incluye una palabra vigilada."
+      staged: "El autor es temporal y `approve_unless_staged` ha sido configurado."
+      category: "La categoría de la publicación requiere aprobación."
+      must_approve_users: "El usuario debe ser aprobado porque `must_approve_users` está habilitado."
+      invite_only: "El usuario debe ser aprobado porque `invite_only` está activado."
     actions:
       agree:
         title: "Estar de acuerdo..."
@@ -3872,9 +3921,19 @@ es:
       delete:
         title: "Eliminar..."
       delete_and_ignore:
+        title: "Borrar publicación e ignorar"
         description: "Eliminar publicación; si es la primera del tema, borrar el tema también."
+      delete_and_ignore_replies:
+        title: "Borrar publicación + respuestas e ignorar"
+        description: "Borrar publicación y todas sus respuestas; si es la primera publicación de un tema, borrarlo también"
+        confirm: "¿Estás seguro de que quieres borrar las respuestas a la publicación también?"
       delete_and_agree:
+        title: "Borrar publicación y coincidir"
         description: "Eliminar publicación; si es la primera del tema, borrar el tema también."
+      delete_and_agree_replies:
+        title: "Borrar publicación + respuestas y coincidir"
+        description: "Borrar publicación y todas sus respuestas; si es la primera publicación de un tema, borrarlo también"
+        confirm: "¿Estás seguro de que quieres borrar las respuestas a la publicación también?"
       disagree_and_restore:
         title: "No coincidir y restaurar publicación"
         description: "Restaurar la publicación para que los usuarios la vean."
@@ -3884,6 +3943,16 @@ es:
         title: "Ignorar"
       approve:
         title: "Aprobar"
+      approve_user:
+        title: "Aprobar Usuario"
+      reject_user:
+        title: "Eliminar usuario..."
+        delete:
+          title: "Eliminar usuario"
+          description: "El usuario será eliminado del foro."
+        block:
+          title: "Eliminar y bloquear usuario"
+          description: "El usuario será eliminado, y bloquearemos su IP y su dirección de correo electrónico."
       reject:
         title: "Rechazar"
       delete_user:

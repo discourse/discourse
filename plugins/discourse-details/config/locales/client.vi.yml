@@ -9,3 +9,5 @@ vi:
   js:
     details:
       title: Ẩn thông tin
+    composer:
+      details_title: Tóm tắt

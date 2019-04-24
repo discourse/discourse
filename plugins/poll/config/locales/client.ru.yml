@@ -69,6 +69,8 @@ ru:
           regular: Выбор одного варианта из списка
           multiple: Выбор нескольких вариантов из списка
           number: Шкала из чисел
+        poll_result:
+          label: Результаты
         poll_config:
           max: Макс.
           min: Мин.

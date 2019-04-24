@@ -8,6 +8,7 @@
 tr_TR:
   site_settings:
     discourse_narrative_bot_enabled: 'Discourse Hikaye Botunu Etkinleştir (discobot)'
+    disable_discourse_narrative_bot_welcome_post: "Discourse anlatı botunu pasif hale getir"
     discourse_narrative_bot_ignored_usernames: "Discourse Hikaye Botunun kullandığı kullanıcı adları"
     discourse_narrative_bot_disable_public_replies: "Discourse Hikaye Botu tarafından verilen cevapları devre dışı bırak"
   badges:
