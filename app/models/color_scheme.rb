@@ -122,7 +122,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.hex_cache
-    @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
+    @hex_cache ||= DistributedCache.get("scheme_hex_for_name")
   end
 
   attr_accessor :is_base

@@ -370,7 +370,7 @@ module Discourse
   end
 
   def self.last_read_only
-    @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
+    @last_read_only ||= DistributedCache.get('last_read_only', namespace: false)
   end
 
   def self.recently_readonly?

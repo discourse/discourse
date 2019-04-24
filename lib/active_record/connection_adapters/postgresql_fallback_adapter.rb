@@ -12,7 +12,7 @@ class PostgreSQLFallbackHandler
   DATABASE_DOWN_CHANNEL = '/global/database_down'.freeze
 
   def initialize
-    @masters_down = DistributedCache.new('masters_down', namespace: false)
+    @masters_down = DistributedCache.get('masters_down', namespace: false)
     @mutex = Mutex.new
     @initialized = false
 

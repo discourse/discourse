@@ -13,7 +13,7 @@ class Stylesheet::Manager
   @lock = Mutex.new
 
   def self.cache
-    @cache ||= DistributedCache.new("discourse_stylesheet")
+    @cache ||= DistributedCache.get("discourse_stylesheet")
   end
 
   def self.clear_theme_cache!

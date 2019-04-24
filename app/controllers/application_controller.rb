@@ -563,7 +563,7 @@ class ApplicationController < ActionController::Base
   end
 
   def self.banner_json_cache
-    @banner_json_cache ||= DistributedCache.new("banner_json")
+    @banner_json_cache ||= DistributedCache.get("banner_json")
   end
 
   def banner_json

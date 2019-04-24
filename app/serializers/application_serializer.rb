@@ -17,7 +17,7 @@ class ApplicationSerializer < ActiveModel::Serializer
   end
 
   def self.fragment_cache
-    @cache ||= DistributedCache.new("am_serializer_fragment_cache")
+    @cache ||= DistributedCache.get("am_serializer_fragment_cache")
   end
 
   protected

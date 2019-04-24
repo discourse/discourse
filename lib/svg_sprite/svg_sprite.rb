@@ -389,6 +389,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.cache
-    @cache ||= DistributedCache.new('svg_sprite')
+    @cache ||= DistributedCache.get('svg_sprite')
   end
 end

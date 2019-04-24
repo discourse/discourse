@@ -29,7 +29,7 @@ class ContentSecurityPolicy
     private
 
     def cache
-      @cache ||= DistributedCache.new('csp_extensions')
+      @cache ||= DistributedCache.get('csp_extensions')
     end
 
     def find_theme_extensions(theme_ids)

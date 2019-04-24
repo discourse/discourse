@@ -10,7 +10,7 @@ require_dependency 'theme_translation_manager'
 
 class Theme < ActiveRecord::Base
 
-  @cache = DistributedCache.new('theme')
+  @cache = DistributedCache.get('theme')
 
   belongs_to :user
   belongs_to :color_scheme

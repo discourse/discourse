@@ -121,7 +121,7 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new('category_topic_ids')
+  @topic_id_cache = DistributedCache.get('category_topic_ids')
 
   def self.topic_ids
     @topic_id_cache['ids'] || reset_topic_ids_cache
@@ -546,7 +546,7 @@ class Category < ActiveRecord::Base
     id == SiteSetting.uncategorized_category_id
   end
 
-  @@url_cache = DistributedCache.new('category_url')
+  @@url_cache = DistributedCache.get('category_url')
 
   def clear_url_cache
     @@url_cache.clear

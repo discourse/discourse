@@ -91,6 +91,7 @@ module TestSetup
     #
     # $redis = DiscourseMockRedis.new
 
+    DistributedCache.clear_caches!
     RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
