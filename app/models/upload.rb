@@ -281,7 +281,7 @@ class Upload < ActiveRecord::Base
 
             remap_scope ||= begin
               Post.with_deleted
-                .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/\\d{1}/'")
+                .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
                 .select(:raw, :cooked)
                 .all
             end
