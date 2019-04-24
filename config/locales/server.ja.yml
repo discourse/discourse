@@ -42,10 +42,12 @@ ja:
     import_error:
       generic: テーマをインポートするときにエラーが起こりました
       about_json: "重要なエラー: about.json が存在しないか無効です"
+      git: "gitレポジトリのクローニングに失敗しました。アクセスが許可されていないか、レポジトリが見つかりません。"
       unpack_failed: "ファイルの解凍に失敗しました"
     errors:
       component_no_user_selectable: "テーマコンポーネントはユーザー選択可能にできません"
       component_no_default: "テーマコンポーネントはデフォルトテーマにできません"
+      component_no_color_scheme: "テーマコンポーネントにカラーパターン設定はありません"
       no_multilevels_components: "子テーマ自身を子テーマのテーマにはできません"
     settings_errors:
       invalid_yaml: "入力されたYAMLは不正です"
@@ -53,6 +55,12 @@ ja:
       name_too_long: "長すぎる名前の設定があります。長さの最大値は255です。"
       default_value_missing: "設定%{name}はデフォルト値を持っていません"
       default_not_match_type: "設定%{name}のデフォルト値の型が、設定の型と合致しません"
+      number_value_not_valid: "新しい値は許可された範囲を超えています。"
+      number_value_not_valid_min_max: "%{min}と%{max}の間になければなりません。"
+      number_value_not_valid_min: "%{min}以上でなければなりません。"
+      number_value_not_valid_max: "%{max}以下でなければなりません。"
+      string_value_not_valid: "新しい値の長さが許可された範囲を超えています。"
+      string_value_not_valid_min_max: "%{min}文字以上%{max}文字以下でなければいけません。"
   emails:
     incoming:
       default_subject: "このトピックはタイトルが必要です。"
@@ -127,7 +135,10 @@ ja:
     imported_from: "これは、オリジナルエントリ%{link}に対するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
   no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
+  no_mentions_allowed_newuser: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
   no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
+  no_attachments_allowed: "申し訳ありませんが、新規ユーザはこのポストにファイルを添付できません。"
+  no_links_allowed: "申し訳ありませんが、新規ユーザはこのポストにリンクを貼れません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
   user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
@@ -157,6 +168,10 @@ ja:
   too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
   groups:
+    errors:
+      invalid_incoming_email: "%{email}のメール認証に失敗しました\U0001F62D"
+      email_already_used_in_group: "'%{email}'はすでに'%{group_name}'グループに使われています。"
+      email_already_used_in_category: "'%{email}'はすでに'%{category_name}'カテゴリーに使われています。"
     default_names:
       everyone: "みなさん"
       admins: "管理者"
@@ -182,6 +197,9 @@ ja:
     attributes:
       category:
         name: "カテゴリ名"
+      topic:
+        title: "タイトル"
+        category_id: "カテゴリ"
       post:
         raw: "本文"
       user_profile:
@@ -207,6 +225,7 @@ ja:
           attributes:
             hex:
               invalid: "は有効なカラーではありません"
+  uncategorized_category_name: "その他"
   vip_category_name: "ラウンジ"
   vip_category_description: "トラストレベル3以上のメンバーのみが参加できるカテゴリ"
   meta_category_name: "サイトフィードバック"
@@ -351,6 +370,9 @@ ja:
     activated: "このアカウントはすでにアクティベートされています。"
     admin_confirm:
       title: "管理アカウントの確認"
+  reviewable_score_types:
+    needs_approval:
+      title: "承認待ち"
   post_action_types:
     off_topic:
       title: "関係ない話題"
@@ -432,8 +454,6 @@ ja:
         make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
   unsubscribed:
-    title: "登録はありません！"
-    description: "<b>%{email}</b>は登録されていません。メール設定を変更するために、<a href='%{url}'>設定画面</a>を開いてください。"
     topic_description: "%{link}を再配信するために、トピックの右か下の通知コントロールを使用してください。"
     private_topic_description: "再配信するために、トピックの右か下の通知コントロールを使用してください。"
   unsubscribe:
@@ -442,15 +462,23 @@ ja:
     mute_topic: "%{link}通知をミュートにする"
     unwatch_category: "%{category}内の全トピックのウォッチを解除"
     mailing_list_mode: "メーリンリストモードを無効にする"
-    disable_digest_emails: "要約されたメールの送信を停止する"
     all: "%{sitename}からのメールを私に送信しないでください。"
     different_user_description: "電子メールで送信したものとは別のユーザーとしてログインしています。 ログアウトするか、匿名モードになり、もう一度やり直してください。"
     not_found_description: "申し訳ありませんが購読解除に失敗しました。メールのリンクの有効期限が切れていませんか？"
     log_out: "ログアウト"
+    digest_frequency:
+      never: "追跡しない"
+      every_30_minutes: "30分毎"
+      every_hour: "1時間毎"
+      daily: "毎日"
+      weekly: "毎週"
+      every_month: "毎月"
+      every_six_months: "6ヶ月毎"
   user_api_key:
     title: "アプリケーションアクセスの認証"
     authorize: "認証"
     read: "既読"
+    read_write: "既読/書く"
     description: '"%{application_name}" があなたのアカウントへのアクセスを要求しています: '
     no_trust_level: "申し訳ありませんが、ユーザーAPIへのアクセスはできません。"
     generic_error: "申し訳ありませんが、この機能は管理者が使用できなくしています。"
@@ -459,6 +487,24 @@ ja:
       notifications: "全ての未読通知を既読にします"
       read: "全て既読にする"
   reports:
+    default:
+      labels:
+        day: 日
+    post_edits:
+      labels:
+        post: 投稿
+        editor: 編集者
+        edit_reason: 理由
+    user_flagging_ratio:
+      labels:
+        user: ユーザー
+        score: スコア
+    moderators_activity:
+      labels:
+        moderator: モデレータ
+    flags_status:
+      labels:
+        flag: タイプ
     visits:
       title: "アクセスユーザー"
       xaxis: "日"
@@ -467,6 +513,18 @@ ja:
       title: "登録"
       xaxis: "日"
       yaxis: "登録数"
+    new_contributors:
+      xaxis: "日"
+    consolidated_page_views:
+      yaxis: "日"
+      labels:
+        post: 投稿
+        editor: 編集者
+        edit_reason: 理由
+    dau_by_mau:
+      xaxis: "日"
+    daily_engaged_users:
+      xaxis: "日"
     profile_views:
       xaxis: "日"
       yaxis: "ユーザープロフィールの閲覧数"
@@ -494,11 +552,23 @@ ja:
       title: "ユーザーごとのトラストレベル"
       xaxis: "トラストレベル"
       yaxis: "ユーザー数"
+    users_by_type:
+      xaxis: "タイプ"
+      yaxis: "ユーザー数"
+      labels:
+        type: タイプ
+      xaxis_labels:
+        admin: 管理者
+        moderator: モデレータ
+        suspended: 凍結中
     emails:
       title: "送信メール"
       xaxis: "日"
       yaxis: "メールの数"
     user_to_user_private_messages:
+      xaxis: "日"
+      yaxis: "メッセージ数"
+    user_to_user_private_messages_with_replies:
       xaxis: "日"
       yaxis: "メッセージ数"
     system_private_messages:
@@ -522,14 +592,25 @@ ja:
       xaxis: "ユーザー"
       num_clicks: "クリック"
       num_topics: "トピック"
+      labels:
+        user: "ユーザー"
+        num_clicks: "クリック"
+        num_topics: "トピック"
     top_traffic_sources:
       title: "トップトラフィックソース"
       xaxis: "ドメイン"
       num_clicks: "クリック"
       num_topics: "トピック"
       num_users: "ユーザー"
+      labels:
+        domain: ドメイン
+        num_clicks: クリック
+        num_topics: トピック
     top_referred_topics:
       title: "トップ被参照トピック"
+      labels:
+        num_clicks: "クリック"
+        topic: "トピック"
     page_view_anon_reqs:
       title: "匿名ユーザー"
       xaxis: "日"
@@ -539,6 +620,7 @@ ja:
       xaxis: "日"
       yaxis: "ログインユーザーからの閲覧数"
     page_view_crawler_reqs:
+      title: "ウェブクローラからの閲覧数"
       xaxis: "日"
       yaxis: "ウェブクローラからの閲覧数"
     page_view_total_reqs:
@@ -588,6 +670,20 @@ ja:
     mobile_visits:
       xaxis: "日"
       yaxis: "アクセス数"
+    web_crawlers:
+      labels:
+        page_views: "PV"
+    suspicious_logins:
+      labels:
+        user: ユーザー
+        location: 場所
+    staff_logins:
+      labels:
+        user: ユーザー
+        location: 場所
+    top_uploads:
+      labels:
+        filename: ファイル名
   dashboard:
     rails_env_warning: "サーバは %{env} モードで起動中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
@@ -600,9 +696,11 @@ ja:
     allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
+    min_personal_message_post_length: "メッセージに投稿可能な最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
+    min_personal_message_title_length: "プライベートメッセージのタイトルとして許容する最小の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。警告：未分類のトピックがある場合は、これをオフにする前に、再分類する必要があります。"
     allow_duplicate_topic_titles: "トピックタイトルの重複を許可"
@@ -615,6 +713,7 @@ ja:
     download_remote_images_to_local: "リモート画像をダウンロードしてローカル画像に変換する。破損した画像を防ぎます"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクスペースの最低残容量 (パーセント)"
     disabled_image_download_domains: "これらのドメインからは、リモート画像のダウンロードを行いません。パイプ区切りのリスト"
+    editing_grace_period: "投稿から(N)秒間は、ポストの新しいバージョンを作成しない"
     edit_history_visible_to_public: "すべてのユーザに対して投稿の編集履歴を許可する。無効の場合はスタッフメンバーのみが確認できます"
     delete_removed_posts_after: "投稿者は投稿を削除してから(N)時間後に削除されます。0を設定すると、すぐに削除されます"
     max_image_width: "投稿内での画像サムネイルの最大の幅"
@@ -652,6 +751,7 @@ ja:
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "投稿に対するアクション (「いいね!」、通報等) 取り消しを許可する時間 (秒)"
     must_approve_users: "スタッフはサイトへのアクセスが許可される前のすべての新規ユーザを承認する必要があります。警告：公開中のサイトでこれを有効にすると、既存の非スタッフユーザのアクセスを取り消すことになります！"
+    moderators_create_categories: "モデレータのカテゴリ作成を許可"
     cors_origins: "CORSを許可。オリジンはhttp://かhttps://を含む必要があります。CORSを有効にするには、環境変数　DISCOURSE_ENABLE_CORSにtrueをセットする必要があります"
     top_menu: "ホームナビゲーションに表示する項目・表示順を指定。例:  latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "投稿メニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
@@ -674,7 +774,6 @@ ja:
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     new_version_emails: "Discourseの新しいバージョンが利用可能になった際に contact_email アドレスにメールで通知する"
     invite_expiry_days: "招待キーの有効期間 (日)"
-    invite_only: "公開登録は無効になっています。すべての新規ユーザーは信頼できるユーザーまたはスタッフによって明示的に招待される必要があります。"
     login_required: "サイトのコンテンツを閲覧するには認証を必須にして、匿名アクセスを拒否する"
     min_password_length: "パスワードの最小の長さ"
     block_common_passwords: "最もよく使われている10,000個のパスワードを許可しない"
@@ -685,7 +784,6 @@ ja:
     sso_overrides_name: "ログインする度に、SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きし、ローカルでの変更を防ぐ"
     sso_not_approved_url: "このURLに承認されていないSSOアカウントをリダイレクト"
     allow_new_registrations: "新しいユーザの登録を許可。ユーザを誰でも作れないようにするためには、チェックを外してください。"
-    enable_yahoo_logins: "Yahoo 認証を有効にする"
     google_oauth2_client_id: "あなたのGoogleアプリケーションのクライアントID"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアント Secret。"
     allow_restore: "すべてのサイトデータを置き換える復元を許可します\n。バックアップからの復元を行うとき以外はfalseのままにしてください。"
@@ -853,6 +951,7 @@ ja:
       invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
       invalid_string_min: "少なくとも%{min}文字は必要です"
       invalid_string_max: "%{max}文字以下である必要があります"
+      min_username_length_range: "最小値を最大値より上にすることはできません。"
   search:
     within_post: "#%{post_number} by %{username}"
     types:
@@ -912,6 +1011,10 @@ ja:
     click_to_continue: "クリックして続けてください。"
     already_logged_in: "おっと！他の人の招待を受け入れたようです。もし、あなたが%{current_user}出なければ、ログアウトして再び試してください。"
     second_factor_title: "二段階認証"
+    second_factor_backup_description: "バックアップコードを入力: "
+  admin:
+    email:
+      sent_test: "送信完了!"
   user:
     username:
       short: "少なくとも%{min}文字は必要です"
@@ -1004,6 +1107,8 @@ ja:
     agreed: "伝えてくれてありがとうございます。問題に同意し、調査しています"
     agreed_and_deleted: "伝えてくれてありがとうございます。問題に同意し、投稿を削除します"
     disagreed: "伝えてくれてありがとうございます。調査しています"
+    ignored: "伝えてくれてありがとうございます。調査しています"
+    ignored_and_deleted: "伝えてくれてありがとうございます。投稿を削除しました"
   system_messages:
     private_topic_title: "トピック #%{id}"
     contents_hidden: "内容を確認するためにその投稿にアクセスして下さい。"
@@ -1070,13 +1175,25 @@ ja:
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
+    email_reject_invalid_post:
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        複雑な書式、大きすぎるメッセージ、小さすぎるメッセージなど、複数の原因が考えられます。もう一度試してください。もし続くようであれば、ウェブサイトから投稿してください
+    email_reject_invalid_post_specified:
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        理由:
+
+        %{post_error}
+
+        問題が修正できたら、もう一度試してください
+    spam_post_blocked:
+      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
     pending_users_reminder:
       subject_template:
         other: "%{count} 人のユーザか承認を待っています。"
-      text_body_template: |
-        新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
-
-        [管理者セクションで確認する](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "リモート画像のダウンロードを無効化"
       text_body_template: "'download_remote_images_threshold'の制限に達したため、`download_remote_images_to_local`の設定は無効になりました"
@@ -1168,9 +1285,11 @@ ja:
     recent_topics: "最新"
     see_more: "もっと見る"
     search_title: "サイトを検索"
+    search_button: "検索"
   terms_of_service:
     title: "利用規約"
   deleted: "削除"
+  image: "画像"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
@@ -1181,6 +1300,21 @@ ja:
     images:
       too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)。リサイズして再アップロードしてください"
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
+  skipped_email_log:
+    user_email_no_user: "id %{user_id}のユーザーは見つかりませんでした"
+    user_email_post_not_found: "id %{post_id}のポストは見つかりません"
+    user_email_anonymous_user: "ユーザーは匿名です"
+    user_email_user_suspended_not_pm: "ユーザーは凍結状態です、プライベートメッセージはありません"
+    user_email_seen_recently: "最近訪れたユーザ"
+    user_email_notification_already_read: "メールが既読になったという通知です"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_deleted: "投稿は投稿者によって削除されました"
+    user_email_user_suspended: "ユーザは凍結状態です"
+    user_email_already_read: "ユーザーはポストを既に読んだ"
+    sender_message_blank: "メッセージが空"
+    sender_message_to_blank: "メッセージの宛先(to)が空"
+    sender_text_part_body_blank: "テキストの本文が空です"
+    sender_body_blank: "本文が空です"
   color_schemes:
     base_theme_name: "ベース"
   about: "このサイトについて"
@@ -1283,8 +1417,22 @@ ja:
     editor:
       name: 編集者
       description: はじめて投稿を編集する
+    basic_user:
+      name: ベーシックユーザ
+    member:
+      name: メンバー
+    regular:
+      name: 通常
+    leader:
+      name: リーダー
+    welcome:
+      name: ようこそ
+      description: 「いいね！」を受けました
     autobiographer:
       name: あなたはだれ？
+    anniversary:
+      name: アニバーサリー
+      description: 今年一度でも投稿したアクティブメンバー
     nice_post:
       name: ナイスな返事
     good_post:
@@ -1295,10 +1443,22 @@ ja:
       name: ナイスなトピック
     good_topic:
       name: イカすトピック
+    great_topic:
+      name: グレートトピック
     nice_share:
+      name: ナイスシェア
+      description: 25人の訪問者にポストがシェアされました
       long_description: |
         このバッジは共有リンクが25人のサイト訪問者からクリックされた時に授与されます。我々のディスカッションとこのコミュニティについて展開して下さり有難うございます!
+    good_share:
+      name: グッドシェア
+      description: 300人の訪問者にポストがシェアされました
+    great_share:
+      name: グレートシェア
+      description: 1000人の訪問者にポストがシェアされました
     first_like:
+      name: 初めての「いいね！」
+      description: 投稿に「いいね！」した
       long_description: |
         このバッジは、最初に :heart: ボタンを使って投稿に いいね！ をした時に付与されます。 投稿へのいいね！は、コミュニティメンバーに投稿した内容が面白い！いいね！と知らせる素晴らしい方法です。 愛を分かち合おう！
     first_flag:
@@ -1421,13 +1581,10 @@ ja:
       long_description: "このバッジは毎月二人のユーザーに付与されるバッジで、素晴らしい貢献をコミュニティーにもたらしたことを讃えるものです！おめでとうございます！\U0001F381\n"
     enthusiast:
       name: 熱狂者
-      description: 登録10日記念！
     aficionado:
       name: 愛すべき人
-      description: 登録100日記念！
     devotee:
       name: 信者
-      description: 登録365日記念！
   admin_login:
     success: "メールを送信しました"
     email_input: "アドミンメール"
@@ -1439,8 +1596,28 @@ ja:
     title: "タグ"
     staff_tag_disallowed: '%{tag}タグは管理人のみが追加可能です'
     staff_tag_remove_disallowed: '%{tag}タグは管理人のみが削除可能です'
+  finish_installation:
+    resend_email:
+      title: "アクティベーションメールの再送"
   wizard:
     step:
+      forum_title:
+        title: "名前"
+      privacy:
+        title: "アクセス"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "公開"
+              restricted:
+                label: "非公開"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "組織"
       colors:
         title: "テーマ"
       homepage:
@@ -1461,6 +1638,26 @@ ja:
                 label: "カテゴリーと人気トピック"
       emoji:
         title: "絵文字"
+  joined: "参加日"
   discourse_push_notifications:
     popup:
       confirm_body: "成功！通知を可能にしました！"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "凍結中のユーザ"
+      delete_spammer:
+        title: "スパムユーザーを削除"
+      disagree:
+        title: "反対する"
+      ignore:
+        title: "無視する"
+      approve:
+        title: "承認"
+      reject_user:
+        delete:
+          title: "削除されたユーザー"
+      reject:
+        title: "リジェクト"
+      delete_user:
+        title: "削除されたユーザー"

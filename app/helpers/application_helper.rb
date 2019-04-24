@@ -54,7 +54,6 @@ module ApplicationHelper
   end
 
   def is_brotli_req?
-    ENV["COMPRESS_BROTLI"] == "1" &&
     request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
   end
 
@@ -324,6 +323,10 @@ module ApplicationHelper
 
   def customization_disabled?
     request.env[ApplicationController::NO_CUSTOM]
+  end
+
+  def include_ios_native_app_banner?
+    current_user && current_user.trust_level >= 1 && SiteSetting.native_app_install_banner_ios
   end
 
   def allow_plugins?

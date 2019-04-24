@@ -97,7 +97,7 @@ describe UsernameChanger do
 
         block.call(post) if block
 
-        UsernameChanger.change(user, 'bar')
+        UsernameChanger.change(user, args[:target_username] || 'bar')
         post.reload
       end
 
@@ -130,13 +130,13 @@ describe UsernameChanger do
 
           expect(post.raw).to eq(".@bar -@bar %@bar _@bar ,@bar ;@bar @@bar")
           expect(post.cooked).to match_html(<<~HTML)
-          <p>.<a class="mention" href="/u/bar">@bar</a>
-             -<a class="mention" href="/u/bar">@bar</a>
-             %<a class="mention" href="/u/bar">@bar</a>
-             _<a class="mention" href="/u/bar">@bar</a>
-             ,<a class="mention" href="/u/bar">@bar</a>
-             ;<a class="mention" href="/u/bar">@bar</a>
-             @<a class="mention" href="/u/bar">@bar</a></p>
+            <p>.<a class="mention" href="/u/bar">@bar</a>
+               -<a class="mention" href="/u/bar">@bar</a>
+               %<a class="mention" href="/u/bar">@bar</a>
+               _<a class="mention" href="/u/bar">@bar</a>
+               ,<a class="mention" href="/u/bar">@bar</a>
+               ;<a class="mention" href="/u/bar">@bar</a>
+               @<a class="mention" href="/u/bar">@bar</a></p>
           HTML
         end
 
@@ -147,38 +147,55 @@ describe UsernameChanger do
           expect(post.cooked).to eq(%Q(<p>“<a class="mention" href="/u/bar">@bar</a>” ‘<a class="mention" href="/u/bar">@bar</a>’</p>))
         end
 
-        it 'replaces mentions when there are trailing symbols' do
-          post = create_post_and_change_username(raw: "@foo. @foo, @foo: @foo; @foo-")
+        it 'replaces Markdown formatted mentions' do
+          post = create_post_and_change_username(raw: "**@foo** *@foo* _@foo_ ~~@foo~~")
 
-          expect(post.raw).to eq("@bar. @bar, @bar: @bar; @bar-")
+          expect(post.raw).to eq("**@bar** *@bar* _@bar_ ~~@bar~~")
           expect(post.cooked).to match_html(<<~HTML)
-          <p><a class="mention" href="/u/bar">@bar</a>.
-             <a class="mention" href="/u/bar">@bar</a>,
-             <a class="mention" href="/u/bar">@bar</a>:
-             <a class="mention" href="/u/bar">@bar</a>;
-             <a class="mention" href="/u/bar">@bar</a>-</p>
+            <p><strong><a class="mention" href="/u/bar">@bar</a></strong>
+               <em><a class="mention" href="/u/bar">@bar</a></em>
+               <em><a class="mention" href="/u/bar">@bar</a></em>
+               <s><a class="mention" href="/u/bar">@bar</a></s></p>
           HTML
         end
 
-        it 'does not replace mention when followed by an underscore' do
-          post = create_post_and_change_username(raw: "@foo_")
+        it 'replaces mentions when there are trailing symbols' do
+          post = create_post_and_change_username(raw: "@foo. @foo, @foo: @foo; @foo_ @foo-")
 
-          expect(post.raw).to eq("@foo_")
-          expect(post.cooked).to eq(%Q(<p><span class="mention">@foo_</span></p>))
+          expect(post.raw).to eq("@bar. @bar, @bar: @bar; @bar_ @bar-")
+          expect(post.cooked).to match_html(<<~HTML)
+            <p><a class="mention" href="/u/bar">@bar</a>.
+               <a class="mention" href="/u/bar">@bar</a>,
+               <a class="mention" href="/u/bar">@bar</a>:
+               <a class="mention" href="/u/bar">@bar</a>;
+               <a class="mention" href="/u/bar">@bar</a>_
+               <a class="mention" href="/u/bar">@bar</a>-</p>
+          HTML
+        end
+
+        it 'does not replace mention in cooked when mention contains a trailing underscore' do
+          # Older versions of Discourse detected a trailing underscore as part of a username.
+          # That doesn't happen anymore, so we need to do create the `cooked` for this test manually.
+          post = create_post_and_change_username(raw: "@foobar @foo") do |p|
+            p.update_columns(raw: p.raw.gsub("@foobar", "@foo_"), cooked: p.cooked.gsub("@foobar", "@foo_"))
+          end
+
+          expect(post.raw).to eq("@bar_ @bar")
+          expect(post.cooked).to eq(%Q(<p><span class="mention">@foo_</span> <a class="mention" href="/u/bar">@bar</a></p>))
         end
 
         it 'does not replace mentions when there are leading alphanumeric chars' do
-          post = create_post_and_change_username(raw: "a@foo 2@foo")
+          post = create_post_and_change_username(raw: "@foo a@foo 2@foo")
 
-          expect(post.raw).to eq("a@foo 2@foo")
-          expect(post.cooked).to eq(%Q(<p>a@foo 2@foo</p>))
+          expect(post.raw).to eq("@bar a@foo 2@foo")
+          expect(post.cooked).to eq(%Q(<p><a class="mention" href="/u/bar">@bar</a> a@foo 2@foo</p>))
         end
 
         it 'does not replace username within email address' do
-          post = create_post_and_change_username(raw: "mail@foo.com")
+          post = create_post_and_change_username(raw: "@foo mail@foo.com")
 
-          expect(post.raw).to eq("mail@foo.com")
-          expect(post.cooked).to eq(%Q(<p><a href="mailto:mail@foo.com">mail@foo.com</a></p>))
+          expect(post.raw).to eq("@bar mail@foo.com")
+          expect(post.cooked).to eq(%Q(<p><a class="mention" href="/u/bar">@bar</a> <a href="mailto:mail@foo.com">mail@foo.com</a></p>))
         end
 
         it 'does not replace username in a mention of a similar username' do
@@ -191,11 +208,11 @@ describe UsernameChanger do
 
           expect(post.raw).to eq("@bar @foobar @foo-bar @foo_bar @foo1")
           expect(post.cooked).to match_html(<<~HTML)
-          <p><a class="mention" href="/u/bar">@bar</a>
-             <a class="mention" href="/u/foobar">@foobar</a>
-             <a class="mention" href="/u/foo-bar">@foo-bar</a>
-             <a class="mention" href="/u/foo_bar">@foo_bar</a>
-             <a class="mention" href="/u/foo1">@foo1</a></p>
+            <p><a class="mention" href="/u/bar">@bar</a>
+               <a class="mention" href="/u/foobar">@foobar</a>
+               <a class="mention" href="/u/foo-bar">@foo-bar</a>
+               <a class="mention" href="/u/foo_bar">@foo_bar</a>
+               <a class="mention" href="/u/foo1">@foo1</a></p>
           HTML
         end
 
@@ -252,6 +269,44 @@ describe UsernameChanger do
 
           expect(post.raw).to eq('<a class="mention">@bar</a> and <a class="mention">@someuser</a>')
           expect(post.cooked).to match_html('<p><a class="mention">@bar</a> and <a class="mention">@someuser</a></p>')
+        end
+
+        context "Unicode usernames" do
+          before { SiteSetting.unicode_usernames = true }
+          let(:user) { Fabricate(:user, username: 'թռչուն') }
+
+          it 'it correctly updates mentions' do
+            post = create_post_and_change_username(raw: "Hello @թռչուն", target_username: 'птица')
+
+            expect(post.raw).to eq("Hello @птица")
+            expect(post.cooked).to eq(%Q(<p>Hello <a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a></p>))
+          end
+
+          it 'does not replace mentions when there are leading alphanumeric chars' do
+            post = create_post_and_change_username(raw: "Hello @թռչուն 鳥@թռչուն 2@թռչուն ٩@թռչուն", target_username: 'птица')
+
+            expect(post.raw).to eq("Hello @птица 鳥@թռչուն 2@թռչուն ٩@թռչուն")
+            expect(post.cooked).to eq(%Q(<p>Hello <a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a> 鳥@թռչուն 2@թռչուն ٩@թռչուն</p>))
+          end
+
+          it 'does not replace username in a mention of a similar username' do
+            Fabricate(:user, username: 'թռչուն鳥')
+            Fabricate(:user, username: 'թռչուն-鳥')
+            Fabricate(:user, username: 'թռչուն_鳥')
+            Fabricate(:user, username: 'թռչուն٩')
+
+            post = create_post_and_change_username(raw: "@թռչուն @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩", target_username: 'птица')
+
+            expect(post.raw).to eq("@птица @թռչուն鳥 @թռչուն-鳥 @թռչուն_鳥 @թռչուն٩")
+            expect(post.cooked).to match_html(<<~HTML)
+              <p><a class="mention" href="/u/%D0%BF%D1%82%D0%B8%D1%86%D0%B0">@птица</a>
+                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%E9%B3%A5">@թռչուն鳥</a>
+                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6-%E9%B3%A5">@թռչուն-鳥</a>
+                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6_%E9%B3%A5">@թռչուն_鳥</a>
+                 <a class="mention" href="/u/%D5%A9%D5%BC%D5%B9%D5%B8%D6%82%D5%B6%D9%A9">@թռչուն٩</a></p>
+            HTML
+          end
+
         end
       end
 

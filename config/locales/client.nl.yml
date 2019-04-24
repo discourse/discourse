@@ -307,6 +307,8 @@ nl:
         search: "Zoeken naar een bericht op titel:"
         placeholder: "typ hier de titel van het bericht"
     review:
+      awaiting_approval: "Wacht op goedkeuring"
+      delete: "Verwijderen"
       settings:
         saved: "Opgeslagen"
         save_changes: "Wijzigingen opslaan"
@@ -327,7 +329,8 @@ nl:
       filtered_topic: "U hebt op beoordeelbare inhoud in één topic gefilterd."
       filtered_user: "Gebruiker:"
       show_all_topics: "alle topics tonen"
-      deleted_user: "(verwijderde gebruiker)"
+      deleted_post: "(bericht verwijderd)"
+      deleted_user: "(gebruiker verwijderd)"
       user:
         username: "Gebruikersnaam"
         email: "E-mailadres"
@@ -350,6 +353,8 @@ nl:
         topic: "Topic"
         reviewable_count: "Aantal"
         reported_by: "Gemeld door"
+        deleted: "[Topic verwijderd]"
+        original: "(oorspronkelijk topic)"
         details: "details"
         unique_users:
           one: "1 gebruiker"
@@ -371,13 +376,14 @@ nl:
         category: "Categorie:"
       conversation:
         view_full: "volledige conversatie bekijken"
-      history:
-        title: "Geschiedenis"
-        edited: "Bewerkt"
       scores:
-        description: "Omschrijving"
+        about: "Deze score wordt berekend op basis van het vertrouwen van de melder, de nauwkeurigheid van zijn of haar eerdere markeringen, en de prioriteit van item dat wordt gemeld."
         score: "Score"
+        date: "Datum"
+        type: "Type"
+        status: "Status"
         submitted_by: "Ingediend door"
+        reviewed_by: "Beoordeeld door"
       statuses:
         pending:
           title: "In wachtrij"
@@ -700,8 +706,7 @@ nl:
       dismiss_notifications: "Alle verwijderen"
       dismiss_notifications_tooltip: "Alle ongelezen meldingen markeren als gelezen"
       first_notification: "Uw eerste melding! Selecteer deze om te beginnen."
-      disable_jump_reply: "Niet naar mijn bericht gaan nadat ik antwoord"
-      dynamic_favicon: "Aantal nieuwe / bijgewerkte topics tonen op browserpictogram"
+      dynamic_favicon: "Aantal op browserpictogram tonen"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
       text_size_default_on_all_devices: "Dit de standaard tekstgrootte maken op al mijn apparaten"
       allow_private_messages: "Andere gebruikers mogen mij persoonlijke berichten sturen"
@@ -941,6 +946,10 @@ nl:
         normal: "Normaal"
         larger: "Groter"
         largest: "Grootst"
+      title_count_mode:
+        title: "Titel van achtergrondpagina geeft dit aantal weer:"
+        notifications: "Nieuwe meldingen"
+        contextual: "Nieuwe pagina-inhoud"
       like_notification_frequency:
         title: "Melden wanneer geliket"
         always: "Altijd"
@@ -1277,13 +1286,9 @@ nl:
         name: "Facebook"
         title: "met Facebook"
         message: "Authenticeren met Facebook (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
-      yahoo:
-        name: "Yahoo"
-        title: "met Yahoo"
-        message: "Authenticeren met Yahoo (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
       github:
         name: "GitHub"
-        title: "met Github"
+        title: "met GitHub"
         message: "Authenticeren met GitHub (zorg ervoor dat pop-upblokkeringen zijn uitgeschakeld)"
     invites:
       accept_title: "Uitnodiging"
@@ -1370,8 +1375,6 @@ nl:
       toggle_whisper: "Fluistermodus in-/uitschakelen"
       toggle_unlisted: "Onzichtbaar in-/uitschakelen"
       posting_not_on_topic: "Op welk topic wilt u antwoorden?"
-      saving_draft_tip: "opslaan..."
-      saved_draft_tip: "opgeslagen"
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Uw topic lijkt op..."
       drafts_offline: "concepten offline"
@@ -1497,7 +1500,8 @@ nl:
       none: "Meldingen kunnen momenteel niet worden geladen."
       empty: "Geen meldingen gevonden."
       more: "oudere meldingen bekijken"
-      total_flagged: "aantal gemarkeerde berichten"
+      post_approved: "Uw bericht is goedgekeurd"
+      reviewable_items: "items die beoordeling nodig hebben"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1536,6 +1540,7 @@ nl:
         watching_first_post: '{{username}} heeft een nieuw topic gemaakt: ''{{topic}}'' - {{site_title}}'
         confirm_title: "Meldingen ingeschakeld - %{site_title}"
         confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
+        custom: "Melding van {{username}} op %{site_title}"
     upload_selector:
       title: "Een afbeelding toevoegen"
       title_with_attachments: "Een afbeelding of bestand toevoegen"
@@ -2052,6 +2057,7 @@ nl:
       quote_reply: "Citeren"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
+      ignored: "Genegeerde inhoud"
       wiki_last_edited_on: "wiki laatst bewerkt op"
       last_edited_on: "bericht laatst bewerkt op"
       reply_as_new_topic: "Antwoorden als gekoppeld topic"
@@ -2059,7 +2065,7 @@ nl:
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
       follow_quote: "naar het geciteerde bericht"
       show_full: "Volledige bericht tonen"
-      show_hidden: "Verborgen inhoud bekijken"
+      show_hidden: "Genegeerde inhoud weergeven."
       deleted_by_author:
         one: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
         other: "(bericht ingetrokken door de schrijver, wordt over %{count} uur automatisch verwijderd, tenzij gemarkeerd)"
@@ -2070,8 +2076,8 @@ nl:
         one: "1 verborgen antwoord weergeven"
         other: "{{count}} verborgen antwoorden weergeven"
       notice:
-        first: "Dit is de eerste keer dat {{user}} iets heeft geplaatst – we heten hem/haar welkom in onze gemeenschap!"
-        return: "Het is al even geleden dat we {{user}} hebben gezien – zijn/haar laatste bericht dateert van {{time}}."
+        new_user: "Dit is de eerste keer dat {{user}} iets heeft geplaatst – we heten hem/haar welkom in onze gemeenschap!"
+        returning_user: "Het is al even geleden dat we {{user}} hebben gezien – zijn/haar laatste bericht dateert van {{time}}."
       unread: "Bericht is ongelezen"
       has_replies:
         one: "{{count}} antwoord"
@@ -2144,6 +2150,8 @@ nl:
         delete_topic_disallowed_modal: "U hebt geen toestemming om dit topic te verwijderen. Als u echt wilt dat het wordt verwijderd, plaats dan een markering voor aandacht van een moderator, en voeg de reden bij."
         delete_topic_disallowed: "u hebt geen toestemming om dit topic te verwijderen"
         delete_topic: "topic verwijderen"
+        add_post_notice: "Stafmelding toevoegen"
+        remove_post_notice: "Stafmelding verwijderen"
       actions:
         flag: "Markeren"
         defer_flags:
@@ -2327,7 +2335,7 @@ nl:
       require_topic_approval: "Goedkeuring van moderator voor alle nieuwe topics vereisen"
       require_reply_approval: "Goedkeuring van moderator voor alle nieuwe antwoorden vereisen"
       this_year: "dit jaar"
-      position: "Positie:"
+      position: "Positie op de categoriepagina:"
       default_position: "Standaardpositie"
       position_disabled: "Categorieën worden op volgorde van activiteit weergegeven. Om de volgorde van categorieën in lijsten aan te passen, "
       position_disabled_click: 'schakelt u de instelling ''vaste categorieposities'' in.'
@@ -2377,6 +2385,11 @@ nl:
         rows_with_featured_topics: "Rijen met aanbevolen topics"
         boxes: "Vakken"
         boxes_with_featured_topics: "Vakken met aanbevolen topics"
+      settings_sections:
+        general: "Algemeen"
+        moderation: "Moderatie"
+        appearance: "Vormgeving"
+        email: "E-mailadres"
     flagging:
       title: "Bedankt voor het beleefd houden van onze gemeenschap!"
       action: "Bericht markeren"
@@ -2563,6 +2576,12 @@ nl:
       readonly: "Bekijken"
     lightbox:
       download: "downloaden"
+      previous: "Vorige (Linkerpijltoets)"
+      next: "Volgende (Rechterpijltoets)"
+      counter: "%curr% van %total%"
+      close: "Sluiten (Esc)"
+      content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
+      image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
     keyboard_shortcuts_help:
       title: "Sneltoetsen"
       jump_to:
@@ -2770,8 +2789,6 @@ nl:
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard laatst bijgewerkt:"
-        find_old: "Zoekt u het oude dashboard?"
-        old_link: "bezoek het hier"
         version: "Versie"
         up_to_date: "U bent up-to-date!"
         critical_available: "Er is een kritieke update beschikbaar."
@@ -2978,6 +2995,9 @@ nl:
         queued_post_event:
           name: "Berichtgoedkeuringsgebeurtenis"
           details: "Wanneer een nieuw wachtend bericht wordt gemaakt, goedgekeurd of geweigerd."
+        reviewable_event:
+          name: "Beoordeelbare gebeurtenis"
+          details: "Wanneer een nieuw item gereed is voor beoordeling en wanneer de status ervan is bijgewerkt."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"
@@ -3143,6 +3163,7 @@ nl:
           mobile: "Mobiel"
           settings: "Instellingen"
           translations: "Vertalingen"
+          extra_scss: "Extra SCSS"
           preview: "Voorbeeld"
           show_advanced: "Geavanceerde velden tonen"
           hide_advanced: "Geavanceerde velden verbergen"
@@ -3468,6 +3489,7 @@ nl:
             web_hook_create: "webhook maken"
             web_hook_update: "webhook bijwerken"
             web_hook_destroy: "webhook verwijderen"
+            web_hook_deactivate: "webhook deactiveren"
             embeddable_host_create: "inbedbare host maken"
             embeddable_host_update: "inbedbare host bijwerken"
             embeddable_host_destroy: "inbedbare host verwijderen"

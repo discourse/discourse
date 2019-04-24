@@ -288,14 +288,17 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def approve
-    Discourse.deprecate("AdminUsersController#approve is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
-    Reviewable.bulk_perform_targets(current_user, :approve, 'ReviewableUser', [@user.id])
+    guardian.ensure_can_approve!(@user)
+
+    reviewable = ReviewableUser.find_by(target: @user) ||
+      Jobs::CreateUserReviewable.new.execute(user_id: @user.id).reviewable
+
+    reviewable.perform(current_user, :approve_user)
     render body: nil
   end
 
   def approve_bulk
-    Discourse.deprecate("AdminUsersController#approve_bulk is deprecated. Please use the Reviewable API instead.", since: "2.3.0beta5", drop_from: "2.4")
-    Reviewable.bulk_perform_targets(current_user, :approve, 'ReviewableUser', params[:users])
+    Reviewable.bulk_perform_targets(current_user, :approve_user, 'ReviewableUser', params[:users])
     render body: nil
   end
 

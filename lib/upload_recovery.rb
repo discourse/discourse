@@ -4,12 +4,7 @@ class UploadRecovery
   end
 
   def recover(posts = Post)
-    posts.where("
-      raw LIKE '%upload:\/\/%'
-      OR raw LIKE '%href=%'
-      OR raw LIKE '%src=%'
-      OR raw LIKE '%[img]%'
-    ").find_each do |post|
+    posts.have_uploads.find_each do |post|
 
       begin
         analyzer = PostAnalyzer.new(post.raw, post.topic_id)
@@ -28,7 +23,7 @@ class UploadRecovery
               recover_post_upload(post, Upload.sha1_from_short_url(orig_src))
             end
           elsif url = (media["href"] || media["src"])
-            data = Upload.extract_upload_url(url)
+            data = Upload.extract_url(url)
             next unless data
 
             sha1 = data[2]
@@ -58,7 +53,7 @@ class UploadRecovery
         background = user_profile.public_send(column)
 
         if background.present? && !Upload.exists?(url: background)
-          data = Upload.extract_upload_url(background)
+          data = Upload.extract_url(background)
           next unless data
           sha1 = data[2]
 

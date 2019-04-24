@@ -133,10 +133,12 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
 
-  if (post.post_notice_type) {
-    postAtts.postNoticeType = post.post_notice_type;
-    if (postAtts.postNoticeType === "returning") {
-      postAtts.postNoticeTime = new Date(post.post_notice_time);
+  if (post.notice_type) {
+    postAtts.noticeType = post.notice_type;
+    if (postAtts.noticeType === "custom") {
+      postAtts.noticeMessage = post.notice_args;
+    } else if (postAtts.noticeType === "returning_user") {
+      postAtts.noticeTime = new Date(post.notice_args);
     }
   }
 

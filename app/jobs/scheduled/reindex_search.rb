@@ -3,6 +3,8 @@ module Jobs
   class ReindexSearch < Jobs::Scheduled
     every 2.hours
 
+    CLEANUP_GRACE_PERIOD = 1.week.ago
+
     def execute(args)
       rebuild_problem_topics
       rebuild_problem_posts
@@ -10,6 +12,7 @@ module Jobs
       rebuild_problem_users
       rebuild_problem_tags
       clean_post_search_data
+      clean_topic_search_data
     end
 
     def rebuild_problem_categories(limit: 500)
@@ -67,7 +70,7 @@ module Jobs
         .where("p.raw = ''")
         .delete_all
 
-      DB.exec(<<~SQL, deleted_at: 1.week.ago)
+      DB.exec(<<~SQL, deleted_at: CLEANUP_GRACE_PERIOD)
         DELETE FROM post_search_data
         WHERE post_id IN (
           SELECT post_id
@@ -77,6 +80,19 @@ module Jobs
           WHERE topics.deleted_at IS NOT NULL
           AND topics.deleted_at <= :deleted_at
         )
+      SQL
+    end
+
+    def clean_topic_search_data
+      DB.exec(<<~SQL, deleted_at: CLEANUP_GRACE_PERIOD)
+      DELETE FROM topic_search_data
+      WHERE topic_id IN (
+        SELECT topic_id
+        FROM topic_search_data
+        INNER JOIN topics ON topic_search_data.topic_id = topics.id
+        WHERE topics.deleted_at IS NOT NULL
+        AND topics.deleted_at <= :deleted_at
+      )
       SQL
     end
 
@@ -95,9 +111,8 @@ module Jobs
           ON pd.locale = :locale
           AND pd.version = :version
           AND pd.post_id = posts.id
-        LEFT JOIN topics ON topics.id = posts.topic_id
+        INNER JOIN topics ON topics.id = posts.topic_id
         WHERE pd.post_id IS NULL
-        AND topics.id IS NOT NULL
         AND topics.deleted_at IS NULL
         AND posts.raw != ''
         ORDER BY posts.id DESC

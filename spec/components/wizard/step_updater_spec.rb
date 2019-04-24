@@ -63,7 +63,7 @@ describe Wizard::StepUpdater do
 
   context "privacy settings" do
     it "updates to open correctly" do
-      updater = wizard.create_updater('privacy', privacy: 'open')
+      updater = wizard.create_updater('privacy', privacy: 'open', privacy_options: 'open')
       updater.update
       expect(updater.success?).to eq(true)
       expect(SiteSetting.login_required?).to eq(false)
@@ -72,7 +72,7 @@ describe Wizard::StepUpdater do
     end
 
     it "updates to private correctly" do
-      updater = wizard.create_updater('privacy', privacy: 'restricted')
+      updater = wizard.create_updater('privacy', privacy: 'restricted', privacy_options: 'invite_only')
       updater.update
       expect(updater.success?).to eq(true)
       expect(SiteSetting.login_required?).to eq(true)

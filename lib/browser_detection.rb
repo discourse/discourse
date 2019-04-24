@@ -14,6 +14,8 @@ module BrowserDetection
       :safari
     when /MSIE/i, /Trident/i
       :ie
+    when /DiscourseHub/i
+      :discoursehub
     else
       :unknown
     end

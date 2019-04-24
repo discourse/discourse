@@ -1,6 +1,7 @@
 /*jshint maxlen:10000000 */
 export default {
   "/t/280/1.json": {
+    pending_posts: [],
     post_stream: {
       posts: [
         {
@@ -4998,7 +4999,7 @@ export default {
           edit_reason: null,
           can_view_edit_history: true,
           wiki: false,
-          post_notice_type: "first"
+          notice_type: "new-user"
         }
       ],
       stream: [25, 26, 27]

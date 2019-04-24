@@ -175,6 +175,7 @@ id:
         name: "Nama Kategori"
       topic:
         title: "Judul"
+        category_id: "Kategori"
       post:
         raw: "Konten"
       user_profile:
@@ -207,6 +208,8 @@ id:
     topic_prefix: "Tentang kategori %{category}"
     errors:
       invalid_email_in: "'%{email}' bukanlah alamat email yang valid."
+      email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
+      email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
     cannot_delete:
       has_subcategories: "Tidak bisa menghapus kategori ini karena memiliki sub-kategori."
       topic_exists_no_oldest: "Tidak dapat menghapus kategori ini karena terdapat %{count} topik."
@@ -230,6 +233,8 @@ id:
     seconds:
       other: "%{count} detik"
   datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "baru saja"
       less_than_x_seconds:
@@ -255,7 +260,11 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
+    choose_new: "Pilih kata sandi baru"
+    choose: "Pilih kata sandi"
     update: "Perbaharui Kata Sandi"
+    save: "Atur Kata Sandi"
+    title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
   change_email:
@@ -275,13 +284,23 @@ id:
     welcome_to: "Selamat datang ke %{site_name}!"
     approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
+  reviewable_score_types:
+    needs_approval:
+      title: "Membutuhan Persetujuan"
   post_action_types:
     off_topic:
       title: "Diluar topik"
+    spam:
+      long_form: "menandai sebagai spam"
+      email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      long_form: "menandai sebagai tidak pantas"
     notify_user:
       title: "Kirim @{{username}} sebuah pesan"
+      email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Hal Lain"
+      email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Penandaan"
   topic_flag_types:
@@ -299,17 +318,45 @@ id:
       title: "Topik Reguler"
   unsubscribe:
     log_out: "Keluar"
+    digest_frequency:
+      never: "tidak pernah"
+      every_30_minutes: "setiap 30 menit"
+      every_hour: "per jam"
+      daily: "harian"
+      weekly: "mingguan"
   user_api_key:
     title: "Izinkan akses aplikasi"
     authorize: "Izinkan"
     read: "baca"
     read_write: "baca/tulis"
   reports:
+    default:
+      labels:
+        day: Hari
+    post_edits:
+      labels:
+        edit_reason: Alasan
+    user_flagging_ratio:
+      labels:
+        user: Pengguna
+    moderators_activity:
+      labels:
+        moderator: Moderator
     visits:
       title: "Kunjungan Pengguna"
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
+      xaxis: "Hari"
+    new_contributors:
+      xaxis: "Hari"
+    consolidated_page_views:
+      yaxis: "Hari"
+      labels:
+        edit_reason: Alasan
+    dau_by_mau:
+      xaxis: "Hari"
+    daily_engaged_users:
       xaxis: "Hari"
     profile_views:
       xaxis: "Hari"
@@ -330,12 +377,18 @@ id:
       xaxis: "Haru"
       yaxis: "Jumlah flags"
     bookmarks:
+      title: "Markah"
       xaxis: "Hari"
       yaxis: "Jumlah bookmark baru"
     users_by_trust_level:
       title: "Pengguna per Level Kepercayaan"
       xaxis: "Level Kepercayaan"
       yaxis: "Jumlah Pengguna"
+    users_by_type:
+      yaxis: "Jumlah Pengguna"
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
     emails:
       title: "Surel Terkirim"
       xaxis: "Hari"
@@ -343,6 +396,9 @@ id:
     user_to_user_private_messages:
       xaxis: "Hari"
       yaxis: "Jumlah Pesan"
+    user_to_user_private_messages_with_replies:
+      xaxis: "Hari"
+      yaxis: "Jumlah pesan"
     system_private_messages:
       title: "Sistem"
       xaxis: "Hari"
@@ -363,11 +419,23 @@ id:
       xaxis: "Pengguna"
       num_clicks: "Klik"
       num_topics: "Topik"
+      labels:
+        user: "Pengguna"
+        num_clicks: "Klik"
+        num_topics: "Topik"
     top_traffic_sources:
       xaxis: "Domain"
       num_clicks: "Klik"
       num_topics: "Topik"
       num_users: "Pengguna"
+      labels:
+        domain: Domain
+        num_clicks: Klik
+        num_topics: Topik
+    top_referred_topics:
+      labels:
+        num_clicks: "Klik"
+        topic: "Topik"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Hari"
@@ -407,6 +475,14 @@ id:
     mobile_visits:
       xaxis: "Hari"
       yaxis: "Jumlah kunjungan"
+    suspicious_logins:
+      labels:
+        user: Pengguna
+        location: Lokasi
+    staff_logins:
+      labels:
+        user: Pengguna
+        location: Lokasi
   dashboard:
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
@@ -416,11 +492,21 @@ id:
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
+    emoji_set: "Bagaimana dengan emoji Anda?"
     errors:
       invalid_email: "Alamat email tidak valid."
+      min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
+      max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
+  search:
+    types:
+      category: "Kategori"
+      user: "Pengguna"
   topic_statuses:
     autoclosed_disabled: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
     autoclosed_disabled_lastpost: "Topik telah dibuka. Jawaban baru sekarang diijinkan."
+  admin:
+    email:
+      sent_test: "terkirim!"
   user:
     email:
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
@@ -429,22 +515,86 @@ id:
       blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
       max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
+    welcome_user:
+      subject_template: "Selamat datang ke %{site_name}!"
+    welcome_invite:
+      subject_template: "Selamat datang ke %{site_name}!"
+    spam_post_blocked:
+      subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:
       subject_template:
         other: "%{count} pengguna sedang menunggu persetujuan"
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
+    digest:
+      liked_received: "Likes Diterima"
+      new_users: "Pengguna Baru"
+    forgot_password:
+      title: "Lupa Password"
+    set_password:
+      title: "Atur Kata Sandi"
   page_not_found:
     see_more: "Selengkapnya"
   terms_of_service:
     title: "Ketentuan Layanan"
+  image: "gambar"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
+  skipped_email_log:
+    user_email_no_user: "Tidak dapat menemukan pengguna dengan id %{user_id}"
+    user_email_post_not_found: "Tidak dapat menemukan post dengan id %{post_id}"
+  about: "Tentang"
   guidelines: "Petunjuk"
   privacy: "Privasi"
+  csv_export:
+    boolean_yes: "Ya"
+    boolean_no: "Tidak"
   tos_topic:
     title: "Ketentuan Layanan"
   privacy_topic:
     title: "Kebijakan Privasi"
+  badges:
+    member:
+      name: Anggota
+    first_quote:
+      name: Kutipan Pertama
+    read_guidelines:
+      name: Baca Pedoman
+    reader:
+      name: Pembaca
+    popular_link:
+      name: Tautan Populer
+    hot_link:
+      name: Tautan
+    famous_link:
+      name: Tautan terkenal
+  wizard:
+    step:
+      forum_title:
+        title: "Nama"
+      privacy:
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Umum"
+              restricted:
+                label: "Pribadi"
+      corporate:
+        title: "Organisasi"
+      colors:
+        title: "Tema"
+  joined: "Joined"
+  reviewables:
+    actions:
+      approve:
+        title: "Terima"
+      reject_user:
+        delete:
+          title: "Hapus Pengguna"
+      reject:
+        title: "Tolak"
+      delete_user:
+        title: "Hapus Pengguna"

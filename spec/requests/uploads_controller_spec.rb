@@ -198,8 +198,8 @@ describe UploadsController do
     let(:sha) { Digest::SHA1.hexdigest("discourse") }
     let(:user) { Fabricate(:user) }
 
-    def upload_file(file)
-      fake_logo = Rack::Test::UploadedFile.new(file_from_fixtures(file))
+    def upload_file(file, folder = "images")
+      fake_logo = Rack::Test::UploadedFile.new(file_from_fixtures(file, folder))
       SiteSetting.authorized_extensions = "*"
       sign_in(user)
 
@@ -261,11 +261,12 @@ describe UploadsController do
 
     context "prevent anons from downloading files" do
       it "returns 404 when an anonymous user tries to download a file" do
-        upload = upload_file("logo.png")
+        skip("this only works when nginx/apache is asset server") if Discourse::Application.config.public_file_server.enabled
+        upload = upload_file("small.pdf", "pdf")
         delete "/session/#{user.username}.json" # upload a file, then sign out
 
         SiteSetting.prevent_anons_from_downloading_files = true
-        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+        get upload.url
         expect(response.status).to eq(404)
       end
     end

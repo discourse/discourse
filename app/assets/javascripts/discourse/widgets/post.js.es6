@@ -355,7 +355,9 @@ createWidget("post-contents", {
   },
 
   html(attrs, state) {
-    let result = [new PostCooked(attrs, new DecoratorHelper(this))];
+    let result = [
+      new PostCooked(attrs, new DecoratorHelper(this), this.currentUser)
+    ];
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
     if (attrs.cooked_hidden) {
@@ -432,13 +434,7 @@ createWidget("post-notice", {
   tagName: "div.post-notice",
 
   buildClasses(attrs) {
-    const classes = [];
-
-    if (attrs.postNoticeType === "first") {
-      classes.push("new-user");
-    } else if (attrs.postNoticeType === "returning") {
-      classes.push("returning-user");
-    }
+    const classes = [attrs.noticeType.replace(/_/g, "-")];
 
     if (
       new Date() - new Date(attrs.created_at) >
@@ -456,13 +452,16 @@ createWidget("post-notice", {
         ? attrs.username
         : attrs.name;
     let text, icon;
-    if (attrs.postNoticeType === "first") {
+    if (attrs.noticeType === "custom") {
+      icon = "user-shield";
+      text = attrs.noticeMessage;
+    } else if (attrs.noticeType === "new_user") {
       icon = "hands-helping";
-      text = I18n.t("post.notice.first", { user });
-    } else if (attrs.postNoticeType === "returning") {
+      text = I18n.t("post.notice.new_user", { user });
+    } else if (attrs.noticeType === "returning_user") {
       icon = "far-smile";
-      const distance = (new Date() - new Date(attrs.postNoticeTime)) / 1000;
-      text = I18n.t("post.notice.return", {
+      const distance = (new Date() - new Date(attrs.noticeTime)) / 1000;
+      text = I18n.t("post.notice.returning_user", {
         user,
         time: durationTiny(distance, { addAgo: true })
       });
@@ -550,7 +549,7 @@ createWidget("post-article", {
       );
     }
 
-    if (attrs.postNoticeType) {
+    if (attrs.noticeType) {
       rows.push(h("div.row", [this.attach("post-notice", attrs)]));
     }
 
@@ -656,14 +655,6 @@ export default createWidget("post", {
       classNames.push("moderator");
     } else {
       classNames.push("regular");
-    }
-    if (
-      this.currentUser &&
-      this.currentUser.ignored_users &&
-      this.currentUser.ignored_users.length > 0 &&
-      this.currentUser.ignored_users.includes(attrs.username)
-    ) {
-      classNames.push("post-ignored");
     }
     if (addPostClassesCallbacks) {
       for (let i = 0; i < addPostClassesCallbacks.length; i++) {

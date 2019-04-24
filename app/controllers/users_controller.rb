@@ -313,7 +313,7 @@ class UsersController < ApplicationController
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
     end
-    username = params[:username]
+    username = params[:username]&.unicode_normalize
 
     target_user = user_from_params_or_current_user
 
@@ -401,6 +401,9 @@ class UsersController < ApplicationController
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
+
+      # If the user was created as active, they might need to be approved
+      user.create_reviewable if user.active?
 
       render json: {
         success: true,
@@ -993,7 +996,6 @@ class UsersController < ApplicationController
   end
 
   def notification_level
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"

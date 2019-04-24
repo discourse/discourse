@@ -8,9 +8,7 @@
 th:
   js:
     discourse_local_dates:
-      title: เพิ่มวัน
       create:
-        modal_title: เพิ่มวัน
         form:
           insert: เพิ่ม
           advanced_mode: ระดับสูง

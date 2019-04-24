@@ -141,6 +141,10 @@ basic:
     max: 2000
   limit_suggested_to_category:
     default: false
+  suggested_topics_unread_max_days_old:
+    default: 90
+    min: 0
+    max: 10000
   suggested_topics_max_days_old:
     default: 365
     min: 7
@@ -341,8 +345,6 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
-  enable_yahoo_logins:
-    default: false
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -448,6 +450,15 @@ users:
     min: 8
     max: 60
     validator: "MaxUsernameLengthValidator"
+  unicode_usernames:
+    default: false
+    client: true
+    validator: "UnicodeUsernameValidator"
+  unicode_username_character_whitelist:
+    validator: "UnicodeUsernameWhitelistValidator"
+    default: ""
+    locale_default:
+      de: "[äöüßÄÖÜẞ]"
   reserved_usernames:
     type: list
     list_type: compact
@@ -531,9 +542,6 @@ users:
     default: false
     client: true
   log_personal_messages_views: false
-  ignore_user_enabled:
-    default: false
-    client: true
   ignored_users_count_message_threshold:
     default: 5
     client: true
@@ -826,12 +834,15 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
-  min_post_notice_tl:
-    default: 2
-    enum: "TrustLevelSetting"
   old_post_notice_days:
     default: 14
     client: true
+  new_user_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
+  returning_user_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
 
@@ -901,6 +912,7 @@ email:
   pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
+  strip_incoming_email_lines: false
   email_in:
     default: false
     client: true
@@ -1104,8 +1116,9 @@ files:
     default: true
     client: true
     shadowed_by_global: true
+    validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
-    default: "/letter_avatar_proxy/v3/letter/{first_letter}/{color}/{size}.png"
+    default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
@@ -1443,7 +1456,7 @@ developer:
     max: 99000
   flush_timings_secs:
     client: true
-    default: 20
+    default: 60
   active_user_rate_limit_secs: 60
   verbose_localization:
     default: false
@@ -1483,8 +1496,10 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_missing_post_uploads_check:
-    default: false
+  refresh_maxmind_db_during_precompile_days:
+    min: 0
+    max: 120
+    default: 2
     hidden: true
 
 embedding:
@@ -1824,7 +1839,17 @@ uncategorized:
     default: true
     client: true
 
-  native_app_install_banner: false
+  native_app_install_banner_ios: false
+
+  native_app_install_banner_android: false
+
+  ios_app_id:
+    default: "1173672076"
+    hidden: true
+
+  android_app_id:
+    default: "com.discourse"
+    hidden: true
 
   pwa_display_browser_regex:
     default: "iPad|iPhone"
@@ -1882,7 +1907,6 @@ user_preferences:
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_dynamic_favicon: false
-  default_other_disable_jump_reply: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -1913,6 +1937,12 @@ user_preferences:
       - larger
       - largest
 
+  default_title_count_mode:
+    type: enum
+    default: notifications
+    choices:
+      - notifications
+      - contextual
 api:
   retain_web_hook_events_period_days:
     default: 30

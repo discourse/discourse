@@ -1,5 +1,5 @@
 {{#each field.choices as |c|}}
-  <div class="radio-field-choice">
+  <div class="radio-field-choice {{fieldClass}}">
     {{radio-button value=field.value
                    radioValue=c.id
                    label=c.label

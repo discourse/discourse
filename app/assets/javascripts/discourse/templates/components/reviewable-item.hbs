@@ -1,7 +1,7 @@
 <div class='reviewable-item {{customClass}}' data-reviewable-id={{reviewable.id}}>
   <div class='reviewable-meta-data'>
     <span class='reviewable-type'>{{reviewable.humanType}}</span>
-    <span class='badge-notification new-posts score' title={{i18n "review.scores.score"}}>{{format-score reviewable.score}}</span>
+    <span class='badge-notification new-posts score' title={{i18n "review.scores.about"}}>{{format-score reviewable.score}}</span>
     {{#if reviewable.reply_count}}
       <span class='reply-count'>{{i18n "review.replies" count=reviewable.reply_count}}</span>
     {{/if}}
@@ -9,19 +9,20 @@
       {{#link-to 'review.show' reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
     </span>
     <span class='status'>
-      {{#if reviewable.approved}}
-        <span class="approved"> {{d-icon "check"}} {{i18n "review.statuses.approved.title"}} </span>
-      {{else if reviewable.rejected}}
-        <span class="rejected"> {{d-icon "times"}} {{i18n "review.statuses.rejected.title"}} </span>
-      {{else if reviewable.ignored}}
-        <span class="ignored"> {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}} </span>
-      {{/if}}
+      {{reviewable-status reviewable.status}}
     </span>
   </div>
 
   <div class='reviewable-contents'>
     {{#if editing}}
       <div class='editable-fields'>
+        {{#if reviewable.created_by}}
+          <div class='editable-created-by'>
+            {{avatar reviewable.created_by imageSize="tiny"}}
+            {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
+          </div>
+        {{/if}}
+
         {{#each reviewable.editable_fields as |f|}}
           <div class='editable-field {{dasherize f.id}}'>
             {{component
@@ -36,10 +37,7 @@
       </div>
     {{else}}
       {{#component reviewableComponent reviewable=reviewable tagName=''}}
-        <div class='reviewable-scores-and-history'>
-          {{reviewable-scores scores=reviewable.reviewable_scores tagName=''}}
-          {{reviewable-histories histories=reviewable.reviewable_histories tagName=''}}
-        </div>
+        {{reviewable-scores reviewable=reviewable tagName=''}}
       {{/component}}
     {{/if}}
   </div>

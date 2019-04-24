@@ -8,9 +8,7 @@
 hu:
   js:
     discourse_local_dates:
-      title: Dátum beszúrása
       create:
-        modal_title: Dátum beszúrása
         form:
           insert: Beszúrás
           advanced_mode: Haladó mód

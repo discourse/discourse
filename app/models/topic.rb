@@ -33,14 +33,6 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?
-      Scheduler::Defer.later("Null topic slug") do
-        Topic.update_all(slug: nil)
-      end
-    end
-  end
-
   def self.max_fancy_title_length
     400
   end
@@ -1402,6 +1394,14 @@ class Topic < ActiveRecord::Base
     scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= SiteSetting.score_to_auto_close_topic
   end
 
+  def update_category_topic_count_by(num)
+    if category_id.present?
+      Category
+        .where(['id = ?', category_id])
+        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+    end
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1450,12 +1450,6 @@ class Topic < ActiveRecord::Base
           invited_by.username
         )
       end
-    end
-  end
-
-  def update_category_topic_count_by(num)
-    if category_id.present?
-      Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
   end
 

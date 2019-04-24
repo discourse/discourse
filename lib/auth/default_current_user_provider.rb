@@ -249,10 +249,10 @@ class Auth::DefaultCurrentUserProvider
   def should_update_last_seen?
     return false if Discourse.pg_readonly_mode?
 
-    if @request.xhr?
+    api = !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
+
+    if @request.xhr? || api
       @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
-    elsif !!(@env[API_KEY_ENV]) || !!(@env[USER_API_KEY_ENV])
-      false
     else
       true
     end

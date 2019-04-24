@@ -8,9 +8,7 @@
 he:
   js:
     discourse_local_dates:
-      title: כתיבת תאריך
       create:
-        modal_title: כתיבת תאריך
         form:
           insert: כתיבה
           advanced_mode: מצב מורחב

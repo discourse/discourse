@@ -29,6 +29,7 @@ describe ThemeField do
 
   it 'does not insert a script tag when there are no inline script' do
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: '<div>new div</div>')
+    theme_field.ensure_baked!
     expect(theme_field.value_baked).to_not include('<script')
   end
 
@@ -53,7 +54,7 @@ describe ThemeField do
     HTML
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
-
+    theme_field.ensure_baked!
     expect(theme_field.value_baked).to include("<script src=\"#{theme_field.javascript_cache.url}\"></script>")
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
@@ -75,7 +76,7 @@ describe ThemeField do
     JavaScript
 
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
-
+    theme_field.ensure_baked!
     expect(theme_field.javascript_cache.content).to include(extracted)
   end
 
@@ -87,11 +88,13 @@ describe ThemeField do
 HTML
 
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+    field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include("<script src=\"#{field.javascript_cache.url}\"></script>")
     expect(field.javascript_cache.content).to include("Theme Transpilation Error:")
 
     field.update!(value: '')
+    field.ensure_baked!
     expect(field.error).to eq(nil)
   end
 
@@ -102,8 +105,9 @@ HTML
 </script>
 HTML
 
-    ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: "string_setting: \"test text \\\" 123!\"")
+    ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: "string_setting: \"test text \\\" 123!\"").ensure_baked!
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "head_tag", value: html)
+    theme_field.ensure_baked!
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include("<script src=\"#{javascript_cache.url}\"></script>")
@@ -115,13 +119,31 @@ HTML
   it "correctly generates errors for transpiled css" do
     css = "body {"
     field = ThemeField.create!(theme_id: 1, target_id: 0, name: "scss", value: css)
-    field.reload
+    field.ensure_baked!
     expect(field.error).not_to eq(nil)
     field.value = "body {color: blue};"
     field.save!
-    field.reload
+    field.ensure_baked!
 
     expect(field.error).to eq(nil)
+  end
+
+  it "allows importing scss files" do
+    theme = Fabricate(:theme)
+    main_field = theme.set_field(target: :common, name: :scss, value: ".class1{color: red}\n@import 'rootfile1';")
+    theme.set_field(target: :extra_scss, name: "rootfile1", value: ".class2{color:green}\n@import 'foldername/subfile1';")
+    theme.set_field(target: :extra_scss, name: "rootfile2", value: ".class3{color:green} ")
+    theme.set_field(target: :extra_scss, name: "foldername/subfile1", value: ".class4{color:yellow}\n@import 'subfile2';")
+    theme.set_field(target: :extra_scss, name: "foldername/subfile2", value: ".class5{color:yellow}\n@import '../rootfile2';")
+
+    theme.save!
+    result = main_field.compile_scss[0]
+
+    expect(result).to include(".class1")
+    expect(result).to include(".class2")
+    expect(result).to include(".class3")
+    expect(result).to include(".class4")
+    expect(result).to include(".class5")
   end
 
   def create_upload_theme_field!(name)
@@ -131,7 +153,7 @@ HTML
       value: "",
       type_id: ThemeField.types[:theme_upload_var],
       name: name,
-    )
+    ).tap { |tf| tf.ensure_baked! }
   end
 
   it "ensures we don't use invalid SCSS variable names" do
@@ -145,7 +167,7 @@ HTML
 
   def create_yaml_field(value)
     field = ThemeField.create!(theme_id: 1, target_id: Theme.targets[:settings], name: "yaml", value: value)
-    field.reload
+    field.ensure_baked!
     field
   end
 
@@ -179,7 +201,7 @@ HTML
 
     field.value = "valid_setting: true"
     field.save!
-    field.reload
+    field.ensure_baked!
     expect(field.error).to eq(nil)
   end
 
@@ -319,6 +341,7 @@ HTML
         HTML
 
         theme_field = ThemeField.create!(theme_id: theme.id, target_id: 0, name: "head_tag", value: html)
+        theme_field.ensure_baked!
         javascript_cache = theme_field.javascript_cache
         expect(javascript_cache.content).to include("inline discourse plugin")
         expect(javascript_cache.content).to include("theme_translations.#{theme.id}.")

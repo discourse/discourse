@@ -203,26 +203,27 @@ RSpec.describe Reviewable, type: :model do
 
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
+      Jobs.stubs(:enqueue)
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :approve)
+      reviewable.perform(moderator, :approve_post)
     end
 
     it "triggers a notification on pending -> reject" do
       reviewable = Fabricate(:reviewable_queued_post)
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :reject)
+      reviewable.perform(moderator, :reject_post)
     end
 
     it "doesn't trigger a notification on approve -> reject" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject)
+      reviewable.perform(moderator, :reject_post)
     end
 
     it "doesn't trigger a notification on reject -> approve" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject)
+      reviewable.perform(moderator, :reject_post)
     end
   end
 

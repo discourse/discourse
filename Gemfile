@@ -14,13 +14,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '5.2.2.1'
-  gem 'actionpack', '5.2.2.1'
-  gem 'actionview', '5.2.2.1'
-  gem 'activemodel', '5.2.2.1'
-  gem 'activerecord', '5.2.2.1'
-  gem 'activesupport', '5.2.2.1'
-  gem 'railties', '5.2.2.1'
+  gem 'actionmailer', '5.2.3'
+  gem 'actionpack', '5.2.3'
+  gem 'actionview', '5.2.3'
+  gem 'activemodel', '5.2.3'
+  gem 'activerecord', '5.2.3'
+  gem 'activesupport', '5.2.3'
+  gem 'railties', '5.2.3'
   gem 'sprockets-rails'
 end
 
@@ -44,7 +44,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.83'
+gem 'onebox', '1.8.86'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
@@ -122,6 +122,7 @@ group :test do
   gem 'minitest', require: false
   gem 'danger'
   gem 'simplecov', require: false
+  gem "test-prof"
 end
 
 group :test, :development do
@@ -135,7 +136,7 @@ group :test, :development do
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
-  gem 'shoulda', require: false
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?

@@ -8,9 +8,7 @@
 nb_NO:
   js:
     discourse_local_dates:
-      title: Sett inn dato
       create:
-        modal_title: Sett inn dato
         form:
           insert: Sett inn
           advanced_mode: Avansert modus

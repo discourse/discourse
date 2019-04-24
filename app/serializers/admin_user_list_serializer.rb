@@ -18,7 +18,6 @@ class AdminUserListSerializer < BasicUserSerializer
              :username,
              :title,
              :avatar_template,
-             :can_approve,
              :approved,
              :suspended_at,
              :suspended_till,
@@ -104,14 +103,6 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def created_at_age
     Time.now - object.created_at
-  end
-
-  def can_approve
-    scope.can_approve?(object)
-  end
-
-  def include_can_approve?
-    SiteSetting.must_approve_users
   end
 
   def include_approved?

@@ -8,7 +8,6 @@ class UserOptionSerializer < ApplicationSerializer
              :external_links_in_new_tab,
              :dynamic_favicon,
              :enable_quoting,
-             :disable_jump_reply,
              :digest_after_minutes,
              :automatically_unpin_topics,
              :auto_track_topics_after_msecs,
@@ -24,7 +23,8 @@ class UserOptionSerializer < ApplicationSerializer
              :homepage_id,
              :hide_profile_and_presence,
              :text_size,
-             :text_size_seq
+             :text_size_seq,
+             :title_count_mode
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

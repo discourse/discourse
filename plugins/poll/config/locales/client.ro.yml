@@ -64,6 +64,8 @@ ro:
           regular: Opțiune unică
           multiple: Opțiune multiplă
           number: Ordonare numerică
+        poll_result:
+          label: Rezultate
         poll_config:
           max: Maxim
           min: Minim

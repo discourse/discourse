@@ -95,6 +95,14 @@ describe Upload do
     expect(created_upload.valid?).to eq(false)
   end
 
+  context ".extract_url" do
+    let(:url) { 'https://example.com/uploads/default/original/1X/d1c2d40ab994e8410c.png' }
+
+    it 'should return the right part of url' do
+      expect(Upload.extract_url(url).to_s).to eq('/original/1X/d1c2d40ab994e8410c.png')
+    end
+  end
+
   context ".get_from_url" do
     let(:sha1) { "10f73034616a796dfd70177dc54b6def44c4ba6f" }
     let(:upload) { Fabricate(:upload, sha1: sha1) }
@@ -112,6 +120,15 @@ describe Upload do
       it 'should return the right upload' do
         expect(Upload.get_from_url(upload.url)).to eq(upload)
       end
+    end
+
+    it "should return the right upload as long as the upload's URL matches" do
+      upload.update!(url: "/uploads/default/12345/971308e535305c51.png")
+
+      expect(Upload.get_from_url(upload.url)).to eq(upload)
+
+      expect(Upload.get_from_url("/uploads/default/123131/971308e535305c51.png"))
+        .to eq(nil)
     end
 
     describe 'for a url a tree' do

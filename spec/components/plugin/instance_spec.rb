@@ -465,11 +465,22 @@ describe Plugin::Instance do
   describe '#register_reviewable_types' do
     it 'Overrides the existing Reviewable types adding new ones' do
       current_types = Reviewable.types
-      new_type_class = Class
+       new_type_class = Class
 
-      Plugin::Instance.new.register_reviewable_type new_type_class
+       Plugin::Instance.new.register_reviewable_type new_type_class
 
-      expect(Reviewable.types).to match_array(current_types << new_type_class.name)
+       expect(Reviewable.types).to match_array(current_types << new_type_class.name)
+    end
+  end
+
+  describe '#extend_list_method' do
+    it 'Overrides the existing list appending new elements' do
+      current_list = Reviewable.types
+      new_element = Class.name
+
+      Plugin::Instance.new.extend_list_method Reviewable, :types, [new_element]
+
+      expect(Reviewable.types).to match_array(current_list << new_element)
     end
   end
 end

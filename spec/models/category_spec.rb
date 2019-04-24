@@ -11,7 +11,7 @@ describe Category do
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
+    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id).case_insensitive
   end
 
   it 'validates inclusion of search_priority' do
@@ -434,7 +434,7 @@ describe Category do
     end
 
     it 'triggers a extensibility event' do
-      event = DiscourseEvent.track_events { @category.destroy }.first
+      event = DiscourseEvent.track(:category_destroyed) { @category.destroy }
 
       expect(event[:event_name]).to eq(:category_destroyed)
       expect(event[:params].first).to eq(@category)

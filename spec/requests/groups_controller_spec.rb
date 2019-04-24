@@ -1275,6 +1275,20 @@ describe GroupsController do
       expect(response.status).to eq(400)
     end
 
+    it 'checks for duplicates' do
+      sign_in(user)
+
+      post "/groups/#{group.name}/request_membership.json",
+        params: { reason: 'Please add me in' }
+
+      expect(response.status).to eq(200)
+
+      post "/groups/#{group.name}/request_membership.json",
+        params: { reason: 'Please add me in' }
+
+      expect(response.status).to eq(409)
+    end
+
     it 'should create the right PM' do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
       owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1 .day)

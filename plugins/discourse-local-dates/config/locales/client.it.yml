@@ -12,9 +12,7 @@ it:
         today: Oggi %{time}
         tomorrow: Domani %{time}
         yesterday: Ieri %{time}
-      title: Inserisci la data
       create:
-        modal_title: Inscisci la data
         form:
           insert: Inserisci
           advanced_mode: Modalità avanzata

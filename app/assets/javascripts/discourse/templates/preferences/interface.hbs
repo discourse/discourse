@@ -49,8 +49,6 @@
 
   {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab}}
   {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting}}
-  {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
-  {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.user_option.disable_jump_reply}}
   {{#if siteSettings.automatically_unpin_topics}}
     {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics}}
   {{/if}}
@@ -58,6 +56,14 @@
   {{#if isiPad}}
     {{preference-checkbox labelKey="user.enable_physical_keyboard" checked=disableSafariHacks}}
   {{/if}}
+  {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
+  <div class='controls controls-dropdown'>
+    <label for="user-email-level">{{i18n 'user.title_count_mode.title'}}</label>
+    {{combo-box valueAttribute="value"
+                content=titleCountModes
+                value=model.user_option.title_count_mode
+                id="user-title-count-mode"}}
+  </div>
 </div>
 
 {{plugin-outlet name="user-preferences-interface" args=(hash model=model save=(action "save"))}}

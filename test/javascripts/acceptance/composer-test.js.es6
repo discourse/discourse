@@ -255,6 +255,8 @@ QUnit.test("Posting on a different topic", async assert => {
 QUnit.test("Create an enqueued Reply", async assert => {
   await visit("/t/internationalization-localization/280");
 
+  assert.notOk(find(".pending-posts .reviewable-item").length);
+
   await click("#topic-footer-buttons .btn.create");
   assert.ok(exists(".d-editor-input"), "the composer input is visible");
   assert.ok(!exists("#reply-title"), "there is no title since this is a reply");
@@ -270,6 +272,8 @@ QUnit.test("Create an enqueued Reply", async assert => {
 
   await click(".modal-footer button");
   assert.ok(invisible(".d-modal"), "the modal can be dismissed");
+
+  assert.ok(find(".pending-posts .reviewable-item").length);
 });
 
 QUnit.test("Edit the first post", async assert => {
@@ -637,6 +641,8 @@ QUnit.test("Can switch states without abandon popup", async assert => {
     find('.action-title a[href="/t/internationalization-localization/280"]'),
     "mode should have changed"
   );
+
+  assert.ok(find(".save-animation"), "save animation should show");
 
   toggleCheckDraftPopup(false);
 });

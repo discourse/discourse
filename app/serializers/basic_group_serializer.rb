@@ -19,6 +19,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :flair_color,
              :bio_raw,
              :bio_cooked,
+             :bio_excerpt,
              :public_admission,
              :public_exit,
              :allow_membership_requests,
@@ -36,6 +37,10 @@ class BasicGroupSerializer < ApplicationSerializer
     if auto_group_name = Group::AUTO_GROUP_IDS[object.id]
       I18n.t("groups.default_names.#{auto_group_name}")
     end
+  end
+
+  def bio_excerpt
+    PrettyText.excerpt(object.bio_cooked, 110) if object.bio_cooked.present?
   end
 
   def include_incoming_email?

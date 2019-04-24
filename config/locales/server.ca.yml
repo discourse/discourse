@@ -37,6 +37,8 @@ ca:
   redirect_warning: "No hem pogut comprovar que l'enllaç que has seleccionat s'hagi enviat al fòrum. Si tot i així vols continuar, clica l'enllaç de sota."
   themes:
     other_error: "S'ha produït un error mentre s'actualitzava el tema"
+    import_error:
+      git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit"
     settings_errors:
       invalid_yaml: "El YAML proveït és invàlid"
   emails:
@@ -276,6 +278,7 @@ ca:
       topic:
         title: "Títol"
         featured_link: "Enllaç destacat"
+        category_id: "Categoria"
       post:
         raw: "Cos"
       user_profile:
@@ -466,6 +469,9 @@ ca:
     welcome_to: "Et donem la benvinguda a %{site_name}!"
     approval_required: "Una persona moderadora ha d'aprovar manualment el teu nou compte abans no puguis accedir a aquest fòrum. Rebràs un correu quan el teu compte hagi estat aprovat!"
     missing_session: "No podem detectar si el teu compte ha estat creat, si us plau assegura't que tens les galetes activades."
+  reviewable_score_types:
+    needs_approval:
+      title: "Cal aprovació"
   post_action_types:
     off_topic:
       title: "Fora de context"
@@ -493,10 +499,12 @@ ca:
     bookmark:
       title: "Preferit"
       description: "Marca aquesta publicació"
+      short_description: "Marca aquesta publicació"
       long_form: "publicació marcada com a preferit"
     like:
       title: "Agrada"
       description: "M'agrada aquesta publicació"
+      short_description: "M'agrada aquesta publicació"
       long_form: "ha agradat"
   user_activity:
     no_bookmarks:
@@ -528,7 +536,6 @@ ca:
         make: "Aquest tema ara està emmarcat. Apareixerà al començament de cada pàgina fins que la persona usuària ho descarti."
         remove: "Aquest tema ja no està emmarcat. Ja no apareixerà més al començament de cada pàgina."
   unsubscribed:
-    title: "Subscripció cancel·lada!"
     topic_description: "Per tornar a subscriure't a %{link}, fes servir el control d'alertes abaix o a la dreta del tema."
   unsubscribe:
     title: "Cancel·la la subscripció!"
@@ -536,11 +543,16 @@ ca:
     mute_topic: "Silencia totes les notificacions per a aquest tema, "
     unwatch_category: "Deixa de mirar tots els temes a %{category}"
     mailing_list_mode: "Apaga el mode de llista de correu"
-    disable_digest_emails: "Deixa d'enviar-me el resum de correus"
     all: "No m'enviïs cap correu de %{sitename}"
     different_user_description: "Actualment t'hi has connectat amb una identitat diferent a la qual vam enviar un correu. Si us plau, desconnecta't o entra-hi anònimament i torna a provar-ho."
     not_found_description: "Disculpa, no hem pogut trobar aquesta cancel·lació de subscripció. És possible que hagi caducat l'enllaç al teu correu?"
     log_out: "Sortir"
+    digest_frequency:
+      never: "mai"
+      every_30_minutes: "cada 30 minuts"
+      every_hour: "cada hora"
+      daily: "diari"
+      weekly: "setmanal"
   user_api_key:
     title: "Autoritza l'accés a l'aplicació"
     authorize: "Autoritza"
@@ -557,12 +569,38 @@ ca:
       read: "Llegeix tot"
       write: "Escriu tot"
   reports:
+    default:
+      labels:
+        day: Dia
+    post_edits:
+      labels:
+        post: Publicació
+        editor: Editor
+        edit_reason: Raó
+    user_flagging_ratio:
+      labels:
+        user: Persona usuària
+    moderators_activity:
+      labels:
+        moderator: Moderació
+    flags_status:
+      labels:
+        flag: Tipus
+        assigned: Assignat
     visits:
       title: "Visites de la persona usuària"
       xaxis: "Dia"
       yaxis: "Quantitat de visites"
     signups:
       xaxis: "Dia"
+    new_contributors:
+      xaxis: "Dia"
+    consolidated_page_views:
+      yaxis: "Dia"
+      labels:
+        post: Publicació
+        editor: Editor
+        edit_reason: Raó
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -595,6 +633,15 @@ ca:
       title: "Persones usuàries per nivell de confiança"
       xaxis: "Nivell de confiança"
       yaxis: "Quantitat de persones usuàries"
+    users_by_type:
+      xaxis: "Tipus"
+      yaxis: "Quantitat de persones usuàries"
+      labels:
+        type: Tipus
+      xaxis_labels:
+        admin: Administració
+        moderator: Moderació
+        suspended: Suspès
     emails:
       title: "Correus enviats"
       xaxis: "Dia"
@@ -604,6 +651,7 @@ ca:
       yaxis: "Quantitat de missatges"
     user_to_user_private_messages_with_replies:
       xaxis: "Dia"
+      yaxis: "Quantitat de missatges"
     system_private_messages:
       title: "Sistema"
       xaxis: "Dia"
@@ -625,14 +673,25 @@ ca:
       xaxis: "Persona usuària"
       num_clicks: "Clics"
       num_topics: "Temes"
+      labels:
+        user: "Persona usuària"
+        num_clicks: "Clics"
+        num_topics: "Temes"
     top_traffic_sources:
       title: "Principals fonts de trànsit "
       xaxis: "Domini"
       num_clicks: "Clics"
       num_topics: "Temes"
       num_users: "Persones usuàries"
+      labels:
+        domain: Domini
+        num_clicks: Clics
+        num_topics: Temes
     top_referred_topics:
       title: "Principals temes referits"
+      labels:
+        num_clicks: "Clics"
+        topic: "Tema"
     page_view_anon_reqs:
       title: "Anònim"
       xaxis: "Dia"
@@ -642,9 +701,11 @@ ca:
       xaxis: "Dia"
       yaxis: "Amb connexió a les vistes de pàgina"
     page_view_crawler_reqs:
+      title: "Vistes de pàgina de rastrejadors de web"
       xaxis: "Dia"
       yaxis: "Vistes de pàgina de rastrejadors de web"
     page_view_total_reqs:
+      title: "Vistes de pàgina"
       xaxis: "Dia"
       yaxis: "Total de vistes de pàgina"
     page_view_logged_in_mobile_reqs:
@@ -690,6 +751,20 @@ ca:
     mobile_visits:
       xaxis: "Dia"
       yaxis: "Quantitat de visites"
+    web_crawlers:
+      labels:
+        page_views: "Vistes de pàgina"
+    suspicious_logins:
+      labels:
+        user: Persona usuària
+        location: Ubicació
+    staff_logins:
+      labels:
+        user: Persona usuària
+        location: Ubicació
+    top_uploads:
+      labels:
+        filename: Nom del fitxer
   dashboard:
     rails_env_warning: "El teu servidor s'executa en mode %{env}."
     host_names_warning: "El teu fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitza-ho per tal de fer servir el nom del teu lloc."
@@ -709,11 +784,13 @@ ca:
     set_locale_from_accept_language_header: "configura la llengua d'interfície per a persones anònimes des dels encapçalaments dels seus navegadors. (EXPERIMENTAL, no funciona amb memòria cau anònima)"
     min_post_length: "Mínim permès en caràcters per a l'extensió de publicacions "
     min_first_post_length: "Mínim permès en caràcters per a l'extensió de primera publicació (cos del tema)"
+    min_personal_message_post_length: "Mínim permès en caràcters per a l'extensió de publicacions a missatges"
     max_post_length: "Màxim permès en caràcters per a l'extensió de publicacions "
     topic_featured_link_enabled: "Activa la publicació d'enllaç amb temes."
     show_topic_featured_link_in_digest: "Mostra el tema de l'enllaç destacat al correu electrònic de resum automàtic."
     min_topic_title_length: "Mida mínima permesa del títol del tema en caràcters  "
     max_topic_title_length: "Mida màxima permesa del títol del tema en caràcters  "
+    min_personal_message_title_length: "Mida mínima permesa del títol d'un missatge en caràcters  "
     min_search_term_length: "Mida mínima permesa d'un camp de cerca en caràcters  "
     search_tokenize_chinese_japanese_korean: "Força la cerca per assegurar les dades en Xinès/Japonès/Coreà fins i tot en llocs que no siguin en aquestes llengües"
     search_prefer_recent_posts: "Si la cerca al teu fòrum va lenta, aquesta opció prova primer amb un índex de publicacions recents"
@@ -750,6 +827,7 @@ ca:
     summary_posts_required: "Publicacions mínimes a un tema abans d'activar 'Resumeix aquest tema'"
     summary_likes_required: "Mínim nombre de m'agrades a un tema abans d'activar 'Resumeix aquest tema'"
     summary_percent_filter: "Quan una persona clica 'Resumeix aquest tema', mostra el '% o' principal de publicacions"
+    enable_personal_messages: "Permet que les persones amb nivell de confiança 1 puguin crear missatges i respondre'ls (configurable amb el mínim de nivell de confiança per enviar missatges). Fixa't que l'equip sempre pot enviar qualsevol mena de missatges."
     enable_long_polling: "El bus de missatges emprat per a la notificació pot fer servir el mostreig llarg"
     long_polling_base_url: "La URL bàsica emprada per a mostreig llarg (quan una xarxa de lliurament de continguts serveix contingut dinàmic, assegura't de configurar-ho per llençar l'origen). Per exemple, http://origin.site.com"
     long_polling_interval: "Quantitat de temps que el servidor hauria d'esperar abans de respondre clients quan no hi ha dades d'enviament (connectat només a persones usuàries)"
@@ -767,6 +845,7 @@ ca:
     must_approve_users: "L'equip ha d'aprovar tots els nous comptes abans de permetre que accedeixin el lloc. ATENCIÓ: si actives això a un lloc en funcionament, es revocarà l'accés a les persones usuàries que no pertanyen a l'equip!"
     pending_users_reminder_delay: "Comunica a l'equip moderador si hi ha noves persones esperant l'aprovació més enllà d'aquest grapat d'hores. Configura-ho a -1 per desactivar les alertes."
     maximum_session_age: "La persona romandrà connectada durant n hores des de la darrera visita"
+    moderators_create_categories: "Permet que l'equip moderador creï noves categories"
     cors_origins: "Orígens permesos per a peticions d'origen creuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha d'establir-se en \"true\" per tal d'habilitar CORS."
     use_admin_ip_whitelist: "Les persones administradores només poden connectar-se si són a una adreça IP definida a la llista d'IP Cobertes (Administració > Connexions > IP Cobertes)."
     top_menu: "Determina quins elements apareixen a la navegació de la pàgina principal i en quin ordre. Per exemple, latest|new|unread|categories|top|read|posted|bookmarks"
@@ -811,7 +890,6 @@ ca:
     sso_allows_all_return_paths: "No restringeixis el domini per a return_paths facilitat per l'autenticació única (per defecte el camí de retorn ha de ser el lloc actual)"
     allow_new_registrations: "Permet registres de noves persones. Inhabilita-ho per tal d'evitar que qualsevol pugui crear un nou compte."
     enable_signup_cta: "Mostra un avís a les persones anònimes que tornin, convidant-les a registrar-s'hi amb un compte."
-    enable_yahoo_logins: "Activa l'autenticació amb Yahoo"
     google_oauth2_client_id: "ID de client a la teva aplicació Google."
     google_oauth2_client_secret: "Client secret a la teva aplicació Google."
     enable_instagram_logins: "Activa l'autenticació amb Instagram, necessita instagram_consumer_key i instagram_consumer_secret"
@@ -841,6 +919,7 @@ ca:
     max_bookmarks_per_day: "Quantitat màxima de preferits per persona i dia."
     max_edits_per_day: "Quantitat màxima d'edicions per persona i dia."
     max_topics_per_day: "Quantitat màxima de temes que una persona pot crear cada dia."
+    max_personal_messages_per_day: "Quantitat màxima de missatges que una persona pot crear cada dia."
     max_invites_per_day: "Quantitat màxima d'invitacions que una persona pot enviar cada dia."
     max_topic_invitations_per_day: "Quantitat màxima d'invitacions a temes que una persona por enviar cada dia."
     alert_admins_if_errors_per_minute: "Quantitat d'errors per minut per desencadenar una alerta admin. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
@@ -1020,7 +1099,6 @@ ca:
     automatically_unpin_topics: "Desclava temes automàticament quan la persona arribi al final."
     read_time_word_count: "Recompte de paraules per minut per calcular el temps estimat de lectura."
     topic_page_title_includes_category: "El títol del tema de la pàgina inclou el nom de la categoria."
-    native_app_install_banner: "Demana a les visites habituals si volen instal·lar l'app nativa del Discuourse."
     max_prints_per_hour_per_user: "Quantitat màxima dimpressions de pàgina /print (deixa a 0 per inhabilitar)"
     full_name_required: "Cal el camp de nom complet a un perfil personal."
     enable_names: "Mostra el nom complet al perfil corresponent, targeta i correus personals. Inhabilita a tot arreu amagar nom complet."
@@ -1060,7 +1138,6 @@ ca:
     default_other_external_links_in_new_tab: "Per defecte, obre enllaços externs a una nova pestanya."
     default_other_enable_quoting: "Per defecte, habilita la resposta amb cita per a text destacat"
     default_other_dynamic_favicon: "Per defecte, mostra el recompte de tema nou/actualitzat a una icona del navegador."
-    default_other_disable_jump_reply: "Per defecte, no saltis a la publicació d'una persona després que hagi respost."
     default_other_like_notification_frequency: "Per defecte, avisa a les persones sobre els M'agrada."
     default_topics_automatic_unpin: "Per defecte, desclava temes quan la persona arriba al final."
     default_categories_watching: "Per defecte, el llistat de categories vistes."
@@ -1107,6 +1184,8 @@ ca:
       email_polling_disabled: "Has de configurar enquestes POP3 o manuals abans de respondre per correu."
       user_locale_not_enabled: "Has de configurar 'allow user locale' abans d'activar aquestes característiques."
       invalid_regex: "Expressions regulars no són vàlides o no estan permeses."
+      min_username_length_range: "No pots establir el mínim per sobre del màxim."
+      max_username_length_range: "No pots establir el màxim per sota del mínim."
   search:
     within_post: "#%{post_number} segons %{username}"
     types:
@@ -1181,6 +1260,9 @@ ca:
     reserved_username: "No es permet el nom de persona usuària."
     missing_user_field: "No has completat tots els camps."
     already_logged_in: "Ui, sembla que estàs provant d'acceptar una invitació per a una altra persona usuària. Si no ets %{current_user}, si us plau surt i torna a provar-ho."
+  admin:
+    email:
+      sent_test: "enviat!"
   user:
     deactivated: "Ha estat desactivat per massa correus retornats a to '%{email}'."
     deactivated_by_staff: "Desactivat per l'equip"
@@ -1230,6 +1312,8 @@ ca:
     agreed: "Gràcies per fer-nos-ho saber. Estem d'acord que hi ha alguna cosa i ens ho estem mirant."
     agreed_and_deleted: "Gràcies per fer-nos-ho saber. Estem d'acord que hi ha alguna cosa i hem eliminat la publicació."
     disagreed: "Gràcies per fer-nos-ho saber. Ens ho estem mirant."
+    ignored: "Gràcies per fer-nos-ho saber. Ens ho estem mirant."
+    ignored_and_deleted: "Gràcies per fer-nos-ho saber. Hem eliminat la publicació."
   system_messages:
     post_hidden:
       title: "Publicació oculta"
@@ -1237,6 +1321,14 @@ ca:
     welcome_user:
       title: "Benvinguda a la persona usuària"
       subject_template: "Et donem la benvinguda a %{site_name}!"
+      text_body_template: |
+        Gràcies per unir-te a %{site_name}! Benvingut!
+
+        %{new_user_tips}
+
+        Creiem en un [comportament civilitzat de la comunitat](%{base_url}/guidelines) per a tots els casos.
+
+        Gaudeix de la teva visita!
     welcome_invite:
       title: "Benvinguda a la persona convidada"
       subject_template: "Et donem la benvinguda a %{site_name}!"
@@ -1344,15 +1436,13 @@ ca:
     too_many_tl3_flags:
       title: "Massa banderes de nivell de confiança 3"
       subject_template: "Nou compte en espera"
+    spam_post_blocked:
+      subject_template: "L'usuari nou %{username} té entrades bloquejades degut a la repetició d'enllaços."
     pending_users_reminder:
       title: "Recordatori de persones pendents"
       subject_template:
         one: "1 persona esperant aprovació"
         other: "%{count} persones esperant aprovació"
-      text_body_template: |
-        Hi ha registres de noves persones esperant l'aprovació (o el refús) abans d'accedir a aquest fòrum.
-
-        [Si us plau, revisa-les a la secció d'administració](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Descarrega imatges remotes inhabilitades"
       subject_template: "Descarregant imatges remotes inhabilitades"
@@ -1382,6 +1472,33 @@ ca:
     only_reply_by_email: "Respon aquest correu per reaccionar."
     visit_link_to_respond: "[Visita tema](%{base_url}%{url}) per reaccionar."
     posted_by: "Publicat per %{username} a %{post_date}"
+    invited_to_private_message_body: |
+      %{username} t'ha invitat a un missatge
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      a
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} t'ha invitat a una discussió
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      a
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Persona convidada a missatge privat"
       text_body_template: |
@@ -1448,6 +1565,15 @@ ca:
         %{respond_instructions}
     user_mentioned:
       title: "Persona mecionada"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
       text_body_template: |
         %{header_instructions}
 
@@ -1552,9 +1678,11 @@ ca:
     recent_topics: "Recent"
     see_more: "Més"
     search_title: "Busca aquest lloc"
+    search_button: "Cerca"
   terms_of_service:
     title: "Condicions d'ús"
   deleted: "esborrat"
+  image: "imatge"
   upload:
     edit_reason: "còpia local d'imatges descarregada"
     unauthorized: "Disculpa, el fitxer que estàs provant de carregar no està autoritzat (les extensions autoritzades són: %{authorized_extensions})."
@@ -1572,6 +1700,25 @@ ca:
   flag_reason:
     sockpuppet: "Una nova persona ha creat un tema i una altra amb la mateixa adreça IP  (%{ip_address}) ha respost. Mira la configuració <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Aquesta nova persona ha creat moltes publicacions amb enllaços al mateix domini (%{domain}). Mira la configuració <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    exceeded_emails_limit: "S'ha excedit exceeded max_emails_per_day_per_user"
+    exceeded_bounces_limit: "S'ha excedit bounce_score_threshold"
+    mailing_list_no_echo_mode: "S'han inhabilitat les alertes de llista de correu per a les publicacions pròpies"
+    user_email_no_user: "No es pot trobar la persona amb id %{user_id}"
+    user_email_post_not_found: "No es pot trobar una publicació amb id %{post_id}"
+    user_email_anonymous_user: "La persona és anònima"
+    user_email_user_suspended_not_pm: "Aquesta persona està suspesa, sense missatge "
+    user_email_seen_recently: "S'ha vist la persona recentment"
+    user_email_notification_already_read: "Ja s'ha llegit la notificació sobre aquest correu"
+    user_email_notification_topic_nil: "post.topic és ul"
+    user_email_post_user_deleted: "La persona de la publicació ha estat eliminada"
+    user_email_post_deleted: "la persona autora va esborrar la publicació "
+    user_email_user_suspended: "la persona va ser suspesa"
+    user_email_already_read: "la persona ja ha llegit aquesta publicació"
+    sender_message_blank: "missatge és buit"
+    sender_message_to_blank: "message.to és buit"
+    sender_text_part_body_blank: "text_part.body és buit"
+    sender_body_blank: "el cos és buit"
   color_schemes:
     base_theme_name: "Base"
   about: "Sobre"
@@ -1765,7 +1912,6 @@ ca:
       help: "registra un nou compte per començar"
     confirm_email:
       title: "Confirma el teu correu"
-      message: "<p>Hem enviat un correu d'activació a <b>%{email}</b>. Si us plau, segueix les instruccions del correu per activar el teu compte.</p><p>Si no t'arribam assegura't que has configurat al teu Discourse el teu correu correctament i revisa la teva carpeta de correu brossa.</p>"
     resend_email:
       title: "Torna a enviar el correu d'activació"
       message: "<p>Hem tornat a enviar el correu d'activació a <b>%{email}</b>"
@@ -1802,16 +1948,13 @@ ca:
             one_paragraph: "Si us plau escurça el teu missatge de benvinguda a un paràgraf"
       privacy:
         title: "Accés"
-        description: "<p>La teva comunitat esta oberta a tothom o està restringida per participació, invitació o aprovació? s t'ho estimes més, pots configurar-ho tot en privat, per fer-ho públic més endavant</p> <p>Sempre pots enviar invitacions des de temes o també des de la teva pàgina de perfil.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Públic"
-                description: "Qualsevol pot accedir a aquesta comunitat registrar-s'hi per a un compte"
               restricted:
                 label: "Privat"
-                description: "Només poden accedir a aquesta comunitat les persones que jo hi hagi convidat o aprovat"
       contact:
         title: "Contacte"
         fields:
@@ -1830,8 +1973,18 @@ ca:
         title: "Tema"
       logos:
         title: "Logos"
+        fields:
+          logo:
+            label: "Logo primari"
+          logo_small:
+            label: "Logo compacte"
       icons:
         title: "Icones"
+        fields:
+          favicon:
+            label: "Icona petita"
+          apple_touch_icon:
+            label: "Icona gran"
       homepage:
         description: "Et suggerim que mostris els darrers temes a la teva pàgina principal, però si t'ho estimes més, també pots mostrar-hi categories (grups o temes) a la pàgina principal."
         title: "Pàgina principal"
@@ -1840,6 +1993,12 @@ ca:
             choices:
               latest:
                 label: "Darrers temes"
+              categories_only:
+                label: "Només categories"
+              categories_with_featured_topics:
+                label: "Categories amb temes destacats"
+              categories_and_latest_topics:
+                label: "Categories i darrers temes"
       emoji:
         title: "Emoji"
         description: "Quin estil d'Emoji t'estimes més per a la teva comunitat? Més tard pots afegir-hi més Emoji personalitzats, des de Administració, Personalitza, Emoji."
@@ -1847,3 +2006,21 @@ ca:
         title: "Convida equip"
       finished:
         title: "El teu Discourse està llest!"
+  joined: "Es va registrar"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Suspèn persona usuària"
+      delete_spammer:
+        title: "Esborra brossa"
+      disagree:
+        title: "En desacord"
+      approve:
+        title: "Aprova"
+      reject_user:
+        delete:
+          title: "Eliminia persona usuària"
+      reject:
+        title: "Rebutja"
+      delete_user:
+        title: "Eliminia persona usuària"

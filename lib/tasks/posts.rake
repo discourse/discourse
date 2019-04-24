@@ -387,3 +387,89 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
 
   puts "", "Done.", ""
 end
+
+UPLOAD_PATTERNS ||= [
+  /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
+  /\/original\//,
+  /\/optimized\//
+].freeze
+
+def get_missing_uploads
+  PostCustomField.where(name: Post::MISSING_UPLOADS)
+end
+
+desc 'Finds missing post upload records from cooked HTML content'
+task 'posts:missing_uploads' => :environment do
+  get_missing_uploads.delete_all
+  missing_uploads = []
+  found_uploads = []
+  old_scheme_upload_count = 0
+  unlinked_post_upload_count = 0
+  count = 0
+
+  Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
+    ids = posts.pluck(:id)
+    sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+
+    posts.each do |post|
+      missing_post_uploads = []
+
+      Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
+        src = media.value
+        next if src.blank? || UPLOAD_PATTERNS.none? { |pattern| src =~ pattern }
+
+        src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+        next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
+
+        path = begin
+          URI(URI.unescape(src))&.path
+        rescue URI::Error
+        end
+
+        next if path.blank?
+
+        sha1 =
+          if path.include? "optimized"
+            OptimizedImage.extract_sha1(path)
+          else
+            Upload.extract_sha1(path)
+          end
+
+        if sha1.blank? || sha1s.exclude?(sha1)
+          missing_post_uploads << src
+
+          if found_uploads.include?(src)
+            unlinked_post_upload_count += 1
+          elsif missing_uploads.exclude?(src)
+            if sha1.blank?
+              old_scheme_upload_count += 1
+              missing_uploads << src
+            elsif Upload.exists?(sha1: sha1)
+              unlinked_post_upload_count += 1
+              found_uploads << src
+            else
+              missing_uploads << src
+            end
+          end
+        end
+      end
+
+      if missing_post_uploads.present?
+        PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing_post_uploads.to_json)
+        count += missing_post_uploads.count
+        putc "x"
+      else
+        putc "."
+      end
+    end
+  end
+
+  puts "", "#{count - unlinked_post_upload_count} post uploads are missing.", ""
+
+  if count > 0
+    puts "#{unlinked_post_upload_count} are unlinked post uploads." if unlinked_post_upload_count > 0
+    puts "#{missing_uploads.count} uploads are missing."
+    puts "#{old_scheme_upload_count} of #{missing_uploads.count} are old scheme uploads." if old_scheme_upload_count > 0
+    puts "#{get_missing_uploads.count} of #{Post.count} posts are affected.", ""
+  end
+end

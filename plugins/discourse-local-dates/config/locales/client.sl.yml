@@ -12,9 +12,7 @@ sl:
         today: danes %{time}
         tomorrow: jutri %{time}
         yesterday: včeraj %{time}
-      title: Vnesi datum
       create:
-        modal_title: Vnesi datum
         form:
           insert: Dodaj
           advanced_mode: Napredni način

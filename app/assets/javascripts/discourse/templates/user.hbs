@@ -193,7 +193,7 @@
             {{/if}}
 
             {{#if canDeleteUser}}
-              <div>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
+              <div class='pull-right'>{{d-button action=(action "adminDelete") icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}</div>
             {{/if}}
           </dl>
           {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}

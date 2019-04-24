@@ -364,6 +364,7 @@ en:
       email_already_used_in_group: "'%{email}' is already used by the group '%{group_name}'."
       email_already_used_in_category: "'%{email}' is already used by the category '%{category_name}'."
       cant_allow_membership_requests: "You cannot allow membership requests for a group without any owners."
+      already_requested_membership: "You have already requested membership for this group."
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -746,6 +747,7 @@ en:
       opera: "Opera"
       ie: "Internet Explorer"
       edge: "Microsoft Edge"
+      discoursehub: "DiscourseHub app"
       unknown: "unknown browser"
     device:
       android: "Android Device"
@@ -880,7 +882,7 @@ en:
     user_must_edit: "<p>This post was flagged by the community and is temporarily hidden.</p>"
 
   ignored:
-    hidden_content: "<p>Hidden content</p>"
+    hidden_content: "<p>Ignored content</p>"
 
   archetypes:
     regular:
@@ -892,8 +894,8 @@ en:
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
 
   unsubscribed:
-    title: "Unsubscribed!"
-    description: "<b>%{email}</b> has been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>."
+    title: "Email preferences updated!"
+    description: "email preferences for <b>%{email}</b> were updated. To change your email settings <a href='%{url}'>visit your user preferences</a>."
     topic_description: "To re-subscribe to %{link}, use the notification control at the bottom or right of the topic."
     private_topic_description: "To re-subscribe, use the notification control at the bottom or right of the topic."
 
@@ -903,11 +905,22 @@ en:
     mute_topic: "Mute all notifications for this topic, %{link}"
     unwatch_category: "Stop watching all topics in %{category}"
     mailing_list_mode: "Turn off mailing list mode"
-    disable_digest_emails: "Stop sending me summary emails"
     all: "Don't send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
     not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
     log_out: "Log Out"
+    submit: "Save preferences"
+    digest_frequency:
+      title: "You are receiving summary emails %{frequency}"
+      select_title: "Set summary emails frequency to:"
+
+      never: "never"
+      every_30_minutes: "every 30 minutes"
+      every_hour: "hourly"
+      daily: "daily"
+      weekly: "weekly"
+      every_month: "every month"
+      every_six_months: "every six months"
 
   user_api_key:
     title: "Authorize application access"
@@ -1454,12 +1467,14 @@ en:
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
-    invite_only: "Public registration is disabled, all new users must be explicitly invited by trusted users or staff."
+    invite_only: "All new users must be explicitly invited by trusted users or staff. Public registration is disabled."
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
+    unicode_usernames: "Allow usernames and group names to contain Unicode letters and numbers."
+    unicode_username_character_whitelist: "Regular expression to allow only some Unicode characters within usernames. ASCII letters and numbers will always be allowed and don't need to be included in the whitelist."
 
     reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
@@ -1489,7 +1504,6 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_yahoo_logins: "Enable Yahoo authentication"
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Client ID of your Google application."
@@ -1568,6 +1582,7 @@ en:
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
+    suggested_topics_unread_max_days_old: "Suggested unread topics should not be more than n days old."
 
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
@@ -1742,6 +1757,7 @@ en:
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "List of alternative templates for reply by email incoming email addresses. Example: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
+    strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
     disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
 
@@ -1838,8 +1854,6 @@ en:
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
-    ignore_user_enabled: "[Beta] Allow ignoring users."
-
     ignored_users_count_message_threshold: "Notify moderators if a particular user is ignored by this many other users."
 
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
@@ -1880,7 +1894,9 @@ en:
 
     topic_page_title_includes_category: "Topic page title includes the category name."
 
-    native_app_install_banner: "Asks recurring visitors to install Discourse native app."
+    native_app_install_banner_ios: "Displays DiscourseHub app banner on iOS devices to regular users (trust level 1 and up)."
+
+    native_app_install_banner_android: "Displays DiscourseHub app banner on Android devices to regular users (trust level 1 and up)."
 
     share_anonymized_statistics: "Share anonymized usage statistics."
 
@@ -1934,8 +1950,9 @@ en:
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
     watched_words_regular_expressions: "Watched words are regular expressions."
 
-    min_post_notice_tl: "Minimum trust level required to see post notices."
     old_post_notice_days: "Days before post notice becomes old"
+    new_user_notice_tl: "Minimum trust level required to see new user post notices."
+    returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
 
     default_email_digest_frequency: "How often users receive summary emails by default."
@@ -1955,7 +1972,6 @@ en:
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
-    default_other_disable_jump_reply: "Don't jump to user's post after they reply by default."
 
     default_other_like_notification_frequency: "Notify users on likes by default"
 
@@ -1967,6 +1983,8 @@ en:
     default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     default_text_size: "Text size which is selected by default"
+
+    default_title_count_mode: "Default mode for the page title counter"
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
@@ -2049,6 +2067,10 @@ en:
         low_weight_invalid: "You cannot set the weight to be greater or equal to 1 or smaller than 'category_search_priority_very_low_weight'."
         high_weight_invalid: "You cannot set the weight to be greater or equal to 1 or greater than 'category_search_priority_very_high_weight'."
         very_high_weight_invalid: "You cannot set the weight to be smaller than 'category_search_priority_high_weight'."
+      unicode_username_whitelist:
+        regex_invalid: "The regular expression is invalid: %{error}"
+        leading_trailing_slash: "The regular expression must not start and end with a slash."
+      unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
 
     placeholder:
       sso_provider_secrets:
@@ -2203,6 +2225,7 @@ en:
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
+      too_long: "is too long"
       characters: "must only include numbers, letters, dashes, and underscores"
       unique: "must be unique"
       blank: "must be present"
@@ -2748,6 +2771,7 @@ en:
         %{post_error}
 
         If you can correct the problem, please try again.
+      date_invalid: "No post creation date found. Is the e-mail missing a Date: header?"
 
     email_reject_post_too_short:
       title: "Email Reject Post Too Short"
@@ -2947,7 +2971,7 @@ en:
       text_body_template: |
         There are new user signups waiting to be approved (or rejected) before they can access this forum.
 
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+        [Please review them](%{base_url}/review).
 
     download_remote_images_disabled:
       title: "Download Remote Images Disabled"
@@ -3413,6 +3437,19 @@ en:
       subject_template: "[%{email_prefix}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
+
+        Click the following link to confirm and activate your new account:
+        %{base_url}/u/activate-account/%{email_token}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+    activation_reminder:
+      title: "Activation Reminder"
+      subject_template: "[%{email_prefix}] Reminder to confirm your account"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        This is a friendly reminder to activate your account.
 
         Click the following link to confirm and activate your new account:
         %{base_url}/u/activate-account/%{email_token}
@@ -4180,7 +4217,7 @@ en:
       no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"
-      message: "<p>We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, ensure you have set up email correctly for your Discourse and check your spam folder.</p>"
+      message: "<p>We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, and <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ensure you set up email correctly</a>.</p>"
     resend_email:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
@@ -4241,19 +4278,26 @@ en:
 
       privacy:
         title: "Access"
-        description:
-          "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>
-          <p>You can always send invites from topics, or from your user profile page, too.</p>"
+        description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>"
 
         fields:
           privacy:
             choices:
               open:
                 label: "Public"
-                description: "Anyone can access this community and sign up for an account"
+                description: "Anyone can access this community"
               restricted:
                 label: "Private"
-                description: "Only people I have invited or approved can access this community"
+                description: "Only logged in users can access this community"
+          privacy_options:
+            description: "How do new users sign up for an account?"
+            choices:
+              open:
+                label: "Users can sign up on their own."
+              invite_only:
+                label: "Users can sign up on their own, but must be approved by staff."
+              must_approve:
+                label: "Users must be invited by trusted users or staff before they can sign up."
 
       contact:
         title: "Contact"
@@ -4359,19 +4403,33 @@ en:
       posted: '%{username} posted in "%{topic}" - %{site_title}'
       private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
       confirm_body: "Success! Notifications have been enabled."
-      custom: "Notification from %{site_title}"
+      custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
     not_found: "not found"
     unknown: "unknown"
     user_merged: "%{username} was merged into this account"
     user_delete_self: "Deleted by self from %{url}"
+    webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
 
   reviewables:
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
+    reasons:
+      post_count: "The poster has not met the `approve_post_count` requirements."
+      trust_level: "The poster has not met the `approve_unless_trust_level` requirement."
+      new_topics_unless_trust_level: "The poster has not met the `approve_new_topics_unless_trust_level` requirement."
+      fast_typer: "The poster typed in their post suspiciously fast. See: `min_first_post_typing_time`."
+      auto_silence_regexp: "The post matched the `auto_silence_first_post_regex` setting."
+      watched_word: "The post included a Watched Word."
+      staged: "The poster was staged and `approve_unless_staged` was set."
+      category: "The category of the post requires approval."
+      must_approve_users: "The user must be approved because `must_approve_users` is enabled."
+      invite_only: "The user must be approved because `invite_only` is enabled."
+
     actions:
       agree:
         title: "Agree..."
@@ -4419,6 +4477,20 @@ en:
         title: "Ignore"
       approve:
         title: "Approve"
+      approve_post:
+        title: "Approve Post"
+      reject_post:
+        title: "Reject Post"
+      approve_user:
+        title: "Approve User"
+      reject_user:
+        title: "Delete User..."
+        delete:
+          title: "Delete User"
+          description: "The user will be deleted from the forum."
+        block:
+          title: "Delete and Block User"
+          description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
       delete_user:

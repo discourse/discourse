@@ -184,18 +184,18 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       contents() {
-        if (!attrs.flagCount) {
-          return;
+        let { currentUser } = this;
+        if (currentUser && currentUser.reviewable_count) {
+          return h(
+            "div.badge-notification.reviewables",
+            {
+              attributes: {
+                title: I18n.t("notifications.reviewable_items")
+              }
+            },
+            this.currentUser.reviewable_count
+          );
         }
-        return h(
-          "div.badge-notification.flagged-posts",
-          {
-            attributes: {
-              title: I18n.t("notifications.total_flagged")
-            }
-          },
-          attrs.flagCount
-        );
       }
     });
 
@@ -410,7 +410,9 @@ export default createWidget("header", {
 
       if (currentPath === "full-page-search") {
         scrollTop();
-        $(".full-page-search").focus();
+        $(".full-page-search")
+          .trigger("touchstart")
+          .focus();
         return false;
       } else {
         return DiscourseURL.routeTo("/search" + params);

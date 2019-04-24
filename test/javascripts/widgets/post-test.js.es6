@@ -874,13 +874,13 @@ widgetTest("pm map", {
 widgetTest("post notice - with username", {
   template: '{{mount-widget widget="post" args=args}}',
   beforeEach() {
-    const date_2d_ago = new Date();
-    date_2d_ago.setDate(date_2d_ago.getDate() - 2);
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
     this.siteSettings.prioritize_username_in_ux = true;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
-      postNoticeType: "returning",
-      postNoticeTime: date_2d_ago,
+      noticeType: "returning_user",
+      noticeTime: twoDaysAgo,
       username: "codinghorror",
       name: "Jeff",
       created_at: new Date()
@@ -891,7 +891,10 @@ widgetTest("post notice - with username", {
       find(".post-notice.returning-user:not(.old)")
         .text()
         .trim(),
-      I18n.t("post.notice.return", { user: "codinghorror", time: "2d ago" })
+      I18n.t("post.notice.returning_user", {
+        user: "codinghorror",
+        time: "2d ago"
+      })
     );
   }
 });
@@ -902,7 +905,7 @@ widgetTest("post notice - with name", {
     this.siteSettings.prioritize_username_in_ux = false;
     this.siteSettings.old_post_notice_days = 14;
     this.set("args", {
-      postNoticeType: "first",
+      noticeType: "new_user",
       username: "codinghorror",
       name: "Jeff",
       created_at: new Date(2019, 0, 1)
@@ -913,7 +916,7 @@ widgetTest("post notice - with name", {
       find(".post-notice.old.new-user")
         .text()
         .trim(),
-      I18n.t("post.notice.first", { user: "Jeff", time: "Jan '10" })
+      I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
     );
   }
 });

@@ -188,7 +188,27 @@ describe PostDestroyer do
         expect(recovered_topic.deleted_by_id).to be_nil
       end
 
-      context "recovered by user" do
+      context "recover" do
+
+        it "doesn't raise an error when the raw doesn't change" do
+          PostRevisor.new(@reply).revise!(
+            @user,
+            { edit_reason: 'made a change' },
+            force_new_version: true
+          )
+          PostDestroyer.new(@user, @reply.reload).recover
+        end
+
+        it "won't recover a non user-deleted post" do
+          PostRevisor.new(@reply).revise!(
+            admin,
+            { raw: 'this is a change to the post' },
+            force_new_version: true
+          )
+          PostDestroyer.new(@user, @reply.reload).recover
+          expect(@reply.reload.raw).to eq('this is a change to the post')
+        end
+
         it "should increment the user's post count" do
           PostDestroyer.new(@user, @reply).destroy
           expect(@user.user_stat.topic_count).to eq(1)

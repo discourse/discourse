@@ -27,6 +27,8 @@ QUnit.test("Filters", async assert => {
 
   await visit("/u/eviltrout/activity/replies");
   hasStream(assert);
+
+  assert.ok(exists(".user-stream.filter-5"), "stream has filter class");
 });
 
 QUnit.test("Badges", async assert => {

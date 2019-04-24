@@ -12,18 +12,12 @@ export function addDecorator(cb) {
 }
 
 export default class PostCooked {
-  constructor(attrs, decoratorHelper) {
+  constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
-
-    if (decoratorHelper) {
-      this.decoratorHelper = decoratorHelper;
-      if (decoratorHelper.widget && decoratorHelper.widget.currentUser) {
-        this.currentUser = decoratorHelper.widget.currentUser;
-      }
-    }
-
+    this.decoratorHelper = decoratorHelper;
+    this.currentUser = currentUser;
     this.ignoredUsers = this.currentUser
       ? this.currentUser.ignored_users
       : null;
@@ -151,7 +145,11 @@ export default class PostCooked {
       const $blockQuote = $("> blockquote", $aside);
       $aside.data("original-contents", $blockQuote.html());
 
-      const originalText = $blockQuote.text().trim();
+      const originalText =
+        $blockQuote.text().trim() ||
+        $("> blockquote", this.attrs.cooked)
+          .text()
+          .trim();
       $blockQuote.html(I18n.t("loading"));
       let topicId = this.attrs.topicId;
       if ($aside.data("topic")) {
@@ -229,7 +227,7 @@ export default class PostCooked {
         .trim()
         .slice(0, -1);
       if (username.length > 0 && this.ignoredUsers.includes(username)) {
-        $aside.find("p").replaceWith(`<i>${I18n.t("post.ignored")}</i>`);
+        $aside.find("p").remove();
       }
     }
     $(".quote-controls", $aside).html(expandContract + navLink);
@@ -264,6 +262,7 @@ export default class PostCooked {
 
   _computeCooked() {
     if (
+      this.attrs.embeddedPost &&
       this.ignoredUsers &&
       this.ignoredUsers.length > 0 &&
       this.ignoredUsers.includes(this.attrs.username)

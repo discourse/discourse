@@ -3,7 +3,12 @@ require 'topic_view'
 
 describe TopicQuery do
 
+  # TODO: this let! here has impact on all tests
+  #  it indeed happens first, but is not obvious later in the tests we depend on the user being
+  #  created so early otherwise finding new topics does not work
+  #  we should remove the let! here and use freeze time to communicate how the clock moves
   let!(:user) { Fabricate(:coding_horror) }
+
   let(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
@@ -734,12 +739,16 @@ describe TopicQuery do
 
     context 'when logged in' do
 
+      def suggested_for(topic)
+        topic_query.list_suggested_for(topic).topics.map { |t| t.id }
+      end
+
       let(:topic) { Fabricate(:topic) }
       let(:suggested_topics) {
         tt = topic
         # lets clear cache once category is created - working around caching is hard
         clear_cache!
-        topic_query.list_suggested_for(tt).topics.map { |t| t.id }
+        suggested_for(tt)
       }
 
       it "should return empty results when there is nothing to find" do
@@ -839,7 +848,19 @@ describe TopicQuery do
       end
 
       context 'with some existing topics' do
-        let!(:partially_read) { Fabricate(:post, user: creator).topic }
+
+        let!(:old_partially_read) {
+          topic = Fabricate(:post, user: creator).topic
+          Fabricate(:post, user: creator, topic: topic)
+          topic
+        }
+
+        let!(:partially_read) {
+          topic = Fabricate(:post, user: creator).topic
+          Fabricate(:post, user: creator, topic: topic)
+          topic
+        }
+
         let!(:new_topic) { Fabricate(:post, user: creator).topic }
         let!(:fully_read) { Fabricate(:post, user: creator).topic }
         let!(:closed_topic) { Fabricate(:topic, user: creator, closed: true) }
@@ -849,42 +870,49 @@ describe TopicQuery do
         let!(:fully_read_archived) { Fabricate(:post, user: creator).topic }
 
         before do
-          user.user_option.auto_track_topics_after_msecs = 0
-          user.user_option.save
-          TopicUser.update_last_read(user, partially_read.id, 0, 0, 0)
+          user.user_option.update!(
+            auto_track_topics_after_msecs: 0,
+            new_topic_duration_minutes: User::NewTopicDuration::ALWAYS
+          )
+
+          freeze_time 3.weeks.from_now
+
+          TopicUser.update_last_read(user, old_partially_read.id, 1, 1, 0)
+          TopicUser.update_last_read(user, partially_read.id, 1, 1, 0)
           TopicUser.update_last_read(user, fully_read.id, 1, 1, 0)
           TopicUser.update_last_read(user, fully_read_closed.id, 1, 1, 0)
           TopicUser.update_last_read(user, fully_read_archived.id, 1, 1, 0)
+
           fully_read_closed.closed = true
           fully_read_closed.save
           fully_read_archived.archived = true
           fully_read_archived.save
+
+          old_partially_read.update!(updated_at: 2.weeks.ago)
+          partially_read.update!(updated_at: Time.now)
+
         end
 
-        it "returns unread, then new, then random" do
-          SiteSetting.suggested_topics = 7
-          expect(suggested_topics[0]).to eq(partially_read.id)
-          expect(suggested_topics[1, 3]).to include(new_topic.id)
-          expect(suggested_topics[1, 3]).to include(closed_topic.id)
-          expect(suggested_topics[1, 3]).to include(archived_topic.id)
+        it "operates correctly" do
 
-          # The line below appears to randomly fail, no idea why need to restructure test
-          #expect(suggested_topics[4]).to eq(fully_read.id)
-          # random doesn't include closed and archived
-        end
+          # Note, this is a pretty slow integration test
+          # it tests that suggested is returned in the expected order
+          # hence we run suggested_for twice here to save on all the setup
 
-        it "won't return new or fully read if there are enough partially read topics" do
-          SiteSetting.suggested_topics = 1
-          expect(suggested_topics).to eq([partially_read.id])
-        end
-
-        it "won't return fully read if there are enough partially read topics and new topics" do
           SiteSetting.suggested_topics = 4
+          SiteSetting.suggested_topics_unread_max_days_old = 7
+
           expect(suggested_topics[0]).to eq(partially_read.id)
-          expect(suggested_topics[1, 3]).to include(new_topic.id)
-          expect(suggested_topics[1, 3]).to include(closed_topic.id)
-          expect(suggested_topics[1, 3]).to include(archived_topic.id)
+          expect(suggested_topics[1, 3]).to contain_exactly(new_topic.id, closed_topic.id, archived_topic.id)
+
+          expect(suggested_topics.length).to eq(4)
+
+          SiteSetting.suggested_topics = 2
+          SiteSetting.suggested_topics_unread_max_days_old = 15
+
+          expect(suggested_for(topic)).to contain_exactly(partially_read.id, old_partially_read.id)
         end
+
       end
     end
   end

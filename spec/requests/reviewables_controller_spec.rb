@@ -17,6 +17,11 @@ describe ReviewablesController do
       get "/review/settings.json"
       expect(response.code).to eq("403")
     end
+
+    it "denies deleting" do
+      delete "/review/123"
+      expect(response.code).to eq("403")
+    end
   end
 
   context "regular user" do
@@ -236,7 +241,7 @@ describe ReviewablesController do
       end
 
       it "returns 404 when the reviewable does not exist" do
-        put "/review/12345/perform/approve.json?version=0"
+        put "/review/12345/perform/approve_user.json?version=0"
         expect(response.code).to eq("404")
       end
 
@@ -247,20 +252,20 @@ describe ReviewablesController do
 
       it "ensures the user can see the reviewable" do
         reviewable.update_column(:reviewable_by_moderator, false)
-        put "/review/#{reviewable.id}/perform/approve.json?version=#{reviewable.version}"
+        put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("404")
       end
 
       it "can properly return errors" do
         qp = Fabricate(:reviewable_queued_post_topic, topic_id: -100)
-        put "/review/#{qp.id}/perform/approve.json?version=#{qp.version}"
+        put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
         expect(response.code).to eq("422")
         result = ::JSON.parse(response.body)
         expect(result['errors']).to be_present
       end
 
       it "requires a version parameter" do
-        put "/review/#{reviewable.id}/perform/approve.json"
+        put "/review/#{reviewable.id}/perform/approve_user.json"
         expect(response.code).to eq("422")
         result = ::JSON.parse(response.body)
         expect(result['errors']).to be_present
@@ -269,7 +274,7 @@ describe ReviewablesController do
       it "succeeds for a valid action" do
         other_reviewable = Fabricate(:reviewable)
 
-        put "/review/#{reviewable.id}/perform/approve.json?version=#{reviewable.version}"
+        put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version}"
         expect(response.code).to eq("200")
         json = ::JSON.parse(response.body)
         expect(json['reviewable_perform_result']['success']).to eq(true)
@@ -285,7 +290,7 @@ describe ReviewablesController do
 
       describe "simultaneous perform" do
         it "fails when the version is wrong" do
-          put "/review/#{reviewable.id}/perform/approve.json?version=#{reviewable.version + 1}"
+          put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version + 1}"
           expect(response.code).to eq("409")
           json = ::JSON.parse(response.body)
           expect(json['errors']).to be_present
@@ -450,6 +455,32 @@ describe ReviewablesController do
         expect(json['category_id']).to eq(new_category_id.to_s)
       end
 
+    end
+
+    context "#destroy" do
+      let(:user) { Fabricate(:user) }
+
+      before do
+        sign_in(user)
+      end
+
+      it "returns 404 if the reviewable doesn't exist" do
+        delete "/review/1234.json"
+        expect(response.code).to eq("404")
+      end
+
+      it "returns 404 if the user can't see the reviewable" do
+        queued_post = Fabricate(:reviewable_queued_post)
+        delete "/review/#{queued_post.id}.json"
+        expect(response.code).to eq("404")
+      end
+
+      it "returns 200 if the user can delete the reviewable" do
+        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        delete "/review/#{queued_post.id}.json"
+        expect(response.code).to eq("200")
+        expect(queued_post.reload).to be_deleted
+      end
     end
 
   end

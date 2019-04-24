@@ -1037,6 +1037,30 @@ describe CookedPostProcessor do
 
   end
 
+  context "#remove_user_ids" do
+    let(:topic) { Fabricate(:topic) }
+
+    let(:post) do
+      Fabricate(:post, raw: <<~RAW)
+        link to a topic: #{topic.url}?u=foo
+
+        a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
+
+        link to an external topic: https://google.com/?u=bar
+      RAW
+    end
+
+    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+    it "does remove user ids" do
+      cpp.remove_user_ids
+
+      expect(cpp.html).to have_tag('a', with: { href: topic.url })
+      expect(cpp.html).to have_tag('a', with: { href: "#{topic.url}?bob=bob&jane=jane" })
+      expect(cpp.html).to have_tag('a', with: { href: "https://google.com/?u=bar" })
+    end
+  end
+
   context "#pull_hotlinked_images" do
 
     let(:post) { build(:post, created_at: 20.days.ago) }
@@ -1288,7 +1312,9 @@ describe CookedPostProcessor do
         topic.bumped_at = 1.day.ago
         CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
 
-        expect(topic.posts).to eq([post, hidden, small_action, reply])
+        expect(topic.ordered_posts.pluck(:id))
+          .to eq([post.id, hidden.id, small_action.id, reply.id])
+
         expect(topic.bumped_at).to eq(1.day.ago)
         expect(reply.raw).to eq("and this is the third reply")
         expect(reply.revisions.count).to eq(1)
@@ -1300,7 +1326,7 @@ describe CookedPostProcessor do
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
-      expect(topic.posts).to eq([post, reply])
+      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
 

@@ -101,4 +101,23 @@ describe PostActionCreator do
       end
     end
   end
+
+  context "take_action" do
+    before do
+      PostActionCreator.create(Fabricate(:user), post, :inappropriate)
+    end
+
+    it "will agree with the old reviewable" do
+      reviewable = PostActionCreator.new(
+        Fabricate(:moderator),
+        post,
+        PostActionType.types[:spam],
+        take_action: true
+      ).perform.reviewable
+      scores = reviewable.reviewable_scores
+      expect(scores[0]).to be_agreed
+      expect(scores[1]).to be_agreed
+      expect(reviewable.reload).to be_approved
+    end
+  end
 end

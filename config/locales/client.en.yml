@@ -359,6 +359,8 @@ en:
         placeholder: "type the message title here"
 
     review:
+      awaiting_approval: "Awaiting Approval"
+      delete: "Delete"
       settings:
         saved: "Saved"
         save_changes: "Save Changes"
@@ -380,7 +382,8 @@ en:
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User:"
       show_all_topics: "show all topics"
-      deleted_user: "(deleted user)"
+      deleted_post: "(post deleted)"
+      deleted_user: "(user deleted)"
       user:
         username: "Username"
         email: "Email"
@@ -404,6 +407,8 @@ en:
         topic: "Topic"
         reviewable_count: "Count"
         reported_by: "Reported by"
+        deleted: "[Topic Deleted]"
+        original: "(original topic)"
         details: "details"
         unique_users:
           one: "1 user"
@@ -426,13 +431,15 @@ en:
         category: "Category:"
       conversation:
         view_full: "view full conversation"
-      history:
-        title: "History"
-        edited: "Edited"
       scores:
-        description: "Description"
+        about: "This score is calculated based on the trust level of the reporter, the accuracy of their previous flags, and the priority of the item being reported."
         score: "Score"
+        date: "Date"
+        type: "Type"
+        status: "Status"
         submitted_by: "Submitted By"
+        reviewed_by: "Reviewed By"
+
       statuses:
         pending:
           title: "Pending"
@@ -769,8 +776,7 @@ en:
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       first_notification: "Your first notification! Select it to begin."
-      disable_jump_reply: "Don't jump to my post after I reply"
-      dynamic_favicon: "Show new / updated topic count on browser icon"
+      dynamic_favicon: "Show counts on browser icon"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       text_size_default_on_all_devices: "Make this the default text size on all my devices"
       allow_private_messages: "Allow other users to send me personal messages"
@@ -1032,6 +1038,11 @@ en:
         normal: "Normal"
         larger: "Larger"
         largest: "Largest"
+
+      title_count_mode:
+        title: "Background page title displays count of:"
+        notifications: "New notifications"
+        contextual: "New page content"
 
       like_notification_frequency:
         title: "Notify when liked"
@@ -1395,10 +1406,6 @@ en:
         name: "Facebook"
         title: "with Facebook"
         message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
-      yahoo:
-        name: "Yahoo"
-        title: "with Yahoo"
-        message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
         name: "GitHub"
         title: "with GitHub"
@@ -1499,8 +1506,6 @@ en:
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving..."
-      saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
@@ -1634,7 +1639,8 @@ en:
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
       more: "view older notifications"
-      total_flagged: "total flagged posts"
+      post_approved: "Your post was approved"
+      reviewable_items: "items requiring review"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1675,6 +1681,7 @@ en:
         watching_first_post: '{{username}} created a new topic "{{topic}}" - {{site_title}}'
         confirm_title: "Notifications enabled - %{site_title}"
         confirm_body: "Success! Notifications have been enabled."
+        custom: "Notification from {{username}} on %{site_title}"
 
     upload_selector:
       title: "Add an image"
@@ -2247,7 +2254,7 @@ en:
       quote_reply: "Quote"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
-      ignored: "Hidden content"
+      ignored: "Ignored content"
       wiki_last_edited_on: "wiki last edited on"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
@@ -2255,7 +2262,7 @@ en:
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
-      show_hidden: "View hidden content."
+      show_hidden: "View ignored content."
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(post withdrawn by author, will be automatically deleted in %{count} hours unless flagged)"
@@ -2267,8 +2274,8 @@ en:
         other: "view {{count}} hidden replies"
 
       notice:
-        first: "This is the first time {{user}} has posted — let’s welcome them to our community!"
-        return: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
+        new_user: "This is the first time {{user}} has posted — let’s welcome them to our community!"
+        returning_user: "It’s been a while since we’ve seen {{user}} — their last post was {{time}}."
 
       unread: "Post is unread"
       has_replies:
@@ -2351,6 +2358,8 @@ en:
         delete_topic_disallowed_modal: "You don't have permission to delete this topic. If you really want it to be deleted, submit a flag for moderator attention together with reasoning."
         delete_topic_disallowed: "you don't have permission to delete this topic"
         delete_topic: "delete topic"
+        add_post_notice: "Add Staff Notice"
+        remove_post_notice: "Remove Staff Notice"
 
       actions:
         flag: "Flag"
@@ -2540,7 +2549,7 @@ en:
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
-      position: "Position:"
+      position: "Position on the categories page:"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
       position_disabled_click: 'enable the "fixed category positions" setting.'
@@ -2590,6 +2599,11 @@ en:
         rows_with_featured_topics: "Rows with featured topics"
         boxes: "Boxes"
         boxes_with_featured_topics: "Boxes with featured topics"
+      settings_sections:
+        general: "General"
+        moderation: "Moderation"
+        appearance: "Appearance"
+        email: "Email"
 
     flagging:
       title: "Thanks for helping to keep our community civil!"
@@ -2791,6 +2805,12 @@ en:
 
     lightbox:
       download: "download"
+      previous: "Previous (Left arrow key)"
+      next: "Next (Right arrow key)"
+      counter: "%curr% of %total%"
+      close: "Close (Esc)"
+      content_load_error: '<a href="%url%">The content</a> could not be loaded.'
+      image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
     keyboard_shortcuts_help:
       title: "Keyboard Shortcuts"
@@ -3013,8 +3033,6 @@ en:
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard last updated:"
-        find_old: "Looking for the old dashboard?"
-        old_link: "visit it here"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
@@ -3226,6 +3244,9 @@ en:
         queued_post_event:
           name: "Post Approval Event"
           details: "When a new queued post is created, approved or rejected."
+        reviewable_event:
+          name: "Reviewable Event"
+          details: "When a new item is ready for review and when its status is updated."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -3396,6 +3417,7 @@ en:
           mobile: "Mobile"
           settings: "Settings"
           translations: "Translations"
+          extra_scss: "Extra SCSS"
           preview: "Preview"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
@@ -3724,6 +3746,7 @@ en:
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"
+            web_hook_deactivate: "webhook deactivate"
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"

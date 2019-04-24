@@ -15,6 +15,7 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
+  attr_accessor :created_new
   validates_presence_of :type, :status, :created_by_id
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: 'User'
@@ -85,7 +86,7 @@ class Reviewable < ActiveRecord::Base
     topic = target.topic if topic.blank? && target.is_a?(Post)
     category_id = topic.category_id if topic.present?
 
-    create!(
+    reviewable = create!(
       target: target,
       target_created_by_id: target_created_by_id,
       topic: topic,
@@ -95,6 +96,9 @@ class Reviewable < ActiveRecord::Base
       payload: payload,
       potential_spam: potential_spam
     )
+    reviewable.created_new = true
+    reviewable
+
   rescue ActiveRecord::RecordNotUnique
 
     row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
@@ -115,6 +119,7 @@ class Reviewable < ActiveRecord::Base
   def add_score(
     user,
     reviewable_score_type,
+    reason: nil,
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
@@ -130,7 +135,7 @@ class Reviewable < ActiveRecord::Base
       sub_total = SiteSetting.min_score_default_visibility
     end
 
-    rs = reviewable_scores.create!(
+    rs = reviewable_scores.new(
       user: user,
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
@@ -139,6 +144,8 @@ class Reviewable < ActiveRecord::Base
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
     )
+    rs.reason = reason.to_s if reason
+    rs.save!
 
     update(score: self.score + rs.score, latest_score: rs.created_at)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
@@ -222,6 +229,9 @@ class Reviewable < ActiveRecord::Base
 
         recalculate_score if result.recalculate_score
       end
+    end
+    if result && result.after_commit
+      result.after_commit.call
     end
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
 
@@ -479,8 +489,9 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

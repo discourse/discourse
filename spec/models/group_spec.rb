@@ -272,7 +272,7 @@ describe Group do
         group = Group.refresh_automatic_group!(:staff)
         expect(group.name).to eq('staff')
 
-        Fabricate(:user_single_email, username: I18n.t('groups.default_names.moderators').upcase)
+        Fabricate(:user, username: I18n.t('groups.default_names.moderators').upcase)
         group = Group.refresh_automatic_group!(:moderators)
         expect(group.name).to eq('moderators')
       end
@@ -843,5 +843,14 @@ describe Group do
 
     group = Group.find(group.id)
     expect(group.flair_url).to eq("fab fa-bandcamp")
+  end
+
+  context "Unicode usernames and group names" do
+    before { SiteSetting.unicode_usernames = true }
+
+    it "should normalize the name" do
+      group = Fabricate(:group, name: "Bücherwurm") # NFD
+      expect(group.name).to eq("Bücherwurm") # NFC
+    end
   end
 end

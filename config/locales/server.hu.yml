@@ -36,6 +36,8 @@ hu:
   remove_posts_deleted_by_author: "Szerző által törölve"
   themes:
     other_error: "Hiba történt az oldal stílusának frissítése közben"
+    import_error:
+      git: "Nem sikerült klónozni a git repositoryt, hozzáférés megtagadva vagy repository nem található"
     settings_errors:
       invalid_yaml: "Az adott YAML érvénytelen."
       default_value_missing: "'%{name}' beállításnak nincs alapértelmezett értéke"
@@ -216,6 +218,7 @@ hu:
         name: "Kategória neve"
       topic:
         title: "Cím"
+        category_id: "Kategória"
       post:
         raw: "Test"
       user_profile:
@@ -241,6 +244,9 @@ hu:
           attributes:
             hex:
               invalid: "egy érvénytelen szín"
+        post_reply:
+          base:
+            different_topic: "A bejegyzésnek és a válasznak azonos témához kell tartoznia."
   vip_category_name: "Társalgó"
   vip_category_description: "A kategória csak 3, vagy magasabb bizalmi szinttel rendelkező tagok számára érhető el."
   meta_category_name: "Visszajelzés"
@@ -387,6 +393,9 @@ hu:
       title: "Adminisztrátori Fiók Megerősítése"
       grant: "Adminisztrátori Hozzáférés Adása"
       back_to: "Vissza %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Jóváhagyásra vár"
   post_action_types:
     off_topic:
       title: "Off-Topik"
@@ -401,6 +410,7 @@ hu:
       long_form: "nem a témába tartozónak jelölve"
     notify_user:
       email_title: 'A bejegyzésed itt "%{title}"'
+      email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Valami más"
       email_body: "%{link}\n\n%{message}"
@@ -431,6 +441,7 @@ hu:
       short_description: "Ez egy hirdetés"
     inappropriate:
       title: "Alkalmatlan"
+      long_form: "nem a témába tartozónak jelölve"
     notify_moderators:
       title: "Valami más"
       email_title: 'A következő témakör "%{title}" moderátori figyelmet igényel'
@@ -440,11 +451,19 @@ hu:
       title: "Általános téma"
     banner:
       title: "Kiemelt Téma"
-  unsubscribed:
-    title: "Leiratkozott!"
+      message:
+        remove: "Ez a téma már nem kiemelt. Ezt követően nem jelenik meg minden oldal tetején."
   unsubscribe:
     title: "Leiratkozás"
     log_out: "Kijelentkezés"
+    digest_frequency:
+      never: "soha"
+      every_30_minutes: "30 percenként"
+      every_hour: "óránként"
+      daily: "naponta"
+      weekly: "hetente"
+      every_month: "minden hónapban"
+      every_six_months: "minden hat hónapban"
   user_api_key:
     authorize: "Engedélyezés"
     read: "olvasható"
@@ -460,6 +479,16 @@ hu:
         editor: Szerkesztő
         author: Szerző
         edit_reason: Indok
+    user_flagging_ratio:
+      labels:
+        user: Felhasználó
+    moderators_activity:
+      labels:
+        moderator: Moderátor
+    flags_status:
+      labels:
+        flag: Típus
+        assigned: Aláírt
     visits:
       title: "Felhasználói látogatások"
       xaxis: "Nap"
@@ -470,6 +499,13 @@ hu:
       yaxis: "Feliratkozások száma"
     new_contributors:
       xaxis: "Nap"
+    consolidated_page_views:
+      yaxis: "Nap"
+      labels:
+        post: Bejegyzés
+        editor: Szerkesztő
+        author: Szerző
+        edit_reason: Indok
     dau_by_mau:
       xaxis: "Nap"
     daily_engaged_users:
@@ -504,14 +540,28 @@ hu:
       yaxis: "Felhasználók száma"
       labels:
         level: Szint
+    users_by_type:
+      xaxis: "Típus"
+      yaxis: "Felhasználók száma"
+      labels:
+        type: Típus
+      xaxis_labels:
+        admin: Adminisztrátor
+        moderator: Moderátor
+        suspended: Felfüggesztett
+        silenced: Némított
     trending_search:
       labels:
+        term: Kifejezés
         searches: Keresések
     emails:
       title: "Kiküldött levelek"
       xaxis: "Nap"
       yaxis: "Levelek száma"
     user_to_user_private_messages:
+      xaxis: "Nap"
+      yaxis: "Üzenetek száma"
+    user_to_user_private_messages_with_replies:
       xaxis: "Nap"
       yaxis: "Üzenetek száma"
     system_private_messages:
@@ -534,6 +584,10 @@ hu:
       xaxis: "Felhasználó"
       num_clicks: "Kattintások"
       num_topics: "Témák"
+      labels:
+        user: "Felhasználó"
+        num_clicks: "Kattintások"
+        num_topics: "Témák"
     top_traffic_sources:
       xaxis: "Domain"
       num_clicks: "Kattintások"
@@ -554,6 +608,7 @@ hu:
     page_view_logged_in_reqs:
       title: "Bejelentkezve"
       xaxis: "Nap"
+      yaxis: "Bejelentkezett Oldalmegtekintések"
     page_view_crawler_reqs:
       xaxis: "Nap"
     page_view_total_reqs:
@@ -603,16 +658,30 @@ hu:
       labels:
         user_agent: "User Agent"
         page_views: "Oldalmegtekintések"
+    suspicious_logins:
+      labels:
+        user: Felhasználó
+        location: Hely
+    staff_logins:
+      labels:
+        user: Felhasználó
+        location: Hely
+    top_uploads:
+      labels:
+        filename: Fájlnév
+        author: Szerző
   dashboard:
     rails_env_warning: "A szerver jelenleg %{env} módban fut."
     host_names_warning: "A config/database.yml file az alapértelmezett 'localhost' domaint használja. Állítsd be az oldalad saját domain nevét."
     memory_warning: "A kiszolgálód kevesebb mint 1GB memóriával rendelkezik. Minimum 1GB memória ajánlott."
   site_settings:
+    moderators_create_categories: "Új kategóriák létrehozásának engedélyezése a moderátorok számára"
     enable_badges: "A jelvény-rendszer engedélyezése"
     min_password_length: "Minimum jelszó hossz."
     block_common_passwords: "A 10,000 leggyakoribb jelszó tiltása."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     enable_emoji: "Emoji-k engedélyezése"
+    emoji_set: "Hogy szeretnéd az emoji-d?"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -625,6 +694,8 @@ hu:
       invalid_string_min_max: "%{min} és %{max} között kell lennie a karakterek számának."
       invalid_string_min: "Nem lehet rövidebb, mint %{min} karakter."
       invalid_string_max: "Nem lehet hosszabb, mint %{max} karakter."
+      min_username_length_range: "Nem lehet a maximum értéknél nagyobb minimum értéket beállítani."
+      max_username_length_range: "Nem lehet a minimum értéknél kisebb maximum értéket beállítani."
   search:
     within_post: "#%{post_number}, általa: %{username}"
     types:
@@ -638,11 +709,15 @@ hu:
   redirected_to_top_reasons:
     new_user: "Üdv a közösségünkben! Ezek a legnépszerűbb témakörök."
     not_seen_in_a_month: "Üdv újra itt! Régóta nem láttunk. Ezek a legnépszerűbb témakörök, mióta nem látogattad az oldalt."
+  topic_statuses:
+    autoclosed_disabled: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
+    autoclosed_disabled_lastpost: "A témakör jelenleg nyitott. Mostantól lehet válaszolni rá."
   login:
     not_approved: "Még nem fogadták el a regisztrációs kérelmedet! Értesítve leszel, amint bejelentkezhetsz."
     incorrect_username_email_or_password: "Hibás felhasználónév, e-mail vagy jelszó"
     wait_approval: "Köszönjük, hogy regisztráltál! Értesíteni fogunk, amint elfogadták a kérelmedet."
     active: "A fiókodat aktiváltuk és készen áll a használatra!"
+    admin_not_allowed_from_ip_address: "Nem léphetsz be erről az ip címről adminisztrátorként."
     suspended: "Nem jelentkezhetsz be eddig: %{date}."
     suspended_with_reason: "A fiók felfüggesztve %{date} -ig: %{reason}"
     errors: "%{errors}"
@@ -653,6 +728,11 @@ hu:
     reserved_username: "Ez a felhasználónév nem engedélyezett."
     missing_user_field: "Nem töltötted ki az összes felhasználói mezőt"
     click_to_continue: "Kattints ide a folytatáshoz."
+    second_factor_title: "Kétlépcsős azonosítás"
+    second_factor_backup_description: "Kérlek írd be valamelyik biztonsági kódodat"
+  admin:
+    email:
+      sent_test: "elküldve!"
   user:
     username:
       short: "nem lehet rövidebb, mint %{min} karakter"
@@ -665,6 +745,8 @@ hu:
       blocked: "nincs engedélyezve."
   flags_dispositions:
     disagreed: "Köszönjük, hogy jelezted felénk! Utánanézünk!"
+    ignored: "Köszönjük, hogy jelezted felénk! Utánanézünk!"
+    ignored_and_deleted: "Köszönjük, hogy jelezted felénk! Eltávolítottuk a bejegyzést!"
   system_messages:
     welcome_user:
       subject_template: "Üdvözlünk a %{site_name} oldalán!"
@@ -702,6 +784,14 @@ hu:
     posted_by: "Beküldve %{username} által, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
     user_invited_to_private_message_pm_group:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
       text_body_template: |2
 
         %{header_instructions}
@@ -862,6 +952,8 @@ hu:
     forgot_password:
       title: "Elfelejtett jelszó"
       subject_template: "[%{email_prefix}] Jelszó visszaállítás"
+    set_password:
+      title: "Állíts be jelszót"
     admin_login:
       subject_template: "[%{email_prefix}] Bejelentkezés"
     signup:
@@ -871,12 +963,25 @@ hu:
     recent_topics: "Friss"
     see_more: "Több"
     search_title: "Keresés az oldalon"
+    search_button: "Keresés"
+  terms_of_service:
+    title: "Szolgáltatási feltételek"
   deleted: "törölt"
   image: "kép"
   upload:
     images:
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehetséges hogy megsérült?"
+  skipped_email_log:
+    user_email_user_suspended: "Felhasználó felfüggesztve"
   color_schemes:
+    light: "Light"
+    dark: "Dark"
+    neutral: "Neutral"
+    grey_amber: "Grey Amber"
+    shades_of_blue: "Shades of Blue"
+    latte: "Latte"
+    summer: "Summer"
+    dark_rose: "Dark Rose"
     default_theme_name: "Light"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
@@ -899,6 +1004,11 @@ hu:
   privacy_topic:
     title: "Adatvédelmi szabályzat"
   badges:
+    editor:
+      name: Szerkesztő
+      description: Első bejegyzés szerkesztése
+    basic_user:
+      name: Alapvető
     member:
       name: Tag
     regular:
@@ -907,6 +1017,18 @@ hu:
       name: Vezető
     welcome:
       name: Üdvözöllek
+      description: Kedvelést kaptál
+    first_like:
+      name: Első kedvelés
+    first_share:
+      name: Első megosztás
+      description: Bejegyzés megosztása
+    first_link:
+      name: Első hivatkozás
+    first_quote:
+      name: Első idézet
+    read_guidelines:
+      name: Irányelvek elolvasása
     reader:
       name: Olvasó
     thank_you:
@@ -965,8 +1087,18 @@ hu:
         title: "Téma"
       logos:
         title: "Logók"
+        fields:
+          logo:
+            label: "Elsődleges logó"
+          logo_small:
+            label: "Kompakt logó"
       icons:
         title: "Ikonok"
+        fields:
+          favicon:
+            label: "Kicsi ikon"
+          apple_touch_icon:
+            label: "Nagy ikon"
       homepage:
         title: "Főoldal"
         fields:
@@ -997,3 +1129,29 @@ hu:
     not_found: "nem található"
     unknown: "ismeretlen"
     user_merged: "%{username} össze lett vonva ezzel a fiókkal"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "Bejegyzés megtartása"
+      agree_and_suspend:
+        title: "Felhasználó  felfüggesztése"
+        description: "Egyezz bele megjelöléssel, és függeszd fel a felhasználót"
+      agree_and_silence:
+        title: "Felhasználó elnémítása"
+      agree_and_hide:
+        title: "Bejegyzés elrejtése"
+      delete_spammer:
+        title: "Spammer törlése"
+      disagree:
+        title: "Elutasítás"
+      ignore:
+        title: "Ignorál"
+      approve:
+        title: "Jóváhagy"
+      reject_user:
+        delete:
+          title: "Felhasználó törlése"
+      reject:
+        title: "Elutasít"
+      delete_user:
+        title: "Felhasználó törlése"

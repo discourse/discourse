@@ -20,6 +20,7 @@ class Post < ActiveRecord::Base
   self.plugin_permitted_create_params = {}
 
   # increase this number to force a system wide post rebake
+  # Recreate `index_for_rebake_old` when the number is increased
   # Version 1, was the initial version
   # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
   BAKED_VERSION = 2
@@ -62,8 +63,11 @@ class Post < ActiveRecord::Base
   LARGE_IMAGES      ||= "large_images".freeze
   BROKEN_IMAGES     ||= "broken_images".freeze
   DOWNLOADED_IMAGES ||= "downloaded_images".freeze
+  MISSING_UPLOADS ||= "missing uploads".freeze
 
   SHORT_POST_CHARS ||= 1200
+
+  register_custom_field_type(MISSING_UPLOADS, :json)
 
   scope :private_posts_for_user, ->(user) {
     where("posts.topic_id IN (SELECT topic_id
@@ -107,6 +111,13 @@ class Post < ActiveRecord::Base
     end
   }
 
+  scope :have_uploads, -> {
+    where(
+      "(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND (posts.cooked LIKE ? OR posts.cooked LIKE '%/original/%' OR posts.cooked LIKE '%/optimized/%')",
+      "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
+    )
+  }
+
   delegate :username, to: :user
 
   def self.hidden_reasons
@@ -129,6 +140,12 @@ class Post < ActiveRecord::Base
     @cook_methods ||= Enum.new(regular: 1,
                                raw_html: 2,
                                email: 3)
+  end
+
+  def self.notices
+    @notices ||= Enum.new(custom: "custom",
+                          new_user: "new_user",
+                          returning_user: "returning_user")
   end
 
   def self.find_by_detail(key, value)
@@ -378,8 +395,8 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete("post_notice_type")
-    self.custom_fields.delete("post_notice_time")
+    self.custom_fields.delete("notice_type")
+    self.custom_fields.delete("notice_args")
     self.save_custom_fields
   end
 
@@ -988,6 +1005,8 @@ end
 #  idx_posts_created_at_topic_id             (created_at,topic_id) WHERE (deleted_at IS NULL)
 #  idx_posts_deleted_posts                   (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
 #  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
+#  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_reply_to_post_number       (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE

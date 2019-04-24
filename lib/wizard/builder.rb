@@ -76,17 +76,32 @@ class Wizard
       end
 
       @wizard.append_step('privacy') do |step|
-        locked = SiteSetting.login_required? && SiteSetting.invite_only?
         privacy = step.add_field(id: 'privacy',
                                  type: 'radio',
                                  required: true,
-                                 value: locked ? 'restricted' : 'open')
+                                 value: SiteSetting.login_required? ? 'restricted' : 'open')
         privacy.add_choice('open', icon: 'unlock')
         privacy.add_choice('restricted', icon: 'lock')
 
+        unless SiteSetting.invite_only? && SiteSetting.must_approve_users?
+          privacy_option_value = "open"
+          privacy_option_value = "invite_only" if SiteSetting.invite_only?
+          privacy_option_value = "must_approve" if SiteSetting.must_approve_users?
+          privacy_options = step.add_field(id: 'privacy_options',
+                                           type: 'radio',
+                                           required: true,
+                                           value: privacy_option_value)
+          privacy_options.add_choice('open')
+          privacy_options.add_choice('invite_only')
+          privacy_options.add_choice('must_approve')
+        end
+
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:privacy] == 'restricted')
-          updater.update_setting(:invite_only, updater.fields[:privacy] == 'restricted')
+          unless SiteSetting.invite_only? && SiteSetting.must_approve_users?
+            updater.update_setting(:invite_only, updater.fields[:privacy_options] == "invite_only")
+            updater.update_setting(:must_approve_users, updater.fields[:privacy_options] == "must_approve")
+          end
         end
       end
 

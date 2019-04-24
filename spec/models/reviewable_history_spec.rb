@@ -8,7 +8,7 @@ RSpec.describe ReviewableHistory, type: :model do
 
   it "adds a `created` history event when a reviewable is created" do
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)
-    reviewable.perform(moderator, :approve)
+    reviewable.perform(moderator, :approve_user)
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)
 
     history = reviewable.history
@@ -21,7 +21,7 @@ RSpec.describe ReviewableHistory, type: :model do
 
   it "adds a `transitioned` event when transitioning" do
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)
-    reviewable.perform(moderator, :approve)
+    reviewable.perform(moderator, :approve_user)
     reviewable = ReviewableUser.needs_review!(target: user, created_by: admin)
 
     history = reviewable.history

@@ -9,18 +9,32 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_actions(actions, guardian, args)
-    return unless guardian.is_staff?
+    if guardian.is_staff?
 
-    actions.add(:approve) unless approved?
-    actions.add(:reject) unless rejected?
+      unless approved?
+        actions.add(:approve_post) do |a|
+          a.icon = 'check'
+          a.label = "reviewables.actions.approve_post.title"
+        end
+      end
 
-    if pending? && guardian.can_delete_user?(created_by)
-      actions.add(:delete_user) do |action|
-        action.icon = 'trash-alt'
-        action.label = 'reviewables.actions.delete_user.title'
-        action.confirm_message = 'reviewables.actions.delete_user.confirm'
+      unless rejected?
+        actions.add(:reject_post) do |a|
+          a.icon = 'times'
+          a.label = "reviewables.actions.reject_post.title"
+        end
+      end
+
+      if pending? && guardian.can_delete_user?(created_by)
+        actions.add(:delete_user) do |action|
+          action.icon = 'trash-alt'
+          action.label = 'reviewables.actions.delete_user.title'
+          action.confirm_message = 'reviewables.actions.delete_user.confirm'
+        end
       end
     end
+
+    actions.add(:delete) if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
@@ -44,7 +58,7 @@ class ReviewableQueuedPost < Reviewable
     result
   end
 
-  def perform_approve(performed_by, args)
+  def perform_approve_post(performed_by, args)
     created_post = nil
 
     creator = PostCreator.new(created_by, create_options.merge(
@@ -70,16 +84,36 @@ class ReviewableQueuedPost < Reviewable
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:approved_post, self, created_post)
 
-    create_result(:success, :approved) { |result| result.created_post = created_post }
+    Notification.create!(
+      notification_type: Notification.types[:post_approved],
+      user_id: created_by.id,
+      data: {},
+      topic_id: created_post.topic_id,
+      post_number: created_post.post_number
+    )
+
+    create_result(:success, :approved) do |result|
+      result.created_post = created_post
+
+      # Do sidekiq work outside of the transaction
+      result.after_commit = -> {
+        creator.enqueue_jobs
+        creator.trigger_after_events
+      }
+    end
   end
 
-  def perform_reject(performed_by, args)
+  def perform_reject_post(performed_by, args)
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:rejected_post, self)
 
     StaffActionLogger.new(performed_by).log_post_rejected(self, DateTime.now) if performed_by.staff?
 
     create_result(:success, :rejected)
+  end
+
+  def perform_delete(performed_by, args)
+    create_result(:success, :deleted)
   end
 
   def perform_delete_user(performed_by, args)
@@ -126,8 +160,9 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

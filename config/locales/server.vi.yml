@@ -206,6 +206,7 @@ vi:
         name: "Tên chuyên mục"
       topic:
         title: "Tiêu đề"
+        category_id: "Danh mục"
       post:
         raw: "Thân"
       user_profile:
@@ -322,6 +323,8 @@ vi:
         other: "gần %{count} năm trước"
   password_reset:
     no_token: "Xin lỗi, liên kết đổi mật khẩu đã cũ. Chọn \"Đăng nhập\" và sử dụng chức năng \"Quên mật khẩu\" để lấy liên kết mới."
+    choose_new: "Chọn một mật khẩu mới"
+    choose: "Chọn một mật khẩu"
     update: "Cập nhật mật khẩu"
     save: "Nhập mật khẩu"
     title: "Thiết lập lại mật khẩu"
@@ -343,6 +346,9 @@ vi:
     continue_button: "Tiếp tục tới %{site_name}"
     welcome_to: "Chào mừng bạn đến với %{site_name}!"
     approval_required: "Một điều hành viên phải duyệt tài khoản của bạn trước khi bạn có thể đăng nhập diễn đàn này. Bạn sẽ nhận được email khi tài khoản của bạn được duyệt!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Cần phê duyệt"
   post_action_types:
     off_topic:
       title: "Không-đúng-chủ-đề"
@@ -370,10 +376,12 @@ vi:
     bookmark:
       title: "Đánh dấu chỉ mục \x1C"
       description: "Đánh dấu chỉ mục bài viết này"
+      short_description: "Đánh dấu chỉ mục bài viết này"
       long_form: "đã đánh dấu chỉ mục bài viết này"
     like:
       title: "Thích"
       description: "Thích bài viết này"
+      short_description: "Thích bài viết này"
       long_form: "đã thích cái này"
   topic_flag_types:
     spam:
@@ -398,17 +406,50 @@ vi:
       message:
         make: "Chủ đề này trở thành một banner. Nó sẽ hiện ở đầu mọi trang tới khi nó được tắt bởi thành viên."
         remove: "Chủ đề này không còn là một banner. Nó sẽ không hiện ở đầu mọi trang nữa."
-  unsubscribed:
-    title: "Đã hủy đăng ký!"
   unsubscribe:
     title: "Hủy đăng ký"
     log_out: "Đăng Xuất"
+    digest_frequency:
+      never: "không  bao giờ"
+      every_30_minutes: "mỗi 30 phút"
+      every_hour: "hàng giờ"
+      daily: "hàng ngày"
+      weekly: "hàng tuần"
   reports:
+    default:
+      labels:
+        day: Ngày
+    post_edits:
+      labels:
+        post: Bài viết
+        editor: Biên tập
+        edit_reason: Lý do
+    user_flagging_ratio:
+      labels:
+        user: Người dùng
+    moderators_activity:
+      labels:
+        moderator: Điều hành
+    flags_status:
+      labels:
+        flag: Loại
     visits:
       title: "Các thành viên truy cập"
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
     signups:
+      xaxis: "Ngày"
+    new_contributors:
+      xaxis: "Ngày"
+    consolidated_page_views:
+      yaxis: "Ngày"
+      labels:
+        post: Bài viết
+        editor: Biên tập
+        edit_reason: Lý do
+    dau_by_mau:
+      xaxis: "Ngày"
+    daily_engaged_users:
       xaxis: "Ngày"
     profile_views:
       title: "Xem hồ sơ người dùng"
@@ -438,11 +479,23 @@ vi:
       title: "Thành viên ở mõi bậc tin tưởng"
       xaxis: "Bậc tin tưởng"
       yaxis: "Số thành viên"
+    users_by_type:
+      xaxis: "Loại"
+      yaxis: "Số thành viên"
+      labels:
+        type: Loại
+      xaxis_labels:
+        admin: Quản trị
+        moderator: Điều hành
+        suspended: Đã tạm khóa
     emails:
       title: "Email đã gửi"
       xaxis: "Ngày"
       yaxis: "Số lượng emails"
     user_to_user_private_messages:
+      xaxis: "Ngày"
+      yaxis: "Số lượng tin nhắn"
+    user_to_user_private_messages_with_replies:
       xaxis: "Ngày"
       yaxis: "Số lượng tin nhắn"
     system_private_messages:
@@ -466,14 +519,25 @@ vi:
       xaxis: "Người dùng"
       num_clicks: "Clicks"
       num_topics: "Chủ đề"
+      labels:
+        user: "Người dùng"
+        num_clicks: "Clicks"
+        num_topics: "Chủ đề"
     top_traffic_sources:
       title: "Nguồn truy cập"
       xaxis: "Tên miền"
       num_clicks: "Clicks"
       num_topics: "Chủ đề"
       num_users: "Người dùng"
+      labels:
+        domain: Tên miền
+        num_clicks: Clicks
+        num_topics: Chủ đề
     top_referred_topics:
       title: "Top chủ đề giới thiệu"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Chủ đề"
     page_view_anon_reqs:
       title: "Ẩn danh"
       xaxis: "Ngày"
@@ -524,6 +588,17 @@ vi:
     mobile_visits:
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
+    suspicious_logins:
+      labels:
+        user: Người dùng
+        location: Vị trí
+    staff_logins:
+      labels:
+        user: Người dùng
+        location: Vị trí
+    top_uploads:
+      labels:
+        filename: Tên tập tin
   dashboard:
     rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
     host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
@@ -542,9 +617,11 @@ vi:
     set_locale_from_accept_language_header: "đặt ngôn ngữ giao diện cho người dùng ẩn danh từ tiêu đề ngôn ngữ trình duyệt web của họ. (KINH NGHIỆM, không hoạt động với bộ nhớ cache ẩn danh)"
     min_post_length: "Số kí tự tối thiểu trong bài đăng."
     min_first_post_length: "Chiều dài tối thiểu cho bài viết đầu tiên (nội dung chủ đề) tính theo ký tự."
+    min_personal_message_post_length: "Số kí tự tối thiểu trong tin nhắn."
     max_post_length: "Số kí tự tối đa trong bài đăng."
     min_topic_title_length: "Số kí tự tối thiểu trong tiêu đề chủ đề."
     max_topic_title_length: "Số kí tự tối đa trong tiêu đề chủ đề."
+    min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
     min_search_term_length: "Số kí tự tối thiểu trong từ khóa tìm kiếm."
     search_tokenize_chinese_japanese_korean: "Bắt buộc tìm kiếm tách từ Chinese/Japanese/Korean ngay cả trên các site không phải là CJK"
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
@@ -587,6 +664,7 @@ vi:
     post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
     must_approve_users: "Quản trị viên phải duyệt tất cả các tài khoản thành viên mới trước khi họ có quyền truy cập website. LƯU Ý: bật tính năng này trên site đang hoạt động sẽ hủy bỏ quyền truy cập đối với các tài khoản thành viên hiện tại!"
     pending_users_reminder_delay: "Thông báo cho quản trị viên nếu thành viên mới đã chờ duyệt lâu hơn số giờ được thiết lập ở đây, đặt là -1 để tắt thông báo."
+    moderators_create_categories: "Cho phép điều hành viên tạo danh mục mới"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_whitelist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     top_menu: "Xác định các mục nào hiển thị trong thanh điều hướng trang chủ, và theo thứ tự nào. Ví dụ latest|new|unread|categories|top|read|posted|bookmarks"
@@ -624,7 +702,6 @@ vi:
     sso_not_approved_url: "Chuyển những tài khoản SSO chưa duyệt tới URL này"
     allow_new_registrations: "Cho phép đăng ký người dùng mới. Bỏ chọn để bất cứ ai cũng có thể tạo tài khoản mới."
     enable_signup_cta: "Hiện thông báo với thành viên ẩn danh khi họ quay lại để yêu cầu họ đăng ký tài khoản."
-    enable_yahoo_logins: "Cho phé chứng thực qua Yahoo"
     google_oauth2_client_id: "Client ID ứng dụng Google của bạn."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
     enable_instagram_logins: "Bật chứng thực Instagram, yêu cầu instagram_consumer_key và instagram_consumer_secret"
@@ -652,6 +729,7 @@ vi:
     max_bookmarks_per_day: "Số tối đa người dùng có thể đánh dấu mỗi ngày."
     max_edits_per_day: "Số tối đa người dùng có thể chỉnh sửa mỗi ngày."
     max_topics_per_day: "Số chủ đề tối đa người dùng có thể tạo mỗi ngày."
+    max_personal_messages_per_day: "Số tin nhắn tối đa người dùng có thể tạo mỗi ngày."
     max_invites_per_day: "Số tối đa người dùng có thể gửi lời mời mỗi ngày."
     max_topic_invitations_per_day: "Số tối đa lời mời chủ đề thành viên có thể gửi mỗi ngày."
     alert_admins_if_errors_per_minute: "Số lỗi trong một phút để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
@@ -819,7 +897,6 @@ vi:
     default_other_external_links_in_new_tab: "Mặc định mở các liên kết ngoài trong thẻ mới "
     default_other_enable_quoting: "Bật trích dẫn trả lời để nổi bật nội dung theo mặc định."
     default_other_dynamic_favicon: "Hiện bộ đếm chủ đề mới/cập nhật trên icon trình duyệt theo mặc định."
-    default_other_disable_jump_reply: "Không nhảy tới bài viết của thành viên sau khi họ trả lời theo mặc định."
     default_other_like_notification_frequency: "Thông báo thành viên khi like theo mặc định"
     default_topics_automatic_unpin: "Tự động bỏ ghim chủ đề khi thành viên xuống cuối trang theo mặc định."
     default_categories_watching: "Hiển thị danh sách chuyên mục đang xem theo mặc định."
@@ -846,6 +923,8 @@ vi:
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       email_polling_disabled: "Bạn phải kích hoạt bằng tay hoặc POP3 polling trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
+      min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
+      max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
@@ -900,6 +979,9 @@ vi:
     reserved_username: "Tên đăng nhập không được cho phép."
     missing_user_field: "Bạn không hoàn tất tất cả các trường người dùng"
     already_logged_in: "Rất tiếc, có vẻ như bạn đang cố gắng để chấp nhận lời mời của một người dùng khác. Nếu bạn không phải là %{current_user}, xin vui lòng đăng xuất và thử lại."
+  admin:
+    email:
+      sent_test: "đã gửi!"
   user:
     username:
       short: "phải dài ít nhất %{min} ký tự"
@@ -929,6 +1011,8 @@ vi:
     agreed: "Cảm ơn đã cho chúng tôi biết. Chúng thôi đồng ý nó là một vấn đề và chúng tôi sẽ xem xét nó."
     agreed_and_deleted: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đồng ý đây là một vấn đề và chúng tôi đã xóa bài viết này."
     disagreed: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
+    ignored: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
+    ignored_and_deleted: "Cảm ơn bạn đã cho chúng tôi biết, chúng tôi đã gỡ bỏ bài viết."
   system_messages:
     welcome_user:
       subject_template: "Chào mừng đến với %{site_name}!"
@@ -999,14 +1083,11 @@ vi:
         Hãy chắc chắn rằng bạn đã cấu hình đúng các thông tin POP trong [thiết lập website](%{base_url}/admin/site_settings/category/email).
 
         Nếu có một giao diện web cho các tài khoản email POP, bạn có thể cần phải đăng nhập vào website và kiểm tra các thiết lập này.
+    spam_post_blocked:
+      subject_template: "Các bài viết của tài khoản mới %{username} đã bị chặn do lặp đi lặp lại các liên kết"
     pending_users_reminder:
       subject_template:
         other: "%{count} thành viên đang chờ duyệt"
-      text_body_template: |2
-
-        Có tài khoản mới đăng ký đang chờ duyệt (hoặc từ chối) trước khi họ có thể truy cập diễn đàn.
-
-        [Hãy xem xét họ trong khu vực admin](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
@@ -1020,11 +1101,38 @@ vi:
       description: "Bạn không thích nhận mail giống mail này? Nhấn vào bỏ theo dõi để bỏ đăng ký ngay lập tức:"
     only_reply_by_email: "Trả lời email này để phản hồi."
     posted_by: "Đăng bởi %{{username} ngày %{post_date}"
+    invited_to_private_message_body: |
+      %{username} mời bạn xem
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tại
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} mời bạn thảo luận
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tại
+
+      > %{site_title} -- %{site_description}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
+      liked_received: "Likes Đã Nhận"
+      new_users: "Thành viên mới"
+      join_the_discussion: "Đọc Tiếp"
       click_here: "bấm vào đây"
+    forgot_password:
+      title: "Quên mật khẩu"
+    set_password:
+      title: "Nhập mật khẩu"
     notify_old_email:
       text_body_template: |2
 
@@ -1041,9 +1149,11 @@ vi:
     recent_topics: "Gân đây"
     see_more: "Thêm"
     search_title: "Tìm trang này"
+    search_button: "Tìm kiếm"
   terms_of_service:
     title: "Điều khoản Dịch vụ"
   deleted: "đã bị xóa "
+  image: "hình ảnh"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
@@ -1057,6 +1167,22 @@ vi:
       size_not_found: "Xin lỗi, không thể xác định kích thước hình. Có thể hình của bạn bị lỗi?"
   avatar:
     missing: "Xin lỗi, chúng tôi không thể tìm thấy avatar liên kết với email đó. Bạn có thể thử upload lại một lần nữa?"
+  skipped_email_log:
+    exceeded_emails_limit: "Vượt quá max_emails_per_day_per_user"
+    user_email_no_user: "không tìm thấy người dùng với id %{user_id}"
+    user_email_post_not_found: "Không tìm thấy bài viết với id %{post_id}"
+    user_email_anonymous_user: "Người dùng là nặc danh"
+    user_email_user_suspended_not_pm: "Tài khoản bị tạm khóa, không có tin nhắn"
+    user_email_seen_recently: "Tài khoản đã xem gần đây"
+    user_email_notification_already_read: "Thông báo email này đã được đọc"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_deleted: "bài viết đã bị xóa bởi tác giả"
+    user_email_user_suspended: "người dùng đã bị tạm khóa"
+    user_email_already_read: "người dùng đã đọc  bài viết này"
+    sender_message_blank: "tin nhắn rỗng"
+    sender_message_to_blank: "message.to rỗng"
+    sender_text_part_body_blank: "text_part.body rỗng"
+    sender_body_blank: "nội dung rỗng"
   color_schemes:
     base_theme_name: "Cơ bản"
   about: "Giới thiệu"
@@ -1237,3 +1363,48 @@ vi:
     initial_topic_title: Báo cáo hiệu suất website
   tags:
     title: "Thẻ"
+  finish_installation:
+    resend_email:
+      title: "Gửi lại email kích hoạt"
+  wizard:
+    step:
+      forum_title:
+        title: "Tên"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "Công ty"
+      colors:
+        title: "Giao diện"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Chỉ chuyên mục"
+              categories_with_featured_topics:
+                label: "Các chuyên mục và chủ đề nổi bật"
+              categories_and_latest_topics:
+                label: "Các chuyên mục và chủ đề mới"
+      emoji:
+        title: "Emoji"
+  joined: "Đã tham gia"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Tạm khóa Thành viên"
+      delete_spammer:
+        title: "Xóa người Spam"
+      disagree:
+        title: "Không đồng ý"
+      approve:
+        title: "Duyệt"
+      reject_user:
+        delete:
+          title: "Xóa tài khoản"
+      reject:
+        title: "Từ chối"
+      delete_user:
+        title: "Xóa tài khoản"

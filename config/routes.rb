@@ -6,7 +6,7 @@ require_dependency "homepage_constraint"
 require_dependency "permalink_constraint"
 
 # The following constants have been replaced with `RouteFormat` and are deprecated.
-USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
+USERNAME_ROUTE_FORMAT = /[%\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
@@ -325,6 +325,7 @@ Discourse::Application.routes.draw do
     action_id: /[a-z\_]+/
   }
   put "review/:reviewable_id" => "reviewables#update", constraints: { reviewable_id: /\d+/ }
+  delete "review/:reviewable_id" => "reviewables#destroy", constraints: { reviewable_id: /\d+/ }
 
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
@@ -552,6 +553,7 @@ Discourse::Application.routes.draw do
     put "rebake"
     put "unhide"
     put "locked"
+    put "notice"
     get "replies"
     get "revisions/latest" => "posts#latest_revision"
     get "revisions/:revision" => "posts#revisions", constraints: { revision: /\d+/ }

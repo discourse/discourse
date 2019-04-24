@@ -5,13 +5,12 @@ class ThemeSetting < ActiveRecord::Base
   validates :data_type, numericality: { only_integer: true }
   validates :name, length: { maximum: 255 }
 
-  after_save do
-    theme.clear_cached_settings!
-    theme.remove_from_cache!
-    theme.theme_fields.update_all(value_baked: nil)
-    theme.theme_settings.reload
-    SvgSprite.expire_cache if self.name.to_s.include?("_icon")
-    CSP::Extension.clear_theme_extensions_cache! if name.to_s == CSP::Extension::THEME_SETTING
+  after_save :clear_settings_cache
+  after_destroy :clear_settings_cache
+
+  def clear_settings_cache
+    # All necessary caches will be cleared on next ensure_baked!
+    theme.settings_field&.invalidate_baked!
   end
 
   def self.types

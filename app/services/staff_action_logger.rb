@@ -599,6 +599,19 @@ class StaffActionLogger
     ))
   end
 
+  def log_web_hook_deactivate(web_hook, response_http_status, opts = {})
+    context = [
+      "webhook_id: #{web_hook.id}",
+      "webhook_response_status: #{response_http_status}"
+    ]
+
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:web_hook_deactivate],
+      context: context,
+      details: I18n.t('staff_action_logs.webhook_deactivation_reason', status: response_http_status)
+    ))
+  end
+
   def log_embeddable_host(embeddable_host, action, opts = {})
     old_values, new_values = get_changes(opts[:changes])
 

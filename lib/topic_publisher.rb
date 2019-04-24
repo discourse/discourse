@@ -8,12 +8,15 @@ class TopicPublisher
 
   def publish!
     published_at = Time.zone.now
+
     TopicTimestampChanger.new(timestamp: published_at, topic: @topic).change! do
       if @topic.private_message?
         @topic = TopicConverter.new(@topic, @published_by)
           .convert_to_public_topic(@category_id)
       else
-        @topic.change_category_to_id(@category_id)
+        PostRevisor.new(@topic.first_post, @topic).revise!(@published_by,
+          category_id: @category_id,
+        )
       end
 
       @topic.update_columns(visible: true)
@@ -22,14 +25,17 @@ class TopicPublisher
 
       # Clean up any publishing artifacts
       SharedDraft.where(topic: @topic).delete_all
+
       TopicTimer.where(topic: @topic).update_all(
         deleted_at: DateTime.now,
         deleted_by_id: @published_by.id
       )
 
       op = @topic.first_post
+
       if op.present?
         op.revisions.delete_all
+
         op.update_columns(
           version: 1,
           public_version: 1,

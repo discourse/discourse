@@ -1,33 +1,52 @@
 {{#if visible}}
   <div class="card-content">
-
-    <div class="card-row first-row">
-      <div class="user-card-avatar">
-        {{#if user.profile_hidden}}
-          <span class="card-huge-avatar">{{bound-avatar user "huge"}}</span>
-        {{else}}
-          <a href="{{user.path}}" {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
-        {{/if}}
-        {{#if user.primary_group_name}}
-          {{avatar-flair
-          flairURL=user.primary_group_flair_url
-          flairBgColor=user.primary_group_flair_bg_color
-          flairColor=user.primary_group_flair_color
-          groupName=user.primary_group_name}}
-        {{/if}}
-        {{plugin-outlet name="user-card-avatar-flair" args=(hash user=user) tagName='div'}}
+    {{#if loading}}
+      <div class="card-row first-row">
+        <div class="user-card-avatar">
+          <div class="card-avatar-placeholder animated-placeholder"></div>
+        </div>
       </div>
-      <div class="names">
-        <span>
+
+      <div class="card-row second-row">
+        <div class="animated-placeholder"></div>
+      </div>
+      <div class="card-row third-row">
+        <div class="animated-placeholder"></div>
+      </div>
+      <div class="card-row fourth-row">
+        <div class="animated-placeholder"></div>
+      </div>
+      <div class="card-row sixth-row">
+        <div class="animated-placeholder"></div>
+      </div>
+    {{else}}
+      <div class="card-row first-row">
+        <div class="user-card-avatar">
+          {{#if user.profile_hidden}}
+            <span class="card-huge-avatar">{{bound-avatar user "huge"}}</span>
+          {{else}}
+            <a href="{{user.path}}" {{action "showUser" user}} class="card-huge-avatar">{{bound-avatar user "huge"}}</a>
+          {{/if}}
+          {{#if user.primary_group_name}}
+            {{avatar-flair
+            flairURL=user.primary_group_flair_url
+            flairBgColor=user.primary_group_flair_bg_color
+            flairColor=user.primary_group_flair_color
+            groupName=user.primary_group_name}}
+          {{/if}}
+          {{plugin-outlet name="user-card-avatar-flair" args=(hash user=user) tagName='div'}}
+        </div>
+        <div class="names">
           <h1 class="{{staff}} {{newUser}} {{if nameFirst "full-name" "username"}}">
             {{#if user.profile_hidden}}
-              <span>
+              <span class="name-username-wrapper">
                 {{if nameFirst user.name (format-username username)}}
-                {{user-status user currentUser=currentUser}}
               </span>
             {{else}}
               <a href="{{user.path}}" {{action "showUser" user}} class='user-profile-link'>
-                {{if nameFirst user.name (format-username username)}}
+                <span class="name-username-wrapper">
+                  {{if nameFirst user.name (format-username username)}}
+                </span>
                 {{user-status user currentUser=currentUser}}
               </a>
             {{/if}}
@@ -47,105 +66,103 @@
             <h2 class="staged">{{i18n 'user.staged'}}</h2>
           {{/if}}
           {{plugin-outlet name="user-card-post-names" args=(hash user=user) tagName='div'}}
-        </span>
-      </div>
-      <ul class="usercard-controls">
-        {{#if user.can_send_private_message_to_user}}
-          <li class='compose-pm'>
-            {{d-button
-            class="btn-primary"
-            action=(route-action "composePrivateMessage" user post)
-            icon="envelope"
-            label="user.private_message"}}
-          </li>
-        {{/if}}
-        {{#if showFilter}}
-          <li>
-            {{d-button
-            class="btn-default"
-            action=(action "togglePosts" user)
-            icon="filter"
-            translatedLabel=togglePostsLabel}}
-          </li>
-        {{/if}}
-        {{#if hasUserFilters}}
-          <li>
-            {{d-button
-            action=(action "cancelFilter")
-            icon="times"
-            label="topic.filters.cancel"}}
-          </li>
-        {{/if}}
-        {{#if showDelete}}
-          <li>
-            {{d-button
-            class="btn-danger"
-            action=(action "deleteUser")
-            actionParam=user
-            icon="exclamation-triangle"
-            label="admin.user.delete"}}
-          </li>
-        {{/if}}
-      </ul>
-      {{plugin-outlet
-      name="user-card-additional-controls"
-      args=(hash user=user close=(action "close"))
-      tagName=""}}
-    </div>
-
-    {{#if user.profile_hidden}}
-      <div class="card-row second-row">
-        <div class='profile-hidden'>
-          <span>{{i18n "user.profile_hidden"}}</span>
         </div>
+        <ul class="usercard-controls">
+          {{#if user.can_send_private_message_to_user}}
+            <li class='compose-pm'>
+              {{d-button
+              class="btn-primary"
+              action=(route-action "composePrivateMessage" user post)
+              icon="envelope"
+              label="user.private_message"}}
+            </li>
+          {{/if}}
+          {{#if showFilter}}
+            <li>
+              {{d-button
+              class="btn-default"
+              action=(action "togglePosts" user)
+              icon="filter"
+              translatedLabel=togglePostsLabel}}
+            </li>
+          {{/if}}
+          {{#if hasUserFilters}}
+            <li>
+              {{d-button
+              action=(action "cancelFilter")
+              icon="times"
+              label="topic.filters.cancel"}}
+            </li>
+          {{/if}}
+          {{#if showDelete}}
+            <li>
+              {{d-button
+              class="btn-danger"
+              action=(action "deleteUser")
+              actionParam=user
+              icon="exclamation-triangle"
+              label="admin.user.delete"}}
+            </li>
+          {{/if}}
+        </ul>
+        {{plugin-outlet
+        name="user-card-additional-controls"
+        args=(hash user=user close=(action "close"))
+        tagName=""}}
       </div>
-    {{/if}}
 
-    {{#if isSuspendedOrHasBio}}
-      <div class="card-row second-row">
-        {{#if user.suspend_reason}}
-          <div class='suspended'>
-            <div class="suspension-date">
-              {{d-icon "ban"}}
-              {{i18n 'user.suspended_notice' date=user.suspendedTillDate}}
-            </div>
-            <div class='suspension-reason'>
-              <span class="suspension-reason-title">{{i18n 'user.suspended_reason'}}</span>
-              <span class="suspension-reason-description">{{user.suspend_reason}}</span>
-            </div>
+      {{#if user.profile_hidden}}
+        <div class="card-row second-row">
+          <div class='profile-hidden'>
+            <span>{{i18n "user.profile_hidden"}}</span>
           </div>
-        {{else}}
-          {{#if user.bio_cooked}}
-            <div class='bio'>{{text-overflow class="overflow" text=user.bio_excerpt}}</div>
-          {{/if}}
-        {{/if}}
-      </div>
-    {{/if}}
-
-    {{#if hasLocationOrWebsite}}
-      <div class="card-row third-row">
-        <div class="location-and-website">
-          {{#if user.location}}
-            <span class='location'>{{d-icon "map-marker-alt"}}
-              <span>{{user.location}}</span></span>
-          {{/if}}
-          {{#if user.website_name}}
-            <span class='website-name'>
-              {{d-icon "globe"}}
-              {{#if linkWebsite}}
-                <a href="{{user.website}}" rel={{unless removeNoFollow 'nofollow noopener'}}
-                 target="_blank">{{user.website_name}}</a>
-              {{else}}
-                <span title={{user.website}}>{{user.website_name}}</span>
-              {{/if}}
-            </span>
-          {{/if}}
-          {{plugin-outlet name="user-card-location-and-website" args=(hash user=user)}}
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
 
-    {{#if user.time_read}}
+      {{#if isSuspendedOrHasBio}}
+        <div class="card-row second-row">
+          {{#if user.suspend_reason}}
+            <div class='suspended'>
+              <div class="suspension-date">
+                {{d-icon "ban"}}
+                {{i18n 'user.suspended_notice' date=user.suspendedTillDate}}
+              </div>
+              <div class='suspension-reason'>
+                <span class="suspension-reason-title">{{i18n 'user.suspended_reason'}}</span>
+                <span class="suspension-reason-description">{{user.suspend_reason}}</span>
+              </div>
+            </div>
+          {{else}}
+            {{#if user.bio_cooked}}
+              <div class='bio'>{{text-overflow class="overflow" text=user.bio_excerpt}}</div>
+            {{/if}}
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if hasLocationOrWebsite}}
+        <div class="card-row third-row">
+          <div class="location-and-website">
+            {{#if user.location}}
+              <span class='location'>{{d-icon "map-marker-alt"}}
+                <span>{{user.location}}</span></span>
+            {{/if}}
+            {{#if user.website_name}}
+              <span class='website-name'>
+                {{d-icon "globe"}}
+                {{#if linkWebsite}}
+                  <a href="{{user.website}}" rel={{unless removeNoFollow 'nofollow noopener'}}
+                   target="_blank">{{user.website_name}}</a>
+                {{else}}
+                  <span title={{user.website}}>{{user.website_name}}</span>
+                {{/if}}
+              </span>
+            {{/if}}
+            {{plugin-outlet name="user-card-location-and-website" args=(hash user=user)}}
+          </div>
+        </div>
+      {{/if}}
+
       <div class="card-row fourth-row">
         {{#unless user.profile_hidden}}
           <div class="metadata">
@@ -155,13 +172,15 @@
             {{/if}}
             <h3><span class='desc'>{{i18n 'joined'}}</span>
               {{format-date user.created_at leaveAgo="true"}}</h3>
-            <h3 title="{{timeReadTooltip}}">
-              <span class='desc'>{{i18n 'time_read'}}</span>
-              {{format-duration user.time_read}}
-              {{#if showRecentTimeRead}}
-                <span>({{i18n 'time_read_recently' time_read=recentTimeRead}})</span>
-              {{/if}}
-            </h3>
+            {{#if user.time_read}}
+              <h3 title="{{timeReadTooltip}}">
+                <span class='desc'>{{i18n 'time_read'}}</span>
+                {{format-duration user.time_read}}
+                {{#if showRecentTimeRead}}
+                  <span>({{i18n 'time_read_recently' time_read=recentTimeRead}})</span>
+                {{/if}}
+              </h3>
+            {{/if}}
             {{#if showCheckEmail}}
               <h3 class="email">
                 {{d-icon "far-envelope" title="user.email.title"}}
@@ -169,11 +188,11 @@
                   {{user.email}}
                 {{else}}
                   {{d-button
-                  action=(action "checkEmail")
-                  actionParam=user
-                  icon="far-envelope"
-                  label="admin.users.check_email.text"
-                  class="btn-primary"}}
+                    action=(action "checkEmail")
+                    actionParam=user
+                    icon="far-envelope"
+                    label="admin.users.check_email.text"
+                    class="btn-primary"}}
                 {{/if}}
               </h3>
             {{/if}}
@@ -182,43 +201,42 @@
         {{/unless}}
         {{plugin-outlet name="user-card-after-metadata" args=(hash user=user)}}
       </div>
-    {{/if}}
 
-    {{#if publicUserFields}}
-      <div class="card-row fifth-row">
-        <div class="public-user-fields">
-          {{#each publicUserFields as |uf|}}
-            {{#if uf.value}}
-              <div class="public-user-field {{uf.field.dasherized_name}}">
-                <span class="user-field-name">{{uf.field.name}}:</span>
-                <span class="user-field-value">{{uf.value}}</span>
-              </div>
-            {{/if}}
-          {{/each}}
-        </div>
-      </div>
-    {{/if}}
-
-    {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
-
-    {{#if showBadges}}
-      <div class="card-row sixth-row">
-        {{#if user.featured_user_badges}}
-          <div class="badge-section">
-            {{#each user.featured_user_badges as |ub|}}
-              {{user-badge badge=ub.badge user=user}}
+      {{#if publicUserFields}}
+        <div class="card-row fifth-row">
+          <div class="public-user-fields">
+            {{#each publicUserFields as |uf|}}
+              {{#if uf.value}}
+                <div class="public-user-field {{uf.field.dasherized_name}}">
+                  <span class="user-field-name">{{uf.field.name}}:</span>
+                  <span class="user-field-value">{{uf.value}}</span>
+                </div>
+              {{/if}}
             {{/each}}
-            {{#if showMoreBadges}}
-              <span class='more-user-badges'>
-                {{#link-to 'user.badges' user}}
-                  {{i18n 'badges.more_badges' count=moreBadgesCount}}
-                {{/link-to}}
-              </span>
-            {{/if}}
           </div>
-        {{/if}}
-      </div>
-    {{/if}}
+        </div>
+      {{/if}}
 
+      {{plugin-outlet name="user-card-before-badges" args=(hash user=user)}}
+
+      {{#if showBadges}}
+        <div class="card-row sixth-row">
+          {{#if user.featured_user_badges}}
+            <div class="badge-section">
+              {{#each user.featured_user_badges as |ub|}}
+                {{user-badge badge=ub.badge user=user}}
+              {{/each}}
+              {{#if showMoreBadges}}
+                <span class='more-user-badges'>
+                  {{#link-to 'user.badges' user}}
+                    {{i18n 'badges.more_badges' count=moreBadgesCount}}
+                  {{/link-to}}
+                </span>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+    {{/if}}
   </div>
 {{/if}}

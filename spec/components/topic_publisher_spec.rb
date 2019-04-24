@@ -34,10 +34,12 @@ describe TopicPublisher do
           expect(topic.created_at).to eq(published_at)
           expect(topic.updated_at).to eq(published_at)
           expect(topic.shared_draft).to be_blank
+
           expect(UserHistory.where(
             acting_user_id: moderator.id,
             action: UserHistory.actions[:topic_published]
           )).to be_present
+
           op.reload
 
           # Should delete any edits on the OP

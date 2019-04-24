@@ -434,6 +434,7 @@ class PostAlerter
        post_url: post_url
       }
 
+      DiscourseEvent.trigger(:pre_notification_alert, user, payload)
       MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
       push_notification(user, payload)
       DiscourseEvent.trigger(:post_notification_alert, user, payload)

@@ -78,6 +78,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
       end
     end
 
@@ -90,6 +91,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
       end
     end
 
@@ -109,7 +111,7 @@ describe NewPostManager do
         SiteSetting.approve_post_count = 100
         user = Fabricate(:user)
         category_group = Fabricate(:category_group, permission_type: 2)
-        group_user = Fabricate(:group_user, group: category_group.group, user_id: user.id)
+        Fabricate(:group_user, group: category_group.group, user_id: user.id)
 
         manager = NewPostManager.new(
           user,
@@ -130,6 +132,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:trust_level)
       end
     end
 
@@ -163,6 +166,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:staged)
       end
     end
 
@@ -188,6 +192,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:new_topics_unless_trust_level)
       end
     end
 
@@ -289,7 +294,7 @@ describe NewPostManager do
       expect(Reviewable.list_for(Discourse.system_user).count).to eq(1)
       expect(@counter).to be(0)
 
-      reviewable.perform(Discourse.system_user, :approve)
+      reviewable.perform(Discourse.system_user, :approve_post)
 
       manager = NewPostManager.new(
         topic.user,
@@ -325,19 +330,19 @@ describe NewPostManager do
     it "handles post_needs_approval? correctly" do
       u = user
       default = NewPostManager.new(u, {})
-      expect(NewPostManager.post_needs_approval?(default)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(default)).to eq(:skip)
 
       with_check = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check)).to eq(true)
+      expect(NewPostManager.post_needs_approval?(with_check)).to eq(:fast_typer)
 
       u.user_stat.post_count = 1
       with_check_and_post = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(:skip)
 
       u.user_stat.post_count = 0
       u.trust_level = 1
       with_check_tl1 = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check_tl1)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_tl1)).to eq(:skip)
     end
   end
 
@@ -359,7 +364,9 @@ describe NewPostManager do
           category: category.id
         )
 
-        expect(manager.perform.action).to eq(:enqueued)
+        result = manager.perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
       end
     end
 
@@ -373,7 +380,10 @@ describe NewPostManager do
 
       it 'enqueues new posts' do
         manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
-        expect(manager.perform.action).to eq(:enqueued)
+
+        result = manager.perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
       end
 
       it "doesn't blow up with invalid topic_id" do

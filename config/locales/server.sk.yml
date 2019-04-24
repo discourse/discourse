@@ -36,6 +36,8 @@ sk:
   redirect_warning: "Neboli sme schopní overiť, či vami vybraný link bol pridaný na fórum. Ak chcete aj tak pokračovať, vyberte link nižšie."
   themes:
     other_error: "počas aktualizácie tému sa niečo nepodarilo"
+    import_error:
+      git: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
     settings_errors:
       invalid_yaml: "Tento YAML nie je validný."
       data_type_not_a_number: "Hodnota nastavenia typu `%{name}` nie je podporovaná. Podporované typy sú `integer`, `bool`, `list` a `enum`"
@@ -184,6 +186,7 @@ sk:
   topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
   just_posted_that: "je to príliš podobné Vášmu predchádzajúcemu príspevku"
   invalid_characters: "obsahuje neplatné znaky"
+  is_invalid: "je to nejasné, je to kompletná veta?"
   next_page: "nasledujúca stránka →"
   prev_page: "← predchádzajúca stránka"
   page_num: "Stránka %{num}"
@@ -218,6 +221,7 @@ sk:
       invalid_domain: "'%{domain}' nie je platnou doménou."
       invalid_incoming_email: "'%{email}' nie je platná emailová adresa."
       email_already_used_in_group: "'%{email}' už je použité skupinou '%{group_name}'."
+      email_already_used_in_category: "'%{email}' už je použité kategóriou '%{category_name}'."
     default_names:
       everyone: "všetci"
       admins: "administrátori"
@@ -271,6 +275,7 @@ sk:
         name: "Názov kategórie"
       topic:
         title: "Názov"
+        category_id: "Kategória"
       post:
         raw: "Telo"
       user_profile:
@@ -296,6 +301,9 @@ sk:
           attributes:
             hex:
               invalid: "nesprávna farba"
+        post_reply:
+          base:
+            different_topic: "Príspevok a odpoveď musia patriť do rovnakej témy."
         watched_word:
           attributes:
             word:
@@ -494,6 +502,9 @@ sk:
     admin_confirm:
       title: "Potvrď admin účet"
       back_to: "Vráť sa na %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Vyžaduje schválenie"
   post_action_types:
     off_topic:
       title: "Mimo témy"
@@ -521,10 +532,12 @@ sk:
     bookmark:
       title: "Záložka"
       description: "Vytvor záložku na tento príspevok"
+      short_description: "Vytvor záložku na tento príspevok"
       long_form: "záložka na tento príspevok bola vytvorená "
     like:
       title: "Páči sa mi"
       description: "Páči sa  mi tento príspevok"
+      short_description: "Páči sa  mi tento príspevok"
       long_form: "páčilo sa"
   user_activity:
     no_default:
@@ -552,18 +565,21 @@ sk:
       message:
         make: "Téma je odteraz baner. Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
         remove: "Téma odteraz nie je baner. Už sa nebude viac zobrazovat navrchu každej stránky."
-  unsubscribed:
-    title: "Odhlásený!"
   unsubscribe:
     title: "Odhlásiť"
     stop_watching_topic: "Prestať pozerať túto tému, %{link}"
     mute_topic: "Stíšiť všetky upozornenia pre túto tému, %{link}"
     unwatch_category: "Prestať pozerať všetky témy v kategórii %{category}"
     mailing_list_mode: "Vypnúť režim mailing listu"
-    disable_digest_emails: "Prestaňte mi posielať súhrnné emaily"
     all: "Neposielajte mi žiadne maily zo stránky %{sitename}"
     not_found_description: "Ľutujeme, nedokázali sme Vás odhlásiť. Je možné, že platnosť odkazu vo Vašom emaile vypršala."
     log_out: "Odhlásiť sa"
+    digest_frequency:
+      never: "nikdy"
+      every_30_minutes: "každých 30 mintút"
+      every_hour: "každú hodinu"
+      daily: "denne"
+      weekly: "týždenne"
   user_api_key:
     title: "Autorizovať prístup aplikácie"
     authorize: "Autorizovať"
@@ -572,11 +588,41 @@ sk:
     no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
     generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
   reports:
+    default:
+      labels:
+        day: Deň
+    post_edits:
+      labels:
+        post: Príspevok
+        editor: Editor
+        edit_reason: Dôvod
+    user_flagging_ratio:
+      labels:
+        user: Používateľ
+    moderators_activity:
+      labels:
+        moderator: Moderátor
+    flags_status:
+      labels:
+        flag: Typ
+        assigned: Priradené
     visits:
       title: "Používateľské návštevy"
       xaxis: "Deň"
       yaxis: "Počet návštev"
     signups:
+      xaxis: "Deň"
+    new_contributors:
+      xaxis: "Deň"
+    consolidated_page_views:
+      yaxis: "Deň"
+      labels:
+        post: Príspevok
+        editor: Editor
+        edit_reason: Dôvod
+    dau_by_mau:
+      xaxis: "Deň"
+    daily_engaged_users:
       xaxis: "Deň"
     profile_views:
       title: "Prezreté používateľské profily"
@@ -606,11 +652,23 @@ sk:
       title: "Používatelia podľa stupňa dôvery"
       xaxis: "Stupeň dôvery"
       yaxis: "Počet použivateľov"
+    users_by_type:
+      xaxis: "Typ"
+      yaxis: "Počet použivateľov"
+      labels:
+        type: Typ
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderátor
+        suspended: Odobrate práva
     emails:
       title: "Emaily odoslané"
       xaxis: "Deň"
       yaxis: "Počet emailov"
     user_to_user_private_messages:
+      xaxis: "Deň"
+      yaxis: "Počet správ"
+    user_to_user_private_messages_with_replies:
       xaxis: "Deň"
       yaxis: "Počet správ"
     system_private_messages:
@@ -634,14 +692,25 @@ sk:
       xaxis: "Používateľ"
       num_clicks: "Klinutia"
       num_topics: "Témy"
+      labels:
+        user: "Používateľ"
+        num_clicks: "Klinutia"
+        num_topics: "Témy"
     top_traffic_sources:
       title: "Najlepšie zdroje"
       xaxis: "Doména"
       num_clicks: "Klinutia"
       num_topics: "Témy"
       num_users: "Používatelia"
+      labels:
+        domain: Doména
+        num_clicks: Klinutia
+        num_topics: Témy
     top_referred_topics:
       title: "Najlepšie témy"
+      labels:
+        num_clicks: "Klinutia"
+        topic: "Témy"
     page_view_anon_reqs:
       title: "Anonymný"
       xaxis: "Deň"
@@ -691,6 +760,17 @@ sk:
     mobile_visits:
       xaxis: "Deň"
       yaxis: "Počet návštev"
+    suspicious_logins:
+      labels:
+        user: Používateľ
+        location: Poloha
+    staff_logins:
+      labels:
+        user: Používateľ
+        location: Poloha
+    top_uploads:
+      labels:
+        filename: Názov súboru
   dashboard:
     rails_env_warning: "Váš server beží v %{env} móde"
     host_names_warning: "Váš súbor config/database.yml používa lokálne meno hostiteľa. Aktualizujte ho menom Vašej stránky."
@@ -704,9 +784,11 @@ sk:
     allow_user_locale: "Povoliť používateľom zvoliť si vlastný jazyk"
     min_post_length: "Minimálny povolený počet znakov v príspevkoch"
     min_first_post_length: "Minimálny povolený počet znakov pre prvý príspevok (obsah témy)"
+    min_personal_message_post_length: "Minimálny povolený počet znakov v správe"
     max_post_length: "Maximálny povolený počet znakov v príspevkoch"
     min_topic_title_length: "Minimálny povolený počet znakov v názve témy"
     max_topic_title_length: "Maximálny povolený počet znakov v názve témy"
+    min_personal_message_title_length: "Minimálny povolený počet znakov v správe"
     min_search_term_length: "Minimálny povolený počet znakov vo vyhľadávaní"
     search_tokenize_chinese_japanese_korean: "Prinúť vyhľádávanie rozložiť Čínštinu/Japončinu/Kórejčinu dokonca i pre nie CJK stránky"
     allow_uncategorized_topics: "Pvoliť vytváranie tém bez kategórií. UPOZORNENIE: Pokiaľ existujú nekategorizované témy, musíte ich zaradiť do kategórii skôr než túto možnosť vypnete."
@@ -749,6 +831,7 @@ sk:
     post_undo_action_window_mins: "Počet minút počas ktorých môžu používatelia zrušiť poslednú akciu na príspevku (\"Páči sa\", označenie, atď..)."
     must_approve_users: "Obsluha musí povoliť účty všetkým novým používateľom skôr než im bude povolený prístup na stránku. UPOZORNENIE: zapnutie na živej stránke spôsobí zrušenie prístupu pre existujúcich používateľov, okrem obsluhy!"
     pending_users_reminder_delay: "Upozorni moderátora ak nový používateľ čaká na schválenie dlhšie ako tento počet hodín. Nastavte -1 pre vypnutie upozornenia."
+    moderators_create_categories: "Povoliť moderátorom vytváranie nových kategórií"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_whitelist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
     top_menu: "Určuje, ktoré položky sa zobrazia na navigácií na domovskej stránke a v akom poradí. Napríklad posledné|neprečítané|kategórie|naj|prečítané|záložky"
@@ -785,7 +868,6 @@ sk:
     sso_not_approved_url: "Presmeruj nepovolené SSO účty na URL"
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
-    enable_yahoo_logins: "Povoliť autentifikáciu pomocou Yahoo."
     google_oauth2_client_id: "Client ID Vašej Google aplikácie."
     google_oauth2_client_secret: "Client secret Vašej Google aplikácie."
     readonly_mode_during_backup: "Zapnúť režim len na čítanie počas vytvárania zálohy"
@@ -810,6 +892,7 @@ sk:
     max_bookmarks_per_day: "Maximálny počet záložiek na jedného používateľa denne."
     max_edits_per_day: "Maximálny počet úprav používateľa denne."
     max_topics_per_day: "Maximálny počet tém používateľa denne."
+    max_personal_messages_per_day: "Maximálny počet správ ktoré môže používateľ denne vytvoriť."
     max_invites_per_day: "Maximálny počet pozvánok ktoré môže používateľ denne zaslať."
     max_topic_invitations_per_day: "Maximálny počet pozvánok do tém ktoré môže používateľ denne zaslať."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
@@ -961,7 +1044,6 @@ sk:
     default_other_external_links_in_new_tab: "Štandardne otvárať externé odkazy v novej záložke."
     default_other_enable_quoting: "Štandardne na vybraný text zapnúť citované odpovede."
     default_other_dynamic_favicon: "Štandardne zobraziť počet nových/aktualizovaných tém v ikone prehliadača."
-    default_other_disable_jump_reply: "Štandardne po odpovedi neskákať na používateľov príspevok."
     default_topics_automatic_unpin: "Štandardne automaticky odopnúť témy ak používateľ dosiahne posledný príspevok."
     default_categories_watching: "Štandardný zoznam kategórií, ktoré sú pozerané."
     default_categories_tracking: "Štandardný zoznam kategórií, ktoré sú sledované."
@@ -987,6 +1069,8 @@ sk:
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
       pop3_polling_password_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 heslo'."
       pop3_polling_authentication_failed: "POP3 autentikácia zlyhala. Prosíme overte zadané pop3 nastavenia."
+      min_username_length_range: "Nemôžete nastaviť minimum viac ako maximum."
+      max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1063,6 +1147,11 @@ sk:
     email_too_long: "Emailová adresa je príliš dlhá. Meno priečinka musí byť kratšie ako 254 znakov a meno domény musí byť kratšie ako 253 znakov."
     reserved_username: "Toto užívateľské meno nie je povolené."
     missing_user_field: "Nevyplnili ste všetky užívateľké polia."
+    second_factor_title: "Dvojfaktorová autentifikácia"
+    second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
+  admin:
+    email:
+      sent_test: "odoslané!"
   user:
     username:
       short: "musí mať minimálne %{min} znakov"
@@ -1090,6 +1179,8 @@ sk:
     agreed: "Ďakujeme za upozornenie. Súhlasíme s tým, že je tam problém a pracujeme na ňom."
     agreed_and_deleted: "Ďakujeme za upozornenie. Súhlasíme s tým, že je tam problém a príspevok sme odstránili."
     disagreed: "Ďakujeme za upozornenie. Práve to riešime."
+    ignored: "Ďakujeme za upozornenie. Práve to riešime."
+    ignored_and_deleted: "Ďakujeme za upozornenie. Daný príspevok sme odstránili."
   system_messages:
     welcome_user:
       subject_template: "Vitajte na %{site_name}!"
@@ -1152,6 +1243,8 @@ sk:
         Ľutujeme, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 
         Akcia uverejnenia nebola rozpoznaná. Prosíme skúste znovu alebo, ak sa chovanie opakuje, uverejnite pomocou webstránky.
+    spam_post_blocked:
+      subject_template: "Nový uživateľ %{username} je zablokovaný kôli opakovaným odkazom"
     pending_users_reminder:
       subject_template:
         one: "1 užívateľ čaká na schválenie"
@@ -1173,7 +1266,12 @@ sk:
     digest:
       why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
       since_last_visit: "Od Vašej poslednej návštevy"
+      liked_received: "Obdržaných 'páči sa mi'"
+      new_users: "Noví používatelia"
+      join_the_discussion: "Čítať viac"
       click_here: "kliknite tu"
+    set_password:
+      title: "Nastavte heslo"
     signup_after_approval:
       subject_template: "Váš účet bol schválený na %{site_name}!"
   page_not_found:
@@ -1182,9 +1280,11 @@ sk:
     recent_topics: "Nedávne"
     see_more: "Viac"
     search_title: "Prehľadať tieto stránky"
+    search_button: "Hľadať"
   terms_of_service:
     title: "Podmienky používania"
   deleted: "vymazané"
+  image: "Obrázok"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
     unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu  (povolené prípony sú: %{authorized_extensions})."
@@ -1198,6 +1298,21 @@ sk:
       size_not_found: "Ľutujeme, ale nepodarilo sa nám zistiť veľkosť obrázku. Nie je nahodou poškodený?"
   avatar:
     missing: "Ľutujeme, ale nemôžeme nájsť žiaden avatar asociovaný s touto emailovou adresou. Môžete ho skúsiť nahrať znova?"
+  skipped_email_log:
+    user_email_no_user: "Nepodarilo sa nájsť užívateľa s id %{user_id}"
+    user_email_post_not_found: "Nepodarilo sa nájsť príspevok s id %{post_id}"
+    user_email_anonymous_user: "Používateľ je anonymný"
+    user_email_user_suspended_not_pm: "Užívateľ je suspendovaný, správa nebude poslaná"
+    user_email_seen_recently: "Používateľ bol nedávno online"
+    user_email_notification_already_read: "Upozornenie o ktorom je tento email už bolo prečítané"
+    user_email_notification_topic_nil: "post.topic je prázdny"
+    user_email_post_deleted: "príspevok bol zmazaný autorom"
+    user_email_user_suspended: "užívateľ bol suspendovaný"
+    user_email_already_read: "používateľ si už prečítal tento príspevok"
+    sender_message_blank: "správa je prázdna"
+    sender_message_to_blank: "message.to je prázdne"
+    sender_text_part_body_blank: "text_part.body je prázdne"
+    sender_body_blank: "telo je prázdne"
   color_schemes:
     base_theme_name: "Základ"
   about: "O stránke"
@@ -1327,6 +1442,73 @@ sk:
     title: "Ochrana súkromia"
     body: "<a name=\"collect\"></a>\n\n## [Aký druh údajov získavame?](#collect)\n\nPo tom, ako sa zaregistrujete na tejto webovej lokalite, získavame vaše údaje, keď sa zúčastňujete fóra čítaním, prispievaním, písaním a hodnotením zdieľaného obsahu. \nPri registrácií na našej webovej lokalite vás môžeme požiadať o zadanie vášho mena a e-mailovej adresy. Našu webovú lokalitu je možné navštevovať aj bez registrácie. Vaša e-mailová adresa bude overená potvrdzovacím e-mailom, ktorý bude obsahovať jednorazový odkaz. Kliknutím naň potvrdíte, že ste používateľom zadanej e-mailovej adresy. \nPri registrácií a uverejňovaní príspevkov zaznamenávame IP adresu, z ktorej bol príspevok odoslaný. Rovnako môžeme uchovať údaje zo serverov, ktoré obsahujú IP adresu pre každú žiadosť odoslanú na náš server.\n\n<a name=\"use\"></a>\n\n## [Na čo tieto údaje využívame?](#use)\n\nAkékoľvek údaje, ktoré o vás získame, môžu byť využité nasledovne:\n\n* Na personalizáciu obsahu – údaje o vás nám pomáhajú lepšie reagovať na vaše individuálne potreby\n* Na vylepšenie webovej lokality – neustále pracujeme na zlepšovaní ponuky našej webovej lokality na základe vašich údajov a spätnej väzby\n* Na zlepšenie zákazníckych služieb – vaše údaje nám pomáhajú efektívnejšie reagovať na používateľské požiadavky a prípadnú zákaznícku podporu\n* Na odosielanie pravidelných e-mailov – vami uvedená e-mailová adresa môže byť použitá na rozposielanie informácií, vami zvolených upozornení na zmeny v obsahu jednotlivých tém, prípadne na správy smerujúce na vaše používateľské konto, odpovede na vaše otázky alebo požiadavky. \n\n<a name=\"protect\"></a>\n\n## [Ako u nás funguje ochrana údajov?](#protect)\n\nVyužívame rôzne ochranné opatrenia, aby sme zaručili ochranu vašich osobných údajov po tom, ako ich uvediete alebo si k nim vyžiadate prístup.\n\n<a name=\"data-retention\"></a>\n\n## [Ako osobné údaje uchovávame?](#data-retention)\n\nBudeme sa snažiť: \nUchovať údaje zo servera, ktoré obsahujú IP adresu všetkých žiadostí na tento server, maximálne po dobu 90 dní.\nUchovať IP adresy spojené s registrovanými používateľmi a ich príspevkami maximálne po dobu 5 rokov. \n\n<a name=\"cookies\"></a>\n\n## [Používame cookies?](#cookies)\n\nÁno. Cookies sú malé súbory, ktoré webová lokalita alebo jej poskytovateľ služieb uloží na harddisk vášho počítača pomocou internetového prehliadača (pokiaľ to povolíte). Cookies umožňujú webovej lokalite rozpoznať váš prehliadač a pokiaľ máte založený účet, tak ho s ním prepoja. \nPoužívame cookies by sme mohli identifikovať a uložiť vaše preferencie pre budúce návštevy webovej lokality a zhromaždiť súbor údajov o návštevnosti a interakciách webovej lokality, aby sme v budúcnosti mohli zabezpečiť lepšiu používateľskú skúsenosť a nástroje. Môžeme tiež kontaktovať poskytovateľa služieb, ktorý nám ako tretia strana pomôže lepšie porozumieť preferenciám návštevníkom našej webovej lokality. Takýto poskytovateľ služieb má dovolené v našom mene narábať s nami získanými údajmi výhradne za účelom zlepšenia našich služieb. \n\n<a name=\"disclose\"></a>\n\n## [Sprístupňujeme informácie tretím stranám?](#disclose)\n\nNeobchodujeme, nevymieňame a žiadnym iným spôsobom neposúvame tretím stranám informácie, ktoré je možné priradiť k vašej osobe. Výnimkou sú dôverné tretie strany, ktoré nám pomáhajú s prevádzkovaním našej webovej aktivity, našimi aktivitami alebo s poskytovaním služieb používateľom a ktoré sa zaviazali, že s týmito údajmi budú zaobchádzať dôverne. Informácie môžeme uverejniť v prípadoch, keď je to v súlade so zákonom, vymáhaním pravidiel našich stránok, s ochranou našich práv alebo práv iných, ako aj s ochranou majetku a bezpečnosti. Údaje, ktoré nemožno spojiť s konkrétnou osobou môžu byť poskytnuté tretím stranám na marketingové, reklamné alebo iné účely. \n\n<a name=\"third-party\"></a>\n\n## [Prepojenia tretích strán](#third-party)\n\nPríležitostne a podľa nášho uváženia môžeme na našej webovej lokalite uverejňovať produkty a služby tretích strán. Tieto tretie strany majú svoje vlastné, nezávislé podmienky o ochrane údajov a preto nenesieme žiadnu zodpovednosť za obsah a aktivity týchto strán. V každom prípade nám však ide o ochranu integrity našej webovej lokality a preto uvítame akúkoľvek spätnú väzbu týkajúcu sa týchto strán. \n\n<a name=\"coppa\"></a>\n\n## [Rešpektovanie zákona o ochrane súkromia detí v rámci online režimov](#coppa)\n\nVšetky produkty a služby na našej webovej lokalite sú určené osobám vo veku minimálne 13 rokov. Pokiaľ je tento server v USA a vy máte menej ako 13 rokov, vzhľadom na [Zákon o ochrane súkromia detí v rámci online režimov](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act) nesmiete používať túto webovú lokalitu. \n\n<a name=\"online\"></a>\n\n## [Súkromie je chránené len online](#online)\n\nTieto pravidlá ochrany súkromia online platia iba pre informácie, ktoré zozbierala naša webová lokalita a nevzťahuje sa na informácie zozbierané v offline režime.\n\n<a name=\"consent\"></a>\n\n## [Váš súhlas](#consent)\n\nPoužívaním našich stránok súhlasíte s našimi pravidlami o ochrane súkromia. \n\n<a name=\"changes\"></a>\n\n## [Zmeny pravidiel o ochrane súkromia](#changes)\n\nAk sa rozhodneme zaviesť akékoľvek zmeny v oblasti ochrany súkromia, uverejníme túto informáciu na našej webovej lokalite. \nTento dokument je zverejnený s licenciou CC-BY-SA. Posledná úprava bola vykonaná dňa 31. mája 2013.\n"
   badges:
+    editor:
+      name: Editor
+      description: Úprava prvého príspevku
+    basic_user:
+      name: Základné
+    member:
+      name: Člen
+    regular:
+      name: Bežné
+    leader:
+      name: Vodca
+    welcome:
+      name: Vitajte
+      description: Prijal "Páči sa"
+    autobiographer:
+      name: Autobiograf
+    anniversary:
+      name: Výročie
+      description: "Aktívny člen, napísal aspoň jeden príspevok za rok"
+    nice_topic:
+      name: Pekná téma
+    good_topic:
+      name: Dobrá téma
+    great_topic:
+      name: Vynikajúca téma
+    nice_share:
+      name: Pekné zdieľanie
+      description: Zdieľaný príspevok s 25 jedinečnými návštevami
+    good_share:
+      name: Dobré zdieľanie
+      description: Zdieľaný príspevok s 300 jedinečnými návštevami
+    great_share:
+      name: Výborné zdieľanie
+      description: Zdieľaný príspevok s 1000 jedinečnými návštevami
+    first_like:
+      name: Prvé "Páči sa mi"
+      description: "Príspevok, ktorý sa páčil"
+      long_description: |
+        Tento odznak je udelený za prvé udelené "Páči sa" použitím :heart:  talčidla. Označenie príspevku "Páči sa" je najlepšia cesta ako ukázať členom komunity, že ich príspevky sú zaujímavé, užitočné, výnimočné, alebo zábavné. Podeľte sa o to!
+    first_flag:
+      name: Prvé označenie
+      description: Označený príspevok
+    promoter:
+      name: Propagátor
+      description: pozval užívateľa
+    campaigner:
+      name: Bojovník
+    champion:
+      name: Šampión
+    first_share:
+      name: Prvé zdieľanie
+      description: Zdieľal príspevok
+      long_description: "Tento odznak je udelený za prvý zdieľaný odkaz na odpoveď, alebo tému pužítím zdieľacieho tlačidla. Zdieľanie odkazov je výborná cesta, ako ukázať zaujímavé diskusie zvyšku sveta a rozširovať Vašu komunitu. \n"
+    first_link:
+      name: Prvý odkaz
+    first_quote:
+      name: Prvý citát
+    read_guidelines:
+      name: "Prečítať pravidlá "
+    reader:
+      name: Čitateľ
+    popular_link:
+      name: Populárny odkaz
+    hot_link:
+      name: Horúci odkaz
+    famous_link:
+      name: Skvelý odkaz
     first_mention:
       name: Prvá zmienka
   admin_login:
@@ -1336,7 +1518,63 @@ sk:
   performance_report:
     initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
     initial_topic_title: Reporty rýchlosti stránok
+  tags:
+    title: "Štítky"
+  finish_installation:
+    resend_email:
+      title: "Znova poslať aktivačný email."
   wizard:
     step:
+      forum_title:
+        title: "Meno"
+      privacy:
+        title: "Prístup"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Verejné"
+              restricted:
+                label: "Súkromné"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "meno@príklad.com"
+      corporate:
+        title: "Organizácia"
+      colors:
+        title: "Téma"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Iba kategórie"
+              categories_and_latest_topics:
+                label: "Kategórie a najnovšie témy"
+      emoji:
+        title: "Emoji"
       invites:
         title: "Pozvite členov"
+  joined: "Vytvorený"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "Ponechať príspevok"
+      agree_and_suspend:
+        title: "Suspendovaný užívateľ"
+      agree_and_silence:
+        title: "Tichý užívateľ"
+      delete_spammer:
+        title: "Zmazať spammera"
+      disagree:
+        title: "Nesúhlasiť"
+      approve:
+        title: "Schváliť"
+      reject_user:
+        delete:
+          title: "Odstrániť používateľa"
+      reject:
+        title: "Zamietnuť"
+      delete_user:
+        title: "Odstrániť používateľa"

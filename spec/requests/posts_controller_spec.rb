@@ -800,10 +800,15 @@ describe PostsController do
           user.reload
           expect(user).to be_silenced
 
-          rp = ReviewableQueuedPost.first
+          rp = ReviewableQueuedPost.find_by(created_by: user)
+          expect(rp.reviewable_scores.first.reason).to eq('fast_typer')
+
+          expect(parsed['pending_post']).to be_present
+          expect(parsed['pending_post']['id']).to eq(rp.id)
+          expect(parsed['pending_post']['raw']).to eq("this is the test content")
 
           mod = Fabricate(:moderator)
-          rp.perform(mod, :approve)
+          rp.perform(mod, :approve_post)
 
           user.reload
           expect(user).not_to be_silenced
@@ -849,6 +854,9 @@ describe PostsController do
         parsed = ::JSON.parse(response.body)
 
         expect(parsed["action"]).to eq("enqueued")
+        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        score = reviewable.reviewable_scores.first
+        expect(score.reason).to eq('auto_silence_regex')
 
         user.reload
         expect(user).to be_silenced

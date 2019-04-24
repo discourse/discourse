@@ -12,9 +12,7 @@ hy:
         today: Այսօր %{time}
         tomorrow: Վաղը %{time}
         yesterday: Երեկ %{time}
-      title: Մուտքագրել ամսաթիվ
       create:
-        modal_title: Մուտքագրել ամսաթիվ
         form:
           insert: Մուտքագրել
           advanced_mode: Ընդլայնված ռեժիմ

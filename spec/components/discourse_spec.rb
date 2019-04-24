@@ -274,7 +274,10 @@ describe Discourse do
     it "should not fail when called" do
       exception = StandardError.new
 
-      Discourse.handle_job_exception(exception, nil, nil)
+      expect do
+        Discourse.handle_job_exception(exception, nil, nil)
+      end.to raise_error(StandardError) # Raises in test mode, catch it
+
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys).to eq([:current_db, :current_hostname])
     end
@@ -282,7 +285,10 @@ describe Discourse do
     it "correctly passes extra context" do
       exception = StandardError.new
 
-      Discourse.handle_job_exception(exception, { message: "Doing a test", post_id: 31 }, nil)
+      expect do
+        Discourse.handle_job_exception(exception, { message: "Doing a test", post_id: 31 }, nil)
+      end.to raise_error(StandardError) # Raises in test mode, catch it
+
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys.sort).to eq([:current_db, :current_hostname, :message, :post_id].sort)
     end

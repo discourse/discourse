@@ -28,7 +28,6 @@ Discourse.SiteSettingsOriginal = {
   allow_new_registrations: true,
   enable_google_logins: true,
   enable_google_oauth2_logins: false,
-  enable_yahoo_logins: true,
   enable_twitter_logins: true,
   enable_facebook_logins: true,
   enable_github_logins: true,
@@ -95,7 +94,8 @@ Discourse.SiteSettingsOriginal = {
   emoji_set: "emoji_one",
   desktop_category_page_style: "categories_and_latest_topics",
   enable_mentions: true,
-  enable_personal_messages: true
+  enable_personal_messages: true,
+  unicode_usernames: false
 };
 Discourse.SiteSettings = jQuery.extend(
   true,

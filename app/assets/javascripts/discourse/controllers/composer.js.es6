@@ -679,6 +679,13 @@ export default Ember.Controller.extend({
       .then(result => {
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);
+          if (result.responseJson.pending_post) {
+            let pendingPosts = this.get("topicController.model.pending_posts");
+            if (pendingPosts) {
+              pendingPosts.pushObject(result.responseJson.pending_post);
+            }
+          }
+
           this.destroyDraft();
           this.close();
           this.appEvents.trigger("post-stream:refresh");
@@ -719,14 +726,9 @@ export default Ember.Controller.extend({
           currentUser.set("reply_count", currentUser.get("reply_count") + 1);
         }
 
-        const disableJumpReply = Discourse.User.currentProp(
-          "disable_jump_reply"
-        );
-        if (!composer.get("replyingToTopic") || !disableJumpReply) {
-          const post = result.target;
-          if (post && !staged) {
-            DiscourseURL.routeTo(post.get("url"));
-          }
+        const post = result.target;
+        if (post && !staged) {
+          DiscourseURL.routeTo(post.get("url"));
         }
       })
       .catch(error => {

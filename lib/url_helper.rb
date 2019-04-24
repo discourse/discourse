@@ -18,7 +18,7 @@ class UrlHelper
   def self.is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
-      !!(url =~ /^\/(assets|plugins|images)\//) ||
+      !!(url =~ Regexp.new("^#{Discourse.base_uri}/(assets|plugins|images)/")) ||
       url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     )
   end

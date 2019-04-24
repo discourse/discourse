@@ -8,7 +8,7 @@ export function nativeShare(data) {
         .share(data)
         .then(resolve)
         .catch(e => {
-          if (e.message === "Share canceled") {
+          if (e.name === "AbortError") {
             // closing share panel do nothing
           } else {
             reject();

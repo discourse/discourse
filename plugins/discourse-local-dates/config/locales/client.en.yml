@@ -5,9 +5,8 @@ en:
         today: Today %{time}
         tomorrow: Tomorrow %{time}
         yesterday: Yesterday %{time}
-      title: Insert date
+      title: Insert date / time
       create:
-        modal_title: Insert date
         form:
           insert: Insert
           advanced_mode: Advanced mode
@@ -23,6 +22,7 @@ en:
           time_title: Time
           format_title: Date format
           timezone: Timezone
+          until: Until...
           recurring:
             every_day: "Every day"
             every_week: "Every week"
