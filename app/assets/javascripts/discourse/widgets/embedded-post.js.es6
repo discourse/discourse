@@ -29,6 +29,7 @@ export default createWidget("embedded-post", {
   buildKey: attrs => `embedded-post-${attrs.id}`,
 
   html(attrs, state) {
+    attrs.embeddedPost = true;
     return [
       h("div.reply", { attributes: { "data-post-id": attrs.id } }, [
         h("div.row", [
