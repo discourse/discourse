@@ -202,17 +202,17 @@ class Upload < ActiveRecord::Base
     self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
-  def self.migrate_to_new_scheme(limit = nil)
+  def self.migrate_to_new_scheme(limit: nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
 
-      scope = Upload.by_users.where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}%'")
-        .order(id: :desc)
+      scope = Upload.by_users.where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}%'").order(id: :desc)
 
       scope = scope.limit(limit) if limit
+      remap_scope = nil
 
       scope.each do |upload|
         begin
@@ -255,7 +255,25 @@ class Upload < ActiveRecord::Base
           end
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
-          DbHelper.remap(previous_url, upload.url)
+
+          DbHelper.remap(
+            previous_url,
+            upload.url,
+            excluded_tables: %w{
+              posts
+              post_search_data
+            }
+          )
+
+          remap_scope ||= begin
+            Post.with_deleted.where("raw ~ '/uploads/default/\\d+/'").all
+          end
+
+          remap_scope.each do |post|
+            post.raw.gsub!(previous_url, upload.url)
+            post.cooked.sub!(previous_url, upload.url)
+            post.save! if post.changed?
+          end
 
           upload.optimized_images.find_each(&:destroy!)
           upload.rebake_posts_on_old_scheme
