@@ -289,7 +289,7 @@ class Upload < ActiveRecord::Base
             remap_scope.each do |post|
               post.raw.gsub!(previous_url, upload.url)
               post.cooked.gsub!(previous_url, upload.url)
-              post.save! if post.changed?
+              post.save!(validate: false) if post.changed?
             end
 
             upload.optimized_images.find_each(&:destroy!)
