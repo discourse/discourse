@@ -1325,4 +1325,94 @@ HTML
     expect(cooked).to eq(html)
   end
 
+  describe "d-wrap" do
+    it "wraps the [wrap] tag inline" do
+      cooked = PrettyText.cook("[wrap=toc]taco[/wrap]")
+
+      html = <<~HTML
+        <div class="d-wrap" data-wrap="toc">
+        <p>taco</p>
+        </div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+
+      cooked = PrettyText.cook("Hello [wrap=toc id=1]taco[/wrap] world")
+
+      html = <<~HTML
+        <p>Hello <span class="d-wrap" data-wrap="toc" data-id="1">taco</span> world</p>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "wraps the [wrap] tag in block" do
+      md = <<~MD
+        [wrap=toc]
+        taco
+        [/wrap]
+      MD
+
+      cooked = PrettyText.cook(md)
+
+      html = <<~HTML
+        <div class="d-wrap" data-wrap="toc">
+        <p>taco</p>
+        </div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "wraps the [wrap] tag without content" do
+      md = <<~MD
+        [wrap=toc]
+        [/wrap]
+      MD
+
+      cooked = PrettyText.cook(md)
+
+      html = <<~HTML
+        <div class="d-wrap" data-wrap="toc"></div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "adds attributes as data-attributes" do
+      cooked = PrettyText.cook("[wrap=toc name=\"pepper bell\" id=1]taco[/wrap]")
+
+      html = <<~HTML
+        <div class="d-wrap" data-wrap="toc" data-name="pepper bell" data-id="1">
+        <p>taco</p>
+        </div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "prevents xss" do
+      cooked = PrettyText.cook('[wrap=toc foo="<script>console.log(1)</script>"]taco[/wrap]')
+
+      html = <<~HTML
+        <div class="d-wrap" data-wrap="toc" data-foo="&amp;lt;script&amp;gt;console.log(1)&amp;lt;/script&amp;gt;">
+        <p>taco</p>
+        </div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+
+    it "allows a limited set of attributes chars" do
+      cooked = PrettyText.cook('[wrap=toc fo@"èk-"!io=bar]taco[/wrap]')
+
+      html = <<~HTML
+        <div class=\"d-wrap\" data-wrap=\"toc\" data-io=\"bar\">
+        <p>taco</p>
+        </div>
+      HTML
+
+      expect(cooked).to eq(html.strip)
+    end
+  end
 end
