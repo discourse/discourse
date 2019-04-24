@@ -390,7 +390,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
             .to change { Post.count }.by(1)
 
           expected_raw = <<~RAW
-          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.reply', base_uri: '')}
+          #{I18n.t('discourse_narrative_bot.advanced_user_narrative.recover.reply', base_uri: '', deletion_after: SiteSetting.delete_removed_posts_after)}
 
           #{I18n.t('discourse_narrative_bot.advanced_user_narrative.category_hashtag.instructions', category: "#a:b", base_uri: '')}
           RAW

@@ -366,7 +366,7 @@ en:
         reply: |-
           Phew, that was a close one! Thanks for fixing that :wink:
 
-          Do note that you only have 24 hours to undelete a post.
+          Do note that you only have %{deletion_after} hour(s) to undelete a post.
 
       category_hashtag:
         instructions: |-
