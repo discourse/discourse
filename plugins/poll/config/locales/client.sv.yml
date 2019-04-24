@@ -58,6 +58,8 @@ sv:
           regular: Ett val
           multiple: Flera val
           number: Sifferbetyg
+        poll_result:
+          label: Resultat
         poll_config:
           max: Max
           min: Min

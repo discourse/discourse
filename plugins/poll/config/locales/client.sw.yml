@@ -61,6 +61,8 @@ sw:
           regular: Chaguo Moja
           multiple: Machaguo Mengi
           number: Thaminisha kwa kutumia namba
+        poll_result:
+          label: Majibu
         poll_config:
           max: Kiwango cha juu
           min: Kiwango cha chini

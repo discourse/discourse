@@ -54,6 +54,8 @@ vi:
           regular: Một lựa chọn
           multiple: Nhiều lựa chọn
           number: Xếp hạng
+        poll_result:
+          label: Kết quả
         poll_config:
           max: Tối đa
           min: Tối thiểu

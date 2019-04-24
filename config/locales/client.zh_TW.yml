@@ -282,6 +282,7 @@ zh_TW:
         search: "以標題尋找訊息"
         placeholder: "輸入訊息標題"
     review:
+      delete: "刪除"
       settings:
         saved: "已儲存"
         save_changes: "儲存變更"
@@ -301,7 +302,6 @@ zh_TW:
       filtered_topic: "您已篩選到單個主題中的可審閱內容。"
       filtered_user: "使用者："
       show_all_topics: "顯示所有話題"
-      deleted_user: "（刪除使用者）"
       user:
         username: "使用者名稱"
         email: "電子信箱"
@@ -336,12 +336,9 @@ zh_TW:
         category: "分類："
       conversation:
         view_full: "查看完整對話"
-      history:
-        title: "歷史紀錄"
-        edited: "編輯"
       scores:
-        description: "描述"
         score: "分數"
+        type: "類型"
         submitted_by: "提交由"
       statuses:
         pending:
@@ -659,8 +656,6 @@ zh_TW:
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
       first_notification: "你的第一則通知！選擇以開始。"
-      disable_jump_reply: "不要在回覆之後直接跳到我的貼文"
-      dynamic_favicon: "在瀏覽器小圖示上顯示新話題/更新的話題數"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
@@ -1224,10 +1219,6 @@ zh_TW:
         name: "Facebook"
         title: "使用 Facebook"
         message: "使用 Facebook 認証 （請確定你的網頁瀏覽器未阻擋彈出視窗）"
-      yahoo:
-        name: "Yahoo"
-        title: "使用 Yahoo"
-        message: "使用 Yahoo 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
       github:
         name: "GitHub"
         title: "使用 GitHub"
@@ -1315,8 +1306,6 @@ zh_TW:
       toggle_whisper: "切換密談"
       toggle_unlisted: "切換 不公開"
       posting_not_on_topic: "你想要回覆哪個話題?"
-      saving_draft_tip: "正在儲存..."
-      saved_draft_tip: "儲存完畢"
       saved_local_draft_tip: "本地儲存完畢"
       similar_topics: "與你的話題類似的討論..."
       drafts_offline: "離線草稿"
@@ -1439,7 +1428,6 @@ zh_TW:
       none: "目前無法載入通知。"
       empty: "未找到任何通知。"
       more: "檢視較舊的通知"
-      total_flagged: "所有被檢舉的貼文"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1978,7 +1966,6 @@ zh_TW:
       continue_discussion: "繼續 {{postLink}} 的討論:"
       follow_quote: "跳到引用的貼文"
       show_full: "顯示所有貼文"
-      show_hidden: "觀看隱藏內容"
       deleted_by_author:
         other: "( 貼文已被作者撤回，除非被檢舉，否則在 %{count} 小時內將自動刪除。)"
       collapse: "收起"
@@ -1987,8 +1974,8 @@ zh_TW:
       gap:
         other: "檢視 {{count}} 則隱藏回應"
       notice:
-        first: "這是{{user}}第一次發表貼文，一起歡迎他加入我們的社群！"
-        return: "{{user}}已經有一陣子沒出現了—— 他最後一次發文是在{{time}}。"
+        new_user: "這是{{user}}第一次發表貼文，一起歡迎他加入我們的社群！"
+        returning_user: "{{user}}已經有一陣子沒出現了—— 他最後一次發文是在{{time}}。"
       unread: "貼文未讀"
       has_replies:
         other: "{{count}} 個回覆"
@@ -2217,7 +2204,6 @@ zh_TW:
       require_topic_approval: "所有新話題皆需要通過管理員審核"
       require_reply_approval: "所有新回覆皆需要通過管理員審核"
       this_year: "今年"
-      position: "位置"
       default_position: "預設的位置"
       position_disabled: "分類的顯示將會以活躍度為排序依據。若要控制分類排序方法，"
       position_disabled_click: '請啟用"固定分類位置"設定'
@@ -2267,6 +2253,10 @@ zh_TW:
         rows_with_featured_topics: "一排精選主題"
         boxes: "匣"
         boxes_with_featured_topics: "精選話題匣"
+      settings_sections:
+        general: "一般"
+        moderation: "管理"
+        email: "電子信箱"
     flagging:
       title: "感謝幫助社群遠離邪惡！"
       action: "檢舉貼文"
@@ -2638,8 +2628,6 @@ zh_TW:
       dashboard:
         title: "控制台"
         last_updated: "控制台最後更新時間:"
-        find_old: "您是否在找尋舊的控制面板？"
-        old_link: "請由此瀏覽"
         version: "版本"
         up_to_date: "你使用的是最新版本!"
         critical_available: "有重要更新可以安裝。"

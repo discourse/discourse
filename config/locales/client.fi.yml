@@ -109,6 +109,7 @@ fi:
       next_month: "Seuraava kuukausi"
       placeholder: päivämäärä
     share:
+      post: "%{postNumber}. viesti"
       close: "sulje"
     action_codes:
       public_topic: "teki ketjusta julkisen %{when}"
@@ -167,6 +168,7 @@ fi:
         us_west_1: "Läntinen USA (Pohjois-Kalifornia)"
         us_west_2: "Läntinen USA (Oregon)"
     edit: "muokkaa ketjun otsikkoa ja aluetta"
+    expand: "Laajenna"
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
     yes_value: "Kyllä"
@@ -294,6 +296,45 @@ fi:
       title:
         search: "Etsi keskustelua otsikon perusteella:"
         placeholder: "kirjoita keskustelun otsikko tähän"
+    review:
+      delete: "Poista"
+      settings:
+        save_changes: "Tallenna muutokset"
+        title: "Asetukset"
+      moderation_history: "Valvontahistoria"
+      title: "Arvioitava"
+      topic: "Ketju:"
+      user:
+        username: "Käyttäjätunnus"
+        email: "Sähköposti"
+        name: "Nimi"
+      topics:
+        topic: "Ketju"
+        reviewable_count: "Lukumäärä"
+        details: "yksityiskohdat"
+      edit: "Muokkaa"
+      save: "Tallenna"
+      cancel: "Peru"
+      filters:
+        type:
+          title: "Tyyppi:"
+        refresh: "Lataa sivu uudelleen"
+      scores:
+        score: "Luku"
+        date: "Päivämäärä"
+        type: "Tyyppi"
+      statuses:
+        pending:
+          title: "Odottaa"
+        rejected:
+          title: "Hylätyt"
+      types:
+        reviewable_user:
+          title: "Käyttäjä"
+      approval:
+        title: "Viesti odottaa hyväksyntää"
+        description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> kirjoitti <a href='{{topicUrl}}'>ketjuun</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Sinä</a> kirjoitit <a href='{{topicUrl}}'>ketjuun</a>"
@@ -341,6 +382,9 @@ fi:
         title: "Lisää jäseniä"
         description: "Hallinnoi ryhmän jäsenyyksiä"
         usernames: "Käyttäjänimet"
+      requests:
+        reason: "Syy"
+        accepted: "hyväksyi"
       manage:
         title: "Hallinnoi"
         name: "Nimi"
@@ -537,6 +581,10 @@ fi:
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
+      user_notifications:
+        ignore_duration_save: "Sivuuta"
+        mute_option: "Vaimenna"
+        normal_option: "Normaali"
       activity_stream: "Toiminta"
       preferences: "Asetukset"
       profile_hidden: "Käyttäjän julkinen profiili ei ole nähtävillä."
@@ -562,8 +610,6 @@ fi:
       dismiss_notifications: "Unohda kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
-      disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
-      dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
       text_size_default_on_all_devices: "Tee tästä oletusfonttikoko kaikille laitteilleni"
       allow_private_messages: "Salli toisten käyttäjien lähettää minulle yksityisviestejä"
@@ -654,6 +700,7 @@ fi:
         emails: "Sähköpostit"
         notifications: "Ilmoitukset"
         categories: "Alueet"
+        users: "Käyttäjät"
         tags: "Tunnisteet"
         interface: "Käyttöliittymä"
         apps: "Sovellukset"
@@ -727,6 +774,7 @@ fi:
         primary: "Ensisijainen sähköpostiosoite"
         secondary: "Toissijaiset sähköpostiosoitteet"
         no_secondary: "Ei toissijaisia sähköpostiosoitteita"
+        instructions: "Ei tule julkiseksi."
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Sähköpostiosoite ei kelpaa."
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
@@ -809,6 +857,11 @@ fi:
         every_hour: "tunneittain"
         daily: "päivittäin"
         weekly: "viikottain"
+      email_level:
+        title: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @nimeni tai kutsuu minut viestiketjuun"
+        always: "aina"
+        never: "ei koskaan"
+      email_messages_level: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin"
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
       other_settings: "Muut"
@@ -1117,10 +1170,6 @@ fi:
         name: "Facebook"
         title: "Facebookilla"
         message: "Todennetaan Facebookin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
-      yahoo:
-        name: "Yaho"
-        title: "Yahoolla"
-        message: "Todennetaan Yahoon kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
       github:
         name: "GitHub"
         title: "GitHubilla"
@@ -1174,6 +1223,7 @@ fi:
     emoji_picker:
       filter_placeholder: Etsi emojia
       objects: Esineet
+      flags: Liputukset
       custom: Mukautetut emojit
       recent: Hiljattain käytetyt
       default_tone: Ei ihonsävyä
@@ -1200,8 +1250,6 @@ fi:
       toggle_whisper: "Vaihda kuiskaus"
       toggle_unlisted: "Listauksissa näkyminen"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
-      saving_draft_tip: "tallennetaan..."
-      saved_draft_tip: "tallennettu"
       saved_local_draft_tip: "tallennettu omalla koneella"
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
@@ -1327,7 +1375,6 @@ fi:
       none: "Ilmoitusten lataaminen ei onnistunut."
       empty: "Ilmoituksia ei löydetty."
       more: "vanhat ilmoitukset"
-      total_flagged: "yhteensä liputettuja viestejä"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1881,7 +1928,6 @@ fi:
       continue_discussion: "Jatkoa ketjulle {{postLink}}:"
       follow_quote: "siirry lainattuun viestiin"
       show_full: "Näytä koko viesti"
-      show_hidden: "Näytä piilotettu sisältö."
       deleted_by_author:
         one: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti tunnin kuluttua, paitsi jos se liputetaan)"
         other: "(kirjoittaja on perunut viestin ja se poistetaan automaattisesti %{count} tunnin kuluttua, paitsi jos se liputetaan)"
@@ -2082,13 +2128,12 @@ fi:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
       choose: "alue&hellip;"
+      edit: "Muokkaa"
       view: "Katsele alueen ketjuja"
       general: "Yleistä"
       settings: "Asetukset"
       topic_template: "Ketjun sapluuna"
       tags: "Tunnisteet"
-      tags_allowed_tags: "Salli vain nämä tunnisteet tällä alueella:"
-      tags_allowed_tag_groups: "Salli vain näiden tunnisteryhmien tunnisteet tällä alueella:"
       tags_placeholder: "(Ei-pakollinen) lista sallituista tunnisteista"
       tag_groups_placeholder: "(Ei-pakollinen) lista sallituista tunnisteryhmistä"
       topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
@@ -2138,7 +2183,6 @@ fi:
       require_topic_approval: "Edellytä valvojan hyväksyntää kaikille uusille ketjuille"
       require_reply_approval: "Edellytä valvojan hyväksyntää kaikille uusille vastauksille"
       this_year: "tänä vuonna"
-      position: "Paikka:"
       default_position: "Oletuspaikka"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Muokataksesi järjestystä,"
       position_disabled_click: 'ota käyttöön "pysyvä aluejärjestys" asetuksista.'
@@ -2162,6 +2206,10 @@ fi:
         muted:
           title: "Vaimennettu"
           description: "Et saa ilmoituksia uusista ketjuista näillä alueilla, eivätkä ne näy tuoreimmissa."
+      search_priority:
+        options:
+          normal: "Normaali"
+          ignore: "Sivuuta"
       sort_options:
         default: "oletus"
         likes: "Tykkäykset"
@@ -2179,6 +2227,10 @@ fi:
         rows_with_featured_topics: "Rivit ja ketjuja"
         boxes: "Laatikot"
         boxes_with_featured_topics: "Laatikot ja ketjuja"
+      settings_sections:
+        general: "Yleistä"
+        moderation: "Valvonta"
+        email: "Sähköposti"
     flagging:
       title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa viesti"
@@ -2572,8 +2624,6 @@ fi:
       dashboard:
         title: "Hallintapaneeli"
         last_updated: "Hallintapaneeli on päivitetty viimeksi:"
-        find_old: "Haeskeletko vanhaa hallintapaneelia?"
-        old_link: "katsele sitä tästä"
         version: "Versio"
         up_to_date: "Sivusto on ajan tasalla!"
         critical_available: "Kriittinen päivitys on saatavilla."
@@ -2617,6 +2667,7 @@ fi:
         moderation_tab: "Valvonta"
         security_tab: "Tietoturva"
         reports_tab: "Raportit"
+        report_filter_any: "mikä tahansa"
         disabled: Pois käytöstä
         timeout_error: Kyselyssä kestää liian kauan. Valitse lyhyempi ajanjakso.
         exception_error: "Pahoittelut, kyselyä tehtäessä tapahtui virhe"
@@ -2782,6 +2833,7 @@ fi:
           inactive: "Ei toiminnassa"
           failed: "Epäonnistui"
           successful: "Onnistui"
+          disabled: "Pois käytöstä"
         events:
           none: "Liittyviä tapahtumia ei ole."
           redeliver: "Toimita uudelleen"
@@ -2928,6 +2980,8 @@ fi:
           customize_desc: "Mukauta:"
           title: "Teemat"
           create: "Luo"
+          create_type: "Tyyppi"
+          create_name: "Nimi"
           long_title: "Muuta sivustosi värejä, CSS:ää ja HTML-sisältöä"
           edit: "Muokkaa"
           edit_confirm: "Tämä on ulkoinen teema. Jos muokkaat CSS:ää tai HTML:ää, muutokset kumoutuvat kun päivität teeman."
@@ -2977,6 +3031,8 @@ fi:
           is_private: "Teema on yksityisessä git-tietovarastossa"
           remote_branch: "Haaran nimi (valinnainen)"
           public_key: "Anna repositorioon pääsy seuraavalle julkiselle avaimelle:"
+          installed: "Asennettu"
+          install_popular: "Suosittuja"
           about_theme: "Tietoa"
           license: "Lisenssi"
           version: "Versio:"
@@ -3728,6 +3784,10 @@ fi:
           label: "Uusi:"
           add: "Lisää"
           filter: "Etsi (URL tai ulkoinen URL)"
+      reseed:
+        modal:
+          categories: "Keskustelualueet"
+          topics: "Ketjuja"
   wizard_js:
     wizard:
       done: "Valmis"

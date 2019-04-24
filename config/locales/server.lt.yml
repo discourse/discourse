@@ -37,6 +37,8 @@ lt:
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
   themes:
     other_error: "Įvyko klaida atnaujinant temą"
+    import_error:
+      git: "Klaida git kapinyno klonavimui, prieiga atmetama arba saugykla nerasta"
     errors:
       component_no_user_selectable: "Tematikos komponentai negali būti pasirinktini vartotojui"
       component_no_default: "Tema komponentai negali būti numatytoji tema"
@@ -108,7 +110,11 @@ lt:
     few: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     many: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
     other: "Apgailestaujame, tačiau jūs galite paminėti tik %{count} vartotojus įraše"
+  no_mentions_allowed_newuser: "Apgailestaujame, tačiau nauji nariai negali minėti kitų narių."
   no_images_allowed_trust: "Atsiprašome, jūs negalite lkelti nuotraukų į šį įrašą"
+  no_images_allowed: "Apgailestaujame, tačiau nauji nariai negali skelbti paveikslėlių pranešimuose."
+  no_attachments_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti priedų pranešimuose."
+  no_links_allowed: "Atsiprašome, bet nauji vartotojai negali įkelti nuorodų į pranešimus."
   user_is_suspended: "Sustabdyti vartotojai negali rašyti pranešimų."
   just_posted_that: "labai panašu į tai, ką parašėte prieš tai"
   invalid_characters: "turi neleistinų simbolių"
@@ -173,6 +179,7 @@ lt:
       topic:
         title: "Antraštė"
         featured_link: "Išskirtinė nuoroda"
+        category_id: "Kategorija"
       post:
         raw: "Tekstas"
       user_profile:
@@ -381,6 +388,9 @@ lt:
       grant: "Svetainės valdytojo priėjimas"
       complete: "<b>%{target_username}</b>dabar administratorius."
       back_to: "Grįžti į %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Reikalingas patvirtinimas"
   post_action_types:
     off_topic:
       title: "Ne į temą"
@@ -421,7 +431,10 @@ lt:
     spam:
       title: "Šlamštas"
       long_form: "pažymėtas kaip šlamštas"
+    inappropriate:
+      title: "Nederamas"
     notify_moderators:
+      title: "Kažkas kito"
       email_body: "%{link}\n\n%{message}"
   archetypes:
     regular:
@@ -429,8 +442,15 @@ lt:
     banner:
       title: "Paryškinta Tema"
   unsubscribe:
+    title: "Nebeprenumeruoti"
     stop_watching_topic: "Nebestebėti šios temos, %{link}"
     log_out: "Atsijungti"
+    digest_frequency:
+      never: "niekada"
+      every_30_minutes: "kas 30 minučių"
+      every_hour: "kas valandą"
+      daily: "kas dieną"
+      weekly: "kas savaitę"
   user_api_key:
     read: "skaityti"
     scopes:
@@ -442,9 +462,16 @@ lt:
         day: Diena
     post_edits:
       labels:
+        post: Įrašai
         editor: Redaktorius
         author: Autorius
         edit_reason: Priežastis
+    user_flagging_ratio:
+      labels:
+        user: Narys
+    moderators_activity:
+      labels:
+        moderator: Moderatorius
     flags_status:
       values:
         agreed: Sutiko
@@ -464,6 +491,13 @@ lt:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    consolidated_page_views:
+      yaxis: "Diena"
+      labels:
+        post: Įrašai
+        editor: Redaguotojas
+        author: Autorius
+        edit_reason: Priežastis
     dau_by_mau:
       xaxis: "Diena"
     daily_engaged_users:
@@ -506,19 +540,28 @@ lt:
       yaxis: "Pranešimų skaičius"
     user_to_user_private_messages_with_replies:
       xaxis: "Diena"
+      yaxis: "Pranešimų skaičius"
     system_private_messages:
       title: "Sistema"
       xaxis: "Diena"
+      yaxis: "Pranešimų skaičius"
     moderator_warning_private_messages:
       xaxis: "Diena"
+      yaxis: "Pranešimų skaičius"
     notify_moderators_private_messages:
       xaxis: "Diena"
+      yaxis: "Pranešimų skaičius"
     notify_user_private_messages:
       xaxis: "Diena"
+      yaxis: "Pranešimų skaičius"
     top_referrers:
       xaxis: "Narys"
       num_clicks: "Spustelėjimai"
       num_topics: "Temos"
+      labels:
+        user: "Narys"
+        num_clicks: "Spustelėjimai"
+        num_topics: "Temos"
     top_traffic_sources:
       xaxis: "Domenas"
       num_clicks: "Paspaudimai"
@@ -541,6 +584,7 @@ lt:
     page_view_crawler_reqs:
       xaxis: "Diena"
     page_view_total_reqs:
+      title: "Puslapio peržiūros"
       xaxis: "Diena"
     page_view_logged_in_mobile_reqs:
       xaxis: "Diena"
@@ -567,6 +611,22 @@ lt:
       yaxis: "Viso"
     mobile_visits:
       xaxis: "Diena"
+      yaxis: "Apsilankymai"
+    web_crawlers:
+      labels:
+        page_views: "Puslapio peržiūros"
+    suspicious_logins:
+      labels:
+        user: Narys
+        location: Vieta
+    staff_logins:
+      labels:
+        user: Narys
+        location: Vieta
+    top_uploads:
+      labels:
+        filename: Dokumento pavadinimas
+        author: Autorius
   site_settings:
     enable_emoji: "Įgalinti Emoji"
   search:
@@ -577,6 +637,10 @@ lt:
   login:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
+    second_factor_title: "Dviejų veiksmų autentifikavimas"
+  admin:
+    email:
+      sent_test: "išsiųsta!"
   user:
     username:
       unique: "privalo buti unikalus"
@@ -631,11 +695,51 @@ lt:
     previous_discussion: "Ankstesni atsakymai"
     unsubscribe:
       title: "Nebeprenumeruoti"
+    user_invited_to_private_message_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm_staged:
       text_body_template: |
         %{header_instructions}
 
         %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
 
         %{respond_instructions}
     user_quoted:
@@ -724,6 +828,7 @@ lt:
         %{message}
     digest:
       new_topics: "Naujos temos"
+      liked_received: "Gauta patikimų"
       new_posts: "Nauji 5ra6ai"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
@@ -764,6 +869,8 @@ lt:
     user_email_anonymous_user: "Narys yra anonimas"
     sender_message_blank: "žinutė yra tuščia"
   color_schemes:
+    light: "Šviesi"
+    dark: "Tamsi"
     default_theme_name: "Šviesi"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
@@ -786,8 +893,12 @@ lt:
     editor:
       name: Redaguotojas
       description: Pirmasis pranešimo redagavimas
+    basic_user:
+      name: Pagrindinis
     member:
       name: Narys
+    regular:
+      name: Nuolatinės
     leader:
       name: Lyderis
     welcome:
@@ -813,10 +924,13 @@ lt:
       name: Puiki tema
     nice_share:
       name: Gražus pasidalinimas
+      description: Pasidalintas pranešimas su 25 unikaliais lankytojais
     good_share:
       name: Geras pasidalinimas
+      description: Pasidalintas pranešimas su 300 unikaliais lankytojais
     great_share:
       name: Puikus pasidalinimas
+      description: Pasidalintas pranešimas su 1000 unikalių lankytojų
     first_like:
       name: Pirmasis įvertinimas
       description: Mėgstate įrašą
@@ -824,7 +938,10 @@ lt:
       name: Pirmasis pranešimas
       description: Pranešei apie įrašą
     promoter:
+      name: Reklameris
       description: Pakvietei narį
+    campaigner:
+      name: Kampanijos narys
     champion:
       name: Čempionas
       description: Pakvietė 5 narius
@@ -866,6 +983,7 @@ lt:
       name: Pirmasis įterpimas
     first_reply_by_email:
       name: Pirmasis atsakymas per e-paštą
+    badge_title_metadata: "%{display_name} ženklelis puslapyje %{site_title}"
   admin_login:
     success: "El. paštas išsiųstas"
     errors:
@@ -893,6 +1011,7 @@ lt:
           welcome:
             label: "Pirmoji tema"
       privacy:
+        title: "Prieiga"
         fields:
           privacy:
             choices:
@@ -913,6 +1032,11 @@ lt:
         title: "Tema"
       logos:
         title: "Logotipas"
+        fields:
+          logo:
+            label: "Pirminis logotipas"
+          logo_small:
+            label: "Įmonės logotipas"
       homepage:
         title: "Pagrindinis puslapis"
         fields:
@@ -944,3 +1068,29 @@ lt:
   staff_action_logs:
     not_found: "nerastas"
     unknown: "nežinoma"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "Palikti įrašą"
+      agree_and_suspend:
+        title: "Suspenduoti narį"
+      agree_and_silence:
+        title: "Nutildyti narį"
+        description: "Sutikti su pranešimu ir nutildyti narį."
+      agree_and_hide:
+        title: "Paslėpti įrašą"
+      delete_spammer:
+        title: "Ištrinti Vartotoją"
+      disagree:
+        title: "Nesutinka"
+      ignore:
+        title: "Ignoruoti"
+      approve:
+        title: "Patvirtinti"
+      reject_user:
+        delete:
+          title: "Ištrinti vartotoją"
+      reject:
+        title: "Atmesti"
+      delete_user:
+        title: "Ištrinti vartotoją"

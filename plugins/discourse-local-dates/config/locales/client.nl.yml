@@ -12,9 +12,8 @@ nl:
         today: Vandaag %{time}
         tomorrow: Morgen %{time}
         yesterday: Gisteren %{time}
-      title: Datum invoegen
+      title: Datum / tijd invoegen
       create:
-        modal_title: Datum invoegen
         form:
           insert: Invoegen
           advanced_mode: Geavanceerde modus
@@ -30,6 +29,7 @@ nl:
           time_title: Tijd
           format_title: Datumnotatie
           timezone: Tijdzone
+          until: Tot...
           recurring:
             every_day: "Elke dag"
             every_week: "Elke week"

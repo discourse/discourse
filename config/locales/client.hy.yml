@@ -304,6 +304,47 @@ hy:
       title:
         search: "Փնտրել Հաղորդագրություն ըստ վերնագրի՝"
         placeholder: "գրեք հաղորդագրության վերնագիրն այստեղ"
+    review:
+      delete: "Ջնջել"
+      settings:
+        save_changes: "Պահպանել Փոփոխությունները"
+        title: "Կարգավորումներ"
+      moderation_history: "Մոդերացիայի Պատմությունը"
+      title: "Կարիք ունի Վերանայման"
+      topic: "Թեմա՝"
+      user:
+        username: "Օգտանուն"
+        email: "Էլ. հասցե"
+        name: "Անուն"
+      topics:
+        topic: "Թեմա"
+        reviewable_count: "Քանակ"
+        details: "մանրամասները"
+      edit: "Խմբագրել"
+      save: "Պահպանել"
+      cancel: "Չեղարկել"
+      filters:
+        type:
+          title: "Տիպ՝ "
+        refresh: "Թարմացնել"
+      scores:
+        score: "Քանակ"
+        date: "Ամսաթիվ"
+        type: "Տիպ"
+      statuses:
+        pending:
+          title: "Սպասող"
+        rejected:
+          title: "Մերժված է"
+        ignored:
+          title: "Անտեսված"
+      types:
+        reviewable_user:
+          title: "Օգտատեր"
+      approval:
+        title: "Գրառումը Հաստատման Կարիք Ունի"
+        description: "Մենք ստացել ենք Ձեր նոր գրառումը, սակայն այն պետք է հաստատվի մոդերատորի կողմից մինչև ցուցադրվելը: Խնդրում ենք լինել համբերատար:"
+        ok: "ՕԿ"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>-ը հրապարակել է <a href='{{topicUrl}}'>այս թեման</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Դուք</a> հրապարակել եք <a href='{{topicUrl}}'>այս թեման</a>"
@@ -351,6 +392,9 @@ hy:
         title: "Ավելացնել Անդամներ"
         description: "Կառավարել այս խմբի անդամակցությունը"
         usernames: "Օգտանուններ"
+      requests:
+        reason: "Պատճառ"
+        accepted: "ընդունված"
       manage:
         title: "Կառավարել"
         name: "Անուն"
@@ -549,6 +593,12 @@ hy:
       new_private_message: "Նոր Հաղորդագրություն"
       private_message: "Հաղորդագրություն"
       private_messages: "Հաղորդագրություններ"
+      user_notifications:
+        ignore_duration_save: "Անտեսել"
+        ignore_duration_time_frame_required: "Խնդրում ենք ընտրել ժամանակահատված"
+        ignore_option: "Անտեսված"
+        mute_option: "Խլացված"
+        normal_option: "Նորմալ"
       activity_stream: "Ակտիվություն"
       preferences: "Նախընտրություններ"
       profile_hidden: "Այս օգտատիրոջ հրապարակային պրոֆիլը թաքցրած է:"
@@ -574,8 +624,6 @@ hy:
       dismiss_notifications: "Չեղարկել Բոլորը"
       dismiss_notifications_tooltip: "Նշել բոլոր չկարդացած ծանուցումները որպես կարդացած:"
       first_notification: "Ձեր առաջին ծանուցումն է! Ընտրեք այն՝ սկսելու համար:"
-      disable_jump_reply: "Չցատկել դեպի իմ գրառումը իմ պատասխանելուց հետո"
-      dynamic_favicon: "Ցուցադրել նոր/թարմացված թեմաների քանակը բրաուզերի պատկերակի վրա"
       theme_default_on_all_devices: "Դարձնել սա լռելյայն թեմա իմ բոլոր սարքավորումների վրա"
       text_size_default_on_all_devices: "Դարձնել սա լռելյայն տեքստի չափ իմ բոլոր սարքերի վրա"
       allow_private_messages: "Թույլ տալ այլ օգտատերերին ուղարկել ինձ անձնական հաղորդագրություններ"
@@ -1149,10 +1197,6 @@ hy:
         name: "Facebook"
         title: "Facebook-ով"
         message: "Վավերացում Facebook-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
-      yahoo:
-        name: "Yahoo"
-        title: "Yahoo-ով"
-        message: "Վավերացում Yahoo-ով (համոզվեք, որ փոփ-ափ արգելափակումները միացված չեն)"
       github:
         name: "GitHub"
         title: "GitHub-ով"
@@ -1240,8 +1284,6 @@ hy:
       toggle_whisper: "Փոխանջատել Շշնջումը"
       toggle_unlisted: "Փոխանջատել Չցուցակագրվածները"
       posting_not_on_topic: "Ո՞ր թեմային եք Դուք ցանկանում պատասխանել:"
-      saving_draft_tip: "պահպանվում է..."
-      saved_draft_tip: "պահված է"
       saved_local_draft_tip: "պահված է տեղում"
       similar_topics: "Ձեր թեման նման է..."
       drafts_offline: "Օֆլայն սևագրեր"
@@ -1367,7 +1409,6 @@ hy:
       none: "Սյս պահին հնարավոր չէ բեռնել ծանուցումները"
       empty: "Ծանուցումներ չեն գտնվել:"
       more: "դիտել ավելի հին ծանուցումները"
-      total_flagged: "դրոշակավորված բոլոր գրառումները"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1924,7 +1965,6 @@ hy:
       continue_discussion: "Շարունակելով {{postLink}} քննարկումը՝ "
       follow_quote: "գնալ դեպի մեջբերված գրառումը"
       show_full: "Ցուցադրել Գրառումն Ամբողջությամբ"
-      show_hidden: "Դիտել Թաքցրած Բովանդակությունը"
       deleted_by_author:
         one: "(հեղինակի կողմից հեռացված հրապարակում, ավտոմատ կերպով կջնջվի %{count}  ժամից, եթե դրոշակավորված չէ)"
         other: "(եթե հեղինակի կողմից հեռացված գրառումը չդրոշակավորվի, ապա ավտոմատ կերպով կջնջվի %{count} ժամից)"
@@ -1935,8 +1975,8 @@ hy:
         one: "դիտել 1 թաքցրած պատասխան"
         other: "դիտել {{count}} թաքցրած պատասխանները"
       notice:
-        first: "Առաջին անգամն է, որ {{user}} -ը գրառում է կատարել — եկեք ողջունենք նրան մեր համայնքում!"
-        return: "Բավական ժամանակ է անցել {{user}} -ին տեսնելուց հետո — նրա վերջին գրառումը եղել է {{time}}:"
+        new_user: "Առաջին անգամն է, որ {{user}} -ը գրառում է կատարել — եկեք ողջունենք նրան մեր համայնքում!"
+        returning_user: "Բավական ժամանակ է անցել {{user}} -ին տեսնելուց հետո — նրա վերջին գրառումը եղել է {{time}}:"
       unread: "Գրառումը կարդացած չէ"
       has_replies:
         one: "{{count}} պատասխան"
@@ -2136,8 +2176,6 @@ hy:
       settings: "Կարգավորումներ"
       topic_template: "Թեմայի Ձևանմուշ"
       tags: "Թեգեր"
-      tags_allowed_tags: "Թույլ տալ միայն այս թեգերի օգտագործումը այս կատեգորիայում՝"
-      tags_allowed_tag_groups: "Թույլ տալ միայն այս խմբերի թեգերի օգատգործումը այս կատեգորիայում՝"
       tags_placeholder: "(Ընտրովի) թույլատրված թեգերի ցանկը"
       tags_tab_description: "Այստեղ սահմանված թեգերը և թեգերի խմբերը հասանելի կլինեն միայն այս կատեգորիայում և այլ կատեգորիաներում, որոնք նույնպես սահմանում են դրանք: Դրանք հասանելի չեն լինի օգտագործման համար այլ կատեգորիաներում:"
       tag_groups_placeholder: "(Ընտրովի) թույլատրված թեգերի խմբերի ցանկը"
@@ -2190,7 +2228,6 @@ hy:
       require_topic_approval: "Բոլոր նոր թեմաների համար պահանջել մոդերատորի հաստատումը"
       require_reply_approval: "Բոլոր նոր պատասխանների համար պահանջել մոդերատորի հաստատումը "
       this_year: "այս տարի"
-      position: "Դիրքը՝"
       default_position: "Լռելյայն Դիրքը"
       position_disabled: "Կատեգորիաները կցուցադրվեն ըստ ակտիվության: Ցանկերում կատեգորիաների դասավորությունը վերահսկելու համար,"
       position_disabled_click: 'միացրեք "fixed category positions" կարգավորումը:'
@@ -2240,6 +2277,10 @@ hy:
         rows_with_featured_topics: "Հանրահայտ թեմաներ պարունակող տողերը"
         boxes: "Արկղերը"
         boxes_with_featured_topics: "Հանրահայտ թեմաներ պարունակող արկղերը"
+      settings_sections:
+        general: "Ընդհանուր"
+        moderation: "Մոդերացիա"
+        email: "Էլ. հասցե"
     flagging:
       title: "Շնորհակալ ենք, որ օգնում եք պահել մեր համայնքը քաղաքակիրթ:"
       action: "Դրոշակավորել Գրառումը"
@@ -2633,8 +2674,6 @@ hy:
       dashboard:
         title: "Կառավարման Հարթակ"
         last_updated: "Կառավարման Հարթակի վերջին թարմացումը՝ "
-        find_old: "Փնտրում եք հին կառավարման հարթա՞կը:"
-        old_link: "տեսեք այն այստեղ"
         version: "Տարբերակ"
         up_to_date: "Դուք ամենավերջին տարբերակն եք օգտագործում!"
         critical_available: "Հասանելի է կրիտիկական թարմացում:"

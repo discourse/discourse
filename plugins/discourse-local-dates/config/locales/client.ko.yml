@@ -12,9 +12,7 @@ ko:
         today: 오늘 %{time}
         tomorrow: 내일 %{time}
         yesterday: 어제 %{time}
-      title: 날짜 삽입
       create:
-        modal_title: 날짜 삽입
         form:
           insert: 삽입
           advanced_mode: 고급 모드

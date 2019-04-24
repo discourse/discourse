@@ -55,6 +55,8 @@ hu:
           regular: Egyszerű választás
           multiple: Többszörös Választás
           number: Értékelés Számokkal
+        poll_result:
+          label: Eredmények
         poll_config:
           max: Max
           min: Min

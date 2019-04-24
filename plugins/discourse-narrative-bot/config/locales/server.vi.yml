@@ -8,3 +8,9 @@
 vi:
   site_settings:
     disable_discourse_narrative_bot_welcome_post: "Tắt tính năng gửi lời chào từ Discourse Narrative Bot"
+  discourse_narrative_bot:
+    magic_8_ball:
+      answers:
+        '9': "Đồng ý"
+    new_user_narrative:
+      reset_trigger: "thành viên mới"

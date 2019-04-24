@@ -8,9 +8,7 @@
 fa_IR:
   js:
     discourse_local_dates:
-      title: افزودن تاریخ
       create:
-        modal_title: افزودن تاریخ
         form:
           insert: درج کردن
           advanced_mode: حالت پیشرفته

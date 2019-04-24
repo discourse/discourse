@@ -307,6 +307,10 @@ fr:
         search: "Rechercher messages par titre :"
         placeholder: "saisir le titre du message ici"
     review:
+      delete: "Supprimer"
+      settings:
+        save_changes: "Sauvegarder"
+        title: "Paramètres"
       moderation_history: "Historique de modération"
       none: "Il n'y a pas d'éléments à vérifier."
       view_pending: "voir les messages en attente"
@@ -317,7 +321,10 @@ fr:
       topic: "Sujet :"
       filtered_user: "Utilisateur:"
       show_all_topics: "afficher tous les sujets"
-      deleted_user: "(utilisateur supprimé)"
+      user:
+        username: "Pseudo"
+        email: "Courriel"
+        name: "Nom"
       user_percentage:
         summary:
           one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalement total)"
@@ -335,6 +342,7 @@ fr:
         topic: "Sujet"
         reviewable_count: "Nombre"
         reported_by: "Signalé par"
+        deleted: "[Sujet supprimé]"
         details: "détails"
         unique_users:
           one: "1 utilisateur"
@@ -353,12 +361,10 @@ fr:
         category: "Catégorie :"
       conversation:
         view_full: "voir conversation entière"
-      history:
-        title: "Historique"
-        edited: "Modifié"
       scores:
-        description: "Description"
         score: "Score"
+        date: "Date"
+        type: "Type"
         submitted_by: "Soumis par"
       statuses:
         pending:
@@ -682,8 +688,6 @@ fr:
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
-      disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
-      dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
@@ -1260,10 +1264,6 @@ fr:
         name: "Facebook"
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
-      yahoo:
-        name: "Yahoo"
-        title: "via Yahoo"
-        message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
       github:
         name: "GitHub"
         title: "via GitHub"
@@ -1353,8 +1353,6 @@ fr:
       toggle_whisper: "Basculer murmure"
       toggle_unlisted: "Basculer la visibilité"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
-      saving_draft_tip: "sauvegarde en cours…"
-      saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "brouillons hors ligne"
@@ -1480,7 +1478,6 @@ fr:
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
       more: "voir les anciennes notifications"
-      total_flagged: "nombre total de messages signalés"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -2042,7 +2039,6 @@ fr:
       continue_discussion: "Suite du sujet {{postLink}} :"
       follow_quote: "aller au message cité"
       show_full: "Afficher le message complet"
-      show_hidden: "Afficher le contenu caché."
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
@@ -2053,8 +2049,8 @@ fr:
         one: "voir 1 réponse cachée"
         other: "voir {{count}} réponses cachées"
       notice:
-        first: "C'est la première fois que {{user}} publie un message — accueillons-le comme il se doit dans notre communauté !"
-        return: "Cela faisait un moment que nous n'avions pas vu {{user}} — son dernier message remonte à {{time}}."
+        new_user: "C'est la première fois que {{user}} publie un message — accueillons-le comme il se doit dans notre communauté !"
+        returning_user: "Cela faisait un moment que nous n'avions pas vu {{user}} — son dernier message remonte à {{time}}."
       unread: "Ce message est non lu"
       has_replies:
         one: "{{count}} réponse"
@@ -2254,8 +2250,6 @@ fr:
       settings: "Paramètres"
       topic_template: "Modèle de sujet"
       tags: "Étiquettes"
-      tags_allowed_tags: "N'autoriser que ces étiquettes à être utilisées dans cette catégorie :"
-      tags_allowed_tag_groups: "N'autoriser que les étiquettes de ces groupes à être utilisées dans cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
       tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés ici ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes de étiquettes autorisées"
@@ -2308,7 +2302,6 @@ fr:
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
-      position: "Position :"
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
@@ -2358,6 +2351,10 @@ fr:
         rows_with_featured_topics: "Rangées avec sujets à la une"
         boxes: "Boîtes"
         boxes_with_featured_topics: "Boîtes avec sujets à la une"
+      settings_sections:
+        general: "Général"
+        moderation: "Modération"
+        email: "Courriel"
     flagging:
       title: "Merci d'aider à garder notre communauté civilisée !"
       action: "Signaler ce message"
@@ -2764,8 +2761,6 @@ fr:
       dashboard:
         title: "Tableau de bord"
         last_updated: "Tableau de bord actualisé le :"
-        find_old: "Vous cherchez l'ancien tableau de bord ?"
-        old_link: "retrouvez-le ici"
         version: "Version"
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
