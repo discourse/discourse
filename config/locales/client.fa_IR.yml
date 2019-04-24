@@ -1181,18 +1181,6 @@ fa_IR:
       none: "قادر به بارگیری اعلان‌ها در این زمان نیستیم."
       empty: "اعلانی پیدا نشد."
       more: "نمایش اعلان‌های قدیمی‌تر"
-      mentioned: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      group_mentioned: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      quoted: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      replied: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      posted: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      edited: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      liked: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      liked_consolidated: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      private_message: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      invited_to_topic: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      linked: "<span>{{نام کابری}}</span> {{توضیحات}}"
-      topic_reminder: "<span>{{نام کابری}}</span> {{توضیحات}}"
       popup:
         mentioned: '{{username}} در "{{topic}}" - {{site_title}} به شما اشاره کرد'
         group_mentioned: '{{username}} به شما در "{{topic}}" - {{site_title}} اشاره نمود'
