@@ -1,3 +1,5 @@
+require 'file_store/local_store'
+
 desc 'Update each post with latest markdown'
 task 'posts:rebake' => :environment do
   ENV['RAILS_DB'] ? rebake_posts : rebake_posts_all_sites
@@ -402,9 +404,7 @@ desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
   get_missing_uploads.delete_all
   missing_uploads = []
-  found_uploads = []
   old_scheme_upload_count = 0
-  unlinked_post_upload_count = 0
   count = 0
 
   Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
@@ -436,21 +436,47 @@ task 'posts:missing_uploads' => :environment do
           end
 
         if sha1.blank? || sha1s.exclude?(sha1)
-          missing_post_uploads << src
+          upload_id = nil
 
-          if found_uploads.include?(src)
-            unlinked_post_upload_count += 1
-          elsif missing_uploads.exclude?(src)
+          if missing_uploads.exclude?(src)
             if sha1.blank?
-              old_scheme_upload_count += 1
-              missing_uploads << src
-            elsif Upload.exists?(sha1: sha1)
-              unlinked_post_upload_count += 1
-              found_uploads << src
+              # recovering old scheme upload.
+              local_store = FileStore::LocalStore.new
+              public_path = "#{local_store.public_dir}#{path}"
+              if File.exists?(public_path)
+                tmp = Tempfile.new
+                tmp.write(File.read(public_path))
+                tmp.rewind
+
+                if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+                  upload_id = upload.id
+                  DbHelper.remap(UrlHelper.absolute(src), upload.url)
+
+                  post.raw.gsub!(src, upload.url)
+                  post.cooked.gsub!(src, upload.url)
+
+                  if post.changed?
+                    post.save!(validate: false)
+                    post.rebake!
+                  end
+                end
+
+                FileUtils.rm(tmp, force: true)
+              else
+                old_scheme_upload_count += 1
+              end
+            else
+              upload_id = Upload.where(sha1: sha1).pluck(:id).first
+            end
+
+            if upload_id.present?
+              PostUpload.create!(post_id: post.id, upload_id: upload_id)
             else
               missing_uploads << src
             end
           end
+
+          missing_post_uploads << src if upload_id.blank?
         end
       end
 
@@ -464,10 +490,9 @@ task 'posts:missing_uploads' => :environment do
     end
   end
 
-  puts "", "#{count - unlinked_post_upload_count} post uploads are missing.", ""
+  puts "", "#{count} post uploads are missing.", ""
 
   if count > 0
-    puts "#{unlinked_post_upload_count} are unlinked post uploads." if unlinked_post_upload_count > 0
     puts "#{missing_uploads.count} uploads are missing."
     puts "#{old_scheme_upload_count} of #{missing_uploads.count} are old scheme uploads." if old_scheme_upload_count > 0
     puts "#{get_missing_uploads.count} of #{Post.count} posts are affected.", ""
