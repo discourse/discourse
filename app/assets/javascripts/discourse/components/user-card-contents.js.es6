@@ -150,6 +150,9 @@ export default Ember.Component.extend(
     },
 
     _showCallback(username, $target) {
+      this._positionCard($target);
+      this.setProperties({ visible: true, loading: true });
+
       const args = { stats: false };
       args.include_post_count_for = this.get("topic.id");
       User.findByUsername(username, args)
@@ -160,8 +163,7 @@ export default Ember.Component.extend(
               user.topic_post_count[args.include_post_count_for]
             );
           }
-          this._positionCard($target);
-          this.setProperties({ user, visible: true });
+          this.setProperties({ user });
         })
         .catch(() => this._close())
         .finally(() => this.set("loading", null));
