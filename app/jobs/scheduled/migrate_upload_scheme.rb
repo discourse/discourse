@@ -5,7 +5,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return unless SiteSetting.migrate_to_new_scheme
+      return if !SiteSetting.migrate_to_new_scheme
 
       # clean up failed uploads
       Upload.where("created_at < ?", 1.hour.ago)
@@ -17,6 +17,11 @@ module Jobs
 
       # migrate uploads to new scheme
       problems = Upload.migrate_to_new_scheme(limit: 50)
+
+      if problems.length == 0
+        # This job is no longer needed skip it from now
+        SiteSetting.migrate_to_new_scheme = false
+      end
 
       problems.each do |hash|
         upload_id = hash[:upload].id
