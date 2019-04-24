@@ -208,8 +208,9 @@ class Upload < ActiveRecord::Base
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
+      db = RailsMultisite::ConnectionManagement.current_db
 
-      scope = Upload.by_users.where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}%'").order(id: :desc)
+      scope = Upload.by_users.where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{db}%'").order(id: :desc)
 
       scope = scope.limit(limit) if limit
 
@@ -273,7 +274,7 @@ class Upload < ActiveRecord::Base
 
           remap_scope ||= begin
             Post.with_deleted
-              .where("raw ~ '/uploads/default/\\d+/'")
+              .where("raw ~ '/uploads/#{db}/\\d+/'")
               .select(:raw, :cooked)
               .all
           end
