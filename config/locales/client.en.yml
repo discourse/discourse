@@ -747,6 +747,7 @@ en:
         ignore_no_users: "You have no ignored users."
         ignore_option: "Ignored"
         ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden."
+        add_ignored_user: "Add..."
         mute_option: "Muted"
         mute_option_title: "You will not receive any notifications related to this user."
         normal_option: "Normal"

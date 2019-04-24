@@ -20,7 +20,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         user
           .updateNotificationLevel("ignore", this.get("ignoredUntil"))
           .then(() => {
-            this.get("onSuccess")(this.get("ignoredUsername"));
+            this.onUserIgnored(this.get("ignoredUsername"));
             this.send("closeModal");
           })
           .catch(popupAjaxError)
