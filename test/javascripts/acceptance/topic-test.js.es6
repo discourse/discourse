@@ -204,6 +204,7 @@ QUnit.test("Updating the topic title with unicode emojis", async assert => {
 QUnit.test(
   "Updating the topic title with unicode emojis without whitespaces",
   async assert => {
+    Discourse.SiteSettings.enable_inline_emoji_translation = true;
     await visit("/t/internationalization-localization/280");
     await click("#topic-title .d-icon-pencil-alt");
 

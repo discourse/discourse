@@ -68,8 +68,8 @@ export function performEmojiUnescape(string, opts) {
       : "emoji";
     const isAllowed =
       (!inlineEmojiEnabled &&
-        (/\s|[.,\/#!$%^&*;:{}=\-_`~()]/.test(before) || m.index === 0)) ||
-      inlineEmojiEnabled;
+        (/\s|[>.,\/#!$%^&*;:{}=\-_`~()]/.test(before) || m.index === 0)) ||
+      !!inlineEmojiEnabled;
 
     const replacement =
       url && (isEmoticon || hasEndingColon || isUnicodeEmoticon) && isAllowed
@@ -101,11 +101,9 @@ export function performEmojiEscape(string, opts) {
       replacement = m[0];
     }
     const before = string.charAt(m.index - 1);
-    if (!/\B/.test(before)) {
-      replacement = "\u200b" + replacement;
-    }
     if (
-      (!inlineEmojiEnabled && (/\s/.test(before) || /\./.test(before))) ||
+      (!inlineEmojiEnabled &&
+        (/\s|[>.,\/#!$%^&*;:{}=\-_`~()]/.test(before) || m.index === 0)) ||
       !!inlineEmojiEnabled
     ) {
       string = string.replace(m[0], replacement);

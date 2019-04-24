@@ -699,7 +699,7 @@ componentTest("emoji", {
     await click(
       '.emoji-picker .section[data-section="smileys_&_emotion"] button.emoji[title="grinning"]'
     );
-    assert.equal(this.get("value"), "hello world.:grinning:");
+    assert.equal(this.get("value"), "hello world. :grinning:");
   }
 });
 
