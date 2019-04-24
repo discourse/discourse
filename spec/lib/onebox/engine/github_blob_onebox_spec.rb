@@ -3,7 +3,7 @@ require "spec_helper"
 describe Onebox::Engine::GithubBlobOnebox do
   before(:all) do
     @link = "https://github.com/discourse/onebox/blob/master/lib/onebox/engine/github_blob_onebox.rb"
-    fake("https://raw.github.com/discourse/onebox/master/lib/onebox/engine/github_blob_onebox.rb", response(described_class.onebox_name))
+    fake("https://raw.githubusercontent.com/discourse/onebox/master/lib/onebox/engine/github_blob_onebox.rb", response(described_class.onebox_name))
   end
 
   include_context "engines"

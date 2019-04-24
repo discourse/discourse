@@ -158,38 +158,46 @@ module Onebox
 
             @file = m[:file]
             @lang = Onebox::FileTypeFinder.from_file_name(m[:file])
-            contents = open(self.raw_template(m), read_timeout: timeout).read
 
-            contents_lines = contents.lines           #get contents lines
-            contents_lines_size = contents_lines.size #get number of lines
+            if @lang == "stl" && link.match(/^https?:\/\/(www\.)?github\.com.*\/blob\//)
 
-            cr = calc_range(m, contents_lines_size)    #calculate the range of lines for output
-            selected_one_liner = cr[:selected_one_liner] #if url is a one-liner calc_range will return it
-            from           = cr[:from]
-            to             = cr[:to]
-            @truncated     = cr[:truncated]
-            range_provided = cr[:range_provided]
-            @cr_results = cr
+              @model_file = @lang.dup
+              @raw = "https://render.githubusercontent.com/view/solid?url=" + self.raw_template(m)
 
-            if range_provided       #if a range provided (single line or more)
-              if SHOW_LINE_NUMBER
-                lines_result = line_number_helper(contents_lines[(from - 1)..(to - 1)], from, selected_one_liner)  #print code with prefix line numbers in case range provided
-                contents = lines_result[:output]
-                @selected_lines_array = lines_result[:array]
+            else
+              contents = open(self.raw_template(m), read_timeout: timeout).read
+
+              contents_lines = contents.lines           #get contents lines
+              contents_lines_size = contents_lines.size #get number of lines
+
+              cr = calc_range(m, contents_lines_size)    #calculate the range of lines for output
+              selected_one_liner = cr[:selected_one_liner] #if url is a one-liner calc_range will return it
+              from           = cr[:from]
+              to             = cr[:to]
+              @truncated     = cr[:truncated]
+              range_provided = cr[:range_provided]
+              @cr_results = cr
+
+              if range_provided       #if a range provided (single line or more)
+                if SHOW_LINE_NUMBER
+                  lines_result = line_number_helper(contents_lines[(from - 1)..(to - 1)], from, selected_one_liner)  #print code with prefix line numbers in case range provided
+                  contents = lines_result[:output]
+                  @selected_lines_array = lines_result[:array]
+                else
+                  contents = contents_lines[(from - 1)..(to - 1)].join()
+                end
+
               else
                 contents = contents_lines[(from - 1)..(to - 1)].join()
               end
 
-            else
-              contents = contents_lines[(from - 1)..(to - 1)].join()
-            end
+              if contents.length > MAX_CHARS    #truncate content chars to limits
+                contents = contents[0..MAX_CHARS]
+                @truncated = true
+              end
 
-            if contents.length > MAX_CHARS    #truncate content chars to limits
-              contents = contents[0..MAX_CHARS]
-              @truncated = true
+              @raw = contents
             end
-
-            @raw = contents
           end
         end
 
@@ -206,7 +214,10 @@ module Onebox
             has_lines: !@selected_lines_array.nil?,
             selected_one_liner: @selected_one_liner,
             cr_results: @cr_results,
-            truncated: @truncated
+            truncated: @truncated,
+            model_file: @model_file,
+            width: 480,
+            height: 360
           }
         end
       end

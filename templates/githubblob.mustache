@@ -1,6 +1,13 @@
 <h4><a href="{{link}}" target="_blank">{{title}}</a></h4>
 {{^has_lines}}
+{{#model_file}}
+<iframe class="render-viewer" width="{{width}}" height="{{height}}" src="{{content}}" sandbox="allow-scripts allow-same-origin allow-top-navigation ">
+Viewer requires iframe.
+</iframe>
+{{/model_file}}
+{{^model_file}}
 <pre><code class='{{lang}}'>{{content}}</code></pre>
+{{/model_file}}
 {{/has_lines}}
 {{#has_lines}}
 {{! This is a template comment  | Sample rules for this box

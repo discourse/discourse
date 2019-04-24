@@ -15,7 +15,7 @@ module Onebox
         /github\.com\/(?<user>[^\/]+)\/(?<repo>[^\/]+)\/blob\/(?<sha1>[^\/]+)\/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?/mi
       end
       def raw_template(m)
-        "https://raw.github.com/#{m[:user]}/#{m[:repo]}/#{m[:sha1]}/#{m[:file]}"
+        "https://raw.githubusercontent.com/#{m[:user]}/#{m[:repo]}/#{m[:sha1]}/#{m[:file]}"
       end
       def title
         Sanitize.fragment(URI.unescape(link).sub(/^https?\:\/\/github\.com\//, ''))
