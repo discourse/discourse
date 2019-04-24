@@ -144,7 +144,7 @@ class SessionController < ApplicationController
       if user = sso.lookup_or_create_user(request.remote_ip)
 
         if user.suspended?
-          render_sso_error(text: I18n.t("login.suspended", date: user.suspended_till), status: 403)
+          render_sso_error(text: failed_to_login(user)[:error], status: 403)
           return
         end
 
