@@ -157,7 +157,9 @@ export default {
         });
       }
       if (openWindow) {
-        window.open(destUrl, "_blank").focus();
+        const newWindow = window.open(destUrl, "_blank");
+        newWindow.opener = null;
+        newWindow.focus();
       } else {
         DiscourseURL.routeTo(href);
       }
@@ -165,7 +167,9 @@ export default {
     }
 
     if (openWindow) {
-      window.open(destUrl, "_blank").focus();
+      const newWindow = window.open(destUrl, "_blank");
+      newWindow.opener = null;
+      newWindow.focus();
     } else {
       DiscourseURL.redirectTo(destUrl);
     }
