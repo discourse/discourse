@@ -1,4 +1,4 @@
-import {popupAjaxError} from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
 
