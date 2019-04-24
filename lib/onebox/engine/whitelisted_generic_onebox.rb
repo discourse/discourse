@@ -336,15 +336,17 @@ module Onebox
       end
 
       def video_html
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:video])
+        escaped_video_src = ::Onebox::Helpers.normalize_url_for_output(data[:video])
+        escaped_image_src = ::Onebox::Helpers.normalize_url_for_output(data[:image])
 
         <<-HTML
             <video title='#{data[:title]}'
                    width='#{data[:video_width]}'
                    height='#{data[:video_height]}'
                    style='max-width:100%'
-                   controls='' poster='#{data[:image]}'>
-              <source src='#{escaped_src}'>
+                   poster='#{escaped_image_src}'
+                   controls='' >
+              <source src='#{escaped_video_src}'>
             </video>
           HTML
       end
