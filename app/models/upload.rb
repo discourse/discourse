@@ -266,12 +266,15 @@ class Upload < ActiveRecord::Base
           )
 
           remap_scope ||= begin
-            Post.with_deleted.where("raw ~ '/uploads/default/\\d+/'").all
+            Post.with_deleted
+              .where("raw ~ '/uploads/default/\\d+/'")
+              .select(:raw, :cooked)
+              .all
           end
 
           remap_scope.each do |post|
             post.raw.gsub!(previous_url, upload.url)
-            post.cooked.sub!(previous_url, upload.url)
+            post.cooked.gsub!(previous_url, upload.url)
             post.save! if post.changed?
           end
 
