@@ -1,6 +1,6 @@
 <div class="ignored-list">
   {{#each items as |item|}}
-    {{ignored-user-list-item item=item onRemoveItem=(action "removeIgnoredUser")}}
+    {{ignored-user-list-item item=item onRemoveIgnoredUser=(action "removeIgnoredUser")}}
   {{else}}
     {{i18n 'user.user_notifications.ignore_no_users'}}
   {{/each}}
