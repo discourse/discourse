@@ -4,8 +4,9 @@ const WRAP_CLASS = "d-wrap";
 
 function parseAttributes(tagInfo) {
   const attributes = tagInfo.attrs._default || "";
+
   return (
-    parseBBCodeTag("[wrap wrap=" + attributes + "]", 0, attributes.length + 12)
+    parseBBCodeTag(`[wrap wrap=${attributes}]`, 0, attributes.length + 12)
       .attrs || {}
   );
 }
@@ -61,10 +62,5 @@ export function setup(helper) {
     md.block.bbcode.ruler.push("block-wrap", blockRule);
   });
 
-  helper.whiteList([
-    `div.${WRAP_CLASS}`,
-    "div[data-*]",
-    `span.${WRAP_CLASS}`,
-    "span[data-*]"
-  ]);
+  helper.whiteList([`div.${WRAP_CLASS}`, `span.${WRAP_CLASS}`, "span[data-*]"]);
 }
