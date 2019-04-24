@@ -22,7 +22,7 @@ class PostDestroyer
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
         )")
-      .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
+      .where("updated_at < ?", SiteSetting.delete_removed_posts_after.hours.ago)
       .where("NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
@@ -176,6 +176,7 @@ class PostDestroyer
       Post.transaction do
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
+        @post.topic.update_column(:closed, true) if @post.is_first_post?
       end
     end
   end
@@ -186,6 +187,7 @@ class PostDestroyer
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
+      @post.topic.update_column(:closed, false) if @post.is_first_post?
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
