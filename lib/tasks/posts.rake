@@ -452,6 +452,7 @@ task 'posts:missing_uploads' => :environment do
                   upload_id = upload.id
                   DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
+                  post.reload
                   post.raw.gsub!(src, upload.url)
                   post.cooked.gsub!(src, upload.url)
 
