@@ -230,10 +230,11 @@ module PrettyText
 
     set = SiteSetting.emoji_set.inspect
     custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
+    inline_emoji = SiteSetting.enable_inline_emoji_translation
     protect do
       v8.eval(<<~JS)
         __paths = #{paths_json};
-        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom} });
+        __performEmojiUnescape(#{title.inspect}, { getURL: __getURL, emojiSet: #{set}, customEmoji: #{custom}, inlineEmojiEnabled: #{inline_emoji} });
       JS
     end
   end
@@ -241,9 +242,10 @@ module PrettyText
   def self.escape_emoji(title)
     return unless title
 
+    inline_emoji = SiteSetting.enable_inline_emoji_translation
     protect do
       v8.eval(<<~JS)
-        __performEmojiEscape(#{title.inspect});
+        __performEmojiEscape(#{title.inspect}, { inlineEmojiEnabled: #{inline_emoji} });
       JS
     end
   end

@@ -64,6 +64,15 @@ QUnit.test("emojiUnescape", assert => {
     "hi :blonde_man:t6",
     "end colon not optional for skin tones"
   );
+  Discourse.SiteSettings.enable_inline_emoji_translation = false;
+  testUnescape("hi:smile:", `hi:smile:`, "inline translations disabled");
+  Discourse.SiteSettings.enable_inline_emoji_translation = true;
+  testUnescape(
+    "hi:smile:",
+    `hi<img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+    "inline translations enabled"
+  );
+  Discourse.SiteSettings.enable_inline_emoji_translation = false;
 });
 
 QUnit.test("Emoji search", assert => {

@@ -201,6 +201,26 @@ QUnit.test("Updating the topic title with unicode emojis", async assert => {
   );
 });
 
+QUnit.test(
+  "Updating the topic title with unicode emojis without whitespaces",
+  async assert => {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-title .d-icon-pencil-alt");
+
+    await fillIn("#edit-title", "Test🙂Title");
+
+    await click("#topic-title .submit-edit");
+
+    assert.equal(
+      find(".fancy-title")
+        .html()
+        .trim(),
+      `Test<img src="/images/emoji/emoji_one/slightly_smiling_face.png?v=${v}" title="slightly_smiling_face" alt="slightly_smiling_face" class="emoji">Title`,
+      "it displays the new title with escaped unicode emojis"
+    );
+  }
+);
+
 acceptance("Topic featured links", {
   loggedIn: true,
   settings: {

@@ -866,7 +866,9 @@ export default Ember.Component.extend({
       const captures = selected.pre.match(/\B:(\w*)$/);
 
       if (_.isEmpty(captures)) {
-        this._addText(selected, `:${code}:`);
+        selected.pre.match(/\S$/)
+          ? this._addText(selected, ` :${code}:`)
+          : this._addText(selected, `:${code}:`);
       } else {
         let numOfRemovedChars = selected.pre.length - captures[1].length;
         selected.pre = selected.pre.slice(

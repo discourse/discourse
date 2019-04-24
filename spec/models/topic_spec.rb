@@ -280,6 +280,7 @@ describe Topic do
     let(:topic_script) { build_topic_with_title("Topic with <script>alert('title')</script> script in its title") }
     let(:topic_emoji) { build_topic_with_title("I 💖 candy alot") }
     let(:topic_modifier_emoji) { build_topic_with_title("I 👨‍🌾 candy alot") }
+    let(:topic_inline_emoji) { build_topic_with_title("Hello😊World") }
 
     it "escapes script contents" do
       expect(topic_script.fancy_title).to eq("Topic with &lt;script&gt;alert(&lsquo;title&rsquo;)&lt;/script&gt; script in its title")
@@ -291,6 +292,16 @@ describe Topic do
 
     it "keeps combined emojis" do
       expect(topic_modifier_emoji.fancy_title).to eq("I :man_farmer: candy alot")
+    end
+
+    it "keeps inline emojis if inline emoji setting disabled" do
+      SiteSetting.enable_inline_emoji_translation = false
+      expect(topic_inline_emoji.fancy_title).to eq("Hello😊World")
+    end
+
+    it "expands inline emojis if inline emoji setting enabled" do
+      SiteSetting.enable_inline_emoji_translation = true
+      expect(topic_inline_emoji.fancy_title).to eq("Hello:blush:World")
     end
 
     it "escapes bold contents" do

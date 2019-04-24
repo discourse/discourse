@@ -25,7 +25,7 @@ const unicodeRegexp = new RegExp(
   Object.keys(replacements)
     .sort()
     .reverse()
-    .join("|") + "|\\B:[^\\s:]+(?::t\\d)?:?\\B",
+    .join("|") + "|:[^\\s:]+(?::t\\d)?:?",
   "g"
 );
 
@@ -43,43 +43,74 @@ export function performEmojiUnescape(string, opts) {
     return;
   }
 
-  return string.replace(unicodeRegexp, m => {
-    const isEmoticon = !!translations[m];
-    const isUnicodeEmoticon = !!replacements[m];
+  const inlineEmojiEnabled =
+    typeof Discourse !== "undefined"
+      ? Discourse.SiteSettings.enable_inline_emoji_translation
+      : !!opts.inlineEmojiEnabled;
+
+  let m;
+  while ((m = unicodeRegexp.exec(string)) !== null) {
+    const before = string.charAt(m.index - 1);
+    const isEmoticon = !!translations[m[0]];
+    const isUnicodeEmoticon = !!replacements[m[0]];
     let emojiVal;
     if (isEmoticon) {
-      emojiVal = translations[m];
+      emojiVal = translations[m[0]];
     } else if (isUnicodeEmoticon) {
-      emojiVal = replacements[m];
+      emojiVal = replacements[m[0]];
     } else {
-      emojiVal = m.slice(1, m.length - 1);
+      emojiVal = m[0].slice(1, m[0].length - 1);
     }
-    const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
+    const hasEndingColon = m[0].lastIndexOf(":") === m[0].length - 1;
     const url = buildEmojiUrl(emojiVal, opts);
     const classes = isCustomEmoji(emojiVal, opts)
       ? "emoji emoji-custom"
       : "emoji";
+    const isAllowed =
+      (!inlineEmojiEnabled &&
+        (/\s|[.,\/#!$%^&*;:{}=\-_`~()]/.test(before) || m.index === 0)) ||
+      inlineEmojiEnabled;
 
-    return url && (isEmoticon || hasEndingColon || isUnicodeEmoticon)
-      ? `<img src='${url}' ${
-          opts.skipTitle ? "" : `title='${emojiVal}'`
-        } alt='${emojiVal}' class='${classes}'>`
-      : m;
-  });
+    const replacement =
+      url && (isEmoticon || hasEndingColon || isUnicodeEmoticon) && isAllowed
+        ? `<img src='${url}' ${
+            opts.skipTitle ? "" : `title='${emojiVal}'`
+          } alt='${emojiVal}' class='${classes}'>`
+        : m;
+
+    string = string.replace(m[0], replacement);
+  }
 
   return string;
 }
 
-export function performEmojiEscape(string) {
-  return string.replace(unicodeRegexp, m => {
-    if (!!translations[m]) {
-      return ":" + translations[m] + ":";
-    } else if (!!replacements[m]) {
-      return ":" + replacements[m] + ":";
+export function performEmojiEscape(string, opts) {
+  const inlineEmojiEnabled =
+    typeof Discourse !== "undefined"
+      ? Discourse.SiteSettings.enable_inline_emoji_translation
+      : !!opts.inlineEmojiEnabled;
+
+  let m;
+  while ((m = unicodeRegexp.exec(string)) !== null) {
+    let replacement;
+    if (!!translations[m[0]]) {
+      replacement = ":" + translations[m[0]] + ":";
+    } else if (!!replacements[m[0]]) {
+      replacement = ":" + replacements[m[0]] + ":";
     } else {
-      return m;
+      replacement = m[0];
     }
-  });
+    const before = string.charAt(m.index - 1);
+    if (!/\B/.test(before)) {
+      replacement = "\u200b" + replacement;
+    }
+    if (
+      (!inlineEmojiEnabled && (/\s/.test(before) || /\./.test(before))) ||
+      !!inlineEmojiEnabled
+    ) {
+      string = string.replace(m[0], replacement);
+    }
+  }
 
   return string;
 }
