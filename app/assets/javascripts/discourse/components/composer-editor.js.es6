@@ -912,7 +912,6 @@ export default Ember.Component.extend({
   _composerClosed() {
     this.appEvents.trigger("composer:will-close");
     Ember.run.next(() => {
-      $("#main-outlet").css("padding-bottom", 0);
       // need to wait a bit for the "slide down" transition of the composer
       Ember.run.later(
         () => this.appEvents.trigger("composer:closed"),
