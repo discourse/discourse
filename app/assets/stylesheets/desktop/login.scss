@@ -136,6 +136,7 @@
     position: relative;
     display: flex;
     overflow: hidden;
+    flex: 1 1 auto;
 
     &:after,
     &:before {
