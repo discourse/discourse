@@ -25,6 +25,34 @@ class TagsController < ::ApplicationController
     @description_meta = I18n.t("tags.title")
     @title = @description_meta
 
+    show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
+
+    if SiteSetting.tags_listed_by_group
+      ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
+      ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless show_all_tags
+
+      grouped_tag_counts = TagGroup.visible(guardian).order('name ASC').includes(:tags).map do |tag_group|
+        { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
+      end
+
+      @tags = self.class.tag_counts_json(ungrouped_tags)
+      @extras = { tag_groups: grouped_tag_counts }
+    else
+      tags = show_all_tags ? Tag.all : Tag.where("tags.topic_count > 0")
+      unrestricted_tags = DiscourseTagging.filter_visible(tags, guardian)
+
+      categories = Category.where("id IN (SELECT category_id FROM category_tags)")
+        .where("id IN (?)", guardian.allowed_category_ids)
+        .includes(:tags)
+
+      category_tag_counts = categories.map do |c|
+        { id: c.id, tags: self.class.tag_counts_json(c.tags) }
+      end
+
+      @tags = self.class.tag_counts_json(unrestricted_tags)
+      @extras = { categories: category_tag_counts }
+    end
+
     respond_to do |format|
 
       format.html do
@@ -32,37 +60,10 @@ class TagsController < ::ApplicationController
       end
 
       format.json do
-        show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
-
-        if SiteSetting.tags_listed_by_group
-          ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
-          ungrouped_tags = ungrouped_tags.where("tags.topic_count > 0") unless show_all_tags
-
-          grouped_tag_counts = TagGroup.visible(guardian).order('name ASC').includes(:tags).map do |tag_group|
-            { id: tag_group.id, name: tag_group.name, tags: self.class.tag_counts_json(tag_group.tags) }
-          end
-
-          render json: {
-            tags: self.class.tag_counts_json(ungrouped_tags),
-            extras: { tag_groups: grouped_tag_counts }
-          }
-        else
-          tags = show_all_tags ? Tag.all : Tag.where("tags.topic_count > 0")
-          unrestricted_tags = DiscourseTagging.filter_visible(tags, guardian)
-
-          categories = Category.where("id IN (SELECT category_id FROM category_tags)")
-            .where("id IN (?)", guardian.allowed_category_ids)
-            .includes(:tags)
-
-          category_tag_counts = categories.map do |c|
-            { id: c.id, tags: self.class.tag_counts_json(c.tags) }
-          end
-
-          render json: {
-            tags: self.class.tag_counts_json(unrestricted_tags),
-            extras: { categories: category_tag_counts }
-          }
-        end
+        render json: {
+          tags: @tags,
+          extras: @extras
+        }
       end
     end
   end
