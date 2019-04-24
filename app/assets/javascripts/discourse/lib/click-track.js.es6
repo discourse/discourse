@@ -108,7 +108,9 @@ export default {
 
     if (!wantsNewWindow(e)) {
       if (!isInternal && openExternalInNewTab) {
-        window.open(href, "_blank").focus();
+        const newWindow = window.open(href, "_blank");
+        newWindow.opener = null;
+        newWindow.focus();
 
         // Hack to prevent changing current window.location.
         // e.preventDefault() does not work.
