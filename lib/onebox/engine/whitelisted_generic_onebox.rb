@@ -343,7 +343,7 @@ module Onebox
                    width='#{data[:video_width]}'
                    height='#{data[:video_height]}'
                    style='max-width:100%'
-                   controls=''>
+                   controls='' poster='#{data[:image]}'>
               <source src='#{escaped_src}'>
             </video>
           HTML
