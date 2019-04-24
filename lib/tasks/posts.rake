@@ -390,12 +390,6 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   puts "", "Done.", ""
 end
 
-UPLOAD_PATTERNS ||= [
-  /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
-  /\/original\//,
-  /\/optimized\//
-].freeze
-
 def get_missing_uploads
   PostCustomField.where(name: Post::MISSING_UPLOADS)
 end
@@ -403,6 +397,12 @@ end
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
   get_missing_uploads.delete_all
+
+  upload_patterns = [
+    /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
+    /\/original\//,
+    /\/optimized\//
+  ]
   missing_uploads = []
   old_scheme_upload_count = 0
   count = 0
@@ -416,7 +416,7 @@ task 'posts:missing_uploads' => :environment do
 
       Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
         src = media.value
-        next if src.blank? || UPLOAD_PATTERNS.none? { |pattern| src =~ pattern }
+        next if src.blank? || upload_patterns.none? { |pattern| src =~ pattern }
 
         src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
         next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
