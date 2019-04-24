@@ -1,7 +1,10 @@
 <label class="control-label">{{i18n 'user.users'}}</label>
 <div class="control-group">
   <div class="controls tracking-controls">
-    <label>{{d-icon "d-muted" class="icon"}} {{i18n 'user.muted_users'}}</label>
+    <label>
+      {{d-icon "d-muted" class="icon"}}
+      <span>{{i18n 'user.muted_users'}}</span>
+    </label>
     {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
   </div>
   <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
