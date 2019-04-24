@@ -212,6 +212,12 @@ class Upload < ActiveRecord::Base
       scope = Upload.by_users.where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}%'").order(id: :desc)
 
       scope = scope.limit(limit) if limit
+
+      if scope.count == 0
+        SiteSetting.migrate_to_new_scheme = false
+        return problems
+      end
+
       remap_scope = nil
 
       scope.each do |upload|
