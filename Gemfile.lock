@@ -222,7 +222,7 @@ GEM
     mustache (1.1.0)
     nap (1.1.0)
     no_proxy_fix (0.1.2)
-    nokogiri (1.10.1)
+    nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
