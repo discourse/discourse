@@ -737,17 +737,19 @@ class User < ActiveRecord::Base
   end
 
   def self.system_avatar_template(username)
+    normalized_username = normalize_username(username)
+
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
       url = "#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
-      url.gsub! "{color}", letter_avatar_color(username.downcase)
+      url.gsub! "{color}", letter_avatar_color(normalized_username)
       url.gsub! "{username}", username
-      url.gsub! "{first_letter}", username[0].downcase
+      url.gsub! "{first_letter}", normalized_username.grapheme_clusters.first
       url.gsub! "{hostname}", Discourse.current_hostname
       url
     else
-      "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+      "#{Discourse.base_uri}/letter_avatar/#{normalized_username}/{size}/#{LetterAvatar.version}.png"
     end
   end
 
