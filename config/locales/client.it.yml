@@ -303,21 +303,59 @@ it:
       title:
         search: "Cerca un Messaggio per titolo:"
     review:
+      delete: "Elimina"
+      settings:
+        save_changes: "Salva Modifiche"
+        title: "Impostazioni"
+      moderation_history: "Storico Moderazione"
+      view_all: "Vedi tutti"
       none: "Non ci sono elementi da revisionare."
       view_pending: "vedi in attesa"
       topic_has_pending:
         one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
         other: "Questo Argomento ha  <b>{{count}}</b> messaggi in attesa di approvazione"
       title: "Richiede Revisione"
+      topic: "Argomento:"
+      user:
+        username: "Nome utente"
+        email: "Email"
+        name: "Nome"
+      topics:
+        topic: "Argomento"
+        reviewable_count: "Conteggio"
+        details: "dettagli"
+      edit: "Modifica"
+      save: "Salva"
+      cancel: "Annulla"
+      filters:
+        type:
+          title: "Tipo:"
+        refresh: "Aggiorna"
+      scores:
+        score: "Punteggio"
+        date: "Data"
+        type: "Tipo"
       statuses:
         pending:
           title: "In attesa"
         approved:
           title: "Approvato:"
+        rejected:
+          title: "Rifiutate"
+        ignored:
+          title: "Ignorato"
+        reviewed:
+          title: "(Già revisionati)"
+      types:
+        reviewable_user:
+          title: "Utente"
       approval:
+        title: "Messaggio Da Approvare"
+        description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
         pending_posts:
           one: "Hai<strong>1</strong> messaggio in attesa."
           other: "Hai<strong>{{count}}</strong> messaggi in attesa."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ha pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Tu</a> hai pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
@@ -365,6 +403,9 @@ it:
         title: "Aggiungi Membri"
         description: "Gestisci le iscrizioni di questo gruppo"
         usernames: "Nomi Utente"
+      requests:
+        reason: "Motivo"
+        accepted: "accettata"
       manage:
         title: "Gestisci"
         name: "Nome"
@@ -563,6 +604,12 @@ it:
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
+      user_notifications:
+        ignore_duration_save: "Ignora"
+        ignore_duration_time_frame_required: "Per favore, seleziona un lasso di tempo"
+        ignore_option: "Ignorato"
+        mute_option: "Silenziati"
+        normal_option: "Normale"
       activity_stream: "Attività"
       preferences: "Opzioni"
       profile_hidden: "Il profilo pubblico di questo utente è nascosto."
@@ -588,8 +635,6 @@ it:
       dismiss_notifications: "Nascondi tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       first_notification: "La tua prima notifica! Selezionala per iniziare."
-      disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
-      dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
       theme_default_on_all_devices: "Rendi questo il tema di default su tutti i miei dispositivi."
       text_size_default_on_all_devices: "Rendi questa dimensione del testo il default su tutti i miei dispositivi"
       allow_private_messages: "Consenti agli altri utenti di inviarmi messaggi privati"
@@ -1154,10 +1199,6 @@ it:
         name: "Facebook"
         title: "con Facebook"
         message: "Autenticazione con Facebook (assicurati che il blocco pop up non sia attivo)"
-      yahoo:
-        name: "Yahoo"
-        title: "con Yahoo"
-        message: "Autenticazione con Yahoo (assicurati che il blocco pop up non sia attivo)"
       github:
         name: "GitHub"
         title: "con GitHub"
@@ -1211,6 +1252,7 @@ it:
     emoji_picker:
       filter_placeholder: Ricerca per emoji
       objects: Oggetti
+      flags: Segnalazioni
       custom: Emoji personalizzate
       recent: Usate recentemente
       default_tone: Nessun tono della pelle
@@ -1237,8 +1279,6 @@ it:
       toggle_whisper: "Attiva/Disattiva Sussurri"
       toggle_unlisted: "Rendi Invisibile"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
-      saving_draft_tip: "salvataggio..."
-      saved_draft_tip: "salvato"
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
@@ -1358,7 +1398,6 @@ it:
       none: "Impossibile caricare le notifiche al momento."
       empty: "Nessuna notifica trovata."
       more: "visualizza le notifiche precedenti"
-      total_flagged: "totale argomenti segnalati"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1911,7 +1950,6 @@ it:
       continue_discussion: "Continua la discussione da {{postLink}}:"
       follow_quote: "vai al messaggio citato"
       show_full: "Mostra Messaggio Completo"
-      show_hidden: "Visualizza contenuto nascosto."
       deleted_by_author:
         one: "(post eliminato dall'autore, sarà automaticamente cancellato in %{count} ore se non contrassegnato)"
         other: "(messaggio eliminato dall'autore, verrà automaticamente cancellato in %{count} ore se non segnalato)"
@@ -1922,8 +1960,8 @@ it:
         one: "visualizza 1 risposta nascosta"
         other: "visualizza {{count}} riposte nascoste"
       notice:
-        first: "E' la prima volta che {{user}} invia un messaggio. Diamogli il benvenuto nella nostra comunità!"
-        return: "Era da un bel po' che {{user}} non si faceva vedere: l'ultimo messaggio risale a {{time}}."
+        new_user: "E' la prima volta che {{user}} invia un messaggio. Diamogli il benvenuto nella nostra comunità!"
+        returning_user: "Era da un bel po' che {{user}} non si faceva vedere: l'ultimo messaggio risale a {{time}}."
       unread: "Messaggio non letto"
       has_replies:
         one: "{{count}} Risposta"
@@ -2123,8 +2161,6 @@ it:
       settings: "Impostazioni"
       topic_template: "Modello di Argomento"
       tags: "Etichette"
-      tags_allowed_tags: "Permetti solo a queste etichette di essere usate in questa categoria:"
-      tags_allowed_tag_groups: "Permetti di utilizzare le etichette solo a questi gruppi per questa categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       topic_featured_link_allowed: "Consenti collegamenti in primo piano in questa categoria"
@@ -2174,7 +2210,6 @@ it:
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       this_year: "quest'anno"
-      position: "Posizione:"
       default_position: "Posizione di default"
       position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per modificare l'ordinamento delle categorie nelle liste,"
       position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
@@ -2220,6 +2255,10 @@ it:
         rows_with_featured_topics: "Righe con argomenti in primo piano"
         boxes: "Box"
         boxes_with_featured_topics: "Box con argomenti in primo piano"
+      settings_sections:
+        general: "Generale"
+        moderation: "Moderazione"
+        email: "Email"
     flagging:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Messaggio"
@@ -2288,6 +2327,8 @@ it:
       pinned:
         title: "Appuntato"
         help: "Questo argomento è per te appuntato; verrà mostrato con l'ordinamento di default"
+      unlisted:
+        help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
     posts: "Messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
     posts_likes_MF: |
@@ -2591,8 +2632,6 @@ it:
       dashboard:
         title: "Cruscotto"
         last_updated: "Ultimo aggiornamento cruscotto:"
-        find_old: "Stai cercando il vecchio cruscotto?"
-        old_link: "Lo trovi qui"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
         critical_available: "È disponibile un aggiornamento essenziale."
@@ -2613,6 +2652,8 @@ it:
         private_messages_short: "MP"
         private_messages_title: "Messaggi"
         mobile_title: "Mobile"
+        uploads: "Carica"
+        backups: "Backup"
         lastest_backup: "Recenti: %{date}"
         traffic_short: "Traffico"
         traffic: "Richieste web dell'applicazione"
@@ -2626,7 +2667,9 @@ it:
         all_reports: "Tutti i rapporti"
         general_tab: "Generale"
         moderation_tab: "Moderazione"
+        security_tab: "Sicurezza"
         reports_tab: "Rapporti"
+        report_filter_any: "qualunque"
         disabled: Disabilitato
         timeout_error: "Spiacenti, la ricerca sta impiegando troppo tempo, per favore scegli un intervallo più breve"
         not_found_error: "Spiacenti, questo rapporto non esiste"
@@ -2674,6 +2717,7 @@ it:
         manage:
           interaction:
             email: Email
+            incoming_email: "Indirizzo email personalizzato"
             incoming_email_placeholder: "inserisci indirizzo email"
             visibility: Visibilità
             visibility_levels:
@@ -2687,6 +2731,8 @@ it:
             trust_level: Livello Esperienza
             trust_levels_title: "Livello Esperienza assegnato automaticamente agli utenti quando vengono aggiunti:"
             trust_levels_none: "Nessuno"
+            automatic_membership_email_domains: "Gli utenti che si registrano con un dominio email che corrisponde esattamente a uno presente in questa lista, saranno aggiunti automaticamente a questo gruppo:"
+            automatic_membership_retroactive: "Applica la stessa regola sul dominio email per aggiungere utenti registrati esistenti"
             primary_group: "Imposta automaticamente come gruppo principale"
         name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         primary: "Gruppo Primario"
@@ -2767,6 +2813,7 @@ it:
           inactive: "Non attivo"
           failed: "Fallito"
           successful: "Completato"
+          disabled: "Disabilitato"
         events:
           none: "Non ci sono eventi correlati."
           redeliver: "Riconsegna  "
@@ -2940,6 +2987,7 @@ it:
           default_theme_tooltip: "Questo è il tema di default del sito"
           updates_available_tooltip: "Sono disponibili aggiornamenti per questo tema"
           and_x_more: "ed altri {{count}}."
+          collapse: Raggruppa
           uploads: "Carica"
           no_uploads: "Puoi caricare le risorse associate al tuo tema come il tipo di carattere e le immagini"
           add_upload: "Aggiungi Caricamento"
@@ -2952,6 +3000,9 @@ it:
           edit_css_html_help: "Non hai modificato nessun CSS o HTML"
           delete_upload_confirm: "Elimina questo caricamento? (Il CSS del tema potrebbe non funzionare!)"
           import_web_tip: "Repository contenente il tema"
+          installed: "Installata"
+          install_popular: "Di successo"
+          about_theme: "Informazioni su"
           license: "Licenza"
           component_of: "Componente di:"
           update_to_latest: "Aggiorna all'ultima versione"
@@ -3223,6 +3274,7 @@ it:
           searches: "Ricerche"
           types:
             all_search_types: "Tutti i tipi di ricerca"
+            header: "Intestazione"
         logster:
           title: "Log Errori"
       watched_words:
@@ -3271,7 +3323,7 @@ it:
           suspended: "Sospesi"
           silenced: "Silenziato"
           suspect: "Sospetti"
-          staged: "Da approvare"
+          staged: "Temporanei"
         approved: "Approvato?"
         titles:
           active: "Utenti Attivi"
@@ -3288,7 +3340,7 @@ it:
           silenced: "Utenti Silenziati"
           suspended: "Utenti Sospesi"
           suspect: "Utenti Sospetti"
-          staged: "Utenti da approvare"
+          staged: "Utenti temporanei"
         not_verified: "Non verificato"
         check_email:
           title: "Mostra l'indirizzo email di questo utente"

@@ -387,6 +387,7 @@ fi:
       topic:
         title: "Otsikko"
         featured_link: "Ketjulinkki"
+        category_id: "Alue"
       post:
         raw: "Leipäteksti"
       user_profile:
@@ -447,6 +448,7 @@ fi:
           attributes:
             word:
               too_many: "Toiminnolle on määritelty liian monta sanaa"
+  uncategorized_category_name: "Kategorisoimattomat"
   vip_category_name: "Lounge"
   vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
   meta_category_name: "Palaute"
@@ -690,6 +692,9 @@ fi:
       grant: "Myönnä ylläpitäjäoikeudet"
       complete: "<b>%{target_username}</b> on nyt ylläpitäjä."
       back_to: "Palaa %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Odottaa hyväksyntää"
   post_action_types:
     off_topic:
       title: "Se eksyy aiheesta"
@@ -777,8 +782,6 @@ fi:
         make: "Tämä ketju on nyt banneri. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
         remove: "Tämä ketju ei ole enää banneri. Sitä ei näytetä enää jokaisen sivun ylälaidassa."
   unsubscribed:
-    title: "Tilaus peruttu!"
-    description: "Tilaus osoitteeseen <b>%{email}</b> on peruttu. Voit muuttaa sähköpostiasetuksia <a href='%{url}'>käyttäjäasetuksissasi</a>."
     topic_description: "Tilaa %{link} uudelleen ketjun alla tai oikealla puolen sijaitsevan ilmoitusvalikon kautta."
     private_topic_description: "Voit tilata ketjun uudelleen sen alla tai oikealla puolella sijaitsevan ilmoitusvalikon kautta."
   unsubscribe:
@@ -787,11 +790,16 @@ fi:
     mute_topic: "Vaimenna ilmoitukset tästä ketjusta, %{link}"
     unwatch_category: "Lopeta kaikkien alueen %{category} ketjujen tarkkailu"
     mailing_list_mode: "Poistu postituslistatilasta"
-    disable_digest_emails: "Älä lähetä minulle sähköpostikoosteita"
     all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
     not_found_description: "Pahoittelut, tätä tilauksen perumista ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
+    digest_frequency:
+      never: "ei koskaan"
+      every_30_minutes: "puolen tunnin välein"
+      every_hour: "tunneittain"
+      daily: "päivittäin"
+      weekly: "viikottain"
   user_api_key:
     title: "Anna sovellukselle käyttöoikeus"
     authorize: "Anna käyttöoikeus"
@@ -1250,6 +1258,7 @@ fi:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) verkkotunnus, esim. mysite.com; katso <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Ota käyttöön Google Universal Analyticsin (analytics.js) verkkotunnusten välinen seurantapalvelu . Poisvieviin näiden verkkotunnusten linkkeihin lisätään client id -tunniste. Katso lisää <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googlen Cross-Domain Tracking -oppaasta.</a>"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
     use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     blacklist_ip_blocks: "Lista yksityisistä IP-blokeista, joita Discoursen ei tule käydä läpi"
@@ -1279,6 +1288,7 @@ fi:
     topics_per_period_in_top_page: "Ketjujen lukumäärä, joka näytetään laajennetussa Kuumat-listauksessa."
     redirect_users_to_top_page: "Ohjaa uudet ja kauan poissa olleet käyttäjät automaattisesti kuumat-sivulle."
     top_page_default_timeframe: "Kuumat-sivun oletusaikajakso."
+    moderators_view_emails: "Salli valvojien tarkastella käyttäjien sähköpostiosoitteita"
     prioritize_username_in_ux: "Näytä käyttäjänimi ensimmäisenä käyttäjäsivulla, -kortissa ja viesteissä (jos poistetaan käytöstä, nimi näytetään ensin)"
     enable_rich_text_paste: "Ota käyttöön automaattinen muunnos HTML:stä Markdowniin, kun tekstiä liitetään kirjoitusalueelle (kokeellinen)"
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
@@ -1292,7 +1302,6 @@ fi:
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä ilmoitus <a href='%{base_path}/admin' target='_blank'>/admin</a>-hallintapaneelissa, kun uusi versio on saatavilla"
     new_version_emails: "Lähetä sähköposti contact_email osoitteeseen kun uusi versio Discoursesta on saatavilla."
     invite_expiry_days: "Kuinka monta päivää käyttäjäkutsujen avaimet ovat voimassa"
-    invite_only: "Julkinen rekisteröityminen ei ole käytössä, uuden tilin luominen vaatii kutsun luotetuilta käyttäjiltä tai henkilökunnalta."
     login_required: "Vaadi kirjautumista sivuston lukemiseen, estä kirjautumattomilta pääsy."
     min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä lyhyempi nimi, sivustosi hajoaa!"
     max_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä pidempi nimi, sivustosi hajoaa!"
@@ -1315,7 +1324,6 @@ fi:
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Ota tämä asetus pois käytöstä estääksesi uusien käyttäjätilien luomisen."
     enable_signup_cta: "Näytä palaaville kirjautumattomille käyttäjille ilmoitus, jossa kehotetaan heitä luomaan tili."
-    enable_yahoo_logins: "Ota käyttöön Yahoo kirjautuminen"
     enable_google_oauth2_logins: "Ota käyttöön Google Oauth2 -tunnistautuminen. Tämä on tunnistautumistapa, jota Google nykyisellään tulee. Key ja secret vaaditaan. Katso <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Google-applikaatiosi Client ID."
     google_oauth2_client_secret: "Google-applikaatiosi Client secret."
@@ -1588,7 +1596,6 @@ fi:
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
     read_time_word_count: "Sanamäärä minuutissa, jota käytetään lukuajan arviointiin."
     topic_page_title_includes_category: "Ketjusivu sisältää alueen nimen."
-    native_app_install_banner: "Tarjoaa toistuvasti vieraileville Discoursen käyttöjärjestelmäkohtaista sovellusta."
     share_anonymized_statistics: "Julkaise yksilöimättömät käyttötilastot."
     auto_handle_queued_age: "Käsittele automaattisesti asiat, jotka ovat odottaneet käsittelyä näin monta päivää. Lut sivuutetaan. Jonossa olevat viestit ja käyttäjät hylätään. Jos asetat 0:ksi, ominaisuus ei ole käytössä."
     max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi käytöstä)"
@@ -1640,7 +1647,6 @@ fi:
     default_other_external_links_in_new_tab: "Avaa oletuksena ulkopuoliset linkit uudessa välilehdessä."
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen ikonissa."
-    default_other_disable_jump_reply: "Älä hyppää oletuksena uuteen vastaukseen käyttäjän lähetettyä sen."
     default_other_like_notification_frequency: "Ilmoita käyttäjiä tykkäyksistä oletuksena"
     default_topics_automatic_unpin: "Aseta oletukseksi, että ketjun kiinnitys poistuu automaattisesti, jos käyttäjä selaa keskustelun loppuun"
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
@@ -2048,6 +2054,8 @@ fi:
     agreed: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja selvitämme sitä."
     agreed_and_deleted: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja poistimme kyseisen viestin."
     disagreed: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
+    ignored: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
+    ignored_and_deleted: "Kiitos kun toit asian tietoomme. Poistimme kyseisen viestin."
   temporarily_closed_due_to_flags:
     one: "Ketju on väliaikaisesti suljettu ainakin yhden tunnin ajaksi johtuen suuresta määrästä yhteisön liputuksia."
     other: "Ketju on väliaikaisesti suljettu ainakin %{count} tunnin ajaksi johtuen suuresta määrästä yhteisön liputuksia."
@@ -2491,10 +2499,6 @@ fi:
       subject_template:
         one: "1 käyttäjä odottaa hyväksymistä"
         other: "%{count} käyttäjää odottaa hyväksymistä"
-      text_body_template: |
-        Uusia käyttäjiä odottaa hyväksymistä (tai hylkäämistä) ja pääsyä palstalle.
-
-        [Tarkasta hakemukset admin-alueella](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Linkattuja kuvia ei ladata"
       subject_template: "Linkattujen kuvien lataaminen on otettu pois käytöstä"
@@ -2973,6 +2977,14 @@ fi:
     sender_post_deleted: "viesti on poistettu"
   color_schemes:
     base_theme_name: "Perus"
+    light: "Vaalea"
+    dark: "Tumma"
+    neutral: "Neutraali"
+    grey_amber: "Harmaa ambra"
+    shades_of_blue: "Sinisen sävyt"
+    latte: "Latte"
+    summer: "Kesäinen"
+    dark_rose: "Tumma ruusu"
     default_theme_name: "Vaalea"
     light_theme_name: "Vaalea"
     dark_theme_name: "Tumma"
@@ -3405,17 +3417,14 @@ fi:
         Tämä ansiomerkki myönnetään kahdelle uudelle käyttäjälle joka kuukausi kiitoksena erinomaisesta osallistumisestaan. Mittari on tykkäykset: kuinka usein viesteistä tykätään ja kuka tykkää.
     enthusiast:
       name: Intoilija
-      description: Vieraili 10 päivänä
       long_description: |
         Tämä ansiomerkki myönnetään, kun vierailet 10 peräkkäisenä päivänä. Kiitos kun olet ollut kanssamme yli viikon ajan!
     aficionado:
       name: Hullaantunut
-      description: Vieraili 100 päivänä
       long_description: |
         Tämä ansiomerkki myönnetään, kun vierailet 100 peräkkäisenä päivänä. Sehän on yli kolme kuukautta!
     devotee:
       name: Omistautunut
-      description: Vieraili 365 päivänä
       long_description: |
         Tämä ansiomerkki myönnetään, kun vierailet 365 peräkkäisenä päivänä. Vau, kokonainen vuosi!
     badge_title_metadata: "%{display_name} -ansiomerkki sivustolla %{site_title}"
@@ -3450,7 +3459,6 @@ fi:
       no_emails: "Valitettavasti ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjäsähköposti konfiguraatiotiedostoon tai <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>luo ylläpitäjätili konsolissa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"
-      message: "<p>Lähetimme vahvistusviestin osoitteeseen <b>%{email}</b>. Ota tili käyttöön seuraamalla viestin ohjeita.</p><p>Jos viesti ei saavu, varmista että näppäilit sähköpostin oikein Discourseen ja tarkista roskapostikansiosi.</p>"
     resend_email:
       title: "Lähetä vahvistusviesti uudelleen"
       message: "Lähetimme uuden vahvistusviestin osoitteeseen <b>%{email}</b>"
@@ -3493,16 +3501,13 @@ fi:
             one_paragraph: "Pidä tervetuloviesti yhden kappaleen mittaisena."
       privacy:
         title: "Käyttöoikeudet"
-        description: "<p>Onko yhteisö avoin kaikille vai onko pääsy riippuvainen jäsenyydestä, kutsusta tai hyväksynnästä? Jos haluat, voit laittaa kaiken alulle yksityisesti ja muuttaa foorumin julkiseksi myöhemmin. </p> <p>Voit aina lähettää kutsuja ketjujen alalaidasta kuin myös omalta käyttäjäsivultasikin.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Julkinen"
-                description: "Kenellä tahansa on pääsy yhteisöön ja mahdollisuus käyttäjätunnuksen luomiseen"
               restricted:
                 label: "Yksityinen"
-                description: "Vain kutsutuilla ja hyväksytyillä on pääsy yhteisöön"
       contact:
         title: "Yhteystiedot"
         fields:
@@ -3601,3 +3606,36 @@ fi:
     unknown: "tuntematon"
     user_merged: "%{username} yhdistettiin tähän käyttäjätiliin"
     user_delete_self: "Poisti itsensä asetuksistaan %{url}"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "Säilytä viesti"
+        description: "Ole samaa mieltä lipun kanssa ja pidä viesti ennallaan"
+      agree_and_suspend:
+        title: "Hyllytä käyttäjä"
+        description: "Ole samaa mieltä lipun kanssa ja hyllytä käyttäjä."
+      agree_and_silence:
+        title: "Hiljennä käyttäjä"
+        description: "Ole samaa mieltä lipun kanssa ja hiljennä käyttäjä."
+      agree_and_restore:
+        description: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
+      agree_and_hide:
+        title: "Piilota viesti"
+        description: "Piilota viesti ja lähetä automaattinen yksityisviesti, joka kehottaa käyttäjää muokkaamaan viestiä."
+      delete_spammer:
+        title: "Poista roskapostittaja"
+      disagree_and_restore:
+        description: "Palauta viesti niin että kaikki käyttäjät näkevät sen."
+      disagree:
+        title: "Ole eri mieltä"
+      ignore:
+        title: "Sivuuta"
+      approve:
+        title: "Hyväksy"
+      reject_user:
+        delete:
+          title: "Poista käyttäjä"
+      reject:
+        title: "Hylkää"
+      delete_user:
+        title: "Poista käyttäjä"

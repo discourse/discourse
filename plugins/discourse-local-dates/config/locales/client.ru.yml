@@ -12,9 +12,7 @@ ru:
         today: Сегодня %{time}
         tomorrow: Завтра %{time}
         yesterday: 'Вчера %{time} '
-      title: Вставить дату
       create:
-        modal_title: Вставить дату
         form:
           insert: Вставить
           advanced_mode: Расширенный режим

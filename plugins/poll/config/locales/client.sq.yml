@@ -57,6 +57,8 @@ sq:
           regular: Pa Alternativa
           multiple: Me Alternativa
           number: Vlerësim Numrash
+        poll_result:
+          label: Results
         poll_config:
           max: Maksimumi
           min: Minimumi

@@ -8,9 +8,7 @@
 sw:
   js:
     discourse_local_dates:
-      title: Andika tarehe
       create:
-        modal_title: Andika tarehe
         form:
           insert: Weka
           advanced_mode: Hali-tumizi ya juu

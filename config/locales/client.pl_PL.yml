@@ -150,7 +150,11 @@ pl_PL:
       placeholder: data
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
+      post: "wpis #%{postNumber}"
       close: "zamknij"
+      twitter: "Udostępnij lnik na Twitter"
+      facebook: "Udostępnij lnik na Facebook"
+      email: "Wyślij link poprzez email"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       private_topic: "przekształcił ten temat w wiadomość prywatną %{when}"
@@ -210,6 +214,7 @@ pl_PL:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     edit: "edytuj tytuł i kategorię tego tematu"
+    expand: "Rozszerz"
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
     yes_value: "Tak"
@@ -250,6 +255,8 @@ pl_PL:
     every_hour: "co godzinę"
     daily: "dziennie"
     weekly: "tygodniowo"
+    every_month: "każdego miesiąca"
+    every_six_months: "co 6 miesięcy"
     max_of_count: "max z {{count}}"
     alternation: "lub"
     character_count:
@@ -340,6 +347,60 @@ pl_PL:
       none_found: "Nie znaleziono tematów."
       title:
         placeholder: "tutaj wpisz tytuł tematu"
+    choose_message:
+      none_found: "Nie znaleziono wiadomości."
+      title:
+        placeholder: "wpisz tytuł wiadomości"
+    review:
+      delete: "Usuń"
+      settings:
+        saved: "Zapisano"
+        save_changes: "Zapisz zmiany"
+        title: "Ustawienia"
+      moderation_history: "Historia moderacji"
+      view_all: "Pokaż wszystko"
+      grouped_by_topic: "Grupuj tematycznie"
+      none: "Brak elementów do przejrzenia."
+      view_pending: "pokaż oczekujące"
+      title: "Oczekuje akceptacji"
+      topic: "Temat:"
+      filtered_user: "Użytkownik:"
+      show_all_topics: "pokaż wszystkie tematy"
+      user:
+        username: "Nazwa użytkownika"
+        email: "Email"
+        name: "Imię"
+        fields: "Pola"
+      topics:
+        topic: "Temat"
+        reviewable_count: "Liczba"
+        reported_by: "Zgłoszony przez"
+        details: "szczegóły"
+        unique_users:
+          one: "1 użytkownik"
+          few: "{{count}} użytkowników"
+          many: "{{count}}użytkowników"
+          other: "{{count}} użytkowników"
+      edit: "Edytuj"
+      save: "Zapisz"
+      cancel: "Anuluj"
+      filters:
+        refresh: "Odśwież"
+      scores:
+        date: "Data"
+        type: "Typ"
+      statuses:
+        pending:
+          title: "Oczekujące"
+        rejected:
+          title: "Odrzucone"
+      types:
+        reviewable_user:
+          title: "Użytkownik"
+      approval:
+        title: "Wpis wymaga zatwierdzenia"
+        description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> tworzy <a href='{{topicUrl}}'>temat</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Dodajesz</a> <a href='{{topicUrl}}'>temat</a>"
@@ -389,6 +450,9 @@ pl_PL:
         title: "Dodaj członków"
         description: "Zarządzaj członkami tej grupy"
         usernames: "Nazwy użytkowników"
+      requests:
+        reason: "Powód"
+        accepted: "przyjęty"
       manage:
         title: "Zarządzaj"
         name: "Nazwa"
@@ -581,6 +645,10 @@ pl_PL:
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
+      user_notifications:
+        ignore_duration_save: "Ignoruj"
+        mute_option: "Wyciszenie"
+        normal_option: "Normalny"
       activity_stream: "Aktywność"
       preferences: "Ustawienia"
       profile_hidden: "Publiczny profil użytkownika jest ukryty."
@@ -606,8 +674,6 @@ pl_PL:
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
-      disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
-      dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
       allow_private_messages: "Pozwól innym użytkownikom wysyłać do mnie prywatne wiadomości"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
@@ -692,6 +758,7 @@ pl_PL:
         emails: "Wiadomości"
         notifications: "Powiadomienia"
         categories: "Kategorie"
+        users: "Użytkownicy"
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
@@ -752,6 +819,7 @@ pl_PL:
         primary: "Podstawowe adres email"
         secondary: "Drugorzędne adresy email"
         no_secondary: "Brak drugorzędnych adresów email"
+        instructions: "Nie będzie publicznie widoczny."
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
@@ -812,6 +880,7 @@ pl_PL:
       email_settings: "Email"
       text_size:
         title: "Rozmiar tekstu"
+        normal: "Normalny"
       like_notification_frequency:
         title: "Powiadom o lajkach"
         always: "Zawsze"
@@ -828,6 +897,13 @@ pl_PL:
         every_hour: "co godzinę"
         daily: "codziennie"
         weekly: "co tydzień"
+        every_month: "każdego miesiąca"
+        every_six_months: "co 6 miesięcy"
+      email_level:
+        title: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
+        always: "zawsze"
+        never: "nigdy"
+      email_messages_level: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
       include_tl0_in_digests: "Dołącz treści od nowych użytkowników w e-mailach podsumowujących."
       email_in_reply_to: "Dołącz fragment odpowiedzi w poście do maili "
       other_settings: "Inne"
@@ -1086,6 +1162,9 @@ pl_PL:
       help: "Email nie dotarł? Upewnij się najpierw czy sprawdziłeś folder spam.<p>Nie jesteś pewny jaki email został użyty? Wprowadz adres tutaj, a dowiemy się czy taki istnieje.</p><p>Jeśli nie masz już dostępu do adresu email zapisanego na twoim koncie, skontaktuj się z <a href='%{basePath}/about'>naszym pomocnym zespołem.</a></p>"
       button_ok: "OK"
       button_help: "Pomoc"
+    email_login:
+      complete_username_not_found: "Nie znaleziono konta o nazwie <b>%{username}</b>"
+      complete_email_not_found: "Nie znaleziono konta przypisanego do <b>%{email}</b>"
     login:
       title: "Logowanie"
       username: "Użytkownik"
@@ -1093,6 +1172,7 @@ pl_PL:
       second_factor_title: "Dwuskładnikowe uwierzytelnianie"
       second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
       second_factor_backup_description: "Proszę wprowadź jeden ze swoich zapasowych kodów:"
+      second_factor: "1"
       email_placeholder: "adres email lub nazwa użytkownika"
       caps_lock_warning: "Caps Lock jest włączony"
       error: "Nieznany błąd"
@@ -1135,10 +1215,6 @@ pl_PL:
         name: "Facebook"
         title: "przez Facebook"
         message: "Uwierzytelnianie przy pomocy konta Facebook (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
-      yahoo:
-        name: "Yahoo"
-        title: "przez Yahoo"
-        message: "Uwierzytelnianie przy pomocy konta Yahoo (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       github:
         name: "GitHub"
         title: "przez GitHub"
@@ -1193,6 +1269,7 @@ pl_PL:
     emoji_picker:
       filter_placeholder: Szukaj emoji
       objects: Obiekty
+      flags: Flagi
       custom: Spersonalizowane emoji
       recent: Ostatnio używane
       default_tone: Brak koloru skóry
@@ -1216,8 +1293,6 @@ pl_PL:
       toggle_whisper: "Przełącz szept"
       toggle_unlisted: "Przycisk ukrywania"
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
-      saving_draft_tip: "zapisuję..."
-      saved_draft_tip: "zapisano"
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
@@ -1316,7 +1391,6 @@ pl_PL:
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
       more: "pokaż starsze powiadomienia"
-      total_flagged: "wszystkie oflagowane wpisy"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1330,6 +1404,7 @@ pl_PL:
         few: "<span>{{username}}, {{username2}} i {{count}} inne osoby</span> {{description}}"
         many: "<span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}"
         other: "<span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}"
+      liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1809,6 +1884,8 @@ pl_PL:
       move_to_new_message:
         radio_label: "Nowa wiadomość"
         participants: "Uczestnicy"
+      move_to_existing_message:
+        participants: "Uczestnicy"
       merge_posts:
         title: "Scal wybrane posty"
         action: "scal wybrane posty"
@@ -1832,6 +1909,8 @@ pl_PL:
         selected_post:
           label: "zaznaczone"
           title: "Kliknij aby usunąć post z zaznaczenia"
+        select_replies:
+          label: "wybierz +replies"
         delete: usuń wybrane
         cancel: anuluj wybieranie
         select_all: zaznacz wszystkie
@@ -1852,7 +1931,6 @@ pl_PL:
       continue_discussion: "Kontynuując dyskusję z {{postLink}}:"
       follow_quote: "idź do cytowanego wpisu"
       show_full: "Pokaż pełny wpis"
-      show_hidden: "Zobacz ukrytą zawartość."
       deleted_by_author:
         one: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godzinę, chyba że zostanie oflagowany) "
         few: "(wpis wycofany przez autora, zostanie automatycznie usunięty za %{count} godziny, chyba że zostanie oflagowany) "
@@ -1925,6 +2003,7 @@ pl_PL:
         rebake: "Odśwież HTML"
         unhide: "Wycofaj ukrycie"
         change_owner: "Zmiana właściciela"
+        grant_badge: "Przyznaj odznakę"
         lock_post: "Zablokuj Wpis"
         unlock_post: "Odblokuj Wpis"
         delete_topic: "usuń temat"
@@ -2071,13 +2150,12 @@ pl_PL:
       can: "może&hellip; "
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
+      edit: "Edytuj"
       view: "Pokaż Tematy w Kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
       topic_template: "Szablon tematu"
       tags: "Tagi"
-      tags_allowed_tags: "Zezwól jedynie na użycie następujących tagów w tej kategorii:"
-      tags_allowed_tag_groups: "Zezwól jedynie na użycie tagów z następujących grup w tej kategorii:"
       tags_placeholder: "(Opcjonalnie) lista dozwolonych tagów"
       tag_groups_placeholder: "(Opcjonalnie) lista dozwolonych grup tagów"
       topic_featured_link_allowed: "Zezwól na wybrane linki w tej kategorii"
@@ -2143,6 +2221,10 @@ pl_PL:
         muted:
           title: "Wyciszone"
           description: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
+      search_priority:
+        options:
+          normal: "Normalny"
+          ignore: "Ignoruj"
       sort_options:
         default: "domyślny"
         likes: "Polubienia"
@@ -2160,6 +2242,9 @@ pl_PL:
         rows_with_featured_topics: "Rzędy z wybranymi tematami"
         boxes: "Pudełka"
         boxes_with_featured_topics: "Ramki z wybranymi tematami"
+      settings_sections:
+        general: "Ogólne"
+        email: "Email"
     flagging:
       title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Oflaguj wpis"
@@ -2238,6 +2323,8 @@ pl_PL:
       pinned:
         title: "Przypięty"
         help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
+      unlisted:
+        help: "Temat jest niewidoczny: nie będzie wyświetlany na listach tematów a dostęp do niego można uzyskać jedynie poprzez link bezpośredni"
     posts: "Wpisy"
     posts_long: "jest {{number}} wpisów w tym temacie"
     posts_likes_MF: |
@@ -2576,15 +2663,22 @@ pl_PL:
         private_messages_short: "Wiad."
         private_messages_title: "Wiadomości"
         mobile_title: "Mobile"
+        uploads: "Pliki"
+        backups: "Kopie zapasowe"
         traffic_short: "Ruch"
         traffic: "Zapytania do aplikacji"
         page_views: "Wyświetlenia strony"
         page_views_short: "Wyświetlenia strony"
         show_traffic_report: "Pokaż szczegółowy raport ruchu"
         activity_metrics: Metryka aktywności
+        general_tab: "Ogólne"
+        security_tab: "Bezpieczeństwo"
+        report_filter_any: "każdy"
         reports:
           today: "Dzisiaj"
           yesterday: "Wczoraj"
+          last_7_days: "Ostatnie 7"
+          last_30_days: "Ostatnie 30"
           all_time: "Przez cały czas"
           7_days_ago: "7 dni temu"
           30_days_ago: "30 dni temu"
@@ -2601,15 +2695,22 @@ pl_PL:
       groups:
         new:
           title: "Nowa grupa"
+          create: "Stwórz"
           name:
             too_short: "Nazwa grupy jest zbyt krótka"
             too_long: "Nazwa grupy jest zbyt długa"
             available: "Nazwa grupy jest dostępna"
             not_available: "Nazwa grupy jest niedostępna"
             blank: "Nazwa grupy nie może być pusta"
+        bulk_add:
+          title: "Dodaj więcej do grupy"
+          complete_users_not_added: "Podani użytkownicy nie mogą zostać dodani (Sprawdź, czy stworzyli konto):"
+          paste: "Podaj listę nazw użytkowników lub adresów e-mail,  każdy w oddzielnej linii:"
         manage:
           interaction:
             email: Email
+            incoming_email: "Niestandardowy adres poczty przychodzącej"
+            incoming_email_placeholder: "podaj adres e-mail"
             visibility: Widoczność
             visibility_levels:
               title: "Kto może widzieć tę grupę?"
@@ -2618,8 +2719,14 @@ pl_PL:
               staff: "Właściciele grupy i zespół"
               owners: "Właściciele grupy i administratorzy"
           membership:
+            automatic: Automatyczne
             trust_level: Poziom Zaufania
             trust_levels_title: "Domyślny poziom zaufania przyznawany dodawanym użytkownikom:"
+            trust_levels_none: "Brak"
+            automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
+            automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
+            primary_group: "Automatycznie ustawiaj jako główną grupę"
+        name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"
         title: "Grupy"
@@ -2832,18 +2939,23 @@ pl_PL:
           theme: "Motyw"
           customize_desc: "Personalizacja:"
           title: "Motywy"
+          create: "Stwórz"
+          create_type: "Typ"
+          create_name: "Imię"
           long_title: "Zmodyfikuj kolory, kod CSS i kod HTML zawartości Twojej strony"
           edit: "Edytuj"
           edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
           common: "Częste"
           desktop: "Komputer"
           mobile: "Mobilnie"
+          settings: "Ustawienia"
           preview: "Podgląd"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
           color_scheme_select: "Wybierz kolory, jakie mają być użyte w motywie"
           custom_sections: "Spersonalizowane sekcje:"
           theme_components: "Komponenty motywu"
+          collapse: Zwiń
           uploads: "Pliki"
           no_uploads: "Możesz załadować zasoby do swojego motywu np. fonty lub obrazy"
           add_upload: "Dodaj plik"
@@ -2855,6 +2967,9 @@ pl_PL:
           edit_css_html_help: "Nie modyfikowałeś CSS ani HTML"
           delete_upload_confirm: "Czy usunąć ten plik? (CSS motywu może przestać działać!)"
           import_web_tip: "Repozytorium zawierające motyw"
+          installed: "Zainstalowana"
+          install_popular: "Popularne"
+          about_theme: "O stronie"
           license: "Licencja"
           update_to_latest: "Aktualizuj do najnowszego"
           check_for_updates: "Sprawdź dostępność aktualizacji"
@@ -3375,6 +3490,10 @@ pl_PL:
         go_back: "Wróć do wyszukiwania"
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
+      settings:
+        show_overriden: "Pokaż tylko nadpisane"
+        reset: "przywróć domyślne"
+        none: "żadne"
       site_settings:
         title: "Ustawienia"
         no_results: "Brak wyników wyszukiwania"
@@ -3411,6 +3530,7 @@ pl_PL:
           tags: "Tagi"
           search: "Wyszukaj"
           groups: "Grupy"
+          dashboard: "Raporty"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka
@@ -3530,6 +3650,10 @@ pl_PL:
           label: "Nowy:"
           add: "Dodaj"
           filter: "Wyszukaj (URL or zewnętrzny URL)"
+      reseed:
+        modal:
+          categories: "Kategorie"
+          topics: "Tematy"
   wizard_js:
     wizard:
       done: "Zrobione"

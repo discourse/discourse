@@ -37,6 +37,8 @@ bs_BA:
   redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
   themes:
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
+    import_error:
+      git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
     settings_errors:
       invalid_yaml: "Korišteni YAML fajl nije validan."
       data_type_not_a_number: "Postavka tipa `%{name}` nije podržana. Podržani tipovi su `integer`, `bool`, `list` i `enum`"
@@ -63,6 +65,8 @@ bs_BA:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
+      exclusion: is reserved
+      has_already_been_used: "već se koristi"
     embed:
       load_from_remote: "There was an error loading that post."
   activemodel:
@@ -74,6 +78,7 @@ bs_BA:
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
   not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  likes: "Sviđanja"
   embed:
     start_discussion: "Start Discussion"
     continue: "Continue Discussion"
@@ -81,6 +86,11 @@ bs_BA:
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
+  no_mentions_allowed: "Sorry, you can't mention other users."
+  no_mentions_allowed_newuser: "Sorry, new users can't mention other users."
+  no_images_allowed: "Sorry, new users can't put images in posts."
+  no_attachments_allowed: "Sorry, new users can't put attachments in posts."
+  no_links_allowed: "Sorry, new users can't put links in posts."
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   just_posted_that: "is too similar to what you recently posted"
@@ -100,6 +110,7 @@ bs_BA:
     latest: "Latest topics"
     hot: "Hot topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+  excerpt_image: "slika"
   groups:
     default_names:
       everyone: "everyone"
@@ -136,6 +147,11 @@ bs_BA:
     attributes:
       category:
         name: "Ime Kategorije"
+      topic:
+        title: "Naslov"
+        category_id: "Kategorija"
+      post:
+        raw: "Tijelo"
       user_profile:
         bio_raw: "O Meni"
     errors:
@@ -176,6 +192,12 @@ bs_BA:
       title: "novi korisnik"
     basic:
       title: "korisnik"
+    member:
+      title: "član"
+    regular:
+      title: "pokretač"
+    leader:
+      title: "vođa"
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
@@ -192,6 +214,8 @@ bs_BA:
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:
+    choose_new: "Izaberite novu šifru"
+    choose: "Izaberite šifru"
     update: "Obnovi Šifru"
     save: "Namjesti Šifru"
     title: "Resetuj Šifru"
@@ -207,6 +231,9 @@ bs_BA:
     continue_button: "Nastavi na %{site_name}"
     welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Potrebno odobrenje"
   post_action_types:
     off_topic:
       title: "Nije Relevantno"
@@ -215,6 +242,7 @@ bs_BA:
     spam:
       title: "Spam"
       long_form: "opomeni kao spam"
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
       long_form: "opomeni kao neprikladno"
@@ -228,10 +256,12 @@ bs_BA:
     bookmark:
       title: "Sačuvaj"
       description: "Sačuvaj ovaj post"
+      short_description: "Sačuvaj ovaj post"
       long_form: "sačuvan post"
     like:
       title: "Like"
       description: "Lajkuj ovaj post"
+      short_description: "Lajkuj ovaj post"
       long_form: "lajkovao si ovo"
   topic_flag_types:
     spam:
@@ -252,15 +282,54 @@ bs_BA:
     regular:
       title: "Regular Topic"
     banner:
+      title: "Banner tema"
       message:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
+  unsubscribe:
+    title: "Odjavi se"
+    log_out: "Izloguj se"
+    digest_frequency:
+      never: "nikad"
+      every_30_minutes: "svakih 30 minuta"
+      every_hour: "po satu"
+      daily: "dnevno"
+      weekly: "sedmično"
   reports:
+    default:
+      labels:
+        day: Day
+    post_edits:
+      labels:
+        post: Objava
+        editor: Urednik
+        edit_reason: Reason
+    user_flagging_ratio:
+      labels:
+        user: User
+    moderators_activity:
+      labels:
+        moderator: Moderator
+    flags_status:
+      labels:
+        flag: Tip
     visits:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
+      xaxis: "Day"
+    new_contributors:
+      xaxis: "Day"
+    consolidated_page_views:
+      yaxis: "Day"
+      labels:
+        post: Objava
+        editor: Urednik
+        edit_reason: Reason
+    dau_by_mau:
+      xaxis: "Day"
+    daily_engaged_users:
       xaxis: "Day"
     profile_views:
       xaxis: "Dan"
@@ -288,11 +357,23 @@ bs_BA:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
       yaxis: "Number of Users"
+    users_by_type:
+      xaxis: "Tip"
+      yaxis: "Number of Users"
+      labels:
+        type: Tip
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Suspended
     emails:
       title: "Emails Sent"
       xaxis: "Day"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
+      xaxis: "Day"
+      yaxis: "Number of private messages"
+    user_to_user_private_messages_with_replies:
       xaxis: "Day"
       yaxis: "Number of private messages"
     system_private_messages:
@@ -316,18 +397,69 @@ bs_BA:
       xaxis: "User"
       num_clicks: "Clicks"
       num_topics: "Topics"
+      labels:
+        user: "User"
+        num_clicks: "Clicks"
+        num_topics: "Teme"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
       num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Teme
     top_referred_topics:
       title: "Top Referred Topics"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Topic"
     page_view_anon_reqs:
+      title: "Anoniman"
       xaxis: "Dan"
+    page_view_logged_in_reqs:
+      xaxis: "Day"
+    page_view_crawler_reqs:
+      xaxis: "Day"
+    page_view_total_reqs:
+      xaxis: "Day"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Day"
+    page_view_anon_mobile_reqs:
+      xaxis: "Day"
+    http_background_reqs:
+      xaxis: "Day"
+    http_2xx_reqs:
+      xaxis: "Day"
+    http_3xx_reqs:
+      xaxis: "Day"
+    http_4xx_reqs:
+      xaxis: "Day"
+    http_5xx_reqs:
+      xaxis: "Day"
+    http_total_reqs:
+      xaxis: "Day"
     time_to_first_response:
+      xaxis: "Day"
       yaxis: "Prosječno vrijeme (hours)"
+    topics_with_no_response:
+      xaxis: "Day"
+    mobile_visits:
+      xaxis: "Day"
+      yaxis: "Number of visits"
+    suspicious_logins:
+      labels:
+        user: User
+        location: Lokacija
+    staff_logins:
+      labels:
+        user: User
+        location: Lokacija
+    top_uploads:
+      labels:
+        filename: Filename
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -338,9 +470,11 @@ bs_BA:
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
+    min_personal_message_post_length: "Minimum allowed post length in characters for private messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
+    min_personal_message_title_length: "Minimum allowed title length for a private message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -351,6 +485,7 @@ bs_BA:
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
@@ -373,6 +508,7 @@ bs_BA:
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
@@ -398,7 +534,6 @@ bs_BA:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
-    enable_yahoo_logins: "Enable Yahoo authentication"
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
@@ -416,6 +551,7 @@ bs_BA:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
+    max_personal_messages_per_day: "Maximum number of private messages users can create per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
@@ -540,6 +676,7 @@ bs_BA:
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
   topic_statuses:
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_disabled_lastpost: "Ova tema je sada otvorena. Novi postovi su dozvoljeni."
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Netačan nadimak, email ili šifra"
@@ -547,6 +684,7 @@ bs_BA:
     active: "Vaš nalog je aktivan i spreman za korišćenje."
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
     not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
+    admin_not_allowed_from_ip_address: "Ne možete se logirati kao admin sa te IP adrese."
     suspended: "You can't log in until %{date}."
     errors: "%{errors}"
     not_available: "Nije dostupno. Probaj %{suggestion}?"
@@ -556,6 +694,10 @@ bs_BA:
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     missing_user_field: "You have not completed all the user fields"
+    second_factor_title: "Two Factor Authentication"
+  admin:
+    email:
+      sent_test: "sent!"
   user:
     username:
       short: "must be at least %{min} characters"
@@ -576,6 +718,8 @@ bs_BA:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
     agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
     disagreed: "Thanks for letting us know. We're looking into it."
+    ignored: "Thanks for letting us know. We're looking into it."
+    ignored_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
     welcome_user:
       subject_template: "Dobrodošli na %{site_name}!"
@@ -596,11 +740,22 @@ bs_BA:
       subject_template: "Bulk user invite processed with errors"
     csv_export_failed:
       subject_template: "Export failed"
-    pending_users_reminder:
+    email_reject_invalid_post:
       text_body_template: |
-        There are new user signups waiting to be approved (or rejected) before they can access this forum.
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
+    email_reject_invalid_post_specified:
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Reason:
+
+        %{post_error}
+
+        If you can correct the problem, please try again.
+    spam_post_blocked:
+      subject_template: "New user %{username} posts blocked due to repeated links"
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
@@ -614,7 +769,12 @@ bs_BA:
     posted_by: "Odgovoreno %{username} dana %{post_date}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
+      liked_received: "Likes Received"
+      new_users: "Users"
+      join_the_discussion: "Pročitaj Više"
       click_here: "klikni ovdje"
+    set_password:
+      title: "Postavi šifru"
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
   page_not_found:
@@ -625,6 +785,7 @@ bs_BA:
   terms_of_service:
     title: "Terms of Service"
   deleted: "obrisano"
+  image: "slika"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -635,11 +796,29 @@ bs_BA:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+  skipped_email_log:
+    user_email_no_user: "Can't find user with id %{user_id}"
+    user_email_post_not_found: "Can't find a post with id %{post_id}"
+    user_email_user_suspended_not_pm: "User is suspended, not a private message"
+    user_email_seen_recently: "User was seen recently"
+    user_email_notification_already_read: "The notification this email is about has already been read"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_deleted: "post was deleted by the author"
+    user_email_user_suspended: "user was suspended"
+    user_email_already_read: "user has already read this post"
+    sender_message_blank: "message is blank"
+    sender_message_to_blank: "message.to is blank"
+    sender_text_part_body_blank: "text_part.body is blank"
+    sender_body_blank: "body is blank"
   color_schemes:
     base_theme_name: "Base"
+  about: "O Nama"
   guidelines: "Guidelines"
   privacy: "Privacy"
   edit_this_page: "Edit this page"
+  csv_export:
+    boolean_yes: "Da"
+    boolean_no: "Ne"
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:
@@ -648,3 +827,122 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
+  badges:
+    editor:
+      name: Urednik
+      description: Prvi post izmjenjen
+    basic_user:
+      name: Osnovni
+    member:
+      name: Član
+    regular:
+      name: Regularan
+    leader:
+      name: Vođa
+    welcome:
+      name: Dobrodošao
+      description: Dobio Lajk
+    autobiographer:
+      name: Autobiografičar
+    anniversary:
+      name: Godišnjica
+      description: "Aktivan član godinu dana, pisao najmanje jednom"
+    nice_topic:
+      name: Dobra Tema
+    good_topic:
+      name: Odlična Tema
+    great_topic:
+      name: Super Tema
+    nice_share:
+      name: Dobar Share
+      description: Podijelio je post sa više od 25 posjetilaca
+    good_share:
+      name: Good Share
+      description: Shared a post with 300 unique visitors
+    great_share:
+      name: Great Share
+      description: Shared a post with 1000 unique visitors
+    first_like:
+      name: Prvi Lajk
+      description: Lajkovao post
+    first_flag:
+      name: Prva Opomena
+      description: Opomenuo post
+    first_share:
+      name: Prvi Share
+      description: Podijelio post
+    first_link:
+      name: Prvi Link
+    first_quote:
+      name: Prvo Citiranje
+    read_guidelines:
+      name: Pročitao Pravila
+    reader:
+      name: Čitač
+  tags:
+    title: "Oznake"
+  finish_installation:
+    register:
+      help: "Registriraj novi račun kako bi počeo"
+    resend_email:
+      title: "Pošalji ponovo email aktivacije"
+  wizard:
+    step:
+      forum_title:
+        title: "Ime"
+      privacy:
+        title: "Pristup"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Javno"
+              restricted:
+                label: "Privatno"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "Organizacija"
+      colors:
+        title: "Izgled"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Samo kategorije"
+              categories_with_featured_topics:
+                label: "Kategorije sa Izdvojenim temama"
+              categories_and_latest_topics:
+                label: "Kategorije i Novije teme"
+              categories_and_top_topics:
+                label: "Kategorije i Top teme"
+  joined: "Registrovan"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "Obavijesti uključene - %{site_title}"
+      confirm_body: "Uspješno! Obavijesti su sada uključene."
+  reviewables:
+    actions:
+      agree_and_keep:
+        description: "Složij se sa prijavom ali ostavi prijavljenu objavu neizmjenjenom"
+      agree_and_suspend:
+        title: "Suspend User"
+        description: "Složij se sa prijavom i suspendiraj prijavljenog korisnika (suspend)"
+      agree_and_silence:
+        description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
+      delete_spammer:
+        title: "Obriši Spamera"
+      disagree:
+        title: "Disagree"
+      approve:
+        title: "Odobri"
+      reject_user:
+        delete:
+          title: "Delete User"
+      reject:
+        title: "Odbij"
+      delete_user:
+        title: "Delete User"

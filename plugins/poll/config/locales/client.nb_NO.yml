@@ -59,6 +59,8 @@ nb_NO:
           regular: Et valg
           multiple: Flere valg
           number: Nummervurdering
+        poll_result:
+          label: Resultater
         poll_config:
           max: Maksimum
           min: Minimum

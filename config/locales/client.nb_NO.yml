@@ -109,6 +109,7 @@ nb_NO:
       next_month: "Neste måned"
       placeholder: dato
     share:
+      post: "innlegg #%{postNumber}"
       close: "lukk"
     action_codes:
       public_topic: "gjorde dette emnet offentlig %{when}"
@@ -166,6 +167,7 @@ nb_NO:
         us_west_1: "USA vest (N. California)"
         us_west_2: "USA vest (Oregon)"
     edit: "endre tittelen og kategorien til dette emnet"
+    expand: "Utvid"
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
     yes_value: "Ja"
@@ -241,6 +243,9 @@ nb_NO:
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt privat emneutkast"
       topic_reply: "Svarutkast"
+      abandon:
+        yes_value: "Ja"
+        no_value: "Nei"
     topic_count_latest:
       one: "Se {{count}} nytt eller oppdatert emne"
       other: "Se {{count}} nye eller oppdaterte emner"
@@ -274,6 +279,42 @@ nb_NO:
       none_found: "Ingen emner funnet."
       title:
         placeholder: "skriv tittelen på emnet her"
+    review:
+      delete: "Slett"
+      settings:
+        save_changes: "Lagre endringer"
+        title: "Innstillinger"
+      moderation_history: "Moderatorhistorikk"
+      title: "Må ses gjennom"
+      topic: "Emne:"
+      user:
+        username: "Brukernavn"
+        email: "E-post"
+        name: "Navn"
+      topics:
+        topic: "Emne"
+        reviewable_count: "Antall"
+        details: "detaljer"
+      edit: "Rediger"
+      save: "Lagre"
+      cancel: "Avbryt"
+      filters:
+        refresh: "Last inn på nytt"
+      scores:
+        date: "Dato"
+        type: "Type"
+      statuses:
+        pending:
+          title: "På vent"
+        rejected:
+          title: "Avvist"
+      types:
+        reviewable_user:
+          title: "Bruker"
+      approval:
+        title: "Innlegg trenger godkjenning"
+        description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Ha tålmod."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> opprettet <a href='{{topicUrl}}'>emnet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> opprettet <a href='{{topicUrl}}'>emnet</a>"
@@ -320,6 +361,9 @@ nb_NO:
         title: "Legg til medlemmer"
         description: "Endre medlemskapet i denne gruppen"
         usernames: "Brukernavn"
+      requests:
+        reason: "Begrunnelse"
+        accepted: "godtatt"
       manage:
         title: "Behandle"
         name: "Navn"
@@ -506,6 +550,10 @@ nb_NO:
       new_private_message: "Ny Melding"
       private_message: "Melding"
       private_messages: "Meldinger"
+      user_notifications:
+        ignore_duration_save: "Ignorer"
+        mute_option: "Ignorert"
+        normal_option: "Normal"
       activity_stream: "Aktivitet"
       preferences: "Innstillinger"
       expand_profile: "Utvid"
@@ -530,8 +578,6 @@ nb_NO:
       dismiss_notifications: "Forkast alle"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       first_notification: "Ditt første varsel! Velg det for å komme i gang."
-      disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
-      dynamic_favicon: "Vis antall nye / oppdaterte emner på nettleserikonet"
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
@@ -618,6 +664,7 @@ nb_NO:
         emails: "E-poster"
         notifications: "Varsler"
         categories: "Kategorier"
+        users: "Brukere"
         tags: "Stikkord"
         interface: "Grensesnitt"
         apps: "Programmer"
@@ -686,6 +733,7 @@ nb_NO:
         primary: "Primær e-post"
         secondary: "Sekundære e-poster"
         no_secondary: "Ingen sekundære e-poster"
+        instructions: "Vises aldri offentlig"
         ok: "Vi sender deg en e-post for å bekrefte"
         invalid: "Oppgi en gyldig e-postadresse"
         authenticated: "Din e-post har blitt autentisert av {{provider}}"
@@ -722,6 +770,9 @@ nb_NO:
         any: "alle"
       password_confirmation:
         title: "Passord igjen"
+      auth_tokens:
+        ip: "IP"
+        details: "Detaljer"
       last_posted: "Siste innlegg"
       last_emailed: "Sist kontaktet"
       last_seen: "Sist sett"
@@ -730,6 +781,8 @@ nb_NO:
       location: "Sted"
       website: "Nettsted"
       email_settings: "E-post"
+      text_size:
+        normal: "Normal"
       like_notification_frequency:
         title: "Varsle når likt"
         always: "Alltid"
@@ -746,6 +799,11 @@ nb_NO:
         every_hour: "hver time"
         daily: "daglig"
         weekly: "ukentlig"
+      email_level:
+        title: "Send meg en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
+        always: "alltid"
+        never: "aldri"
+      email_messages_level: "Motta en e-post når noen sender meg en melding"
       include_tl0_in_digests: "Inkluder innhold fra nye brukere i oppsummerings-eposter"
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
       other_settings: "Annet"
@@ -1048,10 +1106,6 @@ nb_NO:
         name: "Facebook"
         title: "med Facebook"
         message: "Autentiserer med Facebook (sørg for at du tillater oppsprettsvindu)"
-      yahoo:
-        name: "Yahoo"
-        title: "med Yahoo"
-        message: "Autentiserer med Yahoo (sørg for at du tillater oppsprettsvindu)"
       github:
         name: "GitHub"
         title: "med GitHub"
@@ -1102,6 +1156,7 @@ nb_NO:
     emoji_picker:
       filter_placeholder: Søk etter emoji
       objects: Objekter
+      flags: Flagg
       custom: Egendefinerte emoji-er
       recent: Nylig brukt
       default_tone: Ingen hudtone
@@ -1128,8 +1183,6 @@ nb_NO:
       toggle_whisper: "Slå på/av hvisking"
       toggle_unlisted: "Skjul eller gjør synlig"
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
-      saving_draft_tip: "lagrer…"
-      saved_draft_tip: "lagret"
       saved_local_draft_tip: "lagret lokalt"
       similar_topics: "Emnet ditt har likheter med…"
       drafts_offline: "utkast offline"
@@ -1248,7 +1301,6 @@ nb_NO:
       none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."
       empty: "Ingen varsler funnet."
       more: "se gamle varsler"
-      total_flagged: "totalt rapporterte innlegg"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1260,6 +1312,7 @@ nb_NO:
       liked_many:
         one: "<span>{{username}}, {{username2}} og én annen</span> {{description}}"
         other: "<span>{{username}}, {{username2}} og {{count}} andre</span> {{description}}"
+      liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
       invited_to_private_message: "<p><span>{{username}}</span> {{description}}"
       invited_to_topic: "<span>{{username}}</span> {{description}}"
@@ -1712,6 +1765,7 @@ nb_NO:
       split_topic:
         title: "Flytt til nytt emne"
         action: "flytt til nytt emne"
+        radio_label: "Nytt emne"
         error: "Det oppstod en feil ved flytting av innlegg til det nye emnet."
         instructions:
           one: "Du er i ferd med å opprette et nytt emne basert på innlegget du har valgt.."
@@ -1723,6 +1777,8 @@ nb_NO:
         instructions:
           one: "Velg emnet du vil flytte dette innlegget til."
           other: "Velg emnet du vil flytte de <b>{{count}}</b> innleggene til."
+      move_to_new_message:
+        radio_label: "Ny Melding"
       merge_posts:
         title: "Slå sammen valgte innlegg"
         action: "slå sammen valgte innlegg"
@@ -1770,7 +1826,6 @@ nb_NO:
       continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
       follow_quote: "gå til det siterte innlegget"
       show_full: "Vis hele innlegget"
-      show_hidden: "Se skjult innhold"
       deleted_by_author:
         one: "(innlegg som er trukket tilbake av forfatter, blir automatisk slettet etter % {count} time, med mindre de blir flagget)"
         other: "(innlegg trukket tilbake av forfatter, blir automatisk slettet etter %{count} timer, med mindre det blir rapportert)"
@@ -1849,6 +1904,7 @@ nb_NO:
         unlock_post_description: "tillat innleggsskriveren å redigere dette innlegget"
         delete_topic_disallowed_modal: "Du har ikke rettigheter til å slette dette emnet. Hvis du virkelig vil at det skal slettes, flagg emnet og skriv en begrunnelse slik at en moderator kan vurdere forespørselen din."
         delete_topic_disallowed: "du har ikke rettigheter til å slette dette emnet"
+        delete_topic: "slett emne"
       actions:
         flag: "Rapportering"
         defer_flags:
@@ -1968,13 +2024,12 @@ nb_NO:
       none: "(no category)"
       all: "Alle kategorier"
       choose: "kategori&hellip;"
+      edit: "Rediger"
       view: "Se emner i kategori"
       general: "Generelt"
       settings: "Innstillinger"
       topic_template: "Mal for emne"
       tags: "Stikkord"
-      tags_allowed_tags: "Bare tillat disse etikettene brukt i denne kategorien:"
-      tags_allowed_tag_groups: "Bare tillat stikkord fra disse gruppene å bli brukt i denne kategorien:"
       tags_placeholder: "(Valgfritt) liste over tillatte stikkord"
       tag_groups_placeholder: "(Valgfritt) liste over tillatte stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
@@ -2024,7 +2079,6 @@ nb_NO:
       require_topic_approval: "Krev godkjennelse fra moderator for alle nye emner"
       require_reply_approval: "Krev godkjennelse fra moderator for alle nye svar"
       this_year: "dette året"
-      position: "Posisjon:"
       default_position: "Forvalgt posisjon"
       position_disabled: "Kategorier vil bli vist i henhold til aktivitet. For å styre rekkefølgen av kategorier i listen"
       position_disabled_click: 'aktiver innstillingen "faste kategoriposisjoner".'
@@ -2047,6 +2101,10 @@ nb_NO:
         muted:
           title: "Ignorert"
           description: "Du vil aldri bli varslet om noe vedrørende nye emner i disse kategoriene, og de vil ikke vises i listen over siste."
+      search_priority:
+        options:
+          normal: "Normal"
+          ignore: "Ignorer"
       sort_options:
         default: "forvalg"
         likes: "Likes"
@@ -2064,6 +2122,10 @@ nb_NO:
         rows_with_featured_topics: "Rader med fremhevede emner"
         boxes: "Bokser"
         boxes_with_featured_topics: "Bokser med fremhevede emner"
+      settings_sections:
+        general: "Generelt"
+        moderation: "Moderering"
+        email: "E-post"
     flagging:
       title: "Takk for at du hjelper å holde forumet ryddig!"
       action: "Rapporter innlegg"
@@ -2132,6 +2194,8 @@ nb_NO:
       pinned:
         title: "Fastsatt"
         help: "Dette emnet er festet for deg; det vil vises øverst i sin kategori"
+      unlisted:
+        help: "Dette emnet er ikke synlig; det vil ikke vises i lister over emner, og er kun tilgjengelig via en direkte lenke"
     posts: "Innlegg"
     posts_long: "det er {{number}} innlegg i dette emnet"
     posts_likes_MF: |
@@ -2368,6 +2432,7 @@ nb_NO:
       upload_description: "Last opp en csv-fil for å opprette flere stikkort på én gang"
       upload_successful: "Stikkordene ble lastet opp"
       delete_unused: "Slett ubrukte stikkord"
+      cancel_delete_unused: "Avbryt"
       filters:
         without_category: "%{filter} %{tag} emner"
         with_category: "%{filter} %{tag} emner i %{category}"
@@ -2442,8 +2507,6 @@ nb_NO:
       dashboard:
         title: "Dashbord"
         last_updated: "Dashboardet var sist oppdatert:"
-        find_old: "Ser du etter det gamle dashbordet?"
-        old_link: "besøk det her"
         version: "Versjon"
         up_to_date: "Du har den seneste versjonen!"
         critical_available: "En kritisk oppdatering er tilgjengelig."
@@ -2464,6 +2527,8 @@ nb_NO:
         private_messages_short: "Meldinger"
         private_messages_title: "Meldinger"
         mobile_title: "Mobil"
+        uploads: "Opplastinger"
+        backups: "Sikkerhetskopier"
         lastest_backup: "Siste: %{date}"
         traffic_short: "Trafikk"
         traffic: "Applikasjon webforespørsler"
@@ -2477,6 +2542,8 @@ nb_NO:
         all_reports: "Alle rapporter"
         general_tab: "Generelt"
         moderation_tab: "Moderering"
+        security_tab: "Sikkerhet"
+        report_filter_any: "alle"
         disabled: Deaktivert
         timeout_error: "Beklager, spørringen tar for lang tid, vennligst velg et kortere tidsrom"
         exception_error: "Beklager, en feil oppstod under kjøringen av denne spørringen"
@@ -2639,6 +2706,7 @@ nb_NO:
           inactive: "Inaktiv"
           failed: "Feilet"
           successful: "Vellykket"
+          disabled: "Deaktivert"
         events:
           none: "Det finnes ingen relaterte hendelser."
           redeliver: "Send på nytt"
@@ -2770,8 +2838,12 @@ nb_NO:
           revert: "Tilbakestill endringer"
           revert_confirm: "Er du sikker på at du vil tilbakestille dine endringer?"
         theme:
+          theme: "Drakt"
           customize_desc: "Skreddersy:"
           title: "Drakter"
+          create: "Opprett"
+          create_type: "Type"
+          create_name: "Navn"
           long_title: "Gå over farger, CSS- og HTML-innhold på siden din"
           edit: "Rediger"
           edit_confirm: "Dette er en drakt annensteds hen, hvis du endrer CSS/HTML vil dine endringer gå tapt neste gang du oppdaterer drakten."
@@ -2785,6 +2857,7 @@ nb_NO:
           color_scheme_select: "Velg farger å bruke i drakten"
           custom_sections: "Egendefinerte valg:"
           theme_components: "Drakt-komponenter"
+          collapse: Fold sammen
           uploads: "Opplastinger"
           no_uploads: "Du kan laste opp effekter tilknyttet din drakt, som skrifter og bilder"
           add_upload: "Legg til opplasting"
@@ -2803,6 +2876,9 @@ nb_NO:
           import_web_tip: "Pakkebrønn inneholdende drakt"
           is_private: "Drakten er i et privat git repository"
           public_key: "Gi den følgende public keyen tilgang til repoet:"
+          installed: "Installert"
+          install_popular: "Populært"
+          about_theme: "Om"
           license: "Lisens"
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
@@ -2966,6 +3042,7 @@ nb_NO:
           filter: "Filtrer:"
           title: "Personalhandlinger"
           clear_filters: "Vis alt"
+          staff_user: "Bruker"
           target_user: "Målbruker"
           subject: "Emne"
           when: "Når"
@@ -3070,6 +3147,7 @@ nb_NO:
           title: "Søkelogger"
           term: "Term"
           searches: "Søk"
+          click_through_rate: "Klikkrate"
           types:
             all_search_types: "Alle søketyper"
             header: "Hode"
@@ -3399,6 +3477,7 @@ nb_NO:
           tags: "Stikkord"
           search: "Søk"
           groups: "Grupper"
+          dashboard: "Dashbord"
       badges:
         title: Merker
         new_badge: Nytt merke
@@ -3518,6 +3597,10 @@ nb_NO:
           label: "Ny:"
           add: "Legg til"
           filter: "Søk (URL eller ekstern URL)"
+      reseed:
+        modal:
+          categories: "Kategorier"
+          topics: "Emner"
   wizard_js:
     wizard:
       done: "Ferdig"

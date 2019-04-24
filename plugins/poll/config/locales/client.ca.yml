@@ -59,6 +59,8 @@ ca:
           regular: Elecció simple
           multiple: Elecció múltiple
           number: Classificació de nombre
+        poll_result:
+          label: Resultats
         poll_config:
           max: Màx.
           min: Mín.

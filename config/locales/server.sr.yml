@@ -38,6 +38,7 @@ sr:
       even: mora biti parno
       exclusion: je rezervisano
       greater_than: "mora biti veće od %{count}"
+      is_invalid: "deluje nejasno, da li je rečenica kompletna?"
       contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
       less_than: "mora biti manje od 1%{count}"
       not_a_number: nije broj
@@ -101,6 +102,7 @@ sr:
         name: "Ime kategorije"
       topic:
         title: "Naslov"
+        category_id: "Kategorija"
       user_profile:
         bio_raw: "O meni"
     errors:
@@ -111,12 +113,108 @@ sr:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
+  staff_category_name: "Osoblje"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
+    distance_in_words_verbose:
+      half_a_minute: "upravo sad"
+  password_reset:
+    save: "Postavi Šifru"
+    title: "Resetujte Šifru"
   change_email:
     authorizing_old:
       title: "Hvala što ste potvrdili svoju važeću email adresu"
+  activation:
+    welcome_to: "Dobrodošao na %{site_name}!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Potrebno odobrenje"
+  post_action_types:
+    spam:
+      title: "Nepoželjno"
+    bookmark:
+      title: "Markiraj"
+  topic_flag_types:
+    spam:
+      title: "Nepoželjno"
+  archetypes:
+    banner:
+      title: "Postavi temu kao banner"
+  unsubscribe:
+    log_out: "Odjava"
+    digest_frequency:
+      never: "nikada"
+      every_30_minutes: "svakih 30 minuta"
+      daily: "svakodnevno"
+      weekly: "nedeljno"
+  reports:
+    post_edits:
+      labels:
+        editor: Urednik
+        edit_reason: Razlog
+    user_flagging_ratio:
+      labels:
+        user: Korisnik
+    moderators_activity:
+      labels:
+        moderator: Moderator
+    consolidated_page_views:
+      labels:
+        editor: Urednik
+        edit_reason: Razlog
+    topics:
+      title: "Teme"
+    posts:
+      title: "Poruka"
+    likes:
+      title: "Lajkovi"
+    flags:
+      title: "Zastave"
+    bookmarks:
+      title: "Markiraj"
+    users_by_trust_level:
+      xaxis: "Nivo poverenja"
+    users_by_type:
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Suspendovani
+    system_private_messages:
+      title: "Sistem"
+    top_referrers:
+      xaxis: "Korisnik"
+      num_topics: "Teme"
+      labels:
+        user: "Korisnik"
+        num_topics: "Teme"
+    top_traffic_sources:
+      xaxis: "Domen"
+      num_topics: "Teme"
+      num_users: "Korisnici"
+      labels:
+        domain: Domen
+        num_topics: Teme
+    top_referred_topics:
+      labels:
+        topic: "Tema"
+    page_view_anon_reqs:
+      title: "Anonimno"
+    suspicious_logins:
+      labels:
+        user: Korisnik
+        location: Lokacija
+    staff_logins:
+      labels:
+        user: Korisnik
+        location: Lokacija
+    top_uploads:
+      labels:
+        filename: Ime datoteke
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
+    min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
     pending_users_reminder_delay: "Obavesti moderatore ako novi korisnik čeka na odobrenje duže nego ovoliko časova. Podesiti na -1 da bi se onemogućile notifikacije."
@@ -161,10 +259,97 @@ sr:
     show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
     delete_drafts_older_than_n_days: Izbriši radne verzije poruka starije od (n) dana
     enable_emoji: "Omogući emotikone"
+    emoji_set: "Koliko bi ste želeli vas emoji?"
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori  (0 da se isključi)"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
+  search:
+    types:
+      category: "Kategorije"
+      user: "Korisnici"
+  login:
+    admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao admin sa te IP adrese."
+  admin:
+    email:
+      sent_test: "poslato!"
+  system_messages:
+    welcome_user:
+      subject_template: "Dobrodošao na %{site_name}!"
+    welcome_invite:
+      subject_template: "Dobrodošao na %{site_name}!"
+  user_notifications:
+    digest:
+      liked_received: "Primljeno Lajkova"
+      new_users: "Novi Korisnici"
+    forgot_password:
+      title: "Zaboravio Šifru"
+    set_password:
+      title: "Postavi Šifru"
+  page_not_found:
+    see_more: "Više"
+  terms_of_service:
+    title: "Uslovi Korišćenja"
+  image: "slika"
+  about: "O nama"
+  guidelines: "Smernice"
+  privacy: "Privatnost"
+  csv_export:
+    boolean_yes: "Da"
+    boolean_no: "Ne"
+  tos_topic:
+    title: "Uslovi Korišćenja"
+  privacy_topic:
+    title: "Politika Privatnosti"
+  badges:
+    editor:
+      name: Urednik
+      description: Prva izmjena poruke
+    basic_user:
+      name: Osnovno
+    member:
+      name: Član
+    regular:
+      name: Stalni član
+    leader:
+      name: Vođa
+    welcome:
+      name: Dobrodošao
+      description: Primio lajk
+    autobiographer:
+      name: Autobiograf
+    nice_topic:
+      name: Lepa Tema
+    good_topic:
+      name: Dobra Tema
+    great_topic:
+      name: Odlična Tema
+    nice_share:
+      name: Lepo Deljenje
+      description: Podijelio poruku sa 25 jedinstvenih posetioca.
+    good_share:
+      name: Dobro Deljenje
+      description: Podelio poruku sa 300 jedinstvenih posetioca.
+    great_share:
+      name: Odlično Deljenje
+      description: Podelio poruku s 1000 jedinstvenih posjetioca.
+    first_like:
+      name: Prvi Lajk
+      description: Lajkovao poruku
+    first_flag:
+      name: Prva Zastava
+      description: Označio poruku
+    first_share:
+      name: Prva Podela
+      description: Podelio poruku
+    first_link:
+      name: Prvi Link
+    first_quote:
+      name: Prvi citat
+    read_guidelines:
+      name: Pročitao Smernice
+    reader:
+      name: Čitač
   wizard:
     step:
       locale:
@@ -189,5 +374,31 @@ sr:
             label: "Tema dobrodošlice"
             description: "<p>Kako biste najbolje opisali vašu zajednicu totalnom strancu u liftu u 1 minuti?</p> <ul> <li>Za koga su ove diskusije?</li> <li>Šta ovde mogu da pronađem?</li> <li>Zašto bih ovo posećivao?</li> </ul> <p>Vaša tema dobrodošlice je prvo što će novi posetioci pročitati. Posmatrajte je to kao <b>vašu misiju</b> u jednom paragrafu. </p>"
             one_paragraph: "Molimo da vaša poruka dobrodošlice ne bude duža od jednog paragrafa."
+      contact:
+        fields:
+          contact_email:
+            placeholder: "ime@primer.com"
+      corporate:
+        title: "Organizacija"
+      emoji:
+        title: "Emoji"
       finished:
         title: "Vaš Discource je spreman!"
+  joined: "Pridružen"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Suspenduj Korisnika"
+      delete_spammer:
+        title: "Obriši korisnika"
+      disagree:
+        title: "Odbaci"
+      approve:
+        title: "Odobri"
+      reject_user:
+        delete:
+          title: "Obriši Korisnika"
+      reject:
+        title: "Odbij"
+      delete_user:
+        title: "Obriši Korisnika"
