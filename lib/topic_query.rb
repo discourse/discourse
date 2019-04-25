@@ -312,7 +312,7 @@ class TopicQuery
     list = private_messages_for(user, :user)
 
     list = not_archived(list, user)
-      .where('NOT (topics.participant_count = 1 AND topics.user_id = ?)', user.id)
+      .where('NOT (topics.participant_count = 1 AND topics.user_id = ? AND topics.moderator_posts_count = 0)', user.id)
 
     create_list(:private_messages, {}, list)
   end
