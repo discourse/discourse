@@ -158,7 +158,6 @@ describe RemoteTheme do
       expect(scheme_count).to eq(1)
 
       # It should detect local changes
-      expect(remote.diff_local_changes.blank?).to eq(true)
       @theme.set_field(target: :common, name: :scss, value: 'body {background-color: blue};')
       @theme.save
       @theme.reload
