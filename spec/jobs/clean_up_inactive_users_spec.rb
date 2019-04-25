@@ -32,4 +32,12 @@ RSpec.describe Jobs::CleanUpInactiveUsers do
 
     expect(User.exists?(id: user.id)).to eq(false)
   end
+
+  it "doesn't delete inactive admins" do
+    SiteSetting.clean_up_inactive_users_after_days = 4
+    admin = Fabricate(:admin, last_seen_at: 5.days.ago, trust_level: TrustLevel.levels[:newuser])
+
+    expect { described_class.new.execute({}) }.to_not change { User.count }
+    expect(User.exists?(admin.id)).to eq(true)
+  end
 end
