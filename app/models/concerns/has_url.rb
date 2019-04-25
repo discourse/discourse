@@ -26,7 +26,13 @@ module HasUrl
 
       return if uri&.path.blank?
       data = extract_url(uri.path)
-      return if data.blank?
+
+      if data.blank?
+        result = nil
+        result ||= self.find_by(url: uri.path)
+        return result
+      end
+
       result = nil
 
       if self.name == "Upload"

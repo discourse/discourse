@@ -59,6 +59,8 @@ ur:
           regular: اکیلا انتخاب
           multiple: ایک سے زیادہ انتخاب
           number: نمبر کی درجہ بندی
+        poll_result:
+          label: نتائج
         poll_config:
           max: زیادہ سے زیادہ
           min: کم از کم

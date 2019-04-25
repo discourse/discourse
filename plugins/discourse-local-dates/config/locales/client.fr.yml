@@ -12,9 +12,8 @@ fr:
         today: Aujourd'hui %{time}
         tomorrow: Demain %{time}
         yesterday: Hier %{time}
-      title: Insérer date
+      title: Insérer date / heure
       create:
-        modal_title: Insérer date
         form:
           insert: Insérer
           advanced_mode: Mode avancé
@@ -30,6 +29,7 @@ fr:
           time_title: Time
           format_title: Format de date
           timezone: Fuseau horaire
+          until: Jusqu'à...
           recurring:
             every_day: "Tous les jours"
             every_week: "Toutes les semaines"

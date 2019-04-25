@@ -12,9 +12,7 @@ pt_BR:
         today: Hoje %{time}
         tomorrow: Amanhã %{time}
         yesterday: Ontem %{time}
-      title: Inserir data
       create:
-        modal_title: Inserir data
         form:
           insert: Inserir
           advanced_mode: Modo avançado

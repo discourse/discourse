@@ -12,9 +12,7 @@ fi:
         today: Tänään %{time}
         tomorrow: Huomenna %{time}
         yesterday: Eilen %{time}
-      title: Lisää päiväys
       create:
-        modal_title: Lisää päiväys
         form:
           insert: Lisää
           advanced_mode: Lisäasetukset

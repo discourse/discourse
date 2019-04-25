@@ -10,9 +10,7 @@ pl_PL:
     discourse_local_dates:
       relative_dates:
         today: Dziś %{time}
-      title: Wstaw datę
       create:
-        modal_title: Wstaw datę
         form:
           insert: Wstaw
           advanced_mode: Tryb zaawansowany

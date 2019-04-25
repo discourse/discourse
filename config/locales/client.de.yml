@@ -215,6 +215,8 @@ de:
     every_hour: "jede Stunde"
     daily: "täglich"
     weekly: "wöchentlich"
+    every_month: "jeden Monat"
+    every_six_months: "alle sechs Monate"
     max_of_count: "von max. {{count}}"
     alternation: "oder"
     character_count:
@@ -304,6 +306,111 @@ de:
       title:
         search: "Suche eine Nachricht anhand der Überschrift:"
         placeholder: "Gib hier die Überschrift der Nachricht ein"
+    review:
+      awaiting_approval: "Wartet auf Genehmigung"
+      delete: "Löschen"
+      settings:
+        saved: "Gespeichert"
+        save_changes: "Speichern"
+        title: "Einstellungen"
+        score_bonuses:
+          title: "Bewertungs-Boni"
+          description: "Boni ermöglicht es, bestimmte Arten höher zu bewerten als andere, damit sie priorisiert werden können. Beachte: Die Änderung dieser Werte hat keinen Einfluss auf bisher bewertete Einträge."
+      moderation_history: "Moderationshistorie"
+      view_all: "Alle anzeigen"
+      grouped_by_topic: "Gruppiert nach Thema"
+      none: "Es sind keine Einträge zur Überprüfung vorhanden."
+      view_pending: "zeige verbleibende"
+      topic_has_pending:
+        one: "Dieses Thema hat <b>1</b> Beitrag, der auf Genehmigung wartet."
+        other: "Dieses Thema hat <b>{{count}}</b> Beiträge, die auf Genehmigung warten."
+      title: "Überprüfung nötig"
+      topic: "Thema:"
+      filtered_topic: "Du hast nach zu prüfenden Inhalten in einem einzelnen Thema gefiltert."
+      filtered_user: "Benutzer:"
+      show_all_topics: "Zeige alle Themen"
+      user:
+        username: "Benutzername"
+        email: "E-Mail"
+        name: "Name"
+        fields: "Felder"
+      user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} Meldung insgesamt)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} Meldungen insgesamt)"
+        agreed:
+          one: "{{count}}% zugestimmt"
+          other: "{{count}}% zugestimmt"
+        disagreed:
+          one: "{{count}}% abgelehnt"
+          other: "{{count}}% abgelehnt"
+        ignored:
+          one: "{{count}}% ignoriert"
+          other: "{{count}}% ignoriert"
+      topics:
+        topic: "Thema"
+        reviewable_count: "Anzahl"
+        reported_by: "Gemeldet von"
+        deleted: "[Thema gelöscht]"
+        original: "(usprüngliches Thema)"
+        details: "Details"
+        unique_users:
+          one: "1 Benutzer"
+          other: "{{count}} Benutzer"
+      replies:
+        one: "1 Antwort"
+        other: "{{count}} Antworten"
+      edit: "Bearbeiten"
+      save: "Speichern"
+      cancel: "Abbrechen"
+      new_topic: "Neues Thema:"
+      filters:
+        type:
+          title: "Typ:"
+          all: "(alle Arten)"
+        minimum_score: "Minimale Bewertung:"
+        refresh: "Aktualisieren"
+        status: "Status:"
+        category: "Kategorie:"
+      conversation:
+        view_full: "zeige vollständige Unterhaltung"
+      scores:
+        score: "Wertung"
+        date: "Datum"
+        type: "Typ"
+        status: "Status"
+        submitted_by: "Abgesendet von"
+        reviewed_by: "Überprüft von"
+      statuses:
+        pending:
+          title: "Ausstehend"
+        approved:
+          title: "Genehmigt"
+        rejected:
+          title: "Abgelehnt"
+        ignored:
+          title: "Ignoriert"
+        deleted:
+          title: "Gelöscht"
+        reviewed:
+          title: "(Alle überprüft)"
+        all:
+          title: "(Alles)"
+      types:
+        reviewable_flagged_post:
+          title: "Gemeldeter Beitrag"
+          flagged_by: "Gemeldet von"
+        reviewable_queued_post:
+          title: "Beitrag in der Warteschlange"
+        reviewable_user:
+          title: "Benutzer"
+      approval:
+        title: "Beitrag muss genehmigt werden"
+        description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
+        pending_posts:
+          one: "Du hast <strong>1</strong> verbleibenden Beitrag."
+          other: "Du hast <strong>{{count}}</strong> verbleibende Beiträge."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat <a href='{{topicUrl}}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"{{userUrl}}\">Du</a> hast <a href=\"{{topicUrl}}\">das Thema</a> verfasst"
@@ -559,6 +666,18 @@ de:
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
+      user_notifications:
+        ignore_duration_title: "Zeitschaltuhr ignorieren"
+        ignore_duration_when: "Dauer:"
+        ignore_duration_save: "Ignorieren"
+        ignore_duration_note: "Bitte beachte, dass alle Ignorierungen automatisch entfernt werden, wenn die Ignorierungsdauer verstreicht."
+        ignore_duration_time_frame_required: "Bitte wähle einen Zeitrahmen aus"
+        ignore_option: "Ignoriert"
+        ignore_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer erhalten, und seine Themen und Antworten werden ausgeblendet."
+        mute_option: "Stummgeschaltet"
+        mute_option_title: "Du wirst keine Benachrichtigungen zu diesem Benutzer bekommen."
+        normal_option: "Normal"
+        normal_option_title: "Du wirst benachrichtigt, wenn dieser Benutzer dir antwortet, dich zitiert oder erwähnt."
       activity_stream: "Aktivität"
       preferences: "Einstellungen"
       profile_hidden: "Das öffentliche Profil des Benutzers ist ausgeblendet."
@@ -584,8 +703,7 @@ de:
       dismiss_notifications: "Alles gelesen"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
-      disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
-      dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
+      dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
       text_size_default_on_all_devices: "Mache diese Schriftgröße zum Standard für alle meine Geräte"
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
@@ -825,6 +943,10 @@ de:
         normal: "Normal"
         larger: "Größer"
         largest: "Am größten"
+      title_count_mode:
+        title: "Hintergrund-Seitentitel zeigt Anzahl von:"
+        notifications: "Neue Benachrichtigungen"
+        contextual: "Neuer Seiteninhalt"
       like_notification_frequency:
         title: "Benachrichtigung für erhaltene Likes anzeigen"
         always: "immer"
@@ -1161,10 +1283,6 @@ de:
         name: "Facebook"
         title: "mit Facebook"
         message: "Authentifiziere mit Facebook (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
-      yahoo:
-        name: "Yahoo"
-        title: "mit Yahoo"
-        message: "Authentifiziere mit Yahoo (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
       github:
         name: "GitHub"
         title: "mit GitHub"
@@ -1203,6 +1321,8 @@ de:
       alt: "Alt"
     conditional_loading_section:
       loading: Wird geladen…
+    category_row:
+      topic_count: "{{count}} Themen in dieser Kategorie"
     select_kit:
       default_header_text: Auswählen…
       no_content: Keine Treffer gefunden
@@ -1252,8 +1372,6 @@ de:
       toggle_whisper: "Flüstermodus umschalten"
       toggle_unlisted: "Unsichtbar umschalten"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
-      saving_draft_tip: "wird gespeichert…"
-      saved_draft_tip: "gespeichert"
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit…"
       drafts_offline: "Entwürfe offline"
@@ -1379,7 +1497,6 @@ de:
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       empty: "Keine Benachrichtigungen gefunden."
       more: "ältere Benachrichtigungen anzeigen"
-      total_flagged: "Anzahl der gemeldeten Beiträge"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1649,7 +1766,9 @@ de:
         next_week: "Nächste Woche"
         two_weeks: "Zwei Wochen"
         next_month: "Nächster Monat"
+        two_months: "Zwei Monate"
         three_months: "Drei Monate"
+        four_months: "Vier Monate"
         six_months: "Sechs Monate"
         one_year: "Ein Jahr"
         forever: "Für immer"
@@ -1925,10 +2044,14 @@ de:
         description:
           one: Du hast <b>1</b> Beitrag ausgewählt.
           other: "Du hast <b>{{count}}</b> Beiträge ausgewählt."
+      deleted_by_author:
+        one: "(Thema von Autor zurückgezogen, wird automatisch in %{count} Stunde gelöscht, außer es wird gemeldet)"
+        other: "(Thema von Autor zurückgezogen, wird automatisch in %{count}Stunden gelöscht, außer es wird gemeldet)"
     post:
       quote_reply: "Zitat"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
+      ignored: "Ignorierter Inhalt"
       wiki_last_edited_on: "Wiki zuletzt bearbeitet am"
       last_edited_on: "Beitrag zuletzt bearbeitet am"
       reply_as_new_topic: "Mit verknüpftem Thema antworten"
@@ -1936,7 +2059,7 @@ de:
       continue_discussion: "Fortsetzung der Diskussion von {{postLink}}:"
       follow_quote: "springe zum zitierten Beitrag"
       show_full: "Zeige ganzen Beitrag"
-      show_hidden: "Versteckte Inhalte anzeigen."
+      show_hidden: "Ignorierte Inhalte anzeigen."
       deleted_by_author:
         one: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunde gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
         other: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunden gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
@@ -1947,8 +2070,8 @@ de:
         one: "einen versteckten Beitrag anzeigen"
         other: "{{count}} versteckte Beiträge anzeigen"
       notice:
-        first: "Dies ist der erste Beitrag von {{user}} — lasst uns das neue Mitglied in unserer Community willkommen hei­ßen!"
-        return: "Es ist eine Weile her, dass wir {{user}} gesehen haben. — Sein/ihr letzter Beitrag war {{time}}."
+        new_user: "Dies ist der erste Beitrag von {{user}} — lasst uns das neue Mitglied in unserer Community willkommen hei­ßen!"
+        returning_user: "Es ist eine Weile her, dass wir {{user}} gesehen haben. — Der letzter Beitrag war {{time}}."
       unread: "Beitrag ist ungelesen"
       has_replies:
         one: "{{count}} Antwort"
@@ -2148,11 +2271,13 @@ de:
       settings: "Einstellungen"
       topic_template: "Themenvorlage"
       tags: "Schlagwörter"
-      tags_allowed_tags: "Erlaube in dieser Kategorie nur folgende Schlagwörter:"
-      tags_allowed_tag_groups: "Erlaube in dieser Kategorie nur Schlagwörter aus folgenden Schlagwortgruppen:"
+      tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
+      tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tags_tab_description: "Hier definierte Schlagwörter und Schlagwort-Gruppen sind nur in dieser Kategorie und in Kategorien, in denen sie ebenfalls definiert sind, verfügbar. In anderen Kategorien sind sie nicht verwendbar."
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
+      manage_tag_groups_link: "Verwalte hier die Schlagwort-Gruppen."
+      allow_global_tags_label: "Erlaube auch andere Schlagwörter."
       topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: "Kategorie löschen"
       create: "Neue Kategorie"
@@ -2202,7 +2327,7 @@ de:
       require_topic_approval: "Erfordere Moderator-Genehmigung für alle neuen Themen"
       require_reply_approval: "Erfordere Moderator-Genehmigung für alle neuen Antworten"
       this_year: "dieses Jahr"
-      position: "Position:"
+      position: "Position auf der Kategorien-Seite:"
       default_position: "Standardposition"
       position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern,"
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
@@ -2252,6 +2377,11 @@ de:
         rows_with_featured_topics: "Zeilen mit hervorgehobenen Themen"
         boxes: "Spalten"
         boxes_with_featured_topics: "Spalten mit hervorgehobenen Themen"
+      settings_sections:
+        general: "Allgemein"
+        moderation: "Moderation"
+        appearance: "Erscheinungsbild"
+        email: "E-Mail"
     flagging:
       title: "Danke für deine Mithilfe!"
       action: "Beitrag melden"
@@ -2641,8 +2771,6 @@ de:
       dashboard:
         title: "Übersicht"
         last_updated: "Übersicht zuletzt aktualisiert:"
-        find_old: "Suchst du das alte Dashboard?"
-        old_link: "besuche es hier"
         version: "Version"
         up_to_date: "Du verwendest die neueste Version!"
         critical_available: "Ein kritisches Update ist verfügbar."
@@ -2849,6 +2977,9 @@ de:
         queued_post_event:
           name: "Ereignis nach Beitragsgenehmigung"
           details: "Wenn eine Beitrag in der Warteschlange erstellt, genehmigt oder abgelehnt wird."
+        reviewable_event:
+          name: "Überpüfbares Ereignis"
+          details: "Wenn ein neuer Eintrag zur Überprüfung bereit ist und wenn sich sein Status ändert."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -3014,6 +3145,7 @@ de:
           mobile: "Mobil"
           settings: "Einstellungen"
           translations: "Übersetzungen"
+          extra_scss: "Zusätzliches SCSS"
           preview: "Vorschau"
           show_advanced: "erweiterte Felder anzeigen"
           hide_advanced: "erweiterte Felder verbergen"
@@ -3339,6 +3471,9 @@ de:
             web_hook_create: "Webhook anlegen"
             web_hook_update: "Webhook aktualisieren"
             web_hook_destroy: "Webhook entfernen"
+            embeddable_host_create: "Einbettbaren Host erstellen"
+            embeddable_host_update: "Einbettbaren Host aktualisieren"
+            embeddable_host_destroy: "Einbettbaren Host entfernen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

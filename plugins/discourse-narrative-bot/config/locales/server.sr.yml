@@ -7,6 +7,9 @@
 
 sr:
   discourse_narrative_bot:
+    magic_8_ball:
+      answers:
+        '9': "Da"
     new_user_narrative:
       bookmark:
         instructions: |-

@@ -262,6 +262,7 @@ export default class PostCooked {
 
   _computeCooked() {
     if (
+      (this.attrs.firstPost || this.attrs.embeddedPost) &&
       this.ignoredUsers &&
       this.ignoredUsers.length > 0 &&
       this.ignoredUsers.includes(this.attrs.username)

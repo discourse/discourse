@@ -136,7 +136,7 @@ sl:
         second_response: |-
           Se opravičujem. Še vedno ne razumem. :anguished:
 
-          Sem samo robot, ampak če hočete govoriti z pravo osebo, pojdite na [O nas stran](%{base_path}/about).
+          Sem samo robot, ampak če hočete govoriti s pravo osebo, pojdite na [O nas stran](%{base_path}/about).
 
           Medtem vas ne bom motil.
     new_user_narrative:
@@ -146,11 +146,11 @@ sl:
       hello:
         title: "Pozdravljeni!"
         message: |-
-          Zahvaljujemo se vam za pridružitev %{title} in dobrodošli!
+          Dobrodošli - zahvaljujemo se vam za pridružitev %{title}!
 
-          - Jaz sem samo robot, ampak [naše osebje](%{base_uri}/about) je na voljo, če potrebujete pravo osebo.
+          - Jaz sem samo robot - če potrebujete pravo osebo je na voljo [naše osebje](%{base_uri}/about).
 
-          - Iz varnostnih razlogov omejujemo, kaj lahko novi uporabniki počno. Dobili boste nove zmožnosti (in [značke](%{base_uri}/badges)), ko vas bolje spoznamo.
+          - Iz varnostnih razlogov je omejeno kaj lahko novi uporabniki počnete. Ko vas bolje spoznamo, boste dobili nove zmožnosti (in [značke](%{base_uri}/badges)).
 
           - Verjamemo v [prijazno obnašanje v skupnosti](%{base_uri}/guidelines).
       onebox:
@@ -223,7 +223,7 @@ sl:
           Z izbiro poljubnega besedila v mojem prispevku se vam bo prikazal <kbd>**Citiraj**</kbd> gumb. Tudi pritisk na **Odgovori** pri izbranem besedilu bo zadoščal! Ali lahko poskusite znova?
       bookmark:
         instructions: |-
-          Če se hočete naučiti kaj novega, izberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**.  Če to storite, se vam mogoče obeta :gift: v prihodnosti!
+          Da se naučite kaj novega, kliknite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> spodaj in <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **zaznamujte to zasebno sporočilo**.  Če to storite se vam v prihodnje mogoče obeta :gift:!
         reply: |-
           Enkratno! Sedaj lahko kadarkoli najdete pot nazaj na najin zaseben pogovor, enostavno preko [Zaznamki zavihka v vašem profilu](%{profile_page_url}/activity/bookmarks). Samo izberite vašo profilno sliko zgoraj desno &#8599;
         not_found: |-

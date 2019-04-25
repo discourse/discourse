@@ -59,6 +59,8 @@ el:
           regular: Μία επιλογή
           multiple: Πολλαπλές επιλογές
           number: Αξιολόγηση αριθμoύ
+        poll_result:
+          label: Αποτελέσματα
         poll_config:
           max: Μέγιστο
           min: Ελάχιστο

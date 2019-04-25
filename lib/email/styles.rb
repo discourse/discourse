@@ -150,7 +150,7 @@ module Email
             next
           end
 
-          src_uri = URI(i['src'])
+          src_uri = i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i['src'])
           # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https'}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? '' : '?' + src_uri.query}#{src_uri.fragment.nil? ? '' : '#' + src_uri.fragment}"
           i.replace "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"

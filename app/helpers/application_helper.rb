@@ -293,7 +293,7 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||= begin
-      if mobile_view? && SiteSetting.site_mobile_logo_url
+      if mobile_view? && SiteSetting.site_mobile_logo_url.present?
         SiteSetting.site_mobile_logo_url
       else
         SiteSetting.site_logo_url

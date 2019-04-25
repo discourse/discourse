@@ -8,9 +8,7 @@
 sk:
   js:
     discourse_local_dates:
-      title: Vložiť dátum
       create:
-        modal_title: Vložiť dátum
         form:
           insert: Vložiť
           advanced_mode: Pokročilý režim

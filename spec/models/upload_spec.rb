@@ -122,6 +122,15 @@ describe Upload do
       end
     end
 
+    it "should return the right upload as long as the upload's URL matches" do
+      upload.update!(url: "/uploads/default/12345/971308e535305c51.png")
+
+      expect(Upload.get_from_url(upload.url)).to eq(upload)
+
+      expect(Upload.get_from_url("/uploads/default/123131/971308e535305c51.png"))
+        .to eq(nil)
+    end
+
     describe 'for a url a tree' do
       before do
         upload.update!(url:

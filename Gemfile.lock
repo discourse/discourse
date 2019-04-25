@@ -222,7 +222,7 @@ GEM
     mustache (1.1.0)
     nap (1.1.0)
     no_proxy_fix (0.1.2)
-    nokogiri (1.10.1)
+    nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.1)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -263,7 +263,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.8.85)
+    onebox (1.8.86)
       htmlentities (~> 4.3)
       moneta (~> 1.0)
       multi_json (~> 1.11)
@@ -521,7 +521,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox (= 1.8.85)
+  onebox (= 1.8.86)
   openid-redis-store
   parallel_tests
   pg

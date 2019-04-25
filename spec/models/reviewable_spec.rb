@@ -203,6 +203,7 @@ RSpec.describe Reviewable, type: :model do
 
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
+      Jobs.stubs(:enqueue)
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
       reviewable.perform(moderator, :approve_post)
     end

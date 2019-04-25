@@ -18,6 +18,7 @@ te:
   loading: "లోడవుతోంది"
   log_in: "లాగిన్"
   disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
+  anonymous: "అనామక"
   errors: &errors
     format: "%{attribute} %{message}"
     messages:
@@ -34,6 +35,7 @@ te:
       exclusion: రక్షితము
       greater_than: " %{count} కన్నా ఎక్కువ ఉండాలి"
       greater_than_or_equal_to: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
+      has_already_been_used: "ఇప్పటికే వాడుకలో ఉంది"
       inclusion: జాబితాలో జతపర్చబడలేదు
       invalid: చెల్లనిది
       less_than: "%{count} కన్నా తక్కువ ఉండాలి"
@@ -73,6 +75,7 @@ te:
   not_found: "అభ్యర్థించిన URL లేదా వనరు దొరకలేదు."
   invalid_access: "అభ్యర్థించిన వనరు వీక్షించడానికి మీకు అనుమతి లేదు."
   read_only_mode_enabled: "సైటు కేవలం చదివే రీతిలో ఉంది. చర్చలు ఇప్పుడు అచేతనం."
+  likes: "ఇష్టాలు"
   too_many_replies:
     one: "క్షమించాలి. కొత్త సభ్యులు తాత్కాలికంగా ఒక విషయానికి  ఒక జవాబుకు మాత్రమే పరిమితం చేయబడ్డారు"
     other: "క్షమించాలి. కొత్త సభ్యులు, తాత్కాలికంగా ఒక విషయానికి %{count} జవాబులకు మాత్రమే పరిమితం చెయ్యబడ్డారు."
@@ -86,6 +89,11 @@ te:
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"
+  no_mentions_allowed: "క్షమించాలి. మీరు ఇతర సభ్యులను ప్రస్తావించలేరు"
+  no_mentions_allowed_newuser: "క్షమించాలి. కొత్త సభ్యులు ఇతర సభ్యులను ప్రస్తావించలేరు."
+  no_images_allowed: "క్షమించాలి. కొత్త సభ్యులు టపాలో బొమ్మలు ఉంచలేరు."
+  no_attachments_allowed: "క్షమించాలి. కొత్త సభ్యులు టపాలో జోడింపులు ఉంచవీలవదు."
+  no_links_allowed: "క్షమించాలి, కొత్త సభ్యులు టపాలో లంకెలు ఉంచవీలవదు."
   spamming_host: "క్షమించాలి. ఆ అతిధికి మీరు లంకె టపా చెయ్యలేరు."
   user_is_suspended: "సస్పెండైన సభ్యులు టపా రాయుట వీలవదు"
   topic_not_found: "ఏదో తప్పు జరిగింది. బహుశా ఈ అంశం ముగిసింది లేదా మీరు చూస్తూ ఉండగా తొలగించబడింది?"
@@ -134,6 +142,9 @@ te:
     attributes:
       category:
         name: "వర్గం పేరు"
+      topic:
+        title: "శీర్షిక"
+        category_id: "వర్గం"
       post:
         raw: "శరీరం"
       user_profile:
@@ -179,6 +190,12 @@ te:
       title: "కొత్త సభ్యుడు"
     basic:
       title: "ప్రాథమిక సభ్యుడు"
+    member:
+      title: "మెంబరు"
+    regular:
+      title: "రెగ్యులర్"
+    leader:
+      title: "లీడర్"
   rate_limiter:
     hours:
       one: "ఒక గంట"
@@ -298,10 +315,12 @@ te:
     bookmark:
       title: "పేజీక"
       description: "ఈ టపాకు పేజీక ఉంచు"
+      short_description: "ఈ టపాకు పేజీక ఉంచు"
       long_form: "ఈ టపాకు పేజీక ఉంచారు"
     like:
       title: "ఇష్టం"
       description: "ఈ టపాను ఇష్టపడు"
+      short_description: "ఈ టపాను ఇష్టపడు"
       long_form: "ఈ టపాను ఇష్టపడ్డారు"
   topic_flag_types:
     spam:
@@ -322,15 +341,51 @@ te:
     regular:
       title: "రెగ్యులర్ విషయం"
     banner:
+      title: "బ్యానరు విషయం"
       message:
         make: "ఈ విషయం ఇప్పుడు బ్యానరు. సభ్యుడు తుడిచే వరకూ ఈ విషయం ప్రతి పుటకు అగ్రభాగాన కనిపిస్తుంది."
         remove: "ఈ విషయం ఇప్పుడు బ్యానరు కాదు. ఇహ అది ప్రతి పుట అగ్రభాగానా కనిపించదు"
+  unsubscribe:
+    log_out: "లాగవుట్"
+    digest_frequency:
+      never: "ఎప్పటికీ వద్దు"
+      daily: "ప్రతిరోజూ"
+      weekly: "ప్రతీవారం"
   reports:
+    default:
+      labels:
+        day: రోజు
+    post_edits:
+      labels:
+        editor: ఎడిటరు
+        edit_reason: కారణం
+    user_flagging_ratio:
+      labels:
+        user: సభ్యుడు
+    moderators_activity:
+      labels:
+        moderator: నిర్వాహకుడు
+    flags_status:
+      labels:
+        flag: రకం
     visits:
       title: "సభ్యుని గణాంకాలు"
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
     signups:
+      xaxis: "రోజు"
+    new_contributors:
+      xaxis: "రోజు"
+    consolidated_page_views:
+      yaxis: "రోజు"
+      labels:
+        editor: ఎడిటరు
+        edit_reason: కారణం
+    dau_by_mau:
+      xaxis: "రోజు"
+    daily_engaged_users:
+      xaxis: "రోజు"
+    profile_views:
       xaxis: "రోజు"
     topics:
       title: "విషయాలు"
@@ -356,11 +411,22 @@ te:
       title: "నమ్మకపు స్థాయి వారీగా సభ్యులు"
       xaxis: "నమ్మకం స్థాయి"
       yaxis: "సభ్యుల సంఖ్య"
+    users_by_type:
+      xaxis: "రకం"
+      yaxis: "సభ్యుల సంఖ్య"
+      labels:
+        type: రకం
+      xaxis_labels:
+        admin: అధికారి
+        moderator: నిర్వాహకుడు
+        suspended: సస్పెడయ్యాడు
     emails:
       title: "పంపిన ఈమెయిల్ల సంఖ్య"
       xaxis: "రోజు"
       yaxis: "ఈమెయిల్ల సంఖ్య"
     user_to_user_private_messages:
+      xaxis: "రోజు"
+    user_to_user_private_messages_with_replies:
       xaxis: "రోజు"
     system_private_messages:
       title: "వ్వవస్థ"
@@ -379,14 +445,25 @@ te:
       xaxis: "సభ్యుడు"
       num_clicks: "నొక్కులు"
       num_topics: "విషయాలు"
+      labels:
+        user: "సభ్యుడు"
+        num_clicks: "నొక్కులు"
+        num_topics: "విషయాలు"
     top_traffic_sources:
       title: "అగ్ర ట్రాఫిక్ మూలాలు"
       xaxis: "డొమైను"
       num_clicks: "నొక్కులు"
       num_topics: "విషయాలు"
       num_users: "సభ్యులు"
+      labels:
+        domain: డొమైను
+        num_clicks: నొక్కులు
+        num_topics: విషయాలు
     top_referred_topics:
       title: "అగ్ర రిఫరరు విషయాలు"
+      labels:
+        num_clicks: "నొక్కులు"
+        topic: "విషయం"
     page_view_anon_reqs:
       title: "అనామక"
       xaxis: "రోజు"
@@ -396,6 +473,10 @@ te:
     page_view_crawler_reqs:
       xaxis: "రోజు"
     page_view_total_reqs:
+      xaxis: "రోజు"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "రోజు"
+    page_view_anon_mobile_reqs:
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"
@@ -421,9 +502,29 @@ te:
       title: "మొత్తం"
       xaxis: "రోజు"
       yaxis: "మొత్తం అభ్యర్థనలు"
+    time_to_first_response:
+      xaxis: "రోజు"
+    topics_with_no_response:
+      xaxis: "రోజు"
+      yaxis: "మొత్తం"
+    mobile_visits:
+      xaxis: "రోజు"
+      yaxis: "దర్శనాల సంఖ్య"
+    suspicious_logins:
+      labels:
+        user: సభ్యుడు
+        location: ప్రాంతం
+    staff_logins:
+      labels:
+        user: సభ్యుడు
+        location: ప్రాంతం
+    top_uploads:
+      labels:
+        filename: దస్త్రం పేరు
   dashboard:
     rails_env_warning: "మీ సర్వరు %(env) రీతిలో నడుస్తోంది"
     host_names_warning: "మీ config/database.yml దస్త్రం అప్రమేయ లోకల్ హోస్ట్ వాడుతున్నది. దాన్ని మీ సైటు పేరుకు మార్చగలరు. "
+    queue_size_warning: "వరుసలో ఉన్న ఉద్యోగాల సంఖ్య %{queue_size}, ఏది ఆధిక్యత.ఈ సైడ్‌కిక్ ప్రక్రియ(లు) ఒక సమస్య సూచిస్తుంది , లేదా \nమీకు మరింతమంది సైడ్‌కిక్ కార్మికులు అవసరం కావచ్చు."
     memory_warning: "మీ సర్వరు ఒక జీబీ కన్నా తక్కువ మెమరీతో నడుస్తున్నది. కనీసం ఒక జీబీ అయినా ఉండుట మంచిది. "
   site_settings:
     censored_words: "వీటితో పదాలు స్వయంచాలకంగా భర్తీ చేయబడతాయి &#9632;&#9632;&#9632;&#9632;"
@@ -440,9 +541,11 @@ te:
     title: "ఈ సైట్ యొక్క పేరు ,టైటిల్ ట్యాగ్ లో ఉపయోగించారు."
     site_description: "మెటా వివరణ ట్యాగ్ ఉపయోగించి ఈ సైట్‌ని ఒక వాక్యంలో వివరించండి."
     download_remote_images_threshold: "సుదూర చిత్రాలను స్థానికంగా దిగుమతి చేయడానికి అవసరమయ్యే కనీస డిస్క్ స్థలం (శాతం లో)"
+    editing_grace_period: "టపా చేసిన తర్వాత (n) సెకన్లు, టపా చరిత్రలో ఒక కొత్త కధనం సృష్టించడానికి సవరింపు కుదరదు."
     max_image_width: "ఒక టపాలో థంబ్నైల్ గరిష్ట వెడల్పు"
     max_image_height: "ఒక టపాలో థంబ్నైల్ గరిష్ట ఎత్తు"
     post_excerpt_maxlength: "ఒక టపా సంగ్రహం/సారాంశం గరిష్ట పొడవు."
+    moderators_create_categories: "మధ్యవర్తులు కొత్త వర్గాలు సృష్టించడానికి అనుమతించు"
     topics_per_period_in_top_summary: "అప్రమేయ అగ్ర విషయాల సారాంశంలో చూపే అగ్ర విషయాల సంఖ్య."
     invite_expiry_days: "వాడుకరుల ఆహ్వాన కీ ఎన్ని రోజులు చెల్లుతుంది"
     min_password_length: "సంకేతపదపు కనీస పొడవు."
@@ -465,6 +568,7 @@ te:
     newuser_max_links: "కొత్త వాడుకరి టపా కి ఎన్ని లంకెలు జోడించవచ్చు."
     newuser_max_images: "కొత్త వాడుకరి టపా కి ఎన్ని చిత్రాలు జోడించవచ్చు."
     newuser_max_attachments: "కొత్త వాడుకరి టపా కి ఎన్నిఅనుబంధాలు జోడించవచ్చు"
+    emoji_set: "మీ ఇమోజి ఎలా ఉండాలి? "
     errors:
       invalid_email: "చెల్లని ఈమెయిలు చిరునామా."
       invalid_username: "ఆ పేరుతో ఏ వాడురకీ లేరు."
@@ -482,16 +586,21 @@ te:
   most_recent_poster: "ఇటీవలి పోస్టర్"
   frequent_poster: "తరచూ వచ్చే పోస్టర్"
   topic_statuses:
+    autoclosed_disabled: "ఈ విషయం ఇప్పుడు తెరవబడింది.కొత్త జవాబులకు అనుమతి."
     autoclosed_disabled_lastpost: "ఈ విషయం ఇప్పుడు తెరవబడింది.కొత్త జవాబులకు అనుమతి."
   login:
     incorrect_username_email_or_password: "తప్పు సభ్యుని పేరు లేదా ఈమెయిల్ లేదా సంకేతపదం"
     active: "మీ ఖాతా చేతనమైంది మరియు వాడటానికి సిద్దంగా ఉంది."
+    admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
     suspended: "మీరు %{date}. తారీకు వరకు లాగిన్ అవ్వలేరు"
     errors: "%{errors}"
     not_available: "అందుబాటులో లేదు. %{suggestion} ప్రయత్నించండి?"
     new_registrations_disabled: "కొత్త ఖాతా నమోదులను ప్రస్తుతం అనుమతించడం లేదు."
     password_too_long: "సంకేతపదాలు 200 అక్షరాలకు పరిమితం"
     missing_user_field: "మీరు అన్ని సభ్య క్షేత్రాలూ నింపలేదు"
+  admin:
+    email:
+      sent_test: "పంపారు!"
   user:
     username:
       short: "కనీసం %[min] అక్షరాలు ఉండాలి"
@@ -509,18 +618,35 @@ te:
   user_notifications:
     previous_discussion: "గత జవాబులు"
     digest:
+      liked_received: "అందుకున్న ఇష్టాలు"
+      new_users: "కొత్త వినియోగదారులు"
+      join_the_discussion: "ఇంకా చదువు"
       click_here: "ఇక్కడ క్లిక్ చేయండి"
+    forgot_password:
+      title: "సంకేతపదం మర్చిపోయా"
+    set_password:
+      title: "సంకేతపదం అమర్చండి"
   page_not_found:
     popular_topics: "ప్రముఖ"
     recent_topics: "తాజా"
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
+    search_button: "వెతుకు"
   terms_of_service:
     title: "సేవా నియమాలు"
   deleted: "తొలగించారు"
+  image: "బొమ్మ"
   upload:
     images:
       size_not_found: "క్షమించండి, కానీ మేము చిత్రం యొక్క పరిమాణం నిర్ణయించలేదు. బహుశా మీ చిత్రం పాడై ఉండవచ్చు?"
+  skipped_email_log:
+    user_email_seen_recently: "వినియోగదారు కొత్తగా చూశారు"
+    user_email_notification_already_read: "ఈ ఈమెయిల్ గురించి ప్రకటన ఇప్పటికే చదివబడింది"
+    user_email_post_deleted: "టపా రచయితచే తొలగింపబడింది"
+    user_email_user_suspended: "వినియోగదారు నిలిపివేయబడ్డారు"
+    user_email_already_read: "వినియోగదారు ఇప్పటికే ఈ టపా చదివారు"
+    sender_message_blank: "ఖాళీ సందేశం"
+    sender_body_blank: "ముఖ్యభాగం ఖాళీగా ఉంది"
   color_schemes:
     base_theme_name: "ఆధారం"
   about: "గురించి"
@@ -536,3 +662,103 @@ te:
     title: "సేవా నిబంధనలు"
   privacy_topic:
     title: "ప్రైవసీ పోలసీ"
+  badges:
+    editor:
+      name: ఎడిటరు
+      description: తొలి టపా సవరణ
+    basic_user:
+      name: ప్రాథమిక
+    member:
+      name: సభ్యుడు
+    regular:
+      name: రెగ్యులరు
+    leader:
+      name: లీడరు
+    welcome:
+      name: సుస్వాగతం
+      description: ఒక ఇష్టాన్ని అందుకున్నారు
+    autobiographer:
+      name: ఆత్మకధావాది
+    anniversary:
+      name: వార్షికోత్సవం
+      description: "ఒక సంవత్సరం నుండి చురుకైన సభ్యుడు, కనీసం ఒకసారి టపా చేశాడు"
+    nice_topic:
+      name: మంచి విషయం
+    good_topic:
+      name: చాలా మంచి విషయం
+    great_topic:
+      name: బహుమంచి విషయం
+    nice_share:
+      name: మంచి పంపకం
+      description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు
+    good_share:
+      name: చాలామంచి పంపకం
+      description: ఒక టపాను 300మంది సభ్యులతో పంచుకున్నారు
+    great_share:
+      name: బహుమంచి పంపకం
+      description: ఒక టపాను 1000 మంది సభ్యులతో పంచుకున్నారు
+    first_like:
+      name: తొలి ఇష్టం
+      description: టపాను ఇష్టపడ్డారు
+    first_flag:
+      name: తొలి కేతనం
+      description: ఒక టపాను కేతనించారు
+    first_share:
+      name: తొలి పంపకం
+      description: ఒక టపాను పంచారు
+    first_link:
+      name: తొలి లంకె
+    first_quote:
+      name: తొలి కోట్
+    read_guidelines:
+      name: మార్గదర్శకాలు చదువు
+    reader:
+      name: చదువరి
+  tags:
+    title: "ట్యాగులు"
+  wizard:
+    step:
+      forum_title:
+        title: "పేరు"
+      privacy:
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "బహిరంగం"
+              restricted:
+                label: "అంతరంగికం"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "సంస్థ"
+      colors:
+        title: "అలంకారం"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "వర్గాలు మాత్రమే"
+      emoji:
+        title: "ఇమోజి"
+  joined: "చేరినారు"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "సభ్యుడిని సస్పెండు చేయి"
+      delete_spammer:
+        title: "స్పామరును తొలగించు"
+      disagree:
+        title: "ఒప్పుకోకు"
+      approve:
+        title: "అంగీకరించు"
+      reject_user:
+        delete:
+          title: "సభ్యుడిని తొలగించు"
+      reject:
+        title: "తిరస్కరించు"
+      delete_user:
+        title: "సభ్యుడిని తొలగించు"

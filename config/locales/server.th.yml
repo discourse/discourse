@@ -29,6 +29,7 @@ th:
   loading: "กำลังโหลด"
   powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
   log_in: "เข้าสู่ระบบ"
+  submit: "ตกลง"
   disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
   anonymous: "ไม่ระบุชื่อ"
   remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
@@ -38,10 +39,13 @@ th:
         inactive_user_error: "เกิดขึ้นเมื่อผู้ส่งยังไม่มีการใช้งาน"
   errors: &errors
     messages:
+      exclusion: ถูกจองแล้ว
+      has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
   activemodel:
     errors:
       <<: *errors
+  likes: "ถูกใจ"
   embed:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
@@ -63,35 +67,201 @@ th:
     until_posts:
       other: "%{count} โพส"
   activerecord:
+    attributes:
+      topic:
+        title: "ชื่อเรื่อง"
+        category_id: "หมวดหมู่"
     errors:
       <<: *errors
+  staff_category_name: "ทีมงาน"
   category:
     topic_prefix: "เกี่ยวกับหมวด %{category}"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1 นาที"
+    distance_in_words_verbose:
+      half_a_minute: "เมื่อสักครู่นี้"
+  password_reset:
+    choose_new: "เลือกรหัสผู้ใช้ใหม่"
+    choose: "เลือกรหัสผู้ใช้"
+    save: "ตั้งรหัสผ่าน"
+    title: "รีเซ็ทรหัสผ่าน"
+  reviewable_score_types:
+    needs_approval:
+      title: "ต้องการอนุมัติ"
+  post_action_types:
+    spam:
+      title: "ขยะ"
+    bookmark:
+      title: "บุ๊คมาร์ค"
+  topic_flag_types:
+    spam:
+      title: "ขยะ"
   archetypes:
     banner:
       title: "ป้ายหัวข้อ"
+  unsubscribe:
+    log_out: "ออกจากระบบ"
+    digest_frequency:
+      never: "ไม่เลย"
+      every_30_minutes: "ทุก 30 นาที"
+      every_hour: "ทุกชั่วโมง"
+      daily: "ทุกวัน"
+      weekly: "รายสัปดาห์"
   reports:
+    post_edits:
+      labels:
+        post: โพส
+        edit_reason: เหตุผล
+    user_flagging_ratio:
+      labels:
+        user: ผู้ใช้
+    moderators_activity:
+      labels:
+        moderator: ผู้ดูแล
+    flags_status:
+      labels:
+        flag: ชนิด
+    consolidated_page_views:
+      labels:
+        post: โพส
+        edit_reason: เหตุผล
     topics:
       title: "หัวข้อ"
     posts:
       title: "โพส"
+    likes:
+      title: "ถูกใจ"
+    flags:
+      title: "ธง"
     bookmarks:
       title: "บุ๊คมาร์ค"
     users_by_trust_level:
       xaxis: "ระดับความไว้ใจ"
+    users_by_type:
+      xaxis: "ชนิด"
+      labels:
+        type: ชนิด
+      xaxis_labels:
+        admin: ผู้ดูแลระบบ
+        moderator: ผู้ดูแล
+        suspended: ระงับการใช้งาน
+    system_private_messages:
+      title: "ระบบ"
     top_referrers:
+      xaxis: "ผู้ใช้"
       num_topics: "หัวข้อ"
+      labels:
+        user: "ผู้ใช้"
+        num_topics: "หัวข้อ"
     top_traffic_sources:
       num_topics: "หัวข้อ"
       num_users: "ผู้ใช้"
+      labels:
+        num_topics: หัวข้อ
+    top_referred_topics:
+      labels:
+        topic: "หัวข้อ"
+    page_view_anon_reqs:
+      title: "ไม่ระบุชื่อ"
+    suspicious_logins:
+      labels:
+        user: ผู้ใช้
+        location: ที่อยู่
+    staff_logins:
+      labels:
+        user: ผู้ใช้
+        location: ที่อยู่
   search:
     types:
+      category: "หมวดหมู่"
       user: "ผู้ใช้"
   login:
     admin_not_allowed_from_ip_address: "คุณไม่สามารถเข้าสู่ระบบด้วยผู้ดูแลระบบด้วยไอพีนี้"
   subject_re: "ตอบ: "
   subject_pm: "[PM] "
   user_notifications:
+    user_replied:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_quoted:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm:
       text_body_template: |
         %{header_instructions}
@@ -105,5 +275,66 @@ th:
       text_body_template: |2
 
         %{message}
+    digest:
+      liked_received: "ได้รับการชอบ"
+      new_users: "ผู้ใช้งานใหม่"
+    forgot_password:
+      title: "ลืมรหัสผ่าน"
+    set_password:
+      title: "ตั้งรหัสผ่าน"
   page_not_found:
     see_more: "อื่น"
+    search_button: "ค้นหา"
+  terms_of_service:
+    title: "เงื่อนไขการบริการ"
+  about: "เกี่ยวกับ"
+  guidelines: "คู่มือ"
+  privacy: "ความเป็นส่วนตัว"
+  csv_export:
+    boolean_yes: "ใช่"
+    boolean_no: "ไม่ใช่"
+  tos_topic:
+    title: "เงื่อนไขการบริการ"
+  privacy_topic:
+    title: "นโยบายความเป็นส่วนตัว"
+  badges:
+    regular:
+      name: ทั่วไป
+    first_link:
+      name: ลิงค์แรก
+    popular_link:
+      name: ลิงค์ที่ได้รับความนิยม
+    famous_link:
+      name: ลิงค์ที่ได้รับความนิยม
+  tags:
+    title: "ป้าย"
+  wizard:
+    step:
+      forum_title:
+        title: "ชื่อ"
+      privacy:
+        title: "การเข้าถึง"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "องค์กร"
+      emoji:
+        title: "Emoji"
+  joined: "สมัครสมาชิกเมื่อ"
+  reviewables:
+    actions:
+      delete_spammer:
+        title: "ลบสแปมเมอร์"
+      disagree:
+        title: "ไม่เห็นด้วย"
+      approve:
+        title: "อนุมัติ"
+      reject_user:
+        delete:
+          title: "ลบผู้ใช้"
+      reject:
+        title: "ละทิ้ง"
+      delete_user:
+        title: "ลบผู้ใช้"

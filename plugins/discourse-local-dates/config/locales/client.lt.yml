@@ -8,9 +8,7 @@
 lt:
   js:
     discourse_local_dates:
-      title: Įterpti datą
       create:
-        modal_title: Įterpti datą
         form:
           insert: Įterpti
           advanced_mode: Išplėstinis režimas
