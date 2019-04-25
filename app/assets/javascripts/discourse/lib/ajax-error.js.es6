@@ -35,7 +35,7 @@ export function extractError(error, defaultMessage) {
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.failed) {
-      parsedError = parsedJSON.message;
+      parsedError = parsedJSON.failed;
     }
   }
 
