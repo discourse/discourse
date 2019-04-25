@@ -108,7 +108,7 @@ describe Email::Styles do
     end
 
     it "prefers data-original-href attribute to get iframe link" do
-      original_url = "https://vimeo.com/329875646"
+      original_url = "https://vimeo.com/329875646/85f1546a42"
       iframe_url = "https://player.vimeo.com/video/329875646"
       frag = html_fragment("<iframe src=\"#{iframe_url}\" data-original-href=\"#{original_url}\"></iframe>")
       expect(frag.at('iframe')).to be_blank
