@@ -280,12 +280,9 @@ class Upload < ActiveRecord::Base
                 notifications
                 single_sign_on_records
                 stylesheet_cache
-                topic_links
-                topics
                 topic_search_data
                 users
                 user_emails
-                user_profiles
                 draft_sequences
                 optimized_images
               }
