@@ -27,8 +27,7 @@ task "avatars:clean" => :environment do
 
   optimized_image_ids = OptimizedImage.where("upload_id IN (SELECT custom_upload_id FROM user_avatars) OR
                         upload_id IN (SELECT gravatar_upload_id FROM user_avatars) OR
-                        upload_id IN (SELECT uploaded_avatar_id FROM users)")
-                        .pluck(:id)
+                        upload_id IN (SELECT uploaded_avatar_id FROM users)").pluck(:id)
 
   optimized_image_ids.each do |id|
     begin
