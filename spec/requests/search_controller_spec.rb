@@ -137,6 +137,11 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "doesn't raise an error when search term is not in valid format" do
+      get "/search.json?q[foo]"
+      expect(response.status).to eq(200)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }
