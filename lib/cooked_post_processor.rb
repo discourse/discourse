@@ -598,7 +598,11 @@ class CookedPostProcessor
 
   def remove_user_ids
     @doc.css("a[href]").each do |a|
-      uri = URI(a["href"])
+      uri = begin
+        URI(a["href"])
+      rescue URI::Error
+        next
+      end
       next if uri.hostname != Discourse.current_hostname
 
       query = Rack::Utils.parse_nested_query(uri.query)

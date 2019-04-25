@@ -1047,6 +1047,8 @@ describe CookedPostProcessor do
         a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
 
         link to an external topic: https://google.com/?u=bar
+
+        a malformed url: https://www.example.com/#123#4
       RAW
     end
 
@@ -1058,6 +1060,7 @@ describe CookedPostProcessor do
       expect(cpp.html).to have_tag('a', with: { href: topic.url })
       expect(cpp.html).to have_tag('a', with: { href: "#{topic.url}?bob=bob&jane=jane" })
       expect(cpp.html).to have_tag('a', with: { href: "https://google.com/?u=bar" })
+      expect(cpp.html).to have_tag('a', with: { href: "https://www.example.com/#123#4" })
     end
   end
 
