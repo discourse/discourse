@@ -45,7 +45,11 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
     if (!content.value) {
       if (this.get("tagId")) {
-        content.title = this.get("tagId");
+        if (this.get("tagId") === "none") {
+          content.title = this.get("noTagsLabel");
+        } else {
+          content.title = this.get("tagId");
+        }
       } else if (this.get("noTagsSelected")) {
         content.title = this.get("noTagsLabel");
       } else {
