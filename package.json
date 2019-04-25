@@ -16,7 +16,7 @@
     "highlight.js": "https://github.com/highlightjs/highlight.js",
     "htmlparser": "https://github.com/tautologistics/node-htmlparser",
     "intersection-observer": "^0.5.1",
-    "jquery": "3.3.1",
+    "jquery": "3.4.0",
     "jquery-color": "1.0.0",
     "jquery-resize": "https://github.com/cowboy/jquery-resize/",
     "jquery-tags-input": "1.3.5",
