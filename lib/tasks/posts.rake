@@ -413,9 +413,9 @@ task 'posts:missing_uploads' => :environment do
 
     posts.each do |post|
       missing_post_uploads = []
+      links = Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").map { |media| media.value }.uniq
 
-      Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").each do |media|
-        src = media.value
+      links.each do |src|
         next if src.blank? || upload_patterns.none? { |pattern| src =~ pattern }
 
         src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
@@ -449,6 +449,7 @@ task 'posts:missing_uploads' => :environment do
                 tmp.rewind
 
                 if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+                  sha1s << upload.sha1
                   upload_id = upload.id
                   DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
