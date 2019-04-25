@@ -265,6 +265,15 @@
         }
       }
     }
+
+    pre {
+      background-color: blend-primary-secondary(5%);
+      max-height: 300px;
+      padding: 0.5em;
+      code {
+        max-height: none;
+      }
+    }
   }
   .password-confirmation {
     display: none;
