@@ -137,9 +137,9 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
-    it "doesn't raise an error when search term is not in valid format" do
+    it "raises an error when search term is a hash" do
       get "/search.json?q[foo]"
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(400)
     end
 
     it "logs the search term" do

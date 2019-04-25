@@ -11,6 +11,12 @@ class SearchController < ApplicationController
   def show
     @search_term = params.permit(:q)[:q]
 
+    # a q param has been given but it's not in the correct format
+    # eg: ?q[foo]=bar
+    if params[:q].present? && !@search_term.present?
+      raise Discourse::InvalidParameters.new(:q)
+    end
+
     if @search_term.present? &&
        @search_term.length < SiteSetting.min_search_term_length
       raise Discourse::InvalidParameters.new(:q)
