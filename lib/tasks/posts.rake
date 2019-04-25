@@ -472,7 +472,8 @@ task 'posts:missing_uploads' => :environment do
             end
 
             if upload_id.present?
-              PostUpload.create!(post_id: post.id, upload_id: upload_id)
+              attributes = { post_id: post.id, upload_id: upload_id }
+              PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
             else
               missing_uploads << src
             end
