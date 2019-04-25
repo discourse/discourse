@@ -24,7 +24,7 @@ export default Ember.Mixin.create({
   addTouchListeners($element) {
     if (this.site.mobileView) {
       $element
-        .on("touchstart", e => this._panStart(e.touches[0]))
+        .on("touchstart", e => e.touches && this._panStart(e.touches[0]))
         .on("touchmove", e => {
           const touchEvent = e.touches[0];
           touchEvent.type = "pointermove";
