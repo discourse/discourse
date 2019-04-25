@@ -14,15 +14,15 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 2.5s linear infinite forwards;
+    animation: placeHolderShimmer 4s linear infinite forwards;
     position: absolute;
     left: 0;
     content: "";
     background: linear-gradient(
       to right,
-      $primary-low 10%,
-      $primary-low-mid 18%,
-      $primary-low 33%
+      $primary-very-low 10%,
+      $primary-low 18%,
+      $primary-very-low 33%
     );
     height: $avatar_width;
     width: $card_width;

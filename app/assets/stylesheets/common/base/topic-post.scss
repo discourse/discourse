@@ -4,21 +4,21 @@
     background-position: -1000px 0;
   }
   100% {
-    background-position: 1000px 0;
+    background-position: 1100px 0;
   }
 }
 .placeholder-animation {
-  animation-duration: 2.5s;
+  animation-duration: 4s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
-  background: $primary-low;
+  background: $primary-very-low;
   background: linear-gradient(
     to right,
-    $primary-low 10%,
-    $primary-low-mid 18%,
-    $primary-low 33%
+    $primary-very-low 10%,
+    $primary-low 18%,
+    $primary-very-low 33%
   );
 }
 
@@ -30,15 +30,15 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 2.5s linear infinite forwards;
+    animation: placeHolderShimmer 4s linear infinite forwards;
     position: absolute;
     left: 0;
     content: "";
     background: linear-gradient(
       to right,
-      $primary-low 10%,
-      $primary-low-mid 28%,
-      $primary-low 43%
+      $primary-very-low 10%,
+      $primary-low 28%,
+      $primary-very-low 43%
     );
     height: 45px;
     width: 700px;
