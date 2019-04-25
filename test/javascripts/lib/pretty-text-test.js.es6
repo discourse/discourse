@@ -1387,6 +1387,13 @@ QUnit.test("enable/disable features", assert => {
   );
 });
 
+QUnit.test("table inside code block", assert => {
+  assert.cooked(
+    "```|a|\n--\n|a|```",
+    '<pre><code class="lang-auto">--\n|a|```</code></pre>'
+  );
+});
+
 QUnit.test("emoji", assert => {
   assert.cooked(
     ":smile:",
