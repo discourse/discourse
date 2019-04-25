@@ -8,7 +8,7 @@
 }(this, (function (moment) { 'use strict';
 
 
-    var enIe = moment.defineLocale('en-ie', {
+    var enSG = moment.defineLocale('en-SG', {
         months : 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
         monthsShort : 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
         weekdays : 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
@@ -20,7 +20,7 @@
             L : 'DD/MM/YYYY',
             LL : 'D MMMM YYYY',
             LLL : 'D MMMM YYYY HH:mm',
-            LLLL : 'dddd D MMMM YYYY HH:mm'
+            LLLL : 'dddd, D MMMM YYYY HH:mm'
         },
         calendar : {
             sameDay : '[Today at] LT',
@@ -61,6 +61,6 @@
         }
     });
 
-    return enIe;
+    return enSG;
 
 })));
