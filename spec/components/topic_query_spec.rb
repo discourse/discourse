@@ -1070,4 +1070,16 @@ describe TopicQuery do
       end
     end
   end
+
+  describe '#list_private_messages' do
+    it "includes topics with moderator posts" do
+      private_message_topic = Fabricate(:private_message_post, user: user).topic
+
+      expect(TopicQuery.new(user).list_private_messages(user).topics).to be_empty
+
+      private_message_topic.add_moderator_post(admin, "Thank you for your flag")
+
+      expect(TopicQuery.new(user).list_private_messages(user).topics).to eq([private_message_topic])
+    end
+  end
 end
