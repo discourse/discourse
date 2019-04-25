@@ -115,16 +115,15 @@ QUnit.test(
 );
 
 QUnit.test("does not track clicks on lightboxes", async assert => {
-  var clickEvent = generateClickEventOn(".lightbox");
-  assert.ok(track(clickEvent));
+  assert.notOk(track(generateClickEventOn(".lightbox")));
 });
 
 QUnit.test("does not track clicks when forcibly disabled", async assert => {
-  assert.ok(track(generateClickEventOn(".no-track-link")));
+  assert.notOk(track(generateClickEventOn(".no-track-link")));
 });
 
 QUnit.test("does not track clicks on back buttons", async assert => {
-  assert.ok(track(generateClickEventOn(".back")));
+  assert.notOk(track(generateClickEventOn(".back")));
 });
 
 QUnit.test("does not track right clicks inside quotes", async assert => {
@@ -134,11 +133,13 @@ QUnit.test("does not track right clicks inside quotes", async assert => {
 });
 
 QUnit.test("does not track clicks links in quotes", async assert => {
-  assert.ok(track(generateClickEventOn(".quote a:last-child")));
+  Discourse.User.currentProp("external_links_in_new_tab", true);
+  assert.notOk(track(generateClickEventOn(".quote a:last-child")));
+  assert.ok(window.open.calledWith("https://google.com", "_blank"));
 });
 
 QUnit.test("does not track clicks on category badges", async assert => {
-  assert.ok(track(generateClickEventOn(".hashtag")));
+  assert.notOk(track(generateClickEventOn(".hashtag")));
 });
 
 QUnit.test("does not track clicks on mailto", async assert => {
