@@ -1,15 +1,54 @@
+// placeholder
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+.placeholder-animation {
+  animation-duration: 2.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: $primary-low;
+  background: linear-gradient(
+    to right,
+    $primary-low 10%,
+    $primary-low-mid 18%,
+    $primary-low 33%
+  );
+}
+
 .placeholder-avatar {
   display: inline-block;
-  background-color: $primary-low;
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  &:before {
+    animation: placeHolderShimmer 2.5s linear infinite forwards;
+    position: absolute;
+    left: 0;
+    content: "";
+    background: linear-gradient(
+      to right,
+      $primary-low 10%,
+      $primary-low-mid 28%,
+      $primary-low 43%
+    );
+    height: 45px;
+    width: 700px;
+  }
 }
 
 .placeholder-text {
+  margin-left: 11px;
   display: inline-block;
-  background-color: $primary-low;
-  width: 100%;
+  width: calc(100% - 11px);
   height: 1.5em;
   margin-bottom: 0.6em;
 }
