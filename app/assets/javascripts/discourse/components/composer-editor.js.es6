@@ -261,8 +261,9 @@ export default Ember.Component.extend({
     // when adding two separate files with the same filename search for matching
     // placeholder already existing in the editor ie [Uploading: test.png...]
     // and add order nr to the next one: [Uplodading: test.png(1)...]
+    const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regexString = `\\[${I18n.t("uploading_filename", {
-      filename: filename + "(?:\\()?([0-9])?(?:\\))?"
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?"
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
     const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
