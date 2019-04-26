@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
   include HasDestroyedWebHook
 
   has_many :posts
-  has_many :notifications, dependent: :destroy
-  has_many :topic_users, dependent: :destroy
+  has_many :notifications, dependent: :delete_all
+  has_many :topic_users, dependent: :delete_all
   has_many :category_users, dependent: :destroy
   has_many :tag_users, dependent: :destroy
   has_many :user_api_keys, dependent: :destroy
