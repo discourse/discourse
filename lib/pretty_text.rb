@@ -375,8 +375,13 @@ module PrettyText
 
   def self.convert_vimeo_iframes(doc)
     doc.css("iframe[src*='player.vimeo.com']").each do |iframe|
-      vimeo_id = iframe['src'].split('/').last
-      iframe.replace "<p><a href='https://vimeo.com/#{vimeo_id}'>https://vimeo.com/#{vimeo_id}</a></p>"
+      if iframe["data-original-href"].present?
+        vimeo_url = iframe["data-original-href"]
+      else
+        vimeo_id = iframe['src'].split('/').last
+        vimeo_url = "https://vimeo.com/#{vimeo_id}"
+      end
+      iframe.replace "<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>"
     end
   end
 
