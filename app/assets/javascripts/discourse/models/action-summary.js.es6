@@ -3,9 +3,7 @@ import RestModel from "discourse/models/rest";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default RestModel.extend({
-  canToggle: function() {
-    return this.get("can_undo") || this.get("can_act");
-  }.property("can_undo", "can_act"),
+  canToggle: Ember.computed.or("can_undo", "can_act"),
 
   // Remove it
   removeAction: function() {

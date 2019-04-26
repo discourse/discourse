@@ -1,6 +1,7 @@
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import DiscourseURL from "discourse/lib/url";
 import { extractError } from "discourse/lib/ajax-error";
+import computed from "ember-addons/ember-computed-decorators";
 
 // Modal for editing / creating a category
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -28,39 +29,44 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   }.observes("model.description"),
 
-  title: function() {
-    if (this.get("model.id")) {
+  @computed("model.id", "model.name")
+  title(id, name) {
+    if (id) {
       return I18n.t("category.edit_dialog_title", {
-        categoryName: this.get("model.name")
+        categoryName: name
       });
     }
     return I18n.t("category.create");
-  }.property("model.id", "model.name"),
+  },
 
   titleChanged: function() {
     this.set("modal.title", this.get("title"));
   }.observes("title"),
 
-  disabled: function() {
-    if (this.get("saving") || this.get("deleting")) return true;
-    if (!this.get("model.name")) return true;
-    if (!this.get("model.color")) return true;
+  @computed("saving", "model.name", "model.color", "deleting")
+  disabled(saving, name, color, deleting) {
+    if (saving || deleting) return true;
+    if (!name) return true;
+    if (!color) return true;
     return false;
-  }.property("saving", "model.name", "model.color", "deleting"),
+  },
 
-  deleteDisabled: function() {
-    return this.get("deleting") || this.get("saving") || false;
-  }.property("disabled", "saving", "deleting"),
+  @computed("saving", "deleting")
+  deleteDisabled(saving, deleting) {
+    return deleting || saving || false;
+  },
 
-  categoryName: function() {
-    const name = this.get("name") || "";
+  @computed("name")
+  categoryName(name) {
+    name = name || "";
     return name.trim().length > 0 ? name : I18n.t("preview");
-  }.property("name"),
+  },
 
-  saveLabel: function() {
-    if (this.get("saving")) return "saving";
-    return this.get("model.id") ? "category.save" : "category.create";
-  }.property("saving", "model.id"),
+  @computed("saving", "model.id")
+  saveLabel(saving, id) {
+    if (saving) return "saving";
+    return id ? "category.save" : "category.create";
+  },
 
   actions: {
     saveCategory() {

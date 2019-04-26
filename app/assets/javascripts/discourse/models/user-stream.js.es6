@@ -3,6 +3,7 @@ import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default RestModel.extend({
   loaded: false,
@@ -11,8 +12,8 @@ export default RestModel.extend({
     this.setProperties({ itemsLoaded: 0, content: [] });
   }.on("init"),
 
-  filterParam: function() {
-    const filter = this.get("filter");
+  @computed("filter")
+  filterParam(filter) {
     if (filter === Discourse.UserAction.TYPES.replies) {
       return [UserAction.TYPES.replies, UserAction.TYPES.quotes].join(",");
     }
@@ -22,7 +23,7 @@ export default RestModel.extend({
     }
 
     return filter;
-  }.property("filter"),
+  },
 
   baseUrl: url(
     "itemsLoaded",
@@ -45,9 +46,10 @@ export default RestModel.extend({
     return this.findItems();
   },
 
-  noContent: function() {
+  @computed("loaded", "content.[]")
+  noContent() {
     return this.get("loaded") && this.get("content").length === 0;
-  }.property("loaded", "content.[]"),
+  },
 
   remove(userAction) {
     // 1) remove the user action from the child groups

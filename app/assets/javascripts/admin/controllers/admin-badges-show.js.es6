@@ -1,6 +1,7 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyNotEqual } from "discourse/lib/computed";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(bufferedProperty("model"), {
   adminBadges: Ember.inject.controller(),
@@ -17,14 +18,13 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   readOnly: Ember.computed.alias("buffered.system"),
   showDisplayName: propertyNotEqual("name", "displayName"),
 
-  hasQuery: function() {
-    const bQuery = this.get("buffered.query");
-    if (bQuery) {
-      return bQuery.trim().length > 0;
+  @computed("model.query", "buffered.query")
+  hasQuery(modelQuery, bufferedQuery) {
+    if (bufferedQuery) {
+      return bufferedQuery.trim().length > 0;
     }
-    const mQuery = this.get("model.query");
-    return mQuery && mQuery.trim().length > 0;
-  }.property("model.query", "buffered.query"),
+    return modelQuery && modelQuery.trim().length > 0;
+  },
 
   _resetSaving: function() {
     this.set("saving", false);

@@ -1,15 +1,18 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   loadingMore: Ember.computed.alias("topicList.loadingMore"),
   loading: Ember.computed.not("loaded"),
 
-  loaded: function() {
+  @computed("topicList.loaded")
+  loaded() {
     var topicList = this.get("topicList");
     if (topicList) {
       return topicList.get("loaded");
     } else {
       return true;
     }
-  }.property("topicList.loaded"),
+  },
 
   _topicListChanged: function() {
     this._initFromTopicList(this.get("topicList"));
@@ -27,9 +30,6 @@ export default Ember.Component.extend({
     const topicList = this.get("topicList");
     if (topicList) {
       this._initFromTopicList(topicList);
-    } else {
-      // Without a topic list, we assume it's loaded always.
-      this.set("loaded", true);
     }
   },
 

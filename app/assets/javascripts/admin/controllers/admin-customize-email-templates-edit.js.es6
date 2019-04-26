@@ -1,17 +1,18 @@
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(bufferedProperty("emailTemplate"), {
   saved: false,
 
-  hasMultipleSubjects: function() {
-    const buffered = this.get("buffered");
+  @computed("buffered")
+  hasMultipleSubjects(buffered) {
     if (buffered.getProperties("subject")["subject"]) {
       return false;
     } else {
       return buffered.getProperties("id")["id"];
     }
-  }.property("buffered"),
+  },
 
   actions: {
     saveChanges() {

@@ -11,36 +11,7 @@ export default Discourse.Model.extend({
     return Math.round((minDaysVisited * 100) / timePeriod);
   },
 
-  met: function() {
-    return {
-      days_visited: this.get("days_visited") >= this.get("min_days_visited"),
-      topics_replied_to:
-        this.get("num_topics_replied_to") >= this.get("min_topics_replied_to"),
-      topics_viewed: this.get("topics_viewed") >= this.get("min_topics_viewed"),
-      posts_read: this.get("posts_read") >= this.get("min_posts_read"),
-      topics_viewed_all_time:
-        this.get("topics_viewed_all_time") >=
-        this.get("min_topics_viewed_all_time"),
-      posts_read_all_time:
-        this.get("posts_read_all_time") >= this.get("min_posts_read_all_time"),
-      flagged_posts:
-        this.get("num_flagged_posts") <= this.get("max_flagged_posts"),
-      flagged_by_users:
-        this.get("num_flagged_by_users") <= this.get("max_flagged_by_users"),
-      likes_given: this.get("num_likes_given") >= this.get("min_likes_given"),
-      likes_received:
-        this.get("num_likes_received") >= this.get("min_likes_received"),
-      likes_received_days:
-        this.get("num_likes_received_days") >=
-        this.get("min_likes_received_days"),
-      likes_received_users:
-        this.get("num_likes_received_users") >=
-        this.get("min_likes_received_users"),
-      level_locked: this.get("trust_level_locked"),
-      silenced: this.get("penalty_counts.silenced") === 0,
-      suspended: this.get("penalty_counts.suspended") === 0
-    };
-  }.property(
+  @computed(
     "days_visited",
     "min_days_visited",
     "num_topics_replied_to",
@@ -71,4 +42,34 @@ export default Discourse.Model.extend({
     "penalty_counts.silenced",
     "penalty_counts.suspended"
   )
+  met() {
+    return {
+      days_visited: this.get("days_visited") >= this.get("min_days_visited"),
+      topics_replied_to:
+        this.get("num_topics_replied_to") >= this.get("min_topics_replied_to"),
+      topics_viewed: this.get("topics_viewed") >= this.get("min_topics_viewed"),
+      posts_read: this.get("posts_read") >= this.get("min_posts_read"),
+      topics_viewed_all_time:
+        this.get("topics_viewed_all_time") >=
+        this.get("min_topics_viewed_all_time"),
+      posts_read_all_time:
+        this.get("posts_read_all_time") >= this.get("min_posts_read_all_time"),
+      flagged_posts:
+        this.get("num_flagged_posts") <= this.get("max_flagged_posts"),
+      flagged_by_users:
+        this.get("num_flagged_by_users") <= this.get("max_flagged_by_users"),
+      likes_given: this.get("num_likes_given") >= this.get("min_likes_given"),
+      likes_received:
+        this.get("num_likes_received") >= this.get("min_likes_received"),
+      likes_received_days:
+        this.get("num_likes_received_days") >=
+        this.get("min_likes_received_days"),
+      likes_received_users:
+        this.get("num_likes_received_users") >=
+        this.get("min_likes_received_users"),
+      level_locked: this.get("trust_level_locked"),
+      silenced: this.get("penalty_counts.silenced") === 0,
+      suspended: this.get("penalty_counts.suspended") === 0
+    };
+  }
 });

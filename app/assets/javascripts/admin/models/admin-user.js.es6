@@ -293,17 +293,19 @@ const AdminUser = Discourse.User.extend({
       });
   },
 
-  canLockTrustLevel: function() {
-    return this.get("trust_level") < 4;
-  }.property("trust_level"),
+  @computed("trust_level")
+  canLockTrustLevel(trustLevel) {
+    return trustLevel < 4;
+  },
 
   canSuspend: Ember.computed.not("staff"),
 
-  suspendDuration: function() {
-    const suspended_at = moment(this.suspended_at),
-      suspended_till = moment(this.suspended_till);
-    return suspended_at.format("L") + " - " + suspended_till.format("L");
-  }.property("suspended_till", "suspended_at"),
+  @computed("suspended_till", "suspended_at")
+  suspendDuration(suspendedTill, suspendedAt) {
+    suspendedAt = moment(suspendedAt);
+    suspendedTill = moment(suspendedTill);
+    return suspendedAt.format("L") + " - " + suspendedTill.format("L");
+  },
 
   suspend(data) {
     return ajax(`/admin/users/${this.id}/suspend`, {

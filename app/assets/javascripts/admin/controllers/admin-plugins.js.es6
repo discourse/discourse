@@ -1,4 +1,7 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Controller.extend({
+  @computed
   adminRoutes: function() {
     return this.get("model")
       .map(p => {
@@ -7,7 +10,8 @@ export default Ember.Controller.extend({
         }
       })
       .compact();
-  }.property(),
+  },
+
   actions: {
     clearFilter() {
       this.setProperties({ filter: "", onlyOverridden: false });

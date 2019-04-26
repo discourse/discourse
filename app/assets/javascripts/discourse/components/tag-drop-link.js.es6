@@ -1,4 +1,5 @@
 import DiscourseURL from "discourse/lib/url";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   tagName: "a",
@@ -10,17 +11,19 @@ export default Ember.Component.extend({
   ],
   attributeBindings: ["href"],
 
-  href: function() {
+  @computed("tagId", "category")
+  href(tagId, category) {
     var url = "/tags";
-    if (this.get("category")) {
-      url += this.get("category.url");
+    if (category) {
+      url += category.url;
     }
-    return url + "/" + this.get("tagId");
-  }.property("tagId", "category"),
+    return url + "/" + tagId;
+  },
 
-  tagClass: function() {
-    return "tag-" + this.get("tagId");
-  }.property("tagId"),
+  @computed("tagId")
+  tagClass(tagId) {
+    return "tag-" + tagId;
+  },
 
   click(e) {
     e.preventDefault();

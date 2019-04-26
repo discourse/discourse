@@ -17,16 +17,17 @@ const Post = RestModel.extend({
     return Discourse.SiteSettings;
   },
 
-  shareUrl: function() {
+  @computed("url")
+  shareUrl(url) {
     const user = Discourse.User.current();
     const userSuffix = user ? "?u=" + user.get("username_lower") : "";
 
     if (this.get("firstPost")) {
       return this.get("topic.url") + userSuffix;
     } else {
-      return this.get("url") + userSuffix;
+      return url + userSuffix;
     }
-  }.property("url"),
+  },
 
   new_user: Ember.computed.equal("trust_level", 0),
   firstPost: Ember.computed.equal("post_number", 1),
@@ -36,36 +37,31 @@ const Post = RestModel.extend({
   deleted: Ember.computed.or("deleted_at", "deletedViaTopic"),
   notDeleted: Ember.computed.not("deleted"),
 
-  showName: function() {
-    const name = this.get("name");
+  @computed("name", "username")
+  showName(name, username) {
     return (
-      name &&
-      name !== this.get("username") &&
-      Discourse.SiteSettings.display_name_on_posts
+      name && name !== username && Discourse.SiteSettings.display_name_on_posts
     );
-  }.property("name", "username"),
+  },
 
-  postDeletedBy: function() {
-    if (this.get("firstPost")) {
-      return this.get("topic.deleted_by");
-    }
-    return this.get("deleted_by");
-  }.property("firstPost", "deleted_by", "topic.deleted_by"),
+  @computed("firstPost", "deleted_by", "topic.deleted_by")
+  postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
+    return firstPost ? topicDeletedBy : deletedBy;
+  },
 
-  postDeletedAt: function() {
-    if (this.get("firstPost")) {
-      return this.get("topic.deleted_at");
-    }
-    return this.get("deleted_at");
-  }.property("firstPost", "deleted_at", "topic.deleted_at"),
+  @computed("firstPost", "deleted_at", "topic.deleted_at")
+  postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
+    return firstPost ? topicDeletedAt : deletedAt;
+  },
 
-  url: function() {
+  @computed("post_number", "topic_id", "topic.slug")
+  url(postNr, topicId, slug) {
     return postUrl(
-      this.get("topic.slug") || this.get("topic_slug"),
-      this.get("topic_id") || this.get("topic.id"),
-      this.get("post_number")
+      slug || this.get("topic_slug"),
+      topicId || this.get("topic.id"),
+      postNr
     );
-  }.property("post_number", "topic_id", "topic.slug"),
+  },
 
   // Don't drop the /1
   @computed("post_number", "url")
