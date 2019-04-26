@@ -2,6 +2,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { bufferedRender } from "discourse-common/lib/buffered-render";
 import { escapeExpression } from "discourse/lib/utilities";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend(
   bufferedRender({
@@ -26,9 +27,10 @@ export default Ember.Component.extend(
       return false;
     },
 
-    canAct: function() {
-      return Discourse.User.current() && !this.get("disableActions");
-    }.property("disableActions"),
+    @computed("disableActions")
+    canAct(disableActions) {
+      return Discourse.User.current() && !disableActions;
+    },
 
     buildBuffer(buffer) {
       const canAct = this.get("canAct");

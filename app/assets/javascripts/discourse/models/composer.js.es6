@@ -77,9 +77,10 @@ const Composer = RestModel.extend({
   draftSaving: false,
   draftSaved: false,
 
-  archetypes: function() {
+  @computed
+  archetypes() {
     return this.site.get("archetypes");
-  }.property(),
+  },
 
   @computed("action")
   sharedDraft: action => action === CREATE_SHARED_DRAFT,
@@ -184,9 +185,10 @@ const Composer = RestModel.extend({
     .property()
     .volatile(),
 
-  archetype: function() {
-    return this.get("archetypes").findBy("id", this.get("archetypeId"));
-  }.property("archetypeId"),
+  @computed("archetypeId")
+  archetype(archetypeId) {
+    return this.get("archetypes").findBy("id", archetypeId);
+  },
 
   archetypeChanged: function() {
     return this.set("metaData", Ember.Object.create());
@@ -377,30 +379,27 @@ const Composer = RestModel.extend({
     );
   },
 
-  titleLengthValid: function() {
-    if (
-      this.user.get("admin") &&
-      this.get("post.static_doc") &&
-      this.get("titleLength") > 0
-    )
-      return true;
-    if (this.get("titleLength") < this.get("minimumTitleLength")) return false;
-    return this.get("titleLength") <= this.siteSettings.max_topic_title_length;
-  }.property("minimumTitleLength", "titleLength", "post.static_doc"),
+  @computed("minimumTitleLength", "titleLength", "post.static_doc")
+  titleLengthValid(minTitleLength, titleLength, staticDoc) {
+    if (this.user.get("admin") && staticDoc && titleLength > 0) return true;
+    if (titleLength < minTitleLength) return false;
+    return titleLength <= this.siteSettings.max_topic_title_length;
+  },
 
-  hasMetaData: function() {
-    const metaData = this.get("metaData");
+  @computed("metaData")
+  hasMetaData(metaData) {
     return metaData ? Ember.isEmpty(Ember.keys(this.get("metaData"))) : false;
-  }.property("metaData"),
+  },
 
   /**
     Did the user make changes to the reply?
 
     @property replyDirty
   **/
-  replyDirty: function() {
-    return this.get("reply") !== this.get("originalText");
-  }.property("reply", "originalText"),
+  @computed("reply", "originalText")
+  replyDirty(reply, originalText) {
+    return reply !== originalText;
+  },
 
   /**
     Did the user make changes to the topic title?
@@ -417,9 +416,10 @@ const Composer = RestModel.extend({
 
     @property missingTitleCharacters
   **/
-  missingTitleCharacters: function() {
-    return this.get("minimumTitleLength") - this.get("titleLength");
-  }.property("minimumTitleLength", "titleLength"),
+  @computed("minimumTitleLength", "titleLength")
+  missingTitleCharacters(minimumTitleLength, titleLength) {
+    return minimumTitleLength - titleLength;
+  },
 
   /**
     Minimum number of characters for a title to be valid.
@@ -474,23 +474,25 @@ const Composer = RestModel.extend({
 
     @property titleLength
   **/
-  titleLength: function() {
-    const title = this.get("title") || "";
+  @computed("title")
+  titleLength(title) {
+    title = title || "";
     return title.replace(/\s+/gim, " ").trim().length;
-  }.property("title"),
+  },
 
   /**
     Computes the length of the reply minus the quote(s) and non-significant whitespaces
 
     @property replyLength
   **/
-  replyLength: function() {
-    let reply = this.get("reply") || "";
+  @computed("reply")
+  replyLength(reply) {
+    reply = reply || "";
     while (Quote.REGEXP.test(reply)) {
       reply = reply.replace(Quote.REGEXP, "");
     }
     return reply.replace(/\s+/gim, " ").trim().length;
-  }.property("reply"),
+  },
 
   _setupComposer: function() {
     this.set("archetypeId", this.site.get("default_archetype"));

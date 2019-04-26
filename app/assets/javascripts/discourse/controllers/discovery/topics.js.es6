@@ -5,6 +5,7 @@ import { endWith } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import TopicList from "discourse/models/topic-list";
+import computed from "ember-addons/ember-computed-decorators";
 
 const controllerOpts = {
   discovery: Ember.inject.controller(),
@@ -96,26 +97,24 @@ const controllerOpts = {
     return filter.match(new RegExp(filterType + "$", "gi")) ? true : false;
   },
 
-  showDismissRead: function() {
-    return (
-      this.isFilterPage(this.get("model.filter"), "unread") &&
-      this.get("model.topics.length") > 0
-    );
-  }.property("model.filter", "model.topics.length"),
+  @computed("model.filter", "model.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return this.isFilterPage(filter, "unread") && topicsLength > 0;
+  },
 
-  showResetNew: function() {
-    return (
-      this.get("model.filter") === "new" && this.get("model.topics.length") > 0
-    );
-  }.property("model.filter", "model.topics.length"),
+  @computed("model.filter", "model.topics.length")
+  showResetNew(filter, topicsLength) {
+    return filter === "new" && topicsLength > 0;
+  },
 
-  showDismissAtTop: function() {
+  @computed("model.filter", "model.topics.length")
+  showDismissAtTop(filter, topicsLength) {
     return (
-      (this.isFilterPage(this.get("model.filter"), "new") ||
-        this.isFilterPage(this.get("model.filter"), "unread")) &&
-      this.get("model.topics.length") >= 15
+      (this.isFilterPage(filter, "new") ||
+        this.isFilterPage(filter, "unread")) &&
+      topicsLength >= 15
     );
-  }.property("model.filter", "model.topics.length"),
+  },
 
   hasTopics: Ember.computed.gt("model.topics.length", 0),
   allLoaded: Ember.computed.empty("model.more_topics_url"),
@@ -128,10 +127,9 @@ const controllerOpts = {
   weekly: Ember.computed.equal("period", "weekly"),
   daily: Ember.computed.equal("period", "daily"),
 
-  footerMessage: function() {
-    if (!this.get("allLoaded")) {
-      return;
-    }
+  @computed("allLoaded", "model.topics.length")
+  footerMessage(allLoaded, topicsLength) {
+    if (!allLoaded) return;
 
     const category = this.get("category");
     if (category) {
@@ -140,7 +138,7 @@ const controllerOpts = {
       });
     } else {
       const split = (this.get("model.filter") || "").split("/");
-      if (this.get("model.topics.length") === 0) {
+      if (topicsLength === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1]
         });
@@ -150,14 +148,11 @@ const controllerOpts = {
         });
       }
     }
-  }.property("allLoaded", "model.topics.length"),
+  },
 
-  footerEducation: function() {
-    if (
-      !this.get("allLoaded") ||
-      this.get("model.topics.length") > 0 ||
-      !this.currentUser
-    ) {
+  @computed("allLoaded", "model.topics.length")
+  footerEducation(allLoaded, topicsLength) {
+    if (!allLoaded || topicsLength > 0 || !this.currentUser) {
       return;
     }
 
@@ -173,7 +168,7 @@ const controllerOpts = {
         `${this.currentUser.get("username_lower")}/preferences`
       )
     });
-  }.property("allLoaded", "model.topics.length")
+  }
 };
 
 Object.keys(queryParams).forEach(function(p) {

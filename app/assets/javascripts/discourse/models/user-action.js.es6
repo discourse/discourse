@@ -164,16 +164,7 @@ const UserAction = RestModel.extend({
     }
   },
 
-  children: function() {
-    const g = this.get("childGroups");
-    let rval = [];
-    if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
-        return i.get("items") && i.get("items").length > 0;
-      });
-    }
-    return rval;
-  }.property(
+  @computed(
     "childGroups",
     "childGroups.likes.items",
     "childGroups.likes.items.[]",
@@ -183,7 +174,17 @@ const UserAction = RestModel.extend({
     "childGroups.edits.items.[]",
     "childGroups.bookmarks.items",
     "childGroups.bookmarks.items.[]"
-  ),
+  )
+  children() {
+    const g = this.get("childGroups");
+    let rval = [];
+    if (g) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function(i) {
+        return i.get("items") && i.get("items").length > 0;
+      });
+    }
+    return rval;
+  },
 
   switchToActing() {
     this.setProperties({

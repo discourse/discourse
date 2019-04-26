@@ -1,14 +1,18 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   tagName: "span",
 
-  showGrantCount: function() {
-    return this.get("count") && this.get("count") > 1;
-  }.property("count"),
+  @computed("count")
+  showGrantCount(count) {
+    return count && count > 1;
+  },
 
-  badgeUrl: function() {
+  @computed("badge", "user")
+  badgeUrl() {
     // NOTE: I tried using a link-to helper here but the queryParams mean it fails
     var username = this.get("user.username_lower") || "";
     username = username !== "" ? "?username=" + username : "";
     return this.get("badge.url") + username;
-  }.property("badge", "user")
+  }
 });

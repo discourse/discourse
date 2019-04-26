@@ -26,13 +26,14 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     "categoriesSorting"
   ),
 
-  showApplyAll: function() {
+  @computed("categoriesBuffered.@each.hasBufferedChanges")
+  showApplyAll() {
     let anyChanged = false;
     this.get("categoriesBuffered").forEach(bc => {
       anyChanged = anyChanged || bc.get("hasBufferedChanges");
     });
     return anyChanged;
-  }.property("categoriesBuffered.@each.hasBufferedChanges"),
+  },
 
   moveDir(cat, dir) {
     const cats = this.get("categoriesOrdered");

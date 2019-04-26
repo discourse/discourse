@@ -39,6 +39,7 @@ function loadDraft(store, opts) {
     ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
   ) {
     const composer = store.createRecord("composer");
+
     composer.open({
       draftKey,
       draftSequence,
@@ -301,14 +302,12 @@ export default Ember.Controller.extend({
     }
   },
 
-  showWarning: function() {
+  @computed("model.creatingPrivateMessage", "model.targetUsernames")
+  showWarning(creatingPrivateMessage, usernames) {
     if (!Discourse.User.currentProp("staff")) {
       return false;
     }
-
-    var usernames = this.get("model.targetUsernames");
     var hasTargetGroups = this.get("model.hasTargetGroups");
-
     // We need exactly one user to issue a warning
     if (
       Ember.isEmpty(usernames) ||
@@ -317,8 +316,8 @@ export default Ember.Controller.extend({
     ) {
       return false;
     }
-    return this.get("model.creatingPrivateMessage");
-  }.property("model.creatingPrivateMessage", "model.targetUsernames"),
+    return creatingPrivateMessage;
+  },
 
   @computed("model.topic")
   draftTitle(topic) {
@@ -1102,15 +1101,13 @@ export default Ember.Controller.extend({
     $(".d-editor-input").autocomplete({ cancel: true });
   },
 
-  canEdit: function() {
-    return (
-      this.get("model.action") === "edit" &&
-      Discourse.User.current().get("can_edit")
-    );
-  }.property("model.action"),
+  @computed("model.action")
+  canEdit(action) {
+    return action === "edit" && Discourse.User.current().get("can_edit");
+  },
 
-  visible: function() {
-    var state = this.get("model.composeState");
+  @computed("model.composeState")
+  visible(state) {
     return state && state !== "closed";
-  }.property("model.composeState")
+  }
 });

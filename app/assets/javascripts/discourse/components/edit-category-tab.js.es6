@@ -1,18 +1,21 @@
 import { propertyEqual } from "discourse/lib/computed";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Component.extend({
   tagName: "li",
   classNameBindings: ["active", "tabClassName"],
 
-  tabClassName: function() {
-    return "edit-category-" + this.get("tab");
-  }.property("tab"),
+  @computed("tab")
+  tabClassName(tab) {
+    return "edit-category-" + tab;
+  },
 
   active: propertyEqual("selectedTab", "tab"),
 
-  title: function() {
-    return I18n.t("category." + this.get("tab").replace("-", "_"));
-  }.property("tab"),
+  @computed("tab")
+  title(tab) {
+    return I18n.t("category." + tab.replace("-", "_"));
+  },
 
   didInsertElement() {
     this._super(...arguments);

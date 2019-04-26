@@ -77,9 +77,10 @@ export default Ember.Controller.extend(PreferencesTabController, {
     });
   },
 
-  userSelectableThemes: function() {
+  @computed
+  userSelectableThemes() {
     return listThemes(this.site);
-  }.property(),
+  },
 
   @computed("userSelectableThemes")
   showThemeSelector(themes) {

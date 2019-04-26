@@ -12,9 +12,10 @@ export default Ember.Controller.extend(BadgeSelectController, {
   application: Ember.inject.controller(),
   hiddenSetTitle: true,
 
-  filteredList: function() {
-    return this.get("userBadgesAll").filterBy("badge.allow_title", true);
-  }.property("userBadgesAll"),
+  @computed("userBadgesAll")
+  filteredList(userBadgesAll) {
+    return userBadgesAll.filterBy("badge.allow_title", true);
+  },
 
   @computed("username")
   user(username) {
