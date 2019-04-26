@@ -5,6 +5,6 @@ class AddMissingUserDestroyerIndexes < ActiveRecord::Migration[5.2]
     add_index :post_actions, [:user_id]
     add_index :user_uploads, [:user_id, :upload_id]
     add_index :user_auth_token_logs, [:user_id]
-    add_index :topic_link, [:user_id]
+    add_index :topic_links, [:user_id]
   end
 end
