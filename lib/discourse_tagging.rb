@@ -4,6 +4,13 @@ module DiscourseTagging
   TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
   TAGS_STAFF_CACHE_KEY = "staff_tag_names"
 
+  TAG_GROUP_TAG_IDS_SQL = <<-SQL
+      SELECT tag_id
+        FROM tag_group_memberships tgm
+  INNER JOIN tag_groups tg
+          ON tgm.tag_group_id = tg.id
+  SQL
+
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -53,6 +60,19 @@ module DiscourseTagging
               tags << Tag.create(name: name)
             end
           end
+        end
+
+        # add missing mandatory parent tags
+        parent_tags = TagGroup.includes(:parent_tag).where("tag_groups.id IN (
+          SELECT tg.id
+            FROM tag_groups tg
+      INNER JOIN tag_group_memberships tgm
+              ON tgm.tag_group_id = tg.id
+           WHERE tg.parent_tag_id IS NOT NULL
+             AND tgm.tag_id IN (?))", tags.map(&:id)).map(&:parent_tag)
+
+        parent_tags.reject { |t| tag_names.include?(t.name) }.each do |tag|
+          tags << tag
         end
 
         # validate minimum required tags for a category
@@ -147,28 +167,19 @@ module DiscourseTagging
         all_staff_tags = DiscourseTagging.staff_tag_names
         query = query.where('tags.name NOT IN (?)', all_staff_tags) if all_staff_tags.present?
       end
+    end
 
+    if opts[:for_input]
       # exclude tag groups that have a parent tag which is missing from selected_tags
 
-      select_sql = <<-SQL
-      SELECT tag_id
-            FROM tag_group_memberships tgm
-      INNER JOIN tag_groups tg
-              ON tgm.tag_group_id = tg.id
-      SQL
-
       if selected_tag_ids.empty?
-        sql = "tags.id NOT IN (#{select_sql} WHERE tg.parent_tag_id IS NOT NULL)"
+        sql = "tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE tg.parent_tag_id IS NOT NULL)"
         query = query.where(sql)
       else
-        # One tag per group restriction
-        exclude_group_ids = TagGroup.where(one_per_topic: true)
-          .joins(:tag_group_memberships)
-          .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
-          .pluck(:id)
+        exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
 
         if exclude_group_ids.empty?
-          sql = "tags.id NOT IN (#{select_sql} WHERE tg.parent_tag_id NOT IN (?))"
+          sql = "tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE tg.parent_tag_id NOT IN (?))"
           query = query.where(sql, selected_tag_ids)
         else
           # It's possible that the selected tags violate some one-tag-per-group restrictions,
@@ -177,9 +188,21 @@ module DiscourseTagging
             .where(tag_id: selected_tag_ids)
             .where(tag_group_id: exclude_group_ids)
             .map(&:tag_id)
-          sql = "(tags.id NOT IN (#{select_sql} WHERE (tg.parent_tag_id NOT IN (?) OR tg.id in (?))) OR tags.id IN (?))"
+          sql = "(tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE (tg.parent_tag_id NOT IN (?) OR tg.id in (?))) OR tags.id IN (?))"
           query = query.where(sql, selected_tag_ids, exclude_group_ids, limit_tag_ids)
         end
+      end
+    elsif opts[:for_topic] && !selected_tag_ids.empty?
+      # One tag per group restriction
+      exclude_group_ids = one_per_topic_group_ids(selected_tag_ids)
+
+      unless exclude_group_ids.empty?
+        limit_tag_ids = TagGroupMembership.select('distinct on (tag_group_id) tag_id')
+          .where(tag_id: selected_tag_ids)
+          .where(tag_group_id: exclude_group_ids)
+          .map(&:tag_id)
+        sql = "(tags.id NOT IN (#{TAG_GROUP_TAG_IDS_SQL} WHERE (tg.id in (?))) OR tags.id IN (?))"
+        query = query.where(sql, exclude_group_ids, limit_tag_ids)
       end
     end
 
@@ -188,6 +211,13 @@ module DiscourseTagging
     else
       filter_visible(query, guardian)
     end
+  end
+
+  def self.one_per_topic_group_ids(selected_tag_ids)
+    TagGroup.where(one_per_topic: true)
+      .joins(:tag_group_memberships)
+      .where('tag_group_memberships.tag_id in (?)', selected_tag_ids)
+      .pluck(:id)
   end
 
   def self.filter_visible(query, guardian = nil)

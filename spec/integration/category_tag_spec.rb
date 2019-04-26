@@ -196,12 +196,20 @@ describe "category tag restrictions" do
   end
 
   context "tag groups with parent tag" do
-    it "filter_allowed_tags returns results based on whether parent tag is present or not" do
+    it "for input field, filter_allowed_tags returns results based on whether parent tag is present or not" do
       tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
       tag_group.tags = [tag3, tag4]
       expect(filter_allowed_tags(for_input: true)).to contain_exactly(tag1, tag2)
       expect(filter_allowed_tags(for_input: true, selected_tags: [tag1.name])).to contain_exactly(tag2, tag3, tag4)
       expect(filter_allowed_tags(for_input: true, selected_tags: [tag1.name, tag3.name])).to contain_exactly(tag2, tag4)
+    end
+
+    it "for tagging a topic, filter_allowed_tags allows tags without parent tag" do
+      tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
+      tag_group.tags = [tag3, tag4]
+      expect(filter_allowed_tags(for_topic: true)).to contain_exactly(tag1, tag2, tag3, tag4)
+      expect(filter_allowed_tags(for_topic: true, selected_tags: [tag1.name])).to contain_exactly(tag1, tag2, tag3, tag4)
+      expect(filter_allowed_tags(for_topic: true, selected_tags: [tag1.name, tag3.name])).to contain_exactly(tag1, tag2, tag3, tag4)
     end
 
     context "and category restrictions" do
