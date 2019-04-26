@@ -174,13 +174,6 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
       onebox = described_class.new(original_link)
       expect(onebox.to_html).to be_nil
     end
-
-    it "works with Twitter cards" do
-      fake("https://simplecast.com/s/7fe152f4", response('simplecast'))
-
-      onebox = described_class.new("https://simplecast.com/s/7fe152f4")
-      expect(onebox.to_html).to include("https://embed.simplecast.com/7fe152f4")
-    end
   end
 
 end

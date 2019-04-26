@@ -95,7 +95,6 @@ module Onebox
           samsung.com
           screenr.com
           scribd.com
-          simplecast.com
           slideshare.net
           sourceforge.net
           speakerdeck.com
