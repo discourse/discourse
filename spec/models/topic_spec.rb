@@ -1476,8 +1476,6 @@ describe Topic do
   end
 
   describe '#private_topic_timer' do
-    let(:user) { Fabricate(:user) }
-
     let(:topic_timer) do
       Fabricate(:topic_timer,
         public_type: false,
@@ -2286,7 +2284,6 @@ describe Topic do
 
   describe '#pm_with_non_human_user?' do
     let(:robot) { Fabricate(:user, id: -3) }
-    fab!(:user) { Fabricate(:user) }
 
     let(:topic) do
       topic = Fabricate(:private_message_topic,
