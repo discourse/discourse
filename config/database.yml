@@ -1,7 +1,11 @@
 development:
   prepared_statements: false
   adapter: postgresql
-  database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
+  #database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
+  database: discourse
+  username: discourse
+  password: wqpIJSkqicjkcza888221
+  host: postgres
   min_messages: warning
   pool: 5
   timeout: 5000
@@ -12,32 +16,3 @@ development:
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - "localhost"
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  prepared_statements: false
-  adapter: postgresql
-  database: <%= ENV["RAILS_DB"] ? ENV["RAILS_DB"] : "discourse_test" %>
-  min_messages: warning
-  pool: 5
-  timeout: 5000
-  host_names:
-    - test.localhost
-
-# profile db is used for benchmarking using the script/bench.rb script
-profile:
-  prepared_statements: false
-  adapter: postgresql
-  database: discourse_profile
-  min_messages: warning
-  pool: 5
-  timeout: 5000
-  host_names:
-    - "localhost"
-# You may be surprised production is not here, it is sourced from application.rb using a monkey patch
-# This is done for 2 reasons
-#
-# 1. we need to support blank settings correctly and rendering nothing in yaml/erb is a PITA
-# 2. why go from object -> yaml -> object, pointless

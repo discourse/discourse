@@ -32,7 +32,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   awaitingApproval: false,
 
   canLoginLocal: setting("enable_local_logins"),
-  canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
+  canLoginLocalWithEmail: false,
   loginRequired: Ember.computed.alias("application.loginRequired"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
 
@@ -110,6 +110,35 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       this.set("loggingIn", true);
+
+      const url = 'http://localhost:8081/api/signin/account/';
+      const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "login": this.get("loginName"),
+          "password": this.get("loginPassword"),
+        }),
+      };
+      fetch(url, options)
+      .then((response) => response.json())
+      .then((jsonResponse) => {
+        if ('errors' in jsonResponse || 'error' in jsonResponse) {
+          const errorMessage = jsonResponse.errors || jsonResponse.error;
+          return console.warn('login failure:',errorMessage);
+        }
+        console.log('login success:',jsonResponse.user);
+        console.log(jsonResponse);
+
+        window.localStorage.setItem('user', JSON.stringify(jsonResponse.user));
+        document.cookie = `user=${JSON.stringify(jsonResponse.user)}`;
+        window.localStorage.setItem('apiKey', JSON.stringify(jsonResponse.api_key));
+        document.cookie = `apiKey=${JSON.stringify(jsonResponse.api_key)}`;
+        console.log(document.cookie);
+      })
+      .catch((error) => console.error(error));
 
       ajax("/session", {
         type: "POST",

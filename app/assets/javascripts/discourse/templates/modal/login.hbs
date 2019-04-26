@@ -1,36 +1,349 @@
+<style>
+  .main {
+    display: flex;
+    flex-direction: row;
+    font-family: "Futura";
+    height: -webkit-fill-available;
+    font-weight: bold;
+    height: 80vh;
+    width: 80vw;
+  }
+
+  .main__signup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #3E4048;
+    color: #F2F2F2;
+    padding: 2.5em;
+  }
+
+  .main__signup--main{
+    height: 80%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .main__signup__terms-conditions{
+    height: 20%;
+    display: flex;
+    font-size: 12px;
+    font-weight: 500;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .main__signup--greeting {
+    margin-bottom: 0.5em;
+    font-size: 40px;
+  }
+
+  .main__signup--header{
+    margin-top: 0;
+    margin-bottom: 3em;
+    font-size: 24px;
+  }
+
+  .main__signup--button {
+    background-color: #F2F2F2 !important;
+    border: none !important;
+    color: #2298FF !important;
+    text-transform: unset !important;
+    border-radius: 0 !important;
+    font-weight: bold !important;
+    font-size: 25px !important;
+    padding: 8px 107px !important;
+    font-family: Lato !important;
+    line-height: 1.70 !important;
+  }
+
+  .main__signin {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+    background-color: #F2F2F2;
+    color: #3E4048 !important;
+    height: auto;
+    padding-right: 5em;
+    padding-left: 7em;
+    padding-bottom: 2.5em;
+  }
+
+  .main__create-account {
+    flex-grow: 2;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 3.5em;
+    padding-right: 7em;
+  }
+
+  .main__welcome-back {
+    flex-grow: 0;
+    padding-left: 5em;
+  }
+
+  .main__signin--greeting {
+    font-size: 50px;
+    margin-bottom: 1em;
+  }
+
+  .main__signin--input--first > input {
+    color: 'white';
+    border-bottom: 'solid white 0.25em';
+    width: '100%';
+    margin-bottom: '2.5%';
+  }
+
+  .main__signin--header{
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    margin-bottom: 1em;
+    height: 24%;
+  }
+
+  .main__welcome-back-header {
+    height: 33%;
+  }
+
+  .main__signin-main{
+   display: flex;
+   flex-direction: column;
+   height: 79%;
+  }
+
+  .main__welsome-back-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main__signin--logo {
+    width: fit-content;
+  }
+
+  .main__signin--input--first {
+    margin-bottom: 3em;
+    width: 100%;
+  }
+
+  .main__signin--input--second {
+    margin-bottom: 1em;
+    width: 100%;
+  }
+
+  .main__create-account-input--first {
+    margin-bottom: 1.5em;
+  }
+
+  .main__create-account-input--second {
+    margin-bottom: 1.5em;
+  }
+
+  .main__create-account-input--third {
+    margin-bottom: 3em;
+  }
+
+  .MuiSvgIcon-root-82 {
+    width: 1.5em;
+    height: 1.5em;
+  }
+
+  .main__signin--button{
+    margin-top: 1.5em !important;
+    margin-bottom: 2em !important;
+      text-transform: none !important;
+      border-radius: 0 !important;
+      border: 6px solid #2298FF !important;
+      color: #2298FF !important;
+      width: 60%;  
+      font-size: 27px !important;
+     font-weight: bold !important;
+     font-family: Lato !important;
+     padding-top: 5px !important;
+     padding-bottom: 15px !important;
+  }
+
+  .main__welcome-back-button {
+    width: 94%;
+    padding: 0px 24px !important;
+    margin-top: 1em !important;  
+  }
+
+  .main__create-acount-button {
+    width: 65%;
+    height: 3em;
+    padding: 0;
+  }
+
+  .MuiButton-label-2 {
+    font-weight: bold !important;
+    font-size: 27px !important;
+  }
+
+  .MuiTypography-body1-100, .MuiInputBase-input-53 {
+    /* color: #3E4048 !important; */
+    font-size: 27px !important;
+    font-weight: bold !important;
+    font-family: Lato !important;
+    padding: 6px 0 18px !important;
+  }
+
+  .MuiInputBase-root-14 {
+    color: #F2F2F2 !important;
+    font-size: 27px !important;
+    font-weight: bold !important;
+    font-family: Lato !important;
+    padding: 6px 0 18px !important;
+  }
+
+  .MuiCheckbox-colorSecondary-71.MuiCheckbox-checked-67{
+    color: #2298FF !important;
+  }
+
+  .MuiInput-underline-34:after {
+    border-bottom: 5px solid #3E4048 !important;
+    border-radius: 5px;
+  }
+
+  .main__create-account-input--first:after, 
+  .main__create-account-input--second:after, 
+  .main__create-account-input--third:after {
+    border-bottom: 5px solid #F2F2F2 !important;
+    border-radius: 5px;
+  }
+
+  .MuiSvgIcon-root-82 {
+    width: 2em !important;
+    height: 2em !important;
+    color: #3E4048 !important;
+  }
+
+  .MuiButton-sizeLarge-25 {
+    padding: 15px 24px;
+    
+  }
+
+  a {
+    color: #3E4048 !important;
+    font-size: 27px !important;
+    font-weight: bold !important;
+    font-family: Lato !important;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .select-box--box{
+    width: 180px;
+    position: absolute;
+    left: 0;
+  }
+  .select-box-container {
+    height: 30px;
+    border: 1px solid #aaa;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .select-box--selected-item {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    padding: 4px 12px;
+    vertical-align: middle;
+  }
+
+  .select-box--items div {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 6px;
+    padding-left: 20px;
+  }
+
+  .select-box--arrow {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    background: #aaa;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .select-box--arrow-down {
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid #fff;
+  }
+
+  .select-box--arrow-up{
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid #fff;
+  }
+</style>
+
 {{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword secondFactorToken=secondFactorToken action=(action "login")}}
   {{#d-modal-body title="login.title" class=modalBodyClasses}}
-
-    {{#if canLoginLocal}}
-      <form id='login-form' method='post'>
-        <div id="credentials" class={{credentialsClass}}>
-          <table>
-            <tr>
-              <td><label for='login-account-name'>{{i18n 'login.username'}}</label></td>
-              <td>{{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus" disabled=showSecondFactor}}</td>
-            </tr>
-            <tr>
-              <td><label for='login-account-password'>{{i18n 'login.password'}}</label></td>
-              <td>{{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn disabled=showSecondFactor}}</td>
-              <td><a id="forgot-password-link" {{action "forgotPassword"}}>{{i18n 'forgot_password.action'}}</a></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td><div class="caps-lock-warning {{unless capsLockOn 'hidden'}}">{{d-icon "exclamation-triangle"}} {{i18n 'login.caps_lock_warning'}}</div></td>
-              <td></td>
-            </tr>
-          </table>
+    <div id="root">
+      <div class="main">
+        <div class="main__signup">
+           <div class="main__signup--main">
+              <h1 class="main__signup--greeting">您好</h1>
+              <p class="main__signup--header">注册并加入BMW企业社区</p>
+              <button class="MuiButtonBase-root-27 MuiButtonBase-disabled-28 MuiButton-root-1 MuiButton-outlined-9 MuiButton-outlinedPrimary-10 MuiButton-sizeLarge-25 MuiButton-disabled-21 main__signup--button" tabindex="-1" type="button" disabled=""><span class="MuiButton-label-2">注册</span></button>
+           </div>
+           <div class="main__signup__terms-conditions"><span>注册即代表同意</span><span>BMW企业社区运营协议及隐私条款</span></div>
         </div>
-        {{#second-factor-form
-          secondFactorMethod=secondFactorMethod
-          secondFactorToken=secondFactorToken
-          class=secondFactorClass
-          backupEnabled=backupEnabled
-          isLogin=true}}
-          {{second-factor-input value=secondFactorToken inputId='login-second-factor' secondFactorMethod=secondFactorMethod backupEnabled=backupEnabled}}
-        {{/second-factor-form}}
-      </form>
-    {{/if}}
+        <div class="main__signin">
+           <div class="main__signin--header"><img class="main__signin--logo" src="http://localhost:8081/gamelogin/logo-onboarding.becef846.png"></div>
+           <div class="main__signin-main">
+              <h1 class="main__signin--greeting">登陆</h1>
+              {{#if canLoginLocal}}
+                <form id='login-form' method='post'>
+                  <div class="MuiInputBase-root-43 MuiInput-root-30 MuiInput-underline-34 main__signin--input--first">{{text-field value=loginName placeholder="公司邮箱" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus" disabled=showSecondFactor}}</div>
+                  <div class="MuiFormControl-root-60">
+                     <div class="MuiInputBase-root-43 MuiInput-root-30 MuiInput-underline-34 MuiInputBase-formControl-44 MuiInput-formControl-31 main__signin--input--second">{{password-field value=loginPassword placeholder="密码" type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn disabled=showSecondFactor}}</div>
+                  </div>
+                </form>
+              {{/if}}
+              <label class="MuiFormControlLabel-root-64">
+                 <span class="MuiButtonBase-root-27 MuiIconButton-root-80 MuiPrivateSwitchBase-root-76 MuiCheckbox-root-70 MuiCheckbox-colorSecondary-75">
+                    <span class="MuiIconButton-label-85">
+                       <svg class="MuiSvgIcon-root-86" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                          <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"></path>
+                       </svg>
+                       <input class="MuiPrivateSwitchBase-input-79" type="checkbox" data-indeterminate="false" value="checkedA">
+                    </span>
+                    <span class="MuiTouchRipple-root-139"></span>
+                 </span>
+                 <span class="MuiTypography-root-95 MuiTypography-body1-104 MuiFormControlLabel-label-69">记住我</span>
+              </label>
+              <button {{action "login"}} class="MuiButtonBase-root-27 MuiButton-root-1 MuiButton-outlined-9 MuiButton-outlinedPrimary-10 MuiButton-sizeLarge-25 main__signin--button" tabindex="0" type="button"><span class="MuiButton-label-2">登陆</span><span class="MuiTouchRipple-root-139"></span></button><a>忘记密码？</a>
+           </div>
+          </div>
+          <div></div>
+       </div>
+    </div>
     {{#if showLoginButtons}}
       {{login-buttons
         showLoginWithEmailLink=showLoginWithEmailLink
@@ -39,30 +352,6 @@
         externalLogin=(action "externalLogin")}}
     {{/if}}
   {{/d-modal-body}}
-
-  <div class="modal-footer">
-    {{#if canLoginLocal}}
-      {{d-button
-        action=(action "login")
-        form="login-form"
-        icon="unlock"
-        label=loginButtonLabel
-        disabled=loginDisabled
-        class='btn btn-large btn-primary'}}
-
-      {{#if showSignupLink}}
-        <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
-          {{i18n 'create_account.title'}}
-        </button>
-      {{/if}}
-    {{/if}}
-
-    {{#if authenticate}}
-      &nbsp;{{i18n 'login.authenticating'}}
-    {{/if}}
-
-    {{conditional-loading-spinner condition=showSpinner size="small"}}
-  </div>
 
   <div class="auth-message">{{authMessage}}</div>
   <div id='login-alert' class={{alertClass}}>{{alert}}</div>
