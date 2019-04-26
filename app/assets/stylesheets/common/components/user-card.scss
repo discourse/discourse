@@ -2,42 +2,31 @@ $card_width: 580px;
 $avatar_width: 120px;
 $avatar_margin: -50px; // negative margin makes avatars extend above cards
 
-// placeholder
-@keyframes placeHolderShimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-}
 .animated-placeholder {
-  animation-duration: 1.25s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-  background: $primary-low;
-  background: linear-gradient(
-    to right,
-    $primary-low 10%,
-    $primary-low-mid 18%,
-    $primary-low 33%
-  );
   height: 20px;
   position: relative;
 }
+
 .card-avatar-placeholder {
   width: $avatar_width;
   height: $avatar_width;
   border-radius: 100%;
-  animation-duration: 5s;
-  background: linear-gradient(
-    to right,
-    $primary-low 10%,
-    $primary-low-mid 38%,
-    $primary-low 73%
-  );
+  position: relative;
+  overflow: hidden;
+  &:before {
+    animation: placeHolderShimmer 4s linear infinite forwards;
+    position: absolute;
+    left: 0;
+    content: "";
+    background: linear-gradient(
+      to right,
+      $primary-very-low 10%,
+      $primary-low 18%,
+      $primary-very-low 33%
+    );
+    height: $avatar_width;
+    width: $card_width;
+  }
 }
 
 // shared styles for user and group cards
