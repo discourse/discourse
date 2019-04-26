@@ -8,7 +8,7 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 const Report = Discourse.Model.extend({
   average: false,

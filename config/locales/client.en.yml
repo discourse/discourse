@@ -3110,6 +3110,13 @@ en:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
+          filters:
+            file-extension:
+              label: File extension
+            group:
+              label: Group
+            category:
+              label: Category
 
       commits:
         latest_changes: "Latest changes: please update often!"
