@@ -802,15 +802,6 @@ export default Ember.Component.extend({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    if (plainText) {
-      plainText = plainText.trim().replace(/\r/g, "");
-      const table = this._extractTable(plainText);
-      if (table) {
-        this.appEvents.trigger("composer:insert-text", table);
-        handled = true;
-      }
-    }
-
     const { pre, lineVal } = this._getSelected(null, { lineVal: true });
     const isInlinePasting = pre.match(/[^\n]$/);
 
@@ -823,6 +814,15 @@ export default Ember.Component.extend({
         );
       } else {
         canPasteHtml = !isInside(pre, /(^|\n)```/g);
+
+        if (canPasteHtml) {
+          plainText = plainText.trim().replace(/\r/g, "");
+          const table = this._extractTable(plainText);
+          if (table) {
+            this.appEvents.trigger("composer:insert-text", table);
+            handled = true;
+          }
+        }
       }
     }
 
