@@ -390,6 +390,8 @@ describe Topic do
   end
 
   context 'category validation' do
+    fab!(:category) { Fabricate(:category) }
+
     context 'allow_uncategorized_topics is false' do
       before do
         SiteSetting.allow_uncategorized_topics = false
@@ -407,7 +409,7 @@ describe Topic do
       end
 
       it 'passes for topics with a category' do
-        expect(Fabricate.build(:topic, category: Fabricate(:category))).to be_valid
+        expect(Fabricate.build(:topic, category: category)).to be_valid
       end
     end
 
@@ -421,7 +423,7 @@ describe Topic do
       end
 
       it 'passes for topics with a category' do
-        expect(Fabricate.build(:topic, category: Fabricate(:category))).to be_valid
+        expect(Fabricate.build(:topic, category: category)).to be_valid
       end
     end
   end
