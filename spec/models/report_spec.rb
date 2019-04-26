@@ -20,7 +20,6 @@ describe Report do
   end
 
   shared_examples 'category filtering on subcategories' do
-
     it 'returns the filtered data' do
       expect(report.total).to eq(1)
     end
@@ -753,12 +752,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('flags', category_id: c1.id) }
+        let(:report) { Report.find('flags', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('flags', category_id: c0.id) }
+          let(:report) { Report.find('flags', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -782,12 +781,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics', category_id: c1.id) }
+        let(:report) { Report.find('topics', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics', category_id: c0.id) }
+          let(:report) { Report.find('topics', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -872,12 +871,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('posts', category_id: c1.id) }
+        let(:report) { Report.find('posts', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('posts', category_id: c0.id) }
+          let(:report) { Report.find('posts', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -903,12 +902,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics_with_no_response', category_id: c1.id) }
+        let(:report) { Report.find('topics_with_no_response', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics_with_no_response', category_id: c0.id) }
+          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -939,12 +938,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('likes', category_id: c1.id) }
+        let(:report) { Report.find('likes', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('likes', category_id: c0.id) }
+          let(:report) { Report.find('likes', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
