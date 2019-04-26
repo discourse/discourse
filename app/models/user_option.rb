@@ -195,8 +195,6 @@ end
 #  user_id                          :integer          not null, primary key
 #  mailing_list_mode                :boolean          default(FALSE), not null
 #  email_digests                    :boolean
-#  email_level                      :integer          default(1), not null
-#  email_messages_level             :integer          default(0), not null
 #  external_links_in_new_tab        :boolean          default(FALSE), not null
 #  enable_quoting                   :boolean          default(TRUE), not null
 #  dynamic_favicon                  :boolean          default(FALSE), not null
@@ -219,6 +217,9 @@ end
 #  hide_profile_and_presence        :boolean          default(FALSE), not null
 #  text_size_key                    :integer          default(0), not null
 #  text_size_seq                    :integer          default(0), not null
+#  email_level                      :integer          default(1), not null
+#  email_messages_level             :integer          default(0), not null
+#  title_count_mode_key             :integer          default(0), not null
 #
 # Indexes
 #
