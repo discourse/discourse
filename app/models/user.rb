@@ -49,7 +49,9 @@ class User < ActiveRecord::Base
   has_many :user_warnings
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
-  has_many :directory_items, dependent: :delete_all
+
+  # see before_destroy
+  has_many :directory_items
   has_many :user_auth_tokens, dependent: :destroy
   has_many :user_auth_token_logs, dependent: :destroy
 
@@ -141,6 +143,12 @@ class User < ActiveRecord::Base
     # we need to bypass the default scope here, which appears not bypassed for :delete_all
     # however :destroy it is bypassed
     PostAction.with_deleted.where(user_id: self.id).delete_all
+
+    # This is a perf optimisation to ensure we hit the index
+    # without this we need to scan a much larger number of rows
+    DirectoryItem.where(user_id: self.id)
+      .where('period_type in (?)', DirectoryItem.period_types.values)
+      .delete_all
   end
 
   # Skip validating email, for example from a particular auth provider plugin
