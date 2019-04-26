@@ -7,7 +7,6 @@ require_dependency 'post_destroyer'
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
-  let(:topic) { Fabricate(:topic) }
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -1699,6 +1698,7 @@ describe Topic do
       end
 
       it "doesn't return topics that a user has muted" do
+        topic = Fabricate(:topic)
         user = Fabricate(:user)
 
         Fabricate(:topic_user,
@@ -2332,6 +2332,7 @@ describe Topic do
 
   describe '#remove_allowed_user' do
     fab!(:another_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic) }
 
     describe 'removing oneself' do
       it 'should remove onself' do
