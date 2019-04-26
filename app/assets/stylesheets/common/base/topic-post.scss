@@ -1,15 +1,30 @@
 .placeholder-avatar {
   display: inline-block;
-  background-color: $primary-low;
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  &:before {
+    animation: placeHolderShimmer 4s linear infinite forwards;
+    position: absolute;
+    left: 0;
+    content: "";
+    background: linear-gradient(
+      to right,
+      $primary-very-low 10%,
+      $primary-low 28%,
+      $primary-very-low 43%
+    );
+    height: 45px;
+    width: 700px;
+  }
 }
 
 .placeholder-text {
+  margin-left: 11px;
   display: inline-block;
-  background-color: $primary-low;
-  width: 100%;
+  width: calc(100% - 11px);
   height: 1.5em;
   margin-bottom: 0.6em;
 }
