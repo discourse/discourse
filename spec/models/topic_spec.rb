@@ -1421,10 +1421,10 @@ describe Topic do
     describe '#by_most_recently_created' do
       it 'returns topics ordered by created_at desc, id desc' do
         now = Time.now
-        a = Fabricate(:topic, created_at: now - 2.minutes)
-        b = Fabricate(:topic, created_at: now)
-        c = Fabricate(:topic, created_at: now)
-        d = Fabricate(:topic, created_at: now - 2.minutes)
+        a = Fabricate(:topic, user: user, created_at: now - 2.minutes)
+        b = Fabricate(:topic, user: user, created_at: now)
+        c = Fabricate(:topic, user: user, created_at: now)
+        d = Fabricate(:topic, user: user, created_at: now - 2.minutes)
         expect(Topic.by_newest).to eq([c, b, d, a])
       end
     end
@@ -1432,11 +1432,11 @@ describe Topic do
     describe '#created_since' do
       it 'returns topics created after some date' do
         now = Time.now
-        a = Fabricate(:topic, created_at: now - 2.minutes)
-        b = Fabricate(:topic, created_at: now - 1.minute)
-        c = Fabricate(:topic, created_at: now)
-        d = Fabricate(:topic, created_at: now + 1.minute)
-        e = Fabricate(:topic, created_at: now + 2.minutes)
+        a = Fabricate(:topic, user: user, created_at: now - 2.minutes)
+        b = Fabricate(:topic, user: user, created_at: now - 1.minute)
+        c = Fabricate(:topic, user: user, created_at: now)
+        d = Fabricate(:topic, user: user, created_at: now + 1.minute)
+        e = Fabricate(:topic, user: user, created_at: now + 2.minutes)
         expect(Topic.created_since(now)).not_to include a
         expect(Topic.created_since(now)).not_to include b
         expect(Topic.created_since(now)).not_to include c
@@ -1447,9 +1447,9 @@ describe Topic do
 
     describe '#visible' do
       it 'returns topics set as visible' do
-        a = Fabricate(:topic, visible: false)
-        b = Fabricate(:topic, visible: true)
-        c = Fabricate(:topic, visible: true)
+        a = Fabricate(:topic, user: user, visible: false)
+        b = Fabricate(:topic, user: user, visible: true)
+        c = Fabricate(:topic, user: user, visible: true)
         expect(Topic.visible).not_to include a
         expect(Topic.visible).to include b
         expect(Topic.visible).to include c
@@ -1462,9 +1462,9 @@ describe Topic do
         c2 = Fabricate(:category, parent_category_id: c1.id)
         c3 = Fabricate(:category)
 
-        t1 = Fabricate(:topic, category_id: c1.id)
-        t2 = Fabricate(:topic, category_id: c2.id)
-        t3 = Fabricate(:topic, category_id: c3.id)
+        t1 = Fabricate(:topic, user: user, category_id: c1.id)
+        t2 = Fabricate(:topic, user: user, category_id: c2.id)
+        t3 = Fabricate(:topic, user: user, category_id: c3.id)
 
         expect(Topic.in_category_and_subcategories(c1.id)).not_to include(t3)
         expect(Topic.in_category_and_subcategories(c1.id)).to include(t2)
