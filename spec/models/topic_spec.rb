@@ -807,53 +807,50 @@ describe Topic do
   end
 
   context 'bumping topics' do
-
-    before do
-      @topic = Fabricate(:topic, bumped_at: 1.year.ago)
-    end
+    let!(:topic) { Fabricate(:topic, bumped_at: 1.year.ago) }
 
     it 'updates the bumped_at field when a new post is made' do
-      expect(@topic.bumped_at).to be_present
+      expect(topic.bumped_at).to be_present
       expect {
-        create_post(topic: @topic, user: @topic.user)
-        @topic.reload
-      }.to change(@topic, :bumped_at)
+        create_post(topic: topic, user: topic.user)
+        topic.reload
+      }.to change(topic, :bumped_at)
     end
 
     context 'editing posts' do
       before do
-        @earlier_post = Fabricate(:post, topic: @topic, user: @topic.user)
-        @last_post = Fabricate(:post, topic: @topic, user: @topic.user)
-        @topic.reload
+        @earlier_post = Fabricate(:post, topic: topic, user: topic.user)
+        @last_post = Fabricate(:post, topic: topic, user: topic.user)
+        topic.reload
       end
 
       it "doesn't bump the topic on an edit to the last post that doesn't result in a new version" do
         expect {
           SiteSetting.editing_grace_period = 5.minutes
           @last_post.revise(@last_post.user, { raw: @last_post.raw + "a" }, revised_at: @last_post.created_at + 10.seconds)
-          @topic.reload
-        }.not_to change(@topic, :bumped_at)
+          topic.reload
+        }.not_to change(topic, :bumped_at)
       end
 
       it "bumps the topic when a new version is made of the last post" do
         expect {
           @last_post.revise(Fabricate(:moderator), raw: 'updated contents')
-          @topic.reload
-        }.to change(@topic, :bumped_at)
+          topic.reload
+        }.to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
         expect {
           @earlier_post.revise(Fabricate(:moderator), raw: 'updated contents')
-          @topic.reload
-        }.not_to change(@topic, :bumped_at)
+          topic.reload
+        }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post have invalid topic title while edit" do
         expect {
           @last_post.revise(Fabricate(:moderator), title: 'invalid title')
-          @topic.reload
-        }.not_to change(@topic, :bumped_at)
+          topic.reload
+        }.not_to change(topic, :bumped_at)
       end
     end
   end
@@ -893,39 +890,39 @@ describe Topic do
   end
 
   context 'update_status' do
+    fab!(:topic) { Fabricate(:topic, bumped_at: 1.hour.ago) }
+
     before do
-      @topic = Fabricate(:topic, bumped_at: 1.hour.ago)
-      @topic.reload
-      @original_bumped_at = @topic.bumped_at.to_f
-      @user = @topic.user
+      @original_bumped_at = topic.bumped_at.to_f
+      @user = topic.user
       @user.admin = true
     end
 
     context 'visibility' do
       context 'disable' do
         before do
-          @topic.update_status('visible', false, @user)
-          @topic.reload
+          topic.update_status('visible', false, @user)
+          topic.reload
         end
 
         it 'should not be visible and have correct counts' do
-          expect(@topic).not_to be_visible
-          expect(@topic.moderator_posts_count).to eq(1)
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic).not_to be_visible
+          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
         end
       end
 
       context 'enable' do
         before do
-          @topic.update_attribute :visible, false
-          @topic.update_status('visible', true, @user)
-          @topic.reload
+          topic.update_attribute :visible, false
+          topic.update_status('visible', true, @user)
+          topic.reload
         end
 
         it 'should be visible with correct counts' do
-          expect(@topic).to be_visible
-          expect(@topic.moderator_posts_count).to eq(1)
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic).to be_visible
+          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
         end
       end
     end
@@ -933,28 +930,28 @@ describe Topic do
     context 'pinned' do
       context 'disable' do
         before do
-          @topic.update_status('pinned', false, @user)
-          @topic.reload
+          topic.update_status('pinned', false, @user)
+          topic.reload
         end
 
         it "doesn't have a pinned_at but has correct dates" do
-          expect(@topic.pinned_at).to be_blank
-          expect(@topic.moderator_posts_count).to eq(1)
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.pinned_at).to be_blank
+          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
         end
       end
 
       context 'enable' do
         before do
-          @topic.update_attribute :pinned_at, nil
-          @topic.update_status('pinned', true, @user)
-          @topic.reload
+          topic.update_attribute :pinned_at, nil
+          topic.update_status('pinned', true, @user)
+          topic.reload
         end
 
         it 'should enable correctly' do
-          expect(@topic.pinned_at).to be_present
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
-          expect(@topic.moderator_posts_count).to eq(1)
+          expect(topic.pinned_at).to be_present
+          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.moderator_posts_count).to eq(1)
         end
 
       end
@@ -978,15 +975,15 @@ describe Topic do
 
       context 'enable' do
         before do
-          @topic.update_attribute :archived, false
-          @topic.update_status('archived', true, @user)
-          @topic.reload
+          topic.update_attribute :archived, false
+          topic.update_status('archived', true, @user)
+          topic.reload
         end
 
         it 'should be archived' do
-          expect(@topic).to be_archived
-          expect(@topic.moderator_posts_count).to eq(1)
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic).to be_archived
+          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
         end
 
       end
@@ -1011,16 +1008,16 @@ describe Topic do
 
       context 'enable' do
         before do
-          @topic.update_attribute :closed, false
-          @topic.update_status(status, true, @user)
-          @topic.reload
+          topic.update_attribute :closed, false
+          topic.update_status(status, true, @user)
+          topic.reload
         end
 
         it 'should be closed' do
-          expect(@topic).to be_closed
-          expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
-          expect(@topic.moderator_posts_count).to eq(1)
-          expect(@topic.topic_timers.first).to eq(nil)
+          expect(topic).to be_closed
+          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.moderator_posts_count).to eq(1)
+          expect(topic.topic_timers.first).to eq(nil)
         end
       end
     end
@@ -1037,9 +1034,9 @@ describe Topic do
       context 'topic was set to close when it was created' do
         it 'includes the autoclose duration in the moderator post' do
           freeze_time(Time.new(2000, 1, 1))
-          @topic.created_at = 3.days.ago
-          @topic.update_status(status, true, @user)
-          expect(@topic.posts.last.raw).to include "closed after 3 days"
+          topic.created_at = 3.days.ago
+          topic.update_status(status, true, @user)
+          expect(topic.posts.last.raw).to include "closed after 3 days"
         end
       end
 
@@ -1047,17 +1044,17 @@ describe Topic do
         it 'includes the autoclose duration in the moderator post' do
           freeze_time(Time.new(2000, 1, 1))
 
-          @topic.created_at = 7.days.ago
+          topic.created_at = 7.days.ago
 
           freeze_time(2.days.ago)
 
-          @topic.set_or_create_timer(TopicTimer.types[:close], 48)
-          @topic.save!
+          topic.set_or_create_timer(TopicTimer.types[:close], 48)
+          topic.save!
 
           freeze_time(2.days.from_now)
 
-          @topic.update_status(status, true, @user)
-          expect(@topic.posts.last.raw).to include "closed after 2 days"
+          topic.update_status(status, true, @user)
+          expect(topic.posts.last.raw).to include "closed after 2 days"
         end
       end
     end
