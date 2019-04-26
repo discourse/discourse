@@ -68,7 +68,7 @@ module SiteIconManager
       value = SiteSetting.send(setting_name)
       return value if value
     end
-    return Upload.find(SKETCH_LOGO_ID)  if info[:fallback_to_sketch]
+    return Upload.find(SKETCH_LOGO_ID) if info[:fallback_to_sketch]
     nil
   end
 
