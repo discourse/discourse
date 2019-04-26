@@ -316,5 +316,6 @@ end
 #  index_topic_links_on_link_post_id_and_reflection  (link_post_id,reflection)
 #  index_topic_links_on_post_id                      (post_id)
 #  index_topic_links_on_topic_id                     (topic_id)
+#  index_topic_links_on_user_id                      (user_id)
 #  unique_post_links                                 (topic_id,post_id,url) UNIQUE
 #
