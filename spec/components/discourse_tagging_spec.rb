@@ -158,6 +158,39 @@ describe DiscourseTagging do
         expect(topic.reload.tags).to eq([hidden_tag])
       end
     end
+
+    context 'tag group with parent tag' do
+      let(:topic) { Fabricate(:topic, user: user) }
+      let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
+
+      before do
+        tag_group = Fabricate(:tag_group, parent_tag_id: tag1.id)
+        tag_group.tags = [tag3]
+      end
+
+      it "can tag with parent" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to eq([tag1.name])
+      end
+
+      it "can tag with parent and a tag" do
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag1.name, tag3.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(*[tag1, tag3].map(&:name))
+      end
+
+      it "adds all parent tags that are missing" do
+        parent_tag = Fabricate(:tag, name: 'parent')
+        tag_group2 = Fabricate(:tag_group, parent_tag_id: parent_tag.id)
+        tag_group2.tags = [tag2]
+        valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name, tag2.name])
+        expect(valid).to eq(true)
+        expect(topic.reload.tags.map(&:name)).to contain_exactly(
+          *[tag1, tag2, tag3, parent_tag].map(&:name)
+        )
+      end
+    end
   end
 
   describe '#tags_for_saving' do
