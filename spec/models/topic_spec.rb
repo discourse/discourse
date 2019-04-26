@@ -7,6 +7,7 @@ require_dependency 'post_destroyer'
 describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:another_user) { Fabricate(:user) }
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -488,7 +489,6 @@ describe Topic do
 
   describe '#invite' do
     fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:another_user) { Fabricate(:user) }
 
     context 'rate limits' do
       before do
@@ -1284,7 +1284,6 @@ describe Topic do
 
       describe 'to a different category' do
         fab!(:new_category) { Fabricate(:category, user: user, name: '2nd category') }
-        fab!(:another_user) { Fabricate(:user) }
 
         it 'should work' do
           topic.change_category_to_id(new_category.id)
@@ -2341,7 +2340,6 @@ describe Topic do
   end
 
   describe '#remove_allowed_user' do
-    fab!(:another_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
 
     describe 'removing oneself' do
