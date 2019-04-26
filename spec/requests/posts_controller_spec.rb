@@ -277,7 +277,6 @@ describe PostsController do
 
     describe 'when logged in' do
       let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user, post_number: 2) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:post, topic: Fabricate(:private_message_topic), post_number: 3)

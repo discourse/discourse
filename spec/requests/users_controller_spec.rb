@@ -832,8 +832,6 @@ describe UsersController do
       end
 
       context 'authentication records for' do
-        let(:user) { Fabricate(:user) }
-
         before do
           OmniAuth.config.test_mode = true
 
@@ -2574,7 +2572,6 @@ describe UsersController do
   describe '#show' do
     context "anon" do
       let(:user) { Discourse.system_user }
-      let(:other_user) { Fabricate(:user) }
 
       it "returns success" do
         get "/u/#{user.username}.json"

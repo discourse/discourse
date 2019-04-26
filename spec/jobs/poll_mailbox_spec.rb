@@ -24,8 +24,6 @@ describe Jobs::PollMailbox do
   describe ".poll_pop3" do
 
     context "pop errors" do
-      let(:user) { Fabricate(:user) }
-
       before do
         Discourse.expects(:handle_job_exception).at_least_once
       end

@@ -737,7 +737,6 @@ describe Topic do
     context 'invite' do
 
       context 'existing user' do
-        let(:walter) { Fabricate(:walter_white) }
 
         context 'by group name' do
           let(:group) { Fabricate(:group) }
