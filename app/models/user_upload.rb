@@ -15,4 +15,5 @@ end
 # Indexes
 #
 #  index_user_uploads_on_upload_id_and_user_id  (upload_id,user_id) UNIQUE
+#  index_user_uploads_on_user_id_and_upload_id  (user_id,upload_id)
 #

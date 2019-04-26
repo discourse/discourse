@@ -16,3 +16,7 @@ end
 #  created_at         :datetime
 #  path               :string
 #
+# Indexes
+#
+#  index_user_auth_token_logs_on_user_id  (user_id)
+#
