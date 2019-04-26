@@ -794,12 +794,12 @@ describe Topic do
       it "should set up actions correctly" do
         UserActionManager.enable
 
-        post = create_post(archetype: 'private_message', target_usernames: [Fabricate(:coding_horror).username])
+        post = create_post(archetype: 'private_message', target_usernames: [user.username])
         actions = post.user.user_actions
 
         expect(actions.map { |a| a.action_type }).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map { |a| a.action_type }).to include(UserAction::NEW_PRIVATE_MESSAGE)
-        expect(coding_horror.user_actions.map { |a| a.action_type }).to include(UserAction::GOT_PRIVATE_MESSAGE)
+        expect(user.user_actions.map { |a| a.action_type }).to include(UserAction::GOT_PRIVATE_MESSAGE)
       end
 
     end
