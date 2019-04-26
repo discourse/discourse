@@ -1,27 +1,3 @@
-// placeholder
-@keyframes placeHolderShimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1100px 0;
-  }
-}
-.placeholder-animation {
-  animation-duration: 4s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-  background: $primary-very-low;
-  background: linear-gradient(
-    to right,
-    $primary-very-low 10%,
-    $primary-low 18%,
-    $primary-very-low 33%
-  );
-}
-
 .placeholder-avatar {
   display: inline-block;
   width: 45px;
