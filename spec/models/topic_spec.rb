@@ -121,33 +121,35 @@ describe Topic do
   end
 
   context 'slug' do
-    let(:title) { "hello world topic" }
-    let(:slug) { "hello-world-topic" }
-    let!(:expected_title) { title.dup }
-    let!(:expected_slug) { slug.dup }
-    let(:topic) { Fabricate.build(:topic, title: title) }
-
     context 'encoded generator' do
       before { SiteSetting.slug_generation_method = 'encoded' }
 
-      it "returns a Slug for a title" do
-        expect(topic.title).to eq(expected_title)
-        expect(topic.slug).to eq(expected_slug)
+      context 'with ascii letters' do
+        let!(:title) { "hello world topic" }
+        let!(:slug) { "hello-world-topic" }
+        let!(:topic) { Fabricate.build(:topic, title: title) }
+
+        it "returns a Slug for a title" do
+          expect(topic.title).to eq(title)
+          expect(topic.slug).to eq(slug)
+        end
       end
 
       context 'for cjk characters' do
-        let(:title) { "熱帶風暴畫眉" }
-        let!(:expected_title) { title.dup }
+        let!(:title) { "熱帶風暴畫眉" }
+        let!(:topic) { Fabricate.build(:topic, title: title) }
 
         it "returns encoded Slug for a title" do
-          expect(topic.title).to eq(expected_title)
-          expect(topic.slug).to eq(expected_title)
+          expect(topic.title).to eq(title)
+          expect(topic.slug).to eq(title)
         end
       end
 
       context 'for numbers' do
-        let(:title) { "123456789" }
-        let(:slug) { "topic" }
+        let!(:title) { "123456789" }
+        let!(:slug) { "topic" }
+        let!(:topic) { Fabricate.build(:topic, title: title) }
+
         it 'generates default slug' do
           Slug.expects(:for).with(title).returns("topic")
           expect(Fabricate.build(:topic, title: title).slug).to eq("topic")
@@ -156,10 +158,11 @@ describe Topic do
     end
 
     context 'none generator' do
-      before { SiteSetting.slug_generation_method = 'none' }
+      let!(:title) { "熱帶風暴畫眉" }
+      let!(:slug) { "topic" }
+      let!(:topic) { Fabricate.build(:topic, title: title) }
 
-      let(:title) { "熱帶風暴畫眉" }
-      let(:slug) { "topic" }
+      before { SiteSetting.slug_generation_method = 'none' }
 
       it "returns a Slug for a title" do
         Slug.expects(:for).with(title).returns('topic')
@@ -170,14 +173,21 @@ describe Topic do
     context '#ascii_generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
 
-      it "returns a Slug for a title" do
-        Slug.expects(:for).with(title).returns(slug)
-        expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+      context 'with ascii letters' do
+        let!(:title) { "hello world topic" }
+        let!(:slug) { "hello-world-topic" }
+        let!(:topic) { Fabricate.build(:topic, title: title) }
+
+        it "returns a Slug for a title" do
+          Slug.expects(:for).with(title).returns(slug)
+          expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
+        end
       end
 
       context 'for cjk characters' do
-        let(:title) { "熱帶風暴畫眉" }
-        let(:slug) { 'topic' }
+        let!(:title) { "熱帶風暴畫眉" }
+        let!(:slug) { 'topic' }
+        let!(:topic) { Fabricate.build(:topic, title: title) }
 
         it "returns 'topic' when the slug is empty (say, non-latin characters)" do
           Slug.expects(:for).with(title).returns("topic")
