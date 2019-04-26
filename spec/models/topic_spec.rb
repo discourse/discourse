@@ -8,6 +8,7 @@ describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user) }
   fab!(:another_user) { Fabricate(:user) }
+  fab!(:trust_level_2) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
@@ -505,7 +506,6 @@ describe Topic do
         start = Time.now.tomorrow.beginning_of_day
         freeze_time(start)
 
-        trust_level_2 = Fabricate(:user, trust_level: 2)
         topic = Fabricate(:topic, user: trust_level_2)
 
         topic.invite(topic.user, user.username)
@@ -519,7 +519,6 @@ describe Topic do
         start = Time.now.tomorrow.beginning_of_day
         freeze_time(start)
 
-        trust_level_2 = Fabricate(:user, trust_level: 2)
         topic = Fabricate(:private_message_topic, user: trust_level_2)
 
         topic.invite(topic.user, user.username)
@@ -548,8 +547,8 @@ describe Topic do
     end
 
     describe 'private message' do
-      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-      fab!(:topic) { Fabricate(:private_message_topic, user: user) }
+      fab!(:user) { trust_level_2 }
+      fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
 
       describe 'by username' do
         it 'should be able to invite a user' do
