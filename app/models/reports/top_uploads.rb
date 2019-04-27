@@ -64,7 +64,7 @@ Report.add_report('top_uploads') do |report|
   builder.where("up.created_at < :end_date", end_date: report.end_date)
 
   if extension_filter
-    builder.where("up.extension = :extension", extension: extension_filter)
+    builder.where("up.extension = :extension", extension: extension_filter.sub(/^\./, ''))
   end
 
   builder.query.each do |row|
