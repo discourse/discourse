@@ -18,8 +18,8 @@ export function isValidLink($link) {
     return false;
   }
 
-  // Do not track links in quotes or in elided part
-  if ($link.parents("aside.quote, .elided").length !== 0) {
+  // Do not track links in elided part
+  if ($link.parents(".elided").length !== 0) {
     return false;
   }
 
