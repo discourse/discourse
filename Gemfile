@@ -87,7 +87,9 @@ gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-gem 'omniauth-google-oauth2'
+# pinned until we test verified email change in the gem
+gem 'omniauth-google-oauth2', '0.6.0'
+
 gem 'oj'
 gem 'pg'
 gem 'mini_sql'
