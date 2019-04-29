@@ -13,7 +13,7 @@ describe PostReply do
       expect(PostReply.new(post: post, reply: other_post)).to be_valid
 
       other_topic = Fabricate(:topic)
-      other_post.update_attributes!(topic_id: other_topic.id)
+      other_post.update!(topic_id: other_topic.id)
       other_post.reload
 
       post_reply = PostReply.new(post: post, reply: other_post)

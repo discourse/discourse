@@ -34,14 +34,14 @@ describe Jobs::UserEmail do
     end
 
     it "doesn't call the mailer when the user is staged" do
-      staged.update_attributes!(last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
+      staged.update!(last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago)
       Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
     context 'not emailed recently' do
       before do
-        user.update_attributes!(last_emailed_at: 8.days.ago)
+        user.update!(last_emailed_at: 8.days.ago)
       end
 
       it "calls the mailer when the user exists" do
@@ -52,8 +52,8 @@ describe Jobs::UserEmail do
 
     context 'recently emailed' do
       before do
-        user.update_attributes!(last_emailed_at: 2.hours.ago)
-        user.user_option.update_attributes!(digest_after_minutes: 1.day.to_i / 60)
+        user.update!(last_emailed_at: 2.hours.ago)
+        user.user_option.update!(digest_after_minutes: 1.day.to_i / 60)
       end
 
       it 'skips sending digest email' do
@@ -129,7 +129,7 @@ describe Jobs::UserEmail do
     end
 
     it "does send an email to a user that's been recently seen but has email_level set to always" do
-      user.user_option.update_attributes(email_level: UserOption.email_level_types[:always])
+      user.user_option.update(email_level: UserOption.email_level_types[:always])
       PostTiming.create!(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id, msecs: 100)
 
       Jobs::UserEmail.new.execute(
@@ -158,16 +158,16 @@ describe Jobs::UserEmail do
     end
 
     it "doesn't send a PM email to a user that's been recently seen and has email_messages_level set to never" do
-      user.user_option.update_attributes(email_messages_level: UserOption.email_level_types[:never])
-      user.user_option.update_attributes(email_level: UserOption.email_level_types[:always])
+      user.user_option.update(email_messages_level: UserOption.email_level_types[:never])
+      user.user_option.update(email_level: UserOption.email_level_types[:always])
       Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
 
       expect(ActionMailer::Base.deliveries).to eq([])
     end
 
     it "doesn't send a regular post email to a user that's been recently seen and has email_level set to never" do
-      user.user_option.update_attributes(email_messages_level: UserOption.email_level_types[:always])
-      user.user_option.update_attributes(email_level: UserOption.email_level_types[:never])
+      user.user_option.update(email_messages_level: UserOption.email_level_types[:always])
+      user.user_option.update(email_level: UserOption.email_level_types[:never])
       Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
 
       expect(ActionMailer::Base.deliveries).to eq([])
@@ -248,7 +248,7 @@ describe Jobs::UserEmail do
       end
 
       it "doesn't send the email if user of the post has been deleted" do
-        post.update_attributes!(user_id: nil)
+        post.update!(user_id: nil)
         Jobs::UserEmail.new.execute(type: :user_replied, user_id: user.id, post_id: post.id)
 
         expect(ActionMailer::Base.deliveries).to eq([])

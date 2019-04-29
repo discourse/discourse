@@ -75,7 +75,7 @@ describe SearchIndexer do
   it 'correctly indexes a post according to version' do
     # Preparing so that they can be indexed to right version
     SearchIndexer.update_posts_index(post_id, "dummy", "", nil, nil)
-    PostSearchData.find_by(post_id: post_id).update_attributes!(version: -1)
+    PostSearchData.find_by(post_id: post_id).update!(version: -1)
 
     data = "<a>This</a> is a test"
     SearchIndexer.update_posts_index(post_id, "", "", nil, data)

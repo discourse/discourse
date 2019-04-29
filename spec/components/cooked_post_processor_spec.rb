@@ -583,7 +583,7 @@ describe CookedPostProcessor do
       end
 
       it "should escape the filename" do
-        upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
+        upload.update!(original_filename: "><img src=x onerror=alert('haha')>.png")
         cpp.post_process_images
         cpp.optimize_urls
 

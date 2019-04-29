@@ -119,7 +119,7 @@ RSpec.describe GroupActionLogger do
 
   describe '#log_change_group_settings' do
     it 'should create the right record' do
-      group.update_attributes!(public_admission: true, created_at: Time.zone.now)
+      group.update!(public_admission: true, created_at: Time.zone.now)
 
       expect { subject.log_change_group_settings }.to change { GroupHistory.count }.by(1)
 

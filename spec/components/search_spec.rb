@@ -286,7 +286,7 @@ describe Search do
       end
 
       it "works for unlisted topics" do
-        topic.update_attributes(visible: false)
+        topic.update(visible: false)
         _post = new_post('discourse is awesome', topic)
         results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)

@@ -617,7 +617,7 @@ describe Group do
 
   it 'should cook the bio' do
     group = Fabricate(:group)
-    group.update_attributes!(bio_raw: 'This is a group for :unicorn: lovers')
+    group.update!(bio_raw: 'This is a group for :unicorn: lovers')
 
     expect(group.bio_cooked).to include("unicorn.png")
   end

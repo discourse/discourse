@@ -9,7 +9,7 @@ describe ThemeJavascriptsController do
   describe '#show' do
     def update_digest_and_get(digest)
       # actually set digest to make sure 404 is raised by router
-      javascript_cache.update_attributes(digest: digest)
+      javascript_cache.update(digest: digest)
 
       get "/theme-javascripts/#{digest}.js"
     end

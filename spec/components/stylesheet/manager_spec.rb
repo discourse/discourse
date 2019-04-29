@@ -150,12 +150,12 @@ describe Stylesheet::Manager do
 
       digest1 = manager.color_scheme_digest
 
-      category2.update_attributes(uploaded_background_id: 789, updated_at: 1.day.ago)
+      category2.update(uploaded_background_id: 789, updated_at: 1.day.ago)
 
       digest2 = manager.color_scheme_digest
       expect(digest2).to_not eq(digest1)
 
-      category1.update_attributes(uploaded_background_id: nil, updated_at: 5.minutes.ago)
+      category1.update(uploaded_background_id: nil, updated_at: 5.minutes.ago)
 
       digest3 = manager.color_scheme_digest
       expect(digest3).to_not eq(digest2)

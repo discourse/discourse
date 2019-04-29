@@ -309,7 +309,7 @@ describe Plugin::Instance do
 
       expect(called).to eq(1)
 
-      user.update_attributes!(username: 'some_username')
+      user.update!(username: 'some_username')
 
       expect(called).to eq(1)
     end
@@ -325,7 +325,7 @@ describe Plugin::Instance do
 
       expect(called).to eq(1)
 
-      user.update_attributes!(username: 'some_username')
+      user.update!(username: 'some_username')
 
       expect(called).to eq(1)
     end

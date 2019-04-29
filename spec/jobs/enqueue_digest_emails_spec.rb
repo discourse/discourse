@@ -30,11 +30,11 @@ describe Jobs::EnqueueDigestEmails do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
 
         # As an admin
-        unapproved_user.update_attributes(admin: true, moderator: false)
+        unapproved_user.update(admin: true, moderator: false)
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
 
         # As an approved user
-        unapproved_user.update_attributes(admin: false, moderator: false, approved: true)
+        unapproved_user.update(admin: false, moderator: false, approved: true)
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
       end
     end

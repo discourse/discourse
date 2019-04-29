@@ -518,7 +518,7 @@ class Category < ActiveRecord::Base
       .pluck("topics.id")
       .first
 
-    self.update_attributes(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
+    self.update(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
   end
 
   def self.query_parent_category(parent_slug)

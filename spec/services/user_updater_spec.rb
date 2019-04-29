@@ -258,7 +258,7 @@ describe UserUpdater do
 
       context 'badge can be used as a title' do
         before do
-          badge.update_attributes(allow_title: true)
+          badge.update(allow_title: true)
         end
 
         it 'can use as title, sets badge_granted_title' do
@@ -270,7 +270,7 @@ describe UserUpdater do
         end
 
         it 'badge has not been granted, does not change title' do
-          badge.update_attributes(allow_title: true)
+          badge.update(allow_title: true)
           updater = UserUpdater.new(user, user)
           updater.update(title: badge.name)
           user.reload
@@ -279,8 +279,8 @@ describe UserUpdater do
         end
 
         it 'changing to a title that is not from a badge, unsets badge_granted_title' do
-          user.update_attributes(title: badge.name)
-          user.user_profile.update_attributes(badge_granted_title: true)
+          user.update(title: badge.name)
+          user.user_profile.update(badge_granted_title: true)
 
           guardian = stub
           guardian.stubs(:can_grant_title?).with(user, 'Dancer').returns(true)

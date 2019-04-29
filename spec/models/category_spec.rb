@@ -311,31 +311,31 @@ describe Category do
     end
 
     it "renames the definition when renamed" do
-      @category.update_attributes(name: 'Troutfishing')
+      @category.update(name: 'Troutfishing')
       @topic.reload
       expect(@topic.title).to match(/Troutfishing/)
       expect(@topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
-      expect { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
+      expect { @category.update(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
     end
 
     it "creates permalink when category slug is changed" do
-      @category.update_attributes(slug: 'new-category')
+      @category.update(slug: 'new-category')
       expect(Permalink.count).to eq(1)
     end
 
     it "reuses existing permalink when category slug is changed" do
       permalink = Permalink.create!(url: "c/#{@category.slug}", category_id: 42)
 
-      expect { @category.update_attributes(slug: 'new-slug') }.to_not change { Permalink.count }
+      expect { @category.update(slug: 'new-slug') }.to_not change { Permalink.count }
       expect(permalink.reload.category_id).to eq(@category.id)
     end
 
     it "creates permalink when sub category slug is changed" do
       sub_category = Fabricate(:category, slug: 'sub-category', parent_category_id: @category.id)
-      sub_category.update_attributes(slug: 'new-sub-category')
+      sub_category.update(slug: 'new-sub-category')
       expect(Permalink.count).to eq(1)
     end
 
@@ -356,7 +356,7 @@ describe Category do
       GlobalSetting.stubs(:relative_url_root).returns('/forum')
       Discourse.stubs(:base_uri).returns("/forum")
       old_url = @category.url
-      @category.update_attributes(slug: 'new-category')
+      @category.update(slug: 'new-category')
       permalink = Permalink.last
       expect(permalink.url).to eq(old_url[1..-1])
     end

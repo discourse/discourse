@@ -634,7 +634,7 @@ describe TopicView do
     context "categorized topic" do
       let(:category) { Fabricate(:category) }
 
-      before { topic.update_attributes(category_id: category.id) }
+      before { topic.update(category_id: category.id) }
 
       context "topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }
