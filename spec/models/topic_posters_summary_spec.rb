@@ -22,14 +22,16 @@ describe TopicPostersSummary do
     let(:featured_user3) { nil }
     let(:featured_user4) { nil }
 
-    it 'contains only the topic creator when there are no other posters' do
-      expect(summary.count).to eq 1
+    context "when there are no other posters" do
+      it 'contains only the topic creator' do
+        expect(summary.count).to eq 1
 
-      summary.first.tap do |topic_poster|
-        expect(topic_poster.user).to eq topic_creator
-        expect(topic_poster.description).to eq(
-          "#{I18n.t(:original_poster)}, #{I18n.t(:most_recent_poster)}"
-        )
+        summary.first.tap do |topic_poster|
+          expect(topic_poster.user).to eq topic_creator
+          expect(topic_poster.description).to eq(
+            "#{I18n.t(:original_poster)}, #{I18n.t(:most_recent_poster)}"
+          )
+        end
       end
     end
 
