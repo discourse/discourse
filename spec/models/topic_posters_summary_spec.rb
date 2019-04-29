@@ -39,12 +39,6 @@ describe TopicPostersSummary do
 
       let!(:summary) { described_class.new(topic).summary }
 
-      before do
-        topic.last_poster = topic_creator
-        topic.featured_user1 = featured_user1
-        topic.save!
-      end
-
       it 'keeps the topic creator at the front of the summary' do
         expect(summary.map(&:user)).to eq([
           topic_creator,
