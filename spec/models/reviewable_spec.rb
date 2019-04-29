@@ -7,7 +7,6 @@ RSpec.describe Reviewable, type: :model do
     let(:user) { Fabricate(:user) }
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
-    let(:queued_post) { Fabricate.build(:reviewable_queued_post) }
 
     it "can create a reviewable object" do
       expect(reviewable).to be_present

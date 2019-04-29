@@ -1181,8 +1181,6 @@ describe Guardian do
     end
 
     context 'as a moderator' do
-      let(:other_post) { Fabricate(:post, topic: topic, user: topic.user) }
-
       before do
         topic.save!
         post.save!

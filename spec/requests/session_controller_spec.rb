@@ -1145,7 +1145,6 @@ RSpec.describe SessionController do
       end
 
       context 'when admins are restricted by ip address' do
-        let(:permitted_ip_address) { '111.234.23.11' }
         before do
           SiteSetting.use_admin_ip_whitelist = true
           ScreenedIpAddress.all.destroy_all

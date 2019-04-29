@@ -251,8 +251,6 @@ describe CategoriesController do
     end
 
     describe "logged in" do
-      let(:valid_attrs) { { id: category.id, name: "hello", color: "ff0", text_color: "fff" } }
-
       before do
         sign_in(admin)
       end
@@ -399,8 +397,6 @@ describe CategoriesController do
     end
 
     describe 'logged in' do
-      let(:valid_attrs) { { id: category.id, slug: 'fff' } }
-
       before do
         sign_in(admin)
       end

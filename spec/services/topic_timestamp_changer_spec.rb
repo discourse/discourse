@@ -3,7 +3,6 @@ require 'rails_helper'
 describe TopicTimestampChanger do
   describe "change!" do
     let(:old_timestamp) { Time.zone.now }
-    let(:new_timestamp) { old_timestamp + 1.day }
     let(:topic) { Fabricate(:topic, created_at: old_timestamp) }
     let!(:p1) { Fabricate(:post, topic: topic, created_at: old_timestamp) }
     let!(:p2) { Fabricate(:post, topic: topic, created_at: old_timestamp + 1.day) }

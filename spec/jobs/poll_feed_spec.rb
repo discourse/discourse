@@ -6,7 +6,6 @@ describe Jobs::PollFeed do
 
   context "execute" do
     let(:url) { "http://eviltrout.com" }
-    let(:embed_by_username) { "eviltrout" }
 
     before do
       $redis.del("feed-polled-recently")

@@ -8,8 +8,6 @@ describe FilterBestPosts do
   let(:coding_horror) { Fabricate(:coding_horror) }
   let(:first_poster) { topic.user }
 
-  let(:topic_view) { TopicView.new(topic.id, coding_horror) }
-
   let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
   let!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5) }
   let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
