@@ -520,8 +520,8 @@ class Post < ActiveRecord::Base
   end
 
   def unhide!
-    self.update_attributes(hidden: false)
-    self.topic.update_attributes(visible: true) if is_first_post?
+    self.update(hidden: false)
+    self.topic.update(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)
   end

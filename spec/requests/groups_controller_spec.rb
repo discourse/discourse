@@ -430,7 +430,7 @@ describe GroupsController do
       response_body = JSON.parse(response.body)
       expect(response_body["mentionable"]).to eq(false)
 
-      group.update_attributes!(
+      group.update!(
         mentionable_level: Group::ALIAS_LEVELS[:everyone],
         visibility_level: Group.visibility_levels[:staff]
       )
@@ -561,7 +561,7 @@ describe GroupsController do
 
     context "when user is group admin" do
       before do
-        user.update_attributes!(admin: true)
+        user.update!(admin: true)
         sign_in(user)
       end
 
@@ -804,7 +804,7 @@ describe GroupsController do
 
       context 'public group' do
         it 'should be fobidden' do
-          group.update_attributes!(
+          group.update!(
             public_admission: true,
             public_exit: true
           )
@@ -1184,7 +1184,7 @@ describe GroupsController do
 
       describe 'when viewing a public group' do
         before do
-          group.update_attributes!(
+          group.update!(
             public_admission: true,
             public_exit: true
           )

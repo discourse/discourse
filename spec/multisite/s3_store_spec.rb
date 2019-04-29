@@ -63,7 +63,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload = build_upload
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/default/original/1X/#{upload.sha1}.png")
+          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/default/original/1X/#{upload.sha1}.png")
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)
@@ -80,7 +80,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
           upload = build_upload
           store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-          upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/second/original/1X/#{upload.sha1}.png")
+          upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/second/original/1X/#{upload.sha1}.png")
           s3_object = stub
 
           s3_bucket.expects(:object).with("uploads/tombstone/second/original/1X/#{upload.sha1}.png").returns(s3_object)
@@ -102,7 +102,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
             upload = build_upload
             store.expects(:get_depth_for).with(upload.id).returns(0)
             s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
-            upload.update_attributes!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png")
+            upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/discourse-uploads/uploads/default/original/1X/#{upload.sha1}.png")
             s3_object = stub
 
             s3_bucket.expects(:object).with("discourse-uploads/uploads/tombstone/default/original/1X/#{upload.sha1}.png").returns(s3_object)

@@ -1668,7 +1668,7 @@ describe UsersController do
       put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
 
       expect(user.reload.title).not_to eq(badge.display_name)
-      badge.update_attributes allow_title: true
+      badge.update allow_title: true
 
       put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
 

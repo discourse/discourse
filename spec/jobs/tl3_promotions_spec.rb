@@ -4,7 +4,7 @@ describe Jobs::Tl3Promotions do
 
   def create_qualifying_stats(user)
     user.create_user_stat if user.user_stat.nil?
-    user.user_stat.update_attributes!(
+    user.user_stat.update!(
       days_visited: 1000,
       topic_reply_count: 1000,
       topics_entered: 1000,

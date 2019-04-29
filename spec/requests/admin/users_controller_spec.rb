@@ -346,7 +346,7 @@ RSpec.describe Admin::UsersController do
       stat.posts_read_count = SiteSetting.tl1_requires_read_posts + 1
       stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
       stat.save!
-      another_user.update_attributes(trust_level: TrustLevel[1])
+      another_user.update(trust_level: TrustLevel[1])
 
       put "/admin/users/#{another_user.id}/trust_level.json", params: {
         level: TrustLevel[0]

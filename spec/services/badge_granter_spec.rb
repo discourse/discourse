@@ -266,7 +266,7 @@ describe BadgeGranter do
       action = PostActionCreator.like(liker, post).post_action
 
       # Nice post badge
-      post.update_attributes like_count: 10
+      post.update like_count: 10
 
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
@@ -275,19 +275,19 @@ describe BadgeGranter do
       expect(UserBadge.where(user_id: user.id, badge_id: Badge::NicePost).count).to eq(1)
 
       # Good post badge
-      post.update_attributes like_count: 25
+      post.update like_count: 25
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
       expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GoodPost)).not_to eq(nil)
 
       # Great post badge
-      post.update_attributes like_count: 50
+      post.update like_count: 50
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action: action)
       BadgeGranter.process_queue!
       expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost)).not_to eq(nil)
 
       # Revoke badges on unlike
-      post.update_attributes like_count: 49
+      post.update like_count: 49
       BadgeGranter.backfill(Badge.find(Badge::GreatPost))
       expect(UserBadge.find_by(user_id: user.id, badge_id: Badge::GreatPost)).to eq(nil)
     end

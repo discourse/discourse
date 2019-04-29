@@ -515,7 +515,7 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update_attributes(last_posted_at: @post.created_at)
+    @user.update(last_posted_at: @post.created_at)
   end
 
   def create_post_notice

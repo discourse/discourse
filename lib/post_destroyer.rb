@@ -111,7 +111,7 @@ class PostDestroyer
         counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
         counts.each do |user_id, count|
           if user_stat = UserStat.where(user_id: user_id).first
-            user_stat.update_attributes(post_count: user_stat.post_count + count)
+            user_stat.update(post_count: user_stat.post_count + count)
           end
         end
       end
@@ -347,7 +347,7 @@ class PostDestroyer
       counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
       counts.each do |user_id, count|
         if user_stat = UserStat.where(user_id: user_id).first
-          user_stat.update_attributes(post_count: user_stat.post_count - count)
+          user_stat.update(post_count: user_stat.post_count - count)
         end
       end
     end

@@ -28,7 +28,7 @@ describe UserSearch do
     Fabricate :post, user: user6, topic: topic
     Fabricate :post, user: staged, topic: topic4
 
-    user6.update_attributes(suspended_at: 1.day.ago, suspended_till: 1.year.from_now)
+    user6.update(suspended_at: 1.day.ago, suspended_till: 1.year.from_now)
   end
 
   def search_for(*args)

@@ -416,7 +416,7 @@ RSpec.describe ListController do
 
       describe "category default views" do
         it "has a top default view" do
-          category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
+          category.update!(default_view: 'top', default_top_period: 'monthly')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -424,7 +424,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of nil" do
-          category.update_attributes!(default_view: nil)
+          category.update!(default_view: nil)
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -432,7 +432,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of ''" do
-          category.update_attributes!(default_view: '')
+          category.update!(default_view: '')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -440,7 +440,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of latest" do
-          category.update_attributes!(default_view: 'latest')
+          category.update!(default_view: 'latest')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
