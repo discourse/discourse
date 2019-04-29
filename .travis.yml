@@ -34,7 +34,7 @@ matrix:
   fast_finish: true
 
 rvm:
-  - 2.6.2
+  - 2.6.3
 
 services:
   - redis-server
