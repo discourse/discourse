@@ -212,6 +212,10 @@ class SearchIndexer
         end
       end
 
+      document.css("img[class='emoji']").each do |node|
+        node.remove_attribute("alt")
+      end
+
       document.css("a[href]").each do |node|
         if node["href"] == node.text || MENTION_CLASSES.include?(node["class"])
           node.remove_attribute("href")
