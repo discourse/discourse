@@ -75,7 +75,8 @@ script:
     bash -c "
       if [ '$RUN_LINT' == '1' ]; then
         bundle exec rubocop --parallel && \
-        bundle exec danger && \
+        gem install danger -v 5.13.0 && \
+        danger && \
         yarn eslint --ext .es6 app/assets/javascripts && \
         yarn eslint --ext .es6 test/javascripts && \
         yarn eslint --ext .es6 plugins/**/assets/javascripts && \
