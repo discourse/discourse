@@ -518,7 +518,7 @@ DEPENDENCIES
   omniauth
   omniauth-facebook
   omniauth-github
-  omniauth-google-oauth2
+  omniauth-google-oauth2 (= 0.6.0)
   omniauth-instagram
   omniauth-oauth2
   omniauth-openid
