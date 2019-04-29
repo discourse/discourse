@@ -27,22 +27,22 @@ describe Admin::EmbeddableHostsController do
 
     describe '#update' do
       it "logs embeddable host update" do
+
+        category = Fabricate(:category)
+
         put "/admin/embeddable_hosts/#{embeddable_host.id}.json", params: {
-          embeddable_host: { host: "test.com", class_name: "test-class", category_id: "3" }
+          embeddable_host: { host: "test.com", class_name: "test-class", category_id: category.id }
         }
 
         expect(response.status).to eq(200)
 
-        if (!UserHistory.where(
+        history_exists = UserHistory.where(
             acting_user_id: admin.id,
             action: UserHistory.actions[:embeddable_host_update],
-            new_value: "host: test.com, class_name: test-class, category_id: 3").exists?)
+            new_value: "host: test.com, class_name: test-class, category_id: #{category.id}").exists?
 
-          puts "heisentest just failed, debug info is:"
-          puts "count: #{UserHistory.count}"
-          puts "data: #{UserHistory.all.map(&:to_json).join("\n")}"
-          expect("erracit test").to eq("erratic test")
-        end
+        expect(history_exists).to eq(true)
+
       end
     end
 
