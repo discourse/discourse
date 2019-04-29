@@ -92,10 +92,12 @@ class Admin::WebHooksController < Admin::AdminController
 
       now = Time.zone.now
       response = conn.post(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
-      web_hook_event.update!(status: response.status,
-                                        response_headers: MultiJson.dump(response.headers),
-                                        response_body: response.body,
-                                        duration: ((Time.zone.now - now) * 1000).to_i)
+      web_hook_event.update!(
+        status: response.status,
+        response_headers: MultiJson.dump(response.headers),
+        response_body: response.body,
+        duration: ((Time.zone.now - now) * 1000).to_i
+      )
       render_serialized(web_hook_event, AdminWebHookEventSerializer, root: 'web_hook_event')
     else
       render json: failed_json
