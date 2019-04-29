@@ -6,15 +6,10 @@ import { selectedText } from "discourse/lib/utilities";
 export function isValidLink($link) {
   // Do not track:
   //  - lightboxes
-  //  - group mentions
   //  - links with disabled tracking
   //  - category links
   //  - quote back button
-  if (
-    $link.is(
-      ".lightbox, .mention, .mention-group, .no-track-link, .hashtag, .back"
-    )
-  ) {
+  if ($link.is(".lightbox, .no-track-link, .hashtag, .back")) {
     return false;
   }
 
@@ -51,6 +46,11 @@ export default {
 
     const $link = $(e.currentTarget);
     const tracking = isValidLink($link);
+
+    // Return early for mentions and group mentions
+    if ($link.is(".mention, .mention-group")) {
+      return true;
+    }
 
     if ($link.hasClass("attachment")) {
       // Warn the user if they cannot download the file.
