@@ -75,13 +75,15 @@ describe UserAnonymizer do
         user.update(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
 
         profile = user.reload.user_profile
-        profile.update(location: "Moose Jaw",
-                                  website: "www.bim.com",
-                                  bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  profile_background: "http://example.com/bg.jpg",
-                                  bio_cooked_version: 2,
-                                  card_background: "http://example.com/cb.jpg")
+        profile.update(
+          location: "Moose Jaw",
+          website: "www.bim.com",
+          bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
+          bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
+          profile_background: "http://example.com/bg.jpg",
+          bio_cooked_version: 2,
+          card_background: "http://example.com/cb.jpg"
+        )
 
         prev_username = user.username
 
