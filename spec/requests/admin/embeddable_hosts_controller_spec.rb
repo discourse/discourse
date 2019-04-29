@@ -32,9 +32,17 @@ describe Admin::EmbeddableHostsController do
         }
 
         expect(response.status).to eq(200)
-        expect(UserHistory.where(acting_user_id: admin.id,
-                                 action: UserHistory.actions[:embeddable_host_update],
-                                 new_value: "host: test.com, class_name: test-class, category_id: 3").exists?).to eq(true)
+
+        if (!UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:embeddable_host_update],
+            new_value: "host: test.com, class_name: test-class, category_id: 3").exists?)
+
+          puts "heisentest just failed, debug info is:"
+          puts "count: #{UserHistory.count}"
+          puts "data: #{UserHistory.all.map(&:to_json).join("\n")}"
+          expect("erracit test").to eq("erratic test")
+        end
       end
     end
 
