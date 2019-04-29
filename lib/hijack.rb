@@ -108,7 +108,7 @@ module Hijack
                 db_runtime = timings[:sql][:duration]
               end
 
-              subscriber = Lograge::Lograge::LogSubscribers::ActionController.new
+              subscriber = Lograge::LogSubscribers::ActionController.new
               payload = ActiveSupport::HashWithIndifferentAccess.new(
                 controller: self.class.name,
                 action: action_name,
