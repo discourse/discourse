@@ -50,6 +50,12 @@ describe SearchIndexer do
     expect(scrubbed).to eq('@автомобилист')
   end
 
+  it 'extracts emoji name from emoji image' do
+    html = %Q|<img src="#{Discourse.base_url_no_prefix}/images/emoji/twitter/wink.png?v=9" title=":wink:" class="emoji" alt=":wink:">|
+    scrubbed = scrub(html)
+    expect(scrubbed).to eq(':wink:')
+  end
+
   it 'uses ignore_accent setting to strip diacritics' do
     html = "<p>HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好</p>"
 
