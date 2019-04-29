@@ -46,6 +46,12 @@ describe Slug do
       it "fallbacks to empty string if it's too long" do
         expect(Slug.for(very_long_string)).to eq(default_slug)
       end
+
+      it "transliterates with the default locale" do
+        SiteSetting.default_locale = :de
+        I18n.locale = :en
+        expect(Slug.for('löwe')).to eq('loewe')
+      end
     end
 
     context 'encoded generator' do
