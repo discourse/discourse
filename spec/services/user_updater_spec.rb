@@ -145,20 +145,26 @@ describe UserUpdater do
       date_of_birth = Time.zone.now
 
       theme = Fabricate(:theme, user_selectable: true)
+      upload1 = Fabricate(:upload)
+      upload2 = Fabricate(:upload)
 
       seq = user.user_option.theme_key_seq
 
-      val = updater.update(bio_raw: 'my new bio',
-                           email_level: UserOption.email_level_types[:always],
-                           mailing_list_mode: true,
-                           digest_after_minutes: "45",
-                           new_topic_duration_minutes: 100,
-                           auto_track_topics_after_msecs: 101,
-                           notification_level_when_replying: 3,
-                           email_in_reply_to: false,
-                           date_of_birth: date_of_birth,
-                           theme_ids: [theme.id],
-                           allow_private_messages: false)
+      val = updater.update(
+        bio_raw: 'my new bio',
+        email_level: UserOption.email_level_types[:always],
+        mailing_list_mode: true,
+        digest_after_minutes: "45",
+        new_topic_duration_minutes: 100,
+        auto_track_topics_after_msecs: 101,
+        notification_level_when_replying: 3,
+        email_in_reply_to: false,
+        date_of_birth: date_of_birth,
+        theme_ids: [theme.id],
+        allow_private_messages: false,
+        card_background_upload_url: upload1.url,
+        profile_background_upload_url: upload2.url
+      )
 
       expect(val).to be_truthy
 
@@ -176,6 +182,8 @@ describe UserUpdater do
       expect(user.user_option.theme_key_seq).to eq(seq + 1)
       expect(user.user_option.allow_private_messages).to eq(false)
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
+      expect(user.card_background_upload).to eq(upload1)
+      expect(user.profile_background_upload).to eq(upload2)
     end
 
     it "disables email_digests when enabling mailing_list_mode" do

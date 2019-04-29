@@ -44,44 +44,7 @@ class UploadRecovery
     end
   end
 
-  def recover_user_profile_backgrounds
-    UserProfile
-      .where("profile_background IS NOT NULL OR card_background IS NOT NULL")
-      .find_each do |user_profile|
-
-      %i{card_background profile_background}.each do |column|
-        background = user_profile.public_send(column)
-
-        if background.present? && !Upload.exists?(url: background)
-          data = Upload.extract_url(background)
-          next unless data
-          sha1 = data[2]
-
-          if @dry_run
-            puts "#{background}"
-          else
-            recover_user_profile_background(sha1, user_profile.user_id) do |upload|
-              user_profile.update!("#{column}" => upload.url) if upload.persisted?
-            end
-          end
-        end
-      end
-    end
-  end
-
   private
-
-  def recover_user_profile_background(sha1, user_id, &block)
-    return unless valid_sha1?(sha1)
-
-    attributes = { sha1: sha1, user_id: user_id }
-
-    if Discourse.store.external?
-      recover_from_s3(attributes, &block)
-    else
-      recover_from_local(attributes, &block)
-    end
-  end
 
   def recover_post_upload(post, sha1)
     return unless valid_sha1?(sha1)

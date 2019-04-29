@@ -10,8 +10,8 @@ export default Ember.Controller.extend(PreferencesTabController, {
     "location",
     "custom_fields",
     "user_fields",
-    "profile_background",
-    "card_background",
+    "profile_background_upload_url",
+    "card_background_upload_url",
     "date_of_birth"
   ],
 

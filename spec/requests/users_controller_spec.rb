@@ -1459,6 +1459,7 @@ describe UsersController do
       before do
         sign_in(user)
       end
+
       let(:user) { Fabricate(:user, username: 'test.test', name: "Test User") }
 
       it "should be able to update a user" do
@@ -1494,6 +1495,7 @@ describe UsersController do
 
     context 'with authenticated user' do
       context 'with permission to update' do
+        let(:upload) { Fabricate(:upload) }
         let!(:user) { sign_in(Fabricate(:user)) }
 
         it 'allows the update' do
@@ -1504,7 +1506,9 @@ describe UsersController do
           put "/u/#{user.username}.json", params: {
             name: 'Jim Tom',
             muted_usernames: "#{user2.username},#{user3.username}",
-            watched_tags: "#{tags[0].name},#{tags[1].name}"
+            watched_tags: "#{tags[0].name},#{tags[1].name}",
+            card_background_upload_url: upload.url,
+            profile_background_upload_url: upload.url
           }
 
           expect(response.status).to eq(200)
@@ -1512,8 +1516,8 @@ describe UsersController do
           user.reload
 
           expect(user.name).to eq 'Jim Tom'
-
           expect(user.muted_users.pluck(:username).sort).to eq [user2.username, user3.username].sort
+
           expect(TagUser.where(
             user: user,
             notification_level: TagUser.notification_levels[:watching]
@@ -1532,6 +1536,8 @@ describe UsersController do
           expect(user.muted_users.pluck(:username).sort).to be_empty
           expect(user.user_option.theme_ids).to eq([theme.id])
           expect(user.user_option.email_level).to eq(UserOption.email_level_types[:always])
+          expect(user.profile_background_upload).to eq(upload)
+          expect(user.card_background_upload).to eq(upload)
         end
 
         context 'a locale is chosen that differs from I18n.locale' do
@@ -1986,6 +1992,7 @@ describe UsersController do
     context 'while logged in' do
       let(:another_user) { Fabricate(:user) }
       let(:user) { Fabricate(:user) }
+
       before do
         sign_in(user)
       end
@@ -2008,7 +2015,7 @@ describe UsersController do
       it 'can clear the profile background' do
         delete "/u/#{user.username}/preferences/user_image.json", params: { type: 'profile_background' }
 
-        expect(user.reload.user_profile.profile_background).to eq("")
+        expect(user.reload.profile_background_upload).to eq(nil)
         expect(response.status).to eq(200)
       end
     end

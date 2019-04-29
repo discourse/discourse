@@ -951,10 +951,25 @@ describe UserMerger do
   end
 
   it "updates users" do
-    walter.update_attribute(:approved_by, source_user)
+    walter.update!(approved_by: source_user)
+    upload = Fabricate(:upload)
+
+    source_user.update!(admin: true)
+
+    source_user.user_profile.update!(
+      card_background_upload: upload,
+      profile_background_upload: upload,
+    )
+
     merge_users!
 
     expect(walter.reload.approved_by).to eq(target_user)
+
+    target_user.reload
+
+    expect(target_user.admin).to eq(true)
+    expect(target_user.card_background_upload).to eq(upload)
+    expect(target_user.profile_background_upload).to eq(upload)
   end
 
   it "deletes the source user even when it's an admin" do

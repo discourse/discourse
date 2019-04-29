@@ -41,13 +41,11 @@ describe UserSerializer do
   end
 
   context "with a user" do
-    let(:user) { Fabricate.build(:user, user_profile: Fabricate.build(:user_profile)) }
+    let(:user) { Fabricate(:user) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
-
-    it "produces json" do
-      expect(json).to be_present
-    end
+    let(:upload) { Fabricate(:upload) }
+    let(:upload2) { Fabricate(:upload) }
 
     context "with `enable_names` true" do
       before do
@@ -69,23 +67,15 @@ describe UserSerializer do
       end
     end
 
-    context "with filled out card background" do
+    context "with filled out backgrounds" do
       before do
-        user.user_profile.card_background = 'http://card.com'
+        user.user_profile.upload_card_background(upload)
+        user.user_profile.upload_profile_background(upload2)
       end
 
       it "has a profile background" do
-        expect(json[:card_background]).to eq 'http://card.com'
-      end
-    end
-
-    context "with filled out profile background" do
-      before do
-        user.user_profile.profile_background = 'http://background.com'
-      end
-
-      it "has a profile background" do
-        expect(json[:profile_background]).to eq 'http://background.com'
+        expect(json[:card_background_upload_url]).to eq(upload.url)
+        expect(json[:profile_background_upload_url]).to eq(upload2.url)
       end
     end
 
