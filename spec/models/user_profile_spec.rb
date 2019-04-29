@@ -8,23 +8,6 @@ describe UserProfile do
     expect(user.user_profile).to be_present
   end
 
-  context "url validation" do
-    let(:user) { Fabricate(:user) }
-    let(:upload) { Fabricate(:upload) }
-
-    it "ensures profile_background is valid" do
-      expect(Fabricate.build(:user_profile, user: user, profile_background: "---%")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, profile_background: "http://example.com/made-up.jpg")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, profile_background: upload.url)).to be_valid
-    end
-
-    it "ensures background_url is valid" do
-      expect(Fabricate.build(:user_profile, user: user, card_background: ";test")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, card_background: "http://example.com/no.jpg")).not_to be_valid
-      expect(Fabricate.build(:user_profile, user: user, card_background: upload.url)).to be_valid
-    end
-  end
-
   describe 'rebaking' do
     it 'correctly rebakes bio' do
       user_profile = Fabricate(:evil_trout).user_profile
@@ -228,7 +211,7 @@ describe UserProfile do
 
         user.reload
 
-        expect(user.user_profile.profile_background).to eq(nil)
+        expect(user.profile_background_upload).to eq(nil)
       end
     end
 
@@ -240,7 +223,7 @@ describe UserProfile do
 
         user.reload
 
-        expect(user.user_profile.card_background).to eq(nil)
+        expect(user.card_background_upload).to eq(nil)
       end
     end
 

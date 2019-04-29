@@ -74,17 +74,23 @@ describe UserAnonymizer do
       end
 
       it "resets profile to default values" do
-        user.update(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+        user.update!(
+          name: "Bibi",
+          date_of_birth: 19.years.ago,
+          title: "Super Star"
+        )
 
         profile = user.reload.user_profile
-        profile.update(
+        upload = Fabricate(:upload)
+
+        profile.update!(
           location: "Moose Jaw",
-          website: "www.bim.com",
+          website: "http://www.bim.com",
           bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
           bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
-          profile_background: "http://example.com/bg.jpg",
+          profile_background_upload: upload,
           bio_cooked_version: 2,
-          card_background: "http://example.com/cb.jpg"
+          card_background_upload: upload
         )
 
         prev_username = user.username
@@ -104,9 +110,9 @@ describe UserAnonymizer do
         expect(profile.location).to eq(nil)
         expect(profile.website).to eq(nil)
         expect(profile.bio_cooked).to eq(nil)
-        expect(profile.profile_background).to eq(nil)
-        expect(profile.bio_cooked_version).to eq(nil)
-        expect(profile.card_background).to eq(nil)
+        expect(profile.profile_background_upload).to eq(nil)
+        expect(profile.bio_cooked_version).to eq(UserProfile::BAKED_VERSION)
+        expect(profile.card_background_upload).to eq(nil)
       end
     end
 

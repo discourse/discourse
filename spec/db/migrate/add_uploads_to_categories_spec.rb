@@ -13,32 +13,44 @@ RSpec.describe AddUploadsToCategories do
     end
   end
 
+  def select_column_from_categories(column, category_id)
+    DB.query_single(<<~SQL).first
+    SELECT #{column}
+    FROM categories
+    WHERE id = #{category_id}
+    SQL
+  end
+
   it "should migrate the data properly" do
     upload1 = Fabricate(:upload)
     upload2 = Fabricate(:upload)
+    category1 = Fabricate(:category)
+    category2 = Fabricate(:category)
 
-    category1 = Fabricate(:category,
-      logo_url: upload1.url,
-      background_url: upload2.url
-    )
+    DB.exec(<<~SQL)
+    UPDATE categories
+    SET logo_url = '#{upload1.url}', background_url = '#{upload2.url}'
+    WHERE categories.id = #{category1.id}
+    SQL
 
-    category2 = Fabricate(:category,
-      logo_url: upload2.url,
-      background_url: upload1.url
-    )
+    DB.exec(<<~SQL)
+    UPDATE categories
+    SET logo_url = '#{upload2.url}', background_url = '#{upload1.url}'
+    WHERE categories.id = #{category2.id}
+    SQL
 
     silence_stdout { described_class.new.up }
 
-    Discourse.reset_active_record_cache
+    expect(select_column_from_categories(:uploaded_logo_id, category1.id))
+      .to eq(upload1.id)
 
-    category1.reload
+    expect(select_column_from_categories(:uploaded_background_id, category1.id))
+      .to eq(upload2.id)
 
-    expect(category1.uploaded_logo_id).to eq(upload1.id)
-    expect(category1.uploaded_background_id).to eq(upload2.id)
+    expect(select_column_from_categories(:uploaded_logo_id, category2.id))
+      .to eq(upload2.id)
 
-    category2.reload
-
-    expect(category2.uploaded_logo_id).to eq(upload2.id)
-    expect(category2.uploaded_background_id).to eq(upload1.id)
+    expect(select_column_from_categories(:uploaded_background_id, category2.id))
+      .to eq(upload1.id)
   end
 end

@@ -69,12 +69,16 @@ class SessionController < ApplicationController
           sso.avatar_url = UrlHelper.absolute Discourse.store.cdn_url(avatar_url)
         end
 
-        if current_user.user_profile.profile_background.present?
-          sso.profile_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.profile_background)
+        if current_user.user_profile.profile_background_upload.present?
+          sso.profile_background_url = UrlHelper.absolute(upload_cdn_path(
+            current_user.user_profile.profile_background_upload.url
+          ))
         end
 
-        if current_user.user_profile.card_background.present?
-          sso.card_background_url = UrlHelper.absolute upload_cdn_path(current_user.user_profile.card_background)
+        if current_user.user_profile.card_background_upload.present?
+          sso.card_background_url = UrlHelper.absolute(upload_cdn_path(
+            current_user.user_profile.card_background_upload.url
+          ))
         end
 
         if request.xhr?

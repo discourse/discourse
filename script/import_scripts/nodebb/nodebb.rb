@@ -281,7 +281,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     return if !upload.persisted?
 
-    imported_user.user_profile.update(profile_background: upload.url)
+    imported_user.user_profile.upload_profile_background(upload)
   ensure
     string_io.close rescue nil
     file.close rescue nil

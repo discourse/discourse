@@ -54,8 +54,14 @@ class UserUpdater
     unless SiteSetting.enable_sso && SiteSetting.sso_overrides_bio
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
-    user_profile.profile_background = attributes.fetch(:profile_background) { user_profile.profile_background }
-    user_profile.card_background = attributes.fetch(:card_background) { user_profile.card_background }
+
+    if upload = Upload.get_from_url(attributes[:profile_background_upload_url])
+      user_profile.upload_profile_background(upload)
+    end
+
+    if upload = Upload.get_from_url(attributes[:card_background_upload_url])
+      user_profile.upload_card_background(upload)
+    end
 
     old_user_name = user.name.present? ? user.name : ""
     user.name = attributes.fetch(:name) { user.name }
