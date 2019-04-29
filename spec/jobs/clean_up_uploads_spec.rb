@@ -156,7 +156,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete profile background uploads" do
     profile_background_upload = fabricate_upload
-    UserProfile.last.update!(profile_background: profile_background_upload.url)
+    UserProfile.last.upload_profile_background(profile_background_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -166,7 +166,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete card background uploads" do
     card_background_upload = fabricate_upload
-    UserProfile.last.update!(card_background: card_background_upload.url)
+    UserProfile.last.upload_card_background(card_background_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 

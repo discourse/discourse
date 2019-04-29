@@ -77,8 +77,8 @@ const User = RestModel.extend({
     return username;
   },
 
-  @computed("profile_background")
-  profileBackground(bgUrl) {
+  @computed("profile_background_upload_url")
+  profileBackgroundUrl(bgUrl) {
     if (
       Ember.isEmpty(bgUrl) ||
       !Discourse.SiteSettings.allow_profile_backgrounds
@@ -250,8 +250,8 @@ const User = RestModel.extend({
       "user_fields",
       "muted_usernames",
       "ignored_usernames",
-      "profile_background",
-      "card_background",
+      "profile_background_upload_url",
+      "card_background_upload_url",
       "muted_tags",
       "tracked_tags",
       "watched_tags",

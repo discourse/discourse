@@ -804,9 +804,13 @@ RSpec.describe SessionController do
         )
 
         @user.update_columns(uploaded_avatar_id: upload.id)
-        @user.user_profile.update_columns(
-          profile_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something",
-          card_background: "//test.s3.dualstack.us-east-1.amazonaws.com/something"
+
+        upload1 = Fabricate(:upload_s3)
+        upload2 = Fabricate(:upload_s3)
+
+        @user.user_profile.update!(
+          profile_background_upload: upload1,
+          card_background_upload: upload2
         )
 
         @user.reload

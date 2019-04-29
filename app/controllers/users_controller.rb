@@ -1241,8 +1241,8 @@ class UsersController < ApplicationController
       :location,
       :website,
       :dismissed_banner_key,
-      :profile_background,
-      :card_background
+      :profile_background_upload_url,
+      :card_background_upload_url
     ]
 
     permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?

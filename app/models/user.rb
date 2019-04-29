@@ -79,6 +79,8 @@ class User < ActiveRecord::Base
 
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
+  has_one :profile_background_upload, through: :user_profile
+  has_one :card_background_upload, through: :user_profile
   has_one :single_sign_on_record, dependent: :destroy
   belongs_to :approved_by, class_name: 'User'
   belongs_to :primary_group, class_name: 'Group'

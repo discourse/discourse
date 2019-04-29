@@ -164,7 +164,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     return if !upload.persisted?
 
-    imported_user.user_profile.update(profile_background: upload.url)
+    imported_user.user_profile.upload_profile_background(upload)
   ensure
     file.close rescue nil
     file.unlink rescue nil

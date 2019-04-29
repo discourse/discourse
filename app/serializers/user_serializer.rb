@@ -41,8 +41,6 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :website_name,
-             :profile_background,
-             :card_background,
              :location,
              :can_edit,
              :can_edit_username,
@@ -80,7 +78,9 @@ class UserSerializer < BasicUserSerializer
              :second_factor_enabled,
              :second_factor_backup_enabled,
              :second_factor_remaining_backup_codes,
-             :associated_accounts
+             :associated_accounts,
+             :profile_background_upload_url,
+             :card_background_upload_url
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -127,8 +127,8 @@ class UserSerializer < BasicUserSerializer
                        :location,
                        :website,
                        :website_name,
-                       :profile_background,
-                       :card_background
+                       :profile_background_upload_url,
+                       :card_background_upload_url
 
   ###
   ### ATTRIBUTES
@@ -241,14 +241,6 @@ class UserSerializer < BasicUserSerializer
 
   def include_website_name
     website.present?
-  end
-
-  def profile_background
-    object.user_profile.profile_background
-  end
-
-  def card_background
-    object.user_profile.card_background
   end
 
   def location
@@ -489,6 +481,14 @@ class UserSerializer < BasicUserSerializer
 
   def include_staged?
     scope.is_staff?
+  end
+
+  def profile_background_upload_url
+    object.profile_background_upload&.url
+  end
+
+  def card_background_upload_url
+    object.card_background_upload&.url
   end
 
 end
