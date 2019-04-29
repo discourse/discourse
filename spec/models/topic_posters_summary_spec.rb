@@ -2,7 +2,12 @@ require 'rails_helper'
 
 describe TopicPostersSummary do
   describe '#summary' do
-    let(:summary) { described_class.new(topic).summary }
+    let(:topic_creator)  { Fabricate(:user) }
+    let(:last_poster)    { nil }
+    let(:featured_user1) { nil }
+    let(:featured_user2) { nil }
+    let(:featured_user3) { nil }
+    let(:featured_user4) { nil }
 
     let(:topic) do
       Fabricate(:topic,
@@ -15,12 +20,7 @@ describe TopicPostersSummary do
       )
     end
 
-    let(:topic_creator)  { Fabricate(:user) }
-    let(:last_poster)    { nil }
-    let(:featured_user1) { nil }
-    let(:featured_user2) { nil }
-    let(:featured_user3) { nil }
-    let(:featured_user4) { nil }
+    let(:summary) { described_class.new(topic).summary }
 
     context "when there are no other posters" do
       it 'contains only the topic creator' do
