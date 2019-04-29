@@ -179,4 +179,14 @@ if (!Array.prototype.find) {
   });
 }
 
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/flags#Polyfill
+if (RegExp.prototype.flags === undefined) {
+  Object.defineProperty(RegExp.prototype, "flags", {
+    configurable: true,
+    get: function() {
+      return this.toString().match(/[gimsuy]*$/)[0];
+    }
+  });
+}
+
 /* eslint-enable */
