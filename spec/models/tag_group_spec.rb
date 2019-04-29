@@ -52,24 +52,37 @@ describe TagGroup do
       staff_only_tag_group.save!
     end
 
-    it "returns correct groups based on category & tag group permissions" do
-      expect(TagGroup.visible(Guardian.new(admin)).pluck(:name)).to match_array(TagGroup.pluck(:name))
-      expect(TagGroup.visible(Guardian.new(moderator)).pluck(:name)).to match_array(TagGroup.pluck(:name))
+    shared_examples "correct visible tag groups" do
+      it "returns correct groups based on category & tag group permissions" do
+        expect(TagGroup.visible(Guardian.new(admin)).pluck(:name)).to match_array(TagGroup.pluck(:name))
+        expect(TagGroup.visible(Guardian.new(moderator)).pluck(:name)).to match_array(TagGroup.pluck(:name))
 
-      expect(TagGroup.visible(Guardian.new(user2)).pluck(:name)).to match_array([
-        public_tag_group.name, unrestricted_tag_group.name, private_tag_group.name,
-        everyone_tag_group.name, visible_tag_group.name,
-      ])
+        expect(TagGroup.visible(Guardian.new(user2)).pluck(:name)).to match_array([
+          public_tag_group.name, unrestricted_tag_group.name, private_tag_group.name,
+          everyone_tag_group.name, visible_tag_group.name,
+        ])
 
-      expect(TagGroup.visible(Guardian.new(user1)).pluck(:name)).to match_array([
-        public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
-        visible_tag_group.name,
-      ])
+        expect(TagGroup.visible(Guardian.new(user1)).pluck(:name)).to match_array([
+          public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
+          visible_tag_group.name,
+        ])
 
-      expect(TagGroup.visible(Guardian.new(nil)).pluck(:name)).to match_array([
-        public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
-        visible_tag_group.name,
-      ])
+        expect(TagGroup.visible(Guardian.new(nil)).pluck(:name)).to match_array([
+          public_tag_group.name, unrestricted_tag_group.name, everyone_tag_group.name,
+          visible_tag_group.name,
+        ])
+      end
+    end
+
+    include_examples "correct visible tag groups"
+
+    context "staff-only tag group restricted to a public category" do
+      before do
+        public_category.allowed_tag_groups = [public_tag_group.name, staff_only_tag_group.name]
+        private_category.allowed_tag_groups = [private_tag_group.name, staff_only_tag_group.name]
+      end
+
+      include_examples "correct visible tag groups"
     end
   end
 end
