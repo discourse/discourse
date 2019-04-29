@@ -12,7 +12,7 @@ import { relativeAge } from "discourse/lib/formatter";
 function optionHtml(option) {
   const $node = $(`<span>${option.html}</span>`);
 
-  $node.find(".discourse-local-date").each((index, elem) => {
+  $node.find(".discourse-local-date").each((_index, elem) => {
     $(elem).applyLocalDates();
   });
 
