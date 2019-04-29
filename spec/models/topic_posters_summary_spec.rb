@@ -5,20 +5,9 @@ describe TopicPostersSummary do
     let!(:topic_creator)  { Fabricate(:user) }
 
     context "when there are no other posters" do
-      let!(:last_poster)    { nil }
-      let!(:featured_user1) { nil }
-      let!(:featured_user2) { nil }
-      let!(:featured_user3) { nil }
-      let!(:featured_user4) { nil }
-
       let!(:topic) do
         Fabricate(:topic,
           user: topic_creator,
-          last_poster: last_poster,
-          featured_user1: featured_user1,
-          featured_user2: featured_user2,
-          featured_user3: featured_user3,
-          featured_user4: featured_user4
         )
       end
 
@@ -39,18 +28,12 @@ describe TopicPostersSummary do
     context 'when the lastest poster is also the topic creator' do
       let!(:last_poster)    { topic_creator }
       let!(:featured_user1) { Fabricate(:user) }
-      let!(:featured_user2) { nil }
-      let!(:featured_user3) { nil }
-      let!(:featured_user4) { nil }
 
       let!(:topic) do
         Fabricate(:topic,
           user: topic_creator,
           last_poster: last_poster,
           featured_user1: featured_user1,
-          featured_user2: featured_user2,
-          featured_user3: featured_user3,
-          featured_user4: featured_user4
         )
       end
 
