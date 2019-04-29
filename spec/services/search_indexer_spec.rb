@@ -38,6 +38,18 @@ describe SearchIndexer do
     expect(scrubbed).to eq("http://meta.discourse.org/ link")
   end
 
+  it 'extracts @username from mentions' do
+    html = '<p><a class="mention" href="/u/%E7%8B%AE%E5%AD%90">@狮子</a> <a class="mention" href="/u/foo">@foo</a></p>'
+    scrubbed = scrub(html)
+    expect(scrubbed).to eq('@狮子 @foo')
+  end
+
+  it 'extracts @groupname from group mentions' do
+    html = '<p><a class="mention-group" href="/groups/%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8%D1%81%D1%82">@автомобилист</a></p>'
+    scrubbed = scrub(html)
+    expect(scrubbed).to eq('@автомобилист')
+  end
+
   it 'uses ignore_accent setting to strip diacritics' do
     html = "<p>HELLO Hétérogénéité Здравствуйте هتاف للترحيب 你好</p>"
 
