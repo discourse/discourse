@@ -50,9 +50,7 @@ export default {
     }
 
     const $link = $(e.currentTarget);
-    if (!isValidLink($link)) {
-      return true;
-    }
+    const tracking = isValidLink($link);
 
     if ($link.hasClass("attachment")) {
       // Warn the user if they cannot download the file.
@@ -81,7 +79,7 @@ export default {
     const ownLink = userId && userId === Discourse.User.currentProp("id");
 
     // Update badge clicks unless it's our own.
-    if (!ownLink) {
+    if (tracking && !ownLink) {
       const $badge = $("span.badge", $link);
       if ($badge.length === 1) {
         const html = $badge.html();
@@ -93,13 +91,15 @@ export default {
       }
     }
 
-    const trackPromise = ajax("/clicks/track", {
-      data: {
-        url: href,
-        post_id: postId,
-        topic_id: topicId
-      }
-    });
+    const trackPromise = tracking
+      ? ajax("/clicks/track", {
+          data: {
+            url: href,
+            post_id: postId,
+            topic_id: topicId
+          }
+        })
+      : Ember.RSVP.resolve();
 
     const isInternal = DiscourseURL.isInternal(href);
     const openExternalInNewTab = Discourse.User.currentProp(
