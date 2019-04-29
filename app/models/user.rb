@@ -752,8 +752,8 @@ class User < ActiveRecord::Base
       url = SiteSetting.external_system_avatars_url.dup
       url = "#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
       url.gsub! "{color}", letter_avatar_color(normalized_username)
-      url.gsub! "{username}", username
-      url.gsub! "{first_letter}", normalized_username.grapheme_clusters.first
+      url.gsub! "{username}", CGI.escape(username)
+      url.gsub! "{first_letter}", CGI.escape(normalized_username.grapheme_clusters.first)
       url.gsub! "{hostname}", Discourse.current_hostname
       url
     else
