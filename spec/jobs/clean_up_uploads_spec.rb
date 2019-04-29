@@ -8,8 +8,6 @@ describe Jobs::CleanUpUploads do
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
   end
 
-  let(:upload) { fabricate_upload }
-
   before do
     SiteSetting.clean_up_uploads = true
     SiteSetting.clean_orphan_uploads_grace_period_hours = 1

@@ -289,7 +289,6 @@ describe "category tag restrictions" do
 end
 
 describe "tag topic counts per category" do
-  let(:user)  { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
   let(:category) { Fabricate(:category) }
   let(:category2) { Fabricate(:category) }

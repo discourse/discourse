@@ -4,7 +4,6 @@ RSpec.describe ListController do
   let(:topic) { Fabricate(:topic, user: user) }
   let(:group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user) }
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -199,8 +198,6 @@ RSpec.describe ListController do
         allowed_groups: [group],
       )
     end
-
-    let(:private_post) { Fabricate(:post, topic: topic) }
 
     it 'should return the right response' do
       get "/topics/private-messages-group/#{user.username}/#{group.name}.json"

@@ -8,7 +8,6 @@ describe Jobs::BulkInvite do
     let!(:group2) { Fabricate(:group, name: 'group2') }
     let!(:topic) { Fabricate(:topic, id: 999) }
     let(:email) { "test@discourse.org" }
-    let(:csv_info) { [] }
     let(:basename) { "bulk_invite.csv" }
     let(:filename) { "#{Invite.base_directory}/#{basename}" }
 

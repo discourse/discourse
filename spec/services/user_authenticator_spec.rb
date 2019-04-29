@@ -19,7 +19,6 @@ end
 
 describe UserAuthenticator do
   context "#finish" do
-    let(:authenticator) { Auth::GithubAuthenticator.new }
     let(:group) { Fabricate(:group, automatic_membership_email_domains: "discourse.org") }
 
     before do

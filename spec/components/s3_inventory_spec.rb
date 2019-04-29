@@ -6,7 +6,6 @@ require "file_store/s3_store"
 describe "S3Inventory" do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
   let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
-  let(:store) { FileStore::S3Store.new(helper) }
   let(:inventory) { S3Inventory.new(helper, :upload) }
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
