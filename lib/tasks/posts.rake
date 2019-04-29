@@ -443,9 +443,18 @@ task 'posts:missing_uploads' => :environment do
               # recovering old scheme upload.
               local_store = FileStore::LocalStore.new
               public_path = "#{local_store.public_dir}#{path}"
+              file_path = nil
+
               if File.exists?(public_path)
+                file_path = public_path
+              else
+                tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
+                file_path = tombstone_path if File.exists?(tombstone_path)
+              end
+
+              if file_path.present?
                 tmp = Tempfile.new
-                tmp.write(File.read(public_path))
+                tmp.write(File.read(file_path))
                 tmp.rewind
 
                 if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
