@@ -3,11 +3,6 @@ require 'rails_helper'
 describe TopicPostersSummary do
   describe '#summary' do
     let(:topic_creator)  { Fabricate(:user) }
-    let(:last_poster)    { nil }
-    let(:featured_user1) { nil }
-    let(:featured_user2) { nil }
-    let(:featured_user3) { nil }
-    let(:featured_user4) { nil }
 
     let(:topic) do
       Fabricate(:topic,
@@ -23,6 +18,12 @@ describe TopicPostersSummary do
     let(:summary) { described_class.new(topic).summary }
 
     context "when there are no other posters" do
+      let(:last_poster)    { nil }
+      let(:featured_user1) { nil }
+      let(:featured_user2) { nil }
+      let(:featured_user3) { nil }
+      let(:featured_user4) { nil }
+
       it 'contains only the topic creator' do
         expect(summary.count).to eq 1
 
@@ -38,6 +39,9 @@ describe TopicPostersSummary do
     context 'when the lastest poster is also the topic creator' do
       let(:last_poster)    { topic_creator }
       let(:featured_user1) { Fabricate(:user) }
+      let(:featured_user2) { nil }
+      let(:featured_user3) { nil }
+      let(:featured_user4) { nil }
 
       before do
         topic.last_poster = topic_creator
