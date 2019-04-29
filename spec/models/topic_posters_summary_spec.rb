@@ -25,14 +25,13 @@ describe TopicPostersSummary do
       end
     end
 
-    context 'when the lastest poster is also the topic creator' do
-      let!(:last_poster)    { topic_creator }
+    context 'when the last poster is also the topic creator' do
       let!(:featured_user1) { Fabricate(:user) }
 
       let!(:topic) do
         Fabricate(:topic,
           user: topic_creator,
-          last_poster: last_poster,
+          last_poster: topic_creator,
           featured_user1: featured_user1,
         )
       end
