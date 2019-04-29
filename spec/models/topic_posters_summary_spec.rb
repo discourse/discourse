@@ -4,25 +4,25 @@ describe TopicPostersSummary do
   describe '#summary' do
     let(:topic_creator)  { Fabricate(:user) }
 
-    let(:topic) do
-      Fabricate(:topic,
-        user: topic_creator,
-        last_poster: last_poster,
-        featured_user1: featured_user1,
-        featured_user2: featured_user2,
-        featured_user3: featured_user3,
-        featured_user4: featured_user4
-      )
-    end
-
-    let(:summary) { described_class.new(topic).summary }
-
     context "when there are no other posters" do
       let(:last_poster)    { nil }
       let(:featured_user1) { nil }
       let(:featured_user2) { nil }
       let(:featured_user3) { nil }
       let(:featured_user4) { nil }
+
+      let(:topic) do
+        Fabricate(:topic,
+          user: topic_creator,
+          last_poster: last_poster,
+          featured_user1: featured_user1,
+          featured_user2: featured_user2,
+          featured_user3: featured_user3,
+          featured_user4: featured_user4
+        )
+      end
+
+      let(:summary) { described_class.new(topic).summary }
 
       it 'contains only the topic creator' do
         expect(summary.count).to eq 1
@@ -42,6 +42,19 @@ describe TopicPostersSummary do
       let(:featured_user2) { nil }
       let(:featured_user3) { nil }
       let(:featured_user4) { nil }
+
+      let(:topic) do
+        Fabricate(:topic,
+          user: topic_creator,
+          last_poster: last_poster,
+          featured_user1: featured_user1,
+          featured_user2: featured_user2,
+          featured_user3: featured_user3,
+          featured_user4: featured_user4
+        )
+      end
+
+      let(:summary) { described_class.new(topic).summary }
 
       before do
         topic.last_poster = topic_creator
@@ -63,6 +76,19 @@ describe TopicPostersSummary do
       let(:featured_user2) { Fabricate(:user) }
       let(:featured_user3) { Fabricate(:user) }
       let(:featured_user4) { Fabricate(:user) }
+
+      let(:topic) do
+        Fabricate(:topic,
+          user: topic_creator,
+          last_poster: last_poster,
+          featured_user1: featured_user1,
+          featured_user2: featured_user2,
+          featured_user3: featured_user3,
+          featured_user4: featured_user4
+        )
+      end
+
+      let(:summary) { described_class.new(topic).summary }
 
       it 'contains only five posters with latest poster at the end' do
         expect(summary.map(&:user)).to eq([
