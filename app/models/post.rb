@@ -688,6 +688,7 @@ class Post < ActiveRecord::Base
                         ON p2.post_number = post_timings.post_number
                           AND p2.topic_id = post_timings.topic_id
                           AND p2.user_id <> post_timings.user_id
+                      /*where2*/
                       GROUP BY post_timings.topic_id, post_timings.post_number) AS x
                 /*where*/")
 
@@ -696,7 +697,7 @@ class Post < ActiveRecord::Base
                   AND (posts.avg_time <> (x.gmean / 1000)::int OR posts.avg_time IS NULL)")
 
       if min_topic_age
-        builder.where("posts.topic_id IN (SELECT id FROM topics where bumped_at > :bumped_at)",
+        builder.where2("p2.topic_id IN (SELECT id FROM topics where bumped_at > :bumped_at)",
                      bumped_at: min_topic_age)
       end
 
