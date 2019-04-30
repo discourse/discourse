@@ -20,9 +20,15 @@ describe Onebox::Engine::InstagramOnebox do
     expect(html).to include("1.2m Likes, 6,100 Comments - National Geographic (@natgeo) on Instagram")
   end
 
-  it 'Oneboxes links that include the username' do
+  it 'oneboxes links that include the username' do
     link_with_profile = 'https://www.instagram.com/bennyblood24/p/Brc6FNRn9vu/'
     onebox_klass = Onebox::Matcher.new(link_with_profile).oneboxed
+    expect(onebox_klass.name).to eq(described_class.name)
+  end
+
+  it 'oneboxes photo links' do
+    photo_link = 'https://www.instagram.com/p/Brc6FNRn9vu/'
+    onebox_klass = Onebox::Matcher.new(photo_link).oneboxed
     expect(onebox_klass.name).to eq(described_class.name)
   end
 end
