@@ -124,14 +124,14 @@ class NewPostManager
 
     if post.errors[:raw].present?
       result = NewPostResult.new(:created_post, false)
-      result.errors[:base] << post.errors[:raw]
+      result.errors.add(:base, post.errors[:raw])
       return result
     elsif manager.args[:topic_id]
       topic = Topic.unscoped.where(id: manager.args[:topic_id]).first
 
       unless manager.user.guardian.can_create_post_on_topic?(topic)
         result = NewPostResult.new(:created_post, false)
-        result.errors[:base] << I18n.t(:topic_not_found)
+        result.errors.add(:base, I18n.t(:topic_not_found))
         return result
       end
     elsif manager.args[:category]
@@ -139,7 +139,7 @@ class NewPostManager
 
       unless manager.user.guardian.can_create_topic_on_category?(category)
         result = NewPostResult.new(:created_post, false)
-        result.errors[:base] << I18n.t("js.errors.reasons.forbidden")
+        result.errors.add(:base, I18n.t("js.errors.reasons.forbidden"))
         return result
       end
     end
@@ -172,7 +172,7 @@ class NewPostManager
   def perform
     if !self.class.exempt_user?(@user) && matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?
       result = NewPostResult.new(:created_post, false)
-      result.errors[:base] << I18n.t('contains_blocked_words', word: matches[0])
+      result.errors.add(:base, I18n.t('contains_blocked_words', word: matches[0]))
       return result
     end
 

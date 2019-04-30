@@ -227,7 +227,7 @@ describe Validators::PostValidator do
 
       it "should add an error" do
         validator.unique_post_validator(new_post)
-        expect(new_post.errors.keys).to contain_exactly(:raw)
+        expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
       end
 
       it "should not add an error if post.skip_unique_check is true" do

@@ -152,7 +152,7 @@ class UploadsController < ApplicationController
       upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
     end
 
-    upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
+    upload.errors.empty? ? upload : { errors: upload.errors.to_hash.values.flatten }
   ensure
     tempfile&.close!
   end

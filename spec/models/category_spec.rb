@@ -23,7 +23,7 @@ describe Category do
     category.search_priority = Searchable::PRIORITIES.values.last + 1
 
     expect(category.valid?).to eq(false)
-    expect(category.errors.keys).to contain_exactly(:search_priority)
+    expect(category.errors.to_hash.keys).to contain_exactly(:search_priority)
   end
 
   it 'validates uniqueness in case insensitive way' do

@@ -84,7 +84,7 @@ RSpec.describe TopicTimer, type: :model do
             )
 
             expect(topic_timer).to_not be_valid
-            expect(topic_timer.errors.keys).to include(:category_id)
+            expect(topic_timer.errors).to include(:category_id)
           end
         end
 

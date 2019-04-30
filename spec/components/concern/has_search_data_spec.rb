@@ -21,10 +21,10 @@ describe HasSearchData do
       DB.exec("drop table model_items")
       DB.exec("drop table model_item_search_data")
 
-      # import is making my life hard, we need to nuke this out of orbit
-      des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
-      des[ActiveRecord::Base].delete(ModelItem)
-      des[ActiveRecord::Base].delete(ModelItemSearchData)
+      # this weakref in the descendant tracker should clean up the two tests
+      # if this becomes an issue we can revisit (watch out for erratic tests)
+      Object.send(:remove_const, :ModelItem)
+      Object.send(:remove_const, :ModelItemSearchData)
     end
 
     let(:item) do

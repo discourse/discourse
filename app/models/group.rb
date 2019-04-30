@@ -99,7 +99,7 @@ class Group < ActiveRecord::Base
   validates :messageable_level, inclusion: { in: ALIAS_LEVELS.values }
 
   scope :visible_groups, Proc.new { |user, order, opts|
-    groups = Group.order(order || "name ASC")
+    groups = self.order(order || "name ASC")
 
     if !opts || !opts[:include_everyone]
       groups = groups.where("groups.id > 0")

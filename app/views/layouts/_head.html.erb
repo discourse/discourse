@@ -5,7 +5,7 @@
 <%- end %>
 <% site_apple_touch_icon_url = SiteSetting.site_apple_touch_icon_url %>
 <%- if site_apple_touch_icon_url.present? %>
-<link rel="apple-touch-icon" type="image/png" href="<%= UrlHelper.absolute(site_apple_touch_icon_url) %>">
+<link rel="apple-touch-icon" type="image/png" href="<%= ::UrlHelper.absolute(site_apple_touch_icon_url) %>">
 <%- end %>
 <meta name="theme-color" content="#<%= ColorScheme.hex_for_name('header_background', scheme_id) %>">
 <% if mobile_view? %>

@@ -27,13 +27,13 @@ module DiscourseTagging
         staff_tags = new_tag_names & all_staff_tags
         staff_tags += new_tag_names & hidden_tags
         if staff_tags.present?
-          topic.errors[:base] << I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" "))
+          topic.errors.add(:base, I18n.t("tags.staff_tag_disallowed", tag: staff_tags.join(" ")))
           return false
         end
 
         staff_tags = removed_tag_names & all_staff_tags
         if staff_tags.present?
-          topic.errors[:base] << I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" "))
+          topic.errors.add(:base, I18n.t("tags.staff_tag_remove_disallowed", tag: staff_tags.join(" ")))
           return false
         end
 
@@ -77,7 +77,7 @@ module DiscourseTagging
 
         # validate minimum required tags for a category
         if !guardian.is_staff? && category && category.minimum_required_tags > 0 && tags.length < category.minimum_required_tags
-          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
           return false
         end
 
@@ -85,7 +85,7 @@ module DiscourseTagging
       else
         # validate minimum required tags for a category
         if !guardian.is_staff? && category && category.minimum_required_tags > 0
-          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
           return false
         end
 

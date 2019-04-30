@@ -20,9 +20,9 @@ describe Positionable do
     after do
       DB.exec("drop table test_items")
 
-      # import is making my life hard, we need to nuke this out of orbit
-      des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
-      des[ActiveRecord::Base].delete(TestItem)
+      # this weakref in the descendant tracker should clean up the two tests
+      # if this becomes an issue we can revisit (watch out for erratic tests)
+      Object.send(:remove_const, :TestItem)
     end
 
     it "can position stuff correctly" do

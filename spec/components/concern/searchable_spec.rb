@@ -22,10 +22,10 @@ describe Searchable do
       DB.exec("drop table searchable_records")
       DB.exec("drop table searchable_record_search_data")
 
-      # import is making my life hard, we need to nuke this out of orbit
-      des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
-      des[ActiveRecord::Base].delete(SearchableRecord)
-      des[ActiveRecord::Base].delete(SearchableRecordSearchData)
+      # this weakref in the descendant tracker should clean up the two tests
+      # if this becomes an issue we can revisit (watch out for erratic tests)
+      Object.send(:remove_const, :SearchableRecord)
+      Object.send(:remove_const, :SearchableRecordSearchData)
     end
 
     let(:item) { SearchableRecord.create! }
