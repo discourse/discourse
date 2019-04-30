@@ -50,7 +50,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "should include correct id in top_category_ids array" do
-      category = Category.first
+      _category = Category.first
       CategoryUser.create!(user_id: user.id,
                            category_id: category1.id,
                            notification_level: CategoryUser.notification_levels[:tracking])

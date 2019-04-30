@@ -1112,7 +1112,9 @@ module Email
         raise TooShortPost
       end
 
-      raise InvalidPost, errors.join("\n") if result.errors.any?
+      if result.errors.present?
+        raise InvalidPost, errors.join("\n")
+      end
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)

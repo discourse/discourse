@@ -91,7 +91,7 @@ class PostCreator
     @post = nil
 
     if @user.suspended? && !skip_validations?
-      errors[:base] << I18n.t(:user_is_suspended)
+      errors.add(:base, I18n.t(:user_is_suspended))
       return false
     end
 
@@ -102,8 +102,9 @@ class PostCreator
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
 
       if names.length > max_allowed_message_recipients
-        errors[:base] << I18n.t(:max_pm_recepients,
-          recipients_limit: max_allowed_message_recipients
+        errors.add(
+          :base,
+          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -124,7 +125,7 @@ class PostCreator
         ", user_ids: users.keys)
         .pluck(:id).each do |m|
 
-        errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
+        errors.add(:base, I18n.t(:not_accepting_pms, username: users[m]))
       end
 
       return false if errors[:base].present?
@@ -136,7 +137,7 @@ class PostCreator
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
-        errors[:base] << I18n.t(:topic_not_found)
+        errors.add(:base, I18n.t(:topic_not_found))
         return false
       end
     end
@@ -147,7 +148,7 @@ class PostCreator
 
     if @post.has_host_spam?
       @spam = true
-      errors[:base] << I18n.t(:spamming_host)
+      errors.add(:base, I18n.t(:spamming_host))
       return false
     end
 

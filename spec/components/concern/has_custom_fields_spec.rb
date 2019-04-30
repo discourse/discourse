@@ -22,10 +22,10 @@ describe HasCustomFields do
       DB.exec("drop table custom_fields_test_items")
       DB.exec("drop table custom_fields_test_item_custom_fields")
 
-      # import is making my life hard, we need to nuke this out of orbit
-      des = ActiveSupport::DescendantsTracker.class_variable_get :@@direct_descendants
-      des[ActiveRecord::Base].delete(CustomFieldsTestItem)
-      des[ActiveRecord::Base].delete(CustomFieldsTestItemCustomField)
+      # this weakref in the descendant tracker should clean up the two tests
+      # if this becomes an issue we can revisit (watch out for erratic tests)
+      Object.send(:remove_const, :CustomFieldsTestItem)
+      Object.send(:remove_const, :CustomFieldsTestItemCustomField)
     end
 
     it "simple modification of custom fields" do

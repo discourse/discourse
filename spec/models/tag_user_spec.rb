@@ -164,7 +164,7 @@ describe TagUser do
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(staff), ["foo"])
         expect(result).to eq(true)
 
-        topic.errors[:base].clear
+        topic.errors.clear
 
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
         expect(result).to eq(false)

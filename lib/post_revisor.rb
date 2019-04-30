@@ -562,7 +562,7 @@ class PostRevisor
       category.update_column(:description, new_description)
       @category_changed = category
     else
-      @post.errors[:base] << I18n.t("category.errors.description_incomplete")
+      @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
   end
 

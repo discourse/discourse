@@ -584,7 +584,7 @@ class UserNotifications < ActionMailer::Base
       )
 
       unless translation_override_exists
-        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/invite',
           format: :html,
           locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
@@ -611,7 +611,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+
+        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,

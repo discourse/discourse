@@ -160,7 +160,7 @@ class TopicCreator
         # Validate minimum required tags for a category
         category = find_category
         if category.present? && category.minimum_required_tags > 0
-          topic.errors[:base] << I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags)
+          topic.errors.add(:base, I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags))
           rollback_from_errors!(topic)
         end
       end
