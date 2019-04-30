@@ -100,9 +100,9 @@ describe TopicView do
   end
 
   context "with a few sample posts" do
-    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
-    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
+    fab!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
+    fab!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
+    fab!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
     it "it can find the best responses" do
 
