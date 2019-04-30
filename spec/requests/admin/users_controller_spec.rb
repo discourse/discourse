@@ -794,6 +794,8 @@ RSpec.describe Admin::UsersController do
       expect(u.name).to eq("Bill")
       expect(u.username).to eq("bill22")
       expect(u.admin).to eq(true)
+      expect(u.active).to eq(true)
+      expect(u.approved).to eq(true)
     end
 
     it "doesn't send the email with send_email falsey" do
