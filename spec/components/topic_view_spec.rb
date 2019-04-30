@@ -8,7 +8,7 @@ describe TopicView do
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
-  let(:topic) { create_topic }
+  let(:topic) { Fabricate(:topic) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   let(:first_poster) { topic.user }
 
