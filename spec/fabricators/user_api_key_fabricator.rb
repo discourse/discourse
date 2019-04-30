@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:readonly_user_api_key, from: :user_api_key) do
   user
   scopes ['read']

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: plugin-name
 # about: about: my plugin
 # version: 0.1

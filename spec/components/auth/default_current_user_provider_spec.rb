@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'auth/default_current_user_provider'
 

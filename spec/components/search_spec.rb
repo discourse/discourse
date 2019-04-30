@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'search'
@@ -1152,14 +1153,14 @@ describe Search do
 
   context '#ts_query' do
     it 'can parse complex strings using ts_query helper' do
-      str = " grigio:babel deprecated? "
+      str = +" grigio:babel deprecated? "
       str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
       ts_query = Search.ts_query(term: str, ts_config: "simple")
-      expect { DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
+      expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
 
       ts_query = Search.ts_query(term: "foo.bar/'&baz", ts_config: "simple")
-      expect { DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
+      expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
       expect(ts_query).to include("baz")
     end
   end

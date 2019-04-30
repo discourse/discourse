@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MessageBus::DiagnosticsHelper
   def publish(channel, data, opts = nil)
     id = super(channel, data, opts)
