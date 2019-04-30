@@ -211,7 +211,8 @@ class ReviewableFlaggedPost < Reviewable
   def perform_delete_and_ignore_replies(performed_by, args)
     result = perform_ignore(performed_by, args)
 
-    replies = PostReply.where(post_id: post.id).includes(:reply).map(&:reply)
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post).destroy
     replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
 
@@ -227,7 +228,8 @@ class ReviewableFlaggedPost < Reviewable
   def perform_delete_and_agree_replies(performed_by, args)
     result = agree(performed_by, args)
 
-    replies = PostReply.where(post_id: post.id).includes(:reply).map(&:reply)
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
     PostDestroyer.new(performed_by, post).destroy
     replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
 
