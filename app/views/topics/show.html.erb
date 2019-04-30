@@ -88,7 +88,7 @@
 <% end %>
 
 <% if @topic_view.prev_page || @topic_view.next_page %>
-  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
     <% if @topic_view.prev_page %>
       <span itemprop='name'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'url' %></span>
     <% end %>
