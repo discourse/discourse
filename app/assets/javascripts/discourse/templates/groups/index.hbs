@@ -23,11 +23,11 @@
 
   {{#if model}}
     {{#conditional-loading-spinner condition=model.loading}}
-      {{#load-more selector=".groups-table .groups-table-row" action=(action "loadMore")}}
+      {{#load-more selector=".groups-boxes .group-box" action=(action "loadMore")}}
         <div class='container'>
           <div class="groups-boxes">
             {{#each model as |group|}}
-            {{#link-to "group.members" group.name class="group-box"}}
+              {{#link-to "group.members" group.name class="group-box"}}
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
                     {{#if group.flair_url}}
@@ -39,13 +39,13 @@
                           groupName=group.name}}
                       </span>
                     {{/if}}
+
                     <span class="group-info">
-                    {{groups-info group=group}}
+                      {{groups-info group=group}}
 
-                    <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
-                  </span>
-                </div>
-
+                      <div class="group-user-count">{{d-icon "user"}}{{group.user_count}}</div>
+                    </span>
+                  </div>
 
                   <div class="group-description">{{{group.bio_excerpt}}}</div>
 
@@ -77,7 +77,7 @@
                     {{/group-membership-button}}
                   </div>
                 </div>
-                {{/link-to}}
+              {{/link-to}}
             {{/each}}
           </div>
         </div>
