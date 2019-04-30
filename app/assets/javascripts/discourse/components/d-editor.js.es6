@@ -426,11 +426,15 @@ export default Ember.Component.extend({
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
-          this.set(
-            "isEditorFocused",
-            $("textarea.d-editor-input").is(":focus")
+          this.setProperties({
+            isEditorFocused: $("textarea.d-editor-input").is(":focus"),
+            emojiPickerIsActive: true
+          });
+
+          Ember.run.schedule("afterRender", () =>
+            $(".emoji-picker input[name='filter']").val(v.term)
           );
-          this.set("emojiPickerIsActive", true);
+
           return "";
         }
       },
@@ -477,7 +481,7 @@ export default Ember.Component.extend({
           )
           .then(list => {
             if (list.length) {
-              list.push({ label: I18n.t("composer.more_emoji") });
+              list.push({ label: I18n.t("composer.more_emoji"), term });
             }
             return list;
           });
