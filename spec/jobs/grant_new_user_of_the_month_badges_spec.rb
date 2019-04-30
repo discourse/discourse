@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'jobs/scheduled/grant_new_user_of_the_month_badges'
 

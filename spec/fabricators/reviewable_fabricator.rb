@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:reviewable) do
   reviewable_by_moderator true
   type 'ReviewableUser'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:post_revision) do
   post
   user

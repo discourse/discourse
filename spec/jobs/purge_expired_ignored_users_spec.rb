@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 require_dependency 'jobs/scheduled/purge_expired_ignored_users'

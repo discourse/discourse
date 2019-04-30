@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:category) do
   name { sequence(:name) { |n| "Amazing Category #{n}" } }
   user

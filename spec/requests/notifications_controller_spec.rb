@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 def create_notification(user_id, resp_code, matcher)

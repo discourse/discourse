@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'email_cook'
 require 'pretty_text'
@@ -22,7 +24,7 @@ describe EmailCook do
       Vestibulum feugiat mi vitae turpis tempor dignissim.
     LONG_EMAIL
 
-    long_cooked = <<~LONG_COOKED.strip!
+    long_cooked = (+<<~LONG_COOKED).strip!
       Hello,
       <br>
       <br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
@@ -45,7 +47,7 @@ describe EmailCook do
       Stet clita kasd gubergren.
     LONG_EMAIL
 
-    long_cooked = <<~LONG_COOKED.strip!
+    long_cooked = (+<<~LONG_COOKED).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat
       risus.
       <br>Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan.
@@ -70,7 +72,7 @@ describe EmailCook do
       Nunc convallis volutpat risus.
     LONG_EMAIL
 
-    long_cooked = <<~LONG_COOKED.strip!
+    long_cooked = (+<<~LONG_COOKED).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       <br>
       <br>&lt;form name=&quot;f1&quot; method=&quot;post&quot; action=&quot;test.html&quot; onsubmit=&quot;javascript:showAlert()&quot;&gt;
@@ -94,7 +96,7 @@ describe EmailCook do
       no indentation, but lots       of spaces
     LONG_EMAIL
 
-    long_cooked = <<~LONG_COOKED.strip!
+    long_cooked = (+<<~LONG_COOKED).strip!
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       <br>
       <br>#{nbsp}#{nbsp}#{nbsp}#{nbsp}this is indended by 4 spaces

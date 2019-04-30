@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'admin_confirmation'
 require 'rails_helper'
 

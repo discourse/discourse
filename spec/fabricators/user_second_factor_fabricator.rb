@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:user_second_factor_totp, from: :user_second_factor) do
   user
   data 'rcyryaqage3jexfj'
