@@ -25,9 +25,10 @@ const controllerOpts = {
   expandAllPinned: false,
 
   resetParams() {
-    Object.keys(this.get("model.params") || {}).forEach(key =>
-      this.set(key, null)
-    );
+    Object.keys(this.get("model.params") || {}).forEach(key => {
+      // controllerOpts contains the default values for parameters, so use them. They might be null.
+      this.set(key, controllerOpts[key]);
+    });
   },
 
   actions: {
