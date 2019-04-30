@@ -30,7 +30,7 @@ describe Admin::EmbeddableHostsController do
     describe '#update' do
       xit "logs embeddable host update" do
         category = Fabricate(:category)
-        
+
         put "/admin/embeddable_hosts/#{embeddable_host.id}.json", params: {
           embeddable_host: { host: "test.com", class_name: "test-class", category_id: category.id }
         }
