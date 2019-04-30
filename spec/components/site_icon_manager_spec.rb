@@ -18,7 +18,7 @@ describe SiteIconManager do
     SiteSetting.logo_small = nil
 
     # Falls back to sketch for some icons
-    expect(SiteIconManager.favicon.upload_id).to eq(-6)
+    expect(SiteIconManager.favicon.upload_id).to eq(SiteIconManager::SKETCH_LOGO_ID)
     expect(SiteIconManager.mobile_logo).to eq(nil)
 
     SiteSetting.logo_small = upload
