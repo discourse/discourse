@@ -33,6 +33,15 @@ function argValue(arg) {
   }
 }
 
+function useHelper(state, name) {
+  let id = state.helpersUsed[name];
+  if (!id) {
+    id = ++state.helperNumber;
+    state.helpersUsed[name] = id;
+  }
+  return `__h${id}`;
+}
+
 function mustacheValue(node, state) {
   let path = node.path.original;
 
@@ -63,18 +72,30 @@ function mustacheValue(node, state) {
       }
 
       break;
-    case "fa-icon":
+    case "avatar":
+      let template = argValue(node.hash.pairs.find(p => p.key === "template"));
+      let username = argValue(node.hash.pairs.find(p => p.key === "username"));
+      let size = argValue(node.hash.pairs.find(p => p.key === "size"));
+      return `${useHelper(
+        state,
+        "avatar"
+      )}(${size}, { template: ${template}, username: ${username} })`;
+      break;
+    case "date":
+      value = resolve(node.params[0].original);
+      return `${useHelper(state, "dateNode")}(${value})`;
+      break;
     case "d-icon":
-      state.helpersUsed.iconNode = true;
       let icon = node.params[0].value;
-      return `__iN("${icon}")`;
+      return `${useHelper(state, "iconNode")}("${icon}")`;
       break;
     default:
       if (node.escaped) {
         return `${resolve(path)}`;
       } else {
-        state.helpersUsed.rawHtml = true;
-        return `new __rH({ html: '<span>' + ${resolve(path)} + '</span>'})`;
+        return `new ${useHelper(state, "rawHtml")}({ html: '<span>' + ${resolve(
+          path
+        )} + '</span>'})`;
       }
       break;
   }
@@ -86,7 +107,8 @@ class Compiler {
     this.ast = ast;
 
     this.state = {
-      helpersUsed: {}
+      helpersUsed: {},
+      helperNumber: 0
     };
   }
 
@@ -212,12 +234,11 @@ function compile(template) {
   let code = compiler.compile();
 
   let imports = "";
-  if (compiler.state.helpersUsed.iconNode) {
-    imports += "var __iN = Discourse.__widget_helpers.iconNode; ";
-  }
-  if (compiler.state.helpersUsed.rawHtml) {
-    imports += "var __rH = Discourse.__widget_helpers.rawHtml; ";
-  }
+
+  Object.keys(compiler.state.helpersUsed).forEach(h => {
+    let id = compiler.state.helpersUsed[h];
+    imports += `var __h${id} = Discourse.__widget_helpers.${h}; `;
+  });
 
   return `function(attrs, state) { ${imports}var _r = [];\n${code}\nreturn _r; }`;
 }
