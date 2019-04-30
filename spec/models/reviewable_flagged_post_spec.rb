@@ -131,6 +131,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reply_to_post_number: post.post_number,
         topic_id: post.topic_id
       )
+      nested_reply = PostCreator.create(
+        Fabricate(:user),
+        raw: 'this is the reply text2',
+        reply_to_post_number: reply.post_number,
+        topic_id: post.topic_id
+      )
       post.reload
 
       reviewable.perform(moderator, :delete_and_ignore_replies)
@@ -138,6 +144,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(score.reload).to be_ignored
       expect(post.reload.deleted_at).to be_present
       expect(reply.reload.deleted_at).to be_present
+      expect(nested_reply.reload.deleted_at).to be_present
     end
 
     it "delete_and_agree agrees with the flags and deletes post" do
@@ -154,6 +161,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reply_to_post_number: post.post_number,
         topic_id: post.topic_id
       )
+      nested_reply = PostCreator.create(
+        Fabricate(:user),
+        raw: 'this is the reply text2',
+        reply_to_post_number: reply.post_number,
+        topic_id: post.topic_id
+      )
       post.reload
 
       reviewable.perform(moderator, :delete_and_agree_replies)
@@ -161,6 +174,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(score.reload).to be_agreed
       expect(post.reload.deleted_at).to be_present
       expect(reply.reload.deleted_at).to be_present
+      expect(nested_reply.reload.deleted_at).to be_present
     end
 
     it "disagrees with the flags" do
