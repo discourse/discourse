@@ -11,6 +11,7 @@ describe TopicView do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   fab!(:first_poster) { topic.user }
+  fab!(:anonymous) { Fabricate(:anonymous) }
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
@@ -57,7 +58,6 @@ describe TopicView do
       end
 
       describe "when an anonymous user made a post" do
-        let(:anonymous) { Fabricate(:anonymous) }
         let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
         it "filters out ignored user posts only" do
@@ -67,7 +67,6 @@ describe TopicView do
       end
 
       describe "when an anonymous (non signed-in) user is viewing a Topic" do
-        let(:anonymous) { Fabricate(:anonymous) }
         let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
         it "filters out ignored user posts only" do
