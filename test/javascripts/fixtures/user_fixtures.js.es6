@@ -150,7 +150,7 @@ export default {
         { action_type: 11, count: 20, id: null }
       ],
       can_send_private_messages: true,
-      can_send_private_message_to_user: false,
+      can_send_private_message_to_user: true,
       bio_excerpt:
         '<p>Co-founder of Discourse. Previously, I created <a href="http://forumwarz.com">Forumwarz</a>. <a href="https://twitter.com/eviltrout">Follow me on Twitter</a>. I am <a class="mention" href="/u/eviltrout">@eviltrout</a>.</p>',
       trust_level: 4,

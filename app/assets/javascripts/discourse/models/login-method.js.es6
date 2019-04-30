@@ -93,7 +93,8 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
   // On Mobile, Android or iOS always go with full screen
   if (
     isMobileDevice ||
-    (capabilities && (capabilities.isIOS || capabilities.isAndroid))
+    (capabilities && (capabilities.isIOS || capabilities.isAndroid)) ||
+    Discourse.useFullScreenLogin
   ) {
     methods.forEach(m => m.set("full_screen_login", true));
   }

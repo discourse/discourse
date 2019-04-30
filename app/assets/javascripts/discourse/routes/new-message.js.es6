@@ -55,11 +55,8 @@ export default Discourse.Route.extend({
       });
     } else {
       $.cookie("destination_url", window.location.href);
-      if (Discourse.showingSignup) {
-        Discourse.showingSignup = false;
-      } else {
-        this.replaceWith("login");
-      }
+      Discourse.useFullScreenLogin = true;
+      this.replaceWith("login");
     }
   }
 });

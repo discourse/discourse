@@ -72,12 +72,8 @@ export default Discourse.Route.extend({
     } else {
       // User is not logged in
       $.cookie("destination_url", window.location.href);
-      if (Discourse.showingSignup) {
-        // We're showing the sign up modal
-        Discourse.showingSignup = false;
-      } else {
-        self.replaceWith("login");
-      }
+      Discourse.useFullScreenLogin = true;
+      self.replaceWith("login");
     }
   },
 
