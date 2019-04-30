@@ -1,0 +1,4 @@
+plugins:
+  discourse_automation_enabled:
+    default: true
+    client: true
