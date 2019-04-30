@@ -431,9 +431,12 @@ export default Ember.Component.extend({
             emojiPickerIsActive: true
           });
 
-          Ember.run.schedule("afterRender", () =>
-            $(".emoji-picker input[name='filter']").val(v.term)
-          );
+          Ember.run.schedule("afterRender", () => {
+            const filterInput = document.querySelector(
+              ".emoji-picker input[name='filter']"
+            );
+            if (filterInput) filterInput.value = v.term;
+          });
 
           return "";
         }
