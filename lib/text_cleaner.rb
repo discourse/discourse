@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Clean up a text
 #
@@ -27,6 +29,8 @@ class TextCleaner
   end
 
   def self.clean(text, opts = {})
+    text = text.dup
+
     # Remove invalid byte sequences
     text.scrub!("")
     # Replace !!!!! with a single !
@@ -38,7 +42,7 @@ class TextCleaner
     # Capitalize first letter, but only when entire first word is lowercase
     first, rest = text.split(' ', 2)
     if first && opts[:capitalize_first_letter] && first == first.mb_chars.downcase
-      text = "#{first.mb_chars.capitalize}#{rest ? ' ' + rest : ''}"
+      text = +"#{first.mb_chars.capitalize}#{rest ? ' ' + rest : ''}"
     end
     # Remove unnecessary periods at the end
     text.sub!(/([^.])\.+(\s*)\z/, '\1\2') if opts[:remove_all_periods_from_the_end]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
@@ -776,8 +778,8 @@ describe SiteSettingExtension do
   describe "get_hostname" do
 
     it "properly extracts the hostname" do
+      # consider testing this through a public interface, this tests implementation details
       expect(settings.send(:get_hostname, "discourse.org")).to eq("discourse.org")
-      expect(settings.send(:get_hostname, " discourse.org ")).to eq("discourse.org")
       expect(settings.send(:get_hostname, "@discourse.org")).to eq("discourse.org")
       expect(settings.send(:get_hostname, "https://discourse.org")).to eq("discourse.org")
     end

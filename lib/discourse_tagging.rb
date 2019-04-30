@@ -111,8 +111,9 @@ module DiscourseTagging
 
     term = opts[:term]
     if term.present?
-      term.gsub!("_", "\\_")
-      term = clean_tag(term).downcase
+      term = term.gsub("_", "\\_")
+      clean_tag(term)
+      term.downcase!
       query = query.where('lower(tags.name) like ?', "%#{term}%")
     end
 
