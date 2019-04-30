@@ -35,6 +35,14 @@ end
 task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
   SeedFu.seed(DiscoursePluginRegistry.seed_paths)
 
+  unless Discourse.skip_post_deployment_migrations?
+    puts
+    print "Recompiling theme fields... "
+    ThemeField.force_recompilation!
+    Theme.expire_site_cache!
+    puts "Done"
+  end
+
   if MultisiteTestHelpers.load_multisite?
     system("rake db:schema:dump")
     system("RAILS_DB=discourse_test_multisite rake db:schema:load")
