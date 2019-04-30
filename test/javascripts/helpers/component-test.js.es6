@@ -50,6 +50,12 @@ export default function(name, opts) {
     andThen(() => {
       return this.render(opts.template);
     });
-    andThen(() => opts.test.call(this, assert));
+    andThen(() => {
+      if (opts.skip) {
+        assert.expect(0);
+      } else {
+        opts.test.call(this, assert);
+      }
+    });
   });
 }

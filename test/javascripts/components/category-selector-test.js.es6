@@ -64,8 +64,8 @@ componentTest("interactions", {
     this.set("categories", [Category.findById(2), Category.findById(6)]);
   },
 
+  skip: true,
   async test(assert) {
-    return assert.ok(true); // Flaky test. Marked as pending
     await this.get("subject").expand();
     await this.get("subject").selectRowByValue(8);
 

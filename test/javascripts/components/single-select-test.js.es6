@@ -768,9 +768,8 @@ componentTest("with accents in content", {
 componentTest("with no content and allowAny", {
   template: "{{single-select allowAny=true}}",
 
+  skip: true,
   async test(assert) {
-    return assert.ok(true); // Flaky test. Marked as pending
-
     await click(
       this.get("subject")
         .header()
