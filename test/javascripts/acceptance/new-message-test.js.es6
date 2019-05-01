@@ -4,7 +4,7 @@ acceptance("New Message");
 
 QUnit.test("accessing new-message route when logged out", async assert => {
   await visit(
-    "/new-message?username=eviltrout&title=message%20title&body=message%20body"
+    "/new-message?username=charlie&title=message%20title&body=message%20body"
   );
 
   assert.ok(exists(".modal.login-modal"), "it shows the login modal");
@@ -15,7 +15,7 @@ QUnit.test("accessing new-message route when logged in", async assert => {
   Discourse.reset();
 
   await visit(
-    "/new-message?username=eviltrout&title=message%20title&body=message%20body"
+    "/new-message?username=charlie&title=message%20title&body=message%20body"
   );
 
   assert.ok(exists(".composer-fields"), "it opens composer");
@@ -37,7 +37,7 @@ QUnit.test("accessing new-message route when logged in", async assert => {
     find(".users-input .item:eq(0)")
       .text()
       .trim(),
-    "eviltrout",
+    "charlie",
     "it selects correct username"
   );
 });
