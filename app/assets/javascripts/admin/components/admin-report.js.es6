@@ -218,8 +218,8 @@ export default Ember.Component.extend({
 
       exportEntity("report", {
         name: this.get("model.type"),
-        startDate: this.get("startDate"),
-        endDate: this.get("endDate"),
+        start_date: this.get("startDate"),
+        end_date: this.get("endDate"),
         category_id: customFilters.category,
         group_id: customFilters.group
       }).then(outputExportResult);
