@@ -1130,6 +1130,25 @@ describe Search do
           .to eq([post7.id, post8.id])
       end
 
+      it "can search for unlisted topics as staff" do
+        topic1 = Fabricate(:topic, visible: false)
+        post = Fabricate(:post, raw: 'Testing post', topic: topic1)
+        topic2 = Fabricate(:topic)
+        Fabricate(:post, raw: 'Testing post', topic: topic2)
+
+        results = Search.execute('Testing post status:unlisted', guardian: Guardian.new(Fabricate(:moderator)))
+        expect(results.posts.length).to eq(1)
+        expect(results.posts.first.id).to eq(post.id)
+      end
+
+      it "unlisted topics can't be found using search for non-staff" do
+        topic = Fabricate(:topic, visible: false)
+        Fabricate(:post, raw: 'Testing post', topic: topic)
+
+        results = Search.execute('Testing post', guardian: Guardian.new(Fabricate(:user)))
+        expect(results.posts.length).to eq(0)
+      end
+
     end
 
     it "can find posts which contains filetypes" do
