@@ -214,7 +214,7 @@ export default Ember.Component.extend({
     },
 
     exportCsv() {
-      const customFilters = this.get("filters.customFilters");
+      const customFilters = this.get("filters.customFilters") || {};
 
       exportEntity("report", {
         name: this.get("model.type"),
