@@ -222,7 +222,7 @@ export default function transformPost(
           acted,
           count,
           canUndo: a.can_undo,
-          canDeferFlags: a.can_defer_flags,
+          canIgnoreFlags: a.can_defer_flags,
           description: actionDescription(action, acted, count)
         };
       });

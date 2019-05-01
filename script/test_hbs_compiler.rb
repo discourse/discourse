@@ -1,19 +1,9 @@
 template = <<~HBS
-  {{attach widget="widget-name" attrs=attrs}}
-  {{a}}
-  {{{htmlValue}}}
-  {{#if state.category}}
-    {{attach widget="category-display" attrs=(hash category=state.category someNumber=123 someString="wat")}}
-  {{/if}}
-  {{#each transformed.something as |s|}}
-    {{s.wat}}
-  {{/each}}
-
-  {{attach widget=settings.widgetName}}
-
-  {{#unless settings.hello}}
-    XYZ
-  {{/unless}}
+  {{attach widget="wat" attrs=(hash test="abc" text=(i18n "hello" count=attrs.wat))}}
+  {{action-link action="undo" className="undo" text=(i18n (concat "post.actions.undo." attrs.action))}}
+  {{actions-summary-item attrs=as}}
+  {{attach widget="actions-summary-item" attrs=as}}
+  {{testing value="hello"}}
 HBS
 
 ctx = MiniRacer::Context.new(timeout: 15000)
