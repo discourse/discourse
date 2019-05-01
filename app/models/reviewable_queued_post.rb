@@ -36,11 +36,14 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def build_editable_fields(fields, guardian, args)
-    return unless guardian.is_staff?
 
     # We can edit category / title if it's a new topic
     if topic_id.blank?
-      fields.add('category_id', :category)
+
+      # Only staff can edit category for now, since in theory a category group reviewer could
+      # post in a category they don't have access to.
+      fields.add('category_id', :category) if guardian.is_staff?
+
       fields.add('payload.title', :text)
       fields.add('payload.tags', :tags)
     end
