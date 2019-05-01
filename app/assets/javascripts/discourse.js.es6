@@ -11,7 +11,7 @@ const Discourse = Ember.Application.extend({
   _docTitle: document.title,
   RAW_TEMPLATES: {},
   __widget_helpers: {},
-  showingSignup: false,
+  useFullScreenLogin: false,
   customEvents: {
     paste: "paste"
   },
