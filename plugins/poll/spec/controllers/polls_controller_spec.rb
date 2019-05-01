@@ -5,7 +5,7 @@ describe ::DiscoursePoll::PollsController do
 
   let!(:user) { log_in }
   let(:topic) { Fabricate(:topic) }
-  let(:poll)  { Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]") }
+  let!(:poll)  { Fabricate(:post, topic: topic, user: user, raw: "[poll]\n- A\n- B\n[/poll]") }
   let(:multi_poll)  { Fabricate(:post, topic: topic, user: user, raw: "[poll min=1 max=2 type=multiple public=true]\n- A\n- B\n[/poll]") }
   let(:public_poll_on_vote) { Fabricate(:post, topic: topic, user: user, raw: "[poll public=true results=on_vote]\n- A\n- B\n[/poll]") }
   let(:public_poll_on_close) { Fabricate(:post, topic: topic, user: user, raw: "[poll public=true results=on_close]\n- A\n- B\n[/poll]") }

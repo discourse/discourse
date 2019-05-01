@@ -1,6 +1,8 @@
 require 'distributed_cache'
 
 class ApplicationSerializer < ActiveModel::Serializer
+  extend DistributedCache::Mixin
+
   embed :ids, include: true
 
   class CachedFragment
@@ -16,9 +18,7 @@ class ApplicationSerializer < ActiveModel::Serializer
     fragment_cache.delete(name)
   end
 
-  def self.fragment_cache
-    @cache ||= DistributedCache.new("am_serializer_fragment_cache")
-  end
+  distributed_cache :fragment_cache, 'am_serializer_fragment_cache'
 
   protected
 

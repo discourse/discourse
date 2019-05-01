@@ -1,7 +1,8 @@
 module SiteIconManager
   extend GlobalPath
+  extend DistributedCache::Mixin
 
-  @cache = DistributedCache.new('icon_manager')
+  distributed_cache :cache, 'icon_manager'
 
   SKETCH_LOGO_ID = -6
 
@@ -27,7 +28,7 @@ module SiteIconManager
         end
       end
     end
-    @cache.clear
+    cache.clear
   end
 
   ICONS.each do |name, info|
@@ -60,7 +61,7 @@ module SiteIconManager
   private
 
   def self.get_set_cache(key)
-    @cache[key] ||= yield
+    cache[key] ||= yield
   end
 
   def self.resolve_original(info)

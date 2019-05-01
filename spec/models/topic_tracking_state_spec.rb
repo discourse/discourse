@@ -14,7 +14,7 @@ describe TopicTrackingState do
 
   let(:topic) { post.topic }
   let(:private_message_post) { Fabricate(:private_message_post) }
-  let(:private_message_topic) { private_message_post.topic }
+  let!(:private_message_topic) { private_message_post.topic }
 
   describe '#publish_latest' do
     it 'can correctly publish latest' do

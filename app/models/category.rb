@@ -13,6 +13,7 @@ class Category < ActiveRecord::Base
   include CategoryHashtag
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  extend DistributedCache::Mixin
 
   REQUIRE_TOPIC_APPROVAL = 'require_topic_approval'
   REQUIRE_REPLY_APPROVAL = 'require_reply_approval'
@@ -121,14 +122,14 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new('category_topic_ids')
+  distributed_cache :topic_id_cache, 'category_topic_ids'
 
   def self.topic_ids
-    @topic_id_cache['ids'] || reset_topic_ids_cache
+    topic_id_cache['ids'] || reset_topic_ids_cache
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache['ids'] = Set.new(Category.pluck(:topic_id).compact)
+    topic_id_cache['ids'] = Set.new(Category.pluck(:topic_id).compact)
   end
 
   def reset_topic_ids_cache
@@ -546,10 +547,14 @@ class Category < ActiveRecord::Base
     id == SiteSetting.uncategorized_category_id
   end
 
-  @@url_cache = DistributedCache.new('category_url')
+  distributed_cache :url_cache, 'category_url'
+
+  def url_cache
+    self.class.url_cache
+  end
 
   def clear_url_cache
-    @@url_cache.clear
+    url_cache.clear
   end
 
   def full_slug(separator = "-")
@@ -558,12 +563,12 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    url = @@url_cache[self.id]
+    url = url_cache[self.id]
     unless url
       url = +"#{Discourse.base_uri}/c"
       url << "/#{parent_category.slug}" if parent_category_id
       url << "/#{slug}"
-      @@url_cache[self.id] = -url
+      url_cache[self.id] = -url
     end
 
     url

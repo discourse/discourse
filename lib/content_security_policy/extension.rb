@@ -2,6 +2,7 @@
 class ContentSecurityPolicy
   module Extension
     extend self
+    extend DistributedCache::Mixin
 
     def site_setting_extension
       { script_src: SiteSetting.content_security_policy_script_src.split('|') }
@@ -28,9 +29,7 @@ class ContentSecurityPolicy
 
     private
 
-    def cache
-      @cache ||= DistributedCache.new('csp_extensions')
-    end
+    distributed_cache :cache, 'csp_extensions'
 
     def find_theme_extensions(theme_ids)
       extensions = []

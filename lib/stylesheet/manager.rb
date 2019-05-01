@@ -4,6 +4,7 @@ require_dependency 'stylesheet/compiler'
 module Stylesheet; end
 
 class Stylesheet::Manager
+  extend DistributedCache::Mixin
 
   CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
@@ -12,9 +13,7 @@ class Stylesheet::Manager
 
   @lock = Mutex.new
 
-  def self.cache
-    @cache ||= DistributedCache.new("discourse_stylesheet")
-  end
+  distributed_cache :cache, 'discourse_stylesheet'
 
   def self.clear_theme_cache!
     cache.hash.keys.select { |k| k =~ /theme/ }.each { |k|cache.delete(k) }

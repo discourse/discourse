@@ -9,8 +9,9 @@ require_dependency 'theme_translation_parser'
 require_dependency 'theme_translation_manager'
 
 class Theme < ActiveRecord::Base
+  extend DistributedCache::Mixin
 
-  @cache = DistributedCache.new('theme')
+  distributed_cache :cache, 'theme'
 
   belongs_to :user
   belongs_to :color_scheme
@@ -91,10 +92,10 @@ class Theme < ActiveRecord::Base
   end, on: [:create, :update]
 
   def self.get_set_cache(key, &blk)
-    if val = @cache[key]
+    if val = cache[key]
       return val
     end
-    @cache[key] = blk.call
+    cache[key] = blk.call
   end
 
   def self.theme_ids
@@ -214,13 +215,13 @@ class Theme < ActiveRecord::Base
 
     theme_ids = transform_ids(theme_ids)
     cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{ThemeField::COMPILER_VERSION}"
-    lookup = @cache[cache_key]
+    lookup = cache[cache_key]
     return lookup.html_safe if lookup
 
     target = target.to_sym
     val = resolve_baked_field(theme_ids, target, field)
 
-    (@cache[cache_key] = val || "").html_safe
+    (cache[cache_key] = val || "").html_safe
   end
 
   def self.remove_from_cache!
@@ -228,7 +229,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    @cache.clear
+    cache.clear
   end
 
   def self.targets

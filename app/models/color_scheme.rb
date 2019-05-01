@@ -3,6 +3,7 @@
 require_dependency 'distributed_cache'
 
 class ColorScheme < ActiveRecord::Base
+  extend DistributedCache::Mixin
 
   # rubocop:disable Layout/AlignHash
 
@@ -119,9 +120,7 @@ class ColorScheme < ActiveRecord::Base
     list
   end
 
-  def self.hex_cache
-    @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
-  end
+  distributed_cache :hex_cache, 'scheme_hex_for_name'
 
   attr_accessor :is_base
 

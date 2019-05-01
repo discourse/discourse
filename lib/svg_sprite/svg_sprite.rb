@@ -3,6 +3,8 @@
 require_dependency 'distributed_cache'
 
 module SvgSprite
+  extend DistributedCache::Mixin
+
   SVG_ICONS ||= Set.new([
     "adjust",
     "ambulance",
@@ -388,7 +390,5 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     cache[key] ||= yield
   end
 
-  def self.cache
-    @cache ||= DistributedCache.new('svg_sprite')
-  end
+  distributed_cache :cache, 'svg_sprite'
 end

@@ -8,7 +8,7 @@ describe DiscoursePoll::PollsUpdater do
 
   let(:user) { Fabricate(:user) }
 
-  let(:post) {
+  let!(:post) {
     Fabricate(:post, raw: <<~RAW)
       [poll]
       * 1
@@ -37,7 +37,7 @@ describe DiscoursePoll::PollsUpdater do
     RAW
   }
 
-  let(:polls) {
+  let!(:polls) {
     DiscoursePoll::PollsValidator.new(post).validate_polls
   }
 

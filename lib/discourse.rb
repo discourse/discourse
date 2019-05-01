@@ -4,6 +4,7 @@ require_dependency 'route_format'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
+require_dependency 'distributed_cache'
 require 'digest/sha1'
 
 # Prevents errors with reloading dev with conditional includes
@@ -19,6 +20,8 @@ module Discourse
   class SidekiqExceptionHandler
     extend Sidekiq::ExceptionHandler
   end
+
+  extend DistributedCache::Mixin
 
   class Utils
     def self.execute_command(*command, failure_message: "", success_status_codes: [0])
@@ -364,9 +367,7 @@ module Discourse
     $redis.get(PG_READONLY_MODE_KEY).present?
   end
 
-  def self.last_read_only
-    @last_read_only ||= DistributedCache.new('last_read_only', namespace: false)
-  end
+  distributed_cache :last_read_only, 'last_read_only', namespace: false
 
   def self.recently_readonly?
     read_only = last_read_only[$redis.namespace]

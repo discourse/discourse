@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
+  extend DistributedCache::Mixin
 
   attr_reader :theme_ids
 
@@ -568,9 +569,7 @@ class ApplicationController < ActionController::Base
     MultiJson.dump(data)
   end
 
-  def self.banner_json_cache
-    @banner_json_cache ||= DistributedCache.new("banner_json")
-  end
+  distributed_cache :banner_json_cache, 'banner_json'
 
   def banner_json
     json = ApplicationController.banner_json_cache["json"]

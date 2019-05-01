@@ -164,6 +164,7 @@ RSpec.configure do |config|
     #
     # $redis = DiscourseMockRedis.new
 
+    DistributedCache::Mixin.clear_caches!
     RateLimiter.disable
     PostActionNotifier.disable
     SearchIndexer.disable
