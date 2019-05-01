@@ -28,6 +28,17 @@ const REGEXP_POST_TIME_WHEN = /^(before|after)/gi;
 
 const IN_OPTIONS_MAPPING = { images: "with" };
 
+const DEFAULT_STATUS_OPTIONS = [
+  { name: I18n.t("search.advanced.statuses.open"), value: "open" },
+  { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
+  { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
+  { name: I18n.t("search.advanced.statuses.noreplies"), value: "noreplies" },
+  {
+    name: I18n.t("search.advanced.statuses.single_user"),
+    value: "single_user"
+  }
+];
+
 export default Ember.Component.extend({
   classNames: ["search-advanced-options"],
 
@@ -45,17 +56,6 @@ export default Ember.Component.extend({
     { name: I18n.t("search.advanced.filters.unpinned"), value: "unpinned" },
     { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
     { name: I18n.t("search.advanced.filters.images"), value: "images" }
-  ],
-
-  statusOptions: [
-    { name: I18n.t("search.advanced.statuses.open"), value: "open" },
-    { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
-    { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
-    { name: I18n.t("search.advanced.statuses.noreplies"), value: "noreplies" },
-    {
-      name: I18n.t("search.advanced.statuses.single_user"),
-      value: "single_user"
-    }
   ],
 
   postTimeOptions: [
@@ -102,10 +102,20 @@ export default Ember.Component.extend({
           days: ""
         }
       },
+      statusOptions: DEFAULT_STATUS_OPTIONS,
       inOptions: this.currentUser
         ? this.inOptionsForUsers.concat(this.inOptionsForAll)
         : this.inOptionsForAll
     });
+
+    if (this.currentUser.get("staff")) {
+      this.setProperties({
+        statusOptions: DEFAULT_STATUS_OPTIONS.concat({
+          name: I18n.t("search.advanced.statuses.unlisted"),
+          value: "unlisted"
+        })
+      });
+    }
   },
 
   _update() {
