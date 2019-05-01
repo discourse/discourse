@@ -63,13 +63,10 @@ createWidget("small-user-list", {
 
 createWidget("action-link", {
   tagName: "span.action-link",
+  template: hbs`<a>{{attrs.text}}. </a>`,
 
   buildClasses(attrs) {
     return attrs.className;
-  },
-
-  html(attrs) {
-    return h("a", [attrs.text, ". "]);
   },
 
   click() {
@@ -82,56 +79,24 @@ createWidget("actions-summary-item", {
   buildKey: attrs => `actions-summary-item-${attrs.id}`,
 
   defaultState() {
-    return { users: [] };
+    return { users: null };
   },
 
-  html(attrs, state) {
-    const users = state.users;
+  template: hbs`
+    {{#if state.users}}
+      {{small-user-list users=state.users description=(concat "post.actions.people." attrs.action)}}
+    {{else}}
+      {{action-link action="whoActed" text=attrs.description}}
+    {{/if}}
 
-    const result = [];
-    const action = attrs.action;
+    {{#if attrs.canUndo}}
+      {{action-link action="undo" className="undo" text=(i18n (concat "post.actions.undo." attrs.action))}}
+    {{/if}}
 
-    if (users.length === 0) {
-      result.push(
-        this.attach("action-link", {
-          action: "whoActed",
-          text: attrs.description
-        })
-      );
-    } else {
-      result.push(
-        this.attach("small-user-list", {
-          users,
-          description: `post.actions.people.${action}`
-        })
-      );
-    }
-
-    if (attrs.canUndo) {
-      result.push(
-        this.attach("action-link", {
-          action: "undo",
-          className: "undo",
-          text: I18n.t(`post.actions.undo.${action}`)
-        })
-      );
-    }
-
-    if (attrs.canDeferFlags) {
-      const flagsDesc = I18n.t(`post.actions.defer_flags`, {
-        count: attrs.count
-      });
-      result.push(
-        this.attach("action-link", {
-          action: "deferFlags",
-          className: "defer-flags",
-          text: flagsDesc
-        })
-      );
-    }
-
-    return result;
-  },
+    {{#if attrs.canIgnoreFlags}}
+      {{action-link action="deferFlags" className="defer-flags" text=(i18n "post.actions.defer_flags" count=attrs.count)}}
+    {{/if}}
+  `,
 
   whoActed() {
     const attrs = this.attrs;
@@ -159,7 +124,7 @@ export default createWidget("actions-summary", {
   tagName: "section.post-actions",
   template: hbs`
     {{#each attrs.actionsSummary as |as|}}
-      {{attach widget="actions-summary-item" attrs=as}}
+      {{actions-summary-item attrs=as}}
       <div class='clearfix'></div>
     {{/each}}
     {{#if attrs.deleted_at}}

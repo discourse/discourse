@@ -53,7 +53,7 @@ widgetTest("deferFlags", {
         {
           action: "off_topic",
           description: "very off topic",
-          canDeferFlags: true,
+          canIgnoreFlags: true,
           count: 1
         }
       ]
