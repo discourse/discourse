@@ -62,6 +62,18 @@ export default function() {
       return response(json);
     });
 
+    this.get("/c/bug/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/l/latest.json"];
+
+      if (loggedIn()) {
+        // Stuff to let us post
+        json.topic_list.can_create_topic = true;
+        json.topic_list.draft_key = "new_topic";
+        json.topic_list.draft_sequence = 1;
+      }
+      return response(json);
+    });
+
     this.get("/tags", () => {
       return response({
         tags: [
