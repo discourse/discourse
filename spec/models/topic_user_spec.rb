@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TopicUser do
@@ -83,7 +85,6 @@ describe TopicUser do
   let(:topic_user) { TopicUser.get(topic, user) }
   let(:topic_creator_user) { TopicUser.get(topic, topic.user) }
 
-  let(:post) { Fabricate(:post, topic: topic, user: user) }
   let(:new_user) {
     u = Fabricate(:user)
     u.user_option.update_columns(auto_track_topics_after_msecs: 1000)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'discourse_ip_info'
 
@@ -346,7 +348,7 @@ RSpec.describe Admin::UsersController do
       stat.posts_read_count = SiteSetting.tl1_requires_read_posts + 1
       stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
       stat.save!
-      another_user.update_attributes(trust_level: TrustLevel[1])
+      another_user.update(trust_level: TrustLevel[1])
 
       put "/admin/users/#{another_user.id}/trust_level.json", params: {
         level: TrustLevel[0]
@@ -794,6 +796,8 @@ RSpec.describe Admin::UsersController do
       expect(u.name).to eq("Bill")
       expect(u.username).to eq("bill22")
       expect(u.admin).to eq(true)
+      expect(u.active).to eq(true)
+      expect(u.approved).to eq(true)
     end
 
     it "doesn't send the email with send_email falsey" do

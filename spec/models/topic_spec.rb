@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_destroyer'
@@ -737,7 +738,6 @@ describe Topic do
     context 'invite' do
 
       context 'existing user' do
-        let(:walter) { Fabricate(:walter_white) }
 
         context 'by group name' do
           let(:group) { Fabricate(:group) }

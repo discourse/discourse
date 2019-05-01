@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'highline/import'
 require 'highline/simulate'
@@ -45,7 +47,7 @@ RSpec.describe "Post rake tasks" do
 
   describe 'rebake_match' do
     it 'rebakes matched posts' do
-      post.update_attributes(cooked: '')
+      post.update(cooked: '')
 
       HighLine::Simulate.with('y') do
         Rake::Task['posts:rebake_match'].invoke('brown')

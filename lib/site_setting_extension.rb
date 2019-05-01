@@ -384,7 +384,7 @@ module SiteSettingExtension
 
   def filter_value(name, value)
     if HOSTNAME_SETTINGS.include?(name)
-      value.split("|").map { |url| get_hostname(url) }.compact.uniq.join("|")
+      value.split("|").map { |url| url.strip!; get_hostname(url) }.compact.uniq.join("|")
     else
       value
     end
@@ -490,7 +490,6 @@ module SiteSettingExtension
   end
 
   def get_hostname(url)
-    url.strip!
 
     host = begin
       URI.parse(url)&.host

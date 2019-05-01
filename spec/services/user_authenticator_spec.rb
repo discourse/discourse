@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user_authenticator'
 
@@ -19,7 +21,6 @@ end
 
 describe UserAuthenticator do
   context "#finish" do
-    let(:authenticator) { Auth::GithubAuthenticator.new }
     let(:group) { Fabricate(:group, automatic_membership_email_domains: "discourse.org") }
 
     before do

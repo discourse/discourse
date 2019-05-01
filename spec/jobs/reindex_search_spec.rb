@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::ReindexSearch do
@@ -21,7 +23,7 @@ describe Jobs::ReindexSearch do
       model = Fabricate(m.to_sym)
       # so that search data can be reindexed
       search_data = model.send("#{m}_search_data")
-      search_data.update_attributes!(version: 0)
+      search_data.update!(version: 0)
       model.reload
 
       subject.execute({})

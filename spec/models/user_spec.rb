@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user'
 
@@ -1633,14 +1635,14 @@ describe User do
 
     describe 'when first notification has been seen' do
       it 'should return the right value' do
-        user.update_attributes!(seen_notification_id: notification.id)
+        user.update!(seen_notification_id: notification.id)
         expect(user.reload.read_first_notification?).to eq(true)
       end
     end
 
     describe 'when user is trust level 1' do
       it 'should return the right value' do
-        user.update_attributes!(trust_level: TrustLevel[1])
+        user.update!(trust_level: TrustLevel[1])
 
         expect(user.read_first_notification?).to eq(false)
       end
@@ -1648,7 +1650,7 @@ describe User do
 
     describe 'when user is trust level 2' do
       it 'should return the right value' do
-        user.update_attributes!(trust_level: TrustLevel[2])
+        user.update!(trust_level: TrustLevel[2])
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -1656,7 +1658,7 @@ describe User do
 
     describe 'when user is an old user' do
       it 'should return the right value' do
-        user.update_attributes!(first_seen_at: 1.year.ago)
+        user.update!(first_seen_at: 1.year.ago)
 
         expect(user.read_first_notification?).to eq(true)
       end
@@ -2101,6 +2103,26 @@ describe User do
         expect(User.username_exists?("LO\u0308WE")).to eq(true) # NFD
         expect(User.username_exists?("l\u00D6wE")).to eq(true)  # NFC
         expect(User.username_exists?("foo")).to eq(false)
+      end
+    end
+
+    describe ".system_avatar_template" do
+      context "with external system avatars enabled" do
+        before { SiteSetting.external_system_avatars_enabled = true }
+
+        it "uses the normalized username" do
+          expect(User.system_avatar_template("Lo\u0308we")).to match(%r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|)
+          expect(User.system_avatar_template("L\u00F6wE")).to match(%r|/letter_avatar_proxy/v\d/letter/l/71e660/{size}.png|)
+        end
+
+        it "uses the first grapheme cluster and URL encodes it" do
+          expect(User.system_avatar_template("बहुत")).to match(%r|/letter_avatar_proxy/v\d/letter/%E0%A4%AC/ea5d25/{size}.png|)
+        end
+
+        it "substitues {username} with the URL encoded username" do
+          SiteSetting.external_system_avatars_url = "https://{hostname}/{username}.png"
+          expect(User.system_avatar_template("बहुत")).to eq("https://#{Discourse.current_hostname}/%E0%A4%AC%E0%A4%B9%E0%A5%81%E0%A4%A4.png")
+        end
       end
     end
   end

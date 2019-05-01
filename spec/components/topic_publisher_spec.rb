@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'topic_publisher'
 require 'rails_helper'
 

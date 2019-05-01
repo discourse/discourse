@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe CategoryHashtag do
@@ -24,8 +26,8 @@ describe CategoryHashtag do
     end
 
     it "should be case sensitive" do
-      parent_category.update_attributes!(slug: "ApPlE")
-      child_category.update_attributes!(slug: "OraNGE")
+      parent_category.update!(slug: "ApPlE")
+      child_category.update!(slug: "OraNGE")
 
       expect(Category.query_from_hashtag_slug("apple")).to eq(nil)
       expect(Category.query_from_hashtag_slug("apple#{CategoryHashtag::SEPARATOR}orange")).to eq(nil)

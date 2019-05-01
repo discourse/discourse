@@ -38,7 +38,7 @@ componentTest("default", {
       });
     });
   },
-
+  skip: true,
   async test(assert) {
     await this.get("subject").expand();
 

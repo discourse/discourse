@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe InvitesController do
@@ -26,7 +28,7 @@ describe InvitesController do
     end
 
     it "returns error if invite has already been redeemed" do
-      invite.update_attributes!(redeemed_at: 1.day.ago)
+      invite.update!(redeemed_at: 1.day.ago)
       get "/invites/#{invite.invite_key}"
 
       expect(response.status).to eq(200)

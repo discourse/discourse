@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'site_settings/type_supervisor'
 
@@ -72,9 +74,14 @@ describe SiteSettings::TypeSupervisor do
       it "'uploaded_image_list' should be at 17th position" do
         expect(SiteSettings::TypeSupervisor.types[:uploaded_image_list]).to eq(17)
       end
-
       it "'upload' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:upload]).to eq(18)
+      end
+      it "'group' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:group]).to eq(19)
+      end
+      it "'group_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:group_list]).to eq(20)
       end
     end
   end
@@ -233,9 +240,6 @@ describe SiteSettings::TypeSupervisor do
     end
 
     describe '#to_rb_value' do
-      let(:true_val) { 't' }
-      let(:false_val) { 'f' }
-
       it 'the type can be overriden by a parameter' do
         expect(settings.type_supervisor.to_rb_value(:type_null, '1', SiteSetting.types[:integer])).to eq(1)
       end

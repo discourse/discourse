@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe BasicGroupSerializer do
@@ -31,12 +33,6 @@ describe BasicGroupSerializer do
     end
 
     describe 'group owner' do
-      let(:user) do
-        user = Fabricate(:user)
-        group.add_owner(user)
-        user
-      end
-
       it 'should include bio_raw' do
         expect(subject.as_json[:bio_raw]).to eq('testing')
       end

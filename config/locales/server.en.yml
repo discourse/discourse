@@ -1840,6 +1840,7 @@ en:
     staff_user_custom_fields: "A list of user custom fields that can be retrieved for staff members with the API."
     enable_user_directory: "Provide a directory of users for browsing"
     enable_group_directory: "Provide a directory of groups for browsing"
+    enable_category_group_review: "Allow groups to review content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
@@ -1857,7 +1858,7 @@ en:
 
     ignored_users_message_gap_days: "How long to wait before notifying moderators again about a user who has been ignored by many others."
 
-    clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed."
+    clean_up_inactive_users_after_days: "Number of days before an inactive user (trust level 0 without any posts) is removed. To disable clean up set to 0."
 
     user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 

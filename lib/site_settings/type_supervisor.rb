@@ -33,6 +33,7 @@ class SiteSettings::TypeSupervisor
       uploaded_image_list: 17,
       upload: 18,
       group: 19,
+      group_list: 20,
     )
   end
 

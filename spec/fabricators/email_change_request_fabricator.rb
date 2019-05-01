@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:email_change_request) do
   user
   old_email { sequence(:old_email) { |i| "bruce#{i}@wayne.com" } }

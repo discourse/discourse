@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'topic_view'
 
@@ -433,19 +435,19 @@ describe TopicQuery do
 
     describe "category default sort order" do
       it "can use category's default sort order" do
-        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
       end
 
       it "ignores invalid order value" do
-        category.update_attributes!(sort_order: 'funny')
+        category.update!(sort_order: 'funny')
         topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
       end
 
       it "can be overridden" do
-        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        category.update!(sort_order: 'created', sort_ascending: true)
         topic_ids = TopicQuery.new(user, category: category.id, order: 'activity').list_latest.topics.map(&:id)
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
       end
@@ -525,8 +527,6 @@ describe TopicQuery do
     end
 
     context 'preload api' do
-      let(:topics) {}
-
       it "preloads data correctly" do
         TopicList.preloaded_custom_fields << "tag"
         TopicList.preloaded_custom_fields << "age"

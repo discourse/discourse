@@ -131,7 +131,8 @@ const Category = RestModel.extend({
         navigate_to_first_post_after_read: this.get(
           "navigate_to_first_post_after_read"
         ),
-        search_priority: this.get("search_priority")
+        search_priority: this.get("search_priority"),
+        reviewable_by_group_name: this.get("reviewable_by_group_name")
       },
       type: id ? "PUT" : "POST"
     });

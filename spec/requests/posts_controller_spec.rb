@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 shared_examples 'finding and showing post' do
@@ -100,7 +102,7 @@ describe PostsController do
     it 'returns the expected post' do
       first_post = Fabricate(:post, created_at: 10.days.ago)
       second_post = Fabricate(:post, topic: first_post.topic, created_at: 4.days.ago)
-      third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
+      _third_post = Fabricate(:post, topic: first_post.topic, created_at: 3.days.ago)
 
       get "/posts/by-date/#{second_post.topic_id}/#{(second_post.created_at - 2.days).strftime("%Y-%m-%d")}.json"
       json = JSON.parse(response.body)
@@ -111,7 +113,7 @@ describe PostsController do
 
     it 'returns no post if date is > at last created post' do
       get "/posts/by-date/#{post.topic_id}/2245-11-11.json"
-      json = JSON.parse(response.body)
+      _json = JSON.parse(response.body)
       expect(response.status).to eq(404)
     end
   end
@@ -277,7 +279,6 @@ describe PostsController do
 
     describe 'when logged in' do
       let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user, post_number: 2) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:post, topic: Fabricate(:private_message_topic), post_number: 3)

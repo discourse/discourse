@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TopicsController do
@@ -336,7 +338,6 @@ RSpec.describe TopicsController do
       let(:trust_level_4) { Fabricate(:trust_level_4) }
       let(:evil_trout) { Fabricate(:evil_trout) }
       let(:message) { Fabricate(:private_message_topic) }
-      let(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
       let(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
 
       let(:dest_message) do
@@ -2580,7 +2581,6 @@ RSpec.describe TopicsController do
 
   describe 'shared drafts' do
     let(:shared_drafts_category) { Fabricate(:category) }
-    let(:category) { Fabricate(:category) }
 
     before do
       SiteSetting.shared_drafts_category = shared_drafts_category.id
@@ -2629,7 +2629,6 @@ RSpec.describe TopicsController do
       let(:category) { Fabricate(:category) }
       let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
       let!(:post) { Fabricate(:post, topic: topic) }
-      let(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
       let(:moderator) { Fabricate(:moderator) }
 
       it "fails for anonymous users" do

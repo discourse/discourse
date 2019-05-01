@@ -257,7 +257,7 @@ componentTest("with forceEscape", {
   beforeEach() {
     this.set("content", ["<div>sam</div>"]);
   },
-
+  skip: true,
   async test(assert) {
     await this.get("subject").expand();
 

@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ListController do
   let(:topic) { Fabricate(:topic, user: user) }
   let(:group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user) }
   let(:admin) { Fabricate(:admin) }
 
   before do
@@ -199,8 +200,6 @@ RSpec.describe ListController do
         allowed_groups: [group],
       )
     end
-
-    let(:private_post) { Fabricate(:post, topic: topic) }
 
     it 'should return the right response' do
       get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
@@ -419,7 +418,7 @@ RSpec.describe ListController do
 
       describe "category default views" do
         it "has a top default view" do
-          category.update_attributes!(default_view: 'top', default_top_period: 'monthly')
+          category.update!(default_view: 'top', default_top_period: 'monthly')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -427,7 +426,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of nil" do
-          category.update_attributes!(default_view: nil)
+          category.update!(default_view: nil)
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -435,7 +434,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of ''" do
-          category.update_attributes!(default_view: '')
+          category.update!(default_view: '')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)
@@ -443,7 +442,7 @@ RSpec.describe ListController do
         end
 
         it "has a default view of latest" do
-          category.update_attributes!(default_view: 'latest')
+          category.update!(default_view: 'latest')
           get "/c/#{category.slug}.json"
           expect(response.status).to eq(200)
           json = JSON.parse(response.body)

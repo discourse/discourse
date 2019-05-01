@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Reviewable, type: :model do
@@ -7,7 +9,6 @@ RSpec.describe Reviewable, type: :model do
     let(:user) { Fabricate(:user) }
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
-    let(:queued_post) { Fabricate.build(:reviewable_queued_post) }
 
     it "can create a reviewable object" do
       expect(reviewable).to be_present
@@ -93,6 +94,7 @@ RSpec.describe Reviewable, type: :model do
       end
 
       it "works with the reviewable by group" do
+        SiteSetting.enable_category_group_review = true
         group = Fabricate(:group)
         reviewable.reviewable_by_group_id = group.id
         reviewable.save!
@@ -105,6 +107,16 @@ RSpec.describe Reviewable, type: :model do
         gu.destroy
         user.update_columns(moderator: false, admin: true)
         expect(Reviewable.list_for(user, status: :pending)).to eq([reviewable])
+      end
+
+      it "doesn't allow review by group when disabled" do
+        SiteSetting.enable_category_group_review = false
+        group = Fabricate(:group)
+        reviewable.reviewable_by_group_id = group.id
+        reviewable.save!
+
+        GroupUser.create!(group_id: group.id, user_id: user.id)
+        expect(Reviewable.list_for(user, status: :pending)).to be_blank
       end
 
       context 'Reviewing as an admin' do

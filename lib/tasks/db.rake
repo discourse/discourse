@@ -40,6 +40,11 @@ task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
     print "Optimizing site icons... "
     SiteIconManager.ensure_optimized!
     puts "Done"
+    puts
+    print "Recompiling theme fields... "
+    ThemeField.force_recompilation!
+    Theme.expire_site_cache!
+    puts "Done"
   end
 
   if MultisiteTestHelpers.load_multisite?

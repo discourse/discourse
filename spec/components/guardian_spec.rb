@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 require 'guardian'
@@ -1181,8 +1183,6 @@ describe Guardian do
     end
 
     context 'as a moderator' do
-      let(:other_post) { Fabricate(:post, topic: topic, user: topic.user) }
-
       before do
         topic.save!
         post.save!

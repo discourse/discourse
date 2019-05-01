@@ -6,15 +6,10 @@ import { selectedText } from "discourse/lib/utilities";
 export function isValidLink($link) {
   // Do not track:
   //  - lightboxes
-  //  - group mentions
   //  - links with disabled tracking
   //  - category links
   //  - quote back button
-  if (
-    $link.is(
-      ".lightbox, .mention, .mention-group, .no-track-link, .hashtag, .back"
-    )
-  ) {
+  if ($link.is(".lightbox, .no-track-link, .hashtag, .back")) {
     return false;
   }
 
@@ -50,7 +45,10 @@ export default {
     }
 
     const $link = $(e.currentTarget);
-    if (!isValidLink($link)) {
+    const tracking = isValidLink($link);
+
+    // Return early for mentions and group mentions
+    if ($link.is(".mention, .mention-group")) {
       return true;
     }
 
@@ -81,7 +79,7 @@ export default {
     const ownLink = userId && userId === Discourse.User.currentProp("id");
 
     // Update badge clicks unless it's our own.
-    if (!ownLink) {
+    if (tracking && !ownLink) {
       const $badge = $("span.badge", $link);
       if ($badge.length === 1) {
         const html = $badge.html();
@@ -93,13 +91,15 @@ export default {
       }
     }
 
-    const trackPromise = ajax("/clicks/track", {
-      data: {
-        url: href,
-        post_id: postId,
-        topic_id: topicId
-      }
-    });
+    const trackPromise = tracking
+      ? ajax("/clicks/track", {
+          data: {
+            url: href,
+            post_id: postId,
+            topic_id: topicId
+          }
+        })
+      : Ember.RSVP.resolve();
 
     const isInternal = DiscourseURL.isInternal(href);
     const openExternalInNewTab = Discourse.User.currentProp(

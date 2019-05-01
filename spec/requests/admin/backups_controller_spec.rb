@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::BackupsController do
   let(:admin) { Fabricate(:admin) }
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2014-02-11-065935.tar.gz" }
-  let(:store) { BackupRestore::LocalBackupStore.new }
 
   def create_backup_files(*filenames)
     @paths = filenames.map do |filename|

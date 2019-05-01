@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UsersController do
@@ -832,8 +834,6 @@ describe UsersController do
       end
 
       context 'authentication records for' do
-        let(:user) { Fabricate(:user) }
-
         before do
           OmniAuth.config.test_mode = true
 
@@ -1670,7 +1670,7 @@ describe UsersController do
       put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
 
       expect(user.reload.title).not_to eq(badge.display_name)
-      badge.update_attributes allow_title: true
+      badge.update allow_title: true
 
       put "/u/#{user.username}/preferences/badge_title.json", params: { user_badge_id: user_badge.id }
 
@@ -2574,7 +2574,6 @@ describe UsersController do
   describe '#show' do
     context "anon" do
       let(:user) { Discourse.system_user }
-      let(:other_user) { Fabricate(:user) }
 
       it "returns success" do
         get "/u/#{user.username}.json"

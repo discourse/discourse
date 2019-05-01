@@ -1772,6 +1772,7 @@ en:
           archived: are archived
           noreplies: have zero replies
           single_user: contain a single user
+          unlisted: are unlisted
         post:
           count:
             label: Minimum Post Count
@@ -2549,6 +2550,8 @@ en:
       default_top_period: "Default Top Period:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
+      reviewable_by_group: "In addition to staff, posts and flags in this category can be also be reviewed by:"
+      review_group_name: "group name"
       require_topic_approval: "Require moderator approval of all new topics"
       require_reply_approval: "Require moderator approval of all new replies"
       this_year: "this year"
@@ -4106,6 +4109,7 @@ en:
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"
+        add_group: "add group"
         uploaded_image_list:
           label: "Edit list"
           empty: "There are no pictures yet. Please upload one."

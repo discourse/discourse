@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Wizard
   class StepUpdater
     include ActiveModel::Model
@@ -29,7 +31,7 @@ class Wizard
     end
 
     def update_setting(id, value)
-      value.strip! if value.is_a?(String)
+      value = value.strip if value.is_a?(String)
 
       if !value.is_a?(Upload) && SiteSetting.type_supervisor.get_type(id) == :upload
         value = Upload.get_from_url(value) || ''

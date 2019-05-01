@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserMerger do
@@ -677,7 +679,6 @@ describe UserMerger do
 
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
-    let(:post3) { Fabricate(:post) }
 
     def log_like_action(acting_user, user, post)
       UserAction.log_action!(action_type: UserAction::LIKE,

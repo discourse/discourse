@@ -557,12 +557,17 @@ users:
     min: 1
   clean_up_inactive_users_after_days:
     default: 730
+    min: 0
+    max: 3650
 
 groups:
   enable_group_directory:
     client: true
     default: true
   group_in_subject:
+    default: false
+  enable_category_group_review:
+    client: true
     default: false
 
 posting:

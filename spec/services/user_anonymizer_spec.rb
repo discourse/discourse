@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe UserAnonymizer do
@@ -72,16 +74,18 @@ describe UserAnonymizer do
       end
 
       it "resets profile to default values" do
-        user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+        user.update(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
 
         profile = user.reload.user_profile
-        profile.update_attributes(location: "Moose Jaw",
-                                  website: "www.bim.com",
-                                  bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
-                                  profile_background: "http://example.com/bg.jpg",
-                                  bio_cooked_version: 2,
-                                  card_background: "http://example.com/cb.jpg")
+        profile.update(
+          location: "Moose Jaw",
+          website: "www.bim.com",
+          bio_raw: "I'm Bibi from Moosejaw. I sing and dance.",
+          bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
+          profile_background: "http://example.com/bg.jpg",
+          bio_cooked_version: 2,
+          card_background: "http://example.com/cb.jpg"
+        )
 
         prev_username = user.username
 
@@ -114,7 +118,7 @@ describe UserAnonymizer do
       it "changes name to anonymized username" do
         prev_username = user.username
 
-        user.update_attributes(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
+        user.update(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
 
         make_anonymous
         user.reload

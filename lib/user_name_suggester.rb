@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserNameSuggester
   GENERIC_NAMES = ['i', 'me', 'info', 'support', 'admin', 'webmaster', 'hello', 'mail', 'office', 'contact', 'team']
 
@@ -41,7 +43,7 @@ module UserNameSuggester
   end
 
   def self.sanitize_username(name)
-    name = name.to_s
+    name = name.to_s.dup
 
     if SiteSetting.unicode_usernames
       name.unicode_normalize!

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SearchController do
@@ -134,6 +136,11 @@ describe SearchController do
 
     it "raises an error when the search term length is less than required" do
       get "/search.json", params: { q: 'ba' }
+      expect(response.status).to eq(400)
+    end
+
+    it "raises an error when search term is a hash" do
+      get "/search.json?q[foo]"
       expect(response.status).to eq(400)
     end
 

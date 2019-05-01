@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:upload) do
   user
   sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }

@@ -42,7 +42,7 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def update
-    if @web_hook.update_attributes(web_hook_params)
+    if @web_hook.update(web_hook_params)
       StaffActionLogger.new(current_user).log_web_hook(@web_hook, UserHistory.actions[:web_hook_update], changes: @web_hook.saved_changes)
       render_serialized(@web_hook, AdminWebHookSerializer, root: 'web_hook')
     else
@@ -92,10 +92,12 @@ class Admin::WebHooksController < Admin::AdminController
 
       now = Time.zone.now
       response = conn.post(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
-      web_hook_event.update_attributes!(status: response.status,
-                                        response_headers: MultiJson.dump(response.headers),
-                                        response_body: response.body,
-                                        duration: ((Time.zone.now - now) * 1000).to_i)
+      web_hook_event.update!(
+        status: response.status,
+        response_headers: MultiJson.dump(response.headers),
+        response_body: response.body,
+        duration: ((Time.zone.now - now) * 1000).to_i
+      )
       render_serialized(web_hook_event, AdminWebHookEventSerializer, root: 'web_hook_event')
     else
       render json: failed_json

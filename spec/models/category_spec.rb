@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_creator'
@@ -47,6 +48,51 @@ describe Category do
       group = Fabricate(:group)
       category_group = Fabricate(:category_group, category: category, group: group)
       expect(category.permissions_params).to eq("#{group.name}" => category_group.permission_type)
+    end
+  end
+
+  describe "#review_group_id" do
+    let(:group) { Fabricate(:group) }
+    let(:category) { Fabricate(:category, reviewable_by_group: group) }
+    let(:topic) { Fabricate(:topic, category: category) }
+    let(:post) { Fabricate(:post, topic: topic) }
+    let(:user) { Fabricate(:user) }
+
+    it "will add the group to the reviewable" do
+      SiteSetting.enable_category_group_review = true
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      expect(reviewable.reviewable_by_group_id).to eq(group.id)
+    end
+
+    it "will add the group to the reviewable even if created manually" do
+      SiteSetting.enable_category_group_review = true
+      reviewable = ReviewableFlaggedPost.create!(
+        created_by: user,
+        payload: { raw: 'test raw' },
+        category: category
+      )
+      expect(reviewable.reviewable_by_group_id).to eq(group.id)
+    end
+
+    it "will not add add the group to the reviewable" do
+      SiteSetting.enable_category_group_review = false
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      expect(reviewable.reviewable_by_group_id).to be_nil
+    end
+
+    it "will nullify the group_id if destroyed" do
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      group.destroy
+      expect(category.reload.reviewable_by_group).to be_blank
+      expect(reviewable.reload.reviewable_by_group_id).to be_blank
+    end
+
+    it "will remove the reviewable_by_group if the category is updated" do
+      SiteSetting.enable_category_group_review = true
+      reviewable = PostActionCreator.spam(user, post).reviewable
+      category.reviewable_by_group_id = nil
+      category.save!
+      expect(reviewable.reload.reviewable_by_group_id).to be_nil
     end
   end
 
@@ -311,31 +357,31 @@ describe Category do
     end
 
     it "renames the definition when renamed" do
-      @category.update_attributes(name: 'Troutfishing')
+      @category.update(name: 'Troutfishing')
       @topic.reload
       expect(@topic.title).to match(/Troutfishing/)
       expect(@topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
-      expect { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
+      expect { @category.update(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
     end
 
     it "creates permalink when category slug is changed" do
-      @category.update_attributes(slug: 'new-category')
+      @category.update(slug: 'new-category')
       expect(Permalink.count).to eq(1)
     end
 
     it "reuses existing permalink when category slug is changed" do
       permalink = Permalink.create!(url: "c/#{@category.slug}", category_id: 42)
 
-      expect { @category.update_attributes(slug: 'new-slug') }.to_not change { Permalink.count }
+      expect { @category.update(slug: 'new-slug') }.to_not change { Permalink.count }
       expect(permalink.reload.category_id).to eq(@category.id)
     end
 
     it "creates permalink when sub category slug is changed" do
       sub_category = Fabricate(:category, slug: 'sub-category', parent_category_id: @category.id)
-      sub_category.update_attributes(slug: 'new-sub-category')
+      sub_category.update(slug: 'new-sub-category')
       expect(Permalink.count).to eq(1)
     end
 
@@ -356,7 +402,7 @@ describe Category do
       GlobalSetting.stubs(:relative_url_root).returns('/forum')
       Discourse.stubs(:base_uri).returns("/forum")
       old_url = @category.url
-      @category.update_attributes(slug: 'new-category')
+      @category.update(slug: 'new-category')
       permalink = Permalink.last
       expect(permalink.url).to eq(old_url[1..-1])
     end

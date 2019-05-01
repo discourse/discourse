@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'post_merger'
 
@@ -35,7 +37,7 @@ describe PostMerger do
     end
 
     it "should not allow the first post in a topic to be merged" do
-      post.update_attributes!(user: user)
+      post.update!(user: user)
       reply1 = create_post(topic: topic, post_number: post.post_number, user: user)
       reply2 = create_post(topic: topic, post_number: post.post_number, user: user)
 

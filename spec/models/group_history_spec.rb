@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe GroupHistory do
@@ -26,7 +28,7 @@ RSpec.describe GroupHistory do
     end
 
     it 'should filter by subject correctly' do
-      other_group_history.update_attributes!(subject: "test")
+      other_group_history.update!(subject: "test")
 
       expect(described_class.with_filters(
         group_history.group,
@@ -35,8 +37,8 @@ RSpec.describe GroupHistory do
     end
 
     it 'should filter by multiple filters correctly' do
-      group_history.update_attributes!(action: GroupHistory.actions[:remove_user_from_group])
-      other_group_history.update_attributes!(subject: "test")
+      group_history.update!(action: GroupHistory.actions[:remove_user_from_group])
+      other_group_history.update!(subject: "test")
 
       expect(described_class.with_filters(group_history.group,
         action: GroupHistory.actions[3], subject: 'test'

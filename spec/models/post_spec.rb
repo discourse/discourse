@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Post do
@@ -403,7 +405,6 @@ describe Post do
 
       context "with a previous host" do
 
-        let(:user) { old_post.newuser }
         let(:another_disney_link) { post_with_body("[radiator springs](http://disneyland.disney.go.com/disney-california-adventure/radiator-springs-racers/)", newuser) }
 
         before do

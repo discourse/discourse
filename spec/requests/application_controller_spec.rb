@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApplicationController do
@@ -89,7 +91,7 @@ RSpec.describe ApplicationController do
     end
 
     it 'should not raise a 500 (nor should it log a warning) for bad params' do
-      bad_str = "d\xDE".force_encoding('utf-8')
+      bad_str = (+"d\xDE").force_encoding('utf-8')
       expect(bad_str.valid_encoding?).to eq(false)
 
       get "/latest.json", params: { test: bad_str }

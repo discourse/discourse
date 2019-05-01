@@ -685,17 +685,26 @@ class TopicQuery
     if SiteSetting.tagging_enabled
       result = result.preload(:tags)
 
-      if @options[:tags] && @options[:tags].size > 0
-        @options[:tags] = @options[:tags].split unless @options[:tags].respond_to?('each')
-        @options[:tags].each { |t| t.downcase! if t.is_a? String }
+      tags = @options[:tags]
+
+      if tags && tags.size > 0
+        tags = tags.split if String === tags
+
+        tags = tags.map do |t|
+          if String === t
+            t.downcase
+          else
+            t
+          end
+        end
 
         if @options[:match_all_tags]
           # ALL of the given tags:
-          tags_count = @options[:tags].length
-          @options[:tags] = Tag.where_name(@options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
+          tags_count = tags.length
+          tags = Tag.where_name(tags).pluck(:id) unless Integer === tags[0]
 
-          if tags_count == @options[:tags].length
-            @options[:tags].each_with_index do |tag, index|
+          if tags_count == tags.length
+            tags.each_with_index do |tag, index|
               sql_alias = ['t', index].join
               result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
             end
@@ -705,12 +714,17 @@ class TopicQuery
         else
           # ANY of the given tags:
           result = result.joins(:tags)
-          if @options[:tags][0].is_a?(Integer)
-            result = result.where("tags.id in (?)", @options[:tags])
+          if Integer === tags[0]
+            result = result.where("tags.id in (?)", tags)
           else
-            result = result.where("lower(tags.name) in (?)", @options[:tags])
+            result = result.where("lower(tags.name) in (?)", tags)
           end
         end
+
+        # TODO: this is very side-effecty and should be changed
+        # It is done cause further up we expect normalized tags
+        @options[:tags] = tags
+
       elsif @options[:no_tags]
         # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
         result = result.where.not(id: TopicTag.distinct.pluck(:topic_id))

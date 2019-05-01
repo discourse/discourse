@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_context "backups" do
   before { create_backups }
   after(:all) { remove_backups }
