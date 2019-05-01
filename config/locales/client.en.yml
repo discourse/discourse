@@ -4121,6 +4121,7 @@ en:
         categories:
           all_results: "All"
           required: "Required"
+          branding: "Branding"
           basic: "Basic Setup"
           users: "Users"
           posting: "Posting"

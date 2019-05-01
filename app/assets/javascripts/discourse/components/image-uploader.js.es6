@@ -21,24 +21,31 @@ export default Ember.Component.extend(UploadMixin, {
     }
   },
 
-  @computed("imageUrl")
-  backgroundStyle(imageUrl) {
-    if (Ember.isEmpty(imageUrl)) {
+  @computed("imageUrl", "placeholderUrl")
+  showingPlaceholder(imageUrl, placeholderUrl) {
+    return !imageUrl && placeholderUrl;
+  },
+
+  @computed("placeholderUrl")
+  placeholderStyle(url) {
+    if (Ember.isEmpty(url)) {
       return "".htmlSafe();
     }
+    return `background-image: url(${url})`.htmlSafe();
+  },
 
-    return `background-image: url(${imageUrl})`.htmlSafe();
+  @computed("imageUrl")
+  backgroundStyle(url) {
+    if (Ember.isEmpty(url)) {
+      return "".htmlSafe();
+    }
+    return `background-image: url(${url})`.htmlSafe();
   },
 
   @computed("imageUrl")
   imageBaseName(imageUrl) {
     if (Ember.isEmpty(imageUrl)) return;
     return imageUrl.split("/").slice(-1)[0];
-  },
-
-  @computed("backgroundStyle")
-  hasBackgroundStyle(backgroundStyle) {
-    return !Ember.isEmpty(backgroundStyle.string);
   },
 
   validateUploadedFilesOptions() {

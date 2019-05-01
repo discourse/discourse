@@ -261,6 +261,8 @@ module SiteSettingExtension
   def placeholder(setting)
     if !I18n.t("site_settings.placeholder.#{setting}", default: "").empty?
       I18n.t("site_settings.placeholder.#{setting}")
+    elsif SiteIconManager.respond_to?("#{setting}_url")
+      SiteIconManager.public_send("#{setting}_url")
     end
   end
 

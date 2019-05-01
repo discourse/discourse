@@ -5,6 +5,10 @@ export default Discourse.Route.extend({
       "categoryNameKey",
       params.category_id
     );
+    this.controllerFor("adminSiteSettings").set(
+      "categoryNameKey",
+      params.category_id
+    );
     return Ember.Object.create({
       nameKey: params.category_id,
       name: I18n.t("admin.site_settings.categories." + params.category_id),
