@@ -5,7 +5,7 @@ require "csv"
 
 class S3Inventory
 
-  attr_reader :inventory_id, :model, :inventory_date
+  attr_reader :type, :model, :inventory_date
 
   CSV_KEY_INDEX ||= 1
   CSV_ETAG_INDEX ||= 2
@@ -16,10 +16,10 @@ class S3Inventory
     @s3_helper = s3_helper
 
     if type == :upload
-      @inventory_id = "original"
+      @type = "original"
       @model = Upload
     elsif type == :optimized
-      @inventory_id = "optimized"
+      @type = "optimized"
       @model = OptimizedImage
     end
   end
@@ -30,13 +30,13 @@ class S3Inventory
       return
     end
 
-    DistributedMutex.synchronize("s3_inventory_list_missing_#{inventory_id}") do
+    DistributedMutex.synchronize("s3_inventory_list_missing_#{type}") do
       download_inventory_files_to_tmp_directory
       decompress_inventory_files
 
       ActiveRecord::Base.transaction do
         begin
-          table_name = "#{inventory_id}_inventory"
+          table_name = "#{type}_inventory"
           connection = ActiveRecord::Base.connection.raw_connection
           connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
           connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
@@ -157,7 +157,7 @@ class S3Inventory
   end
 
   def inventory_configuration
-    filter_prefix = inventory_id
+    filter_prefix = type
     filter_prefix = File.join(bucket_folder_path, filter_prefix) if bucket_folder_path.present?
 
     {
@@ -202,6 +202,16 @@ class S3Inventory
     objects
   rescue Aws::Errors::ServiceError => e
     log("Failed to list inventory from S3", e)
+  end
+
+  def inventory_id
+    @inventory_id ||= begin
+      if bucket_folder_path.present?
+        "#{bucket_folder_path}-#{type}"
+      else
+        type
+      end
+    end
   end
 
   def inventory_path_arn
