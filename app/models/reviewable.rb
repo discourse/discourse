@@ -70,6 +70,13 @@ class Reviewable < ActiveRecord::Base
     %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
   end
 
+  def created_new!
+    self.created_new = true
+    self.topic = target.topic if topic.blank? && target.is_a?(Post)
+    self.target_created_by_id = target.is_a?(Post) ? target.user_id : nil
+    self.category_id = topic.category_id if category_id.blank? && topic.present?
+  end
+
   # Create a new reviewable, or if the target has already been reviewed return it to the
   # pending state and re-use it.
   #
@@ -90,11 +97,7 @@ class Reviewable < ActiveRecord::Base
       payload: payload,
       potential_spam: potential_spam
     )
-    reviewable.created_new = true
-    reviewable.topic = target.topic if reviewable.topic.blank? && target.is_a?(Post)
-    reviewable.target_created_by_id = target.is_a?(Post) ? target.user_id : nil
-    reviewable.category_id = reviewable.topic.category_id if reviewable.topic.present?
-
+    reviewable.created_new!
     reviewable.save!
     reviewable
 
