@@ -10,5 +10,11 @@ export default FilterComponent.extend({
   @computed("filter.default")
   category(categoryId) {
     return Category.findById(categoryId);
+  },
+
+  actions: {
+    onDeselect() {
+      this.applyFilter(this.get("filter.id"), undefined);
+    }
   }
 });
