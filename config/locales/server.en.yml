@@ -4452,6 +4452,8 @@ en:
         title: "Delete Spammer"
         description: "Remove the user and all their posts and topics."
         confirm: "Are you sure you want to delete all that user's posts, topics, and block their IP and email addresses?"
+      delete_single:
+        title: "Delete"
       delete:
         title: "Delete..."
       delete_and_ignore:

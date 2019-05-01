@@ -55,6 +55,17 @@ RSpec.describe Reviewable, type: :model do
       expect(reviewable.category).to eq(post.topic.category)
     end
 
+    it "will update the category if the topic category changes" do
+      post = Fabricate(:post)
+      moderator = Fabricate(:moderator)
+      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      expect(reviewable.category).to eq(post.topic.category)
+      new_cat = Fabricate(:category)
+      PostRevisor.new(post).revise!(moderator, category_id: new_cat.id)
+      expect(post.topic.reload.category).to eq(new_cat)
+      expect(reviewable.reload.category).to eq(new_cat)
+    end
+
     it "can create multiple objects with a NULL target" do
       r0 = ReviewableQueuedPost.needs_review!(created_by: admin, payload: { raw: 'hello world I am a post' })
       expect(r0).to be_present
