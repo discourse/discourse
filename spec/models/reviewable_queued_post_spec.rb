@@ -137,11 +137,18 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     let(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
 
     context "editing" do
-      let(:guardian) { Guardian.new(moderator) }
 
       it "is editable and returns the fields" do
-        fields = reviewable.editable_for(guardian)
+        fields = reviewable.editable_for(Guardian.new(moderator))
         expect(fields.has?('category_id')).to eq(true)
+        expect(fields.has?('payload.raw')).to eq(true)
+        expect(fields.has?('payload.title')).to eq(true)
+        expect(fields.has?('payload.tags')).to eq(true)
+      end
+
+      it "is editable by a category group reviewer" do
+        fields = reviewable.editable_for(Guardian.new(Fabricate(:user)))
+        expect(fields.has?('category_id')).to eq(false)
         expect(fields.has?('payload.raw')).to eq(true)
         expect(fields.has?('payload.title')).to eq(true)
         expect(fields.has?('payload.tags')).to eq(true)
