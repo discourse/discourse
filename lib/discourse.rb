@@ -469,7 +469,7 @@ module Discourse
   end
 
   def self.stats
-    @stats ||= PluginStore.new("stats")
+    PluginStore.new("stats")
   end
 
   def self.current_user_provider
