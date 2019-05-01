@@ -37,6 +37,7 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
     end
 
     Theme.expire_site_cache!
+    SiteIconManager.ensure_optimized!
   end
 
   def log(message)

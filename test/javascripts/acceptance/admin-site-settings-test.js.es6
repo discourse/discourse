@@ -1,12 +1,31 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { default as siteSettingFixture } from "fixtures/site_settings";
+
+var titleOverride = undefined;
 
 acceptance("Admin - Site Settings", {
   loggedIn: true,
+  beforeEach() {
+    titleOverride = undefined;
+  },
 
   pretend(server, helper) {
-    server.put("/admin/site_settings/**", () =>
-      helper.response({ success: "OK" })
-    );
+    server.put("/admin/site_settings/title", body => {
+      titleOverride = body.requestBody.split("=")[1];
+      return helper.response({ success: "OK" });
+    });
+    server.get("/admin/site_settings", () => {
+      const fixtures = siteSettingFixture["/admin/site_settings"].site_settings;
+      const titleSetting = Object.assign({}, fixtures[0]);
+
+      if (titleOverride) {
+        titleSetting.value = titleOverride;
+      }
+      const response = {
+        site_settings: [titleSetting, ...fixtures.slice(1)]
+      };
+      return helper.response(response);
+    });
   }
 });
 

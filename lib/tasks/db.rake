@@ -37,6 +37,10 @@ task 'db:migrate' => ['environment', 'set_locale'] do |_, args|
 
   unless Discourse.skip_post_deployment_migrations?
     puts
+    print "Optimizing site icons... "
+    SiteIconManager.ensure_optimized!
+    puts "Done"
+    puts
     print "Recompiling theme fields... "
     ThemeField.force_recompilation!
     Theme.expire_site_cache!

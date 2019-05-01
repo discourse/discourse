@@ -169,6 +169,7 @@ RSpec.configure do |config|
     SearchIndexer.disable
     UserActionManager.disable
     NotificationEmailer.disable
+    SiteIconManager.disable
 
     SiteSetting.provider.all.each do |setting|
       SiteSetting.remove_override!(setting.name)

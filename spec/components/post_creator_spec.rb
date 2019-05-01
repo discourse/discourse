@@ -178,7 +178,7 @@ describe PostCreator do
         user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
         expect(user_action).not_to eq(nil)
 
-        expect(messages.length).to eq(5)
+        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(5)
       end
 
       it 'extracts links from the post' do

@@ -124,8 +124,8 @@ class StaticController < ApplicationController
     is_asset_path
 
     hijack do
-      data = DistributedMemoizer.memoize("FAVICON#{SiteSetting.site_favicon_url}", 60 * 30) do
-        favicon = SiteSetting.favicon
+      data = DistributedMemoizer.memoize("FAVICON#{SiteIconManager.favicon_url}", 60 * 30) do
+        favicon = SiteIconManager.favicon
         next "" unless favicon
 
         if Discourse.store.external?

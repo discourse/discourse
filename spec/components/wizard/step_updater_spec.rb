@@ -262,7 +262,7 @@ describe Wizard::StepUpdater do
 
       updater = wizard.create_updater('icons',
         favicon: upload.url,
-        apple_touch_icon: upload2.url
+        large_icon: upload2.url
       )
 
       updater.update
@@ -270,16 +270,7 @@ describe Wizard::StepUpdater do
       expect(updater).to be_success
       expect(wizard.completed_steps?('icons')).to eq(true)
       expect(SiteSetting.favicon).to eq(upload)
-      expect(SiteSetting.apple_touch_icon).to eq(upload2)
-    end
-
-    it "updates large_icon if the uploaded icon size is greater than 180x180" do
-      upload = Fabricate(:upload, width: 512, height: 512)
-      updater = wizard.create_updater('icons', apple_touch_icon: upload.url)
-      updater.update
-
-      expect(updater).to be_success
-      expect(SiteSetting.large_icon).to eq(upload)
+      expect(SiteSetting.large_icon).to eq(upload2)
     end
   end
 
