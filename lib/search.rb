@@ -280,14 +280,6 @@ class Search
     posts.where("topics.participant_count = 1")
   end
 
-  advanced_filter(/^status:unlisted$/) do |posts|
-    if @guardian.is_staff?
-      posts.where("NOT topics.visible")
-    else
-      posts.where("1=0")
-    end
-  end
-
   advanced_filter(/^posts_count:(\d+)$/) do |posts, match|
     posts.where("topics.posts_count = ?", match.to_i)
   end
@@ -745,7 +737,7 @@ class Search
 
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
-    posts = posts.where("topics.visible") if !is_topic_search && !@guardian.is_staff?
+    posts = posts.where("topics.visible") unless is_topic_search
 
     if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
       posts = posts.where("topics.archetype =  ?", Archetype.private_message)

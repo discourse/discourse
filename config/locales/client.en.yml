@@ -1772,7 +1772,6 @@ en:
           archived: are archived
           noreplies: have zero replies
           single_user: contain a single user
-          unlisted: are unlisted
         post:
           count:
             label: Minimum Post Count
