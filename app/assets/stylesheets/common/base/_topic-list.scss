@@ -129,6 +129,10 @@
 
   .main-link {
     @extend .topic-list-main-link;
+
+    .raw-topic-link > * {
+      pointer-events: none;
+    }
   }
 
   .link-bottom-line {
