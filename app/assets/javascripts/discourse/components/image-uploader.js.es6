@@ -35,10 +35,16 @@ export default Ember.Component.extend(UploadMixin, {
   },
 
   @computed("imageUrl")
-  backgroundStyle(url) {
+  imageCDNURL(url) {
     if (Ember.isEmpty(url)) {
       return "".htmlSafe();
     }
+
+    return Discourse.getURLWithCDN(url);
+  },
+
+  @computed("imageCDNURL")
+  backgroundStyle(url) {
     return `background-image: url(${url})`.htmlSafe();
   },
 
