@@ -184,6 +184,17 @@ describe UserUpdater do
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
       expect(user.card_background_upload).to eq(upload1)
       expect(user.profile_background_upload).to eq(upload2)
+
+      success = updater.update(
+        profile_background_upload_url: "",
+        card_background_upload_url: ""
+      )
+
+      user.reload
+
+      expect(success).to eq(true)
+      expect(user.card_background_upload).to eq(nil)
+      expect(user.profile_background_upload).to eq(nil)
     end
 
     it "disables email_digests when enabling mailing_list_mode" do

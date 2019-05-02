@@ -55,12 +55,16 @@ class UserUpdater
       user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
     end
 
-    if upload = Upload.get_from_url(attributes[:profile_background_upload_url])
-      user_profile.upload_profile_background(upload)
+    if attributes[:profile_background_upload_url] == ""
+      user_profile.profile_background_upload_id = nil
+    elsif upload = Upload.get_from_url(attributes[:profile_background_upload_url])
+      user_profile.profile_background_upload_id = upload.id
     end
 
-    if upload = Upload.get_from_url(attributes[:card_background_upload_url])
-      user_profile.upload_card_background(upload)
+    if attributes[:card_background_upload_url] == ""
+      user_profile.card_background_upload_id = nil
+    elsif upload = Upload.get_from_url(attributes[:card_background_upload_url])
+      user_profile.card_background_upload_id = upload.id
     end
 
     old_user_name = user.name.present? ? user.name : ""
