@@ -207,6 +207,7 @@ export default Ember.Component.extend({
 
     refreshReport() {
       this.attrs.onRefresh({
+        type: this.get("model.type"),
         startDate: this.get("startDate"),
         endDate: this.get("endDate"),
         filters: this.get("filters.customFilters")
