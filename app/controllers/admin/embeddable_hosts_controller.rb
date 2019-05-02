@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::EmbeddableHostsController < Admin::AdminController
 
   def create

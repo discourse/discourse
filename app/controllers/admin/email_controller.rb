@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'email/renderer'
 
 class Admin::EmailController < Admin::AdminController
