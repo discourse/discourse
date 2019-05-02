@@ -154,20 +154,16 @@ end
 #  website                      :string
 #  bio_raw                      :text
 #  bio_cooked                   :text
-#  profile_background           :string(255)
 #  dismissed_banner_key         :integer
 #  bio_cooked_version           :integer
 #  badge_granted_title          :boolean          default(FALSE)
-#  card_background              :string(255)
 #  views                        :integer          default(0), not null
 #  profile_background_upload_id :integer
 #  card_background_upload_id    :integer
 #
 # Indexes
 #
-#  index_user_profiles_on_bio_cooked_version            (bio_cooked_version)
-#  index_user_profiles_on_card_background               (card_background)
-#  index_user_profiles_on_card_background_upload_id     (card_background_upload_id)
-#  index_user_profiles_on_profile_background            (profile_background)
-#  index_user_profiles_on_profile_background_upload_id  (profile_background_upload_id)
+#  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
+#  index_user_profiles_on_card_background     (card_background)
+#  index_user_profiles_on_profile_background  (profile_background)
 #
