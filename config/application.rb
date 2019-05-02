@@ -37,8 +37,16 @@ GlobalSetting.load_defaults
 
 require 'pry-rails' if Rails.env.development?
 
-if defined?(Bundler) && !Rails.env.production?
-  Bundler.require(*Rails.groups(assets: %w(development test profile)))
+if defined?(Bundler)
+  bundler_groups = [:default]
+
+  if !Rails.env.production?
+    bundler_groups = bundler_groups.concat(Rails.groups(
+      assets: %w(development test profile)
+    ))
+  end
+
+  Bundler.require(*bundler_groups)
 end
 
 module Discourse
