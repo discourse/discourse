@@ -7,6 +7,7 @@ body.crawler {
     background-color: #fff;
     padding: 10px;
     box-shadow: shadow("header");
+    box-sizing: border-box;
   }
   div.topic-list div[itemprop="itemListElement"] {
     padding: 10px 0;
