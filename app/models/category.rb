@@ -742,11 +742,13 @@ end
 #  navigate_to_first_post_after_read :boolean          default(FALSE), not null
 #  search_priority                   :integer          default(0)
 #  allow_global_tags                 :boolean          default(FALSE), not null
+#  reviewable_by_group_id            :integer
 #
 # Indexes
 #
-#  index_categories_on_email_in         (email_in) UNIQUE
-#  index_categories_on_search_priority  (search_priority)
-#  index_categories_on_topic_count      (topic_count)
-#  unique_index_categories_on_name      (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
+#  index_categories_on_email_in                (email_in) UNIQUE
+#  index_categories_on_reviewable_by_group_id  (reviewable_by_group_id)
+#  index_categories_on_search_priority         (search_priority)
+#  index_categories_on_topic_count             (topic_count)
+#  unique_index_categories_on_name             (COALESCE(parent_category_id, '-1'::integer), name) UNIQUE
 #

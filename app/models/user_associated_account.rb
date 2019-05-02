@@ -12,7 +12,7 @@ end
 #
 # Table name: user_associated_accounts
 #
-#  id            :bigint(8)        not null, primary key
+#  id            :bigint           not null, primary key
 #  provider_name :string           not null
 #  provider_uid  :string           not null
 #  user_id       :integer

@@ -7,7 +7,7 @@ end
 #
 # Table name: group_requests
 #
-#  id         :bigint(8)        not null, primary key
+#  id         :bigint           not null, primary key
 #  group_id   :integer
 #  user_id    :integer
 #  reason     :text

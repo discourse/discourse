@@ -25,8 +25,8 @@ end
 #
 # Table name: javascript_caches
 #
-#  id             :bigint(8)        not null, primary key
-#  theme_field_id :bigint(8)        not null
+#  id             :bigint           not null, primary key
+#  theme_field_id :bigint           not null
 #  digest         :string
 #  content        :text             not null
 #  created_at     :datetime         not null
