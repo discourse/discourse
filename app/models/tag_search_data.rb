@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TagSearchData < ActiveRecord::Base
   include HasSearchData
 end

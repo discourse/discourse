@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'markdown_linker'
 require_dependency 'email/message_builder'
 require_dependency 'age_words'
@@ -472,7 +474,7 @@ class UserNotifications < ActionMailer::Base
     group_name = opts[:group_name]
     locale = user_locale(user)
 
-    template = "user_notifications.user_#{notification_type}"
+    template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
       template << "_pm"
 
@@ -561,7 +563,7 @@ class UserNotifications < ActionMailer::Base
     ).exists?
 
     if opts[:use_invite_template]
-      invite_template = "user_notifications.invited"
+      invite_template = +"user_notifications.invited"
       invite_template << "_group" if group_name
 
       invite_template <<

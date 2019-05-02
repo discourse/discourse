@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixTosName < ActiveRecord::Migration[4.2]
   def up
     I18n.overrides_disabled do

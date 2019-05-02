@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # bespoke importer for a customer, feel free to borrow ideas
 
 require 'csv'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FlaggedUserSerializer < BasicUserSerializer
   attributes :can_delete_all_posts,
              :can_be_deleted,

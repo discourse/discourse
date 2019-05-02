@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # cf. https://github.com/rails-sqlserver/tiny_tds#install
 require "tiny_tds"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")

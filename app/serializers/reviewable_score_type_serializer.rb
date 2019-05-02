@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewableScoreTypeSerializer < ApplicationSerializer
   attributes :id, :title, :score_bonus, :icon
 

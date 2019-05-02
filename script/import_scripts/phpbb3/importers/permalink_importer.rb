@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportScripts::PhpBB3
   class PermalinkImporter
     CATEGORY_LINK_NORMALIZATION = '/(viewforum.php\?)(?:.*&)?(f=\d+).*/\1\2'

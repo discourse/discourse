@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Backfill < Thor
   desc "link_titles", "Backfills link titles"
 

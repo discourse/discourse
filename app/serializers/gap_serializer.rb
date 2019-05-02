@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GapSerializer < ApplicationSerializer
   attributes :before, :after
 

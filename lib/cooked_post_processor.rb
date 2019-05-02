@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
@@ -421,7 +423,7 @@ class CookedPostProcessor
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
-    informations = "#{original_width}×#{original_height}"
+    informations = +"#{original_width}×#{original_height}"
     informations << " #{upload.human_filesize}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)

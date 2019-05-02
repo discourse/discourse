@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAllTimeAndOpLikesToTopTopics < ActiveRecord::Migration[4.2]
   def change
     add_column :top_topics, :all_score, :float, default: 0

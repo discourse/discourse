@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePostUploadJoinTable < ActiveRecord::Migration[4.2]
   def change
     create_table :posts_uploads, force: true, id: false do |t|

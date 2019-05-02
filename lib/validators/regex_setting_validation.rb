@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RegexSettingValidation
 
   def initialize_regex_opts(opts = {})

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddReviewableScoreToTopics < ActiveRecord::Migration[5.2]
   def up
     add_column :topics, :reviewable_score, :float, null: false, default: 0

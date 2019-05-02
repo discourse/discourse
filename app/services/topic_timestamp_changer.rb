@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicTimestampChanger
   class InvalidTimestampError < StandardError; end
 

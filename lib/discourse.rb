@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cache'
 require 'open3'
 require_dependency 'route_format'
@@ -261,7 +263,7 @@ module Discourse
 
   def self.base_url_no_prefix
     default_port = SiteSetting.force_https? ? 443 : 80
-    url = "#{base_protocol}://#{current_hostname}"
+    url = +"#{base_protocol}://#{current_hostname}"
     url << ":#{SiteSetting.port}" if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
 
     if Rails.env.development? && SiteSetting.port.blank?
@@ -285,7 +287,7 @@ module Discourse
 
     return unless uri
 
-    path = uri.path || ""
+    path = +(uri.path || "")
     if !uri.host || (uri.host == Discourse.current_hostname && path.start_with?(Discourse.base_uri))
       path.slice!(Discourse.base_uri)
       return Rails.application.routes.recognize_path(path)
@@ -302,9 +304,9 @@ module Discourse
   end
 
   READONLY_MODE_KEY_TTL  ||= 60
-  READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
-  PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze
-  USER_READONLY_MODE_KEY ||= 'readonly_mode:user'.freeze
+  READONLY_MODE_KEY      ||= 'readonly_mode'
+  PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'
+  USER_READONLY_MODE_KEY ||= 'readonly_mode:user'
 
   READONLY_KEYS ||= [
     READONLY_MODE_KEY,

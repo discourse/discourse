@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
 
   AVATAR_SIZE ||= 480

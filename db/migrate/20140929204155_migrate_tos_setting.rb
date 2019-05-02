@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateTosSetting < ActiveRecord::Migration[4.2]
   def up
     res = execute("SELECT * FROM site_settings WHERE name = 'tos_accept_required' AND value = 't'")

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Builds a Mail::Message we can use for sending. Optionally supports using a template
 # for the body and subject
 module Email
@@ -39,10 +41,10 @@ module Email
           @template_args[:respond_instructions] = I18n.t('user_notifications.pm_participants', @template_args) if @opts[:private_reply]
         else
           if @opts[:only_reply_by_email]
-            string = "user_notifications.only_reply_by_email"
+            string = +"user_notifications.only_reply_by_email"
             string << "_pm" if @opts[:private_reply]
           else
-            string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
+            string = allow_reply_by_email? ? +"user_notifications.reply_by_email" : +"user_notifications.visit_link_to_respond"
             string << "_pm" if @opts[:private_reply]
           end
           @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)

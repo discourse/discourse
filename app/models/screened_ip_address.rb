@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'screening_model'
 require_dependency 'ip_addr'
 

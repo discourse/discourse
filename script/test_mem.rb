@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 start = Time.now
 require 'objspace'
 require File.expand_path("../../config/environment", __FILE__)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveEmailInAddressSetting < ActiveRecord::Migration[4.2]
   def up
     uncat_id = DB.query_single("SELECT value FROM site_settings WHERE name = 'uncategorized_category_id'").first

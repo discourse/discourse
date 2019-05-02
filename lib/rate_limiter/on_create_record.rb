@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RateLimiter
 
   # A mixin we can use on ActiveRecord Models to automatically rate limit them

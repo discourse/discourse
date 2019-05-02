@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rake docker:test is designed to be used inside the discourse/docker_test image
 # running it anywhere else will likely fail
 #

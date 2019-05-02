@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report('profile_views') do |report|
   group_filter = report.filters.dig(:group)
   report.add_filter('group', default: group_filter)

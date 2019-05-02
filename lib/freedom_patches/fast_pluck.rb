@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Speeds up #pluck so its about 2.2x faster, importantly makes pluck avoid creation of a slew
 # of AR objects
 #

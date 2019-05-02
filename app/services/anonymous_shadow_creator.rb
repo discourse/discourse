@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AnonymousShadowCreator
 
   def self.get_master(user)

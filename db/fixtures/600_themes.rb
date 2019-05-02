@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # we can not guess what to do if customization already started, so skip it
 if !Theme.exists?
   STDERR.puts "> Seeding dark and light themes"

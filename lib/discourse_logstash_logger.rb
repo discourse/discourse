@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'logstash-logger'
 
 class DiscourseLogstashLogger

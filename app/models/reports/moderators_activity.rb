@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("moderators_activity") do |report|
   report.labels = [
     {

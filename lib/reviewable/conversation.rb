@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Reviewable < ActiveRecord::Base
   class Conversation
     include ActiveModel::Serialization

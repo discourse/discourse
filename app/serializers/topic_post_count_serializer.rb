@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicPostCountSerializer < BasicUserSerializer
 
   attributes :post_count, :primary_group_name,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # API to wrap up plugin store rows
 class PluginStore
   attr_reader :plugin_name

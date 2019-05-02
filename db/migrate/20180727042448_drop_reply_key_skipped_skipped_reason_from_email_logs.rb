@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropReplyKeySkippedSkippedReasonFromEmailLogs < ActiveRecord::Migration[5.2]
   def up
     remove_index :email_logs, [:skipped, :bounced, :created_at]

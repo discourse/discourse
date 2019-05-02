@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_memoizer'
 require_dependency 'file_helper'
 
@@ -35,7 +37,7 @@ class StaticController < ApplicationController
     @page = 'faq' if @page == 'guidelines'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
-    @page.gsub!(/[^a-z0-9\_\-]/, '')
+    @page = @page.gsub(/[^a-z0-9\_\-]/, '')
 
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.get(map[@page][:topic_id]))

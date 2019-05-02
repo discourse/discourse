@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPostImageIndexes < ActiveRecord::Migration[5.2]
   def change
 

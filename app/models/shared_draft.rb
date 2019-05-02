@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SharedDraft < ActiveRecord::Base
   belongs_to :topic
   belongs_to :category

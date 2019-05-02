@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTranslationOverrides < ActiveRecord::Migration[4.2]
   def change
     create_table :translation_overrides, force: true do |t|

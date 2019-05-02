@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'enum'
 require_dependency 'distributed_cache'
 require_dependency 'flag_settings'

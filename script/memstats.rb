@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # from: https://gist.github.com/kenn/5105061/raw/ac7ebc6be7008c35b72560cc4e05b7cc14eb4919/memstats.rb
 
 #------------------------------------------------------------------------------

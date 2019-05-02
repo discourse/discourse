@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GlobalSetting
 
   def self.register(key, default)
@@ -225,7 +227,7 @@ class GlobalSetting
 
   class EnvProvider < BaseProvider
     def lookup(key, default)
-      var = ENV["DISCOURSE_" << key.to_s.upcase]
+      var = ENV["DISCOURSE_" + key.to_s.upcase]
       resolve(var , var.nil? ? default : nil)
     end
 

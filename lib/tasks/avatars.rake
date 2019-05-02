@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Refresh all avatars (download missing gravatars, refresh system)"
 task "avatars:refresh" => :environment do
   i = 0

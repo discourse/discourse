@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MaxUsernameLengthValidator
   def initialize(opts = {})
     @opts = opts

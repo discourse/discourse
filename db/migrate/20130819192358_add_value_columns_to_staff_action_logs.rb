@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddValueColumnsToStaffActionLogs < ActiveRecord::Migration[4.2]
   def change
     add_column :staff_action_logs, :subject, :text

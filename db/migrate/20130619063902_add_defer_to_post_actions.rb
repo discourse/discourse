@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDeferToPostActions < ActiveRecord::Migration[4.2]
   def change
     # an action can be deferred by a moderator, used for flags

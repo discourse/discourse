@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SingleSignOnRecord < ActiveRecord::Base
   belongs_to :user
 

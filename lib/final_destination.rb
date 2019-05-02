@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'socket'
 require 'ipaddr'
 require 'excon'

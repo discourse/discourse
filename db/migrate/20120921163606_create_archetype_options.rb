@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateArchetypeOptions < ActiveRecord::Migration[4.2]
   def change
     create_table :archetype_options do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserAuthenticator
 
   def initialize(user, session, authenticator_finder = Users::OmniauthCallbacksController)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseNarrativeBot
   class WelcomePostTypeSiteSetting
     def self.valid_value?(val)

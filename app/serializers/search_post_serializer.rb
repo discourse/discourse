@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SearchPostSerializer < BasicPostSerializer
   has_one :topic, serializer: SearchTopicListItemSerializer
 

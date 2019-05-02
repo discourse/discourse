@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sidekiq/pausable"
 
 Sidekiq.configure_client do |config|

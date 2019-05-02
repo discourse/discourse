@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-details
 # about: HTML5.1 Details polyfill for Discourse
 # version: 0.4

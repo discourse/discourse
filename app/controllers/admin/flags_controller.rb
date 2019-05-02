@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'flag_query'
 
 class Admin::FlagsController < Admin::AdminController

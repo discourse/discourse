@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateReviewables < ActiveRecord::Migration[5.2]
   def change
     create_table :reviewables do |t|

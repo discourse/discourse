@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncrementReservedTrustLevelBadgeIds < ActiveRecord::Migration[4.2]
   def up
     execute "ALTER SEQUENCE badges_id_seq START WITH 100"

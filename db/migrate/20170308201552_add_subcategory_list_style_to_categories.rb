@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSubcategoryListStyleToCategories < ActiveRecord::Migration[4.2]
   def up
     add_column :categories, :subcategory_list_style, :string, limit: 50, default: 'rows_with_featured_topics'

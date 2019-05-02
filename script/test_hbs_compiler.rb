@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 template = <<~HBS
   {{attach widget="wat" attrs=(hash test="abc" text=(i18n "hello" count=attrs.wat))}}
   {{action-link action="undo" className="undo" text=(i18n (concat "post.actions.undo." attrs.action))}}

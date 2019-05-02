@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserCustomField < ActiveRecord::Base
   belongs_to :user
 end

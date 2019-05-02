@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostMover
   attr_reader :original_topic, :destination_topic, :user, :post_ids
 

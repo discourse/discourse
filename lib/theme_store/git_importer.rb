@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'theme_store/tgz_exporter'
 
 module ThemeStore; end

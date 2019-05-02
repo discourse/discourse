@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MergeMuteOptionsOnTopicUsers < ActiveRecord::Migration[4.2]
   def change
     execute "update topic_users set notifications = 0 where notifications = 3"

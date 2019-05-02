@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MakeUserAuthTokenIndexUnique < ActiveRecord::Migration[4.2]
   def up
     remove_index :user_auth_tokens, [:auth_token]

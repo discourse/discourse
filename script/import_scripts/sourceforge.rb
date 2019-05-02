@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'base.rb'
 
 # Import script for SourceForge discussions.

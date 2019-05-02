@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveStars < ActiveRecord::Migration[4.2]
   def up
     r = execute <<SQL

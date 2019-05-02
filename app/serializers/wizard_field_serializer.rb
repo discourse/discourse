@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WizardFieldSerializer < ApplicationSerializer
 
   attributes :id, :type, :required, :value, :label, :placeholder, :description

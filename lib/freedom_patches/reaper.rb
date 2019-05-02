@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Discourse ships with a connection reaper
 # this patch ensures that the connection reaper never runs in Rails
 #

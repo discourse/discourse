@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'seed_data/categories'
 require_dependency 'seed_data/topics'
 

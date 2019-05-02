@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-local-dates
 # about: Display a date in your local timezone
 # version: 0.1

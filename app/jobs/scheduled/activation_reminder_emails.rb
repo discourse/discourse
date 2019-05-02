@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class ActivationReminderEmails < Jobs::Scheduled
     every 2.hours

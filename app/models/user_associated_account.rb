@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserAssociatedAccount < ActiveRecord::Base
   belongs_to :user
 

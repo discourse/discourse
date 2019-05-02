@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UrlHelper
 
   # At the moment this handles invalid URLs that browser address bar accepts
@@ -24,7 +26,7 @@ class UrlHelper
   end
 
   def self.absolute(url, cdn = Discourse.asset_host)
-    cdn = "https:" << cdn if cdn && cdn =~ /^\/\//
+    cdn = "https:#{cdn}" if cdn && cdn =~ /^\/\//
     url =~ /^\/[^\/]/ ? (cdn || Discourse.base_url_no_prefix) + url : url
   end
 

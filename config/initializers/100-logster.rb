@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if Rails.env.development? && RUBY_VERSION.match?(/^2\.5\.[23]/)
   STDERR.puts "WARNING: Discourse development environment runs slower on Ruby 2.5.3 or below"
   STDERR.puts "We recommend you upgrade to Ruby 2.6.1 for the optimal development performance"

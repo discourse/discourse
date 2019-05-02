@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Migration
   class BaseDropper
     FUNCTION_SCHEMA_NAME = "discourse_functions".freeze

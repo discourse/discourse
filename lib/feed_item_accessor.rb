@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FeedItemAccessor
   attr_accessor :rss_item
 

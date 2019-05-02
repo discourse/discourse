@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'reviewable_action_serializer'
 require_dependency 'reviewable_editable_field_serializer'
 

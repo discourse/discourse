@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "site_icon_manager"
 
 DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseNarrativeBot
   module Actions
     TIMEOUT_DURATION = 900 # 15 mins

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'avatar_lookup'
 require_dependency 'primary_group_lookup'
 

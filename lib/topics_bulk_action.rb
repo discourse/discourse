@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicsBulkAction
 
   def initialize(user, topic_ids, operation, options = {})

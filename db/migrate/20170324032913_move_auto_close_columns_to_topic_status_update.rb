@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MoveAutoCloseColumnsToTopicStatusUpdate < ActiveRecord::Migration[4.2]
   def up
     # The 1 in the fourth column is TopicStatusUpdate.types[:close], an enum with value 1.

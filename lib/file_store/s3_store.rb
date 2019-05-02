@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "uri"
 require "mini_mime"
 require_dependency "file_store/base_store"
@@ -34,6 +36,8 @@ module FileStore
     #   - content_type
     #   - cache_locally
     def store_file(file, path, opts = {})
+      path = path.dup
+
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]

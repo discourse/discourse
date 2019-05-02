@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SourceURL < Tilt::Template
   self.default_mime_type = 'application/javascript'
 

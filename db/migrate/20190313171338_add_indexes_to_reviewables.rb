@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndexesToReviewables < ActiveRecord::Migration[5.2]
   def up
     remove_index :reviewables, :status

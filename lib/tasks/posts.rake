@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'file_store/local_store'
 
 desc 'Update each post with latest markdown'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 {
   -1 => "d-logo-sketch.png", # Old version
   -2 => "d-logo-sketch-small.png", # Old version

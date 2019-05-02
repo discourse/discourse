@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHookEventType < ActiveRecord::Base
   TOPIC = 1
   POST = 2

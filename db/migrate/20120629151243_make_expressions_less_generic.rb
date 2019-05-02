@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MakeExpressionsLessGeneric < ActiveRecord::Migration[4.2]
   def up
     rename_column :expressions, :parent_id, :post_id

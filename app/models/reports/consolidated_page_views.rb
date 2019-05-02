@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("consolidated_page_views") do |report|
   filters = %w[
     page_view_logged_in

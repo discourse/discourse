@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserSerializer < BasicUserSerializer
 
   attr_accessor :omit_stats,

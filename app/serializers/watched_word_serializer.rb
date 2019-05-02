@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WatchedWordSerializer < ApplicationSerializer
   attributes :id, :word, :action
 

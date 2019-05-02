@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ColorSchemeColor < ActiveRecord::Base
   belongs_to :color_scheme
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # this is a trivial graceful restart on touch of tmp/restart.
 #
 # It simply drains all the requests (waits up to 4 seconds) and issues a HUP

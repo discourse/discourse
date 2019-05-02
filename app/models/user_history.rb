@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # UserHistory stores information about actions that users have taken,
 # like deleting users, changing site settings, dimissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.

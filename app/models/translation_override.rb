@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base

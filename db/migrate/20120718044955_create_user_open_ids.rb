@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUserOpenIds < ActiveRecord::Migration[4.2]
   def change
     create_table :user_open_ids do |t|

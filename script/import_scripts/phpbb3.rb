@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Importer for phpBB 3.0 and 3.1
 # Documentation: https://meta.discourse.org/t/importing-from-phpbb3/30810
 

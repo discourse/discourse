@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "digest/sha1"
 require_dependency "file_helper"
 require_dependency "url_helper"

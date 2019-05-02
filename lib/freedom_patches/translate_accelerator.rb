@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This patch performs 2 functions
 #
 # 1. It caches all translations which drastically improves

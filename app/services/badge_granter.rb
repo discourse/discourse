@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgeGranter
 
   def initialize(badge, user, opts = {})

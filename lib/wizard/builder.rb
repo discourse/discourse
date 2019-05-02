@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'introduction_updater'
 require_dependency 'emoji_set_site_setting'
 require_dependency 'seed_data/categories'

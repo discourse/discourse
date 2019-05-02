@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AvatarLookup
 
   def initialize(user_ids = [])

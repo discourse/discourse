@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SetDefaultBadgeGrouping < ActiveRecord::Migration[4.2]
   def change
     execute 'UPDATE badges SET badge_grouping_id = 5 WHERE badge_grouping_id IS NULL'

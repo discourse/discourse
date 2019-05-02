@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "mini_mime"
 require_dependency 'upload_creator'
 

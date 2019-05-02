@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'search/grouped_search_results'
 
 class Search

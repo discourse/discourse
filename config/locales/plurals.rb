@@ -1,4 +1,6 @@
 # encoding: utf-8
+# frozen_string_literal: true
+
 # source: https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
 
 {

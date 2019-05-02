@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # custom importer for www.sfn.org, feel free to borrow ideas
 
 require "csv"

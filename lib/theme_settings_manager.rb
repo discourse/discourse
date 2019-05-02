@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeSettingsManager
   attr_reader :name, :theme, :default
 

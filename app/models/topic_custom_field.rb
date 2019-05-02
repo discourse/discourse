@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicCustomField < ActiveRecord::Base
   belongs_to :topic
 end

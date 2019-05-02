@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../../config/environment", __FILE__)
 
 # no less than 1 megapixel

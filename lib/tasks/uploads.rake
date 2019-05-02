@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "db_helper"
 require "digest/sha1"
 require "base62"

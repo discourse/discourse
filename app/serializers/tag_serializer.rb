@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TagSerializer < ApplicationSerializer
   attributes :id, :name, :topic_count, :staff
 

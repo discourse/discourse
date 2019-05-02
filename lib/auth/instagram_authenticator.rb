@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::InstagramAuthenticator < Auth::ManagedAuthenticator
   def name
     "instagram"

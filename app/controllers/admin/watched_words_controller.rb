@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::WatchedWordsController < Admin::AdminController
 
   def index

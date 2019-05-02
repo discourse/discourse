@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WildcardUrlChecker
 
   def self.check_url(url, url_to_check)

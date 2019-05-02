@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 MessageBus.site_id_lookup do |env = nil|
   if env
     setup_message_bus_env(env)

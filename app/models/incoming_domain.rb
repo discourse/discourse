@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingDomain < ActiveRecord::Base
   def self.add!(uri)
     name = uri.host

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SafeModeController < ApplicationController
   layout 'no_ember'
   before_action :ensure_safe_mode_enabled

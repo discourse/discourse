@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.join(Rails.root, 'script', 'import_scripts', 'base.rb')
 
 module ImportExport

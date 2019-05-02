@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-nginx-performance-report
 # about: Analyzing Discourse Performance using NGINX logs
 # version: 0.1

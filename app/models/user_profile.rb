@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'upload_creator'
 class UserProfile < ActiveRecord::Base
   self.ignored_columns = %w{

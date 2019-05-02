@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Stylesheet
   module ScssFunctions
     def asset_url(path)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UploadRecovery
   def initialize(dry_run: false)
     @dry_run = dry_run

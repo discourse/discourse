@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Jive importer
 require 'nokogiri'
 require 'csv'

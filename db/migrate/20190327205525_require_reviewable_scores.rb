@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RequireReviewableScores < ActiveRecord::Migration[5.2]
   def up
     min_score = DB.query_single("SELECT value FROM site_settings WHERE name = 'min_score_default_visibility'")[0].to_f

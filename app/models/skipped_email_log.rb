@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SkippedEmailLog < ActiveRecord::Base
   belongs_to :email_log
 

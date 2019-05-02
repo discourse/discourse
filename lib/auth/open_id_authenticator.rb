@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::OpenIdAuthenticator < Auth::Authenticator
 
   attr_reader :name, :identifier
