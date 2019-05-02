@@ -43,7 +43,11 @@ export function registerTopicFooterButton(button) {
     return;
   }
 
-  if (!normalizedButton.icon && !normalizedButton.title) {
+  if (
+    !normalizedButton.icon &&
+    !normalizedButton.title &&
+    !normalizedButton.translatedTitle
+  ) {
     Ember.error(
       `Attempted to register a topic button: ${
         button.id
