@@ -463,7 +463,7 @@ module BackupRestore
       SQL
 
       User.where("uploaded_avatar_id IS NOT NULL").find_each do |user|
-        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id, user_id: user.id)
+        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id)
       end
     end
 
