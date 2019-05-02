@@ -139,7 +139,8 @@ task 'docker:test' do
             spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
             # quick and dirty load balancing
             if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(40))
+              spec_partials[0].concat(spec_partials[total - 1].shift(30))
+              spec_partials[1].concat(spec_partials[total - 2].shift(30))
             end
 
             params << spec_partials[subset].join(' ')
@@ -154,7 +155,7 @@ task 'docker:test' do
           if ENV["SINGLE_PLUGIN"]
             @good &&= run_or_fail("bundle exec rake plugin:spec['#{ENV["SINGLE_PLUGIN"]}']")
           else
-            @good &&= run_or_fail("bundle exec rake plugin:spec")
+            @good &&= run_or_fail("RSPEC_FAILFAST=1 bundle exec rake plugin:spec")
           end
         end
         puts "travis_fold:end:ruby_tests" if ENV["TRAVIS"]
