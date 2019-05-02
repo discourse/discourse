@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCategoryFeaturedThreads < ActiveRecord::Migration[4.2]
   def change
     create_table :category_featured_threads, id: false do |t|

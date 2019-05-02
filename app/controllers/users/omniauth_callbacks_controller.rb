@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+# frozen_string_literal: true
+
 require_dependency 'email'
 require_dependency 'enum'
 require_dependency 'user_name_suggester'
@@ -58,7 +60,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
 
       if parsed && (parsed.host == nil || parsed.host == Discourse.current_hostname)
-        @origin = "#{parsed.path}"
+        @origin = +"#{parsed.path}"
         @origin << "?#{parsed.query}" if parsed.query
       end
     end

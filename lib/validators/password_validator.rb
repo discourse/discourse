@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "common_passwords/common_passwords"
 
 class PasswordValidator < ActiveModel::EachValidator

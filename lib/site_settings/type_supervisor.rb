@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'site_settings/validations'
 require_dependency 'enum'
 

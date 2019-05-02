@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "digest"
 require_dependency "new_post_manager"
 require_dependency "html_to_markdown"
@@ -1012,6 +1014,8 @@ module Email
     end
 
     def add_attachments(raw, user, options = {})
+      raw = raw.dup
+
       rejected_attachments = []
       attachments.each do |attachment|
         tmp = Tempfile.new(["discourse-email-attachment", File.extname(attachment.filename)])
@@ -1128,7 +1132,7 @@ module Email
     end
 
     def self.elided_html(elided)
-      html =  "\n\n" << "<details class='elided'>" << "\n"
+      html =  +"\n\n" << "<details class='elided'>" << "\n"
       html << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n\n"
       html << elided << "\n\n"
       html << "</details>" << "\n"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AllowNullUserIdOnPosts < ActiveRecord::Migration[4.2]
   def up
     change_column :posts, :user_id, :integer, null: true

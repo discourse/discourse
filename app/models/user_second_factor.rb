@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserSecondFactor < ActiveRecord::Base
   belongs_to :user
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
 
   class CustomBuilder < MiniSql::Builder
@@ -8,9 +10,9 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
 
     def secure_category(secure_category_ids, category_alias = 'c')
       if secure_category_ids.present?
-        where("NOT COALESCE(" << category_alias << ".read_restricted, false) OR " << category_alias << ".id in (:secure_category_ids)", secure_category_ids: secure_category_ids)
+        where("NOT COALESCE(#{category_alias}.read_restricted, false) OR #{category_alias}.id in (:secure_category_ids)", secure_category_ids: secure_category_ids)
       else
-        where("NOT COALESCE(" << category_alias << ".read_restricted, false)")
+        where("NOT COALESCE(#{category_alias}.read_restricted, false)")
       end
       self
     end

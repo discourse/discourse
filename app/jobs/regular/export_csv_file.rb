@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 require_dependency 'system_message'
 require_dependency 'upload_creator'

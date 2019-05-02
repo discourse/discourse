@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewableActionSerializer < ApplicationSerializer
   attributes :id, :icon, :label, :confirm_message, :description, :client_action
 

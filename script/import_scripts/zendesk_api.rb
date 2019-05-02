@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Zendesk importer
 #
 # This one uses their API.

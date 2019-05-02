@@ -1,4 +1,6 @@
 # encoding: utf-8
+# frozen_string_literal: true
+
 #
 # Author: Erick Guan <fantasticfears@gmail.com>
 #

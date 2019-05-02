@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 #  A class that handles interaction between a plugin and the Discourse App.
 #

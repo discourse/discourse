@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This script is run in the discourse_test docker image
 # Available environment variables:
 # => NO_UPDATE        disables updating the source code within the discourse_test docker image

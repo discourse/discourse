@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenamePrivatePersonal < ActiveRecord::Migration[5.1]
 
   def setting(old, new)

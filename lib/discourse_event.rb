@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is meant to be used by plugins to trigger and listen to events
 # So we can execute code when things happen.
 class DiscourseEvent

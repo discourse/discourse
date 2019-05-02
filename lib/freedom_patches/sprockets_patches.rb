@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This contains two patches to make sprockets more tolerable in dev
 #
 # 1. Stop computing asset paths which triggers sprockets to do mountains of work

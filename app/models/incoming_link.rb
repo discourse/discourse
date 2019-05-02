@@ -80,7 +80,7 @@ class IncomingLink < ActiveRecord::Base
 
   def referer
     if self.incoming_referer
-      self.incoming_referer.incoming_domain.to_url << self.incoming_referer.path
+      self.incoming_referer.incoming_domain.to_url + self.incoming_referer.path
     end
   end
 

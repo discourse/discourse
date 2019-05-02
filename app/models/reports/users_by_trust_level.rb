@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("users_by_trust_level") do |report|
   report.data = []
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mini_racer'
 require 'nokogiri'
 require 'erb'
@@ -144,7 +146,7 @@ module PrettyText
       custom_emoji = {}
       Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
 
-      buffer = <<~JS
+      buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
         __paths = #{paths_json};
@@ -286,8 +288,8 @@ module PrettyText
 
         if !uri.host.present? ||
            uri.host == site_uri.host ||
-           uri.host.ends_with?("." << site_uri.host) ||
-           whitelist.any? { |u| uri.host == u || uri.host.ends_with?("." << u) }
+           uri.host.ends_with?(".#{site_uri.host}") ||
+           whitelist.any? { |u| uri.host == u || uri.host.ends_with?(".#{u}") }
           # we are good no need for nofollow
           l.remove_attribute("rel")
         else
@@ -319,7 +321,7 @@ module PrettyText
     # extract quotes
     doc.css("aside.quote[data-topic]").each do |aside|
       if aside["data-topic"].present?
-        url = "/t/topic/#{aside["data-topic"]}"
+        url = +"/t/topic/#{aside["data-topic"]}"
         url << "/#{aside["data-post"]}" if aside["data-post"].present?
         links << DetectedLink.new(url, true)
       end

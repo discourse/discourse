@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopListSerializer < ApplicationSerializer
 
   attributes :can_create_topic,

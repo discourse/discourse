@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemesController < ::ApplicationController
   def assets
     theme_ids = params[:ids].to_s.split("-").map(&:to_i)

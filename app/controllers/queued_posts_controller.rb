@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'queued_post_serializer'
 
 class QueuedPostsController < ApplicationController

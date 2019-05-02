@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicTimer < ActiveRecord::Base
   include Trashable
 

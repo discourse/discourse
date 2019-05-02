@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'application_serializer'
 
 class NewPostResultSerializer < ApplicationSerializer

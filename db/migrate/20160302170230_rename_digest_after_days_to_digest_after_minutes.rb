@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameDigestAfterDaysToDigestAfterMinutes < ActiveRecord::Migration[4.2]
   def up
     rename_column :user_options, :digest_after_days, :digest_after_minutes

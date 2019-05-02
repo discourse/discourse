@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jobs::TopicActionConverter < Jobs::Base
 
   # Re-creating all the user actions could be very slow, so let's do it in a job

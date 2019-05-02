@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ARGV.include?('bbcode-to-md')
   # Replace (most) bbcode with markdown before creating posts.
   # This will dramatically clean up the final posts in Discourse.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report('top_uploads') do |report|
   report.modes = [:table]
 

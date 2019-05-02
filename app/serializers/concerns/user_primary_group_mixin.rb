@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserPrimaryGroupMixin
 
   def self.included(klass)

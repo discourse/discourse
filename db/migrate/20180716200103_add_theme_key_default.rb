@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddThemeKeyDefault < ActiveRecord::Migration[5.2]
   def up
     if column_exists?(:themes, :key)

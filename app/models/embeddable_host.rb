@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'url_helper'
 
 class EmbeddableHost < ActiveRecord::Base

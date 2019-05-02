@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("flags_status") do |report|
   report.modes = [:table]
 

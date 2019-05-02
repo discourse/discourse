@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report('top_referred_topics') do |report|
   category_filter = report.filters.dig(:category)
   report.add_filter('category', default: category_filter)

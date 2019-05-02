@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # can be used to generate a mock db for profiling purposes
 
 # we want our script to generate a consistent output, to do so

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Discourse
   VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/ unless defined? ::Discourse::VERSION_REGEXP
 

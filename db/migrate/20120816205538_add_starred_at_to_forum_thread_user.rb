@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddStarredAtToForumThreadUser < ActiveRecord::Migration[4.2]
   def up
     add_column :forum_thread_users, :starred_at, :datetime

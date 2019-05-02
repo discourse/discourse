@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
@@ -545,8 +547,8 @@ class Post < ActiveRecord::Base
   def self.url(slug, topic_id, post_number, opts = nil)
     opts ||= {}
 
-    result = "/t/"
-    result << "#{slug}/" unless !!opts[:without_slug]
+    result = +"/t/"
+    result << "#{slug}/" if !opts[:without_slug]
 
     "#{result}#{topic_id}/#{post_number}"
   end

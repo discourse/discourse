@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # convert huge XML dump to mysql friendly import
 #
 

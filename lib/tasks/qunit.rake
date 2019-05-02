@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Runs the qunit test suite"
 
 task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|

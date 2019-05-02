@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   # various consistency checks
   class EnsureDbConsistency < Jobs::Scheduled

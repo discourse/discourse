@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicViewDetailsSerializer < ApplicationSerializer
 
   def self.can_attributes

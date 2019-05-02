@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserMerger
   def initialize(source_user, target_user, acting_user = nil)
     @source_user = source_user

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScreenedEmailSerializer < ApplicationSerializer
   attributes :email,
              :action,

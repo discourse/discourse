@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSupportForBouncedEmails < ActiveRecord::Migration[4.2]
   def change
     add_column :email_logs, :bounced, :boolean, null: false, default: false

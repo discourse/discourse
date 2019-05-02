@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebCrawlerRequest < ActiveRecord::Base
   include CachedCounting
 

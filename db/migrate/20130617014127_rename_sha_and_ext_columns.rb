@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameShaAndExtColumns < ActiveRecord::Migration[4.2]
   def up
     rename_column :optimized_images, :sha, :sha1

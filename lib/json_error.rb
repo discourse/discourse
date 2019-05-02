@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module JsonError
 
   def create_errors_json(obj, opts = nil)

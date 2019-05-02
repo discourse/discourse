@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddBumpedAtToForumThreads < ActiveRecord::Migration[4.2]
   def change
     add_column :forum_threads, :bumped_at, :datetime

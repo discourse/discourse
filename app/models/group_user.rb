@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'notification_levels'
 
 class GroupUser < ActiveRecord::Base

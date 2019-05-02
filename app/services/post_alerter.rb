@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'distributed_mutex'
 require_dependency 'user_action_manager'
 
@@ -565,7 +567,7 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    condition = <<~SQL
+    condition = +<<~SQL
       id IN (
         SELECT user_id
           FROM topic_users

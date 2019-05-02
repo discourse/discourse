@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddLastPostedAtToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :last_posted_at, :datetime, null: true

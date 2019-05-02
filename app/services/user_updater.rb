@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserUpdater
 
   CATEGORY_IDS = {

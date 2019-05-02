@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "run chrome headless smoke tests on current build"
 task "smoke:test" do
   unless system("command -v google-chrome >/dev/null;")

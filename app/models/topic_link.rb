@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'uri'
 require_dependency 'slug'
 require_dependency 'discourse'
@@ -191,7 +193,7 @@ class TopicLink < ActiveRecord::Base
       topic_id = nil unless topic
 
       if topic.present?
-        url = "#{Discourse.base_url_no_prefix}#{topic.relative_url}"
+        url = +"#{Discourse.base_url_no_prefix}#{topic.relative_url}"
         url << "/#{post_number}" if post_number.to_i > 1
       end
     end

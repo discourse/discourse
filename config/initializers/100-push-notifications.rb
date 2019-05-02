@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'webpush'
 
 if SiteSetting.vapid_public_key.blank? || SiteSetting.vapid_private_key.blank? || SiteSetting.vapid_public_key_bytes.blank?

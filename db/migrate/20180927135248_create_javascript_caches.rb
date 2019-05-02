@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateJavascriptCaches < ActiveRecord::Migration[5.2]
   def change
     create_table :javascript_caches do |t|

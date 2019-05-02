@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateNullOverrideForUploadSiteSettings < ActiveRecord::Migration[5.2]
   def up
     {

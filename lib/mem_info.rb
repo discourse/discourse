@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MemInfo
 
   # Total memory in kb. On Mac OS uses "sysctl", elsewhere expects the system has /proc/meminfo.

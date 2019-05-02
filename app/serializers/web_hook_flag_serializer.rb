@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHookFlagSerializer < ApplicationSerializer
   attributes :id,
              :post,

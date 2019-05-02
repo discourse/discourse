@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::SiteSettingsController < Admin::AdminController
   rescue_from Discourse::InvalidParameters do |e|
     render_json_error e.message, status: 422

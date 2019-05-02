@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "final_destination"
 require "mini_mime"
 require "open-uri"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jobs::CreateUserReviewable < Jobs::Base
   attr_reader :reviewable
 

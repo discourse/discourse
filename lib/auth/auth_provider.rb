@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::AuthProvider
   include ActiveModel::Serialization
 

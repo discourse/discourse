@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def public_js
   "#{Rails.root}/public/javascripts"
 end

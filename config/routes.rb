@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "sidekiq/web"
 require "mini_scheduler/web"
 require_dependency "admin_constraint"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ForceRebakeOnPostsWithLightboxes < ActiveRecord::Migration[5.2]
   def up
     # Picking up changes to lightbox HTML in cooked_post_processor

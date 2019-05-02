@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUploadsToCategories < ActiveRecord::Migration[4.2]
   def up
     add_column :categories, :uploaded_logo_id, :integer, index: true

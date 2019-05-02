@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserAuthTokens < ActiveRecord::Migration[4.2]
   def down
     execute <<SQL

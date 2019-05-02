@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'screening_model'
 
 # A ScreenedEmail record represents an email address that is being watched,

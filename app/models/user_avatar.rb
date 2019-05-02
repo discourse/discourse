@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'letter_avatar'
 require_dependency 'upload_creator'
 

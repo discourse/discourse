@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnableInviteOnlyValidator
   def initialize(opts = {})
     @opts = opts

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'jobs/regular/update_username'
 
 class UsernameChanger

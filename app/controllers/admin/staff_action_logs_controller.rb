@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::StaffActionLogsController < Admin::AdminController
 
   def index
@@ -22,7 +24,7 @@ class Admin::StaffActionLogsController < Admin::AdminController
 
     diff_fields = {}
 
-    output = "<h2>#{CGI.escapeHTML(cur["name"].to_s)}</h2><p></p>"
+    output = +"<h2>#{CGI.escapeHTML(cur["name"].to_s)}</h2><p></p>"
 
     diff_fields["name"] = {
       prev: prev["name"].to_s,

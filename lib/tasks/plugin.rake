@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 directory 'plugins'
 
 desc 'install all official plugins (use GIT_WRITE=1 to pull with write access)'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # we should set the locale before the migration
 task 'set_locale' do
   begin

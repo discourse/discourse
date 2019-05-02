@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # How a post is deleted is affected by who is performing the action.
 # this class contains the logic to delete it.

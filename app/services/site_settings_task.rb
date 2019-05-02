@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SiteSettingsTask
   def self.export_to_hash(include_defaults: false)
     site_settings = SiteSetting.all_settings

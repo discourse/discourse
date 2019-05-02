@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # see: https://github.com/rails/rails/issues/32995
 #
 # Rails 5.2 forces us to add Arel.sql to #order and #pluck

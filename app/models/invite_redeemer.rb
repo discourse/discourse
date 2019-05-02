@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_fields, :ip_address) do
 
   def redeem

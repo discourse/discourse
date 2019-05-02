@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSchemaMigrationDetails < ActiveRecord::Migration[4.2]
   def up
     # schema_migrations table is way too thin, does not give info about

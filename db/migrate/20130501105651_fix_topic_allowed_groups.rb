@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixTopicAllowedGroups < ActiveRecord::Migration[4.2]
   def change
     # big oops

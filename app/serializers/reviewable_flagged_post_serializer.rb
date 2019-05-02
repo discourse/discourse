@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewableFlaggedPostSerializer < ReviewableSerializer
   target_attributes :cooked, :raw, :reply_count
   attributes :blank_post, :post_updated_at, :post_version

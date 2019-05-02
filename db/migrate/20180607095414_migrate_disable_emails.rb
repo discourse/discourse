@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateDisableEmails < ActiveRecord::Migration[5.1]
   def up
     execute "UPDATE site_settings SET data_type = 7 WHERE name = 'disable_emails';"

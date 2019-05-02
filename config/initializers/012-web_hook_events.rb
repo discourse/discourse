@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 %i(
   topic_recovered
 ).each do |event|

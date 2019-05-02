@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameClickedTopicIdToSearchResultId < ActiveRecord::Migration[5.1]
   def up
     rename_column :search_logs, :clicked_topic_id, :search_result_id

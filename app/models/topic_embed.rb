@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'nokogiri'
 require_dependency 'url_helper'
 
@@ -131,7 +133,7 @@ class TopicEmbed < ActiveRecord::Base
 
     read_doc = Readability::Document.new(html, opts)
 
-    title = raw_doc.title || ''
+    title = +(raw_doc.title || '')
     title.strip!
 
     if SiteSetting.embed_title_scrubber.present?
@@ -215,7 +217,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.first_paragraph_from(html)
     doc = Nokogiri::HTML(html)
 
-    result = ""
+    result = +""
     doc.css('p').each do |p|
       if p.text.present?
         result << p.to_s

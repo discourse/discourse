@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateReviewableQueuedPosts < ActiveRecord::Migration[5.2]
   def up
     execute(<<~SQL)

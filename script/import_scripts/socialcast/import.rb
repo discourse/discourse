@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './socialcast_message.rb'
 require_relative './socialcast_user.rb'
 require 'set'

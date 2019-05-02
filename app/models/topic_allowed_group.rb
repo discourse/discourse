@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicAllowedGroup < ActiveRecord::Base
   belongs_to :topic
   belongs_to :group

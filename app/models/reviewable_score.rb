@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewableScore < ActiveRecord::Base
   belongs_to :reviewable
   belongs_to :user

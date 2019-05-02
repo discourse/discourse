@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # loaded really early
 module Plugin; end
 

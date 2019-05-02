@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'email/sender'
 require_dependency 'user_notifications'
 

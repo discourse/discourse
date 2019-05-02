@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategorySerializer < BasicCategorySerializer
 
   attributes :read_restricted,

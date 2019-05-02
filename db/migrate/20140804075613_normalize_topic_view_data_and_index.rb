@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NormalizeTopicViewDataAndIndex < ActiveRecord::Migration[4.2]
   def change
     remove_index :topic_views, [:topic_id]

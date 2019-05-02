@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailToken < ActiveRecord::Base
   belongs_to :user
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMissingUserDestroyerIndexes < ActiveRecord::Migration[5.2]
   def change
     # these indexes are required to make deletions of users fast

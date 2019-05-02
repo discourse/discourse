@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveEnglishFromPostActionTypes < ActiveRecord::Migration[4.2]
   def up
     rename_column :post_action_types, :name, :name_key

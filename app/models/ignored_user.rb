@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IgnoredUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :ignored_user, class_name: "User"

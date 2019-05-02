@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnableSsoValidator
   def initialize(opts = {})
     @opts = opts

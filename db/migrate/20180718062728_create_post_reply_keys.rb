@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'migration/column_dropper'
 
 class CreatePostReplyKeys < ActiveRecord::Migration[5.2]

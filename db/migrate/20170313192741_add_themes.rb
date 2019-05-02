@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddThemes < ActiveRecord::Migration[4.2]
   def up
     rename_table :site_customizations, :themes

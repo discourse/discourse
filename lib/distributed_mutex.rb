@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Cross-process locking using Redis.
 class DistributedMutex
   DEFAULT_VALIDITY ||= 60

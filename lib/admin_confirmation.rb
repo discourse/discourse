@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminConfirmation
   attr_accessor :token
   attr_reader :performed_by

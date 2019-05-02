@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebHookEvent < ActiveRecord::Base
   belongs_to :web_hook
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # session that is not stored in cookie, expires after 1.hour unconditionally
 class SecureSession
   def initialize(prefix)

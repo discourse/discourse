@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 require 'reverse_markdown'
 require_relative 'base'

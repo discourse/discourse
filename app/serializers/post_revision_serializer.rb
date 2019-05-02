@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostRevisionSerializer < ApplicationSerializer
 
   attributes :created_at,

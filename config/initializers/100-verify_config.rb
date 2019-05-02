@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Check that the app is configured correctly. Raise some helpful errors if something is wrong.
 
 if defined?(Rails::Server) && Rails.env.production? # Only run these checks when starting up a production server

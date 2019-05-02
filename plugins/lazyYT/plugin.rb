@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: lazyYT
 # about: Uses the lazyYT plugin to lazy load Youtube videos
 # version: 1.0.1

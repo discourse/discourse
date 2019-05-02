@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminEmailTemplateSerializer < ApplicationSerializer
   attributes :id, :title, :subject, :body, :can_revert?
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::WebHooksController < Admin::AdminController
   before_action :fetch_web_hook, only: %i(show update destroy list_events bulk_events ping)
 

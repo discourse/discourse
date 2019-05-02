@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseNarrativeBot
   class Dice
     MAXIMUM_NUM_OF_DICE = 20

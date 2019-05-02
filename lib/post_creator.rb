@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Responsible for creating posts and topics
 #
 require_dependency 'rate_limiter'

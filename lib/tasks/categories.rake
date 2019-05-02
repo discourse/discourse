@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task "categories:move_topics", [:from_category, :to_category] => [:environment] do |_, args|
   from_category_id = args[:from_category]
   to_category_id = args[:to_category]

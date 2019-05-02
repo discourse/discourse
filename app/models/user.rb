@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'jobs/base'
 require_dependency 'email'
 require_dependency 'email_token'
@@ -752,7 +754,7 @@ class User < ActiveRecord::Base
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
-      url = "#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
+      url = +"#{Discourse::base_uri}#{url}" unless url =~ /^https?:\/\//
       url.gsub! "{color}", letter_avatar_color(normalized_username)
       url.gsub! "{username}", CGI.escape(username)
       url.gsub! "{first_letter}", CGI.escape(normalized_username.grapheme_clusters.first)

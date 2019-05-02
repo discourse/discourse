@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateJoinTableWebHooksWebHookEventTypes < ActiveRecord::Migration[4.2]
   def change
     create_join_table :web_hooks, :web_hook_event_types

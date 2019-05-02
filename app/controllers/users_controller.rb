@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'

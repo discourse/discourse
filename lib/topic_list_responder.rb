@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helps us respond with a topic list from a controller
 module TopicListResponder
 

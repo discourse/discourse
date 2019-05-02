@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
@@ -107,7 +109,7 @@ class TopicView
   end
 
   def canonical_path
-    path = relative_url
+    path = relative_url.dup
     path <<
       if @page > 1
         "?page=#{@page}"

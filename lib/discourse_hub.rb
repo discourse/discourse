@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'version'
 require_dependency 'site_setting'
 

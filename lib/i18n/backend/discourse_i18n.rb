@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'i18n/backend/pluralization'
 require_dependency 'locale_site_setting'
 

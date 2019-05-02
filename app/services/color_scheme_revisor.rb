@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ColorSchemeRevisor
 
   def initialize(color_scheme, params = {})

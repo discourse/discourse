@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report('time_to_first_response') do |report|
   category_filter = report.filters.dig(:category)
   report.add_filter('category', default: category_filter)

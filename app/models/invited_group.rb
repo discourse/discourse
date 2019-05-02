@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvitedGroup < ActiveRecord::Base
   belongs_to :group
   belongs_to :invite

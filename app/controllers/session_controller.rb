@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'rate_limiter'
 require_dependency 'single_sign_on'
 require_dependency 'single_sign_on_provider'

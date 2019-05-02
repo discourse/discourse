@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::ImpersonateController < Admin::AdminController
 
   def create

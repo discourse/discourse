@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateMailingListDailyUpdatesUsersToDailySummary < ActiveRecord::Migration[4.2]
   def change
     change_column_default :user_options, :mailing_list_mode_frequency, 1

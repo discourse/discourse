@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminDashboardIndexData < AdminDashboardData
   def get_json
     {

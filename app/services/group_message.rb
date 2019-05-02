@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # GroupMessage sends a private message to a group.
 # It will also avoid sending the same message repeatedly, which can happen with
 # notifications to moderators when spam is detected.

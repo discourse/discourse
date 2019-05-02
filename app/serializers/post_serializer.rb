@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need

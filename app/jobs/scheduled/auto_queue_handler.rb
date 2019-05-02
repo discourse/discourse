@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This job will automatically act on records that have gone unhandled on a
 # queue for a long time.
 module Jobs

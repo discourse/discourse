@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   # if locale changes or search algorithm changes we may want to reindex stuff
   class ReindexSearch < Jobs::Scheduled

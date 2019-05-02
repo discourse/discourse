@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCsvExportLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :csv_export_logs do |t|

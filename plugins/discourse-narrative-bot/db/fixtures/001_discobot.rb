@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 discobot_username = 'discobot'
 
 def seed_primary_email

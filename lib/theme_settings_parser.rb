@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeSettingsParser
   class InvalidYaml < StandardError; end
 

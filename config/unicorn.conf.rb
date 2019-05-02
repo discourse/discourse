@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # See http://unicorn.bogomips.org/Unicorn/Configurator.html
 
 if ENV["LOGSTASH_UNICORN_URI"]

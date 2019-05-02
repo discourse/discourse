@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task 'assets:precompile:before' do
 
   require 'uglifier'

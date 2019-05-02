@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # load up git version into memory
 # this way if it changes underneath we still have
 # the original version

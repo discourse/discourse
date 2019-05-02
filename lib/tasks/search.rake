@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task "search:reindex" => :environment do
   ENV['RAILS_DB'] ? reindex_search : reindex_search_all_sites
 end

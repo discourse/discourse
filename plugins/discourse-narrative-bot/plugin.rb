@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-narrative-bot
 # about: Introduces staff to Discourse
 # version: 1.0

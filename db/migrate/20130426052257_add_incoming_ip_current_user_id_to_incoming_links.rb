@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIncomingIpCurrentUserIdToIncomingLinks < ActiveRecord::Migration[4.2]
   def change
     add_column :incoming_links, :ip_address, :inet

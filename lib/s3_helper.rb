@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "aws-sdk-s3"
 
 class S3Helper
@@ -47,6 +49,8 @@ class S3Helper
   end
 
   def remove(s3_filename, copy_to_tombstone = false)
+    s3_filename = s3_filename.dup
+
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
       self.copy(

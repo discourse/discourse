@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jobs::NotifyReviewable < Jobs::Base
 
   def execute(args)

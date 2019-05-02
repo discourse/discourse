@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("storage_stats") do |report|
   backup_stats = begin
     BackupRestore::BackupStore.create.stats

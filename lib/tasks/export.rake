@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc 'Export all the categories'
 task 'export:categories', [:category_ids] => [:environment] do |_, args|
   require "import_export/import_export"

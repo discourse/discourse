@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::Result
   attr_accessor :user, :name, :username, :email, :user,
                 :email_valid, :extra_data, :awaiting_activation,
