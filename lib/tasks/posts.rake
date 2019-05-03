@@ -390,123 +390,60 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   puts "", "Done.", ""
 end
 
-def get_missing_uploads
-  PostCustomField.where(name: Post::MISSING_UPLOADS)
-end
-
 desc 'Finds missing post upload records from cooked HTML content'
 task 'posts:missing_uploads' => :environment do
-  get_missing_uploads.delete_all
-
-  upload_patterns = [
-    /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
-    /\/original\//,
-    /\/optimized\//
-  ]
-  missing_uploads = []
   old_scheme_upload_count = 0
-  count = 0
 
-  Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
-    ids = posts.pluck(:id)
-    sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+  missing = Post.find_missing_uploads do |post, src, path, sha1|
+    next if sha1.present?
 
-    posts.each do |post|
-      missing_post_uploads = []
-      links = Nokogiri::HTML::fragment(post.cooked).css("a/@href", "img/@src").map { |media| media.value }.uniq
+    upload_id = nil
 
-      links.each do |src|
-        next if src.blank? || upload_patterns.none? { |pattern| src =~ pattern }
+    # recovering old scheme upload.
+    local_store = FileStore::LocalStore.new
+    public_path = "#{local_store.public_dir}#{path}"
+    file_path = nil
 
-        src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-        next unless Discourse.store.has_been_uploaded?(src) || src =~ /\A\/[^\/]/i
-
-        path = begin
-          URI(URI.unescape(src))&.path
-        rescue URI::Error
-        end
-
-        next if path.blank?
-
-        sha1 =
-          if path.include? "optimized"
-            OptimizedImage.extract_sha1(path)
-          else
-            Upload.extract_sha1(path)
-          end
-
-        if sha1.blank? || sha1s.exclude?(sha1)
-          upload_id = nil
-
-          if missing_uploads.exclude?(src)
-            if sha1.blank?
-              # recovering old scheme upload.
-              local_store = FileStore::LocalStore.new
-              public_path = "#{local_store.public_dir}#{path}"
-              file_path = nil
-
-              if File.exists?(public_path)
-                file_path = public_path
-              else
-                tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
-                file_path = tombstone_path if File.exists?(tombstone_path)
-              end
-
-              if file_path.present?
-                tmp = Tempfile.new
-                tmp.write(File.read(file_path))
-                tmp.rewind
-
-                if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
-                  sha1s << upload.sha1
-                  upload_id = upload.id
-                  DbHelper.remap(UrlHelper.absolute(src), upload.url)
-
-                  post.reload
-                  post.raw.gsub!(src, upload.url)
-                  post.cooked.gsub!(src, upload.url)
-
-                  if post.changed?
-                    post.save!(validate: false)
-                    post.rebake!
-                  end
-                end
-
-                FileUtils.rm(tmp, force: true)
-              else
-                old_scheme_upload_count += 1
-              end
-            else
-              upload_id = Upload.where(sha1: sha1).pluck(:id).first
-            end
-
-            if upload_id.present?
-              attributes = { post_id: post.id, upload_id: upload_id }
-              PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
-            else
-              missing_uploads << src
-            end
-          end
-
-          missing_post_uploads << src if upload_id.blank?
-        end
-      end
-
-      if missing_post_uploads.present?
-        PostCustomField.create!(post_id: post.id, name: Post::MISSING_UPLOADS, value: missing_post_uploads.to_json)
-        count += missing_post_uploads.count
-        putc "x"
-      else
-        putc "."
-      end
+    if File.exists?(public_path)
+      file_path = public_path
+    else
+      tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
+      file_path = tombstone_path if File.exists?(tombstone_path)
     end
+
+    if file_path.present?
+      tmp = Tempfile.new
+      tmp.write(File.read(file_path))
+      tmp.rewind
+
+      if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+        sha1s << upload.sha1
+        upload_id = upload.id
+        DbHelper.remap(UrlHelper.absolute(src), upload.url)
+
+        post.reload
+        post.raw.gsub!(src, upload.url)
+        post.cooked.gsub!(src, upload.url)
+
+        if post.changed?
+          post.save!(validate: false)
+          post.rebake!
+        end
+      end
+
+      FileUtils.rm(tmp, force: true)
+    else
+      old_scheme_upload_count += 1
+    end
+
+    upload_id
   end
 
-  puts "", "#{count} post uploads are missing.", ""
+  puts "", "#{missing[:count]} post uploads are missing.", ""
 
-  if count > 0
-    puts "#{missing_uploads.count} uploads are missing."
-    puts "#{old_scheme_upload_count} of #{missing_uploads.count} are old scheme uploads." if old_scheme_upload_count > 0
-    puts "#{get_missing_uploads.count} of #{Post.count} posts are affected.", ""
+  if missing[:count] > 0
+    puts "#{missing[:uploads].count} uploads are missing."
+    puts "#{old_scheme_upload_count} of #{missing[:uploads].count} are old scheme uploads." if old_scheme_upload_count > 0
+    puts "#{missing[:post_uploads].count} of #{Post.count} posts are affected.", ""
   end
 end

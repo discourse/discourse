@@ -36,8 +36,6 @@ class S3Inventory
 
       ActiveRecord::Base.transaction do
         begin
-          table_name = "#{type}_inventory"
-          connection = ActiveRecord::Base.connection.raw_connection
           connection.exec("CREATE TEMP TABLE #{table_name}(key text UNIQUE, etag text, PRIMARY KEY(etag, key))")
           connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
             files.each do |file|
@@ -53,6 +51,8 @@ class S3Inventory
             FROM #{table_name}
             WHERE #{model.table_name}.etag IS NULL
               AND url ILIKE '%' || #{table_name}.key")
+
+          list_missing_post_uploads if type == "original"
 
           uploads = (model == Upload) ? model.by_users.where("created_at < ?", inventory_date) : model
           missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
@@ -71,6 +71,35 @@ class S3Inventory
         end
       end
     end
+  end
+
+  def list_missing_post_uploads
+    log "Listing missing post uploads..."
+
+    missing = Post.find_missing_uploads(include_local_upload: false) do |_, _, _, sha1|
+      next if sha1.blank?
+
+      upload_id = nil
+      result = connection.exec("SELECT * FROM #{table_name} WHERE key LIKE '%original/%/#{sha1}%'")
+
+      if result.count >= 0
+        key = result[0]["key"]
+        data = s3_helper.object(key).data
+        upload_id = Upload.create!(
+          user_id: Discourse.system_user.id,
+          original_filename: "",
+          filesize: data.content_length,
+          url: File.join(Discourse.store.absolute_base_url, key),
+          sha1: sha1,
+          etag: result[0]["etag"]
+        ).id
+      end
+
+      upload_id
+    end
+
+    Discourse.stats.set("missing_post_uploads", missing[:count])
+    log "#{missing[:count]} post uploads are missing."
   end
 
   def download_inventory_files_to_tmp_directory
@@ -127,6 +156,14 @@ class S3Inventory
   end
 
   private
+
+  def connection
+    @connection ||= ActiveRecord::Base.connection.raw_connection
+  end
+
+  def table_name
+    "#{type}_inventory"
+  end
 
   def files
     @files ||= begin
