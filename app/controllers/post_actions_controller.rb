@@ -49,16 +49,6 @@ class PostActionsController < ApplicationController
     end
   end
 
-  def defer_flags
-    guardian.ensure_can_defer_flags!(@post)
-
-    if reviewable = @post.reviewable_flag
-      reviewable.perform(current_user, :ignore)
-    end
-
-    render json: { success: true }
-  end
-
   private
 
   def fetch_post_from_params

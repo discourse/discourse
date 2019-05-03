@@ -10,6 +10,16 @@ module TopicGuardian
     )
   end
 
+  def can_review_topic?(topic)
+    return false if anonymous? || topic.nil?
+    return true if is_staff?
+
+    SiteSetting.enable_category_group_review? &&
+      topic.category.present? &&
+      topic.category.reviewable_by_group_id.present? &&
+      GroupUser.where(group_id: topic.category.reviewable_by_group_id, user_id: user.id).exists?
+  end
+
   def can_create_shared_draft?
     is_staff? && SiteSetting.shared_drafts_enabled?
   end

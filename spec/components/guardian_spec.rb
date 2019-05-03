@@ -249,29 +249,6 @@ describe Guardian do
     end
   end
 
-  describe "can_defer_flags" do
-    let(:post) { Fabricate(:post) }
-    let(:user) { post.user }
-    let(:moderator) { Fabricate(:moderator) }
-
-    it "returns false when the user is nil" do
-      expect(Guardian.new(nil).can_defer_flags?(post)).to be_falsey
-    end
-
-    it "returns false when the post is nil" do
-      expect(Guardian.new(moderator).can_defer_flags?(nil)).to be_falsey
-    end
-
-    it "returns false when the user is not a moderator" do
-      expect(Guardian.new(user).can_defer_flags?(post)).to be_falsey
-    end
-
-    it "returns true when the user is a moderator" do
-      expect(Guardian.new(moderator).can_defer_flags?(post)).to be_truthy
-    end
-
-  end
-
   describe 'can_send_private_message' do
     let(:user) { Fabricate(:user) }
     let(:another_user) { Fabricate(:user) }
@@ -1669,6 +1646,28 @@ describe Guardian do
 
     it "allows moderators to see flags" do
       expect(Guardian.new(admin).can_see_flags?(post)).to be_truthy
+    end
+  end
+
+  context "can_review_topic?" do
+    it 'returns false with a nil object' do
+      expect(Guardian.new(user).can_review_topic?(nil)).to eq(false)
+    end
+
+    it 'returns true for a staff user' do
+      expect(Guardian.new(moderator).can_review_topic?(topic)).to eq(true)
+    end
+
+    it 'returns false for a regular user' do
+      expect(Guardian.new(user).can_review_topic?(topic)).to eq(false)
+    end
+
+    it 'returns false for a regular user' do
+      SiteSetting.enable_category_group_review = true
+      group = Fabricate(:group)
+      GroupUser.create!(group_id: group.id, user_id: user.id)
+      topic.category.update!(reviewable_by_group_id: group.id)
+      expect(Guardian.new(user).can_review_topic?(topic)).to eq(true)
     end
   end
 

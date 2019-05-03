@@ -73,7 +73,10 @@ class PostSerializer < BasicPostSerializer
              :notice_args,
              :last_wiki_edit,
              :locked,
-             :excerpt
+             :excerpt,
+             :reviewable_id,
+             :reviewable_score_count,
+             :reviewable_score_pending_count
 
   def initialize(object, opts)
     super(object, opts)
@@ -251,14 +254,6 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
-      # The following only applies if you're logged in
-      if summary[:can_act] && scope.current_user.present?
-        summary[:can_defer_flags] = true if scope.is_staff? &&
-                                                   PostActionType.flag_types_without_custom.values.include?(id) &&
-                                                   active_flags.present? && active_flags.has_key?(id) &&
-                                                   active_flags[id] > 0
-      end
-
       if actions.present? && actions.has_key?(id)
         summary[:acted] = true
         summary[:can_undo] = true if scope.can_delete?(actions[id])
@@ -416,7 +411,62 @@ class PostSerializer < BasicPostSerializer
     object.hidden
   end
 
-  private
+  # If we have a topic view, it has bulk values for the reviewable content we can use
+  def reviewable_id
+    if @topic_view.present?
+      for_post = @topic_view.reviewable_counts[object.id]
+      return for_post ? for_post[:reviewable_id] : 0
+    end
+
+    reviewable&.id
+  end
+
+  def include_reviewable_id?
+    can_review_topic?
+  end
+
+  def reviewable_score_count
+    if @topic_view.present?
+      for_post = @topic_view.reviewable_counts[object.id]
+      return for_post ? for_post[:total] : 0
+    end
+
+    reviewable_scores.size
+  end
+
+  def include_reviewable_score_count?
+    can_review_topic?
+  end
+
+  def reviewable_score_pending_count
+    if @topic_view.present?
+      for_post = @topic_view.reviewable_counts[object.id]
+      return for_post ? for_post[:pending] : 0
+    end
+
+    reviewable_scores.count { |rs| rs.pending? }
+  end
+
+  def include_reviewable_score_pending_count?
+    can_review_topic?
+  end
+
+private
+
+  def can_review_topic?
+    return @can_review_topic unless @can_review_topic.nil?
+    @can_review_topic = @topic_view&.can_review_topic
+    @can_review_topic ||= scope.can_review_topic?(object.topic)
+    @can_review_topic
+  end
+
+  def reviewable
+    @reviewable ||= Reviewable.where(target: object).includes(:reviewable_scores).first
+  end
+
+  def reviewable_scores
+    reviewable&.reviewable_scores&.to_a || []
+  end
 
   def user_custom_fields_object
     (@topic_view&.user_custom_fields || @options[:user_custom_fields] || {})
@@ -430,10 +480,6 @@ class PostSerializer < BasicPostSerializer
 
   def post_actions
     @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
-  end
-
-  def active_flags
-    @active_flags ||= (@topic_view&.all_active_flags || {})[object.id]
   end
 
   def post_custom_fields
