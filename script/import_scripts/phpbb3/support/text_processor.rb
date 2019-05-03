@@ -21,19 +21,25 @@ module ImportScripts::PhpBB3
       create_internal_link_regexps(settings.original_site_prefix)
     end
 
-    def process_raw_text(raw)
+    def process_raw_text(raw, attachments = nil)
       if @use_xml_to_markdown
+        unreferenced_attachments = attachments&.dup
+
         converter = BBCode::XmlToMarkdown.new(
           raw,
           username_from_user_id: lambda { |user_id| @lookup.find_username_by_import_id(user_id) },
           smilie_to_emoji: lambda { |smilie| @smiley_processor.emoji(smilie) },
           quoted_post_from_post_id: lambda { |post_id| @lookup.topic_lookup_from_imported_post_id(post_id) },
-          upload_md_from_file: nil,
+          upload_md_from_file: lambda do |filename, index|
+            unreferenced_attachments[index] = nil
+            attachments.fetch(index, filename)
+          end,
           url_replacement: nil,
           allow_inline_code: false
         )
 
-        converter.convert
+        text = converter.convert
+        add_unreferenced_attachments(text, unreferenced_attachments)
       else
         text = raw.dup
         text = CGI.unescapeHTML(text)
@@ -52,13 +58,13 @@ module ImportScripts::PhpBB3
     end
 
     def process_post(raw, attachments)
-      text = process_raw_text(raw)
+      text = process_raw_text(raw, attachments)
       text = process_attachments(text, attachments) if attachments.present?
       text
     end
 
     def process_private_msg(raw, attachments)
-      text = process_raw_text(raw)
+      text = process_raw_text(raw, attachments)
       text = process_attachments(text, attachments) if attachments.present?
       text
     end
@@ -156,6 +162,12 @@ module ImportScripts::PhpBB3
         unreferenced_attachments[index] = nil
         attachments.fetch(index, real_filename)
       end
+
+      add_unreferenced_attachments(text, unreferenced_attachments)
+    end
+
+    def add_unreferenced_attachments(text, unreferenced_attachments)
+      return text unless unreferenced_attachments
 
       unreferenced_attachments = unreferenced_attachments.compact
       text << "\n" << unreferenced_attachments.join("\n") unless unreferenced_attachments.empty?
