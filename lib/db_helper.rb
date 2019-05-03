@@ -9,12 +9,23 @@ class DbHelper
   ORDER BY table_name, column_name
   SQL
 
+  TRIGGERS_SQL ||= <<~SQL
+    SELECT trigger_name
+      FROM information_schema.triggers
+     WHERE trigger_name LIKE '%_readonly'
+  SQL
+
   def self.remap(from, to, anchor_left: false, anchor_right: false, excluded_tables: [])
     like = "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"
+
+    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
+
     text_columns = Hash.new { |h, k| h[k] = [] }
 
     DB.query(REMAP_SQL).each do |r|
-      text_columns[r.table_name] << r.column_name
+      unless triggers.include?("#{r.table_name}_#{r.column_name}_readonly")
+        text_columns[r.table_name] << r.column_name
+      end
     end
 
     text_columns.each do |table, columns|
@@ -39,10 +50,14 @@ class DbHelper
   end
 
   def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [])
+    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
+
     text_columns = Hash.new { |h, k| h[k] = [] }
 
     DB.query(REMAP_SQL).each do |r|
-      text_columns[r.table_name] << r.column_name
+      unless triggers.include?("#{r.table_name}_#{r.column_name}_readonly")
+        text_columns[r.table_name] << r.column_name
+      end
     end
 
     text_columns.each do |table, columns|
