@@ -1,6 +1,9 @@
 import RestModel from "discourse/models/rest";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { ajax } from "discourse/lib/ajax";
+import { escapeExpression } from "discourse/lib/utilities";
+import highlightSyntax from "discourse/lib/highlight-syntax";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -277,9 +280,36 @@ const Theme = RestModel.extend({
   },
 
   updateToLatest() {
-    return this.save({ remote_update: true }).then(() =>
-      this.set("changed", false)
-    );
+    return ajax(`/admin/themes/${this.id}/diff_local_changes`).then(json => {
+      if (json && json.error) {
+        bootbox.alert(
+          I18n.t("generic_error_with_reason", {
+            error: json.error
+          })
+        );
+      } else if (json && json.diff) {
+        bootbox.confirm(
+          I18n.t("admin.customize.theme.update_confirm") +
+            `<pre><code class="diff">${escapeExpression(
+              json.diff
+            )}</code></pre>`,
+          I18n.t("cancel"),
+          I18n.t("admin.customize.theme.update_confirm_yes"),
+          result => {
+            if (result) {
+              return this.save({ remote_update: true }).then(() =>
+                this.set("changed", false)
+              );
+            }
+          }
+        );
+        highlightSyntax();
+      } else {
+        return this.save({ remote_update: true }).then(() =>
+          this.set("changed", false)
+        );
+      }
+    });
   },
 
   changed: false,

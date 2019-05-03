@@ -378,4 +378,13 @@ describe Admin::ThemesController do
       expect(response.status).to eq(400)
     end
   end
+
+  describe '#diff_local_changes' do
+    let(:theme) { Fabricate(:theme) }
+
+    it "should return empty for a default theme" do
+      get "/admin/themes/#{theme.id}/diff_local_changes.json"
+      expect(response.body).to eq("{}")
+    end
+  end
 end

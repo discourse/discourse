@@ -170,6 +170,21 @@ class RemoteTheme < ActiveRecord::Base
     end
   end
 
+  def diff_local_changes
+    return unless is_git?
+    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
+    begin
+      importer.import!
+    rescue RemoteTheme::ImportError => err
+      { error: err.message }
+    else
+      changes = importer.diff_local_changes(self.id)
+      return nil if changes.blank?
+
+      { diff: changes }
+    end
+  end
+
   def normalize_override(hex)
     return unless hex
 
