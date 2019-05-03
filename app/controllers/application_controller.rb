@@ -14,6 +14,7 @@ require_dependency 'global_path'
 require_dependency 'secure_session'
 require_dependency 'topic_query'
 require_dependency 'hijack'
+require_dependency 'read_only'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -21,6 +22,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
+  include ReadOnly
 
   attr_reader :theme_ids
 
@@ -78,10 +80,6 @@ class ApplicationController < ActionController::Base
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
       (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
-  end
-
-  def add_readonly_header
-    response.headers['Discourse-Readonly'] = 'true' if @readonly_mode
   end
 
   def perform_refresh_session
@@ -507,10 +505,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def check_readonly_mode
-    @readonly_mode = Discourse.readonly_mode?
-  end
 
   def locale_from_header
     begin
