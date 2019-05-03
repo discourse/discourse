@@ -170,6 +170,35 @@ class Autospec::Manager
     @queue.unshift ["focus", failed_specs.join(" "), runner] if failed_specs.length > 0
   end
 
+  def root_path
+    root_path ||= File.expand_path(File.dirname(__FILE__) + "../../..")
+  end
+
+  def reverse_symlink_map
+    map = {}
+    Dir[root_path + "/plugins/*"].each do |f|
+      next if !File.directory? f
+      resolved = File.realpath(f)
+      if resolved != f
+        map[resolved] = f
+      end
+    end
+    map
+  end
+
+  # plugins can be symlinked, try to figure out which plugin this is
+  def reverse_symlink(file)
+    resolved = file
+    @reverse_map ||= reverse_symlink_map
+    @reverse_map.each do |location, discourse_location|
+      if file.start_with?(location)
+        resolved = discourse_location + file[location.length..-1]
+      end
+    end
+
+    resolved
+  end
+
   def listen_for_changes
     puts "@@@@@@@@@@@@ listen_for_changes" if @debug
 
@@ -182,7 +211,7 @@ class Autospec::Manager
       options[:latency] = @opts[:latency] || 3
     end
 
-    path = File.expand_path(File.dirname(__FILE__) + "../../..")
+    path = root_path
 
     if ENV['VIM_AUTOSPEC']
       STDERR.puts "Using VIM file listener"
@@ -192,6 +221,7 @@ class Autospec::Manager
       server = SocketServer.new(socket_path)
       server.start do |line|
         file, line = line.split(' ')
+        file = reverse_symlink(file)
         file = file.sub(Rails.root.to_s << "/", "")
         # process_change can aquire a mutex and block
         # the acceptor
@@ -216,7 +246,10 @@ class Autospec::Manager
           listener = Listen.to("#{path}/#{watch}", options) do |modified, added, _|
             paths = [modified, added].flatten
             paths.compact!
-            paths.map! { |long| long[(path.length + 1)..-1] }
+            paths.map! do |long|
+              long = reverse_symlink(long)
+              long[(path.length + 1)..-1]
+            end
             process_change(paths)
           end
           listener.start
