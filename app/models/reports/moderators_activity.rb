@@ -69,7 +69,7 @@ Report.add_report("moderators_activity") do |report|
       SELECT agreed_by_id,
       disagreed_by_id
       FROM post_actions
-      WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
+      WHERE post_action_type_id IN (#{PostActionType.flag_types.values.join(',')})
       AND created_at >= '#{report.start_date}'
       AND created_at <= '#{report.end_date}'
       ),
