@@ -319,7 +319,7 @@ class PostAlerter
       ).exists?
     end
 
-    # Don't notify the same user about the same notification on the same post
+    # Don't notify the same user about the same type of notification on the same post
     existing_notification = user.notifications
       .order("notifications.id DESC")
       .find_by(
@@ -355,6 +355,15 @@ class PostAlerter
         return notification if notification
       end
     end
+
+    # Don't alert same user about the same post
+    # i.e. skip duplicate alerts on a revised post (when editing post triggers a new type of notification like a mention or a quote)
+    existing_alert = user.notifications
+      .order("notifications.id DESC")
+      .find_by(
+        topic_id: post.topic_id,
+        post_number: post.post_number
+      )
 
     collapsed = false
 
@@ -415,7 +424,7 @@ class PostAlerter
       skip_send_email: skip_send_email
     )
 
-    if created.id && !existing_notification && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+    if created.id && !existing_alert && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
       create_notification_alert(user: user, post: original_post, notification_type: type, username: original_username)
     end
 
