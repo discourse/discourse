@@ -470,10 +470,6 @@ class Post < ActiveRecord::Base
     post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values, deleted_at: nil).count != 0
   end
 
-  def active_flags
-    post_actions.active.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
-  end
-
   def reviewable_flag
     ReviewableFlaggedPost.pending.find_by(target: self)
   end

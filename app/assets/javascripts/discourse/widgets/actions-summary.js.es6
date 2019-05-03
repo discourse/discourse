@@ -74,57 +74,11 @@ createWidget("action-link", {
   }
 });
 
-createWidget("actions-summary-item", {
-  tagName: "div.post-action",
-  buildKey: attrs => `actions-summary-item-${attrs.id}`,
-
-  defaultState() {
-    return { users: null };
-  },
-
-  template: hbs`
-    {{#if state.users}}
-      {{small-user-list users=state.users description=(concat "post.actions.people." attrs.action)}}
-    {{else}}
-      {{action-link action="whoActed" text=attrs.description}}
-    {{/if}}
-
-    {{#if attrs.canUndo}}
-      {{action-link action="undo" className="undo" text=(i18n (concat "post.actions.undo." attrs.action))}}
-    {{/if}}
-
-    {{#if attrs.canIgnoreFlags}}
-      {{action-link action="deferFlags" className="defer-flags" text=(i18n "post.actions.defer_flags" count=attrs.count)}}
-    {{/if}}
-  `,
-
-  whoActed() {
-    const attrs = this.attrs;
-    const state = this.state;
-    return this.store
-      .find("post-action-user", {
-        id: attrs.postId,
-        post_action_type_id: attrs.id
-      })
-      .then(users => {
-        state.users = users.map(avatarAtts);
-      });
-  },
-
-  undo() {
-    this.sendWidgetAction("undoPostAction", this.attrs.id);
-  },
-
-  deferFlags() {
-    this.sendWidgetAction("deferPostActionFlags", this.attrs.id);
-  }
-});
-
 export default createWidget("actions-summary", {
   tagName: "section.post-actions",
   template: hbs`
     {{#each attrs.actionsSummary as |as|}}
-      {{actions-summary-item attrs=as}}
+      <div class='post-action'>{{as.description}}</div>
       <div class='clearfix'></div>
     {{/each}}
     {{#if attrs.deleted_at}}

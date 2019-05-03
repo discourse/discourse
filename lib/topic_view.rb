@@ -15,7 +15,8 @@ class TopicView
     :print,
     :message_bus_last_id,
     :queued_posts_enabled,
-    :personal_message
+    :personal_message,
+    :can_review_topic
   )
 
   attr_accessor(
@@ -100,6 +101,7 @@ class TopicView
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
 
+    @can_review_topic = @guardian.can_review_topic?(@topic)
     @queued_posts_enabled = NewPostManager.queue_enabled?
     @personal_message = @topic.private_message?
   end
@@ -410,16 +412,32 @@ class TopicView
     @all_post_actions ||= PostAction.counts_for(@posts, @user)
   end
 
-  def all_active_flags
-    @all_active_flags ||= ReviewableFlaggedPost.counts_for(@posts)
-  end
-
   def links
     @links ||= TopicLink.topic_map(@guardian, @topic.id)
   end
 
+  def reviewable_counts
+    if @reviewable_counts.blank?
+
+      # Create a hash with counts by post so we can quickly look up whether there is reviewable content.
+      @reviewable_counts = {}
+      Reviewable.
+        where(target_type: 'Post', target_id: filtered_post_ids).
+        includes(:reviewable_scores).each do |r|
+
+        for_post = (@reviewable_counts[r.target_id] ||= { total: 0, pending: 0, reviewable_id: r.id })
+        r.reviewable_scores.each do |s|
+          for_post[:total] += 1
+          for_post[:pending] += 1 if s.pending?
+        end
+      end
+    end
+
+    @reviewable_counts
+  end
+
   def pending_posts
-    ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
+    @pending_posts ||= ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
   end
 
   def actions_summary

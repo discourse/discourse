@@ -1,3 +1,14 @@
+.button-count.has-pending {
+  span {
+    background-color: $danger;
+    color: $secondary;
+    border-radius: 10px;
+    padding: 0.25em 0.5em;
+    display: inline-block;
+    font-size: 0.8em;
+  }
+}
+
 .placeholder-avatar {
   display: inline-block;
   width: 45px;
@@ -243,6 +254,7 @@ blockquote {
 }
 
 .post-action {
+  color: $primary-medium;
   .undo-action,
   .act-action {
     margin-left: 5px;

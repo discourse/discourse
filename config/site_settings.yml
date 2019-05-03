@@ -190,10 +190,9 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "like-count|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
-      - like-count
       - like
       - edit
       - flag
