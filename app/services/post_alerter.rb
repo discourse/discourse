@@ -319,32 +319,44 @@ class PostAlerter
       ).exists?
     end
 
-    # Don't notify the same user about the same type of notification on the same post
-    existing_notification = user.notifications
+    existing_notifications = user.notifications
       .order("notifications.id DESC")
-      .find_by(
+      .where(
         topic_id: post.topic_id,
-        post_number: post.post_number,
-        notification_type: type
-      )
+        post_number: post.post_number
+      ).limit(10)
 
-    return if existing_notification && !should_notify_previous?(user, existing_notification, opts)
+    existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
+
+    # existing_notification = user.notifications
+    #   .order("notifications.id DESC")
+    #   .find_by(
+    #     topic_id: post.topic_id,
+    #     post_number: post.post_number
+    #   )
+
+    # # Don't notify the same user about the same type of notification on the same post
+    # existing_notification_of_same_type = existing_notification if existing_notification&.notification_type == type
+
+    puts existing_notification_of_same_type.inspect
+
+    return if existing_notification_of_same_type && !should_notify_previous?(user, existing_notification_of_same_type, opts)
 
     notification_data = {}
 
     if is_liked
-      if existing_notification &&
-        existing_notification.created_at > 1.day.ago &&
+      if existing_notification_of_same_type &&
+        existing_notification_of_same_type.created_at > 1.day.ago &&
         (
           user.user_option.like_notification_frequency ==
           UserOption.like_notification_frequency_type[:always]
         )
 
-        data = existing_notification.data_hash
+        data = existing_notification_of_same_type.data_hash
         notification_data["username2"] = data["display_username"]
         notification_data["count"] = (data["count"] || 1).to_i + 1
         # don't use destroy so we don't trigger a notification count refresh
-        Notification.where(id: existing_notification.id).destroy_all
+        Notification.where(id: existing_notification_of_same_type.id).destroy_all
       elsif !SiteSetting.likes_notification_consolidation_threshold.zero?
         notification = consolidate_liked_notifications(
           user,
@@ -424,7 +436,7 @@ class PostAlerter
       skip_send_email: skip_send_email
     )
 
-    if created.id && !existing_alert && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
+    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type) && !user.suspended?
       create_notification_alert(user: user, post: original_post, notification_type: type, username: original_username)
     end
 
