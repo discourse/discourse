@@ -219,6 +219,14 @@ module ImportScripts::PhpBB3
       SQL
     end
 
+    def get_smiley(smiley_code)
+      query(<<-SQL).first
+        SELECT emotion, smiley_url
+        FROM #{@table_prefix}smilies
+        WHERE code = '#{smiley_code}'
+      SQL
+    end
+
     def get_config_values
       query(<<-SQL).first
         SELECT

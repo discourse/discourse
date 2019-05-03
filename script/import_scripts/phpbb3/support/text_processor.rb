@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
+require_relative 'bbcode/xml_to_markdown'
+
 module ImportScripts::PhpBB3
   class TextProcessor
     # @param lookup [ImportScripts::LookupContainer]
     # @param database [ImportScripts::PhpBB3::Database_3_0 | ImportScripts::PhpBB3::Database_3_1]
     # @param smiley_processor [ImportScripts::PhpBB3::SmileyProcessor]
     # @param settings [ImportScripts::PhpBB3::Settings]
-    def initialize(lookup, database, smiley_processor, settings)
+    # @param phpbb_config [Hash]
+    def initialize(lookup, database, smiley_processor, settings, phpbb_config)
       @lookup = lookup
       @database = database
       @smiley_processor = smiley_processor
       @he = HTMLEntities.new
+      @use_xml_to_markdown = phpbb_config[:phpbb_version].start_with?('3.2')
 
       @settings = settings
       @new_site_prefix = settings.new_site_prefix
@@ -18,19 +22,33 @@ module ImportScripts::PhpBB3
     end
 
     def process_raw_text(raw)
-      text = raw.dup
-      text = CGI.unescapeHTML(text)
+      if @use_xml_to_markdown
+        converter = BBCode::XmlToMarkdown.new(
+          raw,
+          username_from_user_id: lambda { |user_id| @lookup.find_username_by_import_id(user_id) },
+          smilie_to_emoji: lambda { |smilie| @smiley_processor.emoji(smilie) },
+          quoted_post_from_post_id: lambda { |post_id| @lookup.topic_lookup_from_imported_post_id(post_id) },
+          upload_md_from_file: nil,
+          url_replacement: nil,
+          allow_inline_code: false
+        )
 
-      clean_bbcodes(text)
-      if @settings.use_bbcode_to_md
-        text = bbcode_to_md(text)
+        converter.convert
+      else
+        text = raw.dup
+        text = CGI.unescapeHTML(text)
+
+        clean_bbcodes(text)
+        if @settings.use_bbcode_to_md
+          text = bbcode_to_md(text)
+        end
+        process_smilies(text)
+        process_links(text)
+        process_lists(text)
+        process_code(text)
+        fix_markdown(text)
+        text
       end
-      process_smilies(text)
-      process_links(text)
-      process_lists(text)
-      process_code(text)
-      fix_markdown(text)
-      text
     end
 
     def process_post(raw, attachments)

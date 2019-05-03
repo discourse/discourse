@@ -66,11 +66,11 @@ module ImportScripts::PhpBB3
     end
 
     def text_processor
-      @text_processor ||= TextProcessor.new(@lookup, @database, smiley_processor, @settings)
+      @text_processor ||= TextProcessor.new(@lookup, @database, smiley_processor, @settings, @phpbb_config)
     end
 
     def smiley_processor
-      SmileyProcessor.new(@uploader, @settings, @phpbb_config)
+      SmileyProcessor.new(@uploader, @database, @settings, @phpbb_config)
     end
   end
 end
