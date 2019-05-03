@@ -4,7 +4,7 @@ import { historyHeat } from "discourse/widgets/post-edits-indicator";
 import showModal from "discourse/lib/show-modal";
 
 export default Ember.Component.extend({
-  hasEdits: Ember.computed.gt("reviewable.version", 1),
+  hasEdits: Ember.computed.gt("reviewable.post_version", 1),
 
   @computed("reviewable.post_updated_at")
   historyClass(updatedAt) {
