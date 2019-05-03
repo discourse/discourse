@@ -1555,7 +1555,7 @@ en:
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       reply_placeholder_no_images: "Type here. Use Markdown, BBCode, or HTML to format."
-      reply_placeholder_choose_category: "You must select a category before typing here."
+      reply_placeholder_choose_category: "Select a category before typing here."
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
