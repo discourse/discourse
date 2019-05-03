@@ -435,7 +435,14 @@ export default Ember.Component.extend({
             const filterInput = document.querySelector(
               ".emoji-picker input[name='filter']"
             );
-            if (filterInput) filterInput.value = v.term;
+            if (filterInput) {
+              filterInput.value = v.term;
+
+              Ember.run.later(
+                () => filterInput.dispatchEvent(new Event("input")),
+                50
+              );
+            }
           });
 
           return "";
