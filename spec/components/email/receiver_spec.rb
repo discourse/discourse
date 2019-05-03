@@ -212,6 +212,14 @@ describe Email::Receiver do
       expect(email_log_2.bounced).to eq(true)
     end
 
+    it "works when the final recipient is different" do
+      expect { process(:verp_bounce_different_final_recipient) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+
     it "sends a system message once they reach the 'bounce_score_threshold'" do
       expect(user.active).to eq(true)
 

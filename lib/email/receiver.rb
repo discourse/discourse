@@ -513,13 +513,13 @@ module Email
     def parse_from_field(mail = nil)
       mail ||= @mail
 
-      if mail.bounced?
+      if email_log.present?
+        email = email_log.to_address || email_log.user&.email
+        return [email, email_log.user&.username]
+      elsif mail.bounced?
         Array.wrap(mail.final_recipient).each do |from|
           return extract_from_address_and_name(from)
         end
-      elsif email_log.present?
-        email = email_log.user&.email || email_log.to_address
-        return [email, email_log.user&.username]
       end
 
       return unless mail[:from]
