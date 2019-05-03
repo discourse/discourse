@@ -9,7 +9,7 @@ class MetadataController < ApplicationController
   end
 
   def opensearch
-    render file: "#{Rails.root}/app/views/metadata/opensearch.xml"
+    render template: "metadata/opensearch.xml"
   end
 
   private
