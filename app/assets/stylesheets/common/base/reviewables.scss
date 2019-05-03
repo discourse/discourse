@@ -1,4 +1,10 @@
 .reviewable {
+  .flagged-post-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
   .status {
     color: $primary-medium;
     span.approved {
