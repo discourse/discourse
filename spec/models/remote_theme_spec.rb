@@ -29,7 +29,7 @@ describe RemoteTheme do
           "theme_version": "1.0",
           "minimum_discourse_version": "1.0.0",
           "assets": {
-            "font": "assets/awesome.woff2"
+            "font": "assets/font.woff2"
           },
           "color_schemes": {
             "#{color_scheme_name}": {
@@ -53,7 +53,7 @@ describe RemoteTheme do
         "common/header.html" => "I AM HEADER",
         "common/random.html" => "I AM SILLY",
         "common/embedded.scss" => "EMBED",
-        "assets/awesome.woff2" => "FAKE FONT",
+        "assets/font.woff2" => "FAKE FONT",
         "settings.yaml" => "boolean_setting: true",
         "locales/en.yml" => "sometranslations"
       )
@@ -84,7 +84,6 @@ describe RemoteTheme do
       expect(@theme.theme_fields.length).to eq(7)
 
       mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
-
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq(scss_data)
       expect(mapped["0-embedded_scss"]).to eq("EMBED")
@@ -117,7 +116,6 @@ describe RemoteTheme do
 
       File.delete("#{initial_repo}/settings.yaml")
       File.delete("#{initial_repo}/scss/file.scss")
-
       `cd #{initial_repo} && git commit -am "update"`
 
       time = Time.new('2001')
@@ -160,6 +158,13 @@ describe RemoteTheme do
 
       scheme_count = ColorScheme.where(theme_id: @theme.id).count
       expect(scheme_count).to eq(1)
+
+      # It should detect local changes
+      @theme.set_field(target: :common, name: :scss, value: 'body {background-color: blue};')
+      @theme.save
+      @theme.reload
+
+      expect(remote.diff_local_changes[:diff]).to include("background-color: blue")
     end
   end
 

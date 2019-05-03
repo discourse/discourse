@@ -3424,6 +3424,8 @@ en:
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
+          update_confirm: "These local changes will be erased by the update. Are you sure you want to continue?"
+          update_confirm_yes: "Yes, continue with the update"
           common: "Common"
           desktop: "Desktop"
           mobile: "Mobile"
