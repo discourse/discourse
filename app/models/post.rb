@@ -890,12 +890,12 @@ class Post < ActiveRecord::Base
 
   def link_post_uploads(fragments: nil)
     upload_ids = []
-    fragments ||= Nokogiri::HTML::fragment(self.cooked)
 
-    fragments.css("a/@href", "img/@src").each do |media|
-      if upload = Upload.get_from_url(media.value)
-        upload_ids << upload.id
-      end
+    each_upload_url(fragments: fragments) do |src, _, sha1|
+      upload = nil
+      upload = Upload.find_by(sha1: sha1) if sha1.present?
+      upload ||= Upload.get_from_url(src)
+      upload_ids << upload.id if upload.present?
     end
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
@@ -914,6 +914,84 @@ class Post < ActiveRecord::Base
     JSON.parse(self.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
   rescue JSON::ParserError
     {}
+  end
+
+  def each_upload_url(fragments: nil, include_local_upload: true)
+    upload_patterns = [
+      /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
+      /\/original\//,
+      /\/optimized\//
+    ]
+    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
+
+    links.each do |src|
+      next if src.blank? || upload_patterns.none? { |pattern| src =~ pattern }
+
+      src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
+
+      path = begin
+        URI(URI.unescape(src))&.path
+      rescue URI::Error
+      end
+
+      next if path.blank?
+
+      sha1 =
+        if path.include? "optimized"
+          OptimizedImage.extract_sha1(path)
+        else
+          Upload.extract_sha1(path)
+        end
+
+      yield(src, path, sha1)
+    end
+  end
+
+  def self.find_missing_uploads(include_local_upload: true)
+    PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+    missing_uploads = []
+    missing_post_uploads = {}
+
+    Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
+      ids = posts.pluck(:id)
+      sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+
+      posts.each do |post|
+        post.each_upload_url do |src, path, sha1|
+          next if sha1.present? && sha1s.include?(sha1)
+
+          missing_post_uploads[post.id] ||= []
+
+          if missing_uploads.include?(src)
+            missing_post_uploads[post.id] << src
+            next
+          end
+
+          upload_id = nil
+          upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
+          upload_id ||= yield(post, src, path, sha1)
+
+          if upload_id.present?
+            attributes = { post_id: post.id, upload_id: upload_id }
+            PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
+          else
+            missing_uploads << src
+            missing_post_uploads[post.id] << src
+          end
+        end
+      end
+    end
+
+    count = 0
+    missing_post_uploads = missing_post_uploads.reject { |_, uploads| uploads.empty? }
+    missing_post_uploads.reject do |post_id, uploads|
+      PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
+      count += uploads.count
+    end
+
+    return { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
   private

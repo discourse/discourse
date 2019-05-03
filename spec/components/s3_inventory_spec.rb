@@ -75,7 +75,7 @@ describe "S3Inventory" do
       inventory.backfill_etags_and_list_missing
     end
 
-    expect(output).to eq("#{upload.url}\n1 of 4 uploads are missing\n")
+    expect(output).to eq("Listing missing post uploads...\n0 post uploads are missing.\n#{upload.url}\n1 of 4 uploads are missing\n")
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(1)
   end
 

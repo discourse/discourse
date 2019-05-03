@@ -1261,19 +1261,23 @@ describe Post do
       )
     end
 
+    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_uri}" }
+    let(:video_url) { "#{base_url}#{video_upload.url}" }
+    let(:audio_url) { "#{base_url}#{audio_upload.url}" }
+
     let(:raw) do
       <<~RAW
       <a href="#{attachment_upload.url}">Link</a>
       <img src="#{image_upload.url}">
 
       <video width="100%" height="100%" controls>
-        <source src="http://myforum.com#{video_upload.url}">
-        <a href="http://myforum.com#{video_upload.url}">http://myforum.com#{video_upload.url}</a>
+        <source src="#{video_url}">
+        <a href="#{video_url}">#{video_url}</a>
       </video>
 
       <audio controls>
-        <source src="http://myforum.com#{audio_upload.url}">
-        <a href="http://myforum.com#{audio_upload.url}">http://myforum.com#{audio_upload.url}</a>
+        <source src="#{audio_url}">
+        <a href="#{audio_url}">#{audio_url}</a>
       </audio>
       RAW
     end
