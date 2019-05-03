@@ -331,6 +331,7 @@ class UsersController < ApplicationController
 
   def create
     params.require(:email)
+    params.require(:username)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations

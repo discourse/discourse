@@ -963,6 +963,7 @@ describe UsersController do
     shared_examples 'failed signup' do
       it 'should not create a new User' do
         expect { post "/u.json", params: create_params }.to_not change { User.count }
+        expect(response.status).to eq(200)
       end
 
       it 'should report failed' do
@@ -995,6 +996,15 @@ describe UsersController do
       let(:create_params) { { name: @user.name, username: 'Reserved', email: @user.email, password: "x" * 20 } }
       before { SiteSetting.reserved_usernames = 'a|reserved|b' }
       include_examples 'failed signup'
+    end
+
+    context 'with a missing username' do
+      let(:create_params) { { name: @user.name, email: @user.email, password: "x" * 20 } }
+
+      it 'should not create a new User' do
+        expect { post "/u.json", params: create_params }.to_not change { User.count }
+        expect(response.status).to eq(400)
+      end
     end
 
     context 'when an Exception is raised' do
