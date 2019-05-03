@@ -16,4 +16,9 @@ module MobileDetection
       mobile_device?(user_agent)
     end
   end
+
+  def self.ios_device?(user_agent)
+    user_agent =~ /iPad|iPhone|iPod/
+  end
+
 end
