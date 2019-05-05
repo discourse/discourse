@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 describe ThemeJavascriptsController do
-  fab!(:theme) { Fabricate(:theme) }
+  let!(:theme) { Fabricate(:theme) }
   let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "header", value: "<a>html</a>") }
   let(:javascript_cache) { JavascriptCache.create!(content: 'console.log("hello");', theme_field: theme_field) }
 

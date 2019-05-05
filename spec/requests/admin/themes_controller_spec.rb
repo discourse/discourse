@@ -218,7 +218,7 @@ describe Admin::ThemesController do
   end
 
   describe '#update' do
-    fab!(:theme) { Fabricate(:theme) }
+    let!(:theme) { Fabricate(:theme) }
 
     it 'returns the right response when an invalid id is given' do
       put "/admin/themes/99999.json"
@@ -348,7 +348,7 @@ describe Admin::ThemesController do
   end
 
   describe '#destroy' do
-    fab!(:theme) { Fabricate(:theme) }
+    let!(:theme) { Fabricate(:theme) }
 
     it 'returns the right response when an invalid id is given' do
       delete "/admin/themes/9999.json"

@@ -155,7 +155,7 @@ describe StaffActionLogger do
       expect { logger.log_theme_change(nil, nil) }.to raise_error(Discourse::InvalidParameters)
     end
 
-    fab! :theme do
+    let! :theme do
       Fabricate(:theme)
     end
 

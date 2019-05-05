@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'theme_store/tgz_exporter'
 
 describe ThemeStore::TgzExporter do
-  fab!(:theme) do
+  let!(:theme) do
     Fabricate(:theme, name: "Header Icons").tap do |theme|
       theme.set_field(target: :common, name: :body_tag, value: "<b>testtheme1</b>")
       theme.set_field(target: :settings, name: :yaml, value: "somesetting: test")
