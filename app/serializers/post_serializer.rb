@@ -23,7 +23,6 @@ class PostSerializer < BasicPostSerializer
              :reply_count,
              :reply_to_post_number,
              :quote_count,
-             :avg_time,
              :incoming_link_count,
              :reads,
              :score,

@@ -6,7 +6,6 @@ class ScoreCalculator
       like_score: 15,
       incoming_link_count: 5,
       bookmark_count: 2,
-      avg_time: 0.05,
       reads: 0.2
     }
   end

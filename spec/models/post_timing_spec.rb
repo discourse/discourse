@@ -162,69 +162,6 @@ describe PostTiming do
 
     end
 
-    describe 'avg times' do
-
-      describe 'posts' do
-        it 'has no avg_time by default' do
-          expect(@post.avg_time).to be_blank
-        end
-
-        it "doesn't change when we calculate the avg time for the post because there's no timings" do
-          Post.calculate_avg_time
-          @post.reload
-          expect(@post.avg_time).to be_blank
-        end
-      end
-
-      describe 'topics' do
-        it 'has no avg_time by default' do
-          expect(@topic.avg_time).to be_blank
-        end
-
-        it "doesn't change when we calculate the avg time for the post because there's no timings" do
-          Topic.calculate_avg_time
-          @topic.reload
-          expect(@topic.avg_time).to be_blank
-        end
-      end
-
-      describe "it doesn't create an avg time for the same user" do
-        it 'something' do
-          PostTiming.record_timing(@timing_attrs.merge(user_id: @post.user_id))
-          Post.calculate_avg_time
-          @post.reload
-          expect(@post.avg_time).to be_blank
-        end
-
-      end
-
-      describe 'with a timing for another user' do
-        before do
-          PostTiming.record_timing(@timing_attrs)
-          Post.calculate_avg_time
-          @post.reload
-        end
-
-        it 'has a post avg_time from the timing' do
-          expect(@post.avg_time).to be_present
-        end
-
-        describe 'forum topics' do
-          before do
-            Topic.calculate_avg_time
-            @topic.reload
-          end
-
-          it 'has an avg_time from the timing' do
-            expect(@topic.avg_time).to be_present
-          end
-
-        end
-
-      end
-
-    end
-
   end
 
 end
