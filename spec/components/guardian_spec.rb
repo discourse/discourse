@@ -14,6 +14,8 @@ describe Guardian do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:another_group) { Fabricate(:group) }
 
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
@@ -329,8 +331,6 @@ describe Guardian do
     end
 
     it "respects the group's messageable_level" do
-      group = Fabricate(:group)
-
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
         output = level == :everyone ? true : false
@@ -473,8 +473,6 @@ describe Guardian do
     end
 
     context 'with groups' do
-      fab!(:group) { Fabricate(:group) }
-      fab!(:another_group) { Fabricate(:group) }
       let(:groups) { [group, another_group] }
 
       before do
@@ -500,7 +498,6 @@ describe Guardian do
   describe 'can_invite_to?' do
 
     describe "regular topics" do
-      fab!(:group) { Fabricate(:group) }
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic) { Fabricate(:topic) }
       fab!(:private_topic) { Fabricate(:topic, category: category) }
@@ -542,7 +539,6 @@ describe Guardian do
 
       describe 'for a private category for automatic and non-automatic group' do
         fab!(:automatic_group) { Fabricate(:group, automatic: true) }
-        fab!(:group) { Fabricate(:group) }
 
         let(:category) do
           Fabricate(:category, read_restricted: true).tap do |category|
@@ -698,7 +694,6 @@ describe Guardian do
 
       it 'allows members of an authorized group' do
         user = Fabricate(:user)
-        group = Fabricate(:group)
 
         secure_category = Fabricate(:category)
         secure_category.set_permissions(group => :readonly)
@@ -720,7 +715,6 @@ describe Guardian do
       end
 
       it 'correctly handles groups' do
-        group = Fabricate(:group)
         category = Fabricate(:category, read_restricted: true)
         category.set_permissions(group => :full)
         category.save
