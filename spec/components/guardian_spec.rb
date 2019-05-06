@@ -510,8 +510,6 @@ describe Guardian do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:private_topic) { Fabricate(:topic, category: category) }
       fab!(:user) { topic.user }
-      fab!(:moderator) { Fabricate(:moderator) }
-      fab!(:admin) { Fabricate(:admin) }
       let(:private_category)  { Fabricate(:private_category, group: group) }
       let(:group_private_topic) { Fabricate(:topic, category: private_category) }
       let(:group_owner) { group_private_topic.user.tap { |u| group.add_owner(u) } }
@@ -594,8 +592,6 @@ describe Guardian do
     describe "private messages" do
       fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
-      fab!(:admin) { Fabricate(:admin) }
-      fab!(:moderator) { Fabricate(:moderator) }
 
       context "when private messages are disabled" do
         it "allows an admin to invite to the pm" do
@@ -3111,8 +3107,6 @@ describe Guardian do
     end
 
     context "with hide suspension reason enabled" do
-      fab!(:moderator) { Fabricate(:moderator) }
-
       before do
         SiteSetting.hide_suspension_reasons = true
       end
