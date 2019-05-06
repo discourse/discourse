@@ -6,6 +6,7 @@ RSpec.describe TopicsController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
 
   describe '#wordpress' do
     let!(:user) { sign_in(moderator) }
@@ -96,7 +97,7 @@ RSpec.describe TopicsController do
       end
 
       context 'success' do
-        before { sign_in(Fabricate(:admin)) }
+        before { sign_in(admin) }
 
         it "returns success" do
           expect do
@@ -119,7 +120,7 @@ RSpec.describe TopicsController do
 
         describe 'when topic has been deleted' do
           it 'should still be able to move posts' do
-            PostDestroyer.new(Fabricate(:admin), topic.first_post).destroy
+            PostDestroyer.new(admin, topic.first_post).destroy
 
             expect(topic.reload.deleted_at).to_not be_nil
 
@@ -268,7 +269,7 @@ RSpec.describe TopicsController do
       end
 
       context 'success' do
-        before { sign_in(Fabricate(:admin)) }
+        before { sign_in(admin) }
 
         it "returns success" do
           SiteSetting.allow_staff_to_tag_pms = true
@@ -293,7 +294,7 @@ RSpec.describe TopicsController do
 
         describe 'when message has been deleted' do
           it 'should still be able to move posts' do
-            PostDestroyer.new(Fabricate(:admin), message.first_post).destroy
+            PostDestroyer.new(admin, message.first_post).destroy
 
             expect(message.reload.deleted_at).to_not be_nil
 
@@ -331,7 +332,7 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to an existing message' do
-      let!(:user) { sign_in(Fabricate(:admin)) }
+      let!(:user) { sign_in(admin) }
       fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       fab!(:evil_trout) { Fabricate(:evil_trout) }
       let(:message) { Fabricate(:private_message_topic) }
@@ -497,7 +498,7 @@ RSpec.describe TopicsController do
     end
 
     describe 'changing ownership' do
-      let!(:editor) { sign_in(Fabricate(:admin)) }
+      let!(:editor) { sign_in(admin) }
       let(:topic) { Fabricate(:topic) }
       fab!(:user_a) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, topic: topic) }
@@ -770,7 +771,7 @@ RSpec.describe TopicsController do
         expect(first_notification.read).to eq(true)
         expect(second_notification.read).to eq(false)
 
-        PostDestroyer.new(Fabricate(:admin), post2).destroy
+        PostDestroyer.new(admin, post2).destroy
 
         delete "/t/#{topic.id}/timings.json?last=1"
 
@@ -1345,7 +1346,7 @@ RSpec.describe TopicsController do
 
       context 'admin' do
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
         end
 
         expected = {
@@ -1892,9 +1893,8 @@ RSpec.describe TopicsController do
   describe '#invite_group' do
     let(:admins) { Group[:admins] }
 
-    let!(:admin) { sign_in(Fabricate(:admin)) }
-
     before do
+      sign_in(admin)
       admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
       admins.save!
     end
@@ -1928,7 +1928,7 @@ RSpec.describe TopicsController do
 
     describe 'when logged in' do
       it "changes the topic archetype to 'banner'" do
-        topic = Fabricate(:topic, user: sign_in(Fabricate(:admin)))
+        topic = Fabricate(:topic, user: sign_in(admin))
 
         put "/t/#{topic.id}/make-banner.json"
         expect(response.status).to eq(200)
@@ -1947,7 +1947,7 @@ RSpec.describe TopicsController do
 
     describe 'when logged in' do
       it "resets the topic archetype" do
-        topic = Fabricate(:topic, user: sign_in(Fabricate(:admin)), archetype: Archetype.banner)
+        topic = Fabricate(:topic, user: sign_in(admin), archetype: Archetype.banner)
 
         put "/t/#{topic.id}/remove-banner.json"
         expect(response.status).to eq(200)
@@ -1959,7 +1959,7 @@ RSpec.describe TopicsController do
 
   describe '#remove_allowed_user' do
     it 'admin can be removed from a pm' do
-      admin = sign_in(Fabricate(:admin))
+      sign_in(admin)
       pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username, admin.username])
 
       put "/t/#{pm.topic_id}/remove-allowed-user.json", params: {
@@ -2128,7 +2128,7 @@ RSpec.describe TopicsController do
 
       context "success" do
         it "returns success" do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
           put "/t/#{topic.id}/convert-topic/private.json"
 
           topic.reload
@@ -2154,7 +2154,7 @@ RSpec.describe TopicsController do
 
       context "success" do
         it "returns success" do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
           put "/t/#{topic.id}/convert-topic/public.json"
 
           topic.reload
@@ -2217,8 +2217,6 @@ RSpec.describe TopicsController do
     end
 
     context 'when logged in as an admin' do
-      let(:admin) { Fabricate(:admin) }
-
       before do
         sign_in(admin)
       end
@@ -2451,7 +2449,7 @@ RSpec.describe TopicsController do
       let(:group) { Fabricate(:group) }
 
       before do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
       end
 
       it "should work correctly" do
@@ -2511,7 +2509,9 @@ RSpec.describe TopicsController do
     end
 
     describe 'as an admin user' do
-      let!(:admin) { sign_in(Fabricate(:admin)) }
+      before do
+        sign_in(admin)
+      end
 
       it "disallows inviting a group to a topic" do
         topic = Fabricate(:topic)
@@ -2720,7 +2720,7 @@ RSpec.describe TopicsController do
 
       it "should fail for non-existend topic" do
         max_id = Topic.maximum(:id)
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         put "/t/#{max_id + 1}/reset-bump-date.json"
         expect(response.status).to eq(404)
       end
