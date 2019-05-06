@@ -24,6 +24,7 @@ export default {
       bus.subscribe("/reviewable_counts", data => {
         user.set("reviewable_count", data.reviewable_count);
       });
+
       bus.subscribe(
         `/notification/${user.get("id")}`,
         data => {
@@ -42,6 +43,14 @@ export default {
             oldPM !== data.unread_private_messages
           ) {
             appEvents.trigger("notifications:changed");
+
+            if (
+              site.mobileView &&
+              (data.unread_notifications - oldUnread > 0 ||
+                data.unread_private_messages - oldPM > 0)
+            ) {
+              appEvents.trigger("header:update-topic", null, 5000);
+            }
           }
 
           const stale = store.findStale(
