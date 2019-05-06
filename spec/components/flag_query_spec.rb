@@ -4,15 +4,13 @@ require 'rails_helper'
 require_dependency 'flag_query'
 
 describe FlagQuery do
-
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:codinghorror) { Fabricate(:coding_horror) }
 
   describe "flagged_topics" do
     it "respects `reviewable_default_visibility`" do
       Reviewable.set_priorities(medium: 10.0)
-
-      admin = Fabricate(:admin)
-      moderator = Fabricate(:moderator)
 
       post = create_post
 
@@ -45,7 +43,6 @@ describe FlagQuery do
   describe "flagged_post_actions" do
 
     it "returns the proper count" do
-      moderator = Fabricate(:moderator)
       post = create_post
       PostActionCreator.spam(moderator, post)
       expect(FlagQuery.flagged_post_actions(topic_id: post.topic_id).count).to eq(1)
@@ -55,7 +52,6 @@ describe FlagQuery do
 
   describe "flagged_posts_report" do
     it "does not return flags on system posts" do
-      admin = Fabricate(:admin)
       post = create_post(user: Discourse.system_user)
       PostActionCreator.create(codinghorror, post, :spam)
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
@@ -66,9 +62,6 @@ describe FlagQuery do
     end
 
     it "operates correctly" do
-      admin = Fabricate(:admin)
-      moderator = Fabricate(:moderator)
-
       post = create_post
       post2 = create_post
 
@@ -136,7 +129,6 @@ describe FlagQuery do
       Reviewable.set_priorities(medium: 3.0)
       SiteSetting.reviewable_default_visibility = 'medium'
 
-      admin = Fabricate(:admin)
       flagger = Fabricate(:user)
 
       post = create_post
