@@ -70,4 +70,14 @@ RSpec.describe Onebox::Helpers do
     end
   end
 
+  describe '.uri_encode' do
+    it { expect(described_class.uri_encode('http://example.com/f"o&o?[b"ar]')).to eq("http://example.com/f%22o&o?%5Bb%22ar%5D") }
+    it { expect(described_class.uri_encode("http://example.com/f.o~o;?<ba'r>")).to eq("http://example.com/f.o~o;?%3Cba%27r%3E") }
+    it { expect(described_class.uri_encode("http://example.com/<pa'th>(foo)?b+a+r")).to eq("http://example.com/%3Cpa'th%3E(foo)?b%2Ba%2Br") }
+    it { expect(described_class.uri_encode("http://example.com/p,a:t!h-f$o@o*?b!a#r@")).to eq("http://example.com/p,a:t!h-f$o@o*?b%21a#r%40") }
+    it { expect(described_class.uri_encode("http://example.com/path&foo?b'a<r>&qu(er)y=1")).to eq("http://example.com/path&foo?b%27a%3Cr%3E&qu%28er%29y=1") }
+    it { expect(described_class.uri_encode("http://example.com/index&<script>alert('XSS');</script>")).to eq("http://example.com/index&%3Cscript%3Ealert('XSS');%3C/script%3E") }
+    it { expect(described_class.uri_encode("http://example.com/index.html?message=<script>alert('XSS');</script>")).to eq("http://example.com/index.html?message=%3Cscript%3Ealert%28%27XSS%27%29%3B%3C%2Fscript%3E") }
+    it { expect(described_class.uri_encode("http://example.com/index.php/<IFRAME SRC=source.com onload='alert(document.cookie)'></IFRAME>")).to eq("http://example.com/index.php/%3CIFRAME%20SRC=source.com%20onload='alert(document.cookie)'%3E%3C/IFRAME%3E") }
+  end
 end

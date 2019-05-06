@@ -81,12 +81,7 @@ module Onebox
     end
 
     def link
-      @url.gsub(/['\"<>]/,
-        "'" => '&#39;',
-        '"' => '&quot;',
-        '<' => '&lt;',
-        '>' => '&gt;',
-      )
+      ::Onebox::Helpers.uri_encode(@url)
     end
 
     def always_https?

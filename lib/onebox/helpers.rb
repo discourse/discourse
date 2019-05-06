@@ -185,5 +185,52 @@ module Onebox
       end
       src
     end
+
+    RFC_3986_URI_REGEX = /^(?<scheme>([^:\/?#]+):)?(?<authority>\/\/([^\/?#]*))?(?<path>[^?#]*)(\?(?<query>[^#]*))?(#(?<fragment>.*))?$/
+
+    # Percent-encodes a URI query parameter per RFC3986 - https://tools.ietf.org/html/rfc3986
+    def self.uri_query_encode(query_string)
+      return "" unless query_string
+
+      # query can encode space to %20 OR +
+      # + MUST be encoded as %2B
+      # in RFC3968 both query and fragment are defined as:
+      # = *( pchar / "/" / "?" )
+      # CGI.escape turns space into + which is the most backward compatible
+      # however it doesn't roundtrip through URI.unescape which prefers %20
+      CGI.escape(query_string).gsub('+', '%20')
+    end
+
+    # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986
+    def self.uri_encode(url)
+      return "" unless url
+
+      # parse uri into named matches, then reassemble properly encoded
+      parts = url.match(RFC_3986_URI_REGEX)
+
+      encoded = ""
+      encoded += parts[:scheme] unless parts[:scheme].nil?
+      encoded += parts[:authority] unless parts[:authority].nil?
+
+      # path requires space to be encoded as %20 (NEVER +)
+      # + should be left unencoded
+      # URI::parse and URI::Generic.build don't like paths encoded with CGI.escape
+      # URI.escape does not change / to %2F and : to %3A like CGI.escape
+      encoded += URI.escape(parts[:path]) unless parts[:path].nil?
+
+      # each query parameter
+      if !parts[:query].nil?
+        query_string = parts[:query].split('&').map do |pair|
+          # can optionally be separated by an =
+          pair.split('=').map do |v|
+            uri_query_encode(v)
+          end.join('=')
+        end.join('&')
+        encoded += '?' + query_string
+      end
+
+      encoded += '#' + uri_query_encode(parts[:fragment]) unless parts[:fragment].nil?
+      encoded
+    end
   end
 end

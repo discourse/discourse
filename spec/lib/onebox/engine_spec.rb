@@ -21,7 +21,7 @@ describe Onebox::Engine do
     before { allow(Onebox::View).to receive(:template) { %|this should be a template| } }
 
     it "escapes `link`" do
-      html = OneboxEngineExample.new(%|http://foo.com/'?a=1&b=2|).to_html
+      html = OneboxEngineExample.new(%|http://foo.com/bar?a='&b=2|).to_html
       expect(html).not_to match(/'/)
     end
   end
