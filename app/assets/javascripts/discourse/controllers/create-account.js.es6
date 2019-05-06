@@ -186,7 +186,7 @@ export default Ember.Controller.extend(
     // Determines whether at least one login button is enabled
     @computed
     hasAtLeastOneLoginButton() {
-      return findAll(this.siteSettings).length > 0;
+      return findAll().length > 0;
     },
 
     @on("init")

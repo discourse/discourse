@@ -72,7 +72,6 @@ export default Discourse.Route.extend({
     } else {
       // User is not logged in
       $.cookie("destination_url", window.location.href);
-      Discourse.useFullScreenLogin = true;
       self.replaceWith("login");
     }
   },
