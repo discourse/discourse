@@ -42,7 +42,7 @@ shared_examples 'finding and showing post' do
     end
 
     it "can find posts as a admin" do
-      sign_in(Fabricate(:admin))
+      sign_in(admin)
       get url
       expect(response.status).to eq(200)
     end
@@ -57,6 +57,7 @@ shared_examples 'action requires login' do |method, url, params = {}|
 end
 
 describe PostsController do
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
@@ -471,7 +472,6 @@ describe PostsController do
 
       context "removing a bookmark" do
         let(:post_action) { PostActionCreator.create(user, post, :bookmark).post_action }
-        fab!(:admin) { Fabricate(:admin) }
 
         it "returns the right response when post is not bookmarked" do
           put "/posts/#{Fabricate(:post, user: user).id}/bookmark.json"
@@ -597,7 +597,7 @@ describe PostsController do
       end
 
       it "toggle wiki status should create a new version" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         another_user = Fabricate(:user)
         another_post = Fabricate(:post, user: another_user)
 
@@ -617,7 +617,7 @@ describe PostsController do
       end
 
       it "can wiki a post" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
 
         post.reload
@@ -626,7 +626,7 @@ describe PostsController do
 
       it "can unwiki a post" do
         wikied_post = Fabricate(:post, user: user, wiki: true)
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         put "/posts/#{wikied_post.id}/wiki.json", params: { wiki: 'false' }
 
@@ -1058,7 +1058,7 @@ describe PostsController do
 
           context "as staff" do
             before do
-              sign_in(Fabricate(:admin))
+              sign_in(admin)
             end
 
             it "cant create an uncategorized post" do
@@ -1129,7 +1129,7 @@ describe PostsController do
 
       context 'as a staff user' do
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
         end
 
         it 'should be able to mark a topic as warning' do
@@ -1217,7 +1217,7 @@ describe PostsController do
 
       context "admins" do
         before do
-          sign_in(Fabricate(:admin))
+          sign_in(admin)
         end
 
         include_examples "it works"
@@ -1283,7 +1283,7 @@ describe PostsController do
       end
 
       it "ensures staff can see the revisions" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
@@ -1319,7 +1319,7 @@ describe PostsController do
       end
 
       it "works for admins" do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(200)
       end
@@ -1336,7 +1336,6 @@ describe PostsController do
     end
 
     context "deleted post" do
-      fab!(:admin) { Fabricate(:admin) }
       fab!(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
       fab!(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
@@ -1350,7 +1349,6 @@ describe PostsController do
     end
 
     context "deleted topic" do
-      fab!(:admin) { Fabricate(:admin) }
       fab!(:deleted_topic) { Fabricate(:topic, user: admin) }
       fab!(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
       fab!(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
@@ -1480,7 +1478,6 @@ describe PostsController do
         r1 = PostActionCreator.off_topic(moderator, post_deferred).reviewable
         r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
 
-        admin = Fabricate(:admin)
         r0.perform(admin, :agree_and_keep)
         r1.perform(admin, :ignore)
         r2.perform(admin, :disagree)
@@ -1512,7 +1509,6 @@ describe PostsController do
 
       it "doesn't return secured categories for moderators if they don't have access" do
         user = Fabricate(:user)
-        admin = Fabricate(:admin)
         Fabricate(:moderator)
 
         group = Fabricate(:group)
@@ -1532,7 +1528,6 @@ describe PostsController do
 
       it "doesn't return PMs for moderators" do
         user = Fabricate(:user)
-        admin = Fabricate(:admin)
         Fabricate(:moderator)
 
         pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
@@ -1548,7 +1543,6 @@ describe PostsController do
 
       it "only shows posts deleted by other users" do
         user = Fabricate(:user)
-        admin = Fabricate(:admin)
 
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
@@ -1557,7 +1551,7 @@ describe PostsController do
         PostDestroyer.new(user, post_deleted_by_user).destroy
         PostDestroyer.new(admin, post_deleted_by_admin).destroy
 
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
@@ -1638,7 +1632,7 @@ describe PostsController do
   describe '#latest' do
     context 'private posts' do
       it 'returns private posts rss feed' do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         public_post
         private_post
@@ -1653,7 +1647,7 @@ describe PostsController do
       end
 
       it 'returns private posts for json' do
-        sign_in(Fabricate(:admin))
+        sign_in(admin)
 
         public_post
         private_post
