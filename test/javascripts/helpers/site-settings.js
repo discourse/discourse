@@ -12,7 +12,7 @@ Discourse.SiteSettingsOriginal = {
   ga_universal_tracking_code: "",
   ga_universal_domain_name: "auto",
   top_menu: "latest|new|unread|categories|top",
-  post_menu: "like-count|like|share|flag|edit|bookmark|delete|admin|reply",
+  post_menu: "like|share|flag|edit|bookmark|delete|admin|reply",
   post_menu_hidden_items: "flag|edit|delete|admin",
   share_links: "twitter|facebook|email",
   category_colors:
