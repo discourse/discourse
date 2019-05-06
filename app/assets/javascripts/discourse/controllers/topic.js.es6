@@ -1272,10 +1272,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
           }
         }
 
+        // scroll to bottom is very specific to new posts from discobot
+        // hence the -2 check (dicobot id). We can shift all this code
+        // to discobot plugin longer term
         if (
           topic.get("isPrivateMessage") &&
           this.currentUser &&
           this.currentUser.get("id") !== data.user_id &&
+          data.user_id === -2 &&
           data.type === "created"
         ) {
           const postNumber = data.post_number;
