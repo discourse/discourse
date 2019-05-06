@@ -16,6 +16,7 @@ describe Guardian do
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
   fab!(:group) { Fabricate(:group) }
   fab!(:another_group) { Fabricate(:group) }
+  fab!(:automatic_group) { Fabricate(:group, automatic: true) }
 
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
@@ -538,8 +539,6 @@ describe Guardian do
       end
 
       describe 'for a private category for automatic and non-automatic group' do
-        fab!(:automatic_group) { Fabricate(:group, automatic: true) }
-
         let(:category) do
           Fabricate(:category, read_restricted: true).tap do |category|
             category.groups << automatic_group
@@ -563,7 +562,7 @@ describe Guardian do
       end
 
       describe 'for a private category for automatic groups' do
-        let(:group) { Fabricate(:group, automatic: true) }
+        let(:group) { automatic_group }
 
         let(:category) do
           Fabricate(:private_category, group: group, read_restricted: true)
