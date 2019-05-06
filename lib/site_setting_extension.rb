@@ -406,6 +406,8 @@ module SiteSettingExtension
       set(name, value)
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    else
+      raise Discourse::InvalidParameters
     end
   end
 
