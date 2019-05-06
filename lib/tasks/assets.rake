@@ -128,6 +128,21 @@ def brotli(path)
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
+def should_brotli?(path)
+  return true unless path.include? "locales/"
+
+  locales = Set.new(["en"])
+
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    locales.add(SiteSetting.default_locale)
+  end
+
+  path_locale = path.delete_prefix("locales/").delete_suffix(".js")
+  return true if locales.include?(path_locale)
+
+  false
+end
+
 def compress(from, to)
   if $node_uglify
     compress_node(from, to)
@@ -191,7 +206,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               info["size"] = File.size(path)
               info["mtime"] = File.mtime(path).iso8601
               gzip(path)
-              brotli(path)
+              brotli(path) if should_brotli?(info["logical_path"])
 
               STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
               STDERR.puts
