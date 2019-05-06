@@ -53,7 +53,7 @@ import:
   bookmarks: true
   attachments: true
   private_messages: true
-  polls: false  # Don't set this to true. Importing polls is currently broken.
+  polls: true
 
   # When true: each imported user will have the original username from phpBB as its name
   # When false: the name of each imported user will be blank unless the username was changed during import
