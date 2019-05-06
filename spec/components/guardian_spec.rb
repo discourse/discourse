@@ -13,6 +13,8 @@ describe Guardian do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:anonymous_user) { Fabricate(:anonymous) }
+  fab!(:staff_post) { Fabricate(:post, user: moderator) }
+
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
@@ -128,13 +130,10 @@ describe Guardian do
 
     it "allows flagging of staff posts when allow_flagging_staff is true" do
       SiteSetting.allow_flagging_staff = true
-      staff_post = Fabricate(:post, user: moderator)
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
     end
 
     describe 'when allow_flagging_staff is false' do
-      fab!(:staff_post) { Fabricate(:post, user: moderator) }
-
       before do
         SiteSetting.allow_flagging_staff = false
       end
