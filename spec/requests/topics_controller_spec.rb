@@ -59,7 +59,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to a new topic' do
-      fab!(:user) { Fabricate(:user) }
       fab!(:moderator) { Fabricate(:moderator) }
       let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
@@ -245,7 +244,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to a new message' do
-      fab!(:user) { Fabricate(:user) }
       fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       fab!(:moderator) { Fabricate(:moderator) }
       let!(:message) { Fabricate(:private_message_topic) }
@@ -388,7 +386,6 @@ RSpec.describe TopicsController do
 
     describe 'merging into another topic' do
       fab!(:moderator) { Fabricate(:moderator) }
-      fab!(:user) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
 
@@ -423,7 +420,6 @@ RSpec.describe TopicsController do
 
     describe 'merging into another message' do
       fab!(:moderator) { Fabricate(:moderator) }
-      fab!(:user) { Fabricate(:user) }
       fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       let(:message) { Fabricate(:private_message_topic, user: user) }
       let!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
@@ -546,7 +542,7 @@ RSpec.describe TopicsController do
       end
 
       it "works with deleted users" do
-        deleted_user = Fabricate(:user)
+        deleted_user = user
         t2 = Fabricate(:topic, user: deleted_user)
         p3 = Fabricate(:post, topic: t2, user: deleted_user)
 
@@ -628,7 +624,6 @@ RSpec.describe TopicsController do
     context 'when logged in' do
       let(:topic) { Fabricate(:topic) }
       let(:pm) { Fabricate(:private_message_topic) }
-      fab!(:user) { Fabricate(:user) }
       before do
         sign_in(user)
       end
@@ -658,7 +653,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      fab!(:user) { Fabricate(:user) }
       fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic) }
       before do
@@ -793,7 +787,7 @@ RSpec.describe TopicsController do
 
     context 'when logged in' do
       before do
-        @user = sign_in(Fabricate(:user))
+        @user = sign_in(user)
         @topic = Fabricate(:topic, user: @user)
         Fabricate(:post, user: @user, topic: @topic, post_number: 2)
         TopicUser.create!(topic: @topic, user: @user)
@@ -827,7 +821,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      fab!(:user) { Fabricate(:user) }
       fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: user, deleted_at: Time.now, deleted_by: moderator) }
       let!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1, deleted_at: Time.now, deleted_by: moderator) }
@@ -864,7 +857,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      fab!(:user) { Fabricate(:user) }
       fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: user, created_at: 48.hours.ago) }
       let!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
@@ -1308,7 +1300,7 @@ RSpec.describe TopicsController do
 
       context 'normal user' do
         before do
-          sign_in(Fabricate(:user))
+          sign_in(user)
         end
 
         expected = {
@@ -1382,8 +1374,6 @@ RSpec.describe TopicsController do
     end
 
     it 'records a view to invalid post_number' do
-      user = Fabricate(:user)
-
       expect do
         get "/t/#{topic.slug}/#{topic.id}/#{256**4}", params: {
           u: user.username
@@ -1394,8 +1384,6 @@ RSpec.describe TopicsController do
     end
 
     it 'records incoming links' do
-      user = Fabricate(:user)
-
       expect do
         get "/t/#{topic.slug}/#{topic.id}", params: {
           u: user.username
@@ -1781,7 +1769,6 @@ RSpec.describe TopicsController do
 
     describe 'filtering by post number with filters' do
       describe 'username filters' do
-        fab!(:user) { Fabricate(:user) }
         let(:post) { Fabricate(:post, user: user) }
         let!(:post2) { Fabricate(:post, topic: topic, user: user) }
         let!(:post3) { Fabricate(:post, topic: topic) }
@@ -1846,7 +1833,7 @@ RSpec.describe TopicsController do
 
     describe 'filtering by post number with filters' do
       describe 'username filters' do
-        let!(:post2) { Fabricate(:post, topic: topic, user: Fabricate(:user)) }
+        let!(:post2) { Fabricate(:post, topic: topic, user: user) }
         let!(:post3) { Fabricate(:post, topic: topic) }
 
         it 'should return the right posts' do
@@ -1979,7 +1966,6 @@ RSpec.describe TopicsController do
   describe '#remove_allowed_user' do
     it 'admin can be removed from a pm' do
       admin = sign_in(Fabricate(:admin))
-      user = Fabricate(:user)
       pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username, admin.username])
 
       put "/t/#{pm.topic_id}/remove-allowed-user.json", params: {
@@ -1998,7 +1984,7 @@ RSpec.describe TopicsController do
     end
 
     describe "when logged in" do
-      let!(:user) { sign_in(Fabricate(:user)) }
+      before { sign_in(user) }
       let(:operation) { { type: 'change_category', category_id: '1' } }
       let(:topic_ids) { [1, 2, 3] }
 
@@ -2041,7 +2027,7 @@ RSpec.describe TopicsController do
   describe '#remove_bookmarks' do
     it "should remove bookmarks properly from non first post" do
       bookmark = PostActionType.types[:bookmark]
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post = create_post
       post2 = create_post(topic_id: post.topic_id)
@@ -2057,7 +2043,6 @@ RSpec.describe TopicsController do
 
     it "should disallow bookmarks on posts you have no access to" do
       sign_in(Fabricate(:user))
-      user = Fabricate(:user)
       pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username])
 
       put "/t/#{pm.topic_id}/bookmark.json"
@@ -2066,13 +2051,14 @@ RSpec.describe TopicsController do
   end
 
   describe '#reset_new' do
-    let(:user) { sign_in(Fabricate(:user)) }
     it 'needs you to be logged in' do
       put "/topics/reset-new.json"
       expect(response.status).to eq(403)
     end
 
     it "updates the `new_since` date" do
+      sign_in(user)
+
       old_date = 2.years.ago
 
       user.user_stat.update_column(:new_since, old_date)
@@ -2137,12 +2123,11 @@ RSpec.describe TopicsController do
     end
 
     describe 'converting public topic to private message' do
-      fab!(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:topic, user: user) }
       let!(:post) { Fabricate(:post, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/t/#{topic.id}/convert-topic/private.json"
         expect(response).to be_forbidden
       end
@@ -2164,12 +2149,11 @@ RSpec.describe TopicsController do
     end
 
     describe 'converting private message to public topic' do
-      fab!(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:private_message_topic, user: user) }
       let!(:post) { Fabricate(:post, topic: topic) }
 
       it "raises an error when the user doesn't have permission to convert topic" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/t/#{topic.id}/convert-topic/public.json"
         expect(response).to be_forbidden
       end
@@ -2385,7 +2369,7 @@ RSpec.describe TopicsController do
 
           it 'should return the right response' do
             post "/t/#{group_private_topic.id}/invite.json", params: {
-              user: Fabricate(:user)
+              user: user
             }
 
             expect(response.status).to eq(403)
@@ -2395,7 +2379,7 @@ RSpec.describe TopicsController do
         describe 'when user is not part of the required group' do
           it 'should return the right response' do
             post "/t/#{group_private_topic.id}/invite.json", params: {
-              user: Fabricate(:user)
+              user: user
             }
 
             expect(response.status).to eq(422)
@@ -2414,7 +2398,7 @@ RSpec.describe TopicsController do
       describe 'when topic id is invalid' do
         it 'should return the right response' do
           post "/t/999/invite.json", params: {
-            email: Fabricate(:user).email
+            email: user.email
           }
 
           expect(response.status).to eq(400)
@@ -2637,7 +2621,7 @@ RSpec.describe TopicsController do
       end
 
       it "fails as a regular user" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
         expect(response.status).to eq(403)
       end
