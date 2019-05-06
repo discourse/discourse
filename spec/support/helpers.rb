@@ -110,6 +110,16 @@ module Helpers
     end
   end
 
+  def create_hidden_tags(tag_names)
+    tag_group = Fabricate(:tag_group,
+      name: 'Hidden Tags',
+      permissions: { staff: :full }
+    )
+    tag_names.each do |name|
+      tag_group.tags << (Tag.where(name: name).first || Fabricate(:tag, name: name))
+    end
+  end
+
   def capture_stdout
     old_stdout = $stdout
     io = StringIO.new
