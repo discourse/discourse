@@ -67,7 +67,7 @@ QUnit.test("tracks internal URLs", async assert => {
 });
 
 QUnit.test("does not track elements with no href", async assert => {
-  assert.ok(track(generateClickEventOn(".attachment")));
+  assert.ok(track(generateClickEventOn(".a-without-href")));
 });
 
 QUnit.test("does not track attachments", async assert => {
