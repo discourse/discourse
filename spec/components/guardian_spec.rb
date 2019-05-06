@@ -251,7 +251,6 @@ describe Guardian do
   end
 
   describe 'can_send_private_message' do
-    fab!(:user) { Fabricate(:user) }
     fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
 
     it "returns false when the user is nil" do
@@ -369,7 +368,6 @@ describe Guardian do
   end
 
   describe 'can_reply_as_new_topic' do
-    fab!(:user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
     fab!(:private_message) { Fabricate(:private_message_topic) }
 
@@ -3088,8 +3086,6 @@ describe Guardian do
   end
 
   context "suspension reasons" do
-    fab!(:user) { Fabricate(:user) }
-
     it "will be shown by default" do
       expect(Guardian.new.can_see_suspension_reason?(user)).to eq(true)
     end
