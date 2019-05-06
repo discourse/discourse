@@ -12,10 +12,10 @@ RSpec.describe WebHookPostSerializer do
 
   it 'should only include the required keys' do
     count = serialized_for_user(admin).keys.count
-    difference = count - 34
+    difference = count - 33
 
     expect(difference).to eq(0), lambda {
-      message = ""
+      message = +""
 
       if difference < 0
         message << "#{difference * -1} key(s) have been removed from this serializer."
