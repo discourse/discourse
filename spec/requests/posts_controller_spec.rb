@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 shared_examples 'finding and showing post' do
-  fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post, user: user) }
 
   it "ensures the user can't see the post" do
@@ -170,7 +169,6 @@ describe PostsController do
 
     describe 'when logged in' do
       let(:topic) { Fabricate(:topic) }
-      fab!(:user) { Fabricate(:user) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
@@ -217,7 +215,7 @@ describe PostsController do
       end
 
       it "raises an error when the user doesn't have permission to delete the posts" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response).to be_forbidden
       end
@@ -277,8 +275,6 @@ describe PostsController do
     include_examples 'action requires login', :put, "/posts/123/recover.json"
 
     describe 'when logged in' do
-      fab!(:user) { Fabricate(:user) }
-
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:post, topic: Fabricate(:private_message_topic), post_number: 3)
         sign_in(user)
@@ -303,7 +299,6 @@ describe PostsController do
   describe '#update' do
     include_examples 'action requires login', :put, "/posts/2.json"
 
-    fab!(:user) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, user: user) }
     let(:update_params) do
       {
@@ -444,7 +439,6 @@ describe PostsController do
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
     fab!(:post) { Fabricate(:post, user: user) }
-    fab!(:user) { Fabricate(:user) }
 
     describe 'when logged in' do
       before do
@@ -584,7 +578,6 @@ describe PostsController do
         sign_in(user)
       end
 
-      fab!(:user) { Fabricate(:user) }
       fab!(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to wiki the post" do
@@ -640,7 +633,6 @@ describe PostsController do
         sign_in(user)
       end
 
-      fab!(:user) { Fabricate(:user) }
       fab!(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to change the post type" do
@@ -665,7 +657,7 @@ describe PostsController do
       fab!(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to rebake the post" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/posts/#{post.id}/rebake.json"
         expect(response).to be_forbidden
       end
@@ -695,14 +687,11 @@ describe PostsController do
       SiteSetting.enable_whispers = true
     end
 
-    fab!(:user) { Fabricate(:user) }
-
     context 'api' do
       it 'memoizes duplicate requests' do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
-        user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
         post "/posts.json", params: {
@@ -732,7 +721,6 @@ describe PostsController do
         Jobs.run_immediately!
         NotificationEmailer.enable
         post_1 = Fabricate(:post)
-        user = Fabricate(:user)
         master_key = ApiKey.create_master_key.key
 
         post "/posts.json", params: {
@@ -774,7 +762,6 @@ describe PostsController do
 
       it 'prevents whispers for regular users' do
         post_1 = Fabricate(:post)
-        user = Fabricate(:user)
         user_key = ApiKey.create!(user: user, key: SecureRandom.hex).key
 
         post "/posts.json", params: {
@@ -878,7 +865,7 @@ describe PostsController do
 
       it "can send a message to a group" do
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
-        user1 = Fabricate(:user)
+        user1 = user
         group.add(user1)
 
         post "/posts.json", params: {
@@ -1273,7 +1260,7 @@ describe PostsController do
       end
 
       it "ensures regular user cannot see the revisions" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response).to be_forbidden
       end
@@ -1309,7 +1296,7 @@ describe PostsController do
       }
 
       it "throws an exception for users" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(404)
       end
@@ -1372,7 +1359,7 @@ describe PostsController do
 
     describe 'when logged in as a regular user' do
       it "does not work" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         put "/posts/#{post_id}/revisions/#{revision_id}/revert.json"
         expect(response).to_not be_successful
       end
@@ -1427,7 +1414,7 @@ describe PostsController do
 
   describe '#expand_embed' do
     before do
-      sign_in(Fabricate(:user))
+      sign_in(user)
     end
 
     fab!(:post) { Fabricate(:post) }
@@ -1451,7 +1438,7 @@ describe PostsController do
 
     describe "when logged in" do
       it "raises an error if the user doesn't have permission to see the flagged posts" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/system/flagged.json"
         expect(response).to be_forbidden
       end
@@ -1463,7 +1450,6 @@ describe PostsController do
       end
 
       it "only shows agreed and deferred flags" do
-        user = Fabricate(:user)
         post_agreed = create_post(user: user)
         post_deferred = create_post(user: user)
         post_disagreed = create_post(user: user)
@@ -1490,7 +1476,7 @@ describe PostsController do
 
     describe "when logged in" do
       it "raises an error if the user doesn't have permission to see the deleted posts" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
         get "/posts/system/deleted.json"
         expect(response).to be_forbidden
       end
@@ -1502,7 +1488,6 @@ describe PostsController do
       end
 
       it "doesn't return secured categories for moderators if they don't have access" do
-        user = Fabricate(:user)
         Fabricate(:moderator)
 
         group = Fabricate(:group)
@@ -1521,7 +1506,6 @@ describe PostsController do
       end
 
       it "doesn't return PMs for moderators" do
-        user = Fabricate(:user)
         Fabricate(:moderator)
 
         pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
@@ -1536,8 +1520,6 @@ describe PostsController do
       end
 
       it "only shows posts deleted by other users" do
-        user = Fabricate(:user)
-
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
         post_deleted_by_admin = create_post(user: user)
@@ -1711,7 +1693,7 @@ describe PostsController do
       let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: Fabricate(:user), raw_email: 'email_content') }
 
       it "raises an error if the user doesn't have permission to view raw email" do
-        sign_in(Fabricate(:user))
+        sign_in(user)
 
         get "/posts/#{post.id}/raw-email.json"
         expect(response).to be_forbidden
