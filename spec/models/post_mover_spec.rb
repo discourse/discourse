@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 describe PostMover do
+  fab!(:admin) { Fabricate(:admin) }
 
   describe '#move_types' do
     context "verify enum sequence" do
@@ -529,7 +530,6 @@ describe PostMover do
           fab!(:destination_topic) { Fabricate(:topic, closed: true) }
 
           it "works correctly for admin" do
-            admin = Fabricate(:admin)
             moved_to = topic.move_posts(admin, [p1.id, p2.id], destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
@@ -555,7 +555,6 @@ describe PostMover do
 
     context 'messages' do
       fab!(:user) { Fabricate(:user) }
-      fab!(:admin) { Fabricate(:admin) }
       fab!(:evil_trout) { Fabricate(:evil_trout) }
       fab!(:another_user) { Fabricate(:user) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
@@ -682,7 +681,6 @@ describe PostMover do
     end
 
     context 'banner topic' do
-      fab!(:admin) { Fabricate(:admin) }
       fab!(:evil_trout) { Fabricate(:evil_trout) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
       fab!(:topic) { Fabricate(:topic) }
