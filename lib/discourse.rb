@@ -263,6 +263,11 @@ module Discourse
     default_port = SiteSetting.force_https? ? 443 : 80
     url = "#{base_protocol}://#{current_hostname}"
     url << ":#{SiteSetting.port}" if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
+
+    if Rails.env.development? && SiteSetting.port.blank?
+      url << ":#{ENV["UNICORN_PORT"] || 3000}"
+    end
+
     url
   end
 
