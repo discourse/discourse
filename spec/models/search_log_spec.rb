@@ -165,7 +165,7 @@ RSpec.describe SearchLog, type: :model do
 
   describe ".term_details" do
     it "should only use the date for the period" do
-      time = Time.new(2019, 5, 23, 18, 15, 30)
+      time = Time.utc(2019, 5, 23, 18, 15, 30)
       freeze_time(time)
 
       search_log = Fabricate(:search_log, created_at: time - 1.hour)
