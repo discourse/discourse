@@ -258,10 +258,13 @@ describe PostMover do
 
           it "does not try to move small action posts" do
             small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
-            new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id], title: "new testing topic name", category_id: category.id)
+            hidden_small_action = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+            hidden_small_action.update_attribute(:raw, "")
+            new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id, hidden_small_action.id], title: "new testing topic name", category_id: category.id)
 
             expect(new_topic.posts_count).to eq(2)
             expect(small_action.topic_id).to eq(topic.id)
+            expect(hidden_small_action.topic_id).to eq(topic.id)
 
             moderator_post = topic.posts.last
             expect(moderator_post.raw).to include("2 posts were split")
