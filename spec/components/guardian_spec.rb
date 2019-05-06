@@ -9,6 +9,7 @@ require_dependency 'post_locker'
 describe Guardian do
 
   fab!(:user) { Fabricate(:user) }
+  fab!(:another_user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:anonymous_user) { Fabricate(:anonymous) }
@@ -251,7 +252,6 @@ describe Guardian do
 
   describe 'can_send_private_message' do
     fab!(:user) { Fabricate(:user) }
-    fab!(:another_user) { Fabricate(:user) }
     fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
 
     it "returns false when the user is nil" do
@@ -2720,8 +2720,6 @@ describe Guardian do
     end
 
     context "when ignored user is a normal user" do
-      let!(:another_user) { Fabricate(:user) }
-
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
       end
@@ -2729,7 +2727,6 @@ describe Guardian do
 
     context "when ignorer's trust level is below tl2" do
       let(:guardian) { Guardian.new(trust_level_1) }
-      let!(:another_user) { Fabricate(:user) }
       let!(:trust_level_1) { build(:user, trust_level: 1) }
 
       it 'does not allow ignoring user' do
@@ -2739,7 +2736,6 @@ describe Guardian do
 
     context "when ignorer is staff" do
       let(:guardian) { Guardian.new(admin) }
-      let!(:another_user) { Fabricate(:user) }
 
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
@@ -2748,7 +2744,6 @@ describe Guardian do
 
     context "when ignorer's trust level is tl2" do
       let(:guardian) { Guardian.new(trust_level_2) }
-      let!(:another_user) { Fabricate(:user) }
 
       it 'allows ignoring user' do
         expect(guardian.can_ignore_user?(another_user.id)).to eq(true)
@@ -2775,8 +2770,6 @@ describe Guardian do
     end
 
     context "when muted user is a normal user" do
-      let!(:another_user) { Fabricate(:user) }
-
       it 'allows muting user' do
         expect(guardian.can_mute_user?(another_user.id)).to eq(true)
       end
@@ -2784,7 +2777,6 @@ describe Guardian do
 
     context "when muter's trust level is below tl1" do
       let(:guardian) { Guardian.new(trust_level_0) }
-      let!(:another_user) { Fabricate(:user) }
       let!(:trust_level_0) { build(:user, trust_level: 0) }
 
       it 'does not allow muting user' do
@@ -2794,7 +2786,6 @@ describe Guardian do
 
     context "when muter is staff" do
       let(:guardian) { Guardian.new(admin) }
-      let!(:another_user) { Fabricate(:user) }
 
       it 'allows muting user' do
         expect(guardian.can_mute_user?(another_user.id)).to eq(true)
@@ -2803,7 +2794,6 @@ describe Guardian do
 
     context "when muters's trust level is tl1" do
       let(:guardian) { Guardian.new(trust_level_1) }
-      let!(:another_user) { Fabricate(:user) }
 
       it 'allows muting user' do
         expect(guardian.can_mute_user?(another_user.id)).to eq(true)
@@ -3133,7 +3123,6 @@ describe Guardian do
 
     context 'normal user' do
       fab!(:topic) { Fabricate(:topic, user: Fabricate(:user)) }
-      fab!(:another_user) { Fabricate(:user) }
 
       before do
         topic.allowed_users << user
