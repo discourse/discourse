@@ -451,6 +451,7 @@ class PostRevisor
     return if @skip_revision
     # don't create an empty revision if something failed
     return unless successfully_saved_post_and_topic
+    return if only_hidden_tags_changed?
     @version_changed ? create_revision : update_revision
   end
 

@@ -763,6 +763,12 @@ describe PostRevisor do
                 expect(result).to eq(true)
               }.to_not change { topic.reload.bumped_at }
             end
+
+            it "doesn't create revision" do
+              expect {
+                subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+              }.to_not change { post.reload.revisions.size }
+            end
           end
 
         end
