@@ -4,6 +4,7 @@ require 'rails_helper'
 
 describe PostMover do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
 
   describe '#move_types' do
     context "verify enum sequence" do
@@ -24,7 +25,7 @@ describe PostMover do
   describe 'move_posts' do
     context 'topics' do
       fab!(:user) { Fabricate(:user, admin: true) }
-      fab!(:another_user) { Fabricate(:evil_trout) }
+      fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
       fab!(:topic) { Fabricate(:topic, user: user) }
       fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
@@ -555,7 +556,6 @@ describe PostMover do
 
     context 'messages' do
       fab!(:user) { Fabricate(:user) }
-      fab!(:evil_trout) { Fabricate(:evil_trout) }
       fab!(:another_user) { Fabricate(:user) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
       fab!(:topic) { Fabricate(:topic) }
@@ -681,7 +681,6 @@ describe PostMover do
     end
 
     context 'banner topic' do
-      fab!(:evil_trout) { Fabricate(:evil_trout) }
       fab!(:regular_user) { Fabricate(:trust_level_4) }
       fab!(:topic) { Fabricate(:topic) }
       fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
