@@ -7,6 +7,7 @@ RSpec.describe TopicsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
   describe '#wordpress' do
     let!(:user) { sign_in(moderator) }
@@ -245,7 +246,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to a new message' do
-      fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       let!(:message) { Fabricate(:private_message_topic) }
       let!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
       let!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: message) }
@@ -333,7 +333,6 @@ RSpec.describe TopicsController do
 
     describe 'moving to an existing message' do
       let!(:user) { sign_in(admin) }
-      fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       fab!(:evil_trout) { Fabricate(:evil_trout) }
       let(:message) { Fabricate(:private_message_topic) }
       let(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
@@ -418,7 +417,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'merging into another message' do
-      fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       let(:message) { Fabricate(:private_message_topic, user: user) }
       let!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
       let!(:p2) { Fabricate(:post, topic: message, reply_to_post_number: p1.post_number, user: user) }
@@ -486,7 +484,7 @@ RSpec.describe TopicsController do
 
     describe 'forbidden to trust_level_4s' do
       before do
-        sign_in(Fabricate(:trust_level_4))
+        sign_in(trust_level_4)
       end
 
       it 'correctly denies' do
@@ -568,7 +566,9 @@ RSpec.describe TopicsController do
     end
 
     describe "forbidden to trust_level_4" do
-      let!(:trust_level_4) { sign_in(Fabricate(:trust_level_4)) }
+      before do
+        sign_in(trust_level_4)
+      end
 
       it 'correctly denies' do
         put "/t/1/change-timestamp.json", params: params
@@ -1921,7 +1921,7 @@ RSpec.describe TopicsController do
 
   describe '#make_banner' do
     it 'needs you to be a staff member' do
-      topic = Fabricate(:topic, user: sign_in(Fabricate(:trust_level_4)))
+      topic = Fabricate(:topic, user: sign_in(trust_level_4))
       put "/t/#{topic.id}/make-banner.json"
       expect(response).to be_forbidden
     end
@@ -1940,7 +1940,7 @@ RSpec.describe TopicsController do
 
   describe '#remove_banner' do
     it 'needs you to be a staff member' do
-      topic = Fabricate(:topic, user: sign_in(Fabricate(:trust_level_4)), archetype: Archetype.banner)
+      topic = Fabricate(:topic, user: sign_in(trust_level_4), archetype: Archetype.banner)
       put "/t/#{topic.id}/remove-banner.json"
       expect(response).to be_forbidden
     end
