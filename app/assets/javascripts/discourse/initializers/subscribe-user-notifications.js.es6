@@ -23,9 +23,6 @@ export default {
     if (user) {
       bus.subscribe("/reviewable_counts", data => {
         user.set("reviewable_count", data.reviewable_count);
-        if (data.reviewable_count > 0) {
-          user.set("show_reviewables", 1);
-        }
       });
       bus.subscribe(
         `/notification/${user.get("id")}`,
