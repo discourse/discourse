@@ -202,7 +202,7 @@ describe Guardian do
       end
 
       it "returns true for a new user flagging a private message as spam" do
-        post = Fabricate(:private_message_post, user: Fabricate(:admin))
+        post = Fabricate(:private_message_post, user: admin)
         user.trust_level = TrustLevel[0]
         post.topic.allowed_users << user
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
@@ -339,8 +339,6 @@ describe Guardian do
 
         expect(Guardian.new(user).can_send_private_message?(group)).to eq(output)
       end
-
-      admin = Fabricate(:admin)
 
       Group::ALIAS_LEVELS.each do |level, _|
         group.update!(messageable_level: Group::ALIAS_LEVELS[level])
@@ -490,7 +488,7 @@ describe Guardian do
       it 'returns false when user is not allowed to edit a group' do
         expect(Guardian.new(user).can_invite_to_forum?(groups)).to eq(false)
 
-        expect(Guardian.new(Fabricate(:admin)).can_invite_to_forum?(groups))
+        expect(Guardian.new(admin).can_invite_to_forum?(groups))
           .to eq(true)
       end
 
@@ -862,7 +860,7 @@ describe Guardian do
         before { SiteSetting.edit_history_visible_to_public = false }
 
         it 'is true for staff' do
-          expect(Guardian.new(Fabricate(:admin)).can_see?(post_revision)).to be_truthy
+          expect(Guardian.new(admin).can_see?(post_revision)).to be_truthy
           expect(Guardian.new(moderator).can_see?(post_revision)).to be_truthy
         end
 
