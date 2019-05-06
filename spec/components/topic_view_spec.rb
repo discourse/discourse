@@ -5,6 +5,9 @@ require 'topic_view'
 
 describe TopicView do
 
+  fab!(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:topic) { create_topic }
   fab!(:evil_trout) { Fabricate(:evil_trout) }
   let(:first_poster) { topic.user }
@@ -27,15 +30,13 @@ describe TopicView do
   end
 
   it "handles deleted topics" do
-    admin = Fabricate(:admin)
     topic.trash!(admin)
-    expect { TopicView.new(topic.id, Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
+    expect { TopicView.new(topic.id, user) }.to raise_error(Discourse::InvalidAccess)
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
   context "setup_filtered_posts" do
     describe "filters posts with ignored users" do
-      fab!(:user) { Fabricate(:user) }
       fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
       let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
       let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
@@ -104,9 +105,6 @@ describe TopicView do
     let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:admin) { Fabricate(:admin) }
-
     it "it can find the best responses" do
 
       best2 = TopicView.new(topic.id, evil_trout, best: 2)
@@ -114,7 +112,7 @@ describe TopicView do
       expect(best2.posts[0].id).to eq(p2.id)
       expect(best2.posts[1].id).to eq(p3.id)
 
-      topic.update_status('closed', true, Fabricate(:admin))
+      topic.update_status('closed', true, admin)
       expect(topic.posts.count).to eq(4)
 
       # should not get the status post
@@ -197,7 +195,7 @@ describe TopicView do
       end
 
       it "does not log personal message view if user can't see the message" do
-        expect { TopicView.new(private_message.id, Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
+        expect { TopicView.new(private_message.id, user) }.to raise_error(Discourse::InvalidAccess)
         expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
       end
 
@@ -232,7 +230,6 @@ describe TopicView do
     end
 
     describe "#get_canonical_path" do
-      fab!(:user) { Fabricate(:user) }
       fab!(:topic) { Fabricate(:topic) }
       let(:path) { "/1234" }
 
@@ -259,7 +256,6 @@ describe TopicView do
         topic.stubs(:highest_post_number).returns(5)
         topic
       end
-      let(:user) { Fabricate(:user) }
 
       before do
         TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
@@ -364,7 +360,7 @@ describe TopicView do
       anon_posts = TopicView.new(topic.id).posts
       expect(anon_posts.map(&:id)).to eq([p1.id, p3.id])
 
-      admin_posts = TopicView.new(topic.id, Fabricate(:moderator)).posts
+      admin_posts = TopicView.new(topic.id, moderator).posts
       expect(admin_posts.map(&:id)).to eq([p1.id, p2.id, p3.id])
     end
   end
@@ -374,7 +370,7 @@ describe TopicView do
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
     let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout) }
-    let!(:p6) { Fabricate(:post, topic: topic, user: Fabricate(:user), deleted_at: Time.now) }
+    let!(:p6) { Fabricate(:post, topic: topic, user: user, deleted_at: Time.now) }
     let!(:p4) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now) }
     let!(:p1) { Fabricate(:post, topic: topic, user: first_poster) }
     let!(:p7) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now) }
