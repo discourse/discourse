@@ -36,7 +36,7 @@ shared_examples 'finding and showing post' do
     end
 
     it "can find posts as a moderator" do
-      sign_in(Fabricate(:moderator))
+      sign_in(moderator)
       get url
       expect(response.status).to eq(200)
     end
@@ -58,6 +58,7 @@ end
 
 describe PostsController do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
@@ -170,7 +171,6 @@ describe PostsController do
     describe 'when logged in' do
       let(:topic) { Fabricate(:topic) }
       fab!(:user) { Fabricate(:user) }
-      fab!(:moderator) { Fabricate(:moderator) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
@@ -248,8 +248,6 @@ describe PostsController do
       end
 
       context "deleting flagged posts" do
-        fab!(:moderator) { Fabricate(:moderator) }
-
         before do
           sign_in(moderator)
           PostActionCreator.off_topic(moderator, post1)
@@ -313,8 +311,6 @@ describe PostsController do
         image_sizes: { 'http://image.com/image.jpg' => { 'width' => 123, 'height' => 456 } },
       }
     end
-
-    fab!(:moderator) { Fabricate(:moderator) }
 
     describe 'when logged in as a regular user' do
       before do
@@ -653,7 +649,7 @@ describe PostsController do
       end
 
       it "can change the post type" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
 
         post.reload
@@ -675,13 +671,13 @@ describe PostsController do
       end
 
       it "can rebake the post" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         put "/posts/#{post.id}/rebake.json"
         expect(response.status).to eq(200)
       end
 
       it "will invalidate broken images cache" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         post.custom_fields[Post::BROKEN_IMAGES] = ["https://example.com/image.jpg"].to_json
         post.save_custom_fields
         put "/posts/#{post.id}/rebake.json"
@@ -825,7 +821,7 @@ describe PostsController do
           expect(parsed['pending_post']['id']).to eq(rp.id)
           expect(parsed['pending_post']['raw']).to eq("this is the test content")
 
-          mod = Fabricate(:moderator)
+          mod = moderator
           rp.perform(mod, :approve_post)
 
           user.reload
@@ -1088,7 +1084,7 @@ describe PostsController do
 
       describe "as a staff user" do
         before do
-          sign_in(Fabricate(:moderator))
+          sign_in(moderator)
         end
 
         it "will raise an error if there is no shared draft category" do
@@ -1225,7 +1221,7 @@ describe PostsController do
 
       context "moderators" do
         before do
-          sign_in(Fabricate(:moderator))
+          sign_in(moderator)
         end
 
         include_examples "it works"
@@ -1373,7 +1369,6 @@ describe PostsController do
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
-    fab!(:moderator) { Fabricate(:moderator) }
 
     describe 'when logged in as a regular user' do
       it "does not work" do
@@ -1462,7 +1457,7 @@ describe PostsController do
       end
 
       it "can see the flagged posts when authorized" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/system/flagged.json"
         expect(response.status).to eq(200)
       end
@@ -1473,7 +1468,6 @@ describe PostsController do
         post_deferred = create_post(user: user)
         post_disagreed = create_post(user: user)
 
-        moderator = Fabricate(:moderator)
         r0 = PostActionCreator.spam(moderator, post_agreed).reviewable
         r1 = PostActionCreator.off_topic(moderator, post_deferred).reviewable
         r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
@@ -1502,7 +1496,7 @@ describe PostsController do
       end
 
       it "can see the deleted posts when authorized" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/system/deleted.json"
         expect(response.status).to eq(200)
       end
@@ -1518,7 +1512,7 @@ describe PostsController do
         secured_post = create_post(user: user, category: secured_category)
         PostDestroyer.new(admin, secured_post).destroy
 
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
@@ -1533,7 +1527,7 @@ describe PostsController do
         pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
         PostDestroyer.new(admin, pm_post).destroy
 
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
         get "/posts/#{user.username}/deleted.json"
         expect(response.status).to eq(200)
 
@@ -1724,7 +1718,7 @@ describe PostsController do
       end
 
       it "can view raw email" do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
 
         get "/posts/#{post.id}/raw-email.json"
         expect(response.status).to eq(200)
@@ -1737,7 +1731,7 @@ describe PostsController do
 
   describe "#locked" do
     before do
-      sign_in(Fabricate(:moderator))
+      sign_in(moderator)
     end
 
     it 'can lock and unlock the post' do
