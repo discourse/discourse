@@ -127,12 +127,12 @@ describe Guardian do
 
     it "allows flagging of staff posts when allow_flagging_staff is true" do
       SiteSetting.allow_flagging_staff = true
-      staff_post = Fabricate(:post, user: Fabricate(:moderator))
+      staff_post = Fabricate(:post, user: moderator)
       expect(Guardian.new(user).post_can_act?(staff_post, :spam)).to be_truthy
     end
 
     describe 'when allow_flagging_staff is false' do
-      fab!(:staff_post) { Fabricate(:post, user: Fabricate(:moderator)) }
+      fab!(:staff_post) { Fabricate(:post, user: moderator) }
 
       before do
         SiteSetting.allow_flagging_staff = false
@@ -863,7 +863,7 @@ describe Guardian do
 
         it 'is true for staff' do
           expect(Guardian.new(Fabricate(:admin)).can_see?(post_revision)).to be_truthy
-          expect(Guardian.new(Fabricate(:moderator)).can_see?(post_revision)).to be_truthy
+          expect(Guardian.new(moderator).can_see?(post_revision)).to be_truthy
         end
 
         it 'is true for trust level 4' do
@@ -2294,7 +2294,7 @@ describe Guardian do
     end
 
     it "is false for admin anonymizing a moderator" do
-      expect(Guardian.new(admin).can_anonymize_user?(Fabricate(:moderator))).to be_falsey
+      expect(Guardian.new(admin).can_anonymize_user?(moderator)).to be_falsey
     end
 
     it "is false for moderator anonymizing an admin" do
@@ -2302,7 +2302,7 @@ describe Guardian do
     end
 
     it "is false for moderator anonymizing a moderator" do
-      expect(Guardian.new(moderator).can_anonymize_user?(Fabricate(:moderator))).to be_falsey
+      expect(Guardian.new(moderator).can_anonymize_user?(moderator)).to be_falsey
     end
   end
 
