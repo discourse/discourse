@@ -14,7 +14,7 @@ require_dependency 'global_path'
 require_dependency 'secure_session'
 require_dependency 'topic_query'
 require_dependency 'hijack'
-require_dependency 'read_only'
+require_dependency 'read_only_header'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
-  include ReadOnly
+  include ReadOnlyHeader
 
   attr_reader :theme_ids
 
