@@ -53,6 +53,6 @@ if Rails.env == "development"
     end
   end
 
-  Sprockets.register_bundle_metadata_reducer 'application/javascript', :data, proc { "" }, ::SprocketHack.method(:concat_javascript_sources)
+  Sprockets.register_bundle_metadata_reducer 'application/javascript', :data, proc { +"" }, ::SprocketHack.method(:concat_javascript_sources)
 
 end
