@@ -4,6 +4,7 @@ require 'rails_helper'
 require_dependency 'topics_bulk_action'
 
 describe TopicsBulkAction do
+  fab!(:topic) { Fabricate(:topic) }
 
   describe "dismiss_posts" do
     it "dismisses posts" do
@@ -32,7 +33,6 @@ describe TopicsBulkAction do
   end
 
   describe "change_category" do
-    fab!(:topic) { Fabricate(:topic) }
     fab!(:category) { Fabricate(:category) }
 
     context "when the user can edit the topic" do
@@ -58,8 +58,6 @@ describe TopicsBulkAction do
   end
 
   describe "reset_read" do
-    fab!(:topic) { Fabricate(:topic) }
-
     it "delegates to PostTiming.destroy_for" do
       tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_read')
       PostTiming.expects(:destroy_for).with(topic.user_id, [topic.id])
@@ -80,8 +78,6 @@ describe TopicsBulkAction do
   end
 
   describe "change_notification_level" do
-    fab!(:topic) { Fabricate(:topic) }
-
     context "when the user can see the topic" do
       it "updates the notification level" do
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
@@ -103,8 +99,6 @@ describe TopicsBulkAction do
   end
 
   describe "close" do
-    fab!(:topic) { Fabricate(:topic) }
-
     context "when the user can moderate the topic" do
       it "closes the topic and returns the topic_id" do
         Guardian.any_instance.expects(:can_moderate?).returns(true)
@@ -130,8 +124,6 @@ describe TopicsBulkAction do
   end
 
   describe "archive" do
-    fab!(:topic) { Fabricate(:topic) }
-
     context "when the user can moderate the topic" do
       it "archives the topic and returns the topic_id" do
         Guardian.any_instance.expects(:can_moderate?).returns(true)
@@ -157,8 +149,6 @@ describe TopicsBulkAction do
   end
 
   describe "unlist" do
-    fab!(:topic) { Fabricate(:topic) }
-
     context "when the user can moderate the topic" do
       it "unlists the topic and returns the topic_id" do
         Guardian.any_instance.expects(:can_moderate?).returns(true)
@@ -184,7 +174,6 @@ describe TopicsBulkAction do
   end
 
   describe "change_tags" do
-    fab!(:topic) { Fabricate(:topic) }
     fab!(:tag1)  { Fabricate(:tag) }
     fab!(:tag2)  { Fabricate(:tag) }
 
@@ -236,7 +225,6 @@ describe TopicsBulkAction do
   end
 
   describe "append tags" do
-    fab!(:topic) { Fabricate(:topic) }
     fab!(:tag1)  { Fabricate(:tag) }
     fab!(:tag2)  { Fabricate(:tag) }
     fab!(:tag3)  { Fabricate(:tag) }
