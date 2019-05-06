@@ -1215,8 +1215,10 @@ describe PostsController do
       end
 
       context "TL4 users" do
+        fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+
         before do
-          sign_in(Fabricate(:trust_level_4))
+          sign_in(trust_level_4)
         end
 
         include_examples "it works"
