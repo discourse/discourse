@@ -52,9 +52,36 @@ export function buildButton(name, widget) {
   }
 }
 
+function likeCount(attrs) {
+  const count = attrs.likeCount;
+
+  if (count > 0) {
+    const title = attrs.liked
+      ? count === 1
+        ? "post.has_likes_title_only_you"
+        : "post.has_likes_title_you"
+      : "post.has_likes_title";
+    const icon = attrs.yours ? "d-liked" : "";
+    const additionalClass = attrs.yours ? "my-likes" : "regular-likes";
+
+    return {
+      action: "toggleWhoLiked",
+      title,
+      className: `button-count like-count highlight-action ${additionalClass}`,
+      contents: count,
+      icon,
+      iconRight: true,
+      addContainer: attrs.yours,
+      titleOptions: { count: attrs.liked ? count - 1 : count }
+    };
+  }
+}
+
+registerButton("like-count", likeCount);
+
 registerButton("like", attrs => {
   if (!attrs.showLike) {
-    return;
+    return likeCount(attrs);
   }
 
   const className = attrs.liked
@@ -83,30 +110,6 @@ registerButton("like", attrs => {
   }
 
   return button;
-});
-
-registerButton("like-count", attrs => {
-  const count = attrs.likeCount;
-
-  if (count > 0) {
-    const title = attrs.liked
-      ? count === 1
-        ? "post.has_likes_title_only_you"
-        : "post.has_likes_title_you"
-      : "post.has_likes_title";
-    const icon = attrs.yours ? "d-liked" : "";
-    const additionalClass = attrs.yours ? "my-likes" : "regular-likes";
-
-    return {
-      action: "toggleWhoLiked",
-      title,
-      className: `button-count like-count highlight-action ${additionalClass}`,
-      contents: count,
-      icon,
-      iconRight: true,
-      titleOptions: { count: attrs.liked ? count - 1 : count }
-    };
-  }
 });
 
 registerButton("flag-count", attrs => {
@@ -344,7 +347,10 @@ export default createWidget("post-menu", {
       if (buttonAtts.before) {
         let before = this.attachButton(buttonAtts.before);
         return h("div.double-button", [before, button]);
+      } else if (buttonAtts.addContainer) {
+        return h("div.double-button", [button]);
       }
+
       return button;
     }
   },

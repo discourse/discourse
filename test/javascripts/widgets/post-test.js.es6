@@ -144,7 +144,7 @@ widgetTest("like count button", {
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }]
     });
     this.set("post", post);
-    this.set("args", { likeCount: 1, showLike: true });
+    this.set("args", { likeCount: 1 });
   },
   async test(assert) {
     assert.ok(find("button.like-count").length === 1);
