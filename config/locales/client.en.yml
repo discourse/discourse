@@ -4265,6 +4265,7 @@ en:
 
       permalink:
         title: "Permalinks"
+        description: "Please note this will only work for redirecting external links, it will not work for internal links."
         url: "URL"
         topic_id: "Topic ID"
         topic_title: "Topic"
