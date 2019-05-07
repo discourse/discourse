@@ -159,11 +159,7 @@ module SeedData
     end
 
     def find_category(site_setting_name)
-<<<<<<< HEAD
       category_id = SiteSetting.get(site_setting_name)
-=======
-      category_id = SiteSetting.public_send(site_setting_name)
->>>>>>> DEV: Prefer `public_send` over `send`.
       Category.find_by(id: category_id) if category_id > 0
     end
 
