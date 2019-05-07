@@ -20,6 +20,6 @@ export default TextField.extend({
     // iOS is crazy, without this we will not be
     // at the top of the page
     $(window).scrollTop(0);
-    $searchInput.trigger("touchstart").focus();
+    $searchInput.focus();
   }
 });

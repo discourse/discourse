@@ -410,9 +410,7 @@ export default createWidget("header", {
 
       if (currentPath === "full-page-search") {
         scrollTop();
-        $(".full-page-search")
-          .trigger("touchstart")
-          .focus();
+        $(".full-page-search").focus();
         return false;
       } else {
         return DiscourseURL.routeTo("/search" + params);
