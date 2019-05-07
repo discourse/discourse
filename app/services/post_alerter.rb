@@ -326,19 +326,8 @@ class PostAlerter
         post_number: post.post_number
       ).limit(10)
 
+    # Don't notify the same user about the same type of notification on the same post
     existing_notification_of_same_type = existing_notifications.find { |n| n.notification_type == type }
-
-    # existing_notification = user.notifications
-    #   .order("notifications.id DESC")
-    #   .find_by(
-    #     topic_id: post.topic_id,
-    #     post_number: post.post_number
-    #   )
-
-    # # Don't notify the same user about the same type of notification on the same post
-    # existing_notification_of_same_type = existing_notification if existing_notification&.notification_type == type
-
-    puts existing_notification_of_same_type.inspect
 
     return if existing_notification_of_same_type && !should_notify_previous?(user, existing_notification_of_same_type, opts)
 
@@ -367,15 +356,6 @@ class PostAlerter
         return notification if notification
       end
     end
-
-    # Don't alert same user about the same post
-    # i.e. skip duplicate alerts on a revised post (when editing post triggers a new type of notification like a mention or a quote)
-    existing_alert = user.notifications
-      .order("notifications.id DESC")
-      .find_by(
-        topic_id: post.topic_id,
-        post_number: post.post_number
-      )
 
     collapsed = false
 
