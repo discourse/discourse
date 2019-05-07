@@ -37,11 +37,7 @@ class Embedding < OpenStruct
 
   def self.find
     embedding_args = { id: 'default' }
-
-    Embedding.settings.each do |s|
-      embedding_args[s] = SiteSetting.public_send(s)
-    end
-
+    Embedding.settings.each { |s| embedding_args[s] = SiteSetting.get(s) }
     Embedding.new(embedding_args)
   end
 end
