@@ -245,12 +245,24 @@ class PostMover
   end
 
   def watch_new_topic
-    TopicUser.change(
-      destination_topic.user,
-      destination_topic.id,
-      notification_level: TopicUser.notification_levels[:watching],
-      notifications_reason_id: TopicUser.notification_reasons[:created_topic]
-    )
+    if @destination_topic.archetype == Archetype.private_message
+      if @original_topic.archetype == Archetype.private_message
+        notification_levels = TopicUser.where(topic_id: @original_topic.id, user_id: posts.pluck(:user_id)).pluck(:user_id, :notification_level).to_h
+      else
+        notification_levels = posts.pluck(:user_id).uniq.map { |user_id| [user_id, TopicUser.notification_levels[:watching]] }.to_h
+      end
+    else
+      notification_levels = [[@destination_topic.user_id, TopicUser.notification_levels[:watching]]]
+    end
+
+    notification_levels.each do |user_id, notification_level|
+      TopicUser.change(
+        user_id,
+        @destination_topic.id,
+        notification_level: notification_level,
+        notifications_reason_id: TopicUser.notification_reasons[destination_topic.user_id == user_id ? :created_topic : :created_post]
+      )
+    end
   end
 
   def add_allowed_users(usernames)
