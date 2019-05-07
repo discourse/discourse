@@ -33,6 +33,7 @@ required:
     default: ""
   short_site_description:
     default: ""
+    client: true
   contact_email:
     client: true
     default: ""
