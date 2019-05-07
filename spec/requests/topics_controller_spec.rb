@@ -2745,8 +2745,9 @@ RSpec.describe TopicsController do
       end
 
       it "should fail for non-existend topic" do
+        max_id = Topic.maximum(:id)
         sign_in(Fabricate(:admin))
-        put "/t/1/reset-bump-date.json"
+        put "/t/#{max_id + 1}/reset-bump-date.json"
         expect(response.status).to eq(404)
       end
     end
