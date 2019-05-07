@@ -1171,7 +1171,7 @@ describe Report do
         expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
         expect(page_view_logged_in_report[:data][0][:y]).to eql(2)
 
-        expect(page_view_anon_report[:color]).to eql("rgba(0,136,204,0.5)")
+        expect(page_view_anon_report[:color]).to eql("#40c8ff")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
       end
     end
