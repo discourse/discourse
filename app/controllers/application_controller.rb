@@ -628,10 +628,10 @@ class ApplicationController < ActionController::Base
       error_obj = nil
       if opts[:additional_errors]
         error_target = opts[:additional_errors].find do |o|
-          target = obj.send(o)
+          target = obj.public_send(o)
           target && target.errors.present?
         end
-        error_obj = obj.send(error_target) if error_target
+        error_obj = obj.public_send(error_target) if error_target
       end
       render_json_error(error_obj || obj)
     end

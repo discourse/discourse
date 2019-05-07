@@ -23,7 +23,7 @@ end
 
 describe Auth::GithubAuthenticator do
   let(:authenticator) { described_class.new }
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'after_authenticate' do
     let(:data) do
@@ -251,7 +251,7 @@ describe Auth::GithubAuthenticator do
   end
 
   context 'revoke' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::GithubAuthenticator.new }
 
     it 'raises exception if no entry for user' do
@@ -271,8 +271,8 @@ describe Auth::GithubAuthenticator do
     let(:job_klass) { Jobs::DownloadAvatarFromUrl }
 
     context 'when user has a custom avatar' do
-      let(:user_avatar) { Fabricate(:user_avatar, custom_upload: Fabricate(:upload)) }
-      let(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }
+      fab!(:user_avatar) { Fabricate(:user_avatar, custom_upload: Fabricate(:upload)) }
+      fab!(:user_with_custom_avatar) { Fabricate(:user, user_avatar: user_avatar) }
 
       it 'does not enqueue a download_avatar_from_url job' do
         expect {

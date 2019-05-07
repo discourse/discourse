@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe UserMerger do
-  let!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
-  let!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
-  let(:walter) { Fabricate(:walter_white) }
+  fab!(:target_user) { Fabricate(:user, username: 'alice', email: 'alice@example.com') }
+  fab!(:source_user) { Fabricate(:user, username: 'alice1', email: 'alice@work.com') }
+  fab!(:walter) { Fabricate(:walter_white) }
 
   def merge_users!(source = nil, target =  nil)
     source ||= source_user
@@ -462,7 +462,7 @@ describe UserMerger do
 
       posts.each do |type, post|
         post.reload
-        expect(post.send("#{type}_count")).to eq(1)
+        expect(post.public_send("#{type}_count")).to eq(1)
       end
     end
   end
@@ -677,8 +677,8 @@ describe UserMerger do
     # action_type and user_id are not nullable
     # target_topic_id and acting_user_id are nullable, but always have a value
 
-    let(:post1) { Fabricate(:post) }
-    let(:post2) { Fabricate(:post) }
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
 
     def log_like_action(acting_user, user, post)
       UserAction.log_action!(action_type: UserAction::LIKE,

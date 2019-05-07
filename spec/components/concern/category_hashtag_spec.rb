@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe CategoryHashtag do
   describe '#query_from_hashtag_slug' do
-    let(:parent_category) { Fabricate(:category) }
-    let(:child_category) { Fabricate(:category, parent_category: parent_category) }
+    fab!(:parent_category) { Fabricate(:category) }
+    fab!(:child_category) { Fabricate(:category, parent_category: parent_category) }
 
     it "should return the right result for a parent category slug" do
       expect(Category.query_from_hashtag_slug(parent_category.slug))

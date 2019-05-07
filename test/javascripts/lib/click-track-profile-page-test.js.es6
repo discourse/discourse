@@ -55,10 +55,8 @@ QUnit.test("tracks internal URLs", async assert => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   /* global server */
-  server.get("/clicks/track", request => {
-    assert.ok(
-      request.url.indexOf("url=http%3A%2F%2Fdiscuss.domain.com") !== -1
-    );
+  server.post("/clicks/track", request => {
+    assert.equal(request.requestBody, "url=http%3A%2F%2Fdiscuss.domain.com");
   });
 
   assert.notOk(track(generateClickEventOn("#same-site")));
@@ -68,11 +66,10 @@ QUnit.test("tracks external URLs", async assert => {
   assert.expect(2);
 
   /* global server */
-  server.get("/clicks/track", request => {
-    assert.ok(
-      request.url.indexOf(
-        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-      ) !== -1
+  server.post("/clicks/track", request => {
+    assert.equal(
+      request.requestBody,
+      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
     );
   });
 
@@ -83,11 +80,10 @@ QUnit.test("tracks external URLs in other posts", async assert => {
   assert.expect(2);
 
   /* global server */
-  server.get("/clicks/track", request => {
-    assert.ok(
-      request.url.indexOf(
-        "url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331"
-      ) !== -1
+  server.post("/clicks/track", request => {
+    assert.equal(
+      request.requestBody,
+      "url=http%3A%2F%2Fwww.google.com&post_id=24&topic_id=7331"
     );
   });
 

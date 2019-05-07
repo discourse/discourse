@@ -111,7 +111,7 @@ class GlobalSetting
       replica_host
       replica_port
     }.each do |s|
-      if val = self.send("db_#{s}")
+      if val = self.public_send("db_#{s}")
         hash[s] = val
       end
     end

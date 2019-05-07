@@ -107,8 +107,9 @@ module Email
 
       styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
+
       if style = @opts[:style]
-        styled.send("format_#{style}")
+        styled.public_send("format_#{style}")
       end
 
       Mail::Part.new do

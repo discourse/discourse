@@ -14,9 +14,9 @@ describe TopicViewSerializer do
     RandomTopicSelector.clear_cache!
   end
 
-  let(:topic) { Fabricate(:topic) }
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   describe '#featured_link and #featured_link_root_domain' do
     let(:featured_link) { 'http://meta.discourse.org' }

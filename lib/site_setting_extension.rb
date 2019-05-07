@@ -13,6 +13,7 @@ module SiteSettingExtension
   # for site locale
   def self.extended(klass)
     if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
+      # protected
       klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
     end
   end
@@ -137,7 +138,7 @@ module SiteSettingExtension
       end
 
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
-        val = GlobalSetting.send(name)
+        val = GlobalSetting.public_send(name)
 
         unless val.nil? || (val == ''.freeze)
           shadowed_val = val
@@ -186,9 +187,9 @@ module SiteSettingExtension
     defaults.all.keys.each do |s|
       result[s] =
         if deprecated_settings.include?(s.to_s)
-          send(s, warn: false).to_s
+          public_send(s, warn: false).to_s
         else
-          send(s).to_s
+          public_send(s).to_s
         end
     end
 
@@ -229,7 +230,7 @@ module SiteSettingExtension
       .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
       .map do |s, v|
 
-      value = send(s)
+      value = public_send(s)
       type_hash = type_supervisor.type_hash(s)
       default = defaults.get(s, default_locale).to_s
 
@@ -288,7 +289,7 @@ module SiteSettingExtension
       new_hash = defaults_view.merge!(new_hash)
 
       # add shadowed
-      shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.send(ss) }
+      shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.public_send(ss) }
 
       changes, deletions = diff_hash(new_hash, current)
 
@@ -370,7 +371,7 @@ module SiteSettingExtension
   end
 
   def notify_clients!(name)
-    MessageBus.publish('/client_settings', name: name, value: self.send(name))
+    MessageBus.publish('/client_settings', name: name, value: self.public_send(name))
   end
 
   def requires_refresh?(name)
@@ -390,10 +391,14 @@ module SiteSettingExtension
     end
   end
 
-  def set(name, value)
+  def set(name, value, options = nil)
     if has_setting?(name)
       value = filter_value(name, value)
-      self.send("#{name}=", value)
+      if options
+        self.public_send("#{name}=", value, options)
+      else
+        self.public_send("#{name}=", value)
+      end
       Discourse.request_refresh! if requires_refresh?(name)
     else
       raise Discourse::InvalidParameters.new("Either no setting named '#{name}' exists or value provided is invalid")
@@ -401,11 +406,21 @@ module SiteSettingExtension
   end
 
   def set_and_log(name, value, user = Discourse.system_user)
-    prev_value = send(name)
-    set(name, value)
     if has_setting?(name)
+      prev_value = public_send(name)
+      set(name, value)
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+    else
+      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+    end
+  end
+
+  def get(name)
+    if has_setting?(name)
+      self.public_send(name)
+    else
+      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
     end
   end
 
@@ -481,7 +496,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}?" do
-      self.send clean_name
+      self.public_send clean_name
     end
 
     define_singleton_method "#{clean_name}=" do |val|

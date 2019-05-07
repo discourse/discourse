@@ -8,7 +8,7 @@ describe EmailLog do
   it { is_expected.to validate_presence_of :to_address }
   it { is_expected.to validate_presence_of :email_type }
 
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   context 'unique email per post' do
     it 'only allows through one email per post' do

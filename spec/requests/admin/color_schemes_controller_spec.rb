@@ -8,7 +8,7 @@ describe Admin::ColorSchemesController do
   end
 
   context "while logged in as an admin" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
     let(:valid_params) { { color_scheme: {
         name: 'Such Design',
         colors: [
@@ -53,7 +53,7 @@ describe Admin::ColorSchemesController do
     end
 
     describe "#update" do
-      let(:existing) { Fabricate(:color_scheme) }
+      fab!(:existing) { Fabricate(:color_scheme) }
 
       it "returns success" do
         put "/admin/color_schemes/#{existing.id}.json", params: valid_params
@@ -82,7 +82,7 @@ describe Admin::ColorSchemesController do
     end
 
     describe "#destroy" do
-      let!(:existing) { Fabricate(:color_scheme) }
+      fab!(:existing) { Fabricate(:color_scheme) }
 
       it "returns success" do
         expect {

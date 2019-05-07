@@ -6,9 +6,9 @@ require_dependency 'post_action'
 describe PostSerializer do
 
   context "a post with lots of actions" do
-    let(:post) { Fabricate(:post) }
-    let(:actor) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:actor) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
     let(:acted_ids) {
       PostActionType.public_types.values
         .concat([:notify_user, :spam].map { |k| PostActionType.types[k] })

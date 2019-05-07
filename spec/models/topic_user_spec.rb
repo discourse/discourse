@@ -75,7 +75,7 @@ describe TopicUser do
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :topic }
 
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   let(:topic) {
     u = Fabricate(:user)
@@ -235,7 +235,7 @@ describe TopicUser do
     end
 
     context 'private messages' do
-      let(:target_user) { Fabricate(:user) }
+      fab!(:target_user) { Fabricate(:user) }
 
       let(:post) do
         create_post(

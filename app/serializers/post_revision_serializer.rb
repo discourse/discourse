@@ -201,7 +201,9 @@ class PostRevisionSerializer < ApplicationSerializer
 
     # Retrieve any `tracked_topic_fields`
     PostRevisor.tracked_topic_fields.each_key do |field|
-      latest_modifications[field.to_s] = [topic.send(field)] if topic.respond_to?(field)
+      if topic.respond_to?(field)
+        latest_modifications[field.to_s] = [topic.public_send(field)]
+      end
     end
 
     latest_modifications["featured_link"] = [post.topic.featured_link] if SiteSetting.topic_featured_link_enabled

@@ -13,7 +13,7 @@ describe UsersEmailController do
     end
 
     context 'valid old address token' do
-      let(:user) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:moderator) }
       let(:updater) { EmailUpdater.new(user.guardian, user) }
 
       before do
@@ -36,7 +36,7 @@ describe UsersEmailController do
     end
 
     context 'valid new address token' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let(:updater) { EmailUpdater.new(user.guardian, user) }
 
       before do
@@ -73,7 +73,7 @@ describe UsersEmailController do
       end
 
       context 'second factor required' do
-        let!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
+        fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
         it 'requires a second factor token' do
           get "/u/authorize-email/#{user.email_tokens.last.token}"
@@ -114,7 +114,7 @@ describe UsersEmailController do
   end
 
   describe '#update' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:new_email) { 'bubblegum@adventuretime.ooo' }
 
     it "requires you to be logged in" do
@@ -147,7 +147,7 @@ describe UsersEmailController do
       end
 
       context 'when the new email address is taken' do
-        let!(:other_user) { Fabricate(:coding_horror) }
+        fab!(:other_user) { Fabricate(:coding_horror) }
 
         context 'hide_email_address_taken is disabled' do
           before do
@@ -187,7 +187,7 @@ describe UsersEmailController do
       end
 
       context 'when new email is different case of existing email' do
-        let!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com') }
+        fab!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com') }
 
         it 'raises an error' do
           put "/u/#{user.username}/preferences/email.json", params: {

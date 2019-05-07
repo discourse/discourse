@@ -15,6 +15,6 @@ class TopicPoster < OpenStruct
 
   # TODO: Remove when old list is removed
   def [](attr)
-    send(attr)
+    public_send(attr)
   end
 end

@@ -108,7 +108,7 @@ class Admin::BadgesController < Admin::AdminController
       params.permit(*allowed)
 
       allowed.each do |key|
-        badge.send("#{key}=" , params[key]) if params[key]
+        badge.public_send("#{key}=" , params[key]) if params[key]
       end
 
       # Badge query contract checks

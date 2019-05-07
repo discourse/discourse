@@ -11,7 +11,7 @@ describe Jobs::ProcessPost do
 
   context 'with a post' do
 
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     it 'does not erase posts when CookedPostProcessor malfunctions' do
       # Look kids, an actual reason why you want to use mocks

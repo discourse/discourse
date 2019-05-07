@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe UserProfileView do
-  let(:user) { Fabricate(:user) }
-  let(:other_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
   let(:user_profile_id) { user.user_profile.id }
 
   def add(user_profile_id, ip, user_id = nil, at = nil)

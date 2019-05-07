@@ -1,1 +1,1 @@
-ActiveRecord::Base.send(:include, ActiveModel::ForbiddenAttributesProtection)
+ActiveRecord::Base.public_send(:include, ActiveModel::ForbiddenAttributesProtection)

@@ -443,11 +443,10 @@ module ApplicationHelper
 
   def client_side_setup_data
     service_worker_url = Rails.env.development? ? 'service-worker.js' : Rails.application.assets_manifest.assets['service-worker.js']
-    current_hostname_without_port = RailsMultisite::ConnectionManagement.current_hostname.sub(/:[\d]*$/, '')
 
     setup_data = {
       cdn: Rails.configuration.action_controller.asset_host,
-      base_url: current_hostname_without_port,
+      base_url: Discourse.base_url,
       base_uri: Discourse::base_uri,
       environment: Rails.env,
       letter_avatar_version: LetterAvatar.version,

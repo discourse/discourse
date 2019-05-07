@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe CurrentUserSerializer do
   context "when SSO is not enabled" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let :serializer do
       CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
     end
@@ -36,10 +36,10 @@ RSpec.describe CurrentUserSerializer do
   end
 
   context "#top_category_ids" do
-    let(:user) { Fabricate(:user) }
-    let(:category1) { Fabricate(:category) }
-    let(:category2) { Fabricate(:category) }
-    let(:category3) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:category1) { Fabricate(:category) }
+    fab!(:category2) { Fabricate(:category) }
+    fab!(:category3) { Fabricate(:category) }
     let :serializer do
       CurrentUserSerializer.new(user, scope: Guardian.new, root: false)
     end
@@ -69,7 +69,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   context "#groups" do
-    let(:member) { Fabricate(:user) }
+    fab!(:member) { Fabricate(:user) }
     let :serializer do
       CurrentUserSerializer.new(member, scope: Guardian.new, root: false)
     end

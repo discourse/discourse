@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe ReviewableSerializer do
 
-  let(:reviewable) { Fabricate(:reviewable_queued_post) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+  fab!(:admin) { Fabricate(:admin) }
 
   it "serializes all the fields" do
     json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json

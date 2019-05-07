@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe CategoryUploadSerializer do
 
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
   let(:subject) { described_class.new(upload, root: false) }
 
   it 'should include width and height' do

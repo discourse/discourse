@@ -5,7 +5,7 @@ require 'rails_helper'
 describe Jobs::ExportCsvFile do
 
   context '.execute' do
-    let(:user) { Fabricate(:user, username: "john_doe") }
+    fab!(:user) { Fabricate(:user, username: "john_doe") }
 
     it 'raises an error when the entity is missing' do
       expect { Jobs::ExportCsvFile.new.execute(user_id: user.id) }.to raise_error(Discourse::InvalidParameters)

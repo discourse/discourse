@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe MetadataController do
+
   describe 'manifest.webmanifest' do
     before do
       SiteIconManager.enable

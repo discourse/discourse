@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe StaticController do
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
     let(:filename) { 'smallest.png' }
@@ -151,7 +151,7 @@ describe StaticController do
 
         context "when #{setting_name} site setting is set" do
           before do
-            SiteSetting.public_send("#{setting_name}=", 'http://example.com/page')
+            SiteSetting.set(setting_name, 'http://example.com/page')
           end
 
           it "redirects to the #{setting_name}" do

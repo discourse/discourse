@@ -10,7 +10,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def enabled?
-    SiteSetting.send(@enabled_site_setting)
+    SiteSetting.get(@enabled_site_setting)
   end
 
   def description_for_user(user)

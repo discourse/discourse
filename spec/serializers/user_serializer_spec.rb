@@ -168,7 +168,7 @@ describe UserSerializer do
   end
 
   context "with custom_fields" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:json) { UserSerializer.new(user, scope: Guardian.new, root: false).as_json }
 
     before do
@@ -206,7 +206,7 @@ describe UserSerializer do
   end
 
   context "with user fields" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     let! :fields do
       [
@@ -231,7 +231,7 @@ describe UserSerializer do
   end
 
   context "with user_api_keys" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "sorts keys by last used time" do
       freeze_time

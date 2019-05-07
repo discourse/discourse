@@ -54,7 +54,7 @@ describe Auth::TwitterAuthenticator do
   end
 
   context 'revoke' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::TwitterAuthenticator.new }
 
     it 'raises exception if no entry for user' do

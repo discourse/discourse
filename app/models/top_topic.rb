@@ -53,7 +53,7 @@ class TopTopic < ActiveRecord::Base
 
   def self.update_counts_and_compute_scores_for(period)
     sort_orders.each do |sort|
-      TopTopic.send("update_#{sort}_count_for", period)
+      TopTopic.public_send("update_#{sort}_count_for", period)
     end
     compute_top_score_for(period)
   end

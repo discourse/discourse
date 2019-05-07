@@ -228,7 +228,7 @@ class Reviewable < ActiveRecord::Base
     update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
-      result = send(perform_method, performed_by, args)
+      result = public_send(perform_method, performed_by, args)
 
       if result.success?
         update_count = transition_to(result.transition_to, performed_by) if result.transition_to

@@ -8,7 +8,7 @@ describe Admin::ScreenedIpAddressesController do
     expect(Admin::ScreenedIpAddressesController < Admin::AdminController).to eq(true)
   end
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     sign_in(admin)

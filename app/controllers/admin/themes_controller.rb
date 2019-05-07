@@ -157,7 +157,7 @@ class Admin::ThemesController < Admin::AdminController
 
     [:name, :color_scheme_id, :user_selectable].each do |field|
       if theme_params.key?(field)
-        @theme.send("#{field}=", theme_params[field])
+        @theme.public_send("#{field}=", theme_params[field])
       end
     end
 

@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe Admin::EmailController do
-  let(:admin) { Fabricate(:admin) }
-  let(:email_log) { Fabricate(:email_log) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:email_log) { Fabricate(:email_log) }
 
   before do
     sign_in(admin)
@@ -35,8 +35,8 @@ describe Admin::EmailController do
   end
 
   describe '#sent' do
-    let(:post) { Fabricate(:post) }
-    let(:email_log) { Fabricate(:email_log, post: post) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:email_log) { Fabricate(:email_log, post: post) }
 
     let(:post_reply_key) do
       Fabricate(:post_reply_key, post: post, user: email_log.user)
@@ -89,9 +89,9 @@ describe Admin::EmailController do
   end
 
   describe '#skipped' do
-    let(:user) { Fabricate(:user) }
-    let!(:log1) { Fabricate(:skipped_email_log, user: user) }
-    let!(:log2) { Fabricate(:skipped_email_log) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:log1) { Fabricate(:skipped_email_log, user: user) }
+    fab!(:log2) { Fabricate(:skipped_email_log) }
 
     it "succeeds" do
       get "/admin/email/skipped.json"
@@ -136,8 +136,8 @@ describe Admin::EmailController do
     end
 
     context 'with SiteSetting.disable_emails' do
-      let(:eviltrout) { Fabricate(:evil_trout) }
-      let(:admin) { Fabricate(:admin) }
+      fab!(:eviltrout) { Fabricate(:evil_trout) }
+      fab!(:admin) { Fabricate(:admin) }
 
       it 'bypasses disable when setting is "yes"' do
         SiteSetting.disable_emails = 'yes'
@@ -247,7 +247,7 @@ describe Admin::EmailController do
     end
 
     context 'bounced email log entry exists' do
-      let(:email_log) { Fabricate(:email_log, bounced: true, bounce_key: SecureRandom.hex) }
+      fab!(:email_log) { Fabricate(:email_log, bounced: true, bounce_key: SecureRandom.hex) }
       let(:error_message) { "Email::Receiver::BouncedEmailError" }
 
       it 'returns an incoming email sent to the reply_by_email_address' do

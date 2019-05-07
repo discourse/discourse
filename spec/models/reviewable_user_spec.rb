@@ -4,16 +4,16 @@ require 'rails_helper'
 
 RSpec.describe ReviewableUser, type: :model do
 
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator) { Fabricate(:moderator) }
   let(:user) do
     user = Fabricate(:user)
     user.activate
     user
   end
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   context "actions_for" do
-    let(:reviewable) { Fabricate(:reviewable) }
+    fab!(:reviewable) { Fabricate(:reviewable) }
     it "returns correct actions in the pending state" do
       actions = reviewable.actions_for(Guardian.new(moderator))
       expect(actions.has?(:approve_user)).to eq(true)
@@ -30,8 +30,8 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   context "#update_fields" do
-    let(:moderator) { Fabricate(:moderator) }
-    let(:reviewable) { Fabricate(:reviewable) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:reviewable) { Fabricate(:reviewable) }
 
     it "doesn't raise errors with an empty update" do
       expect(reviewable.update_fields(nil, moderator)).to eq(true)
@@ -52,7 +52,7 @@ RSpec.describe ReviewableUser, type: :model do
   end
 
   context "perform" do
-    let(:reviewable) { Fabricate(:reviewable) }
+    fab!(:reviewable) { Fabricate(:reviewable) }
     context "approve" do
       it "allows us to approve a user" do
         result = reviewable.perform(moderator, :approve_user)

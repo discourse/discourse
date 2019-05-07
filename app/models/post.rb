@@ -257,7 +257,7 @@ class Post < ActiveRecord::Base
     raw_links
     has_oneboxes?}.each do |attr|
     define_method(attr) do
-      post_analyzer.send(attr)
+      post_analyzer.public_send(attr)
     end
   end
 

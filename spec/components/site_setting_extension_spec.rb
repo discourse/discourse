@@ -532,6 +532,23 @@ describe SiteSettingExtension do
     end
   end
 
+  describe ".get" do
+    before do
+      settings.setting(:title, "Discourse v1")
+      settings.refresh!
+    end
+
+    it "works correctly" do
+      expect {
+        settings.get("frogs_in_africa")
+      }.to raise_error(Discourse::InvalidParameters)
+
+      expect(settings.get(:title)).to eq("Discourse v1")
+      expect(settings.get("title")).to eq("Discourse v1")
+    end
+
+  end
+
   describe ".set_and_log" do
     before do
       settings.setting(:s3_secret_access_key, "old_secret_key", secret: true)
@@ -823,8 +840,8 @@ describe SiteSettingExtension do
 
   describe '.setup_methods' do
     describe 'for uploads site settings' do
-      let(:upload) { Fabricate(:upload) }
-      let(:upload2) { Fabricate(:upload) }
+      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload2) { Fabricate(:upload) }
 
       it 'should return the upload record' do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)

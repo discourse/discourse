@@ -39,7 +39,7 @@ class AdminDashboardData
   def problems
     problems = []
     AdminDashboardData.problem_syms.each do |sym|
-      problems << send(sym)
+      problems << public_send(sym)
     end
     AdminDashboardData.problem_blocks.each do |blk|
       problems << instance_exec(&blk)

@@ -113,7 +113,11 @@ class Admin::EmailController < Admin::AdminController
     params.require(:username)
     params.require(:email)
     user = User.find_by_username(params[:username])
-    message, skip_reason = UserNotifications.send(:digest, user, since: params[:last_seen_at])
+
+    message, skip_reason = UserNotifications.public_send(:digest, user,
+      since: params[:last_seen_at]
+    )
+
     if message
       message.to = params[:email]
       begin

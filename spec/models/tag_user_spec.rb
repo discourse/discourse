@@ -69,10 +69,10 @@ describe TagUser do
   end
 
   context "integration" do
-    let(:user) { Fabricate(:user) }
-    let(:watched_tag) { Fabricate(:tag) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag)   { Fabricate(:tag) }
-    let(:tracked_tag) { Fabricate(:tag) }
+    fab!(:tracked_tag) { Fabricate(:tag) }
 
     context "with some tag notification settings" do
       before do

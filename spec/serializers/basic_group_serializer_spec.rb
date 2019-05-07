@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe BasicGroupSerializer do
   let(:guardian) { Guardian.new }
-  let(:group) { Fabricate(:group) }
+  fab!(:group) { Fabricate(:group) }
   subject { described_class.new(group, scope: guardian, root: false) }
 
   describe '#display_name' do
@@ -17,7 +17,7 @@ describe BasicGroupSerializer do
     end
 
     describe 'normal group' do
-      let(:group) { Fabricate(:group) }
+      fab!(:group) { Fabricate(:group) }
 
       it 'should not include the display name' do
         expect(subject.display_name).to eq(nil)
@@ -26,7 +26,7 @@ describe BasicGroupSerializer do
   end
 
   describe '#bio_raw' do
-    let(:group) { Fabricate(:group, bio_raw: 'testing') }
+    fab!(:group) { Fabricate(:group, bio_raw: 'testing') }
 
     subject do
       described_class.new(group, scope: guardian, root: false, owner_group_ids: [group.id])
@@ -40,7 +40,7 @@ describe BasicGroupSerializer do
   end
 
   describe '#automatic_membership_email_domains' do
-    let(:group) { Fabricate(:group, automatic_membership_email_domains: 'ilovediscourse.com', automatic_membership_retroactive: true) }
+    fab!(:group) { Fabricate(:group, automatic_membership_email_domains: 'ilovediscourse.com', automatic_membership_retroactive: true) }
     let(:admin_guardian) { Guardian.new(Fabricate(:admin)) }
 
     it 'should include email domains for admin' do
@@ -58,7 +58,7 @@ describe BasicGroupSerializer do
   end
 
   describe '#has_messages' do
-    let(:group) { Fabricate(:group, has_messages: true) }
+    fab!(:group) { Fabricate(:group, has_messages: true) }
 
     describe 'for a staff user' do
       let(:guardian) { Guardian.new(Fabricate(:moderator)) }
@@ -69,7 +69,7 @@ describe BasicGroupSerializer do
     end
 
     describe 'for a group user' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let(:guardian) { Guardian.new(user) }
 
       before do

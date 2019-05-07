@@ -171,7 +171,7 @@ describe Jobs::PullHotlinkedImages do
   end
 
   describe "with a lightboxed image" do
-    let(:upload) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:upload) }
 
     before do
       FastImage.expects(:size).returns([1750, 2000])

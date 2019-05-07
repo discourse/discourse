@@ -115,7 +115,7 @@ QUnit.testStart(function(ctx) {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = dup(Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "";
-  Discourse.BaseUrl = "localhost";
+  Discourse.BaseUrl = "http://localhost:3000";
   Discourse.Session.resetCurrent();
   Discourse.User.resetCurrent();
   resetSite(Discourse.SiteSettings);

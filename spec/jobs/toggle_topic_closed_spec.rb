@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe Jobs::ToggleTopicClosed do
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
-  let(:topic) do
+  fab!(:topic) do
     Fabricate(:topic_timer, user: admin).topic
   end
 
@@ -45,8 +45,8 @@ describe Jobs::ToggleTopicClosed do
     end
 
     describe 'when category has auto close configured' do
-      let(:category) { Fabricate(:category, auto_close_hours: 5) }
-      let(:topic) { Fabricate(:topic, category: category, closed: true) }
+      fab!(:category) { Fabricate(:category, auto_close_hours: 5) }
+      fab!(:topic) { Fabricate(:topic, category: category, closed: true) }
 
       it "should restore the category's auto close timer" do
         Fabricate(:topic_timer,
@@ -86,7 +86,7 @@ describe Jobs::ToggleTopicClosed do
   end
 
   describe 'when user is not authorized to close topics' do
-    let(:topic) do
+    fab!(:topic) do
       Fabricate(:topic_timer, execute_at: 2.hours.from_now).topic
     end
 

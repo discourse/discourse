@@ -95,7 +95,9 @@ class DbHelper
       SQL
 
       if rows.size > 0
-        found["#{r.table_name}.#{r.column_name}"] = rows.map { |row| row.send(r.column_name) }
+        found["#{r.table_name}.#{r.column_name}"] = rows.map do |row|
+          row.public_send(r.column_name)
+        end
       end
     end
 

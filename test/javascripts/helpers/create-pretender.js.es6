@@ -138,7 +138,7 @@ export default function() {
       return response({ topic_list: { topics: [] } });
     });
 
-    this.get("/clicks/track", success);
+    this.post("/clicks/track", success);
 
     this.get("/search", request => {
       if (request.queryParams.q === "posts") {

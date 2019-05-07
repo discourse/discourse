@@ -278,7 +278,7 @@ class Wizard
     protected
 
     def replace_setting_value(updater, raw, field_name)
-      old_value = SiteSetting.send(field_name)
+      old_value = SiteSetting.get(field_name)
       old_value = field_name if old_value.blank?
 
       new_value = updater.fields[field_name.to_sym]

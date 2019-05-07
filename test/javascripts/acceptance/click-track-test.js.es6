@@ -4,7 +4,7 @@ acceptance("Click Track", {});
 
 QUnit.test("Do not track mentions", async assert => {
   /* global server */
-  server.get("/clicks/track", () => assert.ok(false));
+  server.post("/clicks/track", () => assert.ok(false));
 
   await visit("/t/internationalization-localization/280");
   assert.ok(invisible("#user-card"), "card should not appear");

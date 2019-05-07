@@ -66,7 +66,7 @@ describe UserProfile do
     end
 
     describe 'after save' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         user.user_profile.bio_raw = 'my bio'
@@ -84,7 +84,7 @@ describe UserProfile do
   end
 
   describe 'changing bio' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       user.user_profile.bio_raw = "**turtle power!**"
@@ -98,8 +98,8 @@ describe UserProfile do
   end
 
   describe 'bio excerpt emojis' do
-    let(:user) { Fabricate(:user) }
-    let(:upload) { Fabricate(:upload) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:upload) { Fabricate(:upload) }
 
     before do
       CustomEmoji.create!(name: 'test', upload: upload)
@@ -129,7 +129,7 @@ describe UserProfile do
         user
       end
 
-      let(:created_user) do
+      fab!(:created_user) do
         user = Fabricate(:user)
         user.user_profile.bio_raw = 'I love http://discourse.org'
         user.user_profile.save!
@@ -196,7 +196,7 @@ describe UserProfile do
   end
 
   context '.import_url_for_user' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       stub_request(:any, "thisfakesomething.something.com")
