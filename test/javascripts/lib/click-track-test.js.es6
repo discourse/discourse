@@ -52,7 +52,6 @@ QUnit.test("tracks internal URLs", async assert => {
   assert.expect(2);
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
-  const done = assert.async();
   /* global server */
   server.get("/clicks/track", request => {
     assert.ok(
@@ -60,7 +59,6 @@ QUnit.test("tracks internal URLs", async assert => {
         "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
       ) !== -1
     );
-    done();
   });
 
   assert.notOk(track(generateClickEventOn("#same-site")));
@@ -83,7 +81,6 @@ QUnit.test("does not track attachments", async assert => {
 QUnit.test("tracks external URLs", async assert => {
   assert.expect(2);
 
-  const done = assert.async();
   /* global server */
   server.get("/clicks/track", request => {
     assert.ok(
@@ -91,7 +88,6 @@ QUnit.test("tracks external URLs", async assert => {
         "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       ) !== -1
     );
-    done();
   });
 
   assert.notOk(track(generateClickEventOn("a")));
@@ -103,7 +99,6 @@ QUnit.test(
     assert.expect(3);
     Discourse.User.currentProp("external_links_in_new_tab", true);
 
-    const done = assert.async();
     /* global server */
     server.get("/clicks/track", request => {
       assert.ok(
@@ -111,7 +106,6 @@ QUnit.test(
           "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
         ) !== -1
       );
-      done();
     });
 
     assert.notOk(track(generateClickEventOn("a")));
@@ -170,7 +164,8 @@ asyncTestDiscourse("restores the href after a while", async assert => {
   assert.notOk(track(generateClickEventOn("a")));
 
   const done = assert.async();
-  setTimeout(function() {
+
+  Ember.run.later(() => {
     done();
     assert.equal(fixture("a").attr("href"), "http://www.google.com");
   }, 75);
