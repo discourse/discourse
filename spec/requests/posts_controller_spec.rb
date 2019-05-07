@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 shared_examples 'finding and showing post' do
-  let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post, user: user) }
 
   it "ensures the user can't see the post" do
     topic = post.topic
@@ -57,9 +57,9 @@ shared_examples 'action requires login' do |method, url, params = {}|
 end
 
 describe PostsController do
-  let(:user) { Fabricate(:user) }
-  let(:category) { Fabricate(:category) }
-  let(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:topic) { Fabricate(:topic) }
   let(:public_post) { Fabricate(:post, user: user, topic: topic) }
   let(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
 
@@ -168,8 +168,8 @@ describe PostsController do
 
     describe 'when logged in' do
       let(:topic) { Fabricate(:topic) }
-      let(:user) { Fabricate(:user) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:moderator) { Fabricate(:moderator) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         pm = Fabricate(:private_message_topic)
@@ -198,9 +198,9 @@ describe PostsController do
     include_examples 'action requires login', :delete, "/posts/destroy_many.json", params: { post_ids: [123, 345] }
 
     describe 'when logged in' do
-      let(:poster) { Fabricate(:moderator) }
-      let(:post1) { Fabricate(:post, user: poster, post_number: 2) }
-      let(:post2) { Fabricate(:post, topic: post1.topic, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
+      fab!(:poster) { Fabricate(:moderator) }
+      fab!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
+      fab!(:post2) { Fabricate(:post, topic: post1.topic, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
 
       it "raises invalid parameters no post_ids" do
         sign_in(poster)
@@ -247,7 +247,7 @@ describe PostsController do
       end
 
       context "deleting flagged posts" do
-        let(:moderator) { Fabricate(:moderator) }
+        fab!(:moderator) { Fabricate(:moderator) }
 
         before do
           sign_in(moderator)
@@ -278,7 +278,7 @@ describe PostsController do
     include_examples 'action requires login', :put, "/posts/123/recover.json"
 
     describe 'when logged in' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:post, topic: Fabricate(:private_message_topic), post_number: 3)
@@ -304,8 +304,8 @@ describe PostsController do
   describe '#update' do
     include_examples 'action requires login', :put, "/posts/2.json"
 
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post, user: user) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, user: user) }
     let(:update_params) do
       {
         post: { raw: 'edited body', edit_reason: 'typo' },
@@ -313,7 +313,7 @@ describe PostsController do
       }
     end
 
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     describe 'when logged in as a regular user' do
       before do
@@ -446,15 +446,15 @@ describe PostsController do
 
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
-    let(:post) { Fabricate(:post, user: user) }
-    let(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:user) { Fabricate(:user) }
 
     describe 'when logged in' do
       before do
         sign_in(user)
       end
 
-      let(:private_message) { Fabricate(:private_message_post) }
+      fab!(:private_message) { Fabricate(:private_message_post) }
 
       it "raises an error if the user doesn't have permission to see the post" do
         put "/posts/#{private_message.id}/bookmark.json", params: { bookmarked: "true" }
@@ -471,7 +471,7 @@ describe PostsController do
 
       context "removing a bookmark" do
         let(:post_action) { PostActionCreator.create(user, post, :bookmark).post_action }
-        let(:admin) { Fabricate(:admin) }
+        fab!(:admin) { Fabricate(:admin) }
 
         it "returns the right response when post is not bookmarked" do
           put "/posts/#{Fabricate(:post, user: user).id}/bookmark.json"
@@ -588,8 +588,8 @@ describe PostsController do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to wiki the post" do
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
@@ -644,8 +644,8 @@ describe PostsController do
         sign_in(user)
       end
 
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate(:post, user: user) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to change the post type" do
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
@@ -666,7 +666,7 @@ describe PostsController do
     include_examples "action requires login", :put, "/posts/2/rebake.json"
 
     describe "when logged in" do
-      let(:post) { Fabricate(:post, user: user) }
+      fab!(:post) { Fabricate(:post, user: user) }
 
       it "raises an error if the user doesn't have permission to rebake the post" do
         sign_in(Fabricate(:user))
@@ -698,7 +698,7 @@ describe PostsController do
       SiteSetting.min_first_post_typing_time = 0
     end
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     context 'api' do
       it 'memoizes duplicate requests' do
@@ -1057,7 +1057,7 @@ describe PostsController do
     end
 
     describe 'shared draft' do
-      let(:destination_category) { Fabricate(:category) }
+      fab!(:destination_category) { Fabricate(:category) }
 
       it "will raise an error for regular users" do
         post "/posts.json", params: {
@@ -1085,7 +1085,7 @@ describe PostsController do
         end
 
         context "with a shared category" do
-          let(:shared_category) { Fabricate(:category) }
+          fab!(:shared_category) { Fabricate(:category) }
           before do
             SiteSetting.shared_drafts_category = shared_category.id
           end
@@ -1108,7 +1108,7 @@ describe PostsController do
     end
 
     describe 'warnings' do
-      let(:user_2) { Fabricate(:user) }
+      fab!(:user_2) { Fabricate(:user) }
 
       context 'as a staff user' do
         before do
@@ -1223,7 +1223,7 @@ describe PostsController do
       end
 
       context "users" do
-        let(:topic) { Fabricate(:topic) }
+        fab!(:topic) { Fabricate(:topic) }
 
         [:user].each do |user|
           it "will raise an error for #{user}" do
@@ -1242,7 +1242,7 @@ describe PostsController do
   end
 
   describe '#revisions' do
-    let(:post) { Fabricate(:post, version: 2) }
+    fab!(:post) { Fabricate(:post, version: 2) }
     let(:post_revision) { Fabricate(:post_revision, post: post) }
 
     it "throws an exception when revision is < 2" do
@@ -1319,9 +1319,9 @@ describe PostsController do
     end
 
     context "deleted post" do
-      let(:admin) { Fabricate(:admin) }
-      let(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
-      let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
+      fab!(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
       before { deleted_post.trash!(admin) }
 
@@ -1333,10 +1333,10 @@ describe PostsController do
     end
 
     context "deleted topic" do
-      let(:admin) { Fabricate(:admin) }
-      let(:deleted_topic) { Fabricate(:topic, user: admin) }
-      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
-      let(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
+      fab!(:admin) { Fabricate(:admin) }
+      fab!(:deleted_topic) { Fabricate(:topic, user: admin) }
+      fab!(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
+      fab!(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
 
       before { deleted_topic.trash!(admin) }
 
@@ -1351,14 +1351,14 @@ describe PostsController do
   describe '#revert' do
     include_examples 'action requires login', :put, "/posts/123/revisions/2/revert.json"
 
-    let(:post) { Fabricate(:post, user: Fabricate(:user), raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
+    fab!(:post) { Fabricate(:post, user: Fabricate(:user), raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex") }
     let(:post_revision) { Fabricate(:post_revision, post: post, modifications: { "raw" => ["this is original post body.", "this is edited post body."] }) }
     let(:blank_post_revision) { Fabricate(:post_revision, post: post, modifications: { "edit_reason" => ["edit reason #1", "edit reason #2"] }) }
     let(:same_post_revision) { Fabricate(:post_revision, post: post, modifications: { "raw" => ["Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex", "this is edited post body."] }) }
 
     let(:post_id) { post.id }
     let(:revision_id) { post_revision.number }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     describe 'when logged in as a regular user' do
       it "does not work" do
@@ -1420,7 +1420,7 @@ describe PostsController do
       sign_in(Fabricate(:user))
     end
 
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     it "raises an error when you can't see the post" do
       post = Fabricate(:private_message_post)
@@ -1573,8 +1573,8 @@ describe PostsController do
   end
 
   describe '#short_link' do
-    let(:topic) { Fabricate(:topic) }
-    let(:post) { Fabricate(:post, topic: topic) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
 
     it "redirects to the topic" do
       get "/p/#{post.id}.json"

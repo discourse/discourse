@@ -32,8 +32,8 @@ describe TopicsBulkAction do
   end
 
   describe "change_category" do
-    let(:topic) { Fabricate(:topic) }
-    let(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:category) { Fabricate(:category) }
 
     context "when the user can edit the topic" do
       it "changes the category and returns the topic_id" do
@@ -58,7 +58,7 @@ describe TopicsBulkAction do
   end
 
   describe "reset_read" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     it "delegates to PostTiming.destroy_for" do
       tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'reset_read')
@@ -68,8 +68,8 @@ describe TopicsBulkAction do
   end
 
   describe "delete" do
-    let(:topic) { Fabricate(:post).topic }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "deletes the topic" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: 'delete')
@@ -80,7 +80,7 @@ describe TopicsBulkAction do
   end
 
   describe "change_notification_level" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     context "when the user can see the topic" do
       it "updates the notification level" do
@@ -103,7 +103,7 @@ describe TopicsBulkAction do
   end
 
   describe "close" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     context "when the user can moderate the topic" do
       it "closes the topic and returns the topic_id" do
@@ -130,7 +130,7 @@ describe TopicsBulkAction do
   end
 
   describe "archive" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     context "when the user can moderate the topic" do
       it "archives the topic and returns the topic_id" do
@@ -157,7 +157,7 @@ describe TopicsBulkAction do
   end
 
   describe "unlist" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     context "when the user can moderate the topic" do
       it "unlists the topic and returns the topic_id" do
@@ -184,9 +184,9 @@ describe TopicsBulkAction do
   end
 
   describe "change_tags" do
-    let(:topic) { Fabricate(:topic) }
-    let(:tag1)  { Fabricate(:tag) }
-    let(:tag2)  { Fabricate(:tag) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:tag1)  { Fabricate(:tag) }
+    fab!(:tag2)  { Fabricate(:tag) }
 
     before do
       SiteSetting.tagging_enabled = true
@@ -236,10 +236,10 @@ describe TopicsBulkAction do
   end
 
   describe "append tags" do
-    let(:topic) { Fabricate(:topic) }
-    let(:tag1)  { Fabricate(:tag) }
-    let(:tag2)  { Fabricate(:tag) }
-    let(:tag3)  { Fabricate(:tag) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:tag1)  { Fabricate(:tag) }
+    fab!(:tag2)  { Fabricate(:tag) }
+    fab!(:tag3)  { Fabricate(:tag) }
 
     before do
       SiteSetting.tagging_enabled = true

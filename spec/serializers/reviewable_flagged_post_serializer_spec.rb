@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe ReviewableFlaggedPostSerializer do
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   it "includes the user fields for review" do
     p0 = Fabricate(:post)

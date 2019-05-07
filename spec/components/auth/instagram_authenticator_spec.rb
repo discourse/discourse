@@ -42,7 +42,7 @@ describe Auth::InstagramAuthenticator do
   end
 
   context 'revoke' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::InstagramAuthenticator.new }
 
     it 'raises exception if no entry for user' do

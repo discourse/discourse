@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe PostReply do
-  let(:topic) { Fabricate(:topic) }
-  let(:post) { Fabricate(:post, topic: topic) }
-  let(:other_post) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
+  fab!(:other_post) { Fabricate(:post, topic: topic) }
 
   it { is_expected.to belong_to :post }
   it { is_expected.to belong_to :reply }

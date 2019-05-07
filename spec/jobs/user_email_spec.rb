@@ -9,10 +9,10 @@ describe Jobs::UserEmail do
     SiteSetting.email_time_window_mins = 10
   end
 
-  let(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago) }
-  let(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
-  let(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now) }
-  let(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago) }
+  fab!(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago) }
+  fab!(:staged) { Fabricate(:user, staged: true, last_seen_at: 11.minutes.ago) }
+  fab!(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now) }
+  fab!(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago) }
 
   it "raises an error when there is no user" do
     expect { Jobs::UserEmail.new.execute(type: :digest) }.to raise_error(Discourse::InvalidParameters)
@@ -27,8 +27,8 @@ describe Jobs::UserEmail do
   end
 
   context 'digest can be generated' do
-    let(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
-    let!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
+    fab!(:user) { Fabricate(:user, last_seen_at: 8.days.ago, last_emailed_at: 8.days.ago) }
+    fab!(:popular_topic) { Fabricate(:topic, user: Fabricate(:admin), created_at: 1.hour.ago) }
 
     it "doesn't call the mailer when the user is missing" do
       Jobs::UserEmail.new.execute(type: :digest, user_id: 1234)
@@ -112,8 +112,8 @@ describe Jobs::UserEmail do
   end
 
   context "recently seen" do
-    let(:post) { Fabricate(:post, user: user) }
-    let(:notification) { Fabricate(
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:notification) { Fabricate(
         :notification,
         user: user,
         topic: post.topic,
@@ -177,7 +177,7 @@ describe Jobs::UserEmail do
   end
 
   context "email_log" do
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     before do
       SiteSetting.editing_grace_period = 0
@@ -233,7 +233,7 @@ describe Jobs::UserEmail do
     end
 
     context "post" do
-      let(:post) { Fabricate(:post, user: user) }
+      fab!(:post) { Fabricate(:post, user: user) }
 
       it "doesn't send the email if you've seen the post" do
         PostTiming.record_timing(topic_id: post.topic_id, user_id: user.id, post_number: post.post_number, msecs: 6666)
@@ -307,8 +307,8 @@ describe Jobs::UserEmail do
     end
 
     context 'notification' do
-      let(:post) { Fabricate(:post, user: user) }
-      let!(:notification) {
+      fab!(:post) { Fabricate(:post, user: user) }
+      fab!(:notification) {
         Fabricate(:notification,
                     user: user,
                     topic: post.topic,

@@ -9,7 +9,7 @@ describe EmailToken do
   it { is_expected.to belong_to :user }
 
   context '#create' do
-    let(:user) { Fabricate(:user, active: false) }
+    fab!(:user) { Fabricate(:user, active: false) }
     let!(:original_token) { user.email_tokens.first }
     let!(:email_token) { user.email_tokens.create(email: 'bubblegum@adevnturetime.ooo') }
 
@@ -46,7 +46,7 @@ describe EmailToken do
 
   context '#confirm' do
 
-    let(:user) { Fabricate(:user, active: false) }
+    fab!(:user) { Fabricate(:user, active: false) }
     let(:email_token) { user.email_tokens.first }
 
     it 'returns nil with a nil token' do
@@ -122,8 +122,8 @@ describe EmailToken do
         Jobs.run_immediately!
       end
 
-      let(:invite) { Fabricate(:invite, email: 'test@example.com', user_id: nil) }
-      let(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
+      fab!(:invite) { Fabricate(:invite, email: 'test@example.com', user_id: nil) }
+      fab!(:invited_user) { Fabricate(:user, active: false, email: invite.email) }
       let(:user_email_token) { invited_user.email_tokens.first }
       let!(:confirmed_invited_user) { EmailToken.confirm(user_email_token.token) }
 

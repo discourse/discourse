@@ -10,7 +10,7 @@ describe Wizard::StepUpdater do
     SiteSetting.wizard_enabled = true
   end
 
-  let(:user) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:admin) }
   let(:wizard) { Wizard::Builder.new(user).build }
 
   context "locale" do
@@ -171,7 +171,7 @@ describe Wizard::StepUpdater do
 
   context "colors step" do
     context "with an existing color scheme" do
-      let!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
+      fab!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
       it "updates the scheme" do
         updater = wizard.create_updater('colors', theme_previews: 'Dark')

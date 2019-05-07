@@ -8,8 +8,8 @@ describe CategoryFeaturedTopic do
   it { is_expected.to belong_to :topic }
 
   context 'feature_topics_for' do
-    let(:user)           { Fabricate(:user) }
-    let(:category)       { Fabricate(:category) }
+    fab!(:user)          { Fabricate(:user) }
+    fab!(:category)      { Fabricate(:category) }
     let!(:category_post) { PostCreator.create(user, raw: "I put this post in the category", title: "categorize THIS", category: category.id) }
 
     it "works in batched mode" do

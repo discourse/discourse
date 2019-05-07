@@ -80,7 +80,7 @@ describe TopicLinkClick do
       end
 
       context 'while logged in' do
-        let(:other_user) { Fabricate(:user) }
+        fab!(:other_user) { Fabricate(:user) }
         before do
           @url = TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1', user_id: other_user.id)
           @click = TopicLinkClick.last

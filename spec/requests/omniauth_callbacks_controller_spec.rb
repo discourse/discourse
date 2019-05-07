@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Users::OmniauthCallbacksController do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     OmniAuth.config.test_mode = true
@@ -398,7 +398,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context 'when attempting reconnect' do
-      let(:user2) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
       before do
         UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '12345', user: user)
         UserAssociatedAccount.create!(provider_name: "google_oauth2", provider_uid: '123456', user: user2)

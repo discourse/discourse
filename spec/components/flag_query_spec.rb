@@ -5,7 +5,7 @@ require_dependency 'flag_query'
 
 describe FlagQuery do
 
-  let(:codinghorror) { Fabricate(:coding_horror) }
+  fab!(:codinghorror) { Fabricate(:coding_horror) }
 
   describe "flagged_topics" do
     it "respects `min_score_default_visibility`" do

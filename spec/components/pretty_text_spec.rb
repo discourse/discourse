@@ -23,7 +23,7 @@ describe PrettyText do
 
     describe "with avatar" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         User.stubs(:default_template).returns(default_avatar)
@@ -134,8 +134,8 @@ describe PrettyText do
 
     describe "with primary user group" do
       let(:default_avatar) { "//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/{size}.png" }
-      let(:group) { Fabricate(:group) }
-      let!(:user) { Fabricate(:user, primary_group: group) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:user) { Fabricate(:user, primary_group: group) }
 
       before do
         User.stubs(:default_template).returns(default_avatar)
@@ -202,7 +202,7 @@ describe PrettyText do
     end
 
     describe "with letter avatar" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       context "subfolder" do
         before do
@@ -713,7 +713,7 @@ describe PrettyText do
 
   describe 'format_for_email' do
     let(:base_url) { "http://baseurl.net" }
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     before do
       Discourse.stubs(:base_url).returns(base_url)

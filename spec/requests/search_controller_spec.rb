@@ -174,7 +174,7 @@ describe SearchController do
     end
 
     context "with a user" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       it "raises an error if the user can't see the context" do
         get "/search/query.json", params: {

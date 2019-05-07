@@ -10,7 +10,7 @@ describe GivenDailyLike do
   end
 
   context 'with a user' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     def value_for(user_id, date)
       GivenDailyLike.find_for(user_id, date).pluck(:likes_given)[0] || 0

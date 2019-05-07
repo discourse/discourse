@@ -21,7 +21,7 @@ end
 
 describe UserAuthenticator do
   context "#finish" do
-    let(:group) { Fabricate(:group, automatic_membership_email_domains: "discourse.org") }
+    fab!(:group) { Fabricate(:group, automatic_membership_email_domains: "discourse.org") }
 
     before do
       SiteSetting.enable_github_logins = true

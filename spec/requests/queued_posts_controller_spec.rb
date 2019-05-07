@@ -32,7 +32,7 @@ describe QueuedPostsController do
 
   describe '#update' do
     before { sign_in(Fabricate(:moderator)) }
-    let(:qp) { Fabricate(:reviewable_queued_post) }
+    fab!(:qp) { Fabricate(:reviewable_queued_post) }
 
     context 'not found' do
       it 'returns json error' do
@@ -87,7 +87,7 @@ describe QueuedPostsController do
       end
 
       context 'when it is a topic' do
-        let(:queued_topic) { Fabricate(:reviewable_queued_post_topic,) }
+        fab!(:queued_topic) { Fabricate(:reviewable_queued_post_topic,) }
 
         it 'updates the topic attributes' do
           put "/queued_posts/#{queued_topic.id}.json", params: {
@@ -122,7 +122,7 @@ describe QueuedPostsController do
       end
 
       context 'when it is a reply' do
-        let(:queued_reply) { Fabricate(:reviewable_queued_post) }
+        fab!(:queued_reply) { Fabricate(:reviewable_queued_post) }
 
         it 'updates the reply attributes' do
           put "/queued_posts/#{queued_reply.id}.json", params: {

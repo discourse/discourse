@@ -38,7 +38,7 @@ describe ReviewablesController do
   end
 
   context "when logged in" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)
@@ -172,7 +172,7 @@ describe ReviewablesController do
 
     context "#show" do
       context "basics" do
-        let(:reviewable) { Fabricate(:reviewable) }
+        fab!(:reviewable) { Fabricate(:reviewable) }
         before do
           sign_in(Fabricate(:moderator))
         end
@@ -192,9 +192,9 @@ describe ReviewablesController do
       end
 
       context "conversation" do
-        let(:post) { Fabricate(:post) }
-        let(:user) { Fabricate(:user) }
-        let(:admin) { Fabricate(:admin) }
+        fab!(:post) { Fabricate(:post) }
+        fab!(:user) { Fabricate(:user) }
+        fab!(:admin) { Fabricate(:admin) }
         let(:result) { PostActionCreator.notify_moderators(user, post, 'this is the first post') }
         let(:reviewable) { result.reviewable }
 
@@ -237,7 +237,7 @@ describe ReviewablesController do
     end
 
     context "#perform" do
-      let(:reviewable) { Fabricate(:reviewable) }
+      fab!(:reviewable) { Fabricate(:reviewable) }
       before do
         sign_in(Fabricate(:moderator))
       end
@@ -301,11 +301,11 @@ describe ReviewablesController do
     end
 
     context "#topics" do
-      let(:post0) { Fabricate(:post) }
-      let(:post1) { Fabricate(:post, topic: post0.topic) }
-      let(:post2) { Fabricate(:post) }
-      let(:user0) { Fabricate(:user) }
-      let(:user1) { Fabricate(:user) }
+      fab!(:post0) { Fabricate(:post) }
+      fab!(:post1) { Fabricate(:post, topic: post0.topic) }
+      fab!(:post2) { Fabricate(:post) }
+      fab!(:user0) { Fabricate(:user) }
+      fab!(:user1) { Fabricate(:user) }
 
       it "returns empty json for no reviewables" do
         get "/review/topics.json"
@@ -353,10 +353,10 @@ describe ReviewablesController do
     end
 
     context "#update" do
-      let(:reviewable) { Fabricate(:reviewable) }
-      let(:reviewable_post) { Fabricate(:reviewable_queued_post) }
-      let(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:reviewable) { Fabricate(:reviewable) }
+      fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
+      fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
+      fab!(:moderator) { Fabricate(:moderator) }
 
       before do
         sign_in(moderator)
@@ -460,7 +460,7 @@ describe ReviewablesController do
     end
 
     context "#destroy" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         sign_in(user)

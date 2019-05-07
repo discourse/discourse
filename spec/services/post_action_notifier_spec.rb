@@ -8,8 +8,8 @@ describe PostActionNotifier do
     PostActionNotifier.enable
   end
 
-  let!(:evil_trout) { Fabricate(:evil_trout) }
-  let(:post) { Fabricate(:post) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:post) { Fabricate(:post) }
 
   context 'when editing a post' do
     it 'notifies a user of the revision' do
@@ -45,8 +45,8 @@ describe PostActionNotifier do
   end
 
   context 'private message' do
-    let(:user) { Fabricate(:user) }
-    let(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout') }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:mention_post) { Fabricate(:post, user: user, raw: 'Hello @eviltrout') }
     let(:topic) do
       topic = mention_post.topic
       topic.update_columns archetype: Archetype.private_message, category_id: nil
@@ -71,8 +71,8 @@ describe PostActionNotifier do
   end
 
   context 'moderator action post' do
-    let(:user) { Fabricate(:user) }
-    let(:first_post) { Fabricate(:post, user: user, raw: 'A useless post for you.') }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:first_post) { Fabricate(:post, user: user, raw: 'A useless post for you.') }
     let(:topic) { first_post.topic }
 
     it 'should not notify anyone' do

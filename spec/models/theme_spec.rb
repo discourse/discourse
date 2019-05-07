@@ -7,7 +7,7 @@ describe Theme do
     Theme.clear_cache!
   end
 
-  let :user do
+  fab! :user do
     Fabricate(:user)
   end
 

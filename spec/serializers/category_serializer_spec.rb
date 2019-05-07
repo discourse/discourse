@@ -4,8 +4,8 @@ require 'rails_helper'
 require_dependency 'category'
 
 describe CategorySerializer do
-  let(:group) { Fabricate(:group) }
-  let(:category) { Fabricate(:category, reviewable_by_group_id: group.id) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:category) { Fabricate(:category, reviewable_by_group_id: group.id) }
 
   it "includes the reviewable by group name if enabled" do
     SiteSetting.enable_category_group_review = true

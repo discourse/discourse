@@ -4,9 +4,9 @@ require 'rails_helper'
 
 describe Jobs::NotifyReviewable do
   describe '.execute' do
-    let!(:admin) { Fabricate(:admin, moderator: true) }
-    let!(:moderator) { Fabricate(:moderator) }
-    let!(:group_user) { Fabricate(:group_user) }
+    fab!(:admin) { Fabricate(:admin, moderator: true) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:group_user) { Fabricate(:group_user) }
     let(:user) { group_user.user }
     let(:group) { group_user.group }
 

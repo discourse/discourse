@@ -28,7 +28,7 @@ describe TopicPostersSummary do
     end
 
     context 'when the last poster is also the topic creator' do
-      let!(:featured_user1) { Fabricate(:user) }
+      fab!(:featured_user1) { Fabricate(:user) }
 
       let!(:topic) do
         Fabricate(:topic,
@@ -50,10 +50,10 @@ describe TopicPostersSummary do
 
     context 'when the topic has many posters' do
       let!(:last_poster)    { Fabricate(:user) }
-      let!(:featured_user1) { Fabricate(:user) }
-      let!(:featured_user2) { Fabricate(:user) }
-      let!(:featured_user3) { Fabricate(:user) }
-      let!(:featured_user4) { Fabricate(:user) }
+      fab!(:featured_user1) { Fabricate(:user) }
+      fab!(:featured_user2) { Fabricate(:user) }
+      fab!(:featured_user3) { Fabricate(:user) }
+      fab!(:featured_user4) { Fabricate(:user) }
 
       let!(:topic) do
         Fabricate(:topic,

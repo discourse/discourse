@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe CategoryGuardian do
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:guardian) { Guardian.new(admin) }
-  let(:category) { Fabricate(:category) }
+  fab!(:category) { Fabricate(:category) }
 
   describe '#cannot_delete_category_reason' do
     describe 'when category is uncategorized' do

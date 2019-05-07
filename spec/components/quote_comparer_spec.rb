@@ -6,7 +6,7 @@ require 'quote_comparer'
 describe QuoteComparer do
 
   describe "#modified?" do
-    let(:post) { Fabricate(:post, raw: "This has **text** we _are_ matching") }
+    fab!(:post) { Fabricate(:post, raw: "This has **text** we _are_ matching") }
 
     def qc(text)
       QuoteComparer.new(post.topic_id, post.post_number, text)

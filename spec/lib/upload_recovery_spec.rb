@@ -4,7 +4,7 @@ require 'rails_helper'
 require_dependency "upload_recovery"
 
 RSpec.describe UploadRecovery do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   let(:upload) do
     UploadCreator.new(

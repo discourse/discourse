@@ -5,7 +5,7 @@ require 'rails_helper'
 require_dependency 'jobs/scheduled/invalidate_inactive_admins'
 
 describe Jobs::InvalidateInactiveAdmins do
-  let!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
+  fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   before { active_admin.email_tokens.update_all(confirmed: true) }
 
   subject { Jobs::InvalidateInactiveAdmins.new.execute({}) }
@@ -18,7 +18,7 @@ describe Jobs::InvalidateInactiveAdmins do
   end
 
   context "with an admin who hasn't been seen recently" do
-    let!(:not_seen_admin) { Fabricate(:admin, last_seen_at: 370.days.ago) }
+    fab!(:not_seen_admin) { Fabricate(:admin, last_seen_at: 370.days.ago) }
     before { not_seen_admin.email_tokens.update_all(confirmed: true) }
 
     context 'invalidate_inactive_admin_email_after_days = 365' do

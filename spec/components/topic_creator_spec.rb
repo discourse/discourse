@@ -4,9 +4,9 @@ require 'rails_helper'
 
 describe TopicCreator do
 
-  let(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
-  let(:moderator) { Fabricate(:moderator) }
-  let(:admin)     { Fabricate(:admin) }
+  fab!(:user)      { Fabricate(:user, trust_level: TrustLevel[2]) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin)     { Fabricate(:admin) }
 
   let(:valid_attrs) { Fabricate.attributes_for(:topic) }
   let(:pm_valid_attrs)  { { raw: 'this is a new post', title: 'this is a new title', archetype: Archetype.private_message, target_usernames: moderator.username } }
@@ -63,8 +63,8 @@ describe TopicCreator do
     end
 
     context 'tags' do
-      let!(:tag1) { Fabricate(:tag, name: "fun") }
-      let!(:tag2) { Fabricate(:tag, name: "fun2") }
+      fab!(:tag1) { Fabricate(:tag, name: "fun") }
+      fab!(:tag2) { Fabricate(:tag, name: "fun2") }
 
       before do
         SiteSetting.tagging_enabled = true
@@ -99,7 +99,7 @@ describe TopicCreator do
       end
 
       context 'minimum_required_tags is present' do
-        let!(:category) { Fabricate(:category, name: "beta", minimum_required_tags: 2) }
+        fab!(:category) { Fabricate(:category, name: "beta", minimum_required_tags: 2) }
 
         it "fails for regular user if minimum_required_tags is not satisfied" do
           expect do

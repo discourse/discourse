@@ -840,8 +840,8 @@ describe SiteSettingExtension do
 
   describe '.setup_methods' do
     describe 'for uploads site settings' do
-      let(:upload) { Fabricate(:upload) }
-      let(:upload2) { Fabricate(:upload) }
+      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload2) { Fabricate(:upload) }
 
       it 'should return the upload record' do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)

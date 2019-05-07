@@ -15,7 +15,7 @@ describe Jobs::SendSystemMessage do
 
   context 'with valid parameters' do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should call SystemMessage.create" do
       SystemMessage.any_instance.expects(:create).with('welcome_invite', {})
