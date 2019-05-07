@@ -9,4 +9,4 @@ module Stylesheet
   end
 end
 
-::SassC::Script::Functions.public_send(:include, Stylesheet::ScssFunctions)
+::SassC::Script::Functions.include(Stylesheet::ScssFunctions)
