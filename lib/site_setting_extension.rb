@@ -390,10 +390,14 @@ module SiteSettingExtension
     end
   end
 
-  def set(name, value)
+  def set(name, value, options = nil)
     if has_setting?(name)
       value = filter_value(name, value)
-      self.public_send("#{name}=", value)
+      if options
+        self.public_send("#{name}=", value, options)
+      else
+        self.public_send("#{name}=", value)
+      end
       Discourse.request_refresh! if requires_refresh?(name)
     else
       raise Discourse::InvalidParameters.new("Either no setting named '#{name}' exists or value provided is invalid")
@@ -407,7 +411,15 @@ module SiteSettingExtension
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
       StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
     else
-      raise Discourse::InvalidParameters
+      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
+    end
+  end
+
+  def get(name)
+    if has_setting?(name)
+      self.public_send(name)
+    else
+      raise Discourse::InvalidParameters.new("No setting named '#{name}' exists")
     end
   end
 

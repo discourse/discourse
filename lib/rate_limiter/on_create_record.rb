@@ -14,9 +14,9 @@ class RateLimiter
 
       limit_key = "create_#{self.class.name.underscore}"
       max_setting = if user && user.new_user? && SiteSetting.has_setting?("rate_limit_new_user_#{limit_key}")
-        SiteSetting.send("rate_limit_new_user_#{limit_key}")
+        SiteSetting.get("rate_limit_new_user_#{limit_key}")
       else
-        SiteSetting.send("rate_limit_#{limit_key}")
+        SiteSetting.get("rate_limit_#{limit_key}")
       end
       @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)
     end

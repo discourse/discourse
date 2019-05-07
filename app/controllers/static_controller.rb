@@ -27,7 +27,7 @@ class StaticController < ApplicationController
 
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
-      url = SiteSetting.send(site_setting_key)
+      url = SiteSetting.get(site_setting_key)
       return redirect_to(url) unless url.blank?
     end
 
