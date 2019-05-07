@@ -441,7 +441,7 @@ describe Topic do
       end
 
       context "secure categories" do
-        let(:category) { Fabricate(:category, read_restricted: true) }
+        fab!(:category) { Fabricate(:category, read_restricted: true) }
 
         before do
           topic.category = category
@@ -478,8 +478,8 @@ describe Topic do
   end
 
   describe '#invite' do
-    let(:topic) { Fabricate(:topic, user: user) }
-    let(:another_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:another_user) { Fabricate(:user) }
 
     context 'rate limits' do
       before do
@@ -539,8 +539,8 @@ describe Topic do
     end
 
     describe 'private message' do
-      let(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
-      let(:topic) { Fabricate(:private_message_topic, user: user) }
+      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
+      fab!(:topic) { Fabricate(:private_message_topic, user: user) }
 
       describe 'by username' do
         it 'should be able to invite a user' do
@@ -643,18 +643,18 @@ describe Topic do
         end
 
         describe 'when topic belongs to a private category' do
-          let(:group) { Fabricate(:group) }
+          fab!(:group) { Fabricate(:group) }
 
-          let(:category) do
+          fab!(:category) do
             Fabricate(:category, groups: [group]).tap do |category|
               category.set_permissions(group => :full)
               category.save!
             end
           end
 
-          let(:topic) { Fabricate(:topic, category: category) }
+          fab!(:topic) { Fabricate(:topic, category: category) }
           let(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
-          let(:invitee) { Fabricate(:user) }
+          fab!(:invitee) { Fabricate(:user) }
 
           describe 'as a group owner' do
             it 'should be able to invite a user' do
@@ -724,7 +724,7 @@ describe Topic do
 
   context 'private message' do
     let(:coding_horror) { User.find_by(username: "CodingHorror") }
-    let(:evil_trout) { Fabricate(:evil_trout) }
+    fab!(:evil_trout) { Fabricate(:evil_trout) }
     let(:topic) { Fabricate(:private_message_topic) }
 
     it "should integrate correctly" do
@@ -740,7 +740,7 @@ describe Topic do
       context 'existing user' do
 
         context 'by group name' do
-          let(:group) { Fabricate(:group) }
+          fab!(:group) { Fabricate(:group) }
 
           it 'can add admin to allowed groups' do
             admins = Group[:admins]
@@ -849,8 +849,8 @@ describe Topic do
   end
 
   context 'moderator posts' do
-    let(:moderator) { Fabricate(:moderator) }
-    let(:topic) { Fabricate(:topic) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:topic) { Fabricate(:topic) }
 
     it 'creates a moderator post' do
       mod_post = topic.add_moderator_post(
@@ -1055,8 +1055,8 @@ describe Topic do
 
   describe "banner" do
 
-    let(:topic) { Fabricate(:topic) }
-    let(:user) { topic.user }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user) { topic.user }
     let(:banner) { { html: "<p>BANNER</p>", url: topic.url, key: topic.id } }
 
     before { topic.stubs(:banner).returns(banner) }
@@ -1155,7 +1155,7 @@ describe Topic do
   end
 
   describe 'meta data' do
-    let(:topic) { Fabricate(:topic, meta_data: { 'hello' => 'world' }) }
+    fab!(:topic) { Fabricate(:topic, meta_data: { 'hello' => 'world' }) }
 
     it 'allows us to create a topic with meta data' do
       expect(topic.meta_data['hello']).to eq('world')
@@ -1206,7 +1206,7 @@ describe Topic do
 
   describe 'after create' do
 
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     it 'is a regular topic by default' do
       expect(topic.archetype).to eq(Archetype.default)
@@ -1228,9 +1228,9 @@ describe Topic do
   end
 
   describe '#change_category_to_id' do
-    let(:topic) { Fabricate(:topic) }
-    let(:user) { topic.user }
-    let(:category) { Fabricate(:category, user: user) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user) { topic.user }
+    fab!(:category) { Fabricate(:category, user: user) }
 
     describe 'without a previous category' do
       it 'changes the category' do
@@ -1274,8 +1274,8 @@ describe Topic do
       end
 
       describe 'to a different category' do
-        let(:new_category) { Fabricate(:category, user: user, name: '2nd category') }
-        let(:another_user) { Fabricate(:user) }
+        fab!(:new_category) { Fabricate(:category, user: user, name: '2nd category') }
+        fab!(:another_user) { Fabricate(:user) }
 
         it 'should work' do
           topic.change_category_to_id(new_category.id)
@@ -1490,8 +1490,8 @@ describe Topic do
       Fabricate(:topic_timer, execute_at: 5.hours.from_now).topic
     end
 
-    let(:admin) { Fabricate(:admin) }
-    let(:trust_level_4) { Fabricate(:trust_level_4) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:trust_level_4) { Fabricate(:trust_level_4) }
 
     it 'can take a number of hours as an integer' do
       freeze_time now
@@ -1634,9 +1634,9 @@ describe Topic do
     end
 
     describe "private status type" do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:reminder) { Fabricate(:topic_timer, user: admin, topic: topic, status_type: TopicTimer.types[:reminder]) }
-      let(:other_admin) { Fabricate(:admin) }
+      fab!(:other_admin) { Fabricate(:admin) }
 
       it "lets two users have their own record" do
         reminder
@@ -1828,12 +1828,12 @@ describe Topic do
   end
 
   describe 'all_allowed_users' do
-    let(:group) { Fabricate(:group) }
-    let(:topic) { Fabricate(:topic, allowed_groups: [group]) }
-    let!(:allowed_user) { Fabricate(:user) }
-    let!(:allowed_group_user) { Fabricate(:user) }
-    let!(:moderator) { Fabricate(:user, moderator: true) }
-    let!(:rando) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:topic) { Fabricate(:topic, allowed_groups: [group]) }
+    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:allowed_group_user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:user, moderator: true) }
+    fab!(:rando) { Fabricate(:user) }
 
     before do
       topic.allowed_users << allowed_user
@@ -1913,8 +1913,8 @@ describe Topic do
 
   describe 'trash!' do
     context "its category's topic count" do
-      let(:moderator) { Fabricate(:moderator) }
-      let(:category) { Fabricate(:category) }
+      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:category) { Fabricate(:category) }
 
       it "subtracts 1 if topic is being deleted" do
         topic = Fabricate(:topic, category: category)
@@ -1939,7 +1939,7 @@ describe Topic do
 
   describe 'recover!' do
     context "its category's topic count" do
-      let(:category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category) }
 
       it "adds 1 if topic is deleted" do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
@@ -2140,7 +2140,7 @@ describe Topic do
 
   context 'featured link' do
     before { SiteSetting.topic_featured_link_enabled = true }
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
 
     it 'can validate featured link' do
       topic.featured_link = ' invalid string'
@@ -2158,7 +2158,7 @@ describe Topic do
 
     context 'when category restricts present' do
       let!(:link_category) { Fabricate(:link_category) }
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:link_topic) { Fabricate(:topic, category: link_category) }
 
       it 'can save the featured link if it belongs to that category' do
@@ -2277,7 +2277,7 @@ describe Topic do
 
   describe '#pm_with_non_human_user?' do
     let(:robot) { Fabricate(:user, id: -3) }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     let(:topic) do
       topic = Fabricate(:private_message_topic,
@@ -2331,7 +2331,7 @@ describe Topic do
   end
 
   describe '#remove_allowed_user' do
-    let(:another_user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user) }
 
     describe 'removing oneself' do
       it 'should remove onself' do
