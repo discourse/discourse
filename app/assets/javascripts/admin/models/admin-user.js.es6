@@ -52,7 +52,7 @@ const AdminUser = Discourse.User.extend({
   canResetBounceScore: Ember.computed.gt("bounce_score", 0),
 
   resetBounceScore() {
-    return ajax(`/admin/users/${this.get("id")}/reset_bounce_score`, {
+    return ajax(`/admin/users/${this.id}/reset_bounce_score`, {
       type: "POST"
     }).then(() =>
       this.setProperties({
@@ -63,25 +63,24 @@ const AdminUser = Discourse.User.extend({
   },
 
   generateApiKey() {
-    const self = this;
-    return ajax("/admin/users/" + this.get("id") + "/generate_api_key", {
+    return ajax(`/admin/users/${this.id}/generate_api_key`, {
       type: "POST"
-    }).then(function(result) {
+    }).then(result => {
       const apiKey = ApiKey.create(result.api_key);
-      self.set("api_key", apiKey);
+      this.set("api_key", apiKey);
       return apiKey;
     });
   },
 
   groupAdded(added) {
-    return ajax("/admin/users/" + this.get("id") + "/groups", {
+    return ajax(`/admin/users/${this.id}/groups`, {
       type: "POST",
       data: { group_id: added.id }
     }).then(() => this.get("groups").pushObject(added));
   },
 
   groupRemoved(groupId) {
-    return ajax("/admin/users/" + this.get("id") + "/groups/" + groupId, {
+    return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
       type: "DELETE"
     }).then(() => {
       this.set("groups.[]", this.get("groups").rejectBy("id", groupId));
@@ -92,80 +91,84 @@ const AdminUser = Discourse.User.extend({
   },
 
   revokeApiKey() {
-    return ajax("/admin/users/" + this.get("id") + "/revoke_api_key", {
+    return ajax(`/admin/users/${this.id}/revoke_api_key`, {
       type: "DELETE"
     }).then(() => this.set("api_key", null));
   },
 
   deleteAllPosts() {
     let deletedPosts = 0;
-    const user = this,
-      message = I18n.messageFormat("admin.user.delete_all_posts_confirm_MF", {
+    const user = this;
+    const message = I18n.messageFormat(
+      "admin.user.delete_all_posts_confirm_MF",
+      {
         POSTS: user.get("post_count"),
         TOPICS: user.get("topic_count")
-      }),
-      buttons = [
-        {
-          label: I18n.t("composer.cancel"),
-          class: "d-modal-cancel",
-          link: true
-        },
-        {
-          label:
-            `${iconHTML("exclamation-triangle")} ` +
-            I18n.t("admin.user.delete_all_posts"),
-          class: "btn btn-danger",
-          callback: () => {
-            openProgressModal();
+      }
+    );
+    const buttons = [
+      {
+        label: I18n.t("composer.cancel"),
+        class: "d-modal-cancel",
+        link: true
+      },
+      {
+        label:
+          `${iconHTML("exclamation-triangle")} ` +
+          I18n.t("admin.user.delete_all_posts"),
+        class: "btn btn-danger",
+        callback: () => {
+          openProgressModal();
+          performDelete();
+        }
+      }
+    ];
+    const openProgressModal = () => {
+      bootbox.dialog(
+        `<p>${I18n.t(
+          "admin.user.delete_posts_progress"
+        )}</p><div class='progress-bar'><span></span></div>`,
+        [],
+        { classes: "delete-posts-progress" }
+      );
+    };
+    const performDelete = () => {
+      let deletedPercentage = 0;
+      return ajax(`/admin/users/${user.get("id")}/delete_posts_batch`, {
+        type: "PUT"
+      })
+        .then(({ posts_deleted }) => {
+          if (posts_deleted === 0) {
+            user.set("post_count", 0);
+            bootbox.hideAll();
+          } else {
+            deletedPosts += posts_deleted;
+            deletedPercentage = Math.floor(
+              (deletedPosts * 100) / user.get("post_count")
+            );
+            $(".delete-posts-progress .progress-bar > span").css({
+              width: `${deletedPercentage}%`
+            });
             performDelete();
           }
-        }
-      ],
-      openProgressModal = () => {
-        bootbox.dialog(
-          `<p>${I18n.t(
-            "admin.user.delete_posts_progress"
-          )}</p><div class='progress-bar'><span></span></div>`,
-          [],
-          { classes: "delete-posts-progress" }
-        );
-      },
-      performDelete = () => {
-        let deletedPercentage = 0;
-        return ajax(`/admin/users/${user.get("id")}/delete_posts_batch`, {
-          type: "PUT"
         })
-          .then(({ posts_deleted }) => {
-            if (posts_deleted === 0) {
-              user.set("post_count", 0);
-              bootbox.hideAll();
-            } else {
-              deletedPosts += posts_deleted;
-              deletedPercentage = Math.floor(
-                (deletedPosts * 100) / user.get("post_count")
-              );
-              $(".delete-posts-progress .progress-bar > span").css({
-                width: `${deletedPercentage}%`
-              });
-              performDelete();
-            }
-          })
-          .catch(e => {
-            bootbox.hideAll();
-            let error;
-            AdminUser.find(user.get("id")).then(u => user.setProperties(u));
-            if (e.responseJSON && e.responseJSON.errors) {
-              error = e.responseJSON.errors[0];
-            }
-            error = error || I18n.t("admin.user.delete_posts_failed");
-            bootbox.alert(error);
-          });
-      };
+        .catch(e => {
+          bootbox.hideAll();
+          let error;
+          AdminUser.find(user.get("id")).then(u => user.setProperties(u));
+          if (e.responseJSON && e.responseJSON.errors) {
+            error = e.responseJSON.errors[0];
+          }
+          error = error || I18n.t("admin.user.delete_posts_failed");
+          bootbox.alert(error);
+        });
+    };
+
     bootbox.dialog(message, buttons, { classes: "delete-all-posts" });
   },
 
   revokeAdmin() {
-    return ajax(`/admin/users/${this.get("id")}/revoke_admin`, {
+    return ajax(`/admin/users/${this.id}/revoke_admin`, {
       type: "PUT"
     }).then(() => {
       this.setProperties({
@@ -177,7 +180,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   grantAdmin() {
-    return ajax(`/admin/users/${this.get("id")}/grant_admin`, {
+    return ajax(`/admin/users/${this.id}/grant_admin`, {
       type: "PUT"
     })
       .then(() => {
@@ -187,12 +190,11 @@ const AdminUser = Discourse.User.extend({
   },
 
   revokeModeration() {
-    const self = this;
-    return ajax("/admin/users/" + this.get("id") + "/revoke_moderation", {
+    return ajax(`/admin/users/${this.id}/revoke_moderation`, {
       type: "PUT"
     })
-      .then(function() {
-        self.setProperties({
+      .then(() => {
+        this.setProperties({
           moderator: false,
           can_grant_moderation: true,
           can_revoke_moderation: false
@@ -202,12 +204,11 @@ const AdminUser = Discourse.User.extend({
   },
 
   grantModeration() {
-    const self = this;
-    return ajax("/admin/users/" + this.get("id") + "/grant_moderation", {
+    return ajax(`/admin/users/${this.id}/grant_moderation`, {
       type: "PUT"
     })
-      .then(function() {
-        self.setProperties({
+      .then(() => {
+        this.setProperties({
           moderator: true,
           can_grant_moderation: false,
           can_revoke_moderation: true
@@ -217,7 +218,7 @@ const AdminUser = Discourse.User.extend({
   },
 
   disableSecondFactor() {
-    return ajax(`/admin/users/${this.get("id")}/disable_second_factor`, {
+    return ajax(`/admin/users/${this.id}/disable_second_factor`, {
       type: "PUT"
     })
       .then(() => {
@@ -227,11 +228,10 @@ const AdminUser = Discourse.User.extend({
   },
 
   approve() {
-    const self = this;
-    return ajax("/admin/users/" + this.get("id") + "/approve", {
+    return ajax(`/admin/users/${this.id}/approve`, {
       type: "PUT"
-    }).then(function() {
-      self.setProperties({
+    }).then(() => {
+      this.setProperties({
         can_approve: false,
         approved: true,
         approved_by: Discourse.User.current()
@@ -246,14 +246,12 @@ const AdminUser = Discourse.User.extend({
   dirty: propertyNotEqual("originalTrustLevel", "trustLevel.id"),
 
   saveTrustLevel() {
-    return ajax("/admin/users/" + this.id + "/trust_level", {
+    return ajax(`/admin/users/${this.id}/trust_level`, {
       type: "PUT",
       data: { level: this.get("trustLevel.id") }
     })
-      .then(function() {
-        window.location.reload();
-      })
-      .catch(function(e) {
+      .then(() => window.location.reload())
+      .catch(e => {
         let error;
         if (e.responseJSON && e.responseJSON.errors) {
           error = e.responseJSON.errors[0];
@@ -261,7 +259,7 @@ const AdminUser = Discourse.User.extend({
         error =
           error ||
           I18n.t("admin.user.trust_level_change_failed", {
-            error: "http: " + e.status + " - " + e.body
+            error: this._formatError(e)
           });
         bootbox.alert(error);
       });
@@ -272,14 +270,12 @@ const AdminUser = Discourse.User.extend({
   },
 
   lockTrustLevel(locked) {
-    return ajax("/admin/users/" + this.id + "/trust_level_lock", {
+    return ajax(`/admin/users/${this.id}/trust_level_lock`, {
       type: "PUT",
       data: { locked: !!locked }
     })
-      .then(function() {
-        window.location.reload();
-      })
-      .catch(function(e) {
+      .then(() => window.location.reload())
+      .catch(e => {
         let error;
         if (e.responseJSON && e.responseJSON.errors) {
           error = e.responseJSON.errors[0];
@@ -287,16 +283,13 @@ const AdminUser = Discourse.User.extend({
         error =
           error ||
           I18n.t("admin.user.trust_level_change_failed", {
-            error: "http: " + e.status + " - " + e.body
+            error: this._formatError(e)
           });
         bootbox.alert(error);
       });
   },
 
-  @computed("trust_level")
-  canLockTrustLevel(trustLevel) {
-    return trustLevel < 4;
-  },
+  canLockTrustLevel: Ember.computed.lt("trust_level", 4),
 
   canSuspend: Ember.computed.not("staff"),
 
@@ -324,9 +317,7 @@ const AdminUser = Discourse.User.extend({
     return ajax("/admin/users/" + this.id + "/log_out", {
       type: "POST",
       data: { username_or_email: this.get("username") }
-    }).then(function() {
-      bootbox.alert(I18n.t("admin.user.logged_out"));
-    });
+    }).then(() => bootbox.alert(I18n.t("admin.user.logged_out")));
   },
 
   impersonate() {
@@ -334,10 +325,8 @@ const AdminUser = Discourse.User.extend({
       type: "POST",
       data: { username_or_email: this.get("username") }
     })
-      .then(function() {
-        document.location = Discourse.getURL("/");
-      })
-      .catch(function(e) {
+      .then(() => (document.location = Discourse.getURL("/")))
+      .catch(e => {
         if (e.status === 404) {
           bootbox.alert(I18n.t("admin.impersonate.not_found"));
         } else {
@@ -347,31 +336,27 @@ const AdminUser = Discourse.User.extend({
   },
 
   activate() {
-    return ajax("/admin/users/" + this.id + "/activate", {
+    return ajax(`/admin/users/${this.id}/activate`, {
       type: "PUT"
     })
-      .then(function() {
-        window.location.reload();
-      })
-      .catch(function(e) {
-        var error = I18n.t("admin.user.activate_failed", {
-          error: "http: " + e.status + " - " + e.body
+      .then(() => window.location.reload())
+      .catch(e => {
+        const error = I18n.t("admin.user.activate_failed", {
+          error: this._formatError(e)
         });
         bootbox.alert(error);
       });
   },
 
   deactivate() {
-    return ajax("/admin/users/" + this.id + "/deactivate", {
+    return ajax(`/admin/users/${this.id}/deactivate`, {
       type: "PUT",
       data: { context: document.location.pathname }
     })
-      .then(function() {
-        window.location.reload();
-      })
-      .catch(function(e) {
-        var error = I18n.t("admin.user.deactivate_failed", {
-          error: "http: " + e.status + " - " + e.body
+      .then(() => window.location.reload())
+      .catch(e => {
+        const error = I18n.t("admin.user.deactivate_failed", {
+          error: this._formatError(e)
         });
         bootbox.alert(error);
       });
@@ -383,18 +368,14 @@ const AdminUser = Discourse.User.extend({
     return ajax(`/admin/users/${this.id}/unsilence`, {
       type: "PUT"
     })
-      .then(result => {
-        this.setProperties(result.unsilence);
-      })
+      .then(result => this.setProperties(result.unsilence))
       .catch(e => {
-        let error = I18n.t("admin.user.unsilence_failed", {
-          error: `http: ${e.status} - ${e.body}`
+        const error = I18n.t("admin.user.unsilence_failed", {
+          error: this._formatError(e)
         });
         bootbox.alert(error);
       })
-      .finally(() => {
-        this.set("silencingUser", false);
-      });
+      .finally(() => this.set("silencingUser", false));
   },
 
   silence(data) {
@@ -403,18 +384,14 @@ const AdminUser = Discourse.User.extend({
       type: "PUT",
       data
     })
-      .then(result => {
-        this.setProperties(result.silence);
-      })
+      .then(result => this.setProperties(result.silence))
       .catch(e => {
-        let error = I18n.t("admin.user.silence_failed", {
-          error: `http: ${e.status} - ${e.body}`
+        const error = I18n.t("admin.user.silence_failed", {
+          error: this._formatError(e)
         });
         bootbox.alert(error);
       })
-      .finally(() => {
-        this.set("silencingUser", false);
-      });
+      .finally(() => this.set("silencingUser", false));
   },
 
   sendActivationEmail() {
@@ -422,25 +399,23 @@ const AdminUser = Discourse.User.extend({
       type: "POST",
       data: { username: this.get("username") }
     })
-      .then(function() {
-        bootbox.alert(I18n.t("admin.user.activation_email_sent"));
-      })
+      .then(() => bootbox.alert(I18n.t("admin.user.activation_email_sent")))
       .catch(popupAjaxError);
   },
 
   anonymize() {
-    const user = this,
-      message = I18n.t("admin.user.anonymize_confirm");
+    const user = this;
+    const message = I18n.t("admin.user.anonymize_confirm");
 
     const performAnonymize = function() {
-      return ajax("/admin/users/" + user.get("id") + "/anonymize.json", {
+      return ajax(`/admin/users/${user.get("id")}/anonymize.json`, {
         type: "PUT"
       })
         .then(function(data) {
           if (data.success) {
             if (data.username) {
               document.location = Discourse.getURL(
-                "/admin/users/" + user.get("id") + "/" + data.username
+                `/admin/users/${user.get("id")}/${data.username}`
               );
             } else {
               document.location = Discourse.getURL("/admin/users/list/active");
@@ -452,9 +427,7 @@ const AdminUser = Discourse.User.extend({
             }
           }
         })
-        .catch(function() {
-          bootbox.alert(I18n.t("admin.user.anonymize_failed"));
-        });
+        .catch(() => bootbox.alert(I18n.t("admin.user.anonymize_failed")));
     };
 
     const buttons = [
@@ -478,9 +451,9 @@ const AdminUser = Discourse.User.extend({
   },
 
   destroy(opts) {
-    const user = this,
-      message = I18n.t("admin.user.delete_confirm"),
-      location = document.location.pathname;
+    const user = this;
+    const message = I18n.t("admin.user.delete_confirm");
+    const location = document.location.pathname;
 
     const performDestroy = function(block) {
       bootbox.dialog(I18n.t("admin.user.deleting_user"));
@@ -493,7 +466,7 @@ const AdminUser = Discourse.User.extend({
       if (opts && opts.deletePosts) {
         formData["delete_posts"] = true;
       }
-      return ajax("/admin/users/" + user.get("id") + ".json", {
+      return ajax(`/admin/users/${user.get("id")}.json`, {
         type: "DELETE",
         data: formData
       })
@@ -545,15 +518,13 @@ const AdminUser = Discourse.User.extend({
   },
 
   loadDetails() {
-    const user = this;
-
-    if (user.get("loadedDetails")) {
-      return Ember.RSVP.resolve(user);
+    if (this.get("loadedDetails")) {
+      return Ember.RSVP.resolve(this);
     }
 
-    return AdminUser.find(user.get("id")).then(result => {
-      user.setProperties(result);
-      user.set("loadedDetails", true);
+    return AdminUser.find(this.id).then(result => {
+      const userProperties = Object.assign(result, { loadedDetails: true });
+      this.setProperties(userProperties);
     });
   },
 
@@ -571,23 +542,25 @@ const AdminUser = Discourse.User.extend({
   silencedBy: wrapAdmin,
 
   @computed("approved_by")
-  approvedBy: wrapAdmin
+  approvedBy: wrapAdmin,
+
+  _formatError(event) {
+    return `http: ${event.status} - ${event.body}`;
+  }
 });
 
 AdminUser.reopenClass({
   find(user_id) {
-    return ajax("/admin/users/" + user_id + ".json").then(result => {
+    return ajax(`/admin/users/${user_id}.json`).then(result => {
       result.loadedDetails = true;
       return AdminUser.create(result);
     });
   },
 
   findAll(query, filter) {
-    return ajax("/admin/users/list/" + query + ".json", {
+    return ajax(`/admin/users/list/${query}.json`, {
       data: filter
-    }).then(function(users) {
-      return users.map(u => AdminUser.create(u));
-    });
+    }).then(users => users.map(u => AdminUser.create(u)));
   }
 });
 
