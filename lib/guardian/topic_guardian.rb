@@ -24,6 +24,10 @@ module TopicGuardian
     is_staff? && SiteSetting.shared_drafts_enabled?
   end
 
+  def can_create_whisper?
+    is_staff? && SiteSetting.enable_whispers?
+  end
+
   def can_publish_topic?(topic, category)
     is_staff? && can_see?(topic) && can_create_topic?(category)
   end

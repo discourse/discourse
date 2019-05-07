@@ -243,6 +243,7 @@ en:
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   invalid_grant_badge_reason_link: "External or invalid discourse link is not allowed in badge reason"
   email_template_cant_be_modified: "This email template can't be modified"
+  invalid_whisper_access: "Either whispers are not enabled or you do not have access to create whisper posts"
 
   reading_time: "Reading time"
   likes: "Likes"

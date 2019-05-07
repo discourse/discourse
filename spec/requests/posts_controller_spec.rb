@@ -696,6 +696,7 @@ describe PostsController do
 
     before do
       SiteSetting.min_first_post_typing_time = 0
+      SiteSetting.enable_whispers = true
     end
 
     fab!(:user) { Fabricate(:user) }
@@ -773,6 +774,22 @@ describe PostsController do
 
         expect(response.status).to eq(200)
         expect(post_1.topic.user.notifications.count).to eq(1)
+      end
+
+      it 'prevents whispers for regular users' do
+        post_1 = Fabricate(:post)
+        user = Fabricate(:user)
+        user_key = ApiKey.create!(user: user, key: SecureRandom.hex).key
+
+        post "/posts.json", params: {
+          api_username: user.username,
+          api_key: user_key,
+          raw: 'this is test whisper',
+          topic_id: post_1.topic.id,
+          reply_to_post_number: 1,
+          whisper: true
+        }
+        expect(response.status).to eq(403)
       end
     end
 
