@@ -31,6 +31,9 @@ export function navigateToTopic(topic, href) {
 
 export const ListItemDefaults = {
   tagName: "tr",
+  classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
+  attributeBindings: ["data-topic-id"],
+  "data-topic-id": Ember.computed.alias("topic.id"),
 
   @computed
   newDotText() {
@@ -175,13 +178,6 @@ export default Ember.Component.extend(
   ListItemDefaults,
   bufferedRender({
     rerenderTriggers: ["bulkSelectEnabled", "topic.pinned"],
-    classNameBindings: [
-      ":topic-list-item",
-      "unboundClassNames",
-      "topic.visited"
-    ],
-    attributeBindings: ["data-topic-id"],
-    "data-topic-id": Ember.computed.alias("topic.id"),
 
     actions: {
       toggleBookmark() {
