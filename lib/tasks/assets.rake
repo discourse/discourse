@@ -79,7 +79,7 @@ def compress_node(from, to)
   source_map_root = assets + ((d = File.dirname(from)) == "." ? "" : "/#{d}")
   source_map_url = cdn_path "/assets/#{to}.map"
 
-  cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
+  cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{source_map_url}'"
 
   STDERR.puts cmd
   result = `#{cmd} 2>&1`
@@ -205,7 +205,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
               info["size"] = File.size(path)
               info["mtime"] = File.mtime(path).iso8601
-              gzip(path) if should_brotli?(info["logical_path"])
+              gzip(path)
               brotli(path) if should_brotli?(info["logical_path"])
 
               STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
