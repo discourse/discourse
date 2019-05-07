@@ -37,7 +37,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     changeTimestamp() {
-      console.log("CHAGING");
       this.set("saving", true);
 
       const topic = this.topicController.model;
