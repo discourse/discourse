@@ -55,6 +55,10 @@ $font-down-4: 0.5745em;
 $font-down-5: 0.5em;
 $font-down-6: 0.4355em;
 
+// inputs/textareas in iOS need to be at least 16px to avoid triggering zoom on focus
+// with base at 15px, the below gives 16.05px
+$font-size-ios-input: 1.07em;
+
 // Common line-heights
 $line-height-small: 1;
 $line-height-medium: 1.2; // Headings or large text
