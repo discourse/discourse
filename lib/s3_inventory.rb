@@ -82,7 +82,7 @@ class S3Inventory
       upload_id = nil
       result = connection.exec("SELECT * FROM #{table_name} WHERE key LIKE '%original/%/#{sha1}%'")
 
-      if result.count >= 0
+      if result.count >= 1
         key = result[0]["key"]
         data = s3_helper.object(key).data
         upload_id = Upload.create!(
