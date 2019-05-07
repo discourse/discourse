@@ -6355,6 +6355,38 @@
     {
       "code": "1f9a9",
       "name": "flamingo"
+    },
+    {
+      "code": "1f971",
+      "name": "yawning_face"
+    },
+    {
+      "code": "1f90f",
+      "name": "pinching_hand"
+    },
+    {
+      "code": "1f415-200d-1f9ba",
+      "name": "service_dog"
+    },
+    {
+      "code": "1f9a7",
+      "name": "orangutan"
+    },
+    {
+      "code": "1f6fa",
+      "name": "auto_rickshaw"
+    },
+    {
+      "code": "1fa82",
+      "name": "parachute"
+    },
+    {
+      "code": "1fa80",
+      "name": "yo-yo"
+    },
+    {
+      "code": "1fa81",
+      "name": "kite"
     }
   ],
   "tonableEmojis": [
