@@ -295,7 +295,25 @@ class Report
     add_counts report, subject, 'topics.created_at'
   end
 
+  def lighten_color(hex, amount)
+    hex = adjust_hex(hex)
+    rgb = hex.scan(/../).map { |color| color.hex }
+    rgb[0] = [(rgb[0].to_i + 255 * amount).round, 255].min
+    rgb[1] = [(rgb[1].to_i + 255 * amount).round, 255].min
+    rgb[2] = [(rgb[2].to_i + 255 * amount).round, 255].min
+    "#%02x%02x%02x" % rgb
+  end
+
   def rgba_color(hex, opacity = 1)
+    rgbs = hex_to_rgbs(adjust_hex(hex))
+    "rgba(#{rgbs.join(',')},#{opacity})"
+  end
+
+  private
+
+  def adjust_hex(hex)
+    hex = hex.gsub('#', '')
+
     if hex.size == 3
       chars = hex.scan(/\w/)
       hex = chars.zip(chars).flatten.join
@@ -305,12 +323,8 @@ class Report
       hex = hex.ljust(6, hex.last)
     end
 
-    rgbs = hex_to_rgbs(hex)
-
-    "rgba(#{rgbs.join(',')},#{opacity})"
+    hex
   end
-
-  private
 
   def hex_to_rgbs(hex_color)
     hex_color = hex_color.gsub('#', '')
