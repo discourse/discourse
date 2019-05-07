@@ -53,7 +53,7 @@ module DiscourseNarrativeBot
             if (@skip && @state != :end)
               skip_tutorial(next_state)
             else
-              self.public_send(action)
+              self.send(action)
             end
 
           if new_post
