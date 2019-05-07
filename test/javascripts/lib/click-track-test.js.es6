@@ -54,11 +54,10 @@ QUnit.test("tracks internal URLs", async assert => {
 
   const done = assert.async();
   /* global server */
-  server.get("/clicks/track", request => {
+  server.post("/clicks/track", request => {
     assert.ok(
-      request.url.indexOf(
-        "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
-      ) !== -1
+      request.requestBody,
+      "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
     );
     done();
   });
@@ -75,7 +74,7 @@ QUnit.test("does not track attachments", async assert => {
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   /* global server */
-  server.get("/clicks/track", () => assert.ok(false));
+  server.post("/clicks/track", () => assert.ok(false));
 
   assert.ok(track(generateClickEventOn(".attachment")));
 });
@@ -85,11 +84,10 @@ QUnit.test("tracks external URLs", async assert => {
 
   const done = assert.async();
   /* global server */
-  server.get("/clicks/track", request => {
+  server.post("/clicks/track", request => {
     assert.ok(
-      request.url.indexOf(
-        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-      ) !== -1
+      request.requestBody,
+      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
     );
     done();
   });
@@ -105,11 +103,10 @@ QUnit.test(
 
     const done = assert.async();
     /* global server */
-    server.get("/clicks/track", request => {
+    server.post("/clicks/track", request => {
       assert.ok(
-        request.url.indexOf(
-          "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-        ) !== -1
+        request.requestBody,
+        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );
       done();
     });

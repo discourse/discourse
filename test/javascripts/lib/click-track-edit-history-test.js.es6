@@ -62,11 +62,10 @@ QUnit.test("tracks internal URLs", async assert => {
 
   const done = assert.async();
   /* global server */
-  server.get("/clicks/track", request => {
-    assert.ok(
-      request.url.indexOf(
-        "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
-      ) !== -1
+  server.post("/clicks/track", request => {
+    assert.equal(
+      request.requestBody,
+      "url=http%3A%2F%2Fdiscuss.domain.com&post_id=42&topic_id=1337"
     );
     done();
   });
@@ -79,11 +78,10 @@ QUnit.test("tracks external URLs", async assert => {
 
   const done = assert.async();
   /* global server */
-  server.get("/clicks/track", request => {
-    assert.ok(
-      request.url.indexOf(
-        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-      ) !== -1
+  server.post("/clicks/track", request => {
+    assert.equal(
+      request.requestBody,
+      "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
     );
     done();
   });
@@ -99,11 +97,10 @@ QUnit.test(
 
     const done = assert.async();
     /* global server */
-    server.get("/clicks/track", request => {
-      assert.ok(
-        request.url.indexOf(
-          "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
-        ) !== -1
+    server.post("/clicks/track", request => {
+      assert.equal(
+        request.requestBody,
+        "url=http%3A%2F%2Fwww.google.com&post_id=42&topic_id=1337"
       );
       done();
     });

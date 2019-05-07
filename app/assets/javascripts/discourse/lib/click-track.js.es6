@@ -93,7 +93,7 @@ export default {
 
     let trackPromise = Ember.RSVP.resolve();
     if (tracking) {
-      if (navigator.sendBeacon) {
+      if (!Ember.testing && navigator.sendBeacon) {
         const data = new FormData();
         data.append("url", href);
         data.append("post_id", postId);
