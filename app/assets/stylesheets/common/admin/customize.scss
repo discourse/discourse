@@ -613,6 +613,10 @@
   margin-bottom: 10px;
 }
 
+.permalink-description {
+  color: dark-light-choose($primary-medium, $secondary-medium);
+}
+
 // embedding
 .embeddable-hosts {
   margin-bottom: 2em;
