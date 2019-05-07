@@ -562,13 +562,11 @@ describe Guardian do
       end
 
       describe 'for a private category for automatic groups' do
-        let(:group) { automatic_group }
-
         let(:category) do
-          Fabricate(:private_category, group: group, read_restricted: true)
+          Fabricate(:private_category, group: automatic_group, read_restricted: true)
         end
 
-        let(:group_owner) { Fabricate(:user).tap { |user| group.add_owner(user) } }
+        let(:group_owner) { Fabricate(:user).tap { |user| automatic_group.add_owner(user) } }
         let(:topic) { Fabricate(:topic, category: category) }
 
         it 'should return false for all type of users' do
