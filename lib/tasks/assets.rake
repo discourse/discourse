@@ -199,8 +199,8 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
               # We can specify some files to never minify
               unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
-                FileUtils.mv(path, _path)
-                compress(_file, file)
+                FileUtils.mv(path, _path) if should_brotli?(info["logical_path"])
+                compress(_file, file) if should_brotli?(info["logical_path"])
               end
 
               info["size"] = File.size(path)
