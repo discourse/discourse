@@ -128,8 +128,8 @@ class SingleSignOn
     payload = {}
 
     ACCESSORS.each do |k|
-      next if (val = send k) == nil
-     payload[k] = val
+      next if (val = public_send(k)) == nil
+      payload[k] = val
     end
 
     @custom_fields&.each do |k, v|

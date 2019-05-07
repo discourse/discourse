@@ -60,7 +60,7 @@ class Search
       elsif !@type_filter.present? && send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
-        (send type) << object
+        (self.public_send(type)) << object
       end
     end
 
