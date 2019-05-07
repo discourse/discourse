@@ -16,6 +16,8 @@ module Trashable
       #
       scope = self.all
 
+      # must use :send here cause predicates is protected
+      # careful with updates of this API
       scope.where_clause.send(:predicates).delete(with_deleted_scope_sql)
       scope
     end

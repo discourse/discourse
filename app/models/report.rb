@@ -169,7 +169,7 @@ class Report
       begin
         wrap_slow_query do
           if respond_to?(report_method)
-            send(report_method, report)
+            public_send(report_method, report)
           elsif type =~ /_reqs$/
             req_report(report, type.split(/_reqs$/)[0].to_sym)
           else
