@@ -13,7 +13,7 @@ describe ClicksController do
       sign_in(Fabricate(:user))
 
       expect {
-        get "/clicks/track", params: { url: url, post_id: post.id, topic_id: post.topic_id }, headers: headers
+        post "/clicks/track", params: { url: url, post_id: post.id, topic_id: post.topic_id }, headers: headers
       }.to change { TopicLinkClick.count }.by(1)
     end
   end
