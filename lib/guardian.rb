@@ -118,7 +118,7 @@ class Guardian
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      return (see_method ? send(see_method, obj) : true)
+      return (see_method ? public_send(see_method, obj) : true)
     end
   end
 
@@ -137,7 +137,7 @@ class Guardian
     end
     create_method = :"can_create_#{target}?"
 
-    return send(create_method, parent) if respond_to?(create_method)
+    return public_send(create_method, parent) if respond_to?(create_method)
 
     true
   end
@@ -479,7 +479,7 @@ class Guardian
   def can_do?(action, obj)
     if obj && authenticated?
       action_method = method_name_for action, obj
-      return (action_method ? send(action_method, obj) : true)
+      return (action_method ? public_send(action_method, obj) : true)
     else
       false
     end

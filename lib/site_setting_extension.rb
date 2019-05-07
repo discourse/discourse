@@ -13,6 +13,7 @@ module SiteSettingExtension
   # for site locale
   def self.extended(klass)
     if GlobalSetting.respond_to?(:default_locale) && GlobalSetting.default_locale.present?
+      # protected
       klass.send :setup_shadowed_methods, :default_locale, GlobalSetting.default_locale
     end
   end

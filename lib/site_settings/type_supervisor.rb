@@ -219,7 +219,7 @@ class SiteSettings::TypeSupervisor
 
     validate_method = "validate_#{name}"
     if self.respond_to? validate_method
-      send(validate_method, val)
+      public_send(validate_method, val)
     end
   end
 

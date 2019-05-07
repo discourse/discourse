@@ -25,7 +25,7 @@ module ActiveSupport
           found = true
           data = cache.fetch(arguments) { found = false }
           unless found
-            cache[arguments] = data = send(uncached, *arguments)
+            cache[arguments] = data = public_send(uncached, *arguments)
           end
           # so cache is never corrupted
           data.dup
@@ -48,7 +48,7 @@ module ActiveSupport
 
           define_method(method_name) do |*arguments|
             ActiveSupport::Inflector.clear_memoize!
-            send(orig, *arguments)
+            public_send(orig, *arguments)
           end
         end
       end

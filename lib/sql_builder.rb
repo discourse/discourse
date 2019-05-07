@@ -110,7 +110,7 @@ class SqlBuilder
     values.map! do |row|
       mapped = klass.new
       setters.each_with_index do |name, index|
-        mapped.send name, row[index]
+        mapped.public_send name, row[index]
       end
       mapped
     end
