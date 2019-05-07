@@ -904,9 +904,18 @@ const Composer = RestModel.extend({
   },
 
   getCookedHtml() {
-    return $("#reply-control .d-editor-preview")
-      .html()
-      .replace(/<span class="marker"><\/span>/g, "");
+    const editorPreviewNode = document.querySelector(
+      "#reply-control .d-editor-preview"
+    );
+
+    if (editorPreviewNode) {
+      return editorPreviewNode.innerHTML.replace(
+        /<span class="marker"><\/span>/g,
+        ""
+      );
+    }
+
+    return "";
   },
 
   saveDraft() {
