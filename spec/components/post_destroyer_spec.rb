@@ -52,6 +52,16 @@ describe PostDestroyer do
   end
 
   describe 'destroy_old_stubs' do
+    it 'destroys stubs for deleted by user topics' do
+      SiteSetting.delete_removed_posts_after = 24
+
+      PostDestroyer.new(post.user, post).destroy
+      post.update_column(:updated_at, 2.days.ago)
+
+      PostDestroyer.destroy_stubs
+      expect(post.reload.deleted_at).not_to eq(nil)
+    end
+
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.delete_removed_posts_after = 24
       Fabricate(:admin)
