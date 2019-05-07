@@ -8,8 +8,8 @@ describe SystemMessage do
 
   context 'send' do
 
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       SiteSetting.site_contact_username = admin.username

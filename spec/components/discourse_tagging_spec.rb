@@ -8,13 +8,13 @@ require 'discourse_tagging'
 
 describe DiscourseTagging do
 
-  let(:admin) { Fabricate(:admin) }
-  let(:user)  { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)  { Fabricate(:user) }
   let(:guardian) { Guardian.new(user) }
 
-  let!(:tag1) { Fabricate(:tag, name: "fun") }
-  let!(:tag2) { Fabricate(:tag, name: "fun2") }
-  let!(:tag3) { Fabricate(:tag, name: "Fun3") }
+  fab!(:tag1) { Fabricate(:tag, name: "fun") }
+  fab!(:tag2) { Fabricate(:tag, name: "fun2") }
+  fab!(:tag3) { Fabricate(:tag, name: "Fun3") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -42,7 +42,7 @@ describe DiscourseTagging do
       end
 
       context 'with tags visible only to staff' do
-        let(:hidden_tag) { Fabricate(:tag) }
+        fab!(:hidden_tag) { Fabricate(:tag) }
         let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
         it 'should return all tags to staff' do
@@ -61,9 +61,9 @@ describe DiscourseTagging do
   end
 
   describe 'filter_visible' do
-    let(:hidden_tag) { Fabricate(:tag) }
+    fab!(:hidden_tag) { Fabricate(:tag) }
     let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
-    let(:topic) { Fabricate(:topic, tags: [tag1, tag2, tag3, hidden_tag]) }
+    fab!(:topic) { Fabricate(:topic, tags: [tag1, tag2, tag3, hidden_tag]) }
 
     it 'returns all tags to staff' do
       tags = DiscourseTagging.filter_visible(topic.tags, Guardian.new(admin))
@@ -89,7 +89,7 @@ describe DiscourseTagging do
 
   describe 'tag_topic_by_names' do
     context 'staff-only tags' do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
 
       before do
         create_staff_tags(['alpha'])
@@ -109,8 +109,8 @@ describe DiscourseTagging do
     end
 
     context 'respects category minimum_required_tags setting' do
-      let(:category) { Fabricate(:category, minimum_required_tags: 2) }
-      let(:topic) { Fabricate(:topic, category: category) }
+      fab!(:category) { Fabricate(:category, minimum_required_tags: 2) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
 
       it 'when tags are not present' do
         valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
@@ -138,10 +138,10 @@ describe DiscourseTagging do
     end
 
     context 'hidden tags' do
-      let(:hidden_tag) { Fabricate(:tag) }
+      fab!(:hidden_tag) { Fabricate(:tag) }
       let!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
-      let(:topic) { Fabricate(:topic, user: user) }
-      let(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
+      fab!(:topic) { Fabricate(:topic, user: user) }
+      fab!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1) }
 
       it 'user cannot add hidden tag by knowing its name' do
         expect(PostRevisor.new(post).revise!(topic.user, raw: post.raw + " edit", tags: [hidden_tag.name])).to be_falsey
@@ -252,10 +252,10 @@ describe DiscourseTagging do
   end
 
   describe "staff_tag_names" do
-    let(:tag) { Fabricate(:tag) }
+    fab!(:tag) { Fabricate(:tag) }
 
-    let(:staff_tag) { Fabricate(:tag) }
-    let(:other_staff_tag) { Fabricate(:tag) }
+    fab!(:staff_tag) { Fabricate(:tag) }
+    fab!(:other_staff_tag) { Fabricate(:tag) }
 
     let!(:staff_tag_group) {
       Fabricate(

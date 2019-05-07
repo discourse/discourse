@@ -89,9 +89,9 @@ describe UserUpdater do
   end
 
   describe '#update' do
-    let(:category) { Fabricate(:category) }
-    let(:tag) { Fabricate(:tag) }
-    let(:tag2) { Fabricate(:tag) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
 
     it 'saves user' do
       user = Fabricate(:user, name: 'Billy Bob')
@@ -274,8 +274,8 @@ describe UserUpdater do
     end
 
     context 'title is from a badge' do
-      let(:user) { Fabricate(:user, title: 'Emperor') }
-      let(:badge) { Fabricate(:badge, name: 'Minion') }
+      fab!(:user) { Fabricate(:user, title: 'Emperor') }
+      fab!(:badge) { Fabricate(:badge, name: 'Minion') }
 
       context 'badge can be used as a title' do
         before do

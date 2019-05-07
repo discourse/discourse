@@ -5,7 +5,7 @@ require 'suggested_topics_builder'
 
 describe SuggestedTopicsBuilder do
 
-  let(:topic) { Fabricate(:topic) }
+  fab!(:topic) { Fabricate(:topic) }
   let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
   before do
@@ -68,7 +68,7 @@ describe SuggestedTopicsBuilder do
     end
 
     context "adding topics" do
-      let!(:other_topic) { Fabricate(:topic) }
+      fab!(:other_topic) { Fabricate(:topic) }
 
       before do
         # Add all topics
@@ -86,9 +86,9 @@ describe SuggestedTopicsBuilder do
     end
 
     context "adding topics that are not open" do
-      let!(:archived_topic) { Fabricate(:topic, archived: true) }
-      let!(:closed_topic) { Fabricate(:topic, closed: true) }
-      let!(:invisible_topic) { Fabricate(:topic, visible: false) }
+      fab!(:archived_topic) { Fabricate(:topic, archived: true) }
+      fab!(:closed_topic) { Fabricate(:topic, closed: true) }
+      fab!(:invisible_topic) { Fabricate(:topic, visible: false) }
 
       it "adds archived and closed, but not invisible topics" do
         builder.add_results(Topic)
@@ -98,7 +98,7 @@ describe SuggestedTopicsBuilder do
     end
 
     context "category definition topics" do
-      let!(:category) { Fabricate(:category) }
+      fab!(:category) { Fabricate(:category) }
 
       it "doesn't add a category definition topic" do
         expect(category.topic_id).to be_present

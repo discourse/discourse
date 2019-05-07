@@ -4,10 +4,10 @@ require 'rails_helper'
 require 'excon'
 
 describe Jobs::EmitWebHookEvent do
-  let(:post_hook) { Fabricate(:web_hook) }
-  let(:inactive_hook) { Fabricate(:inactive_web_hook) }
-  let(:post) { Fabricate(:post) }
-  let(:user) { Fabricate(:user) }
+  fab!(:post_hook) { Fabricate(:web_hook) }
+  fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
+  fab!(:post) { Fabricate(:post) }
+  fab!(:user) { Fabricate(:user) }
 
   it 'raises an error when there is no web hook record' do
     expect do
@@ -157,10 +157,10 @@ describe Jobs::EmitWebHookEvent do
   end
 
   context 'with category filters' do
-    let(:category) { Fabricate(:category) }
-    let(:topic) { Fabricate(:topic) }
-    let(:topic_with_category) { Fabricate(:topic, category_id: category.id) }
-    let(:topic_hook) { Fabricate(:topic_web_hook, categories: [category]) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic_with_category) { Fabricate(:topic, category_id: category.id) }
+    fab!(:topic_hook) { Fabricate(:topic_web_hook, categories: [category]) }
 
     it "doesn't emit when event is not related with defined categories" do
       subject.execute(
@@ -186,9 +186,9 @@ describe Jobs::EmitWebHookEvent do
   end
 
   context 'with tag filters' do
-    let(:tag) { Fabricate(:tag) }
-    let(:topic) { Fabricate(:topic, tags: [tag]) }
-    let(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+    fab!(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
 
     it "doesn't emit when event is not included any tags" do
       subject.execute(

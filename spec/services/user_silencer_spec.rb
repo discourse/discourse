@@ -9,7 +9,7 @@ describe UserSilencer do
   end
 
   describe 'silence' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:silencer) { UserSilencer.new(user) }
     subject(:silence_user) { silencer.silence }
 
@@ -100,8 +100,8 @@ describe UserSilencer do
   end
 
   describe 'hide_posts' do
-    let(:user)    { Fabricate(:user, trust_level: 0) }
-    let!(:post)   { Fabricate(:post, user: user) }
+    fab!(:user)    { Fabricate(:user, trust_level: 0) }
+    fab!(:post)   { Fabricate(:post, user: user) }
     subject       { UserSilencer.new(user) }
 
     it "hides all the user's posts" do

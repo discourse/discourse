@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Admin::SearchLogsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     SearchLog.log(term: 'ruby', search_type: :header, ip_address: '127.0.0.1')

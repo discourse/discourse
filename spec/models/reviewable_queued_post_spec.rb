@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe ReviewableQueuedPost, type: :model do
 
-  let!(:category) { Fabricate(:category) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   context "creating a post" do
     let!(:topic) { Fabricate(:topic, category: category) }

@@ -57,11 +57,11 @@ describe TopicList do
     end
 
     describe 'when there are tags restricted to a category' do
-      let!(:category) { Fabricate(:category) }
-      let!(:topic) { Fabricate(:topic, category: category) }
-      let!(:other_topic) { Fabricate(:topic) } # uncategorized
-      let!(:tag) { Fabricate(:tag, topics: [topic], categories: [category], name: "category-tag") }
-      let!(:other_tag) { Fabricate(:tag, topics: [topic], name: "use-anywhere") }
+      fab!(:category) { Fabricate(:category) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:other_topic) { Fabricate(:topic) } # uncategorized
+      fab!(:tag) { Fabricate(:tag, topics: [topic], categories: [category], name: "category-tag") }
+      fab!(:other_tag) { Fabricate(:tag, topics: [topic], name: "use-anywhere") }
       let(:topic_list) { TopicList.new('latest', topic.user, [topic], category: category.id, category_id: category.id) }
 
       it 'should return tags used in the category' do

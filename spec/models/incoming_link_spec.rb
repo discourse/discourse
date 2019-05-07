@@ -4,9 +4,9 @@ require 'rails_helper'
 
 describe IncomingLink do
 
-  let(:sharing_user) { Fabricate(:user, name: 'Alice') }
-  let(:current_user) { Fabricate(:user, name: 'Bob') }
-  let(:post) { Fabricate(:post) }
+  fab!(:sharing_user) { Fabricate(:user, name: 'Alice') }
+  fab!(:current_user) { Fabricate(:user, name: 'Bob') }
+  fab!(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
 
   let :incoming_link do

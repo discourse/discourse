@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Admin::EmojisController do
-  let(:admin) { Fabricate(:admin) }
-  let(:upload) { Fabricate(:upload) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:upload) { Fabricate(:upload) }
 
   before do
     sign_in(admin)

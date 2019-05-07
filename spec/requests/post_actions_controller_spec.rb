@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PostActionsController do
   describe '#destroy' do
-    let(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+    fab!(:post) { Fabricate(:post, user: Fabricate(:coding_horror)) }
 
     it 'requires you to be logged in' do
       delete "/post_actions/#{post.id}.json"
@@ -12,7 +12,7 @@ RSpec.describe PostActionsController do
     end
 
     context 'logged in' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       before do
         sign_in(user)
@@ -114,8 +114,8 @@ RSpec.describe PostActionsController do
     end
 
     describe 'as a moderator' do
-      let(:user) { Fabricate(:moderator) }
-      let(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
+      fab!(:user) { Fabricate(:moderator) }
+      fab!(:post_1) { Fabricate(:post, user: Fabricate(:coding_horror)) }
 
       before do
         sign_in(user)
@@ -261,4 +261,5 @@ RSpec.describe PostActionsController do
       end
     end
   end
+
 end

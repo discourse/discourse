@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Admin::GroupsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
-  let(:group) { Fabricate(:group) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
 
   before do
     sign_in(admin)
@@ -67,7 +67,7 @@ RSpec.describe Admin::GroupsController do
   end
 
   describe "#bulk_perform" do
-    let(:group) do
+    fab!(:group) do
       Fabricate(:group,
         name: "test",
         primary_group: true,
@@ -76,8 +76,8 @@ RSpec.describe Admin::GroupsController do
       )
     end
 
-    let(:user) { Fabricate(:user, trust_level: 2) }
-    let(:user2) { Fabricate(:user, trust_level: 4) }
+    fab!(:user) { Fabricate(:user, trust_level: 2) }
+    fab!(:user2) { Fabricate(:user, trust_level: 4) }
 
     it "can assign users to a group by email or username" do
       Jobs.run_immediately!

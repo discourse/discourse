@@ -287,8 +287,8 @@ describe UserAuthToken do
 
   context "suspicious login" do
 
-    let(:user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
 
     it "is not checked when generated for non-staff" do
       UserAuthToken.generate!(user_id: user.id, staff: user.staff?)

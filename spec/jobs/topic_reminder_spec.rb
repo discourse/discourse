@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 describe Jobs::TopicReminder do
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
-  let(:topic) do
+  fab!(:topic) do
     Fabricate(:topic_timer,
       user: admin,
       status_type: TopicTimer.types[:reminder]

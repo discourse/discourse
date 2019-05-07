@@ -7,10 +7,10 @@ describe FileStore::LocalStore do
 
   let(:store) { FileStore::LocalStore.new }
 
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
 
-  let(:optimized_image) { Fabricate(:optimized_image) }
+  fab!(:optimized_image) { Fabricate(:optimized_image) }
 
   describe "#store_upload" do
 

@@ -6,8 +6,8 @@ require_dependency 'user_badge'
 describe UserBadge do
 
   context 'validations' do
-    let(:badge) { Fabricate(:badge) }
-    let(:user) { Fabricate(:user) }
+    fab!(:badge) { Fabricate(:badge) }
+    fab!(:user) { Fabricate(:user) }
     let(:subject) { BadgeGranter.grant(badge, user) }
 
     it { is_expected.to validate_presence_of(:badge_id) }

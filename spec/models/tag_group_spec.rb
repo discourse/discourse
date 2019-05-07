@@ -4,25 +4,25 @@ require 'rails_helper'
 
 describe TagGroup do
   describe '#visible' do
-    let(:user1) { Fabricate(:user) }
-    let(:user2) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
-    let(:group) { Fabricate(:group) }
+    fab!(:group) { Fabricate(:group) }
 
-    let!(:everyone_tag_group) { Fabricate(:tag_group, name: 'Visible & usable by everyone', tag_names: ['foo-bar']) }
-    let!(:visible_tag_group) { Fabricate(:tag_group, name: 'Visible by everyone, usable by staff', tag_names: ['foo']) }
-    let!(:staff_only_tag_group) { Fabricate(:tag_group, name: 'Staff only', tag_names: ['bar']) }
+    fab!(:everyone_tag_group) { Fabricate(:tag_group, name: 'Visible & usable by everyone', tag_names: ['foo-bar']) }
+    fab!(:visible_tag_group) { Fabricate(:tag_group, name: 'Visible by everyone, usable by staff', tag_names: ['foo']) }
+    fab!(:staff_only_tag_group) { Fabricate(:tag_group, name: 'Staff only', tag_names: ['bar']) }
 
-    let!(:public_tag_group) { Fabricate(:tag_group, name: 'Public', tag_names: ['public1']) }
-    let!(:private_tag_group) { Fabricate(:tag_group, name: 'Private', tag_names: ['privatetag1']) }
-    let!(:staff_tag_group) { Fabricate(:tag_group, name: 'Staff Talk', tag_names: ['stafftag1']) }
-    let!(:unrestricted_tag_group) { Fabricate(:tag_group, name: 'Unrestricted', tag_names: ['use-anywhere']) }
+    fab!(:public_tag_group) { Fabricate(:tag_group, name: 'Public', tag_names: ['public1']) }
+    fab!(:private_tag_group) { Fabricate(:tag_group, name: 'Private', tag_names: ['privatetag1']) }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, name: 'Staff Talk', tag_names: ['stafftag1']) }
+    fab!(:unrestricted_tag_group) { Fabricate(:tag_group, name: 'Unrestricted', tag_names: ['use-anywhere']) }
 
-    let!(:public_category) { Fabricate(:category, name: 'Public Category') }
-    let!(:private_category) { Fabricate(:private_category, group: group) }
-    let!(:staff_category) { Fabricate(:category, name: 'Secret') }
+    fab!(:public_category) { Fabricate(:category, name: 'Public Category') }
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+    fab!(:staff_category) { Fabricate(:category, name: 'Secret') }
 
     let(:everyone) { Group::AUTO_GROUPS[:everyone] }
     let(:staff) { Group::AUTO_GROUPS[:staff] }

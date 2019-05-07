@@ -8,8 +8,8 @@ describe Admin::EmbeddableHostsController do
   end
 
   context 'while logged in as an admin' do
-    let(:admin) { Fabricate(:admin) }
-    let(:embeddable_host) { Fabricate(:embeddable_host) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
 
     before do
       sign_in(admin)

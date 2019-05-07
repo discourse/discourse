@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe TopicTrackingState do
 
-  let(:user) do
+  fab!(:user) do
     Fabricate(:user)
   end
 
@@ -13,7 +13,7 @@ describe TopicTrackingState do
   end
 
   let(:topic) { post.topic }
-  let(:private_message_post) { Fabricate(:private_message_post) }
+  fab!(:private_message_post) { Fabricate(:private_message_post) }
   let(:private_message_topic) { private_message_post.topic }
 
   describe '#publish_latest' do
@@ -73,7 +73,7 @@ describe TopicTrackingState do
   end
 
   describe '#publish_private_message' do
-    let!(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     describe 'normal topic' do
       it 'should publish the right message' do
@@ -94,8 +94,8 @@ describe TopicTrackingState do
     end
 
     describe 'topic with groups' do
-      let(:group1) { Fabricate(:group, users: [Fabricate(:user)]) }
-      let(:group2) { Fabricate(:group, users: [Fabricate(:user), Fabricate(:user)]) }
+      fab!(:group1) { Fabricate(:group, users: [Fabricate(:user)]) }
+      fab!(:group2) { Fabricate(:group, users: [Fabricate(:user), Fabricate(:user)]) }
 
       before do
         [group1, group2].each do |group|

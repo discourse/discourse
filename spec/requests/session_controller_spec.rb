@@ -1345,7 +1345,7 @@ RSpec.describe SessionController do
     end
 
     context 'for an existing username' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       context 'local login is disabled' do
         before do

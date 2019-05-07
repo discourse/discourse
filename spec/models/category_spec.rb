@@ -5,7 +5,7 @@ require 'rails_helper'
 require_dependency 'post_creator'
 
 describe Category do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
@@ -151,10 +151,10 @@ describe Category do
   end
 
   describe "security" do
-    let(:category) { Fabricate(:category) }
-    let(:category_2) { Fabricate(:category) }
-    let(:user) { Fabricate(:user) }
-    let(:group) { Fabricate(:group) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:category_2) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
       expect(category.read_restricted?).to be false
@@ -220,7 +220,7 @@ describe Category do
   end
 
   describe "short name" do
-    let!(:category) { Fabricate(:category, name: 'xx') }
+    fab!(:category) { Fabricate(:category, name: 'xx') }
 
     it "creates the category" do
       expect(category).to be_present
@@ -615,14 +615,14 @@ describe Category do
   end
 
   describe "#url_with_id" do
-    let(:category) { Fabricate(:category, name: 'cats') }
+    fab!(:category) { Fabricate(:category, name: 'cats') }
 
     it "includes the id in the URL" do
       expect(category.url_with_id).to eq("/c/#{category.id}-cats")
     end
 
     context "child category" do
-      let(:child_category) { Fabricate(:category, parent_category_id: category.id, name: 'dogs') }
+      fab!(:child_category) { Fabricate(:category, parent_category_id: category.id, name: 'dogs') }
 
       it "includes the id in the URL" do
         expect(child_category.url_with_id).to eq("/c/cats/dogs/#{child_category.id}")
@@ -644,8 +644,8 @@ describe Category do
   end
 
   describe "parent categories" do
-    let(:user) { Fabricate(:user) }
-    let(:parent_category) { Fabricate(:category, user: user) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:parent_category) { Fabricate(:category, user: user) }
 
     it "can be associated with a parent category" do
       sub_category = Fabricate.build(:category, parent_category_id: parent_category.id, user: user)
@@ -705,7 +705,7 @@ describe Category do
   end
 
   describe "validate email_in" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "works with a valid email" do
       expect(Category.new(name: 'test', user: user, email_in: 'test@example.com').valid?).to eq(true)
@@ -718,7 +718,7 @@ describe Category do
     end
 
     context "with a duplicate email in a group" do
-      let(:group) { Fabricate(:group, name: 'testgroup', incoming_email: 'test@example.com') }
+      fab!(:group) { Fabricate(:group, name: 'testgroup', incoming_email: 'test@example.com') }
 
       it "adds an error with an invalid email" do
         category = Category.new(name: 'test', user: user, email_in: group.incoming_email)
@@ -727,7 +727,7 @@ describe Category do
     end
 
     context "with duplicate email in a category" do
-      let!(:category) { Fabricate(:category, user: user, name: '<b>cool</b>', email_in: 'test@example.com') }
+      fab!(:category) { Fabricate(:category, user: user, name: '<b>cool</b>', email_in: 'test@example.com') }
 
       it "adds an error with an invalid email" do
         category = Category.new(name: 'test', user: user, email_in: "test@example.com")
@@ -739,7 +739,7 @@ describe Category do
   end
 
   describe 'require topic/post approval' do
-    let(:category) { Fabricate(:category) }
+    fab!(:category) { Fabricate(:category) }
 
     describe '#require_topic_approval?' do
       before do
@@ -818,12 +818,12 @@ describe Category do
   end
 
   describe "validate permissions compatibility" do
-    let(:admin) { Fabricate(:admin) }
-    let(:group) { Fabricate(:group) }
-    let(:group2) { Fabricate(:group) }
-    let(:parent_category) { Fabricate(:category, name: "parent") }
-    let(:subcategory) { Fabricate(:category, name: "child1", parent_category_id: parent_category.id) }
-    let(:subcategory2) { Fabricate(:category, name: "child2", parent_category_id: parent_category.id) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:group2) { Fabricate(:group) }
+    fab!(:parent_category) { Fabricate(:category, name: "parent") }
+    fab!(:subcategory) { Fabricate(:category, name: "child1", parent_category_id: parent_category.id) }
+    fab!(:subcategory2) { Fabricate(:category, name: "child2", parent_category_id: parent_category.id) }
 
     context "when changing subcategory permissions" do
       it "it is not valid if permissions are less restrictive" do

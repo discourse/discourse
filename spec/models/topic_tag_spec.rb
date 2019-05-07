@@ -4,8 +4,8 @@ require 'rails_helper'
 
 describe TopicTag do
 
-  let(:topic) { Fabricate(:topic) }
-  let(:tag) { Fabricate(:tag) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:tag) { Fabricate(:tag) }
   let(:topic_tag) { Fabricate(:topic_tag, topic: topic, tag: tag) }
 
   context '#after_create' do

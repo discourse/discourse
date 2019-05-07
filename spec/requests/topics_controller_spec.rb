@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe TopicsController do
-  let(:topic) { Fabricate(:topic) }
-  let(:user) { Fabricate(:user) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user) }
 
   describe '#wordpress' do
     let!(:user) { sign_in(Fabricate(:moderator)) }
@@ -59,8 +59,8 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to a new topic' do
-      let(:user) { Fabricate(:user) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:moderator) { Fabricate(:moderator) }
       let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
       let!(:topic) { p1.topic }
@@ -187,7 +187,7 @@ RSpec.describe TopicsController do
       let!(:user) { sign_in(Fabricate(:moderator)) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
-      let(:dest_topic) { Fabricate(:topic) }
+      fab!(:dest_topic) { Fabricate(:topic) }
       let(:p2) { Fabricate(:post, user: user, topic: topic) }
 
       context 'success' do
@@ -245,9 +245,9 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to a new message' do
-      let(:user) { Fabricate(:user) }
-      let(:trust_level_4) { Fabricate(:trust_level_4) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+      fab!(:moderator) { Fabricate(:moderator) }
       let!(:message) { Fabricate(:private_message_topic) }
       let!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
       let!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: message) }
@@ -335,8 +335,8 @@ RSpec.describe TopicsController do
 
     describe 'moving to an existing message' do
       let!(:user) { sign_in(Fabricate(:admin)) }
-      let(:trust_level_4) { Fabricate(:trust_level_4) }
-      let(:evil_trout) { Fabricate(:evil_trout) }
+      fab!(:trust_level_4) { Fabricate(:trust_level_4) }
+      fab!(:evil_trout) { Fabricate(:evil_trout) }
       let(:message) { Fabricate(:private_message_topic) }
       let(:p2) { Fabricate(:post, user: evil_trout, post_number: 2, topic: message) }
 
@@ -387,8 +387,8 @@ RSpec.describe TopicsController do
     end
 
     describe 'merging into another topic' do
-      let(:moderator) { Fabricate(:moderator) }
-      let(:user) { Fabricate(:user) }
+      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
 
@@ -422,9 +422,9 @@ RSpec.describe TopicsController do
     end
 
     describe 'merging into another message' do
-      let(:moderator) { Fabricate(:moderator) }
-      let(:user) { Fabricate(:user) }
-      let(:trust_level_4) { Fabricate(:trust_level_4) }
+      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       let(:message) { Fabricate(:private_message_topic, user: user) }
       let!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
       let!(:p2) { Fabricate(:post, topic: message, reply_to_post_number: p1.post_number, user: user) }
@@ -506,7 +506,7 @@ RSpec.describe TopicsController do
     describe 'changing ownership' do
       let!(:editor) { sign_in(Fabricate(:admin)) }
       let(:topic) { Fabricate(:topic) }
-      let(:user_a) { Fabricate(:user) }
+      fab!(:user_a) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, topic: topic) }
       let(:p2) { Fabricate(:post, topic: topic) }
 
@@ -628,7 +628,7 @@ RSpec.describe TopicsController do
     context 'when logged in' do
       let(:topic) { Fabricate(:topic) }
       let(:pm) { Fabricate(:private_message_topic) }
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       before do
         sign_in(user)
       end
@@ -658,8 +658,8 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      let(:user) { Fabricate(:user) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic) }
       before do
         sign_in(moderator)
@@ -827,8 +827,8 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      let(:user) { Fabricate(:user) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: user, deleted_at: Time.now, deleted_by: moderator) }
       let!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1, deleted_at: Time.now, deleted_by: moderator) }
 
@@ -864,8 +864,8 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      let(:user) { Fabricate(:user) }
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: user, created_at: 48.hours.ago) }
       let!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
@@ -1045,12 +1045,12 @@ RSpec.describe TopicsController do
         end
 
         context 'updating to a category with restricted tags' do
-          let!(:category) { Fabricate(:category) }
-          let!(:restricted_category) { Fabricate(:category) }
-          let!(:tag1) { Fabricate(:tag) }
-          let!(:tag2) { Fabricate(:tag) }
+          fab!(:category) { Fabricate(:category) }
+          fab!(:restricted_category) { Fabricate(:category) }
+          fab!(:tag1) { Fabricate(:tag) }
+          fab!(:tag2) { Fabricate(:tag) }
           let!(:tag_group_1) { Fabricate(:tag_group, tag_names: [tag1.name]) }
-          let!(:tag_group_2) { Fabricate(:tag_group) }
+          fab!(:tag_group_2) { Fabricate(:tag_group) }
 
           before do
             SiteSetting.tagging_enabled = true
@@ -1248,7 +1248,7 @@ RSpec.describe TopicsController do
     end
 
     context 'permission errors' do
-      let(:allowed_user) { Fabricate(:user) }
+      fab!(:allowed_user) { Fabricate(:user) }
       let(:allowed_group) { Fabricate(:group) }
       let(:secure_category) do
         c = Fabricate(:category)
@@ -1781,7 +1781,7 @@ RSpec.describe TopicsController do
 
     describe 'filtering by post number with filters' do
       describe 'username filters' do
-        let(:user) { Fabricate(:user) }
+        fab!(:user) { Fabricate(:user) }
         let(:post) { Fabricate(:post, user: user) }
         let!(:post2) { Fabricate(:post, topic: topic, user: user) }
         let!(:post3) { Fabricate(:post, topic: topic) }
@@ -2137,7 +2137,7 @@ RSpec.describe TopicsController do
     end
 
     describe 'converting public topic to private message' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:topic, user: user) }
       let!(:post) { Fabricate(:post, topic: topic) }
 
@@ -2164,7 +2164,7 @@ RSpec.describe TopicsController do
     end
 
     describe 'converting private message to public topic' do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let(:topic) { Fabricate(:private_message_topic, user: user) }
       let!(:post) { Fabricate(:post, topic: topic) }
 
@@ -2427,10 +2427,10 @@ RSpec.describe TopicsController do
       end
 
       describe "when PM has reached maximum allowed numbers of recipients" do
-        let(:user2) { Fabricate(:user) }
+        fab!(:user2) { Fabricate(:user) }
         let(:pm) { Fabricate(:private_message_topic, user: user) }
 
-        let(:moderator) { Fabricate(:moderator) }
+        fab!(:moderator) { Fabricate(:moderator) }
         let(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
 
         before do

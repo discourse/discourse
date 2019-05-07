@@ -27,8 +27,8 @@ RSpec::Matchers.define_negated_matcher :not_add_notification, :add_notification
 
 describe PostAlerter do
 
-  let!(:evil_trout) { Fabricate(:evil_trout) }
-  let(:user) { Fabricate(:user) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:user) { Fabricate(:user) }
 
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
@@ -259,7 +259,7 @@ describe PostAlerter do
 
   context '@group mentions' do
 
-    let(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+    fab!(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
     let(:post) { create_post_with_alerts(raw: "Hello @group how are you?") }
     before { group.add(evil_trout) }
 
@@ -348,12 +348,12 @@ describe PostAlerter do
       }.not_to change(evil_trout.notifications, :count)
     end
 
-    let(:alice) { Fabricate(:user, username: 'alice') }
-    let(:bob) { Fabricate(:user, username: 'bob') }
-    let(:carol) { Fabricate(:admin, username: 'carol') }
-    let(:dave) { Fabricate(:user, username: 'dave') }
-    let(:eve) { Fabricate(:user, username: 'eve') }
-    let(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+    fab!(:alice) { Fabricate(:user, username: 'alice') }
+    fab!(:bob) { Fabricate(:user, username: 'bob') }
+    fab!(:carol) { Fabricate(:admin, username: 'carol') }
+    fab!(:dave) { Fabricate(:user, username: 'dave') }
+    fab!(:eve) { Fabricate(:user, username: 'eve') }
+    fab!(:group) { Fabricate(:group, name: 'group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     before do
       group.bulk_add([alice.id, eve.id])
@@ -369,7 +369,7 @@ describe PostAlerter do
     end
 
     context "topic" do
-      let(:topic) { Fabricate(:topic, user: alice) }
+      fab!(:topic) { Fabricate(:topic, user: alice) }
 
       [:watching, :tracking, :regular].each do |notification_level|
         context "when notification level is '#{notification_level}'" do
@@ -397,7 +397,7 @@ describe PostAlerter do
     end
 
     context "message to users" do
-      let(:pm_topic) do
+      fab!(:pm_topic) do
         Fabricate(:private_message_topic,
                   user: alice,
                   topic_allowed_users: [
@@ -469,8 +469,8 @@ describe PostAlerter do
 
     context "message to group" do
 
-      let(:some_group) { Fabricate(:group, name: 'some_group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
-      let(:pm_topic) do
+      fab!(:some_group) { Fabricate(:group, name: 'some_group', mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:pm_topic) do
         Fabricate(:private_message_topic,
                   user: alice,
                   topic_allowed_groups: [
@@ -542,8 +542,8 @@ describe PostAlerter do
   end
 
   describe ".create_notification" do
-    let(:topic) { Fabricate(:private_message_topic, user: user, created_at: 1.hour.ago) }
-    let(:post) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
+    fab!(:topic) { Fabricate(:private_message_topic, user: user, created_at: 1.hour.ago) }
+    fab!(:post) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
 
     it "creates a notification for PMs" do
       post.revise(user, { raw: 'This is the revised post' }, revised_at: Time.zone.now)
@@ -697,12 +697,12 @@ describe PostAlerter do
   end
 
   describe "watching_first_post" do
-    let(:group) { Fabricate(:group) }
-    let(:user) { Fabricate(:user) }
-    let(:category) { Fabricate(:category) }
-    let(:tag)  { Fabricate(:tag) }
-    let(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
-    let(:post) { Fabricate(:post, topic: topic) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:tag)  { Fabricate(:tag) }
+    fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
 
     it "doesn't notify people who aren't watching" do
       PostAlerter.post_created(post)
@@ -941,10 +941,10 @@ describe PostAlerter do
     end
 
     context "on change" do
-      let(:user) { Fabricate(:user) }
-      let(:other_tag) { Fabricate(:tag) }
-      let(:watched_tag) { Fabricate(:tag) }
-      let(:post) { Fabricate(:post) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:other_tag) { Fabricate(:tag) }
+      fab!(:watched_tag) { Fabricate(:tag) }
+      fab!(:post) { Fabricate(:post) }
 
       before do
         SiteSetting.tagging_enabled = true
@@ -974,9 +974,9 @@ describe PostAlerter do
   end
 
   describe '#extract_linked_users' do
-    let(:topic) { Fabricate(:topic) }
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:post2) { Fabricate(:post) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post) }
 
     describe 'when linked post has been deleted' do
       let(:topic_link) do

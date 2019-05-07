@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe PostActionCreator do
-  let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
 
   describe "rate limits" do

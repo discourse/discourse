@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe UserExport do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   describe '.remove_old_exports' do
     it 'should remove the right records' do

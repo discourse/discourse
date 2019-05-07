@@ -14,9 +14,9 @@ describe Jobs::PurgeExpiredIgnoredUsers do
   end
 
   context "when some ignored users exist" do
-    let(:tarek) { Fabricate(:user, username: "tarek") }
-    let(:matt) { Fabricate(:user, username: "matt") }
-    let(:john) { Fabricate(:user, username: "john") }
+    fab!(:tarek) { Fabricate(:user, username: "tarek") }
+    fab!(:matt) { Fabricate(:user, username: "matt") }
+    fab!(:john) { Fabricate(:user, username: "john") }
 
     before do
       Fabricate(:ignored_user, user: tarek, ignored_user: matt)
@@ -30,7 +30,7 @@ describe Jobs::PurgeExpiredIgnoredUsers do
     end
 
     context "when there are expired ignored users" do
-      let(:fred) { Fabricate(:user, username: "fred") }
+      fab!(:fred) { Fabricate(:user, username: "fred") }
 
       it "purges expired ignored users" do
         freeze_time(5.months.ago) do
@@ -43,7 +43,7 @@ describe Jobs::PurgeExpiredIgnoredUsers do
     end
 
     context "when there are expired ignored users by expiring_at" do
-      let(:fred) { Fabricate(:user, username: "fred") }
+      fab!(:fred) { Fabricate(:user, username: "fred") }
 
       it "purges expired ignored users" do
         Fabricate(:ignored_user, user: tarek, ignored_user: fred, expiring_at: 1.month.from_now)

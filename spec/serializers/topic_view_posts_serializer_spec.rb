@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe TopicViewPostsSerializer do
-  let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post) }
   let(:topic) { post.topic }
   let(:topic_view) { TopicView.new(topic, user, post_ids: [post.id]) }
 

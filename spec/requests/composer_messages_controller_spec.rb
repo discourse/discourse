@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe ComposerMessagesController do
-  let(:topic) { Fabricate(:topic, created_at: 10.years.ago, last_posted_at: 10.years.ago) }
-  let(:post) { Fabricate(:post, topic: topic, post_number: 1, created_at: 10.years.ago) }
+  fab!(:topic) { Fabricate(:topic, created_at: 10.years.ago, last_posted_at: 10.years.ago) }
+  fab!(:post) { Fabricate(:post, topic: topic, post_number: 1, created_at: 10.years.ago) }
 
   context '#index' do
     it 'requires you to be logged in' do

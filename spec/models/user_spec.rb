@@ -128,7 +128,7 @@ describe User do
 
   describe 'reviewable' do
     let(:user) { Fabricate(:user, active: false) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       Jobs.run_immediately!
@@ -875,7 +875,7 @@ describe User do
   end
 
   describe "last_seen_at" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "should have a blank last seen on creation" do
       expect(user.last_seen_at).to eq(nil)
@@ -942,7 +942,7 @@ describe User do
   end
 
   describe 'email_confirmed?' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     context 'when email has not been confirmed yet' do
       it 'should return false' do
@@ -968,7 +968,7 @@ describe User do
   end
 
   describe "flag_linked_posts_as_spam" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:admin) { Fabricate(:admin) }
     let!(:post) { PostCreator.new(user, title: "this topic contains spam", raw: "this post has a link: http://discourse.org").create }
     let!(:another_post) { PostCreator.new(user, title: "this topic also contains spam", raw: "this post has a link: http://discourse.org/asdfa").create }
@@ -1093,9 +1093,9 @@ describe User do
   end
 
   describe 'api keys' do
-    let(:admin) { Fabricate(:admin) }
-    let(:other_admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:other_admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     describe '.generate_api_key' do
 
@@ -1189,7 +1189,7 @@ describe User do
 
   describe "#find_email" do
 
-    let(:user) { Fabricate(:user, email: "bob@example.com") }
+    fab!(:user) { Fabricate(:user, email: "bob@example.com") }
 
     context "when email is exists in the email logs" do
       before { user.stubs(:last_sent_email_address).returns("bob@lastemail.com") }
@@ -1482,8 +1482,8 @@ describe User do
 
   describe "number_of_flags_given" do
 
-    let(:user) { Fabricate(:user) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "doesn't count disagreed flags" do
       post_agreed = Fabricate(:post)
@@ -1502,8 +1502,8 @@ describe User do
 
   describe "number_of_deleted_posts" do
 
-    let(:user) { Fabricate(:user, id: 2) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user, id: 2) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "counts all the posts" do
       # at least 1 "unchanged" post
@@ -1613,7 +1613,7 @@ describe User do
   end
 
   describe "#logged_out" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it 'should publish the right message' do
       message = MessageBus.track_publish('/logout') { user.logged_out }.first
@@ -1623,8 +1623,8 @@ describe User do
   end
 
   describe '#read_first_notification?' do
-    let(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    let(:notification) { Fabricate(:private_message_notification) }
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    fab!(:notification) { Fabricate(:private_message_notification) }
 
     describe 'when first notification has not been seen' do
       it 'should return the right value' do
@@ -1665,7 +1665,7 @@ describe User do
   end
 
   describe "#featured_user_badges" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:user_badge_tl1) { UserBadge.create(badge_id: 1, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
     let!(:user_badge_tl2) { UserBadge.create(badge_id: 2, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
@@ -1680,7 +1680,7 @@ describe User do
 
   describe ".clear_global_notice_if_needed" do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
     before do
@@ -1880,7 +1880,7 @@ describe User do
   end
 
   describe "#secondary_emails" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "only contains secondary emails" do
       expect(user.user_emails.secondary).to eq([])

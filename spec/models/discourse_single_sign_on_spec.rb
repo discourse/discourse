@@ -606,7 +606,7 @@ describe DiscourseSingleSignOn do
   end
 
   context 'when sso_overrides_avatar is enabled' do
-    let!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
+    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
       sso = DiscourseSingleSignOn.new
@@ -686,7 +686,7 @@ describe DiscourseSingleSignOn do
   end
 
   context 'when sso_overrides_profile_background is enabled' do
-    let!(:sso_record) { Fabricate(:single_sign_on_record, external_profile_background_url: "http://example.com/an_image.png") }
+    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_profile_background_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
       sso = DiscourseSingleSignOn.new
@@ -758,7 +758,7 @@ describe DiscourseSingleSignOn do
   end
 
   context 'when sso_overrides_card_background is enabled' do
-    let!(:sso_record) { Fabricate(:single_sign_on_record, external_card_background_url: "http://example.com/an_image.png") }
+    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_card_background_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
       sso = DiscourseSingleSignOn.new

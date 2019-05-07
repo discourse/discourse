@@ -166,7 +166,7 @@ describe ApplicationHelper do
   end
 
   describe '#html_classes' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)

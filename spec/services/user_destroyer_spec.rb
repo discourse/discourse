@@ -5,8 +5,8 @@ require_dependency 'user_destroyer'
 
 describe UserDestroyer do
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   describe 'new' do
     it 'raises an error when user is nil' do

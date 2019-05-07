@@ -123,10 +123,10 @@ describe IncomingLinksReport do
   describe 'top_referrers' do
     subject(:top_referrers) { IncomingLinksReport.find('top_referrers').as_json }
 
-    let(:amy) { Fabricate(:user, username: 'amy') }
-    let(:bob) { Fabricate(:user, username: 'bob') }
-    let(:post1) { Fabricate(:post) }
-    let(:post2) { Fabricate(:post) }
+    fab!(:amy) { Fabricate(:user, username: 'amy') }
+    fab!(:bob) { Fabricate(:user, username: 'bob') }
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
     let(:topic1) { post1.topic }
     let(:topic2) { post2.topic }
 

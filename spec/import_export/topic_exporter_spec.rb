@@ -9,9 +9,9 @@ describe ImportExport::TopicExporter do
     STDOUT.stubs(:write)
   end
 
-  let(:user) { Fabricate(:user) }
-  let(:topic) { Fabricate(:topic, user: user) }
-  let!(:post) { Fabricate(:post, topic: topic, user: user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
 
   context '.perform' do
     it 'export a single topic' do

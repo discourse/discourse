@@ -6,7 +6,7 @@ require 'topic_view'
 describe TopicView do
 
   let(:topic) { create_topic }
-  let(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
   let(:first_poster) { topic.user }
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
@@ -35,8 +35,8 @@ describe TopicView do
 
   context "setup_filtered_posts" do
     describe "filters posts with ignored users" do
-      let!(:user) { Fabricate(:user) }
-      let!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
       let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
       let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
       let!(:post3) { Fabricate(:post, topic: topic, user: user) }
@@ -104,8 +104,8 @@ describe TopicView do
     let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:admin) { Fabricate(:admin) }
 
     it "it can find the best responses" do
 
@@ -167,8 +167,8 @@ describe TopicView do
     end
 
     context 'log_check_personal_message is enabled' do
-      let(:group) { Fabricate(:group) }
-      let(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         SiteSetting.log_personal_messages_views = true
@@ -232,8 +232,8 @@ describe TopicView do
     end
 
     describe "#get_canonical_path" do
-      let(:user) { Fabricate(:user) }
-      let(:topic) { Fabricate(:topic) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:path) { "/1234" }
 
       before do
@@ -574,8 +574,8 @@ describe TopicView do
   end
 
   context "page_title" do
-    let(:tag1) { Fabricate(:tag) }
-    let(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:tag1) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
 
     subject { TopicView.new(topic.id, evil_trout).page_title }
 
