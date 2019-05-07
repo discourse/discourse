@@ -1524,23 +1524,20 @@ describe Guardian do
     end
 
     describe 'a Category' do
-
-      fab!(:category) { plain_category }
-
       it 'returns false when not logged in' do
-        expect(Guardian.new.can_edit?(category)).to be_falsey
+        expect(Guardian.new.can_edit?(plain_category)).to be_falsey
       end
 
       it 'returns false as a regular user' do
-        expect(Guardian.new(category.user).can_edit?(category)).to be_falsey
+        expect(Guardian.new(plain_category.user).can_edit?(plain_category)).to be_falsey
       end
 
       it 'returns false as a moderator' do
-        expect(Guardian.new(moderator).can_edit?(category)).to be_falsey
+        expect(Guardian.new(moderator).can_edit?(plain_category)).to be_falsey
       end
 
       it 'returns true as an admin' do
-        expect(Guardian.new(admin).can_edit?(category)).to be_truthy
+        expect(Guardian.new(admin).can_edit?(plain_category)).to be_truthy
       end
     end
 
