@@ -582,7 +582,7 @@ Discourse::Application.routes.draw do
 
   resources :clicks do
     collection do
-      get "track"
+      post "track"
     end
   end
 

@@ -91,15 +91,25 @@ export default {
       }
     }
 
-    const trackPromise = tracking
-      ? ajax("/clicks/track", {
+    let trackPromise = Ember.RSVP.resolve();
+    if (tracking) {
+      if (navigator.sendBeacon) {
+        const data = new FormData();
+        data.append("url", href);
+        data.append("post_id", postId);
+        data.append("topic_id", topicId);
+        navigator.sendBeacon("/clicks/track", data);
+      } else {
+        trackPromise = ajax("/clicks/track", {
+          type: "POST",
           data: {
             url: href,
             post_id: postId,
             topic_id: topicId
           }
-        })
-      : Ember.RSVP.resolve();
+        });
+      }
+    }
 
     const isInternal = DiscourseURL.isInternal(href);
     const openExternalInNewTab = Discourse.User.currentProp(
