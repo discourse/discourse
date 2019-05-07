@@ -2394,50 +2394,6 @@ en:
           notify_user: "You sent a message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
-        by_you_and_others:
-          off_topic:
-            one: "You and 1 other flagged this as off-topic"
-            other: "You and {{count}} other people flagged this as off-topic"
-          spam:
-            one: "You and 1 other flagged this as spam"
-            other: "You and {{count}} other people flagged this as spam"
-          inappropriate:
-            one: "You and 1 other flagged this as inappropriate"
-            other: "You and {{count}} other people flagged this as inappropriate"
-          notify_moderators:
-            one: "You and 1 other flagged this for moderation"
-            other: "You and {{count}} other people flagged this for moderation"
-          notify_user:
-            one: "You and 1 other sent a message to this user"
-            other: "You and {{count}} other people sent a message to this user"
-          bookmark:
-            one: "You and 1 other bookmarked this post"
-            other: "You and {{count}} other people bookmarked this post"
-          like:
-            one: "You and 1 other liked this"
-            other: "You and {{count}} other people liked this"
-        by_others:
-          off_topic:
-            one: "1 person flagged this as off-topic"
-            other: "{{count}} people flagged this as off-topic"
-          spam:
-            one: "1 person flagged this as spam"
-            other: "{{count}} people flagged this as spam"
-          inappropriate:
-            one: "1 person flagged this as inappropriate"
-            other: "{{count}} people flagged this as inappropriate"
-          notify_moderators:
-            one: "1 person flagged this for moderation"
-            other: "{{count}} people flagged this for moderation"
-          notify_user:
-            one: "1 person sent a message to this user"
-            other: "{{count}} sent a message to this user"
-          bookmark:
-            one: "1 person bookmarked this post"
-            other: "{{count}} people bookmarked this post"
-          like:
-            one: "1 person liked this"
-            other: "{{count}} people liked this"
 
       delete:
         confirm:
