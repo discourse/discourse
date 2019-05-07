@@ -82,7 +82,8 @@ export default Ember.Controller.extend({
   actions: {
     save() {
       this.set("saved", false);
-      const url = extractDomainFromUrl(this.get("model.payload_url"));
+      const url = this.get("model.payload_url");
+      const domain = extractDomainFromUrl(url);
       const model = this.get("model");
       const isNew = model.get("isNew");
 
@@ -103,10 +104,10 @@ export default Ember.Controller.extend({
       };
 
       if (
-        url === "localhost" ||
-        url.match(/192\.168\.\d+\.\d+/) ||
-        url.match(/127\.\d+\.\d+\.\d+/) ||
-        url === Discourse.BaseUrl
+        domain === "localhost" ||
+        domain.match(/192\.168\.\d+\.\d+/) ||
+        domain.match(/127\.\d+\.\d+\.\d+/) ||
+        url.startsWith(Discourse.BaseUrl)
       ) {
         return bootbox.confirm(
           I18n.t("admin.web_hooks.warn_local_payload_url"),
