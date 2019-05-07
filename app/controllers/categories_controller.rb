@@ -240,9 +240,9 @@ class CategoriesController < ApplicationController
     draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
 
     %w{category topic}.each do |type|
-      result.send(:"#{type}_list").draft = draft
-      result.send(:"#{type}_list").draft_key = draft_key
-      result.send(:"#{type}_list").draft_sequence = draft_sequence
+      result.public_send(:"#{type}_list").draft = draft
+      result.public_send(:"#{type}_list").draft_key = draft_key
+      result.public_send(:"#{type}_list").draft_sequence = draft_sequence
     end
 
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)

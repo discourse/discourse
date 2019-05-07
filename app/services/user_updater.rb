@@ -113,11 +113,11 @@ class UserUpdater
       if attributes.key?(attribute)
         save_options = true
 
-        if [true, false].include?(user.user_option.send(attribute))
+        if [true, false].include?(user.user_option.public_send(attribute))
           val = attributes[attribute].to_s == 'true'
-          user.user_option.send("#{attribute}=", val)
+          user.user_option.public_send("#{attribute}=", val)
         else
-          user.user_option.send("#{attribute}=", attributes[attribute])
+          user.user_option.public_send("#{attribute}=", attributes[attribute])
         end
       end
     end

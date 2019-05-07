@@ -18,11 +18,11 @@ class CustomRenderer < AbstractController::Base
   end
 
   def cookies
-    @parent.send(:cookies)
+    @parent.public_send(:cookies)
   end
 
   def session
-    @parent.send(:session)
+    @parent.public_send(:session)
   end
 
   def initialize(parent)

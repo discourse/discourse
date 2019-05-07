@@ -16,18 +16,19 @@ describe Jobs::ReindexSearch do
       model = Fabricate(m.to_sym)
       SiteSetting.default_locale = locale
       subject.execute({})
-      expect(model.send("#{m}_search_data").locale).to eq locale
+      expect(model.public_send("#{m}_search_data").locale).to eq locale
     end
 
     it "should rebuild `#{m}` when INDEX_VERSION changed" do
       model = Fabricate(m.to_sym)
       # so that search data can be reindexed
-      search_data = model.send("#{m}_search_data")
+      search_data = model.public_send("#{m}_search_data")
       search_data.update!(version: 0)
       model.reload
 
       subject.execute({})
-      expect(model.send("#{m}_search_data").version).to eq SearchIndexer::INDEX_VERSION
+      expect(model.public_send("#{m}_search_data").version)
+        .to eq(SearchIndexer::INDEX_VERSION)
     end
   end
 

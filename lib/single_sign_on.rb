@@ -81,7 +81,7 @@ class SingleSignOn
       if BOOLS.include? k
         val = ["true", "false"].include?(val) ? val == "true" : nil
       end
-      sso.send("#{k}=", val)
+      sso.public_send("#{k}=", val)
     end
 
     decoded_hash.each do |k, v|

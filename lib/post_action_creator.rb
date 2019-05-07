@@ -201,7 +201,7 @@ private
 
     if post_action
       post_action.recover!
-      action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
+      action_attrs.each { |attr, val| post_action.public_send("#{attr}=", val) }
       post_action.save
       PostActionNotifier.post_action_created(post_action)
     else

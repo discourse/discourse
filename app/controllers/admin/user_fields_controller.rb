@@ -27,7 +27,7 @@ class Admin::UserFieldsController < Admin::AdminController
 
     Admin::UserFieldsController.columns.each do |col|
       unless field_params[col].nil?
-        field.send("#{col}=", field_params[col])
+        field.public_send("#{col}=", field_params[col])
       end
     end
     update_options(field)

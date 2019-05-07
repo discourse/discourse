@@ -78,7 +78,7 @@ describe TopicStatusUpdater do
         topic = Fabricate(:topic, status_name => false)
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, true)
         expect(updated).to eq(true)
-        expect(topic.send("#{status_name}?")).to eq(true)
+        expect(topic.public_send("#{status_name}?")).to eq(true)
 
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, true)
         expect(updated).to eq(false)
@@ -86,7 +86,7 @@ describe TopicStatusUpdater do
 
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, false)
         expect(updated).to eq(true)
-        expect(topic.send("#{status_name}?")).to eq(false)
+        expect(topic.public_send("#{status_name}?")).to eq(false)
 
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, false)
         expect(updated).to eq(false)

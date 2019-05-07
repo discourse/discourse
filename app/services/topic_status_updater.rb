@@ -32,7 +32,7 @@ TopicStatusUpdater = Struct.new(:topic, :user) do
       rc = Topic.where(:id => topic.id, status.name => !status.enabled)
         .update_all(status.name => status.enabled?)
 
-      topic.send("#{status.name}=", status.enabled?)
+      topic.public_send("#{status.name}=", status.enabled?)
       result = false if rc == 0
     end
 
