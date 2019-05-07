@@ -1222,7 +1222,6 @@ describe User do
     end
 
     it "returns custom color if restrict_letter_avatar_colors site setting is set" do
-      colors = SiteSetting.restrict_letter_avatar_colors.split("|")
       expect(User.letter_avatar_color("username_one")).to eq("2F70AC")
       expect(User.letter_avatar_color("username_two")).to eq("ED207B")
       expect(User.letter_avatar_color("username_three")).to eq("AAAAAA")

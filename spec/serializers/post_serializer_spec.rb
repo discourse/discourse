@@ -44,6 +44,18 @@ describe PostSerializer do
     end
   end
 
+  context "a post with reviewable content" do
+    let!(:post) { Fabricate(:post, user: Fabricate(:user)) }
+    let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
+
+    it "includes the reviewable data" do
+      json = PostSerializer.new(post, scope: Guardian.new(Fabricate(:moderator)), root: false).as_json
+      expect(json[:reviewable_id]).to eq(reviewable.id)
+      expect(json[:reviewable_score_count]).to eq(1)
+      expect(json[:reviewable_score_pending_count]).to eq(1)
+    end
+  end
+
   context "a post by a nuked user" do
     let!(:post) { Fabricate(:post, user: Fabricate(:user), deleted_at: Time.zone.now) }
 

@@ -462,7 +462,7 @@ describe UserMerger do
 
       posts.each do |type, post|
         post.reload
-        expect(post.send("#{type}_count")).to eq(1)
+        expect(post.public_send("#{type}_count")).to eq(1)
       end
     end
   end

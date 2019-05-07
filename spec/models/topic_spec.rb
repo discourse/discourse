@@ -2030,13 +2030,6 @@ describe Topic do
 
   end
 
-  describe "calculate_avg_time" do
-    it "does not explode" do
-      Topic.calculate_avg_time
-      Topic.calculate_avg_time(1.day.ago)
-    end
-  end
-
   describe "expandable_first_post?" do
 
     let(:topic) { Fabricate.build(:topic) }

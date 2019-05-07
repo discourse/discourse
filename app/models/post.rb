@@ -257,7 +257,7 @@ class Post < ActiveRecord::Base
     raw_links
     has_oneboxes?}.each do |attr|
     define_method(attr) do
-      post_analyzer.send(attr)
+      post_analyzer.public_send(attr)
     end
   end
 
@@ -470,10 +470,6 @@ class Post < ActiveRecord::Base
     post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values, deleted_at: nil).count != 0
   end
 
-  def active_flags
-    post_actions.active.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
-  end
-
   def reviewable_flag
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
@@ -672,37 +668,6 @@ class Post < ActiveRecord::Base
     $redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
     posts_per_day
 
-  end
-
-  # This calculates the geometric mean of the post timings and stores it along with
-  # each post.
-  def self.calculate_avg_time(min_topic_age = nil)
-    retry_lock_error do
-      builder = DB.build("UPDATE posts
-                SET avg_time = (x.gmean / 1000)
-                FROM (SELECT post_timings.topic_id,
-                             post_timings.post_number,
-                             round(exp(avg(CASE WHEN msecs > 0 THEN ln(msecs) ELSE 0 END))) AS gmean
-                      FROM post_timings
-                      INNER JOIN posts AS p2
-                        ON p2.post_number = post_timings.post_number
-                          AND p2.topic_id = post_timings.topic_id
-                          AND p2.user_id <> post_timings.user_id
-                      /*where2*/
-                      GROUP BY post_timings.topic_id, post_timings.post_number) AS x
-                /*where*/")
-
-      builder.where("x.topic_id = posts.topic_id
-                  AND x.post_number = posts.post_number
-                  AND (posts.avg_time <> (x.gmean / 1000)::int OR posts.avg_time IS NULL)")
-
-      if min_topic_age
-        builder.where2("p2.topic_id IN (SELECT id FROM topics where bumped_at > :bumped_at)",
-                     bumped_at: min_topic_age)
-      end
-
-      builder.exec
-    end
   end
 
   before_save do

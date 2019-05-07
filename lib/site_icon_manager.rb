@@ -65,7 +65,7 @@ module SiteIconManager
 
   def self.resolve_original(info)
     info[:settings].each do |setting_name|
-      value = SiteSetting.send(setting_name)
+      value = SiteSetting.get(setting_name)
       return value if value
     end
     return Upload.find(SKETCH_LOGO_ID) if info[:fallback_to_sketch]

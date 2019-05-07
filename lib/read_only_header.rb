@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ReadOnly
+module ReadOnlyHeader
 
   def check_readonly_mode
     @readonly_mode = Discourse.readonly_mode?

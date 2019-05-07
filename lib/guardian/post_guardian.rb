@@ -79,10 +79,6 @@ module PostGuardian
     can_see_post?(post) && is_staff?
   end
 
-  def can_defer_flags?(post)
-    can_see_post?(post) && is_staff? && post
-  end
-
   # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
     return true if is_admin?

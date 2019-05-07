@@ -11,14 +11,10 @@ var $buo = function() {
   if (navigator && navigator.userAgent) {
     ua = navigator.userAgent;
   }
-  if (ua && (ua.indexOf('Android 2.2') >= 0 || ua.indexOf('Android 2.3') >= 0)) {
-    // Android 2.2 and 2.3 browsers report that they have pushState, but they don't really.
-    // See http://caniuse.com/#search=pushstate
-    badAndroid = true;
-  }
 
-  // sam: my main concern here is mobile, but its an outlier, for now we support ie10, set conditionally and stuff with pushState
-  if (window.ie === "new" || (window.history && window.history.pushState && !badAndroid)) {
+  // sam: we require WeakMap, this allows us to easily feature detect IE10 that does not support it
+  // This also catches ancient android phones that never had that feature (2.2 and below)
+  if (window.WeakMap) {
     return;
   }
 

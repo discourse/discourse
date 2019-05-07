@@ -1023,14 +1023,6 @@ describe Post do
     end
   end
 
-  describe "calculate_avg_time" do
-
-    it "should not crash" do
-      Post.calculate_avg_time
-      Post.calculate_avg_time(1.day.ago)
-    end
-  end
-
   describe "has_host_spam" do
     let(:raw) { "hello from my site http://www.example.net http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 

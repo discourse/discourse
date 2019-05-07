@@ -465,7 +465,7 @@ class PostCreator
 
     # Attributes we pass through to the post instance if present
     [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email, :action_code].each do |a|
-      post.send("#{a}=", @opts[a]) if @opts[a].present?
+      post.public_send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
     post.extract_quoted_post_numbers

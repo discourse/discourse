@@ -345,7 +345,7 @@ module Email
         # use the first html extracter that matches
         if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
           doc = Nokogiri::HTML.fragment(html)
-          self.send(:"extract_from_#{html_extracter[0]}", doc)
+          self.public_send(:"extract_from_#{html_extracter[0]}", doc)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           markdown = trim_discourse_markers(markdown)
@@ -1176,7 +1176,7 @@ module Email
     end
 
     def send_subscription_mail(action, user)
-      message = SubscriptionMailer.send(action, user)
+      message = SubscriptionMailer.public_send(action, user)
       Email::Sender.new(message, :subscription).send
     end
 

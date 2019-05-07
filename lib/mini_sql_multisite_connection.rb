@@ -19,7 +19,7 @@ class MiniSqlMultisiteConnection < MiniSql::Postgres::Connection
   class ParamEncoder
     def encode(*sql_array)
       # use active record to avoid any discrepencies
-      ActiveRecord::Base.send(:sanitize_sql_array, sql_array)
+      ActiveRecord::Base.public_send(:sanitize_sql_array, sql_array)
     end
   end
 

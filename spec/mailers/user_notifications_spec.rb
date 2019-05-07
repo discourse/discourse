@@ -641,10 +641,13 @@ describe UserNotifications do
 
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
-    mailer = UserNotifications.send(mail_type, user,
-                                    notification_type: Notification.types[notification.notification_type],
-                                    notification_data_hash: notification.data_hash,
-                                    post: notification.post)
+    mailer = UserNotifications.public_send(
+      mail_type, user,
+      notification_type: Notification.types[notification.notification_type],
+      notification_data_hash: notification.data_hash,
+      post: notification.post
+    )
+
     mailer.message
   end
 
@@ -668,7 +671,8 @@ describe UserNotifications do
     context "private_email" do
       it "doesn't support reply by email" do
         SiteSetting.private_email = true
-        mailer = UserNotifications.send(
+
+        mailer = UserNotifications.public_send(
           mail_type,
           user,
           notification_type: Notification.types[notification.notification_type],

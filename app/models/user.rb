@@ -351,7 +351,7 @@ class User < ActiveRecord::Base
 
   def self.unstage(params)
     if user = User.where(staged: true).with_email(params[:email].strip.downcase).first
-      params.each { |k, v| user.send("#{k}=", v) }
+      params.each { |k, v| user.public_send("#{k}=", v) }
       user.active = false
       user.unstage
     end
@@ -1351,7 +1351,7 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching watching_first_post tracking muted}.each do |s|
-      category_ids = SiteSetting.send("default_categories_#{s}").split("|")
+      category_ids = SiteSetting.get("default_categories_#{s}").split("|")
       category_ids.each do |category_id|
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
       end

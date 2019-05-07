@@ -169,7 +169,7 @@ class Report
       begin
         wrap_slow_query do
           if respond_to?(report_method)
-            send(report_method, report)
+            public_send(report_method, report)
           elsif type =~ /_reqs$/
             req_report(report, type.split(/_reqs$/)[0].to_sym)
           else
@@ -240,14 +240,14 @@ class Report
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
 
-    subject_class.send(report_method, *args).each do |date, count|
+    subject_class.public_send(report_method, *args).each do |date, count|
       report.data << { x: date, y: count }
     end
   end
 
   def self.add_prev_data(report, subject_class, report_method, *args)
     if report.modes.include?(:chart) && report.facets.include?(:prev_period)
-      prev_data = subject_class.send(report_method, *args)
+      prev_data = subject_class.public_send(report_method, *args)
       report.prev_data = prev_data.map { |k, v| { x: k, y: v } }
     end
   end

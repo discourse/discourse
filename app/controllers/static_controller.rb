@@ -27,7 +27,7 @@ class StaticController < ApplicationController
 
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
-      url = SiteSetting.send(site_setting_key)
+      url = SiteSetting.get(site_setting_key)
       return redirect_to(url) unless url.blank?
     end
 
@@ -38,7 +38,7 @@ class StaticController < ApplicationController
     @page.gsub!(/[^a-z0-9\_\-]/, '')
 
     if map.has_key?(@page)
-      @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
+      @topic = Topic.find_by_id(SiteSetting.get(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
       title_prefix = if I18n.exists?("js.#{@page}")
         I18n.t("js.#{@page}")

@@ -173,9 +173,30 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
   },
 
   _updateSelectedPostIds(postIds) {
-    this.get("selectedPostIds").pushObjects(postIds);
+    const smallActionsPostIds = this._smallActionPostIds();
+    this.get("selectedPostIds").pushObjects(
+      postIds.filter(postId => !smallActionsPostIds.has(postId))
+    );
     this.set("selectedPostIds", [...new Set(this.get("selectedPostIds"))]);
     this._forceRefreshPostStream();
+  },
+
+  _smallActionPostIds() {
+    const smallActionsPostIds = new Set();
+    const posts = this.get("model.postStream.posts");
+    if (posts) {
+      const small_action = this.site.get("post_types.small_action");
+      const whisper = this.site.get("post_types.whisper");
+      posts.forEach(post => {
+        if (
+          post.post_type === small_action ||
+          (!post.cooked && post.post_type === whisper)
+        ) {
+          smallActionsPostIds.add(post.id);
+        }
+      });
+    }
+    return smallActionsPostIds;
   },
 
   _loadPostIds(post) {
@@ -664,7 +685,12 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
     },
 
     selectAll() {
-      this.set("selectedPostIds", [...this.get("model.postStream.stream")]);
+      const smallActionsPostIds = this._smallActionPostIds();
+      this.set("selectedPostIds", [
+        ...this.get("model.postStream.stream").filter(
+          postId => !smallActionsPostIds.has(postId)
+        )
+      ]);
       this._forceRefreshPostStream();
     },
 
@@ -1272,10 +1298,14 @@ export default Ember.Controller.extend(bufferedProperty("model"), {
           }
         }
 
+        // scroll to bottom is very specific to new posts from discobot
+        // hence the -2 check (dicobot id). We can shift all this code
+        // to discobot plugin longer term
         if (
           topic.get("isPrivateMessage") &&
           this.currentUser &&
           this.currentUser.get("id") !== data.user_id &&
+          data.user_id === -2 &&
           data.type === "created"
         ) {
           const postNumber = data.post_number;

@@ -226,7 +226,9 @@ class PostRevisor
 
   def post_changed?
     POST_TRACKED_FIELDS.each do |field|
-      return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
+      if @fields.has_key?(field) && @fields[field] != @post.public_send(field)
+        return true
+      end
     end
     advance_draft_sequence
     false
@@ -362,7 +364,7 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
+      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
     @post.last_editor_id = @editor.id
@@ -451,6 +453,7 @@ class PostRevisor
     return if @skip_revision
     # don't create an empty revision if something failed
     return unless successfully_saved_post_and_topic
+    return if only_hidden_tags_changed?
     @version_changed ? create_revision : update_revision
   end
 
@@ -522,7 +525,23 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true || @post.whisper?
+    !@post_successfully_saved ||
+      @topic_changes.errored? ||
+      @opts[:bypass_bump] == true ||
+      @post.whisper? ||
+      only_hidden_tags_changed?
+  end
+
+  def only_hidden_tags_changed?
+    modifications = post_changes.merge(@topic_changes.diff)
+    if modifications.keys.size == 1 && tags_diff = modifications["tags"]
+      a, b = tags_diff[0] || [], tags_diff[1] || []
+      changed_tags = (a + b) - (a & b)
+      if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
+        return true
+      end
+    end
+    false
   end
 
   def is_last_post?

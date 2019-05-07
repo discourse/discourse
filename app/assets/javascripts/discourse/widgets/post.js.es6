@@ -711,21 +711,5 @@ export default createWidget("post", {
       bootbox.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: new Date().getTime() });
     }
-  },
-
-  undoPostAction(typeId) {
-    const post = this.model;
-    return post
-      .get("actions_summary")
-      .findBy("id", typeId)
-      .undo(post);
-  },
-
-  deferPostActionFlags(typeId) {
-    const post = this.model;
-    return post
-      .get("actions_summary")
-      .findBy("id", typeId)
-      .deferFlags(post);
   }
 });

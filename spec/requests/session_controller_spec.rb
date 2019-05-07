@@ -267,11 +267,7 @@ RSpec.describe SessionController do
       SiteSetting.enable_sso = true
       SiteSetting.sso_secret = @sso_secret
 
-      # We have 2 options, either fabricate an admin or don't
-      # send welcome messages
       Fabricate(:admin)
-      # skip for now
-      # SiteSetting.send_welcome_message = false
     end
 
     let(:headers) { { host: Discourse.current_hostname } }

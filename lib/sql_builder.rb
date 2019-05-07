@@ -62,7 +62,7 @@ class SqlBuilder
 
     sql = to_sql
     if @klass
-      @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
+      @klass.find_by_sql(ActiveRecord::Base.public_send(:sanitize_sql_array, [sql, @args]))
     else
       if @args == {}
         ActiveRecord::Base.exec_sql(sql)
@@ -110,7 +110,7 @@ class SqlBuilder
     values.map! do |row|
       mapped = klass.new
       setters.each_with_index do |name, index|
-        mapped.send name, row[index]
+        mapped.public_send name, row[index]
       end
       mapped
     end

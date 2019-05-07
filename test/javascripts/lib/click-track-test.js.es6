@@ -31,6 +31,7 @@ QUnit.module("lib:click-track", {
           <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
           <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>
           <a class="mailto" href="mailto:foo@bar.com">email-me</a>
+          <a class="a-without-href">no href</a>
           <aside class="quote">
             <a href="https://discuss.domain.com/t/welcome-to-meta-discourse-org/1/30">foo</a>
             <a href="https://google.com">bar</a>
@@ -63,6 +64,10 @@ QUnit.test("tracks internal URLs", async assert => {
   });
 
   assert.notOk(track(generateClickEventOn("#same-site")));
+});
+
+QUnit.test("does not track elements with no href", async assert => {
+  assert.ok(track(generateClickEventOn(".a-without-href")));
 });
 
 QUnit.test("does not track attachments", async assert => {

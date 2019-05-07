@@ -254,7 +254,7 @@ class Admin::UsersController < Admin::AdminController
     level = params[:level].to_i
 
     if @user.manual_locked_trust_level.nil?
-      if [0, 1, 2].include?(level) && Promotion.send("tl#{level + 1}_met?", @user)
+      if [0, 1, 2].include?(level) && Promotion.public_send("tl#{level + 1}_met?", @user)
         @user.manual_locked_trust_level = level
         @user.save
       elsif level == 3 && Promotion.tl3_lost?(@user)

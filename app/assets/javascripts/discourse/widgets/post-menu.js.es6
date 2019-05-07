@@ -52,9 +52,36 @@ export function buildButton(name, widget) {
   }
 }
 
+function likeCount(attrs) {
+  const count = attrs.likeCount;
+
+  if (count > 0) {
+    const title = attrs.liked
+      ? count === 1
+        ? "post.has_likes_title_only_you"
+        : "post.has_likes_title_you"
+      : "post.has_likes_title";
+    const icon = attrs.yours ? "d-liked" : "";
+    const additionalClass = attrs.yours ? "my-likes" : "regular-likes";
+
+    return {
+      action: "toggleWhoLiked",
+      title,
+      className: `button-count like-count highlight-action ${additionalClass}`,
+      contents: count,
+      icon,
+      iconRight: true,
+      addContainer: attrs.yours,
+      titleOptions: { count: attrs.liked ? count - 1 : count }
+    };
+  }
+}
+
+registerButton("like-count", likeCount);
+
 registerButton("like", attrs => {
   if (!attrs.showLike) {
-    return;
+    return likeCount(attrs);
   }
 
   const className = attrs.liked
@@ -64,7 +91,8 @@ registerButton("like", attrs => {
   const button = {
     action: "like",
     icon: attrs.liked ? "d-liked" : "d-unliked",
-    className
+    className,
+    before: "like-count"
   };
 
   // If the user has already liked the post and doesn't have permission
@@ -84,38 +112,30 @@ registerButton("like", attrs => {
   return button;
 });
 
-registerButton("like-count", attrs => {
-  const count = attrs.likeCount;
-
-  if (count > 0) {
-    const title = attrs.liked
-      ? count === 1
-        ? "post.has_likes_title_only_you"
-        : "post.has_likes_title_you"
-      : "post.has_likes_title";
-    const icon = attrs.yours ? "d-liked" : "";
-    const additionalClass = attrs.yours ? "my-likes" : "regular-likes";
-
-    return {
-      action: "toggleWhoLiked",
-      title,
-      className: `like-count highlight-action ${additionalClass}`,
-      contents: count,
-      icon,
-      iconRight: true,
-      titleOptions: { count: attrs.liked ? count - 1 : count }
-    };
+registerButton("flag-count", attrs => {
+  let className = "button-count";
+  if (attrs.reviewableScorePendingCount > 0) {
+    className += " has-pending";
   }
+  return {
+    className,
+    contents: h("span", attrs.reviewableScoreCount.toString()),
+    url: `/review/${attrs.reviewableId}`
+  };
 });
 
 registerButton("flag", attrs => {
-  if (attrs.canFlag && !attrs.hidden) {
-    return {
+  if (attrs.reviewableId || (attrs.canFlag && !attrs.hidden)) {
+    let button = {
       action: "showFlags",
       title: "post.controls.flag",
       icon: "flag",
       className: "create-flag"
     };
+    if (attrs.reviewableId) {
+      button.before = "flag-count";
+    }
+    return button;
   }
 });
 
@@ -323,7 +343,15 @@ export default createWidget("post-menu", {
   attachButton(name) {
     let buttonAtts = buildButton(name, this);
     if (buttonAtts) {
-      return this.attach(this.settings.buttonType, buttonAtts);
+      let button = this.attach(this.settings.buttonType, buttonAtts);
+      if (buttonAtts.before) {
+        let before = this.attachButton(buttonAtts.before);
+        return h("div.double-button", [before, button]);
+      } else if (buttonAtts.addContainer) {
+        return h("div.double-button", [button]);
+      }
+
+      return button;
     }
   },
 
@@ -359,22 +387,21 @@ export default createWidget("post-menu", {
       replaceButton(orderedButtons, "reply", "wiki-edit");
     }
 
-    orderedButtons
-      .filter(x => x !== "like-count" && x !== "like")
-      .forEach(i => {
-        const button = this.attachButton(i, attrs);
+    orderedButtons.forEach(i => {
+      const button = this.attachButton(i, attrs);
 
-        if (button) {
-          allButtons.push(button);
+      if (button) {
+        allButtons.push(button);
 
-          if (
-            (attrs.yours && button.attrs.alwaysShowYours) ||
-            hiddenButtons.indexOf(i) === -1
-          ) {
-            visibleButtons.push(button);
-          }
+        if (
+          (attrs.yours && button.attrs && button.attrs.alwaysShowYours) ||
+          (attrs.reviewableId && i === "flag") ||
+          hiddenButtons.indexOf(i) === -1
+        ) {
+          visibleButtons.push(button);
         }
-      });
+      }
+    });
 
     if (!this.settings.collapseButtons) {
       visibleButtons = allButtons;
@@ -396,13 +423,6 @@ export default createWidget("post-menu", {
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
     }
-
-    visibleButtons.unshift(
-      h("div.like-button", [
-        this.attachButton("like-count", attrs),
-        this.attachButton("like", attrs)
-      ])
-    );
 
     Object.values(_extraButtons).forEach(builder => {
       if (builder) {

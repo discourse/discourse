@@ -321,10 +321,12 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.optimize(operation, from, to, dimensions, opts = {})
     method_name = "#{operation}_instructions"
+
     if !!opts[:allow_animation] && (from =~ /\.GIF$/i)
       method_name += "_animated"
     end
-    instructions = self.send(method_name.to_sym, from, to, dimensions, opts)
+
+    instructions = self.public_send(method_name.to_sym, from, to, dimensions, opts)
     convert_with(instructions, to, opts)
   end
 

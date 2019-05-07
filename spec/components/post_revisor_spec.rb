@@ -740,6 +740,37 @@ describe PostRevisor do
             end
           end
 
+          context "hidden tags" do
+            let(:bumped_at) { 1.day.ago }
+
+            before do
+              topic.update_attributes!(bumped_at: bumped_at)
+              create_hidden_tags(['important', 'secret'])
+              topic = post.topic
+              topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]
+            end
+
+            it "doesn't bump topic if only staff-only tags are added" do
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+                expect(result).to eq(true)
+              }.to_not change { topic.reload.bumped_at }
+            end
+
+            it "doesn't bump topic if only staff-only tags are removed" do
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) - ['important', 'secret'])
+                expect(result).to eq(true)
+              }.to_not change { topic.reload.bumped_at }
+            end
+
+            it "doesn't create revision" do
+              expect {
+                subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+              }.to_not change { post.reload.revisions.size }
+            end
+          end
+
         end
 
         context "cannot create tags" do

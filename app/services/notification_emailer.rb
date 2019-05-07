@@ -126,7 +126,7 @@ class NotificationEmailer
     email_user   = EmailUser.new(notification)
     email_method = Notification.types[notification.notification_type]
 
-    email_user.send(email_method) if email_user.respond_to? email_method
+    email_user.public_send(email_method) if email_user.respond_to? email_method
   end
 
 end
