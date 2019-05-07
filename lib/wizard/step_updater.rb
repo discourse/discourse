@@ -37,7 +37,7 @@ class Wizard
         value = Upload.get_from_url(value) || ''
       end
 
-      SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.send(id) != value
+      SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.get(id) != value
     end
 
     def apply_setting(id)

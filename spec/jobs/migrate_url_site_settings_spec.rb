@@ -67,8 +67,8 @@ RSpec.describe Jobs::MigrateUrlSiteSettings do
       twitter_summary_large_image
       push_notifications_icon
     }.each do |setting|
-      expect(SiteSetting.public_send(setting)).to eq(upload)
-      expect(SiteSetting.public_send(setting).is_a?(Upload)).to eq(true)
+      expect(SiteSetting.get(setting)).to eq(upload)
+      expect(SiteSetting.get(setting).is_a?(Upload)).to eq(true)
     end
   end
 end

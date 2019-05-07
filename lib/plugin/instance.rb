@@ -81,7 +81,7 @@ class Plugin::Instance
   end
 
   def enabled?
-    @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
+    @enabled_site_setting ? SiteSetting.get(@enabled_site_setting) : true
   end
 
   delegate :name, to: :metadata
@@ -532,7 +532,7 @@ class Plugin::Instance
       rescue NotImplementedError
         provider.authenticator.define_singleton_method(:enabled?) do
           Discourse.deprecate("#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.")
-          return SiteSetting.send(provider.enabled_setting) if provider.enabled_setting
+          return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
           Discourse.deprecate("#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.")
           true
         end

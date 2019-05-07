@@ -11,7 +11,7 @@ describe SiteSettings::Validations do
 
     shared_examples "s3 bucket validation" do
       def change_bucket_value(value)
-        SiteSetting.public_send("#{other_setting_name}=", value)
+        SiteSetting.set(other_setting_name, value)
       end
 
       it "shouldn't raise an error when both buckets are blank" do

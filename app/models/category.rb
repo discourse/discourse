@@ -285,7 +285,7 @@ class Category < ActiveRecord::Base
   def remove_site_settings
     SiteSetting.all_settings.each do |s|
       if s[:type] == 'category' && s[:value].to_i == self.id
-        SiteSetting.send("#{s[:setting]}=", '')
+        SiteSetting.set(s[:setting], '')
       end
     end
 

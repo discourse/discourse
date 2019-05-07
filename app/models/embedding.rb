@@ -23,7 +23,7 @@ class Embedding < OpenStruct
 
   def save
     Embedding.settings.each do |s|
-      SiteSetting.send("#{s}=", send(s))
+      SiteSetting.set(s, public_send(s))
     end
     true
   rescue Discourse::InvalidParameters => p
