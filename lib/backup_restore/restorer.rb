@@ -452,6 +452,9 @@ module BackupRestore
     end
 
     def generate_optimized_images
+      log 'Optimizing site icons...'
+      SiteIconManager.ensure_optimized!
+
       log 'Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed.'
       log 'You can expedite the process by manually running "rake posts:rebake_uncooked_posts"'
 
