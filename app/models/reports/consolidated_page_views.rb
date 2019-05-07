@@ -14,7 +14,7 @@ Report.add_report("consolidated_page_views") do |report|
     color = report.rgba_color(tertiary)
 
     if filter == "page_view_anon"
-      color = report.rgba_color(tertiary, 0.5)
+      color = report.lighten_color(tertiary, 0.25)
     end
 
     if filter == "page_view_crawler"
