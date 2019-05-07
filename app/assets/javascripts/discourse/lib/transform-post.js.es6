@@ -227,8 +227,8 @@ export default function transformPost(
   }
 
   if (postAtts.post_number === 1) {
-    postAtts.canRecoverTopic = topic.deleted_at && details.can_recover;
-    postAtts.canDeleteTopic = !topic.deleted_at && details.can_delete;
+    postAtts.canRecoverTopic = postAtts.isDeleted && details.can_recover;
+    postAtts.canDeleteTopic = !postAtts.isDeleted && details.can_delete;
     postAtts.expandablePost = topic.expandable_first_post;
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;
