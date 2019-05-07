@@ -521,6 +521,7 @@ module BackupRestore
       log "Clear theme cache"
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
+      Stylesheet::Manager.cache.clear
     end
 
     def disable_readonly_mode
