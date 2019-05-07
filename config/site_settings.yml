@@ -1388,9 +1388,14 @@ spam:
   flags_default_topics:
     default: false
     client: true
-  min_score_default_visibility:
-    default: 0.0
+  reviewable_default_visibility:
     client: true
+    type: enum
+    default: low
+    choices:
+      - low
+      - medium
+      - high
 
 rate_limits:
   unique_posts_mins: 5

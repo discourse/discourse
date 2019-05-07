@@ -281,4 +281,32 @@ RSpec.describe Reviewable, type: :model do
       expect(user.user_stat.reload.flags_agreed).to eq(0)
     end
   end
+
+  context "priorities" do
+    it "returns 0 for unknown priorities" do
+      expect(Reviewable.min_score_for_priority('wat')).to eq(0.0)
+    end
+
+    it "returns 0 for all by default" do
+      expect(Reviewable.min_score_for_priority('low')).to eq(0.0)
+      expect(Reviewable.min_score_for_priority('medium')).to eq(0.0)
+      expect(Reviewable.min_score_for_priority('high')).to eq(0.0)
+    end
+
+    it "can be set manually with `set_priorities`" do
+      Reviewable.set_priorities(medium: 12.5, high: 123.45)
+      expect(Reviewable.min_score_for_priority('low')).to eq(0.0)
+      expect(Reviewable.min_score_for_priority('medium')).to eq(12.5)
+      expect(Reviewable.min_score_for_priority('high')).to eq(123.45)
+    end
+
+    it "will return the default priority if none supplied" do
+      Reviewable.set_priorities(medium: 12.3, high: 45.6)
+      expect(Reviewable.min_score_for_priority).to eq(0.0)
+      SiteSetting.reviewable_default_visibility = 'medium'
+      expect(Reviewable.min_score_for_priority).to eq(12.3)
+      SiteSetting.reviewable_default_visibility = 'high'
+      expect(Reviewable.min_score_for_priority).to eq(45.6)
+    end
+  end
 end

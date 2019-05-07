@@ -1494,7 +1494,6 @@ zh_CN:
     auto_silence_fast_typers_max_trust_level: "自动禁言输入快速的用户的适用信任等级"
     auto_silence_first_post_regex: "检查用户首贴的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。例子：raging|a[bc]a 将匹配 raging、aba 或者 aca，因此禁言该用户。只对首贴有效。"
     flags_default_topics: "在管理栏目中默认显示被标记的主题"
-    min_score_default_visibility: "除非达到分数否则不显示审核项目"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%%{reply_key}@reply.example.com 或 replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "通过邮件回复的回复地址模板，例如：%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"

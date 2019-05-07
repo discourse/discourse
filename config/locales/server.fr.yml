@@ -1571,7 +1571,6 @@ fr:
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
     auto_silence_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, mettre sous silence le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a mettre sous slience les premiers messages contenant rageux ou aba ou aca."
     flags_default_topics: "Afficher les sujets signalés par défaut dans la section administrateur"
-    min_score_default_visibility: "N'afficher les éléments à revoir que s'ils atteignent ce score"
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"

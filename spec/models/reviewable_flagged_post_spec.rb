@@ -205,8 +205,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(pending_count).to eq(0)
     end
 
-    it "respects min_score_default_visibility" do
-      SiteSetting.min_score_default_visibility = 7.5
+    it "respects `reviewable_default_visibility`" do
+      Reviewable.set_priorities(high: 7.5)
+      SiteSetting.reviewable_default_visibility = 'high'
       expect(pending_count).to eq(0)
 
       PostActionCreator.off_topic(user, post)

@@ -6,7 +6,6 @@ class ReviewablesController < ApplicationController
   before_action :version_required, only: [:update, :perform]
 
   def index
-    min_score = params[:min_score].nil? ? SiteSetting.min_score_default_visibility : params[:min_score].to_f
     offset = params[:offset].to_i
 
     if params[:type].present?
@@ -23,7 +22,7 @@ class ReviewablesController < ApplicationController
       status: status,
       category_id: category_id,
       topic_id: topic_id,
-      min_score: min_score,
+      priority: params[:priority],
       username: params[:username],
       type: params[:type]
     }
@@ -63,7 +62,7 @@ class ReviewablesController < ApplicationController
     # topics isn't indexed on `reviewable_score` and doesn't know what the current user can see,
     # so let's query from the inside out.
     pending = Reviewable.viewable_by(current_user).pending
-    pending = pending.where("score >= ?", SiteSetting.min_score_default_visibility)
+    pending = pending.where("score >= ?", Reviewable.min_score_for_priority)
 
     pending.each do |r|
       topic_ids << r.topic_id

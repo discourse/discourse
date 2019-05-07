@@ -1,7 +1,6 @@
 <div class='reviewable-item {{customClass}}' data-reviewable-id={{reviewable.id}}>
   <div class='reviewable-meta-data'>
     <span class='reviewable-type'>{{reviewable.humanType}}</span>
-    <span class='badge-notification new-posts score' title={{i18n "review.scores.about"}}>{{format-score reviewable.score}}</span>
     {{#if reviewable.reply_count}}
       <span class='reply-count'>{{i18n "review.replies" count=reviewable.reply_count}}</span>
     {{/if}}

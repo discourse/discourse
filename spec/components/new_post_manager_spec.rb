@@ -270,7 +270,8 @@ describe NewPostManager do
     end
 
     it "calls custom enqueuing handlers" do
-      SiteSetting.min_score_default_visibility = 20.5
+      Reviewable.set_priorities(high: 20.5)
+      SiteSetting.reviewable_default_visibility = 'high'
 
       manager = NewPostManager.new(
         topic.user,
