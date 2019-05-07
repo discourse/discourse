@@ -17,7 +17,7 @@ class Promotion
     return false if @user.trust_level >= TrustLevel[2]
 
     review_method = :"review_tl#{@user.trust_level}"
-    return send(review_method) if respond_to?(review_method)
+    return public_send(review_method) if respond_to?(review_method)
 
     false
   end

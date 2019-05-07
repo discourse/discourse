@@ -38,7 +38,7 @@ class RateLimiter
         self.after_create do |*args|
           next if @rate_limits_disabled
 
-          if rate_limiter = send(limiter_method)
+          if rate_limiter = public_send(limiter_method)
             rate_limiter.performed!
             @performed ||= {}
             @performed[limiter_method] = true
@@ -47,14 +47,14 @@ class RateLimiter
 
         self.after_destroy do
           next if @rate_limits_disabled
-          if rate_limiter = send(limiter_method)
+          if rate_limiter = public_send(limiter_method)
             rate_limiter.rollback!
           end
         end
 
         self.after_rollback do
           next if @rate_limits_disabled
-          if rate_limiter = send(limiter_method)
+          if rate_limiter = public_send(limiter_method)
             if @performed.present? && @performed[limiter_method]
               rate_limiter.rollback!
               @performed[limiter_method] = false
