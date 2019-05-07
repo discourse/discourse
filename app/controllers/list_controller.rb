@@ -248,7 +248,7 @@ class ListController < ApplicationController
   def top(options = nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
-    send("top_#{period}", options)
+    public_send("top_#{period}", options)
   end
 
   def category_top

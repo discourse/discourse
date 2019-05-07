@@ -13,8 +13,8 @@ class TopListSerializer < ApplicationSerializer
     attribute period
 
     define_method(period) do
-      if object.public_send(period)
-        TopicListSerializer.new(object.public_send(period), scope: scope).as_json
+      if resolved = object.public_send(period)
+        TopicListSerializer.new(resolved, scope: scope).as_json
       end
     end
 

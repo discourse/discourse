@@ -27,7 +27,7 @@ class UserSerializer < BasicUserSerializer
       method_name = "include_#{attr}?"
       define_method(method_name) do
         return false if scope.restrict_user_fields?(object)
-        send(attr).present?
+        public_send(attr).present?
       end
     end
   end
