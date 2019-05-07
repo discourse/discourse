@@ -128,17 +128,12 @@ def brotli(path)
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
-def should_brotli?(path)
+def should_compress?(path, locales)
+  return false if Rails.configuration.assets.skip_minification.include? path
   return true unless path.include? "locales/"
 
-  locales = Set.new(["en"])
-
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    locales.add(SiteSetting.default_locale)
-  end
-
   path_locale = path.delete_prefix("locales/").delete_suffix(".js")
-  return true if locales.include?(path_locale)
+  return true if locales.include? path_locale
 
   false
 end
@@ -178,10 +173,15 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
+    startAll = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     manifest = Sprockets::Manifest.new(assets_path)
+    locales = Set.new(["en"])
+
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      locales.add(SiteSetting.default_locale)
+    end
 
     concurrent? do |proc|
-      to_skip = Rails.configuration.assets.skip_minification || []
       manifest.files
         .select { |k, v| k =~ /\.js$/ }
         .each do |file, info|
@@ -197,16 +197,15 @@ task 'assets:precompile' => 'assets:precompile:before' do
               start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
               STDERR.puts "#{start} Compressing: #{file}"
 
-              # We can specify some files to never minify
-              unless (ENV["DONT_MINIFY"] == "1") || to_skip.include?(info['logical_path'])
-                FileUtils.mv(path, _path) if should_brotli?(info["logical_path"])
-                compress(_file, file) if should_brotli?(info["logical_path"])
+              if should_compress?(info["logical_path"], locales)
+                FileUtils.mv(path, _path)
+                compress(_file, file)
               end
 
               info["size"] = File.size(path)
               info["mtime"] = File.mtime(path).iso8601
               gzip(path)
-              brotli(path) if should_brotli?(info["logical_path"])
+              brotli(path) if should_compress?(info["logical_path"], locales)
 
               STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
               STDERR.puts
@@ -214,6 +213,9 @@ task 'assets:precompile' => 'assets:precompile:before' do
           end
       end
     end
+
+    STDERR.puts "Done compressing all JS files : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - startAll).round(2)} secs"
+    STDERR.puts
 
     # protected
     manifest.send :save
