@@ -22,6 +22,7 @@ function unlessReadOnly(method, message) {
 
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   siteTitle: setting("title"),
+  shortSiteDescription: setting("short_site_description"),
 
   actions: {
     toggleAnonymous() {
@@ -41,6 +42,9 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
     _collectTitleTokens(tokens) {
       tokens.push(this.get("siteTitle"));
+      if (window.location.pathname === Discourse.getURL("/")) {
+        tokens.push(this.get("shortSiteDescription"));
+      }
       Discourse.set("_docTitle", tokens.join(" - "));
     },
 
