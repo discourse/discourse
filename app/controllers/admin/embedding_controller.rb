@@ -16,7 +16,7 @@ class Admin::EmbeddingController < Admin::AdminController
     end
 
     Embedding.settings.each do |s|
-      @embedding.send("#{s}=", params[:embedding][s])
+      @embedding.public_send("#{s}=", params[:embedding][s])
     end
 
     if @embedding.save

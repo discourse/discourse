@@ -1033,6 +1033,6 @@ class TopicQuery
   private
 
   def sanitize_sql_array(input)
-    ActiveRecord::Base.send(:sanitize_sql_array, input.join(','))
+    ActiveRecord::Base.public_send(:sanitize_sql_array, input.join(','))
   end
 end

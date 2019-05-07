@@ -47,7 +47,7 @@ class Promotion
     if new_level < old_level && @user.manual_locked_trust_level.nil?
       next_up = new_level + 1
       key = "tl#{next_up}_met?"
-      if self.class.respond_to?(key) && self.class.send(key, @user)
+      if self.class.respond_to?(key) && self.class.public_send(key, @user)
         raise Discourse::InvalidAccess.new, I18n.t('trust_levels.change_failed_explanation',
              user_name: @user.name,
              new_trust_level: new_level,

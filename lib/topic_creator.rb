@@ -92,7 +92,7 @@ class TopicCreator
           else "track!"
           end
 
-        topic.notifier.send(action, gu.user_id)
+        topic.notifier.public_send(action, gu.user_id)
       end
     end
   end

@@ -57,8 +57,9 @@ module DiscoursePoll
 
             # update poll
             POLL_ATTRIBUTES.each do |attr|
-              old_poll.send("#{attr}=", poll.send(attr))
+              old_poll.public_send("#{attr}=", poll.public_send(attr))
             end
+
             old_poll.save!
 
             # keep track of anonymous votes
@@ -102,7 +103,7 @@ module DiscoursePoll
     def self.is_different?(old_poll, new_poll, new_options)
       # an attribute was changed?
       POLL_ATTRIBUTES.each do |attr|
-        return true if old_poll.send(attr) != new_poll.send(attr)
+        return true if old_poll.public_send(attr) != new_poll.public_send(attr)
       end
 
       # an option was changed?

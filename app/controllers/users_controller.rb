@@ -1036,7 +1036,7 @@ class UsersController < ApplicationController
     result = {}
 
     %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
-      result[info] = @user.send(info)
+      result[info] = @user.public_send(info)
     end
 
     render json: result

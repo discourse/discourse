@@ -125,6 +125,7 @@ class Validators::UploadValidator < ActiveModel::Validator
     else
       SiteSetting.get("max_#{type}_size_kb")
     end
+
     max_size_bytes = max_size_kb.kilobytes
 
     if upload.filesize > max_size_bytes

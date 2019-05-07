@@ -14,7 +14,7 @@ class PostSerializer < BasicPostSerializer
   ]
 
   INSTANCE_VARS.each do |v|
-    self.send(:attr_accessor, v)
+    self.public_send(:attr_accessor, v)
   end
 
   attributes :post_number,
@@ -80,9 +80,10 @@ class PostSerializer < BasicPostSerializer
 
   def initialize(object, opts)
     super(object, opts)
+
     PostSerializer::INSTANCE_VARS.each do |name|
       if opts.include? name
-        self.send("#{name}=", opts[name])
+        self.public_send("#{name}=", opts[name])
       end
     end
   end
@@ -242,7 +243,7 @@ class PostSerializer < BasicPostSerializer
     PostActionType.types.except(:bookmark).each do |sym, id|
       count_col = "#{sym}_count".to_sym
 
-      count = object.send(count_col) if object.respond_to?(count_col)
+      count = object.public_send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
       summary[:hidden] = true if sym == :vote
 
