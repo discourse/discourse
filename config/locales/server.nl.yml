@@ -1577,7 +1577,6 @@ nl:
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
     auto_silence_first_post_regex: "Hoofdlettergevoelige regex die bij overeenkomst het eerste bericht van een gebruiker dempt en in de wachtrij voor goedkeuring zet. Voorbeeld: raging|a[bc]a zorgt ervoor dat alle eerste berichten die raging, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
     flags_default_topics: "Gemarkeerde topics standaard in de beheersectie tonen"
-    min_score_default_visibility: "Geen beoordeelbare items tonen, tenzij ze aan deze score voldoen"
     reply_by_email_enabled: "Antwoorden op topics via e-mail inschakelen."
     reply_by_email_address: "Sjabloon voor adres voor inkomende e-mail bij antwoorden per e-mail, bijvoorbeeld: %%{reply_key}@reply.example.com of replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Lijst van alternatieve sjablonen voor adressen voor inkomende e-mail bij antwoorden per e-mail. Voorbeeld: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"

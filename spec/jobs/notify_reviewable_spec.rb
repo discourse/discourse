@@ -65,7 +65,8 @@ describe Jobs::NotifyReviewable do
 
     it "respects visibility" do
       SiteSetting.enable_category_group_review = true
-      SiteSetting.min_score_default_visibility = 2.0
+      Reviewable.set_priorities(medium: 2.0)
+      SiteSetting.reviewable_default_visibility = 'medium'
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
 

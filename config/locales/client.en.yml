@@ -429,6 +429,12 @@ en:
         refresh: "Refresh"
         status: "Status:"
         category: "Category:"
+        priority:
+          title: "Minimum Priority:"
+          low: "Low"
+          medium: "Medium"
+          high: "High"
+
       conversation:
         view_full: "view full conversation"
       scores:

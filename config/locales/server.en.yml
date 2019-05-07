@@ -1751,7 +1751,7 @@ en:
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
     flags_default_topics: "Show flagged topics by default in the admin section"
-    min_score_default_visibility: "Don't show reviewable items unless they meet this score"
+    reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %%{reply_key}@reply.example.com or replies+%%{reply_key}@example.com"

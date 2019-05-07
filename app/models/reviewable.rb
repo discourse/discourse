@@ -56,7 +56,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.default_visible
-    where("score >= ?", SiteSetting.min_score_default_visibility)
+    where("score >= ?", min_score_for_priority)
   end
 
   def self.valid_type?(type)
@@ -133,8 +133,8 @@ class Reviewable < ActiveRecord::Base
     sub_total = (ReviewableScore.user_flag_score(user) + type_bonus + take_action_bonus)
 
     # We can force a reviewable to hit the threshold, for example with queued posts
-    if force_review && sub_total < SiteSetting.min_score_default_visibility
-      sub_total = SiteSetting.min_score_default_visibility
+    if force_review && sub_total < Reviewable.min_score_for_priority
+      sub_total = Reviewable.min_score_for_priority
     end
 
     rs = reviewable_scores.new(
@@ -153,6 +153,17 @@ class Reviewable < ActiveRecord::Base
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
     rs
+  end
+
+  def self.set_priorities(medium: nil, high: nil)
+    PluginStore.set('reviewables', 'priority_medium', medium) if medium
+    PluginStore.set('reviewables', 'priority_high', high) if high
+  end
+
+  def self.min_score_for_priority(priority = nil)
+    priority ||= SiteSetting.reviewable_default_visibility
+    return 0.0 unless ['medium', 'high'].include?(priority)
+    return PluginStore.get('reviewables', "priority_#{priority}").to_f
   end
 
   def history
@@ -316,11 +327,10 @@ class Reviewable < ActiveRecord::Base
     type: nil,
     limit: nil,
     offset: nil,
-    min_score: nil,
+    priority: nil,
     username: nil
   )
-    min_score ||= SiteSetting.min_score_default_visibility
-
+    min_score = Reviewable.min_score_for_priority(priority)
     order = (status == :pending) ? 'score DESC, created_at DESC' : 'created_at DESC'
 
     if username.present?
@@ -335,7 +345,7 @@ class Reviewable < ActiveRecord::Base
     result = result.where(type: type) if type
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
-    result = result.where("score >= ?", min_score) if min_score
+    result = result.where("score >= ?", min_score) if min_score > 0
 
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
     if user_id
