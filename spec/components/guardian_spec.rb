@@ -17,6 +17,7 @@ describe Guardian do
   fab!(:group) { Fabricate(:group) }
   fab!(:another_group) { Fabricate(:group) }
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
+  fab!(:plain_category) { Fabricate(:category) }
 
   let(:trust_level_1) { build(:user, trust_level: 1) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
@@ -692,7 +693,7 @@ describe Guardian do
       it 'allows members of an authorized group' do
         user = Fabricate(:user)
 
-        secure_category = Fabricate(:category)
+        secure_category = plain_category
         secure_category.set_permissions(group => :readonly)
         secure_category.save
 
@@ -886,7 +887,7 @@ describe Guardian do
 
     describe 'a Topic' do
       it 'does not allow moderators to create topics in readonly categories' do
-        category = Fabricate(:category)
+        category = plain_category
         category.set_permissions(everyone: :read)
         category.save
 
@@ -894,34 +895,34 @@ describe Guardian do
       end
 
       it 'should check for full permissions' do
-        category = Fabricate(:category)
+        category = plain_category
         category.set_permissions(everyone: :create_post)
         category.save
         expect(Guardian.new(user).can_create?(Topic, category)).to be_falsey
       end
 
       it "is true for new users by default" do
-        expect(Guardian.new(user).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(user).can_create?(Topic, plain_category)).to be_truthy
       end
 
       it "is false if user has not met minimum trust level" do
         SiteSetting.min_trust_to_create_topic = 1
-        expect(Guardian.new(build(:user, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_falsey
+        expect(Guardian.new(build(:user, trust_level: 0)).can_create?(Topic, plain_category)).to be_falsey
       end
 
       it "is true if user has met or exceeded the minimum trust level" do
         SiteSetting.min_trust_to_create_topic = 1
-        expect(Guardian.new(build(:user, trust_level: 1)).can_create?(Topic, Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:user, trust_level: 2)).can_create?(Topic, Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_truthy
-        expect(Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic, Fabricate(:category))).to be_truthy
+        expect(Guardian.new(build(:user, trust_level: 1)).can_create?(Topic, plain_category)).to be_truthy
+        expect(Guardian.new(build(:user, trust_level: 2)).can_create?(Topic, plain_category)).to be_truthy
+        expect(Guardian.new(build(:admin, trust_level: 0)).can_create?(Topic, plain_category)).to be_truthy
+        expect(Guardian.new(build(:moderator, trust_level: 0)).can_create?(Topic, plain_category)).to be_truthy
       end
     end
 
     describe 'a Post' do
 
       it "is false on readonly categories" do
-        category = Fabricate(:category)
+        category = plain_category
         topic.category = category
         category.set_permissions(everyone: :readonly)
         category.save
@@ -1183,7 +1184,7 @@ describe Guardian do
     end
 
     it 'returns false for category definition topics' do
-      c = Fabricate(:category)
+      c = plain_category
       topic = Topic.find_by(id: c.topic_id)
       expect(Guardian.new(admin).can_convert_topic?(topic)).to be_falsey
     end
@@ -1290,7 +1291,7 @@ describe Guardian do
       end
 
       it "returns false if a wiki but the user can't create a post" do
-        c = Fabricate(:category)
+        c = plain_category
         c.set_permissions(everyone: :readonly)
         c.save
 
@@ -1524,7 +1525,7 @@ describe Guardian do
 
     describe 'a Category' do
 
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category) { plain_category }
 
       it 'returns false when not logged in' do
         expect(Guardian.new.can_edit?(category)).to be_falsey
