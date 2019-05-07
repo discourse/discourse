@@ -730,7 +730,9 @@ class PostsController < ApplicationController
       result[:shared_draft] = true
     end
 
-    if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"
+    if params[:whisper] == "true"
+      raise Discourse::InvalidAccess.new("invalid_whisper_access", nil, custom_message: "invalid_whisper_access") unless guardian.can_create_whisper?
+
       result[:post_type] = Post.types[:whisper]
     end
 
