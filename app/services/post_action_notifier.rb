@@ -93,19 +93,29 @@ class PostActionNotifier
 
     return unless post
     return if post_revision.user.blank?
-    return if post_revision.user_id == post.user_id
     return if post.topic.blank?
     return if post.topic.private_message?
     return if SiteSetting.disable_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
 
-    alerter.create_notification(
-      post.user,
-      Notification.types[:edited],
-      post,
-      display_username: post_revision.user.username,
-      acting_user_id: post_revision.try(:user_id),
-      revision_number: post_revision.number
-    )
+    if post_revision.user_id != post.user_id
+      Jobs.enqueue(:notify_post_revision,
+        user_id: post.user_id,
+        post_revision_id: post_revision.id
+      )
+    end
+
+    if post.wiki && post.is_first_post?
+      TopicUser.watching(post.topic_id)
+        .where.not(user_id: post_revision.user_id)
+        .where(topic: post.topic)
+        .find_each do |topic_user|
+
+        Jobs.enqueue(:notify_post_revision,
+          user_id: topic_user.user_id,
+          post_revision_id: post_revision.id
+        )
+      end
+    end
   end
 
   def self.after_post_unhide(post, flaggers)
