@@ -176,15 +176,17 @@ const Composer = RestModel.extend({
   },
 
   @computed
-  get composerTime() {
-    let total = this.composerTotalOpened || 0;
-    const oldOpen = this.composerOpened;
+  composerTime: {
+    get() {
+      let total = this.composerTotalOpened || 0;
+      const oldOpen = this.composerOpened;
 
-    if (oldOpen) {
-      total += new Date() - oldOpen;
+      if (oldOpen) {
+        total += new Date() - oldOpen;
+      }
+
+      return total;
     }
-
-    return total;
   },
 
   @computed("archetypeId")
@@ -257,7 +259,7 @@ const Composer = RestModel.extend({
 
   @computed("action", "post", "topic", "topic.title")
   replyOptions(action, post, topic, topicTitle) {
-    let options = {
+    const options = {
       userLink: null,
       topicLink: null,
       postLink: null,
@@ -646,9 +648,11 @@ const Composer = RestModel.extend({
         originalText: opts.quote
       });
     }
+
     if (opts.title) {
       this.set("title", opts.title);
     }
+
     this.set("originalText", opts.draft ? "" : this.reply);
     if (this.editingFirstPost) {
       this.set("originalTitle", this.title);
@@ -672,11 +676,6 @@ const Composer = RestModel.extend({
     }
   },
 
-  /**
-    Clear any state we have in preparation for a new composition.
-
-    @method clearState
-  **/
   clearState() {
     this.setProperties({
       originalText: null,
@@ -695,10 +694,9 @@ const Composer = RestModel.extend({
     });
   },
 
-  // When you edit a post
   editPost(opts) {
-    let post = this.post;
-    let oldCooked = post.cooked;
+    const post = this.post;
+    const oldCooked = post.cooked;
     let promise = Ember.RSVP.resolve();
 
     // Update the topic if we're editing the first post
@@ -734,7 +732,7 @@ const Composer = RestModel.extend({
 
     this.set("composeState", SAVING);
 
-    let rollback = throwAjaxError(error => {
+    const rollback = throwAjaxError(error => {
       post.set("cooked", oldCooked);
       this.set("composeState", OPEN);
       if (error.jqXHR && error.jqXHR.status === 409) {
@@ -765,15 +763,12 @@ const Composer = RestModel.extend({
     return dest;
   },
 
-  // Create a new Post
   createPost(opts) {
-    const post = this.post,
-      topic = this.topic,
-      user = this.user,
-      postStream = this.get("topic.postStream");
-
+    const post = this.post;
+    const topic = this.topic;
+    const user = this.user;
+    const postStream = this.get("topic.postStream");
     let addedToStream = false;
-
     const postTypes = this.site.post_types;
     const postType = this.whisper ? postTypes.whisper : postTypes.regular;
 
@@ -925,16 +920,19 @@ const Composer = RestModel.extend({
     if (this.canEditTitle) {
       // Save title and/or post body
       if (!this.title && !this.reply) return;
+
       if (
         this.title &&
         this.titleLengthValid &&
         this.reply &&
         this.replyLength < this.siteSettings.min_post_length
-      )
+      ) {
         return;
+      }
     } else {
       // Do not save when there is no reply
       if (!this.reply) return;
+
       // Do not save when the reply's length is too small
       if (this.replyLength < this.siteSettings.min_post_length) return;
     }
@@ -967,7 +965,7 @@ const Composer = RestModel.extend({
     );
 
     if (this.get("post.id") && !Ember.isEmpty(this.originalText)) {
-      data["originalText"] = this.originalText;
+      data.originalText = this.originalText;
     }
 
     return Draft.save(this.draftKey, this.draftSequence, data)
