@@ -447,3 +447,7 @@ task 'posts:missing_uploads' => :environment do
     puts "#{missing[:post_uploads].count} of #{Post.count} posts are affected.", ""
   end
 end
+
+desc 'Finds missing post upload records from cooked HTML content'
+task 'posts:missing_uploads' => :environment do
+end

@@ -64,10 +64,12 @@ class Post < ActiveRecord::Base
   BROKEN_IMAGES     ||= "broken_images".freeze
   DOWNLOADED_IMAGES ||= "downloaded_images".freeze
   MISSING_UPLOADS ||= "missing uploads".freeze
+  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored".freeze
 
   SHORT_POST_CHARS ||= 1200
 
   register_custom_field_type(MISSING_UPLOADS, :json)
+  register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
   scope :private_posts_for_user, ->(user) {
     where("posts.topic_id IN (SELECT topic_id
@@ -918,8 +920,13 @@ class Post < ActiveRecord::Base
     PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
     missing_uploads = []
     missing_post_uploads = {}
+    query = Post
+              .have_uploads
+              .joins("LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'")
+              .where("post_custom_fields.id IS NULL")
+              .select(:id, :cooked)
 
-    Post.have_uploads.select(:id, :cooked).find_in_batches do |posts|
+    query.find_in_batches do |posts|
       ids = posts.pluck(:id)
       sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
 
