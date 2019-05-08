@@ -775,6 +775,20 @@ describe PostsController do
         }
         expect(response.status).to eq(403)
       end
+
+      it 'will raise an error if specified category cannot be found' do
+        user = Fabricate(:admin)
+        master_key = ApiKey.create_master_key.key
+
+        post "/posts.json", params: {
+          api_username: user.username,
+          api_key: master_key,
+          title: 'this is a test title',
+          raw: 'this is test body',
+          category: 'invalid'
+        }
+        expect(response.status).to eq(404)
+      end
     end
 
     describe "when logged in" do

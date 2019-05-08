@@ -122,6 +122,9 @@ class TopicCreator
 
     @guardian.ensure_can_create!(Topic, category) unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
 
+    if @opts[:category] && category.nil?
+      raise Discourse::NotFound
+    end
     topic_params[:category_id] = category.id if category.present?
 
     topic_params[:created_at] = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
