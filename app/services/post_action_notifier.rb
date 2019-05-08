@@ -97,24 +97,26 @@ class PostActionNotifier
     return if post.topic.private_message?
     return if SiteSetting.disable_edit_notifications && post_revision.user_id == Discourse::SYSTEM_USER_ID
 
+    user_ids = []
+
     if post_revision.user_id != post.user_id
-      Jobs.enqueue(:notify_post_revision,
-        user_id: post.user_id,
-        post_revision_id: post_revision.id
-      )
+      user_ids << post.user_id
     end
 
     if post.wiki && post.is_first_post?
-      TopicUser.watching(post.topic_id)
-        .where.not(user_id: post_revision.user_id)
-        .where(topic: post.topic)
-        .find_each do |topic_user|
+      user_ids.concat(
+        TopicUser.watching(post.topic_id)
+          .where.not(user_id: post_revision.user_id)
+          .where(topic: post.topic)
+          .pluck(:user_id)
+      )
+    end
 
-        Jobs.enqueue(:notify_post_revision,
-          user_id: topic_user.user_id,
-          post_revision_id: post_revision.id
-        )
-      end
+    if user_ids.present?
+      Jobs.enqueue(:notify_post_revision,
+        user_ids: user_ids,
+        post_revision_id: post_revision.id
+      )
     end
   end
 
