@@ -481,6 +481,31 @@ HTML
     expect(ColorScheme.hex_for_name('header_primary')).to eq('333333')
   end
 
+  it "correctly notifies about theme changes" do
+    cs1 = Fabricate(:color_scheme)
+    cs2 = Fabricate(:color_scheme)
+
+    theme = Fabricate(:theme,
+      user_selectable: true,
+      user: user,
+      color_scheme_id: cs1.id
+    )
+
+    messages = MessageBus.track_publish do
+      theme.save!
+    end.filter { |m| m.channel == "/file-change" }
+    expect(messages.count).to eq(1)
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:desktop_theme, :mobile_theme)
+
+    # With color scheme change:
+    messages = MessageBus.track_publish do
+      theme.color_scheme_id = cs2.id
+      theme.save!
+    end.filter { |m| m.channel == "/file-change" }
+    expect(messages.count).to eq(1)
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:admin, :desktop, :desktop_theme, :mobile, :mobile_theme)
+  end
+
   it 'handles settings cache correctly' do
     Theme.destroy_all
 
