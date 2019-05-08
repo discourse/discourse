@@ -42,7 +42,10 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
     _collectTitleTokens(tokens) {
       tokens.push(this.get("siteTitle"));
-      if (window.location.pathname === Discourse.getURL("/")) {
+      if (
+        window.location.pathname === Discourse.getURL("/") &&
+        this.get("shortSiteDescription") !== ""
+      ) {
         tokens.push(this.get("shortSiteDescription"));
       }
       Discourse.set("_docTitle", tokens.join(" - "));
