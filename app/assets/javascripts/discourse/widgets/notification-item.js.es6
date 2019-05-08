@@ -10,13 +10,15 @@ import {
   formatUsername
 } from "discourse/lib/utilities";
 import { setTransientHeader } from "discourse/lib/ajax";
-import { userPath } from "discourse/lib/url";
+import { groupPath, userPath } from "discourse/lib/url";
 import { iconNode } from "discourse-common/lib/icon-library";
-
-const LIKED_TYPE = 5;
-const INVITED_TYPE = 8;
-const GROUP_SUMMARY_TYPE = 16;
-export const LIKED_CONSOLIDATED_TYPE = 19;
+import {
+  LIKED_TYPE,
+  INVITED_TYPE,
+  GROUP_SUMMARY_TYPE,
+  LIKED_CONSOLIDATED_TYPE,
+  GROUP_INVITE_TYPE
+} from "discourse/components/concerns/notification-types";
 
 createWidget("notification-item", {
   tagName: "li",
@@ -72,6 +74,10 @@ createWidget("notification-item", {
       );
     }
 
+    if (attrs.notification_type === GROUP_INVITE_TYPE) {
+      return groupPath(data.group_name);
+    }
+
     if (data.group_id) {
       return userPath(data.username + "/messages/group/" + data.group_name);
     }
@@ -114,8 +120,11 @@ createWidget("notification-item", {
 
     if (notificationType === GROUP_SUMMARY_TYPE) {
       const count = data.inbox_count;
-      const group_name = data.group_name;
-      return I18n.t(scope, { count, group_name });
+      const groupName = data.group_name;
+      return I18n.t(scope, { count, group_name: groupName });
+    } else if (notificationType === GROUP_INVITE_TYPE) {
+      const groupName = data.group_name;
+      return I18n.t(scope, { group_name: groupName });
     }
 
     const username = formatUsername(data.display_username);
