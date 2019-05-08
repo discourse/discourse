@@ -562,9 +562,9 @@ class UserNotifications < ActionMailer::Base
 
     if opts[:use_invite_template]
       invite_template = "user_notifications.invited"
-      invite_template << "_group" if group_name
+      invite_template += "_group" if group_name
 
-      invite_template <<
+      invite_template +=
         if post.topic.private_message?
           "_to_private_message_body"
         else
