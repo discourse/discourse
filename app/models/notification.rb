@@ -64,7 +64,8 @@ class Notification < ActiveRecord::Base
                         topic_reminder: 18,
                         liked_consolidated: 19,
                         post_approved: 20,
-                        code_review_commit_approved: 21
+                        code_review_commit_approved: 21,
+                        membership_request_accepted: 22
                        )
   end
 
