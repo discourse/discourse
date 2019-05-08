@@ -45,7 +45,7 @@ export function createPreviewComponent(width, height, obj) {
         this._super(...arguments);
         const c = this.$("canvas")[0];
         this.ctx = c.getContext("2d");
-        this.ctx.scale(2, 2);
+        this.ctx.scale(scale, scale);
         this.reload();
       },
 
