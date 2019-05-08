@@ -68,6 +68,16 @@ describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
       expect(ApplicationRequest.page_view_anon_mobile.first.count).to eq(1)
+
+      # log discourse User Agent requests as crawler for page views
+      data = Middleware::RequestTracker.get_data(env(
+        "HTTP_USER_AGENT" => "DiscourseAPI Ruby Gem 0.19.0"
+      ), ["200", { "Content-Type" => 'text/html' }], 0.1)
+
+      Middleware::RequestTracker.log_request(data)
+      ApplicationRequest.write_cache!
+
+      expect(ApplicationRequest.page_view_crawler.first.count).to eq(2)
     end
 
   end
