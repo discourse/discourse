@@ -9,7 +9,7 @@ task 'assets:precompile:before' do
 
   # Ensure we ALWAYS do a clean build
   # We use many .erbs that get out of date quickly, especially with plugins
-  puts "Purging temp files"
+  STDERR.puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
   # Ensure we clear emoji cache before pretty-text/emoji/data.js.es6.erb
@@ -22,9 +22,11 @@ task 'assets:precompile:before' do
 
   unless ENV['USE_SPROCKETS_UGLIFY']
     $bypass_sprockets_uglify = true
+    Rails.configuration.assets.js_compressor = nil
+    Rails.configuration.assets.gzip = false
   end
 
-  puts "Bundling assets"
+  STDERR.puts "Bundling assets"
 
   # in the past we applied a patch that removed asset postfixes, but it is terrible practice
   # leaving very complicated build issues
@@ -36,11 +38,6 @@ task 'assets:precompile:before' do
   # Needed for proper source maps with a CDN
   load "#{Rails.root}/lib/global_path.rb"
   include GlobalPath
-
-  if $bypass_sprockets_uglify
-    Rails.configuration.assets.js_compressor = nil
-    Rails.configuration.assets.gzip = false
-  end
 
 end
 
@@ -116,19 +113,20 @@ def gzip(path)
 end
 
 # different brotli versions use different parameters
-def brotli_command(path)
-  "brotli -f --quality=11 #{path} --output=#{path}.br"
+def brotli_command(path, max_compress)
+  compression_quality = max_compress ? "11" : "6"
+  "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
 end
 
-def brotli(path)
-  STDERR.puts brotli_command(path)
-  STDERR.puts `#{brotli_command(path)}`
+def brotli(path, max_compress)
+  STDERR.puts brotli_command(path, max_compress)
+  STDERR.puts `#{brotli_command(path, max_compress)}`
   raise "brotli compression failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
   STDERR.puts `chmod +r #{path}.br`.strip
   raise "chmod failed: exit code #{$?.exitstatus}" if $?.exitstatus != 0
 end
 
-def should_compress?(path, locales)
+def max_compress?(path, locales)
   return false if Rails.configuration.assets.skip_minification.include? path
   return true unless path.include? "locales/"
 
@@ -189,7 +187,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
         path = "#{assets_path}/#{file}"
           _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
           _path = "#{assets_path}/#{_file}"
-
+          max_compress = max_compress?(info["logical_path"], locales)
           if File.exists?(_path)
             STDERR.puts "Skipping: #{file} already compressed"
           else
@@ -197,7 +195,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
               STDERR.puts "#{start} Compressing: #{file}"
 
-              if should_compress?(info["logical_path"], locales)
+              if max_compress
                 FileUtils.mv(path, _path)
                 compress(_file, file)
               end
@@ -205,7 +203,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
               info["size"] = File.size(path)
               info["mtime"] = File.mtime(path).iso8601
               gzip(path)
-              brotli(path) if should_compress?(info["logical_path"], locales)
+              brotli(path, max_compress)
 
               STDERR.puts "Done compressing #{file} : #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)} secs"
               STDERR.puts
