@@ -1279,7 +1279,7 @@ security:
     default: false
   non_crawler_user_agents:
     hidden: true
-    default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna"
+    default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"
     type: list
     list_type: compact
   crawler_user_agents:
