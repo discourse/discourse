@@ -5,12 +5,13 @@ require 'rails_helper'
 RSpec.describe TopicsController do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   describe '#wordpress' do
-    let!(:user) { sign_in(Fabricate(:moderator)) }
-    let(:p1) { Fabricate(:post, user: user) }
+    let!(:user) { sign_in(moderator) }
+    let(:p1) { Fabricate(:post, user: moderator) }
     let(:topic) { p1.topic }
-    let!(:p2) { Fabricate(:post, topic: topic, user: user) }
+    let!(:p2) { Fabricate(:post, topic: topic, user: moderator) }
 
     it "returns the JSON in the format our wordpress plugin needs" do
       SiteSetting.external_system_avatars_enabled = false
@@ -59,7 +60,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to a new topic' do
-      fab!(:moderator) { Fabricate(:moderator) }
       let(:p1) { Fabricate(:post, user: user, post_number: 1) }
       let(:p2) { Fabricate(:post, user: user, post_number: 2, topic: p1.topic) }
       let!(:topic) { p1.topic }
@@ -157,7 +157,7 @@ RSpec.describe TopicsController do
       describe "moving replied posts" do
         context 'success' do
           it "moves the child posts too" do
-            user = sign_in(Fabricate(:moderator))
+            user = sign_in(moderator)
             p1 = Fabricate(:post, topic: topic, user: user)
             p2 = Fabricate(:post, topic: topic, user: user, reply_to_post_number: p1.post_number)
             PostReply.create(post_id: p1.id, reply_id: p2.id)
@@ -183,7 +183,7 @@ RSpec.describe TopicsController do
     end
 
     describe 'moving to an existing topic' do
-      let!(:user) { sign_in(Fabricate(:moderator)) }
+      let!(:user) { sign_in(moderator) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
       fab!(:dest_topic) { Fabricate(:topic) }
@@ -245,7 +245,6 @@ RSpec.describe TopicsController do
 
     describe 'moving to a new message' do
       fab!(:trust_level_4) { Fabricate(:trust_level_4) }
-      fab!(:moderator) { Fabricate(:moderator) }
       let!(:message) { Fabricate(:private_message_topic) }
       let!(:p1) { Fabricate(:post, user: user, post_number: 1, topic: message) }
       let!(:p2) { Fabricate(:post, user: user, post_number: 2, topic: message) }
@@ -385,7 +384,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'merging into another topic' do
-      fab!(:moderator) { Fabricate(:moderator) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
 
@@ -419,7 +417,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'merging into another message' do
-      fab!(:moderator) { Fabricate(:moderator) }
       fab!(:trust_level_4) { Fabricate(:trust_level_4) }
       let(:message) { Fabricate(:private_message_topic, user: user) }
       let!(:p1) { Fabricate(:post, topic: message, user: trust_level_4) }
@@ -476,7 +473,7 @@ RSpec.describe TopicsController do
 
     describe 'forbidden to moderators' do
       before do
-        sign_in(Fabricate(:moderator))
+        sign_in(moderator)
       end
       it 'correctly denies' do
         post "/t/111/change-owner.json", params: {
@@ -579,7 +576,7 @@ RSpec.describe TopicsController do
     end
 
     describe 'changing timestamps' do
-      let!(:moderator) { sign_in(Fabricate(:moderator)) }
+      before { sign_in(moderator) }
       let(:old_timestamp) { Time.zone.now }
       let(:new_timestamp) { old_timestamp - 1.day }
       let!(:topic) { Fabricate(:topic, created_at: old_timestamp) }
@@ -653,7 +650,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic) }
       before do
         sign_in(moderator)
@@ -821,7 +817,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: user, deleted_at: Time.now, deleted_by: moderator) }
       let!(:post) { Fabricate(:post, user: user, topic: topic, post_number: 1, deleted_at: Time.now, deleted_by: moderator) }
 
@@ -857,7 +852,6 @@ RSpec.describe TopicsController do
     end
 
     describe 'when logged in' do
-      fab!(:moderator) { Fabricate(:moderator) }
       let(:topic) { Fabricate(:topic, user: user, created_at: 48.hours.ago) }
       let!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
@@ -1334,7 +1328,7 @@ RSpec.describe TopicsController do
 
       context 'moderator' do
         before do
-          sign_in(Fabricate(:moderator))
+          sign_in(moderator)
         end
 
         expected = {
@@ -2414,7 +2408,6 @@ RSpec.describe TopicsController do
         fab!(:user2) { Fabricate(:user) }
         let(:pm) { Fabricate(:private_message_topic, user: user) }
 
-        fab!(:moderator) { Fabricate(:moderator) }
         let(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
 
         before do
@@ -2535,7 +2528,6 @@ RSpec.describe TopicsController do
       let(:group) { Fabricate(:group, messageable_level: 99) }
       let(:pm) { Fabricate(:private_message_topic, user: user) }
 
-      let(:moderator) { Fabricate(:moderator) }
       let(:moderator_pm) { Fabricate(:private_message_topic, user: moderator) }
 
       before do
@@ -2583,7 +2575,6 @@ RSpec.describe TopicsController do
       end
 
       context "as a moderator" do
-        let(:moderator) { Fabricate(:moderator) }
         before do
           sign_in(moderator)
         end
@@ -2613,7 +2604,6 @@ RSpec.describe TopicsController do
       let(:category) { Fabricate(:category) }
       let(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
       let!(:post) { Fabricate(:post, topic: topic) }
-      let(:moderator) { Fabricate(:moderator) }
 
       it "fails for anonymous users" do
         put "/t/#{topic.id}/publish.json", params: { destination_category_id: category.id }
