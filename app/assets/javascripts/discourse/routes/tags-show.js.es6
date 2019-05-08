@@ -107,7 +107,7 @@ export default Discourse.Route.extend({
       this.topicTrackingState,
       params.filter,
       params,
-      {}
+      { cached: true }
     ).then(list => {
       if (list.topic_list.tags && list.topic_list.tags.length === 1) {
         // Update name of tag (case might be different)
