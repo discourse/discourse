@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewablesController < ApplicationController
   requires_login
 
@@ -30,12 +32,20 @@ class ReviewablesController < ApplicationController
     total_rows = Reviewable.list_for(current_user, filters).count
     reviewables = Reviewable.list_for(current_user, filters.merge(limit: PER_PAGE, offset: offset)).to_a
 
+    claimed_topics = ReviewableClaimedTopic.claimed_hash(reviewables.map { |r| r.topic_id }.uniq)
+
     # This is a bit awkward, but ActiveModel serializers doesn't seem to serialize STI. Note `hash`
     # is mutated by the serializer and contains the side loaded records which must be merged in the end.
     hash = {}
     json = {
       reviewables: reviewables.map! do |r|
-        result = r.serializer.new(r, root: nil, hash: hash, scope: guardian).as_json
+        result = r.serializer.new(
+          r,
+          root: nil,
+          hash: hash,
+          scope: guardian,
+          claimed_topics: claimed_topics
+        ).as_json
         hash[:bundled_actions].uniq!
         (hash['actions'] || []).uniq!
         result
@@ -78,7 +88,17 @@ class ReviewablesController < ApplicationController
     end
 
     topics = Topic.where(id: topic_ids).order('reviewable_score DESC')
-    render_serialized(topics, ReviewableTopicSerializer, root: 'reviewable_topics', stats: stats)
+    render_serialized(
+      topics,
+      ReviewableTopicSerializer,
+      root: 'reviewable_topics',
+      stats: stats,
+      claimed_topics: ReviewableClaimedTopic.claimed_hash(topic_ids),
+      rest_serializer: true,
+      meta: {
+        types: meta_types
+      }
+    )
   end
 
   def show
@@ -88,6 +108,7 @@ class ReviewablesController < ApplicationController
       reviewable,
       reviewable.serializer,
       rest_serializer: true,
+      claimed_topics: ReviewableClaimedTopic.claimed_hash([reviewable.topic_id]),
       root: 'reviewable',
       meta: {
         types: meta_types
@@ -106,6 +127,10 @@ class ReviewablesController < ApplicationController
 
   def update
     reviewable = find_reviewable
+    if error = claim_error?(reviewable)
+      return render_json_error(error)
+    end
+
     editable = reviewable.editable_for(guardian)
     raise Discourse::InvalidAccess.new unless editable.present?
 
@@ -136,8 +161,15 @@ class ReviewablesController < ApplicationController
   def perform
     args = { version: params[:version].to_i }
 
+    result = nil
     begin
-      result = find_reviewable.perform(current_user, params[:action_id].to_sym, args)
+      reviewable = find_reviewable
+
+      if error = claim_error?(reviewable)
+        return render_json_error(error)
+      end
+
+      result = reviewable.perform(current_user, params[:action_id].to_sym, args)
     rescue Reviewable::InvalidAction => e
       # Consider InvalidAction an InvalidAccess
       raise Discourse::InvalidAccess.new(e.message)
@@ -169,6 +201,17 @@ class ReviewablesController < ApplicationController
 
 protected
 
+  def claim_error?(reviewable)
+    return if SiteSetting.reviewable_claiming == "disabled" || reviewable.topic_id.blank?
+
+    claimed_by_id = ReviewableClaimedTopic.where(topic_id: reviewable.topic_id).pluck(:user_id)[0]
+    if SiteSetting.reviewable_claiming == "required" && claimed_by_id.blank?
+      return I18n.t('reviewables.must_claim')
+    end
+
+    claimed_by_id.present? && claimed_by_id != current_user.id
+  end
+
   def find_reviewable
     reviewable = Reviewable.viewable_by(current_user).where(id: params[:reviewable_id]).first
     raise Discourse::NotFound.new if reviewable.blank?
@@ -189,7 +232,8 @@ protected
     {
       created_by: 'user',
       target_created_by: 'user',
-      reviewed_by: 'user'
+      reviewed_by: 'user',
+      claimed_by: 'user'
     }
   end
 

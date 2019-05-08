@@ -180,18 +180,26 @@ class Reviewable < ActiveRecord::Base
   end
 
   def apply_review_group
-    return unless SiteSetting.enable_category_group_review? && category.present? && category.reviewable_by_group_id
+    return unless SiteSetting.enable_category_group_review? &&
+      category.present? &&
+      category.reviewable_by_group_id
+
     self.reviewable_by_group_id = category.reviewable_by_group_id
   end
 
   def actions_for(guardian, args = nil)
     args ||= {}
-    Actions.new(self, guardian).tap { |a| build_actions(a, guardian, args) }
+
+    Actions.new(self, guardian).tap do |actions|
+      build_actions(actions, guardian, args)
+    end
   end
 
   def editable_for(guardian, args = nil)
     args ||= {}
-    EditableFields.new(self, guardian, args).tap { |a| build_editable_fields(a, guardian, args) }
+    EditableFields.new(self, guardian, args).tap do |fields|
+      build_editable_fields(fields, guardian, args)
+    end
   end
 
   # subclasses must implement "build_actions" to list the actions they're capable of
@@ -492,7 +500,6 @@ end
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
-#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null

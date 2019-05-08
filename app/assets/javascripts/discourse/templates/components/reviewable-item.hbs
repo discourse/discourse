@@ -41,34 +41,43 @@
     {{/if}}
   </div>
   <div class='reviewable-actions'>
-    {{#if editing}}
-      {{d-button
-        class="btn-primary reviewable-action save-edit"
-        disabled=updating
-        icon="check"
-        action=(action "saveEdit")
-        label="review.save"}}
-      {{d-button
-        class="btn-danger reviewable-action cancel-edit"
-        disabled=updating
-        icon="times"
-        action=(action "cancelEdit")
-        label="review.cancel"}}
-    {{else}}
-      {{#each reviewable.bundled_actions as |bundle|}}
-        {{reviewable-bundled-action
-          bundle=bundle
-          performAction=(action "perform")
-          reviewableUpdating=updating}}
-      {{/each}}
+    {{#if claimEnabled}}
+      <div class='claimed-actions'>
+        <span class='help'>{{{claimHelp}}}</span>
+        {{reviewable-claimed-topic topicId=reviewable.topic.id claimedBy=reviewable.claimed_by}}
+      </div>
+    {{/if}}
 
-      {{#if reviewable.can_edit}}
+    {{#if canPerform}}
+      {{#if editing}}
         {{d-button
-          class="reviewable-action edit"
+          class="btn-primary reviewable-action save-edit"
           disabled=updating
-          icon="pencil-alt"
-          action=(action "edit")
-          label="review.edit"}}
+          icon="check"
+          action=(action "saveEdit")
+          label="review.save"}}
+        {{d-button
+          class="btn-danger reviewable-action cancel-edit"
+          disabled=updating
+          icon="times"
+          action=(action "cancelEdit")
+          label="review.cancel"}}
+      {{else}}
+        {{#each reviewable.bundled_actions as |bundle|}}
+          {{reviewable-bundled-action
+            bundle=bundle
+            performAction=(action "perform")
+            reviewableUpdating=updating}}
+        {{/each}}
+
+        {{#if reviewable.can_edit}}
+          {{d-button
+            class="reviewable-action edit"
+            disabled=updating
+            icon="pencil-alt"
+            action=(action "edit")
+            label="review.edit"}}
+        {{/if}}
       {{/if}}
     {{/if}}
   </div>

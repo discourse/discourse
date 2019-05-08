@@ -18,6 +18,43 @@ export default Ember.Component.extend({
     return type.dasherize();
   },
 
+  @computed("siteSettings.reviewable_claiming", "reviewable.topic")
+  claimEnabled(claimMode, topic) {
+    return claimMode !== "disabled" && !!topic;
+  },
+
+  @computed(
+    "claimEnabled",
+    "siteSettings.reviewable_claiming",
+    "reviewable.claimed_by"
+  )
+  canPerform(claimEnabled, claimMode, claimedBy) {
+    if (!claimEnabled) {
+      return true;
+    }
+
+    if (claimedBy) {
+      return claimedBy.id === this.currentUser.id;
+    }
+
+    return claimMode !== "required";
+  },
+
+  @computed("siteSettings.reviewable_claiming", "reviewable.claimed_by")
+  claimHelp(claimMode, claimedBy) {
+    if (claimedBy) {
+      return claimedBy.id === this.currentUser.id
+        ? I18n.t("review.claim_help.claimed_by_you")
+        : I18n.t("review.claim_help.claimed_by_other", {
+            username: claimedBy.username
+          });
+    }
+
+    return claimMode === "optional"
+      ? I18n.t("review.claim_help.optional")
+      : I18n.t("review.claim_help.required");
+  },
+
   // Find a component to render, if one exists. For example:
   // `ReviewableUser` will return `reviewable-user`
   @computed("reviewable.type")

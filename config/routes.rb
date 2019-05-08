@@ -328,6 +328,8 @@ Discourse::Application.routes.draw do
   put "review/:reviewable_id" => "reviewables#update", constraints: { reviewable_id: /\d+/ }
   delete "review/:reviewable_id" => "reviewables#destroy", constraints: { reviewable_id: /\d+/ }
 
+  resources :reviewable_claimed_topics
+
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
   get "session/sso_provider" => "session#sso_provider"

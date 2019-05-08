@@ -26,6 +26,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     let(:guardian) { Guardian.new(moderator) }
 
     describe "actions_for" do
+
       it "returns appropriate defaults" do
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_hide)).to eq(true)
