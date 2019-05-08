@@ -921,10 +921,10 @@ class Post < ActiveRecord::Base
     missing_uploads = []
     missing_post_uploads = {}
     query = Post
-              .have_uploads
-              .joins("LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'")
-              .where("post_custom_fields.id IS NULL")
-              .select(:id, :cooked)
+      .have_uploads
+      .joins("LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'")
+      .where("post_custom_fields.id IS NULL")
+      .select(:id, :cooked)
 
     query.find_in_batches do |posts|
       ids = posts.pluck(:id)
