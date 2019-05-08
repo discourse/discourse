@@ -302,6 +302,7 @@ componentTest("supports keyboard events", {
     this.set("content", [{ id: 1, name: "robin" }, { id: 2, name: "regis" }]);
   },
 
+  skip: true,
   async test(assert) {
     await this.get("subject").expand();
     await this.get("subject").keyboard("down");
