@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 shared_examples 'finding and showing post' do
-  fab!(:post) { Fabricate(:post, user: user) }
+  let!(:post) { post_by_user }
 
   it "ensures the user can't see the post" do
     topic = post.topic
@@ -61,6 +61,7 @@ describe PostsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
+  fab!(:post_by_user) { Fabricate(:post, user: user) }
   let(:public_post) { Fabricate(:post, user: user, topic: topic) }
   let(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
 
@@ -299,7 +300,7 @@ describe PostsController do
   describe '#update' do
     include_examples 'action requires login', :put, "/posts/2.json"
 
-    fab!(:post) { Fabricate(:post, user: user) }
+    let!(:post) { post_by_user }
     let(:update_params) do
       {
         post: { raw: 'edited body', edit_reason: 'typo' },
@@ -438,7 +439,7 @@ describe PostsController do
 
   describe '#bookmark' do
     include_examples 'action requires login', :put, "/posts/2/bookmark.json"
-    fab!(:post) { Fabricate(:post, user: user) }
+    let!(:post) { post_by_user }
 
     describe 'when logged in' do
       before do
@@ -464,7 +465,7 @@ describe PostsController do
         let(:post_action) { PostActionCreator.create(user, post, :bookmark).post_action }
 
         it "returns the right response when post is not bookmarked" do
-          put "/posts/#{Fabricate(:post, user: user).id}/bookmark.json"
+          put "/posts/#{post_by_user.id}/bookmark.json"
           expect(response.status).to eq(404)
         end
 
@@ -578,7 +579,7 @@ describe PostsController do
         sign_in(user)
       end
 
-      fab!(:post) { Fabricate(:post, user: user) }
+      let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to wiki the post" do
         put "/posts/#{post.id}/wiki.json", params: { wiki: 'true' }
@@ -633,7 +634,7 @@ describe PostsController do
         sign_in(user)
       end
 
-      fab!(:post) { Fabricate(:post, user: user) }
+      let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to change the post type" do
         put "/posts/#{post.id}/post_type.json", params: { post_type: 2 }
@@ -654,7 +655,7 @@ describe PostsController do
     include_examples "action requires login", :put, "/posts/2/rebake.json"
 
     describe "when logged in" do
-      fab!(:post) { Fabricate(:post, user: user) }
+      let!(:post) { post_by_user }
 
       it "raises an error if the user doesn't have permission to rebake the post" do
         sign_in(user)
