@@ -73,7 +73,8 @@ task 'javascript:update' do
       source: 'moment/locale/.',
       destination: 'moment-locale',
     }, {
-      source: 'moment-timezone/builds/moment-timezone-with-data.js'
+      source: 'moment-timezone/builds/moment-timezone-with-data-10-year-range.js',
+      destination: 'moment-timezone-with-data.js'
     }, {
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'
