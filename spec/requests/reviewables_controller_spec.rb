@@ -290,6 +290,29 @@ describe ReviewablesController do
         expect(other_reviewable.reload.version).to eq(0)
       end
 
+      context "claims" do
+        let(:qp) { Fabricate(:reviewable_queued_post) }
+
+        it "fails when reviewables must be claimed" do
+          SiteSetting.reviewable_claiming = 'required'
+          put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
+          expect(response.code).to eq("422")
+        end
+
+        it "fails when optional claims are claimed by others" do
+          SiteSetting.reviewable_claiming = 'optional'
+          ReviewableClaimedTopic.create!(topic_id: qp.topic_id, user: Fabricate(:admin))
+          put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
+          expect(response.code).to eq("422")
+        end
+
+        it "works when claims are optional" do
+          SiteSetting.reviewable_claiming = 'optional'
+          put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
+          expect(response.code).to eq("200")
+        end
+      end
+
       describe "simultaneous perform" do
         it "fails when the version is wrong" do
           put "/review/#{reviewable.id}/perform/approve_user.json?version=#{reviewable.version + 1}"
@@ -314,7 +337,23 @@ describe ReviewablesController do
         expect(json['reviewable_topics']).to be_blank
       end
 
-      it "returns json listing the topics " do
+      it "includes claimed information" do
+        SiteSetting.reviewable_claiming = 'optional'
+        PostActionCreator.spam(user0, post0)
+        moderator = Fabricate(:moderator)
+        ReviewableClaimedTopic.create!(user: moderator, topic: post0.topic)
+
+        get "/review/topics.json"
+        expect(response.code).to eq("200")
+        json = ::JSON.parse(response.body)
+        json_topic = json['reviewable_topics'].find { |rt| rt['id'] == post0.topic_id }
+        expect(json_topic['claimed_by_id']).to eq(moderator.id)
+
+        json_user = json['users'].find { |u| u['id'] == json_topic['claimed_by_id'] }
+        expect(json_user).to be_present
+      end
+
+      it "returns json listing the topics" do
         PostActionCreator.spam(user0, post0)
         PostActionCreator.off_topic(user0, post1)
         PostActionCreator.spam(user0, post2)

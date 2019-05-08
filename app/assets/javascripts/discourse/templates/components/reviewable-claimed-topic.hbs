@@ -1,0 +1,18 @@
+{{#if enabled}}
+  <div class='reviewable-claimed-topic'>
+    {{#if claimedBy}}
+      <div class='claimed-by'>
+        {{avatar claimedBy imageSize="small"}}
+        <span class='claimed-username'>{{claimedBy.username}}</span>
+      </div>
+      {{d-button
+        icon="times"
+        class="btn-small unclaim"
+        action=(action "unclaim")
+        disabled=unassigning
+        title="review.unclaim.help"}}
+    {{else}}
+      {{d-button icon="user-plus" class="btn-small claim" title="review.claim.title" action=(action "claim")}}
+    {{/if}}
+  </div>
+{{/if}}

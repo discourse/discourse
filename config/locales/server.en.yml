@@ -1750,6 +1750,7 @@ en:
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post."
+    reviewable_claiming: "Does reviewable content need to be claimed before it can be acted upon?"
     reviewable_default_topics: "Show reviewable content grouped by topic by default"
     reviewable_default_visibility: "Don't show reviewable items unless they meet this priority"
 
@@ -4417,6 +4418,8 @@ en:
     webhook_deactivation_reason: "Your webhook has been automatically deactivated. We received multiple '%{status}' HTTP status failure responses."
 
   reviewables:
+    must_claim: "You must claim items before acting on them."
+    user_claimed: "This item has been claimed by another user."
     missing_version: "You must supply a version parameter"
     conflict: "There was an update conflict preventing you from doing that."
     reasons:

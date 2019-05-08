@@ -1386,6 +1386,16 @@ spam:
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
+
+  reviewable_claiming:
+    client: true
+    type: enum
+    default: disabled
+    choices:
+      - disabled
+      - optional
+      - required
+
   reviewable_default_topics:
     default: false
     client: true
