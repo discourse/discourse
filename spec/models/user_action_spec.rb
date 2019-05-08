@@ -53,6 +53,7 @@ describe UserAction do
       end
 
       it 'includes the events correctly' do
+        Jobs.run_immediately!
         PostActionNotifier.enable
 
         mystats = stats_for_user(user)
