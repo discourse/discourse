@@ -102,6 +102,7 @@ describe PostAlerter do
 
   context 'edits' do
     it 'notifies correctly on edits' do
+      Jobs.run_immediately!
       PostActionNotifier.enable
 
       post = Fabricate(:post, raw: 'I love waffles')
