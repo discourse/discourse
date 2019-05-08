@@ -118,7 +118,9 @@ export default createWidget("hamburger-menu", {
       (this.currentUser.staff || this.currentUser.reviewable_count)
     ) {
       links.push({
-        route: "review",
+        route: siteSettings.reviewable_default_topics
+          ? "review.topics"
+          : "review",
         className: "review",
         label: "review.title",
         badgeCount: "reviewable_count",
