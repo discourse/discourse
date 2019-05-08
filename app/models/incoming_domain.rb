@@ -24,7 +24,7 @@ class IncomingDomain < ActiveRecord::Base
     url = "http#{https ? "s" : ""}://#{name}"
 
     if https && port != 443 || !https && port != 80
-      url += ":#{port}"
+      url << ":#{port}"
     end
 
     url
