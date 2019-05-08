@@ -549,9 +549,9 @@ class UserNotifications < ActionMailer::Base
     context_posts = context_posts.to_a
 
     if context_posts.present?
-      context += "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
+      context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
-        context += email_post_markdown(cp, true)
+        context << email_post_markdown(cp, true)
       end
     end
 
@@ -562,9 +562,9 @@ class UserNotifications < ActionMailer::Base
 
     if opts[:use_invite_template]
       invite_template = "user_notifications.invited"
-      invite_template += "_group" if group_name
+      invite_template << "_group" if group_name
 
-      invite_template +=
+      invite_template <<
         if post.topic.private_message?
           "_to_private_message_body"
         else
