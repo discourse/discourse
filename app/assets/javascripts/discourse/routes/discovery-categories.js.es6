@@ -5,6 +5,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
+import { searchPriorities } from "discourse/components/concerns/category_search_priorities";
 
 const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   renderTemplate() {
@@ -109,7 +110,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
         available_groups: groups.map(g => g.name),
         allow_badges: true,
         topic_featured_link_allowed: true,
-        custom_fields: {}
+        custom_fields: {},
+        search_priority: searchPriorities.normal
       });
 
       showModal("edit-category", { model });
