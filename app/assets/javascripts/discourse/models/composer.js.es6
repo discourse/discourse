@@ -417,7 +417,7 @@ const Composer = RestModel.extend({
     canEditTopicFeaturedLink
   ) {
     if (
-      this.get("post.post_type") === this.site.post_types.small_action ||
+      this.get("post.post_type") === this.site.get("post_types.small_action") ||
       (canEditTopicFeaturedLink && this.featuredLink)
     ) {
       return 0;
