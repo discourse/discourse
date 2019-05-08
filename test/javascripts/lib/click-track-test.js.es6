@@ -70,13 +70,13 @@ QUnit.test("does not track elements with no href", async assert => {
 });
 
 QUnit.test("does not track attachments", async assert => {
-  assert.expect(1);
   sandbox.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
   /* global server */
   server.post("/clicks/track", () => assert.ok(false));
 
-  assert.ok(track(generateClickEventOn(".attachment")));
+  assert.notOk(track(generateClickEventOn(".attachment")));
+  assert.ok(DiscourseURL.redirectTo.calledWith("http://discuss.domain.com/uploads/default/1234/1532357280.txt"));
 });
 
 QUnit.test("tracks external URLs", async assert => {

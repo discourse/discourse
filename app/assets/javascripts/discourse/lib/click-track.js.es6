@@ -52,6 +52,11 @@ export default {
       return true;
     }
 
+    let href = ($link.attr("href") || $link.data("href") || "").trim();
+    if (!href || href.indexOf("mailto:") === 0) {
+      return true;
+    }
+
     if ($link.hasClass("attachment")) {
       // Warn the user if they cannot download the file.
       if (
@@ -59,15 +64,14 @@ export default {
         !Discourse.User.current()
       ) {
         bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
-        return false;
+      } else if (wantsNewWindow(e)) {
+        const newWindow = window.open(href, "_blank");
+        newWindow.opener = null;
+        newWindow.focus();
+      } else {
+        DiscourseURL.redirectTo(href);
       }
-
-      return true;
-    }
-
-    let href = ($link.attr("href") || $link.data("href") || "").trim();
-    if (!href || href.indexOf("mailto:") === 0) {
-      return true;
+      return false;
     }
 
     const $article = $link.closest(
