@@ -69,7 +69,7 @@ module DiscourseNarrativeBot
       valid = false
 
       doc.css(".mention").each do |mention|
-        if mention.text.downcase == "@#{self.discobot_user.username}".downcase
+        if User.normalize_username(mention.text) == "@#{self.discobot_user.username_lower}"
           valid = true
           break
         end
