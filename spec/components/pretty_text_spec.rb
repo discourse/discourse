@@ -748,6 +748,11 @@ describe PrettyText do
       html = "<p>Contact me at <a href=\"mailto:username@me.com\">this address</a>.</p>"
       expect(PrettyText.format_for_email(html, post)).to eq(html)
     end
+
+    it "prefers data-original-href attribute to get Vimeo iframe link and escapes it" do
+      html = "<p>Check out this video – <iframe src='https://player.vimeo.com/video/329875646' data-original-href='https://vimeo.com/329875646/> <script>alert(1)</script>'></iframe>.</p>"
+      expect(PrettyText.format_for_email(html, post)).to match(Regexp.escape("https://vimeo.com/329875646/%3E%20%3Cscript%3Ealert(1)%3C/script%3E"))
+    end
   end
 
   it 'Is smart about linebreaks and IMG tags' do
