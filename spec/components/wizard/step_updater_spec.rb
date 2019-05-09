@@ -190,7 +190,7 @@ describe Wizard::StepUpdater do
 
       context 'dark theme' do
         it "creates the theme" do
-          updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
+          updater = wizard.create_updater('colors', theme_previews: 'Dark')
 
           expect { updater.update }.to change { Theme.count }.by(1)
 
@@ -203,7 +203,7 @@ describe Wizard::StepUpdater do
 
       context 'light theme' do
         it "creates the theme" do
-          updater = wizard.create_updater('colors', allow_dark_light_selection: true)
+          updater = wizard.create_updater('colors', {})
 
           expect { updater.update }.to change { Theme.count }.by(1)
 
@@ -218,7 +218,7 @@ describe Wizard::StepUpdater do
     context "without an existing scheme" do
       it "creates the scheme" do
         ColorScheme.destroy_all
-        updater = wizard.create_updater('colors', theme_previews: 'Dark', allow_dark_light_selection: true)
+        updater = wizard.create_updater('colors', theme_previews: 'Dark')
         updater.update
         expect(updater.success?).to eq(true)
         expect(wizard.completed_steps?('colors')).to eq(true)
