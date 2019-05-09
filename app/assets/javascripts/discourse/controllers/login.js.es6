@@ -130,7 +130,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
               });
 
               Ember.run.schedule("afterRender", () =>
-                document.getElementById("second-factor input").focus()
+                document
+                  .getElementById("second-factor")
+                  .querySelector("input")
+                  .focus()
               );
 
               return;
