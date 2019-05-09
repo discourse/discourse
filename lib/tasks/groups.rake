@@ -8,21 +8,30 @@ task "groups:grant_badge", [:group_id, :badge_id] => [:environment] do |_, args|
     exit 1
   end
 
-  group = Group.find(group_id)
-  badge = Badge.find(badge_id)
+  group = Group.find_by(id: group_id)
 
-  if group.present? && badge.present?
-    puts "Granting badge '#{badge.name}' to all users in group '#{group.name}'..."
+  unless group
+    puts "ERROR: `group_id` is invalid"
+    exit 1
+  end
 
-    count = 0
-    group.users.each do |user|
-      begin
-        BadgeGranter.grant(badge, user)
-      rescue => e
-        puts "", "Failed to grant badge to #{user.username}", e, e.backtrace.join("\n")
-      end
-      putc "." if (count += 1) % 5 == 0
+  badge = Badge.find_by(id: badge_id)
+
+  unless badge
+    puts "ERROR: `badge_id` is invalid"
+    exit 1
+  end
+
+  puts "Granting badge '#{badge.name}' to all users in group '#{group.name}'..."
+
+  count = 0
+  group.users.each do |user|
+    begin
+      BadgeGranter.grant(badge, user)
+    rescue => e
+      puts "", "Failed to grant badge to #{user.username}", e, e.backtrace.join("\n")
     end
+    putc "." if (count += 1) % 5 == 0
   end
 
   puts "", "Done! Badge granted to #{count} members.", ""
