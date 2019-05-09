@@ -63,7 +63,7 @@ describe WatchedWord do
     end
 
     it "blocks on revisions" do
-      post = Fabricate(:post, topic: Fabricate(:topic, user: tl2_user), user: tl2_user)
+      post = Fabricate(:post_with_validation, topic: Fabricate(:topic, user: tl2_user), user: tl2_user)
       expect {
         PostRevisor.new(post).revise!(post.user, { raw: "Want some #{block_word.word} for cheap?" }, revised_at: post.updated_at + 10.seconds)
         expect(post.errors).to be_present
