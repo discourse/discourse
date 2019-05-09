@@ -181,6 +181,10 @@ const path = require("path");
       );
     });
 
+    await page.evaluate(() => {
+      document.getElementById("reply-title").value = "";
+    });
+
     await exec("compose new topic", () => {
       const date = `(${+new Date()})`;
       const title = `This is a new topic ${date}`;
