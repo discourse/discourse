@@ -1,7 +1,7 @@
 import { setting } from "discourse/lib/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import computed from "ember-addons/ember-computed-decorators";
-import { searchPriorities } from "discourse/components/concerns/category_search_priorities";
+import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 import Group from "discourse/models/group";
 
 const categorySortCriteria = [];
