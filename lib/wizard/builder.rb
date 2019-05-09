@@ -167,7 +167,12 @@ class Wizard
           theme = themes.find(&:default?)
           theme ||= themes.first
 
-          theme ||= Theme.create(name: name, user_id: @wizard.user.id, color_scheme_id: scheme.id)
+          theme ||= Theme.create!(
+            name: name,
+            user_id: @wizard.user.id,
+            color_scheme_id: scheme.id
+          )
+
           theme.set_default!
         end
       end
