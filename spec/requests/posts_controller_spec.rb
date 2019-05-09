@@ -787,21 +787,12 @@ describe PostsController do
           raw: 'this is test body',
           category: 'invalid'
         }
-        expect(response.status).to eq(404)
-      end
 
-      it 'can create topics with an empty category param' do
-        user = Fabricate(:admin)
-        master_key = ApiKey.create_master_key.key
+        expect(response.status).to eq(400)
 
-        post "/posts.json", params: {
-          api_username: user.username,
-          api_key: master_key,
-          title: 'title for a topic without a category',
-          raw: 'body for my topic without a category',
-          category: ''
-        }
-        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)["errors"]).to include(
+          I18n.t("invalid_params", message: "category")
+        )
       end
     end
 
