@@ -961,6 +961,25 @@ describe PostsController do
         expect(topic.meta_data).to eq("xyz" => 'abc')
       end
 
+      it 'can create an uncategorized topic' do
+        title = 'this is the test title for the topic'
+
+        expect do
+          post "/posts.json", params: {
+            raw: 'this is the test content',
+            title: title,
+            category: ""
+          }
+
+          expect(response.status).to eq(200)
+        end.to change { Topic.count }.by(1)
+
+        topic = Topic.last
+
+        expect(topic.title).to eq(title.capitalize)
+        expect(topic.category_id).to eq(SiteSetting.uncategorized_category_id)
+      end
+
       it 'can create a reply to a post' do
         topic = Fabricate(:private_message_post, user: user).topic
         post_2 = Fabricate(:private_message_post, user: user, topic: topic)
