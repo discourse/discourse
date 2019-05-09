@@ -1,3 +1,5 @@
+require_dependency "migration/base_dropper"
+
 class DbHelper
 
   REMAP_SQL ||= <<~SQL
@@ -23,7 +25,7 @@ class DbHelper
     text_columns = Hash.new { |h, k| h[k] = [] }
 
     DB.query(REMAP_SQL).each do |r|
-      unless triggers.include?("#{r.table_name}_#{r.column_name}_readonly")
+      unless triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
         text_columns[r.table_name] << r.column_name
       end
     end
@@ -55,7 +57,7 @@ class DbHelper
     text_columns = Hash.new { |h, k| h[k] = [] }
 
     DB.query(REMAP_SQL).each do |r|
-      unless triggers.include?("#{r.table_name}_#{r.column_name}_readonly")
+      unless triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
         text_columns[r.table_name] << r.column_name
       end
     end
