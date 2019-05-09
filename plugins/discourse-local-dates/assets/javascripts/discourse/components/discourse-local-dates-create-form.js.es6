@@ -178,6 +178,11 @@ export default Ember.Component.extend({
     return moment.tz.guess();
   },
 
+  @computed
+  allTimezones() {
+    return moment.tz.names();
+  },
+
   timezoneIsDifferentFromUserTimezone: propertyNotEqual(
     "currentUserTimezone",
     "options.timezone"
