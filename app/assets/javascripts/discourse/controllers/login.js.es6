@@ -129,7 +129,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 showSecondFactor: true
               });
 
-              Ember.run.schedule("afterRender", () =>
+              Ember.run.next(() =>
                 document
                   .getElementById("second-factor")
                   .querySelector("input")
