@@ -69,7 +69,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   // Determines whether at least one login button is enabled
   @computed("canLoginLocalWithEmail")
   hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
-    return findAll(this.siteSettings).length > 0 || canLoginLocalWithEmail;
+    return findAll().length > 0 || canLoginLocalWithEmail;
   },
 
   @computed("loggingIn")
@@ -212,8 +212,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod) {
-      loginMethod.doLogin();
+    externalLogin(loginMethod, { fullScreenLogin = false } = {}) {
+      const capabilities = this.capabilities;
+      // On Mobile, Android or iOS always go with full screen
+      if (
+        this.isMobileDevice ||
+        (capabilities && (capabilities.isIOS || capabilities.isAndroid))
+      ) {
+        fullScreenLogin = true;
+      }
+
+      loginMethod.doLogin({ fullScreenLogin });
     },
 
     createAccount() {
@@ -287,11 +296,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   @computed("authenticate")
   authMessage(authenticate) {
     if (Ember.isEmpty(authenticate)) return "";
-    const method = findAll(
-      this.siteSettings,
-      this.capabilities,
-      this.isMobileDevice
-    ).findBy("name", authenticate);
+    const method = findAll().findBy("name", authenticate);
     if (method) {
       return method.get("message");
     }

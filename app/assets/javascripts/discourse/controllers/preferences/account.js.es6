@@ -73,11 +73,7 @@ export default Ember.Controller.extend(
 
     @computed("model.associated_accounts.[]")
     authProviders(accounts) {
-      const allMethods = findAll(
-        this.siteSettings,
-        this.capabilities,
-        this.site.isMobileDevice
-      );
+      const allMethods = findAll();
 
       const result = allMethods.map(method => {
         return {
@@ -109,11 +105,7 @@ export default Ember.Controller.extend(
       if (secondFactorEnabled || !canCheckEmails || isAnonymous) {
         return false;
       }
-
-      return (
-        findAll(this.siteSettings, this.capabilities, this.site.isMobileDevice)
-          .length > 0
-      );
+      return findAll().length > 0;
     },
 
     @computed("showAllAuthTokens", "model.user_auth_tokens")
@@ -256,7 +248,7 @@ export default Ember.Controller.extend(
       },
 
       connectAccount(method) {
-        method.doLogin(true);
+        method.doLogin({ reconnect: true, fullScreenLogin: false });
       }
     }
   }
