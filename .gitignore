@@ -33,8 +33,8 @@ config/discourse.conf
 *.sql
 *.sql.gz
 /db/*.sqlite3
-/db/structure.sql
 /db/schema.rb
+!db/structure.sql
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

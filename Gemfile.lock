@@ -31,6 +31,8 @@ GEM
       activemodel (= 5.2.3)
       activesupport (= 5.2.3)
       arel (>= 9.0)
+    activerecord-clean-db-structure (0.3.0)
+      activerecord (>= 4.2)
     activesupport (5.2.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
@@ -424,6 +426,7 @@ DEPENDENCIES
   active_model_serializers (~> 0.8.3)
   activemodel (= 5.2.3)
   activerecord (= 5.2.3)
+  activerecord-clean-db-structure
   activesupport (= 5.2.3)
   annotate
   aws-sdk-s3

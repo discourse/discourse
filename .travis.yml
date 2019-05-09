@@ -14,6 +14,7 @@ env:
     - TRAVIS_NODE_VERSION="10"
     - DISCOURSE_HOSTNAME=www.example.com
     - RUBY_GLOBAL_METHOD_CACHE_SIZE=131072
+    - RAILS_ENV=test
   matrix:
     - "RAILS_MASTER=0 QUNIT_RUN=0 RUN_LINT=0"
     - "RAILS_MASTER=0 QUNIT_RUN=1 RUN_LINT=0"
@@ -66,9 +67,9 @@ before_install:
 
 install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
-  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development assets --deployment --retry=3 --jobs=3; fi"
   - bash -c "if [ '$QUNIT_RUN' == '1' ] || [ '$RUN_LINT' == '1' ]; then yarn install --dev; fi"
-  - bash -c "if [ '$RUN_LINT' != '1' ]; then LOAD_PLUGINS=1 bundle exec rake db:create db:migrate; fi"
+  - bash -c "if [ '$RUN_LINT' != '1' ]; then bundle exec rake db:create db:schema:load && LOAD_PLUGINS=1 bundle exec rake db:migrate; fi"
 
 script:
   - |
