@@ -145,4 +145,32 @@ describe Wizard::Builder do
       expect(login_required_field.id).to eq('privacy')
     end
   end
+
+  context "colors step" do
+    fab!(:theme) { Fabricate(:theme) }
+    let(:colors_step) { wizard.steps.find { |s| s.id == 'colors' } }
+    let(:field) { colors_step.fields.first }
+
+    describe "when the default theme has not been override" do
+      before do
+        SiteSetting.find_by(name: "default_theme_id").destroy!
+      end
+
+      it 'should set the right default values' do
+        expect(field.required).to eq(true)
+        expect(field.value).to eq(ColorScheme::LIGHT_THEME_ID)
+      end
+    end
+
+    describe "when the default them hass been override" do
+      before do
+        theme.set_default!
+      end
+
+      it 'should set the right default values' do
+        expect(field.required).to eq(false)
+        expect(field.value).to eq(nil)
+      end
+    end
+  end
 end

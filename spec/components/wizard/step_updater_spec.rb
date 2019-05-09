@@ -183,6 +183,20 @@ describe Wizard::StepUpdater do
       end
     end
 
+    context "with an existing default theme" do
+      fab!(:theme) { Fabricate(:theme) }
+
+      before do
+        theme.set_default!
+      end
+
+      it "should not update the default theme when no option has been selected" do
+        expect do
+          wizard.create_updater('colors', {}).update
+        end.to_not change { SiteSetting.default_theme_id }
+      end
+    end
+
     context "without an existing theme" do
       before do
         Theme.delete_all
@@ -203,14 +217,19 @@ describe Wizard::StepUpdater do
 
       context 'light theme' do
         it "creates the theme" do
-          updater = wizard.create_updater('colors', {})
+          updater = wizard.create_updater('colors',
+            theme_previews: ColorScheme::LIGHT_THEME_ID
+          )
 
           expect { updater.update }.to change { Theme.count }.by(1)
 
           theme = Theme.last
 
           expect(theme.user_id).to eq(wizard.user.id)
-          expect(theme.color_scheme).to eq(ColorScheme.find_by(name: 'Light'))
+
+          expect(theme.color_scheme).to eq(ColorScheme.find_by(name:
+            ColorScheme::LIGHT_THEME_ID
+          ))
         end
       end
     end

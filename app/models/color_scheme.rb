@@ -101,6 +101,8 @@ class ColorScheme < ActiveRecord::Base
 
   # rubocop:enable Layout/AlignHash
 
+  LIGHT_THEME_ID = 'Light'
+
   def self.base_color_scheme_colors
     base_with_hash = {}
 
@@ -109,7 +111,7 @@ class ColorScheme < ActiveRecord::Base
     end
 
     list = [
-      { id: 'Light', colors: base_with_hash }
+      { id: LIGHT_THEME_ID, colors: base_with_hash }
     ]
 
     CUSTOM_SCHEMES.each do |k, v|
