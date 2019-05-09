@@ -65,7 +65,6 @@ class UploadsController < ApplicationController
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-      return render_404 unless Discourse.store.internal?
       return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 
       if upload = Upload.find_by(sha1: params[:sha]) || Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
