@@ -4,12 +4,7 @@ Fabricator(:post) do
   user
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
-  skip_validation true
   post_type Post.types[:regular]
-end
-
-Fabricator(:post_with_validation, from: :post) do
-  skip_validation false
 end
 
 Fabricator(:post_with_long_raw_content, from: :post) do

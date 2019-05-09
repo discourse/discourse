@@ -102,7 +102,7 @@ describe PostRevisor do
   end
 
   context 'revise' do
-    let(:post) { Fabricate(:post_with_validation, post_args) }
+    let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
     subject { PostRevisor.new(post) }
