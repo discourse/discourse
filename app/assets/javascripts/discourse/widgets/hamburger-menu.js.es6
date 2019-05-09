@@ -204,6 +204,12 @@ export default createWidget("hamburger-menu", {
       );
     }
 
+    if (!this.siteSettings.allow_uncategorized_topics) {
+      categories = categories.filter(
+        c => c.id !== this.site.uncategorized_category_id
+      );
+    }
+
     const moreCount = categories.length - maxCategoriesToDisplay;
     categories = categories.slice(0, maxCategoriesToDisplay);
 
