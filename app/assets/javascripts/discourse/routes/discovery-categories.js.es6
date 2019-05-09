@@ -5,7 +5,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "preload-store";
-import { searchPriorities } from "discourse/components/concerns/category_search_priorities";
+import { searchPriorities } from "discourse/components/concerns/category-search-priorities";
 
 const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   renderTemplate() {
