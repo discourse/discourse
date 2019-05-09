@@ -57,7 +57,7 @@ describe Post do
   def post_with_body(body, user = nil)
     args = post_args.merge(raw: body)
     args[:user] = user if user.present?
-    Fabricate.build(:post_with_validation, args)
+    Fabricate.build(:post, args)
   end
 
   it { is_expected.to validate_presence_of :raw }
@@ -79,7 +79,7 @@ describe Post do
     describe '#by_newest' do
       it 'returns posts ordered by created_at desc' do
         2.times do |t|
-          Fabricate(:post_with_validation, created_at: t.seconds.from_now)
+          Fabricate(:post, created_at: t.seconds.from_now)
         end
         expect(Post.by_newest.first.created_at).to be > Post.by_newest.last.created_at
       end
@@ -87,7 +87,7 @@ describe Post do
 
     describe '#with_user' do
       it 'gives you a user' do
-        Fabricate(:post_with_validation, user: Fabricate.build(:user))
+        Fabricate(:post, user: Fabricate.build(:user))
         expect(Post.with_user.first.user).to be_a User
       end
     end
@@ -97,7 +97,7 @@ describe Post do
   describe "revisions and deleting/recovery" do
 
     context 'a post without links' do
-      let(:post) { Fabricate(:post_with_validation, post_args) }
+      let(:post) { Fabricate(:post, post_args) }
 
       before do
         post.trash!
@@ -137,7 +137,7 @@ describe Post do
 
     context 'a post with notices' do
       let(:post) {
-        post = Fabricate(:post_with_validation, post_args)
+        post = Fabricate(:post, post_args)
         post.custom_fields["notice_type"] = Post.notices[:returning_user]
         post.custom_fields["notice_args"] = 1.day.ago
         post.save_custom_fields
@@ -155,7 +155,7 @@ describe Post do
   end
 
   describe 'flagging helpers' do
-    fab!(:post) { Fabricate(:post_with_validation) }
+    fab!(:post) { Fabricate(:post) }
     fab!(:user) { Fabricate(:coding_horror) }
     fab!(:admin) { Fabricate(:admin) }
 
@@ -198,7 +198,7 @@ describe Post do
 
   describe "maximum images" do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    let(:post_no_images) { Fabricate.build(:post_with_validation, post_args.merge(user: newuser)) }
+    let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
     let(:post_with_avatars) { post_with_body('<img alt="smiley" title=":smiley:" src="/assets/emoji/smiley.png" class="avatar"> <img alt="wink" title=":wink:" src="/assets/emoji/wink.png" class="avatar">', newuser) }
@@ -210,7 +210,7 @@ describe Post do
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
     it "returns 0 images for an empty post" do
-      expect(Fabricate.build(:post_with_validation).image_count).to eq(0)
+      expect(Fabricate.build(:post).image_count).to eq(0)
     end
 
     it "finds images from markdown" do
@@ -312,12 +312,12 @@ describe Post do
 
   describe "maximum attachments" do
     fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    let(:post_no_attachments) { Fabricate.build(:post_with_validation, post_args.merge(user: newuser)) }
+    let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_attachment) { post_with_body('<a class="attachment" href="/uploads/default/1/2082985.txt">file.txt</a>', newuser) }
     let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
 
     it "returns 0 attachments for an empty post" do
-      expect(Fabricate.build(:post_with_validation).attachment_count).to eq(0)
+      expect(Fabricate.build(:post).attachment_count).to eq(0)
     end
 
     it "finds attachments from HTML" do
@@ -431,7 +431,7 @@ describe Post do
     let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
 
     it "returns 0 links for an empty post" do
-      expect(Fabricate.build(:post_with_validation).link_count).to eq(0)
+      expect(Fabricate.build(:post).link_count).to eq(0)
     end
 
     it "returns 0 links for a post with mentions" do
@@ -503,44 +503,44 @@ describe Post do
     context 'raw_mentions' do
 
       it "returns an empty array with no matches" do
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "Hello Jake and Finn!"))
+        post = Fabricate.build(:post, post_args.merge(raw: "Hello Jake and Finn!"))
         expect(post.raw_mentions).to eq([])
       end
 
       it "returns lowercase unique versions of the mentions" do
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "@Jake @Finn @Jake"))
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn @Jake"))
         expect(post.raw_mentions).to eq(['jake', 'finn'])
       end
 
       it "ignores pre" do
         # we need to force an inline
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "p <pre>@Jake</pre> @Finn"))
+        post = Fabricate.build(:post, post_args.merge(raw: "p <pre>@Jake</pre> @Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "catches content between pre tags" do
         # per common mark we need to force an inline
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "a <pre>hello</pre> @Finn <pre></pre>"))
+        post = Fabricate.build(:post, post_args.merge(raw: "a <pre>hello</pre> @Finn <pre></pre>"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "ignores code" do
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "@Jake `@Finn`"))
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake `@Finn`"))
         expect(post.raw_mentions).to eq(['jake'])
       end
 
       it "ignores quotes" do
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n@Finn"))
+        post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]\n@Jake\n[/quote]\n@Finn"))
         expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "handles underscore in username" do
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "@Jake @Finn @Jake_Old"))
+        post = Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn @Jake_Old"))
         expect(post.raw_mentions).to eq(['jake', 'finn', 'jake_old'])
       end
 
       it "handles hyphen in groupname" do
-        post = Fabricate.build(:post_with_validation, post_args.merge(raw: "@org-board"))
+        post = Fabricate.build(:post, post_args.merge(raw: "@org-board"))
         expect(post.raw_mentions).to eq(['org-board'])
       end
 
@@ -590,11 +590,11 @@ describe Post do
 
   context 'validation' do
     it 'validates our default post' do
-      expect(Fabricate.build(:post_with_validation, post_args)).to be_valid
+      expect(Fabricate.build(:post, post_args)).to be_valid
     end
 
     it 'create blank posts as invalid' do
-      expect(Fabricate.build(:post_with_validation, raw: "")).not_to be_valid
+      expect(Fabricate.build(:post, raw: "")).not_to be_valid
     end
   end
 
@@ -627,7 +627,7 @@ describe Post do
 
   context 'revise' do
 
-    let(:post) { Fabricate(:post_with_validation, post_args) }
+    let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
 
     it 'has no revision' do
@@ -732,7 +732,7 @@ describe Post do
     let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/uploads/default/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/uploads/default/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
 
     let(:post) do
-      Fabricate(:post_with_validation,
+      Fabricate(:post,
         raw: "<img src=\"/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
         cooked: cooked
       )
@@ -746,7 +746,7 @@ describe Post do
 
   describe 'after save' do
 
-    let(:post) { Fabricate(:post_with_validation, post_args) }
+    let(:post) { Fabricate(:post, post_args) }
 
     it "has correct info set" do
       expect(post.user_deleted?).to eq(false)
@@ -762,8 +762,8 @@ describe Post do
 
     describe 'extract_quoted_post_numbers' do
 
-      let!(:post) { Fabricate(:post_with_validation, post_args) }
-      let(:reply) { Fabricate.build(:post_with_validation, post_args) }
+      let!(:post) { Fabricate(:post, post_args) }
+      let(:reply) { Fabricate.build(:post, post_args) }
 
       it "finds the quote when in the same topic" do
         reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id}\"]hello[/quote]"
@@ -778,7 +778,7 @@ describe Post do
       end
 
       it "doesn't find the quote in the same post" do
-        reply = Fabricate.build(:post_with_validation, post_args.merge(post_number: 646))
+        reply = Fabricate.build(:post, post_args.merge(post_number: 646))
         reply.raw = "[quote=\"EvilTrout, post:#{reply.post_number}, topic:#{post.topic_id}\"]hello[/quote]"
         reply.extract_quoted_post_numbers
         expect(reply.quoted_post_numbers).to be_blank
@@ -790,7 +790,7 @@ describe Post do
       fab!(:topic) { Fabricate(:topic) }
       let(:other_user) { Fabricate(:coding_horror) }
       let(:reply_text) { "[quote=\"Evil Trout, post:1\"]\nhello\n[/quote]\nHmmm!" }
-      let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post_with_validation).raw, topic_id: topic.id).create }
+      let!(:post) { PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create }
       let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number).create }
 
       it 'has a quote' do
@@ -841,10 +841,10 @@ describe Post do
   end
 
   context 'summary' do
-    let!(:p1) { Fabricate(:post_with_validation, post_args.merge(score: 4, percent_rank: 0.33)) }
-    let!(:p2) { Fabricate(:post_with_validation, post_args.merge(score: 10, percent_rank: 0.66)) }
-    let!(:p3) { Fabricate(:post_with_validation, post_args.merge(score: 5, percent_rank: 0.99)) }
-    fab!(:p4) { Fabricate(:post_with_validation, percent_rank: 0.99) }
+    let!(:p1) { Fabricate(:post, post_args.merge(score: 4, percent_rank: 0.33)) }
+    let!(:p2) { Fabricate(:post, post_args.merge(score: 10, percent_rank: 0.66)) }
+    let!(:p3) { Fabricate(:post, post_args.merge(score: 5, percent_rank: 0.99)) }
+    fab!(:p4) { Fabricate(:post, percent_rank: 0.99) }
 
     it "returns the OP and posts above the threshold in summary mode" do
       SiteSetting.summary_percent_filter = 66
@@ -856,9 +856,9 @@ describe Post do
   context 'sort_order' do
     context 'regular topic' do
 
-      let!(:p1) { Fabricate(:post_with_validation, post_args) }
-      let!(:p2) { Fabricate(:post_with_validation, post_args) }
-      let!(:p3) { Fabricate(:post_with_validation, post_args) }
+      let!(:p1) { Fabricate(:post, post_args) }
+      let!(:p2) { Fabricate(:post, post_args) }
+      let!(:p3) { Fabricate(:post, post_args) }
 
       it 'defaults to created order' do
         expect(Post.regular_order).to eq([p1, p2, p3])
@@ -868,10 +868,10 @@ describe Post do
 
   context "reply_history" do
 
-    let!(:p1) { Fabricate(:post_with_validation, post_args) }
-    let!(:p2) { Fabricate(:post_with_validation, post_args.merge(reply_to_post_number: p1.post_number)) }
-    let!(:p3) { Fabricate(:post_with_validation, post_args) }
-    let!(:p4) { Fabricate(:post_with_validation, post_args.merge(reply_to_post_number: p2.post_number)) }
+    let!(:p1) { Fabricate(:post, post_args) }
+    let!(:p2) { Fabricate(:post, post_args.merge(reply_to_post_number: p1.post_number)) }
+    let!(:p3) { Fabricate(:post, post_args) }
+    let!(:p4) { Fabricate(:post, post_args.merge(reply_to_post_number: p2.post_number)) }
 
     it "returns the posts in reply to this post" do
       expect(p4.reply_history).to eq([p1, p2])
@@ -885,12 +885,12 @@ describe Post do
   context "reply_ids" do
 
     fab!(:topic) { Fabricate(:topic) }
-    let!(:p1) { Fabricate(:post_with_validation, topic: topic, post_number: 1) }
-    let!(:p2) { Fabricate(:post_with_validation, topic: topic, post_number: 2, reply_to_post_number: 1) }
-    let!(:p3) { Fabricate(:post_with_validation, topic: topic, post_number: 3) }
-    let!(:p4) { Fabricate(:post_with_validation, topic: topic, post_number: 4, reply_to_post_number: 2) }
-    let!(:p5) { Fabricate(:post_with_validation, topic: topic, post_number: 5, reply_to_post_number: 4) }
-    let!(:p6) { Fabricate(:post_with_validation, topic: topic, post_number: 6) }
+    let!(:p1) { Fabricate(:post, topic: topic, post_number: 1) }
+    let!(:p2) { Fabricate(:post, topic: topic, post_number: 2, reply_to_post_number: 1) }
+    let!(:p3) { Fabricate(:post, topic: topic, post_number: 3) }
+    let!(:p4) { Fabricate(:post, topic: topic, post_number: 4, reply_to_post_number: 2) }
+    let!(:p5) { Fabricate(:post, topic: topic, post_number: 5, reply_to_post_number: 4) }
+    let!(:p6) { Fabricate(:post, topic: topic, post_number: 6) }
 
     before {
       PostReply.create!(post: p1, reply: p2)
@@ -927,8 +927,8 @@ describe Post do
 
     # integration test -> should move to centralized integration test
     it 'finds urls for posts presented' do
-      p1 = Fabricate(:post_with_validation)
-      p2 = Fabricate(:post_with_validation)
+      p1 = Fabricate(:post)
+      p2 = Fabricate(:post)
       expect(Post.urls([p1.id, p2.id])).to eq(p1.id => p1.url, p2.id => p2.url)
     end
   end
@@ -995,7 +995,7 @@ describe Post do
 
       describe 'when user can not mention a group' do
         it "should not create the mention" do
-          post = Fabricate(:post_with_validation, raw: "hello @#{group.name}")
+          post = Fabricate(:post, raw: "hello @#{group.name}")
           post.trigger_post_process
           post.reload
 
@@ -1027,7 +1027,7 @@ describe Post do
     let(:raw) { "hello from my site http://www.example.net http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}" }
 
     it "correctly detects host spam" do
-      post = Fabricate(:post_with_validation, raw: raw)
+      post = Fabricate(:post, raw: raw)
 
       expect(post.total_hosts_usage).to eq("www.example.net" => 1)
       post.acting_user.trust_level = 0
@@ -1045,7 +1045,7 @@ describe Post do
     it "doesn't punish staged users" do
       SiteSetting.newuser_spam_host_threshold = 1
       user = Fabricate(:user, staged: true, trust_level: 0)
-      post = Fabricate(:post_with_validation, raw: raw, user: user)
+      post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end
 
@@ -1055,7 +1055,7 @@ describe Post do
       user = Fabricate(:user, staged: true, trust_level: 0)
       user.created_at = 1.hour.ago
       user.unstage
-      post = Fabricate(:post_with_validation, raw: raw, user: user)
+      post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(true)
     end
 
@@ -1065,20 +1065,20 @@ describe Post do
       user = Fabricate(:user, staged: true, trust_level: 0)
       user.created_at = 1.day.ago
       user.unstage
-      post = Fabricate(:post_with_validation, raw: raw, user: user)
+      post = Fabricate(:post, raw: raw, user: user)
       expect(post.has_host_spam?).to eq(false)
     end
 
     it "ignores private messages" do
       SiteSetting.newuser_spam_host_threshold = 1
       user = Fabricate(:user, trust_level: 0)
-      post = Fabricate(:post_with_validation, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
+      post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
       expect(post.has_host_spam?).to eq(false)
     end
   end
 
   it "has custom fields" do
-    post = Fabricate(:post_with_validation)
+    post = Fabricate(:post)
     expect(post.custom_fields["a"]).to eq(nil)
 
     post.custom_fields["Tommy"] = "Hanks"
@@ -1110,7 +1110,7 @@ describe Post do
   end
 
   describe "#set_owner" do
-    fab!(:post) { Fabricate(:post_with_validation) }
+    fab!(:post) { Fabricate(:post) }
     fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "will change owner of a post correctly" do
@@ -1222,7 +1222,7 @@ describe Post do
   end
 
   it "automatically orders post revisions by number ascending" do
-    post = Fabricate(:post_with_validation)
+    post = Fabricate(:post)
     post.revisions.create!(user_id: 1, post_id: post.id, number: 2)
     post.revisions.create!(user_id: 1, post_id: post.id, number: 1)
     expect(post.revisions.pluck(:number)).to eq([1, 2])
@@ -1274,7 +1274,7 @@ describe Post do
       RAW
     end
 
-    let(:post) { Fabricate(:post_with_validation, raw: raw) }
+    let(:post) { Fabricate(:post, raw: raw) }
 
     it "finds all the uploads in the post" do
       post.custom_fields[Post::DOWNLOADED_IMAGES] = {
@@ -1341,13 +1341,13 @@ describe Post do
   context "have_uploads" do
     it "should find all posts with the upload" do
       ids = []
-      ids << Fabricate(:post_with_validation, cooked: "A post with upload <img src='/uploads/default/1/defghijklmno.png'>").id
-      ids << Fabricate(:post_with_validation, cooked: "A post with optimized image <img src='/uploads/default/_optimized/601/961/defghijklmno.png'>").id
-      Fabricate(:post_with_validation)
-      ids << Fabricate(:post_with_validation, cooked: "A post with upload <img src='/uploads/default/original/1X/abc/defghijklmno.png'>").id
-      ids << Fabricate(:post_with_validation, cooked: "A post with upload link <a href='https://cdn.example.com/original/1X/abc/defghijklmno.png'>").id
-      ids << Fabricate(:post_with_validation, cooked: "A post with optimized image <img src='https://cdn.example.com/bucket/optimized/1X/abc/defghijklmno.png'>").id
-      Fabricate(:post_with_validation, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
+      ids << Fabricate(:post, cooked: "A post with upload <img src='/uploads/default/1/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with optimized image <img src='/uploads/default/_optimized/601/961/defghijklmno.png'>").id
+      Fabricate(:post)
+      ids << Fabricate(:post, cooked: "A post with upload <img src='/uploads/default/original/1X/abc/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with upload link <a href='https://cdn.example.com/original/1X/abc/defghijklmno.png'>").id
+      ids << Fabricate(:post, cooked: "A post with optimized image <img src='https://cdn.example.com/bucket/optimized/1X/abc/defghijklmno.png'>").id
+      Fabricate(:post, cooked: "A post with external link <a href='https://example.com/wp-content/uploads/abcdef.gif'>")
       expect(Post.have_uploads.order(:id).pluck(:id)).to eq(ids)
     end
   end
