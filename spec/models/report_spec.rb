@@ -544,6 +544,7 @@ describe Report do
       before do
         freeze_time
 
+        post.revise(post.user, { raw: 'updated body by author', edit_reason: 'not cool' }, force_new_version: true)
         post.revise(editor, raw: 'updated body', edit_reason: 'not cool')
       end
 
