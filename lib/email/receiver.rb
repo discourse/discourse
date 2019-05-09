@@ -802,13 +802,13 @@ module Email
 
       return false if email.blank? || !email["@"]
 
-      embedded_user = find_or_create_user(email, display_name)
       raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
       title = embedded.subject.presence || subject
 
       case destination[:type]
       when :group
         group = destination[:obj]
+        embedded_user = find_or_create_user(email, display_name)
         post = create_topic(user: embedded_user,
                             raw: raw,
                             title: title,
@@ -825,6 +825,7 @@ module Email
         return false if user.staged? && !category.email_in_allow_strangers
         return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
+        embedded_user = find_or_create_user(email, display_name)
         post = create_topic(user: embedded_user,
                             raw: raw,
                             title: title,

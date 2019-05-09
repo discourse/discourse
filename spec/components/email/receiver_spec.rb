@@ -1043,7 +1043,13 @@ describe Email::Receiver do
         staged_user_count = User.where(staged: true).count
         User.expects(:create).never
         User.expects(:create!).never
-        expect { process(email_name) }.to raise_error(expected_exception)
+
+        if expected_exception
+          expect { process(email_name) }.to raise_error(expected_exception)
+        else
+          process(email_name)
+        end
+
         expect(User.where(staged: true).count).to eq(staged_user_count)
       end
     end
@@ -1158,6 +1164,24 @@ describe Email::Receiver do
 
       context "when the email address isn't matching the one we sent the notification to" do
         include_examples "does not create staged users", :reply_user_not_matching, Email::Receiver::ReplyUserNotMatchingError
+      end
+
+      context "when forwarded emails are enabled" do
+        before do
+          SiteSetting.enable_forwarded_emails = true
+        end
+
+        context "when a reply contains a forwareded email" do
+          include_examples "does not create staged users", :reply_and_forwarded
+        end
+
+        context "forwarded email to category that doesn't allow strangers" do
+          before do
+            category.update!(email_in: "team@bar.com", email_in_allow_strangers: false)
+          end
+
+          include_examples "cleans up staged users", :forwarded_email_1, Email::Receiver::StrangersNotAllowedError
+        end
       end
     end
 
