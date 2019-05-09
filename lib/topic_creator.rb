@@ -119,7 +119,6 @@ class TopicCreator
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
-
     @guardian.ensure_can_create!(Topic, category) unless (@opts[:skip_validations] || @opts[:archetype] == Archetype.private_message)
 
     topic_params[:category_id] = category.id if category.present?
@@ -137,20 +136,22 @@ class TopicCreator
   end
 
   def find_category
-    # PM can't have a category
-    @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+    @category ||= begin
+      # PM can't have a category
+      @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
 
-    if @opts[:shared_draft]
-      return Category.find(SiteSetting.shared_drafts_category)
-    end
+      if @opts[:shared_draft]
+        return Category.find(SiteSetting.shared_drafts_category)
+      end
 
-    # Temporary fix to allow older clients to create topics.
-    # When all clients are updated the category variable should
-    # be set directly to the contents of the if statement.
-    if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
-      Category.find_by(id: @opts[:category])
-    else
-      Category.find_by(name_lower: @opts[:category].try(:downcase))
+      # Temporary fix to allow older clients to create topics.
+      # When all clients are updated the category variable should
+      # be set directly to the contents of the if statement.
+      if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+        Category.find_by(id: @opts[:category])
+      else
+        Category.find_by(name_lower: @opts[:category].try(:downcase))
+      end
     end
   end
 
