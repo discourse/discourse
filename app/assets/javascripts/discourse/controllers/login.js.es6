@@ -97,7 +97,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       }
 
       if (Ember.isEmpty(this.loginName) || Ember.isEmpty(this.loginPassword)) {
-        self.flash(I18n.t("login.blank_username_or_password"), "error");
+        this.flash(I18n.t("login.blank_username_or_password"), "error");
         return;
       }
 
