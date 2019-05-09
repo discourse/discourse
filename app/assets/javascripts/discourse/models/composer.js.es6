@@ -948,7 +948,7 @@ const Composer = RestModel.extend({
       this._clearingStatus = null;
     }
 
-    const data = this.getProperties(
+    let data = this.getProperties(
       "reply",
       "action",
       "title",
@@ -957,12 +957,13 @@ const Composer = RestModel.extend({
       "archetypeId",
       "whisper",
       "metaData",
-      "usernames",
       "composerTime",
       "typingTime",
       "tags",
       "noBump"
     );
+
+    data = Object.assign(data, { usernames: this.targetUsernames });
 
     if (this.get("post.id") && !Ember.isEmpty(this.originalText)) {
       data.originalText = this.originalText;
