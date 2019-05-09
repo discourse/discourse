@@ -129,7 +129,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 showSecondFactor: true
               });
 
-              Ember.run.next(() =>
+              Ember.run.schedule("afterRender", () =>
                 document
                   .getElementById("second-factor")
                   .querySelector("input")
@@ -155,16 +155,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
             const hiddenLoginForm = document.getElementById(
               "hidden-login-form"
             );
+            const applyHiddenFormInputValue = (value, key) => {
+              if (!hiddenLoginForm) return;
+
+              hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
+            };
+
             const destinationUrl = $.cookie("destination_url");
             const ssoDestinationUrl = $.cookie("sso_destination_url");
 
-            hiddenLoginForm.querySelector(
-              "input[name=username]"
-            ).value = this.loginName;
-
-            hiddenLoginForm.querySelector(
-              "input[name=password]"
-            ).value = this.loginPassword;
+            applyHiddenFormInputValue(this.loginName, "username");
+            applyHiddenFormInputValue(this.loginPassword, "password");
 
             if (ssoDestinationUrl) {
               $.removeCookie("sso_destination_url");
@@ -174,24 +175,23 @@ export default Ember.Controller.extend(ModalFunctionality, {
               // redirect client to the original URL
               $.removeCookie("destination_url");
 
-              hiddenLoginForm.querySelector(
-                "input[name=redirect]"
-              ).value = destinationUrl;
+              applyHiddenFormInputValue(destinationUrl, "redirect");
             } else {
-              hiddenLoginForm.querySelector("input[name=redirect]").value =
-                window.location.href;
+              applyHiddenFormInputValue(window.location.href, "redirect");
             }
 
-            if (
-              navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-              navigator.userAgent.match(/Safari/g)
-            ) {
-              // In case of Safari on iOS do not submit hidden login form
-              window.location.href = hiddenLoginForm.querySelector(
-                "input[name=redirect]"
-              ).value;
-            } else {
-              hiddenLoginForm.submit();
+            if (hiddenLoginForm) {
+              if (
+                navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
+                navigator.userAgent.match(/Safari/g)
+              ) {
+                // In case of Safari on iOS do not submit hidden login form
+                window.location.href = hiddenLoginForm.querySelector(
+                  "input[name=redirect]"
+                ).value;
+              } else {
+                hiddenLoginForm.submit();
+              }
             }
             return;
           }
