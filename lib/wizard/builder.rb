@@ -147,9 +147,22 @@ class Wizard
 
       @wizard.append_step('colors') do |step|
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
-        scheme_id = default_theme&.color_scheme&.base_scheme_id || 'Light'
+        default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
-        themes = step.add_field(id: 'theme_previews', type: 'component', required: true, value: scheme_id)
+        scheme_id =
+          if default_theme_override
+            default_theme&.color_scheme&.base_scheme_id
+          else
+            ColorScheme::LIGHT_THEME_ID
+          end
+
+        themes = step.add_field(
+          id: 'theme_previews',
+          type: 'component',
+          required: !default_theme_override,
+          value: scheme_id
+        )
+
         ColorScheme.base_color_scheme_colors.each do |t|
           with_hash = t[:colors].dup
           with_hash.map { |k, v| with_hash[k] = "##{v}" }
@@ -157,7 +170,13 @@ class Wizard
         end
 
         step.on_update do |updater|
-          scheme_name = updater.fields[:theme_previews] || 'Light'
+          scheme_name = (
+            (updater.fields[:theme_previews] || "") ||
+            ColorScheme::LIGHT_THEME_ID
+          )
+
+          next unless scheme_name.present?
+
           name = I18n.t("color_schemes.#{scheme_name.downcase.gsub(' ', '_')}_theme_name")
 
           theme = nil
