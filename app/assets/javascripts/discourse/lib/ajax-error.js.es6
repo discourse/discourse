@@ -34,6 +34,8 @@ export function extractError(error, defaultMessage) {
       parsedError = parsedJSON.errors.join("<br>");
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
+    } else if (parsedJSON.message) {
+      parsedError = parsedJSON.message;
     } else if (parsedJSON.failed) {
       parsedError = parsedJSON.failed;
     }
