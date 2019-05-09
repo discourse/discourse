@@ -37,13 +37,7 @@ export default Ember.Controller.extend(
 
     @computed
     externalAuthsEnabled() {
-      return (
-        findLoginMethods(
-          this.siteSettings,
-          this.capabilities,
-          this.site.isMobileDevice
-        ).length > 0
-      );
+      return findLoginMethods().length > 0;
     },
 
     @computed(

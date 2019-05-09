@@ -55,7 +55,6 @@ export default Discourse.Route.extend({
       });
     } else {
       $.cookie("destination_url", window.location.href);
-      Discourse.useFullScreenLogin = true;
       this.replaceWith("login");
     }
   }
