@@ -25,22 +25,6 @@ module I18n
         end
       end
 
-      def fallbacks(locale)
-        I18n.fallbacks[locale]
-      end
-
-      def exists?(locale, key)
-        fallbacks(locale).each do |fallback|
-          begin
-            return true if super(fallback, key)
-          rescue I18n::InvalidLocale
-            # we do nothing when the locale is invalid, as this is a fallback anyways.
-          end
-        end
-
-        false
-      end
-
       def self.create_search_regexp(query, as_string: false)
         regexp = Regexp.escape(query)
 
@@ -55,7 +39,7 @@ module I18n
         results = {}
         regexp = self.class.create_search_regexp(query)
 
-        fallbacks(locale).each do |fallback|
+        I18n.fallbacks[locale].each do |fallback|
           find_results(regexp, results, translations[fallback])
         end
 
