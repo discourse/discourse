@@ -103,31 +103,21 @@ module JsLocaleHelper
   end
 
   def self.translations_for(locale_str)
-    current_locale  = I18n.locale
-    locale_sym      = locale_str.to_sym
-    site_locale     = SiteSetting.default_locale.to_sym
-    fallback_locale = LocaleSiteSetting.fallback_locale(locale_str)
-
-    I18n.locale = locale_sym
-
     if Rails.env.development?
       @loaded_translations = nil
       @plugin_translations = nil
       @loaded_merges = nil
     end
 
-    translations =
+    locale_sym = locale_str.to_sym
+
+    I18n.with_locale(locale_sym) do
       if locale_sym == :en
         load_translations(locale_sym)
-      elsif locale_sym == site_locale || site_locale == :en
-        load_translations_merged(locale_sym, fallback_locale, :en)
       else
-        load_translations_merged(locale_sym, fallback_locale, site_locale, :en)
+        load_translations_merged(*I18n.fallbacks[locale_sym])
       end
-
-    I18n.locale = current_locale
-
-    translations
+    end
   end
 
   def self.output_locale(locale)
