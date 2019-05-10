@@ -412,7 +412,7 @@ class Plugin::Instance
       full_path = File.dirname(path) << "/assets/" << file
     end
 
-    assets << [full_path, opts]
+    assets << [full_path, asset_name, opts]
   end
 
   def register_service_worker(file, opts = nil)
@@ -528,7 +528,7 @@ class Plugin::Instance
       contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
     end
 
-    File.delete(js_file_path) if asset_exists?
+    File.delete(js_file_path) if js_asset_exists?
 
     if contents.present?
       contents.insert(0, "<%")
@@ -635,8 +635,12 @@ class Plugin::Instance
     @asset_name ||= File.dirname(path).split("/").last
   end
 
-  def asset_exists?
+  def js_asset_exists?
     File.exists?(js_file_path)
+  end
+
+  def css_asset_exists?
+    DiscoursePluginRegistry.stylesheets_exists?(asset_name)
   end
 
   protected
@@ -650,8 +654,8 @@ class Plugin::Instance
   end
 
   def register_assets!
-    assets.each do |asset, opts|
-      DiscoursePluginRegistry.register_asset(asset, opts)
+    assets.each do |asset, asset_name, opts|
+      DiscoursePluginRegistry.register_asset(asset, opts, asset_name)
     end
   end
 

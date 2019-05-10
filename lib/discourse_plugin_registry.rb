@@ -45,15 +45,15 @@ class DiscoursePluginRegistry
     end
 
     def stylesheets
-      @stylesheets ||= Set.new
+      @stylesheets ||= Hash.new
     end
 
     def mobile_stylesheets
-      @mobile_stylesheets ||= Set.new
+      @mobile_stylesheets ||= Hash.new
     end
 
     def desktop_stylesheets
-      @desktop_stylesheets ||= Set.new
+      @desktop_stylesheets ||= Hash.new
     end
 
     def sass_variables
@@ -151,7 +151,7 @@ class DiscoursePluginRegistry
   JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6|\.js\.no-module\.es6$/
   HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
 
-  def self.register_asset(asset, opts = nil)
+  def self.register_asset(asset, opts = nil, asset_name)
     if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
@@ -164,17 +164,24 @@ class DiscoursePluginRegistry
       end
     elsif asset =~ /\.css$|\.scss$/
       if opts == :mobile
-        self.mobile_stylesheets << asset
+        self.mobile_stylesheets[asset_name] ||= []
+        self.mobile_stylesheets[asset_name] << asset
       elsif opts == :desktop
-        self.desktop_stylesheets << asset
+        self.desktop_stylesheets[asset_name] ||= []
+        self.desktop_stylesheets[asset_name] << asset
       elsif opts == :variables
         self.sass_variables << asset
       else
-        self.stylesheets << asset
+        self.stylesheets[asset_name] ||= []
+        self.stylesheets[asset_name] << asset
       end
     elsif asset =~ HANDLEBARS_REGEX
       self.handlebars << asset
     end
+  end
+
+  def self.stylesheets_exists?(asset_name)
+    self.stylesheets[asset_name].present? || self.mobile_stylesheets[asset_name].present? || self.desktop_stylesheets[asset_name].present?
   end
 
   def self.register_seed_data(key, value)

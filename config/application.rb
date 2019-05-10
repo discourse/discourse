@@ -246,7 +246,7 @@ module Discourse
       Discourse.activate_plugins!
     end
 
-    Discourse.find_plugin_assets(include_disabled: true).each do |file|
+    Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
       config.assets.precompile << "#{file}.js"
     end
 
