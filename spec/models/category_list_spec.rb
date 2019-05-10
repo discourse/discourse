@@ -4,6 +4,10 @@ require 'rails_helper'
 require 'category_list'
 
 describe CategoryList do
+  before do
+    # we need automatic updating here cause we are testing this
+    Topic.update_featured_topics = true
+  end
 
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
@@ -66,7 +70,7 @@ describe CategoryList do
     fab!(:topic_category) { Fabricate(:category, num_featured_topics: 2) }
 
     context "with a topic in a category" do
-      fab!(:topic) { Fabricate(:topic, category: topic_category) }
+      let(:topic) { Fabricate(:topic, category: topic_category) }
       let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
 
       it "should return the category" do
@@ -77,19 +81,22 @@ describe CategoryList do
     end
 
     context "with pinned topics in a category" do
-      fab!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
-      fab!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
-      fab!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
-      fab!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
-      let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
+      let!(:topic1) { Fabricate(:topic, category: topic_category, bumped_at: 8.minutes.ago) }
+      let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
+      let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
+      let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
 
-      it "returns pinned topic first" do
-        expect(category.displayable_topics.map(&:id)).to eq([pinned.id, topic3.id])
+      def displayable_topics
+        category_list = CategoryList.new(Guardian.new(user), include_topics: true)
+        category_list.categories.find { |c| c.id == topic_category.id }.displayable_topics.map(&:id)
       end
 
-      it "returns topics in bumped_at order if pinned was unpinned" do
-        PinnedCheck.stubs(:unpinned?).returns(true)
-        expect(category.displayable_topics.map(&:id)).to eq([topic3.id, topic2.id])
+      it "returns pinned topic first" do
+        expect(displayable_topics).to eq([pinned.id, topic3.id])
+
+        TopicUser.change(user.id, pinned.id, cleared_pinned_at: pinned.pinned_at + 10)
+
+        expect(displayable_topics).to eq([topic3.id, topic2.id])
       end
     end
 

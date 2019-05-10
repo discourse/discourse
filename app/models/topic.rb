@@ -671,6 +671,8 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
+  cattr_accessor :update_featured_topics
+
   def changed_to_category(new_category)
     return true if new_category.blank? || Category.exists?(topic_id: id)
     return false if new_category.id == SiteSetting.uncategorized_category_id && !SiteSetting.allow_uncategorized_topics
@@ -701,8 +703,11 @@ class Topic < ActiveRecord::Base
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
-      CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
-      CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+
+      if Topic.update_featured_topics != false
+        CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
+        CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+      end
     end
 
     true
