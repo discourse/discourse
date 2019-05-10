@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::NotifyReviewable do
   describe '.execute' do
-    let!(:admin) { Fabricate(:admin, moderator: true) }
-    let!(:moderator) { Fabricate(:moderator) }
-    let!(:group_user) { Fabricate(:group_user) }
+    fab!(:admin) { Fabricate(:admin, moderator: true) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:group_user) { Fabricate(:group_user) }
     let(:user) { group_user.user }
     let(:group) { group_user.group }
 
     it "will notify users of new reviewable content" do
+      SiteSetting.enable_category_group_review = true
+
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
 
       # Content for admins only
@@ -47,8 +51,22 @@ describe Jobs::NotifyReviewable do
       expect(group_msg.data[:reviewable_count]).to eq(1)
     end
 
+    it "won't notify a group when disabled" do
+      SiteSetting.enable_category_group_review = false
+
+      GroupUser.create!(group_id: group.id, user_id: moderator.id)
+      r3 = Fabricate(:reviewable, reviewable_by_moderator: true, reviewable_by_group: group)
+      messages = MessageBus.track_publish("/reviewable_counts") do
+        described_class.new.execute(reviewable_id: r3.id)
+      end
+      group_msg = messages.find { |m| m.user_ids.include?(user.id) }
+      expect(group_msg).to be_blank
+    end
+
     it "respects visibility" do
-      SiteSetting.min_score_default_visibility = 2.0
+      SiteSetting.enable_category_group_review = true
+      Reviewable.set_priorities(medium: 2.0)
+      SiteSetting.reviewable_default_visibility = 'medium'
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
 

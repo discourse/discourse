@@ -11,6 +11,14 @@
 <section class="field">
   <label for="category-allowed-tag-groups">{{i18n 'category.tags_allowed_tag_groups'}}</label>
   {{tag-group-chooser id="category-allowed-tag-groups" tagGroups=category.allowed_tag_groups}}
+  {{#link-to 'tagGroups'}}{{i18n 'category.manage_tag_groups_link'}}{{/link-to}}
+</section>
+
+<section class='field'>
+  <label>
+    {{input type="checkbox" checked=category.allow_global_tags id="allow_global_tags" disabled=disableAllowGlobalTags}}
+    {{i18n 'category.allow_global_tags_label'}}
+  </label>
 </section>
 
 <section class='field'>

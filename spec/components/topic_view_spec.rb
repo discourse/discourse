@@ -1,11 +1,17 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'topic_view'
 
 describe TopicView do
 
-  let(:topic) { create_topic }
-  let(:evil_trout) { Fabricate(:evil_trout) }
-  let(:first_poster) { topic.user }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
+  fab!(:first_poster) { topic.user }
+  fab!(:anonymous) { Fabricate(:anonymous) }
 
   let(:topic_view) { TopicView.new(topic.id, evil_trout) }
 
@@ -25,78 +31,58 @@ describe TopicView do
   end
 
   it "handles deleted topics" do
-    admin = Fabricate(:admin)
     topic.trash!(admin)
-    expect { TopicView.new(topic.id, Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
+    expect { TopicView.new(topic.id, user) }.to raise_error(Discourse::InvalidAccess)
     expect { TopicView.new(topic.id, admin) }.not_to raise_error
   end
 
   context "setup_filtered_posts" do
     describe "filters posts with ignored users" do
-      let!(:user) { Fabricate(:user) }
-      let!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
+      fab!(:ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: user) }
       let!(:post) { Fabricate(:post, topic: topic, user: first_poster) }
       let!(:post2) { Fabricate(:post, topic: topic, user: evil_trout) }
       let!(:post3) { Fabricate(:post, topic: topic, user: user) }
 
-      describe "when SiteSetting.ignore_user_enabled is false" do
-        it "does not filter out ignored user posts" do
-          SiteSetting.ignore_user_enabled = false
-
-          tv = TopicView.new(topic.id, evil_trout)
-          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id])
-        end
+      it "filters out ignored user posts" do
+        tv = TopicView.new(topic.id, evil_trout)
+        expect(tv.filtered_post_ids).to eq([post.id, post2.id])
       end
 
-      describe "when SiteSetting.ignore_user_enabled is true" do
+      describe "when an ignored user made the original post" do
+        let!(:post) { Fabricate(:post, topic: topic, user: user) }
 
-        before do
-          SiteSetting.ignore_user_enabled = true
-        end
-
-        it "filters out ignored user posts" do
+        it "filters out ignored user posts only" do
           tv = TopicView.new(topic.id, evil_trout)
           expect(tv.filtered_post_ids).to eq([post.id, post2.id])
         end
+      end
 
-        describe "when an ignored user made the original post" do
-          let!(:post) { Fabricate(:post, topic: topic, user: user) }
+      describe "when an anonymous user made a post" do
+        let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
-          it "filters out ignored user posts only" do
-            tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id])
-          end
+        it "filters out ignored user posts only" do
+          tv = TopicView.new(topic.id, evil_trout)
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
         end
+      end
 
-        describe "when an anonymous user made a post" do
-          let(:anonymous) { Fabricate(:anonymous) }
-          let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
+      describe "when an anonymous (non signed-in) user is viewing a Topic" do
+        let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
 
-          it "filters out ignored user posts only" do
-            tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
-          end
+        it "filters out ignored user posts only" do
+          tv = TopicView.new(topic.id, nil)
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id, post4.id])
         end
+      end
 
-        describe "when an anonymous (non signed-in) user is viewing a Topic" do
-          let(:anonymous) { Fabricate(:anonymous) }
-          let!(:post4) { Fabricate(:post, topic: topic, user: anonymous) }
+      describe "when a staff user is ignored" do
+        let!(:admin) { Fabricate(:user, admin: true) }
+        let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
+        let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
 
-          it "filters out ignored user posts only" do
-            tv = TopicView.new(topic.id, nil)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post3.id, post4.id])
-          end
-        end
-
-        describe "when a staff user is ignored" do
-          let!(:admin) { Fabricate(:user, admin: true) }
-          let!(:admin_ignored_user) { Fabricate(:ignored_user, user: evil_trout, ignored_user: admin) }
-          let!(:post4) { Fabricate(:post, topic: topic, user: admin) }
-
-          it "filters out ignored user excluding the staff user" do
-            tv = TopicView.new(topic.id, evil_trout)
-            expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
-          end
+        it "filters out ignored user excluding the staff user" do
+          tv = TopicView.new(topic.id, evil_trout)
+          expect(tv.filtered_post_ids).to eq([post.id, post2.id, post4.id])
         end
       end
     end
@@ -114,12 +100,9 @@ describe TopicView do
   end
 
   context "with a few sample posts" do
-    let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
-    let!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
-
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
+    fab!(:p2) { Fabricate(:post, topic: topic, user: evil_trout, percent_rank: 0.5) }
+    fab!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
     it "it can find the best responses" do
 
@@ -128,7 +111,7 @@ describe TopicView do
       expect(best2.posts[0].id).to eq(p2.id)
       expect(best2.posts[1].id).to eq(p3.id)
 
-      topic.update_status('closed', true, Fabricate(:admin))
+      topic.update_status('closed', true, admin)
       expect(topic.posts.count).to eq(4)
 
       # should not get the status post
@@ -181,8 +164,8 @@ describe TopicView do
     end
 
     context 'log_check_personal_message is enabled' do
-      let(:group) { Fabricate(:group) }
-      let(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:private_message) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         SiteSetting.log_personal_messages_views = true
@@ -211,7 +194,7 @@ describe TopicView do
       end
 
       it "does not log personal message view if user can't see the message" do
-        expect { TopicView.new(private_message.id, Fabricate(:user)) }.to raise_error(Discourse::InvalidAccess)
+        expect { TopicView.new(private_message.id, user) }.to raise_error(Discourse::InvalidAccess)
         expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
       end
 
@@ -246,8 +229,7 @@ describe TopicView do
     end
 
     describe "#get_canonical_path" do
-      let(:user) { Fabricate(:user) }
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:path) { "/1234" }
 
       before do
@@ -273,7 +255,6 @@ describe TopicView do
         topic.stubs(:highest_post_number).returns(5)
         topic
       end
-      let(:user) { Fabricate(:user) }
 
       before do
         TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
@@ -318,28 +299,6 @@ describe TopicView do
       it 'returns the like' do
         PostActionCreator.like(evil_trout, p1)
         expect(topic_view.all_post_actions[p1.id][PostActionType.types[:like]]).to be_present
-      end
-    end
-
-    context '.all_active_flags' do
-      it 'is blank at first' do
-        expect(topic_view.all_active_flags).to be_blank
-      end
-
-      it 'returns the active flags' do
-        PostActionCreator.off_topic(moderator, p1)
-        PostActionCreator.off_topic(evil_trout, p1)
-
-        expect(topic_view.all_active_flags[p1.id][PostActionType.types[:off_topic]]).to eq(2)
-      end
-
-      it 'returns only the active flags' do
-        reviewable = PostActionCreator.off_topic(moderator, p1).reviewable
-        PostActionCreator.off_topic(evil_trout, p1)
-
-        reviewable.perform(moderator, :ignore)
-
-        expect(topic_view.all_active_flags[p1.id]).to eq(nil)
       end
     end
 
@@ -400,7 +359,7 @@ describe TopicView do
       anon_posts = TopicView.new(topic.id).posts
       expect(anon_posts.map(&:id)).to eq([p1.id, p3.id])
 
-      admin_posts = TopicView.new(topic.id, Fabricate(:moderator)).posts
+      admin_posts = TopicView.new(topic.id, moderator).posts
       expect(admin_posts.map(&:id)).to eq([p1.id, p2.id, p3.id])
     end
   end
@@ -410,7 +369,7 @@ describe TopicView do
     # Create the posts in a different order than the sort_order
     let!(:p5) { Fabricate(:post, topic: topic, user: evil_trout) }
     let!(:p2) { Fabricate(:post, topic: topic, user: evil_trout) }
-    let!(:p6) { Fabricate(:post, topic: topic, user: Fabricate(:user), deleted_at: Time.now) }
+    let!(:p6) { Fabricate(:post, topic: topic, user: user, deleted_at: Time.now) }
     let!(:p4) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now) }
     let!(:p1) { Fabricate(:post, topic: topic, user: first_poster) }
     let!(:p7) { Fabricate(:post, topic: topic, user: evil_trout, deleted_at: Time.now) }
@@ -610,8 +569,8 @@ describe TopicView do
   end
 
   context "page_title" do
-    let(:tag1) { Fabricate(:tag) }
-    let(:tag2) { Fabricate(:tag, topic_count: 2) }
+    fab!(:tag1) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag, topic_count: 2) }
 
     subject { TopicView.new(topic.id, evil_trout).page_title }
 
@@ -650,7 +609,7 @@ describe TopicView do
     context "categorized topic" do
       let(:category) { Fabricate(:category) }
 
-      before { topic.update_attributes(category_id: category.id) }
+      before { topic.update(category_id: category.id) }
 
       context "topic_page_title_includes_category is false" do
         before { SiteSetting.topic_page_title_includes_category = false }

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'new_post_manager'
 
 describe NewPostManager do
 
-  let(:topic) { Fabricate(:topic) }
+  fab!(:topic) { Fabricate(:topic) }
 
   context "default action" do
     it "creates the post by default" do
@@ -18,7 +20,7 @@ describe NewPostManager do
   end
 
   context "default action" do
-    let(:other_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
 
     it "doesn't enqueue private messages" do
       SiteSetting.approve_unless_trust_level = 4
@@ -78,6 +80,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
       end
     end
 
@@ -90,6 +93,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:post_count)
       end
     end
 
@@ -109,7 +113,7 @@ describe NewPostManager do
         SiteSetting.approve_post_count = 100
         user = Fabricate(:user)
         category_group = Fabricate(:category_group, permission_type: 2)
-        group_user = Fabricate(:group_user, group: category_group.group, user_id: user.id)
+        Fabricate(:group_user, group: category_group.group, user_id: user.id)
 
         manager = NewPostManager.new(
           user,
@@ -130,6 +134,28 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:trust_level)
+      end
+    end
+
+    context "with uncategorized disabled, and approval" do
+      before do
+        SiteSetting.allow_uncategorized_topics = false
+        SiteSetting.approve_unless_trust_level = 4
+      end
+
+      it "will return an enqueue result" do
+        npm = NewPostManager.new(
+          Fabricate(:user),
+          title: 'this is a new topic title',
+          raw: "this is the raw content",
+          category: Fabricate(:category).id
+        )
+
+        result = NewPostManager.default_handler(npm)
+        expect(NewPostManager.queue_enabled?).to eq(true)
+        expect(result.action).to eq(:enqueued)
+        expect(result.errors).to be_blank
       end
     end
 
@@ -142,6 +168,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:staged)
       end
     end
 
@@ -167,6 +194,7 @@ describe NewPostManager do
         result = NewPostManager.default_handler(manager)
         expect(NewPostManager.queue_enabled?).to eq(true)
         expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:new_topics_unless_trust_level)
       end
     end
 
@@ -242,12 +270,15 @@ describe NewPostManager do
     end
 
     it "calls custom enqueuing handlers" do
-      SiteSetting.min_score_default_visibility = 20.5
+      Reviewable.set_priorities(high: 20.5)
+      SiteSetting.reviewable_default_visibility = 'high'
 
       manager = NewPostManager.new(
         topic.user,
         raw: 'to the handler I say enqueue me!',
-        title: 'this is the title of the queued post'
+        title: 'this is the title of the queued post',
+        tags: ['hello', 'world'],
+        category: topic.category_id
       )
 
       result = manager.perform
@@ -259,6 +290,8 @@ describe NewPostManager do
       expect(reviewable.reviewable_scores).to be_present
       expect(reviewable.score).to eq(20.5)
       expect(reviewable.reviewable_by_moderator?).to eq(true)
+      expect(reviewable.category).to be_present
+      expect(reviewable.payload['tags']).to eq(['hello', 'world'])
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
       expect(result.pending_count).to eq(1)
@@ -266,14 +299,18 @@ describe NewPostManager do
       expect(Reviewable.list_for(Discourse.system_user).count).to eq(1)
       expect(@counter).to be(0)
 
-      reviewable.perform(Discourse.system_user, :approve)
+      reviewable.perform(Discourse.system_user, :approve_post)
 
       manager = NewPostManager.new(
         topic.user,
         raw: 'another post by this user queue me',
-        title: 'cool title in another topic'
+        topic_id: topic.id
       )
       result = manager.perform
+      reviewable = result.reviewable
+
+      expect(reviewable.topic).to be_present
+      expect(reviewable.category).to be_present
       expect(result.pending_count).to eq(1)
     end
 
@@ -302,25 +339,25 @@ describe NewPostManager do
     it "handles post_needs_approval? correctly" do
       u = user
       default = NewPostManager.new(u, {})
-      expect(NewPostManager.post_needs_approval?(default)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(default)).to eq(:skip)
 
       with_check = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check)).to eq(true)
+      expect(NewPostManager.post_needs_approval?(with_check)).to eq(:fast_typer)
 
       u.user_stat.post_count = 1
       with_check_and_post = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_and_post)).to eq(:skip)
 
       u.user_stat.post_count = 0
       u.trust_level = 1
       with_check_tl1 = NewPostManager.new(u, first_post_checks: true)
-      expect(NewPostManager.post_needs_approval?(with_check_tl1)).to eq(false)
+      expect(NewPostManager.post_needs_approval?(with_check_tl1)).to eq(:skip)
     end
   end
 
   context 'when posting in the category requires approval' do
-    let(:user) { Fabricate(:user) }
-    let(:category) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:category) { Fabricate(:category) }
 
     context 'when new topics require approval' do
       before do
@@ -336,12 +373,14 @@ describe NewPostManager do
           category: category.id
         )
 
-        expect(manager.perform.action).to eq(:enqueued)
+        result = manager.perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
       end
     end
 
     context 'when new posts require approval' do
-      let(:topic) { Fabricate(:topic, category: category) }
+      fab!(:topic) { Fabricate(:topic, category: category) }
 
       before do
         category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
@@ -350,7 +389,10 @@ describe NewPostManager do
 
       it 'enqueues new posts' do
         manager = NewPostManager.new(user, raw: 'this is a new post', topic_id: topic.id)
-        expect(manager.perform.action).to eq(:enqueued)
+
+        result = manager.perform
+        expect(result.action).to eq(:enqueued)
+        expect(result.reason).to eq(:category)
       end
 
       it "doesn't blow up with invalid topic_id" do

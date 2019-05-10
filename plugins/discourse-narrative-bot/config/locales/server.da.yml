@@ -34,3 +34,8 @@ da:
         Jeg beklager, det er matematisk umuligt at rulle den kombination af terninger. :confounded:
       not_enough_dice: |-
         I only have %{num_of_dice} dice. [Skamfuldt](http://www.therobotsvoice.com/2009/04/the_10_most_shameful_rpg_dice.php), jeg ved det!
+    magic_8_ball:
+      answers:
+        '9': "Ja"
+    new_user_narrative:
+      reset_trigger: "ny bruger"

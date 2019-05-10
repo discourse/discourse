@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::SiteSettingsController do
@@ -7,7 +9,7 @@ describe Admin::SiteSettingsController do
   end
 
   context 'while logged in as an admin' do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)

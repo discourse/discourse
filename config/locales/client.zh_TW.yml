@@ -169,7 +169,6 @@ zh_TW:
     age: "已建立"
     joined: "加入時間"
     admin_title: "管理員"
-    flags_title: "標記"
     show_more: "顯示更多"
     show_help: "選項"
     links: "連結"
@@ -195,6 +194,8 @@ zh_TW:
     every_hour: "每小時"
     daily: "每天"
     weekly: "每週"
+    every_month: "每個月"
+    every_six_months: "每半年"
     max_of_count: "（最大 {{count}}）"
     alternation: "或"
     character_count:
@@ -280,25 +281,93 @@ zh_TW:
       title:
         search: "以標題尋找訊息"
         placeholder: "輸入訊息標題"
-    queue:
-      topic: "話題："
-      approve: "批准"
-      reject: "拒絕"
-      delete_user: "刪除使用者"
-      title: "需審核"
-      none: "沒有要回顧的貼文。"
-      edit: "編輯"
-      cancel: "取消"
-      view_pending: "觀看待審核的貼文"
-      has_pending_posts:
+    review:
+      delete: "刪除"
+      settings:
+        saved: "已儲存"
+        save_changes: "儲存變更"
+        title: "設定"
+        score_bonuses:
+          title: "積分獎金"
+          description: "獎金允許某些類型的人比別人的得分更高，使他們可以優先。注意：改變這些值將不會應用到過去的計分項目。"
+      moderation_history: "審核歷史"
+      view_all: "查看全部"
+      grouped_by_topic: "按主題分類"
+      none: "沒有要審查的項目"
+      view_pending: "觀看待審核"
+      topic_has_pending:
         other: "本話題中仍有 <b>{{count}}</b>篇待審核貼文"
-      confirm: "儲存變更"
-      delete_prompt: "你確定要刪除 <b>%{username}</b> 嗎？此操作將移除所有其貼文，並封鎖其電子郵件與 IP 位置。"
+      title: "需要審核"
+      topic: "話題："
+      filtered_topic: "您已篩選到單個主題中的可審閱內容。"
+      filtered_user: "使用者："
+      show_all_topics: "顯示所有話題"
+      user:
+        username: "使用者名稱"
+        email: "電子信箱"
+        name: "名稱"
+      user_percentage:
+        summary:
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} (共{{count}}則檢舉)"
+        agreed:
+          other: "{{count}}%同意"
+        disagreed:
+          other: "{{count}}%不同意"
+        ignored:
+          other: "{{count}}% 忽略"
+      topics:
+        topic: "話題"
+        reviewable_count: "次數"
+        reported_by: "回報由"
+        details: "詳情"
+        unique_users:
+          other: "%{count} 使用者"
+      edit: "編輯"
+      save: "儲存"
+      cancel: "取消"
+      new_topic: "新增話題"
+      filters:
+        type:
+          title: "類型："
+          all: "（所有類型）"
+        minimum_score: "最低分數："
+        refresh: "重新整理"
+        status: "狀態："
+        category: "分類："
+      conversation:
+        view_full: "查看完整對話"
+      scores:
+        score: "分數"
+        type: "類型"
+        submitted_by: "提交由"
+      statuses:
+        pending:
+          title: "申請中"
+        approved:
+          title: "已同意"
+        rejected:
+          title: "被拒絕"
+        ignored:
+          title: "忽略"
+        deleted:
+          title: "刪除"
+        reviewed:
+          title: "（所有已審核）"
+        all:
+          title: "（所有）"
+      types:
+        reviewable_flagged_post:
+          title: "標記的貼文"
+          flagged_by: "標記由"
+        reviewable_queued_post:
+          title: "排定的貼文"
+        reviewable_user:
+          title: "使用者"
       approval:
         title: "貼文需等待審核"
         description: "我們已收到您的貼文，但需要先經過版主審核後才會顯示出來。敬請稍後。"
         pending_posts:
-          other: "你有 <strong>{{count}}</strong> 篇待審核的貼文"
+          other: "你有 <strong>{{count}}</strong> 篇貼文在等待審核中"
         ok: "確定"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 開啟了 <a href='{{topicUrl}}'>此話題</a>"
@@ -342,10 +411,19 @@ zh_TW:
         remove_user_as_group_owner: "撤銷擁有者"
     groups:
       member_added: "已新增"
+      member_requested: "請求"
       add_members:
         title: "新增成員"
         description: "管理這個群組的成員"
         usernames: "使用者名稱"
+      requests:
+        title: "請求"
+        reason: "原因"
+        accept: "接受"
+        accepted: "已接受"
+        deny: "拒絕"
+        denied: "被拒絕"
+        undone: "請求未完成"
       manage:
         title: "管理"
         name: "名稱"
@@ -376,6 +454,7 @@ zh_TW:
       empty:
         posts: "沒有來自該群組成員的貼文。"
         members: "群組內無成員。"
+        requests: "群組內無任何成員發出請求"
         mentions: "群組未曾被提及"
         messages: "無該群組的訊息。"
         topics: "沒有來自該群組成員的話題。"
@@ -540,6 +619,18 @@ zh_TW:
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
+      user_notifications:
+        ignore_duration_title: "忽略計時器"
+        ignore_duration_when: "持續時間："
+        ignore_duration_save: "忽略"
+        ignore_duration_note: "請注意，在忽略時間過期後，將自動忽略所有忽略過的。"
+        ignore_duration_time_frame_required: "請選擇一個有效時間範圍"
+        ignore_option: "已忽略"
+        ignore_option_title: "您將不會收到與此使用者相關的通知，並且該使用者的所有主題與留言都將被隱藏。"
+        mute_option: "靜音"
+        mute_option_title: "您將不會收到與此使用者相關的任何通知。"
+        normal_option: "一般"
+        normal_option_title: "如果有人@你或回覆你的帖子，將通知你。"
       activity_stream: "活動"
       preferences: "偏好設定"
       profile_hidden: "該使用者的個人檔案已被設為隱藏。"
@@ -565,8 +656,6 @@ zh_TW:
       dismiss_notifications: "忽略全部"
       dismiss_notifications_tooltip: "將所有未讀通知設為已讀"
       first_notification: "你的第一則通知！選擇以開始。"
-      disable_jump_reply: "不要在回覆之後直接跳到我的貼文"
-      dynamic_favicon: "在瀏覽器小圖示上顯示新話題/更新的話題數"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
@@ -822,6 +911,8 @@ zh_TW:
         every_hour: "每小時"
         daily: "每天"
         weekly: "每週"
+        every_month: "每個月"
+        every_six_months: "每半年"
       email_level:
         title: "當有人引用、回覆我的發文，或以 @使用者名稱 提及我時，請以電子郵件通知我。"
         always: "總是"
@@ -1128,10 +1219,6 @@ zh_TW:
         name: "Facebook"
         title: "使用 Facebook"
         message: "使用 Facebook 認証 （請確定你的網頁瀏覽器未阻擋彈出視窗）"
-      yahoo:
-        name: "Yahoo"
-        title: "使用 Yahoo"
-        message: "使用 Yahoo 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
       github:
         name: "GitHub"
         title: "使用 GitHub"
@@ -1170,6 +1257,8 @@ zh_TW:
       alt: "Alt"
     conditional_loading_section:
       loading: 載入中...
+    category_row:
+      topic_count: "{{count}}個話題在此分類"
     select_kit:
       default_header_text: 選擇...
       no_content: 找不到符合的項目
@@ -1217,8 +1306,6 @@ zh_TW:
       toggle_whisper: "切換密談"
       toggle_unlisted: "切換 不公開"
       posting_not_on_topic: "你想要回覆哪個話題?"
-      saving_draft_tip: "正在儲存..."
-      saved_draft_tip: "儲存完畢"
       saved_local_draft_tip: "本地儲存完畢"
       similar_topics: "與你的話題類似的討論..."
       drafts_offline: "離線草稿"
@@ -1341,7 +1428,6 @@ zh_TW:
       none: "目前無法載入通知。"
       empty: "未找到任何通知。"
       more: "檢視較舊的通知"
-      total_flagged: "所有被檢舉的貼文"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1599,7 +1685,9 @@ zh_TW:
         next_week: "下週"
         two_weeks: "兩週"
         next_month: "下個月"
+        two_months: "兩個月"
         three_months: "三個月"
+        four_months: "四個月"
         six_months: "六個月"
         one_year: "一年"
         forever: "永久"
@@ -1865,6 +1953,8 @@ zh_TW:
         deselect_all: 取消選取
         description:
           other: "你已選擇了 <b>{{count}}</b> 篇貼文。"
+      deleted_by_author:
+        other: "（主題已被作者撤回，將在%{count}小時內自動刪除，若有標記便不會刪除）"
     post:
       quote_reply: "引用"
       edit_reason: "原因: "
@@ -1876,7 +1966,6 @@ zh_TW:
       continue_discussion: "繼續 {{postLink}} 的討論:"
       follow_quote: "跳到引用的貼文"
       show_full: "顯示所有貼文"
-      show_hidden: "觀看隱藏內容"
       deleted_by_author:
         other: "( 貼文已被作者撤回，除非被檢舉，否則在 %{count} 小時內將自動刪除。)"
       collapse: "收起"
@@ -1885,13 +1974,11 @@ zh_TW:
       gap:
         other: "檢視 {{count}} 則隱藏回應"
       notice:
-        first: "這是{{user}}第一次發表貼文，一起歡迎他加入我們的社群！"
-        return: "{{user}}已經有一陣子沒出現了—— 他最後一次發文是在{{time}}。"
+        new_user: "這是{{user}}第一次發表貼文，一起歡迎他加入我們的社群！"
+        returning_user: "{{user}}已經有一陣子沒出現了—— 他最後一次發文是在{{time}}。"
       unread: "貼文未讀"
       has_replies:
         other: "{{count}} 個回覆"
-      has_likes:
-        other: "{{count}} 個讚"
       has_likes_title:
         other: "{{count}} 個使用者對此貼文讚好"
       has_likes_title_only_you: "你已按讚"
@@ -2065,8 +2152,6 @@ zh_TW:
       settings: "設定"
       topic_template: "話題範本"
       tags: "標籤"
-      tags_allowed_tags: "此分類中只允許使用這些標籤"
-      tags_allowed_tag_groups: "此分類中只允許使用來自這些群組的標籤"
       tags_placeholder: "（可選）允許使用的標籤列表"
       tags_tab_description: "此處指定的標記和標記群組僅在此類別以及也指定它們的其他類別中可用。它們不可用於其他類別。"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
@@ -2119,7 +2204,6 @@ zh_TW:
       require_topic_approval: "所有新話題皆需要通過管理員審核"
       require_reply_approval: "所有新回覆皆需要通過管理員審核"
       this_year: "今年"
-      position: "位置"
       default_position: "預設的位置"
       position_disabled: "分類的顯示將會以活躍度為排序依據。若要控制分類排序方法，"
       position_disabled_click: '請啟用"固定分類位置"設定'
@@ -2148,6 +2232,10 @@ zh_TW:
         options:
           normal: "一般"
           ignore: "忽略"
+          very_low: "非常低"
+          low: "低"
+          high: "高"
+          very_high: "非常高"
       sort_options:
         default: "預設"
         likes: "讚"
@@ -2165,6 +2253,10 @@ zh_TW:
         rows_with_featured_topics: "一排精選主題"
         boxes: "匣"
         boxes_with_featured_topics: "精選話題匣"
+      settings_sections:
+        general: "一般"
+        moderation: "管理"
+        email: "電子信箱"
     flagging:
       title: "感謝幫助社群遠離邪惡！"
       action: "檢舉貼文"
@@ -2536,8 +2628,6 @@ zh_TW:
       dashboard:
         title: "控制台"
         last_updated: "控制台最後更新時間:"
-        find_old: "您是否在找尋舊的控制面板？"
-        old_link: "請由此瀏覽"
         version: "版本"
         up_to_date: "你使用的是最新版本!"
         critical_available: "有重要更新可以安裝。"
@@ -2613,87 +2703,6 @@ zh_TW:
       commits:
         latest_changes: "最近的變更：請經常更新！"
         by: "由"
-      flags:
-        title: "檢舉"
-        active_posts: "被檢舉的貼文"
-        old_posts: "舊的被檢舉貼文"
-        topics: "被檢舉的話題"
-        moderation_history: "板主"
-        agree: "同意"
-        agree_title: "確認此檢舉為有效且正確"
-        agree_flag_hide_post: "隱藏貼文"
-        agree_flag_hide_post_title: "隱藏此貼文並自動傳送訊息通知使用者重新編輯貼文內容。"
-        agree_flag_restore_post: "同意並還原貼文"
-        agree_flag_restore_post_title: "將話題變更為對所有人顯示。"
-        agree_flag_suspend: "停權使用者"
-        agree_flag_suspend_title: "同意檢舉並停權使用者"
-        agree_flag_silence: "靜音使用者"
-        agree_flag_silence_title: "同意檢舉並禁止使用者發文"
-        agree_flag: "保留貼文"
-        agree_flag_title: "同意檢舉但不改變貼文"
-        ignore_flag: "忽略"
-        ignore_flag_title: "移除檢舉，目前不須採取任何行動"
-        delete: "刪除"
-        delete_title: "刪除被申訴的貼文"
-        delete_post_defer_flag: "刪除貼文並忽略檢舉"
-        delete_post_defer_flag_title: "刪除貼文，如果刪除的是話題的第一則貼文，話題也將一併刪除"
-        delete_post_agree_flag: "刪除貼文並同意檢舉"
-        delete_post_agree_flag_title: "刪除貼文，如果刪除的是話題的第一則貼文，話題也將一併刪除"
-        delete_flag_modal_title: "刪除並且..."
-        delete_spammer: "刪除垃圾貼文發送者"
-        delete_spammer_title: "刪除此使用者與他的所有貼文與話題"
-        disagree_flag_unhide_post: "不同意 ( 取消貼文的隱藏狀態 )"
-        disagree_flag_unhide_post_title: "移除該貼文的所有檢舉，使貼文重現"
-        disagree_flag: "不同意"
-        disagree_flag_title: "否決此檢舉為無效或有誤"
-        clear_topic_flags: "完成"
-        clear_topic_flags_title: "已調查過該話題，問題已解決。點擊完成以移除檢舉。"
-        more: "（更多回覆）"
-        suspend_user: "將使用者停權"
-        suspend_user_title: "因為這篇文章而被停權的使用者。"
-        replies:
-          other: "[%{count}條回應]"
-        delete_replies:
-          other: "是否也要刪除此貼文底下的%{count}條回應？"
-        dispositions:
-          agreed: "同意"
-          disagreed: "不同意"
-          deferred: "已忽略"
-        flagged_by: "檢舉者"
-        resolved_by: "處理為"
-        took_action: "採取行動"
-        system: "系統"
-        error: "發生了某些錯誤"
-        reply_message: "回覆"
-        no_results: "沒有被標記的文章。"
-        topic_flagged: "此 <strong>話題</strong> 已被檢舉。"
-        show_full: "顯示完整貼文"
-        visit_topic: "瀏覽話題以採取行動"
-        was_edited: "貼文已在第一次標記後被編輯"
-        previous_flags_count: "這篇貼文已經被標記  {{count}} 次。"
-        show_details: "顯示標籤的詳情"
-        user_percentage:
-          summary:
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} (共{{count}}則檢舉)"
-          agreed:
-            other: "{{count}}%同意"
-          disagreed:
-            other: "{{count}}%不同意"
-          ignored:
-            other: "{{count}}% 忽略"
-        details: "詳情"
-        flagged_topics:
-          topic: "討論話題"
-          type: "類型"
-          users: "使用者"
-          last_flagged: "最後標記"
-          no_results: "沒有被標記的話題。"
-        short_names:
-          off_topic: "離題"
-          inappropriate: "不當內容"
-          spam: "垃圾貼文"
-          notify_user: "自訂"
-          notify_moderators: "自訂"
       groups:
         new:
           title: "新群組"
@@ -3311,6 +3320,9 @@ zh_TW:
             web_hook_create: "\bwebhook 建立"
             web_hook_update: "webhook 更新"
             web_hook_destroy: "webhook 銷毀"
+            embeddable_host_create: "可嵌入主機建立"
+            embeddable_host_update: "可嵌入主機更新"
+            embeddable_host_destroy: "嵌入式主機破壞"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新使用者。"
@@ -3397,17 +3409,12 @@ zh_TW:
         nav:
           new: "新使用者"
           active: "啟用的"
-          pending: "申請中"
           staff: "管理員"
           suspended: "已停權"
           silenced: "被靜音"
           suspect: "嫌疑"
           staged: "暫存"
         approved: "已批准？"
-        approved_selected:
-          other: "批准使用者 ({{count}})"
-        reject_selected:
-          other: "拒絕使用者 ({{count}})"
         titles:
           active: "活躍的使用者"
           new: "新使用者"
@@ -3424,10 +3431,6 @@ zh_TW:
           suspended: "已停權的使用者"
           suspect: "嫌疑使用者"
           staged: "暫存用戶"
-        reject_successful:
-          other: "成功拒絕 %{count} 個使用者。"
-        reject_failures:
-          other: "無法拒絕 %{count} 個使用者"
         not_verified: "未確認"
         check_email:
           title: "顯示使用者 Email"

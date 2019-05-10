@@ -19,7 +19,7 @@ class ColorSchemeRevisor
       if has_colors
         @params[:colors].each do |c|
           if existing = @color_scheme.colors_by_name[c[:name]]
-            existing.update_attributes(c)
+            existing.update(c)
           else
             @color_scheme.color_scheme_colors << ColorSchemeColor.new(name: c[:name], hex: c[:hex])
           end

@@ -1,4 +1,3 @@
-require 'js_locale_helper'
 require "i18n/i18n_interpolation_keys_finder"
 
 class TranslationOverride < ActiveRecord::Base
@@ -65,6 +64,7 @@ class TranslationOverride < ActiveRecord::Base
 
   def check_interpolation_keys
     original_text = I18n.overrides_disabled do
+      # lookup is protected
       I18n.backend.send(:lookup, self.locale, self.translation_key)
     end
 

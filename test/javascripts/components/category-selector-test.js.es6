@@ -64,6 +64,7 @@ componentTest("interactions", {
     this.set("categories", [Category.findById(2), Category.findById(6)]);
   },
 
+  skip: true,
   async test(assert) {
     await this.get("subject").expand();
     await this.get("subject").selectRowByValue(8);

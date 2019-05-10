@@ -88,7 +88,11 @@ class UserHistory < ActiveRecord::Base
       approve_user: 69,
       web_hook_create: 70,
       web_hook_update: 71,
-      web_hook_destroy: 72
+      web_hook_destroy: 72,
+      embeddable_host_create: 73,
+      embeddable_host_update: 74,
+      embeddable_host_destroy: 75,
+      web_hook_deactivate: 76
     )
   end
 
@@ -155,7 +159,11 @@ class UserHistory < ActiveRecord::Base
       :approve_user,
       :web_hook_create,
       :web_hook_update,
-      :web_hook_destroy
+      :web_hook_destroy,
+      :web_hook_deactivate,
+      :embeddable_host_create,
+      :embeddable_host_update,
+      :embeddable_host_destroy
     ]
   end
 
@@ -198,7 +206,14 @@ class UserHistory < ActiveRecord::Base
 
   def self.staff_action_records(viewer, opts = nil)
     opts ||= {}
-    opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+    custom_staff = opts[:action_id].to_i == actions[:custom_staff]
+
+    if custom_staff
+      opts[:custom_type] = opts[:action_name]
+    else
+      opts[:action_id] = self.actions[opts[:action_name].to_sym] if opts[:action_name]
+    end
+
     query = self.with_filters(opts.slice(*staff_filters)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
     query = query.where(admin_only: false) unless viewer && viewer.admin?
     query

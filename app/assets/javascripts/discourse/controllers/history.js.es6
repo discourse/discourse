@@ -152,9 +152,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return !prevHidden && this.currentUser && this.currentUser.get("staff");
   },
 
-  @computed("model.last_revision", "model.current_revision", "model.can_edit")
-  displayEdit(lastRevision, currentRevision, canEdit) {
-    return canEdit && lastRevision === currentRevision;
+  @computed(
+    "model.last_revision",
+    "model.current_revision",
+    "model.can_edit",
+    "topicController"
+  )
+  displayEdit(lastRevision, currentRevision, canEdit, topicController) {
+    return !!(canEdit && topicController && lastRevision === currentRevision);
   },
 
   @computed("model.wiki")

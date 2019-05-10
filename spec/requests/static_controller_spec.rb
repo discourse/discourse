@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe StaticController do
-  let(:upload) { Fabricate(:upload) }
+  fab!(:upload) { Fabricate(:upload) }
 
   context '#favicon' do
     let(:filename) { 'smallest.png' }
@@ -21,7 +23,7 @@ describe StaticController do
 
         expect(response.status).to eq(200)
         expect(response.content_type).to eq('image/png')
-        expect(response.body.bytesize).to eq(SiteSetting.favicon.filesize)
+        expect(response.body.bytesize).to eq(SiteIconManager.favicon.filesize)
       end
 
       it 'returns the configured favicon' do
@@ -149,7 +151,7 @@ describe StaticController do
 
         context "when #{setting_name} site setting is set" do
           before do
-            SiteSetting.public_send("#{setting_name}=", 'http://example.com/page')
+            SiteSetting.set(setting_name, 'http://example.com/page')
           end
 
           it "redirects to the #{setting_name}" do

@@ -70,7 +70,7 @@ end
 #
 # Table name: skipped_email_logs
 #
-#  id            :bigint(8)        not null, primary key
+#  id            :bigint           not null, primary key
 #  email_type    :string           not null
 #  to_address    :string           not null
 #  user_id       :integer

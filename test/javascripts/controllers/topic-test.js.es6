@@ -467,10 +467,22 @@ QUnit.test("togglePostSelection", function(assert) {
 // });
 
 QUnit.test("selectBelow", function(assert) {
-  const postStream = { stream: [1, 2, 3, 4, 5] };
+  const site = Ember.Object.create({
+    post_types: { small_action: 3, whisper: 4 }
+  });
+
+  const postStream = {
+    stream: [1, 2, 3, 4, 5, 6, 7, 8],
+    posts: [
+      { id: 5, cooked: "whisper post", post_type: 4 },
+      { id: 6, cooked: "a small action", post_type: 3 },
+      { id: 7, cooked: "", post_type: 4 }
+    ]
+  };
+
   const model = Topic.create({ postStream });
-  const controller = this.subject({ model });
-  const selectedPostIds = controller.get("selectedPostIds");
+  const controller = this.subject({ site, model });
+  let selectedPostIds = controller.get("selectedPostIds");
 
   assert.equal(selectedPostIds[0], undefined, "no posts selected by default");
 
@@ -479,6 +491,7 @@ QUnit.test("selectBelow", function(assert) {
   assert.equal(selectedPostIds[0], 3, "selected post #3");
   assert.equal(selectedPostIds[1], 4, "also selected 1st post below post #3");
   assert.equal(selectedPostIds[2], 5, "also selected 2nd post below post #3");
+  assert.equal(selectedPostIds[3], 8, "also selected 3rd post below post #3");
 });
 
 QUnit.test("topVisibleChanged", function(assert) {

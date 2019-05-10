@@ -33,6 +33,7 @@ required:
     default: ""
   short_site_description:
     default: ""
+    client: true
   contact_email:
     client: true
     default: ""
@@ -50,15 +51,26 @@ required:
   site_contact_group_name:
     default: ""
     type: group
+  exclude_rel_nofollow_domains:
+    default: ""
+    type: list
+  company_name:
+    default: ""
+  governing_law:
+    default: ""
+  city_for_disputes:
+    default: ""
+
+branding:
   logo:
-    default: -1
+    default: -5
     client: true
     type: upload
   logo_url:
     hidden: true
     default: "/images/d-logo-sketch.png"
   logo_small:
-    default: -2
+    default: -6
     client: true
     type: upload
   logo_small_url:
@@ -82,18 +94,21 @@ required:
     default: ""
     client: true
     type: upload
+  manifest_icon:
+    default: ""
+    type: upload
   large_icon_url:
     hidden: true
     default: ""
   favicon:
-    default: -3
+    default: ""
     client: true
     type: upload
   favicon_url:
     hidden: true
     default: "/images/default-favicon.ico"
   apple_touch_icon:
-    default: -4
+    default: ""
     client: true
     type: upload
   apple_touch_icon_url:
@@ -110,15 +125,6 @@ required:
     type: upload
   twitter_summary_large_image_url:
     hidden: true
-    default: ""
-  exclude_rel_nofollow_domains:
-    default: ""
-    type: list
-  company_name:
-    default: ""
-  governing_law:
-    default: ""
-  city_for_disputes:
     default: ""
 
 basic:
@@ -141,6 +147,10 @@ basic:
     max: 2000
   limit_suggested_to_category:
     default: false
+  suggested_topics_unread_max_days_old:
+    default: 90
+    min: 0
+    max: 10000
   suggested_topics_max_days_old:
     default: 365
     min: 7
@@ -181,10 +191,9 @@ basic:
   post_menu:
     client: true
     type: list
-    default: "like-count|like|share|flag|edit|bookmark|delete|admin|reply"
+    default: "like|share|flag|edit|bookmark|delete|admin|reply"
     allow_any: false
     choices:
-      - like-count
       - like
       - edit
       - flag
@@ -304,6 +313,7 @@ login:
     refresh: true
     client: true
     default: false
+    validator: "EnableInviteOnlyValidator"
   login_required:
     refresh: true
     client: true
@@ -340,8 +350,6 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
-  enable_yahoo_logins:
-    default: false
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -447,6 +455,15 @@ users:
     min: 8
     max: 60
     validator: "MaxUsernameLengthValidator"
+  unicode_usernames:
+    default: false
+    client: true
+    validator: "UnicodeUsernameValidator"
+  unicode_username_character_whitelist:
+    validator: "UnicodeUsernameWhitelistValidator"
+    default: ""
+    locale_default:
+      de: "[äöüßÄÖÜẞ]"
   reserved_usernames:
     type: list
     list_type: compact
@@ -530,9 +547,6 @@ users:
     default: false
     client: true
   log_personal_messages_views: false
-  ignore_user_enabled:
-    default: false
-    client: true
   ignored_users_count_message_threshold:
     default: 5
     client: true
@@ -543,12 +557,17 @@ users:
     min: 1
   clean_up_inactive_users_after_days:
     default: 730
+    min: 0
+    max: 3650
 
 groups:
   enable_group_directory:
     client: true
     default: true
   group_in_subject:
+    default: false
+  enable_category_group_review:
+    client: true
     default: false
 
 posting:
@@ -825,12 +844,15 @@ posting:
     default: false
     client: true
     shadowed_by_global: true
-  min_post_notice_tl:
-    default: 2
-    enum: "TrustLevelSetting"
   old_post_notice_days:
     default: 14
     client: true
+  new_user_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
+  returning_user_notice_tl:
+    default: 2
+    enum: "TrustLevelSetting"
   returning_users_days:
     default: 120
 
@@ -900,6 +922,7 @@ email:
   pop3_polling_delete_from_server: true
   log_mail_processing_failures: false
   incoming_email_prefer_html: true
+  strip_incoming_email_lines: false
   email_in:
     default: false
     client: true
@@ -1103,13 +1126,14 @@ files:
     default: true
     client: true
     shadowed_by_global: true
+    validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
-    default: "/letter_avatar_proxy/v3/letter/{first_letter}/{color}/{size}.png"
+    default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
   restrict_letter_avatar_colors:
-    default: ''
+    default: ""
     type: list
     list_type: compact
     validator: "ColorListValidator"
@@ -1231,11 +1255,11 @@ security:
   enforce_second_factor:
     client: true
     type: enum
-    default: 'no'
+    default: "no"
     choices:
-      - 'no'
-      - 'staff'
-      - 'all'
+      - "no"
+      - "staff"
+      - "all"
   force_https:
     default: false
     shadowed_by_global: true
@@ -1255,7 +1279,7 @@ security:
     default: false
   non_crawler_user_agents:
     hidden: true
-    default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna"
+    default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"
     type: list
     list_type: compact
   crawler_user_agents:
@@ -1362,12 +1386,27 @@ spam:
   auto_silence_fast_typers_on_first_post: true
   auto_silence_fast_typers_max_trust_level: 0
   auto_silence_first_post_regex: ""
-  flags_default_topics:
+
+  reviewable_claiming:
+    client: true
+    type: enum
+    default: disabled
+    choices:
+      - disabled
+      - optional
+      - required
+
+  reviewable_default_topics:
     default: false
     client: true
-  min_score_default_visibility:
-    default: 0.0
+  reviewable_default_visibility:
     client: true
+    type: enum
+    default: low
+    choices:
+      - low
+      - medium
+      - high
 
 rate_limits:
   unique_posts_mins: 5
@@ -1442,7 +1481,7 @@ developer:
     max: 99000
   flush_timings_secs:
     client: true
-    default: 20
+    default: 60
   active_user_rate_limit_secs: 60
   verbose_localization:
     default: false
@@ -1482,6 +1521,11 @@ developer:
   enable_safe_mode:
     default: true
     client: true
+  refresh_maxmind_db_during_precompile_days:
+    min: 0
+    max: 120
+    default: 2
+    hidden: true
 
 embedding:
   feed_polling_enabled:
@@ -1820,7 +1864,17 @@ uncategorized:
     default: true
     client: true
 
-  native_app_install_banner: false
+  native_app_install_banner_ios: false
+
+  native_app_install_banner_android: false
+
+  ios_app_id:
+    default: "1173672076"
+    hidden: true
+
+  android_app_id:
+    default: "com.discourse"
+    hidden: true
 
   pwa_display_browser_regex:
     default: "iPad|iPhone"
@@ -1878,7 +1932,6 @@ user_preferences:
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_dynamic_favicon: false
-  default_other_disable_jump_reply: false
   default_other_like_notification_frequency:
     enum: "LikeNotificationFrequencySiteSetting"
     default: 1
@@ -1909,6 +1962,12 @@ user_preferences:
       - larger
       - largest
 
+  default_title_count_mode:
+    type: enum
+    default: notifications
+    choices:
+      - notifications
+      - contextual
 api:
   retain_web_hook_events_period_days:
     default: 30
@@ -1919,7 +1978,7 @@ user_api:
   allow_user_api_keys:
     default: true
   allow_user_api_key_scopes:
-    default: "read|write|message_bus|push|notifications|session_info"
+    default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
   max_api_keys_per_user:
     default: 10

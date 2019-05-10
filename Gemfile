@@ -14,13 +14,13 @@ if rails_master?
 else
   # until rubygems gives us optional dependencies we are stuck with this
   # bundle update actionmailer actionpack actionview activemodel activerecord activesupport railties
-  gem 'actionmailer', '5.2.2.1'
-  gem 'actionpack', '5.2.2.1'
-  gem 'actionview', '5.2.2.1'
-  gem 'activemodel', '5.2.2.1'
-  gem 'activerecord', '5.2.2.1'
-  gem 'activesupport', '5.2.2.1'
-  gem 'railties', '5.2.2.1'
+  gem 'actionmailer', '5.2.3'
+  gem 'actionpack', '5.2.3'
+  gem 'actionview', '5.2.3'
+  gem 'activemodel', '5.2.3'
+  gem 'activerecord', '5.2.3'
+  gem 'activesupport', '5.2.3'
+  gem 'railties', '5.2.3'
   gem 'sprockets-rails'
 end
 
@@ -44,12 +44,12 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox', '1.8.82'
+gem 'onebox', '1.8.88'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'discourse-ember-source', '~> 3.7.0'
+gem 'discourse-ember-source', '~> 3.8.0'
 gem 'ember-handlebars-template', '0.8.0'
 gem 'barber'
 
@@ -87,7 +87,9 @@ gem 'omniauth-github'
 
 gem 'omniauth-oauth2', require: false
 
-gem 'omniauth-google-oauth2'
+# pinned until we test verified email change in the gem
+gem 'omniauth-google-oauth2', '0.6.0'
+
 gem 'oj'
 gem 'pg'
 gem 'mini_sql'
@@ -120,7 +122,8 @@ group :test do
   gem 'webmock', require: false
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-  gem 'danger'
+  gem 'simplecov', require: false
+  gem "test-prof"
 end
 
 group :test, :development do
@@ -134,11 +137,12 @@ group :test, :development do
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
-  gem 'shoulda', require: false
+  gem 'shoulda-matchers', '~> 3.1', '>= 3.1.3', require: false
   gem 'rspec-html-matchers'
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
   gem 'rubocop', require: false
+  gem 'parallel_tests'
 end
 
 group :development do

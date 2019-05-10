@@ -10,8 +10,15 @@ uk:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
   date:
     month_names: [~, "", "", "", "", "", "", "", "", "", "", "", ""]
+    <<: *datetime_formats
+  time:
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Теми"
   posts: "дописи"
@@ -26,6 +33,8 @@ uk:
       accepted: має бути прийнятий
       blank: не може бути порожнім
       present: має бути порожнім
+      exclusion: is reserved
+      has_already_been_used: "вже було використано"
       not_a_number: це не цифра
       not_an_integer: має бути цілим числом
       too_long:
@@ -117,6 +126,7 @@ uk:
         name: "Назва категорії"
       topic:
         title: "Назва"
+        category_id: "Категорія"
       post:
         raw: "Тіло"
       user_profile:
@@ -132,6 +142,8 @@ uk:
           attributes:
             payload_url:
               invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
+  uncategorized_category_name: "Без категорій"
+  vip_category_name: "Lounge"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
   staff_category_name: "Персонал"
   staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
@@ -146,6 +158,8 @@ uk:
       title: "базовий користувач"
     member:
       title: "учасник"
+    leader:
+      title: "провідник"
   rate_limiter:
     hours:
       one: "1 година"
@@ -180,11 +194,16 @@ uk:
     success_unapproved: "Ви успішно змінили свій пароль."
   change_email:
     confirmed: "Адресу вашої електронної скриньки оновлено."
+    please_continue: "Продовжити у %{site_name}"
     error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
   activation:
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
+    continue_button: "Продовжити у %{site_name}"
     welcome_to: "Ласкаво просимо до сайта %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Потребує схвалення"
   post_action_types:
     off_topic:
       title: "Недотичне до теми"
@@ -192,6 +211,7 @@ uk:
     spam:
       title: "Спам"
       long_form: "flagged this as spam"
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Неприпустиме"
       long_form: "flagged this as inappropriate"
@@ -202,10 +222,12 @@ uk:
     bookmark:
       title: "Лишити закладку"
       description: "Bookmark this post"
+      short_description: "Bookmark this post"
       long_form: "bookmarked this post"
     like:
       title: "Вподобати"
       description: "Like this post"
+      short_description: "Like this post"
       long_form: "liked this"
   topic_flag_types:
     spam:
@@ -221,12 +243,52 @@ uk:
   archetypes:
     regular:
       title: "Звичайна тема"
+  unsubscribe:
+    title: "Відпісатися"
+    log_out: "Вийти"
+    digest_frequency:
+      never: "ніколи"
+      every_30_minutes: "кожні 30 хвилин"
+      every_hour: "щогодини"
+      daily: "щодня"
+      weekly: "щотижня"
   reports:
+    default:
+      labels:
+        day: День
+    post_edits:
+      labels:
+        post: Допис
+        editor: Редактор
+        edit_reason: Причина
+    user_flagging_ratio:
+      labels:
+        user: Користувач
+    moderators_activity:
+      labels:
+        moderator: Модератор
+    flags_status:
+      labels:
+        flag: Тип
     visits:
       title: "Відвідини користувачів"
       xaxis: "День"
       yaxis: "Кількість відвідин"
     signups:
+      xaxis: "День"
+    new_contributors:
+      xaxis: "День"
+    consolidated_page_views:
+      yaxis: "День"
+      labels:
+        post: Допис
+        editor: Редактор
+        edit_reason: Причина
+    dau_by_mau:
+      xaxis: "День"
+    daily_engaged_users:
+      xaxis: "День"
+    profile_views:
       xaxis: "День"
     topics:
       title: "Теми"
@@ -252,11 +314,22 @@ uk:
       title: "Користувачі за Рівнем довіри"
       xaxis: "Рівень довіри"
       yaxis: "Кількість користувачів"
+    users_by_type:
+      xaxis: "Тип"
+      yaxis: "Кількість користувачів"
+      labels:
+        type: Тип
+      xaxis_labels:
+        admin: Адмін
+        moderator: Модератор
+        suspended: Призупинені
     emails:
       title: "Листів надіслано"
       xaxis: "День"
       yaxis: "Кількість листів"
     user_to_user_private_messages:
+      xaxis: "День"
+    user_to_user_private_messages_with_replies:
       xaxis: "День"
     system_private_messages:
       title: "Системні"
@@ -275,18 +348,72 @@ uk:
       xaxis: "Користувач"
       num_clicks: "Переходи"
       num_topics: "Теми"
+      labels:
+        user: "Користувач"
+        num_clicks: "Переходи"
+        num_topics: "Теми"
     top_traffic_sources:
       title: "Головні джерела трафіку"
       xaxis: "Домен"
       num_clicks: "Переходи"
       num_topics: "Теми"
       num_users: "Користувачі"
+      labels:
+        domain: Домен
+        num_clicks: Переходи
+        num_topics: Теми
     top_referred_topics:
       title: "Найбільше посилаються на"
+      labels:
+        num_clicks: "Переходи"
+        topic: "Тема"
+    page_view_anon_reqs:
+      xaxis: "День"
+    page_view_logged_in_reqs:
+      xaxis: "День"
+    page_view_crawler_reqs:
+      xaxis: "День"
+    page_view_total_reqs:
+      xaxis: "День"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "День"
+    page_view_anon_mobile_reqs:
+      xaxis: "День"
+    http_background_reqs:
+      xaxis: "День"
+    http_2xx_reqs:
+      xaxis: "День"
+    http_3xx_reqs:
+      xaxis: "День"
+    http_4xx_reqs:
+      xaxis: "День"
+    http_5xx_reqs:
+      xaxis: "День"
+    http_total_reqs:
+      xaxis: "День"
+    time_to_first_response:
+      xaxis: "День"
+    topics_with_no_response:
+      xaxis: "День"
+    mobile_visits:
+      xaxis: "День"
+      yaxis: "Кількість відвідин"
+    suspicious_logins:
+      labels:
+        user: Користувач
+        location: Місцеположення
+    staff_logins:
+      labels:
+        user: Користувач
+        location: Місцеположення
+    top_uploads:
+      labels:
+        filename: Filename
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
+    queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
     memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -300,7 +427,6 @@ uk:
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
     min_password_length: "Мінімальна довжина пароля."
-    enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
@@ -323,6 +449,7 @@ uk:
     short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
     embed_truncate: "Обрізати вбудовані повідомлення. "
+    emoji_set: "Які вам подобаються смайлики?"
     errors:
       invalid_integer: "Значення має бути цілим."
       regex_mismatch: "Значення не відповідає потрібному формату."
@@ -341,6 +468,7 @@ uk:
   frequent_poster: "Частий дописувач"
   topic_statuses:
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
+    autoclosed_disabled_lastpost: "Цю тему відкрито. Нові відповіді дозволено."
   login:
     not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
     incorrect_username_email_or_password: "Неправильне ім'я користувача, електронна скринька або пароль"
@@ -352,6 +480,9 @@ uk:
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Щось пішло не так, можливо, ім'я користувача або електронна скринька вже зареєстровані. Спробуйте посилання \"Я забув пароль\"."
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+  admin:
+    email:
+      sent_test: "надіслано!"
   user:
     username:
       short: "має бути найменше %{min} символів"
@@ -369,11 +500,6 @@ uk:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-    pending_users_reminder:
-      text_body_template: |
-        Є нові користувачі, що зареєструвалися і очікують на схвалення (або відхилення) перед тим, як зможуть отримати доступ до цього форуму.
-
-        [Будь ласка, розгляньте їх в адміністративній секції](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Завантаження віддалених зображені відключено"
   user_notifications:
@@ -383,7 +509,16 @@ uk:
       description: "Не зацікавлені в отриманні цих листів? Немає проблем! Натисніть нижче, щоб відписатися назавжди:"
     posted_by: "Опубліковано %{username} %{post_date}"
     digest:
+      new_topics: "Нові теми"
+      liked_received: "Отримані вподобання"
+      new_posts: "Нові дописи"
+      new_users: "Нові користувачі"
+      join_the_discussion: "Читати більше"
       click_here: "натисніть тут"
+    forgot_password:
+      title: "Забув(ла) пароль"
+    set_password:
+      title: "Встановити пароль"
     signup_after_approval:
       subject_template: "Вас було схвалено на сайті %{site_name}!"
   page_not_found:
@@ -391,9 +526,11 @@ uk:
     recent_topics: "Останні"
     see_more: "Більше"
     search_title: "Пошук на цьому сайті"
+    search_button: "Пошук"
   terms_of_service:
     title: "Умови Використання"
   deleted: "deleted"
+  image: "зображення"
   upload:
     edit_reason: "завантажені локальні копії забражень"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -401,8 +538,84 @@ uk:
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
     images:
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+  skipped_email_log:
+    user_email_no_user: "Can't find user with id %{user_id}"
+    user_email_post_not_found: "Can't find a post with id %{post_id}"
+    user_email_seen_recently: "User was seen recently"
+    user_email_notification_already_read: "The notification this email is about has already been read"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_deleted: "post was deleted by the author"
+    user_email_user_suspended: "user was suspended"
+    user_email_already_read: "user has already read this post"
+    sender_message_blank: "message is blank"
+    sender_message_to_blank: "message.to is blank"
+    sender_text_part_body_blank: "text_part.body is blank"
+    sender_body_blank: "body is blank"
+  about: "Про"
   guidelines: "Інструкції"
   privacy: "Конфіденційність"
   edit_this_page: "Редагувати цю сторінку"
+  csv_export:
+    boolean_yes: "Так"
+    boolean_no: "Ні"
   guidelines_topic:
     title: "ЧаПи/Інструкції"
+  tos_topic:
+    title: "Умови Використання"
+  privacy_topic:
+    title: "Політика конфіденційності"
+  badges:
+    editor:
+      name: Редактор
+    regular:
+      name: Звичайний
+    welcome:
+      name: Ласкаво просимо
+    autobiographer:
+      name: Автобіографіст
+    anniversary:
+      name: Річниця
+    nice_topic:
+      name: Непогана тема
+    good_topic:
+      name: Хороша тема
+    great_topic:
+      name: Чудова тема
+    first_link:
+      name: Перше посилання
+    first_quote:
+      name: Перша цитата
+    read_guidelines:
+      name: Читати інструкції
+    reader:
+      name: Читач
+  tags:
+    title: "Теги"
+  wizard:
+    step:
+      forum_title:
+        title: "Ім'я"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "електронна скринька"
+      corporate:
+        title: "Організація"
+  joined: "Приєднався(лась)"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Призупинити користувача"
+      delete_spammer:
+        title: "Видалити спамера"
+      disagree:
+        title: "Відмовитися"
+      approve:
+        title: "Схвалити"
+      reject_user:
+        delete:
+          title: "Видалити користувача"
+      reject:
+        title: "Відхилити"
+      delete_user:
+        title: "Видалити користувача"

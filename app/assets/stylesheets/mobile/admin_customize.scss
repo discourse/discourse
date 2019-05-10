@@ -12,4 +12,9 @@
   .admin-container .select-kit {
     width: 100%;
   }
+
+  .admin-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }

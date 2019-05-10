@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::ColorSchemesController < Admin::AdminController
 
   before_action :fetch_color_scheme, only: [:update, :destroy]

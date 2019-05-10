@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'validators/post_validator'
 
 describe Validators::PostValidator do
-  let(:topic) { Fabricate(:topic) }
+  fab!(:topic) { Fabricate(:topic) }
   let(:post) { build(:post, topic: topic) }
   let(:validator) { Validators::PostValidator.new({}) }
 
@@ -24,8 +26,8 @@ describe Validators::PostValidator do
     end
 
     describe "when post's topic is a PM between a human and a non human user" do
-      let(:robot) { Fabricate(:user, id: -3) }
-      let(:user) { Fabricate(:user) }
+      fab!(:robot) { Fabricate(:user, id: -3) }
+      fab!(:user) { Fabricate(:user) }
 
       let(:topic) do
         Fabricate(:private_message_topic, topic_allowed_users: [
@@ -187,8 +189,8 @@ describe Validators::PostValidator do
   end
 
   describe "unique_post_validator" do
-    let(:user) { Fabricate(:user, id: 999) }
-    let(:post) { Fabricate(:post, user: user, topic: topic) }
+    fab!(:user) { Fabricate(:user, id: 999) }
+    fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
     before do
       SiteSetting.unique_posts_mins = 5
@@ -225,7 +227,7 @@ describe Validators::PostValidator do
 
       it "should add an error" do
         validator.unique_post_validator(new_post)
-        expect(new_post.errors.keys).to contain_exactly(:raw)
+        expect(new_post.errors.to_hash.keys).to contain_exactly(:raw)
       end
 
       it "should not add an error if post.skip_unique_check is true" do
@@ -238,9 +240,9 @@ describe Validators::PostValidator do
 
   context "force_edit_last_validator" do
 
-    let(:user) { Fabricate(:user) }
-    let(:other_user) { Fabricate(:user) }
-    let(:topic) { Fabricate(:topic) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
+    fab!(:topic) { Fabricate(:topic) }
 
     before do
       SiteSetting.max_consecutive_replies = 2

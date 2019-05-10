@@ -229,7 +229,6 @@ sl:
     age: "Starost"
     joined: "Pridružen"
     admin_title: "Admin"
-    flags_title: "Prijave"
     show_more: "Več"
     show_help: "možnosti"
     links: "Povezave"
@@ -258,6 +257,8 @@ sl:
     every_hour: "vsako uro"
     daily: "dnevno"
     weekly: "tedensko"
+    every_month: "vsak mesec"
+    every_six_months: "vsakih 6 mesecev"
     max_of_count: "največ od {{count}}"
     alternation: "ali"
     character_count:
@@ -355,32 +356,114 @@ sl:
       title:
         search: "Poišči sporočilo po naslovu:"
         placeholder: "vnesite naslov sporočila tukaj"
-    queue:
+    review:
+      awaiting_approval: "Čaka odobritev"
+      delete: "Izbriši"
+      settings:
+        saved: "Shranjeno"
+        save_changes: "Shrani spremembe"
+        title: "Nastavitve"
+        score_bonuses:
+          title: "Bonus ocene"
+          description: "Bonusi omogočajo posameznim vrstam, da so ocenjeni višje kot drugi in so tako prednostni. Opomba: sprememba teh vrednosti ne bo vplivala na predhodno ocenjene predmete."
+      moderation_history: "Zgodovina moderiranja"
+      view_all: "Prikaži vse"
+      grouped_by_topic: "Združeno po skupinah"
+      none: "Ni nobenih predmetov za odobritev."
+      view_pending: "poglej za odobritev"
+      topic_has_pending:
+        one: "Ta tema ima <b>{{count}}</b> prispevek za potrditev"
+        two: "Ta tema ima <b>{{count}}</b> prispevka za potrditev"
+        few: "Ta tema ima <b>{{count}}</b> prispevke za potrditev"
+        other: "Ta tema ima <b>{{count}}</b> prispevkov za potrditev"
+      title: "Za odobritev"
       topic: "Tema:"
-      approve: "Odobri"
-      reject: "Zavrni"
-      delete_user: "Izbriši uporabnika"
-      title: "Potrebuje odobritev"
-      none: "Ni prispevkov za pregled."
+      filtered_user: "Uporabnik:"
+      show_all_topics: "prikaži vse teme"
+      deleted_post: "(prispevek izbrisan)"
+      deleted_user: "(uporabnik izbrisan)"
+      user:
+        username: "Uporabniško ime"
+        email: "E-sporočila"
+        name: "Polno ime"
+        fields: "Polja"
+      user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} vseh prijav)"
+          two: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} vseh prijav)"
+          few: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} vseh prijav)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} vseh prijav)"
+      topics:
+        topic: "Tema"
+        reviewable_count: "Število"
+        reported_by: "Prijavljen od"
+        deleted: "[tema izbrisana]"
+        original: "(izvorna tema)"
+        details: "podrobnosti"
+        unique_users:
+          one: "{{count}} uporabnik"
+          two: "{{count}} uporabnika"
+          few: "{{count}} uporabniki"
+          other: "{{count}} uporabnikov"
+      replies:
+        one: "{{count}} odgovor"
+        two: "{{count}} odgovora"
+        few: "{{count}} odgovori"
+        other: "{{count}} odgovorov"
       edit: "Uredi"
+      save: "Shrani"
       cancel: "Prekliči"
-      view_pending: "ogled čakajočih prispevkov"
-      has_pending_posts:
-        one: "Ta tema ima <b>1</b> prispevek, ki čaka odobritev"
-        two: "Ta tema ima <b>2</b> prispevka, ki čakata odobritev"
-        few: "Ta tema ima <b>{{count}}</b> prispevke, ki čakajo odobritev"
-        other: "Ta tema ima <b>{{count}}</b> prispevkov, ki čakajo odobritev"
-      confirm: "Shrani spremembe"
-      delete_prompt: "Ali ste prepričani, da želite izbrisati <b>%{username}</b>? To bo odstranilo vse njihove prispevke ter blokiralo njihov e-poštni naslov in IP naslov."
+      new_topic: "Nova tema:"
+      filters:
+        type:
+          title: "Vrsta:"
+          all: "(vse vrste)"
+        minimum_score: "Najnižja ocena:"
+        refresh: "Osveži"
+        status: "Stanje:"
+        category: "Kategorija:"
+      conversation:
+        view_full: "prikaži celo razpravo"
+      scores:
+        about: "Ta ocena je izračunana na podlagi nivoja zaupanja prijavitelja, ustreznosti njihovih prejšnih prijav in prioritete prispevka, ki je bil prijavljen."
+        score: "Ocena"
+        date: "Datum"
+        type: "Tip"
+        status: "Stanje"
+        submitted_by: "Poslano od"
+        reviewed_by: "Pregledano od"
+      statuses:
+        pending:
+          title: "Za potrditev"
+        approved:
+          title: "Potrjeno"
+        rejected:
+          title: "Zavrnjeno"
+        ignored:
+          title: "Prezrto"
+        deleted:
+          title: "Izbrisano"
+        reviewed:
+          title: "(vsi pregledani)"
+        all:
+          title: "(vse)"
+      types:
+        reviewable_flagged_post:
+          title: "Prijavljen prispevek"
+          flagged_by: "Prijavljen od"
+        reviewable_queued_post:
+          title: "Prispevek za potrditev"
+        reviewable_user:
+          title: "Uporabnik"
       approval:
-        title: "Prispevek potrebuje odobritev."
+        title: "Prispevek za odobritev."
         description: "Prejeli smo vaš nov prispevek, vendar potrebuje odobritev s strani moderatorja preden bo objavljen. Prosimo za potrpežljivost."
         pending_posts:
-          one: "Imate <strong>{{count}}</strong> čakajoči prispevek."
-          two: "Imate <strong>{{count}}</strong> čakajoča prispevka."
-          few: "Imate <strong>{{count}}</strong> čakajoče prispevke."
-          other: "Imate <strong>{{count}}</strong> čakajočih prispevkov."
-        ok: "V redu"
+          one: "Imate <strong>{{count}}</strong> prispevek za potrditev."
+          two: "Imate <strong>{{count}}</strong> prispevka za potrditev."
+          few: "Imate <strong>{{count}}</strong> prispevke za potrditev."
+          other: "Imate <strong>{{count}}</strong> prispevkov za potrditev."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> je objavil <a href='{{topicUrl}}'>temo</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Vi</a> ste objavili <a href='{{topicUrl}}'>temo</a>"
@@ -426,10 +509,19 @@ sl:
         remove_user_as_group_owner: "Odstrani skrbnika"
     groups:
       member_added: "Dodano"
+      member_requested: "Zahtevano ob"
       add_members:
         title: "Dodaj člane"
         description: "Upravljaj članstvo te skupine"
         usernames: "Uporabniška imena"
+      requests:
+        title: "Zahtevki"
+        reason: "Razlog"
+        accept: "Odobri"
+        accepted: "odobreno"
+        deny: "Zavrni"
+        denied: "zavrnjeno"
+        undone: "zahtevek umaknjen"
       manage:
         title: "Upravljaj"
         name: "Ime skupine"
@@ -460,6 +552,7 @@ sl:
       empty:
         posts: "Ni prispevkov članov skupine."
         members: "Ta skupina nima članov."
+        requests: "Ni nobenih zahtevkov po članstvu v tej skupini."
         mentions: "Ta skupina ni bila nikjer omenjena."
         messages: "Ni sporočil za to skupino."
         topics: "Člani te skupine nimajo nobene teme."
@@ -636,10 +729,18 @@ sl:
       new_private_message: "Novo ZS"
       private_message: "Zasebno sporočilo"
       private_messages: "Zasebna sporočila"
-      user_notifications_ignore_option: "Prezrti"
-      user_notifications_mute_option: "Utišani"
-      user_notifications_mute_option_title: "Ne boste prejemali obvestil povezanih s tem uporabnikom."
-      user_notifications_normal_option: "Običajno"
+      user_notifications:
+        ignore_duration_title: "Prezri opomnik"
+        ignore_duration_when: "Trajanje:"
+        ignore_duration_save: "Prezri"
+        ignore_duration_note: "Vsi prezrti opomniki so samodejno odstranjeni ko poteče čas za preziranje."
+        ignore_duration_time_frame_required: "Izberite časovni okvir"
+        ignore_option: "Prezrti"
+        ignore_option_title: "Ne boste prejemali obvestil povezanih z tem uporabnikom in vse njihove teme in odgovori bodo skriti."
+        mute_option: "Utišani"
+        mute_option_title: "Ne boste prejemali obvestil povezanih s tem uporabnikom."
+        normal_option: "Običajno"
+        normal_option_title: "Obveščeni boste če vam ta uporabnik odgovori, vas citira ali vas omeni. "
       activity_stream: "Aktivnost"
       preferences: "Nastavitve"
       profile_hidden: "Profil tega uporabnika je skrit."
@@ -665,8 +766,7 @@ sl:
       dismiss_notifications: "Opusti vse"
       dismiss_notifications_tooltip: "Označi vsa neprebrana obvestila kot prebrana"
       first_notification: "Vaše prvo obvestilo! Izberite ga za začetek."
-      disable_jump_reply: "Ne skoči na moj prispevek po tem ko odgovorim"
-      dynamic_favicon: "Pokaži število novih / posodobljenih tem na ikoni brskalnika"
+      dynamic_favicon: "Prikaži števec na ikoni brskalnika"
       theme_default_on_all_devices: "Nastavi kot privzeti videz na vseh mojih napravah"
       text_size_default_on_all_devices: "Nastavi kot privzeto velikost besedila na vseh mojih napravah "
       allow_private_messages: "Dovoli drugim uporabnikom da mi pošiljajo zasebna sporočila."
@@ -715,7 +815,7 @@ sl:
       delete_account: "Izbriši moj račun"
       delete_account_confirm: "Ste prepričani, da želite trajno izbrisati svoj račun? Tega postopka ni mogoče razveljaviti!"
       deleted_yourself: "Vaš račun je bil uspešno izbrisan."
-      delete_yourself_not_allowed: "Če želite izbrisati račun, prosim kontaktirajte člana osebja foruma."
+      delete_yourself_not_allowed: "Če želite izbrisati račun, kontaktirajte člana osebja foruma."
       unread_message_count: "Sporočila"
       admin_delete: "Izbriši"
       users: "Uporabniki"
@@ -841,7 +941,7 @@ sl:
         sso_override_instructions: "E-naslov se lahko spremeni pri SSO ponudniku."
         instructions: "Se nikoli ne prikaže javno."
         ok: "Poslali vam bomo e-sporočilo za potrditev."
-        invalid: "Prosim vnesite veljaven e-naslov."
+        invalid: "Vnesite veljaven e-naslov."
         authenticated: "Vaša e-naslov je bil potrjen pri {{provider}}"
         frequency_immediately: "E-sporočilo bo poslano nemudoma, če niste prebrali stvari o katerih vam pošiljamo e-sporočilo."
         frequency:
@@ -908,6 +1008,10 @@ sl:
         normal: "Običajna"
         larger: "Večja"
         largest: "Največja"
+      title_count_mode:
+        title: "Stran v ozadju prikazuje števec kot:"
+        notifications: "Nova obvestila"
+        contextual: "Nova vsebina na strani"
       like_notification_frequency:
         title: "Obvesti o všečkih"
         always: "Vedno"
@@ -1225,7 +1329,7 @@ sl:
       caps_lock_warning: "Caps Lock je vključen"
       error: "Neznana napaka"
       cookies_error: "Vaš brskalnik ima onemogočene piškotke. Prijava verjetno ne bo uspela, če jih ne boste omogočili."
-      rate_limit: "Prosimo počakajte preden se poskusite ponovno prijaviti."
+      rate_limit: "Počakajte preden se poskusite ponovno prijaviti."
       blank_username: "Vnesite uporabniško ime ali e-naslov."
       blank_username_or_password: "Vpišite e-naslov ali uporabniško ime in geslo."
       reset_password: "Zamenjaj geslo"
@@ -1266,10 +1370,6 @@ sl:
         name: "Facebook"
         title: "Facebook"
         message: "Preverjanje s Facebookom (pojavna okna morajo biti omogočena v brskalniku)"
-      yahoo:
-        name: "Yahoo"
-        title: "Yahoo"
-        message: "Preverjanje z Yahoojem (pojavna okna morajo biti omogočena v brskalniku)"
       github:
         name: "GitHub"
         title: "GitHub"
@@ -1308,6 +1408,8 @@ sl:
       alt: "Alt"
     conditional_loading_section:
       loading: Nalagam...
+    category_row:
+      topic_count: "{{count}} tem v tej kategoriji"
     select_kit:
       default_header_text: Izberi...
       no_content: Ni zadetkov
@@ -1361,8 +1463,6 @@ sl:
       toggle_whisper: "Preklopi šepet"
       toggle_unlisted: "Preklopi izločeno"
       posting_not_on_topic: "Na katero temo bi radi odgovorili?"
-      saving_draft_tip: "shranjevanje..."
-      saved_draft_tip: "shranjeno"
       saved_local_draft_tip: "shranjeno lokalno"
       similar_topics: "Vaša tema je podobna kot..."
       drafts_offline: "osnutki brez povezave"
@@ -1388,7 +1488,7 @@ sl:
         tags_missing: "Izbrati morate vsaj {{count}} oznak"
       save_edit: "Shrani spremembe"
       overwrite_edit: "Prepiši spremembo"
-      reply_original: "Odgovori v izvirni temi"
+      reply_original: "Odgovori v izvorni temi"
       reply_here: "Odgovori tu"
       reply: "Odgovori"
       cancel: "Prekliči"
@@ -1494,7 +1594,8 @@ sl:
       none: "Ta trenutek ne moremo naložiti obvestil."
       empty: "Ni obvestil."
       more: "prikaži starejša obvestila"
-      total_flagged: "vseh prijavljenih prispevkov"
+      post_approved: "Vaš prispevek je bil odobren"
+      reviewable_items: "čakajo na pregled"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1539,6 +1640,7 @@ sl:
         watching_first_post: '{{username}} je ustvaril novo temo "{{topic}}" - {{site_title}}'
         confirm_title: "Obvestila omogočena - %{site_title}"
         confirm_body: "Uspelo! Obvestila so bila omogočena."
+        custom: "Obvestilo od  {{username}} na %{site_title}"
     upload_selector:
       title: "Dodaj sliko"
       title_with_attachments: "Dodaj sliko ali datoteko"
@@ -1576,7 +1678,7 @@ sl:
       searching: "Iščem ..."
       post_format: "#{{post_number}} od {{username}}"
       results_page: "Zadetki iskanja za '{{term}}'"
-      more_results: "Obstaja več zadetkov. Prosimo zožite kriterije iskanja."
+      more_results: "Obstaja več zadetkov. Zožite kriterije iskanja."
       cant_find: "Ne najdete tega kar iščete?"
       start_new_topic: "Bi mogoče ustvarili novo temo?"
       or_search_google: "Ali poskusite iskati z Googlom:"
@@ -1788,7 +1890,9 @@ sl:
         next_week: "Naslednji teden"
         two_weeks: "Dva tedna"
         next_month: "Naslednji mesec"
+        two_months: "Dveh mesecih"
         three_months: "Tri mesece"
+        four_months: "Štirih mesecih"
         six_months: "Šest mesecev"
         one_year: "Eno leto"
         forever: "Za vedno"
@@ -2084,10 +2188,16 @@ sl:
           two: "Izbrali ste <b>{{count}}</b> prispevka."
           few: "Izbrali ste <b>{{count}}</b> prispevke."
           other: "Izbrali ste <b>{{count}}</b> prispevkov."
+      deleted_by_author:
+        one: "(tema umaknjena s strani avtorja bo samodejno izbrisana v {{count}} uri - razen če je prijavljena moderatorju)"
+        two: "(tema umaknjena s strani avtorja bo samodejno izbrisana v {{count}} urah - razen če je prijavljena moderatorju)"
+        few: "(tema umaknjena s strani avtorja bo samodejno izbrisana v {{count}} urah - razen če je prijavljena moderatorju)"
+        other: "(tema umaknjena s strani avtorja bo samodejno izbrisana v {{count}} urah - razen če je prijavljena moderatorju)"
     post:
       quote_reply: "Citiraj"
       edit_reason: "Razlog:"
       post_number: "prispevek {{number}}"
+      ignored: "Prezrta vsebina"
       wiki_last_edited_on: "wiki zadnjič spremenjen"
       last_edited_on: "prispevek zadnjič spremenjen"
       reply_as_new_topic: "Odgovori v novi povezani temi"
@@ -2095,7 +2205,7 @@ sl:
       continue_discussion: "Nadaljevanje pogovora iz {{postLink}}:"
       follow_quote: "pojdi na citiran prispevek"
       show_full: "Prikaži cel prispevek"
-      show_hidden: "Prikaži skrito vsebino."
+      show_hidden: "Prikaži prezrto vsebino."
       deleted_by_author:
         one: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} uri, če ni prijavljen moderatorju)"
         two: "(prispevek umaknjen s strani avtorja se bo samodejno izbrisal po %{count} urah, če ni prijavljen moderatorju)"
@@ -2110,19 +2220,14 @@ sl:
         few: "poglej {{count}} skrite odgovore"
         other: "poglej {{count}} skritih odgovorov"
       notice:
-        first: "Uporabnik {{user}} je prvič objavil prispevek — poskrbimo da bo lepo sprejet v naši skupnosti!"
-        return: "Uporabnik {{user}}že kar nekaj časa ni sodeloval — njihov zadnji prispevek je bil objavljen {{time}}."
+        new_user: "Uporabnik {{user}} je prvič objavil prispevek — poskrbimo da bo lepo sprejet v naši skupnosti!"
+        returning_user: "Uporabnik {{user}} že nekaj časa ni sodeloval na forumu — njihov zadnji prispevek je bil objavljen {{time}}."
       unread: "Prispevek je neprebran"
       has_replies:
         one: "{{count}} odgovor"
         two: "{{count}} odgovora"
         few: "{{count}} odgovore"
         other: "{{count}} odgovorov"
-      has_likes:
-        one: "{{count}} všeček"
-        two: "{{count}} všečka"
-        few: "{{count}} všečki"
-        other: "{{count}} všečkov"
       has_likes_title:
         one: "{{count}} uporabniku je prispevek všeč"
         two: "{{count}} uporabnikoma je prispevek všeč"
@@ -2199,6 +2304,8 @@ sl:
         delete_topic_disallowed_modal: "Nimate pravic da izbrišete to temo. Če jo bi res radi izbrisali, jo prijavite osebju skupaj z razlogi."
         delete_topic_disallowed: "nimate pravic za brisanje te teme"
         delete_topic: "izbriši temo"
+        add_post_notice: "Dodaj opombo osebja"
+        remove_post_notice: "Odstrani opombo osebja"
       actions:
         flag: "Prijavi"
         defer_flags:
@@ -2362,11 +2469,13 @@ sl:
       settings: "Nastavitve"
       topic_template: "Predloga teme"
       tags: "Oznake"
-      tags_allowed_tags: "V tej kategoriji dovoli samo te oznake:"
-      tags_allowed_tag_groups: "V tej kategoriji bodo dovoljene samo oznake teh skupin:"
+      tags_allowed_tags: "Omeji te oznake na to kategorijo:"
+      tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
       tags_tab_description: "Oznake in skupine oznak navedene tukaj bodo na voljo samo v tej kategoriji in drugih kategorijah, ki jih bodo imele navedene. Ne bodo na voljo v ostalih kategorijah."
       tag_groups_placeholder: "(neobvezno) seznam dovoljenih oznak skupin"
+      manage_tag_groups_link: "Upravljaj skupine oznak tukaj."
+      allow_global_tags_label: "Dovoli tudi druge oznake"
       topic_featured_link_allowed: "Dovoli najboljše povezave v tej kategoriji"
       delete: "Izbriši kategorijo"
       create: "Nova kategorija"
@@ -2389,7 +2498,7 @@ sl:
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       list: "Seznam kategorij"
-      no_description: "Prosimo dodajte opis kategorije."
+      no_description: "Dodajte opis kategorije."
       change_in_category_topic: "Uredi opis"
       already_used: "Ta barva je že uporabljena na drugi kategoriji."
       security: "Varnost"
@@ -2416,7 +2525,7 @@ sl:
       require_topic_approval: "Zahtevaj moderatorjevo potrditev vseh novih tem"
       require_reply_approval: "Zahteva odobritev moderatorja za vse nove odgovore"
       this_year: "to leto"
-      position: "Pozicija:"
+      position: "Položaj na strani kategorij:"
       default_position: "Privzeta pozicija"
       position_disabled: "Kategorije bodo razvrščene glede na aktivnost. Za kontrolo razvrščanja kategorij na seznamih, "
       position_disabled_click: 'omogoči nastavitev "fiksnih položajev kategorij"'
@@ -2466,6 +2575,11 @@ sl:
         rows_with_featured_topics: "Vrstice z izpostavljenimi temami"
         boxes: "Škatle"
         boxes_with_featured_topics: "Škatle z izpostavljenimi temami"
+      settings_sections:
+        general: "Splošno"
+        moderation: "Moderiranje"
+        appearance: "Izgled"
+        email: "E-sporočila"
     flagging:
       title: "Hvala, da pomagate ohraniti prijazno skupnost!"
       action: "Prijavi prispevek"
@@ -2682,6 +2796,12 @@ sl:
       readonly: "Vidi"
     lightbox:
       download: "prenesi"
+      previous: "Predhodna (leva puščična tipka)"
+      next: "Naslednja (desna puščična tipka)"
+      counter: "%curr% od %total%"
+      close: "Zapri (Esc)"
+      content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
+      image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
     keyboard_shortcuts_help:
       title: "Bližnjice na tipkovnici"
       jump_to:
@@ -2903,13 +3023,11 @@ sl:
       dashboard:
         title: "Nadzorna plošča"
         last_updated: "Nadzorna plošča nazadnje osvežena:"
-        find_old: "Iščete staro nadzorno ploščo?"
-        old_link: "obiščite jo tukaj"
         version: "Verzija"
         up_to_date: "Imate zadnjo verzijo!"
         critical_available: "Nujna posodobitev je na voljo."
         updates_available: "Posodobitve so na voljo."
-        please_upgrade: "Prosimo, posodobite sistem!"
+        please_upgrade: "Posodobite sistem!"
         no_check_performed: "Preverjanje posodobitev se ni izvedlo. Preverite da sidekiq teče."
         stale_data: "Zadnje čase se preverjanje posodobitev ni izvedlo. Preveite sidekiq teče. "
         version_check_pending: "Izgleda ste nedavno posodobili sistem. Super!"
@@ -2950,10 +3068,11 @@ sl:
         moderation_tab: "Moderiranje"
         security_tab: "Varnost"
         reports_tab: "Poročila"
+        report_filter_any: "katerokoli"
         disabled: Onemogočeno
-        timeout_error: "Poizvedba traja predolgo, prosimo izberite krajši interval."
+        timeout_error: Poizvedba traja predolgo - izberite krajši interval.
         exception_error: Prišlo je do napake med poizvedbo.
-        too_many_requests: To dejanje ste izvedli prevečkrat. Prosimo počakajte preden poskusite ponovno.
+        too_many_requests: To dejanje ste izvedli prevečkrat. Počakajte preden poskusite ponovno.
         not_found_error: To poročilo ne obstaja.
         filter_reports: Filtriraj poročila
         reports:
@@ -2978,73 +3097,6 @@ sl:
           no_data: "Ni podatkov za prikaz."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnik iskanj</a>'
-      flags:
-        title: "Prijave"
-        active_posts: "Prijavljeni prispevki"
-        old_posts: "Stari prijavljeni prispevki"
-        topics: "Prijavljene teme"
-        moderation_history: "Zgodovina moderiranja"
-        agree_flag_hide_post: "Skrij prispevek"
-        agree_flag_hide_post_title: "Skrij prispevek in samodejno pošlji zasebno sporočilo uporabniku, kjer ga prosiš, da naj spremenijo prispevek."
-        agree_flag_restore_post: "Potrdi in povrni prispevek"
-        agree_flag_restore_post_title: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-        agree_flag_suspend: "Suspendiraj uporabnika"
-        agree_flag_silence: "Utišaj uporabnika"
-        agree_flag_silence_title: "Potrdi prijavo in utišaj uporabnika"
-        agree_flag: "Ohrani prispevek"
-        ignore_flag: "Prezri"
-        delete: "Izbriši"
-        delete_post_defer_flag: "Izbriši prispevek in prezri prijavo"
-        delete_post_defer_flag_title: "Izbriši prispevek; če je prvi prispevek, izbriši temo"
-        delete_post_agree_flag: "Izbriši prispevek in potrdi prijavo"
-        delete_post_agree_flag_title: "Izbriši prispevek; če je prvi prispevek, izbriši temo"
-        delete_flag_modal_title: "Izbriši in..."
-        delete_spammer: "Izbriši spamerja"
-        disagree_flag_unhide_post: "Se ne strinjam (povrni prispevek)"
-        disagree_flag_unhide_post_title: "Odstrani prijave s tega prispevka in naredi prispevek spet viden"
-        clear_topic_flags: "Odstrani prijavo"
-        clear_topic_flags_title: "Ta tema je bila preverjena in problemi rešeni. Izberi Odstrani prijavo da bo ponovno vidna.."
-        more: "(več odgovorov...)"
-        suspend_user: "Suspendiraj uporabnika"
-        replies:
-          one: "[%{count} odgovor]"
-          two: "[%{count} odgovora]"
-          few: "[%{count} odgovori]"
-          other: "[%{count} odgovorov]"
-        delete_replies:
-          one: "Pobrišemo tudi %{count} odgovor na ta prispevek?"
-          two: "Pobrišemo tudi %{count} odgovora na ta prispevek?"
-          few: "Pobrišemo tudi %{count} odgovore na ta prispevek?"
-          other: "Pobrišemo tudi %{count} odgovorov na ta prispevek?"
-        flagged_by: "Prijavljen od"
-        system: "Sistem"
-        error: "Prišlo je do napake"
-        reply_message: "Odgovori"
-        no_results: "Ni prijavljenih prispevkov."
-        topic_flagged: "Ta <strong>tema</strong> je bila prijavljena."
-        show_full: "pokaži cel prispevek"
-        visit_topic: "Obiščite temo da ukrepate"
-        previous_flags_count: "Ta prispevek je bila prijavljen že {{count}} krat."
-        show_details: "Pokaži podrobnosti prijave"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} prijava)"
-            two: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} prijavi)"
-            few: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} prijave)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} prijav)"
-        details: "podrobnosti"
-        flagged_topics:
-          topic: "Tema"
-          type: "Tip"
-          users: "Uporabniki"
-          last_flagged: "Zadnja prijava"
-          no_results: "Ni prijavljenih tem"
-        short_names:
-          off_topic: "ne ustreza temi (off-topic)"
-          inappropriate: "neprimerno"
-          spam: "neželeno"
-          notify_user: "po meri"
-          notify_moderators: "po meri"
       groups:
         new:
           title: "Nova skupina"
@@ -3106,6 +3158,7 @@ sl:
         key: "API ključ"
         generate: "Generiraj"
         regenerate: "Regeneriraj"
+        revoke: "Prekliči"
         confirm_revoke: "Ali ste prepričani da hočete preklicati ta ključ?"
         all_users: "Vsi uporabniki"
       web_hooks:
@@ -3115,13 +3168,18 @@ sl:
         description: "Opis"
         secret: "Skriven"
         wildcard_event: "Pošlji mi vse."
+        active: "Aktivni"
         user_event:
           name: "Dogodek uporabnika"
         delivery_status:
           inactive: "Nedejaven"
+          failed: "Spodletelo"
           successful: "Uspešno"
+          disabled: "Onemogočeno"
         events:
+          request: "Zahteva"
           timestamp: "Ustvarjeno"
+          actions: "Akcije"
       plugins:
         title: "Vtičniki"
         installed: "Nameščeni vtičniki"
@@ -3152,6 +3210,7 @@ sl:
         operations:
           cancel:
             label: "Prekliči"
+            title: "Prekliči trenutno operacijo"
           backup:
             label: "Varnostna kopija"
             title: "Ustvari varnostno kopijo"
@@ -3173,6 +3232,7 @@ sl:
         preview: "predogled"
         explain_preview: "Oglej si stran s tem videzom"
         save: "Shrani"
+        new: "Novi"
         delete: "Izbriši"
         delete_confirm: "Izbriši ta videz?"
         color: "Barva"
@@ -3192,6 +3252,9 @@ sl:
           theme_name: "Ime videza"
           customize_desc: "Prilagodi:"
           title: "Videzi"
+          create: "Ustvari"
+          create_type: "Tip"
+          create_name: "Polno ime"
           edit: "Uredi"
           common: "Skupno"
           desktop: "Namizno"
@@ -3205,11 +3268,16 @@ sl:
           css_html: "CSS/HTML po meri"
           edit_css_html: "Uredi CSS/HTML"
           edit_css_html_help: "Niste uredili še nobenega CSS ali HTML."
+          installed: "Nameščeno"
+          install_popular: "Zanimivo"
+          about_theme: "O nas"
           license: "Licenca"
           updating: "Posodabljam..."
           add: "Dodaj"
           scss:
             text: "CSS"
+          header:
+            text: "Glava"
           head_tag:
             text: "</head>"
             title: "HTML, ki bo vstavljen pred </head> oznako"
@@ -3231,7 +3299,7 @@ sl:
         settings: "Nastavitve"
         templates: "Predloge"
         sending_test: "Pošiljam testno e-sporočilo..."
-        test_error: "Prišlo je do napake med pošiljanjem testnega e-sporočila. Prosimo da ponovno preverite vaše nastavitve e-pošte in preverite, da vaš ponudnik ne blokira povezav za e-pošto. Potem poskusite ponovno."
+        test_error: "Prišlo je do napake med pošiljanjem testnega e-sporočila. Ponovno preverite vaše nastavitve e-pošte in preverite, da vaš ponudnik ne blokira povezav za e-pošto. Potem poskusite ponovno."
         sent: "Poslano"
         received: "Prejeto"
         rejected: "Zavrnjeno"
@@ -3239,10 +3307,22 @@ sl:
         time: "Čas"
         user: "Uporabnik"
         refresh: "Osveži"
+        incoming_emails:
+          from_address: "Od"
+          to_addresses: "Za"
+          subject: "Naslov"
+          error: "napaka"
+          modal:
+            error: "napaka"
+            subject: "Naslov"
+          filters:
+            error_placeholder: "napaka"
         logs:
           none: "Ni zapisov."
           filters:
+            title: "Filter"
             user_placeholder: "uporabniško ime"
+            address_placeholder: "name@example.com"
       moderation_history:
         no_results: "Ni nobene zgodovine moderiranja."
         actions:
@@ -3254,6 +3334,7 @@ sl:
         title: "Dnevniki"
         action: "Dejanje"
         created_at: "Ustvarjeno"
+        ip_address: "IP"
         topic_id: "ID teme"
         post_id: "ID prispevka"
         category_id: "ID kategorije"
@@ -3347,13 +3428,15 @@ sl:
             do_nothing: "Dovoli"
             allow_admin: "Dovoli administratorju"
           form:
+            label: "Novo:"
             add: "Dodaj"
+            filter: "Išči"
         search_logs:
           title: "Dnevnik iskanj"
           term: "Iskalni pogoj"
           searches: "Iskanj"
           types:
-            all_search_types: "Vsi tipi iskanj"
+            all_search_types: "Vse vrste iskanj"
             header: "Glava"
             full_page: "Cela stran"
             click_through_only: "Vse (kjer je kliknil na rezultat)"
@@ -3399,27 +3482,16 @@ sl:
         nav:
           new: "Novi"
           active: "Aktivni"
-          pending: "Za potrditev"
           staff: "Osebje"
           suspended: "Suspendirani"
           silenced: "Utišani"
           suspect: "Sumljivi"
           staged: "Prirejeni"
         approved: "Potrjen?"
-        approved_selected:
-          one: "potrdi uporabnika"
-          two: "potrdi uporabnika ({{count}})"
-          few: "potrdi uporabnike ({{count}})"
-          other: "potrdi uporabnike ({{count}})"
-        reject_selected:
-          one: "zavrni uporabnika"
-          two: "zavrni uporabnika ({{count}})"
-          few: "zavrni uporabnike ({{count}})"
-          other: "zavrni uporabnike ({{count}})"
         titles:
           active: "Aktivni uporabniki"
           new: "Novi uporabniki"
-          pending: "Uporabniki za potrditev"
+          pending: "Uporabniki za odobritev"
           newuser: "Uporabniki na nivoju zaupanja 0 (novi)"
           basic: "Uporabniki na nivoju zaupanja 1 (osnovni)"
           member: "Uporabniki na nivoju zaupanja 2 (člani)"
@@ -3430,16 +3502,6 @@ sl:
           suspended: "Suspendirani uporabniki"
           suspect: "Sumljivi uporabniki"
           staged: "Prirejeni uporabniki"
-        reject_successful:
-          one: "Uspešno zavrnili %{count} uporabnika."
-          two: "Uspešno zavrnili %{count} uporabnika."
-          few: "Uspešno zavrnili %{count} uporabnike."
-          other: "Uspešno zavrnili %{count} uporabnikov."
-        reject_failures:
-          one: "Ni uspelo zavrniti %{count} uporabnika."
-          two: "Ni uspelo zavrniti %{count} uporabnika."
-          few: "Ni uspelo zavrniti %{count} uporabnike."
-          other: "Ni uspelo zavrniti %{count} uporabnikov."
         check_email:
           text: "Prikaži"
       user:
@@ -3541,6 +3603,7 @@ sl:
         suspended_explanation: "Suspendiran uporabnik se ne more prijaviti."
         silence_explanation: "Utišan uporabnik ne more odgovarjati ali ustvariti novo temo."
         staged_explanation: "Prirejen uporabnik lahko objavi prispevek preko e-pošte v določenih temah."
+        suspend_modal_title: "Suspendiraj uporabnika"
         trust_level_2_users: "Uporabniki na nivoju zaupanja 2"
         trust_level_3_requirements: "Zahteve za nivo zaupanja 3"
         trust_level_locked_tip: "nivo zaupanja je zaklenjen, sistem ne bo spreminjal nivo zaupanja uporabnika"
@@ -3616,15 +3679,40 @@ sl:
           confirm: "Potrditev"
           dropdown: "Spustni meni"
       site_text:
+        description: "Lahko spremenite katerikoli besedilo na forumu. Začnite tako da poiščete spodaj:"
         search: "Išči besedilo, ki bi ga rad/a uredil/a"
         title: "Vsebina besedila"
         edit: "uredi"
+        revert: "Prekliči spremembe"
+        revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
+        go_back: "Nazaj na iskalnik"
+        show_overriden: "Prikaži samo preglašene/spremenjene"
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."
       settings:
+        show_overriden: "Prikaži samo preglašene/spremenjene"
         none: "brez"
       site_settings:
         title: "Nastavitve"
+        no_results: "Iskanje nima zadetkov."
+        clear_filter: "Počisti"
+        uploaded_image_list:
+          upload:
+            label: "Naloži"
         categories:
+          all_results: "Vsi"
+          users: "Uporabniki"
+          posting: "Prispevki"
+          email: "E-sporočila"
+          security: "Varnost"
+          api: "API"
+          uncategorized: "Druge"
+          backups: "Varnostne kopije"
+          login: "Prijava"
+          plugins: "Vtičniki"
+          user_preferences: "Nastavitve uporabnika"
+          tags: "Oznake"
+          search: "Išči"
+          groups: "Skupine"
           dashboard: "Nadzorna plošča"
       badges:
         title: Značke
@@ -3719,6 +3807,10 @@ sl:
           label: "Novo:"
           add: "Dodaj"
           filter: "Išči (URL ali zunanji URL)"
+      reseed:
+        modal:
+          categories: "Kategorije"
+          topics: "Tem"
   wizard_js:
     wizard:
       done: "Končano"

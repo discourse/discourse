@@ -29,6 +29,7 @@ ar:
   loading: "يحمّل"
   powered_by_html: 'مدعومة من <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه و جافاسكربت مفعّل'
   log_in: "لِج"
+  submit: "أرسل"
   purge_reason: "حُذف آليًّا باعتباره حسابًا إمّا مهجورًا أو غير مفعّل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
   anonymous: "متخفي"
@@ -233,6 +234,7 @@ ar:
     user_posts: "احدث المنشورات من %{username} "
     user_topics: "  آخر الموضوعات بواسطة @%{username}"
     tag: "موضوعات موسومة"
+    badge: "%{display_name} شاره على %{site_title}"
   too_late_to_edit: "هذا المنشور أُنشأ منذ فترة طويلة جدًّا، لم يعد ممكناً تعديلة او حذفة."
   revert_version_same: "ألاصدار الحالي يتطابق مع نفس ألاصدار الذي تحاول استرجاعه ."
   excerpt_image: "صورة"
@@ -316,6 +318,7 @@ ar:
       topic:
         title: "عنوان"
         featured_link: "رابط مشهور"
+        category_id: "تصنيف"
       post:
         raw: "متن النص"
       user_profile:
@@ -600,6 +603,9 @@ ar:
       grant: "اجعلة مُديراً"
       complete: "المستخدم <b>%{target_username}</b> مدير الآن."
       back_to: "العودة إلي %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "تحتاج موافقة"
   post_action_types:
     off_topic:
       title: "خارج الموضوع"
@@ -668,8 +674,6 @@ ar:
         make: "هذا الموضوع معلّم الآن. سوف يظهر في أعلى كل صفحة حتى يرفض من قبل المستخدم."
         remove: "هذا الموضوع لم يعد معلّم. لن يظهر في أعلى كل صفحة."
   unsubscribed:
-    title: "غير مشترك!"
-    description: "<b>%{email}><b/> أصبح غير مشترك . لتغيّر بريدك الإلكتروني <a/>  زُر خصائص المستخدم الخاصة بك <'a href=%{url}"
     topic_description: "لإعادة الاشتراك لل %{link}، استخدم ادارة التنبيهات في أسفل او يمين الموضوع."
   unsubscribe:
     title: "إلغاء الإشتراك"
@@ -677,11 +681,16 @@ ar:
     mute_topic: "اكتم كلّ إشعارات هذا الموضوع، %{link}"
     unwatch_category: "ألغِ مراقبة كلّ الموضوعات في %{category}"
     mailing_list_mode: "الغاء وضعية قائمة المراسلات"
-    disable_digest_emails: "توقف عن ارسال الملخصات بالبريد الالكترونى"
     all: "لا ترسل إليّ أيّ بريد من %{sitename}"
     different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الخروج  ثم  الدخول مرة أخرى  والمحاولة مجدداً."
     not_found_description: "نأسف ، لم نستطيع أن نلغي اشتراكك . من الممكن أن الرابط المرسل إليك قد انتهت مدته . "
     log_out: "تسجيل خروج"
+    digest_frequency:
+      never: "أبدا"
+      every_30_minutes: "كل 30 دقيقة"
+      every_hour: "كل ساعة"
+      daily: "يوميا"
+      weekly: "أسبوعيا"
   user_api_key:
     title: "منح الصلاحية لدخول التطبيق"
     authorize: "منح الصلاحية"
@@ -697,11 +706,40 @@ ar:
       read: "قراءة الكلّ"
       write: "كتابة الكلّ"
   reports:
+    default:
+      labels:
+        day: اليوم
+    post_edits:
+      labels:
+        post: مشاركة
+        editor: مُصحح
+        edit_reason: سبب
+    user_flagging_ratio:
+      labels:
+        user: مستخدم
+    moderators_activity:
+      labels:
+        moderator: مشرف
+    flags_status:
+      labels:
+        flag: النوع
     visits:
       title: "زيارات المستخدم"
       xaxis: "اليوم"
       yaxis: "مرّات الزّيارة"
     signups:
+      xaxis: "اليوم"
+    new_contributors:
+      xaxis: "اليوم"
+    consolidated_page_views:
+      yaxis: "اليوم"
+      labels:
+        post: مشاركة
+        editor: مُصحح
+        edit_reason: سبب
+    dau_by_mau:
+      xaxis: "اليوم"
+    daily_engaged_users:
       xaxis: "اليوم"
     profile_views:
       title: "مشاهدات الحساب الشخصي للعضو"
@@ -731,12 +769,24 @@ ar:
       title: "الأعضاء في مستوى الثقة"
       xaxis: "مستوى الثقة"
       yaxis: "عدد المستخدمين"
+    users_by_type:
+      xaxis: "النوع"
+      yaxis: "عدد المستخدمين"
+      labels:
+        type: النوع
+      xaxis_labels:
+        admin: مدير
+        moderator: مشرف
+        suspended: موقوف
     emails:
       title: "رسائل البريد المرسلَة"
       xaxis: "يوم"
       yaxis: "عدد رسائل البريد الإلكتروني"
     user_to_user_private_messages:
       xaxis: "يوم"
+      yaxis: "عدد الرسائل"
+    user_to_user_private_messages_with_replies:
+      xaxis: "اليوم"
       yaxis: "عدد الرسائل"
     system_private_messages:
       title: "النظام"
@@ -759,14 +809,25 @@ ar:
       xaxis: "مستخدم"
       num_clicks: "نقرات"
       num_topics: "المواضيع"
+      labels:
+        user: "مستخدم"
+        num_clicks: "نقرات"
+        num_topics: "المواضيع"
     top_traffic_sources:
       title: "أعلى مصادر مرور"
       xaxis: "مجال"
       num_clicks: "نقرات"
       num_topics: "المواضيع"
       num_users: "اﻷعضاء"
+      labels:
+        domain: مجال
+        num_clicks: نقرات
+        num_topics: المواضيع
     top_referred_topics:
       title: "أعلى مواضيع مشارة"
+      labels:
+        num_clicks: "نقرات"
+        topic: "موضوع"
     page_view_anon_reqs:
       title: "مجهولون"
       xaxis: "يوم"
@@ -776,9 +837,11 @@ ar:
       xaxis: "يوم"
       yaxis: "عدد قراءات الصفحات للمسجلين دخول"
     page_view_crawler_reqs:
+      title: "عدد قراءات الصفحات لزواحف الانترنت"
       xaxis: "يوم"
       yaxis: "عدد قراءات الصفحات لزواحف الانترنت"
     page_view_total_reqs:
+      title: "زيارات الصفحة"
       xaxis: "يوم"
       yaxis: "عدد قراءات الصفحات الكلى"
     page_view_logged_in_mobile_reqs:
@@ -824,6 +887,20 @@ ar:
     mobile_visits:
       xaxis: "اليوم"
       yaxis: "عدد الزيارات"
+    web_crawlers:
+      labels:
+        page_views: "زيارات الصفحة"
+    suspicious_logins:
+      labels:
+        user: مستخدم
+        location: الموقع الجغرافي
+    staff_logins:
+      labels:
+        user: مستخدم
+        location: الموقع الجغرافي
+    top_uploads:
+      labels:
+        filename: اسم الملفّ
   dashboard:
     rails_env_warning: "يعمل الخادوم في وضع %{env}."
     host_names_warning: "يستخدم ملفّ config/database.yml اسم المضيف الافتراضيّ localhost. حدّثه ليستخدم اسم مضيف الموقع."
@@ -838,10 +915,12 @@ ar:
     set_locale_from_accept_language_header: "اختيار لغة الواجة للمستخدمين المتخفون طبقا للغة المختارة بمتصفح الشبكة. ( إعداد تجريبى، لا يعمل مع ذاكرة المتصفح )"
     min_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف"
     min_first_post_length: "الحد الأدنى المسموح به لطول أول منشور (المنشور الاول بالموضوع) بالأحرف"
+    min_personal_message_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف في الرسائل"
     max_post_length: "الحد الأقصي المسموح به لطول المنشور بالأحرف"
     topic_featured_link_enabled: "السماح بنشر روابط في الموضوعات"
     min_topic_title_length: "الحد الأدنى المسموح به موضوع طول اللقب في الأحرف"
     max_topic_title_length: "الحد الأعلى المسموح به لطول عنوان موضوع في الأحرف"
+    min_personal_message_title_length: "الحد الأدنى المسموح به لطول عنوان لرسالة في الأحرف"
     min_search_term_length: "الحد الأدنى الصالح لطول مصطلح  في الأحرف"
     search_tokenize_chinese_japanese_korean: "ارغام الباحث على تجميع احرف اللغات الصينية واليابانية والكورية حتى على المواقع الغير معدة لتلك اللغات."
     search_prefer_recent_posts: "اذا كان البحث في المنتدي بطئ, هذا الخيار سوف يحاول فهرسة اخر المنشورات اولاً"
@@ -895,6 +974,7 @@ ar:
     must_approve_users: "يجب علي طاقم العمل الموافقة على جميع الحسابات الجديدة قبل أن يتم السماح لها بالوصول إلى الموقع. تحذير: تفعيل هذة الخاصية علي موقع نشط سوف يمنع وصول كل الاعضاء ماعدا طاقم العمل."
     pending_users_reminder_delay: "نبه المشرفين إذا وجد اعضاء ينتظرون الموافقة لمدة اطول من الساعات ، قم بوضع الخيار -1 لايقاف التنبيهات ."
     maximum_session_age: "سيظل المستخدم مسجل دخول لهذا العدد من الساعات منذ زيارته اﻷخيرة."
+    moderators_create_categories: "السماح للمشرفين بإنشاء اقسام جديدة"
     cors_origins: "اسمح بالأصول للطلبات عبر المنشأ (CORS). كل أصل يجب أن يتضمن http:// أو https://. متغير env لـ DISCOURSE_ENABLE_CORS يجب أن يعين إلى true ليعمل CORS."
     use_admin_ip_whitelist: "المدير فقط يمكنه تسجيل الدخول إذا كانت عناوين IP لهم معرفة في قائمة IP المحجوبة. (المدير > السجلات > IP المحجوبة)"
     top_menu: "حدد العناصر التي تظهر في قائمة ملاحة الصفحة الرئيسية، و ترتيبها."
@@ -934,7 +1014,6 @@ ar:
     sso_not_approved_url: "إعادة التوجيه لم توافق على حسابات SSO لهذا URL"
     allow_new_registrations: "السماح بتسجيل حسابات جديدة. عطل هذه الخاصية إذا كنت تريد منع الكل من عمل حساب جديد علي الموقع."
     enable_signup_cta: "اعرض تنبية للزوار المجهولين المترددين يحثهم علي تسجيل حساب جديد."
-    enable_yahoo_logins: "تفعيل تسجيل الدخول بميل YAHOO"
     google_oauth2_client_id: "رقم التعريف لتطبيق جوجل الخاص بك"
     google_oauth2_client_secret: "الرقم السري لتطبيق جوجل الخاص بك."
     enable_instagram_logins: "تفعيل تسجيل الدخول عن طريق حساب انستغرام."
@@ -960,6 +1039,7 @@ ar:
     max_bookmarks_per_day: "أقصى عدد من العلامات لكلّ مستخدم يوميًّا."
     max_edits_per_day: "أقصى عدد من عمليّات التّحرير لكلّ مستخدم يوميًّا."
     max_topics_per_day: "أقصى عدد للمواضيع التي يمكن للعضو إنشائها باليوم."
+    max_personal_messages_per_day: "أقصى عدد لرسائل الأعضاء التي يمكن إنشائها باليوم."
     max_invites_per_day: "أقصى عدد للدعوات التي يمكن للعضو إرسالها باليوم."
     max_topic_invitations_per_day: "أقصى عدد لدعوات الموضوع التي يمكن للعضو إرسالها باليوم."
     alert_admins_if_errors_per_minute: "عدد الأخطاء في الدقيقة الواحدة لكى يرسل تنبيه للمدير. قيمة 0 تعطل هذه الميزة. ملاحظة: تتطلب إعادة تشغيل."
@@ -985,6 +1065,7 @@ ar:
     tl2_requires_topics_entered: "عدد المواضيع التي على المستخدم دخولها قبل ترقيته إلى مستوى الثّقة الثّاني."
     tl2_requires_read_posts: "عدد المشاركات التي على المستخدم قراءتها قبل ترقيته إلى مستوى الثّقة الثّاني."
     tl2_requires_time_spent_mins: "عدد الدّقائق التي على المستخدم إمضائها في قراءة المشاركات قبل ترقيته إلى مستوى الثّقة الثّاني."
+    tl2_requires_days_visited: "كمية الأيام التي يجب على العضو زيارة الموقع فيها قبل ترقيته لمستوى الثقة 2."
     tl2_requires_likes_received: "عدد الإعجابات التي على المستخدم استقبالها قبل ترقيته إلى مستوى الثّقة الثّاني."
     tl2_requires_likes_given: "عدد الإعجابات التي على المستخدم إعطائها قبل ترقيته إلى مستوى الثّقة الثّاني."
     tl2_requires_topic_reply_count: "عدد المواضيع التي على المستخدم الرّد فيها قبل ترقيته إلى مستوى الثّقة الثّاني."
@@ -1044,7 +1125,6 @@ ar:
     max_age_unmatched_emails: "احذف عرض عدد مرات ادخال البريد الالكتروني الغير متطابق بعد (N) ايام."
     max_age_unmatched_ips: "احذف عرض عدد مرات ادخال IP الغير متطابق بعد (N)ايام."
     num_flaggers_to_close_topic: "ادني عدد من تبليغات  المميزه المطلوبه ليتم ايقاف  الموضوع تلفائيا ليدخل"
-    num_flags_to_close_topic: "ادني عدد من التبليغات النشطه المطلوبه ليتم توقيف الموضوع تلقائيا ليدخل"
     auto_respond_to_flag_actions: "تمكين الرد التلقائي عند التخلص من التبليغ."
     min_first_post_typing_time: "الحد الأدنى من الوقت بالمللي ثانية يجب على المستخدم كتابته خلال المشاركة الأولى، إذا لم تتم الاستجابة للحد الأدنى للمشاركة ستدخل تلقائيا في قائمة انتظار الموافقة على الاحتياجات. تعيين إلى 0 للتعطيل (غير مستحسن)"
     reply_by_email_enabled: "تفعيل الرد على الموضوع بواسطة البريد الالكتروني"
@@ -1128,7 +1208,6 @@ ar:
     default_other_external_links_in_new_tab: "افتح الرّوابط الخارجيّة في ألسنة جديدة افتراضيًّا."
     default_other_enable_quoting: "فعل إقتباس الردود لتحديد النص إفتراضيا."
     default_other_dynamic_favicon: "إعرض عدد المواضيع الجديدة/الحديثة في أيقونة المتصفح إفتراضيا."
-    default_other_disable_jump_reply: "لاتتجاوز الردود الى رد العضو مباشرة بعد اضافته رد جديد. "
     default_other_like_notification_frequency: "اجعل تنبيه الأعضاء بالإعجابات الجديدة افتراضي. "
     default_topics_automatic_unpin: "تلقائياً قم إزالة تثبيت المواضيع عندما يصل العضو إلى الأسفل \"إفتراضيا\"."
     default_categories_watching: "قائمة الأقسام المضبوطة إفتراضيا علي الوضع \"مُراقب\"."
@@ -1151,6 +1230,8 @@ ar:
       invalid_string_min: "يجب أن تكون على الأقل %{min} أحرف"
       invalid_string_max: "يجب ان لا تكون الاحرف اكثر من %{max} "
       invalid_reply_by_email_address: "القيمة يجب أن تحتوي '%%{reply_key}' وتختلف عن إشعار البريد الإلكتروني."
+      min_username_length_range: "لا يمكن أن تكون القيمة الدنيا أكبر من العليا."
+      max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
   search:
     within_post: "#%{post_number} بواسطة %{username}"
     types:
@@ -1237,6 +1318,9 @@ ar:
     email_too_long: "عنوان البريد الإلكترونيّ الذي قدّمته طويل جدًّا. لا يجب أن يزيد طول أسماء صناديق البريد على 254 محرفًا، ولا يجب أن يزيد طول أسماء النّطاقات على 253 محرفًا."
     reserved_username: "اسم المستخدم ذلك غير مسموح."
     missing_user_field: "لم تُكمل كافة الحقول المطلوبة "
+  admin:
+    email:
+      sent_test: "أُرسلت!"
   user:
     username:
       short: "يجب أن تكون على الأقل %{min} أحرف"
@@ -1254,14 +1338,6 @@ ar:
       max_new_accounts_per_registration_ip: "وفقًا لعنوان IP الخاص بك فقد تم حظر التسجيل (لقد وصلت للحد الأقصى المسموح به) تواصل مع أحد المشرفين."
     website:
       domain_not_allowed: "موقع الوبّ غير صالح. النّطاقات الممكنة هي: %{domains}"
-  flags_reminder:
-    subject_template:
-      zero: "لا يوجد تبليغات تنتظر التعامل معها"
-      one: "بلاغ واحد ينتظر التعامل معه"
-      two: "بلاغان ينتظران التعامل معهما"
-      few: "%{count} بلاغات تنتظر التعامل معها"
-      many: "%{count} بلاغات تنتظر التعامل معها"
-      other: "%{count} بلاغات تنتظر التعامل معها"
   unsubscribe_mailer:
     subject_template: "أكّد عدم رغبتك بعد الآن باستقبال تحديثات %{site_title} على البريد"
   invite_password_instructions:
@@ -1282,8 +1358,8 @@ ar:
     agreed: "نشكرك لإعلامنا بذلك. نوافقك الرّأي بوجود مشكلة وسننظر فيها."
     agreed_and_deleted: "نشكرك لإعلامنا بذلك. نوافقك الرّأي بوجود مشكلة وقد أزلنا المشاركة."
     disagreed: "نشكرك لإعلامنا بذلك. نحن ننظر في الأمر."
-    deferred: "نشكرك لإعلامنا بذلك. نحن ننظر في الأمر."
-    deferred_and_deleted: "نشكرك لإعلامنا بذلك. لقد أزلنا المشاركة."
+    ignored: "نشكرك لإعلامنا بذلك. نحن ننظر في الأمر."
+    ignored_and_deleted: "نشكرك لإعلامنا بذلك. لقد أزلنا المشاركة."
   system_messages:
     contents_hidden: "يُرجى زيارة المشاركة لرؤية محتوياتها"
     post_hidden:
@@ -1333,6 +1409,15 @@ ar:
         عذرا, لكن رسالتك الإلكترونية إلي %{destination} ( بعنوان %{former_title}) مرفوضة.
 
         القسم الذي ارسلت له يسمح فقط لعناوين البريد الإلكتروني المعروفة و الاعضاء الحاصلين علي صلاحية مناسبة بعمل رد. إذا كنت تعتقد ان هذا خطا [تواصل مع طاقم العمل](%{base_url}/about).
+    email_reject_invalid_post:
+      text_body_template: |
+        نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل.
+
+        بعض الأسباب المحتملة هي: التنسيق المعقد، رسالة كبيرة جدا، رسالة صغيرة جدا. يرجى المحاولة مرة أخرى، أو الرد عبر الموقع الإلكتروني إذا استمر هذا الوضع.
+    email_reject_invalid_post_specified:
+      text_body_template: "نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل. \n\nالسبب:\n\n%{post_error}\n\nاذا كنت تستطيع تصحيح المشكلة، يرجى المحاولة لاحقاً.\n"
+    spam_post_blocked:
+      subject_template: "العضو الجديد %{username} تم حجب مشاركاته بسبب تكرار الروابط "
     pending_users_reminder:
       subject_template:
         zero: "لا يوجد أعضاء تنتظر الموافقة."
@@ -1341,9 +1426,6 @@ ar:
         few: "%{count} أعضاء تنتظر الموافقة."
         many: "%{count} أعضاء تنتظر الموافقة."
         other: "%{count} أعضاء تنتظر الموافقة."
-      text_body_template: |
-        هناك تسجيلات مستخدمين جديده تنظر لكي يتم قبولها (او رفضها) قبل ان يمكنهم الوصول لهذه المدونه.
-        [الرجاء مراجعنهم في قسم المدراء](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "الغاء تفعيل تحميل الصور عن بعد "
       text_body_template: "تم تعطيل الإعداد 'download_remote_images_to_local' لأنه تم الوصول إلى حد مساحة القرص في 'download_remote_images_threshold'."
@@ -1356,6 +1438,7 @@ ar:
 
     لإلغاء الاشتراك من البريد الالكتروني ، [ انقر هنا](%{unsubscribe_url}).
   subject_re: "اعادة "
+  subject_pm: "[مسائًا]"
   user_notifications:
     previous_discussion: "الردود السابقة "
     in_reply_to: "في رد لـ "
@@ -1373,11 +1456,16 @@ ar:
       new_topics: "المواضيع الجديدة"
       liked_received: "الإعجابات المستلمة"
       new_posts: "المشاركات الجديدة"
+      new_users: "المستخدمون الجدد"
       popular_topics: "أشهر المواضيع"
       join_the_discussion: "إقرأ المزيد"
       more_new: "الجديد لك أنت"
       click_here: "أنقر هنا"
       preheader: "ملخص منذ زيارتك الأخيرة على %{last_seen_at}"
+    forgot_password:
+      title: "نسيت الرمز السري"
+    set_password:
+      title: "تعين كلمة المرور"
     account_created:
       title: "الحساب أُنشئ"
       subject_template: "حسابك الجديد [%{email_prefix}]"
@@ -1406,6 +1494,7 @@ ar:
     recent_topics: "الأحدث"
     see_more: "المزيد"
     search_title: "البحث في الموقع"
+    search_button: "البحث"
   login_required:
     welcome_message: |
       ## اهلا بك في %{title}
@@ -1413,6 +1502,7 @@ ar:
   terms_of_service:
     title: "شروط الخدمة"
   deleted: "حذف"
+  image: "صورة"
   upload:
     edit_reason: "تحميل نسخ محلية للصور"
     unauthorized: "المعذرة، الملف الذي تحاول رفعه غير مسموح به (الامتدادات المسموح بها هي : %{authorized_extensions})."
@@ -1429,6 +1519,21 @@ ar:
   flag_reason:
     sockpuppet: "عضو جديد نشر موضوع جديد ثم قام عضو جديد اخر له نفس الIP (%{ip_address}) بالرد علية. انظر إعدادات<a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "عضو جديد حاول إنشاء عدة منشورات تحتوي علي روابط لنفس العنوان (%{domain}). انظر إعدادات <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    user_email_no_user: "تعذّر العثور على مستخدم معرّفه %{user_id}"
+    user_email_post_not_found: "تعذر إيجاد المشاركة ذات المعرف %{post_id}"
+    user_email_anonymous_user: "المستخدم مجهول"
+    user_email_user_suspended_not_pm: "عضو موقوف، ليست رسالة"
+    user_email_seen_recently: "تم رؤية هذا المستخدم مؤخراً"
+    user_email_notification_already_read: "تم قراءة هذه الاشعارات "
+    user_email_notification_topic_nil: "مشاركة.موضوع صفر"
+    user_email_post_deleted: "تم حذف الموضوع من قبل كاتبه "
+    user_email_user_suspended: "تم تعليق حساب المستخدم"
+    user_email_already_read: "المستخدم قرأ هذه المشاركة "
+    sender_message_blank: "رسالة فارغة"
+    sender_message_to_blank: "رسالة فارغة "
+    sender_text_part_body_blank: "text_part.body فارغ"
+    sender_body_blank: "محتوى فارغ "
   color_schemes:
     base_theme_name: "قاعدة"
   about: "حول "
@@ -1693,13 +1798,10 @@ ar:
         تُمنح هذة الشارة لشكر عضوين جديدين كل شهر كان لهما نشاط متميز في اول شهر لهما في المجتمع, يتم حساب هذا التميز بعدد المنشورات التي تم الاعجاب بها و من اُعجب بها.
     enthusiast:
       name: مُتحمس
-      description: زرت الموقع 10 ايام
     aficionado:
       name: هاوي
-      description: زرت الموقع 100 يوم
     devotee:
       name: متعصب
-      description: زرت الموقع 365 يوم
     badge_title_metadata: "%{display_name} شاره على %{site_title}"
   admin_login:
     success: "البريد أُرسل"
@@ -1712,12 +1814,22 @@ ar:
     title: "الأوسمة"
   finish_installation:
     congratulations: "تهانينا على تثبيت دسكورس!"
+    resend_email:
+      title: "اعد ارسال رسالة التفعيل"
   wizard:
     step:
+      forum_title:
+        title: "الإسم"
       privacy:
         title: "صلاحية"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
       corporate:
         title: "منظمات"
+      colors:
+        title: "الواجهة"
       icons:
         title: "أيقونة"
       homepage:
@@ -1728,9 +1840,33 @@ ar:
             choices:
               latest:
                 label: "أحدث المواضيع"
+              categories_only:
+                label: "الأقسام فقط"
+              categories_with_featured_topics:
+                label: "أقسام ذات مواضيع مُميزة"
+              categories_and_latest_topics:
+                label: "الأقسام والمواضيع الأخيرة"
       emoji:
         title: "الرموز التعبيرية"
       invites:
         title: "ادعو للانظمام الى الطاقم"
       finished:
         title: "نسخة دسكورس جاهزة!"
+  joined: "انضم"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "عضو موقوف"
+      delete_spammer:
+        title: "احذف ناشر السبام"
+      disagree:
+        title: "لا اوافق"
+      approve:
+        title: "تصديق"
+      reject_user:
+        delete:
+          title: "احذف المستخدم"
+      reject:
+        title: "ارفض"
+      delete_user:
+        title: "احذف المستخدم"

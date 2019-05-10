@@ -38,7 +38,13 @@ export default Ember.TextField.extend({
   },
 
   @computed("placeholderKey")
-  placeholder(placeholderKey) {
-    return placeholderKey ? I18n.t(placeholderKey) : "";
+  placeholder: {
+    get() {
+      if (this._placeholder) return this._placeholder;
+      return this.placeholderKey ? I18n.t(this.placeholderKey) : "";
+    },
+    set(value) {
+      return (this._placeholder = value);
+    }
   }
 });

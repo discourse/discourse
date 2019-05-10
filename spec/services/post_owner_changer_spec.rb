@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe PostOwnerChanger do
   describe "change_owner!" do
-    let!(:editor) { Fabricate(:admin) }
-    let(:user_a) { Fabricate(:user) }
+    fab!(:editor) { Fabricate(:admin) }
+    fab!(:user_a) { Fabricate(:user) }
     let(:p1) { create_post(post_number: 1) }
     let(:topic) { p1.topic }
     let(:p2) { create_post(topic: topic, post_number: 2) }
@@ -188,7 +190,7 @@ describe PostOwnerChanger do
       end
 
       context 'private message topic' do
-        # let(:topic) { Fabricate(:private_message_topic) }
+        # fab!(:topic) { Fabricate(:private_message_topic) }
         let(:pm) do
           create_post(
             archetype: 'private_message',

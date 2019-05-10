@@ -261,8 +261,9 @@ export default Ember.Component.extend({
     // when adding two separate files with the same filename search for matching
     // placeholder already existing in the editor ie [Uploading: test.png...]
     // and add order nr to the next one: [Uplodading: test.png(1)...]
+    const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regexString = `\\[${I18n.t("uploading_filename", {
-      filename: filename + "(?:\\()?([0-9])?(?:\\))?"
+      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?"
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
     const matchingPlaceholder = this.get("composer.reply").match(globalRegex);
@@ -878,15 +879,13 @@ export default Ember.Component.extend({
     if ($preview.find(".codeblock-image").length === 0) {
       this.$(".d-editor-preview *")
         .contents()
-        .filter(function() {
-          return this.nodeType === 3; // TEXT_NODE
-        })
         .each(function() {
-          $(this).replaceWith(
-            $(this)
-              .text()
-              .replace(imageScaleRegex, "<span class='codeblock-image'>$&</a>")
-          );
+          if (this.nodeType !== 3) return; // TEXT_NODE
+          const $this = $(this);
+
+          if ($this.text().match(imageScaleRegex)) {
+            $this.wrap("<span class='codeblock-image'></span>");
+          }
         });
     }
 
@@ -914,7 +913,6 @@ export default Ember.Component.extend({
   _composerClosed() {
     this.appEvents.trigger("composer:will-close");
     Ember.run.next(() => {
-      $("#main-outlet").css("padding-bottom", 0);
       // need to wait a bit for the "slide down" transition of the composer
       Ember.run.later(
         () => this.appEvents.trigger("composer:closed"),
@@ -965,7 +963,11 @@ export default Ember.Component.extend({
         unshift: true
       });
 
-      if (this.get("allowUpload") && this.get("uploadIcon")) {
+      if (
+        this.get("allowUpload") &&
+        this.get("uploadIcon") &&
+        !this.site.mobileView
+      ) {
         toolbar.addButton({
           id: "upload",
           group: "insertions",

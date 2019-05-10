@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SingleSignOnRecordSerializer do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
   let :sso do
     SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', external_email: user.email, last_payload: '')
   end
 
   context "admin" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
     let :serializer do
       SingleSignOnRecordSerializer.new(sso, scope: Guardian.new(admin), root: false)
     end
@@ -21,7 +23,7 @@ RSpec.describe SingleSignOnRecordSerializer do
   end
 
   context "moderator" do
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
     let :serializer do
       SingleSignOnRecordSerializer.new(sso, scope: Guardian.new(moderator), root: false)
     end

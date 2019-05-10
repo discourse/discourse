@@ -189,7 +189,6 @@ es:
     age: "Edad"
     joined: "Registrado"
     admin_title: "Admin"
-    flags_title: "Reportes"
     show_more: "ver más"
     show_help: "opciones"
     links: "Enlaces"
@@ -216,6 +215,8 @@ es:
     every_hour: "cada hora"
     daily: "cada día"
     weekly: "cada semana"
+    every_month: "cada mes"
+    every_six_months: "cada seis meses"
     max_of_count: "máximo de {{count}}"
     alternation: "o"
     character_count:
@@ -305,27 +306,113 @@ es:
       title:
         search: "Buscar un mensaje por título:"
         placeholder: "escribe el título del mensaje aquí"
-    queue:
+    review:
+      awaiting_approval: "Esperando aprobación"
+      delete: "Borrar"
+      settings:
+        saved: "Guardado"
+        save_changes: "Guardar cambios"
+        title: "Ajustes"
+        score_bonuses:
+          title: "Bonificación de puntuaciones"
+          description: "Las bonificaciones permiten a ciertos tipos puntuar más alto que otros para que sean priorizados. Nota: cambiar estos valores no tendrá efecto retroactivo para elementos previamente puntuados."
+      moderation_history: "Historial de moderación"
+      view_all: "Ver todo"
+      grouped_by_topic: "Agrupación por tema"
+      none: "No hay nada que revisar."
+      view_pending: "ver pendiente"
+      topic_has_pending:
+        one: "Este tema tiene <b>1</b> publicación esperando aprobación"
+        other: "Este tema tiene <b>{{count}}</b> publicaciones esperando aprobación"
+      title: "Necesita revisión"
       topic: "Tema:"
-      approve: "Aprobar"
-      reject: "Rechazar"
-      delete_user: "Eliminar usuario"
-      title: "Necesita aprobación"
-      none: "No hay posts para revisar."
+      filtered_topic: "Has filtrado el contenido revisable a un único tema."
+      filtered_user: "Usuario:"
+      show_all_topics: "mostrar todos los temas"
+      deleted_post: "(post eliminado)"
+      deleted_user: "(usuario eliminado)"
+      user:
+        username: "Nombre de usuario"
+        email: "Email"
+        name: "Nombre"
+        fields: "Campos"
+      user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}}, ({{count}} reporte en total)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} reportes totales)"
+        agreed:
+          one: "{{count}}% de acuerdo"
+          other: "{{count}}% de acuerdo"
+        disagreed:
+          one: "{{count}}% en desacuerdo"
+          other: "{{count}}% en desacuerdo"
+        ignored:
+          one: "{{count}}% ignorado"
+          other: "{{count}}% ignorados"
+      topics:
+        topic: "Tema"
+        reviewable_count: "Cantidad"
+        reported_by: "Reportado por"
+        deleted: "[Tema borrado]"
+        original: "(tema original)"
+        details: "detalles"
+        unique_users:
+          one: "1 usuario"
+          other: "{{count}} usuarios"
+      replies:
+        one: "1 respuest"
+        other: "{{count}} respuestas"
       edit: "Editar"
+      save: "Guardar"
       cancel: "Cancelar"
-      view_pending: "ver posts pendientes"
-      has_pending_posts:
-        one: "Este tema tiene <b>1</b> post esperando aprobación"
-        other: "Este tema tiene <b>{{count}}</b> posts esperando aprobación"
-      confirm: "Guardar cambios"
-      delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Se eliminarán todos sus posts y se bloqueará su email y dirección IP."
+      new_topic: "Nuevo tema:"
+      filters:
+        type:
+          title: "Tipo:"
+          all: "(todos los tipos)"
+        minimum_score: "Puntuación mínima:"
+        refresh: "Actualizar"
+        status: "Estado:"
+        category: "Categoría:"
+      conversation:
+        view_full: "ver conversación completa"
+      scores:
+        about: "Esta puntuación se calcula en función del nivel de confianza del reportador, la precisión de sus reportes anteriores y la prioridad del elemento que se informa."
+        score: "Puntuación"
+        date: "Fecha"
+        type: "Tipo"
+        status: "Estado"
+        submitted_by: "Enviado por"
+        reviewed_by: "Revisado por"
+      statuses:
+        pending:
+          title: "Pendiente"
+        approved:
+          title: "Aprobado"
+        rejected:
+          title: "Rechazado"
+        ignored:
+          title: "Ignorado"
+        deleted:
+          title: "Borrado"
+        reviewed:
+          title: "(Todo revisado)"
+        all:
+          title: "(Todo)"
+      types:
+        reviewable_flagged_post:
+          title: "Publicación reportada"
+          flagged_by: "Reportado por"
+        reviewable_queued_post:
+          title: "Publicación en cola"
+        reviewable_user:
+          title: "Usuario"
       approval:
-        title: "El post necesita aprobación"
-        description: "Hemos recibido tu nuevo post pero necesita ser aprobado por un moderador antes de aparecer. Por favor, ten paciencia."
+        title: "La publicación necesita ser aprobada"
+        description: "Hemos recibido tu nueva publicación, pero deberá ser aprobada por un moderador antes de aparecer. Por favor, ten paciencia."
         pending_posts:
-          one: "Tienes <strong>1</strong> post pendiente."
-          other: "Tienes <strong>{{count}}</strong> posts pendientes."
+          one: "Tienes <strong>1</strong> publicación pendiente."
+          other: "Tienes <strong>{{count}}</strong> publicaciones pendientes."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicó <a href='{{topicUrl}}'>el tema</a>"
@@ -370,10 +457,19 @@ es:
         remove_user_as_group_owner: "Quitar de dueño"
     groups:
       member_added: "Agregado"
+      member_requested: "Solicitado el"
       add_members:
         title: "Añadir miembros"
         description: "Administrar la membresía de éste grupo"
         usernames: "Nombres de usuario"
+      requests:
+        title: "Solicitudes"
+        reason: "Motivo"
+        accept: "Aceptar"
+        accepted: "aceptado"
+        deny: "Denegar"
+        denied: "denegado"
+        undone: "solicitud deshecha"
       manage:
         title: "Gestionar"
         name: "Nombre"
@@ -404,6 +500,7 @@ es:
       empty:
         posts: "No existe ningún post de miembros de este grupo"
         members: "No hay miembros en este grupo."
+        requests: "No tienes solicitudes de membresía para este grupo."
         mentions: "No hay menciones de este grupo."
         messages: "No hay mensajes a este grupo."
         topics: "No hay temas de miembros de este grupo."
@@ -572,6 +669,18 @@ es:
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
+      user_notifications:
+        ignore_duration_title: "Temporizador de ignorado"
+        ignore_duration_when: "Duración:"
+        ignore_duration_save: "Ignorar"
+        ignore_duration_note: "Por favor, ten en cuenta que todos los ignorados son automáticamente retirados después de la duración especificada."
+        ignore_duration_time_frame_required: "Por favor, selecciona un intervalo de tiempo"
+        ignore_option: "Ignorado"
+        ignore_option_title: "No recibirás notificaciones relacionadas con este usuario, y todas sus respuestas y temas serán ocultadas."
+        mute_option: "Silenciado"
+        mute_option_title: "No recibirás ninguna notificación relacionada con este usuario."
+        normal_option: "Normal"
+        normal_option_title: "Se te notificará si este usuario te responde, cita o menciona."
       activity_stream: "Actividad"
       preferences: "Preferencias"
       profile_hidden: "Este perfil público del usuario ha sido ocultado."
@@ -597,8 +706,7 @@ es:
       dismiss_notifications: "Descartar todos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       first_notification: "¡Tu primera notificación! Selecciónala para comenzar."
-      disable_jump_reply: "No dirigirme a mi post cuando responda"
-      dynamic_favicon: "Mostrar contador de temas nuevos/actualizados en el favicon"
+      dynamic_favicon: "Mostrar número en el icono del navegador"
       theme_default_on_all_devices: "Hacer éste mi tema por defecto en todos mis dispositivos."
       text_size_default_on_all_devices: "Hacer éste mi tamaño por defecto en todos mis dispositivos."
       allow_private_messages: "Permitir que otros usuarios me envíen mensajes privados"
@@ -770,6 +878,7 @@ es:
         primary: "Correo electrónico principal"
         secondary: "Correos electrónicos secundarios"
         no_secondary: "Sin correos electrónicos secundarios"
+        sso_override_instructions: "El correo electrónico puede actualizarse desde el proveedor de SSO."
         instructions: "Nunca se muestra al público."
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
@@ -837,6 +946,10 @@ es:
         normal: "Normal"
         larger: "Grande"
         largest: "Muy grande"
+      title_count_mode:
+        title: "El título de la página muestra una cuenta de:"
+        notifications: "Nuevas notificaciones"
+        contextual: "Nuevo contenido en la página"
       like_notification_frequency:
         title: "Notificar cuando me dan Me gusta"
         always: "Con cada Me gusta que reciban mis posts"
@@ -854,6 +967,8 @@ es:
         every_hour: "cada hora"
         daily: "diariamente"
         weekly: "semanalmente"
+        every_month: "cada mes"
+        every_six_months: "cada seis meses"
       email_level:
         title: "Enviarme un email cuando alguien me cite, responda, mencione mi @nombre de usuario o me invite a un tema."
         always: "siempre"
@@ -1171,10 +1286,6 @@ es:
         name: "Facebook"
         title: "con Facebook"
         message: "Autenticando con Facebook (asegúrate de desactivar cualquier bloqueador de pop ups)"
-      yahoo:
-        name: "Yahoo"
-        title: "con Yahoo"
-        message: "Autenticando con Yahoo (asegúrate de desactivar cualquier bloqueador de pop ups)"
       github:
         name: "GitHub"
         title: "con GitHub"
@@ -1213,6 +1324,8 @@ es:
       alt: "Alt"
     conditional_loading_section:
       loading: Cargando...
+    category_row:
+      topic_count: "{{count}} temas en esta categoría"
     select_kit:
       default_header_text: Seleccionar...
       no_content: Ninguna coincidencia encontrada
@@ -1227,9 +1340,9 @@ es:
         other: "Seleccionar al menos {{count}} items."
     emoji_picker:
       filter_placeholder: Buscar emoji
-      smileys_&_emotion: Caras y emocione
+      smileys_&_emotion: Caras y emociones
       people_&_body: Personas y cuerpo
-      animals_&_nature: Animales y naturalez
+      animals_&_nature: Animales y naturaleza
       food_&_drink: Comida y bebida
       travel_&_places: Viajes y lugares
       activities: Actividades
@@ -1262,8 +1375,6 @@ es:
       toggle_whisper: "Activar/desactivar Susurro"
       toggle_unlisted: "Visible / Invisible"
       posting_not_on_topic: "¿A qué tema quieres responder?"
-      saving_draft_tip: "guardando..."
-      saved_draft_tip: "guardado"
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores offline"
@@ -1389,7 +1500,8 @@ es:
       none: "No se han podido cargar las notificaciones."
       empty: "No se han encontrado notificaciones."
       more: "ver notificaciones antiguas"
-      total_flagged: "total de posts reportados"
+      post_approved: "Tu post ha sido aprovado"
+      reviewable_items: "elementos a la espera de revisión"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1428,6 +1540,7 @@ es:
         watching_first_post: '{{username}} ha creado un nuevo tema "{{topic}}" - {{site_title}}'
         confirm_title: "Notificaciones habilitadas - %{site_title}"
         confirm_body: "¡Éxito! Las notificaciones han sido habilitadas."
+        custom: "Notificación de {{username}} en %{site_title}"
     upload_selector:
       title: "Añadir imagen"
       title_with_attachments: "Añadir una imagen o archivo"
@@ -1659,7 +1772,9 @@ es:
         next_week: "Semana próxima"
         two_weeks: "Dos Semanas"
         next_month: "Próximo mes"
+        two_months: "Dos meses"
         three_months: "Tres Meses"
+        four_months: "Cuatro meses"
         six_months: "Seis Meses"
         one_year: "Un Año"
         forever: "Para siempre"
@@ -1935,10 +2050,14 @@ es:
         description:
           one: Has seleccionado <b>1</b> post.
           other: "Has seleccionado <b>{{count}}</b> posts."
+      deleted_by_author:
+        one: "(tema retirado por su autor, se borrará automáticamente en %{count} hora,  salvo que sea reportado)"
+        other: "(tema retirado por su autor, se borrará automáticamente en %{count} horas,  salvo que sea reportado)"
     post:
       quote_reply: "Citar"
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
+      ignored: "Contenido ignorado"
       wiki_last_edited_on: "wiki editada por última vez"
       last_edited_on: "post editado por última vez el"
       reply_as_new_topic: "Responder como tema enlazado"
@@ -1946,7 +2065,7 @@ es:
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
       follow_quote: "ir al post citado"
       show_full: "Mostrar todo el post"
-      show_hidden: "Ver el contenido oculto."
+      show_hidden: "Ver contenido ignorado."
       deleted_by_author:
         one: "(post retirado por el autor. Será borrado automáticamente en %{count} hora si no es reportado)"
         other: "(post retirado por el autor. Será borrado automáticamente en %{count} horas si no es reportado)"
@@ -1957,15 +2076,12 @@ es:
         one: "ver 1 post oculto"
         other: "ver {{count}} posts ocultos"
       notice:
-        first: "Esta es la primera vez que {{user}} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
-        return: "Hacía tiempo que no veíamos a {{user}} — su última publicación fue {{time}}. "
+        new_user: "Esta es la primera vez que {{user}} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
+        returning_user: "Hace tiempo que no vemos a {{user}} — su última publicación fue {{time}}. "
       unread: "Post sin leer"
       has_replies:
         one: "{{count}} Respuesta"
         other: "{{count}} Respuestas"
-      has_likes:
-        one: "{{count}} Me gusta"
-        other: "{{count}} Me gusta"
       has_likes_title:
         one: "1 persona le ha dado Me gusta a este post"
         other: "{{count}} personas le han dado Me gusta a este post"
@@ -2034,6 +2150,8 @@ es:
         delete_topic_disallowed_modal: "No tienes permiso para borrar este tema. Si de verdad quieres que se elimine, repórtalo y explica los motivos en el propio reporte para que lo estudiemos."
         delete_topic_disallowed: "no tienes permiso para borrar este tema"
         delete_topic: "borrar tema"
+        add_post_notice: "Añadir aviso de staff"
+        remove_post_notice: "Eliminar aviso de staff"
       actions:
         flag: "Reportar"
         defer_flags:
@@ -2161,11 +2279,13 @@ es:
       settings: "Ajustes"
       topic_template: "Plantilla de tema"
       tags: "Etiquetas"
-      tags_allowed_tags: "Solo permitir estas etiquetas para usarse en esta categoría:"
-      tags_allowed_tag_groups: "Solo permitir las etiquetas de estos grupos para usarse en esta categoría:"
+      tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
+      tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tags_tab_description: "Las etiquetas y grupos de etiquetas especificadas aquí solo podrán ser usadas en esta y otras categorías que también las tengan especificadas. No estarán disponibles en otras categorías."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
+      manage_tag_groups_link: "Gestiona grupos de etiquetas aquí."
+      allow_global_tags_label: "También permitir otras etiquetas"
       topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: "Eliminar categoría"
       create: "Crear categoría"
@@ -2215,7 +2335,7 @@ es:
       require_topic_approval: "Requiere aprobación del moderador para todos los temas nuevos"
       require_reply_approval: "Requiere aprobación del moderador para todas las respuestas nuevas"
       this_year: "este año"
-      position: "Posición:"
+      position: "Posición en la página de categorías:"
       default_position: "Posición predeterminada"
       position_disabled: "Las Categorías se mostrarán por orden de actividad. Para controlar el orden en que aparecen en las listas,"
       position_disabled_click: 'activa la opción "fixed category positions".'
@@ -2244,6 +2364,10 @@ es:
         options:
           normal: "Normal"
           ignore: "Ignorar"
+          very_low: "Muy baja"
+          low: "Baja"
+          high: "Alta"
+          very_high: "Muy alta"
       sort_options:
         default: "por defecto"
         likes: "Me gusta"
@@ -2261,6 +2385,11 @@ es:
         rows_with_featured_topics: "Filas con temas destacados"
         boxes: "Cajas"
         boxes_with_featured_topics: "Cajas con temas destacados"
+      settings_sections:
+        general: "General"
+        moderation: "Moderación"
+        appearance: "Aspecto"
+        email: "Correo electrónico"
     flagging:
       title: "¡Gracias por ayudar a mantener una comunidad civilizada!"
       action: "Reportar post"
@@ -2447,6 +2576,12 @@ es:
       readonly: "Ver"
     lightbox:
       download: "descargar"
+      previous: "Anterior (flecha izquierda)"
+      next: "Siguiente (flecha derecha)"
+      counter: "%curr% de %total%"
+      close: "Cerrar (Esc)"
+      content_load_error: '<a href="%url%">El contenido</a>no pudo ser cargado.'
+      image_load_error: '<a href="%url%">La imagen</a>no pudo ser cargada.'
     keyboard_shortcuts_help:
       title: "Atajos de teclado"
       jump_to:
@@ -2654,8 +2789,6 @@ es:
       dashboard:
         title: "Panel"
         last_updated: "Panel actualizado el:"
-        find_old: "¿Buscando el antiguo dashboard?"
-        old_link: "lo visitas aquí"
         version: "Versión"
         up_to_date: "¡Estás al día!"
         critical_available: "Actualización crítica disponible."
@@ -2732,93 +2865,6 @@ es:
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"
-      flags:
-        title: "Reportes"
-        active_posts: "Posts Reportados"
-        old_posts: "Post reportados antiguos"
-        topics: "Temas Reportados"
-        moderation_history: "Historial de moderación"
-        agree: "De acuerdo"
-        agree_title: "Confirmar esta indicación como válido y correcto."
-        agree_flag_hide_post: "Esconder Post"
-        agree_flag_hide_post_title: "Ocultar este post y enviar automáticamente un mensaje al usuario para que lo edite de forma urgente"
-        agree_flag_restore_post: "Coincidir y Restaurar Mensaje"
-        agree_flag_restore_post_title: "Restaurar el post para que todos los usuarios puedan verlo."
-        agree_flag_suspend: "Suspender Usuario"
-        agree_flag_suspend_title: "Estar de acuerdo con el reporte y suspender el usuario."
-        agree_flag_silence: "Silenciar Usuario"
-        agree_flag_silence_title: "Estar de acuerdo con el reporte y silenciar el usuario."
-        agree_flag: "Mantener Post"
-        agree_flag_title: "Estar de acuerdo con el reporte y mantener la publicación intacta."
-        ignore_flag: "Ignorar"
-        ignore_flag_title: "Eliminar este reporte; no requiere ninguna acción en este momento."
-        delete: "Eliminar"
-        delete_title: "Eliminar el post referido por este indicador."
-        delete_post_defer_flag: "Eliminar post e ignorar reporte"
-        delete_post_defer_flag_title: "Eliminar post; si era el primero de un tema, eliminar el tema"
-        delete_post_agree_flag: "Eliminar post y estar de acuerdo con el reporte"
-        delete_post_agree_flag_title: "Eliminar post; si era el primero de un tema, eliminar el tema"
-        delete_flag_modal_title: "Borrar y..."
-        delete_spammer: "Eliminar spammer"
-        delete_spammer_title: "Eliminar usuario y todos los posts y temas de ese usuario."
-        disagree_flag_unhide_post: "No coincido (volver a mostrar post)"
-        disagree_flag_unhide_post_title: "Quitar todos los reportes de este post y hacerlo visible de nuevo"
-        disagree_flag: "No coincido"
-        disagree_flag_title: "Denegar esta indicación como inválida o incorrecta"
-        clear_topic_flags: "Hecho"
-        clear_topic_flags_title: "Este tema ha sido investigado y los problemas han sido resueltos. Haz clic en Hecho para eliminar los reportes."
-        more: "(más respuestas...)"
-        suspend_user: "Suspender Usuario"
-        suspend_user_title: "Suspender usuario de este post"
-        replies:
-          one: "[1 respuesta]"
-          other: "[%{count} respuestas]"
-        delete_replies:
-          one: "¿También borrar %{count} respuesta a este post?"
-          other: "¿También borrar las %{count} respuestas a este post?"
-        dispositions:
-          agreed: "coincidió"
-          disagreed: "no coincidió"
-          deferred: "ignorado"
-        flagged_by: "Reportado por"
-        resolved_by: "Resuelto por"
-        took_action: "Tomó medidas"
-        system: "Sistema"
-        error: "Algo salió mal"
-        reply_message: "Responder"
-        no_results: "No hay mensajes reportados."
-        topic_flagged: "Este <strong>tema</strong> ha sido reportado."
-        show_full: "mostrar mensaje completo"
-        visit_topic: "Visita el tema para tomar medidas"
-        was_edited: "El post fue editado después del primer reporte"
-        previous_flags_count: "Este post ya fue marcado {{count}} veces."
-        show_details: "Mostrar detalles del reporte"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} reporte en total)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} reportes totales)"
-          agreed:
-            one: "{{count}}% de acuerdo"
-            other: "{{count}}% de acuerdo"
-          disagreed:
-            one: "{{count}}% en desacuerdo"
-            other: "{{count}}% en desacuerdo"
-          ignored:
-            one: "{{count}}% ignorado"
-            other: "{{count}}% ignorado"
-        details: "detalles"
-        flagged_topics:
-          topic: "Tema"
-          type: "Tipo"
-          users: "Usuarios"
-          last_flagged: "Último reporte"
-          no_results: "No hay temas reportados."
-        short_names:
-          off_topic: "off-topic"
-          inappropriate: "inapropiado"
-          spam: "spam"
-          notify_user: "personalizado"
-          notify_moderators: "personalizado"
       groups:
         new:
           title: "Grupo Nuevo"
@@ -2949,6 +2995,9 @@ es:
         queued_post_event:
           name: "Evento de aprobación de publicación"
           details: "Cuando se crea, aprueba o rechaza una nueva publicación en cola."
+        reviewable_event:
+          name: "Evento revisable"
+          details: "Cuando un elemento nuevo está disponible para ser revisado y cuando su estado es actualizado."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -3114,6 +3163,7 @@ es:
           mobile: "Móvil"
           settings: "Ajustes"
           translations: "Traducciones"
+          extra_scss: "Extra SCSS"
           preview: "Vista previa"
           show_advanced: "Mostrar campos avanzados"
           hide_advanced: "Ocultar campos avanzados"
@@ -3439,6 +3489,10 @@ es:
             web_hook_create: "crear webhook"
             web_hook_update: "actualizar webhook"
             web_hook_destroy: "destruir webhook"
+            web_hook_deactivate: "webhook desactivar"
+            embeddable_host_create: "crear host insertable"
+            embeddable_host_update: "actualizar host insertable"
+            embeddable_host_destroy: "borrar host insertable"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -3526,19 +3580,12 @@ es:
         nav:
           new: "Nuevo"
           active: "Activo"
-          pending: "Pendiente"
           staff: "Staff"
           suspended: "Suspendidos"
           silenced: "Silenciado"
           suspect: "Sospechoso"
           staged: "Temporal"
         approved: "Aprobado/s?"
-        approved_selected:
-          one: "aprobar usuario"
-          other: "aprobar ({{count}}) usuarios"
-        reject_selected:
-          one: "rechazar usuario"
-          other: "rechazar ({{count}}) usuarios"
         titles:
           active: "Usuarios activos"
           new: "Usuarios nuevos"
@@ -3555,12 +3602,6 @@ es:
           suspended: "Usuarios suspendidos"
           suspect: "Usuarios sospechados"
           staged: "Usuarios Temporales"
-        reject_successful:
-          one: "1 usuario rechazado con éxito."
-          other: "%{count} usuarios rechazados con éxito."
-        reject_failures:
-          one: "Error al rechazar 1 usuario."
-          other: "Error al rechazar %{count} usuarios."
         not_verified: "No verificado"
         check_email:
           title: "Revelar la dirección de e-mail de este usuario"

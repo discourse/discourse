@@ -6,7 +6,10 @@ const SELECTORS =
 export default {
   name: "d-popover",
 
-  initialize() {
+  initialize(container) {
+    const router = container.lookup("router:main");
+    router.on("routeWillChange", hidePopover);
+
     $("#main").on("click.d-popover mouseenter.d-popover", SELECTORS, event =>
       showPopover(event)
     );

@@ -111,7 +111,7 @@ class GlobalSetting
       replica_host
       replica_port
     }.each do |s|
-      if val = self.send("db_#{s}")
+      if val = self.public_send("db_#{s}")
         hash[s] = val
       end
     end
@@ -236,6 +236,10 @@ class GlobalSetting
 
   class BlankProvider < BaseProvider
     def lookup(key, default)
+
+      if key == :redis_port
+        return ENV["DISCOURSE_REDIS_PORT"] if ENV["DISCOURSE_REDIS_PORT"]
+      end
       default
     end
 

@@ -12,10 +12,7 @@ pt_BR:
         today: Hoje %{time}
         tomorrow: Amanhã %{time}
         yesterday: Ontem %{time}
-      title: Inserir data
       create:
-        modal_title: Inserir data
-        modal_subtitle: " Converteremos automaticamente a data e o tempo para o fuso horário local do visitante."
         form:
           insert: Inserir
           advanced_mode: Modo avançado
@@ -30,3 +27,4 @@ pt_BR:
           date_title: Data
           time_title: Hora
           format_title: Formato de data
+          timezone: Fuso Horário

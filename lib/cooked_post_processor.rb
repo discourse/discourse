@@ -8,6 +8,7 @@ require_dependency 'quote_comparer'
 class CookedPostProcessor
   INLINE_ONEBOX_LOADING_CSS_CLASS = "inline-onebox-loading"
   INLINE_ONEBOX_CSS_CLASS = "inline-onebox"
+  LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
   LOADING_SIZE = 10
   LOADING_COLORS = 32
 
@@ -39,6 +40,7 @@ class CookedPostProcessor
       post_process_images
       post_process_quotes
       optimize_urls
+      remove_user_ids
       update_post_image
       enforce_nofollow
       pull_hotlinked_images(bypass_bump)
@@ -367,7 +369,7 @@ class CookedPostProcessor
 
   def add_lightbox!(img, original_width, original_height, upload, cropped: false)
     # first, create a div to hold our lightbox
-    lightbox = create_node("div", "lightbox-wrapper")
+    lightbox = create_node("div", LIGHTBOX_WRAPPER_CSS_CLASS)
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
@@ -567,7 +569,7 @@ class CookedPostProcessor
           new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
           new_parent.first.add_child(img)
         end
-      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images")) && width > 0 && height > 0
+      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") || parent_class&.include?("scale-images")) && width > 0 && height > 0
         img.remove_attribute("width")
         img.remove_attribute("height")
         img.parent["class"] = "aspect-image-full-size"
@@ -591,6 +593,23 @@ class CookedPostProcessor
       @doc.css("img[#{selector}]").each do |img|
         img[selector] = UrlHelper.cook_url(img[selector].to_s)
       end
+    end
+  end
+
+  def remove_user_ids
+    @doc.css("a[href]").each do |a|
+      uri = begin
+        URI(a["href"])
+      rescue URI::Error
+        next
+      end
+      next if uri.hostname != Discourse.current_hostname
+
+      query = Rack::Utils.parse_nested_query(uri.query)
+      next if !query.delete("u")
+
+      uri.query = query.map { |k, v| "#{k}=#{v}" }.join("&").presence
+      a["href"] = uri.to_s
     end
   end
 

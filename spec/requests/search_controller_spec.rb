@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SearchController do
@@ -137,6 +139,11 @@ describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "raises an error when search term is a hash" do
+      get "/search.json?q[foo]"
+      expect(response.status).to eq(400)
+    end
+
     it "logs the search term" do
       SiteSetting.log_search_queries = true
       get "/search.json", params: { q: 'bantha' }
@@ -167,7 +174,7 @@ describe SearchController do
     end
 
     context "with a user" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
 
       it "raises an error if the user can't see the context" do
         get "/search/query.json", params: {

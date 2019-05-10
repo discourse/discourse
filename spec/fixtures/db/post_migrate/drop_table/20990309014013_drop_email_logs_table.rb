@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DropEmailLogsTable < ActiveRecord::Migration[5.2]
   def up
     drop_table :email_logs

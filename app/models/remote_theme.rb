@@ -124,13 +124,14 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     theme_info = RemoteTheme.extract_theme_info(importer)
+    updated_fields = []
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
         new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
         File.rename(path, new_path) # OptimizedImage has strict file name restrictions, so rename temporarily
         upload = UploadCreator.new(File.open(new_path), File.basename(relative_path), for_theme: true).create_for(theme.user_id)
-        theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
+        updated_fields << theme.set_field(target: :common, name: name, type: :theme_upload_var, upload_id: upload.id)
       end
     end
 
@@ -144,8 +145,12 @@ class RemoteTheme < ActiveRecord::Base
     importer.all_files.each do |filename|
       next unless opts = ThemeField.opts_from_file_path(filename)
       value = importer[filename]
-      theme.set_field(opts.merge(value: value))
+      updated_fields << theme.set_field(opts.merge(value: value))
     end
+
+    # Destroy fields that no longer exist in the remote theme
+    field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
+    ThemeField.where(id: field_ids_to_destroy).destroy_all
 
     if !skip_update
       self.remote_updated_at = Time.zone.now
@@ -162,6 +167,21 @@ class RemoteTheme < ActiveRecord::Base
       importer.cleanup! if cleanup
     rescue => e
       Rails.logger.warn("Failed cleanup remote git #{e}")
+    end
+  end
+
+  def diff_local_changes
+    return unless is_git?
+    importer = ThemeStore::GitImporter.new(remote_url, private_key: private_key, branch: branch)
+    begin
+      importer.import!
+    rescue RemoteTheme::ImportError => err
+      { error: err.message }
+    else
+      changes = importer.diff_local_changes(self.id)
+      return nil if changes.blank?
+
+      { diff: changes }
     end
   end
 

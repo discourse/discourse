@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec::Matchers.define :be_within_one_second_of do |expected_time|
   match do |actual_time|
     (actual_time - expected_time).abs < 1

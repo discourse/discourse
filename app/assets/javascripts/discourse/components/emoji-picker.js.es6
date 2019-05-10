@@ -360,10 +360,15 @@ export default Ember.Component.extend({
         .off("touchstart")
         .on("touchstart", "button.emoji", touchStartEvent => {
           const $this = $(touchStartEvent.currentTarget);
+
           $this.on("touchend", touchEndEvent => {
+            touchEndEvent.preventDefault();
+            touchEndEvent.stopPropagation();
+
             handler.bind(self)(touchEndEvent);
             $this.off("touchend");
           });
+
           $this.on("touchmove", () => $this.off("touchend"));
         });
     } else {

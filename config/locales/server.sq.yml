@@ -55,10 +55,25 @@ sq:
       confirmation: "nuk përputhet %{attribute}"
       empty: nuk mund të lihet bosh
       equal_to: "duhet të jetë baraz me %{count}"
+      even: must be even
       exclusion: është i rezervuar
+      greater_than: "must be greater than %{count}"
+      greater_than_or_equal_to: "must be greater than or equal to %{count}"
+      has_already_been_used: "është përdorur më parë"
+      inclusion: is not included in the list
       invalid: është i pavlefshëm
+      less_than: "must be less than %{count}"
+      less_than_or_equal_to: "must be less than or equal to %{count}"
       not_a_number: nuk është një numër
+      not_an_integer: must be an integer
+      odd: must be odd
       record_invalid: "Verifikimi dështoj: %{errors}"
+      restrict_dependent_destroy:
+        one: "Cannot delete record because a dependent %{record} exists"
+        many: "Cannot delete record because dependent %{record} exist"
+      other_than: "must be other than %{count}"
+    template:
+      body: "There were problems with the following fields:"
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
@@ -68,8 +83,14 @@ sq:
       <<: *errors
   invite:
     user_exists: "Nuk keni nevojë të ftoni <b>%{email}</b>, ata <a href='%{base_path}/u/%{username}/summary'>kanë krijuar një llogari në faqe!</a>"
+  backup:
+    operation_already_running: "An operation is currently running. Can't start a new job right now."
+    backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
+    not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
+  not_found: "The requested URL or resource could not be found."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
+  read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   reading_time: "Koha e leximit"
   likes: "Pëlqime"
   embed:
@@ -80,19 +101,28 @@ sq:
       other: "janë %{count} përgjigje"
     loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
+    imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
+  no_mentions_allowed: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
   no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
   too_many_mentions_newuser:
     one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim."
     other: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtarë në një postim."
   no_images_allowed: "Na vjen keq, anëtarët e rinj nuk kanë të drejtë të vendosin imazhe në një postim."
+  no_attachments_allowed: "Na vjen keq, new users can't put attachments in posts."
+  no_links_allowed: "Na vjen keq, new users can't put links in posts."
   spamming_host: "Na vjen keq, you cannot post a link to that host."
+  user_is_suspended: "Suspended users are not allowed to post."
+  topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
+  just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "përmban karaktere  jo të vlefshëm"
   next_page: "faqja tjetër →"
   prev_page: "← faqe mëparshme"
   page_num: "Faqe %{num}"
   home_title: "Kryefaqja"
+  topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "Burimi RSS i '%{topic}'"
+  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} shkruajti:"
   num_posts: "Postime:"
   num_participants: "Pjesëmarrësit:"
@@ -105,6 +135,8 @@ sq:
   too_late_to_edit: "Ky postim është fshirë para shumë kohësh. Nuk mund të ndryshohet apo fshihet më."
   excerpt_image: "imazh"
   groups:
+    errors:
+      invalid_incoming_email: "'%{email}' nuk është një adresë e vlefshme emaili."
     default_names:
       everyone: "të gjithë"
       admins: "admins"
@@ -143,6 +175,9 @@ sq:
     attributes:
       category:
         name: "Emri Kategorisë"
+      topic:
+        title: "Titulli"
+        category_id: "Kategori"
       post:
         raw: "Trupi"
       user_profile:
@@ -153,17 +188,26 @@ sq:
         topic:
           attributes:
             base:
+              too_many_users: "You can only send warnings to one user at a time."
               no_user_selected: "Ju duhet të zgjidhni një përdorues të vlefshëm."
         user:
           attributes:
             password:
               common: "është një ndër 10000 fjalëkalimet më të përdorur. Ju ftojmë të përdorni një më të sigurtë."
+              same_as_username: "is the same as your username. Please use a more secure password."
+              same_as_email: "is the same as your email. Please use a more secure password."
+            ip_address:
+              signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:
           attributes:
             hex:
               invalid: "nuk është një ngjyrë e vlefshme"
+  vip_category_name: "Lounge"
+  vip_category_description: "A category exclusive to members with trust level 3 and higher."
   meta_category_name: "Reagimet e Faqes"
+  meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Stafi"
+  staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
   lounge_welcome:
     title: "Mirë se vini në Lounge"
   category:
@@ -187,6 +231,7 @@ sq:
       title: "i zakonshëm"
     leader:
       title: "udhëheqës"
+    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     hours:
       one: "1 orë"
@@ -270,6 +315,8 @@ sq:
         other: "pothuajse %{count} vite më parë"
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
+    choose_new: "Zgjidhni një fjalëkalim të ri"
+    choose: "Zgjidhni një fjalëkalim të ri"
     update: "Rifresko Fjalëkalimin"
     save: "Vendos Fjalëkalim"
     title: "Rivendos Fjalëkalimin"
@@ -289,6 +336,10 @@ sq:
     please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
     continue_button: "Vazhdo tek %{site_name}"
     welcome_to: "Mirë se vini tek %{site_name}!"
+    approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+  reviewable_score_types:
+    needs_approval:
+      title: "Tema që kërkojnë aprovim"
   post_action_types:
     off_topic:
       title: "Jashtë teme"
@@ -314,10 +365,12 @@ sq:
     bookmark:
       title: "Shto tek të preferuarat"
       description: "Shto postimin tek të preferuarat"
+      short_description: "Shto postimin tek të preferuarat"
       long_form: "shtoi postimin tek të preferuarat"
     like:
       title: "Pëlqe"
       description: "Më pëlqen ky postim"
+      short_description: "Më pëlqen ky postim"
       long_form: "pëlqeu këtë"
   topic_flag_types:
     spam:
@@ -343,29 +396,64 @@ sq:
         make: "Kjo temë është tani banderolë. Do të shfaqet në majë të gjithë faqes derisa përdoruesi t'a heqë vetë. "
         remove: "Kjo temë nuk është më banderolë. Nuk do të shfaqet më në majë të çdo faqeje të sitit. "
   unsubscribed:
-    title: "U çregjistruat!"
     topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
   unsubscribe:
     title: "Çregjistrohuni"
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
-    disable_digest_emails: "Mos më dërgo më mesazhe email me përmbledhjet"
     all: "Mos më dërgoni më email nga %{sitename}"
+    log_out: "Shkëputu"
+    digest_frequency:
+      never: "asnjëherë"
+      every_30_minutes: "çdo 30 minuta"
+      every_hour: "çdo orë"
+      daily: "çdo ditë"
+      weekly: "çdo javë"
   user_api_key:
     title: "Lejo këtë aplikimi të ketë akses në faqe"
     authorize: "Autorizo"
+    read: "lexuar"
     description: '"%{application_name}" po kërkon këto të drejta në lidhje me llogarinë tuaj:'
     scopes:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
       session_info: "Leximin e informacionit të sesionit të llogarisë"
   reports:
+    default:
+      labels:
+        day: Day
+    post_edits:
+      labels:
+        post: Postim
+        editor: Redaktor
+        edit_reason: Arsye
+    user_flagging_ratio:
+      labels:
+        user: User
+    moderators_activity:
+      labels:
+        moderator: Moderator
+    flags_status:
+      labels:
+        flag: Lloji
     visits:
       title: "Vizitat e përdoruesit"
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
     signups:
       xaxis: "Ditë"
+    new_contributors:
+      xaxis: "Day"
+    consolidated_page_views:
+      yaxis: "Day"
+      labels:
+        post: Postim
+        editor: Redaktor
+        edit_reason: Arsye
+    dau_by_mau:
+      xaxis: "Day"
+    daily_engaged_users:
+      xaxis: "Day"
     profile_views:
       xaxis: "Ditë"
     topics:
@@ -392,12 +480,24 @@ sq:
       title: "Përdorues për Nivel Besimi"
       xaxis: "Niveli i besimit"
       yaxis: "Numri i përdoruesve"
+    users_by_type:
+      xaxis: "Lloji"
+      yaxis: "Numri i përdoruesve"
+      labels:
+        type: Lloji
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Të pezulluar
     emails:
       title: "Emails Sent"
       xaxis: "Ditë"
       yaxis: "Number of Emails"
     user_to_user_private_messages:
       xaxis: "Ditë"
+      yaxis: "Numri i mesazheve"
+    user_to_user_private_messages_with_replies:
+      xaxis: "Day"
       yaxis: "Numri i mesazheve"
     system_private_messages:
       title: "Sistem"
@@ -420,14 +520,25 @@ sq:
       xaxis: "User"
       num_clicks: "Clicks"
       num_topics: "Topics"
+      labels:
+        user: "User"
+        num_clicks: "Clicks"
+        num_topics: "Tema"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
       num_clicks: "Clicks"
       num_topics: "Topics"
       num_users: "Users"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Tema
     top_referred_topics:
       title: "Top Referred Topics"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Topic"
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Ditë"
@@ -477,6 +588,17 @@ sq:
     mobile_visits:
       xaxis: "Ditë"
       yaxis: "Numri i vizitave"
+    suspicious_logins:
+      labels:
+        user: User
+        location: Vendndodhja
+    staff_logins:
+      labels:
+        user: User
+        location: Vendndodhja
+    top_uploads:
+      labels:
+        filename: Filename
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -489,9 +611,11 @@ sq:
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
+    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
+    min_personal_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
@@ -503,6 +627,7 @@ sq:
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
@@ -532,6 +657,7 @@ sq:
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
+    moderators_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
@@ -564,7 +690,6 @@ sq:
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
-    enable_yahoo_logins: "Enable Yahoo authentication"
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
     allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
@@ -582,6 +707,7 @@ sq:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
+    max_personal_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
@@ -656,7 +782,6 @@ sq:
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
-    num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
     min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
     reply_by_email_enabled: "Enable replying to topics via email."
@@ -676,6 +801,7 @@ sq:
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
+    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
@@ -778,8 +904,20 @@ sq:
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
     suspended: "You can't log in until %{date}."
+    suspended_with_reason: "Account suspended until %{date}: %{reason}"
+    errors: "%{errors}"
+    not_available: "Not available. Try %{suggestion}?"
+    something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
+    omniauth_error: "Sorry, there was an error authorizing your account. Perhaps you did not approve authorization?"
+    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    new_registrations_disabled: "New account registrations are not allowed at this time."
+    password_too_long: "Passwords are limited to 200 characters."
+    email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
     reserved_username: "Ky emër nuk lejohet."
     missing_user_field: "You have not completed all the user fields"
+  admin:
+    email:
+      sent_test: "u dërgua!"
   user:
     username:
       short: "must be at least %{min} characters"
@@ -792,10 +930,6 @@ sq:
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
-  flags_reminder:
-    subject_template:
-      one: "1 sinjalizim në pritje për t'u trajtuar"
-      other: "%{count} sinjalizime në pritje për t'u trajtuar"
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
   admin_confirmation_mailer:
@@ -812,13 +946,21 @@ sq:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
     agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
     disagreed: "Thanks for letting us know. We're looking into it."
-    deferred: "Thanks for letting us know. We're looking into it."
-    deferred_and_deleted: "Thanks for letting us know. We've removed the post."
+    ignored: "Thanks for letting us know. We're looking into it."
+    ignored_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
     post_hidden:
       subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
+      text_body_template: |
+        Thanks for joining %{site_name}, and welcome!
+
+        %{new_user_tips}
+
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
     welcome_invite:
       subject_template: "Mirë se vini tek %{site_name}!"
     backup_succeeded:
@@ -841,14 +983,26 @@ sq:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         We couldn't find your reply in the email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
+    email_reject_invalid_post:
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
+    email_reject_invalid_post_specified:
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Reason:
+
+        %{post_error}
+
+        If you can correct the problem, please try again.
+    spam_post_blocked:
+      subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
       subject_template:
         one: "1 user waiting for approval"
         other: "%{count} users waiting for approval"
-      text_body_template: |
-        There are new user signups waiting to be approved (or rejected) before they can access this forum.
-
-        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
@@ -871,6 +1025,33 @@ sq:
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
+    invited_to_private_message_body: |
+      %{username} ju ftoi tek mesazhi
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      në
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} ju ftoi në një bisedë
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tek
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       text_body_template: |
         %{header_instructions}
@@ -937,6 +1118,15 @@ sq:
         %{context}
 
         %{respond_instructions}
+    user_mentioned_pm:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
       text_body_template: |
         %{header_instructions}
@@ -980,10 +1170,19 @@ sq:
         %{message}
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
+      new_topics: "Diskutimet e Reja"
+      liked_received: "Pëlqime të marra"
+      new_posts: "Postimet e Reja"
+      new_users: "Përdorues të rinj"
+      join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
       click_here: "klikoni këtu"
       from: "%{site_name} - përmbledhja"
       preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
+    forgot_password:
+      title: "Harruat Fjalëkalimin"
+    set_password:
+      title: "Vendos Fjalëkalim"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
       text_body_template: |
@@ -1016,9 +1215,11 @@ sq:
     recent_topics: "Më të fundit"
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
+    search_button: "Kërko"
   terms_of_service:
     title: "Kushtet e shërbimit"
   deleted: "deleted"
+  image: "imazh"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1029,6 +1230,22 @@ sq:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+  skipped_email_log:
+    user_email_no_user: "Can't find user with id %{user_id}"
+    user_email_post_not_found: "Can't find a post with id %{post_id}"
+    user_email_anonymous_user: "User is anonymous"
+    user_email_user_suspended_not_pm: "User is suspended, not a message"
+    user_email_seen_recently: "User was seen recently"
+    user_email_notification_already_read: "The notification this email is about has already been read"
+    user_email_notification_topic_nil: "post.topic is nil"
+    user_email_post_user_deleted: "Përdoruesi i këtij postimi është fshirë."
+    user_email_post_deleted: "autori e ka fshirë postimin"
+    user_email_user_suspended: "user was suspended"
+    user_email_already_read: "user has already read this post"
+    sender_message_blank: "message is blank"
+    sender_message_to_blank: "message.to is blank"
+    sender_text_part_body_blank: "text_part.body is blank"
+    sender_body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
   about: "Rreth"
@@ -1207,10 +1424,52 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
+  tags:
+    title: "Etiketat"
   finish_installation:
     confirm_email:
       title: "Konfirmoni emailin tuaj"
+    resend_email:
+      title: "Dërgo përsëri emailin e aktivizimit"
   wizard:
     step:
+      forum_title:
+        title: "Emri"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "emri@adresa.com"
+      corporate:
+        title: "Organizata"
+      colors:
+        title: "Tema"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Vetëm kategoritë"
+              categories_with_featured_topics:
+                label: "Kategoritë dhe temat e zgjedhura"
+              categories_and_latest_topics:
+                label: "Kategoritë dhe temat e fundit"
       emoji:
         title: "Emoji"
+  joined: "Anëtarësuar"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Pezullo anëtarin"
+      delete_spammer:
+        title: "Elimino Spammer"
+      disagree:
+        title: "Jo dakord"
+      approve:
+        title: "Aprovo"
+      reject_user:
+        delete:
+          title: "Fshij Anëtarin"
+      reject:
+        title: "Refuzo"
+      delete_user:
+        title: "Fshij Anëtarin"

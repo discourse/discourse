@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::ExportCsvFile do
 
   context '.execute' do
-    let(:user) { Fabricate(:user, username: "john_doe") }
+    fab!(:user) { Fabricate(:user, username: "john_doe") }
 
     it 'raises an error when the entity is missing' do
       expect { Jobs::ExportCsvFile.new.execute(user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
@@ -42,15 +44,14 @@ describe Jobs::ExportCsvFile do
     Hash[*user_list_header.zip(row).flatten]
   end
 
-  it "experts secondary emails" do
+  it "exports secondary emails" do
     user = Fabricate(:user)
     Fabricate(:secondary_email, user: user, primary: false)
-
-    secondary_emails = user.secondary_emails.join(";")
+    secondary_emails = user.secondary_emails
 
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
-    expect(user["secondary_emails"]).to eq(secondary_emails)
+    expect(user["secondary_emails"].split(";")).to match_array(secondary_emails)
   end
 
   it 'exports sso data' do

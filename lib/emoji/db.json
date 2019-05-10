@@ -845,7 +845,7 @@
       "name": "man_shrugging"
     },
     {
-      "code": "1f481",
+      "code": "1f481-200d-2640-fe0f",
       "name": "tipping_hand_woman"
     },
     {
@@ -853,7 +853,7 @@
       "name": "tipping_hand_man"
     },
     {
-      "code": "1f645",
+      "code": "1f645-200d-2640-fe0f",
       "name": "no_good_woman"
     },
     {
@@ -861,7 +861,7 @@
       "name": "no_good_man"
     },
     {
-      "code": "1f646",
+      "code": "1f646-200d-2640-fe0f",
       "name": "ok_woman"
     },
     {
@@ -869,7 +869,7 @@
       "name": "ok_man"
     },
     {
-      "code": "1f64b",
+      "code": "1f64b-200d-2640-fe0f",
       "name": "raising_hand_woman"
     },
     {
@@ -877,7 +877,7 @@
       "name": "raising_hand_man"
     },
     {
-      "code": "1f64e",
+      "code": "1f64e-200d-2640-fe0f",
       "name": "pouting_woman"
     },
     {
@@ -885,7 +885,7 @@
       "name": "pouting_man"
     },
     {
-      "code": "1f64d",
+      "code": "1f64d-200d-2640-fe0f",
       "name": "frowning_woman"
     },
     {
@@ -893,7 +893,7 @@
       "name": "frowning_man"
     },
     {
-      "code": "1f487",
+      "code": "1f487-200d-2640-fe0f",
       "name": "haircut_woman"
     },
     {
@@ -901,7 +901,7 @@
       "name": "haircut_man"
     },
     {
-      "code": "1f486",
+      "code": "1f486-200d-2640-fe0f",
       "name": "massage_woman"
     },
     {
@@ -6355,6 +6355,38 @@
     {
       "code": "1f9a9",
       "name": "flamingo"
+    },
+    {
+      "code": "1f971",
+      "name": "yawning_face"
+    },
+    {
+      "code": "1f90f",
+      "name": "pinching_hand"
+    },
+    {
+      "code": "1f415-200d-1f9ba",
+      "name": "service_dog"
+    },
+    {
+      "code": "1f9a7",
+      "name": "orangutan"
+    },
+    {
+      "code": "1f6fa",
+      "name": "auto_rickshaw"
+    },
+    {
+      "code": "1fa82",
+      "name": "parachute"
+    },
+    {
+      "code": "1fa80",
+      "name": "yo-yo"
+    },
+    {
+      "code": "1fa81",
+      "name": "kite"
     }
   ],
   "tonableEmojis": [

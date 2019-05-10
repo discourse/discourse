@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'file_store/s3_store'
 
 RSpec.describe UploadCreator do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   describe '#create_for' do
     describe 'when upload is not an image' do

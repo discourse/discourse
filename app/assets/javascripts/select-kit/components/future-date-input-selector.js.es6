@@ -91,12 +91,36 @@ export const TIMEFRAMES = [
     icon: "briefcase"
   }),
   buildTimeframe({
+    id: "two_months",
+    format: "MMM D",
+    enabled: opts => opts.includeMidFuture,
+    when: (time, timeOfDay) =>
+      time
+        .add(2, "month")
+        .startOf("month")
+        .hour(timeOfDay)
+        .minute(0),
+    icon: "briefcase"
+  }),
+  buildTimeframe({
     id: "three_months",
     format: "MMM D",
-    enabled: opts => opts.includeFarFuture,
+    enabled: opts => opts.includeMidFuture,
     when: (time, timeOfDay) =>
       time
         .add(3, "month")
+        .startOf("month")
+        .hour(timeOfDay)
+        .minute(0),
+    icon: "briefcase"
+  }),
+  buildTimeframe({
+    id: "four_months",
+    format: "MMM D",
+    enabled: opts => opts.includeMidFuture,
+    when: (time, timeOfDay) =>
+      time
+        .add(4, "month")
         .startOf("month")
         .hour(timeOfDay)
         .minute(0),
@@ -139,6 +163,7 @@ export const TIMEFRAMES = [
   }),
   buildTimeframe({
     id: "pick_date_and_time",
+    enabled: opts => opts.includeDateTime,
     icon: "far-calendar-plus"
   }),
   buildTimeframe({
@@ -192,7 +217,9 @@ export default ComboBoxComponent.extend(DatetimeMixin, {
       now,
       day: now.day(),
       includeWeekend: this.get("includeWeekend"),
+      includeMidFuture: this.get("includeMidFuture") || true,
       includeFarFuture: this.get("includeFarFuture"),
+      includeDateTime: this.get("includeDateTime"),
       includeBasedOnLastPost: this.get("statusType") === CLOSE_STATUS_TYPE,
       canScheduleToday: 24 - now.hour() > 6
     };

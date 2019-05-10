@@ -40,7 +40,8 @@ module DiscourseHub
 
   def self.singular_action(action, rel_url, params = {})
     connect_opts = connect_opts(params)
-    JSON.parse(Excon.send(action,
+
+    JSON.parse(Excon.public_send(action,
       "#{hub_base_url}#{rel_url}",
       {
         headers: { 'Referer' => referer, 'Accept' => accepts.join(', ') },
@@ -53,7 +54,7 @@ module DiscourseHub
   def self.collection_action(action, rel_url, params = {})
     connect_opts = connect_opts(params)
 
-    response = Excon.send(action,
+    response = Excon.public_send(action,
       "#{hub_base_url}#{rel_url}",
       {
         body: JSON[params],

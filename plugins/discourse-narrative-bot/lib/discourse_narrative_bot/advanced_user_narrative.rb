@@ -249,7 +249,7 @@ module DiscourseNarrativeBot
       fake_delay
 
       raw = <<~RAW
-      #{I18n.t("#{I18N_KEY}.recover.reply", i18n_post_args)}
+      #{I18n.t("#{I18N_KEY}.recover.reply", i18n_post_args(deletion_after: SiteSetting.delete_removed_posts_after))}
 
       #{instance_eval(&@next_instructions)}
       RAW

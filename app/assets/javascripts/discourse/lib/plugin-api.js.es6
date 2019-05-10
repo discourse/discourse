@@ -1,3 +1,4 @@
+import deprecated from "discourse-common/lib/deprecated";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -15,7 +16,6 @@ import {
 } from "discourse/widgets/widget";
 import { preventCloak } from "discourse/widgets/post-stream";
 import { h } from "virtual-dom";
-import { addFlagProperty } from "discourse/components/site-header";
 import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { addPostSmallActionIcon } from "discourse/widgets/post-small-action";
@@ -536,11 +536,10 @@ class PluginApi {
     return reopenWidget(name, args);
   }
 
-  /**
-   * Adds a property that can be summed for calculating the flag counter
-   **/
-  addFlagProperty(property) {
-    return addFlagProperty(property);
+  addFlagProperty() {
+    deprecated(
+      "addFlagProperty has been removed. Use the reviewable API instead."
+    );
   }
 
   /**

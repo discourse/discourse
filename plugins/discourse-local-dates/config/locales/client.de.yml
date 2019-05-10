@@ -12,12 +12,9 @@ de:
         today: Heute %{time}
         tomorrow: Morgen %{time}
         yesterday: Gestern %{time}
-      title: Datum einfügen
+      title: Datum / Zeit einfügen
       create:
-        modal_title: Datum einfügen
-        modal_subtitle: "Datum und Uhrzeit werden automatisch an die lokale Zeitzone des Betrachters angepasst."
         form:
-          to: "zu"
           insert: Einfügen
           advanced_mode: Erweiterter Modus
           simple_mode: Einfacher Modus
@@ -31,3 +28,14 @@ de:
           date_title: Datum
           time_title: Uhrzeit
           format_title: Datumsformat
+          timezone: Zeitzone
+          until: Bis...
+          recurring:
+            every_day: "Jeden Tag"
+            every_week: "Jede Woche"
+            every_two_weeks: "Alle zwei Wochen"
+            every_month: "Jeden Monat"
+            every_two_months: "Alle zwei Monate"
+            every_three_months: "Alle drei Monate"
+            every_six_months: "Alle sechs Monate"
+            every_year: "Jedes Jahr"

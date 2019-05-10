@@ -118,6 +118,7 @@ const Category = RestModel.extend({
         all_topics_wiki: this.get("all_topics_wiki"),
         allowed_tags: this.get("allowed_tags"),
         allowed_tag_groups: this.get("allowed_tag_groups"),
+        allow_global_tags: this.get("allow_global_tags"),
         sort_order: this.get("sort_order"),
         sort_ascending: this.get("sort_ascending"),
         topic_featured_link_allowed: this.get("topic_featured_link_allowed"),
@@ -130,7 +131,8 @@ const Category = RestModel.extend({
         navigate_to_first_post_after_read: this.get(
           "navigate_to_first_post_after_read"
         ),
-        search_priority: this.get("search_priority")
+        search_priority: this.get("search_priority"),
+        reviewable_by_group_name: this.get("reviewable_by_group_name")
       },
       type: id ? "PUT" : "POST"
     });

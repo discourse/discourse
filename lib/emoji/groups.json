@@ -344,6 +344,10 @@
         "diversity": false
       },
       {
+        "name": "yawning_face",
+        "diversity": false
+      },
+      {
         "name": "triumph",
         "diversity": false
       },
@@ -614,6 +618,10 @@
         "diversity": true
       },
       {
+        "name": "pinching_hand",
+        "diversity": false
+      },
+      {
         "name": "v",
         "diversity": true
       },
@@ -850,15 +858,11 @@
         "diversity": true
       },
       {
-        "name": "frowning_woman",
-        "diversity": true
-      },
-      {
         "name": "frowning_man",
         "diversity": true
       },
       {
-        "name": "pouting_woman",
+        "name": "frowning_woman",
         "diversity": true
       },
       {
@@ -866,7 +870,7 @@
         "diversity": true
       },
       {
-        "name": "no_good_woman",
+        "name": "pouting_woman",
         "diversity": true
       },
       {
@@ -874,7 +878,7 @@
         "diversity": true
       },
       {
-        "name": "ok_woman",
+        "name": "no_good_woman",
         "diversity": true
       },
       {
@@ -882,7 +886,7 @@
         "diversity": true
       },
       {
-        "name": "tipping_hand_woman",
+        "name": "ok_woman",
         "diversity": true
       },
       {
@@ -890,11 +894,15 @@
         "diversity": true
       },
       {
-        "name": "raising_hand_woman",
+        "name": "tipping_hand_woman",
         "diversity": true
       },
       {
         "name": "raising_hand_man",
+        "diversity": true
+      },
+      {
+        "name": "raising_hand_woman",
         "diversity": true
       },
       {
@@ -1202,19 +1210,19 @@
         "diversity": false
       },
       {
-        "name": "massage_woman",
-        "diversity": true
-      },
-      {
         "name": "massage_man",
         "diversity": true
       },
       {
-        "name": "haircut_woman",
+        "name": "massage_woman",
         "diversity": true
       },
       {
         "name": "haircut_man",
+        "diversity": true
+      },
+      {
+        "name": "haircut_woman",
         "diversity": true
       },
       {
@@ -1576,11 +1584,19 @@
         "diversity": false
       },
       {
+        "name": "orangutan",
+        "diversity": false
+      },
+      {
         "name": "dog",
         "diversity": false
       },
       {
         "name": "dog2",
+        "diversity": false
+      },
+      {
+        "name": "service_dog",
         "diversity": false
       },
       {
@@ -2892,6 +2908,10 @@
         "diversity": false
       },
       {
+        "name": "auto_rickshaw",
+        "diversity": false
+      },
+      {
         "name": "bike",
         "diversity": false
       },
@@ -2989,6 +3009,10 @@
       },
       {
         "name": "flight_arrival",
+        "diversity": false
+      },
+      {
+        "name": "parachute",
         "diversity": false
       },
       {
@@ -3563,6 +3587,14 @@
       },
       {
         "name": "dart",
+        "diversity": false
+      },
+      {
+        "name": "yo-yo",
+        "diversity": false
+      },
+      {
+        "name": "kite",
         "diversity": false
       },
       {

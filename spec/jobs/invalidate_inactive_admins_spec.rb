@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 require_dependency 'jobs/scheduled/invalidate_inactive_admins'
 
 describe Jobs::InvalidateInactiveAdmins do
-  let!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
+  fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
   before { active_admin.email_tokens.update_all(confirmed: true) }
 
   subject { Jobs::InvalidateInactiveAdmins.new.execute({}) }
@@ -16,7 +18,7 @@ describe Jobs::InvalidateInactiveAdmins do
   end
 
   context "with an admin who hasn't been seen recently" do
-    let!(:not_seen_admin) { Fabricate(:admin, last_seen_at: 370.days.ago) }
+    fab!(:not_seen_admin) { Fabricate(:admin, last_seen_at: 370.days.ago) }
     before { not_seen_admin.email_tokens.update_all(confirmed: true) }
 
     context 'invalidate_inactive_admin_email_after_days = 365' do
@@ -37,7 +39,6 @@ describe Jobs::InvalidateInactiveAdmins do
       context 'with social logins' do
         before do
           GithubUserInfo.create!(user_id: not_seen_admin.id, screen_name: 'bob', github_user_id: 100)
-          UserOpenId.create!(url: 'https://me.yahoo.com/id/123' , user_id: not_seen_admin.id, email: 'bob@example.com', active: true)
           UserAssociatedAccount.create!(provider_name: "google_oauth2", user_id: not_seen_admin.id, provider_uid: 100, info: { email: "bob@google.account.com" })
         end
 
@@ -45,7 +46,6 @@ describe Jobs::InvalidateInactiveAdmins do
           subject
           expect(GithubUserInfo.where(user_id: not_seen_admin.id).exists?).to eq(false)
           expect(UserAssociatedAccount.where(user_id: not_seen_admin.id).exists?).to eq(false)
-          expect(UserOpenId.where(user_id: not_seen_admin.id).exists?).to eq(false)
         end
       end
     end

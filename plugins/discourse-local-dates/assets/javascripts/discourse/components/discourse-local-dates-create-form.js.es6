@@ -1,3 +1,6 @@
+/* global Pikaday:true */
+import { propertyNotEqual } from "discourse/lib/computed";
+import loadScript from "discourse/lib/load-script";
 import { default as computed } from "ember-addons/ember-computed-decorators";
 import { cookAsync } from "discourse/lib/text";
 import debounce from "discourse/lib/debounce";
@@ -16,10 +19,15 @@ export default Ember.Component.extend({
   advancedMode: false,
   isValid: true,
   timezone: null,
-  timezones: null,
+  fromSelected: null,
+  fromFilled: Ember.computed.notEmpty("date"),
+  toSelected: null,
+  toFilled: Ember.computed.notEmpty("toDate"),
 
   init() {
     this._super(...arguments);
+
+    this._picker = null;
 
     this.setProperties({
       timezones: [],
@@ -34,7 +42,10 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this._renderPreview();
+    this._setupPicker().then(picker => {
+      this._picker = picker;
+      this.send("focusFrom");
+    });
   },
 
   _renderPreview: debounce(function() {
@@ -43,7 +54,6 @@ export default Ember.Component.extend({
     if (markup) {
       cookAsync(markup).then(result => {
         this.set("currentPreview", result);
-
         Ember.run.schedule("afterRender", () =>
           this.$(".preview .discourse-local-date").applyLocalDates()
         );
@@ -168,6 +178,24 @@ export default Ember.Component.extend({
     return moment.tz.guess();
   },
 
+  @computed
+  allTimezones() {
+    return moment.tz.names();
+  },
+
+  timezoneIsDifferentFromUserTimezone: propertyNotEqual(
+    "currentUserTimezone",
+    "options.timezone"
+  ),
+
+  @computed("currentUserTimezone")
+  formatedCurrentUserTimezone(timezone) {
+    return timezone
+      .replace("_", " ")
+      .replace("Etc/", "")
+      .split("/");
+  },
+
   @computed("formats")
   previewedFormats(formats) {
     return formats.map(format => {
@@ -216,17 +244,6 @@ export default Ember.Component.extend({
         id: "1.years"
       }
     ];
-  },
-
-  @computed()
-  allTimezones() {
-    if (
-      moment.locale() !== "en" &&
-      typeof moment.tz.localizedNames === "function"
-    ) {
-      return moment.tz.localizedNames();
-    }
-    return moment.tz.names();
   },
 
   _generateDateMarkup(config, options, isRange) {
@@ -280,7 +297,46 @@ export default Ember.Component.extend({
     return text;
   },
 
+  @computed("fromConfig.dateTime")
+  formattedFrom(dateTime) {
+    return dateTime.format("LLLL");
+  },
+
+  @computed("toConfig.dateTime", "toSelected")
+  formattedTo(dateTime, toSelected) {
+    const emptyText = toSelected
+      ? "&nbsp;"
+      : I18n.t("discourse_local_dates.create.form.until");
+
+    return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
+  },
+
   actions: {
+    setTime(event) {
+      this._setTimeIfValid(event.target.value, "time");
+    },
+
+    setToTime(event) {
+      this._setTimeIfValid(event.target.value, "toTime");
+    },
+
+    eraseToDateTime() {
+      this.setProperties({ toDate: null, toTime: null });
+      this._setPickerDate(null);
+    },
+
+    focusFrom() {
+      this.setProperties({ fromSelected: true, toSelected: false });
+      this._setPickerDate(this.get("fromConfig.date"));
+      this._setPickerMinDate(null);
+    },
+
+    focusTo() {
+      this.setProperties({ toSelected: true, fromSelected: false });
+      this._setPickerDate(this.get("toConfig.date"));
+      this._setPickerMinDate(this.get("fromConfig.date"));
+    },
+
     advancedMode() {
       this.toggleProperty("advancedMode");
     },
@@ -297,6 +353,75 @@ export default Ember.Component.extend({
     cancel() {
       this._closeModal();
     }
+  },
+
+  _setTimeIfValid(time, key) {
+    if (Ember.isEmpty(time)) {
+      this.set(key, null);
+      return;
+    }
+
+    if (/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+      this.set(key, time);
+    }
+  },
+
+  _setupPicker() {
+    return new Ember.RSVP.Promise(resolve => {
+      loadScript("/javascripts/pikaday.js").then(() => {
+        const options = {
+          field: this.$(`.fake-input`)[0],
+          container: this.$(`#picker-container-${this.elementId}`)[0],
+          bound: false,
+          format: "YYYY-MM-DD",
+          reposition: false,
+          firstDay: 1,
+          defaultDate: moment(this.get("date"), this.dateFormat).toDate(),
+          setDefaultDate: true,
+          keyboardInput: false,
+          i18n: {
+            previousMonth: I18n.t("dates.previous_month"),
+            nextMonth: I18n.t("dates.next_month"),
+            months: moment.months(),
+            weekdays: moment.weekdays(),
+            weekdaysShort: moment.weekdaysShort()
+          },
+          onSelect: date => {
+            const formattedDate = moment(date).format("YYYY-MM-DD");
+
+            if (this.get("fromSelected")) {
+              this.set("date", formattedDate);
+            }
+
+            if (this.get("toSelected")) {
+              this.set("toDate", formattedDate);
+            }
+          }
+        };
+
+        resolve(new Pikaday(options));
+      });
+    });
+  },
+
+  _setPickerMinDate(date) {
+    if (date && !moment(date, this.dateFormat).isValid()) {
+      date = null;
+    }
+
+    Ember.run.schedule("afterRender", () => {
+      this._picker.setMinDate(moment(date, this.dateFormat).toDate());
+    });
+  },
+
+  _setPickerDate(date) {
+    if (date && !moment(date, this.dateFormat).isValid()) {
+      date = null;
+    }
+
+    Ember.run.schedule("afterRender", () => {
+      this._picker.setDate(date, true);
+    });
   },
 
   _closeModal() {

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::TruncateUserFlagStats do
-  let(:user) { Fabricate(:user) }
-  let(:other_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
 
   before do
     # We might make this a site setting eventually

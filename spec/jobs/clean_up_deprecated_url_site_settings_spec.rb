@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Jobs::CleanUpDeprecatedUrlSiteSettings do
@@ -14,8 +16,8 @@ RSpec.describe Jobs::CleanUpDeprecatedUrlSiteSettings do
   it 'should clean up the old deprecated site settings correctly' do
     logo_upload = Fabricate(:upload)
     SiteSetting.logo = logo_upload
-    SiteSetting.public_send("logo_url=", '/test/some/url', warn: false)
-    SiteSetting.public_send("logo_small_url=", '/test/another/url', warn: false)
+    SiteSetting.set("logo_url", '/test/some/url', warn: false)
+    SiteSetting.set("logo_small_url", '/test/another/url', warn: false)
 
     expect do
       described_class.new.execute({})

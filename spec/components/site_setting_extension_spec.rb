@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'site_setting_extension'
 require_dependency 'site_settings/local_process_provider'
@@ -149,6 +151,79 @@ describe SiteSettingExtension do
       settings.hello = 100
       settings.provider.current_site = "boom"
       expect(settings.hello).to eq(1)
+    end
+  end
+
+  describe "DiscourseEvent" do
+    before do
+      settings.setting(:test_setting, 1)
+      settings.refresh!
+    end
+
+    it "triggers events correctly" do
+      settings.setting(:test_setting, 1)
+      settings.refresh!
+
+      override_events = DiscourseEvent.track_events { settings.test_setting = 2 }
+      no_change_events = DiscourseEvent.track_events { settings.test_setting = 2 }
+      default_events = DiscourseEvent.track_events { settings.test_setting = 1 }
+
+      expect(override_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed, :site_setting_saved)
+      expect(no_change_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_saved)
+      expect(default_events.map { |e| e[:event_name] }).to contain_exactly(:site_setting_changed, :site_setting_saved)
+
+      changed_event_1 = override_events.find { |e| e[:event_name] == :site_setting_changed }
+      changed_event_2 = default_events.find { |e| e[:event_name] == :site_setting_changed }
+
+      expect(changed_event_1[:params]).to eq([:test_setting, 1, 2])
+      expect(changed_event_2[:params]).to eq([:test_setting, 2, 1])
+    end
+
+    it "provides the correct values when using site_setting_changed" do
+      event_new_value = nil
+      event_old_value = nil
+      site_setting_value = nil
+
+      test_lambda = -> (name, old_val, new_val) do
+        event_old_value = old_val
+        event_new_value = new_val
+        site_setting_value = settings.test_setting
+      end
+
+      begin
+        DiscourseEvent.on(:site_setting_changed, &test_lambda)
+        settings.test_setting = 2
+      ensure
+        DiscourseEvent.off(:site_setting_changed, &test_lambda)
+      end
+
+      expect(event_old_value).to eq(1)
+      expect(event_new_value).to eq(2)
+      expect(site_setting_value).to eq(2)
+    end
+
+    it "can produce confusing results when using site_setting_saved" do
+      # site_setting_saved is deprecated. This test case illustrates why it can be confusing
+
+      active_record_value = nil
+      site_setting_value = nil
+
+      test_lambda = -> (setting) do
+        active_record_value = setting.value
+        site_setting_value = settings.test_setting
+      end
+
+      begin
+        DiscourseEvent.on(:site_setting_saved, &test_lambda)
+        settings.test_setting = 2
+      ensure
+        DiscourseEvent.off(:site_setting_saved, &test_lambda)
+      end
+
+      # Problem 1, the site_setting_changed event gives us the database value, not the ruby value
+      expect(active_record_value).to eq("2")
+      # Problem 2, calling SiteSetting.test_setting inside the event will still return the old value
+      expect(site_setting_value).to eq(1)
     end
   end
 
@@ -457,6 +532,23 @@ describe SiteSettingExtension do
     end
   end
 
+  describe ".get" do
+    before do
+      settings.setting(:title, "Discourse v1")
+      settings.refresh!
+    end
+
+    it "works correctly" do
+      expect {
+        settings.get("frogs_in_africa")
+      }.to raise_error(Discourse::InvalidParameters)
+
+      expect(settings.get(:title)).to eq("Discourse v1")
+      expect(settings.get("title")).to eq("Discourse v1")
+    end
+
+  end
+
   describe ".set_and_log" do
     before do
       settings.setting(:s3_secret_access_key, "old_secret_key", secret: true)
@@ -703,8 +795,8 @@ describe SiteSettingExtension do
   describe "get_hostname" do
 
     it "properly extracts the hostname" do
+      # consider testing this through a public interface, this tests implementation details
       expect(settings.send(:get_hostname, "discourse.org")).to eq("discourse.org")
-      expect(settings.send(:get_hostname, " discourse.org ")).to eq("discourse.org")
       expect(settings.send(:get_hostname, "@discourse.org")).to eq("discourse.org")
       expect(settings.send(:get_hostname, "https://discourse.org")).to eq("discourse.org")
     end
@@ -748,8 +840,8 @@ describe SiteSettingExtension do
 
   describe '.setup_methods' do
     describe 'for uploads site settings' do
-      let(:upload) { Fabricate(:upload) }
-      let(:upload2) { Fabricate(:upload) }
+      fab!(:upload) { Fabricate(:upload) }
+      fab!(:upload2) { Fabricate(:upload) }
 
       it 'should return the upload record' do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)

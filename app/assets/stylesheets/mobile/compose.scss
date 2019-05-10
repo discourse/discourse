@@ -10,6 +10,7 @@
   z-index: z("mobile-composer");
   .reply-area {
     padding: 0 10px;
+    padding-bottom: env(safe-area-inset-bottom);
     @media screen and (max-width: 374px) {
       padding: 0 5px;
     }
@@ -38,6 +39,8 @@
   }
 
   &.draft {
+    padding-bottom: env(safe-area-inset-bottom);
+
     .toggle-toolbar,
     .toggler {
       top: 8px;
@@ -134,8 +137,9 @@
         0
       ); // Hack: Reduces composer icon jitter while scrolling in Safari on iOS12
     }
-    @media all and (max-width: 350px) {
-      padding: 2px 4px;
+    @include breakpoint(mobile-medium) {
+      padding: 4px;
+      font-size: 0.96em;
     }
     &.preview {
       margin: 0;

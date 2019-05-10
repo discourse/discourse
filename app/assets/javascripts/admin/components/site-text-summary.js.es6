@@ -17,7 +17,7 @@ export default Ember.Component.extend({
   },
 
   click() {
-    this.send("edit");
+    this.editAction(this.get("siteText"));
   },
 
   _searchTerm() {

@@ -82,7 +82,6 @@ module PrettyText
     ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
 
-    apply_es6_file(ctx, root_path, "discourse/helpers/parse-html")
     apply_es6_file(ctx, root_path, "discourse/lib/to-markdown")
     apply_es6_file(ctx, root_path, "discourse/lib/utilities")
 
@@ -376,8 +375,13 @@ module PrettyText
 
   def self.convert_vimeo_iframes(doc)
     doc.css("iframe[src*='player.vimeo.com']").each do |iframe|
-      vimeo_id = iframe['src'].split('/').last
-      iframe.replace "<p><a href='https://vimeo.com/#{vimeo_id}'>https://vimeo.com/#{vimeo_id}</a></p>"
+      if iframe["data-original-href"].present?
+        vimeo_url = UrlHelper.escape_uri(iframe["data-original-href"])
+      else
+        vimeo_id = iframe['src'].split('/').last
+        vimeo_url = "https://vimeo.com/#{vimeo_id}"
+      end
+      iframe.replace "<p><a href='#{vimeo_url}'>#{vimeo_url}</a></p>"
     end
   end
 

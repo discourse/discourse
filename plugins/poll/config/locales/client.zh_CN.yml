@@ -14,7 +14,7 @@ zh_CN:
         other: "总票数"
       average_rating: "平均评分：<strong>%{average}</strong>。"
       public:
-        title: "投票<strong>公开</strong>。"
+        title: "投票为<strong>公开</strong>。"
       results:
         vote:
           title: "结果将显示在<strong>投票</strong>上。"

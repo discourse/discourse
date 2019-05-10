@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::FlaggedTopicsController do
-  let(:post) { Fabricate(:post) }
-  let(:user) { Fabricate(:user) }
+  fab!(:post) { Fabricate(:post) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     PostActionCreator.spam(user, post)
   end
 
-  let!(:flag) { Fabricate(:flag) }
+  fab!(:flag) { Fabricate(:flag) }
 
   shared_examples "successfully retrieve list of flagged topics" do
     it "returns a list of flagged topics" do

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ReviewableScore, type: :model do
 
   context "transitions" do
-    let(:user) { Fabricate(:user, trust_level: 3) }
-    let(:post) { Fabricate(:post) }
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user, trust_level: 3) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "scores agreements properly" do
       reviewable = PostActionCreator.off_topic(user, post).reviewable
@@ -47,11 +49,11 @@ RSpec.describe ReviewableScore, type: :model do
   end
 
   describe "overall score" do
-    let(:user0) { Fabricate(:user, trust_level: 1) }
-    let(:user1) { Fabricate(:user, trust_level: 2) }
-    let(:user2) { Fabricate(:user, trust_level: 3) }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:post) { Fabricate(:post) }
+    fab!(:user0) { Fabricate(:user, trust_level: 1) }
+    fab!(:user1) { Fabricate(:user, trust_level: 2) }
+    fab!(:user2) { Fabricate(:user, trust_level: 3) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
     it "gives a bonus for take_action" do
@@ -87,7 +89,7 @@ RSpec.describe ReviewableScore, type: :model do
   end
 
   describe ".user_accuracy_bonus" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:user_stat) { user.user_stat }
 
     it "returns 0 for a user with no flags" do
@@ -127,7 +129,7 @@ RSpec.describe ReviewableScore, type: :model do
     end
 
     context "a user with some flags" do
-      let(:user) { Fabricate(:user) }
+      fab!(:user) { Fabricate(:user) }
       let(:user_stat) { user.user_stat }
 
       it "returns 1.0 + trust_level + accuracy_bonus" do

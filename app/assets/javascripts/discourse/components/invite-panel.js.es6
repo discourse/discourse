@@ -14,7 +14,6 @@ export default Ember.Component.extend({
   // page which is wrong.
   emailOrUsername: null,
   hasCustomMessage: false,
-  hasCustomMessage: false,
   customMessage: null,
   inviteIcon: "envelope",
   invitingExistingUserToTopic: false,

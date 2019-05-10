@@ -1,11 +1,5 @@
-<span class='groups-info-name'>{{group.displayName}}</span>
-
 {{#if showFullName}}
-  <span class='groups-info-full-name'>{{group.full_name}}</span>
-{{/if}}
-
-{{#if group.title}}
-  <div>
-    <span class='groups-info-title'>{{group.title}}</span>
-  </div>
+  <span class='groups-info-name'>{{group.full_name}}</span>
+{{else}}
+  <span class='groups-info-name'>{{group.displayName}}</span>
 {{/if}}

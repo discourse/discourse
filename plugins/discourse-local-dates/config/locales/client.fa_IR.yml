@@ -8,10 +8,7 @@
 fa_IR:
   js:
     discourse_local_dates:
-      title: افزودن تاریخ
       create:
-        modal_title: افزودن تاریخ
-        modal_subtitle: "ما تاریخ و زمان را به شکل خودکار به منطقه زمانی محلی بیننده تبدیل می کنیم."
         form:
           insert: درج کردن
           advanced_mode: حالت پیشرفته

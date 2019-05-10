@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:topic_timer) do
   user
   topic

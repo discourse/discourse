@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'search'
@@ -286,7 +287,7 @@ describe Search do
       end
 
       it "works for unlisted topics" do
-        topic.update_attributes(visible: false)
+        topic.update(visible: false)
         _post = new_post('discourse is awesome', topic)
         results = Search.execute('discourse', search_context: topic)
         expect(results.posts.length).to eq(1)
@@ -333,6 +334,29 @@ describe Search do
 
         expect(result.posts).to contain_exactly(reply)
         expect(result.blurb(reply)).to eq(expected_blurb)
+      end
+
+      it 'does not allow a post with repeated words to dominate the ranking' do
+        category = Fabricate(:category, name: "winter is coming")
+
+        post = Fabricate(:post,
+          raw: "I think winter will end soon",
+          topic: Fabricate(:topic,
+            title: "dragon john snow winter",
+            category: category
+          )
+        )
+
+        post2 = Fabricate(:post,
+          raw: "I think #{'winter' * 20} will end soon",
+          topic: Fabricate(:topic, title: "dragon john snow summer", category: category)
+        )
+
+        result = Search.execute('winter')
+
+        expect(result.posts.pluck(:id)).to eq([
+          post.id, category.topic.first_post.id, post2.id
+        ])
       end
     end
 
@@ -940,22 +964,45 @@ describe Search do
       today        = Date.today
       yesterday    = 1.day.ago
       two_days_ago = 2.days.ago
+      category = Fabricate(:category)
 
-      old_topic    = Fabricate(:topic,
-          title: 'First Topic, testing the created_at sort',
-          created_at: two_days_ago)
+      old_topic = Fabricate(:topic,
+        title: 'First Topic, testing the created_at sort',
+        created_at: two_days_ago,
+        category: category
+      )
+
       latest_topic = Fabricate(:topic,
-          title: 'Second Topic, testing the created_at sort',
-          created_at: yesterday)
+        title: 'Second Topic, testing the created_at sort',
+        created_at: yesterday,
+        category: category
+      )
 
-      old_relevant_topic_post     = Fabricate(:post, topic: old_topic, created_at: yesterday, raw: 'Relevant Topic')
-      latest_irelevant_topic_post = Fabricate(:post, topic: latest_topic, created_at: today, raw: 'Not Relevant')
+      old_relevant_topic_post = Fabricate(:post,
+        topic: old_topic,
+        created_at: yesterday,
+        raw: 'Relevant Relevant Topic'
+      )
+
+      latest_irelevant_topic_post = Fabricate(:post,
+        topic: latest_topic,
+        created_at: today,
+        raw: 'Not Relevant'
+      )
 
       # Expecting the default results
-      expect(Search.execute('Topic').posts.map(&:id)).to eq([old_relevant_topic_post.id, latest_irelevant_topic_post.id])
+      expect(Search.execute('Topic').posts).to contain_exactly(
+        old_relevant_topic_post,
+        latest_irelevant_topic_post,
+        category.topic.first_post
+      )
 
       # Expecting the ordered by topic creation results
-      expect(Search.execute('Topic order:latest_topic').posts.map(&:id)).to eq([latest_irelevant_topic_post.id, old_relevant_topic_post.id])
+      expect(Search.execute('Topic order:latest_topic').posts).to contain_exactly(
+        latest_irelevant_topic_post,
+        old_relevant_topic_post,
+        category.topic.first_post
+      )
     end
 
     it 'can tokenize dots' do
@@ -1106,14 +1153,14 @@ describe Search do
 
   context '#ts_query' do
     it 'can parse complex strings using ts_query helper' do
-      str = " grigio:babel deprecated? "
+      str = +" grigio:babel deprecated? "
       str << "page page on Atmosphere](https://atmospherejs.com/grigio/babel)xxx: aaa.js:222 aaa'\"bbb"
 
       ts_query = Search.ts_query(term: str, ts_config: "simple")
-      expect { DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
+      expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
 
       ts_query = Search.ts_query(term: "foo.bar/'&baz", ts_config: "simple")
-      expect { DB.exec("SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
+      expect { DB.exec(+"SELECT to_tsvector('bbb') @@ " << ts_query) }.to_not raise_error
       expect(ts_query).to include("baz")
     end
   end

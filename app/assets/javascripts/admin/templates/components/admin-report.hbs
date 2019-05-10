@@ -6,7 +6,7 @@
         <ul class="breadcrumb">
           {{#if showAllReportsLink}}
             <li class="item all-reports">
-              {{#link-to "admin.dashboardNextReports" class="report-url"}}
+              {{#link-to "admin.dashboardReports" class="report-url"}}
                 {{i18n "admin.dashboard.all_reports"}}
               {{/link-to}}
             </li>
@@ -40,11 +40,11 @@
             {{else}}
               {{number model.currentTotal noTitle="true"}}{{#if model.percent}}%{{/if}}
             {{/if}}
-          </span>
 
-          {{#if model.trendIcon}}
-            {{d-icon model.trendIcon class="icon"}}
-          {{/if}}
+            {{#if model.trendIcon}}
+              {{d-icon model.trendIcon class="icon"}}
+            {{/if}}
+          </span>
         </div>
       {{/if}}
     </div>
@@ -149,38 +149,17 @@
           </div>
         {{/if}}
 
-        {{#if showCategoryOptions}}
+        {{#each model.available_filters as |filter|}}
           <div class="control">
-            <div class="input">
-              {{search-advanced-category-chooser
-                filterable=true
-                value=category
-                castInteger=true}}
-            </div>
-          </div>
-        {{/if}}
+            <span class="label">
+              {{i18n (concat "admin.dashboard.reports.filters." filter.id ".label")}}
+            </span>
 
-        {{#if showGroupOptions}}
-          <div class="control">
             <div class="input">
-              {{combo-box
-                castInteger=true
-                filterable=true
-                valueAttribute="value"
-                content=groupOptions
-                value=groupId}}
-            </div>
-          </div>
-        {{/if}}
-
-        {{#each filterOptions as |filterOption|}}
-          <div class="control">
-            <div class="input">
-              {{combo-box content=filterOption.choices
-                          filterable=true
-                          allowAny=true
-                          value=filterOption.selected
-                          onSelect=(action "filter" filterOption.id)}}
+              {{component
+                (concat "report-filters/" filter.id)
+                filter=filter
+                applyFilter=(action "applyFilter")}}
             </div>
           </div>
         {{/each}}

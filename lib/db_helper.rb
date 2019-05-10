@@ -1,3 +1,5 @@
+require_dependency "migration/base_dropper"
+
 class DbHelper
 
   REMAP_SQL ||= <<~SQL
@@ -9,12 +11,23 @@ class DbHelper
   ORDER BY table_name, column_name
   SQL
 
+  TRIGGERS_SQL ||= <<~SQL
+    SELECT trigger_name
+      FROM information_schema.triggers
+     WHERE trigger_name LIKE '%_readonly'
+  SQL
+
   def self.remap(from, to, anchor_left: false, anchor_right: false, excluded_tables: [])
     like = "#{anchor_left ? '' : "%"}#{from}#{anchor_right ? '' : "%"}"
+
+    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
+
     text_columns = Hash.new { |h, k| h[k] = [] }
 
     DB.query(REMAP_SQL).each do |r|
-      text_columns[r.table_name] << r.column_name
+      unless triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
+        text_columns[r.table_name] << r.column_name
+      end
     end
 
     text_columns.each do |table, columns|
@@ -39,10 +52,14 @@ class DbHelper
   end
 
   def self.regexp_replace(pattern, replacement, flags: "gi", match: "~*", excluded_tables: [])
+    triggers = DB.query(TRIGGERS_SQL).map(&:trigger_name).to_set
+
     text_columns = Hash.new { |h, k| h[k] = [] }
 
     DB.query(REMAP_SQL).each do |r|
-      text_columns[r.table_name] << r.column_name
+      unless triggers.include?(Migration::BaseDropper.readonly_trigger_name(r.table_name, r.column_name))
+        text_columns[r.table_name] << r.column_name
+      end
     end
 
     text_columns.each do |table, columns|
@@ -80,7 +97,9 @@ class DbHelper
       SQL
 
       if rows.size > 0
-        found["#{r.table_name}.#{r.column_name}"] = rows.map { |row| row.send(r.column_name) }
+        found["#{r.table_name}.#{r.column_name}"] = rows.map do |row|
+          row.public_send(r.column_name)
+        end
       end
     end
 

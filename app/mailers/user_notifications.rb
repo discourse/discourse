@@ -21,6 +21,14 @@ class UserNotifications < ActionMailer::Base
     )
   end
 
+  def activation_reminder(user, opts = {})
+    build_user_email_token_by_template(
+      "user_notifications.activation_reminder",
+      user,
+      opts[:email_token]
+    )
+  end
+
   def signup_after_approval(user, opts = {})
     locale = user_locale(user)
     tips = I18n.t('system_messages.usage_tips.text_body_template',
@@ -199,8 +207,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       # Try to find 3 interesting stats for the top of the digest
+      new_topics_count = Topic.for_digest(user, min_date).count
 
-      new_topics_count = Topic.new_since_last_seen(user, min_date).count
       if new_topics_count == 0
         # We used topics from new users instead, so count should match
         new_topics_count = topics_for_digest.size
@@ -576,7 +584,7 @@ class UserNotifications < ActionMailer::Base
       )
 
       unless translation_override_exists
-        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/invite',
           format: :html,
           locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
@@ -603,7 +611,8 @@ class UserNotifications < ActionMailer::Base
       end
 
       unless translation_override_exists
-        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+
+        html = UserNotificationRenderer.with_view_paths(Rails.configuration.paths["app/views"]).render(
           template: 'email/notification',
           format: :html,
           locals: { context_posts: context_posts,

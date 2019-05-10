@@ -40,7 +40,7 @@ module Roleable
   end
 
   def set_permission(permission_name, value)
-    self.send("#{permission_name}=", value)
+    self.public_send("#{permission_name}=", value)
     save_and_refresh_staff_groups!
   end
 

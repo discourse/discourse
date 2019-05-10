@@ -8,10 +8,7 @@
 ja:
   js:
     discourse_local_dates:
-      title: 日付の挿入
       create:
-        modal_title: 日付の挿入
-        modal_subtitle: "日付と時刻を閲覧者の現地時間帯に自動的に変換します。"
         form:
           insert: 挿入
           advanced_mode: アドバンスドモード
@@ -19,6 +16,7 @@ ja:
           timezones_title: 表示するタイムゾーン
           recurring_title: レジューム
           recurring_none: レジュームしない
+          invalid_date: 日付が無効です。日付と時刻が正しいことを確認してください。
           date_title: 日付
           time_title: 時刻
           format_title: 日付のフォーマット

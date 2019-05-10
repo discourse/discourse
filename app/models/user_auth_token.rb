@@ -242,4 +242,5 @@ end
 #
 #  index_user_auth_tokens_on_auth_token       (auth_token) UNIQUE
 #  index_user_auth_tokens_on_prev_auth_token  (prev_auth_token) UNIQUE
+#  index_user_auth_tokens_on_user_id          (user_id)
 #

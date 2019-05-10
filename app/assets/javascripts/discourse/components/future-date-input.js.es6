@@ -10,11 +10,13 @@ export default Ember.Component.extend({
   selection: null,
   date: null,
   time: null,
+  includeDateTime: true,
   isCustom: Ember.computed.equal("selection", "pick_date_and_time"),
   isBasedOnLastPost: Ember.computed.equal(
     "selection",
     "set_based_on_last_post"
   ),
+  displayDateAndTimePicker: Ember.computed.and("includeDateTime", "isCustom"),
   displayLabel: null,
 
   init() {

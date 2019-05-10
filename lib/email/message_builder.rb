@@ -107,8 +107,9 @@ module Email
 
       styled = Email::Styles.new(html_override, @opts)
       styled.format_basic
+
       if style = @opts[:style]
-        styled.send("format_#{style}")
+        styled.public_send("format_#{style}")
       end
 
       Mail::Part.new do
@@ -118,8 +119,13 @@ module Email
     end
 
     def body
-      body = @opts[:body]
-      body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup if @opts[:template]
+      body = nil
+
+      if @opts[:template]
+        body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup
+      else
+        body = @opts[:body].dup
+      end
 
       if @template_args[:unsubscribe_instructions].present?
         body << "\n"

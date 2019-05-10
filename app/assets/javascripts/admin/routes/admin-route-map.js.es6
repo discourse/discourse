@@ -1,18 +1,16 @@
 export default function() {
   this.route("admin", { resetNamespace: true }, function() {
-    this.route("dashboard", { path: "/dashboard-old" });
-
-    this.route("dashboardNext", { path: "/" }, function() {
+    this.route("dashboard", { path: "/" }, function() {
       this.route("general", { path: "/" });
-      this.route("admin.dashboardNextModeration", {
+      this.route("admin.dashboardModeration", {
         path: "/dashboard/moderation",
         resetNamespace: true
       });
-      this.route("admin.dashboardNextSecurity", {
+      this.route("admin.dashboardSecurity", {
         path: "/dashboard/security",
         resetNamespace: true
       });
-      this.route("admin.dashboardNextReports", {
+      this.route("admin.dashboardReports", {
         path: "/dashboard/reports",
         resetNamespace: true
       });
@@ -133,7 +131,7 @@ export default function() {
           { path: "/search_logs", resetNamespace: true },
           function() {
             this.route("index", { path: "/" });
-            this.route("term", { path: "/term/:term" });
+            this.route("term", { path: "/term" });
           }
         );
         this.route(

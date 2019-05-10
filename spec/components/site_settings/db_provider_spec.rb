@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'site_settings/db_provider'
 
@@ -14,7 +16,7 @@ describe SiteSettings::DbProvider do
   end
 
   # integration test, requires db access
-  it "act correctly" do
+  it "acts correctly" do
     setting = Struct.new(:name, :value, :data_type)
 
     SiteSetting.destroy_all

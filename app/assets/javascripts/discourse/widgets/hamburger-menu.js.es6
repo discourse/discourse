@@ -57,14 +57,6 @@ export default createWidget("hamburger-menu", {
       }
     ];
 
-    links.push({
-      route: "review",
-      className: "review",
-      label: "review.title",
-      badgeCount: "reviewable_count",
-      badgeClass: "reviewables"
-    });
-
     if (currentUser.admin) {
       links.push({
         href: "/admin/site_settings/category/required",
@@ -117,6 +109,22 @@ export default createWidget("hamburger-menu", {
         label: "filters.unread.title",
         title: "filters.unread.help",
         count: this.lookupCount("unread")
+      });
+    }
+
+    // Staff always see the review link. Non-staff will see it if there are items to review
+    if (
+      this.currentUser &&
+      (this.currentUser.staff || this.currentUser.reviewable_count)
+    ) {
+      links.push({
+        route: siteSettings.reviewable_default_topics
+          ? "review.topics"
+          : "review",
+        className: "review",
+        label: "review.title",
+        badgeCount: "reviewable_count",
+        badgeClass: "reviewables"
       });
     }
 
@@ -193,6 +201,12 @@ export default createWidget("hamburger-menu", {
         allCategories
           .filter(c => !categories.includes(c))
           .sort((a, b) => b.topic_count - a.topic_count)
+      );
+    }
+
+    if (!this.siteSettings.allow_uncategorized_topics) {
+      categories = categories.filter(
+        c => c.id !== this.site.uncategorized_category_id
       );
     }
 

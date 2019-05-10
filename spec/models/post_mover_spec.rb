@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PostMover do
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:evil_trout) { Fabricate(:evil_trout) }
 
   describe '#move_types' do
     context "verify enum sequence" do
@@ -20,13 +24,13 @@ describe PostMover do
 
   describe 'move_posts' do
     context 'topics' do
-      let(:user) { Fabricate(:user, admin: true) }
-      let(:another_user) { Fabricate(:evil_trout) }
-      let(:category) { Fabricate(:category, user: user) }
-      let!(:topic) { Fabricate(:topic, user: user) }
-      let!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
+      fab!(:user) { Fabricate(:user, admin: true) }
+      fab!(:another_user) { evil_trout }
+      fab!(:category) { Fabricate(:category, user: user) }
+      fab!(:topic) { Fabricate(:topic, user: user) }
+      fab!(:p1) { Fabricate(:post, topic: topic, user: user, created_at: 3.hours.ago) }
 
-      let!(:p2) do
+      fab!(:p2) do
         Fabricate(:post,
           topic: topic,
           user: another_user,
@@ -34,9 +38,9 @@ describe PostMover do
           reply_to_post_number: p1.post_number)
       end
 
-      let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
-      let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
-      let!(:p5) { Fabricate(:post) }
+      fab!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
+      fab!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
+      fab!(:p5) { Fabricate(:post) }
       let(:p6) { Fabricate(:post, topic: topic) }
 
       before do
@@ -256,10 +260,13 @@ describe PostMover do
 
           it "does not try to move small action posts" do
             small_action = Fabricate(:post, topic: topic, raw: "A small action", post_type: Post.types[:small_action])
-            new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id], title: "new testing topic name", category_id: category.id)
+            hidden_small_action = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+            hidden_small_action.update_attribute(:raw, "")
+            new_topic = topic.move_posts(user, [p2.id, p4.id, small_action.id, hidden_small_action.id], title: "new testing topic name", category_id: category.id)
 
             expect(new_topic.posts_count).to eq(2)
             expect(small_action.topic_id).to eq(topic.id)
+            expect(hidden_small_action.topic_id).to eq(topic.id)
 
             moderator_post = topic.posts.last
             expect(moderator_post.raw).to include("2 posts were split")
@@ -280,8 +287,8 @@ describe PostMover do
         end
 
         context "to an existing topic" do
-          let!(:destination_topic) { Fabricate(:topic, user: another_user) }
-          let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user) }
+          fab!(:destination_topic) { Fabricate(:topic, user: another_user) }
+          fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: another_user) }
 
           it "works correctly" do
             topic.expects(:add_moderator_post).once
@@ -489,9 +496,9 @@ describe PostMover do
             topic.expects(:add_moderator_post)
           end
 
-          let!(:destination_topic) { Fabricate(:topic, user: user) }
-          let!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
-          let!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }
+          fab!(:destination_topic) { Fabricate(:topic, user: user) }
+          fab!(:destination_op) { Fabricate(:post, topic: destination_topic, user: user) }
+          fab!(:destination_deleted_reply) { Fabricate(:post, topic: destination_topic, user: another_user) }
           let(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id) }
 
           it "works correctly" do
@@ -521,10 +528,9 @@ describe PostMover do
         end
 
         context "to an existing closed topic" do
-          let!(:destination_topic) { Fabricate(:topic, closed: true) }
+          fab!(:destination_topic) { Fabricate(:topic, closed: true) }
 
           it "works correctly for admin" do
-            admin = Fabricate(:admin)
             moved_to = topic.move_posts(admin, [p1.id, p2.id], destination_topic_id: destination_topic.id)
             expect(moved_to).to be_present
 
@@ -549,18 +555,16 @@ describe PostMover do
     end
 
     context 'messages' do
-      let(:user) { Fabricate(:user) }
-      let(:admin) { Fabricate(:admin) }
-      let(:evil_trout) { Fabricate(:evil_trout) }
-      let(:another_user) { Fabricate(:user) }
-      let(:regular_user) { Fabricate(:trust_level_4) }
-      let(:topic) { Fabricate(:topic) }
-      let(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
-      let!(:p1) { Fabricate(:post, topic: personal_message, user: user) }
-      let!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user) }
-      let!(:p3) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: user) }
-      let!(:p4) { Fabricate(:post, topic: personal_message, reply_to_post_number: p2.post_number, user: user) }
-      let!(:p5) { Fabricate(:post, topic: personal_message, user: evil_trout) }
+      fab!(:user) { Fabricate(:user) }
+      fab!(:another_user) { Fabricate(:user) }
+      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
+      fab!(:p1) { Fabricate(:post, topic: personal_message, user: user) }
+      fab!(:p2) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: another_user) }
+      fab!(:p3) { Fabricate(:post, topic: personal_message, reply_to_post_number: p1.post_number, user: user) }
+      fab!(:p4) { Fabricate(:post, topic: personal_message, reply_to_post_number: p2.post_number, user: user) }
+      fab!(:p5) { Fabricate(:post, topic: personal_message, user: evil_trout) }
       let(:another_personal_message) do
         Fabricate(:private_message_topic, user: user, topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: admin)
@@ -677,14 +681,12 @@ describe PostMover do
     end
 
     context 'banner topic' do
-      let(:admin) { Fabricate(:admin) }
-      let(:evil_trout) { Fabricate(:evil_trout) }
-      let(:regular_user) { Fabricate(:trust_level_4) }
-      let(:topic) { Fabricate(:topic) }
-      let(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
-      let(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
-      let!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
-      let!(:p2) { Fabricate(:post, topic: banner_topic, reply_to_post_number: p1.post_number, user: regular_user) }
+      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:topic) { Fabricate(:topic) }
+      fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
+      fab!(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
+      fab!(:p1) { Fabricate(:post, topic: banner_topic, user: evil_trout) }
+      fab!(:p2) { Fabricate(:post, topic: banner_topic, reply_to_post_number: p1.post_number, user: regular_user) }
 
       context 'move to existing topic' do
         it "allows moving banner topic posts in regular topic" do

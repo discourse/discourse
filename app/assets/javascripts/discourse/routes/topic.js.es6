@@ -118,14 +118,13 @@ const TopicRoute = Discourse.Route.extend({
     },
 
     showHistory(model, revision) {
-      showModal("history", { model });
-      const historyController = this.controllerFor("history");
-
+      let historyController = showModal("history", {
+        model,
+        modalClass: "history-modal"
+      });
       historyController.refresh(model.get("id"), revision || "latest");
       historyController.set("post", model);
       historyController.set("topicController", this.controllerFor("topic"));
-
-      this.controllerFor("modal").set("modalClass", "history-modal");
     },
 
     showGrantBadgeModal() {

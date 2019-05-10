@@ -11,7 +11,6 @@ const Discourse = Ember.Application.extend({
   _docTitle: document.title,
   RAW_TEMPLATES: {},
   __widget_helpers: {},
-  showingSignup: false,
   customEvents: {
     paste: "paste"
   },
@@ -51,15 +50,20 @@ const Discourse = Ember.Application.extend({
       $("title").text(title);
     }
 
-    var displayCount = Discourse.User.current()
-      ? this.get("notificationCount")
-      : this.get("contextCount");
-
+    var displayCount = this.get("displayCount");
     if (displayCount > 0 && !Discourse.User.currentProp("dynamic_favicon")) {
       title = `(${displayCount}) ${title}`;
     }
 
     document.title = title;
+  },
+
+  @computed("contextCount", "notificationCount")
+  displayCount() {
+    return Discourse.User.current() &&
+      Discourse.User.currentProp("title_count_mode") === "notifications"
+      ? this.get("notificationCount")
+      : this.get("contextCount");
   },
 
   @observes("contextCount", "notificationCount")
@@ -74,9 +78,7 @@ const Discourse = Ember.Application.extend({
         url = Discourse.getURL("/favicon/proxied?" + encodeURIComponent(url));
       }
 
-      var displayCount = Discourse.User.current()
-        ? this.get("notificationCount")
-        : this.get("contextCount");
+      var displayCount = this.get("displayCount");
 
       new window.Favcount(url).set(displayCount);
     }

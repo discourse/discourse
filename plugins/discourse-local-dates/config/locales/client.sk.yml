@@ -8,10 +8,7 @@
 sk:
   js:
     discourse_local_dates:
-      title: Vložiť dátum
       create:
-        modal_title: Vložiť dátum
-        modal_subtitle: "Dátum a čas automaticky skonvertujeme do miestneho časového pásma diváka."
         form:
           insert: Vložiť
           advanced_mode: Pokročilý režim

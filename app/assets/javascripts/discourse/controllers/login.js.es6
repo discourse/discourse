@@ -29,6 +29,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   processingEmailLink: false,
   showLoginButtons: true,
   showSecondFactor: false,
+  awaitingApproval: false,
 
   canLoginLocal: setting("enable_local_logins"),
   canLoginLocalWithEmail: setting("enable_local_logins_via_email"),
@@ -42,7 +43,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
       loggedIn: false,
       secondFactorRequired: false,
       showSecondFactor: false,
-      showLoginButtons: true
+      showLoginButtons: true,
+      awaitingApproval: false
     });
   },
 
@@ -56,10 +58,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return showSecondFactor ? "" : "hidden";
   },
 
+  @computed("awaitingApproval", "hasAtLeastOneLoginButton")
+  modalBodyClasses(awaitingApproval, hasAtLeastOneLoginButton) {
+    let classes = ["login-modal"];
+    if (awaitingApproval) classes.push("awaiting-approval");
+    if (hasAtLeastOneLoginButton) classes.push("has-alt-auth");
+    return classes.join(" ");
+  },
+
   // Determines whether at least one login button is enabled
   @computed("canLoginLocalWithEmail")
   hasAtLeastOneLoginButton(canLoginLocalWithEmail) {
-    return findAll(this.siteSettings).length > 0 || canLoginLocalWithEmail;
+    return findAll().length > 0 || canLoginLocalWithEmail;
   },
 
   @computed("loggingIn")
@@ -202,8 +212,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return false;
     },
 
-    externalLogin(loginMethod) {
-      loginMethod.doLogin();
+    externalLogin(loginMethod, { fullScreenLogin = false } = {}) {
+      const capabilities = this.capabilities;
+      // On Mobile, Android or iOS always go with full screen
+      if (
+        this.isMobileDevice ||
+        (capabilities && (capabilities.isIOS || capabilities.isAndroid))
+      ) {
+        fullScreenLogin = true;
+      }
+
+      loginMethod.doLogin({ fullScreenLogin });
     },
 
     createAccount() {
@@ -274,17 +293,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     }
   },
 
-  authMessage: function() {
-    if (Ember.isEmpty(this.get("authenticate"))) return "";
-    const method = findAll(
-      this.siteSettings,
-      this.capabilities,
-      this.isMobileDevice
-    ).findBy("name", this.get("authenticate"));
+  @computed("authenticate")
+  authMessage(authenticate) {
+    if (Ember.isEmpty(authenticate)) return "";
+    const method = findAll().findBy("name", authenticate);
     if (method) {
       return method.get("message");
     }
-  }.property("authenticate"),
+  },
 
   authenticationComplete(options) {
     const self = this;
@@ -296,6 +312,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
         self.flash(errorMsg, className || "success");
         self.set("authenticate", null);
       });
+    }
+
+    if (
+      options.awaiting_approval &&
+      !this.get("canLoginLocal") &&
+      !this.get("canLoginLocalWithEmail")
+    ) {
+      this.set("awaitingApproval", true);
     }
 
     if (options.omniauth_disallow_totp) {

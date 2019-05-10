@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'rate_limiter'
 
 describe RateLimiter do
 
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
   let(:rate_limiter) { RateLimiter.new(user, "peppermint-butler", 2, 60) }
 
   context 'disabled' do

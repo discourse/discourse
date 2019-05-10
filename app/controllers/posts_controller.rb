@@ -200,7 +200,10 @@ class PostsController < ApplicationController
 
     post.image_sizes = params[:image_sizes] if params[:image_sizes].present?
 
-    if !guardian.send("can_edit?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
+    if !guardian.public_send("can_edit?", post) &&
+       post.user_id == current_user.id &&
+       post.edit_time_limit_expired?
+
       return render_json_error(I18n.t('too_late_to_edit'))
     end
 
@@ -476,6 +479,22 @@ class PostsController < ApplicationController
     render_json_dump(locked: post.locked?)
   end
 
+  def notice
+    raise Discourse::NotFound unless guardian.is_staff?
+
+    post = find_post_from_params
+
+    if params[:notice].present?
+      post.custom_fields["notice_type"] = Post.notices[:custom]
+      post.custom_fields["notice_args"] = params[:notice]
+      post.save_custom_fields
+    else
+      post.delete_post_notices
+    end
+
+    render body: nil
+  end
+
   def bookmark
     if params[:bookmarked] == "true"
       post = find_post_from_params
@@ -711,7 +730,9 @@ class PostsController < ApplicationController
       result[:shared_draft] = true
     end
 
-    if current_user.staff? && SiteSetting.enable_whispers? && params[:whisper] == "true"
+    if params[:whisper] == "true"
+      raise Discourse::InvalidAccess.new("invalid_whisper_access", nil, custom_message: "invalid_whisper_access") unless guardian.can_create_whisper?
+
       result[:post_type] = Post.types[:whisper]
     end
 

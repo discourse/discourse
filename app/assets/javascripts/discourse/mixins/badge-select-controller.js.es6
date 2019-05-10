@@ -1,11 +1,12 @@
 import Badge from "discourse/models/badge";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Mixin.create({
   saving: false,
   saved: false,
 
-  selectableUserBadges: function() {
-    let items = this.get("filteredList");
+  @computed("filteredList")
+  selectableUserBadges(items) {
     items = _.uniq(items, false, function(e) {
       return e.get("badge.name");
     });
@@ -15,18 +16,16 @@ export default Ember.Mixin.create({
       })
     );
     return items;
-  }.property("filteredList"),
+  },
 
-  savingStatus: function() {
-    if (this.get("saving")) {
-      return I18n.t("saving");
-    } else {
-      return I18n.t("save");
-    }
-  }.property("saving"),
+  @computed("saving")
+  savingStatus(saving) {
+    return saving ? I18n.t("saving") : I18n.t("save");
+  },
 
-  selectedUserBadge: function() {
-    const selectedUserBadgeId = parseInt(this.get("selectedUserBadgeId"));
+  @computed("selectedUserBadgeId")
+  selectedUserBadge(selectedUserBadgeId) {
+    selectedUserBadgeId = parseInt(selectedUserBadgeId);
     let selectedUserBadge = null;
     this.get("selectableUserBadges").forEach(function(userBadge) {
       if (userBadge.get("id") === selectedUserBadgeId) {
@@ -34,7 +33,7 @@ export default Ember.Mixin.create({
       }
     });
     return selectedUserBadge;
-  }.property("selectedUserBadgeId"),
+  },
 
   disableSave: Ember.computed.alias("saving")
 });

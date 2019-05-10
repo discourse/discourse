@@ -191,8 +191,6 @@ et:
   too_late_to_edit: "Postitus loodi kaua aega tagasi. Seda ei saa enam muuta ega kustutada."
   revert_version_same: "Praegune versioon on sama sellega, millele sa püüad tagasi pöörduda."
   excerpt_image: "pilt"
-  queue:
-    delete_reason: "Kustutatud modereerimisjärjekorra kaudu"
   groups:
     errors:
       can_not_modify_automatic: "Autommatset gruppi ei saa muuta"
@@ -241,6 +239,7 @@ et:
       topic:
         title: "Pealkiri"
         featured_link: "Põhiloo viide"
+        category_id: "Foorum"
       post:
         raw: "Sisu"
       user_profile:
@@ -270,6 +269,9 @@ et:
           attributes:
             hex:
               invalid: "pole korrektne värv"
+        post_reply:
+          base:
+            different_topic: "Postitus ja vastus peavad kuuluma samasse teemasse."
         web_hook:
           attributes:
             payload_url:
@@ -461,6 +463,9 @@ et:
     welcome_to: "Tere tulemast %{site_name}!"
     approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
     missing_session: "Me ei saa kontrollida kas Teie konto on loodud, palun kontrolli et brauseris oleks küpsised lubatud."
+  reviewable_score_types:
+    needs_approval:
+      title: "Vajab kinnitust"
   post_action_types:
     off_topic:
       title: "Teemaväline"
@@ -493,6 +498,7 @@ et:
     like:
       title: "Laigi"
       description: "Laigi seda postitust"
+      short_description: "Laigi seda postitust"
       long_form: "laikis seda"
   user_activity:
     no_default:
@@ -523,12 +529,16 @@ et:
       title: "Tavaline teema"
     banner:
       title: "Teema Bänneriks"
-  unsubscribed:
-    title: "Tellimus tühistatud!"
   unsubscribe:
     title: "Tühista tellimus"
     mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
+    digest_frequency:
+      never: "mitte kunagi"
+      every_30_minutes: "iga pooltund"
+      every_hour: "iga tund"
+      daily: "iga päev"
+      weekly: "iga nädal"
   user_api_key:
     title: "Autoriseeri rakenduse ligipääs"
     authorize: "Autoriseeri"
@@ -548,6 +558,9 @@ et:
         post: Postitus
         author: Autor
         edit_reason: Põhjus
+    user_flagging_ratio:
+      labels:
+        user: Kasutaja
     moderators_activity:
       labels:
         moderator: Moderaator
@@ -571,6 +584,12 @@ et:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    consolidated_page_views:
+      yaxis: "Päev"
+      labels:
+        post: Postitus
+        author: Autor
+        edit_reason: Põhjus
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:
@@ -612,9 +631,11 @@ et:
       xaxis_labels:
         admin: Admin
         moderator: Moderaator
+        suspended: Peatatud
         silenced: Vaigistatud
     trending_search:
       labels:
+        term: Termin
         searches: Otsingud
     emails:
       title: "Saadetud kirjad"
@@ -647,6 +668,10 @@ et:
       xaxis: "Kasutaja"
       num_clicks: "Klikid"
       num_topics: "Teemad"
+      labels:
+        user: "Kasutaja"
+        num_clicks: "Klikke"
+        num_topics: "Teemasid"
     top_traffic_sources:
       title: "Suurima liikluse allikad"
       xaxis: "Domeen"
@@ -672,6 +697,7 @@ et:
     page_view_crawler_reqs:
       xaxis: "Päev"
     page_view_total_reqs:
+      title: "Lehekülje vaatamisi"
       xaxis: "Päev"
     page_view_logged_in_mobile_reqs:
       xaxis: "Päev"
@@ -705,6 +731,18 @@ et:
     web_crawlers:
       labels:
         page_views: "Lehekülje vaatamisi"
+    suspicious_logins:
+      labels:
+        user: Kasutaja
+        location: Asukoht
+    staff_logins:
+      labels:
+        user: Kasutaja
+        location: Asukoht
+    top_uploads:
+      labels:
+        filename: Faili nimi
+        author: Autor
   dashboard:
     host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
@@ -712,6 +750,7 @@ et:
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
+    min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
     enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
     instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
     instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
@@ -734,6 +773,8 @@ et:
     remove_muted_tags_from_latest: "Ära näita värskete teemade nimistus teemasid, millel on vaigistatud silt."
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
+      min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
+      max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
   search:
     types:
       category: "Liigid"
@@ -743,11 +784,19 @@ et:
   most_recent_poster: "Viimane postitaja"
   frequent_poster: "Tihedam postitaja"
   login:
+    not_approved: "Kontot pole veel kinnitatud. Teid teavitatakse e-post teel, kui sisselogimine on võimaldatud."
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
+  admin:
+    email:
+      sent_test: "saadetud!"
   flags_dispositions:
     agreed: "Täname, et teada andsite. Tegeleme sellega."
   system_messages:
+    welcome_user:
+      subject_template: "Tere tulemast %{site_name}!"
+    welcome_invite:
+      subject_template: "Tere tulemast %{site_name}!"
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"
     restore_succeeded:
@@ -770,6 +819,7 @@ et:
       new_topics: "Uued teemad"
       unread_messages: "Lugemata sõnumid"
       unread_notifications: "Lugemata teavitused"
+      liked_received: "Meeldimisi saadud"
       new_posts: "Uued postitused"
       new_users: "Uued kasutajad"
       popular_topics: "Populaarsed teemad"
@@ -784,6 +834,8 @@ et:
     forgot_password:
       title: "Unustasin parooli"
       subject_template: "[%{email_prefix}] Parooli taastamine"
+    set_password:
+      title: "Määra Parool"
     signup_after_approval:
       subject_template: "Oled saidil %{site_name} heaks kiidetud!"
   page_not_found:
@@ -792,13 +844,26 @@ et:
     recent_topics: "Viimased"
     see_more: "Veel"
     search_title: "Otsi sellelt saidilt"
+    search_button: "Otsi"
   terms_of_service:
     title: "Teenuse tingimused"
   deleted: "kustutatud"
   image: "pilt"
   upload:
     pasted_image_filename: "Asetatud pilt"
+  skipped_email_log:
+    user_email_anonymous_user: "Kasutaja on anonüümne"
+    user_email_seen_recently: "Kasutajat nähti hiljuti"
+    user_email_notification_topic_nil: "post.topic tühi hulk"
+    sender_message_blank: "sõnum on tühi"
+    sender_message_to_blank: "message.to on tühi"
+    sender_text_part_body_blank: "text_part.body on tühi"
+    sender_body_blank: "sisu on tühi"
   color_schemes:
+    light: "Hele"
+    dark: "Tume"
+    neutral: "Neutraalne"
+    summer: "Suvi"
     default_theme_name: "Hele"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
@@ -859,6 +924,7 @@ et:
       description: Jagas postitust 300 unikaalse külastajaga
     great_share:
       name: Suurepärane jagamine
+      description: Jagas postitust 1000 unikaalse külastajaga
     first_like:
       name: Esimene meeldimine
       description: Laikis postitust
@@ -976,10 +1042,8 @@ et:
             choices:
               open:
                 label: "Avalik"
-                description: "Kogukonnale pääseb ligi igaüks ning võib liituda"
               restricted:
                 label: "Privaatne"
-                description: "Kogukonnaga saavad liituda ainult minu poolt kutsutud või heakskiidetud inimesed"
       contact:
         title: "Kontakt"
         fields:
@@ -996,8 +1060,18 @@ et:
         title: "Kujundusteema"
       logos:
         title: "Logod"
+        fields:
+          logo:
+            label: "Peamine logo"
+          logo_small:
+            label: "Kompaktne logo"
       icons:
         title: "Ikoonid"
+        fields:
+          favicon:
+            label: "Väike ikoon"
+          apple_touch_icon:
+            label: "Suur ikoon"
       homepage:
         title: "Avaleht"
         fields:
@@ -1005,12 +1079,42 @@ et:
             choices:
               latest:
                 label: "Viimased teemad"
+              categories_only:
+                label: "Ainult foorumid"
+              categories_with_featured_topics:
+                label: "Foorumid esiletõstetud teemadega"
+              categories_and_latest_topics:
+                label: "Foorumid ja viimased teemad"
       emoji:
         title: "Emotikon"
       invites:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
+  joined: "Liitus"
   staff_action_logs:
     not_found: "ei leitud"
     unknown: "tundmatu"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Peata kasutaja"
+      agree_and_silence:
+        title: "Vaigista kasutaja"
+      agree_and_hide:
+        title: "Peida postitus"
+      delete_spammer:
+        title: "Kustuta spämmija"
+      disagree:
+        title: "Ei nõustu"
+      ignore:
+        title: "Ignoreeri"
+      approve:
+        title: "Kinnita"
+      reject_user:
+        delete:
+          title: "Kustuta kasutaja"
+      reject:
+        title: "Lükka tagasi"
+      delete_user:
+        title: "Kustuta kasutaja"

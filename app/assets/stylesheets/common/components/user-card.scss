@@ -2,6 +2,33 @@ $card_width: 580px;
 $avatar_width: 120px;
 $avatar_margin: -50px; // negative margin makes avatars extend above cards
 
+.animated-placeholder {
+  height: 20px;
+  position: relative;
+}
+
+.card-avatar-placeholder {
+  width: $avatar_width;
+  height: $avatar_width;
+  border-radius: 100%;
+  position: relative;
+  overflow: hidden;
+  &:before {
+    animation: placeHolderShimmer 4s linear infinite forwards;
+    position: absolute;
+    left: 0;
+    content: "";
+    background: linear-gradient(
+      to right,
+      $primary-very-low 10%,
+      $primary-low 18%,
+      $primary-very-low 33%
+    );
+    height: $avatar_width;
+    width: $card_width;
+  }
+}
+
 // shared styles for user and group cards
 #user-card,
 #group-card {
@@ -43,6 +70,20 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   .first-row {
     .names {
       padding-left: 1.25em;
+
+      .user-profile-link {
+        display: flex;
+        align-items: center;
+      }
+
+      .d-icon {
+        margin: 0 0.25em;
+      }
+
+      .name-username-wrapper {
+        margin-right: 0;
+        flex: 0 1 auto;
+      }
       span {
         display: block;
       }
@@ -68,6 +109,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     display: inline;
     margin-right: 0.5em;
     color: $primary;
+    &.email,
     .desc,
     a {
       color: $primary-high;
@@ -135,6 +177,10 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       .suspension-date {
         font-weight: bold;
       }
+    }
+    .profile-hidden {
+      font-size: $font-up-1;
+      margin-top: 0.5em;
     }
   }
   // location and website

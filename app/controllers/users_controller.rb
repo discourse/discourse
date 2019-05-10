@@ -313,7 +313,7 @@ class UsersController < ApplicationController
       params.require(:username) if !params[:email].present?
       return render(json: success_json)
     end
-    username = params[:username]
+    username = params[:username]&.unicode_normalize
 
     target_user = user_from_params_or_current_user
 
@@ -331,6 +331,7 @@ class UsersController < ApplicationController
 
   def create
     params.require(:email)
+    params.require(:username)
     params.permit(:user_fields)
 
     unless SiteSetting.allow_new_registrations
@@ -401,6 +402,9 @@ class UsersController < ApplicationController
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
+
+      # If the user was created as active, they might need to be approved
+      user.create_reviewable if user.active?
 
       render json: {
         success: true,
@@ -993,13 +997,17 @@ class UsersController < ApplicationController
   end
 
   def notification_level
-    raise Discourse::NotFound unless SiteSetting.ignore_user_enabled
     user = fetch_user_from_params
 
     if params[:notification_level] == "ignore"
       guardian.ensure_can_ignore_user!(user.id)
       MutedUser.where(user: current_user, muted_user: user).delete_all
-      IgnoredUser.find_or_create_by!(user: current_user, ignored_user: user)
+      ignored_user = IgnoredUser.find_by(user: current_user, ignored_user: user)
+      if ignored_user.present?
+        ignored_user.update(expiring_at: DateTime.parse(params[:expiring_at]))
+      else
+        IgnoredUser.create!(user: current_user, ignored_user: user, expiring_at: Time.parse(params[:expiring_at]))
+      end
     elsif params[:notification_level] == "mute"
       guardian.ensure_can_mute_user!(user.id)
       IgnoredUser.where(user: current_user, ignored_user: user).delete_all
@@ -1028,7 +1036,7 @@ class UsersController < ApplicationController
     result = {}
 
     %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions warnings_received_count}.each do |info|
-      result[info] = @user.send(info)
+      result[info] = @user.public_send(info)
     end
 
     render json: result
@@ -1234,8 +1242,8 @@ class UsersController < ApplicationController
       :location,
       :website,
       :dismissed_banner_key,
-      :profile_background,
-      :card_background
+      :profile_background_upload_url,
+      :card_background_upload_url
     ]
 
     permitted << { custom_fields: User.editable_user_custom_fields } unless User.editable_user_custom_fields.blank?

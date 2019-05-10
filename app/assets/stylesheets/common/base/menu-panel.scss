@@ -285,7 +285,7 @@ div.menu-links-header {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: -0.5em 0;
-    @media screen and (max-width: 350px) {
+    @include breakpoint(mobile-medium) {
       max-width: 125px;
     }
   }

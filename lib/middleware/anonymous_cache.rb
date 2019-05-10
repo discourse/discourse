@@ -62,7 +62,11 @@ module Middleware
         @is_crawler ||=
           begin
             user_agent = @env[USER_AGENT]
-            CrawlerDetection.crawler?(user_agent) ? :true : :false
+            if CrawlerDetection.crawler?(user_agent)
+              :true
+            else
+              user_agent.downcase.include?("discourse") ? :true : :false
+            end
           end
         @is_crawler == :true
       end

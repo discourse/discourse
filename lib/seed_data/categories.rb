@@ -95,7 +95,7 @@ module SeedData
 
     def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
                         permissions:, force_permissions:, force_existence: false)
-      category_id = SiteSetting.send(site_setting_name)
+      category_id = SiteSetting.get(site_setting_name)
 
       if should_create_category?(category_id, force_existence)
         category = Category.new(
@@ -111,7 +111,7 @@ module SeedData
         category.set_permissions(permissions)
         category.save!
 
-        SiteSetting.send("#{site_setting_name}=", category.id)
+        SiteSetting.set(site_setting_name, category.id)
       elsif category = Category.find_by(id: category_id)
         if description.present? && (category.topic_id.blank? || !Topic.exists?(category.topic_id))
           category.description = description
@@ -159,7 +159,7 @@ module SeedData
     end
 
     def find_category(site_setting_name)
-      category_id = SiteSetting.send(site_setting_name)
+      category_id = SiteSetting.get(site_setting_name)
       Category.find_by(id: category_id) if category_id > 0
     end
 

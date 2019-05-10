@@ -1,0 +1,78 @@
+// --------------------------------------------------
+// Footer nav bar (displayed in DiscourseHub app and PWAs)
+// --------------------------------------------------
+
+$footer-nav-height: 55px;
+
+body.footer-nav-visible {
+  #main-outlet {
+    padding-bottom: $footer-nav-height + 15;
+  }
+
+  #topic-progress-wrapper,
+  #reply-control.draft {
+    bottom: $footer-nav-height;
+  }
+
+  #reply-control.draft {
+    margin-bottom: env(safe-area-inset-bottom);
+    padding-bottom: 0px;
+  }
+}
+
+.footer-nav {
+  background-color: rgba($header_background, 0.9);
+  box-shadow: shadow("footer-nav");
+  height: $footer-nav-height;
+  position: fixed;
+  bottom: -$footer-nav-height;
+  left: 0;
+  width: 100%;
+  z-index: z("footer-nav");
+  transition: all linear 0.1s;
+
+  .d-icon {
+    color: $header_primary-medium;
+  }
+
+  &.visible {
+    bottom: 0px;
+
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .footer-nav-widget {
+    display: flex;
+    justify-content: "space-evenly";
+    @include unselectable;
+    button {
+      flex: 1;
+      margin: 12px;
+      &:disabled {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+@supports (-webkit-backdrop-filter: blur(10px)) {
+  body:not(.footer-nav-ipad) .footer-nav {
+    background-color: rgba($header_background, 0.7);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+body.footer-nav-ipad {
+  padding-top: $footer-nav-height;
+  .footer-nav {
+    bottom: auto;
+    top: 0px;
+    background-color: $header_background;
+    z-index: z("ipad-header-nav");
+    padding-bottom: 0; // resets safe-area-inset-bottom
+  }
+
+  &.docked .d-header {
+    margin-top: $footer-nav-height;
+  }
+}

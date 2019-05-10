@@ -68,7 +68,7 @@ class PostAnalyzer
     raw_mentions = cooked_stripped.css('.mention, .mention-group').map do |e|
       if name = e.inner_text
         name = name[1..-1]
-        name.downcase! if name
+        name = User.normalize_username(name)
         name
       end
     end

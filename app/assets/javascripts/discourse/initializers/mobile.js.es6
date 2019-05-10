@@ -1,5 +1,6 @@
 import Mobile from "discourse/lib/mobile";
 import { setResolverOption } from "discourse-common/resolver";
+import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
 
 // Initializes the `Mobile` helper object.
 export default {
@@ -14,5 +15,14 @@ export default {
     site.set("isMobileDevice", Mobile.isMobileDevice);
 
     setResolverOption("mobileView", Mobile.mobileView);
+
+    if (isAppWebview()) {
+      Ember.run.later(() => {
+        postRNWebviewMessage(
+          "headerBg",
+          $(".d-header").css("background-color")
+        );
+      }, 500);
+    }
   }
 };

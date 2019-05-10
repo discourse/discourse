@@ -54,7 +54,7 @@ module Jobs
       # write to CSV file
       CSV.open(absolute_path, "w") do |csv|
         csv << get_header
-        send(export_method).each { |d| csv << d }
+        public_send(export_method).each { |d| csv << d }
       end
 
       # compress CSV file

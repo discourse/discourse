@@ -14,6 +14,7 @@ require_dependency 'global_path'
 require_dependency 'secure_session'
 require_dependency 'topic_query'
 require_dependency 'hijack'
+require_dependency 'read_only_header'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -21,6 +22,7 @@ class ApplicationController < ActionController::Base
   include JsonError
   include GlobalPath
   include Hijack
+  include ReadOnlyHeader
 
   attr_reader :theme_ids
 
@@ -78,10 +80,6 @@ class ApplicationController < ActionController::Base
       (request.content_type.blank? || request.content_type.include?('html')) &&
       !['json', 'rss'].include?(params[:format]) &&
       (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
-  end
-
-  def add_readonly_header
-    response.headers['Discourse-Readonly'] = 'true' if @readonly_mode
   end
 
   def perform_refresh_session
@@ -508,10 +506,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def check_readonly_mode
-    @readonly_mode = Discourse.readonly_mode?
-  end
-
   def locale_from_header
     begin
       # Rails I18n uses underscores between the locale and the region; the request
@@ -634,10 +628,10 @@ class ApplicationController < ActionController::Base
       error_obj = nil
       if opts[:additional_errors]
         error_target = opts[:additional_errors].find do |o|
-          target = obj.send(o)
+          target = obj.public_send(o)
           target && target.errors.present?
         end
-        error_obj = obj.send(error_target) if error_target
+        error_obj = obj.public_send(error_target) if error_target
       end
       render_json_error(error_obj || obj)
     end
@@ -702,6 +696,29 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_login_if_required
     return if request.format.json? && is_api?
+
+    # Used by clients authenticated via user API.
+    # Redirects to provided URL scheme if
+    # - request uses a valid public key and auth_redirect scheme
+    # - one_time_password scope is allowed
+    if !current_user &&
+      params.has_key?(:user_api_public_key) &&
+      params.has_key?(:auth_redirect)
+      begin
+        OpenSSL::PKey::RSA.new(params[:user_api_public_key])
+      rescue OpenSSL::PKey::RSAError
+        return render plain: I18n.t("user_api_key.invalid_public_key")
+      end
+
+      if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+        return render plain: I18n.t("user_api_key.invalid_auth_redirect")
+      end
+
+      if UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
+        redirect_to("#{params[:auth_redirect]}?otp=true")
+        return
+      end
+    end
 
     if !current_user && SiteSetting.login_required?
       flash.keep

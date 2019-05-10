@@ -57,9 +57,29 @@
 }
 
 .discourse-local-dates-create-modal {
-  min-height: 200px;
+  min-height: 320px;
   display: flex;
   flex-direction: row;
+  padding: 0.5em;
+
+  .picker-panel {
+    padding: 5px;
+    border: 1px solid $primary-low;
+  }
+
+  .date-picker {
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    box-sizing: border-box;
+
+    .pika-single {
+      position: relative !important;
+      flex: 1;
+      display: flex;
+      border: 0;
+    }
+  }
 
   .form {
     flex: 1 0 0px;
@@ -71,60 +91,149 @@
     .date-time-configuration {
       display: flex;
 
-      .range,
-      .timezone {
-        display: flex;
-        justify-content: flex-start;
-        flex: 1;
-        align-items: center;
-
-        .from {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
-
-        .to {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
-
-        .to-indicator {
-          display: flex;
-          flex-direction: row;
-          padding-top: 0.5em;
-          margin: 0 1em;
-          font-size: $font-up-2;
-        }
+      .fake-input {
+        display: none;
       }
 
-      .date {
-        margin-right: 0.5em;
-        .date-input {
-          width: 100px;
-          text-align: center;
-          .date-picker {
-            padding: 0;
-            margin: 0;
-            width: 100%;
+      .timezone-input {
+        width: 100%;
+
+        &.is-expanded {
+          .select-kit-header {
+            border: 1px solid $primary-medium;
+          }
+        }
+
+        .select-kit-header {
+          padding: 0.5em 0.5em;
+          border: 1px solid $primary-low;
+
+          .d-icon {
+            margin-right: 1em;
+          }
+
+          .caret-icon {
+            margin-right: 0;
           }
         }
       }
 
-      .timezone {
-        margin-left: 1em;
-        .timezone-input {
-          width: 180px;
+      .date-time-control {
+        position: relative;
+        display: flex;
+        border: 1px solid $primary-low;
+
+        &.is-filled,
+        &.is-selected {
+          .date-time {
+            color: $primary;
+            background: $secondary;
+          }
+
+          .d-icon {
+            color: $primary-high;
+          }
+        }
+
+        &.from {
+          border-radius: 5px 5px 0 0;
+
+          .date-time {
+            border-radius: 5px 5px 0 0;
+          }
+
+          &.is-selected {
+            border-color: $tertiary;
+          }
+        }
+
+        &.to {
+          border-radius: 0 0 5px 5px;
+          margin-bottom: 1em;
+
+          .date-time {
+            border-radius: 0 0 5px 5px;
+            padding-right: 3em;
+          }
+
+          &.is-selected {
+            border-color: $tertiary;
+          }
+        }
+
+        .date-time {
+          color: $primary-medium;
+          background: $primary-very-low;
+        }
+
+        .d-icon {
+          position: absolute;
+          margin-top: auto;
+          margin-bottom: auto;
+          left: 0.5em;
+          top: 0;
+          bottom: 0;
+          color: $primary-medium;
+        }
+
+        .delete-to-date {
+          position: absolute;
+          margin-top: auto;
+          margin-bottom: auto;
+          right: 0;
+          width: 30px;
+          top: 0;
+          bottom: 0;
+          color: $primary-high;
+          border-radius: 0 0 5px 0;
+        }
+
+        .date-time {
+          padding: 1em 0.5em 1em 2em;
+          border: 0;
+          outline: none;
+          flex: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          text-align: left;
         }
       }
 
-      .time {
-        .time-input {
-          width: 80px;
+      .inputs-panel {
+        flex: 1;
+      }
+
+      .picker-panel {
+        z-index: 1;
+        background: $secondary;
+        width: 200px;
+        box-sizing: border-box;
+        margin-left: 1em;
+      }
+
+      .time-pickers {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+        margin-top: 1em;
+        align-items: center;
+        padding: 0.25em;
+        border-top: 1px solid $primary-low-mid;
+        box-sizing: border-box;
+
+        .d-icon {
+          color: $primary-medium;
+        }
+
+        .time-picker {
+          outline: none;
+          box-shadow: none;
           margin: 0;
-          padding: 0;
-          text-align: center;
+          box-sizing: border-box;
+          width: 100%;
+          border: 0;
         }
       }
     }
@@ -132,11 +241,20 @@
     .preview {
       text-align: center;
       margin-top: 0;
-      margin-bottom: 1em;
-    }
+      margin-bottom: 0.5em;
+      display: flex;
+      align-items: center;
+      padding: 0.5em;
+      flex-wrap: wrap;
 
-    .validation-error {
-      color: $danger;
+      b {
+        margin-right: 0.5em;
+      }
+
+      b + p {
+        margin: 0;
+        display: inline-block;
+      }
     }
 
     .recurrence {
@@ -144,6 +262,10 @@
         width: 300px;
       }
     }
+  }
+
+  .validation-error {
+    margin-bottom: 0.5em;
   }
 
   .format {
@@ -174,37 +296,30 @@
   }
 }
 
-@media (max-width: 700px) {
-  .discourse-local-dates-create-modal {
-    .form {
-      .date-time-configuration {
-        flex-direction: column;
-        .range,
-        .timezone {
-          display: flex;
-          flex: 1;
-          flex-direction: column;
+html:not(.mobile-view) {
+  .discourse-local-dates-create-modal.modal-body {
+    width: 600px;
+    max-height: 400px;
+  }
+}
 
-          .controls,
-          .control-group {
-            width: 100%;
-          }
+html.mobile-view {
+  .discourse-local-dates-create-modal.modal-body {
+    .date-time-configuration {
+      flex-direction: column;
+    }
 
-          .to-indicator {
-            margin: 0.5em 1em;
-          }
-        }
+    .picker-panel {
+      width: 100%;
+      margin: 0 0 1em 0;
 
-        .timezone {
-          margin: 0.5em 0 0 0;
-          padding: 0.5em 0 0 0;
-          border-top: 1px solid $primary-low;
-
-          .timezone-input {
-            width: 100%;
-          }
-        }
+      .pika-single {
+        justify-content: center;
       }
+    }
+
+    .time-picker {
+      padding-top: 6px;
     }
   }
 }

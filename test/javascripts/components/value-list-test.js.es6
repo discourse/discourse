@@ -4,6 +4,7 @@ moduleForComponent("value-list", { integration: true });
 componentTest("adding a value", {
   template: "{{value-list values=values}}",
 
+  skip: true,
   async test(assert) {
     this.set("values", "vinkas\nosama");
 
@@ -90,6 +91,7 @@ componentTest("array support", {
 componentTest("delimiter support", {
   template: "{{value-list values=values inputDelimiter='|'}}",
 
+  skip: true,
   async test(assert) {
     this.set("values", "vinkas|osama");
 

@@ -2,7 +2,7 @@ import { PHRASE_MATCH_REGEXP_PATTERN } from "discourse/lib/concerns/search-const
 
 export const CLASS_NAME = "search-highlight";
 
-export default function($elem, term) {
+export default function($elem, term, opts = {}) {
   if (!_.isEmpty(term)) {
     // special case ignore "l" which is used for magic sorting
     let words = _.reject(
@@ -11,6 +11,8 @@ export default function($elem, term) {
     );
 
     words = words.map(w => w.replace(/^"(.*)"$/, "$1"));
-    $elem.highlight(words, { className: CLASS_NAME, wordsOnly: true });
+    const highlightOpts = { wordsOnly: true };
+    if (!opts.defaultClassName) highlightOpts.className = CLASS_NAME;
+    $elem.highlight(words, highlightOpts);
   }
 }

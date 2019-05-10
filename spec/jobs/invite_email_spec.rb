@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'jobs/base'
 
@@ -12,7 +14,7 @@ describe Jobs::InviteEmail do
     context 'with an invite id' do
 
       let (:mailer) { Mail::Message.new(to: 'eviltrout@test.domain') }
-      let (:invite) { Fabricate(:invite) }
+      fab!(:invite) { Fabricate(:invite) }
 
       it 'delegates to the test mailer' do
         Email::Sender.any_instance.expects(:send)

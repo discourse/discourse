@@ -236,15 +236,21 @@ export default MountWidget.extend({
     }
 
     const onscreenPostNumbers = [];
+    const readPostNumbers = [];
+
     const prev = this._previouslyNearby;
     const newPrev = {};
     nearby.forEach(idx => {
       const post = posts.objectAt(idx);
       const postNumber = post.post_number;
+
       delete prev[postNumber];
 
       if (onscreen.indexOf(idx) !== -1) {
         onscreenPostNumbers.push(postNumber);
+        if (post.read) {
+          readPostNumbers.push(postNumber);
+        }
       }
       newPrev[postNumber] = post;
       uncloak(post, this);
@@ -253,7 +259,7 @@ export default MountWidget.extend({
     Object.values(prev).forEach(node => cloak(node, this));
 
     this._previouslyNearby = newPrev;
-    this.screenTrack.setOnscreen(onscreenPostNumbers);
+    this.screenTrack.setOnscreen(onscreenPostNumbers, readPostNumbers);
   },
 
   _scrollTriggered() {
@@ -261,10 +267,8 @@ export default MountWidget.extend({
   },
 
   _posted(staged) {
-    const disableJumpReply = this.currentUser.get("disable_jump_reply");
-
     this.queueRerender(() => {
-      if (staged && !disableJumpReply) {
+      if (staged) {
         const postNumber = staged.get("post_number");
         DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
       }

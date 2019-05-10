@@ -1,6 +1,7 @@
 require_dependency 'reviewable'
 
 class ReviewableUser < Reviewable
+
   def self.create_for(user)
     create(
       created_by_id: Discourse.system_user.id,
@@ -11,11 +12,31 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return unless pending?
 
-    actions.add(:approve) if guardian.can_approve?(target) || args[:approved_by_invite]
-    actions.add(:reject) if guardian.can_delete_user?(target)
+    if guardian.can_approve?(target) || args[:approved_by_invite]
+      actions.add(:approve_user) do |a|
+        a.icon = 'user-plus'
+        a.label = "reviewables.actions.approve_user.title"
+      end
+    end
+
+    reject = actions.add_bundle(
+      'reject_user',
+      icon: 'user-times',
+      label: 'reviewables.actions.reject_user.title'
+    )
+    actions.add(:reject_user_delete, bundle: reject) do |a|
+      a.icon = 'user-times'
+      a.label = "reviewables.actions.reject_user.delete.title"
+      a.description = "reviewables.actions.reject_user.delete.description"
+    end
+    actions.add(:reject_user_block, bundle: reject) do |a|
+      a.icon = 'ban'
+      a.label = "reviewables.actions.reject_user.block.title"
+      a.description = "reviewables.actions.reject_user.block.description"
+    end
   end
 
-  def perform_approve(performed_by, args)
+  def perform_approve_user(performed_by, args)
     ReviewableUser.set_approved_fields!(target, performed_by)
     target.save!
 
@@ -33,13 +54,32 @@ class ReviewableUser < Reviewable
     create_result(:success, :approved)
   end
 
-  def perform_reject(performed_by, args)
-    destroyer = UserDestroyer.new(performed_by)
-    destroyer.destroy(target)
+  def perform_reject_user_delete(performed_by, args)
+    # We'll delete the user if we can
+    if target.present?
+      destroyer = UserDestroyer.new(performed_by)
+
+      begin
+        delete_args = {}
+        delete_args[:block_ip] = true if args[:block_ip]
+        delete_args[:block_email] = true if args[:block_email]
+
+        destroyer.destroy(target, delete_args)
+      rescue UserDestroyer::PostsExistError
+        # If a user has posts, we won't delete them to preserve their content.
+        # However the reviable record will be "rejected" and they will remain
+        # unapproved in the database. A staff member can still approve them
+        # via the admin.
+      end
+    end
 
     create_result(:success, :rejected)
-  rescue UserDestroyer::PostsExistError
-    create_result(:failed)
+  end
+
+  def perform_reject_user_block(performed_by, args)
+    args[:block_email] = true
+    args[:block_ip] = true
+    perform_reject_user_delete(performed_by, args)
   end
 
   # Update's the user's fields for approval but does not save. This
@@ -55,13 +95,12 @@ end
 #
 # Table name: reviewables
 #
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
 #  type                    :string           not null
 #  status                  :integer          default(0), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
-#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -77,8 +116,10 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

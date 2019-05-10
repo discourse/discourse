@@ -9,7 +9,7 @@ pt:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
-    long_date: "DD de MMMM de YYYY hh:mm"
+    long_date: "DD MMMM de YYYY, hh:mm"
   datetime_formats: &datetime_formats
     formats:
       short: "%m-%d-%Y"
@@ -245,8 +245,6 @@ pt:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Já não pode ser editada ou apagada."
   revert_version_same: "A versão actual é o mesma versão para a qual está a tentar reverter."
   excerpt_image: "imagem"
-  queue:
-    delete_reason: "Eliminado através da fila de moderação de mensagens"
   groups:
     errors:
       can_not_modify_automatic: "Não pode modificar um grupo automático"
@@ -300,6 +298,7 @@ pt:
       topic:
         title: "Título"
         featured_link: "Ligação Destacada"
+        category_id: "Categoria"
       post:
         raw: "Corpo"
       user_profile:
@@ -348,6 +347,7 @@ pt:
           attributes:
             word:
               too_many: "Demasiadas palavras para essa ação"
+  uncategorized_category_name: "Sem categoria"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros de Nível de Confiança 3 ou superior."
   meta_category_name: "Comentários sobre o Sítio"
@@ -498,6 +498,9 @@ pt:
       grant: "Conceder Acesso de Administrador"
       complete: "<b>%{target_username}</b> é agora um administrador."
       back_to: "Voltar para %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Necessita de Aprovação"
   post_action_types:
     off_topic:
       title: "Fora de Contexto"
@@ -552,6 +555,7 @@ pt:
     notify_moderators:
       title: "Algo Mais"
       long_form: "sinalizou isto para obter a atenção do moderador"
+      short_description: "Requer a atenção da equipa por outra razão"
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -565,7 +569,6 @@ pt:
         make: "Este tópico é agora uma faixa. Aparecerá no topo de cada página até ser dispensado pelo utilizador."
         remove: "Este tópico já não é uma faixa. Deixará de aparecer no topo de cada página."
   unsubscribed:
-    title: "Subscrição cancelada!"
     topic_description: "Para re-subscrever a %{link}, use o controle de notificação no fundo ou à direita do tópico."
   unsubscribe:
     title: "Cancelar subscrição"
@@ -573,11 +576,16 @@ pt:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
     unwatch_category: "Deixar de seguir todos os tópicos em %{category}"
     mailing_list_mode: "Desligar modo de lista de distribuição"
-    disable_digest_emails: "Parar envio de emails de resumo"
     all: "Não me mandar email de %{sitename}"
     different_user_description: "Está ligado como um utilizador diferente do que aquele para o qual enviamos email. Por favor saia, ou entre em modo anónimo, e tente novamente."
     not_found_description: "Pedimos desculpa, não conseguimos cancelar a sua subscrição. É possível que a ligação no seu email tenha expirado?"
     log_out: "Sair"
+    digest_frequency:
+      never: "nunca"
+      every_30_minutes: "a cada 30 minutos"
+      every_hour: "de hora em hora"
+      daily: "diariamente"
+      weekly: "semanalmente"
   user_api_key:
     title: "Autorizar o acesso da aplicação"
     authorize: "Autorizar"
@@ -594,11 +602,40 @@ pt:
       read: "Ler todos"
       write: "Escrever todos"
   reports:
+    default:
+      labels:
+        day: Dia
+    post_edits:
+      labels:
+        post: Publicação
+        editor: Editor
+        edit_reason: Motivo
+    user_flagging_ratio:
+      labels:
+        user: Utilizador
+    moderators_activity:
+      labels:
+        moderator: Moderador
+    flags_status:
+      labels:
+        flag: Tipo
     visits:
       title: "Visitas do Utilizador"
       xaxis: "Dia"
       yaxis: "Número de visitas"
     signups:
+      xaxis: "Dia"
+    new_contributors:
+      xaxis: "Dia"
+    consolidated_page_views:
+      yaxis: "Dia"
+      labels:
+        post: Publicação
+        editor: Editor
+        edit_reason: Motivo
+    dau_by_mau:
+      xaxis: "Dia"
+    daily_engaged_users:
       xaxis: "Dia"
     profile_views:
       title: "Vistas do Perfil de Utilizador"
@@ -628,11 +665,23 @@ pt:
       title: "Utilizadores por Nível de Confiança"
       xaxis: "Nível de Confiança"
       yaxis: "Número de Utilizadores"
+    users_by_type:
+      xaxis: "Tipo"
+      yaxis: "Número de Utilizadores"
+      labels:
+        type: Tipo
+      xaxis_labels:
+        admin: Administração
+        moderator: Moderador
+        suspended: Suspenso
     emails:
       title: "Emails Enviados"
       xaxis: "Dia"
       yaxis: "Número de Emails"
     user_to_user_private_messages:
+      xaxis: "Dia"
+      yaxis: "Número de mensagens"
+    user_to_user_private_messages_with_replies:
       xaxis: "Dia"
       yaxis: "Número de mensagens"
     system_private_messages:
@@ -656,14 +705,25 @@ pt:
       xaxis: "Utilizador"
       num_clicks: "Cliques"
       num_topics: "Tópicos"
+      labels:
+        user: "Utilizador"
+        num_clicks: "Cliques"
+        num_topics: "Tópicos"
     top_traffic_sources:
       title: "As Melhores Fontes de Tráfego"
       xaxis: "Domínio"
       num_clicks: "Cliques"
       num_topics: "Tópicos"
       num_users: "Utilizadores"
+      labels:
+        domain: Domínio
+        num_clicks: Cliques
+        num_topics: Tópicos
     top_referred_topics:
       title: "Os Melhores Tópicos Referenciados"
+      labels:
+        num_clicks: "Cliques"
+        topic: "Tópico"
     page_view_anon_reqs:
       title: "Anónimo"
       xaxis: "Dia"
@@ -673,6 +733,7 @@ pt:
       xaxis: "Dia"
       yaxis: "Vistas de Página Ligadas"
     page_view_crawler_reqs:
+      title: "Vistas de Página de Web Crawler"
       xaxis: "Dia"
       yaxis: "Vistas de Página de Web Crawler"
     page_view_total_reqs:
@@ -721,6 +782,17 @@ pt:
     mobile_visits:
       xaxis: "Dia"
       yaxis: "Número de visitas"
+    suspicious_logins:
+      labels:
+        user: Utilizador
+        location: Localização
+    staff_logins:
+      labels:
+        user: Utilizador
+        location: Localização
+    top_uploads:
+      labels:
+        filename: Nome do ficheiro
   dashboard:
     rails_env_warning: "O seu servidor está a executar em modo %{env}."
     host_names_warning: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
@@ -740,11 +812,13 @@ pt:
     set_locale_from_accept_language_header: "defina a língua de interface para utilizadores anónimos com base nos cabeçalhos de língua dos seus navegadores. (EXPERIMENTAL, não funciona com cache anónima)"
     min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
     min_first_post_length: "Tamanho mínimo permitido para a primeira mensagem (corpo do tópico), em caracteres"
+    min_personal_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
     topic_featured_link_enabled: "Permitir publicar uma ligação com tópicos."
     show_topic_featured_link_in_digest: "Mostrar a ligação destacada do tópico no email de resumo."
     min_topic_title_length: "Tamanho mínimo permitido por título de cada tópico, em caracteres"
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
+    min_personal_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
     search_tokenize_chinese_japanese_korean: "Forçar pesquisa para atomizar Chinês/Japonês/Coreano mesmo em sites que não sejam CJC"
     search_prefer_recent_posts: "Se pesquisar no seu fórum vasto é lento, esta opção tenta usar um índex de publicações recentes primeiro"
@@ -781,6 +855,7 @@ pt:
     summary_posts_required: "Número mínimo de mensagens num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
+    enable_personal_messages: "Permitir que utilizadores de nível de confiança 1 (configurável através do nível de confiança mínimo para enviar mensagens) criem mensagens e respostas a mensagens. Note que a equipa de apoio pode mandar mensagens de qualquer maneira."
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -798,6 +873,7 @@ pt:
     must_approve_users: "O pessoal deve aprovar todas as novas contas de utilizador antes destas terem permissão para aceder ao sítio. AVISO: ativar isto para um sítio ativo irá revogar o acesso aos utilizadores existentes que não fazem parte do pessoal!"
     pending_users_reminder_delay: "Notificar moderadores se novos utilizadores estiverem à espera de aprovação por mais que esta quantidade de horas. Configurar com -1 para desativar notificações."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
+    moderators_create_categories: "Permitir que os moderadores criem novas categorias"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_whitelist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo últimos|novos|não lidos|categorias|topo|lidos|publicados|marcadores"
@@ -838,7 +914,6 @@ pt:
     sso_not_approved_url: "Redirecionar contas SSO não aprovadas para este URL"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
     enable_signup_cta: "Mostrar um aviso a utilizadores anónimos que retornem levando-os a inscreverem-se para uma conta."
-    enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     google_oauth2_client_id: "ID do cliente da sua aplicação Google."
     google_oauth2_client_secret: "Chave do cliente da sua aplicação Google."
     enable_instagram_logins: "Activar autenticação pelo Instagram, requer instagram_consumer_key e instagram_consumer_secret"
@@ -868,6 +943,7 @@ pt:
     max_bookmarks_per_day: "Número máximo de marcadores por utilizador por dia."
     max_edits_per_day: "Número máximo de edições por utilizador por dia."
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
+    max_personal_messages_per_day: "Número máximo de mensagens que os utilizadores podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um utilizador pode enviar por dia."
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
@@ -967,7 +1043,6 @@ pt:
     max_age_unmatched_emails: "Eliminar entradas de email não encontradas após (N) dias."
     max_age_unmatched_ips: "Eliminar entradas IP não encontradas após (N) dias."
     num_flaggers_to_close_topic: "Número mínimo de sinalizações únicas que são necessárias para automaticamente pausar um tópico para intervenção."
-    num_flags_to_close_topic: "Número mínimo de sinalizações ativas que são necessárias para automaticamente pausar um tópico para intervenção."
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
     min_first_post_typing_time: "Quantidade mínima de tempo em milissegundos que um utilizador deve digitar durante a sua primeira mensagem, se o limite não for atingido a mensagem será automaticamente inserida na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
@@ -1022,6 +1097,7 @@ pt:
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
     digest_other_topics: "O número máximo de tópicos a mostrar na secção de  \"Novos em tópicos e categorias que segue\" do email de resumo."
     digest_min_excerpt_length: "Tamanho mínimo dos excertos de publicações no email de resumo, em caracteres."
+    suppress_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     digest_suppress_categories: "Suprimir estas categorias dos emails de resumo."
     disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
@@ -1082,7 +1158,6 @@ pt:
     default_other_external_links_in_new_tab: "Por defeito, abrir hiperligações externas num novo separador."
     default_other_enable_quoting: "Por defeito, ativar resposta por citação para texto destacado."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
-    default_other_disable_jump_reply: "Por defeito, não saltar para a mensagem do utilizador após ter respondido."
     default_other_like_notification_frequency: "Notificar, por omissão, os utilizadores quando alguém gostar"
     default_topics_automatic_unpin: "Desafixar automaticamente tópicos quando um utilizador chega ao final, por defeito."
     default_categories_watching: "Lista de categorias que por defeito são vigiadas."
@@ -1129,6 +1204,8 @@ pt:
       email_polling_disabled: "Tem de ligar a consulta manual ou automática de emails via POP3 antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
+      min_username_length_range: "Não pode definir o mínimo acima do máximo."
+      max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1204,6 +1281,11 @@ pt:
     reserved_username: "Esse nome de utilizador não é permitido."
     missing_user_field: "Não completou todos os campos de utilizador."
     already_logged_in: "Oops, parece que tentou aceitar um convite para outro utilizador. Se não é o %{current_user}, por favor saia e tente novamente."
+    second_factor_title: "Autenticação em Dois Passos"
+    second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
+  admin:
+    email:
+      sent_test: "enviado!"
   user:
     deactivated: "Conta desactivada devido a demasiados emails redirecionados para '%{email}'."
     username:
@@ -1222,10 +1304,6 @@ pt:
     ip_address:
       blocked: "Novos registos não são permitidos a partir do seu endereço IP."
       max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
-  flags_reminder:
-    subject_template:
-      one: "1 sinalização à espera de ser tratada"
-      other: "%{count} sinalizações à espera de serem tratadas"
   unsubscribe_mailer:
     subject_template: "Confirme que não quer receber emails com actualizações de %{site_title}"
   invite_password_instructions:
@@ -1250,8 +1328,8 @@ pt:
     agreed: "Obrigado por nos informar. Concordamos que existe um problema e estamos a analisá-lo."
     agreed_and_deleted: "Obrigado por nos informar. Concordamos que existe um problema e removemos a mensagem."
     disagreed: "Obrigado por nos informar. Estamos a analisá-lo."
-    deferred: "Obrigado por nos informar. Estamos a analisá-lo."
-    deferred_and_deleted: "Obrigado por nos informar. Removemos a mensagem."
+    ignored: "Obrigado por nos informar. Estamos a analisá-lo."
+    ignored_and_deleted: "Obrigado por nos informar. Removemos a mensagem."
   system_messages:
     private_topic_title: "Tópico #%{id}"
     contents_hidden: "Por favor, visite o artigo para ver o seu conteúdo."
@@ -1261,6 +1339,14 @@ pt:
     welcome_user:
       title: "Bem-vindo Utilizador"
       subject_template: "Bem-vindo a %{site_name}!"
+      text_body_template: |
+        Obrigado por se juntar a %{site_name}, e bem-vindo!
+
+        %{new_user_tips}
+
+        Acreditamos no [comportamento civilizado da comunidade](%{base_url}/guidelines) em todas as alturas.
+
+        Desfrute da sua estadia!
     welcome_invite:
       title: "Boas-vindas de Convite"
       subject_template: "Bem-vindo a %{site_name}!"
@@ -1356,19 +1442,39 @@ pt:
       subject_template: "Nova conta suspensa"
     too_many_tl3_flags:
       subject_template: "Nova conta suspensa"
+    silenced_by_staff:
+      subject_template: "Conta temporariamente suspensa"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática de %{site_name} para informá-lo de que a sua conta está temporariamente suspensa como medida precaucionária.
+
+        Por favor continue a navegar, mas não será capaz de criar novas respostas ou tópicos até um [membro da equipa de apoio](%{base_url}/about)  poder rever a sua conta. Pedimos desculpa pela inconveniência.
+
+        Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
+    spam_post_blocked:
+      subject_template: "Novas mensagens do novo utilizador %{username} foram bloqueadas devido a hiperligações repetidas"
+    unsilenced:
+      subject_template: "Conta deixou de estar suspensa"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática de %{site_name} para informar que a sua conta deixou de estar suspensa após avaliação da staff.
+
+        Pode agora voltar a responder e criar novos tópicos.
     pending_users_reminder:
       subject_template:
         one: "1 utilizador espera a aprovação"
         other: "%{count} utilizadores esperam a aprovação"
-      text_body_template: |2
-
-        Há registos de novos utilizadores à espera de serem aprovados (ou rejeitados) antes de poderem aceder a este fórum.
-
-        [Por favor reveja-os na secção de administração](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Transferência de Imagens Remotas Desativada"
       subject_template: "Transferência de imagens remotas desativada"
       text_body_template: "A configuração `download_remote_images_to_local` foi desativada porque o limite de espaço em disco em `download_remote_images_threshold` foi alcançado."
+    queued_posts_reminder:
+      text_body_template: |
+        Olá,
+
+        Existem publicações de novos utilizadores que estão à espera de revisão. [Podem ser aprovadas ou rejeitadas aqui](%{base_url}/queued-posts).
   unsubscribe_link: |2
 
     Para cancelar as subscrições a estes emails, [clique aqui](%{unsubscribe_url}).
@@ -1392,6 +1498,34 @@ pt:
     only_reply_by_email: "Responda a este email para responder."
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
     posted_by: "Publicado por %{username} em %{post_date}"
+    invited_to_private_message_body: |
+      %{username} convidou-o para uma mensagem
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} convidou-o para uma discussão
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       text_body_template: |2
 
@@ -1466,6 +1600,16 @@ pt:
         %{context}
 
         %{respond_instructions}
+    user_mentioned_pm:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
       text_body_template: |2
 
@@ -1517,6 +1661,7 @@ pt:
       new_topics: "Novos tópicos"
       unread_messages: "Mensagens Não Lidas"
       unread_notifications: "Notificações Não Lidas"
+      liked_received: "Gostos Recebidos"
       new_posts: "Novas Publicações"
       new_users: "Novos Utilizadores"
       popular_topics: "Tópicos Populares"
@@ -1526,6 +1671,10 @@ pt:
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
+    forgot_password:
+      title: "Esqueci a palavra-passe"
+    set_password:
+      title: "Definir Palavra-passe"
     notify_old_email:
       text_body_template: |2
 
@@ -1546,9 +1695,11 @@ pt:
     recent_topics: "Recente"
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
+    search_button: "Pesquisar"
   terms_of_service:
     title: "Termos de Serviço"
   deleted: "eliminado"
+  image: "imagem"
   upload:
     edit_reason: "cópias locais de imagens transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -1565,6 +1716,25 @@ pt:
   flag_reason:
     sockpuppet: "Um novo utilizador criou um tópico, no qual um outro novo utilizador com o mesmo IP (%{ip_address})  respondeu. Veja as configurações de <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a> nas configurações do sítio."
     spam_hosts: "Este novo utilizador tentou criar múltiplas publicações com ligações ao mesmo domínio  (%{domain}). Verifique as configurações do sítio de <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    exceeded_emails_limit: "Excedeu max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Ultrapassou bounce_score_threshold"
+    mailing_list_no_echo_mode: "Notificações via lista de distribuição desativadas para as publicações do próprio utilizador "
+    user_email_no_user: "Não foi possível encontrar o utilizador com o id %{user_id}"
+    user_email_post_not_found: "Não foi possível encontrar a mensagem com o id %{post_id}"
+    user_email_anonymous_user: "Utilizador é anónimo"
+    user_email_user_suspended_not_pm: "O utilizador está suspenso, sem mensagens"
+    user_email_seen_recently: "O utilizador foi visto recentemente"
+    user_email_notification_already_read: "A notificação sobre o qual este email se trata já foi lida"
+    user_email_notification_topic_nil: "post.topic está vazio"
+    user_email_post_user_deleted: "O utilizador do publicação foi eliminado."
+    user_email_post_deleted: "a mensagem foi eliminada pelo autor"
+    user_email_user_suspended: "o utilizador foi suspenso"
+    user_email_already_read: "o utilizador já leu esta mensagem"
+    sender_message_blank: "a mensagem está em branco"
+    sender_message_to_blank: "message.to está em branco"
+    sender_text_part_body_blank: "text_part.body está em branco"
+    sender_body_blank: "corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
   about: "Sobre"
@@ -1693,6 +1863,8 @@ pt:
     nice_post:
       name: Boa Resposta
       description: Recebeu 10 gostos numa resposta
+      long_description: |
+        Este distintivo é concedido ao criar uma resposta que obtém 10 gostos. A sua resposta causou uma boa impressão na comunidade e ajudou a comunidade a seguir em frente.
     good_post:
       name: Boa Resposta
       description: Recebeu 25 gostos numa resposta
@@ -1702,6 +1874,8 @@ pt:
     nice_topic:
       name: Bom Tópico
       description: Recebeu 10 gostos num tópico
+      long_description: |
+        Este distintivo é concedido ao criar um tópico que obtém 10 gostos. Iniciou uma discussão interessante que a comunidade gostou.
     good_topic:
       name: Ótimo Tópico
       description: Recebeu 25 gostos num tópico
@@ -1860,7 +2034,6 @@ pt:
       help: "registe uma conta nova para começar"
     confirm_email:
       title: "Confirme o seu Email"
-      message: "<p>Enviámos um email de ativação para <b>%{email}</b>. Por favor siga as instruções no email para ativar a sua conta.</p><p>Se não receber o email, verifique que configurou correctamente o email no Discourse e verifique a sua pasta de spam.</p>"
     resend_email:
       title: "Reenviar Email de Ativação"
       message: "<p>Reenviamos o email de ativação para <b>%{email}</b>"
@@ -1901,10 +2074,8 @@ pt:
             choices:
               open:
                 label: "Público"
-                description: "Qualquer pessoa pode aceder a esta comunidade e inscrever-se para a criação de uma conta"
               restricted:
                 label: "Privado"
-                description: "Apenas pessoas que convidei ou aprovei podem aceder a  esta comunidade"
       contact:
         title: "Contacte-nos"
         fields:
@@ -1923,8 +2094,18 @@ pt:
         title: "Tema"
       logos:
         title: "Logos"
+        fields:
+          logo:
+            label: "Logo Primário"
+          logo_small:
+            label: "Logo Compacto"
       icons:
         title: "Ícones"
+        fields:
+          favicon:
+            label: "Ícone Pequeno"
+          apple_touch_icon:
+            label: "Ícone Grande"
       homepage:
         title: "Página de início"
         fields:
@@ -1932,9 +2113,41 @@ pt:
             choices:
               latest:
                 label: "Tópicos recentes"
+              categories_only:
+                label: "Apenas Categorias"
+              categories_with_featured_topics:
+                label: "Categorias com Tópicos Destacados"
+              categories_and_latest_topics:
+                label: "Categorias e Tópicos Recentes"
+              categories_and_top_topics:
+                label: "Categorias e Melhores Tópicos"
       emoji:
         title: "Emoji"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:
         title: "O seu Discourse está Pronto!"
+  joined: "Juntou-se"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "Notificações ativas - %{site_title}"
+      confirm_body: "Sucesso! As notificações foram ativadas."
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Utilizador Suspenso"
+      delete_spammer:
+        title: "Eliminar Spammer"
+      disagree:
+        title: "Discordar"
+      ignore:
+        title: "Ignorar"
+      approve:
+        title: "Aprovar"
+      reject_user:
+        delete:
+          title: "Eliminar Utilizador"
+      reject:
+        title: "Rejeitar"
+      delete_user:
+        title: "Eliminar Utilizador"

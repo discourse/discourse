@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe SvgSprite do
@@ -73,19 +75,23 @@ describe SvgSprite do
 
     # Works when applying override
     theme.update_setting(:custom_icon, "gas-pump")
+    theme.save!
     expect(SvgSprite.all_icons([theme.id])).to include("gas-pump")
 
     # Works when changing override
     theme.update_setting(:custom_icon, "gamepad")
+    theme.save!
     expect(SvgSprite.all_icons([theme.id])).to include("gamepad")
     expect(SvgSprite.all_icons([theme.id])).not_to include("gas-pump")
 
     # FA5 syntax
     theme.update_setting(:custom_icon, "fab fa-bandcamp")
+    theme.save!
     expect(SvgSprite.all_icons([theme.id])).to include("fab-bandcamp")
 
     # Internal Discourse syntax + multiple icons
     theme.update_setting(:custom_icon, "fab-android|dragon")
+    theme.save!
     expect(SvgSprite.all_icons([theme.id])).to include("fab-android")
     expect(SvgSprite.all_icons([theme.id])).to include("dragon")
 
@@ -94,6 +100,7 @@ describe SvgSprite do
 
     # Check components are included
     theme.update(component: true)
+    theme.save!
     parent_theme = Fabricate(:theme)
     parent_theme.add_child_theme!(theme)
     expect(SvgSprite.all_icons([parent_theme.id])).to include("dragon")

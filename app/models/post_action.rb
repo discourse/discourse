@@ -163,11 +163,11 @@ class PostAction < ActiveRecord::Base
     return @rate_limiter if @rate_limiter.present?
 
     %w(like flag bookmark).each do |type|
-      if send("is_#{type}?")
-        limit = SiteSetting.send("max_#{type}s_per_day")
+      if public_send("is_#{type}?")
+        limit = SiteSetting.get("max_#{type}s_per_day")
 
         if is_like? && user && user.trust_level >= 2
-          multiplier = SiteSetting.send("tl#{user.trust_level}_additional_likes_per_day_multiplier").to_f
+          multiplier = SiteSetting.get("tl#{user.trust_level}_additional_likes_per_day_multiplier").to_f
           multiplier = 1.0 if multiplier < 1.0
 
           limit = (limit * multiplier).to_i
@@ -259,8 +259,10 @@ end
 #
 # Indexes
 #
-#  idx_unique_actions                                     (user_id,post_action_type_id,post_id,targets_topic) UNIQUE WHERE ((deleted_at IS NULL) AND (disagreed_at IS NULL) AND (deferred_at IS NULL))
-#  idx_unique_flags                                       (user_id,post_id,targets_topic) UNIQUE WHERE ((deleted_at IS NULL) AND (disagreed_at IS NULL) AND (deferred_at IS NULL) AND (post_action_type_id = ANY (ARRAY[3, 4, 7, 8])))
-#  index_post_actions_on_post_id                          (post_id)
-#  index_post_actions_on_user_id_and_post_action_type_id  (user_id,post_action_type_id) WHERE (deleted_at IS NULL)
+#  idx_unique_actions                                          (user_id,post_action_type_id,post_id,targets_topic) UNIQUE WHERE ((deleted_at IS NULL) AND (disagreed_at IS NULL) AND (deferred_at IS NULL))
+#  idx_unique_flags                                            (user_id,post_id,targets_topic) UNIQUE WHERE ((deleted_at IS NULL) AND (disagreed_at IS NULL) AND (deferred_at IS NULL) AND (post_action_type_id = ANY (ARRAY[3, 4, 7, 8])))
+#  index_post_actions_on_post_action_type_id_and_disagreed_at  (post_action_type_id,disagreed_at) WHERE (disagreed_at IS NULL)
+#  index_post_actions_on_post_id                               (post_id)
+#  index_post_actions_on_user_id                               (user_id)
+#  index_post_actions_on_user_id_and_post_action_type_id       (user_id,post_action_type_id) WHERE (deleted_at IS NULL)
 #

@@ -15,6 +15,8 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
+  before_save :apply_review_group
+  attr_accessor :created_new
   validates_presence_of :type, :status, :created_by_id
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: 'User'
@@ -29,9 +31,12 @@ class Reviewable < ActiveRecord::Base
   has_many :reviewable_scores
 
   after_create do
+    log_history(:created, created_by)
+  end
+
+  after_commit(on: :create) do
     DiscourseEvent.trigger(:reviewable_created, self)
     Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
-    log_history(:created, created_by)
   end
 
   def self.statuses
@@ -51,7 +56,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.default_visible
-    where("score >= ?", SiteSetting.min_score_default_visibility)
+    where("score >= ?", min_score_for_priority)
   end
 
   def self.valid_type?(type)
@@ -63,6 +68,13 @@ class Reviewable < ActiveRecord::Base
 
   def self.types
     %w[ReviewableFlaggedPost ReviewableQueuedPost ReviewableUser]
+  end
+
+  def created_new!
+    self.created_new = true
+    self.topic = target.topic if topic.blank? && target.is_a?(Post)
+    self.target_created_by_id = target.is_a?(Post) ? target.user_id : nil
+    self.category_id = topic.category_id if category_id.blank? && topic.present?
   end
 
   # Create a new reviewable, or if the target has already been reviewed return it to the
@@ -77,33 +89,39 @@ class Reviewable < ActiveRecord::Base
     reviewable_by_moderator: false,
     potential_spam: true
   )
-    target_created_by_id = target.is_a?(Post) ? target.user_id : nil
-
-    topic = target.topic if topic.blank? && target.is_a?(Post)
-    category_id = topic.category_id if topic.present?
-
-    create!(
+    reviewable = new(
       target: target,
-      target_created_by_id: target_created_by_id,
       topic: topic,
       created_by: created_by,
-      category_id: category_id,
       reviewable_by_moderator: reviewable_by_moderator,
       payload: payload,
       potential_spam: potential_spam
     )
+    reviewable.created_new!
+    reviewable.save!
+    reviewable
+
   rescue ActiveRecord::RecordNotUnique
-    updates = {
-      status: statuses[:pending]
-    }
-    updates[:potential_spam] = true if potential_spam
-    where(target: target).update_all(updates)
-    find_by(target: target).tap { |r| r.log_history(:transitioned, created_by) }
+
+    row_count = DB.exec(<<~SQL, status: statuses[:pending], id: target.id, type: target.class.name)
+      UPDATE reviewables
+      SET status = :status
+      WHERE status <> :status
+        AND target_id = :id
+        AND target_type = :type
+    SQL
+
+    where(target: target).update_all(potential_spam: true) if potential_spam
+
+    reviewable = find_by(target: target)
+    reviewable.log_history(:transitioned, created_by) if row_count > 0
+    reviewable
   end
 
   def add_score(
     user,
     reviewable_score_type,
+    reason: nil,
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
@@ -115,11 +133,11 @@ class Reviewable < ActiveRecord::Base
     sub_total = (ReviewableScore.user_flag_score(user) + type_bonus + take_action_bonus)
 
     # We can force a reviewable to hit the threshold, for example with queued posts
-    if force_review && sub_total < SiteSetting.min_score_default_visibility
-      sub_total = SiteSetting.min_score_default_visibility
+    if force_review && sub_total < Reviewable.min_score_for_priority
+      sub_total = Reviewable.min_score_for_priority
     end
 
-    rs = reviewable_scores.create!(
+    rs = reviewable_scores.new(
       user: user,
       status: ReviewableScore.statuses[:pending],
       reviewable_score_type: reviewable_score_type,
@@ -128,11 +146,24 @@ class Reviewable < ActiveRecord::Base
       take_action_bonus: take_action_bonus,
       created_at: created_at || Time.zone.now
     )
+    rs.reason = reason.to_s if reason
+    rs.save!
 
     update(score: self.score + rs.score, latest_score: rs.created_at)
     topic.update(reviewable_score: topic.reviewable_score + rs.score) if topic
 
     rs
+  end
+
+  def self.set_priorities(medium: nil, high: nil)
+    PluginStore.set('reviewables', 'priority_medium', medium) if medium
+    PluginStore.set('reviewables', 'priority_high', high) if high
+  end
+
+  def self.min_score_for_priority(priority = nil)
+    priority ||= SiteSetting.reviewable_default_visibility
+    return 0.0 unless ['medium', 'high'].include?(priority)
+    return PluginStore.get('reviewables', "priority_#{priority}").to_f
   end
 
   def history
@@ -148,14 +179,27 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def apply_review_group
+    return unless SiteSetting.enable_category_group_review? &&
+      category.present? &&
+      category.reviewable_by_group_id
+
+    self.reviewable_by_group_id = category.reviewable_by_group_id
+  end
+
   def actions_for(guardian, args = nil)
     args ||= {}
-    Actions.new(self, guardian).tap { |a| build_actions(a, guardian, args) }
+
+    Actions.new(self, guardian).tap do |actions|
+      build_actions(actions, guardian, args)
+    end
   end
 
   def editable_for(guardian, args = nil)
     args ||= {}
-    EditableFields.new(self, guardian, args).tap { |a| build_editable_fields(a, guardian, args) }
+    EditableFields.new(self, guardian, args).tap do |fields|
+      build_editable_fields(fields, guardian, args)
+    end
   end
 
   # subclasses must implement "build_actions" to list the actions they're capable of
@@ -200,17 +244,23 @@ class Reviewable < ActiveRecord::Base
     raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
 
     result = nil
+    update_count = false
     Reviewable.transaction do
       increment_version!(args[:version])
-      result = send(perform_method, performed_by, args)
+      result = public_send(perform_method, performed_by, args)
 
       if result.success?
-        transition_to(result.transition_to, performed_by) if result.transition_to
+        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
         update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
 
         recalculate_score if result.recalculate_score
       end
     end
+    if result && result.after_commit
+      result.after_commit.call
+    end
+    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if update_count
+
     result
   end
 
@@ -219,6 +269,7 @@ class Reviewable < ActiveRecord::Base
 
     self.status = Reviewable.statuses[status_symbol]
     save!
+
     log_history(:transitioned, performed_by)
     DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
 
@@ -230,7 +281,7 @@ class Reviewable < ActiveRecord::Base
       )
     end
 
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if was_pending
+    was_pending
   end
 
   def post_options
@@ -263,10 +314,12 @@ class Reviewable < ActiveRecord::Base
     end
     return result if user.admin?
 
+    group_ids = SiteSetting.enable_category_group_review? ? user.group_users.pluck(:group_id) : []
+
     result.where(
       '(reviewable_by_moderator AND :staff) OR (reviewable_by_group_id IN (:group_ids))',
       staff: user.staff?,
-      group_ids: user.group_users.pluck(:group_id)
+      group_ids: group_ids
     ).where("category_id IS NULL OR category_id IN (?)", Guardian.new(user).allowed_category_ids)
   end
 
@@ -282,11 +335,10 @@ class Reviewable < ActiveRecord::Base
     type: nil,
     limit: nil,
     offset: nil,
-    min_score: nil,
+    priority: nil,
     username: nil
   )
-    min_score ||= SiteSetting.min_score_default_visibility
-
+    min_score = Reviewable.min_score_for_priority(priority)
     order = (status == :pending) ? 'score DESC, created_at DESC' : 'created_at DESC'
 
     if username.present?
@@ -301,7 +353,7 @@ class Reviewable < ActiveRecord::Base
     result = result.where(type: type) if type
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
-    result = result.where("score >= ?", min_score) if min_score
+    result = result.where("score >= ?", min_score) if min_score > 0
 
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
     if user_id
@@ -431,10 +483,10 @@ private
       RETURNING user_id, flags_agreed + flags_disagreed + flags_ignored AS total
     SQL
 
-    Jobs.enqueue(
-      :truncate_user_flag_stats,
-      user_ids: result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
-    )
+    user_ids = result.select { |r| r.total > Jobs::TruncateUserFlagStats.truncate_to }.map(&:user_id)
+    return if user_ids.blank?
+
+    Jobs.enqueue(:truncate_user_flag_stats, user_ids: user_ids)
   end
 end
 
@@ -442,13 +494,12 @@ end
 #
 # Table name: reviewables
 #
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
 #  type                    :string           not null
 #  status                  :integer          default(0), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
-#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -464,8 +515,10 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

@@ -1,4 +1,4 @@
-InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_fields) do
+InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_fields, :ip_address) do
 
   def redeem
     Invite.transaction do
@@ -12,7 +12,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite, username, name, password = nil, user_custom_fields = nil)
+  def self.create_user_from_invite(invite, username, name, password = nil, user_custom_fields = nil, ip_address = nil)
     if username && UsernameValidator.new(username).valid_format? && User.username_available?(username)
       available_username = username
     else
@@ -25,7 +25,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
       username: available_username,
       name: available_name,
       active: false,
-      trust_level: SiteSetting.default_invitee_trust_level
+      trust_level: SiteSetting.default_invitee_trust_level,
+      ip_address: ip_address,
+      registration_ip_address: ip_address
     }
 
     user = User.unstage(user_params)
@@ -73,7 +75,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   def process_invitation
     approve_account_if_needed
     add_to_private_topics_if_invited
-    add_user_to_invited_topics
     add_user_to_groups
     send_welcome_message
     notify_invitee
@@ -93,7 +94,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite, username, name, password, user_custom_fields)
+    result ||= InviteRedeemer.create_user_from_invite(invite, username, name, password, user_custom_fields, ip_address)
     result.send_welcome_message = false
     result
   end
@@ -103,16 +104,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def add_to_private_topics_if_invited
-    invite.topics.private_messages.each do |t|
-      t.topic_allowed_users.create(user_id: invited_user.id)
-    end
-  end
-
-  def add_user_to_invited_topics
-    Invite.where('invites.email = ? and invites.id != ?', invite.email, invite.id).includes(:topics).where(topics: { archetype: Archetype::private_message }).each do |i|
-      i.topics.each do |t|
-        t.topic_allowed_users.create(user_id: invited_user.id)
-      end
+    topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: invite.email }).pluck(:id)
+    topic_ids.each do |id|
+      TopicAllowedUser.create(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
     end
   end
 
@@ -133,7 +127,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     if invited_user.present? && reviewable_user = ReviewableUser.find_by(target: invited_user)
       reviewable_user.perform(
         invite.invited_by,
-        :approve,
+        :approve_user,
         send_email: false,
         approved_by_invite: true
       )

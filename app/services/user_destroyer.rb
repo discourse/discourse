@@ -23,6 +23,8 @@ class UserDestroyer
 
     prepare_for_destroy(user) if opts[:prepare_for_destroy] == true
 
+    result = nil
+
     optional_transaction(open_transaction: opts[:transaction]) do
 
       Draft.where(user_id: user.id).delete_all
@@ -71,47 +73,52 @@ class UserDestroyer
       # keep track of emails used
       user_emails = user.user_emails.pluck(:email)
 
-      user.destroy.tap do |u|
-        if u
-          if opts[:block_email]
-            user_emails.each do |email|
-              ScreenedEmail.block(email, ip_address: u.ip_address)&.record_match!
-            end
+      if result = user.destroy
+        if opts[:block_email]
+          user_emails.each do |email|
+            ScreenedEmail.block(email, ip_address: result.ip_address)&.record_match!
           end
-
-          if opts[:block_ip] && u.ip_address
-            ScreenedIpAddress.watch(u.ip_address)&.record_match!
-            if u.registration_ip_address && u.ip_address != u.registration_ip_address
-              ScreenedIpAddress.watch(u.registration_ip_address)&.record_match!
-            end
-          end
-
-          Post.unscoped.where(user_id: u.id).update_all(user_id: nil)
-
-          # If this user created categories, fix those up:
-          Category.where(user_id: u.id).each do |c|
-            c.user_id = Discourse::SYSTEM_USER_ID
-            c.save!
-            if topic = Topic.unscoped.find_by(id: c.topic_id)
-              topic.recover!
-              topic.user_id = Discourse::SYSTEM_USER_ID
-              topic.save!
-            end
-          end
-
-          unless opts[:quiet]
-            if @actor == user
-              deleted_by = Discourse.system_user
-              opts[:context] = I18n.t("staff_action_logs.user_delete_self", url: opts[:context])
-            else
-              deleted_by = @actor
-            end
-            StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
-          end
-          MessageBus.publish "/file-change", ["refresh"], user_ids: [u.id]
         end
+
+        if opts[:block_ip] && result.ip_address
+          ScreenedIpAddress.watch(result.ip_address)&.record_match!
+          if result.registration_ip_address && result.ip_address != result.registration_ip_address
+            ScreenedIpAddress.watch(result.registration_ip_address)&.record_match!
+          end
+        end
+
+        Post.unscoped.where(user_id: result.id).update_all(user_id: nil)
+
+        # If this user created categories, fix those up:
+        Category.where(user_id: result.id).each do |c|
+          c.user_id = Discourse::SYSTEM_USER_ID
+          c.save!
+          if topic = Topic.unscoped.find_by(id: c.topic_id)
+            topic.recover!
+            topic.user_id = Discourse::SYSTEM_USER_ID
+            topic.save!
+          end
+        end
+
+        unless opts[:quiet]
+          if @actor == user
+            deleted_by = Discourse.system_user
+            opts[:context] = I18n.t("staff_action_logs.user_delete_self", url: opts[:context])
+          else
+            deleted_by = @actor
+          end
+          StaffActionLogger.new(deleted_by).log_user_deletion(user, opts.slice(:context))
+        end
+        MessageBus.publish "/file-change", ["refresh"], user_ids: [result.id]
       end
     end
+
+    # After the user is deleted, remove the reviewable
+    if reviewable = Reviewable.pending.find_by(target: user)
+      reviewable.perform(@actor, :reject_user_delete)
+    end
+
+    result
   end
 
   protected

@@ -3,39 +3,39 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { longDate } from "discourse/lib/formatter";
 import { h } from "virtual-dom";
 
-const FIFTY_HOURS = 60 * 50 * 1000;
+function mult(val) {
+  return 60 * 50 * 1000 * val;
+}
+
+export function historyHeat(siteSettings, updatedAt) {
+  if (!updatedAt) {
+    return;
+  }
+
+  // Show heat on age
+  const rightNow = new Date().getTime();
+  const updatedAtTime = updatedAt.getTime();
+
+  if (updatedAtTime > rightNow - mult(siteSettings.history_hours_low)) {
+    return "heatmap-high";
+  }
+
+  if (updatedAtTime > rightNow - mult(siteSettings.history_hours_medium)) {
+    return "heatmap-med";
+  }
+
+  if (updatedAtTime > rightNow - mult(siteSettings.history_hours_high)) {
+    return "heatmap-low";
+  }
+}
 
 export default createWidget("post-edits-indicator", {
   tagName: "div.post-info.edits",
 
-  historyHeat(updatedAt) {
-    if (!updatedAt) {
-      return;
-    }
-
-    // Show heat on age
-    const rightNow = new Date().getTime();
-    const updatedAtTime = updatedAt.getTime();
-
-    const siteSettings = this.siteSettings;
-    if (updatedAtTime > rightNow - FIFTY_HOURS * siteSettings.history_hours_low)
-      return "heatmap-high";
-    if (
-      updatedAtTime >
-      rightNow - FIFTY_HOURS * siteSettings.history_hours_medium
-    )
-      return "heatmap-med";
-    if (
-      updatedAtTime >
-      rightNow - FIFTY_HOURS * siteSettings.history_hours_high
-    )
-      return "heatmap-low";
-  },
-
   html(attrs) {
     let icon = "pencil-alt";
     const updatedAt = new Date(attrs.updated_at);
-    let className = this.historyHeat(updatedAt);
+    let className = historyHeat(this.siteSettings, updatedAt);
     const date = longDate(updatedAt);
     let title;
 

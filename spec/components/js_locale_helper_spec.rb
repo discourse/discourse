@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
-require_dependency 'js_locale_helper'
 require 'mini_racer'
 
 describe JsLocaleHelper do

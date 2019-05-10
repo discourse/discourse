@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe InviteMailer do
@@ -7,7 +9,7 @@ describe InviteMailer do
     context "invite to site" do
 
       context "default invite message" do
-        let(:invite) { Fabricate(:invite) }
+        fab!(:invite) { Fabricate(:invite) }
         let(:invite_mail) { InviteMailer.send_invite(invite) }
 
         it 'renders the invitee email' do
@@ -36,7 +38,7 @@ describe InviteMailer do
       end
 
       context "custom invite message" do
-        let(:invite) { Fabricate(:invite, custom_message: "Hey, you should join this forum!") }
+        fab!(:invite) { Fabricate(:invite, custom_message: "Hey, you should join this forum!") }
 
         context "custom message includes invite link" do
           let(:custom_invite_mail) { InviteMailer.send_invite(invite) }

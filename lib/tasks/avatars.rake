@@ -6,8 +6,12 @@ task "avatars:refresh" => :environment do
   puts
 
   User.find_each do |user|
-    user.refresh_avatar
-    user.user_avatar.update_gravatar!
+    begin
+      user.refresh_avatar
+      user.user_avatar.update_gravatar!
+    rescue => e
+      puts "", "Failed to refresh avatar for #{user.username}", e, e.backtrace.join("\n")
+    end
     putc "." if (i += 1) % 10 == 0
   end
 
@@ -21,14 +25,17 @@ task "avatars:clean" => :environment do
   puts "Cleaning up avatar thumbnails"
   puts
 
-  OptimizedImage.where("upload_id IN (SELECT custom_upload_id FROM user_avatars) OR
+  optimized_image_ids = OptimizedImage.where("upload_id IN (SELECT custom_upload_id FROM user_avatars) OR
                         upload_id IN (SELECT gravatar_upload_id FROM user_avatars) OR
-                        upload_id IN (SELECT uploaded_avatar_id FROM users)")
-    .find_each do |optimized_image|
+                        upload_id IN (SELECT uploaded_avatar_id FROM users)").pluck(:id)
+
+  optimized_image_ids.each do |id|
     begin
+      optimized_image = OptimizedImage.find_by(id: id)
+      next unless optimized_image.present?
       optimized_image.destroy!
-    rescue
-      # skip
+    rescue => e
+      puts "", "Failed to cleanup avatar (optimized_image id: #{id})", e, e.backtrace.join("\n")
     end
     putc "." if (i += 1) % 10 == 0
   end

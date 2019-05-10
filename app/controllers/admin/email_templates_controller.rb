@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::EmailTemplatesController < Admin::AdminController
 
   def self.email_keys

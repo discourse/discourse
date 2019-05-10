@@ -1,5 +1,3 @@
-import parseHTML from "discourse/helpers/parse-html";
-
 const trimLeft = text => text.replace(/^\s+/, "");
 const trimRight = text => text.replace(/\s+$/, "");
 const countPipes = text => (text.replace(/\\\|/, "").match(/\|/g) || []).length;
@@ -495,10 +493,9 @@ function tags() {
 class Element {
   constructor(element, parent, previous, next) {
     this.name = element.name;
-    this.type = element.type;
     this.data = element.data;
     this.children = element.children;
-    this.attributes = element.attributes || {};
+    this.attributes = element.attributes;
 
     if (parent) {
       this.parent = parent;
@@ -554,14 +551,7 @@ class Element {
   }
 
   toMarkdown() {
-    switch (this.type) {
-      case "text":
-        return this.text();
-        break;
-      case "tag":
-        return this.tag().toMarkdown();
-        break;
-    }
+    return this.name === "#text" ? this.text() : this.tag().toMarkdown();
   }
 
   filterParentNames(names) {
@@ -628,7 +618,42 @@ function putPlaceholders(html) {
     match = codeRegEx.exec(origHtml);
   }
 
-  const elements = parseHTML(trimUnwanted(html));
+  const transformNode = node => {
+    if (node.nodeName !== "#text" && node.length !== undefined) {
+      const ret = [];
+      for (let i = 0; i < node.length; ++i) {
+        if (node[i].nodeName !== "#comment") {
+          ret.push(transformNode(node[i]));
+        }
+      }
+      return ret;
+    }
+
+    const ret = {
+      name: node.nodeName.toLowerCase(),
+      data: node.data,
+      children: [],
+      attributes: {}
+    };
+
+    if (node.nodeName === "#text") {
+      return ret;
+    }
+
+    for (let i = 0; i < node.childNodes.length; ++i) {
+      if (node.childNodes[i].nodeName !== "#comment") {
+        ret.children.push(transformNode(node.childNodes[i]));
+      }
+    }
+
+    for (let i = 0; i < node.attributes.length; ++i) {
+      ret.attributes[node.attributes[i].name] = node.attributes[i].value;
+    }
+
+    return ret;
+  };
+
+  const elements = transformNode($.parseHTML(trimUnwanted(html)));
   return { elements, placeholders };
 }
 

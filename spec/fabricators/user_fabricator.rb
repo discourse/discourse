@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 Fabricator(:user_stat) do
 end
 
-Fabricator(:user_single_email, class_name: :user) do
+Fabricator(:user, class_name: :user) do
   name 'Bruce Wayne'
   username { sequence(:username) { |i| "bruce#{i}" } }
   email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
@@ -11,7 +13,7 @@ Fabricator(:user_single_email, class_name: :user) do
   active true
 end
 
-Fabricator(:user, from: :user_single_email) do
+Fabricator(:user_with_secondary_email, from: :user) do
   after_create { |user| Fabricate(:secondary_email, user: user) }
 end
 

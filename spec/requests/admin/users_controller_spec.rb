@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'discourse_ip_info'
 
 RSpec.describe Admin::UsersController do
-  let(:admin) { Fabricate(:admin) }
-  let(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
 
   it 'is a subclass of AdminController' do
     expect(Admin::UsersController < Admin::AdminController).to eq(true)
@@ -56,11 +58,10 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#approve' do
+    let(:evil_trout) { Fabricate(:evil_trout) }
     before do
       SiteSetting.must_approve_users = true
     end
-
-    let(:evil_trout) { Fabricate(:evil_trout) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -70,7 +71,18 @@ RSpec.describe Admin::UsersController do
       expect(evil_trout.approved).to eq(false)
     end
 
+    it "will create a reviewable if one does not exist" do
+      evil_trout.update!(active: true)
+      expect(ReviewableUser.find_by(target: evil_trout)).to be_blank
+      put "/admin/users/#{evil_trout.id}/approve.json"
+      expect(response.code).to eq("200")
+      expect(ReviewableUser.find_by(target: evil_trout)).to be_present
+      expect(evil_trout.reload).to be_approved
+    end
+
     it 'calls approve' do
+      Jobs.run_immediately!
+      evil_trout.activate
       put "/admin/users/#{evil_trout.id}/approve.json"
       expect(response.status).to eq(200)
       evil_trout.reload
@@ -102,6 +114,8 @@ RSpec.describe Admin::UsersController do
     end
 
     it "approves the user when permitted" do
+      Jobs.run_immediately!
+      evil_trout.activate
       put "/admin/users/approve-bulk.json", params: { users: [evil_trout.id] }
       expect(response.status).to eq(200)
       evil_trout.reload
@@ -129,7 +143,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#suspend' do
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now,
         reason: "because of this post",
@@ -218,7 +232,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#revoke_admin' do
-    let(:another_admin) { Fabricate(:admin) }
+    fab!(:another_admin) { Fabricate(:admin) }
 
     it 'raises an error unless the user can revoke access' do
       sign_in(user)
@@ -237,7 +251,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#grant_admin' do
-    let(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { Fabricate(:coding_horror) }
 
     after do
       $redis.flushall
@@ -264,7 +278,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#add_group' do
-    let(:group) { Fabricate(:group) }
+    fab!(:group) { Fabricate(:group) }
 
     it 'adds the user to the group' do
       post "/admin/users/#{user.id}/groups.json", params: {
@@ -301,7 +315,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#trust_level' do
-    let(:another_user) { Fabricate(:coding_horror, created_at: 1.month.ago) }
+    fab!(:another_user) { Fabricate(:coding_horror, created_at: 1.month.ago) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -334,7 +348,7 @@ RSpec.describe Admin::UsersController do
       stat.posts_read_count = SiteSetting.tl1_requires_read_posts + 1
       stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
       stat.save!
-      another_user.update_attributes(trust_level: TrustLevel[1])
+      another_user.update(trust_level: TrustLevel[1])
 
       put "/admin/users/#{another_user.id}/trust_level.json", params: {
         level: TrustLevel[0]
@@ -348,7 +362,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#grant_moderation' do
-    let(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_user) { Fabricate(:coding_horror) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -370,7 +384,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#revoke_moderation' do
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it 'raises an error unless the user can revoke access' do
       sign_in(user)
@@ -389,9 +403,9 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#primary_group' do
-    let(:group) { Fabricate(:group) }
-    let(:another_user) { Fabricate(:coding_horror) }
-    let(:another_group) { Fabricate(:group, title: 'New') }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:another_user) { Fabricate(:coding_horror) }
+    fab!(:another_group) { Fabricate(:group, title: 'New') }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -476,7 +490,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#destroy' do
-    let(:delete_me) { Fabricate(:user) }
+    fab!(:delete_me) { Fabricate(:user) }
 
     it "returns a 403 if the user doesn't exist" do
       delete "/admin/users/123123drink.json"
@@ -511,7 +525,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#activate' do
-    let(:reg_user) { Fabricate(:inactive_user) }
+    fab!(:reg_user) { Fabricate(:inactive_user) }
 
     it "returns success" do
       put "/admin/users/#{reg_user.id}/activate.json"
@@ -537,7 +551,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#log_out' do
-    let(:reg_user) { Fabricate(:user) }
+    fab!(:reg_user) { Fabricate(:user) }
 
     it "returns success" do
       post "/admin/users/#{reg_user.id}/log_out.json"
@@ -553,7 +567,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#silence' do
-    let(:reg_user) { Fabricate(:user) }
+    fab!(:reg_user) { Fabricate(:user) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -625,7 +639,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#unsilence' do
-    let(:reg_user) { Fabricate(:user, silenced_till: 10.years.from_now) }
+    fab!(:reg_user) { Fabricate(:user, silenced_till: 10.years.from_now) }
 
     it "raises an error when the user doesn't have permission" do
       sign_in(user)
@@ -652,8 +666,8 @@ RSpec.describe Admin::UsersController do
   end
 
   describe '#reject_bulk' do
-    let(:reject_me)     { Fabricate(:user) }
-    let(:reject_me_too) { Fabricate(:user) }
+    fab!(:reject_me)     { Fabricate(:user) }
+    fab!(:reject_me_too) { Fabricate(:user) }
 
     it 'does nothing without users' do
       delete "/admin/users/reject-bulk.json"
@@ -782,6 +796,8 @@ RSpec.describe Admin::UsersController do
       expect(u.name).to eq("Bill")
       expect(u.username).to eq("bill22")
       expect(u.admin).to eq(true)
+      expect(u.active).to eq(true)
+      expect(u.approved).to eq(true)
     end
 
     it "doesn't send the email with send_email falsey" do
@@ -915,7 +931,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#penalty_history" do
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
     let(:logger) { StaffActionLogger.new(admin) }
 
     it "doesn't allow moderators to clear a user's history" do

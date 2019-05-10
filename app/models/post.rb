@@ -20,6 +20,7 @@ class Post < ActiveRecord::Base
   self.plugin_permitted_create_params = {}
 
   # increase this number to force a system wide post rebake
+  # Recreate `index_for_rebake_old` when the number is increased
   # Version 1, was the initial version
   # Version 2 15-12-2017, introduces CommonMark and a huge number of onebox fixes
   BAKED_VERSION = 2
@@ -62,8 +63,13 @@ class Post < ActiveRecord::Base
   LARGE_IMAGES      ||= "large_images".freeze
   BROKEN_IMAGES     ||= "broken_images".freeze
   DOWNLOADED_IMAGES ||= "downloaded_images".freeze
+  MISSING_UPLOADS ||= "missing uploads".freeze
+  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored".freeze
 
   SHORT_POST_CHARS ||= 1200
+
+  register_custom_field_type(MISSING_UPLOADS, :json)
+  register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
 
   scope :private_posts_for_user, ->(user) {
     where("posts.topic_id IN (SELECT topic_id
@@ -86,15 +92,16 @@ class Post < ActiveRecord::Base
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where('topics.subtype = ?', subtype) }
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, -> (guardian) { where('posts.post_type IN (?)', Topic.visible_post_types(guardian&.user)) }
+
   scope :for_mailing_list, ->(user, since) {
     q = created_since(since)
-      .joins(:topic)
-      .where(topic: Topic.for_digest(user, Time.at(0))) # we want all topics with new content, regardless when they were created
+      .joins("INNER JOIN (#{Topic.for_digest(user, Time.at(0)).select(:id).to_sql}) AS digest_topics ON digest_topics.id = posts.topic_id") # we want all topics with new content, regardless when they were created
+      .order('posts.created_at ASC')
 
     q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
-
-    q.order('posts.created_at ASC')
+    q
   }
+
   scope :raw_match, -> (pattern, type = 'string') {
     type = type&.downcase
 
@@ -104,6 +111,13 @@ class Post < ActiveRecord::Base
     when 'regex'
       where('raw ~* ?', "(?n)#{pattern}")
     end
+  }
+
+  scope :have_uploads, -> {
+    where(
+      "(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND (posts.cooked LIKE ? OR posts.cooked LIKE '%/original/%' OR posts.cooked LIKE '%/optimized/%')",
+      "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
+    )
   }
 
   delegate :username, to: :user
@@ -128,6 +142,12 @@ class Post < ActiveRecord::Base
     @cook_methods ||= Enum.new(regular: 1,
                                raw_html: 2,
                                email: 3)
+  end
+
+  def self.notices
+    @notices ||= Enum.new(custom: "custom",
+                          new_user: "new_user",
+                          returning_user: "returning_user")
   end
 
   def self.find_by_detail(key, value)
@@ -239,7 +259,7 @@ class Post < ActiveRecord::Base
     raw_links
     has_oneboxes?}.each do |attr|
     define_method(attr) do
-      post_analyzer.send(attr)
+      post_analyzer.public_send(attr)
     end
   end
 
@@ -377,8 +397,8 @@ class Post < ActiveRecord::Base
   end
 
   def delete_post_notices
-    self.custom_fields.delete("post_notice_type")
-    self.custom_fields.delete("post_notice_time")
+    self.custom_fields.delete("notice_type")
+    self.custom_fields.delete("notice_args")
     self.save_custom_fields
   end
 
@@ -452,10 +472,6 @@ class Post < ActiveRecord::Base
     post_actions.where(post_action_type_id: PostActionType.flag_types_without_custom.values, deleted_at: nil).count != 0
   end
 
-  def active_flags
-    post_actions.active.where(post_action_type_id: PostActionType.flag_types_without_custom.values)
-  end
-
   def reviewable_flag
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
@@ -502,8 +518,8 @@ class Post < ActiveRecord::Base
   end
 
   def unhide!
-    self.update_attributes(hidden: false)
-    self.topic.update_attributes(visible: true) if is_first_post?
+    self.update(hidden: false)
+    self.topic.update(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)
   end
@@ -603,7 +619,11 @@ class Post < ActiveRecord::Base
     new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
     old_cooked = cooked
 
-    update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
+    update_columns(
+      cooked: new_cooked,
+      baked_at: Time.zone.now,
+      baked_version: BAKED_VERSION
+    )
 
     if invalidate_broken_images
       custom_fields.delete(BROKEN_IMAGES)
@@ -650,36 +670,6 @@ class Post < ActiveRecord::Base
     $redis.setex("estimated_posts_per_day", 1.day.to_i, posts_per_day.to_s)
     posts_per_day
 
-  end
-
-  # This calculates the geometric mean of the post timings and stores it along with
-  # each post.
-  def self.calculate_avg_time(min_topic_age = nil)
-    retry_lock_error do
-      builder = DB.build("UPDATE posts
-                SET avg_time = (x.gmean / 1000)
-                FROM (SELECT post_timings.topic_id,
-                             post_timings.post_number,
-                             round(exp(avg(CASE WHEN msecs > 0 THEN ln(msecs) ELSE 0 END))) AS gmean
-                      FROM post_timings
-                      INNER JOIN posts AS p2
-                        ON p2.post_number = post_timings.post_number
-                          AND p2.topic_id = post_timings.topic_id
-                          AND p2.user_id <> post_timings.user_id
-                      GROUP BY post_timings.topic_id, post_timings.post_number) AS x
-                /*where*/")
-
-      builder.where("x.topic_id = posts.topic_id
-                  AND x.post_number = posts.post_number
-                  AND (posts.avg_time <> (x.gmean / 1000)::int OR posts.avg_time IS NULL)")
-
-      if min_topic_age
-        builder.where("posts.topic_id IN (SELECT id FROM topics where bumped_at > :bumped_at)",
-                     bumped_at: min_topic_age)
-      end
-
-      builder.exec
-    end
   end
 
   before_save do
@@ -867,12 +857,12 @@ class Post < ActiveRecord::Base
 
   def link_post_uploads(fragments: nil)
     upload_ids = []
-    fragments ||= Nokogiri::HTML::fragment(self.cooked)
 
-    fragments.css("a/@href", "img/@src").each do |media|
-      if upload = Upload.get_from_url(media.value)
-        upload_ids << upload.id
-      end
+    each_upload_url(fragments: fragments) do |src, _, sha1|
+      upload = nil
+      upload = Upload.find_by(sha1: sha1) if sha1.present?
+      upload ||= Upload.get_from_url(src)
+      upload_ids << upload.id if upload.present?
     end
 
     upload_ids |= Upload.where(id: downloaded_images.values).pluck(:id)
@@ -891,6 +881,89 @@ class Post < ActiveRecord::Base
     JSON.parse(self.custom_fields[Post::DOWNLOADED_IMAGES].presence || "{}")
   rescue JSON::ParserError
     {}
+  end
+
+  def each_upload_url(fragments: nil, include_local_upload: true)
+    upload_patterns = [
+      /\/uploads\/#{RailsMultisite::ConnectionManagement.current_db}\//,
+      /\/original\//,
+      /\/optimized\//
+    ]
+    fragments ||= Nokogiri::HTML::fragment(self.cooked)
+    links = fragments.css("a/@href", "img/@src").map { |media| media.value }.uniq
+
+    links.each do |src|
+      next if src.blank? || upload_patterns.none? { |pattern| src =~ pattern }
+
+      src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+      next unless Discourse.store.has_been_uploaded?(src) || (include_local_upload && src =~ /\A\/[^\/]/i)
+
+      path = begin
+        URI(URI.unescape(src))&.path
+      rescue URI::Error
+      end
+
+      next if path.blank?
+
+      sha1 =
+        if path.include? "optimized"
+          OptimizedImage.extract_sha1(path)
+        else
+          Upload.extract_sha1(path)
+        end
+
+      yield(src, path, sha1)
+    end
+  end
+
+  def self.find_missing_uploads(include_local_upload: true)
+    PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+    missing_uploads = []
+    missing_post_uploads = {}
+    query = Post
+      .have_uploads
+      .joins("LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'")
+      .where("post_custom_fields.id IS NULL")
+      .select(:id, :cooked)
+
+    query.find_in_batches do |posts|
+      ids = posts.pluck(:id)
+      sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+
+      posts.each do |post|
+        post.each_upload_url do |src, path, sha1|
+          next if sha1.present? && sha1s.include?(sha1)
+
+          missing_post_uploads[post.id] ||= []
+
+          if missing_uploads.include?(src)
+            missing_post_uploads[post.id] << src
+            next
+          end
+
+          upload_id = nil
+          upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
+          upload_id ||= yield(post, src, path, sha1)
+
+          if upload_id.present?
+            attributes = { post_id: post.id, upload_id: upload_id }
+            PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
+          else
+            missing_uploads << src
+            missing_post_uploads[post.id] << src
+          end
+        end
+      end
+    end
+
+    count = 0
+    missing_post_uploads = missing_post_uploads.reject { |_, uploads| uploads.empty? }
+    missing_post_uploads.reject do |post_id, uploads|
+      PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
+      count += uploads.count
+    end
+
+    return { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
   private
@@ -983,6 +1056,8 @@ end
 #  idx_posts_created_at_topic_id             (created_at,topic_id) WHERE (deleted_at IS NULL)
 #  idx_posts_deleted_posts                   (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
 #  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
+#  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_reply_to_post_number       (reply_to_post_number)
 #  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE

@@ -1,33 +1,16 @@
 import ClickTrack from "discourse/lib/click-track";
-import { selectedText } from "discourse/lib/utilities";
 
 export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.$().on("mouseup.discourse-redirect", "#revisions a", function(e) {
-      // bypass if we are selecting stuff
-      const selection = window.getSelection && window.getSelection();
-      if (selection.type === "Range" || selection.rangeCount > 0) {
-        if (selectedText() !== "") {
-          return true;
-        }
-      }
-
-      const $target = $(e.target);
-      if (
-        $target.hasClass("mention") ||
-        $target.parents(".expanded-embed").length
-      ) {
-        return false;
-      }
-
+    $(this.element).on("click.discourse-redirect", "a", function(e) {
       return ClickTrack.trackClick(e);
     });
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.$().off("mouseup.discourse-redirect", "#revisions a");
+    $(this.element).off("click.discourse-redirect", "a");
   }
 });

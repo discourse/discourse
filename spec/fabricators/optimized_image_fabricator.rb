@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:optimized_image) do
   upload
   sha1 "86f7e437faa5a7fce15d1ddcb9eaeaea377667b8"

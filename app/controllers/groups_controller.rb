@@ -1,4 +1,6 @@
 class GroupsController < ApplicationController
+  include ApplicationHelper
+
   requires_login only: [
     :set_notifications,
     :mentionable,
@@ -42,7 +44,7 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    page_size = 30
+    page_size = mobile_device? ? 15 : 36
     page = params[:page]&.to_i || 0
     order = %w{name user_count}.delete(params[:order])
     dir = params[:asc] ? 'ASC' : 'DESC'
@@ -408,12 +410,13 @@ class GroupsController < ApplicationController
   def request_membership
     params.require(:reason)
 
-    unless current_user.staff?
-      RateLimiter.new(current_user, "request_group_membership", 1, 1.day).performed!
-    end
-
     group = find_group(:id)
-    group_name = group.name
+
+    begin
+      GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
+    rescue ActiveRecord::RecordNotUnique => e
+      return render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")), status: 409
+    end
 
     usernames = [current_user.username].concat(
       group.users.where('group_users.owner')
@@ -432,14 +435,12 @@ class GroupsController < ApplicationController
     EOF
 
     post = PostCreator.new(current_user,
-      title: I18n.t('groups.request_membership_pm.title', group_name: group_name),
+      title: I18n.t('groups.request_membership_pm.title', group_name: group.name),
       raw: raw,
       archetype: Archetype.private_message,
       target_usernames: usernames.join(','),
       skip_validations: true
     ).create!
-
-    GroupRequest.create!(group: group, user: current_user, reason: params[:reason])
 
     render json: success_json.merge(relative_url: post.topic.relative_url)
   end
@@ -507,6 +508,7 @@ class GroupsController < ApplicationController
           mentionable_level
           messageable_level
           default_notification_level
+          bio_raw
         }
       else
         default_params = %i{

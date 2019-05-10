@@ -1,5 +1,6 @@
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend(GrantBadgeController, {
   adminUser: Ember.inject.controller(),
@@ -10,7 +11,8 @@ export default Ember.Controller.extend(GrantBadgeController, {
   sortedBadges: Ember.computed.sort("model", "badgeSortOrder"),
   badgeSortOrder: ["granted_at:desc"],
 
-  groupedBadges: function() {
+  @computed("model", "model.[]", "model.expandedBadges.[]")
+  groupedBadges() {
     const allBadges = this.get("model");
 
     var grouped = _.groupBy(allBadges, badge => badge.badge_id);
@@ -46,7 +48,7 @@ export default Ember.Controller.extend(GrantBadgeController, {
       .sortBy(group => group.granted_at)
       .reverse()
       .value();
-  }.property("model", "model.[]", "model.expandedBadges.[]"),
+  },
 
   actions: {
     expandGroup: function(userBadge) {

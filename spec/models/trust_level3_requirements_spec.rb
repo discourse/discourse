@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TrustLevel3Requirements do
 
   let(:user) { Fabricate.build(:user) }
   subject(:tl3_requirements) { described_class.new(user) }
-  let(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   before do
     described_class.clear_cache

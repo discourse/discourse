@@ -27,6 +27,7 @@ export default Ember.Component.extend({
   @computed("currentTargetName", "fieldName")
   activeSectionMode(targetName, fieldName) {
     if (["settings", "translations"].includes(targetName)) return "yaml";
+    if (["extra_scss"].includes(targetName)) return "scss";
     return fieldName && fieldName.indexOf("scss") > -1 ? "scss" : "html";
   },
 
@@ -73,7 +74,7 @@ export default Ember.Component.extend({
 
     addField(name) {
       if (!name) return;
-      name = name.replace(/\W/g, "");
+      name = name.replace(/[^a-zA-Z0-9-_/]/g, "");
       this.get("theme").setField(this.get("currentTargetName"), name, "");
       this.setProperties({ newFieldName: "", addingField: false });
       this.fieldAdded(this.get("currentTargetName"), name);

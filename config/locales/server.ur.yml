@@ -37,6 +37,8 @@ ur:
   redirect_warning: "ہم تصدیق نہ کر سکے کہ آپ کا منتخب کردہ لِنک اصل میں فورم پر شائع کیا گیا تھا کہ نہیں۔ اگر آپ پھر بھی آگے بڑھنا چاہتے ہیں، تو نیچے دیئے گئے لِنک کو منتخب کریں۔"
   themes:
     other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"
+    import_error:
+      git: "گِٹ رِیپَوزِٹَری کلَون کرنے میں خرابی، رسائی کی اجازت نہیں یا رِیپَوزِٹَری موجود نہیں ہے"
     settings_errors:
       invalid_yaml: "فراہم کردہ YAML غلط ہے۔"
       data_type_not_a_number: "ترتیب `%{name}` کی قسم کی اجازت نہیں ہے۔ اجازت یافتہ اقسام `integer'،` bool`، `list` اور `enum` ہیں"
@@ -237,9 +239,6 @@ ur:
   too_late_to_edit: "یہ پوسٹ بہت دیر پہلے بنائی گئی تھی۔ یہ مزید ترمیم یا حذف نہیں کی جا سکتی۔"
   revert_version_same: "موجودہ وَرژن وہی وَرژن ہے جسے آپ واپس لوٹانے کی کوشش کررہے ہیں۔"
   excerpt_image: "تصویر"
-  queue:
-    delete_reason: "پوسٹ ماڈرَیشَن قطار کے ذریعے حذف کر دیا گیا"
-    not_found: "پوسٹ نہیں مل سکی یا پہلے سے ہی اَپ ڈیٹ ہو چکی ہے۔"
   groups:
     errors:
       can_not_modify_automatic: "آپ ایک خودکار گروپ کو ترمیم نہیں کر سکتے ہیں"
@@ -333,6 +332,7 @@ ur:
       topic:
         title: "عنوان"
         featured_link: "نمایاں لنک"
+        category_id: "زمرہ"
       post:
         raw: "متن"
       user_profile:
@@ -582,6 +582,9 @@ ur:
       grant: "عطا ایڈمن رسائی"
       complete: "<b>%{target_username}</b> اب ایک ایڈمِنِسٹریٹر ہے۔"
       back_to: "%{title} پر واپس جائیں"
+  reviewable_score_types:
+    needs_approval:
+      title: "منظوری کی ضرورت ہے"
   post_action_types:
     off_topic:
       title: "موضوع سے ہٹ کر"
@@ -645,6 +648,7 @@ ur:
     notify_moderators:
       title: "کچھ اور"
       long_form: "اِس کو ماڈریٹر کی توجہ کیلئے فلَیگ کیا گیا"
+      short_description: "اسٹاف کی توجہ کسی اور وجہ کی بناہ پر درکار ہے"
       email_title: 'ٹاپک "%{title}" پر اسٹاف کی توجہ درکار ہے'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -659,8 +663,6 @@ ur:
         make: "یہ ٹاپک اب ایک بَینر ہے۔ یہ ہر صفحے کے سب سے اوپر دکھایا جائے گا جب تک صارف اِسے برخاست نہیں کر دیتا۔"
         remove: "یہ ٹاپک اب بینر نہیں ہے۔ یہ اب ہر صفحے کے سب سے اوپر دکھایا نہیں جائے گا۔"
   unsubscribed:
-    title: "غیر سَبسکرائب شدہ!"
-    description: "<b>%{email}</b> کو غیر سَبسکرائب کر دیا گیا ہے۔ اپنی ای میل کی ترتیبات کو تبدیل کرنے کیلئے <a href='%{url}'>اپنی صارفی ترجیحات پر جائیں</a>۔"
     topic_description: "%{link} پر دوبارہ سَبسکرائب کرنے کیلئے، ٹاپک کے نچلے حصے یا دائیں جانب اطلاعات کنٹرول کا استعمال کریں۔"
   unsubscribe:
     title: "غیر سَبسکرائب"
@@ -668,11 +670,16 @@ ur:
     mute_topic: "اِس ٹاپک کیلئے تمام اطلاعات کو خاموش کر دیں، %{link}"
     unwatch_category: "%{category} میں تمام ٹاپکس کو دیکھنا چھوڑ دیں"
     mailing_list_mode: "مَیلِنگ لِسٹ مَوڈ بند کریں"
-    disable_digest_emails: "مجھے خلاصہ ای میلزبھیجنا روک دیں"
     all: "مجھے %{sitename} سے کوئی میل نہ بھیجیں"
     different_user_description: "جس صارف کو ہم نے اِی میل کی، آپ اُس سے مختلف صارف کے طور پر لاگ اِن ہیں۔ براہ مہربانی لاگ آوٹ کریں، یا گمنام مَوڈ میں داخل ہوں، اور دوبارہ کوشش کریں۔"
     not_found_description: "معذرت، ہم اِس غیر سَبسکرائب کو تلاش نہ کرسکے۔ ممکن ہے کہ آپ کے ای میل میں لِنک کی میعاد ختم ہوگئی ہے؟"
     log_out: "لاگ آُوٹ"
+    digest_frequency:
+      never: "کبھی نہیں "
+      every_30_minutes: "ہر 30 منٹ"
+      every_hour: "گھنٹہ وار"
+      daily: "روزانہ "
+      weekly: "ہفتہ وار"
   user_api_key:
     title: "ایپلیکیشن ایکسَیس کی اجازت دیں"
     authorize: "اجازت دیں"
@@ -689,11 +696,41 @@ ur:
       read: "تمام رِیڈ"
       write: " تمام رائیٹ"
   reports:
+    default:
+      labels:
+        day: دن
+    post_edits:
+      labels:
+        post: پوسٹ
+        editor: ترمیم کنندہ
+        edit_reason: وجہ
+    user_flagging_ratio:
+      labels:
+        user: صارف
+    moderators_activity:
+      labels:
+        moderator: ماڈریٹر
+    flags_status:
+      labels:
+        flag: قِسم
+        assigned: اسائین کردہ
     visits:
       title: "صارف وِزِٹس"
       xaxis: "دن"
       yaxis: "وِزِٹس کی تعداد"
     signups:
+      xaxis: "دن"
+    new_contributors:
+      xaxis: "دن"
+    consolidated_page_views:
+      yaxis: "دن"
+      labels:
+        post: پوسٹ
+        editor: ترمیم کنندہ
+        edit_reason: وجہ
+    dau_by_mau:
+      xaxis: "دن"
+    daily_engaged_users:
       xaxis: "دن"
     profile_views:
       title: "صارف پروفائل وِیوز"
@@ -723,6 +760,20 @@ ur:
       title: "صارفین فی ٹرسٹ لَیول"
       xaxis: "ٹرسٹ لَیول"
       yaxis: "صارفین کی تعداد"
+    users_by_type:
+      xaxis: "قِسم"
+      yaxis: "صارفین کی تعداد"
+      labels:
+        type: قِسم
+      xaxis_labels:
+        admin: منتظم
+        moderator: ماڈریٹر
+        suspended: معطل کردہ
+        silenced: خاموش کیو ہوئے
+    trending_search:
+      labels:
+        term: اصطلاح
+        searches: سرچز
     emails:
       title: "بھیجی گئیں اِی میل"
       xaxis: "دن"
@@ -731,6 +782,7 @@ ur:
       xaxis: "دن"
       yaxis: "پیغامات کی تعداد"
     user_to_user_private_messages_with_replies:
+      title: "صارف-سے-صارف (جوابات کے ساتھ)"
       xaxis: "دن"
       yaxis: "پیغامات کی تعداد"
     system_private_messages:
@@ -754,14 +806,25 @@ ur:
       xaxis: "صارف"
       num_clicks: "کلِکس"
       num_topics: "ٹاپک"
+      labels:
+        user: "صارف"
+        num_clicks: "کلِکس"
+        num_topics: "ٹاپک"
     top_traffic_sources:
       title: "ٹریفک کے ٹاپ ذرائع"
       xaxis: "ڈَومَین"
       num_clicks: "کلِکس"
       num_topics: "ٹاپک"
       num_users: "صارفین"
+      labels:
+        domain: ڈَومَین
+        num_clicks: کلِکس
+        num_topics: ٹاپک
     top_referred_topics:
       title: "ٹاپ تجویز کردہ ٹاپک"
+      labels:
+        num_clicks: "کلِکس"
+        topic: "ٹاپک"
     page_view_anon_reqs:
       title: "گمنام"
       xaxis: "دن"
@@ -771,9 +834,11 @@ ur:
       xaxis: "دن"
       yaxis: "صفحہ کے لاگڈ اِن ملاحظات"
     page_view_crawler_reqs:
+      title: "صفحہ کے وَیب کرالر ملاحظات"
       xaxis: "دن"
       yaxis: "صفحہ کے وَیب کرالر ملاحظات"
     page_view_total_reqs:
+      title: "صفحہ ملاحظات"
       xaxis: "دن"
       yaxis: "صفحہ کے کُل ملاحظات"
     page_view_logged_in_mobile_reqs:
@@ -819,6 +884,21 @@ ur:
     mobile_visits:
       xaxis: "دن"
       yaxis: "وِزِٹس کی تعداد"
+    web_crawlers:
+      labels:
+        user_agent: "صارف ایجنٹ"
+        page_views: "صفحہ ملاحظات"
+    suspicious_logins:
+      labels:
+        user: صارف
+        location: محل وقوع
+    staff_logins:
+      labels:
+        user: صارف
+        location: محل وقوع
+    top_uploads:
+      labels:
+        filename: فائل کا نام
   dashboard:
     rails_env_warning: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"
     host_names_warning: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
@@ -907,7 +987,6 @@ ur:
     tl2_additional_likes_per_day_multiplier: "اِس نمبر کے ساتھ ضرب کر کے ٹ.ل.2 (ممبر) کیلئے فی دن لائیکس کی حد میں اضافہ کریں"
     tl3_additional_likes_per_day_multiplier: "اِس نمبر کے ساتھ ضرب کر کے ٹ.ل.3 (رَیگولر) کیلئے فی دن لائیکس کی حد میں اضافہ کریں"
     tl4_additional_likes_per_day_multiplier: "اِس نمبر کے ساتھ ضرب کر کے ٹ.ل.4 (لِیڈر) کیلئے فی دن لائیکس کی حد میں اضافہ کریں"
-    num_spam_flags_to_silence_new_user: "اگر کسی نئے صارف کی پوسٹس کو num_users_to_silence_new_user مختلف صارفین سے اتنے سپَیم فلَیگز ملیں، تو اُن کی تمام پوسٹس کو چھپا اور مستقبل کی اشاعت کو روک دیں۔ غیر فعال کرنے کیلئے 0۔"
     num_users_to_silence_new_user: "اگر کسی نئے صارف کی پوسٹس کو اتنے مختلف صارفین سے num_spam_flags_to_silence_new_user سپَیم فلَیگز ملیں، تو اُن کی تمام پوسٹس کو چھپا اور مستقبل کی اشاعت کو روک دیں۔ غیر فعال کرنے کیلئے 0۔"
     num_tl3_flags_to_silence_new_user: "اگر کسی نئے صارف کی پوسٹس کو num_tl3_users_to_silence_new_user مختلف ٹرسٹ لَیول 3 والے صارفین سے اتنے فلَیگز ملیں، تو اُن کی تمام پوسٹس کو چھپا اور مستقبل کی اشاعت کو روک دیں۔ غیر فعال کرنے کیلئے 0۔"
     num_tl3_users_to_silence_new_user: "اگر کسی نئے صارف کی پوسٹس کو اتنے مختلف ٹرسٹ لَیول 3 والے صارفین سے num_tl3_flags_to_silence_new_user فلَیگز ملیں، تو اُن کی تمام پوسٹس کو چھپا اور مستقبل کی اشاعت کو روک دیں۔ غیر فعال کرنے کیلئے 0۔"
@@ -918,6 +997,7 @@ ur:
     must_approve_users: "سائٹ تک رسائی حاصل کرنے سے پہلے اسٹاف کو تمام نئے صارف اکاؤنٹس کو منظور کرنا ضروری ہے۔ انتباہ: کسی لائیو سائٹ کیلئے اِس کو فعال کرنے سے غیر اسٹاف صارفین کیلئے رسائی منسوخ ہو جائے گی!"
     pending_users_reminder_delay: "ماڈریٹرز کو مطلع کریں اگر نئے صارفین اِس سے زیادہ گھنٹوں سے منظوری کے منتظر ہوں۔ اطلاعات کو غیر فعال کرنے کیلئے -1 سَیٹ کریں۔"
     maximum_session_age: "آخری وزٹ سے ن گھنٹوں بعد تک صارف کو لاگڈ اِن رکھا جائے گا"
+    moderators_create_categories: "منتظمین کو نئے زُمرہ جات بنانے کی اجازت دیں"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"
     use_admin_ip_whitelist: "ایڈمن صرف اُس صورت میں لاگ ان کرسکتے ہیں اگر وہ ایسے IP ایڈریس میں ہیں جو اسکرین کردہ آئی پیز کی فہرست (ایڈمن > لاگز > اسکرین کردہ آئی پیز) میں بیان کیا گیا ہو۔"
     blacklist_ip_blocks: "نجی IP بلاکس کی فہرست جو ڈِسکَورس کی طرف سے کبھی کرال نہیں ہونی چاہئیں"
@@ -971,7 +1051,6 @@ ur:
     enable_local_logins_via_email: "صارفین کو بذریعہ ای میل بھیجے جانے والے ایک کلِک لاگ اِن لِنک کی درخواست کرنے کی اجازت دیں۔"
     allow_new_registrations: "نئے صارف رجسٹریشنوں کی اجازت دیں۔ کسی کو نیا اکاؤنٹ بنانے سے روکنے کیلئے اس کو غیر چیک شدہ کریں۔"
     enable_signup_cta: "واپس آنے والے گمنام صارفین کو ایک نوٹس دکھائیں جو اُنہیں اکاؤنٹ بنانے کیلۓ قائل کرے۔"
-    enable_yahoo_logins: "یاہُو توثیق کو فعال کریں"
     google_oauth2_client_id: "آپ کی گُوگل ایپلی کیشن کی کلائنٹ آئی ڈی."
     google_oauth2_client_secret: "آپ کی گُوگل ایپلی کیشن کا کلائنٹ سیکرٹ."
     enable_instagram_logins: "اِنسٹاگرام توثیق کو فعال کریں، instagram_consumer_key اور instagram_consumer_secret کی ضرورت ہے"
@@ -1122,7 +1201,6 @@ ur:
     max_age_unmatched_emails: "غیر مَیچ شدہ سکرین کردہ ای میل اندراجات (ن) دنوں کے بعد حذف کر دیں۔"
     max_age_unmatched_ips: "غیر مَیچ شدہ سکرین کردہ IP اندراجات (ن) دنوں کے بعد حذف کر دیں۔"
     num_flaggers_to_close_topic: "ٹاپک کو مداخلت کیلئے خود کار طریقے سے روک دینے کیلئے فلَیگ کرنے والوں کی کم از کم تعداد"
-    num_flags_to_close_topic: "ٹاپک کو مداخلت کیلئے خود کار طریقے سے روک دینے کیلئے فعال فلَیگز کی کم از کم تعداد"
     num_hours_to_close_topic: "مداخلت کیلئے ٹاپک کو روک دینے کیلئے گھنٹوں کی تعداد۔"
     auto_respond_to_flag_actions: "ایک فلَیگ کو ڈراپ کرتے وقت خودکار جوابات فعال کریں۔"
     min_first_post_typing_time: "ایک صارف پہلی پوسٹ کے دوران ملی سیکنڈوں میں کم از کم کتنا وقت ٹائپ کرے، اگر حد پوری نہ ہو تو پوسٹ خود بخود منظوری کی ضرورت کی قطار میں داخل کر دی جائے گی۔ غیر فعال کرنے کیلئے 0 سَیٹ کریں (غیر تجویز کردہ)"
@@ -1215,7 +1293,6 @@ ur:
     automatically_unpin_topics: "صارفین جب ٹاپک کے آخر تک پہنچ جائیں تو خود بخود ٹاپکس پر سے پِن ہٹا دیں۔"
     read_time_word_count: "متوقع پڑھنے کے وقت کا حساب لگانے کیلئے فی منٹ الفاظ کی تعداد۔"
     topic_page_title_includes_category: "ٹاپک صفحہ کے عنوان میں زُمرہ کا نام شامل ہے۔"
-    native_app_install_banner: "بار بار آنے والوں کو ڈِسکورس مقامی ایَپ اِنسٹال کرنے کیلئے پوچھا جائے۔"
     share_anonymized_statistics: "گمنام استعمال کے اعداد و شمار کا اشتراک کریں۔"
     auto_handle_queued_age: "اُن ریکارڈز کو خود کار طریقہ سے ہَینڈل کریں جو اتنے دنوں کے بعد نظر ثانی کے منتظر ہیں۔ فلَیگز کو نظر انداز کیا جائے گا۔ قطار شدہ پوسٹس اور صارفین کو مسترد کردیا جائے گا۔ اِس خصوصیت کو غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
     max_prints_per_hour_per_user: "/print صفحہ نقوش کی زیادہ سے زیادہ تعداد (غیر فعال کرنے کیلئے 0 پر سَیٹ کریں)"
@@ -1263,7 +1340,6 @@ ur:
     default_other_external_links_in_new_tab: "ڈِیفالٹ کے طور پر تمام بیرونی ویب سائٹ کے لنکس ایک نئے ٹیب میں کھولیں۔"
     default_other_enable_quoting: "ڈِیفالٹ کے طور پر روشنی ڈالے گئے ٹَیکسٹ کے لئے اقتباسی جواب فعال کریں۔"
     default_other_dynamic_favicon: "ڈِیفالٹ کے طور پر براؤزر آئکن پر نئے / اَپ ڈیٹ کردہ ٹاپکس کی گنتی دکھائیں۔"
-    default_other_disable_jump_reply: "ڈِیفالٹ کے طور پر صارف کے جواب دینے کے بعد اُن کی پوسٹ پر نہ جائیں۔"
     default_other_like_notification_frequency: "ڈِیفالٹ کے طور پر صارفین کو لائیکس پر اطلاع دیں"
     default_topics_automatic_unpin: "ڈِیفالٹ کے طور پر صارفین جب ٹاپک کے آخر تک پہنچ جائیں تو خود بخود ٹاپکس پر سے پِن ہٹا دیں۔"
     default_categories_watching: "زُمرہ جات کی فہرست جو ڈِیفالٹ کے طور پر دیکھے گئے ہوں۔"
@@ -1318,6 +1394,8 @@ ur:
       reply_by_email_disabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'جواب بذریعہ ای میل' فعال کرنا ضروری ہے۔"
       sso_url_is_empty: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'sso url' مقرر کرنا ضروری ہے۔"
       enable_local_logins_disabled: "اِس ترتیب کو فعال کرنے سے پہلے آپ کا 'مقامی لاگ اِن' فعال کرنا ضروری ہے۔"
+      min_username_length_range: "آپ کم از کم، زیادہ سے زیادہ سے اوپر مقرر نہیں کرسکتے۔"
+      max_username_length_range: "آپ زیادہ سے زیادہ، کم از کم سے نیچے مقرر نہیں کرسکتے۔"
   search:
     within_post: "%{username} کی طرف سے #%{post_number}"
     types:
@@ -1421,6 +1499,9 @@ ur:
     already_logged_in: "افوہ، لگتا ہے کہ آپ کسی اور صارف کیلئے دعوت نامے کو قبول کرنے کی کوشش کر رہے ہیں۔ اگر آپ %{current_user} نہیں ہیں تو، براہ مہربانی لاگ آُوٹ کریں اور دوبارہ کوشش کریں۔"
     second_factor_title: "دو فیکٹر توثیق"
     second_factor_description: "براہ مہربانی اپنی اَیپ میں سے مطلوبہ توثیقی کَوڈ درج کریں:"
+  admin:
+    email:
+      sent_test: "بھیج دی گئی!"
   user:
     deactivated: "بہت سے '%{email}' پر باؤنسِ ہوئے ای میل کی وجہ سے غیر فعال کر دیا گیا تھا۔"
     deactivated_by_staff: "سٹاف نے غیر فعال کیا"
@@ -1451,13 +1532,6 @@ ur:
       unused_staged_user: "غیر استعمال شدہ سٹَیجڈ صارف"
       fixed_primary_email: "سٹَیجڈ صارف کیلئے بنیادی ای میل مقرر کر دیا گیا"
       same_ip_address: "دوسرے صارفین کی طرح ایک ہی IP ایڈریس (%{ip_address})"
-  flags_reminder:
-    flags_were_submitted:
-      one: "فلَیگز 1 گھنٹے سے پہلے جمع کیے گئے تھے۔ [براہ مہربانی ان کا جائزہ لیں](%{base_path}/admin/flags)۔"
-      other: "فلَیگز %{count} گھنٹوں سے پہلے جمع کیے گئے تھے۔ [براہ مہربانی ان کا جائزہ لیں](%{base_path}/admin/flags)۔"
-    subject_template:
-      one: "نمٹائے جانے کا منتظر 1 فلَیگ"
-      other: "نمٹائے جانے کے منتظر %{count} فلَیگز"
   unsubscribe_mailer:
     title: "مَیلر غیر سَبسکرائب کریں"
     subject_template: "تصدیق کریں کہ اب آپ %{site_title} سے ای میل اَپ ڈیٹس حاصل نہیں کرنا چاہتے ہیں"
@@ -1581,8 +1655,8 @@ ur:
     agreed: "ہمیں بتانے کیلئے شکریہ۔ ہم اتفاق کرتے ہیں کہ ایک مسئلہ موجود ہے اور ہم اِس سے نمٹ رہے ہیں۔"
     agreed_and_deleted: "ہمیں بتانے کیلئے شکریہ۔ ہم اتفاق کرتے ہیں کہ ایک مسئلہ موجود ہے اور ہم نے پوسٹ ہٹا دی ہے۔"
     disagreed: "ہمیں بتانے کیلئے شکریہ۔ ہم اِس سے نمٹ رہے ہیں۔"
-    deferred: "ہمیں بتانے کیلئے شکریہ۔ ہم اِس سے نمٹ رہے ہیں۔"
-    deferred_and_deleted: "ہمیں بتانے کیلئے شکریہ۔ ہم نے پوسٹ ہٹا دی ہے۔"
+    ignored: "ہمیں بتانے کیلئے شکریہ۔ ہم اِس سے نمٹ رہے ہیں۔"
+    ignored_and_deleted: "ہمیں بتانے کیلئے شکریہ۔ ہم نے پوسٹ ہٹا دی ہے۔"
   system_messages:
     private_topic_title: "ٹاپک #%{id}"
     contents_hidden: "اِس کے مواد کو دیکھنے کیلئے براہ کرم پوسٹ پر جائیں۔"
@@ -1873,9 +1947,6 @@ ur:
       subject_template:
         one: "1 صارف منظوری کا منتظر ہے"
         other: "%{count} صارفین منظوری کے منتظر ہیں"
-      text_body_template: |
-        اِس فورم تک رسائی حاصل کرنے سے پہلے نئے صارف سائن اَپ منظور (یا مسترد) ہونے کے منتظر ہیں۔
-        [براہ مہربانی اَیڈمن سیکشن میں اُن کا جائزہ لیں](%{base_url}/admin/users/list/pending)۔
     download_remote_images_disabled:
       title: "ریمَوٹ تصاویر کے ڈاؤن لوڈ غیر فعال"
       subject_template: "ریمَوٹ تصاویر کے ڈاؤن لوڈ کو غیر فعال کر دیا گیا ہے"
@@ -2036,6 +2107,16 @@ ur:
     user_mentioned:
       title: "صارف ذکر کیا گیا"
       subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [ذاتی پیغام] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2263,6 +2344,7 @@ ur:
     recent_topics: "حالیہ"
     see_more: "مذید"
     search_title: "اِس سائٹ میں تلاش کریں"
+    search_button: "تلاش کریں"
   offline:
     title: "اَیپ کو لوڈ نہیں کیا جا سکا"
     offline_page_message: "لگتا ہے کہ آپ آف لائن ہیں! براہ مہربانی اپنا نیٹ وَرک کنکشن چیک کریں اور دوبارہ کوشش کیجیے۔"
@@ -2295,8 +2377,30 @@ ur:
   flag_reason:
     sockpuppet: "ایک نئے صارف نے ایک ٹاپک بنایا، اور اُسی IP ایڈریس (%{ip_address}) پر ایک نئے صارف نے جواب دیا۔ `flag_sockpuppets` سائٹ ترتیب دیکھیے۔"
     spam_hosts: "اِس نئے صارف ایک ہی ڈومَین (%{domain}) کے لِنکس کے ساتھ کئی پوسٹس تخلیق کرنے کی کوشش کی۔ <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a> سائٹ کی ترتیب دیکھیے۔"
+  skipped_email_log:
+    exceeded_emails_limit: "max_emails_per_day_per_user سے تجاوز کر گیا"
+    exceeded_bounces_limit: "bounce_score_threshold سے تجاوز کر گیا"
+    mailing_list_no_echo_mode: "صارف کی اپنے پوسٹس کیلئے مَیلنگ لِسٹ اطلاعات غیر فعال ہیں"
+    user_email_no_user: "آئی ڈی %{user_id} کے ساتھ صارف کو تلاش نہیں کیا جا سکا"
+    user_email_post_not_found: "آئی ڈی %{post_id} کے ساتھ پوسٹ کو تلاش نہیں کیا جا سکا"
+    user_email_anonymous_user: "صارف گمنام ہے"
+    user_email_user_suspended_not_pm: "صارف معطل ہے، پیغام نہیں ہے"
+    user_email_seen_recently: "صارف کو حال ہی میں دیکھا گیا تھا"
+    user_email_notification_already_read: "یہ ای میل جس اطلاع کے بارے میں ہے، وہ پہلے ہی پڑھ لی گئی ہے"
+    user_email_notification_topic_nil: "پوسٹ.ٹاپک نِل ہے"
+    user_email_post_user_deleted: "پوسٹ کا صارف حذف کردیا گیا ہے۔"
+    user_email_post_deleted: "پوسٹ مصنف کی طرف سے حذف کر دی گئی"
+    user_email_user_suspended: "صارف معطل کردیا گیا تھا"
+    user_email_already_read: "صارف نے اِس پوسٹ کو پہلے ہی پڑھ لیا ہے"
+    sender_message_blank: "پیغام خالی ہے"
+    sender_message_to_blank: "پیغام.کیلئے خالی ہے"
+    sender_text_part_body_blank: "text_part.body خالی ہے"
+    sender_body_blank: "متن خالی ہے"
   color_schemes:
     base_theme_name: "بَیس"
+    light: "لائٹ"
+    dark: "ڈارک"
+    default_theme_name: "لائٹ"
     light_theme_name: "لائٹ"
     dark_theme_name: "ڈارک"
   about: "بارے میں"
@@ -2663,13 +2767,10 @@ ur:
         یہ بَیج ہر ماہ دو نئے صارفین کو اپنی شاندار مجموعی شراکتوں کیلئے مبارکباد دینے کیلئے عطا کیا جاتا ہے، جیسا کہ اُن کی پوسٹس کو کتنی کثرت سے اور کن کی طرف سے لائیک کیا گیا تھا، سے ناپا جاتا ہے۔
     enthusiast:
       name: پرجوش
-      description: 10 دن وِزِٹ کیا
     aficionado:
       name: اَفیشیاناڈو
-      description: 100 دن وِزِٹ کیا
     devotee:
       name: جاں نثار
-      description: 365 دن وِزِٹ کیا
     badge_title_metadata: "%{site_title}پر %{display_name} بَیج "
   admin_login:
     success: "ای میل بھیج دی گئ"
@@ -2694,7 +2795,6 @@ ur:
       help: "شروع کرنے کے لئے ایک نیا اکاؤنٹ رجسٹر کریں"
     confirm_email:
       title: "اپنے ای میل کی تصدیق کریں"
-      message: "</p>ہم نے </b>%{email}</b> پر ایک ایکٹیویشن میل بھیج دی ہے۔ براہ مہربانی اپنے اکاؤنٹ کو چالو کرنے کیلئے میل میں دی گئی ہدایات پر عمل کریں۔</p> </p>اگر یہ آپ کو موصول نہ ہو، تو یقینی بنائیں کہ آپ نے ڈِسکورس کیلئے صحیح طریقہ سے ای میل سَیٹ کر لی ہے اور اپنا سپَیم فولڈر چیک کریں۔</p>"
     resend_email:
       title: "ایکٹیویشن اِیمیل دوبارہ بھیجییں"
       message: "<p>ہم نے <b>%{email}</b> پر ایکٹیویشن اِیمیل دوبارہ بھیج دی ہے"
@@ -2733,16 +2833,13 @@ ur:
             one_paragraph: "براہ مہربانی اپنے خیر مقدم پیغام کو ایک پیراگراف تک محدود رکھیں۔"
       privacy:
         title: "رسائی"
-        description: "<p>کیا آپ کا کمیونٹی سب کے لئے کھلی ہے، یا یہ رکنیت، دعوت ناموں، یا منظوری کے ذریعہ محدود ہے؟ اگر آپ پسند کریں تو، آپ ذاتی طور پر چیزوں کو مقرر کر سکتے ہیں، اور پھر بعد میں کمیونٹی کو عوامی طور پر کھول سکتے ہیں۔</p> <p>آپ ہمیشہ ٹاپکس، یا اپنے صارف پروفائل صفحے سے بھی دعوت نامے بھیج سکتے ہیں۔</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "عوامی"
-                description: "کوئی بھی اِس کمیونٹی تک رسائی حاصل کر سکتا ہے اور ایک اکاؤنٹ کیلئے سائن اَپ کرسکتا ہے"
               restricted:
                 label: "ذاتی"
-                description: "جنہیں میں نے مدعو کیا یا منظوری دی ہے صرف وہ لوگ اِس کمیونٹی تک رسائی حاصل کر سکتے ہیں"
       contact:
         title: "رابطہ"
         fields:
@@ -2762,8 +2859,18 @@ ur:
         title: "تھیم"
       logos:
         title: "لَوگَو"
+        fields:
+          logo:
+            label: "بنیادی لَوگَو"
+          logo_small:
+            label: "کومپیکٹ لَوگَو"
       icons:
         title: "آئیکن"
+        fields:
+          favicon:
+            label: "چھوٹا آئیکن"
+          apple_touch_icon:
+            label: "بڑا آئیکن"
       homepage:
         description: "ہم آپ کے ہَوم پَیج پر تازہ ترین ٹاپک پیش کرنے کو تجویز کرتے ہیں، لیکن اگر آپ چاہیں تو ہَوم پَیج پر زُمرہ جات (ٹاپکس کے گروپوں) کو بھی دکھا سکتے ہیں۔"
         title: "ہَوم پَیج"
@@ -2772,6 +2879,14 @@ ur:
             choices:
               latest:
                 label: "تازہ ترین ٹاپک"
+              categories_only:
+                label: "صرف زمرہ جات"
+              categories_with_featured_topics:
+                label: "نمایاں ٹاپکس کے ساتھ زمرہ جات"
+              categories_and_latest_topics:
+                label: "زُمرہ جات اور تازہ ترین ٹاپکس"
+              categories_and_top_topics:
+                label: "زمرہ جات اور ٹاپ ٹاپکس"
       emoji:
         title: "اِیمَوجی"
         description: "آپ اپنی کمیونٹی کیلئے کونسا اِیمَوجی سڑائل پسند کریں گے؟ آپ ایڈمن، مرضی کے مطابق بنائیں، اِیمَوجی کے ذریعہ بعد میں مزید اپنی مرضی کے اِیمَوجی شامل کرسکتے ہیں۔"
@@ -2783,3 +2898,36 @@ ur:
   search_logs:
     graph_title: "سرچ شمار"
   joined: "شمولیت اختیار کی"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "پوسٹ برقرار رکھیں"
+        description: "فلَیگ کے ساتھ اتفاق کریں اور پوسٹ کو ویسا ہی رہنے دیں۔"
+      agree_and_suspend:
+        title: "صارف معطل کریں"
+        description: "فلَیگ کے ساتھ اتفاق کریں اور صارف معطل کریں۔"
+      agree_and_silence:
+        title: "صارف خاموش کریں"
+        description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
+      agree_and_restore:
+        description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
+      agree_and_hide:
+        title: "پوسٹ چھپائیں"
+        description: "اِس پوسٹ کو چھپائیں اور خود کار طریقے سے صارف کو اِس میں ترمیم کرنے کیلئے زور ڈالنے کیلئے پیغام بھیجیں۔"
+      delete_spammer:
+        title: "سپیم کرنے والے کو حذف کریں"
+      disagree_and_restore:
+        description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
+      disagree:
+        title: "اختلاف کریں"
+      ignore:
+        title: "نظر انداز کریں"
+      approve:
+        title: "منظور"
+      reject_user:
+        delete:
+          title: "صارف حذف کریں"
+      reject:
+        title: "مسترد کریں"
+      delete_user:
+        title: "صارف حذف کریں"

@@ -69,6 +69,8 @@ pl_PL:
           regular: Pojedynczy wybór
           multiple: Wielokrotny wybór
           number: Liczba ocen
+        poll_result:
+          label: Wyniki
         poll_config:
           max: Max
           min: Min

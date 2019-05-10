@@ -16,6 +16,7 @@ module FileStore
       destination = "#{public_dir}#{url.sub("/uploads/", "/uploads/tombstone/")}"
       dir = Pathname.new(destination).dirname
       FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+      FileUtils.remove(destination) if File.exists?(destination)
       FileUtils.move(source, destination, force: true)
       FileUtils.touch(destination)
     end

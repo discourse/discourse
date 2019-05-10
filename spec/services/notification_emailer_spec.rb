@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe NotificationEmailer do
@@ -6,8 +8,8 @@ describe NotificationEmailer do
     NotificationEmailer.enable
   end
 
-  let(:topic) { Fabricate(:topic) }
-  let(:post) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
 
   # something is off with fabricator
   def create_notification(type, user = nil)

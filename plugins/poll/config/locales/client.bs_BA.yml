@@ -64,6 +64,8 @@ bs_BA:
           regular: Jedan izbor
           multiple: Višestruki izbor
           number: Rejting broja
+        poll_result:
+          label: Rezultati
         poll_config:
           max: Maksimalno
           min: Minimalno

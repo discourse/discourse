@@ -12,12 +12,8 @@ hy:
         today: Այսօր %{time}
         tomorrow: Վաղը %{time}
         yesterday: Երեկ %{time}
-      title: Մուտքագրել ամսաթիվ
       create:
-        modal_title: Մուտքագրել ամսաթիվ
-        modal_subtitle: "Մենք ավտոմատ կերպով կփոխարկենք ամսաթիվը և ժամը՝ ըստ այցելույի տեղական ժամային գոտու:"
         form:
-          to: "դեպի"
           insert: Մուտքագրել
           advanced_mode: Ընդլայնված ռեժիմ
           simple_mode: Հասարակ ռեժիմ

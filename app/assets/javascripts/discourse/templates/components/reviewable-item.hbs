@@ -1,29 +1,27 @@
 <div class='reviewable-item {{customClass}}' data-reviewable-id={{reviewable.id}}>
   <div class='reviewable-meta-data'>
-    <div class='reviewable-type'>{{reviewable.humanType}}</div>
-    <div class='reviewable-category'>
-      {{category-badge reviewable.category}}
-    </div>
-
-    <div class='created-at'>
+    <span class='reviewable-type'>{{reviewable.humanType}}</span>
+    {{#if reviewable.reply_count}}
+      <span class='reply-count'>{{i18n "review.replies" count=reviewable.reply_count}}</span>
+    {{/if}}
+    <span class='created-at'>
       {{#link-to 'review.show' reviewable.id}}{{age-with-tooltip reviewable.created_at}}{{/link-to}}
-    </div>
-    <div class='score' title={{i18n "review.scores.score"}}>{{format-score reviewable.score}}</div>
-
-    <div class='status'>
-      {{#if reviewable.approved}}
-        {{d-icon "check"}} {{i18n "review.statuses.approved.title"}}
-      {{else if reviewable.rejected}}
-        {{d-icon "times"}} {{i18n "review.statuses.rejected.title"}}
-      {{else if reviewable.ignored}}
-        {{d-icon "external-link-alt"}} {{i18n "review.statuses.ignored.title"}}
-      {{/if}}
-    </div>
+    </span>
+    <span class='status'>
+      {{reviewable-status reviewable.status}}
+    </span>
   </div>
 
   <div class='reviewable-contents'>
     {{#if editing}}
       <div class='editable-fields'>
+        {{#if reviewable.created_by}}
+          <div class='editable-created-by'>
+            {{avatar reviewable.created_by imageSize="tiny"}}
+            {{reviewable-created-by-name user=reviewable.created_by tagName=''}}
+          </div>
+        {{/if}}
+
         {{#each reviewable.editable_fields as |f|}}
           <div class='editable-field {{dasherize f.id}}'>
             {{component
@@ -38,40 +36,48 @@
       </div>
     {{else}}
       {{#component reviewableComponent reviewable=reviewable tagName=''}}
-        {{reviewable-scores scores=reviewable.reviewable_scores}}
-        {{reviewable-histories histories=reviewable.reviewable_histories}}
+        {{reviewable-scores reviewable=reviewable tagName=''}}
       {{/component}}
     {{/if}}
   </div>
   <div class='reviewable-actions'>
-    {{#if editing}}
-      {{d-button
-        class="btn-primary reviewable-action save-edit"
-        disabled=updating
-        icon="check"
-        action=(action "saveEdit")
-        label="review.save"}}
-      {{d-button
-        class="btn-danger reviewable-action cancel-edit"
-        disabled=updating
-        icon="times"
-        action=(action "cancelEdit")
-        label="review.cancel"}}
-    {{else}}
-      {{#each reviewable.bundled_actions as |bundle|}}
-        {{reviewable-bundled-action
-          bundle=bundle
-          performAction=(action "perform")
-          reviewableUpdating=updating}}
-      {{/each}}
+    {{#if claimEnabled}}
+      <div class='claimed-actions'>
+        <span class='help'>{{{claimHelp}}}</span>
+        {{reviewable-claimed-topic topicId=reviewable.topic.id claimedBy=reviewable.claimed_by}}
+      </div>
+    {{/if}}
 
-      {{#if reviewable.can_edit}}
+    {{#if canPerform}}
+      {{#if editing}}
         {{d-button
-          class="reviewable-action edit"
+          class="btn-primary reviewable-action save-edit"
           disabled=updating
-          icon="pencil-alt"
-          action=(action "edit")
-          label="review.edit"}}
+          icon="check"
+          action=(action "saveEdit")
+          label="review.save"}}
+        {{d-button
+          class="btn-danger reviewable-action cancel-edit"
+          disabled=updating
+          icon="times"
+          action=(action "cancelEdit")
+          label="review.cancel"}}
+      {{else}}
+        {{#each reviewable.bundled_actions as |bundle|}}
+          {{reviewable-bundled-action
+            bundle=bundle
+            performAction=(action "perform")
+            reviewableUpdating=updating}}
+        {{/each}}
+
+        {{#if reviewable.can_edit}}
+          {{d-button
+            class="reviewable-action edit"
+            disabled=updating
+            icon="pencil-alt"
+            action=(action "edit")
+            label="review.edit"}}
+        {{/if}}
       {{/if}}
     {{/if}}
   </div>

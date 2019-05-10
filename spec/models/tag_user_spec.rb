@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_creator'
@@ -68,10 +69,10 @@ describe TagUser do
   end
 
   context "integration" do
-    let(:user) { Fabricate(:user) }
-    let(:watched_tag) { Fabricate(:tag) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag)   { Fabricate(:tag) }
-    let(:tracked_tag) { Fabricate(:tag) }
+    fab!(:tracked_tag) { Fabricate(:tag) }
 
     context "with some tag notification settings" do
       before do
@@ -81,11 +82,6 @@ describe TagUser do
       let :watched_post do
         TagUser.create!(user: user, tag: watched_tag, notification_level: TagUser.notification_levels[:watching])
         create_post(tags: [watched_tag.name])
-      end
-
-      let :muted_post do
-        TagUser.create!(user: user, tag: muted_tag,   notification_level: TagUser.notification_levels[:muted])
-        create_post(tags: [muted_tag.name])
       end
 
       let :tracked_post do
@@ -168,7 +164,7 @@ describe TagUser do
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(staff), ["foo"])
         expect(result).to eq(true)
 
-        topic.errors[:base].clear
+        topic.errors.clear
 
         result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
         expect(result).to eq(false)

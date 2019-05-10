@@ -26,7 +26,7 @@ end
 #
 # Table name: user_second_factors
 #
-#  id         :bigint(8)        not null, primary key
+#  id         :bigint           not null, primary key
 #  user_id    :integer          not null
 #  method     :integer          not null
 #  data       :string           not null
@@ -37,5 +37,6 @@ end
 #
 # Indexes
 #
-#  index_user_second_factors_on_user_id  (user_id)
+#  index_user_second_factors_on_method_and_enabled  (method,enabled)
+#  index_user_second_factors_on_user_id             (user_id)
 #

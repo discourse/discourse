@@ -30,7 +30,7 @@ module FreedomPatches
 SQL
 
       hostname = `hostname` rescue ""
-      sql = ActiveRecord::Base.send(:sanitize_sql_array, [sql, {
+      sql = ActiveRecord::Base.public_send(:sanitize_sql_array, [sql, {
         version: version || "",
         duration: (time.real * 1000).to_i,
         hostname: hostname,
