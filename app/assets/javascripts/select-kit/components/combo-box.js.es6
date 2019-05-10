@@ -25,8 +25,7 @@ export default SingleSelectComponent.extend({
     return isExpanded ? caretUpIcon : caretDownIcon;
   },
 
-  @on("init")
-  @on("didUpdateAttrs")
+  @on("didUpdateAttrs", "init")
   _setComboBoxOptions() {
     this.get("headerComponentOptions").setProperties({
       clearable: this.get("clearable")
