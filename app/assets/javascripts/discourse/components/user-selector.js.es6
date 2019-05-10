@@ -10,20 +10,20 @@ export default TextField.extend({
 
   @observes("usernames")
   _update() {
-    if (this.get("canReceiveUpdates") === "true")
+    if (this.get("canReceiveUpdates") === "true") {
       this.didInsertElement({ updateData: true });
+    }
   },
 
   didInsertElement(opts) {
     this._super(...arguments);
 
     const bool = n => {
-      const val = this.get(n);
+      const val = this[n];
       return val === true || val === "true";
     };
 
-    var self = this,
-      selected = [],
+    let selected = [],
       groups = [],
       currentUser = this.currentUser,
       includeMentionableGroups = bool("includeMentionableGroups"),
@@ -37,39 +37,38 @@ export default TextField.extend({
       allowEmails = bool("allowEmails"),
       fullWidthWrap = bool("fullWidthWrap");
 
-    function excludedUsernames() {
+    const excludedUsernames = () => {
       // hack works around some issues with allowAny eventing
       const usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        return usernames.concat([currentUser.get("username")]);
+        return usernames.concat([currentUser.username]);
       }
       return usernames;
-    }
+    };
 
-    this.$()
-      .val(this.get("usernames"))
+    $(this.element)
+      .val(this.usernames)
       .autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        disabled: disabled,
-        single: single,
-        allowAny: allowAny,
+        disabled,
+        single,
+        allowAny,
         updateData: opts && opts.updateData ? opts.updateData : false,
         fullWidthWrap,
 
         dataSource(term) {
-          var results = userSearch({
+          return userSearch({
             term,
-            topicId: self.get("topicId"),
+            topicId: this.topicId,
             exclude: excludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
             includeMessageableGroups,
-            group: self.get("group"),
+            group: this.group,
             allowEmails
           });
-          return results;
         },
 
         transformComplete(v) {
@@ -79,16 +78,14 @@ export default TextField.extend({
             }
             return v.username || v.name;
           } else {
-            var excludes = excludedUsernames();
-            return v.usernames.filter(function(item) {
-              return excludes.indexOf(item) === -1;
-            });
+            const excludes = excludedUsernames();
+            return v.usernames.filter(item => excludes.indexOf(item) === -1);
           }
         },
 
         onChangeItems(items) {
-          var hasGroups = false;
-          items = items.map(function(i) {
+          let hasGroups = false;
+          items = items.map(i => {
             if (groups.indexOf(i) > -1) {
               hasGroups = true;
             }
@@ -96,18 +93,20 @@ export default TextField.extend({
           });
 
           let previouslySelected = [];
-          if (Array.isArray(self.get("usernames"))) {
-            previouslySelected = self.get("usernames");
+          if (Array.isArray(this.usernames)) {
+            previouslySelected = this.usernames;
           } else {
-            if (self.get("usernames")) {
-              previouslySelected = self.get("usernames").split(",");
+            if (this.usernames) {
+              previouslySelected = this.usernames.split(",");
             }
           }
-          self.set("usernames", items.join(","));
-          self.set("hasGroups", hasGroups);
+
+          this.setProperties({ usernames: items.join(","), hasGroups });
           selected = items;
-          if (self.get("onChangeCallback"))
-            self.onChangeCallback(previouslySelected, selected);
+
+          if (this.onChangeCallback) {
+            this.onChangeCallback(previouslySelected, selected);
+          }
         },
 
         reverseTransform(i) {
@@ -118,19 +117,18 @@ export default TextField.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this.$().autocomplete("destroy");
+
+    $(this.element).autocomplete("destroy");
   },
 
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
   @observes("usernames")
-  _clearInput: function() {
-    if (arguments.length > 1) {
-      if (Ember.isEmpty(this.get("usernames"))) {
-        this.$()
-          .parent()
-          .find("a")
-          .click();
-      }
+  _clearInput() {
+    if (arguments.length > 1 && Ember.isEmpty(this.usernames)) {
+      $(this.element)
+        .parent()
+        .find("a")
+        .click();
     }
   }
 });
