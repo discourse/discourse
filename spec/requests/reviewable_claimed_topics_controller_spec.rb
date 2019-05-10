@@ -6,7 +6,7 @@ describe ReviewableClaimedTopicsController do
   fab!(:moderator) { Fabricate(:moderator) }
 
   describe '#create' do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
     let(:params) do
       { reviewable_claimed_topic: { topic_id: topic.id } }
     end
@@ -37,7 +37,7 @@ describe ReviewableClaimedTopicsController do
   end
 
   describe '#destroy' do
-    let(:claimed) { Fabricate(:reviewable_claimed_topic) }
+    fab!(:claimed) { Fabricate(:reviewable_claimed_topic) }
 
     before do
       sign_in(moderator)

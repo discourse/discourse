@@ -149,7 +149,7 @@ describe PostSerializer do
     end
 
     context "a hidden revised post" do
-      let(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
+      fab!(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
 
       before do
         SiteSetting.editing_grace_period_max_diff = 1
@@ -202,9 +202,9 @@ describe PostSerializer do
   end
 
   context "a post with notices" do
-    let(:user) { Fabricate(:user, trust_level: 1) }
-    let(:user_tl1) { Fabricate(:user, trust_level: 1) }
-    let(:user_tl2) { Fabricate(:user, trust_level: 2) }
+    fab!(:user) { Fabricate(:user, trust_level: 1) }
+    fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }
+    fab!(:user_tl2) { Fabricate(:user, trust_level: 2) }
 
     let(:post) {
       post = Fabricate(:post, user: user)

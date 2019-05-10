@@ -291,7 +291,7 @@ describe ReviewablesController do
       end
 
       context "claims" do
-        let(:qp) { Fabricate(:reviewable_queued_post) }
+        fab!(:qp) { Fabricate(:reviewable_queued_post) }
 
         it "fails when reviewables must be claimed" do
           SiteSetting.reviewable_claiming = 'required'
