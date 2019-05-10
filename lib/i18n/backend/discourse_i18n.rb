@@ -23,6 +23,15 @@ module I18n
         end
       end
 
+      def pluralize(locale, entry, count)
+        begin
+          super
+        rescue I18n::InvalidPluralizationData => e
+          raise e if I18n.fallbacks[locale] == [locale]
+          throw(:exception, e)
+        end
+      end
+
       def self.create_search_regexp(query, as_string: false)
         regexp = Regexp.escape(query)
 
