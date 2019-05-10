@@ -714,7 +714,7 @@ export default Ember.Controller.extend({
         }
         this.close();
 
-        const currentUser = Discourse.User.current();
+        const currentUser = this.currentUser;
         if (composer.creatingTopic) {
           currentUser.set("topic_count", currentUser.topic_count + 1);
         } else {
@@ -1095,7 +1095,7 @@ export default Ember.Controller.extend({
 
   @computed("model.action")
   canEdit(action) {
-    return action === "edit" && Discourse.User.current().can_edit;
+    return action === "edit" && this.currentUser.can_edit;
   },
 
   @computed("model.composeState")
