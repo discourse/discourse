@@ -72,7 +72,7 @@ export default TextField.extend({
             allowedUsers,
             includeMentionableGroups,
             includeMessageableGroups,
-            group: userSelectorComponent.group,
+            groupMembersOf: userSelectorComponent.groupMembersOf,
             allowEmails
           });
         },
