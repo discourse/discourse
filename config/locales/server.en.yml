@@ -3006,7 +3006,7 @@ en:
       text_body_template: |
         Hello,
 
-        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/queued-posts).
+        Posts from new users were held for moderation and are currently waiting to be reviewed. [Approve or reject them here](%{base_url}/review?type=ReviewableQueuedPost).
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
