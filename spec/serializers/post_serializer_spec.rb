@@ -4,9 +4,9 @@ require 'rails_helper'
 require_dependency 'post_action'
 
 describe PostSerializer do
+  fab!(:post) { Fabricate(:post) }
 
   context "a post with lots of actions" do
-    fab!(:post) { Fabricate(:post) }
     fab!(:actor) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
     let(:acted_ids) {
@@ -42,10 +42,24 @@ describe PostSerializer do
       notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
       expect(notify_user_action).to be_blank
     end
+
+    it "should not allow user to flag post and notify non human user" do
+      post.update!(user: Discourse.system_user)
+
+      serializer = PostSerializer.new(post,
+        scope: Guardian.new(actor),
+        root: false
+      )
+
+      notify_user_action = serializer.actions_summary.find do |a|
+        a[:id] == PostActionType.types[:notify_user]
+      end
+
+      expect(notify_user_action).to eq(nil)
+    end
   end
 
   context "a post with reviewable content" do
-    let!(:post) { Fabricate(:post, user: Fabricate(:user)) }
     let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
 
     it "includes the reviewable data" do
@@ -57,11 +71,11 @@ describe PostSerializer do
   end
 
   context "a post by a nuked user" do
-    let!(:post) { Fabricate(:post, user: Fabricate(:user), deleted_at: Time.zone.now) }
-
     before do
-      post.user_id = nil
-      post.save!
+      post.update!(
+        user_id: nil,
+        deleted_at: Time.zone.now
+      )
     end
 
     subject { PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
@@ -77,8 +91,7 @@ describe PostSerializer do
   end
 
   context "display_username" do
-    let(:user) { Fabricate.build(:user) }
-    let(:post) { Fabricate.build(:post, user: user) }
+    let(:user) { post.user }
     let(:serializer) { PostSerializer.new(post, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
 
