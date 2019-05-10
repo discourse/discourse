@@ -18,7 +18,8 @@ export default SelectKitComponent.extend({
   value: null,
   allowInitialValueMutation: false,
 
-  @on("didReceiveAttrs")
+  @on("init")
+  @on("didUpdateAttrs")
   _compute() {
     run.scheduleOnce("afterRender", () => {
       this.willComputeAttributes();

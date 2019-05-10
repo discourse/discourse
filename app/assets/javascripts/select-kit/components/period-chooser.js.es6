@@ -14,7 +14,8 @@ export default DropdownSelectBoxComponent.extend({
     return isExpanded ? "caret-up" : "caret-down";
   },
 
-  @on("didReceiveAttrs")
+  @on("init")
+  @on("didUpdateAttrs")
   _setFullDay() {
     this.get("headerComponentOptions").setProperties({
       fullDay: this.get("fullDay")

@@ -13,7 +13,8 @@ export default SingleSelectComponent.extend({
   showFullTitle: true,
   allowInitialValueMutation: false,
 
-  @on("didReceiveAttrs")
+  @on("init")
+  @on("didUpdateAttrs")
   _setDropdownSelectBoxComponentOptions() {
     this.get("headerComponentOptions").setProperties({
       showFullTitle: this.get("showFullTitle")
