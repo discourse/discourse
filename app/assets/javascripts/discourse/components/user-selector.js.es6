@@ -1,4 +1,4 @@
-import { observes } from "ember-addons/ember-computed-decorators";
+import { on, observes } from "ember-addons/ember-computed-decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -11,13 +11,17 @@ export default TextField.extend({
   @observes("usernames")
   _update() {
     if (this.canReceiveUpdates === "true") {
-      this.didInsertElement({ updateData: true });
+      this._createAutocompleteInstance({ updateData: true });
     }
   },
 
-  didInsertElement(opts) {
-    this._super(...arguments);
+  @on("willDestroyElement")
+  _destroyAutocompleteInstance() {
+    $(this.element).autocomplete("destroy");
+  },
 
+  @on("didInsertElement")
+  _createAutocompleteInstance(opts) {
     const bool = n => {
       const val = this[n];
       return val === true || val === "true";
@@ -113,12 +117,6 @@ export default TextField.extend({
           return { username: i };
         }
       });
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    $(this.element).autocomplete("destroy");
   },
 
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
