@@ -3021,6 +3021,54 @@ describe UsersController do
           expect(JSON.parse(response.body)).not_to have_key(:groups)
         end
       end
+
+      describe 'when searching by group name' do
+        fab!(:exclusive_group) { Fabricate(:group) }
+
+        it 'return results if the user is a group member' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a group member' do
+          get "/u/search/users.json", params: {
+            group: exclusive_group.name,
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        it 'returns results if the user is member of one of the groups' do
+          exclusive_group.add(user)
+
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to contain_exactly(user.username)
+        end
+
+        it 'does not return results if the user is not a member of the groups' do
+          get "/u/search/users.json", params: {
+            groups: [exclusive_group.name],
+            term: user.username
+          }
+
+          expect(users_found).to be_empty
+        end
+
+        def users_found
+          JSON.parse(response.body)['users'].map { |u| u['username'] }
+        end
+      end
     end
   end
 
