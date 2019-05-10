@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PostAction do
   it { is_expected.to rate_limit }
 
-  let(:moderator) { Fabricate(:moderator) }
-  let(:codinghorror) { Fabricate(:coding_horror) }
-  let(:eviltrout) { Fabricate(:evil_trout) }
-  let(:admin) { Fabricate(:admin) }
-  let(:post) { Fabricate(:post) }
-  let(:second_post) { Fabricate(:post, topic: post.topic) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:codinghorror) { Fabricate(:coding_horror) }
+  fab!(:eviltrout) { Fabricate(:evil_trout) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:post) { Fabricate(:post) }
+  fab!(:second_post) { Fabricate(:post, topic: post.topic) }
   let(:bookmark) { PostAction.new(user_id: post.user_id, post_action_type_id: PostActionType.types[:bookmark] , post_id: post.id) }
 
   def value_for(user_id, dt)
@@ -256,9 +258,9 @@ describe PostAction do
     end
 
     describe 'likes consolidation' do
-      let(:liker) { Fabricate(:user) }
-      let(:liker2) { Fabricate(:user) }
-      let(:likee) { Fabricate(:user) }
+      fab!(:liker) { Fabricate(:user) }
+      fab!(:liker2) { Fabricate(:user) }
+      fab!(:likee) { Fabricate(:user) }
 
       it "can be disabled" do
         SiteSetting.likes_notification_consolidation_threshold = 0
@@ -696,13 +698,13 @@ describe PostAction do
     end
 
     context "topic auto closing" do
-      let(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:post1) { create_post(topic: topic) }
       let(:post2) { create_post(topic: topic) }
       let(:post3) { create_post(topic: topic) }
 
-      let(:flagger1) { Fabricate(:user) }
-      let(:flagger2) { Fabricate(:user) }
+      fab!(:flagger1) { Fabricate(:user) }
+      fab!(:flagger2) { Fabricate(:user) }
 
       before do
         SiteSetting.score_required_to_hide_post = 0
@@ -749,8 +751,8 @@ describe PostAction do
       end
 
       context "on a staff post" do
-        let(:staff_user) { Fabricate(:user, moderator: true) }
-        let(:topic) { Fabricate(:topic, user: staff_user) }
+        fab!(:staff_user) { Fabricate(:user, moderator: true) }
+        fab!(:topic) { Fabricate(:topic, user: staff_user) }
 
         it "will not close topics opened by staff" do
           [flagger1, flagger2].each do |flagger|
@@ -985,7 +987,7 @@ describe PostAction do
   end
 
   describe "triggers Discourse events" do
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
 
     it 'triggers a flag_created event' do
       event = DiscourseEvent.track(:flag_created) { PostActionCreator.spam(eviltrout, post) }

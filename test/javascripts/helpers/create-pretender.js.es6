@@ -62,6 +62,18 @@ export default function() {
       return response(json);
     });
 
+    this.get("/c/bug/l/latest.json", () => {
+      const json = fixturesByUrl["/c/bug/l/latest.json"];
+
+      if (loggedIn()) {
+        // Stuff to let us post
+        json.topic_list.can_create_topic = true;
+        json.topic_list.draft_key = "new_topic";
+        json.topic_list.draft_sequence = 1;
+      }
+      return response(json);
+    });
+
     this.get("/tags", () => {
       return response({
         tags: [
@@ -126,7 +138,7 @@ export default function() {
       return response({ topic_list: { topics: [] } });
     });
 
-    this.get("/clicks/track", success);
+    this.post("/clicks/track", success);
 
     this.get("/search", request => {
       if (request.queryParams.q === "posts") {
@@ -159,6 +171,7 @@ export default function() {
     this.put("/u/eviltrout.json", () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl["/t/280/1.json"]));
+    this.get("/t/34.json", () => response(fixturesByUrl["/t/34/1.json"]));
     this.get("/t/280/20.json", () => response(fixturesByUrl["/t/280/1.json"]));
     this.get("/t/28830.json", () => response(fixturesByUrl["/t/28830/1.json"]));
     this.get("/t/9.json", () => response(fixturesByUrl["/t/9/1.json"]));
@@ -429,7 +442,14 @@ export default function() {
       }
 
       if (data.raw === "enqueue this content please") {
-        return response(200, { success: true, action: "enqueued" });
+        return response(200, {
+          success: true,
+          action: "enqueued",
+          pending_post: {
+            id: 1234,
+            raw: data.raw
+          }
+        });
       }
 
       return response(200, {
@@ -577,11 +597,12 @@ export default function() {
       ]);
     });
 
-    this.get("/admin/logs/search_logs/term/ruby.json", () => {
+    this.get("/admin/logs/search_logs/term.json", () => {
       return response(200, {
         term: {
           type: "search_log_term",
           title: "Search Count",
+          term: "ruby",
           data: [{ x: "2017-07-20", y: 2 }]
         }
       });

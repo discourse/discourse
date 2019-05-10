@@ -1,10 +1,11 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'avatar_lookup'
 
 describe AvatarLookup do
-  let!(:user) { Fabricate(:user, username: "john_doe", name: "John Doe") }
+  fab!(:user) { Fabricate(:user, username: "john_doe", name: "John Doe") }
 
   describe '#[]' do
     before do

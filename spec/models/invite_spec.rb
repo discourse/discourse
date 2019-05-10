@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Invite do
@@ -9,8 +11,8 @@ describe Invite do
   let(:iceking) { 'iceking@adventuretime.ooo' }
 
   context 'user validators' do
-    let(:coding_horror) { Fabricate(:coding_horror) }
-    let(:user) { Fabricate(:user) }
+    fab!(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:user) { Fabricate(:user) }
     let(:invite) { Invite.create(email: user.email, invited_by: coding_horror) }
 
     it "should not allow an invite with the same email as an existing user" do
@@ -24,7 +26,7 @@ describe Invite do
   end
 
   context 'email validators' do
-    let(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "should not allow an invite with unformatted email address" do
       expect {
@@ -60,7 +62,7 @@ describe Invite do
     end
 
     context 'to a topic' do
-      let!(:topic) { Fabricate(:topic) }
+      fab!(:topic) { Fabricate(:topic) }
       let(:inviter) { topic.user }
 
       context 'email' do
@@ -139,7 +141,7 @@ describe Invite do
         end
 
         context 'when adding to another topic' do
-          let!(:another_topic) { Fabricate(:topic, user: topic.user) }
+          fab!(:another_topic) { Fabricate(:topic, user: topic.user) }
 
           it 'should be the same invite' do
             new_invite = Invite.invite_by_email(iceking, inviter, another_topic)
@@ -174,8 +176,8 @@ describe Invite do
   end
 
   context 'an existing user' do
-    let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
-    let(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
+    fab!(:coding_horror) { Fabricate(:coding_horror) }
 
     it "works" do
       expect do
@@ -197,7 +199,7 @@ describe Invite do
 
   context '.redeem' do
 
-    let(:invite) { Fabricate(:invite) }
+    let!(:invite) { Fabricate(:invite) }
 
     it 'creates a notification for the invitee' do
       expect { invite.redeem }.to change(Notification, :count)
@@ -220,7 +222,7 @@ describe Invite do
     end
 
     context "deletes duplicate invites" do
-      let(:another_user) { Fabricate(:user) }
+      fab!(:another_user) { Fabricate(:user) }
 
       it 'delete duplicate invite' do
         another_invite = Fabricate(:invite, email: invite.email, invited_by: another_user)
@@ -317,8 +319,8 @@ describe Invite do
     end
 
     context 'invited to topics' do
-      let(:tl2_user) { Fabricate(:user, trust_level: 2) }
-      let!(:topic) { Fabricate(:private_message_topic, user: tl2_user) }
+      fab!(:tl2_user) { Fabricate(:user, trust_level: 2) }
+      fab!(:topic) { Fabricate(:private_message_topic, user: tl2_user) }
 
       let!(:invite) do
         topic.invite(topic.user, 'jake@adventuretime.ooo')
@@ -335,7 +337,7 @@ describe Invite do
       end
 
       context 'invited by another user to the same topic' do
-        let(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
+        fab!(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
         let!(:another_invite) { topic.invite(another_tl2_user, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
 
@@ -347,8 +349,8 @@ describe Invite do
 
       context 'invited by another user to a different topic' do
         let!(:user) { invite.redeem }
-        let(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
-        let(:another_topic) { Fabricate(:topic, user: another_tl2_user) }
+        fab!(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
+        fab!(:another_topic) { Fabricate(:topic, user: another_tl2_user) }
 
         it 'adds the user to the topic_users of the first topic' do
           expect(another_topic.invite(another_tl2_user, user.username)).to be_truthy # invited via username
@@ -459,9 +461,9 @@ describe Invite do
   end
 
   describe '.redeem_from_email' do
-    let(:inviter) { Fabricate(:user) }
-    let(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
-    let(:user) { Fabricate(:user, email: invite.email) }
+    fab!(:inviter) { Fabricate(:user) }
+    fab!(:invite) { Fabricate(:invite, invited_by: inviter, email: 'test@example.com', user_id: nil) }
+    fab!(:user) { Fabricate(:user, email: invite.email) }
 
     it 'redeems the invite from email' do
       Invite.redeem_from_email(user.email)

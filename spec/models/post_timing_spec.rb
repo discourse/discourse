@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PostTiming do
@@ -6,9 +8,9 @@ describe PostTiming do
   it { is_expected.to validate_presence_of :msecs }
 
   describe 'pretend_read' do
-    let!(:p1) { Fabricate(:post) }
-    let!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
-    let!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
+    fab!(:p1) { Fabricate(:post) }
+    fab!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
+    fab!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
 
     let :topic_id do
       p1.topic_id
@@ -156,69 +158,6 @@ describe PostTiming do
         expect(timing.msecs).to eq(2468)
 
         expect(@coding_horror.user_stat.posts_read_count).to eq(1)
-      end
-
-    end
-
-    describe 'avg times' do
-
-      describe 'posts' do
-        it 'has no avg_time by default' do
-          expect(@post.avg_time).to be_blank
-        end
-
-        it "doesn't change when we calculate the avg time for the post because there's no timings" do
-          Post.calculate_avg_time
-          @post.reload
-          expect(@post.avg_time).to be_blank
-        end
-      end
-
-      describe 'topics' do
-        it 'has no avg_time by default' do
-          expect(@topic.avg_time).to be_blank
-        end
-
-        it "doesn't change when we calculate the avg time for the post because there's no timings" do
-          Topic.calculate_avg_time
-          @topic.reload
-          expect(@topic.avg_time).to be_blank
-        end
-      end
-
-      describe "it doesn't create an avg time for the same user" do
-        it 'something' do
-          PostTiming.record_timing(@timing_attrs.merge(user_id: @post.user_id))
-          Post.calculate_avg_time
-          @post.reload
-          expect(@post.avg_time).to be_blank
-        end
-
-      end
-
-      describe 'with a timing for another user' do
-        before do
-          PostTiming.record_timing(@timing_attrs)
-          Post.calculate_avg_time
-          @post.reload
-        end
-
-        it 'has a post avg_time from the timing' do
-          expect(@post.avg_time).to be_present
-        end
-
-        describe 'forum topics' do
-          before do
-            Topic.calculate_avg_time
-            @topic.reload
-          end
-
-          it 'has an avg_time from the timing' do
-            expect(@topic.avg_time).to be_present
-          end
-
-        end
-
       end
 
     end

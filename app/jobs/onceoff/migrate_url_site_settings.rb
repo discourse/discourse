@@ -73,7 +73,7 @@ module Jobs
           for_site_setting: true
         ).create_for(Discourse.system_user.id)
 
-        SiteSetting.public_send("#{new_setting}=", upload)
+        SiteSetting.set(new_setting, upload)
       end
     end
 

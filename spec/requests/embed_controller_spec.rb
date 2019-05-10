@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe EmbedController do
 
-  let(:host) { "eviltrout.com" }
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:discourse_username) { "eviltrout" }
@@ -140,7 +141,11 @@ describe EmbedController do
       end
 
       it "provides the topic retriever with the discourse username when provided" do
-        TopicRetriever.expects(:new).with(embed_url, has_entry(author_username: discourse_username))
+        retriever = mock
+        retriever.expects(:retrieve).returns(nil)
+        TopicRetriever.expects(:new)
+          .with(embed_url, has_entry(author_username: discourse_username))
+          .returns(retriever)
 
         get '/embed/comments',
           params: { embed_url: embed_url, discourse_username: discourse_username },

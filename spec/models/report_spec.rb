@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Report do
@@ -20,7 +22,6 @@ describe Report do
   end
 
   shared_examples 'category filtering on subcategories' do
-
     it 'returns the filtered data' do
       expect(report.total).to eq(1)
     end
@@ -543,6 +544,7 @@ describe Report do
       before do
         freeze_time
 
+        post.revise(post.user, { raw: 'updated body by author', edit_reason: 'not cool' }, force_new_version: true)
         post.revise(editor, raw: 'updated body', edit_reason: 'not cool')
       end
 
@@ -753,12 +755,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('flags', category_id: c1.id) }
+        let(:report) { Report.find('flags', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('flags', category_id: c0.id) }
+          let(:report) { Report.find('flags', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -782,12 +784,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics', category_id: c1.id) }
+        let(:report) { Report.find('topics', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics', category_id: c0.id) }
+          let(:report) { Report.find('topics', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -872,12 +874,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('posts', category_id: c1.id) }
+        let(:report) { Report.find('posts', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('posts', category_id: c0.id) }
+          let(:report) { Report.find('posts', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -903,12 +905,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('topics_with_no_response', category_id: c1.id) }
+        let(:report) { Report.find('topics_with_no_response', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('topics_with_no_response', category_id: c0.id) }
+          let(:report) { Report.find('topics_with_no_response', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -939,12 +941,12 @@ describe Report do
       end
 
       context "with category filtering" do
-        let(:report) { Report.find('likes', category_id: c1.id) }
+        let(:report) { Report.find('likes', filters: { category: c1.id }) }
 
         include_examples 'category filtering'
 
         context "on subcategories" do
-          let(:report) { Report.find('likes', category_id: c0.id) }
+          let(:report) { Report.find('likes', filters: { category: c0.id }) }
 
           include_examples 'category filtering on subcategories'
         end
@@ -1170,7 +1172,7 @@ describe Report do
         expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
         expect(page_view_logged_in_report[:data][0][:y]).to eql(2)
 
-        expect(page_view_anon_report[:color]).to eql("rgba(0,136,204,0.5)")
+        expect(page_view_anon_report[:color]).to eql("#40c8ff")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
       end
     end

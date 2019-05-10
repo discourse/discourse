@@ -1,10 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
+require 'excon'
 
 describe Jobs::EmitWebHookEvent do
-  let(:post_hook) { Fabricate(:web_hook) }
-  let(:inactive_hook) { Fabricate(:inactive_web_hook) }
-  let(:post) { Fabricate(:post) }
-  let(:user) { Fabricate(:user) }
+  fab!(:post_hook) { Fabricate(:web_hook) }
+  fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
+  fab!(:post) { Fabricate(:post) }
+  fab!(:user) { Fabricate(:user) }
 
   it 'raises an error when there is no web hook record' do
     expect do
@@ -24,50 +27,107 @@ describe Jobs::EmitWebHookEvent do
     end.to raise_error(Discourse::InvalidParameters)
   end
 
+  it "should not destroy webhook event in case of error" do
+    stub_request(:post, post_hook.payload_url).to_return(status: 500)
+
+    subject.execute(
+      web_hook_id: post_hook.id,
+      payload: { id: post.id }.to_json,
+      event_type: WebHookEventType::POST
+    )
+
+    expect(WebHookEvent.last.web_hook_id).to eq(post_hook.id)
+  end
+
   context 'when the web hook is failed' do
     before do
       SiteSetting.retry_web_hook_events = true
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
-        .to_return(body: 'Invalid Access', status: 403)
     end
 
-    it 'retry if site setting is enabled' do
-      expect do
-        subject.execute(
-          web_hook_id: post_hook.id,
-          event_type: described_class::PING_EVENT
-        )
-      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+    context 'when the webhook has failed for 404 or 410' do
+      before do
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: response_status)
+      end
 
-      job = Jobs::EmitWebHookEvent.jobs.first
-      args = job["args"].first
-      expect(args["retry_count"]).to eq(1)
-    end
+      let(:response_status) { 410 }
 
-    it 'does not retry for more than maximum allowed times' do
-      expect do
+      it 'disables the webhook' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT,
+            retry_count: described_class::MAX_RETRY_COUNT
+          )
+        end.to change { post_hook.reload.active }.to(false)
+      end
+
+      it 'logs webhook deactivation reason' do
         subject.execute(
           web_hook_id: post_hook.id,
           event_type: described_class::PING_EVENT,
           retry_count: described_class::MAX_RETRY_COUNT
         )
-      end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
+        user_history = UserHistory.find_by(action: UserHistory.actions[:web_hook_deactivate], acting_user: Discourse.system_user)
+        expect(user_history).to be_present
+        expect(user_history.context).to eq([
+          "webhook_id: #{post_hook.id}",
+          "webhook_response_status: #{response_status}"
+        ].to_s)
+      end
     end
 
-    it 'does not retry if site setting is disabled' do
-      SiteSetting.retry_web_hook_events = false
+    context 'when the webhook has failed' do
+      before do
+        stub_request(:post, post_hook.payload_url).to_return(body: 'Invalid Access', status: 403)
+      end
 
-      expect do
+      it 'retry if site setting is enabled' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+      end
+
+      it 'does not retry for more than maximum allowed times' do
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT,
+            retry_count: described_class::MAX_RETRY_COUNT
+          )
+        end.to_not change { Jobs::EmitWebHookEvent.jobs.size }
+      end
+
+      it 'does not retry if site setting is disabled' do
+        SiteSetting.retry_web_hook_events = false
+
+        expect do
+          subject.execute(
+            web_hook_id: post_hook.id,
+            event_type: described_class::PING_EVENT
+          )
+        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+      end
+
+      it 'properly logs error on rescue' do
+        stub_request(:post, post_hook.payload_url).to_raise("connection error")
         subject.execute(
           web_hook_id: post_hook.id,
           event_type: described_class::PING_EVENT
         )
-      end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+
+        event = WebHookEvent.last
+        expect(event.payload).to eq(MultiJson.dump(ping: 'OK'))
+        expect(event.status).to eq(-1)
+        expect(MultiJson.load(event.response_headers)['error']).to eq('connection error')
+      end
     end
   end
 
   it 'does not raise an error for a ping event without payload' do
-    stub_request(:post, "https://meta.discourse.org/webhook_listener")
+    stub_request(:post, post_hook.payload_url)
       .to_return(body: 'OK', status: 200)
 
     subject.execute(
@@ -85,7 +145,7 @@ describe Jobs::EmitWebHookEvent do
   end
 
   it 'emits normally with sufficient arguments' do
-    stub_request(:post, "https://meta.discourse.org/webhook_listener")
+    stub_request(:post, post_hook.payload_url)
       .with(body: "{\"post\":{\"test\":\"some payload\"}}")
       .to_return(body: 'OK', status: 200)
 
@@ -97,10 +157,10 @@ describe Jobs::EmitWebHookEvent do
   end
 
   context 'with category filters' do
-    let(:category) { Fabricate(:category) }
-    let(:topic) { Fabricate(:topic) }
-    let(:topic_with_category) { Fabricate(:topic, category_id: category.id) }
-    let(:topic_hook) { Fabricate(:topic_web_hook, categories: [category]) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic_with_category) { Fabricate(:topic, category_id: category.id) }
+    fab!(:topic_hook) { Fabricate(:topic_web_hook, categories: [category]) }
 
     it "doesn't emit when event is not related with defined categories" do
       subject.execute(
@@ -112,7 +172,7 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'emit when event is related with defined categories' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .with(body: "{\"topic\":{\"test\":\"some payload\"}}")
         .to_return(body: 'OK', status: 200)
 
@@ -126,9 +186,9 @@ describe Jobs::EmitWebHookEvent do
   end
 
   context 'with tag filters' do
-    let(:tag) { Fabricate(:tag) }
-    let(:topic) { Fabricate(:topic, tags: [tag]) }
-    let(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:topic) { Fabricate(:topic, tags: [tag]) }
+    fab!(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
 
     it "doesn't emit when event is not included any tags" do
       subject.execute(
@@ -148,7 +208,7 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'emit when event is related with defined tags' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .with(body: "{\"topic\":{\"test\":\"some payload\"}}")
         .to_return(body: 'OK', status: 200)
 
@@ -161,9 +221,9 @@ describe Jobs::EmitWebHookEvent do
     end
   end
 
-  describe '#web_hook_request' do
+  describe '#send_webhook!' do
     it 'creates delivery event record' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .to_return(body: 'OK', status: 200)
 
       WebHookEventType.all.pluck(:name).each do |name|
@@ -180,7 +240,7 @@ describe Jobs::EmitWebHookEvent do
     end
 
     it 'sets up proper request headers' do
-      stub_request(:post, "https://meta.discourse.org/webhook_listener")
+      stub_request(:post, post_hook.payload_url)
         .to_return(headers: { test: 'string' }, body: 'OK', status: 200)
 
       subject.execute(

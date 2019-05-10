@@ -126,3 +126,5 @@ bs_BA:
           Hej, hvala za odgovor!
 
           Nažalost, kako sam programiran ograničenim mogućnostima, ne mogu jasno razumjeti na što ste mislili. :frowning:
+    new_user_narrative:
+      reset_trigger: "novi korisnik"

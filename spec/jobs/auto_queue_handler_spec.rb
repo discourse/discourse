@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Jobs::AutoQueueHandler do
@@ -5,8 +7,8 @@ describe Jobs::AutoQueueHandler do
   subject { Jobs::AutoQueueHandler.new.execute({}) }
 
   context "old flag" do
-    let!(:old) { Fabricate(:reviewable_flagged_post, created_at: 61.days.ago) }
-    let!(:not_old) { Fabricate(:reviewable_flagged_post, created_at: 59.days.ago) }
+    fab!(:old) { Fabricate(:reviewable_flagged_post, created_at: 61.days.ago) }
+    fab!(:not_old) { Fabricate(:reviewable_flagged_post, created_at: 59.days.ago) }
 
     it "defers the old flag if auto_handle_queued_age is 60" do
       SiteSetting.auto_handle_queued_age = 60
@@ -24,10 +26,10 @@ describe Jobs::AutoQueueHandler do
   end
 
   context "reviewables" do
-    let!(:new_post) { Fabricate(:reviewable_queued_post, created_at: 59.days.ago) }
-    let!(:old_post) { Fabricate(:reviewable_queued_post, created_at: 61.days.ago) }
-    let!(:new_user) { Fabricate(:reviewable, created_at: 10.days.ago) }
-    let!(:old_user) { Fabricate(:reviewable, created_at: 80.days.ago) }
+    fab!(:new_post) { Fabricate(:reviewable_queued_post, created_at: 59.days.ago) }
+    fab!(:old_post) { Fabricate(:reviewable_queued_post, created_at: 61.days.ago) }
+    fab!(:new_user) { Fabricate(:reviewable, created_at: 10.days.ago) }
+    fab!(:old_user) { Fabricate(:reviewable, created_at: 80.days.ago) }
 
     it "rejects the post when auto_handle_queued_age is 60" do
       SiteSetting.auto_handle_queued_age = 60

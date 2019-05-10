@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'jobs/base'
 require_dependency 'jobs/regular/process_post'
@@ -13,10 +15,10 @@ describe Jobs::NotifyMovedPosts do
   end
 
   context 'with post ids' do
-    let!(:p1) { Fabricate(:post) }
-    let!(:p2) { Fabricate(:post, user: Fabricate(:evil_trout), topic: p1.topic) }
-    let!(:p3) { Fabricate(:post, user: p1.user, topic: p1.topic) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:p1) { Fabricate(:post) }
+    fab!(:p2) { Fabricate(:post, user: Fabricate(:evil_trout), topic: p1.topic) }
+    fab!(:p3) { Fabricate(:post, user: p1.user, topic: p1.topic) }
+    fab!(:admin) { Fabricate(:admin) }
 
     let(:moved_post_notifications) { Notification.where(notification_type: Notification.types[:moved_post]) }
 

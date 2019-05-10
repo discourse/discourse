@@ -118,7 +118,7 @@ en:
           I currently know how to do the following things:
 
           `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Starts one of the following interactive narratives: %{tracks}.
+          > Starts one of the following interactive tutorials: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -144,8 +144,8 @@ en:
           In the meantime, I’ll stay out of your way.
 
     new_user_narrative:
-      reset_trigger: "new user"
-      title: "New user narrative completion certificate"
+      reset_trigger: "tutorial"
+      title: "New user tutorial completion certificate"
       cert_title: "In recognition of successful completion of the new user tutorial"
 
       hello:
@@ -320,7 +320,7 @@ en:
         alt: 'Certificate of Achievement'
 
     advanced_user_narrative:
-      reset_trigger: 'advanced user'
+      reset_trigger: 'advanced tutorial'
       cert_title: "In recognition of successful completion of the advanced user tutorial"
       title: ':arrow_up: Advanced user features'
       start_message: |-
@@ -366,7 +366,7 @@ en:
         reply: |-
           Phew, that was a close one! Thanks for fixing that :wink:
 
-          Do note that you only have 24 hours to undelete a post.
+          Do note that you only have %{deletion_after} hour(s) to undelete a post.
 
       category_hashtag:
         instructions: |-

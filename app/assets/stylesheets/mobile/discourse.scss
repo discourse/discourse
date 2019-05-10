@@ -9,8 +9,30 @@ body {
   background-color: $secondary;
 }
 
-textarea {
-  background-color: $secondary;
+.ios-device {
+  textarea {
+    background-color: $secondary;
+    font-size: $font-size-ios-input;
+  }
+
+  input {
+    &[type="text"],
+    &[type="password"],
+    &[type="datetime"],
+    &[type="datetime-local"],
+    &[type="date"],
+    &[type="month"],
+    &[type="time"],
+    &[type="week"],
+    &[type="number"],
+    &[type="email"],
+    &[type="url"],
+    &[type="search"],
+    &[type="tel"],
+    &[type="color"] {
+      font-size: $font-size-ios-input;
+    }
+  }
 }
 
 blockquote {
@@ -53,6 +75,8 @@ blockquote {
   overflow: visible;
   position: relative;
   border: 1px solid $primary-medium;
+  // Prevents the dropdowns from collapsing while content loads, so they look more like placeholders and less like dark 2px lines
+  min-height: 37px;
 
   a {
     color: $primary;

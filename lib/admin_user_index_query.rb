@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'trust_level'
 
 class AdminUserIndexQuery
@@ -108,7 +110,7 @@ class AdminUserIndexQuery
 
     filter = params[:filter]
     if filter.present?
-      filter.strip!
+      filter = filter.strip
       if ip = IPAddr.new(filter) rescue nil
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else

@@ -38,30 +38,29 @@ class TopicLink < ActiveRecord::Base
   def self.topic_map(guardian, topic_id)
 
     # Sam: complicated reports are really hard in AR
-    builder = DB.build <<-SQL
-  SELECT ftl.url,
-         COALESCE(ft.title, ftl.title) AS title,
-         ftl.link_topic_id,
-         ftl.reflection,
-         ftl.internal,
-         ftl.domain,
-         MIN(ftl.user_id) AS user_id,
-         SUM(clicks) AS clicks
-  FROM topic_links AS ftl
-  LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
-  LEFT JOIN categories AS c ON c.id = ft.category_id
-  /*where*/
-  GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
-  ORDER BY clicks DESC, count(*) DESC
-  LIMIT 50
-SQL
+    builder = DB.build(<<~SQL)
+      SELECT ftl.url,
+             COALESCE(ft.title, ftl.title) AS title,
+             ftl.link_topic_id,
+             ftl.reflection,
+             ftl.internal,
+             ftl.domain,
+             MIN(ftl.user_id) AS user_id,
+             SUM(clicks) AS clicks
+      FROM topic_links AS ftl
+      LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
+      LEFT JOIN categories AS c ON c.id = ft.category_id
+      /*where*/
+      GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
+      ORDER BY clicks DESC, count(*) DESC
+      LIMIT 50
+    SQL
 
     builder.where('ftl.topic_id = :topic_id', topic_id: topic_id)
     builder.where('ft.deleted_at IS NULL')
     # note that ILIKE means "case insensitive LIKE"
     builder.where("NOT(ftl.url ILIKE '%.png' OR ftl.url ILIKE '%.jpg' OR ftl.url ILIKE '%.gif')")
     builder.where("COALESCE(ft.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
-    # do not show links with 0 click
     builder.where("clicks > 0")
 
     builder.secure_category(guardian.secure_category_ids)
@@ -317,5 +316,6 @@ end
 #  index_topic_links_on_link_post_id_and_reflection  (link_post_id,reflection)
 #  index_topic_links_on_post_id                      (post_id)
 #  index_topic_links_on_topic_id                     (topic_id)
+#  index_topic_links_on_user_id                      (user_id)
 #  unique_post_links                                 (topic_id,post_id,url) UNIQUE
 #

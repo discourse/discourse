@@ -9,7 +9,7 @@ class TopicConverter
 
   def convert_to_public_topic(category_id = nil)
     Topic.transaction do
-      @topic.category_id =
+      category_id =
         if category_id
           category_id
         elsif SiteSetting.allow_uncategorized_topics
@@ -21,10 +21,13 @@ class TopicConverter
             .pluck(:id).first
         end
 
-      @topic.archetype = Archetype.default
-      @topic.save
+      PostRevisor.new(@topic.first_post, @topic).revise!(
+        @user,
+        category_id: category_id,
+        archetype: Archetype.default
+      )
+
       update_user_stats
-      update_category_topic_count_by(1)
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
 
       watch_topic(topic)
@@ -34,11 +37,16 @@ class TopicConverter
 
   def convert_to_private_message
     Topic.transaction do
-      update_category_topic_count_by(-1)
-      @topic.category_id = nil
-      @topic.archetype = Archetype.private_message
+      @topic.update_category_topic_count_by(-1)
+
+      PostRevisor.new(@topic.first_post, @topic).revise!(
+        @user,
+        category_id: nil,
+        archetype: Archetype.private_message
+      )
+
       add_allowed_users
-      @topic.save!
+
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       watch_topic(topic)
     end
@@ -71,6 +79,7 @@ class TopicConverter
     # update topics count
     @topic.user.user_stat.topic_count -= 1
     @topic.user.user_stat.save!
+    @topic.save!
   end
 
   def watch_topic(topic)
@@ -79,12 +88,6 @@ class TopicConverter
     @topic.reload.topic_allowed_users.each do |tau|
       next if tau.user_id < 0 || tau.user_id == topic.user_id
       topic.notifier.watch!(tau.user_id)
-    end
-  end
-
-  def update_category_topic_count_by(num)
-    if @topic.category_id.present?
-      Category.where(['id = ?', @topic.category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
     end
   end
 

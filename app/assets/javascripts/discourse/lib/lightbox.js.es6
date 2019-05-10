@@ -1,14 +1,17 @@
 import loadScript from "discourse/lib/load-script";
 import { escapeExpression } from "discourse/lib/utilities";
 import { renderIcon } from "discourse-common/lib/icon-library";
+import { isAppWebview, postRNWebviewMessage } from "discourse/lib/utilities";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 
 export default function($elem) {
   if (!$elem) {
     return;
   }
-  const originalMeta = $("meta[name=viewport]").attr("content");
+
   loadScript("/javascripts/jquery.magnific-popup.min.js").then(function() {
     const spoilers = $elem.find(".spoiler a.lightbox, .spoiled a.lightbox");
+
     $elem
       .find("a.lightbox")
       .not(spoilers)
@@ -17,17 +20,22 @@ export default function($elem) {
         closeOnContentClick: false,
         removalDelay: 300,
         mainClass: "mfp-zoom-in",
+        tClose: I18n.t("lightbox.close"),
+        tLoading: spinnerHTML,
 
         gallery: {
-          enabled: true
+          enabled: true,
+          tPrev: I18n.t("lightbox.previous"),
+          tNext: I18n.t("lightbox.next"),
+          tCounter: I18n.t("lightbox.counter")
+        },
+
+        ajax: {
+          tError: I18n.t("lightbox.content_load_error")
         },
 
         callbacks: {
           open() {
-            $("meta[name=viewport]").attr(
-              "content",
-              "width=device-width, initial-scale=1.0"
-            );
             const wrap = this.wrap,
               img = this.currItem.img,
               maxHeight = img.css("max-height");
@@ -39,15 +47,28 @@ export default function($elem) {
                 wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
               );
             });
+
+            if (isAppWebview()) {
+              postRNWebviewMessage(
+                "headerBg",
+                $(".mfp-bg").css("background-color")
+              );
+            }
           },
           beforeClose() {
-            $("meta[name=viewport]").attr("content", originalMeta);
             this.wrap.off("click.pinhandler");
             this.wrap.removeClass("mfp-force-scrollbars");
+            if (isAppWebview()) {
+              postRNWebviewMessage(
+                "headerBg",
+                $(".d-header").css("background-color")
+              );
+            }
           }
         },
 
         image: {
+          tError: I18n.t("lightbox.image_load_error"),
           titleSrc(item) {
             const href = item.el.data("download-href") || item.src;
             let src = [

@@ -12,10 +12,7 @@ it:
         today: Oggi %{time}
         tomorrow: Domani %{time}
         yesterday: Ieri %{time}
-      title: Inserisci la data
       create:
-        modal_title: Inscisci la data
-        modal_subtitle: "Convertiremo automaticamente la data e l'ora al fuso orario locale del visualizzatore."
         form:
           insert: Inserisci
           advanced_mode: Modalità avanzata

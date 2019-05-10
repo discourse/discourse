@@ -63,6 +63,7 @@ class Plugin::Metadata
     "discourse-voting",
     "discourse-yearly-review",
     "discourse-openid-connect",
+    "discourse-yearly-review",
     "docker_manager",
     "lazyYT",
     "poll"
@@ -94,7 +95,7 @@ class Plugin::Metadata
       attribute = attribute.strip.gsub(/ /, '_').to_sym
 
       if FIELDS.include?(attribute)
-        self.send("#{attribute}=", description.strip)
+        self.public_send("#{attribute}=", description.strip)
       end
     end
 

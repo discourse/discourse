@@ -24,7 +24,7 @@ const LoginMethod = Ember.Object.extend({
     );
   },
 
-  doLogin(reconnect = false) {
+  doLogin({ reconnect = false, fullScreenLogin = true } = {}) {
     const name = this.get("name");
     const customLogin = this.get("customLogin");
 
@@ -37,7 +37,7 @@ const LoginMethod = Ember.Object.extend({
         authUrl += "?reconnect=true";
       }
 
-      if (this.get("full_screen_login")) {
+      if (fullScreenLogin) {
         document.cookie = "fsl=true";
         window.location = authUrl;
       } else {
@@ -79,7 +79,7 @@ const LoginMethod = Ember.Object.extend({
 
 let methods;
 
-export function findAll(siteSettings, capabilities, isMobileDevice) {
+export function findAll() {
   if (methods) {
     return methods;
   }
@@ -89,14 +89,6 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
   Discourse.Site.currentProp("auth_providers").forEach(provider => {
     methods.pushObject(LoginMethod.create(provider));
   });
-
-  // On Mobile, Android or iOS always go with full screen
-  if (
-    isMobileDevice ||
-    (capabilities && (capabilities.isIOS || capabilities.isAndroid))
-  ) {
-    methods.forEach(m => m.set("full_screen_login", true));
-  }
 
   // exclude FA icon for Google, uses custom SVG
   methods.forEach(m => m.set("isGoogle", m.get("name") === "google_oauth2"));

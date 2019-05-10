@@ -34,9 +34,9 @@ createWidget("pm-map-user-group", {
       <span class="group-name">{{attrs.group.name}}</span>
     </a>
     {{#if attrs.isEditing}}
-    {{#if attrs.canRemoveAllowedUsers}}
-      {{attach widget="pm-remove-group-link" attrs=attrs.group}}
-    {{/if}}
+      {{#if attrs.canRemoveAllowedUsers}}
+        {{pm-remove-group-link attrs=attrs.group}}
+      {{/if}}
     {{/if}}
   `
 });

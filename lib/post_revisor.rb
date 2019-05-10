@@ -63,13 +63,18 @@ class PostRevisor
   end
 
   # Fields we want to record revisions for by default
-  track_topic_field(:title) do |tc, title|
-    tc.record_change('title', tc.topic.title, title)
-    tc.topic.title = title
+  %i{title archetype}.each do |field|
+    track_topic_field(field) do |tc, attribute|
+      tc.record_change(field, tc.topic.public_send(field), attribute)
+      tc.topic.public_send("#{field}=", attribute)
+    end
   end
 
   track_topic_field(:category_id) do |tc, category_id|
-    if category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
+    if category_id == 0 && tc.topic.private_message?
+      tc.record_change('category_id', tc.topic.category_id, nil)
+      tc.topic.category_id = nil
+    elsif category_id == 0 || tc.guardian.can_move_topic_to_category?(category_id)
       tc.record_change('category_id', tc.topic.category_id, category_id)
       tc.check_result(tc.topic.change_category_to_id(category_id))
     end
@@ -221,7 +226,9 @@ class PostRevisor
 
   def post_changed?
     POST_TRACKED_FIELDS.each do |field|
-      return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
+      if @fields.has_key?(field) && @fields[field] != @post.public_send(field)
+        return true
+      end
     end
     advance_draft_sequence
     false
@@ -357,7 +364,7 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
+      @post.public_send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
     @post.last_editor_id = @editor.id
@@ -446,6 +453,7 @@ class PostRevisor
     return if @skip_revision
     # don't create an empty revision if something failed
     return unless successfully_saved_post_and_topic
+    return if only_hidden_tags_changed?
     @version_changed ? create_revision : update_revision
   end
 
@@ -517,7 +525,23 @@ class PostRevisor
   end
 
   def bypass_bump?
-    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true || @post.whisper?
+    !@post_successfully_saved ||
+      @topic_changes.errored? ||
+      @opts[:bypass_bump] == true ||
+      @post.whisper? ||
+      only_hidden_tags_changed?
+  end
+
+  def only_hidden_tags_changed?
+    modifications = post_changes.merge(@topic_changes.diff)
+    if modifications.keys.size == 1 && tags_diff = modifications["tags"]
+      a, b = tags_diff[0] || [], tags_diff[1] || []
+      changed_tags = (a + b) - (a & b)
+      if (changed_tags - DiscourseTagging.hidden_tag_names(nil)).empty?
+        return true
+      end
+    end
+    false
   end
 
   def is_last_post?
@@ -557,7 +581,7 @@ class PostRevisor
       category.update_column(:description, new_description)
       @category_changed = category
     else
-      @post.errors[:base] << I18n.t("category.errors.description_incomplete")
+      @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
   end
 

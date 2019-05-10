@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::StaffActionLogsController do
@@ -5,7 +7,7 @@ describe Admin::StaffActionLogsController do
     expect(Admin::StaffActionLogsController < Admin::AdminController).to eq(true)
   end
 
-  let(:admin) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     sign_in(admin)
@@ -24,7 +26,25 @@ describe Admin::StaffActionLogsController do
       expect(json["staff_action_logs"].length).to eq(1)
       expect(json["staff_action_logs"][0]["action_name"]).to eq("delete_topic")
 
-      expect(json["user_history_actions"]).to include("id" => UserHistory.actions[:delete_topic], "name" => 'delete_topic')
+      expect(json["user_history_actions"]).to include(
+        "id" => 'delete_topic', "action_id" => UserHistory.actions[:delete_topic]
+      )
+    end
+
+    context 'When staff actions are extended' do
+      let(:plugin_extended_action) { :confirmed_ham }
+      before { UserHistory.stubs(:staff_actions).returns([plugin_extended_action]) }
+      after { UserHistory.unstub(:staff_actions) }
+
+      it 'Uses the custom_staff id' do
+        get "/admin/logs/staff_action_logs.json", params: {}
+
+        json = JSON.parse(response.body)
+        action = json['user_history_actions'].first
+
+        expect(action['id']).to eq plugin_extended_action.to_s
+        expect(action['action_id']).to eq UserHistory.actions[:custom_staff]
+      end
     end
   end
 

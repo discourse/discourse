@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe QuotedPost do
@@ -28,7 +30,7 @@ describe QuotedPost do
 
     SiteSetting.editing_grace_period = 1.minute.to_i
     post5 = create_post(topic: topic, post_number: 5, raw: "post 5")
-    raw.sub!(post3.full_url, post5.full_url)
+    raw = raw.sub(post3.full_url, post5.full_url)
     post4.revise(post4.user, { raw: raw }, revised_at: post4.updated_at + 2.minutes)
     expect(QuotedPost.where(post_id: post4.id).pluck(:quoted_post_id)).to contain_exactly(post1.id, post2.id, post5.id)
   end
@@ -70,10 +72,18 @@ describe QuotedPost do
     HTML
 
     QuotedPost.create!(post_id: post2.id, quoted_post_id: 999)
+    quote = QuotedPost.create!(post_id: post2.id, quoted_post_id: post1.id)
+    original_date = quote.created_at
+
+    freeze_time 1.hour.from_now
 
     QuotedPost.extract_from(post2)
     expect(QuotedPost.where(post_id: post2.id).count).to eq(1)
     expect(QuotedPost.find_by(post_id: post2.id, quoted_post_id: post1.id)).not_to eq(nil)
+
+    quote.reload
+
+    expect(original_date).to eq_time(quote.created_at)
 
     expect(post2.reply_quoted).to eq(false)
   end

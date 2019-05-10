@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe EmailController do
-  let(:user) { Fabricate(:user) }
-  let(:topic) { Fabricate(:topic) }
-  let(:private_topic) { Fabricate(:private_message_topic) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:private_topic) { Fabricate(:private_message_topic) }
 
   context '.perform unsubscribe' do
     it 'raises not found on invalid key' do
@@ -11,10 +13,10 @@ RSpec.describe EmailController do
       expect(response.status).to eq(404)
     end
 
-    it 'can fully unsubscribe' do
-      user = Fabricate(:user)
-      key = UnsubscribeKey.create_key_for(user, "all")
+    fab!(:user) { Fabricate(:user) }
+    let(:key) { UnsubscribeKey.create_key_for(user, "all") }
 
+    it 'can fully unsubscribe' do
       user.user_option.update_columns(email_digests: true,
                                       email_level: UserOption.email_level_types[:never],
                                       email_messages_level: UserOption.email_level_types[:never])
@@ -37,9 +39,6 @@ RSpec.describe EmailController do
     end
 
     it 'can disable mailing list' do
-      user = Fabricate(:user)
-      key = UnsubscribeKey.create_key_for(user, "all")
-
       user.user_option.update_columns(mailing_list_mode: true)
 
       post "/email/unsubscribe/#{key}.json",
@@ -52,19 +51,31 @@ RSpec.describe EmailController do
       expect(user.user_option.mailing_list_mode).to eq(false)
     end
 
-    it 'can disable digest' do
-      user = Fabricate(:user)
-      key = UnsubscribeKey.create_key_for(user, "all")
-
-      user.user_option.update_columns(email_digests: true)
+    it 'Can change digest frequency' do
+      weekly_interval_minutes = 10080
+      user.user_option.update_columns(email_digests: true, digest_after_minutes: 0)
 
       post "/email/unsubscribe/#{key}.json",
-        params: { disable_digest_emails: "1" }
+        params: { digest_after_minutes: weekly_interval_minutes.to_s }
 
       expect(response.status).to eq(302)
 
       user.user_option.reload
 
+      expect(user.user_option.digest_after_minutes).to eq(weekly_interval_minutes)
+    end
+
+    it 'Can disable email digests setting frequency to zero' do
+      user.user_option.update_columns(email_digests: true, digest_after_minutes: 10080)
+
+      post "/email/unsubscribe/#{key}.json",
+        params: { digest_after_minutes: '0' }
+
+      expect(response.status).to eq(302)
+
+      user.user_option.reload
+
+      expect(user.user_option.digest_after_minutes).to be_zero
       expect(user.user_option.email_digests).to eq(false)
     end
 
@@ -175,99 +186,118 @@ RSpec.describe EmailController do
   end
 
   context '#unsubscribe' do
-    it 'displays log out button if wrong user logged in' do
-      sign_in(Fabricate(:admin))
-      user = Fabricate(:user)
-      key = UnsubscribeKey.create_key_for(user, "digest")
-
-      get "/email/unsubscribe/#{key}"
-
-      expect(response.body).to include(I18n.t("unsubscribe.log_out"))
-      expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
-    end
-
     it 'displays not found if key is not found' do
-      get "/email/unsubscribe/#{SecureRandom.hex}"
+      navigate_to_unsubscribe(SecureRandom.hex)
+
       expect(response.body).to include(CGI.escapeHTML(I18n.t("unsubscribe.not_found_description")))
     end
 
-    it 'correctly handles mailing list mode' do
-      user = Fabricate(:user)
-      key = UnsubscribeKey.create_key_for(user, "digest")
+    fab!(:user) { Fabricate(:user) }
+    let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type) }
 
-      user.user_option.update_columns(mailing_list_mode: true)
+    context 'Unsubscribe from digest' do
+      let(:key_type) { 'digest' }
 
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).to include(I18n.t("unsubscribe.mailing_list_mode"))
+      it 'displays log out button if wrong user logged in' do
+        sign_in(Fabricate(:admin))
 
-      SiteSetting.disable_mailing_list_mode = true
+        navigate_to_unsubscribe
 
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
+        expect(response.body).to include(I18n.t("unsubscribe.log_out"))
+        expect(response.body).to include(I18n.t("unsubscribe.different_user_description"))
+      end
 
-      user.user_option.update_columns(mailing_list_mode: false)
-      SiteSetting.disable_mailing_list_mode = false
+      it 'correctly handles mailing list mode' do
+        user.user_option.update_columns(mailing_list_mode: true)
 
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
+        navigate_to_unsubscribe
+        expect(response.body).to include(I18n.t("unsubscribe.mailing_list_mode"))
+
+        SiteSetting.disable_mailing_list_mode = true
+
+        navigate_to_unsubscribe
+        expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
+
+        user.user_option.update_columns(mailing_list_mode: false)
+        SiteSetting.disable_mailing_list_mode = false
+
+        navigate_to_unsubscribe
+        expect(response.body).not_to include(I18n.t("unsubscribe.mailing_list_mode"))
+      end
+
+      it 'Lets you select the digest frequency ranging from never to half a year' do
+        selected_digest_frequency = 0
+        slow_digest_frequencies = ['weekly', 'every month', 'every six months', 'never']
+
+        navigate_to_unsubscribe
+
+        source = Nokogiri::HTML::fragment(response.body)
+        expect(source.css(".combobox option").map(&:inner_text)).to eq(slow_digest_frequencies)
+      end
+
+      it 'Selects the next slowest frequency by default' do
+        every_month_freq = 43200
+        six_months_freq = 259200
+        user.user_option.update_columns(digest_after_minutes: every_month_freq)
+
+        navigate_to_unsubscribe
+
+        source = Nokogiri::HTML::fragment(response.body)
+        expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(six_months_freq.to_s)
+      end
+
+      it 'Uses never as the selected frequency if current one is six months' do
+        never_frequency = 0
+        six_months_freq = 259200
+        user.user_option.update_columns(digest_after_minutes: six_months_freq)
+
+        navigate_to_unsubscribe
+
+        source = Nokogiri::HTML::fragment(response.body)
+        expect(source.css(".combobox option[selected='selected']")[0]['value']).to eq(never_frequency.to_s)
+      end
     end
 
-    it 'correctly handles digest unsubscribe' do
-      user = Fabricate(:user)
-      user.user_option.update_columns(email_digests: false)
-      key = UnsubscribeKey.create_key_for(user, "digest")
+    context 'Unsubscribe from a post' do
+      fab!(:post) { Fabricate(:post) }
+      let(:user) { post.user }
+      let(:key_type) { post }
 
-      # because we are type digest we will always show digest and it will be selected
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).to include(I18n.t("unsubscribe.disable_digest_emails"))
+      it 'correctly handles watched categories' do
+        cu = create_category_user(:watching)
 
-      source = Nokogiri::HTML::fragment(response.body)
-      expect(source.css("#disable_digest_emails")[0]["checked"]).to eq("checked")
+        navigate_to_unsubscribe
+        expect(response.body).to include("unwatch_category")
 
-      SiteSetting.disable_digest_emails = true
+        cu.destroy!
 
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).not_to include(I18n.t("unsubscribe.disable_digest_emails"))
+        navigate_to_unsubscribe
+        expect(response.body).not_to include("unwatch_category")
+      end
 
-      SiteSetting.disable_digest_emails = false
-      key = UnsubscribeKey.create_key_for(user, "not_digest")
+      it 'correctly handles watched first post categories' do
+        cu = create_category_user(:watching_first_post)
 
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).to include(I18n.t("unsubscribe.disable_digest_emails"))
+        navigate_to_unsubscribe
+        expect(response.body).to include("unwatch_category")
+
+        cu.destroy!
+
+        navigate_to_unsubscribe
+        expect(response.body).not_to include("unwatch_category")
+      end
+
+      def create_category_user(notification_level)
+        CategoryUser.create!(
+          user_id: user.id,
+          category_id: post.topic.category_id,
+          notification_level: CategoryUser.notification_levels[notification_level]
+        )
+      end
     end
 
-    it 'correctly handles watched categories' do
-      post = Fabricate(:post)
-      user = post.user
-      cu = CategoryUser.create!(user_id: user.id,
-                                category_id: post.topic.category_id,
-                                notification_level: CategoryUser.notification_levels[:watching])
-
-      key = UnsubscribeKey.create_key_for(user, post)
+    def navigate_to_unsubscribe(key = unsubscribe_key)
       get "/email/unsubscribe/#{key}"
-      expect(response.body).to include("unwatch_category")
-
-      cu.destroy!
-
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).not_to include("unwatch_category")
-    end
-
-    it 'correctly handles watched first post categories' do
-      post = Fabricate(:post)
-      user = post.user
-      cu = CategoryUser.create!(user_id: user.id,
-                                category_id: post.topic.category_id,
-                                notification_level: CategoryUser.notification_levels[:watching_first_post])
-
-      key = UnsubscribeKey.create_key_for(user, post)
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).to include("unwatch_category")
-
-      cu.destroy!
-
-      get "/email/unsubscribe/#{key}"
-      expect(response.body).not_to include("unwatch_category")
     end
   end
 end

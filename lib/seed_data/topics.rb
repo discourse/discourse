@@ -122,7 +122,7 @@ module SeedData
     end
 
     def create_topic(site_setting_name:, title:, raw:, category: nil, static_first_reply: false, after_create: nil)
-      topic_id = SiteSetting.send(site_setting_name)
+      topic_id = SiteSetting.get(site_setting_name)
       return if topic_id > 0 || Topic.find_by(id: topic_id)
 
       post = PostCreator.create!(
@@ -144,7 +144,7 @@ module SeedData
 
       after_create&.call(post)
 
-      SiteSetting.send("#{site_setting_name}=", post.topic_id)
+      SiteSetting.set(site_setting_name, post.topic_id)
     end
 
     def update_topic(site_setting_name:, title:, raw:, static_first_reply: false, skip_changed:)
@@ -163,7 +163,7 @@ module SeedData
     end
 
     def find_post(site_setting_name)
-      topic_id = SiteSetting.send(site_setting_name)
+      topic_id = SiteSetting.get(site_setting_name)
       Post.find_by(topic_id: topic_id, post_number: 1) if topic_id > 0
     end
 
@@ -172,7 +172,7 @@ module SeedData
     end
 
     def setting_value(site_setting_key)
-      SiteSetting.send(site_setting_key).presence || "<ins>#{site_setting_key}</ins>"
+      SiteSetting.get(site_setting_key).presence || "<ins>#{site_setting_key}</ins>"
     end
 
     def first_reply(post)

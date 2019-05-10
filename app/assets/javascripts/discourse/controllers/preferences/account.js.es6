@@ -55,11 +55,15 @@ export default Ember.Controller.extend(
       return availableTitles.length > 0;
     },
 
-    @computed()
-    canChangePassword() {
-      return (
-        !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
-      );
+    @computed("model.is_anonymous")
+    canChangePassword(isAnonymous) {
+      if (isAnonymous) {
+        return false;
+      } else {
+        return (
+          !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins
+        );
+      }
     },
 
     @computed("model.associated_accounts")
@@ -69,11 +73,7 @@ export default Ember.Controller.extend(
 
     @computed("model.associated_accounts.[]")
     authProviders(accounts) {
-      const allMethods = findAll(
-        this.siteSettings,
-        this.capabilities,
-        this.site.isMobileDevice
-      );
+      const allMethods = findAll();
 
       const result = allMethods.map(method => {
         return {
@@ -92,16 +92,20 @@ export default Ember.Controller.extend(
       return userId !== this.get("currentUser.id");
     },
 
-    @computed("model.second_factor_enabled", "canCheckEmails")
-    canUpdateAssociatedAccounts(secondFactorEnabled, canCheckEmails) {
-      if (secondFactorEnabled || !canCheckEmails) {
+    @computed(
+      "model.second_factor_enabled",
+      "canCheckEmails",
+      "model.is_anonymous"
+    )
+    canUpdateAssociatedAccounts(
+      secondFactorEnabled,
+      canCheckEmails,
+      isAnonymous
+    ) {
+      if (secondFactorEnabled || !canCheckEmails || isAnonymous) {
         return false;
       }
-
-      return (
-        findAll(this.siteSettings, this.capabilities, this.site.isMobileDevice)
-          .length > 0
-      );
+      return findAll().length > 0;
     },
 
     @computed("showAllAuthTokens", "model.user_auth_tokens")
@@ -244,7 +248,7 @@ export default Ember.Controller.extend(
       },
 
       connectAccount(method) {
-        method.doLogin(true);
+        method.doLogin({ reconnect: true, fullScreenLogin: false });
       }
     }
   }

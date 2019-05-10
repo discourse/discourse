@@ -5,4 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-te: {}
+te:
+  discourse_narrative_bot:
+    magic_8_ball:
+      answers:
+        '9': "అవును"
+    new_user_narrative:
+      reset_trigger: "కొత్త సభ్యుడు"

@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Admin::FlagsController do
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
-  let(:post_1) { Fabricate(:post) }
-  let(:category) { Fabricate(:category) }
-  let(:first_post) { Fabricate(:post, post_number: 1) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:post_1) { Fabricate(:post) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:first_post) { Fabricate(:post, post_number: 1) }
 
   before do
     sign_in(admin)

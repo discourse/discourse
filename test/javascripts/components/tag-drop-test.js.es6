@@ -24,13 +24,13 @@ componentTest("default", {
       if (params.queryParams.q === "rég") {
         return response({
           "results": [
-            { "id": "régis", "name": "régis", "count": 2, "pm_count": 0 }
+            { "id": "régis", "text": "régis", "count": 2, "pm_count": 0 }
           ]
         });
       }else if (params.queryParams.q === "dav") {
         return response({
           "results": [
-            { "id": "David", "name": "David", "count": 2, "pm_count": 0 }
+            { "id": "David", "text": "David", "count": 2, "pm_count": 0 }
           ]
         });
       }

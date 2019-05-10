@@ -426,11 +426,25 @@ export default Ember.Component.extend({
           return `${v.code}:`;
         } else {
           $editorInput.autocomplete({ cancel: true });
-          this.set(
-            "isEditorFocused",
-            $("textarea.d-editor-input").is(":focus")
-          );
-          this.set("emojiPickerIsActive", true);
+          this.setProperties({
+            isEditorFocused: $("textarea.d-editor-input").is(":focus"),
+            emojiPickerIsActive: true
+          });
+
+          Ember.run.schedule("afterRender", () => {
+            const filterInput = document.querySelector(
+              ".emoji-picker input[name='filter']"
+            );
+            if (filterInput) {
+              filterInput.value = v.term;
+
+              Ember.run.later(
+                () => filterInput.dispatchEvent(new Event("input")),
+                50
+              );
+            }
+          });
+
           return "";
         }
       },
@@ -477,7 +491,7 @@ export default Ember.Component.extend({
           )
           .then(list => {
             if (list.length) {
-              list.push({ label: I18n.t("composer.more_emoji") });
+              list.push({ label: I18n.t("composer.more_emoji"), term });
             }
             return list;
           });
@@ -802,7 +816,16 @@ export default Ember.Component.extend({
     let html = clipboard.getData("text/html");
     let handled = false;
 
-    if (plainText) {
+    const { pre, lineVal } = this._getSelected(null, { lineVal: true });
+    const isInlinePasting = pre.match(/[^\n]$/);
+    const isCodeBlock = isInside(pre, /(^|\n)```/g);
+
+    if (
+      plainText &&
+      this.siteSettings.enable_rich_text_paste &&
+      !isInlinePasting &&
+      !isCodeBlock
+    ) {
       plainText = plainText.trim().replace(/\r/g, "");
       const table = this._extractTable(plainText);
       if (table) {
@@ -810,9 +833,6 @@ export default Ember.Component.extend({
         handled = true;
       }
     }
-
-    const { pre, lineVal } = this._getSelected(null, { lineVal: true });
-    const isInlinePasting = pre.match(/[^\n]$/);
 
     if (canPasteHtml && plainText) {
       if (isInlinePasting) {
@@ -822,7 +842,7 @@ export default Ember.Component.extend({
           lineVal.match(/^    /)
         );
       } else {
-        canPasteHtml = !isInside(pre, /(^|\n)```/g);
+        canPasteHtml = !isCodeBlock;
       }
     }
 

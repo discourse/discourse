@@ -10,7 +10,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def enabled?
-    SiteSetting.send(@enabled_site_setting)
+    SiteSetting.get(@enabled_site_setting)
   end
 
   def description_for_user(user)
@@ -35,6 +35,7 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
   end
 
   def after_authenticate(auth_token, existing_account: nil)
+    Discourse.deprecate("OpenID Authentication has been deprecated, please migrate to OAuth2 or OpenID Connect", since: "2.3.0beta4", drop_from: "2.4")
     result = Auth::Result.new
 
     data = auth_token[:info]

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'badge'
 
@@ -62,7 +64,7 @@ describe Badge do
   end
 
   describe '#manually_grantable?' do
-    let(:badge) { Fabricate(:badge, name: 'Test Badge') }
+    fab!(:badge) { Fabricate(:badge, name: 'Test Badge') }
     subject { badge.manually_grantable? }
 
     context 'when system badge' do
@@ -95,6 +97,35 @@ describe Badge do
 
     it 'fallbacks to argument value when translation does not exist' do
       expect(Badge.display_name('Not In Translations')).to eq('Not In Translations')
+    end
+  end
+
+  context "First Quote" do
+    let(:quoted_post_badge) do
+      Badge.find(Badge::FirstQuote)
+    end
+
+    it "Awards at the correct award date" do
+      freeze_time
+      post1 = create_post
+
+      raw = <<~RAW
+        [quote="#{post1.user.username}, post:#{post1.post_number}, topic:#{post1.topic_id}"]
+        lorem
+        [/quote]
+      RAW
+
+      post2 = create_post(raw: raw)
+
+      quoted_post = QuotedPost.find_by(post_id: post2.id)
+      freeze_time 1.year.from_now
+      quoted_post.update!(created_at: Time.now)
+
+      BadgeGranter.backfill(quoted_post_badge)
+      user_badge = post2.user.user_badges.find_by(badge_id: quoted_post_badge.id)
+
+      expect(user_badge.granted_at).to eq_time(post2.created_at)
+
     end
   end
 

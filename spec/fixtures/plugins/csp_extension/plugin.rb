@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: csp_extension
 # about: Fixture plugin that extends default CSP
 # version: 1.0

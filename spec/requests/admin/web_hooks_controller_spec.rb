@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Admin::WebHooksController do
@@ -7,8 +9,8 @@ describe Admin::WebHooksController do
   end
 
   context 'while logged in as an admin' do
-    let(:web_hook) { Fabricate(:web_hook) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:web_hook) { Fabricate(:web_hook) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)

@@ -22,6 +22,7 @@ function unlessReadOnly(method, message) {
 
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   siteTitle: setting("title"),
+  shortSiteDescription: setting("short_site_description"),
 
   actions: {
     toggleAnonymous() {
@@ -41,6 +42,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
     _collectTitleTokens(tokens) {
       tokens.push(this.get("siteTitle"));
+      if (
+        window.location.pathname === Discourse.getURL("/") &&
+        this.get("shortSiteDescription") !== ""
+      ) {
+        tokens.push(this.get("shortSiteDescription"));
+      }
       Discourse.set("_docTitle", tokens.join(" - "));
     },
 
@@ -245,14 +252,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _autoLogin(modal, modalClass, notAuto) {
-    const methods = findAll(
-      this.siteSettings,
-      getOwner(this).lookup("capabilities:main"),
-      this.site.isMobileDevice
-    );
+    const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0]);
+      this.controllerFor("login").send("externalLogin", methods[0], {
+        fullScreenLogin: true
+      });
     } else {
       showModal(modal);
       this.controllerFor("modal").set("modalClass", modalClass);

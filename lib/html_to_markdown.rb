@@ -185,6 +185,7 @@ class HtmlToMarkdown
 
   def visit_br(node)
     return if node.previous_sibling.nil? && EMPHASIS.include?(node.parent.name)
+    return if node.parent.name == "p" && (node.next_sibling&.text || "").start_with?("\n")
     @stack[-1].markdown << "\n"
   end
 

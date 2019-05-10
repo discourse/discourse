@@ -210,8 +210,6 @@ el:
   too_late_to_edit: "Αυτή η ανάρτηση δημιουργήθηκε πολύ καιρό πριν. Δεν μπορεί πλέον να γίνει επεξεργασία της ή να διαγραφεί."
   revert_version_same: "Η τρέχουσα έκδοση είναι η ίδια με την έκδοση που προσπαθείς να επαναφέρεις."
   excerpt_image: "εικόνα"
-  queue:
-    delete_reason: "Διαγράφτηκαν μέσω της ουράς επανελέγχου "
   groups:
     errors:
       can_not_modify_automatic: "Δεν μπορείς να τροποποιήσεις μια αυτόματη ομάδα"
@@ -306,6 +304,7 @@ el:
       topic:
         title: "Τίτλος"
         featured_link: "Προτεινόμενος Σύνδεσμος"
+        category_id: "Κατηγορία"
       post:
         raw: "Κύριο μέρος"
       user_profile:
@@ -526,6 +525,9 @@ el:
       grant: "Παραχώρηση Δικαιωμάτων Διαχειριστή"
       complete: "<b>%{target_username}</b> είναι πλέον διαχειριστής."
       back_to: "Επιστροφή σε %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Χρειάζεται Έγκριση"
   post_action_types:
     off_topic:
       title: "Εκτός-Θέματος"
@@ -587,6 +589,7 @@ el:
     notify_moderators:
       title: "Κάτι άλλο"
       long_form: "το επισήμαναν για έλεγχο από συντονιστή"
+      short_description: "Χρειάζεται έλεγχο από το προσωπικό για διαφορετικό λόγο"
       email_title: 'Το θέμα "%{title}" χρειάζεται έλεγχο από συντονιστή'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -601,8 +604,6 @@ el:
         make: "Aυτό το νήμα είναι πλέον νήμα ανακοίνωσης. Θα εμφανίζεται στην κορυφή κάθε σελίδας, μέχρι να απορριφθεί από το χρήστη."
         remove: "Αυτό το νήμα δεν είναι πλέον νήμα ανακοίνωσης. Δε θα εμφανίζεται στην κορυφή κάθε σελίδας."
   unsubscribed:
-    title: "Επιτυχής απεγγραφή!"
-    description: "<b>%{email}</b> έχει απεγγραφεί. Για να αλλάξετε τις ρυθμίσεις του email σας <a href='%{url}'>επισκεφθείτε την σελίδα ρυθμίσεων</a>."
     topic_description: "Για να εγγραφείτε ξανά στο %{link}, χρησιμοποιήστε τον έλεγχο ειδοποιήσεων στην κάτω ή στην δεξιά πλευρά του νήματος."
   unsubscribe:
     title: "Απεγγραφή"
@@ -610,11 +611,16 @@ el:
     mute_topic: "Σίγαση όλων των ειδοποιήσεων για αυτό το νήμα, %{link}"
     unwatch_category: "Διακοπή επιτήρησης όλων των νημάτων της κατηγορίας %{category}"
     mailing_list_mode: "Απενεργοποιήστε τη λειτουργία της ταχυδρομικής λίστας"
-    disable_digest_emails: "Διακοπή αποστολής συνοπτικών μηνυμάτων"
     all: "Μη μου στέλνετε mail από την %{sitename}"
     different_user_description: "Έχετε συνδεθεί ως διαφορετικός χρήστης από αυτόν που επικοινωνήσαμε μέσω email. Παρακαλούμε αποσυνδεθείτε ή χρησιμοποιήστε την ανώνυμη λειτουργία και δοκιμάστε ξανά."
     not_found_description: "Λυπούμαστε, δεν μπορέσαμε να βρούμε την συγκεκριμένη απεγγραφή. Είναι πιθανό ο σύνδεσμος στο email σας να έληξε; "
     log_out: "Αποσύνδεση"
+    digest_frequency:
+      never: "ποτέ"
+      every_30_minutes: "κάθε 30 λεπτά"
+      every_hour: "ωριαία"
+      daily: "καθημερινά"
+      weekly: "κάθε εβδομάδα"
   user_api_key:
     title: "Εξουσιοδότηση πρόσβασης στην εφαρμογή"
     authorize: "Εξουσιοδότηση"
@@ -631,11 +637,40 @@ el:
       read: "Ανάγνωση όλων"
       write: "Εγγραφή όλων"
   reports:
+    default:
+      labels:
+        day: Ημέρα
+    post_edits:
+      labels:
+        post: Ανάρτηση
+        editor: Συντάκτης
+        edit_reason: Αιτία
+    user_flagging_ratio:
+      labels:
+        user: Χρήστης
+    moderators_activity:
+      labels:
+        moderator: Συντονιστής
+    flags_status:
+      labels:
+        flag: Τύπος
     visits:
       title: "Επισκέψεις Χρήστη"
       xaxis: "Ημέρα"
       yaxis: "Αριθμός επισκέψεων"
     signups:
+      xaxis: "Ημέρα"
+    new_contributors:
+      xaxis: "Ημέρα"
+    consolidated_page_views:
+      yaxis: "Ημέρα"
+      labels:
+        post: Ανάρτηση
+        editor: Συντάκτης
+        edit_reason: Αιτία
+    dau_by_mau:
+      xaxis: "Ημέρα"
+    daily_engaged_users:
       xaxis: "Ημέρα"
     profile_views:
       title: "Προβολές Προφίλ Χρήστη"
@@ -665,11 +700,28 @@ el:
       title: "Χρήστες ανάλογα με το Επίπεδο Εμπιστοσύνης"
       xaxis: "Επίπεδο Εμπιστοσύνης"
       yaxis: "Αριθμός χρηστών"
+    users_by_type:
+      xaxis: "Τύπος"
+      yaxis: "Αριθμός χρηστών"
+      labels:
+        type: Τύπος
+      xaxis_labels:
+        admin: Διαχειριστής
+        moderator: Συντονιστής
+        suspended: Αποβλημένοι
+        silenced: Σιγήθηκαν
+    trending_search:
+      labels:
+        term: Όρος
+        searches: Αναζητήσεις
     emails:
       title: "Απεσταλμένα Emails"
       xaxis: "Ημέρα"
       yaxis: "Αριθμός Emails"
     user_to_user_private_messages:
+      xaxis: "Ημέρα"
+      yaxis: "Αριθμός μηνυμάτων"
+    user_to_user_private_messages_with_replies:
       xaxis: "Ημέρα"
       yaxis: "Αριθμός μηνυμάτων"
     system_private_messages:
@@ -693,14 +745,25 @@ el:
       xaxis: "Χρήστης"
       num_clicks: "Clicks"
       num_topics: "Νήματα"
+      labels:
+        user: "Χρήστης"
+        num_clicks: "Clicks"
+        num_topics: "Θέματα"
     top_traffic_sources:
       title: "Κύριες πηγές κίνησης"
       xaxis: "Domain"
       num_clicks: "Clicks"
       num_topics: "Νήματα"
       num_users: "Χρήστες"
+      labels:
+        domain: Domain
+        num_clicks: Clicks
+        num_topics: Θέματα
     top_referred_topics:
       title: "Κορυφαία Αναφερόμενα Νήματα"
+      labels:
+        num_clicks: "Clicks"
+        topic: "Νήμα"
     page_view_anon_reqs:
       title: "Ανώνυμοι"
       xaxis: "Ημέρα"
@@ -710,9 +773,11 @@ el:
       xaxis: "Ημέρα"
       yaxis: "Συνδεδεμένοι στις αναγνώσεις"
     page_view_crawler_reqs:
+      title: "Θεάσεις σελίδας από Web Crawlers"
       xaxis: "Ημέρα"
       yaxis: "Θεάσεις σελίδας από Web Crawlers"
     page_view_total_reqs:
+      title: "Προβολές σελίδας"
       xaxis: "Ημέρα"
       yaxis: "Σύνολο προβολών σελίδας"
     page_view_logged_in_mobile_reqs:
@@ -758,6 +823,20 @@ el:
     mobile_visits:
       xaxis: "Ημέρα"
       yaxis: "Αριθμός επισκέψεων"
+    web_crawlers:
+      labels:
+        page_views: "Προβολές σελίδας"
+    suspicious_logins:
+      labels:
+        user: Χρήστης
+        location: Τοποθεσία
+    staff_logins:
+      labels:
+        user: Χρήστης
+        location: Τοποθεσία
+    top_uploads:
+      labels:
+        filename: Όνομα αρχείου
   dashboard:
     rails_env_warning: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
     host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
@@ -780,11 +859,13 @@ el:
     set_locale_from_accept_language_header: "θέστε την γλώσσα του interface για ανώνυμους χρήστες από τη γλώσσα που χρησιμοποιεί το πρόγραμμα περιήγησης τους. (ΠΕΙΡΑΜΑΤΙΚΟ ΧΑΡΑΚΤΗΡΙΣΤΙΚΟ, δεν λειτουργεί με ανώνυμη cache)"
     min_post_length: "Ελάχιστο επιτρεπτό μήκος ανάρτησης σε χαρακτήρες"
     min_first_post_length: "Ελάχιστο επιτρεπτό μήκος πρώτης ανάρτησης (σώμα νήματος) σε χαρακτήρες"
+    min_personal_message_post_length: "Ελάχιστο επιτρεπτό μήκος ανάρτησης σε χαρακτήρες για μηνύματα"
     max_post_length: "Μέγιστο επιτρεπτό μήκος ανάρτησης σε χαρακτήρες"
     topic_featured_link_enabled: "Ενεργοποίηση ανάρτησης ενός συνδέσμου με νήματα."
     show_topic_featured_link_in_digest: "Δείξε το σύνδεσμο προτεινόμενου νήματος στο συνοπτικό email."
     min_topic_title_length: "Ελάχιστο επιτρεπτό μήκος τίτλου νήματος σε χαρακτήρες"
     max_topic_title_length: "Μέγιστο επιτρεπτό μήκος τίτλου νήματος σε χαρακτήρες"
+    min_personal_message_title_length: "Ελάχιστο επιτρεπτό μήκος τίτλου για ένα μήνυμα σε χαρακτήρες"
     min_search_term_length: "Ελάχιστο έγκυρο μήκος όρου αναζήτησης σε χαρακτήρες"
     search_tokenize_chinese_japanese_korean: "Ανάγκασε την αναζήτηση να κάνει tokenize Κινέζικα / Ιαπωνικά / κορεατικά, ακόμη και σε μη CJK ιστότοπους"
     search_prefer_recent_posts: "Εάν η αναζήτηση στην ιστοσελίδα σας είναι αργή, αυτή η επιλογή δημιουργεί κατάλογο των πιο πρόσφατων αναρτήσεων πρώτα"
@@ -827,6 +908,7 @@ el:
     summary_posts_required: "Ελάχιστες αναρτήσεις σε ένα νήμα πριν το «Συνοψίστε αυτό το θέμα» ενεργοποιηθεί"
     summary_likes_required: "Ελάχιστος αριθμός ''Μου αρέσει'' σε ένα θέμα πριν ενεργοποιηθεί το «Συνοψίστε αυτό το θέμα» "
     summary_percent_filter: "Όταν ο χρήστης επιλέξει «Συνοψίστε αυτό το θέμα», δείξε το κορυφαίο % των αναρτήσεων"
+    enable_personal_messages: "Επίτρεψε στους χρήστες επιπέδου εμπιστοσύνης 1 (ρυθμιζόμενο μέσω min trust level to send messages)  να δημιουργήσουν μηνύματα και να απαντήσουν σε μηνύματα. Σημειώστε ότι οι συνεργάτες μπορούν πάντα να στέλνουν μηνύματα."
     enable_long_polling: "Η αρτηρία μηνυμάτων που χρησιμοποιείτε για ειδοποιήσεις μπορεί να χρησιμοποιήσει μακρυά μέθοδο εξέτασης."
     long_polling_base_url: "Base URL που χρησιμοποιείτε για μακρύ ψήφισμα (όταν ένα CDN εξυπηρετεί δυναμικό περιεχόμενο, βεβαιωθείτε ότι το ορίσατε σε έλξη προέλευσης ) π.χ.: http://origin.site.com"
     long_polling_interval: "Χρονικό διάστημα που ο διακομιστής θα πρέπει να περιμένει πριν απαντήσει στους πελάτες όταν δεν υπάρχουν δεδομένα για την αποστολή (μόνο συνδεδεμένοι χρήστες )"
@@ -839,7 +921,6 @@ el:
     tl2_additional_likes_per_day_multiplier: "Αύξησε το όριο των ''Μου αρέσει'' καθημερινά για  tl2 (member) πολλαπλασιάζοντας με αυτό τον αριθμό."
     tl3_additional_likes_per_day_multiplier: "Αύξησε το όριο των ''Μου αρέσει'' καθημερινά για  tl3 (regular) πολλαπλασιάζοντας με αυτό τον αριθμό."
     tl4_additional_likes_per_day_multiplier: "Αύξησε το όριο των ''Μου αρέσει'' καθημερινά για tl4 (leader) πολλαπλασιάζοντας με αυτό τον αριθμό"
-    num_spam_flags_to_silence_new_user: "Αν η ανάρτηση ενός νέου χρήστη λάβει αυτόν τον αριθμό σημάνσεων spam από num_users_to_silence_new_user διαφορετικούς χρήστες, κρύψε όλες τις υπάρχουσες αναρτησεις του χρήστη και απαγόρευσε κάθε μελλοντική ανάρτηση. 0 για ακύρωση."
     num_users_to_silence_new_user: "Αν η ανάρτηση ενός νέου χρήστη λάβει  num_spam_flags_to_silence_new_user σημάνσεις spam από αυτόν τον αριθμό διαφορετικών χρηστών, κρύψε όλες τις υπάρχουσες αναρτησεις του χρήστη και απαγόρευσε κάθε μελλοντική ανάρτηση. 0 για ακύρωση."
     num_tl3_flags_to_silence_new_user: "Αν η ανάρτηση ενός νέου χρήστη λάβει αυτόν τον αριθμό σημάνσεων από  num_tl3_users_to_silence_new_user διαφορετικούς χρήστες επιπέδου 3, κρύψε όλες τις υπάρχουσες αναρτησεις του χρήστη και απαγόρευσε κάθε μελλοντική ανάρτηση. 0 για ακύρωση."
     num_tl3_users_to_silence_new_user: "Αν η ανάρτηση ενός νέου χρήστη λάβει num_tl3_flags_to_silence_new_user flags από αυτόν τον αριθμό διαφορετικών χρηστών επιπέδου 3, κρύψε όλες τις υπάρχουσες αναρτησεις του χρήστη και απαγόρευσε κάθε μελλοντική ανάρτηση. 0 για ακύρωση."
@@ -849,6 +930,7 @@ el:
     must_approve_users: "Το προσωπικό πρέπει να εγκρίνει όλους τους λογαριασμούς των νέων χρηστών προτού τους επιτραπεί να έχουν πρόσβαση στην ιστοσελίδα. Προειδοποίηση: ενεργοποιώντας το για μια ζωντανή ιστοσελίδα θα έχει ως αποτέλεσμα την ανάκληση για τους υπάρχοντες χρήστες που δεν ανήκουν στο προσωπικό!"
     pending_users_reminder_delay: "Ειδοποίηση των συντονιστών αν υπάρχουν νέοι χρήστες που περιμένουν για αποδοχή του λογαριασμού τους για μεγαλύτερο απο αυτό το χρονικό διάστημα. Όρισέ το στο -1 για να απενεργοποιηθούν οι ειδοποιήσεις."
     maximum_session_age: "Ο χρήστης θα παραμείνει συνδεδεμένος για n ώρες από την τελευταία του επίσκεψη"
+    moderators_create_categories: "Να επιτρέπεται στους συντονιστές να δημιουργούν νέες κατηγορίες"
     cors_origins: "Επιτρεπόμενες πηγές για αιτήσεις πολλαπλής προέλευσης (cross-origin requests, CORS). Η κάθε προέλευση πρέπει να περιέχει http:// or https://. Η env μεταβλητή DISCOURSE_ENABLE_CORS πρέπει να οριστεί σε αληθινή για να ενεργοποιηθεί το CORS."
     use_admin_ip_whitelist: "Οι διαχειριστές μπορούν να συνδέονται μόνο αν βρίσκονται σε μια διευθυνση IP καθορισμένη στη λίστα Screened IPs (Admin > Logs > Screened Ips)."
     blacklist_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
@@ -898,7 +980,6 @@ el:
     sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
     allow_new_registrations: "Επιτρέψτε τις νέες εγγραφές χρηστών. Απενεργοποιήστε την επιλογή αυτή για να αποτρέψετε σε οποιονδήποτε  να δημιουργήσει ένα νέο λογαριασμό"
     enable_signup_cta: "Δείξε μια ανακοίνωση στους ανώνυμους χρήστες που επιστρέφουν, η οποία να τους παροτρύνει να δημιουργήσουν λογαριασμό."
-    enable_yahoo_logins: "Ενεργοποιήστε την επαλήθευση μέσω Yahoo"
     google_oauth2_client_id: "Client ID της Google εφαρμογής σας."
     google_oauth2_client_secret: "Μυστικό πελάτη της Google εφαρμογής σας. "
     enable_instagram_logins: "Ενεργοποίησε την επαλήθευση μέσω Instagram, απαιτεί instagram_consumer_key και instagram_consumer_secret"
@@ -928,6 +1009,7 @@ el:
     max_bookmarks_per_day: "Μέγιστος αριθμός σελιδοδεικτών ανά χρήστη ανά ημέρα."
     max_edits_per_day: "Μέγιστος αριθμός επεξεργασιών ανά χρήστη ανά ημέρα."
     max_topics_per_day: "Μέγιστος αριθμός νημάτων που μπορεί να δημιουργήσει ο χρήστης σε μια ημέρα."
+    max_personal_messages_per_day: "Μέγιστος αριθμός μηνυμάτων που μπορεί να δημιουργήσει ο χρήστης σε μια ημέρα."
     max_invites_per_day: "Μέγιστος αριθμός προσκλήσεων που μπορεί να στείλει ο χρήστης σε μια ημέρα."
     max_topic_invitations_per_day: "Μέγιστος αριθμός προσκλήσεων νημάτων που μπορεί να στείλει ο χρήστης σε μια ημέρα."
     max_logins_per_ip_per_hour: "Μέγιστος αριθμός επιτρεπόμενων συνδέσεων ανα διεύθυνση IP την ώρα"
@@ -1035,7 +1117,6 @@ el:
     max_age_unmatched_emails: "Διαγράψτε τις αταίριαστες ελεγχόμενες εγγραφές email μετά από (N) μέρες."
     max_age_unmatched_ips: "Διαγράψτε τις αταίριαστες ελεγχόμενες εγγραφές IP μετά από (N) μέρες."
     num_flaggers_to_close_topic: "Ελάχιστος αριθμός ξεχωριστών επισημάνσεων που απαιτείται για την αυτόματη παύση ενός νήματος για παρέμβαση. "
-    num_flags_to_close_topic: "Ελάχιστος αριθμός από ενεργές επισημάνσεις που απαιτείται για την αυτόματη παύση ενός νήματος για παρέμβαση."
     num_hours_to_close_topic: "Αριθμός ωρών παύσης ενός νήματος για παρέμβαση"
     auto_respond_to_flag_actions: "Ενεργοποίηση αυτόματης απάντησης όταν αφαιρείται μια επισήμανση."
     min_first_post_typing_time: "Ελάχιστος χρόνος σε χιλιοστά του δευτερολέπτου που ένας χρήστης θα πρέπει να πληκτρολογεί κατά τη διάρκεια της πρώτης ανάρτησης, εάν το όριο δεν επιτευχθεί τότε η ανάρτηση αυτόματα εισέρχεται στην ουρά αυτών που απαιτούν έγκριση. Θέτοντας τον ίσο με 0 απενεργοποιείται το όριο (δεν συνιστάται) "
@@ -1124,7 +1205,6 @@ el:
     automatically_unpin_topics: "Αυτόματο ξεκαρφίτσωμα των νημάτων, όταν ο χρήστης φτάνει στο κάτω μέρος."
     read_time_word_count: "Μέτρηση των λέξεων ανά λεπτό για να υπολογίσεις τον εκτιμώμενο χρόνο διαβάσματος."
     topic_page_title_includes_category: "Ο τίτλος του νήματος της σελίδας περιλαμβάνει και το όνομα της κατηγορίας."
-    native_app_install_banner: "Ζήτα από τους συχνούς επισκέπτες να εγκαταστήσουν την υπάρχουσα εφαρμογή Discourse. "
     share_anonymized_statistics: "Μοιράσου ανωνυμοποιημένα στατιστικά χρήσης"
     auto_handle_queued_age: "Αυτόματη διαχείριση εγγραφών σε αναμονή για έλεγχο μετά από τόσες ημέρες. Οι σημάνσεις θα αγνοηθούν. Αναρτήσεις σε ουρά και χρήστες θα αγνοηθούν. Θέσε 0 για απενεργοποίηση αυτής της λειτουργίας."
     max_prints_per_hour_per_user: "Μέγιστος αριθμός προβολών σελίδας /print (0 για απενεργοποίηση)"
@@ -1168,7 +1248,6 @@ el:
     default_other_external_links_in_new_tab: "Άνοιγε τους εξωτερικούς συνδέσμους σε νέα καρτέλα από προεπιλογή."
     default_other_enable_quoting: "Ενεργοποίηση απάντησης με παράθεση για επιλεγμένο κείμενο από προεπιλογή"
     default_other_dynamic_favicon: "Δείχνε τον αριθμό νέων/ενημερωμένων θεμάτων στο εικονίδιο του προγράμματος περιήγησης από προεπιλογή. "
-    default_other_disable_jump_reply: "Να μην γίνεται μετάβαση στην ανάρτηση του χρήστη μετά την απάντηση από προεπιλογή. "
     default_other_like_notification_frequency: "Ειδοποίησε τους χρήστες όταν έχουν 'μου αρέσει' απο προεπιλογή. "
     default_topics_automatic_unpin: "Αυτόματο ξεκαρφίτσωμα των νημάτων, όταν ο χρήστης φτάνει στο κάτω μέρος από προεπιλογή."
     default_categories_watching: "Λίστα κατηγοριών που επιτηρούνται από προεπιλογή."
@@ -1220,6 +1299,8 @@ el:
       enable_sso_disabled: "Θα πρέπει να ενεργοποιήσετε το 'enable sso' πριν ενεργοποιηθεί αυτή η ρύθμιση."
       staged_users_disabled: "Θα πρέπει να ενεργοποιήσετε τους σταδιακούς χρηστες πριν ενεργοποιήσετε αυτή τη ρύθμιση."
       reply_by_email_disabled: "Θα πρέπει να ενεργοποιήσετε την απάντηση μέσω email πριν ενεργοποιήσετε αυτή τη ρύθμιση."
+      min_username_length_range: "Δεν μπορείς να θέσεις το ελάχιστο πιο πάνω από το μέγιστο"
+      max_username_length_range: "Δεν μπορείς να θέσεις το μέγιστο πιο κάτω από το ελάχιστο."
   search:
     within_post: "#%{post_number} από %{username}"
     types:
@@ -1320,6 +1401,9 @@ el:
     auth_complete: "Η ταυτοποιήση έχει ολοκληρωθεί."
     click_to_continue: "Κλικ εδώ για να συνεχίσετε."
     already_logged_in: "Ουπς, φαίνεται ότι προσπαθείς να αποδεχθείς μια πρόσκληση για άλλον χρήστη. Εάν δεν εισαι %{current_user}, παρακαλώ αποσυνδέσου και δοκίμασε ξανά."
+  admin:
+    email:
+      sent_test: "στάλθηκε!"
   user:
     deactivated: "Απενεργοποιήθηκε εξαιτίας των πολλών μηνυμάτων email που επέστρεψαν πίσω στο %{email}'."
     deactivated_by_staff: "Απενεργοποιήθηκε από τους συνεργάτες"
@@ -1346,13 +1430,6 @@ el:
     website:
       domain_not_allowed: "Η ιστοσελίδα δεν είναι έγκυρη. Τα επιτρεπόμενα domains είναι: %{domains}"
     auto_rejected: "Απορρίφθηκε αυτόματα λόγω παλαιότητας. Δες την ρύθμιση auto_handle_queued_age της ιστοσελίδας."
-  flags_reminder:
-    flags_were_submitted:
-      one: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από 1 ώρα πριν. [Παρακαλούμε ελέγξτε τις](%{base_path}/admin/flags)."
-      other: "Οι σημάνσεις έχουν καταχωρηθεί πάνω από %{count} ώρες πριν. [Παρακαλούμε ελέγξτε τις](%{base_path}/admin/flags)."
-    subject_template:
-      one: "1 επισήμανση περιμένει να διαχειριστεί"
-      other: "%{count} επισημάνσεις περιμένουν να διαχειριστούν"
   unsubscribe_mailer:
     title: "Απεγγραφή"
     subject_template: "Επιβεβαιώστε ότι δε θέλετε να λαμβάνετε πλέον ενημερώσεις μέσω email από %{site_title}"
@@ -1424,8 +1501,8 @@ el:
     agreed: "Ευχαριστούμε που μας ενημερώσατε. Συμφωνούμε ότι υπάρχει κάποιο θέμα και το εξετάζουμε."
     agreed_and_deleted: "Ευχαριστούμε που μας ενημερώσατε. Συμφωνούμε ότι υπάρχει κάποιο θέμα και έχουμε απομακρύνει τη δημοσίευση."
     disagreed: "Ευχαριστούμε που μας ειδοποιήσατε. Το εξετάζουμε."
-    deferred: "Ευχαριστούμε που μας ειδοποιήσατε. Το εξετάζουμε."
-    deferred_and_deleted: "Ευχαριστούμε που μας ειδοποιήσατε. Έχουμε αφαιρέσει τη δημοσίευση."
+    ignored: "Ευχαριστούμε που μας ειδοποιήσατε. Το εξετάζουμε."
+    ignored_and_deleted: "Ευχαριστούμε που μας ειδοποιήσατε. Έχουμε αφαιρέσει τη δημοσίευση."
   system_messages:
     private_topic_title: "Νήμα #%{id}"
     contents_hidden: "Παρακαλώ επισκεφθείτε αυτή την ανάρτηση για να δείτε τα περιεχόμενά της."
@@ -1710,6 +1787,9 @@ el:
         Παρακαλούμε [ελέγξτε τις σημάνσεις](%{base_url}/admin/flags). Αν ο/η %{username} τέθηκε λανθασμένα σε σιγή, κάντε κλικ στο κουμπί αναίρεσης σίγασης στην [σελίδα διαχείρισης χρήστη](%{user_url}).
 
         Αυτό το όριο μπορεί να ρυθμιστεί μέσω του πεδίου `silence_new_user` στις ρυθμίσεις ιστοσελίδας.
+    spam_post_blocked:
+      title: " Ανεπιθύμητη Ανάρτηση Μπλοκαρίστηκε"
+      subject_template: "Οι αναρτήσεις του νέου χρήστη %{username}  μπλοκαρίστηκαν εξαιτίας των επαναλαμβανόμενων συνδέσμων"
     unsilenced:
       title: "Εκτός Σιγής"
       subject_template: "Λογαριασμός όχι πια σε αναστολή"
@@ -1725,11 +1805,6 @@ el:
       subject_template:
         one: "1 χρήστης περιμένει για έγκριση"
         other: "%{count} χρήστες περιμένουν για έγκριση"
-      text_body_template: |2
-
-        Υπάρχουν εγγραφές νέων χρηστών σε αναμονή έγκρισης (΄ή απόρριψης) πριν μπορέσουν να έχουν πρόσβαση σε αυτό το φόρουμ.
-
-        [Παρακαλούμε αναθεωρήστε τις στην ενότητα διαχείρισης](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Η λήψη απομακρυσμένων εικόνων απενεργοποιήθηκε"
       subject_template: "Η λήψη απομακρυσμένων εικόνων απενεργοποιήθηκε"
@@ -1912,6 +1987,17 @@ el:
     user_mentioned:
       title: "Αναφέρθηκε ο χρήστης"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |2
 
         %{header_instructions}
@@ -2130,6 +2216,7 @@ el:
     recent_topics: "Πρόσφατα"
     see_more: "Περισσότερα"
     search_title: "Αναζήτηση στην ιστοσελίδα"
+    search_button: "Αναζήτηση"
   offline:
     title: "Cannot load app"
     offline_page_message: "Πιθανώς βρίσκεσαι εκτός σύνδεσης! Έλεγξε την σύνδεσή σου και δοκίμασε ξανά."
@@ -2165,8 +2252,30 @@ el:
   flag_reason:
     sockpuppet: "Ένας νέος χρήστης δημιούργησε ένα νήμα και ένας άλλος νέος χρήσης με την ίδια διεύθυνση IP (%{ip_address}) απάντησε. Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Αυτός ο νέος χρήστης προσπάθησε να δημιουργήσει πολλαπλές αναρτήσεις με συνδέσμους προς το ίδιο domain (%{domain}). Δες τις ρυθμίσεις ιστοτόπου <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    exceeded_emails_limit: "Υπέρβαση max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Υπέρβαση bounce_score_threshold"
+    mailing_list_no_echo_mode: "Οι ειδοποιήσεις λίστας email είναι απενεργοποιημένες για τις αναρτήσεις του ίδιου του χρήστη."
+    user_email_no_user: "Δεν μπορεί να βρεθει  χρήστης με id %{user_id}"
+    user_email_post_not_found: "Δεν μπορεί να βρεθεί ανάρτηση με id %{post_id}"
+    user_email_anonymous_user: "Ο χρήστης είναι ανώνυμος"
+    user_email_user_suspended_not_pm: "Ο χρήστης έχει ανασταλεί, δεν είναι μήνυμα"
+    user_email_seen_recently: "Ο χρήστης εμφανίστηκε πρόσφατα"
+    user_email_notification_already_read: "Η ειδοποίηση αυτού του email έχει ήδη διαβαστεί"
+    user_email_notification_topic_nil: "post.topic είναι κενό"
+    user_email_post_user_deleted: "Ο χρήστης της ανάρτησης έχει διαγραφεί."
+    user_email_post_deleted: "η ανάρτηση διεγράφη από τον συγγραφέα"
+    user_email_user_suspended: "ο χρήστης είχε ανασταλεί"
+    user_email_already_read: "ο χρήστης έχει ήδη διαβάσει την ανάρτηση"
+    sender_message_blank: "το μήνυμα είναι κενό"
+    sender_message_to_blank: "message.to είναι κενό"
+    sender_text_part_body_blank: "text_part.body είναι κενό"
+    sender_body_blank: "body είναι κενό"
   color_schemes:
     base_theme_name: "Βάση"
+    light: "Ανοιχτό"
+    dark: "Σκούρο"
+    default_theme_name: "Ανοιχτό"
     light_theme_name: "Ανοιχτό"
     dark_theme_name: "Σκούρο"
   about: "Σχετικά"
@@ -2565,13 +2674,10 @@ el:
         Αυτό το βραβείο απονέμεται σε δύο νέους χρήστες κάθε μήνα για την εξαιρετική συνεισφορά τους στην κοινότητα, όπως αυτή μετρήθηκε από το πόσο σύχνα άρεσαν οι αναρτήσεις τους και σε ποιους.
     enthusiast:
       name: Θιασώτης
-      description: 10 ημέρες επισκέψεων
     aficionado:
       name: Οπαδός
-      description: 100 ημέρες επισκέψεων
     devotee:
       name: Λάτρης
-      description: 365 ημέρες επισκέψεων
     badge_title_metadata: "%{display_name} παράσημο στην %{site_title}"
   admin_login:
     success: "Το Email Στάλθηκε"
@@ -2593,7 +2699,6 @@ el:
       help: "κάνε εγγραφή με ένα καινούριο λογαριασμό για να ξεκινήσεις"
     confirm_email:
       title: "Επιβεβαίωσε το email σου"
-      message: "<p>Στείλαμε email ενεργοποίησης στο <b>%{email}</b>. Παρακαλώ, ακολούθησε τις οδηγίες σε αυτό το email για να ενεργοποιήσεις τον λογαριασμό σου. </p><p>Εάν δεν έρθει, βεβαιώσου ότι έχεις ρυθμίσει τα ηλεκτρονικά μηνύματα σωστά για το Discourse και έλεγξε τον φάκελο με τα ανεπιθύμητα.</p>"
     resend_email:
       title: "Επαναποστολή email ενεργοποίησης"
       message: "<p> Στείλαμε email ενεργοποίησης στο <b>%{email}</b>"
@@ -2632,16 +2737,13 @@ el:
             one_paragraph: "Παρακαλώ, περιόρισε το μήνυμα καλωσορίσματος σε μία παράγραφο."
       privacy:
         title: "Πρόσβαση"
-        description: "<p> Είναι η κοινότητά σου είναι ανοιχτή σε όλους ή προϋποθέτει εγγραφή μέλους, πρόσκληση ή έγκριση; Εάν προτιμάς, μπορείς να ρυθμίσεις κάποια πράγματα να είναι ιδιωτικά και έπειτα να τα κάνεις δημόσια.</p><p>Μπορείς πάντα να στέλνεις προσκλήσεις από τα νήματα καθώς επίσης και από τη σελίδα προφίλ του χρήστη.</p> "
         fields:
           privacy:
             choices:
               open:
                 label: "Δημόσια"
-                description: "Όλοι μπορούν να έχουν πρόσβαση σε αυτή την κοινότητα και να εγγραφούν για νέο λογαριασμό"
               restricted:
                 label: "Ιδιωτική"
-                description: "Μόνο τα άτομα που έχω προσκαλέσει ή εγκρίνει μπορούν να έχουν πρόσβαση σε αυτή την κοινότητα"
       contact:
         title: "Επικοινωνία"
         fields:
@@ -2661,8 +2763,18 @@ el:
         title: "Θέμα"
       logos:
         title: "Λογότυπα"
+        fields:
+          logo:
+            label: "Κυρίως Λογότυπο"
+          logo_small:
+            label: "Μικρό λογότυπο"
       icons:
         title: "Εικονίδια"
+        fields:
+          favicon:
+            label: "Μικρό εικονίδιο"
+          apple_touch_icon:
+            label: "Μεγάλο εικονίδιο"
       homepage:
         description: "Σου προτείνουμε να εμφανίζονται τα τελευταία νήματα στην αρχική σου σελίδα, αλλά μπορείς επίσης να επιλέξεις να εμφανίζονται κατηγορίες (ομάδες ή νήματα) στην αρχική σου σελίδα, εάν το προτιμάς."
         title: "Αρχική Σελίδα"
@@ -2671,6 +2783,12 @@ el:
             choices:
               latest:
                 label: "Τελευταία Θέματα"
+              categories_only:
+                label: "Μόνο Κατηγορίες"
+              categories_with_featured_topics:
+                label: "Κατηγορίες με Προτεινόμενα Νήματα"
+              categories_and_latest_topics:
+                label: "Κατηγορίες και Τελευταία Νήματα"
       emoji:
         title: "Emoji"
         description: "Ποιο στυλ Emoji προτιμάς στην κοινότητά σου; Μπορείς να προσθέσεις πιο εξατομικευμένα Emoji αργότερα μέσω της επιλογής Διαχείριση, Εξατομίκευση, Emoji."
@@ -2679,3 +2797,33 @@ el:
         description: "Έχεις σχεδόν τελειώσει! Ας προσκαλέσουμε μερικούς χρήστες να <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>συμμετάσχουν στις συζητήσεις</a> με ενδιαφέροντα νήματα και αναρτήσεις ώστε να ξεκινήσει να λειτουργεί η κοινότητα. "
       finished:
         title: "Το Discourse σου είναι έτοιμο!"
+  joined: "Έγινε μέλος"
+  reviewables:
+    actions:
+      agree_and_keep:
+        description: "Αποδοχή επισήμανσης και διατήρηση της ανάρτησης αμετάβλητης."
+      agree_and_suspend:
+        title: "Αποβολή Χρήστη"
+      agree_and_silence:
+        title: "Σίγαση Χρήστη"
+      agree_and_restore:
+        description: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
+      agree_and_hide:
+        description: "Κρύψε αυτή την ανάρτηση και αυτόματα στείλε στον χρήστη ένα μήνυμα που θα τους προτρέπει να το επεξεργαστούν."
+      delete_spammer:
+        title: "Διαγραφή ανεπιθύμητου χρήστη"
+      disagree_and_restore:
+        description: "Επαναφορά της ανάρτησης ώστε όλοι οι χρήστες να μπορούν να το δουν."
+      disagree:
+        title: "Διαφωνώ"
+      ignore:
+        title: "Αγνόηση"
+      approve:
+        title: "Έγκριση"
+      reject_user:
+        delete:
+          title: "Διαγραφή Χρήστη"
+      reject:
+        title: "Απόρριψη"
+      delete_user:
+        title: "Διαγραφή Χρήστη"

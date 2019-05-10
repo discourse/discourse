@@ -162,7 +162,11 @@
                 {{#if model.draftConflictUser}}
                   {{avatar model.draftConflictUser imageSize="small"}}
                 {{/if}}
-                {{model.draftStatus}}
+                {{#if model.draftSaving}}<div class="spinner small"></div>{{/if}}
+                {{#if model.draftSaved}}{{d-icon 'check' class='save-animation'}}{{/if}}
+                {{#if model.draftStatus}}
+                  <span title="{{model.draftStatus}}">{{d-icon 'user-edit'}}</span>
+                {{/if}}
               </div>
             </div>
 

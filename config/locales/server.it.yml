@@ -37,6 +37,8 @@ it:
   redirect_warning: "Non è stato possibile verificare che il collegamento che hai selezionato sia stato effettivamente pubblicato sul forum. Se desideri procedere comunque, seleziona il collegamento qui sotto."
   themes:
     other_error: "Qualcosa è andato storto durante l'aggiornamento del tema"
+    import_error:
+      git: "Errore nella clonazione del repository git, accesso negato o repository non trovato"
     errors:
       component_no_user_selectable: "I componenti del tema non possono essere selezionabili dall'utente"
       component_no_default: "I componenti del tema non possono essere il tema predefinito"
@@ -261,9 +263,6 @@ it:
   too_late_to_edit: "Quel messaggio è stato creato troppo tempo fa. Non può più essere modificato né cancellato."
   revert_version_same: "La versione attuale è la stessa versione che stai cercando di ripristinare."
   excerpt_image: "immagine"
-  queue:
-    delete_reason: "Cancellato attraverso la coda di moderazione"
-    not_found: "Messggio non trovato o già aggiornato"
   groups:
     success:
       bulk_add:
@@ -365,6 +364,7 @@ it:
       topic:
         title: "Titolo"
         featured_link: "Collegamento Evidenziato"
+        category_id: "Categoria"
       post:
         raw: "Contenuto"
       user_profile:
@@ -425,6 +425,7 @@ it:
           attributes:
             word:
               too_many: "Troppe parole per quest'azione"
+  uncategorized_category_name: "Non categorizzato"
   vip_category_name: "Salotto"
   vip_category_description: "Una categoria esclusiva per i membri con livello di esperienza 3 o superiore."
   meta_category_name: "Feedback Sito"
@@ -643,6 +644,9 @@ it:
       grant: "Assegna Accesso Amministratore"
       complete: "<b>%{target_username}</b>è ora un amministratore."
       back_to: "Torna a %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Da Approvare"
   post_action_types:
     off_topic:
       title: "Fuori Tema"
@@ -709,6 +713,7 @@ it:
     notify_moderators:
       title: "Altro"
       long_form: "segnalato all'attenzione dei moderatori"
+      short_description: "Richiede l'attenzione dello staff per un'altra ragione"
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -723,8 +728,6 @@ it:
         make: "Questo argomento è ora uno striscione. Apparirà in cima ad ogni pagina finché non viene chiuso dall'utente."
         remove: "Questo argomento non è più uno striscione. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
-    title: "Iscrizione annullata!"
-    description: "<b>%{email}</b> è stata annullata. Per cambiare le tue impostazioni email <a href='%{url}'>visita le tue preferenze utente</a>."
     topic_description: "Per re-iscriverti a %{link}, usa il controllo notifiche in fondo o a destra dell'argomento."
   unsubscribe:
     title: "Annulla iscrizione"
@@ -732,11 +735,16 @@ it:
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
     mailing_list_mode: "Disabilita la modalità mailing list"
-    disable_digest_emails: "Smetti di inviarmi email ripielogative"
     all: "Non inviare alcuna email da %{sitename}"
     different_user_description: "Sei attualmente connesso con un utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
     not_found_description: "Spiacenti, non siamo riusciti a trovare questa cancellazione. È possibile che il collegamento nell'email sia scaduto?"
     log_out: "Disconnetti"
+    digest_frequency:
+      never: "mai"
+      every_30_minutes: "ogni 30 minuti"
+      every_hour: "ogni ora"
+      daily: "ogni giorno"
+      weekly: "ogni settimana"
   user_api_key:
     title: "Autorizza accesso dell'applicazione"
     authorize: "Autorizza"
@@ -761,6 +769,7 @@ it:
     post_edits:
       labels:
         post: Messaggio
+        editor: Redattore
         author: Autore
         edit_reason: Motivo
     user_flagging_ratio:
@@ -774,6 +783,10 @@ it:
       labels:
         moderator: Moderatore
         flag_count: Segnalazioni revisionate
+    flags_status:
+      labels:
+        flag: Tipo
+        assigned: Assegnato
     visits:
       title: "Visite Utente"
       xaxis: "Giorno"
@@ -783,6 +796,17 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero di iscrizioni"
       description: "Nuovi account registrati durante questo periodo."
+    new_contributors:
+      xaxis: "Giorno"
+    consolidated_page_views:
+      yaxis: "Giorno"
+      labels:
+        post: Messaggio
+        editor: Redattore
+        author: Autore
+        edit_reason: Motivo
+    dau_by_mau:
+      xaxis: "Giorno"
     daily_engaged_users:
       xaxis: "Giorno"
       yaxis: "Utenti Impegnati"
@@ -867,6 +891,10 @@ it:
       xaxis: "Utente"
       num_clicks: "Click"
       num_topics: "Argomenti"
+      labels:
+        user: "Utente"
+        num_clicks: "Clic"
+        num_topics: "Argomenti"
     top_traffic_sources:
       title: "Migliori Sorgenti di Traffico"
       xaxis: "Dominio"
@@ -891,6 +919,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi"
     page_view_crawler_reqs:
+      title: "Visualizzazioni pagina da Spider web"
       xaxis: "Giorno"
       yaxis: "Visualizzazioni pagina da Spider web"
     page_view_total_reqs:
@@ -947,7 +976,17 @@ it:
         page_views: "Pagine viste"
     suspicious_logins:
       labels:
+        user: Utente
+        location: Località
         os: Sistema Operativo
+    staff_logins:
+      labels:
+        user: Utente
+        location: Località
+    top_uploads:
+      labels:
+        filename: Nome del file
+        author: Autore
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
@@ -968,11 +1007,13 @@ it:
     set_locale_from_accept_language_header: "imposta la lingua di interfaccia per gli utenti anonimi in base ai language header del loro browser.\n(SPERIMENTALE, non funziona con cache anonima)"
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
     min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
+    min_personal_message_post_length: "Lunghezza minima in caratteri per i messaggi"
     max_post_length: "Lunghezza massima dei messaggi in caratteri"
     topic_featured_link_enabled: "Abilita la pubblicazione di collegamenti con gli argomenti."
     show_topic_featured_link_in_digest: "Mostra i collegamenti in primo piano dell'argomento nella email riepilogativa."
     min_topic_title_length: "Numero minimo di caratteri per i titoli degli argomenti"
     max_topic_title_length: "Numero massimo di caratteri per i titoli degli argomenti"
+    min_personal_message_title_length: "Numero minimo di caratteri per un messaggio"
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
     search_tokenize_chinese_japanese_korean: "Attiva la tokenizzazione dei caratteri Cinesi/Giapponesi/Coreani nella ricerca anche sui siti non CJK"
     search_prefer_recent_posts: "Se il tuo forum è corposo e la ricerca è lenta, questa opzione tenta di indicizzare prima i messaggi più recenti"
@@ -1015,6 +1056,7 @@ it:
     summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
+    enable_personal_messages: "Autorizza gli utenti con livello di esperienza 1  (configurabile attraverso \"min livello di esperienza per l'invio di messaggi\") a creare e rispondere ai messaggi. Nota che lo staff può inviare messaggi in ogni caso."
     enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
     long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"
@@ -1027,7 +1069,6 @@ it:
     tl2_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 2 (Assiduo), moltiplicando per questo numero"
     tl3_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 3 (Esperto) moltiplicando per questo numero"
     tl4_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 4 (Veterano), moltiplicando per questo numero"
-    num_spam_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono segnalazioni di spam da num_users_to_silence_new_user diversi utenti, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità. "
     num_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_spam_flags_to_silence_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i suoi messaggi e impediscigli ulteriori invii. 0 per disabilitare. "
     num_tl3_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_silence_new_user differenti utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare. "
     num_tl3_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_silence_new_user segnalazioni da questo numero di utenti a livello di esperienza 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
@@ -1037,6 +1078,7 @@ it:
     must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito. ATTENZIONE: abilitare l'opzione per un sito live revocherà l'accesso per tutti gli utenti non-staff esistenti!"
     pending_users_reminder_delay: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di queste ore. Imposta a -1 per disabilitare le notifiche."
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
+    moderators_create_categories: "Permetti ai moderatori di creare nuove categorie"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_whitelist: "Gli amministratori possono connettersi soltanto se hanno un indirizzo IP definito nell'elenco degli IP scansionati (Amministrazione > Log > IP scansionati). "
     blacklist_ip_blocks: "Un elenco di blocchi di IP privati che non dovrebbero mai essere scansionati da Discourse"
@@ -1088,7 +1130,6 @@ it:
     sso_allows_all_return_paths: "Non restringere il dominio per i return_paths forniti da SSO (per default il return path deve essere sul sito corrente)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
     enable_signup_cta: "Mostra una notifica agli utenti anonimi che ritornano chiedendo loro di registrare un account."
-    enable_yahoo_logins: "Abilita l'autenticazione con Yahoo"
     google_oauth2_client_id: "Client ID della tua applicazione Google."
     google_oauth2_client_secret: "Client secret della tua applicazione Google."
     enable_instagram_logins: "Abilita l'autenticazione con Instagram, richiede la instagram_consumer_key e la instagram_consumer_secret"
@@ -1228,7 +1269,6 @@ it:
     max_age_unmatched_emails: "Elimina le voci di email scansionate senza corrispondenza dopo (N) giorni."
     max_age_unmatched_ips: "Elimina le voci di IP scansionati senza corrispondenza dopo (N) giorni."
     num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
-    num_flags_to_close_topic: "Il numero minimo di segnalazioni attive richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
     num_hours_to_close_topic: "Numero di ore per mettere in pausa un argomento in attesa dell'intervento di un moderatore."
     auto_respond_to_flag_actions: "Attiva risposta automatica quando viene fatta una segnalazione."
     min_first_post_typing_time: "Quantità minima di tempo in millisecondi che un utente deve impiegare per la digitazione del  primo messaggio, se non viene raggiunta la soglia il messaggio verrà automaticamente inserito nella coda dei messaggi da approvare. Impostare su 0 per disabilitare (non consigliato)"
@@ -1319,7 +1359,6 @@ it:
     automatically_unpin_topics: " Spunta automaticamente gli argomenti quando l'utente arriva in fondo. "
     read_time_word_count: "Conteggio di parole al minuto per calcolare il tempo stimato di lettura."
     topic_page_title_includes_category: "Il titolo dell'argomento sulla pagina include il nome della categoria."
-    native_app_install_banner: "Domanda ai visitatori ricorrenti di installare l'app nativa di Discourse."
     share_anonymized_statistics: "Condividi statistiche anonime di utilizzo."
     auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Impostare su 0 per disattivare questa funzionalità."
     max_prints_per_hour_per_user: "Numero massimo di impressioni /pagine di stampa (imposta a 0 per disattivare)"
@@ -1364,7 +1403,6 @@ it:
     default_other_external_links_in_new_tab: "Apri i collegamenti esterni in una nuova scheda di default. "
     default_other_enable_quoting: "Attiva rispondi citando per il testo evidenziato di default."
     default_other_dynamic_favicon: "Per impostazione predefinita mostra il conteggio degli argomenti nuovi/aggiornati sull'icona del browser."
-    default_other_disable_jump_reply: "Per default non saltare al messaggio dell'utente dopo la sua risposta."
     default_other_like_notification_frequency: "Per impostazione predefinita invia una notifica agli utenti sui mi piace"
     default_topics_automatic_unpin: " Per impostazione predefinita spunta automaticamente gli argomenti quando l'utente arriva in fondo. "
     default_categories_watching: "Elenco di categorie osservate per default."
@@ -1417,6 +1455,8 @@ it:
       enable_sso_disabled: "Prima di attivare questa impostazione, devi abilitare 'enable sso'."
       staged_users_disabled: "Devi abilitare 'staged users' prima di attivare questa impostazione ."
       reply_by_email_disabled: "Devi abilitare 'reply by email' prima di attivare questa impostazione ."
+      min_username_length_range: "Non puoi impostare il minimo più grande del massimo."
+      max_username_length_range: "Non puoi impostare il massimo inferiore al minimo."
   search:
     within_post: "n°%{post_number} di %{username}"
     types:
@@ -1520,6 +1560,10 @@ it:
     already_logged_in: "Oops, sembra che tu stai tentando di accettare un invito per un altro utente. Se non sei %{current_user}, disconnettiti e prova di nuovo."
     second_factor_title: "Autenticazione a due fattori"
     second_factor_description: "Per favore, inserisci il codice di autenticazione della tua app:"
+    second_factor_backup_description: "Per favore, inserisci uno dei tuoi codici di backup:"
+  admin:
+    email:
+      sent_test: "inviata!"
   user:
     deactivated: "È stata disattivata a causa di troppe email rimbalzate a '%{email}'."
     deactivated_by_staff: "Disattivato dallo staff"
@@ -1549,13 +1593,6 @@ it:
     destroy_reasons:
       unused_staged_user: "Utente temporaneo non utilizzato"
       fixed_primary_email: "Risolto il problema dell'email principale per l'utente temporaneo"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Flags were submitted over 1 hour ago. [Please review them](%{base_path}/admin/flags)."
-      other: "Delle segnalazioni sono state inviate oltre %{count} ore fa. [Per favore, revisionale](%{base_path}/admin/flags)."
-    subject_template:
-      one: "1 segnalazione in attesa di essere revisionata"
-      other: "%{count} segnalazioni in attesa di essere revisionate"
   unsubscribe_mailer:
     title: "Annullare Iscrizione Mailer"
     subject_template: "Conferma che non desideri più ricevere aggiornamenti via email da %{site_title}"
@@ -1620,8 +1657,8 @@ it:
     agreed: "Grazie per averci informato. Sappiamo che c'è un problema e lo stiamo analizzando."
     agreed_and_deleted: "Grazie per averci informato. Sappiamo che c'è un problema e abbiamo cancellato il messaggio."
     disagreed: "Grazie per averci informato. Stiamo provvedendo."
-    deferred: "Grazie per averci informato. Stiamo provvedendo."
-    deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
+    ignored: "Grazie per averci informato. Stiamo provvedendo."
+    ignored_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
   system_messages:
     private_topic_title: "Argomento #%{id}"
     contents_hidden: "Visita il messaggio per vederne i contenuti."
@@ -1886,6 +1923,7 @@ it:
         Questa impostazione può essere modificata tramite l'impostazione del sito `silence_new_user`.
     spam_post_blocked:
       title: "Messaggio di Spam bloccato"
+      subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
     unsilenced:
       title: "Non silenziato"
       subject_template: "Account non più sospeso"
@@ -1900,10 +1938,6 @@ it:
       subject_template:
         one: "1 utente in attesa di approvazione"
         other: "%{count} utenti in attesa di approvazione"
-      text_body_template: |
-        Ci sono nuove iscrizioni in attesa di essere approvate (o rifiutate) prima che possano accedere a questo forum.
-
-        [Per favore valutale nella sezione di amministrazione](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Scaricamento Immagini Remote Disabilitato"
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
@@ -2065,6 +2099,16 @@ it:
     user_mentioned:
       title: "Utente Menzionato"
       subject_template: "[%{email_prefix}]%{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2259,6 +2303,7 @@ it:
     recent_topics: "Recenti"
     see_more: "Altro"
     search_title: "Cerca nel sito"
+    search_button: "Cerca"
   offline:
     title: "Impossibile caricare l'app"
     offline_page_message: "Sembra che tu sia offline! Controlla la tua connessione di rete e riprova."
@@ -2290,8 +2335,30 @@ it:
   flag_reason:
     sockpuppet: "Un nuovo utente ha creato un argomento, e un altro nuovo utente ha risposto dallo stesso indirizzo IP (%{ip_address}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Questo nuovo utente ha provato a creare più messaggi con collegamenti allo stesso dominio (%{domain}). Vedi l'impostazione del sito <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    exceeded_emails_limit: "Ha superato max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Ha superato bounce_score_threshold"
+    mailing_list_no_echo_mode: "Notifiche della mailing list disattivate per i propri messaggi"
+    user_email_no_user: "Non trovo l'utente con l'id %{user_id}"
+    user_email_post_not_found: "Non trovo un messaggio con id %{post_id}"
+    user_email_anonymous_user: "L'utente è anonimo"
+    user_email_user_suspended_not_pm: "L'utente è sospeso, non è un messaggio"
+    user_email_seen_recently: "L'utente è stato visto di recente"
+    user_email_notification_already_read: "La notifica per cui è stata inviata questa mail è già stata letta"
+    user_email_notification_topic_nil: "post.topic è nil"
+    user_email_post_user_deleted: "L'utente del messaggio è stato eliminato."
+    user_email_post_deleted: "il messaggio è stato cancellato dal suo autore"
+    user_email_user_suspended: "l'utente è stato sospeso"
+    user_email_already_read: "l'utente ha già letto questo messaggio"
+    sender_message_blank: "il messaggio è vuoto"
+    sender_message_to_blank: "message.to è vuoto"
+    sender_text_part_body_blank: "text_part.body è vuoto"
+    sender_body_blank: "il corpo è vuoto"
   color_schemes:
     base_theme_name: "Base"
+    light: "Chiaro"
+    dark: "Scuro"
+    default_theme_name: "Chiaro"
     light_theme_name: "Chiaro"
     dark_theme_name: "Scuro"
   about: "Informazioni su"
@@ -2502,7 +2569,7 @@ it:
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 1. Grazie per essere rimasto nei paraggi e per aver letto alcune discussioni, per capire meglio di cosa si occupa la nostra comunità. Le limitazioni imposte ai nuovi utenti sono state rimosse, e ti sono state attivate alcune funzioni essenziali come l'invio di messaggi personali, la segnalazione di messaggi dubbi, la creazione di messaggi Wiki e la possibilità di inviare immagini multiple e collegamenti.
     member:
       name: Membro
-      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Puà utilizzare</a> inviti, messaggi di gruppo e più \"mi piace\""
+      description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Può utilizzare</a> inviti, messaggi di gruppo e più \"mi piace\""
       long_description: |
         Questo distintivo è assegnato quando si raggiunge il livello di esperienza 2. Grazie per esserti unito e per aver partecipato per qualche settimana alla nostra comunità. Ora puoi mandare inviti dalla tua pagina utente o dai singoli argomenti, creare messaggi personali di gruppo, a mettere un numero maggiore di "Mi piace" al giorno.
     regular:
@@ -2700,17 +2767,14 @@ it:
         Questo distintivo è assegnato per congratularsi con due nuovi utenti ogni mese per i loro ottimi contributi globali, misurati sulla frequenza dei like ricevuti per i loro messaggi e da chi li ha dati.
     enthusiast:
       name: Appassionato
-      description: 10 giorni di frequenza
       long_description: |
         Questo distintivo è assegnato per aver visitato il sito per 10 giorni consecutivi. Grazie per essere rimasto nei paraggi per oltre una settimana!
     aficionado:
       name: Amatoriale
-      description: 100 giorni di frequenza
       long_description: |
         Questo distintivo è assegnato per aver visitato il sito per oltre 100 giorni consecutivi. Si tratta di oltre tre mesi!
     devotee:
       name: Devoto
-      description: 365 giorni di frequenza
       long_description: |
         Questo distintivo è assegnato per aver visitato il sito per 365 giorni consecutivi. Wow, un intero anno!
     badge_title_metadata: "%{display_name}distintivo su %{site_title}"
@@ -2738,7 +2802,6 @@ it:
       help: "registrare un nuovo account per cominciare"
     confirm_email:
       title: "Conferma la tua Email"
-      message: "<p>Abbiamo inviato una email di attivazione a <b>%{email}</b>. Segui le istruzioni nella email per attivare il tuo account.</p><p>Se non arriva assicurati di aver impostato correttamente l'email per Discourse e di aver controllato la cartella di spam.</p>"
     resend_email:
       title: "Rispedire Email di Attivazione"
       message: "<p>Abbiamo rispedito una email di attivazione a <b>%{email}</b>"
@@ -2777,16 +2840,13 @@ it:
             one_paragraph: "Restringi il tuo messaggio di benvenuto a un paragrafo."
       privacy:
         title: "Accesso"
-        description: "<p>La tua comunità è aperta a tutti o è limitata ai membri, agli inviti o all'approvazione? Se preferisci puoi impostare il sito come privato e poi passare a pubblico in seguito.</p><p>Puoi sempre inviare inviti da argomenti o dalla tua pagina di profilo utente.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Pubblico"
-                description: "Chiunque può accedere a questa comunità e registrare un account"
               restricted:
                 label: "Privato"
-                description: "Solo le persone che ho invitato o approvato possono accedere a questa comunità"
       contact:
         title: "Contatto"
         fields:
@@ -2806,8 +2866,18 @@ it:
         title: "Tema"
       logos:
         title: "Loghi"
+        fields:
+          logo:
+            label: "Logo Primario"
+          logo_small:
+            label: "Logo Piccolo"
       icons:
         title: "Icone"
+        fields:
+          favicon:
+            label: "Icona Piccola"
+          apple_touch_icon:
+            label: "Icona Grande"
       homepage:
         description: "Ti consigliamo di mostrare gli ultimi argomenti nella tua homepage, ma puoi anche visualizzare le categorie (gruppi di argomenti) sulla homepage, se preferisci."
         title: "Homepage"
@@ -2832,6 +2902,7 @@ it:
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per far partire la tua comunità. "
       finished:
         title: "Il tuo Discourse è Pronto!"
+  joined: "Iscritto"
   discourse_push_notifications:
     popup:
       confirm_title: "Notifiche abilitate - %{site_title}"
@@ -2839,3 +2910,36 @@ it:
   staff_action_logs:
     not_found: "non trovato"
     unknown: "sconosciuto"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "Mantieni il messaggio"
+        description: "Accetta la segnalazione e mantieni invariato il messaggio."
+      agree_and_suspend:
+        title: "Sospendi Utente"
+        description: "Accetta la segnalazione e sospendi l'utente."
+      agree_and_silence:
+        title: "Silenzia Utente"
+        description: "Accetta la segnalazione e silenzia l'utente."
+      agree_and_restore:
+        description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+      agree_and_hide:
+        title: "Nascondi Messaggio"
+        description: "Nascondi questo messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
+      delete_spammer:
+        title: "Cancella Spammer"
+      disagree_and_restore:
+        description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+      disagree:
+        title: "Rifiuta"
+      ignore:
+        title: "Ignora"
+      approve:
+        title: "Approva"
+      reject_user:
+        delete:
+          title: "Cancella utente"
+      reject:
+        title: "Scarta"
+      delete_user:
+        title: "Cancella utente"

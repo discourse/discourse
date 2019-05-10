@@ -7,11 +7,6 @@ class ThemeField < ActiveRecord::Base
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
 
-  after_commit do |field|
-    SvgSprite.expire_cache if field.target_id == Theme.targets[:settings]
-    SvgSprite.expire_cache if field.name == SvgSprite.theme_sprite_variable_name
-  end
-
   scope :find_by_theme_ids, ->(theme_ids) {
     return none unless theme_ids.present?
 
@@ -221,18 +216,16 @@ class ThemeField < ActiveRecord::Base
     end
 
     self.error = errors.join("\n").presence
-    if !self.error && self.target_id == Theme.targets[:settings]
-      # when settings YAML changes, we need to re-transpile theme JS and CSS
-      theme.theme_fields.where.not(id: self.id).update_all(value_baked: nil)
-    end
   end
 
   def self.guess_type(name:, target:)
-    if html_fields.include?(name.to_s)
+    if basic_targets.include?(target.to_s) && html_fields.include?(name.to_s)
       types[:html]
-    elsif scss_fields.include?(name.to_s)
+    elsif basic_targets.include?(target.to_s) && scss_fields.include?(name.to_s)
       types[:scss]
-    elsif name.to_s == "yaml" || target.to_s == "translations"
+    elsif target.to_s == "extra_scss"
+      types[:scss]
+    elsif target.to_s == "settings" || target.to_s == "translations"
       types[:yaml]
     end
   end
@@ -245,46 +238,93 @@ class ThemeField < ActiveRecord::Base
     @scss_fields ||= %w(scss embedded_scss)
   end
 
+  def self.basic_targets
+    @basic_targets ||= %w(common desktop mobile)
+  end
+
+  def basic_html_field?
+    ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
+      ThemeField.html_fields.include?(self.name)
+  end
+
+  def basic_scss_field?
+    ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
+      ThemeField.scss_fields.include?(self.name)
+  end
+
+  def extra_scss_field?
+    Theme.targets[self.target_id] == :extra_scss
+  end
+
+  def settings_field?
+    Theme.targets[:settings] == self.target_id
+  end
+
+  def translation_field?
+    Theme.targets[:translations] == self.target_id
+  end
+
+  def svg_sprite_field?
+    ThemeField.theme_var_type_ids.include?(self.type_id) && self.name == SvgSprite.theme_sprite_variable_name
+  end
+
   def ensure_baked!
-    if ThemeField.html_fields.include?(self.name) || translation = Theme.targets[:translations] == self.target_id
-      if !self.value_baked || compiler_version != COMPILER_VERSION
-        self.value_baked, self.error = translation ? process_translation : process_html(self.value)
-        self.error = nil unless self.error.present?
-        self.compiler_version = COMPILER_VERSION
+    needs_baking = !self.value_baked || compiler_version != COMPILER_VERSION
+    return unless needs_baking
 
-        if self.will_save_change_to_value_baked? ||
-           self.will_save_change_to_compiler_version? ||
-           self.will_save_change_to_error?
-
-          self.update_columns(value_baked: value_baked,
-                              compiler_version: compiler_version,
-                              error: error)
-        end
-      end
+    if basic_html_field? || translation_field?
+      self.value_baked, self.error = translation_field? ? process_translation : process_html(self.value)
+      self.error = nil unless self.error.present?
+      self.compiler_version = COMPILER_VERSION
+    elsif basic_scss_field?
+      ensure_scss_compiles!
+      Stylesheet::Manager.clear_theme_cache!
+    elsif settings_field?
+      validate_yaml!
+      theme.clear_cached_settings!
+      CSP::Extension.clear_theme_extensions_cache!
+      SvgSprite.expire_cache
+      self.value_baked = "baked"
+      self.compiler_version = COMPILER_VERSION
+    elsif svg_sprite_field?
+      SvgSprite.expire_cache
+      self.error = nil
+      self.value_baked = "baked"
+      self.compiler_version = COMPILER_VERSION
     end
+
+    if self.will_save_change_to_value_baked? ||
+        self.will_save_change_to_compiler_version? ||
+        self.will_save_change_to_error?
+
+      self.update_columns(value_baked: value_baked,
+                          compiler_version: compiler_version,
+                          error: error)
+    end
+  end
+
+  def compile_scss
+    Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"theme_field\";",
+      "theme.scss",
+      theme_field: self.value.dup,
+      theme: self.theme
+    )
   end
 
   def ensure_scss_compiles!
-    if ThemeField.scss_fields.include?(self.name)
-      begin
-        Stylesheet::Compiler.compile("@import \"common/foundation/variables\"; @import \"theme_variables\"; @import \"theme_field\";",
-                                     "theme.scss",
-                                     theme_field: self.value.dup,
-                                     theme: self.theme
-                                    )
-        self.error = nil unless error.nil?
-      rescue SassC::SyntaxError => e
-        self.error = e.message unless self.destroyed?
-      end
-
-      if will_save_change_to_error?
-        update_columns(error: self.error)
-      end
+    result = ["failed"]
+    begin
+      result = compile_scss
+      self.error = nil unless error.nil?
+    rescue SassC::SyntaxError => e
+      self.error = e.message unless self.destroyed?
     end
+    self.compiler_version = COMPILER_VERSION
+    self.value_baked = Digest::SHA1.hexdigest(result.join(",")) # We don't use the compiled CSS here, we just use it to invalidate the stylesheet cache
   end
 
   def target_name
-    Theme.targets.invert[target_id].to_s
+    Theme.targets[target_id].to_s
   end
 
   class ThemeFileMatcher
@@ -311,7 +351,7 @@ class ThemeField < ActiveRecord::Base
       hash = {}
       OPTIONS.each do |option|
         plural = :"#{option}s"
-        hash[option] = @allowed_values[plural][0] if @allowed_values[plural].length == 1
+        hash[option] = @allowed_values[plural][0] if @allowed_values[plural] && @allowed_values[plural].length == 1
         hash[option] = match[option] if hash[option].nil?
       end
       hash
@@ -337,6 +377,9 @@ class ThemeField < ActiveRecord::Base
     ThemeFileMatcher.new(regex: /^common\/embedded\.scss$/,
                          targets: :common, names: "embedded_scss", types: :scss,
                          canonical: -> (h) { "common/embedded.scss" }),
+    ThemeFileMatcher.new(regex: /^scss\/(?<name>.+)\.scss$/,
+                         targets: :extra_scss, names: nil, types: :scss,
+                         canonical: -> (h) { "scss/#{h[:name]}.scss" }),
     ThemeFileMatcher.new(regex: /^settings\.ya?ml$/,
                          names: "yaml", types: :yaml, targets: :settings,
                          canonical: -> (h) { "settings.yml" }),
@@ -370,24 +413,33 @@ class ThemeField < ActiveRecord::Base
     nil
   end
 
-  before_save do
-    validate_yaml!
+  def dependent_fields
+    if extra_scss_field?
+      return theme.theme_fields.where(target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
+                                      name: ThemeField.scss_fields)
+    elsif settings_field?
+      return theme.theme_fields.where(target_id: ThemeField.basic_targets.map { |t| Theme.targets[t.to_sym] },
+                                      name: ThemeField.scss_fields + ThemeField.html_fields)
+    end
+    ThemeField.none
+  end
 
+  def invalidate_baked!
+    update_column(:value_baked, nil)
+    dependent_fields.update_all(value_baked: nil)
+  end
+
+  before_save do
     if will_save_change_to_value? && !will_save_change_to_value_baked?
       self.value_baked = nil
     end
   end
 
+  after_save do
+    dependent_fields.each(&:invalidate_baked!)
+  end
+
   after_commit do
-    unless destroyed?
-      ensure_baked!
-      ensure_scss_compiles!
-      theme.clear_cached_settings!
-    end
-
-    Stylesheet::Manager.clear_theme_cache! if self.name.include?("scss")
-    CSP::Extension.clear_theme_extensions_cache! if name == 'yaml'
-
     # TODO message for mobile vs desktop
     MessageBus.publish "/header-change/#{theme.id}", self.value if theme && self.name == "header"
     MessageBus.publish "/footer-change/#{theme.id}", self.value if theme && self.name == "footer"
@@ -419,7 +471,7 @@ end
 #  id               :integer          not null, primary key
 #  theme_id         :integer          not null
 #  target_id        :integer          not null
-#  name             :string(30)       not null
+#  name             :string(255)      not null
 #  value            :text             not null
 #  value_baked      :text
 #  created_at       :datetime         not null

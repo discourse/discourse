@@ -189,7 +189,6 @@ pt_BR:
     age: "Idade"
     joined: "Registrou"
     admin_title: "Admin"
-    flags_title: "Sinalizações"
     show_more: "mostrar mais"
     show_help: "opções"
     links: "Links"
@@ -305,27 +304,44 @@ pt_BR:
       title:
         search: "Procurar por uma Mensagem pelo título:"
         placeholder: "digite o título da mensagem aqui"
-    queue:
+    review:
+      delete: "Excluir"
+      settings:
+        save_changes: "Salvar Mudanças"
+        title: "Configurações"
+      moderation_history: "Histórico de Moderação"
+      title: "Precisa de Revisão"
       topic: "Tópico:"
-      approve: "Aprovar"
-      reject: "Rejeitar"
-      delete_user: "Excluir Usuário"
-      title: "Aprovação Necessária"
-      none: "Não existem mensagens para revisar."
+      user:
+        username: "Nome de Usuário"
+        email: "E-mail"
+        name: "Nome"
+      topics:
+        topic: "Tópico"
+        reviewable_count: "Contagem"
+        deleted: "[Tópico Excluído]"
+        details: "detalhes"
       edit: "Editar"
+      save: "Salvar"
       cancel: "Cancelar"
-      view_pending: "ver postagens pendentes"
-      has_pending_posts:
-        one: "Este tópico tem <b>1</b> postagem aguardando aprovação"
-        other: "Este tópico tem <b>{{count}}</b> postagens aguardando aprovação"
-      confirm: "Salvar Mudanças"
-      delete_prompt: "Você tem certeza que quer excluir <b>%{username}</b>? Esta ação irá remover todas as suas postagens e bloquear seu e-mail e endereço IP."
+      filters:
+        refresh: "Atualizar"
+      scores:
+        date: "Data"
+        type: "Tipo"
+      statuses:
+        pending:
+          title: "Pendentes"
+        rejected:
+          title: "Rejeitados"
+        ignored:
+          title: "Ignorados"
+      types:
+        reviewable_user:
+          title: "Usuário"
       approval:
-        title: "Aprovação Necessária da Postagem"
+        title: "Postagem Precisa de Aprovação"
         description: "Nós recebemos sua nova postagem, mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor, tenha paciência."
-        pending_posts:
-          one: "Você tem <strong>1</strong> postagem pendente."
-          other: "Você tem <strong>{{count}}</strong> postagens pendentes."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postou <a href='{{topicUrl}}'>o tópico</a>"
@@ -374,6 +390,9 @@ pt_BR:
         title: "Adicionar membros"
         description: "Gerenciar a associação deste grupo"
         usernames: "Nomes de usuários"
+      requests:
+        reason: "Motivo"
+        accepted: "aceito"
       manage:
         title: "Gerenciar"
         name: "Nome"
@@ -526,9 +545,9 @@ pt_BR:
         position: "Posição"
       posts: "Postagens"
       topics: "Tópicos"
-      latest: "Recentes"
-      latest_by: "recentes por"
-      toggle_ordering: "ativar/desativar controle de ordenação"
+      latest: "Últimos"
+      latest_by: "últimos por"
+      toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
       topic_sentence:
         one: "1 tópico"
@@ -572,6 +591,12 @@ pt_BR:
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
+      user_notifications:
+        ignore_duration_save: "Ignorar"
+        ignore_duration_time_frame_required: "Por favor selecione um período de tempo"
+        ignore_option: "Ignorados"
+        mute_option: "Silenciados"
+        normal_option: "Normal"
       activity_stream: "Atividade"
       preferences: "Preferências"
       profile_hidden: "O perfil público deste usuário está oculto."
@@ -597,8 +622,6 @@ pt_BR:
       dismiss_notifications: "Descartar Tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidas"
       first_notification: "Sua primeira notificação! Selecione-a para começar."
-      disable_jump_reply: "Não pular para a minha postagem depois que eu responder"
-      dynamic_favicon: "Exibir contagem de tópicos novos / atualizados no ícone do navegador"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
       text_size_default_on_all_devices: "Definir este tamanho de texto como padrão em todos os meus dispositivos"
       allow_private_messages: "Permitir que outros usuários me enviem mensagens pessoais"
@@ -632,7 +655,7 @@ pt_BR:
       tracked_tags: "Acompanhadas"
       tracked_tags_instructions: "Você irá acompanhar automaticamente todos os tópicos com estas etiquetas. Uma contagem de postagens novas aparecerá ao lado do tópico."
       muted_tags: "Silenciadas"
-      muted_tags_instructions: "Você não será notificado sobre novos tópicos com estas etiquetas, e eles não aparecerão em mais recentes."
+      muted_tags_instructions: "Você não será notificado sobre novos tópicos com estas etiquetas, e eles não aparecerão em últimos."
       watched_categories: "Observadas"
       watched_categories_instructions: "Você irá observar automaticamente todos os tópicos nestas categorias. Você será notificado de todas as novas postagens e tópicos, e uma contagem de postagens novas também aparecerá ao lado do tópico."
       tracked_categories: "Acompanhadas"
@@ -642,7 +665,7 @@ pt_BR:
       watched_first_post_tags: "Observando Primeira Postagem"
       watched_first_post_tags_instructions: "Você será notificado sobre a primeira postagem em cada tópico novo com estas etiquetas."
       muted_categories: "Silenciadas"
-      muted_categories_instructions: "Você não será notificado de nada sobre novos tópicos nestas categorias, e eles não aparecerão nas categorias ou nas páginas mais recentes."
+      muted_categories_instructions: "Você não será notificado de nada sobre novos tópicos nestas categorias, e eles não aparecerão nas categorias ou nas últimas páginas."
       no_category_access: "Como um moderador, você tem acesso limitado à categorias, salvar está desabilitado."
       delete_account: "Excluir Minha Conta"
       delete_account_confirm: "Você tem certeza de que deseja permanentemente excluir a sua conta? Esta ação não pode ser desfeita!"
@@ -768,6 +791,7 @@ pt_BR:
         primary: "E-mail Primário"
         secondary: "E-mails Secundários"
         no_secondary: "Nenhum e-mail secundário"
+        instructions: "Nunca visível publicamente."
         ok: "Nós enviaremos um e-mail para confirmar"
         invalid: "Por favor, insira um endereço de e-mail válido"
         authenticated: "Seu e-mail foi autenticado por {{provider}}"
@@ -882,7 +906,7 @@ pt_BR:
         after_10_minutes: "depois de 10 minutos"
       notification_level_when_replying: "Quando eu postar em um tópico, definir aquele tópico como"
       invited:
-        search: "digite para pesquisar convites..."
+        search: "digite para procurar convites..."
         title: "Convites"
         user: "Usuário Convidado"
         sent: "Enviado"
@@ -1044,7 +1068,7 @@ pt_BR:
     day: "dia"
     first_post: Primeira postagem
     mute: Silenciar
-    unmute: Reativar
+    unmute: Remover Silêncio
     last_post: Postado
     time_read: Lido
     time_read_recently: "%{time_read} recentemente"
@@ -1155,33 +1179,29 @@ pt_BR:
       google_oauth2:
         name: "Google"
         title: "com Google"
-        message: "Autenticação com o Google (tenha certeza que bloqueadores de popup não estão ligados)"
+        message: "Autenticando com Google (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       twitter:
         name: "Twitter"
-        title: "Entrar com Twitter"
-        message: "Autenticando com Twitter (certifique-se de que os bloqueadores de popup estejam desativados)"
+        title: "com Twitter"
+        message: "Autenticando com Twitter (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       instagram:
         name: "Instagram"
-        title: "Entrar com Instagram"
-        message: "Autenticando com o Instagram (tenha certeza de que bloqueadores de pop up não estejam ativados)"
+        title: "com Instagram"
+        message: "Autenticando com Instagram (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       facebook:
         name: "Facebook"
-        title: "Entrar com Facebook"
-        message: "Autenticando com Facebook (certifique-se de que os bloqueadores de popup estejam desativados)"
-      yahoo:
-        name: "Yahoo"
-        title: "Entrar com Yahoo"
-        message: "Autenticando com Yahoo (certifique-se de que os bloqueadores de popup estejam desativados)"
+        title: "com Facebook"
+        message: "Autenticando com Facebook (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
       github:
         name: "GitHub"
         title: "com GitHub"
-        message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"
+        message: "Autenticando com GitHub (certifique-se de que os bloqueadores de pop-up estejam desabilitados)"
     invites:
       accept_title: "Convite"
-      welcome_to: "Bem vindo a %{site_name}!"
+      welcome_to: "Bem vindo à %{site_name}!"
       invited_by: "Você foi convidado por:"
-      social_login_available: "Em breve, você poderá entrar com qualquer login de redes sociais usando este e-mail."
-      your_email: "O endereço de e-mail da sua conta é <b>%{e-mail}</b>."
+      social_login_available: "Você também poderá entrar com qualquer login social usando este e-mail."
+      your_email: "O endereço de e-mail da sua conta é <b>%{email}</b>."
       accept_invite: "Aceitar Convite"
       success: "Sua conta foi criada e você já está logado."
       name_label: "Nome"
@@ -1201,7 +1221,7 @@ pt_BR:
       categories_only: "Categorias Apenas"
       categories_with_featured_topics: "Categorias com Tópicos em Destaque"
       categories_and_latest_topics: "Categorias e Últimos Tópicos"
-      categories_and_top_topics: "Categorias e tópicos principais"
+      categories_and_top_topics: "Categorias e Tópicos Principais"
       categories_boxes: "Caixas com Subcategorias"
       categories_boxes_with_topics: "Caixas com Tópicos em Destaque"
     shortcut_modifier_key:
@@ -1212,18 +1232,18 @@ pt_BR:
       loading: Carregando...
     select_kit:
       default_header_text: Selecionar...
-      no_content: Nenhuma equivalência encontrada
+      no_content: Nenhuma correspondência encontrada
       filter_placeholder: Buscar...
       filter_placeholder_with_any: Procurar ou criar…
-      create: "Crie: '{{content}}'"
+      create: "Criar: '{{content}}'"
       max_content_reached:
-        one: "Você só pode selecionar o item {{count}}."
+        one: "Você só pode selecionar {{count}} item."
         other: "Você só pode selecionar {{count}} itens."
       min_content_not_reached:
-        one: "Selecione pelo menos {{count}} itens."
+        one: "Selecione pelo menos {{count}} item."
         other: "Selecione pelo menos {{count}} itens."
     emoji_picker:
-      filter_placeholder: Pesquisar por emoji
+      filter_placeholder: Procurar por emoji
       smileys_&_emotion: Smileys e Emotion
       people_&_body: Pessoas e Corpo
       animals_&_nature: Animais e Natureza
@@ -1232,112 +1252,110 @@ pt_BR:
       activities: Atividades
       objects: Objetos
       symbols: Símbolos
-      flags: Marcações
+      flags: Sinalizações
       custom: Emojis personalizados
-      recent: Usado recentemente
+      recent: Usados recentemente
       default_tone: Sem tom de pele
       light_tone: Tom de pele claro
-      medium_light_tone: Tom de pele leve médio
+      medium_light_tone: Tom de pele médio claro
       medium_tone: Tom de pele médio
-      medium_dark_tone: Tom de pele escuro e médio
-      dark_tone: Tom de pele escura
+      medium_dark_tone: Tom de pele médio escuro
+      dark_tone: Tom de pele escuro
     shared_drafts:
-      title: "Rascunhos compartilhados"
-      notice: "Este tópico só é visível para aqueles que podem ver o <b>{{category}}</b> categoria."
+      title: "Rascunhos Compartilhados"
+      notice: "Este tópico só é visível para aqueles que podem ver a categoria <b>{{category}}</b>."
       destination_category: "Categoria de Destino"
-      publish: "Publicar rascunho compartilhado"
-      confirm_publish: "Tem certeza de que deseja publicar este rascunho?"
-      publishing: "Publicando tópico..."
+      publish: "Publicar Rascunho Compartilhado"
+      confirm_publish: "Você tem certeza de que deseja publicar este rascunho?"
+      publishing: "Publicando Tópico..."
     composer:
       emoji: "Emoji :)"
       more_emoji: "mais..."
       options: "Opções"
       whisper: "sussuro"
-      unlist: "Não listado"
-      blockquote_text: "Bloco de citação"
-      add_warning: "Este é um aviso oficial."
-      toggle_whisper: "Habilitar Sussuro"
-      toggle_unlisted: "Alterar não listado"
+      unlist: "não listado"
+      blockquote_text: "Bloco de Citação"
+      add_warning: "Esta é uma advertência oficial."
+      toggle_whisper: "Alternar Sussuro"
+      toggle_unlisted: "Alternar Não Listado"
       posting_not_on_topic: "Qual tópico você gostaria de responder?"
-      saving_draft_tip: "gravando..."
-      saved_draft_tip: "salvo"
       saved_local_draft_tip: "salvo localmente"
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos offline"
       edit_conflict: "editar conflito"
-      group_mentioned_limit: "<b>Cuidado!</b> Você mencionou <a href='{{group_link}}'>{{group}}</a>, no entanto, este grupo tem mais membros do que o limite de menção configurado pelo administrador de {{max}} usuários. Ninguém será notificado."
+      group_mentioned_limit: "<b>Aviso!</b> Você mencionou <a href='{{group_link}}'>{{group}}</a>; no entanto, este grupo tem mais membros do que o limite de menção configurado pelo administrador de {{max}} usuários. Ninguém será notificado."
       group_mentioned:
-        one: "Ao mencionar {{group}}, você está prester a notifcar <a href='{{group_link}}'>1 pessoa</a> – tem certeza?"
-        other: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>{{count}} pessoas</a> – tem certeza?"
+        one: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>1 pessoa</a> – você tem certeza?"
+        other: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>{{count}} pessoas</a> – você tem certeza?"
       cannot_see_mention:
-        category: "Você mencionou {{username}}, porém ele(a) não será notificado(a), pois não tem acesso a esta categoria. Você deverá adicioná-lo(a) ao grupo que tem acesso à categoria."
-        private: "Você mencionou {{username}}, porém ele(a) não será notificado(a), pois não pode ver esta mensagem pessoal. Você deverá convidá-lo(a) para esta MP."
-      duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado no tópico por<b>@{{username}}</b> em<a href='{{post_url}}'>uma resposta  {{atrás}}</a> – tem certeza de que deseja postá-lo novamente?"
+        category: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não tem acesso à esta categoria. Você precisará adicioná-lo(a) ao grupo que tem acesso à categoria."
+        private: "Você mencionou {{username}}, mas ele(a) não será notificado(a), pois ele(a) não pode ver esta mensagem pessoal. Você precisará convidá-lo(a) para esta MP."
+      duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado neste tópico por <b>@{{username}}</b> em <a href='{{post_url}}'>uma resposta em {{ago}}</a> – você tem certeza de que deseja postá-lo novamente?"
       error:
         title_missing: "Título é obrigatório"
-        title_too_short: "O título tem que ter no mínimo {{min}} caracteres"
-        title_too_long: "O título não pode ter mais de {{max}} caracteres"
-        post_missing: "A resposta não pode estar vazia"
-        post_length: "A resposta tem que ter no mínimo {{min}} caracteres"
+        title_too_short: "Título precisa ter no mínimo {{min}} caracteres"
+        title_too_long: "Título não pode ter mais de {{max}} caracteres"
+        post_missing: "Postagem não pode estar vazia"
+        post_length: "Postagem precisa ter no mínimo {{min}} caracteres"
         try_like: "Você já tentou o botão {{heart}}?"
         category_missing: "Você precisa escolher uma categoria"
-        tags_missing: "Você deve escolher pelo menos {{count}} tags"
-      save_edit: "Salvar alterações"
+        tags_missing: "Você precisa escolher pelo menos {{count}} etiquetas"
+      save_edit: "Salvar Edição"
       overwrite_edit: "Sobrescrever Edição"
-      reply_original: "Responder em um Tópico Novo"
-      reply_here: "Responda aqui"
+      reply_original: "Responder no Tópico Original"
+      reply_here: "Responder Aqui"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
-      create_pm: "Mensagem"
-      create_whisper: "Sussurrar"
-      create_shared_draft: "Criar rascunho compartilhado"
-      edit_shared_draft: "Editar rascunho compartilhado"
+      create_pm: "Criar Mensagem"
+      create_whisper: "Criar Sussurro"
+      create_shared_draft: "Criar Rascunho Compartilhado"
+      edit_shared_draft: "Editar Rascunho Compartilhado"
       title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
-      title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
-      title_or_link_placeholder: "Digite o título, ou cole um link aqui"
+      title_placeholder: "Sobre o que é esta discussão em uma breve frase?"
+      title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "por que você está editando?"
-      show_edit_reason: "(adicione motivo da edição)"
-      topic_featured_link_placeholder: "Entre com o link mostrado no título."
+      show_edit_reason: "(adicionar motivo da edição)"
+      topic_featured_link_placeholder: "Inserir link mostrado no título."
       remove_featured_link: "Remover link do tópico."
-      reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
-      reply_placeholder_no_images: "Digite aqui. Use Markdown, BBCode ou HTML para formatar."
-      reply_placeholder_choose_category: "Você deve selecionar uma categoria antes de digitar aqui."
-      view_new_post: "Ver sua nova resposta."
+      reply_placeholder: "Digite aqui. Use Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
+      reply_placeholder_no_images: "Digite aqui. Use Markdown, BBCode, ou HTML para formatar."
+      reply_placeholder_choose_category: "Você precisa selecionar uma categoria antes de digitar aqui."
+      view_new_post: "Veja a sua nova postagem."
       saving: "Salvando"
       saved: "Salvo!"
-      saved_draft: "Rascunho salvo, clique em selecionar para continuar editando."
+      saved_draft: "Rascunho da postagem em progresso. Selecione para resumir."
       uploading: "Enviando..."
       show_preview: "mostrar pré-visualização &raquo;"
-      hide_preview: "&laquo; esconder pré-visualização"
-      quote_post_title: "Citar toda a resposta"
-      bold_label: "B"
+      hide_preview: "&laquo; ocultar pré-visualização"
+      quote_post_title: "Citar postagem inteira"
+      bold_label: "N"
       bold_title: "Negrito"
       bold_text: "texto em negrito"
       italic_label: "I"
       italic_title: "Itálico"
       italic_text: "texto em itálico"
-      link_title: "Link"
+      link_title: "Hyperlink"
       link_description: "digite a descrição do link aqui"
-      link_dialog_title: "Inserir link"
+      link_dialog_title: "Inserir Hyperlink"
       link_optional_text: "título opcional"
-      link_url_placeholder: "https://example.com"
-      quote_title: "Bloco de citação"
-      quote_text: "Bloco de citação"
+      link_url_placeholder: "https://exemplo.com"
+      quote_title: "Bloco de Citação"
+      quote_text: "Bloco de Citação"
       code_title: "Texto pré-formatado"
-      code_text: "identar texto pre-formatado em 4 espaços"
-      paste_code_text: "escreva ou cole o código aqui"
+      code_text: "identar texto pré-formatado por 4 espaços"
+      paste_code_text: "digite ou cole o código aqui"
       upload_title: "Enviar"
       upload_description: "digite aqui a descrição do arquivo enviado"
-      olist_title: "Lista numerada"
-      ulist_title: "Lista de itens"
+      olist_title: "Lista Numerada"
+      ulist_title: "Lista com Marcadores"
       list_item: "Item da lista"
       toggle_direction: "Alternar Direção"
-      help: "Ajuda da edição Markdown"
-      collapse: "minimizar o painel do compositor"
+      help: "Ajuda de Edição Markdown"
+      collapse: "minimizar o painel compositor"
       open: "abrir o painel compositor"
-      abandon: "compositor próximo e rascunho de descarte"
+      abandon: "fechar compositor e descartar rascunho"
       enter_fullscreen: "entrar no compositor em tela cheia"
       exit_fullscreen: "sair do compositor em tela cheia"
       modal_ok: "OK"
@@ -1345,48 +1363,47 @@ pt_BR:
       cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
       yourself_confirm:
         title: "Você se esqueceu de adicionar destinatários?"
-        body: "No momento esta mensagem está sendo enviada apenas para si mesmo!"
-      admin_options_title: "Configurações opcionais da equipe para este tópico"
+        body: "No momento esta mensagem está sendo enviada apenas para você mesmo!"
+      admin_options_title: "Configurações opcionais da staff para este tópico"
       composer_actions:
-        reply: Resposta
-        draft: "Esboço, projeto"
+        reply: Responder
+        draft: Rascunho
         edit: Editar
         reply_to_post:
-          label: "Resposta a publicação%{postNumber}por %{postUsername}"
-          desc: Responder a uma postagem específica
+          label: "Responder à postagem %{postNumber} por %{postUsername}"
+          desc: Responder à uma postagem específica
         reply_as_new_topic:
-          label: Responder como tópico vinculado
-          desc: Crie um novo tópico vinculado a este tópico
+          label: Responder como tópico relacionado
+          desc: Criar um novo tópico relacionado a este tópico
         reply_as_private_message:
           label: Nova mensagem
-          desc: Crie uma nova mensagem pessoal
+          desc: Criar uma nova mensagem pessoal
         reply_to_topic:
           label: Responder ao tópico
-          desc: "Responder ao tópico, não é uma postagem específica"
+          desc: "Responder ao tópico, não à uma postagem específica"
         toggle_whisper:
           label: Alternar sussurro
-          desc: Sussurros são visíveis apenas para membros da equipe
+          desc: Sussurros são visíveis apenas para membros da staff
         create_topic:
-          label: "Novo tópico"
+          label: "Novo Tópico"
         shared_draft:
-          label: "Rascunho compartilhado"
-          desc: "Elabore um tópico que só será visível para o pessoal"
+          label: "Rascunho Compartilhado"
+          desc: "Elabore um tópico que será visível somente para a staff"
         toggle_topic_bump:
-          label: "Ativar/Desativar promoção de tópico"
+          label: "Alternar promoção de tópico"
           desc: "Responder sem alterar a data da última resposta"
     notifications:
       tooltip:
         regular:
-          one: "1 notificação sem aviso"
-          other: "{{count}} notificações invisíveis"
+          one: "1 notificação não visualizada"
+          other: "{{count}} notificações não visualizadas"
         message:
           one: "1 mensagem não lida"
           other: "{{count}} mensagens não lidas"
-      title: "notificações de menção de @name, respostas às suas postagens,  tópicos, mensagens, etc"
+      title: "notificações de menção de @nome, respostas às suas postagens, tópicos, mensagens, etc"
       none: "Não foi possível carregar notificações no momento."
-      empty: "Não foi encontrada nenhuma notificação."
+      empty: "Nenhuma notificação foi encontrada."
       more: "ver notificações antigas"
-      total_flagged: "total de mensagens sinalizadas"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1408,29 +1425,29 @@ pt_BR:
       invitee_accepted: "<span>{{username}}</span> aceitou o seu convite"
       moved_post: "<span>{{username}}</span> moveu {{description}}"
       linked: "<span>{{username}}</span> {{description}}"
-      granted_badge: "Adquiriu '{{description}}'"
+      granted_badge: "Ganhou '{{description}}'"
       topic_reminder: "<span>{{username}}</span> {{description}}"
       watching_first_post: "<span>Novo Tópico</span> {{description}}"
       group_message_summary:
-        one: "{{count}} mensagem em seu {{group_name}} caixa de entrada"
-        other: "{{count}} mensagens em seu {{group_name}} caixa de entrada"
+        one: "{{count}} mensagem na caixa de entrada de {{group_name}}"
+        other: "{{count}} mensagens na caixa de entrada de {{group_name}}"
       popup:
         mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
         quoted: '{{username}} citou você em "{{topic}}" - {{site_title}}'
-        replied: '{{username}} respondeu para você em "{{topic}}" - {{site_title}}'
+        replied: '{{username}} te respondeu em "{{topic}}" - {{site_title}}'
         posted: '{{username}} postou em "{{topic}}" - {{site_title}}'
-        private_message: '{{username}} enviou-lhe uma mensagem pessoal em "{{topic}}" - {{site_title}}'
-        linked: '{{username}} linkou o seu post de "{{topic}}" - {{site_title}}'
-        watching_first_post: '{{username}} crook um novo tópico "{{topic}}" - {{site_title}}'
-        confirm_title: "Notificações ativadas - %{site_title}"
-        confirm_body: "Sucesso! Notificações foram ativadas."
+        private_message: '{{username}} te enviou uma mensagem pessoal em "{{topic}}" - {{site_title}}'
+        linked: '{{username}} referenciou a sua postagem em "{{topic}}" - {{site_title}}'
+        watching_first_post: '{{username}} criou um novo tópico "{{topic}}" - {{site_title}}'
+        confirm_title: "Notificações habilitadas - %{site_title}"
+        confirm_body: "Sucesso! Notificações foram habilitadas."
     upload_selector:
       title: "Adicionar uma imagem"
-      title_with_attachments: "Adicionar uma imagem ou arquivo"
+      title_with_attachments: "Adicionar uma imagem ou um arquivo"
       from_my_computer: "Do meu dispositivo"
-      from_the_web: "Da internet"
-      remote_tip: "link da imagem"
+      from_the_web: "Da Internet"
+      remote_tip: "link para imagem"
       remote_tip_with_attachments: "link para imagem ou arquivo {{authorized_extensions}}"
       local_tip: "selecione imagens a partir do seu dispositivo"
       local_tip_with_attachments: "selecione imagens ou arquivos do seu dispositivo {{authorized_extensions}}"
@@ -1943,7 +1960,6 @@ pt_BR:
       continue_discussion: "Continuando a discussão do {{postLink}}:"
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
-      show_hidden: "Ver conteúdo escondido"
       deleted_by_author:
         one: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} hora a exceto se forem sinalizadas)"
         other: "(respostas abandonadas pelo autor, serão removidas automaticamente em %{count} horas a exceto se forem sinalizadas)"
@@ -1954,15 +1970,12 @@ pt_BR:
         one: "ver 1 resposta oculta"
         other: "ver {{count}} respostas ocultas"
       notice:
-        first: "Esta é a primeira vez que o {{user}} postou — Vamos dar boas vindas da nossa comunidade"
-        return: "Já faz um tempo desde que vimos {{user}} — Seu ultimo poste foi {{time}}."
+        new_user: "Esta é a primeira vez que o {{user}} postou — Vamos dar boas vindas da nossa comunidade"
+        returning_user: "Já faz um tempo desde que vimos {{user}} — Seu ultimo poste foi {{time}}."
       unread: "Resposta não lida"
       has_replies:
         one: "{{count}} Resposta"
         other: "{{count}} Respostas"
-      has_likes:
-        one: "{{count}} Curtida"
-        other: "{{count}} Curtidas"
       has_likes_title:
         one: "{{count}} pessoa curtiu esta mensagem"
         other: "{{count}} pessoas curtiram esta mensagem"
@@ -2158,8 +2171,6 @@ pt_BR:
       settings: "Configurações"
       topic_template: "Modelo de Tópico"
       tags: "Etiquetas"
-      tags_allowed_tags: "Apenas permita que estas tags sejam usadas nesta categoria:"
-      tags_allowed_tag_groups: "Permitir que apenas tags destes grupos sejam usadas nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tags_tab_description: "Etiquetas e grupos de etiquetas especificadas aqui estarão disponíveis apenas nesta categoria e em outras categorias que também as especificam. Elas não estarão disponíveis para uso em outras categorias."
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
@@ -2212,7 +2223,6 @@ pt_BR:
       require_topic_approval: "Requer aprovação do moderador de todos os novos tópicos"
       require_reply_approval: "Requer aprovação do moderador de todas as novas respostas"
       this_year: "este ano"
-      position: "Posição:"
       default_position: "Posição Padrão"
       position_disabled: "Categorias serão mostradas em ordem de atividade. Para controlar a ordem das categorias em listas,"
       position_disabled_click: 'habilitar a configuração de "posição de categoria fixa".'
@@ -2236,6 +2246,10 @@ pt_BR:
         muted:
           title: "Silenciar"
           description: "Você nunca será notificado sobre novos tópicos nestas categorias, e não aparecerão no Recentes."
+      search_priority:
+        options:
+          normal: "Normal"
+          ignore: "Ignorar"
       sort_options:
         default: "padrão"
         likes: "Curtidas"
@@ -2253,6 +2267,10 @@ pt_BR:
         rows_with_featured_topics: "Linhas com Tópicos em destaque"
         boxes: "Caixas"
         boxes_with_featured_topics: "Caixas com tópicos em destaque"
+      settings_sections:
+        general: "Geral"
+        moderation: "Moderação"
+        email: "E-mail"
     flagging:
       title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
       action: "Sinalizar resposta"
@@ -2646,8 +2664,6 @@ pt_BR:
       dashboard:
         title: "Painel Administrativo"
         last_updated: "Painel atualizado em:"
-        find_old: "Procurando pelo painel antigo?"
-        old_link: "visite aqui"
         version: "Versão"
         up_to_date: "Você está atualizado!"
         critical_available: "Uma atualização crítica está disponível."
@@ -2724,93 +2740,6 @@ pt_BR:
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"
         by: "por"
-      flags:
-        title: "Sinalizações"
-        active_posts: "Posts sinalizados"
-        old_posts: "Posts antigos sinalizados"
-        topics: "Tópicos sinalizados"
-        moderation_history: "Histórico de Moderação"
-        agree: "Concordo"
-        agree_title: "Confirmar esta marcação como válida e correta"
-        agree_flag_hide_post: "Esconder publicação"
-        agree_flag_hide_post_title: "Esconder esta publicação e enviar automaticamente ao usuário uma mensagem pedindo-lhe para editá-lo."
-        agree_flag_restore_post: "Concordar e restaurar post"
-        agree_flag_restore_post_title: "Restaure a postagem para que todos os usuários possam vê-la."
-        agree_flag_suspend: "Suspender usuário"
-        agree_flag_suspend_title: "Concordar com o sinalizador e suspender o usuário."
-        agree_flag_silence: "Silenciar usuário"
-        agree_flag_silence_title: "Concorde com a bandeira e silencie o usuário."
-        agree_flag: "Manter Post"
-        agree_flag_title: "Concorde com o sinalizador e mantenha a postagem inalterada."
-        ignore_flag: "Ignorar"
-        ignore_flag_title: "Remova este sinalizador; não requer nenhuma ação neste momento."
-        delete: "Apagar"
-        delete_title: "Apagar o post ao qual a marcação se refere."
-        delete_post_defer_flag: "Excluir marcador de postagem e ignorar"
-        delete_post_defer_flag_title: "Apaga a resposta; se for a primeira, apagar o tópico"
-        delete_post_agree_flag: "Excluir postagem e concordar com sinalizador"
-        delete_post_agree_flag_title: "Apagar resposta; se for a primeira, excluir o tópico"
-        delete_flag_modal_title: "Apagar e ..."
-        delete_spammer: "Deletar Spammer"
-        delete_spammer_title: "Remover o usuário e todas as suas respostas e tópicos."
-        disagree_flag_unhide_post: "Discordar (reexibir resposta)"
-        disagree_flag_unhide_post_title: "Remover qualquer denúncia desta resposta e fazer ela visível de novo"
-        disagree_flag: "Discordar"
-        disagree_flag_title: "Negar a marcação como inválida ou incorreta"
-        clear_topic_flags: "Concluído"
-        clear_topic_flags_title: "O tópico foi investigado e as questões foram resolvidas. Clique em Concluído para remover as sinalizações."
-        more: "(mais respostas...)"
-        suspend_user: "Suspender usuário"
-        suspend_user_title: "Suspender usuário para esta postagem"
-        replies:
-          one: "[1 resposta]"
-          other: "[%{count} respostas]"
-        delete_replies:
-          one: "Excluir também a %{count} resposta a esta postagem?"
-          other: "Excluir também a  %{count} resposta a esta postagem??"
-        dispositions:
-          agreed: "concordar"
-          disagreed: "discordar"
-          deferred: "ignorado"
-        flagged_by: "Sinalizado por"
-        resolved_by: "Resolvido por"
-        took_action: "Tomar ação"
-        system: "Sistema"
-        error: "Algo deu errado"
-        reply_message: "Responder"
-        no_results: "Não há mensagens sinalizadas."
-        topic_flagged: "Este <strong>tópico</strong> foi sinalizado."
-        show_full: "mostrar post completo"
-        visit_topic: "Visitar o tópico para tomar ações"
-        was_edited: "Resposta foi editada após uma primeira sinalização"
-        previous_flags_count: "Este post já foi marcado {{count}} vezes."
-        show_details: "Mostrar detalhes da bandeira"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} sinalização no total)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} sinalizações no total)"
-          agreed:
-            one: "{{count}}% concorda"
-            other: "{{count}}% concordam"
-          disagreed:
-            one: "{{count}}% discorda"
-            other: "{{count}}% discordam"
-          ignored:
-            one: "{{count}}% ignora"
-            other: "{{count}}% ignoram"
-        details: "detalhes"
-        flagged_topics:
-          topic: "Tópico"
-          type: "Tipo"
-          users: "Usuários"
-          last_flagged: "Última mensagem sinalizada"
-          no_results: "Não há tópicos sinalizados."
-        short_names:
-          off_topic: "fora do assunto"
-          inappropriate: "impróprio"
-          spam: "spam"
-          notify_user: "personalizado"
-          notify_moderators: "personalizado"
       groups:
         new:
           title: "Novo grupo"
@@ -2946,6 +2875,7 @@ pt_BR:
           inactive: "Inativo"
           failed: "Falhou"
           successful: "Sucesso"
+          disabled: "Desativado"
         events:
           none: "Não existem eventos relacionados."
           redeliver: "Entregar novamente"
@@ -3513,19 +3443,12 @@ pt_BR:
         nav:
           new: "Novos"
           active: "Ativos"
-          pending: "Pendentes"
           staff: "Equipe"
           suspended: "Suspenso"
           silenced: "Silenciado"
           suspect: "Suspeito"
           staged: "Encenado"
         approved: "Aprovado?"
-        approved_selected:
-          one: "aprovar usuário"
-          other: "aprovar usuários ({{count}})"
-        reject_selected:
-          one: "rejeitar usuário"
-          other: "rejeitar usuários ({{count}})"
         titles:
           active: "Usuários Ativos"
           new: "Usuários Novos"
@@ -3542,12 +3465,6 @@ pt_BR:
           suspended: "Usuários Suspensos"
           suspect: "Usuários suspeitos"
           staged: "Usuários em etapas"
-        reject_successful:
-          one: "1 usuário foi rejeitado com sucesso."
-          other: "%{count} usuários foram rejeitados com sucesso."
-        reject_failures:
-          one: "Falha ao rejeitar 1 usuário."
-          other: "Falha ao rejeitar %{count} usuários."
         not_verified: "Não verificado"
         check_email:
           title: "Mostrar endereço de e-mail deste usuário"
@@ -3935,6 +3852,10 @@ pt_BR:
           label: "Novo:"
           add: "Adicionar"
           filter: "Busca (URL ou URL Externa)"
+      reseed:
+        modal:
+          categories: "Categorias"
+          topics: "Tópicos"
   wizard_js:
     wizard:
       done: "Feito"

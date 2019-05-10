@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserAction do
@@ -11,11 +13,11 @@ describe UserAction do
 
   describe '#stream' do
 
-    let(:public_post) { Fabricate(:post) }
+    fab!(:public_post) { Fabricate(:post) }
     let(:public_topic) { public_post.topic }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
-    let(:private_post) { Fabricate(:post) }
+    fab!(:private_post) { Fabricate(:post) }
     let(:private_topic) do
       topic = private_post.topic
       topic.update_columns(category_id: nil, archetype: Archetype::private_message)
@@ -51,6 +53,7 @@ describe UserAction do
       end
 
       it 'includes the events correctly' do
+        Jobs.run_immediately!
         PostActionNotifier.enable
 
         mystats = stats_for_user(user)
@@ -153,9 +156,9 @@ describe UserAction do
 
   describe 'when user likes' do
 
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
     let(:likee) { post.user }
-    let(:liker) { Fabricate(:coding_horror) }
+    fab!(:liker) { Fabricate(:coding_horror) }
 
     def likee_stream
       UserAction.stream(user_id: likee.id, guardian: Guardian.new)
@@ -189,7 +192,7 @@ describe UserAction do
       end
 
       context 'private message' do
-        let(:post) { Fabricate(:private_message_post) }
+        fab!(:post) { Fabricate(:private_message_post) }
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
 
@@ -293,11 +296,11 @@ describe UserAction do
 
   describe 'secures private messages' do
 
-    let(:user) do
+    fab!(:user) do
       Fabricate(:user)
     end
 
-    let(:user2) do
+    fab!(:user2) do
       Fabricate(:user)
     end
 

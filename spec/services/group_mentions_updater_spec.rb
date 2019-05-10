@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe GroupMentionsUpdater do
-  let(:post) { Fabricate(:post) }
+  fab!(:post) { Fabricate(:post) }
 
   before do
     Jobs.run_immediately!

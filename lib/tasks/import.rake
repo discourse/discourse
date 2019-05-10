@@ -20,6 +20,7 @@ task "import:ensure_consistency" => :environment do
   update_users
   update_groups
   update_tag_stats
+  create_category_definitions
 
   log "Done!"
 end
@@ -153,7 +154,6 @@ def insert_user_options
                   enable_quoting,
                   external_links_in_new_tab,
                   dynamic_favicon,
-                  disable_jump_reply,
                   new_topic_duration_minutes,
                   auto_track_topics_after_msecs,
                   notification_level_when_replying,
@@ -173,7 +173,6 @@ def insert_user_options
                   , #{SiteSetting.default_other_enable_quoting}
                   , #{SiteSetting.default_other_external_links_in_new_tab}
                   , #{SiteSetting.default_other_dynamic_favicon}
-                  , #{SiteSetting.default_other_disable_jump_reply}
                   , #{SiteSetting.default_other_new_topic_duration_minutes}
                   , #{SiteSetting.default_other_auto_track_topics_after_msecs}
                   , #{SiteSetting.default_other_notification_level_when_replying}
@@ -423,6 +422,11 @@ end
 
 def update_tag_stats
   Tag.ensure_consistency!
+end
+
+def create_category_definitions
+  log "Creating category definitions"
+  Category.where(topic_id: nil).each(&:create_category_definition)
 end
 
 def log(message)

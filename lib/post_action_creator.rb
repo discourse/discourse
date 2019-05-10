@@ -89,6 +89,12 @@ class PostActionCreator
         PostActionNotifier.post_action_created(post_action)
         notify_subscribers
 
+        # agree with other flags
+        if @take_action && reviewable = @post.reviewable_flag
+          result.reviewable.perform(@created_by, :agree_and_keep)
+          post_action.try(:update_counters)
+        end
+
         result.success = true
         result.post_action = post_action
 
@@ -195,7 +201,7 @@ private
 
     if post_action
       post_action.recover!
-      action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
+      action_attrs.each { |attr, val| post_action.public_send("#{attr}=", val) }
       post_action.save
       PostActionNotifier.post_action_created(post_action)
     else
@@ -210,12 +216,6 @@ private
     end
 
     GivenDailyLike.increment_for(@created_by.id) if @post_action_type_id == PostActionType.types[:like]
-
-    # agree with other flags
-    if @take_action && reviewable = @post.reviewable_flag
-      reviewable.perform(@created_by, :agree_and_keep)
-      post_action.try(:update_counters)
-    end
 
     post_action
   rescue ActiveRecord::RecordNotUnique

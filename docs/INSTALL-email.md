@@ -24,7 +24,7 @@ We recommend creating an [API Key][sg2] instead of using your SendGrid username 
 
 #### [Mailjet][jet] &mdash; 6k emails/month
 
-Go to [My Account page](https://www.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://www.mailjet.com/account/setup) link.
+Go to [My Account page](https://app.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://app.mailjet.com/account/setup) link.
 
 #### [Elastic Email][ee] — 3k emails/month (100 max/day)
 

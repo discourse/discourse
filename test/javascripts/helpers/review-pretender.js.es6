@@ -89,6 +89,30 @@ export default function(helpers) {
     });
   });
 
+  this.get("/review/settings", () => {
+    return response(200, {
+      reviewable_score_types: [
+        {
+          id: 3,
+          title: "Off-Topic",
+          score_bonus: 0.0
+        },
+        {
+          id: 4,
+          title: "Inappropriate",
+          score_bonus: 0.0
+        }
+      ],
+      reviewable_settings: {
+        id: 13870,
+        reviewable_score_type_ids: [3, 4]
+      },
+      __rest_serializer: "1"
+    });
+  });
+
+  this.put("/review/settings", () => response(200, {}));
+
   this.get("/review/:id", () => {
     return response(200, {
       reviewable: flag

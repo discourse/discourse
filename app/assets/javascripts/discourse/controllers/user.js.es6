@@ -21,8 +21,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return !profileHidden && viewingSelf;
   },
 
-  @computed("model.profileBackground")
-  hasProfileBackground(background) {
+  @computed("model.profileBackgroundUrl")
+  hasProfileBackgroundUrl(background) {
     return !Ember.isEmpty(background.toString());
   },
 

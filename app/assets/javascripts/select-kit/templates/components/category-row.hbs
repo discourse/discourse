@@ -5,12 +5,16 @@
           {{badgeForParentCategory}}
         {{/unless}}
         {{badgeForCategory}}
-        <span class="topic-count">{{topicCount}}</span>
+        <span class="topic-count" aria-label={{i18n "category_row.topic_count" count=topicCount}}>
+          &times; {{topicCount}}
+        </span>
       </div>
     {{else}}
       <div class="category-status">
         {{badgeForCategory}}
-        <span class="topic-count">{{topicCount}}</span>
+        <span class="topic-count" aria-label={{i18n "category_row.topic_count" count=topicCount}}>
+          &times; {{topicCount}}
+        </span>
       </div>
     {{/if}}
 

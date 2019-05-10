@@ -28,6 +28,7 @@ sv:
   posts: "inlägg"
   loading: "Laddar"
   log_in: "Logga in"
+  submit: "Skicka"
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
   disable_remote_images_download_reason: "Nedladdning av externa bilder är inaktiverat eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
@@ -191,8 +192,6 @@ sv:
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte längre redigeras eller tas bort."
   revert_version_same: "Den nuvarande versionen är samma som den du försöker återgå till."
   excerpt_image: "bild"
-  queue:
-    delete_reason: "Raderad via modereringskön för inlägg"
   groups:
     errors:
       can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
@@ -241,6 +240,7 @@ sv:
       topic:
         title: "Rubrik"
         featured_link: "Skiss länk"
+        category_id: "Kategori"
       post:
         raw: "Inlägg"
       user_profile:
@@ -276,6 +276,7 @@ sv:
           attributes:
             payload_url:
               invalid: "Webbadressen är ogiltig. Webbadressen skall inkludera :// eller https://. Inga blanktecken är tillåtna"
+  uncategorized_category_name: "Ej kategoriserad"
   vip_category_name: "Lounge"
   vip_category_description: "En kategori exklusiv för medlemmar med en förtroendenivå av 3 eller högre."
   meta_category_name: "Feedback"
@@ -419,6 +420,9 @@ sv:
     welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
     missing_session: "Vi kan inte upptäcka om ditt konto skapades, var god se till att du ha kakor aktiverade."
+  reviewable_score_types:
+    needs_approval:
+      title: "Behöver godkännande"
   post_action_types:
     off_topic:
       title: "Orelevant"
@@ -448,10 +452,12 @@ sv:
     bookmark:
       title: "Bokmärk"
       description: "Bokmärk detta inlägg"
+      short_description: "Bokmärk detta inlägg"
       long_form: "bokmärkte detta inlägg"
     like:
       title: "Gilla"
       description: "Gilla detta inlägg"
+      short_description: "Gilla detta inlägg"
       long_form: "gillade detta inlägg"
   user_activity:
     no_bookmarks:
@@ -483,7 +489,6 @@ sv:
         make: "Detta ämne är nu en banderoll. Den dyker upp i toppen av alla sidor tills den blir avfärdad av användaren."
         remove: "Detta ämne är inte längre en banderoll. Den kommer inte att dyka upp i toppen av varje sida."
   unsubscribed:
-    title: "Avprenumererat!"
     topic_description: "För att återprenumerera till %{link}, använd notifieringskontrollerna vid botten eller högra sidan av ämnet."
   unsubscribe:
     title: "Avprenumerera"
@@ -491,11 +496,16 @@ sv:
     mute_topic: "Tysta alla notifieringar för det här ämnet, %{link}"
     unwatch_category: "Sluta bevaka alla ämnen i %{category}"
     mailing_list_mode: "Stäng av utskicksläge"
-    disable_digest_emails: "Sluta skicka mig de här e-postsammanfattningarna"
     all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den vi skickade e-post till. Var vänlig och logga ut, eller aktivera anonymt läge, och försök igen."
     not_found_description: "Tyvärr, vi kunde inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
     log_out: "Logga ut"
+    digest_frequency:
+      never: "aldrig"
+      every_30_minutes: "var 30:e minut"
+      every_hour: "varje timma"
+      daily: "dagligen"
+      weekly: "veckovis"
   user_api_key:
     title: "Godkänna programåtkomst"
     authorize: "Auktorisera"
@@ -511,11 +521,40 @@ sv:
       read: "Läs alla"
       write: "Skriv alla"
   reports:
+    default:
+      labels:
+        day: Dag
+    post_edits:
+      labels:
+        post: Publicera
+        editor: Redigerare
+        edit_reason: Anledning
+    user_flagging_ratio:
+      labels:
+        user: Användare
+    moderators_activity:
+      labels:
+        moderator: Moderator
+    flags_status:
+      labels:
+        flag: Typ
     visits:
       title: "Användarbesök"
       xaxis: "Dag"
       yaxis: "Antal besök"
     signups:
+      xaxis: "Dag"
+    new_contributors:
+      xaxis: "Dag"
+    consolidated_page_views:
+      yaxis: "Dag"
+      labels:
+        post: Publicera
+        editor: Redigerare
+        edit_reason: Anledning
+    dau_by_mau:
+      xaxis: "Dag"
+    daily_engaged_users:
       xaxis: "Dag"
     profile_views:
       title: "Användarprofilvisningar"
@@ -545,11 +584,23 @@ sv:
       title: "Användare per förtroendenivå"
       xaxis: "Förtroendenivå"
       yaxis: "Antal användare"
+    users_by_type:
+      xaxis: "Typ"
+      yaxis: "Antal användare"
+      labels:
+        type: Typ
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Avstängd
     emails:
       title: "E-post skickade"
       xaxis: "Dag"
       yaxis: "Antal e-post"
     user_to_user_private_messages:
+      xaxis: "Dag"
+      yaxis: "Antal meddelanden"
+    user_to_user_private_messages_with_replies:
       xaxis: "Dag"
       yaxis: "Antal meddelanden"
     system_private_messages:
@@ -573,14 +624,25 @@ sv:
       xaxis: "Användare"
       num_clicks: "Klick"
       num_topics: "Ämnen"
+      labels:
+        user: "Användare"
+        num_clicks: "Klick"
+        num_topics: "Ämnen"
     top_traffic_sources:
       title: "Vanligaste trafikkällor"
       xaxis: "Domän"
       num_clicks: "Klick"
       num_topics: "Ämnen"
       num_users: "Användare"
+      labels:
+        domain: Domän
+        num_clicks: Klick
+        num_topics: Ämnen
     top_referred_topics:
       title: "Mest refererade ämnen"
+      labels:
+        num_clicks: "Klick"
+        topic: "Ämne"
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
@@ -590,9 +652,11 @@ sv:
       xaxis: "Dag"
       yaxis: "Inloggade sidvisningar"
     page_view_crawler_reqs:
+      title: "Sökrobotars sidvisningar"
       xaxis: "Dag"
       yaxis: "Sökrobotars sidvisningar"
     page_view_total_reqs:
+      title: "Sidvisningar"
       xaxis: "Dag"
       yaxis: "Totalt antal sidvisningar"
     page_view_logged_in_mobile_reqs:
@@ -638,6 +702,20 @@ sv:
     mobile_visits:
       xaxis: "Dag"
       yaxis: "Antal besök"
+    web_crawlers:
+      labels:
+        page_views: "Sidvisningar"
+    suspicious_logins:
+      labels:
+        user: Användare
+        location: Plats
+    staff_logins:
+      labels:
+        user: Användare
+        location: Plats
+    top_uploads:
+      labels:
+        filename: Filnamn
   dashboard:
     rails_env_warning: "Din server kör i %{env} läge."
     host_names_warning: "Din config/database.yml fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
@@ -657,11 +735,13 @@ sv:
     set_locale_from_accept_language_header: "sätt gränssnittets språk för anonyma användare från deras webbläsares rubriks språk. (EXPERIMENTELLT, det fungerar inte med anonym cache)"
     min_post_length: "Minsta tillåtna inläggslängd i antal tecken"
     min_first_post_length: "Lägsta antal tillåtna tecken i första inlägget (ämnestext)"
+    min_personal_message_post_length: "Lägst antal tillåtna tecken i inlägg för meddelanden"
     max_post_length: "Högsta tillåtna längd på inlägg i antal tecken"
     topic_featured_link_enabled: "Möjliggör att lägga upp en länk med ämnen."
     show_topic_featured_link_in_digest: "Visa ämnet i skiss länken som fanns i det nerkortade emailet."
     min_topic_title_length: "Lägsta tillåtna längd på ämnesrubrik i antal tecken"
     max_topic_title_length: "Högsta tillåtna längd på ämnesrubrik i antal tecken"
+    min_personal_message_title_length: "Lägst tillåtna längd på rubrik för ett meddelande i antal tecken"
     min_search_term_length: "Lägsta giltiga teckenlängd på sökterm"
     search_tokenize_chinese_japanese_korean: "Framtvinga sökning för att tokenisera kinesiska/japanska/koreanska även på webbplatser som inte är på dessa språk"
     search_prefer_recent_posts: "Om sökningar på ditt stora forum går långsamt, försök detta alternativ som är ett index av de senaste inläggen först."
@@ -697,6 +777,7 @@ sv:
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs"
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
+    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera via minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen oavsett  alltid kan skicka meddelanden. "
     enable_long_polling: "Meddelande-buss som används för notifiering kan använda long polling"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
     long_polling_interval: "Tid som servern bör vänta innan den svarar på klienter när det inte finns någon data att skicka (endast loggad på användare)"
@@ -714,6 +795,7 @@ sv:
     must_approve_users: "Personal måste godkänna alla nya användarkonton innan de tillåts använda webbplatsen. VARNING: om det tillåts när webbplatsen är live så kommer det att upphäva tillgång för alla existerande användare som inte är personal!"
     pending_users_reminder_delay: "Notifiera moderatorer om nya användare har väntat på godkännande längre än så här många timmar. Ange -1 för att inaktivera notifikationer. "
     maximum_session_age: "Användaren kommer fortsättningsvis att vara inloggad i n timmar sedan senaste besöket"
+    moderators_create_categories: "Tillåt moderatorer att skapa nya kategorier"
     cors_origins: "Tillåtna ursprung för cross-ursprungsbegäran (CORS). Varje ursprung måste inkludera http:// eller https://. DISCOURSE_ENABLE_CORS env variabeln måste sättas till true för att aktivera CORS."
     use_admin_ip_whitelist: "Administratörer kan bara logga in om de är på en IP-adress definierad i listan över granskade IP-adresser (Admin > Loggar > Granskade IP-adresser)."
     top_menu: "Bestäm vilka objekt som visas i hemsidans navigation, och i vilken ordning. Exempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -757,7 +839,6 @@ sv:
     sso_not_approved_url: "Omdirigera icke godkända SSO-konton till den här URL:en"
     allow_new_registrations: "Tillåt nya användarregistreringar. Avbocka det här för att förhindra vem som helst från att skapa ett nytt konto."
     enable_signup_cta: "Visa en notis för återvändande anonyma användare för att förmå dem att registrera ett nytt konto."
-    enable_yahoo_logins: "Aktivera Yahoo autentisering"
     google_oauth2_client_id: "Klient-ID för din Google-applikation."
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     enable_instagram_logins: "Tillåt Instagramautentisering, kräver instagram_consumer_key och instagram_consumer_secret"
@@ -784,6 +865,7 @@ sv:
     max_bookmarks_per_day: "Max antal bokmärken per användare och dag."
     max_edits_per_day: "Max antal redigeringar per användare och dag."
     max_topics_per_day: "Max antal ämnen en användare kan skapa per dag."
+    max_personal_messages_per_day: "Max antal meddelanden användare kan skapa per dag."
     max_invites_per_day: "Max antal inbjudningar en användare kan skicka per dag."
     max_topic_invitations_per_day: "Max antal ämnesinbjudningar en användare kan skicka per dag."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
@@ -883,7 +965,6 @@ sv:
     max_age_unmatched_emails: "Ta bort omatchade undersökta e-postinlägg efter (N) dagar."
     max_age_unmatched_ips: "Ta bort omatchade undersökta IP-poster efter (N) dagar."
     num_flaggers_to_close_topic: "Minsta antal unika flaggare som krävs för att automatiskt pausa ett ämne för ingripande"
-    num_flags_to_close_topic: "Minsta antal aktiva flaggor som krävs för att automatiskt pausa ett ämne för ingripande"
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
     min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid komponerandet av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
@@ -958,7 +1039,6 @@ sv:
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
     topic_page_title_includes_category: "Ämnestitel för sidan inkluderar kategorinamnet. "
-    native_app_install_banner: "Uppmanar återkommande besökare att installera diskussionens special utvecklade app."
     max_prints_per_hour_per_user: "Maximalt antal av /printade sidhänvisnigar ( satt till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
@@ -998,7 +1078,6 @@ sv:
     default_other_external_links_in_new_tab: "Ange standardinställningen till att öppna externa länkar i en ny flik."
     default_other_enable_quoting: "Ange standardinställningen till att aktivera svar med citat för markerad text."
     default_other_dynamic_favicon: "Ange standardinställningen till att visa räknaren för nya/uppdaterade ämnen i webbläsaren."
-    default_other_disable_jump_reply: "Ange standardinställningen till att inte hoppa till användarens inlägg efter att de svarati ett ämne. "
     default_other_like_notification_frequency: "Ange standardinställningen till att notifiera användare vid gillning."
     default_topics_automatic_unpin: "Ange standardinställningen till att automatiskt avklistra ämnen när användaren når botten. "
     default_categories_watching: "Lista av kategorier som är bevakade som standard."
@@ -1042,6 +1121,8 @@ sv:
       reply_by_email_address_is_empty: "Du måste ställa in en 'reply by email address' innan du aktiverar svar via e-post."
       email_polling_disabled: "Du måste aktivera antingen manuell eller POP3 polling innan du aktiverar svar via e-post."
       user_locale_not_enabled: "Du måste först aktivera 'allow user locale' innan du aktiverar den här inställningen."
+      min_username_length_range: "Du kan inte sätta minimum högre än maximum"
+      max_username_length_range: "Du kan inte sätta maximum högre än minimum."
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1113,6 +1194,9 @@ sv:
     reserved_username: "Användarnamnet är inte tillåtet."
     missing_user_field: "Du har inte fyllt i alla användarfält"
     already_logged_in: "Hoppsan, det ser ut som att du försöker acceptera en inbjudan för en annan användare. Logga ut och försök igen om du inte är %{current_user}. "
+  admin:
+    email:
+      sent_test: "skickat!"
   user:
     deactivated_by_staff: "Avaktiverades av personalen"
     activated_by_staff: "Aktiverades av personalen"
@@ -1131,10 +1215,6 @@ sv:
     ip_address:
       blocked: "Nya registreringar är inte tillåtna från din IP-adress."
       max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
-  flags_reminder:
-    subject_template:
-      one: "1 flagga väntar på att bli hanterad"
-      other: "%{count} flaggor väntar på att bli hanterade"
   unsubscribe_mailer:
     title: "stäng av mail skrivaren"
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
@@ -1162,8 +1242,8 @@ sv:
     agreed: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi undersöker det. "
     agreed_and_deleted: "Tack för att du meddelade oss. Vi håller med om att det finns ett problem och vi har raderat inlägget."
     disagreed: "Tack för att du meddelande oss. Vi undersöker det."
-    deferred: "Tack för att du meddelande oss. Vi undersöker det."
-    deferred_and_deleted: "Tack för att du meddelande oss. Vi har raderat inlägget."
+    ignored: "Tack för att du meddelande oss. Vi undersöker det."
+    ignored_and_deleted: "Tack för att du meddelande oss. Vi har raderat inlägget."
   system_messages:
     post_hidden:
       title: "Gömda inlägg"
@@ -1276,21 +1356,32 @@ sv:
       subject_template: "Nytt konto pausat"
     too_many_tl3_flags:
       subject_template: "Nytt konto pausat"
+    silenced_by_staff:
+      subject_template: "Konto tillfälligt pausat"
+      text_body_template: "Hej!\n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt konto tillfälligt har pausats som en försiktighetsåtgärd. \n\nDet går bra att fortsätta besöka sidan men du kommer inte att kunna skriva inlägg eller skapa nya ämnen förrän [personalen](%{base_url}/about) granskar dina senaste inlägg. Vi ber om ursäkt för besväret. \n\nFör mer information, se våra [riktlinjer](%{base_url}/guidelines).\n"
+    spam_post_blocked:
+      title: "Skräppost är blockerat"
+      subject_template: "Ny användare %{username} har fått meddelanden blockerade pga. upprepade länkar "
+    unsilenced:
+      subject_template: "Konto ej längre pausat"
+      text_body_template: "Hej!\n\nDet här är ett automatiserat meddelande från %{site_name} för att informera dig om att ditt konto inte längre är pausat efter att personal har granskat ärendet. \n\nDu kan nu skriva inlägg och skapa nya ämnen igen. Tack för ditt tålamod. \n"
     pending_users_reminder:
       title: "Påminnelse om väntande användare"
       subject_template:
         one: "1 användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
-      text_body_template: |
-        Det finns nya användarregistreringar att godkänna (eller avvisa) innan de kan få tillträde till forumet.
-
-        [Var vänlig och granska dem på administratörssidan](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Nerladdningen av externa bilder är avaktiverad"
       subject_template: "Nedladdning av externa bilder har avaktiverats"
       text_body_template: "Inställningen `download_remote_images_to_local` har avaktiverats eftersom att diskutrymmet har nått sin övre gräns."
     dashboard_problems:
       title: "Instrumentpanels problem"
+    queued_posts_reminder:
+      title: "Påminnelse om köande inlägg"
+      text_body_template: |
+        Hej!
+
+        Meddelanden från nya användare väntar för närvarande på att granskas. [Godkänn eller avvisa dem här](%{base_url}/queued-posts).
   unsubscribe_link: |
     [Klicka här ](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
   unsubscribe_link_and_mail: |
@@ -1307,6 +1398,24 @@ sv:
     only_reply_by_email: "Besvara det här e-postmeddelandet för att ge din respons. "
     visit_link_to_respond: "[Besök ämnet](%{base_url}%{url}) för att ge din respons. "
     posted_by: "Postat av %{username} den %{post_date}"
+    invited_to_private_message_body: "%{username} bjöd in dit till ett meddelande\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nvid \n\n> %{site_title} -- %{site_description}\n"
+    invited_to_topic_body: |
+      %{username} bjöd in dig till en diskussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      vid
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "Användare invitera personligt"
       text_body_template: |
@@ -1372,6 +1481,15 @@ sv:
         %{respond_instructions}
     user_mentioned:
       title: "Användare som nämns"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
       text_body_template: |
         %{header_instructions}
 
@@ -1479,9 +1597,11 @@ sv:
     recent_topics: "Senaste"
     see_more: "Mer"
     search_title: "Sök på hemsidan"
+    search_button: "Sök"
   terms_of_service:
     title: "Användarvillkor"
   deleted: "raderad"
+  image: "bild"
   upload:
     edit_reason: "nedladdade lokala kopior av bilder"
     unauthorized: "Tyvärr, filen du försöker ladda upp är inte tillåten (tillåtna filtyper: %{authorized_extensions})."
@@ -1498,6 +1618,25 @@ sv:
   flag_reason:
     sockpuppet: "En ny användare skapade ett ämne, och en annan ny användare på samma IP-adress (%{ip_address}) svarade. Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "Den här nya användaren försökte skapa flera inlägg med länkar till samma domän (%{domain}). Granska webbplatsinställningen <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    exceeded_emails_limit: "Översteg max_emails_per_day_per_user"
+    exceeded_bounces_limit: "Översteg bounce_score_threshold"
+    mailing_list_no_echo_mode: "Email list meddelande är inaktiverat för användarens egna meddelanden"
+    user_email_no_user: "Kan inte hitta användare med id %{user_id}"
+    user_email_post_not_found: "Kan inte hitta ett inlägg med id %{post_id}"
+    user_email_anonymous_user: "Användare är anonym"
+    user_email_user_suspended_not_pm: "Användaren är avstängd, inte ett meddelande"
+    user_email_seen_recently: "Användare sågs senast"
+    user_email_notification_already_read: "Notificieringen som e-posten handlar om har redan blivit läst"
+    user_email_notification_topic_nil: "post.topic är nil"
+    user_email_post_user_deleted: "Användaren som skrivit inlägget har raderats."
+    user_email_post_deleted: "inlägg raderades av författaren"
+    user_email_user_suspended: "användare blev avstängd"
+    user_email_already_read: "användaren har redan läst det här inlägget"
+    sender_message_blank: "meddelande är tomt"
+    sender_message_to_blank: "message.to är tomt"
+    sender_text_part_body_blank: "text_part.body är tomt"
+    sender_body_blank: "body är tom"
   color_schemes:
     base_theme_name: "Bas"
   about: "Om"
@@ -1727,10 +1866,8 @@ sv:
             choices:
               open:
                 label: "Publikt"
-                description: "Alla har tillgång till denna grupp och kan söka medlemskap"
               restricted:
                 label: "Privat"
-                description: "Enbart människor som jag har inviterat eller gett tilåtelse till har åtkomst till denna grupp"
       contact:
         title: "kontakt"
         fields:
@@ -1747,8 +1884,18 @@ sv:
         title: "Tema"
       logos:
         title: "Logotyper"
+        fields:
+          logo:
+            label: "Primär logo"
+          logo_small:
+            label: "Kompakt logo"
       icons:
         title: "Ikoner"
+        fields:
+          favicon:
+            label: "Små ikoner"
+          apple_touch_icon:
+            label: "Stora ikoner"
       homepage:
         title: "Hemsida"
         fields:
@@ -1756,6 +1903,12 @@ sv:
             choices:
               latest:
                 label: "Senaste ämnen"
+              categories_only:
+                label: "Endast kategorier"
+              categories_with_featured_topics:
+                label: "Kategorier med utvalda ämnen"
+              categories_and_latest_topics:
+                label: "Kategorier med senaste ämnen"
       emoji:
         title: "Emojer"
         description: "Vilken emoj stil föredrar du för din grupp? Du kan addera fler personliga Emojer senare via Admin, Customize, Emoj."
@@ -1763,3 +1916,21 @@ sv:
         title: "Invitera personal"
       finished:
         title: "Er diskussionsgrupp är klar!"
+  joined: "Gick med"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "Stäng av användare"
+      delete_spammer:
+        title: "Radera spammare"
+      disagree:
+        title: "Håll inte med"
+      approve:
+        title: "Godkänn"
+      reject_user:
+        delete:
+          title: "Ta bort användare"
+      reject:
+        title: "Avvisa"
+      delete_user:
+        title: "Ta bort användare"

@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UserAvatar do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
   let(:avatar) { user.create_user_avatar! }
 
   describe '#update_gravatar!' do
     let(:temp) { Tempfile.new('test') }
-    let(:upload) { Fabricate(:upload, user: user) }
+    fab!(:upload) { Fabricate(:upload, user: user) }
 
     describe "when working" do
 

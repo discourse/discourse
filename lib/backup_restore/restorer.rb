@@ -403,7 +403,7 @@ module BackupRestore
       log "Reloading site settings..."
       SiteSetting.refresh!
 
-      if @disable_emails
+      if @disable_emails && SiteSetting.disable_emails == 'no'
         log "Disabling outgoing emails for non-staff users..."
         user = User.find_by_email(@user_info[:email]) || Discourse.system_user
         SiteSetting.set_and_log(:disable_emails, 'non-staff', user)
@@ -452,6 +452,9 @@ module BackupRestore
     end
 
     def generate_optimized_images
+      log 'Optimizing site icons...'
+      SiteIconManager.ensure_optimized!
+
       log 'Posts will be rebaked by a background job in sidekiq. You will see missing images until that has completed.'
       log 'You can expedite the process by manually running "rake posts:rebake_uncooked_posts"'
 
@@ -463,7 +466,7 @@ module BackupRestore
       SQL
 
       User.where("uploaded_avatar_id IS NOT NULL").find_each do |user|
-        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id, user_id: user.id)
+        Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id)
       end
     end
 
@@ -518,6 +521,7 @@ module BackupRestore
       log "Clear theme cache"
       ThemeField.force_recompilation!
       Theme.expire_site_cache!
+      Stylesheet::Manager.cache.clear
     end
 
     def disable_readonly_mode

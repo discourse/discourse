@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe UserNotifications do
@@ -180,7 +182,7 @@ describe UserNotifications do
       it "excludes posts that are newer than editing grace period" do
         SiteSetting.editing_grace_period = 5.minutes
         too_new = Fabricate(:topic, user: Fabricate(:user), title: "Oops I need to edit this", created_at: 1.minute.ago)
-        too_new_post = Fabricate(:post, user: too_new.user, topic: too_new, score: 100.0, post_number: 1, created_at: 1.minute.ago)
+        _too_new_post = Fabricate(:post, user: too_new.user, topic: too_new, score: 100.0, post_number: 1, created_at: 1.minute.ago)
         html = subject.html_part.body.to_s
         expect(html).to_not include too_new.title
       end
@@ -639,10 +641,13 @@ describe UserNotifications do
 
   def expects_build_with(condition)
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
-    mailer = UserNotifications.send(mail_type, user,
-                                    notification_type: Notification.types[notification.notification_type],
-                                    notification_data_hash: notification.data_hash,
-                                    post: notification.post)
+    mailer = UserNotifications.public_send(
+      mail_type, user,
+      notification_type: Notification.types[notification.notification_type],
+      notification_data_hash: notification.data_hash,
+      post: notification.post
+    )
+
     mailer.message
   end
 
@@ -666,7 +671,8 @@ describe UserNotifications do
     context "private_email" do
       it "doesn't support reply by email" do
         SiteSetting.private_email = true
-        mailer = UserNotifications.send(
+
+        mailer = UserNotifications.public_send(
           mail_type,
           user,
           notification_type: Notification.types[notification.notification_type],
@@ -767,7 +773,7 @@ describe UserNotifications do
 
       context "when customized" do
         let(:custom_body) do
-          body = <<~BODY
+          body = +<<~BODY
             You are now officially notified.
             %{header_instructions}
             %{message} %{respond_instructions}

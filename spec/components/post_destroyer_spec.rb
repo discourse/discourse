@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'post_destroyer'
 
@@ -7,8 +9,8 @@ describe PostDestroyer do
     UserActionManager.enable
   end
 
-  let(:moderator) { Fabricate(:moderator) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
@@ -50,6 +52,16 @@ describe PostDestroyer do
   end
 
   describe 'destroy_old_stubs' do
+    it 'destroys stubs for deleted by user topics' do
+      SiteSetting.delete_removed_posts_after = 24
+
+      PostDestroyer.new(post.user, post).destroy
+      post.update_column(:updated_at, 2.days.ago)
+
+      PostDestroyer.destroy_stubs
+      expect(post.reload.deleted_at).not_to eq(nil)
+    end
+
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.delete_removed_posts_after = 24
       Fabricate(:admin)
@@ -177,7 +189,38 @@ describe PostDestroyer do
         expect(@user.user_stat.post_count).to eq(1)
       end
 
-      context "recovered by user" do
+      it 'Recovers the post correctly' do
+        PostDestroyer.new(admin, post).destroy
+
+        post.reload
+        PostDestroyer.new(admin, post).recover
+        recovered_topic = post.reload.topic
+
+        expect(recovered_topic.deleted_at).to be_nil
+        expect(recovered_topic.deleted_by_id).to be_nil
+      end
+
+      context "recover" do
+
+        it "doesn't raise an error when the raw doesn't change" do
+          PostRevisor.new(@reply).revise!(
+            @user,
+            { edit_reason: 'made a change' },
+            force_new_version: true
+          )
+          PostDestroyer.new(@user, @reply.reload).recover
+        end
+
+        it "won't recover a non user-deleted post" do
+          PostRevisor.new(@reply).revise!(
+            admin,
+            { raw: 'this is a change to the post' },
+            force_new_version: true
+          )
+          PostDestroyer.new(@user, @reply.reload).recover
+          expect(@reply.reload.raw).to eq('this is a change to the post')
+        end
+
         it "should increment the user's post count" do
           PostDestroyer.new(@user, @reply).destroy
           expect(@user.user_stat.topic_count).to eq(1)
@@ -218,7 +261,7 @@ describe PostDestroyer do
   end
 
   describe "recovery and post actions" do
-    let(:codinghorror) { Fabricate(:coding_horror) }
+    fab!(:codinghorror) { Fabricate(:coding_horror) }
     let!(:like) { PostActionCreator.like(codinghorror, post).post_action }
     let!(:another_like) { PostActionCreator.like(moderator, post).post_action }
 
@@ -272,7 +315,7 @@ describe PostDestroyer do
         expect(post2.deleted_at).to be_blank
         expect(post2.deleted_by).to be_blank
         expect(post2.user_deleted).to eq(true)
-        expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', count: 24))
+        expect(post2.raw).to eq(I18n.t('js.topic.deleted_by_author', count: 24))
         expect(post2.version).to eq(2)
         expect(called).to eq(1)
         expect(user_stat.reload.post_count).to eq(0)
@@ -326,6 +369,8 @@ describe PostDestroyer do
 
     it "accepts a delete_removed_posts_after option" do
       SiteSetting.delete_removed_posts_after = 0
+
+      post.update!(post_number: 2)
 
       PostDestroyer.new(post.user, post, delete_removed_posts_after: 1).destroy
 
@@ -401,10 +446,10 @@ describe PostDestroyer do
   end
 
   context 'private message' do
-    let(:author) { Fabricate(:user) }
-    let(:private_message) { Fabricate(:private_message_topic, user: author) }
-    let!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
-    let!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
+    fab!(:author) { Fabricate(:user) }
+    fab!(:private_message) { Fabricate(:private_message_topic, user: author) }
+    fab!(:first_post) { Fabricate(:post, topic: private_message, user: author) }
+    fab!(:second_post) { Fabricate(:post, topic: private_message, user: author, post_number: 2) }
 
     it "doesn't update post_count for a reply" do
       expect {
@@ -438,10 +483,10 @@ describe PostDestroyer do
 
   context 'deleting the second post in a topic' do
 
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
-    let(:second_user) { Fabricate(:coding_horror) }
+    fab!(:second_user) { Fabricate(:coding_horror) }
     let!(:second_post) { create_post(topic: topic, user: second_user) }
 
     before do
@@ -578,8 +623,8 @@ describe PostDestroyer do
 
   describe 'after delete' do
 
-    let!(:coding_horror) { Fabricate(:coding_horror) }
-    let!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
+    fab!(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:post) { Fabricate(:post, raw: "Hello @CodingHorror") }
 
     it "should feature the users again (in case they've changed)" do
       Jobs.expects(:enqueue).with(:feature_topic_users, has_entries(topic_id: post.topic_id))
@@ -588,7 +633,7 @@ describe PostDestroyer do
 
     describe 'with a reply' do
 
-      let!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
+      fab!(:reply) { Fabricate(:basic_reply, user: coding_horror, topic: post.topic) }
       let!(:post_reply) { PostReply.create(post_id: post.id, reply_id: reply.id) }
 
       it 'changes the post count of the topic' do
@@ -731,7 +776,7 @@ describe PostDestroyer do
   end
 
   describe 'topic links' do
-    let!(:first_post)  { Fabricate(:post) }
+    fab!(:first_post)  { Fabricate(:post) }
     let!(:topic)       { first_post.topic }
     let!(:second_post) { Fabricate(:post_with_external_links, topic: topic) }
 

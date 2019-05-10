@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe DiscourseSingleSignOn do
@@ -100,6 +102,31 @@ describe DiscourseSingleSignOn do
     expect(user.staged).to be(false)
 
     expect(user.name).to eq("Bob O'Bob")
+  end
+
+  context "reviewables" do
+    let(:sso) do
+      DiscourseSingleSignOn.new.tap do |sso|
+        sso.username = "staged"
+        sso.name = "Bob O'Bob"
+        sso.email = "bob@obob.com"
+        sso.external_id = "B"
+      end
+    end
+
+    it "doesn't create reviewables if we aren't approving users" do
+      user = sso.lookup_or_create_user(ip_address)
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_blank
+    end
+
+    it "creates reviewables if needed" do
+      SiteSetting.must_approve_users = true
+      user = sso.lookup_or_create_user(ip_address)
+      reviewable = ReviewableUser.find_by(target: user)
+      expect(reviewable).to be_present
+      expect(reviewable).to be_pending
+    end
   end
 
   it "can set admin and moderator" do
@@ -529,7 +556,7 @@ describe DiscourseSingleSignOn do
       sso.avatar_url = "http://awesome.com/image.png"
       sso.suppress_welcome_message = true
 
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
@@ -540,8 +567,7 @@ describe DiscourseSingleSignOn do
       # junk avatar id should be updated
       old_id = user.uploaded_avatar_id
       Upload.destroy(old_id)
-
-      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
+      FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"), file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       avatar_id = user.uploaded_avatar_id
@@ -580,7 +606,7 @@ describe DiscourseSingleSignOn do
   end
 
   context 'when sso_overrides_avatar is enabled' do
-    let!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
+    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
       sso = DiscourseSingleSignOn.new
@@ -642,11 +668,11 @@ describe DiscourseSingleSignOn do
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       user.user_profile.reload
-      profile_background = user.user_profile.profile_background
+      profile_background_url = user.profile_background_upload.url
 
       # initial creation ...
-      expect(profile_background).to_not eq(nil)
-      expect(profile_background).to_not eq('')
+      expect(profile_background_url).to_not eq(nil)
+      expect(profile_background_url).to_not eq('')
 
       FileHelper.stubs(:download) { raise "should not be called" }
       sso.profile_background_url = "https://some.new/avatar.png"
@@ -655,12 +681,12 @@ describe DiscourseSingleSignOn do
       user.user_profile.reload
 
       # profile_background updated but no override specified ...
-      expect(user.user_profile.profile_background).to eq(profile_background)
+      expect(user.profile_background_upload.url).to eq(profile_background_url)
     end
   end
 
   context 'when sso_overrides_profile_background is enabled' do
-    let!(:sso_record) { Fabricate(:single_sign_on_record, external_profile_background_url: "http://example.com/an_image.png") }
+    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_profile_background_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
       sso = DiscourseSingleSignOn.new
@@ -678,33 +704,24 @@ describe DiscourseSingleSignOn do
     end
 
     it "deal with no profile_background_url passed for an existing user with a profile_background" do
-      Sidekiq::Testing.inline! do
-        # Deliberately not setting profile_background_url so it should not update
-        sso_record.user.user_profile.update_columns(profile_background: '')
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
-        user.user_profile.reload
+      # Deliberately not setting profile_background_url so it should not update
+      sso_record.user.user_profile.clear_profile_background
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        expect(user).to_not be_nil
-        expect(user.user_profile.profile_background).to eq('')
-      end
+      expect(user.profile_background_upload).to eq(nil)
     end
 
     it "deal with a profile_background_url passed for an existing user with a profile_background" do
-      Sidekiq::Testing.inline! do
-        FileHelper.stubs(:download).returns(logo)
+      url = "http://example.com/a_different_image.png"
+      stub_request(:get, url).to_return(body: logo)
 
-        sso_record.user.user_profile.update_columns(profile_background: '')
+      sso_record.user.user_profile.clear_profile_background
+      sso.profile_background_url = "http://example.com/a_different_image.png"
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        sso.profile_background_url = "http://example.com/a_different_image.png"
-
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
-        user.user_profile.reload
-
-        expect(user).to_not be_nil
-        expect(user.user_profile.profile_background).to_not eq('')
-      end
+      expect(user.profile_background_upload).to_not eq(nil)
     end
   end
 
@@ -718,16 +735,14 @@ describe DiscourseSingleSignOn do
       sso.username = "sam"
       sso.card_background_url = "http://awesome.com/image.png"
       sso.suppress_welcome_message = true
-
       FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))
       user = sso.lookup_or_create_user(ip_address)
       user.reload
       user.user_profile.reload
-      card_background = user.user_profile.card_background
+      card_background_url = user.user_profile.card_background_upload.url
 
       # initial creation ...
-      expect(card_background).to_not eq(nil)
-      expect(card_background).to_not eq('')
+      expect(card_background_url).to be_present
 
       FileHelper.stubs(:download) { raise "should not be called" }
       sso.card_background_url = "https://some.new/avatar.png"
@@ -736,12 +751,14 @@ describe DiscourseSingleSignOn do
       user.user_profile.reload
 
       # card_background updated but no override specified ...
-      expect(user.user_profile.card_background).to eq(card_background)
+      expect(user.user_profile.card_background_upload.url).to eq(
+        card_background_url
+      )
     end
   end
 
   context 'when sso_overrides_card_background is enabled' do
-    let!(:sso_record) { Fabricate(:single_sign_on_record, external_card_background_url: "http://example.com/an_image.png") }
+    fab!(:sso_record) { Fabricate(:single_sign_on_record, external_card_background_url: "http://example.com/an_image.png") }
 
     let!(:sso) {
       sso = DiscourseSingleSignOn.new
@@ -759,33 +776,25 @@ describe DiscourseSingleSignOn do
     end
 
     it "deal with no card_background_url passed for an existing user with a card_background" do
-      Sidekiq::Testing.inline! do
-        # Deliberately not setting card_background_url so it should not update
-        sso_record.user.user_profile.update_columns(card_background: '')
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
-        user.user_profile.reload
+      # Deliberately not setting card_background_url so it should not update
+      sso_record.user.user_profile.clear_card_background
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        expect(user).to_not be_nil
-        expect(user.user_profile.card_background).to eq('')
-      end
+      expect(user.user_profile.card_background_upload).to eq(nil)
     end
 
     it "deal with a card_background_url passed for an existing user with a card_background_url" do
-      Sidekiq::Testing.inline! do
-        FileHelper.stubs(:download).returns(logo)
+      url = "http://example.com/a_different_image.png"
+      stub_request(:get, url).to_return(body: logo)
 
-        sso_record.user.user_profile.update_columns(card_background: '')
+      sso_record.user.user_profile.clear_card_background
+      sso.card_background_url = url
 
-        sso.card_background_url = "http://example.com/a_different_image.png"
+      user = sso.lookup_or_create_user(ip_address)
+      user.reload
 
-        user = sso.lookup_or_create_user(ip_address)
-        user.reload
-        user.user_profile.reload
-
-        expect(user).to_not be_nil
-        expect(user.user_profile.card_background).to_not eq('')
-      end
+      expect(user.user_profile.card_background_upload.url).to_not eq('')
     end
   end
 

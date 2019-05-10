@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe CategoriesController do
@@ -146,8 +148,11 @@ describe CategoriesController do
 
       describe "success" do
         it "works" do
+          SiteSetting.enable_category_group_review = true
+
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
+          group = Fabricate(:group)
 
           post "/categories.json", params: {
             name: "hello",
@@ -156,6 +161,7 @@ describe CategoriesController do
             slug: "hello-cat",
             auto_close_hours: 72,
             search_priority: Searchable::PRIORITIES[:ignore],
+            reviewable_by_group_name: group.name,
             permissions: {
               "everyone" => readonly,
               "staff" => create_post
@@ -163,15 +169,19 @@ describe CategoriesController do
           }
 
           expect(response.status).to eq(200)
-          category = Category.find_by(name: "hello")
+          cat_json = ::JSON.parse(response.body)['category']
+          expect(cat_json).to be_present
+          expect(cat_json['reviewable_by_group_name']).to eq(group.name)
+          expect(cat_json['name']).to eq('hello')
+          expect(cat_json['slug']).to eq('hello-cat')
+          expect(cat_json['color']).to eq('ff0')
+          expect(cat_json['auto_close_hours']).to eq(72)
+          expect(cat_json['search_priority']).to eq(Searchable::PRIORITIES[:ignore])
+
+          category = Category.find(cat_json['id'])
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq([
             [Group[:everyone].id, readonly], [Group[:staff].id, create_post]
           ])
-          expect(category.name).to eq("hello")
-          expect(category.slug).to eq("hello-cat")
-          expect(category.color).to eq("ff0")
-          expect(category.auto_close_hours).to eq(72)
-          expect(category.search_priority).to eq(Searchable::PRIORITIES[:ignore])
           expect(UserHistory.count).to eq(4) # 1 + 3 (bootstrap mode)
         end
       end
@@ -251,8 +261,6 @@ describe CategoriesController do
     end
 
     describe "logged in" do
-      let(:valid_attrs) { { id: category.id, name: "hello", color: "ff0", text_color: "fff" } }
-
       before do
         sign_in(admin)
       end
@@ -311,7 +319,7 @@ describe CategoriesController do
       end
 
       describe "success" do
-        it "updates the group correctly" do
+        it "updates attributes correctly" do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
@@ -328,7 +336,8 @@ describe CategoriesController do
             custom_fields: {
               "dancing" => "frogs"
             },
-            minimum_required_tags: ""
+            minimum_required_tags: "",
+            allow_global_tags: 'true'
           }
 
           expect(response.status).to eq(200)
@@ -342,6 +351,7 @@ describe CategoriesController do
           expect(category.auto_close_hours).to eq(72)
           expect(category.custom_fields).to eq("dancing" => "frogs")
           expect(category.minimum_required_tags).to eq(0)
+          expect(category.allow_global_tags).to eq(true)
         end
 
         it 'logs the changes correctly' do
@@ -397,8 +407,6 @@ describe CategoriesController do
     end
 
     describe 'logged in' do
-      let(:valid_attrs) { { id: category.id, slug: 'fff' } }
-
       before do
         sign_in(admin)
       end

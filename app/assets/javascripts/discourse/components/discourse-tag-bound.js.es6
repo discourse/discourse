@@ -1,13 +1,17 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 export default Ember.Component.extend({
   tagName: "a",
   classNameBindings: [":discourse-tag", "style", "tagClass"],
   attributeBindings: ["href"],
 
-  tagClass: function() {
-    return "tag-" + this.get("tagRecord.id");
-  }.property("tagRecord.id"),
+  @computed("tagRecord.id")
+  tagClass(tagRecordId) {
+    return "tag-" + tagRecordId;
+  },
 
-  href: function() {
-    return Discourse.getURL("/tags/" + this.get("tagRecord.id"));
-  }.property("tagRecord.id")
+  @computed("tagRecord.id")
+  href(tagRecordId) {
+    return Discourse.getURL("/tags/" + tagRecordId);
+  }
 });

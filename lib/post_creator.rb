@@ -91,7 +91,7 @@ class PostCreator
     @post = nil
 
     if @user.suspended? && !skip_validations?
-      errors[:base] << I18n.t(:user_is_suspended)
+      errors.add(:base, I18n.t(:user_is_suspended))
       return false
     end
 
@@ -102,8 +102,9 @@ class PostCreator
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
 
       if names.length > max_allowed_message_recipients
-        errors[:base] << I18n.t(:max_pm_recepients,
-          recipients_limit: max_allowed_message_recipients
+        errors.add(
+          :base,
+          I18n.t(:max_pm_recepients, recipients_limit: max_allowed_message_recipients)
         )
 
         return false
@@ -124,7 +125,7 @@ class PostCreator
         ", user_ids: users.keys)
         .pluck(:id).each do |m|
 
-        errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
+        errors.add(:base, I18n.t(:not_accepting_pms, username: users[m]))
       end
 
       return false if errors[:base].present?
@@ -136,7 +137,7 @@ class PostCreator
     else
       @topic = Topic.find_by(id: @opts[:topic_id])
       unless @topic.present? && (@opts[:skip_guardian] || guardian.can_create?(Post, @topic))
-        errors[:base] << I18n.t(:topic_not_found)
+        errors.add(:base, I18n.t(:topic_not_found))
         return false
       end
     end
@@ -147,7 +148,7 @@ class PostCreator
 
     if @post.has_host_spam?
       @spam = true
-      errors[:base] << I18n.t(:spamming_host)
+      errors.add(:base, I18n.t(:spamming_host))
       return false
     end
 
@@ -464,7 +465,7 @@ class PostCreator
 
     # Attributes we pass through to the post instance if present
     [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email, :action_code].each do |a|
-      post.send("#{a}=", @opts[a]) if @opts[a].present?
+      post.public_send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
     post.extract_quoted_post_numbers
@@ -515,11 +516,11 @@ class PostCreator
 
     @user.user_stat.save!
 
-    @user.update_attributes(last_posted_at: @post.created_at)
+    @user.update(last_posted_at: @post.created_at)
   end
 
   def create_post_notice
-    return if @opts[:import_mode] || @user.bot? || @user.staged
+    return if @opts[:import_mode] || @user.anonymous? || @user.bot? || @user.staged
 
     last_post_time = Post.where(user_id: @user.id)
       .order(created_at: :desc)
@@ -528,10 +529,10 @@ class PostCreator
       .first
 
     if !last_post_time
-      @post.custom_fields["post_notice_type"] = "first"
+      @post.custom_fields["notice_type"] = Post.notices[:new_user]
     elsif SiteSetting.returning_users_days > 0 && last_post_time < SiteSetting.returning_users_days.days.ago
-      @post.custom_fields["post_notice_type"] = "returning"
-      @post.custom_fields["post_notice_time"] = last_post_time.iso8601
+      @post.custom_fields["notice_type"] = Post.notices[:returning_user]
+      @post.custom_fields["notice_args"] = last_post_time.iso8601
     end
   end
 
@@ -548,19 +549,17 @@ class PostCreator
   def track_topic
     return if @opts[:import_mode] || @opts[:auto_track] == false
 
-    unless @user.user_option.disable_jump_reply?
-      TopicUser.change(@post.user_id,
-                       @topic.id,
-                       posted: true,
-                       last_read_post_number: @post.post_number,
-                       highest_seen_post_number: @post.post_number)
+    TopicUser.change(@post.user_id,
+                      @topic.id,
+                      posted: true,
+                      last_read_post_number: @post.post_number,
+                      highest_seen_post_number: @post.post_number)
 
-      # assume it took us 5 seconds of reading time to make a post
-      PostTiming.record_timing(topic_id: @post.topic_id,
-                               user_id: @post.user_id,
-                               post_number: @post.post_number,
-                               msecs: 5000)
-    end
+    # assume it took us 5 seconds of reading time to make a post
+    PostTiming.record_timing(topic_id: @post.topic_id,
+                             user_id: @post.user_id,
+                             post_number: @post.post_number,
+                             msecs: 5000)
 
     if @user.staged
       TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::ReportsController do
@@ -6,8 +8,8 @@ describe Admin::ReportsController do
   end
 
   context 'while logged in as an admin' do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       sign_in(admin)
@@ -78,9 +80,9 @@ describe Admin::ReportsController do
       end
 
       describe 'when report is scoped to a category' do
-        let(:category) { Fabricate(:category) }
-        let!(:topic) { Fabricate(:topic, category: category) }
-        let!(:other_topic) { Fabricate(:topic) }
+        fab!(:category) { Fabricate(:category) }
+        fab!(:topic) { Fabricate(:topic, category: category) }
+        fab!(:other_topic) { Fabricate(:topic) }
 
         it 'should render the report as JSON' do
           get "/admin/reports/topics.json", params: { category_id: category.id }
@@ -95,9 +97,9 @@ describe Admin::ReportsController do
       end
 
       describe 'when report is scoped to a group' do
-        let(:user) { Fabricate(:user) }
-        let!(:other_user) { Fabricate(:user) }
-        let(:group) { Fabricate(:group) }
+        fab!(:user) { Fabricate(:user) }
+        fab!(:other_user) { Fabricate(:user) }
+        fab!(:group) { Fabricate(:group) }
 
         it 'should render the report as JSON' do
           group.add(user)

@@ -1,94 +1,80 @@
 import { ajax } from "discourse/lib/ajax";
 import ColorSchemeColor from "admin/models/color-scheme-color";
+import computed from "ember-addons/ember-computed-decorators";
 
 const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
-  init: function() {
+  init() {
     this._super(...arguments);
+
     this.startTrackingChanges();
   },
 
-  description: function() {
+  @computed
+  description() {
     return "" + this.name;
-  }.property(),
+  },
 
-  startTrackingChanges: function() {
-    this.set("originals", {
-      name: this.get("name")
-    });
+  startTrackingChanges() {
+    this.set("originals", { name: this.name });
   },
 
   schemeJson() {
-    let buffer = [];
-    this.get("colors").forEach(c => {
+    const buffer = [];
+    this.colors.forEach(c => {
       buffer.push(`  "${c.get("name")}": "${c.get("hex")}"`);
     });
 
-    return [`"${this.get("name")}": {`, buffer.join(",\n"), "}"].join("\n");
+    return [`"${this.name}": {`, buffer.join(",\n"), "}"].join("\n");
   },
 
-  copy: function() {
-    var newScheme = ColorScheme.create({
-      name: this.get("name"),
+  copy() {
+    const newScheme = ColorScheme.create({
+      name: this.name,
       can_edit: true,
       colors: Ember.A()
     });
-    this.get("colors").forEach(c => {
+    this.colors.forEach(c => {
       newScheme.colors.pushObject(
-        ColorSchemeColor.create({
-          name: c.get("name"),
-          hex: c.get("hex"),
-          default_hex: c.get("default_hex")
-        })
+        ColorSchemeColor.create(c.getProperties("name", "hex", "default_hex"))
       );
     });
     return newScheme;
   },
 
-  changed: function() {
+  @computed("name", "colors.@each.changed", "saving")
+  changed(name) {
     if (!this.originals) return false;
-    if (this.originals["name"] !== this.get("name")) return true;
-    if (
-      _.any(this.get("colors"), function(c) {
-        return c.get("changed");
-      })
-    )
-      return true;
-    return false;
-  }.property("name", "colors.@each.changed", "saving"),
+    if (this.originals.name !== name) return true;
+    if (_.any(this.colors, c => c.get("changed"))) return true;
 
-  disableSave: function() {
-    if (this.get("theme_id")) {
+    return false;
+  },
+
+  @computed("changed")
+  disableSave(changed) {
+    if (this.theme_id) {
       return false;
     }
-    return (
-      !this.get("changed") ||
-      this.get("saving") ||
-      _.any(this.get("colors"), function(c) {
-        return !c.get("valid");
-      })
-    );
-  }.property("changed"),
 
-  newRecord: function() {
-    return !this.get("id");
-  }.property("id"),
+    return !changed || this.saving || _.any(this.colors, c => !c.get("valid"));
+  },
 
-  save: function(opts) {
-    if (this.get("is_base") || this.get("disableSave")) return;
+  newRecord: Ember.computed.not("id"),
 
-    var self = this;
-    this.set("savingStatus", I18n.t("saving"));
-    this.set("saving", true);
+  save(opts) {
+    if (this.is_base || this.disableSave) return;
 
-    var data = {};
+    this.setProperties({ savingStatus: I18n.t("saving"), saving: true });
+
+    const data = {};
 
     if (!opts || !opts.enabledOnly) {
       data.name = this.name;
-      data.base_scheme_id = this.get("base_scheme_id");
+      data.base_scheme_id = this.base_scheme_id;
       data.colors = [];
-      this.get("colors").forEach(c => {
-        if (!self.id || c.get("changed")) {
-          data.colors.pushObject({ name: c.get("name"), hex: c.get("hex") });
+      this.colors.forEach(c => {
+        if (!this.id || c.get("changed")) {
+          data.colors.pushObject(c.getProperties("name", "hex"));
         }
       });
     }
@@ -101,33 +87,34 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
         dataType: "json",
         contentType: "application/json"
       }
-    ).then(function(result) {
+    ).then(result => {
       if (result.id) {
-        self.set("id", result.id);
+        this.set("id", result.id);
       }
+
       if (!opts || !opts.enabledOnly) {
-        self.startTrackingChanges();
-        self.get("colors").forEach(c => c.startTrackingChanges());
+        this.startTrackingChanges();
+        this.colors.forEach(c => c.startTrackingChanges());
       }
-      self.set("savingStatus", I18n.t("saved"));
-      self.set("saving", false);
-      self.notifyPropertyChange("description");
+
+      this.setProperties({ savingStatus: I18n.t("saved"), saving: false });
+      this.notifyPropertyChange("description");
     });
   },
 
-  destroy: function() {
+  destroy() {
     if (this.id) {
-      return ajax("/admin/color_schemes/" + this.id, { type: "DELETE" });
+      return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });
     }
   }
 });
 
-var ColorSchemes = Ember.ArrayProxy.extend({});
+const ColorSchemes = Ember.ArrayProxy.extend({});
 
 ColorScheme.reopenClass({
-  findAll: function() {
-    var colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes").then(function(all) {
+  findAll() {
+    const colorSchemes = ColorSchemes.create({ content: [], loading: true });
+    return ajax("/admin/color_schemes").then(all => {
       all.forEach(colorScheme => {
         colorSchemes.pushObject(
           ColorScheme.create({
@@ -137,7 +124,7 @@ ColorScheme.reopenClass({
             theme_id: colorScheme.theme_id,
             theme_name: colorScheme.theme_name,
             base_scheme_id: colorScheme.base_scheme_id,
-            colors: colorScheme.colors.map(function(c) {
+            colors: colorScheme.colors.map(c => {
               return ColorSchemeColor.create({
                 name: c.name,
                 hex: c.hex,

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'post_revisor'
 
 describe PostRevisor do
 
-  let(:topic) { Fabricate(:topic) }
-  let(:newuser) { Fabricate(:newuser) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:newuser) { Fabricate(:newuser) }
   let(:post_args) { { user: newuser, topic: topic } }
 
   context 'TopicChanges' do
@@ -334,7 +336,7 @@ describe PostRevisor do
     end
 
     describe 'rate limiter' do
-      let(:changed_by) { Fabricate(:coding_horror) }
+      fab!(:changed_by) { Fabricate(:coding_horror) }
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
@@ -343,7 +345,7 @@ describe PostRevisor do
     end
 
     describe "admin editing a new user's post" do
-      let(:changed_by) { Fabricate(:admin) }
+      fab!(:changed_by) { Fabricate(:admin) }
 
       before do
         SiteSetting.newuser_max_images = 0
@@ -381,7 +383,7 @@ describe PostRevisor do
         SiteSetting.editing_grace_period_max_diff = 1000
       end
 
-      let(:changed_by) { Fabricate(:coding_horror) }
+      fab!(:changed_by) { Fabricate(:coding_horror) }
       let!(:result) { subject.revise!(changed_by, raw: "lets update the body. Здравствуйте") }
 
       it 'correctly updates raw' do
@@ -464,7 +466,7 @@ describe PostRevisor do
     end
 
     context "logging staff edits" do
-      let(:moderator) { Fabricate(:moderator) }
+      fab!(:moderator) { Fabricate(:moderator) }
 
       it "doesn't log when a regular user revises a post" do
         subject.revise!(
@@ -511,7 +513,7 @@ describe PostRevisor do
     context "staff_edit_locks_post" do
 
       context "disabled" do
-        let(:moderator) { Fabricate(:moderator) }
+        fab!(:moderator) { Fabricate(:moderator) }
 
         before do
           SiteSetting.staff_edit_locks_post = false
@@ -530,7 +532,7 @@ describe PostRevisor do
       end
 
       context "enabled" do
-        let(:moderator) { Fabricate(:moderator) }
+        fab!(:moderator) { Fabricate(:moderator) }
 
         before do
           SiteSetting.staff_edit_locks_post = true
@@ -605,7 +607,7 @@ describe PostRevisor do
 
     context "alerts" do
 
-      let(:mentioned_user) { Fabricate(:user) }
+      fab!(:mentioned_user) { Fabricate(:user) }
 
       before do
         Jobs.run_immediately!
@@ -735,6 +737,37 @@ describe PostRevisor do
               expect(result).to eq(true)
               post.reload
               expect(post.topic.tags.size).to eq(0)
+            end
+          end
+
+          context "hidden tags" do
+            let(:bumped_at) { 1.day.ago }
+
+            before do
+              topic.update_attributes!(bumped_at: bumped_at)
+              create_hidden_tags(['important', 'secret'])
+              topic = post.topic
+              topic.tags = [Fabricate(:tag, name: "super"), Tag.where(name: "important").first, Fabricate(:tag, name: "stuff")]
+            end
+
+            it "doesn't bump topic if only staff-only tags are added" do
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+                expect(result).to eq(true)
+              }.to_not change { topic.reload.bumped_at }
+            end
+
+            it "doesn't bump topic if only staff-only tags are removed" do
+              expect {
+                result = subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) - ['important', 'secret'])
+                expect(result).to eq(true)
+              }.to_not change { topic.reload.bumped_at }
+            end
+
+            it "doesn't create revision" do
+              expect {
+                subject.revise!(Fabricate(:admin), raw: post.raw, tags: topic.tags.map(&:name) + ['secret'])
+              }.to_not change { post.reload.revisions.size }
             end
           end
 

@@ -8,10 +8,15 @@ import evenRound from "discourse/plugins/poll/lib/even-round";
 import { avatarFor } from "discourse/widgets/post";
 import round from "discourse/lib/round";
 import { relativeAge } from "discourse/lib/formatter";
-import { userPath } from "discourse/lib/url";
 
 function optionHtml(option) {
-  return new RawHtml({ html: `<span>${option.html}</span>` });
+  const $node = $(`<span>${option.html}</span>`);
+
+  $node.find(".discourse-local-date").each((_index, elem) => {
+    $(elem).applyLocalDates();
+  });
+
+  return new RawHtml({ html: `<span>${$node.html()}</span>` });
 }
 
 function infoTextHtml(text) {
@@ -145,7 +150,6 @@ createWidget("discourse-poll-voters", {
       return h("li", [
         avatarFor("tiny", {
           username: user.username,
-          url: this.site.mobileView ? userPath(user.username) : undefined,
           template: user.avatar_template
         }),
         " "

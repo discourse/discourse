@@ -1,7 +1,7 @@
 import ReportLoader from "discourse/lib/reports-loader";
-import Category from "discourse/models/category";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
+import { isNumeric } from "discourse/lib/utilities";
 import { SCHEMA_VERSION, default as Report } from "admin/models/report";
 import computed from "ember-addons/ember-computed-decorators";
 
@@ -50,21 +50,15 @@ export default Ember.Component.extend({
   filters: null,
   startDate: null,
   endDate: null,
-  category: null,
-  groupId: null,
-  filter: null,
   showTrend: false,
   showHeader: true,
   showTitle: true,
   showFilteringUI: false,
-  showCategoryOptions: Ember.computed.alias("model.category_filtering"),
   showDatesOptions: Ember.computed.alias("model.dates_filtering"),
-  showGroupOptions: Ember.computed.alias("model.group_filtering"),
   showExport: Ember.computed.not("model.onlyTable"),
   showRefresh: Ember.computed.or(
-    "showCategoryOptions",
     "showDatesOptions",
-    "showGroupOptions"
+    "model.available_filters.length"
   ),
   shouldDisplayTrend: Ember.computed.and("showTrend", "model.prev_period"),
 
@@ -74,18 +68,11 @@ export default Ember.Component.extend({
     this._reports = [];
   },
 
+  startDate: Ember.computed.alias("filters.startDate"),
+  endDate: Ember.computed.alias("filters.endDate"),
+
   didReceiveAttrs() {
     this._super(...arguments);
-
-    const state = this.get("filters") || {};
-
-    this.setProperties({
-      category: Category.findById(state.categoryId),
-      groupId: state.groupId,
-      filter: state.filter,
-      startDate: state.startDate,
-      endDate: state.endDate
-    });
 
     if (this.get("report")) {
       this._renderReport(
@@ -125,8 +112,6 @@ export default Ember.Component.extend({
     return displayedModesLength > 1;
   },
 
-  categoryId: Ember.computed.alias("category.id"),
-
   @computed("currentMode", "model.modes", "forcedModes")
   displayedModes(currentMode, reportModes, forcedModes) {
     const modes = forcedModes ? forcedModes.split(",") : reportModes;
@@ -143,33 +128,9 @@ export default Ember.Component.extend({
     });
   },
 
-  @computed()
-  groupOptions() {
-    const arr = [
-      { name: I18n.t("admin.dashboard.reports.groups"), value: "all" }
-    ];
-    return arr.concat(
-      (this.site.groups || []).map(i => {
-        return { name: i["name"], value: i["id"] };
-      })
-    );
-  },
-
   @computed("currentMode")
   modeComponent(currentMode) {
     return `admin-report-${currentMode}`;
-  },
-
-  @computed("model.filter_options")
-  filterOptions(options) {
-    if (options) {
-      return options.map(option => {
-        if (option.allowAny) {
-          option.choices.unshift(I18n.t("admin.dashboard.report_filter_any"));
-        }
-        return option;
-      });
-    }
   },
 
   @computed("startDate")
@@ -198,25 +159,25 @@ export default Ember.Component.extend({
 
   @computed(
     "dataSourceName",
-    "categoryId",
-    "groupId",
-    "filter",
     "normalizedStartDate",
-    "normalizedEndDate"
+    "normalizedEndDate",
+    "filters.customFilters"
   )
-  reportKey(dataSourceName, categoryId, groupId, filter, startDate, endDate) {
+  reportKey(dataSourceName, startDate, endDate, customFilters) {
     if (!dataSourceName || !startDate || !endDate) return null;
 
     let reportKey = "reports:";
     reportKey += [
       dataSourceName,
-      categoryId,
       startDate.replace(/-/g, ""),
       endDate.replace(/-/g, ""),
-      groupId,
-      filter,
       "[:prev_period]",
       this.get("reportOptions.table.limit"),
+      customFilters
+        ? JSON.stringify(customFilters, (key, value) =>
+            isNumeric(value) ? value.toString() : value
+          )
+        : null,
       SCHEMA_VERSION
     ]
       .filter(x => x)
@@ -227,49 +188,41 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    filter(filterOptionId, value) {
-      let params = [];
-      let paramPairs = {};
-      let newParams = [];
+    applyFilter(id, value) {
+      let customFilters = this.get("filters.customFilters") || {};
 
-      if (this.get("filter")) {
-        const filter = this.get("filter").slice(1, -1);
-        params = filter.split("&") || [];
-        params.map(p => {
-          const pair = p.split("=");
-          paramPairs[pair[0]] = pair[1];
-        });
+      if (typeof value === "undefined") {
+        delete customFilters[id];
+      } else {
+        customFilters[id] = value;
       }
 
-      paramPairs[filterOptionId] = value;
-      Object.keys(paramPairs).forEach(key => {
-        if (paramPairs[key] !== I18n.t("admin.dashboard.report_filter_any")) {
-          newParams.push(`${key}=${paramPairs[key]}`);
-        }
+      this.attrs.onRefresh({
+        type: this.get("model.type"),
+        startDate: this.get("startDate"),
+        endDate: this.get("endDate"),
+        filters: customFilters
       });
-
-      this.set("filter", `[${newParams.join("&")}]`);
     },
 
     refreshReport() {
       this.attrs.onRefresh({
-        categoryId: this.get("categoryId"),
-        groupId: this.get("groupId"),
-        filter: this.get("filter"),
+        type: this.get("model.type"),
         startDate: this.get("startDate"),
-        endDate: this.get("endDate")
+        endDate: this.get("endDate"),
+        filters: this.get("filters.customFilters")
       });
     },
 
     exportCsv() {
+      const customFilters = this.get("filters.customFilters") || {};
+
       exportEntity("report", {
         name: this.get("model.type"),
         start_date: this.get("startDate"),
         end_date: this.get("endDate"),
-        category_id:
-          this.get("categoryId") === "all" ? undefined : this.get("categoryId"),
-        group_id:
-          this.get("groupId") === "all" ? undefined : this.get("groupId")
+        category_id: customFilters.category,
+        group_id: customFilters.group
       }).then(outputExportResult);
     },
 
@@ -383,20 +336,12 @@ export default Ember.Component.extend({
         .toISOString();
     }
 
-    if (this.get("groupId") && this.get("groupId") !== "all") {
-      payload.data.group_id = this.get("groupId");
-    }
-
-    if (this.get("categoryId") && this.get("categoryId") !== "all") {
-      payload.data.category_id = this.get("categoryId");
-    }
-
-    if (this.get("filter") && this.get("filter") !== "all") {
-      payload.data.filter = this.get("filter");
-    }
-
     if (this.get("reportOptions.table.limit")) {
       payload.data.limit = this.get("reportOptions.table.limit");
+    }
+
+    if (this.get("filters.customFilters")) {
+      payload.data.filters = this.get("filters.customFilters");
     }
 
     return payload;
@@ -443,8 +388,8 @@ export default Ember.Component.extend({
       Report.fillMissingDates(jsonReport, {
         filledField: "prevChartData",
         dataField: "prev_data",
-        starDate: jsonReport.prev_start_date,
-        endDate: jsonReport.prev_end_date
+        starDate: jsonReport.prev_startDate,
+        endDate: jsonReport.prev_endDate
       });
 
       if (jsonReport.prevChartData && jsonReport.prevChartData.length > 40) {

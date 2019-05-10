@@ -69,6 +69,8 @@ sk:
           regular: Jedna možnosť
           multiple: Viacero možností
           number: Číselné hodnotenie
+        poll_result:
+          label: Výsledky
         poll_config:
           max: Max
           min: Min

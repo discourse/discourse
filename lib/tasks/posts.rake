@@ -1,3 +1,5 @@
+require 'file_store/local_store'
+
 desc 'Update each post with latest markdown'
 task 'posts:rebake' => :environment do
   ENV['RAILS_DB'] ? rebake_posts : rebake_posts_all_sites
@@ -386,4 +388,66 @@ task 'posts:reorder_posts', [:topic_id] => [:environment] do |_, args|
   end
 
   puts "", "Done.", ""
+end
+
+desc 'Finds missing post upload records from cooked HTML content'
+task 'posts:missing_uploads' => :environment do
+  old_scheme_upload_count = 0
+
+  missing = Post.find_missing_uploads do |post, src, path, sha1|
+    next if sha1.present?
+
+    upload_id = nil
+
+    # recovering old scheme upload.
+    local_store = FileStore::LocalStore.new
+    public_path = "#{local_store.public_dir}#{path}"
+    file_path = nil
+
+    if File.exists?(public_path)
+      file_path = public_path
+    else
+      tombstone_path = public_path.sub("/uploads/", "/uploads/tombstone/")
+      file_path = tombstone_path if File.exists?(tombstone_path)
+    end
+
+    if file_path.present?
+      tmp = Tempfile.new
+      tmp.write(File.read(file_path))
+      tmp.rewind
+
+      if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
+        sha1s << upload.sha1
+        upload_id = upload.id
+        DbHelper.remap(UrlHelper.absolute(src), upload.url)
+
+        post.reload
+        post.raw.gsub!(src, upload.url)
+        post.cooked.gsub!(src, upload.url)
+
+        if post.changed?
+          post.save!(validate: false)
+          post.rebake!
+        end
+      end
+
+      FileUtils.rm(tmp, force: true)
+    else
+      old_scheme_upload_count += 1
+    end
+
+    upload_id
+  end
+
+  puts "", "#{missing[:count]} post uploads are missing.", ""
+
+  if missing[:count] > 0
+    puts "#{missing[:uploads].count} uploads are missing."
+    puts "#{old_scheme_upload_count} of #{missing[:uploads].count} are old scheme uploads." if old_scheme_upload_count > 0
+    puts "#{missing[:post_uploads].count} of #{Post.count} posts are affected.", ""
+  end
+end
+
+desc 'Finds missing post upload records from cooked HTML content'
+task 'posts:missing_uploads' => :environment do
 end

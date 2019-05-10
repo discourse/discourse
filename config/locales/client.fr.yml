@@ -189,7 +189,6 @@ fr:
     age: "Âge"
     joined: "Inscrit"
     admin_title: "Administration"
-    flags_title: "Signalements"
     show_more: "afficher plus"
     show_help: "options"
     links: "Liens"
@@ -216,6 +215,8 @@ fr:
     every_hour: "chaque heure"
     daily: "quotidiennes"
     weekly: "hebdomadaires"
+    every_month: "chaque mois"
+    every_six_months: "tous les six mois"
     max_of_count: "maximum sur {{count}}"
     alternation: "ou"
     character_count:
@@ -305,26 +306,94 @@ fr:
       title:
         search: "Rechercher messages par titre :"
         placeholder: "saisir le titre du message ici"
-    queue:
-      topic: "Sujet :"
-      approve: "Approuver"
-      reject: "Rejeter"
-      delete_user: "Supprimer l'utilisateur"
-      title: "Nécessite l'approbation"
-      none: "Il n'y a pas de messages à vérifier."
-      edit: "Modifier"
-      cancel: "Annuler"
+    review:
+      delete: "Supprimer"
+      settings:
+        save_changes: "Sauvegarder"
+        title: "Paramètres"
+      moderation_history: "Historique de modération"
+      none: "Il n'y a pas d'éléments à vérifier."
       view_pending: "voir les messages en attente"
-      has_pending_posts:
+      topic_has_pending:
         one: "Ce sujet a <b>1</b> message en attente de validation"
         other: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
-      confirm: "Sauvegarder"
-      delete_prompt: "Êtes-vous sûr de vouloir supprimer <b>%{username}</b> ? Cela supprimera tous ses messages et bloquera son courriel et son adresse IP."
+      title: "Doit être vérifié"
+      topic: "Sujet :"
+      filtered_user: "Utilisateur:"
+      show_all_topics: "afficher tous les sujets"
+      user:
+        username: "Pseudo"
+        email: "Courriel"
+        name: "Nom"
+      user_percentage:
+        summary:
+          one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalement total)"
+          other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalements total)"
+        agreed:
+          one: "{{count}}% accepté"
+          other: "{{count}}% acceptés"
+        disagreed:
+          one: "{{count}}% rejeté"
+          other: "{{count}}% rejetés"
+        ignored:
+          one: "{{count}}% ignoré"
+          other: "{{count}}% ignorés"
+      topics:
+        topic: "Sujet"
+        reviewable_count: "Nombre"
+        reported_by: "Signalé par"
+        deleted: "[Sujet supprimé]"
+        details: "détails"
+        unique_users:
+          one: "1 utilisateur"
+          other: "{{count}} utilisateurs"
+      edit: "Modifier"
+      save: "Sauvegarder"
+      cancel: "Annuler"
+      new_topic: "Nouveau sujet :"
+      filters:
+        type:
+          title: "Type :"
+          all: "(tous les types)"
+        minimum_score: "Score minimum :"
+        refresh: "Rafraîchir"
+        status: "Etat :"
+        category: "Catégorie :"
+      conversation:
+        view_full: "voir conversation entière"
+      scores:
+        score: "Score"
+        date: "Date"
+        type: "Type"
+        submitted_by: "Soumis par"
+      statuses:
+        pending:
+          title: "En attente"
+        approved:
+          title: "Acceptés :"
+        rejected:
+          title: "Rejetés"
+        ignored:
+          title: "Ignorés"
+        deleted:
+          title: "Supprimés"
+        reviewed:
+          title: "(Tous vérifiés)"
+        all:
+          title: "(Tout)"
+      types:
+        reviewable_flagged_post:
+          title: "Message signalé"
+          flagged_by: "Signalé par"
+        reviewable_queued_post:
+          title: "Message en file d'attente"
+        reviewable_user:
+          title: "Utilisateur"
       approval:
         title: "Ce message doit être approuvé"
-        description: "Votre nouveau message a bien été envoyé, mais il doit être approuvé par un modérateur avant d'apparaître publiquement. Merci de votre patience."
+        description: "Votre nouveau message a bien été envoyé, mais il doit être accepté par un modérateur avant d'apparaître publiquement. Merci de votre patience."
         pending_posts:
-          one: "Vous avez <strong>un</strong> message en attente."
+          one: "Vous avez <strong>1</strong> message en attente."
           other: "Vous avez <strong>{{count}}</strong> messages en attente."
         ok: "OK"
     user_action:
@@ -370,10 +439,19 @@ fr:
         remove_user_as_group_owner: "Retirer le propriétaire"
     groups:
       member_added: "Ajouté"
+      member_requested: "Requis à"
       add_members:
         title: "Ajouter membres"
         description: "Gérer les membres de ce groupe"
         usernames: "Pseudos"
+      requests:
+        title: "Requêtes"
+        reason: "Raison"
+        accept: "Accepter"
+        accepted: "accepté"
+        deny: "Refuser"
+        denied: "refusé"
+        undone: "requête annulée"
       manage:
         title: "Gérer"
         name: "Nom"
@@ -404,6 +482,7 @@ fr:
       empty:
         posts: "Il n'y a aucun message de membres de ce groupe."
         members: "Il n' y a aucun membre dans ce groupe."
+        requests: "Il n'y a aucune demande pour rejoindre ce groupe"
         mentions: "Il n'y a aucune mention de ce groupe."
         messages: "Il n'y a aucun message pour ce groupe."
         topics: "Il n'y a aucun sujet par des membres de ce groupe."
@@ -572,6 +651,18 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
+      user_notifications:
+        ignore_duration_title: "Ignorer planification"
+        ignore_duration_when: "Durée :"
+        ignore_duration_save: "Ignorer"
+        ignore_duration_note: "Noter que tous les 'ignorer' sans supprimés automatiquement après l'échéance de la durée d'ignore."
+        ignore_duration_time_frame_required: "Veuillez sélectionner un intervalle de temps"
+        ignore_option: "Ignoré"
+        ignore_option_title: "Vous ne recevrez pas de notification en lien avec cet utilisateur et ses messages et réponses seront cachés."
+        mute_option: "Silencieux"
+        mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utillisateur."
+        normal_option: "Normal"
+        normal_option_title: "Vous serez notifié si cet utilisateur vous répond, vous cite, ou mentionne votre @pseudo."
       activity_stream: "Activité"
       preferences: "Préférences"
       profile_hidden: "Le profil public de cet usagé est caché."
@@ -597,8 +688,6 @@ fr:
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
       first_notification: "Votre première notification ! Cliquez-la pour démarrer."
-      disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
-      dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       text_size_default_on_all_devices: "En faire la taille de texte par défaut sur tous mes périphériques"
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
@@ -856,6 +945,8 @@ fr:
         every_hour: "toutes les heures"
         daily: "quotidien"
         weekly: "hebdomadaire"
+        every_month: "tous les mois"
+        every_six_months: "tous les six mois"
       email_level:
         title: "M'envoyer un courriel quand quelqu'un me cite, répond à l'un de mes messages, mentionne mon @pseudo ou m'invite à rejoindre un sujet."
         always: "toujours"
@@ -1173,10 +1264,6 @@ fr:
         name: "Facebook"
         title: "via Facebook"
         message: "Authentification via Facebook (assurez-vous que les popups ne soient pas bloquées)"
-      yahoo:
-        name: "Yahoo"
-        title: "via Yahoo"
-        message: "Authentification via Yahoo (assurez-vous que les popups ne soient pas bloquées)"
       github:
         name: "GitHub"
         title: "via GitHub"
@@ -1215,6 +1302,8 @@ fr:
       alt: "Alt"
     conditional_loading_section:
       loading: Chargement…
+    category_row:
+      topic_count: "{{count}} sujets dans cette catégorie"
     select_kit:
       default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
@@ -1264,8 +1353,6 @@ fr:
       toggle_whisper: "Basculer murmure"
       toggle_unlisted: "Basculer la visibilité"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
-      saving_draft_tip: "sauvegarde en cours…"
-      saved_draft_tip: "sauvegardé"
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "brouillons hors ligne"
@@ -1391,7 +1478,6 @@ fr:
       none: "Impossible de charger les notifications pour le moment."
       empty: "Aucune notification trouvée."
       more: "voir les anciennes notifications"
-      total_flagged: "nombre total de messages signalés"
       mentioned: "<span>{{username}}</span> {{description}}"
       group_mentioned: "<span>{{username}}</span> {{description}}"
       quoted: "<span>{{username}}</span> {{description}}"
@@ -1661,7 +1747,9 @@ fr:
         next_week: "Semaine prochaine"
         two_weeks: "Deux semaines"
         next_month: "Mois prochai"
+        two_months: "Deux mois"
         three_months: "Trois mois"
+        four_months: "Quatre mois"
         six_months: "Six mois"
         one_year: "Une année"
         forever: "Toujours"
@@ -1937,6 +2025,9 @@ fr:
         description:
           one: vous avez sélectionné <b>1</b> message.
           other: "Vous avez sélectionné <b>{{count}}</b> messages."
+      deleted_by_author:
+        one: "(sujet supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
+        other: "(sujet supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
     post:
       quote_reply: "Citer"
       edit_reason: "Raison :"
@@ -1948,7 +2039,6 @@ fr:
       continue_discussion: "Suite du sujet {{postLink}} :"
       follow_quote: "aller au message cité"
       show_full: "Afficher le message complet"
-      show_hidden: "Afficher le contenu caché."
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
         other: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heures à moins qu'il ne soit signalé)"
@@ -1959,15 +2049,12 @@ fr:
         one: "voir 1 réponse cachée"
         other: "voir {{count}} réponses cachées"
       notice:
-        first: "C'est la première fois que {{user}} publie un message — accueillons-le comme il se doit dans notre communauté !"
-        return: "Cela faisait un moment que nous n'avions pas vu {{user}} — son dernier message remonte à {{time}}."
+        new_user: "C'est la première fois que {{user}} publie un message — accueillons-le comme il se doit dans notre communauté !"
+        returning_user: "Cela faisait un moment que nous n'avions pas vu {{user}} — son dernier message remonte à {{time}}."
       unread: "Ce message est non lu"
       has_replies:
         one: "{{count}} réponse"
         other: "{{count}} réponses"
-      has_likes:
-        one: "{{count}} J'aime"
-        other: "{{count}} J'aime"
       has_likes_title:
         one: "1 personne a aimé ce message"
         other: "{{count}} personnes ont aimé ce message"
@@ -2163,8 +2250,6 @@ fr:
       settings: "Paramètres"
       topic_template: "Modèle de sujet"
       tags: "Étiquettes"
-      tags_allowed_tags: "N'autoriser que ces étiquettes à être utilisées dans cette catégorie :"
-      tags_allowed_tag_groups: "N'autoriser que les étiquettes de ces groupes à être utilisées dans cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
       tags_tab_description: "Les étiquettes et les groupes d'étiquettes spécifiés ici ne seront disponibles que dans cette catégorie ainsi que dans toutes les catégories qui contiennent les mêmes spécifications. Ces étiquettes ne pourront pas être utilisées dans d'autres catégories."
       tag_groups_placeholder: "(Facultatif) liste des groupes de étiquettes autorisées"
@@ -2217,7 +2302,6 @@ fr:
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
-      position: "Position :"
       default_position: "Position par défaut"
       position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste,"
       position_disabled_click: 'activer le paramètre "fixed category positions"'
@@ -2246,6 +2330,10 @@ fr:
         options:
           normal: "Normal"
           ignore: "Ignorer"
+          very_low: "Très faible"
+          low: "Faible"
+          high: "Fort"
+          very_high: "Très fort"
       sort_options:
         default: "standard"
         likes: "J'aime"
@@ -2263,6 +2351,10 @@ fr:
         rows_with_featured_topics: "Rangées avec sujets à la une"
         boxes: "Boîtes"
         boxes_with_featured_topics: "Boîtes avec sujets à la une"
+      settings_sections:
+        general: "Général"
+        moderation: "Modération"
+        email: "Courriel"
     flagging:
       title: "Merci d'aider à garder notre communauté civilisée !"
       action: "Signaler ce message"
@@ -2669,8 +2761,6 @@ fr:
       dashboard:
         title: "Tableau de bord"
         last_updated: "Tableau de bord actualisé le :"
-        find_old: "Vous cherchez l'ancien tableau de bord ?"
-        old_link: "retrouvez-le ici"
         version: "Version"
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
@@ -2747,93 +2837,6 @@ fr:
       commits:
         latest_changes: "Dernières modifications : veuillez mettre à jour régulièrement !"
         by: "par"
-      flags:
-        title: "Signalements"
-        active_posts: "Messages signalés"
-        old_posts: "Anciens messages signalés"
-        topics: "Sujets signalés"
-        moderation_history: "Historique de la modération"
-        agree: "Accepter"
-        agree_title: "Confirmer que le signalement est valide et correcte"
-        agree_flag_hide_post: "Cacher message"
-        agree_flag_hide_post_title: "Cacher le message et envoyer automatiquement un message à l'utilisateur l'incitant à le modifier."
-        agree_flag_restore_post: "Accepter et rétablir le message"
-        agree_flag_restore_post_title: "Rétablir le message afin que tous les utilisateurs puissent le voir."
-        agree_flag_suspend: "Suspendre l'utilisateur"
-        agree_flag_suspend_title: "Accepter le signalement et suspendre l'utilisateur."
-        agree_flag_silence: "Mettre l'utilisateur sous silence"
-        agree_flag_silence_title: "Accepter le signalement et mettre l'utilisateur sous silence."
-        agree_flag: "Conserver le message"
-        agree_flag_title: "Accepter le signalement et conserver le message tel quel."
-        ignore_flag: "Ignorer"
-        ignore_flag_title: "Retirer le signalement ; il ne nécessite aucune action pour le moment."
-        delete: "Supprimer"
-        delete_title: "Supprimer le message signalé."
-        delete_post_defer_flag: "Supprimer le message et ignorer le signalement"
-        delete_post_defer_flag_title: "Supprimer le message ; si c'est le premier message, le sujet sera supprimé"
-        delete_post_agree_flag: "Supprimer le message et accepter le signalement"
-        delete_post_agree_flag_title: "Supprimer le message ; si c'est le premier message, le sujet sera supprimé"
-        delete_flag_modal_title: "Supprimer et…"
-        delete_spammer: "Supprimer le spammer"
-        delete_spammer_title: "Supprimer cet utilisateur et tous ses messages et sujets de ce dernier."
-        disagree_flag_unhide_post: "Refuser (ré-afficher le message)"
-        disagree_flag_unhide_post_title: "Supprimer tous les signalements de ce message et ré-affiché ce dernier"
-        disagree_flag: "Refuser"
-        disagree_flag_title: "Refuser le signalement car il est invalide ou incorrect"
-        clear_topic_flags: "Terminer"
-        clear_topic_flags_title: "Ce sujet a été étudié et les problèmes ont été résolus. Cliquez sur Terminer pour enlever les signalements."
-        more: "(plus de réponses…)"
-        suspend_user: "Suspendre l'utilisateur"
-        suspend_user_title: "Suspendre l'utilisateur pour ce message"
-        replies:
-          one: "[1 réponse]"
-          other: "[%{count} réponses]"
-        delete_replies:
-          one: "Supprimer aussi la %{count} réponse à ce message?"
-          other: "Supprimer aussi les %{count}réponses à ce message?"
-        dispositions:
-          agreed: "accepté"
-          disagreed: "refusé"
-          deferred: "ignoré"
-        flagged_by: "Signalé par"
-        resolved_by: "Résolu par"
-        took_action: "Intervenu"
-        system: "Système"
-        error: "Quelque chose s'est mal passé"
-        reply_message: "Répondre"
-        no_results: "Il n'y a pas de messages signalés."
-        topic_flagged: "Ce <strong>sujet</strong> a été signalé."
-        show_full: "afficher le message complet"
-        visit_topic: "Consulter le sujet pour intervenir"
-        was_edited: "Le message a été modifié après le premier signalement"
-        previous_flags_count: "Ce message a déjà été signalé {{count}} fois."
-        show_details: "Afficher les détails du signalement"
-        user_percentage:
-          summary:
-            one: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalement)"
-            other: "{{agreed}}, {{disagreed}}, {{ignored}} ({{count}} signalements total)"
-          agreed:
-            one: "{{count}}% d'accord"
-            other: "{{count}}% d'accords"
-          disagreed:
-            one: "{{count}}% pas d'accord"
-            other: "{{count}}% pas d'accords"
-          ignored:
-            one: "{{count}}% reporté"
-            other: "{{count}}% reportés"
-        details: "détails"
-        flagged_topics:
-          topic: "Sujet"
-          type: "Type"
-          users: "Utilisateurs"
-          last_flagged: "Derniers signalés"
-          no_results: "Il n'y a pas de sujets signalés."
-        short_names:
-          off_topic: "hors-sujet"
-          inappropriate: "inapproprié"
-          spam: "spam"
-          notify_user: "personnalisé"
-          notify_moderators: "personnalisé"
       groups:
         new:
           title: "Nouveau groupe"
@@ -3454,6 +3457,9 @@ fr:
             web_hook_create: "Créer un webhook"
             web_hook_update: "Mettre à jour le webhook"
             web_hook_destroy: "Détruire le webhook"
+            embeddable_host_create: "créer hôte intégré"
+            embeddable_host_update: "mettre à jour hôte intégré"
+            embeddable_host_destroy: "détruire hôte intégré"
         screened_emails:
           title: "Courriels sous surveillance"
           description: "Lorsque quelqu'un essaye de créer un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -3541,19 +3547,12 @@ fr:
         nav:
           new: "Nouveaux"
           active: "Actifs"
-          pending: "En attente"
           staff: "Responsables"
           suspended: "Suspendus"
           silenced: "Sous silence"
           suspect: "Suspects"
           staged: "Distant"
         approved: "Approuvé ?"
-        approved_selected:
-          one: "approuver l'utilisateur"
-          other: "approuver les utilisateurs ({{count}})"
-        reject_selected:
-          one: "utilisateur rejeté"
-          other: "utilisateurs rejetés ({{count}})"
         titles:
           active: "Utilisateurs actifs"
           new: "Nouveaux utilisateurs"
@@ -3570,12 +3569,6 @@ fr:
           suspended: "Utilisateurs suspendus"
           suspect: "Utilisateurs suspects"
           staged: "Utilisateurs distants"
-        reject_successful:
-          one: "Utilisateur rejeté avec succès."
-          other: "%{count} utilisateurs rejetés avec succès."
-        reject_failures:
-          one: "Utilisateur dont le rejet a échoué."
-          other: "%{count} utilisateurs dont le rejet a échoué."
         not_verified: "Non verifié"
         check_email:
           title: "Afficher l'adresse courriel de cet utilisateur"

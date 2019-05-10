@@ -7,6 +7,77 @@ class UserStat < ActiveRecord::Base
   def self.ensure_consistency!(last_seen = 1.hour.ago)
     reset_bounce_scores
     update_view_counts(last_seen)
+    update_first_unread(last_seen)
+  end
+
+  def self.update_first_unread(last_seen, limit: 10_000)
+    DB.exec(<<~SQL, min_date: last_seen, limit: limit, now: 10.minutes.ago)
+      UPDATE user_stats us
+      SET first_unread_at = COALESCE(Y.min_date, :now)
+      FROM (
+        SELECT u1.id user_id,
+           X.min min_date
+        FROM users u1
+        LEFT JOIN
+          (SELECT u.id AS user_id,
+                  min(topics.updated_at) min
+           FROM users u
+           LEFT JOIN topic_users tu ON tu.user_id = u.id
+           LEFT JOIN topics ON tu.topic_id = topics.id
+           JOIN user_stats AS us ON us.user_id = u.id
+           JOIN user_options AS uo ON uo.user_id = u.id
+           JOIN categories c ON c.id = topics.category_id
+           WHERE u.id IN (
+               SELECT id
+               FROM users
+               WHERE last_seen_at IS NOT NULL
+                AND last_seen_at > :min_date
+                ORDER BY last_seen_at DESC
+                LIMIT :limit
+              )
+             AND topics.archetype <> 'private_message'
+             AND (("topics"."deleted_at" IS NULL
+                   AND tu.last_read_post_number < CASE
+                                                      WHEN u.admin
+                                                           OR u.moderator THEN topics.highest_staff_post_number
+                                                      ELSE topics.highest_post_number
+                                                  END
+                   AND COALESCE(tu.notification_level, 1) >= 2)
+                  OR (1=0))
+             AND (topics.visible
+                  OR u.admin
+                  OR u.moderator)
+             AND topics.deleted_at IS NULL
+             AND (NOT c.read_restricted
+                  OR u.admin
+                  OR category_id IN
+                    (SELECT c2.id
+                     FROM categories c2
+                     JOIN category_groups cg ON cg.category_id = c2.id
+                     JOIN group_users gu ON gu.user_id = u.id
+                     AND cg.group_id = gu.group_id
+                     WHERE c2.read_restricted ))
+             AND NOT EXISTS
+               (SELECT 1
+                FROM category_users cu
+                WHERE last_read_post_number IS NULL
+                  AND cu.user_id = u.id
+                  AND cu.category_id = topics.category_id
+                  AND cu.notification_level = 0)
+           GROUP BY u.id,
+                    u.username) AS X ON X.user_id = u1.id
+        WHERE u1.id IN
+            (
+             SELECT id
+             FROM users
+             WHERE last_seen_at IS NOT NULL
+              AND last_seen_at > :min_date
+              ORDER BY last_seen_at DESC
+              LIMIT :limit
+            )
+      ) Y
+      WHERE Y.user_id = us.user_id
+    SQL
   end
 
   def self.reset_bounce_scores
@@ -57,15 +128,10 @@ class UserStat < ActiveRecord::Base
 
   # topic_reply_count is a count of posts in other users' topics
   def update_topic_reply_count
-    self.topic_reply_count =
-        Topic
-      .where(['id in (
-              SELECT topic_id FROM posts p
-              JOIN topics t2 ON t2.id = p.topic_id
-              WHERE p.deleted_at IS NULL AND
-                t2.user_id <> p.user_id AND
-                p.user_id = ?
-              )', self.user_id])
+    self.topic_reply_count = Topic
+      .joins("INNER JOIN posts ON topics.id = posts.topic_id AND topics.user_id <> posts.user_id")
+      .where("posts.deleted_at IS NULL AND posts.user_id = ?", self.user_id)
+      .distinct
       .count
   end
 
@@ -133,4 +199,5 @@ end
 #  flags_agreed             :integer          default(0), not null
 #  flags_disagreed          :integer          default(0), not null
 #  flags_ignored            :integer          default(0), not null
+#  first_unread_at          :datetime         not null
 #

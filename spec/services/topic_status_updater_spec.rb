@@ -1,4 +1,5 @@
 # encoding: UTF-8
+# frozen_string_literal: true
 
 require 'rails_helper'
 require_dependency 'post_destroyer'
@@ -7,8 +8,8 @@ require_dependency 'post_destroyer'
 
 describe TopicStatusUpdater do
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   it "avoids notifying on automatically closed topics" do
     # TODO: TopicStatusUpdater should suppress message bus updates from the users it "pretends to read"
@@ -77,7 +78,7 @@ describe TopicStatusUpdater do
         topic = Fabricate(:topic, status_name => false)
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, true)
         expect(updated).to eq(true)
-        expect(topic.send("#{status_name}?")).to eq(true)
+        expect(topic.public_send("#{status_name}?")).to eq(true)
 
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, true)
         expect(updated).to eq(false)
@@ -85,7 +86,7 @@ describe TopicStatusUpdater do
 
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, false)
         expect(updated).to eq(true)
-        expect(topic.send("#{status_name}?")).to eq(false)
+        expect(topic.public_send("#{status_name}?")).to eq(false)
 
         updated = TopicStatusUpdater.new(topic, admin).update!(status_name, false)
         expect(updated).to eq(false)

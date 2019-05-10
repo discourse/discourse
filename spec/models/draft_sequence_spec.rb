@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe DraftSequence do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   it 'should produce next sequence for a key' do
     expect(DraftSequence.next!(user, 'test')).to eq 1

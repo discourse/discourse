@@ -7,6 +7,7 @@
 
 ko:
   site_settings:
+    discourse_narrative_bot_enabled: 'Discourse 이야기봇 사용 (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Discourse 이야기봇 환영 포스트 비활성화"
     discourse_narrative_bot_ignored_usernames: "Discourse 이야기봇이 무시할 사용자 아이디"
     discourse_narrative_bot_disable_public_replies: "Discourse 이야기봇의 공개 답글 비활성화"

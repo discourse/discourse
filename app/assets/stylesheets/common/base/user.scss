@@ -3,6 +3,7 @@
 
 .user-content-wrapper {
   // Grid layout
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 5fr;
   grid-template-rows: auto auto 1fr auto;
@@ -19,6 +20,7 @@
     grid-row-start: 2;
     grid-row-end: 3;
   }
+  .solo-preference,
   .user-content,
   .spinner {
     grid-row-start: 2;
@@ -55,6 +57,7 @@
     -ms-grid-row: 2;
     -ms-grid-column: 1;
   }
+  .solo-preference,
   .user-content,
   .spinner {
     -ms-grid-row: 2;
@@ -100,10 +103,21 @@
     width: 100%;
     margin-bottom: 15px;
 
+    &.has-background {
+      .user-profile-image {
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+      }
+      .staff-counters {
+        margin-bottom: 0;
+      }
+    }
+
     .secondary {
-      background: $secondary;
+      display: inline-block;
+      width: 100%;
       border-top: 1px solid $primary-low;
-      border-bottom: 1px solid $primary-low;
 
       .btn {
         padding: 4px 12px;
@@ -155,6 +169,7 @@
 
     .details {
       background: rgba($secondary, 0.8);
+      border-bottom: 1px solid $primary-low;
 
       h1 {
         font-size: $font-up-5;
@@ -196,7 +211,6 @@
       .primary {
         width: 100%;
         position: relative;
-        float: left;
 
         h1 {
           font-weight: bold;
@@ -286,6 +300,7 @@
     color: $secondary;
     display: flex;
     padding: 10px;
+    margin-bottom: s(4);
     > div,
     > div a {
       display: flex;

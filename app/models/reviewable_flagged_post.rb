@@ -67,7 +67,25 @@ class ReviewableFlaggedPost < Reviewable
     if guardian.is_staff?
       delete = actions.add_bundle("#{id}-delete", icon: "far-trash-alt", label: "reviewables.actions.delete.title")
       build_action(actions, :delete_and_ignore, icon: 'external-link-alt', bundle: delete)
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_ignore_replies,
+          icon: 'external-link-alt',
+          confirm: true,
+          bundle: delete
+        )
+      end
       build_action(actions, :delete_and_agree, icon: 'thumbs-up', bundle: delete)
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_agree_replies,
+          icon: 'external-link-alt',
+          bundle: delete,
+          confirm: true
+        )
+      end
     end
   end
 
@@ -136,9 +154,7 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_disagree_and_restore(performed_by, args)
-    result = perform_disagree(performed_by, args)
-    PostDestroyer.new(performed_by, post).recover
-    result
+    perform_disagree(performed_by, args)
   end
 
   def perform_disagree(performed_by, args)
@@ -192,11 +208,34 @@ class ReviewableFlaggedPost < Reviewable
     result
   end
 
+  def perform_delete_and_ignore_replies(performed_by, args)
+    result = perform_ignore(performed_by, args)
+
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
+    PostDestroyer.new(performed_by, post).destroy
+    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+
+    result
+  end
+
   def perform_delete_and_agree(performed_by, args)
     result = agree(performed_by, args)
     PostDestroyer.new(performed_by, post).destroy
     result
   end
+
+  def perform_delete_and_agree_replies(performed_by, args)
+    result = agree(performed_by, args)
+
+    reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
+    replies = Post.where(id: reply_ids.map { |r| r[:id] })
+    PostDestroyer.new(performed_by, post).destroy
+    replies.each { |reply| PostDestroyer.new(performed_by, reply).destroy }
+
+    result
+  end
+
 protected
 
   def agree(performed_by, args)
@@ -206,12 +245,16 @@ protected
 
     trigger_spam = false
     actions.each do |action|
-      action.agreed_at = Time.zone.now
-      action.agreed_by_id = performed_by.id
-      # so callback is called
-      action.save
-      action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
-      trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+      ActiveRecord::Base.transaction do
+        action.agreed_at = Time.zone.now
+        action.agreed_by_id = performed_by.id
+        # so callback is called
+        action.save
+        DB.after_commit do
+          action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
+          trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
+        end
+      end
     end
 
     DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
@@ -245,13 +288,12 @@ end
 #
 # Table name: reviewables
 #
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
 #  type                    :string           not null
 #  status                  :integer          default(0), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
-#  claimed_by_id           :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null
@@ -267,8 +309,10 @@ end
 #
 # Indexes
 #
-#  index_reviewables_on_status_and_created_at  (status,created_at)
-#  index_reviewables_on_status_and_score       (status,score)
-#  index_reviewables_on_status_and_type        (status,type)
-#  index_reviewables_on_type_and_target_id     (type,target_id) UNIQUE
+#  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
+#  index_reviewables_on_status_and_created_at                  (status,created_at)
+#  index_reviewables_on_status_and_score                       (status,score)
+#  index_reviewables_on_status_and_type                        (status,type)
+#  index_reviewables_on_topic_id_and_status_and_created_by_id  (topic_id,status,created_by_id)
+#  index_reviewables_on_type_and_target_id                     (type,target_id) UNIQUE
 #

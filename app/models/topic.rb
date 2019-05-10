@@ -33,14 +33,6 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
 
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    if site_setting.name.to_s == "slug_generation_method" && site_setting.saved_change_to_value?
-      Scheduler::Defer.later("Null topic slug") do
-        Topic.update_all(slug: nil)
-      end
-    end
-  end
-
   def self.max_fancy_title_length
     400
   end
@@ -423,12 +415,6 @@ class Topic < ActiveRecord::Base
     topics
   end
 
-  # Using the digest query, figure out what's  new for a user since last seen
-  def self.new_since_last_seen(user, since, featured_topic_ids = nil)
-    topics = Topic.for_digest(user, since)
-    featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
-  end
-
   def meta_data=(data)
     custom_fields.replace(data)
   end
@@ -685,30 +671,7 @@ class Topic < ActiveRecord::Base
     SQL
   end
 
-  # This calculates the geometric mean of the posts and stores it with the topic
-  def self.calculate_avg_time(min_topic_age = nil)
-    builder = DB.build <<~SQL
-      UPDATE topics
-      SET avg_time = x.gmean
-      FROM (SELECT topic_id,
-                   round(exp(avg(ln(avg_time)))) AS gmean
-            FROM posts
-            WHERE avg_time > 0 AND avg_time IS NOT NULL
-            GROUP BY topic_id) AS x
-      /*where*/
-    SQL
-
-    builder.where <<~SQL
-      x.topic_id = topics.id AND
-      (topics.avg_time <> x.gmean OR topics.avg_time IS NULL)
-    SQL
-
-    if min_topic_age
-      builder.where("topics.bumped_at > :bumped_at", bumped_at: min_topic_age)
-    end
-
-    builder.exec
-  end
+  cattr_accessor :update_featured_topics
 
   def changed_to_category(new_category)
     return true if new_category.blank? || Category.exists?(topic_id: id)
@@ -740,8 +703,11 @@ class Topic < ActiveRecord::Base
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
-      CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
-      CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+
+      if Topic.update_featured_topics != false
+        CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
+        CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.try(:id) == new_category.id
+      end
     end
 
     true
@@ -775,7 +741,7 @@ class Topic < ActiveRecord::Base
       increment!(:moderator_posts_count) if new_post.persisted?
       # If we are moving posts, we want to insert the moderator post where the previous posts were
       # in the stream, not at the end.
-      new_post.update_attributes!(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
+      new_post.update!(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
 
       # Grab any links that are present
       TopicLink.extract_from(new_post)
@@ -926,7 +892,7 @@ class Topic < ActiveRecord::Base
 
   def grant_permission_to_user(lower_email)
     user = User.find_by_email(lower_email)
-    topic_allowed_users.create!(user_id: user.id)
+    topic_allowed_users.create!(user_id: user.id) unless topic_allowed_users.exists?(user_id: user.id)
   end
 
   def max_post_number
@@ -1408,6 +1374,14 @@ class Topic < ActiveRecord::Base
     scores[0] >= SiteSetting.num_flaggers_to_close_topic && scores[1] >= SiteSetting.score_to_auto_close_topic
   end
 
+  def update_category_topic_count_by(num)
+    if category_id.present?
+      Category
+        .where(['id = ?', category_id])
+        .update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
+    end
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -1419,7 +1393,7 @@ class Topic < ActiveRecord::Base
 
     Topic.transaction do
       rate_limit_topic_invitation(invited_by)
-      topic_allowed_users.create!(user_id: target_user.id)
+      topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
       add_small_action(invited_by, "invited_user", target_user.username)
 
       create_invite_notification!(
@@ -1459,18 +1433,12 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  def update_category_topic_count_by(num)
-    if category_id.present?
-      Category.where(['id = ?', category_id]).update_all("topic_count = topic_count " + (num > 0 ? '+' : '') + "#{num}")
-    end
-  end
-
   def limit_first_day_topics_per_day
     apply_per_day_rate_limit_for("first-day-topics", :max_topics_in_first_day)
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
+    RateLimiter.new(user, "#{key}-per-day", SiteSetting.get(method_name), 1.day.to_i)
   end
 
   def create_invite_notification!(target_user, notification_type, username)
@@ -1558,4 +1526,5 @@ end
 #  index_topics_on_lower_title             (lower((title)::text))
 #  index_topics_on_pinned_at               (pinned_at) WHERE (pinned_at IS NOT NULL)
 #  index_topics_on_pinned_globally         (pinned_globally) WHERE pinned_globally
+#  index_topics_on_updated_at_public       (updated_at,visible,highest_staff_post_number,highest_post_number,category_id,created_at,id) WHERE (((archetype)::text <> 'private_message'::text) AND (deleted_at IS NULL))
 #

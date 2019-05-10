@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'system_message'
 require 'topic_subtype'
@@ -6,8 +8,8 @@ describe SystemMessage do
 
   context 'send' do
 
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       SiteSetting.site_contact_username = admin.username

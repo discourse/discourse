@@ -110,37 +110,39 @@
       </div>
     </div>
   {{/if}}
-  <hr>
-  <div class="feature-section">
-    <div class="desc">
-      <p>
-        {{#conditional-loading-spinner size="small" condition=loading}}
-          {{#if bannerCount}}
-            {{{i18n "topic.feature_topic.banner_exists"}}}
+  {{#if currentUser.staff}}
+    <hr>
+    <div class="feature-section">
+      <div class="desc">
+        <p>
+          {{#conditional-loading-spinner size="small" condition=loading}}
+            {{#if bannerCount}}
+              {{{i18n "topic.feature_topic.banner_exists"}}}
+            {{else}}
+              {{{i18n "topic.feature_topic.no_banner_exists"}}}
+            {{/if}}
+          {{/conditional-loading-spinner}}
+        </p>
+        <p>
+          {{i18n "topic.feature_topic.banner_note"}}
+        </p>
+        <p>
+          {{#if model.isBanner}}
+            {{i18n "topic.feature_topic.remove_banner"}}
           {{else}}
-            {{{i18n "topic.feature_topic.no_banner_exists"}}}
+            {{i18n "topic.feature_topic.make_banner"}}
           {{/if}}
-        {{/conditional-loading-spinner}}
-      </p>
-      <p>
-        {{i18n "topic.feature_topic.banner_note"}}
-      </p>
-      <p>
-        {{#if model.isBanner}}
-          {{i18n "topic.feature_topic.remove_banner"}}
-        {{else}}
-          {{i18n "topic.feature_topic.make_banner"}}
-        {{/if}}
-      </p>
-      <p>
-        {{#if model.isBanner}}
-          {{d-button action=(action "removeBanner") icon="thumb-tack" label="topic.feature.remove_banner" class="btn-primary"}}
-        {{else}}
-          {{d-button action=(action "makeBanner") icon="thumb-tack" label="topic.feature.make_banner" class="btn-primary"}}
-        {{/if}}
-      </p>
+        </p>
+        <p>
+          {{#if model.isBanner}}
+            {{d-button action=(action "removeBanner") icon="thumb-tack" label="topic.feature.remove_banner" class="btn-primary"}}
+          {{else}}
+            {{d-button action=(action "makeBanner") icon="thumb-tack" label="topic.feature.make_banner" class="btn-primary"}}
+          {{/if}}
+        </p>
+      </div>
     </div>
-  </div>
+  {{/if}}
 {{/d-modal-body}}
 <div class="modal-footer">
   {{d-modal-cancel close=(route-action "closeModal")}}

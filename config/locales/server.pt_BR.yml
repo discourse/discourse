@@ -14,8 +14,9 @@ pt_BR:
     formats:
       short: "%d/%m/%Y"
       short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
+      date_only: "%-d de %B de %Y"
       long: "%B %-d, %Y, %l:%M%P"
+      no_day: "%B de %Y"
   date:
     month_names: [~, Janeiro, Fevereiro, Março, Abril, Maio, Junho, Julho, Agosto, Setembro, Outubro, Novembro, Dezembro]
     <<: *datetime_formats
@@ -41,6 +42,7 @@ pt_BR:
     other_error: "Algo de errado aconteceu ao atualizar o tema"
     import_error:
       generic: Ocorreu um erro ao importar esse tema
+      git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
     settings_errors:
       invalid_yaml: "O YAML fornecido é inválido."
       data_type_not_a_number: "Definindo`%{name}` tipo não é suportado. Tipos suportados são `integer`,` bool`, `list` e` enum`"
@@ -257,9 +259,6 @@ pt_BR:
   too_late_to_edit: "Essa mensagem foi criada há muito tempo. Ela não pode mais ser editada ou apagada."
   revert_version_same: "A versão atual é a mesma versão para a qual você está tentando reverter."
   excerpt_image: "imagem"
-  queue:
-    delete_reason: "Deletado pela fila de moderação"
-    not_found: "Post não encontrado ou já atualizado."
   groups:
     success:
       bulk_add:
@@ -361,6 +360,7 @@ pt_BR:
       topic:
         title: "Título"
         featured_link: "Link Em Destaque"
+        category_id: "Categoria"
       post:
         raw: "Corpo"
       user_profile:
@@ -421,6 +421,7 @@ pt_BR:
           attributes:
             word:
               too_many: "Muitas palavras para esta ação"
+  uncategorized_category_name: "Sem categoria"
   vip_category_name: "Salão"
   vip_category_description: "Uma categoria exclusiva para membros com nível de confiança 3 e superior."
   meta_category_name: "Feedback do Site"
@@ -616,6 +617,9 @@ pt_BR:
       grant: "Conceder acesso de administrador"
       complete: "<b>%{target_username}</b> é agora um administrador."
       back_to: "Retornar para %{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "Aprovação Necessária"
   post_action_types:
     off_topic:
       title: "Off-Topic"
@@ -695,8 +699,6 @@ pt_BR:
         make: "Este tópico é agora um banner. Ele aparecerá no topo de cada página até que seja julgado improcedente pelo usuário."
         remove: "Este tópico não é mais um banner. Ela deixará de aparecer no topo de todas as páginas."
   unsubscribed:
-    title: "Desinscrito!"
-    description: "<b>%{email}</b> foi anulado. Para alterar suas configurações de e-mail<a href='%{url}'>visite suas preferências de usuário. "
     topic_description: "Para se reinscrever a %{link}, use o controle de notificações no fim ou no canto direito do tópico."
     private_topic_description: "Para se inscrever novamente, use o controle de notificação na parte inferior ou à direita do tópico"
   unsubscribe:
@@ -705,11 +707,16 @@ pt_BR:
     mute_topic: "Silenciar todas as notificações para este tópico, %{link} "
     unwatch_category: "Parar de observar todos os tópicos na categoria  %{category}"
     mailing_list_mode: "Desativar o modo lista de discussão"
-    disable_digest_emails: "Pare de me enviar emails de resumo"
     all: "Não me envie nenhum email de %{sitename}"
     different_user_description: "No momento, você está logado como um usuário diferente daquele para o qual mandamos email. Por favor, saia ou entre no modo anônimo de seu navegador e tente novamente."
     not_found_description: "Desculpe, não conseguimos encontrar esse cancelamento de inscrição. É possível que o link no seu email tenha expirado?"
     log_out: "Sair"
+    digest_frequency:
+      never: "nunca"
+      every_30_minutes: "a cada 30 minutos"
+      every_hour: "a cada hora"
+      daily: "diário"
+      weekly: "semanal"
   user_api_key:
     title: "Autorizar acesso à aplicação"
     authorize: "Autorizar"
@@ -737,6 +744,9 @@ pt_BR:
         editor: Editor
         author: Autor
         edit_reason: Razão
+    user_flagging_ratio:
+      labels:
+        user: Usuário
     moderators_activity:
       labels:
         moderator: Moderador
@@ -770,6 +780,13 @@ pt_BR:
       title: "Novos contribuidores"
       xaxis: "Dia"
       yaxis: "Número de novos colaboradores"
+    consolidated_page_views:
+      yaxis: "Dia"
+      labels:
+        post: Publicar
+        editor: Editor
+        author: Autor
+        edit_reason: Razão
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
@@ -858,6 +875,10 @@ pt_BR:
       xaxis: "Usuário"
       num_clicks: "Clicks"
       num_topics: "Tópicos"
+      labels:
+        user: "Usuário"
+        num_clicks: "Cliques"
+        num_topics: "Tópicos"
     top_traffic_sources:
       title: "Top Fontes de Tráfego"
       xaxis: "Domínio"
@@ -882,6 +903,7 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações autenticadas"
     page_view_crawler_reqs:
+      title: "Visualizações por indexadores web"
       xaxis: "Dia"
       yaxis: "Visualizações por indexadores web"
     page_view_total_reqs:
@@ -936,6 +958,18 @@ pt_BR:
       labels:
         user_agent: "Agente de usuário"
         page_views: "Visualizações de página"
+    suspicious_logins:
+      labels:
+        user: Usuário
+        location: Localização
+    staff_logins:
+      labels:
+        user: Usuário
+        location: Localização
+    top_uploads:
+      labels:
+        filename: Nome do arquivo
+        author: Autor
   dashboard:
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     host_names_warning: "O arquivo config/database.yml está usando hostname padrão localhost. Modifique para usar o hostname do seu site."
@@ -1026,7 +1060,6 @@ pt_BR:
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl2 (membros) multiplicando por esse número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl3 (regular) multiplicando por esse número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl4 (lideres) multiplicando por esse número"
-    num_spam_flags_to_silence_new_user: "Se as postagens de um novo usuário receberem muitos sinalizadores de spam de num_users_to_silence_new_user usuários diferentes, oculte todas as postagens e evite postagens futuras. 0 para desabilitar."
     num_users_to_silence_new_user: "Se as postagens de um novo usuário receberem um sinal num_spam_flags_to_silence_new_user spam de vários usuários diferentes, oculte todas as postagens e evite postagens futuras. 0 para desabilitar."
     num_tl3_flags_to_silence_new_user: "Se as postagens de um novo usuário obtiverem muitos sinalizadores de num_tl3_users_to_silence_new_user diferentes usuários do nível de confiança 3, oculte todos os posts e evite postagens futuras. 0 para desabilitar."
     num_tl3_users_to_silence_new_user: "Se as postagens de um novo usuário obtiverem sinalizadores num_tl3_flags_to_silence_new_user a partir dos vários usuários diferentes do nível de confiança 3, oculte todas as postagens e evite postagens futuras. 0 para desativar."
@@ -1038,6 +1071,7 @@ pt_BR:
     must_approve_users: "Os moderadores devem aprovar todas novas contas antes que elas sejam permitidas acessarem o site. CUIDADO: habilitar esta opção para um site já em funcionamento irá revogar o acesso para todos usuários já cadastrados que não são moderadores."
     pending_users_reminder_delay: "Notifique os moderadores se novos usuários estiverem aguardando aprovação por mais tempo que muitas horas. Defina como -1 para desativar as notificações."
     maximum_session_age: "Usuário continuará logado por n horas desde a última visita"
+    moderators_create_categories: "Permitir a criação de categorias por moderadores"
     cors_origins: "Origens permitidas para pedidos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://.  A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como true para habilitar CORS."
     use_admin_ip_whitelist: "Administradores só podem logar se estiverem na lista de IPs Filtrados (Administração > Logs > IPs Filtrados)."
     blacklist_ip_blocks: "Uma lista de blocos IP privados que nunca devem ser rastreados pelo Discourse"
@@ -1098,7 +1132,6 @@ pt_BR:
     enable_local_logins_via_email: "Permitir que os usuários solicitem um link de login com um clique para serem enviados por e-mail."
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_signup_cta: "Mostra um aviso aos usuários anônimos que retornem, solicitando que criem uma conta."
-    enable_yahoo_logins: "Ativar autenticação pelo Yahoo"
     google_oauth2_client_id: "Client ID da sua aplicação Google."
     google_oauth2_client_secret: "Client secret da sua aplicação Google."
     enable_instagram_logins: "Habilitar autenticação via Instagram. Requer instagram_consumer_key e instagram_consumer_secret"
@@ -1256,7 +1289,6 @@ pt_BR:
     max_age_unmatched_emails: "Excluir entradas de emails filtrados não combinadas após (N) dias."
     max_age_unmatched_ips: "Excluir entradas de IPs filtrados não combinadas após (N) dias."
     num_flaggers_to_close_topic: "Número mínimo de usuários sinalizadores únicos que são exigidos para que um tópico seja automaticamente pausado por intervenção"
-    num_flags_to_close_topic: "Número mínimo de sinalizações ativas que são exigidas para que um tópico seja automaticamente pausado por intervenção"
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Habilitar resposta automática quando eliminada marcação."
     min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que um usuário deve digitar durante a primeira postagem; se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação de necessidades. Defina como 0 para desativar (não recomendado)"
@@ -1353,7 +1385,6 @@ pt_BR:
     automatically_unpin_topics: "Desafixar automaticamente os tópicos quando o usuário atinge o fundo."
     read_time_word_count: "Palavras por minuto para calcular o tempo estimado de leitura."
     topic_page_title_includes_category: "O título da página do tópico inclui o nome da categoria."
-    native_app_install_banner: "Solicita aos visitantes recorrentes que instalem o aplicativo nativo do Discourse."
     share_anonymized_statistics: "Compartilhar estatísticas de uso anônimas."
     auto_handle_queued_age: "Lidar automaticamente com os registros que estão aguardando revisão após vários dias. Sinalizadores serão ignorados. Postagens enfileiradas e usuários serão rejeitados. Defina como 0 para desabilitar esse recurso."
     max_prints_per_hour_per_user: "Número máximo de impressões de páginas / impressão (definido como 0 para desativar)"
@@ -1403,7 +1434,6 @@ pt_BR:
     default_other_external_links_in_new_tab: "Abrir links externos em uma nova aba por padrão."
     default_other_enable_quoting: "Ative a resposta de cotação para texto realçado por padrão."
     default_other_dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do navegador por padrão."
-    default_other_disable_jump_reply: "Não pule para a postagem do usuário depois que ela responder por padrão."
     default_other_like_notification_frequency: "Notificar usuários de curtidas por padrão"
     default_topics_automatic_unpin: "Desvincular tópicos automaticamente quando o usuário alcança a parte inferior por padrão."
     default_categories_watching: "Lista de categorias que são observadas por padrão."
@@ -1460,6 +1490,8 @@ pt_BR:
       reply_by_email_disabled: "Você deve primeiro ativar \"responder por e-mail\" antes de ativar essa configuração."
       sso_url_is_empty: "Você deve definir um 'sso url' antes de habilitar essa configuração."
       enable_local_logins_disabled: "Você deve primeiro habilitar 'habilitar logins locais' antes de ativar esta configuração."
+      min_username_length_range: "Você não pode colocar o mínimo acima do máximo."
+      max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1569,6 +1601,9 @@ pt_BR:
     second_factor_toggle:
       totp: "Use um aplicativo autenticador"
       backup_code: "Use um código de backup"
+  admin:
+    email:
+      sent_test: "enviado!"
   user:
     deactivated: "Foi desativado devido a muitos e-mails devolvidos para '%{email}'."
     deactivated_by_staff: "Desativado pela equipe"
@@ -1599,13 +1634,6 @@ pt_BR:
       unused_staged_user: "Usuário encenado sem uso"
       fixed_primary_email: "E-mail principal fixo para usuário testado"
       same_ip_address: "Mesmo endereço IP (%{ip_address}) como outros usuários"
-  flags_reminder:
-    flags_were_submitted:
-      one: "As sinalizações foram enviadas há mais de 1 hora. [Por favor, revise-as](%{base_path}/admin/flags)."
-      other: "As sinalizações foram submetidas%{count} horas atrás. [Por favor, revise-as](%{base_path}/admin/flags)."
-    subject_template:
-      one: "1 sinalização aguardando a ser controlada"
-      other: "%{count} sinalizações aguardando a ser controladas"
   unsubscribe_mailer:
     title: "Cancelar mensagem do remetente"
     subject_template: "Confirme que você não deseja mais receber atualizações de e-mail de %{site_title}"
@@ -1730,8 +1758,8 @@ pt_BR:
     agreed: "Obrigado por nos avisar. Concordamos que há um problema e nós estamos olhando para ele."
     agreed_and_deleted: "Obrigado por nos avisar. Concordamos que há um problema e nós removemos o post."
     disagreed: "Obrigado por nos avisar. Nós estamos olhando nele."
-    deferred: "Obrigado por nos avisar. Nós estamos olhando nele."
-    deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
+    ignored: "Obrigado por nos avisar. Nós estamos olhando nele."
+    ignored_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
   system_messages:
     private_topic_title: "Tópico #%{id}"
     contents_hidden: "Por favor, visite o post para ver o seu conteúdo."
@@ -2059,10 +2087,6 @@ pt_BR:
       subject_template:
         one: "1 usuário aguardando aprovação"
         other: "%{count} usuários aguardando aprovação"
-      text_body_template: |
-        Há novos cadastros de usuários à espera de serem aprovados (ou rejeitados), antes de poderem acessar este fórum.
-
-        [Por favor, analisá-los na seção de administração] ( %{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "Baixar imagens remotas desativadas"
       subject_template: "Baixar imagens remotas desativado"
@@ -2452,6 +2476,7 @@ pt_BR:
     recent_topics: "Recente"
     see_more: "Mais"
     search_title: "Procurar neste site"
+    search_button: "Pesquisar"
   offline:
     title: "Não é possível carregar o aplicativo"
     offline_page_message: "Parece que você está off-line! Por favor, verifique sua conexão de rede e tente novamente."
@@ -2502,8 +2527,17 @@ pt_BR:
     sender_message_blank: "mensagem está em branco"
     sender_message_to_blank: "message.to está em branco"
     sender_text_part_body_blank: "text_part.body está em branco"
+    sender_body_blank: "o corpo está em branco"
   color_schemes:
     base_theme_name: "Base"
+    light: "Claro"
+    dark: "Escuro"
+    neutral: "Neutro"
+    grey_amber: "Âmbar cinzento"
+    shades_of_blue: "Tons de azul"
+    latte: "Latte"
+    summer: "Verão"
+    dark_rose: "Rosa Escura"
     default_theme_name: "Claro"
     light_theme_name: "Claro"
     dark_theme_name: "Escuro"
@@ -2834,17 +2868,14 @@ pt_BR:
         Este selo é concedido para parabenizar dois novos usuários a cada mês por suas excelentes contribuições gerais, conforme a medida de quantas pessoas gostaram de suas postagens e por quem.
     enthusiast:
       name: Entusiasta
-      description: Visitado 10 dias
       long_description: |
         Este crachá é concedido para visitas de 10 dias consecutivos. Obrigado por ficar com a gente por mais de uma semana!
     aficionado:
       name: Aficionado
-      description: Visitado 100 dias
       long_description: |
         Este distintivo é concedido para visitas de 100 dias consecutivos. Isso é mais do que três meses!
     devotee:
       name: Devoto
-      description: Visitado 365 dias
       long_description: |
         Este selo é concedido para visitas de 365 dias consecutivos. Uau, um ano inteiro!
     badge_title_metadata: "%{display_name}emblema em %{site_title}"
@@ -2873,7 +2904,6 @@ pt_BR:
       no_emails: "Infelizmente, nenhum e-mail de administrador foi definido durante a configuração, portanto, a finalização da configuração pode ser difícil. Por favor, adicione o e-mail no arquivo de configuração ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>criar uma conta de administrador a partir do console</a>."
     confirm_email:
       title: "Confirme seu email"
-      message: "<p>Enviamos um e-mail de ativação para <b>%{email}</b>. Por favor, siga as instruções no e-mail para ativar sua conta.</p><p>Se ele não chegar, verifique se você configurou o e-mail corretamente para seu Discurso e verifique sua pasta de spam.</p>"
     resend_email:
       title: "Reenviar Email de Confirmação"
       message: "<p>Reenviamos o email de confirmação para <b>%{email}</b>"
@@ -2912,16 +2942,13 @@ pt_BR:
             one_paragraph: "Por favor, reduza sua mensagem de boas-vindas para um parágrafo."
       privacy:
         title: "Acesso"
-        description: "<p>Sua comunidade está aberta a todos ou é restrita por associação, convite ou aprovação? Se preferir, pode definir as coisas de forma privada e depois mudar para o público mais tarde.</p> <p>Você sempre pode enviar convites de tópicos ou da sua página de perfil de usuário também.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Público"
-                description: "Todos podem acessar essa comunidade e logar em uma conta. "
               restricted:
                 label: "Privado"
-                description: "Apenas pessoas que eu convidei ou aprovei podem acessar essa comunidade."
       contact:
         title: "Contato"
         fields:
@@ -2941,8 +2968,18 @@ pt_BR:
         title: "Tema"
       logos:
         title: "Logotipos"
+        fields:
+          logo:
+            label: "Logotipo Primário"
+          logo_small:
+            label: "Logotipo Compacto "
       icons:
         title: "Ícones"
+        fields:
+          favicon:
+            label: "Ícone pequeno"
+          apple_touch_icon:
+            label: "Ícone Largo"
       homepage:
         description: "Recomendamos que você mostre os tópicos mais recentes em sua página inicial, mas também pode mostrar categorias (grupos de tópicos) na página inicial, se preferir."
         title: "Página Inicial"
@@ -2986,3 +3023,36 @@ pt_BR:
     unknown: "desconhecido"
     user_merged: "%{username} foi mesclado nessa conta"
     user_delete_self: "Excluído por si mesmo de %{url}"
+  reviewables:
+    actions:
+      agree_and_keep:
+        title: "Manter Post"
+        description: "Concorde com o sinalizador e mantenha a postagem inalterada."
+      agree_and_suspend:
+        title: "Suspender usuário"
+        description: "Concordar com o sinalizador e suspender o usuário."
+      agree_and_silence:
+        title: "Silenciar Usuário"
+        description: "Concorde com a bandeira e silencie o usuário."
+      agree_and_restore:
+        description: "Restaure a postagem para que todos os usuários possam vê-la."
+      agree_and_hide:
+        title: "Esconder publicação"
+        description: "Esconder esta publicação e enviar automaticamente ao usuário uma mensagem pedindo-lhe para editá-lo."
+      delete_spammer:
+        title: "Deletar Spammer"
+      disagree_and_restore:
+        description: "Restaure a postagem para que todos os usuários possam vê-la."
+      disagree:
+        title: "Discordar"
+      ignore:
+        title: "Ignorar"
+      approve:
+        title: "Aprovar"
+      reject_user:
+        delete:
+          title: "Excluir Usuário"
+      reject:
+        title: "Rejeitar"
+      delete_user:
+        title: "Excluir Usuário"

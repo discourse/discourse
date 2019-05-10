@@ -175,7 +175,7 @@ class CategoriesController < ApplicationController
 
     custom_slug = params[:slug].to_s
 
-    if custom_slug.present? && @category.update_attributes(slug: custom_slug)
+    if custom_slug.present? && @category.update(slug: custom_slug)
       render json: success_json
     else
       render_json_error(@category)
@@ -240,9 +240,9 @@ class CategoriesController < ApplicationController
     draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
 
     %w{category topic}.each do |type|
-      result.send(:"#{type}_list").draft = draft
-      result.send(:"#{type}_list").draft_key = draft_key
-      result.send(:"#{type}_list").draft_sequence = draft_sequence
+      result.public_send(:"#{type}_list").draft = draft
+      result.public_send(:"#{type}_list").draft_key = draft_key
+      result.public_send(:"#{type}_list").draft_sequence = draft_sequence
     end
 
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)
@@ -269,36 +269,44 @@ class CategoriesController < ApplicationController
         params[:allowed_tag_groups] ||= []
       end
 
-      params.permit(*required_param_keys,
-                      :position,
-                      :email_in,
-                      :email_in_allow_strangers,
-                      :mailinglist_mirror,
-                      :suppress_from_latest,
-                      :all_topics_wiki,
-                      :parent_category_id,
-                      :auto_close_hours,
-                      :auto_close_based_on_last_post,
-                      :uploaded_logo_id,
-                      :uploaded_background_id,
-                      :slug,
-                      :allow_badges,
-                      :topic_template,
-                      :sort_order,
-                      :sort_ascending,
-                      :topic_featured_link_allowed,
-                      :show_subcategory_list,
-                      :num_featured_topics,
-                      :default_view,
-                      :subcategory_list_style,
-                      :default_top_period,
-                      :minimum_required_tags,
-                      :navigate_to_first_post_after_read,
-                      :search_priority,
-                      custom_fields: [params[:custom_fields].try(:keys)],
-                      permissions: [*p.try(:keys)],
-                      allowed_tags: [],
-                      allowed_tag_groups: [])
+      result = params.permit(
+        *required_param_keys,
+        :position,
+        :email_in,
+        :email_in_allow_strangers,
+        :mailinglist_mirror,
+        :suppress_from_latest,
+        :all_topics_wiki,
+        :parent_category_id,
+        :auto_close_hours,
+        :auto_close_based_on_last_post,
+        :uploaded_logo_id,
+        :uploaded_background_id,
+        :slug,
+        :allow_badges,
+        :topic_template,
+        :sort_order,
+        :sort_ascending,
+        :topic_featured_link_allowed,
+        :show_subcategory_list,
+        :num_featured_topics,
+        :default_view,
+        :subcategory_list_style,
+        :default_top_period,
+        :minimum_required_tags,
+        :navigate_to_first_post_after_read,
+        :search_priority,
+        :allow_global_tags,
+        custom_fields: [params[:custom_fields].try(:keys)],
+        permissions: [*p.try(:keys)],
+        allowed_tags: [],
+        allowed_tag_groups: []
+      )
+      if SiteSetting.enable_category_group_review?
+        result[:reviewable_by_group_id] = Group.find_by(name: params[:reviewable_by_group_name])&.id
+      end
+
+      result
     end
   end
 

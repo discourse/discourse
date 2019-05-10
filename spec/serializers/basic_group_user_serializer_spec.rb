@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe BasicGroupUserSerializer do
-  let(:group) { Fabricate(:group) }
-  let(:user) { Fabricate(:user) }
+  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
 
   before do
     group.add(user)

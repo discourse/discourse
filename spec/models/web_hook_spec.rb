@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe WebHook do
@@ -35,8 +37,8 @@ describe WebHook do
   end
 
   context 'web hooks' do
-    let!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
-    let!(:topic_hook) { Fabricate(:topic_web_hook) }
+    fab!(:post_hook) { Fabricate(:web_hook, payload_url: " https://example.com ") }
+    fab!(:topic_hook) { Fabricate(:topic_web_hook) }
 
     it "removes whitspace from payload_url before saving" do
       expect(post_hook.payload_url).to eq("https://example.com")
@@ -63,7 +65,7 @@ describe WebHook do
       end
 
       describe 'wildcard web hooks' do
-        let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
+        fab!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
 
         it 'should include wildcard hooks' do
           expect(WebHook.active_web_hooks(:wildcard)).to eq([wildcard_hook])
@@ -92,7 +94,7 @@ describe WebHook do
       end
 
       context 'includes wildcard hooks' do
-        let!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
+        fab!(:wildcard_hook) { Fabricate(:wildcard_web_hook) }
 
         describe '#enqueue_hooks' do
           it 'enqueues hooks with ids' do
@@ -173,6 +175,22 @@ describe WebHook do
         payload = JSON.parse(job_args["payload"])
         expect(payload["id"]).to eq(topic_id)
       end
+
+      category = Fabricate(:category)
+
+      expect do
+        PostRevisor.new(post, post.topic).revise!(
+          post.user,
+          category_id: category.id,
+        )
+      end.to change { Jobs::EmitWebHookEvent.jobs.length }.by(1)
+
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_edited")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+      expect(payload["category_id"]).to eq(category.id)
     end
 
     describe 'when topic has been deleted' do
@@ -275,7 +293,7 @@ describe WebHook do
       PostDestroyer.new(user, post).destroy
 
       job = Jobs::EmitWebHookEvent.new
-      job.expects(:web_hook_request).times(2)
+      job.expects(:send_webhook!).times(2)
 
       args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
       job.execute(args.with_indifferent_access)
@@ -290,6 +308,9 @@ describe WebHook do
       Fabricate(:user_web_hook, active: true)
 
       user
+      user.activate
+      Jobs::CreateUserReviewable.new.execute(user_id: user.id)
+
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_created")
@@ -303,7 +324,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(admin.id)
 
-      ReviewableUser.find_by(target: user).perform(admin, :approve)
+      ReviewableUser.find_by(target: user).perform(admin, :approve_user)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("user_approved")
@@ -472,14 +493,14 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
 
-      reviewable.perform(Discourse.system_user, :approve)
+      reviewable.perform(Discourse.system_user, :approve_post)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("approved_post")
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
 
-      reviewable.perform(Discourse.system_user, :reject)
+      reviewable.perform(Discourse.system_user, :reject_post)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("rejected_post")
@@ -496,7 +517,7 @@ describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(reviewable.id)
 
-      reviewable.perform(Discourse.system_user, :reject)
+      reviewable.perform(Discourse.system_user, :reject_user_delete)
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
 
       expect(job_args["event_name"]).to eq("reviewable_transitioned_to")

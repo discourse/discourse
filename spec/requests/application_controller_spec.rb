@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApplicationController do
@@ -22,7 +24,7 @@ RSpec.describe ApplicationController do
 
   describe '#redirect_to_second_factor_if_required' do
     let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     before do
       admin # to skip welcome wizard at home page `/`
@@ -89,7 +91,7 @@ RSpec.describe ApplicationController do
     end
 
     it 'should not raise a 500 (nor should it log a warning) for bad params' do
-      bad_str = "d\xDE".force_encoding('utf-8')
+      bad_str = (+"d\xDE").force_encoding('utf-8')
       expect(bad_str.valid_encoding?).to eq(false)
 
       get "/latest.json", params: { test: bad_str }
@@ -252,11 +254,11 @@ RSpec.describe ApplicationController do
   end
 
   describe "#handle_theme" do
-    let(:theme) { Fabricate(:theme, user_selectable: true) }
-    let(:theme2) { Fabricate(:theme, user_selectable: true) }
-    let(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
-    let(:user) { Fabricate(:user) }
-    let(:admin) { Fabricate(:admin) }
+    let!(:theme) { Fabricate(:theme, user_selectable: true) }
+    let!(:theme2) { Fabricate(:theme, user_selectable: true) }
+    let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       sign_in(user)
@@ -342,6 +344,62 @@ RSpec.describe ApplicationController do
       )
 
       expect(response.body).not_to include("test123")
+    end
+  end
+
+  describe 'Delegated auth' do
+    let :public_key do
+      <<~TXT
+      -----BEGIN PUBLIC KEY-----
+      MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW/47pqT7w
+      IhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV
+      p16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0n
+      w0z/BYpOgZ8QwnI5ZwIDAQAB
+      -----END PUBLIC KEY-----
+      TXT
+    end
+
+    let :args do
+      {
+        auth_redirect: 'http://no-good.com',
+        user_api_public_key: "not-a-valid-public-key"
+      }
+    end
+
+    it 'disallows invalid public_key param' do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      get "/latest", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
+    it 'does not allow invalid auth_redirect' do
+      args[:user_api_public_key] = public_key
+      get "/latest", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_auth_redirect"))
+    end
+
+    it 'does not redirect if one_time_password scope is disallowed' do
+      SiteSetting.allow_user_api_key_scopes = "read|write"
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "discourse://auth_redirect"
+
+      get "/latest", params: args
+
+      expect(response.status).to_not eq(302)
+      expect(response).to_not redirect_to("#{args[:auth_redirect]}?otp=true")
+    end
+
+    it 'redirects correctly with valid params' do
+      SiteSetting.login_required = true
+      args[:user_api_public_key] = public_key
+      args[:auth_redirect] = "discourse://auth_redirect"
+
+      get "/categories", params: args
+
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to("#{args[:auth_redirect]}?otp=true")
     end
   end
 

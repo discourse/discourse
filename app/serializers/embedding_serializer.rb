@@ -9,6 +9,6 @@ class EmbeddingSerializer < ApplicationSerializer
   end
 
   def read_attribute_for_serialization(attr)
-    object.respond_to?(attr) ? object.send(attr) : send(attr)
+    object.respond_to?(attr) ? object.public_send(attr) : public_send(attr)
   end
 end

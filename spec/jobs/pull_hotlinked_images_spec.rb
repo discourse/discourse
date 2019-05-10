@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'jobs/regular/pull_hotlinked_images'
 
@@ -169,7 +171,7 @@ describe Jobs::PullHotlinkedImages do
   end
 
   describe "with a lightboxed image" do
-    let(:upload) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:upload) }
 
     before do
       FastImage.expects(:size).returns([1750, 2000])

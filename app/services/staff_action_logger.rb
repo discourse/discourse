@@ -16,7 +16,11 @@ class StaffActionLogger
 
   def log_user_deletion(deleted_user, opts = {})
     raise Discourse::InvalidParameters.new(:deleted_user) unless deleted_user && deleted_user.is_a?(User)
-    details = USER_FIELDS.map { |x| "#{x}: #{deleted_user.send(x)}" }.join("\n")
+
+    details = USER_FIELDS.map do |x|
+      "#{x}: #{deleted_user.public_send(x)}"
+    end.join("\n")
+
     UserHistory.create!(params(opts).merge(
       action: UserHistory.actions[:delete_user],
       ip_address: deleted_user.ip_address.to_s,
@@ -268,7 +272,11 @@ class StaffActionLogger
 
   def log_badge_creation(badge)
     raise Discourse::InvalidParameters.new(:badge) unless badge
-    details = BADGE_FIELDS.map { |f| [f, badge.send(f)] }.select { |f, v| v.present? }.map { |f, v| "#{f}: #{v}" }
+
+    details = BADGE_FIELDS.map do |f|
+      [f, badge.public_send(f)]
+    end.select { |f, v| v.present? }.map { |f, v| "#{f}: #{v}" }
+
     UserHistory.create!(params.merge(
       action: UserHistory.actions[:create_badge],
       details: details.join("\n")
@@ -287,7 +295,11 @@ class StaffActionLogger
 
   def log_badge_deletion(badge)
     raise Discourse::InvalidParameters.new(:badge) unless badge
-    details = BADGE_FIELDS.map { |f| [f, badge.send(f)] }.select { |f, v| v.present? }.map { |f, v| "#{f}: #{v}" }
+
+    details = BADGE_FIELDS.map do |f|
+      [f, badge.public_send(f)]
+    end.select { |f, v| v.present? }.map { |f, v| "#{f}: #{v}" }
+
     UserHistory.create!(params.merge(
       action: UserHistory.actions[:delete_badge],
       details: details.join("\n")
@@ -566,8 +578,8 @@ class StaffActionLogger
 
     topic = reviewable.topic || Topic.with_deleted.find_by(id: reviewable.topic_id)
     topic_title = topic&.title || I18n.t('staff_action_logs.not_found')
-    username = reviewable.created_by.username || I18n.t('staff_action_logs.unknown')
-    name = reviewable.created_by.name || I18n.t('staff_action_logs.unknown')
+    username = reviewable.created_by&.username || I18n.t('staff_action_logs.unknown')
+    name = reviewable.created_by&.name || I18n.t('staff_action_logs.unknown')
 
     details = [
       "created_at: #{reviewable.created_at}",
@@ -589,15 +601,7 @@ class StaffActionLogger
       "payload_url: #{web_hook.payload_url}"
     ]
 
-    if changes = opts[:changes]
-      changes.reject! { |k, v| k == "updated_at" }
-      old_values = []
-      new_values = []
-      changes.each do |k, v|
-        old_values << "#{k}: #{v[0]}"
-        new_values << "#{k}: #{v[1]}"
-      end
-    end
+    old_values, new_values = get_changes(opts[:changes])
 
     UserHistory.create!(params(opts).merge(
       action: action,
@@ -607,7 +611,45 @@ class StaffActionLogger
     ))
   end
 
+  def log_web_hook_deactivate(web_hook, response_http_status, opts = {})
+    context = [
+      "webhook_id: #{web_hook.id}",
+      "webhook_response_status: #{response_http_status}"
+    ]
+
+    UserHistory.create!(params.merge(
+      action: UserHistory.actions[:web_hook_deactivate],
+      context: context,
+      details: I18n.t('staff_action_logs.webhook_deactivation_reason', status: response_http_status)
+    ))
+  end
+
+  def log_embeddable_host(embeddable_host, action, opts = {})
+    old_values, new_values = get_changes(opts[:changes])
+
+    UserHistory.create!(params(opts).merge(
+      action: action,
+      context: "host: #{embeddable_host.host}",
+      previous_value: old_values&.join(", "),
+      new_value: new_values&.join(", ")
+    ))
+  end
+
   private
+
+  def get_changes(changes)
+    return unless changes
+
+    changes.delete("updated_at")
+    old_values = []
+    new_values = []
+    changes.each do |k, v|
+      old_values << "#{k}: #{v[0]}"
+      new_values << "#{k}: #{v[1]}"
+    end
+
+    [old_values, new_values]
+  end
 
   def params(opts = nil)
     opts ||= {}

@@ -22,7 +22,7 @@ class PostDestroyer
             WHERE t.deleted_at IS NOT NULL AND
                   t.id = posts.topic_id
         )")
-      .where("updated_at < ? AND post_number > 1", SiteSetting.delete_removed_posts_after.hours.ago)
+      .where("updated_at < ?", SiteSetting.delete_removed_posts_after.hours.ago)
       .where("NOT EXISTS (
                   SELECT 1
                   FROM post_actions pa
@@ -85,7 +85,7 @@ class PostDestroyer
     UserActionManager.post_created(@post)
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
     if @post.is_first_post?
-      UserActionManager.topic_created(@post.topic)
+      UserActionManager.topic_created(topic)
       DiscourseEvent.trigger(:topic_recovered, topic, @user)
       StaffActionLogger.new(@user).log_topic_delete_recover(topic, "recover_topic", @opts.slice(:context)) if @user.id != @post.user_id
     end
@@ -111,7 +111,7 @@ class PostDestroyer
         counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
         counts.each do |user_id, count|
           if user_stat = UserStat.where(user_id: user_id).first
-            user_stat.update_attributes(post_count: user_stat.post_count + count)
+            user_stat.update(post_count: user_stat.post_count + count)
           end
         end
       end
@@ -167,27 +167,34 @@ class PostDestroyer
     I18n.with_locale(SiteSetting.default_locale) do
 
       # don't call revise from within transaction, high risk of deadlock
+      key = @post.is_first_post? ? 'js.topic.deleted_by_author' : 'js.post.deleted_by_author'
       @post.revise(@user,
-        { raw: I18n.t('js.post.deleted_by_author', count: delete_removed_posts_after) },
+        { raw: I18n.t(key, count: delete_removed_posts_after) },
         force_new_version: true
       )
 
       Post.transaction do
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
+        @post.topic.update_column(:closed, true) if @post.is_first_post?
       end
     end
   end
 
   def user_recovered
+    return unless @post.user_deleted?
+
     Post.transaction do
       @post.update_column(:user_deleted, false)
       @post.skip_unique_check = true
+      @post.topic.update_column(:closed, false) if @post.is_first_post?
     end
 
     # has internal transactions, if we nest then there are some very high risk deadlocks
     last_revision = @post.revisions.last
-    @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true) if last_revision.present?
+    if last_revision.present? && last_revision.modifications['raw'].present?
+      @post.revise(@user, { raw: last_revision.modifications["raw"][0] }, force_new_version: true)
+    end
   end
 
   private
@@ -342,7 +349,7 @@ class PostDestroyer
       counts = Post.where(post_type: Post.types[:regular], topic_id: @post.topic_id).where('post_number > 1').group(:user_id).count
       counts.each do |user_id, count|
         if user_stat = UserStat.where(user_id: user_id).first
-          user_stat.update_attributes(post_count: user_stat.post_count - count)
+          user_stat.update(post_count: user_stat.post_count - count)
         end
       end
     end

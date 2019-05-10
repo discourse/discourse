@@ -59,6 +59,8 @@ pt:
           regular: Escolha Única
           multiple: Escolha Múltipla
           number: Cotação numérica
+        poll_result:
+          label: Resultados
         poll_config:
           max: Máximo
           min: Mínimo

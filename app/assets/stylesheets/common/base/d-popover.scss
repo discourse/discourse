@@ -22,7 +22,7 @@ $d-popover-border: $primary-medium;
 #d-popover {
   background-color: $d-popover-background;
   position: absolute;
-  z-index: z("tooltip");
+  z-index: z("modal", "tooltip");
   border-color: $d-popover-border;
   border-style: solid;
   border-width: 1px;

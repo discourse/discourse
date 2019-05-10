@@ -7,7 +7,8 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :created_post_id,
     :created_post_topic_id,
     :remove_reviewable_ids,
-    :version
+    :version,
+    :reviewable_count
   )
 
   def success
@@ -36,5 +37,9 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def include_created_post_topic_id?
     object.created_post_topic.present?
+  end
+
+  def reviewable_count
+    Reviewable.list_for(scope.user).count
   end
 end

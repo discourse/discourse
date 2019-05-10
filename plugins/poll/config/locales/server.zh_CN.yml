@@ -12,6 +12,7 @@ zh_CN:
     poll_edit_window_mins: "投票创建后多少分钟内可以编辑？"
     poll_minimum_trust_level_to_create: "创建投票所需的最小信任等级。"
   poll:
+    invalid_argument: "无效值‘%{value}' for argument '%{argument}’"
     multiple_polls_without_name: "有多个投票没有名字。使用“<code>name</code>”属性区分各投票。"
     multiple_polls_with_same_name: "有多个投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”属性区分各投票。"
     default_poll_must_have_at_least_2_options: "投票至少要有 2 个选项。"

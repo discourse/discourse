@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "cooked_post_processor"
 require "file_store/s3_store"
 
 describe CookedPostProcessor do
   context "#post_process" do
-    let(:upload) do
+    fab!(:upload) do
       Fabricate(:upload,
         url: '/uploads/default/original/1X/1/1234567890123456.jpg'
       )
     end
 
-    let(:post) do
+    fab!(:post) do
       Fabricate(:post, raw: <<~RAW)
       <img src="#{upload.url}">
       RAW
@@ -130,9 +132,9 @@ describe CookedPostProcessor do
       end
 
       describe 'internal links' do
-        let(:topic) { Fabricate(:topic) }
+        fab!(:topic) { Fabricate(:topic) }
+        fab!(:post) { Fabricate(:post, raw: "Hello #{topic.url}") }
         let(:url) { topic.url }
-        let(:post) { Fabricate(:post, raw: "Hello #{url}") }
 
         it "includes the topic title" do
           cpp.post_process
@@ -362,7 +364,7 @@ describe CookedPostProcessor do
     end
 
     context "with image_sizes" do
-      let(:post) { Fabricate(:post_with_image_urls) }
+      fab!(:post) { Fabricate(:post_with_image_urls) }
       let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
 
       before do
@@ -399,7 +401,7 @@ describe CookedPostProcessor do
 
     context "with unsized images" do
 
-      let(:post) { Fabricate(:post_with_unsized_images) }
+      fab!(:post) { Fabricate(:post_with_unsized_images) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       it "adds the width and height to images that don't have them" do
@@ -413,8 +415,8 @@ describe CookedPostProcessor do
 
     context "with large images" do
 
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image) }
+      fab!(:upload) { Fabricate(:upload) }
+      fab!(:post) { Fabricate(:post_with_large_image) }
       let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
 
       before do
@@ -461,7 +463,7 @@ describe CookedPostProcessor do
       end
 
       describe 'when image is an svg' do
-        let(:post) do
+        fab!(:post) do
           Fabricate(:post, raw: '<img src="/uploads/default/original/1X/1234567890123456.svg">')
         end
 
@@ -550,8 +552,8 @@ describe CookedPostProcessor do
 
     context "with large images when using subfolders" do
 
-      let(:upload) { Fabricate(:upload) }
-      let(:post) { Fabricate(:post_with_large_image_on_subfolder) }
+      fab!(:upload) { Fabricate(:upload) }
+      fab!(:post) { Fabricate(:post_with_large_image_on_subfolder) }
       let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
       let(:base_url) { "http://test.localhost/subfolder" }
       let(:base_uri) { "/subfolder" }
@@ -583,7 +585,7 @@ describe CookedPostProcessor do
       end
 
       it "should escape the filename" do
-        upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
+        upload.update!(original_filename: "><img src=x onerror=alert('haha')>.png")
         cpp.post_process_images
         cpp.optimize_urls
 
@@ -1037,6 +1039,33 @@ describe CookedPostProcessor do
 
   end
 
+  context "#remove_user_ids" do
+    let(:topic) { Fabricate(:topic) }
+
+    let(:post) do
+      Fabricate(:post, raw: <<~RAW)
+        link to a topic: #{topic.url}?u=foo
+
+        a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
+
+        link to an external topic: https://google.com/?u=bar
+
+        a malformed url: https://www.example.com/#123#4
+      RAW
+    end
+
+    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+
+    it "does remove user ids" do
+      cpp.remove_user_ids
+
+      expect(cpp.html).to have_tag('a', with: { href: topic.url })
+      expect(cpp.html).to have_tag('a', with: { href: "#{topic.url}?bob=bob&jane=jane" })
+      expect(cpp.html).to have_tag('a', with: { href: "https://google.com/?u=bar" })
+      expect(cpp.html).to have_tag('a', with: { href: "https://www.example.com/#123#4" })
+    end
+  end
+
   context "#pull_hotlinked_images" do
 
     let(:post) { build(:post, created_at: 20.days.ago) }
@@ -1252,7 +1281,7 @@ describe CookedPostProcessor do
   end
 
   context "remove direct reply full quote" do
-    let(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
 
     let(:raw) do
@@ -1288,7 +1317,9 @@ describe CookedPostProcessor do
         topic.bumped_at = 1.day.ago
         CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
 
-        expect(topic.posts).to eq([post, hidden, small_action, reply])
+        expect(topic.ordered_posts.pluck(:id))
+          .to eq([post.id, hidden.id, small_action.id, reply.id])
+
         expect(topic.bumped_at).to eq(1.day.ago)
         expect(reply.raw).to eq("and this is the third reply")
         expect(reply.revisions.count).to eq(1)
@@ -1300,7 +1331,7 @@ describe CookedPostProcessor do
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
-      expect(topic.posts).to eq([post, reply])
+      expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
 

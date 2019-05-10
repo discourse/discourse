@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri/xml/parse_options'
 RSpec::Matchers.define :match_html do |expected|
   match do |actual|

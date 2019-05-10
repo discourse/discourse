@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'user'
 
 describe AdminUserListSerializer do
-  let(:user) { Fabricate(:user_second_factor_totp).user }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user_second_factor_totp).user }
+  fab!(:admin) { Fabricate(:admin) }
   let(:guardian) { Guardian.new(admin) }
 
   let(:serializer) do
@@ -17,9 +19,9 @@ describe AdminUserListSerializer do
   end
 
   context "emails" do
-    let(:admin) { Fabricate(:user_single_email, admin: true, email: "admin@email.com") }
-    let(:moderator) { Fabricate(:user_single_email, moderator: true, email: "moderator@email.com") }
-    let(:user) { Fabricate(:user_single_email, email: "user@email.com") }
+    fab!(:admin) { Fabricate(:user, admin: true, email: "admin@email.com") }
+    fab!(:moderator) { Fabricate(:user, moderator: true, email: "moderator@email.com") }
+    fab!(:user) { Fabricate(:user, email: "user@email.com") }
 
     def serialize(user, viewed_by, opts = nil)
       AdminUserListSerializer.new(

@@ -45,8 +45,8 @@ export default Ember.Component.extend(KeyEnterEscape, {
     return composeState || Composer.CLOSED;
   },
 
-  movePanels(sizePx) {
-    $("#main-outlet").css("padding-bottom", sizePx);
+  movePanels(size) {
+    $("#main-outlet").css("padding-bottom", size ? size : "");
 
     // signal the progress bar it should move!
     this.appEvents.trigger("composer:resized");
@@ -64,7 +64,7 @@ export default Ember.Component.extend(KeyEnterEscape, {
       }
 
       const h = $("#reply-control").height() || 0;
-      this.movePanels(h + "px");
+      this.movePanels(h);
     });
   },
 
@@ -111,9 +111,8 @@ export default Ember.Component.extend(KeyEnterEscape, {
       const winHeight = Ember.$(window).height();
       size = Math.min(size, winHeight - headerHeight());
       size = Math.max(size, MIN_COMPOSER_SIZE);
-      const sizePx = `${size}px`;
-      this.movePanels(sizePx);
-      $composer.height(sizePx);
+      this.movePanels(size);
+      $composer.height(size);
     };
 
     const throttledPerformDrag = (event => {

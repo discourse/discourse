@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ApplicationHelper do
@@ -5,7 +7,6 @@ describe ApplicationHelper do
   describe "preload_script" do
     it "provides brotli links to brotli cdn" do
       set_cdn_url "https://awesome.com"
-      set_env "COMPRESS_BROTLI", "1"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = 'br'
       link = helper.preload_script('application')
@@ -20,7 +21,6 @@ describe ApplicationHelper do
         global_setting :s3_access_key_id, '123'
         global_setting :s3_secret_access_key, '123'
         global_setting :s3_cdn_url, 'https://s3cdn.com'
-        set_env "COMPRESS_BROTLI", "1"
       end
 
       after do
@@ -166,7 +166,7 @@ describe ApplicationHelper do
   end
 
   describe '#html_classes' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "includes 'rtl' when the I18n.locale is rtl" do
       I18n.stubs(:locale).returns(:he)
@@ -290,20 +290,14 @@ describe ApplicationHelper do
         )
 
         SiteSetting.large_icon = nil
-
-        expect(helper.crawlable_meta_data).to include(
-          SiteSetting.site_apple_touch_icon_url
-        )
-
-        SiteSetting.apple_touch_icon = nil
-        SiteSetting.apple_touch_icon_url = nil
+        SiteSetting.logo_small = nil
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_logo_url)
 
         SiteSetting.logo = nil
         SiteSetting.logo_url = nil
 
-        expect(helper.crawlable_meta_data).to_not include("/images")
+        expect(helper.crawlable_meta_data).to include(Upload.find(SiteIconManager::SKETCH_LOGO_ID).url)
       end
     end
   end

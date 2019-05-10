@@ -1,17 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'user_name_suggester'
 
 describe UserNameSuggester do
-
-  describe 'name heuristics' do
-    it 'is able to guess a decent username from an email' do
-      expect(UserNameSuggester.suggest('bob@bob.com')).to eq('bob')
-    end
-  end
-
   describe '.suggest' do
     before do
-      User.stubs(:username_length).returns(3..15)
+      SiteSetting.min_username_length = 3
+      SiteSetting.max_username_length = 15
     end
 
     it "doesn't raise an error on nil username" do
@@ -26,10 +22,6 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest("Darth%^Vader")).to eq('Darth_Vader')
     end
 
-    it "transliterates some characters" do
-      expect(UserNameSuggester.suggest("Jørn")).to eq('Jorn')
-    end
-
     it 'adds 1 to an existing username' do
       user = Fabricate(:user)
       expect(UserNameSuggester.suggest(user.username)).to eq("#{user.username}1")
@@ -37,6 +29,10 @@ describe UserNameSuggester do
 
     it "adds numbers if it's too short" do
       expect(UserNameSuggester.suggest('a')).to eq('a11')
+    end
+
+    it 'is able to guess a decent username from an email' do
+      expect(UserNameSuggester.suggest('bob@example.com')).to eq('bob')
     end
 
     it "has a special case for me and i emails" do
@@ -106,6 +102,57 @@ describe UserNameSuggester do
       User.stubs(:username_length).returns(8..8)
       expect(UserNameSuggester.suggest('uuuuuuu_u')).to eq('uuuuuuu1')
     end
-  end
 
+    context "with Unicode usernames disabled" do
+      before { SiteSetting.unicode_usernames = false }
+
+      it "transliterates some characters" do
+        expect(UserNameSuggester.suggest('Jørn')).to eq('Jorn')
+      end
+
+      it "replaces Unicode characters" do
+        expect(UserNameSuggester.suggest('طائر')).to eq('111')
+        expect(UserNameSuggester.suggest('πουλί')).to eq('111')
+      end
+    end
+
+    context "with Unicode usernames enabled" do
+      before { SiteSetting.unicode_usernames = true }
+
+      it "does not transliterate" do
+        expect(UserNameSuggester.suggest("Jørn")).to eq('Jørn')
+      end
+
+      it "does not replace Unicode characters" do
+        expect(UserNameSuggester.suggest('طائر')).to eq('طائر')
+        expect(UserNameSuggester.suggest('πουλί')).to eq('πουλί')
+      end
+
+      it "shortens usernames by counting grapheme clusters" do
+        SiteSetting.max_username_length = 10
+        expect(UserNameSuggester.suggest('बहुत-लंबा-उपयोगकर्ता-नाम')).to eq('बहुत-लंबा-उपयो')
+      end
+
+      it "adds numbers if it's too short" do
+        expect(UserNameSuggester.suggest('鳥')).to eq('鳥11')
+
+        # grapheme cluster consists of 3 code points
+        expect(UserNameSuggester.suggest('য়া')).to eq('য়া11')
+      end
+
+      it "normalizes usernames" do
+        actual = 'Löwe'    # NFD, "Lo\u0308we"
+        expected = 'Löwe'  # NFC, "L\u00F6we"
+
+        expect(UserNameSuggester.suggest(actual)).to eq(expected)
+      end
+
+      it "does not suggest a username longer than max column size" do
+        SiteSetting.max_username_length = 40
+
+        expect(UserNameSuggester.suggest('য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া'))
+          .to eq('য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া-য়া')
+      end
+    end
+  end
 end

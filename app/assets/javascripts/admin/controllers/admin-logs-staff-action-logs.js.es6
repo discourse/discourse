@@ -1,6 +1,7 @@
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import StaffActionLog from "admin/models/staff-action-log";
+import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
   loading: false,
@@ -13,23 +14,21 @@ export default Ember.Controller.extend({
     const filterActionId = this.get("filterActionId");
     if (filterActionId) {
       this._changeFilters({
-        action_name: this.get("userHistoryActions").findBy(
-          "id",
-          parseInt(filterActionId, 10)
-        ).name_raw,
-        action_id: filterActionId
+        action_name: filterActionId,
+        action_id: this.get("userHistoryActions").findBy("id", filterActionId)
+          .action_id
       });
     }
   }.observes("filterActionId"),
 
-  actionFilter: function() {
-    var name = this.get("filters.action_name");
+  @computed("filters.action_name")
+  actionFilter(name) {
     if (name) {
       return I18n.t("admin.logs.staff_actions.actions." + name);
     } else {
       return null;
     }
-  }.property("filters.action_name"),
+  },
 
   showInstructions: Ember.computed.gt("model.length", 0),
 
@@ -54,11 +53,12 @@ export default Ember.Controller.extend({
       .then(result => {
         this.set("model", result.staff_action_logs);
         if (this.get("userHistoryActions").length === 0) {
-          let actionTypes = result.user_history_actions.map(pair => {
+          let actionTypes = result.user_history_actions.map(action => {
             return {
-              id: pair.id,
-              name: I18n.t("admin.logs.staff_actions.actions." + pair.name),
-              name_raw: pair.name
+              id: action.id,
+              action_id: action.action_id,
+              name: I18n.t("admin.logs.staff_actions.actions." + action.id),
+              name_raw: action.id
             };
           });
           actionTypes = _.sortBy(actionTypes, row => row.name);

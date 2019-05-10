@@ -3,8 +3,14 @@ class Reviewable < ActiveRecord::Base
     include ActiveModel::Serialization
 
     attr_reader :reviewable, :status, :created_post, :created_post_topic
-    attr_accessor :transition_to, :remove_reviewable_ids, :errors, :recalculate_score,
-                  :update_flag_stats
+    attr_accessor(
+      :transition_to,
+      :remove_reviewable_ids,
+      :errors,
+      :recalculate_score,
+      :update_flag_stats,
+      :after_commit
+    )
 
     def initialize(reviewable, status)
       @status = status

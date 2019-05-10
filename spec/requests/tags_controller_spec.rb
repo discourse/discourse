@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TagsController do
@@ -79,7 +81,7 @@ describe TagsController do
   end
 
   describe '#check_hashtag' do
-    let(:tag) { Fabricate(:tag, name: 'test') }
+    fab!(:tag) { Fabricate(:tag, name: 'test') }
 
     it "should return the right response" do
       get "/tags/check.json", params: { tag_values: [tag.name] }
@@ -92,8 +94,8 @@ describe TagsController do
   end
 
   describe "#update" do
-    let(:tag) { Fabricate(:tag) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:admin) { Fabricate(:admin) }
 
     before do
       tag
@@ -115,9 +117,9 @@ describe TagsController do
   end
 
   describe '#personal_messages' do
-    let(:regular_user) { Fabricate(:trust_level_4) }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:admin) { Fabricate(:admin) }
+    fab!(:regular_user) { Fabricate(:trust_level_4) }
+    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:admin) { Fabricate(:admin) }
     let(:personal_message) do
       Fabricate(:private_message_topic, user: regular_user, topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: regular_user),
@@ -186,13 +188,13 @@ describe TagsController do
   end
 
   describe '#show_latest' do
-    let(:tag)         { Fabricate(:tag) }
-    let(:other_tag)   { Fabricate(:tag) }
-    let(:third_tag)   { Fabricate(:tag) }
-    let(:category)    { Fabricate(:category) }
-    let(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+    fab!(:tag)       { Fabricate(:tag) }
+    fab!(:other_tag) { Fabricate(:tag) }
+    fab!(:third_tag) { Fabricate(:tag) }
+    fab!(:category)  { Fabricate(:category) }
+    fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
 
-    let(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
+    fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
     let(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
     let(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
@@ -332,8 +334,8 @@ describe TagsController do
       end
 
       context 'with category restriction' do
-        let(:yup) { Fabricate(:tag, name: 'yup') }
-        let(:category) { Fabricate(:category, tags: [yup]) }
+        fab!(:yup) { Fabricate(:tag, name: 'yup') }
+        fab!(:category) { Fabricate(:category, tags: [yup]) }
 
         it "can say if given tag is not allowed" do
           nope = Fabricate(:tag, name: 'nope')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Admin::ImpersonateController do
@@ -7,9 +9,9 @@ describe Admin::ImpersonateController do
   end
 
   context 'while logged in as an admin' do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
-    let(:another_admin) { Fabricate(:admin) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:another_admin) { Fabricate(:admin) }
 
     before do
       sign_in(admin)

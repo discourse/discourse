@@ -51,8 +51,6 @@ task 'javascript:update' do
       source: 'highlight.js/build/.',
       destination: 'highlightjs'
     }, {
-      source: 'htmlparser/lib/htmlparser.js'
-    }, {
       source: 'jquery-resize/jquery.ba-resize.js'
     }, {
       source: 'jquery.autoellipsis/src/jquery.autoellipsis.js',
@@ -75,7 +73,8 @@ task 'javascript:update' do
       source: 'moment/locale/.',
       destination: 'moment-locale',
     }, {
-      source: 'moment-timezone/builds/moment-timezone-with-data.js'
+      source: 'moment-timezone/builds/moment-timezone-with-data-10-year-range.js',
+      destination: 'moment-timezone-with-data.js'
     }, {
       source: 'moment-timezone-names-translations/locales/.',
       destination: 'moment-timezone-names-locale'

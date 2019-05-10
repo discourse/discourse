@@ -1,3 +1,5 @@
+import computed from "ember-addons/ember-computed-decorators";
+
 var ButtonBackBright = {
     classes: "btn-primary",
     action: "back",
@@ -25,13 +27,14 @@ export default Ember.Controller.extend({
   thrown: null,
   lastTransition: null,
 
+  @computed
   isNetwork: function() {
     // never made it on the wire
     if (this.get("thrown.readyState") === 0) return true;
     // timed out
     if (this.get("thrown.jqTextStatus") === "timeout") return true;
     return false;
-  }.property(),
+  },
 
   isNotFound: Ember.computed.equal("thrown.status", 404),
   isForbidden: Ember.computed.equal("thrown.status", 403),
@@ -48,7 +51,8 @@ export default Ember.Controller.extend({
     this.set("loading", false);
   }.on("init"),
 
-  reason: function() {
+  @computed("isNetwork", "isServer", "isUnknown")
+  reason() {
     if (this.get("isNetwork")) {
       return I18n.t("errors.reasons.network");
     } else if (this.get("isServer")) {
@@ -61,11 +65,12 @@ export default Ember.Controller.extend({
       // TODO
       return I18n.t("errors.reasons.unknown");
     }
-  }.property("isNetwork", "isServer", "isUnknown"),
+  },
 
   requestUrl: Ember.computed.alias("thrown.requestedUrl"),
 
-  desc: function() {
+  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  desc() {
     if (this.get("networkFixed")) {
       return I18n.t("errors.desc.network_fixed");
     } else if (this.get("isNetwork")) {
@@ -80,9 +85,10 @@ export default Ember.Controller.extend({
       // TODO
       return I18n.t("errors.desc.unknown");
     }
-  }.property("networkFixed", "isNetwork", "isServer", "isUnknown"),
+  },
 
-  enabledButtons: function() {
+  @computed("networkFixed", "isNetwork", "isServer", "isUnknown")
+  enabledButtons() {
     if (this.get("networkFixed")) {
       return [ButtonLoadPage];
     } else if (this.get("isNetwork")) {
@@ -90,7 +96,7 @@ export default Ember.Controller.extend({
     } else {
       return [ButtonBackBright, ButtonTryAgain];
     }
-  }.property("networkFixed", "isNetwork", "isServer", "isUnknown"),
+  },
 
   actions: {
     back: function() {

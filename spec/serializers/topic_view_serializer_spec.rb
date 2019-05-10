@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe TopicViewSerializer do
   def serialize_topic(topic, user_arg)
     topic_view = TopicView.new(topic.id, user_arg)
-    TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+    serializer = TopicViewSerializer.new(topic_view, scope: Guardian.new(user_arg), root: false).as_json
+    JSON.parse(MultiJson.dump(serializer)).deep_symbolize_keys!
   end
 
   before do
@@ -11,9 +14,9 @@ describe TopicViewSerializer do
     RandomTopicSelector.clear_cache!
   end
 
-  let(:topic) { Fabricate(:topic) }
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
 
   describe '#featured_link and #featured_link_root_domain' do
     let(:featured_link) { 'http://meta.discourse.org' }
@@ -53,7 +56,7 @@ describe TopicViewSerializer do
       it 'should include suggested topics' do
         json = serialize_topic(topic, user)
 
-        expect(json[:suggested_topics].first.id).to eq(topic2.id)
+        expect(json[:suggested_topics].first[:id]).to eq(topic2.id)
       end
     end
 
@@ -130,4 +133,106 @@ describe TopicViewSerializer do
       expect(json[:tags]).to eq([])
     end
   end
+
+  context "with flags" do
+    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:other_post) { Fabricate(:post, topic: topic) }
+
+    it "will return reviewable counts on posts" do
+      r = PostActionCreator.inappropriate(Fabricate(:user), post).reviewable
+      r.perform(admin, :agree_and_keep)
+      PostActionCreator.spam(Fabricate(:user), post)
+
+      json = serialize_topic(topic, admin)
+      p0 = json[:post_stream][:posts][0]
+      expect(p0[:id]).to eq(post.id)
+      expect(p0[:reviewable_score_count]).to eq(2)
+      expect(p0[:reviewable_score_pending_count]).to eq(1)
+
+      p1 = json[:post_stream][:posts][1]
+      expect(p1[:reviewable_score_count]).to eq(0)
+      expect(p1[:reviewable_score_pending_count]).to eq(0)
+    end
+  end
+
+  describe "pending posts" do
+    context "when the queue is enabled" do
+      before do
+        SiteSetting.approve_post_count = 1
+      end
+
+      let!(:queued_post) do
+        ReviewableQueuedPost.needs_review!(
+          topic: topic,
+          payload: { raw: "hello my raw contents" },
+          created_by: user
+        )
+      end
+
+      it "returns a pending_posts_count when the queue is enabled" do
+        json = serialize_topic(topic, admin)
+        expect(json[:queued_posts_count]).to eq(1)
+      end
+
+      it "returns a user's pending posts" do
+        json = serialize_topic(topic, user)
+        expect(json[:queued_posts_count]).to be_nil
+
+        post = json[:pending_posts].find { |p| p[:id] = queued_post.id }
+        expect(post[:raw]).to eq("hello my raw contents")
+        expect(post).to be_present
+      end
+    end
+  end
+
+  context "without an enabled queue" do
+    it "returns nil for the count" do
+      json = serialize_topic(topic, admin)
+      expect(json[:queued_posts_count]).to be_nil
+      expect(json[:pending_posts]).to be_nil
+    end
+  end
+
+  context "details" do
+    it "returns the details object" do
+      PostCreator.create!(user, topic_id: topic.id, raw: "this is my post content")
+      topic.topic_links.create!(user: user, url: 'https://discourse.org', domain: 'discourse.org', clicks: 100)
+      json = serialize_topic(topic, admin)
+
+      details = json[:details]
+      expect(details).to be_present
+      expect(details[:created_by][:id]).to eq(topic.user_id)
+      expect(details[:last_poster][:id]).to eq(user.id)
+      expect(details[:notification_level]).to be_present
+      expect(details[:can_move_posts]).to eq(true)
+      expect(details[:can_flag_topic]).to eq(true)
+      expect(details[:can_review_topic]).to eq(true)
+      expect(details[:links][0][:clicks]).to eq(100)
+
+      participant = details[:participants].find { |p| p[:id] == user.id }
+      expect(participant[:post_count]).to eq(1)
+    end
+
+    it "returns extra fields for a personal message" do
+      group = Fabricate(:group)
+      GroupUser.create(group: group, user: user)
+      GroupUser.create(group: group, user: admin)
+
+      group2 = Fabricate(:group)
+      GroupUser.create(group: group2, user: user)
+
+      pm = Fabricate(:private_message_topic)
+      pm.update(archetype: 'private_message')
+      pm.topic_allowed_groups.create!(group: group)
+      pm.topic_allowed_groups.create!(group: group2)
+
+      json = serialize_topic(pm, admin)
+
+      details = json[:details]
+      expect(details[:can_remove_self_id]).to eq(admin.id)
+      expect(details[:allowed_users].find { |au| au[:id] == pm.user_id }).to be_present
+      expect(details[:allowed_groups].find { |ag| ag[:id] == group.id }).to be_present
+    end
+  end
+
 end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Jobs::PublishTopicToCategory do
-  let(:category) { Fabricate(:category) }
-  let(:another_category) { Fabricate(:category) }
+  fab!(:category) { Fabricate(:category) }
+  fab!(:another_category) { Fabricate(:category) }
 
   let(:topic) do
     topic = Fabricate(:topic, category: category)
@@ -12,6 +14,8 @@ RSpec.describe Jobs::PublishTopicToCategory do
       category_id: another_category.id,
       topic: topic
     )
+
+    Fabricate(:post, topic: topic)
 
     topic
   end
@@ -40,20 +44,18 @@ RSpec.describe Jobs::PublishTopicToCategory do
     message = MessageBus.track_publish do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
     end.find do |m|
-      Hash === m.data && m.data.key?(:reload_topic)
+      Hash === m.data && m.data.key?(:reload_topic) && m.data.key?(:refresh_stream)
     end
 
     topic.reload
     expect(topic.category).to eq(another_category)
     expect(topic.visible).to eq(true)
     expect(topic.public_topic_timer).to eq(nil)
+    expect(message.channel).to eq("/topic/#{topic.id}")
 
     %w{created_at bumped_at updated_at last_posted_at}.each do |attribute|
       expect(topic.public_send(attribute)).to be_within(1.second).of(Time.zone.now)
     end
-
-    expect(message.data[:reload_topic]).to be_present
-    expect(message.data[:refresh_stream]).to be_present
   end
 
   describe 'when topic is a private message' do

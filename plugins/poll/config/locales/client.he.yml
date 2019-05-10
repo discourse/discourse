@@ -69,6 +69,8 @@ he:
           regular: בחירה בודדת
           multiple: בחירה מרובה
           number: ציון מספרי
+        poll_result:
+          label: תוצאות
         poll_config:
           max: מקסימום
           min: מינימום

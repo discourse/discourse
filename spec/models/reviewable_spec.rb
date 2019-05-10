@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Reviewable, type: :model do
 
   context ".create" do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
-    let(:queued_post) { Fabricate.build(:reviewable_queued_post) }
 
     it "can create a reviewable object" do
       expect(reviewable).to be_present
@@ -33,8 +34,8 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".needs_review!" do
-    let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user) }
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user) }
 
     it "will return a new reviewable the first them, and re-use the second time" do
       r0 = ReviewableUser.needs_review!(target: user, created_by: admin)
@@ -54,6 +55,17 @@ RSpec.describe Reviewable, type: :model do
       expect(reviewable.category).to eq(post.topic.category)
     end
 
+    it "will update the category if the topic category changes" do
+      post = Fabricate(:post)
+      moderator = Fabricate(:moderator)
+      reviewable = PostActionCreator.spam(moderator, post).reviewable
+      expect(reviewable.category).to eq(post.topic.category)
+      new_cat = Fabricate(:category)
+      PostRevisor.new(post).revise!(moderator, category_id: new_cat.id)
+      expect(post.topic.reload.category).to eq(new_cat)
+      expect(reviewable.reload.category).to eq(new_cat)
+    end
+
     it "can create multiple objects with a NULL target" do
       r0 = ReviewableQueuedPost.needs_review!(created_by: admin, payload: { raw: 'hello world I am a post' })
       expect(r0).to be_present
@@ -69,14 +81,14 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context ".list_for" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
 
     it "returns an empty list for nil user" do
       expect(Reviewable.list_for(nil)).to eq([])
     end
 
     context "with a pending item" do
-      let(:post) { Fabricate(:post) }
+      fab!(:post) { Fabricate(:post) }
       let(:reviewable) { Fabricate(:reviewable, target: post) }
 
       it "works with the reviewable by moderator flag" do
@@ -93,6 +105,7 @@ RSpec.describe Reviewable, type: :model do
       end
 
       it "works with the reviewable by group" do
+        SiteSetting.enable_category_group_review = true
         group = Fabricate(:group)
         reviewable.reviewable_by_group_id = group.id
         reviewable.save!
@@ -105,6 +118,16 @@ RSpec.describe Reviewable, type: :model do
         gu.destroy
         user.update_columns(moderator: false, admin: true)
         expect(Reviewable.list_for(user, status: :pending)).to eq([reviewable])
+      end
+
+      it "doesn't allow review by group when disabled" do
+        SiteSetting.enable_category_group_review = false
+        group = Fabricate(:group)
+        reviewable.reviewable_by_group_id = group.id
+        reviewable.save!
+
+        GroupUser.create!(group_id: group.id, user_id: user.id)
+        expect(Reviewable.list_for(user, status: :pending)).to be_blank
       end
 
       context 'Reviewing as an admin' do
@@ -137,11 +160,11 @@ RSpec.describe Reviewable, type: :model do
     end
 
     context "with a category restriction" do
-      let(:category) { Fabricate(:category, read_restricted: true) }
+      fab!(:category) { Fabricate(:category, read_restricted: true) }
       let(:topic) { Fabricate(:topic, category: category) }
       let(:post) { Fabricate(:post, topic: topic) }
-      let!(:moderator) { Fabricate(:moderator) }
-      let(:admin) { Fabricate(:admin) }
+      fab!(:moderator) { Fabricate(:moderator) }
+      fab!(:admin) { Fabricate(:admin) }
 
       it "respects category id on the reviewable" do
         Group.refresh_automatic_group!(:staff)
@@ -194,7 +217,7 @@ RSpec.describe Reviewable, type: :model do
   end
 
   context "message bus notifications" do
-    let(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator) { Fabricate(:moderator) }
 
     it "triggers a notification on create" do
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
@@ -203,32 +226,33 @@ RSpec.describe Reviewable, type: :model do
 
     it "triggers a notification on pending -> approve" do
       reviewable = Fabricate(:reviewable_queued_post)
+      Jobs.stubs(:enqueue)
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :approve)
+      reviewable.perform(moderator, :approve_post)
     end
 
     it "triggers a notification on pending -> reject" do
       reviewable = Fabricate(:reviewable_queued_post)
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id))
-      reviewable.perform(moderator, :reject)
+      reviewable.perform(moderator, :reject_post)
     end
 
     it "doesn't trigger a notification on approve -> reject" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject)
+      reviewable.perform(moderator, :reject_post)
     end
 
     it "doesn't trigger a notification on reject -> approve" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
       Jobs.expects(:enqueue).with(:notify_reviewable, has_key(:reviewable_id)).never
-      reviewable.perform(moderator, :reject)
+      reviewable.perform(moderator, :reject_post)
     end
   end
 
   describe "flag_stats" do
-    let(:user) { Fabricate(:user) }
-    let(:post) { Fabricate(:post) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post) }
     let(:reviewable) { PostActionCreator.spam(user, post).reviewable }
 
     it "increases flags_agreed when agreed" do
@@ -255,6 +279,34 @@ RSpec.describe Reviewable, type: :model do
       self_flag = PostActionCreator.spam(user, user_post).reviewable
       self_flag.perform(Discourse.system_user, :agree_and_keep)
       expect(user.user_stat.reload.flags_agreed).to eq(0)
+    end
+  end
+
+  context "priorities" do
+    it "returns 0 for unknown priorities" do
+      expect(Reviewable.min_score_for_priority('wat')).to eq(0.0)
+    end
+
+    it "returns 0 for all by default" do
+      expect(Reviewable.min_score_for_priority('low')).to eq(0.0)
+      expect(Reviewable.min_score_for_priority('medium')).to eq(0.0)
+      expect(Reviewable.min_score_for_priority('high')).to eq(0.0)
+    end
+
+    it "can be set manually with `set_priorities`" do
+      Reviewable.set_priorities(medium: 12.5, high: 123.45)
+      expect(Reviewable.min_score_for_priority('low')).to eq(0.0)
+      expect(Reviewable.min_score_for_priority('medium')).to eq(12.5)
+      expect(Reviewable.min_score_for_priority('high')).to eq(123.45)
+    end
+
+    it "will return the default priority if none supplied" do
+      Reviewable.set_priorities(medium: 12.3, high: 45.6)
+      expect(Reviewable.min_score_for_priority).to eq(0.0)
+      SiteSetting.reviewable_default_visibility = 'medium'
+      expect(Reviewable.min_score_for_priority).to eq(12.3)
+      SiteSetting.reviewable_default_visibility = 'high'
+      expect(Reviewable.min_score_for_priority).to eq(45.6)
     end
   end
 end

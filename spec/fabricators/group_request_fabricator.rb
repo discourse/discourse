@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:group_request) do
   user
   group

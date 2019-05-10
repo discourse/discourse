@@ -92,6 +92,7 @@ sl:
   backup:
     file_exists: "Datoteka, ki jo hočete naložiti, že obstaja."
   invalid_grant_badge_reason_link: "Zunanja ali neustrezna discourse povezava ni dovoljena kot razlog za značko"
+  email_template_cant_be_modified: "Ta predloga e-sporočila se ne more spreminjati"
   reading_time: "Čas branja"
   likes: "Všečki"
   max_consecutive_replies:
@@ -160,6 +161,8 @@ sl:
   edit_conflict: "Ta prispevek je bil spremenjen s strani drugega uporabnika zato ne moremo shraniti vaših sprememb."
   excerpt_image: "slika"
   groups:
+    errors:
+      already_requested_membership: "Za članstvo v tej skupini ste že zaprosili."
     default_names:
       everyone: "vsi"
       admins: "administratorji"
@@ -235,7 +238,10 @@ sl:
       Ali ste prepričani da hočete nadaljevati to staro razpravo?
   activerecord:
     attributes:
+      category:
+        name: "Ime kategorije"
       topic:
+        title: "Naziv"
         featured_link: "Izpostavljena povezava"
         category_id: "Kategorija"
     errors:
@@ -296,7 +302,7 @@ sl:
     post_template: "%{replace_paragraph}\n\nUporabite naslednje odstavke za daljši opis and za določitev pravil in vodil te kategorije:\n\n- Zakaj naj uporabniku uporabljajo to kategorijo? Čemu je namenjena?\n\n- Kako se razlikuje od ostalih kategorij, ki jih že imamo?\n\n- Katere teme sodijo v to kategorijo?\n\n- Ali potrebujemo to kategorijo? Ali jo lahko združimo z drugo kategorijo ali podkategorijo?\n"
     errors:
       description_incomplete: "Objava z opisom kategorije mora vsebovati vsaj en odstavek."
-      permission_conflict: "Vsaka skupina ki ima dostop do podkategorije mora imeti dostop tudi do nadrejene kategorije."
+      permission_conflict: "Vsaka skupina, ki ima dostop do podkategorije, mora imeti dostop tudi do nadrejen kategorije. Naslednje skupine imajo dostop do ene od podkategorij, nimajo pa dostopa do nadrejene kategorije: %{group_names}."
       disallowed_topic_tags: "Ta tema vsebuje oznake, ki niso dovoljene na tej kategoriji: '%{tags}'"
     cannot_delete:
       uncategorized: "Ta kategorija je posebna. Namenjena je za shranjevanje tem, ki nimajo kategorije. Zato ne more biti izbrisana."
@@ -317,6 +323,12 @@ sl:
       title: "redni uporabnik"
     leader:
       title: "vodja"
+  post:
+    has_likes:
+      one: "%{count} všeček"
+      two: "%{count} všečka"
+      few: "%{count} všečke"
+      other: "%{count} všečkov"
   rate_limiter:
     hours:
       one: "%{count} ura"
@@ -335,6 +347,8 @@ sl:
       other: "%{count} sekund"
     short_time: "nekaj sekund"
   datetime:
+    distance_in_words:
+      half_a_minute: "< 1 min"
     distance_in_words_verbose:
       half_a_minute: "pravkar"
       less_than_x_seconds:
@@ -443,17 +457,24 @@ sl:
     revoke_failed: "Nismo uspeli razveljaviti vaš račun pri %{provider_name}."
   activation:
     please_continue: "Vaš nov uporabniški račun je potrjen - preusmerjeni boste na začetno stran."
+    continue_button: "Nadaljujte na %{site_name}"
     welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "Moderator mora ročno potrditi vaš nov uporabniški račun da boste lahko dostopali do foruma. Ko bo račun potrjen boste prejeli e-sporočilo."
+  reviewable_score_types:
+    needs_approval:
+      title: "Potrebuje odobritev"
   post_action_types:
     off_topic:
       description: "Prispevek ne ustreza pogovoru v tej temi kot je definiran z naslovom teme in prvim prispevkom v temi in bi verjetno sodil nekam drugam."
+      long_form: "prijavljeno kot ne ustreza temi"
     spam:
       description: "Prispevek sodi med oglaševanje ali vandalizem. Prispevek ni uporaben in bistven za to temo."
       short_description: "To je oglas ali vandalizem"
+      long_form: "prijavljeno kot neželeno"
     inappropriate:
       description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
+      long_form: "prijavljeno kot neprimerno"
     notify_user:
       title: "Pošlji zasebno sporočilo uporabniku @{{username}}"
       description: "Rad bi osebno opozoril uporabnika o njegovem prispevku preko zasebnega sporočila."
@@ -465,6 +486,10 @@ sl:
       short_description: "Potrebuje pregled osebja iz drugega razloga"
       long_form: "prijavljeno za pregled osebja"
       email_title: 'Prispevek v "%{title}" potrebuje pregled osebja'
+    bookmark:
+      title: "Zaznamek"
+    like:
+      long_form: "je všeč"
   user_activity:
     no_default:
       self: "Nimate nobene aktivnosti."
@@ -479,33 +504,140 @@ sl:
   topic_flag_types:
     spam:
       description: "Tema sodi med oglaševanje ali vandalizem. Ni uporabna in bistvena za ta forum."
+      long_form: "prijavljeno kot neželeno"
       short_description: "To je oglas"
     inappropriate:
       description: 'Tema vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
+      long_form: "prijavljeno kot neprimerno"
+      short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_moderators:
       title: "Drug razlog"
       description: 'Prispevek potrebuje pregled osebja na podlagi <a href="%{base_path}/guidelines">pravil skupnosti</a>, <a href="%{tos_url}">pogojev uporabe</a>, ali iz drugega razloga, ki ni naveden zgoraj.'
       short_description: "Potrebuje pregled osebja iz drugega razloga"
   ignored:
-    hidden_content: "<p>Skrita vsebina</p>"
+    hidden_content: "<p>Prezrta vsebina</p>"
   archetypes:
     banner:
       title: "Tema na oglasnem traku"
       message:
         make: "Ta tema je sedaj na oglasnem traku. Pojavila se bo na vrhu vsake strani dokler jo uporabnik ne zapre."
         remove: "Ta tema ni več na oglasnem traku. Ne bo se več pojavljala na vrhu strani."
+  unsubscribed:
+    title: "Nastavitve e-pošte spremenjene!"
+    description: "nastavitve e-pošte za <b>%{email}</b> so bile spremenjene. Za spremembo vaših nastavitev e-pošte <a href='%{url}'>obiščite svoje uporabniške nastavitve</a>."
   unsubscribe:
+    title: "Odjavi"
     mute_topic: "Utišaj vsa obvestila za to temo, %{link}"
-    disable_digest_emails: "Ne pošiljaj mi več e-sporočil s povzetki"
+    log_out: "Odjava"
+    submit: "Shrani nastavitve"
+    digest_frequency:
+      title: "Prejemate e-sporočila s povzetkom %{frequency}"
+      select_title: "Nastavi pogostost prejemanja e-sporočil na:"
+      never: "nikoli"
+      every_30_minutes: "vsakih 30 minut"
+      every_hour: "vsako uro"
+      daily: "dnevno"
+      weekly: "tedensko"
+      every_month: "vsak mesec"
+      every_six_months: "vsakih 6 mesecev"
+  user_api_key:
+    otp_description: 'Hočete dovoliti "%{application_name}" da dostopa do te strani?'
   reports:
+    default:
+      labels:
+        count: Število
+    post_edits:
+      labels:
+        post: Prispevek
+        editor: Urednik
+        edit_reason: Razlog
+    user_flagging_ratio:
+      labels:
+        user: Uporabnik
+        score: Ocena
     moderators_activity:
       labels:
+        moderator: Moderator
         revision_count: Verzije
     flags_status:
       labels:
+        flag: Tip
         poster: Odgovarja
+    consolidated_page_views:
+      labels:
+        post: Prispevek
+        editor: Urednik
+        edit_reason: Razlog
+    topics:
+      title: "Tem"
+    posts:
+      title: "Prispevki"
+    likes:
+      title: "Všečki"
+    flags:
+      title: "Zastave"
+    bookmarks:
+      title: "Zaznamki"
+    users_by_trust_level:
+      xaxis: "Nivo zaupanja"
+    users_by_type:
+      xaxis: "Tip"
+      labels:
+        type: Tip
+      xaxis_labels:
+        admin: Admin
+        moderator: Moderator
+        suspended: Suspendirani
+        silenced: Utišani
+    trending_search:
+      labels:
+        term: Iskalni pogoj
+        searches: Iskanj
+    system_private_messages:
+      title: "Sistem"
     notify_user_private_messages:
       description: "Kolikokrat so bili uporabniki zasebno opozorjeni s prijavo."
+    top_referrers:
+      xaxis: "Uporabnik"
+      num_topics: "Tem"
+      labels:
+        user: "Uporabnik"
+        num_topics: "Tem"
+    top_traffic_sources:
+      xaxis: "Domena"
+      num_topics: "Tem"
+      num_users: "Uporabniki"
+      labels:
+        domain: Domena
+        num_topics: Tem
+    top_referred_topics:
+      labels:
+        topic: "Tema"
+    page_view_anon_reqs:
+      title: "Anonimni"
+    page_view_total_reqs:
+      title: "Ogledov strani"
+    web_crawlers:
+      labels:
+        page_views: "Ogledov strani"
+    suspicious_logins:
+      labels:
+        user: Uporabnik
+        location: Lokacija
+    staff_logins:
+      labels:
+        user: Uporabnik
+        location: Lokacija
+    top_uploads:
+      labels:
+        filename: Ime datoteke
+  site_settings:
+    avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
+  search:
+    types:
+      category: "Kategorije"
+      topic: "Rezultati"
+      user: "Uporabniki"
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
@@ -627,7 +759,7 @@ sl:
     not_available: "Ni na voljo. Poskusite %{suggestion}?"
     something_already_taken: "Prišlo je do napake, mogoče je uporabniško ime ali e-naslov že registriran. Poskusite povezavo za pozabljeno geslo."
     omniauth_error: "Prišlo je do napake pri preverjanju vašega računa. Mogoče niste potrdili avtorizacije?"
-    omniauth_error_unknown: "Prišlo je do napake pri vaši prijavi, prosimo poskusite ponovno."
+    omniauth_error_unknown: "Prišlo je do napake pri vaši prijavi, poskusite ponovno."
     authenticator_error_no_valid_email: "E-naslov povezan z računom %{account} ni dovoljen. Morali boste uporabiti drug e-naslov."
     new_registrations_disabled: "Nove registracije uporabniških računov trenutno niso mogoče."
     password_too_long: "Geslo je omejeno na 200 znakov."
@@ -650,17 +782,17 @@ sl:
       max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
     destroy_reasons:
       unused_staged_user: "Neuporabljen prirejen uporabnik"
-  flags_reminder:
-    flags_were_submitted:
-      one: "Prijave so bile podane več kot %{count} uro nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-      two: "Prijave so bile podane več kot %{count} uri nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-      few: "Prijave so bile podane več kot %{count} ure nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
-      other: "Prijave so bile podane več kot %{count} ur nazaj. [Prosimo, preglejte prijave](%{base_path}/admin/flags)."
+  reviewables_reminder:
+    submitted:
+      one: "Predmeti so bili poslani pred %{count} uros. [Preglejte jih](%{base_path}/review)."
+      two: "Predmeti so bili poslani pred%{count} urama. [Preglejte jih](%{base_path}/review)."
+      few: "Predmeti so bili poslani pred %{count} urami. [Preglejte jih](%{base_path}/review)."
+      other: "Predmeti so bili poslani pred %{count} urami. [Preglejte jih](%{base_path}/review)."
     subject_template:
-      one: "%{count} prijava čaka na pregled"
-      two: "%{count} prijavi čakata na pregled"
-      few: "%{count} prijave čakajo na pregled"
-      other: "%{count} prijav čaka na pregled"
+      one: "%{count} predmet za potrditev"
+      two: "%{count} predmeta za potrditev"
+      few: "%{count} predmeti za potrditev"
+      other: "%{count} predmetov za potrditev"
   invite_mailer:
     subject_template: "%{inviter_name} vas je povabil da sodelujete v '%{topic_title}' na %{site_domain_name}"
     text_body_template: |
@@ -738,6 +870,10 @@ sl:
     inappropriate: "Vaš prispevek je bil prijavljen kot **ni primeren**: skupnost meni da je žaljiv, nesramen ali krši [pravila skupnosti](%{base_path}/guidelines)."
     spam: "Vaš prispevek je bil prijavljen kot **nezaželen**: skupnost meni da je prispevek oglas ali vsebuje preveč oglaševalske vsebine, da bi bil uporaben in bistven za temo."
     notify_moderators: "Vaš prispevek je bil prijavljen za **pregled osebja**: skupnost meni, da prispevek zahteva poseg člana osebja foruma."
+  flags_dispositions:
+    disagreed: "Hvala za opozorilo. Bomo pregledali."
+    ignored: "Hvala za opozorilo. Bomo pregledali."
+    ignored_and_deleted: "Hvala za opozorilo. Prispevek smo odstranili."
   temporarily_closed_due_to_flags:
     one: "Ta tema je začasno zaprta za najmanj %{count} uro, ker je prejela veliko število prijav s strani članov skupnosti. "
     two: "Ta tema je začasno zaprta za najmanj %{count} uri, ker je prejela veliko število prijav s strani članov skupnosti."
@@ -799,7 +935,7 @@ sl:
         Za več informacij preberite [pravila skupnosti](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        Za nekaj napotkov kako začeti kot nov uporabnik priporočamo [tole blog objavo (v angleščini)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Za nekaj napotkov kot novemu uporabniku priporočamo [tole blog objavo (v angleščini)](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         S časom vas bomo bolje spoznali in bomo vaše začasne omejitve novega uporabnika odstranili. Čez čas boste lahko dosegli [nivo zaupanja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), ki vam bo omogočal več dejanj s katerimi skupaj upravljamo našo skupnost.
     welcome_user:
@@ -815,8 +951,8 @@ sl:
         Lepo se imejte v naši družbi!
     welcome_tl1_user:
       title: "Dobrodošli na nivoju zaupanja 1!"
-      subject_template: "Hvala, ker z nami preživljate svoj čas"
-      text_body_template: "Pozdravljeni! \n\nVidimo, da pridno spremljate naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nVeseli smo, da ste med nami in bi radi vedeli več o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [ustvarite novo temo](%{base_url}/categories).\n"
+      subject_template: "Zahvala za vaš čas z nami"
+      text_body_template: "Pozdravljeni! \n\nOpazili smo, da pridno spremljate naš forum, kar je super. Zato smo vam povišali [nivo zaupanja!](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)\n\nVeseli smo, da ste med nami in zato bi radi izvedeli več o vas. Vzemite si čas in [izpolnite svoj profil](%{base_url}/my/preferences/profile) ali [ustvarite novo temo](%{base_url}/categories).\n"
     welcome_invite:
       title: "Dobrodošel povabljeni"
       subject_template: "Dobrodošli na %{site_name}!"
@@ -1002,6 +1138,7 @@ sl:
       title: "E-sporočilo zavrnjeno - neustrezno"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- neustrezno"
       text_body_template: "Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.\n\nRazlog: \n\n%{post_errorl}\n\nČe znate odpraviti težavo, poskusite znova.\n"
+      date_invalid: "Nismo našli datum nastanka. Ali v e-sporočilu manjka Date:?"
     email_reject_post_too_short:
       title: "E-sporočilo zavrnjeno - vsebina prekratka"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- vsebina prekratka"
@@ -1029,7 +1166,7 @@ sl:
       text_body_template: |
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
-        Nobeno od prejemnih e-naslovo ni prepoznan ali je prišlo do spremembe Message-ID vrstice. Zagotovite, da pošiljate na ustrezen e-naslov, ki vam ga je posredovalo osebje.
+        Noben od prejemnih e-naslovov ni prepoznan ali je prišlo do spremembe Message-ID vrstice. Zagotovite, da pošiljate na ustrezen e-naslov, ki vam ga je posredovalo osebje.
     email_reject_old_destination:
       title: "E-sporočilo zavrnjeno - star naslov"
       subject_template: "[%{email_prefix}] Napaka e-pošte -- star naslov"
@@ -1156,7 +1293,7 @@ sl:
 
         Nov uporabnik [%{username}](%{user_url}) je večkrat poskusil ustvariti več prispevkov z povezavami na %{domains}, ampak ti prispevki so bili blokirani, zato da preprečimo neželeno vsebino. Uporabnik še vedno lahko ustvari nove prispevke, ki ne vsebujejo povezave na %{domains}.
 
-        Prosimo [preverite uporabnika](%{user_url}).
+        [Preverite uporabnika](%{user_url}).
 
         To se lahko spremeni preko `newuser_spam_host_threshold` in `white_listed_spam_host_domains` nastavitev sistema. Razmislite, da bi dodali %{domains} na belo listo, če naj bi bile izvzete.
     unsilenced:
@@ -1176,9 +1313,9 @@ sl:
         few: "%{count} uporabniki čakajo na potrditev"
         other: "%{count} uporabnikov čaka na potrditev"
       text_body_template: |
-        Novo registrirani uporabniki čakajo na potrditev (ali zavrnitev) preden lahko dostopajo do foruma..
+        Nekaj novih prijav uporabnikov čaka na potrditev (ali zavrnitev) preden lahko dostopajo do foruma.
 
-        [Preverite jih v Admin delu](%{base_url}/admin/users/list/pending).
+        [Preglejte jih](%{base_url}/review).
     download_remote_images_disabled:
       title: "Prenos oddaljenih slik onemogočen"
       subject_template: "Prenos oddaljenih slik onemogočen"
@@ -1570,6 +1707,18 @@ sl:
         %{base_url}/u/activate-account/%{email_token}
 
         Če zgornja povezava ne reagira na klik, jo skopirajte v naslovno vrstico v vašem brskalniku.
+    activation_reminder:
+      title: "Opomnik za aktivacijo"
+      subject_template: "[%{email_prefix}] Opomnik za potrditev uporabniškega računa"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        To je prijazni opomnik za aktivacijo vašega uporabniškega računa.
+
+        Kliknite naslednjo povezavo za potrditev in aktivacijo vašega uporabniškega računa:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
     suspicious_login:
       title: "Opozorilo nove prijave"
       subject_template: "[%{site_name}] Opozorilo nove prijave iz %{location}"
@@ -1585,6 +1734,13 @@ sl:
         Če ste bili to vi, ni problema! Ne potrebujete storiti ničesar.
 
         Če to niste bili vi, potem [preverite nedavno uporabljene naprave](%{base_url}/my/preferences/account) in razmislite o zamenjavi gesla.
+  page_not_found:
+    title: "Oops! Ta stran ne obstaja ali je zasebna."
+    popular_topics: "Zanimivo"
+    recent_topics: "Nedavno"
+    see_more: "Več"
+    search_title: "Išči na tem spletnem mestu"
+    search_button: "Išči"
   login_required:
     welcome_message: |
       ## [Dobrodošli na %{title}](#welcome)
@@ -1595,15 +1751,22 @@ sl:
   terms_of_service:
     title: "Pogoji uporabe"
     signup_form_message: 'Prebral sem in sprejemam <a href="%{base_path}/tos" target="_blank">pogoje uporabe</a>.'
+  image: "slika"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
   about: "O nas"
+  guidelines: "Navodila"
   privacy: "Zasebnost"
   edit_this_page: "Uredi to stran"
+  csv_export:
+    boolean_yes: "Da"
+    boolean_no: "Ne"
   static_topic_first_reply: |
     Uredite prvi prispevek v tej temi da spremenite vsebino %{page_name} strani.
   guidelines_topic:
     title: "Pravila skupnosti"
+  tos_topic:
+    title: "Pogoji uporabe"
   privacy_topic:
     title: "Pravilnik o zasebnosti"
   badges:
@@ -1621,7 +1784,7 @@ sl:
       name: Osnovni uporabnik
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljene</a> vse osnovne funkcije skupnosti"
       long_description: |
-        Ta značka vam je podeljena, ko dosežete nivo zaupanja 1. Hvala, ker ste vztrajali in prebrali nekaj tem in tako spoznali kaj sploh je naša skupnost. Omejitve za nove uporabnike so umaknjene: omogočene so vam vsi pomembni mehanizmi, kot so zasebna sporočila, prijave, urejanje wiki in možnost objave več slik in povezav.
+        Ta značka vam je podeljena, ko dosežete nivo zaupanja 1. Hvala, ker ste vztrajali in prebrali nekaj tem in tako spoznali kaj sploh je naša skupnost. Omejitve za nove uporabnike so umaknjene: omogočeni so vam vsi pomembni mehanizmi, kot so zasebna sporočila, prijave, urejanje wiki in možnost objave več slik in povezav.
     member:
       name: Polnopraven član
       description: "<a href=\"https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\">Dodeljena</a> povabila, skupinska zasebna sporočila, več všečkov"
@@ -1832,17 +1995,17 @@ sl:
         Ta značka vam je podeljena dvema novima uporabnikoma vsak mesec za njune prispevke. Merjeno po številu všečkov in po tem od koga so jih prejeli.
     enthusiast:
       name: Navdušenec
-      description: Obiskali 10 dni
+      description: Obiskal 10 zaporednih dni
       long_description: |
         Ta značka vam je podeljena za obiskovanje 10 zaporednih dni. Hvala, ker ste ostali z nami več kot en teden!
     aficionado:
       name: Ljubitelj
-      description: Obiskali 100 dni
+      description: Obiskal 100 zaporednih dni
       long_description: |
         Ta značka vam je podeljena za obiskovanje 100 zaporednih dni. To je več kot tri mesece!
     devotee:
       name: Privrženec
-      description: Obiskali 365 dni
+      description: Obiskal 365 zaporednih dni
       long_description: |
         Ta značka vam je podeljena za obiskovanje 365 zaporednih dni. Neverjetno, celo leto!
     badge_title_metadata: "%{display_name} značka na %{site_title}"
@@ -1854,6 +2017,7 @@ sl:
     email_input: "Administratorjev e-naslov"
     submit_button: "Pošlji e-sporočilo"
   tags:
+    title: "Oznake"
     forbidden:
       restricted_to:
         one: '"%{tag_name}" oznaka je omejena za kategorijo  "%{category_names}"'
@@ -1863,10 +2027,64 @@ sl:
   finish_installation:
     confirm_email:
       title: "Potrdite e-naslov"
-      message: "<p>Poslali smo vam aktivacijsko e-sporočilo na <b>%{email}</b>. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila niste prejeli, preverite da ste pravilno nastavili e-pošto v Discourse in preverite predal z vsiljeno pošto .</p>"
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  wizard:
+    title: "Postavitev Discourse"
+    step:
+      locale:
+        title: "Dobrodošli na vaš Discourse forum!"
+        fields:
+          default_locale:
+            description: "Kateri je vaš privzet jezik skupnosti?"
+      forum_title:
+        title: "Polno ime"
+        description: "Vaše ime je znak, ki se vidi iz razdalje, je <i>prva</i> stvar, ki jo bodo potencialni obiskovalci opazili o vaši skupnosti. Kaj ime in naziv pove o vaši skupnosti?"
+        fields:
+          title:
+            label: "Ime skupnosti"
+            placeholder: "Mikijev klub"
+          site_description:
+            label: "Opiši vašo skupnost v enem kratkem stavku"
+            placeholder: "Prostor kjer Miki debatira s svojimi prijatelji o zanimivih zadevah "
+          short_site_description:
+            label: "Opišite vašo skupnost v nekaj besedah"
+            placeholder: "Najboljši klub"
+      privacy:
+        title: "Dostopnost"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Javno"
+              restricted:
+                label: "Zasebno"
+      contact:
+        fields:
+          contact_email:
+            placeholder: "name@example.com"
+      corporate:
+        title: "Organizacija"
+      colors:
+        title: "Videz"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories_only:
+                label: "Samo kategorije"
+              categories_with_featured_topics:
+                label: "Kategorije z izpostavljenimi temami"
+              categories_and_latest_topics:
+                label: "Kategorije in najnovejše teme"
+              categories_and_top_topics:
+                label: "Kategorije in najboljše teme"
+      emoji:
+        title: "Emoji"
+      invites:
+        disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
+  joined: "Pridružen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je omenil v "%{topic}" - %{site_title}'
@@ -1876,11 +2094,93 @@ sl:
       posted: '%{username} je objavil v "%{topic}" - %{site_title}'
       private_message: '%{username} vam je poslal zasebno sporočilo v "%{topic}" - %{site_title}'
       linked: '%{username} je objavil povezavo na vaš prispevek v "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} je ustvaril novo temo "%{topic}" - %{site_title}'
       confirm_title: "Obvestila omogočena - %{site_title}"
       confirm_body: "Uspelo! Obvestila so bila omogočena."
-      custom: "Obvestilo od %{site_title}"
+      custom: "Obvestilo od %{username} na %{site_title}"
   staff_action_logs:
     not_found: "ni mogoče najti"
     unknown: "neznano"
     user_merged: "%{username} je bil združen v ta račun"
     user_delete_self: "Izbrisan s strani sebe preko %{url}"
+  reviewables:
+    missing_version: "Podati morate verzijo parametra"
+    conflict: "Prišlo je do konflikta, ki to preprečuje. "
+    reasons:
+      post_count: "Avtor ne dosega `approve_post_count` zahteve."
+      trust_level: "Avtor ne dosega `approve_unless_trust_level` zahteve."
+      new_topics_unless_trust_level: "Avtor ne dosega  `approve_new_topics_unless_trust_level` zahteve."
+      fast_typer: "Avtor je tipkal prispevek sumljivo hitro. Glej: `min_first_post_typing_time`."
+      auto_silence_regexp: "Prispevek ustreza `auto_silence_first_post_regex` nastavitvi."
+      watched_word: "Ta prispevek vključuje Watched Word."
+      staged: "Avtor je prirejen in `approve_unless_staged` je nastavljen."
+      category: "Ta kategorija prispevka zahteva potrditev."
+      must_approve_users: "Uporabnik mora biti potrjen, ker je `must_approve_users` vključen."
+      invite_only: "Uporabnik mora biti potrjen, ker je `invite_only` vključen."
+    actions:
+      agree:
+        title: "Strinjam se..."
+      agree_and_keep:
+        title: "Ohrani prispevek"
+        description: "Strinjam se z prijavo in pusti prispevek nespremenjen."
+      agree_and_suspend:
+        title: "Suspendiraj uporabnika"
+        description: "Strinjam se z prijavo in suspendiraj uporabnika."
+      agree_and_silence:
+        title: "Utišaj uporabnika/co"
+        description: "Potrdi prijavo in utišaj uporabnika"
+      agree_and_restore:
+        title: "Povrni prispevek"
+        description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
+      agree_and_hide:
+        title: "Skrij prispevek"
+        description: "Skrij prispevek in samodejno pošlji zasebno sporočilo uporabniku, kjer ga prosiš, da naj spremenijo prispevek."
+      delete_spammer:
+        title: "Izbriši spamerja"
+        description: "Izbriši uporabnika in vse njihove prispevke in teme."
+        confirm: "Ali ste prepričani, da hočete izbrisati vse uporabnikove prispevke, teme in blokirati njegovo IP naslov in e-naslove?"
+      delete:
+        title: "Izbriši..."
+      delete_and_ignore:
+        title: "Izbriši prispevek in prezri"
+        description: "Izbriši prispevek; če je prvi prispevek, izbriši tudi temo"
+      delete_and_ignore_replies:
+        title: "Izbriši prispevek + odgovore in prezri"
+        description: "Izbriši prispevek in vse odgovore; če je prvi prispevek, izbriši tudi temo"
+        confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
+      delete_and_agree:
+        title: "Izbriši prispevek in se strinjam"
+        description: "Izbriši prispevek; če je prvi prispevek, izbriši tudi temo"
+      delete_and_agree_replies:
+        title: "Izbriši prispevek + odgovore in se strinjam"
+        description: "Izbriši prispevek in vse odgovore; če je prvi prispevek, izbriši tudi temo"
+        confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
+      disagree_and_restore:
+        title: "Se ne strinjam in povrni prispevek"
+        description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
+      disagree:
+        title: "Se ne strinjam"
+      ignore:
+        title: "Prezri"
+      approve:
+        title: "Odobri"
+      approve_post:
+        title: "Odobri prispevek"
+      reject_post:
+        title: "Zavrni prispevek"
+      approve_user:
+        title: "Odobri uporabnika"
+      reject_user:
+        title: "Izbriši uporabnika..."
+        delete:
+          title: "Izbriši uporabnika"
+          description: "Ta uporabnik bo izbrisan iz foruma."
+        block:
+          title: "Izbriši in blokiraj uporabnika"
+          description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
+      reject:
+        title: "Zavrni"
+      delete_user:
+        title: "Izbriši uporabnika"
+        confirm: "Ali ste prepričani, da hočete izbrisati uporabnika? To bo izbrisalo vse njihove prispevke in blokiralo njihov e-naslov in IP naslov."
+        reason: "Izbriši preko vrste za pregled"

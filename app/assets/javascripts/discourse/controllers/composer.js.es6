@@ -39,6 +39,7 @@ function loadDraft(store, opts) {
     ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
   ) {
     const composer = store.createRecord("composer");
+
     composer.open({
       draftKey,
       draftSequence,
@@ -255,10 +256,12 @@ export default Ember.Controller.extend({
   _setupPopupMenuOption(callback) {
     let option = callback();
 
-    if (option.condition) {
-      option.condition = this.get(option.condition);
-    } else {
+    if (typeof option.condition === "undefined") {
       option.condition = true;
+    } else if (typeof option.condition === "boolean") {
+      // uses existing value
+    } else {
+      option.condition = this.get(option.condition);
     }
 
     return option;
@@ -299,14 +302,12 @@ export default Ember.Controller.extend({
     }
   },
 
-  showWarning: function() {
+  @computed("model.creatingPrivateMessage", "model.targetUsernames")
+  showWarning(creatingPrivateMessage, usernames) {
     if (!Discourse.User.currentProp("staff")) {
       return false;
     }
-
-    var usernames = this.get("model.targetUsernames");
     var hasTargetGroups = this.get("model.hasTargetGroups");
-
     // We need exactly one user to issue a warning
     if (
       Ember.isEmpty(usernames) ||
@@ -315,8 +316,8 @@ export default Ember.Controller.extend({
     ) {
       return false;
     }
-    return this.get("model.creatingPrivateMessage");
-  }.property("model.creatingPrivateMessage", "model.targetUsernames"),
+    return creatingPrivateMessage;
+  },
 
   @computed("model.topic")
   draftTitle(topic) {
@@ -677,6 +678,13 @@ export default Ember.Controller.extend({
       .then(result => {
         if (result.responseJson.action === "enqueued") {
           this.send("postWasEnqueued", result.responseJson);
+          if (result.responseJson.pending_post) {
+            let pendingPosts = this.get("topicController.model.pending_posts");
+            if (pendingPosts) {
+              pendingPosts.pushObject(result.responseJson.pending_post);
+            }
+          }
+
           this.destroyDraft();
           this.close();
           this.appEvents.trigger("post-stream:refresh");
@@ -717,14 +725,9 @@ export default Ember.Controller.extend({
           currentUser.set("reply_count", currentUser.get("reply_count") + 1);
         }
 
-        const disableJumpReply = Discourse.User.currentProp(
-          "disable_jump_reply"
-        );
-        if (!composer.get("replyingToTopic") || !disableJumpReply) {
-          const post = result.target;
-          if (post && !staged) {
-            DiscourseURL.routeTo(post.get("url"));
-          }
+        const post = result.target;
+        if (post && !staged) {
+          DiscourseURL.routeTo(post.get("url"));
         }
       })
       .catch(error => {
@@ -1098,15 +1101,13 @@ export default Ember.Controller.extend({
     $(".d-editor-input").autocomplete({ cancel: true });
   },
 
-  canEdit: function() {
-    return (
-      this.get("model.action") === "edit" &&
-      Discourse.User.current().get("can_edit")
-    );
-  }.property("model.action"),
+  @computed("model.action")
+  canEdit(action) {
+    return action === "edit" && Discourse.User.current().get("can_edit");
+  },
 
-  visible: function() {
-    var state = this.get("model.composeState");
+  @computed("model.composeState")
+  visible(state) {
     return state && state !== "closed";
-  }.property("model.composeState")
+  }
 });

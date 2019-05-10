@@ -3,7 +3,20 @@
   background-size: cover;
   position: relative;
 
+  .placeholder-overlay {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
   .image-upload-controls {
+    position: relative;
     display: flex;
 
     .btn {

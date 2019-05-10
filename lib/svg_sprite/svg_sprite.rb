@@ -42,6 +42,7 @@ module SvgSprite
     "check-circle",
     "check-square",
     "chevron-down",
+    "chevron-left",
     "chevron-right",
     "chevron-up",
     "circle",
@@ -77,7 +78,6 @@ module SvgSprite
     "fab-twitter",
     "fab-twitter-square",
     "fab-windows",
-    "fab-yahoo",
     "far-bell",
     "far-bell-slash",
     "far-calendar-plus",
@@ -181,8 +181,10 @@ module SvgSprite
     "unlock-alt",
     "upload",
     "user",
+    "user-edit",
     "user-plus",
     "user-secret",
+    "user-shield",
     "user-times",
     "users",
     "wrench"
@@ -326,10 +328,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     end
 
     site_setting_icons
-  end
-
-  DiscourseEvent.on(:site_setting_saved) do |site_setting|
-    expire_cache if site_setting.name.to_s.include?("_icon")
   end
 
   def self.plugin_icons

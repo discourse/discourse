@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Auth::OpenIdAuthenticator do
@@ -36,7 +38,7 @@ describe Auth::OpenIdAuthenticator do
   end
 
   context 'revoke' do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::OpenIdAuthenticator.new("test", "id", "enable_yahoo_logins", trusted: true) }
 
     it 'raises exception if no entry for user' do

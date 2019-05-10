@@ -235,8 +235,6 @@ he:
   too_late_to_edit: "פוסט זה נוצר לפני זמן רב מידי. לא ניתן יותר לערוך או להסיר אותו."
   revert_version_same: "הגרסה הנוכחית זהה לגרסה אליה אתם מנסים לחזור."
   excerpt_image: "תמונה"
-  queue:
-    delete_reason: "נמחק באמצעות בקרה על תור הפוסטים"
   groups:
     errors:
       can_not_modify_automatic: "אינכם יכולים לערוך קבוצה אוטומטית"
@@ -323,6 +321,7 @@ he:
       topic:
         title: "כותרת"
         featured_link: "קישור מומלץ"
+        category_id: "קטגוריה"
       post:
         raw: "גוף"
       user_profile:
@@ -372,6 +371,7 @@ he:
           attributes:
             word:
               too_many: "יש יותר מדי מילים בפעולה הזו"
+  uncategorized_category_name: "לא מקוטלג"
   vip_category_name: "לאונג'"
   vip_category_description: "קטגוריה אקסקלוסיבית למשתמשים עם רמת אמון 3 או יותר."
   meta_category_name: "משוב לאתר"
@@ -590,6 +590,9 @@ he:
       grant: "הענקת גישת ניהול"
       complete: "<b>%{target_username}</b> הוא/היא עכשיו מנהלים."
       back_to: "חזרה ל-%{title}"
+  reviewable_score_types:
+    needs_approval:
+      title: "זקוק לאישור"
   post_action_types:
     off_topic:
       title: "אוף-טופיק"
@@ -650,6 +653,7 @@ he:
     notify_moderators:
       title: "משהו אחר"
       long_form: "זה סומן לתשומת הלב של מנחה"
+      short_description: "דורש תשומת לב של הצוות מסיבה אחרת"
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנחה'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -663,7 +667,6 @@ he:
         make: "נושא זה הוא כעת באנר. הוא יופיע בראש כל עמוד עד שיבוטל על ידי המשתמשים."
         remove: "נושא זה כבר אינו באנר. הוא לא יופיע יותר בראש כל עמוד."
   unsubscribed:
-    title: "בוטל המנוי!"
     topic_description: "כדי להרשם מחדש ל %{link}, השתמשו בהגדרות ההתראות בתחתית או משמאל לנושא."
   unsubscribe:
     title: "בטלו את המנוי"
@@ -671,11 +674,16 @@ he:
     mute_topic: "השתיקו את כל ההתראות של נושא זה, %{link}"
     unwatch_category: "הפסיקו לצפות בכל הנושאים בקטגוריה %{category}"
     mailing_list_mode: "כבו את מצב ״רשימת תפוצה״"
-    disable_digest_emails: "הפסיקו לשלוח לי סיכומים"
     all: "אל תשלחו אלי יותר מיילים מ %{sitename}"
     different_user_description: "אתם כרגע מחוברים כמשתמש אחר מאשר אליו שלחנו מייל. אנא התנתקו, או עיברו למצב אנונימי, ונסו שוב."
     not_found_description: "מצטערים, לא מצאנו את הקישור לביטול המנוי זה. ייתכן הקישור במייל שלכם כבר לא בתוקף?"
     log_out: "התנתקות"
+    digest_frequency:
+      never: "אף פעם"
+      every_30_minutes: "מידי 30 דקות"
+      every_hour: "שעתי"
+      daily: "יומית"
+      weekly: "שבועית"
   user_api_key:
     title: "אישור גישת אפליקציה"
     authorize: "אישור"
@@ -692,11 +700,40 @@ he:
       read: "קריאה להכל"
       write: "כתיבה להכל"
   reports:
+    default:
+      labels:
+        day: יום
+    post_edits:
+      labels:
+        post: פוסט
+        editor: עורכים
+        edit_reason: סיבה
+    user_flagging_ratio:
+      labels:
+        user: משתמש
+    moderators_activity:
+      labels:
+        moderator: מנהל
+    flags_status:
+      labels:
+        flag: סוג
     visits:
       title: "ביקורי משתמש"
       xaxis: "יום"
       yaxis: "מספר ביקורים"
     signups:
+      xaxis: "יום"
+    new_contributors:
+      xaxis: "יום"
+    consolidated_page_views:
+      yaxis: "יום"
+      labels:
+        post: פוסט
+        editor: עורכים
+        edit_reason: סיבה
+    dau_by_mau:
+      xaxis: "יום"
+    daily_engaged_users:
       xaxis: "יום"
     profile_views:
       title: "צפיות בפרופילי משתמשים"
@@ -726,11 +763,23 @@ he:
       title: "משתמשים בכל רמת אמון"
       xaxis: "רמת אמון"
       yaxis: "מספר משתמשים"
+    users_by_type:
+      xaxis: "סוג"
+      yaxis: "מספר משתמשים"
+      labels:
+        type: סוג
+      xaxis_labels:
+        admin: ניהול
+        moderator: מנהל
+        suspended: מושעים
     emails:
       title: "הודעות דואר שנשלחו"
       xaxis: "יום"
       yaxis: "מספר הודעות דואר"
     user_to_user_private_messages:
+      xaxis: "יום"
+      yaxis: "מספר ההודעות"
+    user_to_user_private_messages_with_replies:
       xaxis: "יום"
       yaxis: "מספר ההודעות"
     system_private_messages:
@@ -754,14 +803,25 @@ he:
       xaxis: "משתמש"
       num_clicks: "לחיצות"
       num_topics: "נושאים"
+      labels:
+        user: "משתמש"
+        num_clicks: "לחיצות"
+        num_topics: "נושאים"
     top_traffic_sources:
       title: "מקורות התעבורה הטובים ביותר"
       xaxis: "שם מתחם"
       num_clicks: "לחיצות"
       num_topics: "נושאים"
       num_users: "משתמשים"
+      labels:
+        domain: שם מתחם
+        num_clicks: לחיצות
+        num_topics: נושאים
     top_referred_topics:
       title: "נושאים מיוחסים"
+      labels:
+        num_clicks: "לחיצות"
+        topic: "נושא"
     page_view_anon_reqs:
       title: "אנונימי"
       xaxis: "יום"
@@ -771,9 +831,11 @@ he:
       xaxis: "יום"
       yaxis: "צפיות בדפים של מחוברים"
     page_view_crawler_reqs:
+      title: "צפיות בדפים של זחלני רשת"
       xaxis: "יום"
       yaxis: "צפיות בדפים של זחלני רשת"
     page_view_total_reqs:
+      title: "צפיות-דף"
       xaxis: "יום"
       yaxis: "צפיות כוללות"
     page_view_logged_in_mobile_reqs:
@@ -819,6 +881,20 @@ he:
     mobile_visits:
       xaxis: "יום"
       yaxis: "מספר ביקורים"
+    web_crawlers:
+      labels:
+        page_views: "צפיות-דף"
+    suspicious_logins:
+      labels:
+        user: משתמש
+        location: מיקום
+    staff_logins:
+      labels:
+        user: משתמש
+        location: מיקום
+    top_uploads:
+      labels:
+        filename: שם קובץ
   dashboard:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     host_names_warning: "הקובץ config/database.yml אצלכם משתמש בכתובת ברירת המחדל - localhost. עדכנו אותה להשתמש בכתובת של השרת שלכם."
@@ -840,11 +916,13 @@ he:
     set_locale_from_accept_language_header: "קבעו את שפת הממשק עבור משתמשים אנונימיים לפי השפה בדפדפן. (נ-י-ס-י-ו-נ-י, לא עובד עם cache אנונימי)"
     min_post_length: "מספר התווים המותר כאורך מינימלי לפוסט"
     min_first_post_length: "אורך מינימלי מותר לפוסט ראשון (בגוף הנושא) בתווים "
+    min_personal_message_post_length: "אורך הפוסט המינימלי המותר בתווים להודעות"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
     topic_featured_link_enabled: "איפשור של פרסום קישור עם נושאים."
     show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא במייל התמצות."
     min_topic_title_length: "מספר התווים המינימלי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
+    min_personal_message_title_length: "אורך הכותרת המנימילי המותר להודעה בתווים"
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
     search_tokenize_chinese_japanese_korean: "אלצו את החיפוש לנתח סינית/יפנית/קוריאנית גם באתרים שאינם בשפות אלו"
     search_prefer_recent_posts: "אם חיפוש בפורום הגדול שלכם איטי, אופציה זו מנסה לאנדקס קודם כל את הפוסטים החדשים יותר"
@@ -884,6 +962,7 @@ he:
     summary_posts_required: "מספר הפוסטים המנימלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את % הפוסטים הראשונים"
+    enable_personal_messages: "הרשו למשתמשי רמת אמון 1 (ניתן להגדרה באמצעות רמת אמון מינימלית לשליחת הודעות) ליצור הודעות ולענות להודעות. שימו לב שהצוות תמיד יכול לשלוח הודעות, לא משנה מה."
     enable_long_polling: "באס הודעות שמשמש להתראות יכול להשתמש בתשאול ארוך (long polling)"
     long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
     long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
@@ -901,6 +980,7 @@ he:
     must_approve_users: "על הצוות לאשר את כל המשתמשים החדשים לפני שהם מקבלים גישה לאתר. אזהרה: בחירה זו עבור אתר קיים תשלול גישה ממשתמשים קיימים שאינם מנהלים."
     pending_users_reminder_delay: "הודיעו למנחים אם משתמשים חדשים ממתינים לאישור למעלה מכמות זו של שעות. קבעו ל -1 כדי לנטרל התראות."
     maximum_session_age: "משתמשים ישארו מחוברים ל n שעות מאז ביקורם האחרון"
+    moderators_create_categories: "אפשרו למנחים ליצור קטגוריות חדשות"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
     use_admin_ip_whitelist: "מנהלים יכולים להתחבר רק אם הכתובת שלהם מופיע ברשימת ה IPs המסוננים (ניהול > לוגים > כתובות IP מסוננות)."
     blacklist_ip_blocks: "רשימת כתובות IP פרטיות שלא אמורים אף פעם לסרוק עם דיסקורס"
@@ -947,7 +1027,6 @@ he:
     sso_allows_all_return_paths: "אל תגבילו את שמות המתחם של נתיבי החזרה (return_paths) שניתנים על ידי ה-SSO (כברירת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
     allow_new_registrations: "הפעלת הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "הציגו מודעה למשתמשים אנונימיים חוזרים שמציעה להם להרשם כדי לקבל חשבון."
-    enable_yahoo_logins: "איפשור אימות של Yahoo"
     google_oauth2_client_id: "זהות לקוח (Client ID) של אפליקציית ה-Google שלך."
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     enable_instagram_logins: "הפעלת אימות אינסטגרם, מצריך instagram_consumer_key ו instagram_consumer_secret"
@@ -977,6 +1056,7 @@ he:
     max_bookmarks_per_day: "מספר מקסימלי של סימניות למשתמשים ביום."
     max_edits_per_day: "מספר עריכות מקסימלי מותר למשתמשים ליום."
     max_topics_per_day: "מספר מקסימלי של נושאים שמשתמשים יכולים ליצור ביום."
+    max_personal_messages_per_day: "מספר מקסימלי של הודעות שמשתמשים יכולים ליצור ביום."
     max_invites_per_day: "מספר מקסימלי של הזמנות שיכולים משתמשים לשלוח ביום."
     max_topic_invitations_per_day: "מספר מירבי של הזמנות לנושא שמשתמשים יכולים לשלוח ביום. "
     max_logins_per_ip_per_hour: "מספר מקסימלי של התחברויות מורשות לכל כתובת IP בשעה"
@@ -1083,7 +1163,6 @@ he:
     max_age_unmatched_emails: "מחק ערכי דוא\"ל לא תואמים שמוצגים לאחר (N) ימים."
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של דגלים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
-    num_flags_to_close_topic: "מספר מינימלי של דגלים פעילים שנדרש כדי להשהות באופן אוטומטי את היכולת להתערב בנושא"
     num_hours_to_close_topic: "מספר שעות לעצירת נושא לצורך התערבות."
     auto_respond_to_flag_actions: "הפעלת תגובה אוטמטית עם הסרת דגל."
     min_first_post_typing_time: "זמן מינימלי במילי-שניות שמשתמש חייב להקיש בזמן הפוסט הראשון, אם הסף לא נעבר הפוסט אוטומטית יכנס לתור של אלו שצריכים אישור. קיבעו 0 כדי לנטרל (לא מומלץ)"
@@ -1164,7 +1243,6 @@ he:
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
     topic_page_title_includes_category: "כותרת דף נושא כוללת את שם הקטגוריה."
-    native_app_install_banner: "בקשו ממבקרים חוזרים להתקין את אפליקציית Discourse."
     share_anonymized_statistics: "שתפו סטטיסטיקות שימוש אנונימיות."
     max_prints_per_hour_per_user: "מספר מקסימלי של צפיות בדף /print (הדפסה) (קיבעו ל 0 כדי לנטרל)"
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
@@ -1206,7 +1284,6 @@ he:
     default_other_external_links_in_new_tab: "פתח קישורים חיצונים בטאב חדש, בתור ברירת מחדל."
     default_other_enable_quoting: "איפשור תגובות עם ציטוט לטקסט מצוטט כברירת מחדל."
     default_other_dynamic_favicon: "הציגו ספירה של נושאים חדשים/מעודכנים באייקון של הדפדפן כברירת מחדל."
-    default_other_disable_jump_reply: "כברירת מחדל לא לקפוץ לפוסטים של משתמשים לאחר שהם עונים."
     default_other_like_notification_frequency: "הודיעו למשתמשים על לייקים כברירת מחדל"
     default_topics_automatic_unpin: "ביטול אוטומטי של נעיצת נושאים כאשר משתמשים מגיעים לתחתית - כברירת מחדל."
     default_categories_watching: "רשימת קטגוריות שנצפית כברירת מחדל."
@@ -1254,6 +1331,8 @@ he:
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
       invalid_regex: "ביטוי רגולרי לא תקין או לא מותר."
       enable_sso_disabled: "אתם חייבים קודם כל לאפשר ״אפשור sso״ לפני שאתם מאפשרים הגדרה זו."
+      min_username_length_range: "לא ניתן לקבוע את המינימום מעל המקסימום."
+      max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
   search:
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
@@ -1381,6 +1460,11 @@ he:
     reserved_username: "שם משתמש זה אינו מורשה."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
     already_logged_in: "אופס, נראה שאתם מנסים לקבל הזמנה שנועדה למשתמש אחר. אם אתם לא %{current_user}, אנא התנתקו ונסו שוב."
+    second_factor_title: "אימות ב2 גורמים"
+    second_factor_backup_description: "אנא הכניסו את קודי הגיבוי שלכם:"
+  admin:
+    email:
+      sent_test: "נשלח!"
   user:
     deactivated: "הושבת בעקבות מיילים רבים מידי שהוחזרו ל '%{email}'."
     deactivated_by_staff: "נוטרל על ידי הצוות"
@@ -1405,17 +1489,6 @@ he:
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
     website:
       domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
-  flags_reminder:
-    flags_were_submitted:
-      one: "דגלים נרשמו לפני יותר משעה. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-      two: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-      many: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-      other: "דגלים נרשמו לפני יותר מ %{count} שעות. [אנא סיקרו אותם](%{base_path}/admin/flags)."
-    subject_template:
-      one: "דגל אחד ממתין לטיפול"
-      two: "%{count} דגלים ממתינים לטיפול"
-      many: "%{count} דגלים ממתינים לטיפול"
-      other: "%{count} דגלים ממתינים לטיפול"
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
     subject_template: "אשרו שאינכם מעוניינים יותר לקבל עדכוני דוא\"ל מ%{site_title}"
@@ -1480,8 +1553,8 @@ he:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפוסט."
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
-    deferred: "תודה שעדכנתם אותנו. אנחנו בודקים את העניין."
-    deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפוסט."
+    ignored: "תודה שעדכנתם אותנו. אנחנו בודקים את העניין."
+    ignored_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפוסט."
   system_messages:
     private_topic_title: "נושא #%{id}"
     contents_hidden: "אנא בקרו בפוסט כדי לצפות בתוכן שלו."
@@ -1534,6 +1607,8 @@ he:
       subject_template: "[%{email_prefix}] בעיית מייל -- משתמש לא נמצא"
     email_reject_screened_email:
       title: "מייל נדחה, מייל מסונן"
+      subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
+    email_reject_not_allowed_email:
       subject_template: "[%{email_prefix}] בעיית מייל -- מייל חסום"
     email_reject_inactive_user:
       title: "מייל נדחה, משתמש לא פעיל"
@@ -1627,6 +1702,27 @@ he:
     too_many_tl3_flags:
       title: "יותר מידי דגלי רמת-אמון 3"
       subject_template: "חשבון חדש בהשהיה"
+    silenced_by_staff:
+      subject_template: "חשבון זמנית בהשהיה"
+      text_body_template: |
+        שלום,
+
+        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שהחשבון שלכם הושהה באופן זמני כאמצעי זהירות.
+
+        אנא המשיכו לבקר, אך לא תוכלו לענות או ליצור נושאים עד ש[חבר צוות](%{base_url}/about) יסקור את הפוסטים האחרונים שלכם. אנחנו מתנצלים על אי הנוחות.
+
+        להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
+    spam_post_blocked:
+      title: "פוסט ספאם נחסם"
+      subject_template: "פוסים של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
+    unsilenced:
+      subject_template: "החשבון כבר לא מושהה"
+      text_body_template: |
+        שלום,
+
+        זוהי הודעה אוטומטית מ %{site_name} כדי ליידע אתכם שהחשבון שלכם כבר לא מושהה לאחר סקירה של הצוות.
+
+        אתם יכולים עכשיו ליצור נושאים חדשים, ושוב להגיב לנושאים קיימים. תודה על הסבלנות.
     pending_users_reminder:
       title: "תזכורת משתמשים ממתינים"
       subject_template:
@@ -1634,10 +1730,6 @@ he:
         two: "%{count} משתמשים ממתינים לאישורכם"
         many: "%{count} משתמשים ממתינים לאישורכם"
         other: "%{count} משתמשים ממתינים לאישורכם"
-      text_body_template: |
-        ישנן הרשמות של משתמשים חדשים שממתינות לאישור (או דחייה) לפני שהם יוכלו לגשת לפורום זה.
-
-        [אנא סיקרו אותם באזור הניהול](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       title: "הורדת תמונות מרוחקות מנוטרלת"
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
@@ -1649,6 +1741,10 @@ he:
       subject_template: "אתם המשתמשים החדשים של החודש!"
     queued_posts_reminder:
       title: "תזכורת פוסטים בתור"
+      text_body_template: |
+        שלום,
+
+        פוסטים של משתמשים חדשים הושהו לצורך בדיקה והם כרגע ממתינים לסקירה. [אשרו או דחו אותם כאן](%{base_url}/queued-posts).
   unsubscribe_link: |
     כדי להפסיק את המיילים האלו, [לחצו כאן](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1674,6 +1770,33 @@ he:
     only_reply_by_email: "השיבו למייל זה כדי לענות."
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
+    invited_to_private_message_body: |
+      %{username} הזמין אותך להודעה
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      באתר
+
+      > %{site_title} -- %{site_description}
+    invited_to_topic_body: |
+      %{username} הזמין/הזמינה אותך לדיון
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      באתר
+
+      > %{site_title} -- %{site_description}
+    user_invited_to_private_message_pm_group:
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
     user_invited_to_private_message_pm:
       title: "משתמש/ת הוזמן/ה להודעה פרטית"
       subject_template: "[%{email_prefix}] %{username} הזמין אותך להודעה '%{topic_title}'"
@@ -1748,6 +1871,16 @@ he:
     user_mentioned:
       title: "משתמש/ת הוזכר/ה"
       subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1907,6 +2040,7 @@ he:
     recent_topics: "לאחרונה"
     see_more: "עוד"
     search_title: "חיפוש באתר זה"
+    search_button: "חיפוש"
   login_required:
     welcome_message: |
       ## [ברוך בואך אל %{title}](#welcome)
@@ -1933,8 +2067,30 @@ he:
   flag_reason:
     sockpuppet: "משתמש חדש יצר נושא, ומשתמש חדש אחר מאותה כתובת IP (%{ip_address}) ענו להם. ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`flag_sockpuppets`</a>."
     spam_hosts: "משתמש חדש זה ניסה ליצור מספר פוסטים עם קישורים לאותה הכתובת (%{domain}). ראו את הגדרת האתר <a href='%{base_path}/admin/site_settings/category/spam'>`newuser_spam_host_threshold`</a>."
+  skipped_email_log:
+    exceeded_emails_limit: "נחצה max_emails_per_day_per_user"
+    exceeded_bounces_limit: "נחצה bounce_score_threshold"
+    mailing_list_no_echo_mode: "התראות רשימת תפוצה ינוטרלו עבור הפוסטים של המשתמש עצמו"
+    user_email_no_user: "לא נמצא משתמש/ת עם מזהה %{user_id}"
+    user_email_post_not_found: "לא נמצא פוסט עם מזהה %{post_id}"
+    user_email_anonymous_user: "המשתמש הוא אנונימי"
+    user_email_user_suspended_not_pm: "המשתמש מושהה, לא הודעה"
+    user_email_seen_recently: "המשתמש נראה לאחרונה"
+    user_email_notification_already_read: "ההתראה שעבורה נשלח מייל זה כבר נקראה"
+    user_email_notification_topic_nil: "post.topic הוא nil"
+    user_email_post_user_deleted: "המשתמש של פוסט זה נמחק."
+    user_email_post_deleted: "הפוסט נמחק על ידי הכותב שלו"
+    user_email_user_suspended: "המשתמש הושעה"
+    user_email_already_read: "המשתמש כבר קרא פוסט זה"
+    sender_message_blank: "ההודעה ריקה"
+    sender_message_to_blank: "message.to ריק"
+    sender_text_part_body_blank: "text_part.body ריק"
+    sender_body_blank: "גוף ריק"
   color_schemes:
     base_theme_name: "בסיס"
+    light: "בהיר"
+    dark: "כהה"
+    default_theme_name: "בהיר"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
   about: "אודות"
@@ -2197,11 +2353,6 @@ he:
         עיטור זה מוענק כדי לברך שני משתמשים חדשים בכל חודש בעבור תרומות מצטיינות שלהם, שנמדדות לפי תדירות הלייקים לפוסטים שלכם, וממי הם ניתנו.
     enthusiast:
       name: נלהב
-      description: ביקרו 10 ימים
-    aficionado:
-      description: ביקרו 100 ימים
-    devotee:
-      description: ביקרו 365 ימים
     badge_title_metadata: "עיטור ב-%{site_title} של %{display_name}"
   admin_login:
     success: "דוא\"ל נשלח"
@@ -2223,7 +2374,6 @@ he:
       help: "רישמו חשבון חדש כדי להתחיל"
     confirm_email:
       title: "אשרו את המייל שלכם"
-      message: "<p>שלחנו מייל אקטיבציה ל<b>%{email}</b>. אנא עיקבו אחר ההוראות במייל כדי להפעיל את החשבון שלכם.</p><p>אם הוא לא מגיע, וודאו שהגדרתם נכון את המייל עבור הדיסקורס שלכם ובידקו בתיקיית הספאם.</p>"
     resend_email:
       title: "שליחת מייל אקטיבציה מחדש"
       message: "<p>שלחנו מחדש את מייל האקטיבציה ל<b>%{email}</b>"
@@ -2261,16 +2411,13 @@ he:
             one_paragraph: "אנא הגבילו את הודעת הברוכים-הבאים שלכם לפסקה אחת."
       privacy:
         title: "גישה"
-        description: "<p>האם הקהילה שלכם פתוחה לכולם, או שהיא מוגבלת על ידי חברות, הזמנה, או אישור? אם תעדיפו, תוכלו להקים אותה כפרטית ובהמשך להפוך אותה לפומבית.</p> <p>זיכרו שתמיד תוכלו לשלוח הזמנות גם מנושאים, ומפרופיל המשתמש שלכם.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "פומבי"
-                description: "כל אחד יכול לגשת לקהילה זו ולהרשם כדי לפתוח חשבון"
               restricted:
                 label: "פרטי"
-                description: "רק אנשים שהזמנתי או אישרתי יכולים לגשת לקהילה זו"
       contact:
         title: "איש/אשת קשר"
         fields:
@@ -2289,8 +2436,18 @@ he:
         title: "תמה"
       logos:
         title: "לוגואים"
+        fields:
+          logo:
+            label: "לוגו ראשי"
+          logo_small:
+            label: "לוגו קומפקטי"
       icons:
         title: "אייקונים"
+        fields:
+          favicon:
+            label: "אייקון קטן"
+          apple_touch_icon:
+            label: "אייקון גדול"
       homepage:
         description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים גם להציג קטגוריות (קבוצות נושאים) בדף הבית אם תעדיפו."
         title: "דף הבית"
@@ -2299,6 +2456,14 @@ he:
             choices:
               latest:
                 label: "נושאים אחרונים"
+              categories_only:
+                label: "קטגוריות בלבד"
+              categories_with_featured_topics:
+                label: "קטגוריות עם נושאים מומלצים"
+              categories_and_latest_topics:
+                label: "קטגוריות ונושאים אחרונים"
+              categories_and_top_topics:
+                label: "קטגוריות ונושאים מובילים"
       emoji:
         title: "אמוג׳י"
         description: "איזה סגנון אמוג׳יז תעדיפו לקהילה שלכם? אתם יכולים להוסיף עוד אמוג׳יז מותאמים אישית תחת ניהול, התאמה אישית, אמוג׳י."
@@ -2306,3 +2471,25 @@ he:
         title: "הזמינו צוות"
       finished:
         title: "ה Discourse שלכם מוכן!"
+  joined: "הצטרפו"
+  discourse_push_notifications:
+    popup:
+      confirm_title: "התראות הופעלו - %{site_title}"
+      confirm_body: "הצלחה! התראות הופעלו"
+  reviewables:
+    actions:
+      agree_and_suspend:
+        title: "השעה משתמש"
+      delete_spammer:
+        title: "מחק ספאמר"
+      disagree:
+        title: "אי קבלה"
+      approve:
+        title: "אשר"
+      reject_user:
+        delete:
+          title: "מחק משתמש"
+      reject:
+        title: "לדחות"
+      delete_user:
+        title: "מחק משתמש"

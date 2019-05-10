@@ -1,19 +1,5 @@
 import { userPath } from "discourse/lib/url";
 
-function actionDescription(action, acted, count) {
-  if (acted) {
-    if (count <= 1) {
-      return I18n.t(`post.actions.by_you.${action}`);
-    } else {
-      return I18n.t(`post.actions.by_you_and_others.${action}`, {
-        count: count - 1
-      });
-    }
-  } else {
-    return I18n.t(`post.actions.by_others.${action}`, { count });
-  }
-}
-
 const _additionalAttributes = [];
 
 export function includeAttributes(...attributes) {
@@ -62,6 +48,10 @@ export function transformBasicPost(post) {
     canRecover: post.can_recover,
     canEdit: post.can_edit,
     canFlag: !Ember.isEmpty(post.get("flagsAvailable")),
+    canReviewTopic: false,
+    reviewableId: post.reviewable_id,
+    reviewableScoreCount: post.reviewable_score_count,
+    reviewableScorePendingCount: post.reviewable_score_pending_count,
     version: post.version,
     canRecoverTopic: false,
     canDeletedTopic: false,
@@ -80,7 +70,6 @@ export function transformBasicPost(post) {
     expandablePost: false,
     replyCount: post.reply_count,
     locked: post.locked,
-    ignored: post.ignored,
     userCustomFields: post.user_custom_fields
   };
 
@@ -122,6 +111,7 @@ export default function transformPost(
   postAtts.canViewRawEmail =
     currentUser && (currentUser.id === post.user_id || currentUser.staff);
   postAtts.canReplyAsNewTopic = details.can_reply_as_new_topic;
+  postAtts.canReviewTopic = !!details.can_review_topic;
   postAtts.isWarning = topic.is_warning;
   postAtts.links = post.get("internalLinks");
   postAtts.replyDirectlyBelow =
@@ -134,10 +124,12 @@ export default function transformPost(
   postAtts.topicUrl = topic.get("url");
   postAtts.isSaving = post.isSaving;
 
-  if (post.post_notice_type) {
-    postAtts.postNoticeType = post.post_notice_type;
-    if (postAtts.postNoticeType === "returning") {
-      postAtts.postNoticeTime = new Date(post.post_notice_time);
+  if (post.notice_type) {
+    postAtts.noticeType = post.notice_type;
+    if (postAtts.noticeType === "custom") {
+      postAtts.noticeMessage = post.notice_args;
+    } else if (postAtts.noticeType === "returning_user") {
+      postAtts.noticeTime = new Date(post.notice_args);
     }
   }
 
@@ -207,22 +199,17 @@ export default function transformPost(
   if (post.actions_summary) {
     postAtts.actionsSummary = post.actions_summary
       .filter(a => {
-        return a.actionType.name_key !== "like" && a.count > 0;
+        return a.actionType.name_key !== "like" && a.acted;
       })
       .map(a => {
-        const acted = a.acted;
         const action = a.actionType.name_key;
-        const count = a.count;
 
         return {
           id: a.id,
           postId: post.id,
           action,
-          acted,
-          count,
           canUndo: a.can_undo,
-          canDeferFlags: a.can_defer_flags,
-          description: actionDescription(action, acted, count)
+          description: I18n.t(`post.actions.by_you.${action}`)
         };
       });
   }
@@ -240,8 +227,8 @@ export default function transformPost(
   }
 
   if (postAtts.post_number === 1) {
-    postAtts.canRecoverTopic = topic.deleted_at && details.can_recover;
-    postAtts.canDeleteTopic = !topic.deleted_at && details.can_delete;
+    postAtts.canRecoverTopic = postAtts.isDeleted && details.can_recover;
+    postAtts.canDeleteTopic = !postAtts.isDeleted && details.can_delete;
     postAtts.expandablePost = topic.expandable_first_post;
   } else {
     postAtts.canRecover = postAtts.isDeleted && postAtts.canRecover;

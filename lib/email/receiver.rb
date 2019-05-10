@@ -68,6 +68,7 @@ module Email
         begin
           return if IncomingEmail.exists?(message_id: @message_id)
           ensure_valid_address_lists
+          ensure_valid_date
           @from_email, @from_display_name = parse_from_field
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
@@ -90,6 +91,12 @@ module Email
         if addresses&.errors.present?
           @mail[field] = addresses.to_s.scan(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)
         end
+      end
+    end
+
+    def ensure_valid_date
+      if @mail.date.nil?
+        raise InvalidPost, I18n.t("system_messages.email_reject_invalid_post_specified.date_invalid")
       end
     end
 
@@ -142,14 +149,16 @@ module Email
         return
       end
 
-      # Lets create a staged user if there isn't one yet. We will try to
-      # delete staged users in process!() if something bad happens.
-      if user.nil?
-        user = find_or_create_user!(@from_email, @from_display_name)
-        log_and_validate_user(user)
-      end
-
       if post = find_related_post
+        # Most of the time, it is impossible to **reply** without a reply key, so exit early
+        if user.blank?
+          if sent_to_mailinglist_mirror? || !SiteSetting.find_related_post_with_key
+            user = stage_from_user
+          elsif user.blank?
+            raise BadDestinationAddress
+          end
+        end
+
         create_reply(user: user,
                      raw: body,
                      elided: elided,
@@ -170,6 +179,9 @@ module Email
         end
 
         raise first_exception if first_exception
+
+        # We don't stage new users for emails to reply addresses, exit if user is nil
+        raise BadDestinationAddress if user.blank?
 
         post = find_related_post(force: true)
 
@@ -333,7 +345,7 @@ module Email
         # use the first html extracter that matches
         if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
           doc = Nokogiri::HTML.fragment(html)
-          self.send(:"extract_from_#{html_extracter[0]}", doc)
+          self.public_send(:"extract_from_#{html_extracter[0]}", doc)
         else
           markdown = HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
           markdown = trim_discourse_markers(markdown)
@@ -341,11 +353,37 @@ module Email
         end
       end
 
+      text_format = Receiver::formats[:plaintext]
       if text.blank? || (SiteSetting.incoming_email_prefer_html && markdown.present?)
-        return [markdown, elided_markdown, Receiver::formats[:markdown]]
-      else
-        return [text, elided_text, Receiver::formats[:plaintext]]
+        text, elided_text, text_format = markdown, elided_markdown, Receiver::formats[:markdown]
       end
+
+      if SiteSetting.strip_incoming_email_lines
+        in_code = nil
+
+        text = text.lines.map! do |line|
+          stripped = line.strip << "\n"
+
+          # Do not strip list items.
+          next line if (stripped[0] == '*' || stripped[0] == '-' || stripped[0] == '+') && stripped[1] == ' '
+
+          # Match beginning and ending of code blocks.
+          if !in_code && stripped[0..2] == '```'
+            in_code = '```'
+          elsif in_code == '```' && stripped[0..2] == '```'
+            in_code = nil
+          elsif !in_code && stripped[0..4] == '[code'
+            in_code = '[code]'
+          elsif in_code == '[code]' && stripped[0..6] == '[/code]'
+            in_code = nil
+          end
+
+          # Strip only lines outside code blocks.
+          in_code ? line : stripped
+        end.join
+      end
+
+      [text, elided_text, text_format]
     end
 
     def to_markdown(html, elided_html)
@@ -475,13 +513,13 @@ module Email
     def parse_from_field(mail = nil)
       mail ||= @mail
 
-      if mail.bounced?
+      if email_log.present?
+        email = email_log.to_address || email_log.user&.email
+        return [email, email_log.user&.username]
+      elsif mail.bounced?
         Array.wrap(mail.final_recipient).each do |from|
           return extract_from_address_and_name(from)
         end
-      elsif email_log.present?
-        email = email_log.user&.email || email_log.to_address
-        return [email, email_log.user&.username]
       end
 
       return unless mail[:from]
@@ -627,13 +665,18 @@ module Email
 
       case destination[:type]
       when :group
+        user ||= stage_from_user
+
         group = destination[:obj]
         create_group_post(group, user, body, elided, hidden_reason_id)
 
       when :category
         category = destination[:obj]
 
-        raise StrangersNotAllowedError    if user.staged? && !category.email_in_allow_strangers
+        raise StrangersNotAllowedError    if (user.nil? || user.staged?) && !category.email_in_allow_strangers
+
+        user ||= stage_from_user
+
         raise InsufficientTrustLevelError if !user.has_trust_level?(SiteSetting.email_in_min_trust) && !sent_to_mailinglist_mirror?
 
         create_topic(user: user,
@@ -645,6 +688,9 @@ module Email
                      skip_validations: user.staged?)
 
       when :reply
+        # We don't stage new users for emails to reply addresses, exit if user is nil
+        raise BadDestinationAddress if user.blank?
+
         post_reply_key = destination[:obj]
 
         if post_reply_key.user_id != user.id && !forwarded_reply_key?(post_reply_key, user)
@@ -750,18 +796,19 @@ module Email
     end
 
     def process_forwarded_email(destination, user)
+      user ||= stage_from_user
       embedded = Mail.new(embedded_email_raw)
       email, display_name = parse_from_field(embedded)
 
       return false if email.blank? || !email["@"]
 
-      embedded_user = find_or_create_user(email, display_name)
       raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
       title = embedded.subject.presence || subject
 
       case destination[:type]
       when :group
         group = destination[:obj]
+        embedded_user = find_or_create_user(email, display_name)
         post = create_topic(user: embedded_user,
                             raw: raw,
                             title: title,
@@ -778,6 +825,7 @@ module Email
         return false if user.staged? && !category.email_in_allow_strangers
         return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
 
+        embedded_user = find_or_create_user(email, display_name)
         post = create_topic(user: embedded_user,
                             raw: raw,
                             title: title,
@@ -1031,12 +1079,7 @@ module Email
       options[:via_email] = true
       options[:raw_email] = @raw_email
 
-      # ensure posts aren't created in the future
       options[:created_at] ||= @mail.date
-      if options[:created_at].nil?
-        raise InvalidPost, "No post creation date found. Is the e-mail missing a Date: header?"
-      end
-
       options[:created_at] = DateTime.now if options[:created_at] > DateTime.now
 
       is_private_message = options[:archetype] == Archetype.private_message ||
@@ -1070,7 +1113,9 @@ module Email
         raise TooShortPost
       end
 
-      raise InvalidPost, errors.join("\n") if result.errors.any?
+      if result.errors.present?
+        raise InvalidPost, errors.join("\n")
+      end
 
       if result.post
         @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
@@ -1132,13 +1177,19 @@ module Email
     end
 
     def send_subscription_mail(action, user)
-      message = SubscriptionMailer.send(action, user)
+      message = SubscriptionMailer.public_send(action, user)
       Email::Sender.new(message, :subscription).send
+    end
+
+    def stage_from_user
+      @from_user ||= find_or_create_user!(@from_email, @from_display_name).tap do |u|
+        log_and_validate_user(u)
+      end
     end
 
     def delete_staged_users
       @staged_users.each do |user|
-        if @incoming_email.user.id == user.id
+        if @incoming_email.user&.id == user.id
           @incoming_email.update_columns(user_id: nil)
         end
 

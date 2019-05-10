@@ -22,7 +22,6 @@ export default {
     if (keyValueStore.get("anon-cta-never")) return; // "never show again"
     if (!siteSettings.allow_new_registrations) return;
     if (siteSettings.invite_only) return;
-    if (siteSettings.must_approve_users) return;
     if (siteSettings.login_required) return;
     if (!siteSettings.enable_signup_cta) return;
 

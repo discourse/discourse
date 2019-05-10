@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Fabricator(:web_hook) do
   payload_url 'https://meta.discourse.org/webhook_listener'
   content_type WebHook.content_types['application/json']

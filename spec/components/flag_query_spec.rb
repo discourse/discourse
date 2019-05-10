@@ -1,18 +1,22 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require_dependency 'flag_query'
 
 describe FlagQuery do
 
-  let(:codinghorror) { Fabricate(:coding_horror) }
+  fab!(:codinghorror) { Fabricate(:coding_horror) }
 
   describe "flagged_topics" do
-    it "respects `min_score_default_visibility`" do
+    it "respects `reviewable_default_visibility`" do
+      Reviewable.set_priorities(medium: 10.0)
+
       admin = Fabricate(:admin)
       moderator = Fabricate(:moderator)
 
       post = create_post
 
-      SiteSetting.min_score_default_visibility = 2.0
+      SiteSetting.reviewable_default_visibility = 'low'
       PostActionCreator.spam(moderator, post)
 
       result = FlagQuery.flagged_topics
@@ -21,7 +25,7 @@ describe FlagQuery do
       expect(ft.topic).to eq(post.topic)
       expect(ft.flag_counts).to eq(PostActionType.types[:spam] => 1)
 
-      SiteSetting.min_score_default_visibility = 10.0
+      SiteSetting.reviewable_default_visibility = 'medium'
 
       result = FlagQuery.flagged_topics
       expect(result[:flagged_topics]).to be_blank
@@ -128,14 +132,16 @@ describe FlagQuery do
       expect(posts.count).to eq(1)
     end
 
-    it "respects `min_score_default_visibility`" do
+    it "respects `reviewable_default_visibility`" do
+      Reviewable.set_priorities(medium: 3.0)
+      SiteSetting.reviewable_default_visibility = 'medium'
+
       admin = Fabricate(:admin)
       flagger = Fabricate(:user)
 
       post = create_post
       PostActionCreator.create(flagger, post, :spam)
 
-      SiteSetting.min_score_default_visibility = 3.0
       posts, topics, users = FlagQuery.flagged_posts_report(admin)
       expect(posts).to be_blank
       expect(topics).to be_blank

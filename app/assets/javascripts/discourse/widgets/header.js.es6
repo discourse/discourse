@@ -184,18 +184,18 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       contents() {
-        if (!attrs.flagCount) {
-          return;
+        let { currentUser } = this;
+        if (currentUser && currentUser.reviewable_count) {
+          return h(
+            "div.badge-notification.reviewables",
+            {
+              attributes: {
+                title: I18n.t("notifications.reviewable_items")
+              }
+            },
+            this.currentUser.reviewable_count
+          );
         }
-        return h(
-          "div.badge-notification.flagged-posts",
-          {
-            attributes: {
-              title: I18n.t("notifications.total_flagged")
-            }
-          },
-          attrs.flagCount
-        );
       }
     });
 
@@ -327,9 +327,6 @@ export default createWidget("header", {
       } else if (state.userVisible) {
         panels.push(this.attach("user-menu"));
       }
-      if (this.site.mobileView) {
-        panels.push(this.attach("header-cloak"));
-      }
 
       additionalPanels.map(panel => {
         if (this.state[panel.toggle]) {
@@ -341,6 +338,10 @@ export default createWidget("header", {
           );
         }
       });
+
+      if (this.site.mobileView) {
+        panels.push(this.attach("header-cloak"));
+      }
 
       return panels;
     };

@@ -1,10 +1,16 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'category_list'
 
 describe CategoryList do
+  before do
+    # we need automatic updating here cause we are testing this
+    Topic.update_featured_topics = true
+  end
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
   context "security" do
@@ -61,10 +67,10 @@ describe CategoryList do
 
   context "with a category" do
 
-    let!(:topic_category) { Fabricate(:category, num_featured_topics: 2) }
+    fab!(:topic_category) { Fabricate(:category, num_featured_topics: 2) }
 
     context "with a topic in a category" do
-      let!(:topic) { Fabricate(:topic, category: topic_category) }
+      let(:topic) { Fabricate(:topic, category: topic_category) }
       let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
 
       it "should return the category" do
@@ -79,15 +85,18 @@ describe CategoryList do
       let!(:topic2) { Fabricate(:topic, category: topic_category, bumped_at: 5.minutes.ago) }
       let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
       let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
-      let(:category) { category_list.categories.find { |c| c.id == topic_category.id } }
 
-      it "returns pinned topic first" do
-        expect(category.displayable_topics.map(&:id)).to eq([pinned.id, topic3.id])
+      def displayable_topics
+        category_list = CategoryList.new(Guardian.new(user), include_topics: true)
+        category_list.categories.find { |c| c.id == topic_category.id }.displayable_topics.map(&:id)
       end
 
-      it "returns topics in bumped_at order if pinned was unpinned" do
-        PinnedCheck.stubs(:unpinned?).returns(true)
-        expect(category.displayable_topics.map(&:id)).to eq([topic3.id, topic2.id])
+      it "returns pinned topic first" do
+        expect(displayable_topics).to eq([pinned.id, topic3.id])
+
+        TopicUser.change(user.id, pinned.id, cleared_pinned_at: pinned.pinned_at + 10)
+
+        expect(displayable_topics).to eq([topic3.id, topic2.id])
       end
     end
 
@@ -116,7 +125,14 @@ describe CategoryList do
   end
 
   describe 'category order' do
-    let(:category_ids) { CategoryList.new(Guardian.new(admin)).categories.map(&:id) - [SiteSetting.uncategorized_category_id] }
+    def ordered_category_list(some_user)
+      categories = Category.secured(Guardian.new(some_user))
+      subcategories = categories.where.not(parent_category_id: nil).pluck(:id)
+      CategoryList.order_categories(categories).pluck(:id) - subcategories.push(SiteSetting.uncategorized_category_id)
+    end
+
+    let(:category_ids_admin) { ordered_category_list(admin) }
+    let(:category_ids_user) { ordered_category_list(user) }
 
     before do
       uncategorized = Category.find(SiteSetting.uncategorized_category_id)
@@ -130,17 +146,21 @@ describe CategoryList do
       end
 
       it "returns categories in specified order" do
-        cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
-        expect(category_ids).to eq([cat2.id, cat1.id])
+        cat1 = Fabricate(:category, position: 1)
+        cat2 = Fabricate(:category, position: 0)
+        expect(category_ids_admin).to eq([cat2.id, cat1.id])
       end
 
       it "handles duplicate position values" do
-        cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
-        first_three = category_ids[0, 3] # The order is not deterministic
+        cat1 = Fabricate(:category, position: 0)
+        cat2 = Fabricate(:category, position: 0)
+        cat3 = Fabricate(:category, position: nil)
+        cat4 = Fabricate(:category, position: 0)
+        first_three = category_ids_admin[0, 3] # The order is not deterministic
         expect(first_three).to include(cat1.id)
         expect(first_three).to include(cat2.id)
         expect(first_three).to include(cat4.id)
-        expect(category_ids[-1]).to eq(cat3.id)
+        expect(category_ids_admin[-1]).to eq(cat3.id)
       end
     end
 
@@ -150,18 +170,44 @@ describe CategoryList do
       end
 
       it "returns categories in order of activity" do
-        post1 = Fabricate(:post, created_at: 1.hour.ago)
-        post2 = Fabricate(:post, created_at: 1.day.ago)
-        post3 = Fabricate(:post, created_at: 1.week.ago)
-        cat1 = Fabricate(:category, position: 0, latest_post_id: post2.id)
-        cat2 = Fabricate(:category, position: 1, latest_post_id: post3.id)
-        cat3 = Fabricate(:category, position: 1, latest_post_id: post1.id)
-        expect(category_ids).to eq([cat3.id, cat1.id, cat2.id])
+        cat1 = Fabricate(:category, position: 0)
+        cat2 = Fabricate(:category, position: 1)
+        cat3 = Fabricate(:category, position: 2)
+        cat4 = Fabricate(:category, position: 3)
+        cat5 = Fabricate(:category, parent_category_id: cat2.id)
+
+        Fabricate(:topic, category_id: cat3.id, bumped_at: 1.minutes.ago)
+        Fabricate(:topic, category_id: cat5.id, bumped_at: 2.minutes.ago)
+        Fabricate(:topic, category_id: cat1.id, bumped_at: 3.minutes.ago)
+        Fabricate(:topic, category_id: cat2.id, bumped_at: 5.minutes.ago)
+
+        CategoryFeaturedTopic.feature_topics
+
+        expect(category_ids_admin).to eq([cat3.id, cat2.id, cat1.id, cat4.id])
       end
 
       it "returns categories in order of id when there's no activity" do
-        cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
-        expect(category_ids).to eq([cat1.id, cat2.id])
+        cat1 = Fabricate(:category, position: 2)
+        cat2 = Fabricate(:category, position: 1)
+        cat3 = Fabricate(:category, position: 0)
+        expect(category_ids_admin).to eq([cat1.id, cat2.id, cat3.id])
+      end
+
+      it "shows correct order when a topic in a private category is bumped" do
+        public_cat = Fabricate(:category)
+        public_cat2 = Fabricate(:category)
+        sub_cat_private = Fabricate(:category, parent_category_id: public_cat2.id)
+        sub_cat_private.set_permissions(admins: :full)
+        sub_cat_private.save
+
+        Fabricate(:topic, category: sub_cat_private, bumped_at: 1.minutes.ago)
+        Fabricate(:topic, category: public_cat, bumped_at: 3.minutes.ago)
+        Fabricate(:topic, category: public_cat2, bumped_at: 4.minutes.ago)
+
+        CategoryFeaturedTopic.feature_topics
+
+        expect(category_ids_user).to eq([public_cat.id, public_cat2.id])
+        expect(category_ids_admin).to eq([public_cat2.id, public_cat.id])
       end
     end
   end

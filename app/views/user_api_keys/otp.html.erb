@@ -1,0 +1,9 @@
+<h1><%= t("user_api_key.otp_description", application_name: @application_name) %></h1>
+<div class='authorize-api-key'>
+<%= form_tag(user_api_key_otp_path) do %>
+  <%= hidden_field_tag 'application_name', @application_name %>
+  <%= hidden_field_tag 'public_key', @public_key%>
+  <%= hidden_field_tag('auth_redirect', @auth_redirect) %>
+  <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-danger' %>
+<% end %>
+</div>

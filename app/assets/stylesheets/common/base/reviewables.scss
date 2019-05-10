@@ -1,11 +1,41 @@
 .reviewable {
+  .flagged-post-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .status {
+    color: $primary-medium;
+    span.approved {
+      color: $success;
+      .d-icon {
+        color: currentColor;
+      }
+    }
+    span.rejected {
+      color: $danger;
+      .d-icon {
+        color: currentColor;
+      }
+    }
+  }
+
+  .nav-pills {
+    margin-bottom: 1em;
+  }
+
   .reviewable-container {
     display: flex;
     flex-direction: row;
+    margin-top: 1em;
 
     .reviewable-list {
       flex: 1;
       box-sizing: border-box;
+      max-width: 760px; // Match topic post width
+      min-width: 0;
+      margin-right: auto;
     }
 
     .reviewable-filters {
@@ -20,8 +50,41 @@
   }
 }
 
-.reviewable-user-details {
+.reviewable-settings {
+  p.description {
+    margin-bottom: 2em;
+  }
+
+  .saved {
+    margin-left: 0.5em;
+  }
+  .reviewable-score-type {
+    display: flex;
+
+    .title {
+      width: 30%;
+    }
+  }
+}
+
+.reviewable-user-info {
   margin: 0.5em 0;
+  .reviewable-user-fields {
+    margin-bottom: 2em;
+  }
+
+  .reviewable-user-details {
+    border-bottom: 1px solid $primary-low;
+    padding-bottom: 0.25em;
+
+    display: flex;
+    .name {
+      width: 8em;
+      font-weight: bold;
+      margin-right: 1em;
+    }
+    margin-bottom: 0.5em;
+  }
 }
 
 .no-review {
@@ -30,7 +93,7 @@
 
 .reviewable-filters {
   background-color: $primary-very-low;
-  padding: 0.5em 1em 1em 1em;
+  padding: 1em;
   margin-bottom: 1em;
 
   .reviewable-filter {
@@ -53,6 +116,30 @@
   }
 }
 
+.reviewable-claimed-topic {
+  display: flex;
+  align-items: center;
+  .btn-small {
+    margin-left: 0.5em;
+  }
+}
+
+.reviewable-actions .claimed-actions {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.claimed-by {
+  display: flex;
+  align-items: center;
+  .claimed-username {
+    margin-left: 0.5em;
+  }
+}
+
 .reviewable-topics {
   width: 100%;
 
@@ -69,6 +156,7 @@
     .btn {
       display: flex;
       align-items: center;
+      margin-left: 1em;
     }
   }
 }
@@ -97,9 +185,15 @@
     margin-right: 0.25em;
     &.agreed {
       color: $success;
+      + .d-icon {
+        color: $success;
+      }
     }
     &.disagreed {
       color: $danger;
+      + .d-icon {
+        color: $danger;
+      }
     }
     &.ignored {
       color: $primary-medium;
@@ -111,11 +205,11 @@
 }
 
 .reviewable-item {
-  margin-bottom: 1em;
-  border-bottom: 1px solid dark-light-choose($primary-low, $secondary-low);
+  padding-top: 2em;
+  border-top: 1px solid dark-light-choose($primary-low, $secondary-low);
 
   .topic-statuses {
-    float: none;
+    font-size: $font-up-2;
   }
 
   .reviewable-meta-data {
@@ -124,31 +218,38 @@
     width: 100%;
     margin-bottom: 0.5em;
     font-size: $font-down-1;
-    align-items: center;
+    align-items: baseline;
     .reviewable-type {
-      margin-right: 1em;
+      margin-right: 0.25em;
+    }
+    .reply-count {
+      margin-left: 1em;
     }
     .created-at {
+      margin-left: 1em;
+      margin-right: auto;
       a {
         color: dark-light-choose($primary-medium, $secondary-medium);
       }
-      margin-right: 1em;
     }
     .score {
-      margin-right: 1em;
-    }
-    .status {
-      color: dark-light-choose($primary-high, $secondary-high);
+      font-size: $font-down-1;
     }
   }
 
   .reviewable-contents {
     display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2em;
   }
 
   .reviewable-actions {
-    margin-top: 0.5em;
     display: flex;
+    flex-wrap: wrap;
+
+    button {
+      white-space: nowrap;
+    }
 
     .reviewable-action,
     .reviewable-action-dropdown {
@@ -166,25 +267,75 @@
   margin-top: 1em;
 }
 
-.reviewable-scores,
-.reviewable-histories {
+.reviewable-scores {
   min-width: 50%;
+  color: $primary-high;
 
-  .user {
-    display: flex;
-    align-items: center;
-
-    .user-flag-percentage {
+  .reviewed-by {
+    .date {
       margin-left: 0.5em;
     }
   }
-  > tr > th {
-    text-align: left;
+  .user,
+  .reviewed-by {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
   }
-  > tr > th,
-  > tr > td {
-    padding: 0.25em;
+
+  .user-flag-percentage {
+    margin-left: 0.5em;
   }
+
+  .d-icon {
+    font-size: $font-down-1;
+    color: $primary-medium;
+  }
+
+  .badge-notification {
+    line-height: $line-height-medium;
+    vertical-align: text-top;
+  }
+
+  tbody {
+    border-width: 1px;
+    td {
+      white-space: nowrap;
+      vertical-align: baseline;
+      &.user a,
+      &.reviewed-by a {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    td:last-of-type {
+      width: 100%;
+      white-space: normal;
+    }
+    > tr > th {
+      text-align: left;
+    }
+    > tr > th,
+    > tr > td {
+      padding: 0.5em 1em 0.5em 0;
+      @include breakpoint("mobile") {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 0.5em;
+      }
+    }
+    .reviewable-score-spacer {
+      padding-right: 1em;
+    }
+  }
+}
+
+.reviewable-score-reason {
+  margin: 0.5em 0;
+  max-width: $topic-body-width;
+  margin-bottom: 0.5em;
 }
 
 .reviewable-conversation {
@@ -205,33 +356,42 @@
   }
 }
 
-.reviewable-queued-post,
-.reviewable-flagged-post {
-  .reviewable-contents {
-    margin-top: 1em;
-  }
-
+.reviewable-item {
   .post-title {
     background-color: yellow;
   }
   .created-by {
     margin-right: 1em;
+    padding-top: 0.35em;
+    @include breakpoint("mobile") {
+      float: left;
+      margin-bottom: 1em;
+    }
+  }
+
+  .names {
+    font-weight: bold;
+  }
+
+  .post-contents-wrapper {
+    width: 100%;
+    margin-top: 1em;
+    min-width: 275px;
+    word-break: break-word;
+    @include breakpoint("mobile", min-width) {
+      display: flex;
+    }
   }
 
   .post-contents {
     width: 100%;
+    min-width: 0; // Flexbox fix
   }
-  .post-topic {
-    font-weight: bold;
-    color: $primary-medium;
-    margin-bottom: 1em;
-  }
-}
 
-.reviewable-item {
   .post-body {
     max-width: $topic-body-width;
     max-height: 300px;
+    margin-top: 0.5em;
     overflow-y: auto;
 
     p,
@@ -239,13 +399,40 @@
       margin: 0 0 1em 0;
     }
 
-    p {
+    pre,
+    code {
       word-break: break-all;
+    }
+  }
+
+  .post-topic {
+    width: 100%;
+    color: $primary-medium;
+    margin-bottom: 0.75em;
+    .title-text {
+      font-weight: bold;
+      color: $primary;
+      display: block;
+      font-size: $font-up-2;
+      margin-right: 0.75em;
+    }
+    .topic-statuses {
+      &:empty {
+        display: none;
+      }
     }
   }
 }
 
 .editable-fields {
+  .editable-created-by {
+    display: flex;
+    .avatar {
+      margin-right: 0.25em;
+    }
+    margin-bottom: 0.5em;
+  }
+
   width: 100%;
   .editable-field {
     .mini-tag-chooser {
@@ -262,5 +449,31 @@
       height: 10em;
     }
     margin-bottom: 0.5em;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  table.reviewable-scores {
+    width: 100%;
+    display: block;
+    tbody {
+      width: calc(100% - 5px);
+      display: block;
+      clear: both;
+    }
+  }
+  tr.reviewable-score {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  td.reviewable-score-spacer {
+    display: none;
+  }
+}
+
+@include breakpoint("mobile") {
+  tr.reviewable-score {
+    grid-template-columns: auto auto auto;
   }
 }
