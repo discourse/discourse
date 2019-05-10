@@ -536,16 +536,17 @@ class PostAlerter
     users
   end
 
-  def notify_imap_users?(post)
-    return false if SiteSetting.imap_read_only
-    return false if post.post_type != Post.types[:regular]
-    # Notify only if post was not created from an email. The sender of the
-    # original email is responsible to press the "Reply all" button.
-    return false if post.incoming_email
-    # Sync only if this topic was created from an IMAP email
-    return false if !post.topic&.first_post&.incoming_email&.imap_uid
+  def group_notifying_via_smtp(post)
+    return nil if !SiteSetting.enable_smtp ||
+                  post.post_type != Post.types[:regular] ||
+                  post.incoming_email
 
-    true
+    post.topic.allowed_groups
+      .where.not(smtp_server: nil)
+      .where.not(smtp_port: nil)
+      .where.not(email_username: nil)
+      .where.not(email_password: nil)
+      .first
   end
 
   def notify_pm_users(post, reply_to_user, notified)
@@ -553,28 +554,20 @@ class PostAlerter
 
     warn_if_not_sidekiq
 
-    if notify_imap_users?(post)
-      group = post.topic.allowed_groups.where('smtp_server IS NOT NULL').first
-
-      # Retrieve all email addresses.
+    if group = group_notifying_via_smtp(post)
       email_addresses = post.topic.incoming_email.pluck(:from_address, :to_addresses, :cc_addresses)
-      email_addresses.flatten!
-      email_addresses.uniq!
-      email_addresses.reject!(&:blank?)
-      email_addresses.map! { |emails| emails.split(",") }
-      email_addresses.flatten!
-      email_addresses.uniq!
       email_addresses << group.email_username
+      email_addresses.flatten!
+      email_addresses.uniq!
+      email_addresses.compact!
+      email_addresses.map! { |emails| emails.split(";") }
+      email_addresses.flatten!
+      email_addresses.uniq!
 
-      email_addresses.each do |email|
-        # Do not send the email to the receiver or sender
-        # (they already have it in their mailbox).
-        next if email == post.incoming_email&.from_address || email == group.email_username
-        Jobs.enqueue(:group_smtp_email,
-          group_id: group.id,
-          email: email,
-          post_id: post.id)
-      end
+      Jobs.enqueue(:group_smtp_email,
+        group_id: group.id,
+        post_id: post.id,
+        email: email_addresses - [post.incoming_email&.from_address, group.email_username])
     end
 
     # users that aren't part of any mentioned groups
@@ -587,7 +580,7 @@ class PostAlerter
       end
     end
 
-    # users that are part of all mentionned groups
+    # users that are part of all mentioned groups
     users = indirectly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|

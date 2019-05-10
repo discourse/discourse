@@ -56,7 +56,7 @@ class Imap::Providers::Generic
 
   def open_mailbox(mailbox, write = false)
     if write
-      raise SecurityError.new("two-way imap sync is disabled") if SiteSetting.imap_read_only
+      raise "two-way IMAP sync is disabled" if !SiteSetting.enable_imap_write
       imap.select(mailbox.name)
     else
       imap.examine(mailbox.name)

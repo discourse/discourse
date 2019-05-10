@@ -6,6 +6,8 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
+      return if !SiteSetting.enable_imap
+
       @args = args
 
       Group.all.each do |group|

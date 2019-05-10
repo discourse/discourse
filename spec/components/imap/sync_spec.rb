@@ -6,7 +6,8 @@ describe Imap::Sync do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.allow_staff_to_tag_pms = true
-    SiteSetting.imap_read_only = true
+    SiteSetting.enable_imap = true
+    SiteSetting.enable_imap_write = true
     Jobs.run_immediately!
   end
 

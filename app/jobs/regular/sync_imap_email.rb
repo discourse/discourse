@@ -5,6 +5,8 @@ module Jobs
     sidekiq_options retry: 3
 
     def execute(args)
+      return if !SiteSetting.enable_imap
+
       @args = args
 
       group = Group.find_by(id: @args[:group_id])

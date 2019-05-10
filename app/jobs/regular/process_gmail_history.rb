@@ -6,6 +6,8 @@ require_dependency 'imap'
 module Jobs
   class ProcessGmailHistory < Jobs::Base
     def execute(args)
+      return if !SiteSetting.enable_imap
+
       @args = args || {}
 
       group = Group.find_by(email_username: args[:email_address])
