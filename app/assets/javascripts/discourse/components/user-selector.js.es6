@@ -10,7 +10,7 @@ export default TextField.extend({
 
   @observes("usernames")
   _update() {
-    if (this.get("canReceiveUpdates") === "true") {
+    if (this.canReceiveUpdates === "true") {
       this.didInsertElement({ updateData: true });
     }
   },
