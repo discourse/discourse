@@ -260,10 +260,12 @@ describe ReviewablesController do
 
       it "can properly return errors" do
         qp = Fabricate(:reviewable_queued_post_topic, topic_id: -100)
-        put "/review/#{qp.id}/perform/approve_post.json?version=#{qp.version}"
+        version = qp.version
+        put "/review/#{qp.id}/perform/approve_post.json?version=#{version}"
         expect(response.code).to eq("422")
         result = ::JSON.parse(response.body)
         expect(result['errors']).to be_present
+        expect(qp.reload.version).to eq(version)
       end
 
       it "requires a version parameter" do
