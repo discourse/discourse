@@ -52,11 +52,10 @@ export default Ember.Component.extend(UtilsMixin, {
 
   @on("didReceiveAttrs")
   _setSelectionState() {
-    this.set("isSelected", this.get("computedValue") === this.get("value"));
-    this.set(
-      "isHighlighted",
-      this.get("highlighted.value") === this.get("value")
-    );
+    this.setProperties({
+      isSelected: this.get("computedValue") === this.get("value"),
+      isHighlighted: this.get("highlighted.value") === this.get("value")
+    });
   },
 
   @on("willDestroyElement")
