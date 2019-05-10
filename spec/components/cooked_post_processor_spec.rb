@@ -893,6 +893,31 @@ describe CookedPostProcessor do
     end
   end
 
+  context "#post_process_oneboxes with oneboxed image" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    it "applies aspect ratio to container" do
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns("<aside class='onebox'><div class='scale-images'><img src='/img.jpg' width='400' height='500'/></div></div>")
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.html).to match_html('<aside class="onebox"><div class="aspect-image-full-size" style="--aspect-ratio:400/500;"><img src="/img.jpg"></div></aside>')
+    end
+
+    it "applies aspect ratio when wrapped in link" do
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns("<aside class='onebox'><div class='scale-images'><a href='https://example.com'><img src='/img.jpg' width='400' height='500'/></a></div></div>")
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.html).to match_html('<aside class="onebox"><div class="aspect-image-full-size" style="--aspect-ratio:400/500;"><a href="https://example.com"><img src="/img.jpg"></a></div></aside>')
+    end
+  end
+
   context "#post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do

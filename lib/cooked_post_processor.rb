@@ -539,6 +539,7 @@ class CookedPostProcessor
 
       next if img["class"]&.include?('onebox-avatar')
 
+      parent = parent&.parent if parent&.name == "a"
       parent_class = parent && parent["class"]
       width = img["width"].to_i
       height = img["height"].to_i
@@ -572,8 +573,8 @@ class CookedPostProcessor
       elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") || parent_class&.include?("scale-images")) && width > 0 && height > 0
         img.remove_attribute("width")
         img.remove_attribute("height")
-        img.parent["class"] = "aspect-image-full-size"
-        img.parent["style"] = "--aspect-ratio:#{width}/#{height};"
+        parent["class"] = "aspect-image-full-size"
+        parent["style"] = "--aspect-ratio:#{width}/#{height};"
       end
     end
 
