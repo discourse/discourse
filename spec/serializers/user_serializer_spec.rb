@@ -41,11 +41,11 @@ describe UserSerializer do
   end
 
   context "with a user" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
-    let(:upload) { Fabricate(:upload) }
-    let(:upload2) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload2) { Fabricate(:upload) }
 
     context "with `enable_names` true" do
       before do
