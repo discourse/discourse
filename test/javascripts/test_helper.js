@@ -102,6 +102,9 @@ function resetSite(siteSettings, extras) {
 }
 
 QUnit.testStart(function(ctx) {
+  var module = ctx.module ? ctx.module : "";
+  console.log("\nSTART: " + module + " " + ctx.name);
+
   server = pretender.default();
 
   var helper = {
@@ -142,7 +145,7 @@ QUnit.testStart(function(ctx) {
   }
 });
 
-QUnit.testDone(function() {
+QUnit.testDone(function(ctx) {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
 
@@ -151,6 +154,9 @@ QUnit.testDone(function() {
   flushMap();
 
   server.shutdown();
+
+  var module = ctx.module ? ctx.module : "";
+  console.log("END: " + module + " " + ctx.name + "\n");
 });
 
 // Load ES6 tests
