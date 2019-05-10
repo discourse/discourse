@@ -52,11 +52,11 @@ describe Category do
   end
 
   describe "#review_group_id" do
-    let(:group) { Fabricate(:group) }
-    let(:category) { Fabricate(:category, reviewable_by_group: group) }
-    let(:topic) { Fabricate(:topic, category: category) }
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:user) { Fabricate(:user) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:category) { Fabricate(:category, reviewable_by_group: group) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:user) { Fabricate(:user) }
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_review = true
