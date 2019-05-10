@@ -117,6 +117,9 @@ module TestSetup
       $test_cleanup_callbacks = nil
     end
 
+    # in test this is very expensive, we explicitly enable when needed
+    Topic.update_featured_topics = false
+
     # Running jobs are expensive and most of our tests are not concern with
     # code that runs inside jobs. run_later! means they are put on the redis
     # queue and never processed.
