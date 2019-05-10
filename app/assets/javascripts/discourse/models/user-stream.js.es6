@@ -3,14 +3,18 @@ import { url } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import { emojiUnescape } from "discourse/lib/text";
-import computed from "ember-addons/ember-computed-decorators";
+import {
+  default as computed,
+  on
+} from "ember-addons/ember-computed-decorators";
 
 export default RestModel.extend({
   loaded: false,
 
-  _initialize: function() {
+  @on("init")
+  _initialize() {
     this.setProperties({ itemsLoaded: 0, content: [] });
-  }.on("init"),
+  },
 
   @computed("filter")
   filterParam(filter) {
@@ -47,15 +51,15 @@ export default RestModel.extend({
   },
 
   @computed("loaded", "content.[]")
-  noContent() {
-    return this.get("loaded") && this.get("content").length === 0;
+  noContent(loaded, content) {
+    return loaded && content.length === 0;
   },
 
   remove(userAction) {
     // 1) remove the user action from the child groups
-    this.get("content").forEach(function(ua) {
-      ["likes", "stars", "edits", "bookmarks"].forEach(function(group) {
-        const items = ua.get("childGroups." + group + ".items");
+    this.content.forEach(ua => {
+      ["likes", "stars", "edits", "bookmarks"].forEach(group => {
+        const items = ua.get(`childGroups.${group}.items`);
         if (items) {
           items.removeObject(userAction);
         }
@@ -63,9 +67,9 @@ export default RestModel.extend({
     });
 
     // 2) remove the parents that have no children
-    const content = this.get("content").filter(function(ua) {
-      return ["likes", "stars", "edits", "bookmarks"].any(function(group) {
-        return ua.get("childGroups." + group + ".items.length") > 0;
+    const content = this.content.filter(ua => {
+      return ["likes", "stars", "edits", "bookmarks"].any(group => {
+        return ua.get(`childGroups.${group}.items.length`) > 0;
       });
     });
 
@@ -73,54 +77,55 @@ export default RestModel.extend({
   },
 
   findItems() {
-    const self = this;
-
-    let findUrl = this.get("baseUrl");
-    if (this.get("filterParam")) {
-      findUrl += "&filter=" + this.get("filterParam");
+    let findUrl = this.baseUrl;
+    if (this.filterParam) {
+      findUrl += `&filter=${this.filterParam}`;
     }
-    if (this.get("noContentHelpKey")) {
-      findUrl += "&no_results_help_key=" + this.get("noContentHelpKey");
+    if (this.noContentHelpKey) {
+      findUrl += `&no_results_help_key=${this.noContentHelpKey}`;
     }
 
-    if (this.get("actingUsername")) {
-      findUrl += `&acting_username=${this.get("actingUsername")}`;
+    if (this.actingUsername) {
+      findUrl += `&acting_username=${this.actingUsername}`;
     }
 
     // Don't load the same stream twice. We're probably at the end.
-    const lastLoadedUrl = this.get("lastLoadedUrl");
+    const lastLoadedUrl = this.lastLoadedUrl;
     if (lastLoadedUrl === findUrl) {
       return Ember.RSVP.resolve();
     }
 
-    if (this.get("loading")) {
+    if (this.loading) {
       return Ember.RSVP.resolve();
     }
+
     this.set("loading", true);
     return ajax(findUrl, { cache: "false" })
-      .then(function(result) {
+      .then(result => {
         if (result && result.no_results_help) {
-          self.set("noContentHelp", result.no_results_help);
+          this.set("noContentHelp", result.no_results_help);
         }
         if (result && result.user_actions) {
           const copy = Ember.A();
-          result.user_actions.forEach(function(action) {
+          result.user_actions.forEach(action => {
             action.title = emojiUnescape(
               Handlebars.Utils.escapeExpression(action.title)
             );
             copy.pushObject(UserAction.create(action));
           });
 
-          self.get("content").pushObjects(UserAction.collapseStream(copy));
-          self.setProperties({
-            itemsLoaded: self.get("itemsLoaded") + result.user_actions.length
+          this.content.pushObjects(UserAction.collapseStream(copy));
+          this.setProperties({
+            itemsLoaded: this.itemsLoaded + result.user_actions.length
           });
         }
       })
-      .finally(function() {
-        self.set("loaded", true);
-        self.set("loading", false);
-        self.set("lastLoadedUrl", findUrl);
-      });
+      .finally(() =>
+        this.setProperties({
+          loaded: true,
+          loading: false,
+          lastLoadedUrl: findUrl
+        })
+      );
   }
 });
