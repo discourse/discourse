@@ -151,7 +151,7 @@ class DiscoursePluginRegistry
   JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6|\.js\.no-module\.es6$/
   HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
 
-  def self.register_asset(asset, opts = nil, asset_name)
+  def self.register_asset(asset, opts = nil, asset_name = nil)
     if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
