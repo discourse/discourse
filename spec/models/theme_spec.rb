@@ -202,12 +202,12 @@ HTML
   end
 
   describe ".transform_ids" do
-    let!(:orphan1) { Fabricate(:theme, component: true) }
-    let!(:child) { Fabricate(:theme, component: true) }
-    let!(:child2) { Fabricate(:theme, component: true) }
-    let!(:orphan2) { Fabricate(:theme, component: true) }
-    let!(:orphan3) { Fabricate(:theme, component: true) }
-    let!(:orphan4) { Fabricate(:theme, component: true) }
+    fab!(:orphan1) { Fabricate(:theme, component: true) }
+    fab!(:child) { Fabricate(:theme, component: true) }
+    fab!(:child2) { Fabricate(:theme, component: true) }
+    fab!(:orphan2) { Fabricate(:theme, component: true) }
+    fab!(:orphan3) { Fabricate(:theme, component: true) }
+    fab!(:orphan4) { Fabricate(:theme, component: true) }
 
     before do
       theme.add_child_theme!(child)

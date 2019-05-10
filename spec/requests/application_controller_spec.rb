@@ -254,9 +254,9 @@ RSpec.describe ApplicationController do
   end
 
   describe "#handle_theme" do
-    let!(:theme) { Fabricate(:theme, user_selectable: true) }
-    let!(:theme2) { Fabricate(:theme, user_selectable: true) }
-    let!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
+    fab!(:theme) { Fabricate(:theme, user_selectable: true) }
+    fab!(:theme2) { Fabricate(:theme, user_selectable: true) }
+    fab!(:non_selectable_theme) { Fabricate(:theme, user_selectable: false) }
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
 

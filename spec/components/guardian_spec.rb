@@ -2788,8 +2788,8 @@ describe Guardian do
   end
 
   describe "#allow_themes?" do
-    let!(:theme) { Fabricate(:theme) }
-    let!(:theme2) { Fabricate(:theme) }
+    fab!(:theme) { Fabricate(:theme) }
+    fab!(:theme2) { Fabricate(:theme) }
 
     it "allows staff to use any themes" do
       expect(Guardian.new(moderator).allow_themes?([theme.id, theme2.id])).to eq(false)

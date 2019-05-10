@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe JavascriptCache, type: :model do
-  let!(:theme) { Fabricate(:theme) }
+  fab!(:theme) { Fabricate(:theme) }
   let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: "header", value: "<a>html</a>") }
 
   describe '#save' do
