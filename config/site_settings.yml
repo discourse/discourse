@@ -938,6 +938,7 @@ email:
       - X-Spam-Status
   enable_imap: false
   enable_imap_write: false
+  enable_imap_idle: false
   enable_smtp: false
   imap_polling_period_mins: 5
   imap_polling_old_emails: 1000

@@ -48,6 +48,8 @@ module Imap
       end
 
       if idle
+        raise "IMAP IDLE is disabled" if !SiteSetting.enable_imap_idle
+
         if !@provider.can?("IDLE")
           return Rails.logger.warn("IMAP server for #{@group.name} does not support IDLE.")
         end

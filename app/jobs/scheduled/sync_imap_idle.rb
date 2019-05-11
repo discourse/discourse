@@ -6,12 +6,19 @@ module Jobs
     every 5.seconds
 
     def execute(args)
-      return if !SiteSetting.enable_imap
+      return if !SiteSetting.enable_imap || !SiteSetting.enable_imap_idle
 
       @args = args
+
+      trap('INT')  { kill_threads }
+      trap('TERM') { kill_threads }
+
+      @running = true
       @threads = {}
 
       loop do
+        break if !@running
+
         mailboxes = Mailbox.where(sync: true).includes(:group)
         mailboxes_id = Set.new(mailboxes.pluck(:id))
 
@@ -29,7 +36,7 @@ module Jobs
             imap_sync = Imap::Sync.for_group(mailbox.group)
 
             loop do
-              break if !mailbox.reload.sync
+              break if !@running || !mailbox.reload.sync
               imap_sync.process(mailbox, true)
             end
 
@@ -38,6 +45,13 @@ module Jobs
         end
 
         sleep 5
+      end
+    end
+
+    def kill_threads
+      @threads.each do |_, thread|
+        thread.kill
+        thread.join
       end
     end
   end

@@ -1814,6 +1814,7 @@ en:
 
     enable_imap: "Enable IMAP for synchronizing group messages."
     enable_imap_write: "Enable two-way IMAP synchronization. If disabled, all write-operations on IMAP accounts are disabled."
+    enable_imap_idle: "Use IMAP IDLE mechanism to wait for new emails."
     enable_smtp: "Enable SMTP for sending notifications for group messages."
 
     imap_polling_period_mins: "The period in minutes between checking the IMAP accounts for emails."
