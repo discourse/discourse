@@ -71,7 +71,7 @@ module Email
         begin
           @incoming_email = IncomingEmail.find_by(message_id: @message_id)
           if @incoming_email
-            @incoming_email.update(imap_uid_validity: @opts[:uid_validity], imap_uid: @opts[:uid])
+            @incoming_email.update(imap_uid_validity: @opts[:uid_validity], imap_uid: @opts[:uid], imap_sync: false)
             return
           end
           ensure_valid_address_lists
@@ -122,7 +122,8 @@ module Email
         to_addresses: @mail.to&.map(&:downcase)&.join(";"),
         cc_addresses: @mail.cc&.map(&:downcase)&.join(";"),
         imap_uid_validity: @opts[:uid_validity],
-        imap_uid: @opts[:uid]
+        imap_uid: @opts[:uid],
+        imap_sync: false
       )
     end
 

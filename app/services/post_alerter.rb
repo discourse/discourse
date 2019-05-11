@@ -556,18 +556,18 @@ class PostAlerter
 
     if group = group_notifying_via_smtp(post)
       email_addresses = post.topic.incoming_email.pluck(:from_address, :to_addresses, :cc_addresses)
-      email_addresses << group.email_username
+      email_addresses.map! { |emails| emails && emails.split(";") }
       email_addresses.flatten!
+      email_addresses << group.email_username
       email_addresses.uniq!
       email_addresses.compact!
-      email_addresses.map! { |emails| emails.split(";") }
-      email_addresses.flatten!
-      email_addresses.uniq!
 
-      Jobs.enqueue(:group_smtp_email,
-        group_id: group.id,
-        post_id: post.id,
-        email: email_addresses - [post.incoming_email&.from_address, group.email_username])
+      if email_addresses.size > 1
+        Jobs.enqueue(:group_smtp_email,
+          group_id: group.id,
+          post_id: post.id,
+          email: email_addresses - [group.email_username])
+      end
     end
 
     # users that aren't part of any mentioned groups

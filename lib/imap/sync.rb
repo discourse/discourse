@@ -77,7 +77,7 @@ module Imap
       end
 
       import_mode = new_uids.size > SiteSetting.imap_batch_import_email if SiteSetting.imap_batch_import_email > -1
-      old_uids = old_uids.sample(SiteSetting.imap_polling_old_emails) if SiteSetting.imap_polling_old_emails > 0
+      old_uids = old_uids.sample(SiteSetting.imap_polling_old_emails).sort! if SiteSetting.imap_polling_old_emails > 0
       new_uids = new_uids[0..SiteSetting.imap_polling_new_emails] if SiteSetting.imap_polling_new_emails > 0
 
       if old_uids.present?

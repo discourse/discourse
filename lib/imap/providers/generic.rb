@@ -88,7 +88,7 @@ class Imap::Providers::Generic
 
   def to_tag(label)
     label = DiscourseTagging.clean_tag(label.to_s)
-    label if label != "all-mail" && label != "inbox" && label != "sent"
+    label if label != "inbox" && label != "sent"
   end
 
   def tag_to_flag(tag)

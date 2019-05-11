@@ -67,7 +67,6 @@ describe GroupSmtpMailer do
     expect(ActionMailer::Base.deliveries.size).to eq(1)
 
     sent_mail = ActionMailer::Base.deliveries[0]
-
     expect(sent_mail.to).to contain_exactly("john@doe.com")
     expect(sent_mail.subject).to eq("Re: Hello from John")
     expect(sent_mail.body).to eq(raw)

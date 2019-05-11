@@ -24,7 +24,7 @@ class GroupSmtpMailer < ActionMailer::Base
     build_email(to_address,
       delivery_method_options: delivery_options,
       from: from_group.email_username,
-      subject: incoming_email.subject,
+      subject: incoming_email&.subject || post.topic.title,
       add_re_to_subject: true,
       body: post.raw,
       post_id: post.id,

@@ -40,6 +40,7 @@ class Imap::Providers::Gmail < Imap::Providers::Generic
   def to_tag(label)
     # Label `\\Starred` is Gmail equivalent of :Flagged (both present)
     return "starred" if label == :Flagged
+    return if label == "[Gmail]/All Mail"
 
     label = label.to_s.gsub("[Gmail]/", "")
     super(label)
