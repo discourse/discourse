@@ -35,7 +35,7 @@ class LocaleFileChecker
 
   # Some languages should always use %{count} in pluralized strings.
   # https://meta.discourse.org/t/always-use-count-variable-when-translating-pluralized-strings/83969
-  FORCE_PLURAL_COUNT_LOCALES = ["bs", "lt", "lv", "ru", "sl", "sr", "uk"]
+  FORCE_PLURAL_COUNT_LOCALES = ["bs", "fr", "lt", "lv", "ru", "sl", "sr", "uk"]
 
   def locale_files
     YML_DIRS.map { |dir| Dir["#{Rails.root}/#{dir}/{client,server}.#{@locale}.yml"] }.flatten
