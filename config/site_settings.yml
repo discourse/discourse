@@ -1526,6 +1526,7 @@ developer:
     max: 120
     default: 2
     hidden: true
+    shadowed_by_global: true
 
 embedding:
   feed_polling_enabled:
