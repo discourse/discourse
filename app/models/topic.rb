@@ -1001,7 +1001,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.url(id, slug, post_number = nil)
-    url = +"#{Discourse.base_url}/t/#{slug}/#{id}/"
+    url = +"#{Discourse.base_url}/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
   end
