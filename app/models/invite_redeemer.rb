@@ -80,7 +80,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
     add_user_to_groups
     send_welcome_message
     notify_invitee
-    delete_duplicate_invites
   end
 
   def invite_was_redeemed?
@@ -89,9 +88,15 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password, :user_custom_f
   end
 
   def mark_invite_redeemed
-    Invite.where('id = ? AND redeemed_at IS NULL AND created_at >= ?',
+    count = Invite.where('id = ? AND redeemed_at IS NULL AND created_at >= ?',
                  invite.id, SiteSetting.invite_expiry_days.days.ago)
       .update_all('redeemed_at = CURRENT_TIMESTAMP')
+
+    if count == 1
+      delete_duplicate_invites
+    end
+
+    count
   end
 
   def get_invited_user

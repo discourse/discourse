@@ -206,7 +206,7 @@ describe Invite do
     end
 
     it 'wont redeem an expired invite' do
-      SiteSetting.expects(:invite_expiry_days).returns(10)
+      SiteSetting.invite_expiry_days = 10
       invite.update_column(:created_at, 20.days.ago)
       expect(invite.redeem).to be_blank
     end
