@@ -543,7 +543,7 @@ class UserNotifications < ActionMailer::Base
       title = I18n.t("system_messages.private_topic_title", id: post.topic_id)
     end
 
-    context = ""
+    context = +""
     tu = TopicUser.get(post.topic_id, user)
     context_posts = self.class.get_context_posts(post, tu, user)
 
