@@ -18,6 +18,7 @@ class ThemesController < ::ApplicationController
         next hash unless Rails.env.development?
 
         dup_hash = hash.dup
+        dup_hash[:new_href] = dup_hash[:new_href].dup
         dup_hash[:new_href] << (dup_hash[:new_href].include?("?") ? "&" : "?")
         dup_hash[:new_href] << SecureRandom.hex
         dup_hash
