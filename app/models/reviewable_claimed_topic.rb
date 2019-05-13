@@ -14,3 +14,18 @@ class ReviewableClaimedTopic < ActiveRecord::Base
     result
   end
 end
+
+# == Schema Information
+#
+# Table name: reviewable_claimed_topics
+#
+#  id         :bigint           not null, primary key
+#  user_id    :integer          not null
+#  topic_id   :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_reviewable_claimed_topics_on_topic_id  (topic_id) UNIQUE
+#

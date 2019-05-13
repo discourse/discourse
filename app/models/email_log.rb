@@ -91,6 +91,7 @@ end
 #
 # Indexes
 #
+#  index_email_logs_on_bounce_key  (bounce_key) UNIQUE WHERE (bounce_key IS NOT NULL)
 #  index_email_logs_on_bounced     (bounced)
 #  index_email_logs_on_created_at  (created_at)
 #  index_email_logs_on_message_id  (message_id)
