@@ -604,7 +604,7 @@ pl_PL:
         position: "Pozycja"
       posts: "Wpisy"
       topics: "Tematy"
-      latest: "Aktualne"
+      latest: "Najnowsze"
       latest_by: "najnowszy wpis: "
       toggle_ordering: "przełącz kolejność kontroli"
       subcategories: "Podkategorie"
