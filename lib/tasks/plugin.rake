@@ -31,8 +31,8 @@ task 'plugin:install_all_official' do
 
     if ENV['GIT_WRITE']
       STDERR.puts "Allowing write to all repos!"
-      repo.gsub!("https://github.com/", "git@github.com:")
-      repo << ".git"
+      repo = repo.gsub("https://github.com/", "git@github.com:")
+      repo += ".git"
     end
 
     status = system("git clone #{repo} #{path}")
