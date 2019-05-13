@@ -6,6 +6,10 @@ require_dependency 'user'
 describe User do
   let(:user) { Fabricate(:user) }
 
+  def user_error_message(*keys)
+    I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join('.')}")
+  end
+
   context 'validations' do
     describe '#username' do
       it { is_expected.to validate_presence_of :username }
@@ -31,6 +35,36 @@ describe User do
           expect(new_user.errors.full_messages.first)
             .to include(I18n.t(:'user.username.unique'))
         end
+      end
+
+      it 'is not valid if username changes to be same as password' do
+        user.username = 'myawesomepassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:username, :same_as_password))
+      end
+
+      it 'is not valid if username lowercase changes to be same as password' do
+        user.username = 'MyAwesomePassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:username, :same_as_password))
+      end
+    end
+
+    describe 'name' do
+      it 'is not valid if it changes to be the same as the password' do
+        user.name = 'myawesomepassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:name, :same_as_password))
+      end
+
+      it 'is not valid if name lowercase changes to be the same as the password' do
+        user.name = 'MyAwesomePassword'
+        expect(user).to_not be_valid
+        expect(user.errors.full_messages.first)
+          .to include(user_error_message(:name, :same_as_password))
       end
     end
 

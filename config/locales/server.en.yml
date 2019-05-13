@@ -491,7 +491,12 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
+            username:
+              same_as_password: "is the same as your password."
+            name:
+              same_as_password: "is the same as your password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         user_email:
