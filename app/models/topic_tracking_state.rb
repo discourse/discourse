@@ -168,7 +168,7 @@ class TopicTrackingState
     #
     # This code needs to be VERY efficient as it is triggered via the message bus and may steal
     #  cycles from usual requests
-    sql = report_raw_sql(
+    sql = +report_raw_sql(
       topic_id: topic_id,
       skip_unread: true,
       skip_order: true,
