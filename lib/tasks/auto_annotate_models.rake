@@ -31,7 +31,8 @@ if (Rails.env.development? || Rails.env.test?)
       'format_markdown' => "false",
       'sort' => "false",
       'force' => "false",
-      'trace' => "false"
+      'trace' => "false",
+      'show_foreign_keys' => "true"
     )
   end
 
