@@ -28,7 +28,7 @@
     "moment-timezone": "0.5.25",
     "moment-timezone-names-translations": "https://github.com/discourse/moment-timezone-names-translations",
     "mousetrap": "https://github.com/discourse/mousetrap#firefox-alt-key",
-    "pikaday": "1.7.0",
+    "pikaday": "1.8.0",
     "resumablejs": "1.1.0",
     "spectrum-colorpicker": "1.8.0"
   },
