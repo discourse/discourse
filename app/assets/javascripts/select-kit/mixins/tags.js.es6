@@ -11,8 +11,6 @@ export default Ember.Mixin.create({
   },
 
   searchTags(url, data, callback) {
-    const self = this;
-
     this.startLoading();
 
     return ajax(Discourse.getURL(url), {
@@ -22,15 +20,11 @@ export default Ember.Mixin.create({
       data
     })
       .then(json => {
-        self.set("asyncContent", callback(self, json));
-        self.autoHighlight();
+        this.set("asyncContent", callback(this, json));
+        this.autoHighlight();
       })
-      .catch(error => {
-        popupAjaxError(error);
-      })
-      .finally(() => {
-        self.stopLoading();
-      });
+      .catch(error => popupAjaxError(error))
+      .finally(() => this.stopLoading());
   },
 
   validateCreate(term) {
@@ -63,6 +57,7 @@ export default Ember.Mixin.create({
     const inSelection = this.get("selection")
       .map(s => toLowerCaseOrUndefined(get(s, "value")))
       .includes(term);
+
     if (inCollection || inSelection) {
       return false;
     }
@@ -72,7 +67,7 @@ export default Ember.Mixin.create({
 
   createContentFromInput(input) {
     // See lib/discourse_tagging#clean_tag.
-    var content = input
+    let content = input
       .trim()
       .replace(/\s+/g, "-")
       .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
