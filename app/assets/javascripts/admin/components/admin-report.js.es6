@@ -68,8 +68,8 @@ export default Ember.Component.extend({
     this._reports = [];
   },
 
-  startDate: Ember.computed.alias("filters.startDate"),
-  endDate: Ember.computed.alias("filters.endDate"),
+  startDate: Ember.computed.reads("filters.startDate"),
+  endDate: Ember.computed.reads("filters.endDate"),
 
   didReceiveAttrs() {
     this._super(...arguments);
