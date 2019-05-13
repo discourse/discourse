@@ -10,7 +10,7 @@ module DiscourseNarrativeBot
         return I18n.t('discourse_narrative_bot.dice.invalid')
       end
 
-      output = ''
+      output = +''
 
       if num_of_dice > MAXIMUM_NUM_OF_DICE
         output << I18n.t('discourse_narrative_bot.dice.not_enough_dice',
