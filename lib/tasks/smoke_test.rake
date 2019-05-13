@@ -41,7 +41,7 @@ task "smoke:test" do
     raise "TRIVIAL GET FAILED WITH #{response.code}"
   end
 
-  results = ""
+  results = +""
 
   IO.popen("node #{Rails.root}/test/smoke_test.js #{url}").each do |line|
     puts line
