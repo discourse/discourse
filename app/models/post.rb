@@ -453,11 +453,11 @@ class Post < ActiveRecord::Base
 
   # Strip out most of the markup
   def excerpt(maxlength = nil, options = {})
-    Post.excerpt(cooked, maxlength, options)
+    Post.excerpt(cooked, maxlength, options.merge(post: self))
   end
 
   def excerpt_for_topic
-    Post.excerpt(cooked, 220, strip_links: true, strip_images: true)
+    Post.excerpt(cooked, 220, strip_links: true, strip_images: true, post: self)
   end
 
   def is_first_post?
