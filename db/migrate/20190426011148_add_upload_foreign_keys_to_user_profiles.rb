@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'migration/column_dropper'
 
 class AddUploadForeignKeysToUserProfiles < ActiveRecord::Migration[5.2]

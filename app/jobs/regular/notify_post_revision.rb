@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class NotifyPostRevision < Jobs::Base
     def execute(args)
