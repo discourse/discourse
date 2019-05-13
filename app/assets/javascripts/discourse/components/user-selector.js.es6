@@ -1,4 +1,4 @@
-import { on, observes } from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
 import TextField from "discourse/components/text-field";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse/lib/raw-templates";
@@ -10,24 +10,20 @@ export default TextField.extend({
 
   @observes("usernames")
   _update() {
-    if (this.canReceiveUpdates === "true") {
-      this._createAutocompleteInstance({ updateData: true });
-    }
+    if (this.get("canReceiveUpdates") === "true")
+      this.didInsertElement({ updateData: true });
   },
 
-  @on("willDestroyElement")
-  _destroyAutocompleteInstance() {
-    $(this.element).autocomplete("destroy");
-  },
+  didInsertElement(opts) {
+    this._super(...arguments);
 
-  @on("didInsertElement")
-  _createAutocompleteInstance(opts) {
     const bool = n => {
-      const val = this[n];
+      const val = this.get(n);
       return val === true || val === "true";
     };
 
-    let selected = [],
+    var self = this,
+      selected = [],
       groups = [],
       currentUser = this.currentUser,
       includeMentionableGroups = bool("includeMentionableGroups"),
@@ -41,38 +37,39 @@ export default TextField.extend({
       allowEmails = bool("allowEmails"),
       fullWidthWrap = bool("fullWidthWrap");
 
-    const excludedUsernames = () => {
+    function excludedUsernames() {
       // hack works around some issues with allowAny eventing
       const usernames = single ? [] : selected;
 
       if (currentUser && excludeCurrentUser) {
-        return usernames.concat([currentUser.username]);
+        return usernames.concat([currentUser.get("username")]);
       }
       return usernames;
-    };
+    }
 
-    $(this.element)
-      .val(this.usernames)
+    this.$()
+      .val(this.get("usernames"))
       .autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
-        disabled,
-        single,
-        allowAny,
+        disabled: disabled,
+        single: single,
+        allowAny: allowAny,
         updateData: opts && opts.updateData ? opts.updateData : false,
         fullWidthWrap,
 
         dataSource(term) {
-          return userSearch({
+          var results = userSearch({
             term,
-            topicId: this.topicId,
+            topicId: self.get("topicId"),
             exclude: excludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
             includeMessageableGroups,
-            group: this.group,
+            group: self.get("group"),
             allowEmails
           });
+          return results;
         },
 
         transformComplete(v) {
@@ -82,14 +79,16 @@ export default TextField.extend({
             }
             return v.username || v.name;
           } else {
-            const excludes = excludedUsernames();
-            return v.usernames.filter(item => excludes.indexOf(item) === -1);
+            var excludes = excludedUsernames();
+            return v.usernames.filter(function(item) {
+              return excludes.indexOf(item) === -1;
+            });
           }
         },
 
         onChangeItems(items) {
-          let hasGroups = false;
-          items = items.map(i => {
+          var hasGroups = false;
+          items = items.map(function(i) {
             if (groups.indexOf(i) > -1) {
               hasGroups = true;
             }
@@ -97,20 +96,18 @@ export default TextField.extend({
           });
 
           let previouslySelected = [];
-          if (Array.isArray(this.usernames)) {
-            previouslySelected = this.usernames;
+          if (Array.isArray(self.get("usernames"))) {
+            previouslySelected = self.get("usernames");
           } else {
-            if (this.usernames) {
-              previouslySelected = this.usernames.split(",");
+            if (self.get("usernames")) {
+              previouslySelected = self.get("usernames").split(",");
             }
           }
-
-          this.setProperties({ usernames: items.join(","), hasGroups });
+          self.set("usernames", items.join(","));
+          self.set("hasGroups", hasGroups);
           selected = items;
-
-          if (this.onChangeCallback) {
-            this.onChangeCallback(previouslySelected, selected);
-          }
+          if (self.get("onChangeCallback"))
+            self.onChangeCallback(previouslySelected, selected);
         },
 
         reverseTransform(i) {
@@ -119,14 +116,21 @@ export default TextField.extend({
       });
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+    this.$().autocomplete("destroy");
+  },
+
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
   @observes("usernames")
-  _clearInput() {
-    if (arguments.length > 1 && Ember.isEmpty(this.usernames)) {
-      $(this.element)
-        .parent()
-        .find("a")
-        .click();
+  _clearInput: function() {
+    if (arguments.length > 1) {
+      if (Ember.isEmpty(this.get("usernames"))) {
+        this.$()
+          .parent()
+          .find("a")
+          .click();
+      }
     }
   }
 });
