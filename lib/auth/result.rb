@@ -73,7 +73,7 @@ class Auth::Result
       result[:destination_url] = destination_url if destination_url.present?
 
       if SiteSetting.enable_names?
-        result[:name] = User.suggest_name(name || username || email)
+        result[:name] = name.presence || User.suggest_name(username || email)
       end
 
       result
