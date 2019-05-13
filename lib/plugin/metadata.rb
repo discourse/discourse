@@ -48,6 +48,7 @@ class Plugin::Metadata
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
     "discourse-steam-login",
+    "discourse-login-with-amazon",
     "discourse-policy",
     "discourse-presence",
     "discourse-prometheus",
