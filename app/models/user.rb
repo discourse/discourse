@@ -106,6 +106,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :will_save_change_to_username?
   validate :password_validator
+  validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
@@ -1333,17 +1334,31 @@ class User < ActiveRecord::Base
 
   def username_validator
     username_format_validator || begin
-      existing = DB.query(
-        USERNAME_EXISTS_SQL,
-        username: self.class.normalize_username(username)
-      )
+      if will_save_change_to_username?
+        existing = DB.query(
+          USERNAME_EXISTS_SQL,
+          username: self.class.normalize_username(username)
+        )
 
-      user_id = existing.select { |u| u.is_user }.first&.id
-      same_user = user_id && user_id == self.id
+        user_id = existing.select { |u| u.is_user }.first&.id
+        same_user = user_id && user_id == self.id
 
-      if will_save_change_to_username? && existing.present? && !same_user
-        errors.add(:username, I18n.t(:'user.username.unique'))
+        if existing.present? && !same_user
+          errors.add(:username, I18n.t(:'user.username.unique'))
+        end
+
+        if confirm_password?(username) || confirm_password?(username.downcase)
+          errors.add(:username, :same_as_password)
+        end
       end
+    end
+  end
+
+  def name_validator
+    if name.present? &&
+      (confirm_password?(name) || confirm_password?(name&.downcase))
+
+      errors.add(:name, :same_as_password)
     end
   end
 
