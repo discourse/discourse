@@ -360,7 +360,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false)
-    result = "#{post.raw}\n\n"
+    result = +"#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
@@ -551,7 +551,7 @@ class UserNotifications < ActionMailer::Base
     context_posts = context_posts.to_a
 
     if context_posts.present?
-      context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
+      context << +"-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp, true)
       end
