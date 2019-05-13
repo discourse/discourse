@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateReviewableClaimedTopics < ActiveRecord::Migration[5.2]
   def change
     create_table :reviewable_claimed_topics do |t|

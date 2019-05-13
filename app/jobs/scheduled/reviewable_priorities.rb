@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jobs::ReviewablePriorities < Jobs::Scheduled
   every 1.day
 
