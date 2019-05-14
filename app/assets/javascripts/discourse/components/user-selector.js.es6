@@ -51,6 +51,8 @@ export default TextField.extend({
       return usernames;
     };
 
+    const userSelectorComponent = this;
+
     $(this.element)
       .val(this.usernames)
       .autocomplete({
@@ -64,13 +66,13 @@ export default TextField.extend({
         dataSource(term) {
           return userSearch({
             term,
-            topicId: this.topicId,
+            topicId: userSelectorComponent.topicId,
             exclude: excludedUsernames(),
             includeGroups,
             allowedUsers,
             includeMentionableGroups,
             includeMessageableGroups,
-            group: this.group,
+            group: userSelectorComponent.group,
             allowEmails
           });
         },
@@ -97,19 +99,25 @@ export default TextField.extend({
           });
 
           let previouslySelected = [];
-          if (Array.isArray(this.usernames)) {
-            previouslySelected = this.usernames;
+          if (Array.isArray(userSelectorComponent.usernames)) {
+            previouslySelected = userSelectorComponent.usernames;
           } else {
-            if (this.usernames) {
-              previouslySelected = this.usernames.split(",");
+            if (userSelectorComponent.usernames) {
+              previouslySelected = userSelectorComponent.usernames.split(",");
             }
           }
 
-          this.setProperties({ usernames: items.join(","), hasGroups });
+          userSelectorComponent.setProperties({
+            usernames: items.join(","),
+            hasGroups
+          });
           selected = items;
 
-          if (this.onChangeCallback) {
-            this.onChangeCallback(previouslySelected, selected);
+          if (userSelectorComponent.onChangeCallback) {
+            userSelectorComponent.onChangeCallback(
+              previouslySelected,
+              selected
+            );
           }
         },
 
