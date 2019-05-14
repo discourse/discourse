@@ -214,13 +214,24 @@ describe UploadsController do
       upload
     end
 
-    it "returns 404 when using external storage" do
-      SiteSetting.enable_s3_uploads = true
-      SiteSetting.s3_access_key_id = "fakeid7974664"
-      SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+    context "when using external storage" do
+      before do
+        @upload = upload_file("small.pdf", "pdf")
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_access_key_id = "fakeid7974664"
+        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+      end
 
-      get "/uploads/#{site}/#{sha}.pdf"
-      expect(response.response_code).to eq(404)
+      it "returns 404" do
+        @upload.update_column(:url, "//bucket.s3.amazonaws.com/#{@upload.url}")
+        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+        expect(response.response_code).to eq(404)
+      end
+
+      it "returns upload if url not migrated" do
+        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+        expect(response.status).to eq(200)
+      end
     end
 
     it "returns 404 when the upload doesn't exist" do
