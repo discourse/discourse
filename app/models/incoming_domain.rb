@@ -23,7 +23,7 @@ class IncomingDomain < ActiveRecord::Base
   end
 
   def to_url
-    url = "http#{https ? "s" : ""}://#{name}"
+    url = +"http#{https ? "s" : ""}://#{name}"
 
     if https && port != 443 || !https && port != 80
       url << ":#{port}"
