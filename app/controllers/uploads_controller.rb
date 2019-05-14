@@ -2,6 +2,7 @@
 
 require "mini_mime"
 require_dependency 'upload_creator'
+require_dependency "file_store/local_store"
 
 class UploadsController < ApplicationController
   requires_login except: [:show]
@@ -67,10 +68,14 @@ class UploadsController < ApplicationController
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
     RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-      return render_404 unless Discourse.store.internal?
       return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 
       if upload = Upload.find_by(sha1: params[:sha]) || Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
+        unless Discourse.store.internal?
+          local_store = FileStore::LocalStore.new
+          return render_404 unless local_store.has_been_uploaded?(upload.url)
+        end
+
         opts = {
           filename: upload.original_filename,
           content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
