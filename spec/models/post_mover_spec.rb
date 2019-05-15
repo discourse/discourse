@@ -224,6 +224,14 @@ describe PostMover do
             # both the like and was_liked user actions should be correct
             action = UserAction.find_by(user_id: another_user.id)
             expect(action.target_topic_id).to eq(new_topic.id)
+
+            expect(TopicUser.exists?(
+              user_id: another_user,
+              topic_id: new_topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+              notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+            )).to eq(true)
+            expect(TopicUser.exists?(user_id: user, topic_id: new_topic.id)).to eq(false)
           end
 
           it "moving all posts will close the topic" do
@@ -361,6 +369,66 @@ describe PostMover do
             moderator_post = topic.posts.find_by(post_number: 2)
             expect(moderator_post.raw).to include("4 posts were merged")
           end
+        end
+
+        context "to a message" do
+
+          it "works correctly" do
+            topic.expects(:add_moderator_post).once
+            new_topic = topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", archetype: "private_message")
+
+            expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
+
+            expect(new_topic).to be_present
+            expect(new_topic.featured_user1_id).to eq(p4.user_id)
+            expect(new_topic.like_count).to eq(1)
+
+            expect(new_topic.archetype).to eq(Archetype.private_message)
+            expect(topic.featured_user1_id).to be_blank
+            expect(new_topic.posts.by_post_number).to match_array([p2, p4])
+
+            new_topic.reload
+            expect(new_topic.posts_count).to eq(2)
+            expect(new_topic.highest_post_number).to eq(2)
+
+            p4.reload
+            expect(new_topic.last_post_user_id).to eq(p4.user_id)
+            expect(new_topic.last_posted_at).to eq(p4.created_at)
+            expect(new_topic.bumped_at).to eq(p4.created_at)
+
+            p2.reload
+            expect(p2.sort_order).to eq(1)
+            expect(p2.post_number).to eq(1)
+            expect(p2.topic_links.first.topic_id).to eq(new_topic.id)
+
+            expect(p4.post_number).to eq(2)
+            expect(p4.sort_order).to eq(2)
+
+            topic.reload
+            expect(topic.featured_user1_id).to be_blank
+            expect(topic.like_count).to eq(0)
+            expect(topic.posts_count).to eq(2)
+            expect(topic.posts.by_post_number).to match_array([p1, p3])
+            expect(topic.highest_post_number).to eq(p3.post_number)
+
+            # both the like and was_liked user actions should be correct
+            action = UserAction.find_by(user_id: another_user.id)
+            expect(action.target_topic_id).to eq(new_topic.id)
+
+            expect(TopicUser.exists?(
+              user_id: another_user,
+              topic_id: new_topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+              notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+            )).to eq(true)
+            expect(TopicUser.exists?(
+              user_id: user,
+              topic_id: new_topic.id,
+              notification_level: TopicUser.notification_levels[:watching],
+              notifications_reason_id: TopicUser.notification_reasons[:created_post]
+            )).to eq(true)
+          end
+
         end
 
         shared_examples "moves email related stuff" do
@@ -583,6 +651,9 @@ describe PostMover do
 
       context 'move to new message' do
         it "adds post users as topic allowed users" do
+          TopicUser.change(user, personal_message, notification_level: TopicUser.notification_levels[:muted])
+          TopicUser.change(another_user, personal_message, notification_level: TopicUser.notification_levels[:tracking])
+
           personal_message.move_posts(admin, [p2.id, p3.id, p4.id, p5.id], title: "new testing message name", tags: ["tag1", "tag2"], archetype: "private_message")
 
           p2.reload
@@ -592,6 +663,18 @@ describe PostMover do
           expect(destination_topic.topic_allowed_users.where(user_id: another_user.id).count).to eq(1)
           expect(destination_topic.topic_allowed_users.where(user_id: evil_trout.id).count).to eq(1)
           expect(destination_topic.tags.pluck(:name)).to eq([])
+          expect(TopicUser.exists?(
+            user_id: another_user,
+            topic_id: destination_topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+            notifications_reason_id: TopicUser.notification_reasons[:created_topic]
+          )).to eq(true)
+          expect(TopicUser.exists?(
+            user_id: user,
+            topic_id: destination_topic.id,
+            notification_level: TopicUser.notification_levels[:muted],
+            notifications_reason_id: TopicUser.notification_reasons[:created_post]
+          )).to eq(true)
         end
 
         it "can add tags to new message when allow_staff_to_tag_pms is enabled" do
