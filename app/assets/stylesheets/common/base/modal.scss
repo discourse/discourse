@@ -122,7 +122,6 @@
   }
 }
 
-
 .create-account.in .modal-inner-container,
 .login-modal.in .modal-inner-container {
   animation: slidein 0.3s;
@@ -242,7 +241,7 @@
       display: block;
     }
     .d-modal-cancel {
-      margin: 1em 0 .5em;
+      margin: 1em 0 0.5em;
     }
     .btn {
       text-align: left;
@@ -292,7 +291,8 @@
   }
 }
 
-.permission-list { // Category security tab
+.permission-list {
+  // Category security tab
   list-style: none;
   margin: 0 0 30px;
   padding: 0;
@@ -488,13 +488,13 @@
     }
 
     .jump-to-date-control .input-hint-text {
-        margin-left: 0;
+      margin-left: 0;
     }
 
     .separator {
       display: flex;
       align-items: center;
-      margin: .5em auto;
+      margin: 0.5em auto;
 
       hr {
         flex: 1 0 0px;
