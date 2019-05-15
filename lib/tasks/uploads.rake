@@ -399,8 +399,10 @@ def migrate_to_s3
       next if File.size(path) == s3_object.size && s3_object.etag[etag]
     end
 
+    private_upload = SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(name)
+
     options = {
-      acl: "public-read",
+      acl: private_upload ? "private" : "public-read",
       body: File.open(path, "rb"),
       bucket: bucket,
       content_type: MiniMime.lookup_by_filename(name)&.content_type,
@@ -526,6 +528,14 @@ def migrate_to_s3
 
       count = Post.where("cooked LIKE '%class=\"lightbox\"%'").update_all(baked_version: nil)
       puts "#{count} posts were flagged for a rebake"
+
+      if SiteSetting.prevent_anons_from_downloading_files
+        puts "Rebaking posts with private upload attachments..."
+
+        Post.where("cooked LIKE '%class=\"attachment\"%'").find_each do |post|
+          post.rebake!(priority: :ultra_low)
+        end
+      end
     end
   end
 

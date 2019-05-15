@@ -7,6 +7,7 @@ class S3Helper
   class SettingMissing < StandardError; end
 
   attr_reader :s3_bucket_name, :s3_bucket_folder_path
+  DOWNLOAD_URL_EXPIRES_AFTER_SECONDS ||= 15
 
   def initialize(s3_bucket_name, tombstone_prefix = '', options = {})
     @s3_client = options.delete(:client)

@@ -113,6 +113,10 @@ module FileStore
       get_path_for("original".freeze, upload.id, upload.sha1, extension)
     end
 
+    def get_local_path_for_upload(upload)
+      File.join(Discourse.base_uri, upload_path, get_path_for_upload(upload))
+    end
+
     def get_path_for_optimized_image(optimized_image)
       upload = optimized_image.upload
       version = optimized_image.version || 1

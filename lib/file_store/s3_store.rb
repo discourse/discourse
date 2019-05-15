@@ -41,11 +41,14 @@ module FileStore
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
-      # stored uploaded are public by default
+
+      private_upload = SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(filename)
+
       options = {
-        acl: "public-read",
+        acl: private_upload ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
+
       # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_supported_image?(filename)
 
@@ -101,6 +104,12 @@ module FileStore
     end
 
     def path_for(upload)
+      if SiteSetting.prevent_anons_from_downloading_files
+        expires = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
+        obj = @s3_helper.object(get_path_for_upload(upload))
+        return obj.presigned_url(:get, expires_in: expires)
+      end
+
       url = upload.try(:url)
       FileStore::LocalStore.new.path_for(upload) if url && url[/^\/[^\/]/]
     end

@@ -71,7 +71,7 @@ class UploadsController < ApplicationController
       return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 
       if upload = Upload.find_by(sha1: params[:sha]) || Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
-        unless Discourse.store.internal?
+        if Discourse.store.external? && !SiteSetting.prevent_anons_from_downloading_files
           local_store = FileStore::LocalStore.new
           return render_404 unless local_store.has_been_uploaded?(upload.url)
         end
@@ -84,9 +84,14 @@ class UploadsController < ApplicationController
         opts[:disposition] ||= "attachment" unless FileHelper.is_supported_image?(upload.original_filename)
 
         file_path = Discourse.store.path_for(upload)
-        return render_404 unless file_path
 
-        send_file(file_path, opts)
+        if Discourse.store.external? && SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(upload.original_filename)
+          redirect_to file_path
+        else
+          return render_404 unless file_path
+
+          send_file(file_path, opts)
+        end
       else
         render_404
       end

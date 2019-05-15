@@ -139,6 +139,11 @@ class UploadCreator
         UserUpload.find_or_create_by!(user_id: user_id, upload_id: @upload.id) if user_id
       end
 
+      if !is_image && SiteSetting.prevent_anons_from_downloading_files
+        # use local URL for private uploads in S3
+        @upload.url = Discourse.store.get_local_path_for_upload(@upload)
+      end
+
       @upload
     end
   ensure

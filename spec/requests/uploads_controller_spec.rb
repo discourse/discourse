@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'file_store/s3_store'
 
 describe UploadsController do
   describe '#create' do
@@ -222,8 +223,16 @@ describe UploadsController do
 
       before do
         SiteSetting.enable_s3_uploads = true
-        SiteSetting.s3_access_key_id = "fakeid7974664"
-        SiteSetting.s3_secret_access_key = "fakesecretid7974664"
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "s3-access-key-id"
+        SiteSetting.s3_secret_access_key = "s3-secret-access-key"
+        SiteSetting.s3_region = 'us-west-1'
+
+        store = FileStore::S3Store.new
+        s3_helper = store.instance_variable_get(:@s3_helper)
+        client = Aws::S3::Client.new(stub_responses: true)
+        s3_helper.stubs(:s3_client).returns(client)
+        Discourse.stubs(:store).returns(store)
       end
 
       it "returns 404 " do
@@ -237,6 +246,27 @@ describe UploadsController do
         get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
 
         expect(response.status).to eq(200)
+      end
+
+      it "redirects to presigned URL for private uploads" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        @upload.update_column(:url, "//bucket.s3.amazonaws.com/#{@upload.url}")
+
+        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+
+        expect(response.response_code).to eq(302)
+        expect(response.redirect_url).to match(/amazonaws/)
+        expect(response.redirect_url).to match(/Amz-Credential/)
+      end
+
+      it "does not redirect to presigned S3 URL for private uploads for anons" do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        @upload.update_column(:url, "//bucket.s3.amazonaws.com/#{@upload.url}")
+
+        delete "/session/#{user.username}.json" # sign out
+        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+
+        expect(response.status).to eq(404)
       end
     end
 

@@ -273,6 +273,10 @@ module PrettyText
       add_rel_nofollow_to_user_content(doc)
     end
 
+    if SiteSetting.prevent_anons_from_downloading_files && Discourse.store.external?
+      update_s3_private_upload_urls(doc)
+    end
+
     if SiteSetting.enable_mentions
       add_mentions(doc, user_id: opts[:user_id])
     end
@@ -499,4 +503,13 @@ module PrettyText
     mentions
   end
 
+  def self.update_s3_private_upload_urls(doc)
+    doc.css("a.attachment").each do |link|
+      href = link["href"].to_s
+      if upload = Upload.find_by(url: href)
+        link["href"] = Discourse.store.get_local_path_for_upload(upload)
+      end
+    end
+
+  end
 end

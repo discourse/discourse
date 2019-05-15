@@ -173,6 +173,8 @@ RSpec.describe UploadCreator do
     describe 'uploading to s3' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
+      let(:text_filename) { "utf-8.txt" }
+      let(:text_file) { file_from_fixtures(text_filename, "encodings") }
 
       before do
         SiteSetting.s3_upload_bucket = "s3-upload-bucket"
@@ -196,6 +198,16 @@ RSpec.describe UploadCreator do
         upload = Upload.last
 
         expect(upload.etag).to eq('ETag')
+      end
+
+      it 'should return local URL for private uploads' do
+        SiteSetting.prevent_anons_from_downloading_files = true
+        SiteSetting.authorized_extensions = 'txt'
+        upload = UploadCreator.new(text_file, text_filename).create_for(user.id)
+        stored_upload = Upload.last
+
+        expect(upload.url).not_to eq(stored_upload.url)
+        expect(upload.url).to eq(Discourse.store.get_local_path_for_upload(stored_upload))
       end
     end
   end
