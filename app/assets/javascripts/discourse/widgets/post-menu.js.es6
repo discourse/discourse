@@ -428,14 +428,20 @@ export default createWidget("post-menu", {
       if (builder) {
         const buttonAtts = builder(attrs, this.state, this.siteSettings);
         if (buttonAtts) {
-          const { position, beforeButton } = buttonAtts;
+          const { position, beforeButton, afterButton } = buttonAtts;
           delete buttonAtts.position;
 
           let button = this.attach(this.settings.buttonType, buttonAtts);
 
+          const content = [];
           if (beforeButton) {
-            button = h("span", [beforeButton(h), button]);
+            content.push(beforeButton(h));
           }
+          content.push(button);
+          if (afterButton) {
+            content.push(afterButton(h));
+          }
+          button = h("span", content);
 
           if (button) {
             switch (position) {
