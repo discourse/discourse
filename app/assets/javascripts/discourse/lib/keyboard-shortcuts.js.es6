@@ -416,7 +416,7 @@ export default {
 
   _bindToFunction(func, binding) {
     if (typeof this[func] === "function") {
-      this.keyTrapper.bind(binding, _.bind(this[func], this));
+      this.keyTrapper.bind(binding, this[func].bind(this));
     }
   },
 
