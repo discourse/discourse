@@ -439,7 +439,7 @@ en:
 
       A great discussion involves many voices and perspectives. Can you get anybody else involved? Give it a shot!
 
-      And don't forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](/u/%{reply_username}).
+      And don't forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
