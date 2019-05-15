@@ -1,10 +1,3 @@
-// base styles for every modal popup used in Discourse
-
-.modal-middle-container {
-  display: table-cell;
-  vertical-align: middle;
-}
-
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
   top: 50%;
@@ -29,10 +22,6 @@
   float: right;
 }
 
-.modal-footer .btn-group .btn + .btn {
-  margin-left: -1px;
-}
-
 .modal-header {
   h3 {
     font-size: $font-up-3;
@@ -42,7 +31,6 @@
 .close {
   font-size: $font-up-3;
   text-decoration: none;
-  color: $primary-high;
   &:visited {
     color: $primary-high;
   }
@@ -56,23 +44,17 @@
   .category-chooser {
     width: 50%;
   }
-
-  .category-combobox {
-    width: 430px;
-  }
 }
 
 .edit-category-modal {
   .modal-body {
     position: relative;
     height: 420px;
-    max-height: 420px;
-    padding-bottom: 0;
   }
 
   .disable_info_wrap {
     .cannot_delete_reason {
-      top: -74px;
+      top: -100px;
       right: 4px;
       max-width: 380px;
       min-width: 300px;
@@ -123,7 +105,7 @@
   }
 
   #move-selected {
-    // prevents content from moving when user selects differnt move options 525px
+    // prevents content from moving when user selects different move options 525px
     // is the same width we set on category edit modal
     width: 525px;
 
@@ -171,18 +153,4 @@
       }
     }
   }
-}
-
-.upload-options {
-  margin-left: 20px;
-  margin-top: 20px;
-}
-.uploaded-avatar {
-  margin-top: 20px;
-}
-
-.uploaded-image-preview {
-  width: 400px;
-  max-height: 150px;
-  margin-bottom: 10px;
 }
