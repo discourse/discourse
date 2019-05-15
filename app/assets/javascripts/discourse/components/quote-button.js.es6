@@ -1,3 +1,4 @@
+import debounce from "discourse/lib/debounce";
 import { selectedText } from "discourse/lib/utilities";
 
 export default Ember.Component.extend({
@@ -122,7 +123,7 @@ export default Ember.Component.extend({
   didInsertElement() {
     const { isWinphone, isAndroid } = this.capabilities;
     const wait = isWinphone || isAndroid ? 250 : 25;
-    const onSelectionChanged = _.debounce(() => this._selectionChanged(), wait);
+    const onSelectionChanged = debounce(() => this._selectionChanged(), wait);
 
     $(document)
       .on("mousedown.quote-button", e => {

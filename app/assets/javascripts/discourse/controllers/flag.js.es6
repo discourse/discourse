@@ -67,7 +67,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       this.set("topicActionByName", lookup);
 
       return this.site.get("topic_flag_types").filter(item => {
-        return _.any(this.get("model.actions_summary"), a => {
+        return this.get("model.actions_summary").some(a => {
           return a.id === item.get("id") && a.can_act;
         });
       });

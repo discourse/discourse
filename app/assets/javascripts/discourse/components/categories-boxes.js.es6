@@ -11,14 +11,14 @@ export default Ember.Component.extend({
 
   @computed("categories.[].uploaded_logo.url")
   anyLogos() {
-    return this.get("categories").any(
+    return this.get("categories").some(
       c => !Ember.isEmpty(c.get("uploaded_logo.url"))
     );
   },
 
   @computed("categories.[].subcategories")
   hasSubcategories() {
-    return this.get("categories").any(
+    return this.get("categories").some(
       c => !Ember.isEmpty(c.get("subcategories"))
     );
   },

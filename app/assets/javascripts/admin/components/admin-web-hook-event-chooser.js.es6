@@ -16,7 +16,7 @@ export default Ember.Component.extend({
 
   @computed("model.[]", "typeName")
   eventTypeExists(eventTypes, typeName) {
-    return eventTypes.any(event => event.name === typeName);
+    return eventTypes.some(event => event.name === typeName);
   },
 
   @computed("eventTypeExists")

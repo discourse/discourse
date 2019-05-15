@@ -488,7 +488,7 @@ export default createWidget("header", {
     const check = function(regex) {
       return !!currentPath.match(regex);
     };
-    let showSearch = whitelist.any(check) && !blacklist.any(check);
+    let showSearch = whitelist.some(check) && !blacklist.some(check);
 
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {

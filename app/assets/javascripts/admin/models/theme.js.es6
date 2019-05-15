@@ -165,7 +165,7 @@ const Theme = RestModel.extend({
       return !Ember.isEmpty(this.getField(target, name));
     } else {
       let fields = this.get("theme_fields") || [];
-      return fields.any(
+      return fields.some(
         field => field.target === target && !Ember.isEmpty(field.value)
       );
     }
@@ -174,7 +174,7 @@ const Theme = RestModel.extend({
   hasError(target, name) {
     return this.get("theme_fields")
       .filter(f => f.target === target && (!name || name === f.name))
-      .any(f => f.error);
+      .some(f => f.error);
   },
 
   getError(target, name) {
