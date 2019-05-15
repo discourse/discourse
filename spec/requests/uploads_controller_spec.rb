@@ -209,27 +209,33 @@ describe UploadsController do
         file: fake_logo,
         type: "composer",
       }
+
+      expect(response.status).to eq(200)
+
       url = JSON.parse(response.body)["url"]
       upload = Upload.where(url: url).first
       upload
     end
 
     context "when using external storage" do
+      fab!(:upload) { upload_file("small.pdf", "pdf") }
+
       before do
-        @upload = upload_file("small.pdf", "pdf")
         SiteSetting.enable_s3_uploads = true
         SiteSetting.s3_access_key_id = "fakeid7974664"
         SiteSetting.s3_secret_access_key = "fakesecretid7974664"
       end
 
-      it "returns 404" do
-        @upload.update_column(:url, "//bucket.s3.amazonaws.com/#{@upload.url}")
-        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+      it "returns 404 " do
+        upload = Fabricate(:upload_s3)
+        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+
         expect(response.response_code).to eq(404)
       end
 
       it "returns upload if url not migrated" do
-        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
+
         expect(response.status).to eq(200)
       end
     end
