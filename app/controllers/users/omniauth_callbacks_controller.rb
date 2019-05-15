@@ -44,18 +44,18 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result = authenticator.after_authenticate(auth)
     end
 
-    origin = request.env['omniauth.origin']
+    preferred_origin = request.env['omniauth.origin']
 
     if SiteSetting.enable_sso_provider && payload = cookies.delete(:sso_payload)
-      origin = session_sso_provider_url + "?" + payload
+      preferred_origin = session_sso_provider_url + "?" + payload
     elsif cookies[:destination_url].present?
-      origin = cookies[:destination_url]
+      preferred_origin = cookies[:destination_url]
       cookies.delete(:destination_url)
     end
 
-    if origin.present?
+    if preferred_origin.present?
       parsed = begin
-        URI.parse(origin)
+        URI.parse(preferred_origin)
       rescue URI::Error
       end
 
@@ -69,7 +69,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       @origin = Discourse.base_uri("/")
     end
 
-    @auth_result.destination_url = origin
+    @auth_result.destination_url = @origin
 
     if @auth_result.failed?
       flash[:error] = @auth_result.failed_reason.html_safe

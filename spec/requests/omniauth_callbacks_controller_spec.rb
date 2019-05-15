@@ -119,7 +119,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it 'should return the right response' do
-        destination_url = 'http://thisisasite.com/somepath'
+        destination_url = '/somepath'
         Rails.application.env_config["omniauth.origin"] = destination_url
 
         get "/auth/google_oauth2/callback.json"
@@ -138,7 +138,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       it 'should include destination url in response' do
-        destination_url = 'http://thisisasite.com/somepath'
+        destination_url = '/cookiepath'
         cookies[:destination_url] = destination_url
 
         get "/auth/google_oauth2/callback.json"
@@ -353,6 +353,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/')
         end
 
         it "redirects to internal origin" do
@@ -361,6 +364,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/t/123"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
         it "redirects to relative origin" do
@@ -369,6 +375,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/t/123"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/t/123')
         end
 
         it "redirects with query" do
@@ -377,6 +386,9 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(response.status).to eq 302
           expect(response.location).to eq "http://test.localhost/t/123?foo=bar"
+
+          cookie_data = JSON.parse(response.cookies['authentication_data'])
+          expect(cookie_data["destination_url"]).to eq('/t/123?foo=bar')
         end
 
         it "removes authentication_data cookie on logout" do
