@@ -545,12 +545,13 @@ describe PostAlerter do
   describe ".create_notification" do
     fab!(:topic) { Fabricate(:private_message_topic, user: user, created_at: 1.hour.ago) }
     fab!(:post) { Fabricate(:post, topic: topic, created_at: 1.hour.ago) }
+    let(:type) { Notification.types[:private_message] }
 
     it "creates a notification for PMs" do
       post.revise(user, { raw: 'This is the revised post' }, revised_at: Time.zone.now)
 
       expect {
-        PostAlerter.new.create_notification(user, Notification.types[:private_message], post)
+        PostAlerter.new.create_notification(user, type, post)
       }.to change { user.notifications.count }.by(1)
 
       expect(user.notifications.last.data_hash["topic_title"]).to eq(topic.title)
@@ -562,14 +563,50 @@ describe PostAlerter do
       post.revise(user, { title: "This is the revised title" }, revised_at: Time.now)
 
       expect {
-        PostAlerter.new.create_notification(user, Notification.types[:private_message], post)
+        PostAlerter.new.create_notification(user, type, post)
       }.to change { user.notifications.count }.by(1)
 
       expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
     end
 
-    it "triggers :post_notification_alert" do
+    it "triggers :pre_notification_alert" do
+      events = DiscourseEvent.track_events do
+        PostAlerter.new.create_notification(user, type, post)
+      end
 
+      payload = {
+       notification_type: type,
+       post_number: post.post_number,
+       topic_title: post.topic.title,
+       topic_id: post.topic.id,
+       excerpt: post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+       username: post.username,
+       post_url: post.url
+      }
+
+      expect(events).to include(event_name: :pre_notification_alert, params: [user, payload])
+    end
+
+    it "does not alert when revising and changing notification type" do
+      PostAlerter.new.create_notification(user, type, post)
+
+      post.revise(user, { raw: "Editing post to fake include a mention of @eviltrout" }, revised_at: Time.now)
+
+      events = DiscourseEvent.track_events do
+        PostAlerter.new.create_notification(user, Notification.types[:mentioned], post)
+      end
+
+      payload = {
+       notification_type: type,
+       post_number: post.post_number,
+       topic_title: post.topic.title,
+       topic_id: post.topic.id,
+       excerpt: post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
+       username: post.username,
+       post_url: post.url
+      }
+
+      expect(events).not_to include(event_name: :pre_notification_alert, params: [user, payload])
     end
 
     it "triggers :before_create_notification" do
