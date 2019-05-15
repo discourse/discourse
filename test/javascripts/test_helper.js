@@ -16,7 +16,7 @@
 //= require preload-store
 
 //= require locales/i18n
-//= require locales/en
+//= require locales/en_US
 
 // Stuff we need to load first
 //= require vendor

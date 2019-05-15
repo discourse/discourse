@@ -57,7 +57,14 @@ class LocaleSiteSetting < EnumSiteSetting
     end
   end
 
+  FALLBACKS ||= {
+    en_US: :en
+  }
+
   def self.fallback_locale(locale)
+    fallback_locale = FALLBACKS[locale.to_sym]
+    return fallback_locale if fallback_locale
+
     plugin_locale = DiscoursePluginRegistry.locales[locale.to_s]
     plugin_locale ? plugin_locale[:fallbackLocale]&.to_sym : nil
   end

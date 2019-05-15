@@ -221,7 +221,7 @@ module Jobs
           RailsMultisite::ConnectionManagement.with_connection(db) do
             job_instrumenter = JobInstrumenter.new(job_class: self.class, opts: opts, db: db, jid: jid)
             begin
-              I18n.locale = SiteSetting.default_locale || "en"
+              I18n.locale = SiteSetting.default_locale || SiteSettings::DefaultsProvider::DEFAULT_LOCALE
               I18n.ensure_all_loaded!
               begin
                 logster_env = {}

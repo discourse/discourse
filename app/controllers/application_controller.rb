@@ -324,7 +324,7 @@ class ApplicationController < ActionController::Base
       locale = current_user.effective_locale
     end
 
-    I18n.locale = I18n.locale_available?(locale) ? locale : :en
+    I18n.locale = I18n.locale_available?(locale) ? locale : SiteSettings::DefaultsProvider::DEFAULT_LOCALE
     I18n.ensure_all_loaded!
   end
 

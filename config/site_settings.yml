@@ -639,6 +639,11 @@ posting:
       ja: false
       zh_CN: false
       zh_TW: false
+  title_remove_extraneous_space:
+    default: false
+    locale_default:
+      en: true
+      en_US: true
   title_fancy_entities: true
   min_personal_message_title_length:
     client: true
