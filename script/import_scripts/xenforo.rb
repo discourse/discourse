@@ -307,7 +307,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     s.gsub!(/\[color=[#a-z0-9]+\]/i, "")
     s.gsub!(/\[\/color\]/i, "")
 
-    if ATTACHMENT_DIR
+    if Dir.exist? ATTACHMENT_DIR
       s = process_xf_attachments(:gallery, s)
       s = process_xf_attachments(:attachment, s)
     end
@@ -330,13 +330,9 @@ class ImportScripts::XenForo < ImportScripts::Base
         next
       end
       original_filename = results.first['filename']
-      if (upload = Upload.find_by_original_filename original_filename)
-        # Do nothing
-        puts "Found existing upload for filename #{original_filename}."
-      else
-        result = results.first
-        upload = import_xf_attachment(result['data_id'], result['file_hash'], result['user_id'], original_filename)
-      end
+      result = results.first
+      upload = import_xf_attachment(result['data_id'], result['file_hash'], result['user_id'], original_filename)
+      next unless upload
       if upload.present? && upload.persisted?
         s.gsub!(get_xf_regexp(xf_type, id), @uploader.html_for_upload(upload, original_filename))
       else
@@ -348,14 +344,15 @@ class ImportScripts::XenForo < ImportScripts::Base
 
   def import_xf_attachment(data_id, file_hash, owner_id, original_filename)
     current_filename = "#{data_id}-#{file_hash}.data"
-    path = Pathname.new(ATTACHMENT_DIR + "/attachments/#{data_id / 1000}/#{current_filename}")
+    path = Pathname.new(ATTACHMENT_DIR + "/#{data_id / 1000}/#{current_filename}")
     new_path = path.dirname + original_filename
     upload = nil
     if File.exist? path
       FileUtils.cp path, new_path
       upload = @uploader.create_upload owner_id, new_path, original_filename
+      FileUtils.rm new_path
     else
-      STDERR.puts "Could not find file #{path}. Skipping attachment id #{id}"
+      STDERR.puts "Could not find file #{path}. Skipping attachment id #{data_id}"
     end
     upload
   end
