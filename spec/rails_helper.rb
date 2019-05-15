@@ -108,7 +108,7 @@ module TestSetup
     Discourse.clear_readonly!
     Sidekiq::Worker.clear_all
 
-    I18n.locale = :en
+    I18n.locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE
 
     RspecErrorTracker.last_exception = nil
 

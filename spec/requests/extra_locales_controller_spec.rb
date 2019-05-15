@@ -27,11 +27,8 @@ describe ExtraLocalesController do
     end
 
     it "includes plugin translations" do
-      I18n.locale = :en
-      I18n.reload!
-
       JsLocaleHelper.expects(:plugin_translations)
-        .with(I18n.locale.to_s)
+        .with(any_of("en", "en_US"))
         .returns("admin_js" => {
           "admin" => {
             "site_settings" => {

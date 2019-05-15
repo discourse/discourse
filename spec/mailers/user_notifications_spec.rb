@@ -787,7 +787,7 @@ describe UserNotifications do
 
         before do
           TranslationOverride.upsert!(
-            "en",
+            SiteSetting.default_locale,
             "#{mail_template}.text_body_template",
             custom_body
           )
@@ -901,7 +901,6 @@ describe UserNotifications do
 
     context "user locale is allowed" do
       before do
-        SiteSetting.default_locale = "en"
         SiteSetting.allow_user_locale = true
       end
 
@@ -919,7 +918,6 @@ describe UserNotifications do
 
     context "user locale is not allowed" do
       before do
-        SiteSetting.default_locale = "en"
         SiteSetting.allow_user_locale = false
       end
 
@@ -929,7 +927,7 @@ describe UserNotifications do
           let(:locale) { "fr" }
           let(:mail_type) { mail_type }
           it "sets the locale" do
-            expects_build_with(has_entry(:locale, "en"))
+            expects_build_with(has_entry(:locale, "en_US"))
           end
         end
       end

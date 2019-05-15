@@ -599,8 +599,8 @@ HTML
     end
 
     it "can create a hash of overridden values" do
-      en_translation = ThemeField.create!(theme_id: theme.id, name: "en", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
-        en:
+      en_translation = ThemeField.create!(theme_id: theme.id, name: "en_US", type_id: ThemeField.types[:yaml], target_id: Theme.targets[:translations], value: <<~YAML)
+        en_US:
           group_of_translations:
             translation1: en test1
       YAML
@@ -610,7 +610,7 @@ HTML
       theme.update_translation("group_of_translations.translation1", "overriddentest2")
       theme.reload
       expect(theme.translation_override_hash).to eq(
-        "en" => {
+        "en_US" => {
           "group_of_translations" => {
             "translation1" => "overriddentest1"
           }

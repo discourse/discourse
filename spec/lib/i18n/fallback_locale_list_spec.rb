@@ -13,6 +13,14 @@ describe I18n::Backend::FallbackLocaleList do
     expect(list[:en]).to eq([:en])
   end
 
+  it "works when default_locale is English (United States)" do
+    SiteSetting.default_locale = :en_US
+
+    expect(list[:ru]).to eq([:ru, :en_US, :en])
+    expect(list[:en_US]).to eq([:en_US, :en])
+    expect(list[:en]).to eq([:en])
+  end
+
   it "works when default_locale is not English" do
     SiteSetting.default_locale = :de
 

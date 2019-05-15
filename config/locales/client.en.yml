@@ -38,31 +38,31 @@ en:
         millions: "{{number}}M"
     dates:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      time: "h:mm a"
+      time: "HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       timeline_date: "MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year: "MMM D h:mm a"
+      long_no_year: "D MMM HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_no_year_no_time: "MMM D"
+      long_no_year_no_time: "D MMM"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      full_no_year_no_time: "MMMM Do"
+      full_no_year_no_time: "Do MMMM"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year: "D MMM YYYY HH:mm"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_with_year_no_time: "MMM D, YYYY"
+      long_with_year_no_time: "D MMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      full_with_year_no_time: "MMMM Do, YYYY"
+      full_with_year_no_time: "D MMMM YYYY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year: "MMM D, 'YY LT"
+      long_date_with_year: "D MMM 'YY LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_without_year: "MMM D, LT"
+      long_date_without_year: "D MMM LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_with_year_without_time: "D MMM 'YY"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_without_year_with_linebreak: "D MMM <br/>LT"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
 
       wrap_ago: "%{date} ago"
 
@@ -98,7 +98,9 @@ en:
         almost_x_years:
           one: "1y"
           other: "%{count}y"
-        date_month: "MMM D"
+        # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+        date_month: "D MMM"
+        # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "MMM 'YY"
       medium:
         x_minutes:
@@ -110,7 +112,8 @@ en:
         x_days:
           one: "1 day"
           other: "%{count} days"
-        date_year: "MMM D, 'YY"
+        # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+        date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 min ago"
