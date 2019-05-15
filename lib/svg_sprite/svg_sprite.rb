@@ -203,10 +203,12 @@ module SvgSprite
       .pluck(:upload_id).each do |upload_id|
 
       upload = Upload.find(upload_id)
-      original_path = Discourse.store.path_for(upload)
-      if original_path.blank?
+
+      if Discourse.store.external?
         external_copy = Discourse.store.download(upload) rescue nil
         original_path = external_copy.try(:path)
+      else
+        original_path = Discourse.store.path_for(upload)
       end
 
       custom_sprite_paths << original_path if original_path.present?
