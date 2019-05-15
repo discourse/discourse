@@ -239,8 +239,8 @@ HTML
     let!(:theme3) { Fabricate(:theme) }
 
     let!(:en1) {
-      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en",
-                         value: { en: { somestring1: "helloworld", group: { key1: "enval1" } } }
+      ThemeField.create!(theme: theme, target_id: Theme.targets[:translations], name: "en_US",
+                         value: { en_US: { somestring1: "helloworld", group: { key1: "enval1" } } }
                                   .deep_stringify_keys.to_yaml
       )
     }
@@ -251,21 +251,21 @@ HTML
       )
     }
     let!(:fr2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "fr", value: "") }
-    let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en", value: "") }
+    let!(:en2) { ThemeField.create!(theme: theme2, target_id: Theme.targets[:translations], name: "en_US", value: "") }
     let!(:ca3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "ca", value: "") }
-    let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en", value: "") }
+    let!(:en3) { ThemeField.create!(theme: theme3, target_id: Theme.targets[:translations], name: "en_US", value: "") }
 
     describe "scopes" do
       it "filter_locale_fields returns results in the correct order" do
         expect(ThemeField.find_by_theme_ids([theme3.id, theme.id, theme2.id])
           .filter_locale_fields(
-           ["en", "fr"]
+           ["en_US", "fr"]
         )).to eq([en3, en1, fr1, en2, fr2])
       end
 
       it "find_first_locale_fields returns only the first locale for each theme" do
         expect(ThemeField.find_first_locale_fields(
-          [theme3.id, theme.id, theme2.id], ["ca", "en", "fr"]
+          [theme3.id, theme.id, theme2.id], ["ca", "en_US", "fr"]
         )).to eq([ca3, en1, en2])
       end
     end
@@ -296,7 +296,7 @@ HTML
       it "loads correctly" do
         expect(fr1.translation_data).to eq(
           fr: { somestring1: "bonjourworld", group: { key2: "frval2" } },
-          en: { somestring1: "helloworld", group: { key1: "enval1" } }
+          en_US: { somestring1: "helloworld", group: { key1: "enval1" } }
         )
       end
 
@@ -318,7 +318,7 @@ HTML
         theme.reload
         expect(fr1.translation_data).to eq(
           fr: { somestring1: "bonjourworld", group: { key2: "frval2" } },
-          en: { somestring1: "helloworld", group: { key1: "overriddentest1" } }
+          en_US: { somestring1: "helloworld", group: { key1: "overriddentest1" } }
         )
       end
     end

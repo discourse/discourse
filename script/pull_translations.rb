@@ -16,7 +16,7 @@ end
 def supported_locales
   Dir.glob(expand_path('config/locales/client.*.yml'))
     .map { |x| x.split('.')[-2] }
-    .select { |x| x != 'en' }
+    .reject { |x| x.start_with?('en') }
     .sort - TranslationsManager::BROKEN_LOCALES
 end
 

@@ -646,7 +646,7 @@ componentTest("clicking the toggle-direction button toggles the direction", {
   template: "{{d-editor value=value}}",
   beforeEach() {
     this.siteSettings.support_mixed_text_direction = true;
-    this.siteSettings.default_locale = "en";
+    this.siteSettings.default_locale = "en_US";
   },
 
   async test(assert) {

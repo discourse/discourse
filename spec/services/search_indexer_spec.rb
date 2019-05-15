@@ -102,7 +102,7 @@ describe SearchIndexer do
 
     raw_data, locale, version = PostSearchData.where(post_id: post_id).pluck(:raw_data, :locale, :version)[0]
     expect(raw_data).to eq("This is a test")
-    expect(locale).to eq("en")
+    expect(locale).to eq(SiteSetting.default_locale)
     expect(version).to eq(SearchIndexer::INDEX_VERSION)
 
     SearchIndexer.update_posts_index(post_id, "tester", "", nil, nil)

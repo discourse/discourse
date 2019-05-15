@@ -90,8 +90,11 @@ describe "i18n integrity checks" do
       expect(yaml.keys).to eq([locale])
 
       expect(yaml[locale]["js"]).to be
-      expect(yaml[locale]["admin_js"]).to be
-      # expect(yaml[locale]["wizard_js"]).to be
+
+      if !LocaleSiteSetting.fallback_locale(locale)
+        expect(yaml[locale]["admin_js"]).to be
+        expect(yaml[locale]["wizard_js"]).to be
+      end
     end
   end
 
