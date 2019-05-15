@@ -545,6 +545,127 @@ def migrate_to_s3
 end
 
 ################################################################################
+#                                s3_set_private_uploads_acl                    #
+################################################################################
+
+task "uploads:s3_set_private_uploads_acl" => :environment do
+  ENV["RAILS_DB"] ? s3_set_private_uploads_acl : s3_set_private_uploads_acl_all_sites
+end
+
+def s3_set_private_uploads_acl_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { s3_set_private_uploads_acl }
+end
+
+def s3_set_private_uploads_acl
+  db = RailsMultisite::ConnectionManagement.current_db
+
+  unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+    ENV["DISCOURSE_S3_REGION"].present? &&
+    ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+    ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+
+    puts <<~TEXT
+      Please provide the following environment variables
+        - DISCOURSE_S3_BUCKET
+        - DISCOURSE_S3_REGION
+        - DISCOURSE_S3_ACCESS_KEY_ID
+        - DISCOURSE_S3_SECRET_ACCESS_KEY
+    TEXT
+    exit 1
+  end
+
+  if SiteSetting.Upload.s3_cdn_url.blank?
+    puts "Please provide the 'DISCOURSE_S3_CDN_URL' environment variable"
+    exit 2
+  end
+
+  if !SiteSetting.enable_s3_uploads
+    puts "This only works if SiteSetting.enable_s3_uploads = true."
+    exit 3
+  end
+
+  if !SiteSetting.prevent_anons_from_downloading_files
+    puts "Nothing to do here, site is not configured for private uploads."
+    exit 4
+  end
+
+  dry_run = ENV["DRY_RUN"].present?
+
+  puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
+
+  bucket_has_folder_path = true if ENV["DISCOURSE_S3_BUCKET"].include? "/"
+
+  opts = {
+    region: ENV["DISCOURSE_S3_REGION"],
+    access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
+    secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
+  }
+
+  # S3::Client ignores the `region` option when an `endpoint` is provided.
+  # Without `region`, non-default region bucket creation will break for S3, so we can only
+  # define endpoint when not using S3 i.e. when SiteSetting.s3_endpoint is provided.
+  opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+  s3 = Aws::S3::Client.new(opts)
+
+  if bucket_has_folder_path
+    bucket, folder = S3Helper.get_bucket_and_folder_path(ENV["DISCOURSE_S3_BUCKET"])
+    folder = File.join(folder, "/")
+  else
+    bucket, folder = ENV["DISCOURSE_S3_BUCKET"], ""
+  end
+
+  print " - Listing S3 files"
+
+  s3_objects = []
+  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
+
+  options = { bucket: bucket, prefix: folder + prefix }
+
+  loop do
+    response = s3.list_objects_v2(options)
+    s3_objects.concat(response.contents)
+    putc "."
+    break if response.next_continuation_token.blank?
+    options[:continuation_token] = response.next_continuation_token
+  end
+
+  puts " => #{s3_objects.size} files"
+  puts " - Updating ACL for files in S3"
+
+  s3_acls_updated = 0
+
+  s3_objects.each do |obj|
+    if !FileHelper.is_supported_image?(obj.key)
+      filename = File.basename(obj.key, File.extname(obj.key))
+      upload = Upload.find_by(sha1: filename)
+      if upload && !upload.for_theme
+        current_acl = s3.get_object_acl(
+            bucket: bucket,
+            key: obj.key
+          )
+        current_acl.grants.each do |grant|
+          if grant.permission == "READ"
+            if dry_run
+              puts " - #{obj.key} would be made private"
+            else
+              s3.put_object_acl(
+                acl: "private",
+                bucket: bucket,
+                key: obj.key
+              )
+              s3_acls_updated += 1
+            end
+          end
+        end
+      end
+    end
+  end
+
+  puts " - #{s3_acls_updated.to_s} files updated" if !dry_run
+  puts "Done!"
+end
+
+################################################################################
 #                                  clean_up                                    #
 ################################################################################
 
