@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 // Modal wrappers
 
-=======
->>>>>>> 427c518f73... remove table layout from modal containers
-=======
-// Modal wrappers
-
->>>>>>> a0511dbbf2... general cleanup, style removal
 .modal-outer-container {
   width: 100%;
   height: 100%;
@@ -20,34 +12,12 @@
 }
 
 .modal-inner-container {
-<<<<<<< HEAD
-<<<<<<< HEAD
   box-sizing: border-box;
   flex: 0 1 auto;
   margin: 0 auto;
   max-width: 700px;
   background-color: $secondary;
   box-shadow: shadow("modal");
-=======
-  max-width: 700px;
-=======
-  box-sizing: border-box;
-  flex: 0 1 auto;
->>>>>>> a0511dbbf2... general cleanup, style removal
-  margin: 0 auto;
-  max-width: 700px;
-  background-color: $secondary;
-  box-shadow: shadow("modal");
-<<<<<<< HEAD
-  padding: 1px;
-  box-sizing: border-box;
-
-  @media screen and (min-width: 475px) {
-    width: auto;
-  }
->>>>>>> 427c518f73... remove table layout from modal containers
-=======
->>>>>>> a0511dbbf2... general cleanup, style removal
 
   .select-kit {
     width: 220px;
@@ -239,73 +209,6 @@
     .warning {
       color: $danger !important;
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    .json-uploader {
-      .jsfu-shade-container {
-        display: table-row;
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-      .jsfu-shade {
-        z-index: z("base");
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        .text {
-          color: rgb(255, 255, 255);
-          position: absolute;
-          top: 40%;
-          font-size: $font-up-6;
-          text-align: center;
-          line-height: $line-height-medium;
-          margin-left: auto;
-          margin-right: auto;
-          left: 0;
-          right: 0;
-        }
-      }
-      .jsfu-file {
-        display: table-cell;
-        vertical-align: middle;
-        min-width: 120px;
-      }
-      .jsfu-separator {
-        vertical-align: middle;
-        display: table-cell;
-        font-size: 2.571em;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-      .jsfu-paste {
-        display: table-cell;
-        width: 100%;
-        textarea {
-          margin-bottom: 0;
-          margin-top: 4px;
-        }
-      }
-    }
-
-    pre {
-      background-color: blend-primary-secondary(5%);
-      max-height: 300px;
-      padding: 0.5em;
-      code {
-        max-height: none;
-      }
-    }
-=======
->>>>>>> ad2b964ea9... general cleanup, style removal
-=======
->>>>>>> a0511dbbf2... general cleanup, style removal
-=======
->>>>>>> 3f14af76c7... merge fix
   }
 
   .password-confirmation {
