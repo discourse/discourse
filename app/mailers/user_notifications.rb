@@ -231,11 +231,6 @@ class UserNotifications < ActionMailer::Base
       end
 
       if @counts.size < 3
-        value = Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count
-        @counts << { label_key: 'user_notifications.digest.new_posts', value: value, href: "#{Discourse.base_url}/new" } if value > 0
-      end
-
-      if @counts.size < 3
         value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
         @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
       end
