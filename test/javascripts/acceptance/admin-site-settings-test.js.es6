@@ -42,7 +42,7 @@ QUnit.test("upload site setting", async assert => {
 
 QUnit.test("changing value updates dirty state", async assert => {
   await visit("/admin/site_settings");
-  await fillIn("#setting-filter", "title");
+  await fillIn("#setting-filter", " title ");
   assert.equal(count(".row.setting"), 1, "filter returns 1 site setting");
   assert.ok(!exists(".row.setting.overridden"), "setting isn't overriden");
 
