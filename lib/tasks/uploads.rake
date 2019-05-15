@@ -399,23 +399,19 @@ def migrate_to_s3
       next if File.size(path) == s3_object.size && s3_object.etag[etag]
     end
 
-    private_upload = SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(name)
+    upload = Upload.find_by(url: "/#{file}")
 
     options = {
-      acl: private_upload ? "private" : "public-read",
+      acl: upload&.private? ? "private" : "public-read",
       body: File.open(path, "rb"),
       bucket: bucket,
       content_type: MiniMime.lookup_by_filename(name)&.content_type,
       key: key,
     }
 
-    if !FileHelper.is_supported_image?(name)
-      upload = Upload.find_by(url: "/#{file}")
-
-      if upload&.original_filename
-        options[:content_disposition] =
-          %Q{attachment; filename="#{upload.original_filename}"}
-      end
+    if !FileHelper.is_supported_image?(name) && upload&.original_filename
+      options[:content_disposition] =
+        %Q{attachment; filename="#{upload.original_filename}"}
     end
 
     if dry_run

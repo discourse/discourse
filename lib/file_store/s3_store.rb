@@ -21,7 +21,8 @@ module FileStore
 
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
-      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+
+      url, upload.etag = store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true, private: upload.private?)
       url
     end
 
@@ -42,10 +43,8 @@ module FileStore
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
 
-      private_upload = SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(filename)
-
       options = {
-        acl: private_upload ? "private" : "public-read",
+        acl: opts[:private] ? "private" : "public-read",
         content_type: opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type
       }
 
@@ -104,7 +103,7 @@ module FileStore
     end
 
     def path_for(upload)
-      if SiteSetting.prevent_anons_from_downloading_files
+      if upload.private?
         expires = S3Helper::DOWNLOAD_URL_EXPIRES_AFTER_SECONDS
         obj = @s3_helper.object(get_path_for_upload(upload))
         return obj.presigned_url(:get, expires_in: expires)

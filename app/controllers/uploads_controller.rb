@@ -85,7 +85,7 @@ class UploadsController < ApplicationController
 
         file_path = Discourse.store.path_for(upload)
 
-        if Discourse.store.external? && SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(upload.original_filename)
+        if Discourse.store.external? && upload.private?
           redirect_to file_path
         else
           return render_404 unless file_path

@@ -124,6 +124,12 @@ class Upload < ActiveRecord::Base
     !(url =~ /^(https?:)?\/\//)
   end
 
+  def private?
+    return false if self.for_theme || self.for_site_setting
+
+    SiteSetting.prevent_anons_from_downloading_files && !FileHelper.is_supported_image?(self.original_filename)
+  end
+
   def fix_dimensions!
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
