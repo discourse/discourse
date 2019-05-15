@@ -1,7 +1,7 @@
 /**
  * @license
  * Lodash (Custom Build) <https://lodash.com/>
- * Build: `lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject" minus="template" -d`
+ * Build: `lodash include="each,filter,map,range,first,isEmpty,chain,extend,every,omit,merge,union,sortBy,uniq,intersection,reject,compact,reduce" minus="template" -d`
  * Copyright JS Foundation and other contributors <https://js.foundation/>
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
@@ -536,6 +536,28 @@
     return function(object) {
       return object == null ? undefined : object[key];
     };
+  }
+
+  /**
+   * The base implementation of `_.reduce` and `_.reduceRight`, without support
+   * for iteratee shorthands, which iterates over `collection` using `eachFunc`.
+   *
+   * @private
+   * @param {Array|Object} collection The collection to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @param {*} accumulator The initial value.
+   * @param {boolean} initAccum Specify using the first or last element of
+   *  `collection` as the initial value.
+   * @param {Function} eachFunc The function to iterate over `collection`.
+   * @returns {*} Returns the accumulated value.
+   */
+  function baseReduce(collection, iteratee, accumulator, initAccum, eachFunc) {
+    eachFunc(collection, function(value, index, collection) {
+      accumulator = initAccum
+        ? (initAccum = false, value)
+        : iteratee(accumulator, value, index, collection);
+    });
+    return accumulator;
   }
 
   /**
@@ -4593,6 +4615,36 @@
   /*------------------------------------------------------------------------*/
 
   /**
+   * Creates an array with all falsey values removed. The values `false`, `null`,
+   * `0`, `""`, `undefined`, and `NaN` are falsey.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Array
+   * @param {Array} array The array to compact.
+   * @returns {Array} Returns the new array of filtered values.
+   * @example
+   *
+   * _.compact([0, 1, false, 2, '', 3]);
+   * // => [1, 2, 3]
+   */
+  function compact(array) {
+    var index = -1,
+        length = array == null ? 0 : array.length,
+        resIndex = 0,
+        result = [];
+
+    while (++index < length) {
+      var value = array[index];
+      if (value) {
+        result[resIndex++] = value;
+      }
+    }
+    return result;
+  }
+
+  /**
    * Flattens `array` a single level deep.
    *
    * @static
@@ -5265,6 +5317,50 @@
   function map(collection, iteratee) {
     var func = isArray(collection) ? arrayMap : baseMap;
     return func(collection, getIteratee(iteratee, 3));
+  }
+
+  /**
+   * Reduces `collection` to a value which is the accumulated result of running
+   * each element in `collection` thru `iteratee`, where each successive
+   * invocation is supplied the return value of the previous. If `accumulator`
+   * is not given, the first element of `collection` is used as the initial
+   * value. The iteratee is invoked with four arguments:
+   * (accumulator, value, index|key, collection).
+   *
+   * Many lodash methods are guarded to work as iteratees for methods like
+   * `_.reduce`, `_.reduceRight`, and `_.transform`.
+   *
+   * The guarded methods are:
+   * `assign`, `defaults`, `defaultsDeep`, `includes`, `merge`, `orderBy`,
+   * and `sortBy`
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Collection
+   * @param {Array|Object} collection The collection to iterate over.
+   * @param {Function} [iteratee=_.identity] The function invoked per iteration.
+   * @param {*} [accumulator] The initial value.
+   * @returns {*} Returns the accumulated value.
+   * @see _.reduceRight
+   * @example
+   *
+   * _.reduce([1, 2], function(sum, n) {
+   *   return sum + n;
+   * }, 0);
+   * // => 3
+   *
+   * _.reduce({ 'a': 1, 'b': 2, 'c': 1 }, function(result, value, key) {
+   *   (result[value] || (result[value] = [])).push(key);
+   *   return result;
+   * }, {});
+   * // => { '1': ['a', 'c'], '2': ['b'] } (iteration order is not guaranteed)
+   */
+  function reduce(collection, iteratee, accumulator) {
+    var func = isArray(collection) ? arrayReduce : baseReduce,
+        initAccum = arguments.length < 3;
+
+    return func(collection, getIteratee(iteratee, 4), accumulator, initAccum, baseEach);
   }
 
   /**
@@ -6692,6 +6788,7 @@
   // Add methods that return wrapped values in chain sequences.
   lodash.assignIn = assignIn;
   lodash.chain = chain;
+  lodash.compact = compact;
   lodash.constant = constant;
   lodash.filter = filter;
   lodash.flatten = flatten;
@@ -6754,6 +6851,7 @@
   lodash.stubArray = stubArray;
   lodash.stubFalse = stubFalse;
   lodash.noop = noop;
+  lodash.reduce = reduce;
   lodash.toFinite = toFinite;
   lodash.toInteger = toInteger;
   lodash.toNumber = toNumber;
