@@ -1307,12 +1307,14 @@ describe CookedPostProcessor do
 
   context "remove direct reply full quote" do
     fab!(:topic) { Fabricate(:topic) }
-    let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
+    let!(:post) { Fabricate(:post, topic: topic, raw: 'this is the "first" post') }
 
     let(:raw) do
       <<~RAW.strip
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+
+      this is the “first” post
+
       [/quote]
 
       and this is the third reply
@@ -1324,7 +1326,7 @@ describe CookedPostProcessor do
       and this is the third reply
 
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+      this is the ”first” post
       [/quote]
       RAW
     end
@@ -1340,7 +1342,7 @@ describe CookedPostProcessor do
 
       freeze_time Time.zone.now do
         topic.bumped_at = 1.day.ago
-        CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+        CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
 
         expect(topic.ordered_posts.pluck(:id))
           .to eq([post.id, hidden.id, small_action.id, reply.id])
@@ -1355,7 +1357,7 @@ describe CookedPostProcessor do
 
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
@@ -1365,7 +1367,7 @@ describe CookedPostProcessor do
 
       reply = Fabricate(:post, topic: topic, raw: raw)
 
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(reply.raw).to eq(raw)
     end
 
