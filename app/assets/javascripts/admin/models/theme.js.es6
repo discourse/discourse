@@ -138,7 +138,7 @@ const Theme = RestModel.extend({
   @computed("theme_fields", "theme_fields.@each.error")
   isBroken(fields) {
     return (
-      fields && fields.some(field => field.error && field.error.length > 0)
+      fields && fields.any(field => field.error && field.error.length > 0)
     );
   },
 
@@ -165,7 +165,7 @@ const Theme = RestModel.extend({
       return !Ember.isEmpty(this.getField(target, name));
     } else {
       let fields = this.get("theme_fields") || [];
-      return fields.some(
+      return fields.any(
         field => field.target === target && !Ember.isEmpty(field.value)
       );
     }
@@ -174,7 +174,7 @@ const Theme = RestModel.extend({
   hasError(target, name) {
     return this.get("theme_fields")
       .filter(f => f.target === target && (!name || name === f.name))
-      .some(f => f.error);
+      .any(f => f.error);
   },
 
   getError(target, name) {

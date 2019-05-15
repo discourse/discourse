@@ -38,7 +38,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     if (buffer === null) return false;
 
     return buffer.length === original.length
-      ? buffer.some(id => !original.includes(id))
+      ? buffer.any(id => !original.includes(id))
       : true;
   },
 

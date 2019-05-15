@@ -44,7 +44,7 @@ export default Ember.Component.extend({
           if (!selectedGroups) return groups;
 
           return groups.filter(group => {
-            return !selectedGroups.some(s => s === group.name);
+            return !selectedGroups.any(s => s === group.name);
           });
         });
       },

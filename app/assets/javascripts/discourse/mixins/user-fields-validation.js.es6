@@ -28,7 +28,7 @@ export default Ember.Mixin.create({
       userFields = userFields.filterBy("field.required");
     }
     if (!Ember.isEmpty(userFields)) {
-      const anyEmpty = userFields.some(uf => {
+      const anyEmpty = userFields.any(uf => {
         const val = uf.get("value");
         return !val || Ember.isEmpty(val);
       });

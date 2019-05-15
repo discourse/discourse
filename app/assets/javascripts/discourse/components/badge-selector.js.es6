@@ -45,7 +45,7 @@ export default Ember.Component.extend({
             }
 
             return badges.filter(function(badge) {
-              return !selectedBadges.some(function(s) {
+              return !selectedBadges.any(function(s) {
                 return s === badge.name;
               });
             });

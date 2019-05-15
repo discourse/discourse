@@ -45,7 +45,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
   changed(name) {
     if (!this.originals) return false;
     if (this.originals.name !== name) return true;
-    if (this.colors.some(c => c.get("changed"))) return true;
+    if (this.colors.any(c => c.get("changed"))) return true;
 
     return false;
   },
@@ -56,7 +56,7 @@ const ColorScheme = Discourse.Model.extend(Ember.Copyable, {
       return false;
     }
 
-    return !changed || this.saving || this.colors.some(c => !c.get("valid"));
+    return !changed || this.saving || this.colors.any(c => !c.get("valid"));
   },
 
   newRecord: Ember.computed.not("id"),
