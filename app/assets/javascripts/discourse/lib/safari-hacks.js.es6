@@ -99,7 +99,13 @@ function positioningWorkaround($fixedElement) {
   };
 
   var blurredNow = function(evt) {
-    if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
+    if (
+      !done &&
+      $(document.activeElement)
+        .parents()
+        .toArray()
+        .indexOf(fixedElement) > -1
+    ) {
       // something in focus so skip
       return;
     }
