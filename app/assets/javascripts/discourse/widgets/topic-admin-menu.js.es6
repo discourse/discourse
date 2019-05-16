@@ -5,7 +5,7 @@ createWidget("admin-menu-button", {
   html(attrs) {
     let className;
     if (attrs.buttonClass) {
-      className += " " + attrs.buttonClass;
+      className = attrs.buttonClass;
     }
 
     return h(
