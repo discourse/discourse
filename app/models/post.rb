@@ -959,13 +959,16 @@ class Post < ActiveRecord::Base
     end
 
     count = 0
-    missing_post_uploads = missing_post_uploads.reject { |_, uploads| uploads.empty? }
-    missing_post_uploads.reject do |post_id, uploads|
-      PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
-      count += uploads.count
+    missing_post_uploads = missing_post_uploads.reject do |post_id, uploads|
+      if uploads.present?
+        PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
+        count += uploads.count
+      end
+
+      uploads.empty?
     end
 
-    return { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
+    { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
   private
