@@ -40,7 +40,8 @@ module UserNameSuggester
         SQL
 
         if count > 0
-          available = DB.query_single(<<~SQL, count: count, name: normalized).first
+          # increasing the search space a bit to allow for some extra noise
+          available = DB.query_single(<<~SQL, count: count + 10, name: normalized).first
             WITH numbers AS (SELECT generate_series(1, :count) AS n)
 
             SELECT n FROM numbers
@@ -51,7 +52,8 @@ module UserNameSuggester
           SQL
 
           # we start at 1
-          offset = available - 1
+          offset = available.to_i - 1
+          offset = 0 if offset < 0
         else
           offset = 0
         end
