@@ -10,6 +10,15 @@ describe UserNameSuggester do
       SiteSetting.max_username_length = 15
     end
 
+    it "keeps adding numbers to the username" do
+      Fabricate(:user, username: 'sam')
+      Fabricate(:user, username: 'sAm1')
+      Fabricate(:user, username: 'sam2')
+      Fabricate(:user, username: 'sam4')
+
+      expect(UserNameSuggester.suggest('saM')).to eq('saM3')
+    end
+
     it "doesn't raise an error on nil username" do
       expect(UserNameSuggester.suggest(nil)).to eq(nil)
     end
