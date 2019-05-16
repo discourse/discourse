@@ -115,8 +115,12 @@
         <div class="last-dashboard-update">
           <div>
             <h4>{{i18n "admin.dashboard.last_updated"}} </h4>
-            <p>{{updatedTimestamp}}</p>
-            <a rel="noopener" target="_blank" href="https://meta.discourse.org/tags/release-notes" class="btn btn-default">
+            <p>{{format-date model.attributes.updated_at leaveAgo="true"}}</p>
+          </div>
+          <div>
+            <h4>{{i18n "admin.dashboard.discourse_last_updated"}} </h4>
+            <p>{{format-date model.attributes.discourse_updated_at leaveAgo="true"}}</p>
+            <a rel="noopener" target="_blank" href={{model.attributes.release_notes_link}} class="btn btn-default">
               {{i18n "admin.dashboard.whats_new_in_discourse"}}
             </a>
           </div>
