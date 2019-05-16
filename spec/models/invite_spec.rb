@@ -224,7 +224,7 @@ describe Invite do
     context "deletes duplicate invites" do
       fab!(:another_user) { Fabricate(:user) }
 
-      xit 'delete duplicate invite' do
+      it 'delete duplicate invite' do
         another_invite = Fabricate(:invite, email: invite.email, invited_by: another_user)
         invite.redeem
         duplicate_invite = Invite.find_by(id: another_invite.id)
