@@ -49,9 +49,14 @@ async function runAllTests() {
   let chrome = await launchChrome();
   let protocol = await CDP({ port: chrome.port });
 
-  const { Page, Runtime } = protocol;
+  const { Inspector, Page, Runtime } = protocol;
 
-  await Promise.all([Page.enable(), Runtime.enable()]);
+  await Promise.all([Inspector.enable(), Page.enable(), Runtime.enable()]);
+
+  Inspector.targetCrashed(entry => {
+    console.log("Chrome target crashed:");
+    console.log(entry);
+  });
 
   Runtime.exceptionThrown(exceptionInfo => {
     console.log(exceptionInfo.exceptionDetails.exception.description);
