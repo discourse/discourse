@@ -112,7 +112,11 @@ export default Ember.Controller.extend(PreferencesTabController, {
 
   @computed()
   userSelectableHome() {
-    let homeValues = _.invert(USER_HOMES);
+    let homeValues = {};
+    Object.keys(USER_HOMES).forEach(newValue => {
+      const newKey = USER_HOMES[newValue];
+      homeValues[newKey] = newValue;
+    });
 
     let result = [];
     this.siteSettings.top_menu.split("|").forEach(m => {

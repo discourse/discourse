@@ -53,7 +53,7 @@ export default Ember.Component.extend(
       if (categoryId) {
         const category = Category.findById(categoryId);
 
-        options = _.assign(
+        options = Object.assign(
           {
             categoryName: category.get("slug"),
             categoryUrl: category.get("url")

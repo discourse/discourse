@@ -10,6 +10,7 @@ import {
 } from "ember-addons/ember-computed-decorators";
 import { escapeExpression, tinyAvatar } from "discourse/lib/utilities";
 import { propertyNotEqual } from "discourse/lib/computed";
+import throttle from "discourse/lib/throttle";
 
 // The actions the composer can take
 export const CREATE_TOPIC = "createTopic",
@@ -200,13 +201,13 @@ const Composer = RestModel.extend({
   },
 
   // view detected user is typing
-  typing: _.throttle(
+  typing: throttle(
     function() {
       const typingTime = this.typingTime || 0;
       this.set("typingTime", typingTime + 100);
     },
     100,
-    { leading: false, trailing: true }
+    false
   ),
 
   editingFirstPost: Ember.computed.and("editingPost", "post.firstPost"),
