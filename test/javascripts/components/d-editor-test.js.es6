@@ -806,12 +806,12 @@ composerTestCase("replace-text event for composer", async function(assert) {
     ) {
       this.set("value", BEFORE);
 
-      await textarea.focus();
+      textarea.focus();
 
       assert.ok(document.activeElement === textarea);
       assert.ok(textarea.value === BEFORE);
 
-      await setSelection(textarea, CASE.before);
+      setSelection(textarea, CASE.before);
 
       assert.ok(document.activeElement === textarea);
 
