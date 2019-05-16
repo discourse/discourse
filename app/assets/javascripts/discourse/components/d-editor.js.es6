@@ -675,7 +675,7 @@ export default Ember.Component.extend({
     }
   },
 
-  _replaceText(oldVal, newVal, opts) {
+  _replaceText(oldVal, newVal, opts = {}) {
     const val = this.get("value");
     const needleStart = val.indexOf(oldVal);
 
@@ -693,7 +693,7 @@ export default Ember.Component.extend({
       replacement: { start: needleStart, end: needleStart + newVal.length }
     });
 
-    if (opts && opts.index && opts.regex) {
+    if (opts.index && opts.regex) {
       let i = -1;
       const newValue = val.replace(opts.regex, match => {
         i++;
@@ -705,7 +705,7 @@ export default Ember.Component.extend({
       this.set("value", val.replace(oldVal, newVal));
     }
 
-    if ($("textarea.d-editor-input").is(":focus")) {
+    if (opts.forceFocus || $("textarea.d-editor-input").is(":focus")) {
       // Restore cursor.
       this._selectText(
         newSelection.start,
