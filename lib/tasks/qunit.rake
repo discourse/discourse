@@ -46,6 +46,7 @@ task "qunit:test", [:timeout, :qunit_path] => :environment do |_, args|
     Discourse.after_fork
     Rack::Server.start(config: "config.ru",
                        AccessLog: [],
+                       environment: 'test',
                        Port: port)
     exit
   end
