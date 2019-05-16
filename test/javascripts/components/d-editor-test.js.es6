@@ -761,13 +761,12 @@ composerTestCase("replace-text event for composer", async function(assert) {
       before: [BEFORE.length, 0],
       after: [AFTER.length, 0]
     },
-    // Flaky test. Marked as pending
-    //{
-    //  description:
-    //    "selection spanning needle start becomes selection until replacement start",
-    //  before: [BEFORE.indexOf(NEEDLE) - 1, 2],
-    //  after: [AFTER.indexOf(REPLACE) - 1, 1]
-    //},
+    {
+      description:
+        "selection spanning needle start becomes selection until replacement start",
+      before: [BEFORE.indexOf(NEEDLE) - 1, 2],
+      after: [AFTER.indexOf(REPLACE) - 1, 1]
+    },
     {
       description:
         "selection spanning needle end becomes selection from replacement end",
@@ -805,16 +804,22 @@ composerTestCase("replace-text event for composer", async function(assert) {
       assert,
       textarea
     ) {
-      const focusEvent = $.Event("focus");
-      const $input = $('textarea.d-editor-input');
-      $input.trigger(focusEvent);
-
       this.set("value", BEFORE);
-      await setSelection(textarea, CASE.before);
+
+      textarea.focus();
+
+      assert.ok(document.activeElement === textarea);
+      assert.ok(textarea.value === BEFORE);
+
+      setSelection(textarea, CASE.before);
+
+      assert.ok(document.activeElement === textarea);
 
       this.container
         .lookup("app-events:main")
-        .trigger("composer:replace-text", "green", "yellow");
+        .trigger("composer:replace-text", "green", "yellow", {forceFocus: true});
+
+      assert.ok(document.activeElement === textarea);
 
       let expect = await formatTextWithSelection(AFTER, CASE.after); // eslint-disable-line no-undef
       let actual = await formatTextWithSelection( // eslint-disable-line no-undef
