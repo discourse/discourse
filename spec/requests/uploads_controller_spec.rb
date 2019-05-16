@@ -312,12 +312,12 @@ describe UploadsController do
 
     context "prevent anons from downloading files" do
       it "returns 404 when an anonymous user tries to download a file" do
-        skip("this only works when nginx/apache is asset server") if Discourse::Application.config.public_file_server.enabled
         upload = upload_file("small.pdf", "pdf")
         delete "/session/#{user.username}.json" # upload a file, then sign out
 
         SiteSetting.prevent_anons_from_downloading_files = true
-        get upload.url
+
+        get "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
         expect(response.status).to eq(404)
       end
     end
