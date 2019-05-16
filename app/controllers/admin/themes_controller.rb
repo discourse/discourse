@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'upload_creator'
 require_dependency 'theme_store/tgz_exporter'
 require 'base64'

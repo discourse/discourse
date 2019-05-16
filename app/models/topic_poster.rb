@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicPoster < OpenStruct
   include ActiveModel::Serialization
 

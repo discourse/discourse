@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class RebakeCustomEmojiPosts < Jobs::Base
     def execute(args)

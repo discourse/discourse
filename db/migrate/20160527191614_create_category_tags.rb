@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCategoryTags < ActiveRecord::Migration[4.2]
   def change
     create_table :category_tags do |t|

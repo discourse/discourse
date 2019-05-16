@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicListSerializer < ApplicationSerializer
 
   attributes :can_create_topic,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BadgeQueries
   Reader = <<SQL
   SELECT id user_id, current_timestamp granted_at

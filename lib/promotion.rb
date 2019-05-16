@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Check whether a user is ready for a new trust level.
 #

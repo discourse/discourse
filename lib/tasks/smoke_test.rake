@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "run chrome headless smoke tests on current build"
 task "smoke:test" do
   unless system("command -v google-chrome >/dev/null;")
@@ -39,7 +41,7 @@ task "smoke:test" do
     raise "TRIVIAL GET FAILED WITH #{response.code}"
   end
 
-  results = ""
+  results = +""
 
   IO.popen("node #{Rails.root}/test/smoke_test.js #{url}").each do |line|
     puts line

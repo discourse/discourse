@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'discourse'
 require 'ipaddr'
 require 'url_helper'

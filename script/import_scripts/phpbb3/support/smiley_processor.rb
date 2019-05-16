@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ImportScripts::PhpBB3
   class SmileyProcessor
     # @param uploader [ImportScripts::Uploader]

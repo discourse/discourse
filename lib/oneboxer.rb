@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'uri'
 require_dependency "onebox/discourse_onebox_sanitize_config"
 require_dependency 'final_destination'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SpamRule::AutoSilence
 
   attr_reader :group_message

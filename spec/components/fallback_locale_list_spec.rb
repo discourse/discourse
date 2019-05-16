@@ -18,7 +18,7 @@ describe I18n::Backend::FallbackLocaleList do
 
     expect(list[:ru]).to eq([:ru, :de, :en])
     expect(list[:de]).to eq([:de, :en])
-    expect(list[:en]).to eq([:en, :de])
+    expect(list[:en]).to eq([:en])
   end
 
   context "when plugin registered fallback locale" do
@@ -44,7 +44,7 @@ describe I18n::Backend::FallbackLocaleList do
 
       expect(list[:es_MX]).to eq([:es_MX, :es, :de, :en])
       expect(list[:es]).to eq([:es, :de, :en])
-      expect(list[:en]).to eq([:en, :de])
+      expect(list[:en]).to eq([:en])
     end
   end
 end

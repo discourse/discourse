@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeTranslationOverride < ActiveRecord::Base
   belongs_to :theme
 

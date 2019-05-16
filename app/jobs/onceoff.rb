@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jobs::Onceoff < Jobs::Base
   sidekiq_options retry: false
 

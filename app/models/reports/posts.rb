@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report('posts') do |report|
   report.modes = [:table, :chart]
 

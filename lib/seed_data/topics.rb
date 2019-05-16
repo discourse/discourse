@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SeedData
   class Topics
     def self.with_default_locale

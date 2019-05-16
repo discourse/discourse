@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeJavascriptCompiler
 
   module PrecompilerExtension
@@ -147,7 +149,7 @@ class ThemeJavascriptCompiler
 
   def initialize(theme_id)
     @theme_id = theme_id
-    @content = ""
+    @content = +""
   end
 
   def prepend_settings(settings_hash)

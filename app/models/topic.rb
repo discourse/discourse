@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'slug'
 require_dependency 'avatar_lookup'
 require_dependency 'topic_view'
@@ -999,7 +1001,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.url(id, slug, post_number = nil)
-    url = "#{Discourse.base_url}/t/#{slug}/#{id}"
+    url = +"#{Discourse.base_url}/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
   end
@@ -1009,7 +1011,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.relative_url(id, slug, post_number = nil)
-    url = "#{Discourse.base_uri}/t/"
+    url = +"#{Discourse.base_uri}/t/"
     url << "#{slug}/" if slug.present?
     url << id.to_s
     url << "/#{post_number}" if post_number.to_i > 1

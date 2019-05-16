@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ColorListValidator
   def initialize(opts = {})
     @opts = opts

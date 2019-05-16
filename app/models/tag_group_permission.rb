@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Who can see and use tags belonging to a tag group.
 class TagGroupPermission < ActiveRecord::Base
   belongs_to :tag_group

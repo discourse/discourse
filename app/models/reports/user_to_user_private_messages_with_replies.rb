@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("user_to_user_private_messages_with_replies") do |report|
   report.icon = 'envelope'
   topic_subtype = TopicSubtype.user_to_user

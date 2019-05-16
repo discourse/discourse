@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameModeratorSiteSettings < ActiveRecord::Migration[5.2]
   def up
     execute "UPDATE site_settings SET name = 'moderators_view_emails' WHERE name = 'show_email_on_profile'"

@@ -3360,7 +3360,7 @@ en:
         new_style: "New Style"
         install: "Install"
         delete: "Delete"
-        delete_confirm: "Delete this theme?"
+        delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         color: "Color"
         opacity: "Opacity"
         copy: "Copy"

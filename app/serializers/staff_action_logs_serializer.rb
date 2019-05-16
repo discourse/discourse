@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StaffActionLogsSerializer < ApplicationSerializer
   attributes :user_history_actions
   has_many :staff_action_logs, serializer: UserHistorySerializer, embed: :objects

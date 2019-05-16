@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Some based on : https://gist.github.com/277289
 #
 # This is a rudimentary script that allows us to

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IndexUserBadges < ActiveRecord::Migration[4.2]
   def change
     execute 'DELETE FROM user_badges USING user_badges ub2

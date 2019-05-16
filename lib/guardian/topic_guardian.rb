@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #mixin for all guardian methods dealing with topic permisions
 module TopicGuardian
 

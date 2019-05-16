@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jobs
   class NarrativeTimeout < Jobs::Base
     def execute(args)

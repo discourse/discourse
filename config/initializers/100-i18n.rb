@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # order: after 02-freedom_patches.rb
 
 require 'i18n/backend/discourse_i18n'

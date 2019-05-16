@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateForumThreadLinks < ActiveRecord::Migration[4.2]
   def change
     create_table :forum_thread_links do |t|

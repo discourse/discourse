@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AuthProviderSerializer < ApplicationSerializer
 
   attributes :name, :custom_url, :pretty_name_override, :title_override, :message_override,

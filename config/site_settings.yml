@@ -1074,6 +1074,7 @@ files:
   enable_s3_uploads:
     default: false
     client: true
+    shadowed_by_global: true
   s3_use_iam_profile: false
   s3_access_key_id:
     default: ""
@@ -1089,7 +1090,8 @@ files:
     shadowed_by_global: true
   s3_upload_bucket:
     default: ""
-    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
+    shadowed_by_global: true
   s3_endpoint:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -1526,6 +1528,7 @@ developer:
     max: 120
     default: 2
     hidden: true
+    shadowed_by_global: true
 
 embedding:
   feed_polling_enabled:

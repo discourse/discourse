@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This is our current pattern for data migrations needed by plugins, we prefer to keep them in core
 # so schema is tightly controlled, especially if we are amending tables owned by core
 #

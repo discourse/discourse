@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::PluginsController < Admin::AdminController
 
   def index

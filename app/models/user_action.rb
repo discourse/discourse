@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserAction < ActiveRecord::Base
 
   self.ignored_columns = %w{

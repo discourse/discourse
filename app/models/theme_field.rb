@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'theme_settings_parser'
 require_dependency 'theme_translation_parser'
 require_dependency 'theme_javascript_compiler'

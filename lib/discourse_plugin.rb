@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A basic plugin for Discourse. Meant to be extended and filled in.
 # Most work is delegated to a registry.
 

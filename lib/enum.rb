@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Enum < Hash
   # Public: Initialize an enum.
   #

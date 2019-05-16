@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TrimProfileLength < ActiveRecord::Migration[4.2]
   def change
     # In case any profiles exceed 3000 chars

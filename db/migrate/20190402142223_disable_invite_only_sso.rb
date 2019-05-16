@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DisableInviteOnlySso < ActiveRecord::Migration[5.2]
   def up
     execute(<<~SQL)

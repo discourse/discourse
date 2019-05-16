@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require 'yaml'
 require_relative '../socialcast_api.rb'

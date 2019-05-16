@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'enum'
 require_dependency 'reviewable/actions'
 require_dependency 'reviewable/conversation'
@@ -249,12 +251,12 @@ class Reviewable < ActiveRecord::Base
       increment_version!(args[:version])
       result = public_send(perform_method, performed_by, args)
 
-      if result.success?
-        update_count = transition_to(result.transition_to, performed_by) if result.transition_to
-        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+      raise ActiveRecord::Rollback unless result.success?
 
-        recalculate_score if result.recalculate_score
-      end
+      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+      update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+
+      recalculate_score if result.recalculate_score
     end
     if result && result.after_commit
       result.after_commit.call

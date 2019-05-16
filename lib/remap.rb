@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Remap
   def initialize(from, to, regex: false, verbose: false)
     @from = from

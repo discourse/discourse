@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgePostsViewManager
   VIEW_NAME = "badge_posts".freeze
 

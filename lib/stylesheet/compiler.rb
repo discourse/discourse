@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'stylesheet/common'
 require_dependency 'stylesheet/importer'
 require_dependency 'stylesheet/functions'

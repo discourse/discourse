@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActiveRecord::Base
 
   # Handle PG::UniqueViolation as well due to concurrency

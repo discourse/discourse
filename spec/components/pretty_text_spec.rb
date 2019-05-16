@@ -1209,7 +1209,7 @@ HTML
       - test
           - ![upload](#{upload.short_url})
 
-      ![upload](#{upload.short_url.gsub!(".png", "")})
+      ![upload](#{upload.short_url.gsub(".png", "")})
       RAW
 
       cooked = <<~HTML

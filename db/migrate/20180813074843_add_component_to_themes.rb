@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddComponentToThemes < ActiveRecord::Migration[5.2]
   def up
     add_column :themes, :component, :boolean, null: false, default: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Post processing that we can do after a post has already been cooked.
 # For example, inserting the onebox content, or image sizes/thumbnails.
 
@@ -35,7 +37,7 @@ class CookedPostProcessor
   def post_process(bypass_bump: false, new_post: false)
     DistributedMutex.synchronize("post_process_#{@post.id}") do
       DiscourseEvent.trigger(:before_post_process_cooked, @doc, @post)
-      removed_direct_reply_full_quotes if new_post
+      remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
       post_process_images
       post_process_quotes
@@ -90,22 +92,34 @@ class CookedPostProcessor
     end
   end
 
-  def removed_direct_reply_full_quotes
-    return if !SiteSetting.remove_full_quote || @post.post_number == 1
+  def remove_full_quote_on_direct_reply
+    return if !SiteSetting.remove_full_quote
+    return if @post.post_number == 1
+    return if @doc.css("aside.quote").size != 1
 
-    num_quotes = @doc.css("aside.quote").size
-    return if num_quotes != 1
+    previous = Post
+      .where("post_number < ? AND topic_id = ? AND post_type = ? AND NOT hidden", @post.post_number, @post.topic_id, Post.types[:regular])
+      .order("post_number DESC")
+      .limit(1)
+      .pluck(:cooked)
+      .first
 
-    prev = Post.where('post_number < ? AND topic_id = ? AND post_type = ? AND not hidden', @post.post_number, @post.topic_id, Post.types[:regular]).order('post_number desc').limit(1).pluck(:raw).first
-    return if !prev
+    return if previous.blank?
 
-    new_raw = @post.raw.gsub(/\A\s*\[quote[^\]]*\]\s*#{Regexp.quote(prev.strip)}\s*\[\/quote\]/, '')
-    return if @post.raw == new_raw
+    previous_text = Nokogiri::HTML::fragment(previous).text.strip
+    quoted_text = @doc.css("aside.quote:first-child blockquote").first&.text&.strip
+
+    return if previous_text != quoted_text
+
+    quote_regexp = /\A\s*\[quote.+?\[\/quote\]/im
+    quoteless_raw = @post.raw.sub(quote_regexp, "").strip
+
+    return if @post.raw.strip == quoteless_raw
 
     PostRevisor.new(@post).revise!(
       Discourse.system_user,
       {
-        raw: new_raw.strip,
+        raw: quoteless_raw,
         edit_reason: I18n.t(:removed_direct_reply_full_quotes)
       },
       skip_validations: true,
@@ -421,7 +435,7 @@ class CookedPostProcessor
     img.add_next_sibling(meta)
 
     filename = get_filename(upload, img["src"])
-    informations = "#{original_width}×#{original_height}"
+    informations = +"#{original_width}×#{original_height}"
     informations << " #{upload.human_filesize}" if upload
 
     a["title"] = CGI.escapeHTML(img["title"] || filename)
@@ -539,6 +553,7 @@ class CookedPostProcessor
 
       next if img["class"]&.include?('onebox-avatar')
 
+      parent = parent&.parent if parent&.name == "a"
       parent_class = parent && parent["class"]
       width = img["width"].to_i
       height = img["height"].to_i
@@ -572,8 +587,8 @@ class CookedPostProcessor
       elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") || parent_class&.include?("scale-images")) && width > 0 && height > 0
         img.remove_attribute("width")
         img.remove_attribute("height")
-        img.parent["class"] = "aspect-image-full-size"
-        img.parent["style"] = "--aspect-ratio:#{width}/#{height};"
+        parent["class"] = "aspect-image-full-size"
+        parent["style"] = "--aspect-ratio:#{width}/#{height};"
       end
     end
 

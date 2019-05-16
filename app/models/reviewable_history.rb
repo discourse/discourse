@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewableHistory < ActiveRecord::Base
   belongs_to :reviewable
   belongs_to :created_by, class_name: 'User'

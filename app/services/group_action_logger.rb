@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupActionLogger
 
   def initialize(acting_user, group)

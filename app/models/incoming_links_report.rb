@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IncomingLinksReport
 
   attr_accessor :type, :data, :y_titles, :start_date, :end_date, :limit, :category_id

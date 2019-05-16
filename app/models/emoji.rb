@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Emoji
   # update this to clear the cache
   EMOJI_VERSION = "9"

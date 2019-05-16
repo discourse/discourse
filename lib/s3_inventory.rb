@@ -84,10 +84,12 @@ class S3Inventory
 
       if result.count >= 1
         key = result[0]["key"]
-        data = s3_helper.object(key).data
+        data = @s3_helper.object(key).data
+        filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
+
         upload_id = Upload.create!(
           user_id: Discourse.system_user.id,
-          original_filename: "",
+          original_filename: filename || File.basename(key),
           filesize: data.content_length,
           url: File.join(Discourse.store.absolute_base_url, key),
           sha1: sha1,

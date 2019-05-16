@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "nokogiri"
 
 class HtmlToMarkdown
 
   class Block < Struct.new(:name, :head, :body, :opened, :markdown)
-    def initialize(name, head = "", body = "", opened = false, markdown = "")
+    def initialize(name, head = "", body = "", opened = false, markdown = +"")
       super
     end
   end
@@ -42,10 +44,12 @@ class HtmlToMarkdown
 
   def to_markdown
     @stack = [Block.new("root")]
-    @markdown = ""
+    @markdown = +""
     traverse(@doc)
     @markdown << format_block
-    @markdown.gsub(/\n{3,}/, "\n\n").strip
+    @markdown.gsub!(/\n{3,}/, "\n\n")
+    @markdown.strip!
+    @markdown
   end
 
   def traverse(node)
@@ -58,7 +62,7 @@ class HtmlToMarkdown
     if node.description&.block? && node.parent&.description&.block? && @stack[-1].markdown.size > 0
       block = @stack[-1].dup
       @markdown << format_block
-      block.markdown = ""
+      block.markdown = +""
       block.opened = true
       @stack << block
     end
@@ -81,7 +85,7 @@ class HtmlToMarkdown
     code_class = code ? code["class"] : ""
     lang = code_class ? code_class[/lang-(\w+)/, 1] : ""
     pre = Block.new("pre")
-    pre.markdown = "```#{lang}\n"
+    pre.markdown = +"```#{lang}\n"
     @stack << pre
     traverse(node)
     pre.markdown << "\n```\n"

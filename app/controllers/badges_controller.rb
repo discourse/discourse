@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BadgesController < ApplicationController
   skip_before_action :check_xhr, only: [:index, :show]
 

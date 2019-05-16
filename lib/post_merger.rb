@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PostMerger
   class CannotMergeError < StandardError; end
 

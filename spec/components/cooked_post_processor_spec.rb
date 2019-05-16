@@ -893,6 +893,31 @@ describe CookedPostProcessor do
     end
   end
 
+  context "#post_process_oneboxes with oneboxed image" do
+    let(:post) { build(:post_with_youtube, id: 123) }
+    let(:cpp) { CookedPostProcessor.new(post, invalidate_oneboxes: true) }
+
+    it "applies aspect ratio to container" do
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns("<aside class='onebox'><div class='scale-images'><img src='/img.jpg' width='400' height='500'/></div></div>")
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.html).to match_html('<aside class="onebox"><div class="aspect-image-full-size" style="--aspect-ratio:400/500;"><img src="/img.jpg"></div></aside>')
+    end
+
+    it "applies aspect ratio when wrapped in link" do
+      Oneboxer.expects(:onebox)
+        .with("http://www.youtube.com/watch?v=9bZkp7q19f0", invalidate_oneboxes: true, user_id: nil, category_id: post.topic.category_id)
+        .returns("<aside class='onebox'><div class='scale-images'><a href='https://example.com'><img src='/img.jpg' width='400' height='500'/></a></div></div>")
+
+      cpp.post_process_oneboxes
+
+      expect(cpp.html).to match_html('<aside class="onebox"><div class="aspect-image-full-size" style="--aspect-ratio:400/500;"><a href="https://example.com"><img src="/img.jpg"></a></div></aside>')
+    end
+  end
+
   context "#post_process_oneboxes with square image" do
 
     it "generates a onebox-avatar class" do
@@ -1282,12 +1307,14 @@ describe CookedPostProcessor do
 
   context "remove direct reply full quote" do
     fab!(:topic) { Fabricate(:topic) }
-    let!(:post) { Fabricate(:post, topic: topic, raw: "this is the first post") }
+    let!(:post) { Fabricate(:post, topic: topic, raw: 'this is the "first" post') }
 
     let(:raw) do
       <<~RAW.strip
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+
+      this is the “first” post
+
       [/quote]
 
       and this is the third reply
@@ -1299,7 +1326,7 @@ describe CookedPostProcessor do
       and this is the third reply
 
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
-      this is the first post
+      this is the ”first” post
       [/quote]
       RAW
     end
@@ -1315,7 +1342,7 @@ describe CookedPostProcessor do
 
       freeze_time Time.zone.now do
         topic.bumped_at = 1.day.ago
-        CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+        CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
 
         expect(topic.ordered_posts.pluck(:id))
           .to eq([post.id, hidden.id, small_action.id, reply.id])
@@ -1330,7 +1357,7 @@ describe CookedPostProcessor do
 
     it 'does not delete quote if not first paragraph' do
       reply = Fabricate(:post, topic: topic, raw: raw2)
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
     end
@@ -1340,7 +1367,7 @@ describe CookedPostProcessor do
 
       reply = Fabricate(:post, topic: topic, raw: raw)
 
-      CookedPostProcessor.new(reply).removed_direct_reply_full_quotes
+      CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(reply.raw).to eq(raw)
     end
 

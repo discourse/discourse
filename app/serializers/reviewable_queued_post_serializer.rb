@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReviewableQueuedPostSerializer < ReviewableSerializer
 
   payload_attributes(

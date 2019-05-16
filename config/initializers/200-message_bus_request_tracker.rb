@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # we want MesageBus in the absolute front
 # this is important cause the vast majority of web requests go to it
 # this allows us to avoid full middleware crawls each time

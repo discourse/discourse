@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvitedUserSerializer < BasicUserSerializer
 
   attributes :topics_entered,

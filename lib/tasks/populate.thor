@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Generates posts and topics
 class Populate < Thor
   desc "posts", "Generate posts"

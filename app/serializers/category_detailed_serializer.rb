@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryDetailedSerializer < BasicCategorySerializer
 
   attributes :topic_count,

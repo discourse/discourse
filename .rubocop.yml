@@ -12,6 +12,9 @@ AllCops:
 Style/AndOr:
   Enabled: true
 
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
 # Do not use braces for hash literals when they are the last argument of a
 # method call.
 Style/BracesAroundHashParameters:

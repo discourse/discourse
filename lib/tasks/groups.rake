@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # bulk grant badge to members of a specific group
 task "groups:grant_badge", [:group_id, :badge_id] => [:environment] do |_, args|
   group_id = args[:group_id]

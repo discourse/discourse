@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report("mobile_visits") do |report|
   basic_report_about report, UserVisit, :mobile_by_day, report.start_date, report.end_date
   report.total = UserVisit.where(mobile: true).count

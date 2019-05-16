@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserActivator
   attr_reader :user, :request, :session, :cookies, :message
 

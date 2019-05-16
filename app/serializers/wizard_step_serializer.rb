@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WizardStepSerializer < ApplicationSerializer
 
   attributes :id, :next, :previous, :description, :title, :index, :banner

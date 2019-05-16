@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sam: This has now forked of rails. Trouble is we would never like to use "about 1 month" ever, we only want months for 2 or more months.
 #
 # Backporting a fix to rails itself may get too complex

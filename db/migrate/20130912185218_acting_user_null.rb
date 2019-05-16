@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActingUserNull < ActiveRecord::Migration[4.2]
   def up
     change_column :user_histories, :acting_user_id, :integer, null: true

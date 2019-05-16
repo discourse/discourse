@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddStylesheetCache < ActiveRecord::Migration[4.2]
   def change
     create_table :stylesheet_cache do |t|

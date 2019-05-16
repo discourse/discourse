@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://github.com/redis/redis-rb/pull/591
 class Redis
   class Client

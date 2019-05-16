@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::SearchLogsController < Admin::AdminController
 
   def index

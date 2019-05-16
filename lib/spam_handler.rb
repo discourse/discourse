@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SpamHandler
 
   def self.should_prevent_registration_from_ip?(ip_address)

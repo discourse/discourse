@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserIndexesToPostsAndTopics < ActiveRecord::Migration[4.2]
   def up
     execute "CREATE INDEX idx_posts_user_id_deleted_at

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HiddenProfileSerializer < BasicUserSerializer
   attributes(
     :profile_hidden?,

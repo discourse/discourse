@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module JsLocaleHelper
 
   def self.plugin_client_files(locale_str)
@@ -103,31 +105,21 @@ module JsLocaleHelper
   end
 
   def self.translations_for(locale_str)
-    current_locale  = I18n.locale
-    locale_sym      = locale_str.to_sym
-    site_locale     = SiteSetting.default_locale.to_sym
-    fallback_locale = LocaleSiteSetting.fallback_locale(locale_str)
-
-    I18n.locale = locale_sym
-
     if Rails.env.development?
       @loaded_translations = nil
       @plugin_translations = nil
       @loaded_merges = nil
     end
 
-    translations =
+    locale_sym = locale_str.to_sym
+
+    I18n.with_locale(locale_sym) do
       if locale_sym == :en
         load_translations(locale_sym)
-      elsif locale_sym == site_locale || site_locale == :en
-        load_translations_merged(locale_sym, fallback_locale, :en)
       else
-        load_translations_merged(locale_sym, fallback_locale, site_locale, :en)
+        load_translations_merged(*I18n.fallbacks[locale_sym])
       end
-
-    I18n.locale = current_locale
-
-    translations
+    end
   end
 
   def self.output_locale(locale)
@@ -214,7 +206,7 @@ module JsLocaleHelper
   end
 
   def self.moment_formats
-    result = ""
+    result = +""
     result << moment_format_function('short_date_no_year')
     result << moment_format_function('short_date')
     result << moment_format_function('long_date')
@@ -234,7 +226,7 @@ module JsLocaleHelper
   def self.generate_message_format(message_formats, locale, filename)
     formats = message_formats.map { |k, v| k.inspect << " : " << compile_message_format(filename, locale, v) }.join(", ")
 
-    result = "MessageFormat = {locale: {}};\n"
+    result = +"MessageFormat = {locale: {}};\n"
     result << "I18n._compiledMFs = {#{formats}};\n"
     result << File.read(filename) << "\n"
     result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js") << "\n"
@@ -263,7 +255,7 @@ module JsLocaleHelper
       ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
     end
   rescue MiniRacer::EvalError => e
-    message = "Invalid Format: " << e.message
+    message = +"Invalid Format: " << e.message
     "function(){ return #{message.inspect};}"
   end
 

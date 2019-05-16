@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Report.add_report('web_crawlers') do |report|
   report.labels = [
     {

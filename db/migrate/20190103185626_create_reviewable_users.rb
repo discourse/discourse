@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateReviewableUsers < ActiveRecord::Migration[5.2]
   def up
     # Create reviewables for approved users

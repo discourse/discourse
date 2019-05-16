@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'rate_limiter'
 require_dependency 'system_message'
 require_dependency 'post_action_creator'
@@ -80,7 +82,7 @@ class PostAction < ActiveRecord::Base
     return if !SiteSetting.auto_respond_to_flag_actions
     return if related_post.nil? || related_post.topic.nil?
     return if staff_already_replied?(related_post.topic)
-    message_key = "flags_dispositions.#{disposition}"
+    message_key = +"flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
 
     I18n.with_locale(SiteSetting.default_locale) do

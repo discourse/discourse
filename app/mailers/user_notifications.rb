@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'markdown_linker'
 require_dependency 'email/message_builder'
 require_dependency 'age_words'
@@ -229,11 +231,6 @@ class UserNotifications < ActionMailer::Base
       end
 
       if @counts.size < 3
-        value = Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count
-        @counts << { label_key: 'user_notifications.digest.new_posts', value: value, href: "#{Discourse.base_url}/new" } if value > 0
-      end
-
-      if @counts.size < 3
         value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
         @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
       end
@@ -358,7 +355,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def email_post_markdown(post, add_posted_by = false)
-    result = "#{post.raw}\n\n"
+    result = +"#{post.raw}\n\n"
     if add_posted_by
       result << "#{I18n.t('user_notifications.posted_by', username: post.username, post_date: post.created_at.strftime("%m/%d/%Y"))}\n\n"
     end
@@ -472,7 +469,7 @@ class UserNotifications < ActionMailer::Base
     group_name = opts[:group_name]
     locale = user_locale(user)
 
-    template = "user_notifications.user_#{notification_type}"
+    template = +"user_notifications.user_#{notification_type}"
     if post.topic.private_message?
       template << "_pm"
 
@@ -541,7 +538,7 @@ class UserNotifications < ActionMailer::Base
       title = I18n.t("system_messages.private_topic_title", id: post.topic_id)
     end
 
-    context = ""
+    context = +""
     tu = TopicUser.get(post.topic_id, user)
     context_posts = self.class.get_context_posts(post, tu, user)
 
@@ -549,7 +546,7 @@ class UserNotifications < ActionMailer::Base
     context_posts = context_posts.to_a
 
     if context_posts.present?
-      context << "-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
+      context << +"-- \n*#{I18n.t('user_notifications.previous_discussion')}*\n"
       context_posts.each do |cp|
         context << email_post_markdown(cp, true)
       end
@@ -561,7 +558,7 @@ class UserNotifications < ActionMailer::Base
     ).exists?
 
     if opts[:use_invite_template]
-      invite_template = "user_notifications.invited"
+      invite_template = +"user_notifications.invited"
       invite_template << "_group" if group_name
 
       invite_template <<

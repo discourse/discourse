@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Badge
   .where(name: 'Complete New User Track')
   .update_all(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME)

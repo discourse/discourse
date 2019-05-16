@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CrawlerDetection
 
   def self.to_matcher(string, type: nil)

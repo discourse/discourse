@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryTagStat < ActiveRecord::Base
   belongs_to :category
   belongs_to :tag

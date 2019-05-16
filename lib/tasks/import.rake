@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Use http://tatiyants.com/pev/#/plans/new if you want to optimize a query
 
 task "import:ensure_consistency" => :environment do

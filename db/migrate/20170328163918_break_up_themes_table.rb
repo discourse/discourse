@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BreakUpThemesTable < ActiveRecord::Migration[4.2]
   def change
     create_table :theme_fields do |t|

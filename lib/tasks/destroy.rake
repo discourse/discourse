@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ## These tasks are destructive and are for clearing out all the
 #   content and users from your site, but keeping your site settings,
 #   theme, and category structure.

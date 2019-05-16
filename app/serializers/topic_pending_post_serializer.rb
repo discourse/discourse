@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicPendingPostSerializer < ApplicationSerializer
   attributes :id, :raw, :created_at
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ThemeSetting < ActiveRecord::Base
   belongs_to :theme
 

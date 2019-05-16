@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMutedUsers < ActiveRecord::Migration[4.2]
   def change
     create_table :muted_users, force: true do |t|

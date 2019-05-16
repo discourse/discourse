@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserBadgeUniqueIndex < ActiveRecord::Migration[4.2]
   def up
     # used to keep badges distinct

@@ -121,6 +121,13 @@ describe PasswordValidator do
       expect(record.errors[:password]).to include(password_error_message(:same_as_username))
     end
 
+    it "adds an error when password is the same as the name" do
+      @password = "myawesomepassword"
+      record.name = @password
+      validate
+      expect(record.errors[:password]).to include(password_error_message(:same_as_name))
+    end
+
     it "adds an error when password is the same as the email" do
       @password = "pork@chops.com"
       record.email = @password

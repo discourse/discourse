@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'guardian/category_guardian'
 require_dependency 'guardian/ensure_magic'
 require_dependency 'guardian/post_guardian'

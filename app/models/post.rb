@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'pretty_text'
 require_dependency 'rate_limiter'
 require_dependency 'post_revisor'
@@ -545,8 +547,8 @@ class Post < ActiveRecord::Base
   def self.url(slug, topic_id, post_number, opts = nil)
     opts ||= {}
 
-    result = "/t/"
-    result << "#{slug}/" unless !!opts[:without_slug]
+    result = +"/t/"
+    result << "#{slug}/" if !opts[:without_slug]
 
     "#{result}#{topic_id}/#{post_number}"
   end
@@ -957,13 +959,16 @@ class Post < ActiveRecord::Base
     end
 
     count = 0
-    missing_post_uploads = missing_post_uploads.reject { |_, uploads| uploads.empty? }
-    missing_post_uploads.reject do |post_id, uploads|
-      PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
-      count += uploads.count
+    missing_post_uploads = missing_post_uploads.reject do |post_id, uploads|
+      if uploads.present?
+        PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
+        count += uploads.count
+      end
+
+      uploads.empty?
     end
 
-    return { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
+    { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
   end
 
   private

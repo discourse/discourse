@@ -90,7 +90,7 @@ describe Invite do
         end
 
         context 'when added by another user' do
-          let(:coding_horror) { Fabricate(:coding_horror) }
+          fab!(:coding_horror) { Fabricate(:coding_horror) }
 
           let(:new_invite) do
             Invite.invite_by_email(iceking, coding_horror, topic)
@@ -199,14 +199,14 @@ describe Invite do
 
   context '.redeem' do
 
-    let!(:invite) { Fabricate(:invite) }
+    fab!(:invite) { Fabricate(:invite) }
 
     it 'creates a notification for the invitee' do
       expect { invite.redeem }.to change(Notification, :count)
     end
 
     it 'wont redeem an expired invite' do
-      SiteSetting.expects(:invite_expiry_days).returns(10)
+      SiteSetting.invite_expiry_days = 10
       invite.update_column(:created_at, 20.days.ago)
       expect(invite.redeem).to be_blank
     end

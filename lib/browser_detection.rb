@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BrowserDetection
 
   def self.browser(user_agent)

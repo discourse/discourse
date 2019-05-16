@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WildcardDomainChecker
 
   def self.check_domain(domain, external_domain)

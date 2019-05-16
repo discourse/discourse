@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenamePostNotices < ActiveRecord::Migration[5.2]
   def up
     add_index :post_custom_fields, :post_id, unique: true, name: "index_post_custom_fields_on_notice_type", where: "name = 'notice_type'"

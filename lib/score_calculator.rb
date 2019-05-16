@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ScoreCalculator
 
   def self.default_score_weights

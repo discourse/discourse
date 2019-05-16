@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 #  A wrapper around redis that namespaces keys with the current site id
 #

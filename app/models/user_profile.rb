@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'upload_creator'
 class UserProfile < ActiveRecord::Base
   self.ignored_columns = %w{
@@ -166,4 +168,9 @@ end
 #  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
 #  index_user_profiles_on_card_background     (card_background)
 #  index_user_profiles_on_profile_background  (profile_background)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (card_background_upload_id => uploads.id)
+#  fk_rails_...  (profile_background_upload_id => uploads.id)
 #

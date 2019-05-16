@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicTimerSerializer < ApplicationSerializer
   attributes :id,
              :execute_at,

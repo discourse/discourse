@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'topic_view'
 require_dependency 'promotion'
 require_dependency 'url_helper'

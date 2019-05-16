@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Change topic/post ownership of all the topics/posts by a specific user (without creating new revision)"
 task "users:change_post_ownership", [:old_username, :new_username, :archetype] => [:environment] do |_, args|
   old_username = args[:old_username]

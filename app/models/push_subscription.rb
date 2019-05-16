@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PushSubscription < ActiveRecord::Base
   belongs_to :user
 end

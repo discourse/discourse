@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FlushApplicationRequests < ActiveRecord::Migration[4.2]
   def up
     # flush as enum changed

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserAvatars < ActiveRecord::Migration[4.2]
   def up
     create_table :user_avatars do |t|

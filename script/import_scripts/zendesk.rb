@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Zendesk importer
 #
 # You will need a bunch of CSV files:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "db_helper"
 require "digest/sha1"
 require "base62"
@@ -425,7 +427,9 @@ def migrate_to_s3
 
       puts "Rebaking posts with lightboxes..."
 
-      Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each(&:rebake!)
+      Post.where("cooked LIKE '%class=\"lightbox\"%'").find_each do |post|
+        post.rebake!(priority: :ultra_low)
+      end
     end
   end
 

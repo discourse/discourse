@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'

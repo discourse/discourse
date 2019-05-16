@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # to be used to compare ruby heaps generated in 2.1
 # can isolate memory leaks
 #

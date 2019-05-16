@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
   def name
     "twitter"

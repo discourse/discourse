@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailController < ApplicationController
   layout 'no_ember'
 

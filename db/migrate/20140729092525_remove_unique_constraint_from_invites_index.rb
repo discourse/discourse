@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUniqueConstraintFromInvitesIndex < ActiveRecord::Migration[4.2]
   def up
     remove_index :invites, [:email, :invited_by_id]

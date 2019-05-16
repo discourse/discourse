@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ViewModel used on Summary tab on User page
 
 class UserSummary

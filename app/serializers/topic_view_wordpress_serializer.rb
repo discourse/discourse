@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TopicViewWordpressSerializer < ApplicationSerializer
 
   # These attributes will be delegated to the topic

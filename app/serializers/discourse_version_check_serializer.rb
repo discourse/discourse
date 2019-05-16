@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DiscourseVersionCheckSerializer < ApplicationSerializer
   attributes :latest_version,
              :critical_updates,

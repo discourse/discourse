@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateWarningTopicSubtypes < ActiveRecord::Migration[4.2]
   def change
     execute "UPDATE topics AS t

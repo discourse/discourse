@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency "migration/base_dropper"
 
 class DbHelper

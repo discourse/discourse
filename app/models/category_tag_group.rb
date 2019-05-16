@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CategoryTagGroup < ActiveRecord::Base
   belongs_to :category
   belongs_to :tag_group

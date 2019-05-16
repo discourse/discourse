@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TrackedTopicsUpdater
 
   def initialize(user_id, threshold)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSuppressFromLatestToCategories < ActiveRecord::Migration[5.1]
   def up
     add_column :categories, :suppress_from_latest, :boolean, default: false

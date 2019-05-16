@@ -3,7 +3,6 @@
 require "rails_helper"
 
 describe UserAnonymizer do
-
   let(:admin) { Fabricate(:admin) }
 
   describe "event" do
@@ -27,7 +26,7 @@ describe UserAnonymizer do
   describe "make_anonymous" do
     let(:original_email) { "edward@example.net" }
     let(:user) { Fabricate(:user, username: "edward", email: original_email) }
-    let(:another_user) { Fabricate(:evil_trout) }
+    fab!(:another_user) { Fabricate(:evil_trout) }
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
     it "changes username" do
@@ -297,7 +296,7 @@ describe UserAnonymizer do
     let(:old_ip) { "1.2.3.4" }
     let(:anon_ip) { "0.0.0.0" }
     let(:user) { Fabricate(:user, ip_address: old_ip, registration_ip_address: old_ip) }
-    let(:post) { Fabricate(:post) }
+    fab!(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
 
     it "doesn't anonymize ips by default" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DraftSequence < ActiveRecord::Base
   def self.next!(user, key)
     user_id = user

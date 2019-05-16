@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DetailedUserBadgeSerializer < BasicUserBadgeSerializer
   has_one :granted_by, serializer: UserBadgeSerializer::UserSerializer
 

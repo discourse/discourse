@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserAnonymizer
 
   attr_reader :user_history

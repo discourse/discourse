@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDirectoryItems < ActiveRecord::Migration[4.2]
   def change
     create_table :directory_items, force: true do |t|

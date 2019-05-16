@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../support/constants'
 
 module ImportScripts::PhpBB3

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 desc "invite an admin to this discourse instance"
 task "admin:invite", [:email] => [:environment] do |_, args|

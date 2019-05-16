@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'stylesheet/common'
 require_dependency 'global_path'
 
@@ -33,18 +35,17 @@ module Stylesheet
     end
 
     register_import "theme_colors" do
-      contents = ""
+      contents = +""
       colors = (@theme_id && theme.color_scheme) ? theme.color_scheme.resolved_colors : ColorScheme.base_colors
       colors.each do |n, hex|
         contents << "$#{n}: ##{hex} !default;\n"
       end
-      contents
 
       Import.new("theme_colors.scss", source: contents)
     end
 
     register_import "theme_variables" do
-      contents = ""
+      contents = +""
 
       theme&.all_theme_variables&.each do |field|
         if field.type_id == ThemeField.types[:theme_upload_var]
@@ -65,7 +66,7 @@ module Stylesheet
     end
 
     register_import "category_backgrounds" do
-      contents = ""
+      contents = +""
       Category.where('uploaded_background_id IS NOT NULL').each do |c|
         contents << category_css(c) if c.uploaded_background&.url.present?
       end

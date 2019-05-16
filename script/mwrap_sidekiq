@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 if !ENV["LD_PRELOAD"]&.include?('mwrap')
   # use malloc from libc that interacts better with mwrap
   ENV['RAILS_ENV'] = 'production'

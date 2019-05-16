@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # loaded really early
 module Plugin; end
 
@@ -45,6 +47,8 @@ class Plugin::Metadata
     "discourse-plugin-discord-auth",
     "discourse-plugin-linkedin-auth",
     "discourse-plugin-office365-auth",
+    "discourse-steam-login",
+    "discourse-login-with-amazon",
     "discourse-policy",
     "discourse-presence",
     "discourse-prometheus",

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Unread
 
   # This module helps us calculate unread and new post counts

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseTagging
 
   TAGS_FIELD_NAME = "tags"

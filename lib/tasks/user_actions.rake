@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "rebuild the user_actions table"
 task "user_actions:rebuild" => :environment do
   MessageBus.off

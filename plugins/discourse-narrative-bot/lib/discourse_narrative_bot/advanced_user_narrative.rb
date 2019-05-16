@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseNarrativeBot
   class AdvancedUserNarrative < Base
     I18N_KEY = "discourse_narrative_bot.advanced_user_narrative".freeze

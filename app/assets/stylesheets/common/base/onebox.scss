@@ -251,19 +251,6 @@ aside.onebox {
       clear: both;
       position: relative;
 
-      .instagram-video-icon {
-        &:before {
-          opacity: 0.8;
-          // ideally, the SVG used here should be in HTML and reference the SVG sprite
-          content: svg-uri(
-            '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
-          );
-        }
-        bottom: 10px;
-        right: 10px;
-        position: absolute;
-      }
-
       .instagram-image,
       .scale-image {
         padding: 5px 5px 5px 5px;
@@ -271,6 +258,19 @@ aside.onebox {
         max-height: 100%;
         float: none;
       }
+    }
+
+    .instagram-video-icon {
+      &:before {
+        opacity: 0.8;
+        // ideally, the SVG used here should be in HTML and reference the SVG sprite
+        content: svg-uri(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 512 512" fill="white"><path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path></svg>'
+        );
+      }
+      bottom: 10px;
+      right: 10px;
+      position: absolute;
     }
   }
 }

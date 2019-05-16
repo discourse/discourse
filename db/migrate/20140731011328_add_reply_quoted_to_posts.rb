@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddReplyQuotedToPosts < ActiveRecord::Migration[4.2]
   def up
     add_column :posts, :reply_quoted, :boolean, null: false, default: false

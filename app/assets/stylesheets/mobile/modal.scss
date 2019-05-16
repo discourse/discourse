@@ -42,7 +42,6 @@
 
 .close {
   font-size: $font-up-4;
-  color: $primary;
 }
 
 #move-selected {
@@ -81,7 +80,6 @@
 
 .edit-category-modal {
   .modal-body {
-    box-sizing: border-box;
     position: relative;
     height: 350px;
   }

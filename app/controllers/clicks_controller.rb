@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClicksController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 

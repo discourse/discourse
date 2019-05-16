@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # review per rails release, this speeds up the inflector, we are not inflecting too much at the moment, except in dev
 #
 # note: I am working with the rails team on including this in official rails

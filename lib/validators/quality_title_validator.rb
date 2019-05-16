@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'text_sentinel'
 require 'text_cleaner'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'validators/stripped_length_validator'
 
 module Validators; end

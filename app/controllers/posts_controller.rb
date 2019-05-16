@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'new_post_manager'
 require_dependency 'post_creator'
 require_dependency 'post_action_destroyer'
@@ -762,7 +764,7 @@ class PostsController < ApplicationController
   end
 
   def signature_for(args)
-    "post##" << Digest::SHA1.hexdigest(args
+    +"post##" << Digest::SHA1.hexdigest(args
       .to_h
       .to_a
       .concat([["user", current_user.id]])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if (Rails.env.production? && SiteSetting.logging_provider == 'lograge') || ENV["ENABLE_LOGRAGE"]
   require 'lograge'
 

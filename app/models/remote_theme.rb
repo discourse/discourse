@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_dependency 'theme_store/git_importer'
 require_dependency 'theme_store/tgz_importer'
 require_dependency 'upload_creator'

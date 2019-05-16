@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "edit_rate_limiter"
 require 'post_locker'
 

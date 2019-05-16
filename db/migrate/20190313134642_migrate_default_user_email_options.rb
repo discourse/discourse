@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateDefaultUserEmailOptions < ActiveRecord::Migration[5.2]
   def up
     # see UserOption.email_level_types

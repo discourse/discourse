@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Demon; end
 
 # intelligent fork based demonizer
