@@ -118,6 +118,34 @@ def migrate_from_s3
     puts "You must disable S3 uploads before running that task."
     return
   end
+  if SiteSetting.prevent_anons_from_downloading_files
+    unless ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present? &&
+      ENV["DISCOURSE_S3_REGION"].present? &&
+      ENV["DISCOURSE_S3_ACCESS_KEY_ID"].present? &&
+      ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"].present?
+
+      puts <<~TEXT
+        These environment variables are required when "prevent_anons_from_downloading_files" is enabled
+          - DISCOURSE_S3_BUCKET
+          - DISCOURSE_S3_REGION
+          - DISCOURSE_S3_ACCESS_KEY_ID
+          - DISCOURSE_S3_SECRET_ACCESS_KEY
+      TEXT
+      exit 2
+    end
+
+    opts = {
+      region: ENV["DISCOURSE_S3_REGION"],
+      access_key_id: ENV["DISCOURSE_S3_ACCESS_KEY_ID"],
+      secret_access_key: ENV["DISCOURSE_S3_SECRET_ACCESS_KEY"]
+    }
+
+    # S3::Client ignores the `region` option when an `endpoint` is provided.
+    # Without `region`, non-default region bucket creation will break for S3, so we can only
+    # define endpoint when not using S3 i.e. when SiteSetting.s3_endpoint is provided.
+    opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
+    s3 = Aws::S3::Client.new(opts)
+  end
 
   db = RailsMultisite::ConnectionManagement.current_db
 
@@ -127,7 +155,7 @@ def migrate_from_s3
 
   Post
     .where("user_id > 0")
-    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%'")
+    .where("raw LIKE '%.s3%.amazonaws.com/%' OR raw LIKE '%(upload://%' OR raw LIKE '%class=\"attachment\"%'")
     .find_each do |post|
     begin
       updated = false
@@ -181,6 +209,36 @@ def migrate_from_s3
           url
         rescue
           url
+        end
+      end
+
+      if SiteSetting.prevent_anons_from_downloading_files
+        post.raw.gsub!(/\"attachment\"\shref\=\"(.*)\"/i) do |url|
+          begin
+            sha1 = File.basename($1, File.extname($1))
+            if existing_upload = Upload.find_by(sha1: sha1)
+              if existing_upload.private? && existing_upload.url.match?(/\/\/[\w.-]+amazonaws\.com\//)
+                key = existing_upload.url.gsub(/(\/\/[\w.-]+amazonaws\.com\/)/, "")
+                s3.get_object(
+                  response_target: 's3_tmp',
+                  bucket: ENV['DISCOURSE_S3_BUCKET'],
+                  key: key
+                )
+                file = File.open('s3_tmp')
+
+                filename = existing_upload.original_filename
+                origin = existing_upload.origin
+                existing_upload.destroy
+
+                new_upload = UploadCreator.new(file, filename, origin: origin).create_for(post.user_id || -1)
+                # TODO: this should be in a match (instead of a gsub!) because the raw post doesn't need to be updated
+              end
+            end
+
+            url
+          rescue
+            url
+          end
         end
       end
 
