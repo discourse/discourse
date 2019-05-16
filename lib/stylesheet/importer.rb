@@ -20,11 +20,20 @@ module Stylesheet
     end
 
     Discourse.plugins.each do |plugin|
-      ["", "_mobile", "_desktop"].each do |type|
-        asset_name = "#{plugin.asset_name}#{type}"
-        if DiscoursePluginRegistry.stylesheets[asset_name].present?
+      ["", "mobile", "desktop"].each do |type|
+        asset_name, stylesheets = nil
+
+        if type.present?
+          asset_name = "#{plugin.asset_name}_#{type}"
+          stylesheets = DiscoursePluginRegistry.send("#{type}_stylesheets")[plugin.asset_name]
+        else
+          asset_name = plugin.asset_name
+          stylesheets = DiscoursePluginRegistry.stylesheets[plugin.asset_name]
+        end
+
+        if stylesheets.present?
           register_import asset_name do
-            import_files(DiscoursePluginRegistry.stylesheets[asset_name])
+            import_files(stylesheets)
           end
         end
       end
