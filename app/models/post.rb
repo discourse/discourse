@@ -919,53 +919,57 @@ class Post < ActiveRecord::Base
   end
 
   def self.find_missing_uploads(include_local_upload: true)
-    PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
     missing_uploads = []
     missing_post_uploads = {}
-    query = Post
-      .have_uploads
-      .joins("LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'")
-      .where("post_custom_fields.id IS NULL")
-      .select(:id, :cooked)
+    count = 0
 
-    query.find_in_batches do |posts|
-      ids = posts.pluck(:id)
-      sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
+    DistributedMutex.synchronize("find_missing_uploads") do
+      PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+      query = Post
+        .have_uploads
+        .joins(:topic)
+        .joins("LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = '#{Post::MISSING_UPLOADS_IGNORED}'")
+        .where("post_custom_fields.id IS NULL")
+        .select(:id, :cooked)
 
-      posts.each do |post|
-        post.each_upload_url do |src, path, sha1|
-          next if sha1.present? && sha1s.include?(sha1)
+      query.find_in_batches do |posts|
+        ids = posts.pluck(:id)
+        sha1s = Upload.joins(:post_uploads).where("post_uploads.post_id >= ? AND post_uploads.post_id <= ?", ids.min, ids.max).pluck(:sha1)
 
-          missing_post_uploads[post.id] ||= []
+        posts.each do |post|
+          post.each_upload_url do |src, path, sha1|
+            next if sha1.present? && sha1s.include?(sha1)
 
-          if missing_uploads.include?(src)
-            missing_post_uploads[post.id] << src
-            next
-          end
+            missing_post_uploads[post.id] ||= []
 
-          upload_id = nil
-          upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
-          upload_id ||= yield(post, src, path, sha1)
+            if missing_uploads.include?(src)
+              missing_post_uploads[post.id] << src
+              next
+            end
 
-          if upload_id.present?
-            attributes = { post_id: post.id, upload_id: upload_id }
-            PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
-          else
-            missing_uploads << src
-            missing_post_uploads[post.id] << src
+            upload_id = nil
+            upload_id = Upload.where(sha1: sha1).pluck(:id).first if sha1.present?
+            upload_id ||= yield(post, src, path, sha1)
+
+            if upload_id.present?
+              attributes = { post_id: post.id, upload_id: upload_id }
+              PostUpload.create!(attributes) unless PostUpload.exists?(attributes)
+            else
+              missing_uploads << src
+              missing_post_uploads[post.id] << src
+            end
           end
         end
       end
-    end
 
-    count = 0
-    missing_post_uploads = missing_post_uploads.reject do |post_id, uploads|
-      if uploads.present?
-        PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
-        count += uploads.count
+      missing_post_uploads = missing_post_uploads.reject do |post_id, uploads|
+        if uploads.present?
+          PostCustomField.create!(post_id: post_id, name: Post::MISSING_UPLOADS, value: uploads.to_json)
+          count += uploads.count
+        end
+
+        uploads.empty?
       end
-
-      uploads.empty?
     end
 
     { uploads: missing_uploads, post_uploads: missing_post_uploads, count: count }
