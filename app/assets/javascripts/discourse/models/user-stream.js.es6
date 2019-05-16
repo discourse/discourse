@@ -68,7 +68,7 @@ export default RestModel.extend({
 
     // 2) remove the parents that have no children
     const content = this.content.filter(ua => {
-      return ["likes", "stars", "edits", "bookmarks"].any(group => {
+      return ["likes", "stars", "edits", "bookmarks"].some(group => {
         return ua.get(`childGroups.${group}.items.length`) > 0;
       });
     });

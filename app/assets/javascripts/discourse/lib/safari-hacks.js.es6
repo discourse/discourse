@@ -1,3 +1,4 @@
+import debounce from "discourse/lib/debounce";
 import { isAppleDevice, safariHacksDisabled } from "discourse/lib/utilities";
 
 // we can't tell what the actual visible window height is
@@ -106,7 +107,7 @@ function positioningWorkaround($fixedElement) {
     positioningWorkaround.blur(evt);
   };
 
-  var blurred = _.debounce(blurredNow, 250);
+  var blurred = debounce(blurredNow, 250);
 
   var positioningHack = function(evt) {
     const self = this;
@@ -161,7 +162,7 @@ function positioningWorkaround($fixedElement) {
     }
   }
 
-  const checkForInputs = _.debounce(function() {
+  const checkForInputs = debounce(function() {
     $fixedElement
       .find(
         "button:not(.hide-preview),a:not(.mobile-file-upload):not(.toggle-toolbar)"

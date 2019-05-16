@@ -337,8 +337,8 @@ const TopicTrackingState = Discourse.Model.extend({
 
   countNew(category_id) {
     return _.chain(this.states)
-      .where(isNew)
-      .where(
+      .filter(isNew)
+      .filter(
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&
@@ -359,8 +359,8 @@ const TopicTrackingState = Discourse.Model.extend({
 
   countUnread(category_id) {
     return _.chain(this.states)
-      .where(isUnread)
-      .where(
+      .filter(isUnread)
+      .filter(
         topic =>
           topic.archetype !== "private_message" &&
           !topic.deleted &&

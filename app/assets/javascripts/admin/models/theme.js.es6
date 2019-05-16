@@ -138,7 +138,7 @@ const Theme = RestModel.extend({
   @computed("theme_fields", "theme_fields.@each.error")
   isBroken(fields) {
     return (
-      fields && fields.some(field => field.error && field.error.length > 0)
+      fields && fields.any(field => field.error && field.error.length > 0)
     );
   },
 

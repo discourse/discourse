@@ -39,10 +39,7 @@ export default createWidget("post-links", {
     }
 
     // only show incoming
-    const links = _(this.attrs.links)
-      .filter(l => l.reflection)
-      .uniq(true, l => l.title)
-      .value();
+    const links = this.attrs.links.filter(l => l.reflection).uniqBy("title");
 
     if (links.length === 0) {
       return;
