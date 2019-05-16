@@ -2797,6 +2797,11 @@ en:
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: ", "
+      shortcut_key_delimiter_plus: "+"
+      shortcut_delimiter_or: "%{shortcut1} or %{shortcut2}"
+      shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
+      shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Keyboard Shortcuts"
       jump_to:
         title: "Jump To"
@@ -2814,9 +2819,9 @@ en:
         title: "Navigation"
         jump: "%{shortcut} Go to post #"
         back: "%{shortcut} Back"
-        up_down: "%{shortcut}/%{shortcut_2} Move selection &uarr; &darr;"
-        open: "%{shortcut} or %{shortcut_2} Open selected topic"
-        next_prev: "%{shortcut}/%{shortcut_2} Next/previous section"
+        up_down: "%{shortcut} Move selection &uarr; &darr;"
+        open: "%{shortcut} Open selected topic"
+        next_prev: "%{shortcut} Next/previous section"
       application:
         title: "Application"
         create: "%{shortcut} Create a new topic"
@@ -2824,11 +2829,11 @@ en:
         hamburger_menu: "%{shortcut} Open hamburger menu"
         user_profile_menu: "%{shortcut} Open user menu"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"
-        search: "%{shortcut} or %{shortcut_2} Search"
+        search: "%{shortcut} Search"
         help: "%{shortcut} Open keyboard help"
         dismiss_new_posts: "%{shortcut} Dismiss New/Posts"
         dismiss_topics: "%{shortcut} Dismiss Topics"
-        log_out: "%{shortcut} %{shortcut_2} Log Out"
+        log_out: "%{shortcut} Log Out"
       composing:
         title: "Composing"
         return: "%{shortcut} Return to composer"
