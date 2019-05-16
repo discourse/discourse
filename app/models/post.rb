@@ -117,7 +117,7 @@ class Post < ActiveRecord::Base
 
   scope :have_uploads, -> {
     where(
-      "(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND (posts.cooked LIKE ? OR posts.cooked LIKE '%/original/%' OR posts.cooked LIKE '%/optimized/%')",
+      "(posts.cooked LIKE '%<a %' OR posts.cooked LIKE '%<img %') AND (posts.cooked LIKE ? OR posts.cooked LIKE '%/original/%' OR posts.cooked LIKE '%/optimized/%' OR posts.cooked LIKE '%data-orig-src=%')",
       "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%"
     )
   }
