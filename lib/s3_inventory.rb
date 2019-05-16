@@ -84,7 +84,8 @@ class S3Inventory
 
       if result.count >= 1
         key = result[0]["key"]
-        data = s3_helper.object(key).data
+        data = @s3_helper.object(key).data
+
         upload_id = Upload.create!(
           user_id: Discourse.system_user.id,
           original_filename: "",
