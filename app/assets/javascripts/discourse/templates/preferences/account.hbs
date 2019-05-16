@@ -80,32 +80,38 @@
 
     {{passwordProgress}}
   </div>
+</div>
 
+<div class="control-group pref-second-factor">
+  <label class="control-label">{{i18n 'user.second_factor.title'}}</label>
+  {{#unless model.second_factor_enabled}}
+    <label>
+        {{i18n 'user.second_factor.short_description'}}
+    </label>
+  {{/unless}}
   <div class="controls pref-second-factor">
-    {{#if model.second_factor_enabled}}
-      {{i18n 'user.second_factor.disable'}}
-    {{else}}
-      {{i18n 'user.second_factor.enable'}}
-    {{/if}}
-
     {{#if isCurrentUser}}
-      {{#link-to "preferences.second-factor" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-        {{d-icon "pencil-alt"}}
-      {{/link-to}}
+      {{#if model.second_factor_enabled}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "unlock"}} {{i18n 'user.second_factor.disable'}}
+        {{/link-to}}
+      {{else}}
+        {{#link-to "preferences.second-factor" class="btn btn-default"}}
+          {{d-icon "lock"}} {{i18n 'user.second_factor.enable'}}
+        {{/link-to}}
+      {{/if}}
     {{/if}}
   </div>
 
   <div class="controls pref-second-factor-backup">
     {{#if model.second_factor_enabled}}
-      {{#if model.second_factor_backup_enabled}}
-        {{i18n 'user.second_factor_backup.manage'}}
-      {{else}}
-        {{i18n 'user.second_factor_backup.enable_long'}}
-      {{/if}}
-
       {{#if isCurrentUser}}
-        {{#link-to "preferences.second-factor-backup" class="btn btn-default btn-small btn-icon pad-left no-text"}}
-          {{d-icon "pencil-alt"}}
+        {{#link-to "preferences.second-factor-backup"}}
+        {{#if model.second_factor_backup_enabled}}
+          {{i18n 'user.second_factor_backup.manage'}}
+        {{else}}
+          {{i18n 'user.second_factor_backup.enable_long'}}
+        {{/if}}
         {{/link-to}}
       {{/if}}
     {{/if}}
