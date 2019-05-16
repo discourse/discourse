@@ -23,14 +23,46 @@ module UserNameSuggester
 
   def self.find_available_username_based_on(name, allowed_username = nil)
     name = fix_username(name)
+    offset = nil
     i = 1
     attempt = name
+
     until attempt == allowed_username || User.username_available?(attempt) || i > 100
-      suffix = i.to_s
+
+      if offset.nil?
+        normalized = User.normalize_username(name)
+        similar = "#{normalized}(0|1|2|3|4|5|6|7|8|9)+"
+
+        count = DB.query_single(<<~SQL, like: "#{normalized}%", similar: similar).first
+          SELECT count(*)  FROM users
+          WHERE username_lower LIKE :like AND
+            username_lower SIMILAR TO :similar
+        SQL
+
+        if count > 0
+          available = DB.query_single(<<~SQL, count: count, name: normalized).first
+            WITH numbers AS (SELECT generate_series(1, :count) AS n)
+
+            SELECT n FROM numbers
+            LEFT JOIN users ON username_lower = :name || n::varchar
+            WHERE users.id IS NULL
+            ORDER by n ASC
+            LIMIT 1
+          SQL
+
+          # we start at 1
+          offset = available - 1
+        else
+          offset = 0
+        end
+      end
+
+      suffix = (i + offset).to_s
       max_length = User.username_length.end - suffix.length
       attempt = "#{truncate(name, max_length)}#{suffix}"
       i += 1
     end
+
     until attempt == allowed_username || User.username_available?(attempt) || i > 200
       attempt = SecureRandom.hex[1..SiteSetting.max_username_length]
       i += 1
