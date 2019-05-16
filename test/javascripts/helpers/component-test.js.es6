@@ -6,8 +6,8 @@ import TopicTrackingState from "discourse/models/topic-tracking-state";
 export default function(name, opts) {
   opts = opts || {};
 
-  if (opts.skip) { 
-    return; 
+  if (opts.skip) {
+    return;
   }
 
   test(name, function(assert) {
