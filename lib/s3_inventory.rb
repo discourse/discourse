@@ -76,7 +76,7 @@ class S3Inventory
   def list_missing_post_uploads
     log "Listing missing post uploads..."
 
-    missing = Post.find_missing_uploads(include_local_upload: false) do |_, _, _, sha1|
+    missing = Post.find_missing_uploads(include_local_upload: false) do |post, _, _, sha1|
       next if sha1.blank?
 
       upload_id = nil
@@ -87,14 +87,16 @@ class S3Inventory
         data = @s3_helper.object(key).data
         filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
 
-        upload_id = Upload.create!(
+        upload = Upload.new(
           user_id: Discourse.system_user.id,
           original_filename: filename || File.basename(key),
           filesize: data.content_length,
           url: File.join(Discourse.store.absolute_base_url, key),
           sha1: sha1,
           etag: result[0]["etag"]
-        ).id
+        )
+        upload.save!(validate: false)
+        upload_id = upload.id
       end
 
       upload_id
