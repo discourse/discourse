@@ -76,7 +76,7 @@ class S3Inventory
   def list_missing_post_uploads
     log "Listing missing post uploads..."
 
-    missing = Post.find_missing_uploads(include_local_upload: false) do |post, _, _, sha1|
+    missing = Post.find_missing_uploads(include_local_upload: false) do |_, _, _, sha1|
       next if sha1.blank?
 
       upload_id = nil
