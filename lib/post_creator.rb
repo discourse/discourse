@@ -56,6 +56,7 @@ class PostCreator
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
   #     shared_draft          - Is the topic meant to be a shared draft
+  #     topic_opts            - Options to be overwritten for topic
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
@@ -410,7 +411,8 @@ class PostCreator
   def create_topic
     return if @topic
     begin
-      topic_creator = TopicCreator.new(@user, guardian, @opts)
+      opts = @opts[:topic_opts] ? @opts.merge(@opts[:topic_opts]) : @opts
+      topic_creator = TopicCreator.new(@user, guardian, opts)
       @topic = topic_creator.create
     rescue ActiveRecord::Rollback
       rollback_from_errors!(topic_creator)

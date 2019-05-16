@@ -37,6 +37,9 @@ class TopicCreator
   def create
     topic = Topic.new(setup_topic_params)
     setup_tags(topic)
+    if fields = @opts[:custom_fields]
+      topic.custom_fields = fields
+    end
 
     DiscourseEvent.trigger(:before_create_topic, topic, self)
 
