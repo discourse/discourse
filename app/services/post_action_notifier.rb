@@ -115,10 +115,12 @@ class PostActionNotifier
     end
 
     if user_ids.present?
-      Jobs.enqueue(:notify_post_revision,
-        user_ids: user_ids,
-        post_revision_id: post_revision.id
-      )
+      DB.after_commit do
+        Jobs.enqueue(:notify_post_revision,
+          user_ids: user_ids,
+          post_revision_id: post_revision.id
+        )
+      end
     end
   end
 
