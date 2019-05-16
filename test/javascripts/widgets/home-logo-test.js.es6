@@ -9,6 +9,7 @@ const title = "Cool Forum";
 
 widgetTest("basics", {
   template: '{{mount-widget widget="home-logo" args=args}}',
+  skip: true,
   beforeEach() {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
