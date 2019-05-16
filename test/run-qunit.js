@@ -53,6 +53,10 @@ async function runAllTests() {
 
   await Promise.all([Page.enable(), Runtime.enable()]);
 
+  Runtime.exceptionThrown(exceptionInfo => {
+    console.log(exceptionInfo.exceptionDetails.exception.description);
+  });
+
   Runtime.consoleAPICalled(response => {
     const message = response["args"][0].value;
 
