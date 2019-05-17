@@ -775,8 +775,7 @@ class ApplicationController < ActionController::Base
     end
 
     @container_class = "wrap not-found-container"
-    @slug = params[:slug].presence || params[:id].presence || ""
-    @slug.tr!('-', ' ')
+    @slug = (params[:slug].presence || params[:id].presence || "").tr('-', '')
     @hide_search = true if SiteSetting.login_required
     render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
   end

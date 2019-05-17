@@ -1648,6 +1648,20 @@ describe PostsController do
 
   describe '#latest' do
     context 'private posts' do
+      describe 'when not logged in' do
+        it 'should return the right response' do
+          Fabricate(:post)
+
+          get "/private-posts.rss"
+
+          expect(response.status).to eq(404)
+
+          expect(response.body).to have_tag(
+            "input", with: { value: "private_posts" }
+          )
+        end
+      end
+
       it 'returns private posts rss feed' do
         sign_in(admin)
 
