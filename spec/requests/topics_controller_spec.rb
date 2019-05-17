@@ -1002,7 +1002,8 @@ RSpec.describe TopicsController do
         it "doesn't call the PostRevisor when there is no changes" do
           expect do
             put "/t/#{topic.slug}/#{topic.id}.json", params: {
-              category_id: topic.category_id
+              category_id: topic.category_id,
+              tags_empty_array: true
             }
           end.not_to change(PostRevision.all, :count)
 

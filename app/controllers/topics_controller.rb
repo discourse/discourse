@@ -330,6 +330,7 @@ class TopicsController < ApplicationController
 
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
+    changes.delete(:tags_empty_array) if !topic.tags.exists?
 
     success = true
 
