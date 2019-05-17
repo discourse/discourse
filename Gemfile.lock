@@ -337,7 +337,7 @@ GEM
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
     rtlit (0.0.5)
-    rubocop (0.67.2)
+    rubocop (0.69.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
