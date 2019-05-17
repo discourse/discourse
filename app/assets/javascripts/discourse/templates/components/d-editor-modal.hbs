@@ -1,7 +1,8 @@
+{{#unless hidden}}
+  {{yield}}
 
-{{yield}}
-
-<div class='controls'>
-  {{d-button class="btn-primary" label="composer.modal_ok" action=(action "ok")}}
-  {{d-button class="btn-danger" label="composer.modal_cancel" action=(action "cancel")}}
-</div>
+  <div class="controls">
+    {{d-button class="btn-primary" label="composer.modal_ok" action=(action "ok")}}
+    {{d-button class="btn-danger" label="composer.modal_cancel" action=(action "cancel")}}
+  </div>
+{{/unless}}
