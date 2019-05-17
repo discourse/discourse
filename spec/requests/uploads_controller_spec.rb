@@ -248,23 +248,21 @@ describe UploadsController do
         expect(response.status).to eq(200)
       end
 
-      it "redirects to presigned URL for private uploads" do
+      it "returns presigned URL only for authed users when private uploads enabled" do
         SiteSetting.prevent_anons_from_downloading_files = true
-        @upload.update_column(:url, "//bucket.s3.amazonaws.com/#{@upload.url}")
+        upload_file("spec.txt", "md")
+        upload = Upload.last
+        upload_url = "/uploads/#{site}/#{upload.sha1}.#{upload.extension}"
 
-        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+        get upload_url
 
         expect(response.response_code).to eq(302)
         expect(response.redirect_url).to match(/amazonaws/)
         expect(response.redirect_url).to match(/Amz-Credential/)
-      end
 
-      it "does not redirect to presigned S3 URL for private uploads for anons" do
-        SiteSetting.prevent_anons_from_downloading_files = true
-        @upload.update_column(:url, "//bucket.s3.amazonaws.com/#{@upload.url}")
-
+        # does not redirect to presigned S3 URL for private uploads for anons
         delete "/session/#{user.username}.json" # sign out
-        get "/uploads/#{site}/#{@upload.sha1}.#{@upload.extension}"
+        get upload_url
 
         expect(response.status).to eq(404)
       end
