@@ -1468,10 +1468,6 @@ en:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
-      shift_lowercase: "shift"
-      ctrl_lowercase: "ctrl"
-      alt_lowercase: "alt"
-      enter_lowercase: "enter"
 
     conditional_loading_section:
       loading: Loading...

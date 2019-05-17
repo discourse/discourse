@@ -2,9 +2,9 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 
 const KEY = "keyboard_shortcuts_help";
 
-const SHIFT = I18n.t("shortcut_modifier_key.shift_lowercase");
-const ALT = I18n.t("shortcut_modifier_key.alt_lowercase");
-const CTRL = I18n.t("shortcut_modifier_key.ctrl_lowercase");
+const SHIFT = I18n.t("shortcut_modifier_key.shift");
+const ALT = I18n.t("shortcut_modifier_key.alt");
+const CTRL = I18n.t("shortcut_modifier_key.ctrl");
 const ENTER = I18n.t("shortcut_modifier_key.enter");
 
 const COMMA = I18n.t(`${KEY}.shortcut_key_delimiter_comma`);
