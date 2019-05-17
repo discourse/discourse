@@ -261,7 +261,7 @@ class ImportScripts::XenForo < ImportScripts::Base
 
     # [QUOTE="username, post: 28662, member: 1283"]
     s.gsub!(/\[quote="(\w+), post: (\d*), member: (\d*)"\]/i) do
-      username, imported_post_id, imported_user_id = $1, $2, $3
+      username, imported_post_id, _imported_user_id = $1, $2, $3
 
       topic_mapping = topic_lookup_from_imported_post_id(imported_post_id)
 
@@ -315,10 +315,9 @@ class ImportScripts::XenForo < ImportScripts::Base
     s
   end
 
-
   def process_xf_attachments(xf_type, s)
     ids = Set.new
-    ids.merge(s.scan(get_xf_regexp(xf_type)).map {|x| x[0].to_i})
+    ids.merge(s.scan(get_xf_regexp(xf_type)).map { |x| x[0].to_i })
     ids.each do |id|
       next unless id
       sql = get_xf_sql(xf_type, id).squish!
@@ -360,9 +359,9 @@ class ImportScripts::XenForo < ImportScripts::Base
   def get_xf_regexp(type, id = nil)
     case type
     when :gallery
-      Regexp.new /\[GALLERY=media,\s#{id ? id : '(\d+)'}\].+?\]/i
+      Regexp.new(/\[GALLERY=media,\s#{id ? id : '(\d+)'}\].+?\]/i)
     when :attachment
-      Regexp.new /\[ATTACH(?>=\w+)?\]#{id ? id : '(\d+)'}\[\/ATTACH\]/i
+      Regexp.new(/\[ATTACH(?>=\w+)?\]#{id ? id : '(\d+)'}\[\/ATTACH\]/i)
     end
   end
 
