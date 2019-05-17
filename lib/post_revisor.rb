@@ -101,17 +101,6 @@ class PostRevisor
     end
   end
 
-  track_topic_field(:tags_empty_array) do |tc, val|
-    if val.present? && tc.guardian.can_tag_topics?
-      prev_tags = tc.topic.tags.map(&:name)
-      if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, [])
-        tc.check_result(false)
-        next
-      end
-      tc.record_change('tags', prev_tags, nil)
-    end
-  end
-
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if SiteSetting.topic_featured_link_enabled &&
        topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)

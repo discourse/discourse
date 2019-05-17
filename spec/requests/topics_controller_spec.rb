@@ -1002,12 +1002,53 @@ RSpec.describe TopicsController do
         it "doesn't call the PostRevisor when there is no changes" do
           expect do
             put "/t/#{topic.slug}/#{topic.id}.json", params: {
-              category_id: topic.category_id,
-              tags_empty_array: true
+              category_id: topic.category_id
             }
           end.not_to change(PostRevision.all, :count)
 
           expect(response.status).to eq(200)
+        end
+
+        context 'tags' do
+          fab!(:tag) { Fabricate(:tag) }
+
+          before do
+            SiteSetting.tagging_enabled = true
+          end
+
+          it "can add a tag to topic" do
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: [tag.name]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it 'does not remove tag if no params is given' do
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json"
+            end.to_not change { topic.reload.tags.count }
+
+            expect(response.status).to eq(200)
+          end
+
+          it 'can remove a tag' do
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: {
+                tags: [""]
+              }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags).to eq([])
+          end
         end
 
         context 'when topic is private' do
