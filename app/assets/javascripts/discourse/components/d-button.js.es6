@@ -13,7 +13,8 @@ export default Ember.Component.extend({
     "disabled",
     "translatedTitle:title",
     "translatedLabel:aria-label",
-    "tabindex"
+    "tabindex",
+    "type"
   ],
 
   btnIcon: Ember.computed.notEmpty("icon"),
