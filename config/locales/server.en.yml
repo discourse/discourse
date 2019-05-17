@@ -430,16 +430,16 @@ en:
 
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
 
-      It could be even better if you got other people to share their points of view, too. Give it a shot and invite them over!
+      It could be even better if you got other people space to share their points of view, too. Can you invite them over?
 
     get_a_room: |
-      ### Invite others to get involved and reply too
+      ### Encourage everyone to get involved in the conversation
 
       You’ve replied %{count} times to @%{reply_username} in this particular topic!
 
-      A great discussion involves many voices and perspectives. Can you get anybody else involved? Give it a shot!
+      A great discussion involves many voices and perspectives. Can you get anybody else involved? 
 
-      And don't forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
+      And don’t forget, if you’d like to continue your conversation with this particular user at length outside of public view, [send them a personal message](%{base_path}/u/%{reply_username}).
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
