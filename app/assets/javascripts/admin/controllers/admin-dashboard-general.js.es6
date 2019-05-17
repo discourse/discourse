@@ -111,13 +111,6 @@ export default Ember.Controller.extend(PeriodComputationMixin, {
     return { startDate, endDate };
   },
 
-  @computed("model.attributes.updated_at")
-  updatedTimestamp(updatedAt) {
-    return moment(updatedAt)
-      .tz(moment.tz.guess())
-      .format("LLL");
-  },
-
   _reportsForPeriodURL(period) {
     return Discourse.getURL(`/admin?period=${period}`);
   }
