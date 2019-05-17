@@ -189,10 +189,15 @@ RSpec.describe ApplicationController do
         expect(response).to redirect_to("/forum/t/#{new_topic.slug}/#{new_topic.id}/#{new_topic.posts.last.post_number}")
       end
 
-      it 'should return 404 and show Google search' do
+      it 'should return 404 and show Google search for an invalid topic route' do
         get "/t/nope-nope/99999999"
+
         expect(response.status).to eq(404)
-        expect(response.body).to include(I18n.t('page_not_found.search_button'))
+
+        response_body = response.body
+
+        expect(response_body).to include(I18n.t('page_not_found.search_button'))
+        expect(response_body).to have_tag("input", with: { value: 'nopenope' })
       end
 
       it 'should not include Google search if login_required is enabled' do
