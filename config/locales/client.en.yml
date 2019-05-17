@@ -2011,7 +2011,7 @@ en:
         jump_bottom: "jump to last post"
         jump_prompt: "jump to..."
         jump_prompt_of: "of %{count} posts"
-        jump_prompt_long: "What post would you like to jump to?"
+        jump_prompt_long: "Jump to..."
         jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_to_date: "to date"
         jump_prompt_or: "or"
