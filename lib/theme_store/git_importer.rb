@@ -44,7 +44,7 @@ class ThemeStore::GitImporter
       return Discourse::Utils.execute_command("git", "diff", "--staged")
     end
   ensure
-    FileUtils.rm_rf local_temp_folder
+    FileUtils.rm_rf local_temp_folder if local_temp_folder
   end
 
   def commits_since(hash)
