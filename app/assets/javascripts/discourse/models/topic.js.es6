@@ -652,15 +652,9 @@ Topic.reopenClass({
       delete props.category_id;
     }
 
-    // Annoyingly, empty arrays are not sent across the wire. This
-    // allows us to make a distinction between arrays that were not
-    // sent and arrays that we specifically want to be empty.
-    Object.keys(props).forEach(function(k) {
-      const v = props[k];
-      if (v instanceof Array && v.length === 0) {
-        props[`${k}_empty_array`] = true;
-      }
-    });
+    if (props.tags && props.tags.length === 0) {
+      props.tags = [""];
+    }
 
     return ajax(topic.get("url"), { type: "PUT", data: props }).then(result => {
       // The title can be cleaned up server side
