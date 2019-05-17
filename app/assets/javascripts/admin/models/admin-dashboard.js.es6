@@ -1,6 +1,10 @@
 import { ajax } from "discourse/lib/ajax";
 
-const GENERAL_ATTRIBUTES = ["updated_at"];
+const GENERAL_ATTRIBUTES = [
+  "updated_at",
+  "discourse_updated_at",
+  "release_notes_link"
+];
 
 const AdminDashboard = Discourse.Model.extend({});
 

@@ -3008,7 +3008,8 @@ en:
 
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard last updated:"
+        last_updated: "Dashboard updated:"
+        discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
