@@ -1,3 +1,4 @@
+/*global Mousetrap:true*/
 import { buildResolver } from "discourse-common/resolver";
 import {
   default as computed,
@@ -13,6 +14,12 @@ const Discourse = Ember.Application.extend({
   __widget_helpers: {},
   customEvents: {
     paste: "paste"
+  },
+
+  reset() {
+    this._super(...arguments);
+
+    Mousetrap.reset();
   },
 
   getURL(url) {
