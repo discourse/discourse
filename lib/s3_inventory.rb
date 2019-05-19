@@ -55,7 +55,9 @@ class S3Inventory
           list_missing_post_uploads if type == "original"
 
           uploads = (model == Upload) ? model.by_users.where("created_at < ?", inventory_date) : model
-          missing_uploads = uploads.joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag").where("#{table_name}.etag is NULL")
+          missing_uploads = uploads
+            .joins("LEFT JOIN #{table_name} ON #{table_name}.etag = #{model.table_name}.etag")
+            .where("#{table_name}.etag IS NULL AND #{model.table_name}.etag IS NOT NULL")
 
           if (missing_count = missing_uploads.count) > 0
             missing_uploads.select(:id, :url).find_each do |upload|
