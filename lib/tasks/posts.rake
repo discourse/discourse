@@ -419,7 +419,6 @@ task 'posts:missing_uploads' => :environment do
       tmp.rewind
 
       if upload = UploadCreator.new(tmp, File.basename(path)).create_for(Discourse.system_user.id)
-        sha1s << upload.sha1
         upload_id = upload.id
         DbHelper.remap(UrlHelper.absolute(src), upload.url)
 
