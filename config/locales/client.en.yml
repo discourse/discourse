@@ -69,34 +69,34 @@ en:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1mon"
+          one: "%{count}mon"
           other: "%{count}mon"
         about_x_years:
-          one: "1y"
+          one: "%{count}y"
           other: "%{count}y"
         over_x_years:
-          one: "> 1y"
+          one: "> %{count}y"
           other: "> %{count}y"
         almost_x_years:
-          one: "1y"
+          one: "%{count}y"
           other: "%{count}y"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_month: "D MMM"
@@ -104,35 +104,35 @@ en:
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           other: "%{count} mins"
         x_hours:
-          one: "1 hour"
+          one: "%{count} hour"
           other: "%{count} hours"
         x_days:
-          one: "1 day"
+          one: "%{count} day"
           other: "%{count} days"
         # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 min ago"
+          one: "%{count} min ago"
           other: "%{count} mins ago"
         x_hours:
-          one: "1 hour ago"
+          one: "%{count} hour ago"
           other: "%{count} hours ago"
         x_days:
-          one: "1 day ago"
+          one: "%{count} day ago"
           other: "%{count} days ago"
       later:
         x_days:
-          one: "1 day later"
+          one: "%{count} day later"
           other: "%{count} days later"
         x_months:
-          one: "1 month later"
+          one: "%{count} month later"
           other: "%{count} months later"
         x_years:
-          one: "1 year later"
+          one: "%{count} year later"
           other: "%{count} years later"
       previous_month: "Previous Month"
       next_month: "Next Month"
@@ -387,7 +387,7 @@ en:
       none: "There are no items to review."
       view_pending: "view pending"
       topic_has_pending:
-        one: "This topic has <b>1</b> post pending approval"
+        one: "This topic has <b>%{count}</b> post pending approval"
         other: "This topic has <b>{{count}}</b> posts pending approval"
       title: "Review"
       topic: "Topic:"
@@ -423,10 +423,10 @@ en:
         original: "(original topic)"
         details: "details"
         unique_users:
-          one: "1 user"
+          one: "%{count} user"
           other: "{{count}} users"
       replies:
-        one: "1 reply"
+        one: "%{count} reply"
         other: "{{count}} replies"
       edit: "Edit"
       save: "Save"
@@ -486,7 +486,7 @@ en:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
         pending_posts:
-          one: "You have <strong>1</strong> post pending."
+          one: "You have <strong>%{count}</strong> post pending."
           other: "You have <strong>{{count}}</strong> posts pending."
         ok: "OK"
 
@@ -525,7 +525,7 @@ en:
       posts_read: "Read"
       posts_read_long: "Posts Read"
       total_rows:
-        one: "1 user"
+        one: "%{count} user"
         other: "%{count} users"
 
     group_histories:
@@ -711,7 +711,7 @@ en:
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
       topic_sentence:
-        one: "1 topic"
+        one: "%{count} topic"
         other: "%{count} topics"
       topic_stat_sentence_week:
         one: "%{count} new topic in the past week."
@@ -1274,7 +1274,7 @@ en:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> reached site setting limit of %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> exceeds site setting limit of %{siteSettingRate}."
       rate:
-        one: "1 error/%{duration}"
+        one: "%{count} error/%{duration}"
         other: "%{count} errors/%{duration}"
 
     learn_more: "learn more..."
@@ -1534,7 +1534,7 @@ en:
 
       group_mentioned_limit: "<b>Warning!</b> You mentioned <a href='{{group_link}}'>{{group}}</a>, however this group has more members than the administrator configured mention limit of {{max}} users. Nobody will be notified. "
       group_mentioned:
-        one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
+        one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>%{count} person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
       cannot_see_mention:
         category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
@@ -1651,10 +1651,10 @@ en:
     notifications:
       tooltip:
         regular:
-          one: "1 unseen notification"
+          one: "%{count} unseen notification"
           other: "{{count}} unseen notifications"
         message:
-          one: "1 unread message"
+          one: "%{count} unread message"
           other: "{{count}} unread messages"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
@@ -1671,7 +1671,7 @@ en:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} and 1 other</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} and %{count} other</span> {{description}}"
         other: "<span>{{username}}, {{username2}} and {{count}} others</span> {{description}}"
       liked_consolidated_description:
         one: "liked {{count}} of your posts"
@@ -1731,7 +1731,7 @@ en:
       clear_all: "Clear All"
       too_short: "Your search term is too short."
       result_count:
-        one: "<span>1 result for</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} result for</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} results for</span><span class='term'>{{term}}</span>"
       title: "search topics, posts, users, or categories"
       full_page_title: "search topics or posts"
@@ -1827,7 +1827,7 @@ en:
         notification_level: "Notifications"
         choose_new_category: "Choose the new category for the topics:"
         selected:
-          one: "You have selected <b>1</b> topic."
+          one: "You have selected <b>%{count}</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
         change_tags: "Replace Tags"
         append_tags: "Append Tags"
@@ -1863,7 +1863,7 @@ en:
 
     topic:
       filter_to:
-        one: "1 post in topic"
+        one: "%{count} post in topic"
         other: "{{count}} posts in topic"
       create: "New Topic"
       create_long: "Create a new Topic"
@@ -1882,10 +1882,10 @@ en:
       new: "new topic"
       unread: "unread"
       new_topics:
-        one: "1 new topic"
+        one: "%{count} new topic"
         other: "{{count}} new topics"
       unread_topics:
-        one: "1 unread topic"
+        one: "%{count} unread topic"
         other: "{{count}} unread topics"
       title: "Topic"
       invalid_access:
@@ -1899,16 +1899,16 @@ en:
         title: "Topic not found"
         description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
       total_unread_posts:
-        one: "you have 1 unread post in this topic"
+        one: "you have %{count} unread post in this topic"
         other: "you have {{count}} unread posts in this topic"
       unread_posts:
-        one: "you have 1 unread old post in this topic"
+        one: "you have %{count} unread old post in this topic"
         other: "you have {{count}} unread old posts in this topic"
       new_posts:
-        one: "there is 1 new post in this topic since you last read it"
+        one: "there is %{count} new post in this topic since you last read it"
         other: "there are {{count}} new posts in this topic since you last read it"
       likes:
-        one: "there is 1 like in this topic"
+        one: "there is %{count} like in this topic"
         other: "there are {{count}} likes in this topic"
       back_to_list: "Back to Topic List"
       options: "Topic Options"
@@ -1998,7 +1998,7 @@ en:
         auto_reminder: "You will be reminded about this topic %{timeLeft}."
       auto_close_title: "Auto-Close Settings"
       auto_close_immediate:
-        one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
+        one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
 
       timeline:
@@ -2122,7 +2122,7 @@ en:
         pin_validation: "A date is required to pin this topic."
         not_pinned: "There are no topics pinned in {{categoryLink}}."
         already_pinned:
-          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Make this topic appear at the top of all topic lists until"
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
@@ -2131,7 +2131,7 @@ en:
         global_pin_note: "Users can unpin the topic individually for themselves."
         not_pinned_globally: "There are no topics pinned globally."
         already_pinned_globally:
-          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
@@ -2176,7 +2176,7 @@ en:
 
       filters:
         n_posts:
-          one: "1 post"
+          one: "%{count} post"
           other: "{{count}} posts"
         cancel: "Remove filter"
 
@@ -2264,7 +2264,7 @@ en:
         select_all: select all
         deselect_all: deselect all
         description:
-          one: You have selected <b>1</b> post.
+          one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>{{count}}</b> posts."
 
       deleted_by_author:
@@ -2291,7 +2291,7 @@ en:
       expand_collapse: "expand/collapse"
       locked: "a staff member has locked this post from being edited"
       gap:
-        one: "view 1 hidden reply"
+        one: "view %{count} hidden reply"
         other: "view {{count}} hidden replies"
 
       notice:
@@ -2304,12 +2304,12 @@ en:
         other: "{{count}} Replies"
 
       has_likes_title:
-        one: "1 person liked this post"
+        one: "%{count} person liked this post"
         other: "{{count}} people liked this post"
 
       has_likes_title_only_you: "you liked this post"
       has_likes_title_you:
-        one: "you and 1 other person liked this post"
+        one: "you and %{count} other person liked this post"
         other: "you and {{count}} other people liked this post"
 
       errors:
@@ -2357,10 +2357,10 @@ en:
         delete_replies:
           confirm: "Do you also want to delete the replies to this post?"
           direct_replies:
-            one: "Yes, and 1 direct reply"
+            one: "Yes, and %{count} direct reply"
             other: "Yes, and {{count}} direct replies"
           all_replies:
-            one: "Yes, and 1 reply"
+            one: "Yes, and %{count} reply"
             other: "Yes, and all {{count}} replies"
           just_the_post: "No, just this post"
         admin: "post admin actions"
@@ -2609,13 +2609,13 @@ en:
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       custom_message:
         at_least:
-          one: "enter at least 1 character"
+          one: "enter at least %{count} character"
           other: "enter at least {{count}} characters"
         more:
-          one: "1 to go..."
+          one: "%{count} to go..."
           other: "{{count}} to go..."
         left:
-          one: "1 remaining"
+          one: "%{count} remaining"
           other: "{{count}} remaining"
 
     flagging_topic:
@@ -2629,12 +2629,12 @@ en:
       links_title: "Popular Links"
       links_shown: "show more links..."
       clicks:
-        one: "1 click"
+        one: "%{count} click"
         other: "%{count} clicks"
     post_links:
       about: "expand more links for this post"
       title:
-        one: "1 more"
+        one: "%{count} more"
         other: "%{count} more"
 
     topic_statuses:
@@ -2677,7 +2677,7 @@ en:
       other: "views"
     replies: "Replies"
     views_long:
-      one: "this topic has been viewed 1 time"
+      one: "this topic has been viewed %{count} time"
       other: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
@@ -2705,7 +2705,7 @@ en:
       latest:
         title: "Latest"
         title_with_count:
-          one: "Latest (1)"
+          one: "Latest (%{count})"
           other: "Latest ({{count}})"
         help: "topics with recent posts"
       hot:
@@ -2724,20 +2724,20 @@ en:
       unread:
         title: "Unread"
         title_with_count:
-          one: "Unread (1)"
+          one: "Unread (%{count})"
           other: "Unread ({{count}})"
         help: "topics you are currently watching or tracking with unread posts"
         lower_title_with_count:
-          one: "1 unread"
+          one: "%{count} unread"
           other: "{{count}} unread"
       new:
         lower_title_with_count:
-          one: "1 new"
+          one: "%{count} new"
           other: "{{count}} new"
         lower_title: "new"
         title: "New"
         title_with_count:
-          one: "New (1)"
+          one: "New (%{count})"
           other: "New ({{count}})"
         help: "topics created in the last few days"
       posted:
@@ -2749,7 +2749,7 @@ en:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
       top:
@@ -2851,7 +2851,7 @@ en:
 
     badges:
       earned_n_times:
-        one: "Earned this badge 1 time"
+        one: "Earned this badge %{count} time"
         other: "Earned this badge %{count} times"
       granted_on: "Granted %{date}"
       others_count: "Others with this badge (%{count})"
@@ -2859,13 +2859,13 @@ en:
       allow_title: "You can use this badge as a title"
       multiple_grant: "You can earn this multiple times"
       badge_count:
-        one: "1 Badge"
+        one: "%{count} Badge"
         other: "%{count} Badges"
       more_badges:
-        one: "+1 More"
+        one: "+%{count} More"
         other: "+%{count} More"
       granted:
-        one: "1 granted"
+        one: "%{count} granted"
         other: "%{count} granted"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
@@ -2902,7 +2902,7 @@ en:
       choose_for_topic: "optional tags"
       delete_tag: "Delete Tag"
       delete_confirm:
-        one: "Are you sure you want to delete this tag and remove it from 1 topic it is assigned to?"
+        one: "Are you sure you want to delete this tag and remove it from %{count} topic it is assigned to?"
         other: "Are you sure you want to delete this tag and remove it from {{count}} topics it is assigned to?"
       delete_confirm_no_topics: "Are you sure you want to delete this tag?"
       rename_tag: "Rename Tag"
@@ -3247,7 +3247,7 @@ en:
             one: "There is a new event."
             other: "There are {{count}} new events."
           completed_in:
-            one: "Completed in 1 second."
+            one: "Completed in %{count} second."
             other: "Completed in {{count}} seconds."
           request: "Request"
           response: "Response"
@@ -3480,7 +3480,7 @@ en:
           theme_translations: "Theme Translations"
           empty: "No items"
           commits_behind:
-            one: "Theme is 1 commit behind!"
+            one: "Theme is %{count} commit behind!"
             other: "Theme is {{count}} commits behind!"
           compare_commits: "(See new commits)"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
@@ -3789,7 +3789,7 @@ en:
         clear_filter: "Clear"
         show_words: "show words"
         word_count:
-          one: "1 word"
+          one: "%{count} word"
           other: "%{count} words"
         actions:
           block: "Block"
@@ -3948,7 +3948,7 @@ en:
           one: "Can't delete all posts. Some posts are older than %{count} day old. (The delete_user_max_post_age setting.)"
           other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
         cant_delete_all_too_many_posts:
-          one: "Can't delete all posts because the user has more than 1 post. (delete_all_posts_max)"
+          one: "Can't delete all posts because the user has more than %{count} post. (delete_all_posts_max)"
           other: "Can't delete all posts because the user has more than %{count} posts.  (delete_all_posts_max)"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions.<br><br>Are you SURE you want to delete this user? This is permanent!"
         delete_and_block: "Delete and <b>block</b> this email and IP address"
@@ -4187,7 +4187,7 @@ en:
             text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
           no_grant_count: "No badges to be assigned."
           grant_count:
-            one: "<b>1</b> badge to be assigned."
+            one: "<b>%{count}</b> badge to be assigned."
             other: "<b>%{count}</b> badges to be assigned."
           sample: "Sample:"
           grant:
@@ -4280,7 +4280,7 @@ en:
       quit: "Maybe Later"
 
       staff_count:
-        one: "Your community has 1 staff (you). "
+        one: "Your community has %{count} staff (you). "
         other: "Your community has %{count} staff, including you."
 
       invites:

@@ -31,10 +31,10 @@ en:
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
 
     default_poll_must_have_less_options:
-      one: "Poll must have less than 1 option."
+      one: "Poll must have less than %{count} option."
       other: "Poll must have less than %{count} options."
     named_poll_must_have_less_options:
-      one: "Poll named <strong>%{name}</strong> must have less than 1 option."
+      one: "Poll named <strong>%{name}</strong> must have less than %{count} option."
       other: "Poll named <strong>%{name}</strong> must have less than %{count} options."
 
     default_poll_must_have_different_options: "Poll must have different options."
