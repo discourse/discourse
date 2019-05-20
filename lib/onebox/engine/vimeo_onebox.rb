@@ -4,7 +4,8 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+(\/[^\/]+)?$/)
+      # only match private Vimeo video links
+      matches_regexp(/^https?:\/\/(www\.)?vimeo\.com\/\d+\/[^\/]+?$/)
       always_https
 
       WIDTH  ||= 640
@@ -17,6 +18,10 @@ module Onebox
 
       def to_html
         video_src = og_data.video_secure_url || og_data.video_url
+        if video_src.nil?
+          id = uri.path[/\/(\d+)/, 1]
+          video_src = "https://player.vimeo.com/video/#{id}"
+        end
         video_src = video_src.gsub('autoplay=1', '').chomp("?")
         <<-HTML
           <iframe width="#{WIDTH}"
