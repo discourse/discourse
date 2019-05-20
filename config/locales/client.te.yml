@@ -37,55 +37,55 @@ te:
       tiny:
         half_a_minute: "< 1ని"
         less_than_x_seconds:
-          one: "< 1సె"
+          one: "< %{count}సె"
           other: "< %{count}సె"
         x_seconds:
-          one: "1సె"
+          one: "%{count}సె"
           other: "%{count}సె"
         x_minutes:
-          one: "1ని"
+          one: "%{count}ని"
           other: "%{count}ని"
         about_x_hours:
-          one: "1గ"
+          one: "%{count}గ"
           other: "%{count}గం"
         x_days:
-          one: "1రో"
+          one: "%{count}రో"
           other: "%{count}రో"
         about_x_years:
-          one: "1సం"
+          one: "%{count}సం"
           other: "%{count}సం"
         over_x_years:
-          one: "> 1సం"
+          one: "> %{count}సం"
           other: "> %{count}సం"
         almost_x_years:
-          one: "1సం"
+          one: "%{count}సం"
           other: "%{count}సం"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 నిమిషం"
+          one: "%{count} నిమిషం"
           other: "%{count} నిమిషాలు"
         x_hours:
-          one: "1 గంట"
+          one: "%{count} గంట"
           other: "%{count} గంటలు"
         x_days:
-          one: "1 రోజు"
+          one: "%{count} రోజు"
           other: "%{count} రోజులు"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 నిమిషం ముందు"
+          one: "%{count} నిమిషం ముందు"
           other: "%{count} నిమిషాలు ముందు"
         x_hours:
-          one: "1 గంట క్రితం"
+          one: "%{count} గంట క్రితం"
           other: "%{count} గంటల ముందు"
         x_days:
-          one: "1 రోజు ముందు"
+          one: "%{count} రోజు ముందు"
           other: "%{count} రోజుల ముందు"
       later:
         x_days:
-          one: "1 రోజు తర్వాత"
+          one: "%{count} రోజు తర్వాత"
           other: "%{count} రోజుల తర్వాత"
       previous_month: "గత నెల"
       next_month: "తరువాత నెల"
@@ -768,7 +768,7 @@ te:
         notification_level: "ప్రకటనలు"
         choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
-          one: "మీరు <b>1</b>  విషయం ఎంచుకున్నారు."
+          one: "మీరు <b>%{count}</b>  విషయం ఎంచుకున్నారు."
           other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
       none:
         unread: "మీరు చదవని విషయాలు లేవు"
@@ -797,10 +797,10 @@ te:
       new: "కొత్త విషయం"
       unread: "చదవని"
       new_topics:
-        one: "1 కొత్త విషయం"
+        one: "%{count} కొత్త విషయం"
         other: "{{count}} కొత్త విషయాలు"
       unread_topics:
-        one: "1 చదవని విషయం"
+        one: "%{count} చదవని విషయం"
         other: "{{count}} చదవని విషయాలు"
       title: "విషయం"
       invalid_access:
@@ -814,16 +814,16 @@ te:
         title: "విషయం కనిపించలేదు"
         description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
       total_unread_posts:
-        one: "మీకు ఈ విషయంలో 1 చదవని టపా ఉంది"
+        one: "మీకు ఈ విషయంలో %{count} చదవని టపా ఉంది"
         other: "మీకు ఈ విషయంలో {{count}} చదవని టపాలు ఉన్నాయి"
       unread_posts:
-        one: "మీకు ఈ విషయంలో 1 చదవని పాత టపా ఉంది"
+        one: "మీకు ఈ విషయంలో %{count} చదవని పాత టపా ఉంది"
         other: "మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి"
       new_posts:
-        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  1 కొత్త టపా వచ్చింది"
+        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  %{count} కొత్త టపా వచ్చింది"
         other: "మీరు చివరసారి చదివాక ఈ విషయంలో  {{count}} కొత్త టపాలు వచ్చాయి"
       likes:
-        one: "ఈ విషయానికి 1 ఇష్టం ఉంది"
+        one: "ఈ విషయానికి %{count} ఇష్టం ఉంది"
         other: "ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి"
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
@@ -930,7 +930,7 @@ te:
       login_reply: "జవాబివ్వడానికి లాగిన్ అవ్వండి"
       filters:
         n_posts:
-          one: "1 టపా"
+          one: "%{count} టపా"
           other: "{{count}} టపాలు"
         cancel: "జల్లెడ తొలగించు"
       split_topic:
@@ -964,7 +964,7 @@ te:
         select_all: అన్నీ ఎంచుకో
         deselect_all: అన్నీ వియెంచుకో
         description:
-          one: మీరు <b>1</b> టపా ఎంచుకున్నారు
+          one: మీరు <b>%{count}</b> టపా ఎంచుకున్నారు
           other: "మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు"
     post:
       edit_reason: "కారణం:"

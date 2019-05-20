@@ -25,13 +25,13 @@ fr:
       multiple:
         help:
           at_least_min_options:
-            one: "Choisissez au moins <strong>1</strong> option"
+            one: "Choisissez au moins <strong>%{count}</strong> option"
             other: "Choisissez au moins <strong>%{count}</strong> options"
           up_to_max_options:
-            one: "Choisissez jusqu'à <strong>1</strong> option"
+            one: "Choisissez jusqu'à <strong>%{count}</strong> option"
             other: "Choisissez jusqu'à <strong>%{count}</strong> options"
           x_options:
-            one: "Choisissez <strong>1</strong> option"
+            one: "Choisissez <strong>%{count}</strong> option"
             other: "Choisissez <strong>%{count}</strong> options"
           between_min_and_max_options: "Choisissez entre <strong>%{min}</strong> et <strong>%{max}</strong> options"
       cast-votes:

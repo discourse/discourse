@@ -18,10 +18,10 @@ es:
     default_poll_must_have_at_least_2_options: "La encuesta debe tener al menos 2 opciones."
     named_poll_must_have_at_least_2_options: "La encuesta nombrada <strong>%{name}</strong> debe tener al menos 2 opciones."
     default_poll_must_have_less_options:
-      one: "Las encuestas deben tener menos de 1 opción."
+      one: "Las encuestas deben tener menos de %{count} opción."
       other: "La encuesta debe tener menos de %{count} opciones."
     named_poll_must_have_less_options:
-      one: "La encuesta llamada <strong>%{name}</strong> debe tener menos de 1 opción."
+      one: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{count} opción."
       other: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{count} opciones."
     default_poll_must_have_different_options: "La encuesta debe tener diferentes opciones."
     named_poll_must_have_different_options: "La encuesta nombrada <strong>%{name}</strong> debe tener diferentes opciones."

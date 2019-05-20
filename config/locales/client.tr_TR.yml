@@ -1369,7 +1369,7 @@ tr_TR:
       clear_all: "Tümünü Temizle"
       too_short: "Aradığın terim çok kısa."
       result_count:
-        one: "<span class='term'>{{term}}</span> <span>için 1 sonuç</span>"
+        one: "<span class='term'>{{term}}</span> <span>için %{count} sonuç</span>"
         other: "<span class='term'>{{term}}</span> için <span>{{count}} {{plus}} sonuç</span>"
       title: "konu, gönderi, kullanıcı veya kategori ara"
       full_page_title: "konu ya da gönderi ara"
@@ -3097,7 +3097,7 @@ tr_TR:
         clear_filter: "Temizle"
         show_words: "kelimeleri göster"
         word_count:
-          one: "1 kelime"
+          one: "%{count} kelime"
           other: "%{count} kelimeler"
         actions:
           block: "Engelle"

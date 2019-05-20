@@ -14,10 +14,10 @@ gl:
     default_poll_must_have_at_least_2_options: "A enquisa debe ter alomenos 2 opcións."
     named_poll_must_have_at_least_2_options: "A enquisa chamada <strong>%{name}</strong> debe ter alomenos 2 opcións."
     default_poll_must_have_less_options:
-      one: "A enquisa debe ter cando menos 1 opción."
+      one: "A enquisa debe ter cando menos %{count} opción."
       other: "A enquisa debe ter alomenos %{count} opcións."
     named_poll_must_have_less_options:
-      one: "A enquisa chamada <strong>%{name}</strong> debe ter menos de 1 opción."
+      one: "A enquisa chamada <strong>%{name}</strong> debe ter menos de %{count} opción."
       other: "A enquisa chamada <strong>%{name}</strong> debe ter menos de %{count} opcións."
     default_poll_must_have_different_options: "A enquisa debe ter diferentes opcións."
     named_poll_must_have_different_options: "A enquisa chamada strong>%{name}</strong> debe ter diferentes opcións."

@@ -18,13 +18,13 @@ da:
       multiple:
         help:
           at_least_min_options:
-            one: "Vælg mindst <strong>1</strong> mulighed"
+            one: "Vælg mindst <strong>%{count}</strong> mulighed"
             other: "Vælg mindst <strong>%{count}</strong> muligheder"
           up_to_max_options:
-            one: "Vælg op til <strong>1</strong> mulighed"
+            one: "Vælg op til <strong>%{count}</strong> mulighed"
             other: "Vælg op til <strong>%{count}</strong> muligheder"
           x_options:
-            one: "Vælg <strong>1</strong> mulighed"
+            one: "Vælg <strong>%{count}</strong> mulighed"
             other: "Vælg <strong>%{count}</strong> muligheder"
           between_min_and_max_options: "Vælg imellem <strong>%{min}</strong> og <strong>%{max}</strong> valgmuligheder"
       cast-votes:

@@ -130,19 +130,19 @@ pt:
         one: "Não é possível eliminar o registo pois existe um %{record} dependente"
         many: "Não é possível eliminar o registo pois existem %{record} dependentes"
       too_long:
-        one: é muito comprido (o máximo é 1 caracter)
+        one: é muito comprido (o máximo é %{count} caracter)
         other: é muito comprido (o máximo são %{count} caracteres)
       too_short:
-        one: é muito curto (o mínimo é 1 caracter)
+        one: é muito curto (o mínimo é %{count} caracter)
         other: é muito curto (o mínimo são %{count} caracteres)
       wrong_length:
-        one: tem o comprimento errado (deve ter 1 caracter)
+        one: tem o comprimento errado (deve ter %{count} caracter)
         other: tem o comprimento errado (deve ter %{count} caracteres)
       other_than: "tem que ser diferente de %{count}"
     template:
       body: "Ocorreram problemas com os seguintes campos:"
       header:
-        one: 1 erro impediu este %{model} de ser gravado
+        one: "%{count} erro impediu este %{model} de ser gravado"
         other: "%{count} erros impediram este %{model} de ser gravado"
     embed:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
@@ -171,7 +171,7 @@ pt:
   reading_time: "Tempo de leitura"
   likes: "Gostos"
   too_many_replies:
-    one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a 1 resposta no mesmo tópico."
+    one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} resposta no mesmo tópico."
     other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."
   embed:
     start_discussion: "Iniciar Discussão"
@@ -180,7 +180,7 @@ pt:
     no_hosts: "Não foram configurados anfitriões para incorporar."
     configure: "Configurar Integração"
     more_replies:
-      one: "mais 1 resposta"
+      one: "mais %{count} resposta"
       other: "mais %{count} respostas"
     loading: "A carregar Discussão..."
     permalink: "Hiperligação Permanente"
@@ -188,23 +188,23 @@ pt:
     in_reply_to: "▶ %{username}"
   no_mentions_allowed: "Pedimos desculpa, não pode mencionar outros utilizadores."
   too_many_mentions:
-    one: "Pedimos desculpa, pode mencionar apenas 1 outro utilizador numa mensagem."
+    one: "Pedimos desculpa, pode mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, pode mencionar apenas %{count} outros utilizadores numa mensagem."
   no_mentions_allowed_newuser: "Pedimos desculpa, novos utilizadores não podem mencionar outros utilizadores."
   too_many_mentions_newuser:
-    one: "Pedimos desculpa, novos utilizadores podem mencionar apenas 1 outro utilizador numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} outro utilizador numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem mencionar apenas %{count} utilizadores numa mensagem."
   no_images_allowed: "Pedimos desculpa, novos utilizadores não podem colocar imagens nas mensagens."
   too_many_images:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 imagem numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagem numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} imagens numa mensagem."
   no_attachments_allowed: "Pedimos desculpa, novos utilizadores não podem colocar anexos nas mensagens."
   too_many_attachments:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 anexo numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexo numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} anexos numa mensagem."
   no_links_allowed: "Pedimos desculpa, novos utilizadores não podem colocar hiperligações nas mensagens."
   too_many_links:
-    one: "Pedimos desculpa, novos utilizadores podem colocar apenas 1 hiperligação numa mensagem."
+    one: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligação numa mensagem."
     other: "Pedimos desculpa, novos utilizadores podem colocar apenas %{count} hiperligações numa mensagem."
   spamming_host: "Pedimos desculpa, não pode colocar uma hiperligação para esse servidor."
   user_is_suspended: "Utilizadores suspensos não têm permissão para publicar."
@@ -267,7 +267,7 @@ pt:
       title: "Pedido de Adesão para @%{group_name}"
   education:
     until_posts:
-      one: "1 mensagem"
+      one: "%{count} mensagem"
       other: "%{count} mensagens"
     "new-topic": |2
 
@@ -386,49 +386,49 @@ pt:
     change_failed_explanation: "Tentou despromover %{user_name} para '%{new_trust_level}'. Contudo o Nível de Confiança é atualmente '%{current_trust_level}'. %{user_name} irá permanecer em '%{current_trust_level}' - se deseja despromover o utilizador, bloqueie o Nível de Confiança primeiro"
   rate_limiter:
     hours:
-      one: "1 hora"
+      one: "%{count} hora"
       other: "%{count} horas"
     minutes:
-      one: "1 minuto"
+      one: "%{count} minuto"
       other: "%{count} minutos"
     seconds:
-      one: "1 segundo"
+      one: "%{count} segundo"
       other: "%{count} segundos"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mês"
+        one: "%{count}mês"
         other: "%{count}mês"
       x_months:
-        one: "1mês"
+        one: "%{count}mês"
         other: "%{count}mês"
       about_x_years:
-        one: "1ano"
+        one: "%{count}ano"
         other: "%{count}anos"
       over_x_years:
-        one: "> 1ano"
+        one: "> %{count}ano"
         other: "> %{count}anos"
       almost_x_years:
-        one: "1ano"
+        one: "%{count}ano"
         other: "%{count}anos"
     distance_in_words_verbose:
       half_a_minute: "mesmo agora"
@@ -436,34 +436,34 @@ pt:
         one: "mesmo agora"
         other: "mesmo agora"
       x_seconds:
-        one: "1 segundo atrás"
+        one: "%{count} segundo atrás"
         other: "%{count} segundos atrás"
       less_than_x_minutes:
-        one: "menos de 1 minuto atrás"
+        one: "menos de %{count} minuto atrás"
         other: "menos de %{count} minutos atrás"
       x_minutes:
-        one: "1 minuto atrás"
+        one: "%{count} minuto atrás"
         other: "%{count} minutos atrás"
       about_x_hours:
-        one: "1 hora atrás"
+        one: "%{count} hora atrás"
         other: "%{count} horas atrás"
       x_days:
-        one: "1 dia atrás"
+        one: "%{count} dia atrás"
         other: "%{count} dias atrás"
       about_x_months:
-        one: "há cerca de 1 mês atrás"
+        one: "há cerca de %{count} mês atrás"
         other: "há cerca de %{count} meses atrás"
       x_months:
-        one: "1 mês atrás"
+        one: "%{count} mês atrás"
         other: "%{count} meses atrás"
       about_x_years:
-        one: "há cerca de 1 ano atrás"
+        one: "há cerca de %{count} ano atrás"
         other: "há cerca %{count} anos atrás"
       over_x_years:
-        one: "há mais de 1 ano atrás"
+        one: "há mais de %{count} ano atrás"
         other: "há mais de %{count} anos atrás"
       almost_x_years:
-        one: "há quase 1 ano atrás"
+        one: "há quase %{count} ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
     no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
@@ -1234,28 +1234,28 @@ pt:
       different_users: "Publicações pertencentes a utilizadores diferentes não podem ser unidas."
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de 1 resposta."
+      one: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de %{count} resposta."
       other: "Esta mensagem foi automaticamente fechada após atingir o limite máximo de %{count} respostas."
     autoclosed_topic_max_posts:
-      one: "Este tópico foi automaticamente fechado após atingir o limite máximo de 1 resposta."
+      one: "Este tópico foi automaticamente fechado após atingir o limite máximo de %{count} resposta."
       other: "Este tópico foi automaticamente fechado após atingir o limite máximo de %{count} respostas."
     autoclosed_enabled_days:
-      one: "Este tópico foi automaticamente encerrado após 1 dia. Novas respostas não são permitidas."
+      one: "Este tópico foi automaticamente encerrado após %{count} dia. Novas respostas não são permitidas."
       other: "Este tópico foi automaticamente encerrado após %{count} dias. Novas respostas não são permitidas."
     autoclosed_enabled_hours:
-      one: "Este tópico foi automaticamente encerrado após 1 hora. Novas respostas não são permitidas."
+      one: "Este tópico foi automaticamente encerrado após %{count} hora. Novas respostas não são permitidas."
       other: "Este tópico foi automaticamente encerrado após %{count} horas. Novas respostas não são permitidas."
     autoclosed_enabled_minutes:
-      one: "Este tópico foi automaticamente fechado após 1 minuto. Novas respostas não são permitidas."
+      one: "Este tópico foi automaticamente fechado após %{count} minuto. Novas respostas não são permitidas."
       other: "Este tópico foi automaticamente fechado após %{count} minutos. Novas respostas não são permitidas."
     autoclosed_enabled_lastpost_days:
-      one: "Este tópico foi automaticamente fechado 1 dia após a última resposta. Novas respostas não são permitidas."
+      one: "Este tópico foi automaticamente fechado %{count} dia após a última resposta. Novas respostas não são permitidas."
       other: "Este tópico foi automaticamente fechado %{count} dias após a última resposta. Novas respostas não são permitidas."
     autoclosed_enabled_lastpost_hours:
-      one: "Este tópico foi automaticamente fechado 1 hora após a última resposta. Novas respostas não são permitidas."
+      one: "Este tópico foi automaticamente fechado %{count} hora após a última resposta. Novas respostas não são permitidas."
       other: "Este tópico foi automaticamente fechado %{count} horas após a última resposta. Novas respostas não são permitidas."
     autoclosed_enabled_lastpost_minutes:
-      one: "Este tópico foi automaticamente fechado 1 minuto após a última resposta. Novas respostas não são permitidas."
+      one: "Este tópico foi automaticamente fechado %{count} minuto após a última resposta. Novas respostas não são permitidas."
       other: "Este tópico foi automaticamente fechado %{count} minutos após a última resposta. Novas respostas não são permitidas."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas são permitidas."
     autoclosed_disabled_lastpost: "Este tópico está agora aberto. Novas respostas são permitidas."
@@ -1464,7 +1464,7 @@ pt:
         Pode agora voltar a responder e criar novos tópicos.
     pending_users_reminder:
       subject_template:
-        one: "1 utilizador espera a aprovação"
+        one: "%{count} utilizador espera a aprovação"
         other: "%{count} utilizadores esperam a aprovação"
     download_remote_images_disabled:
       title: "Transferência de Imagens Remotas Desativada"

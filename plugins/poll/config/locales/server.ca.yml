@@ -16,10 +16,10 @@ ca:
     default_poll_must_have_at_least_2_options: "L'enquesta ha de tenir 2 opcions com a mínim."
     named_poll_must_have_at_least_2_options: "La votació anomenada <strong>%{name}</strong> ha de tenir com a mínim 2 opcions."
     default_poll_must_have_less_options:
-      one: "L'enquesta ha de tenir menys d'1 opció."
+      one: "L'enquesta ha de tenir menys d'%{count} opció."
       other: "L'enquesta ha de tenir menys de %{count} opcions."
     named_poll_must_have_less_options:
-      one: "L'enquesta <strong>%{name}</strong> ha de tenir menys d'1 opció."
+      one: "L'enquesta <strong>%{name}</strong> ha de tenir menys d'%{count} opció."
       other: "L'enquesta <strong>%{name}</strong> ha de tenir menys de %{count} opcions."
     default_poll_must_have_different_options: "La votació ha de tenir diferents opcions."
     named_poll_must_have_different_options: "La votació anomenada <strong>%{name}</strong> ha de tenir diferents opcions."

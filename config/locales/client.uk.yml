@@ -29,33 +29,36 @@ uk:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      long_no_year_no_time: "D MMM"
+      long_with_year_no_time: "D MMM YYYY"
       tiny:
         half_a_minute: "< 1 хв"
+        date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 хвилина"
+          one: "%{count} хвилина"
           few: "%{count} хвилини"
           many: "%{count} хвилин"
           other: "%{count} хвилин"
         x_hours:
-          one: "1 година"
+          one: "%{count} година"
           few: "%{count} години"
           many: "%{count} годин"
           other: "%{count} годин"
         x_days:
-          one: "1 день"
+          one: "%{count} день"
           few: "%{count} дні"
           many: "%{count} днів"
           other: "%{count} днів"
       medium_with_ago:
         x_hours:
-          one: "1 годину тому"
+          one: "%{count} годину тому"
           few: "годин тому: %{count}"
           many: "%{count} годин тому"
           other: "%{count} годин тому"
         x_days:
-          one: "1 день тому"
+          one: "%{count} день тому"
           few: "днів тому: %{count}"
           many: "%{count} днів тому"
           other: "%{count} днів тому"
@@ -941,7 +944,7 @@ uk:
         select_all: обрати усе
         deselect_all: скасувати вибір всього
         description:
-          one: Ви обрали <b>1</b> допис.
+          one: Ви обрали <b>%{count}</b> допис.
           few: "Ви обрали дописів: <b>{{count}}</b>."
           many: "Ви обрали дописів: <b>{{count}}</b>."
           other: "Ви обрали дописів: <b>{{count}}</b>."

@@ -43,67 +43,67 @@ it:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}min"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1ora"
+          one: "%{count}ora"
           other: "%{count}ore"
         x_days:
-          one: "1giorno"
+          one: "%{count}giorno"
           other: "%{count}giorni"
         x_months:
-          one: "1 mese"
+          one: "%{count} mese"
           other: "%{count}mesi"
         about_x_years:
-          one: "1anno"
+          one: "%{count}anno"
           other: "%{count}anni"
         over_x_years:
-          one: "> 1anno"
+          one: "> %{count}anno"
           other: "> %{count}anni"
         almost_x_years:
-          one: "1anno"
+          one: "%{count}anno"
           other: "%{count}anni"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           other: "%{count}min"
         x_hours:
-          one: "1 ora"
+          one: "%{count} ora"
           other: "%{count} ore"
         x_days:
-          one: "1 giorno"
+          one: "%{count} giorno"
           other: "%{count} giorni"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 minuto fa"
+          one: "%{count} minuto fa"
           other: "%{count}minuti fa"
         x_hours:
-          one: "1 ora fa"
+          one: "%{count} ora fa"
           other: "%{count}ore fa"
         x_days:
-          one: "1 giorno fa"
+          one: "%{count} giorno fa"
           other: "%{count}giorni fa"
       later:
         x_days:
-          one: "1 giorno dopo"
+          one: "%{count} giorno dopo"
           other: "%{count}giorni dopo"
         x_months:
-          one: "1 mese dopo"
+          one: "%{count} mese dopo"
           other: "%{count}mesi dopo"
         x_years:
-          one: "1 anno dopo"
+          one: "%{count} anno dopo"
           other: "%{count}anni dopo"
       previous_month: "Mese Precedente"
       next_month: "Mese Successivo"
@@ -314,7 +314,7 @@ it:
       none: "Non ci sono elementi da revisionare."
       view_pending: "vedi in attesa"
       topic_has_pending:
-        one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
+        one: "Questo argomento ha <b>%{count}</b> messaggio in attesa di approvazione"
         other: "Questo Argomento ha  <b>{{count}}</b> messaggi in attesa di approvazione"
       topic: "Argomento:"
       user:
@@ -357,7 +357,7 @@ it:
         title: "Messaggio Da Approvare"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
         pending_posts:
-          one: "Hai<strong>1</strong> messaggio in attesa."
+          one: "Hai<strong>%{count}</strong> messaggio in attesa."
           other: "Hai<strong>{{count}}</strong> messaggi in attesa."
         ok: "OK"
     user_action:
@@ -392,7 +392,7 @@ it:
       posts_read: "Letti"
       posts_read_long: "Messaggi Letti"
       total_rows:
-        one: "1 utente"
+        one: "%{count} utente"
         other: "%{count} utenti"
     group_histories:
       actions:
@@ -567,7 +567,7 @@ it:
       toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
       topic_sentence:
-        one: "1 argomento"
+        one: "%{count} argomento"
         other: "%{count} argomenti"
       topic_stat_sentence_week:
         one: "%{count} nuovo argomento nell'ultima settimana."
@@ -1068,7 +1068,7 @@ it:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha raggiunto i limiti impostati di %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha ecceduto i limiti impostati di  %{siteSettingRate}."
       rate:
-        one: "1 errore/%{duration}"
+        one: "%{count} errore/%{duration}"
         other: "%{count} errori/%{duration}"
     learn_more: "per saperne di più..."
     all_time: "totale"
@@ -1292,7 +1292,7 @@ it:
       edit_conflict: "modifica conflitto"
       group_mentioned_limit: "<b>Attenzione!</b> Hai menzionato <a href='{{group_link}}'>{{group}}</a>, tuttavia questo gruppo ha più membri del limite per le menzioni configurato dagli amministratori di {{max}} utenti. Nessuna notifica verrà inviata. "
       group_mentioned:
-        one: "Menzionando {{group}}, verrà notificata <a href='{{group_link}}'>1 persona</a> – sei sicuro?"
+        one: "Menzionando {{group}}, verrà notificata <a href='{{group_link}}'>%{count} persona</a> – sei sicuro?"
         other: "Menzionando {{group}}, verranno notificate <a href='{{group_link}}'>{{count}} persone</a> – sei sicuro?"
       cannot_see_mention:
         category: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
@@ -1395,10 +1395,10 @@ it:
     notifications:
       tooltip:
         regular:
-          one: "1 notifica non visualizzata"
+          one: "%{count} notifica non visualizzata"
           other: "{{count}} notifiche non visualizzate"
         message:
-          one: "1 messaggio non letto"
+          one: "%{count} messaggio non letto"
           other: "{{count}} messaggi non letti"
       title: "notifiche di menzioni @nome, risposte ai tuoi messaggi e argomenti ecc."
       none: "Impossibile caricare le notifiche al momento."
@@ -1557,7 +1557,7 @@ it:
         notification_level: "Notifiche"
         choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
-          one: "Hai selezionato <b>1</b> argomento."
+          one: "Hai selezionato <b>%{count}</b> argomento."
           other: "Hai selezionato <b>{{count}}</b> argomenti."
         change_tags: "Sostituire Etichette"
         append_tags: "Aggiungi Etichette"
@@ -1591,7 +1591,7 @@ it:
         search: "Non ci sono altri risultati di ricerca."
     topic:
       filter_to:
-        one: "1 messaggio in questo argomento"
+        one: "%{count} messaggio in questo argomento"
         other: "{{count}} messaggi in questo argomento"
       create: "Nuovo Argomento"
       create_long: "Crea un nuovo Argomento"
@@ -1610,10 +1610,10 @@ it:
       new: "nuovo argomento"
       unread: "non letto"
       new_topics:
-        one: "1 nuovo argomento"
+        one: "%{count} nuovo argomento"
         other: "{{count}} nuovi argomenti"
       unread_topics:
-        one: "1 argomento non letto"
+        one: "%{count} argomento non letto"
         other: "{{count}} argomenti non letti"
       title: "Argomento"
       invalid_access:
@@ -1630,13 +1630,13 @@ it:
         one: "c'è un post non letto in questa discussione"
         other: "hai {{count}} messagi non letti in questo argomento"
       unread_posts:
-        one: "Hai 1 vecchio messaggio non letto in questo argomento"
+        one: "Hai %{count} vecchio messaggio non letto in questo argomento"
         other: "hai {{count}} vecchi messaggi non letti in questo argomento"
       new_posts:
-        one: "c'è 1 nuovo messaggio in questo argomento dalla tua ultima lettura"
+        one: "c'è %{count} nuovo messaggio in questo argomento dalla tua ultima lettura"
         other: "ci sono {{count}} nuovi messaggi in questo argomento dalla tua ultima lettura"
       likes:
-        one: "c'è 1 \"Mi piace\" in questo argomento"
+        one: "c'è %{count} \"Mi piace\" in questo argomento"
         other: "ci sono {{count}} \"Mi piace\" in questo argomento"
       back_to_list: "Torna alla Lista Argomenti"
       options: "Opzioni Argomento"
@@ -1705,7 +1705,7 @@ it:
         auto_reminder: "Questo argomento ti verrà ricordato %{timeLeft}."
       auto_close_title: "Impostazioni di auto-chiusura"
       auto_close_immediate:
-        one: "L'ultimo messaggio nell'argomento ha già 1 ora, per cui l'argomento verrà chiuso immediatamente."
+        one: "L'ultimo messaggio nell'argomento ha già %{count} ora, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento ha già %{count} ore, per cui l'argomento verrà chiuso immediatamente."
       timeline:
         back: "Indietro"
@@ -1816,7 +1816,7 @@ it:
         pin_validation: "È richiesta una data per appuntare questo argomento."
         not_pinned: "Non ci sono argomenti appuntati in {{categoryLink}}."
         already_pinned:
-          one: "Argomenti attualmente appuntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Argomenti attualmente appuntati in {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Poni questo argomento in cima a tutte le liste di argomenti fino a"
         confirm_pin_globally: "Hai già {{count}} argomenti puntati globalmente. Troppi argomenti puntati potrebbero essere un peso per gli utenti nuovi o anonimi. Sicuro di voler puntare un altro argomento globalmente?"
@@ -1825,7 +1825,7 @@ it:
         global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
         not_pinned_globally: "Non ci sono argomenti appuntati globalmente."
         already_pinned_globally:
-          one: "Argomenti attualmente appuntati globalmente in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Argomenti attualmente appuntati globalmente in {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Argomenti attualmente appuntati globalmente {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
@@ -1863,7 +1863,7 @@ it:
       login_reply: "Connettiti per Rispondere"
       filters:
         n_posts:
-          one: "1 post"
+          one: "%{count} post"
           other: "{{count}} messaggi"
         cancel: "Rimuovi filtro"
       move_to:
@@ -1942,7 +1942,7 @@ it:
         select_all: seleziona tutto
         deselect_all: deseleziona tutto
         description:
-          one: Hai selezionato <b>1</b> messaggio.
+          one: Hai selezionato <b>%{count}</b> messaggio.
           other: "Hai selezionato <b>{{count}}</b> messaggi."
     post:
       quote_reply: "Cita"
@@ -1962,7 +1962,7 @@ it:
       expand_collapse: "espandi/raggruppa"
       locked: "un membro dello Staff ha bloccato le modifiche a questo messaggio"
       gap:
-        one: "visualizza 1 risposta nascosta"
+        one: "visualizza %{count} risposta nascosta"
         other: "visualizza {{count}} riposte nascoste"
       notice:
         new_user: "E' la prima volta che {{user}} invia un messaggio. Diamogli il benvenuto nella nostra comunità!"
@@ -2017,10 +2017,10 @@ it:
         delete_replies:
           confirm: "Vuoi eliminare anche le risposte a questo messaggio?"
           direct_replies:
-            one: "Sì, e 1 risposta diretta"
+            one: "Sì, e %{count} risposta diretta"
             other: "Sì, e le {{count}} risposte dirette"
           all_replies:
-            one: "Sì, e 1 risposta."
+            one: "Sì, e %{count} risposta."
             other: "Sì, e tutte le {{count}} risposte"
           just_the_post: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
@@ -2248,13 +2248,13 @@ it:
       custom_placeholder_notify_moderators: "Facci sapere esattamente cosa ti preoccupa, fornendo collegamenti pertinenti ed esempi ove possibile."
       custom_message:
         at_least:
-          one: "inserisci almeno 1 carattere"
+          one: "inserisci almeno %{count} carattere"
           other: "inserisci almeno {{n}} caratteri"
         more:
-          one: "1 mancante..."
+          one: "%{count} mancante..."
           other: "{{count}} mancanti..."
         left:
-          one: "1 mancante"
+          one: "%{count} mancante"
           other: "{{count}} mancanti..."
     flagging_topic:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
@@ -2266,7 +2266,7 @@ it:
       links_title: "Collegamenti Di Successo"
       links_shown: "mostra altri collegamenti..."
       clicks:
-        one: "1 click"
+        one: "%{count} click"
         other: "%{count} click"
     post_links:
       about: "espandi altri collegamenti per questo messaggio"
@@ -2331,7 +2331,7 @@ it:
       latest:
         title: "Recenti"
         title_with_count:
-          one: "Recente (1)"
+          one: "Recente (%{count})"
           other: "Recenti ({{count}})"
         help: "argomenti con messaggi recenti"
       hot:
@@ -2350,20 +2350,20 @@ it:
       unread:
         title: "Non letti"
         title_with_count:
-          one: "Non letto (1)"
+          one: "Non letto (%{count})"
           other: "Non letti ({{count}})"
         help: "argomenti che stai osservando o seguendo contenenti messaggi non letti"
         lower_title_with_count:
-          one: "1 non letto"
+          one: "%{count} non letto"
           other: "{{count}} non letti"
       new:
         lower_title_with_count:
-          one: "1 nuovo"
+          one: "%{count} nuovo"
           other: "{{count}} nuovi"
         lower_title: "nuovo"
         title: "Nuovi"
         title_with_count:
-          one: "Nuovo (1)"
+          one: "Nuovo (%{count})"
           other: "Nuovi ({{count}})"
         help: "argomenti creati negli ultimi giorni"
       posted:
@@ -2375,7 +2375,7 @@ it:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "argomenti recenti nella categoria {{categoryName}}"
       top:
@@ -2463,7 +2463,7 @@ it:
         print: "<b>ctrl</b>+<b>p</b> Stampa argomento"
     badges:
       earned_n_times:
-        one: "Guadagnato questo distintivo 1 volta"
+        one: "Guadagnato questo distintivo %{count} volta"
         other: "Guadagnato questo distintivo %{count} volte"
       granted_on: "Assegnata %{date}"
       others_count: "Altri utenti con questo distintivo (%{count})"
@@ -2471,13 +2471,13 @@ it:
       allow_title: "Puoi usare questo distintivo come qualifica"
       multiple_grant: "Puoi guadagnarlo più volte"
       badge_count:
-        one: "1 Distintivo"
+        one: "%{count} Distintivo"
         other: "%{count} Distintivi"
       more_badges:
-        one: "+1 altro"
+        one: "+%{count} altro"
         other: "+ altri %{count}"
       granted:
-        one: "1 assegnato"
+        one: "%{count} assegnato"
         other: "%{count} assegnati"
       select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
       none: "(nessuno)"
@@ -2511,7 +2511,7 @@ it:
       choose_for_topic: "etichette facoltative"
       delete_tag: "Cancella Etichetta"
       delete_confirm:
-        one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da 1 argomento a cui è assegnata?"
+        one: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da %{count} argomento a cui è assegnata?"
         other: "Sei sicuro di voler eliminare questa etichetta e rimuoverla da {{count}} argomenti a cui è assegnata?"
       delete_confirm_no_topics: "Sei sicuro di voler eliminare questa etichetta?"
       rename_tag: "Rinomina Etichetta"
@@ -2791,7 +2791,7 @@ it:
             one: "C'è un nuovo evento."
             other: "Ci sono {{count}} nuovi eventi."
           completed_in:
-            one: "Compleato in 1 secondo."
+            one: "Compleato in %{count} secondo."
             other: "Completato in {{count}} secondi."
           request: "Richiesta"
           response: "Risposta"
@@ -2983,7 +2983,7 @@ it:
           no_settings: "Questo tema non ha impostazioni."
           empty: "Nessun elemento"
           commits_behind:
-            one: "Il tema è indietro di 1 aggiornamento!"
+            one: "Il tema è indietro di %{count} aggiornamento!"
             other: "Il tema è indietro di {{count}} aggiornamenti!"
           scss:
             text: "CSS"
@@ -3252,7 +3252,7 @@ it:
         clear_filter: "Pulisci"
         show_words: "mostra le parole"
         word_count:
-          one: "1 word"
+          one: "%{count} word"
           other: "%{count} parole"
         actions:
           block: "Blocca"
@@ -3395,7 +3395,7 @@ it:
           one: "Non posso cancellare tutti i post. Alcuni sono più vecchi di %{count} giorno. (L'impostazione delete_user_max_post_age.)"
           other: "Impossibile cancellare tutti i messaggi. Alcuni sono più vecchi di %{count} giorni. (L'impostazione delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Non posso cancellare tutti i post perché l'utente ha più di 1 post. (delete_all_posts_max.)"
+          one: "Non posso cancellare tutti i post perché l'utente ha più di %{count} post. (delete_all_posts_max.)"
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
         delete_confirm: "E' genericamente preferibile anonimizzare un utente inveche che eliminarlo, per evitare di rimuovere contenuti dalle discussioni esistenti.<br><br>Sei sicuro di voler eliminare questo utente? Questa modifica è permanente."
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
@@ -3620,7 +3620,7 @@ it:
             text: "Ci sono esempi di grant mancanti. Ciò accade quando la query dei distintivi ritorna ID utenti o ID messaggi inesistenti. Successivamente ciò può causare risultati inattesi - controlla bene la tua query."
           no_grant_count: "Nessun distintivo da assegnare."
           grant_count:
-            one: "<b>1</b> distintivo da assegnare."
+            one: "<b>%{count}</b> distintivo da assegnare."
             other: "<b>%{count}</b> distintivi da assegnare."
           sample: "Esempio:"
           grant:
@@ -3698,7 +3698,7 @@ it:
       upload_error: "Spiacenti, c'è stato un errore caricando il file. Per favore, prova di nuovo."
       quit: "Forse Dopo"
       staff_count:
-        one: "Your community has 1 staff (you). "
+        one: "Your community has %{count} staff (you). "
         other: "La tua comunità ha %{count} membri dello staff, te incluso."
       invites:
         add_user: "aggiungi"

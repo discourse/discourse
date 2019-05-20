@@ -134,19 +134,19 @@ de:
         one: "Eintrag kann nicht gelöscht werden, da noch ein davon abhängiger %{record} existiert."
         many: "Eintrag kann nicht gelöscht werden, da noch davon abhängige %{record} existieren."
       too_long:
-        one: ist zu lang (Maximum ist 1 Zeichen)
+        one: ist zu lang (Maximum ist %{count} Zeichen)
         other: ist zu lang (Maximum sind %{count} Zeichen)
       too_short:
-        one: ist zu kurz (Minimum ist 1 Zeichen)
+        one: ist zu kurz (Minimum ist %{count} Zeichen)
         other: ist zu kurz (Minimum sind %{count} Zeichen)
       wrong_length:
-        one: hat die falsche Länge (sollte 1 Zeichen lang sein)
+        one: hat die falsche Länge (sollte %{count} Zeichen lang sein)
         other: hat die falsche Länge (sollte %{count} Zeichen lang sein)
       other_than: "darf nicht %{count} sein"
     template:
       body: "Es gab Probleme mit diesen Feldern:"
       header:
-        one: 1 Fehler verhindert, dass %{model} gespeichert wird
+        one: "%{count} Fehler verhindert, dass %{model} gespeichert wird"
         other: "%{count} Fehler verhindern, dass %{model} gespeichert wird"
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
@@ -218,7 +218,7 @@ de:
     no_hosts: "Es wurden keine Hostnamen für die Einbettung konfiguriert."
     configure: "Einbettung konfigurieren"
     more_replies:
-      one: "1 weitere Antwort"
+      one: "%{count} weitere Antwort"
       other: "%{count} weitere Antworten"
     loading: "Lade Diskussion..."
     permalink: "Permanenter Link"
@@ -326,7 +326,7 @@ de:
       handle: "Mitgliedschaftsanfrage bearbeiten"
   education:
     until_posts:
-      one: "1 Beitrag"
+      one: "%{count} Beitrag"
       other: "%{count} Beiträge"
     "new-topic": |
       Willkommen bei %{site_name} &mdash; **danke, dass du ein neues Thema erstellst!**
@@ -531,50 +531,50 @@ de:
       unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestellungen per E-Mail erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
       topic_invitations_per_day: "Du hast die maximale Zahl an neuen Thema-Einladungen erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
     hours:
-      one: "1 Stunde"
+      one: "%{count} Stunde"
       other: "%{count} Stunden"
     minutes:
-      one: "1 Minute"
+      one: "%{count} Minute"
       other: "%{count} Minuten"
     seconds:
-      one: "1 Sekunde"
+      one: "%{count} Sekunde"
       other: "%{count} Sekunden"
     short_time: "ein paar Sekunden"
   datetime:
     distance_in_words:
       half_a_minute: "< 1min"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1 Min."
+        one: "< %{count} Min."
         other: "< %{count}min"
       x_minutes:
-        one: "1 Min."
+        one: "%{count} Min."
         other: "%{count} Min."
       about_x_hours:
-        one: "1 Std."
+        one: "%{count} Std."
         other: "%{count} Std."
       x_days:
-        one: "1 Tag"
+        one: "%{count} Tag"
         other: "%{count} Tage"
       about_x_months:
-        one: "1 Monat"
+        one: "%{count} Monat"
         other: "%{count} Monate"
       x_months:
-        one: "1 Monat"
+        one: "%{count} Monat"
         other: "%{count} Monate"
       about_x_years:
-        one: "1 Jahr"
+        one: "%{count} Jahr"
         other: "%{count} Jahre"
       over_x_years:
-        one: "> 1 Jahr"
+        one: "> %{count} Jahr"
         other: "> %{count} Jahre"
       almost_x_years:
-        one: "1 Jahr"
+        one: "%{count} Jahr"
         other: "%{count} Jahre"
     distance_in_words_verbose:
       half_a_minute: "gerade eben"
@@ -1868,22 +1868,22 @@ de:
       one: "Dieses Thema wurde automatisch eine Minute nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
       other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
     autoclosed_disabled_days:
-      one: "Das Thema wurde automatisch nach 1 Tag geöffnet."
+      one: "Das Thema wurde automatisch nach %{count} Tag geöffnet."
       other: "Das Thema wurde automatisch nach %{count} Tagen geöffnet."
     autoclosed_disabled_hours:
-      one: "Das Thema wurde automatisch nach 1 Stunde geöffnet."
+      one: "Das Thema wurde automatisch nach %{count} Stunde geöffnet."
       other: "Das Thema wurde automatisch nach %{count} Stunden geöffnet."
     autoclosed_disabled_minutes:
-      one: "Das Thema wurde automatisch nach 1 Minute geöffnet."
+      one: "Das Thema wurde automatisch nach %{count} Minute geöffnet."
       other: "Das Thema wurde automatisch nach %{count} Minuten geöffnet."
     autoclosed_disabled_lastpost_days:
-      one: "Dieses Thema wurde automatisch 1 Tag nach der letzten Antwort geöffnet."
+      one: "Dieses Thema wurde automatisch %{count} Tag nach der letzten Antwort geöffnet."
       other: "Dieses Thema wurde automatisch %{count} Tage nach der letzten Antwort geöffnet."
     autoclosed_disabled_lastpost_hours:
-      one: "Dieses Thema wurde automatisch 1 Stunde nach der letzten Antwort geöffnet."
+      one: "Dieses Thema wurde automatisch %{count} Stunde nach der letzten Antwort geöffnet."
       other: "Dieses Thema wurde automatisch %{count} Stunden nach der letzten Antwort geöffnet."
     autoclosed_disabled_lastpost_minutes:
-      one: "Dieses Thema wurde automatisch 1 Minute nach der letzten Antwort geöffnet."
+      one: "Dieses Thema wurde automatisch %{count} Minute nach der letzten Antwort geöffnet."
       other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geöffnet."
     autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
     autoclosed_disabled_lastpost: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
@@ -1959,10 +1959,10 @@ de:
       inactive_user: "Deaktivierter Benutzer"
   reviewables_reminder:
     submitted:
-      one: "Einträge wurden vor über 1 Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
+      one: "Einträge wurden vor über %{count} Stunde übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
       other: "Einträge wurden vor über %{count} Stunden übermittelt. [Bitte überprüfe sie](%{base_path}/review)."
     subject_template:
-      one: "1 Beitrag benötigt eine Überprüfung"
+      one: "%{count} Beitrag benötigt eine Überprüfung"
       other: "%{count} Beiträge benötigen eine Überprüfung"
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
@@ -2158,7 +2158,7 @@ de:
     ignored: "Danke für deine Meldung. Wir sehen uns das an."
     ignored_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
   temporarily_closed_due_to_flags:
-    one: "Dieses Thema wurde vorübergehend für mindestens 1 Stunde gesperrt aufgrund einer großen Anzahl an Community-Meldungen."
+    one: "Dieses Thema wurde vorübergehend für mindestens %{count} Stunde gesperrt aufgrund einer großen Anzahl an Community-Meldungen."
     other: "Dieses Thema wurde vorübergehend für mindestens %{count} Stunden geschlossen aufgrund einer großen Anzahl an Community_Meldungen."
   system_messages:
     private_topic_title: "Thema #%{id}"
@@ -2639,7 +2639,7 @@ de:
     queued_posts_reminder:
       title: "Erinnerung für anstehende Beiträge"
       subject_template:
-        one: "1 Beitrag wartet auf Überprüfung"
+        one: "%{count} Beitrag wartet auf Überprüfung"
         other: "%{count} Beiträge warten auf Überprüfung"
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
@@ -2655,7 +2655,7 @@ de:
   user_notifications:
     previous_discussion: "Vorangehende Antworten"
     reached_limit:
-      one: "Achtung: Wir senden maximal 1 E-Mail pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen."
+      one: "Achtung: Wir senden maximal %{count} E-Mail pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen."
       other: "Achtung: Wir senden maximal%{count} E-Mails pro Tag. Überprüfe die Seite, um möglicherweise zurückgehaltene E-Mails zu sehen. P.S.: Danke, dass du so beliebt bist!"
     in_reply_to: "Als Antwort auf"
     unsubscribe:

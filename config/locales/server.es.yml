@@ -134,19 +134,19 @@ es:
         one: "No se pudo eliminar el registro porque existe otro %{record} dependiente"
         many: "No se puede eliminar el registro porque existen otros %{record} dependientes"
       too_long:
-        one: es demasiado largo (el máximo es de 1 carácter)
+        one: es demasiado largo (el máximo es de %{count} carácter)
         other: es demasiado largo (el máximo es de %{count} caracteres)
       too_short:
-        one: es demasiado corto (el mínimo es de 1 carácter)
+        one: es demasiado corto (el mínimo es de %{count} carácter)
         other: es demasiado corto (el mínimo es de %{count} caracteres)
       wrong_length:
-        one: tiene una longitud incorrecta (debería ser de 1 carácter)
+        one: tiene una longitud incorrecta (debería ser de %{count} carácter)
         other: tiene una longitud incorrecta (debería ser de %{count} caracteres)
       other_than: "debe ser distinto de %{count}"
     template:
       body: "Hubo problemas con los siguientes campos:"
       header:
-        one: 1 error impidió guardar este %{model}
+        one: "%{count} error impidió guardar este %{model}"
         other: "%{count} errores impidieron guardar este %{model}"
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
@@ -203,7 +203,7 @@ es:
   reading_time: "Tiempo de lectura"
   likes: "Me gusta"
   too_many_replies:
-    one: "Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema."
+    one: "Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuesta en el mismo tema."
     other: "Lo sentimos, pero los usuarios nuevos están limitados a %{count} respuestas en el mismo tema."
   max_consecutive_replies:
     one: "No se permiten respuestas consecutivas. Por favor, edita tu respuesta anterior o espera a que alguien te responda."
@@ -325,7 +325,7 @@ es:
       handle: "atender solicitud de membresía"
   education:
     until_posts:
-      one: "1 post"
+      one: "%{count} post"
       other: "%{count} posts"
     "new-topic": |
       Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
@@ -509,7 +509,7 @@ es:
       uncategorized: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada, y no puede ser eliminada."
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
       topic_exists:
-        one: "No se puede borrar esta categoría porque tiene 1 tema. El tema más antiguo es %{topic_link}."
+        one: "No se puede borrar esta categoría porque tiene %{count} tema. El tema más antiguo es %{topic_link}."
         other: "No se puede borrar esta categoría porque tiene %{count} temas. El tema más antiguo es %{topic_link}."
       topic_exists_no_oldest: "No se puede eliminar esta categoría porque el contador de temas está en %{count}."
     uncategorized_description: "Debates que no necesitan una categoría, o bien no encajan en alguna de las categorías existentes."
@@ -550,50 +550,50 @@ es:
       unsubscribe_via_email: "Has alcanzado el número máximo de desuscripciones por email. Por favor espera %{time_left} antes de intentar de nuevo."
       topic_invitations_per_day: "Has alcanzado el número máximo de invitaciones al tema. Por favor espera %{time_left} antes de intentar de nuevo."
     hours:
-      one: "1 hora"
+      one: "%{count} hora"
       other: "%{count} horas"
     minutes:
-      one: "1 minuto"
+      one: "%{count} minuto"
       other: "%{count} minutos"
     seconds:
-      one: "1 segundo"
+      one: "%{count} segundo"
       other: "%{count} segundos"
     short_time: "unos pocos segundos"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       x_months:
-        one: "1mon"
+        one: "%{count}mon"
         other: "%{count}mon"
       about_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1y"
+        one: "> %{count}y"
         other: "> %{count}y"
       almost_x_years:
-        one: "1y"
+        one: "%{count}y"
         other: "%{count}y"
     distance_in_words_verbose:
       half_a_minute: "ahora mismo"
@@ -601,34 +601,34 @@ es:
         one: "ahora mismo"
         other: "ahora mismo"
       x_seconds:
-        one: "hace 1 segundo"
+        one: "hace %{count} segundo"
         other: "hace %{count} segundos"
       less_than_x_minutes:
-        one: "hace menos de 1 minuto"
+        one: "hace menos de %{count} minuto"
         other: "hace menos de %{count} minutos"
       x_minutes:
-        one: "hace 1 minuto"
+        one: "hace %{count} minuto"
         other: "hace %{count} minutos"
       about_x_hours:
-        one: "hace 1 hora"
+        one: "hace %{count} hora"
         other: "hace %{count} horas"
       x_days:
-        one: "hace 1 día"
+        one: "hace %{count} día"
         other: "hace %{count} días"
       about_x_months:
-        one: "hace como 1 mes"
+        one: "hace como %{count} mes"
         other: "hace como %{count} meses"
       x_months:
-        one: "hace 1 mes"
+        one: "hace %{count} mes"
         other: "hace %{count} meses"
       about_x_years:
-        one: "hace sobre 1 año"
+        one: "hace sobre %{count} año"
         other: "hace sobre %{count} años"
       over_x_years:
-        one: "hace más de 1 año"
+        one: "hace más de %{count} año"
         other: "hace más de %{count} años"
       almost_x_years:
-        one: "hace casi 1 año"
+        one: "hace casi %{count} año"
         other: "hace casi %{count} años"
   password_reset:
     no_token: "Lo sentimos, ese enlace para cambiar la contraseña es demasiado antiguo. Haz clic en el botón Iniciar sesión y utiliza el 'olvidé mi contraseña' para obtener un nuevo enlace. "
@@ -1860,46 +1860,46 @@ es:
     post_revision_text: "Se ha transferido la propiedad"
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta."
+      one: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuesta."
       other: "Este mensaje fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas."
     autoclosed_topic_max_posts:
-      one: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de 1 respuesta."
+      one: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuesta."
       other: "Este tema fue cerrado automáticamente al alcanzar el límite máximo de %{count} respuestas."
     autoclosed_enabled_days:
-      one: "Este tema se cerró automáticamente después de 1 día. No se permiten nuevas respuestas."
+      one: "Este tema se cerró automáticamente después de %{count} día. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente después de %{count} días. No se permiten nuevas respuestas."
     autoclosed_enabled_hours:
-      one: "Este tema se cerró automáticamente después de 1 hora. No se permiten nuevas respuestas."
+      one: "Este tema se cerró automáticamente después de %{count} hora. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente después de %{count} horas. No se permiten nuevas respuestas."
     autoclosed_enabled_minutes:
-      one: "Este tema se cerró automáticamente después de 1 minuto. No se permiten nuevas respuestas."
+      one: "Este tema se cerró automáticamente después de %{count} minuto. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente después de %{count} minutos. No se permiten nuevas respuestas."
     autoclosed_enabled_lastpost_days:
-      one: "Este tema se cerró automáticamente 1 día después del último post. No se permiten nuevas respuestas."
+      one: "Este tema se cerró automáticamente %{count} día después del último post. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente %{count} días después del último post. No se permiten nuevas respuestas."
     autoclosed_enabled_lastpost_hours:
-      one: "Este tema se cerró automáticamente 1 hora después del último post. No se permiten nuevas respuestas."
+      one: "Este tema se cerró automáticamente %{count} hora después del último post. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente %{count} horas después del último post. No se permiten nuevas respuestas."
     autoclosed_enabled_lastpost_minutes:
-      one: "Este tema se cerró automáticamente 1 minuto después del último post. No se permiten nuevas respuestas."
+      one: "Este tema se cerró automáticamente %{count} minuto después del último post. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente %{count} minutos después del último post. No se permiten nuevas respuestas."
     autoclosed_disabled_days:
-      one: "Este tema se abrió automáticamente después de 1 día."
+      one: "Este tema se abrió automáticamente después de %{count} día."
       other: "Este tema se abrió automáticamente después de %{count} días."
     autoclosed_disabled_hours:
-      one: "Este tema se abrió automáticamente después de 1 hora."
+      one: "Este tema se abrió automáticamente después de %{count} hora."
       other: "Este tema se abrió automáticamente después de %{count} horas."
     autoclosed_disabled_minutes:
-      one: "Este tema se abrió automáticamente después de 1 minuto."
+      one: "Este tema se abrió automáticamente después de %{count} minuto."
       other: "Este tema se abrió automáticamente después de %{count} minutos."
     autoclosed_disabled_lastpost_days:
-      one: "Este tema se abrió automáticamente 1 día después de la última respuesta."
+      one: "Este tema se abrió automáticamente %{count} día después de la última respuesta."
       other: "Este tema se abrió automáticamente %{count} días después de la última respuesta."
     autoclosed_disabled_lastpost_hours:
-      one: "Este tema se abrió automáticamente 1 hora después de la última respuesta."
+      one: "Este tema se abrió automáticamente %{count} hora después de la última respuesta."
       other: "Este tema se abrió automáticamente %{count} horas después de la última respuesta."
     autoclosed_disabled_lastpost_minutes:
-      one: "Este tema se abrió automáticamente 1 minuto después de la última respuesta."
+      one: "Este tema se abrió automáticamente %{count} minuto después de la última respuesta."
       other: "Este tema se abrió automáticamente %{count} minutos después de la última respuesta."
     autoclosed_disabled: "El tema ahora está en abierto, se permiten respuestas."
     autoclosed_disabled_lastpost: "Este tema está ahora abierto. Se permiten nuevas respuestas."
@@ -1975,10 +1975,10 @@ es:
       inactive_user: "Usuario inactivo"
   reviewables_reminder:
     submitted:
-      one: "Hay elementos enviados desde hace más de 1 hora. [Por favor, revísalos](%{base_path}/review)"
+      one: "Hay elementos enviados desde hace más de %{count} hora. [Por favor, revísalos](%{base_path}/review)"
       other: "Hay elementos enviados desde hace más de %{count} horas. [Por favor, revísalos](%{base_path}/review)"
     subject_template:
-      one: "1 elemento esperando revisión"
+      one: "%{count} elemento esperando revisión"
       other: "%{count} elementos esperando revisión"
   unsubscribe_mailer:
     title: "Darse de baja"
@@ -2174,7 +2174,7 @@ es:
     ignored: "Gracias por hacérnoslo saber. Lo estamos revisando."
     ignored_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado la publicación."
   temporarily_closed_due_to_flags:
-    one: "Este tema está cerrado temporalmente durante al menos 1 hora debido a un número elevado de reportes de la comunidad."
+    one: "Este tema está cerrado temporalmente durante al menos %{count} hora debido a un número elevado de reportes de la comunidad."
     other: "Este tema está cerrado temporalmente durante al menos %{count} horas debido a un número elevado de reportes de la comunidad."
   system_messages:
     private_topic_title: "Tema #%{id}"
@@ -2628,7 +2628,7 @@ es:
     pending_users_reminder:
       title: "Recordatorio de usuarios pendientes de revisión"
       subject_template:
-        one: "1 usuario esperando aprobación"
+        one: "%{count} usuario esperando aprobación"
         other: "%{count} usuarios esperando aprobación"
       text_body_template: |
         Hay registros de usuarios nuevos esperando a ser aprobados (o rechazados) antes de que puedan acceder a este foro.
@@ -2657,7 +2657,7 @@ es:
     queued_posts_reminder:
       title: "Recordatorio de post en revisión"
       subject_template:
-        one: "1 post esperando a ser revisado"
+        one: "%{count} post esperando a ser revisado"
         other: "%{count} posts esperando a ser revisados"
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
@@ -2673,7 +2673,7 @@ es:
   user_notifications:
     previous_discussion: "Respuestas anteriores"
     reached_limit:
-      one: "ADVERTENCIA: has superado el límite de 1 email diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
+      one: "ADVERTENCIA: has superado el límite de %{count} email diario. Revisa el sitio para ver las otras notificaciones que no te han llegado."
       other: "ADVERTENCIA: has superado el límite de %{count} emails diarios. Las próximas notificaciones de emails serán suprimidas. PD: gracias por ser tan popular!"
     in_reply_to: "En respuesta a"
     unsubscribe:

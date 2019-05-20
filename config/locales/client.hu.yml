@@ -43,57 +43,57 @@ hu:
       tiny:
         half_a_minute: "< 1p"
         less_than_x_seconds:
-          one: "< 1mp"
+          one: "< %{count}mp"
           other: "< %{count}mp"
         x_seconds:
-          one: "1 mp"
+          one: "%{count} mp"
           other: "%{count} mp"
         less_than_x_minutes:
-          one: "< 1 perc"
+          one: "< %{count} perc"
           other: "< %{count}perc"
         x_minutes:
-          one: "1p"
+          one: "%{count}p"
           other: "%{count}p"
         about_x_hours:
-          one: "1ó"
+          one: "%{count}ó"
           other: "%{count}ó"
         x_days:
-          one: "1n"
+          one: "%{count}n"
           other: "%{count}n"
         x_months:
           one: "hó"
           other: "%{count} hónap"
         about_x_years:
-          one: "1é"
+          one: "%{count}é"
           other: "%{count}é"
         over_x_years:
-          one: "> 1é"
+          one: "> %{count}é"
           other: "> %{count}é"
         almost_x_years:
-          one: "1é"
+          one: "%{count}é"
           other: "%{count}é"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 perc"
+          one: "%{count} perc"
           other: "%{count} perc"
         x_hours:
-          one: "1 óra"
+          one: "%{count} óra"
           other: "%{count} óra"
         x_days:
-          one: "1 nap"
+          one: "%{count} nap"
           other: "%{count} nap"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "1 perce"
+          one: "%{count} perce"
           other: "%{count} perce"
         x_hours:
-          one: "1 órája"
+          one: "%{count} órája"
           other: "%{count} órája"
         x_days:
-          one: "1 napja"
+          one: "%{count} napja"
           other: "%{count} napja"
       later:
         x_days:
@@ -312,7 +312,7 @@ hu:
       none: "Nincs átnézésre váró elem"
       view_pending: "várakozók megtekintése"
       topic_has_pending:
-        one: "Ebben a témában <b>1</b>bejegyzés vár jóváhagyásra "
+        one: "Ebben a témában <b>%{count}</b>bejegyzés vár jóváhagyásra "
         other: "Ebben a témában <b>{{count}}</b>bejegyzés vár jóváhagyásra "
       topic: "Téma:"
       filtered_user: "Felhasználó:"
@@ -383,7 +383,7 @@ hu:
       posts_read: "Olvasott"
       posts_read_long: "Elolvasott bejegyzések"
       total_rows:
-        one: "1 felhasználó"
+        one: "%{count} felhasználó"
         other: "%{count} felhasználó"
     group_histories:
       actions:
@@ -555,7 +555,7 @@ hu:
       toggle_ordering: "rendezés megfordítása"
       subcategories: "Alkategóriák"
       topic_sentence:
-        one: "1 téma"
+        one: "%{count} téma"
         other: "%{count} téma"
       n_more: "Kategóriák (%{count} további) ..."
     ip_lookup:
@@ -1199,7 +1199,7 @@ hu:
       drafts_offline: "offline piszkozatok"
       group_mentioned_limit: "<b>Figyelem!</b>Említetted <a href='{{group_link}}'>{{group}}</a>, azonban ennek a csoportnak több embere van mint amit az adminisztrátor által konfigurált említési határa a {{max}} felhasználóknak. Senki nem lesz értesítve."
       group_mentioned:
-        one: "Megemlíteni a {{group}}, értesíteni fogsz <a href='{{group_link}}'>1 embert</a>- biztos vagy benne?"
+        one: "Megemlíteni a {{group}}, értesíteni fogsz <a href='{{group_link}}'>%{count} embert</a>- biztos vagy benne?"
         other: "Megemlíteni a {{group}}, értesíteni fogsz <a href='{{group_link}}'>{{count}} embereket</a> - biztos vagy benne?"
       cannot_see_mention:
         category: "Megemlítetted {{username}} de nem lesznek értesítve mivel nincsen hozzáférésük ehez a témához. Hozzá kell adnod őket egy csoporthoz hogy hozzáférjenek a témához"
@@ -1292,10 +1292,10 @@ hu:
     notifications:
       tooltip:
         regular:
-          one: "1 nemlátott értesítés"
+          one: "%{count} nemlátott értesítés"
           other: "{{count}} nemlátott értesíések"
         message:
-          one: "1 olvasatlan üzenet"
+          one: "%{count} olvasatlan üzenet"
           other: "{{count}} olvasatlan üzenet"
       title: "értesítések @felhasználónév hivatkozásokról, a hozzászólásaidra adott válaszokról, üzenetekről stb."
       none: "Az értesítések betöltése sikertelen."
@@ -1310,7 +1310,7 @@ hu:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} 1 más</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} %{count} más</span> {{description}}"
         other: "<span>{{username}}, {{username2}} és {{count}} mások</span> {{description}}"
       liked_consolidated: "<span>{{username}}</span> {{description}}"
       private_message: "<span>{{username}}</span> {{description}}"
@@ -1454,10 +1454,10 @@ hu:
       new: "új téma"
       unread: "olvasatlan"
       new_topics:
-        one: "1 új téma"
+        one: "%{count} új téma"
         other: "{{count}} új téma"
       unread_topics:
-        one: "1 olvasatlan téma"
+        one: "%{count} olvasatlan téma"
         other: "{{count}} olvasatlan téma"
       title: "Témakör"
       invalid_access:
@@ -1471,13 +1471,13 @@ hu:
         title: "Nem létező témakör"
         description: "Sajnáljuk, de nem tudtuk megtalálni ezt a témakört. Talán egy moderátor kitörölte volna?"
       total_unread_posts:
-        one: "1 hozzászólást nem olvastál a témában"
+        one: "%{count} hozzászólást nem olvastál a témában"
         other: "{{count}} hozzászólást nem olvastál a témában"
       unread_posts:
-        one: "1 nem olvasott bejegyzés van ebben a témában"
+        one: "%{count} nem olvasott bejegyzés van ebben a témában"
         other: "{{count}} nem olvasott bejegyzés van ebben a témában"
       new_posts:
-        one: "1 új bejegyzés van ebben a témában."
+        one: "%{count} új bejegyzés van ebben a témában."
         other: "{{count}} új bejegyzés van ebben a témában."
       back_to_list: "Vissza a témakörök listájára"
       options: "Témakör beállításai"
@@ -1640,7 +1640,7 @@ hu:
       login_reply: "Jelentkezz be, hogy válaszolhass"
       filters:
         n_posts:
-          one: "1 bejegyzés"
+          one: "%{count} bejegyzés"
           other: "{{count}} bejegyzés"
         cancel: "Szűrő törlése"
       split_topic:
@@ -1681,7 +1681,7 @@ hu:
         select_all: mind kiválasztása
         deselect_all: kijelölések törlése
         description:
-          one: Kijelöltél <b>1</b> hozzászólást.
+          one: Kijelöltél <b>%{count}</b> hozzászólást.
           other: "Kijelöltél <b>{{count}}</b> hozzászólást."
     post:
       quote_reply: "Idézet"
@@ -1695,18 +1695,18 @@ hu:
       collapse: "Összeomlás"
       expand_collapse: "kinyitás/bezárás"
       gap:
-        one: "1 rejtett válasz megtekintése"
+        one: "%{count} rejtett válasz megtekintése"
         other: "{{count}} rejtett válasz megtekintése"
       unread: "Olvasatlan bejegyzés"
       has_replies:
         one: "{{count}} Válasz"
         other: "{{count}} Válaszok"
       has_likes_title:
-        one: "1 ember likeolta a bejegyzést"
+        one: "%{count} ember likeolta a bejegyzést"
         other: "{{count}} emberek likeolták ezt a bejegyzést"
       has_likes_title_only_you: "kedvelted ezt a bejegyzést"
       has_likes_title_you:
-        one: "te és 1 másik ember likeolták ezt a bejegyzést"
+        one: "te és %{count} másik ember likeolták ezt a bejegyzést"
         other: "te és {{count}} más emberek likeolták ezt a bejegyzést"
       errors:
         create: "Sajnáljuk, de a bejegyzésed létrehozása közben hiba lépett fel. Kérünk próbáld újra!"
@@ -1884,7 +1884,7 @@ hu:
       custom_placeholder_notify_user: "Légy célra törő, légy konstruktív és mindig legyél kedves másokhoz."
       custom_message:
         left:
-          one: "1 van hátra"
+          one: "%{count} van hátra"
           other: "{{count}} hátralévő"
     flagging_topic:
       action: "Téma jelölése"
@@ -1895,11 +1895,11 @@ hu:
       links_title: "Népszerű Hivatkozások"
       links_shown: "Több link mutatása"
       clicks:
-        one: "1 kattintás"
+        one: "%{count} kattintás"
         other: "%{count} kattintás"
     post_links:
       title:
-        one: "még 1"
+        one: "még %{count}"
         other: "%{count} még"
     topic_statuses:
       warning:
@@ -1953,7 +1953,7 @@ hu:
       latest:
         title: "Legújabb"
         title_with_count:
-          one: "Legutolsó (1)"
+          one: "Legutolsó (%{count})"
           other: "Legutóbbi ({{count}})"
         help: "a legfrissebb bejegyzések témakörei"
       hot:
@@ -1972,20 +1972,20 @@ hu:
       unread:
         title: "Olvasatlan"
         title_with_count:
-          one: "Olvasatlan (1)"
+          one: "Olvasatlan (%{count})"
           other: "Olvasatlan ({{count}})"
         help: "az általad figyelt vagy követett témák, melyekben olvasatlan bejegyzések vannak."
         lower_title_with_count:
-          one: "1 olvasatlan"
+          one: "%{count} olvasatlan"
           other: "{{count}} olvasatlan"
       new:
         lower_title_with_count:
-          one: "1 új"
+          one: "%{count} új"
           other: "{{count}} új"
         lower_title: "új"
         title: "Új"
         title_with_count:
-          one: "Új (1)"
+          one: "Új (%{count})"
           other: "Új ({{count}})"
         help: "az elmúlt napokban létrehozott témakörök"
       posted:
@@ -1997,7 +1997,7 @@ hu:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "legfrissebb témakörök a következő kategóriában: {{categoryName}}"
       top:
@@ -2721,7 +2721,7 @@ hu:
         clear_filter: "Törlés"
         show_words: "Szöveg megjelenítése"
         word_count:
-          one: "1 szó"
+          one: "%{count} szó"
           other: "%{count} szavak"
         actions:
           block: "Blokkol"
@@ -2995,7 +2995,7 @@ hu:
       upload_error: "Sajnáljuk, de hiba lépett fel a fájl feltöltése közben. Kérünk, próbáld újra!"
       quit: "Talán Később"
       staff_count:
-        one: "A közösségedben 1 stábtag van (te)."
+        one: "A közösségedben %{count} stábtag van (te)."
         other: "A közösségedben veled együtt %{count} stábtag van."
       invites:
         add_user: "hozzáadás"

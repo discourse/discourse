@@ -55,7 +55,7 @@ lt:
           many: "%{count} s."
           other: "%{count} s."
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           few: "<%{count}m"
           many: "< %{count}m"
           other: "<%{count}m"
@@ -75,7 +75,7 @@ lt:
           many: "%{count} d."
           other: "%{count} d."
         x_months:
-          one: "1 mėn"
+          one: "%{count} mėn"
           few: "%{count} mėn"
           many: "%{count} mėn"
           other: "%{count} mėn"
@@ -131,17 +131,17 @@ lt:
           other: "prieš %{count} dienų"
       later:
         x_days:
-          one: "po 1 dienos"
+          one: "po %{count} dienos"
           few: "po %{count} dienų"
           many: "po %{count} dienų"
           other: "po %{count} dienų"
         x_months:
-          one: "Po 1 mėnesio"
+          one: "Po %{count} mėnesio"
           few: "po %{count} mėnesių"
           many: "po %{count} mėnesių"
           other: "po %{count} mėnesių"
         x_years:
-          one: "Po 1 metų"
+          one: "Po %{count} metų"
           few: "po %{count} metų"
           many: "po %{count} metų"
           other: "po %{count} metų"
@@ -395,7 +395,7 @@ lt:
       posts_read: "Perskaityti"
       posts_read_long: "Perskaityta Įrašų"
       total_rows:
-        one: "1 vartotojas"
+        one: "%{count} vartotojas"
         few: "%{count} vartotojų"
         many: "%{count} vartotojų"
         other: "%{count} vartotojų"
@@ -560,7 +560,7 @@ lt:
       toggle_ordering: "perjungti išdėstimo tvarką"
       subcategories: "Subkategorijos"
       topic_sentence:
-        one: "1 tema"
+        one: "%{count} tema"
         few: "%{count} temos"
         many: "%{count}temų"
         other: "%{count}temos"
@@ -1231,12 +1231,12 @@ lt:
     notifications:
       tooltip:
         regular:
-          one: "1 nematytas pranešimas"
+          one: "%{count} nematytas pranešimas"
           few: "{{count}}nematyti pranešimai"
           many: "{{count}}nematytų pranešimų"
           other: "{{count}} nematyti pranešimai"
         message:
-          one: "1 neskaityta žinutė"
+          one: "%{count} neskaityta žinutė"
           few: "{{count}}neskaitytos žinutės"
           many: "{{count}}neskaitytų žinučių"
           other: "{{count}}neskaitytos žinutės"
@@ -1253,7 +1253,7 @@ lt:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} ir dar 1</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} ir dar %{count}</span> {{description}}"
         few: "<span>{{username}}, {{username2}}ir {{count}} kiti</span> {{description}}"
         many: "<span>{{username}}, {{username2}} ir {{count}}kitų</span> {{description}}"
         other: "<span>{{username}}, {{username2}} ir {{count}}kitų</span> {{description}}"
@@ -1308,7 +1308,7 @@ lt:
       clear_all: "Ištrinti viską"
       too_short: "Jūsų paieškos frazė, per trumpa."
       result_count:
-        one: "<span>1 rezultatas iš</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} rezultatas iš</span><span class='term'>{{term}}</span>"
         few: "<span>{{count}}{{plus}}rezultatų iš</span><span class='term'>{{term}}</span>"
         many: "<span>{{count}}{{plus}} rezultatai iš</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} rezultatai iš </span><span class='term'>{{term}}</span>"
@@ -1417,7 +1417,7 @@ lt:
         search: "Daugiau paieškos rezultatų nėra"
     topic:
       filter_to:
-        one: "temoje 1 įrašas"
+        one: "temoje %{count} įrašas"
         few: "temoje {{count}} įrašai"
         many: "teoje {{count}} įrašų"
         other: "temoje {{count}} įrašai"
@@ -1458,22 +1458,22 @@ lt:
         title: "Tema nerasta"
         description: "Atsiprašome, bet mes negalėjome rasti jūsų temos. Gal ji buvo ištrinta moderatoriaus?"
       total_unread_posts:
-        one: "šioje temoje turi 1 neperskaitytą įrašą"
+        one: "šioje temoje turi %{count} neperskaitytą įrašą"
         few: "šioje temoje tu turi {{count}} neperskaitytų įrašų"
         many: "šioje temoje tu turi {{count}} neperskaitytų įrašų"
         other: "šioje temoje tu turi {{count}} neperskaitytų įrašų"
       unread_posts:
-        one: "šioje temoje tu turi 1 neperskaitytą seną įrašą"
+        one: "šioje temoje tu turi %{count} neperskaitytą seną įrašą"
         few: "šioje temoje tu turi {{count}} neperskaitytų senų įrašų"
         many: "šioje temoje tu turi {{count}} neperskaitytų senų įrašų"
         other: "šioje temoje tu turi {{count}} neperskaitytų senų įrašų"
       new_posts:
-        one: "šioje temoje yra 1  naujas įrašas nuo paskutinio tavo skaitymo"
+        one: "šioje temoje yra %{count}  naujas įrašas nuo paskutinio tavo skaitymo"
         few: "šioje temoje yra {{count}} naujų įrašų nuo paskutinio tavo skaitymo"
         many: "šioje temoje yra {{count}} naujų įrašų nuo paskutinio tavo skaitymo"
         other: "šioje temoje yra {{count}} naujų įrašų nuo paskutinio tavo skaitymo"
       likes:
-        one: "Šiuo metu temą mėgsta 1 vartotojas"
+        one: "Šiuo metu temą mėgsta %{count} vartotojas"
         few: "Šiuo metu temą mėgsta {{count}} vartotojų"
         many: "Šiuo metu temą mėgsta {{count}} vartotojų"
         other: "Šiuo metu temą mėgsta {{count}} vartotojų"
@@ -1621,7 +1621,7 @@ lt:
         pin_validation: "Terminas reikalauja Prisegti šią temą."
         not_pinned: "{{categoryLink}} nėra prisegtų temų "
         already_pinned:
-          one: "Tema prisegta šioje kategorijoje {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Tema prisegta šioje kategorijoje {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Prisegtos temos šioje kategorijoje {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Prisegtos temos šioje kategorijoje {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Prisegtos temos šioje kategorijoje {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1632,7 +1632,7 @@ lt:
         global_pin_note: "Vartotojai gali Atsegti temą nuo sąrašo viršaus individualiai."
         not_pinned_globally: "Nėra jokių globaliai Prisegtų temų."
         already_pinned_globally:
-          one: "Šiuo metu globaliai prisegta tema: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Šiuo metu globaliai prisegta tema: <strong class='badge badge-notification unread'>%{count}</strong>"
           few: "Šiuo metu globaliai Prisegtos temos: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "Šiuo metu globaliai Prisegtos temos: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "Šiuo metu globaliai Prisegtos temos: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -1669,7 +1669,7 @@ lt:
       login_reply: "Prisijunk, kad atsakytum"
       filters:
         n_posts:
-          one: "1 įrašas"
+          one: "%{count} įrašas"
           few: "{{count}} įrašai"
           many: "{{count}}įrašų"
           other: "{{count}}įrašai"
@@ -1725,7 +1725,7 @@ lt:
         select_all: pažymėti visus
         deselect_all: nieko nepasirinkti
         description:
-          one: Jūs pasirinkote <b>1</b> įrašą.
+          one: Jūs pasirinkote <b>%{count}</b> įrašą.
           few: "Jūs pasirinkote <b>{{count}}</b> įrašus."
           many: "Jūs pasirinkote <b>{{count}}</b> įrašus."
           other: "Jūs pasirinkote <b>{{count}}</b> įrašus."
@@ -1746,7 +1746,7 @@ lt:
         other: "(autoriaus išimtas įrašas automatiškai bus ištrintas per %{count} valandas, nebent turėjo vėliavą)"
       expand_collapse: "išskleisti/suskleisti"
       gap:
-        one: "Peržiūrėti 1 paslėptą atsakymą"
+        one: "Peržiūrėti %{count} paslėptą atsakymą"
         few: "peržiūrėti {{count}} paslėptus atsakymus"
         many: "peržiūrėti {{count}} paslėptus atsakymus"
         other: "peržiūrėti {{count}} paslėptus atsakymus"
@@ -1757,13 +1757,13 @@ lt:
         many: "{{count}} Atsakymai"
         other: "{{count}} Atsakymai"
       has_likes_title:
-        one: "1 žmogui patiko šis įrašas"
+        one: "%{count} žmogui patiko šis įrašas"
         few: "{{count}} žmonėms patinka šis įrašas"
         many: "{{count}} žmonėms patinka šis įrašas"
         other: "{{count}} žmonėms patinka šis įrašas"
       has_likes_title_only_you: "tau patiko šis įrašas"
       has_likes_title_you:
-        one: "tau ir 1 žmogui patiko šis įrašas"
+        one: "tau ir %{count} žmogui patiko šis įrašas"
         few: "tau ir {{count}} žmonėms patiko šis įrašas"
         many: "tau ir {{count}} žmonėms patiko šis įrašas"
         other: "tau ir {{count}} žmonėms patiko šis įrašas"
@@ -1800,12 +1800,12 @@ lt:
         more: "Daugiau"
         delete_replies:
           direct_replies:
-            one: "Taip, ir 1 tiesioginį atsakymą"
+            one: "Taip, ir %{count} tiesioginį atsakymą"
             few: "Taip, ir {{count}}tiesioginius atsakymus"
             many: "Taip, ir {{count}}tiesioginių atsakymų"
             other: "Taip, ir {{count}} tiesioginius atsakymus"
           all_replies:
-            one: "Taip, ir 1 atsakymą"
+            one: "Taip, ir %{count} atsakymą"
             few: "Taip, ir visus {{count}} atsakymus"
             many: "Taip, ir visus {{count}}atsakymų"
             other: "Taip, ir visus {{count}} atsakymus"
@@ -1977,12 +1977,12 @@ lt:
       custom_placeholder_notify_moderators: "Leiskite mums sužinoti kuo būtent esate susirūpinęs. Pateikite nuorodas ir pavyzdžius jei tik įmanoma."
       custom_message:
         at_least:
-          one: "įveskite bent jau 1 simbolį"
+          one: "įveskite bent jau %{count} simbolį"
           few: "įveskite bent jau {{count}} simbolius"
           many: "įveskite bent jau {{count}}simbolių"
           other: "įveskite bent jau {{count}}simbolius"
         more:
-          one: "liko 1..."
+          one: "liko %{count}..."
           few: "liko {{count}}..."
           many: "liko {{count}}..."
           other: "liko {{count}}..."
@@ -2002,7 +2002,7 @@ lt:
         other: "%{count} paspaudimų"
     post_links:
       title:
-        one: "1 daugiau"
+        one: "%{count} daugiau"
         few: "%{count}daugiau"
         many: "%{count}daugiau"
         other: "%{count}daugiau"
@@ -2045,7 +2045,7 @@ lt:
       other: "peržiūros"
     replies: "Atsakymai"
     views_long:
-      one: "ši tema buvo peržiūrėta 1 kartą"
+      one: "ši tema buvo peržiūrėta %{count} kartą"
       few: "ši tema buvo peržiūrėta {{number}} kartus"
       many: "ši tema buvo peržiūrėta {{number}}kartų"
       other: "ši tema buvo peržiūrėta {{number}} kartus"
@@ -2076,7 +2076,7 @@ lt:
       latest:
         title: "Paskutinės"
         title_with_count:
-          one: "Paskutinis (1)"
+          one: "Paskutinis (%{count})"
           few: "Paskutinės ({{count}})"
           many: "Paskutinės ({{count}})"
           other: "Paskutinės ({{count}})"
@@ -2097,26 +2097,26 @@ lt:
       unread:
         title: "Neperskaitytos"
         title_with_count:
-          one: "Neperskaitytas (1)"
+          one: "Neperskaitytas (%{count})"
           few: "Neperskaitytos ({{count}})"
           many: "Neperskaitytos ({{count}})"
           other: "Neperskaitytos ({{count}})"
         help: "temos, kurias stebide ar sekate su neperskaitytais įrašais"
         lower_title_with_count:
-          one: "1 neperskaitytas"
+          one: "%{count} neperskaitytas"
           few: "{{count}} neperskaitytų"
           many: "{{count}} neperskaitytų"
           other: "{{count}} neperskaitytų"
       new:
         lower_title_with_count:
-          one: "1 nauja"
+          one: "%{count} nauja"
           few: "{{count}} nauji"
           many: "{{count}} nauji"
           other: "{{count}} nauji"
         lower_title: "Nauja"
         title: "Naujos"
         title_with_count:
-          one: "Naujas (1)"
+          one: "Naujas (%{count})"
           few: "Naujos ({{count}})"
           many: "Naujos ({{count}})"
           other: "Naujos ({{count}})"
@@ -2130,7 +2130,7 @@ lt:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           few: "{{categoryName}} ({{count}})"
           many: "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
@@ -2217,12 +2217,12 @@ lt:
     badges:
       title: Ženkleliai
       badge_count:
-        one: "1 _enklelis"
+        one: "%{count} _enklelis"
         few: "%{count}Ženkleliai"
         many: "%{count} Ženklelių"
         other: "%{count}Ženkleliai"
       more_badges:
-        one: "+1 Daugiau"
+        one: "+%{count} Daugiau"
         few: "+%{count}Daugiau"
         many: "+%{count}Daugiau"
         other: "+%{count}Daugiau"
@@ -2801,7 +2801,7 @@ lt:
         clear_filter: "Išvalyti"
         show_words: "rodyti žodžius"
         word_count:
-          one: "1 žodis"
+          one: "%{count} žodis"
           few: "%{count} žodžiai"
           many: "%{count} žodžiai"
           other: "%{count} žodžiai"
@@ -2926,7 +2926,7 @@ lt:
           many: "Negalima ištrinti visų pranešimų. Kaikurie pranešimai yra senesni nei %{count} dienų laikotarpio. (delete_user_max_post_age nustatymas)."
           other: "Negalima ištrinti visų pranešimų. Kaikurie pranešimai yra senesni nei %{count} dienų laikotarpio. (delete_user_max_post_age nustatymas)."
         cant_delete_all_too_many_posts:
-          one: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei 1 įrašą.  (delete_all_posts_max)"
+          one: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašą.  (delete_all_posts_max)"
           few: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus.  (delete_all_posts_max)"
           many: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus.  (delete_all_posts_max)"
           other: "Negalima ištrinti visų įrašų, nes vartotojas turi daugiau nei %{count} įrašus.  (delete_all_posts_max)"
@@ -3124,7 +3124,7 @@ lt:
             text: "Dingo trofėjų suteikimo pavyzdžiai. Taip nutinka, kai trofėjaus klausimai sugrąžina vartotojo ID ar įrašo ID, kurie neegzistuoja. Tai gali sukelti problemų ateityje - prašome dar kartą patikrinti savo užklausą"
           no_grant_count: "Nepriskirti jokie trofėjai"
           grant_count:
-            one: "priskirtas <b>1</b>  trofėjus"
+            one: "priskirtas <b>%{count}</b>  trofėjus"
             few: "priskirta <b>%{count}</b> trofėjų"
             many: "priskirta <b>%{count}</b> trofėjų"
             other: "priskirta <b>%{count}</b> trofėjų"

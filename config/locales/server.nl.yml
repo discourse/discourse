@@ -134,19 +134,19 @@ nl:
         one: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk is"
         many: "Kan record niet verwijderen, omdat %{record} hiervan afhankelijk zijn"
       too_long:
-        one: is te lang (maximum is 1 teken)
+        one: is te lang (maximum is %{count} teken)
         other: is te lang (maximum is %{count} tekens)
       too_short:
-        one: is te kort (minimum is 1 teken)
+        one: is te kort (minimum is %{count} teken)
         other: is te kort (minimum is %{count} tekens)
       wrong_length:
-        one: heeft de verkeerde lengte (moet 1 teken zijn)
+        one: heeft de verkeerde lengte (moet %{count} teken zijn)
         other: heeft de verkeerde lengte (moet %{count} tekens zijn)
       other_than: "moet anders zijn dan %{count}"
     template:
       body: "Er waren problemen met de volgende velden:"
       header:
-        one: 1 fout heeft voorkomen dat %{model} kon worden opgeslagen
+        one: "%{count} fout heeft voorkomen dat %{model} kon worden opgeslagen"
         other: "%{count} fouten hebben voorkomen dat %{model} kon worden opgeslagen"
     embed:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
@@ -204,7 +204,7 @@ nl:
   reading_time: "Leestijd"
   likes: "Likes"
   too_many_replies:
-    one: "Sorry, maar nieuwe gebruikers mogen tijdelijk maar 1 antwoord in hetzelfde topic plaatsen."
+    one: "Sorry, maar nieuwe gebruikers mogen tijdelijk maar %{count} antwoord in hetzelfde topic plaatsen."
     other: "Sorry, maar nieuwe gebruikers mogen tijdelijk maar %{count} antwoorden in hetzelfde topic plaatsen."
   max_consecutive_replies:
     one: "Opeenvolgende antwoorden zijn niet toegestaan. Bewerk uw vorige antwoord, or wacht tot iemand op u antwoordt."
@@ -218,7 +218,7 @@ nl:
     no_hosts: "Er zijn geen hosts ingesteld voor inbedding."
     configure: "Inbedding configureren"
     more_replies:
-      one: "Nog 1 antwoord"
+      one: "Nog %{count} antwoord"
       other: "Nog %{count} antwoorden"
     loading: "Discussie laden..."
     permalink: "Permalink"
@@ -326,7 +326,7 @@ nl:
       handle: "lidmaatschapsaanvraag behandelen"
   education:
     until_posts:
-      one: "1 bericht"
+      one: "%{count} bericht"
       other: "%{count} berichten"
     "new-topic": |
       Welkom op %{site_name} &ndash; **bedankt voor het starten van een nieuwe conversatie!**
@@ -515,7 +515,7 @@ nl:
       uncategorized: "Deze categorie is bijzonder. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben, en kan niet worden verwijderd."
       has_subcategories: "Deze categorie kan niet worden verwijderd, omdat deze subcategorieën bevat"
       topic_exists:
-        one: "Deze categorie kan niet worden verwijderd, omdat deze 1 topic bevat. Het oudste topic is %{topic_link}."
+        one: "Deze categorie kan niet worden verwijderd, omdat deze %{count} topic bevat. Het oudste topic is %{topic_link}."
         other: "Deze categorie kan niet worden verwijderd, omdat deze %{count} topics bevat. Het oudste topic is %{topic_link}."
       topic_exists_no_oldest: "Deze categorie kan niet worden verwijderd, omdat het aantal topics %{count} is."
     uncategorized_description: "Topics die geen categorie nodig hebben of niet in een andere bestaande categorie passen."
@@ -556,50 +556,50 @@ nl:
       unsubscribe_via_email: "U hebt het maximale aantal uitschrijvingen via e-mail bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
       topic_invitations_per_day: "U hebt het maximale aantal topic-uitnodigingen bereikt. Wacht %{time_left} voordat u het opnieuw probeert."
     hours:
-      one: "1 uur"
+      one: "%{count} uur"
       other: "%{count} uur"
     minutes:
-      one: "1 minuut"
+      one: "%{count} minuut"
       other: "%{count} minuten"
     seconds:
-      one: "1 seconde"
+      one: "%{count} seconde"
       other: "%{count} seconden"
     short_time: "een paar seconden"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1u"
+        one: "%{count}u"
         other: "%{count}u"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1mnd"
+        one: "%{count}mnd"
         other: "%{count}mnd"
       x_months:
-        one: "1mnd"
+        one: "%{count}mnd"
         other: "%{count}mnd"
       about_x_years:
-        one: "1j"
+        one: "%{count}j"
         other: "%{count}j"
       over_x_years:
-        one: "> 1j"
+        one: "> %{count}j"
         other: "> %{count}j"
       almost_x_years:
-        one: "1j"
+        one: "%{count}j"
         other: "%{count}j"
     distance_in_words_verbose:
       half_a_minute: "zojuist"
@@ -607,34 +607,34 @@ nl:
         one: "zojuist"
         other: "zojuist"
       x_seconds:
-        one: "1 seconde geleden"
+        one: "%{count} seconde geleden"
         other: "%{count} seconden geleden"
       less_than_x_minutes:
-        one: "minder dan 1 minuut geleden"
+        one: "minder dan %{count} minuut geleden"
         other: "minder dan %{count} minuten geleden"
       x_minutes:
-        one: "1 minuut geleden"
+        one: "%{count} minuut geleden"
         other: "%{count} minuten geleden"
       about_x_hours:
-        one: "1 uur geleden"
+        one: "%{count} uur geleden"
         other: "%{count} uur geleden"
       x_days:
-        one: "1 dag geleden"
+        one: "%{count} dag geleden"
         other: "%{count} dagen geleden"
       about_x_months:
-        one: "ongeveer 1 maand geleden"
+        one: "ongeveer %{count} maand geleden"
         other: "ongeveer %{count} maanden geleden"
       x_months:
-        one: "1 maand geleden"
+        one: "%{count} maand geleden"
         other: "%{count} maanden geleden"
       about_x_years:
-        one: "ongeveer 1 jaar geleden"
+        one: "ongeveer %{count} jaar geleden"
         other: "ongeveer %{count} jaar geleden"
       over_x_years:
-        one: "meer dan 1 jaar geleden"
+        one: "meer dan %{count} jaar geleden"
         other: "meer dan %{count} jaar geleden"
       almost_x_years:
-        one: "bijna 1 jaar geleden"
+        one: "bijna %{count} jaar geleden"
         other: "bijna %{count} jaar geleden"
   password_reset:
     no_token: "Sorry, die koppeling voor het wijzigen van uw wachtwoord is te oud. Selecteer de knop Aanmelden en gebruik 'Ik ben mijn wachtwoord vergeten' om een nieuwe koppeling te ontvangen."
@@ -1869,46 +1869,46 @@ nl:
     post_revision_text: "Eigendom overgezet"
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Dit bericht is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
+      one: "Dit bericht is na het bereiken van de maximumlimiet van %{count} antwoord automatisch gesloten."
       other: "Dit bericht is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
     autoclosed_topic_max_posts:
-      one: "Dit topic is na het bereiken van de maximumlimiet van 1 antwoord automatisch gesloten."
+      one: "Dit topic is na het bereiken van de maximumlimiet van %{count} antwoord automatisch gesloten."
       other: "Dit topic is na het bereiken van de maximumlimiet van %{count} antwoorden automatisch gesloten."
     autoclosed_enabled_days:
-      one: "Dit topic is na 1 dag automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: "Dit topic is na %{count} dag automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is na %{count} dagen automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_hours:
-      one: "Dit topic is na 1 uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: "Dit topic is na %{count} uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is na %{count} uur automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_minutes:
-      one: "Dit topic is na 1 minuut automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: "Dit topic is na %{count} minuut automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is na %{count} minuten automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_lastpost_days:
-      one: "Dit topic is 1 dag na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: "Dit topic is %{count} dag na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is %{count} dagen na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_lastpost_hours:
-      one: "Dit topic is 1 uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: "Dit topic is %{count} uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is %{count} uur na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_enabled_lastpost_minutes:
-      one: "Dit topic is 1 minuut na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
+      one: "Dit topic is %{count} minuut na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
       other: "Dit topic is %{count} minuten na het laatste antwoord automatisch gesloten. Nieuwe antwoorden zijn niet meer toegestaan."
     autoclosed_disabled_days:
-      one: "Dit topic is na 1 dag automatisch geopend."
+      one: "Dit topic is na %{count} dag automatisch geopend."
       other: "Dit topic is na %{count} dagen automatisch geopend."
     autoclosed_disabled_hours:
-      one: "Dit topic is na 1 uur automatisch geopend."
+      one: "Dit topic is na %{count} uur automatisch geopend."
       other: "Dit topic is na %{count} uur automatisch geopend."
     autoclosed_disabled_minutes:
-      one: "Dit topic is na 1 minuut automatisch geopend."
+      one: "Dit topic is na %{count} minuut automatisch geopend."
       other: "Dit topic is na %{count} minuten automatisch geopend."
     autoclosed_disabled_lastpost_days:
-      one: "Dit topic is 1 dag na het laatste antwoord automatisch geopend."
+      one: "Dit topic is %{count} dag na het laatste antwoord automatisch geopend."
       other: "Dit topic is %{count} dagen na het laatste antwoord automatisch geopend."
     autoclosed_disabled_lastpost_hours:
-      one: "Dit topic is 1 uur na het laatste antwoord automatisch geopend."
+      one: "Dit topic is %{count} uur na het laatste antwoord automatisch geopend."
       other: "Dit topic is %{count} uur na het laatste antwoord automatisch geopend."
     autoclosed_disabled_lastpost_minutes:
-      one: "Dit topic is 1 minuut na het laatste antwoord automatisch geopend."
+      one: "Dit topic is %{count} minuut na het laatste antwoord automatisch geopend."
       other: "Dit topic is %{count} minuten na het laatste antwoord automatisch geopend."
     autoclosed_disabled: "Dit topic is nu geopend. Nieuwe antwoorden zijn toegestaan."
     autoclosed_disabled_lastpost: "Dit topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
@@ -1982,7 +1982,7 @@ nl:
       inactive_user: "Inactieve gebruiker"
   reviewables_reminder:
     subject_template:
-      one: "1 item moet worden beoordeeld"
+      one: "%{count} item moet worden beoordeeld"
       other: "%{count} items moeten beoordeeld worden"
   unsubscribe_mailer:
     title: "Mailer Uitschrijven"
@@ -2162,7 +2162,7 @@ nl:
         U kunt nu weer nieuwe antwoorden en topics aanmaken. Bedankt voor uw geduld.
     pending_users_reminder:
       subject_template:
-        one: "1 gebruiker wacht op goedkeuring"
+        one: "%{count} gebruiker wacht op goedkeuring"
         other: "%{count} gebruikers wachten op goedkeuring"
     download_remote_images_disabled:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"

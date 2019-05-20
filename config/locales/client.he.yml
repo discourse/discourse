@@ -526,7 +526,7 @@ he:
       posts_read: "נקראו"
       posts_read_long: "פוסטים שנקראו"
       total_rows:
-        one: "משתמש/ת 1"
+        one: "משתמש/ת %{count}"
         two: "%{count} משתמשים"
         many: "%{count} משתמשים"
         other: "%{count} משתמשים"
@@ -1638,7 +1638,7 @@ he:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} ו1 נוסף</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} ו%{count} נוסף</span> {{description}}"
         two: "<span>{{username}}, {{username2}} ו{{count}} נוספים</span> {{description}}"
         many: "<span>{{username}}, {{username2}} ו{{count}} נוספים</span> {{description}}"
         other: "<span>{{username}}, {{username2}} ו{{count}} נוספים </span>{{description}}"
@@ -1858,7 +1858,7 @@ he:
         many: "{{count}} נושאים חדשים"
         other: "{{count}} נושאים חדשים"
       unread_topics:
-        one: "1 שלא נקרא"
+        one: "%{count} שלא נקרא"
         two: "{{count}} נושאים שלא נקראו"
         many: "{{count}} נושאים שלא נקראו"
         other: "{{count}} נושאים שלא נקראו"
@@ -2077,7 +2077,7 @@ he:
         pin_validation: "דרוש תאריך על מנת לנעוץ את הנושא."
         not_pinned: "אין נושאים שננעצו בקטגוריה  {{categoryLink}}."
         already_pinned:
-          one: "נושא שננעצו, נכון לעכשיו בקטגוריה  {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "נושא שננעצו, נכון לעכשיו בקטגוריה  {{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           two: "נושאים ננעצו, נכון לעכשיו, בקטגוריה  {{categoryLink}}.: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "נושאים ננעצו, נכון לעכשיו, בקטגוריה  {{categoryLink}}.: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "נושאים ננעצו, נכון לעכשיו, בקטגוריה  {{categoryLink}}.: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -2088,7 +2088,7 @@ he:
         global_pin_note: "משתמשים יכולים להסיר את הצמדת הנושא באופן עצמאי לעצמם."
         not_pinned_globally: "אין נושאים נעוצים גלובאלית."
         already_pinned_globally:
-          one: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>1</strong>"
+          one: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>%{count}</strong>"
           two: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>{{count}}</strong>"
           many: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>{{count}}</strong>"
           other: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>{{count}}</strong>"
@@ -2599,7 +2599,7 @@ he:
     post_links:
       about: "הרחיבו לינקים נוספים לפוסט זה"
       title:
-        one: "עוד 1"
+        one: "עוד %{count}"
         two: "עוד %{count}"
         many: "עוד %{count}"
         other: "עוד %{count}"
@@ -2642,7 +2642,7 @@ he:
       other: "צפיות"
     replies: "תגובות"
     views_long:
-      one: "נושא זה נצפה פעם 1"
+      one: "נושא זה נצפה פעם %{count}"
       two: "נושא זה נצפה {{number}} פעמים"
       many: "נושא זה נצפה {{number}} פעמים"
       other: "נושא זה נצפה {{number}} פעמים"
@@ -2673,7 +2673,7 @@ he:
       latest:
         title: "פורסמו לאחרונה"
         title_with_count:
-          one: "האחרון (1)"
+          one: "האחרון (%{count})"
           two: "({{count}}) פורסמו לאחרונה"
           many: "({{count}}) פורסמו לאחרונה"
           other: "({{count}}) פורסמו לאחרונה"
@@ -2694,26 +2694,26 @@ he:
       unread:
         title: "לא-נקראו"
         title_with_count:
-          one: "לא נקרא (1)"
+          one: "לא נקרא (%{count})"
           two: "לא-נקראו ({{count}})"
           many: "לא-נקראו ({{count}})"
           other: "לא-נקראו ({{count}})"
         help: "נושאים שאתם כרגע צופים או עוקבים אחריהם עם פוסטים שלא נקראו"
         lower_title_with_count:
-          one: "לא נקרא (1)"
+          one: "לא נקרא (%{count})"
           two: "לא-נקראו {{count}} "
           many: "לא-נקראו {{count}} "
           other: "לא-נקראו {{count}} "
       new:
         lower_title_with_count:
-          one: "חדש (1)"
+          one: "חדש (%{count})"
           two: "{{count}} חדשים"
           many: "{{count}} חדשים"
           other: "{{count}} חדשים"
         lower_title: "חדש"
         title: "חדש"
         title_with_count:
-          one: "חדש (1)"
+          one: "חדש (%{count})"
           two: "חדשים ({{count}})"
           many: "חדשים ({{count}})"
           other: "חדשים ({{count}})"
@@ -2727,7 +2727,7 @@ he:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           two: "{{categoryName}} ({{count}})"
           many: "{{categoryName}} ({{count}})"
           other: "{{categoryName}} ({{count}})"
@@ -2836,12 +2836,12 @@ he:
       allow_title: "אתם יכולים להשתמש בעיטור זה ככותרת"
       multiple_grant: "אתם יכולים לזכות בזאת מספר פעמים"
       badge_count:
-        one: "1 עיטורים"
+        one: "%{count} עיטורים"
         two: "%{count} עיטורים"
         many: "%{count} עיטורים"
         other: "%{count} עיטורים"
       more_badges:
-        one: "+1 נוסף"
+        one: "+%{count} נוסף"
         two: "+%{count} נוספים"
         many: "+%{count} נוספים"
         other: "+%{count} נוספים"
@@ -3452,7 +3452,7 @@ he:
           theme_translations: "תרגום של ערכות עיצוב"
           empty: "אין פריטים"
           commits_behind:
-            one: "התמה נמצאת קומיט 1 מאחור!"
+            one: "התמה נמצאת קומיט %{count} מאחור!"
             two: "התמה נמצאת {{count}} קומיטים מאחור!"
             many: "התמה נמצאת {{count}} קומיטים מאחור!"
             other: "התמה נמצאת {{count}} קומיטים מאחור!"
@@ -3759,7 +3759,7 @@ he:
         clear_filter: "ניקוי"
         show_words: "הצגת מילים"
         word_count:
-          one: "מילה 1"
+          one: "מילה %{count}"
           two: "%{count} מילים"
           many: "%{count} מילים"
           other: "%{count} מילים"

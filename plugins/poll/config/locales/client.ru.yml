@@ -22,17 +22,17 @@ ru:
       multiple:
         help:
           at_least_min_options:
-            one: "Выберите хотя бы <strong>1</strong> вариант ответа"
+            one: "Выберите хотя бы <strong>%{count}</strong> вариант ответа"
             few: "Выберите хотя бы <strong>%{count}</strong> варианта ответов"
             many: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
             other: "Выберите хотя бы <strong>%{count}</strong> вариантов ответов"
           up_to_max_options:
-            one: "Выберите не более <strong>1</strong> варианта ответа"
+            one: "Выберите не более <strong>%{count}</strong> варианта ответа"
             few: "Выберите не более <strong>%{count}</strong> вариантов ответов"
             many: "Выберите не более <strong>%{count}</strong> вариантов ответов"
             other: "Выберите не более <strong>%{count}</strong> вариантов ответов"
           x_options:
-            one: "Выберите <strong>1</strong> вариант ответа"
+            one: "Выберите <strong>%{count}</strong> вариант ответа"
             few: "Выберите <strong>%{count}</strong> варианта ответотв"
             many: "Выберите <strong>%{count}</strong> вариантов ответов"
             other: "Выберите <strong>%{count}</strong> вариантов ответов"

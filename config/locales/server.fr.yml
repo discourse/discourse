@@ -134,19 +134,19 @@ fr:
         one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
         many: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
       too_long:
-        one: est trop long (le maximum est de 1 caractère)
+        one: est trop long (le maximum est de %{count} caractère)
         other: est trop long (le maximum est de %{count} caractères)
       too_short:
-        one: est trop court (le minimum est de 1 caractère)
+        one: est trop court (le minimum est de %{count} caractère)
         other: est trop court (le minimum est de %{count} caractères)
       wrong_length:
-        one: c'est la mauvaise longueur (devrait être de 1 caractère)
+        one: c'est la mauvaise longueur (devrait être de %{count} caractère)
         other: est de la mauvaise longueur (devrait être de %{count} caractères)
       other_than: "doit être différent de %{count}"
     template:
       body: "Des problèmes ont été rencontrés sur les champs suivants : "
       header:
-        one: Une erreur empêche ce %{model} d'être sauvegardé
+        one: "Une erreur empêche ce %{model} d'être sauvegardé"
         other: "%{count} erreurs empêchent ce %{model} d'être sauvegardé"
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
@@ -203,7 +203,7 @@ fr:
   reading_time: "Temps de lecture"
   likes: "J'aime"
   too_many_replies:
-    one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à 1 réponse par sujet."
+    one: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponse par sujet."
     other: "Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{count} réponses par sujet."
   max_consecutive_replies:
     one: "Aucun message supplémentaire est possible. Veuillez modifier votre réponse précédente, ou attendre que quelqu'un vous réponde."
@@ -217,7 +217,7 @@ fr:
     no_hosts: "Aucun hôte n'a été configuré pour l'intégration."
     configure: "Configurer l'intégration"
     more_replies:
-      one: "1 réponse supplémentaire"
+      one: "%{count} réponse supplémentaire"
       other: "%{count} réponses supplémentaires"
     loading: "Chargement de la discussion…"
     permalink: "Lien permanent"
@@ -324,7 +324,7 @@ fr:
       handle: "Gérer demande d'adhésion"
   education:
     until_posts:
-      one: "1 message"
+      one: "%{count} message"
       other: "%{count} messages"
     "new-topic": |2
 
@@ -516,7 +516,7 @@ fr:
       uncategorized: "Cette catégorie est spéciale. Elle sert de zone d'attente pour les sujets qui n'ont pas de catégorie ; elle ne peut pas être supprimée."
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
       topic_exists:
-        one: "Vous ne pouvez pas supprimer cette catégorie car elle contient 1 sujet. Le plus vieux sujet est %{topic_link}."
+        one: "Vous ne pouvez pas supprimer cette catégorie car elle contient %{count} sujet. Le plus vieux sujet est %{topic_link}."
         other: "Vous ne pouvez pas supprimer cette catégorie car elle contient %{count} sujets. Le plus vieux sujet est %{topic_link}."
       topic_exists_no_oldest: "Vous ne pouvez pas supprimer cette catégorie car le nombre de sujet est de %{count}."
     uncategorized_description: "Sujets qui n'ont pas besoin d'une catégorie ou qui ne correspondent à aucune catégorie existante."
@@ -554,50 +554,50 @@ fr:
       unsubscribe_via_email: "Vous avez atteint le nombre maximum de désinscriptions par courriel. Merci de patienter %{time_left} avant d'essayer à nouveau."
       topic_invitations_per_day: "Vous avez atteint le nombre maximum d'invitations dans un sujet. Merci de patienter %{time_left} avant d'essayer à nouveau."
     hours:
-      one: "1 heure"
+      one: "%{count} heure"
       other: "%{count} heures"
     minutes:
-      one: "1 minute"
+      one: "%{count} minute"
       other: "%{count} minutes"
     seconds:
-      one: "1 seconde"
+      one: "%{count} seconde"
       other: "%{count} secondes"
     short_time: "quelques secondes"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       x_minutes:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}h"
       x_days:
-        one: "1j"
+        one: "%{count}j"
         other: "%{count}j"
       about_x_months:
-        one: "1 mois "
+        one: "%{count} mois "
         other: "%{count} mois"
       x_months:
-        one: "1 mois"
+        one: "%{count} mois"
         other: "%{count} mois"
       about_x_years:
-        one: "1 an"
+        one: "%{count} an"
         other: "%{count} ans"
       over_x_years:
-        one: "> 1 an"
+        one: "> %{count} an"
         other: "> %{count} ans"
       almost_x_years:
-        one: "1 an"
+        one: "%{count} an"
         other: "%{count} ans"
     distance_in_words_verbose:
       half_a_minute: "à l'instant"
@@ -611,10 +611,10 @@ fr:
         one: "il y a moins d'une minute"
         other: "il y a moins de %{count} minutes"
       x_minutes:
-        one: "il y a 1 minute"
+        one: "il y a %{count} minute"
         other: "il y a %{count} minutes"
       about_x_hours:
-        one: "il y a 1 heure"
+        one: "il y a %{count} heure"
         other: "il y a %{count} heures"
       x_days:
         one: "il y a un jour"
@@ -1831,10 +1831,10 @@ fr:
     post_revision_text: "Propriété transférée"
   topic_statuses:
     autoclosed_message_max_posts:
-      one: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse."
+      one: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponse."
       other: "Ce message a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses."
     autoclosed_topic_max_posts:
-      one: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de 1 réponse."
+      one: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponse."
       other: "Ce sujet a été automatiquement fermé après avoir atteint la limite maximum de %{count} réponses."
     autoclosed_enabled_days:
       one: "Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant."
@@ -1849,28 +1849,28 @@ fr:
       one: "Cette discussion a été automatiquement fermée après un jour. Aucune réponse n'est permise dorénavant."
       other: "Ce sujet a été automatiquement fermé après %{count} jours. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_lastpost_hours:
-      one: "Cette discussion a été automatiquement fermée après 1 heure suivant le dernier commentaire. Aucune réponse n'est permise dorénavant."
+      one: "Cette discussion a été automatiquement fermée après %{count} heure suivant le dernier commentaire. Aucune réponse n'est permise dorénavant."
       other: "Ce sujet a été automatiquement fermé après %{count} heures suivant le dernier commentaire. Aucune réponse n'est permise dorénavant."
     autoclosed_enabled_lastpost_minutes:
       one: "Cette discussion a été automatiquement fermée une minute après le dernier message. Aucune réponse n'est permise dorénavant."
       other: "Ce sujet a été automatiquement fermé %{count} minutes après le dernier message. Aucune réponse n'est permise dorénavant."
     autoclosed_disabled_days:
-      one: "Ce sujet a été automatiquement ouvert après 1 jour."
+      one: "Ce sujet a été automatiquement ouvert après %{count} jour."
       other: "Ce sujet a été automatiquement ouvert après %{count} jours."
     autoclosed_disabled_hours:
-      one: "Ce sujet a été automatiquement ouvert après 1 heure."
+      one: "Ce sujet a été automatiquement ouvert après %{count} heure."
       other: "Ce sujet a été automatiquement ouvert après %{count} heures."
     autoclosed_disabled_minutes:
-      one: "Ce sujet a été automatiquement ouvert après 1 minute."
+      one: "Ce sujet a été automatiquement ouvert après %{count} minute."
       other: "Ce sujet a été automatiquement ouvert après %{count} minutes."
     autoclosed_disabled_lastpost_days:
-      one: "Ce sujet a été automatiquement ouvert 1 jour après la dernière réponse."
+      one: "Ce sujet a été automatiquement ouvert %{count} jour après la dernière réponse."
       other: "Ce sujet a été automatiquement ouvert %{count} jours après la dernière réponse."
     autoclosed_disabled_lastpost_hours:
-      one: "Ce sujet a été automatiquement ouvert 1 heure après la dernière réponse."
+      one: "Ce sujet a été automatiquement ouvert %{count} heure après la dernière réponse."
       other: "Ce sujet a été automatiquement ouvert %{count} heures après la dernière réponse."
     autoclosed_disabled_lastpost_minutes:
-      one: "Ce sujet a été automatiquement ouvert 1 minute après la dernière réponse."
+      one: "Ce sujet a été automatiquement ouvert %{count} minute après la dernière réponse."
       other: "Ce sujet a été automatiquement ouvert %{count} minutes après la dernière réponse."
     autoclosed_disabled: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
     autoclosed_disabled_lastpost: "Ce sujet est maintenant ouvert. Vous pouvez y participer."
@@ -2163,7 +2163,7 @@ fr:
     ignored: "Merci de nous en informer. Nous travaillons à sa résolution."
     ignored_and_deleted: "Merci de nous en informer. Nous avons supprimé le message."
   temporarily_closed_due_to_flags:
-    one: "This topic is temporarily closed for at least 1 hour due to a large number of community flags."
+    one: "This topic is temporarily closed for at least %{count} hour due to a large number of community flags."
     other: "Ce sujet est fermé pour au moins 1 heure suite à plusieurs signalements de la communauté."
   system_messages:
     private_topic_title: "Topic #%{id}"
@@ -2649,7 +2649,7 @@ fr:
     pending_users_reminder:
       title: "Rappel d'utilisateurs en attente"
       subject_template:
-        one: "1 utilisateur en attente d'approbation"
+        one: "%{count} utilisateur en attente d'approbation"
         other: "%{count} utilisateurs en attente d'approbation"
     download_remote_images_disabled:
       title: "Téléchargement d'images distantes désactivé"
@@ -2674,7 +2674,7 @@ fr:
     queued_posts_reminder:
       title: "Messages dans la file d'attente"
       subject_template:
-        one: "1 message en attente de modération"
+        one: "%{count} message en attente de modération"
         other: "%{count} messages en attention de modération"
   unsubscribe_link: |2
 
@@ -2693,7 +2693,7 @@ fr:
   user_notifications:
     previous_discussion: "Réponses précédentes"
     reached_limit:
-      one: "Rappel : nous envoyons un maximum de 1 courriel quotidien. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
+      one: "Rappel : nous envoyons un maximum de %{count} courriel quotidien. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
       other: "Rappel : nous envoyons un maximum de %{count} courriels quotidiens. Vérifiez le site pour voir lesquels pourraient être retenus. P.S. : merci d'être populaire !"
     in_reply_to: "En réponse à"
     unsubscribe:

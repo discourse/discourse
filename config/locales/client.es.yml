@@ -43,61 +43,61 @@ es:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1 mes"
+          one: "%{count} mes"
           other: "%{count}meses"
         about_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         over_x_years:
-          one: "> 1a"
+          one: "> %{count}a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         date_month: "D MMM"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 minuto"
+          one: "%{count} minuto"
           other: "%{count} mins"
         x_hours:
-          one: "1 hora"
+          one: "%{count} hora"
           other: "%{count} horas"
         x_days:
-          one: "1 día"
+          one: "%{count} día"
           other: "%{count} días"
         date_year: "D MMM, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "hace 1 minuto"
+          one: "hace %{count} minuto"
           other: "hace %{count} minutos"
         x_hours:
-          one: "hace 1 hora"
+          one: "hace %{count} hora"
           other: "hace %{count} horas"
         x_days:
-          one: "hace 1 día"
+          one: "hace %{count} día"
           other: "hace %{count} días"
       later:
         x_days:
-          one: "1 día después"
+          one: "%{count} día después"
           other: "%{count} días después"
         x_months:
           one: "%{count} mes después"
@@ -331,7 +331,7 @@ es:
       none: "No hay artículos para revisar."
       view_pending: "ver pendiente"
       topic_has_pending:
-        one: "Este tema tiene <b>1</b> publicación esperando aprobación"
+        one: "Este tema tiene <b>%{count}</b> publicación esperando aprobación"
         other: "Este tema tiene <b>{{count}}</b> publicaciones pendientes de aprobación."
       title: "Revisión"
       topic: "Tema:"
@@ -366,10 +366,10 @@ es:
         original: "(tema original)"
         details: "detalles"
         unique_users:
-          one: "1 usuario"
+          one: "%{count} usuario"
           other: "{{count}} usuarios"
       replies:
-        one: "1 respuest"
+        one: "%{count} respuest"
         other: "{{count}} respuestas"
       edit: "Editar"
       save: "Guardar"
@@ -425,7 +425,7 @@ es:
         title: "La publicación necesita ser aprobada"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor se paciente."
         pending_posts:
-          one: "Tienes <strong>1</strong> publicación pendiente."
+          one: "Tienes <strong>%{count}</strong> publicación pendiente."
           other: "Tienes <strong>{{count}}</strong> publicaciones pendientes."
         ok: "OK"
     user_action:
@@ -460,7 +460,7 @@ es:
       posts_read: "Leídos"
       posts_read_long: "Publicaciones leídas"
       total_rows:
-        one: "1 usuario"
+        one: "%{count} usuario"
         other: "%{count} usuarios"
     group_histories:
       actions:
@@ -642,7 +642,7 @@ es:
       toggle_ordering: "activar orden"
       subcategories: "Subcategorías"
       topic_sentence:
-        one: "1 tema"
+        one: "%{count} tema"
         other: "%{count} temas"
       topic_stat_sentence_week:
         one: "%{count} nuevo tema en la última semana."
@@ -1165,7 +1165,7 @@ es:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
       rate:
-        one: "1 error/%{duration}"
+        one: "%{count} error/%{duration}"
         other: "%{count} errores/%{duration}"
     learn_more: "saber más..."
     all_time: "total"
@@ -1398,7 +1398,7 @@ es:
       edit_conflict: "conflicto de edición"
       group_mentioned_limit: "<b>¡Advertencia!</b> Has mencionado <a href='{{group_link}}'>{{group}}</a>, sin embargo este grupo tiene más miembros que el límite máximo de {{max}} usuarios configurado por el administrador para hacer menciones. Nadie será notificado. "
       group_mentioned:
-        one: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>1 persona</a> – ¿seguro que quieres hacerlo?"
+        one: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>%{count} persona</a> – ¿seguro que quieres hacerlo?"
         other: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>{{count}} personas</a> – ¿seguro que quieres hacerlo?"
       cannot_see_mention:
         category: "Mencionaste a {{username}} pero no será notificado porque no tiene acceso a esta categoría. Necesitarás añadirlo a un grupo para que tenga acceso a esta categoría."
@@ -1508,10 +1508,10 @@ es:
     notifications:
       tooltip:
         regular:
-          one: "1 notificación sin leer"
+          one: "%{count} notificación sin leer"
           other: "{{count}} notificaciones no leídas"
         message:
-          one: "1 mensaje sin leer"
+          one: "%{count} mensaje sin leer"
           other: "{{count}} mensajes sin leer"
       title: "notificaciones por menciones a tu @nombre, respuestas a tus posts y temas, mensajes, etc"
       none: "No se han podido cargar las notificaciones."
@@ -1528,7 +1528,7 @@ es:
       liked: "<span>{{username}}</span> {{description}}"
       liked_2: "<span>{{username}}, {{username2}}</span> {{description}}"
       liked_many:
-        one: "<span>{{username}}, {{username2}} and 1 mas</span> {{description}}"
+        one: "<span>{{username}}, {{username2}} and %{count} mas</span> {{description}}"
         other: "<span>{{username}}, {{username2}} y otros {{count}} </span> {{description}}"
       liked_consolidated_description:
         one: "le ha dado me gusta a {{count}} de tus mensajes"
@@ -1584,7 +1584,7 @@ es:
       clear_all: "Limpiar todo"
       too_short: "El término de búsqueda es demasiado corto."
       result_count:
-        one: "<span>1 resultado para</span><span class='term'>{{term}}</span>"
+        one: "<span>%{count} resultado para</span><span class='term'>{{term}}</span>"
         other: "<span>{{count}}{{plus}} resultados para </span><span class='term'>{{term}}</span>"
       title: "buscar temas, posts, usuarios o categorías"
       full_page_title: "buscar temas o posts"
@@ -1676,7 +1676,7 @@ es:
         notification_level: "Notificaciones"
         choose_new_category: "Elige una nueva categoría para los temas:"
         selected:
-          one: "Has seleccionado <b>1</b> tema."
+          one: "Has seleccionado <b>%{count}</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
         change_tags: "Cambiar etiquetas"
         append_tags: "Agregar etiquetas"
@@ -1710,7 +1710,7 @@ es:
         search: "No hay más resultados de búsqueda."
     topic:
       filter_to:
-        one: "1 post en el tema"
+        one: "%{count} post en el tema"
         other: "{{count}} posts en el tema"
       create: "Crear tema"
       create_long: "Crear un nuevo tema"
@@ -1729,10 +1729,10 @@ es:
       new: "nuevo tema"
       unread: "sin leer"
       new_topics:
-        one: "1 tema nuevo"
+        one: "%{count} tema nuevo"
         other: "{{count}} temas nuevos"
       unread_topics:
-        one: "1 tema sin leer"
+        one: "%{count} tema sin leer"
         other: "{{count}} temas sin leer"
       title: "Tema"
       invalid_access:
@@ -1746,16 +1746,16 @@ es:
         title: "Tema no encontrado"
         description: "Lo sentimos, no pudimos encontrar ese tema. ¿Tal vez fue eliminado por un moderador?"
       total_unread_posts:
-        one: "tienes 1 publicación sin leer en este tema"
+        one: "tienes %{count} publicación sin leer en este tema"
         other: "tienes {{count}} publicaciones sin leer en este tema"
       unread_posts:
-        one: "tienes 1 post antiguo sin leer en este tema"
+        one: "tienes %{count} post antiguo sin leer en este tema"
         other: "tienes {{count}} posts antiguos sin leer en este tema"
       new_posts:
-        one: "hay 1 nuevo post en este tema desde la última vez que lo leíste"
+        one: "hay %{count} nuevo post en este tema desde la última vez que lo leíste"
         other: "hay {{count}} posts nuevos en este tema desde la última vez que lo leíste"
       likes:
-        one: "este tema le gusta a 1 persona"
+        one: "este tema le gusta a %{count} persona"
         other: "este tema les gusta a {{count}} personas"
       back_to_list: "Volver a la Lista de Temas"
       options: "Opciones del Tema"
@@ -1826,7 +1826,7 @@ es:
         auto_reminder: "Te recordaremos sobre este tema %{timeLeft}."
       auto_close_title: "Configuración de auto-cerrado"
       auto_close_immediate:
-        one: "El último post se publicó hace 1 hora, por lo que el tema se cerrará inmediatamente."
+        one: "El último post se publicó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
         other: "El último post se publicó hace %{count} horas, por lo que el tema se cerrará inmediatamente."
       timeline:
         back: "Volver"
@@ -1948,7 +1948,7 @@ es:
         global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
         not_pinned_globally: "No hay temas destacados globalmente."
         already_pinned_globally:
-          one: "Actualmente hay <strong class='badge badge-notification unread'>1</strong> tema destacado globalmente."
+          one: "Actualmente hay <strong class='badge badge-notification unread'>%{count}</strong> tema destacado globalmente."
           other: "Temas destacados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Hacer de este tema una pancarta que aparece en la parte superior de todas las páginas."
         remove_banner: "Retire la pancarta que aparece en la parte superior de todas las páginas."
@@ -1986,7 +1986,7 @@ es:
       login_reply: "Inicia Sesión para Responder"
       filters:
         n_posts:
-          one: "1 post"
+          one: "%{count} post"
           other: "{{count}} posts"
         cancel: "Quitar filtro"
       move_to:
@@ -2065,7 +2065,7 @@ es:
         select_all: seleccionar todo
         deselect_all: deshacer selección
         description:
-          one: Has seleccionado <b>1</b> post.
+          one: Has seleccionado <b>%{count}</b> post.
           other: "Has seleccionado <b>{{count}}</b> posts."
       deleted_by_author:
         one: "(tema retirado por su autor, se borrará automáticamente en %{count} hora,  salvo que sea reportado)"
@@ -2090,7 +2090,7 @@ es:
       expand_collapse: "expandir/contraer"
       locked: "un miembro del personal ha bloqueado esta publicación para que no se edite"
       gap:
-        one: "ver 1 post oculto"
+        one: "ver %{count} post oculto"
         other: "ver {{count}} posts ocultos"
       notice:
         new_user: "Esta es la primera vez que {{user}} ha publicado — ¡démosle la bienvenida a nuestra comunidad!"
@@ -2100,7 +2100,7 @@ es:
         one: "{{count}} Respuesta"
         other: "{{count}} Respuestas"
       has_likes_title:
-        one: "1 persona le ha dado Me gusta a este post"
+        one: "%{count} persona le ha dado Me gusta a este post"
         other: "{{count}} personas le han dado Me gusta a este post"
       has_likes_title_only_you: "te ha gustado este mensaje"
       has_likes_title_you:
@@ -2145,10 +2145,10 @@ es:
         delete_replies:
           confirm: "¿Quieres eliminar también las respuestas a este post?"
           direct_replies:
-            one: "Si, y 1 respuesta directa"
+            one: "Si, y %{count} respuesta directa"
             other: "Si, y {{count}} respuestas directas"
           all_replies:
-            one: "Sí, y 1 respuesta"
+            one: "Sí, y %{count} respuesta"
             other: "Sí, y todas las {{count}} respuestas"
           just_the_post: "No, solo este post"
         admin: "acciones de administrador para el post"
@@ -2391,10 +2391,10 @@ es:
           one: "introduce al menos un carácter"
           other: "introduce al menos {{count}} caracteres"
         more:
-          one: "1 más..."
+          one: "%{count} más..."
           other: "{{count}} más..."
         left:
-          one: "1 restante"
+          one: "%{count} restante"
           other: "{{count}} restantes"
     flagging_topic:
       title: "¡Gracias por ayudar a mantener una comunidad civilizada!"
@@ -2406,12 +2406,12 @@ es:
       links_title: "Enlaces populares"
       links_shown: "mostrar más enlaces..."
       clicks:
-        one: "1 clic"
+        one: "%{count} clic"
         other: "%{count} clics"
     post_links:
       about: "expandir los demás enlaces de este post"
       title:
-        one: "1 más"
+        one: "%{count} más"
         other: "%{count} más"
     topic_statuses:
       warning:
@@ -2450,7 +2450,7 @@ es:
       other: "visitas"
     replies: "Respuestas"
     views_long:
-      one: "este tema se ha visto 1 vez"
+      one: "este tema se ha visto %{count} vez"
       other: "este tema se ha visto {{number}} veces"
     activity: "Actividad"
     likes: "Likes"
@@ -2475,7 +2475,7 @@ es:
       latest:
         title: "Recientes"
         title_with_count:
-          one: "Reciente (1)"
+          one: "Reciente (%{count})"
           other: "Recientes ({{count}})"
         help: "temas con posts recientes"
       hot:
@@ -2494,7 +2494,7 @@ es:
       unread:
         title: "Sin leer"
         title_with_count:
-          one: "Sin leer (1)"
+          one: "Sin leer (%{count})"
           other: "Sin leer ({{count}})"
         help: "temas que estás vigilando o siguiendo actualmente con posts no leídos"
         lower_title_with_count:
@@ -2502,7 +2502,7 @@ es:
           other: "{{count}} sin leer"
       new:
         lower_title_with_count:
-          one: "1 tema nuevo"
+          one: "%{count} tema nuevo"
           other: "{{count}} temas nuevos"
         lower_title: "nuevo"
         title: "Nuevo"
@@ -2519,7 +2519,7 @@ es:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "temas recientes en la categoría {{categoryName}}"
       top:
@@ -2616,7 +2616,7 @@ es:
         print: "<b>ctrl</b>+<b>p</b> Imprimir tema"
     badges:
       earned_n_times:
-        one: "Ganó esta medalla 1 vez"
+        one: "Ganó esta medalla %{count} vez"
         other: "Ganó esta medalla %{count} veces"
       granted_on: "Concedido hace: %{date}"
       others_count: "Otras personas con esta medalla (%{count})"
@@ -2624,13 +2624,13 @@ es:
       allow_title: "Puedes usar esta medalla como título"
       multiple_grant: "Puedes ganar esto varias veces"
       badge_count:
-        one: "1 medalla"
+        one: "%{count} medalla"
         other: "%{count} medallas"
       more_badges:
-        one: "+1 Más"
+        one: "+%{count} Más"
         other: "+%{count} Más"
       granted:
-        one: "1 concedido"
+        one: "%{count} concedido"
         other: "%{count} concedidos"
       select_badge_for_title: Seleccionar una distinción para utilizar como tu título
       none: "(ninguna)"
@@ -2665,7 +2665,7 @@ es:
       choose_for_topic: "etiquetas opcionales"
       delete_tag: "Eliminar etiqueta"
       delete_confirm:
-        one: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de 1 tema asignado?"
+        one: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de %{count} tema asignado?"
         other: "¿Estás seguro de querer borrar esta etiqueta y eliminarla de {{count}} temas asignados?"
       delete_confirm_no_topics: "¿Estás seguro de querer borrar esta etiqueta?"
       rename_tag: "Renombrar etiqueta"
@@ -2994,7 +2994,7 @@ es:
             one: "Hay un nuevo evento."
             other: "Hay {{count}} nuevos eventos."
           completed_in:
-            one: "Completado en 1 segundo."
+            one: "Completado en %{count} segundo."
             other: "Completado en {{count}} segundos."
           request: "Petición"
           response: "Respuesta"
@@ -3222,7 +3222,7 @@ es:
           theme_translations: "Traducciones del tema"
           empty: "Sin items"
           commits_behind:
-            one: "¡El tema está 1 commit detrás!"
+            one: "¡El tema está %{count} commit detrás!"
             other: "¡El tema está {{count}} commits detrás!"
           compare_commits: "(Ver nuevos commits)"
           repo_unreachable: "No se ha podido contactar con el repositorio Git de este tema. Mensaje de error:"
@@ -3527,7 +3527,7 @@ es:
         clear_filter: "Limpiar"
         show_words: "mostrar palabras"
         word_count:
-          one: "1 palabra"
+          one: "%{count} palabra"
           other: "%{count} palabras"
         actions:
           block: "Bloquear"
@@ -3681,7 +3681,7 @@ es:
           one: "No se pueden eliminar todos los posts. Algunos tienen más de %{count} día de antigüedad. (Ver la opción delete_user_max_post_age )"
           other: "No se pueden eliminar todos los posts. Algunos tienen más de %{count} días de antigüedad. (Ver la opción delete_user_max_post_age )"
         cant_delete_all_too_many_posts:
-          one: "No se pueden eliminar todos los posts porque el usuario tiene más de 1 post. (Ver la opción delete_all_posts_max)"
+          one: "No se pueden eliminar todos los posts porque el usuario tiene más de %{count} post. (Ver la opción delete_all_posts_max)"
           other: "No se pueden eliminar todos los posts porque el usuario tiene más de %{count} posts. (Ver la opción delete_all_posts_max)"
         delete_confirm: "Generalmente, es preferible anonimizar usuarios en vez de eliminarlos, para evitar quitar contenido de debates existentes.<br><br>¿Estás SEGURO de que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_and_block: "Eliminar y <b>bloquear</b> este correo y esta dirección IP"
@@ -3999,7 +3999,7 @@ es:
       upload_error: "Lo sentimos, hubo un error subiendo ese archivo. Por favor, inténtalo de nuevo."
       quit: "Tal vez más tarde"
       staff_count:
-        one: "Tu comunidad tiene 1 staff (tú). "
+        one: "Tu comunidad tiene %{count} staff (tú). "
         other: "Tu comunidad tiene %{count} staff, incluyéndote."
       invites:
         add_user: "añadir"

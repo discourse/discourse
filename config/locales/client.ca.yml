@@ -43,67 +43,67 @@ ca:
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
-          one: "< 1s"
+          one: "< %{count}s"
           other: "< %{count}s"
         x_seconds:
-          one: "1s"
+          one: "%{count}s"
           other: "%{count}s"
         less_than_x_minutes:
-          one: "< 1m"
+          one: "< %{count}m"
           other: "< %{count}m"
         x_minutes:
-          one: "1m"
+          one: "%{count}m"
           other: "%{count}m"
         about_x_hours:
-          one: "1h"
+          one: "%{count}h"
           other: "%{count}h"
         x_days:
-          one: "1d"
+          one: "%{count}d"
           other: "%{count}d"
         x_months:
-          one: "1mes"
+          one: "%{count}mes"
           other: "%{count}mes"
         about_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         over_x_years:
-          one: "> 1a"
+          one: "> %{count}a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1a"
+          one: "%{count}a"
           other: "%{count}a"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
         x_minutes:
-          one: "1 min"
+          one: "%{count} min"
           other: "%{count} mins"
         x_hours:
-          one: "1 hora"
+          one: "%{count} hora"
           other: "%{count} hores"
         x_days:
-          one: "1 dia"
+          one: "%{count} dia"
           other: "%{count} dies"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
-          one: "fa 1 min"
+          one: "fa %{count} min"
           other: "fa %{count} mins"
         x_hours:
-          one: "fa 1 hora"
+          one: "fa %{count} hora"
           other: "fa %{count} hores"
         x_days:
-          one: "fa 1 dia"
+          one: "fa %{count} dia"
           other: "fa %{count} dies"
       later:
         x_days:
-          one: "1 dia després"
+          one: "%{count} dia després"
           other: "%{count} dies després"
         x_months:
-          one: "1 mes després"
+          one: "%{count} mes després"
           other: "%{count} mesos després"
         x_years:
-          one: "1 any després"
+          one: "%{count} any després"
           other: "%{count} anys després"
       previous_month: "Mes anterior"
       next_month: "Següent mes"
@@ -340,7 +340,7 @@ ca:
       posts_read: "Llegit"
       posts_read_long: "Publicacions llegides"
       total_rows:
-        one: "1 persona usuària"
+        one: "%{count} persona usuària"
         other: "%{count} persones usuàries"
     group_histories:
       actions:
@@ -498,7 +498,7 @@ ca:
       toggle_ordering: "alterna el control de l'ordre"
       subcategories: "Subcategories"
       topic_sentence:
-        one: "1 tema"
+        one: "%{count} tema"
         other: "%{count} temes"
     ip_lookup:
       title: Explora adreça IP
@@ -907,7 +907,7 @@ ca:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha arribat al límit de configuració de %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha superat el límit de configuració de %{siteSettingRate}."
       rate:
-        one: "1 error/%{duration}"
+        one: "%{count} error/%{duration}"
         other: "%{count} errors/%{duration}"
     learn_more: "saber-ne més..."
     all_time: "total"
@@ -1141,10 +1141,10 @@ ca:
     notifications:
       tooltip:
         regular:
-          one: "1 notificació no vista"
+          one: "%{count} notificació no vista"
           other: "{{count}} notificacions no vistes"
         message:
-          one: "1 missatge per llegir"
+          one: "%{count} missatge per llegir"
           other: "{{count}}missatges per llegir"
       title: "notificacions de mencions via @nom, respostes a les teves entrades, missatges, etc"
       none: "Impossible carregar ara mateix les notificacions"
@@ -1266,7 +1266,7 @@ ca:
         notification_level: "Notificacions"
         choose_new_category: "Tria la nova categoria per als temes:"
         selected:
-          one: "Has triat <b>1</b> tema."
+          one: "Has triat <b>%{count}</b> tema."
           other: "Has triat <b>{{count}}</b> temes."
         change_tags: "Reemplaça Etiquetes"
         append_tags: "Annexa Etiquetes"
@@ -1300,7 +1300,7 @@ ca:
         search: "No hi ha més resultats de la cerca."
     topic:
       filter_to:
-        one: "1 publicació al tema"
+        one: "%{count} publicació al tema"
         other: "{{count}} publicacions al tema"
       create: "Nou tema"
       create_long: "Crea un tema nou"
@@ -1315,10 +1315,10 @@ ca:
       new: "nou tema"
       unread: "sense llegir"
       new_topics:
-        one: "1 tema nou"
+        one: "%{count} tema nou"
         other: "{{count}} temes nous "
       unread_topics:
-        one: "1 tema sense llegir"
+        one: "%{count} tema sense llegir"
         other: "{{count}} temes sense llegir"
       title: "Tema"
       invalid_access:
@@ -1332,16 +1332,16 @@ ca:
         title: "Tema no trobat"
         description: "Disculpa, no hem pogut trobar aquest tema. Que potser ha estat esborrat per una persona moderadora?"
       total_unread_posts:
-        one: "tens 1 missatge sense llegir a aquest tema"
+        one: "tens %{count} missatge sense llegir a aquest tema"
         other: "tens {{count}} missatges sense llegir a aquest tema"
       unread_posts:
-        one: "tens 1 publicació antiga sense llegir a aquest tema"
+        one: "tens %{count} publicació antiga sense llegir a aquest tema"
         other: "tens {{count}} publicacions antigues sense llegir a aquest tema"
       new_posts:
-        one: "hi ha 1 nova publicació a aquest tema des de la teva darrera lectura"
+        one: "hi ha %{count} nova publicació a aquest tema des de la teva darrera lectura"
         other: "hi ha {{count}} noves publicacions a aquest tema des de la teva darrera lectura"
       likes:
-        one: "hi ha 1 M'agrada a aquest tema"
+        one: "hi ha %{count} M'agrada a aquest tema"
         other: "hi ha {{count}} m'agrades en aquest tema"
       back_to_list: "Torna al llistat de temes"
       options: "Opcions de tema"
@@ -1371,7 +1371,7 @@ ca:
         auto_close_based_on_last_post: "Aquest tema es tancarà %{duration} després de la darrera resposta."
       auto_close_title: "Configuració del tancament automàtic"
       auto_close_immediate:
-        one: "La darrera publicació al tema ja té 1 hora, per això el tema es tancarà immediatament."
+        one: "La darrera publicació al tema ja té %{count} hora, per això el tema es tancarà immediatament."
         other: "La darrera publicació al tema ja té %{count} hores, per això el tema es tancarà immediatament."
       timeline:
         back: "Enrere"
@@ -1478,7 +1478,7 @@ ca:
         pin_validation: "Cal una data per clavar aquest tema."
         not_pinned: "No hi ha temes clavats a {{categoryLink}}."
         already_pinned:
-          one: "Temes clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Temes clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temes clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Fes que aquest tema aparegui al començament de tots fins "
         confirm_pin_globally: "Ja has arribat globalment a {{count}} temes clavats. Massa temes clavats poden carregar les persones usuàries noves o anònimes. Segur que vols clavar un altre tema globalment?"
@@ -1487,7 +1487,7 @@ ca:
         global_pin_note: "Individualment, les mateixes persones usuàries poden desclavar el tema."
         not_pinned_globally: "No hi ha temes clavats globalment."
         already_pinned_globally:
-          one: "Temes globalment clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Temes globalment clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Temes globalment clavats a hores d'ara{{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
         make_banner: "Fes que aquest tema aparegui emmarcat al començament de totes les pàgines."
         remove_banner: "Eiimina el marc que apareix al començament de totes les pàgines."
@@ -1524,7 +1524,7 @@ ca:
       login_reply: "Identifica't per respondre"
       filters:
         n_posts:
-          one: "1 publicació"
+          one: "%{count} publicació"
           other: "{{count}} publicacions"
         cancel: "Filtre remot"
       split_topic:
@@ -1569,7 +1569,7 @@ ca:
         select_all: selecciona-ho tot
         deselect_all: desmarca-ho tot
         description:
-          one: Has seleccionat <b>1</b> publicació
+          one: Has seleccionat <b>%{count}</b> publicació
           other: "Has seleccionat <b>{{count}}</b> publicacions."
     post:
       quote_reply: "Cita"
@@ -1583,22 +1583,22 @@ ca:
       follow_quote: "vés a la publicació citada"
       show_full: "Mostra la publicació sencera"
       deleted_by_author:
-        one: "(publicació retirada per la persona autora, s'esborrarà automàticament en 1 hora, si no és marcada amb bandera)"
+        one: "(publicació retirada per la persona autora, s'esborrarà automàticament en %{count} hora, si no és marcada amb bandera)"
         other: "(publicació retirada per la persona autora, s'esborrarà automàticament en %{count} hores, si no és marcada amb bandera)"
       expand_collapse: "eixampla/contrau"
       gap:
-        one: "mira 1 resposta amagada"
+        one: "mira %{count} resposta amagada"
         other: "mira {{count}} respostes amagades"
       unread: "Publicació no llegida"
       has_replies:
         one: "{{count}} Resposta"
         other: "{{count}} Respostes"
       has_likes_title:
-        one: "La publicació agrada a 1 persona"
+        one: "La publicació agrada a %{count} persona"
         other: "La publicació agrada a {{count}} persones"
       has_likes_title_only_you: "t'ha agradat aquesta publicació"
       has_likes_title_you:
-        one: "La publicació t'agrada a tu i a 1 persona"
+        one: "La publicació t'agrada a tu i a %{count} persona"
         other: "La publicació t'agrada a tu i a {{count}} persones"
       errors:
         create: "Disculpa, s'ha produït una errada en crear la teva publicació. Si us plau, torna-ho a provar."
@@ -1809,13 +1809,13 @@ ca:
       custom_placeholder_notify_moderators: "Deixa'ns saber que t'amoïna i passa'ns tants enllaços rellevants i exemples com sigui possible."
       custom_message:
         at_least:
-          one: "introdueix almenys 1 caràcter"
+          one: "introdueix almenys %{count} caràcter"
           other: "introdueix almenys {{count}} caràcters"
         more:
-          one: "1 per anar..."
+          one: "%{count} per anar..."
           other: "{{count}} per anar..."
         left:
-          one: "1 restant"
+          one: "%{count} restant"
           other: "{{count}} restants"
     flagging_topic:
       title: "Gràcies per ajudar-nos a mantenir polida la nostra comunitat!"
@@ -1827,12 +1827,12 @@ ca:
       links_title: "Enllaços populars"
       links_shown: "mostra més enllaços..."
       clicks:
-        one: "1 clic"
+        one: "%{count} clic"
         other: "%{count} clics"
     post_links:
       about: "eixampla més enllaços per a aquesta publicació"
       title:
-        one: "1 més"
+        one: "%{count} més"
         other: "%{count} més"
     topic_statuses:
       warning:
@@ -1871,7 +1871,7 @@ ca:
       other: "vistes"
     replies: "Respostes"
     views_long:
-      one: "aquest tema ha estat vist 1 cop"
+      one: "aquest tema ha estat vist %{count} cop"
       other: "aquest tema ha estat vist {{number}} cops"
     activity: "Activitat"
     likes: "Ha agradat"
@@ -1895,7 +1895,7 @@ ca:
       latest:
         title: "Darrers"
         title_with_count:
-          one: "Darrer (1)"
+          one: "Darrer (%{count})"
           other: "Darrers ({{count}})"
         help: "temes amb publicacions recents"
       hot:
@@ -1914,20 +1914,20 @@ ca:
       unread:
         title: "No llegits"
         title_with_count:
-          one: "No llegit (1)"
+          one: "No llegit (%{count})"
           other: "No llegits ({{count}})"
         help: "temes que estàs mirant o seguint amb publicacions no llegides"
         lower_title_with_count:
-          one: "1 no llegit"
+          one: "%{count} no llegit"
           other: "{{count}} no llegits"
       new:
         lower_title_with_count:
-          one: "1 nou"
+          one: "%{count} nou"
           other: "{{count}} nous"
         lower_title: "nou"
         title: "Nous"
         title_with_count:
-          one: "Nou (1)"
+          one: "Nou (%{count})"
           other: "Nous ({{count}})"
         help: "temes creats durant els darrers dies"
       posted:
@@ -1939,7 +1939,7 @@ ca:
       category:
         title: "{{categoryName}}"
         title_with_count:
-          one: "{{categoryName}} (1)"
+          one: "{{categoryName}} (%{count})"
           other: "{{categoryName}} ({{count}})"
         help: "darrers temes a la categoria {{categoryName}} "
       top:
@@ -2023,19 +2023,19 @@ ca:
         print: "<b>ctrl</b>+<b>p</b> Imprimeix tema"
     badges:
       earned_n_times:
-        one: "Ha rebut distintiu 1 cop"
+        one: "Ha rebut distintiu %{count} cop"
         other: "Ha rebut distintiu %{count} cops"
       granted_on: "Concedit %{date}"
       others_count: "Altres amb aquest distintiu (%{count})"
       title: Distintius
       badge_count:
-        one: "1 Distintiu"
+        one: "%{count} Distintiu"
         other: "%{count} Distintius"
       more_badges:
-        one: "+1 Més"
+        one: "+%{count} Més"
         other: "+%{count} Més"
       granted:
-        one: "1 concedit"
+        one: "%{count} concedit"
         other: "%{count} concedits"
       select_badge_for_title: Tria un distintiu per fer-lo servir com al teu títol
       none: "(cap)"
@@ -2294,7 +2294,7 @@ ca:
             one: "Hi ha un nou esdeveniment."
             other: "Hi ha {{count}} esdeveniments nous."
           completed_in:
-            one: "Completat en 1 segon."
+            one: "Completat en %{count} segon."
             other: "Completat en {{count}} segons."
           request: "Sol·licita"
           response: "Reacció"
@@ -2750,7 +2750,7 @@ ca:
           one: "No es poden esborrar totes les publicacions. Algunes publicacions tenen més d'%{count} dia. (La configuració delete_user_max_post_age)"
           other: "No es poden esborrar totes les publicacions. Algunes publicacions tenen més de %{count} dies. (La configuració delete_user_max_post_age)"
         cant_delete_all_too_many_posts:
-          one: "No es poden esborrar totes les publicacions perquè la persona usuària té més d'1 publicació.  (delete_all_posts_max)"
+          one: "No es poden esborrar totes les publicacions perquè la persona usuària té més d'%{count} publicació.  (delete_all_posts_max)"
           other: "No es poden esborrar totes les publicacions perquè la persona usuària té més de %{count} publicacions.  (delete_all_posts_max)"
         delete_and_block: "Esborra i <b>bloca</i> aquest correu electrònic i adreça IP"
         delete_dont_block: "Només esborra"
@@ -2961,7 +2961,7 @@ ca:
             text: "Hi ha mostres perdudes de concessions. Això passa quan la consulta de distintius retorna ID de persona usuària o de publicacions que no existeixen. Després això pot provocar resultats inesperats - si us plau, torna a revisar la teva consulta."
           no_grant_count: "No hi ha distintius per assignar."
           grant_count:
-            one: "<b>1</b> distintiu per assignar."
+            one: "<b>%{count}</b> distintiu per assignar."
             other: "<b>%{count}</b> distintius per assignar."
           sample: "Exemple:"
           grant:

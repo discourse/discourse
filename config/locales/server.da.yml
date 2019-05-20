@@ -85,19 +85,19 @@ da:
         one: "Kan ikke slette fordi en afhængighed %{record} findes"
         many: "Kan ikke slette fordi en afhængighed %{record} findes"
       too_long:
-        one: er for lang (maximum er 1 tegn)
+        one: er for lang (maximum er %{count} tegn)
         other: er for lang (maximum er %{count} tegn)
       too_short:
-        one: er for kort (minimum er 1 tegn)
+        one: er for kort (minimum er %{count} tegn)
         other: er for kort (minimum er %{count} tegn)
       wrong_length:
-        one: har forkert længde (burde være 1 tegn)
+        one: har forkert længde (burde være %{count} tegn)
         other: har forkert længde (burde være  %{count} tegn)
       other_than: "skal være andet end %{count}"
     template:
       body: "Der var problemer med følgende felter:"
       header:
-        one: Een fejl forhindrede denne %{model} for at gemme.
+        one: "Een fejl forhindrede denne %{model} for at gemme."
         other: "%{count} fejl forhindrede denne %{model} i at gemme."
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
@@ -127,7 +127,7 @@ da:
   reading_time: "Læsetid"
   likes: "Synes godt om"
   too_many_replies:
-    one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
+    one: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
   embed:
     start_discussion: "Start diskussion"
@@ -137,7 +137,7 @@ da:
     no_hosts: "Ingen værter var konfigureret til indlejring."
     configure: "Konfigurér indlejring"
     more_replies:
-      one: "1 svar til"
+      one: "%{count} svar til"
       other: "%{count} svar til"
     loading: "Indlæser diskussion…"
     permalink: "Permalink"
@@ -371,49 +371,49 @@ da:
     change_failed_explanation: "Du har forsøgt at degradere %{user_name} til '%{new_trust_level}'. Imidlertid er deres niveau af tillid allerede '%{current_trust_level}'. %{user_name} vil forblive'%{current_trust_level}' - hvis du ønsker at degradere brugeren, skal du først låse brugerens tillids niveau / Trust Level"
   rate_limiter:
     hours:
-      one: "1 time"
+      one: "%{count} time"
       other: "%{count} timer"
     minutes:
-      one: "1 minut"
+      one: "%{count} minut"
       other: "%{count} minutter"
     seconds:
-      one: "1 sekund"
+      one: "%{count} sekund"
       other: "%{count} sekunder"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
       less_than_x_seconds:
-        one: "< 1s"
+        one: "< %{count}s"
         other: "< %{count}s"
       x_seconds:
-        one: "1s"
+        one: "%{count}s"
         other: "%{count}s"
       less_than_x_minutes:
-        one: "< 1m"
+        one: "< %{count}m"
         other: "< %{count}m"
       x_minutes:
-        one: "1m"
+        one: "%{count}m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
+        one: "%{count}h"
         other: "%{count}t"
       x_days:
-        one: "1d"
+        one: "%{count}d"
         other: "%{count}d"
       about_x_months:
-        one: "1md"
+        one: "%{count}md"
         other: "%{count}mdr"
       x_months:
-        one: "1md"
+        one: "%{count}md"
         other: "%{count}mdr"
       about_x_years:
-        one: "1 år"
+        one: "%{count} år"
         other: "%{count} år"
       over_x_years:
-        one: "> 1 år"
+        one: "> %{count} år"
         other: "> %{count} år"
       almost_x_years:
-        one: "1 år"
+        one: "%{count} år"
         other: "%{count} år"
     distance_in_words_verbose:
       half_a_minute: "lige nu"
@@ -421,34 +421,34 @@ da:
         one: "lige nu"
         other: "lige nu"
       x_seconds:
-        one: "1 sekund siden"
+        one: "%{count} sekund siden"
         other: "%{count} sekunder siden"
       less_than_x_minutes:
-        one: "mindre end 1 minut siden"
+        one: "mindre end %{count} minut siden"
         other: "mindre end %{count} minutter siden"
       x_minutes:
-        one: "1 minut siden"
+        one: "%{count} minut siden"
         other: "%{count} minutter siden"
       about_x_hours:
-        one: "1 time siden"
+        one: "%{count} time siden"
         other: "%{count} timer siden"
       x_days:
-        one: "1 dag siden"
+        one: "%{count} dag siden"
         other: "%{count} dage siden"
       about_x_months:
-        one: "ca. 1 måned siden"
+        one: "ca. %{count} måned siden"
         other: "ca. %{count} måneder siden"
       x_months:
-        one: "1 måned siden"
+        one: "%{count} måned siden"
         other: "%{count} måneder siden"
       about_x_years:
-        one: "ca. 1 år siden"
+        one: "ca. %{count} år siden"
         other: "ca. %{count} år siden"
       over_x_years:
-        one: "over 1 år siden"
+        one: "over %{count} år siden"
         other: "over %{count} år siden"
       almost_x_years:
-        one: "næsten 1 år siden"
+        one: "næsten %{count} år siden"
         other: "næsten %{count} år siden"
   password_reset:
     no_token: "Beklager, dit kodeords-reset link er udløbet. Vælg 'Log ind' knappen og brug 'Jeg har glemt mit kodeord' for at få et nyt link."
@@ -977,22 +977,22 @@ da:
     new_user: "Velkommen til fællesskabet! Dette er de seneste mest populære emner."
   topic_statuses:
     autoclosed_enabled_days:
-      one: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
+      one: "Dette emne blev automatisk lukket efter %{count} dag. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket efter %{count} dage. Nye svar er ikke længere tilladt."
     autoclosed_enabled_hours:
-      one: "Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt."
+      one: "Dette emne blev automatisk lukket efter %{count} time. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket efter %{count} timer. Nye svar er ikke længere tilladt."
     autoclosed_enabled_minutes:
-      one: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
+      one: "Dette emne blev automatisk lukket efter %{count} minut. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket efter %{count} minutter. Nye svar er ikke længere tilladt."
     autoclosed_enabled_lastpost_days:
-      one: "Dette emne blev automatisk lukket 1 dag efter det seneste svar. Nye svar er ikke længere tilladt."
+      one: "Dette emne blev automatisk lukket %{count} dag efter det seneste svar. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket %{count} dage efter det seneste svar. Nye svar er ikke længere tilladt."
     autoclosed_enabled_lastpost_hours:
-      one: "Dette emne blev automatisk lukket 1 time efter det seneste svar. Nye svar er ikke længere tilladt."
+      one: "Dette emne blev automatisk lukket %{count} time efter det seneste svar. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket %{count} timer efter det seneste svar. Nye svar er ikke længere tilladt."
     autoclosed_enabled_lastpost_minutes:
-      one: "Dette emne blev automatisk lukket 1 minut efter det seneste svar. Nye svar er ikke længere tilladt."
+      one: "Dette emne blev automatisk lukket %{count} minut efter det seneste svar. Nye svar er ikke længere tilladt."
       other: "Dette emne blev automatisk lukket %{count} minutter efter det seneste svar. Nye svar er ikke længere tilladt."
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     autoclosed_disabled_lastpost: "Dette emne er nu åbent. Nye svar er tilladt."
@@ -1168,7 +1168,7 @@ da:
     pending_users_reminder:
       title: "Påmindelse om afventende brugere"
       subject_template:
-        one: "1 bruger afventer godkendelse"
+        one: "%{count} bruger afventer godkendelse"
         other: "%{count} brugere afventer godkendelse"
     download_remote_images_disabled:
       subject_template: "Download af eksterne billeder er slået fra"
