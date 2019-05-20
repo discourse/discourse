@@ -85,20 +85,24 @@ class S3Inventory
       result = connection.exec("SELECT * FROM #{table_name} WHERE key LIKE '%original/%/#{sha1}%'")
 
       if result.count >= 1
-        key = result[0]["key"]
-        data = @s3_helper.object(key).data
-        filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
+        begin
+          key = result[0]["key"]
+          data = @s3_helper.object(key).data
+          filename = (data.content_disposition&.match(/filename=\"(.*)\"/) || [])[1]
 
-        upload = Upload.new(
-          user_id: Discourse.system_user.id,
-          original_filename: filename || File.basename(key),
-          filesize: data.content_length,
-          url: File.join(Discourse.store.absolute_base_url, key),
-          sha1: sha1,
-          etag: result[0]["etag"]
-        )
-        upload.save!(validate: false)
-        upload_id = upload.id
+          upload = Upload.new(
+            user_id: Discourse.system_user.id,
+            original_filename: filename || File.basename(key),
+            filesize: data.content_length,
+            url: File.join(Discourse.store.absolute_base_url, key),
+            sha1: sha1,
+            etag: result[0]["etag"]
+          )
+          upload.save!(validate: false)
+          upload_id = upload.id
+        rescue Aws::S3::Errors::NotFound
+          next
+        end
       end
 
       upload_id
