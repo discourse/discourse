@@ -32,7 +32,7 @@
     <% end %>
   <% end %>
 
-  <% if @tags && !@tags.empty? %>
+  <% if @tags.present? %>
     <div class="tag-list">
       <h3><%= t 'js.tagging.other_tags' %></h3>
       <% @tags.each do |tag| %>
