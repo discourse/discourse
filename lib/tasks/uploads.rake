@@ -221,7 +221,7 @@ def migration_successful?(db, should_raise = false)
   raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0 && should_raise
   return false if count > 0
 
-  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
+  cdn_path = SiteSetting.cdn_path("/uploads/#{db}/original").sub(/https?:/, "")
   count = Post.where("cooked LIKE '%#{cdn_path}%'").count
   raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0 && should_raise
   return false if count > 0
