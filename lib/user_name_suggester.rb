@@ -57,11 +57,16 @@ module UserNameSuggester
         else
           offset = 0
         end
+
+        if allowed_username && offset > 0
+          (0...offset).each do |x|
+            attempt = create_attempt(name, i, x)
+            return attempt if attempt == allowed_username
+          end
+        end
       end
 
-      suffix = (i + offset).to_s
-      max_length = User.username_length.end - suffix.length
-      attempt = "#{truncate(name, max_length)}#{suffix}"
+      attempt = create_attempt(name, i, offset)
       i += 1
     end
 
@@ -70,6 +75,12 @@ module UserNameSuggester
       i += 1
     end
     attempt
+  end
+
+  def self.create_attempt(name, i, offset)
+    suffix = (i + offset).to_s
+    max_length = User.username_length.end - suffix.length
+    attempt = "#{truncate(name, max_length)}#{suffix}"
   end
 
   def self.fix_username(name)

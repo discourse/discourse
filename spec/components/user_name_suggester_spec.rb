@@ -19,6 +19,14 @@ describe UserNameSuggester do
       expect(UserNameSuggester.suggest('saM')).to eq('saM3')
     end
 
+    it "doesn't skip over allowed username" do
+      Fabricate(:user, username: 'sam')
+      Fabricate(:user, username: 'sAm1')
+      Fabricate(:user, username: 'sam2')
+
+      expect(UserNameSuggester.suggest('saM', 'saM2')).to eq('saM2')
+    end
+
     it "doesn't raise an error on nil username" do
       expect(UserNameSuggester.suggest(nil)).to eq(nil)
     end
