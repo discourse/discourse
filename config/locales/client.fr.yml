@@ -317,7 +317,6 @@ fr:
       topic_has_pending:
         one: "Ce sujet a <b>1</b> message en attente de validation"
         other: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
-      title: "Doit être vérifié"
       topic: "Sujet :"
       filtered_user: "Utilisateur:"
       show_all_topics: "afficher tous les sujets"
@@ -359,6 +358,9 @@ fr:
         refresh: "Rafraîchir"
         status: "Etat :"
         category: "Catégorie :"
+        priority:
+          low: "Faible"
+          high: "Fort"
       conversation:
         view_full: "voir conversation entière"
       scores:
@@ -653,6 +655,7 @@ fr:
       private_messages: "Messages directs"
       user_notifications:
         ignore_duration_title: "Ignorer planification"
+        ignore_duration_username: "Pseudo"
         ignore_duration_when: "Durée :"
         ignore_duration_save: "Ignorer"
         ignore_duration_note: "Noter que tous les 'ignorer' sans supprimés automatiquement après l'échéance de la durée d'ignore."
@@ -1395,7 +1398,6 @@ fr:
       remove_featured_link: "Retirer le lien du sujet"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       reply_placeholder_no_images: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme."
-      reply_placeholder_choose_category: "Vous devez sélectionner une catégorie avant de rédiger ici."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
@@ -1798,7 +1800,6 @@ fr:
         jump_bottom: "aller au dernier message"
         jump_prompt: "aller à…"
         jump_prompt_of: "de %{count} messages"
-        jump_prompt_long: "À quel message voulez-vous aller ?"
         jump_bottom_with_number: "aller au message %{post_number}"
         jump_prompt_to_date: "à la date"
         jump_prompt_or: "ou"
@@ -2153,50 +2154,6 @@ fr:
           notify_user: "Vous avez envoyé un message à cet utilisateur"
           bookmark: "Vous avez mis un signet à ce message"
           like: "Vous l'avez aimé"
-        by_you_and_others:
-          off_topic:
-            one: "Vous et 1 autre personne l'avez signalé comme étant hors-sujet"
-            other: "Vous et {{count}} autres personnes l'avez signalé comme étant hors-sujet"
-          spam:
-            one: "Vous et 1 autre personne l'avez signalé comme étant du spam"
-            other: "Vous et {{count}} autres personnes l'avez signalé comme étant du spam"
-          inappropriate:
-            one: "Vous et 1 autre personne l'ont signalé comme inapproprié"
-            other: "Vous et {{count}} autres personnes l'ont signalé comme inapproprié"
-          notify_moderators:
-            one: "Vous et 1 autre personne l'ont signalé pour modération"
-            other: "Vous et {{count}} autres personnes l'ont signalé pour modération"
-          notify_user:
-            one: "1 autre personne et vous avez envoyé un message à cet utilisateur"
-            other: "{{count}} autres personnes et vous avez envoyé un message à cet utilisateur"
-          bookmark:
-            one: "Vous et 1 autre personne ont mis un signet à ce message"
-            other: "Vous et {{count}} autres personnes ont mis un signet à ce message"
-          like:
-            one: "Vous et 1 autre personne l'ont aimé"
-            other: "Vous et {{count}} autres personnes l'ont aimé"
-        by_others:
-          off_topic:
-            one: "1 personne l'a signalé comme étant hors-sujet"
-            other: "{{count}} personnes l'ont signalé comme étant hors-sujet"
-          spam:
-            one: "1 personne a signalé ceci comme étant du spam"
-            other: "{{count}} personnes ont signalé ceci comme étant du spam"
-          inappropriate:
-            one: "1 personne a signalé ceci comme étant inapproprié"
-            other: "{{count}} personnes ont signalé ceci comme étant inapproprié"
-          notify_moderators:
-            one: "1 personne a signalé ceci pour modération"
-            other: "{{count}} personnes ont signalé pour modération"
-          notify_user:
-            one: "1 personne a envoyé un message à cet utilisateur"
-            other: "{{count}} personnes ont envoyé un message à cet utilisateur"
-          bookmark:
-            one: "1 personne a mis un signet à ce message"
-            other: "{{count}} personnes ont mis un signet à ce message"
-          like:
-            one: "1 personne a aimé ceci"
-            other: "{{count}} personnes ont aimé ceci"
       delete:
         confirm:
           one: "Êtes-vous sûr de vouloir supprimer ce message ?"
@@ -2299,6 +2256,7 @@ fr:
       default_top_period: "Période des meilleurs sujets par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
+      review_group_name: "nom du groupe"
       require_topic_approval: "Nécessiter l'approbation pour chaque nouveau sujet"
       require_reply_approval: "Nécessiter l'approbation pour chaque nouvelle réponse"
       this_year: "cette année"
@@ -2760,7 +2718,6 @@ fr:
         title: "Liste de rapports disponibles"
       dashboard:
         title: "Tableau de bord"
-        last_updated: "Tableau de bord actualisé le :"
         version: "Version"
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
@@ -2834,6 +2791,11 @@ fr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activé <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collectioner les données.'
+          filters:
+            group:
+              label: Groupe
+            category:
+              label: Catégorie
       commits:
         latest_changes: "Dernières modifications : veuillez mettre à jour régulièrement !"
         by: "par"
@@ -3093,7 +3055,6 @@ fr:
         new_style: "Nouveau style"
         install: "Installer"
         delete: "Supprimer"
-        delete_confirm: "Supprimer ce thème ?"
         color: "Couleur"
         opacity: "Opacité"
         copy: "Copier"

@@ -260,20 +260,6 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    dominating_topic: |
-      ### Lad andre deltage i samtalen
-
-      Dette emne er åbenbart vigtigt for dig &ndash; du har oprettet mere end %{percent}% af svarene her.
-
-      Er du sikker på, at du giver tilstrækkelig tid til, at andre folk også kan dele deres synspunkter?
-    get_a_room: |
-      ### Overvej at svare flere personer
-
-      Du har allerede svaret %{count} gange på @%{reply_username} i dette særlige emne.
-
-      Har du overveje også at give svar til *andre* personer i denne diskussion? En god diskussion involverer mange stemmer og perspektiver.
-
-      Hvis du ønsker at fortsætte din dialog med denne specifikke bruger i fuld længde, [så send dem en personlig besked](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Du kan ikke skrive flere indlæg i dette emne
 
@@ -1192,10 +1178,6 @@ da:
       subject_template: "Du er månedens nye bruger!"
     queued_posts_reminder:
       title: "Påmindelse om indlæg, der skal godkendes"
-      text_body_template: |
-        Hej,
-
-        Indlæg fra nye brugere er tilbageholdt for at blive godkendt og afventer at blive gennemgået. [Godkend eller afvis dem her](%{base_url}/queued-posts).
   unsubscribe_link: |
     [Klik her](%{unsubscribe_url}) hvis du ikke længere vil modtage disse emails.
   unsubscribe_link_and_mail: |
@@ -1368,7 +1350,6 @@ da:
       unread_messages: "Ulæste beskeder"
       unread_notifications: "Ulæste beskeder"
       liked_received: "Modtagne \"Synes om\""
-      new_posts: "Nye indlæg"
       new_users: "Nye brugere"
       popular_topics: "Populære emner"
       follow_topic: "Følg dette emne"
@@ -1640,14 +1621,10 @@ da:
         fields:
           logo:
             label: "Primært logo"
-          logo_small:
-            label: "Kompakt logo"
       icons:
         title: "Ikoner"
         fields:
-          favicon:
-            label: "Lille ikon"
-          apple_touch_icon:
+          large_icon:
             label: "Stort ikon"
       homepage:
         description: "Vi anbefaler at seneste emner vises på din hjemmeside, men du kan også vise kategorier (grupper af emner) på hjemmesiden, hvis du foretrækker dette."
@@ -1679,6 +1656,8 @@ da:
         title: "Skjul Indlæg"
       delete_spammer:
         title: "Slet spammer"
+      delete_single:
+        title: "Slet"
       disagree:
         title: "Uenig"
       approve:

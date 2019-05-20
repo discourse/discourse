@@ -91,6 +91,8 @@ vi:
     share:
       post: "đăng #%{postNumber}"
       close: "đóng"
+      twitter: "chia sẻ liên kết này lên Twitter"
+      facebook: "chia sẻ liên kết này lên Facebook"
     action_codes:
       public_topic: "hiển thị chủ đề này công khai lúc %{when}"
       split_topic: "tách chủ đề này lúc %{when}"
@@ -470,6 +472,7 @@ vi:
       private_message: "Tin nhắn"
       private_messages: "Tin nhắn"
       user_notifications:
+        ignore_duration_username: "Tên đăng nhập"
         mute_option: "Im lặng"
         normal_option: "Bình thường"
       activity_stream: "Hoạt động"
@@ -1524,36 +1527,6 @@ vi:
           notify_user: "Bạn đã gửi một tin nhắn đến người dùng này"
           bookmark: "Bạn đã đánh dấu bài viết này"
           like: "Bạn đã thích cái này"
-        by_you_and_others:
-          off_topic:
-            other: "Bạn và  {{count}}  người khác đã đánh dấu đây là chủ đề đóng"
-          spam:
-            other: "Bạn và {{count}} người khác gắn cờ nó là rác"
-          inappropriate:
-            other: "Bạn và {{count}} other người khác đã đánh dấu nó là không phù hợp"
-          notify_moderators:
-            other: "Bạn và {{count}} người khác gắn cờ nó là điều tiết"
-          notify_user:
-            other: "Bạn và {{count}} người khác đã gửi một tin nhắn đến người dùng này"
-          bookmark:
-            other: "Bạn và {{count}} người khác đã đánh dấu bài viết này"
-          like:
-            other: "Bạn và {{count}} người khác đã thích cái này"
-        by_others:
-          off_topic:
-            other: "{{count}} người đã đánh dấu nó là chủ đề đóng"
-          spam:
-            other: "{{count}} người khác đánh dấu là rác"
-          inappropriate:
-            other: "{{count}} người khác đã đánh dấu là không phù hợp"
-          notify_moderators:
-            other: "{{count}} người đã đánh dấu để chờ duyệt"
-          notify_user:
-            other: "{{count}} gửi tin nhắn đến người dùng này"
-          bookmark:
-            other: "{{count}} người đã đánh dấu bài viết này"
-          like:
-            other: "{count}} người đã thích cái này"
       revisions:
         controls:
           first: "Sửa đổi đầu tiên"
@@ -1627,6 +1600,7 @@ vi:
       email_in_disabled_click: 'kích hoạt thiết lập thư điện tử'
       allow_badges_label: "Cho phép thưởng huy hiệu trong chuyên mục này"
       edit_permissions: "Sửa quyền"
+      review_group_name: "Nhóm tên"
       this_year: "năm nay"
       default_position: "vị trí mặc định"
       position_disabled: "Chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự chuyên mục trong danh sách, "
@@ -1974,7 +1948,6 @@ vi:
       moderator: "Điều hành"
       dashboard:
         title: "Bảng điều khiển"
-        last_updated: "Bảng điều khiển cập nhật gần nhất:"
         version: "Phiên bản"
         up_to_date: "Bạn đã cập nhật phiên bản mới nhất"
         critical_available: "Bản cập nhật quan trọng sẵn sằng."
@@ -2013,6 +1986,11 @@ vi:
           start_date: "Từ ngày"
           end_date: "Đến ngày"
           groups: "Các nhóm"
+          filters:
+            group:
+              label: Nhóm
+            category:
+              label: Danh mục
       commits:
         latest_changes: "Thay đổi cuối: vui lòng cập nhật thường xuyên!"
         by: "bởi"

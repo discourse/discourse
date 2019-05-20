@@ -598,6 +598,8 @@ gl:
         title: "Suspender usuario"
       delete_spammer:
         title: "Eliminar spammer"
+      delete_single:
+        title: "Eliminar"
       disagree:
         title: "Non aceptar"
       approve:

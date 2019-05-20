@@ -454,6 +454,7 @@ sq:
       private_message: "Mesazh"
       private_messages: "Mesazhet"
       user_notifications:
+        ignore_duration_username: "Emri i përdoruesit"
         mute_option: "Pa njoftime"
         normal_option: "Normal"
       activity_stream: "Aktiviteti"
@@ -1220,7 +1221,6 @@ sq:
         go_bottom: "poshtë"
         go: "shko"
         jump_bottom: "hidhu tek përgjigja e fundit"
-        jump_prompt_long: "Tek cila temë doni të shkoni?"
         jump_bottom_with_number: "shko tek përgjigja %{post_number}"
         jump_prompt_or: "ose"
         total: totali i postimeve
@@ -1497,50 +1497,6 @@ sq:
           notify_user: "Ju i dërguat një mesazh këtij përdoruesi"
           bookmark: "E ruajte këtë temë tek të preferuarat e tua"
           like: "Ju e pëlqyet këtë"
-        by_you_and_others:
-          off_topic:
-            one: "Ti dhe 1 anëtar tjetër sinjalizuat këtë postim si jashtë teme"
-            other: "Ti dhe {{count}} anëtarë të tjerë sinjalizuat këtë postim si jashtë teme"
-          spam:
-            one: "Ti dhe 1 anëtar tjetër sinjalizuat këtë postim si spam"
-            other: "Ti dhe {{count}} anëtarë të tjerë sinjalizuat këtë postim si spam"
-          inappropriate:
-            one: "Ti dhe 1 anëtar tjetër sinjalizuat këtë postim si të papërshtatshëm"
-            other: "Ti dhe {{count}} anëtarë të tjerë sinjalizuat këtë postim si të papërshtatshëm"
-          notify_moderators:
-            one: "Ti dhe 1 anëtar tjetër sinjalizuat këtë postim për moderim"
-            other: "Ti dhe {{count}} anëtarë të tjerë sinjalizuat këtë postim për moderim"
-          notify_user:
-            one: "Ju dhe 1 person tjetër i dërguat një mesazh këtij përdoruesi."
-            other: "Ju dhe {{count}} persona të tjerë i dërguat një mesazh këtij përdoruesi."
-          bookmark:
-            one: "Ti dhe 1 anëtar tjetër shtuat këtë postim tek të preferuarat tuaja"
-            other: "Ti dhe {{count}} anëtarë të tjerë shtuat këtë postim tek të preferuarat tuaja"
-          like:
-            one: "Ju dhe 1 person tjetër pëlqyet këtë "
-            other: "Ju dhe {{count}} të tjerë pëlqyen këtë postim"
-        by_others:
-          off_topic:
-            one: "1 anëtar sinjalizoi këtë postim si jashtë teme"
-            other: "{{count}} anëtarë sinjalizuan këtë postim si jashtë teme"
-          spam:
-            one: "1 anëtar sinjalizoi këtë postim si spam"
-            other: "{{count}} anëtarë sinjalizuan këtë postim si spam"
-          inappropriate:
-            one: "1 anëtar sinjalizoi këtë postim si të papërshtatshëm"
-            other: "{{count}} anëtarë sinjalizuan këtë postim si të papërshtatshëm"
-          notify_moderators:
-            one: "1 anëtar sinjalizoi këtë postim për moderim"
-            other: "{{count}} anëtarë sinjalizuan këtë postim për moderim"
-          notify_user:
-            one: "1 person i dërgoi një mesazh këtij përdoruesi"
-            other: "{{count}} i dërguan një mesazh këtij përdoruesi"
-          bookmark:
-            one: "1 anëtar shtoi këtë postim tek të preferuarat"
-            other: "{{count}} anëtarë shtuan këtë postim tek të preferuarat"
-          like:
-            one: "1 person pëlqeu këtë postim"
-            other: "{{count}} vetë pëlqyen këtë postim"
       revisions:
         controls:
           first: "Revizioni i parë"
@@ -1610,6 +1566,7 @@ sq:
       email_in_disabled_click: 'aktivizo rregullimin "email in".'
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       edit_permissions: "Ndryshoni autorizimet"
+      review_group_name: "emri i grupit"
       this_year: "këtë vit"
       default_position: "Default Position"
       position_disabled: "Kategoritue do të renditen sipas aktivitetit. Për të kontrolluar renditjen e kategorive nëpër lista, "
@@ -1987,7 +1944,6 @@ sq:
       moderator: "Moderator"
       dashboard:
         title: "Paneli i kontrollit"
-        last_updated: "Rinovimi i fundit:"
         version: "Versioni"
         up_to_date: "Jeni të azhurnuar!"
         critical_available: "Përditësim i rëndësishëm."
@@ -2027,6 +1983,11 @@ sq:
           start_date: "Dita e fillimit"
           end_date: "Dita e fundit"
           groups: "Të gjitha grupet"
+          filters:
+            group:
+              label: Grupi
+            category:
+              label: Kategori
       commits:
         latest_changes: "Latest changes: please update often!"
         by: "nga"

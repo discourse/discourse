@@ -258,7 +258,6 @@ da:
       settings:
         save_changes: "Gem ændringer"
         title: "Indstillinger"
-      title: "Behov for gennemlæsning"
       topic: "Emne:"
       user:
         username: "Brugernavn"
@@ -499,6 +498,7 @@ da:
       private_message: "Besked"
       private_messages: "Beskeder"
       user_notifications:
+        ignore_duration_username: "Brugernavn"
         mute_option: "Lydløs"
         normal_option: "Normal"
       activity_stream: "Aktivitet"
@@ -1363,7 +1363,6 @@ da:
         jump_bottom: "Hop til sidste indlæg"
         jump_prompt: "spring til..."
         jump_prompt_of: "af %{count} indlæg"
-        jump_prompt_long: "Hvilket indlæg vil du gerne springe til?"
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         jump_prompt_or: "eller"
         total: antal indlæg
@@ -1652,50 +1651,6 @@ da:
           notify_user: "Du har sendt en besked til denne bruger"
           bookmark: "Du bogmærkede dette indlæg"
           like: "Du liker dette indlæg"
-        by_you_and_others:
-          off_topic:
-            one: "Du og 1 anden flagede dette som off-topic"
-            other: "Du og {{count}} andre flagede dette som off-topic"
-          spam:
-            one: "Du og 1 anden flagede dette som spam"
-            other: "Du og {{count}} andre flagede dette som spam"
-          inappropriate:
-            one: "Du og 1 anden flagede dettes om upasende"
-            other: "Du og {{count}} andre flagede dettes om upasende"
-          notify_moderators:
-            one: "Du og 1 anden flagede dette til moderation"
-            other: "Du og {{count}} andre flagede dette til moderation"
-          notify_user:
-            one: "Dig og en anden har sendt en besked til denne bruger"
-            other: "Dig og {{count}} andre har sendt en besked til denne bruger"
-          bookmark:
-            one: "Du og 1 anden bogmærkede dette indlæg"
-            other: "Du og {{count}} andre bogmærkede dette indlæg"
-          like:
-            one: "Du og 1 anden liker dette"
-            other: "Du og {{count}} andre liker dette"
-        by_others:
-          off_topic:
-            one: "1 person flagede dette som off-topic"
-            other: "{{count}} personer flagede dette som off-topic"
-          spam:
-            one: "1 person flagede dette som spam"
-            other: "{{count}} personer flagede dette som spam"
-          inappropriate:
-            one: "1 person flagede dette som upassende"
-            other: "{{count}} personer flagede dette som upassende"
-          notify_moderators:
-            one: "1 person flagede dette til moderation"
-            other: "{{count}} personer flagede dette til moderation"
-          notify_user:
-            one: "1 person har sendt en besked til denne bruger"
-            other: "{{count}} har sendt en besked til denne bruger"
-          bookmark:
-            one: "1 person bogmærkede dette indlæg"
-            other: "{{count}} personer bogmærkede dette indlæg"
-          like:
-            one: "1 person liker dette"
-            other: "{{count}} personer liker dette"
       revisions:
         controls:
           first: "Første udgave"
@@ -1781,6 +1736,7 @@ da:
       default_top_period: "Standardperiode for top:"
       allow_badges_label: "Tillad af badges bliver tildelt i denne kategori"
       edit_permissions: "Redigér tilladelser"
+      review_group_name: "gruppe navn"
       this_year: "dette år"
       default_position: "Standarposition"
       position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "
@@ -2177,7 +2133,6 @@ da:
       moderator: "Moderator"
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard sidst opdateret:"
         version: "Installeret version"
         up_to_date: "Du kører den seneste version af Discourse."
         critical_available: "En kritisk opdatering er tilgængelig."
@@ -2222,6 +2177,11 @@ da:
           start_date: "Start dato"
           end_date: "Slut dato"
           groups: "Alle grupper"
+          filters:
+            group:
+              label: Gruppe
+            category:
+              label: Kategori
       commits:
         latest_changes: "Seneste ændringer: opdatér ofte!"
         by: "af"
@@ -2440,7 +2400,6 @@ da:
         new: "Ny"
         new_style: "Ny style"
         delete: "Slet"
-        delete_confirm: "Slet dette tema?"
         color: "Farve"
         opacity: "Gennemsigtighed"
         copy: "Kopier"

@@ -569,6 +569,7 @@ bs_BA:
       private_message: "Privatne Poruke"
       private_messages: "Poruke"
       user_notifications:
+        ignore_duration_username: "Ime"
         mute_option: "Utišan"
         normal_option: "Normalno"
       activity_stream: "Aktivnost"
@@ -1225,7 +1226,6 @@ bs_BA:
       remove_featured_link: "Odstranite link sa teme."
       reply_placeholder: "Ovdje kucate vaš tekst. Koristite Markdown, BBcode ili HTML kako bi formatirali isti. Povucite ili zaljepite slike."
       reply_placeholder_no_images: "Ovdje kucate tekst odgovor-a. Koristite Markdown, BBCode, ili HTML za formatiranje teksta."
-      reply_placeholder_choose_category: "Morate izabrati kategoriju prije nego što počnete kucati tekst."
       view_new_post: "Pogledaj svoj novi post."
       saving: "Spašavam"
       saved: "Sačuvano!"
@@ -1624,7 +1624,6 @@ bs_BA:
         jump_bottom: "skoči na zadnju objavu"
         jump_prompt: "skoči na..."
         jump_prompt_of: "od %{count} objava"
-        jump_prompt_long: "Na koju objavu želite skočiti?"
         jump_bottom_with_number: "skoči na post %{post_number}"
         jump_prompt_or: "ili"
         total: ukupan broj
@@ -1952,40 +1951,6 @@ bs_BA:
           notify_user: "You sent a private message to this user"
           bookmark: "You bookmarked this post"
           like: "Lajkovao si ovo"
-        by_you_and_others:
-          off_topic:
-            one: "Vi i još 1 osoba ste prijavili ovo kao iskakanje iz okvira teme"
-            few: "Vi i još {{count}} ostale osobe ste prijavili ovo kao iskakanje iz okvira teme"
-            other: "Vi i još {{count}} ostalih osoba ste prijavili ovo kao iskakanje iz okvira teme"
-          spam:
-            one: "Vi i još 1 osoba ste prijavili ovo kao spam"
-            few: "Vi i još  {{count}} ostale osobe ste prijavili ovo kao spam"
-            other: "Vi i još {{count}} ostalih osoba ste prijavili ovo kao spam"
-          inappropriate:
-            one: "Vi i još 1 osoba ste prijavili ovo kao neprimjereno"
-            few: "Vi i još  {{count}} ostale osobe ste prijavili ovo kao neprimjereno"
-            other: "Vi i još {{count}} ostalih osoba ste prijavili ovo kao neprimjereno"
-          notify_moderators:
-            one: "Vi i još 1 osoba ste prijavili ovo za korigovanje od strane moderatora"
-            few: "Vi i još {{count}} ostale osobe ste prijavili ovo za korigovanje od strane moderatora"
-            other: "Vi i još {{count}} ostalih osoba ste prijavili ovo za korigovanje od strane moderatora"
-        by_others:
-          off_topic:
-            one: "1 osoba je prijavila ovo kao iskakanje iz okvira teme"
-            few: "{{count}} osobe je prijavilo ovo kao iskakanje iz okvira teme"
-            other: "{{count}} osoba je prijavilo ovo kao iskakanje iz okvira teme"
-          spam:
-            one: "1 osoba je prijavila ovo kao spam"
-            few: "{{count}} osobe je prijavilo ovo kao spam"
-            other: "{{count}} osoba je prijavilo ovo kao spam"
-          inappropriate:
-            one: "1 osoba je prijavila ovo kao neprimjereno"
-            few: "{{count}} osobe je prijavilo ovo kao neprimjereno"
-            other: "{{count}} osoba je prijavilo ovo kao neprimjereno"
-          notify_moderators:
-            one: "1 osoba je prijavila ovo za korigovanje od strane moderatora"
-            few: "{{count}} osobe je prijavilo ovo za korigovanje od strane moderatora"
-            other: "{{count}} osoba je prijavilo ovo za korigovanje od strane moderatora"
       revisions:
         controls:
           first: "First revision"
@@ -2038,6 +2003,7 @@ bs_BA:
       email_in_disabled_click: 'enable the "email in" setting.'
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
+      review_group_name: "group name"
       this_year: "this year"
       default_position: "Default Position"
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
@@ -2289,7 +2255,6 @@ bs_BA:
       moderator: "Moderator"
       dashboard:
         title: "Dashboard"
-        last_updated: "Dashboard last updated:"
         version: "Version"
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
@@ -2324,6 +2289,11 @@ bs_BA:
           30_days_ago: "30 Days Ago"
           all: "All"
           view_table: "View as Table"
+          filters:
+            group:
+              label: Grupa
+            category:
+              label: Kategorija
       commits:
         latest_changes: "Latest changes: please update often!"
         by: "by"

@@ -618,6 +618,7 @@ sk:
       private_message: "Správa"
       private_messages: "Správy"
       user_notifications:
+        ignore_duration_username: "Používateľské meno"
         mute_option: "Ignorované"
         normal_option: "Normálne"
       activity_stream: "Aktivita"
@@ -1819,78 +1820,6 @@ sk:
           notify_user: "Poslali ste správu používateľovi "
           bookmark: "Vytvorili ste si záložku na tento príspevok"
           like: "Páči sa Vám to"
-        by_you_and_others:
-          off_topic:
-            one: "Vy a 1 ďalšia osoba to označílo ako mimo tému"
-            few: "Vy a ďalšie {{count}} osoby to označíli ako mimo tému"
-            many: "Vy a ďalších {{count}} osôb to označílo ako mimo tému"
-            other: "Vy a ďalších {{count}} osôb to označílo ako mimo tému"
-          spam:
-            one: "Vy a 1 ďalšia osoba to označíla ako spam"
-            few: "Vy a ďalšie {{count}} osoby to označíli ako spam"
-            many: "Vy a ďalších {{count}} osôb to označílo ako spam"
-            other: "Vy a ďalších {{count}} osôb to označílo ako spam"
-          inappropriate:
-            one: "Vy a jedna ďalšia osoba to označila ako nevhodné"
-            few: "Vy a ďalšie {{count}} osoby to označili ako nevhodné"
-            many: "Vy a ďalších {{count}} osôb to označilo ako nevhodné"
-            other: "Vy a ďalších {{count}} osôb to označilo ako nevhodné"
-          notify_moderators:
-            one: "Vy a jedna ďalšia osoba to označila na moderovanie"
-            few: "Vy a ďalšie {{count}} osoby to označili na moderovanie"
-            many: "Vy a ďalších {{count}} osôb to označilo na moderovanie"
-            other: "Vy a ďalších {{count}} osôb to označilo na moderovanie"
-          notify_user:
-            one: "Vy a jedna ďalšia osoba poslala správu tomuto užívateľovi"
-            few: "Vy a ďalšie {{count}} osoby poslali správu tomuto užívateľovi"
-            many: "Vy a ďalších {{count}} osôb poslalo správu tomuto používateľovi"
-            other: "Vy a ďalších {{count}} osôb poslalo správu tomuto používateľovi"
-          bookmark:
-            one: "Vy a jedna ďalšia osoba si vytvorilo záložku na tento príspevok"
-            few: "Vy a ďalšie {{count}} osoby si vytvorili záložku na tento príspevok"
-            many: "Vy a ďalších {{count}} osôb si vytvorilo záložku na tento príspevok"
-            other: "Vy a ďalších {{count}} osôb si vytvorilo záložku na tento príspevok"
-          like:
-            one: "Páči sa to Vám a jendej ďalšej osobe"
-            few: "Páči sa to Vám a ďalším {{count}} osobám"
-            many: "Páči sa to Vám a ďalším {{count}} osobám"
-            other: "Páči sa to Vám a ďalším {{count}} osobám"
-        by_others:
-          off_topic:
-            one: "1 osoba to označíla ako mimo tému"
-            few: "{{count}} osoby to označíli ako mimo tému"
-            many: "{{count}} osôb to označílo ako mimo tému"
-            other: "{{count}} osôb to označílo ako mimo tému"
-          spam:
-            one: "1 osoba to označíla ako spam"
-            few: "{{count}} osoby to označíli ako spam"
-            many: "{{count}} osôb to označílo ako spam"
-            other: "{{count}} osôb to označílo ako spam"
-          inappropriate:
-            one: "1 osoba to označila ako nevhodné"
-            few: "{{count}} osoby to označili ako nevhodné"
-            many: "{{count}} osôb to označilo ako nevhodné"
-            other: "{{count}} osôb to označilo ako nevhodné"
-          notify_moderators:
-            one: "1 osoba to označila na moderovanie"
-            few: "{{count}} osoby to označili na moderovanie"
-            many: "{{count}} osôb to označilo na moderovanie"
-            other: "{{count}} osôb to označilo na moderovanie"
-          notify_user:
-            one: "1 osoba poslala správu tomuto používateľovi"
-            few: "{{count}} osoby poslali správu tomuto používateľovi"
-            many: "{{count}} osôb poslalo správu tomuto používateľovi"
-            other: "{{count}} osôb poslalo správu tomuto používateľovi"
-          bookmark:
-            one: "1 osoba si vytvorila záložku na tento príspevok"
-            few: "{{count}} osoby si vytvorili záložku na tento príspevok"
-            many: "{{count}} osôb si vytvorilo záložku na tento príspevok"
-            other: "{{count}} osôb si vytvorilo záložku na tento príspevok"
-          like:
-            one: " {{count}} osobe sa to páčilo"
-            few: " {{count}} osobám sa to páčilo"
-            many: " {{count}} osobám sa to páčilo"
-            other: " {{count}} osobám sa to páčilo"
       revisions:
         controls:
           first: "Prvá revízia"
@@ -1955,6 +1884,7 @@ sk:
       email_in_disabled_click: 'povoľte nastavenie "email in"'
       allow_badges_label: "Povoliť získavanie odznakov v tejto kategórii"
       edit_permissions: "Upraviť práva"
+      review_group_name: "názov skupiny"
       this_year: "tento rok"
       default_position: "Predvolená pozícia"
       position_disabled: "Kategórie budú zobrazené podľa aktivity. Pre možnosť ovládania poradia kategórií v zozname,"
@@ -2353,7 +2283,6 @@ sk:
       moderator: "Moderátor"
       dashboard:
         title: "Ovládací panel"
-        last_updated: "Dashboard naposledy aktualizovaný:"
         version: "Verzia"
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
         critical_available: "Je dostupná kritická aktualizácia."
@@ -2399,6 +2328,11 @@ sk:
           start_date: "Od"
           end_date: "Do"
           groups: "Všetky skupiny"
+          filters:
+            group:
+              label: Skupina
+            category:
+              label: Kategória
       commits:
         latest_changes: "Najnov3ie zmeny. Prosime aktualizujte čo najčastejšie!"
         by: "podľa"

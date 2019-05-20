@@ -266,20 +266,6 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: |
-      ### Pozwól innym dołączyć do rozmowy
-
-      Ten temat jest dla Ciebie istotny  &ndash; napisałeś tu ponad %{percent}% wszystkich odpowiedzi.
-
-      Czy na pewno dajesz innym wystarczająco czasu na przedstawienie swoich punktów widzenia?
-    get_a_room: |
-      ### Odpowiedz wielu osobom
-
-      W tym temacie odpowiedziałeś już %{count} razy do @%{reply_username}
-
-      Czy myślałeś o odpowiedzi do *innych* osób w dyskusji? Dobra dyskusja pozwala wypowiedzieć się wielu osobom z różnymi opiniami.
-
-      Jeżeli chcesz kontynuować dowolnie długą dyskusję z konkretnym użytkownikiem możesz [wysłać prywatną wiadomość](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Osiągnąłeś limit odpowiedzi w tym temacie
 
@@ -1763,10 +1749,6 @@ pl_PL:
       subject_template: "Jesteś nowym użytkownikiem miesiąca!"
     queued_posts_reminder:
       title: "Przypomnienie o postach w kolejce"
-      text_body_template: |
-        Witaj,
-
-        Posty od nowych użytkowników zostały przekazane do moderacji i oczekują na przejrzenie. [Zatwierdź lub odrzuć je tutaj](%{base_url}/queued-posts).
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych wiadomości e-mail, [Kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1964,7 +1946,6 @@ pl_PL:
       unread_messages: "Nieprzeczytane Wiadomości"
       unread_notifications: "Nieprzeczytane Powiadomienia"
       liked_received: "Otrzymane Polubienia"
-      new_posts: "Nowe wpisy"
       new_users: "Nowi użytkownicy"
       popular_topics: "Popularne tematy"
       follow_topic: "Śledź ten temat"
@@ -2553,14 +2534,10 @@ pl_PL:
         fields:
           logo:
             label: "Podstawowe logo"
-          logo_small:
-            label: "Kompaktowe logo"
       icons:
         title: "Ikony"
         fields:
-          favicon:
-            label: "Mała ikona"
-          apple_touch_icon:
+          large_icon:
             label: "Duża ikona"
       homepage:
         description: "Polecamy wyświetlanie ostatnich tematów na twojej stronie domowej, ale jeśli wolisz możesz również wyświetlić kategorie (grupy tematów) na stronie domowej."
@@ -2597,6 +2574,8 @@ pl_PL:
         title: "Wycisz użytkownika"
       delete_spammer:
         title: "Usuń spamera"
+      delete_single:
+        title: "Usuń"
       disagree:
         title: "Wycofaj"
       ignore:

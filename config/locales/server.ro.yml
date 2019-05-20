@@ -1455,11 +1455,6 @@ ro:
         În fiecare lună, doi utilizatori noi primesc acest premiu ce va fi vizibil permanent pe [pagina de ecusoane](%{url})
 
         Ai devenit un membru valoros al comunității noastre. Mulțumim pentru participare!
-    queued_posts_reminder:
-      text_body_template: |
-        Salutare,
-
-        Există postări de utilizatori noi care așteaptă să fie moderate. [Aprobă-le sau respinge-le aici](%{base_url}/queued-posts).
   unsubscribe_link: |
     Pentru dezabonare de la aceste emailuri, [click aici](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1635,7 +1630,6 @@ ro:
       unread_messages: "Mesaje necitite"
       unread_notifications: "Notificări necitite"
       liked_received: "Aprecieri primite"
-      new_posts: "Postări noi"
       new_users: "Utilizatori noi"
       popular_topics: "Subiecte notorii"
       follow_topic: "Urmărește acest subiect"
@@ -2040,14 +2034,10 @@ ro:
         fields:
           logo:
             label: "Logo-ul principal"
-          logo_small:
-            label: "Logo compact"
       icons:
         title: "Iconițe"
         fields:
-          favicon:
-            label: "Iconiță mică"
-          apple_touch_icon:
+          large_icon:
             label: "Iconiță mare"
       homepage:
         title: "Pagina principală"
@@ -2093,6 +2083,8 @@ ro:
         title: "Ascunde postarea"
       delete_spammer:
         title: "Șterge spammer"
+      delete_single:
+        title: "Șterge"
       disagree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
       disagree:

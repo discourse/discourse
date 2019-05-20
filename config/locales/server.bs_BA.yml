@@ -935,6 +935,8 @@ bs_BA:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_spammer:
         title: "Obriši Spamera"
+      delete_single:
+        title: "Delete"
       disagree:
         title: "Disagree"
       approve:

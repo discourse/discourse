@@ -439,6 +439,7 @@ th:
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
       user_notifications:
+        ignore_duration_username: "ชื่อผู้ใช้"
         mute_option: "ปิด"
         normal_option: "ปกติ"
       activity_stream: "กิจกรรม"
@@ -1265,12 +1266,6 @@ th:
           bookmark: "ย้อนคืนการบุ๊คมาร์ค"
         by_you:
           bookmark: "บุ๊คมาร์คโพสนี้"
-        by_you_and_others:
-          bookmark:
-            other: "คุณและอีก {{count}} คนได้บุ๊คมาร์คโพสนี้"
-        by_others:
-          bookmark:
-            other: "{{count}} คน ได้บุ๊คมาร์คโพสนี้"
     category:
       edit: "แก้ไข"
       settings: "การตั้งค่า"
@@ -1280,6 +1275,7 @@ th:
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก?"
       security: "ความปลอดภัย"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
+      review_group_name: "ชื่อกลุ่ม"
       notifications:
         watching:
           title: "กำลังดู"
@@ -1533,7 +1529,6 @@ th:
       moderator: "ผู้ดูแล"
       dashboard:
         title: "แดชบอร์ด"
-        last_updated: "แดชบอร์ดพร้อมกับแก้ไขล่าสุด:"
         version: "เวอร์ชั่น"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
         critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
@@ -1566,6 +1561,11 @@ th:
           start_date: "วันที่เริ่ม"
           end_date: "วันที่จบ"
           groups: "กลุ่มทั้งหมด"
+          filters:
+            group:
+              label: กลุ่ม
+            category:
+              label: หมวดหมู่
       commits:
         latest_changes: "การเปลี่ยนแปลงล่าสุด: โปรดอัพเดตบ่อยๆ"
         by: "โดย"

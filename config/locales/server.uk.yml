@@ -511,7 +511,6 @@ uk:
     digest:
       new_topics: "Нові теми"
       liked_received: "Отримані вподобання"
-      new_posts: "Нові дописи"
       new_users: "Нові користувачі"
       join_the_discussion: "Читати більше"
       click_here: "натисніть тут"
@@ -608,6 +607,8 @@ uk:
         title: "Призупинити користувача"
       delete_spammer:
         title: "Видалити спамера"
+      delete_single:
+        title: "Видалити"
       disagree:
         title: "Відмовитися"
       approve:

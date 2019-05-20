@@ -12,5 +12,3 @@ lt:
     magic_8_ball:
       answers:
         '9': "Taip"
-    new_user_narrative:
-      reset_trigger: "naujas vartotojas"

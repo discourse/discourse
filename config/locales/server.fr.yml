@@ -366,22 +366,6 @@ fr:
       Vous pouvez éditer votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b> qui s'affichera.
 
       C'est plus facile de lire des discussions avec des réponses approfondies plutôt que plusieurs réponses individuelles courtes.
-    dominating_topic: |2
-
-      ### Laissez les autres rejoindre la conversation
-
-      Ce sujet est vraiment important pour vous &ndash; vous avez posté plus de %{percent}% des réponses dans cette discussion.
-
-      Avez-vous laissé suffisamment de temps aux autres membres afin qu'ils partagent, eux aussi, leurs points de vue ?
-    get_a_room: |2
-
-      ### Répondre à d'autres personnes
-
-      Vous avez déjà répondu %{count} fois à @%{reply_username} dans ce sujet.
-
-      Avez-vous aussi pensé répondre à d'autres personnes dans cette discussion ? Une grande discussion implique plusieurs avis et points de vue.
-
-      Si vous aimeriez prolonger la discussion avec cet utilisateur en particulier, [envoyez-leur un message direct](%{base_path}/u/%{reply_username}).
     too_many_replies: |2
 
       ### Vous avez atteint le nombre de réponses maximum dans ce sujet
@@ -1154,12 +1138,10 @@ fr:
         filesize: Taille de fichier
       description: "Liste de tous les envois de fichier, par extension, taille de fichier, et auteur."
     top_ignored_users:
-      title: "Utilisateurs les plus ignorés"
       labels:
         ignored_user: Utilisateur ignoré
         ignores_count: Ignorés
         mutes_count: Muets
-      description: "Liste les utilisateurs les plus ignorés."
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
@@ -1171,8 +1153,6 @@ fr:
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramétres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
-    pwa_config_icon_warning: 'Votre site n''a pas d''icône 512 x 512 qui permettrait aux utilisateurs d''ajouter un raccourci vers ce site sur les appareils Android. Aller au <a href="%{base_path}/admin/site_settings/category/all_results?filter=large_icon">Paramètres du site</a> et télécharger un icône 512 x 512.'
-    pwa_config_title_warning: 'Votre site n''a pas titre court qui permettrait aux utilisateurs d''ajouter un raccourci vers ce site sur les appareils Android. Aller au Paramètres du site et ajouter un titre court, limité à 12 caractères.'
     s3_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Allez dans les <a href="%{base_path}/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="https://www.imagemagick.org/script/download.php" target="_blank">pour télécharger la dernière version</a>.'
@@ -1257,11 +1237,6 @@ fr:
     logo_small: "La petite image logo affiché en haut à gauche du site quand la page est défilée vers le bas. Utiliser une image carré de 120 x 120. Si vide, une glyphe 'maison' sera affichée."
     digest_logo: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Doit être en forme de rectangle large et ne pas être une image SVG. Si vide, l'image du paramètre `logo` sera utilisé."
     mobile_logo: "L'image de votre logo utilisé sur la version mobile de votre site. Utiliser une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360. Si vide, l'image du paramètre `logo` sera utilisé. "
-    large_icon: "Image utilisée comme logo sur Android. Taille requise : 512 x 512."
-    favicon: "Un favicon pour votre site, voir <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://fr.wikipedia.org/wiki/Favicon</a>, pour fonctionner correctement à travers un CDN il doit être PNG."
-    apple_touch_icon: "Icône utilisée pour les appareils d'Apple. Taille requise : 144 x 144."
-    opengraph_image: "Image opengraph par défaut, utilisée quand la page n'a pas d'autre image or logo de site approprié."
-    twitter_summary_large_image: "Image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280 en largeur et 150 en hauteur). "
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
     email_subject: "Format du sujet personnalisable pour les courriels standards. Voir <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1313,7 +1288,6 @@ fr:
     blacklist_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être crawlés par Discourse"
     whitelist_internal_hosts: "Une liste de domaines internes que Discourse peut crawler en sécurité pour les Onebox et autres"
     allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
-    whitelisted_crawler_user_agents: "Les agents utilisateurs des robots d'exploration du Web qui devraient être autorisés à accéder au site."
     blacklisted_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'exploration Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si une whitelist est définie."
     slow_down_crawler_user_agents: "Agents de crawlers web qui devrait être limité dans robots.txt avec la commande Crawl-delay."
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents est spécifié ce taux s'appliquera aux crawlers web (secondes d'attente entre requêtes)"
@@ -1570,7 +1544,6 @@ fr:
     auto_silence_fast_typers_on_first_post: "Mettre sous silence automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximum pour automatiquement mettre sous silence les utilisateurs rédigeant des messages trop rapidement."
     auto_silence_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, mettre sous silence le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a mettre sous slience les premiers messages contenant rageux ou aba ou aca."
-    flags_default_topics: "Afficher les sujets signalés par défaut dans la section administrateur"
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %%{reply_key}@reply.example.com ou replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -1599,7 +1572,6 @@ fr:
     attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     enable_forwarded_emails: "[BÊTA] Autoriser les utilisateurs de créer des sujets en transferant un courriel."
     always_show_trimmed_content: "Toujours montrer la partie réduite des courriels entrants. ATTENTION : cela peut révéler les adresses courriels."
-    private_email: "Ne pas inclure du contenu de messages ou de sujets pour plus de confidentialité. REMARQUE : cela désactive aussi le résumé par courriels."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connexions au serveur POP3. (Recommandé)"
@@ -1655,7 +1627,6 @@ fr:
     log_personal_messages_views: "Logguer les vues de messages directs par Admin pour d'autres utilisateurs/groupes."
     ignored_users_count_message_threshold: "Notifier les modérateur si un utilisateur est ignoré par autant d'utilisateurs."
     ignored_users_message_gap_days: "Combien de temps faut-il attendre avant de notifier à nouveau les modérateurs d'un utilisateur ignoré par beaucoup d'autres."
-    clean_up_inactive_users_after_days: "Nombre de jours avant qu'un utilisateur inactif (niveau de confiance 0 sans aucun messages) soit supprimé."
     user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
@@ -2705,11 +2676,6 @@ fr:
       subject_template:
         one: "1 message en attente de modération"
         other: "%{count} messages en attention de modération"
-      text_body_template: |2
-
-        Bonjour,
-
-        Des messages de nouveaux utilisateurs sont en attente de modération. [Approuvez ou rejetez-les ici](%{base_url}/queued-posts).
   unsubscribe_link: |2
 
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
@@ -2995,7 +2961,6 @@ fr:
       unread_messages: "Messages non lus"
       unread_notifications: "Notifications non lues"
       liked_received: "J'aime reçus"
-      new_posts: "Nouveaux messages"
       new_users: "Nouveaux utilisateurs"
       popular_topics: "Sujets populaires"
       follow_topic: "Suivre ce sujet"
@@ -3908,7 +3873,6 @@ fr:
     title: "Étiquettes"
     staff_tag_disallowed: 'L''étiquette "%{tag}" ne peut être appliquée que par un responsable.'
     staff_tag_remove_disallowed: 'L''étiquette "%{tag}" ne peut être retirée que par un responsable.'
-    minimum_required_tags: "Vous devez choisir au moins %{count} étiquettes."
     upload_row_too_long: "Le fichier CSV devrait avoir une étiquette par ligne. L'étiquette peut être suivie d'une virgule et par un nom de groupe d'étiquettes."
     forbidden:
       in_this_category: '"%{tag_name}" ne peut pas être utilisé dans cette catégorie'
@@ -4009,18 +3973,11 @@ fr:
           logo:
             label: "Logo principal"
             description: "L'image de votre logo situé en haut à gauche de votre site. Utiliser une forme rectangulaire large avec une hauteur de 120 et une largeur de plus que 360"
-          logo_small:
-            label: "Logo compact"
-            description: "Une version compacte de votre logo qui est affichée dans le coin supérieur gauche de votre site quand vous défilez la page vers le bas. Utiliser une image carré de 120 x 120."
       icons:
         title: "Icônes"
         fields:
-          favicon:
-            label: "Petite icône"
-            description: "Icône utilisée pour représenter le site dans les navigateurs Web et qui rend bien à de petites tailles comme 32 x 32. PNG ou JPG recommandés."
-          apple_touch_icon:
+          large_icon:
             label: "Grande icône"
-            description: "Icône utilisée pour représenter le site sur les appareils modernes et que rend bien à des tailles plus grandes. La taille minimale conseillée est de 512 x 512."
       homepage:
         description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
         title: "Page d'accueil"
@@ -4097,6 +4054,8 @@ fr:
         title: "Supprimer le spammeur"
         description: "Supprimer cet utilisateur, tous ses messages et sujets."
         confirm: "Êtes-vous sûr de vouloir supprimer tous les messages et sujets de cet utilisateur, et bloquer son courriel ainsi que son adresse IP ?"
+      delete_single:
+        title: "Supprimer"
       delete:
         title: "Supprimer..."
       delete_and_ignore:

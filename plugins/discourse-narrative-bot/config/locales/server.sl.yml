@@ -113,11 +113,6 @@ sl:
       random_mention:
         reply: |-
           Pozdravljeni! Da izveste, kaj znam, recite `@%{discobot_username} %{help_trigger}`.
-        tracks: |-
-          Trenutno znam narediti naslednje stvari:
-
-          `@%{discobot_username} %{reset_trigger} %{default_track}`
-          > Začni eno od naslednjih interaktivnih pripovedi: %{tracks}.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -140,8 +135,6 @@ sl:
 
           Medtem vas ne bom motil.
     new_user_narrative:
-      reset_trigger: "nov uporabnik"
-      title: "Priznanje o opravljenem vodiču za novega uporabnika"
       cert_title: "Priznanje za uspešno končan vodič za nove uporabnike."
       hello:
         title: "Pozdravljeni!"
@@ -302,7 +295,6 @@ sl:
       certificate:
         alt: 'Priznanje'
     advanced_user_narrative:
-      reset_trigger: 'napredni uporabnik'
       cert_title: "Priznanje za uspešno končan vodič za napredne uporabnike."
       title: ':arrow_up: Napredne uporabniške funkcije'
       start_message: |-
@@ -342,10 +334,6 @@ sl:
           Ali mi naredite uslugo in **prekličete izbris**?
         not_found: |-
           Imate težavo? Uporabite prikaži več<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da razkrijete akcijo <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> prekliči izbris.
-        reply: |-
-          Uf, to je bilo pa blizu! Hvala, da ste to rešili :wink:
-
-          Vedite, da imate samo 24 ur za preklic izbrisa prispevka.
       category_hashtag:
         instructions: |-
           Ali ste vedeli, da se lahko navežete na kategorijo ali oznako v vašem prispevku? Na primer, ali ste videli %{category} kategorijo?

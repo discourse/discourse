@@ -1567,6 +1567,8 @@ sk:
         title: "Tichý užívateľ"
       delete_spammer:
         title: "Zmazať spammera"
+      delete_single:
+        title: "Odstrániť"
       disagree:
         title: "Nesúhlasiť"
       approve:

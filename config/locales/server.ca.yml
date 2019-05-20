@@ -259,12 +259,6 @@ ca:
       Pots editar la teva darrera resposta per a afegir una cita. Per a fer-ho, selecciona text i prem el botó de <b>cita resposta</b> que apareixerà.
 
       És més fàcil seguir un tema quan té menys respostes més profundes que no pas moltes respostes indivituals.
-    dominating_topic: |
-      ### Deixa que altres s'afegeixin a a conversa
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      Are you sure you’re providing adequate time for other people to share their points of view, too?
     too_many_replies: |
       ### Has assolit el límit de respostes per a aquest tema
 
@@ -1635,7 +1629,6 @@ ca:
       unread_messages: "Missatges sense llegir"
       unread_notifications: "Alertes sense llegir"
       liked_received: "M'agrades rebuts"
-      new_posts: "Noves publicacions"
       new_users: "Noves persones usuàries"
       popular_topics: "Temes populars"
       follow_topic: "Segueix aquest tema"
@@ -1976,14 +1969,10 @@ ca:
         fields:
           logo:
             label: "Logo primari"
-          logo_small:
-            label: "Logo compacte"
       icons:
         title: "Icones"
         fields:
-          favicon:
-            label: "Icona petita"
-          apple_touch_icon:
+          large_icon:
             label: "Icona gran"
       homepage:
         description: "Et suggerim que mostris els darrers temes a la teva pàgina principal, però si t'ho estimes més, també pots mostrar-hi categories (grups o temes) a la pàgina principal."
@@ -2013,6 +2002,8 @@ ca:
         title: "Suspèn persona usuària"
       delete_spammer:
         title: "Esborra brossa"
+      delete_single:
+        title: "Esborra"
       disagree:
         title: "En desacord"
       approve:

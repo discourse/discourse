@@ -214,6 +214,8 @@ it:
     every_hour: "ogni ora"
     daily: "ogni giorno"
     weekly: "ogni settimana"
+    every_month: "ogni mese"
+    every_six_months: "ogni sei mesi"
     max_of_count: "massimo di {{count}}"
     alternation: "o"
     character_count:
@@ -249,7 +251,7 @@ it:
         unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
     bookmarks:
       created: "hai inserito questo messaggio nei segnalibri"
-      not_bookmarked: "Aggiungi questo messaggio ai segnalibri"
+      not_bookmarked: "aggiungi ai segnalibri"
       remove: "Rimuovi Segnalibro"
       confirm_clear: "Sei certo di voler rimuovere tutti i segnalibri da questo argomento?"
     drafts:
@@ -314,7 +316,6 @@ it:
       topic_has_pending:
         one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
         other: "Questo Argomento ha  <b>{{count}}</b> messaggi in attesa di approvazione"
-      title: "Richiede Revisione"
       topic: "Argomento:"
       user:
         username: "Nome utente"
@@ -331,6 +332,9 @@ it:
         type:
           title: "Tipo:"
         refresh: "Aggiorna"
+        priority:
+          low: "Bassa"
+          high: "Alta"
       scores:
         score: "Punteggio"
         date: "Data"
@@ -605,6 +609,7 @@ it:
       private_message: "Messaggio"
       private_messages: "Messaggi"
       user_notifications:
+        ignore_duration_username: "Nome utente"
         ignore_duration_save: "Ignora"
         ignore_duration_time_frame_required: "Per favore, seleziona un lasso di tempo"
         ignore_option: "Ignorato"
@@ -762,7 +767,7 @@ it:
         disable_description: "Inserisci il codice di autenticazione dalla tua app"
         show_key_description: "Inserisci manualmente"
         extended_description: |
-          L'autenticazione a due fattori aggiunge ulteriore sicurezza attraverso la richiesta di un token usa e getta insieme alla password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
+          L'autenticazione a due fattori aggiunge ulteriore sicurezza al tuo account attraverso la richiesta di un token usa e getta oltre alla tua password. I token possono essere generati su dispositivi <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> e <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> .
         oauth_enabled_warning: "Tieni presente che gli accessi ai social network saranno disabilitati dopo aver attivato l'autenticazione a due fattori nel tuo account."
         enforced_notice: "E' obbligatorio abilitare l'autenticazione a due fattori per accedere a questo sito."
       change_about:
@@ -886,6 +891,8 @@ it:
         every_hour: "ogni ora"
         daily: "ogni giorno"
         weekly: "ogni settimana"
+        every_month: "ogni mese"
+        every_six_months: "ogni sei mesi"
       email_level:
         title: "Inviami una email quando qualcuno mi cita, risponde ai miei messaggi, menziona il mio @nomeutente, o mi invita in un argomento."
         always: "sempre"
@@ -1321,7 +1328,6 @@ it:
       remove_featured_link: "Rimuovi il collegamento dall'argomento."
       reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla le immagini."
       reply_placeholder_no_images: "Scrivi qui. Usa Markdown, BBcode o HTML per formattare."
-      reply_placeholder_choose_category: "Devi selezionare una categoria prima di digitare qui."
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio"
       saved: "Salvato!"
@@ -1713,7 +1719,6 @@ it:
         jump_bottom: "salta all'ultimo messaggio"
         jump_prompt: "vai a..."
         jump_prompt_of: "di %{count} messaggi"
-        jump_prompt_long: "A quale messaggio vuoi saltare?"
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
         jump_prompt_or: "o"
         total: totale messaggi
@@ -1878,12 +1883,12 @@ it:
         title: "Sposta in Argomento Esistente"
         action: "sposta in un argomento esistente"
         error: "Si è verificato un errore nello spostare i messaggi nell'argomento."
-        radio_label: "Argomento esistente"
+        radio_label: "Argomento Esistente"
         instructions:
           one: "Per favore scegli l'argomento dove spostare il messaggio."
           other: "Per favore scegli l'argomento di destinazione dove spostare i <b>{{count}}</b> messaggi."
       move_to_new_message:
-        title: "Sposta in un nuovo Messaggio"
+        title: "Sposta in un nuovo messaggio"
         action: "sposta in un nuovo messaggio"
         message_title: "Titolo del nuovo messaggio"
         radio_label: "Nuovo messaggio"
@@ -1894,11 +1899,11 @@ it:
       move_to_existing_message:
         title: "Sposta in un messaggio esistente"
         action: "sposta in un messaggio esistente"
-        radio_label: "Messaggio esistente"
+        radio_label: "Messaggio Esistente"
         participants: "Partecipanti"
         instructions:
-          one: "Per favore, scegli il messaggio verso il quale vorresti spostare questo messaggio."
-          other: "Per favore, scegli il messaggio verso il quale vorresti spostare quei <b>{{count}}</b> messaggi."
+          one: "Scegli il messaggio verso il quale vorresti spostare questo messaggio."
+          other: "Scegli il messaggio verso il quale vorresti spostare quei <b>{{count}}</b> messaggi."
       merge_posts:
         title: "Unisci Messaggi Selezionati"
         action: "unisci messaggi selezionati"
@@ -2064,50 +2069,6 @@ it:
           notify_user: "Hai inviato un messaggio a questo utente"
           bookmark: "Hai inserito questo messaggio nei segnalibri"
           like: "Ti piace"
-        by_you_and_others:
-          off_topic:
-            one: "Tu e un'altra persona lo avete contrassegnato come fuori tema"
-            other: "Tu e {{count}} altre persone lo avete contrassegnato come fuori tema"
-          spam:
-            one: "Tu e un'altra persona lo avete contrassegnato come spam"
-            other: "Tu e {{count}} altre persona lo avete contrassegnato come spam"
-          inappropriate:
-            one: "Tu e un'altra persona lo avete contrassegnato come non appropriato"
-            other: "Tu e  {{count}} altre persone lo avete contrassegnato come non appropriato"
-          notify_moderators:
-            one: "Tu e un'altra persona lo avete contrassegnato per la moderazione"
-            other: "Tu e {{count}} altre persone lo avete contrassegnato per la moderazione"
-          notify_user:
-            one: "Tu e un'altra persona avete inviato un messaggio a questo utente"
-            other: "Tu e {{count}} altre persone avete inviato un messaggio a questo utente"
-          bookmark:
-            one: "Tu e un'altra persona avete inserito questo messaggio nei segnalibri"
-            other: "Tu e {{count}} altre persone avete inserito questo messaggio nei segnalibri"
-          like:
-            one: "A te e a un'altra persona è piaciuto"
-            other: "A te e a {{count}} altre persone è piaciuto"
-        by_others:
-          off_topic:
-            one: "Una persona lo ha contrassegnato come fuori tema"
-            other: "{{count}} persone lo hanno contrassegnato come fuori tema"
-          spam:
-            one: "Una persona lo ha contrassegnato come spam"
-            other: "{{count}} persone lo hanno contrassegnato come spam"
-          inappropriate:
-            one: "Una persona lo ha contrassegnato come non appropriato"
-            other: "{{count}} persone lo hanno contrassegnato come non appropriato"
-          notify_moderators:
-            one: "Una persona lo ha contrassegnato per la moderazione"
-            other: "{{count}} persone lo hanno contrassegnato per la moderazione"
-          notify_user:
-            one: "Una persona ha inviato un messaggio a questo utente"
-            other: "{{count}} persone hanno inviato un messaggio a questo utente"
-          bookmark:
-            one: "Una persona ha inserito un segnalibro a questo post"
-            other: "{{count}} persone hanno inserito un segnalibro a questo post"
-          like:
-            one: "A una persona è piaciuto"
-            other: "A {{count}} persone è piaciuto"
       delete:
         confirm:
           one: "Vuoi davvero eliminare quel messaggio?"
@@ -2207,6 +2168,7 @@ it:
       default_top_period: "Periodo Predefinito Argomenti Di Punta:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
+      review_group_name: "nome gruppo"
       require_topic_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       require_reply_approval: "Richiedi l'approvazione di un moderatore per tutti i nuovi argomenti"
       this_year: "quest'anno"
@@ -2238,6 +2200,10 @@ it:
         options:
           normal: "Normale"
           ignore: "Ignora"
+          very_low: "Molto Bassa"
+          low: "Bassa"
+          high: "Alta"
+          very_high: "Molto Alta"
       sort_options:
         default: "predefinito"
         likes: "Mi piace"
@@ -2631,7 +2597,6 @@ it:
         title: "Lista dei rapporti disponibili"
       dashboard:
         title: "Cruscotto"
-        last_updated: "Ultimo aggiornamento cruscotto:"
         version: "Versione"
         up_to_date: "Sei aggiornato!"
         critical_available: "È disponibile un aggiornamento essenziale."
@@ -2652,7 +2617,7 @@ it:
         private_messages_short: "MP"
         private_messages_title: "Messaggi"
         mobile_title: "Mobile"
-        uploads: "Carica"
+        uploads: "Caricamenti"
         backups: "Backup"
         lastest_backup: "Recenti: %{date}"
         traffic_short: "Traffico"
@@ -2694,6 +2659,11 @@ it:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a>per iniziare a raccogliere i dati.'
+          filters:
+            group:
+              label: Gruppo
+            category:
+              label: Categoria
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
@@ -2930,7 +2900,6 @@ it:
         new: "Nuovo"
         new_style: "Nuovo Stile"
         delete: "Cancella"
-        delete_confirm: "Eliminare questo tema?"
         color: "Colore"
         opacity: "Opacità"
         copy: "Copia"

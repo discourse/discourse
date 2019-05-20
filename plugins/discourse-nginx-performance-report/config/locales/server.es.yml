@@ -7,4 +7,4 @@
 
 es:
   site_settings:
-    daily_performance_report: "Analizar los registros de NGINX diariamente y publicar un tema para administradores con los detalles"
+    daily_performance_report: "Analizar los registros de NGINX diariamente y publicar un tema solo para el staff con detalles"

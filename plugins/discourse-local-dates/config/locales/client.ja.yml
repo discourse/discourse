@@ -8,6 +8,8 @@
 ja:
   js:
     discourse_local_dates:
+      relative_dates:
+        today: 今日
       create:
         form:
           insert: 挿入

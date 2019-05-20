@@ -13,7 +13,7 @@ es:
         other: "votantes"
       total_votes:
         one: "voto total"
-        other: "votos totales"
+        other: "total de votos"
       average_rating: "Puntuación media: <strong>%{average}</strong>."
       public:
         title: "Votos son <strong>públicos</strong>."
@@ -33,10 +33,10 @@ es:
           x_options:
             one: "Elige <strong>1</strong> opción"
             other: "Elige <strong>%{count}</strong> opciones"
-          between_min_and_max_options: "Elige entre <strong>%{min}</strong> y <strong>%{max}</strong> opciones"
+          between_min_and_max_options: "Elige entre las opciones <strong>%{min}</strong> y <strong>%{max}</strong>."
       cast-votes:
-        title: "Votar"
-        label: "¡Vota!"
+        title: "Emite tus votos"
+        label: "¡Vota ahora!"
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Mostrar resultados"
@@ -44,18 +44,18 @@ es:
         title: "Volver a tus votos"
         label: "Ocultar resultados"
       open:
-        title: "Abrir encuesta"
+        title: "Abrir la encuesta"
         label: "Abrir"
-        confirm: "¿Seguro que quieres abrir esta encuesta?"
+        confirm: "¿Estás seguro de que quieres abrir esta encuesta?"
       close:
         title: "Cerrar la encuesta"
         label: "Cerrar"
-        confirm: "¿Seguro que quieres cerrar esta encuesta?"
+        confirm: "¿Estás seguro de que quieres cerrar esta encuesta?"
       automatic_close:
         closes_in: "Cierra en <strong>%{timeLeft}</strong>."
         age: "Cerrado <strong>%{age}</strong>"
-      error_while_toggling_status: "Lo sentimos, hubo un error al cambiar el estado de esta encuesta."
-      error_while_casting_votes: "Lo sentimos, hubo un error al registrar tus votos."
+      error_while_toggling_status: "Lo sentimos, se produjo un error al cambiar el estado de esta encuesta."
+      error_while_casting_votes: "Lo sentimos, hubo un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, hubo un error al mostrar los votantes."
       ui_builder:
         title: Crear Encuesta

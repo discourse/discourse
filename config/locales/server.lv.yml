@@ -353,6 +353,8 @@ lv:
         title: "Apturētie lietotāji"
       delete_spammer:
         title: "Izdzēst spamotāju"
+      delete_single:
+        title: "Dzēst"
       disagree:
         title: "Nepiekrist"
       approve:

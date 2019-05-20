@@ -7,10 +7,18 @@
 
 vi:
   site_settings:
+    discourse_narrative_bot_enabled: 'Bật Bot Hướng Dẫn Discourse (discobot)'
     disable_discourse_narrative_bot_welcome_post: "Tắt tính năng gửi lời chào từ Discourse Narrative Bot"
+  badges:
+    certified:
+      name: Đã chứng nhận
+      description: "Đã hoàn thành hướng dẫn thành viên mới của chúng tôi"
+      long_description: |
+        Huy hiệu này được cấp khi hoàn thành thành công hướng dẫn tương tác cho thành viên mới. Bạn đã chủ động tìm hiểu các công cụ thảo luận cơ bản và giờ bạn đã được chứng nhận!
+    licensed:
+      name: Đã cấp phép
+      description: "Đã hoàn thành hướng dẫn nâng cao cho thành viên mới của chúng tôi"
   discourse_narrative_bot:
     magic_8_ball:
       answers:
         '9': "Đồng ý"
-    new_user_narrative:
-      reset_trigger: "thành viên mới"

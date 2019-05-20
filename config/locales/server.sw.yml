@@ -253,20 +253,6 @@ sw:
       Unaweza kuhariri machapisho yaliyopita kuongeza nukulu kwa kufanya yafuatayo, bainisha nakala na chagua kitufe cha <b>nukulu jibu</b>kitakachotokea.
 
       Ni rahisi kwa watu wote kusoma mada ambazo zina majibu machache ukilinganisha na majibu madogo, mafupi na ya kibinafsi.
-    dominating_topic: |
-      ### Ruhusu wengine wajiunge kwenye maongezi
-
-      Mada hii ni muhimu kwako &ndash; umechapisha zaidi ya %{percent}% ya majibu hapa.
-
-      Una uhakika unatoa mda wa kutosha kwa watu wengine kutoa maoni yao, pia?
-    get_a_room: |
-      ### Fikia kujibu kwa watu wengi
-
-      Umejibu mara %{count} kwenye @%{reply_username} kwenye mada hii.
-
-      Umefikiria kuhusu kujibu watu *wengine* kwenye majadiliano, pia? Majadiliano mazuri yanashirikisha sauti na mtazamo mwingi.
-
-      Kama ungependa, kuendelea na maongezi yako na mtumiaji huyu kwa krefu, [watumie ujumbe binafsi](%{base_path}/u/%{reply_username}).
     too_many_replies: |
       ### Umefika kiwango cha juu cha kujibu kwenye mada hii
 
@@ -915,7 +901,6 @@ sw:
     num_hours_to_close_topic: "Mda wa masaa kusitisha mada ili kuingilia."
     auto_silence_fast_typers_max_trust_level: "Kiwango cha  juu cha uaminifu kunyamazisha wanaochapa haraka sana otomatikali"
     auto_silence_first_post_regex: "Taarifa zilizo ndani ya mabano hazitapewa kipaumbele kama herufi ni kubwa au ndogo, kama zikipitishwa zitasababisha chapisho la kwanza linyamazishwe na lisubirishwe. Mfano raging|a[bc]a , itasababisha machapisho yote yenye raging au aba au aca yamazishwe mara ya kwanza. Kanuni hii inatokea kwenye chapisho la kwanza tu."
-    flags_default_topics: "Onyesha mada zilizoripotiwa kama chaguo-msingi upande wa kiongozi"
     reply_by_email_enabled: "Ruhusu majibu ya mada kupitia barua pepe."
     delete_all_posts_max: "Kiwango cha juu cha machapisho yanayoweza kufutwa mara moja na kitufe cha Futa Machapisho Yote. Kama mtumiaji ana namba fulani ya machapisho, machapisho hayawezi kufutwa mara moja na mtumiaji hawezi kufutwa. "
     digest_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa kwenye muhtasari wa barua pepe."
@@ -1499,10 +1484,6 @@ sw:
         Kwa haraka sana, umekuwa mwanachama muhimu sana kwenye jumuia yetu. Asante sana kwa kujiunga, na endelea kufanya kazi nzuri!
     queued_posts_reminder:
       title: "Ukumbusho wa Machapisho Yalipangwa"
-      text_body_template: |
-        Habari,
-
-        Machapisho kutoka kwa mtumiaji mpya yamesimamishwa kwa ajili ya ukaguzi na yanasubiria kukaguliwa. [Thibitisha au Kataa hapa](%{base_url}/subirishwa-machapisho).
   unsubscribe_link: |
     Kujitoa kwenye barua pepe hizi, [bofya hapa](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1745,7 +1726,6 @@ sw:
       unread_messages: "Ujumbe ambao Haujasomwa"
       unread_notifications: "Taarifa ambazo Hazijasomwa"
       liked_received: "Upendo Uliopokelewa"
-      new_posts: "Machapisho Mapya"
       new_users: "Watumiaji Wapya"
       popular_topics: "Mada Maarufu"
       follow_topic: "Fuatilia mada"
@@ -2214,7 +2194,6 @@ sw:
     title: "Lebo"
     staff_tag_disallowed: 'lebo ya "%{tag}" inatumiwa na wasaidizi pekee.'
     staff_tag_remove_disallowed: 'lebo ya "%{tag}" inaweza kuondolewa na wasaidizi tu.'
-    minimum_required_tags: "Chagua lebo %{count} au zaidi."
   rss_by_tag: "Mada zenye lebo %{tag}"
   finish_installation:
     congratulations: "Hongera, umesakinisha Discourse!"
@@ -2291,9 +2270,7 @@ sw:
       icons:
         title: "Ikoni"
         fields:
-          favicon:
-            label: "Ikoni Ndogo"
-          apple_touch_icon:
+          large_icon:
             label: "Ikoni Kubwa"
       homepage:
         description: "Tunakushauri uonyeshe mada za hivi karibuni kwenye ukurasa wa kwanza, lakini unaweza kuonyesha kategoria (vikundi vya mada) kwenye ukurasa wa kwanza kama ungependelea."
@@ -2343,6 +2320,8 @@ sw:
         description: "Ficha chapisho hili na otomatikali mtumie mtumiaji ujumbe wa kumwambia afanye uhariri."
       delete_spammer:
         title: "Futa Muandishi wa Taka"
+      delete_single:
+        title: "Futa"
       disagree_and_restore:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
       disagree:

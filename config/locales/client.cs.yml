@@ -343,7 +343,6 @@ cs:
         save_changes: "Uložit změny"
         title: "Nastavení"
       moderation_history: "Historie moderování"
-      title: "Potřebuje posouzení"
       topic: "Téma:"
       user:
         username: "Uživatelské jméno"
@@ -617,6 +616,7 @@ cs:
       private_message: "Zpráva"
       private_messages: "Zprávy"
       user_notifications:
+        ignore_duration_username: "Uživatelské jméno"
         ignore_duration_save: "ignorovat"
         mute_option: "Ztišené"
         normal_option: "Normální"
@@ -1343,7 +1343,6 @@ cs:
       remove_featured_link: "Odstranit odkaz z tématu."
       reply_placeholder: "Pište sem. Můžete použít Markdown, BBCode nebo HTML. Obrázky nahrajte přetáhnutím nebo vložením ze schránky."
       reply_placeholder_no_images: "Pište sem. Můžete použít Markdown, BBCode nebo HTML."
-      reply_placeholder_choose_category: "Musíte vybrat kategorii, než sem začnete psát."
       view_new_post: "Zobrazit váš nový příspěvek."
       saving: "Ukládám"
       saved: "Uloženo!"
@@ -1763,7 +1762,6 @@ cs:
         jump_bottom: "na poslední příspěvek"
         jump_prompt: "přejít na..."
         jump_prompt_of: "%{count} příspěvků"
-        jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         jump_prompt_to_date: "do data"
         jump_prompt_or: "nebo"
@@ -2120,78 +2118,6 @@ cs:
           notify_user: "Tomuto uživateli jste zaslali zprávu"
           bookmark: "Přidali jste si tento příspěvek do záložek"
           like: "Toto se vám líbí"
-        by_you_and_others:
-          off_topic:
-            one: "Vy a 1 další člověk jste označili tento příspěvek jako off-topic"
-            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako off-topic"
-            many: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako off-topic"
-            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako off-topic"
-          spam:
-            one: "Vy a 1 další člověk jste označili tento příspěvek jako spam"
-            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako spam"
-            many: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako spam"
-            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako spam"
-          inappropriate:
-            one: "Vy a 1 další člověk jste označili tento příspěvek jako nevhodný"
-            few: "Vy a {{count}} další lidé jste označili tento příspěvek jako nevhodný"
-            many: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako nevhodný"
-            other: "Vy a {{count}} dalších lidí jste označili tento příspěvek jako nevhodný"
-          notify_moderators:
-            one: "Vy a 1 další člověk jste nahlásili tento příspěvek"
-            few: "Vy a {{count}} další lidé jste nahlásili tento příspěvek"
-            many: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
-            other: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
-          notify_user:
-            one: "Vy a 1 další uživatel jste poslali zprávu tomuto uživateli"
-            few: "Vy a {{count}} ostatní lidé jste poslali zprávu tomuto uživateli"
-            many: "Vy a {{count}} ostatních lidí jste poslali zprávu tomuto uživateli"
-            other: "Vy a {{count}} ostatních lidí jste poslali zprávu tomuto uživateli"
-          bookmark:
-            one: "Vy a 1 další člověk jste si přidali tento příspěvek do záložek"
-            few: "Vy a {{count}} další lidé jste si přidali tento příspěvek do záložek"
-            many: "Vy a {{count}} dalších lidí si přidali tento příspěvek do záložek"
-            other: "Vy a {{count}} dalších lidí si přidali tento příspěvek do záložek"
-          like:
-            one: "Vám a 1 dalšímu člověku se tento příspěvek líbí"
-            few: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-            many: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-            other: "Vám a {{count}} dalším lidem se tento příspěvek líbí"
-        by_others:
-          off_topic:
-            one: "1 člověk označil tento příspěvek jako off-topic"
-            few: "{{count}} lidé označili tento příspěvek jako off-topic"
-            many: "{{count}} lidí označilo tento příspěvek jako off-topic"
-            other: "{{count}} lidí označilo tento příspěvek jako off-topic"
-          spam:
-            one: "1 člověk označil tento příspěvek jako spam"
-            few: "{{count}} lidé označili tento příspěvek jako spam"
-            many: "{{count}} lidí označilo tento příspěvek jako spam"
-            other: "{{count}} lidí označilo tento příspěvek jako spam"
-          inappropriate:
-            one: "1 člověk označil tento příspěvek jako nevhodný"
-            few: "{{count}} lidé označili tento příspěvek jako nevhodný"
-            many: "{{count}} lidí označilo tento příspěvek jako nevhodný"
-            other: "{{count}} lidí označilo tento příspěvek jako nevhodný"
-          notify_moderators:
-            one: "1 člověk nahlásil tento příspěvek"
-            few: "{{count}} lidé nahlásili tento příspěvek"
-            many: "{{count}} lidí nahlásilo tento příspěvek"
-            other: "{{count}} lidí nahlásilo tento příspěvek"
-          notify_user:
-            one: "1 člověk poslal zprávu tomuto uživateli"
-            few: "{{count}} lidé poslali zprávu tomuto uživateli"
-            many: "{{count}} lidí poslalo zprávu tomuto uživateli"
-            other: "{{count}} lidí poslalo zprávu tomuto uživateli"
-          bookmark:
-            one: "1 člověk si přidal tento příspěvek do záložek"
-            few: "{{count}} lidé si přidali tento příspěvek do záložek"
-            many: "{{count}} lidí si přidalo tento příspěvek do záložek"
-            other: "{{count}} lidí si přidalo tento příspěvek do záložek"
-          like:
-            one: "1 člověku se tento příspěvek líbí"
-            few: "{{count}} lidem se tento příspěvek líbí"
-            many: "{{count}} lidem se tento příspěvek líbí"
-            other: "{{count}} lidem se tento příspěvek líbí"
       delete:
         confirm:
           one: "Jsi si jistý, že chceš smazat tento příspěvek?"
@@ -2293,6 +2219,7 @@ cs:
       default_top_period: "Výchozí hlavní doba:"
       allow_badges_label: "Povolit používání odznaků v této kategorii"
       edit_permissions: "Upravit oprávnění"
+      review_group_name: "název skupiny"
       require_topic_approval: "Požadovat schválení moderátorů pro všechna nová témata"
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"
@@ -2764,7 +2691,6 @@ cs:
         title: "Seznam dostupných reportů"
       dashboard:
         title: "Rozcestník"
-        last_updated: "Přehled naposled aktualizován:"
         version: "Verze Discourse"
         up_to_date: "Máte aktuální!"
         critical_available: "Je k dispozici důležitá aktualizace."
@@ -2810,6 +2736,11 @@ cs:
           start_date: "Datum začátku"
           end_date: "Datum konce"
           groups: "Všechny skupiny"
+          filters:
+            group:
+              label: Skupina
+            category:
+              label: Kategorie
       commits:
         latest_changes: "Poslední změny:"
         by: "od"
@@ -3045,7 +2976,6 @@ cs:
         new: "Nové"
         new_style: "Nový styl"
         delete: "Smazat"
-        delete_confirm: "Smazat tento motiv? "
         color: "Barva"
         opacity: "Neprůhlednost"
         copy: "Kopírovat"

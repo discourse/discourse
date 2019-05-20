@@ -10,5 +10,3 @@ ro:
     magic_8_ball:
       answers:
         '9': "Da"
-    new_user_narrative:
-      reset_trigger: "utilizator nou"

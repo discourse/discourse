@@ -83,7 +83,6 @@ tr_TR:
       skip_trigger: 'atla'
       help_trigger: 'yardımı görüntüle'
     new_user_narrative:
-      reset_trigger: "yeni kullanıcı"
       quoting:
         reply: |-
           Güzel iş, benim en favori alıntımı aldınız! :left_speech_bubble:
@@ -93,7 +92,6 @@ tr_TR:
       certificate:
         alt: 'Başarı Belgesi'
     advanced_user_narrative:
-      reset_trigger: 'gelişmiş kullanıcı'
       title: ':arrow_up: Gelişmiş kullanıcı özellikleri'
       edit:
         bot_created_post_raw: "@%{discobot_username} bugüne kadar, bildiğim en havalı bot :wink:"

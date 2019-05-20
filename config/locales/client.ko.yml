@@ -291,7 +291,6 @@ ko:
       view_pending: "보류중 보기"
       topic_has_pending:
         other: "이 토픽에는 승인 대기중인 게시물이 <b>{{count}}</b>개 있습니다"
-      title: "검토 필요"
       topic: "토픽:"
       filtered_topic: "한 토픽에서 검토 가능한 콘텐츠로 필터링 했습니다."
       filtered_user: "사용자:"
@@ -583,6 +582,7 @@ ko:
       private_message: "메시지"
       private_messages: "메시지"
       user_notifications:
+        ignore_duration_username: "아이디"
         ignore_duration_save: "무시"
         ignore_option: "무시됨"
         mute_option: "알림끔"
@@ -1203,7 +1203,6 @@ ko:
       show_edit_reason: "(수정사유 추가)"
       topic_featured_link_placeholder: "타이틀과 함께 표시될 링크를 입력하세요."
       reply_placeholder: "여기에 타이핑 하세요. 마크다운 또는 BBCode, HTML 포맷을 이용하세요. 이미지를 끌어오거나 붙여넣기 하세요."
-      reply_placeholder_choose_category: "입력하기 전에 카테고리를 먼저 선택해야합니다."
       view_new_post: "새로운 글을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
@@ -1543,7 +1542,6 @@ ko:
         jump_bottom: "최근 글로 이동"
         jump_prompt: "넘어가기"
         jump_prompt_of: "번째, 총 %{count} 개 포스트"
-        jump_prompt_long: "어느 게시글로 점프할까요?"
         jump_bottom_with_number: "jump to post %{post_number}"
         jump_prompt_or: "또는"
         total: 총 글
@@ -1834,36 +1832,6 @@ ko:
           notify_user: "글쓴이에게 메시지를 보냈습니다"
           bookmark: "이 글을 북마크했습니다"
           like: "좋아해요"
-        by_you_and_others:
-          off_topic:
-            other: "당신 외 {{count}}명이 주제에서 벗어났다고 신고했습니다"
-          spam:
-            other: "당신 외 {{count}}명이 스팸이라고 신고했습니다"
-          inappropriate:
-            other: "당신 외 {{count}}명이 부적절한 컨텐츠라고 신고했습니다"
-          notify_moderators:
-            other: "당신 외 {{count}}명이 운영자에게 알렸습니다"
-          notify_user:
-            other: "당신 외 {{count}}명이 글쓴이에게 메시지를 보냈습니다"
-          bookmark:
-            other: "당신 외 {{count}}명이 북마크 했습니다"
-          like:
-            other: "당신 외 {{count}}명이 좋아합니다"
-        by_others:
-          off_topic:
-            other: "{{count}}명이 주제에서 벗어났다고 신고했습니다"
-          spam:
-            other: "{{count}}명의 스팸이라고 신고했습니다"
-          inappropriate:
-            other: "{{count}}명이 부적절한 컨텐츠라고 신고했습니다"
-          notify_moderators:
-            other: "{{count}}명이 운영자에게 알렸습니다"
-          notify_user:
-            other: "{{count}}명이 글쓴이에게 메시지를 보냈습니다"
-          bookmark:
-            other: "{{count}}명이 북마크했습니다"
-          like:
-            other: "{{count}}명이 좋아합니다"
       delete:
         confirm:
           other: "정말로 {{count}}개의 글을 삭제 하시겠습니까?"
@@ -1956,6 +1924,7 @@ ko:
       default_top_period: "기본 Top 기간:"
       allow_badges_label: "배지가 이 카테고리에서 주어질 수 있도록 허용"
       edit_permissions: "권한 수정"
+      review_group_name: "그룹명"
       this_year: "올해"
       default_position: "기본 위치"
       position_disabled: "카테고리는 활동량에 따라서 표시됩니다. 목록 내의 카테고리 순서를 지정하하려면"
@@ -2356,7 +2325,6 @@ ko:
       moderator: "운영자"
       dashboard:
         title: "대시보드"
-        last_updated: "대시보드 최근 업데이트:"
         version: "버전"
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
@@ -2405,6 +2373,11 @@ ko:
           end_date: "종료일"
           groups: "모든 그룹"
           no_data: "표시할 정보가 없습니다."
+          filters:
+            group:
+              label: 그룹
+            category:
+              label: 카테고리
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
@@ -2643,7 +2616,6 @@ ko:
         new: "새 사용자 지정"
         new_style: "새로운 스타일"
         delete: "삭제"
-        delete_confirm: "이 테마를 삭제할까요?"
         color: "색상"
         opacity: "투명도"
         copy: "복사"
