@@ -678,8 +678,8 @@ en:
       flair_preview_image: "Preview Image"
 
     user_action_groups:
-      "1": "Likes Given"
-      "2": "Likes Received"
+      "1": "Likes"
+      "2": "Likes"
       "3": "Bookmarks"
       "4": "Topics"
       "5": "Replies"
