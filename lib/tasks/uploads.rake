@@ -348,9 +348,12 @@ def migrate_to_s3
 
   puts
 
+  failure_message = "S3 migration failed for db '#{db}'."
+
   if failed.size > 0
     puts "Failed to upload #{failed.size} files"
     puts failed.join("\n")
+    raise failure_message
   elsif s3_objects.size + synced >= local_files.size
     puts "Updating the URLs in the database..."
 
@@ -436,6 +439,18 @@ def migrate_to_s3
       end
     end
   end
+
+  base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
+  count = Upload.where("url NOT LIKE '#{base_url}%'").count
+  raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0
+
+  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
+  count = Post.where("cooked LIKE '%#{cdn_path}%'").count
+  raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0
+
+  Rake::Task['posts:missing_uploads'].invoke
+  count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
+  raise failure_message if count > 0
 
   puts "Done!"
 end
