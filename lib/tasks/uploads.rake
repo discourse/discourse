@@ -212,12 +212,13 @@ def migrate_to_s3_all_sites
   RailsMultisite::ConnectionManagement.each_connection do
     begin
       migrate_to_s3
-    rescue e
+    rescue RuntimeError => e
       if ENV["SKIP_FAILED"]
         puts e
       else
         raise e unless ENV["SKIP_FAILED"]
       end
+    end
   end
 end
 
