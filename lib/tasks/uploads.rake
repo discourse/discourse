@@ -212,6 +212,28 @@ def migrate_to_s3_all_sites
   RailsMultisite::ConnectionManagement.each_connection { migrate_to_s3 }
 end
 
+def migration_successful?(db, should_raise = false)
+  failure_message = "S3 migration failed for db '#{db}'."
+  prefix = ENV["MIGRATE_TO_MULTISITE"] ? "uploads/#{db}/original/" : "original/"
+
+  base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
+  count = Upload.where("id >= 0 AND url NOT LIKE '#{base_url}%'").count
+  raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0 && should_raise
+  return false if count > 0
+
+  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
+  count = Post.where("cooked LIKE '%#{cdn_path}%'").count
+  raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0 && should_raise
+  return false if count > 0
+
+  Rake::Task['posts:missing_uploads'].invoke
+  count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
+  raise failure_message if count > 0 && should_raise
+  return false if count > 0
+
+  return true
+end
+
 def migrate_to_s3
 
   # we don't want have migrated state, ensure we run all jobs here
@@ -220,6 +242,9 @@ def migrate_to_s3
   db = RailsMultisite::ConnectionManagement.current_db
 
   dry_run = !!ENV["DRY_RUN"]
+
+  puts "Checking if #{db} already migrated..."
+  return puts "Already migrated #{db}!" if migration_successful?(db)
 
   puts "*" * 30 + " DRY RUN " + "*" * 30 if dry_run
   puts "Migrating uploads to S3 for '#{db}'..."
@@ -440,17 +465,7 @@ def migrate_to_s3
     end
   end
 
-  base_url = File.join(SiteSetting.Upload.s3_base_url, prefix)
-  count = Upload.where("id >= 0 AND url NOT LIKE '#{base_url}%'").count
-  raise "#{count} of #{Upload.count} uploads are not migrated to S3. #{failure_message}" if count > 0
-
-  cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
-  count = Post.where("cooked LIKE '%#{cdn_path}%'").count
-  raise "#{count} posts are not remapped to new S3 upload URL. #{failure_message}" if count > 0
-
-  Rake::Task['posts:missing_uploads'].invoke
-  count = PostCustomField.where(name: Post::MISSING_UPLOADS).count
-  raise failure_message if count > 0
+  migration_successful?(db, true)
 
   puts "Done!"
 end
