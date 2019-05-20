@@ -205,7 +205,7 @@ class UserNotifications < ActionMailer::Base
       @excerpts = {}
 
       @popular_topics.map do |t|
-        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked) if t.first_post.present?
+        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked, t.first_post) if t.first_post.present?
       end
 
       # Try to find 3 interesting stats for the top of the digest
