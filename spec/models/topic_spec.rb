@@ -908,7 +908,7 @@ describe Topic do
         it 'should not be visible and have correct counts' do
           expect(topic).not_to be_visible
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
       end
 
@@ -922,7 +922,7 @@ describe Topic do
         it 'should be visible with correct counts' do
           expect(topic).to be_visible
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
       end
     end
@@ -937,7 +937,7 @@ describe Topic do
         it "doesn't have a pinned_at but has correct dates" do
           expect(topic.pinned_at).to be_blank
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
       end
 
@@ -950,7 +950,7 @@ describe Topic do
 
         it 'should enable correctly' do
           expect(topic.pinned_at).to be_present
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
           expect(topic.moderator_posts_count).to eq(1)
         end
 
@@ -968,7 +968,7 @@ describe Topic do
 
         it 'should archive correctly' do
           expect(@archived_topic).not_to be_archived
-          expect(@archived_topic.bumped_at.to_f).to be_within(0.1).of(@original_bumped_at)
+          expect(@archived_topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
           expect(@archived_topic.moderator_posts_count).to eq(1)
         end
       end
@@ -983,9 +983,8 @@ describe Topic do
         it 'should be archived' do
           expect(topic).to be_archived
           expect(topic.moderator_posts_count).to eq(1)
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
         end
-
       end
     end
 
@@ -1001,9 +1000,8 @@ describe Topic do
         it 'should not be pinned' do
           expect(@closed_topic).not_to be_closed
           expect(@closed_topic.moderator_posts_count).to eq(1)
-          expect(@closed_topic.bumped_at.to_f).not_to eq(@original_bumped_at)
+          expect(@closed_topic.bumped_at.to_f).not_to be_within(1e-4).of(@original_bumped_at)
         end
-
       end
 
       context 'enable' do
@@ -1015,7 +1013,7 @@ describe Topic do
 
         it 'should be closed' do
           expect(topic).to be_closed
-          expect(topic.bumped_at.to_f).to eq(@original_bumped_at)
+          expect(topic.bumped_at.to_f).to be_within(1e-4).of(@original_bumped_at)
           expect(topic.moderator_posts_count).to eq(1)
           expect(topic.topic_timers.first).to eq(nil)
         end
