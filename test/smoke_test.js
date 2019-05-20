@@ -1,3 +1,5 @@
+/*eslint no-console: "off"*/
+
 const args = process.argv.slice(2);
 
 if (args.length < 1 || args.length > 2) {
